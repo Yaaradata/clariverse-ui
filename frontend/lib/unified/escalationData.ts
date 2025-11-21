@@ -293,6 +293,52 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
     let currentSentiment = originSentiment;
     let currentTime = startTime.getTime();
 
+    // Function to get realistic time difference based on channel transition
+    const getTimeDifference = (
+      fromChannel: "email" | "ticket" | "chat" | "voice",
+      toChannel: "email" | "ticket" | "chat" | "voice",
+      isEscalation: boolean = false
+    ): number => {
+      // Base time differences in hours (more realistic)
+      // Format: { fromChannel: { toChannel: [minHours, maxHours] } }
+      const timeMatrix: Record<string, Record<string, [number, number]>> = {
+        email: {
+          chat: [3, 8],      // Email to chat: 3-8 hours (customer waits for email response, then switches to chat)
+          voice: [4, 12],     // Email to voice: 4-12 hours (longer wait, then calls)
+          ticket: [6, 24],    // Email to ticket: 6-24 hours (formal escalation takes longer)
+        },
+        chat: {
+          email: [1, 4],      // Chat to email: 1-4 hours (quick follow-up via email)
+          voice: [0.5, 2],    // Chat to voice: 30 min - 2 hours (immediate escalation)
+          ticket: [2, 8],     // Chat to ticket: 2-8 hours (escalation after chat session)
+        },
+        voice: {
+          email: [2, 6],      // Voice to email: 2-6 hours (follow-up documentation)
+          chat: [1, 3],       // Voice to chat: 1-3 hours (quick follow-up)
+          ticket: [4, 12],    // Voice to ticket: 4-12 hours (formal escalation)
+        },
+        ticket: {
+          email: [1, 4],      // Ticket to email: 1-4 hours (quick response)
+          chat: [0.5, 2],     // Ticket to chat: 30 min - 2 hours (immediate support)
+          voice: [1, 3],      // Ticket to voice: 1-3 hours (personal call)
+        },
+      };
+
+      // If escalation, reduce time (more urgent)
+      const baseRange = timeMatrix[fromChannel]?.[toChannel] || [2, 6];
+      let [minHours, maxHours] = baseRange;
+      
+      if (isEscalation) {
+        // Escalations are faster - reduce by 30-50%
+        minHours = Math.max(0.5, minHours * 0.5);
+        maxHours = Math.max(1, maxHours * 0.7);
+      }
+
+      // Add some randomness within the range
+      const hours = minHours + (rng.random() * (maxHours - minHours));
+      return Math.round(hours * 60) * 60 * 1000; // Convert to milliseconds
+    };
+
     // Intermediate steps (1 or 2 steps depending on path length)
     // For 3-step: steps.length = 3, so this loop runs once (stepIdx = 1)
     // For 4-step: steps.length = 4, so this loop runs twice (stepIdx = 1, 2)
@@ -300,7 +346,10 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
     
     for (let intermediateIdx = 0; intermediateIdx < numIntermediateSteps; intermediateIdx++) {
       const stepIdx = intermediateIdx + 1; // stepIdx in the steps array (1 or 2)
-      currentTime += 2 * 60 * 60 * 1000; // Add 2 hours per step
+      const fromChannel = steps[stepIdx - 1];
+      const toChannel = steps[stepIdx];
+      const timeDiff = getTimeDifference(fromChannel, toChannel, false);
+      currentTime += timeDiff;
       
       // Sentiment should increase with each intermediate step (growing concern)
       const sentimentIncrease = intermediateIdx === 0 ? 1 : 0.5; // First intermediate gets +1, second gets +0.5
@@ -334,7 +383,9 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
     }
 
     // Final step: Escalation - Sentiment should be highest (frustrated/urgent)
-    currentTime += 2 * 60 * 60 * 1000;
+    const lastIntermediateChannel = steps[steps.length - 2];
+    const escalationTimeDiff = getTimeDifference(lastIntermediateChannel, finalChannel, true);
+    currentTime += escalationTimeDiff;
     const minEscalationSentiment = Math.min(currentSentiment + 1, 5);
     const escalationSentiment = Math.max(minEscalationSentiment, 4); // Always at least 4 for escalation
     // Generate message count for final escalation step

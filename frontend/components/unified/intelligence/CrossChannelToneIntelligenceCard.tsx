@@ -1331,9 +1331,6 @@ export function CrossChannelToneIntelligenceCard() {
                                 "text-red-400"
                               }`}>
                                 {step.sentimentScore}/5
-                              </span>
-                              <span className="text-sm">
-                                {step.sentimentScore <= 2 ? "🟢" : step.sentimentScore === 3 ? "🟡" : "🔴"}
                                 </span>
                               </div>
                               </div>
@@ -1585,13 +1582,12 @@ export function CrossChannelToneIntelligenceCard() {
                                                      : `bg-gray-500/20 border ${stepColors.border} border-opacity-60`
                                                  } border`}
                                                >
-                                                 <StepIcon className={`h-3.5 w-3.5 ${stepColors.text}`} />
                                                  <span className={`${stepColors.text} capitalize font-bold text-[10px] whitespace-nowrap`}>
-                                                   {step.channel}
-                                                 </span>
-                                                 {step.escalated && (
-                                                   <AlertCircle className="h-3 w-3 text-red-400 animate-pulse" />
-                                                 )}
+                                                     {step.channel}
+                                                   </span>
+                                                   {step.escalated && (
+                                                     <AlertCircle className="h-3 w-3 text-red-400 animate-pulse" />
+                                                   )}
                                                  {isFirst && (
                                                    <span className="text-[8px] text-gray-400 font-medium ml-0.5">Origin</span>
                                                  )}
@@ -1617,51 +1613,168 @@ export function CrossChannelToneIntelligenceCard() {
                                          <div className="text-[10px] text-gray-400 mb-2 font-semibold uppercase tracking-wide">Sentiment Trend</div>
                                          <div className="h-24 w-full">
                                            <ResponsiveContainer width="100%" height="100%">
-                                             <AreaChart
-                                               data={journey.journey.map((step, idx) => ({
+                                             {(() => {
+                                               const sentimentData = journey.journey.map((step, idx) => ({
                                                  step: idx + 1,
                                                  channel: step.channel.charAt(0).toUpperCase() + step.channel.slice(1),
                                                  sentiment: step.sentimentScore,
                                                  timestamp: step.timestamp
-                                               }))}
-                                               margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                                             >
-                                               <defs>
-                                                 <linearGradient id={`sentimentGradient-${journey.id}`} x1="0" y1="0" x2="0" y2="1">
-                                                   <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.8}/>
-                                                   <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.1}/>
-                                                 </linearGradient>
-                                               </defs>
-                                               <XAxis 
-                                                 dataKey="channel" 
-                                                 tick={{ fill: '#9ca3af', fontSize: 9 }}
-                                                 axisLine={{ stroke: '#4b5563' }}
-                                                 tickLine={{ stroke: '#4b5563' }}
-                                               />
-                                               <YAxis 
-                                                 domain={[1, 5]}
-                                                 tick={{ fill: '#9ca3af', fontSize: 9 }}
-                                                 axisLine={{ stroke: '#4b5563' }}
-                                                 tickLine={{ stroke: '#4b5563' }}
-                                               />
-                                               <Tooltip 
-                                                 contentStyle={{ 
-                                                   backgroundColor: 'rgba(15, 15, 15, 0.95)', 
-                                                   border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                   borderRadius: '6px',
-                                                   fontSize: '11px'
-                                                 }}
-                                                 labelStyle={{ color: '#9ca3af' }}
-                                                 formatter={(value: number) => [`${value.toFixed(1)}/5`, 'Sentiment']}
-                                               />
-                                               <Area 
-                                                 type="monotone" 
-                                                 dataKey="sentiment" 
-                                                 stroke="#14b8a6" 
-                                                 strokeWidth={2}
-                                                 fill={`url(#sentimentGradient-${journey.id})`}
-                                               />
-                                             </AreaChart>
+                                               }));
+                                               
+                                               // Function to get color based on sentiment (1-5 scale)
+                                               // Sentiment 1 (calm): Green
+                                               // Sentiment 2-3: Green to Yellow transition
+                                               // Sentiment 4: Yellow to Orange
+                                               // Sentiment 5 (frustrated): Red
+                                               const getSentimentColor = (sentiment: number): string => {
+                                                 // Normalize sentiment to 0-1 range (1->0, 5->1)
+                                                 const normalized = (sentiment - 1) / 4;
+                                                 
+                                                 if (normalized <= 0.25) {
+                                                   // Sentiment 1-2: Green to Yellow-Green
+                                                   const ratio = normalized / 0.25; // 0 to 1
+                                                   const r = Math.round(34 + (ratio * 100)); // 34 to 134 (green to yellow-green)
+                                                   const g = Math.round(197 + (ratio * 58)); // 197 to 255
+                                                   const b = Math.round(94 - (ratio * 94)); // 94 to 0
+                                                   return `rgb(${r}, ${g}, ${b})`;
+                                                 } else if (normalized <= 0.5) {
+                                                   // Sentiment 2-3: Yellow-Green to Yellow
+                                                   const ratio = (normalized - 0.25) / 0.25; // 0 to 1
+                                                   const r = Math.round(134 + (ratio * 121)); // 134 to 255
+                                                   const g = Math.round(255 - (ratio * 55)); // 255 to 200
+                                                   const b = Math.round(0); // 0
+                                                   return `rgb(${r}, ${g}, ${b})`;
+                                                 } else if (normalized <= 0.75) {
+                                                   // Sentiment 3-4: Yellow to Orange
+                                                   const ratio = (normalized - 0.5) / 0.25; // 0 to 1
+                                                   const r = Math.round(255); // 255 (red stays max)
+                                                   const g = Math.round(200 - (ratio * 100)); // 200 to 100
+                                                   const b = Math.round(0); // 0
+                                                   return `rgb(${r}, ${g}, ${b})`;
+                                                 } else {
+                                                   // Sentiment 4-5: Orange to Red
+                                                   const ratio = (normalized - 0.75) / 0.25; // 0 to 1
+                                                   const r = Math.round(255); // 255 (red stays max)
+                                                   const g = Math.round(100 - (ratio * 100)); // 100 to 0
+                                                   const b = Math.round(0); // 0
+                                                   return `rgb(${r}, ${g}, ${b})`;
+                                                 }
+                                               };
+                                               
+                                               // Generate gradient stops based on data points with proper positioning
+                                               // Calculate offsets based on actual data point positions
+                                               const gradientStops = sentimentData.map((point, idx) => {
+                                                 // For categorical x-axis, evenly distribute
+                                                 const offset = sentimentData.length > 1 
+                                                   ? (idx / (sentimentData.length - 1)) * 100 
+                                                   : 0;
+                                                 const color = getSentimentColor(point.sentiment);
+                                                 return { offset, color, sentiment: point.sentiment };
+                                               });
+                                               
+                                               // Ensure first and last stops are at 0% and 100%
+                                               if (gradientStops.length > 0) {
+                                                 gradientStops[0].offset = 0;
+                                                 if (gradientStops.length > 1) {
+                                                   gradientStops[gradientStops.length - 1].offset = 100;
+                                                 }
+                                               }
+                                               
+                                               // Get stroke color (use the highest sentiment color or average)
+                                               const avgSentiment = sentimentData.reduce((sum, p) => sum + p.sentiment, 0) / sentimentData.length;
+                                               const strokeColor = getSentimentColor(avgSentiment);
+                                               
+                                               return (
+                                                 <AreaChart
+                                                   data={sentimentData}
+                                                   margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                                                 >
+                                                   <defs>
+                                                     {/* Horizontal gradient for line stroke - transitions left to right based on sentiment */}
+                                                     <linearGradient id={`sentimentLineGradient-${journey.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+                                                       {gradientStops.map((stop, idx) => (
+                                                         <stop 
+                                                           key={idx}
+                                                           offset={`${stop.offset}%`} 
+                                                           stopColor={stop.color} 
+                                                           stopOpacity={1}
+                                                         />
+                                                       ))}
+                                                     </linearGradient>
+                                                     {/* Horizontal area fill gradient - transitions left to right based on sentiment */}
+                                                     <linearGradient 
+                                                       id={`sentimentAreaGradient-${journey.id}`} 
+                                                       x1="0%" 
+                                                       y1="0%" 
+                                                       x2="100%" 
+                                                       y2="0%"
+                                                       spreadMethod="pad"
+                                                     >
+                                                       {gradientStops.map((stop, idx) => {
+                                                         const nextStop = gradientStops[idx + 1];
+                                                         const stops = [];
+                                                         
+                                                         // Add main stop with color based on sentiment at this point
+                                                         stops.push(
+                                                           <stop 
+                                                             key={`${idx}-main`}
+                                                             offset={`${stop.offset}%`} 
+                                                             stopColor={stop.color} 
+                                                             stopOpacity={0.6}
+                                                           />
+                                                         );
+                                                         
+                                                         // Add intermediate stop for smoother transition between points
+                                                         if (nextStop && idx < gradientStops.length - 1) {
+                                                           const midOffset = (stop.offset + nextStop.offset) / 2;
+                                                           const midSentiment = (stop.sentiment + nextStop.sentiment) / 2;
+                                                           const midColor = getSentimentColor(midSentiment);
+                                                           stops.push(
+                                                             <stop 
+                                                               key={`${idx}-mid`}
+                                                               offset={`${midOffset}%`} 
+                                                               stopColor={midColor} 
+                                                               stopOpacity={0.6}
+                                                             />
+                                                           );
+                                                         }
+                                                         
+                                                         return stops;
+                                                       }).flat()}
+                                                     </linearGradient>
+                                                   </defs>
+                                                   <XAxis 
+                                                     dataKey="channel" 
+                                                     tick={{ fill: '#9ca3af', fontSize: 9 }}
+                                                     axisLine={{ stroke: '#4b5563' }}
+                                                     tickLine={{ stroke: '#4b5563' }}
+                                                   />
+                                                   <YAxis 
+                                                     domain={[1, 5]}
+                                                     tick={{ fill: '#9ca3af', fontSize: 9 }}
+                                                     axisLine={{ stroke: '#4b5563' }}
+                                                     tickLine={{ stroke: '#4b5563' }}
+                                                   />
+                                                   <Tooltip 
+                                                     contentStyle={{ 
+                                                       backgroundColor: 'rgba(15, 15, 15, 0.95)', 
+                                                       border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                       borderRadius: '6px',
+                                                       fontSize: '11px'
+                                                     }}
+                                                     labelStyle={{ color: '#9ca3af' }}
+                                                     formatter={(value: number) => [`${value.toFixed(1)}/5`, 'Sentiment']}
+                                                   />
+                                                   <Area 
+                                                     type="monotone" 
+                                                     dataKey="sentiment" 
+                                                     stroke={`url(#sentimentLineGradient-${journey.id})`}
+                                                     strokeWidth={2}
+                                                     fill={`url(#sentimentAreaGradient-${journey.id})`}
+                                                   />
+                                                 </AreaChart>
+                                               );
+                                             })()}
                                            </ResponsiveContainer>
                                          </div>
                                        </div>
@@ -1684,7 +1797,7 @@ export function CrossChannelToneIntelligenceCard() {
                                               <Lightbulb className="h-3.5 w-3.5" />
                                               <span>Next Action Suggestion</span>
                                             </button>
-                                            {journey.aiSummary && (
+                                    {journey.aiSummary && (
                                               <button
                                                 onClick={() => setActiveTab({ ...activeTab, [journey.customerId]: "summary" })}
                                                 className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
@@ -1697,14 +1810,14 @@ export function CrossChannelToneIntelligenceCard() {
                                                 <span>AI Summary</span>
                                               </button>
                                             )}
-                                          </div>
                                         </div>
-                                        
+                                      </div>
+
                                         {/* Tab Content */}
                                         <div className="p-3">
                                           {(activeTab[journey.customerId] || "action") === "action" && journey.nextActionSuggestion && (
-                                            <div className="p-3 rounded-lg bg-[rgba(251,191,36,0.1)] border border-amber-400/30">
-                                              <p className="text-xs text-gray-200 leading-relaxed">{journey.nextActionSuggestion}</p>
+                                      <div className="p-3 rounded-lg bg-[rgba(251,191,36,0.1)] border border-amber-400/30">
+                                        <p className="text-xs text-gray-200 leading-relaxed">{journey.nextActionSuggestion}</p>
                                             </div>
                                           )}
                                           {activeTab[journey.customerId] === "summary" && journey.aiSummary && (
