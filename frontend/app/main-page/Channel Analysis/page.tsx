@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { SystemHealthRibbon, type SystemHealthMetric } from "@/components/unified/kpi/SystemHealthRibbon";
 import {
   ToneDriftWall,
-  PrematureClosureAuditWall,
   UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { EmotionShockboard, ResolutionIntegrityMonitor, PatternRecognitionEngine } from "@/components/unified/intents/IntentIntelligenceSection";
@@ -109,10 +108,7 @@ export default function ChannelAnalysisPage() {
 
       <UnifiedIntelligenceWall actionGrid={actionGrid} />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ToneDriftWall />
-        <PrematureClosureAuditWall />
-      </div>
+      <ToneDriftWall />
       <EmotionShockboard />
       <ResolutionIntegrityMonitor />
       <PatternRecognitionEngine />

@@ -276,20 +276,14 @@ export function PrematureClosureRiskAuditCard() {
 
   return (
     <div className="w-full h-full bg-[#0a0a0a] p-10" ref={containerRef}>
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="h-5 w-5 text-yellow-400" />
-            <h1 className="text-2xl font-bold text-white">Premature Closure Risk Audit</h1>
-          </div>
-          <p className="text-sm text-gray-400">
-            Cases where tickets were closed but the same issue was raised again in another channel.
-          </p>
+      <div className="mb-6">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="h-5 w-5 text-yellow-400" />
+          <h1 className="text-2xl font-bold text-white">Cross-Channel Interaction Breakdown Audit</h1>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-[rgba(26,26,26,0.6)]">
-          <AlertCircle className="h-4 w-4 text-gray-400" />
-          <span className="text-sm text-white">All Risks ({CASES.length})</span>
-        </div>
+        <p className="text-sm text-gray-400">
+          Cases where tickets were closed but the same issue was raised again in another channel.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

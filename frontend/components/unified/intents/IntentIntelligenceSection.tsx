@@ -338,7 +338,12 @@ export function PatternRecognitionEngine() {
 
   // Filter entities based on selected channel
   const filteredEntities = useMemo(() => {
-    return allData.entities.filter((entity) => entity.channels[selectedChannel]);
+    if (selectedChannel === 'all') {
+      return allData.entities;
+    }
+    // Type guard: selectedChannel is not 'all', so it's a valid channel key
+    const channelKey = selectedChannel as Exclude<ChannelKey, 'all'>;
+    return allData.entities.filter((entity) => entity.channels[channelKey]);
   }, [allData.entities, selectedChannel]);
 
   const svgWidth = 800;
@@ -483,19 +488,22 @@ export function PatternRecognitionEngine() {
       {/* Channel Filter Tabs */}
       <div className="mb-6">
         <div className="flex flex-wrap gap-2">
-          {(["email", "chat", "ticket", "social", "voice"] as ChannelKey[]).map((channel) => (
-            <button
-              key={channel}
-              onClick={() => setSelectedChannel(channel)}
-              className={`px-4 py-2 rounded-lg border transition-all duration-200 text-sm font-medium ${
-                selectedChannel === channel
-                  ? "border-[#b90abd]/70 bg-gradient-to-r from-[#b90abd]/20 to-[#5332ff]/10 text-white shadow-lg"
-                  : "border-white/10 bg-black/20 text-gray-300 hover:border-[#b90abd]/40 hover:text-white"
-              }`}
-            >
-              {channelIcons[channel]} {channelLabels[channel]}
-            </button>
-          ))}
+          {(["email", "chat", "ticket", "social", "voice"] as const).map((channel) => {
+            const channelKey = channel as Exclude<ChannelKey, 'all'>;
+            return (
+              <button
+                key={channel}
+                onClick={() => setSelectedChannel(channelKey)}
+                className={`px-4 py-2 rounded-lg border transition-all duration-200 text-sm font-medium ${
+                  selectedChannel === channelKey
+                    ? "border-[#b90abd]/70 bg-gradient-to-r from-[#b90abd]/20 to-[#5332ff]/10 text-white shadow-lg"
+                    : "border-white/10 bg-black/20 text-gray-300 hover:border-[#b90abd]/40 hover:text-white"
+                }`}
+              >
+                {channelIcons[channelKey]} {channelLabels[channelKey]}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -785,11 +793,12 @@ export function PatternRecognitionEngine() {
                 <div className="pt-2 border-t border-white/10">
                   <span className="text-gray-400 text-xs">Channels:</span>
                   <div className="flex flex-wrap items-center gap-2 mt-1">
-                    {(["email", "voice", "chat", "social", "ticket"] as ChannelKey[]).map((channel) => {
-                      if (!hoveredEntity.channels[channel]) return null;
+                    {(["email", "voice", "chat", "social", "ticket"] as const).map((channel) => {
+                      const channelKey = channel as Exclude<ChannelKey, 'all'>;
+                      if (!hoveredEntity.channels[channelKey]) return null;
                       return (
                         <span key={channel} className="text-xs text-white bg-white/10 px-2 py-1 rounded border border-white/20">
-                          {channelLabels[channel]}
+                          {channelLabels[channelKey]}
                         </span>
                       );
                     })}
@@ -818,13 +827,15 @@ export function PatternRecognitionEngine() {
           </h3>
           <div className="space-y-4 max-h-[600px] overflow-y-auto pr-2">
             {(() => {
-                const channelEntities = allData.entities.filter((e) => e.channels[selectedChannel]);
+                const channelEntities = selectedChannel === 'all' 
+                  ? allData.entities 
+                  : allData.entities.filter((e) => e.channels[selectedChannel as Exclude<ChannelKey, 'all'>]);
                 
                 if (channelEntities.length === 0) {
                   return (
                     <div className="rounded-lg border border-white/10 bg-[rgba(26,26,26,0.6)] p-4">
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xl">{channelIcons[selectedChannel]}</span>
+                        {selectedChannel !== 'all' && <span className="text-xl">{channelIcons[selectedChannel as Exclude<ChannelKey, 'all'>]}</span>}
                         <h4 className="text-sm font-bold text-white">{channelLabels[selectedChannel]}</h4>
                       </div>
                       <p className="text-xs text-gray-300 leading-relaxed">
@@ -852,7 +863,7 @@ export function PatternRecognitionEngine() {
                     {/* Insight Container */}
                     <div className="rounded-lg border border-white/10 bg-[rgba(26,26,26,0.6)] p-5">
                       <div className="flex items-center gap-2 mb-4">
-                        <span className="text-xl">{channelIcons[selectedChannel]}</span>
+                        {selectedChannel !== 'all' && <span className="text-xl">{channelIcons[selectedChannel as Exclude<ChannelKey, 'all'>]}</span>}
                         <h4 className="text-sm font-bold text-white">{channelLabels[selectedChannel]} • Insight Analysis</h4>
                       </div>
                       <div className="space-y-3">

@@ -348,37 +348,16 @@ function ToneDriftSequence({ sequence }: { sequence: ToneDriftSequencePoint[] })
 }
 
 export function PrematureClosureAuditWall({ audits = prematureClosureAuditData }: { audits?: PrematureClosureAuditEntry[] } = {}) {
-  const highRisk = audits.filter((audit) => audit.riskLevel === "high").length;
-  const openChannels = audits.reduce((acc, audit) => acc + audit.activeChannels.length, 0);
-
   return (
     <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg shadow-rose-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <CardTitle>✨ Premature Closure Risk Audit</CardTitle>
+          <CardTitle>✨ Cross-Channel Interaction Breakdown Audit</CardTitle>
           <CardDescription>Spots closure conflicts across channels for the same active banking intent.</CardDescription>
         </div>
         <Badge className="border-rose-400/40 bg-rose-500/10 text-rose-100">Cross-Channel</Badge>
       </CardHeader>
       <CardContent className="space-y-4 px-6 pb-6">
-        <div className="grid gap-3 text-xs text-gray-200 sm:grid-cols-3">
-          <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.5)] p-3">
-            <div className="text-[10px] uppercase tracking-wide text-gray-500">Cases flagged</div>
-            <div className="mt-1 text-xl font-semibold text-white">{audits.length}</div>
-            <div className="text-[11px] text-gray-400">Cross-channel mismatches</div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.5)] p-3">
-            <div className="text-[10px] uppercase tracking-wide text-gray-500">Active threads</div>
-            <div className="mt-1 text-xl font-semibold text-white">{openChannels}</div>
-            <div className="text-[11px] text-gray-400">Still awaiting bank action</div>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.5)] p-3">
-            <div className="text-[10px] uppercase tracking-wide text-gray-500">High risk</div>
-            <div className="mt-1 text-xl font-semibold text-white">{highRisk}</div>
-            <div className="text-[11px] text-gray-400">Compliance-sensitive closures</div>
-          </div>
-        </div>
-
         <ScrollArea className="h-[360px] pr-2">
           <div className="space-y-4 pb-2">
             {audits.map((audit) => (

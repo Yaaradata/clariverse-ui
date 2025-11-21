@@ -10,7 +10,6 @@ import {
   UnifiedIntelligenceWall,
   IntentOverlapPanel,
   PressureConstellationWall,
-  PrematureClosureAuditWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
@@ -877,9 +876,6 @@ export default function HomePage() {
           <UnifiedIntelligenceWall actionGrid={actionGrid} />
           <CrossChannelToneIntelligenceCard />
           <PrematureClosureRiskCard />
-          <div className="grid gap-6 lg:grid-cols-2">
-            <PrematureClosureAuditWall />
-          </div>
           <EmotionShockboard />
           <ResolutionIntegrityMonitor />
           <PatternRecognitionEngine />

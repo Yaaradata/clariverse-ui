@@ -484,7 +484,7 @@ export function CrossChannelToneIntelligenceCard() {
     
     setOriginChannelData(originDataMap);
   }, []);
-
+  
   // Get links to show - if channel selected, only show flows FROM that channel
   const linksToShow = selectedChannel
     ? sankeyLinks.filter((link) => link.source === selectedChannel)
