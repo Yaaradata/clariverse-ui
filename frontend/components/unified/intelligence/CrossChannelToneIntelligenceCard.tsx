@@ -1082,116 +1082,112 @@ export function CrossChannelToneIntelligenceCard() {
                   }
                 };
                 
-                // Calculate tooltip position - ensure it stays within SVG bounds
-                const tooltipWidth = 240;
-                const tooltipHeight = 200;
-                const padding = 10;
-                const svgWidth = 800; // Approximate SVG width
-                const svgHeight = 500; // Approximate SVG height
+                // Calculate tooltip position - position at top of node by default
+                const tooltipWidth = 260;
+                const tooltipHeight = 210; // Increased to ensure sentiment is fully visible
+                const padding = 20;
+                const nodeRadius = 30;
+                const svgWidth = 750; // SVG viewBox width
+                const svgHeight = 500; // SVG viewBox height
                 
-                // Default: position to the right of node
-                let tooltipX = hoveredNode.x + 60;
-                let tooltipY = hoveredNode.y - tooltipHeight / 2;
+                // Default: position above the node (centered horizontally)
+                let tooltipX = hoveredNode.x - tooltipWidth / 2;
+                let tooltipY = hoveredNode.y - tooltipHeight - nodeRadius - 20; // Above node with spacing
                 
-                // Adjust if tooltip goes beyond right edge
-                if (tooltipX + tooltipWidth > svgWidth - padding) {
-                  tooltipX = hoveredNode.x - tooltipWidth - 60; // Position to the left
-                }
-                
-                // Adjust if tooltip goes beyond top edge
-                if (tooltipY < padding) {
-                  tooltipY = padding;
-                }
-                
-                // Adjust if tooltip goes beyond bottom edge
-                if (tooltipY + tooltipHeight > svgHeight - padding) {
-                  tooltipY = svgHeight - tooltipHeight - padding;
-                }
-                
-                // Ensure tooltip doesn't go beyond left edge
+                // Adjust if tooltip goes beyond left edge
                 if (tooltipX < padding) {
                   tooltipX = padding;
                 }
                 
+                // Adjust if tooltip goes beyond right edge
+                if (tooltipX + tooltipWidth > svgWidth - padding) {
+                  tooltipX = svgWidth - tooltipWidth - padding;
+                }
+                
+                // If not enough space above, position below the node
+                if (tooltipY < padding) {
+                  tooltipY = hoveredNode.y + nodeRadius + 20; // Below node with spacing
+                }
+                
+                // Adjust if tooltip goes beyond bottom edge (when positioned below)
+                if (tooltipY + tooltipHeight > svgHeight - padding) {
+                  tooltipY = svgHeight - tooltipHeight - padding;
+                }
+                
                 const TooltipIcon = getChannelIcon(step.channel);
                 
-                // Determine tooltip side (left or right of node)
-                const tooltipOnRight = tooltipX > hoveredNode.x;
-                const nodeRadius = 30;
+                // Determine if tooltip is above or below node
+                const tooltipAbove = hoveredNode.y > tooltipY + tooltipHeight / 2;
                 
                 return (
                   <g style={{ pointerEvents: "none" }}>
                     {/* Connection line from node to tooltip */}
                     <line
-                      x1={hoveredNode.x + (tooltipOnRight ? nodeRadius : -nodeRadius)}
-                      y1={hoveredNode.y}
-                      x2={tooltipOnRight ? tooltipX : tooltipX + tooltipWidth}
-                      y2={tooltipY + tooltipHeight / 2}
-                      stroke="rgba(255, 255, 255, 0.3)"
+                      x1={hoveredNode.x}
+                      y1={hoveredNode.y + (tooltipAbove ? -nodeRadius : nodeRadius)}
+                      x2={hoveredNode.x}
+                      y2={tooltipAbove ? tooltipY + tooltipHeight : tooltipY}
+                      stroke="rgba(255, 255, 255, 0.4)"
                       strokeWidth="2"
                       strokeDasharray="4,4"
                     />
                     
-                    {/* Tooltip background with shadow */}
+                    {/* Tooltip background with solid shadow - ensures visibility */}
                     <rect
-                      x={tooltipX - 2}
-                      y={tooltipY - 2}
-                      width={tooltipWidth + 4}
-                      height={tooltipHeight + 4}
-                      rx="8"
-                      fill="rgba(0, 0, 0, 0.5)"
-                      opacity="1"
+                      x={tooltipX - 4}
+                      y={tooltipY - 4}
+                      width={tooltipWidth + 8}
+                      height={tooltipHeight + 8}
+                      rx="12"
+                      fill="rgb(0, 0, 0)"
+                      opacity="0.9"
                     />
                     <foreignObject
                       x={tooltipX}
                       y={tooltipY}
                       width={tooltipWidth}
                       height={tooltipHeight}
-                      style={{ pointerEvents: "none" }}
+                      style={{ pointerEvents: "none", zIndex: 1000 }}
                     >
-                      <div className="bg-[rgb(15,15,15)] border-2 border-white/40 rounded-lg p-4 shadow-2xl w-full h-full overflow-hidden">
-                        <div className="flex items-center gap-2 mb-3">
-                          <div className={`p-1.5 rounded ${getChannelColor(step.channel).bg} bg-opacity-20`}>
-                            <TooltipIcon className={`h-5 w-5 ${getChannelColor(step.channel).text}`} />
-                          </div>
-                          <h4 className="text-sm font-bold text-white capitalize">{step.channel}</h4>
-                        </div>
-                        
-                        <div className="space-y-2 text-xs">
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-400">{getMessageLabel(step.channel)}:</span>
-                            <span className="text-white font-semibold">{messageCount}</span>
+                      <div className="bg-[rgb(15,15,15)] border-2 border-white/50 rounded-lg p-3 shadow-2xl w-full h-full overflow-hidden flex flex-col">
+                        <div className="flex-1 min-h-0">
+                          {/* Message Count */}
+                          <div className="flex items-center justify-between py-1.5 px-2 bg-white/5 rounded mb-2">
+                            <span className="text-gray-300 text-[10px] font-medium">{getMessageLabel(step.channel)}:</span>
+                            <span className="text-white font-bold text-sm">{messageCount}</span>
                           </div>
                           
-                          <div className="pt-2 border-t border-white/10">
-                            <div className="text-gray-400 mb-1.5">Subtopics:</div>
-                            <div className="flex flex-wrap gap-1.5">
+                          {/* Subtopics */}
+                          <div className="mb-2">
+                            <div className="text-gray-300 text-[10px] font-semibold mb-1">Subtopics:</div>
+                            <div className="flex flex-wrap gap-1">
                               {step.subtopics.slice(0, 4).map((topic, idx) => (
                                 <span
                                   key={idx}
-                                  className="px-2 py-0.5 bg-blue-500/20 border border-blue-500/40 rounded text-[10px] text-blue-200"
+                                  className="px-2 py-0.5 bg-blue-500/25 border border-blue-500/50 rounded text-[9px] font-medium text-blue-100"
                                 >
                                   {topic}
                                 </span>
                               ))}
                             </div>
                           </div>
-                          
-                          <div className="pt-2 border-t border-white/10">
-                            <div className="flex items-center justify-between">
-                              <span className="text-gray-400">Sentiment:</span>
-                              <div className="flex items-center gap-2">
-                                <span className={`font-bold ${
-                                  step.sentimentScore <= 2 ? "text-green-400" :
-                                  step.sentimentScore === 3 ? "text-yellow-400" :
-                                  "text-red-400"
-                                }`}>
-                                  {step.sentimentScore}/5
-                                </span>
-                                <span className="text-gray-500">
-                                  {step.sentimentScore <= 2 ? "🟢" : step.sentimentScore === 3 ? "🟡" : "🔴"}
-                                </span>
-                              </div>
+                        </div>
+                        
+                        {/* Sentiment - Always visible at bottom with proper spacing */}
+                        <div className="pt-2 border-t border-white/20 flex-shrink-0">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-300 text-[10px] font-semibold">Sentiment:</span>
+                            <div className="flex items-center gap-1.5">
+                              <span className={`font-bold text-xs ${
+                                step.sentimentScore <= 2 ? "text-green-400" :
+                                step.sentimentScore === 3 ? "text-yellow-400" :
+                                "text-red-400"
+                              }`}>
+                                {step.sentimentScore}/5
+                              </span>
+                              <span className="text-sm">
+                                {step.sentimentScore <= 2 ? "🟢" : step.sentimentScore === 3 ? "🟡" : "🔴"}
+                              </span>
                             </div>
                           </div>
                         </div>
