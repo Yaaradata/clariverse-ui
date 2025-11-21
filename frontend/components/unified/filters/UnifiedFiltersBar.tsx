@@ -65,9 +65,10 @@ export function UnifiedFiltersBar({
               <SelectTrigger className="w-[160px] border border-[color:var(--border)] bg-[color:var(--card)] text-white text-sm h-[38px]">
                 <SelectValue placeholder="Select period" />
               </SelectTrigger>
-              <SelectContent className="border border-[color:var(--border)] bg-[color:var(--card)] text-white z-[9999] w-[160px]">
+              <SelectContent className="border border-[color:var(--border)] bg-[color:var(--card)] text-white z-[9999] w-[160px] min-w-[160px] max-w-[160px]">
                 <SelectItem value="All">All</SelectItem>
                 <SelectItem value="Current day">Current day</SelectItem>
+                <SelectItem value="Current Month">Current Month</SelectItem>
                 <SelectItem value="One Week">One Week</SelectItem>
                 <SelectItem value="One Month">One Month</SelectItem>
                 <SelectItem value="6 Months">6 Months</SelectItem>

@@ -22,7 +22,14 @@ export type SystemHealthMetric = {
   sentimentDelta: number;
   sentimentTrend: number[];
   urgencyPct: number;
+  urgencyTrend: number[];
+  urgencyStartPct: number;
+  urgencyEndPct: number;
   slaRisk: number;
+  slaRiskTrend: number[];
+  slaRiskStartPct: number;
+  slaRiskEndPct: number;
+  dateRange: { start: string; end: string };
   unresolved: number;
   unresolvedCompany: number;
   unresolvedCustomer: number;
@@ -94,42 +101,60 @@ export function SystemHealthRibbon({ data, explanations = {}, onChannelSelect }:
                       </div>
                     </div>
 
-                    <div className="h-12 w-full">
-                      {metric.sentimentTrend.length > 1 ? (
-                        <ResponsiveContainer width="100%" height="100%">
-                          <AreaChart
-                            data={metric.sentimentTrend.map((value, idx) => ({ idx, value }))}
-                            margin={{ top: 4, right: 0, left: 0, bottom: 0 }}
-                          >
-                            <defs>
-                              <linearGradient id={`spark-${metric.channel}`} x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor={SPARKLINE_COLORS[metric.channel].stroke} stopOpacity={0.6} />
-                                <stop offset="95%" stopColor={SPARKLINE_COLORS[metric.channel].fill} stopOpacity={0.05} />
-                              </linearGradient>
-                            </defs>
-                            <Area
-                              type="monotone"
-                              dataKey="value"
-                              stroke={SPARKLINE_COLORS[metric.channel].stroke}
-                              strokeWidth={2}
-                              fill={`url(#spark-${metric.channel})`}
-                              isAnimationActive={false}
-                            />
-                          </AreaChart>
-                        </ResponsiveContainer>
-                      ) : (
-                        <div className="h-full w-full rounded bg-[rgba(26,26,26,0.45)]" />
-                      )}
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-[9px] text-gray-500 px-1">
+                        <span>{new Date(metric.dateRange.start).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                        <span>{new Date(metric.dateRange.end).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                      </div>
+                      <div className="h-10 w-full">
+                        {metric.sentimentTrend.length > 1 ? (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart
+                              data={metric.sentimentTrend.map((value, idx) => ({ 
+                                idx, 
+                                value
+                              }))}
+                              margin={{ top: 2, right: 2, left: 2, bottom: 2 }}
+                            >
+                              <defs>
+                                <linearGradient id={`spark-${metric.channel}`} x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor={SPARKLINE_COLORS[metric.channel].stroke} stopOpacity={0.6} />
+                                  <stop offset="95%" stopColor={SPARKLINE_COLORS[metric.channel].fill} stopOpacity={0.1} />
+                                </linearGradient>
+                              </defs>
+                              <Area
+                                type="monotone"
+                                dataKey="value"
+                                stroke={SPARKLINE_COLORS[metric.channel].stroke}
+                                strokeWidth={2}
+                                fill={`url(#spark-${metric.channel})`}
+                                isAnimationActive={false}
+                                dot={false}
+                              />
+                            </AreaChart>
+                          </ResponsiveContainer>
+                        ) : (
+                          <div className="h-full w-full rounded bg-[rgba(26,26,26,0.45)]" />
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-400">Urgency</span>
-                      <span className="text-sm font-semibold text-orange-400">{metric.urgencyPct}%</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] text-gray-500">{metric.urgencyStartPct.toFixed(1)}%</span>
+                        <span className="text-xs text-gray-500">→</span>
+                        <span className="text-sm font-semibold text-orange-400">{metric.urgencyEndPct.toFixed(1)}%</span>
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <span className="text-xs text-gray-400">SLA Risk</span>
-                      <span className="text-sm font-semibold text-red-400">{metric.slaRisk}%</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] text-gray-500">{metric.slaRiskStartPct.toFixed(1)}%</span>
+                        <span className="text-xs text-gray-500">→</span>
+                        <span className="text-sm font-semibold text-red-400">{metric.slaRiskEndPct.toFixed(1)}%</span>
+                      </div>
                     </div>
 
                     <div className="flex items-center justify-between">

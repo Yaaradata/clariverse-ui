@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,8 +9,22 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  ReferenceLine,
+  AreaChart,
+  Area,
+  ComposedChart,
+  Line,
+  PieChart,
+  Pie,
   Cell,
+  Legend,
 } from "recharts";
+import { getEmotionShockboardData, type EmotionShockboardEntry } from "@/lib/unified/emotionShockboardData";
+import {
+  getEntityBubbleData,
+  type EntityBubbleData,
+  type EntityBubble,
+} from "@/lib/unified/patternRecognitionData";
 
 interface IntentIntelligenceSectionProps {
   clusters: unknown[];
@@ -19,20 +33,14 @@ interface IntentIntelligenceSectionProps {
   onIntentSelect: (intentId: string | null) => void;
 }
 
-type ShockBar = {
-  channel: string;
-  label: string;
-  sentimentDelta: number;
-  shockScore: number;
-  urgencyMultiplier: number;
-  dominantIntent: string;
-};
+type ShockBar = EmotionShockboardEntry;
 
 type ShockEvent = {
   id: string;
   tone: "critical" | "warning" | "positive";
   channel: string;
   spike: number;
+  shiftType: string;
   intent: string;
   cause: string;
   suggestion: string;
@@ -49,6 +57,65 @@ type ResolutionIssue = {
   tone: ResolutionIssueTone;
 };
 
+const tooltipStyles = {
+  backgroundColor: "#0f172a",
+  borderRadius: "12px",
+  border: "1px solid #334155",
+  maxWidth: "280px",
+};
+
+const EmotionTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null;
+  const entry = payload[0]?.payload as EmotionShockboardEntry & {
+    positiveValue: number;
+    negativeValue: number;
+  };
+  if (!entry) return null;
+
+  const renderList = (title: string, topics: string[], colorClass: string) => (
+    <div>
+      <p className={`text-[11px] font-semibold uppercase tracking-wide ${colorClass}`}>{title}</p>
+      {topics.length === 0 ? (
+        <p className="text-[11px] text-gray-400">No standout clusters</p>
+      ) : (
+        <ul className="list-disc list-inside text-[11px] text-gray-100 space-y-0.5">
+          {topics.map((topic) => (
+            <li key={`${title}-${topic}`}>{topic}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="p-3 text-xs text-gray-200 space-y-2" style={tooltipStyles}>
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-semibold text-white">{entry.label}</p>
+        <div className="text-[11px] text-gray-400">
+          Total:{" "}
+          <span className="text-white font-semibold">
+            {(entry.positive + entry.negative).toLocaleString()} threads
+          </span>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <p className="text-[11px] font-semibold text-emerald-300">Positive</p>
+          <p className="text-sm font-semibold text-white">{entry.positive.toLocaleString()}</p>
+        </div>
+        <div>
+          <p className="text-[11px] font-semibold text-rose-300">Negative</p>
+          <p className="text-sm font-semibold text-white">{entry.negative.toLocaleString()}</p>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        {renderList("Top positive clusters", entry.topPositive, "text-emerald-300")}
+        {renderList("Top negative clusters", entry.topNegative, "text-rose-300")}
+      </div>
+    </div>
+  );
+};
+
 export function EmotionShockboard({
   bars = emotionShockBars,
   events = emotionShockEvents,
@@ -60,17 +127,23 @@ export function EmotionShockboard({
     () =>
       bars.map((entry) => ({
         ...entry,
-        color: entry.sentimentDelta >= 0 ? "rgba(244,63,94,0.85)" : "rgba(34,197,94,0.85)",
+        positiveValue: entry.positive,
+        negativeValue: entry.negative * -1,
       })),
     [bars],
   );
+
+  const maxMagnitude = Math.max(
+    10,
+    ...chartData.map((entry) => Math.max(entry.positiveValue, entry.negativeValue * -1))
+  );
+  const domain = [-Math.ceil(maxMagnitude * 1.2), Math.ceil(maxMagnitude * 1.2)];
 
   return (
     <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="text-xl font-semibold text-white">⚡ Cross-Channel Emotion Shockboard</h2>
-          <p className="text-sm text-gray-300">Detects sudden sentiment & emotion spikes within the last 48 hours.</p>
         </div>
         <Badge className="border-rose-400/40 bg-rose-500/10 text-rose-100">Emotion Alerts</Badge>
       </div>
@@ -83,80 +156,87 @@ export function EmotionShockboard({
           </div>
           <div className="mt-2 h-90">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" />
+              <BarChart
+                data={chartData}
+                margin={{ top: 12, right: 16, left: 16, bottom: 32 }}
+                barCategoryGap={24}
+              >
+                <defs>
+                  <linearGradient id="emotionPositiveGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#34d399" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#0f766e" stopOpacity={0.9} />
+                  </linearGradient>
+                  <linearGradient id="emotionNegativeGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f87171" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#9f1239" stopOpacity={0.9} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
                 <XAxis
                   dataKey="label"
-                  tick={{ fill: "#d1d5db", fontSize: 12 }}
-                  axisLine={{ stroke: "rgba(148,163,184,0.25)" }}
+                  tick={{ fill: "#cbd5f5", fontSize: 12 }}
+                  axisLine={false}
                   tickLine={false}
                 />
                 <YAxis
-                  domain={[0, 100]}
-                  ticks={[0, 25, 50, 75, 100]}
-                  tickFormatter={(value) => `${value}`}
-                  tick={{ fill: "#d1d5db", fontSize: 12 }}
-                  axisLine={{ stroke: "rgba(148,163,184,0.25)" }}
+                  tick={{ fill: "#94a3b8", fontSize: 11 }}
+                  axisLine={false}
                   tickLine={false}
-                  padding={{ top: 0, bottom: 0 }}
+                  tickFormatter={(value) => `${Math.abs(Number(value)).toLocaleString()}`}
+                  domain={domain as [number, number]}
                 />
-                <Tooltip
-                  cursor={{ fill: "rgba(148,163,184,0.08)" }}
-                  contentStyle={{
-                    backgroundColor: "rgba(15,23,42,0.95)",
-                    borderRadius: "12px",
-                    border: "1px solid rgba(148,163,184,0.3)",
-                    color: "#e5e7eb",
-                    fontSize: "12px",
-                    padding: "10px 12px",
-                  }}
-                  itemStyle={{ color: "#f9fafb" }}
-                  formatter={(value, _name, props) => {
-                    const datum = props.payload as ShockBar;
-                    return [
-                      `Shock Score: ${value}`,
-                      `Sentiment spike: ${datum.sentimentDelta > 0 ? "+" : ""}${datum.sentimentDelta.toFixed(1)}`,
-                      `Intent: ${datum.dominantIntent}`,
-                    ];
-                  }}
+                <ReferenceLine y={0} stroke="#475569" />
+                <Tooltip content={<EmotionTooltip />} cursor={{ fill: "#1e293b55" }} />
+                <Bar
+                  dataKey="positiveValue"
+                  name="Positive volume"
+                  radius={[6, 6, 0, 0]}
+                  fill="url(#emotionPositiveGradient)"
+                  isAnimationActive={false}
                 />
-                <Bar dataKey="shockScore" radius={[10, 10, 4, 4]}>
-                  {chartData.map((entry) => (
-                    <Cell key={entry.channel} fill={entry.color} />
-                  ))}
-                </Bar>
+                <Bar
+                  dataKey="negativeValue"
+                  name="Negative volume"
+                  radius={[0, 0, 6, 6]}
+                  fill="url(#emotionNegativeGradient)"
+                  isAnimationActive={false}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
         <div className="flex flex-col gap-3">
-          {events.map((event, index) => (
-            <div
-              key={event.id}
-              className="rounded-2xl border border-white/10 bg-[rgba(26,26,26,0.55)] px-4 py-4 text-sm text-gray-200 shadow-inner transition hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]"
-            >
-              <div className="flex items-center justify-between text-xs uppercase tracking-wide">
-                <span className="font-semibold text-gray-300">
-                  {event.tone === "critical" ? "🔴 Shock" : event.tone === "warning" ? "🟠 Surge" : "🟢 Cooling"}
-                </span>
-                <span className="rounded-full border border-[color:var(--border)] bg-[rgba(26,26,26,0.55)] px-2 py-0.5 text-[10px] text-gray-300">
-                  #{index + 1}
-                </span>
+          <div className="text-xs font-semibold text-gray-400 mb-1 uppercase tracking-wide">
+            Channel-Specific Emotion Alerts
+          </div>
+          {events.map((event, index) => {
+            const alertLabel = event.tone === "critical" ? "SHOCK" : event.tone === "warning" ? "SURGE" : "COOLING";
+            const alertIcon = event.tone === "critical" ? "🔴" : event.tone === "warning" ? "🟠" : "🟢";
+            return (
+              <div
+                key={event.id}
+                className="rounded-2xl border border-white/10 bg-[rgba(26,26,26,0.55)] px-4 py-4 text-sm text-gray-200 shadow-inner transition hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]"
+              >
+                <div className="flex items-center justify-between text-xs uppercase tracking-wide mb-2">
+                  <span className="font-semibold text-gray-300">
+                    {alertIcon} {alertLabel} #{index + 1}
+                  </span>
+                </div>
+                <div className="space-y-1.5">
+                  <p className="text-sm font-semibold text-white">
+                    {event.channel} → {event.spike > 0 ? "+" : ""}
+                    {event.spike.toFixed(1)} shift <span className="text-gray-400 font-normal">({event.shiftType})</span>
+                  </p>
+                  <p className="text-xs text-gray-300">
+                    Triggered Intent: <span className="font-semibold text-indigo-200">{event.intent}</span>
+                  </p>
+                  <p className="text-xs text-gray-400">{event.cause}</p>
+                  <p className="text-xs text-purple-300">⚡ {event.suggestion}</p>
+                </div>
               </div>
-              <div className="mt-2 space-y-1">
-                <p className="text-sm font-semibold text-white">
-                  {event.channel} → {event.spike > 0 ? "+" : ""}
-                  {event.spike.toFixed(1)} shift
-                </p>
-                <p className="text-xs text-gray-300">
-                  Triggered Intent: <span className="font-semibold text-indigo-200">{event.intent}</span>
-                </p>
-                <p className="text-xs text-gray-400">{event.cause}</p>
-                <p className="text-xs text-purple-300">✨ {event.suggestion}</p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </Card>
@@ -231,6 +311,184 @@ export function ResolutionIntegrityMonitor({
   );
 }
 
+export function PatternRecognitionEngine() {
+  const data = useMemo(() => getEntityBubbleData(), []);
+
+  const channelIcons = {
+    email: "📧",
+    voice: "🎧",
+    chat: "💬",
+    social: "🌐",
+    ticket: "🎟",
+  };
+
+  const getSeverityColor = (severity: number) => {
+    // Severity 0-10, map to color gradient: green → yellow → orange → red
+    if (severity >= 8) return "#ef4444"; // Red - critical
+    if (severity >= 6) return "#f97316"; // Orange - high
+    if (severity >= 4) return "#eab308"; // Yellow - medium
+    return "#22c55e"; // Green - low
+  };
+
+  const getBubbleSize = (frequency: number) => {
+    // Frequency determines bubble radius (min 40, max 100)
+    const minFreq = Math.min(...data.entities.map((e) => e.frequency));
+    const maxFreq = Math.max(...data.entities.map((e) => e.frequency));
+    const normalized = (frequency - minFreq) / (maxFreq - minFreq);
+    return 40 + normalized * 60;
+  };
+
+  const getSeverityLabel = (entity: EntityBubble) => {
+    if (entity.severity >= 8) return "Critical Severity";
+    if (entity.severity >= 6) return "High Severity";
+    if (entity.severity >= 4) return "Medium Severity";
+    return "Low Severity";
+  };
+
+  const svgWidth = 800;
+  const svgHeight = 600;
+
+  return (
+    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-8 shadow-lg shadow-purple-500/10 rounded-xl">
+      {/* Title Section */}
+      <div className="mb-6">
+        <h2 className="text-3xl font-bold text-white mb-2">Entity Bubble Cluster</h2>
+        <p className="text-base text-gray-300">Real-Time Painpoints Across Channels (Email • Voice • Chat • Social • Ticket)</p>
+      </div>
+
+      {/* Bubble Cluster Visualization */}
+      <div className="mb-6 rounded-lg border border-white/10 bg-[rgba(26,26,26,0.4)] p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">Bubble Cluster Visualization</h3>
+        <div className="relative">
+          <svg width={svgWidth} height={svgHeight} className="w-full h-auto">
+            <defs>
+              <filter id="bubbleGlow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="bubblePulse">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+                <animate attributeName="opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+              </filter>
+            </defs>
+
+            {/* Bubbles */}
+            {data.entities.map((entity) => {
+              if (!entity.x || !entity.y) return null;
+
+              const bubbleSize = getBubbleSize(entity.frequency);
+              const bubbleColor = getSeverityColor(entity.severity);
+              const filterId = entity.trend === "rising" ? "bubblePulse" : "bubbleGlow";
+              const hasPulse = entity.trend === "rising";
+
+              // Channel icons positions (around the bubble edge)
+              const channelPositions = [
+                { key: "email", angle: 0 },
+                { key: "voice", angle: (Math.PI * 2) / 5 },
+                { key: "chat", angle: ((Math.PI * 2) / 5) * 2 },
+                { key: "social", angle: ((Math.PI * 2) / 5) * 3 },
+                { key: "ticket", angle: ((Math.PI * 2) / 5) * 4 },
+              ];
+
+              return (
+                <g key={entity.id}>
+                  {/* Bubble circle */}
+                  <circle
+                    cx={entity.x}
+                    cy={entity.y}
+                    r={bubbleSize}
+                    fill={bubbleColor}
+                    fillOpacity={0.6}
+                    stroke={bubbleColor}
+                    strokeWidth={2}
+                    filter={`url(#${filterId})`}
+                  />
+
+                  {/* Entity name */}
+                  <text
+                    x={entity.x}
+                    y={entity.y - 8}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="#ffffff"
+                    fontSize="16"
+                    fontWeight="bold"
+                    className="pointer-events-none"
+                  >
+                    {entity.name}
+                  </text>
+
+                  {/* AI summary subtext */}
+                  <text
+                    x={entity.x}
+                    y={entity.y + 12}
+                    textAnchor="middle"
+                    dominantBaseline="middle"
+                    fill="#ffffff"
+                    fontSize="11"
+                    fontWeight="semibold"
+                    className="pointer-events-none"
+                  >
+                    {entity.trend === "rising" && entity.trendPercentage
+                      ? `↑ ${entity.trendPercentage}%`
+                      : getSeverityLabel(entity)}
+                  </text>
+
+                  {/* Channel icon badges */}
+                  {channelPositions.map((pos) => {
+                    if (!entity.channels[pos.key as keyof typeof entity.channels]) return null;
+
+                    const iconDistance = bubbleSize - 8;
+                    const iconX = entity.x + Math.cos(pos.angle) * iconDistance;
+                    const iconY = entity.y + Math.sin(pos.angle) * iconDistance;
+
+                    return (
+                      <text
+                        key={pos.key}
+                        x={iconX}
+                        y={iconY}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize="12"
+                        filter="url(#bubbleGlow)"
+                        className="pointer-events-none"
+                      >
+                        {channelIcons[pos.key as keyof typeof channelIcons]}
+                      </text>
+                    );
+                  })}
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </div>
+
+      {/* AI Insight Block */}
+      <div className="rounded-lg border border-white/10 bg-[rgba(26,26,26,0.4)] p-6">
+        <h3 className="text-lg font-semibold text-white mb-4">🧠 AI Insight</h3>
+        <div className="space-y-3">
+          <div>
+            <h4 className="text-sm font-bold text-white mb-2">AI Insight:</h4>
+            <p className="text-sm text-gray-300 leading-relaxed">{data.aiInsight}</p>
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-white mb-2">AI Recommended Action:</h4>
+            <p className="text-sm text-gray-300 leading-relaxed">{data.aiRecommendedAction}</p>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}
+
 export function IntentIntelligenceSection({
   clusters: _clusters,
   severityMatrix: _severityMatrix,
@@ -241,80 +499,43 @@ export function IntentIntelligenceSection({
     <div className="space-y-6">
       <EmotionShockboard />
       <ResolutionIntegrityMonitor />
+      <PatternRecognitionEngine />
     </div>
   );
 }
 
-const emotionShockBars: ShockBar[] = [
-  {
-    channel: "voice",
-    label: "Voice",
-    sentimentDelta: 2.1,
-    shockScore: 82,
-    urgencyMultiplier: 0.9,
-    dominantIntent: "Mortgage Rate Lock",
-  },
-  {
-    channel: "social",
-    label: "Social",
-    sentimentDelta: 2.6,
-    shockScore: 91,
-    urgencyMultiplier: 0.94,
-    dominantIntent: "Credit Card Dispute",
-  },
-  {
-    channel: "chat",
-    label: "Chat",
-    sentimentDelta: -1.8,
-    shockScore: 48,
-    urgencyMultiplier: 0.72,
-    dominantIntent: "Account Access Reset",
-  },
-  {
-    channel: "email",
-    label: "Email",
-    sentimentDelta: 1.2,
-    shockScore: 55,
-    urgencyMultiplier: 0.64,
-    dominantIntent: "Billing Clarification",
-  },
-  {
-    channel: "ticket",
-    label: "Ticket",
-    sentimentDelta: 0.8,
-    shockScore: 37,
-    urgencyMultiplier: 0.58,
-    dominantIntent: "Loyalty Rewards",
-  },
-];
+const emotionShockBars: ShockBar[] = getEmotionShockboardData();
 
 const emotionShockEvents: ShockEvent[] = [
   {
-    id: "shock-critical-social",
+    id: "shock-critical-email",
     tone: "critical",
-    channel: "Social",
-    spike: 2.6,
-    intent: "Credit Card Dispute",
-    cause: "Multiple public complaints referencing delayed chargebacks within 30 minutes.",
-    suggestion: "Launch proactive clarification thread and inbox follow-up acknowledging delays.",
+    channel: "Email",
+    spike: 4.2,
+    shiftType: "Negative surge",
+    intent: "Billing Inquiry Spike",
+    cause: "150+ threads with frustration about invoice clarity in past 2 hours",
+    suggestion: "Deploy clarification email template to waiting queue",
   },
   {
     id: "shock-warning-voice",
     tone: "warning",
     channel: "Voice",
-    spike: 1.9,
-    intent: "Mortgage Rate Lock",
-    cause: "Underwriting delays surfaced but agents lacked updated SLA guidance.",
-    suggestion: "Push real-time underwriting ETA alert to voice routing & agent assist.",
+    spike: 2.8,
+    shiftType: "Positive spike",
+    intent: "Resolution Appreciation",
+    cause: "Agent performance on complex issues exceeded targets by 40%",
+    suggestion: "Capture call recordings for training library",
   },
   {
     id: "shock-positive-chat",
     tone: "positive",
     channel: "Chat",
     spike: -1.8,
-    intent: "Account Access Reset",
-    cause: "Automated reset flow reduced backlog and anger sentiment in the last hour.",
-    suggestion: "Extend self-service reset workflow to email & ticket surfaces automatically.",
+    shiftType: "Sentiment stabilizing",
+    intent: "Self-Service Deflection Success",
+    cause: "Knowledge base articles reduced frustrated escalations by 35%",
+    suggestion: "Monitor for sustained improvement over next 4 hours",
   },
 ];
 

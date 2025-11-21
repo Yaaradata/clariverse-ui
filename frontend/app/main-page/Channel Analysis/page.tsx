@@ -7,14 +7,16 @@ import {
   PrematureClosureAuditWall,
   UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
-import { EmotionShockboard, ResolutionIntegrityMonitor } from "@/components/unified/intents/IntentIntelligenceSection";
+import { EmotionShockboard, ResolutionIntegrityMonitor, PatternRecognitionEngine } from "@/components/unified/intents/IntentIntelligenceSection";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { fetchTrendData, type TrendPointResponse } from "@/lib/unified/adapters";
 import { fetchSystemHealth, type SystemHealthResponse } from "@/lib/unified/adapters";
 import { fetchCrossChannelActionGrid, type CrossChannelActionGridResponse } from "@/lib/unified/adapters";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 
 export default function ChannelAnalysisPage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [systemHealth, setSystemHealth] = useState<SystemHealthMetric[]>([]);
   const [metricExplanations, setMetricExplanations] = useState<Record<string, string>>({});
   const [trendData, setTrendData] = useState<TrendPointResponse[]>([]);
@@ -40,7 +42,14 @@ export default function ChannelAnalysisPage() {
         sentimentDelta: item.sentimentDelta,
         sentimentTrend: item.sentimentTrend,
         urgencyPct: item.urgencyPct,
+        urgencyTrend: item.urgencyTrend,
+        urgencyStartPct: item.urgencyStartPct,
+        urgencyEndPct: item.urgencyEndPct,
         slaRisk: item.slaRisk,
+        slaRiskTrend: item.slaRiskTrend,
+        slaRiskStartPct: item.slaRiskStartPct,
+        slaRiskEndPct: item.slaRiskEndPct,
+        dateRange: item.dateRange,
         unresolved: item.unresolved,
         unresolvedCompany: item.unresolvedCompany,
         unresolvedCustomer: item.unresolvedCustomer,
@@ -60,6 +69,7 @@ export default function ChannelAnalysisPage() {
       setMetricExplanations(explanationMap);
       setTrendData(trend);
       setActionGrid(actionGridData);
+      setIsLoading(false);
     }
     load();
     return () => {
@@ -67,8 +77,16 @@ export default function ChannelAnalysisPage() {
     };
   }, []);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-gray-400">Loading channel analysis data...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6 p-6 min-h-screen">
       {systemHealth.length > 0 && (
         <SystemHealthRibbon data={systemHealth} explanations={metricExplanations} />
       )}
@@ -87,6 +105,8 @@ export default function ChannelAnalysisPage() {
         <CrossChannelTrendChart data={trendData} />
       )}
 
+      <CrossChannelToneIntelligenceCard />
+
       <UnifiedIntelligenceWall actionGrid={actionGrid} />
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -95,6 +115,7 @@ export default function ChannelAnalysisPage() {
       </div>
       <EmotionShockboard />
       <ResolutionIntegrityMonitor />
+      <PatternRecognitionEngine />
     </div>
   );
 }

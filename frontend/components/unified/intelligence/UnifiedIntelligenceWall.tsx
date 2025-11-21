@@ -956,7 +956,7 @@ const prematureClosureAuditData: PrematureClosureAuditEntry[] = [
   },
 ];
 
-const toneDriftData: ToneDriftEntry[] = [
+export const toneDriftData: ToneDriftEntry[] = [
   {
     intent: "Mortgage Rate Lock",
     correlationLevel: "Cross-channel sequence drift",

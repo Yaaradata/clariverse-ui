@@ -10,7 +10,14 @@ export type SystemHealthResponse = {
   sentimentDelta: number;
   sentimentTrend: number[];
   urgencyPct: number;
+  urgencyTrend: number[];
+  urgencyStartPct: number;
+  urgencyEndPct: number;
   slaRisk: number;
+  slaRiskTrend: number[];
+  slaRiskStartPct: number;
+  slaRiskEndPct: number;
+  dateRange: { start: string; end: string };
   unresolved: number;
   unresolvedCompany: number;
   unresolvedCustomer: number;
@@ -298,6 +305,51 @@ export interface ChannelDistributionResponse {
   value: number;
 }
 
+export interface ToneIntelligenceData {
+  toneDriftScore: number;
+  toneDriftTrend: "up" | "down" | "stable";
+  toneDriftBenchmark: number;
+  stabilityIndex: number;
+  stabilityTrend: "up" | "down" | "stable";
+  stabilityBenchmark: number;
+  dateRange: { start: string; end: string };
+  channelPath: string[];
+  channelSentiments: Array<{ channel: string; sentiment: number }>;
+  channelVolumes: Array<{ channel: string; volume: number }>;
+  toneJumps: Array<{ from: string; to: string; jump: number; timeToEscalate: number }>;
+  aiObservations: string;
+  driftContributors: Array<{
+    channel: string;
+    contribution: number;
+    isPositive: boolean;
+    samplePhrases: string[];
+  }>;
+  hotspots: Array<{
+    from: string;
+    to: string;
+    severity: "critical" | "warning" | "watch";
+    volume: number;
+    toneDelta: number;
+  }>;
+  volatilityScore: number;
+  volatilityByChannel: Array<{ channel: string; volatility: number }>;
+  volatilityTrend: number[];
+  predictionRiskLevels: {
+    highRisk: { count: number; percentage: number; threshold: string };
+    mediumRisk: { count: number; percentage: number; threshold: string };
+    lowRisk: { count: number; percentage: number; threshold: string };
+    stable: { count: number; percentage: number; threshold: string };
+  };
+  riskTrending: Array<{ level: "high" | "medium" | "low" | "stable"; change: number; direction: "up" | "down"; timeframe: string }>;
+  nextForecast: {
+    conversations: { min: number; max: number };
+    aiConfidence: number;
+  };
+  agentSwitchImpact: number;
+  delayCorrelations: Array<{ delay: string; drift: number }>;
+  recommendations: string[];
+}
+
 export interface ConversationRecordResponse {
   id: string;
   participant: string;
@@ -317,7 +369,29 @@ function generateSentimentTrend(base: number, delta: number): number[] {
   });
 }
 
+function generatePercentageTrend(startPct: number, endPct: number): number[] {
+  const points = 12;
+  return Array.from({ length: points }, (_, index) => {
+    const progress = index / (points - 1);
+    const wave = Math.sin(index / 2) * 2;
+    const noise = (Math.random() - 0.5) * 1.5;
+    const value = startPct + (endPct - startPct) * progress + wave + noise;
+    return Number(Math.max(0, Math.min(100, value)).toFixed(1));
+  });
+}
+
+function getCurrentMonthRange(): { start: string; end: string } {
+  const today = new Date();
+  const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+  return {
+    start: firstDay.toISOString().split("T")[0],
+    end: today.toISOString().split("T")[0],
+  };
+}
+
 export async function fetchSystemHealth(): Promise<SystemHealthResponse[]> {
+  const dateRange = getCurrentMonthRange();
+  
   return Promise.resolve([
     {
       channel: "email",
@@ -329,7 +403,14 @@ export async function fetchSystemHealth(): Promise<SystemHealthResponse[]> {
       sentimentDelta: -0.2,
       sentimentTrend: generateSentimentTrend(3.4, -0.2),
       urgencyPct: 24.6,
+      urgencyStartPct: 22.1,
+      urgencyEndPct: 24.6,
+      urgencyTrend: generatePercentageTrend(22.1, 24.6),
       slaRisk: 8.7,
+      slaRiskStartPct: 7.2,
+      slaRiskEndPct: 8.7,
+      slaRiskTrend: generatePercentageTrend(7.2, 8.7),
+      dateRange,
       unresolved: 178,
       unresolvedCompany: 110,
       unresolvedCustomer: 68,
@@ -347,7 +428,14 @@ export async function fetchSystemHealth(): Promise<SystemHealthResponse[]> {
       sentimentDelta: 0.1,
       sentimentTrend: generateSentimentTrend(3.9, 0.1),
       urgencyPct: 18.4,
+      urgencyStartPct: 20.2,
+      urgencyEndPct: 18.4,
+      urgencyTrend: generatePercentageTrend(20.2, 18.4),
       slaRisk: 3.1,
+      slaRiskStartPct: 4.5,
+      slaRiskEndPct: 3.1,
+      slaRiskTrend: generatePercentageTrend(4.5, 3.1),
+      dateRange,
       unresolved: 89,
       unresolvedCompany: 36,
       unresolvedCustomer: 53,
@@ -365,7 +453,14 @@ export async function fetchSystemHealth(): Promise<SystemHealthResponse[]> {
       sentimentDelta: -0.05,
       sentimentTrend: generateSentimentTrend(3.5, -0.05),
       urgencyPct: 32.1,
+      urgencyStartPct: 28.9,
+      urgencyEndPct: 32.1,
+      urgencyTrend: generatePercentageTrend(28.9, 32.1),
       slaRisk: 12.3,
+      slaRiskStartPct: 10.8,
+      slaRiskEndPct: 12.3,
+      slaRiskTrend: generatePercentageTrend(10.8, 12.3),
+      dateRange,
       unresolved: 134,
       unresolvedCompany: 78,
       unresolvedCustomer: 56,
@@ -383,7 +478,14 @@ export async function fetchSystemHealth(): Promise<SystemHealthResponse[]> {
       sentimentDelta: -0.1,
       sentimentTrend: generateSentimentTrend(3.2, -0.1),
       urgencyPct: 41.7,
+      urgencyStartPct: 38.5,
+      urgencyEndPct: 41.7,
+      urgencyTrend: generatePercentageTrend(38.5, 41.7),
       slaRisk: 15.2,
+      slaRiskStartPct: 13.1,
+      slaRiskEndPct: 15.2,
+      slaRiskTrend: generatePercentageTrend(13.1, 15.2),
+      dateRange,
       unresolved: 167,
       unresolvedCompany: 78,
       unresolvedCustomer: 89,
@@ -401,7 +503,14 @@ export async function fetchSystemHealth(): Promise<SystemHealthResponse[]> {
       sentimentDelta: 0.05,
       sentimentTrend: generateSentimentTrend(4.1, 0.05),
       urgencyPct: 12.9,
+      urgencyStartPct: 14.3,
+      urgencyEndPct: 12.9,
+      urgencyTrend: generatePercentageTrend(14.3, 12.9),
       slaRisk: 4.2,
+      slaRiskStartPct: 5.1,
+      slaRiskEndPct: 4.2,
+      slaRiskTrend: generatePercentageTrend(5.1, 4.2),
+      dateRange,
       unresolved: 23,
       unresolvedCompany: 8,
       unresolvedCustomer: 15,
@@ -1197,4 +1306,113 @@ export async function fetchChannelFlow(): Promise<ChannelFlowLinkResponse[]> {
     { from: "social", to: "chat", value: 26 },
     { from: "voice", to: "escalation", value: 14 },
   ]);
+}
+
+export async function fetchCrossChannelToneIntelligence(): Promise<ToneIntelligenceData> {
+  const today = new Date();
+  const startDate = new Date(today);
+  startDate.setDate(today.getDate() - 30);
+
+  return Promise.resolve({
+    toneDriftScore: 2.8,
+    toneDriftTrend: "up",
+    toneDriftBenchmark: 2.1,
+    stabilityIndex: 0.72,
+    stabilityTrend: "down",
+    stabilityBenchmark: 0.78,
+    dateRange: {
+      start: startDate.toISOString().split("T")[0],
+      end: today.toISOString().split("T")[0],
+    },
+    channelPath: ["Email", "Chat", "Voice", "Ticket"],
+    channelSentiments: [
+      { channel: "Email", sentiment: 2.1 },
+      { channel: "Chat", sentiment: 2.6 },
+      { channel: "Voice", sentiment: 3.9 },
+      { channel: "Ticket", sentiment: 4.2 },
+    ],
+    channelVolumes: [
+      { channel: "Email", volume: 1247 },
+      { channel: "Chat", volume: 892 },
+      { channel: "Voice", volume: 456 },
+      { channel: "Ticket", volume: 234 },
+    ],
+    toneJumps: [
+      { from: "Chat", to: "Voice", jump: 1.3, timeToEscalate: 2.4 },
+      { from: "Email", to: "Chat", jump: 0.5, timeToEscalate: 4.2 },
+      { from: "Voice", to: "Ticket", jump: 0.3, timeToEscalate: 1.8 },
+    ],
+    aiObservations:
+      "Tone escalates sharply when customers transition from async → sync channels. Most volatility occurs during Chat → Voice handoff. Escalation likelihood is high after 3+ channel hops.",
+    driftContributors: [
+      {
+        channel: "Voice",
+        contribution: 35,
+        isPositive: false,
+        samplePhrases: ["frustrated", "unacceptable", "terrible service"],
+      },
+      {
+        channel: "Chat",
+        contribution: 28,
+        isPositive: false,
+        samplePhrases: ["waiting too long", "not helpful", "disappointed"],
+      },
+      {
+        channel: "Email",
+        contribution: 18,
+        isPositive: false,
+        samplePhrases: ["delayed response", "confusing", "need clarification"],
+      },
+      {
+        channel: "Ticket",
+        contribution: 7,
+        isPositive: false,
+        samplePhrases: ["escalation needed", "urgent", "critical issue"],
+      },
+      {
+        channel: "Social",
+        contribution: 12,
+        isPositive: false,
+        samplePhrases: ["public complaint", "poor experience", "dissatisfied"],
+      },
+    ],
+    hotspots: [
+      { from: "Chat", to: "Voice", severity: "critical", volume: 342, toneDelta: 1.3 },
+      { from: "Social", to: "Chat", severity: "warning", volume: 189, toneDelta: 0.8 },
+      { from: "Voice", to: "Tickets", severity: "watch", volume: 124, toneDelta: 0.3 },
+    ],
+    volatilityScore: 0.68,
+    volatilityByChannel: [
+      { channel: "Voice", volatility: 0.82 },
+      { channel: "Chat", volatility: 0.71 },
+      { channel: "Social", volatility: 0.65 },
+      { channel: "Email", volatility: 0.58 },
+      { channel: "Tickets", volatility: 0.52 },
+    ],
+    volatilityTrend: [0.62, 0.65, 0.68, 0.66, 0.68, 0.70, 0.68],
+    predictionRiskLevels: {
+      highRisk: { count: 23, percentage: 7, threshold: ">70% escalation" },
+      mediumRisk: { count: 47, percentage: 15, threshold: "40-70% escalation" },
+      lowRisk: { count: 89, percentage: 28, threshold: "10-40% escalation" },
+      stable: { count: 156, percentage: 50, threshold: "<10% escalation" },
+    },
+    riskTrending: [
+      { level: "high", change: 5, direction: "up", timeframe: "last 30min" },
+      { level: "medium", change: 3, direction: "down", timeframe: "last 30min" },
+    ],
+    nextForecast: {
+      conversations: { min: 15, max: 18 },
+      aiConfidence: 84,
+    },
+    agentSwitchImpact: 1.2,
+    delayCorrelations: [
+      { delay: ">2h delay", drift: 0.8 },
+      { delay: ">12h delay", drift: 1.6 },
+    ],
+    recommendations: [
+      "Improve call-handoff intelligence and unify escalation scripts across synchronous channels to reduce tone volatility.",
+      "Implement proactive tone monitoring alerts when customers transition between async and sync channels.",
+      "Standardize response templates to maintain consistent tone across all channel handoffs.",
+    ],
+  });
 }

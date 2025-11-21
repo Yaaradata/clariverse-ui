@@ -1022,42 +1022,44 @@ export async function getPredictiveMetrics(): Promise<PredictiveMetrics> {
 
 // Generate priority resolution data for a specific quadrant
 export function generatePriorityResolutionDataForQuadrant(threads: EisenhowerThread[], quadrant: string): PriorityResolutionData[] {
-  // Define allowed priorities for each quadrant
-  const quadrantPriorities: Record<string, string[]> = {
-    do: ['P1', 'P2'],
-    schedule: ['P2', 'P3'],
-    delegate: ['P3', 'P4'],
-    delete: ['P4', 'P5']
-  };
+  // Filter threads by quadrant only (don't filter by priority - show all priorities in the quadrant)
+  const quadrantThreads = threads.filter(thread => thread.quadrant === quadrant);
 
-  // Get allowed priorities for this quadrant
-  const allowedPriorities = quadrantPriorities[quadrant] || [];
-
-  // Filter threads by quadrant and allowed priorities
-  const quadrantThreads = threads.filter(thread => 
-    thread.quadrant === quadrant && allowedPriorities.includes(thread.priority)
-  );
-
-  // Group by priority and count statuses (only for allowed priorities)
-  const priorityCounts: Record<string, { openCustomer: number; openCompany: number; closed: number }> = {};
+  // Group by priority and count statuses for ALL threads in this quadrant
+  const priorityCounts: Record<string, { openCustomer: number; openCompany: number; closed: number; inProgress: number }> = {};
 
   quadrantThreads.forEach(thread => {
     const priority = thread.priority;
     if (!priorityCounts[priority]) {
-      priorityCounts[priority] = { openCustomer: 0, openCompany: 0, closed: 0 };
+      priorityCounts[priority] = { openCustomer: 0, openCompany: 0, closed: 0, inProgress: 0 };
     }
 
+    // Map all resolution statuses to the available categories
     if (thread.resolution_status === 'open' && thread.action_pending_from === 'customer') {
       priorityCounts[priority].openCustomer++;
     } else if (thread.resolution_status === 'open' && thread.action_pending_from === 'company') {
+      priorityCounts[priority].openCompany++;
+    } else if (thread.resolution_status === 'in_progress') {
+      // In progress means company is working on it
+      priorityCounts[priority].openCompany++;
+    } else if (thread.resolution_status === 'escalated') {
+      // Escalated means it's with the company
       priorityCounts[priority].openCompany++;
     } else if (thread.resolution_status === 'closed') {
       priorityCounts[priority].closed++;
     }
   });
 
-  // Convert to array format, only including allowed priorities
-  return allowedPriorities.map(priority => ({
+  // Get all priorities that exist in this quadrant, sorted by priority order (P1, P2, P3, P4, P5)
+  const priorityOrder = ['P1', 'P2', 'P3', 'P4', 'P5'];
+  const prioritiesInQuadrant = Object.keys(priorityCounts).sort((a, b) => {
+    const indexA = priorityOrder.indexOf(a);
+    const indexB = priorityOrder.indexOf(b);
+    return indexA - indexB;
+  });
+
+  // Convert to array format, only including priorities that actually have data
+  return prioritiesInQuadrant.map(priority => ({
     priority,
     openCustomer: priorityCounts[priority]?.openCustomer || 0,
     openCompany: priorityCounts[priority]?.openCompany || 0,

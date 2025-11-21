@@ -4,17 +4,16 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { UnifiedFiltersBar } from "@/components/unified/filters/UnifiedFiltersBar";
 import { SystemHealthRibbon, type SystemHealthMetric } from "@/components/unified/kpi/SystemHealthRibbon";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
-import { GaugeInsightsPanel } from "@/components/unified/charts/GaugeInsightsPanel";
-import { EmotionShockboard, ResolutionIntegrityMonitor } from "@/components/unified/intents/IntentIntelligenceSection";
+import { EmotionShockboard, ResolutionIntegrityMonitor, PatternRecognitionEngine } from "@/components/unified/intents/IntentIntelligenceSection";
 import { AIDayGeneratorChat } from "@/components/unified/AIDayGeneratorChat";
 import {
   UnifiedIntelligenceWall,
-  AISummaryRail,
   IntentOverlapPanel,
   PressureConstellationWall,
-  ToneDriftWall,
   PrematureClosureAuditWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
+import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
+import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -308,16 +307,26 @@ function EisenhowerSummaryCard({
 }
 
 export default function HomePage() {
-  const [dateFilterPreset, setDateFilterPreset] = useState<string>("All");
-  const [dateRange, setDateRange] = useState<DateRange>({ start: "", end: "" });
+  // Initialize with current month date range
+  const getCurrentMonthRange = () => {
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    return {
+      start: firstDay.toISOString().split("T")[0],
+      end: today.toISOString().split("T")[0],
+    };
+  };
+
+  const [dateFilterPreset, setDateFilterPreset] = useState<string>("Current Month");
+  const [dateRange, setDateRange] = useState<DateRange>(getCurrentMonthRange());
   const [activePrimarySection, setActivePrimarySection] = useState<string>(PRIMARY_SECTION_TABS[0].id);
 
   const [systemHealth, setSystemHealth] = useState<SystemHealthMetric[]>([]);
   const [trendData, setTrendData] = useState<TrendPointResponse[]>([]);
   const [intentClusters, setIntentClusters] = useState<IntentClusterResponse[]>([]);
   const [allIntentClusters, setAllIntentClusters] = useState<IntentClusterResponse[]>([]);
-  const [appliedPreset, setAppliedPreset] = useState<string>("All");
-  const [appliedRange, setAppliedRange] = useState<DateRange>({ start: "", end: "" });
+  const [appliedPreset, setAppliedPreset] = useState<string>("Current Month");
+  const [appliedRange, setAppliedRange] = useState<DateRange>(getCurrentMonthRange());
   const [severityMatrix, setSeverityMatrix] = useState<SeverityMatrixResponse[]>([]);
   const [metricExplanations, setMetricExplanations] = useState<Record<string, string>>({});
 
@@ -331,6 +340,9 @@ export default function HomePage() {
   }));
   const [selectedIntentId, setSelectedIntentId] = useState<string | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [activeQuadrantTab, setActiveQuadrantTab] = useState<Record<ChannelKey, "summary" | "details">>(() =>
+    CHANNEL_TABS.reduce((acc, channel) => ({ ...acc, [channel]: "summary" as const }), {} as Record<ChannelKey, "summary" | "details">)
+  );
 
   useEffect(() => {
     let mounted = true;
@@ -357,7 +369,14 @@ export default function HomePage() {
         sentimentDelta: item.sentimentDelta,
         sentimentTrend: item.sentimentTrend,
         urgencyPct: item.urgencyPct,
+        urgencyTrend: item.urgencyTrend,
+        urgencyStartPct: item.urgencyStartPct,
+        urgencyEndPct: item.urgencyEndPct,
         slaRisk: item.slaRisk,
+        slaRiskTrend: item.slaRiskTrend,
+        slaRiskStartPct: item.slaRiskStartPct,
+        slaRiskEndPct: item.slaRiskEndPct,
+        dateRange: item.dateRange,
         unresolved: item.unresolved,
         unresolvedCompany: item.unresolvedCompany,
         unresolvedCustomer: item.unresolvedCustomer,
@@ -389,10 +408,17 @@ export default function HomePage() {
   }, []);
 
   const handleQuadrantSelect = useCallback((channel: ChannelKey, quadrant: string) => {
-    setSelectedQuadrants((prev) => ({
-      ...prev,
-      [channel]: prev[channel] === quadrant ? null : quadrant,
-    }));
+    setSelectedQuadrants((prev) => {
+      const newValue = prev[channel] === quadrant ? null : quadrant;
+      // When selecting a quadrant, default to "summary" tab
+      if (newValue !== null) {
+        setActiveQuadrantTab((tabPrev) => ({ ...tabPrev, [channel]: "summary" }));
+      }
+      return {
+        ...prev,
+        [channel]: newValue,
+      };
+    });
   }, []);
 
   useEffect(() => {
@@ -442,6 +468,13 @@ export default function HomePage() {
             end: today.toISOString().split("T")[0],
           });
           break;
+        case "Current Month":
+          const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+          setDateRange({
+            start: firstDay.toISOString().split("T")[0],
+            end: today.toISOString().split("T")[0],
+          });
+          break;
         case "One Week":
           startDate.setDate(today.getDate() - 7);
           setDateRange({
@@ -479,66 +512,179 @@ export default function HomePage() {
     // TODO: trigger refetch with filters
   };
 
-  const gaugeData = useMemo(() => {
-    if (systemHealth.length === 0) {
-      return {
-        values: { sentimentScore: 0, urgencyIndex: 0, slaRisk: 0, pendingFromCompany: 0 },
-        insights: {
-          overall: "",
-          urgencyIndex: "",
-          slaRisk: "",
-          pendingFromCompany: "",
-        },
-      };
-    }
-
-    const sentimentRaw =
-      systemHealth.reduce((sum, item) => sum + item.sentiment, 0) / systemHealth.length;
-    const sentimentScore = Math.max(1, Math.min(5, sentimentRaw));
-    const sentimentPercent = ((sentimentScore - 1) / 4) * 100;
-    const urgencyIndex =
-      systemHealth.reduce((sum, item) => sum + item.urgencyPct, 0) /
-      (systemHealth.length * 100);
-    const slaRisk =
-      systemHealth.reduce((sum, item) => sum + item.slaRisk, 0) /
-      (systemHealth.length * 100);
-    const companyPendingCount = severityMatrix.filter((row) => row.actionPending === "company").length;
-    const pendingFromCompany = severityMatrix.length === 0 ? 0 : companyPendingCount / severityMatrix.length;
-
-    const lowestSentiment = systemHealth.reduce((prev, curr) =>
-      curr.sentiment < prev.sentiment ? curr : prev,
-    systemHealth[0]);
-    const highestSentiment = systemHealth.reduce((prev, curr) =>
-      curr.sentiment > prev.sentiment ? curr : prev,
-    systemHealth[0]);
-    const highestUrgent = systemHealth.reduce((prev, curr) =>
-      curr.urgencyPct > prev.urgencyPct ? curr : prev,
-    systemHealth[0]);
-    const highestSla = systemHealth.reduce((prev, curr) =>
-      curr.slaRisk > prev.slaRisk ? curr : prev,
-    systemHealth[0]);
-
-    const customerPendingCount = severityMatrix.length - companyPendingCount;
-
-    const insights = {
-      overall: `Average sentiment sits at ${sentimentScore.toFixed(1)} (${getSentimentLabel(sentimentScore)}). ${lowestSentiment.label} trails at ${lowestSentiment.sentiment.toFixed(1)}, while ${highestSentiment.label} leads recovery at ${highestSentiment.sentiment.toFixed(1)}.`,
-      urgencyIndex: `${(urgencyIndex * 100).toFixed(1)}% of conversations carry urgency flags. ${highestUrgent.label} contributes ${highestUrgent.urgencyPct}% alone, indicating where teams should allocate capacity first.`,
-      slaRisk: `${(slaRisk * 100).toFixed(1)}% SLA risk overall. ${highestSla.label} accounts for the largest share at ${highestSla.slaRisk}% with ${highestSla.unresolved} unresolved cases awaiting action.`,
-      pendingFromCompany: `${(pendingFromCompany * 100).toFixed(1)}% of intents are waiting on internal owners (${companyPendingCount} clusters) versus ${customerPendingCount} pending on customers.`,
-    };
-
-    return {
-      values: { sentimentScore: sentimentPercent, urgencyIndex, slaRisk, pendingFromCompany },
-      insights,
-    };
-  }, [systemHealth, severityMatrix]);
 
   const handlePrimarySectionSelect = useCallback((sectionId: string) => {
     setActivePrimarySection(sectionId);
   }, []);
 
+  // Generate AI summary insights for a specific quadrant (overall summary, not individual actions)
+  const generateQuadrantSummary = useCallback((threads: EisenhowerThread[], quadrant: string, channel: ChannelKey) => {
+    const quadrantThreads = threads.filter((thread) => thread.quadrant === quadrant);
+    if (quadrantThreads.length === 0) {
+      return {
+        insights: [
+          {
+            title: "No Active Items",
+            description: `No items currently in ${QUADRANT_LABELS[quadrant]} quadrant for ${CHANNEL_LABELS_MAP[channel]}.`,
+            tone: "default" as const,
+          },
+        ],
+      };
+    }
+
+    const total = quadrantThreads.length;
+    const openCount = quadrantThreads.filter((t) => t.resolution_status === "open").length;
+    const inProgressCount = quadrantThreads.filter((t) => t.resolution_status === "in_progress").length;
+    const closedCount = quadrantThreads.filter((t) => t.resolution_status === "closed").length;
+    const escalatedCount = quadrantThreads.filter((t) => t.escalation_count > 0).length;
+    const avgSentiment = quadrantThreads.reduce((sum, t) => sum + t.overall_sentiment, 0) / total;
+    const avgBusinessImpact = quadrantThreads.reduce((sum, t) => sum + t.business_impact_score, 0) / total;
+    const avgRisk = quadrantThreads.reduce((sum, t) => sum + t.risk_score, 0) / total;
+
+    // Get top topics/subjects
+    const topicCounts = quadrantThreads.reduce((acc, thread) => {
+      const topic = thread.subject_norm || "Unknown";
+      acc[topic] = (acc[topic] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const topTopics = Object.entries(topicCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 3)
+      .map(([topic, count]) => ({ topic, count, percentage: Math.round((count / total) * 100) }));
+
+    // Group by priority
+    const priorityGroups = quadrantThreads.reduce((acc, thread) => {
+      const priority = thread.priority;
+      if (!acc[priority]) acc[priority] = [];
+      acc[priority].push(thread);
+      return acc;
+    }, {} as Record<string, EisenhowerThread[]>);
+
+    const p1Count = priorityGroups["P1"]?.length || 0;
+    const p2Count = priorityGroups["P2"]?.length || 0;
+    const openRate = (openCount / total) * 100;
+    const inProgressRate = (inProgressCount / total) * 100;
+
+    const quadrantLabel = QUADRANT_LABELS[quadrant];
+    const insights: Array<{ title: string; description: string; tone: "default" | "info" | "success" | "warning" | "danger" }> = [];
+
+    // Generate overall AI insights based on quadrant type and data patterns
+    if (quadrant === "do") {
+      // Critical/Urgent quadrant insights
+      if (p1Count > 0) {
+        insights.push({
+          title: "Critical Priority Items",
+          description: `${p1Count} P1 items require immediate attention. Average sentiment ${avgSentiment.toFixed(1)} indicates ${avgSentiment > 4.0 ? "high customer frustration" : "moderate concern"}.`,
+          tone: p1Count > total * 0.3 ? "danger" : "warning",
+        });
+      }
+
+      if (escalatedCount > 0) {
+        insights.push({
+          title: "Escalation Alert",
+          description: `${escalatedCount} cases have been escalated (${Math.round((escalatedCount / total) * 100)}% of quadrant). Senior review and specialized handling recommended.`,
+          tone: "danger",
+        });
+      }
+
+      if (openRate > 50) {
+        insights.push({
+          title: "Action Bottleneck",
+          description: `${Math.round(openRate)}% of items remain open. Focus on P1 items first, then batch process similar topics for efficiency.`,
+          tone: "warning",
+        });
+      }
+
+      if (topTopics.length > 0 && topTopics[0].percentage > 30) {
+        insights.push({
+          title: "Dominant Issue Pattern",
+          description: `"${topTopics[0].topic}" accounts for ${topTopics[0].percentage}% of items (${topTopics[0].count} cases). Consider creating a dedicated workflow or template.`,
+          tone: "info",
+        });
+      }
+
+      if (avgSentiment > 4.0) {
+        insights.push({
+          title: "Sentiment Risk",
+          description: `Average sentiment ${avgSentiment.toFixed(1)} indicates elevated customer frustration. Prioritize resolution and consider proactive communication.`,
+          tone: "danger",
+        });
+      } else if (avgSentiment < 2.5) {
+        insights.push({
+          title: "Positive Trend",
+          description: `Average sentiment ${avgSentiment.toFixed(1)} shows customers are generally satisfied. Maintain current resolution quality.`,
+          tone: "success",
+        });
+      }
+
+      if (avgBusinessImpact > 70) {
+        insights.push({
+          title: "High Business Impact",
+          description: `Average business impact score ${Math.round(avgBusinessImpact)} indicates significant revenue or relationship risk. Expedite resolution.`,
+          tone: "warning",
+        });
+      }
+    } else if (quadrant === "schedule") {
+      insights.push({
+        title: "Planned Review Queue",
+        description: `${total} items scheduled for review. ${topTopics.length > 0 ? `Top topic: "${topTopics[0].topic}" (${topTopics[0].percentage}%). ` : ""}Batch similar items together for streamlined processing.`,
+        tone: "info",
+      });
+
+      if (topTopics.length > 0) {
+        insights.push({
+          title: "Topic Clustering Opportunity",
+          description: `Group "${topTopics[0].topic}" items (${topTopics[0].count} cases) for batch review. This could reduce processing time by 30-40%.`,
+          tone: "success",
+        });
+      }
+    } else if (quadrant === "delegate") {
+      insights.push({
+        title: "Delegation Queue",
+        description: `${total} items ready for team distribution. ${topTopics.length > 0 ? `Route "${topTopics[0].topic}" (${topTopics[0].count} cases) to specialized team members. ` : ""}Distribute based on expertise and current workload.`,
+        tone: "info",
+      });
+
+      if (topTopics.length > 0) {
+        insights.push({
+          title: "Specialization Opportunity",
+          description: `"${topTopics[0].topic}" represents ${topTopics[0].percentage}% of delegation queue. Consider assigning dedicated specialist for faster resolution.`,
+          tone: "info",
+        });
+      }
+    } else if (quadrant === "delete") {
+      insights.push({
+        title: "Postponement Queue",
+        description: `${total} items marked for later review. Monitor periodically for priority changes. ${closedCount > 0 ? `${closedCount} items already closed. ` : ""}Consider archiving resolved items.`,
+        tone: "default",
+      });
+    }
+
+    // Add general insights applicable to all quadrants
+    if (inProgressRate > 40) {
+      insights.push({
+        title: "Active Processing",
+        description: `${Math.round(inProgressRate)}% of items are in progress. Good momentum - maintain current workflow pace.`,
+        tone: "success",
+      });
+    }
+
+    if (insights.length === 0) {
+      insights.push({
+        title: "Quadrant Overview",
+        description: `${total} items in ${quadrantLabel} for ${CHANNEL_LABELS_MAP[channel]}. ${openCount} open, ${inProgressCount} in progress, ${closedCount} closed. Average sentiment ${avgSentiment.toFixed(1)}.`,
+        tone: "default",
+      });
+    }
+
+    return {
+      insights: insights.slice(0, 6), // Limit to 6 insights for better readability
+    };
+  }, []);
+
   return (
-    <div className="space-y-6 animate-fade-in pb-6 bg-[var(--background)]">
+    <div className="space-y-6 animate-fade-in pb-6 bg-[var(--background)] min-h-screen">
       <UnifiedFiltersBar
         dateFilterPreset={dateFilterPreset}
         dateRange={dateRange}
@@ -576,12 +722,6 @@ export default function HomePage() {
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
             <AIRiskSpikeMonitor />
-            <div className="grid grid-cols-1 gap-6 xl:grid-cols-[380px_minmax(0,1fr)] items-stretch">
-              <div className="h-full">
-                <AISummaryRail aiSummary={aiSummary} />
-              </div>
-              <GaugeInsightsPanel className="h-full" data={gaugeData.values} insights={gaugeData.insights} />
-            </div>
           </section>
 
           <section id="channel-analysis" className="space-y-6 scroll-mt-20">
@@ -647,15 +787,60 @@ export default function HomePage() {
                                 </CardDescription>
                               </CardHeader>
                               <CardContent>
-                                {quadrantData.length > 0 ? (
-                                  <PriorityResolutionChart
-                                    data={quadrantData}
-                                    threads={channelThreads}
-                                    selectedQuadrant={channelQuadrant}
-                                  />
-                                ) : (
-                                  <div className="py-8 text-center text-sm text-gray-400">No priority data available.</div>
-                                )}
+                                <Tabs
+                                  value={activeQuadrantTab[channel]}
+                                  onValueChange={(value) =>
+                                    setActiveQuadrantTab((prev) => ({ ...prev, [channel]: value as "summary" | "details" }))
+                                  }
+                                  className="w-full"
+                                >
+                                  <TabsList className="grid w-full grid-cols-2 mb-4">
+                                    <TabsTrigger value="summary" className="text-xs">
+                                      ✨ AI Summary Wall
+                                    </TabsTrigger>
+                                    <TabsTrigger value="details" className="text-xs">
+                                      Details
+                                    </TabsTrigger>
+                                  </TabsList>
+                                  <TabsContent value="summary" className="space-y-0">
+                                    {(() => {
+                                      const summary = generateQuadrantSummary(channelThreads, channelQuadrant, channel);
+                                      return (
+                                        <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+                                          {summary.insights.map((insight, idx) => {
+                                            const toneClasses: Record<string, string> = {
+                                              default: "border-white/10 bg-black/40",
+                                              info: "border-indigo-400/30 bg-indigo-500/10",
+                                              success: "border-emerald-400/30 bg-emerald-500/10",
+                                              warning: "border-amber-400/30 bg-amber-500/10",
+                                              danger: "border-rose-400/30 bg-rose-500/10",
+                                            };
+                                            return (
+                                              <div
+                                                key={`${insight.title}-${idx}`}
+                                                className={`rounded-xl border p-4 ${toneClasses[insight.tone]} space-y-1`}
+                                              >
+                                                <div className="text-sm font-semibold text-white">{insight.title}</div>
+                                                <div className="text-xs text-gray-300">{insight.description}</div>
+                                              </div>
+                                            );
+                                          })}
+                                        </div>
+                                      );
+                                    })()}
+                                  </TabsContent>
+                                  <TabsContent value="details" className="mt-0">
+                                    {quadrantData.length > 0 ? (
+                                      <PriorityResolutionChart
+                                        data={quadrantData}
+                                        threads={channelThreads}
+                                        selectedQuadrant={channelQuadrant}
+                                      />
+                                    ) : (
+                                      <div className="py-8 text-center text-sm text-gray-400">No priority data available.</div>
+                                    )}
+                                  </TabsContent>
+                                </Tabs>
                               </CardContent>
                             </Card>
                           </div>
@@ -690,12 +875,14 @@ export default function HomePage() {
           )}
           {trendData.length > 0 && <CrossChannelTrendChart data={trendData} />}
           <UnifiedIntelligenceWall actionGrid={actionGrid} />
+          <CrossChannelToneIntelligenceCard />
+          <PrematureClosureRiskCard />
           <div className="grid gap-6 lg:grid-cols-2">
-            <ToneDriftWall />
             <PrematureClosureAuditWall />
           </div>
           <EmotionShockboard />
           <ResolutionIntegrityMonitor />
+          <PatternRecognitionEngine />
         </section>
       )}
 
