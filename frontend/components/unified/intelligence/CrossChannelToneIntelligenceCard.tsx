@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Mail, MessageSquare, Ticket, Phone, AlertCircle, TrendingUp, ArrowRight, Filter, X, Sparkles, Lightbulb } from "lucide-react";
 import { generateCustomerJourneys, type CustomerJourney } from "@/lib/unified/escalationData";
+import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
 
 interface ChannelEscalation {
   channel: "email" | "ticket" | "chat" | "voice";
@@ -174,6 +175,7 @@ export function CrossChannelToneIntelligenceCard() {
   const [severityFilter, setSeverityFilter] = useState<"all" | "high" | "medium" | "low">("all");
   const [hoveredEscalationChannel, setHoveredEscalationChannel] = useState<string | null>(null);
   const [hoveredCustomerId, setHoveredCustomerId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<Record<string, "action" | "summary">>({});
   const [hoveredNode, setHoveredNode] = useState<{ journeyId: string; stepIdx: number; x: number; y: number } | null>(null);
   const [originChannelData, setOriginChannelData] = useState<Map<string, OriginChannelData>>(new Map());
   const [animationStage, setAnimationStage] = useState<number>(5); // Start at 5 (fully animated)
@@ -837,8 +839,8 @@ export function CrossChannelToneIntelligenceCard() {
                   const targetPos = nodePositions[journey.finalChannel];
                   if (!sourcePos || !targetPos) return;
 
-                  const sourceY = sourcePos.y + sourcePos.height / 2;
-                  const targetY = targetPos.y + targetPos.height / 2;
+                const sourceY = sourcePos.y + sourcePos.height / 2;
+                const targetY = targetPos.y + targetPos.height / 2;
                   const sourceX = 170;
                   const targetX = 650;
                   
@@ -905,15 +907,15 @@ export function CrossChannelToneIntelligenceCard() {
                   
                   // Get channel-specific color for path
                   const getChannelPathColor = (channel: string) => {
-                    switch (channel) {
-                      case "email": return "#3b82f6";
-                      case "ticket": return "#a78bfa";
-                      case "chat": return "#34d399";
-                      case "voice": return "#f87171";
-                      default: return "#6b7280";
-                    }
-                  };
-                  
+                  switch (channel) {
+                    case "email": return "#3b82f6";
+                    case "ticket": return "#a78bfa";
+                    case "chat": return "#34d399";
+                    case "voice": return "#f87171";
+                    default: return "#6b7280";
+                  }
+                };
+                
                   const pathColor = getChannelPathColor(journey.originChannel);
                   const path = calculateCustomerPath(sourceY, targetY, journeyIdx);
                   
@@ -921,25 +923,25 @@ export function CrossChannelToneIntelligenceCard() {
                   
                   // Get ALL intermediate steps (excluding first and last) - matching Journey Timeline
                   const intermediateSteps = journey.journey.slice(1, -1);
-                  
-                  return (
+
+                return (
                     <g key={`journey-${journey.customerId}`}>
                       <g opacity={isHovered ? 1 : selectedChannel ? 0.6 : 0.3}>
                         {/* Highlight hovered customer path */}
                         {isHovered && (
-                          <path
-                            d={path}
-                            fill="none"
-                            stroke="#b90abd"
-                            strokeWidth={6}
-                            strokeDasharray="none"
-                            opacity="1"
-                            style={{ filter: "drop-shadow(0 0 10px #b90abd)" }}
-                          />
-                        )}
-                        {/* Main customer path - thin line for one customer */}
                         <path
                           d={path}
+                          fill="none"
+                          stroke="#b90abd"
+                          strokeWidth={6}
+                          strokeDasharray="none"
+                          opacity="1"
+                          style={{ filter: "drop-shadow(0 0 10px #b90abd)" }}
+                        />
+                      )}
+                        {/* Main customer path - thin line for one customer */}
+                      <path
+                        d={path}
                           fill={pathColor}
                           fillOpacity={isHovered ? 0.9 : 0.6}
                           stroke={isHovered ? "#fff" : "transparent"}
@@ -956,7 +958,7 @@ export function CrossChannelToneIntelligenceCard() {
                           
                           // Calculate position on the curved path for this specific journey
                           const verticalOffset = journeyIdx * 3;
-                          const nodePos = calculateIntermediateNodePosition(
+                        const nodePos = calculateIntermediateNodePosition(
                             sourceX, targetX, sourceY, targetY, stepProgress, verticalOffset
                           );
                           
@@ -968,6 +970,7 @@ export function CrossChannelToneIntelligenceCard() {
                           const nodeIconColor = step.channel === "email" ? "#60a5fa" : step.channel === "ticket" ? "#a78bfa" : step.channel === "chat" ? "#34d399" : "#f87171";
                           
                           const isNodeHovered = hoveredNode?.journeyId === journey.customerId && hoveredNode?.stepIdx === stepIdx;
+                          const isCustomerHovered = hoveredCustomerId === journey.customerId;
                           const messageCount = step.messageCount || 0;
                           const getMessageLabel = (channel: string) => {
                             switch (channel) {
@@ -978,23 +981,25 @@ export function CrossChannelToneIntelligenceCard() {
                               default: return "Messages";
                             }
                           };
-                          
-                          return (
+                        
+                        return (
                             <g key={`node-${journey.customerId}-${stepIdx}-${step.channel}`}>
                               {/* Intermediate node circle - with hover */}
-                              <circle
-                                cx={nodePos.x}
-                                cy={nodePos.y}
+                            <circle
+                              cx={nodePos.x}
+                              cy={nodePos.y}
                                 r={nodeRadius}
-                                fill={nodeColors.bg}
-                                fillOpacity={isNodeHovered ? "1" : "0.9"}
-                                stroke={step.escalated ? "#ef4444" : nodeColors.border}
-                                strokeWidth={isNodeHovered ? (step.escalated ? "5" : "4") : (step.escalated ? "4" : "3")}
-                                style={{ 
+                                fill={isCustomerHovered ? "#ffffff" : nodeColors.bg}
+                                fillOpacity={isNodeHovered ? "1" : (isCustomerHovered ? "1" : "0.9")}
+                                stroke={isCustomerHovered ? "#ffffff" : (step.escalated ? "#ef4444" : nodeColors.border)}
+                                strokeWidth={isNodeHovered ? (step.escalated ? "5" : "4") : (isCustomerHovered ? "4" : (step.escalated ? "4" : "3"))}
+                              style={{ 
                                   cursor: "pointer",
-                                  filter: isNodeHovered 
-                                    ? (step.escalated ? "drop-shadow(0 0 12px #ef4444)" : `drop-shadow(0 0 10px ${nodeColors.border})`)
-                                    : (step.escalated ? "drop-shadow(0 0 8px #ef4444)" : `drop-shadow(0 0 6px ${nodeColors.border})`),
+                                  filter: isCustomerHovered 
+                                    ? "none"
+                                    : (isNodeHovered 
+                                      ? (step.escalated ? "drop-shadow(0 0 12px #ef4444)" : `drop-shadow(0 0 10px ${nodeColors.border})`)
+                                      : (step.escalated ? "drop-shadow(0 0 8px #ef4444)" : `drop-shadow(0 0 6px ${nodeColors.border})`)),
                                   transition: "all 0.2s ease"
                                 }}
                                 onMouseEnter={(e) => {
@@ -1011,65 +1016,242 @@ export function CrossChannelToneIntelligenceCard() {
                                 }}
                                 onMouseLeave={() => setHoveredNode(null)}
                               />
-                              {/* Icon inside circle */}
-                              <foreignObject 
+                            {/* Icon inside circle */}
+                            <foreignObject 
                                 x={nodePos.x - 18} 
                                 y={nodePos.y - 18} 
                                 width="36" 
                                 height="36"
-                                style={{ pointerEvents: "none" }}
-                              >
-                                <div className="flex items-center justify-center w-full h-full">
-                                  <NodeIcon className="h-7 w-7" style={{ color: nodeIconColor }} />
-                                </div>
-                              </foreignObject>
+                              style={{ pointerEvents: "none" }}
+                            >
+                              <div className="flex items-center justify-center w-full h-full">
+                                  <NodeIcon className="h-7 w-7" style={{ color: isCustomerHovered ? "#000000" : nodeIconColor }} />
+                              </div>
+                            </foreignObject>
                               {/* Channel label - positioned above or below based on available space */}
-                              <text
-                                x={nodePos.x}
+                            <text
+                              x={nodePos.x}
                                 y={textPos.y}
-                                textAnchor="middle"
-                                className="fill-white font-bold capitalize"
+                              textAnchor="middle"
+                              className="fill-white font-bold capitalize"
                                 style={{ pointerEvents: "none", fontSize: "12px" }}
-                              >
+                            >
                                 {step.channel}
-                              </text>
-                              {/* Escalation indicator */}
+                            </text>
+                            {/* Escalation indicator */}
                               {step.escalated && (
-                                <>
-                                  <circle
+                              <>
+                                <circle
                                     cx={nodePos.x + 20}
                                     cy={nodePos.y - 20}
                                     r="10"
-                                    fill="#ef4444"
-                                    style={{ pointerEvents: "none" }}
-                                  />
-                                  <text
+                                  fill="#ef4444"
+                                  style={{ pointerEvents: "none" }}
+                                />
+                                <text
                                     x={nodePos.x + 20}
                                     y={nodePos.y - 14}
-                                    textAnchor="middle"
-                                    className="fill-white font-bold"
+                                  textAnchor="middle"
+                                  className="fill-white font-bold"
                                     style={{ pointerEvents: "none", fontSize: "10px" }}
-                                  >
-                                    !
-                                  </text>
-                                </>
-                              )}
-                            </g>
-                          );
-                        })}
+                                >
+                                  !
+                                </text>
+                              </>
+                            )}
+                          </g>
+                        );
+                      })}
                       </g>
                     </g>
                   );
                 });
               })()}
 
-              {/* Tooltip for hovered node */}
-              {hoveredNode && (() => {
-                const journey = customerJourneys.find(j => j.customerId === hoveredNode.journeyId);
-                if (!journey) return null;
-                const intermediateSteps = journey.journey.slice(1, -1);
-                const step = intermediateSteps[hoveredNode.stepIdx];
-                if (!step) return null;
+              {/* Tooltips for hovered customer nodes or manually hovered node */}
+              {(() => {
+                // If a customer is hovered, show tooltips for all their intermediate nodes
+                // Otherwise, show tooltip for manually hovered node
+                let nodesToShow: Array<{ journeyId: string; stepIdx: number; x: number; y: number }> = [];
+                
+                if (hoveredCustomerId) {
+                  // Find the hovered customer's journey
+                  const hoveredJourney = customerJourneys.find(j => j.customerId === hoveredCustomerId);
+                  if (hoveredJourney) {
+                    const sourcePos = nodePositions[hoveredJourney.originChannel];
+                    const targetPos = nodePositions[hoveredJourney.finalChannel];
+                    if (sourcePos && targetPos) {
+                      const sourceY = sourcePos.y + sourcePos.height / 2;
+                      const targetY = targetPos.y + targetPos.height / 2;
+                      const sourceX = 170;
+                      const targetX = 650;
+                      
+                      const intermediateSteps = hoveredJourney.journey.slice(1, -1);
+                      const journeyIdx = customerJourneys.findIndex(j => j.customerId === hoveredCustomerId);
+                      
+                      intermediateSteps.forEach((step, stepIdx) => {
+                        const stepProgress = (stepIdx + 1) / (hoveredJourney.journey.length - 1);
+                        const verticalOffset = journeyIdx * 3;
+                        const nodePos = calculateIntermediateNodePosition(
+                          sourceX, targetX, sourceY, targetY, stepProgress, verticalOffset
+                        );
+                        nodesToShow.push({
+                          journeyId: hoveredJourney.customerId,
+                          stepIdx: stepIdx,
+                          x: nodePos.x,
+                          y: nodePos.y
+                        });
+                      });
+                    }
+                  }
+                } else if (hoveredNode) {
+                  // Show tooltip for manually hovered node
+                  nodesToShow.push(hoveredNode);
+                }
+                
+                // Calculate positions for all tooltips with overlap prevention
+                const tooltipWidth = 260;
+                const tooltipHeight = 210;
+                const padding = 20;
+                const nodeRadius = 30;
+                const svgWidth = 750;
+                const svgHeight = 500;
+                const minTooltipSpacing = tooltipHeight + 50; // Increased spacing between tooltips
+                
+                // Helper function to check if two tooltips overlap
+                const doTooltipsOverlap = (
+                  x1: number, y1: number, w1: number, h1: number,
+                  x2: number, y2: number, w2: number, h2: number
+                ): boolean => {
+                  return !(x1 + w1 < x2 || x2 + w2 < x1 || y1 + h1 < y2 || y2 + h2 < y1);
+                };
+                
+                // Sort nodes by X position first, then Y to process left to right, top to bottom
+                const sortedNodes = [...nodesToShow].sort((a, b) => {
+                  if (Math.abs(a.x - b.x) < 50) {
+                    return a.y - b.y; // If X is similar, sort by Y
+                  }
+                  return a.x - b.x; // Otherwise sort by X
+                });
+                
+                // Calculate adjusted positions for all tooltips to prevent overlaps
+                const tooltipPositions: Array<{ tooltipX: number; tooltipY: number; tooltipAbove: boolean; nodeData: typeof nodesToShow[0] }> = [];
+                
+                sortedNodes.forEach((nodeData, idx) => {
+                  // Try positioning above first
+                  let tooltipX = nodeData.x - tooltipWidth / 2;
+                  let tooltipY = nodeData.y - tooltipHeight - nodeRadius - 20;
+                  let preferredAbove = true;
+                  
+                  // Adjust horizontal position to stay within bounds
+                  if (tooltipX < padding) {
+                    tooltipX = padding;
+                  }
+                  if (tooltipX + tooltipWidth > svgWidth - padding) {
+                    tooltipX = svgWidth - tooltipWidth - padding;
+                  }
+                  
+                  // Check for overlaps with all previous tooltips
+                  let foundPosition = false;
+                  let attempts = 0;
+                  const maxAttempts = 50;
+                  
+                  while (!foundPosition && attempts < maxAttempts) {
+                    foundPosition = true;
+                    
+                    // Check against all previous tooltips
+                    for (let prevIdx = 0; prevIdx < idx; prevIdx++) {
+                      const prevPos = tooltipPositions[prevIdx];
+                      
+                      if (doTooltipsOverlap(
+                        tooltipX, tooltipY, tooltipWidth, tooltipHeight,
+                        prevPos.tooltipX, prevPos.tooltipY, tooltipWidth, tooltipHeight
+                      )) {
+                        foundPosition = false;
+                        
+                        // If overlapping, try positioning below the previous tooltip
+                        tooltipY = prevPos.tooltipY + minTooltipSpacing;
+                        
+                        // If that goes beyond bottom, try positioning above the previous tooltip
+                        if (tooltipY + tooltipHeight > svgHeight - padding) {
+                          tooltipY = prevPos.tooltipY - tooltipHeight - 20;
+                          preferredAbove = false;
+                          
+                          // If that goes beyond top, position at the bottom
+                          if (tooltipY < padding) {
+                            tooltipY = svgHeight - tooltipHeight - padding;
+                            preferredAbove = false;
+                          }
+                        }
+                        
+                        break; // Re-check from the beginning
+                      }
+                    }
+                    
+                    attempts++;
+                  }
+                  
+                  // If still no position found, try below the node
+                  if (!foundPosition || tooltipY < padding) {
+                    tooltipY = nodeData.y + nodeRadius + 20;
+                    preferredAbove = false;
+                    
+                    // Re-check overlaps when positioned below
+                    for (let prevIdx = 0; prevIdx < idx; prevIdx++) {
+                      const prevPos = tooltipPositions[prevIdx];
+                      
+                      if (doTooltipsOverlap(
+                        tooltipX, tooltipY, tooltipWidth, tooltipHeight,
+                        prevPos.tooltipX, prevPos.tooltipY, tooltipWidth, tooltipHeight
+                      )) {
+                        tooltipY = prevPos.tooltipY + minTooltipSpacing;
+                      }
+                    }
+                  }
+                  
+                  // Final boundary checks
+                  if (tooltipY < padding) {
+                    tooltipY = padding;
+                  }
+                  if (tooltipY + tooltipHeight > svgHeight - padding) {
+                    tooltipY = svgHeight - tooltipHeight - padding;
+                  }
+                  
+                  // Final overlap check after boundary adjustment
+                  for (let prevIdx = 0; prevIdx < idx; prevIdx++) {
+                    const prevPos = tooltipPositions[prevIdx];
+                    
+                    if (doTooltipsOverlap(
+                      tooltipX, tooltipY, tooltipWidth, tooltipHeight,
+                      prevPos.tooltipX, prevPos.tooltipY, tooltipWidth, tooltipHeight
+                    )) {
+                      // Force position below the previous tooltip
+                      tooltipY = prevPos.tooltipY + minTooltipSpacing;
+                      preferredAbove = false;
+                      
+                      // Ensure it's within bounds
+                      if (tooltipY + tooltipHeight > svgHeight - padding) {
+                        tooltipY = svgHeight - tooltipHeight - padding;
+                      }
+                    }
+                  }
+                  
+                  // Determine if tooltip is above or below node
+                  const tooltipAbove = preferredAbove && nodeData.y > tooltipY + tooltipHeight / 2;
+                  
+                  tooltipPositions.push({ tooltipX, tooltipY, tooltipAbove, nodeData });
+                });
+                
+                if (nodesToShow.length === 0) return null;
+                
+                return (
+                  <>
+                    {tooltipPositions.map(({ tooltipX, tooltipY, tooltipAbove, nodeData }, tooltipIdx) => {
+                  const journey = customerJourneys.find(j => j.customerId === nodeData.journeyId);
+                  if (!journey) return null;
+                  const intermediateSteps = journey.journey.slice(1, -1);
+                  const step = intermediateSteps[nodeData.stepIdx];
+                  if (!step) return null;
                 
                 const messageCount = step.messageCount || 0;
                 const getMessageLabel = (channel: string) => {
@@ -1082,53 +1264,18 @@ export function CrossChannelToneIntelligenceCard() {
                   }
                 };
                 
-                // Calculate tooltip position - position at top of node by default
-                const tooltipWidth = 260;
-                const tooltipHeight = 210; // Increased to ensure sentiment is fully visible
-                const padding = 20;
-                const nodeRadius = 30;
-                const svgWidth = 750; // SVG viewBox width
-                const svgHeight = 500; // SVG viewBox height
-                
-                // Default: position above the node (centered horizontally)
-                let tooltipX = hoveredNode.x - tooltipWidth / 2;
-                let tooltipY = hoveredNode.y - tooltipHeight - nodeRadius - 20; // Above node with spacing
-                
-                // Adjust if tooltip goes beyond left edge
-                if (tooltipX < padding) {
-                  tooltipX = padding;
-                }
-                
-                // Adjust if tooltip goes beyond right edge
-                if (tooltipX + tooltipWidth > svgWidth - padding) {
-                  tooltipX = svgWidth - tooltipWidth - padding;
-                }
-                
-                // If not enough space above, position below the node
-                if (tooltipY < padding) {
-                  tooltipY = hoveredNode.y + nodeRadius + 20; // Below node with spacing
-                }
-                
-                // Adjust if tooltip goes beyond bottom edge (when positioned below)
-                if (tooltipY + tooltipHeight > svgHeight - padding) {
-                  tooltipY = svgHeight - tooltipHeight - padding;
-                }
-                
                 const TooltipIcon = getChannelIcon(step.channel);
                 
-                // Determine if tooltip is above or below node
-                const tooltipAbove = hoveredNode.y > tooltipY + tooltipHeight / 2;
-                
                 return (
-                  <g style={{ pointerEvents: "none" }}>
+                  <g key={`tooltip-${nodeData.journeyId}-${nodeData.stepIdx}`} style={{ pointerEvents: "none" }}>
                     {/* Connection line from node to tooltip */}
                     <line
-                      x1={hoveredNode.x}
-                      y1={hoveredNode.y + (tooltipAbove ? -nodeRadius : nodeRadius)}
-                      x2={hoveredNode.x}
+                      x1={nodeData.x}
+                      y1={nodeData.y + (tooltipAbove ? -nodeRadius : nodeRadius)}
+                      x2={nodeData.x}
                       y2={tooltipAbove ? tooltipY + tooltipHeight : tooltipY}
                       stroke="rgba(255, 255, 255, 0.4)"
-                      strokeWidth="2"
+                            strokeWidth="2"
                       strokeDasharray="4,4"
                     />
                     
@@ -1170,8 +1317,8 @@ export function CrossChannelToneIntelligenceCard() {
                                 </span>
                               ))}
                             </div>
-                          </div>
-                        </div>
+                              </div>
+                              </div>
                         
                         {/* Sentiment - Always visible at bottom with proper spacing */}
                         <div className="pt-2 border-t border-white/20 flex-shrink-0">
@@ -1187,13 +1334,16 @@ export function CrossChannelToneIntelligenceCard() {
                               </span>
                               <span className="text-sm">
                                 {step.sentimentScore <= 2 ? "🟢" : step.sentimentScore === 3 ? "🟡" : "🔴"}
-                              </span>
+                                </span>
+                              </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </foreignObject>
+                        </foreignObject>
                   </g>
+                );
+              })}
+                  </>
                 );
               })()}
 
@@ -1322,7 +1472,7 @@ export function CrossChannelToneIntelligenceCard() {
                               onMouseEnter={() => setHoveredEscalationChannel(selectedChannel)}
                               onMouseLeave={() => setHoveredEscalationChannel(null)}
                             >
-                              <div className="text-xs text-gray-400 mb-1">Escalated to here</div>
+                              <div className="text-xs text-gray-400 mb-1">Escalation Inflow</div>
                               <div className="text-xl font-bold text-red-400">{getTotalEscalationsToChannel(selectedChannel)}</div>
                               
                               {hoveredEscalationChannel === selectedChannel && (() => {
@@ -1330,7 +1480,7 @@ export function CrossChannelToneIntelligenceCard() {
                                 return (
                                   <div className="absolute z-[100] right-full mr-3 top-0 w-56 p-4 rounded-lg bg-[rgba(15,15,15,0.99)] border-2 border-red-400/60 shadow-2xl backdrop-blur-sm">
                                     <div className="absolute right-0 top-4 w-0 h-0 border-l-8 border-l-red-400/60 border-t-8 border-t-transparent border-b-8 border-b-transparent transform translate-x-full"></div>
-                                    <div className="text-xs font-bold text-red-300 mb-3 uppercase tracking-wide">Origins that escalated here:</div>
+                                    <div className="text-xs font-bold text-red-300 mb-3 uppercase tracking-wide">Escalations Received from Other Channels:</div>
                                     <div className="space-y-2">
                                       {origins.length > 0 ? (
                                         origins.map((origin) => {
@@ -1413,11 +1563,7 @@ export function CrossChannelToneIntelligenceCard() {
                                      {/* Journey Path with Timeline - Complete Path */}
                                      <div className="mb-3 p-3 rounded-lg bg-[rgba(26,26,26,0.6)] border border-white/5">
                                        <div className="text-xs text-gray-400 mb-3 font-semibold uppercase tracking-wide">Journey Timeline</div>
-                                       <div className={`flex items-center gap-2 ${
-                                         journey.journey.length >= 4 
-                                           ? 'flex-wrap justify-start' 
-                                           : 'flex-nowrap'
-                                       } overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent`}>
+                                       <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
                                          {journey.journey.map((step, index) => {
                                            const isLast = index === journey.journey.length - 1;
                                            const isFirst = index === 0;
@@ -1427,14 +1573,11 @@ export function CrossChannelToneIntelligenceCard() {
                                            const timeDiff = prevStep
                                              ? Math.round((new Date(step.timestamp).getTime() - new Date(prevStep.timestamp).getTime()) / (1000 * 60 * 60))
                                              : null;
-                                           const sentimentEmoji = step.sentimentScore <= 2 ? "🟢" : step.sentimentScore === 3 ? "🟡" : "🔴";
 
                   return (
-                                             <div key={`${journey.id}-step-${index}`} className="flex items-center gap-2 relative flex-shrink-0">
+                                             <div key={`${journey.id}-step-${index}`} className="flex items-center gap-1.5 relative flex-shrink-0">
                                                <div
-                                                 className={`flex flex-col items-center gap-1 px-3 py-2 rounded-lg text-xs transition-all ${
-                                                   journey.journey.length >= 4 ? 'min-w-[95px] max-w-[95px]' : 'min-w-[85px]'
-                                                 } ${
+                                                 className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs transition-all ${
                                                    step.escalated
                                                      ? "bg-red-500/30 border-2 border-red-400 shadow-lg shadow-red-500/20"
                                                      : isFirst
@@ -1442,70 +1585,134 @@ export function CrossChannelToneIntelligenceCard() {
                                                      : `bg-gray-500/20 border ${stepColors.border} border-opacity-60`
                                                  } border`}
                                                >
-                                                 <div className="flex items-center gap-1.5">
-                                                   <StepIcon className={`h-4 w-4 ${stepColors.text}`} />
-                                                   <span className={`${stepColors.text} capitalize font-bold text-[11px] whitespace-nowrap`}>
-                                                     {step.channel}
-                                                   </span>
-                                                   {step.escalated && (
-                                                     <AlertCircle className="h-3.5 w-3.5 text-red-400 animate-pulse" />
-                                                   )}
-                                                 </div>
+                                                 <StepIcon className={`h-3.5 w-3.5 ${stepColors.text}`} />
+                                                 <span className={`${stepColors.text} capitalize font-bold text-[10px] whitespace-nowrap`}>
+                                                   {step.channel}
+                                                 </span>
+                                                 {step.escalated && (
+                                                   <AlertCircle className="h-3 w-3 text-red-400 animate-pulse" />
+                                                 )}
                                                  {isFirst && (
-                                                   <div className="text-[9px] text-gray-400 mt-0.5 font-medium">Origin</div>
+                                                   <span className="text-[8px] text-gray-400 font-medium ml-0.5">Origin</span>
                                                  )}
                                                  {isLast && step.escalated && (
-                                                   <div className="text-[9px] text-red-400 font-bold mt-0.5 uppercase">ESCALATED</div>
-                                                 )}
-                                                 {!isLast && !step.escalated && (
-                                                   <div className="text-[9px] text-gray-400 mt-0.5 flex items-center gap-1">
-                                                     <span>{sentimentEmoji}</span>
-                                                     <span className="font-semibold">{step.sentimentScore.toFixed(1)}</span>
-                                                   </div>
+                                                   <span className="text-[8px] text-red-400 font-bold uppercase ml-0.5">ESCALATED</span>
                                                  )}
                                                  {timeDiff !== null && (
-                                                   <div className="text-[8px] text-gray-500 mt-0.5 font-medium">
+                                                   <span className="text-[8px] text-gray-500 font-medium ml-0.5">
                                                      +{timeDiff}h
-                                                   </div>
+                                                   </span>
                                                  )}
                                                </div>
                                                {!isLast && (
-                                                 <ArrowRight className={`h-4 w-4 text-gray-400 flex-shrink-0 ${journey.journey.length >= 4 ? 'mx-0.5' : ''}`} />
+                                                 <ArrowRight className="h-3 w-3 text-gray-400 flex-shrink-0" />
                                                )}
                                              </div>
                                            );
                                          })}
                                        </div>
-                                       {/* Journey Summary */}
-                                       <div className="mt-3 pt-2 border-t border-white/10 flex items-center justify-between text-[10px] text-gray-400">
-                                         <span className="font-medium">
-                                           Path: {journey.journey.map(s => s.channel).join(" → ")}
-                                         </span>
-                                         <span className="font-semibold text-white">
-                                           {journey.journey.length} {journey.journey.length === 1 ? "step" : "steps"}
-                                         </span>
+                                       
+                                       {/* Sentiment Plot */}
+                                       <div className="mt-3 pt-3 border-t border-white/10">
+                                         <div className="text-[10px] text-gray-400 mb-2 font-semibold uppercase tracking-wide">Sentiment Trend</div>
+                                         <div className="h-24 w-full">
+                                           <ResponsiveContainer width="100%" height="100%">
+                                             <AreaChart
+                                               data={journey.journey.map((step, idx) => ({
+                                                 step: idx + 1,
+                                                 channel: step.channel.charAt(0).toUpperCase() + step.channel.slice(1),
+                                                 sentiment: step.sentimentScore,
+                                                 timestamp: step.timestamp
+                                               }))}
+                                               margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                                             >
+                                               <defs>
+                                                 <linearGradient id={`sentimentGradient-${journey.id}`} x1="0" y1="0" x2="0" y2="1">
+                                                   <stop offset="5%" stopColor="#14b8a6" stopOpacity={0.8}/>
+                                                   <stop offset="95%" stopColor="#14b8a6" stopOpacity={0.1}/>
+                                                 </linearGradient>
+                                               </defs>
+                                               <XAxis 
+                                                 dataKey="channel" 
+                                                 tick={{ fill: '#9ca3af', fontSize: 9 }}
+                                                 axisLine={{ stroke: '#4b5563' }}
+                                                 tickLine={{ stroke: '#4b5563' }}
+                                               />
+                                               <YAxis 
+                                                 domain={[1, 5]}
+                                                 tick={{ fill: '#9ca3af', fontSize: 9 }}
+                                                 axisLine={{ stroke: '#4b5563' }}
+                                                 tickLine={{ stroke: '#4b5563' }}
+                                               />
+                                               <Tooltip 
+                                                 contentStyle={{ 
+                                                   backgroundColor: 'rgba(15, 15, 15, 0.95)', 
+                                                   border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                   borderRadius: '6px',
+                                                   fontSize: '11px'
+                                                 }}
+                                                 labelStyle={{ color: '#9ca3af' }}
+                                                 formatter={(value: number) => [`${value.toFixed(1)}/5`, 'Sentiment']}
+                                               />
+                                               <Area 
+                                                 type="monotone" 
+                                                 dataKey="sentiment" 
+                                                 stroke="#14b8a6" 
+                                                 strokeWidth={2}
+                                                 fill={`url(#sentimentGradient-${journey.id})`}
+                                               />
+                                             </AreaChart>
+                                           </ResponsiveContainer>
+                                         </div>
                                        </div>
                                      </div>
 
-                                    {/* AI Summary */}
-                                    {journey.aiSummary && (
-                                      <div className="mb-3 p-3 rounded-lg bg-[rgba(59,130,246,0.1)] border border-blue-400/30">
-                                        <div className="flex items-center gap-2 mb-2">
-                                          <Sparkles className="h-4 w-4 text-blue-400" />
-                                          <div className="text-xs font-semibold text-blue-300 uppercase tracking-wide">AI Summary</div>
+                                    {/* AI Summary and Next Action Suggestion Tabs */}
+                                    {(journey.aiSummary || journey.nextActionSuggestion) && (
+                                      <div className="rounded-lg border border-white/10 bg-[rgba(15,15,15,0.8)] overflow-hidden">
+                                        {/* Tab Header */}
+                                        <div className="flex items-center justify-between border-b border-white/10 bg-[rgba(26,26,26,0.6)] px-4 py-2">
+                                          <div className="flex items-center gap-4">
+                                            <button
+                                              onClick={() => setActiveTab({ ...activeTab, [journey.customerId]: "action" })}
+                                              className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                                                (activeTab[journey.customerId] || "action") === "action"
+                                                  ? "bg-amber-500/20 text-amber-300 border border-amber-400/30"
+                                                  : "text-gray-400 hover:text-gray-300 hover:bg-white/5"
+                                              }`}
+                                            >
+                                              <Lightbulb className="h-3.5 w-3.5" />
+                                              <span>Next Action Suggestion</span>
+                                            </button>
+                                            {journey.aiSummary && (
+                                              <button
+                                                onClick={() => setActiveTab({ ...activeTab, [journey.customerId]: "summary" })}
+                                                className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
+                                                  activeTab[journey.customerId] === "summary"
+                                                    ? "bg-blue-500/20 text-blue-300 border border-blue-400/30"
+                                                    : "text-gray-400 hover:text-gray-300 hover:bg-white/5"
+                                                }`}
+                                              >
+                                                <Sparkles className="h-3.5 w-3.5" />
+                                                <span>AI Summary</span>
+                                              </button>
+                                            )}
+                                          </div>
                                         </div>
-                                        <p className="text-xs text-gray-200 leading-relaxed">{journey.aiSummary}</p>
-                                      </div>
-                                    )}
-
-                                    {/* Next Action Suggestion */}
-                                    {journey.nextActionSuggestion && (
-                                      <div className="p-3 rounded-lg bg-[rgba(251,191,36,0.1)] border border-amber-400/30">
-                                        <div className="flex items-center gap-2 mb-2">
-                                          <Lightbulb className="h-4 w-4 text-amber-400" />
-                                          <div className="text-xs font-semibold text-amber-300 uppercase tracking-wide">Next Action Suggestion</div>
+                                        
+                                        {/* Tab Content */}
+                                        <div className="p-3">
+                                          {(activeTab[journey.customerId] || "action") === "action" && journey.nextActionSuggestion && (
+                                            <div className="p-3 rounded-lg bg-[rgba(251,191,36,0.1)] border border-amber-400/30">
+                                              <p className="text-xs text-gray-200 leading-relaxed">{journey.nextActionSuggestion}</p>
+                                            </div>
+                                          )}
+                                          {activeTab[journey.customerId] === "summary" && journey.aiSummary && (
+                                            <div className="p-3 rounded-lg bg-[rgba(59,130,246,0.1)] border border-blue-400/30">
+                                              <p className="text-xs text-gray-200 leading-relaxed">{journey.aiSummary}</p>
+                                            </div>
+                                          )}
                                         </div>
-                                        <p className="text-xs text-gray-200 leading-relaxed">{journey.nextActionSuggestion}</p>
                                       </div>
                                     )}
 
