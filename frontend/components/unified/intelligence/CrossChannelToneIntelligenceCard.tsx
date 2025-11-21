@@ -811,8 +811,6 @@ export function CrossChannelToneIntelligenceCard() {
               </defs>
               
               {/* Background zones */}
-              <rect x="0" y="40" width="170" height="420" fill="url(#originGradient)" opacity="0.3" />
-              <rect x="650" y="40" width="100" height="420" fill="url(#escalationGradient)" opacity="0.3" />
               
               {/* Labels */}
               <text x="85" y="25" textAnchor="middle" className="text-base fill-blue-300 font-bold">ORIGIN CHANNELS</text>
