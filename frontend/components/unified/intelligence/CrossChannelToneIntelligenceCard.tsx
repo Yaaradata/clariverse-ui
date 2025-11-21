@@ -171,8 +171,7 @@ export function CrossChannelToneIntelligenceCard() {
   const [customerJourneys, setCustomerJourneys] = useState<CustomerJourney[]>([]);
   const [sankeyLinks, setSankeyLinks] = useState<SankeyLink[]>([]);
   const [channelMetrics, setChannelMetrics] = useState<ChannelMetrics[]>([]);
-  const [selectedChannel, setSelectedChannel] = useState<string | null>("chat"); // Default to Chat
-  const [severityFilter, setSeverityFilter] = useState<"all" | "high" | "medium" | "low">("all");
+  const [selectedChannel, setSelectedChannel] = useState<string | null>(null); // Default: show all channels
   const [hoveredEscalationChannel, setHoveredEscalationChannel] = useState<string | null>(null);
   const [hoveredCustomerId, setHoveredCustomerId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<Record<string, "action" | "summary">>({});
@@ -486,16 +485,10 @@ export function CrossChannelToneIntelligenceCard() {
     setOriginChannelData(originDataMap);
   }, []);
 
-  // Filter links by severity
-  let filteredLinks = sankeyLinks;
-  if (severityFilter !== "all") {
-    filteredLinks = filteredLinks.filter((link) => link.severity === severityFilter);
-  }
-  
   // Get links to show - if channel selected, only show flows FROM that channel
   const linksToShow = selectedChannel
-    ? filteredLinks.filter((link) => link.source === selectedChannel)
-    : filteredLinks;
+    ? sankeyLinks.filter((link) => link.source === selectedChannel)
+    : sankeyLinks;
 
   // Calculate intermediate nodes position along the curved path
   const calculateIntermediateNodePosition = (
@@ -536,8 +529,8 @@ export function CrossChannelToneIntelligenceCard() {
       const linksFrom = linksToShow.filter((l) => l.source === channel);
       const linksTo = linksToShow.filter((l) => l.target === channel);
       // For unselected channels, also consider all links for sizing
-      const allLinksFrom = filteredLinks.filter((l) => l.source === channel);
-      const allLinksTo = filteredLinks.filter((l) => l.target === channel);
+      const allLinksFrom = sankeyLinks.filter((l) => l.source === channel);
+      const allLinksTo = sankeyLinks.filter((l) => l.target === channel);
       
       const visibleValue = Math.max(
         linksFrom.reduce((sum, l) => sum + l.value, 0),
@@ -756,33 +749,12 @@ export function CrossChannelToneIntelligenceCard() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-2xl font-bold text-white">Cross channel Escalation</h2>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-[rgba(26,26,26,0.6)]">
-              <Filter className="h-4 w-4 text-gray-400" />
-              <select
-                value={severityFilter}
-                onChange={(e) => setSeverityFilter(e.target.value as any)}
-                className="bg-transparent text-white text-sm border-none outline-none"
-              >
-                <option value="all">All Severities</option>
-                <option value="high">High</option>
-                <option value="medium">Medium</option>
-                <option value="low">Low</option>
-              </select>
-            </div>
-          </div>
         </div>
         <p className="text-sm text-gray-400">Customer escalation flow visualization</p>
       </div>
 
       {/* Sankey Diagram */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-            <TrendingUp className="h-5 w-5" />
-            Escalation Flow Diagram
-          </h3>
-        </div>
 
 
         <div className={`grid ${selectedChannel ? "grid-cols-1 lg:grid-cols-3" : "grid-cols-1"} gap-4`}>

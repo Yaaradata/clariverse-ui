@@ -4,8 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Mail, MessageSquare, Ticket, Phone, AlertCircle, CheckCircle, AlertTriangle, Sparkles, X, Share2 } from "lucide-react";
-import { generatePrematureClosureCases, type PrematureClosureCase, type ChannelStatus } from "@/lib/unified/prematureClosureData";
+import { Mail, MessageSquare, Ticket, Phone, AlertCircle, CheckCircle, AlertTriangle, Sparkles, X, TrendingUp } from "lucide-react";
 
 interface ClosedChannel {
   id: string;
@@ -39,25 +38,123 @@ interface Flow {
   caseIds: string[];
 }
 
+interface PrematureClosureCase {
+  id: string;
+  risk: 'high' | 'medium' | 'low';
+  title: string;
+  description: string;
+  intentCluster: string;
+  timestamp: string;
+  closedChannel: string;
+  activeChannels: Array<{
+    channel: string;
+    sentiment: string;
+    status: string;
+    pendingAction?: string;
+  }>;
+  action: string;
+}
+
+const CLOSED_CHANNELS: ClosedChannel[] = [
+  { id: 'ticket', label: 'Ticket', status: 'Marked Resolved', count: 2, icon: Ticket },
+  { id: 'chat', label: 'Chat', status: 'Marked Resolved', count: 1, icon: MessageSquare },
+  { id: 'voice', label: 'Voice', status: 'Confirmed Complete', count: 1, icon: Phone },
+];
+
+const ACTIVE_CHANNELS: ActiveChannel[] = [
+  { id: 'voice', label: 'Voice', status: 'Frustrated', count: 2, icon: Phone },
+  { id: 'email', label: 'Email', status: 'Awaiting Action', count: 2, icon: Mail },
+  { id: 'social', label: 'Social', status: 'Public Complaint', count: 1, icon: MessageSquare },
+];
+
+const FLOWS: Flow[] = [
+  {
+    from: 'ticket',
+    to: 'voice',
+    count: 2,
+    risk: 'high',
+    conflict: { sentiment: '4/5', sameIntent: true, timeDelta: '1 min' },
+    topics: ['Mortgage Rate Lock'],
+    caseIds: ['C-48152', 'C-77204']
+  },
+  {
+    from: 'ticket',
+    to: 'email',
+    count: 1,
+    risk: 'medium',
+    conflict: { sentiment: '3.5/5', sameIntent: true, timeDelta: '2h' },
+    topics: ['Credit Card Dispute'],
+    caseIds: ['C-77204']
+  },
+  {
+    from: 'chat',
+    to: 'email',
+    count: 1,
+    risk: 'medium',
+    conflict: { sentiment: '4.2/5', sameIntent: true, timeDelta: '30 min' },
+    topics: ['Credit Card Dispute'],
+    caseIds: ['C-77204']
+  },
+  {
+    from: 'chat',
+    to: 'social',
+    count: 1,
+    risk: 'high',
+    conflict: { sentiment: '4.5/5', sameIntent: true, timeDelta: '1h' },
+    topics: ['Credit Card Dispute'],
+    caseIds: ['C-77204']
+  },
+  {
+    from: 'voice',
+    to: 'email',
+    count: 1,
+    risk: 'low',
+    conflict: { sentiment: '2.5/5', sameIntent: true, timeDelta: '4h' },
+    topics: ['Account Inquiry'],
+    caseIds: ['C-12345']
+  },
+];
+
+const CASES: PrematureClosureCase[] = [
+  {
+    id: 'C-48152',
+    risk: 'high',
+    title: 'Mortgage Rate Lock',
+    description: 'Ticket closed while borrower escalated the same rate-lock request via voice with declining sentiment.',
+    intentCluster: 'Intent cluster',
+    timestamp: 'Nov 6, 2:22 PM',
+    closedChannel: 'ticket',
+    activeChannels: [
+      { channel: 'ticket', sentiment: '2.1 (Bit Irritated)', status: 'Resolution' },
+      { channel: 'voice', sentiment: '4.6 (Frustrated)', status: 'Escalation' },
+    ],
+    action: 'Reopen ticket and assign to compliance QA for premature closure review.'
+  },
+  {
+    id: 'C-77204',
+    risk: 'medium',
+    title: 'Credit Card Dispute',
+    description: 'Chat marked dispute resolved, yet customer continues via email and social with unresolved sentiment and company pending actions.',
+    intentCluster: 'Intent cluster',
+    timestamp: 'Nov 5, 7:10 PM',
+    closedChannel: 'chat',
+    activeChannels: [
+      { channel: 'chat', sentiment: '2.3 (Bit Irritated)', status: 'Resolution' },
+      { channel: 'email', sentiment: '4.2 (Anger)', status: 'Investigation', pendingAction: 'Pending bank action' },
+      { channel: 'social', sentiment: '4.5 (Frustrated)', status: 'Awareness', pendingAction: 'Pending bank action' },
+    ],
+    action: 'Link channels in dispute workflow and launch follow-up audit on closure criteria.'
+  },
+];
+
 const getChannelColor = (channel: string) => {
   switch (channel) {
-    case "email": return { bg: '#60a5fa', border: '#3b82f6', text: '#93c5fd' };
-    case "ticket": return { bg: '#a78bfa', border: '#8b5cf6', text: '#c4b5fd' };
-    case "chat": return { bg: '#34d399', border: '#10b981', text: '#6ee7b7' };
-    case "voice": return { bg: '#f87171', border: '#ef4444', text: '#fca5a5' };
-    case "social": return { bg: '#f472b6', border: '#ec4899', text: '#f9a8d4' };
+    case 'ticket': return { bg: '#a78bfa', border: '#8b5cf6', text: '#c4b5fd' };
+    case 'chat': return { bg: '#34d399', border: '#10b981', text: '#6ee7b7' };
+    case 'voice': return { bg: '#f87171', border: '#ef4444', text: '#fca5a5' };
+    case 'email': return { bg: '#60a5fa', border: '#3b82f6', text: '#93c5fd' };
+    case 'social': return { bg: '#f472b6', border: '#ec4899', text: '#f9a8d4' };
     default: return { bg: '#6b7280', border: '#4b5563', text: '#9ca3af' };
-  }
-};
-
-const getChannelIcon = (channel: string) => {
-  switch (channel) {
-    case "email": return Mail;
-    case "ticket": return Ticket;
-    case "chat": return MessageSquare;
-    case "voice": return Phone;
-    case "social": return Share2;
-    default: return Mail;
   }
 };
 
@@ -69,193 +166,65 @@ const getRiskColor = (risk: 'high' | 'medium' | 'low') => {
   }
 };
 
-const getRiskLevelColor = (riskLevel: "high" | "medium" | "low") => {
-  switch (riskLevel) {
-    case "high":
-      return {
-        bg: "bg-red-500/20",
-        border: "border-red-400/40",
-        text: "text-red-100",
-        badge: "bg-red-500/30 border-red-400/50 text-red-200",
-      };
-    case "medium":
-      return {
-        bg: "bg-amber-500/20",
-        border: "border-amber-400/40",
-        text: "text-amber-100",
-        badge: "bg-amber-500/30 border-amber-400/50 text-amber-200",
-      };
-    case "low":
-      return {
-        bg: "bg-emerald-500/20",
-        border: "border-emerald-400/40",
-        text: "text-emerald-100",
-        badge: "bg-emerald-500/30 border-emerald-400/50 text-emerald-200",
-      };
-  }
-};
-
-const getSentimentColor = (score: number) => {
-  if (score <= 2) return "text-emerald-400";
-  if (score <= 3) return "text-amber-400";
-  if (score <= 4) return "text-orange-400";
-  return "text-red-400";
-};
-
-export function PrematureClosureRiskCard() {
-  const [cases, setCases] = useState<PrematureClosureCase[]>([]);
-  const [riskFilter, setRiskFilter] = useState<"all" | "high" | "medium" | "low">("all");
+export function PrematureClosureRiskAuditCard() {
   const [selectedFlow, setSelectedFlow] = useState<Flow | null>(null);
   const [hoveredFlow, setHoveredFlow] = useState<Flow | null>(null);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [viewportWidth, setViewportWidth] = useState(1000);
-
-  useEffect(() => {
-    const prematureCases = generatePrematureClosureCases();
-    setCases(prematureCases);
-  }, []);
+  const [viewportWidth, setViewportWidth] = useState(1400);
 
   useEffect(() => {
     const updateViewport = () => {
       if (containerRef.current) {
-        const width = containerRef.current.offsetWidth || containerRef.current.clientWidth;
-        setViewportWidth(Math.max(width, 800)); // Minimum width
+        setViewportWidth(containerRef.current.offsetWidth);
       }
     };
     updateViewport();
     window.addEventListener('resize', updateViewport);
-    const observer = new ResizeObserver(updateViewport);
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-    return () => {
-      window.removeEventListener('resize', updateViewport);
-      observer.disconnect();
-    };
+    return () => window.removeEventListener('resize', updateViewport);
   }, []);
 
   const isSmallViewport = viewportWidth < 1400;
-  const svgHeight = 600;
-
-  // Generate flows from cases
-  const flows = useMemo(() => {
-    const flowMap = new Map<string, Flow>();
-    
-    cases.forEach(caseItem => {
-      const closedChannel = caseItem.channels.find(c => c.status === 'closed');
-      const activeChannels = caseItem.channels.filter(c => c.status === 'active' || c.status === 'pending');
-      
-      if (closedChannel && activeChannels.length > 0) {
-        activeChannels.forEach(activeChannel => {
-          const key = `${closedChannel.channel}-${activeChannel.channel}`;
-          const existing = flowMap.get(key);
-          
-          if (existing) {
-            existing.count++;
-            existing.caseIds.push(caseItem.customerId);
-            if (!existing.topics.includes(caseItem.issueType)) {
-              existing.topics.push(caseItem.issueType);
-            }
-          } else {
-            flowMap.set(key, {
-              from: closedChannel.channel,
-              to: activeChannel.channel,
-              count: 1,
-              risk: caseItem.riskLevel,
-              conflict: {
-                sentiment: `${activeChannel.sentiment.toFixed(1)}/5`,
-                sameIntent: true,
-                timeDelta: '1 min', // Would calculate from timestamps
-              },
-              topics: [caseItem.issueType],
-              caseIds: [caseItem.customerId],
-            });
-          }
-        });
-      }
-    });
-    
-    return Array.from(flowMap.values());
-  }, [cases]);
-
-  // Calculate closed and active channels from flows
-  const closedChannels = useMemo(() => {
-    const channelMap = new Map<string, number>();
-    flows.forEach(flow => {
-      channelMap.set(flow.from, (channelMap.get(flow.from) || 0) + flow.count);
-    });
-    return Array.from(channelMap.entries()).map(([id, count]) => ({
-      id,
-      label: id.charAt(0).toUpperCase() + id.slice(1),
-      status: id === 'ticket' ? 'Marked Resolved' : id === 'chat' ? 'Marked Resolved' : 'Confirmed Complete',
-      count,
-      icon: getChannelIcon(id) as typeof Ticket,
-    }));
-  }, [flows]);
-
-  const activeChannels = useMemo(() => {
-    const channelMap = new Map<string, number>();
-    flows.forEach(flow => {
-      channelMap.set(flow.to, (channelMap.get(flow.to) || 0) + flow.count);
-    });
-    return Array.from(channelMap.entries()).map(([id, count]) => ({
-      id,
-      label: id.charAt(0).toUpperCase() + id.slice(1),
-      status: id === 'voice' ? 'Frustrated' : id === 'email' ? 'Awaiting Action' : 'Public Complaint',
-      count,
-      icon: getChannelIcon(id) as typeof Mail,
-    }));
-  }, [flows]);
 
   // Calculate node positions
   const nodePositions = useMemo(() => {
-    const calculatedSvgWidth = Math.max(viewportWidth, 800);
     const leftX = 100;
-    const rightX = Math.max(calculatedSvgWidth - 250, leftX + 400); // Ensure minimum spacing
+    const rightX = viewportWidth - 300;
     const middleX = (leftX + rightX) / 2;
     const nodeSpacing = 160;
     const startY = 100;
-    const nodeHeight = isSmallViewport ? 96 : 120;
-    const nodeWidth = isSmallViewport ? 160 : 200;
-
-    // Center nodes vertically if there are fewer channels
-    const maxChannels = Math.max(closedChannels.length, activeChannels.length);
-    const totalHeight = (maxChannels - 1) * nodeSpacing + nodeHeight;
-    const centerOffset = (svgHeight - totalHeight) / 2;
-    const adjustedStartY = Math.max(50, centerOffset);
 
     const closedPositions: Record<string, { x: number; y: number }> = {};
-    closedChannels.forEach((channel, idx) => {
+    CLOSED_CHANNELS.forEach((channel, idx) => {
       closedPositions[channel.id] = {
         x: leftX,
-        y: adjustedStartY + idx * nodeSpacing,
+        y: startY + idx * nodeSpacing,
       };
     });
 
     const activePositions: Record<string, { x: number; y: number }> = {};
-    activeChannels.forEach((channel, idx) => {
+    ACTIVE_CHANNELS.forEach((channel, idx) => {
       activePositions[channel.id] = {
         x: rightX,
-        y: adjustedStartY + idx * nodeSpacing,
+        y: startY + idx * nodeSpacing,
       };
     });
 
     return { closed: closedPositions, active: activePositions, middleX };
-  }, [viewportWidth, svgHeight, closedChannels, activeChannels, isSmallViewport]);
+  }, [viewportWidth]);
 
   // Calculate flow paths
   const flowPaths = useMemo(() => {
-    return flows.map((flow, idx) => {
+    return FLOWS.map((flow, idx) => {
       const fromPos = nodePositions.closed[flow.from];
       const toPos = nodePositions.active[flow.to];
       
       if (!fromPos || !toPos) return null;
 
-      const startX = fromPos.x + (isSmallViewport ? 160 : 200);
-      const startY = fromPos.y + (isSmallViewport ? 48 : 60);
+      const startX = fromPos.x + 200;
+      const startY = fromPos.y + 60;
       const endX = toPos.x;
-      const endY = toPos.y + (isSmallViewport ? 48 : 60);
+      const endY = toPos.y + 60;
       
       // Control points for smooth S-curve
       const control1X = startX + (endX - startX) * 0.3;
@@ -293,49 +262,33 @@ export function PrematureClosureRiskCard() {
       conflictY: number;
       width: number;
     }>;
-  }, [nodePositions, flows, isSmallViewport]);
+  }, [nodePositions]);
 
-  const filteredCases = riskFilter === "all" 
-    ? (selectedFlow ? cases.filter(c => selectedFlow.caseIds.includes(c.customerId)) : cases)
-    : cases.filter(c => c.riskLevel === riskFilter);
+  const filteredCases = selectedFlow
+    ? CASES.filter(c => selectedFlow.caseIds.includes(c.id))
+    : CASES;
 
-  const riskCounts = {
-    high: cases.filter(c => c.riskLevel === "high").length,
-    medium: cases.filter(c => c.riskLevel === "medium").length,
-    low: cases.filter(c => c.riskLevel === "low").length,
+  const getChannelIcon = (channelId: string) => {
+    const allChannels = [...CLOSED_CHANNELS, ...ACTIVE_CHANNELS];
+    const channel = allChannels.find(c => c.id === channelId);
+    return channel?.icon || Ticket;
   };
 
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg">
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Sparkles className="h-5 w-5 text-yellow-400" />
-              <h2 className="text-2xl font-bold text-white">Premature Closure Risk Audit</h2>
-            </div>
-            <p className="text-sm text-gray-400">
-              Cases where tickets were closed but the same issue was raised again in another channel
-            </p>
+    <div className="w-full h-full bg-[#0a0a0a] p-10" ref={containerRef}>
+      <div className="flex items-start justify-between mb-6">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="h-5 w-5 text-yellow-400" />
+            <h1 className="text-2xl font-bold text-white">Premature Closure Risk Audit</h1>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-[rgba(26,26,26,0.6)]">
-              <AlertCircle className="h-4 w-4 text-gray-400" />
-              <select
-                value={riskFilter}
-                onChange={(e) => {
-                  setRiskFilter(e.target.value as any);
-                  setSelectedFlow(null);
-                }}
-                className="bg-transparent text-white text-sm border-none outline-none"
-              >
-                <option value="all">All Risks ({cases.length})</option>
-                <option value="high">High ({riskCounts.high})</option>
-                <option value="medium">Medium ({riskCounts.medium})</option>
-                <option value="low">Low ({riskCounts.low})</option>
-              </select>
-            </div>
-          </div>
+          <p className="text-sm text-gray-400">
+            Cases where tickets were closed but the same issue was raised again in another channel.
+          </p>
+        </div>
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/10 bg-[rgba(26,26,26,0.6)]">
+          <AlertCircle className="h-4 w-4 text-gray-400" />
+          <span className="text-sm text-white">All Risks ({CASES.length})</span>
         </div>
       </div>
 
@@ -343,13 +296,9 @@ export function PrematureClosureRiskCard() {
         {/* Sankey Flow Diagram - Left Side (60%) */}
         <div className="lg:col-span-2">
           <Card className="border border-white/10 bg-[rgba(26,26,26,0.6)] p-6">
-            <div className="relative bg-[#0a0a0a] rounded-lg overflow-visible" style={{ minHeight: `${svgHeight}px` }} ref={containerRef}>
-              <svg width="100%" height={svgHeight} viewBox={`0 0 ${Math.max(viewportWidth, 800)} ${svgHeight}`} preserveAspectRatio="xMidYMid meet" style={{ overflow: 'visible' }}>
+            <div className="relative" style={{ minHeight: '600px' }}>
+              <svg width="100%" height="600" className="overflow-visible">
                 <defs>
-                  <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#1a1a1a" />
-                    <stop offset="100%" stopColor="#252525" />
-                  </linearGradient>
                   {['high', 'medium', 'low'].map(risk => {
                     const colors = getRiskColor(risk as 'high' | 'medium' | 'low');
                     return (
@@ -439,12 +388,13 @@ export function PrematureClosureRiskCard() {
                 })}
 
                 {/* Closed Channel Nodes (Left) */}
-                {closedChannels.map((channel) => {
+                {CLOSED_CHANNELS.map((channel) => {
                   const pos = nodePositions.closed[channel.id];
                   if (!pos) return null;
                   const colors = getChannelColor(channel.id);
                   const Icon = channel.icon;
                   const isHovered = hoveredNode === `closed-${channel.id}`;
+                  const connectedFlows = flowPaths.filter(f => f.from === channel.id);
 
                   return (
                     <g
@@ -459,13 +409,13 @@ export function PrematureClosureRiskCard() {
                         width={isSmallViewport ? 160 : 200}
                         height={isSmallViewport ? 96 : 120}
                         rx="12"
-                        fill="url(#nodeGradient)"
+                        fill="linear-gradient(135deg, #1a1a1a, #252525)"
                         stroke={colors.border}
                         strokeWidth="2"
                         opacity={isHovered ? 1 : (hoveredNode && !isHovered ? 0.4 : 1)}
                         style={{
                           transition: 'all 0.3s ease',
-                          filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.4))',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
                         }}
                       />
                       <foreignObject
@@ -490,12 +440,13 @@ export function PrematureClosureRiskCard() {
                 })}
 
                 {/* Active Channel Nodes (Right) */}
-                {activeChannels.map((channel) => {
+                {ACTIVE_CHANNELS.map((channel) => {
                   const pos = nodePositions.active[channel.id];
                   if (!pos) return null;
                   const colors = getChannelColor(channel.id);
                   const Icon = channel.icon;
                   const isHovered = hoveredNode === `active-${channel.id}`;
+                  const connectedFlows = flowPaths.filter(f => f.to === channel.id);
 
                   return (
                     <g
@@ -510,13 +461,13 @@ export function PrematureClosureRiskCard() {
                         width={isSmallViewport ? 160 : 200}
                         height={isSmallViewport ? 96 : 120}
                         rx="12"
-                        fill="url(#nodeGradient)"
+                        fill="linear-gradient(135deg, #1a1a1a, #252525)"
                         stroke="#f97316"
                         strokeWidth="2"
                         opacity={isHovered ? 1 : (hoveredNode && !isHovered ? 0.4 : 1)}
                         style={{
                           transition: 'all 0.3s ease',
-                          filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.4))',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
                         }}
                       />
                       <foreignObject
@@ -558,105 +509,100 @@ export function PrematureClosureRiskCard() {
               <h3 className="text-lg font-bold text-white">Premature Closure Cases</h3>
               {selectedFlow && (
                 <span className="text-xs text-gray-400">
-                  Viewing {filteredCases.length} of {cases.length} cases
+                  Viewing {filteredCases.length} of {CASES.length} cases
                 </span>
               )}
             </div>
             <ScrollArea className="h-[600px] pr-2">
               <div className="space-y-4">
-                {filteredCases.length > 0 ? (
-                  filteredCases.map((caseItem) => {
-                    const severityColors = {
-                      high: "bg-red-500/20 border-red-400/40 text-red-100",
-                      medium: "bg-amber-500/20 border-amber-400/40 text-amber-100",
-                      low: "bg-emerald-500/20 border-emerald-400/40 text-emerald-100",
-                    };
+                {filteredCases.map((caseItem) => {
+                  const riskColors = {
+                    high: 'bg-red-500/20 border-red-400/40 text-red-100',
+                    medium: 'bg-amber-500/20 border-amber-400/40 text-amber-100',
+                    low: 'bg-yellow-500/20 border-yellow-400/40 text-yellow-100',
+                  };
 
-                    return (
-                      <Card
-                        key={caseItem.customerId}
-                        className={`border border-white/10 bg-[rgba(15,15,15,0.8)] p-4 hover:border-[#b90abd]/40 transition-all ${
-                          selectedFlow?.caseIds.includes(caseItem.customerId) ? 'border-[#b90abd]/60 bg-[rgba(185,10,189,0.1)]' : ''
-                        }`}
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex-1">
+                  return (
+                    <Card
+                      key={caseItem.id}
+                      className={`border border-white/10 bg-[rgba(15,15,15,0.8)] p-4 hover:border-[#b90abd]/40 transition-all ${
+                        selectedFlow?.caseIds.includes(caseItem.id) ? 'border-[#b90abd]/60 bg-[rgba(185,10,189,0.1)]' : ''
+                      }`}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h5 className="text-base font-semibold text-white">{caseItem.id}</h5>
+                            <Badge className={`${riskColors[caseItem.risk]} text-xs`}>
+                              {caseItem.risk.toUpperCase()}
+                            </Badge>
+                          </div>
+                          <h6 className="text-sm font-bold text-white mb-1">{caseItem.title}</h6>
+                          <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                            <span>{caseItem.intentCluster}</span>
+                            <span>•</span>
+                            <span>{caseItem.timestamp}</span>
+                          </div>
+                          <p className="text-xs text-gray-300 mb-3">{caseItem.description}</p>
+
+                          {/* Channel Status */}
+                          <div className="mb-3 space-y-2">
+                            <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
+                              Channel Status
+                            </div>
+                            {caseItem.activeChannels.map((ac, idx) => {
+                              const channelColors = getChannelColor(ac.channel);
+                              const ChannelIcon = getChannelIcon(ac.channel);
+                              const isResolved = ac.status === 'Resolution';
+                              const sentimentColor = parseFloat(ac.sentiment.split(' ')[0]) >= 4 ? 'text-red-400' : 'text-gray-400';
+
+                              return (
+                                <div key={idx} className="flex items-center gap-2 text-xs">
+                                  {isResolved ? (
+                                    <CheckCircle className="h-4 w-4 text-green-400" />
+                                  ) : (
+                                    <X className="h-4 w-4 text-red-400" />
+                                  )}
+                                  <Badge
+                                    className="text-xs px-2 py-0.5"
+                                    style={{
+                                      backgroundColor: `${channelColors.bg}40`,
+                                      borderColor: channelColors.border,
+                                      color: channelColors.text,
+                                    }}
+                                  >
+                                    <ChannelIcon className="h-3 w-3 inline mr-1" />
+                                    {ac.channel.charAt(0).toUpperCase() + ac.channel.slice(1)}
+                                  </Badge>
+                                  <span className={sentimentColor}>{ac.sentiment}</span>
+                                  <span className="text-gray-500 text-[10px]">({ac.status})</span>
+                                  {ac.pendingAction && (
+                                    <span className="text-orange-400 text-[10px]">• {ac.pendingAction}</span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {/* Action Section */}
+                          <div className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-400/30 rounded-lg p-3">
                             <div className="flex items-center gap-2 mb-2">
-                              <h5 className="text-base font-semibold text-white">{caseItem.customerId}</h5>
-                              <Badge className={`${severityColors[caseItem.riskLevel]} text-xs`}>
-                                {caseItem.riskLevel.toUpperCase()}
-                              </Badge>
+                              <Sparkles className="h-4 w-4 text-yellow-400" />
+                              <span className="text-xs font-bold text-yellow-300 uppercase">Action</span>
                             </div>
-                            <h6 className="text-sm font-bold text-white mb-1">{caseItem.issueType}</h6>
-                            <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
-                              <span>{caseItem.intentCluster}</span>
-                              <span>•</span>
-                              <span>{caseItem.timestamp}</span>
-                            </div>
-                            <p className="text-xs text-gray-300 mb-3">{caseItem.description}</p>
-
-                            {/* Channel Status */}
-                            <div className="mb-3 space-y-2">
-                              <div className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
-                                Channel Status
-                              </div>
-                              {caseItem.channels.map((channel, idx) => {
-                                const channelColors = getChannelColor(channel.channel);
-                                const ChannelIcon = getChannelIcon(channel.channel);
-                                const isResolved = channel.status === 'closed';
-                                const sentimentColor = getSentimentColor(channel.sentiment);
-
-                                return (
-                                  <div key={idx} className="flex items-center gap-2 text-xs flex-wrap">
-                                    {isResolved ? (
-                                      <CheckCircle className="h-4 w-4 text-green-400" />
-                                    ) : (
-                                      <X className="h-4 w-4 text-red-400" />
-                                    )}
-                                    <Badge
-                                      className="text-xs px-2 py-0.5"
-                                      style={{
-                                        backgroundColor: `${channelColors.bg}40`,
-                                        borderColor: channelColors.border,
-                                        color: channelColors.text,
-                                      }}
-                                    >
-                                      <ChannelIcon className="h-3 w-3 inline mr-1" />
-                                      {channel.channel.charAt(0).toUpperCase() + channel.channel.slice(1)}
-                                    </Badge>
-                                    <span className={sentimentColor}>{channel.sentiment.toFixed(1)} ({channel.sentimentLabel})</span>
-                                    <span className="text-gray-500 text-[10px]">({channel.statusLabel})</span>
-                                    {channel.status === 'pending' && (
-                                      <span className="text-orange-400 text-[10px]">• Pending bank action</span>
-                                    )}
-                                  </div>
-                                );
-                              })}
-                            </div>
-
-                            {/* Action Section */}
-                            <div className="bg-gradient-to-r from-yellow-500/20 to-amber-500/20 border border-yellow-400/30 rounded-lg p-3">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Sparkles className="h-4 w-4 text-yellow-400" />
-                                <span className="text-xs font-bold text-yellow-300 uppercase">Action</span>
-                              </div>
-                              <p className="text-xs text-white leading-relaxed">{caseItem.aiAction}</p>
-                            </div>
+                            <p className="text-xs text-white leading-relaxed">{caseItem.action}</p>
                           </div>
                         </div>
-                      </Card>
-                    );
-                  })
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <p>No premature closure cases found</p>
-                  </div>
-                )}
+                      </div>
+                    </Card>
+                  );
+                })}
               </div>
             </ScrollArea>
           </Card>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
+

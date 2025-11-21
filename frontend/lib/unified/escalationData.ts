@@ -277,15 +277,19 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
       : originChannel === "chat"
       ? Math.floor(rng.random() * 15) + 5 // 5-19 chat messages
       : originChannel === "voice"
-      ? Math.floor(rng.random() * 3) + 1 // 1-3 voice messages
+      ? Math.floor(rng.random() * 7) + 18 // 18-24 voice messages (min 18)
       : Math.floor(rng.random() * 4) + 1; // 1-4 ticket threads
+    // Set duration for voice channel (10-20 minutes)
+    const originDuration = originChannel === "voice" 
+      ? Math.floor(rng.random() * 11) + 10 // 10-20 minutes
+      : undefined;
     journey.push({
       channel: originChannel,
       timestamp: startTime.toISOString(),
       escalated: false,
       sentiment: 0.1 + rng.random() * 0.3, // Keep old sentiment for compatibility
       sentimentScore: originSentiment,
-      duration: undefined,
+      duration: originDuration,
       subtopics: initialTopicSet,
       messageCount: originMessageCount,
     });
@@ -367,8 +371,12 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
         : steps[stepIdx] === "chat"
         ? Math.floor(rng.random() * 15) + 5 // 5-19 chat messages
         : steps[stepIdx] === "voice"
-        ? Math.floor(rng.random() * 3) + 1 // 1-3 voice messages
+        ? Math.floor(rng.random() * 7) + 18 // 18-24 voice messages (min 18)
         : Math.floor(rng.random() * 4) + 1; // 1-4 ticket threads
+      // Set duration for voice channel (10-20 minutes)
+      const stepDuration = steps[stepIdx] === "voice" 
+        ? Math.floor(rng.random() * 11) + 10 // 10-20 minutes
+        : undefined;
       // Use intermediate subtopics for intermediate steps - same problem, progressing concern
       journey.push({
         channel: steps[stepIdx],
@@ -376,7 +384,7 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
         escalated: false,
         sentiment: 0.1 + rng.random() * 0.2, // Keep old sentiment for compatibility
         sentimentScore: currentSentiment,
-        duration: undefined,
+        duration: stepDuration,
         subtopics: intermediateTopicSet, // Same problem theme, but intermediate level subtopics
         messageCount: stepMessageCount,
       });
@@ -394,8 +402,12 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
       : finalChannel === "chat"
       ? Math.floor(rng.random() * 15) + 5 // 5-19 chat messages
       : finalChannel === "voice"
-      ? Math.floor(rng.random() * 3) + 1 // 1-3 voice messages
+      ? Math.floor(rng.random() * 7) + 18 // 18-24 voice messages (min 18)
       : Math.floor(rng.random() * 4) + 1; // 1-4 ticket threads
+    // Set duration for voice channel (10-20 minutes), undefined for other channels
+    const finalDuration = finalChannel === "voice" 
+      ? Math.floor(rng.random() * 11) + 10 // 10-20 minutes
+      : undefined;
     // Final step uses escalation subtopics - same problem theme, but urgent/escalation level
     journey.push({
       channel: finalChannel,
@@ -403,7 +415,7 @@ export const generateCustomerJourneys = (): CustomerJourney[] => {
       escalated: true,
       sentiment: -0.1 - rng.random() * 0.4, // Keep old sentiment for compatibility
       sentimentScore: escalationSentiment,
-      duration: Math.floor(rng.random() * 30) + 10,
+      duration: finalDuration,
       subtopics: escalationTopicSet, // Same problem theme, but escalation level subtopics
       messageCount: finalMessageCount,
     });
