@@ -515,7 +515,7 @@ export function PrematureClosureRiskCard() {
 
 
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg">
+    <Card className="border border-(--border) bg-(--card) p-6 shadow-lg">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="h-5 w-5 text-yellow-400" />
@@ -639,7 +639,7 @@ export function PrematureClosureRiskCard() {
 
                     {/* Action */}
                     <div className="flex items-start gap-2 mb-4 p-3 bg-yellow-500/10 border border-yellow-400/20 rounded-lg">
-                      <Sparkles className="h-4 w-4 text-yellow-400 flex-shrink-0 mt-0.5" />
+                      <Sparkles className="h-4 w-4 text-yellow-400 shrink-0 mt-0.5" />
                       <div className="text-sm text-yellow-100">
                         <span className="font-semibold">Action:</span> {caseItem.aiAction}
                       </div>
@@ -775,7 +775,7 @@ export function PrematureClosureRiskCard() {
                     key={idx}
                     className="flex items-start gap-3 p-4 rounded-lg bg-[rgba(15,15,15,0.8)] border border-white/5"
                   >
-                    <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                    <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
                     <p className="text-sm text-gray-200 leading-relaxed">{indicator}</p>
                   </div>
                 ))}
@@ -795,7 +795,7 @@ export function PrematureClosureRiskCard() {
                 key={idx}
                 className="flex items-start gap-3 p-4 rounded-lg bg-[rgba(15,15,15,0.8)] border border-white/5"
               >
-                <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
                 <p className="text-sm text-gray-200 leading-relaxed">{indicator}</p>
               </div>
             ))}

@@ -235,7 +235,7 @@ type PressureInsight = {
 
 export function ToneDriftWall({ toneDrift = toneDriftData }: { toneDrift?: ToneDriftEntry[] } = {}) {
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-(--border) bg-(--card) shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <CardTitle>✨ Tone Drift Across Channels</CardTitle>
@@ -274,13 +274,13 @@ function ToneDriftCard({ entry }: { entry: ToneDriftEntry }) {
   const deltaValue = deltaAbsolute.toFixed(1);
 
   return (
-    <div className="flex h-full flex-col justify-between rounded-2xl border border-[color:var(--border)] bg-[color:var(--card)] p-5 text-sm text-gray-300 shadow-inner shadow-indigo-500/10 transition-colors duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <div className="flex h-full flex-col justify-between rounded-2xl border border-(--border) bg-(--card) p-5 text-sm text-gray-300 shadow-inner shadow-indigo-500/10 transition-colors duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <div className="space-y-3">
         <div className="flex flex-wrap items-center gap-2 text-[10px] font-semibold uppercase tracking-wide text-indigo-200/80">
           <span className="rounded-full border border-indigo-400/40 bg-indigo-500/10 px-2 py-1 text-indigo-100">
             Tone Drift ✨
           </span>
-          <span className="rounded-full border border-[color:var(--border)] bg-[rgba(26,26,26,0.55)] px-2 py-1 text-gray-200">
+          <span className="rounded-full border border-(--border) bg-[rgba(26,26,26,0.55)] px-2 py-1 text-gray-200">
             {entry.correlationLevel}
           </span>
         </div>
@@ -301,7 +301,7 @@ function ToneDriftCard({ entry }: { entry: ToneDriftEntry }) {
           {entry.sequence.map((point, index) => (
             <span
               key={`${entry.intent}-${point.channel}-${index}`}
-              className="rounded-full border border-[color:var(--border)] bg-[rgba(26,26,26,0.55)] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-300"
+              className="rounded-full border border-(--border) bg-[rgba(26,26,26,0.55)] px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-gray-300"
             >
               {CHANNEL_LABELS[point.channel]}
             </span>
@@ -317,7 +317,7 @@ function ToneDriftSequence({ sequence }: { sequence: ToneDriftSequencePoint[] })
     <div className="mt-4 space-y-3">
       <div className="flex items-center gap-2 text-[11px] uppercase tracking-wide text-indigo-200/70">
         <span>Journey Timeline</span>
-        <div className="h-px flex-1 bg-gradient-to-r from-indigo-400/40 via-indigo-200/20 to-indigo-400/40" />
+        <div className="h-px flex-1 bg-linear-to-r from-indigo-400/40 via-indigo-200/20 to-indigo-400/40" />
       </div>
       <div className="flex flex-col gap-2.5">
         {sequence.map((point, index) => (
@@ -326,7 +326,7 @@ function ToneDriftSequence({ sequence }: { sequence: ToneDriftSequencePoint[] })
             className="flex items-center justify-between rounded-lg border border-white/10 bg-[rgba(26,26,26,0.5)] px-3 py-2 text-xs"
           >
             <div className="flex items-center gap-2">
-              <span className="rounded-full border border-[color:var(--border)] bg-[rgba(26,26,26,0.55)] px-2 py-1 text-[11px] font-semibold text-gray-100">
+              <span className="rounded-full border border-(--border) bg-[rgba(26,26,26,0.55)] px-2 py-1 text-[11px] font-semibold text-gray-100">
                 {CHANNEL_LABELS[point.channel]}
               </span>
               {point.stage ? (
@@ -349,7 +349,7 @@ function ToneDriftSequence({ sequence }: { sequence: ToneDriftSequencePoint[] })
 
 export function PrematureClosureAuditWall({ audits = prematureClosureAuditData }: { audits?: PrematureClosureAuditEntry[] } = {}) {
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg shadow-rose-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-(--border) bg-(--card) shadow-lg shadow-rose-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <CardTitle>✨ Cross-Channel Interaction Breakdown Audit</CardTitle>
@@ -569,7 +569,7 @@ export function PressureConstellationWall({
   );
 
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-(--border) bg-(--card) shadow-lg shadow-indigo-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <CardTitle>✨ AI-Clustered Pressure Constellation Map</CardTitle>
@@ -580,7 +580,7 @@ export function PressureConstellationWall({
         <Badge className="border-indigo-400/40 bg-indigo-500/10 text-indigo-100">Constellation</Badge>
       </CardHeader>
       <CardContent className="space-y-6 px-6 pb-6">
-        <div className="rounded-2xl border border-dashed border-white/10 bg-gradient-to-tr from-[#1b1b2f]/70 via-[rgba(26,26,26,0.55)] to-[#2b1d3f]/60 p-6 shadow-inner">
+        <div className="rounded-2xl border border-dashed border-white/10 bg-linear-to-tr from-[#1b1b2f]/70 via-[rgba(26,26,26,0.55)] to-[#2b1d3f]/60 p-6 shadow-inner">
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs uppercase tracking-wide text-indigo-100/70">
             <div className="flex items-center gap-2">
               <span className="rounded-full border border-white/10 bg-white/5 px-2 py-1">X → Sentiment (Happy → Frustrated)</span>
@@ -1269,7 +1269,7 @@ const pressureConstellationInsights: PressureInsight[] = [
 
 export function AISummaryRail({ aiSummary }: { aiSummary: AISummaryWallResponse | null }) {
   return (
-    <Card className="h-full border border-[color:var(--border)] bg-[color:var(--card)] transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="h-full border border-(--border) bg-(--card) transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <CardHeader>
         <CardTitle>✨ AI Summary Wall</CardTitle>
         <CardDescription>Executive-level highlights generated from live insights.</CardDescription>
