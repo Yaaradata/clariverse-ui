@@ -202,7 +202,7 @@ export function EisenhowerDistributionCard({ data }: { data: KPIData }) {
       description: 'Not Important, Urgent',
     },
     {
-      name: 'Delete',
+      name: 'Postpone',
       value: distribution.delete,
       percentage: Math.round((distribution.delete / total) * 100),
       color: 'bg-gray-500',

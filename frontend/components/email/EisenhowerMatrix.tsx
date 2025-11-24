@@ -36,7 +36,7 @@ const quadrantLabels = {
   do: 'Do - Now',
   schedule: 'Schedule - Later',
   delegate: 'Delegate - Team',
-  delete: 'Delete',
+  delete: 'Postpone',
 };
 
 // Define allowed priorities for each quadrant

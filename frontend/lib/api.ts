@@ -528,7 +528,7 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
           email: 'support@company.com',
         },
       ],
-      resolution_status: ['open', 'in_progress', 'closed', 'escalated'][Math.floor(seededRandom(seed + 13) * 4)] as any,
+      resolution_status: 'open' as const, // All threads are open - no closed items
       priority,
       urgency,
       importance_score,
@@ -1022,31 +1022,25 @@ export async function getPredictiveMetrics(): Promise<PredictiveMetrics> {
 
 // Generate priority resolution data for a specific quadrant
 export function generatePriorityResolutionDataForQuadrant(threads: EisenhowerThread[], quadrant: string): PriorityResolutionData[] {
-  // Filter threads by quadrant only (don't filter by priority - show all priorities in the quadrant)
+  // Filter threads by quadrant only (all threads are already 'open', so no need to filter by status)
   const quadrantThreads = threads.filter(thread => thread.quadrant === quadrant);
 
-  // Group by priority and count statuses for ALL threads in this quadrant
-  const priorityCounts: Record<string, { openCustomer: number; openCompany: number; closed: number; inProgress: number }> = {};
+  // Group by priority and count statuses
+  const priorityCounts: Record<string, { openCustomer: number; openCompany: number; closed: number }> = {};
 
   quadrantThreads.forEach(thread => {
     const priority = thread.priority;
     if (!priorityCounts[priority]) {
-      priorityCounts[priority] = { openCustomer: 0, openCompany: 0, closed: 0, inProgress: 0 };
+      priorityCounts[priority] = { openCustomer: 0, openCompany: 0, closed: 0 };
     }
 
-    // Map all resolution statuses to the available categories
-    if (thread.resolution_status === 'open' && thread.action_pending_from === 'customer') {
+    // All threads are open - split by action_pending_from
+    // Ensure every thread is counted exactly once
+    if (thread.action_pending_from === 'customer') {
       priorityCounts[priority].openCustomer++;
-    } else if (thread.resolution_status === 'open' && thread.action_pending_from === 'company') {
+    } else {
+      // action_pending_from === 'company' or any other case
       priorityCounts[priority].openCompany++;
-    } else if (thread.resolution_status === 'in_progress') {
-      // In progress means company is working on it
-      priorityCounts[priority].openCompany++;
-    } else if (thread.resolution_status === 'escalated') {
-      // Escalated means it's with the company
-      priorityCounts[priority].openCompany++;
-    } else if (thread.resolution_status === 'closed') {
-      priorityCounts[priority].closed++;
     }
   });
 
@@ -1058,13 +1052,25 @@ export function generatePriorityResolutionDataForQuadrant(threads: EisenhowerThr
     return indexA - indexB;
   });
 
-  // Convert to array format, only including priorities that actually have data
-  return prioritiesInQuadrant.map(priority => ({
+  // Convert to array format - closed is always 0 (no closed items)
+  // Verify total matches quadrant count
+  const result = prioritiesInQuadrant.map(priority => ({
     priority,
     openCustomer: priorityCounts[priority]?.openCustomer || 0,
     openCompany: priorityCounts[priority]?.openCompany || 0,
-    closed: priorityCounts[priority]?.closed || 0
+    closed: 0 // Always 0 - no closed items
   }));
+
+  // Verify: sum of all priorities should equal quadrant thread count
+  const totalInChart = result.reduce((sum, item) => sum + item.openCustomer + item.openCompany, 0);
+  const totalInQuadrant = quadrantThreads.length;
+  
+  // If there's a mismatch (shouldn't happen, but just in case), log it
+  if (totalInChart !== totalInQuadrant) {
+    console.warn(`Count mismatch for quadrant ${quadrant}: Chart shows ${totalInChart}, Quadrant has ${totalInQuadrant}`);
+  }
+
+  return result;
 }
 
 // Social Media Dashboard Types and Interfaces

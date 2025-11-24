@@ -43,7 +43,7 @@ const quadrantConfig = {
     color: 'text-gray-400',
     bgColor: 'bg-gray-500/10',
     borderColor: 'border-gray-500/20',
-    description: 'Low priority tasks that can be eliminated',
+    description: 'Low priority tasks that can be postponed',
   },
 };
 

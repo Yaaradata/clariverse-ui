@@ -129,7 +129,7 @@ export function AIDayGeneratorChat({ isOpen, onClose, kpiData, threads }: AIDayG
         `• Do - Now: ${threads.filter(t => t.quadrant === 'do').length} threads\n` +
         `• Schedule - Later: ${threads.filter(t => t.quadrant === 'schedule').length} threads\n` +
         `• Delegate - Team: ${threads.filter(t => t.quadrant === 'delegate').length} threads\n` +
-        `• Delete: ${threads.filter(t => t.quadrant === 'delete').length} threads\n\n` +
+        `• Postpone: ${threads.filter(t => t.quadrant === 'delete').length} threads\n\n` +
         `**Next Steps**: Review the Risk Assessment card and Eisenhower Matrix for detailed analysis.`;
     }
 

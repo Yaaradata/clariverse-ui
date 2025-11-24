@@ -144,7 +144,7 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
                 stackId="a"
                 fill="#5332ff"
                 name="Open - Customer"
-                radius={[0, 0, 0, 0]}
+                radius={[4, 4, 0, 0]}
               />
               <Bar
                 dataKey="openCompany"
@@ -152,13 +152,6 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
                 fill="#f97316"
                 name="Open - Company"
                 radius={[0, 0, 0, 0]}
-              />
-              <Bar
-                dataKey="closed"
-                stackId="a"
-                fill="#10b981"
-                name="Closed"
-                radius={[4, 4, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
