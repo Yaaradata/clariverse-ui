@@ -20,11 +20,11 @@ type RiskSpike = {
 };
 
 const spikeIcon: Record<RiskSpike["spikeType"], { icon: string; color: string }> = {
-  "Urgency Surge": { icon: "🔥", color: "text-amber-300" },
-  "Sentiment Crash": { icon: "💢", color: "text-rose-300" },
-  "SLA Spike": { icon: "📉", color: "text-indigo-200" },
-  "Unresolved Surge": { icon: "⚠️", color: "text-yellow-300" },
-  "Volume Surge": { icon: "📈", color: "text-emerald-300" },
+  "Urgency Surge": { icon: "", color: "text-amber-300" },
+  "Sentiment Crash": { icon: "", color: "text-rose-300" },
+  "SLA Spike": { icon: "", color: "text-indigo-200" },
+  "Unresolved Surge": { icon: "", color: "text-yellow-300" },
+  "Volume Surge": { icon: "", color: "text-emerald-300" },
 };
 
 const severityStyles: Record<RiskSpike["severity"], string> = {
@@ -122,7 +122,7 @@ export function AIRiskSpikeMonitor({ spikes = mockRiskSpikes }: { spikes?: RiskS
       <p className="text-xs text-gray-400">
         Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.
       </p>
-      <div className="flex gap-4 overflow-x-auto pb-3">
+      <div className="flex gap-4 overflow-x-auto pb-3 items-stretch">
         {spikes.map((spike) => (
           <RiskSpikeCard key={spike.id} spike={spike} />
         ))}
@@ -139,7 +139,7 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
 
   return (
     <div
-      className={`w-70 min-w-[16rem] rounded-2xl border px-4 py-4 text-sm text-gray-200 shadow-lg ${severityClass}`}
+      className={`w-70 min-w-[16rem] rounded-2xl border px-4 py-4 text-sm text-gray-200 shadow-lg flex flex-col ${severityClass}`}
     >
       <div className="flex items-center gap-2 text-sm font-semibold">
         <span className={`${iconMeta.color} text-lg`}>{iconMeta.icon}</span>
@@ -160,7 +160,7 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-2 rounded-xl border border-white/5 bg-black/30 p-3 text-xs text-gray-200">
+      <div className="mt-6 space-y-2 rounded-xl border border-white/5 bg-black/30 p-3 text-xs text-gray-200 flex-1 flex flex-col justify-center">
         {detailRows.map((row) => (
           <div key={row.label} className="flex items-center justify-between gap-3">
             <span className="text-gray-400">{row.label}</span>

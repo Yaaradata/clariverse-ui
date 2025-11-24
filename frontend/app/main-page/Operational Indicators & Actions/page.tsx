@@ -8,9 +8,9 @@ import { EmotionShockboard, PatternRecognitionEngine } from "@/components/unifie
 import { AIDayGeneratorChat } from "@/components/unified/AIDayGeneratorChat";
 import {
   UnifiedIntelligenceWall,
-  IntentOverlapPanel,
-  PressureConstellationWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
+import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligence/IntentIntelligenceCommandCenter";
+import { Target } from "lucide-react";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
@@ -38,7 +38,6 @@ import {
   type EisenhowerThread,
 } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import { Target } from "lucide-react";
 
 type DateRange = {
   start: string;
@@ -883,8 +882,78 @@ export default function HomePage() {
 
       {activePrimarySection === "intent-analysis" && (
         <section id="intent-analysis" className="space-y-6 scroll-mt-20">
-          <IntentOverlapPanel />
-          <PressureConstellationWall />
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            {/* Total Intents */}
+            <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-purple-500/30 transition-all">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-gray-300">Total Intents</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-white mb-1">127</div>
+                <div className="text-xs text-gray-400">Active across 5 channels</div>
+              </CardContent>
+            </Card>
+
+            {/* High-Severity Intent Count */}
+            <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-red-500/30 transition-all">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-gray-300">High-Severity Intent Count</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-white mb-1">23</div>
+                <div className="text-xs text-gray-400">
+                  <span className="text-red-400">18%</span> of total intents
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Avg SLA Risk Across Intents */}
+            <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-orange-500/30 transition-all">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                  <span>✨</span>
+                  <span>Avg SLA Risk Across Intents</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-white mb-1">68%</div>
+                <div className="text-xs text-gray-400">Above threshold of 60%</div>
+              </CardContent>
+            </Card>
+
+            {/* Top Intent by Volume */}
+            <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-purple-500/30 transition-all">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-gray-300">Top Intent by Volume</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-bold text-white mb-1 line-clamp-1">Payment Failures</div>
+                <div className="text-xs text-gray-400">
+                  <span className="text-purple-400">520</span> interactions
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Fastest-Growing Intent */}
+            <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-emerald-500/30 transition-all">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-gray-300 flex items-center gap-2">
+                  <span>✨</span>
+                  <span>Fastest-Growing Intent</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-lg font-bold text-white mb-1 line-clamp-1">Mortgage Rate Lock</div>
+                <div className="text-xs text-gray-400">
+                  <span className="text-emerald-400">+42%</span> vs last week
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Intent Intelligence Command Center - Full-page, no-scroll 3-zone component */}
+          <IntentIntelligenceCommandCenter />
         </section>
       )}
     </div>

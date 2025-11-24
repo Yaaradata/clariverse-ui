@@ -1,6 +1,7 @@
 "use client";
 
 import { IntentOverlapPanel, PressureConstellationWall } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
+import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligence/IntentIntelligenceCommandCenter";
 
 export default function IntentAnalysisPage() {
   return (
@@ -13,6 +14,10 @@ export default function IntentAnalysisPage() {
         </p>
       </div>
 
+      {/* Intent Intelligence Command Center - Full-page, no-scroll 3-zone component */}
+      <IntentIntelligenceCommandCenter />
+
+      {/* Existing components below */}
       <IntentOverlapPanel />
       <PressureConstellationWall />
     </div>
