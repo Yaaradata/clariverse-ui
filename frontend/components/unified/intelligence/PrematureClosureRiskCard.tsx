@@ -7,8 +7,7 @@ import { Sparkles, AlertTriangle, X, CheckCircle, Clock, UserX, Mail, MessageSqu
 import { generatePrematureClosureCases, type PrematureClosureCase } from "@/lib/unified/prematureClosureData";
 
 type BreakdownType = 
-  | "Inconsistent Closure"
-  | "Recurrence After Resolution"
+  | "Escalation after resolved"
   | "Duplicate Interactions"
   | "Escalation Loops"
   | "Unactioned Escalations";
@@ -41,8 +40,7 @@ interface HeatmapData {
 }
 
 const BREAKDOWN_TYPES: BreakdownType[] = [
-  "Inconsistent Closure",
-  "Recurrence After Resolution",
+  "Escalation after resolved",
   "Duplicate Interactions",
   "Escalation Loops",
   "Unactioned Escalations",
@@ -62,8 +60,7 @@ const getPriorityColor = (priority: PriorityLevel) => {
 
 const getBreakdownColor = (type: BreakdownType) => {
   switch (type) {
-    case "Inconsistent Closure": return "#8b5cf6"; // purple
-    case "Recurrence After Resolution": return "#ef4444"; // red
+    case "Escalation after resolved": return "#8b5cf6"; // purple
     case "Duplicate Interactions": return "#3b82f6"; // blue
     case "Escalation Loops": return "#f59e0b"; // amber
     case "Unactioned Escalations": return "#ec4899"; // pink
@@ -82,10 +79,8 @@ const getRiskBadgeColor = (risk: PriorityLevel) => {
 
 const getBreakdownDescription = (type: BreakdownType): string => {
   switch (type) {
-    case "Inconsistent Closure":
-      return "A customer issue is marked resolved in one channel (like Chat) but remains open or escalated in another channel (like Email).";
-    case "Recurrence After Resolution":
-      return "The issue reappears even after all involved channels marked it as resolved, meaning the root cause was not fixed.";
+    case "Escalation after resolved":
+      return "A customer issue is marked resolved in one channel (like Chat) but remains open or escalated in another channel (like Email), or the issue reappears even after all involved channels marked it as resolved, meaning the root cause was not fixed.";
     case "Duplicate Interactions":
       return "The same customer reaches multiple channels (Email → Chat → Call) about the same issue because it wasn't properly handled the first time.";
     case "Escalation Loops":
@@ -135,27 +130,26 @@ const caseMatchesBreakdown = (caseItem: PrematureClosureCase, breakdownType: Bre
   const allChannels = caseItem.channels;
 
   switch (breakdownType) {
-    case "Inconsistent Closure":
-      // One channel closed, another active simultaneously (within 2 hours)
+    case "Escalation after resolved":
+      // One channel closed, another active simultaneously (within 2 hours) OR
+      // All channels closed, then new channel opens later (1+ days gap)
+      // Check for escalation after resolved (within 2 hours)
       if (closedChannels.length > 0 && activeChannels.length > 0) {
         const closedTimes = closedChannels.map(c => new Date(c.closedAt || c.timestamp).getTime());
         const activeTimes = activeChannels.map(c => new Date(c.openedAt || c.timestamp).getTime());
         const minClosed = Math.min(...closedTimes);
         const maxActive = Math.max(...activeTimes);
         const timeGapMinutes = (maxActive - minClosed) / (1000 * 60);
-        return timeGapMinutes < 120; // Within 2 hours
+        if (timeGapMinutes < 120) return true; // Within 2 hours
       }
-      return false;
-    
-    case "Recurrence After Resolution":
-      // All channels closed, then new channel opens later (1+ days gap)
+      // Check for recurrence after resolution (1+ days gap)
       if (closedChannels.length >= 2 && activeChannels.length > 0) {
         const closedTimes = closedChannels.map(c => new Date(c.closedAt || c.timestamp).getTime());
         const activeTimes = activeChannels.map(c => new Date(c.openedAt || c.timestamp).getTime());
         const maxClosed = Math.max(...closedTimes);
         const minActive = Math.min(...activeTimes);
         const timeGapDays = (minActive - maxClosed) / (1000 * 60 * 60 * 24);
-        return timeGapDays >= 1; // At least 1 day gap
+        if (timeGapDays >= 1) return true; // At least 1 day gap
       }
       return false;
     
@@ -236,7 +230,7 @@ export function PrematureClosureRiskCard() {
         const toStatus = caseItem.channels.find(c => c.channel === toChannel)?.status;
         const toSentiment = caseItem.channels.find(c => c.channel === toChannel)?.sentiment || 0;
 
-        // Breakdown Type A — Inconsistent Closure: from closed, to active/pending
+        // Breakdown Type A — Escalation after resolved: from closed, to active/pending
         if (fromStatus === 'closed' && (toStatus === 'active' || toStatus === 'pending')) {
           pairData.inconsistentClosure++;
         }
@@ -285,8 +279,7 @@ export function PrematureClosureRiskCard() {
   const breakdownStats = useMemo((): BreakdownStat[] => {
     // Count actual cases for each breakdown type using the same logic as filtering
     const breakdownCounts: Record<BreakdownType, number> = {
-      "Inconsistent Closure": 0,
-      "Recurrence After Resolution": 0,
+      "Escalation after resolved": 0,
       "Duplicate Interactions": 0,
       "Escalation Loops": 0,
       "Unactioned Escalations": 0,
@@ -294,8 +287,7 @@ export function PrematureClosureRiskCard() {
 
     // Also collect priorities from cases for risk calculation
     const priorities: Record<BreakdownType, PriorityLevel[]> = {
-      "Inconsistent Closure": [],
-      "Recurrence After Resolution": [],
+      "Escalation after resolved": [],
       "Duplicate Interactions": [],
       "Escalation Loops": [],
       "Unactioned Escalations": [],
@@ -318,8 +310,7 @@ export function PrematureClosureRiskCard() {
 
     // Calculate trends based on risk distribution
     const trends: Record<BreakdownType, number> = {
-      "Inconsistent Closure": 12,
-      "Recurrence After Resolution": 8,
+      "Escalation after resolved": 12,
       "Duplicate Interactions": -4,
       "Escalation Loops": 15,
       "Unactioned Escalations": 3,
@@ -359,8 +350,7 @@ export function PrematureClosureRiskCard() {
 
     // Track breakdown occurrences by case risk level for each breakdown type
     const priorityDistribution: Record<BreakdownType, { high: number; medium: number; low: number }> = {
-      "Inconsistent Closure": { high: 0, medium: 0, low: 0 },
-      "Recurrence After Resolution": { high: 0, medium: 0, low: 0 },
+      "Escalation after resolved": { high: 0, medium: 0, low: 0 },
       "Duplicate Interactions": { high: 0, medium: 0, low: 0 },
       "Escalation Loops": { high: 0, medium: 0, low: 0 },
       "Unactioned Escalations": { high: 0, medium: 0, low: 0 },
@@ -376,8 +366,7 @@ export function PrematureClosureRiskCard() {
 
       // Count contributions to each breakdown type for this case
       const breakdownCounts: Record<BreakdownType, number> = {
-        "Inconsistent Closure": 0,
-        "Recurrence After Resolution": 0,
+        "Escalation after resolved": 0,
         "Duplicate Interactions": 0,
         "Escalation Loops": 0,
         "Unactioned Escalations": 0,
@@ -391,14 +380,29 @@ export function PrematureClosureRiskCard() {
         const toStatus = caseItem.channels.find(c => c.channel === toChannel)?.status;
         const toSentiment = caseItem.channels.find(c => c.channel === toChannel)?.sentiment || 0;
 
-        // Breakdown Type A — Inconsistent Closure
+        // Breakdown Type A — Escalation after resolved (includes both simultaneous closure conflicts and recurrence after resolution)
+        // One channel closed, another active simultaneously (within 2 hours)
         if (fromStatus === 'closed' && (toStatus === 'active' || toStatus === 'pending')) {
-          breakdownCounts["Inconsistent Closure"]++;
+          const closedTimes = closedChannels.map(c => new Date(c.closedAt || c.timestamp).getTime());
+          const activeTimes = activeChannels.map(c => new Date(c.openedAt || c.timestamp).getTime());
+          const minClosed = Math.min(...closedTimes);
+          const maxActive = Math.max(...activeTimes);
+          const timeGapMinutes = (maxActive - minClosed) / (1000 * 60);
+          if (timeGapMinutes < 120) {
+            breakdownCounts["Escalation after resolved"]++;
+          }
         }
-
-        // Breakdown Type B — Recurrence After Resolution
+        
+        // Recurrence After Resolution: All channels closed, then new channel opens later (1+ days gap)
         if (closedChannels.length >= 2 && activeChannels.some(c => c.channel === toChannel)) {
-          breakdownCounts["Recurrence After Resolution"]++;
+          const closedTimes = closedChannels.map(c => new Date(c.closedAt || c.timestamp).getTime());
+          const activeTimes = activeChannels.map(c => new Date(c.openedAt || c.timestamp).getTime());
+          const maxClosed = Math.max(...closedTimes);
+          const minActive = Math.min(...activeTimes);
+          const timeGapDays = (minActive - maxClosed) / (1000 * 60 * 60 * 24);
+          if (timeGapDays >= 1) {
+            breakdownCounts["Escalation after resolved"]++;
+          }
         }
 
         // Breakdown Type C — Duplicate Interactions
@@ -494,28 +498,37 @@ export function PrematureClosureRiskCard() {
 
 
 
-  // Business impact indicators
-  const impactIndicators = useMemo(() => {
-    const totalCases = cases.length;
-    const inconsistentCount = breakdownStats.find(s => s.type === "Inconsistent Closure")?.count || 0;
-    const recurrenceCount = breakdownStats.find(s => s.type === "Recurrence After Resolution")?.count || 0;
-    const escalationCount = breakdownStats.find(s => s.type === "Escalation Loops")?.count || 0;
-    const duplicateCount = breakdownStats.find(s => s.type === "Duplicate Interactions")?.count || 0;
-
-    const inconsistentPercent = totalCases > 0 ? Math.round((inconsistentCount / totalCases) * 100) : 0;
-
-    return [
-      `${inconsistentPercent}% of escalations are caused by incomplete closure across channels.`,
-      "Repeat issues indicate quality gap in first-contact resolution.",
-      "Email–Chat and Chat–Voice routes show highest inconsistency.",
-      escalationCount > 0 ? "Escalation loops are increasing — customer frustration risk high." : "",
-      duplicateCount > 0 ? "Duplicate interactions add avoidable workload to agents." : "",
-    ].filter(Boolean);
-  }, [cases, breakdownStats]);
+  // Get impact indicators for each breakdown type
+  const getImpactIndicatorsForType = (breakdownType: BreakdownType): string[] => {
+    switch (breakdownType) {
+      case "Escalation after resolved":
+        return [
+          "43% of escalations caused by agents closing tickets without checking other active channels.",
+          "Agents close cases based on customer acknowledgment, not backend system verification.",
+        ];
+      case "Duplicate Interactions":
+        return [
+          "Customers contact multiple channels simultaneously when response time exceeds 10 minutes.",
+          "Multiple agents working same case without coordination provide conflicting information.",
+        ];
+      case "Escalation Loops":
+        return [
+          "Agents transfer issues between channels instead of escalating to specialists, creating loops.",
+          "Customer sentiment deteriorates from 2.3 to 4.8 with each bounce across channels.",
+        ];
+      case "Unactioned Escalations":
+        return [
+          "Agents close one channel while related channel remains pending, leaving issues unresolved.",
+          "Cases marked \"Pending Review\" lack follow-up, forcing customers to reopen via new channels.",
+        ];
+      default:
+        return [];
+    }
+  };
 
 
   return (
-    <Card className="border border-(--border) bg-(--card) p-6 shadow-lg">
+    <Card className="border border-white/10 bg-black/30 p-6 shadow-lg">
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-2">
           <Sparkles className="h-5 w-5 text-yellow-400" />
@@ -526,281 +539,244 @@ export function PrematureClosureRiskCard() {
         </p>
       </div>
 
-      {/* ① Breakdown Summary Stats */}
+      {/* ① Breakdown Summary */}
       <div className="mb-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Breakdown Summary Stats</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-          {breakdownStats.map((stat) => (
-            <div
-              key={stat.type}
-              className="relative h-full"
-              onMouseEnter={() => setHoveredBreakdown(stat.type)}
-              onMouseLeave={() => setHoveredBreakdown(null)}
-            >
-              <Card 
-                className={`border border-white/10 bg-[rgba(15,15,15,0.8)] p-4 cursor-pointer hover:bg-[rgba(15,15,15,0.9)] transition-colors h-full flex flex-col ${
-                  selectedBreakdown === stat.type ? 'ring-2 ring-yellow-400/50' : ''
-                }`}
-                onClick={() => setSelectedBreakdown(selectedBreakdown === stat.type ? null : stat.type)}
-              >
-                <div className="flex items-start justify-between flex-1">
-                  <div className="flex-1">
-                    <h4 className="text-sm font-semibold text-white mb-1">{stat.type}</h4>
-                    <div className="text-2xl font-bold text-white">{stat.count}</div>
-                  </div>
-                  <Badge className={getRiskBadgeColor(stat.risk)}>
-                    {stat.risk}
-                  </Badge>
-                </div>
-              </Card>
-              
-              {/* Hover Tooltip */}
-              {hoveredBreakdown === stat.type && (
-                <div className="absolute z-50 top-full left-0 mt-2 w-80 p-4 bg-[rgba(15,15,15,0.98)] border border-white/20 rounded-lg shadow-xl">
-                  <div className="text-sm font-semibold text-white mb-2">{stat.type}</div>
-                  <div className="text-xs text-gray-300 leading-relaxed">
-                    {getBreakdownDescription(stat.type)}
-                  </div>
-                  <div className="absolute -top-2 left-6 w-4 h-4 bg-[rgba(15,15,15,0.98)] border-l border-t border-white/20 transform rotate-45"></div>
-                          </div>
-              )}
-                        </div>
-          ))}
-                      </div>
-                    </div>
-
-      {/* ③ Priority Heatmap - Always visible, moves to right when breakdown selected */}
-      <div className={`grid gap-6 mb-6 ${selectedBreakdown ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
-        {/* ⑤ Detailed Case View - Left side when breakdown selected */}
-        {selectedBreakdown && (
-          <div className="lg:col-span-1">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-1">{selectedBreakdown}</h3>
-                <p className="text-sm text-gray-400">Spots closure conflicts across channels for the same active banking intent.</p>
-              </div>
-              <button
-                onClick={() => setSelectedBreakdown(null)}
-                className="p-2 hover:bg-white/10 rounded-lg transition-colors"
-              >
-                <X className="h-5 w-5 text-gray-400" />
-              </button>
-            </div>
-
-            {/* Scrollable Case List */}
-            <div className="max-h-[600px] overflow-y-auto pr-2 space-y-4">
-              {filteredCasesByBreakdown.map((caseItem, index) => {
-                const closedChannels = caseItem.channels.filter(c => c.status === 'closed');
-                const activeChannels = caseItem.channels.filter(c => c.status === 'active' || c.status === 'pending');
-                const firstClosed = closedChannels[0];
-                const firstActive = activeChannels[0];
-
-                return (
-                  <Card key={`${caseItem.id}-${selectedBreakdown}-${index}`} className="border border-purple-500/30 bg-[rgba(15,15,15,0.9)] p-6">
-                    {/* Header Badges */}
-                    <div className="flex items-center gap-2 mb-4 flex-wrap">
-                      <Badge className="bg-pink-500/20 border-pink-400/40 text-pink-100 text-xs">
-                        Premature Closure Risk
-                      </Badge>
-                      <Badge className={getRiskBadgeStyle(caseItem.riskLevel) + " text-xs"}>
-                        {caseItem.riskLevel === 'high' ? 'HIGH RISK' : caseItem.riskLevel === 'medium' ? 'MEDIUM RISK' : 'LOW RISK'}
-                      </Badge>
-                      <Badge className="bg-blue-500/20 border-blue-400/40 text-blue-100 text-xs">
-                        Customer {caseItem.customerId}
-                          </Badge>
-                        </div>
-                        
-                    {/* Title and Metadata */}
-                    <div className="mb-4">
-                      <h4 className="text-lg font-semibold text-white mb-2">{caseItem.issueType}</h4>
-                      <div className="flex items-center gap-4 text-xs text-gray-400">
-                        <span className="uppercase">{caseItem.intentCluster}</span>
-                            <span>•</span>
-                            <span>{caseItem.timestamp}</span>
-                          </div>
-                        </div>
-
-                    {/* Channel Status */}
-                    <div className="flex items-center gap-4 mb-4 text-sm flex-wrap">
-                      {firstClosed && (
-                        <div className="text-gray-300">
-                          <span className="capitalize">{firstClosed.channel}</span> closed at {firstClosed.sentiment.toFixed(1)} ({firstClosed.sentimentLabel})
-                        </div>
-                      )}
-                      {firstActive && (
-                        <div className="text-gray-300">
-                          Active on <span className="capitalize">{firstActive.channel}</span> ({firstActive.sentimentLabel})
-                      </div>
-                      )}
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-sm text-gray-300 mb-4 leading-relaxed">{caseItem.description}</p>
-
-                    {/* Action */}
-                    <div className="flex items-start gap-2 mb-4 p-3 bg-yellow-500/10 border border-yellow-400/20 rounded-lg">
-                      <Sparkles className="h-4 w-4 text-yellow-400 shrink-0 mt-0.5" />
-                      <div className="text-sm text-yellow-100">
-                        <span className="font-semibold">Action:</span> {caseItem.aiAction}
-                      </div>
-                    </div>
-
-                    {/* Channel Status Details */}
-                    <div className="flex flex-wrap gap-3">
-                      {caseItem.channels.map((channel, idx) => {
-                          const ChannelIcon = getChannelIcon(channel.channel);
-                        const colors = getChannelColor(channel.channel);
-                        const isClosed = channel.status === 'closed';
-                        const isPending = channel.status === 'pending';
-
-                          return (
-                          <div
-                            key={idx}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
-                              isClosed
-                                ? 'bg-green-500/10 border-green-400/30'
-                                : isPending
-                                ? 'bg-yellow-500/10 border-yellow-400/30'
-                                : 'bg-red-500/10 border-red-400/30'
-                            }`}
-                          >
-                            {isClosed ? (
-                              <CheckCircle className="h-4 w-4 text-green-400" />
-                            ) : isPending ? (
-                              <Clock className="h-4 w-4 text-yellow-400" />
-                            ) : (
-                              <UserX className="h-4 w-4 text-red-400" />
-                            )}
-                            <ChannelIcon className={`h-4 w-4 ${colors.text}`} />
-                            <div className="text-xs">
-                              <div className="font-semibold text-white uppercase">{channel.channel}</div>
-                              <div className="text-gray-300">
-                                {channel.sentiment.toFixed(1)} {channel.sentimentLabel.toUpperCase()}
-                              </div>
-                              <div className="text-gray-400 text-[10px] uppercase">
-                                {channel.statusLabel}
-                                {isPending && ' • Pending bank action'}
-                              </div>
-                              </div>
-                            </div>
-                        );
-                      })}
-                    </div>
-                  </Card>
-                          );
-                        })}
-                      </div>
-                    </div>
-        )}
-
-        {/* ③ Priority Heatmap - Right side when breakdown selected */}
-        <div className={selectedBreakdown ? 'lg:col-span-1' : ''}>
-          <Card className="border border-white/10 bg-[rgba(26,26,26,0.6)] p-6 mb-6">
-            <h3 className="text-lg font-semibold text-white mb-4">Priority Heatmap</h3>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr>
-                    <th className="text-left text-xs font-semibold text-gray-400 uppercase tracking-wide p-2 border-b border-white/10">
-                      Breakdown
-                    </th>
-                    {PRIORITY_LEVELS.map(priority => (
-                      <th
-                        key={priority}
-                        className="text-center text-xs font-semibold text-gray-400 uppercase tracking-wide p-2 border-b border-white/10"
-                      >
-                        {priority}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {heatmapData.map((row) => (
-                    <tr key={row.breakdown} className="border-b border-white/5 hover:bg-white/5">
-                      <td className="text-sm text-white p-3 font-medium">{row.breakdown}</td>
-                      <td className="text-center p-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                            style={{ backgroundColor: getPriorityColor("Critical") }}
-                          >
-                            {row.critical > 0 ? row.critical : ''}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-center p-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                            style={{ backgroundColor: getPriorityColor("High") }}
-                          >
-                            {row.high > 0 ? row.high : ''}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-center p-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                            style={{ backgroundColor: getPriorityColor("Medium") }}
-                          >
-                            {row.medium > 0 ? row.medium : ''}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-center p-3">
-                        <div className="flex items-center justify-center gap-2">
-                          <div
-                            className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                            style={{ backgroundColor: getPriorityColor("Low") }}
-                          >
-                            {row.low > 0 ? row.low : ''}
-                        </div>
-                      </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-                    </div>
-                  </Card>
-
-          {/* ④ Business Impact Indicators - Below heatmap when breakdown selected */}
-          {selectedBreakdown && (
-            <Card className="border border-white/10 bg-[rgba(26,26,26,0.6)] p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Business Impact Indicators</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {impactIndicators.map((indicator, idx) => (
-                  <div
-                    key={idx}
-                    className="flex items-start gap-3 p-4 rounded-lg bg-[rgba(15,15,15,0.8)] border border-white/5"
-                  >
-                    <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
-                    <p className="text-sm text-gray-200 leading-relaxed">{indicator}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-            )}
-          </div>
-      </div>
-
-      {/* ④ Business Impact Indicators - Shown when no breakdown selected */}
-      {!selectedBreakdown && (
-        <Card className="border border-white/10 bg-[rgba(26,26,26,0.6)] p-6">
-          <h3 className="text-lg font-semibold text-white mb-4">Business Impact Indicators</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {impactIndicators.map((indicator, idx) => (
+        <h3 className="text-lg font-semibold text-white mb-4">Breakdown Summary</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {breakdownStats.map((stat) => {
+            // Get heatmap data for this breakdown type
+            const heatmapRow = heatmapData.find(h => h.breakdown === stat.type);
+            
+            return (
               <div
-                key={idx}
-                className="flex items-start gap-3 p-4 rounded-lg bg-[rgba(15,15,15,0.8)] border border-white/5"
+                key={stat.type}
+                className="relative h-full"
+                onMouseEnter={() => setHoveredBreakdown(stat.type)}
+                onMouseLeave={() => setHoveredBreakdown(null)}
               >
-                <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5" />
-                <p className="text-sm text-gray-200 leading-relaxed">{indicator}</p>
+                <Card 
+                  className={`border border-white/10 bg-[rgba(15,15,15,0.8)] p-4 cursor-pointer hover:bg-[rgba(15,15,15,0.9)] transition-colors h-full flex flex-col ${
+                    selectedBreakdown === stat.type ? 'ring-2 ring-yellow-400/50' : ''
+                  }`}
+                  onClick={() => setSelectedBreakdown(selectedBreakdown === stat.type ? null : stat.type)}
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex-1">
+                      <h4 className="text-sm font-semibold text-white mb-1">{stat.type}</h4>
+                      <div className="text-2xl font-bold text-white">{stat.count}</div>
+                    </div>
+                    <Badge className={getRiskBadgeColor(stat.risk)}>
+                      {stat.risk}
+                    </Badge>
+                  </div>
+                  
+                  {/* Priority Distribution inside card */}
+                  {heatmapRow && (
+                    <div className="mt-3 pt-3 border-t border-white/10 mb-3">
+                      <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2">Priority Distribution</div>
+                      <div className="grid grid-cols-4 gap-2">
+                        {heatmapRow.critical > 0 && (
+                          <div className="flex flex-col items-center">
+                            <div
+                              className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white mb-1"
+                              style={{ backgroundColor: getPriorityColor("Critical") }}
+                            >
+                              {heatmapRow.critical}
+                            </div>
+                            <span className="text-[9px] text-gray-400">P1</span>
+                          </div>
+                        )}
+                        {heatmapRow.high > 0 && (
+                          <div className="flex flex-col items-center">
+                            <div
+                              className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white mb-1"
+                              style={{ backgroundColor: getPriorityColor("High") }}
+                            >
+                              {heatmapRow.high}
+                            </div>
+                            <span className="text-[9px] text-gray-400">P2</span>
+                          </div>
+                        )}
+                        {heatmapRow.medium > 0 && (
+                          <div className="flex flex-col items-center">
+                            <div
+                              className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white mb-1"
+                              style={{ backgroundColor: getPriorityColor("Medium") }}
+                            >
+                              {heatmapRow.medium}
+                            </div>
+                            <span className="text-[9px] text-gray-400">P3</span>
+                          </div>
+                        )}
+                        {heatmapRow.low > 0 && (
+                          <div className="flex flex-col items-center">
+                            <div
+                              className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold text-white mb-1"
+                              style={{ backgroundColor: getPriorityColor("Low") }}
+                            >
+                              {heatmapRow.low}
+                            </div>
+                            <span className="text-[9px] text-gray-400">P4</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Business Impact Indicators inside card */}
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2">Business Impact</div>
+                    <div className="space-y-2">
+                      {getImpactIndicatorsForType(stat.type).map((indicator, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-2 p-2 rounded-lg bg-rose-500/10 border border-pink-500/30"
+                        >
+                          <Sparkles className="h-3.5 w-3.5 text-yellow-400 shrink-0 mt-0.5" />
+                          <p className="text-[11px] text-gray-200 leading-relaxed">{indicator}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Card>
+                
+                {/* Hover Tooltip */}
+                {hoveredBreakdown === stat.type && (
+                  <div className="absolute z-50 top-full left-0 mt-2 w-80 p-4 bg-[rgba(15,15,15,0.98)] border border-white/20 rounded-lg shadow-xl">
+                    <div className="text-sm font-semibold text-white mb-2">{stat.type}</div>
+                    <div className="text-xs text-gray-300 leading-relaxed">
+                      {getBreakdownDescription(stat.type)}
+                    </div>
+                    <div className="absolute -top-2 left-6 w-4 h-4 bg-[rgba(15,15,15,0.98)] border-l border-t border-white/20 transform rotate-45"></div>
+                  </div>
+                )}
               </div>
-            ))}
+            );
+          })}
+        </div>
       </div>
-        </Card>
+
+      {/* ⑤ Detailed Case View - Shown when breakdown selected */}
+      {selectedBreakdown && (
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-semibold text-white mb-1">{selectedBreakdown}</h3>
+              <p className="text-sm text-gray-400">Spots closure conflicts across channels for the same active banking intent.</p>
+            </div>
+            <button
+              onClick={() => setSelectedBreakdown(null)}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <X className="h-5 w-5 text-gray-400" />
+            </button>
+          </div>
+
+          {/* Scrollable Case List */}
+          <div className="max-h-[600px] overflow-y-auto pr-2 space-y-4">
+            {filteredCasesByBreakdown.map((caseItem, index) => {
+              const closedChannels = caseItem.channels.filter(c => c.status === 'closed');
+              const activeChannels = caseItem.channels.filter(c => c.status === 'active' || c.status === 'pending');
+              const firstClosed = closedChannels[0];
+              const firstActive = activeChannels[0];
+
+              return (
+                <Card key={`${caseItem.id}-${selectedBreakdown}-${index}`} className="border border-purple-500/30 bg-[rgba(15,15,15,0.9)] p-6">
+                  {/* Header Badges */}
+                  <div className="flex items-center gap-2 mb-4 flex-wrap">
+                    <Badge className="bg-pink-500/20 border-pink-400/40 text-pink-100 text-xs">
+                      Premature Closure Risk
+                    </Badge>
+                    <Badge className={getRiskBadgeStyle(caseItem.riskLevel) + " text-xs"}>
+                      {caseItem.riskLevel === 'high' ? 'HIGH RISK' : caseItem.riskLevel === 'medium' ? 'MEDIUM RISK' : 'LOW RISK'}
+                    </Badge>
+                    <Badge className="bg-blue-500/20 border-blue-400/40 text-blue-100 text-xs">
+                      Customer {caseItem.customerId}
+                    </Badge>
+                  </div>
+                  
+                  {/* Title and Metadata */}
+                  <div className="mb-4">
+                    <h4 className="text-lg font-semibold text-white mb-2">{caseItem.issueType}</h4>
+                    <div className="flex items-center gap-4 text-xs text-gray-400">
+                      <span className="uppercase">{caseItem.intentCluster}</span>
+                      <span>•</span>
+                      <span>{caseItem.timestamp}</span>
+                    </div>
+                  </div>
+
+                  {/* Channel Status */}
+                  <div className="flex items-center gap-4 mb-4 text-sm flex-wrap">
+                    {firstClosed && (
+                      <div className="text-gray-300">
+                        <span className="capitalize">{firstClosed.channel}</span> closed at {firstClosed.sentiment.toFixed(1)} ({firstClosed.sentimentLabel})
+                      </div>
+                    )}
+                    {firstActive && (
+                      <div className="text-gray-300">
+                        Active on <span className="capitalize">{firstActive.channel}</span> ({firstActive.sentimentLabel})
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-300 mb-4 leading-relaxed">{caseItem.description}</p>
+
+                  {/* Action */}
+                  <div className="flex items-start gap-2 mb-4 p-3 bg-yellow-500/10 border border-yellow-400/20 rounded-lg">
+                    <Sparkles className="h-4 w-4 text-yellow-400 shrink-0 mt-0.5" />
+                    <div className="text-sm text-yellow-100">
+                      <span className="font-semibold">Action:</span> {caseItem.aiAction}
+                    </div>
+                  </div>
+
+                  {/* Channel Status Details */}
+                  <div className="flex flex-wrap gap-3">
+                    {caseItem.channels.map((channel, idx) => {
+                      const ChannelIcon = getChannelIcon(channel.channel);
+                      const colors = getChannelColor(channel.channel);
+                      const isClosed = channel.status === 'closed';
+                      const isPending = channel.status === 'pending';
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${
+                            isClosed
+                              ? 'bg-green-500/10 border-green-400/30'
+                              : isPending
+                              ? 'bg-yellow-500/10 border-yellow-400/30'
+                              : 'bg-red-500/10 border-red-400/30'
+                          }`}
+                        >
+                          {isClosed ? (
+                            <CheckCircle className="h-4 w-4 text-green-400" />
+                          ) : isPending ? (
+                            <Clock className="h-4 w-4 text-yellow-400" />
+                          ) : (
+                            <UserX className="h-4 w-4 text-red-400" />
+                          )}
+                          <ChannelIcon className={`h-4 w-4 ${colors.text}`} />
+                          <div className="text-xs">
+                            <div className="font-semibold text-white uppercase">{channel.channel}</div>
+                            <div className="text-gray-300">
+                              {channel.sentiment.toFixed(1)} {channel.sentimentLabel.toUpperCase()}
+                            </div>
+                            <div className="text-gray-400 text-[10px] uppercase">
+                              {channel.statusLabel}
+                              {isPending && ' • Pending bank action'}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+
+        </div>
       )}
 
     </Card>

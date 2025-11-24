@@ -6,7 +6,7 @@ import {
   ToneDriftWall,
   UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
-import { EmotionShockboard, ResolutionIntegrityMonitor, PatternRecognitionEngine } from "@/components/unified/intents/IntentIntelligenceSection";
+import { EmotionShockboard, ResolutionIntegrityMonitor } from "@/components/unified/intents/IntentIntelligenceSection";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { fetchTrendData, type TrendPointResponse } from "@/lib/unified/adapters";
 import { fetchSystemHealth, type SystemHealthResponse } from "@/lib/unified/adapters";
@@ -111,7 +111,6 @@ export default function ChannelAnalysisPage() {
       <ToneDriftWall />
       <EmotionShockboard />
       <ResolutionIntegrityMonitor />
-      <PatternRecognitionEngine />
     </div>
   );
 }

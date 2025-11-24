@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { UnifiedFiltersBar } from "@/components/unified/filters/UnifiedFiltersBar";
 import { SystemHealthRibbon, type SystemHealthMetric } from "@/components/unified/kpi/SystemHealthRibbon";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
-import { EmotionShockboard, PatternRecognitionEngine } from "@/components/unified/intents/IntentIntelligenceSection";
+import { EmotionShockboard } from "@/components/unified/intents/IntentIntelligenceSection";
 import { AIDayGeneratorChat } from "@/components/unified/AIDayGeneratorChat";
 import {
   UnifiedIntelligenceWall,
@@ -894,7 +894,6 @@ export default function HomePage() {
           <CrossChannelToneIntelligenceCard />
           <PrematureClosureRiskCard />
           <EmotionShockboard />
-          <PatternRecognitionEngine />
         </section>
       )}
 
