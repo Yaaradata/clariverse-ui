@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, useRef } from "react";
 import { UnifiedFiltersBar } from "@/components/unified/filters/UnifiedFiltersBar";
 import { SystemHealthRibbon, type SystemHealthMetric } from "@/components/unified/kpi/SystemHealthRibbon";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
@@ -792,14 +792,32 @@ export default function HomePage() {
                                   }
                                   className="w-full"
                                 >
-                                  <TabsList className="grid w-full grid-cols-2 mb-4">
-                                    <TabsTrigger value="summary" className="text-xs">
-                                      ✨ AI Summary Wall
-                                    </TabsTrigger>
-                                    <TabsTrigger value="details" className="text-xs">
-                                      Details
-                                    </TabsTrigger>
-                                  </TabsList>
+                                  <div className="relative mb-4">
+                                    <TabsList className="grid w-full grid-cols-2 relative bg-transparent border-b border-white/10">
+                                      <TabsTrigger 
+                                        value="summary" 
+                                        className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
+                                      >
+                                        ✨ AI Summary Wall
+                                      </TabsTrigger>
+                                      <TabsTrigger 
+                                        value="details" 
+                                        className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
+                                      >
+                                        Details
+                                      </TabsTrigger>
+                                      {/* Red underline indicator */}
+                                      <div
+                                        className="absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all duration-300 ease-in-out"
+                                        style={{
+                                          width: '50%',
+                                          transform: activeQuadrantTab[channel] === 'summary' 
+                                            ? 'translateX(0%)' 
+                                            : 'translateX(100%)',
+                                        }}
+                                      />
+                                    </TabsList>
+                                  </div>
                                   <TabsContent value="summary" className="space-y-0">
                                     {(() => {
                                       const summary = generateQuadrantSummary(channelThreads, channelQuadrant, channel);
