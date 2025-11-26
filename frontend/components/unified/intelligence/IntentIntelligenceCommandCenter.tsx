@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PressureScatterDatum } from "./PressureScatterMap";
@@ -22,6 +23,14 @@ const channelDotClass: Record<ChannelKey, string> = {
   ticket: "bg-purple-400",
   social: "bg-pink-400",
   voice: "bg-orange-400",
+};
+
+const channelTextClass: Record<ChannelKey, string> = {
+  email: "text-blue-400",
+  chat: "text-emerald-400",
+  ticket: "text-purple-400",
+  social: "text-pink-400",
+  voice: "text-orange-400",
 };
 
 type ClusterSummary = {
@@ -248,6 +257,39 @@ export function IntentIntelligenceCommandCenter({
   conflicts = defaultConflicts,
   recommendations = defaultRecommendations,
 }: IntentIntelligenceCommandCenterProps) {
+  // State for selected filter: null means "All", otherwise a single channel
+  const [selectedFilter, setSelectedFilter] = useState<ChannelKey | "all" | null>("all");
+
+  // Filter scatter data based on selected filter
+  const filteredScatterData = useMemo(() => {
+    if (selectedFilter === "all" || selectedFilter === null) {
+      return scatterData;
+    }
+    return scatterData.filter((item) => item.dominantChannel === selectedFilter);
+  }, [scatterData, selectedFilter]);
+
+  // Handle filter selection
+  const handleFilterClick = (channel: ChannelKey | "all") => {
+    // If clicking the same filter, toggle back to "all"
+    if (selectedFilter === channel) {
+      setSelectedFilter("all");
+    } else {
+      setSelectedFilter(channel);
+    }
+  };
+
+  // Determine if a channel is selected
+  const isChannelSelected = (channel: ChannelKey | "all") => {
+    return selectedFilter === channel;
+  };
+
+  // Get the number of active channels based on filter
+  const getActiveChannelCount = () => {
+    if (selectedFilter === "all" || selectedFilter === null) {
+      return CHANNEL_ORDER.length;
+    }
+    return 1;
+  };
 
   return (
     <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
@@ -258,27 +300,50 @@ export function IntentIntelligenceCommandCenter({
           <CardDescription className="text-xs text-gray-400">High-level distribution of 100+ intents</CardDescription>
         </CardHeader>
         <CardContent className="p-4">
-          {/* Dominant Channel Legend */}
-          <div className="mb-3 flex items-center gap-2 text-xs text-gray-300">
+          {/* Dominant Channel Legend - Now clickable filters */}
+          <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-gray-300">
             <span className="font-semibold">Dominant Channel •</span>
-            <span className="flex items-center gap-1">
-              <span className="text-blue-400">Email 🔵</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-emerald-400">Chat 🟢</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-purple-400">Ticket 🟣</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-pink-400">Social 🟠</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="text-orange-400">Voice 🔴</span>
-            </span>
+            
+            {/* "All" filter button */}
+            <button
+              onClick={() => handleFilterClick("all")}
+              className={`flex items-center gap-1 px-2 py-1 rounded transition-all ${
+                isChannelSelected("all")
+                  ? "bg-white/10 border border-white/20 opacity-100"
+                  : "opacity-40 hover:opacity-60 border border-transparent"
+              } hover:bg-white/5 cursor-pointer`}
+              title={isChannelSelected("all") ? "Showing all channels" : "Show all channels"}
+            >
+              <span className="text-gray-300">All</span>
+            </button>
+
+            {/* Individual channel filter buttons */}
+            {CHANNEL_ORDER.map((channel) => {
+              const isSelected = isChannelSelected(channel);
+              const channelLabel = CHANNEL_LABELS[channel];
+              const channelColor = channelTextClass[channel];
+              const emoji = channel === "email" ? "🔵" : channel === "chat" ? "🟢" : channel === "ticket" ? "🟣" : channel === "social" ? "🟠" : "🔴";
+              
+              return (
+                <button
+                  key={channel}
+                  onClick={() => handleFilterClick(channel)}
+                  className={`flex items-center gap-1 px-2 py-1 rounded transition-all ${
+                    isSelected
+                      ? "bg-white/10 border border-white/20 opacity-100"
+                      : "opacity-40 hover:opacity-60 border border-transparent"
+                  } hover:bg-white/5 cursor-pointer`}
+                  title={isSelected ? `Showing only ${channelLabel}. Click to show all.` : `Show only ${channelLabel}`}
+                >
+                  <span className={channelColor}>
+                    {channelLabel} {emoji}
+                  </span>
+                </button>
+              );
+            })}
           </div>
           
-          <CompactScatterMap data={scatterData} height={260} />
+          <CompactScatterMap data={filteredScatterData} height={260} />
           <div className="mt-2 flex flex-wrap gap-1 text-[9px] text-gray-400 mb-4">
             <span>X: Sentiment</span>
             <span>•</span>
@@ -294,17 +359,22 @@ export function IntentIntelligenceCommandCenter({
             {/* Scope */}
             <div>
               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">Scope</div>
-              <div className="text-2xl font-bold text-white">{scatterData.length}</div>
-              <div className="text-[10px] text-gray-500">Active intents mapped across five channels</div>
+              <div className="text-2xl font-bold text-white">{filteredScatterData.length}</div>
+              <div className="text-[10px] text-gray-500">
+                Active intents mapped across {getActiveChannelCount()} {getActiveChannelCount() === 1 ? "channel" : "channels"}
+                {selectedFilter !== "all" && selectedFilter !== null && ` (${CHANNEL_LABELS[selectedFilter]})`}
+              </div>
             </div>
 
             {/* Avg Pressure */}
             <div>
               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">Avg Pressure</div>
               <div className="text-xl font-bold text-white">
-                {(
-                  scatterData.reduce((sum, item) => sum + item.pressureScore, 0) / scatterData.length
-                ).toFixed(1)}
+                {filteredScatterData.length > 0
+                  ? (
+                      filteredScatterData.reduce((sum, item) => sum + item.pressureScore, 0) / filteredScatterData.length
+                    ).toFixed(1)
+                  : "0.0"}
               </div>
               <div className="text-[10px] text-gray-500">Weighted by sentiment tension & backlog</div>
             </div>
@@ -313,19 +383,23 @@ export function IntentIntelligenceCommandCenter({
             <div>
               <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2">Top Pressure Nodes</div>
               <div className="space-y-1 text-[10px]">
-                {scatterData
-                  .slice()
-                  .sort((a, b) => b.pressureScore - a.pressureScore)
-                  .slice(0, 5)
-                  .map((node, idx) => (
-                    <div key={node.id} className="flex items-center justify-between">
-                      <span className="font-semibold text-gray-100">{node.displayName}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-300">{CHANNEL_LABELS[node.dominantChannel]}</span>
-                        <span className="text-purple-200 font-semibold">{node.pressureScore.toFixed(1)}</span>
+                {filteredScatterData.length > 0 ? (
+                  filteredScatterData
+                    .slice()
+                    .sort((a, b) => b.pressureScore - a.pressureScore)
+                    .slice(0, 5)
+                    .map((node, idx) => (
+                      <div key={node.id} className="flex items-center justify-between">
+                        <span className="font-semibold text-gray-100">{node.displayName}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-300">{CHANNEL_LABELS[node.dominantChannel]}</span>
+                          <span className="text-purple-200 font-semibold">{node.pressureScore.toFixed(1)}</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))
+                ) : (
+                  <div className="text-gray-500 text-[10px]">No data for selected channels</div>
+                )}
               </div>
             </div>
           </div>

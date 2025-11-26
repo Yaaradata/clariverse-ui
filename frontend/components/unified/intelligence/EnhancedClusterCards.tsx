@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export function EnhancedClusterCards() {
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg">
+    <Card className="border border-(--border) bg-(--card) shadow-lg">
       <CardHeader>
         <CardTitle className="text-white">Enhanced Cluster Cards</CardTitle>
         <CardDescription className="text-gray-400">
@@ -17,8 +17,3 @@ export function EnhancedClusterCards() {
     </Card>
   );
 }
-
-
-
-
-
