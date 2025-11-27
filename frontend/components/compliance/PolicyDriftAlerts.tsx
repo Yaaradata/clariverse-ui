@@ -1,4 +1,4 @@
-import { PolicyDrift, policyDriftData } from '@/lib/Compliance/policyDriftData';
+import { PolicyDrift, policyDriftData } from '@/lib/compliance/policyDriftData';
 
 interface PolicyDriftAlertsProps {
   isDarkMode: boolean;

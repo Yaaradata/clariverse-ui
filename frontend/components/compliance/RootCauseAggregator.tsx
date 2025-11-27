@@ -1,4 +1,4 @@
-import { RootCauseCluster, rootCauseData } from '@/lib/Compliance/rootCauseData';
+import { RootCauseCluster, rootCauseData } from '@/lib/compliance/rootCauseData';
 
 interface RootCauseAggregatorProps {
   isDarkMode: boolean;

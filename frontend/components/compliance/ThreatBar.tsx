@@ -1,4 +1,4 @@
-import { Threat, threatData } from '@/lib/Compliance/threatData';
+import { Threat, threatData } from '@/lib/compliance/threatData';
 
 interface ThreatBarProps {
   threats?: Threat[];

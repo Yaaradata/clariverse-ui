@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { riskHeatmapData } from '@/lib/Compliance/riskHeatmapData';
+import { riskHeatmapData } from '@/lib/compliance/riskHeatmapData';
 
 interface RiskHeatmapProps {
   isDarkMode: boolean;

@@ -1,4 +1,4 @@
-import { InvestigationCase, investigationData } from '@/lib/Compliance/investigationData';
+import { InvestigationCase, investigationData } from '@/lib/compliance/investigationData';
 
 interface InvestigationQueueProps {
   isDarkMode: boolean;

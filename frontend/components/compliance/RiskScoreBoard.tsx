@@ -1,4 +1,4 @@
-import { KPI, kpiData } from '@/lib/Compliance/kpiData';
+import { KPI, kpiData } from '@/lib/compliance/kpiData';
 
 interface RiskScoreBoardProps {
   isDarkMode: boolean;

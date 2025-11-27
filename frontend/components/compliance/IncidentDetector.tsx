@@ -1,4 +1,4 @@
-import { Incident, incidentData } from '@/lib/Compliance/incidentData';
+import { Incident, incidentData } from '@/lib/compliance/incidentData';
 
 interface IncidentDetectorProps {
   isDarkMode: boolean;
