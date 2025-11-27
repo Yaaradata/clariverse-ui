@@ -166,10 +166,10 @@ export default function VoiceTranscript() {
   }
 
   return (
-    <div className="space-y-6 animate-fade-in pb-6">
+    <div className="space-y-6 animate-fade-in pb-6 overflow-x-hidden">
       {/* Header */}
-      <div className="space-y-4 animate-slide-down">
-        <div className="flex items-center justify-between">
+      <div className="space-y-4 animate-slide-down overflow-x-hidden">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="text-4xl font-bold text-foreground mb-2">Fluid Intelligence Dashboard - Voice</h1>
             <p className="text-muted-foreground text-lg">✨AI-powered call center intelligence & quality assurance</p>
@@ -242,7 +242,7 @@ export default function VoiceTranscript() {
       <KPIRibbon data={kpiData} />
 
       {/* Main Dashboard Grid */}
-      <div className="flex gap-4 items-start w-full">
+      <div className="grid grid-cols-[minmax(0,28fr)_minmax(0,50fr)_minmax(0,22fr)] gap-4 items-start w-full max-w-full overflow-x-hidden">
         {/* Left Column - Team Health */}
         <TeamHealthColumn
           qaScore={teamHealthData.qaScore}

@@ -182,40 +182,40 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 min-w-0 w-full">
       <Card className={SOCIAL_CARD_BASE}>
         <CardHeader>
           <CardTitle className="text-lg text-white">Community Signals</CardTitle>
           <CardDescription>Key topics and their sentiment mix from Reddit banking threads</CardDescription>
         </CardHeader>
-        <CardContent className="pt-2">
+        <CardContent className="pt-2 pb-4">
           <div className="grid gap-4 sm:grid-cols-2">
             {communitySignals.map((signal, index) => {
               const style = MOMENTUM_STYLES[signal.momentumType];
               return (
-                <div key={index} className={SOCIAL_PANEL_BASE}>
-                  <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-semibold text-white uppercase tracking-wide">{signal.signalLabel}</p>
-                    <span className={`text-xs uppercase tracking-wide font-semibold ${style.badgeClass}`}>
+                <div key={index} className={`${SOCIAL_PANEL_BASE} p-4 space-y-3`}>
+                  <div className="flex items-center justify-between gap-3 flex-wrap">
+                    <p className="text-sm font-semibold text-white uppercase tracking-wide break-words">{signal.signalLabel}</p>
+                    <span className={`text-xs uppercase tracking-wide font-semibold px-2 py-0.5 rounded flex-shrink-0 ${style.badgeClass}`}>
                       {style.label}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-300">{signal.subreddit}</p>
-                  <div className="flex items-end gap-3">
-                    <span className="text-4xl text-white font-semibold">
+                  <p className="text-sm text-gray-300 font-medium">{signal.subreddit}</p>
+                  <div className="flex items-end gap-3 flex-wrap">
+                    <span className="text-3xl text-white font-semibold leading-none">
                       {signal.growthPercent.toLocaleString()}%
                     </span>
-                    <span className="text-xs text-gray-400">
-                      Momentum · {(signal.threadVolume ?? 0).toLocaleString()} threads
+                    <span className="text-xs text-gray-400 pb-0.5">
+                      Momentum · <span className="font-medium">{(signal.threadVolume ?? 0).toLocaleString()}</span> threads
                     </span>
                   </div>
-                  <p className="text-xs text-gray-400 leading-relaxed">{signal.insight}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed break-words">{signal.insight}</p>
                   {signal.topMentions && signal.topMentions.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1.5 pt-1">
                       {signal.topMentions.map(tag => (
                         <span
                           key={`${signal.subreddit}-${tag}`}
-                          className="text-[11px] text-purple-200 bg-purple-500/10 border border-purple-500/30 rounded-full px-2 py-0.5"
+                          className="text-[10px] text-purple-200 bg-purple-500/10 border border-purple-500/30 rounded-full px-2 py-0.5 font-medium"
                         >
                           #{tag}
                         </span>
@@ -258,7 +258,7 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
                 layout="vertical"
                 barCategoryGap="24%"
                 barGap={8}
-                margin={{ top: 12, right: 110, bottom: 12, left: 16 }}
+                margin={{ top: 12, right: 90, bottom: 12, left: 16 }}
               >
                 <defs>
                   {sortedViralityTopics.map((topic, index) => (
@@ -292,8 +292,8 @@ export function RedditCommunityColumn({ communitySignals, viralityTopics }: Redd
                   dataKey="name"
                   type="category"
                   stroke="#9CA3AF"
-                  width={220}
-                  tick={{ fill: '#D1D5DB', fontSize: 12, dy: 4 }}
+                  width={180}
+                  tick={{ fill: '#D1D5DB', fontSize: 11, dy: 4 }}
                   tickLine={false}
                   axisLine={false}
                   interval={0}

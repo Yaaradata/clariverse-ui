@@ -11,7 +11,7 @@ interface RedditActionColumnProps {
 
 export function RedditActionColumn({ moderationAlerts, influencers }: RedditActionColumnProps) {
   return (
-    <div className="flex flex-col gap-6 h-full min-h-0">
+    <div className="flex flex-col gap-6 h-full min-h-0 min-w-0 w-full">
       <Card className={SOCIAL_CARD_BASE}>
         <CardHeader className="px-6 pt-6 pb-3">
           <CardTitle className="flex items-center gap-2 text-white text-lg">
@@ -22,34 +22,34 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
             High-velocity reports and policy-sensitive conversations pulled directly from Reddit mod queues
           </CardDescription>
         </CardHeader>
-        <CardContent className="px-6 pb-6 space-y-3 xl:max-h-[460px] xl:overflow-y-auto">
+        <CardContent className="px-6 pb-6 space-y-3 xl:max-h-[460px] xl:overflow-y-auto pr-2">
           <TooltipProvider delayDuration={200}>
             {moderationAlerts.map(alert => (
               <UITooltip key={alert.id}>
                 <TooltipTrigger asChild>
-                  <div className={`${SOCIAL_PANEL_BASE} cursor-pointer`}>
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div className="flex-1 space-y-1.5">
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400 uppercase tracking-wide">
-                          <span>r/{alert.type}</span>
+                  <div className={`${SOCIAL_PANEL_BASE} cursor-pointer p-4`}>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0 space-y-2">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400 uppercase tracking-wide">
+                          <span className="font-medium">r/{alert.type}</span>
                           {(alert.severity === 'critical' || alert.severity === 'high') && (
-                            <span className="text-orange-300">priority</span>
+                            <span className="text-orange-300 font-semibold">priority</span>
                           )}
                           <span className="flex items-center gap-1 text-gray-400 normal-case">
-                            <Clock className="h-3 w-3" />
-                            {alert.detectedAt} · {alert.firstDetected}
+                            <Clock className="h-3 w-3 flex-shrink-0" />
+                            <span className="text-[11px]">{alert.detectedAt} · {alert.firstDetected}</span>
                           </span>
                         </div>
-                        <h4 className="text-sm font-semibold text-white">{alert.topic}</h4>
-                        <div className="text-xs text-gray-400 flex items-center gap-2">
+                        <h4 className="text-sm font-semibold text-white leading-tight break-words">{alert.topic}</h4>
+                        <div className="text-xs text-gray-400 flex items-center gap-2 flex-wrap">
                           <span className="text-gray-300 font-medium">{alert.author}</span>
-                          <span>{alert.handle}</span>
-                          {alert.verified && <Star className="h-3 w-3 text-sky-300 fill-sky-300" />}
+                          <span className="text-gray-500">{alert.handle}</span>
+                          {alert.verified && <Star className="h-3 w-3 text-sky-300 fill-sky-300 flex-shrink-0" />}
                         </div>
-                        <p className="text-xs text-gray-300 leading-relaxed line-clamp-2">{alert.summary}</p>
+                        <p className="text-xs text-gray-300 leading-relaxed line-clamp-2 break-words">{alert.summary}</p>
                       </div>
                       <span
-                        className={`text-[11px] px-2 py-0.5 rounded-full uppercase tracking-wide ${
+                        className={`text-[10px] px-2.5 py-1 rounded-full uppercase tracking-wide flex-shrink-0 ${
                           alert.severity === 'critical'
                             ? 'bg-red-500/20 text-red-300 border border-red-500/40'
                             : alert.severity === 'high'
@@ -134,22 +134,22 @@ export function RedditActionColumn({ moderationAlerts, influencers }: RedditActi
         </CardHeader>
         <CardContent className="px-6 pb-6 space-y-3 overflow-y-auto flex-1 min-h-0">
           {influencers.map(profile => (
-            <div key={profile.id} className={`${SOCIAL_PANEL_BASE} space-y-3`}>
-              <div className="grid grid-cols-[minmax(0,_1fr)_auto] gap-4 items-start">
-                <div>
-                  <p className="text-sm font-semibold text-white">u/{profile.username}</p>
-                  <p className="text-xs text-gray-400 capitalize">{profile.sentiment}</p>
+            <div key={profile.id} className={`${SOCIAL_PANEL_BASE} space-y-2.5 p-4`}>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white break-words">u/{profile.username}</p>
+                  <p className="text-xs text-gray-400 capitalize mt-0.5">{profile.sentiment}</p>
                 </div>
-                <div className="text-right text-xs text-gray-400 whitespace-nowrap leading-relaxed">
-                  <div>{profile.karma.toLocaleString()} karma</div>
-                  <div>{profile.followers.toLocaleString()} followers</div>
+                <div className="text-right text-xs text-gray-400 whitespace-nowrap leading-relaxed flex-shrink-0">
+                  <div className="font-medium">{profile.karma.toLocaleString()} karma</div>
+                  <div className="font-medium">{profile.followers.toLocaleString()} followers</div>
                 </div>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">{profile.lastPostSummary}</p>
-              <div className="flex items-center justify-between text-xs text-gray-400">
-                <span>Engagement rate: {profile.engagementRate}%</span>
+              <p className="text-xs text-gray-400 leading-relaxed break-words">{profile.lastPostSummary}</p>
+              <div className="flex items-center justify-between text-xs text-gray-400 flex-wrap gap-2">
+                <span className="font-medium">Engagement rate: {profile.engagementRate}%</span>
                 {profile.watchlist && (
-                  <span className="text-red-400 text-[11px] uppercase tracking-wide">Watch closely</span>
+                  <span className="text-red-400 text-[10px] uppercase tracking-wide font-semibold">Watch closely</span>
                 )}
               </div>
             </div>

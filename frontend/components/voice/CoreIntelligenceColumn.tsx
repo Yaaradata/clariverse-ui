@@ -52,7 +52,7 @@ export function CoreIntelligenceColumn({
   };
 
   return (
-    <div className="space-y-4 w-[50%] flex-shrink-0">
+    <div className="space-y-4 min-w-0 w-full">
       {/* Coaching Recommendations */}
       <Card>
         <CardHeader>
@@ -265,9 +265,9 @@ export function CoreIntelligenceColumn({
           <CardTitle className="text-lg">Intent Distribution</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 min-w-0">
             {/* Left Side Legend */}
-            <div className="flex-shrink-0 space-y-2 min-w-[140px]">
+            <div className="flex-shrink-0 space-y-2 min-w-[120px] max-w-[140px]">
               {intentDistribution.slice(0, Math.ceil(intentDistribution.length / 2)).map((intent, idx) => (
                 <div key={idx} className="flex items-center gap-2">
                   <div 
@@ -321,7 +321,7 @@ export function CoreIntelligenceColumn({
             </div>
 
             {/* Right Side Legend */}
-            <div className="flex-shrink-0 space-y-2 min-w-[140px]">
+            <div className="flex-shrink-0 space-y-2 min-w-[120px] max-w-[140px]">
               {intentDistribution.slice(Math.ceil(intentDistribution.length / 2)).map((intent, idx) => {
                 const actualIdx = Math.ceil(intentDistribution.length / 2) + idx;
                 return (
@@ -354,7 +354,7 @@ export function CoreIntelligenceColumn({
           <TooltipProvider>
             <div className="space-y-3">
               {/* Column Headers */}
-              <div className="grid gap-3 text-xs font-semibold text-muted-foreground mb-3 pb-2 border-b border-white/20" style={{ gridTemplateColumns: '140px repeat(5, 1fr)' }}>
+              <div className="grid gap-3 text-xs font-semibold text-muted-foreground mb-3 pb-2 border-b border-white/20 min-w-0" style={{ gridTemplateColumns: 'minmax(100px, 140px) repeat(5, minmax(60px, 1fr))' }}>
                 <div className="text-left">Call Type</div>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -421,7 +421,7 @@ export function CoreIntelligenceColumn({
               {/* Heatmap Rows */}
               <div className="space-y-2 max-h-[500px] overflow-y-auto">
                 {issueHeatmap.map((item, idx) => (
-                  <div key={idx} className="grid gap-3 items-start py-1.5 hover:bg-white/5 rounded px-1 transition-colors" style={{ gridTemplateColumns: '140px repeat(5, 1fr)' }}>
+                  <div key={idx} className="grid gap-3 items-start py-1.5 hover:bg-white/5 rounded px-1 transition-colors min-w-0" style={{ gridTemplateColumns: 'minmax(100px, 140px) repeat(5, minmax(60px, 1fr))' }}>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div className="text-sm text-white font-medium cursor-help pr-2 leading-tight" title={item.intent} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>

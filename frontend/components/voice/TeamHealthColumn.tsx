@@ -43,7 +43,7 @@ export function TeamHealthColumn({
   dateRange
 }: TeamHealthColumnProps) {
   return (
-    <div className="space-y-4 w-[28%] flex-shrink-0">
+    <div className="space-y-4 min-w-0 w-full">
       {/* Team Quality Overview */}
       <Card>
         <CardHeader>

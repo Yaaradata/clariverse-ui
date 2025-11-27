@@ -149,7 +149,7 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 min-w-0 w-full">
       <Card className={SOCIAL_CARD_BASE}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-white text-lg">
@@ -160,20 +160,20 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
             Fastest growing conversation entry points
           </CardDescription>
         </CardHeader>
-        <CardContent className="grid gap-3 sm:grid-cols-2">
+        <CardContent className="grid gap-3 sm:grid-cols-2 pb-4">
           {hashtagTrends.map((hashtag) => (
-            <div key={hashtag.hashtag} className={`${SOCIAL_PANEL_BASE} space-y-2`}>
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-white">{hashtag.hashtag}</p>
-                <span className={`text-xs uppercase tracking-wide ${hashtag.sentiment === 'positive' ? 'text-emerald-400' : hashtag.sentiment === 'negative' ? 'text-red-400' : 'text-gray-400'}`}>
+            <div key={hashtag.hashtag} className={`${SOCIAL_PANEL_BASE} space-y-2.5 p-4`}>
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <p className="text-sm font-semibold text-white break-words">{hashtag.hashtag}</p>
+                <span className={`text-xs uppercase tracking-wide px-2 py-0.5 rounded flex-shrink-0 ${hashtag.sentiment === 'positive' ? 'text-emerald-400' : hashtag.sentiment === 'negative' ? 'text-red-400' : 'text-gray-400'}`}>
                   {hashtag.sentiment}
                 </span>
               </div>
-              <div className="flex items-end gap-3">
-                <span className="text-3xl text-white font-semibold">{hashtag.growthPercent}%</span>
-                <span className="text-xs text-gray-400">Growth · {hashtag.volume.toLocaleString()} posts</span>
+              <div className="flex items-end gap-3 flex-wrap">
+                <span className="text-3xl text-white font-semibold leading-none">{hashtag.growthPercent}%</span>
+                <span className="text-xs text-gray-400 pb-0.5">Growth · <span className="font-medium">{hashtag.volume.toLocaleString()}</span> posts</span>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">{hashtag.summary}</p>
+              <p className="text-xs text-gray-400 leading-relaxed break-words">{hashtag.summary}</p>
             </div>
           ))}
         </CardContent>
@@ -205,7 +205,7 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
               layout="vertical"
               barCategoryGap="28%"
               barGap={8}
-              margin={{ top: 20, right: 120, bottom: 20, left: 12 }}
+              margin={{ top: 20, right: 90, bottom: 20, left: 12 }}
             >
               <defs>
                 {sortedViralityTopics.map((topic, index) => (
@@ -239,8 +239,8 @@ export function XEngagementColumn({ hashtagTrends, trendingPosts }: XEngagementC
                 dataKey="name"
                 type="category"
                 stroke="#9CA3AF"
-                width={220}
-                tick={{ fill: '#D1D5DB', fontSize: 12, dy: 4 }}
+                width={180}
+                tick={{ fill: '#D1D5DB', fontSize: 11, dy: 4 }}
                 tickLine={false}
                 axisLine={false}
                 interval={0}

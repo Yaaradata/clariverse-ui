@@ -154,7 +154,7 @@ export function ActionCoachingColumn({
   const chartData = getChartData();
 
   return (
-    <div className="space-y-4 w-[22%] flex-shrink-0">
+    <div className="space-y-4 min-w-0 w-full">
       {/* Customer Emotion Flow */}
       <Card>
         <CardHeader>

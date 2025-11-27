@@ -168,11 +168,11 @@ export default function RedditDashboardPage() {
     }
   }, [complianceFeatureDataset, selectedCategoryKey]);
   return (
-    <div className="space-y-6 pb-8 animate-fade-in">
+    <div className="space-y-6 pb-8 animate-fade-in overflow-x-hidden">
       <RedditKPIRibbon data={kpis} />
 
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,_2fr)_minmax(0,_1fr)] gap-6 items-start min-h-[560px]">
+      <div className="space-y-6 overflow-x-hidden">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,_2fr)_minmax(0,_1fr)] gap-6 items-start min-h-[560px] w-full max-w-full">
           <RedditCommunityColumn communitySignals={signals} viralityTopics={viralityTopics} />
           <RedditActionColumn moderationAlerts={moderationAlerts} influencers={influencers} />
         </div>

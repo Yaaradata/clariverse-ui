@@ -411,11 +411,11 @@ const TrustpilotDashboard = (props: any) => {
                     <Star className="h-5 w-5 fill-yellow-400" />
                   </div>
                 </div>
-                <div className="mb-4">
-                  <div className="text-4xl font-bold text-white mb-2">{avgRating.toFixed(1)}</div>
-                  <div className="text-sm text-slate-400">out of 5.0 stars</div>
+                <div className="mb-2">
+                  <div className="text-2xl font-bold text-white mb-1">{avgRating.toFixed(1)}</div>
+                  <span className="text-sm font-semibold text-slate-400">out of 5.0 stars</span>
                 </div>
-                <div className={`p-3 rounded-md text-xs leading-relaxed ${
+                <div className={`mt-3 p-2 rounded-md text-xs ${
                   avgRating < 4.0 ? 'bg-[#b90abd]/10 border border-[#b90abd]/20 text-[#b90abd]' : 'bg-gray-800/50 text-gray-400'
                 }`}>
                   {avgRating >= 4.0
@@ -448,11 +448,11 @@ const TrustpilotDashboard = (props: any) => {
                     <MessageSquare className="h-5 w-5" />
                   </div>
                 </div>
-                <div className="mb-4">
-                  <div className="text-4xl font-bold text-white mb-2">{repliedPercent}%</div>
-                  <div className="text-sm text-slate-400">vs {notRepliedPercent}% Not Replied</div>
+                <div className="mb-2">
+                  <div className="text-2xl font-bold text-white mb-1">{repliedPercent}%</div>
+                  <span className="text-sm font-semibold text-slate-400">vs {notRepliedPercent}% Not Replied</span>
                 </div>
-                <div className={`p-3 rounded-md text-xs leading-relaxed ${
+                <div className={`mt-3 p-2 rounded-md text-xs ${
                   repliedPercent < 70 ? 'bg-[#b90abd]/10 border border-[#b90abd]/20 text-[#b90abd]' : 'bg-gray-800/50 text-gray-400'
                 }`}>
                   {notRepliedCount} reviews need responses – prioritize negative reviews
@@ -481,11 +481,11 @@ const TrustpilotDashboard = (props: any) => {
                     <Clock className="h-5 w-5" />
                   </div>
                 </div>
-                <div className="mb-4">
-                  <div className="text-4xl font-bold text-white mb-2">{avgResponseTimeHours.toFixed(1)}h</div>
-                  <div className="text-sm text-slate-400">Average response time</div>
+                <div className="mb-2">
+                  <div className="text-2xl font-bold text-white mb-1">{avgResponseTimeHours.toFixed(1)}h</div>
+                  <span className="text-sm font-semibold text-slate-400">Average response time</span>
                 </div>
-                <div className={`p-3 rounded-md text-xs leading-relaxed ${
+                <div className={`mt-3 p-2 rounded-md text-xs ${
                   avgResponseTimeHours > 4 ? 'bg-[#b90abd]/10 border border-[#b90abd]/20 text-[#b90abd]' : 'bg-gray-800/50 text-gray-400'
                 }`}>
                   {avgResponseTimeHours <= 4
@@ -520,11 +520,11 @@ const TrustpilotDashboard = (props: any) => {
                     )}
                   </div>
                 </div>
-                <div className="mb-4">
-                  <div className="text-4xl font-bold text-white mb-2">{positiveReviewsPercent.toFixed(1)}%</div>
-                  <div className="text-sm text-slate-400">vs {negativeReviewsPercent.toFixed(1)}% Negative</div>
+                <div className="mb-2">
+                  <div className="text-2xl font-bold text-white mb-1">{positiveReviewsPercent.toFixed(1)}%</div>
+                  <span className="text-sm font-semibold text-slate-400">vs {negativeReviewsPercent.toFixed(1)}% Negative</span>
                 </div>
-                <div className={`p-3 rounded-md text-xs leading-relaxed ${
+                <div className={`mt-3 p-2 rounded-md text-xs ${
                   positiveReviewsPercent < 70 ? 'bg-[#b90abd]/10 border border-[#b90abd]/20 text-[#b90abd]' : 'bg-gray-800/50 text-gray-400'
                 }`}>
                   {Math.round((totalReviews * negativeReviewsPercent) / 100)} negative reviews need attention – focus on top issues
