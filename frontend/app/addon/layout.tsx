@@ -39,7 +39,7 @@ export default function AddonLayout({
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: isDarkMode ? '#010101' : '#FFFFFF' }}>
+    <div className="min-h-screen" style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }}>
       {/* Header with company name using Yaara brand colors */}
       <header className="shadow-lg" style={{ backgroundColor: '#010101' }}>
         <div className="container mx-auto px-6 py-4">
@@ -90,7 +90,7 @@ export default function AddonLayout({
         className="border-b" 
         style={{ 
           borderColor: isDarkMode ? '#939394' : '#D6D9D8',
-          backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF'
+          backgroundColor: isDarkMode ? '#1a1a1a' : '#FAFAFA'
         }}
       >
         <div className="container mx-auto px-6">

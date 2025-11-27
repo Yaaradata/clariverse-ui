@@ -37,7 +37,7 @@ export default function FCIPage() {
   }, []);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: isDarkMode ? '#010101' : '#FFFFFF' }}>
+    <div className="min-h-screen" style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }}>
       <div className="container mx-auto px-6 py-6">
         {/* Header */}
         <div className="mb-6">
