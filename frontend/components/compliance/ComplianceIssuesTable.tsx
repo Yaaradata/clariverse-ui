@@ -278,201 +278,141 @@ export function ComplianceIssuesTable({ data, isDarkMode = false }: ComplianceIs
         </div>
       </div>
 
-      {/* Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr style={{ backgroundColor: isDarkMode ? '#141414' : '#FAFAFA' }}>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#939394' }}>
-                Issue
-              </th>
-              <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#939394' }}>
-                Agent
-              </th>
-              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: '#939394' }}>
-                Severity
-              </th>
-              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: '#939394' }}>
-                Region
-              </th>
-              <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider" style={{ color: '#939394' }}>
-                Status
-              </th>
-              <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider" style={{ color: '#939394' }}>
-                Time
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((issue, index) => {
-              const severityColor = getSeverityColor(issue.severity);
-              const statusColor = getStatusColor(issue.status);
-              const isExpanded = expandedRow === issue.id;
-              const issueDetails = issueDetailsMap[issue.id];
+      {/* List */}
+      <div className="overflow-y-auto" style={{ maxHeight: '500px' }}>
+        <div className="divide-y" style={{ borderColor: isDarkMode ? '#1f1f1f' : '#F0F0F0' }}>
+          {filteredData.map((issue, index) => {
+            const severityColor = getSeverityColor(issue.severity);
+            const statusColor = getStatusColor(issue.status);
+            const isExpanded = expandedRow === issue.id;
+            const issueDetails = issueDetailsMap[issue.id];
 
-              return (
-                <Fragment key={issue.id}>
-                  <tr
-                    className={`cursor-pointer transition-all duration-300 hover:bg-opacity-50 ${
-                      isVisible ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    style={{ 
-                      transitionDelay: `${index * 50}ms`,
-                      backgroundColor: isExpanded 
-                        ? (isDarkMode ? '#1a1a1a' : '#F9F9F9') 
-                        : 'transparent',
-                      borderBottom: isExpanded ? 'none' : `1px solid ${isDarkMode ? '#1f1f1f' : '#F0F0F0'}`
-                    }}
-                    onClick={() => setExpandedRow(isExpanded ? null : issue.id)}
-                  >
-                    {/* Issue */}
-                    <td className="px-4 py-4">
-                      <div className="flex items-start gap-3">
-                        <div 
-                          className="mt-0.5 p-1.5 rounded-lg"
-                          style={{ backgroundColor: `${severityColor}15` }}
+            return (
+              <Fragment key={issue.id}>
+                <div
+                  className={`p-4 cursor-pointer transition-all duration-300 ${
+                    isVisible ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{ 
+                    transitionDelay: `${index * 50}ms`,
+                    backgroundColor: isExpanded 
+                      ? (isDarkMode ? '#1a1a1a' : '#F9F9F9') 
+                      : 'transparent',
+                    borderBottom: `1px solid ${isDarkMode ? '#1f1f1f' : '#F0F0F0'}`
+                  }}
+                  onClick={() => setExpandedRow(isExpanded ? null : issue.id)}
+                >
+                  {/* Main Row */}
+                  <div className="flex items-start gap-3">
+                    <div 
+                      className="p-1.5 rounded-lg flex-shrink-0"
+                      style={{ backgroundColor: `${severityColor}15` }}
+                    >
+                      <AlertCircle className="w-4 h-4" style={{ color: severityColor }} />
+                    </div>
+                    
+                    <div className="flex-1 min-w-0">
+                      {/* Top Row - ID, Category, Severity */}
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span 
+                          className="text-[10px] font-mono px-1.5 py-0.5 rounded"
+                          style={{ 
+                            backgroundColor: isDarkMode ? '#2a2a2a' : '#F0F0F0',
+                            color: '#939394'
+                          }}
                         >
-                          <AlertCircle className="w-4 h-4" style={{ color: severityColor }} />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <span 
-                              className="text-xs font-mono px-1.5 py-0.5 rounded"
-                              style={{ 
-                                backgroundColor: isDarkMode ? '#2a2a2a' : '#F0F0F0',
-                                color: '#939394'
-                              }}
-                            >
-                              {issue.id}
-                            </span>
-                            <span 
-                              className="px-2 py-0.5 rounded text-xs font-medium"
-                              style={{ 
-                                backgroundColor: isDarkMode ? '#5332FF20' : '#5332FF10',
-                                color: '#5332FF'
-                              }}
-                            >
-                              {issue.category}
-                            </span>
-                            {issue.repeatOffense && (
-                              <span 
-                                className="px-2 py-0.5 rounded text-xs font-medium"
-                                style={{ 
-                                  backgroundColor: '#ef444420',
-                                  color: '#ef4444'
-                                }}
-                              >
-                                ⚠️ Repeat
-                              </span>
-                            )}
-                          </div>
-                          <p 
-                            className={`text-sm mt-1 ${isExpanded ? '' : 'line-clamp-2'}`}
-                            style={{ color: isDarkMode ? '#E0E0E0' : '#333333' }}
+                          {issue.id}
+                        </span>
+                        <span 
+                          className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                          style={{ 
+                            backgroundColor: isDarkMode ? '#5332FF20' : '#5332FF10',
+                            color: '#5332FF'
+                          }}
+                        >
+                          {issue.category}
+                        </span>
+                        <span 
+                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-semibold uppercase"
+                          style={{ 
+                            backgroundColor: `${severityColor}20`,
+                            color: severityColor
+                          }}
+                        >
+                          <span 
+                            className="w-1.5 h-1.5 rounded-full"
+                            style={{ backgroundColor: severityColor }}
+                          />
+                          {issue.severity}
+                        </span>
+                        {issue.repeatOffense && (
+                          <span 
+                            className="px-1.5 py-0.5 rounded text-[10px] font-medium"
+                            style={{ 
+                              backgroundColor: '#ef444420',
+                              color: '#ef4444'
+                            }}
                           >
-                            {issue.issue}
-                          </p>
-                        </div>
-                        <ChevronRight 
-                          className={`w-4 h-4 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`}
-                          style={{ color: '#939394' }}
-                        />
+                            Repeat
+                          </span>
+                        )}
                       </div>
-                    </td>
-
-                    {/* Agent */}
-                    <td className="px-4 py-4">
-                      <div className="flex items-center gap-2">
-                        <div 
-                          className="w-8 h-8 rounded-full flex items-center justify-center"
-                          style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#F0F0F0' }}
-                        >
-                          <User className="w-4 h-4" style={{ color: '#939394' }} />
-                        </div>
-                        <div>
-                          <p 
-                            className="text-sm font-medium"
-                            style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                          >
+                      
+                      {/* Description */}
+                      <p 
+                        className={`text-sm leading-relaxed ${isExpanded ? '' : 'line-clamp-1'}`}
+                        style={{ color: isDarkMode ? '#E0E0E0' : '#333333' }}
+                      >
+                        {issue.issue}
+                      </p>
+                      
+                      {/* Bottom Row - Agent, Region, Status, Time */}
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
+                        <div className="flex items-center gap-1.5">
+                          <User className="w-3 h-3" style={{ color: '#939394' }} />
+                          <span className="text-[11px]" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
                             {issue.agentName}
-                          </p>
-                          <p className="text-xs" style={{ color: '#939394' }}>
-                            {issue.agentId}
-                          </p>
+                          </span>
                         </div>
-                      </div>
-                    </td>
-
-                    {/* Severity */}
-                    <td className="px-4 py-4 text-center">
-                      <span 
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold uppercase"
-                        style={{ 
-                          backgroundColor: `${severityColor}20`,
-                          color: severityColor
-                        }}
-                      >
+                        <span className="text-[11px]" style={{ color: '#939394' }}>
+                          {getRegionFlag(issue.region)} {issue.region}
+                        </span>
                         <span 
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: severityColor }}
-                        />
-                        {issue.severity}
-                      </span>
-                    </td>
-
-                    {/* Region */}
-                    <td className="px-4 py-4 text-center">
-                      <span 
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-                        style={{ 
-                          backgroundColor: isDarkMode ? '#2a2a2a' : '#F0F0F0',
-                          color: isDarkMode ? '#FFFFFF' : '#010101'
-                        }}
-                      >
-                        <span>{getRegionFlag(issue.region)}</span>
-                        {issue.region}
-                      </span>
-                    </td>
-
-                    {/* Status */}
-                    <td className="px-4 py-4 text-center">
-                      <span 
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium capitalize"
-                        style={{ 
-                          backgroundColor: `${statusColor}15`,
-                          color: statusColor
-                        }}
-                      >
-                        <span 
-                          className="w-1.5 h-1.5 rounded-full animate-pulse"
-                          style={{ backgroundColor: statusColor }}
-                        />
-                        {issue.status}
-                      </span>
-                    </td>
-
-                    {/* Time */}
-                    <td className="px-4 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
-                        <Clock className="w-3.5 h-3.5" style={{ color: '#939394' }} />
-                        <span className="text-xs" style={{ color: '#939394' }} suppressHydrationWarning>
+                          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium capitalize"
+                          style={{ 
+                            backgroundColor: `${statusColor}15`,
+                            color: statusColor
+                          }}
+                        >
+                          <span 
+                            className="w-1 h-1 rounded-full animate-pulse"
+                            style={{ backgroundColor: statusColor }}
+                          />
+                          {issue.status}
+                        </span>
+                        <span className="text-[10px] flex items-center gap-1" style={{ color: '#939394' }} suppressHydrationWarning>
+                          <Clock className="w-3 h-3" />
                           {formatTimestamp(issue.timestamp)}
                         </span>
                       </div>
-                    </td>
-                  </tr>
+                    </div>
+                    
+                    <ChevronRight 
+                      className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`}
+                      style={{ color: '#939394' }}
+                    />
+                  </div>
+                </div>
 
-                  {/* Expanded Details Row */}
-                  {isExpanded && issueDetails && (
-                    <tr>
-                      <td 
-                        colSpan={6} 
-                        className="px-4 pb-4"
-                        style={{ 
-                          backgroundColor: isDarkMode ? '#1a1a1a' : '#F9F9F9',
-                          borderBottom: `1px solid ${isDarkMode ? '#1f1f1f' : '#F0F0F0'}`
-                        }}
-                      >
+                {/* Expanded Details */}
+                {isExpanded && issueDetails && (
+                  <div 
+                    className="px-4 pb-4"
+                    style={{ 
+                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F9F9F9',
+                      borderBottom: `1px solid ${isDarkMode ? '#1f1f1f' : '#F0F0F0'}`
+                    }}
+                  >
                         <div 
                           className="rounded-xl p-5 animate-in slide-in-from-top-2 duration-300"
                           style={{ 
@@ -666,14 +606,12 @@ export function ComplianceIssuesTable({ data, isDarkMode = false }: ComplianceIs
                             </div>
                           </div>
                         </div>
-                      </td>
-                    </tr>
-                  )}
-                </Fragment>
-              );
-            })}
-          </tbody>
-        </table>
+                  </div>
+                )}
+              </Fragment>
+            );
+          })}
+        </div>
       </div>
 
       {/* Footer */}

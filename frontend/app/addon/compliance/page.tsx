@@ -5,17 +5,15 @@ import { Calendar, Settings, Clock, Users } from 'lucide-react';
 import { ComplianceScoreMeter } from '@/components/compliance/ComplianceScoreMeter';
 import { ViolationCategoryChart } from '@/components/compliance/ViolationCategoryChart';
 import { ComplianceIssuesTable } from '@/components/compliance/ComplianceIssuesTable';
-import { InsightsPanel } from '@/components/compliance/InsightsPanel';
 import { RiskAlertPanel } from '@/components/compliance/RiskAlertPanel';
 import { AgentWatchlist } from '@/components/compliance/AgentWatchlist';
-import { RegionalComplianceMap } from '@/components/compliance/RegionalComplianceMap';
 import { ComplianceInsightsCards } from '@/components/compliance/ComplianceInsightsCards';
+import { ActiveRisksTable } from '@/components/compliance/ActiveRisksTable';
 import {
   TimeFilter,
   complianceScoreData,
   violationCategoryData,
   complianceIssuesData,
-  complianceInsightsData,
   riskAlertsData
 } from '@/lib/compliance/complianceData';
 
@@ -136,47 +134,38 @@ export default function CompliancePage() {
           </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Left Column - Violations & Issues */}
-          <div className="xl:col-span-2 space-y-6">
-            {/* Violations by Category */}
-            <ViolationCategoryChart 
-              data={violationCategoryData[timeFilter]} 
-              isDarkMode={isDarkMode} 
-            />
+        {/* Violations, Risk Alert & Agent Watchlist Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          {/* Violations by Category */}
+          <ViolationCategoryChart 
+            data={violationCategoryData[timeFilter]} 
+            isDarkMode={isDarkMode} 
+          />
 
-            {/* Issues Table */}
-            <ComplianceIssuesTable 
-              data={complianceIssuesData} 
-              isDarkMode={isDarkMode} 
-            />
-          </div>
+          {/* Risk Alert Panel */}
+          <RiskAlertPanel 
+            data={riskAlertsData} 
+            isDarkMode={isDarkMode} 
+          />
 
-          {/* Right Column - Insights & Risk Alerts */}
-          <div className="space-y-6">
-            {/* AI Insights Panel */}
-            <InsightsPanel 
-              data={complianceInsightsData} 
-              isDarkMode={isDarkMode} 
-            />
-
-            {/* Risk Alert Panel */}
-            <RiskAlertPanel 
-              data={riskAlertsData} 
-              isDarkMode={isDarkMode} 
-            />
-
-            {/* Agent Watchlist */}
-            <AgentWatchlist 
-              isDarkMode={isDarkMode} 
-            />
-          </div>
+          {/* Agent Watchlist */}
+          <AgentWatchlist 
+            isDarkMode={isDarkMode} 
+          />
         </div>
 
-        {/* Regional Compliance Map */}
-        <div className="mt-6">
-          <RegionalComplianceMap isDarkMode={isDarkMode} />
+        {/* Active Compliance Issues & Active Risks - Side by Side */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+          {/* Issues Table */}
+          <ComplianceIssuesTable 
+            data={complianceIssuesData} 
+            isDarkMode={isDarkMode} 
+          />
+
+          {/* Active Risks Table */}
+          <ActiveRisksTable 
+            isDarkMode={isDarkMode} 
+          />
         </div>
 
         {/* Footer */}

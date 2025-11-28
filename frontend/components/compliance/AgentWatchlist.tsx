@@ -328,7 +328,7 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
         </div>
 
         {/* Agent List */}
-        <div className="overflow-y-auto" style={{ maxHeight: showAllAgents ? '600px' : '340px' }}>
+        <div className="overflow-y-auto" style={{ maxHeight: showAllAgents ? '600px' : '450px' }}>
           {watchlistData.map((agent, index) => {
             const riskConfig = getRiskConfig(agent.riskLevel);
             const isHovered = hoveredAgent === agent.id;
