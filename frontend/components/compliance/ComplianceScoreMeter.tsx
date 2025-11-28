@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, Minus, Sparkles } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { ComplianceScore, getScoreRatingColor } from '@/lib/compliance/complianceData';
 
 interface ComplianceScoreMeterProps {
@@ -176,43 +176,69 @@ export function ComplianceScoreMeter({ data, isDarkMode = false }: ComplianceSco
         </div>
       </div>
 
-      {/* AI Insight */}
-      <div 
-        className="mt-4 p-3 rounded-xl"
-        style={{ 
-          background: isDarkMode 
-            ? 'linear-gradient(135deg, rgba(83, 50, 255, 0.15) 0%, rgba(185, 10, 189, 0.1) 100%)'
-            : 'linear-gradient(135deg, rgba(83, 50, 255, 0.08) 0%, rgba(185, 10, 189, 0.05) 100%)',
-          border: `1px solid ${isDarkMode ? 'rgba(83, 50, 255, 0.3)' : 'rgba(83, 50, 255, 0.2)'}`
-        }}
-      >
-        <div className="flex items-start gap-2.5">
-          <div 
-            className="p-1.5 rounded-lg flex-shrink-0"
-            style={{ 
-              background: 'linear-gradient(135deg, #5332FF 0%, #B90ABD 100%)'
-            }}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-white" />
+      {/* AI Insights */}
+      <div className="mt-10 space-y-2">
+        <div 
+          className="p-3 rounded-xl"
+          style={{ 
+            background: isDarkMode 
+              ? 'linear-gradient(135deg, rgba(83, 50, 255, 0.15) 0%, rgba(185, 10, 189, 0.1) 100%)'
+              : 'linear-gradient(135deg, rgba(83, 50, 255, 0.08) 0%, rgba(185, 10, 189, 0.05) 100%)',
+            border: `1px solid ${isDarkMode ? 'rgba(83, 50, 255, 0.3)' : 'rgba(83, 50, 255, 0.2)'}`
+          }}
+        >
+          <div className="flex items-start gap-2.5">
+            <span className="text-sm flex-shrink-0">✨</span>
+            <div className="flex-1 min-w-0">
+              <p 
+                className="text-[10px] font-semibold uppercase tracking-wider mb-1"
+                style={{ color: '#5332FF' }}
+              >
+                AI Insight
+              </p>
+              <p 
+                className="text-xs leading-relaxed"
+                style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+              >
+                {data.trend < 0 
+                  ? `Score dropped ${Math.abs(data.trend).toFixed(1)}% due to increased KYC violations. Focus on agent training for identity verification protocols.`
+                  : data.value >= 90 
+                    ? `Excellent compliance posture! Maintain current controls and continue monitoring for emerging risks.`
+                    : `Score improving steadily. Address pending script violations to reach the 95% target within 2 weeks.`
+                }
+              </p>
+            </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <p 
-              className="text-[10px] font-semibold uppercase tracking-wider mb-1"
-              style={{ color: '#5332FF' }}
-            >
-              AI Insight
-            </p>
-            <p 
-              className="text-xs leading-relaxed"
-              style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-            >
-              {data.trend < 0 
-                ? `Score dropped ${Math.abs(data.trend).toFixed(1)}% due to increased KYC violations. Focus on agent training for identity verification protocols.`
-                : data.value >= 90 
-                  ? `Excellent compliance posture! Maintain current controls and continue monitoring for emerging risks.`
-                  : `Score improving steadily. Address pending script violations to reach the 95% target within 2 weeks.`
-              }
-            </p>
+        </div>
+
+        <div 
+          className="p-3 rounded-xl"
+          style={{ 
+            background: isDarkMode 
+              ? 'linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%)'
+              : 'linear-gradient(135deg, rgba(34, 197, 94, 0.08) 0%, rgba(6, 182, 212, 0.05) 100%)',
+            border: `1px solid ${isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.2)'}`
+          }}
+        >
+          <div className="flex items-start gap-2.5">
+            <span className="text-sm flex-shrink-0">✨</span>
+            <div className="flex-1 min-w-0">
+              <p 
+                className="text-[10px] font-semibold uppercase tracking-wider mb-1"
+                style={{ color: '#22c55e' }}
+              >
+                Recommendation
+              </p>
+              <p 
+                className="text-xs leading-relaxed"
+                style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+              >
+                {data.value < 85
+                  ? `Enable real-time script monitoring to catch violations before they impact scores. 23% of issues are preventable.`
+                  : `Consider automating GLBA disclosure checks on chat channel to reduce manual review backlog by 40%.`
+                }
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, Settings, TrendingUp, TrendingDown, AlertTriangle, CheckCircle2, Clock, Users } from 'lucide-react';
+import { Calendar, Settings, Clock, Users } from 'lucide-react';
 import { ComplianceScoreMeter } from '@/components/compliance/ComplianceScoreMeter';
 import { ViolationCategoryChart } from '@/components/compliance/ViolationCategoryChart';
 import { ComplianceIssuesTable } from '@/components/compliance/ComplianceIssuesTable';
@@ -9,14 +9,14 @@ import { InsightsPanel } from '@/components/compliance/InsightsPanel';
 import { RiskAlertPanel } from '@/components/compliance/RiskAlertPanel';
 import { AgentWatchlist } from '@/components/compliance/AgentWatchlist';
 import { RegionalComplianceMap } from '@/components/compliance/RegionalComplianceMap';
+import { ComplianceInsightsCards } from '@/components/compliance/ComplianceInsightsCards';
 import {
   TimeFilter,
   complianceScoreData,
   violationCategoryData,
   complianceIssuesData,
   complianceInsightsData,
-  riskAlertsData,
-  complianceMetricsData
+  riskAlertsData
 } from '@/lib/compliance/complianceData';
 
 export default function CompliancePage() {
@@ -57,8 +57,6 @@ export default function CompliancePage() {
     { value: '7d', label: 'Last 7 Days' },
     { value: '30d', label: 'Last 30 Days' }
   ];
-
-  const metrics = complianceMetricsData[timeFilter];
 
   return (
     <div 
@@ -116,118 +114,37 @@ export default function CompliancePage() {
           </div>
         </div>
 
-        {/* Quick Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          {[
-            { 
-              label: 'Total Violations', 
-              value: metrics.totalViolations.toLocaleString(), 
-              icon: AlertTriangle, 
-              color: '#ef4444',
-              trend: -12
-            },
-            { 
-              label: 'Resolved Today', 
-              value: metrics.resolvedToday.toLocaleString(), 
-              icon: CheckCircle2, 
-              color: '#22c55e',
-              trend: 8
-            },
-            { 
-              label: 'Pending Review', 
-              value: metrics.pendingReview.toLocaleString(), 
-              icon: Clock, 
-              color: '#f97316',
-              trend: -5
-            },
-            { 
-              label: 'Critical Issues', 
-              value: metrics.criticalIssues.toLocaleString(), 
-              icon: AlertTriangle, 
-              color: '#ef4444',
-              trend: 3
-            },
-            { 
-              label: 'Avg Resolution', 
-              value: metrics.avgResolutionTime, 
-              icon: Clock, 
-              color: '#5332FF',
-              trend: -10
-            },
-            { 
-              label: 'Compliance Rate', 
-              value: `${metrics.complianceRate}%`, 
-              icon: CheckCircle2, 
-              color: '#22c55e',
-              trend: 2.5
-            }
-          ].map((stat, index) => (
-            <div
-              key={stat.label}
-              className="rounded-xl p-4 transition-all duration-300 hover:scale-[1.02]"
-              style={{
-                backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-                border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`,
-                boxShadow: isDarkMode 
-                  ? '0 2px 12px rgba(0, 0, 0, 0.3)'
-                  : '0 2px 12px rgba(0, 0, 0, 0.04)',
-                animationDelay: `${index * 50}ms`
-              }}
-            >
-              <div className="flex items-start justify-between mb-2">
-                <div 
-                  className="p-2 rounded-lg"
-                  style={{ backgroundColor: `${stat.color}15` }}
-                >
-                  <stat.icon className="w-4 h-4" style={{ color: stat.color }} />
-                </div>
-                <div 
-                  className="flex items-center gap-1 text-xs font-medium"
-                  style={{ color: stat.trend > 0 ? '#ef4444' : '#22c55e' }}
-                >
-                  {stat.trend > 0 ? (
-                    <TrendingUp className="w-3 h-3" />
-                  ) : (
-                    <TrendingDown className="w-3 h-3" />
-                  )}
-                  <span>{Math.abs(stat.trend)}%</span>
-                </div>
-              </div>
-              <p 
-                className="text-2xl font-bold mb-1"
-                style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-              >
-                {stat.value}
-              </p>
-              <p className="text-xs" style={{ color: '#939394' }}>
-                {stat.label}
-              </p>
-            </div>
-          ))}
+        {/* AI Post-Interaction Compliance Insights + Compliance Health Score */}
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-6">
+          {/* AI Insights Cards - Takes 3 columns */}
+          <div 
+            className="xl:col-span-3 rounded-2xl p-6"
+            style={{ 
+              backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
+            }}
+          >
+            <ComplianceInsightsCards isDarkMode={isDarkMode} />
+          </div>
+
+          {/* Compliance Score Meter - Takes 1 column */}
+          <div className="xl:col-span-1">
+            <ComplianceScoreMeter 
+              data={complianceScoreData[timeFilter]} 
+              isDarkMode={isDarkMode} 
+            />
+          </div>
         </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          {/* Left Column - Compliance Health */}
+          {/* Left Column - Violations & Issues */}
           <div className="xl:col-span-2 space-y-6">
-            {/* Score & Violations Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-              {/* Compliance Score Meter */}
-              <div className="h-full">
-                <ComplianceScoreMeter 
-                  data={complianceScoreData[timeFilter]} 
-                  isDarkMode={isDarkMode} 
-                />
-              </div>
-              
-              {/* Violations by Category */}
-              <div className="h-full">
-                <ViolationCategoryChart 
-                  data={violationCategoryData[timeFilter]} 
-                  isDarkMode={isDarkMode} 
-                />
-              </div>
-            </div>
+            {/* Violations by Category */}
+            <ViolationCategoryChart 
+              data={violationCategoryData[timeFilter]} 
+              isDarkMode={isDarkMode} 
+            />
 
             {/* Issues Table */}
             <ComplianceIssuesTable 

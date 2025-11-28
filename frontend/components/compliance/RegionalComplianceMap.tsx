@@ -109,6 +109,18 @@ export function RegionalComplianceMap({ isDarkMode = false }: RegionalCompliance
   const totalAgents = regionData.reduce((sum, r) => sum + r.agents, 0);
   const avgCompliance = Math.round(regionData.reduce((sum, r) => sum + r.complianceScore, 0) / regionData.length);
 
+  // Deterministic pseudo-random function based on seed
+  // Using integer math to avoid floating-point precision issues between server/client
+  const seededRandom = (seed: number): number => {
+    // Simple LCG (Linear Congruential Generator) for deterministic values
+    const a = 1664525;
+    const c = 1013904223;
+    const m = Math.pow(2, 32);
+    const result = ((a * seed + c) % m) / m;
+    // Round to 2 decimal places to avoid hydration mismatch
+    return Math.round(result * 100) / 100;
+  };
+
   // Generate hexagon grid points for world map
   const generateHexGrid = () => {
     const hexagons = [];
@@ -127,7 +139,10 @@ export function RegionalComplianceMap({ isDarkMode = false }: RegionalCompliance
         if (isLand) {
           // Determine region color based on position
           const regionColor = getRegionColor(col / cols * 100, row / rows * 100);
-          hexagons.push({ x, y, color: regionColor, opacity: 0.3 + Math.random() * 0.4 });
+          // Use deterministic opacity based on position to avoid hydration mismatch
+          const seed = row * cols + col;
+          const opacity = 0.3 + seededRandom(seed) * 0.4;
+          hexagons.push({ x, y, color: regionColor, opacity });
         }
       }
     }
