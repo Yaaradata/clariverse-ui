@@ -4,7 +4,7 @@ export type TimeFilter = '24h' | '7d' | '30d';
 export type Severity = 'critical' | 'high' | 'medium' | 'low';
 export type Region = 'APAC' | 'India' | 'Europe' | 'Americas' | 'MEA';
 export type RiskCategory = 'fraud' | 'operational' | 'reputation' | 'third-party' | 'cyber';
-export type ViolationCategory = 'KYC' | 'Script Violation' | 'Data Privacy' | 'AML' | 'Consent' | 'PCI-DSS';
+export type ViolationCategory = 'Sanctions / PEP Screening' | 'AML Compliance' | 'Customer Identification Program' | 'Regulatory Reporting' | 'Data Privacy Compliance' | 'Cross-Border Compliance' | 'Vendor Compliance';
 
 export interface ComplianceScore {
   value: number;
@@ -89,36 +89,39 @@ export const complianceScoreData: Record<TimeFilter, ComplianceScore> = {
 
 export const violationCategoryData: Record<TimeFilter, ViolationData[]> = {
   '24h': [
-    { category: 'KYC', count: 45, trend: 20, severity: 'high', percentage: 32 },
-    { category: 'Script Violation', count: 38, trend: -5, severity: 'medium', percentage: 27 },
-    { category: 'Data Privacy', count: 28, trend: 15, severity: 'critical', percentage: 20 },
-    { category: 'AML', count: 15, trend: -10, severity: 'high', percentage: 11 },
-    { category: 'Consent', count: 10, trend: 8, severity: 'medium', percentage: 7 },
-    { category: 'PCI-DSS', count: 5, trend: 0, severity: 'low', percentage: 3 }
+    { category: 'Sanctions / PEP Screening', count: 52, trend: 25, severity: 'critical', percentage: 26 },
+    { category: 'AML Compliance', count: 45, trend: 18, severity: 'high', percentage: 22 },
+    { category: 'Customer Identification Program', count: 38, trend: -5, severity: 'high', percentage: 19 },
+    { category: 'Regulatory Reporting', count: 28, trend: 12, severity: 'medium', percentage: 14 },
+    { category: 'Data Privacy Compliance', count: 20, trend: 8, severity: 'medium', percentage: 10 },
+    { category: 'Cross-Border Compliance', count: 12, trend: -3, severity: 'low', percentage: 6 },
+    { category: 'Vendor Compliance', count: 6, trend: 0, severity: 'low', percentage: 3 }
   ],
   '7d': [
-    { category: 'KYC', count: 312, trend: 18, severity: 'high', percentage: 30 },
-    { category: 'Script Violation', count: 287, trend: -3, severity: 'medium', percentage: 28 },
-    { category: 'Data Privacy', count: 198, trend: 12, severity: 'critical', percentage: 19 },
-    { category: 'AML', count: 124, trend: -8, severity: 'high', percentage: 12 },
-    { category: 'Consent', count: 78, trend: 5, severity: 'medium', percentage: 7 },
-    { category: 'PCI-DSS', count: 41, trend: 2, severity: 'low', percentage: 4 }
+    { category: 'Sanctions / PEP Screening', count: 364, trend: 22, severity: 'critical', percentage: 25 },
+    { category: 'AML Compliance', count: 312, trend: 15, severity: 'high', percentage: 22 },
+    { category: 'Customer Identification Program', count: 267, trend: -3, severity: 'high', percentage: 18 },
+    { category: 'Regulatory Reporting', count: 198, trend: 10, severity: 'medium', percentage: 14 },
+    { category: 'Data Privacy Compliance', count: 145, trend: 6, severity: 'medium', percentage: 10 },
+    { category: 'Cross-Border Compliance', count: 89, trend: -5, severity: 'low', percentage: 6 },
+    { category: 'Vendor Compliance', count: 67, trend: 2, severity: 'low', percentage: 5 }
   ],
   '30d': [
-    { category: 'KYC', count: 1245, trend: 22, severity: 'high', percentage: 31 },
-    { category: 'Script Violation', count: 1089, trend: -2, severity: 'medium', percentage: 27 },
-    { category: 'Data Privacy', count: 756, trend: 15, severity: 'critical', percentage: 19 },
-    { category: 'AML', count: 498, trend: -12, severity: 'high', percentage: 12 },
-    { category: 'Consent', count: 312, trend: 8, severity: 'medium', percentage: 8 },
-    { category: 'PCI-DSS', count: 145, trend: 3, severity: 'low', percentage: 3 }
+    { category: 'Sanctions / PEP Screening', count: 1456, trend: 28, severity: 'critical', percentage: 26 },
+    { category: 'AML Compliance', count: 1245, trend: 18, severity: 'high', percentage: 22 },
+    { category: 'Customer Identification Program', count: 1067, trend: -2, severity: 'high', percentage: 19 },
+    { category: 'Regulatory Reporting', count: 789, trend: 12, severity: 'medium', percentage: 14 },
+    { category: 'Data Privacy Compliance', count: 578, trend: 8, severity: 'medium', percentage: 10 },
+    { category: 'Cross-Border Compliance', count: 312, trend: -4, severity: 'low', percentage: 5 },
+    { category: 'Vendor Compliance', count: 223, trend: 3, severity: 'low', percentage: 4 }
   ]
 };
 
 export const complianceIssuesData: ComplianceIssue[] = [
   {
     id: 'CI-001',
-    issue: 'Customer identity verification skipped during high-value transaction',
-    category: 'KYC',
+    issue: 'PEP screening missed for politically exposed person during onboarding',
+    category: 'Sanctions / PEP Screening',
     agentId: 'AGT-2451',
     agentName: 'Michael Chen',
     severity: 'critical',
@@ -129,8 +132,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-002',
-    issue: 'Script deviation during risk disclosure - missing mandatory statements',
-    category: 'Script Violation',
+    issue: 'Suspicious transaction pattern not flagged for AML review',
+    category: 'AML Compliance',
     agentId: 'AGT-1823',
     agentName: 'Sarah Williams',
     severity: 'high',
@@ -141,8 +144,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-003',
-    issue: 'Customer data shared with unauthorized third-party vendor',
-    category: 'Data Privacy',
+    issue: 'Customer identity verification skipped during high-value transaction',
+    category: 'Customer Identification Program',
     agentId: 'AGT-3012',
     agentName: 'James Rodriguez',
     severity: 'critical',
@@ -153,8 +156,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-004',
-    issue: 'Suspicious transaction pattern not flagged for AML review',
-    category: 'AML',
+    issue: 'SAR filing deadline missed for flagged transaction',
+    category: 'Regulatory Reporting',
     agentId: 'AGT-2789',
     agentName: 'Priya Sharma',
     severity: 'high',
@@ -165,8 +168,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-005',
-    issue: 'Recording consent not obtained before call recording started',
-    category: 'Consent',
+    issue: 'Customer data shared without proper consent documentation',
+    category: 'Data Privacy Compliance',
     agentId: 'AGT-1456',
     agentName: 'Emma Johnson',
     severity: 'medium',
@@ -177,8 +180,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-006',
-    issue: 'Same agent repeated script violation - 3rd occurrence this week',
-    category: 'Script Violation',
+    issue: 'Cross-border transfer processed without required regulatory approval',
+    category: 'Cross-Border Compliance',
     agentId: 'AGT-1823',
     agentName: 'Sarah Williams',
     severity: 'high',
@@ -189,8 +192,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-007',
-    issue: 'BPO vendor downloading customer financial data without authorization',
-    category: 'Data Privacy',
+    issue: 'BPO vendor accessing customer data without proper authorization',
+    category: 'Vendor Compliance',
     agentId: 'BPO-VN-089',
     agentName: 'Vendor: TechServe Asia',
     severity: 'critical',
@@ -201,8 +204,8 @@ export const complianceIssuesData: ComplianceIssue[] = [
   },
   {
     id: 'CI-008',
-    issue: 'KYC document verification bypassed for VIP customer',
-    category: 'KYC',
+    issue: 'Sanctions list check bypassed for expedited VIP account opening',
+    category: 'Sanctions / PEP Screening',
     agentId: 'AGT-3456',
     agentName: 'David Kim',
     severity: 'high',
@@ -216,17 +219,17 @@ export const complianceIssuesData: ComplianceIssue[] = [
 export const complianceInsightsData: ComplianceInsight[] = [
   {
     id: 'INS-001',
-    message: 'KYC complaints are up by 20% compared to last week',
+    message: 'Sanctions screening failures up by 25% - PEP list updates required',
     type: 'warning',
-    category: 'KYC',
-    change: 20,
+    category: 'Sanctions / PEP Screening',
+    change: 25,
     trend: 'up'
   },
   {
     id: 'INS-002',
-    message: 'Agent AGT-1823 (Sarah Williams) repeated 2 violations in script compliance',
+    message: 'AML flagged transactions not escalated within SLA - 67 cases pending',
     type: 'alert',
-    category: 'Script Violation',
+    category: 'AML Compliance',
     trend: 'up'
   },
   {
@@ -240,23 +243,23 @@ export const complianceInsightsData: ComplianceInsight[] = [
     id: 'INS-004',
     message: 'Data privacy violations trending down by 8% in EMEA region',
     type: 'info',
-    category: 'Data Privacy',
+    category: 'Data Privacy Compliance',
     change: -8,
     trend: 'down'
   },
   {
     id: 'INS-005',
-    message: 'AML alert response time improved by 15% after process update',
+    message: 'Regulatory reporting accuracy improved by 15% after automation',
     type: 'info',
-    category: 'AML',
+    category: 'Regulatory Reporting',
     change: -15,
     trend: 'down'
   },
   {
     id: 'INS-006',
-    message: 'Consent violations spiking in European operations - GDPR risk',
+    message: 'Cross-border transaction violations increasing in EU corridor',
     type: 'warning',
-    category: 'Consent',
+    category: 'Cross-Border Compliance',
     change: 12,
     trend: 'up'
   }
