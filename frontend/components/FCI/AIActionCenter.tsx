@@ -29,7 +29,7 @@ export function AIActionCenter({ actions, isDarkMode = false }: AIActionCenterPr
 
   return (
     <div
-      className="border rounded-lg p-4 shadow-sm"
+      className="border rounded-lg p-4 shadow-sm h-full flex flex-col"
       style={{
         borderColor: isDarkMode ? '#939394' : '#D6D9D8',
         backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF'
@@ -39,7 +39,7 @@ export function AIActionCenter({ actions, isDarkMode = false }: AIActionCenterPr
         className="text-lg font-bold mb-4"
         style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
       >
-        🟦 What To Do Next (AI Action Center)
+        What To Do Next (AI Action Center)
       </h3>
 
       <div className="space-y-6">
@@ -48,7 +48,7 @@ export function AIActionCenter({ actions, isDarkMode = false }: AIActionCenterPr
           <div className="flex items-center gap-2 mb-3">
             <Settings className="w-5 h-5" style={{ color: '#5332FF' }} />
             <h4 className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-              1️⃣ Process Fixes
+              Process Fixes
             </h4>
           </div>
           <div className="space-y-3">
@@ -119,7 +119,7 @@ export function AIActionCenter({ actions, isDarkMode = false }: AIActionCenterPr
           <div className="flex items-center gap-2 mb-3">
             <Users className="w-5 h-5" style={{ color: '#5332FF' }} />
             <h4 className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-              2️⃣ Agent Skills Enhancements
+              Agent Skills Enhancements
             </h4>
           </div>
           <div className="space-y-3">
@@ -190,7 +190,7 @@ export function AIActionCenter({ actions, isDarkMode = false }: AIActionCenterPr
           <div className="flex items-center gap-2 mb-3">
             <Bell className="w-5 h-5" style={{ color: '#5332FF' }} />
             <h4 className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-              3️⃣ Proactive Alerts
+              Proactive Alerts
             </h4>
           </div>
           <div className="space-y-3">
@@ -258,9 +258,10 @@ export function AIActionCenter({ actions, isDarkMode = false }: AIActionCenterPr
       </div>
 
       <p className="text-xs mt-4 italic" style={{ color: '#939394' }}>
-        👉 Executive takeaway: Clear actions that drive immediate business results.
+        Executive takeaway: Clear actions that drive immediate business results.
       </p>
     </div>
   );
 }
+
 
