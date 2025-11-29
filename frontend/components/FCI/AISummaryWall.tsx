@@ -299,11 +299,11 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
         boxShadow: isDarkMode 
           ? '0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
           : '0 4px 24px rgba(0, 0, 0, 0.06)',
-        maxHeight: '615px'
+        height: '615px'
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-5 flex-shrink-0">
         <div className="flex items-center gap-3">
           <div 
             className="p-2 rounded-xl"
@@ -322,7 +322,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
               AI Summary Wall
             </h3>
             <p className="text-xs" style={{ color: '#939394' }}>
-              {selectedInsight ? 'Click to view details' : 'Real-time FCI intelligence'}
+              {selectedInsight ? 'Viewing details' : 'Real-time FCI intelligence'}
             </p>
           </div>
         </div>
@@ -338,316 +338,317 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
         </div>
       </div>
 
-      {/* Detail View */}
-      {selectedInsight && selectedDetails && selectedConfig && (
-        <div 
-          className="mb-4 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300"
-          style={{ 
-            background: selectedConfig.bgGradient,
-            border: `1px solid ${selectedConfig.color}50`
-          }}
-        >
-          {/* Detail Header */}
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <selectedConfig.icon className="w-5 h-5" style={{ color: selectedConfig.color }} />
-              <span 
-                className="text-sm font-bold"
-                style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+      {/* Scrollable Content Area - includes both detail view and insights list */}
+      <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin" style={{ 
+        scrollbarWidth: 'thin',
+        scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5',
+        minHeight: 0
+      }}>
+        {/* Detail View */}
+        {selectedInsight && selectedDetails && selectedConfig && (
+          <div 
+            className="mb-4 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300"
+            style={{ 
+              background: selectedConfig.bgGradient,
+              border: `1px solid ${selectedConfig.color}50`
+            }}
+          >
+            {/* Detail Header */}
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <selectedConfig.icon className="w-5 h-5" style={{ color: selectedConfig.color }} />
+                <span 
+                  className="text-sm font-bold"
+                  style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                >
+                  {selectedInsight.title}
+                </span>
+              </div>
+              <button 
+                onClick={closeDetail}
+                className="p-1 rounded-lg hover:bg-black/10 transition-colors"
               >
-                {selectedInsight.title}
-              </span>
+                <X className="w-4 h-4" style={{ color: '#939394' }} />
+              </button>
             </div>
-            <button 
-              onClick={closeDetail}
-              className="p-1 rounded-lg hover:bg-black/10 transition-colors"
-            >
-              <X className="w-4 h-4" style={{ color: '#939394' }} />
-            </button>
-          </div>
 
-          {/* Priority Badge */}
-          <div className="flex items-center gap-2 mb-3">
-            {(() => {
-              const priorityConfig = getPriorityConfig(selectedDetails.priority);
-              return (
-                <span 
-                  className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full"
-                  style={{ 
-                    backgroundColor: `${priorityConfig.color}20`,
-                    color: priorityConfig.color
-                  }}
-                >
-                  <priorityConfig.icon className="w-3 h-3" />
-                  {priorityConfig.label}
-                </span>
-              );
-            })()}
-            <span 
-              className="text-xs px-2 py-1 rounded-full"
-              style={{ 
-                backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-                color: '#939394'
-              }}
-            >
-              {getCategoryLabel(selectedInsight.category)}
-            </span>
-          </div>
-
-          {/* Root Cause */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-1.5">
-              <FileText className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
-              <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
-                Root Cause
-              </span>
-            </div>
-            <p 
-              className="text-sm leading-relaxed"
-              style={{ color: isDarkMode ? '#E0E0E0' : '#333333' }}
-            >
-              {selectedDetails.rootCause}
-            </p>
-          </div>
-
-          {/* Affected Areas */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-1.5">
-              <Target className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
-              <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
-                Affected Areas
-              </span>
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {selectedDetails.affectedAreas.map((area, i) => (
-                <span 
-                  key={i}
-                  className="text-[10px] px-2 py-0.5 rounded"
-                  style={{ 
-                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F0F0F0',
-                    color: isDarkMode ? '#D6D9D8' : '#4a4a4a'
-                  }}
-                >
-                  {area}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Recommended Actions */}
-          <div className="mb-4">
-            <div className="flex items-center gap-2 mb-1.5">
-              <ArrowRight className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
-              <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
-                Recommended Actions
-              </span>
-            </div>
-            <ul className="space-y-1.5">
-              {selectedDetails.recommendedActions.map((action, i) => (
-                <li 
-                  key={i}
-                  className="flex items-start gap-2 text-xs"
-                  style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-                >
+            {/* Priority Badge */}
+            <div className="flex items-center gap-2 mb-3">
+              {(() => {
+                const priorityConfig = getPriorityConfig(selectedDetails.priority);
+                return (
                   <span 
-                    className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold"
+                    className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full"
                     style={{ 
-                      backgroundColor: `${selectedConfig.color}20`,
-                      color: selectedConfig.color
+                      backgroundColor: `${priorityConfig.color}20`,
+                      color: priorityConfig.color
                     }}
                   >
-                    {i + 1}
+                    <priorityConfig.icon className="w-3 h-3" />
+                    {priorityConfig.label}
                   </span>
-                  {action}
-                </li>
-              ))}
-            </ul>
-          </div>
+                );
+              })()}
+              <span 
+                className="text-xs px-2 py-1 rounded-full"
+                style={{ 
+                  backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
+                  color: '#939394'
+                }}
+              >
+                {getCategoryLabel(selectedInsight.category)}
+              </span>
+            </div>
 
-          {/* Footer Info */}
-          <div 
-            className="flex items-center justify-between pt-3 border-t"
-            style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
-          >
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3 h-3" style={{ color: '#939394' }} />
-                <span className="text-[10px]" style={{ color: '#939394' }}>
-                  {selectedDetails.timeToResolve}
+            {/* Root Cause */}
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <FileText className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
+                <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
+                  Root Cause
                 </span>
               </div>
-              {selectedDetails.assignedTo && (
-                <div className="flex items-center gap-1.5">
-                  <Users className="w-3 h-3" style={{ color: '#939394' }} />
-                  <span className="text-[10px]" style={{ color: '#939394' }}>
-                    {selectedDetails.assignedTo}
-                  </span>
-                </div>
-              )}
+              <p 
+                className="text-sm leading-relaxed"
+                style={{ color: isDarkMode ? '#E0E0E0' : '#333333' }}
+              >
+                {selectedDetails.rootCause}
+              </p>
             </div>
-            <span 
-              className="text-[10px] font-medium"
-              style={{ color: selectedConfig.color }}
-            >
-              {selectedDetails.estimatedImpact.split(' - ')[0]}
-            </span>
-          </div>
-        </div>
-      )}
 
-      {/* Insights List - Scrollable */}
-      <div 
-        className="space-y-3 overflow-y-auto pr-2 scrollbar-thin flex-1"
-        style={{ 
-          scrollbarWidth: 'thin',
-          scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5'
-        }}
-      >
-        {sortedData.map((insight, index) => {
-          const config = getTypeConfig(insight.severity);
-          const Icon = config.icon;
-          const TrendIcon = getTrendIcon(insight.trend);
-          const CategoryIcon = getCategoryIcon(insight.category);
-          const isActive = activeInsight === insight.id;
-          const isSelected = selectedInsight?.id === insight.id;
-
-          return (
-            <div
-              key={insight.id}
-              className={`relative rounded-xl p-4 cursor-pointer transition-all duration-300 ${
-                isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
-              } ${isActive ? 'scale-[1.02]' : 'hover:scale-[1.01]'}`}
-              style={{ 
-                transitionDelay: `${index * 80}ms`,
-                background: config.bgGradient,
-                border: `1px solid ${isSelected ? config.color : (isActive ? config.color : config.borderColor)}`,
-                boxShadow: isSelected ? `0 4px 20px ${config.color}40` : (isActive ? `0 4px 20px ${config.color}30` : 'none')
-              }}
-              onMouseEnter={() => setActiveInsight(insight.id)}
-              onMouseLeave={() => setActiveInsight(null)}
-              onClick={() => handleInsightClick(insight)}
-            >
-              {/* Glow effect for critical items */}
-              {insight.severity === 'critical' && (
-                <div 
-                  className="absolute inset-0 rounded-xl animate-pulse"
-                  style={{ 
-                    background: `radial-gradient(circle at center, ${config.color}10 0%, transparent 70%)`,
-                    pointerEvents: 'none'
-                  }}
-                />
-              )}
-
-              <div className="relative flex items-start gap-3">
-                <div 
-                  className="p-2 rounded-lg flex-shrink-0"
-                  style={{ backgroundColor: `${config.color}20` }}
-                >
-                  <Icon className="w-4 h-4" style={{ color: config.color }} />
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span 
-                      className="text-xs font-semibold uppercase px-1.5 py-0.5 rounded"
-                      style={{ 
-                        backgroundColor: `${config.color}25`,
-                        color: config.color
-                      }}
-                    >
-                      {config.label}
-                    </span>
-                    <span 
-                      className="text-xs px-1.5 py-0.5 rounded flex items-center gap-1"
-                      style={{ 
-                        backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-                        color: '#939394'
-                      }}
-                    >
-                      <CategoryIcon className="w-3 h-3" />
-                      {getCategoryLabel(insight.category)}
-                    </span>
-                  </div>
-
-                  <p 
-                    className="text-sm font-semibold mb-1"
-                    style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+            {/* Affected Areas */}
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <Target className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
+                <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
+                  Affected Areas
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {selectedDetails.affectedAreas.map((area, i) => (
+                  <span 
+                    key={i}
+                    className="text-[10px] px-2 py-0.5 rounded"
+                    style={{ 
+                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F0F0F0',
+                      color: isDarkMode ? '#D6D9D8' : '#4a4a4a'
+                    }}
                   >
-                    {insight.title}
-                  </p>
-
-                  <p 
-                    className="text-xs leading-relaxed"
-                    style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-                  >
-                    {insight.message}
-                  </p>
-
-                  {/* Metrics */}
-                  {insight.metrics && (
-                    <div className="flex items-center gap-3 mt-2 flex-wrap">
-                      {insight.metrics.volume !== undefined && (
-                        <span 
-                          className="text-xs font-medium"
-                          style={{ color: config.color }}
-                        >
-                          {insight.metrics.volume.toLocaleString()} {insight.metrics.volumeLabel}
-                        </span>
-                      )}
-                      {insight.metrics.responseTime && (
-                        <span 
-                          className="text-xs flex items-center gap-1"
-                          style={{ color: '#939394' }}
-                        >
-                          <Timer className="w-3 h-3" />
-                          {insight.metrics.responseTime}
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Trend indicator */}
-                  {insight.change !== undefined && TrendIcon && (
-                    <div 
-                      className="flex items-center gap-1.5 mt-2"
-                      style={{ 
-                        color: insight.trend === 'up' ? '#ef4444' : '#22c55e'
-                      }}
-                    >
-                      <TrendIcon className="w-3.5 h-3.5" />
-                      <span className="text-xs font-semibold">
-                        {insight.change > 0 ? '+' : ''}{insight.change}% from last period
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Click hint */}
-                  <div 
-                    className={`flex items-center gap-1 mt-2 text-[10px] transition-opacity duration-200 ${
-                      isActive ? 'opacity-100' : 'opacity-0'
-                    }`}
-                    style={{ color: config.color }}
-                  >
-                    <span>Click for details</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </div>
-                </div>
-
-                <ChevronRight 
-                  className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${
-                    isActive ? 'translate-x-1 opacity-100' : 'opacity-40'
-                  }`}
-                  style={{ color: config.color }}
-                />
+                    {area}
+                  </span>
+                ))}
               </div>
             </div>
-          );
-        })}
+
+            {/* Recommended Actions */}
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1.5">
+                <ArrowRight className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
+                <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
+                  Recommended Actions
+                </span>
+              </div>
+              <ul className="space-y-1.5">
+                {selectedDetails.recommendedActions.map((action, i) => (
+                  <li 
+                    key={i}
+                    className="flex items-start gap-2 text-xs"
+                    style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                  >
+                    <span 
+                      className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold"
+                      style={{ 
+                        backgroundColor: `${selectedConfig.color}20`,
+                        color: selectedConfig.color
+                      }}
+                    >
+                      {i + 1}
+                    </span>
+                    {action}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Footer Info */}
+            <div 
+              className="flex items-center justify-between pt-3 border-t"
+              style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-3 h-3" style={{ color: '#939394' }} />
+                  <span className="text-[10px]" style={{ color: '#939394' }}>
+                    {selectedDetails.timeToResolve}
+                  </span>
+                </div>
+                {selectedDetails.assignedTo && (
+                  <div className="flex items-center gap-1.5">
+                    <Users className="w-3 h-3" style={{ color: '#939394' }} />
+                    <span className="text-[10px]" style={{ color: '#939394' }}>
+                      {selectedDetails.assignedTo}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <span 
+                className="text-[10px] font-medium"
+                style={{ color: selectedConfig.color }}
+              >
+                {selectedDetails.estimatedImpact.split(' - ')[0]}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Insights List */}
+        <div className="space-y-3">
+          {sortedData.map((insight, index) => {
+            const config = getTypeConfig(insight.severity);
+            const Icon = config.icon;
+            const TrendIcon = getTrendIcon(insight.trend);
+            const CategoryIcon = getCategoryIcon(insight.category);
+            const isActive = activeInsight === insight.id;
+            const isSelected = selectedInsight?.id === insight.id;
+
+            return (
+              <div
+                key={insight.id}
+                className={`relative rounded-xl p-4 cursor-pointer transition-all duration-300 ${
+                  isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
+                } ${isActive ? 'scale-[1.02]' : 'hover:scale-[1.01]'}`}
+                style={{ 
+                  transitionDelay: `${index * 80}ms`,
+                  background: config.bgGradient,
+                  border: `1px solid ${isSelected ? config.color : (isActive ? config.color : config.borderColor)}`,
+                  boxShadow: isSelected ? `0 4px 20px ${config.color}40` : (isActive ? `0 4px 20px ${config.color}30` : 'none')
+                }}
+                onMouseEnter={() => setActiveInsight(insight.id)}
+                onMouseLeave={() => setActiveInsight(null)}
+                onClick={() => handleInsightClick(insight)}
+              >
+                {/* Glow effect for critical items */}
+                {insight.severity === 'critical' && (
+                  <div 
+                    className="absolute inset-0 rounded-xl animate-pulse"
+                    style={{ 
+                      background: `radial-gradient(circle at center, ${config.color}10 0%, transparent 70%)`,
+                      pointerEvents: 'none'
+                    }}
+                  />
+                )}
+
+                <div className="relative flex items-start gap-3">
+                  <div 
+                    className="p-2 rounded-lg flex-shrink-0"
+                    style={{ backgroundColor: `${config.color}20` }}
+                  >
+                    <Icon className="w-4 h-4" style={{ color: config.color }} />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <span 
+                        className="text-xs font-semibold uppercase px-1.5 py-0.5 rounded"
+                        style={{ 
+                          backgroundColor: `${config.color}25`,
+                          color: config.color
+                        }}
+                      >
+                        {config.label}
+                      </span>
+                      <span 
+                        className="text-xs px-1.5 py-0.5 rounded flex items-center gap-1"
+                        style={{ 
+                          backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
+                          color: '#939394'
+                        }}
+                      >
+                        <CategoryIcon className="w-3 h-3" />
+                        {getCategoryLabel(insight.category)}
+                      </span>
+                    </div>
+
+                    <p 
+                      className="text-sm font-semibold mb-1"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      {insight.title}
+                    </p>
+
+                    <p 
+                      className="text-xs leading-relaxed"
+                      style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                    >
+                      {insight.message}
+                    </p>
+
+                    {/* Metrics */}
+                    {insight.metrics && (
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
+                        {insight.metrics.volume !== undefined && (
+                          <span 
+                            className="text-xs font-medium"
+                            style={{ color: config.color }}
+                          >
+                            {insight.metrics.volume.toLocaleString()} {insight.metrics.volumeLabel}
+                          </span>
+                        )}
+                        {insight.metrics.responseTime && (
+                          <span 
+                            className="text-xs flex items-center gap-1"
+                            style={{ color: '#939394' }}
+                          >
+                            <Timer className="w-3 h-3" />
+                            {insight.metrics.responseTime}
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Trend indicator */}
+                    {insight.change !== undefined && TrendIcon && (
+                      <div 
+                        className="flex items-center gap-1.5 mt-2"
+                        style={{ 
+                          color: insight.trend === 'up' ? '#ef4444' : '#22c55e'
+                        }}
+                      >
+                        <TrendIcon className="w-3.5 h-3.5" />
+                        <span className="text-xs font-semibold">
+                          {insight.change > 0 ? '+' : ''}{insight.change}% from last period
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Click hint */}
+                    <div 
+                      className={`flex items-center gap-1 mt-2 text-[10px] transition-opacity duration-200 ${
+                        isActive ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      style={{ color: config.color }}
+                    >
+                      <span>Click for details</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </div>
+                  </div>
+
+                  <ChevronRight 
+                    className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${
+                      isActive ? 'translate-x-1 opacity-100' : 'opacity-40'
+                    }`}
+                    style={{ color: config.color }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Summary Footer */}
+      {/* Summary Footer - Fixed at bottom */}
       <div 
-        className="mt-5 pt-4 border-t grid grid-cols-3 gap-4"
+        className="mt-5 pt-4 border-t grid grid-cols-3 gap-4 flex-shrink-0"
         style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
       >
         <div className="text-center">
@@ -681,4 +682,3 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
     </div>
   );
 }
-
