@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, Settings, Users, Clock } from 'lucide-react';
+import { Settings, Users } from 'lucide-react';
 import { FCIKPICards } from '@/components/FCI/FCIKPICards';
+import { FCIEisenhowerDistribution } from '@/components/FCI/FCIEisenhowerDistribution';
 import { FailureClusters } from '@/components/FCI/FailureClusters';
 import { SmartAgentActionList } from '@/components/FCI/SmartAgentActionList';
 import { IntentScoreHeatmap } from '@/components/FCI/IntentScoreHeatmap';
@@ -14,13 +15,16 @@ import {
   agentActionData
 } from '@/lib/fci-lib/fciAdvancedData';
 
-type TimeFilter = '24h' | '7d' | '30d';
+type FCITab = 'summary' | 'workforce';
+
+const tabs: { id: FCITab; label: string }[] = [
+  { id: 'summary', label: 'Summary' },
+  { id: 'workforce', label: 'Workforce Performance' },
+];
 
 export default function FCIPage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [activeTab, setActiveTab] = useState<FCITab>('summary');
 
   // Check for dark mode from parent
   useEffect(() => {
@@ -43,110 +47,94 @@ export default function FCIPage() {
     };
   }, []);
 
-  const handleTimeFilterChange = (filter: TimeFilter) => {
-    setIsLoading(true);
-    setTimeFilter(filter);
-    setTimeout(() => setIsLoading(false), 500);
-  };
-
-  const timeFilterOptions: { value: TimeFilter; label: string }[] = [
-    { value: '24h', label: 'Last 24 Hours' },
-    { value: '7d', label: 'Last 7 Days' },
-    { value: '30d', label: 'Last 30 Days' }
-  ];
-
   return (
     <div 
       className="min-h-screen"
       style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }}
     >
       <div className="container mx-auto px-6 py-6">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-          <div>
-            <h1
-              className="text-2xl font-bold mb-2"
-              style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-            >
-              Failed Customer Interaction (FCI) Dashboard
-            </h1>
-            <p className="text-sm flex items-center gap-2" style={{ color: '#939394' }}>
-              <span>Real-time FCI monitoring and root cause analysis</span>
-              <span className="flex items-center gap-1 text-xs" suppressHydrationWarning>
-                <Clock className="w-3 h-3" />
-                Updated {lastRefresh.toLocaleTimeString()}
-              </span>
-            </p>
-          </div>
-
-          {/* Controls */}
-          <div className="flex items-center gap-3">
-            {/* Time Filter */}
-            <div 
-              className="flex items-center rounded-xl p-1"
-              style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}` }}
-            >
-              {timeFilterOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => handleTimeFilterChange(option.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    timeFilter === option.value ? 'shadow-sm' : ''
-                  }`}
-                  style={{
-                    backgroundColor: timeFilter === option.value 
-                      ? '#5332FF' 
-                      : 'transparent',
-                    color: timeFilter === option.value 
-                      ? '#FFFFFF' 
-                      : (isDarkMode ? '#D6D9D8' : '#939394')
+        {/* Sub-Tabs */}
+        <div 
+          className="flex gap-6 mb-6"
+          style={{ borderBottom: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}` }}
+        >
+          {tabs.map((tab) => {
+            const isActive = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className="relative pb-3 transition-all duration-200"
+              >
+                <span 
+                  className="text-sm font-medium"
+                  style={{ 
+                    color: isActive ? '#A855F7' : (isDarkMode ? '#939394' : '#6B7280')
                   }}
                 >
-                  <Calendar className="w-4 h-4" />
-                  {option.label}
-                </button>
-              ))}
+                  {tab.label}
+                </span>
+                {isActive && (
+                  <div 
+                    className="absolute bottom-0 left-0 right-0 h-0.5"
+                    style={{ backgroundColor: '#A855F7' }}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Summary Tab Content */}
+        {activeTab === 'summary' && (
+          <>
+            {/* KPI Cards Row (includes AI Summary Wall) */}
+            <div className="mb-6">
+              <FCIKPICards data={fciKPIData} isDarkMode={isDarkMode} />
             </div>
-          </div>
-        </div>
 
-        {/* KPI Cards Row (includes AI Summary Wall) */}
-        <div className="mb-6">
-          <FCIKPICards data={fciKPIData} isDarkMode={isDarkMode} />
-        </div>
+            {/* Eisenhower Quadrant Distribution */}
+            <FCIEisenhowerDistribution isDarkMode={isDarkMode} />
 
-        {/* What's Failing - Full Width */}
-        <div 
-          className="rounded-2xl mb-6"
-          style={{ 
-            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
-          }}
-        >
-          <FailureClusters clusters={fciClusters} isDarkMode={isDarkMode} />
-        </div>
+            {/* What's Failing - Full Width */}
+            <div 
+              className="rounded-2xl mb-6"
+              style={{ 
+                backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
+              }}
+            >
+              <FailureClusters clusters={fciClusters} isDarkMode={isDarkMode} />
+            </div>
+          </>
+        )}
 
-        {/* Agent Actions (Full Width) */}
-        <div 
-          className="rounded-2xl mb-6"
-          style={{ 
-            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
-          }}
-        >
-          <SmartAgentActionList data={agentActionData} isDarkMode={isDarkMode} />
-        </div>
+        {/* Workforce Performance Tab Content */}
+        {activeTab === 'workforce' && (
+          <>
+            {/* Cross-Intent Performance Grid */}
+            <div 
+              className="rounded-2xl p-6 mb-6"
+              style={{ 
+                backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
+              }}
+            >
+              <IntentScoreHeatmap isDarkMode={isDarkMode} />
+            </div>
 
-        {/* Cross-Intent Performance Heatmap */}
-        <div 
-          className="rounded-2xl p-6 mb-6"
-          style={{ 
-            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-            border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
-          }}
-        >
-          <IntentScoreHeatmap isDarkMode={isDarkMode} />
-        </div>
+            {/* Agents Requiring Training */}
+            <div 
+              className="rounded-2xl mb-6"
+              style={{ 
+                backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
+              }}
+            >
+              <SmartAgentActionList data={agentActionData} isDarkMode={isDarkMode} />
+            </div>
+          </>
+        )}
 
         {/* Footer */}
         <div 
