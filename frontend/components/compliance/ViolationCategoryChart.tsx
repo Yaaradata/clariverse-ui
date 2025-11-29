@@ -17,8 +17,7 @@ import {
   MessageSquare,
   Ticket,
   Mic,
-  Share2,
-  X
+  Share2
 } from 'lucide-react';
 import { ViolationData, getSeverityColor } from '@/lib/compliance/complianceData';
 
@@ -60,30 +59,12 @@ const getChannelBreakdown = (category: string, total: number): ChannelBreakdown 
 
 export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCategoryChartProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [hoveredBar, setHoveredBar] = useState<{ categoryIndex: number; channel: string } | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 200);
     return () => clearTimeout(timer);
   }, []);
-
-  useEffect(() => {
-    if (hoveredIndex !== null && rowRefs.current[hoveredIndex] && containerRef.current) {
-      const row = rowRefs.current[hoveredIndex];
-      const container = containerRef.current;
-      if (row) {
-        const rowRect = row.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        setTooltipPosition({
-          top: rowRect.bottom - containerRect.top + 8,
-          left: 0
-        });
-      }
-    }
-  }, [hoveredIndex]);
 
   const maxCount = Math.max(...data.map(d => d.count));
   const totalViolations = data.reduce((sum, d) => sum + d.count, 0);
@@ -110,14 +91,9 @@ export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCa
     { key: 'social', label: 'Social', icon: Share2, color: '#ec4899' }
   ];
 
-  const hoveredItem = hoveredIndex !== null ? data[hoveredIndex] : null;
-  const hoveredChannelBreakdown = hoveredItem ? getChannelBreakdown(hoveredItem.category, hoveredItem.count) : null;
-  const hoveredSeverityColor = hoveredItem ? getSeverityColor(hoveredItem.severity) : '#939394';
-
   return (
     <div
-      ref={containerRef}
-      className={`rounded-2xl p-6 transition-all duration-500 h-full flex flex-col relative ${
+      className={`rounded-2xl p-6 transition-all duration-500 flex flex-col overflow-hidden ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{
@@ -125,7 +101,8 @@ export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCa
         border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`,
         boxShadow: isDarkMode 
           ? '0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
-          : '0 4px 24px rgba(0, 0, 0, 0.06)'
+          : '0 4px 24px rgba(0, 0, 0, 0.06)',
+        maxHeight: '600px'
       }}
     >
       {/* Header */}
@@ -157,18 +134,15 @@ export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCa
         {data.map((item, index) => {
           const barWidth = (item.count / maxCount) * 100;
           const severityColor = getSeverityColor(item.severity);
-          const isHovered = hoveredIndex === index;
+          const channelBreakdown = getChannelBreakdown(item.category, item.count);
 
           return (
             <div
               key={item.category}
-              ref={(el) => { rowRefs.current[index] = el; }}
-              className={`transition-all duration-300 cursor-pointer ${
+              className={`transition-all duration-300 ${
                 isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
             >
               {/* Category Label Row */}
               <div className="flex items-center justify-between mb-2">
@@ -216,149 +190,80 @@ export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCa
                 </div>
               </div>
 
-              {/* Progress Bar */}
+              {/* Segmented Progress Bar with Channels */}
               <div 
                 className="relative h-3 rounded-full overflow-hidden"
                 style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F0F0F0' }}
               >
-                <div
-                  className="h-full rounded-full transition-all duration-700 ease-out"
+                <div 
+                  className="h-full flex rounded-full overflow-hidden transition-all duration-700 ease-out"
                   style={{
                     width: isVisible ? `${barWidth}%` : '0%',
-                    backgroundColor: severityColor,
-                    boxShadow: isHovered ? `0 0 12px ${severityColor}80` : 'none',
-                    transform: isHovered ? 'scaleY(1.2)' : 'scaleY(1)',
                     transitionDelay: `${index * 100}ms`
                   }}
-                />
-                {/* Percentage label */}
-                <span 
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold transition-opacity duration-300 ${
-                    isHovered ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
                 >
-                  {item.percentage}%
-                </span>
+                  {channelConfig.map((channel, channelIndex) => {
+                    const channelCount = channelBreakdown[channel.key as keyof ChannelBreakdown];
+                    const channelPercentage = (channelCount / item.count) * 100;
+                    const isHovered = hoveredBar?.categoryIndex === index && hoveredBar?.channel === channel.key;
+                    
+                    if (channelCount === 0) return null;
+                    
+                    return (
+                      <div
+                        key={channel.key}
+                        className="h-full flex items-center justify-center relative group cursor-pointer transition-all duration-300"
+                        style={{ 
+                          width: `${channelPercentage}%`,
+                          backgroundColor: channel.color,
+                          opacity: isHovered ? 1 : 0.9,
+                          transform: isHovered ? 'scaleY(1.3)' : 'scaleY(1)',
+                          boxShadow: isHovered ? `inset 0 0 0 1px ${isDarkMode ? '#FFFFFF' : '#000000'}60` : 'none'
+                        }}
+                        onMouseEnter={() => setHoveredBar({ categoryIndex: index, channel: channel.key })}
+                        onMouseLeave={() => setHoveredBar(null)}
+                      >
+                        {/* Show percentage inside bar only on hover */}
+                        {isHovered && (
+                          <span 
+                            className="text-[9px] font-bold text-white z-10"
+                            style={{ 
+                              textShadow: '0 1px 2px rgba(0,0,0,0.5)',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {Math.round(channelPercentage)}%
+                          </span>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           );
         })}
       </div>
 
-      {/* Legend */}
-      <div className="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t" style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}>
-        {['critical', 'high', 'medium', 'low'].map((severity) => (
-          <div key={severity} className="flex items-center gap-2">
-            <div 
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: getSeverityColor(severity as any) }}
-            />
-            <span className="text-xs capitalize" style={{ color: '#939394' }}>
-              {severity}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      {/* Fixed Channel Breakdown Tooltip - Rendered at component level */}
-      {hoveredIndex !== null && hoveredItem && hoveredChannelBreakdown && (
-        <div 
-          className="absolute left-4 right-4 p-4 rounded-xl animate-in fade-in zoom-in-95 duration-200"
-          style={{
-            top: tooltipPosition.top,
-            zIndex: 100,
-            backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF',
-            border: `2px solid ${hoveredSeverityColor}`,
-            boxShadow: isDarkMode 
-              ? `0 20px 60px rgba(0, 0, 0, 1), 0 0 0 1px ${hoveredSeverityColor}40`
-              : `0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px ${hoveredSeverityColor}40`
-          }}
-        >
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <span 
-                className="text-xs font-bold uppercase tracking-wide"
-                style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-              >
-                Channel Breakdown: {hoveredItem.category}
-              </span>
-              <span 
-                className="text-[10px] px-2 py-0.5 rounded-full font-bold"
-                style={{ 
-                  backgroundColor: hoveredSeverityColor,
-                  color: '#FFFFFF'
-                }}
-              >
-                {hoveredItem.count} total
-              </span>
-            </div>
-            <button 
-              onClick={() => setHoveredIndex(null)}
-              className="p-1 rounded-lg hover:opacity-70 transition-opacity"
-              style={{ color: '#939394' }}
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          
-          {/* Horizontal Bars for each channel */}
-          <div className="space-y-2.5">
-            {channelConfig.map((channel) => {
-              const Icon = channel.icon;
-              const count = hoveredChannelBreakdown[channel.key as keyof ChannelBreakdown];
-              const percentage = Math.round((count / hoveredItem.count) * 100);
-              const maxChannelCount = Math.max(...Object.values(hoveredChannelBreakdown));
-              const barWidth = (count / maxChannelCount) * 100;
-              
-              return (
-                <div key={channel.key} className="flex items-center gap-3">
-                  {/* Channel Icon & Label */}
-                  <div className="flex items-center gap-2 w-20 flex-shrink-0">
-                    <Icon className="w-4 h-4" style={{ color: channel.color }} />
-                    <span 
-                      className="text-xs font-medium"
-                      style={{ color: isDarkMode ? '#FFFFFF' : '#333333' }}
-                    >
-                      {channel.label}
-                    </span>
-                  </div>
-                  
-                  {/* Thin Horizontal Bar */}
-                  <div className="flex-1 flex items-center gap-2">
-                    <div 
-                      className="flex-1 h-2 rounded-full overflow-hidden"
-                      style={{ backgroundColor: isDarkMode ? '#262626' : '#E8E8E8' }}
-                    >
-                      <div
-                        className="h-full rounded-full transition-all duration-300"
-                        style={{ 
-                          width: `${barWidth}%`,
-                          backgroundColor: channel.color
-                        }}
-                      />
-                    </div>
-                    <span 
-                      className="text-xs font-bold w-8 text-center"
-                      style={{ color: channel.color }}
-                    >
-                      {count}
-                    </span>
-                  </div>
-                  
-                  {/* Percentage */}
-                  <span 
-                    className="text-[11px] font-medium w-10 text-right"
-                    style={{ color: isDarkMode ? '#888888' : '#666666' }}
-                  >
-                    {percentage}%
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+      {/* Channel Legend (replacing severity legend) */}
+      <div className="mt-6 pt-4 border-t flex-shrink-0" style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}>
+        <div className="flex items-center justify-between gap-2 overflow-x-auto">
+          <span className="text-xs font-semibold flex-shrink-0" style={{ color: '#939394' }}>
+            Channels:
+          </span>
+          {channelConfig.map((channel) => {
+            const Icon = channel.icon;
+            return (
+              <div key={channel.key} className="flex items-center gap-1 flex-shrink-0">
+                <Icon className="w-3 h-3" style={{ color: channel.color }} />
+                <span className="text-[11px]" style={{ color: '#939394' }}>
+                  {channel.label}
+                </span>
+              </div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Calendar, Settings, Clock, Users } from 'lucide-react';
+import { Settings, Users, LayoutDashboard, UserCog } from 'lucide-react';
 import { ComplianceScoreMeter } from '@/components/compliance/ComplianceScoreMeter';
 import { ViolationCategoryChart } from '@/components/compliance/ViolationCategoryChart';
 import { ComplianceIssuesTable } from '@/components/compliance/ComplianceIssuesTable';
@@ -17,44 +17,38 @@ import {
   riskAlertsData
 } from '@/lib/compliance/complianceData';
 
+type TabType = 'summary' | 'workforce';
+
 export default function CompliancePage() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
-  const [isLoading, setIsLoading] = useState(false);
-  const [lastRefresh, setLastRefresh] = useState(new Date());
+  const [activeTab, setActiveTab] = useState<TabType>('summary');
 
-  // Check for dark mode from parent
+  // Check for dark mode and time filter from layout
   useEffect(() => {
-    const checkTheme = () => {
+    const checkSettings = () => {
       const theme = localStorage.getItem('theme');
       setIsDarkMode(theme === 'dark');
+      
+      const savedTimeFilter = localStorage.getItem('complianceTimeFilter') as TimeFilter;
+      if (savedTimeFilter) {
+        setTimeFilter(savedTimeFilter);
+      }
     };
     
-    checkTheme();
+    checkSettings();
     
     // Listen for storage changes
-    window.addEventListener('storage', checkTheme);
+    window.addEventListener('storage', checkSettings);
     
     // Poll for changes (since we're in same window)
-    const interval = setInterval(checkTheme, 100);
+    const interval = setInterval(checkSettings, 100);
     
     return () => {
-      window.removeEventListener('storage', checkTheme);
+      window.removeEventListener('storage', checkSettings);
       clearInterval(interval);
     };
   }, []);
-
-  const handleTimeFilterChange = (filter: TimeFilter) => {
-    setIsLoading(true);
-    setTimeFilter(filter);
-    setTimeout(() => setIsLoading(false), 500);
-  };
-
-  const timeFilterOptions: { value: TimeFilter; label: string }[] = [
-    { value: '24h', label: 'Last 24 Hours' },
-    { value: '7d', label: 'Last 7 Days' },
-    { value: '30d', label: 'Last 30 Days' }
-  ];
 
   return (
     <div 
@@ -62,113 +56,103 @@ export default function CompliancePage() {
       style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }}
     >
       <div className="container mx-auto px-6 py-6">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-          <div>
-            <h1
-              className="text-2xl font-bold mb-2"
-              style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+        {/* Tabs */}
+        <div className="mb-6">
+          <div 
+            className="flex items-center gap-1 p-1 rounded-xl w-full"
+            style={{ 
+              backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF',
+              border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+            }}
+          >
+            <button
+              onClick={() => setActiveTab('summary')}
+              className={`flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200`}
+              style={{
+                backgroundColor: activeTab === 'summary' ? '#5332FF' : 'transparent',
+                color: activeTab === 'summary' ? '#FFFFFF' : (isDarkMode ? '#D6D9D8' : '#939394')
+              }}
             >
-              Compliance Overview Dashboard
-            </h1>
-            <p className="text-sm flex items-center gap-2" style={{ color: '#939394' }}>
-              <span>Real-time compliance health monitoring and risk assessment</span>
-              <span className="flex items-center gap-1 text-xs" suppressHydrationWarning>
-                <Clock className="w-3 h-3" />
-                Updated {lastRefresh.toLocaleTimeString()}
-              </span>
-            </p>
-          </div>
-
-          {/* Controls */}
-          <div className="flex items-center gap-3">
-            {/* Time Filter */}
-            <div 
-              className="flex items-center rounded-xl p-1"
-              style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}` }}
+              <LayoutDashboard className="w-4 h-4" />
+              Summary
+            </button>
+            <button
+              onClick={() => setActiveTab('workforce')}
+              className={`flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200`}
+              style={{
+                backgroundColor: activeTab === 'workforce' ? '#5332FF' : 'transparent',
+                color: activeTab === 'workforce' ? '#FFFFFF' : (isDarkMode ? '#D6D9D8' : '#939394')
+              }}
             >
-              {timeFilterOptions.map((option) => (
-                <button
-                  key={option.value}
-                  onClick={() => handleTimeFilterChange(option.value)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    timeFilter === option.value ? 'shadow-sm' : ''
-                  }`}
-                  style={{
-                    backgroundColor: timeFilter === option.value 
-                      ? '#5332FF' 
-                      : 'transparent',
-                    color: timeFilter === option.value 
-                      ? '#FFFFFF' 
-                      : (isDarkMode ? '#D6D9D8' : '#939394')
-                  }}
-                >
-                  <Calendar className="w-4 h-4" />
-                  {option.label}
-                </button>
-              ))}
-            </div>
-
+              <UserCog className="w-4 h-4" />
+              Workforce Performance
+            </button>
           </div>
         </div>
 
-        {/* Compliance Health Score + AI Post-Interaction Compliance Insights */}
-        <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-6">
-          {/* Compliance Score Meter - Takes 1 column (LEFT) */}
-          <div className="xl:col-span-1">
-            <ComplianceScoreMeter 
-              data={complianceScoreData[timeFilter]} 
+        {/* Tab Content */}
+        {activeTab === 'summary' && (
+          <>
+            {/* Compliance Health Score + AI Post-Interaction Compliance Insights */}
+            <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-6">
+              {/* Compliance Score Meter - Takes 1 column (LEFT) */}
+              <div className="xl:col-span-1">
+                <ComplianceScoreMeter 
+                  data={complianceScoreData[timeFilter]} 
+                  isDarkMode={isDarkMode} 
+                />
+              </div>
+
+              {/* AI Insights Cards - Takes 3 columns (RIGHT) */}
+              <div 
+                className="xl:col-span-3 rounded-2xl p-6"
+                style={{ 
+                  backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                  border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
+                }}
+              >
+                <ComplianceInsightsCards isDarkMode={isDarkMode} />
+              </div>
+            </div>
+
+            {/* Violations & Risk Alert Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              {/* Violations by Category */}
+              <ViolationCategoryChart 
+                data={violationCategoryData[timeFilter]} 
+                isDarkMode={isDarkMode} 
+              />
+
+              {/* Risk Alert Panel */}
+              <RiskAlertPanel 
+                data={riskAlertsData} 
+                isDarkMode={isDarkMode} 
+              />
+            </div>
+
+            {/* Active Compliance Issues & Active Risks - Side by Side */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+              {/* Issues Table */}
+              <ComplianceIssuesTable 
+                data={complianceIssuesData} 
+                isDarkMode={isDarkMode} 
+              />
+
+              {/* Active Risks Table */}
+              <ActiveRisksTable 
+                isDarkMode={isDarkMode} 
+              />
+            </div>
+          </>
+        )}
+
+        {activeTab === 'workforce' && (
+          <div className="mb-6">
+            <AgentWatchlist 
               isDarkMode={isDarkMode} 
             />
           </div>
-
-          {/* AI Insights Cards - Takes 3 columns (RIGHT) */}
-          <div 
-            className="xl:col-span-3 rounded-2xl p-6"
-            style={{ 
-              backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}`
-            }}
-          >
-            <ComplianceInsightsCards isDarkMode={isDarkMode} />
-          </div>
-        </div>
-
-        {/* Violations & Risk Alert Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          {/* Violations by Category */}
-          <ViolationCategoryChart 
-            data={violationCategoryData[timeFilter]} 
-            isDarkMode={isDarkMode} 
-          />
-
-          {/* Risk Alert Panel */}
-          <RiskAlertPanel 
-            data={riskAlertsData} 
-            isDarkMode={isDarkMode} 
-          />
-        </div>
-
-        {/* Active Compliance Issues & Active Risks - Side by Side */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
-          {/* Issues Table */}
-          <ComplianceIssuesTable 
-            data={complianceIssuesData} 
-            isDarkMode={isDarkMode} 
-          />
-
-          {/* Active Risks Table */}
-          <ActiveRisksTable 
-            isDarkMode={isDarkMode} 
-          />
-        </div>
-
-        {/* Agent Watchlist */}
-        <div className="mb-6">
-          <AgentWatchlist 
-            isDarkMode={isDarkMode} 
-          />
-        </div>
+        )}
 
         {/* Footer */}
         <div 

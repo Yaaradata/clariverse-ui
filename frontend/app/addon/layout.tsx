@@ -4,6 +4,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { Calendar } from 'lucide-react';
+
+type TimeFilter = '24h' | '7d' | '30d';
 
 export default function AddonLayout({
   children,
@@ -12,15 +15,27 @@ export default function AddonLayout({
 }) {
   const pathname = usePathname();
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   
   const isComplianceActive = pathname === '/addon/compliance';
   const isFCIActive = pathname === '/addon/fci';
+
+  const timeFilterOptions: { value: TimeFilter; label: string }[] = [
+    { value: '24h', label: 'Last 24 Hours' },
+    { value: '7d', label: 'Last 7 Days' },
+    { value: '30d', label: 'Last 30 Days' }
+  ];
 
   // Load theme preference from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
       setIsDarkMode(true);
+    }
+    // Load time filter preference
+    const savedTimeFilter = localStorage.getItem('complianceTimeFilter') as TimeFilter;
+    if (savedTimeFilter) {
+      setTimeFilter(savedTimeFilter);
     }
   }, []);
 
@@ -34,8 +49,19 @@ export default function AddonLayout({
     }
   }, [isDarkMode]);
 
+  // Save time filter preference
+  useEffect(() => {
+    localStorage.setItem('complianceTimeFilter', timeFilter);
+    // Dispatch storage event so compliance page can react
+    window.dispatchEvent(new Event('storage'));
+  }, [timeFilter]);
+
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const handleTimeFilterChange = (filter: TimeFilter) => {
+    setTimeFilter(filter);
   };
 
   return (
@@ -55,32 +81,63 @@ export default function AddonLayout({
               <h1 className="text-3xl font-bold text-white">Yaaralabs</h1>
             </div>
             
-            {/* Theme Toggle Switch */}
-            <button
-              onClick={toggleTheme}
-              className="relative inline-flex items-center cursor-pointer"
-              aria-label="Toggle theme"
-            >
-              <div 
-                className="w-16 h-8 rounded-full transition-colors duration-300 ease-in-out"
-                style={{ 
-                  backgroundColor: isDarkMode ? '#5332FF' : '#D6D9D8'
-                }}
+            <div className="flex items-center gap-4">
+              {/* Time Filter - Only show on Compliance page */}
+              {isComplianceActive && (
+                <div 
+                  className="flex items-center rounded-xl p-1"
+                  style={{ backgroundColor: '#1a1a1a', border: '1px solid #2a2a2a' }}
+                >
+                  {timeFilterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => handleTimeFilterChange(option.value)}
+                      className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                        timeFilter === option.value ? 'shadow-sm' : ''
+                      }`}
+                      style={{
+                        backgroundColor: timeFilter === option.value 
+                          ? '#5332FF' 
+                          : 'transparent',
+                        color: timeFilter === option.value 
+                          ? '#FFFFFF' 
+                          : '#D6D9D8'
+                      }}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Theme Toggle Switch */}
+              <button
+                onClick={toggleTheme}
+                className="relative inline-flex items-center cursor-pointer"
+                aria-label="Toggle theme"
               >
                 <div 
-                  className="absolute top-1 left-1 w-6 h-6 rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center"
+                  className="w-16 h-8 rounded-full transition-colors duration-300 ease-in-out"
                   style={{ 
-                    backgroundColor: '#FFFFFF',
-                    transform: isDarkMode ? 'translateX(32px)' : 'translateX(0)',
-                    boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    backgroundColor: isDarkMode ? '#5332FF' : '#D6D9D8'
                   }}
                 >
-                  <span className="text-sm">
-                    {isDarkMode ? '🌙' : '☀️'}
-                  </span>
+                  <div 
+                    className="absolute top-1 left-1 w-6 h-6 rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center"
+                    style={{ 
+                      backgroundColor: '#FFFFFF',
+                      transform: isDarkMode ? 'translateX(32px)' : 'translateX(0)',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                    }}
+                  >
+                    <span className="text-sm">
+                      {isDarkMode ? '🌙' : '☀️'}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </header>
