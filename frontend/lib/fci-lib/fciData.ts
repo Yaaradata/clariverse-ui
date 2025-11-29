@@ -39,6 +39,20 @@ export interface FCICluster {
   examples: string[];
   affectedCustomers: number;
   businessImpact: string;
+  totalInteractions?: number;
+  avgResolutionTime?: string;
+  topChannels?: {
+    channel: string;
+    percentage: number;
+  }[];
+  topics?: string[];
+  nextActionSuggestion?: string;
+  // Root cause breakdown
+  processError?: number;        // Percentage due to process/system issues
+  productKnowledgeGap?: number; // Percentage due to agent knowledge gaps
+  // Channel breakdown for root causes
+  processErrorByChannel?: { channel: string; count: number; percentage: number }[];
+  productKnowledgeGapByChannel?: { channel: string; count: number; percentage: number }[];
 }
 
 export interface CustomerEmotionData {
@@ -102,81 +116,417 @@ export const fciKPIData: FCIKPIData = {
   highRiskCustomersImpacted: 342
 };
 
+// Bank of America Dominant Cluster Labels with Topics
 export const fciClusters: FCICluster[] = [
   {
     id: '1',
-    category: 'Authentication and access issues',
-    count: 1247,
-    trend: 8.3,
+    category: 'Account Access & Security',
+    count: 2847,
+    trend: 12.5,
     severity: 'High Impact',
     examples: [
-      'Multiple login failures',
-      'MFA retry loops',
-      'Account lockouts',
-      'Password reset failures'
+      'Customer unable to access Online Banking after password reset',
+      'SafePass authentication failures during login attempts',
+      'Account lockout after multiple incorrect password entries',
+      'Mobile app login issues with biometric authentication'
     ],
-    affectedCustomers: 892,
-    businessImpact: 'High customer frustration, potential churn'
+    affectedCustomers: 2156,
+    businessImpact: 'High friction in digital adoption, increased call volume, security concerns',
+    totalInteractions: 8234,
+    avgResolutionTime: '2.8 hours',
+    topChannels: [
+      { channel: 'Voice', percentage: 38 },
+      { channel: 'Chat', percentage: 32 },
+      { channel: 'Email', percentage: 18 },
+      { channel: 'Trouble Ticket', percentage: 12 }
+    ],
+    topics: ['Online ID', 'Password Reset', 'Account Lockout', 'SafePass Authentication', 'Security Alerts', 'App Login'],
+    nextActionSuggestion: 'Implement self-service password reset via Erica and reduce SafePass friction with trusted device recognition',
+    processError: 72,
+    productKnowledgeGap: 28,
+    processErrorByChannel: [
+      { channel: 'Email', count: 12, percentage: 18 },
+      { channel: 'Chat', count: 18, percentage: 26 },
+      { channel: 'Ticket', count: 22, percentage: 32 },
+      { channel: 'Voice', count: 14, percentage: 20 },
+      { channel: 'Social', count: 3, percentage: 4 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 8, percentage: 22 },
+      { channel: 'Chat', count: 12, percentage: 34 },
+      { channel: 'Ticket', count: 6, percentage: 17 },
+      { channel: 'Voice', count: 7, percentage: 20 },
+      { channel: 'Social', count: 2, percentage: 7 }
+    ]
   },
   {
     id: '2',
-    category: 'Dispute resolution delays',
-    count: 856,
-    trend: -3.1,
+    category: 'Transaction Disputes & Fraud',
+    count: 2134,
+    trend: 8.7,
     severity: 'High Impact',
     examples: [
-      'Chargeback disputes unresolved',
-      'Refund processing delays',
-      'Transaction disputes pending',
-      'Billing error corrections'
+      'Unauthorized debit card charges not recognized by customer',
+      'Fraud claim processing delays exceeding 10 business days',
+      'Identity theft cases requiring immediate card replacement',
+      'Zero liability disputes for compromised card numbers'
     ],
-    affectedCustomers: 623,
-    businessImpact: 'Regulatory compliance risk, customer trust erosion'
+    affectedCustomers: 1823,
+    businessImpact: 'Revenue loss from chargebacks, customer trust erosion, regulatory scrutiny',
+    totalInteractions: 6542,
+    avgResolutionTime: '5.2 hours',
+    topChannels: [
+      { channel: 'Voice', percentage: 45 },
+      { channel: 'Email', percentage: 25 },
+      { channel: 'Trouble Ticket', percentage: 18 },
+      { channel: 'Chat', percentage: 12 }
+    ],
+    topics: ['Unauthorized Charges', 'Fraud Claims', 'Debit Disputes', 'Identity Theft', 'Zero Liability', 'Stolen Card'],
+    nextActionSuggestion: 'Deploy real-time fraud alerts with one-click dispute filing and expedite provisional credit for confirmed fraud',
+    processError: 45,
+    productKnowledgeGap: 55,
+    processErrorByChannel: [
+      { channel: 'Email', count: 14, percentage: 22 },
+      { channel: 'Chat', count: 8, percentage: 12 },
+      { channel: 'Ticket', count: 24, percentage: 38 },
+      { channel: 'Voice', count: 16, percentage: 25 },
+      { channel: 'Social', count: 2, percentage: 3 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 18, percentage: 25 },
+      { channel: 'Chat', count: 16, percentage: 22 },
+      { channel: 'Ticket', count: 12, percentage: 17 },
+      { channel: 'Voice', count: 22, percentage: 30 },
+      { channel: 'Social', count: 4, percentage: 6 }
+    ]
   },
   {
     id: '3',
-    category: 'Charges/fees confusion',
-    count: 643,
-    trend: 5.7,
-    severity: 'Medium',
+    category: 'Credit Card Services',
+    count: 1876,
+    trend: -2.3,
+    severity: 'High Impact',
     examples: [
-      'Hidden fee complaints',
-      'Unexpected charges',
-      'Fee structure unclear',
-      'Billing transparency issues'
+      'BankAmericard rewards not posting correctly to account',
+      'Customized Cash category changes not reflecting',
+      'Premium Rewards redemption issues at partner merchants',
+      'Credit line increase requests pending without response'
     ],
-    affectedCustomers: 512,
-    businessImpact: 'Customer satisfaction decline'
+    affectedCustomers: 1432,
+    businessImpact: 'Reduced card usage, lost interchange revenue, competitive switching',
+    totalInteractions: 5234,
+    avgResolutionTime: '3.1 hours',
+    topChannels: [
+      { channel: 'Chat', percentage: 42 },
+      { channel: 'Voice', percentage: 28 },
+      { channel: 'Email', percentage: 18 },
+      { channel: 'Social Media', percentage: 12 }
+    ],
+    topics: ['BankAmericard Rewards', 'Customized Cash', 'Premium Rewards', 'Travel Rewards', 'Credit Line', 'APR Changes'],
+    nextActionSuggestion: 'Auto-resolve rewards posting delays and provide proactive CLI decisions via mobile app notifications',
+    processError: 35,
+    productKnowledgeGap: 65,
+    processErrorByChannel: [
+      { channel: 'Email', count: 8, percentage: 15 },
+      { channel: 'Chat', count: 10, percentage: 19 },
+      { channel: 'Ticket', count: 18, percentage: 35 },
+      { channel: 'Voice', count: 13, percentage: 25 },
+      { channel: 'Social', count: 3, percentage: 6 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 22, percentage: 28 },
+      { channel: 'Chat', count: 24, percentage: 30 },
+      { channel: 'Ticket', count: 8, percentage: 10 },
+      { channel: 'Voice', count: 20, percentage: 26 },
+      { channel: 'Social', count: 5, percentage: 6 }
+    ]
   },
   {
     id: '4',
-    category: 'Card declines / blocking',
-    count: 521,
-    trend: 12.4,
+    category: 'Loan & Mortgage Inquiries',
+    count: 1654,
+    trend: 15.2,
     severity: 'High Impact',
     examples: [
-      'Legitimate transactions blocked',
-      'False fraud alerts',
-      'Card activation failures',
-      'Payment processing errors'
+      'Home loan application status unclear after 30 days',
+      'Mortgage refinance rate lock expiration concerns',
+      'Auto loan payoff amount discrepancies',
+      'Loan modification request documentation confusion'
     ],
-    affectedCustomers: 398,
-    businessImpact: 'Revenue loss, customer experience degradation'
+    affectedCustomers: 1287,
+    businessImpact: 'Lost lending revenue, customer attrition to competitors, NPS impact',
+    totalInteractions: 4567,
+    avgResolutionTime: '6.5 hours',
+    topChannels: [
+      { channel: 'Voice', percentage: 48 },
+      { channel: 'Email', percentage: 28 },
+      { channel: 'Trouble Ticket', percentage: 15 },
+      { channel: 'Chat', percentage: 9 }
+    ],
+    topics: ['Home Loans', 'Mortgage Refinance', 'Auto Loans', 'Personal Loans', 'Rate Options', 'Loan Modification'],
+    nextActionSuggestion: 'Implement real-time loan status tracker in mobile app and assign dedicated loan specialists for complex cases',
+    processError: 30,
+    productKnowledgeGap: 70,
+    processErrorByChannel: [
+      { channel: 'Email', count: 10, percentage: 20 },
+      { channel: 'Chat', count: 6, percentage: 12 },
+      { channel: 'Ticket', count: 20, percentage: 40 },
+      { channel: 'Voice', count: 12, percentage: 24 },
+      { channel: 'Social', count: 2, percentage: 4 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 28, percentage: 32 },
+      { channel: 'Chat', count: 15, percentage: 17 },
+      { channel: 'Ticket', count: 10, percentage: 11 },
+      { channel: 'Voice', count: 32, percentage: 36 },
+      { channel: 'Social', count: 3, percentage: 4 }
+    ]
   },
   {
     id: '5',
-    category: 'KYC document rejections',
-    count: 389,
+    category: 'Fee Complaints & Waivers',
+    count: 1432,
+    trend: 6.8,
+    severity: 'Medium',
+    examples: [
+      'Overdraft fee charged despite Preferred Rewards status',
+      'Monthly maintenance fee on account with qualifying balance',
+      'NSF charges for delayed ACH posting',
+      'Wire transfer fee waiver request denied'
+    ],
+    affectedCustomers: 1156,
+    businessImpact: 'Fee revenue at risk, CFPB complaint exposure, relationship damage',
+    totalInteractions: 3892,
+    avgResolutionTime: '1.8 hours',
+    topChannels: [
+      { channel: 'Chat', percentage: 38 },
+      { channel: 'Voice', percentage: 32 },
+      { channel: 'Social Media', percentage: 18 },
+      { channel: 'Email', percentage: 12 }
+    ],
+    topics: ['Overdraft Fees', 'Monthly Maintenance', 'NSF Charges', 'ATM Fees', 'Wire Fees', 'Expedited Delivery'],
+    nextActionSuggestion: 'Enable proactive fee waiver for Preferred Rewards members and auto-refund first-time NSF incidents',
+    processError: 68,
+    productKnowledgeGap: 32,
+    processErrorByChannel: [
+      { channel: 'Email', count: 16, percentage: 18 },
+      { channel: 'Chat', count: 22, percentage: 25 },
+      { channel: 'Ticket', count: 28, percentage: 32 },
+      { channel: 'Voice', count: 18, percentage: 21 },
+      { channel: 'Social', count: 4, percentage: 4 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 10, percentage: 24 },
+      { channel: 'Chat', count: 14, percentage: 34 },
+      { channel: 'Ticket', count: 5, percentage: 12 },
+      { channel: 'Voice', count: 10, percentage: 24 },
+      { channel: 'Social', count: 3, percentage: 6 }
+    ]
+  },
+  {
+    id: '6',
+    category: 'Digital Banking & Technology',
+    count: 1287,
+    trend: -5.4,
+    severity: 'Medium',
+    examples: [
+      'Mobile app crashing during check deposit',
+      'Erica assistant providing incorrect balance information',
+      'Zelle payment showing as pending for 3+ days',
+      'Bill Pay scheduled payment failed without notification'
+    ],
+    affectedCustomers: 987,
+    businessImpact: 'Digital adoption decline, increased branch/call volume, competitive disadvantage',
+    totalInteractions: 3456,
+    avgResolutionTime: '2.4 hours',
+    topChannels: [
+      { channel: 'Chat', percentage: 45 },
+      { channel: 'Trouble Ticket', percentage: 25 },
+      { channel: 'Voice', percentage: 18 },
+      { channel: 'Social Media', percentage: 12 }
+    ],
+    topics: ['Mobile App', 'Erica Assistant', 'Zelle Payments', 'Bill Pay', 'Mobile Deposit', 'Online Statements'],
+    nextActionSuggestion: 'Deploy in-app issue reporting with auto-escalation and improve Erica response accuracy for common issues',
+    processError: 82,
+    productKnowledgeGap: 18,
+    processErrorByChannel: [
+      { channel: 'Email', count: 8, percentage: 12 },
+      { channel: 'Chat', count: 28, percentage: 42 },
+      { channel: 'Ticket', count: 20, percentage: 30 },
+      { channel: 'Voice', count: 8, percentage: 12 },
+      { channel: 'Social', count: 3, percentage: 4 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 6, percentage: 20 },
+      { channel: 'Chat', count: 10, percentage: 33 },
+      { channel: 'Ticket', count: 5, percentage: 17 },
+      { channel: 'Voice', count: 7, percentage: 23 },
+      { channel: 'Social', count: 2, percentage: 7 }
+    ]
+  },
+  {
+    id: '7',
+    category: 'Branch & ATM Services',
+    count: 987,
+    trend: 3.2,
+    severity: 'Medium',
+    examples: [
+      'Financial center appointment availability limited',
+      'ATM card retained without clear reason',
+      'Cardless ATM withdrawal failures with app',
+      'Notary service wait times exceeding 45 minutes'
+    ],
+    affectedCustomers: 756,
+    businessImpact: 'Poor in-person experience, branch efficiency issues, accessibility concerns',
+    totalInteractions: 2678,
+    avgResolutionTime: '3.8 hours',
+    topChannels: [
+      { channel: 'Voice', percentage: 52 },
+      { channel: 'Chat', percentage: 25 },
+      { channel: 'Trouble Ticket', percentage: 15 },
+      { channel: 'Email', percentage: 8 }
+    ],
+    topics: ['Financial Center', 'ATM Locations', 'Appointment Booking', 'Teller Services', 'Cardless ATM', 'Notary Service'],
+    nextActionSuggestion: 'Enable real-time appointment booking via Erica and deploy ATM card return process for retained cards',
+    processError: 55,
+    productKnowledgeGap: 45,
+    processErrorByChannel: [
+      { channel: 'Email', count: 6, percentage: 14 },
+      { channel: 'Chat', count: 10, percentage: 22 },
+      { channel: 'Ticket', count: 16, percentage: 36 },
+      { channel: 'Voice', count: 10, percentage: 22 },
+      { channel: 'Social', count: 3, percentage: 6 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 8, percentage: 18 },
+      { channel: 'Chat', count: 12, percentage: 27 },
+      { channel: 'Ticket', count: 8, percentage: 18 },
+      { channel: 'Voice', count: 14, percentage: 32 },
+      { channel: 'Social', count: 2, percentage: 5 }
+    ]
+  },
+  {
+    id: '8',
+    category: 'Investment & Wealth',
+    count: 876,
     trend: -1.8,
     severity: 'Medium',
     examples: [
-      'Document format issues',
-      'OCR extraction failures',
-      'Verification delays',
-      'Resubmission loops'
+      'Merrill Lynch account access separate from banking',
+      'Merrill Edge trade execution delays during market hours',
+      'Preferred Rewards tier calculation including investments',
+      'IRA contribution limit clarification needed'
     ],
-    affectedCustomers: 287,
-    businessImpact: 'Onboarding friction, compliance delays'
+    affectedCustomers: 654,
+    businessImpact: 'AUM at risk, wealth client attrition, cross-sell opportunity loss',
+    totalInteractions: 2345,
+    avgResolutionTime: '4.5 hours',
+    topChannels: [
+      { channel: 'Voice', percentage: 48 },
+      { channel: 'Email', percentage: 28 },
+      { channel: 'Chat', percentage: 15 },
+      { channel: 'Trouble Ticket', percentage: 9 }
+    ],
+    topics: ['Merrill Lynch', 'Merrill Edge', 'Preferred Rewards', 'Portfolio Review', 'IRAs/401k', 'Advisory Services'],
+    nextActionSuggestion: 'Unify Merrill and banking login experience and provide dedicated wealth concierge for Platinum clients',
+    processError: 25,
+    productKnowledgeGap: 75,
+    processErrorByChannel: [
+      { channel: 'Email', count: 5, percentage: 16 },
+      { channel: 'Chat', count: 4, percentage: 13 },
+      { channel: 'Ticket', count: 12, percentage: 39 },
+      { channel: 'Voice', count: 8, percentage: 26 },
+      { channel: 'Social', count: 2, percentage: 6 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 26, percentage: 30 },
+      { channel: 'Chat', count: 18, percentage: 21 },
+      { channel: 'Ticket', count: 10, percentage: 12 },
+      { channel: 'Voice', count: 28, percentage: 32 },
+      { channel: 'Social', count: 4, percentage: 5 }
+    ]
+  },
+  {
+    id: '9',
+    category: 'Direct Deposit & Payroll',
+    count: 765,
+    trend: 4.5,
+    severity: 'Low',
+    examples: [
+      'Payroll direct deposit not reflecting on expected date',
+      'Routing number confusion for external transfers',
+      'ACH transfer delays beyond 3 business days',
+      'Payment holds on large incoming deposits'
+    ],
+    affectedCustomers: 567,
+    businessImpact: 'Primary account relationship at risk, payroll provider churn, cash flow concerns',
+    totalInteractions: 1987,
+    avgResolutionTime: '2.2 hours',
+    topChannels: [
+      { channel: 'Chat', percentage: 42 },
+      { channel: 'Voice', percentage: 35 },
+      { channel: 'Email', percentage: 15 },
+      { channel: 'Trouble Ticket', percentage: 8 }
+    ],
+    topics: ['Payroll Deposit', 'Routing Number', 'Direct Deposit', 'Deposit Delays', 'ACH Transfers', 'Payment Holds'],
+    nextActionSuggestion: 'Provide real-time deposit tracking and proactive notifications for expected payroll timing',
+    processError: 65,
+    productKnowledgeGap: 35,
+    processErrorByChannel: [
+      { channel: 'Email', count: 12, percentage: 20 },
+      { channel: 'Chat', count: 18, percentage: 30 },
+      { channel: 'Ticket', count: 16, percentage: 27 },
+      { channel: 'Voice', count: 10, percentage: 17 },
+      { channel: 'Social', count: 4, percentage: 6 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 10, percentage: 22 },
+      { channel: 'Chat', count: 14, percentage: 30 },
+      { channel: 'Ticket', count: 6, percentage: 13 },
+      { channel: 'Voice', count: 14, percentage: 30 },
+      { channel: 'Social', count: 2, percentage: 5 }
+    ]
+  },
+  {
+    id: '10',
+    category: 'Account Closure & Changes',
+    count: 543,
+    trend: 7.1,
+    severity: 'Low',
+    examples: [
+      'Account closure process taking longer than 7 days',
+      'Upgrade to Preferred Rewards not reflecting benefits',
+      'Joint account addition requiring branch visit',
+      'Beneficiary designation update complexity'
+    ],
+    affectedCustomers: 423,
+    businessImpact: 'Customer attrition, relationship value loss, process inefficiency',
+    totalInteractions: 1456,
+    avgResolutionTime: '5.8 hours',
+    topChannels: [
+      { channel: 'Voice', percentage: 45 },
+      { channel: 'Email', percentage: 28 },
+      { channel: 'Trouble Ticket', percentage: 18 },
+      { channel: 'Chat', percentage: 9 }
+    ],
+    topics: ['Close Account', 'Account Upgrade', 'Preferred Rewards', 'Product Switch', 'Joint Account', 'Beneficiary Designation'],
+    nextActionSuggestion: 'Enable digital account modifications and deploy retention offers for closure intent detection',
+    processError: 58,
+    productKnowledgeGap: 42,
+    processErrorByChannel: [
+      { channel: 'Email', count: 14, percentage: 22 },
+      { channel: 'Chat', count: 8, percentage: 13 },
+      { channel: 'Ticket', count: 22, percentage: 35 },
+      { channel: 'Voice', count: 16, percentage: 25 },
+      { channel: 'Social', count: 3, percentage: 5 }
+    ],
+    productKnowledgeGapByChannel: [
+      { channel: 'Email', count: 12, percentage: 25 },
+      { channel: 'Chat', count: 10, percentage: 21 },
+      { channel: 'Ticket', count: 8, percentage: 17 },
+      { channel: 'Voice', count: 15, percentage: 31 },
+      { channel: 'Social', count: 3, percentage: 6 }
+    ]
   }
 ];
 
@@ -294,4 +644,5 @@ export const aiActions: AIAction[] = [
     category: 'Operations'
   }
 ];
+
 
