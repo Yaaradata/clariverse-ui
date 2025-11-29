@@ -134,8 +134,8 @@ export default function CompliancePage() {
           </div>
         </div>
 
-        {/* Violations, Risk Alert & Agent Watchlist Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {/* Violations & Risk Alert Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
           {/* Violations by Category */}
           <ViolationCategoryChart 
             data={violationCategoryData[timeFilter]} 
@@ -147,15 +147,10 @@ export default function CompliancePage() {
             data={riskAlertsData} 
             isDarkMode={isDarkMode} 
           />
-
-          {/* Agent Watchlist */}
-          <AgentWatchlist 
-            isDarkMode={isDarkMode} 
-          />
         </div>
 
         {/* Active Compliance Issues & Active Risks - Side by Side */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
           {/* Issues Table */}
           <ComplianceIssuesTable 
             data={complianceIssuesData} 
@@ -164,6 +159,13 @@ export default function CompliancePage() {
 
           {/* Active Risks Table */}
           <ActiveRisksTable 
+            isDarkMode={isDarkMode} 
+          />
+        </div>
+
+        {/* Agent Watchlist */}
+        <div className="mb-6">
+          <AgentWatchlist 
             isDarkMode={isDarkMode} 
           />
         </div>
@@ -197,4 +199,3 @@ export default function CompliancePage() {
     </div>
   );
 }
-
