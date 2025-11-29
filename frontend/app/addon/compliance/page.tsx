@@ -112,9 +112,17 @@ export default function CompliancePage() {
           </div>
         </div>
 
-        {/* AI Post-Interaction Compliance Insights + Compliance Health Score */}
+        {/* Compliance Health Score + AI Post-Interaction Compliance Insights */}
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6 mb-6">
-          {/* AI Insights Cards - Takes 3 columns */}
+          {/* Compliance Score Meter - Takes 1 column (LEFT) */}
+          <div className="xl:col-span-1">
+            <ComplianceScoreMeter 
+              data={complianceScoreData[timeFilter]} 
+              isDarkMode={isDarkMode} 
+            />
+          </div>
+
+          {/* AI Insights Cards - Takes 3 columns (RIGHT) */}
           <div 
             className="xl:col-span-3 rounded-2xl p-6"
             style={{ 
@@ -123,14 +131,6 @@ export default function CompliancePage() {
             }}
           >
             <ComplianceInsightsCards isDarkMode={isDarkMode} />
-          </div>
-
-          {/* Compliance Score Meter - Takes 1 column */}
-          <div className="xl:col-span-1">
-            <ComplianceScoreMeter 
-              data={complianceScoreData[timeFilter]} 
-              isDarkMode={isDarkMode} 
-            />
           </div>
         </div>
 
