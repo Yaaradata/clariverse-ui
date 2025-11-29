@@ -9,6 +9,8 @@ import { RiskAlertPanel } from '@/components/compliance/RiskAlertPanel';
 import { AgentWatchlist } from '@/components/compliance/AgentWatchlist';
 import { ComplianceInsightsCards } from '@/components/compliance/ComplianceInsightsCards';
 import { ActiveRisksTable } from '@/components/compliance/ActiveRisksTable';
+import { AIAfterCallWork } from '@/components/compliance/AIAfterCallWork';
+import { CallCenterRiskHeatMap } from '@/components/compliance/CallCenterRiskHeatMap';
 import {
   TimeFilter,
   complianceScoreData,
@@ -147,8 +149,22 @@ export default function CompliancePage() {
         )}
 
         {activeTab === 'workforce' && (
-          <div className="mb-6">
-            <AgentWatchlist 
+          <div className="space-y-6">
+            {/* Top Row - Forms Filled & Agent Watchlist */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+              {/* AI After-Call Work - Forms Filled */}
+              <AIAfterCallWork 
+                isDarkMode={isDarkMode} 
+              />
+              
+              {/* Agent Watchlist */}
+              <AgentWatchlist 
+                isDarkMode={isDarkMode} 
+              />
+            </div>
+
+            {/* Bottom Row - Risk Heat Map */}
+            <CallCenterRiskHeatMap 
               isDarkMode={isDarkMode} 
             />
           </div>
