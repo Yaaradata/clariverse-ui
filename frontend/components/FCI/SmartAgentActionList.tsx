@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AgentActionData } from '@/lib/fci-lib/fciAdvancedData';
+import { AgentActionData, getCallTranscriptByAgentId, CallTranscript } from '@/lib/fci-lib/fciAdvancedData';
 import { 
   Search, ChevronDown, ChevronLeft, ChevronRight, Phone, Mail, MessageCircle, 
   Ticket, Share2, Filter, X, Clock, Star, TrendingUp, TrendingDown,
@@ -47,7 +47,7 @@ interface AgentCase {
   content: CaseContent;
 }
 
-interface EmailMessage { id: string; from: string; to: string; timestamp: string; subject: string; body: string; isAgent: boolean; }
+interface EmailMessage { id: string; from: string; to: string; timestamp: string; subject: string; body: string; isAgent: boolean; sender: string; }
 interface ChatMessage { id: string; sender: string; timestamp: string; message: string; isAgent: boolean; }
 interface VoiceTranscript { id: string; speaker: string; timestamp: string; text: string; isAgent: boolean; }
 
@@ -56,87 +56,156 @@ type CaseContent = { type: 'Email'; messages: EmailMessage[]; } | { type: 'Chat'
 // ============ SAMPLE DATA ============
 
 const generateCasesForAgent = (agentId: string, channel: string): AgentCase[] => {
+  // For Voice channel, try to get real call transcript data
+  if (channel === 'Voice') {
+    const callTranscript = getCallTranscriptByAgentId(agentId);
+    if (callTranscript) {
+      // Convert call transcript to voice case format
+      const voiceCase: AgentCase = {
+        id: callTranscript.callId,
+        subject: `${callTranscript.topic} - ${callTranscript.customerName}`,
+        channel: 'Voice' as const,
+        sentiment: callTranscript.sentiment === 'positive' ? 'Positive' : callTranscript.sentiment === 'negative' ? 'Negative' : 'Neutral',
+        csat: callTranscript.sentiment === 'positive' ? 4.5 : callTranscript.sentiment === 'negative' ? 2.0 : 3.0,
+        createdAt: new Date(callTranscript.startTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        status: callTranscript.resolution === 'resolved' ? 'Resolved' : callTranscript.resolution === 'escalated' ? 'Escalated' : 'Pending',
+        dominantTopic: callTranscript.topic,
+        subtopics: [callTranscript.topic.split(' - ')[1] || callTranscript.topic],
+        aiScores: {
+          takeOwnership: Math.round((callTranscript.resolution === 'resolved' ? 75 : 40)),
+          actWithEmpathy: Math.round((callTranscript.sentiment === 'positive' ? 80 : 35)),
+          makeItEasy: Math.round((callTranscript.fciScore < 30 ? 75 : 45)),
+          getItRight: Math.round((callTranscript.qualityScore > 70 ? 75 : 50))
+        },
+        aiSummary: callTranscript.fciScore > 35 ? [
+          `FCI Score: ${callTranscript.fciScore}% - Quality needs improvement`,
+          `Duration: ${callTranscript.duration} | Resolution: ${callTranscript.resolution}`,
+          `Sentiment: ${callTranscript.sentiment}`
+        ] : [
+          `Excellent call - FCI Score: ${callTranscript.fciScore}%`,
+          `Duration: ${callTranscript.duration} | Resolved successfully`,
+          `Customer satisfied with resolution`
+        ],
+        content: {
+          type: 'Voice' as const,
+          transcript: callTranscript.messages.map((msg, idx) => ({
+            id: msg.id,
+            speaker: msg.name,
+            timestamp: msg.timestamp || `${Math.floor(idx * 3)}:${String((idx * 3) % 60).padStart(2, '0')}`,
+            text: msg.message,
+            isAgent: msg.speaker === 'agent'
+          }))
+        }
+      };
+      return [voiceCase];
+    }
+  }
+
+  // Original hardcoded cases for other channels
   const emailCases: AgentCase[] = [
     {
-      id: `${agentId}-E001`, subject: 'Dispute on Unauthorized Debit Card Transaction - $847.50', channel: 'Email', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Escalated',
+      id: `${agentId}-E001`, subject: 'Dispute on Unauthorized Debit Card Transaction - $847.50 (John Morrison)', channel: 'Email', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Escalated',
       dominantTopic: 'Transaction Dispute', subtopics: ['Unauthorized Charge', 'Debit Card Fraud', 'Refund Request', 'Account Security'],
-      aiScores: { takeOwnership: 45, actWithEmpathy: 38, makeItEasy: 42, getItRight: 55 },
+      aiScores: { takeOwnership: 28, actWithEmpathy: 22, makeItEasy: 25, getItRight: 32 },
       aiSummary: ['Agent failed to acknowledge customer frustration about unauthorized charge', 'Did not offer provisional credit as per bank policy for fraud claims', 'Should have escalated to fraud department within first response', 'Missing proper documentation of dispute details'],
       content: { type: 'Email', messages: [
-        { id: '1', from: 'john.customer@email.com', to: 'support@bofa.com', timestamp: 'Dec 15, 2024 9:23 AM', subject: 'URGENT: Unauthorized Transaction on My Account', body: 'I noticed a charge of $847.50 from "ELECTRONICS OUTLET" on my debit card that I did not make. I was at work during this time and have my card with me. This is clearly fraud and I need this resolved immediately. My account number ends in 4523.', isAgent: false },
-        { id: '2', from: 'agent@bofa.com', to: 'john.customer@email.com', timestamp: 'Dec 15, 2024 2:45 PM', subject: 'RE: URGENT: Unauthorized Transaction on My Account', body: 'Thank you for contacting Bank of America. I can see the transaction you mentioned. Please fill out our dispute form and mail it to our processing center. This process takes 7-10 business days.', isAgent: true },
-        { id: '3', from: 'john.customer@email.com', to: 'support@bofa.com', timestamp: 'Dec 15, 2024 3:12 PM', subject: 'RE: URGENT: Unauthorized Transaction on My Account', body: 'This is unacceptable! I am a victim of fraud and you want me to wait 10 days? I need my money back NOW. This is my rent money! Can someone actually help me or do I need to close my account?', isAgent: false },
-        { id: '4', from: 'agent@bofa.com', to: 'john.customer@email.com', timestamp: 'Dec 15, 2024 4:30 PM', subject: 'RE: URGENT: Unauthorized Transaction on My Account', body: 'I understand. Our policy requires the dispute form. I have attached the form to this email. Please complete and return at your earliest convenience.', isAgent: true }
+        { id: '1', from: 'john.morrison@email.com', to: 'support@bofa.com', timestamp: 'Dec 15, 2024 9:23 AM', subject: 'URGENT: Unauthorized Transaction on My Account', body: 'I noticed a charge of $847.50 from "ELECTRONICS OUTLET" on my debit card that I did not make. I was at work during this time and have my card with me. This is clearly fraud and I need this resolved immediately. My account number ends in 4523.', isAgent: false, sender: 'John Morrison' },
+        { id: '2', from: 'support@bofa.com', to: 'john.morrison@email.com', timestamp: 'Dec 15, 2024 2:45 PM', subject: 'RE: URGENT: Unauthorized Transaction on My Account', body: 'Thank you for contacting Bank of America. I can see the transaction you mentioned. Please fill out our dispute form and mail it to our processing center. This process takes 7-10 business days.', isAgent: true, sender: 'Support Agent - Sarah Bennett' },
+        { id: '3', from: 'john.morrison@email.com', to: 'support@bofa.com', timestamp: 'Dec 15, 2024 3:12 PM', subject: 'RE: URGENT: Unauthorized Transaction on My Account', body: 'This is unacceptable! I am a victim of fraud and you want me to wait 10 days? I need my money back NOW. This is my rent money! Can someone actually help me or do I need to close my account?', isAgent: false, sender: 'John Morrison' },
+        { id: '4', from: 'support@bofa.com', to: 'john.morrison@email.com', timestamp: 'Dec 15, 2024 4:30 PM', subject: 'RE: URGENT: Unauthorized Transaction on My Account', body: 'I understand. Our policy requires the dispute form. I have attached the form to this email. Please complete and return at your earliest convenience.', isAgent: true, sender: 'Support Agent - Sarah Bennett' }
       ]}
     },
     {
-      id: `${agentId}-E002`, subject: 'Monthly Maintenance Fee Waiver Request - Preferred Rewards', channel: 'Email', sentiment: 'Negative', csat: 3, createdAt: 'Dec 14, 2024', status: 'Resolved',
+      id: `${agentId}-E002`, subject: 'Monthly Maintenance Fee Waiver Request - Mary Smith', channel: 'Email', sentiment: 'Negative', csat: 3, createdAt: 'Dec 14, 2024', status: 'Resolved',
       dominantTopic: 'Fee Dispute', subtopics: ['Maintenance Fee', 'Preferred Rewards', 'Account Tier', 'Fee Waiver Policy'],
-      aiScores: { takeOwnership: 52, actWithEmpathy: 48, makeItEasy: 55, getItRight: 62 },
+      aiScores: { takeOwnership: 35, actWithEmpathy: 32, makeItEasy: 38, getItRight: 40 },
       aiSummary: ['Agent could have proactively offered fee refund for Preferred Rewards member', 'Missed opportunity to explain tier benefits clearly', 'Should have verified account balance to confirm eligibility', 'Response time exceeded 4-hour SLA for premium customers'],
       content: { type: 'Email', messages: [
-        { id: '1', from: 'mary.smith@email.com', to: 'support@bofa.com', timestamp: 'Dec 14, 2024 10:15 AM', subject: 'Why am I being charged maintenance fee?', body: 'I have been a Preferred Rewards Gold member for 3 years. My account always has over $50,000 combined balance. Why was I charged a $25 monthly maintenance fee this month? Please refund this immediately.', isAgent: false },
-        { id: '2', from: 'agent@bofa.com', to: 'mary.smith@email.com', timestamp: 'Dec 14, 2024 3:42 PM', subject: 'RE: Why am I being charged maintenance fee?', body: 'Hello, I reviewed your account. It appears your balance dropped below the minimum threshold briefly on the 3rd of this month. The fee was correctly applied per our terms.', isAgent: true }
+        { id: '1', from: 'mary.smith@email.com', to: 'support@bofa.com', timestamp: 'Dec 14, 2024 10:15 AM', subject: 'Why am I being charged maintenance fee?', body: 'I have been a Preferred Rewards Gold member for 3 years. My account always has over $50,000 combined balance. Why was I charged a $25 monthly maintenance fee this month? Please refund this immediately.', isAgent: false, sender: 'Mary Smith' },
+        { id: '2', from: 'support@bofa.com', to: 'mary.smith@email.com', timestamp: 'Dec 14, 2024 3:42 PM', subject: 'RE: Why am I being charged maintenance fee?', body: 'Hello Mary, I reviewed your account. It appears your balance dropped below the minimum threshold briefly on the 3rd of this month. The fee was correctly applied per our terms.', isAgent: true, sender: 'Support Agent - James Morrison' }
       ]}
     }
   ];
 
   const chatCases: AgentCase[] = [
     {
-      id: `${agentId}-C001`, subject: 'Mobile App Login Issues - Cannot Access Account', channel: 'Chat', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Escalated',
+      id: `${agentId}-C001`, subject: 'Mobile App Login Issues - David Chen', channel: 'Chat', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Escalated',
       dominantTopic: 'Account Access', subtopics: ['Mobile App', 'Login Failure', 'Password Reset', 'Two-Factor Authentication'],
-      aiScores: { takeOwnership: 40, actWithEmpathy: 35, makeItEasy: 45, getItRight: 50 },
+      aiScores: { takeOwnership: 25, actWithEmpathy: 20, makeItEasy: 28, getItRight: 30 },
       aiSummary: ['Agent used robotic language instead of empathetic responses', 'Did not offer callback option for extended troubleshooting', 'Should have verified identity through alternative methods', 'Missed opportunity to educate on Erica virtual assistant'],
       content: { type: 'Chat', messages: [
-        { id: '1', sender: 'Customer', timestamp: '10:23 AM', message: 'Hi, I cannot login to my mobile banking app. It keeps saying "Authentication Failed" even though my password is correct!', isAgent: false },
-        { id: '2', sender: 'Agent', timestamp: '10:24 AM', message: 'Hello. Please try resetting your password through the forgot password link.', isAgent: true },
-        { id: '3', sender: 'Customer', timestamp: '10:25 AM', message: 'I already tried that 3 times! It sends a code to my old phone number which I dont have anymore.', isAgent: false },
-        { id: '4', sender: 'Agent', timestamp: '10:27 AM', message: 'You will need to visit a branch with ID to update your phone number.', isAgent: true },
-        { id: '5', sender: 'Customer', timestamp: '10:28 AM', message: 'I am traveling abroad! That is not possible. Is there any other way?', isAgent: false },
-        { id: '6', sender: 'Agent', timestamp: '10:30 AM', message: 'Unfortunately that is our only option for phone number changes. Is there anything else I can help with?', isAgent: true }
+        { id: '1', sender: 'David Chen', timestamp: '10:23 AM', message: 'Hi, I cannot login to my mobile banking app. It keeps saying "Authentication Failed" even though my password is correct!', isAgent: false },
+        { id: '2', sender: 'Bank Agent Sarah', timestamp: '10:24 AM', message: 'Hello David. Please try resetting your password through the forgot password link.', isAgent: true },
+        { id: '3', sender: 'David Chen', timestamp: '10:25 AM', message: 'I already tried that 3 times! It sends a code to my old phone number which I dont have anymore.', isAgent: false },
+        { id: '4', sender: 'Bank Agent Sarah', timestamp: '10:27 AM', message: 'You will need to visit a branch with ID to update your phone number.', isAgent: true },
+        { id: '5', sender: 'David Chen', timestamp: '10:28 AM', message: 'I am traveling abroad! That is not possible. Is there any other way?', isAgent: false },
+        { id: '6', sender: 'Bank Agent Sarah', timestamp: '10:30 AM', message: 'Unfortunately that is our only option for phone number changes. Is there anything else I can help with?', isAgent: true }
       ]}
-    }
-  ];
-
-  const voiceCases: AgentCase[] = [
+    },
     {
-      id: `${agentId}-V001`, subject: 'Account Closure Request - Customer Retention Attempt', channel: 'Voice', sentiment: 'Negative', csat: 1, createdAt: 'Dec 15, 2024', status: 'Escalated',
-      dominantTopic: 'Account Closure', subtopics: ['Customer Retention', 'Competitor Offer', 'Fee Concerns', 'Service Complaints'],
-      aiScores: { takeOwnership: 32, actWithEmpathy: 28, makeItEasy: 35, getItRight: 40 },
-      aiSummary: ['Agent failed to use retention script and offers', 'Did not acknowledge customers 15-year relationship with bank', 'Should have offered to match competitor rates', 'Escalation to retention specialist should have happened immediately'],
-      content: { type: 'Voice', transcript: [
-        { id: '1', speaker: 'Customer', timestamp: '0:00:15', text: 'I want to close all my accounts today. I am switching to Chase.', isAgent: false },
-        { id: '2', speaker: 'Agent', timestamp: '0:00:25', text: 'I can help you with that. May I have your account number please?', isAgent: true },
-        { id: '3', speaker: 'Customer', timestamp: '0:00:35', text: 'Its 4523-8891-0045. I have been a customer for 15 years but your fees are too high.', isAgent: false },
-        { id: '4', speaker: 'Agent', timestamp: '0:00:50', text: 'I understand. Let me verify your identity first. Can you confirm your date of birth?', isAgent: true },
-        { id: '5', speaker: 'Customer', timestamp: '0:01:02', text: 'March 15, 1975. Chase is offering me a bonus and no fees for the first year.', isAgent: false },
-        { id: '6', speaker: 'Agent', timestamp: '0:01:15', text: 'Thank you. To close the account, I will need to transfer you to our account services.', isAgent: true }
+      id: `${agentId}-C002`, subject: 'Wire Transfer Issue - Incorrect Fee Information - Angela Rodriguez', channel: 'Chat', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Escalated',
+      dominantTopic: 'Wire Transfer Issue', subtopics: ['Incorrect Fees', 'Hidden Charges', 'Poor Guidance', 'Customer Confusion'],
+      aiScores: { takeOwnership: 30, actWithEmpathy: 28, makeItEasy: 32, getItRight: 35 },
+      aiSummary: ['Agent provided incomplete fee information causing customer frustration', 'Failed to mention conversion rates and intermediary bank charges upfront', 'Should have offered fee comparison with other transfer methods', 'Customer was overcharged due to agent not explaining all costs clearly'],
+      content: { type: 'Chat', messages: [
+        { id: '1', sender: 'Angela Rodriguez', timestamp: '2:15 PM', message: 'Hi there! I want to send a wire transfer to my family in Mexico. What is my daily limit and total fees?', isAgent: false },
+        { id: '2', sender: 'Bank Agent Marcus', timestamp: '2:16 PM', message: 'Hello Angela! Your daily wire limit is $50,000 for international transfers. The fee is just $20.', isAgent: true },
+        { id: '3', sender: 'Angela Rodriguez', timestamp: '2:18 PM', message: 'I sent $5,000 but my family only received $4,850. Where did $150 go?', isAgent: false },
+        { id: '4', sender: 'Bank Agent Marcus', timestamp: '2:19 PM', message: 'That would be the intermediary bank charges and currency conversion fees. You should have asked about those.', isAgent: true },
+        { id: '5', sender: 'Angela Rodriguez', timestamp: '2:22 PM', message: 'You told me the fee was $20! This is false advertising. I want to escalate this!', isAgent: false }
       ]}
     }
   ];
 
   const ticketCases: AgentCase[] = [
     {
-      id: `${agentId}-T001`, subject: 'Recurring ACH Debit Not Processing - Utility Payment', channel: 'Ticket', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Pending',
+      id: `${agentId}-T001`, subject: 'Recurring ACH Debit Not Processing - Michael Johnson', channel: 'Ticket', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Pending',
       dominantTopic: 'ACH Processing', subtopics: ['Recurring Payment', 'Utility Bill', 'Payment Schedule', 'Account Linking'],
-      aiScores: { takeOwnership: 42, actWithEmpathy: 45, makeItEasy: 40, getItRight: 48 },
+      aiScores: { takeOwnership: 32, actWithEmpathy: 28, makeItEasy: 30, getItRight: 35 },
       aiSummary: ['Agent did not investigate root cause of ACH failure', 'Should have offered to set up payment from bank side', 'Missing follow-up with biller to confirm payment details', 'Customer left without clear resolution timeline'],
       content: { type: 'Ticket', messages: [
-        { id: '1', sender: 'Customer', timestamp: 'Dec 15, 10:00 AM', message: 'My electric bill autopay has not gone through for 2 months. I am getting late fees. Account: ***4523', isAgent: false },
-        { id: '2', sender: 'Agent', timestamp: 'Dec 15, 11:30 AM', message: 'I reviewed your account. The ACH requests are being returned. Please contact your utility provider to verify account details.', isAgent: true }
+        { id: '1', sender: 'Michael Johnson', timestamp: 'Dec 15, 10:00 AM', message: 'My electric bill autopay has not gone through for 2 months. I am getting late fees. Account: ***4523', isAgent: false },
+        { id: '2', sender: 'Support Agent - Ticket #78234', timestamp: 'Dec 15, 11:30 AM', message: 'Hello Michael, I reviewed your account. The ACH requests are being returned. Please contact your utility provider to verify account details.', isAgent: true },
+        { id: '3', sender: 'Michael Johnson', timestamp: 'Dec 15, 1:45 PM', message: 'I already contacted them. They say everything looks correct on their end. Please help me resolve this!', isAgent: false },
+        { id: '4', sender: 'Support Agent - Ticket #78234', timestamp: 'Dec 15, 3:00 PM', message: 'We can try setting up the payment manually. I can help you process a one-time payment and set up new ACH authorization.', isAgent: true }
+      ]}
+    },
+    {
+      id: `${agentId}-T002`, subject: 'Credit Card Dispute - Lost Card Replacement - Patricia Williams', channel: 'Ticket', sentiment: 'Negative', csat: 3, createdAt: 'Dec 14, 2024', status: 'Resolved',
+      dominantTopic: 'Card Services', subtopics: ['Lost Card', 'Card Replacement', 'Fraud Protection', 'Account Security'],
+      aiScores: { takeOwnership: 42, actWithEmpathy: 38, makeItEasy: 44, getItRight: 46 },
+      aiSummary: ['Agent properly blocked card and ordered replacement', 'Could have offered expedited shipping at no cost', 'Should have provided more details on fraud monitoring', 'Follow-up communication was adequate but could be warmer'],
+      content: { type: 'Ticket', messages: [
+        { id: '1', sender: 'Patricia Williams', timestamp: 'Dec 14, 9:00 AM', message: 'I lost my credit card somewhere between home and the grocery store. I need it replaced ASAP.', isAgent: false },
+        { id: '2', sender: 'Support Team', timestamp: 'Dec 14, 10:15 AM', message: 'Hello Patricia, I have immediately blocked your card to prevent fraudulent use. A replacement will be mailed to your address within 5-7 business days.', isAgent: true },
+        { id: '3', sender: 'Patricia Williams', timestamp: 'Dec 14, 11:30 AM', message: 'Can you expedite it? I have travel coming up next week.', isAgent: false },
+        { id: '4', sender: 'Support Team', timestamp: 'Dec 14, 1:00 PM', message: 'Yes, I can ship it overnight for $29.95. Should I process that for you?', isAgent: true }
       ]}
     }
   ];
 
   const socialCases: AgentCase[] = [
     {
-      id: `${agentId}-S001`, subject: 'Public Complaint - ATM Ate My Card', channel: 'Social Media', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Resolved',
+      id: `${agentId}-S001`, subject: 'Public Complaint - ATM Ate Card (Robert Thompson)', channel: 'Social Media', sentiment: 'Negative', csat: 2, createdAt: 'Dec 15, 2024', status: 'Resolved',
       dominantTopic: 'ATM Services', subtopics: ['Card Retention', 'ATM Malfunction', 'Card Replacement', 'Account Access'],
-      aiScores: { takeOwnership: 38, actWithEmpathy: 42, makeItEasy: 35, getItRight: 45 },
+      aiScores: { takeOwnership: 24, actWithEmpathy: 20, makeItEasy: 22, getItRight: 28 },
       aiSummary: ['Response on public platform lacked urgency', 'Should have moved conversation to DM immediately', 'Did not offer expedited card replacement', 'Missing apology for ATM malfunction'],
       content: { type: 'Social Media', messages: [
-        { id: '1', sender: '@frustrated_customer', timestamp: 'Dec 15, 8:45 AM', message: '@BankofAmerica Your ATM on Main St just ate my debit card! Now I have no way to access my money. #worstbank', isAgent: false },
-        { id: '2', sender: '@BofA_Help', timestamp: 'Dec 15, 10:30 AM', message: 'Hi, we apologize for the inconvenience. Please DM us your account details and we will assist you.', isAgent: true }
+        { id: '1', sender: '@RThompson_22', timestamp: 'Dec 15, 8:45 AM', message: '@BankofAmerica Your ATM on Main St just ate my debit card! Now I have no way to access my money. This is unacceptable! #worstbank', isAgent: false },
+        { id: '2', sender: '@BofA_Help', timestamp: 'Dec 15, 10:30 AM', message: 'Hi @RThompson_22, we apologize for the inconvenience. Please DM us your account details and we will assist you right away.', isAgent: true },
+        { id: '3', sender: '@RThompson_22', timestamp: 'Dec 15, 11:00 AM', message: 'Finally! Check your DMs', isAgent: false }
+      ]}
+    },
+    {
+      id: `${agentId}-S002`, subject: 'Negative Feedback - Poor Service Recovery (Linda Foster)', channel: 'Social Media', sentiment: 'Negative', csat: 2, createdAt: 'Dec 14, 2024', status: 'Escalated',
+      dominantTopic: 'Service Failure', subtopics: ['Poor Response', 'Unresolved Issue', 'Public Complaint', 'Brand Damage'],
+      aiScores: { takeOwnership: 18, actWithEmpathy: 16, makeItEasy: 20, getItRight: 22 },
+      aiSummary: ['Agent response on public platform was dismissive and unhelpful', 'Took 8 hours to respond to urgent public complaint', 'Did not offer concrete resolution or compensation', 'Customer escalated to better business bureau after this interaction'],
+      content: { type: 'Social Media', messages: [
+        { id: '1', sender: '@LFoster_Travel', timestamp: 'Dec 14, 7:30 AM', message: '@BankofAmerica My wire transfer failed AGAIN! You charged me $20 but my money never arrived. This is the 3rd time! #worstbank', isAgent: false },
+        { id: '2', sender: '@BofA_Help', timestamp: 'Dec 14, 3:45 PM', message: '@LFoster_Travel Please DM us your account details. These matters take time to investigate.', isAgent: true },
+        { id: '3', sender: '@LFoster_Travel', timestamp: 'Dec 14, 5:00 PM', message: '@BofA_Help 8 hours for a response?! My family is waiting for money! You should prioritize customers on social media!', isAgent: false },
+        { id: '4', sender: '@BofA_Help', timestamp: 'Dec 14, 6:15 PM', message: '@LFoster_Travel We follow standard procedures. A resolution can take 5-7 business days.', isAgent: true }
       ]}
     }
   ];
@@ -144,7 +213,7 @@ const generateCasesForAgent = (agentId: string, channel: string): AgentCase[] =>
   switch (channel) {
     case 'Email': return emailCases;
     case 'Chat': return chatCases;
-    case 'Voice': return voiceCases;
+    case 'Voice': return []; // Voice cases are generated dynamically at top of function
     case 'Ticket': return ticketCases;
     case 'Social Media': return socialCases;
     default: return emailCases;
@@ -265,17 +334,25 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
       </div>
 
         <div className="overflow-x-auto flex-1">
-        <table className="w-full text-sm">
+        <table className="w-full text-sm table-fixed">
+          <colgroup>
+            <col style={{ width: '25%' }} />
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '12%' }} />
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '12%' }} />
+            <col style={{ width: '10%' }} />
+            <col style={{ width: '20%' }} />
+          </colgroup>
           <thead>
               <tr style={{ borderBottom: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}` }}>
-                <th className="text-left p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Agent</th>
-                <th className="text-center p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Quality Score</th>
-                <th className="text-center p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Total Cases</th>
-                <th className="text-center p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Channel</th>
-                <th className="text-center p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>FCI Score</th>
-                <th className="text-center p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Resolution Rate</th>
-                <th className="text-center p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>CSAT</th>
-                <th className="text-left p-3 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Needs Training At</th>
+                <th className="text-left p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Agent</th>
+                <th className="text-center p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Quality Score</th>
+                <th className="text-center p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Total Cases</th>
+                <th className="text-center p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Channel</th>
+                <th className="text-center p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>FCI Score</th>
+                <th className="text-center p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>CSAT</th>
+                <th className="text-center p-4 font-semibold text-xs uppercase" style={{ color: '#939394' }}>Needs Training At</th>
             </tr>
           </thead>
           <tbody>
@@ -283,19 +360,18 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
                 const ChannelIcon = getChannelIcon(agent.channel);
                 return (
                   <tr key={agent.id} className="cursor-pointer transition-colors" style={{ borderBottom: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}` }} onClick={() => setSelectedAgent(agent)} onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = isDarkMode ? '#1a1a1a' : '#F5F5F5'; }} onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; }}>
-                    <td className="p-3">
+                    <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: '#5332FF' }}>{agent.name.split(' ').map(n => n[0]).join('')}</div>
-                        <div><p className="font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{agent.name}</p><p className="text-xs" style={{ color: '#939394' }}>{agent.id}</p></div>
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style={{ backgroundColor: '#5332FF' }}>{agent.name.split(' ').map(n => n[0]).join('')}</div>
+                        <div className="min-w-0"><p className="font-medium truncate" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{agent.name}</p><p className="text-xs truncate" style={{ color: '#939394' }}>{agent.id}</p></div>
                   </div>
                 </td>
-                    <td className="p-3 text-center"><span className="font-bold" style={{ color: getScoreColor(agent.qualityScore) }}>{agent.qualityScore}%</span></td>
-                    <td className="p-3 text-center"><span className="font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{agent.totalCases}</span></td>
-                    <td className="p-3 text-center"><div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: `${getChannelColor(agent.channel)}20`, color: getChannelColor(agent.channel) }}><ChannelIcon className="w-3 h-3" />{agent.channel}</div></td>
-                    <td className="p-3 text-center"><span className="font-bold" style={{ color: getScoreColor(agent.fciScore, true) }}>{agent.fciScore}%</span></td>
-                    <td className="p-3 text-center"><span className="font-medium" style={{ color: getScoreColor(agent.resolutionRate) }}>{agent.resolutionRate}%</span></td>
-                    <td className="p-3 text-center"><div className="flex items-center justify-center gap-1"><span className="font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{agent.customerSatisfaction}</span><span className="text-xs" style={{ color: '#939394' }}>/5</span></div></td>
-                    <td className="p-3"><span className="px-2.5 py-1 rounded text-xs font-medium" style={{ backgroundColor: '#ef444420', color: '#ef4444' }}>{agent.needsTrainingAt}</span></td>
+                    <td className="p-4 text-center"><span className="font-bold" style={{ color: getScoreColor(agent.qualityScore) }}>{agent.qualityScore}%</span></td>
+                    <td className="p-4 text-center"><span className="font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{agent.totalCases}</span></td>
+                    <td className="p-4 text-center"><div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap" style={{ backgroundColor: `${getChannelColor(agent.channel)}20`, color: getChannelColor(agent.channel) }}><ChannelIcon className="w-3 h-3 flex-shrink-0" />{agent.channel}</div></td>
+                    <td className="p-4 text-center"><span className="font-bold" style={{ color: getScoreColor(agent.fciScore, true) }}>{agent.fciScore}%</span></td>
+                    <td className="p-4 text-center"><div className="flex items-center justify-center gap-1"><span className="font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{agent.customerSatisfaction}</span><span className="text-xs" style={{ color: '#939394' }}>/5</span></div></td>
+                    <td className="p-4"><span className="px-2.5 py-1 rounded text-xs font-medium inline-block" style={{ backgroundColor: '#ef444420', color: '#ef4444' }}>{agent.needsTrainingAt}</span></td>
               </tr>
                 );
               })}
@@ -366,12 +442,6 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
                   <p className="text-2xl font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{selectedAgent.totalCases}</p>
                   <p className="text-[10px] uppercase tracking-wide" style={{ color: '#939394' }}>Total Cases</p>
                 </div>
-                <div className="p-3 rounded-xl text-center" style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}>
-                  <p className="text-2xl font-bold flex items-center justify-center gap-1" style={{ color: '#ef4444' }}>
-                    <TrendingDown className="w-5 h-5" />{selectedAgent.resolutionRate}%
-                  </p>
-                  <p className="text-[10px] uppercase tracking-wide" style={{ color: '#939394' }}>Resolution Rate</p>
-                </div>
               </div>
             </div>
 
@@ -389,7 +459,7 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
                     <div className="space-y-3">
                       {selectedCase.content.type === 'Email' && selectedCase.content.messages.map((msg) => (
                         <div key={msg.id} className="p-3 rounded-lg" style={{ backgroundColor: msg.isAgent ? (isDarkMode ? '#5332FF15' : '#5332FF10') : (isDarkMode ? '#0d0d0d' : '#FFFFFF'), borderLeft: `3px solid ${msg.isAgent ? '#5332FF' : '#939394'}` }}>
-                          <div className="flex items-center justify-between mb-2"><span className="text-xs font-medium" style={{ color: msg.isAgent ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#4a4a4a') }}>{msg.isAgent ? 'Agent' : 'Customer'}</span><span className="text-xs" style={{ color: '#939394' }}>{msg.timestamp}</span></div>
+                          <div className="flex items-center justify-between mb-2"><span className="text-xs font-medium" style={{ color: msg.isAgent ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#4a4a4a') }}>{msg.sender}</span><span className="text-xs" style={{ color: '#939394' }}>{msg.timestamp}</span></div>
                           <p className="text-xs font-medium mb-1" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{msg.subject}</p>
                           <p className="text-xs leading-relaxed" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>{msg.body}</p>
                         </div>
