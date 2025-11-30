@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp, TrendingDown, Phone, Mail, Ticket, MessageCircle, Shield, Zap, AlertOctagon, MessageSquare, Hash } from 'lucide-react';
+import { TrendingUp, TrendingDown, Phone, Mail, Ticket, MessageCircle, Shield, Zap, AlertOctagon, MessageSquare, Hash, Globe, Settings, Users, Handshake } from 'lucide-react';
 import { AISummaryWall } from './AISummaryWall';
 import { useState } from 'react';
 
@@ -40,18 +40,20 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
       }
     },
     riskSignal: {
-      fraud: { percentage: 3.2, cases: 72, trend: -0.5 },
-      outage: { percentage: 0.8, cases: 18, trend: 0.0 },
-      compliance: { percentage: 5.1, cases: 115, trend: 1.2 },
-      totalFlagged: 205,
-      highPriority: 28,
-      critical: 5,
-      resolvedToday: 67,
+      fraud: { percentage: 2.5, cases: 20, trend: -0.5 },
+      cyber: { percentage: 1.8, cases: 15, trend: 0.3 },
+      operational: { percentage: 2.2, cases: 18, trend: -0.2 },
+      reputation: { percentage: 1.5, cases: 12, trend: 0.1 },
+      thirdParty: { percentage: 1.9, cases: 15, trend: 0.4 },
+      totalFlagged: 80,
+      highPriority: 12,
+      critical: 3,
+      resolvedToday: 24,
       segmentRisk: {
-        hvhf: { count: 12, level: 'low' },
-        hvlf: { count: 28, level: 'medium' },
-        lvhf: { count: 85, level: 'high' },
-        lvlf: { count: 80, level: 'high' }
+        hvhf: { count: 8, level: 'low' },
+        hvlf: { count: 15, level: 'medium' },
+        lvhf: { count: 32, level: 'high' },
+        lvlf: { count: 25, level: 'high' }
       }
     },
     customerSentiment: {
@@ -264,33 +266,53 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                 <span className="text-sm" style={{ color: '#939394' }}>flagged</span>
               </div>
               
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <div className="flex items-center gap-1.5">
-                      <AlertOctagon className="w-4 h-4" style={{ color: '#ef4444' }} />
-                      <span className="text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Fraud</span>
-                    </div>
-                    <span className="text-sm font-bold" style={{ color: '#ef4444' }}>{kpiData.riskSignal.fraud.cases}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <div className="flex items-center gap-1.5">
-                      <Zap className="w-4 h-4" style={{ color: '#f59e0b' }} />
-                      <span className="text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Outage</span>
-                    </div>
-                    <span className="text-sm font-bold" style={{ color: '#f59e0b' }}>{kpiData.riskSignal.outage.cases}</span>
-                  </div>
-                  <div className="flex items-center justify-between p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <div className="flex items-center gap-1.5">
-                      <Shield className="w-4 h-4" style={{ color: '#5332FF' }} />
-                      <span className="text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Compliance</span>
-                    </div>
-                    <span className="text-sm font-bold" style={{ color: '#5332FF' }}>{kpiData.riskSignal.compliance.cases}</span>
-                  </div>
+              <div className="flex-1 flex flex-col gap-7">
+                {/* Horizontal Stacked Bar Chart */}
+                <div>
+                  {(() => {
+                    const riskCategories = [
+                      { key: 'fraud', label: 'Fraud', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
+                      { key: 'cyber', label: 'Cyber', color: '#8b5cf6', cases: kpiData.riskSignal.cyber.cases },
+                      { key: 'operational', label: 'Operational', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
+                      { key: 'reputation', label: 'Reputation', color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
+                      { key: 'thirdParty', label: 'Third-Party', color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
+                    ];
+                    const total = riskCategories.reduce((sum, r) => sum + r.cases, 0);
+                    
+                    return (
+                      <>
+                        {/* Stacked Bar */}
+                        <div className="flex h-8 rounded-lg overflow-hidden mb-1.5 mt-3">
+                          {riskCategories.map((risk, idx) => (
+                            <div
+                              key={risk.key}
+                              className="flex items-center justify-center transition-all hover:opacity-80 cursor-pointer"
+                              style={{ 
+                                width: `${(risk.cases / total) * 100}%`,
+                                backgroundColor: risk.color,
+                              }}
+                              title={`${risk.label}: ${risk.cases}`}
+                            >
+                              <span className="text-[10px] font-bold text-white">{risk.cases}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {/* Legend */}
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-6">
+                          {riskCategories.map((risk) => (
+                            <div key={risk.key} className="flex items-center gap-1.5">
+                              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: risk.color }} />
+                              <span className="text-xs" style={{ color: '#939394' }}>{risk.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
                 </div>
 
-                <div className="mt-2">
-                  <p className="text-xs font-bold mb-1.5" style={{ color: '#939394' }}>RISK BY SEGMENT</p>
+                <div>
+                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>RISK BY SEGMENT</p>
                   <div className="grid grid-cols-4 gap-1.5">
                     {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
                       const segmentColors: Record<string, string> = {
@@ -423,16 +445,16 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                   </div>
                 </div>
 
-                <div className="space-y-1.5 mt-2">
+                <div className="grid grid-cols-2 gap-2 mt-2">
                   <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
                     <p className="text-[10px] font-bold" style={{ color: '#10b981' }}>POSITIVE</p>
-                    <p className="text-xs" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                    <p className="text-[10px]" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
                       {kpiData.customerSentiment.positiveTopics.join(' • ')}
                     </p>
                   </div>
                   <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
                     <p className="text-[10px] font-bold" style={{ color: '#ef4444' }}>NEGATIVE</p>
-                    <p className="text-xs" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                    <p className="text-[10px]" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
                       {kpiData.customerSentiment.negativeTopics.join(' • ')}
                     </p>
                   </div>

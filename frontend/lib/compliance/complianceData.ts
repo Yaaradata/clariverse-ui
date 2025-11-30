@@ -265,92 +265,133 @@ export const complianceInsightsData: ComplianceInsight[] = [
   }
 ];
 
-export const riskAlertsData: RiskAlert[] = [
-  {
-    id: 'RA-001',
-    title: 'Potential Fraud Pattern Detected',
-    description: 'Unusual transaction approval patterns from APAC region - 15 high-value transactions bypassed verification',
-    category: 'fraud',
-    severity: 'critical',
-    region: 'APAC',
-    timestamp: '2024-01-15T09:00:00Z',
-    impactedAgents: 3,
-    impactedCustomers: 15,
-    status: 'active'
-  },
-  {
-    id: 'RA-002',
-    title: 'Cyber Security Breach Attempt',
-    description: 'Multiple failed login attempts detected on agent workstations - potential credential stuffing attack',
-    category: 'cyber',
-    severity: 'high',
-    region: 'India',
-    timestamp: '2024-01-15T08:30:00Z',
-    impactedAgents: 12,
-    impactedCustomers: 0,
-    status: 'active'
-  },
-  {
-    id: 'RA-003',
-    title: 'Tier 1 Customer Complaint - HNI',
-    description: 'High-net-worth customer filed formal complaint about unauthorized data access',
-    category: 'reputation',
-    severity: 'critical',
-    region: 'Europe',
-    timestamp: '2024-01-15T07:45:00Z',
-    impactedAgents: 1,
-    impactedCustomers: 1,
-    status: 'active'
-  },
-  {
-    id: 'RA-004',
-    title: 'Third-Party Vendor Non-Compliance',
-    description: 'BPO vendor TechServe Asia failed data handling audit - immediate contract review required',
-    category: 'third-party',
-    severity: 'high',
-    region: 'APAC',
-    timestamp: '2024-01-15T06:20:00Z',
-    impactedAgents: 45,
-    impactedCustomers: 2340,
-    status: 'monitoring'
-  },
-  {
-    id: 'RA-005',
-    title: 'Operational System Outage',
-    description: 'Compliance monitoring pools down in Americas region - real-time monitoring affected',
-    category: 'operational',
-    severity: 'high',
-    region: 'Americas',
-    timestamp: '2024-01-15T05:15:00Z',
-    impactedAgents: 156,
-    impactedCustomers: 0,
-    status: 'active'
-  },
-  {
-    id: 'RA-006',
-    title: 'Social Media Brand Risk',
-    description: 'Negative sentiment spike on Twitter regarding data breach claims - PR response needed',
-    category: 'reputation',
-    severity: 'medium',
-    region: 'Americas',
-    timestamp: '2024-01-15T04:30:00Z',
-    impactedAgents: 0,
-    impactedCustomers: 0,
-    status: 'monitoring'
-  },
-  {
-    id: 'RA-007',
-    title: 'Fraud Ring Activity',
-    description: 'Coordinated fraudulent account opening attempts detected from MEA region',
-    category: 'fraud',
-    severity: 'critical',
-    region: 'MEA',
-    timestamp: '2024-01-15T03:00:00Z',
-    impactedAgents: 0,
-    impactedCustomers: 28,
-    status: 'active'
-  }
-];
+// Generate risk alerts data with proper counts: Fraud: 20, Cyber: 15, Operational: 18, Reputation: 12, Third-Party: 15
+const generateRiskAlerts = (): RiskAlert[] => {
+  const alerts: RiskAlert[] = [];
+  const regions: Region[] = ['APAC', 'India', 'Europe', 'Americas', 'MEA'];
+  const severities: Severity[] = ['critical', 'high', 'medium', 'low'];
+  const statuses: ('active' | 'monitoring' | 'resolved')[] = ['active', 'monitoring', 'resolved'];
+  
+  // Fraud alerts (20)
+  const fraudTitles = [
+    'Potential Fraud Pattern Detected', 'Fraudulent Transaction Attempt', 'Account Takeover Risk',
+    'Suspicious Wire Transfer', 'Identity Theft Alert', 'Card Cloning Detected', 'Phishing Attack Identified',
+    'Unauthorized Access Attempt', 'Money Laundering Pattern', 'Check Fraud Alert',
+    'ACH Fraud Detected', 'Loan Application Fraud', 'Duplicate Transaction Alert', 'Counterfeit Detection',
+    'Social Engineering Attempt', 'Internal Fraud Risk', 'Vendor Payment Fraud', 'Invoice Manipulation',
+    'Payroll Fraud Alert', 'Refund Fraud Pattern'
+  ];
+  fraudTitles.forEach((title, i) => {
+    alerts.push({
+      id: `RA-FR-${String(i + 1).padStart(3, '0')}`,
+      title,
+      description: `${title} - Immediate investigation required for potential financial loss`,
+      category: 'fraud',
+      severity: i < 3 ? 'critical' : i < 8 ? 'high' : i < 14 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      timestamp: new Date(Date.now() - i * 3600000).toISOString(),
+      impactedAgents: Math.floor(Math.random() * 10) + 1,
+      impactedCustomers: Math.floor(Math.random() * 100) + 10,
+      status: i < 12 ? 'active' : i < 16 ? 'monitoring' : 'resolved'
+    });
+  });
+
+  // Cyber alerts (15)
+  const cyberTitles = [
+    'Cyber Security Breach Attempt', 'DDoS Attack Detected', 'Malware Infection Risk',
+    'Data Exfiltration Alert', 'Ransomware Threat', 'SQL Injection Attempt', 'Zero-Day Vulnerability',
+    'Credential Stuffing Attack', 'Man-in-the-Middle Attack', 'API Security Breach',
+    'Network Intrusion Detected', 'Endpoint Compromise', 'Cloud Security Alert', 'Email Security Threat',
+    'Encryption Failure Detected'
+  ];
+  cyberTitles.forEach((title, i) => {
+    alerts.push({
+      id: `RA-CY-${String(i + 1).padStart(3, '0')}`,
+      title,
+      description: `${title} - Security team engagement required immediately`,
+      category: 'cyber',
+      severity: i < 2 ? 'critical' : i < 6 ? 'high' : i < 11 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      timestamp: new Date(Date.now() - i * 4200000).toISOString(),
+      impactedAgents: Math.floor(Math.random() * 50) + 5,
+      impactedCustomers: Math.floor(Math.random() * 500),
+      status: i < 9 ? 'active' : i < 12 ? 'monitoring' : 'resolved'
+    });
+  });
+
+  // Operational alerts (18)
+  const operationalTitles = [
+    'System Outage Detected', 'Process Failure Alert', 'SLA Breach Warning',
+    'Capacity Threshold Exceeded', 'Queue Overflow Alert', 'Batch Processing Failure',
+    'Integration Error', 'Database Performance Issue', 'Service Degradation',
+    'Workflow Disruption', 'Resource Constraint', 'Configuration Drift Detected',
+    'Backup Failure Alert', 'Monitoring Gap Identified', 'Audit Trail Missing',
+    'Compliance Tool Down', 'Report Generation Failed', 'Data Sync Issue'
+  ];
+  operationalTitles.forEach((title, i) => {
+    alerts.push({
+      id: `RA-OP-${String(i + 1).padStart(3, '0')}`,
+      title,
+      description: `${title} - Operations team to investigate and resolve`,
+      category: 'operational',
+      severity: i < 2 ? 'critical' : i < 7 ? 'high' : i < 13 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      timestamp: new Date(Date.now() - i * 3000000).toISOString(),
+      impactedAgents: Math.floor(Math.random() * 100) + 10,
+      impactedCustomers: Math.floor(Math.random() * 200),
+      status: i < 10 ? 'active' : i < 14 ? 'monitoring' : 'resolved'
+    });
+  });
+
+  // Reputation alerts (12)
+  const reputationTitles = [
+    'Negative Media Coverage', 'Social Media Crisis', 'Customer Complaint Escalation',
+    'Brand Damage Alert', 'Public Relations Risk', 'Influencer Criticism',
+    'Review Platform Alert', 'Regulatory Public Notice', 'Executive Exposure Risk',
+    'Competitor Attack Campaign', 'Viral Negative Content', 'Trust Score Decline'
+  ];
+  reputationTitles.forEach((title, i) => {
+    alerts.push({
+      id: `RA-RP-${String(i + 1).padStart(3, '0')}`,
+      title,
+      description: `${title} - Communications team to prepare response strategy`,
+      category: 'reputation',
+      severity: i < 2 ? 'critical' : i < 5 ? 'high' : i < 9 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      timestamp: new Date(Date.now() - i * 5000000).toISOString(),
+      impactedAgents: Math.floor(Math.random() * 20),
+      impactedCustomers: Math.floor(Math.random() * 1000) + 100,
+      status: i < 7 ? 'active' : i < 10 ? 'monitoring' : 'resolved'
+    });
+  });
+
+  // Third-Party alerts (15)
+  const thirdPartyTitles = [
+    'Vendor Non-Compliance', 'Third-Party Data Breach', 'Supplier Risk Alert',
+    'Contract Violation Detected', 'Vendor Performance Issue', 'Outsourcing Risk',
+    'Partner Security Concern', 'Sub-contractor Audit Failure', 'Vendor Financial Risk',
+    'Third-Party Access Violation', 'BPO Compliance Gap', 'Cloud Provider Issue',
+    'Payment Processor Alert', 'API Partner Risk', 'Vendor Continuity Concern'
+  ];
+  thirdPartyTitles.forEach((title, i) => {
+    alerts.push({
+      id: `RA-TP-${String(i + 1).padStart(3, '0')}`,
+      title,
+      description: `${title} - Vendor management team to review and escalate`,
+      category: 'third-party',
+      severity: i < 2 ? 'critical' : i < 6 ? 'high' : i < 11 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      timestamp: new Date(Date.now() - i * 4800000).toISOString(),
+      impactedAgents: Math.floor(Math.random() * 80) + 20,
+      impactedCustomers: Math.floor(Math.random() * 3000) + 500,
+      status: i < 9 ? 'active' : i < 12 ? 'monitoring' : 'resolved'
+    });
+  });
+
+  return alerts;
+};
+
+export const riskAlertsData: RiskAlert[] = generateRiskAlerts();
 
 export const complianceMetricsData: Record<TimeFilter, ComplianceMetrics> = {
   '24h': {

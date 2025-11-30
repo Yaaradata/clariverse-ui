@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, AlertTriangle, Info, AlertCircle, 
   Zap, ChevronRight, X, Clock, Users, FileText, Target, 
   ArrowRight, CheckCircle2, AlertOctagon, Phone, Mail, GitBranch,
-  BookOpen, CreditCard, RefreshCw, Timer
+  BookOpen, CreditCard, RefreshCw, Timer, Sparkles
 } from 'lucide-react';
 
 // Types
@@ -315,15 +315,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
       {/* Header */}
       <div className="flex items-center justify-between mb-5 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div 
-            className="p-2 rounded-xl"
-            style={{ 
-              background: 'linear-gradient(135deg, #5332FF 0%, #B90ABD 100%)',
-              boxShadow: '0 4px 12px rgba(83, 50, 255, 0.3)'
-            }}
-          >
-            <Zap className="w-5 h-5 text-white" />
-          </div>
+          <span className="text-2xl">✨</span>
           <div>
             <h3 
               className="text-lg font-bold"

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Settings, Users } from 'lucide-react';
+import { Settings, Users, LayoutGrid, UserCircle } from 'lucide-react';
 import { FCIKPICards } from '@/components/FCI/FCIKPICards';
 import { FCIEisenhowerDistribution } from '@/components/FCI/FCIEisenhowerDistribution';
 import { FailureClusters } from '@/components/FCI/FailureClusters';
@@ -17,9 +17,9 @@ import {
 
 type FCITab = 'summary' | 'workforce';
 
-const tabs: { id: FCITab; label: string }[] = [
-  { id: 'summary', label: 'Summary' },
-  { id: 'workforce', label: 'Workforce Performance' },
+const tabs: { id: FCITab; label: string; icon: typeof LayoutGrid }[] = [
+  { id: 'summary', label: 'Summary', icon: LayoutGrid },
+  { id: 'workforce', label: 'Workforce Performance', icon: UserCircle },
 ];
 
 export default function FCIPage() {
@@ -53,36 +53,32 @@ export default function FCIPage() {
       style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }}
     >
       <div className="container mx-auto px-6 py-6">
-        {/* Sub-Tabs */}
-        <div 
-          className="flex gap-6 mb-6"
-          style={{ borderBottom: `1px solid ${isDarkMode ? '#1f1f1f' : '#E5E5E5'}` }}
-        >
-          {tabs.map((tab) => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className="relative pb-3 transition-all duration-200"
-              >
-                <span 
-                  className="text-sm font-medium"
-                  style={{ 
-                    color: isActive ? '#A855F7' : (isDarkMode ? '#939394' : '#6B7280')
+        {/* Sub-Tabs - Full Width Pill Style */}
+        <div className="mb-6">
+          <div 
+            className="flex w-full rounded-xl p-1.5"
+            style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#E5E5E5', border: `1px solid ${isDarkMode ? '#2a2a2a' : '#D6D9D8'}` }}
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{
+                    backgroundColor: isActive ? '#5332FF' : 'transparent',
+                    color: isActive ? '#FFFFFF' : (isDarkMode ? '#939394' : '#6B7280'),
+                    boxShadow: isActive ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
                   }}
                 >
+                  <Icon className="w-4 h-4" />
                   {tab.label}
-                </span>
-                {isActive && (
-                  <div 
-                    className="absolute bottom-0 left-0 right-0 h-0.5"
-                    style={{ backgroundColor: '#A855F7' }}
-                  />
-                )}
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Summary Tab Content */}
