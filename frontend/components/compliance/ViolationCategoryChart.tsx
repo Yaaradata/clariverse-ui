@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import { 
   TrendingUp, 
   TrendingDown, 
-  AlertTriangle,
   UserCheck,
   ShieldCheck,
   Banknote,
@@ -118,15 +117,17 @@ export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCa
             {totalViolations.toLocaleString()} total violations detected
           </p>
         </div>
-        <div 
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full"
-          style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
+        <button 
+          className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all hover:opacity-90 hover:scale-105"
+          style={{ 
+            background: 'linear-gradient(135deg, #5332FF 0%, #7c3aed 100%)',
+            color: '#FFFFFF',
+            boxShadow: '0 4px 12px rgba(83, 50, 255, 0.3)'
+          }}
         >
-          <AlertTriangle className="w-4 h-4" style={{ color: '#f97316' }} />
-          <span className="text-xs font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-            Live Monitoring
-          </span>
-        </div>
+          <span>✨</span>
+          Automated SAR Report
+        </button>
       </div>
 
       {/* Bar Chart */}
