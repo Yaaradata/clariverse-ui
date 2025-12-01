@@ -249,10 +249,10 @@ export function CallCenterRiskHeatMap({ isDarkMode = false }: CallCenterRiskHeat
                 className="text-base font-bold"
                 style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
               >
-                Call Center Risk Heat Map
+                Contact Centre Units Risk Map
               </h3>
               <p className="text-xs" style={{ color: '#939394' }}>
-                Risk distribution across {callCenterUnits.length} operational units
+                Risk distribution across {callCenterUnits.length} contact centre units
               </p>
             </div>
           </div>
@@ -300,7 +300,7 @@ export function CallCenterRiskHeatMap({ isDarkMode = false }: CallCenterRiskHeat
                     minWidth: '160px'
                   }}
                 >
-                  Call Center Unit
+                  Contact Centre Unit
                 </th>
               {riskCategories.map((category) => (
                 <th 
