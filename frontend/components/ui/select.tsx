@@ -101,14 +101,15 @@ export function SelectValue({ placeholder }: SelectValueProps) {
 interface SelectContentProps {
   children: React.ReactNode
   className?: string
+  style?: React.CSSProperties
 }
 
-export function SelectContent({ children, className }: SelectContentProps) {
+export function SelectContent({ children, className, style }: SelectContentProps) {
   const { open, setOpen, triggerRef } = useSelectContext()
   const [position, setPosition] = React.useState({ top: 0, left: 0 })
   const contentRef = React.useRef<HTMLDivElement>(null)
 
-  React.useEffect(() => {
+  const updatePosition = React.useCallback(() => {
     if (open && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect()
       // Use viewport coordinates for fixed positioning
@@ -120,6 +121,16 @@ export function SelectContent({ children, className }: SelectContentProps) {
   }, [open])
 
   React.useEffect(() => {
+    updatePosition()
+  }, [open, updatePosition])
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (open) {
+        updatePosition()
+      }
+    }
+
     const handleClickOutside = (event: MouseEvent) => {
       if (
         triggerRef.current && 
@@ -132,10 +143,18 @@ export function SelectContent({ children, className }: SelectContentProps) {
     }
 
     if (open) {
+      // Update position on scroll
+      window.addEventListener("scroll", handleScroll, true)
+      window.addEventListener("resize", updatePosition)
       document.addEventListener("mousedown", handleClickOutside)
-      return () => document.removeEventListener("mousedown", handleClickOutside)
+      
+      return () => {
+        window.removeEventListener("scroll", handleScroll, true)
+        window.removeEventListener("resize", updatePosition)
+        document.removeEventListener("mousedown", handleClickOutside)
+      }
     }
-  }, [open, setOpen])
+  }, [open, setOpen, updatePosition])
 
   if (!open) return null
 
@@ -150,9 +169,10 @@ export function SelectContent({ children, className }: SelectContentProps) {
       style={{
         top: position.top,
         left: position.left,
+        ...style
       }}
     >
-      <div className="p-1 overflow-visible">
+      <div className="p-1 overflow-visible" style={{ backgroundColor: style?.backgroundColor || 'transparent' }}>
         {children}
       </div>
     </div>
