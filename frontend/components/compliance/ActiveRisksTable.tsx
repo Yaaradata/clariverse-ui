@@ -36,252 +36,222 @@ interface RiskDetails {
   notes: string;
 }
 
-const riskData: RiskItem[] = [
-  {
-    id: 'RSK-001',
-    type: 'Regulatory',
-    category: 'GDPR Non-Compliance',
-    description: 'Customer consent records incomplete for 15% of European accounts processed through voice channel',
-    severity: 'critical',
-    region: 'Europe',
-    status: 'active',
-    channel: 'Voice',
-    timestamp: new Date(Date.now() - 1800000).toISOString(),
-    impactScore: 92,
-    likelihood: 85
-  },
-  {
-    id: 'RSK-002',
-    type: 'Operational',
-    category: 'Third-Party Vendor Risk',
-    description: 'BPO vendor security audit revealed unauthorized data retention practices',
-    severity: 'critical',
-    region: 'APAC',
-    status: 'active',
-    channel: 'Multi-Channel',
-    timestamp: new Date(Date.now() - 7200000).toISOString(),
-    impactScore: 95,
-    likelihood: 90
-  },
-  {
-    id: 'RSK-003',
-    type: 'Financial',
-    category: 'AML Alert Backlog',
-    description: 'Unreviewed AML alerts exceeding 72-hour SLA threshold by 340%',
-    severity: 'high',
-    region: 'Americas',
-    status: 'active',
-    channel: 'Ticket',
-    timestamp: new Date(Date.now() - 14400000).toISOString(),
-    impactScore: 78,
-    likelihood: 70
-  },
-  {
-    id: 'RSK-004',
-    type: 'Reputational',
-    category: 'Social Media Escalation',
-    description: 'Viral customer complaint about fee disclosure gaining traction on Twitter/X',
-    severity: 'high',
-    region: 'Americas',
-    status: 'monitoring',
-    channel: 'Social',
-    timestamp: new Date(Date.now() - 3600000).toISOString(),
-    impactScore: 72,
-    likelihood: 65
-  },
-  {
-    id: 'RSK-005',
-    type: 'Operational',
-    category: 'Script Compliance Drift',
-    description: 'Script adherence declining across EMEA voice team - down 12% this week',
-    severity: 'medium',
-    region: 'Europe',
-    status: 'monitoring',
-    channel: 'Voice',
-    timestamp: new Date(Date.now() - 28800000).toISOString(),
-    impactScore: 58,
-    likelihood: 55
-  },
-  {
-    id: 'RSK-006',
-    type: 'Technology',
-    category: 'System Vulnerability',
-    description: 'CRM authentication timeout allowing extended sessions without re-verification',
-    severity: 'high',
-    region: 'India',
-    status: 'active',
-    channel: 'Chat',
-    timestamp: new Date(Date.now() - 10800000).toISOString(),
-    impactScore: 68,
-    likelihood: 75
-  },
-  {
-    id: 'RSK-007',
-    type: 'Regulatory',
-    category: 'TCPA Violation Pattern',
-    description: 'Callback consent not properly documented in 8% of outbound calls',
-    severity: 'medium',
-    region: 'Americas',
-    status: 'monitoring',
-    channel: 'Voice',
-    timestamp: new Date(Date.now() - 43200000).toISOString(),
-    impactScore: 52,
-    likelihood: 60
-  },
-  {
-    id: 'RSK-008',
-    type: 'Financial',
-    category: 'Fraud Detection Gap',
-    description: 'Email phishing attacks bypassing current detection filters - 3 incidents this week',
-    severity: 'critical',
-    region: 'APAC',
-    status: 'active',
-    channel: 'Email',
-    timestamp: new Date(Date.now() - 5400000).toISOString(),
-    impactScore: 88,
-    likelihood: 80
-  }
-];
+// Generate risk data with counts: Fraud: 20, Cyber: 15, Operational: 18, Reputation: 12, Third-Party: 15
+const generateRiskData = (): RiskItem[] => {
+  const risks: RiskItem[] = [];
+  const regions: Region[] = ['APAC', 'India', 'Europe', 'Americas'];
+  const channels = ['Voice', 'Chat', 'Email', 'Ticket', 'Social', 'Multi-Channel'];
+  const severities: ('critical' | 'high' | 'medium' | 'low')[] = ['critical', 'high', 'medium', 'low'];
+  const statuses: ('active' | 'monitoring' | 'mitigated')[] = ['active', 'monitoring', 'mitigated'];
 
-const riskDetailsMap: Record<string, RiskDetails> = {
-  'RSK-001': {
-    rootCause: 'IVR consent capture flow not triggering properly for calls transferred from mobile app. Legacy integration issue identified.',
-    businessImpact: 'Potential GDPR Article 7 violation. Risk of regulatory investigation and customer complaints.',
-    affectedProcesses: ['Voice Onboarding', 'App-to-Agent Transfer', 'Call Recording'],
-    financialExposure: '€2M - €10M potential fine',
-    mitigationActions: [
-      'Deploy emergency IVR patch within 24 hours',
-      'Manual consent verification for all affected accounts',
-      'Prepare GDPR breach notification template',
-      'Engage legal for regulatory impact assessment'
-    ],
-    controlsInPlace: ['Daily consent audit report', 'QA sampling of calls'],
-    owner: 'Data Protection Officer - EU',
-    reviewDate: 'Due in 12 hours',
-    trend: 15,
-    notes: 'Engineering team deployed hotfix at 14:00 UTC. Monitoring consent capture rates.'
-  },
-  'RSK-002': {
-    rootCause: 'Vendor retained customer data on local servers beyond contractual retention period. Discovered during routine audit.',
-    businessImpact: 'Data breach potential affecting 50,000+ customer records. Contract violation. Regulatory exposure.',
-    affectedProcesses: ['BPO Data Processing', 'Customer Support', 'Back-office Operations'],
-    financialExposure: '$5M - $20M potential liability',
-    mitigationActions: [
-      'Immediate suspension of vendor data access',
-      'Forensic audit of vendor systems',
-      'Customer notification preparation',
-      'Contract termination review with legal',
-      'Alternative vendor activation'
-    ],
-    controlsInPlace: ['Quarterly vendor audits', 'DLP monitoring'],
-    owner: 'CISO + Vendor Management',
-    reviewDate: 'Immediate escalation',
-    trend: 25,
-    notes: 'Crisis team activated. Board notification scheduled for 18:00 UTC.'
-  },
-  'RSK-003': {
-    rootCause: 'Staff shortage in AML review team combined with 40% increase in flagged transactions due to new detection rules.',
-    businessImpact: 'FinCEN regulatory risk. Potential for missed suspicious activity. SAR filing delays.',
-    affectedProcesses: ['AML Monitoring', 'Transaction Review', 'SAR Filing'],
-    financialExposure: '$1M - $5M potential fines',
-    mitigationActions: [
-      'Deploy additional AML analysts from other regions',
-      'Implement risk-based triage for alert prioritization',
-      'Overtime authorization for existing team',
-      'Review alert threshold calibration'
-    ],
-    controlsInPlace: ['Daily backlog monitoring', 'Escalation at 48-hour threshold'],
-    owner: 'AML Compliance Director',
-    reviewDate: 'Daily review',
-    trend: -8,
-    notes: 'Backlog reducing after temporary staff deployment. Target clear within 5 days.'
-  },
-  'RSK-004': {
-    rootCause: 'Customer posted about undisclosed overdraft fee. Post gained 50K+ engagements. Media outlets picking up story.',
-    businessImpact: 'Brand reputation damage. Potential regulatory inquiry. Customer trust erosion.',
-    affectedProcesses: ['Social Media Response', 'PR Communications', 'Customer Relations'],
-    financialExposure: 'Indirect - estimated brand impact $500K - $2M',
-    mitigationActions: [
-      'Prepare official response statement',
-      'Direct outreach to affected customer',
-      'Review fee disclosure scripts across all channels',
-      'Proactive media briefing'
-    ],
-    controlsInPlace: ['Social media monitoring', 'Crisis communication protocol'],
-    owner: 'Head of Communications',
-    reviewDate: 'Hourly monitoring',
-    trend: 35,
-    notes: 'Customer contacted, resolution in progress. Sentiment tracking shows stabilization.'
-  },
-  'RSK-005': {
-    rootCause: 'New product launch scripts not fully integrated into agent workflow. Training completion at 68%.',
-    businessImpact: 'Increased compliance violations. Customer confusion on new product terms.',
-    affectedProcesses: ['Voice Sales', 'Product Onboarding', 'Quality Assurance'],
-    financialExposure: '$100K - $500K potential regulatory exposure',
-    mitigationActions: [
-      'Mandatory script training completion by EOW',
-      'Enable real-time script prompts',
-      'Increase QA sampling rate to 20%',
-      'Daily compliance score reporting to team leads'
-    ],
-    controlsInPlace: ['Weekly script compliance reporting', 'Agent coaching program'],
-    owner: 'EMEA Operations Manager',
-    reviewDate: 'Weekly review',
-    trend: -5,
-    notes: 'Training completion trending upward. Expected full compliance by Friday.'
-  },
-  'RSK-006': {
-    rootCause: 'Session timeout extended to 4 hours during holiday period for customer convenience. Never reverted.',
-    businessImpact: 'Security vulnerability. Unauthorized access risk. GLBA compliance concern.',
-    affectedProcesses: ['CRM Access', 'Customer Data Viewing', 'Chat Support'],
-    financialExposure: '$500K - $2M potential breach liability',
-    mitigationActions: [
-      'Immediate timeout reduction to 15 minutes',
-      'Forced re-authentication for sensitive actions',
-      'Audit log review for suspicious access patterns',
-      'Security awareness reminder to all agents'
-    ],
-    controlsInPlace: ['Access logging', 'Anomaly detection'],
-    owner: 'IT Security Manager',
-    reviewDate: 'Immediate fix',
-    trend: 0,
-    notes: 'Configuration change scheduled for deployment at 02:00 UTC tonight.'
-  },
-  'RSK-007': {
-    rootCause: 'Agents inconsistently using callback consent script. CRM checkbox not mandatory.',
-    businessImpact: 'TCPA lawsuit exposure. Class action potential.',
-    affectedProcesses: ['Outbound Calls', 'Callback Scheduling', 'Lead Management'],
-    financialExposure: '$500 - $1,500 per violation (potential class action)',
-    mitigationActions: [
-      'Make consent checkbox mandatory in CRM',
-      'Script compliance coaching for flagged agents',
-      'Implement call recording review for callbacks',
-      'Legal review of current consent language'
-    ],
-    controlsInPlace: ['Call recording', 'Monthly compliance audit'],
-    owner: 'US Compliance Manager',
-    reviewDate: 'Weekly review',
-    trend: -3,
-    notes: 'CRM update scheduled for next sprint. Interim manual verification in place.'
-  },
-  'RSK-008': {
-    rootCause: 'Sophisticated phishing campaign mimicking internal communications. Current filters not detecting new patterns.',
-    businessImpact: 'Customer account compromise. Financial fraud. Data breach potential.',
-    affectedProcesses: ['Email Security', 'Customer Communications', 'Account Security'],
-    financialExposure: '$1M - $10M fraud exposure',
-    mitigationActions: [
-      'Deploy emergency email filter rules',
-      'Customer advisory on phishing awareness',
-      'Mandatory password reset for compromised accounts',
-      'Enhanced monitoring for suspicious login patterns',
-      'Vendor engagement for advanced threat protection'
-    ],
-    controlsInPlace: ['Email filtering', 'Fraud monitoring', 'Customer alerts'],
-    owner: 'Fraud Prevention Director',
-    reviewDate: 'Continuous monitoring',
-    trend: 20,
-    notes: '3 accounts compromised, secured. Investigating attack origin with external security firm.'
-  }
+  // Fraud risks (20) - mapped to Financial type
+  const fraudCategories = [
+    'Transaction Fraud Alert', 'Account Takeover Risk', 'Identity Theft Pattern', 'Wire Fraud Detection',
+    'Card Fraud Attempt', 'Phishing Attack', 'Money Laundering Flag', 'Check Fraud Alert',
+    'ACH Fraud Pattern', 'Loan Fraud Risk', 'Duplicate Transaction', 'Counterfeit Alert',
+    'Social Engineering', 'Internal Fraud Risk', 'Vendor Payment Fraud', 'Invoice Fraud',
+    'Payroll Fraud', 'Refund Fraud', 'Credit Fraud', 'Debit Fraud'
+  ];
+  fraudCategories.forEach((cat, i) => {
+    risks.push({
+      id: `RSK-FR-${String(i + 1).padStart(3, '0')}`,
+      type: 'Financial',
+      category: cat,
+      description: `${cat} detected - immediate investigation required to prevent financial loss`,
+      severity: i < 3 ? 'critical' : i < 8 ? 'high' : i < 14 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      status: i < 12 ? 'active' : i < 16 ? 'monitoring' : 'mitigated',
+      channel: channels[i % channels.length],
+      timestamp: new Date(Date.now() - i * 3600000).toISOString(),
+      impactScore: 95 - i * 2,
+      likelihood: 90 - i * 2
+    });
+  });
+
+  // Cyber risks (15) - mapped to Technology type
+  const cyberCategories = [
+    'Security Breach Attempt', 'DDoS Attack', 'Malware Detection', 'Data Exfiltration',
+    'Ransomware Threat', 'SQL Injection', 'Zero-Day Exploit', 'Credential Stuffing',
+    'MITM Attack', 'API Breach', 'Network Intrusion', 'Endpoint Compromise',
+    'Cloud Security Risk', 'Email Threat', 'Encryption Failure'
+  ];
+  cyberCategories.forEach((cat, i) => {
+    risks.push({
+      id: `RSK-CY-${String(i + 1).padStart(3, '0')}`,
+      type: 'Technology',
+      category: cat,
+      description: `${cat} - security team engagement required immediately`,
+      severity: i < 2 ? 'critical' : i < 6 ? 'high' : i < 11 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      status: i < 9 ? 'active' : i < 12 ? 'monitoring' : 'mitigated',
+      channel: channels[i % channels.length],
+      timestamp: new Date(Date.now() - i * 4200000).toISOString(),
+      impactScore: 92 - i * 3,
+      likelihood: 85 - i * 3
+    });
+  });
+
+  // Operational risks (18)
+  const operationalCategories = [
+    'System Outage', 'Process Failure', 'SLA Breach', 'Capacity Exceeded',
+    'Queue Overflow', 'Batch Failure', 'Integration Error', 'Database Issue',
+    'Service Degradation', 'Workflow Disruption', 'Resource Constraint', 'Config Drift',
+    'Backup Failure', 'Monitoring Gap', 'Audit Trail Gap', 'Compliance Tool Down',
+    'Report Failure', 'Data Sync Issue'
+  ];
+  operationalCategories.forEach((cat, i) => {
+    risks.push({
+      id: `RSK-OP-${String(i + 1).padStart(3, '0')}`,
+      type: 'Operational',
+      category: cat,
+      description: `${cat} - operations team to investigate and resolve`,
+      severity: i < 2 ? 'critical' : i < 7 ? 'high' : i < 13 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      status: i < 10 ? 'active' : i < 14 ? 'monitoring' : 'mitigated',
+      channel: channels[i % channels.length],
+      timestamp: new Date(Date.now() - i * 3000000).toISOString(),
+      impactScore: 88 - i * 2,
+      likelihood: 80 - i * 2
+    });
+  });
+
+  // Reputation risks (12) - mapped to Reputational type
+  const reputationCategories = [
+    'Negative Media', 'Social Media Crisis', 'Customer Escalation', 'Brand Damage',
+    'PR Risk Alert', 'Influencer Criticism', 'Review Alert', 'Regulatory Notice',
+    'Executive Risk', 'Competitor Attack', 'Viral Content', 'Trust Decline'
+  ];
+  reputationCategories.forEach((cat, i) => {
+    risks.push({
+      id: `RSK-RP-${String(i + 1).padStart(3, '0')}`,
+      type: 'Reputational',
+      category: cat,
+      description: `${cat} - communications team to prepare response`,
+      severity: i < 2 ? 'critical' : i < 5 ? 'high' : i < 9 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      status: i < 7 ? 'active' : i < 10 ? 'monitoring' : 'mitigated',
+      channel: channels[i % channels.length],
+      timestamp: new Date(Date.now() - i * 5000000).toISOString(),
+      impactScore: 85 - i * 3,
+      likelihood: 75 - i * 3
+    });
+  });
+
+  // Third-Party risks (15) - mapped to Regulatory type
+  const thirdPartyCategories = [
+    'Vendor Non-Compliance', 'Third-Party Breach', 'Supplier Risk', 'Contract Violation',
+    'Vendor Performance', 'Outsourcing Risk', 'Partner Security', 'Subcontractor Audit',
+    'Vendor Financial Risk', 'Access Violation', 'BPO Compliance', 'Cloud Provider Risk',
+    'Payment Processor', 'API Partner Risk', 'Continuity Risk'
+  ];
+  thirdPartyCategories.forEach((cat, i) => {
+    risks.push({
+      id: `RSK-TP-${String(i + 1).padStart(3, '0')}`,
+      type: 'Regulatory',
+      category: cat,
+      description: `${cat} - vendor management team to review`,
+      severity: i < 2 ? 'critical' : i < 6 ? 'high' : i < 11 ? 'medium' : 'low',
+      region: regions[i % regions.length],
+      status: i < 9 ? 'active' : i < 12 ? 'monitoring' : 'mitigated',
+      channel: channels[i % channels.length],
+      timestamp: new Date(Date.now() - i * 4800000).toISOString(),
+      impactScore: 90 - i * 3,
+      likelihood: 82 - i * 3
+    });
+  });
+
+  return risks;
+};
+
+const riskData: RiskItem[] = generateRiskData();
+
+// Dynamic function to generate risk details based on risk item
+const generateRiskDetails = (risk: RiskItem): RiskDetails => {
+  const typeDetails: Record<string, { 
+    processes: string[], 
+    controls: string[], 
+    owner: string,
+    actions: string[]
+  }> = {
+    'Financial': {
+      processes: ['Transaction Monitoring', 'Fraud Detection', 'AML Review', 'Account Security'],
+      controls: ['Real-time alerts', 'Daily audit reports', 'Automated flagging'],
+      owner: 'Fraud Prevention Director',
+      actions: [
+        'Initiate immediate investigation',
+        'Block suspicious accounts if necessary',
+        'Notify affected customers',
+        'Engage fraud investigation team',
+        'Document incident for regulatory reporting'
+      ]
+    },
+    'Technology': {
+      processes: ['Security Operations', 'Infrastructure Management', 'Access Control', 'Data Protection'],
+      controls: ['SIEM monitoring', 'Endpoint protection', 'Access logging'],
+      owner: 'CISO / IT Security Manager',
+      actions: [
+        'Isolate affected systems',
+        'Deploy emergency patches',
+        'Conduct forensic analysis',
+        'Reset compromised credentials',
+        'Strengthen security controls'
+      ]
+    },
+    'Operational': {
+      processes: ['Service Delivery', 'Process Management', 'Quality Assurance', 'Resource Planning'],
+      controls: ['Performance monitoring', 'SLA tracking', 'Escalation protocols'],
+      owner: 'Operations Manager',
+      actions: [
+        'Activate business continuity plan',
+        'Deploy additional resources',
+        'Implement workaround procedures',
+        'Communicate with stakeholders',
+        'Document lessons learned'
+      ]
+    },
+    'Reputational': {
+      processes: ['Communications', 'Social Media Management', 'Customer Relations', 'PR Response'],
+      controls: ['Social listening tools', 'Crisis protocols', 'Media monitoring'],
+      owner: 'Head of Communications',
+      actions: [
+        'Prepare official response statement',
+        'Engage with affected parties directly',
+        'Monitor sentiment and media coverage',
+        'Coordinate internal messaging',
+        'Plan proactive communications'
+      ]
+    },
+    'Regulatory': {
+      processes: ['Vendor Management', 'Compliance Monitoring', 'Contract Management', 'Audit Support'],
+      controls: ['Vendor assessments', 'Contract reviews', 'Compliance audits'],
+      owner: 'Compliance / Vendor Management Lead',
+      actions: [
+        'Review vendor contract terms',
+        'Conduct emergency audit',
+        'Prepare regulatory notification if required',
+        'Implement enhanced oversight',
+        'Evaluate alternative vendors'
+      ]
+    }
+  };
+
+  const details = typeDetails[risk.type] || typeDetails['Operational'];
+  const exposureBase = risk.severity === 'critical' ? '$5M - $20M' : 
+                       risk.severity === 'high' ? '$1M - $5M' : 
+                       risk.severity === 'medium' ? '$500K - $2M' : '$100K - $500K';
+
+  return {
+    rootCause: `${risk.category} identified in ${risk.channel} channel within ${risk.region} region. Investigation ongoing to determine full scope and contributing factors.`,
+    businessImpact: `Potential impact on operations and customer trust. Risk score indicates ${risk.severity} priority for immediate action.`,
+    affectedProcesses: details.processes,
+    financialExposure: exposureBase,
+    mitigationActions: details.actions,
+    controlsInPlace: details.controls,
+    owner: details.owner,
+    reviewDate: risk.severity === 'critical' ? 'Immediate' : risk.severity === 'high' ? 'Within 24 hours' : 'Within 48 hours',
+    trend: risk.impactScore > 70 ? Math.floor(Math.random() * 20) + 5 : -Math.floor(Math.random() * 10),
+    notes: `Risk ${risk.id} is currently ${risk.status}. Team assigned and monitoring progress. Last updated: ${new Date().toLocaleTimeString()}.`
+  };
 };
 
 interface ActiveRisksTableProps {
@@ -444,7 +414,7 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
             const severityColor = getSeverityColor(risk.severity);
             const statusColor = getStatusColor(risk.status);
             const isExpanded = expandedRow === risk.id;
-            const riskDetails = riskDetailsMap[risk.id];
+            const riskDetails = generateRiskDetails(risk);
             const riskScore = getRiskScore(risk.impactScore, risk.likelihood);
 
             return (

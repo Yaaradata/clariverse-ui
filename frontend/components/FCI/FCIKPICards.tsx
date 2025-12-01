@@ -1,6 +1,6 @@
 'use client';
 
-import { TrendingUp, TrendingDown, Phone, Mail, Ticket, MessageCircle, Shield, Zap, AlertOctagon, MessageSquare, Hash } from 'lucide-react';
+import { TrendingUp, TrendingDown, Phone, Mail, Ticket, MessageCircle, Shield, Zap, AlertOctagon, MessageSquare, Hash, Globe, Settings, Users, Handshake } from 'lucide-react';
 import { AISummaryWall } from './AISummaryWall';
 import { useState } from 'react';
 
@@ -11,85 +11,66 @@ interface FCIKPICardsProps {
 
 export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [hoveredSegment, setHoveredSegment] = useState<{ label: string; score: number; percentage: number } | null>(null);
 
   const kpiData = {
     totalInteraction: {
       value: 87.5,
       trend: 3.2,
-      totalVolume: 2265,
-      lastWeekComparison: '+142',
-      sparkline: [45, 52, 48, 61, 55, 68, 75, 87],
-      channels: {
-        email: { count: 628, percentage: 27.7 },
-        ticket: { count: 339, percentage: 15.0 },
-        chat: { count: 498, percentage: 22.0 },
-        voice: { count: 565, percentage: 24.9 },
-        social: { count: 235, percentage: 10.4 }
+      totalVolume: 243253,
+      lastWeekComparison: '+1,842',
+      customerSegments: {
+        hvhf: { label: 'High Value High Frequency', count: 48650, percentage: 20 },
+        hvlf: { label: 'High Value Low Frequency', count: 72976, percentage: 30 },
+        lvhf: { label: 'Low Value High Frequency', count: 60813, percentage: 25 },
+        lvlf: { label: 'Low Value Low Frequency', count: 60814, percentage: 25 }
       },
       peakHour: '2:00 PM',
       peakIncrease: 12
     },
     fciRate: {
-      value: 18.5,
-      trend: -2.3,
-      channels: { 
-        email: 28, 
-        chat: 24, 
-        voice: 32, 
-        ticket: 10,
-        social: 6 
-      },
-      actualResolutions: 419,
-      target: 22.0,
-      bestPerforming: 'Voice',
-      worstPerforming: 'Social'
-    },
-    crossChannelReport: {
-      value: 24.3,
-      trend: 1.5,
-      breakdown: { 
-        emailToPhone: 12.1, 
-        chatToCall: 8.2, 
-        ticketToEmail: 3.5,
-        other: 0.5 
-      },
-      volume: 551,
-      commonPath: 'Email → Phone',
-      avgTouchpoints: 2.8,
-      multiChannelCustomers: 203
-    },
-    escalationRate: {
-      value: 12.8,
-      trend: -1.2,
-      casesEscalatedToday: 290,
-      avgEscalationTime: 4.2,
-      mostEscalated: { category: 'Billing Issues', percentage: 34 },
-      secondMostEscalated: { category: 'Technical Support', percentage: 28 },
-      thirdMostEscalated: { category: 'Account Access', percentage: 18 },
-      tier2: 68,
-      tier3: 32
+      value: 1.5,
+      trend: -0.3,
+      target: 1.0,
+      segmentFCI: {
+        hvhf: { label: 'HVHF', rate: 0.8, color: '#10b981' },
+        hvlf: { label: 'HVLF', rate: 1.2, color: '#06b6d4' },
+        lvhf: { label: 'LVHF', rate: 2.1, color: '#f59e0b' },
+        lvlf: { label: 'LVLF', rate: 2.8, color: '#ef4444' }
+      }
     },
     riskSignal: {
-      fraud: { percentage: 3.2, cases: 72, trend: -0.5 },
-      outage: { percentage: 0.8, cases: 18, trend: 0.0 },
-      compliance: { percentage: 5.1, cases: 115, trend: 1.2 },
-      totalFlagged: 205,
-      highPriority: 28,
-      critical: 5,
-      resolvedToday: 67
+      fraud: { percentage: 2.5, cases: 20, trend: -0.5 },
+      cyber: { percentage: 1.8, cases: 15, trend: 0.3 },
+      operational: { percentage: 2.2, cases: 18, trend: -0.2 },
+      reputation: { percentage: 1.5, cases: 12, trend: 0.1 },
+      thirdParty: { percentage: 1.9, cases: 15, trend: 0.4 },
+      totalFlagged: 80,
+      highPriority: 12,
+      critical: 3,
+      resolvedToday: 24,
+      segmentRisk: {
+        hvhf: { count: 8, level: 'low' },
+        hvlf: { count: 15, level: 'medium' },
+        lvhf: { count: 32, level: 'high' },
+        lvlf: { count: 25, level: 'high' }
+      }
     },
     customerSentiment: {
       value: 72,
       trend: 2.1,
-      positive: 45,
-      neutral: 27,
-      negative: 28,
       analyzedInteractions: 945,
       improvementFromYesterday: '+0.8%',
       negativeTopics: ['Wait times', 'Transfer issues'],
       positiveTopics: ['Quick resolution', 'Agent helpfulness'],
       npsScore: 68,
-      detractors: 18
+      detractors: 18,
+      segmentSentiment: {
+        hvhf: { label: 'High Value High Freq', score: 85, color: '#10b981' },
+        hvlf: { label: 'High Value Low Freq', score: 72, color: '#06b6d4' },
+        lvhf: { label: 'Low Value High Freq', score: 65, color: '#f59e0b' },
+        lvlf: { label: 'Low Value Low Freq', score: 58, color: '#ef4444' }
+      }
     }
   };
 
@@ -109,42 +90,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
       <span>{Math.abs(trend)}%</span>
     </div>
   );
-
-  const LineChart = ({ data }: { data: number[] }) => {
-    const width = 320;
-    const height = 40;
-    const padding = 4;
-    const chartWidth = width - padding * 2;
-    const chartHeight = height - padding * 2;
-    
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const range = max - min || 1;
-    
-    let pathD = '';
-    let areaD = '';
-    data.forEach((value, idx) => {
-      const x = (idx / (data.length - 1)) * chartWidth + padding;
-      const y = height - ((value - min) / range) * chartHeight - padding;
-      pathD += `${idx === 0 ? 'M' : 'L'} ${x} ${y}`;
-      if (idx === 0) areaD += `M ${x} ${height} L ${x} ${y}`;
-      else areaD += ` L ${x} ${y}`;
-    });
-    areaD += ` L ${width - padding} ${height} Z`;
-
-    return (
-      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="w-full">
-        <defs>
-          <linearGradient id="sparklineGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#5332FF" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#5332FF" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <path d={areaD} fill="url(#sparklineGradient)" />
-        <path d={pathD} stroke="#5332FF" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    );
-  };
 
   const getCardStyle = (isHovered: boolean) => ({
     borderColor: isHovered ? '#5332FF' : (isDarkMode ? '#1f1f1f' : '#E5E5E5'),
@@ -176,24 +121,21 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
   };
 
   return (
-    <div className="p-6" style={{ backgroundColor: isDarkMode ? '#000000' : '#f8f9fa' }}>
-      <div className="grid grid-cols-5 gap-4">
-        {/* Left Side - 6 KPI Cards */}
-        <div className="col-span-3 flex flex-col gap-4" style={{ height: '600px' }}>
-          {/* Row 1 - Top 3 Cards */}
-          <div className="grid grid-cols-3 gap-4" style={{ height: '290px' }}>
+    <div className="p-4" style={{ backgroundColor: isDarkMode ? '#000000' : '#f8f9fa' }}>
+      <div className="flex gap-4">
+        {/* Left Side - 4 KPI Cards in 2x2 grid */}
+        <div className="flex-[2] grid grid-cols-2 gap-4">
             {/* Card 1 - Total Interaction */}
             <div 
-              className="border rounded-2xl p-4 cursor-pointer flex flex-col h-full"
+              className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
               style={getCardStyle(hoveredCard === 'total')}
               onMouseEnter={() => setHoveredCard('total')}
               onMouseLeave={() => setHoveredCard(null)}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Total Interactions</span>
-                <TrendBadge trend={kpiData.totalInteraction.trend} isPositive={false} />
+                <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Total Interactions</span>
               </div>
-              <div className="text-3xl font-bold mb-3" style={{ 
+              <div className="text-4xl font-bold mb-3" style={{ 
                 background: 'linear-gradient(135deg, #5332FF 0%, #7c3aed 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -203,52 +145,58 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
               </div>
               
               <div className="flex-1 flex flex-col justify-between">
-                <div className="grid grid-cols-5 gap-1 mb-3">
-                  {Object.entries(kpiData.totalInteraction.channels).map(([channel, data]) => (
-                    <div 
-                      key={channel}
-                      className="flex flex-col items-center gap-0.5 p-1.5 rounded-lg" 
-                      style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}
-                    >
-                      <div style={{ color: getChannelColor(channel) }}>
-                        {getChannelIcon(channel)}
-                      </div>
-                      <div className="font-bold text-xs" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                        {formatNumber(data.count)}
-                      </div>
-                      <div className="text-[9px] text-center capitalize" style={{ color: '#939394' }}>
-                        {channel}
-                      </div>
-                    </div>
-                  ))}
+                <div>
+                  <p className="text-xs font-bold mb-2" style={{ color: '#939394' }}>CUSTOMER SEGMENTATION</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {Object.entries(kpiData.totalInteraction.customerSegments).map(([key, segment]) => {
+                      const colors: Record<string, string> = {
+                        hvhf: '#10b981',
+                        hvlf: '#06b6d4', 
+                        lvhf: '#f59e0b',
+                        lvlf: '#ef4444'
+                      };
+                      return (
+                        <div 
+                          key={key}
+                          className="p-2 rounded-lg" 
+                          style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}
+                        >
+                          <div className="flex items-center gap-1 mb-1">
+                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[key] }} />
+                            <span className="text-[10px]" style={{ color: '#939394' }}>{segment.label}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                              {formatNumber(segment.count)}
+                            </span>
+                            <span className="text-xs font-medium" style={{ color: colors[key] }}>
+                              {segment.percentage}%
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span style={{ color: '#939394' }}>vs. Last Week</span>
-                    <span className="font-bold" style={{ color: '#10b981' }}>{kpiData.totalInteraction.lastWeekComparison}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span style={{ color: '#939394' }}>Peak Hour</span>
-                    <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{kpiData.totalInteraction.peakHour}</span>
-                  </div>
-                  <LineChart data={kpiData.totalInteraction.sparkline} />
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span style={{ color: '#939394' }}>vs. Last Week</span>
+                  <span className="font-bold" style={{ color: '#10b981' }}>{kpiData.totalInteraction.lastWeekComparison}</span>
                 </div>
               </div>
             </div>
 
             {/* Card 2 - FCI Rate */}
             <div 
-              className="border rounded-2xl p-4 cursor-pointer flex flex-col h-full"
+              className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
               style={getCardStyle(hoveredCard === 'fci')}
               onMouseEnter={() => setHoveredCard('fci')}
               onMouseLeave={() => setHoveredCard(null)}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>FCI Rate</span>
-                <TrendBadge trend={kpiData.fciRate.trend} isPositive={true} />
+                <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>FCI Rate</span>
               </div>
-              <div className="text-3xl font-bold mb-3" style={{ 
+              <div className="text-4xl font-bold mb-3" style={{ 
                 background: 'linear-gradient(135deg, #B90ABD 0%, #d946ef 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -258,173 +206,36 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
               </div>
               
               <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span style={{ color: '#939394' }}>Resolutions</span>
-                    <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                      {formatNumber(kpiData.fciRate.actualResolutions)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span style={{ color: '#939394' }}>Target</span>
-                    <span className="font-bold" style={{ color: '#10b981' }}>{kpiData.fciRate.target}%</span>
-                  </div>
+                <div className="flex items-center justify-between text-sm mb-3">
+                  <span style={{ color: '#939394' }}>Target</span>
+                  <span className="font-bold" style={{ color: '#10b981' }}>{kpiData.fciRate.target}%</span>
                 </div>
 
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>CHANNEL PERFORMANCE</p>
-                  {Object.entries(kpiData.fciRate.channels).map(([channel, percentage]) => (
-                    <div key={channel} className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1.5">
-                        <div style={{ color: getChannelColor(channel) }}>
-                          {getChannelIcon(channel)}
+                <div>
+                  <p className="text-xs font-bold mb-2" style={{ color: '#939394' }}>FCI BY SEGMENT</p>
+                  <div className="flex items-end gap-2 justify-between">
+                    {Object.entries(kpiData.fciRate.segmentFCI).map(([key, segment]) => {
+                      const maxHeight = 55;
+                      const barHeight = (segment.rate / 3) * maxHeight;
+                      return (
+                        <div key={key} className="flex flex-col items-center flex-1">
+                          <span className="text-xs font-bold mb-1" style={{ color: segment.color }}>
+                            {segment.rate}%
+                          </span>
+                          <div 
+                            className="w-full rounded-t-sm transition-all duration-300"
+                            style={{ 
+                              height: `${barHeight}px`, 
+                              backgroundColor: segment.color,
+                              minHeight: '8px'
+                            }}
+                          />
+                          <span className="text-[10px] mt-1" style={{ color: '#939394' }}>
+                            {segment.label}
+                          </span>
                         </div>
-                        <span className="capitalize" style={{ color: '#939394' }}>{channel}</span>
-                      </div>
-                      <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                        {percentage}%
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 - Cross Channel */}
-            <div 
-              className="border rounded-2xl p-4 cursor-pointer flex flex-col h-full"
-              style={getCardStyle(hoveredCard === 'cross')}
-              onMouseEnter={() => setHoveredCard('cross')}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Cross-Channel</span>
-                <TrendBadge trend={kpiData.crossChannelReport.trend} isPositive={false} />
-              </div>
-              <div className="text-3xl font-bold mb-3" style={{ color: '#5332FF' }}>
-                {kpiData.crossChannelReport.value}%
-              </div>
-              
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span style={{ color: '#939394' }}>Total Cases</span>
-                    <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                      {formatNumber(kpiData.crossChannelReport.volume)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span style={{ color: '#939394' }}>Avg Touchpoints</span>
-                    <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                      {kpiData.crossChannelReport.avgTouchpoints}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                  <p className="text-[10px] font-bold mb-1.5" style={{ color: '#939394' }}>TOP MIGRATION PATHS</p>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1">
-                        <Mail className="w-3 h-3" style={{ color: '#5332FF' }} />
-                        <span style={{ color: '#939394' }}>→</span>
-                        <Phone className="w-3 h-3" style={{ color: '#f59e0b' }} />
-                      </div>
-                      <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                        {kpiData.crossChannelReport.breakdown.emailToPhone}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1">
-                        <MessageCircle className="w-3 h-3" style={{ color: '#10b981' }} />
-                        <span style={{ color: '#939394' }}>→</span>
-                        <Phone className="w-3 h-3" style={{ color: '#f59e0b' }} />
-                      </div>
-                      <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                        {kpiData.crossChannelReport.breakdown.chatToCall}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-1">
-                        <Ticket className="w-3 h-3" style={{ color: '#ef4444' }} />
-                        <span style={{ color: '#939394' }}>→</span>
-                        <Mail className="w-3 h-3" style={{ color: '#5332FF' }} />
-                      </div>
-                      <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                        {kpiData.crossChannelReport.breakdown.ticketToEmail}%
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Row 2 - Bottom 3 Cards */}
-          <div className="grid grid-cols-3 gap-4" style={{ height: '290px' }}>
-            {/* Escalation */}
-            <div 
-              className="border rounded-2xl p-4 cursor-pointer flex flex-col h-full"
-              style={getCardStyle(hoveredCard === 'escalation')}
-              onMouseEnter={() => setHoveredCard('escalation')}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Escalation Rate</span>
-                <TrendBadge trend={kpiData.escalationRate.trend} isPositive={true} />
-              </div>
-              <div className="text-3xl font-bold mb-3" style={{ color: '#f59e0b' }}>
-                {kpiData.escalationRate.value}%
-              </div>
-              
-              <div className="flex-1 flex flex-col justify-between">
-                <div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span style={{ color: '#939394' }}>Cases Today</span>
-                    <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                      {formatNumber(kpiData.escalationRate.casesEscalatedToday)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs mb-2">
-                    <span style={{ color: '#939394' }}>Avg Time</span>
-                    <span className="font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                      {kpiData.escalationRate.avgEscalationTime}h
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="flex gap-2">
-                    <div className="flex-1 p-1.5 rounded-lg text-center" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                      <p className="text-[10px] mb-0.5" style={{ color: '#939394' }}>Tier 2</p>
-                      <p className="text-lg font-bold" style={{ color: '#f59e0b' }}>{kpiData.escalationRate.tier2}%</p>
-                    </div>
-                    <div className="flex-1 p-1.5 rounded-lg text-center" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                      <p className="text-[10px] mb-0.5" style={{ color: '#939394' }}>Tier 3</p>
-                      <p className="text-lg font-bold" style={{ color: '#ef4444' }}>{kpiData.escalationRate.tier3}%</p>
-                    </div>
-                  </div>
-
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>TOP REASONS</p>
-                    <div className="space-y-0.5">
-                      <div className="flex items-center justify-between text-xs">
-                        <span style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                          {kpiData.escalationRate.mostEscalated.category}
-                        </span>
-                        <span className="font-bold" style={{ color: '#f59e0b' }}>
-                          {kpiData.escalationRate.mostEscalated.percentage}%
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between text-xs">
-                        <span style={{ color: '#939394' }}>
-                          {kpiData.escalationRate.secondMostEscalated.category}
-                        </span>
-                        <span className="font-bold" style={{ color: '#939394' }}>
-                          {kpiData.escalationRate.secondMostEscalated.percentage}%
-                        </span>
-                      </div>
-                    </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -432,77 +243,103 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
 
             {/* Risk Signal */}
             <div 
-              className="border rounded-2xl p-4 cursor-pointer flex flex-col h-full"
+              className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
               style={getCardStyle(hoveredCard === 'risk')}
               onMouseEnter={() => setHoveredCard('risk')}
               onMouseLeave={() => setHoveredCard(null)}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Risk Signals</span>
-                <div className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold"
-                  style={{ backgroundColor: isDarkMode ? '#ef444425' : '#ef444415', color: '#ef4444' }}>
-                  <AlertOctagon className="w-3.5 h-3.5" />
-                  <span>{kpiData.riskSignal.critical}</span>
-                </div>
+                <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Risk Signals</span>
               </div>
               
               <div className="flex items-baseline gap-2 mb-3">
-                <div className="text-3xl font-bold" style={{ color: '#ef4444' }}>
+                <div className="text-4xl font-bold" style={{ color: '#ef4444' }}>
                   {formatNumber(kpiData.riskSignal.totalFlagged)}
                 </div>
                 <span className="text-sm" style={{ color: '#939394' }}>flagged</span>
               </div>
               
-              <div className="flex-1 flex flex-col justify-between">
-                <div className="space-y-1.5">
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-1.5">
-                        <AlertOctagon className="w-3.5 h-3.5" style={{ color: '#ef4444' }} />
-                        <span className="text-xs font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Fraud</span>
-                      </div>
-                      <span className="text-sm font-bold" style={{ color: '#ef4444' }}>
-                        {kpiData.riskSignal.fraud.percentage}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: '#939394' }}>{formatNumber(kpiData.riskSignal.fraud.cases)} cases</span>
-                      <span style={{ color: '#10b981' }}>
-                        {kpiData.riskSignal.fraud.trend}%
-                      </span>
-                    </div>
-                  </div>
+              <div className="flex-1 flex flex-col gap-7">
+                {/* Horizontal Stacked Bar Chart */}
+                <div>
+                  {(() => {
+                    const riskCategories = [
+                      { key: 'fraud', label: 'Fraud', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
+                      { key: 'cyber', label: 'Cyber', color: '#8b5cf6', cases: kpiData.riskSignal.cyber.cases },
+                      { key: 'operational', label: 'Operational', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
+                      { key: 'reputation', label: 'Reputation', color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
+                      { key: 'thirdParty', label: 'Third-Party', color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
+                    ];
+                    const total = riskCategories.reduce((sum, r) => sum + r.cases, 0);
+                    
+                    return (
+                      <>
+                        {/* Stacked Bar */}
+                        <div className="flex h-8 rounded-lg overflow-hidden mb-1.5 mt-3">
+                          {riskCategories.map((risk, idx) => (
+                            <div
+                              key={risk.key}
+                              className="flex items-center justify-center transition-all hover:opacity-80 cursor-pointer"
+                              style={{ 
+                                width: `${(risk.cases / total) * 100}%`,
+                                backgroundColor: risk.color,
+                              }}
+                              title={`${risk.label}: ${risk.cases}`}
+                            >
+                              <span className="text-[10px] font-bold text-white">{risk.cases}</span>
+                            </div>
+                          ))}
+                        </div>
+                        {/* Legend */}
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-6">
+                          {riskCategories.map((risk) => (
+                            <div key={risk.key} className="flex items-center gap-1.5">
+                              <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: risk.color }} />
+                              <span className="text-xs" style={{ color: '#939394' }}>{risk.label}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </>
+                    );
+                  })()}
+                </div>
 
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5" style={{ color: '#f59e0b' }} />
-                        <span className="text-xs font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Outage</span>
-                      </div>
-                      <span className="text-sm font-bold" style={{ color: '#10b981' }}>
-                        {kpiData.riskSignal.outage.percentage}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: '#939394' }}>{formatNumber(kpiData.riskSignal.outage.cases)} cases</span>
-                      <span style={{ color: '#939394' }}>No change</span>
-                    </div>
-                  </div>
-
-                  <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <div className="flex items-center justify-between mb-1">
-                      <div className="flex items-center gap-1.5">
-                        <Shield className="w-3.5 h-3.5" style={{ color: '#5332FF' }} />
-                        <span className="text-xs font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Compliance</span>
-                      </div>
-                      <span className="text-sm font-bold" style={{ color: '#f59e0b' }}>
-                        {kpiData.riskSignal.compliance.percentage}%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{ color: '#939394' }}>{formatNumber(kpiData.riskSignal.compliance.cases)} cases</span>
-                      <span style={{ color: '#ef4444' }}>+{kpiData.riskSignal.compliance.trend}%</span>
-                    </div>
+                <div>
+                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>RISK BY SEGMENT</p>
+                  <div className="grid grid-cols-4 gap-1.5">
+                    {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
+                      const segmentColors: Record<string, string> = {
+                        hvhf: '#10b981',
+                        hvlf: '#06b6d4',
+                        lvhf: '#f59e0b',
+                        lvlf: '#ef4444'
+                      };
+                      const labels: Record<string, string> = {
+                        hvhf: 'HVHF',
+                        hvlf: 'HVLF',
+                        lvhf: 'LVHF',
+                        lvlf: 'LVLF'
+                      };
+                      return (
+                        <div 
+                          key={key} 
+                          className="flex flex-col items-center p-1.5 rounded-lg"
+                          style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}
+                        >
+                          <div 
+                            className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold"
+                            style={{ 
+                              backgroundColor: `${segmentColors[key]}20`,
+                              color: segmentColors[key],
+                              border: `2px solid ${segmentColors[key]}`
+                            }}
+                          >
+                            {segment.count}
+                          </div>
+                          <span className="text-[9px] mt-1" style={{ color: '#939394' }}>{labels[key]}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -510,67 +347,116 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
 
             {/* Sentiment */}
             <div 
-              className="border rounded-2xl p-4 cursor-pointer flex flex-col h-full"
+              className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
               style={getCardStyle(hoveredCard === 'sentiment')}
               onMouseEnter={() => setHoveredCard('sentiment')}
               onMouseLeave={() => setHoveredCard(null)}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Sentiment Score</span>
-                <TrendBadge trend={kpiData.customerSentiment.trend} isPositive={true} />
+                <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Sentiment Score</span>
               </div>
-              <div className="text-3xl font-bold mb-3" style={{ color: '#10b981' }}>
+              <div className="text-4xl font-bold mb-2" style={{ color: '#10b981' }}>
                 {kpiData.customerSentiment.value}%
               </div>
               
               <div className="flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="flex gap-1 h-2.5 rounded-full overflow-hidden mb-2">
-                    <div style={{ width: `${kpiData.customerSentiment.positive}%`, backgroundColor: '#10b981' }}></div>
-                    <div style={{ width: `${kpiData.customerSentiment.neutral}%`, backgroundColor: '#939394' }}></div>
-                    <div style={{ width: `${kpiData.customerSentiment.negative}%`, backgroundColor: '#ef4444' }}></div>
-                  </div>
-                  <div className="grid grid-cols-3 gap-1 text-xs mb-2">
-                    <div className="text-center">
-                      <div className="font-bold" style={{ color: '#10b981' }}>{kpiData.customerSentiment.positive}%</div>
-                      <div className="text-[10px]" style={{ color: '#939394' }}>Positive</div>
+                  <p className="text-xs font-bold mb-2" style={{ color: '#939394' }}>SENTIMENT BY SEGMENT</p>
+                  <div className="flex items-center justify-center">
+                    {/* Pie Chart */}
+                    <div className="relative">
+                      <svg width="90" height="90" viewBox="0 0 100 100">
+                        {(() => {
+                          const segments = Object.values(kpiData.customerSentiment.segmentSentiment);
+                          const total = segments.reduce((sum, s) => sum + s.score, 0);
+                          const overallSentiment = kpiData.customerSentiment.value; // 72%
+                          let currentAngle = -90;
+                          
+                          return segments.map((segment, idx) => {
+                            const piePercentage = (segment.score / total) * 100;
+                            // Calculate weighted contribution to overall sentiment
+                            const weightedPercentage = (segment.score / total) * overallSentiment;
+                            const angle = (piePercentage / 100) * 360;
+                            const startAngle = currentAngle;
+                            const endAngle = currentAngle + angle;
+                            currentAngle = endAngle;
+                            
+                            const startRad = (startAngle * Math.PI) / 180;
+                            const endRad = (endAngle * Math.PI) / 180;
+                            const largeArc = angle > 180 ? 1 : 0;
+                            
+                            const x1 = 50 + 40 * Math.cos(startRad);
+                            const y1 = 50 + 40 * Math.sin(startRad);
+                            const x2 = 50 + 40 * Math.cos(endRad);
+                            const y2 = 50 + 40 * Math.sin(endRad);
+                            
+                            return (
+                              <path
+                                key={idx}
+                                d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArc} 1 ${x2} ${y2} Z`}
+                                fill={segment.color}
+                                stroke={isDarkMode ? '#0d0d0d' : '#FFFFFF'}
+                                strokeWidth="1"
+                                className="cursor-pointer transition-opacity duration-200 hover:opacity-80"
+                                onMouseEnter={() => setHoveredSegment({ label: segment.label, score: segment.score, percentage: Math.round(weightedPercentage * 10) / 10 })}
+                                onMouseLeave={() => setHoveredSegment(null)}
+                              />
+                            );
+                          });
+                        })()}
+                        <circle cx="50" cy="50" r="22" fill={isDarkMode ? '#0d0d0d' : '#FFFFFF'} />
+                        {hoveredSegment && (
+                          <text x="50" y="55" textAnchor="middle" fontSize="12" fontWeight="bold" fill={isDarkMode ? '#FFFFFF' : '#010101'}>
+                            {hoveredSegment.percentage}%
+                          </text>
+                        )}
+                      </svg>
                     </div>
-                    <div className="text-center">
-                      <div className="font-bold" style={{ color: '#939394' }}>{kpiData.customerSentiment.neutral}%</div>
-                      <div className="text-[10px]" style={{ color: '#939394' }}>Neutral</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="font-bold" style={{ color: '#ef4444' }}>{kpiData.customerSentiment.negative}%</div>
-                      <div className="text-[10px]" style={{ color: '#939394' }}>Negative</div>
+                    {/* Legend */}
+                    <div className="ml-3 space-y-1">
+                      {Object.entries(kpiData.customerSentiment.segmentSentiment).map(([key, segment]) => {
+                        const segments = Object.values(kpiData.customerSentiment.segmentSentiment);
+                        const total = segments.reduce((sum, s) => sum + s.score, 0);
+                        const overallSentiment = kpiData.customerSentiment.value;
+                        const weightedPercentage = Math.round(((segment.score / total) * overallSentiment) * 10) / 10;
+                        return (
+                          <div 
+                            key={key} 
+                            className="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity"
+                            onMouseEnter={() => setHoveredSegment({ label: segment.label, score: segment.score, percentage: weightedPercentage })}
+                            onMouseLeave={() => setHoveredSegment(null)}
+                          >
+                            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
+                            <span className="text-[10px]" style={{ color: hoveredSegment?.label === segment.label ? segment.color : '#939394' }}>
+                              {segment.label}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between p-2 rounded-lg" 
-                    style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <span className="text-xs" style={{ color: '#939394' }}>NPS Score</span>
-                    <span className="font-bold text-sm" style={{ color: '#10b981' }}>{kpiData.customerSentiment.npsScore}</span>
-                  </div>
-
+                <div className="grid grid-cols-2 gap-2 mt-2">
                   <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <p className="text-[10px] font-bold mb-1" style={{ color: '#10b981' }}>POSITIVE</p>
-                    <p className="text-xs mb-2" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                    <p className="text-[10px] font-bold" style={{ color: '#10b981' }}>POSITIVE</p>
+                    <p className="text-[10px]" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
                       {kpiData.customerSentiment.positiveTopics.join(' • ')}
                     </p>
-                    <p className="text-[10px] font-bold mb-1" style={{ color: '#ef4444' }}>NEGATIVE</p>
-                    <p className="text-xs" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                  </div>
+                  <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
+                    <p className="text-[10px] font-bold" style={{ color: '#ef4444' }}>NEGATIVE</p>
+                    <p className="text-[10px]" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
                       {kpiData.customerSentiment.negativeTopics.join(' • ')}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
         </div>
 
         {/* Right Side - AI Summary Wall */}
-        <div className="col-span-2" style={{ height: '600px' }}>
+        <div className="flex-1">
           <AISummaryWall isDarkMode={isDarkMode} />
         </div>
       </div>

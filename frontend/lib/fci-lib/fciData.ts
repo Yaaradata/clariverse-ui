@@ -138,7 +138,7 @@ export const fciClusters: FCICluster[] = [
       { channel: 'Voice', percentage: 38 },
       { channel: 'Chat', percentage: 32 },
       { channel: 'Email', percentage: 18 },
-      { channel: 'Trouble Ticket', percentage: 12 }
+      { channel: 'Ticket', percentage: 12 }
     ],
     topics: ['Online ID', 'Password Reset', 'Account Lockout', 'SafePass Authentication', 'Security Alerts', 'App Login'],
     nextActionSuggestion: 'Implement self-service password reset via Erica and reduce SafePass friction with trusted device recognition',
@@ -178,7 +178,7 @@ export const fciClusters: FCICluster[] = [
     topChannels: [
       { channel: 'Voice', percentage: 45 },
       { channel: 'Email', percentage: 25 },
-      { channel: 'Trouble Ticket', percentage: 18 },
+      { channel: 'Ticket', percentage: 18 },
       { channel: 'Chat', percentage: 12 }
     ],
     topics: ['Unauthorized Charges', 'Fraud Claims', 'Debit Disputes', 'Identity Theft', 'Zero Liability', 'Stolen Card'],
@@ -260,7 +260,7 @@ export const fciClusters: FCICluster[] = [
     topChannels: [
       { channel: 'Voice', percentage: 48 },
       { channel: 'Email', percentage: 28 },
-      { channel: 'Trouble Ticket', percentage: 15 },
+      { channel: 'Ticket', percentage: 15 },
       { channel: 'Chat', percentage: 9 }
     ],
     topics: ['Home Loans', 'Mortgage Refinance', 'Auto Loans', 'Personal Loans', 'Rate Options', 'Loan Modification'],
@@ -341,7 +341,7 @@ export const fciClusters: FCICluster[] = [
     avgResolutionTime: '2.4 hours',
     topChannels: [
       { channel: 'Chat', percentage: 45 },
-      { channel: 'Trouble Ticket', percentage: 25 },
+      { channel: 'Ticket', percentage: 25 },
       { channel: 'Voice', percentage: 18 },
       { channel: 'Social Media', percentage: 12 }
     ],
@@ -383,7 +383,7 @@ export const fciClusters: FCICluster[] = [
     topChannels: [
       { channel: 'Voice', percentage: 52 },
       { channel: 'Chat', percentage: 25 },
-      { channel: 'Trouble Ticket', percentage: 15 },
+      { channel: 'Ticket', percentage: 15 },
       { channel: 'Email', percentage: 8 }
     ],
     topics: ['Financial Center', 'ATM Locations', 'Appointment Booking', 'Teller Services', 'Cardless ATM', 'Notary Service'],
@@ -425,7 +425,7 @@ export const fciClusters: FCICluster[] = [
       { channel: 'Voice', percentage: 48 },
       { channel: 'Email', percentage: 28 },
       { channel: 'Chat', percentage: 15 },
-      { channel: 'Trouble Ticket', percentage: 9 }
+      { channel: 'Ticket', percentage: 9 }
     ],
     topics: ['Merrill Lynch', 'Merrill Edge', 'Preferred Rewards', 'Portfolio Review', 'IRAs/401k', 'Advisory Services'],
     nextActionSuggestion: 'Unify Merrill and banking login experience and provide dedicated wealth concierge for Platinum clients',
@@ -466,7 +466,7 @@ export const fciClusters: FCICluster[] = [
       { channel: 'Chat', percentage: 42 },
       { channel: 'Voice', percentage: 35 },
       { channel: 'Email', percentage: 15 },
-      { channel: 'Trouble Ticket', percentage: 8 }
+      { channel: 'Ticket', percentage: 8 }
     ],
     topics: ['Payroll Deposit', 'Routing Number', 'Direct Deposit', 'Deposit Delays', 'ACH Transfers', 'Payment Holds'],
     nextActionSuggestion: 'Provide real-time deposit tracking and proactive notifications for expected payroll timing',
@@ -506,7 +506,7 @@ export const fciClusters: FCICluster[] = [
     topChannels: [
       { channel: 'Voice', percentage: 45 },
       { channel: 'Email', percentage: 28 },
-      { channel: 'Trouble Ticket', percentage: 18 },
+      { channel: 'Ticket', percentage: 18 },
       { channel: 'Chat', percentage: 9 }
     ],
     topics: ['Close Account', 'Account Upgrade', 'Preferred Rewards', 'Product Switch', 'Joint Account', 'Beneficiary Designation'],

@@ -420,7 +420,7 @@ export function RiskAlertPanel({ data, isDarkMode = false }: RiskAlertPanelProps
         <div className="grid grid-cols-5 gap-2">
           {(['fraud', 'cyber', 'operational', 'reputation', 'third-party'] as RiskCategory[]).map((cat) => {
             const config = getCategoryConfig(cat);
-            const count = data.filter(a => a.category === cat && a.status === 'active').length;
+            const count = data.filter(a => a.category === cat).length;
 
             return (
               <div 

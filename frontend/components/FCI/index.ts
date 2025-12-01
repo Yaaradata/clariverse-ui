@@ -1,5 +1,6 @@
 // FCI Components Exports
 export { FCIKPICards } from './FCIKPICards';
+export { FCIEisenhowerDistribution } from './FCIEisenhowerDistribution';
 export { FailureClusters } from './FailureClusters';
 export { CustomerEmotion } from './CustomerEmotion';
 export { AIActionCenter } from './AIActionCenter';

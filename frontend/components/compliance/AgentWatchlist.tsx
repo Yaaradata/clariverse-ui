@@ -321,7 +321,7 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
                   className="text-base font-bold"
                   style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
                 >
-                  Agent Watchlist
+                  Workforce Watchlist
                 </h3>
                 <p className="text-xs" style={{ color: '#939394' }}>
                   {watchlistData.length} agents requiring attention

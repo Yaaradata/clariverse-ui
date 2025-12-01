@@ -5,7 +5,7 @@ import {
   TrendingUp, TrendingDown, AlertTriangle, Info, AlertCircle, 
   Zap, ChevronRight, X, Clock, Users, FileText, Target, 
   ArrowRight, CheckCircle2, AlertOctagon, Phone, Mail, GitBranch,
-  BookOpen, CreditCard, RefreshCw, Timer
+  BookOpen, CreditCard, RefreshCw, Timer, Sparkles
 } from 'lucide-react';
 
 // Types
@@ -45,13 +45,14 @@ export const fciInsightsData: FCIInsight[] = [
     id: 'FCI-001',
     severity: 'info',
     category: 'product-update',
-    title: 'New Product Info Available',
-    message: 'Learning modules for agents - New training content deployed for Q1 product updates',
-    trend: 'stable',
+    title: 'High Volume Surge - Atmos Credit Card',
+    message: 'Significant increase in inquiries due to new Atmos Credit Card launch - 2,340 calls today about card features and eligibility',
+    trend: 'up',
+    change: 156,
     metrics: {
-      volume: 45,
-      volumeLabel: 'agents pending',
-      customerImpact: 'Low'
+      volume: 2340,
+      volumeLabel: 'calls today',
+      customerImpact: 'Medium'
     }
   },
   {
@@ -89,7 +90,7 @@ export const fciInsightsData: FCIInsight[] = [
     severity: 'warning',
     category: 'sla-breach',
     title: 'SLA Failure: High-Value Customer Emails',
-    message: 'Email responses to high-value customers exceeding 48 hours - 156 VIP accounts affected',
+    message: 'Email responses to high-value customers exceeding 48 hours.',
     trend: 'up',
     change: 35,
     metrics: {
@@ -103,17 +104,18 @@ export const fciInsightsData: FCIInsight[] = [
 
 export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
   'FCI-001': {
-    rootCause: 'New product features released require agent training updates. Training modules have been deployed but completion rate is at 32%.',
-    affectedAreas: ['Training', 'Agent Performance', 'Product Knowledge', 'Customer Service Quality'],
+    rootCause: 'New Atmos Credit Card launched with premium cashback rewards driving high customer interest. Marketing campaign exceeded projections by 3x, resulting in call volume surge. Agents need updated product knowledge to handle feature and eligibility inquiries.',
+    affectedAreas: ['Card Services', 'Call Center', 'Product Knowledge', 'Marketing Alignment', 'Digital Channels'],
     recommendedActions: [
-      'Send reminder notifications to all agents with pending training',
-      'Schedule mandatory training sessions for teams with lowest completion',
-      'Track training completion and link to quality scores',
-      'Consider gamification to encourage faster completion'
+      'Deploy Atmos Credit Card quick reference guide to all agents immediately',
+      'Add dedicated IVR option for Atmos Card inquiries to reduce wait times',
+      'Enable self-service eligibility checker on mobile app and website',
+      'Schedule additional agent shifts for next 2 weeks to handle surge',
+      'Create FAQ chatbot responses for common Atmos Card questions'
     ],
-    estimatedImpact: 'Medium - Improved first contact resolution expected after training',
-    timeToResolve: '5-7 business days',
-    assignedTo: 'Training & Development Team',
+    estimatedImpact: 'Medium - Positive product interest but requires capacity management',
+    timeToResolve: '3-5 business days',
+    assignedTo: 'Card Services + Call Center Ops',
     priority: 'medium'
   },
   'FCI-002': {
@@ -172,6 +174,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
   const [isVisible, setIsVisible] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
   const [selectedInsight, setSelectedInsight] = useState<FCIInsight | null>(null);
+  const [popupPosition, setPopupPosition] = useState<{ top: number } | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 400);
@@ -270,12 +273,19 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
     }
   };
 
-  const handleInsightClick = (insight: FCIInsight) => {
+  const handleInsightClick = (insight: FCIInsight, event: React.MouseEvent) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const containerRect = event.currentTarget.closest('.flex-1.overflow-y-auto')?.getBoundingClientRect();
+    if (containerRect) {
+      const relativeTop = rect.top - containerRect.top + (event.currentTarget.closest('.flex-1.overflow-y-auto')?.scrollTop || 0);
+      setPopupPosition({ top: relativeTop });
+    }
     setSelectedInsight(insight);
   };
 
   const closeDetail = () => {
     setSelectedInsight(null);
+    setPopupPosition(null);
   };
 
   // Sort insights by severity
@@ -305,15 +315,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
       {/* Header */}
       <div className="flex items-center justify-between mb-5 flex-shrink-0">
         <div className="flex items-center gap-3">
-          <div 
-            className="p-2 rounded-xl"
-            style={{ 
-              background: 'linear-gradient(135deg, #5332FF 0%, #B90ABD 100%)',
-              boxShadow: '0 4px 12px rgba(83, 50, 255, 0.3)'
-            }}
-          >
-            <Zap className="w-5 h-5 text-white" />
-          </div>
+          <span className="text-2xl">✨</span>
           <div>
             <h3 
               className="text-lg font-bold"
@@ -339,168 +341,11 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
       </div>
 
       {/* Scrollable Content Area - includes both detail view and insights list */}
-      <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin" style={{ 
+      <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin relative" style={{ 
         scrollbarWidth: 'thin',
         scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5',
         minHeight: 0
       }}>
-        {/* Detail View */}
-        {selectedInsight && selectedDetails && selectedConfig && (
-          <div 
-            className="mb-4 rounded-xl p-4 animate-in slide-in-from-top-2 duration-300"
-            style={{ 
-              background: selectedConfig.bgGradient,
-              border: `1px solid ${selectedConfig.color}50`
-            }}
-          >
-            {/* Detail Header */}
-            <div className="flex items-start justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <selectedConfig.icon className="w-5 h-5" style={{ color: selectedConfig.color }} />
-                <span 
-                  className="text-sm font-bold"
-                  style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                >
-                  {selectedInsight.title}
-                </span>
-              </div>
-              <button 
-                onClick={closeDetail}
-                className="p-1 rounded-lg hover:bg-black/10 transition-colors"
-              >
-                <X className="w-4 h-4" style={{ color: '#939394' }} />
-              </button>
-            </div>
-
-            {/* Priority Badge */}
-            <div className="flex items-center gap-2 mb-3">
-              {(() => {
-                const priorityConfig = getPriorityConfig(selectedDetails.priority);
-                return (
-                  <span 
-                    className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full"
-                    style={{ 
-                      backgroundColor: `${priorityConfig.color}20`,
-                      color: priorityConfig.color
-                    }}
-                  >
-                    <priorityConfig.icon className="w-3 h-3" />
-                    {priorityConfig.label}
-                  </span>
-                );
-              })()}
-              <span 
-                className="text-xs px-2 py-1 rounded-full"
-                style={{ 
-                  backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-                  color: '#939394'
-                }}
-              >
-                {getCategoryLabel(selectedInsight.category)}
-              </span>
-            </div>
-
-            {/* Root Cause */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <FileText className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
-                <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
-                  Root Cause
-                </span>
-              </div>
-              <p 
-                className="text-sm leading-relaxed"
-                style={{ color: isDarkMode ? '#E0E0E0' : '#333333' }}
-              >
-                {selectedDetails.rootCause}
-              </p>
-            </div>
-
-            {/* Affected Areas */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <Target className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
-                <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
-                  Affected Areas
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-1.5">
-                {selectedDetails.affectedAreas.map((area, i) => (
-                  <span 
-                    key={i}
-                    className="text-[10px] px-2 py-0.5 rounded"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F0F0F0',
-                      color: isDarkMode ? '#D6D9D8' : '#4a4a4a'
-                    }}
-                  >
-                    {area}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Recommended Actions */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1.5">
-                <ArrowRight className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
-                <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
-                  Recommended Actions
-                </span>
-              </div>
-              <ul className="space-y-1.5">
-                {selectedDetails.recommendedActions.map((action, i) => (
-                  <li 
-                    key={i}
-                    className="flex items-start gap-2 text-xs"
-                    style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-                  >
-                    <span 
-                      className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold"
-                      style={{ 
-                        backgroundColor: `${selectedConfig.color}20`,
-                        color: selectedConfig.color
-                      }}
-                    >
-                      {i + 1}
-                    </span>
-                    {action}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Footer Info */}
-            <div 
-              className="flex items-center justify-between pt-3 border-t"
-              style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1.5">
-                  <Clock className="w-3 h-3" style={{ color: '#939394' }} />
-                  <span className="text-[10px]" style={{ color: '#939394' }}>
-                    {selectedDetails.timeToResolve}
-                  </span>
-                </div>
-                {selectedDetails.assignedTo && (
-                  <div className="flex items-center gap-1.5">
-                    <Users className="w-3 h-3" style={{ color: '#939394' }} />
-                    <span className="text-[10px]" style={{ color: '#939394' }}>
-                      {selectedDetails.assignedTo}
-                    </span>
-                  </div>
-                )}
-              </div>
-              <span 
-                className="text-[10px] font-medium"
-                style={{ color: selectedConfig.color }}
-              >
-                {selectedDetails.estimatedImpact.split(' - ')[0]}
-              </span>
-            </div>
-          </div>
-        )}
-
         {/* Insights List */}
         <div className="space-y-3">
           {sortedData.map((insight, index) => {
@@ -525,7 +370,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
                 }}
                 onMouseEnter={() => setActiveInsight(insight.id)}
                 onMouseLeave={() => setActiveInsight(null)}
-                onClick={() => handleInsightClick(insight)}
+                onClick={(e) => handleInsightClick(insight, e)}
               >
                 {/* Glow effect for critical items */}
                 {insight.severity === 'critical' && (
@@ -624,7 +469,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
                     {/* Click hint */}
                     <div 
                       className={`flex items-center gap-1 mt-2 text-[10px] transition-opacity duration-200 ${
-                        isActive ? 'opacity-100' : 'opacity-0'
+                        isActive && !isSelected ? 'opacity-100' : 'opacity-0'
                       }`}
                       style={{ color: config.color }}
                     >
@@ -644,6 +489,182 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
             );
           })}
         </div>
+
+        {/* Popup Detail View - positioned overlay */}
+        {selectedInsight && selectedDetails && selectedConfig && popupPosition && (
+          <>
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 z-40"
+              style={{ backgroundColor: 'rgba(0,0,0,0.3)' }}
+              onClick={closeDetail}
+            />
+            {/* Popup */}
+            <div 
+              className="absolute left-0 right-0 z-50 mx-2 rounded-xl p-4 animate-in zoom-in-95 duration-200"
+              style={{ 
+                top: `${popupPosition.top}px`,
+                background: isDarkMode ? '#1a1a1a' : '#FFFFFF',
+                border: `2px solid ${selectedConfig.color}`,
+                boxShadow: `0 8px 32px ${selectedConfig.color}40, 0 4px 16px rgba(0,0,0,0.3)`
+              }}
+            >
+              {/* Detail Header */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <div 
+                    className="p-1.5 rounded-lg"
+                    style={{ backgroundColor: `${selectedConfig.color}20` }}
+                  >
+                    <selectedConfig.icon className="w-4 h-4" style={{ color: selectedConfig.color }} />
+                  </div>
+                  <span 
+                    className="text-sm font-bold"
+                    style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                  >
+                    {selectedInsight.title}
+                  </span>
+                </div>
+                <button 
+                  onClick={closeDetail}
+                  className="p-1.5 rounded-lg transition-colors"
+                  style={{ 
+                    backgroundColor: isDarkMode ? '#2a2a2a' : '#F0F0F0'
+                  }}
+                >
+                  <X className="w-4 h-4" style={{ color: '#939394' }} />
+                </button>
+              </div>
+
+              {/* Priority Badge */}
+              <div className="flex items-center gap-2 mb-3">
+                {(() => {
+                  const priorityConfig = getPriorityConfig(selectedDetails.priority);
+                  return (
+                    <span 
+                      className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full"
+                      style={{ 
+                        backgroundColor: `${priorityConfig.color}20`,
+                        color: priorityConfig.color
+                      }}
+                    >
+                      <priorityConfig.icon className="w-3 h-3" />
+                      {priorityConfig.label}
+                    </span>
+                  );
+                })()}
+                <span 
+                  className="text-xs px-2 py-1 rounded-full"
+                  style={{ 
+                    backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
+                    color: '#939394'
+                  }}
+                >
+                  {getCategoryLabel(selectedInsight.category)}
+                </span>
+              </div>
+
+              {/* Root Cause */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <FileText className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
+                  <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
+                    Root Cause
+                  </span>
+                </div>
+                <p 
+                  className="text-sm leading-relaxed"
+                  style={{ color: isDarkMode ? '#E0E0E0' : '#333333' }}
+                >
+                  {selectedDetails.rootCause}
+                </p>
+              </div>
+
+              {/* Affected Areas */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Target className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
+                  <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
+                    Affected Areas
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {selectedDetails.affectedAreas.map((area, i) => (
+                    <span 
+                      key={i}
+                      className="text-[10px] px-2 py-0.5 rounded"
+                      style={{ 
+                        backgroundColor: isDarkMode ? '#2a2a2a' : '#F0F0F0',
+                        color: isDarkMode ? '#D6D9D8' : '#4a4a4a'
+                      }}
+                    >
+                      {area}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Recommended Actions */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <ArrowRight className="w-3.5 h-3.5" style={{ color: selectedConfig.color }} />
+                  <span className="text-xs font-semibold uppercase" style={{ color: '#939394' }}>
+                    Recommended Actions
+                  </span>
+                </div>
+                <ul className="space-y-1.5">
+                  {selectedDetails.recommendedActions.map((action, i) => (
+                    <li 
+                      key={i}
+                      className="flex items-start gap-2 text-xs"
+                      style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                    >
+                      <span 
+                        className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold"
+                        style={{ 
+                          backgroundColor: `${selectedConfig.color}20`,
+                          color: selectedConfig.color
+                        }}
+                      >
+                        {i + 1}
+                      </span>
+                      {action}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Footer Info */}
+              <div 
+                className="flex items-center justify-between pt-3 border-t"
+                style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <Clock className="w-3 h-3" style={{ color: '#939394' }} />
+                    <span className="text-[10px]" style={{ color: '#939394' }}>
+                      {selectedDetails.timeToResolve}
+                    </span>
+                  </div>
+                  {selectedDetails.assignedTo && (
+                    <div className="flex items-center gap-1.5">
+                      <Users className="w-3 h-3" style={{ color: '#939394' }} />
+                      <span className="text-[10px]" style={{ color: '#939394' }}>
+                        {selectedDetails.assignedTo}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span 
+                  className="text-[10px] font-medium"
+                  style={{ color: selectedConfig.color }}
+                >
+                  {selectedDetails.estimatedImpact.split(' - ')[0]}
+                </span>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       {/* Summary Footer - Fixed at bottom */}

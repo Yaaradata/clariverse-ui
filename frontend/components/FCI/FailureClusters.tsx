@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from 'recharts';
 import { FCICluster } from '@/lib/fci-lib/fciData';
-import { TrendingUp, TrendingDown, X, Users, Clock, MessageSquare, Mail, MessageCircle, Ticket, Phone, Share2 } from 'lucide-react';
+import { TrendingUp, TrendingDown, X, Users, Clock, MessageSquare, Mail, MessageCircle, Ticket, Phone, Share2, Sparkles, AlertTriangle, Lightbulb } from 'lucide-react';
 
 interface FailureClustersProps {
   clusters: FCICluster[];
@@ -11,7 +11,7 @@ interface FailureClustersProps {
 }
 
 // Fixed channel order for consistent stacking
-const CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Social Media', 'Trouble Ticket'];
+const CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Social Media', 'Ticket'];
 
 // Channel colors for stacked bars (matching severity theme)
 const CHANNEL_COLORS: Record<string, string> = {
@@ -19,7 +19,7 @@ const CHANNEL_COLORS: Record<string, string> = {
   'Chat': '#f97316',         // Orange
   'Email': '#eab308',        // Yellow
   'Social Media': '#22c55e', // Green
-  'Trouble Ticket': '#06b6d4' // Cyan
+  'Ticket': '#06b6d4' // Cyan
 };
 
 // Custom bar shape that only curves the topmost segment
@@ -85,6 +85,42 @@ const getChannelIcon = (channel: string) => {
     case 'Social': return Share2;
     default: return MessageCircle;
   }
+};
+
+// Generate AI Insight based on cluster data
+const generateAIInsight = (cluster: FCICluster): string => {
+  const trendDirection = cluster.trend > 0 ? 'increased' : 'decreased';
+  const trendPercent = Math.abs(cluster.trend);
+  
+  if (cluster.processError && cluster.processError > 60) {
+    return `Failures ${trendDirection} by ${trendPercent}% due to system and process issues. ${cluster.processError}% of cases stem from process errors, indicating need for workflow optimization in ${cluster.category.toLowerCase()}.`;
+  }
+  
+  if (cluster.productKnowledgeGap && cluster.productKnowledgeGap > 60) {
+    const topChannel = cluster.topChannels?.[0]?.channel || 'voice';
+    return `Score dropped ${trendPercent}% due to knowledge gaps. Focus on agent training for ${cluster.category.toLowerCase()} protocols, especially on ${topChannel.toLowerCase()} channel.`;
+  }
+  
+  if (cluster.trend > 10) {
+    return `Alert: ${cluster.category} failures spiked ${trendPercent}% affecting ${cluster.affectedCustomers.toLocaleString()} customers. Primary driver: ${cluster.processError && cluster.processError > cluster.productKnowledgeGap! ? 'process errors' : 'knowledge gaps'}.`;
+  }
+  
+  return `${cluster.category} shows ${trendPercent}% ${trendDirection} trend with ${cluster.count.toLocaleString()} cases. Resolution time averaging ${cluster.avgResolutionTime || 'N/A'} across ${cluster.totalInteractions?.toLocaleString() || 0} interactions.`;
+};
+
+// Generate Recommendation based on cluster data
+const generateRecommendation = (cluster: FCICluster): string => {
+  const topChannel = cluster.topChannels?.[0]?.channel || 'voice';
+  
+  if (cluster.processError && cluster.processError > 60) {
+    return `Consider automating ${cluster.category.toLowerCase()} workflows on ${topChannel.toLowerCase()} channel to reduce manual review backlog by up to ${Math.round(cluster.processError * 0.5)}%.`;
+  }
+  
+  if (cluster.productKnowledgeGap && cluster.productKnowledgeGap > 50) {
+    return `Implement targeted training program for ${topChannel.toLowerCase()} agents on ${cluster.category.toLowerCase()}. Expected FCI reduction: ${Math.round(cluster.productKnowledgeGap * 0.3)}%.`;
+  }
+  
+  return `Deploy proactive monitoring for ${cluster.category.toLowerCase()} with automated escalation for cases exceeding ${cluster.avgResolutionTime || '2 hours'} resolution time.`;
 };
 
 // Detail Card Component for selected cluster
@@ -156,11 +192,12 @@ const ClusterDetailCard = ({
         </button>
       </div>
 
-      {/* Metrics Grid */}
+      {/* Metrics Grid - 3 Columns */}
       <div 
-        className="grid grid-cols-2 gap-3 p-3 rounded-lg mb-4"
+        className="grid grid-cols-3 gap-4 p-4 rounded-lg mb-4"
         style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
       >
+        {/* Row 1 */}
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#5332FF20' }}>
             <MessageSquare className="w-4 h-4" style={{ color: '#5332FF' }} />
@@ -183,7 +220,20 @@ const ClusterDetailCard = ({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 col-span-2">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#f9731620' }}>
+            <Lightbulb className="w-4 h-4" style={{ color: '#f97316' }} />
+          </div>
+          <div>
+            <p className="text-xs" style={{ color: '#939394' }}>Knowledge Gap</p>
+            <p className="text-sm font-bold" style={{ color: '#f97316' }}>
+              {cluster.productKnowledgeGap || 0}%
+            </p>
+          </div>
+        </div>
+        
+        {/* Row 2 */}
+        <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#ef444420' }}>
             <Users className="w-4 h-4" style={{ color: '#ef4444' }} />
           </div>
@@ -194,140 +244,61 @@ const ClusterDetailCard = ({
             </p>
           </div>
         </div>
-      </div>
-
-      {/* Root Cause Breakdown */}
-      {(cluster.processError !== undefined || cluster.productKnowledgeGap !== undefined) && (
-        <div className="mb-4">
-          <p className="text-xs font-semibold mb-3 uppercase" style={{ color: '#939394' }}>
-            Root Cause Breakdown
-          </p>
-          <div className="space-y-3">
-            {/* Process Error */}
-            <div className="group relative">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                  Process Error
-                </span>
-                <span className="text-xs font-bold" style={{ color: '#ef4444' }}>
-                  {cluster.processError || 0}%
-                </span>
-              </div>
-              <div 
-                className="h-2 rounded-full overflow-hidden cursor-pointer group-hover:ring-2 group-hover:ring-red-500/40 transition-all"
-                style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
-              >
-                <div 
-                  className="h-full rounded-full"
-                  style={{ 
-                    width: `${cluster.processError || 0}%`,
-                    backgroundColor: '#ef4444'
-                  }}
-                />
-              </div>
-              {/* Tooltip - CSS hover based */}
-              {cluster.processErrorByChannel && (
-                <div 
-                  className="absolute left-0 right-0 top-full mt-2 p-3 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-                  style={{
-                    backgroundColor: isDarkMode ? '#1f1f1f' : '#FFFFFF',
-                    border: '2px solid #ef4444',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs font-bold uppercase" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                      Channel Breakdown
-                    </p>
-                    <span className="px-2 py-0.5 rounded text-xs font-bold" style={{ backgroundColor: '#ef444420', color: '#ef4444' }}>
-                      {cluster.processErrorByChannel.reduce((sum, c) => sum + c.count, 0)} total
-                    </span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {cluster.processErrorByChannel.map((item, idx) => {
-                      const IconComponent = getChannelIcon(item.channel);
-                      const barColor = BREAKDOWN_CHANNEL_COLORS[item.channel] || '#939394';
-                      const maxPct = Math.max(...cluster.processErrorByChannel!.map(d => d.percentage));
-                      return (
-                        <div key={idx} className="flex items-center gap-2">
-                          <IconComponent className="w-3 h-3 shrink-0" style={{ color: barColor }} />
-                          <span className="text-xs w-12 shrink-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>{item.channel}</span>
-                          <div className="flex-1 h-2 rounded-full" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}>
-                            <div className="h-full rounded-full" style={{ width: `${(item.percentage / maxPct) * 100}%`, backgroundColor: barColor }} />
-                          </div>
-                          <span className="text-xs font-bold w-6 text-right" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{item.count}</span>
-                          <span className="text-xs w-8 text-right" style={{ color: '#939394' }}>{item.percentage}%</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-            {/* Product Knowledge Gap */}
-            <div className="group relative">
-              <div className="flex items-center justify-between mb-1">
-                <span className="text-xs" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                  Product Knowledge Gap
-                </span>
-                <span className="text-xs font-bold" style={{ color: '#f97316' }}>
-                  {cluster.productKnowledgeGap || 0}%
-                </span>
-              </div>
-              <div 
-                className="h-2 rounded-full overflow-hidden cursor-pointer group-hover:ring-2 group-hover:ring-orange-500/40 transition-all"
-                style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
-              >
-                <div 
-                  className="h-full rounded-full"
-                  style={{ 
-                    width: `${cluster.productKnowledgeGap || 0}%`,
-                    backgroundColor: '#f97316'
-                  }}
-                />
-              </div>
-              {/* Tooltip - CSS hover based */}
-              {cluster.productKnowledgeGapByChannel && (
-                <div 
-                  className="absolute left-0 right-0 top-full mt-2 p-3 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-                  style={{
-                    backgroundColor: isDarkMode ? '#1f1f1f' : '#FFFFFF',
-                    border: '2px solid #f97316',
-                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
-                  }}
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="text-xs font-bold uppercase" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                      Channel Breakdown
-                    </p>
-                    <span className="px-2 py-0.5 rounded text-xs font-bold" style={{ backgroundColor: '#f9731620', color: '#f97316' }}>
-                      {cluster.productKnowledgeGapByChannel.reduce((sum, c) => sum + c.count, 0)} total
-                    </span>
-                  </div>
-                  <div className="space-y-1.5">
-                    {cluster.productKnowledgeGapByChannel.map((item, idx) => {
-                      const IconComponent = getChannelIcon(item.channel);
-                      const barColor = BREAKDOWN_CHANNEL_COLORS[item.channel] || '#939394';
-                      const maxPct = Math.max(...cluster.productKnowledgeGapByChannel!.map(d => d.percentage));
-                      return (
-                        <div key={idx} className="flex items-center gap-2">
-                          <IconComponent className="w-3 h-3 shrink-0" style={{ color: barColor }} />
-                          <span className="text-xs w-12 shrink-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>{item.channel}</span>
-                          <div className="flex-1 h-2 rounded-full" style={{ backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}>
-                            <div className="h-full rounded-full" style={{ width: `${(item.percentage / maxPct) * 100}%`, backgroundColor: barColor }} />
-                          </div>
-                          <span className="text-xs font-bold w-6 text-right" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{item.count}</span>
-                          <span className="text-xs w-8 text-right" style={{ color: '#939394' }}>{item.percentage}%</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#ef444420' }}>
+            <AlertTriangle className="w-4 h-4" style={{ color: '#ef4444' }} />
+          </div>
+          <div>
+            <p className="text-xs" style={{ color: '#939394' }}>Process Error</p>
+            <p className="text-sm font-bold" style={{ color: '#ef4444' }}>
+              {cluster.processError || 0}%
+            </p>
           </div>
         </div>
-      )}
+        <div /> {/* Empty cell for alignment */}
+      </div>
+
+      {/* AI Insight Card */}
+      <div 
+        className="rounded-xl p-4 mb-3"
+        style={{ 
+          background: isDarkMode 
+            ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(30, 30, 30, 0.9) 100%)'
+            : 'linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%)',
+          border: '1px solid rgba(139, 92, 246, 0.3)'
+        }}
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-4 h-4" style={{ color: '#f59e0b' }} />
+          <span className="text-xs font-bold uppercase" style={{ color: '#f59e0b' }}>
+            AI Insight
+          </span>
+        </div>
+        <p className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+          {generateAIInsight(cluster)}
+        </p>
+      </div>
+
+      {/* Recommendation Card */}
+      <div 
+        className="rounded-xl p-4 mb-4"
+        style={{ 
+          background: isDarkMode 
+            ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(30, 30, 30, 0.9) 100%)'
+            : 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%)',
+          border: '1px solid rgba(16, 185, 129, 0.3)'
+        }}
+      >
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-4 h-4" style={{ color: '#10b981' }} />
+          <span className="text-xs font-bold uppercase" style={{ color: '#10b981' }}>
+            Recommendation
+          </span>
+        </div>
+        <p className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+          {cluster.nextActionSuggestion || generateRecommendation(cluster)}
+        </p>
+      </div>
 
       {/* Dominant Topics */}
       {cluster.topics && Array.isArray(cluster.topics) && cluster.topics.length > 0 && (
