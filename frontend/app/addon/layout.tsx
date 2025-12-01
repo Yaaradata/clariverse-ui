@@ -70,20 +70,19 @@ export default function AddonLayout({
       <header className="shadow-lg" style={{ backgroundColor: '#010101' }}>
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Image 
-                src="/logo.png" 
-                alt="Yaaralabs Logo" 
-                width={50} 
-                height={50}
-                className="rounded-full"
+                src="/bank-of-america.png" 
+                alt="Bank of America Logo" 
+                width={70} 
+                height={30}
               />
-              <h1 className="text-3xl font-bold text-white">Yaaralabs</h1>
+              <h1 className="text-xl font-bold text-white">Bank of America</h1>
             </div>
             
             <div className="flex items-center gap-4">
-              {/* Time Filter - Only show on Compliance page */}
-              {isComplianceActive && (
+              {/* Time Filter - Show on Compliance and FCI pages */}
+              {(isComplianceActive || isFCIActive) && (
                 <div 
                   className="flex items-center rounded-xl p-1"
                   style={{ backgroundColor: '#1a1a1a', border: '1px solid #2a2a2a' }}

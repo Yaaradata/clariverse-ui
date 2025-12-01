@@ -11,7 +11,7 @@ interface FailureClustersProps {
 }
 
 // Fixed channel order for consistent stacking
-const CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Social Media', 'Trouble Ticket'];
+const CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Social Media', 'Ticket'];
 
 // Channel colors for stacked bars (matching severity theme)
 const CHANNEL_COLORS: Record<string, string> = {
@@ -19,7 +19,7 @@ const CHANNEL_COLORS: Record<string, string> = {
   'Chat': '#f97316',         // Orange
   'Email': '#eab308',        // Yellow
   'Social Media': '#22c55e', // Green
-  'Trouble Ticket': '#06b6d4' // Cyan
+  'Ticket': '#06b6d4' // Cyan
 };
 
 // Custom bar shape that only curves the topmost segment

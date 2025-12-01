@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { 
   Map, AlertTriangle, TrendingUp, TrendingDown,
-  Building2, Phone, Shield, Users, Clock,
+  Building2, Phone, Shield, Users,
   ChevronRight, Info
 } from 'lucide-react';
 
@@ -33,12 +33,12 @@ const riskCategories: RiskCategory[] = [
 ];
 
 const callCenterUnits: CallCenterUnit[] = [
-  // Americas Region
+  // USA Locations
   {
-    id: 'CC-CLT',
-    name: 'Charlotte HQ',
-    location: 'Charlotte, NC (Americas)',
-    agents: 890,
+    id: 'CC-PHX',
+    name: 'Phoenix, AZ',
+    location: 'Phoenix, AZ (USA)',
+    agents: 320,
     totalCalls: 45230,
     risks: {
       compliance: 18,
@@ -51,14 +51,14 @@ const callCenterUnits: CallCenterUnit[] = [
     }
   },
   {
-    id: 'CC-WES',
-    name: 'Westerville Credit Card',
-    location: 'Columbus, OH (Americas)',
-    agents: 456,
+    id: 'CC-BFS',
+    name: 'Belfast, ME',
+    location: 'Belfast, ME (USA)',
+    agents: 180,
     totalCalls: 28750,
     risks: {
       compliance: 25,
-      fraud: 42,
+      fraud: 72,
       kyc: 35,
       script: 28,
       disclosure: 32,
@@ -67,27 +67,27 @@ const callCenterUnits: CallCenterUnit[] = [
     }
   },
   {
-    id: 'CC-DAL',
-    name: 'Dallas Operations',
-    location: 'Dallas, TX (Americas)',
-    agents: 378,
-    totalCalls: 19450,
+    id: 'CC-NWK',
+    name: 'Newark, DE',
+    location: 'Newark, DE (USA)',
+    agents: 245,
+    totalCalls: 34560,
     risks: {
       compliance: 32,
-      fraud: 28,
-      kyc: 38,
+      fraud: 75,
+      kyc: 68,
       script: 25,
       disclosure: 35,
-      aml: 30,
+      aml: 78,
       sentiment: 28
     }
   },
   {
-    id: 'CC-PHX',
-    name: 'Phoenix Regional',
-    location: 'Phoenix, AZ (Americas)',
-    agents: 245,
-    totalCalls: 12890,
+    id: 'CC-JAX',
+    name: 'Jacksonville, FL',
+    location: 'Jacksonville, FL (USA)',
+    agents: 195,
+    totalCalls: 23450,
     risks: {
       compliance: 28,
       fraud: 22,
@@ -98,28 +98,76 @@ const callCenterUnits: CallCenterUnit[] = [
       sentiment: 20
     }
   },
-  // EMEA Region
   {
-    id: 'CC-DUB',
-    name: 'Dublin European HQ',
-    location: 'Dublin, Ireland (EMEA)',
-    agents: 312,
+    id: 'CC-ADD',
+    name: 'Addison, TX',
+    location: 'Addison, TX (USA)',
+    agents: 165,
+    totalCalls: 18920,
+    risks: {
+      compliance: 30,
+      fraud: 28,
+      kyc: 32,
+      script: 22,
+      disclosure: 28,
+      aml: 26,
+      sentiment: 24
+    }
+  },
+  {
+    id: 'CC-GSO',
+    name: 'Greensboro, NC',
+    location: 'Greensboro, NC (USA)',
+    agents: 142,
     totalCalls: 15670,
     risks: {
-      compliance: 22,
+      compliance: 20,
       fraud: 18,
       kyc: 25,
       script: 15,
-      disclosure: 28,
+      disclosure: 22,
       aml: 20,
       sentiment: 16
     }
   },
+  // International Locations
   {
-    id: 'CC-LON',
-    name: 'London Operations',
-    location: 'London, UK (EMEA)',
-    agents: 267,
+    id: 'CC-MNL',
+    name: 'Manila (Taguig)',
+    location: 'Manila, Philippines',
+    agents: 485,
+    totalCalls: 52340,
+    risks: {
+      compliance: 72,
+      fraud: 35,
+      kyc: 58,
+      script: 65,
+      disclosure: 70,
+      aml: 36,
+      sentiment: 30
+    }
+  },
+  {
+    id: 'CC-CR',
+    name: 'San Jose (Heredia)',
+    location: 'San Jose, Costa Rica',
+    agents: 228,
+    totalCalls: 18920,
+    risks: {
+      compliance: 22,
+      fraud: 20,
+      kyc: 28,
+      script: 18,
+      disclosure: 25,
+      aml: 22,
+      sentiment: 18
+    }
+  },
+  {
+    id: 'CC-CHS',
+    name: 'Chester, UK',
+    location: 'Chester, United Kingdom',
+    agents: 198,
     totalCalls: 13450,
     risks: {
       compliance: 35,
@@ -127,170 +175,8 @@ const callCenterUnits: CallCenterUnit[] = [
       kyc: 42,
       script: 30,
       disclosure: 38,
-      aml: 52,
+      aml: 75,
       sentiment: 28
-    }
-  },
-  {
-    id: 'CC-FRA',
-    name: 'Frankfurt Center',
-    location: 'Frankfurt, Germany (EMEA)',
-    agents: 156,
-    totalCalls: 8230,
-    risks: {
-      compliance: 20,
-      fraud: 16,
-      kyc: 18,
-      script: 14,
-      disclosure: 22,
-      aml: 18,
-      sentiment: 12
-    }
-  },
-  // Asia Pacific Region
-  {
-    id: 'CC-HKG',
-    name: 'Hong Kong Asian HQ',
-    location: 'Hong Kong (APAC)',
-    agents: 289,
-    totalCalls: 14560,
-    risks: {
-      compliance: 38,
-      fraud: 55,
-      kyc: 48,
-      script: 32,
-      disclosure: 42,
-      aml: 62,
-      sentiment: 35
-    }
-  },
-  {
-    id: 'CC-SGP',
-    name: 'Singapore Hub',
-    location: 'Singapore (APAC)',
-    agents: 198,
-    totalCalls: 10230,
-    risks: {
-      compliance: 25,
-      fraud: 32,
-      kyc: 28,
-      script: 20,
-      disclosure: 30,
-      aml: 35,
-      sentiment: 22
-    }
-  },
-  {
-    id: 'CC-TKY',
-    name: 'Tokyo Operations',
-    location: 'Tokyo, Japan (APAC)',
-    agents: 134,
-    totalCalls: 7890,
-    risks: {
-      compliance: 15,
-      fraud: 12,
-      kyc: 18,
-      script: 10,
-      disclosure: 16,
-      aml: 14,
-      sentiment: 10
-    }
-  },
-  // India GBS Centers
-  {
-    id: 'GBS-MUM',
-    name: 'Mumbai GBS',
-    location: 'Mumbai, India (GBS)',
-    agents: 1245,
-    totalCalls: 62340,
-    risks: {
-      compliance: 45,
-      fraud: 38,
-      kyc: 52,
-      script: 48,
-      disclosure: 55,
-      aml: 42,
-      sentiment: 40
-    }
-  },
-  {
-    id: 'GBS-BLR',
-    name: 'Bengaluru GBS',
-    location: 'Bengaluru, India (GBS)',
-    agents: 1120,
-    totalCalls: 56780,
-    risks: {
-      compliance: 42,
-      fraud: 35,
-      kyc: 48,
-      script: 45,
-      disclosure: 50,
-      aml: 38,
-      sentiment: 36
-    }
-  },
-  {
-    id: 'GBS-CHN',
-    name: 'Chennai GBS',
-    location: 'Chennai, India (GBS)',
-    agents: 890,
-    totalCalls: 44560,
-    risks: {
-      compliance: 55,
-      fraud: 48,
-      kyc: 62,
-      script: 58,
-      disclosure: 65,
-      aml: 52,
-      sentiment: 48
-    }
-  },
-  {
-    id: 'GBS-HYD',
-    name: 'Hyderabad GBS',
-    location: 'Hyderabad, India (GBS)',
-    agents: 756,
-    totalCalls: 38920,
-    risks: {
-      compliance: 48,
-      fraud: 42,
-      kyc: 55,
-      script: 52,
-      disclosure: 58,
-      aml: 45,
-      sentiment: 42
-    }
-  },
-  {
-    id: 'GBS-DEL',
-    name: 'New Delhi GBS',
-    location: 'New Delhi, India (GBS)',
-    agents: 678,
-    totalCalls: 34560,
-    risks: {
-      compliance: 68,
-      fraud: 72,
-      kyc: 75,
-      script: 65,
-      disclosure: 78,
-      aml: 70,
-      sentiment: 62
-    }
-  },
-  {
-    id: 'GBS-GGN',
-    name: 'Gurugram GBS',
-    location: 'Gurugram, India (GBS)',
-    agents: 534,
-    totalCalls: 27890,
-    risks: {
-      compliance: 52,
-      fraud: 58,
-      kyc: 60,
-      script: 55,
-      disclosure: 62,
-      aml: 55,
-      sentiment: 48
     }
   }
 ];
@@ -646,12 +532,6 @@ export function CallCenterRiskHeatMap({ isDarkMode = false }: CallCenterRiskHeat
           backgroundColor: isDarkMode ? '#0a0a0a' : '#FAFAFA'
         }}
       >
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4" style={{ color: '#939394' }} />
-          <span className="text-[10px]" style={{ color: '#939394' }}>
-            Updated every 15 minutes • Last update: 2 min ago
-          </span>
-        </div>
         <button 
           className="text-xs font-medium hover:opacity-80 flex items-center gap-1"
           style={{ color: '#5332FF' }}

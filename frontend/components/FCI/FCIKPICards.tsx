@@ -134,7 +134,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Total Interactions</span>
-                <TrendBadge trend={kpiData.totalInteraction.trend} isPositive={false} />
               </div>
               <div className="text-4xl font-bold mb-3" style={{ 
                 background: 'linear-gradient(135deg, #5332FF 0%, #7c3aed 100%)',
@@ -196,7 +195,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>FCI Rate</span>
-                <TrendBadge trend={kpiData.fciRate.trend} isPositive={true} />
               </div>
               <div className="text-4xl font-bold mb-3" style={{ 
                 background: 'linear-gradient(135deg, #B90ABD 0%, #d946ef 100%)',
@@ -252,11 +250,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Risk Signals</span>
-                <div className="flex items-center gap-1 px-2 py-1 rounded text-sm font-bold"
-                  style={{ backgroundColor: isDarkMode ? '#ef444425' : '#ef444415', color: '#ef4444' }}>
-                  <AlertOctagon className="w-4 h-4" />
-                  <span>{kpiData.riskSignal.critical}</span>
-                </div>
               </div>
               
               <div className="flex items-baseline gap-2 mb-3">
@@ -361,7 +354,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Sentiment Score</span>
-                <TrendBadge trend={kpiData.customerSentiment.trend} isPositive={true} />
               </div>
               <div className="text-4xl font-bold mb-2" style={{ color: '#10b981' }}>
                 {kpiData.customerSentiment.value}%

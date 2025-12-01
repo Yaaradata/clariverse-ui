@@ -832,7 +832,7 @@ export function FCIEisenhowerDistribution({ isDarkMode }: FCIEisenhowerDistribut
                   color: activeInsightTab === 'summary' ? '#b90abd' : '#939394'
                 }}
               >
-                <Sparkles className="h-3.5 w-3.5" />
+                <span>✨</span>
                 AI Summary
                 {activeInsightTab === 'summary' && (
                   <div
@@ -849,7 +849,7 @@ export function FCIEisenhowerDistribution({ isDarkMode }: FCIEisenhowerDistribut
                 }}
               >
                 <BarChart3 className="h-3.5 w-3.5" />
-                Segment Details
+                Details
                 {activeInsightTab === 'details' && (
                   <div
                     className="absolute bottom-0 left-0 right-0 h-0.5"
@@ -925,32 +925,6 @@ export function FCIEisenhowerDistribution({ isDarkMode }: FCIEisenhowerDistribut
                       </div>
                     </div>
                   </div>
-
-                  {/* Action Footer */}
-                  <div 
-                    className="flex items-center justify-between p-3 rounded-xl"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F3F4F6',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" style={{ color: '#939394' }} />
-                      <span className="text-xs" style={{ color: '#939394' }}>
-                        {selectedQuadrant === 'do' ? '2-4 hours resolution' : 
-                         selectedQuadrant === 'schedule' ? '24-48 hours' :
-                         selectedQuadrant === 'delegate' ? '1-2 weeks' : 'Monthly review'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4" style={{ color: '#939394' }} />
-                      <span className="text-xs" style={{ color: '#939394' }}>
-                        {selectedQuadrant === 'do' ? 'Operations Manager' : 
-                         selectedQuadrant === 'schedule' ? 'Digital Lead' :
-                         selectedQuadrant === 'delegate' ? 'Team Leads' : 'Knowledge Team'}
-                      </span>
-                    </div>
-                  </div>
                 </div>
               ) : (
                 /* Details Tab Content */
@@ -1015,32 +989,6 @@ export function FCIEisenhowerDistribution({ isDarkMode }: FCIEisenhowerDistribut
                       <div className="text-2xl font-bold" style={{ color: '#f59e0b' }}>
                         {selectedData.segments.filter(s => selectedData.segmentData[s].volume > 0).length}
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Action Footer */}
-                  <div 
-                    className="flex items-center justify-between p-3 rounded-xl"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F3F4F6',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" style={{ color: '#939394' }} />
-                      <span className="text-xs" style={{ color: '#939394' }}>
-                        {selectedQuadrant === 'do' ? '2-4 hours resolution' : 
-                         selectedQuadrant === 'schedule' ? '24-48 hours' :
-                         selectedQuadrant === 'delegate' ? '1-2 weeks' : 'Monthly review'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4" style={{ color: '#939394' }} />
-                      <span className="text-xs" style={{ color: '#939394' }}>
-                        {selectedQuadrant === 'do' ? 'Operations Manager' : 
-                         selectedQuadrant === 'schedule' ? 'Digital Lead' :
-                         selectedQuadrant === 'delegate' ? 'Team Leads' : 'Knowledge Team'}
-                      </span>
                     </div>
                   </div>
                 </div>

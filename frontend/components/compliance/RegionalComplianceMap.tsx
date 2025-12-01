@@ -20,59 +20,103 @@ interface RegionData {
 
 const regionData: RegionData[] = [
   {
-    id: 'americas',
-    name: 'Americas',
-    code: 'AME',
-    violations: 12,
-    complianceScore: 87,
-    agents: 245,
+    id: 'phoenix',
+    name: 'Phoenix, AZ',
+    code: 'PHX',
+    violations: 8,
+    complianceScore: 89,
+    agents: 320,
+    trend: -3,
+    riskLevel: 'low',
+    coordinates: { x: 18, y: 42 }
+  },
+  {
+    id: 'belfast',
+    name: 'Belfast, ME',
+    code: 'BFS',
+    violations: 5,
+    complianceScore: 92,
+    agents: 180,
     trend: -5,
+    riskLevel: 'low',
+    coordinates: { x: 25, y: 35 }
+  },
+  {
+    id: 'newark',
+    name: 'Newark, DE',
+    code: 'NWK',
+    violations: 12,
+    complianceScore: 85,
+    agents: 245,
+    trend: 2,
+    riskLevel: 'medium',
+    coordinates: { x: 24, y: 38 }
+  },
+  {
+    id: 'jacksonville',
+    name: 'Jacksonville, FL',
+    code: 'JAX',
+    violations: 10,
+    complianceScore: 87,
+    agents: 195,
+    trend: -2,
     riskLevel: 'medium',
     coordinates: { x: 22, y: 45 }
   },
   {
-    id: 'europe',
-    name: 'Europe',
-    code: 'EUR',
-    violations: 18,
+    id: 'addison',
+    name: 'Addison, TX',
+    code: 'ADD',
+    violations: 9,
+    complianceScore: 88,
+    agents: 165,
+    trend: -4,
+    riskLevel: 'low',
+    coordinates: { x: 20, y: 40 }
+  },
+  {
+    id: 'greensboro',
+    name: 'Greensboro, NC',
+    code: 'GSO',
+    violations: 6,
+    complianceScore: 91,
+    agents: 142,
+    trend: -6,
+    riskLevel: 'low',
+    coordinates: { x: 23, y: 41 }
+  },
+  {
+    id: 'manila',
+    name: 'Manila (Taguig)',
+    code: 'MNL',
+    violations: 15,
     complianceScore: 82,
-    agents: 312,
+    agents: 485,
     trend: 8,
     riskLevel: 'high',
+    coordinates: { x: 78, y: 52 }
+  },
+  {
+    id: 'costa-rica',
+    name: 'San Jose (Heredia)',
+    code: 'CR',
+    violations: 7,
+    complianceScore: 90,
+    agents: 228,
+    trend: -4,
+    riskLevel: 'low',
+    coordinates: { x: 20, y: 50 }
+  },
+  {
+    id: 'chester',
+    name: 'Chester, UK',
+    code: 'CHS',
+    violations: 11,
+    complianceScore: 86,
+    agents: 198,
+    trend: 3,
+    riskLevel: 'medium',
     coordinates: { x: 48, y: 32 }
-  },
-  {
-    id: 'india',
-    name: 'India',
-    code: 'IND',
-    violations: 8,
-    complianceScore: 91,
-    agents: 428,
-    trend: -12,
-    riskLevel: 'low',
-    coordinates: { x: 65, y: 48 }
-  },
-  {
-    id: 'apac',
-    name: 'APAC',
-    code: 'APAC',
-    violations: 24,
-    complianceScore: 76,
-    agents: 567,
-    trend: 15,
-    riskLevel: 'critical',
-    coordinates: { x: 78, y: 55 }
-  },
-  {
-    id: 'mea',
-    name: 'MEA',
-    code: 'MEA',
-    violations: 6,
-    complianceScore: 89,
-    agents: 156,
-    trend: -3,
-    riskLevel: 'low',
-    coordinates: { x: 55, y: 52 }
   }
 ];
 
@@ -237,10 +281,10 @@ export function RegionalComplianceMap({ isDarkMode = false }: RegionalCompliance
                 className="text-lg font-bold"
                 style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
               >
-                Regional Compliance Overview
+                Call Center Risk Heat Map
               </h3>
               <p className="text-xs" style={{ color: '#939394' }}>
-                Global compliance status across all operating regions
+                Risk assessment across all call center locations
               </p>
             </div>
           </div>

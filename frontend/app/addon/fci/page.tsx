@@ -138,7 +138,7 @@ export default function FCIPage() {
           style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
         >
           <p className="text-xs" style={{ color: '#939394' }}>
-            © 2024 Yaaralabs FCI Monitoring System • Data refreshed every 5 minutes
+            © 2024 Bank of America FCI Monitoring System • Data refreshed every 5 minutes
           </p>
           <div className="flex items-center gap-4">
             <button 

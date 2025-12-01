@@ -90,7 +90,7 @@ export const fciInsightsData: FCIInsight[] = [
     severity: 'warning',
     category: 'sla-breach',
     title: 'SLA Failure: High-Value Customer Emails',
-    message: 'Email responses to high-value customers exceeding 48 hours - 156 VIP accounts affected',
+    message: 'Email responses to high-value customers exceeding 48 hours.',
     trend: 'up',
     change: 35,
     metrics: {
