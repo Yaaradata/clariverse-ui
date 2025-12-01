@@ -5,7 +5,8 @@ import {
   UserX, AlertTriangle, TrendingUp, TrendingDown, 
   Eye, ChevronRight, Shield, Clock, X, FileText,
   Target, ArrowRight, Calendar, Phone, Mail, Building,
-  CheckCircle2, XCircle, AlertCircle, BarChart3, Users
+  CheckCircle2, XCircle, AlertCircle, BarChart3, Users,
+  MessageSquare, Ticket, Mic, Share2
 } from 'lucide-react';
 import { getRegionFlag, Region } from '@/lib/compliance/complianceData';
 
@@ -18,6 +19,7 @@ interface WatchlistAgent {
   lastViolation: string;
   riskLevel: 'critical' | 'high' | 'medium';
   categories: string[];
+  channel: 'email' | 'chat' | 'ticket' | 'voice' | 'social';
 }
 
 // Extended agent details
@@ -166,6 +168,14 @@ const agentDetailsMap: Record<string, AgentDetails> = {
   }
 };
 
+const channelConfig = {
+  email: { label: 'Email', icon: Mail, color: '#3b82f6' },
+  chat: { label: 'Chat', icon: MessageSquare, color: '#22c55e' },
+  ticket: { label: 'Ticket', icon: Ticket, color: '#f97316' },
+  voice: { label: 'Voice', icon: Mic, color: '#8b5cf6' },
+  social: { label: 'Social', icon: Share2, color: '#ec4899' }
+};
+
 const watchlistData: WatchlistAgent[] = [
   {
     id: 'AGT-1823',
@@ -175,7 +185,8 @@ const watchlistData: WatchlistAgent[] = [
     trend: 40,
     lastViolation: '2 hours ago',
     riskLevel: 'critical',
-    categories: ['Script Violation', 'Consent']
+    categories: ['Script Violation', 'Consent'],
+    channel: 'voice'
   },
   {
     id: 'AGT-2451',
@@ -185,7 +196,8 @@ const watchlistData: WatchlistAgent[] = [
     trend: 15,
     lastViolation: '5 hours ago',
     riskLevel: 'high',
-    categories: ['KYC']
+    categories: ['KYC'],
+    channel: 'chat'
   },
   {
     id: 'BPO-VN-089',
@@ -195,7 +207,8 @@ const watchlistData: WatchlistAgent[] = [
     trend: 25,
     lastViolation: '8 hours ago',
     riskLevel: 'critical',
-    categories: ['Data Privacy', 'Third-Party']
+    categories: ['Data Privacy', 'Third-Party'],
+    channel: 'email'
   },
   {
     id: 'AGT-2789',
@@ -205,7 +218,8 @@ const watchlistData: WatchlistAgent[] = [
     trend: -10,
     lastViolation: '1 day ago',
     riskLevel: 'medium',
-    categories: ['AML']
+    categories: ['AML'],
+    channel: 'ticket'
   }
 ];
 
@@ -409,6 +423,22 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
                       >
                         {getRegionFlag(agent.region)} {agent.region}
                       </span>
+                      {(() => {
+                        const channel = channelConfig[agent.channel];
+                        const ChannelIcon = channel.icon;
+                        return (
+                          <span 
+                            className="flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded"
+                            style={{ 
+                              backgroundColor: `${channel.color}15`,
+                              color: channel.color
+                            }}
+                          >
+                            <ChannelIcon className="w-3 h-3" />
+                            {channel.label}
+                          </span>
+                        );
+                      })()}
                     </div>
 
                     <div className="flex items-center gap-3">
