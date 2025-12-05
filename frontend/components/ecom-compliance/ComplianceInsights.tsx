@@ -36,8 +36,8 @@ export default function ComplianceInsights() {
 
   const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
   const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
-  const headerColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(31, 41, 55)';
-  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)';
+  const headerColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
   const scrollbarColor = isDarkMode ? 'rgb(51, 51, 51) rgb(26, 26, 26)' : 'rgb(203, 213, 225) rgb(241, 245, 249)';
 
   return (
@@ -45,7 +45,7 @@ export default function ComplianceInsights() {
       {/* Row 1: Trust Risk Score + AI Insights Cards */}
       <div className="flex gap-4">
         {/* Left - Trust Risk Score */}
-        <div className="flex-shrink-0 w-80">
+        <div className="flex-shrink-0 w-96">
           <TrustRiskScore />
         </div>
 
@@ -64,7 +64,10 @@ export default function ComplianceInsights() {
               {criticalCount > 0 && (
                 <span 
                   className="text-[10px] px-2 py-0.5 rounded-full tracking-wide uppercase font-medium" 
-                  style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: 'rgb(252, 165, 165)' }}
+                  style={{ 
+                    backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.12)', 
+                    color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)' 
+                  }}
                 >
                   {criticalCount} Critical
                 </span>
@@ -72,7 +75,10 @@ export default function ComplianceInsights() {
               {highCount > 0 && (
                 <span 
                   className="text-[10px] px-2 py-0.5 rounded-full tracking-wide uppercase font-medium" 
-                  style={{ backgroundColor: 'rgba(251, 146, 60, 0.2)', color: 'rgb(253, 186, 116)' }}
+                  style={{ 
+                    backgroundColor: isDarkMode ? 'rgba(251, 146, 60, 0.2)' : 'rgba(249, 115, 22, 0.12)', 
+                    color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)' 
+                  }}
                 >
                   {highCount} High
                 </span>
@@ -101,10 +107,10 @@ export default function ComplianceInsights() {
         </div>
       </div>
 
-      {/* Row 2: Logistics + Marketplace Radar + Governance Grid */}
+      {/* Row 2: Marketplace Radar + Logistics + Governance Grid */}
       <div className="grid grid-cols-3 gap-4">
-        <LogisticsBreachPlot />
         <MarketplaceRadar />
+        <LogisticsBreachPlot />
         <GovernanceGrid />
       </div>
     </div>
