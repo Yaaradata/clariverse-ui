@@ -161,7 +161,7 @@ export default function EcomLayout({
                 borderBottom: isCompActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Trust & Safety
+              Risk & Trust
             </Link>
             <Link
               href="/ecom/paingradation"
@@ -171,7 +171,7 @@ export default function EcomLayout({
                 borderBottom: isPaingradationActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Operational Pain Intelligence
+              Operational Perfectness
             </Link>
           </div>
         </div>
