@@ -161,7 +161,7 @@ export default function EcomLayout({
                 borderBottom: isCompActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Compliance and Risk
+              Trust & Safety
             </Link>
             <Link
               href="/ecom/paingradation"
