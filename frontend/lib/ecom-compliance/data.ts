@@ -1,0 +1,172 @@
+import { Insight } from './types';
+
+export const complianceInsights: Insight[] = [
+  {
+    id: "insight_001",
+    title: "Return & Refund Policy Mis-communication",
+    severity: "CRITICAL",
+    channels: ["Chat", "Tickets", "Voice"],
+    domain: "Returns & Refunds Compliance",
+    detected_at: "2h ago",
+    affected_interactions: 2130,
+    issue: "Agents promised \"return anytime\" or \"full refund\" conflicting with policy terms.",
+    root_cause: "Agent response macros are outdated and not aligned with current policy. No system in place to enforce policy-locked replies before sending.",
+    corrective_action: "Update all agent macros immediately and add mandatory refund-eligibility verification step before processing."
+  },
+  {
+    id: "insight_002",
+    title: "PII / Sensitive Data Exposure",
+    severity: "CRITICAL",
+    channels: ["Chat", "Email", "Social Media"],
+    domain: "Data Privacy (DPDP/IT Act)",
+    detected_at: "45m ago",
+    affected_interactions: 540,
+    issue: "PII or payment data shared in plain chat/email without secure handling.",
+    root_cause: "No automatic PII detection system deployed in communication channels. Agents have not received adequate training on data sensitivity protocols.",
+    corrective_action: "Immediately redact PII from all conversation logs and retrain agents on data protection protocols."
+  },
+  {
+    id: "insight_003",
+    title: "Misleading Product Claims",
+    severity: "CRITICAL",
+    channels: ["Email", "Social Media", "Chat", "Tickets"],
+    domain: "Consumer Protection & Listings",
+    detected_at: "30m ago",
+    affected_interactions: 870,
+    issue: "Product descriptions inaccurate — wrong specs, missing MRP, exaggerated claims.",
+    root_cause: "Seller listing oversight process is weak with limited verification. No feedback loop exists between customer complaints and listing review team.",
+    corrective_action: "Suspend affected listings immediately and notify sellers to correct product information within 48 hours."
+  },
+  {
+    id: "insight_004",
+    title: "Return Abuse Signals",
+    severity: "CRITICAL",
+    channels: ["Tickets", "Chat", "Return Requests"],
+    domain: "Return Fraud / Abuse Risk",
+    detected_at: "1h ago",
+    affected_interactions: 610,
+    issue: "Repeat customers filing vague complaints suggesting serial policy abuse.",
+    root_cause: "No automated language pattern detection for identifying abuse signals. Return approval relies entirely on manual QC review without flagging.",
+    corrective_action: "Escalate flagged requests to fraud review team and require photo proof with delivery verification."
+  },
+  {
+    id: "insight_005",
+    title: "Consent & Data Retention Violation",
+    severity: "HIGH",
+    channels: ["App/Web Chat", "Tickets", "Email"],
+    domain: "Data Consent (DPDP)",
+    detected_at: "20m ago",
+    affected_interactions: 420,
+    issue: "Data retained without consent; deletion requests not honored.",
+    root_cause: "Consent capture flow is not enforced during data collection. Retention policy lacks regular audits and user deletion requests are backlogged.",
+    corrective_action: "Purge all unconsented data records and process pending deletion requests within 48 hours."
+  },
+  {
+    id: "insight_006",
+    title: "Dark-Pattern UI Complaints",
+    severity: "HIGH",
+    channels: ["Social Media", "Customer Feedback", "Complaints"],
+    domain: "Consumer Protection",
+    detected_at: "15m ago",
+    affected_interactions: 250,
+    issue: "Users report hidden fees, pre-checked boxes, misleading pricing.",
+    root_cause: "No UX compliance review process for checkout flows. Missing feedback loop from customer complaints to design team for corrections.",
+    corrective_action: "Conduct immediate UX audit and remove all pre-checked consent boxes and hidden fee elements."
+  },
+  {
+    id: "insight_007",
+    title: "Data Breach Complaint Spike",
+    severity: "HIGH",
+    channels: ["Social Media", "Email", "Tickets"],
+    domain: "Data Security & Privacy",
+    detected_at: "10m ago",
+    affected_interactions: 180,
+    issue: "Users receiving suspicious marketing — possible unauthorized data sharing.",
+    root_cause: "Data access controls are weak without proper role-based restrictions. No audit trail exists for tracking who accessed sensitive user data.",
+    corrective_action: "Suspend all external data-sharing immediately and launch comprehensive internal security audit."
+  },
+  {
+    id: "insight_008",
+    title: "Delivery Status Mismatch",
+    severity: "HIGH",
+    channels: ["Voice", "Chat"],
+    domain: "Delivery SLA",
+    detected_at: "45m ago",
+    affected_interactions: 870,
+    issue: "Agents claim \"delivered\" without verifying GPS/hub logs.",
+    root_cause: "No mandatory verification protocol before confirming delivery status. Agents bypass GPS scan and hub log checks to close tickets faster.",
+    corrective_action: "Mandate GPS scan and hub log verification before any delivery status confirmation to customers."
+  },
+  {
+    id: "insight_009",
+    title: "Invoice / GST Violations",
+    severity: "HIGH",
+    channels: ["Email", "Tickets"],
+    domain: "Invoice / GST Mandate",
+    detected_at: "30m ago",
+    affected_interactions: 430,
+    issue: "Agents incorrectly stating invoices cannot be re-issued.",
+    root_cause: "New agents have not received GST compliance training. Invoice re-issue workflow documentation is missing from agent knowledge base.",
+    corrective_action: "Conduct immediate GST workflow training for all agents and update invoice-related scripts."
+  },
+  {
+    id: "insight_010",
+    title: "Warranty Info Errors",
+    severity: "MEDIUM",
+    channels: ["Voice", "Chat"],
+    domain: "Warranty Compliance",
+    detected_at: "1h ago",
+    affected_interactions: 210,
+    issue: "Agents wrongly claiming Flipkart handles warranty instead of brand.",
+    root_cause: "Brand partnership rules are unclear in agent documentation. Warranty handling scripts are outdated and do not reflect current brand agreements.",
+    corrective_action: "Update warranty response templates in CRM and add brand-specific warranty routing information."
+  },
+  {
+    id: "insight_011",
+    title: "Seller Misconduct Not Escalated",
+    severity: "MEDIUM",
+    channels: ["Chat", "Tickets", "Complaints"],
+    domain: "Seller Compliance",
+    detected_at: "2h ago",
+    affected_interactions: 156,
+    issue: "Seller complaints (delays, counterfeits) not escalated to Trust team.",
+    root_cause: "Escalation protocol for seller violations is unclear to agents. No seller-risk classification system to identify severity levels.",
+    corrective_action: "Define clear escalation pathways and train all agents on seller violation categories and severity."
+  },
+  {
+    id: "insight_012",
+    title: "Promo Terms Miscommunication",
+    severity: "MEDIUM",
+    channels: ["Chat", "Voice", "Social Media"],
+    domain: "Promotional Compliance",
+    detected_at: "3h ago",
+    affected_interactions: 340,
+    issue: "Agents gave wrong promo info — discounts, minimum order requirements.",
+    root_cause: "Promotional terms are not synced to agent knowledge base in real-time. Rapid campaign changes are not communicated to support teams.",
+    corrective_action: "Implement real-time promo sync to agent desktop and add verification step before quoting offers."
+  },
+  {
+    id: "insight_013",
+    title: "Payment Dispute Delays",
+    severity: "LOW",
+    channels: ["Email", "Tickets"],
+    domain: "Payment Dispute SLA",
+    detected_at: "4h ago",
+    affected_interactions: 89,
+    issue: "Payment disputes (failed refunds, double charges) exceeding SLA.",
+    root_cause: "Manual dispute queue is overloaded with backlog tickets. No priority routing system to fast-track payment-related issues.",
+    corrective_action: "Implement priority routing for all payment disputes and add dedicated payment resolution queue."
+  },
+  {
+    id: "insight_014",
+    title: "Cross-Sell Without Consent",
+    severity: "LOW",
+    channels: ["Voice", "Chat"],
+    domain: "Consent-Based Marketing",
+    detected_at: "5h ago",
+    affected_interactions: 112,
+    issue: "Agents promoting products without customer consent.",
+    root_cause: "Aggressive cross-sell targets pressure agents to push promotions. Sales scripts lack mandatory consent-check step before pitching.",
+    corrective_action: "Add mandatory consent verification before any promotional pitch and revise cross-sell KPIs."
+  }
+];

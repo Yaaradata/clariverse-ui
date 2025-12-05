@@ -18,7 +18,7 @@ export default function EcomLayout({
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   
   const isPaingradationActive = pathname === '/ecom/paingradation';
-  const isCompActive = pathname === '/ecom/comp';
+  const isCompActive = pathname.startsWith('/ecom/comp');
 
   const timeFilterOptions: { value: TimeFilter; label: string }[] = [
     { value: '24h', label: 'Last 24 Hours' },
