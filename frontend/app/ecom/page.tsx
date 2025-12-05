@@ -61,7 +61,7 @@ export default function EcomPage() {
                 borderBottom: isPaingradationActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Paingradation
+              Operational Pain Intelligence
             </Link>
           </div>
         </div>
