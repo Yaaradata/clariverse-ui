@@ -170,11 +170,24 @@ export default function MarketplaceRadar() {
     
     checkTheme();
     checkFilter();
-    window.addEventListener('storage', () => {
+    
+    // Listen for storage changes (from other tabs)
+    const handleStorage = () => {
       checkTheme();
       checkFilter();
+    };
+    window.addEventListener('storage', handleStorage);
+    
+    // Listen for class changes on document (same tab theme toggle)
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
     });
-    return () => window.removeEventListener('storage', () => {});
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      observer.disconnect();
+    };
   }, []);
 
   const riskData = useMemo(() => getRiskData(timeFilter), [timeFilter]);
@@ -184,9 +197,9 @@ export default function MarketplaceRadar() {
 
   const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
   const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
-  const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(31, 41, 55)';
-  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)';
-  const barBg = isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(228, 228, 231)';
+  const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const barBg = isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(229, 231, 235)';
 
   const getBarColor = (value: number, critical: boolean) => {
     if (critical || value >= CRITICAL_THRESHOLD) return 'rgb(239, 68, 68)';

@@ -27,60 +27,60 @@ interface InsightCardProps {
   delay?: number;
 }
 
-const getSeverityColors = (severity: Severity) => {
+const getSeverityColors = (severity: Severity, isDarkMode: boolean) => {
   switch (severity) {
     case 'CRITICAL':
       return {
-        badgeBg: 'rgba(239, 68, 68, 0.2)',
-        badgeText: 'rgb(252, 165, 165)',
+        badgeBg: isDarkMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.15)',
+        badgeText: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)',
         iconBg: 'rgba(239, 68, 68, 0.125)',
         iconColor: 'rgb(239, 68, 68)',
-        borderColor: 'rgba(239, 68, 68, 0.6)',
-        bgColor: 'rgba(239, 68, 68, 0.05)',
-        boxShadow: 'rgba(239, 68, 68, 0.3) 0px 4px 20px -4px',
-        affectedColor: 'rgb(239, 68, 68)',
+        borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.4)',
+        bgColor: isDarkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(254, 242, 242, 0.9)',
+        boxShadow: 'rgba(239, 68, 68, 0.2) 0px 4px 20px -4px',
+        affectedColor: 'rgb(220, 38, 38)',
         actionBorder: 'rgba(239, 68, 68, 0.25)',
-        actionBg: 'rgba(239, 68, 68, 0.063)',
+        actionBg: isDarkMode ? 'rgba(239, 68, 68, 0.063)' : 'rgba(254, 226, 226, 0.8)',
       };
     case 'HIGH':
       return {
-        badgeBg: 'rgba(251, 146, 60, 0.2)',
-        badgeText: 'rgb(253, 186, 116)',
+        badgeBg: isDarkMode ? 'rgba(251, 146, 60, 0.2)' : 'rgba(249, 115, 22, 0.15)',
+        badgeText: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)',
         iconBg: 'rgba(249, 115, 22, 0.125)',
         iconColor: 'rgb(249, 115, 22)',
-        borderColor: 'rgba(251, 146, 60, 0.6)',
-        bgColor: 'rgba(251, 146, 60, 0.05)',
-        boxShadow: 'rgba(251, 146, 60, 0.2) 0px 4px 20px -4px',
-        affectedColor: 'rgb(249, 115, 22)',
+        borderColor: isDarkMode ? 'rgba(251, 146, 60, 0.6)' : 'rgba(249, 115, 22, 0.4)',
+        bgColor: isDarkMode ? 'rgba(251, 146, 60, 0.05)' : 'rgba(255, 247, 237, 0.9)',
+        boxShadow: 'rgba(251, 146, 60, 0.15) 0px 4px 20px -4px',
+        affectedColor: 'rgb(234, 88, 12)',
         actionBorder: 'rgba(249, 115, 22, 0.25)',
-        actionBg: 'rgba(249, 115, 22, 0.063)',
+        actionBg: isDarkMode ? 'rgba(249, 115, 22, 0.063)' : 'rgba(255, 237, 213, 0.8)',
       };
     case 'MEDIUM':
       return {
-        badgeBg: 'rgba(250, 204, 21, 0.2)',
-        badgeText: 'rgb(253, 224, 71)',
+        badgeBg: isDarkMode ? 'rgba(250, 204, 21, 0.2)' : 'rgba(234, 179, 8, 0.15)',
+        badgeText: isDarkMode ? 'rgb(253, 224, 71)' : 'rgb(161, 98, 7)',
         iconBg: 'rgba(234, 179, 8, 0.125)',
-        iconColor: 'rgb(234, 179, 8)',
-        borderColor: 'rgba(250, 204, 21, 0.4)',
-        bgColor: 'rgba(250, 204, 21, 0.05)',
+        iconColor: isDarkMode ? 'rgb(234, 179, 8)' : 'rgb(180, 83, 9)',
+        borderColor: isDarkMode ? 'rgba(250, 204, 21, 0.4)' : 'rgba(234, 179, 8, 0.4)',
+        bgColor: isDarkMode ? 'rgba(250, 204, 21, 0.05)' : 'rgba(254, 252, 232, 0.9)',
         boxShadow: 'rgba(250, 204, 21, 0.1) 0px 4px 20px -4px',
-        affectedColor: 'rgb(234, 179, 8)',
+        affectedColor: isDarkMode ? 'rgb(234, 179, 8)' : 'rgb(180, 83, 9)',
         actionBorder: 'rgba(234, 179, 8, 0.25)',
-        actionBg: 'rgba(234, 179, 8, 0.063)',
+        actionBg: isDarkMode ? 'rgba(234, 179, 8, 0.063)' : 'rgba(254, 249, 195, 0.8)',
       };
     case 'LOW':
     default:
       return {
-        badgeBg: 'rgba(147, 197, 253, 0.2)',
-        badgeText: 'rgb(147, 197, 253)',
+        badgeBg: isDarkMode ? 'rgba(147, 197, 253, 0.2)' : 'rgba(59, 130, 246, 0.15)',
+        badgeText: isDarkMode ? 'rgb(147, 197, 253)' : 'rgb(29, 78, 216)',
         iconBg: 'rgba(59, 130, 246, 0.125)',
         iconColor: 'rgb(59, 130, 246)',
-        borderColor: 'rgba(147, 197, 253, 0.4)',
-        bgColor: 'rgba(147, 197, 253, 0.05)',
+        borderColor: isDarkMode ? 'rgba(147, 197, 253, 0.4)' : 'rgba(59, 130, 246, 0.4)',
+        bgColor: isDarkMode ? 'rgba(147, 197, 253, 0.05)' : 'rgba(239, 246, 255, 0.9)',
         boxShadow: 'rgba(147, 197, 253, 0.1) 0px 4px 20px -4px',
-        affectedColor: 'rgb(59, 130, 246)',
+        affectedColor: 'rgb(37, 99, 235)',
         actionBorder: 'rgba(59, 130, 246, 0.25)',
-        actionBg: 'rgba(59, 130, 246, 0.063)',
+        actionBg: isDarkMode ? 'rgba(59, 130, 246, 0.063)' : 'rgba(219, 234, 254, 0.8)',
       };
   }
 };
@@ -151,15 +151,15 @@ export default function InsightCard({ insight, delay = 0 }: InsightCardProps) {
     };
   }, []);
 
-  const colors = getSeverityColors(insight.severity);
+  const colors = getSeverityColors(insight.severity, isDarkMode);
 
-  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(31, 41, 55)';
-  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(249, 250, 251)';
-  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(229, 231, 235)';
-  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(75, 85, 99)';
-  const labelColor = 'rgb(107, 114, 128)';
-  const valueColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(31, 41, 55)';
-  const actionTextColor = isDarkMode ? 'rgb(229, 231, 235)' : 'rgb(55, 65, 81)';
+  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(17, 24, 39)';
+  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
+  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(55, 65, 81)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
+  const valueColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(17, 24, 39)';
+  const actionTextColor = isDarkMode ? 'rgb(229, 231, 235)' : 'rgb(31, 41, 55)';
 
   return (
     <div

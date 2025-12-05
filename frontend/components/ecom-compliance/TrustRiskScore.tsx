@@ -37,12 +37,12 @@ export default function TrustRiskScore() {
 
   const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
   const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
-  const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(31, 41, 55)';
-  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)';
-  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(107, 114, 128)';
+  const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
   const ringBg = isDarkMode ? 'rgb(38, 38, 38)' : 'rgb(229, 231, 235)';
-  const insightBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(249, 250, 251)';
-  const insightBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(229, 231, 235)';
+  const insightBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const insightBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
 
   return (
     <div 
@@ -108,8 +108,8 @@ export default function TrustRiskScore() {
         <div 
           className="mt-2 px-3 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider"
           style={{ 
-            backgroundColor: 'rgba(249, 115, 22, 0.15)', 
-            color: 'rgb(253, 186, 116)' 
+            backgroundColor: isDarkMode ? 'rgba(249, 115, 22, 0.15)' : 'rgba(249, 115, 22, 0.12)', 
+            color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)' 
           }}
         >
           Elevated Risk
@@ -119,8 +119,8 @@ export default function TrustRiskScore() {
         <div 
           className="mt-2 flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
           style={{ 
-            backgroundColor: 'rgba(239, 68, 68, 0.15)', 
-            color: 'rgb(252, 165, 165)' 
+            backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.12)', 
+            color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)' 
           }}
         >
           <TrendingUp className="w-3 h-3" />
@@ -150,12 +150,12 @@ export default function TrustRiskScore() {
         style={{ backgroundColor: insightBg, border: `1px solid ${insightBorder}` }}
       >
         <div className="flex items-center gap-1.5 mb-1.5">
-          <Lightbulb className="w-3 h-3" style={{ color: 'rgb(250, 204, 21)' }} />
-          <span className="text-[9px] uppercase tracking-wider font-medium" style={{ color: 'rgb(250, 204, 21)' }}>
+          <Lightbulb className="w-3 h-3" style={{ color: isDarkMode ? 'rgb(250, 204, 21)' : 'rgb(161, 98, 7)' }} />
+          <span className="text-[9px] uppercase tracking-wider font-medium" style={{ color: isDarkMode ? 'rgb(250, 204, 21)' : 'rgb(161, 98, 7)' }}>
             AI Insight
           </span>
         </div>
-        <p className="text-[11px] leading-relaxed" style={{ color: subtextColor }}>
+        <p className="text-[11px] leading-relaxed" style={{ color: isDarkMode ? subtextColor : 'rgb(55, 65, 81)' }}>
           Rise in customer expressions of dissatisfaction linked to replacement denials and repeated delay complaints.
         </p>
       </div>
@@ -164,17 +164,17 @@ export default function TrustRiskScore() {
       <div 
         className="rounded-xl p-3"
         style={{ 
-          backgroundColor: 'rgba(249, 115, 22, 0.08)', 
-          border: '1px solid rgba(249, 115, 22, 0.2)' 
+          backgroundColor: isDarkMode ? 'rgba(249, 115, 22, 0.08)' : 'rgba(255, 237, 213, 0.8)', 
+          border: '1px solid rgba(249, 115, 22, 0.25)' 
         }}
       >
         <div className="flex items-center gap-1.5 mb-1.5">
-          <AlertTriangle className="w-3 h-3" style={{ color: 'rgb(249, 115, 22)' }} />
-          <span className="text-[9px] uppercase tracking-wider font-medium" style={{ color: 'rgb(249, 115, 22)' }}>
+          <AlertTriangle className="w-3 h-3" style={{ color: isDarkMode ? 'rgb(249, 115, 22)' : 'rgb(194, 65, 12)' }} />
+          <span className="text-[9px] uppercase tracking-wider font-medium" style={{ color: isDarkMode ? 'rgb(249, 115, 22)' : 'rgb(194, 65, 12)' }}>
             Recommendation
           </span>
         </div>
-        <p className="text-[11px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(154, 52, 18)' }}>
+        <p className="text-[11px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(124, 45, 18)' }}>
           Add mandatory clarity message on return/replacement eligibility to reduce frustration-triggered escalations.
         </p>
       </div>

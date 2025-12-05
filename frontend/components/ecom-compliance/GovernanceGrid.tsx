@@ -178,31 +178,31 @@ const getStatus = (count: number, filter: TimeFilter) => {
   return 'Stable';
 };
 
-const getStatusStyles = (status: string) => {
+const getStatusStyles = (status: string, isDarkMode: boolean) => {
   switch (status) {
     case 'Critical':
       return {
         borderColor: 'rgb(239, 68, 68)',
-        bg: 'rgba(239, 68, 68, 0.08)',
-        textColor: 'rgb(252, 165, 165)',
-        badgeColor: 'rgb(239, 68, 68)',
+        bg: isDarkMode ? 'rgba(239, 68, 68, 0.08)' : 'rgba(254, 226, 226, 0.8)',
+        textColor: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)',
+        badgeColor: isDarkMode ? 'rgb(239, 68, 68)' : 'rgb(185, 28, 28)',
         pulse: true,
       };
     case 'Warning':
       return {
         borderColor: 'rgb(245, 158, 11)',
-        bg: 'rgba(245, 158, 11, 0.08)',
-        textColor: 'rgb(253, 230, 138)',
-        badgeColor: 'rgb(245, 158, 11)',
+        bg: isDarkMode ? 'rgba(245, 158, 11, 0.08)' : 'rgba(254, 243, 199, 0.8)',
+        textColor: isDarkMode ? 'rgb(253, 230, 138)' : 'rgb(146, 64, 14)',
+        badgeColor: isDarkMode ? 'rgb(245, 158, 11)' : 'rgb(180, 83, 9)',
         pulse: false,
       };
     case 'Stable':
     default:
       return {
         borderColor: 'rgb(16, 185, 129)',
-        bg: 'rgba(16, 185, 129, 0.08)',
-        textColor: 'rgb(167, 243, 208)',
-        badgeColor: 'rgb(16, 185, 129)',
+        bg: isDarkMode ? 'rgba(16, 185, 129, 0.08)' : 'rgba(209, 250, 229, 0.8)',
+        textColor: isDarkMode ? 'rgb(167, 243, 208)' : 'rgb(4, 120, 87)',
+        badgeColor: isDarkMode ? 'rgb(16, 185, 129)' : 'rgb(4, 120, 87)',
         pulse: false,
       };
   }
@@ -235,11 +235,24 @@ export default function GovernanceGrid() {
     
     checkTheme();
     checkFilter();
-    window.addEventListener('storage', () => {
+    
+    // Listen for storage changes (from other tabs)
+    const handleStorage = () => {
       checkTheme();
       checkFilter();
+    };
+    window.addEventListener('storage', handleStorage);
+    
+    // Listen for class changes on document (same tab theme toggle)
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
     });
-    return () => window.removeEventListener('storage', () => {});
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      observer.disconnect();
+    };
   }, []);
 
   const governanceData = useMemo(() => getGovernanceData(timeFilter), [timeFilter]);
@@ -254,8 +267,8 @@ export default function GovernanceGrid() {
 
   const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
   const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
-  const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(31, 41, 55)';
-  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)';
+  const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
 
   return (
     <div 
@@ -279,7 +292,7 @@ export default function GovernanceGrid() {
       {/* 2x2 Grid */}
       <div className="grid grid-cols-2 gap-2 flex-1">
         {enrichedData.map((item) => {
-          const styles = getStatusStyles(item.status);
+          const styles = getStatusStyles(item.status, isDarkMode);
           const Icon = item.icon;
           return (
             <div 
