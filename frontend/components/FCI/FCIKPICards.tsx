@@ -31,7 +31,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
     fciRate: {
       value: 1.5,
       trend: -0.3,
-      target: 1.0,
       segmentFCI: {
         hvhf: { label: 'HVHF', rate: 0.8, color: '#10b981' },
         hvlf: { label: 'HVLF', rate: 1.2, color: '#06b6d4' },
@@ -206,10 +205,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
               </div>
               
               <div className="flex-1 flex flex-col justify-between">
-                <div className="flex items-center justify-between text-sm mb-3">
-                  <span style={{ color: '#939394' }}>Target</span>
-                  <span className="font-bold" style={{ color: '#10b981' }}>{kpiData.fciRate.target}%</span>
-                </div>
 
                 <div>
                   <p className="text-xs font-bold mb-2" style={{ color: '#939394' }}>FCI BY SEGMENT</p>

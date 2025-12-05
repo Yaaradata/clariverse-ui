@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from 'recharts';
 import { FCICluster } from '@/lib/fci-lib/fciData';
 import { TrendingUp, TrendingDown, X, Users, Clock, MessageSquare, Mail, MessageCircle, Ticket, Phone, Share2, Sparkles, AlertTriangle, Lightbulb } from 'lucide-react';
@@ -24,22 +24,27 @@ const CHANNEL_COLORS: Record<string, string> = {
 
 // Custom bar shape that only curves the topmost segment
 const CustomBar = (props: any) => {
-  const { x, y, width, height, fill, payload, dataKey } = props;
+  const { x, y, width, height, fill, payload, dataKey, viewMode } = props;
   
   if (!payload || height <= 0) return null;
   
-  // Find the topmost channel for this bar (last channel with value > 0 in order)
-  let topChannel = '';
-  for (let i = CHANNEL_ORDER.length - 1; i >= 0; i--) {
-    const channel = CHANNEL_ORDER[i];
-    if (payload[channel] && payload[channel] > 0) {
-      topChannel = channel;
+  // Determine which items to check based on view mode
+  const itemsToCheck = viewMode === 'customerSegment' 
+    ? CUSTOMER_SEGMENTS
+    : CHANNEL_ORDER;
+  
+  // Find the topmost item for this bar (last item with value > 0 in order)
+  let topItem = '';
+  for (let i = itemsToCheck.length - 1; i >= 0; i--) {
+    const item = itemsToCheck[i];
+    if (payload[item] && payload[item] > 0) {
+      topItem = item;
       break;
     }
   }
   
-  // Only apply radius if this is the top channel
-  const isTop = dataKey === topChannel;
+  // Only apply radius if this is the top item
+  const isTop = dataKey === topItem;
   const radius = isTop ? 6 : 0;
   
   if (isTop) {
@@ -358,80 +363,227 @@ const CustomStackedTooltip = ({ active, payload, label, isDarkMode }: any) => {
   );
 };
 
+// Customer segment multipliers to simulate different data based on segment
+const CUSTOMER_SEGMENT_MULTIPLIERS: Record<string, Record<string, number>> = {
+  'High Value High Frequency': {
+    'Account Access & Security': 1.3,
+    'Transaction Disputes & Fraud': 1.5,
+    'Credit Card Services': 1.4,
+    'Loan & Mortgage Inquiries': 1.2,
+    'Fee Complaints & Waivers': 0.8,
+    'Digital Banking & Technology': 1.1,
+    'Branch & ATM Services': 0.9,
+    'Investment & Wealth': 1.6,
+    'Direct Deposit & Payroll': 0.7,
+    'Account Closure & Changes': 0.6
+  },
+  'High Value Low Frequency': {
+    'Account Access & Security': 0.9,
+    'Transaction Disputes & Fraud': 1.1,
+    'Credit Card Services': 1.2,
+    'Loan & Mortgage Inquiries': 1.3,
+    'Fee Complaints & Waivers': 0.7,
+    'Digital Banking & Technology': 0.8,
+    'Branch & ATM Services': 0.6,
+    'Investment & Wealth': 1.5,
+    'Direct Deposit & Payroll': 0.5,
+    'Account Closure & Changes': 0.4
+  },
+  'Low Value High Frequency': {
+    'Account Access & Security': 1.2,
+    'Transaction Disputes & Fraud': 1.0,
+    'Credit Card Services': 0.9,
+    'Loan & Mortgage Inquiries': 0.8,
+    'Fee Complaints & Waivers': 1.3,
+    'Digital Banking & Technology': 1.4,
+    'Branch & ATM Services': 1.1,
+    'Investment & Wealth': 0.5,
+    'Direct Deposit & Payroll': 1.2,
+    'Account Closure & Changes': 1.0
+  },
+  'Low Value Low Frequency': {
+    'Account Access & Security': 0.8,
+    'Transaction Disputes & Fraud': 0.7,
+    'Credit Card Services': 0.6,
+    'Loan & Mortgage Inquiries': 0.5,
+    'Fee Complaints & Waivers': 1.1,
+    'Digital Banking & Technology': 0.9,
+    'Branch & ATM Services': 0.8,
+    'Investment & Wealth': 0.3,
+    'Direct Deposit & Payroll': 0.9,
+    'Account Closure & Changes': 0.7
+  }
+};
+
+type ViewMode = 'channel' | 'customerSegment';
+
+// Customer segment options - moved outside component to avoid initialization issues
+const CUSTOMER_SEGMENTS = [
+  'High Value High Frequency',
+  'High Value Low Frequency',
+  'Low Value High Frequency',
+  'Low Value Low Frequency'
+];
+
+// Colors for customer segments - matching channel color theme
+const SEGMENT_COLORS: Record<string, string> = {
+  'High Value High Frequency': '#ef4444',  // Red (same as Voice)
+  'High Value Low Frequency': '#f97316',   // Orange (same as Chat)
+  'Low Value High Frequency': '#eab308',   // Yellow (same as Email)
+  'Low Value Low Frequency': '#22c55e'     // Green (same as Social Media)
+};
+
 export function FailureClusters({ clusters, isDarkMode = false }: FailureClustersProps) {
+  const [viewMode, setViewMode] = useState<ViewMode>('channel');
+  
+  // Filter and transform clusters - no filtering needed, just use original clusters
+  const filteredClusters = useMemo(() => {
+    return [...clusters];
+  }, [clusters]);
+  
   // Find the cluster with highest volume to show by default
-  const highestVolumeCluster = clusters.reduce((max, cluster) => 
-    cluster.count > max.count ? cluster : max, clusters[0]
-  );
+  const highestVolumeCluster = useMemo(() => {
+    return filteredClusters.reduce((max, cluster) => 
+      cluster.count > max.count ? cluster : max, filteredClusters[0]
+    );
+  }, [filteredClusters]);
   
-  const [selectedCluster, setSelectedCluster] = useState<FCICluster | null>(highestVolumeCluster);
+  const [selectedCluster, setSelectedCluster] = useState<FCICluster | null>(null);
   
-  // Transform data for stacked bar chart
-  const chartData = clusters.map(cluster => {
-    const baseData: any = {
-      name: cluster.category,
-      fullName: cluster.category,
-      total: cluster.count,
-      severity: cluster.severity,
-      clusterId: cluster.id
-    };
-    
-    // Calculate actual values based on channel percentages (only for channels that exist)
-    if (cluster.topChannels) {
-      cluster.topChannels.forEach(channel => {
-        const value = Math.round(cluster.count * (channel.percentage / 100));
-        if (value > 0) {
-          baseData[channel.channel] = value;
-        }
-      });
+  // Update selected cluster when view mode changes
+  useEffect(() => {
+    if (selectedCluster) {
+      const updatedCluster = filteredClusters.find(c => c.id === selectedCluster.id);
+      if (updatedCluster) {
+        setSelectedCluster(updatedCluster);
+        return;
+      }
     }
-    
-    return baseData;
-  });
+    setSelectedCluster(highestVolumeCluster);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewMode]);
+  
+  // Transform data for stacked bar chart based on view mode
+  const chartData = useMemo(() => {
+    if (viewMode === 'customerSegment') {
+      // Show data grouped by customer segments
+      return filteredClusters.map(cluster => {
+        const baseData: any = {
+          name: cluster.category,
+          fullName: cluster.category,
+          total: cluster.count,
+          severity: cluster.severity,
+          clusterId: cluster.id
+        };
+        
+        // Calculate values for each customer segment
+        CUSTOMER_SEGMENTS.forEach(segment => {
+          const multiplier = CUSTOMER_SEGMENT_MULTIPLIERS[segment]?.[cluster.category] || 1;
+          const segmentValue = Math.round(cluster.count * multiplier);
+          baseData[segment] = segmentValue;
+        });
+        
+        // Calculate total for sorting
+        baseData.total = CUSTOMER_SEGMENTS.reduce((sum, segment) => {
+          return sum + (baseData[segment] || 0);
+        }, 0);
+        
+        return baseData;
+      }).sort((a, b) => b.total - a.total); // Sort by total descending
+    } else {
+      // Show all channels stacked (default channel view)
+      return filteredClusters.map(cluster => {
+        const baseData: any = {
+          name: cluster.category,
+          fullName: cluster.category,
+          total: cluster.count,
+          severity: cluster.severity,
+          clusterId: cluster.id
+        };
+        
+        // Calculate actual values based on channel percentages (only for channels that exist)
+        if (cluster.topChannels) {
+          cluster.topChannels.forEach(channel => {
+            const value = Math.round(cluster.count * (channel.percentage / 100));
+            if (value > 0) {
+              baseData[channel.channel] = value;
+            }
+          });
+        }
+        
+        return baseData;
+      }).sort((a, b) => b.total - a.total); // Sort by total descending
+    }
+  }, [filteredClusters, viewMode]);
 
   // Use fixed channel order for consistent stacking
   const channelList = CHANNEL_ORDER;
+  
+  // Get active items for chart based on view mode
+  const activeChartItems = useMemo(() => {
+    if (viewMode === 'customerSegment') {
+      return CUSTOMER_SEGMENTS;
+    }
+    return CHANNEL_ORDER;
+  }, [viewMode]);
 
   const handleBarClick = (data: any) => {
     if (data && data.fullName) {
-      const cluster = clusters.find(c => c.category === data.fullName);
+      const cluster = filteredClusters.find(c => c.category === data.fullName);
       if (cluster) {
         setSelectedCluster(cluster);
       }
     }
   };
 
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+  };
+
   return (
     <div className="p-6 h-full">
       <div className="mb-4">
         <h3
-          className="text-lg font-bold mb-3"
+          className="text-lg font-bold mb-4"
           style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
         >
           What's Failing?
         </h3>
-        {/* Channel Legend - Above Chart */}
-        <div 
-          className="flex items-center justify-center gap-6 py-3 px-4 rounded-xl"
-          style={{ 
-            backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
-            border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-          }}
-        >
-          {channelList.map(channel => (
-            <div key={channel} className="flex items-center gap-2">
-              <span 
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: CHANNEL_COLORS[channel] || '#939394' }}
-              />
-              <span 
-                className="text-sm font-medium" 
-                style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-              >
-                {channel}
-              </span>
-            </div>
-          ))}
+        
+        {/* Tab Buttons - By Channel and By Customer Segment */}
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => handleViewModeChange('channel')}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+            style={{
+              backgroundColor: viewMode === 'channel' 
+                ? '#5332FF' 
+                : (isDarkMode ? '#1a1a1a' : '#FFFFFF'),
+              color: viewMode === 'channel' 
+                ? '#FFFFFF' 
+                : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
+              border: `1px solid ${viewMode === 'channel' ? '#5332FF' : (isDarkMode ? '#2a2a2a' : '#E5E5E5')}`,
+              boxShadow: viewMode === 'channel' ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
+            }}
+          >
+            By Channel
+          </button>
+          <button
+            onClick={() => handleViewModeChange('customerSegment')}
+            className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+            style={{
+              backgroundColor: viewMode === 'customerSegment' 
+                ? '#5332FF' 
+                : (isDarkMode ? '#1a1a1a' : '#FFFFFF'),
+              color: viewMode === 'customerSegment' 
+                ? '#FFFFFF' 
+                : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
+              border: `1px solid ${viewMode === 'customerSegment' ? '#5332FF' : (isDarkMode ? '#2a2a2a' : '#E5E5E5')}`,
+              boxShadow: viewMode === 'customerSegment' ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
+            }}
+          >
+            By Customer Segment
+          </button>
         </div>
       </div>
 
@@ -455,20 +607,86 @@ export function FailureClusters({ clusters, isDarkMode = false }: FailureCluster
                 />
                 <YAxis tick={{ fill: isDarkMode ? '#D6D9D8' : '#010101', fontSize: 11 }} />
                 <Tooltip content={<CustomStackedTooltip isDarkMode={isDarkMode} />} />
-                {channelList.map((channel) => (
-                  <Bar 
-                    key={channel}
-                    dataKey={channel}
-                    stackId="a"
-                    fill={CHANNEL_COLORS[channel] || '#939394'}
-                    shape={<CustomBar />}
-                    cursor="pointer"
-                    opacity={selectedCluster ? 0.6 : 1}
-                    onClick={(data) => handleBarClick(data)}
-                  />
-                ))}
+                {viewMode === 'channel' ? (
+                  // Render channel bars
+                  activeChartItems.map((channel) => (
+                    <Bar 
+                      key={channel}
+                      dataKey={channel}
+                      stackId="a"
+                      fill={CHANNEL_COLORS[channel] || '#939394'}
+                      shape={(props: any) => <CustomBar {...props} viewMode="channel" />}
+                      cursor="pointer"
+                      opacity={selectedCluster ? 0.6 : 1}
+                      onClick={(data) => handleBarClick(data)}
+                    />
+                  ))
+                ) : (
+                  // Render customer segment bars
+                  activeChartItems.map((segment) => (
+                    <Bar 
+                      key={segment}
+                      dataKey={segment}
+                      stackId="a"
+                      fill={SEGMENT_COLORS[segment] || '#939394'}
+                      shape={(props: any) => <CustomBar {...props} viewMode="customerSegment" />}
+                      cursor="pointer"
+                      opacity={selectedCluster ? 0.6 : 1}
+                      onClick={(data) => handleBarClick(data)}
+                    />
+                  ))
+                )}
               </BarChart>
             </ResponsiveContainer>
+          </div>
+          
+          {/* Legend - Shows Channels or Customer Segments (Below Chart) */}
+          <div 
+            className="flex items-center justify-center gap-6 py-3 px-4 rounded-xl mt-4"
+            style={{ 
+              backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
+              border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+            }}
+          >
+            {viewMode === 'channel' ? (
+              // Show channel legend
+              channelList.map(channel => (
+                <div
+                  key={channel}
+                  className="flex items-center gap-2"
+                >
+                  <span 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: CHANNEL_COLORS[channel] || '#939394' }}
+                  />
+                  <span 
+                    className="text-sm font-medium" 
+                    style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                  >
+                    {channel}
+                  </span>
+                </div>
+              ))
+            ) : (
+              // Show customer segment legend
+              CUSTOMER_SEGMENTS.map(segment => (
+                <div
+                  key={segment}
+                  className="flex items-center gap-2"
+                >
+                  <span 
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: SEGMENT_COLORS[segment] || '#939394' }}
+                  />
+                  <span 
+                    className="text-sm font-medium" 
+                    style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                  >
+                    {segment}
+                  </span>
+                </div>
+              ))
+            )}
           </div>
         </div>
 

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Flame, Users, Zap, ThumbsUp, Heart, Target, CheckCircle } from 'lucide-react';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
 interface HeatmapCell {
   score: number;
@@ -105,8 +106,21 @@ const getScoreBgColor = (score: number, isDarkMode: boolean): string => {
   return isDarkMode ? 'rgba(220, 38, 38, 0.3)' : 'rgba(220, 38, 38, 0.25)';
 };
 
+const CONTACT_CENTER_UNITS = [
+  { value: 'manila', label: 'Manila (Taguig)' },
+  { value: 'newark', label: 'Newark, DE' },
+  { value: 'chester', label: 'Chester, UK' },
+  { value: 'belfast', label: 'Belfast, ME' },
+  { value: 'addison', label: 'Addison, TX' },
+  { value: 'jacksonville', label: 'Jacksonville, FL' },
+  { value: 'sanjose', label: 'San Jose (Heredia)' },
+  { value: 'greensboro', label: 'Greensboro, NC' },
+  { value: 'phoenix', label: 'Phoenix, AZ' }
+];
+
 export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapProps) {
   const [hoveredCell, setHoveredCell] = useState<{ pillar: string; intent: string } | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<string>('');
 
   // Calculate insights
   const getBottleneck = () => {
@@ -152,9 +166,53 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
     <div className="mt-6">
       {/* Header */}
       <div className="mb-4">
-        <h3 className="text-lg font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-          Cross-Intent Performance Grid
-        </h3>
+        <div className="flex items-center gap-4 mb-3 flex-wrap">
+          <h3 className="text-lg font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+            Cross-Intent Performance Grid
+          </h3>
+          {/* Contact Center Units Filter */}
+          <Select value={selectedUnit} onValueChange={setSelectedUnit}>
+            <SelectTrigger
+              className="w-[180px] h-8 rounded-md text-xs"
+              style={{
+                backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#3a3a3a' : '#D1D5DB'}`,
+                color: isDarkMode ? '#FFFFFF' : '#010101',
+                boxShadow: isDarkMode ? '0 1px 3px rgba(0, 0, 0, 0.3)' : '0 1px 2px rgba(0, 0, 0, 0.05)'
+              }}
+            >
+              <SelectValue placeholder="All" />
+            </SelectTrigger>
+            <SelectContent
+              className="rounded-lg"
+              style={{
+                backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF',
+                border: `1px solid ${isDarkMode ? '#3a3a3a' : '#D1D5DB'}`,
+                boxShadow: isDarkMode 
+                  ? '0 4px 12px rgba(0, 0, 0, 0.5)' 
+                  : '0 4px 12px rgba(0, 0, 0, 0.15)',
+                opacity: 1,
+                backdropFilter: 'none',
+                background: isDarkMode ? '#1a1a1a' : '#FFFFFF',
+                backgroundImage: 'none',
+                WebkitBackdropFilter: 'none'
+              }}
+            >
+              {CONTACT_CENTER_UNITS.map((unit) => (
+                <SelectItem
+                  key={unit.value}
+                  value={unit.value}
+                  className="rounded-sm text-xs"
+                  style={{
+                    color: isDarkMode ? '#FFFFFF' : '#010101'
+                  }}
+                >
+                  {unit.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <p className="text-xs mt-1" style={{ color: '#939394' }}>
           Heatmap of FCI pillar scores across dominant customer intents
         </p>
