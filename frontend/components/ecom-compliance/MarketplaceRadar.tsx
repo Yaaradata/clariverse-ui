@@ -1,52 +1,198 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { ShieldAlert, AlertTriangle } from 'lucide-react';
+import { useState, useEffect, useMemo } from 'react';
+import { ShieldAlert, TrendingUp, TrendingDown, MessageCircle, Mail, Phone, Hash } from 'lucide-react';
 
-const radarData = [
-  { category: 'Counterfeit/IP', value: 85, label: 'Fake, Copy' },
-  { category: 'MRP/Price', value: 62, label: 'Higher price' },
-  { category: 'Expiry/Quality', value: 45, label: 'Expired stock' },
-  { category: 'Misleading Specs', value: 78, label: 'Wrong features' },
-  { category: 'Seller Conduct', value: 55, label: 'Rude seller' },
-];
+type TimeFilter = '24h' | '7d' | '30d';
+
+const getRiskData = (filter: TimeFilter) => {
+  // Risk values vary based on time period (dilution effect over longer periods)
+  if (filter === '24h') {
+    return [
+      { 
+        name: 'Counterfeit / IP Infringement', 
+        value: 85, 
+        delta: 12, 
+        critical: true,
+        channel: 'Social Media',
+        channelIcon: 'social',
+        keyword: '"First Copy"',
+        category: 'Sneakers'
+      },
+      { 
+        name: 'MRP & Price Manipulation', 
+        value: 62, 
+        delta: 8, 
+        critical: false,
+        channel: 'Chat',
+        channelIcon: 'chat',
+        keyword: '"Higher than tag"',
+        category: 'Electronics'
+      },
+      { 
+        name: 'Misleading Claims (CPA 2019)', 
+        value: 78, 
+        delta: -3, 
+        critical: true,
+        channel: 'Tickets',
+        channelIcon: 'email',
+        keyword: '"Wrong specs"',
+        category: 'Mobiles'
+      },
+      { 
+        name: 'Seller Conduct', 
+        value: 45, 
+        delta: 5, 
+        critical: false,
+        channel: 'Voice',
+        channelIcon: 'voice',
+        keyword: '"Direct UPI"',
+        category: 'Fashion'
+      },
+    ];
+  } else if (filter === '7d') {
+    return [
+      { 
+        name: 'Counterfeit / IP Infringement', 
+        value: 72, 
+        delta: 8, 
+        critical: false,
+        channel: 'Social Media',
+        channelIcon: 'social',
+        keyword: '"Fake product"',
+        category: 'Footwear'
+      },
+      { 
+        name: 'MRP & Price Manipulation', 
+        value: 55, 
+        delta: 4, 
+        critical: false,
+        channel: 'Tickets',
+        channelIcon: 'email',
+        keyword: '"Overpriced"',
+        category: 'Appliances'
+      },
+      { 
+        name: 'Misleading Claims (CPA 2019)', 
+        value: 68, 
+        delta: -5, 
+        critical: false,
+        channel: 'Chat',
+        channelIcon: 'chat',
+        keyword: '"Not as shown"',
+        category: 'Electronics'
+      },
+      { 
+        name: 'Seller Conduct', 
+        value: 38, 
+        delta: 2, 
+        critical: false,
+        channel: 'Voice',
+        channelIcon: 'voice',
+        keyword: '"Rude behavior"',
+        category: 'General'
+      },
+    ];
+  } else {
+    return [
+      { 
+        name: 'Counterfeit / IP Infringement', 
+        value: 65, 
+        delta: 5, 
+        critical: false,
+        channel: 'Social Media',
+        channelIcon: 'social',
+        keyword: '"Duplicate"',
+        category: 'Fashion'
+      },
+      { 
+        name: 'MRP & Price Manipulation', 
+        value: 48, 
+        delta: -2, 
+        critical: false,
+        channel: 'Tickets',
+        channelIcon: 'email',
+        keyword: '"Price mismatch"',
+        category: 'FMCG'
+      },
+      { 
+        name: 'Misleading Claims (CPA 2019)', 
+        value: 58, 
+        delta: -8, 
+        critical: false,
+        channel: 'Chat',
+        channelIcon: 'chat',
+        keyword: '"Wrong features"',
+        category: 'Mobiles'
+      },
+      { 
+        name: 'Seller Conduct', 
+        value: 32, 
+        delta: -4, 
+        critical: false,
+        channel: 'Voice',
+        channelIcon: 'voice',
+        keyword: '"Unprofessional"',
+        category: 'Services'
+      },
+    ];
+  }
+};
+
+const CRITICAL_THRESHOLD = 80;
+
+const ChannelIcon = ({ type, className }: { type: string; className?: string }) => {
+  switch (type) {
+    case 'social':
+      return <MessageCircle className={className} />;
+    case 'email':
+      return <Mail className={className} />;
+    case 'voice':
+      return <Phone className={className} />;
+    default:
+      return <MessageCircle className={className} />;
+  }
+};
 
 export default function MarketplaceRadar() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
 
   useEffect(() => {
     const checkTheme = () => {
       const theme = localStorage.getItem('theme');
       setIsDarkMode(theme === 'dark');
     };
+    const checkFilter = () => {
+      const filter = localStorage.getItem('ecomTimeFilter') as TimeFilter;
+      if (filter) setTimeFilter(filter);
+    };
+    
     checkTheme();
-    window.addEventListener('storage', checkTheme);
-    return () => window.removeEventListener('storage', checkTheme);
+    checkFilter();
+    window.addEventListener('storage', () => {
+      checkTheme();
+      checkFilter();
+    });
+    return () => window.removeEventListener('storage', () => {});
   }, []);
+
+  const riskData = useMemo(() => getRiskData(timeFilter), [timeFilter]);
+  const riskScore = useMemo(() => Math.round(riskData.reduce((acc, r) => acc + r.value, 0) / riskData.length), [riskData]);
+  const hasCritical = riskData.some(r => r.critical);
+  const topRisk = riskData.reduce((max, r) => r.value > max.value ? r : max, riskData[0]);
 
   const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
   const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
   const textColor = isDarkMode ? 'rgb(255, 255, 255)' : 'rgb(31, 41, 55)';
   const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)';
-  const gridColor = isDarkMode ? 'rgb(63, 63, 70)' : 'rgb(212, 212, 216)';
+  const barBg = isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(228, 228, 231)';
 
-  // Calculate radar polygon points
-  const centerX = 100;
-  const centerY = 100;
-  const maxRadius = 70;
-  const angleStep = (2 * Math.PI) / radarData.length;
-  
-  const getPoint = (value: number, index: number) => {
-    const angle = angleStep * index - Math.PI / 2;
-    const radius = (value / 100) * maxRadius;
-    return {
-      x: centerX + radius * Math.cos(angle),
-      y: centerY + radius * Math.sin(angle),
-    };
+  const getBarColor = (value: number, critical: boolean) => {
+    if (critical || value >= CRITICAL_THRESHOLD) return 'rgb(239, 68, 68)';
+    if (value >= 60) return 'rgb(245, 158, 11)';
+    return 'rgb(16, 185, 129)';
   };
-
-  const polygonPoints = radarData.map((d, i) => getPoint(d.value, i)).map(p => `${p.x},${p.y}`).join(' ');
-  const safeZonePoints = radarData.map((_, i) => getPoint(50, i)).map(p => `${p.x},${p.y}`).join(' ');
 
   return (
     <div 
@@ -55,133 +201,129 @@ export default function MarketplaceRadar() {
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: textColor }}>
-            <ShieldAlert className="w-4 h-4" style={{ color: 'rgb(239, 68, 68)' }} />
-            Marketplace Integrity Radar
-          </h3>
-          <p className="text-[10px] mt-1" style={{ color: subtextColor }}>Vendor health based on complaint categories</p>
-        </div>
-        <div className="text-right">
-          <span className="text-lg font-bold" style={{ color: 'rgb(239, 68, 68)' }}>72</span>
-          <span className="text-xs" style={{ color: subtextColor }}>/100</span>
-          <p className="text-[9px] uppercase tracking-wider" style={{ color: 'rgb(239, 68, 68)' }}>High Risk</p>
+        <h3 className="text-sm font-semibold" style={{ color: textColor }}>Marketplace Integrity Risk</h3>
+        <div 
+          className="flex items-center gap-2 px-2 py-1 rounded"
+          style={{ 
+            backgroundColor: hasCritical ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
+            border: hasCritical ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid rgba(245, 158, 11, 0.2)'
+          }}
+        >
+          <ShieldAlert className="w-3 h-3" style={{ color: hasCritical ? 'rgb(239, 68, 68)' : 'rgb(245, 158, 11)' }} />
+          <span 
+            className="text-[10px] font-bold"
+            style={{ color: hasCritical ? 'rgb(239, 68, 68)' : 'rgb(245, 158, 11)' }}
+          >
+            {hasCritical ? 'CRITICAL' : 'MODERATE'}: {riskScore}/100
+          </span>
         </div>
       </div>
 
-      {/* Radar Chart */}
-      <div className="flex-1 flex items-center justify-center min-h-[160px]">
-        <svg viewBox="0 0 200 200" className="w-full h-full max-w-[200px]">
-          {/* Grid circles */}
-          {[25, 50, 75, 100].map((r, i) => (
-            <circle
-              key={i}
-              cx={centerX}
-              cy={centerY}
-              r={(r / 100) * maxRadius}
-              fill="none"
-              stroke={gridColor}
-              strokeWidth="0.5"
-              strokeDasharray={i === 1 ? "4,4" : "0"}
-            />
-          ))}
-          
-          {/* Axis lines */}
-          {radarData.map((_, i) => {
-            const point = getPoint(100, i);
-            return (
-              <line
-                key={i}
-                x1={centerX}
-                y1={centerY}
-                x2={point.x}
-                y2={point.y}
-                stroke={gridColor}
-                strokeWidth="0.5"
-              />
-            );
-          })}
+      {/* Risk Meters with Micro Info */}
+      <div className="space-y-3 flex-1">
+        {riskData.map((risk) => {
+          const barColor = getBarColor(risk.value, risk.critical);
+          const isUp = risk.delta > 0;
+          return (
+            <div key={risk.name} className="group">
+              {/* Risk Name Row */}
+              <div className="flex justify-between items-center mb-1">
+                <span 
+                  className="text-[10px] font-medium"
+                  style={{ color: textColor, opacity: 0.9 }}
+                >
+                  {risk.name}
+                </span>
+                <div className="flex items-center gap-2">
+                  <span 
+                    className="text-[10px] font-mono font-bold"
+                    style={{ color: barColor }}
+                  >
+                    {risk.value}%
+                  </span>
+                  <span 
+                    className="text-[8px] flex items-center gap-0.5"
+                    style={{ color: isUp ? 'rgb(239, 68, 68)' : 'rgb(16, 185, 129)' }}
+                  >
+                    {isUp ? <TrendingUp className="w-2 h-2" /> : <TrendingDown className="w-2 h-2" />}
+                    {isUp ? '+' : ''}{risk.delta}%
+                  </span>
+                </div>
+              </div>
+              
+              {/* Progress Bar */}
+              <div className="relative h-2 w-full rounded-full overflow-hidden" style={{ backgroundColor: barBg }}>
+                {/* Threshold line at 80% */}
+                <div 
+                  className="absolute top-0 bottom-0 w-px z-10"
+                  style={{ 
+                    left: `${CRITICAL_THRESHOLD}%`, 
+                    borderRight: '1px dashed',
+                    borderColor: isDarkMode ? 'rgb(113, 113, 122)' : 'rgb(161, 161, 170)'
+                  }}
+                />
+                {/* Bar fill */}
+                <div 
+                  className="h-full rounded-full transition-all duration-500"
+                  style={{ 
+                    width: `${risk.value}%`, 
+                    backgroundColor: barColor,
+                    boxShadow: risk.critical ? `0 0 8px ${barColor}50` : 'none'
+                  }}
+                />
+              </div>
 
-          {/* Safe zone (green dashed) */}
-          <polygon
-            points={safeZonePoints}
-            fill="none"
-            stroke="rgb(16, 185, 129)"
-            strokeWidth="1"
-            strokeDasharray="4,4"
-            opacity="0.4"
-          />
-
-          {/* Risk polygon */}
-          <polygon
-            points={polygonPoints}
-            fill="rgba(239, 68, 68, 0.2)"
-            stroke="rgb(239, 68, 68)"
-            strokeWidth="2"
-          />
-
-          {/* Data points */}
-          {radarData.map((d, i) => {
-            const point = getPoint(d.value, i);
-            return (
-              <circle
-                key={i}
-                cx={point.x}
-                cy={point.y}
-                r="3"
-                fill="rgb(239, 68, 68)"
-              />
-            );
-          })}
-
-          {/* Labels */}
-          {radarData.map((d, i) => {
-            const labelPoint = getPoint(115, i);
-            return (
-              <text
-                key={i}
-                x={labelPoint.x}
-                y={labelPoint.y}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fontSize="8"
-                fill={subtextColor}
-              >
-                {d.category.split('/')[0]}
-              </text>
-            );
-          })}
-        </svg>
+              {/* Micro Info Row */}
+              <div className="flex items-center gap-3 mt-1">
+                <span className="text-[8px] flex items-center gap-0.5" style={{ color: subtextColor }}>
+                  <ChannelIcon type={risk.channelIcon} className="w-2.5 h-2.5" />
+                  {risk.channel}
+                </span>
+                <span className="text-[8px] flex items-center gap-0.5" style={{ color: subtextColor }}>
+                  <Hash className="w-2.5 h-2.5" />
+                  {risk.keyword}
+                </span>
+                <span className="text-[8px]" style={{ color: subtextColor }}>
+                  {risk.category}
+                </span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
-      {/* Micro Info */}
-      <div className="flex gap-4 mt-2 pt-3" style={{ borderTop: `1px solid ${containerBorder}` }}>
+      {/* Micro Information Row */}
+      <div className="grid grid-cols-3 gap-2 mt-3 pt-3" style={{ borderTop: `1px solid ${containerBorder}` }}>
         <div>
-          <span className="text-[9px] uppercase tracking-wider" style={{ color: subtextColor }}>Top Offender</span>
-          <p className="text-xs font-medium" style={{ color: 'rgb(239, 68, 68)' }}>Electronics Category</p>
+          <span className="text-[8px] uppercase tracking-wider" style={{ color: subtextColor }}>Top Offender</span>
+          <p className="text-[10px] font-medium mt-0.5" style={{ color: 'rgb(239, 68, 68)' }}>{topRisk.category}</p>
+          <p className="text-[8px]" style={{ color: subtextColor }}>{topRisk.value}% risk density</p>
         </div>
         <div>
-          <span className="text-[9px] uppercase tracking-wider" style={{ color: subtextColor }}>Active Vectors</span>
-          <p className="text-xs font-medium" style={{ color: textColor }}>5 Risk Areas</p>
+          <span className="text-[8px] uppercase tracking-wider" style={{ color: subtextColor }}>Critical Threshold</span>
+          <p className="text-[10px] font-medium mt-0.5" style={{ color: textColor }}>{CRITICAL_THRESHOLD}%</p>
+          <p className="text-[8px]" style={{ color: subtextColor }}>{riskData.filter(r => r.critical).length} vectors breached</p>
+        </div>
+        <div>
+          <span className="text-[8px] uppercase tracking-wider" style={{ color: subtextColor }}>Primary Channel</span>
+          <p className="text-[10px] font-medium mt-0.5" style={{ color: textColor }}>{topRisk.channel}</p>
+          <p className="text-[8px]" style={{ color: subtextColor }}>High signal volume</p>
         </div>
       </div>
 
       {/* AI Insight */}
       <div 
         className="mt-3 rounded-lg p-2.5"
-        style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+        style={{ 
+          background: isDarkMode ? 'linear-gradient(to right, rgba(245, 158, 11, 0.1), transparent)' : 'rgba(245, 158, 11, 0.08)',
+          borderLeft: '2px solid rgb(245, 158, 11)'
+        }}
       >
-        <div className="flex items-center gap-1.5 mb-1">
-          <AlertTriangle className="w-3 h-3" style={{ color: 'rgb(239, 68, 68)' }} />
-          <span className="text-[9px] uppercase tracking-wider font-medium" style={{ color: 'rgb(239, 68, 68)' }}>
-            AI Insight
-          </span>
-        </div>
-        <p className="text-[10px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(254, 202, 202)' : 'rgb(153, 27, 27)' }}>
-          <strong>Catalog Integrity:</strong> 'Counterfeit' axis is elevated (85/100) due to a cluster of complaints targeting 3 specific headphone SKUs. Immediate listing suppression recommended.
+        <p className="text-[10px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(212, 212, 216)' : 'rgb(63, 63, 70)' }}>
+          <span className="font-bold" style={{ color: 'rgb(245, 158, 11)' }}>AI:</span> '{topRisk.name.split('/')[0].trim()}' risk crossed threshold ({CRITICAL_THRESHOLD}%) via <strong style={{ color: textColor }}>{topRisk.channel}</strong>. 
+          Trigger: <em>{topRisk.keyword}</em> in {topRisk.category}.
         </p>
       </div>
     </div>
   );
 }
-

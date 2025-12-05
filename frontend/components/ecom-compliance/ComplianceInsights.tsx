@@ -45,7 +45,7 @@ export default function ComplianceInsights() {
       {/* Row 1: Trust Risk Score + AI Insights Cards */}
       <div className="flex gap-4">
         {/* Left - Trust Risk Score */}
-        <div className="flex-shrink-0 w-80">
+        <div className="flex-shrink-0 w-96">
           <TrustRiskScore />
         </div>
 
@@ -101,10 +101,10 @@ export default function ComplianceInsights() {
         </div>
       </div>
 
-      {/* Row 2: Logistics + Marketplace Radar + Governance Grid */}
+      {/* Row 2: Marketplace Radar + Logistics + Governance Grid */}
       <div className="grid grid-cols-3 gap-4">
-        <LogisticsBreachPlot />
         <MarketplaceRadar />
+        <LogisticsBreachPlot />
         <GovernanceGrid />
       </div>
     </div>
