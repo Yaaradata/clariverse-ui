@@ -366,7 +366,7 @@ export default function GovernanceGrid() {
         }}
       >
         <p className="text-[10px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(212, 212, 216)' : 'rgb(63, 63, 70)' }}>
-          <span className="font-bold" style={{ color: 'rgb(129, 140, 248)' }}>AI:</span> High volume of 'Invoice Invalid' tickets via <strong style={{ color: textColor }}>Grievance Officer</strong> suggests potential GST API failure. Keyword: <em>"GST missing"</em>
+          <span style={{ color: 'rgb(129, 140, 248)' }}>✨</span> High volume of &apos;Invoice Invalid&apos; tickets via <strong style={{ color: textColor }}>Grievance Officer</strong> suggests potential GST API failure. Keyword: <em>&quot;GST missing&quot;</em>
         </p>
       </div>
     </div>

@@ -333,7 +333,7 @@ export default function MarketplaceRadar() {
         }}
       >
         <p className="text-[10px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(212, 212, 216)' : 'rgb(63, 63, 70)' }}>
-          <span className="font-bold" style={{ color: 'rgb(245, 158, 11)' }}>AI:</span> '{topRisk.name.split('/')[0].trim()}' risk crossed threshold ({CRITICAL_THRESHOLD}%) via <strong style={{ color: textColor }}>{topRisk.channel}</strong>. 
+          <span style={{ color: 'rgb(245, 158, 11)' }}>✨</span> &apos;{topRisk.name.split('/')[0].trim()}&apos; risk crossed threshold ({CRITICAL_THRESHOLD}%) via <strong style={{ color: textColor }}>{topRisk.channel}</strong>. 
           Trigger: <em>{topRisk.keyword}</em> in {topRisk.category}.
         </p>
       </div>

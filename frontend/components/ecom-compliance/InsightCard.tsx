@@ -93,18 +93,10 @@ const getChannelIcon = (channel: Channel) => {
       return <Mail className="w-3 h-3" />;
     case 'Chat':
       return <MessageSquare className="w-3 h-3" />;
-    case 'Tickets':
+    case 'Ticket':
       return <Ticket className="w-3 h-3" />;
     case 'Social Media':
       return <MessageCircle className="w-3 h-3" />;
-    case 'App/Web Chat':
-      return <MessageSquare className="w-3 h-3" />;
-    case 'Return Requests':
-      return <Package className="w-3 h-3" />;
-    case 'Customer Feedback':
-      return <Users className="w-3 h-3" />;
-    case 'Complaints':
-      return <FileWarning className="w-3 h-3" />;
     default:
       return <MessageSquare className="w-3 h-3" />;
   }

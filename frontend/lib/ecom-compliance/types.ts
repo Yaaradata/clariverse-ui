@@ -4,12 +4,8 @@ export type Channel =
   | 'Chat' 
   | 'Voice' 
   | 'Email' 
-  | 'Tickets' 
-  | 'Social Media' 
-  | 'App/Web Chat'
-  | 'Return Requests'
-  | 'Customer Feedback'
-  | 'Complaints';
+  | 'Ticket' 
+  | 'Social Media';
 
 export interface Insight {
   id: string;
