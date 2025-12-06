@@ -203,10 +203,6 @@ export default function InsightCard({ insight, delay = 0 }: InsightCardProps) {
           <span className="text-[9px] text-right max-w-[150px] truncate" style={{ color: valueColor }}>{insight.domain}</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="uppercase tracking-wide" style={{ color: labelColor }}>Detected</span>
-          <span style={{ color: valueColor }}>{insight.detected_at}</span>
-        </div>
-        <div className="flex justify-between items-center">
           <span className="uppercase tracking-wide" style={{ color: labelColor }}>Affected</span>
           <span className="font-semibold" style={{ color: colors.affectedColor }}>
             {insight.affected_interactions.toLocaleString()}

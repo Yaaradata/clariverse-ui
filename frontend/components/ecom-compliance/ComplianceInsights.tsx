@@ -1,24 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import InsightCard from './InsightCard';
 import TrustRiskScore from './TrustRiskScore';
 import LogisticsBreachPlot from './LogisticsBreachPlot';
 import MarketplaceRadar from './MarketplaceRadar';
 import GovernanceGrid from './GovernanceGrid';
+import ComplianceThemeDriftPlot, { getDriftConfig, TimeFilter } from './ComplianceThemeDriftPlot';
+import DriftDetailPanel from './DriftDetailPanel';
 import { complianceInsights } from '@/lib/ecom-compliance';
 
 export default function ComplianceInsights() {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [selectedDriftCategory, setSelectedDriftCategory] = useState<string | null>(null);
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
 
   useEffect(() => {
     const checkTheme = () => {
       const theme = localStorage.getItem('theme');
       setIsDarkMode(theme === 'dark');
     };
+    const checkFilter = () => {
+      const filter = localStorage.getItem('ecomTimeFilter') as TimeFilter;
+      if (filter) setTimeFilter(filter);
+    };
     
     checkTheme();
-    window.addEventListener('storage', checkTheme);
+    checkFilter();
+    window.addEventListener('storage', () => {
+      checkTheme();
+      checkFilter();
+    });
     
     const observer = new MutationObserver(() => {
       setIsDarkMode(document.documentElement.classList.contains('dark'));
@@ -30,6 +42,8 @@ export default function ComplianceInsights() {
       observer.disconnect();
     };
   }, []);
+
+  const driftConfig = useMemo(() => getDriftConfig(timeFilter), [timeFilter]);
 
   const criticalCount = complianceInsights.filter(i => i.severity === 'CRITICAL').length;
   const highCount = complianceInsights.filter(i => i.severity === 'HIGH').length;
@@ -92,7 +106,7 @@ export default function ComplianceInsights() {
 
             {/* Cards Container */}
             <div 
-              className="flex gap-3 overflow-x-auto pb-3 pt-4 items-stretch scrollbar-thin"
+              className="flex gap-3 overflow-x-auto pb-6 pt-6 items-stretch scrollbar-thin"
               style={{ scrollbarColor }}
             >
               {complianceInsights.map((insight, index) => (
@@ -112,6 +126,24 @@ export default function ComplianceInsights() {
         <MarketplaceRadar />
         <LogisticsBreachPlot />
         <GovernanceGrid />
+      </div>
+
+      {/* Row 3: Compliance Theme Drift Plot + Detail Panel */}
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-7 flex" style={{ minHeight: '500px' }}>
+          <ComplianceThemeDriftPlot 
+            onCategoryClick={setSelectedDriftCategory}
+            selectedCategory={selectedDriftCategory}
+          />
+        </div>
+        <div className="col-span-5 flex" style={{ minHeight: '500px', height: '500px' }}>
+          <DriftDetailPanel 
+            selectedCategory={selectedDriftCategory}
+            onClose={() => setSelectedDriftCategory(null)}
+            isDarkMode={isDarkMode}
+            driftConfig={driftConfig}
+          />
+        </div>
       </div>
     </div>
   );
