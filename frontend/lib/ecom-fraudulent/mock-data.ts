@@ -18,10 +18,11 @@ export const fraudRiskScoreData = {
   aiInsight: 'Spike in "Empty Box" claims correlated with specific courier partner in North region. 34% of claims trace back to 3 fulfillment centers.',
   recommendation: 'Implement mandatory photo/video proof for high-value orders and deploy weight verification at handoff points.',
   categories: [
-    { name: 'DNR Claims', value: 35, color: '#ef4444', icon: 'package' as const },
-    { name: 'Empty Box', value: 25, color: '#f97316', icon: 'package' as const },
-    { name: 'Agent Risk', value: 22, color: '#a855f7', icon: 'user' as const },
-    { name: 'Wardrobing', value: 18, color: '#6366f1', icon: 'repeat' as const },
+    { name: 'DNR Claims', value: 20.4, color: '#FF5A5A' },
+    { name: 'Empty Box', value: 16.0, color: '#F97316' },
+    { name: 'Promo Abuse', value: 12.4, color: '#10B981' },
+    { name: 'Agent Risk', value: 13.1, color: '#A855F7' },
+    { name: 'Wardrobing', value: 10.9, color: '#3B82F6' },
   ],
 };
 
