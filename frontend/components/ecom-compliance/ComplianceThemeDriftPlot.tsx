@@ -112,10 +112,13 @@ const generateWaveData = (filter: TimeFilter) => {
     ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     : ['W1', 'W2', 'W3', 'W4'];
 
+  // Wave amplitude based on time filter: 24h = very small, 7d = medium, 30d = large
+  const waveAmplitude = filter === '24h' ? 2 : filter === '7d' ? 12 : 18;
+
   // Generate smooth wave-like data with some randomness but trending upward
   return labels.slice(0, points).map((time, i) => {
     const trend = i / points;
-    const wave = Math.sin(i * 0.8) * 10;
+    const wave = Math.sin(i * 0.8) * waveAmplitude;
     
     return {
       time,
@@ -234,15 +237,17 @@ const CustomTooltip = ({ active, payload, label, hoveredKey, driftConfig, isDark
 interface ComplianceThemeDriftPlotProps {
   onCategoryClick?: (category: string | null) => void;
   selectedCategory?: string | null;
+  timeFilter?: TimeFilter;
 }
 
 // Main Component
 export default function ComplianceThemeDriftPlot({ 
   onCategoryClick, 
-  selectedCategory 
+  selectedCategory,
+  timeFilter: timeFilterProp
 }: ComplianceThemeDriftPlotProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
+  const [timeFilter, setTimeFilter] = useState<TimeFilter>(timeFilterProp || '24h');
   const [hoveredSeries, setHoveredSeries] = useState<string | null>(null);
 
   useEffect(() => {
@@ -251,8 +256,12 @@ export default function ComplianceThemeDriftPlot({
       setIsDarkMode(theme === 'dark');
     };
     const checkFilter = () => {
-      const filter = localStorage.getItem('ecomTimeFilter') as TimeFilter;
-      if (filter) setTimeFilter(filter);
+      if (timeFilterProp) {
+        setTimeFilter(timeFilterProp);
+      } else {
+        const filter = localStorage.getItem('ecomTimeFilter') as TimeFilter;
+        if (filter) setTimeFilter(filter);
+      }
     };
     
     checkTheme();
@@ -260,7 +269,9 @@ export default function ComplianceThemeDriftPlot({
     
     const handleStorage = () => {
       checkTheme();
-      checkFilter();
+      if (!timeFilterProp) {
+        checkFilter();
+      }
     };
     window.addEventListener('storage', handleStorage);
     
@@ -273,7 +284,14 @@ export default function ComplianceThemeDriftPlot({
       window.removeEventListener('storage', handleStorage);
       observer.disconnect();
     };
-  }, []);
+  }, [timeFilterProp]);
+
+  // Update timeFilter when prop changes
+  useEffect(() => {
+    if (timeFilterProp) {
+      setTimeFilter(timeFilterProp);
+    }
+  }, [timeFilterProp]);
 
   const driftConfig = useMemo(() => getDriftConfig(timeFilter), [timeFilter]);
   const waveData = useMemo(() => generateWaveData(timeFilter), [timeFilter]);

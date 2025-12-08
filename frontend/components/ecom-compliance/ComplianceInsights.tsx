@@ -247,6 +247,7 @@ export default function ComplianceInsights() {
           <ComplianceThemeDriftPlot 
             onCategoryClick={setSelectedDriftCategory}
             selectedCategory={selectedDriftCategory}
+            timeFilter={timeFilter}
           />
         </div>
         <div className="col-span-5 flex" style={{ minHeight: '500px', height: '500px' }}>
