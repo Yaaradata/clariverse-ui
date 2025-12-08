@@ -80,15 +80,15 @@ export default function ClaimTaxonomyChart({
       <div className="flex items-center gap-4 mb-3 flex-wrap">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-red-500" />
-          <span className="text-gray-400 text-[10px]">DNR</span>
+          <span className="text-gray-400 text-[10px]">Fulfillment Fraud</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-orange-500" />
-          <span className="text-gray-400 text-[10px]">Empty Box</span>
+          <span className="text-gray-400 text-[10px]">Syndicated Claims</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-yellow-500" />
-          <span className="text-gray-400 text-[10px]">Wardrobing</span>
+          <span className="text-gray-400 text-[10px]">Asset Abuse</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full bg-indigo-500" />
@@ -98,7 +98,7 @@ export default function ClaimTaxonomyChart({
 
       {/* Chart */}
       <div className="flex-1 min-h-[160px]">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <AreaChart data={timeSeriesData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
             <defs>
               <linearGradient id="dnrGrad" x1="0" y1="0" x2="0" y2="1">
@@ -133,9 +133,9 @@ export default function ClaimTaxonomyChart({
               tickLine={false}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Area type="monotone" dataKey="dnr" name="DNR" stroke={COLORS.dnr} fill="url(#dnrGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="emptyBox" name="Empty Box" stroke={COLORS.emptyBox} fill="url(#emptyBoxGrad)" strokeWidth={2} />
-            <Area type="monotone" dataKey="wardrobing" name="Wardrobing" stroke={COLORS.wardrobing} fill="url(#wardrobingGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="dnr" name="Fulfillment Fraud" stroke={COLORS.dnr} fill="url(#dnrGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="emptyBox" name="Syndicated Claims" stroke={COLORS.emptyBox} fill="url(#emptyBoxGrad)" strokeWidth={2} />
+            <Area type="monotone" dataKey="wardrobing" name="Asset Abuse" stroke={COLORS.wardrobing} fill="url(#wardrobingGrad)" strokeWidth={2} />
             <Area type="monotone" dataKey="itemSwitch" name="Item Switch" stroke={COLORS.itemSwitch} fill="url(#itemSwitchGrad)" strokeWidth={2} />
           </AreaChart>
         </ResponsiveContainer>

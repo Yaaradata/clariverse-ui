@@ -11,18 +11,19 @@ export type Channel =
   | 'Social Posts';
 
 export type FraudCategory = 
-  | 'DNR' 
-  | 'Empty Box/Tampering' 
-  | 'Wardrobing' 
-  | 'Wrong Item Switch'
-  | 'Promo Abuse'
-  | 'Referral Abuse'
-  | 'Coercion'
-  | 'Agent Collusion';
+  | 'Fulfillment Fraud' 
+  | 'Syndicated Claims' 
+  | 'Asset Abuse' 
+  | 'Incentive Fraud'
+  | 'Insider Collusion'
+  | 'Brand Extortion'
+  | '3rd Party Fraud'
+  | 'Policy Arbitrage';
 
 export type CoercionType = 
   | 'Legal Threat' 
-  | 'Social Shaming' 
+  | 'Reputation Leverage Attacks' 
+  | 'Social Engineering Attempts'
   | 'Urgency Pressure';
 
 // Widget 1: Claim Taxonomy

@@ -92,7 +92,7 @@ export default function AgentRiskRadar({
           <div className="p-1.5 bg-purple-500/10 rounded-lg">
             <UserX className="w-4 h-4 text-purple-400" />
           </div>
-          <h3 className="text-white font-semibold text-base">Agent Risk Analysis</h3>
+          <h3 className="text-white font-semibold text-base">Insider Collusion Detection</h3>
         </div>
         <div className="text-right">
           <div className="flex items-baseline gap-1">

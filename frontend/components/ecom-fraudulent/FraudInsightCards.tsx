@@ -1,16 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { 
+  ShieldAlert,
   Package, 
   UserX, 
   Repeat, 
   ShoppingBag, 
-  MessageSquare, 
   Mail, 
   Ticket, 
-  Phone,
   Globe,
-  Settings
+  Clock,
+  ChevronDown,
+  AlertTriangle,
+  Users
 } from 'lucide-react';
 
 export interface FraudInsight {
@@ -18,7 +21,6 @@ export interface FraudInsight {
   title: string;
   severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
   channels: string[];
-  policy: string;
   detected: string;
   affected: number;
   description: string;
@@ -33,6 +35,8 @@ interface FraudInsightCardsProps {
   highCount: number;
 }
 
+type FilterType = 'all' | 'critical' | 'high' | 'medium' | 'low';
+
 const getIconComponent = (icon: string) => {
   switch (icon) {
     case 'package': return Package;
@@ -45,167 +49,210 @@ const getIconComponent = (icon: string) => {
 
 const getChannelIcon = (channel: string) => {
   switch (channel.toLowerCase()) {
-    case 'chat': return <MessageSquare className="w-3 h-3" />;
     case 'email': return <Mail className="w-3 h-3" />;
     case 'tickets': return <Ticket className="w-3 h-3" />;
-    case 'voice': return <Phone className="w-3 h-3" />;
     case 'social media': return <Globe className="w-3 h-3" />;
-    default: return <MessageSquare className="w-3 h-3" />;
+    default: return <Mail className="w-3 h-3" />;
   }
 };
 
-const getSeverityColors = (severity: string) => {
+const getSeverityColor = (severity: string) => {
   switch (severity) {
-    case 'CRITICAL':
-      return {
-        badge: 'bg-red-500/20 text-red-400 border-red-500/40',
-        border: 'border-red-500/30',
-        icon: 'bg-red-500/10 text-red-400',
-      };
-    case 'HIGH':
-      return {
-        badge: 'bg-orange-500/20 text-orange-400 border-orange-500/40',
-        border: 'border-orange-500/30',
-        icon: 'bg-orange-500/10 text-orange-400',
-      };
-    case 'MEDIUM':
-      return {
-        badge: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40',
-        border: 'border-yellow-500/30',
-        icon: 'bg-yellow-500/10 text-yellow-400',
-      };
-    default:
-      return {
-        badge: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
-        border: 'border-blue-500/30',
-        icon: 'bg-blue-500/10 text-blue-400',
-      };
+    case 'CRITICAL': return 'bg-red-500 text-white';
+    case 'HIGH': return 'bg-orange-500 text-white';
+    case 'MEDIUM': return 'bg-yellow-500 text-black';
+    case 'LOW': return 'bg-blue-500 text-white';
+    default: return 'bg-gray-500 text-white';
   }
 };
 
 export default function FraudInsightCards({ insights, criticalCount, highCount }: FraudInsightCardsProps) {
+  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const mediumCount = insights.filter(i => i.severity === 'MEDIUM').length;
+  const lowCount = insights.filter(i => i.severity === 'LOW').length;
+  const totalCount = insights.length;
+
+  const filteredInsights = activeFilter === 'all' 
+    ? insights 
+    : insights.filter(i => i.severity.toLowerCase() === activeFilter);
+
+  // Category counts for bottom stats
+  const dnrCount = insights.filter(i => i.title.toLowerCase().includes('dnr') || i.icon === 'package').length;
+  const emptyBoxCount = insights.filter(i => i.title.toLowerCase().includes('empty box')).length;
+  const promoCount = insights.filter(i => i.title.toLowerCase().includes('promo')).length;
+  const agentCount = insights.filter(i => i.title.toLowerCase().includes('agent') || i.icon === 'user').length;
+  const wardrobingCount = insights.filter(i => i.title.toLowerCase().includes('wardrob') || i.icon === 'repeat').length;
+
+  const filters: { key: FilterType; label: string; count: number; icon?: React.ReactNode }[] = [
+    { key: 'all', label: 'All Alerts', count: totalCount },
+    { key: 'critical', label: 'Critical', count: criticalCount, icon: <AlertTriangle className="w-3 h-3" /> },
+    { key: 'high', label: 'High', count: highCount, icon: <AlertTriangle className="w-3 h-3" /> },
+    { key: 'medium', label: 'Medium', count: mediumCount, icon: <AlertTriangle className="w-3 h-3" /> },
+    { key: 'low', label: 'Low', count: lowCount, icon: <AlertTriangle className="w-3 h-3" /> },
+  ];
+
   return (
     <div className="bg-[#0a0a0f] border border-white/10 rounded-xl p-5 h-full flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-amber-400">✦</span>
+      <div className="flex items-start justify-between mb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-red-500/10 rounded-lg">
+            <ShieldAlert className="w-5 h-5 text-red-400" />
+          </div>
+          <div>
           <h3 className="text-white font-semibold text-base">AI Fraud Pattern Insights</h3>
+            <p className="text-gray-500 text-xs">{totalCount} active patterns requiring attention</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="bg-red-500/20 text-red-400 text-xs font-medium px-2 py-0.5 rounded">
-            {criticalCount} CRITICAL
-          </span>
-          <span className="bg-orange-500/20 text-orange-400 text-xs font-medium px-2 py-0.5 rounded">
-            {highCount} HIGH
-          </span>
+        <div className="bg-red-500/20 text-red-400 px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+          <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></span>
+          {totalCount} Active
         </div>
       </div>
-      <p className="text-gray-500 text-xs mb-4">
-        Live detection of fraud patterns, abuse signals, and risk indicators from customer communications.
-      </p>
 
-      {/* Horizontal Scrolling Cards */}
-      <div className="flex-1 overflow-x-auto pb-2">
-        <div className="flex gap-4 min-w-max">
-          {insights.map((insight) => {
-            const colors = getSeverityColors(insight.severity);
+      {/* Filter Tabs */}
+      <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
+        {filters.map(filter => (
+          <button
+            key={filter.key}
+            onClick={() => setActiveFilter(filter.key)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+              activeFilter === filter.key
+                ? 'bg-blue-500/20 text-blue-400 border border-blue-500/40'
+                : 'bg-white/5 text-gray-400 border border-white/10 hover:bg-white/10'
+            }`}
+          >
+            {filter.icon}
+            {filter.label}
+            <span className={`px-1.5 py-0.5 rounded text-[10px] ${
+              activeFilter === filter.key ? 'bg-blue-500/30' : 'bg-white/10'
+            }`}>
+              {filter.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Insight List */}
+      <div className="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[400px] scrollbar-thin">
+        {filteredInsights.map((insight) => {
             const IconComponent = getIconComponent(insight.icon);
+          const isExpanded = expandedId === insight.id;
             
             return (
               <div 
                 key={insight.id}
-                className={`w-72 flex-shrink-0 bg-[#0d0d14] border ${colors.border} rounded-xl p-4 hover:brightness-110 transition-all cursor-pointer`}
-              >
-                {/* Card Header */}
-                <div className="flex items-start gap-2 mb-3">
-                  <div className={`p-1.5 rounded-lg ${colors.icon}`}>
-                    <IconComponent className="w-4 h-4" />
+              className="bg-[#0d0d14] border border-white/5 rounded-xl p-3 hover:border-white/10 transition-all cursor-pointer"
+              onClick={() => setExpandedId(isExpanded ? null : insight.id)}
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex items-start gap-3 flex-1">
+                  <div className="p-2 bg-white/5 rounded-lg mt-0.5">
+                    <IconComponent className="w-4 h-4 text-gray-400" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="text-white text-sm font-semibold leading-tight">{insight.title}</h4>
-                  </div>
-                </div>
-
-                {/* Severity Badge */}
-                <div className="mb-3">
-                  <span className={`text-[10px] px-2 py-0.5 rounded border font-semibold ${colors.badge}`}>
+                    {/* Badges */}
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className={`text-[10px] px-2 py-0.5 rounded font-semibold ${getSeverityColor(insight.severity)}`}>
                     {insight.severity}
                   </span>
-                </div>
-
-                {/* Metadata */}
-                <div className="space-y-1.5 text-[11px] mb-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 uppercase tracking-wide">Channel</span>
-                    <div className="flex items-center gap-1 text-gray-300">
-                      {insight.channels.map((channel, i) => (
-                        <span key={i} className="flex items-center gap-0.5">
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 flex items-center gap-1">
+                        <span className="w-1 h-1 bg-emerald-400 rounded-full"></span>
+                        Active
+                      </span>
+                      {insight.channels.slice(0, 1).map((channel, i) => (
+                        <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-white/5 text-gray-400 flex items-center gap-1">
                           {getChannelIcon(channel)}
-                          <span className="text-[10px]">{channel}</span>
+                          {channel}
                         </span>
                       ))}
                     </div>
+                    
+                    {/* Title & Description */}
+                    <h4 className="text-white text-sm font-medium mb-1">{insight.title}</h4>
+                    <p className="text-gray-500 text-xs line-clamp-1">{insight.description}</p>
+                    
+                    {/* Expanded Content */}
+                    {isExpanded && (
+                      <div className="mt-3 pt-3 border-t border-white/5 space-y-2">
+                        <div>
+                          <span className="text-gray-500 text-[10px] uppercase tracking-wider">Root Cause</span>
+                          <p className="text-gray-400 text-xs mt-0.5">{insight.rootCause}</p>
+                        </div>
+                        <div>
+                          <span className="text-red-400 text-[10px] uppercase tracking-wider">Corrective Action</span>
+                          <p className="text-gray-400 text-xs mt-0.5">{insight.correctiveAction}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 uppercase tracking-wide">Policy</span>
-                    <span className="text-gray-300 text-right max-w-[140px] truncate">{insight.policy}</span>
+                        <div className="flex items-center gap-4 text-xs">
+                          <span className="text-gray-500">
+                            Affected: <span className="text-red-400 font-semibold">{insight.affected.toLocaleString()}</span>
+                          </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 uppercase tracking-wide">Detected</span>
-                    <span className="text-gray-300">{insight.detected}</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500 uppercase tracking-wide">Affected</span>
-                    <span className="text-red-400 font-semibold">{insight.affected.toLocaleString()}</span>
+                    )}
                   </div>
                 </div>
 
-                {/* Description */}
-                <div className="bg-black/30 rounded-lg p-2.5 mb-3">
-                  <p className="text-gray-400 text-[11px] leading-relaxed line-clamp-2">{insight.description}</p>
-                </div>
-
-                {/* Root Cause */}
-                <div className="mb-3">
-                  <span className="text-gray-500 text-[9px] uppercase tracking-wider font-medium">Root Cause</span>
-                  <p className="text-gray-400 text-[11px] mt-0.5 line-clamp-2">{insight.rootCause}</p>
-                </div>
-
-                {/* Corrective Action */}
-                <div className="bg-red-500/5 border border-red-500/20 rounded-lg p-2.5">
-                  <div className="flex items-start gap-1.5">
-                    <Settings className="w-3 h-3 text-red-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-red-400 text-[9px] uppercase tracking-wider font-semibold block">Corrective Action</span>
-                      <p className="text-gray-300 text-[11px] mt-0.5 line-clamp-2">{insight.correctiveAction}</p>
-                    </div>
+                {/* Right: Timestamp */}
+                <div className="flex items-center gap-2 text-gray-500 ml-3">
+                  <Clock className="w-3 h-3" />
+                  <span className="text-xs whitespace-nowrap">{insight.detected}</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
                   </div>
                 </div>
               </div>
             );
           })}
+      </div>
+
+      {/* Bottom Stats */}
+      <div className="grid grid-cols-5 gap-2 mt-4 pt-4 border-t border-white/10">
+        <div className="text-center p-2 bg-white/5 rounded-lg">
+          <AlertTriangle className="w-4 h-4 text-red-400 mx-auto mb-1" />
+          <div className="text-white text-lg font-bold">{dnrCount}</div>
+          <div className="text-gray-500 text-[9px] uppercase tracking-wider">Fulfillment</div>
+        </div>
+        <div className="text-center p-2 bg-white/5 rounded-lg">
+          <Package className="w-4 h-4 text-orange-400 mx-auto mb-1" />
+          <div className="text-white text-lg font-bold">{emptyBoxCount}</div>
+          <div className="text-gray-500 text-[9px] uppercase tracking-wider">Syndicated</div>
+        </div>
+        <div className="text-center p-2 bg-white/5 rounded-lg">
+          <ShoppingBag className="w-4 h-4 text-yellow-400 mx-auto mb-1" />
+          <div className="text-white text-lg font-bold">{promoCount}</div>
+          <div className="text-gray-500 text-[9px] uppercase tracking-wider">Incentive</div>
+        </div>
+        <div className="text-center p-2 bg-white/5 rounded-lg">
+          <Users className="w-4 h-4 text-purple-400 mx-auto mb-1" />
+          <div className="text-white text-lg font-bold">{agentCount}</div>
+          <div className="text-gray-500 text-[9px] uppercase tracking-wider">Insider</div>
+        </div>
+        <div className="text-center p-2 bg-white/5 rounded-lg">
+          <Repeat className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+          <div className="text-white text-lg font-bold">{wardrobingCount}</div>
+          <div className="text-gray-500 text-[9px] uppercase tracking-wider">Asset Abuse</div>
         </div>
       </div>
 
       {/* Scrollbar styling */}
       <style jsx>{`
-        div::-webkit-scrollbar {
-          height: 6px;
+        .scrollbar-thin::-webkit-scrollbar {
+          width: 6px;
         }
-        div::-webkit-scrollbar-track {
+        .scrollbar-thin::-webkit-scrollbar-track {
           background: rgba(255,255,255,0.02);
           border-radius: 3px;
         }
-        div::-webkit-scrollbar-thumb {
+        .scrollbar-thin::-webkit-scrollbar-thumb {
           background: rgba(255,255,255,0.1);
           border-radius: 3px;
         }
-        div::-webkit-scrollbar-thumb:hover {
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
           background: rgba(255,255,255,0.2);
         }
       `}</style>
     </div>
   );
 }
-

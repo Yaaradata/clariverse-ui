@@ -18,6 +18,13 @@ export default function FakeEscalationDetector({ data, ghostDetails }: FakeEscal
   const totalEscalations = data.reduce((sum, item) => sum + item.count, 0);
   const ghostData = data.find(d => d.type === 'Ghost');
 
+  // Transform data for Recharts compatibility
+  const chartData = data.map(item => ({
+    type: item.type,
+    count: item.count,
+    percentage: item.percentage,
+  })) as Array<Record<string, string | number>>;
+
   const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: EscalationData }> }) => {
     if (active && payload && payload.length) {
       const item = payload[0].payload;
@@ -58,7 +65,7 @@ export default function FakeEscalationDetector({ data, ghostDetails }: FakeEscal
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={data}
+                data={chartData}
                 cx="50%"
                 cy="50%"
                 innerRadius={35}
@@ -67,7 +74,7 @@ export default function FakeEscalationDetector({ data, ghostDetails }: FakeEscal
                 dataKey="count"
                 nameKey="type"
               >
-                {data.map((entry) => (
+                {chartData.map((entry) => (
                   <Cell 
                     key={entry.type} 
                     fill={COLORS[entry.type as keyof typeof COLORS]}

@@ -17,7 +17,7 @@ const getTypeConfig = (type: CoercionType) => {
         border: 'border-red-500/30',
         label: 'LEGAL',
       };
-    case 'Social Shaming':
+    case 'Reputation Leverage Attacks':
       return {
         icon: Twitter,
         color: 'text-blue-400',
@@ -32,6 +32,14 @@ const getTypeConfig = (type: CoercionType) => {
         bg: 'bg-amber-500/10',
         border: 'border-amber-500/30',
         label: 'URGENCY',
+      };
+    case 'Social Engineering Attempts':
+      return {
+        icon: MessageCircle,
+        color: 'text-purple-400',
+        bg: 'bg-purple-500/10',
+        border: 'border-purple-500/30',
+        label: 'ENGINEERING',
       };
     default:
       return {
@@ -84,7 +92,7 @@ export default function CoercionAlertCards({ alerts }: CoercionAlertCardsProps) 
 
       {/* Signal Type Filters */}
       <div className="flex items-center gap-2 mb-3">
-        {['Legal Threat', 'Social Shaming', 'Urgency Pressure'].map((type) => {
+        {['Legal Threat', 'Reputation Leverage Attacks', 'Social Engineering Attempts'].map((type) => {
           const config = getTypeConfig(type as CoercionType);
           const count = alerts.filter(a => a.type === type).length;
           return (

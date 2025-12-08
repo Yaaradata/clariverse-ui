@@ -1,110 +1,192 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 // Components
 import {
-  FraudRiskScore,
-  FraudInsightCards,
-  ClaimTaxonomyChart,
-  AgentRiskRadar,
+  FraudRiskSnapshot,
+  AIPatternBrain,
   ThreatIntelligenceGrid,
+  ForensicEvidenceModal,
 } from '@/components/ecom-fraudulent';
+import { getPatternStats, getPatternRiskScore, getPatternAgentsCount, patternStats } from '@/components/ecom-fraudulent/ForensicEvidenceModal';
+import type { FraudPattern } from '@/components/ecom-fraudulent';
 
 // Data
 import {
   fraudRiskScoreData,
   fraudInsightsData,
-  claimTaxonomyData,
-  claimTimeSeriesData,
-  agentRiskRadarData,
   threatIntelligenceData,
 } from '@/lib/ecom-fraudulent';
 
+// Category mapping for each pattern
+const patternCategories = [
+  'Fulfillment Fraud',    // Delivery Liability Risk
+  'Insider Collusion',    // Internal Policy Violations
+  'Asset Abuse',          // Non-Resalable Returns
+  'Incentive Fraud',      // Marketing Budget Waste
+  'Syndicated Claims',    // Organized Fraud Rings
+  'Brand Extortion',      // Reputation Ransom Attacks
+  '3rd Party Fraud',      // RaaS Signals
+  'Policy Arbitrage',     // Cross-Channel Arbitration
+];
+
+// Calculate exposure from affected cases (realistic average per case based on pattern type)
+const calculateExposure = (patternId: string, affected: number): number => {
+  // Average case values by pattern (in rupees)
+  const avgCaseValues: Record<string, number> = {
+    'FI-001': 1000,  // Fulfillment Fraud - lower value per case
+    'FI-002': 1000,  // Insider Collusion - policy violations
+    'FI-003': 1000,  // Asset Abuse - return fraud, lower value
+    'FI-004': 1000,  // Incentive Fraud - promo abuse
+    'FI-005': 1000,  // Syndicated Claims - organized fraud
+    'FI-006': 4171,  // Brand Extortion - reputation ransom (higher value)
+    'FI-007': 5000,  // RaaS Signals - professional fraud (higher value)
+    'FI-008': 1205,  // Policy Arbitrage - cross-channel
+  };
+  
+  const avgValue = avgCaseValues[patternId] || 1000;
+  return affected * avgValue;
+};
+
+// Transform fraud insights to patterns for AIPatternBrain
+const fraudPatterns: FraudPattern[] = fraudInsightsData.map((insight, idx) => {
+  const stats = getPatternStats(insight.id);
+  const volume = stats.volume || insight.affected;
+  const exposure = stats.exposure || calculateExposure(insight.id, volume);
+  
+  return {
+    id: insight.id,
+    title: insight.title,
+    severity: insight.severity,
+    category: patternCategories[idx] || 'Unknown',
+    channels: insight.channels,
+    detected: insight.detected,
+    affected: volume,
+    exposure: exposure,
+    riskScore: getPatternRiskScore(insight.id),
+    trend: [23, 18, 8, 15, 12, 31, 45, 22][idx] || 10,
+    description: insight.description,
+    aiSummary: insight.description,
+    rootCause: insight.rootCause,
+    correctiveAction: insight.correctiveAction,
+    icon: insight.icon,
+    relatedAgents: getPatternAgentsCount(insight.id),
+    relatedPincodes: [12, 8, 15, 6, 9, 0, 5, 0][idx] || 5,
+  };
+});
+
 export default function FraudulentPage() {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [selectedPattern, setSelectedPattern] = useState<FraudPattern | null>(null);
+  const [modalType, setModalType] = useState<'cases' | 'agents' | 'pincodes' | null>(null);
 
-  // Listen for theme changes
-  useEffect(() => {
-    const checkTheme = () => {
-      const theme = localStorage.getItem('theme');
-      setIsDarkMode(theme === 'dark');
-    };
-    
-    checkTheme();
-    window.addEventListener('storage', checkTheme);
-    
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    
-    return () => {
-      window.removeEventListener('storage', checkTheme);
-      observer.disconnect();
-    };
-  }, []);
-
-  // Calculate totals for the insight cards
+  // Calculate totals
   const criticalCount = fraudInsightsData.filter(i => i.severity === 'CRITICAL').length;
   const highCount = fraudInsightsData.filter(i => i.severity === 'HIGH').length;
 
-  // Calculate total signals for claim taxonomy
-  const totalClaimSignals = claimTaxonomyData.reduce((sum, item) => sum + item.count, 0);
+  const totalPatternVolume = Object.values(patternStats).reduce((sum, p) => sum + p.volume, 0);
+  const totalPatternExposure = Object.values(patternStats).reduce((sum, p) => sum + p.exposure, 0);
+
+  // Pattern-level legend (pattern names instead of categories)
+  const patternLegendColors = [
+    '#EF4444', '#F97316', '#10B981', '#A855F7',
+    '#3B82F6', '#EC4899', '#F59E0B', '#06B6D4',
+  ];
+
+  const dynamicCategories = fraudPatterns.map((pattern, idx) => {
+    const share = totalPatternExposure > 0
+      ? Math.round((pattern.exposure / totalPatternExposure) * 100)
+      : 0;
+    return {
+      name: pattern.title,
+      value: share,
+      cases: pattern.affected,
+      color: patternLegendColors[idx % patternLegendColors.length] || '#888888',
+    };
+  });
+
+  const handleViewCases = (patternId: string) => {
+    const pattern = fraudPatterns.find(p => p.id === patternId);
+    if (pattern) {
+      setSelectedPattern(pattern);
+      setModalType('cases');
+    }
+  };
+
+  const handleViewAgents = (patternId: string) => {
+    const pattern = fraudPatterns.find(p => p.id === patternId);
+    if (pattern) {
+      setSelectedPattern(pattern);
+      setModalType('agents');
+    }
+  };
+
+  const handleViewPincodes = (patternId: string) => {
+    const pattern = fraudPatterns.find(p => p.id === patternId);
+    if (pattern) {
+      setSelectedPattern(pattern);
+      setModalType('pincodes');
+    }
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPattern(null);
+    setModalType(null);
+  };
 
   return (
-    <div className="min-h-screen bg-[#030308] p-3 sm:p-4 lg:p-6 space-y-4 sm:space-y-6">
-      {/* Row 1: Fraud Risk Score (left) + AI Fraud Pattern Insights (right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-        {/* Left: Fraud Risk Score */}
-        <div className="lg:col-span-3">
-          <FraudRiskScore 
-            score={fraudRiskScoreData.score}
-            aiInsight={fraudRiskScoreData.aiInsight}
-            recommendation={fraudRiskScoreData.recommendation}
-            categories={fraudRiskScoreData.categories}
-          />
-        </div>
+    <div className="min-h-screen w-full px-0 space-y-3">
         
-        {/* Right: AI Fraud Pattern Insights */}
-        <div className="lg:col-span-9">
-          <FraudInsightCards 
-            insights={fraudInsightsData}
-            criticalCount={criticalCount}
-            highCount={highCount}
-          />
+        {/* ROW 1: Two-column grid, equal widths, 16px gap */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+          {/* Left: Fraud Risk Snapshot */}
+          <div className="w-full h-full">
+            <FraudRiskSnapshot 
+              score={fraudRiskScoreData.score}
+              totalCases={totalPatternVolume}
+              weekChange={fraudRiskScoreData.weekChange}
+              categories={dynamicCategories}
+              fraudSuspectedPercent={8.4}
+              estimatedExposure={totalPatternExposure}
+              lossAvoided={2180000}
+              falsePositiveRate={12.3}
+            />
+          </div>
+          
+          {/* Right: AI Pattern Brain */}
+          <div className="w-full h-full">
+            <AIPatternBrain 
+              patterns={fraudPatterns}
+              onViewCases={handleViewCases}
+              onViewAgents={handleViewAgents}
+              onViewPincodes={handleViewPincodes}
+            />
+          </div>
         </div>
-      </div>
 
-      {/* Row 2: Three equal-width widgets */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Left: Customer Claim Patterns (Area Chart) */}
-        <ClaimTaxonomyChart 
-          data={claimTaxonomyData}
-          timeSeriesData={claimTimeSeriesData}
-          totalSignals={totalClaimSignals}
-          peakCategory="DNR (45%)"
-          topKeyword="Empty Box Claim"
-          aiInsight="Claim Spike: 40% surge in 'Empty Box' claims for electronics between 14:00-18:00, correlated with specific courier partner."
-        />
+        {/* ROW 3: Threat Monitor */}
+        <div className="grid grid-cols-12 gap-4">
+          <div className="col-span-12">
+            <ThreatIntelligenceGrid 
+              categories={threatIntelligenceData.categories}
+              overallStatus={threatIntelligenceData.overallStatus}
+              aiInsight={threatIntelligenceData.aiInsight}
+            />
+          </div>
+        </div>
 
-        {/* Middle: Agent Risk Radar */}
-        <AgentRiskRadar 
-          data={agentRiskRadarData.data}
-          overallScore={agentRiskRadarData.overallScore}
-          riskLevel={agentRiskRadarData.riskLevel}
-          topRiskAgent={agentRiskRadarData.topRiskAgent}
-          activeVectors={agentRiskRadarData.activeVectors}
-          aiInsight={agentRiskRadarData.aiInsight}
-        />
-
-        {/* Right: External Threat Monitor (2x2 Grid) */}
-        <ThreatIntelligenceGrid 
-          categories={threatIntelligenceData.categories}
-          overallStatus={threatIntelligenceData.overallStatus}
-          aiInsight={threatIntelligenceData.aiInsight}
-        />
-      </div>
+        {/* Forensic Evidence Modal */}
+        {selectedPattern && modalType && (
+          <ForensicEvidenceModal
+            isOpen={!!selectedPattern}
+            onClose={handleCloseModal}
+            patternTitle={selectedPattern.title}
+            patternId={selectedPattern.id}
+            totalExposure={selectedPattern.exposure}
+            totalVolume={selectedPattern.affected}
+            viewType={modalType}
+          />
+        )}
     </div>
   );
 }

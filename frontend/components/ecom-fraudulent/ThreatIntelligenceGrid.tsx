@@ -91,7 +91,7 @@ export default function ThreatIntelligenceGrid({
       <div className="flex items-center justify-between mb-1">
         <div className="flex items-center gap-2">
           <AlertTriangle className="w-5 h-5 text-rose-400" />
-          <h3 className="text-white font-semibold text-base">External Threat Monitor</h3>
+          <h3 className="text-white font-semibold text-base">Adversarial Pressure Index</h3>
         </div>
         <span className={`text-xs font-semibold px-2.5 py-1 rounded border ${getOverallStatusColors(overallStatus)}`}>
           {overallStatus}
@@ -145,14 +145,33 @@ export default function ThreatIntelligenceGrid({
       </div>
 
       {/* AI Insight */}
-      <div className="bg-[#1a1a2e]/50 border border-cyan-500/20 rounded-lg p-3 mt-3">
+      <div className="bg-[#1a1a2e]/50 border border-cyan-500/20 rounded-lg p-2.5 mt-3">
         <div className="flex items-start gap-2">
-          <Lightbulb className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+          <Lightbulb className="w-3.5 h-3.5 text-cyan-400 flex-shrink-0 mt-0.5" />
           <div>
-            <span className="text-cyan-400 text-[10px] uppercase tracking-wider font-semibold">AI Insight</span>
-            <p className="text-gray-400 text-xs mt-1 leading-relaxed">{aiInsight}</p>
+            <span className="text-cyan-400 text-[9px] uppercase tracking-wider font-semibold">AI Insight</span>
+            <p className="text-gray-400 text-[10px] mt-0.5 leading-relaxed">{aiInsight}</p>
           </div>
         </div>
+      </div>
+
+      {/* Recent Coercion Phrases */}
+      <div className="mt-3 pt-3 border-t border-white/5">
+        <span className="text-gray-500 text-[9px] uppercase tracking-wider">Recent Coercion Phrases</span>
+        <ul className="mt-1.5 space-y-1">
+          <li className="text-gray-400 text-[10px] flex items-start gap-1.5">
+            <span className="text-red-400">•</span>
+            &quot;I will file Consumer Forum case tomorrow...&quot;
+          </li>
+          <li className="text-gray-400 text-[10px] flex items-start gap-1.5">
+            <span className="text-orange-400">•</span>
+            &quot;My 50K Twitter followers will destroy you...&quot;
+          </li>
+          <li className="text-gray-400 text-[10px] flex items-start gap-1.5">
+            <span className="text-yellow-400">•</span>
+            &quot;Flight in 2 hours, refund NOW or else...&quot;
+          </li>
+        </ul>
       </div>
     </div>
   );
