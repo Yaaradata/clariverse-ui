@@ -21,7 +21,7 @@ export function ImperfectnessKPICards({ data }: ImperfectnessKPICardsProps) {
   const kpiCards = [
     {
       title: 'Imperfect Order Count',
-      value: data.imperfectOrderCount.toLocaleString(),
+      value: data.imperfectOrderCount.toLocaleString('en-US'),
       subtext: `${data.imperfectOrderPercentage.toFixed(1)}% of total orders`,
       percentage: data.imperfectOrderPercentage,
       icon: PackageX,
@@ -32,7 +32,7 @@ export function ImperfectnessKPICards({ data }: ImperfectnessKPICardsProps) {
     },
     {
       title: 'Business Impact Amount',
-      value: `₹${data.businessImpactAmount.toLocaleString()}`,
+      value: `₹${data.businessImpactAmount.toLocaleString('en-US')}`,
       subtext: 'Total financial impact',
       icon: DollarSign,
       color: 'text-white',
@@ -53,7 +53,7 @@ export function ImperfectnessKPICards({ data }: ImperfectnessKPICardsProps) {
     {
       title: 'Max Imperfect Orders Region',
       value: data.maxImperfectOrdersRegion,
-      subtext: `${data.maxImperfectOrdersCount.toLocaleString()} imperfect orders`,
+      subtext: `${data.maxImperfectOrdersCount.toLocaleString('en-US')} imperfect orders`,
       icon: MapPin,
       color: 'text-white',
       bgColor: 'bg-green-500/10',
@@ -128,7 +128,7 @@ export function ImperfectnessKPICards({ data }: ImperfectnessKPICardsProps) {
                     // Max Imperfect Orders Region - highlight count in purple
                     <>
                       <span className="text-purple-400 font-semibold">
-                        {data.maxImperfectOrdersCount.toLocaleString()}
+                        {data.maxImperfectOrdersCount.toLocaleString('en-US')}
                       </span>
                       {' imperfect orders'}
                     </>
