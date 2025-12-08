@@ -6,7 +6,6 @@ import { useState } from 'react';
 import {
   FraudRiskSnapshot,
   AIPatternBrain,
-  ThreatIntelligenceGrid,
   ForensicEvidenceModal,
 } from '@/components/ecom-fraudulent';
 import { getPatternStats, getPatternRiskScore, getPatternAgentsCount, patternStats } from '@/components/ecom-fraudulent/ForensicEvidenceModal';
@@ -16,7 +15,6 @@ import type { FraudPattern } from '@/components/ecom-fraudulent';
 import {
   fraudRiskScoreData,
   fraudInsightsData,
-  threatIntelligenceData,
 } from '@/lib/ecom-fraudulent';
 
 // Category mapping for each pattern
@@ -189,17 +187,6 @@ export default function FraudulentPage() {
               onViewCases={handleViewCases}
               onViewAgents={handleViewAgents}
               onViewPincodes={handleViewPincodes}
-            />
-          </div>
-        </div>
-
-        {/* ROW 3: Threat Monitor */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-12">
-            <ThreatIntelligenceGrid 
-              categories={threatIntelligenceData.categories}
-              overallStatus={threatIntelligenceData.overallStatus}
-              aiInsight={threatIntelligenceData.aiInsight}
             />
           </div>
         </div>
