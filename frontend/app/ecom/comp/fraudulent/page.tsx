@@ -8,6 +8,7 @@ import {
   AIPatternBrain,
   ForensicEvidenceModal,
   CrossChannelFraudConsistencyWheel,
+  RegionalFraudBurdenBar,
 } from '@/components/ecom-fraudulent';
 import { getPatternStats, getPatternRiskScore, getPatternAgentsCount, patternStats } from '@/components/ecom-fraudulent/ForensicEvidenceModal';
 import type { FraudPattern } from '@/components/ecom-fraudulent';
@@ -192,22 +193,16 @@ export default function FraudulentPage() {
           </div>
         </div>
 
-        {/* ROW 2: Three-column grid - Left: Cross-Channel Fraud Consistency Wheel, Center: TBD, Right: TBD */}
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-          {/* Left: Cross-Channel Fraud Consistency Wheel */}
-          <div className="w-full">
+        {/* ROW 2: Cross-Channel Fraud Consistency Wheel - Left Aligned */}
+        <div className="w-full">
+          <div className="max-w-4xl">
             <CrossChannelFraudConsistencyWheel />
           </div>
-          
-          {/* Center: Reserved for future component */}
-          <div className="w-full">
-            {/* Placeholder for center component */}
-          </div>
-          
-          {/* Right: Reserved for future component */}
-          <div className="w-full">
-            {/* Placeholder for right component */}
-          </div>
+        </div>
+
+        {/* ROW 3: Regional Fraud Burden Bar - Full Width */}
+        <div className="w-full">
+          <RegionalFraudBurdenBar />
         </div>
 
         {/* Forensic Evidence Modal */}
