@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PainAISummaryWall } from './PainAISummaryWall';
 import { CXPainPriorityBoard } from './CXPainPriorityBoard';
+import { DisruptionHeatMap } from './DisruptionHeatMap';
 import {
   overallPainHealthData,
   painByJourneyStageData,
@@ -294,10 +295,11 @@ export function PainKPICards() {
                         const endRad = (endAngle * Math.PI) / 180;
                         const largeArc = angle > 180 ? 1 : 0;
                         
-                        const x1 = 50 + 40 * Math.cos(startRad);
-                        const y1 = 50 + 40 * Math.sin(startRad);
-                        const x2 = 50 + 40 * Math.cos(endRad);
-                        const y2 = 50 + 40 * Math.sin(endRad);
+                        // Round to 2 decimal places to avoid hydration mismatch
+                        const x1 = Math.round((50 + 40 * Math.cos(startRad)) * 100) / 100;
+                        const y1 = Math.round((50 + 40 * Math.sin(startRad)) * 100) / 100;
+                        const x2 = Math.round((50 + 40 * Math.cos(endRad)) * 100) / 100;
+                        const y2 = Math.round((50 + 40 * Math.sin(endRad)) * 100) / 100;
                         
                         return (
                           <path
@@ -597,6 +599,11 @@ export function PainKPICards() {
       {/* CX Pain Priority Board - Below the KPI Cards */}
       <div className="mt-4">
         <CXPainPriorityBoard isDarkMode={isDarkMode} />
+      </div>
+
+      {/* Disruption Heat Map - Below the Priority Board */}
+      <div className="mt-4">
+        <DisruptionHeatMap isDarkMode={isDarkMode} />
       </div>
     </div>
   );

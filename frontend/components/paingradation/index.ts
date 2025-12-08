@@ -8,4 +8,5 @@ export { PainKPICards } from './PainKPICards';
 export { PainAISummaryWall } from './PainAISummaryWall';
 export { CXPainPriorityBoard } from './CXPainPriorityBoard';
 export { useTheme } from './useTheme';
+export { DisruptionHeatMap } from './DisruptionHeatMap';
 

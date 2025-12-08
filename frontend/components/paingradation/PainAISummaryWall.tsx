@@ -350,7 +350,7 @@ export function PainAISummaryWall({ data = painInsightsData, isDarkMode = false 
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-5 flex-shrink-0">
+      <div className="flex items-center justify-between mb-5 shrink-0">
         <div className="flex items-center gap-3">
           <span className="text-2xl">✨</span>
           <div>
@@ -422,7 +422,7 @@ export function PainAISummaryWall({ data = painInsightsData, isDarkMode = false 
 
                 <div className="relative flex items-start gap-3">
                   <div 
-                    className="p-2 rounded-lg flex-shrink-0"
+                    className="p-2 rounded-lg shrink-0"
                     style={{ backgroundColor: `${config.color}20` }}
                   >
                     <Icon className="w-4 h-4" style={{ color: config.color }} />
@@ -516,7 +516,7 @@ export function PainAISummaryWall({ data = painInsightsData, isDarkMode = false 
                   </div>
 
                   <ChevronRight 
-                    className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${
+                    className={`w-4 h-4 shrink-0 transition-all duration-300 ${
                       isActive ? 'translate-x-1 opacity-100' : 'opacity-40'
                     }`}
                     style={{ color: config.color }}
@@ -657,7 +657,7 @@ export function PainAISummaryWall({ data = painInsightsData, isDarkMode = false 
                       style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
                     >
                       <span 
-                        className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-[10px] font-bold"
+                        className="w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 text-[10px] font-bold"
                         style={{ 
                           backgroundColor: `${selectedConfig.color}20`,
                           color: selectedConfig.color
@@ -706,7 +706,7 @@ export function PainAISummaryWall({ data = painInsightsData, isDarkMode = false 
 
       {/* Summary Footer - Fixed at bottom */}
       <div 
-        className="mt-5 pt-4 border-t grid grid-cols-3 gap-4 flex-shrink-0"
+        className="mt-5 pt-4 border-t grid grid-cols-3 gap-4 shrink-0"
         style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
       >
         <div className="text-center">
