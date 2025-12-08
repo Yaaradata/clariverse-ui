@@ -2,6 +2,49 @@
 
 import { ImperfectnessKPICards } from '@/components/paingradation/ImperfectnessKPICards';
 import { DominantClusterChart } from '@/components/paingradation/DominantClusterChart';
+import { NarrativeLens } from '@/components/paingradation/NarrativeLens';
+import { ImperfectOrderDistribution } from '@/components/paingradation/ImperfectOrderDistribution';
+import { AIImperfectOrderInsightWall } from '@/components/paingradation/AIImperfectOrderInsightWall';
+
+// Helper function to generate random channel distribution (1-3 channels, not all)
+function generateRandomChannels(totalCount: number, seed: number): Array<{ channel: string; count: number; color: string }> {
+  const allChannels = [
+    { channel: 'Email', color: '#5332ff' },
+    { channel: 'Voice', color: '#ef4444' },
+    { channel: 'Chat', color: '#10b981' },
+    { channel: 'Tickets', color: '#f59e0b' },
+    { channel: 'Social Media', color: '#ec4899' },
+  ];
+
+  // Use seed for consistent randomness
+  const numChannels = 1 + (seed % 3); // 1, 2, or 3 channels
+  const shuffled = [...allChannels].sort(() => (seed % 2) - 0.5);
+  const selectedChannels = shuffled.slice(0, numChannels);
+
+  // Distribute totalCount across selected channels
+  const channelCounts: number[] = [];
+  let remaining = totalCount;
+
+  for (let i = 0; i < selectedChannels.length; i++) {
+    if (i === selectedChannels.length - 1) {
+      channelCounts.push(remaining);
+    } else {
+      // Random distribution between 30% and 60% of remaining
+      const minPercent = 0.3;
+      const maxPercent = 0.6;
+      const percent = minPercent + ((seed + i) % 100) / 100 * (maxPercent - minPercent);
+      const count = Math.max(1, Math.floor(remaining * percent));
+      channelCounts.push(count);
+      remaining -= count;
+    }
+  }
+
+  return selectedChannels.map((ch, idx) => ({
+    channel: ch.channel,
+    count: channelCounts[idx],
+    color: ch.color,
+  }));
+}
 
 export default function ImperfectnessPage() {
   // Mock data - Replace with actual API data
@@ -14,6 +57,70 @@ export default function ImperfectnessPage() {
     maxImperfectOrdersRegion: 'Mumbai',
     maxImperfectOrdersCount: 42,
   };
+
+  // Mock complaint phrases data - Replace with actual API data
+  const complaintPhrases = [
+    {
+      phrase: 'I received the wrong item completely different from what I ordered',
+      count: 245,
+      percentage: 18.5,
+      trend: 'up' as const,
+    },
+    {
+      phrase: 'The package was damaged when it arrived and items inside were broken',
+      count: 198,
+      percentage: 15.0,
+      trend: 'up' as const,
+    },
+    {
+      phrase: 'Order was delivered 3 days late without any prior notification',
+      count: 187,
+      percentage: 14.1,
+      trend: 'stable' as const,
+    },
+    {
+      phrase: 'Payment was deducted but order shows as cancelled in the system',
+      count: 165,
+      percentage: 12.5,
+      trend: 'up' as const,
+    },
+    {
+      phrase: 'Refund amount has not been credited to my account even after 7 days',
+      count: 142,
+      percentage: 10.7,
+      trend: 'down' as const,
+    },
+    {
+      phrase: 'Product quality is very poor and does not match the description at all',
+      count: 128,
+      percentage: 9.7,
+      trend: 'up' as const,
+    },
+    {
+      phrase: 'Some items from my order were missing and I only received partial delivery',
+      count: 115,
+      percentage: 8.7,
+      trend: 'stable' as const,
+    },
+    {
+      phrase: 'Delivery person marked as delivered but I never received the package',
+      count: 98,
+      percentage: 7.4,
+      trend: 'up' as const,
+    },
+    {
+      phrase: 'The size I ordered does not fit and the color is completely different',
+      count: 87,
+      percentage: 6.6,
+      trend: 'stable' as const,
+    },
+    {
+      phrase: 'Replacement process is very unclear and customer service is not helping',
+      count: 76,
+      percentage: 5.7,
+      trend: 'down' as const,
+    },
+  ];
 
   // Mock cluster data - Replace with actual API data
   const clusterData: Array<{
@@ -34,11 +141,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Order auto-cancelled but payment captured',
       mainTopic: 'Payment & Order Status Mismatch',
       totalCount: 25,
-      channels: [
-        { channel: 'Email', count: 12, color: '#5332ff' },
-        { channel: 'Voice', count: 8, color: '#ef4444' },
-        { channel: 'Chat', count: 5, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(25, 1),
       issues: [
         // Tier 1 Cities
         {
@@ -203,11 +306,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Wrong item delivered',
       mainTopic: 'Fulfilment Accuracy Issues',
       totalCount: 22,
-      channels: [
-        { channel: 'Email', count: 10, color: '#5332ff' },
-        { channel: 'Voice', count: 7, color: '#ef4444' },
-        { channel: 'Chat', count: 5, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(22, 2),
       issues: [
         {
           pincode: '400001',
@@ -263,11 +362,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Missing item from order',
       mainTopic: 'Fulfilment Accuracy Issues',
       totalCount: 18,
-      channels: [
-        { channel: 'Voice', count: 9, color: '#ef4444' },
-        { channel: 'Email', count: 6, color: '#5332ff' },
-        { channel: 'Chat', count: 3, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(18, 3),
       issues: [
         {
           pincode: '400052',
@@ -315,11 +410,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Incorrect quantity',
       mainTopic: 'Fulfilment Accuracy Issues',
       totalCount: 15,
-      channels: [
-        { channel: 'Email', count: 7, color: '#5332ff' },
-        { channel: 'Voice', count: 5, color: '#ef4444' },
-        { channel: 'Chat', count: 3, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(15, 4),
       issues: [
         {
           pincode: '400053',
@@ -375,11 +466,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Partial delivery without prior communication',
       mainTopic: 'Fulfilment Accuracy Issues',
       totalCount: 12,
-      channels: [
-        { channel: 'Voice', count: 6, color: '#ef4444' },
-        { channel: 'Email', count: 4, color: '#5332ff' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(12, 5),
       issues: [
         {
           pincode: '600001',
@@ -419,11 +506,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Replacement delivered but incorrect',
       mainTopic: 'Fulfilment Accuracy Issues',
       totalCount: 10,
-      channels: [
-        { channel: 'Email', count: 5, color: '#5332ff' },
-        { channel: 'Voice', count: 3, color: '#ef4444' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(10, 6),
       issues: [
         {
           pincode: '400001',
@@ -463,12 +546,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Delivered late vs promised time',
       mainTopic: 'Delivery Experience Complaints',
       totalCount: 20,
-      channels: [
-        { channel: 'Voice', count: 18, color: '#ef4444' },
-        { channel: 'Email', count: 15, color: '#5332ff' },
-        { channel: 'Chat', count: 8, color: '#10b981' },
-        { channel: 'Tickets', count: 4, color: '#8b5cf6' },
-      ],
+      channels: generateRandomChannels(20, 7),
       issues: [
         // Tier 1 Cities
         {
@@ -617,11 +695,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Customer says "not delivered" but platform shows "delivered"',
       mainTopic: 'Delivery Experience Complaints',
       totalCount: 15,
-      channels: [
-        { channel: 'Voice', count: 8, color: '#ef4444' },
-        { channel: 'Email', count: 5, color: '#5332ff' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(15, 8),
       issues: [
         {
           pincode: '400070',
@@ -661,11 +735,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Rider did not follow instructions',
       mainTopic: 'Delivery Experience Complaints',
       totalCount: 8,
-      channels: [
-        { channel: 'Voice', count: 5, color: '#ef4444' },
-        { channel: 'Email', count: 2, color: '#5332ff' },
-        { channel: 'Chat', count: 1, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(8, 9),
       issues: [
         {
           pincode: '400070',
@@ -705,11 +775,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Delivery attempt confusion',
       mainTopic: 'Delivery Experience Complaints',
       totalCount: 7,
-      channels: [
-        { channel: 'Voice', count: 4, color: '#ef4444' },
-        { channel: 'Email', count: 2, color: '#5332ff' },
-        { channel: 'Chat', count: 1, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(7, 10),
       issues: [
         {
           pincode: '560025',
@@ -749,12 +815,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Damaged item',
       mainTopic: 'Product Condition Complaints',
       totalCount: 18,
-      channels: [
-        { channel: 'Email', count: 14, color: '#5332ff' },
-        { channel: 'Social Media', count: 10, color: '#f59e0b' },
-        { channel: 'Chat', count: 7, color: '#10b981' },
-        { channel: 'Voice', count: 4, color: '#ef4444' },
-      ],
+      channels: generateRandomChannels(18, 11),
       issues: [
         // Tier 1 Cities
         {
@@ -903,11 +964,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Defective item',
       mainTopic: 'Product Condition Complaints',
       totalCount: 12,
-      channels: [
-        { channel: 'Email', count: 6, color: '#5332ff' },
-        { channel: 'Social Media', count: 4, color: '#f59e0b' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(12, 12),
       issues: [
         {
           pincode: '110017',
@@ -947,11 +1004,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Tampered package',
       mainTopic: 'Product Condition Complaints',
       totalCount: 9,
-      channels: [
-        { channel: 'Email', count: 5, color: '#5332ff' },
-        { channel: 'Social Media', count: 3, color: '#f59e0b' },
-        { channel: 'Chat', count: 1, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(9, 13),
       issues: [
         {
           pincode: '400028',
@@ -999,11 +1052,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Expired / spoiled product',
       mainTopic: 'Product Condition Complaints',
       totalCount: 8,
-      channels: [
-        { channel: 'Social Media', count: 4, color: '#f59e0b' },
-        { channel: 'Email', count: 3, color: '#5332ff' },
-        { channel: 'Voice', count: 1, color: '#ef4444' },
-      ],
+      channels: generateRandomChannels(8, 14),
       issues: [
         {
           pincode: '110017',
@@ -1051,11 +1100,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Leaking / broken packaging',
       mainTopic: 'Product Condition Complaints',
       totalCount: 7,
-      channels: [
-        { channel: 'Email', count: 4, color: '#5332ff' },
-        { channel: 'Voice', count: 2, color: '#ef4444' },
-        { channel: 'Chat', count: 1, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(7, 15),
       issues: [
         {
           pincode: '400052',
@@ -1095,11 +1140,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Duplicate charges reported',
       mainTopic: 'Payment & Order Status Mismatch',
       totalCount: 10,
-      channels: [
-        { channel: 'Email', count: 5, color: '#5332ff' },
-        { channel: 'Voice', count: 3, color: '#ef4444' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(10, 16),
       issues: [
         {
           pincode: '400088',
@@ -1139,11 +1180,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Replacement process unclear',
       mainTopic: 'Payment & Order Status Mismatch',
       totalCount: 11,
-      channels: [
-        { channel: 'Email', count: 6, color: '#5332ff' },
-        { channel: 'Voice', count: 3, color: '#ef4444' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(11, 17),
       issues: [
         {
           pincode: '400088',
@@ -1199,12 +1236,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Refund not reflecting after imperfect order',
       mainTopic: 'Payment & Order Status Mismatch',
       totalCount: 15,
-      channels: [
-        { channel: 'Email', count: 12, color: '#5332ff' },
-        { channel: 'Voice', count: 9, color: '#ef4444' },
-        { channel: 'Chat', count: 5, color: '#10b981' },
-        { channel: 'Tickets', count: 2, color: '#8b5cf6' },
-      ],
+      channels: generateRandomChannels(15, 18),
       issues: [
         // Tier 1 Cities
         {
@@ -1361,11 +1393,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Size/fit issues',
       mainTopic: 'Quality & Expectation Mismatch',
       totalCount: 10,
-      channels: [
-        { channel: 'Social Media', count: 5, color: '#f59e0b' },
-        { channel: 'Email', count: 3, color: '#5332ff' },
-        { channel: 'Chat', count: 2, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(10, 19),
       issues: [
         {
           pincode: '400001',
@@ -1421,11 +1449,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Colour/shade mismatch',
       mainTopic: 'Quality & Expectation Mismatch',
       totalCount: 9,
-      channels: [
-        { channel: 'Social Media', count: 5, color: '#f59e0b' },
-        { channel: 'Email', count: 3, color: '#5332ff' },
-        { channel: 'Chat', count: 1, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(9, 20),
       issues: [
         {
           pincode: '400052',
@@ -1473,11 +1497,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Freshness complaints',
       mainTopic: 'Quality & Expectation Mismatch',
       totalCount: 8,
-      channels: [
-        { channel: 'Social Media', count: 4, color: '#f59e0b' },
-        { channel: 'Email', count: 3, color: '#5332ff' },
-        { channel: 'Voice', count: 1, color: '#ef4444' },
-      ],
+      channels: generateRandomChannels(8, 21),
       issues: [
         {
           pincode: '400053',
@@ -1533,11 +1553,7 @@ export default function ImperfectnessPage() {
       clusterLabel: 'Product not matching description',
       mainTopic: 'Quality & Expectation Mismatch',
       totalCount: 14,
-      channels: [
-        { channel: 'Social Media', count: 6, color: '#f59e0b' },
-        { channel: 'Email', count: 5, color: '#5332ff' },
-        { channel: 'Chat', count: 3, color: '#10b981' },
-      ],
+      channels: generateRandomChannels(14, 22),
       issues: [
         {
           pincode: '400028',
@@ -1591,6 +1607,24 @@ export default function ImperfectnessPage() {
       </div>
 
       <ImperfectnessKPICards data={kpiData} />
+
+      {/* Three Column Layout */}
+      <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Column 1: Imperfect Order Distribution */}
+        <div className="lg:col-span-1" style={{ minHeight: '600px' }}>
+          <ImperfectOrderDistribution data={clusterData} />
+        </div>
+
+        {/* Column 2: Narrative Lens */}
+        <div className="lg:col-span-1" style={{ minHeight: '600px' }}>
+          <NarrativeLens phrases={complaintPhrases} />
+        </div>
+
+        {/* Column 3: AI Imperfect Order Insight Wall */}
+        <div className="lg:col-span-1" style={{ minHeight: '600px' }}>
+          <AIImperfectOrderInsightWall />
+        </div>
+      </div>
 
       <div className="mt-8">
         <DominantClusterChart data={clusterData} />

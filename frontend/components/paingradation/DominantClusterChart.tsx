@@ -287,8 +287,8 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
       {/* Main Chart Section */}
       <div className="lg:col-span-2">
-        <Card className="bg-[#0d0d0d] border border-[#2a2a2a]">
-          <CardHeader className="pb-4">
+        <Card className="bg-[#0d0d0d] border border-[#2a2a2a] h-full">
+          <CardHeader className="pb-4 pt-6">
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-lg font-bold text-white mb-2">
@@ -425,7 +425,7 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
       {/* Detail Panel */}
       <div className="lg:col-span-1">
         <Card className="bg-[#0d0d0d] border border-[#2a2a2a] h-full">
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-4 pt-6">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-bold text-white">
                 Dominant Clusters
