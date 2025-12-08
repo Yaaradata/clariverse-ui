@@ -7,6 +7,7 @@ import {
   FraudRiskSnapshot,
   AIPatternBrain,
   ForensicEvidenceModal,
+  CrossChannelFraudConsistencyWheel,
 } from '@/components/ecom-fraudulent';
 import { getPatternStats, getPatternRiskScore, getPatternAgentsCount, patternStats } from '@/components/ecom-fraudulent/ForensicEvidenceModal';
 import type { FraudPattern } from '@/components/ecom-fraudulent';
@@ -188,6 +189,24 @@ export default function FraudulentPage() {
               onViewAgents={handleViewAgents}
               onViewPincodes={handleViewPincodes}
             />
+          </div>
+        </div>
+
+        {/* ROW 2: Three-column grid - Left: Cross-Channel Fraud Consistency Wheel, Center: TBD, Right: TBD */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+          {/* Left: Cross-Channel Fraud Consistency Wheel */}
+          <div className="w-full">
+            <CrossChannelFraudConsistencyWheel />
+          </div>
+          
+          {/* Center: Reserved for future component */}
+          <div className="w-full">
+            {/* Placeholder for center component */}
+          </div>
+          
+          {/* Right: Reserved for future component */}
+          <div className="w-full">
+            {/* Placeholder for right component */}
           </div>
         </div>
 
