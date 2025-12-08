@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   BarChart,
@@ -13,7 +13,7 @@ import {
   Legend,
   Cell,
 } from 'recharts';
-import { MapPin, Filter, X } from 'lucide-react';
+import { MapPin, Filter, X, ChevronDown } from 'lucide-react';
 
 interface ChannelData {
   channel: string;
@@ -23,18 +23,34 @@ interface ChannelData {
 
 interface ClusterData {
   clusterLabel: string;
+  mainTopic: string; // Main topic category (A, B, C, D, E)
   totalCount: number;
   channels: ChannelData[];
   issues: IssueDetail[];
+}
+
+interface MainTopicData {
+  topicId: string;
+  topicName: string;
+  clusters: string[];
+  totalCount: number;
+  channels: ChannelData[];
 }
 
 interface IssueDetail {
   pincode: string;
   address: string;
   city: string;
-  cityTier: 'tier1' | 'tier2' | 'tier3';
+  cityTier: 'tier1' | 'tier2' | 'tier3' | 'northeast' | 'islands';
   orderId?: string;
   issueType?: string;
+}
+
+type TierOption = 'all' | 'tier1' | 'tier2' | 'tier3' | 'northeast' | 'islands';
+
+interface TierOptionConfig {
+  value: TierOption;
+  label: string;
 }
 
 interface DominantClusterChartProps {
@@ -43,10 +59,10 @@ interface DominantClusterChartProps {
 
 const CHANNEL_COLORS: Record<string, string> = {
   'Email': '#5332ff',
-  'Phone': '#ef4444',
+  'Voice': '#ef4444',
   'Chat': '#10b981',
   'Social Media': '#f59e0b',
-  'App': '#8b5cf6',
+  'Tickets': '#8b5cf6',
   'Website': '#06b6d4',
 };
 
@@ -54,11 +70,41 @@ const TIER_COLORS = {
   tier1: '#ef4444',
   tier2: '#f59e0b',
   tier3: '#10b981',
+  northeast: '#8b5cf6',
+  islands: '#06b6d4',
 };
 
+const TIER_OPTIONS: TierOptionConfig[] = [
+  { value: 'all', label: 'All Regions' },
+  { value: 'tier1', label: 'Tier 1 Metros' },
+  { value: 'tier2', label: 'Tier 2 Cities' },
+  { value: 'tier3', label: 'Tier 3 & Rural' },
+  { value: 'northeast', label: 'Northeast & Hill States' },
+  { value: 'islands', label: 'Islands & Remote Areas' },
+];
+
 export function DominantClusterChart({ data }: DominantClusterChartProps) {
-  const [selectedTier, setSelectedTier] = useState<'all' | 'tier1' | 'tier2' | 'tier3'>('all');
+  const [selectedTier, setSelectedTier] = useState<TierOption>('all');
   const [selectedCluster, setSelectedCluster] = useState<string | null>(null);
+  const [isTierDropdownOpen, setIsTierDropdownOpen] = useState(false);
+  const tierDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        tierDropdownRef.current &&
+        !tierDropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsTierDropdownOpen(false);
+      }
+    };
+
+    if (isTierDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isTierDropdownOpen]);
 
   // Filter data based on selected tier
   const filteredData = useMemo(() => {
@@ -82,27 +128,77 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
     }).filter(cluster => cluster.totalCount > 0);
   }, [data, selectedTier]);
 
-  // Prepare chart data with stacked bars
+  const selectedTierLabel = TIER_OPTIONS.find(opt => opt.value === selectedTier)?.label || 'All Regions';
+
+  // Group data by main topics
+  const topicsData = useMemo(() => {
+    const topicsMap = new Map<string, MainTopicData>();
+
+    filteredData.forEach(cluster => {
+      const topicId = cluster.mainTopic;
+      const existing = topicsMap.get(topicId);
+
+      if (existing) {
+        existing.clusters.push(cluster.clusterLabel);
+        existing.totalCount += cluster.totalCount;
+        // Merge channels
+        cluster.channels.forEach(channel => {
+          const existingChannel = existing.channels.find(c => c.channel === channel.channel);
+          if (existingChannel) {
+            existingChannel.count += channel.count;
+          } else {
+            existing.channels.push({ ...channel });
+          }
+        });
+      } else {
+        topicsMap.set(topicId, {
+          topicId,
+          topicName: cluster.mainTopic,
+          clusters: [cluster.clusterLabel],
+          totalCount: cluster.totalCount,
+          channels: cluster.channels.map(c => ({ ...c })),
+        });
+      }
+    });
+
+    return Array.from(topicsMap.values());
+  }, [filteredData]);
+
+  // Prepare chart data with stacked bars grouped by main topics
   const chartData = useMemo(() => {
+    // Normalize channel names: convert "Phone" to "Voice", "App" to "Tickets", and exclude "WhatsApp"
+    const normalizeChannel = (channel: string) => {
+      if (channel === 'Phone') return 'Voice';
+      if (channel === 'App') return 'Tickets';
+      return channel;
+    };
+
     const channelNames = Array.from(
-      new Set(filteredData.flatMap(cluster => cluster.channels.map(c => c.channel)))
+      new Set(
+        topicsData.flatMap(topic => 
+          topic.channels.map(c => normalizeChannel(c.channel))
+        )
+      )
     ).filter(channel => channel !== 'WhatsApp'); // Exclude WhatsApp
 
-    return filteredData.map(cluster => {
+    return topicsData.map(topic => {
       const dataPoint: Record<string, any> = {
-        clusterLabel: cluster.clusterLabel,
-        totalCount: cluster.totalCount,
-        isSelected: selectedCluster === cluster.clusterLabel,
+        topicId: topic.topicId,
+        topicName: topic.topicName,
+        totalCount: topic.totalCount,
+        clusters: topic.clusters,
       };
 
       channelNames.forEach(channel => {
-        const channelData = cluster.channels.find(c => c.channel === channel);
+        const channelData = topic.channels.find(
+          c => normalizeChannel(c.channel) === channel
+        );
         dataPoint[channel] = channelData?.count || 0;
       });
 
       return dataPoint;
     });
-  }, [filteredData, selectedCluster]);
+  }, [topicsData]);
 
   // Get selected cluster details
   const selectedClusterData = useMemo(() => {
@@ -110,12 +206,27 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
     return filteredData.find(cluster => cluster.clusterLabel === selectedCluster);
   }, [selectedCluster, filteredData]);
 
+  // Get selected topic details
+  const selectedTopicData = useMemo(() => {
+    if (!selectedCluster) return null;
+    const topic = topicsData.find(t => t.clusters.includes(selectedCluster));
+    return topic;
+  }, [selectedCluster, topicsData]);
+
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       const total = payload.reduce((sum: number, entry: any) => sum + (entry.value || 0), 0);
+      const dataPoint = payload[0]?.payload;
+      const clusters = dataPoint?.clusters || [];
+      
       return (
-        <div className="bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg p-4 shadow-xl">
-          <p className="font-semibold text-white text-sm mb-3">{label}</p>
+        <div className="bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg p-4 shadow-xl max-w-xs">
+          <p className="font-semibold text-white text-sm mb-2">{label}</p>
+          {clusters.length > 0 && (
+            <p className="text-xs text-gray-400 mb-3">
+              Clusters: {clusters.join(', ')}
+            </p>
+          )}
           <div className="space-y-2">
             {payload.map((entry: any, index: number) => (
               entry.value > 0 && (
@@ -145,15 +256,31 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
   };
 
   const handleBarClick = (data: any) => {
-    if (data && data.clusterLabel) {
-      setSelectedCluster(
-        selectedCluster === data.clusterLabel ? null : data.clusterLabel
-      );
+    if (data && data.topicName) {
+      // Select the first cluster of the clicked topic
+      const topic = topicsData.find(t => t.topicName === data.topicName);
+      if (topic && topic.clusters.length > 0) {
+        const firstCluster = topic.clusters[0];
+        setSelectedCluster(
+          selectedCluster === firstCluster ? null : firstCluster
+        );
+      }
     }
   };
 
+  // Normalize channel names: convert "Phone" to "Voice", "App" to "Tickets", and exclude "WhatsApp"
+  const normalizeChannel = (channel: string) => {
+    if (channel === 'Phone') return 'Voice';
+    if (channel === 'App') return 'Tickets';
+    return channel;
+  };
+
   const channelNames = Array.from(
-    new Set(filteredData.flatMap(cluster => cluster.channels.map(c => c.channel)))
+    new Set(
+      topicsData.flatMap(topic => 
+        topic.channels.map(c => normalizeChannel(c.channel))
+      )
+    )
   ).filter(channel => channel !== 'WhatsApp'); // Exclude WhatsApp
 
   return (
@@ -165,39 +292,63 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle className="text-lg font-bold text-white mb-2">
-                  Dominant Cluster Distribution
+                  Imperfect Order Distribution
                 </CardTitle>
                 <p className="text-xs text-gray-400">
-                  Channel distribution across cluster labels
+                  Channel distribution across main topics
                 </p>
               </div>
             </div>
 
-            {/* Tier Filters */}
+            {/* Tier Filter Dropdown */}
             <div className="mt-4 flex items-center gap-2">
               <Filter className="w-4 h-4 text-gray-400" />
-              <span className="text-xs text-gray-400 mr-2">City Tier:</span>
-              <div className="flex gap-2">
-                {(['all', 'tier1', 'tier2', 'tier3'] as const).map((tier) => (
-                  <button
-                    key={tier}
-                    onClick={() => setSelectedTier(tier)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 ${
-                      selectedTier === tier
-                        ? tier === 'all'
-                          ? 'bg-[#b90abd] text-white shadow-lg shadow-[#b90abd]/30'
-                          : `bg-[${TIER_COLORS[tier]}] text-white`
-                        : 'bg-[#1a1a1a] text-gray-400 border border-[#2a2a2a] hover:border-[#3a3a3a]'
+              <span className="text-xs text-gray-400 mr-2">Region:</span>
+              <div className="relative" ref={tierDropdownRef}>
+                <button
+                  onClick={() => setIsTierDropdownOpen(!isTierDropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 bg-[#1a1a1a] text-gray-300 border border-[#2a2a2a] hover:border-[#3a3a3a] min-w-[180px] justify-between"
+                >
+                  <span>{selectedTierLabel}</span>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${
+                      isTierDropdownOpen ? 'rotate-180' : ''
                     }`}
-                    style={
-                      selectedTier === tier && tier !== 'all'
-                        ? { backgroundColor: TIER_COLORS[tier] }
-                        : {}
-                    }
-                  >
-                    {tier === 'all' ? 'All Cities' : tier.toUpperCase()}
-                  </button>
-                ))}
+                  />
+                </button>
+
+                {isTierDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg shadow-xl z-50 overflow-hidden">
+                    <div className="py-2">
+                      {TIER_OPTIONS.map((option) => (
+                        <button
+                          key={option.value}
+                          onClick={() => {
+                            setSelectedTier(option.value);
+                            setIsTierDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-200 flex items-center gap-3 ${
+                            selectedTier === option.value
+                              ? 'bg-[#b90abd]/20 text-white'
+                              : 'text-gray-300 hover:bg-[#1a1a1a] hover:text-white'
+                          }`}
+                        >
+                          <div className="flex items-center gap-2 flex-1">
+                            {selectedTier === option.value && (
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#b90abd] shrink-0" />
+                            )}
+                            {selectedTier !== option.value && (
+                              <div className="w-1.5 h-1.5 rounded-full shrink-0" />
+                            )}
+                            <span className={selectedTier === option.value ? 'font-medium' : ''}>
+                              {option.label}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </CardHeader>
@@ -207,7 +358,7 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={chartData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 100 }}
                   onClick={handleBarClick}
                 >
                   <CartesianGrid
@@ -216,11 +367,11 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                     opacity={0.3}
                   />
                   <XAxis
-                    dataKey="clusterLabel"
+                    dataKey="topicName"
                     angle={-45}
                     textAnchor="end"
-                    height={80}
-                    tick={{ fill: '#939394', fontSize: 11 }}
+                    height={100}
+                    tick={{ fill: '#939394', fontSize: 10 }}
                     axisLine={{ stroke: '#2a2a2a' }}
                     tickLine={{ stroke: '#2a2a2a' }}
                   />
@@ -277,7 +428,7 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-bold text-white">
-                Issue Details
+                Dominant Clusters
               </CardTitle>
               {selectedCluster && (
                 <button
@@ -288,10 +439,9 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                 </button>
               )}
             </div>
-            {selectedCluster && (
+            {selectedTopicData && (
               <p className="text-xs text-gray-400 mt-1">
-                {selectedClusterData?.totalCount || 0} issues in{' '}
-                <span className="text-[#b90abd] font-medium">{selectedCluster}</span>
+                {selectedTopicData.totalCount} total issues
               </p>
             )}
           </CardHeader>
@@ -305,6 +455,13 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                   scrollbarColor: '#3a3a3a #1a1a1a',
                 }}
               >
+                <div className="mb-3 pb-3 border-b border-[#2a2a2a]">
+                  <p className="text-xs text-gray-400 mb-1">Selected Cluster</p>
+                  <p className="text-sm font-semibold text-white">{selectedCluster}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    {selectedClusterData.totalCount} issues
+                  </p>
+                </div>
                 {selectedClusterData.issues.map((issue, index) => (
                   <div
                     key={index}
@@ -312,7 +469,7 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
+                        className="w-2 h-2 rounded-full mt-1.5 shrink-0"
                         style={{
                           backgroundColor:
                             TIER_COLORS[issue.cityTier] || '#939394',
@@ -320,7 +477,7 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <MapPin className="w-3.5 h-3.5 text-[#b90abd] flex-shrink-0" />
+                          <MapPin className="w-3.5 h-3.5 text-[#b90abd] shrink-0" />
                           <span className="text-xs font-semibold text-white">
                             {issue.pincode}
                           </span>
@@ -357,14 +514,69 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                   </div>
                 ))}
               </div>
+            ) : topicsData.length > 0 ? (
+              <div 
+                className="space-y-4 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin"
+                style={{
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#3a3a3a #1a1a1a',
+                }}
+              >
+                {topicsData.map((topic, topicIndex) => (
+                  <div
+                    key={topicIndex}
+                    className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg hover:border-[#b90abd]/50 transition-all duration-200"
+                  >
+                    <div className="mb-2">
+                      <h4 className="text-sm font-semibold text-white mb-1">
+                        {topic.topicName}
+                      </h4>
+                      <p className="text-xs text-gray-400">
+                        {topic.totalCount} issues
+                      </p>
+                    </div>
+                    <div className="space-y-1.5 mt-2">
+                      {topic.clusters.map((clusterName, clusterIndex) => {
+                        const clusterData = filteredData.find(c => c.clusterLabel === clusterName);
+                        return (
+                          <div
+                            key={clusterIndex}
+                            onClick={() => {
+                              setSelectedCluster(
+                                selectedCluster === clusterName ? null : clusterName
+                              );
+                            }}
+                            className={`p-2 rounded-md cursor-pointer transition-all duration-200 ${
+                              selectedCluster === clusterName
+                                ? 'bg-[#b90abd]/20 border border-[#b90abd]/50'
+                                : 'bg-[#0d0d0d] border border-[#2a2a2a] hover:border-[#3a3a3a]'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs font-medium text-gray-300">
+                                {clusterName}
+                              </span>
+                              {clusterData && (
+                                <span className="text-xs text-gray-500">
+                                  {clusterData.totalCount}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-64 text-center">
                 <MapPin className="w-12 h-12 text-gray-600 mb-4" />
                 <p className="text-sm text-gray-400 mb-2">
-                  Select a cluster from the chart
+                  No data available
                 </p>
                 <p className="text-xs text-gray-500">
-                  Click on any bar to view pincode and address details
+                  Select a different region filter
                 </p>
               </div>
             )}
