@@ -1135,7 +1135,7 @@ export function CXPainPriorityBoard({
                                     {/* Channel Distribution Tooltip on Hover */}
                                     {isHovered && (
                                       <div 
-                                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-[100] px-3 py-2 rounded-lg shadow-lg min-w-[180px] pointer-events-none"
+                                        className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-100 px-3 py-2 rounded-lg shadow-lg min-w-[180px] pointer-events-none"
                                         style={{ 
                                           backgroundColor: isDarkMode ? '#1e293b' : '#1e293b',
                                           color: '#ffffff',
