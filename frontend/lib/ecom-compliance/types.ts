@@ -3,6 +3,8 @@ export type Severity = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 export type Channel = 
   | 'Chat' 
   | 'Voice' 
+  | 'Voice (Inbound)' 
+  | 'Voice (Outbound)'
   | 'Email' 
   | 'Ticket' 
   | 'Social Media';

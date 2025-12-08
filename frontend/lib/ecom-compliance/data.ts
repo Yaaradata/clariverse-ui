@@ -5,13 +5,13 @@ export const complianceInsights: Insight[] = [
     id: "insight_001",
     title: "Return & Refund Policy Mis-communication",
     severity: "CRITICAL",
-    channels: ["Chat", "Ticket", "Voice"],
+    channels: ["Chat", "Ticket", "Voice (Inbound)"],
     domain: "Returns & Refunds Compliance",
     detected_at: "2h ago",
     affected_interactions: 2130,
     issue: "Agents promised \"return anytime\" or \"full refund\" conflicting with policy terms.",
-    root_cause: "Agent response macros are outdated and not aligned with current policy. No system in place to enforce policy-locked replies before sending.",
-    corrective_action: "Update all agent macros immediately and add mandatory refund-eligibility verification step before processing."
+    root_cause: "Agent response macros are outdated and not aligned with current policy. No system to enforce policy-locked replies.",
+    corrective_action: "Update all agent macros immediately and add mandatory refund-eligibility verification before processing."
   },
   {
     id: "insight_002",
@@ -22,7 +22,7 @@ export const complianceInsights: Insight[] = [
     detected_at: "45m ago",
     affected_interactions: 540,
     issue: "PII or payment data shared in plain chat/email without secure handling.",
-    root_cause: "No automatic PII detection system deployed in communication channels. Agents have not received adequate training on data sensitivity protocols.",
+    root_cause: "No automatic PII detection system in communication channels. Agents lack adequate training on data sensitivity protocols.",
     corrective_action: "Immediately redact PII from all conversation logs and retrain agents on data protection protocols."
   },
   {
@@ -34,7 +34,7 @@ export const complianceInsights: Insight[] = [
     detected_at: "30m ago",
     affected_interactions: 870,
     issue: "Product descriptions inaccurate — wrong specs, missing MRP, exaggerated claims.",
-    root_cause: "Seller listing oversight process is weak with limited verification. No feedback loop exists between customer complaints and listing review team.",
+    root_cause: "Seller listing oversight is weak with limited verification. No feedback loop between customer complaints and listing review team.",
     corrective_action: "Suspend affected listings immediately and notify sellers to correct product information within 48 hours."
   },
   {
@@ -46,7 +46,7 @@ export const complianceInsights: Insight[] = [
     detected_at: "1h ago",
     affected_interactions: 610,
     issue: "Repeat customers filing vague complaints suggesting serial policy abuse.",
-    root_cause: "No automated language pattern detection for identifying abuse signals. Return approval relies entirely on manual QC review without flagging.",
+    root_cause: "No automated language pattern detection for abuse signals. Return approval relies entirely on manual QC review without flagging.",
     corrective_action: "Escalate flagged requests to fraud review team and require photo proof with delivery verification."
   },
   {
@@ -58,7 +58,7 @@ export const complianceInsights: Insight[] = [
     detected_at: "20m ago",
     affected_interactions: 420,
     issue: "Data retained without consent; deletion requests not honored.",
-    root_cause: "Consent capture flow is not enforced during data collection. Retention policy lacks regular audits and user deletion requests are backlogged.",
+    root_cause: "Consent capture flow not enforced during data collection. Retention policy lacks audits and deletion requests are backlogged.",
     corrective_action: "Purge all unconsented data records and process pending deletion requests within 48 hours."
   },
   {
@@ -70,7 +70,7 @@ export const complianceInsights: Insight[] = [
     detected_at: "15m ago",
     affected_interactions: 250,
     issue: "Users report hidden fees, pre-checked boxes, misleading pricing.",
-    root_cause: "No UX compliance review process for checkout flows. Missing feedback loop from customer complaints to design team for corrections.",
+    root_cause: "No UX compliance review process for checkout flows. Missing feedback loop from customer complaints to design team.",
     corrective_action: "Conduct immediate UX audit and remove all pre-checked consent boxes and hidden fee elements."
   },
   {
@@ -82,19 +82,19 @@ export const complianceInsights: Insight[] = [
     detected_at: "10m ago",
     affected_interactions: 180,
     issue: "Users receiving suspicious marketing — possible unauthorized data sharing.",
-    root_cause: "Data access controls are weak without proper role-based restrictions. No audit trail exists for tracking who accessed sensitive user data.",
+    root_cause: "Data access controls are weak without proper role-based restrictions. No audit trail for tracking sensitive data access.",
     corrective_action: "Suspend all external data-sharing immediately and launch comprehensive internal security audit."
   },
   {
     id: "insight_008",
     title: "Delivery Status Mismatch",
     severity: "HIGH",
-    channels: ["Voice", "Chat"],
+    channels: ["Voice (Inbound)", "Chat"],
     domain: "Delivery SLA",
     detected_at: "45m ago",
     affected_interactions: 870,
     issue: "Agents claim \"delivered\" without verifying GPS/hub logs.",
-    root_cause: "No mandatory verification protocol before confirming delivery status. Agents bypass GPS scan and hub log checks to close tickets faster.",
+    root_cause: "No mandatory verification protocol before confirming delivery status. Agents bypass GPS scan and hub log checks.",
     corrective_action: "Mandate GPS scan and hub log verification before any delivery status confirmation to customers."
   },
   {
@@ -106,43 +106,43 @@ export const complianceInsights: Insight[] = [
     detected_at: "30m ago",
     affected_interactions: 430,
     issue: "Agents incorrectly stating invoices cannot be re-issued.",
-    root_cause: "New agents have not received GST compliance training. Invoice re-issue workflow documentation is missing from agent knowledge base.",
+    root_cause: "New agents lack GST compliance training. Invoice re-issue workflow documentation missing from agent knowledge base.",
     corrective_action: "Conduct immediate GST workflow training for all agents and update invoice-related scripts."
   },
   {
     id: "insight_010",
     title: "Warranty Info Errors",
     severity: "MEDIUM",
-    channels: ["Voice", "Chat"],
+    channels: ["Voice (Inbound)", "Chat"],
     domain: "Warranty Compliance",
     detected_at: "1h ago",
     affected_interactions: 210,
     issue: "Agents wrongly claiming Flipkart handles warranty instead of brand.",
-    root_cause: "Brand partnership rules are unclear in agent documentation. Warranty handling scripts are outdated and do not reflect current brand agreements.",
+    root_cause: "Brand partnership rules unclear in agent documentation. Warranty handling scripts outdated and don't reflect current agreements.",
     corrective_action: "Update warranty response templates in CRM and add brand-specific warranty routing information."
   },
   {
     id: "insight_011",
     title: "Seller Misconduct Not Escalated",
     severity: "MEDIUM",
-    channels: ["Chat", "Ticket", "Voice"],
+    channels: ["Chat", "Ticket", "Voice (Inbound)"],
     domain: "Seller Compliance",
     detected_at: "2h ago",
     affected_interactions: 156,
     issue: "Seller complaints (delays, counterfeits) not escalated to Trust team.",
-    root_cause: "Escalation protocol for seller violations is unclear to agents. No seller-risk classification system to identify severity levels.",
+    root_cause: "Escalation protocol for seller violations unclear to agents. No seller-risk classification system to identify severity levels.",
     corrective_action: "Define clear escalation pathways and train all agents on seller violation categories and severity."
   },
   {
     id: "insight_012",
     title: "Promo Terms Miscommunication",
     severity: "MEDIUM",
-    channels: ["Chat", "Voice", "Social Media"],
+    channels: ["Chat", "Voice (Inbound)", "Social Media"],
     domain: "Promotional Compliance",
     detected_at: "3h ago",
     affected_interactions: 340,
     issue: "Agents gave wrong promo info — discounts, minimum order requirements.",
-    root_cause: "Promotional terms are not synced to agent knowledge base in real-time. Rapid campaign changes are not communicated to support teams.",
+    root_cause: "Promotional terms not synced to agent knowledge base in real-time. Rapid campaign changes not communicated to support teams.",
     corrective_action: "Implement real-time promo sync to agent desktop and add verification step before quoting offers."
   },
   {
@@ -154,19 +154,103 @@ export const complianceInsights: Insight[] = [
     detected_at: "4h ago",
     affected_interactions: 89,
     issue: "Payment disputes (failed refunds, double charges) exceeding SLA.",
-    root_cause: "Manual dispute queue is overloaded with backlog tickets. No priority routing system to fast-track payment-related issues.",
+    root_cause: "Manual dispute queue overloaded with backlog tickets. No priority routing system to fast-track payment-related issues.",
     corrective_action: "Implement priority routing for all payment disputes and add dedicated payment resolution queue."
   },
   {
     id: "insight_014",
     title: "Cross-Sell Without Consent",
     severity: "LOW",
-    channels: ["Voice", "Chat"],
+    channels: ["Voice (Inbound)", "Chat"],
     domain: "Consent-Based Marketing",
     detected_at: "5h ago",
     affected_interactions: 112,
     issue: "Agents promoting products without customer consent.",
-    root_cause: "Aggressive cross-sell targets pressure agents to push promotions. Sales scripts lack mandatory consent-check step before pitching.",
+    root_cause: "Aggressive cross-sell targets pressure agents to push promotions. Sales scripts lack mandatory consent-check step.",
     corrective_action: "Add mandatory consent verification before any promotional pitch and revise cross-sell KPIs."
+  },
+  {
+    id: "insight_015",
+    title: "Call Without Valid Consent (TRAI / DPDP Risk)",
+    severity: "CRITICAL",
+    channels: ["Voice (Outbound)"],
+    domain: "Consent & UCC Compliance (TRAI/DPDP)",
+    detected_at: "1h ago",
+    affected_interactions: 890,
+    issue: "Agents called customers without verifying opt-in status or outside permitted hours, violating TRAI/DPDP guidelines.",
+    root_cause: "Outbound dialer lacks real-time consent verification API. Agents rely on outdated callback lists without checking opt-in status.",
+    corrective_action: "Enable consent-check API before dialing and implement automated opt-in verification."
+  },
+  {
+    id: "insight_016",
+    title: "Promotional Call – Misleading Benefit Claims",
+    severity: "HIGH",
+    channels: ["Voice (Outbound)"],
+    domain: "Unfair Trade Practice (Consumer Protection)",
+    detected_at: "2h ago",
+    affected_interactions: 450,
+    issue: "Agents exaggerated promotional offers during outbound calls (e.g., \"Guaranteed cashback for everyone\") violating fair-practice standards.",
+    root_cause: "Outbound sales scripts contain unverified promotional claims. No real-time offer validation system checks eligibility before promises.",
+    corrective_action: "Update outbound promotional scripts with verified terms and add mandatory eligibility verification."
+  },
+  {
+    id: "insight_017",
+    title: "Refund Clarification – Inaccurate Policy Communication",
+    severity: "HIGH",
+    channels: ["Voice (Outbound)"],
+    domain: "Refund & Return Compliance",
+    detected_at: "45m ago",
+    affected_interactions: 320,
+    issue: "Agents over-promised faster refund processing than policy allows during outbound calls, creating compliance drift.",
+    root_cause: "Outbound refund scripts not synchronized with actual processing timelines. Agents lack access to real-time refund status dashboard.",
+    corrective_action: "Sync outbound refund scripts with policy timelines and provide real-time status visibility before commitments."
+  },
+  {
+    id: "insight_018",
+    title: "Fraud Verification – Sensitive Data Mishandling",
+    severity: "CRITICAL",
+    channels: ["Voice (Outbound)"],
+    domain: "Data Privacy & Security (DPDP/PCI)",
+    detected_at: "30m ago",
+    affected_interactions: 180,
+    issue: "Agents asked customers to verbally confirm full card numbers or OTPs during outbound fraud verification, violating PCI/DPDP protocols.",
+    root_cause: "Agents lack structured outbound fraud-handling scripts. No standardized verification workflow prevents over-sharing sensitive details.",
+    corrective_action: "Implement standardized fraud verification workflow with auto-masked prompts and prohibit verbal card/OTP confirmation."
+  },
+  {
+    id: "insight_019",
+    title: "Delivery Verification – Incorrect SLA Commitment",
+    severity: "MEDIUM",
+    channels: ["Voice (Outbound)"],
+    domain: "Delivery SLA Compliance",
+    detected_at: "1h ago",
+    affected_interactions: 240,
+    issue: "Agents made incorrect delivery promises during outbound calls for address confirmation, violating SLA commitments.",
+    root_cause: "Outbound delivery scripts not integrated with real-time logistics SLA data. Agents make informal reassurances without checking timelines.",
+    corrective_action: "Integrate delivery scripts with real-time SLA dashboard and mandate verification before commitments."
+  },
+  {
+    id: "insight_020",
+    title: "Service Call – Incorrect Warranty Obligation Explanation",
+    severity: "MEDIUM",
+    channels: ["Voice (Outbound)"],
+    domain: "Warranty & Service Compliance",
+    detected_at: "2h ago",
+    affected_interactions: 195,
+    issue: "Agents provided incorrect warranty periods, hidden fees, or failed to mention exclusions during outbound warranty/service calls.",
+    root_cause: "Outbound warranty scripts contain outdated warranty terms. No brand-specific warranty routing information available to agents during calls.",
+    corrective_action: "Update warranty scripts with current brand-specific terms and add mandatory eligibility verification."
+  },
+  {
+    id: "insight_021",
+    title: "Call – Improper Pressure to Withdraw Complaint (CPA Risk)",
+    severity: "CRITICAL",
+    channels: ["Voice (Outbound)"],
+    domain: "Consumer Protection Act (CPA) Compliance",
+    detected_at: "15m ago",
+    affected_interactions: 95,
+    issue: "Agents pressured customers to withdraw complaints or accept non-policy compensation during outbound calls, violating CPA standards.",
+    root_cause: "Outbound complaint scripts encourage agents to close complaints quickly without proper resolution. No compliance guardrails prevent pressure tactics.",
+    corrective_action: "Revise complaint scripts to prohibit pressure tactics and implement compliance monitoring for complaint calls."
   }
 ];

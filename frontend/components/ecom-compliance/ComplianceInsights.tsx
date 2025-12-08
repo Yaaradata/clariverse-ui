@@ -19,7 +19,7 @@ export default function ComplianceInsights() {
   const [isChannelDropdownOpen, setIsChannelDropdownOpen] = useState(false);
   const channelDropdownRef = useRef<HTMLDivElement>(null);
 
-  const channels = ['All Channels', 'Email', 'Chat', 'Ticket', 'Voice Transcript', 'Social Media'];
+  const channels = ['All Channels', 'Email', 'Chat', 'Ticket', 'Voice (Inbound)', 'Voice (Outbound)', 'Social Media'];
 
   useEffect(() => {
     const checkTheme = () => {
@@ -67,18 +67,29 @@ export default function ComplianceInsights() {
 
   const driftConfig = useMemo(() => getDriftConfig(timeFilter), [timeFilter]);
 
-  // Filter insights based on selected channel
+  // Filter and sort insights based on selected channel and severity
   const filteredInsights = useMemo(() => {
-    if (selectedChannel === 'All Channels') {
-      return complianceInsights;
+    let filtered = complianceInsights;
+    
+    // Filter by channel if not "All Channels"
+    if (selectedChannel !== 'All Channels') {
+      const channelToFilter: string = selectedChannel;
+      filtered = complianceInsights.filter(insight => 
+        insight.channels.includes(channelToFilter as 'Chat' | 'Voice' | 'Voice (Inbound)' | 'Voice (Outbound)' | 'Email' | 'Ticket' | 'Social Media')
+      );
     }
     
-    // Map "Voice Transcript" to "Voice" for filtering (data uses "Voice")
-    const channelToFilter: string = selectedChannel === 'Voice Transcript' ? 'Voice' : selectedChannel;
+    // Sort by severity: CRITICAL > HIGH > MEDIUM > LOW
+    const severityOrder: Record<string, number> = {
+      'CRITICAL': 0,
+      'HIGH': 1,
+      'MEDIUM': 2,
+      'LOW': 3
+    };
     
-    return complianceInsights.filter(insight => 
-      insight.channels.includes(channelToFilter as 'Chat' | 'Voice' | 'Email' | 'Ticket' | 'Social Media')
-    );
+    return filtered.sort((a, b) => {
+      return severityOrder[a.severity] - severityOrder[b.severity];
+    });
   }, [selectedChannel]);
 
   const criticalCount = filteredInsights.filter(i => i.severity === 'CRITICAL').length;
@@ -209,7 +220,7 @@ export default function ComplianceInsights() {
             {/* Cards Container */}
             <div 
               className="flex gap-3 overflow-x-auto pb-6 pt-6 items-stretch scrollbar-thin"
-              style={{ scrollbarColor }}
+              style={{ scrollbarColor, height: '455px', minHeight: '455px' }}
             >
               {filteredInsights.map((insight, index) => (
                 <InsightCard 

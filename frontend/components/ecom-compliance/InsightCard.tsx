@@ -5,6 +5,8 @@ import {
   Settings, 
   Shield, 
   Phone, 
+  PhoneIncoming,
+  PhoneOutgoing,
   Mail, 
   MessageSquare, 
   FileWarning,
@@ -89,6 +91,10 @@ const getChannelIcon = (channel: Channel) => {
   switch (channel) {
     case 'Voice':
       return <Phone className="w-3 h-3" />;
+    case 'Voice (Inbound)':
+      return <PhoneIncoming className="w-3 h-3" />;
+    case 'Voice (Outbound)':
+      return <PhoneOutgoing className="w-3 h-3" />;
     case 'Email':
       return <Mail className="w-3 h-3" />;
     case 'Chat':
@@ -155,7 +161,7 @@ export default function InsightCard({ insight, delay = 0 }: InsightCardProps) {
 
   return (
     <div
-      className="w-72 min-w-[18rem] rounded-xl border px-4 py-4 text-sm shadow-lg flex flex-col transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+      className="w-72 min-w-[18rem] rounded-xl border px-2 pt-2 pb-1 text-sm shadow-lg flex flex-col justify-start transition-all duration-300 cursor-pointer hover:scale-[1.02]"
       style={{
         transitionDelay: `${delay}ms`,
         borderColor: colors.borderColor,
@@ -225,12 +231,12 @@ export default function InsightCard({ insight, delay = 0 }: InsightCardProps) {
       </div>
 
       {/* Actions */}
-      <div className="rounded-lg border p-2 text-[11px]" style={{ borderColor: colors.actionBorder, backgroundColor: colors.actionBg }}>
+      <div className="rounded-lg border p-2 text-[11px] mb-0" style={{ borderColor: colors.actionBorder, backgroundColor: colors.actionBg }}>
         <div className="flex items-start gap-1.5">
           <Settings className="w-3 h-3 flex-shrink-0 mt-0.5" style={{ color: colors.iconColor }} />
-          <div>
-            <span className="text-[9px] uppercase tracking-wider font-medium block" style={{ color: colors.iconColor }}>Corrective Action</span>
-            <span style={{ color: actionTextColor }}>{insight.corrective_action}</span>
+          <div className="flex-1 min-w-0">
+            <span className="text-[9px] uppercase tracking-wider font-medium block mb-0.5" style={{ color: colors.iconColor }}>Corrective Action</span>
+            <span className="block" style={{ color: actionTextColor }}>{insight.corrective_action}</span>
           </div>
         </div>
       </div>
