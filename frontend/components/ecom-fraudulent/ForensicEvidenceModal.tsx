@@ -168,11 +168,20 @@ export const patternStats: Record<string, { volume: number; exposure: number }> 
 
 export const getPatternStats = (patternId: string) => patternStats[patternId] || { volume: 0, exposure: 0 };
 
+// Pattern-specific risk scores (updated values)
+const patternRiskScores: Record<string, number> = {
+  'FI-001': 71,  // Delivery Liability Risk
+  'FI-002': 40,  // Internal Policy Violations
+  'FI-003': 55,  // Non-Resalable Returns
+  'FI-004': 75,  // Marketing Budget Waste
+  'FI-005': 60,  // Organized Fraud Rings
+  'FI-006': 80,  // Reputation Ransom Attacks
+  'FI-007': 42,  // Refund-as-a-Service (RaaS) Signals
+  'FI-008': 68,  // Cross-Channel Arbitration
+};
+
 export const getPatternRiskScore = (patternId: string) => {
-  const cases = patternCases[patternId];
-  if (!cases || cases.length === 0) return 0;
-  const total = cases.reduce((sum, item) => sum + item.riskScore, 0);
-  return Math.round(total / cases.length);
+  return patternRiskScores[patternId] || 0;
 };
 
 // Get cases for a specific pattern

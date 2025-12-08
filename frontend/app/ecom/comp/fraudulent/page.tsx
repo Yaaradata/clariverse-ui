@@ -31,6 +31,24 @@ const patternCategories = [
   'Policy Arbitrage',     // Cross-Channel Arbitration
 ];
 
+// Calculate severity based on risk score ranges
+const getSeverityFromRiskScore = (riskScore: number): 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW' => {
+  if (riskScore >= 76) return 'CRITICAL';
+  if (riskScore >= 65) return 'HIGH';
+  if (riskScore >= 50) return 'MEDIUM';
+  if (riskScore >= 40) return 'LOW';
+  return 'LOW'; // Default to LOW for scores below 40
+};
+
+// Get color based on risk score ranges
+const getColorFromRiskScore = (riskScore: number): string => {
+  if (riskScore >= 76) return '#EF4444'; // Red - Critical
+  if (riskScore >= 65) return '#F97316'; // Orange - High
+  if (riskScore >= 50) return '#F59E0B'; // Yellow/Amber - Moderate
+  if (riskScore >= 40) return '#10B981'; // Light Green/Teal - Low
+  return '#10B981'; // Default to green for scores below 40
+};
+
 // Calculate exposure from affected cases (realistic average per case based on pattern type)
 const calculateExposure = (patternId: string, affected: number): number => {
   // Average case values by pattern (in rupees)
@@ -54,23 +72,24 @@ const fraudPatterns: FraudPattern[] = fraudInsightsData.map((insight, idx) => {
   const stats = getPatternStats(insight.id);
   const volume = stats.volume || insight.affected;
   const exposure = stats.exposure || calculateExposure(insight.id, volume);
+  const riskScore = getPatternRiskScore(insight.id);
   
   return {
-    id: insight.id,
-    title: insight.title,
-    severity: insight.severity,
+  id: insight.id,
+  title: insight.title,
+  severity: getSeverityFromRiskScore(riskScore), // Calculate severity from risk score
     category: patternCategories[idx] || 'Unknown',
-    channels: insight.channels,
-    detected: insight.detected,
+  channels: insight.channels,
+  detected: insight.detected,
     affected: volume,
     exposure: exposure,
-    riskScore: getPatternRiskScore(insight.id),
+    riskScore: riskScore,
     trend: [23, 18, 8, 15, 12, 31, 45, 22][idx] || 10,
-    description: insight.description,
+  description: insight.description,
     aiSummary: insight.description,
-    rootCause: insight.rootCause,
-    correctiveAction: insight.correctiveAction,
-    icon: insight.icon,
+  rootCause: insight.rootCause,
+  correctiveAction: insight.correctiveAction,
+  icon: insight.icon,
     relatedAgents: getPatternAgentsCount(insight.id),
     relatedPincodes: [12, 8, 15, 6, 9, 0, 5, 0][idx] || 5,
   };
@@ -87,21 +106,31 @@ export default function FraudulentPage() {
   const totalPatternVolume = Object.values(patternStats).reduce((sum, p) => sum + p.volume, 0);
   const totalPatternExposure = Object.values(patternStats).reduce((sum, p) => sum + p.exposure, 0);
 
+  // Calculate overall risk score as average of all pattern risk scores
+  const overallRiskScore = fraudPatterns.length > 0
+    ? fraudPatterns.reduce((sum, p) => sum + p.riskScore, 0) / fraudPatterns.length
+    : 0;
+
   // Pattern-level legend (pattern names instead of categories)
   const patternLegendColors = [
     '#EF4444', '#F97316', '#10B981', '#A855F7',
     '#3B82F6', '#EC4899', '#F59E0B', '#06B6D4',
   ];
 
+  // Calculate total risk score for proportional donut segments
+  const totalRiskScore = fraudPatterns.reduce((sum, p) => sum + p.riskScore, 0);
+
   const dynamicCategories = fraudPatterns.map((pattern, idx) => {
-    const share = totalPatternExposure > 0
-      ? Math.round((pattern.exposure / totalPatternExposure) * 100)
+    // Calculate share based on risk score instead of exposure
+    const share = totalRiskScore > 0
+      ? Math.round((pattern.riskScore / totalRiskScore) * 100)
       : 0;
     return {
       name: pattern.title,
-      value: share,
+      value: share, // Donut chart segments based on risk score proportion
       cases: pattern.affected,
-      color: patternLegendColors[idx % patternLegendColors.length] || '#888888',
+      riskScore: pattern.riskScore, // Risk score for legend display
+      color: getColorFromRiskScore(pattern.riskScore), // Color based on risk score range
     };
   });
 
@@ -142,7 +171,7 @@ export default function FraudulentPage() {
           {/* Left: Fraud Risk Snapshot */}
           <div className="w-full h-full">
             <FraudRiskSnapshot 
-              score={fraudRiskScoreData.score}
+              score={overallRiskScore}
               totalCases={totalPatternVolume}
               weekChange={fraudRiskScoreData.weekChange}
               categories={dynamicCategories}

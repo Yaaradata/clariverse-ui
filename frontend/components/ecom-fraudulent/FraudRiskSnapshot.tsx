@@ -9,7 +9,8 @@ interface FraudCategory {
   value: number;
   cases: number;
   color: string;
-  [key: string]: string | number;
+  riskScore?: number;
+  [key: string]: string | number | undefined;
 }
 
 interface FraudRiskSnapshotProps {
@@ -62,12 +63,16 @@ export default function FraudRiskSnapshot({
           </div>
           <h3 className="text-white font-semibold text-sm">Enterprise Risk Posture</h3>
         </div>
+        <div className="text-right">
+          <div className="text-white text-lg font-bold">{totalCases.toLocaleString()}</div>
+          <div className="text-gray-500 text-[10px] uppercase">Cases</div>
+        </div>
       </div>
 
       {/* Compact Chart + Legend */}
       <div className="flex items-center gap-3 mb-3">
         {/* Mini Donut */}
-        <div className="relative w-24 h-24 flex-shrink-0">
+        <div className="relative w-40 h-40 flex-shrink-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
             <PieChart>
               <Pie
@@ -96,41 +101,32 @@ export default function FraudRiskSnapshot({
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-bold text-white">{score.toFixed(0)}</span>
-            <span className="text-[8px] text-gray-500 uppercase">Score</span>
+            <span className="text-3xl font-bold text-white">{score.toFixed(0)}%</span>
+            <span className="text-[10px] text-gray-500 uppercase">Risk Score</span>
           </div>
         </div>
 
-        {/* Legend - full list in two columns */}
+        {/* Legend - full list in single column */}
         <div className="flex-1">
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+          <div className="grid grid-cols-1 gap-y-1">
             {categories.map((cat, idx) => (
               <div 
                 key={cat.name} 
-                className="flex items-center gap-1.5 cursor-pointer hover:opacity-80"
+                className="flex items-center justify-between cursor-pointer hover:opacity-80"
                 onMouseEnter={() => setActiveIndex(idx)}
                 onMouseLeave={() => setActiveIndex(undefined)}
               >
-                <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
-                <span className="text-gray-400 text-[10px] flex-1 truncate">{cat.name}</span>
-                <span className="text-white text-[10px] font-medium">{cat.value}%</span>
+                <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
+                  <span className="text-gray-400 text-[10px] truncate ml-1">{cat.name}</span>
+                </div>
+                <span className="text-white text-[10px] font-medium ml-2 flex-shrink-0">{cat.riskScore !== undefined ? cat.riskScore : cat.value + '%'}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Summary Stats Row */}
-      <div className="grid grid-cols-2 gap-4 py-3 px-3 bg-white/5 rounded-lg mb-3">
-        <div className="text-left">
-          <div className="text-white text-lg font-bold">{totalCases.toLocaleString()}</div>
-          <div className="text-gray-500 text-[10px] uppercase">Cases</div>
-        </div>
-        <div className="text-left">
-          <div className="text-white text-lg font-bold">{score.toFixed(0)}%</div>
-          <div className="text-gray-500 text-[10px] uppercase">Risk Score</div>
-        </div>
-      </div>
 
       {/* 2x2 KPI Grid */}
       <div className="grid grid-cols-2 gap-2 flex-1">

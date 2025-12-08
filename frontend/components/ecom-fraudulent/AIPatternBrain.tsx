@@ -38,10 +38,10 @@ interface AIPatternBrainProps {
 
 const getSeverityColor = (severity: string) => {
   switch (severity) {
-    case 'CRITICAL': return 'bg-red-500 text-white';
-    case 'HIGH': return 'bg-orange-500 text-white';
-    case 'MEDIUM': return 'bg-yellow-500 text-black';
-    case 'LOW': return 'bg-blue-500 text-white';
+    case 'CRITICAL': return 'bg-red-500 text-white'; // 76-100
+    case 'HIGH': return 'bg-orange-500 text-white'; // 65-75
+    case 'MEDIUM': return 'bg-amber-500 text-black'; // 50-64 (Yellow/Amber)
+    case 'LOW': return 'bg-green-500 text-white'; // 40-49 (Light Green/Teal)
     default: return 'bg-gray-500 text-white';
   }
 };
@@ -66,17 +66,6 @@ const formatCurrency = (value: number) => {
   return `₹${value.toLocaleString()}`;
 };
 
-const ALL_CATEGORIES = [
-  'Fulfillment Fraud',
-  'Syndicated Claims', 
-  'Asset Abuse',
-  'Incentive Fraud',
-  'Insider Collusion',
-  'Brand Extortion',
-  '3rd Party Fraud',
-  'Policy Arbitrage',
-];
-
 export default function AIPatternBrain({ 
   patterns, 
   onViewCases, 
@@ -84,20 +73,14 @@ export default function AIPatternBrain({
   onViewPincodes 
 }: AIPatternBrainProps) {
   const [expandedPatternId, setExpandedPatternId] = useState<string | null>(null);
-  const [severityFilter, setSeverityFilter] = useState<'all' | 'CRITICAL' | 'HIGH'>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [severityFilter, setSeverityFilter] = useState<'all' | 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW'>('all');
   
   // Apply filters
   const filteredPatterns = patterns.filter(p => {
-    const matchesSeverity = severityFilter === 'all' || p.severity === severityFilter;
-    const matchesCategory = categoryFilter === 'all' || p.category === categoryFilter;
-    return matchesSeverity && matchesCategory;
+    return severityFilter === 'all' || p.severity === severityFilter;
   });
   
-  const criticalCount = patterns.filter(p => p.severity === 'CRITICAL').length;
-  const highCount = patterns.filter(p => p.severity === 'HIGH').length;
-  
-  const hasActiveFilters = severityFilter !== 'all' || categoryFilter !== 'all';
+  const hasActiveFilters = severityFilter !== 'all';
 
   const toggleExpand = (patternId: string) => {
     setExpandedPatternId(expandedPatternId === patternId ? null : patternId);
@@ -105,7 +88,6 @@ export default function AIPatternBrain({
   
   const clearFilters = () => {
     setSeverityFilter('all');
-    setCategoryFilter('all');
   };
 
   return (
@@ -124,7 +106,7 @@ export default function AIPatternBrain({
         </div>
           <div className="flex items-center gap-2 flex-wrap justify-end">
             <div className="flex items-center gap-1 p-0.5 bg-white/5 rounded-lg">
-              {(['all', 'CRITICAL', 'HIGH'] as const).map((sev) => (
+              {(['all', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const).map((sev) => (
                 <button
                   key={sev}
                   onClick={() => setSeverityFilter(sev)}
@@ -132,6 +114,8 @@ export default function AIPatternBrain({
                     severityFilter === sev
                       ? sev === 'CRITICAL' ? 'bg-red-500/30 text-red-400'
                         : sev === 'HIGH' ? 'bg-orange-500/30 text-orange-400'
+                        : sev === 'MEDIUM' ? 'bg-amber-500/30 text-amber-400'
+                        : sev === 'LOW' ? 'bg-green-500/30 text-green-400'
                         : 'bg-purple-500/30 text-purple-400'
                       : 'text-gray-500 hover:text-gray-300'
                   }`}
@@ -139,18 +123,6 @@ export default function AIPatternBrain({
                   {sev === 'all' ? 'All' : sev.charAt(0) + sev.slice(1).toLowerCase()}
                 </button>
               ))}
-            </div>
-            <div className="relative">
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="px-3 py-1.5 pr-6 text-[11px] bg-[#0f0f14] border border-purple-500/30 rounded-md text-gray-100 focus:outline-none focus:ring-1 focus:ring-purple-500/60 cursor-pointer min-w-[180px]"
-              >
-                <option value="all" className="bg-[#0a0a0f] text-gray-200">All Categories</option>
-                {ALL_CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat} className="bg-[#0a0a0f] text-gray-200">{cat}</option>
-                ))}
-              </select>
             </div>
             {hasActiveFilters && (
               <button
@@ -200,9 +172,6 @@ export default function AIPatternBrain({
                     <div className="flex items-center gap-1.5 mb-0.5">
                       <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${getSeverityColor(pattern.severity)}`}>
                         {pattern.severity}
-                      </span>
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded border ${getCategoryColor(pattern.category)}`}>
-                        {pattern.category}
                       </span>
                     </div>
                     <h4 className="text-white text-sm font-semibold truncate">{pattern.title}</h4>
