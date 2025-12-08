@@ -28,6 +28,7 @@ interface InsightData {
   region: string;
   pattern: string;
   aiInsight: string;
+  summaryTitle?: string;
   evidence: string[];
   whyItMatters: string[];
   nextActions: string[];
@@ -125,102 +126,102 @@ const regionalData: RegionalData[] = [
   },
 ];
 
-// Mock insight data - in production, this would come from API
-const insightData: Record<string, InsightData> = {
-  'Tier 1-Reputation Ransom Attacks': {
+// Region-specific insight data - in production, this would come from API
+const regionInsights: Record<string, Omit<InsightData, 'pattern'>> = {
+  'Tier 1': {
     region: 'Tier 1',
-    pattern: 'Reputation Ransom Attacks',
-    aiInsight: 'Reputation Ransom Attacks in Tier 1 are being driven by coordinated social escalations and copy-pasted complaint scripts across chat + social channels.',
+    aiInsight: 'High-velocity fraud using channel hopping to accelerate refund pressure.',
+    summaryTitle: 'Omni-Channel Fraud Command Centers',
     evidence: [
-      '64% of Tier 1 complaints included threat-based language ("post online", "viral review")',
-      '41% used identical phrasing, indicating script reuse',
-      '27% of chat interactions escalated to social platforms within 6 hours',
-      'Voice transcripts show aggressive tone escalation in refund discussions',
+      'Scripted INR + social threats across Chat + Social',
+      'GPS mismatch clusters in top ZIPs',
+      'Courier misinformation patterns repeated',
     ],
-    whyItMatters: [
-      'High risk to brand reputation',
-      'Pressure on Goodwill Budget (refund leakage)',
-      'Increased cross-channel workload due to escalations',
-      'Signals potential RaaS activity in metro zones',
-    ],
+    whyItMatters: [],
     nextActions: [
-      'Deploy unified escalation messaging across all channels to eliminate arbitration',
-      'Reduce discretionary refunds in Tier 1 for threat-based complaints',
-      'Activate Social Listening Watchlist for repeat handles',
-      'Align courier partners to audit delivery incidents feeding the narrative',
-      'Trigger Fraud Playbook v3 for organized threat clusters',
+      'Enforce Photo/POD capture in targeted high-risk pincodes',
+      'Introduce automated hold on courier payout until status confirmed',
+      'Deploy threat language auto-flagging across chat + social',
     ],
-    riskForecast: [
-      'Narrative pressure increased 18% week-over-week',
-      'Cross-channel jumps increased from 1.7 → 2.3 channels per fraud case',
-      'Script similarity index rose from 0.42 → 0.58, indicating network reuse',
-    ],
-    ownership: [
-      'Risk / Trust Head: Reduce abuse exposure',
-      'CX Head: Normalize policy messaging',
-      'Social Ops Lead: Contain external threats',
-    ],
+    riskForecast: [],
+    ownership: [],
     channelBreakdown: { chat: 35, email: 28, ticket: 15, voice: 5, social: 17 },
   },
-  'Tier 1-Delivery Liability Risk': {
-    region: 'Tier 1',
-    pattern: 'Delivery Liability Risk',
-    aiInsight: 'High volume of contradictory delivery stories in Tier 1 indicate courier-customer alignment signals.',
-    evidence: [
-      '52% of complaints show GPS coordinate mismatches',
-      '38% involve "delivery agent said" narratives',
-      'Repeated INR complaints from same pincodes',
-      'Contradictory delivery timelines across channels',
-    ],
-    whyItMatters: [
-      'Direct impact on courier partner relationships',
-      'Compensation padding attempts',
-      'Customer trust erosion',
-    ],
-    nextActions: [
-      'Enforce OTP-at-doorstep plus geo-tagged photo/POD',
-      'Alert on >1km GPS drift',
-      'Hold courier payouts until proof verified',
-    ],
-    riskForecast: [
-      'Delivery disputes up 12% week-over-week',
-      'GPS mismatch rate increased from 45% → 52%',
-    ],
-    ownership: [
-      'Logistics Head: Courier audit & proof enforcement',
-      'Fraud Ops: Coordinate investigation',
-    ],
-    channelBreakdown: { chat: 41, email: 22, ticket: 19, voice: 11, social: 7 },
-  },
-  'Tier 2-Marketing Budget Waste': {
+  'Tier 2': {
     region: 'Tier 2',
-    pattern: 'Marketing Budget Waste',
-    aiInsight: 'Tier 2 users heavily exploiting promo-based refund reasoning with copy-pasted claim formats.',
+    aiInsight: 'Tier-1 methods emerging at moderate scale; opportunistic behavior.',
+    summaryTitle: 'Fast-Follower Fraud Spillover',
     evidence: [
-      '43% of refund requests cite "promo not applied"',
-      '32% show identical cashback complaint language',
-      'Promo re-use attempts detected across 18% of cases',
+      'Playbook reuse detected from metro spread',
+      'Early-stage claim stacking before verification',
+      'Channel spillover into tickets + emails',
     ],
-    whyItMatters: [
-      'Marketing budget leakage',
-      'Promo code abuse spreading',
-      'Systemic exploitation pattern',
-    ],
+    whyItMatters: [],
     nextActions: [
-      'Bind promos to device fingerprint',
-      'Tighten velocity limits on promo usage',
-      'Add ML fake-account screening',
-      'Kill-switch leaked codes',
+      'Apply regional pincode risk tiers to adjust refund rules',
+      'Enable first-line agent prompts for script-style messages',
+      'Early-warning pattern alerts when repeat narratives spike',
     ],
-    riskForecast: [
-      'Promo abuse cases up 22% week-over-week',
-      'Cashback exploitation increased 15%',
-    ],
-    ownership: [
-      'Marketing Head: Promo security & device binding',
-      'Fraud Ops: Account screening',
-    ],
+    riskForecast: [],
+    ownership: [],
     channelBreakdown: { chat: 43, email: 32, ticket: 18, voice: 4, social: 3 },
+  },
+  'Rural': {
+    region: 'Rural',
+    aiInsight: 'Lower volume but higher operational leakage per incident.',
+    summaryTitle: 'Supplier-Driven Tactical Abuse',
+    evidence: [
+      'Seller network collusion patterns',
+      'Device + account reuse across buyers',
+      'Long investigation timelines → leakage',
+    ],
+    whyItMatters: [],
+    nextActions: [
+      'Reverse pickup verification for flagged sellers',
+      'Deploy device fingerprint matching from chat/voice',
+      'Switch to proof-first refunds only in red-zones',
+    ],
+    riskForecast: [],
+    ownership: [],
+    channelBreakdown: { chat: 40, email: 25, ticket: 20, voice: 10, social: 5 },
+  },
+  'NE': {
+    region: 'NE',
+    aiInsight: 'Lower scale but disproportionate social pressure.',
+    summaryTitle: 'High Threat-Based Escalation',
+    evidence: [
+      'Viral threat language in transcripts',
+      'SLA sensitivity → instant escalations',
+      'Reputation pressure for faster refunds',
+    ],
+    whyItMatters: [],
+    nextActions: [
+      'Provide automated SLA updates to reduce escalation frequency',
+      'Introduce goodwill refund caps when threats detected',
+      'Create small regional reviewer risk list for monitoring',
+    ],
+    riskForecast: [],
+    ownership: [],
+    channelBreakdown: { chat: 40, email: 25, ticket: 20, voice: 10, social: 5 },
+  },
+  'Islands': {
+    region: 'Islands',
+    aiInsight: 'Smallest volumes but highest strategic fraud density.',
+    summaryTitle: 'High-Intent Repeat Exploiters',
+    evidence: [
+      'Remote delivery validation weaknesses',
+      'Repeated addresses + IPs',
+      'Social review manipulation for leverage',
+    ],
+    whyItMatters: [],
+    nextActions: [
+      'Address + IP risk scoring for repeat offenders',
+      'Courier proof compliance audit (small coverage, high return)',
+      'Auto-flag review-refund correlation in social channels',
+    ],
+    riskForecast: [],
+    ownership: [],
+    channelBreakdown: { chat: 40, email: 25, ticket: 20, voice: 10, social: 5 },
   },
 };
 
@@ -231,12 +232,15 @@ export default function RegionalFraudBurdenBar() {
     const region = regionalData[index]?.region;
     if (!region) return;
     
-    const key = `${region}-${pattern}`;
-    const insight = insightData[key];
-    if (insight) {
-      setSelectedInsight(insight);
+    // Use region-specific insight data
+    const regionInsight = regionInsights[region];
+    if (regionInsight) {
+      setSelectedInsight({
+        ...regionInsight,
+        pattern, // Include the clicked pattern for display
+      });
     } else {
-      // Generate default insight if not available
+      // Fallback if region not found
       const defaultInsight: InsightData = {
         region,
         pattern,
@@ -245,23 +249,14 @@ export default function RegionalFraudBurdenBar() {
           'Pattern detected across multiple communication channels',
           'Consistent behavioral signals identified',
         ],
-        whyItMatters: [
-          'Potential operational impact',
-          'Requires monitoring and response',
-        ],
+        whyItMatters: [],
         nextActions: [
           'Review channel-specific patterns',
           'Monitor trend over next 7 days',
           'Coordinate with regional fraud ops',
         ],
-        riskForecast: [
-          'Pattern volume stable',
-          'Monitor for escalation signals',
-        ],
-        ownership: [
-          'Fraud Ops: Pattern investigation',
-          'Regional Lead: Operational response',
-        ],
+        riskForecast: [],
+        ownership: [],
         channelBreakdown: { chat: 40, email: 25, ticket: 20, voice: 10, social: 5 },
       };
       setSelectedInsight(defaultInsight);
@@ -370,28 +365,25 @@ export default function RegionalFraudBurdenBar() {
               </button>
             </div>
 
-            <div className="space-y-4 flex-1">
-              {/* AI Insight Summary */}
+            <div className="space-y-4 flex-1 overflow-y-auto">
+              {/* 1. Summary */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
                   <Target className="w-3 h-3 text-green-400" />
                   <span className="text-gray-400 text-[10px] uppercase tracking-wider">Summary</span>
                 </div>
                 <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-3">
+                  {selectedInsight.summaryTitle && (
+                    <p className="text-white text-[12px] font-semibold mb-1.5">{selectedInsight.summaryTitle}</p>
+                  )}
                   <p className="text-white text-[12px] leading-relaxed">{selectedInsight.aiInsight}</p>
-                </div>
-                <div className="mt-2 flex items-center gap-2 text-[10px] text-gray-500">
-                  <span>{selectedInsight.region}</span>
-                  <span>•</span>
-                  <span>{selectedInsight.pattern}</span>
                 </div>
               </div>
 
-              {/* Evidence from Comms */}
+              {/* 2. Root Cause */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <AlertTriangle className="w-3 h-3 text-orange-400" />
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Evidence from Comms</span>
+                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Root Cause</span>
                 </div>
                 <div className="space-y-1.5">
                   {selectedInsight.evidence.map((item, idx) => (
@@ -403,27 +395,10 @@ export default function RegionalFraudBurdenBar() {
                 </div>
               </div>
 
-              {/* Why It Matters */}
+              {/* 3. Next Action Suggestion */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <TrendingUp className="w-3 h-3 text-red-400" />
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Why It Matters</span>
-                </div>
-                <div className="space-y-1.5">
-                  {selectedInsight.whyItMatters.map((item, idx) => (
-                    <div key={idx} className="text-gray-300 text-[11px] leading-relaxed flex items-start gap-2">
-                      <span className="text-red-400 mt-0.5">•</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Next Best Action */}
-              <div>
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Target className="w-3 h-3 text-blue-400" />
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Next Best Action</span>
+                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Next Action Suggestion</span>
                 </div>
                 <div className="space-y-1.5">
                   {selectedInsight.nextActions.map((item, idx) => (
@@ -435,53 +410,37 @@ export default function RegionalFraudBurdenBar() {
                 </div>
               </div>
 
-              {/* Risk Forecast */}
+              {/* 4. Channel Breakdown */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <TrendingUp className="w-3 h-3 text-yellow-400" />
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Risk Forecast</span>
+                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Channel Breakdown</span>
                 </div>
-                <div className="space-y-1.5">
-                  {selectedInsight.riskForecast.map((item, idx) => (
-                    <div key={idx} className="text-gray-300 text-[11px] leading-relaxed flex items-start gap-2">
-                      <span className="text-yellow-400 mt-0.5">•</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Ownership */}
-              <div>
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Users className="w-3 h-3 text-purple-400" />
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Ownership</span>
-                </div>
-                <div className="space-y-1.5">
-                  {selectedInsight.ownership.map((item, idx) => (
-                    <div key={idx} className="text-gray-300 text-[11px] leading-relaxed flex items-start gap-2">
-                      <span className="text-purple-400 mt-0.5">•</span>
-                      <span>{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Channel Breakdown */}
-              <div>
-                <div className="text-gray-400 text-[10px] uppercase tracking-wider mb-2">Channel Breakdown</div>
-                <div className="flex items-center gap-1">
+                <div className="space-y-2">
                   {Object.entries(selectedInsight.channelBreakdown).map(([channel, value]) => {
                     const total = Object.values(selectedInsight.channelBreakdown).reduce((a, b) => a + b, 0);
                     const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
-                    if (value === 0) return null;
+                    const color = channelColors[channel as keyof typeof channelColors];
                     return (
-                      <div key={channel} className="flex items-center gap-1">
-                        <div
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: channelColors[channel as keyof typeof channelColors] }}
-                        />
-                        <span className="text-gray-400 text-[9px]">{channel.toUpperCase()}: {percentage}%</span>
+                      <div key={channel} className="space-y-0.5">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <div
+                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: color }}
+                            />
+                            <span className="text-gray-400 text-[10px] capitalize">{channel}</span>
+                          </div>
+                          <span className="text-white text-[10px] font-medium">{percentage}%</span>
+                        </div>
+                        <div className="bg-white/5 rounded-full h-1.5 overflow-hidden">
+                          <div
+                            className="h-full rounded-full transition-all"
+                            style={{
+                              width: `${percentage}%`,
+                              backgroundColor: color,
+                            }}
+                          />
+                        </div>
                       </div>
                     );
                   })}

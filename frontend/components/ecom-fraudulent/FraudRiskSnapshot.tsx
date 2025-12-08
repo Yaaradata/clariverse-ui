@@ -110,19 +110,19 @@ export default function FraudRiskSnapshot({
         <div className="flex-1">
           <div className="grid grid-cols-1 gap-y-1">
             {categories.map((cat, idx) => (
-              <div 
-                key={cat.name} 
+            <div 
+              key={cat.name} 
                 className="flex items-center justify-between cursor-pointer hover:opacity-80"
-                onMouseEnter={() => setActiveIndex(idx)}
-                onMouseLeave={() => setActiveIndex(undefined)}
-              >
+              onMouseEnter={() => setActiveIndex(idx)}
+              onMouseLeave={() => setActiveIndex(undefined)}
+            >
                 <div className="flex items-center gap-1.5 flex-1 min-w-0">
                   <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
                   <span className="text-gray-400 text-[10px] truncate ml-1">{cat.name}</span>
                 </div>
                 <span className="text-white text-[10px] font-medium ml-2 flex-shrink-0">{cat.riskScore !== undefined ? cat.riskScore : cat.value + '%'}</span>
-              </div>
-            ))}
+            </div>
+          ))}
           </div>
         </div>
       </div>

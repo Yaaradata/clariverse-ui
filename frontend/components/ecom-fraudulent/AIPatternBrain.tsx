@@ -152,33 +152,33 @@ export default function AIPatternBrain({
           </div>
         ) : filteredPatterns.map((pattern) => {
           const isExpanded = expandedPatternId === pattern.id;
-          
-          return (
-            <div 
-              key={pattern.id}
+              
+              return (
+                <div 
+                  key={pattern.id}
               className={`rounded-xl transition-all ${
                 isExpanded 
                   ? 'bg-purple-500/10 border border-purple-500/30 shadow-md shadow-purple-900/30' 
-                  : 'bg-[#0d0d14] border border-white/5 hover:border-white/10'
-              }`}
+                      : 'bg-[#0d0d14] border border-white/5 hover:border-white/10'
+                  }`}
             >
               {/* Collapsed Header - Always Visible */}
               <div 
                 onClick={() => toggleExpand(pattern.id)}
                 className="p-3.5 cursor-pointer"
-              >
-                <div className="flex items-start gap-2">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${getSeverityColor(pattern.severity)}`}>
-                        {pattern.severity}
-                      </span>
-                    </div>
+                >
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${getSeverityColor(pattern.severity)}`}>
+                          {pattern.severity}
+                        </span>
+                      </div>
                     <h4 className="text-white text-sm font-semibold truncate">{pattern.title}</h4>
                     <div className="flex items-center gap-2 mt-1 text-[11px] text-gray-500">
-                      <span>{pattern.affected.toLocaleString()} cases</span>
-                      <span>•</span>
-                      <span>{pattern.detected}</span>
+                        <span>{pattern.affected.toLocaleString()} cases</span>
+                        <span>•</span>
+                        <span>{pattern.detected}</span>
                     </div>
                   </div>
                   <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -188,52 +188,52 @@ export default function AIPatternBrain({
               {/* Expanded Content */}
               {isExpanded && (
                 <div className="px-4 pb-4 pt-3.5 border-t border-white/5">
-                  {/* AI Summary */}
+              {/* AI Summary */}
                   <div className="bg-purple-500/5 border border-purple-500/20 rounded-lg p-3 mb-3">
                     <p className="text-gray-300 text-[12px] leading-relaxed">{pattern.aiSummary}</p>
-                  </div>
+              </div>
 
-                  {/* Metric Chips */}
+              {/* Metric Chips */}
                   <div className="grid grid-cols-3 gap-3 mb-3">
-                    <div className="bg-white/5 rounded-lg p-2 text-center">
+                <div className="bg-white/5 rounded-lg p-2 text-center">
                       <div className="text-white text-base font-bold">{pattern.affected.toLocaleString()}</div>
                       <div className="text-gray-500 text-[10px]">Volume</div>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-2 text-center">
+                </div>
+                <div className="bg-white/5 rounded-lg p-2 text-center">
                       <div className="text-yellow-400 text-base font-bold">{pattern.riskScore}</div>
                       <div className="text-gray-500 text-[10px]">Risk Score</div>
-                    </div>
-                    <div className="bg-white/5 rounded-lg p-2 text-center">
+                </div>
+                <div className="bg-white/5 rounded-lg p-2 text-center">
                       <div className="text-red-400 text-base font-bold">{formatCurrency(pattern.exposure)}</div>
                       <div className="text-gray-500 text-[10px]">Exposure</div>
-                    </div>
-                  </div>
+                </div>
+              </div>
 
-                  {/* Root Cause & Action */}
+              {/* Root Cause & Action */}
                   <div className="space-y-3 mb-3">
-                    <div>
+                <div>
                       <span className="text-gray-500 text-[10px] uppercase tracking-wider">Root Cause</span>
-                      <p className="text-gray-300 text-[12px] leading-relaxed mt-1">{pattern.rootCause}</p>
-                    </div>
-                    <div>
+                      <p className="text-gray-300 text-[12px] leading-relaxed mt-1 whitespace-pre-line">{pattern.rootCause}</p>
+                </div>
+                <div>
                       <span className="text-orange-400 text-[10px] uppercase tracking-wider">Recommended Action</span>
-                      <p className="text-gray-300 text-[12px] leading-relaxed mt-1">{pattern.correctiveAction}</p>
-                    </div>
-                  </div>
+                      <p className="text-gray-300 text-[12px] leading-relaxed mt-1 whitespace-pre-line">{pattern.correctiveAction}</p>
+                </div>
+              </div>
 
-                  {/* CTA Buttons */}
+              {/* CTA Buttons */}
                   <div className="flex justify-end pt-3 border-t border-white/5">
-                    <button 
+                <button 
                       onClick={(e) => { e.stopPropagation(); onViewCases?.(pattern.id); }}
                       className="flex items-center justify-center gap-1 px-3.5 py-1.75 bg-red-500/10 text-red-300 rounded-lg text-[11px] font-semibold hover:bg-red-500/20 transition-all"
-                    >
-                      <AlertTriangle className="w-3 h-3" />
-                      View Cases
-                    </button>
-                  </div>
-                </div>
-              )}
+                >
+                  <AlertTriangle className="w-3 h-3" />
+                  View Cases
+                </button>
+              </div>
             </div>
+          )}
+        </div>
           );
         })}
       </div>

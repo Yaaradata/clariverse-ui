@@ -282,70 +282,69 @@ export default function CrossChannelFraudConsistencyWheel() {
                 onClick={() => setSelectedPattern(isExpanded ? null : pattern.id)}
                 className="p-3.5 cursor-pointer"
               >
-                <div className="flex items-start gap-3">
-                  {/* Channel Consistency Indicators */}
-                  <div className="flex-shrink-0 flex items-center gap-0.5">
-                    {channelOrder.map((channel) => {
-                      const isPresent = pattern.channels[channel];
-                      return (
-                        <span
-                          key={channel}
-                          className="text-base leading-none"
-                          style={{
-                            color: isPresent ? channelColors[channel] : '#6B7280',
-                          }}
-                          title={`${channelLabels[channel]}: ${isPresent ? 'Present' : 'Absent'}`}
-                        >
-                          {isPresent ? '⬤' : '○'}
-                        </span>
-                      );
-                    })}
-                  </div>
-
-                  {/* Pattern Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
+                <div className="space-y-2">
+                  {/* Row 1: [Pattern Title] [Channel Dots] */}
+                  <div className="flex items-center justify-between gap-2">
+                    {/* Left: Pattern Title and Channel Count */}
+                    <div className="flex items-center gap-1.5 flex-1 min-w-0">
                       <h4 className="text-white text-sm font-semibold truncate">{pattern.title}</h4>
-                      <span className="text-gray-500 text-[10px]">({channelCount} channels)</span>
+                      <span className="text-gray-500 text-[10px] whitespace-nowrap">({channelCount} channels)</span>
                     </div>
-
-                    {/* Pattern Strength Mini-Bar */}
-                    <div className="mb-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-500 text-[9px] uppercase">Pattern Strength:</span>
-                        <div className="flex-1 bg-white/5 rounded-full h-1.5 overflow-hidden">
-                          <div
-                            className="h-full rounded-full transition-all"
-                            style={{
-                              width: `${pattern.consistency}%`,
-                              backgroundColor: consistencyColor,
-                            }}
-                          />
-                        </div>
-                        <span className="text-white text-[10px] font-medium">{pattern.consistency}%</span>
-                      </div>
-                    </div>
-
-                    {/* Channel Indicators */}
-                    <div className="flex items-center gap-1.5 flex-wrap">
+                    
+                    {/* Right: Channel Consistency Indicators */}
+                    <div className="flex-shrink-0 flex items-center gap-0.5">
                       {channelOrder.map((channel) => {
-                        const Icon = channelIcons[channel];
                         const isPresent = pattern.channels[channel];
                         return (
-                          <div
+                          <span
                             key={channel}
-                            className={`flex items-center gap-1 px-1.5 py-0.5 rounded ${
-                              isPresent
-                                ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                                : 'bg-white/5 text-gray-600 border border-white/5'
-                            }`}
+                            className="text-base leading-none"
+                            style={{
+                              color: isPresent ? channelColors[channel] : '#6B7280',
+                            }}
+                            title={`${channelLabels[channel]}: ${isPresent ? 'Present' : 'Absent'}`}
                           >
-                            <Icon className="w-2.5 h-2.5" />
-                            <span className="text-[9px]">{channelLabels[channel]}</span>
-                          </div>
+                            {isPresent ? '⬤' : '○'}
+                          </span>
                         );
                       })}
                     </div>
+                  </div>
+
+                  {/* Row 2: Pattern Strength */}
+                  <div className="flex items-center gap-2">
+                    <span className="text-gray-500 text-[9px] uppercase whitespace-nowrap">Pattern Strength:</span>
+                    <div className="flex-1 bg-white/5 rounded-full h-1.5 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${pattern.consistency}%`,
+                          backgroundColor: consistencyColor,
+                        }}
+                      />
+                    </div>
+                    <span className="text-white text-[10px] font-medium whitespace-nowrap flex-shrink-0">{pattern.consistency}%</span>
+                  </div>
+
+                  {/* Row 3: Channel Indicators */}
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {channelOrder.map((channel) => {
+                      const Icon = channelIcons[channel];
+                      const isPresent = pattern.channels[channel];
+                      return (
+                        <div
+                          key={channel}
+                          className={`flex items-center gap-1 px-1.5 py-0.5 rounded ${
+                            isPresent
+                              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                              : 'bg-white/5 text-gray-600 border border-white/5'
+                          }`}
+                        >
+                          <Icon className="w-2.5 h-2.5" />
+                          <span className="text-[9px]">{channelLabels[channel]}</span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
