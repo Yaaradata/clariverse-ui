@@ -7,8 +7,8 @@ import {
   CoercionAlert,
   AbuseKeyword,
   FraudDashboardStats,
+  FraudInsight,
 } from './types';
-import { FraudInsight } from '@/components/ecom-fraudulent/FraudInsightCards';
 
 // Fraud Risk Score Data
 export const fraudRiskScoreData = {

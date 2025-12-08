@@ -26,6 +26,20 @@ export type CoercionType =
   | 'Social Engineering Attempts'
   | 'Urgency Pressure';
 
+// Fraud Insight (used in main dashboard)
+export interface FraudInsight {
+  id: string;
+  title: string;
+  severity: 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
+  channels: string[];
+  detected: string;
+  affected: number;
+  description: string;
+  rootCause: string;
+  correctiveAction: string;
+  icon: 'package' | 'user' | 'repeat' | 'shopping';
+}
+
 // Widget 1: Claim Taxonomy
 export interface ClaimTaxonomyItem {
   category: string;
