@@ -91,7 +91,7 @@ export default function AIPatternBrain({
   };
 
   return (
-    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-full flex flex-col shadow-lg shadow-black/30 overflow-hidden w-full">
+    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-4  h-full flex flex-col shadow-lg shadow-black/30 overflow-hidden w-full">
       {/* Header */}
       <div className="flex flex-col gap-2 mb-2">
         <div className="flex items-center justify-between">
@@ -138,7 +138,7 @@ export default function AIPatternBrain({
       </div>
 
       {/* Expandable Pattern List */}
-      <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin max-h-[350px]">
+      <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin max-h-[600px]">
         {filteredPatterns.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Filter className="w-8 h-8 text-gray-600 mb-2" />

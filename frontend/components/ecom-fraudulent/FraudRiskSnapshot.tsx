@@ -59,10 +59,10 @@ export default function FraudRiskSnapshot({
         <h3 className="text-white font-semibold text-sm">Enterprise Risk Posture</h3>
       </div>
 
-      {/* Compact Chart + Legend */}
-      <div className="flex items-center gap-3 mb-3">
-        {/* Mini Donut */}
-        <div className="relative w-40 h-40 flex-shrink-0">
+      {/* Chart + Legend - Centered Chart with Legend Below */}
+      <div className="flex flex-col items-center gap-3 mb-3">
+        {/* Centered Donut */}
+        <div className="relative w-56 h-56 flex-shrink-0">
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
             <PieChart>
               <Pie
@@ -91,13 +91,13 @@ export default function FraudRiskSnapshot({
             </PieChart>
           </ResponsiveContainer>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-white">{score.toFixed(0)}%</span>
-            <span className="text-[10px] text-gray-500 uppercase">Risk Score</span>
+            <span className="text-4xl font-bold text-white">{score.toFixed(0)}%</span>
+            <span className="text-[11px] text-gray-500 uppercase">Risk Score</span>
           </div>
         </div>
 
-        {/* Legend - full list in single column */}
-        <div className="flex-1">
+        {/* Legend - below chart */}
+        <div className="w-full">
           <div className="grid grid-cols-1 gap-y-1">
             {categories.map((cat, idx) => (
             <div 
@@ -107,10 +107,10 @@ export default function FraudRiskSnapshot({
               onMouseLeave={() => setActiveIndex(undefined)}
             >
                 <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
-                  <span className="text-gray-400 text-[10px] truncate ml-1">{cat.name}</span>
+                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: cat.color }} />
+                  <span className="text-gray-400 text-xs truncate ml-1">{cat.name}</span>
                 </div>
-                <span className="text-white text-[10px] font-medium ml-2 flex-shrink-0">{cat.riskScore !== undefined ? cat.riskScore : cat.value + '%'}</span>
+                <span className="text-white text-xs font-medium ml-2 flex-shrink-0">{cat.riskScore !== undefined ? cat.riskScore : cat.value + '%'}</span>
             </div>
           ))}
           </div>
