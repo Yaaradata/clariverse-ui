@@ -10,7 +10,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
   Cell,
 } from 'recharts';
 import { MapPin, Filter, X, ChevronDown } from 'lucide-react';
@@ -64,6 +63,14 @@ const CHANNEL_COLORS: Record<string, string> = {
   'Social Media': '#f59e0b',
   'Tickets': '#8b5cf6',
   'Website': '#06b6d4',
+};
+
+const MACRO_COLORS: Record<string, string> = {
+  'Payment & Order Status Mismatch': '#3B82F6', // Blue
+  'Fulfilment Accuracy Issues': '#22C55E', // Green
+  'Delivery Experience Complaints': '#F97316', // Orange
+  'Product Condition Complaints': '#A855F7', // Purple
+  'Quality & Expectation Mismatch': '#F43F5E', // Pink/Red
 };
 
 const TIER_COLORS = {
@@ -354,11 +361,11 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
           </CardHeader>
 
           <CardContent>
-            <div className="h-96 w-full">
+            <div className="h-[500px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={chartData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 100 }}
+                  margin={{ top: 10, right: 30, left: 20, bottom: 40 }}
                   onClick={handleBarClick}
                 >
                   <CartesianGrid
@@ -381,13 +388,6 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                     tickLine={{ stroke: '#2a2a2a' }}
                   />
                   <Tooltip content={<CustomTooltip />} />
-                  <Legend
-                    wrapperStyle={{ paddingTop: '20px' }}
-                    iconType="circle"
-                    formatter={(value) => (
-                      <span className="text-xs text-gray-400">{value}</span>
-                    )}
-                  />
                   {channelNames.map((channel, index) => (
                     <Bar
                       key={channel}
@@ -404,9 +404,9 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
               </ResponsiveContainer>
             </div>
 
-            {/* Channel Legend */}
-            <div className="mt-4 pt-4 border-t border-[#2a2a2a]">
-              <div className="flex flex-wrap gap-4">
+            {/* Channel Legend - Below the plot */}
+            <div className="mt-0 pt-1 border-t border-[#2a2a2a]">
+              <div className="flex flex-wrap gap-4 justify-center">
                 {channelNames.map((channel) => (
                   <div key={channel} className="flex items-center gap-2">
                     <div
@@ -522,10 +522,21 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                   scrollbarColor: '#3a3a3a #1a1a1a',
                 }}
               >
-                {topicsData.map((topic, topicIndex) => (
+                {topicsData.map((topic, topicIndex) => {
+                  const topicColor = MACRO_COLORS[topic.topicName] || '#b90abd';
+                  return (
                   <div
                     key={topicIndex}
-                    className="p-3 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg hover:border-[#b90abd]/50 transition-all duration-200"
+                    className="p-3 bg-[#1a1a1a] border-2 rounded-lg transition-all duration-200"
+                    style={{
+                      borderColor: `${topicColor}80`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = topicColor;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = `${topicColor}80`;
+                    }}
                   >
                     <div className="mb-2">
                       <h4 className="text-sm font-semibold text-white mb-1">
@@ -538,6 +549,7 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                     <div className="space-y-1.5 mt-2">
                       {topic.clusters.map((clusterName, clusterIndex) => {
                         const clusterData = filteredData.find(c => c.clusterLabel === clusterName);
+                        const topicColor = MACRO_COLORS[topic.topicName] || '#b90abd';
                         return (
                           <div
                             key={clusterIndex}
@@ -546,11 +558,27 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                                 selectedCluster === clusterName ? null : clusterName
                               );
                             }}
-                            className={`p-2 rounded-md cursor-pointer transition-all duration-200 ${
-                              selectedCluster === clusterName
-                                ? 'bg-[#b90abd]/20 border border-[#b90abd]/50'
-                                : 'bg-[#0d0d0d] border border-[#2a2a2a] hover:border-[#3a3a3a]'
-                            }`}
+                            className="p-2 rounded-md cursor-pointer transition-all duration-200 border-2"
+                            style={{
+                              borderColor: selectedCluster === clusterName 
+                                ? topicColor 
+                                : `${topicColor}66`,
+                              backgroundColor: selectedCluster === clusterName 
+                                ? `${topicColor}20` 
+                                : '#0d0d0d',
+                            }}
+                            onMouseEnter={(e) => {
+                              if (selectedCluster !== clusterName) {
+                                e.currentTarget.style.borderColor = `${topicColor}AA`;
+                                e.currentTarget.style.backgroundColor = `${topicColor}10`;
+                              }
+                            }}
+                            onMouseLeave={(e) => {
+                              if (selectedCluster !== clusterName) {
+                                e.currentTarget.style.borderColor = `${topicColor}66`;
+                                e.currentTarget.style.backgroundColor = '#0d0d0d';
+                              }
+                            }}
                           >
                             <div className="flex items-center justify-between">
                               <span className="text-xs font-medium text-gray-300">
@@ -567,7 +595,8 @@ export function DominantClusterChart({ data }: DominantClusterChartProps) {
                       })}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-64 text-center">
