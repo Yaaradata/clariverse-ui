@@ -1601,10 +1601,6 @@ export default function ImperfectnessPage() {
 
   return (
     <div className="min-h-screen w-full px-6 py-8 bg-[#0a0a0a]">
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-2 text-white">Imperfectness</h2>
-        <p className="text-gray-400">Monitor imperfect orders and business impact</p>
-      </div>
 
       <ImperfectnessKPICards data={kpiData} />
 

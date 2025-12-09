@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageSquare, TrendingUp } from 'lucide-react';
+import { MessageSquare, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 interface ComplaintPhrase {
   phrase: string;
@@ -27,7 +27,7 @@ export function NarrativeLens({ phrases }: NarrativeLensProps) {
           </div>
           <div>
             <CardTitle className="text-lg font-bold text-white mb-1">
-              Narrative Lens
+            VoC Friction Drivers
             </CardTitle>
             <p className="text-xs text-gray-400">
               Issue Statement Extractor - Top 10 complaint phrases
@@ -79,15 +79,13 @@ export function NarrativeLens({ phrases }: NarrativeLensProps) {
                             </span>
                             {phrase.trend && (
                               <div className="flex items-center gap-1">
-                                <TrendingUp
-                                  className={`w-3 h-3 ${
-                                    phrase.trend === 'up'
-                                      ? 'text-red-400'
-                                      : phrase.trend === 'down'
-                                      ? 'text-green-400'
-                                      : 'text-gray-400'
-                                  }`}
-                                />
+                                {phrase.trend === 'up' ? (
+                                  <TrendingUp className="w-3 h-3 text-red-400" />
+                                ) : phrase.trend === 'down' ? (
+                                  <TrendingDown className="w-3 h-3 text-green-400" />
+                                ) : (
+                                  <Minus className="w-3 h-3 text-gray-400" />
+                                )}
                                 <span
                                   className={`text-xs ${
                                     phrase.trend === 'up'
