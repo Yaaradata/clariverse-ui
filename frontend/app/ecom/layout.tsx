@@ -14,7 +14,7 @@ export default function EcomLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   
   const isPaingradationActive = pathname === '/ecom/paingradation';
@@ -29,8 +29,11 @@ export default function EcomLayout({
   // Load theme preference from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
+    // Default to dark mode if no theme is saved, otherwise use saved preference
+    if (savedTheme === null) {
       setIsDarkMode(true);
+    } else {
+      setIsDarkMode(savedTheme === 'dark');
     }
     // Load time filter preference
     const savedTimeFilter = localStorage.getItem('ecomTimeFilter') as TimeFilter;
