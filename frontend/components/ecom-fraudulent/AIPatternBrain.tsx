@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { 
-  Sparkles,
   AlertTriangle,
   ChevronDown,
   X,
@@ -96,11 +95,8 @@ export default function AIPatternBrain({
       <div className="flex flex-col gap-2 mb-2">
         <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-purple-500/10 rounded-lg">
-            <Sparkles className="w-4 h-4 text-purple-400" />
-          </div>
           <div>
-            <h3 className="text-white font-semibold text-sm">Predictive Threat Intelligence</h3>
+            <h3 className="text-white font-semibold text-sm">✨ Predictive Threat Intelligence</h3>
             <p className="text-gray-500 text-[10px]">{filteredPatterns.length} of {patterns.length} patterns</p>
           </div>
         </div>
