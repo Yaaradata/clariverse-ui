@@ -49,7 +49,7 @@ function generateRandomChannels(totalCount: number, seed: number): Array<{ chann
 export default function ImperfectnessPage() {
   // Mock data - Replace with actual API data
   const kpiData = {
-    imperfectOrderCount: 127,
+    imperfectOrderCount: 12352,
     imperfectOrderPercentage: 18.5,
     totalOrders: 685,
     businessImpactAmount: 2450000,
@@ -140,7 +140,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Order auto-cancelled but payment captured',
       mainTopic: 'Payment & Order Status Mismatch',
-      totalCount: 25,
+      totalCount: 1091,
       channels: generateRandomChannels(25, 1),
       issues: [
         // Tier 1 Cities
@@ -305,7 +305,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Wrong item delivered',
       mainTopic: 'Fulfilment Accuracy Issues',
-      totalCount: 22,
+      totalCount: 960,
       channels: generateRandomChannels(22, 2),
       issues: [
         {
@@ -361,7 +361,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Missing item from order',
       mainTopic: 'Fulfilment Accuracy Issues',
-      totalCount: 18,
+      totalCount: 786,
       channels: generateRandomChannels(18, 3),
       issues: [
         {
@@ -409,7 +409,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Incorrect quantity',
       mainTopic: 'Fulfilment Accuracy Issues',
-      totalCount: 15,
+      totalCount: 655,
       channels: generateRandomChannels(15, 4),
       issues: [
         {
@@ -465,7 +465,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Partial delivery without prior communication',
       mainTopic: 'Fulfilment Accuracy Issues',
-      totalCount: 12,
+      totalCount: 524,
       channels: generateRandomChannels(12, 5),
       issues: [
         {
@@ -505,7 +505,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Replacement delivered but incorrect',
       mainTopic: 'Fulfilment Accuracy Issues',
-      totalCount: 10,
+      totalCount: 436,
       channels: generateRandomChannels(10, 6),
       issues: [
         {
@@ -545,7 +545,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Delivered late vs promised time',
       mainTopic: 'Delivery Experience Complaints',
-      totalCount: 20,
+      totalCount: 873,
       channels: generateRandomChannels(20, 7),
       issues: [
         // Tier 1 Cities
@@ -694,7 +694,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Customer says "not delivered" but platform shows "delivered"',
       mainTopic: 'Delivery Experience Complaints',
-      totalCount: 15,
+      totalCount: 655,
       channels: generateRandomChannels(15, 8),
       issues: [
         {
@@ -734,7 +734,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Rider did not follow instructions',
       mainTopic: 'Delivery Experience Complaints',
-      totalCount: 8,
+      totalCount: 349,
       channels: generateRandomChannels(8, 9),
       issues: [
         {
@@ -774,7 +774,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Delivery attempt confusion',
       mainTopic: 'Delivery Experience Complaints',
-      totalCount: 7,
+      totalCount: 306,
       channels: generateRandomChannels(7, 10),
       issues: [
         {
@@ -814,7 +814,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Damaged item',
       mainTopic: 'Product Condition Complaints',
-      totalCount: 18,
+      totalCount: 786,
       channels: generateRandomChannels(18, 11),
       issues: [
         // Tier 1 Cities
@@ -963,7 +963,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Defective item',
       mainTopic: 'Product Condition Complaints',
-      totalCount: 12,
+      totalCount: 524,
       channels: generateRandomChannels(12, 12),
       issues: [
         {
@@ -1003,7 +1003,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Tampered package',
       mainTopic: 'Product Condition Complaints',
-      totalCount: 9,
+      totalCount: 393,
       channels: generateRandomChannels(9, 13),
       issues: [
         {
@@ -1051,7 +1051,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Expired / spoiled product',
       mainTopic: 'Product Condition Complaints',
-      totalCount: 8,
+      totalCount: 349,
       channels: generateRandomChannels(8, 14),
       issues: [
         {
@@ -1099,7 +1099,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Leaking / broken packaging',
       mainTopic: 'Product Condition Complaints',
-      totalCount: 7,
+      totalCount: 306,
       channels: generateRandomChannels(7, 15),
       issues: [
         {
@@ -1139,7 +1139,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Duplicate charges reported',
       mainTopic: 'Payment & Order Status Mismatch',
-      totalCount: 10,
+      totalCount: 436,
       channels: generateRandomChannels(10, 16),
       issues: [
         {
@@ -1179,7 +1179,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Replacement process unclear',
       mainTopic: 'Payment & Order Status Mismatch',
-      totalCount: 11,
+      totalCount: 480,
       channels: generateRandomChannels(11, 17),
       issues: [
         {
@@ -1235,7 +1235,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Refund not reflecting after imperfect order',
       mainTopic: 'Payment & Order Status Mismatch',
-      totalCount: 15,
+      totalCount: 655,
       channels: generateRandomChannels(15, 18),
       issues: [
         // Tier 1 Cities
@@ -1392,7 +1392,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Size/fit issues',
       mainTopic: 'Quality & Expectation Mismatch',
-      totalCount: 10,
+      totalCount: 436,
       channels: generateRandomChannels(10, 19),
       issues: [
         {
@@ -1448,7 +1448,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Colour/shade mismatch',
       mainTopic: 'Quality & Expectation Mismatch',
-      totalCount: 9,
+      totalCount: 393,
       channels: generateRandomChannels(9, 20),
       issues: [
         {
@@ -1496,7 +1496,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Freshness complaints',
       mainTopic: 'Quality & Expectation Mismatch',
-      totalCount: 8,
+      totalCount: 349,
       channels: generateRandomChannels(8, 21),
       issues: [
         {
@@ -1552,7 +1552,7 @@ export default function ImperfectnessPage() {
     {
       clusterLabel: 'Product not matching description',
       mainTopic: 'Quality & Expectation Mismatch',
-      totalCount: 14,
+      totalCount: 629,
       channels: generateRandomChannels(14, 22),
       issues: [
         {
@@ -1600,8 +1600,7 @@ export default function ImperfectnessPage() {
   ];
 
   return (
-    <div className="min-h-screen w-full px-6 py-8 bg-[#0a0a0a]">
-
+    <>
       <ImperfectnessKPICards data={kpiData} />
 
       {/* Three Column Layout */}
@@ -1625,6 +1624,6 @@ export default function ImperfectnessPage() {
       <div className="mt-8">
         <DominantClusterChart data={clusterData} />
       </div>
-    </div>
+    </>
   );
 }

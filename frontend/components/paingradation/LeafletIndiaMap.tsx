@@ -23,30 +23,46 @@ const categoryConfig = {
   operational: { color: '#22c55e', icon: '👥', label: 'Operational & Human' },
 };
 
-// Tier colors
+// Tier colors - Updated to include all 5 tiers
 const tierConfig = {
   tier1: { color: '#8b5cf6', label: 'Tier 1' },
   tier2: { color: '#06b6d4', label: 'Tier 2' },
   tier3: { color: '#f59e0b', label: 'Tier 3' },
+  northeast: { color: '#10b981', label: 'Northeast & Hill States' },
+  islands: { color: '#ec4899', label: 'Islands & Remote Areas' },
 };
 
-// Create a single location marker showing ONLY ONE category with tier color
+// Create a single location marker using tier color (matching legend colors)
 const createLocationMarker = (category: string, tier: string) => {
   const tierInfo = tierConfig[tier as keyof typeof tierConfig];
-  const tierNumber = tier.replace('tier', '');
+  
+  // Get tier number or abbreviation for badge
+  let tierBadge = tier.replace('tier', '');
+  if (tier === 'northeast') tierBadge = 'NE';
+  if (tier === 'islands') tierBadge = 'IS';
+  
   const cat = categoryConfig[category as keyof typeof categoryConfig];
   
   if (!cat) return L.divIcon({ className: 'custom-marker', html: '📍', iconSize: [20, 20] });
   
-  // Create marker showing only ONE category
+  // Use tier color for the entire marker to match legend - ensure correct colors for all tiers
+  let tierColor = '#666'; // Default fallback
+  if (tier === 'tier1') tierColor = '#8b5cf6'; // Purple
+  else if (tier === 'tier2') tierColor = '#06b6d4'; // Cyan
+  else if (tier === 'tier3') tierColor = '#f59e0b'; // Orange
+  else if (tier === 'northeast') tierColor = '#10b981'; // Green
+  else if (tier === 'islands') tierColor = '#ec4899'; // Pink
+  else if (tierInfo?.color) tierColor = tierInfo.color; // Fallback to tierInfo if available
+  
+  // Create marker with tier color as primary (matching legend colors)
   const iconHtml = `
     <div style="
       position: relative;
       display: inline-block;
     ">
-      <!-- Outer tier-colored circle (main visual) -->
+      <!-- Main tier-colored circle (matches legend color exactly) -->
       <div style="
-        background-color: ${tierInfo?.color || '#666'};
+        background-color: ${tierColor};
         border-radius: 50%;
         width: 42px;
         height: 42px;
@@ -57,39 +73,39 @@ const createLocationMarker = (category: string, tier: string) => {
         border: 3px solid white;
         position: relative;
       ">
-        <!-- Inner circle showing the single category -->
+        <!-- Inner circle with white background for category icon visibility -->
         <div style="
-          background-color: ${cat.color};
+          background-color: rgba(255, 255, 255, 0.9);
           border-radius: 50%;
-          width: 30px;
-          height: 30px;
+          width: 28px;
+          height: 28px;
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 18px;
+          font-size: 16px;
         ">
           ${cat.icon}
         </div>
         
-        <!-- Tier number badge -->
+        <!-- Tier badge (bottom right) with tier color -->
         <div style="
           position: absolute;
           bottom: -4px;
           right: -4px;
-          background-color: ${tierInfo?.color || '#666'};
+          background-color: ${tierColor};
           color: white;
           border-radius: 50%;
-          width: 20px;
-          height: 20px;
+          width: ${tierBadge.length > 1 ? '22px' : '20px'};
+          height: ${tierBadge.length > 1 ? '22px' : '20px'};
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: 11px;
+          font-size: ${tierBadge.length > 1 ? '9px' : '11px'};
           font-weight: bold;
           border: 2px solid white;
           box-shadow: 0 2px 4px rgba(0,0,0,0.3);
         ">
-          ${tierNumber}
+          ${tierBadge}
         </div>
       </div>
     </div>
@@ -133,7 +149,7 @@ interface LocationData {
   city: string;
   state: string;
   stateCode: string;
-  tier: 'tier1' | 'tier2' | 'tier3';
+  tier: 'tier1' | 'tier2' | 'tier3' | 'northeast' | 'islands';
   categories: string[];
   disruptions: number;
   coordinates?: { lat: number; lon: number };
@@ -899,7 +915,7 @@ export default function LeafletIndiaMapComponent({
   const [isClient, setIsClient] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Ensure we're on the client side
     if (typeof window === 'undefined' || typeof document === 'undefined') {
       return;
@@ -907,29 +923,39 @@ export default function LeafletIndiaMapComponent({
     
     setIsClient(true);
     
-    // Wait for DOM to be ready using multiple strategies
+    // Wait for DOM to be ready and container to exist
     const initializeMap = () => {
+      // Check if container exists in DOM
+      if (!containerRef.current || !containerRef.current.parentElement) {
+        // Retry after a short delay
+        setTimeout(initializeMap, 50);
+        return;
+      }
+      
       // Use requestAnimationFrame to ensure DOM is painted
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          setMapLoaded(true);
+          // Double-check container still exists
+          if (containerRef.current && containerRef.current.parentElement) {
+            setMapLoaded(true);
+          }
         });
       });
     };
     
     if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      // DOM is already ready
-      initializeMap();
+      // DOM is already ready, but wait a bit for React to mount
+      setTimeout(initializeMap, 100);
     } else {
       // Wait for DOM to be ready
       const handleLoad = () => {
-        initializeMap();
+        setTimeout(initializeMap, 100);
         window.removeEventListener('load', handleLoad);
       };
       window.addEventListener('load', handleLoad);
       
       // Also try after a short delay as fallback
-      setTimeout(initializeMap, 100);
+      setTimeout(initializeMap, 200);
       
       return () => {
         window.removeEventListener('load', handleLoad);
@@ -937,26 +963,13 @@ export default function LeafletIndiaMapComponent({
     }
   }, []);
 
-  if (!isClient || !mapLoaded) {
+  // Show loading state if not ready
+  if (!isClient || !mapLoaded || !containerRef.current) {
     return (
       <div 
         ref={containerRef}
         className="w-full h-full flex items-center justify-center bg-slate-50"
-      >
-        <div className="flex flex-col items-center gap-2">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-          <span className="text-sm text-slate-500">Loading map...</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Only render MapContainer when we're sure we're on client and container exists
-  if (!isClient || !mapLoaded || typeof window === 'undefined') {
-    return (
-      <div 
-        ref={containerRef}
-        className="w-full h-full flex items-center justify-center bg-slate-50"
+        style={{ minHeight: '500px' }}
       >
         <div className="flex flex-col items-center gap-2">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -1033,7 +1046,7 @@ export default function LeafletIndiaMapComponent({
         }
       `}</style>
       
-      {isClient && mapLoaded && typeof window !== 'undefined' && typeof document !== 'undefined' && (
+      {isClient && mapLoaded && typeof window !== 'undefined' && typeof document !== 'undefined' && containerRef.current && (
         <MapContainer
           key="leaflet-map" // Force remount on client
           center={[20.5937, 78.9629]} // Center of India
@@ -1042,6 +1055,9 @@ export default function LeafletIndiaMapComponent({
           zoomControl={true}
           scrollWheelZoom={true}
           className="rounded-xl"
+          whenReady={() => {
+            // Map is ready
+          }}
         >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

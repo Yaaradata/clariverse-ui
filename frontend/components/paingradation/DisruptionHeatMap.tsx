@@ -6,7 +6,7 @@ import { useTheme } from './useTheme';
 import dynamic from 'next/dynamic';
 
 // Types
-type TierType = 'tier1' | 'tier2' | 'tier3';
+type TierType = 'tier1' | 'tier2' | 'tier3' | 'northeast' | 'islands';
 type CategoryType = 'weather' | 'infrastructure' | 'socioPolitical' | 'operational';
 
 interface LocationData {
@@ -51,19 +51,21 @@ interface TierConfig {
   color: string;
 }
 
-// Category configurations (Total: 6,251)
+// Category configurations (Total: 6,246)
 const categoryConfigs: CategoryConfig[] = [
-  { id: 'weather', label: 'Weather & Environment', color: '#3b82f6', count: 1563, percentage: 25 },
-  { id: 'infrastructure', label: 'Infrastructure & Traffic', color: '#f97316', count: 2500, percentage: 40 },
-  { id: 'socioPolitical', label: 'Socio-Political & Security', color: '#ef4444', count: 938, percentage: 15 },
-  { id: 'operational', label: 'Operational & Human', color: '#22c55e', count: 1250, percentage: 20 },
+  { id: 'weather', label: 'Weather & Environment', color: '#3b82f6', count: 1562, percentage: 25 },
+  { id: 'infrastructure', label: 'Infrastructure & Traffic', color: '#f97316', count: 2498, percentage: 40 },
+  { id: 'socioPolitical', label: 'Socio-Political & Security', color: '#ef4444', count: 937, percentage: 15 },
+  { id: 'operational', label: 'Operational & Human', color: '#22c55e', count: 1249, percentage: 20 },
 ];
 
-// Tier configurations
+// Tier configurations - Each tier has a unique, distinct color for easy differentiation
 const tierConfigs: TierConfig[] = [
-  { id: 'tier1', label: 'Tier 1', color: '#8b5cf6' },
-  { id: 'tier2', label: 'Tier 2', color: '#06b6d4' },
-  { id: 'tier3', label: 'Tier 3', color: '#f59e0b' },
+  { id: 'tier1', label: 'Tier 1', color: '#8b5cf6' }, // Purple
+  { id: 'tier2', label: 'Tier 2', color: '#06b6d4' }, // Cyan/Teal
+  { id: 'tier3', label: 'Tier 3', color: '#f59e0b' }, // Orange/Amber
+  { id: 'northeast', label: 'Northeast & Hill States', color: '#10b981' }, // Green/Emerald
+  { id: 'islands', label: 'Islands & Remote Areas', color: '#ec4899' }, // Pink/Rose
 ];
 
 // State disruption data for the map
@@ -110,7 +112,9 @@ const stateDisruptionData: StateDisruptionData[] = [
 // Location data with state codes and coordinates
 // Tier 1: Only Socio-Political & Security and Operational & Human (fewer locations)
 // Tier 2 & 3: All categories (more locations, especially Tier 3)
-// Total disruptions: 6,251 (Tier 1: 850, Tier 2: 1,500, Tier 3: 3,901)
+// Northeast & Hill States: All categories (moderate locations)
+// Islands & Remote Areas: All categories (fewer locations)
+// Total disruptions: 6,246 (Tier 1: 850, Tier 2: 1,500, Tier 3: 3,896, Northeast: 450, Islands: 550)
 const locationData: LocationData[] = [
   // Tier 1 - Only Socio-Political & Security and Operational & Human (fewer locations) - Total: 850
   { id: 'loc-001', pincode: '110001', placeName: 'Connaught Place', city: 'Delhi', state: 'Delhi', stateCode: 'in-dl', tier: 'tier1', categories: ['socioPolitical', 'operational'], disruptions: 365, coordinates: { lat: 28.6304, lon: 77.2177 } },
@@ -124,21 +128,34 @@ const locationData: LocationData[] = [
   { id: 'loc-007', pincode: '440001', placeName: 'Sitabuldi', city: 'Nagpur', state: 'Maharashtra', stateCode: 'in-mh', tier: 'tier2', categories: ['weather', 'infrastructure', 'socioPolitical'], disruptions: 325, coordinates: { lat: 21.1458, lon: 79.0882 } },
   { id: 'loc-008', pincode: '500001', placeName: 'Abids', city: 'Hyderabad', state: 'Telangana', stateCode: 'in-tg', tier: 'tier2', categories: ['infrastructure', 'weather', 'operational'], disruptions: 304, coordinates: { lat: 17.3850, lon: 78.4867 } },
   
-  // Tier 3 - All categories (more locations) - Total: 3,901
-  { id: 'loc-009', pincode: '341001', placeName: 'Station Road', city: 'Bikaner', state: 'Rajasthan', stateCode: 'in-rj', tier: 'tier3', categories: ['weather', 'infrastructure', 'socioPolitical', 'operational'], disruptions: 225, coordinates: { lat: 28.0229, lon: 73.3119 } },
-  { id: 'loc-010', pincode: '342001', placeName: 'High Court Road', city: 'Jodhpur', state: 'Rajasthan', stateCode: 'in-rj', tier: 'tier3', categories: ['weather', 'operational', 'infrastructure'], disruptions: 242, coordinates: { lat: 26.2389, lon: 73.0243 } },
+  // Tier 3 - All categories (more locations) - Total: 2,896
+  { id: 'loc-009', pincode: '341001', placeName: 'Station Road', city: 'Bikaner', state: 'Rajasthan', stateCode: 'in-rj', tier: 'tier3', categories: ['weather', 'infrastructure', 'socioPolitical', 'operational'], disruptions: 125, coordinates: { lat: 28.0229, lon: 73.3119 } },
+  { id: 'loc-010', pincode: '342001', placeName: 'High Court Road', city: 'Jodhpur', state: 'Rajasthan', stateCode: 'in-rj', tier: 'tier3', categories: ['weather', 'operational', 'infrastructure'], disruptions: 142, coordinates: { lat: 26.2389, lon: 73.0243 } },
   { id: 'loc-011', pincode: '208001', placeName: 'Mall Road', city: 'Kanpur', state: 'Uttar Pradesh', stateCode: 'in-up', tier: 'tier3', categories: ['operational', 'socioPolitical', 'weather'], disruptions: 307, coordinates: { lat: 26.4499, lon: 80.3319 } },
-  { id: 'loc-012', pincode: '400051', placeName: 'Bandra West', city: 'Mumbai', state: 'Maharashtra', stateCode: 'in-mh', tier: 'tier3', categories: ['infrastructure', 'weather', 'socioPolitical'], disruptions: 259, coordinates: { lat: 19.0596, lon: 72.8295 } },
-  { id: 'loc-013', pincode: '411001', placeName: 'Shivajinagar', city: 'Pune', state: 'Maharashtra', stateCode: 'in-mh', tier: 'tier3', categories: ['weather', 'infrastructure', 'operational'], disruptions: 208, coordinates: { lat: 18.5204, lon: 73.8567 } },
+  { id: 'loc-012', pincode: '400051', placeName: 'Bandra West', city: 'Mumbai', state: 'Maharashtra', stateCode: 'in-mh', tier: 'tier3', categories: ['infrastructure', 'weather', 'socioPolitical'], disruptions: 159, coordinates: { lat: 19.0596, lon: 72.8295 } },
+  { id: 'loc-013', pincode: '411001', placeName: 'Shivajinagar', city: 'Pune', state: 'Maharashtra', stateCode: 'in-mh', tier: 'tier3', categories: ['weather', 'infrastructure', 'operational'], disruptions: 108, coordinates: { lat: 18.5204, lon: 73.8567 } },
   { id: 'loc-014', pincode: '560001', placeName: 'MG Road', city: 'Bengaluru', state: 'Karnataka', stateCode: 'in-ka', tier: 'tier3', categories: ['infrastructure', 'weather', 'socioPolitical', 'operational'], disruptions: 431, coordinates: { lat: 12.9716, lon: 77.5946 } },
   { id: 'loc-015', pincode: '560095', placeName: 'Whitefield', city: 'Bengaluru', state: 'Karnataka', stateCode: 'in-ka', tier: 'tier3', categories: ['infrastructure', 'weather'], disruptions: 363, coordinates: { lat: 12.9698, lon: 77.7499 } },
   { id: 'loc-016', pincode: '600001', placeName: 'Parry\'s Corner', city: 'Chennai', state: 'Tamil Nadu', stateCode: 'in-tn', tier: 'tier3', categories: ['weather', 'operational', 'infrastructure'], disruptions: 307, coordinates: { lat: 13.0827, lon: 80.2707 } },
-  { id: 'loc-017', pincode: '600040', placeName: 'Adyar', city: 'Chennai', state: 'Tamil Nadu', stateCode: 'in-tn', tier: 'tier3', categories: ['infrastructure', 'socioPolitical'], disruptions: 259, coordinates: { lat: 13.0067, lon: 80.2206 } },
-  { id: 'loc-018', pincode: '700091', placeName: 'Salt Lake', city: 'Kolkata', state: 'West Bengal', stateCode: 'in-wb', tier: 'tier3', categories: ['operational', 'weather', 'infrastructure'], disruptions: 225, coordinates: { lat: 22.5745, lon: 88.4339 } },
-  { id: 'loc-019', pincode: '110020', placeName: 'Hauz Khas', city: 'Delhi', state: 'Delhi', stateCode: 'in-dl', tier: 'tier3', categories: ['operational', 'socioPolitical', 'weather', 'infrastructure'], disruptions: 242, coordinates: { lat: 28.5448, lon: 77.2066 } },
-  { id: 'loc-020', pincode: '500032', placeName: 'Banjara Hills', city: 'Hyderabad', state: 'Telangana', stateCode: 'in-tg', tier: 'tier3', categories: ['infrastructure', 'weather'], disruptions: 293, coordinates: { lat: 17.4239, lon: 78.4481 } },
-  { id: 'loc-021', pincode: '380015', placeName: 'Navrangpura', city: 'Ahmedabad', state: 'Gujarat', stateCode: 'in-gj', tier: 'tier3', categories: ['weather', 'socioPolitical', 'operational'], disruptions: 276, coordinates: { lat: 23.0405, lon: 72.5597 } },
-  { id: 'loc-022', pincode: '302016', placeName: 'C Scheme', city: 'Jaipur', state: 'Rajasthan', stateCode: 'in-rj', tier: 'tier3', categories: ['infrastructure', 'operational', 'weather'], disruptions: 259, coordinates: { lat: 26.9124, lon: 75.7873 } },
+  { id: 'loc-017', pincode: '600040', placeName: 'Adyar', city: 'Chennai', state: 'Tamil Nadu', stateCode: 'in-tn', tier: 'tier3', categories: ['infrastructure', 'socioPolitical'], disruptions: 159, coordinates: { lat: 13.0067, lon: 80.2206 } },
+  { id: 'loc-018', pincode: '700091', placeName: 'Salt Lake', city: 'Kolkata', state: 'West Bengal', stateCode: 'in-wb', tier: 'tier3', categories: ['operational', 'weather', 'infrastructure'], disruptions: 125, coordinates: { lat: 22.5745, lon: 88.4339 } },
+  { id: 'loc-019', pincode: '110020', placeName: 'Hauz Khas', city: 'Delhi', state: 'Delhi', stateCode: 'in-dl', tier: 'tier3', categories: ['operational', 'socioPolitical', 'weather', 'infrastructure'], disruptions: 142, coordinates: { lat: 28.5448, lon: 77.2066 } },
+  { id: 'loc-020', pincode: '500032', placeName: 'Banjara Hills', city: 'Hyderabad', state: 'Telangana', stateCode: 'in-tg', tier: 'tier3', categories: ['infrastructure', 'weather'], disruptions: 193, coordinates: { lat: 17.4239, lon: 78.4481 } },
+  { id: 'loc-021', pincode: '380015', placeName: 'Navrangpura', city: 'Ahmedabad', state: 'Gujarat', stateCode: 'in-gj', tier: 'tier3', categories: ['weather', 'socioPolitical', 'operational'], disruptions: 176, coordinates: { lat: 23.0405, lon: 72.5597 } },
+  { id: 'loc-022', pincode: '302016', placeName: 'C Scheme', city: 'Jaipur', state: 'Rajasthan', stateCode: 'in-rj', tier: 'tier3', categories: ['infrastructure', 'operational', 'weather'], disruptions: 159, coordinates: { lat: 26.9124, lon: 75.7873 } },
+  
+  // Northeast & Hill States - All categories - Total: 450
+  { id: 'loc-023', pincode: '793001', placeName: 'Police Bazaar', city: 'Shillong', state: 'Meghalaya', stateCode: 'in-ml', tier: 'northeast', categories: ['weather', 'infrastructure', 'operational'], disruptions: 125, coordinates: { lat: 25.5788, lon: 91.8933 } },
+  { id: 'loc-024', pincode: '737101', placeName: 'MG Marg', city: 'Gangtok', state: 'Sikkim', stateCode: 'in-sk', tier: 'northeast', categories: ['weather', 'socioPolitical'], disruptions: 98, coordinates: { lat: 27.3389, lon: 88.6065 } },
+  { id: 'loc-025', pincode: '795001', placeName: 'Thangal Bazaar', city: 'Imphal', state: 'Manipur', stateCode: 'in-mn', tier: 'northeast', categories: ['infrastructure', 'operational', 'socioPolitical'], disruptions: 112, coordinates: { lat: 24.8170, lon: 93.9368 } },
+  { id: 'loc-026', pincode: '791001', placeName: 'Zero Point', city: 'Itanagar', state: 'Arunachal Pradesh', stateCode: 'in-ar', tier: 'northeast', categories: ['weather', 'infrastructure'], disruptions: 85, coordinates: { lat: 27.0844, lon: 93.6053 } },
+  { id: 'loc-027', pincode: '797001', placeName: 'Kohima Town', city: 'Kohima', state: 'Nagaland', stateCode: 'in-nl', tier: 'northeast', categories: ['operational', 'socioPolitical'], disruptions: 30, coordinates: { lat: 25.6747, lon: 94.1106 } },
+  
+  // Islands & Remote Areas - All categories - Total: 550
+  { id: 'loc-028', pincode: '744101', placeName: 'Phoenix Bay', city: 'Port Blair', state: 'Andaman and Nicobar', stateCode: 'in-an', tier: 'islands', categories: ['weather', 'infrastructure', 'operational'], disruptions: 198, coordinates: { lat: 11.7401, lon: 92.6586 } },
+  { id: 'loc-029', pincode: '682551', placeName: 'Lakshadweep', city: 'Kavaratti', state: 'Lakshadweep', stateCode: 'in-ld', tier: 'islands', categories: ['weather', 'operational'], disruptions: 145, coordinates: { lat: 10.5667, lon: 72.6417 } },
+  { id: 'loc-030', pincode: '682001', placeName: 'Willingdon Island', city: 'Kochi', state: 'Kerala', stateCode: 'in-kl', tier: 'islands', categories: ['infrastructure', 'weather', 'socioPolitical'], disruptions: 125, coordinates: { lat: 9.9312, lon: 76.2673 } },
+  { id: 'loc-031', pincode: '744102', placeName: 'Haddo', city: 'Port Blair', state: 'Andaman and Nicobar', stateCode: 'in-an', tier: 'islands', categories: ['operational', 'infrastructure'], disruptions: 82, coordinates: { lat: 11.6670, lon: 92.7364 } },
 ];
 
 // Leaflet Map Component (dynamically imported to avoid SSR issues)
@@ -159,7 +176,7 @@ export function DisruptionHeatMap({ isDarkMode: propDarkMode }: DisruptionHeatMa
   const themeDarkMode = useTheme();
   const isDarkMode = propDarkMode !== undefined ? propDarkMode : themeDarkMode;
   
-  const [selectedTiers, setSelectedTiers] = useState<TierType[]>(['tier1', 'tier2', 'tier3']);
+  const [selectedTiers, setSelectedTiers] = useState<TierType[]>(['tier1', 'tier2', 'tier3', 'northeast', 'islands']);
   const [selectedCategories, setSelectedCategories] = useState<CategoryType[]>(['weather', 'infrastructure', 'socioPolitical', 'operational']);
   const [selectedState, setSelectedState] = useState<StateDisruptionData | null>(null);
   const [drillDownLevel, setDrillDownLevel] = useState<'state' | 'pincode'>('state');
@@ -256,7 +273,7 @@ export function DisruptionHeatMap({ isDarkMode: propDarkMode }: DisruptionHeatMa
 
   // Clear all filters
   const clearAllFilters = useCallback(() => {
-    setSelectedTiers(['tier1', 'tier2', 'tier3']);
+    setSelectedTiers(['tier1', 'tier2', 'tier3', 'northeast', 'islands']);
     setSelectedCategories(['weather', 'infrastructure', 'socioPolitical', 'operational']);
     setSearchQuery('');
     setSelectedState(null);
@@ -366,11 +383,12 @@ export function DisruptionHeatMap({ isDarkMode: propDarkMode }: DisruptionHeatMa
         categoryDisruptions[0] || { category: 'weather' as CategoryType, disruptions: 0 }
       );
 
-      // Always use tier color to differentiate cities by tier (3 different colors)
+      // Always use tier color to differentiate cities by tier (5 different colors)
       // This ensures states are colored based on their dominant tier
       const tierConfig = tierConfigs.find(t => t.id === dominantTier.tier);
-      // Use base tier color directly to ensure all 3 colors are clearly visible
-      // Tier 1: #8b5cf6 (purple), Tier 2: #06b6d4 (teal), Tier 3: #f59e0b (orange)
+      // Use base tier color directly to ensure all 5 colors are clearly visible
+      // Tier 1: #8b5cf6 (purple), Tier 2: #06b6d4 (cyan), Tier 3: #f59e0b (orange), 
+      // Northeast: #10b981 (green), Islands: #ec4899 (pink)
       const baseColor = tierConfig?.color || '#6366f1';
       const colorType: 'tier' | 'category' = 'tier';
 
@@ -701,7 +719,7 @@ export function DisruptionHeatMap({ isDarkMode: propDarkMode }: DisruptionHeatMa
                     onClick={() => {
                       // Toggle tier filter: if only this tier is selected, select all; otherwise, select only this tier
                       if (isOnlySelected) {
-                        setSelectedTiers(['tier1', 'tier2', 'tier3']);
+                        setSelectedTiers(['tier1', 'tier2', 'tier3', 'northeast', 'islands']);
                       } else {
                         setSelectedTiers([tier.id]);
                       }

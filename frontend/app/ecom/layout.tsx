@@ -14,7 +14,14 @@ export default function EcomLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  // Initialize theme from localStorage if available, default to dark
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      return savedTheme === null ? true : savedTheme === 'dark';
+    }
+    return true;
+  });
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   
   const isPaingradationActive = pathname === '/ecom/paingradation' || pathname.startsWith('/ecom/paingradation/');
@@ -26,15 +33,20 @@ export default function EcomLayout({
     { value: '30d', label: 'Last 30 Days' }
   ];
 
-  // Load theme preference from localStorage
+  // Load theme preference from localStorage and apply immediately
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
     // Default to dark mode if no theme is saved, otherwise use saved preference
-    if (savedTheme === null) {
-      setIsDarkMode(true);
+    const initialDarkMode = savedTheme === null ? true : savedTheme === 'dark';
+    setIsDarkMode(initialDarkMode);
+    
+    // Apply theme immediately to prevent flash
+    if (initialDarkMode) {
+      document.documentElement.classList.add('dark');
     } else {
-      setIsDarkMode(savedTheme === 'dark');
+      document.documentElement.classList.remove('dark');
     }
+    
     // Load time filter preference
     const savedTimeFilter = localStorage.getItem('ecomTimeFilter') as TimeFilter;
     if (savedTimeFilter) {
@@ -42,7 +54,7 @@ export default function EcomLayout({
     }
   }, []);
 
-  // Save theme preference and apply to document
+  // Save theme preference and apply to document when theme changes
   useEffect(() => {
     localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
     if (isDarkMode) {
@@ -68,7 +80,7 @@ export default function EcomLayout({
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }}>
+    <div className="min-h-screen" style={{ backgroundColor: isDarkMode ? '#010101' : '#F5F5F5' }} suppressHydrationWarning>
       {/* Header with company name using Yaara brand colors */}
       <header className="shadow-lg" style={{ backgroundColor: '#010101' }}>
         <div className="container mx-auto px-6 py-4">
@@ -120,12 +132,14 @@ export default function EcomLayout({
                 onClick={toggleTheme}
                 className="relative inline-flex items-center cursor-pointer"
                 aria-label="Toggle theme"
+                suppressHydrationWarning
               >
                 <div 
                   className="w-16 h-8 rounded-full transition-colors duration-300 ease-in-out"
                   style={{ 
                     backgroundColor: isDarkMode ? '#5332FF' : '#D6D9D8'
                   }}
+                  suppressHydrationWarning
                 >
                   <div 
                     className="absolute top-1 left-1 w-6 h-6 rounded-full transition-transform duration-300 ease-in-out flex items-center justify-center"
@@ -134,8 +148,9 @@ export default function EcomLayout({
                       transform: isDarkMode ? 'translateX(32px)' : 'translateX(0)',
                       boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
                     }}
+                    suppressHydrationWarning
                   >
-                    <span className="text-sm">
+                    <span className="text-sm" suppressHydrationWarning>
                       {isDarkMode ? '🌙' : '☀️'}
                     </span>
                   </div>
@@ -153,6 +168,7 @@ export default function EcomLayout({
           borderColor: isDarkMode ? '#939394' : '#D6D9D8',
           backgroundColor: isDarkMode ? '#1a1a1a' : '#FAFAFA'
         }}
+        suppressHydrationWarning
       >
         <div className="container mx-auto px-6">
           <div className="flex gap-8">
@@ -163,6 +179,7 @@ export default function EcomLayout({
                 color: isCompActive ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#939394'),
                 borderBottom: isCompActive ? '3px solid #5332FF' : 'none',
               }}
+              suppressHydrationWarning
             >
               Risk & Trust
             </Link>
@@ -173,6 +190,7 @@ export default function EcomLayout({
                 color: isPaingradationActive ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#939394'),
                 borderBottom: isPaingradationActive ? '3px solid #5332FF' : 'none',
               }}
+              suppressHydrationWarning
             >
               Operational Perfectness
             </Link>
@@ -180,7 +198,7 @@ export default function EcomLayout({
         </div>
       </div>
 
-      <main className="w-full" data-theme={isDarkMode ? 'dark' : 'light'}>
+      <main className="w-full" data-theme={isDarkMode ? 'dark' : 'light'} suppressHydrationWarning>
         {children}
       </main>
     </div>

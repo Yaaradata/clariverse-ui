@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ChevronDown } from 'lucide-react';
+import { useTheme } from './useTheme';
 import {
   Chart as ChartJS,
   LinearScale,
@@ -188,6 +189,7 @@ function calcRadius(backlogPercent: number) {
 }
 
 export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionProps) {
+  const isDarkMode = useTheme();
   const [selectedMacro, setSelectedMacro] = useState<string>('All');
   const [selectedChannel, setSelectedChannel] = useState<string>('All');
   const [isMacroDropdownOpen, setIsMacroDropdownOpen] = useState(false);
@@ -548,22 +550,35 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
   }, []);
 
   return (
-    <Card className="border border-white/10 bg-black/30 shadow-lg h-full flex flex-col">
+    <Card className="shadow-lg h-full flex flex-col" style={{ backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.3)' : '#FFFFFF', borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#E5E5E5', borderWidth: '1px', borderStyle: 'solid' }}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-sm font-semibold text-white">
+            <CardTitle className="text-sm font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
               Imperfect Order Distribution
             </CardTitle>
           </div>
 
           {/* Channel Filter Dropdown - Top Right */}
           <div className="flex items-center gap-2">
-            <span className="text-xs font-semibold text-gray-300">Channel •</span>
+            <span className="text-xs font-semibold" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>Channel •</span>
             <div className="relative" ref={channelDropdownRef}>
               <button
                 onClick={() => setIsChannelDropdownOpen(!isChannelDropdownOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 bg-[#1a1a1a] text-gray-300 border border-[#2a2a2a] hover:border-[#3a3a3a] min-w-[140px] justify-between"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 min-w-[140px] justify-between"
+                style={{
+                  backgroundColor: isDarkMode ? '#1a1a1a' : '#f8f9fa',
+                  color: isDarkMode ? '#D6D9D8' : '#4a4a4a',
+                  borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#3a3a3a' : '#d0d0d0';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = isDarkMode ? '#2a2a2a' : '#E5E5E5';
+                }}
               >
                 <span>{selectedChannel}</span>
                 <ChevronDown
@@ -574,18 +589,30 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
               </button>
 
             {isChannelDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg shadow-xl z-50 overflow-hidden">
+              <div className="absolute top-full right-0 mt-2 w-48 rounded-lg shadow-xl z-50 overflow-hidden" style={{ backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF', borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5', borderWidth: '1px', borderStyle: 'solid' }}>
                 <div className="py-2">
                   <button
                     onClick={() => {
                       setSelectedChannel('All');
                       setIsChannelDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-200 flex items-center gap-3 ${
-                      selectedChannel === 'All'
-                        ? 'bg-[#b90abd]/20 text-white'
-                        : 'text-gray-300 hover:bg-[#1a1a1a] hover:text-white'
-                    }`}
+                    className="w-full text-left px-4 py-2.5 text-sm transition-all duration-200 flex items-center gap-3"
+                    style={{
+                      backgroundColor: selectedChannel === 'All' ? 'rgba(185, 10, 189, 0.2)' : 'transparent',
+                      color: selectedChannel === 'All' ? (isDarkMode ? '#FFFFFF' : '#010101') : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedChannel !== 'All') {
+                        e.currentTarget.style.backgroundColor = isDarkMode ? '#1a1a1a' : '#f8f9fa';
+                        e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#010101';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedChannel !== 'All') {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                        e.currentTarget.style.color = isDarkMode ? '#D6D9D8' : '#4a4a4a';
+                      }
+                    }}
                   >
                     <div className="flex items-center gap-2 flex-1">
                       {selectedChannel === 'All' && (
@@ -606,11 +633,23 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
                         setSelectedChannel(channel);
                         setIsChannelDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-200 flex items-center gap-3 ${
-                        selectedChannel === channel
-                          ? 'bg-[#b90abd]/20 text-white'
-                          : 'text-gray-300 hover:bg-[#1a1a1a] hover:text-white'
-                      }`}
+                      className="w-full text-left px-4 py-2.5 text-sm transition-all duration-200 flex items-center gap-3"
+                      style={{
+                        backgroundColor: selectedChannel === channel ? 'rgba(185, 10, 189, 0.2)' : 'transparent',
+                        color: selectedChannel === channel ? (isDarkMode ? '#FFFFFF' : '#010101') : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
+                      }}
+                      onMouseEnter={(e) => {
+                        if (selectedChannel !== channel) {
+                          e.currentTarget.style.backgroundColor = isDarkMode ? '#1a1a1a' : '#f8f9fa';
+                          e.currentTarget.style.color = isDarkMode ? '#FFFFFF' : '#010101';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (selectedChannel !== channel) {
+                          e.currentTarget.style.backgroundColor = 'transparent';
+                          e.currentTarget.style.color = isDarkMode ? '#D6D9D8' : '#4a4a4a';
+                        }
+                      }}
                     >
                       <div className="flex items-center gap-2 flex-1">
                         {selectedChannel === channel ? (
@@ -636,7 +675,7 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
       </CardHeader>
       <CardContent className="p-4 flex-1 flex flex-col overflow-hidden">
         {/* Macro Filter - Similar to Channel Filter in Intent Landscape Map */}
-        <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-gray-300">
+        <div className="mb-3 flex flex-wrap items-center gap-2 text-xs" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
           <span className="font-semibold">Macro Topic •</span>
 
           {/* "All" filter button */}
@@ -649,7 +688,7 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
             } hover:bg-white/5 cursor-pointer`}
             title={selectedMacro === 'All' ? 'Showing all macros' : 'Show all macros'}
           >
-            <span className="text-gray-300">All</span>
+            <span style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>All</span>
           </button>
 
           {/* Individual macro filter buttons */}
@@ -678,7 +717,7 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: macroColor }}
                 />
-                <span className="text-gray-300">
+                <span style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
                   {shortName} {macroCount > 0 && `(${macroCount})`}
                 </span>
               </button>
@@ -698,7 +737,7 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
         </div>
 
         {/* Legend */}
-        <div className="mt-2 flex flex-wrap gap-1 text-[9px] text-gray-400 mb-4">
+        <div className="mt-2 flex flex-wrap gap-1 text-[9px] mb-4" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
           <span>X: Sentiment</span>
           <span>•</span>
           <span>Y: Urgency</span>
@@ -709,14 +748,14 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
         </div>
 
         {/* Statistics Panel - Same as Intent Landscape Map */}
-        <div className="rounded-lg border border-white/10 bg-black/40 p-4 space-y-4">
+        <div className="rounded-lg p-4 space-y-4" style={{ backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.4)' : '#f8f9fa', borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#E5E5E5', borderWidth: '1px', borderStyle: 'solid' }}>
           {/* Scope */}
           <div>
-            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">
+            <div className="text-[10px] uppercase tracking-wide mb-1" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
               Scope
             </div>
-            <div className="text-2xl font-bold text-white">{summaryMetrics.activeMicros}</div>
-            <div className="text-[10px] text-gray-500">
+            <div className="text-2xl font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{summaryMetrics.activeMicros}</div>
+            <div className="text-[10px]" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
               Active micros mapped across {summaryMetrics.activeMacros}{' '}
               {summaryMetrics.activeMacros === 1 ? 'macro' : 'macros'}
               {selectedMacro !== 'All' && ` (${selectedMacro})`}
@@ -725,37 +764,37 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
 
           {/* Avg Pressure */}
           <div>
-            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-1">
+            <div className="text-[10px] uppercase tracking-wide mb-1" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
               Avg Pressure
             </div>
-            <div className="text-xl font-bold text-white">
+            <div className="text-xl font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
               {summaryMetrics.avgPressure}
             </div>
-            <div className="text-[10px] text-gray-500">
+            <div className="text-[10px]" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
               Weighted by sentiment tension & backlog
             </div>
           </div>
 
           {/* Top Pressure Nodes */}
           <div>
-            <div className="text-[10px] uppercase tracking-wide text-gray-400 mb-2">
+            <div className="text-[10px] uppercase tracking-wide mb-2" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
               Top Pressure Nodes
             </div>
             <div className="space-y-1 text-[10px]">
               {summaryMetrics.topPressureNodes.length > 0 ? (
                 summaryMetrics.topPressureNodes.map((node, idx) => (
                   <div key={idx} className="flex items-center justify-between">
-                    <span className="text-gray-300 truncate flex-1 mr-2">
+                    <span className="truncate flex-1 mr-2" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
                       {node.clusterLabel}
                     </span>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-gray-400">{node.dominantChannel}</span>
-                      <span className="text-white font-medium">{node.pressure}</span>
+                      <span style={{ color: isDarkMode ? '#939394' : '#666666' }}>{node.dominantChannel}</span>
+                      <span className="font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{node.pressure}</span>
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-gray-500 text-[10px]">No data available</div>
+                <div className="text-[10px]" style={{ color: isDarkMode ? '#939394' : '#666666' }}>No data available</div>
               )}
             </div>
           </div>

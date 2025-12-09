@@ -60,7 +60,7 @@ export function PainKPICards() {
   });
 
   return (
-    <div className="p-4" style={{ backgroundColor: isDarkMode ? '#000000' : '#f8f9fa' }}>
+    <div>
       {/* Grid Layout: Left 2x2 grid, Right AI Summary Wall */}
       <div className="grid grid-cols-[2fr_1fr] gap-4" style={{ gridTemplateRows: '1fr 1fr' }}>
         {/* Left Side - 4 KPI Cards in 2x2 grid */}

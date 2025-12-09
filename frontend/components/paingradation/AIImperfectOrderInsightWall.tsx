@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTheme } from './useTheme';
 
 interface Insight {
   id: number;
@@ -106,13 +107,14 @@ const insights: Insight[] = [
 ];
 
 export function AIImperfectOrderInsightWall() {
+  const isDarkMode = useTheme();
   return (
-    <Card className="bg-[#0d0d0d] border border-[#2a2a2a] h-full flex flex-col">
+    <Card className="h-full flex flex-col" style={{ backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF', borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5', borderWidth: '1px', borderStyle: 'solid' }}>
       <CardHeader className="pb-4 pt-6">
-        <CardTitle className="text-lg font-bold text-white mb-1">
+        <CardTitle className="text-lg font-bold mb-1" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
           ✨ AI Imperfect Order Insight Wall
         </CardTitle>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs" style={{ color: isDarkMode ? '#939394' : '#666666' }}>
           Critical insights and AI-driven recommendations
         </p>
       </CardHeader>
@@ -124,22 +126,29 @@ export function AIImperfectOrderInsightWall() {
             viewportClassName="scrollbar-thin overflow-y-auto"
             style={{
               scrollbarWidth: 'thin',
-              scrollbarColor: '#3a3a3a #1a1a1a',
+              scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5',
             }}
           >
             <div className="space-y-3 pr-2">
             {insights.map((insight) => (
               <div
                 key={insight.id}
-                className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner hover:border-amber-400/40 transition-colors"
+                className="rounded-xl p-4 text-sm shadow-inner hover:border-amber-400/40 transition-colors"
+                style={{
+                  backgroundColor: isDarkMode ? 'rgba(26,26,26,0.45)' : '#f8f9fa',
+                  borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#E5E5E5',
+                  borderWidth: '1px',
+                  borderStyle: 'solid',
+                  color: isDarkMode ? '#e5e7eb' : '#4a4a4a',
+                }}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-base" suppressHydrationWarning>{insight.emoji}</span>
-                  <span className="text-base font-semibold text-white">{insight.headline}</span>
+                  <span className="text-base font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{insight.headline}</span>
                 </div>
-                <div className="text-xs uppercase tracking-wide text-indigo-200/80 mb-1">{insight.topic}</div>
-                <p className="text-xs text-gray-400 mb-2">{insight.description}</p>
-                <p className="text-xs text-purple-300">{insight.action}</p>
+                <div className="text-xs uppercase tracking-wide mb-1" style={{ color: isDarkMode ? 'rgba(199, 210, 254, 0.8)' : '#6366f1' }}>{insight.topic}</div>
+                <p className="text-xs mb-2" style={{ color: isDarkMode ? '#939394' : '#666666' }}>{insight.description}</p>
+                <p className="text-xs" style={{ color: isDarkMode ? '#c084fc' : '#9333ea' }}>{insight.action}</p>
               </div>
             ))}
             </div>
