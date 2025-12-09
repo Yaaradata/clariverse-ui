@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { MapPin, X, AlertTriangle, TrendingUp, Users, Target } from 'lucide-react';
+import { MapPin, X, TrendingUp, Users, Target } from 'lucide-react';
 
 interface ChannelBreakdown {
   chat: number;
@@ -352,10 +352,7 @@ export default function RegionalFraudBurdenBar() {
           <div className="w-96 flex-shrink-0 bg-black/30 border border-white/10 rounded-xl p-4 flex flex-col overflow-y-auto scrollbar-thin">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="p-1 bg-green-500/10 rounded">
-                  <AlertTriangle className="w-3.5 h-3.5 text-green-400" />
-                </div>
-                <h4 className="text-white text-sm font-semibold">AI Insight</h4>
+                <h4 className="text-white text-sm font-semibold">✨ AI Insight</h4>
               </div>
               <button
                 onClick={() => setSelectedInsight(null)}

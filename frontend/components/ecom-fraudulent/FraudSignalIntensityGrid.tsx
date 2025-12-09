@@ -28,11 +28,11 @@ const patterns: PatternData[] = [
     title: 'Delivery Liability Risk',
     totalCases: 15,
     channels: {
-      Email: { volume: 4, detection: 89, avgTime: '2.1h', riskScore: 82 }, // Orange
-      Chat: { volume: 5, detection: 87, avgTime: '1.8h', riskScore: 78 }, // Orange
-      Ticket: { volume: 3, detection: 85, avgTime: '2.4h', riskScore: 75 }, // Orange
-      Voice: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // No data
-      Social: { volume: 1, detection: 83, avgTime: '4.1h', riskScore: 76 }, // Orange
+      Email: { volume: 4, detection: 89, avgTime: '2.1h', riskScore: 78 }, // Red (CRITICAL ≥76)
+      Chat: { volume: 5, detection: 87, avgTime: '1.8h', riskScore: 72 }, // Orange (HIGH 65-75)
+      Ticket: { volume: 3, detection: 85, avgTime: '2.4h', riskScore: 70 }, // Orange (HIGH 65-75)
+      Voice: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // Empty
+      Social: { volume: 1, detection: 83, avgTime: '4.1h', riskScore: 58 }, // Yellow (MEDIUM 50-64)
     },
   },
   {
@@ -40,11 +40,11 @@ const patterns: PatternData[] = [
     title: 'Internal Policy Violations',
     totalCases: 10,
     channels: {
-      Email: { volume: 3, detection: 76, avgTime: '1.5h', riskScore: 71 }, // Orange
-      Chat: { volume: 3, detection: 74, avgTime: '1.2h', riskScore: 68 }, // Light green
-      Ticket: { volume: 2, detection: 78, avgTime: '1.8h', riskScore: 72 }, // Orange
-      Voice: { volume: 1, detection: 82, avgTime: '2.5h', riskScore: 74 }, // Orange
-      Social: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // No data
+      Email: { volume: 3, detection: 76, avgTime: '1.5h', riskScore: 68 }, // Orange (HIGH 65-75)
+      Chat: { volume: 3, detection: 74, avgTime: '1.2h', riskScore: 62 }, // Yellow (MEDIUM 50-64)
+      Ticket: { volume: 2, detection: 78, avgTime: '1.8h', riskScore: 71 }, // Orange (HIGH 65-75)
+      Voice: { volume: 1, detection: 82, avgTime: '2.5h', riskScore: 73 }, // Orange (HIGH 65-75)
+      Social: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // Empty
     },
   },
   {
@@ -52,11 +52,11 @@ const patterns: PatternData[] = [
     title: 'Non-Resalable Returns',
     totalCases: 14,
     channels: {
-      Email: { volume: 4, detection: 81, avgTime: '2.3h', riskScore: 72 }, // Orange
-      Chat: { volume: 5, detection: 79, avgTime: '2.0h', riskScore: 70 }, // Orange
-      Ticket: { volume: 3, detection: 83, avgTime: '2.6h', riskScore: 74 }, // Orange
-      Voice: { volume: 1, detection: 77, avgTime: '3.1h', riskScore: 68 }, // Light green
-      Social: { volume: 1, detection: 75, avgTime: '3.5h', riskScore: 66 }, // Light green
+      Email: { volume: 4, detection: 81, avgTime: '2.3h', riskScore: 61 }, // Yellow (MEDIUM 50-64)
+      Chat: { volume: 5, detection: 79, avgTime: '2.0h', riskScore: 59 }, // Yellow (MEDIUM 50-64)
+      Ticket: { volume: 3, detection: 83, avgTime: '2.6h', riskScore: 63 }, // Yellow (MEDIUM 50-64)
+      Voice: { volume: 1, detection: 77, avgTime: '3.1h', riskScore: 55 }, // Yellow (MEDIUM 50-64)
+      Social: { volume: 1, detection: 75, avgTime: '3.5h', riskScore: 52 }, // Yellow (MEDIUM 50-64)
     },
   },
   {
@@ -64,11 +64,11 @@ const patterns: PatternData[] = [
     title: 'Marketing Budget Waste',
     totalCases: 8,
     channels: {
-      Email: { volume: 2, detection: 72, avgTime: '1.8h', riskScore: 70 }, // Orange
-      Chat: { volume: 3, detection: 70, avgTime: '1.5h', riskScore: 68 }, // Light green
-      Ticket: { volume: 2, detection: 74, avgTime: '2.0h', riskScore: 72 }, // Orange
-      Voice: { volume: 1, detection: 68, avgTime: '2.8h', riskScore: 66 }, // Light green
-      Social: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // No data
+      Email: { volume: 2, detection: 72, avgTime: '1.8h', riskScore: 69 }, // Orange (HIGH 65-75)
+      Chat: { volume: 3, detection: 70, avgTime: '1.5h', riskScore: 64 }, // Yellow (MEDIUM 50-64)
+      Ticket: { volume: 2, detection: 74, avgTime: '2.0h', riskScore: 67 }, // Orange (HIGH 65-75)
+      Voice: { volume: 1, detection: 68, avgTime: '2.8h', riskScore: 56 }, // Yellow (MEDIUM 50-64)
+      Social: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // Empty
     },
   },
   {
@@ -76,11 +76,11 @@ const patterns: PatternData[] = [
     title: 'Organized Fraud Rings',
     totalCases: 7,
     channels: {
-      Email: { volume: 2, detection: 95, avgTime: '1.2h', riskScore: 92 }, // Red
-      Chat: { volume: 2, detection: 93, avgTime: '1.0h', riskScore: 89 }, // Orange
-      Ticket: { volume: 1, detection: 97, avgTime: '1.4h', riskScore: 96 }, // Red
-      Voice: { volume: 1, detection: 94, avgTime: '1.6h', riskScore: 88 }, // Orange
-      Social: { volume: 1, detection: 92, avgTime: '1.8h', riskScore: 86 }, // Orange
+      Email: { volume: 2, detection: 95, avgTime: '1.2h', riskScore: 82 }, // Red (CRITICAL ≥76)
+      Chat: { volume: 2, detection: 93, avgTime: '1.0h', riskScore: 79 }, // Red (CRITICAL ≥76)
+      Ticket: { volume: 1, detection: 97, avgTime: '1.4h', riskScore: 85 }, // Red (CRITICAL ≥76)
+      Voice: { volume: 1, detection: 94, avgTime: '1.6h', riskScore: 74 }, // Orange (HIGH 65-75)
+      Social: { volume: 1, detection: 92, avgTime: '1.8h', riskScore: 66 }, // Orange (HIGH 65-75)
     },
   },
   {
@@ -88,11 +88,11 @@ const patterns: PatternData[] = [
     title: 'Reputation Ransom Attacks',
     totalCases: 11,
     channels: {
-      Email: { volume: 3, detection: 88, avgTime: '0.8h', riskScore: 82 }, // Orange
-      Chat: { volume: 4, detection: 86, avgTime: '0.6h', riskScore: 79 }, // Orange
-      Ticket: { volume: 2, detection: 90, avgTime: '1.0h', riskScore: 83 }, // Orange
-      Voice: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // No data
-      Social: { volume: 2, detection: 92, avgTime: '0.5h', riskScore: 88 }, // Orange
+      Email: { volume: 3, detection: 88, avgTime: '0.8h', riskScore: 60 }, // Yellow (MEDIUM 50-64)
+      Chat: { volume: 4, detection: 86, avgTime: '0.6h', riskScore: 57 }, // Yellow (MEDIUM 50-64)
+      Ticket: { volume: 2, detection: 90, avgTime: '1.0h', riskScore: 54 }, // Yellow (MEDIUM 50-64)
+      Voice: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 }, // Empty
+      Social: { volume: 2, detection: 92, avgTime: '0.5h', riskScore: 48 }, // Green (LOW 40-49)
     },
   },
   {
@@ -100,11 +100,11 @@ const patterns: PatternData[] = [
     title: 'RaaS Signals',
     totalCases: 12,
     channels: {
-      Email: { volume: 3, detection: 96, avgTime: '0.9h', riskScore: 88 }, // Orange
-      Chat: { volume: 4, detection: 94, avgTime: '0.7h', riskScore: 86 }, // Orange
-      Ticket: { volume: 2, detection: 98, avgTime: '1.1h', riskScore: 88 }, // Orange
-      Voice: { volume: 2, detection: 95, avgTime: '1.3h', riskScore: 89 }, // Orange
-      Social: { volume: 1, detection: 93, avgTime: '1.5h', riskScore: 87 }, // Orange
+      Email: { volume: 3, detection: 96, avgTime: '0.9h', riskScore: 45 }, // Green (LOW 40-49)
+      Chat: { volume: 4, detection: 94, avgTime: '0.7h', riskScore: 43 }, // Green (LOW 40-49)
+      Ticket: { volume: 2, detection: 98, avgTime: '1.1h', riskScore: 48 }, // Green (LOW 40-49)
+      Voice: { volume: 2, detection: 95, avgTime: '1.3h', riskScore: 46 }, // Green (LOW 40-49)
+      Social: { volume: 1, detection: 93, avgTime: '1.5h', riskScore: 44 }, // Green (LOW 40-49)
     },
   },
   {
@@ -112,11 +112,11 @@ const patterns: PatternData[] = [
     title: 'Cross-Channel Arbitration',
     totalCases: 13,
     channels: {
-      Email: { volume: 3, detection: 85, avgTime: '2.2h', riskScore: 80 }, // Orange
-      Chat: { volume: 5, detection: 83, avgTime: '1.9h', riskScore: 77 }, // Orange
-      Ticket: { volume: 3, detection: 87, avgTime: '2.5h', riskScore: 82 }, // Orange
-      Voice: { volume: 1, detection: 81, avgTime: '3.0h', riskScore: 76 }, // Orange
-      Social: { volume: 1, detection: 79, avgTime: '3.3h', riskScore: 75 }, // Orange
+      Email: { volume: 3, detection: 85, avgTime: '2.2h', riskScore: 47 }, // Green (LOW 40-49)
+      Chat: { volume: 5, detection: 83, avgTime: '1.9h', riskScore: 42 }, // Green (LOW 40-49)
+      Ticket: { volume: 3, detection: 87, avgTime: '2.5h', riskScore: 49 }, // Green (LOW 40-49)
+      Voice: { volume: 1, detection: 81, avgTime: '3.0h', riskScore: 41 }, // Green (LOW 40-49)
+      Social: { volume: 1, detection: 79, avgTime: '3.3h', riskScore: 40 }, // Green (LOW 40-49)
     },
   },
 ];
@@ -146,45 +146,35 @@ const insights = {
   threat: {
     icon: '🔥',
     title: 'CRITICAL THREAT PATTERN',
-    text: 'Voice channel fraud spikes 340% during weekend evenings. Deploy weekend verification protocols.',
+    text: 'Organized Fraud Rings: 3 CRITICAL signals detected. Delivery Liability Risk Email at 78. Immediate escalation required.',
     color: 'red',
     iconComponent: AlertTriangle,
   },
   behavioral: {
     icon: '🧠',
     title: 'BEHAVIORAL INTELLIGENCE',
-    text: 'Fraudsters test via Email first, then escalate to Voice. Pattern detected in 34% of multi-channel cases.',
+    text: '9 HIGH-risk signals across 4 patterns. Internal Policy Violations spans 3 channels. 4 empty cells show data gaps.',
     color: 'purple',
     iconComponent: Brain,
   },
   recommendation: {
     icon: '💡',
     title: 'STRATEGIC RECOMMENDATION',
-    text: 'Real-time phrase matching in Chat prevents 67% of escalations. Savings: ₹2.1Cr monthly with 0.8 FTE.',
+    text: '23 signals at MEDIUM/LOW baseline. RaaS and Cross-Channel patterns well-controlled. Focus on CRITICAL clusters.',
     color: 'blue',
     iconComponent: Lightbulb,
   },
 };
 
-// Helper function to get background color based on risk score (similar to the example)
+// Helper function to get background color based on risk score
+// CRITICAL ≥76: Red, HIGH ≥65: Orange, MEDIUM ≥50: Yellow, LOW ≥40: Green
 const getBackgroundColor = (riskScore: number): string => {
-  if (riskScore === 0) return 'rgba(0, 0, 0, 0.3)';
-  // Green to yellow gradient (low to medium risk)
-  if (riskScore >= 45 && riskScore < 50) return `rgba(43, 223, 22, ${0.373 + (riskScore - 45) * 0.0034})`;
-  if (riskScore >= 50 && riskScore < 55) return `rgba(57, 223, 22, ${0.39 + (riskScore - 50) * 0.0036})`;
-  if (riskScore >= 55 && riskScore < 60) return `rgba(74, 223, 22, ${0.408 + (riskScore - 55) * 0.0044})`;
-  if (riskScore >= 60 && riskScore < 65) return `rgba(95, 223, 22, ${0.43 + (riskScore - 60) * 0.006})`;
-  if (riskScore >= 65 && riskScore < 70) return `rgba(119, 223, 22, ${0.46 + (riskScore - 65) * 0.006})`;
-  // Yellow to orange gradient (medium to high risk)
-  if (riskScore >= 70 && riskScore < 75) return `rgba(147, 223, 22, ${0.49 + (riskScore - 70) * 0.007})`;
-  if (riskScore >= 75 && riskScore < 80) return `rgba(177, 223, 22, ${0.525 + (riskScore - 75) * 0.0083})`;
-  if (riskScore >= 80 && riskScore < 85) return `rgba(212, 223, 22, ${0.565 + (riskScore - 80) * 0.0078})`;
-  // Orange to red gradient (high to critical risk)
-  if (riskScore >= 85 && riskScore < 90) return `rgba(223, 196, 22, ${0.604 + (riskScore - 85) * 0.0092})`;
-  if (riskScore >= 90 && riskScore < 95) return `rgba(223, 60, 22, ${0.65 + (riskScore - 90) * 0.01})`;
-  if (riskScore >= 95) return `rgba(223, 22, 22, ${0.7 + Math.min((riskScore - 95) * 0.02, 0.1)})`;
-  // Fallback for very low scores
-  return 'rgba(43, 223, 22, 0.373)';
+  if (riskScore === 0) return 'rgba(0, 0, 0, 0.3)'; // Empty
+  if (riskScore >= 76) return 'rgba(239, 68, 68, 0.6)'; // Red - CRITICAL
+  if (riskScore >= 65) return 'rgba(249, 115, 22, 0.6)'; // Orange - HIGH
+  if (riskScore >= 50) return 'rgba(234, 179, 8, 0.6)'; // Yellow - MEDIUM
+  if (riskScore >= 40) return 'rgba(34, 197, 94, 0.6)'; // Green - LOW
+  return 'rgba(0, 0, 0, 0.3)'; // Fallback
 };
 
 export default function FraudSignalIntensityGrid() {
