@@ -31,8 +31,8 @@ const patterns: PatternData[] = [
       Email: { volume: 4, detection: 89, avgTime: '2.1h', riskScore: 82 },
       Chat: { volume: 5, detection: 87, avgTime: '1.8h', riskScore: 78 },
       Ticket: { volume: 3, detection: 85, avgTime: '2.4h', riskScore: 75 },
-      Voice: { volume: 2, detection: 91, avgTime: '3.2h', riskScore: 88 },
-      Social: { volume: 1, detection: 83, avgTime: '4.1h', riskScore: 72 },
+      Voice: { volume: 2, detection: 91, avgTime: '3.2h', riskScore: 80 },
+      Social: { volume: 1, detection: 83, avgTime: '4.1h', riskScore: 76 },
     },
   },
   {
@@ -43,7 +43,7 @@ const patterns: PatternData[] = [
       Email: { volume: 3, detection: 76, avgTime: '1.5h', riskScore: 71 },
       Chat: { volume: 3, detection: 74, avgTime: '1.2h', riskScore: 68 },
       Ticket: { volume: 2, detection: 78, avgTime: '1.8h', riskScore: 72 },
-      Voice: { volume: 1, detection: 82, avgTime: '2.5h', riskScore: 79 },
+      Voice: { volume: 1, detection: 82, avgTime: '2.5h', riskScore: 74 },
       Social: { volume: 1, detection: 70, avgTime: '3.0h', riskScore: 65 },
     },
   },
@@ -52,11 +52,11 @@ const patterns: PatternData[] = [
     title: 'Non-Resalable Returns',
     totalCases: 14,
     channels: {
-      Email: { volume: 4, detection: 81, avgTime: '2.3h', riskScore: 76 },
-      Chat: { volume: 5, detection: 79, avgTime: '2.0h', riskScore: 73 },
-      Ticket: { volume: 3, detection: 83, avgTime: '2.6h', riskScore: 78 },
-      Voice: { volume: 1, detection: 77, avgTime: '3.1h', riskScore: 71 },
-      Social: { volume: 1, detection: 75, avgTime: '3.5h', riskScore: 69 },
+      Email: { volume: 4, detection: 81, avgTime: '2.3h', riskScore: 72 },
+      Chat: { volume: 5, detection: 79, avgTime: '2.0h', riskScore: 70 },
+      Ticket: { volume: 3, detection: 83, avgTime: '2.6h', riskScore: 74 },
+      Voice: { volume: 1, detection: 77, avgTime: '3.1h', riskScore: 68 },
+      Social: { volume: 1, detection: 75, avgTime: '3.5h', riskScore: 66 },
     },
   },
   {
@@ -64,11 +64,11 @@ const patterns: PatternData[] = [
     title: 'Marketing Budget Waste',
     totalCases: 8,
     channels: {
-      Email: { volume: 2, detection: 72, avgTime: '1.8h', riskScore: 67 },
-      Chat: { volume: 3, detection: 70, avgTime: '1.5h', riskScore: 64 },
-      Ticket: { volume: 2, detection: 74, avgTime: '2.0h', riskScore: 69 },
-      Voice: { volume: 1, detection: 68, avgTime: '2.8h', riskScore: 62 },
-      Social: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 },
+      Email: { volume: 2, detection: 72, avgTime: '1.8h', riskScore: 70 },
+      Chat: { volume: 3, detection: 70, avgTime: '1.5h', riskScore: 68 },
+      Ticket: { volume: 2, detection: 74, avgTime: '2.0h', riskScore: 72 },
+      Voice: { volume: 1, detection: 68, avgTime: '2.8h', riskScore: 66 },
+      Social: { volume: 0, detection: 0, avgTime: '0h', riskScore: 47 },
     },
   },
   {
@@ -88,11 +88,11 @@ const patterns: PatternData[] = [
     title: 'Reputation Ransom Attacks',
     totalCases: 11,
     channels: {
-      Email: { volume: 3, detection: 88, avgTime: '0.8h', riskScore: 84 },
-      Chat: { volume: 4, detection: 86, avgTime: '0.6h', riskScore: 81 },
-      Ticket: { volume: 2, detection: 90, avgTime: '1.0h', riskScore: 87 },
+      Email: { volume: 3, detection: 88, avgTime: '0.8h', riskScore: 82 },
+      Chat: { volume: 4, detection: 86, avgTime: '0.6h', riskScore: 79 },
+      Ticket: { volume: 2, detection: 90, avgTime: '1.0h', riskScore: 83 },
       Voice: { volume: 0, detection: 0, avgTime: '0h', riskScore: 0 },
-      Social: { volume: 2, detection: 92, avgTime: '0.5h', riskScore: 89 },
+      Social: { volume: 2, detection: 92, avgTime: '0.5h', riskScore: 90 },
     },
   },
   {
@@ -116,19 +116,30 @@ const patterns: PatternData[] = [
       Chat: { volume: 5, detection: 83, avgTime: '1.9h', riskScore: 77 },
       Ticket: { volume: 3, detection: 87, avgTime: '2.5h', riskScore: 82 },
       Voice: { volume: 1, detection: 81, avgTime: '3.0h', riskScore: 76 },
-      Social: { volume: 1, detection: 79, avgTime: '3.3h', riskScore: 74 },
+      Social: { volume: 1, detection: 79, avgTime: '3.3h', riskScore: 75 },
     },
   },
 ];
 
 const channels = ['Email', 'Chat', 'Ticket', 'Voice', 'Social'] as const;
 
-const getColorClass = (volume: number): string => {
-  if (volume === 0) return 'bg-white/5';
-  if (volume <= 5) return 'bg-green-600';
-  if (volume <= 15) return 'bg-yellow-600';
-  if (volume <= 30) return 'bg-orange-600';
-  return 'bg-red-600';
+const getColorClass = (riskScore: number): string => {
+  if (riskScore === 0) return 'bg-white/5';
+  // Green (45-49) - Low risk
+  if (riskScore >= 45 && riskScore <= 49) return 'bg-green-600';
+  // Yellow (50-74) - Medium risk
+  if (riskScore >= 50 && riskScore < 62) return 'bg-yellow-500';
+  if (riskScore >= 62 && riskScore <= 74) return 'bg-yellow-600';
+  // Orange (75-84) - High risk
+  if (riskScore >= 75 && riskScore < 80) return 'bg-orange-500';
+  if (riskScore >= 80 && riskScore <= 84) return 'bg-orange-600';
+  // Red (85-95) - Critical risk
+  if (riskScore >= 85 && riskScore < 90) return 'bg-red-500';
+  if (riskScore >= 90 && riskScore <= 95) return 'bg-red-600';
+  if (riskScore > 95) return 'bg-red-700';
+  // Fallback for values below 45
+  if (riskScore < 45) return 'bg-green-500';
+  return 'bg-white/5';
 };
 
 const insights = {
@@ -206,7 +217,7 @@ export default function FraudSignalIntensityGrid() {
                 <div className="flex-1 grid grid-cols-5 gap-1">
                   {channels.map((channel) => {
                     const cell = pattern.channels[channel];
-                    const colorClass = getColorClass(cell.volume);
+                    const colorClass = getColorClass(cell.riskScore);
 
                     return (
                       <div

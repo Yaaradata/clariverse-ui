@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { ShieldAlert, TrendingUp, TrendingDown, AlertCircle, IndianRupee, ShieldCheck, Target } from 'lucide-react';
+import { ShieldAlert, AlertCircle, Target, Clock, Users } from 'lucide-react';
 
 interface FraudCategory {
   name: string;
@@ -18,10 +18,11 @@ interface FraudRiskSnapshotProps {
   totalCases?: number;
   weekChange?: number;
   categories?: FraudCategory[];
-  fraudSuspectedPercent?: number;
-  estimatedExposure?: number;
-  lossAvoided?: number;
+  detectionRate?: number;
+  avgDetectionTime?: string;
   falsePositiveRate?: number;
+  activeCases?: number;
+  avgCaseDays?: string;
 }
 
 const defaultCategories: FraudCategory[] = [
@@ -40,33 +41,22 @@ export default function FraudRiskSnapshot({
   totalCases = 1247,
   weekChange = 12,
   categories = defaultCategories,
-  fraudSuspectedPercent = 8.4,
-  estimatedExposure = 4250000,
-  lossAvoided = 2180000,
+  detectionRate = 87.3,
+  avgDetectionTime = '1.8h',
   falsePositiveRate = 12.3,
+  activeCases = 90,
+  avgCaseDays = '3.2 days avg',
 }: FraudRiskSnapshotProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
-
-  const formatCurrency = (value: number) => {
-    if (value >= 10000000) return `₹${(value / 10000000).toFixed(1)}Cr`;
-    if (value >= 100000) return `₹${(value / 100000).toFixed(1)}L`;
-    return `₹${value.toLocaleString()}`;
-  };
 
   return (
     <div className="bg-[#0a0a0f] border border-white/10 rounded-2xl p-5 h-full flex flex-col shadow-lg shadow-black/30">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-red-500/10 rounded-lg">
-            <ShieldAlert className="w-4 h-4 text-red-400" />
-          </div>
-          <h3 className="text-white font-semibold text-sm">Enterprise Risk Posture</h3>
+      <div className="flex items-center gap-2 mb-3">
+        <div className="p-1.5 bg-red-500/10 rounded-lg">
+          <ShieldAlert className="w-4 h-4 text-red-400" />
         </div>
-        <div className="text-right">
-          <div className="text-white text-lg font-bold">{totalCases.toLocaleString()}</div>
-          <div className="text-gray-500 text-[10px] uppercase">Cases</div>
-        </div>
+        <h3 className="text-white font-semibold text-sm">Enterprise Risk Posture</h3>
       </div>
 
       {/* Compact Chart + Legend */}
@@ -130,40 +120,44 @@ export default function FraudRiskSnapshot({
 
       {/* 2x2 KPI Grid */}
       <div className="grid grid-cols-2 gap-2 flex-1">
+        {/* 1. Fraud Detection Rate */}
+        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
+          <div className="flex items-center gap-1.5 mb-1">
+            <Target className="w-3 h-3 text-green-400" />
+            <span className="text-gray-500 text-[9px] uppercase">Fraud Detection Rate</span>
+          </div>
+          <div className="text-green-400 text-lg font-bold">{detectionRate}%</div>
+          <div className="text-gray-500 text-[9px] mt-0.5">AI catches {Math.round(detectionRate)}/100 fraud attempts</div>
+        </div>
+
+        {/* 2. Avg Detection Time */}
+        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
+          <div className="flex items-center gap-1.5 mb-1">
+            <Clock className="w-3 h-3 text-blue-400" />
+            <span className="text-gray-500 text-[9px] uppercase">Avg Detection Time</span>
+          </div>
+          <div className="text-blue-400 text-lg font-bold">{avgDetectionTime}</div>
+          <div className="text-gray-500 text-[9px] mt-0.5">From claim → AI flag • ↓32% vs Q3</div>
+        </div>
+
+        {/* 3. False Positive Rate */}
         <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
             <AlertCircle className="w-3 h-3 text-orange-400" />
-            <span className="text-gray-500 text-[9px] uppercase">Fraud Suspected</span>
+            <span className="text-gray-500 text-[9px] uppercase">False Positive Rate</span>
           </div>
-          <div className="text-white text-lg font-bold">{fraudSuspectedPercent}%</div>
-          <div className="text-gray-500 text-[9px]">of total contacts</div>
+          <div className="text-orange-400 text-lg font-bold">{falsePositiveRate}%</div>
+          <div className="text-gray-500 text-[9px] mt-0.5">Legit customers flagged • Target &lt;10%</div>
         </div>
 
+        {/* 4. Cases Under Review */}
         <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
-            <IndianRupee className="w-3 h-3 text-red-400" />
-            <span className="text-gray-500 text-[9px] uppercase">Est. Exposure</span>
+            <Users className="w-3 h-3 text-purple-400" />
+            <span className="text-gray-500 text-[9px] uppercase">Cases Under Review</span>
           </div>
-          <div className="text-red-400 text-lg font-bold">{formatCurrency(estimatedExposure)}</div>
-          <div className="text-gray-500 text-[9px]">potential loss</div>
-        </div>
-
-        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
-          <div className="flex items-center gap-1.5 mb-1">
-            <ShieldCheck className="w-3 h-3 text-green-400" />
-            <span className="text-gray-500 text-[9px] uppercase">Loss Avoided</span>
-          </div>
-          <div className="text-green-400 text-lg font-bold">{formatCurrency(lossAvoided)}</div>
-          <div className="text-gray-500 text-[9px]">saved by AI</div>
-        </div>
-
-        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Target className="w-3 h-3 text-blue-400" />
-            <span className="text-gray-500 text-[9px] uppercase">Customer Friction Rate</span>
-          </div>
-          <div className="text-blue-400 text-lg font-bold">{falsePositiveRate}%</div>
-          <div className="text-gray-500 text-[9px]">AI flags genuine</div>
+          <div className="text-purple-400 text-lg font-bold">{activeCases} active</div>
+          <div className="text-gray-500 text-[9px] mt-0.5">Avg resolution: {avgCaseDays}</div>
         </div>
       </div>
     </div>

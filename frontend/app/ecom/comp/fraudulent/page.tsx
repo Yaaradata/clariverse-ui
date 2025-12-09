@@ -176,10 +176,11 @@ export default function FraudulentPage() {
               totalCases={totalPatternVolume}
               weekChange={fraudRiskScoreData.weekChange}
               categories={dynamicCategories}
-              fraudSuspectedPercent={8.4}
-              estimatedExposure={totalPatternExposure}
-              lossAvoided={2180000}
+              detectionRate={87.3}
+              avgDetectionTime="1.8h"
               falsePositiveRate={12.3}
+              activeCases={90}
+              avgCaseDays="3.2 days"
             />
           </div>
           
