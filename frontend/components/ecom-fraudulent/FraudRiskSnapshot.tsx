@@ -50,7 +50,7 @@ export default function FraudRiskSnapshot({
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   return (
-    <div className="bg-[#0a0a0f] border border-white/10 rounded-2xl p-5 h-full flex flex-col shadow-lg shadow-black/30">
+    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-full flex flex-col shadow-lg shadow-black/30">
       {/* Header */}
       <div className="flex items-center gap-2 mb-3">
         <div className="p-1.5 bg-red-500/10 rounded-lg">
@@ -121,7 +121,7 @@ export default function FraudRiskSnapshot({
       {/* 2x2 KPI Grid */}
       <div className="grid grid-cols-2 gap-2 flex-1">
         {/* 1. Fraud Detection Rate */}
-        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
+        <div className="bg-black/30 border border-white/5 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
             <Target className="w-3 h-3 text-green-400" />
             <span className="text-gray-500 text-[9px] uppercase">Fraud Detection Rate</span>
@@ -131,7 +131,7 @@ export default function FraudRiskSnapshot({
         </div>
 
         {/* 2. Avg Detection Time */}
-        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
+        <div className="bg-black/30 border border-white/5 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
             <Clock className="w-3 h-3 text-blue-400" />
             <span className="text-gray-500 text-[9px] uppercase">Avg Detection Time</span>
@@ -141,7 +141,7 @@ export default function FraudRiskSnapshot({
         </div>
 
         {/* 3. False Positive Rate */}
-        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
+        <div className="bg-black/30 border border-white/5 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
             <AlertCircle className="w-3 h-3 text-orange-400" />
             <span className="text-gray-500 text-[9px] uppercase">False Positive Rate</span>
@@ -151,7 +151,7 @@ export default function FraudRiskSnapshot({
         </div>
 
         {/* 4. Cases Under Review */}
-        <div className="bg-[#0d0d14] border border-white/5 rounded-lg p-2.5">
+        <div className="bg-black/30 border border-white/5 rounded-lg p-2.5">
           <div className="flex items-center gap-1.5 mb-1">
             <Users className="w-3 h-3 text-purple-400" />
             <span className="text-gray-500 text-[9px] uppercase">Cases Under Review</span>

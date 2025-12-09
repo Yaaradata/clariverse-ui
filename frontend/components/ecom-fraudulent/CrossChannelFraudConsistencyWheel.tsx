@@ -75,15 +75,12 @@ const fraudPatternsData: FraudPatternData[] = [
         'claim sequence reversal',
         'repeated INR complaints',
         'contradictory delivery timelines',
-        'GPS mismatch evidence',
       ],
     },
     snippets: [
       { channel: 'Chat', text: '"delivery agent said package delivered but I was home all day"' },
       { channel: 'Email', text: '"GPS shows delivery but no one came to my address"' },
       { channel: 'Ticket', text: '"driver marked delivered without OTP verification"' },
-      { channel: 'Voice', text: '"I spoke to delivery person who admitted he marked it delivered from warehouse"' },
-      { channel: 'Social', text: '"Posted Ring doorbell footage - no delivery attempt at claimed time"' },
     ],
   },
   {
@@ -96,14 +93,12 @@ const fraudPatternsData: FraudPatternData[] = [
         '"other agent promised…"',
         'exception-demand wording',
         '"do it as one-time favour"',
-        'manager approval bypass',
       ],
     },
     snippets: [
       { channel: 'Chat', text: '"previous agent said refund approved without return"' },
       { channel: 'Email', text: '"other agent promised full refund as exception"' },
       { channel: 'Voice', text: '"do it as one-time favour, I know you can"' },
-      { channel: 'Ticket', text: '"agent on call yesterday said no documentation needed"' },
     ],
   },
   {
@@ -132,7 +127,6 @@ const fraudPatternsData: FraudPatternData[] = [
       phrases: [
         'promo re-use attempts',
         '"cashback didn\'t credit, please apply again"',
-        'referral bonus exploitation',
       ],
     },
     snippets: [
@@ -151,16 +145,12 @@ const fraudPatternsData: FraudPatternData[] = [
         'repeated script phrases across users',
         'same opening line',
         'synchronized complaint timestamps',
-        'identical photo evidence',
-        'coordinated review attacks',
       ],
     },
     snippets: [
       { channel: 'Chat', text: '"received empty box, weight mismatch detected"' },
       { channel: 'Email', text: '"package arrived empty, clearly tampered"' },
       { channel: 'Voice', text: '"box was empty when delivered, need immediate refund"' },
-      { channel: 'Ticket', text: '"opened box on video, nothing inside except packing material"' },
-      { channel: 'Social', text: '"Posting unboxing video showing empty package - refund now or go viral"' },
     ],
   },
   {
@@ -173,14 +163,12 @@ const fraudPatternsData: FraudPatternData[] = [
         '"I\'ll post this everywhere"',
         'social virality threats',
         'review extortion language',
-        'negative rating warnings',
       ],
     },
     snippets: [
       { channel: 'Social', text: '"I\'ll make this viral if no refund"' },
       { channel: 'Chat', text: '"refund or I tweet this now"' },
       { channel: 'Email', text: '"post goes live if no response today"' },
-      { channel: 'Ticket', text: '"Filing consumer complaint and 1-star review unless resolved in 24h"' },
     ],
   },
   {
@@ -193,16 +181,12 @@ const fraudPatternsData: FraudPatternData[] = [
         'refund templates',
         'identical refund justification lines',
         '"agent earlier confirmed refund" (copy-pasted)',
-        'professional fraud terminology',
-        'scripted escalation paths',
       ],
     },
     snippets: [
       { channel: 'Chat', text: '"agent earlier confirmed refund, processing delay?"' },
       { channel: 'Email', text: '"refund was approved but not credited to account"' },
       { channel: 'Ticket', text: '"previous agent said refund initiated, status?"' },
-      { channel: 'Voice', text: '"I was told refund is approved, need ticket number for bank"' },
-      { channel: 'Social', text: '"DM me immediately, your agent promised refund but not received"' },
     ],
   },
   {
@@ -240,9 +224,9 @@ export default function CrossChannelFraudConsistencyWheel() {
   };
 
   return (
-    <div className="bg-[#0a0a0f] border border-white/10 rounded-2xl p-5 h-[600px] shadow-lg shadow-black/30 flex flex-col">
+    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-[670px] shadow-lg shadow-black/30 flex flex-col">
       {/* Header - Sticky */}
-      <div className="flex flex-col gap-3 mb-4 flex-shrink-0 sticky top-0 bg-[#0a0a0f] z-10 pb-2">
+      <div className="flex flex-col gap-3 mb-4 flex-shrink-0 sticky top-0 bg-[#0d0d0d] z-10 pb-2">
         <div className="flex items-center gap-2">
           <div className="p-1.5 bg-blue-500/10 rounded-lg">
             <Layers className="w-4 h-4 text-blue-400" />
@@ -290,7 +274,7 @@ export default function CrossChannelFraudConsistencyWheel() {
               className={`rounded-xl transition-all border ${
                 isExpanded
                   ? 'bg-blue-500/10 border-blue-500/30 shadow-md shadow-blue-900/30'
-                  : 'bg-[#0d0d14] border-white/5 hover:border-white/10'
+                  : 'bg-black/30 border-white/5 hover:border-white/10'
               }`}
             >
               {/* Pattern Row Header */}

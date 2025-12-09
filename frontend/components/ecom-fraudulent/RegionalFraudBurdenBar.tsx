@@ -267,7 +267,7 @@ export default function RegionalFraudBurdenBar() {
     if (active && payload && payload.length) {
       const total = payload.reduce((sum: number, entry: any) => sum + (entry.value || 0), 0);
       return (
-        <div className="bg-[#0d0d14] border border-white/20 rounded-lg p-3 shadow-lg">
+        <div className="bg-black border border-white/20 rounded-lg p-3 shadow-lg">
           <p className="text-white text-sm font-semibold mb-2">{label}</p>
           <div className="space-y-1.5">
             {payload.map((entry: any, index: number) => {
@@ -299,9 +299,9 @@ export default function RegionalFraudBurdenBar() {
   };
 
   return (
-    <div className="bg-[#0a0a0f] border border-white/10 rounded-2xl p-5 h-[600px] shadow-lg shadow-black/30 flex flex-col">
+    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-[600px] shadow-lg shadow-black/30 flex flex-col">
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4 flex-shrink-0 sticky top-0 bg-[#0a0a0f] z-10 pb-2">
+      <div className="flex items-center gap-2 mb-4 flex-shrink-0 sticky top-0 bg-[#0d0d0d] z-10 pb-2">
         <div className="p-1.5 bg-green-500/10 rounded-lg">
           <MapPin className="w-4 h-4 text-green-400" />
         </div>
@@ -349,7 +349,7 @@ export default function RegionalFraudBurdenBar() {
 
         {/* AI Insight Panel */}
         {selectedInsight && (
-          <div className="w-96 flex-shrink-0 bg-[#0d0d14] border border-white/10 rounded-xl p-4 flex flex-col overflow-y-auto scrollbar-thin">
+          <div className="w-96 flex-shrink-0 bg-black/30 border border-white/10 rounded-xl p-4 flex flex-col overflow-y-auto scrollbar-thin">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="p-1 bg-green-500/10 rounded">

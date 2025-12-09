@@ -91,7 +91,7 @@ export default function AIPatternBrain({
   };
 
   return (
-    <div className="bg-[#0a0a0f] border border-white/10 rounded-2xl p-5 h-full flex flex-col shadow-lg shadow-black/30 overflow-hidden w-full">
+    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-full flex flex-col shadow-lg shadow-black/30 overflow-hidden w-full">
       {/* Header */}
       <div className="flex flex-col gap-2 mb-2">
         <div className="flex items-center justify-between">
@@ -159,7 +159,7 @@ export default function AIPatternBrain({
               className={`rounded-xl transition-all ${
                 isExpanded 
                   ? 'bg-purple-500/10 border border-purple-500/30 shadow-md shadow-purple-900/30' 
-                      : 'bg-[#0d0d14] border border-white/5 hover:border-white/10'
+                      : 'bg-black/30 border border-white/5 hover:border-white/10'
                   }`}
             >
               {/* Collapsed Header - Always Visible */}
