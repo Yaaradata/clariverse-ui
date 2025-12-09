@@ -9,6 +9,7 @@ import {
   ForensicEvidenceModal,
   CrossChannelFraudConsistencyWheel,
   RegionalFraudBurdenBar,
+  FraudSignalIntensityGrid,
 } from '@/components/ecom-fraudulent';
 import { getPatternStats, getPatternRiskScore, getPatternAgentsCount, patternStats } from '@/components/ecom-fraudulent/ForensicEvidenceModal';
 import type { FraudPattern } from '@/components/ecom-fraudulent';
@@ -193,11 +194,10 @@ export default function FraudulentPage() {
           </div>
         </div>
 
-        {/* ROW 2: Cross-Channel Fraud Consistency Wheel - Left Aligned */}
-        <div className="w-full">
-          <div className="max-w-4xl">
-            <CrossChannelFraudConsistencyWheel />
-          </div>
+        {/* ROW 2: Cross-Channel Fraud Consistency Wheel + Fraud Signal Intensity Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.8fr] gap-4">
+          <CrossChannelFraudConsistencyWheel />
+          <FraudSignalIntensityGrid />
         </div>
 
         {/* ROW 3: Regional Fraud Burden Bar - Full Width */}
