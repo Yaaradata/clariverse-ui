@@ -264,7 +264,7 @@ export default function LogisticsBreachPlot() {
         <div>
           <h3 className="text-sm font-semibold flex items-center gap-2" style={{ color: textColor }}>
             <Package className="w-4 h-4" style={{ color: colors.lastMile }} />
-            Logistics Custody Chain Fractures
+            Logistics Chain Fractures
             <span 
               className="text-[8px] px-1.5 py-0.5 rounded font-medium"
               style={{ backgroundColor: isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(244, 244, 245)', color: subtextColor }}

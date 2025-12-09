@@ -555,24 +555,23 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
             <CardTitle className="text-sm font-semibold text-white">
               Imperfect Order Distribution
             </CardTitle>
-            <CardDescription className="text-xs text-gray-400">
-              High-level distribution of {filteredData.length}+ micro clusters
-            </CardDescription>
           </div>
 
           {/* Channel Filter Dropdown - Top Right */}
-          <div className="relative" ref={channelDropdownRef}>
-            <button
-              onClick={() => setIsChannelDropdownOpen(!isChannelDropdownOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 bg-[#1a1a1a] text-gray-300 border border-[#2a2a2a] hover:border-[#3a3a3a] min-w-[140px] justify-between"
-            >
-              <span>{selectedChannel}</span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${
-                  isChannelDropdownOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-semibold text-gray-300">Channel •</span>
+            <div className="relative" ref={channelDropdownRef}>
+              <button
+                onClick={() => setIsChannelDropdownOpen(!isChannelDropdownOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 bg-[#1a1a1a] text-gray-300 border border-[#2a2a2a] hover:border-[#3a3a3a] min-w-[140px] justify-between"
+              >
+                <span>{selectedChannel}</span>
+                <ChevronDown
+                  className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${
+                    isChannelDropdownOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
 
             {isChannelDropdownOpen && (
               <div className="absolute top-full right-0 mt-2 w-48 bg-[#0d0d0d] border border-[#2a2a2a] rounded-lg shadow-xl z-50 overflow-hidden">
@@ -631,6 +630,7 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
                 </div>
               </div>
             )}
+            </div>
           </div>
         </div>
       </CardHeader>
@@ -670,8 +670,8 @@ export function ImperfectOrderDistribution({ data }: ImperfectOrderDistributionP
                 } hover:bg-white/5 cursor-pointer`}
                 title={
                   isSelected
-                    ? `Showing only ${macro}. Click to show all.`
-                    : `Show only ${macro}`
+                    ? `${macro}. Click to show all.`
+                    : `${macro}`
                 }
               >
                 <div

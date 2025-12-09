@@ -3,7 +3,51 @@
 import { useState, useEffect } from 'react';
 import { TrendingUp, AlertTriangle, Lightbulb } from 'lucide-react';
 
-export default function TrustRiskScore() {
+type TimeFilter = '24h' | '7d' | '30d';
+
+interface TrustRiskScoreProps {
+  timeFilter?: TimeFilter;
+}
+
+// Score data based on time filter
+const getScoreData = (filter: TimeFilter) => {
+  const data: Record<TimeFilter, { 
+    score: number; 
+    previousScore: number; 
+    change: number; 
+    threshold: number;
+    aiInsight: string;
+    recommendation: string;
+  }> = {
+    '24h': {
+      score: 64.3,
+      previousScore: 61.7,
+      change: 4.1,
+      threshold: 50.0,
+      aiInsight: 'Rise in dissatisfaction linked to replacement denials and repeated delay complaints.',
+      recommendation: 'Add mandatory clarity message on return/replacement eligibility to reduce escalations.'
+    },
+    '7d': {
+      score: 68.5,
+      previousScore: 65.2,
+      change: 5.1,
+      threshold: 50.0,
+      aiInsight: 'Sustained trust erosion pattern with peak incidents during weekend deliveries and support interactions.',
+      recommendation: 'Implement proactive communication for delays and enhance weekend support coverage.'
+    },
+    '30d': {
+      score: 72.1,
+      previousScore: 69.8,
+      change: 3.3,
+      threshold: 50.0,
+      aiInsight: 'Monthly trend shows gradual trust degradation driven by policy gaps and inconsistent resolution quality.',
+      recommendation: 'Launch policy transparency initiative and standardize resolution protocols across all touchpoints.'
+    }
+  };
+  return data[filter];
+};
+
+export default function TrustRiskScore({ timeFilter = '24h' }: TrustRiskScoreProps) {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
@@ -26,10 +70,8 @@ export default function TrustRiskScore() {
     };
   }, []);
 
-  const score = 64.3;
-  const previousScore = 61.7;
-  const change = 4.1;
-  const threshold = 50.0;
+  const scoreData = getScoreData(timeFilter);
+  const { score, previousScore, change, threshold, aiInsight, recommendation } = scoreData;
   
   // Calculate ring progress (score out of 100)
   const circumference = 2 * Math.PI * 54;
@@ -156,7 +198,7 @@ export default function TrustRiskScore() {
           </span>
         </div>
         <p className="text-[11px] leading-relaxed" style={{ color: isDarkMode ? subtextColor : 'rgb(55, 65, 81)' }}>
-          Rise in customer expressions of dissatisfaction linked to replacement denials and repeated delay complaints.
+          {aiInsight}
         </p>
       </div>
 
@@ -175,7 +217,7 @@ export default function TrustRiskScore() {
           </span>
         </div>
         <p className="text-[11px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(124, 45, 18)' }}>
-          Add mandatory clarity message on return/replacement eligibility to reduce frustration-triggered escalations.
+          {recommendation}
         </p>
       </div>
     </div>

@@ -21,7 +21,7 @@ export default function EcomPage() {
   const isCompActive = pathname === '/ecom/comp';
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: '#010101' }}>
       {/* Header with company name using Yaara brand colors */}
       <header className="shadow-lg" style={{ backgroundColor: '#010101' }}>
         <div className="container mx-auto px-6 py-4">

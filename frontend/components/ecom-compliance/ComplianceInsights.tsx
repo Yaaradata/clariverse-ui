@@ -107,7 +107,7 @@ export default function ComplianceInsights() {
       <div className="flex gap-4">
         {/* Left - Trust Risk Score */}
         <div className="flex-shrink-0 w-96">
-          <TrustRiskScore />
+          <TrustRiskScore timeFilter={timeFilter} />
         </div>
 
         {/* Right - AI Post-Interaction Insights */}

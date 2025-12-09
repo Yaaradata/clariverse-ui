@@ -333,7 +333,7 @@ export function IntentIntelligenceCommandCenter({
                       ? "bg-white/10 border border-white/20 opacity-100"
                       : "opacity-40 hover:opacity-60 border border-transparent"
                   } hover:bg-white/5 cursor-pointer`}
-                  title={isSelected ? `Showing only ${channelLabel}. Click to show all.` : `Show only ${channelLabel}`}
+                  title={isSelected ? `Showing only ${channelLabel}. Click to show all.` : `${channelLabel}`}
                 >
                   <span className={channelColor}>
                     {channelLabel} {emoji}
