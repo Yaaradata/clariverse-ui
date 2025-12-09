@@ -118,7 +118,7 @@ export function AIImperfectOrderInsightWall() {
       </CardHeader>
 
       <CardContent className="flex-1 overflow-hidden">
-        <div className="relative overflow-hidden h-[600px]">
+        <div className="relative overflow-hidden h-[665px]">
           <ScrollArea
             className="h-full w-full"
             viewportClassName="scrollbar-thin overflow-y-auto"

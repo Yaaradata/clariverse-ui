@@ -16,7 +16,7 @@ interface NarrativeLensProps {
 }
 
 export function NarrativeLens({ phrases }: NarrativeLensProps) {
-  const topPhrases = phrases.slice(0, 10);
+  const topPhrases = phrases.slice(0, 11);
 
   return (
     <Card className="bg-[#0d0d0d] border border-[#2a2a2a] h-full flex flex-col">
@@ -36,8 +36,8 @@ export function NarrativeLens({ phrases }: NarrativeLensProps) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-hidden">
-        <div className="relative overflow-hidden h-[600px]">
+      <CardContent className="flex-1 overflow-hidden pt-0 pb-2 px-4 py-20 pr-2">
+        <div className="relative overflow-hidden h-[665px]">
           <ScrollArea
             className="h-full w-full"
             viewportClassName="scrollbar-thin overflow-y-auto"
@@ -46,7 +46,7 @@ export function NarrativeLens({ phrases }: NarrativeLensProps) {
               scrollbarColor: '#3a3a3a #1a1a1a',
             }}
           >
-            <div className="space-y-2 pr-2">
+            <div className="space-y-2 pr-2 pb-2">
               {topPhrases.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
                   <MessageSquare className="w-12 h-12 text-gray-600 mb-4" />
