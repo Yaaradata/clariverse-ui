@@ -271,7 +271,7 @@ export default function CrossChannelFraudConsistencyWheel() {
 
   return (
     <div 
-      className="rounded-xl p-5 md:p-6 h-[670px] shadow-sm flex flex-col"
+      className="rounded-xl p-5 md:p-6 h-[683px] shadow-sm flex flex-col"
       style={{ backgroundColor: containerBg, border: `1px solid ${containerBorder}` }}
     >
       {/* Header */}
