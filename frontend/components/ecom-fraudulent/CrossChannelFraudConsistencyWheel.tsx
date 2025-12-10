@@ -322,7 +322,7 @@ export default function CrossChannelFraudConsistencyWheel() {
       </div>
 
       {/* Main Content: Wheel + Details - Scrollable */}
-      <div className="flex-1 overflow-y-auto space-y-4 pr-2 scrollbar-visible">
+      <div className="flex-1 overflow-y-auto space-y-4 hide-scrollbar">
         {fraudPatternsData.map((pattern) => {
           const channelCount = getChannelCount(pattern.channels);
           const isExpanded = selectedPattern === pattern.id;
@@ -507,25 +507,14 @@ export default function CrossChannelFraudConsistencyWheel() {
         })}
       </div>
 
-      {/* Scrollbar styles */}
+      {/* Hide scrollbar styles */}
       <style jsx>{`
-        .scrollbar-visible::-webkit-scrollbar {
-          width: 8px;
+        .hide-scrollbar {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE and Edge */
         }
-        .scrollbar-visible::-webkit-scrollbar-track {
-          background: ${isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(243, 244, 246)'};
-          border-radius: 4px;
-        }
-        .scrollbar-visible::-webkit-scrollbar-thumb {
-          background: ${isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(156, 163, 175)'};
-          border-radius: 4px;
-        }
-        .scrollbar-visible::-webkit-scrollbar-thumb:hover {
-          background: ${isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)'};
-        }
-        .scrollbar-visible {
-          scrollbar-width: thin; /* Firefox */
-          scrollbar-color: ${isDarkMode ? 'rgb(107, 114, 128) rgb(39, 39, 42)' : 'rgb(156, 163, 175) rgb(243, 244, 246)'}; /* Firefox */
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none; /* Chrome, Safari, Opera */
         }
       `}</style>
     </div>

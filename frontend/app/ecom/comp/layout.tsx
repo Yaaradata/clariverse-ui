@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { ShieldCheck, AlertTriangle } from 'lucide-react';
 
 export default function CompLayout({
@@ -10,7 +11,6 @@ export default function CompLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   const isComplianceActive = pathname === '/ecom/comp';
@@ -48,8 +48,8 @@ export default function CompLayout({
           border: isDarkMode ? '1px solid rgb(42, 42, 42)' : '1px solid rgb(214, 217, 216)' 
         }}
       >
-        <button
-          onClick={() => router.push('/ecom/comp')}
+        <Link
+          href="/ecom/comp"
           className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
           style={{
             backgroundColor: isComplianceActive ? 'rgb(83, 50, 255)' : 'transparent',
@@ -60,9 +60,9 @@ export default function CompLayout({
         >
           <ShieldCheck className="w-4 h-4" />
           Compliance and Risk
-        </button>
-        <button
-          onClick={() => router.push('/ecom/comp/fraudulent')}
+        </Link>
+        <Link
+          href="/ecom/comp/fraudulent"
           className="flex-1 flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200"
           style={{
             backgroundColor: isFraudulentActive ? 'rgb(83, 50, 255)' : 'transparent',
@@ -73,7 +73,7 @@ export default function CompLayout({
         >
           <AlertTriangle className="w-4 h-4" />
           Fraudulent
-        </button>
+        </Link>
       </div>
 
       {/* Content */}
