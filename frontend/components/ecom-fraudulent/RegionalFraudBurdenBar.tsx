@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 import { MapPin, X, TrendingUp, Users, Target } from 'lucide-react';
 
@@ -227,6 +227,36 @@ const regionInsights: Record<string, Omit<InsightData, 'pattern'>> = {
 
 export default function RegionalFraudBurdenBar() {
   const [selectedInsight, setSelectedInsight] = useState<InsightData | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === 'dark');
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      observer.disconnect();
+    };
+  }, []);
+
+  const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
+  const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
+  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
+  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
+  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(55, 65, 81)';
 
   const handleBarClick = (data: any, index: number, pattern: string) => {
     const region = regionalData[index]?.region;
@@ -267,8 +297,14 @@ export default function RegionalFraudBurdenBar() {
     if (active && payload && payload.length) {
       const total = payload.reduce((sum: number, entry: any) => sum + (entry.value || 0), 0);
       return (
-        <div className="bg-black border border-white/20 rounded-lg p-3 shadow-lg">
-          <p className="text-white text-sm font-semibold mb-2">{label}</p>
+        <div 
+          className="rounded-lg p-3 shadow-lg border"
+          style={{ 
+            backgroundColor: containerBg,
+            borderColor: containerBorder
+          }}
+        >
+          <p className="text-sm font-semibold mb-2" style={{ color: textColor }}>{label}</p>
           <div className="space-y-1.5">
             {payload.map((entry: any, index: number) => {
               const percentage = total > 0 ? Math.round((entry.value / total) * 100) : 0;
@@ -279,17 +315,17 @@ export default function RegionalFraudBurdenBar() {
                       className="w-3 h-3 rounded"
                       style={{ backgroundColor: entry.color }}
                     />
-                    <span className="text-gray-300 text-xs">{entry.dataKey}</span>
+                    <span className="text-xs" style={{ color: summaryTextColor }}>{entry.dataKey}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-white text-xs font-semibold">{entry.value}</span>
-                    <span className="text-gray-500 text-xs">({percentage}%)</span>
+                    <span className="text-xs font-semibold" style={{ color: textColor }}>{entry.value}</span>
+                    <span className="text-xs" style={{ color: subtextColor }}>({percentage}%)</span>
                   </div>
                 </div>
               );
             })}
-            <div className="pt-1.5 mt-1.5 border-t border-white/10">
-              <div className="text-gray-400 text-[10px]">Total: {total} signals</div>
+            <div className="pt-1.5 mt-1.5" style={{ borderTop: `1px solid ${containerBorder}` }}>
+              <div className="text-[10px]" style={{ color: subtextColor }}>Total: {total} signals</div>
             </div>
           </div>
         </div>
@@ -299,15 +335,27 @@ export default function RegionalFraudBurdenBar() {
   };
 
   return (
-    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-[600px] shadow-lg shadow-black/30 flex flex-col">
+    <div 
+      className="rounded-xl p-5 md:p-6 h-[600px] shadow-sm flex flex-col"
+      style={{ backgroundColor: containerBg, border: `1px solid ${containerBorder}` }}
+    >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-4 flex-shrink-0 sticky top-0 bg-[#0d0d0d] z-10 pb-2">
-        <div className="p-1.5 bg-green-500/10 rounded-lg">
-          <MapPin className="w-4 h-4 text-green-400" />
+      <div 
+        className="flex items-center gap-2 mb-4 flex-shrink-0 pb-2"
+        style={{ backgroundColor: containerBg }}
+      >
+        <div 
+          className="p-1.5 rounded-lg border"
+          style={{ 
+            backgroundColor: isDarkMode ? 'rgba(34, 197, 94, 0.125)' : 'rgba(34, 197, 94, 0.12)',
+            borderColor: isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.25)'
+          }}
+        >
+          <MapPin className="w-4 h-4" style={{ color: 'rgb(34, 197, 94)' }} />
         </div>
         <div>
-          <h3 className="text-white font-semibold text-sm">Regional Fraud Burden</h3>
-          <p className="text-gray-500 text-[10px]">Comms-based fraud signals by region</p>
+          <h3 className="font-semibold text-sm" style={{ color: textColor }}>Regional Fraud Burden</h3>
+          <p className="text-[10px]" style={{ color: subtextColor }}>Comms-based fraud signals by region</p>
         </div>
       </div>
 
@@ -320,14 +368,14 @@ export default function RegionalFraudBurdenBar() {
               data={regionalData}
               margin={{ top: 10, right: 10, left: 0, bottom: 20 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+              <CartesianGrid strokeDasharray="3 3" stroke={containerBorder} opacity={0.3} />
               <XAxis
                 dataKey="region"
-                tick={{ fill: '#9CA3AF', fontSize: 11 }}
+                tick={{ fill: labelColor, fontSize: 11 }}
               />
               <YAxis
-                tick={{ fill: '#9CA3AF', fontSize: 11 }}
-                label={{ value: 'Fraud Signal Volume', angle: -90, position: 'insideLeft', style: { fill: '#9CA3AF', fontSize: 10 } }}
+                tick={{ fill: labelColor, fontSize: 11 }}
+                label={{ value: 'Fraud Signal Volume', angle: -90, position: 'insideLeft', style: { fill: labelColor, fontSize: 10 } }}
               />
               <Tooltip content={<CustomTooltip />} />
               {fraudPatterns.map((pattern) => (
@@ -349,16 +397,25 @@ export default function RegionalFraudBurdenBar() {
 
         {/* AI Insight Panel */}
         {selectedInsight && (
-          <div className="w-96 flex-shrink-0 bg-black/30 border border-white/10 rounded-xl p-4 flex flex-col overflow-y-auto scrollbar-thin">
+          <div 
+            className="w-96 flex-shrink-0 rounded-xl p-4 flex flex-col overflow-y-auto shadow-sm border"
+            style={{ 
+              backgroundColor: containerBg,
+              borderColor: containerBorder
+            }}
+          >
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <h4 className="text-white text-sm font-semibold">✨ AI Insight</h4>
+                <h4 className="text-sm font-semibold" style={{ color: textColor }}>✨ AI Insight</h4>
               </div>
               <button
                 onClick={() => setSelectedInsight(null)}
-                className="p-1 hover:bg-white/10 rounded transition-colors"
+                className="p-1 rounded"
+                style={{ 
+                  backgroundColor: 'transparent'
+                }}
               >
-                <X className="w-4 h-4 text-gray-400" />
+                <X className="w-4 h-4" style={{ color: subtextColor }} />
               </button>
             </div>
 
@@ -366,26 +423,32 @@ export default function RegionalFraudBurdenBar() {
               {/* 1. Summary */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <Target className="w-3 h-3 text-green-400" />
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Summary</span>
+                  <Target className="w-3 h-3" style={{ color: 'rgb(34, 197, 94)' }} />
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: labelColor }}>Summary</span>
                 </div>
-                <div className="bg-green-500/5 border border-green-500/20 rounded-lg p-3">
+                <div 
+                  className="rounded-lg p-3 border"
+                  style={{ 
+                    backgroundColor: isDarkMode ? 'rgba(168, 85, 247, 0.05)' : 'rgba(245, 243, 255, 0.9)',
+                    borderColor: isDarkMode ? 'rgba(168, 85, 247, 0.3)' : 'rgba(168, 85, 247, 0.25)'
+                  }}
+                >
                   {selectedInsight.summaryTitle && (
-                    <p className="text-white text-[12px] font-semibold mb-1.5">{selectedInsight.summaryTitle}</p>
+                    <p className="text-[12px] font-semibold mb-1.5" style={{ color: isDarkMode ? 'rgb(196, 181, 253)' : 'rgb(126, 34, 206)' }}>{selectedInsight.summaryTitle}</p>
                   )}
-                  <p className="text-white text-[12px] leading-relaxed">{selectedInsight.aiInsight}</p>
+                  <p className="text-[12px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(196, 181, 253)' : 'rgb(126, 34, 206)' }}>{selectedInsight.aiInsight}</p>
                 </div>
               </div>
 
               {/* 2. Root Cause */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Root Cause</span>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: labelColor }}>Root Cause</span>
                 </div>
                 <div className="space-y-1.5">
                   {selectedInsight.evidence.map((item, idx) => (
-                    <div key={idx} className="text-gray-300 text-[11px] leading-relaxed flex items-start gap-2">
-                      <span className="text-orange-400 mt-0.5">•</span>
+                    <div key={idx} className="text-[11px] leading-relaxed flex items-start gap-2" style={{ color: summaryTextColor }}>
+                      <span className="mt-0.5" style={{ color: 'rgb(249, 115, 22)' }}>•</span>
                       <span>{item}</span>
                     </div>
                   ))}
@@ -395,12 +458,12 @@ export default function RegionalFraudBurdenBar() {
               {/* 3. Next Action Suggestion */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Next Action Suggestion</span>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: labelColor }}>Next Action Suggestion</span>
                 </div>
                 <div className="space-y-1.5">
                   {selectedInsight.nextActions.map((item, idx) => (
-                    <div key={idx} className="text-gray-300 text-[11px] leading-relaxed flex items-start gap-2">
-                      <span className="text-blue-400 mt-0.5">•</span>
+                    <div key={idx} className="text-[11px] leading-relaxed flex items-start gap-2" style={{ color: summaryTextColor }}>
+                      <span className="mt-0.5" style={{ color: 'rgb(59, 130, 246)' }}>•</span>
                       <span>{item}</span>
                     </div>
                   ))}
@@ -410,7 +473,7 @@ export default function RegionalFraudBurdenBar() {
               {/* 4. Channel Breakdown */}
               <div>
                 <div className="flex items-center gap-1.5 mb-2">
-                  <span className="text-gray-400 text-[10px] uppercase tracking-wider">Channel Breakdown</span>
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: labelColor }}>Channel Breakdown</span>
                 </div>
                 <div className="space-y-2">
                   {Object.entries(selectedInsight.channelBreakdown).map(([channel, value]) => {
@@ -425,11 +488,14 @@ export default function RegionalFraudBurdenBar() {
                               className="w-2 h-2 rounded-full flex-shrink-0"
                               style={{ backgroundColor: color }}
                             />
-                            <span className="text-gray-400 text-[10px] capitalize">{channel}</span>
+                            <span className="text-[10px] capitalize" style={{ color: subtextColor }}>{channel}</span>
                           </div>
-                          <span className="text-white text-[10px] font-medium">{percentage}%</span>
+                          <span className="text-[10px] font-medium" style={{ color: textColor }}>{percentage}%</span>
                         </div>
-                        <div className="bg-white/5 rounded-full h-1.5 overflow-hidden">
+                        <div 
+                          className="rounded-full h-1.5 overflow-hidden"
+                          style={{ backgroundColor: summaryBg }}
+                        >
                           <div
                             className="h-full rounded-full transition-all"
                             style={{
@@ -449,39 +515,21 @@ export default function RegionalFraudBurdenBar() {
       </div>
 
       {/* Legend */}
-      <div className="mt-3 pt-3 border-t border-white/5 flex-shrink-0">
+      <div className="mt-3 pt-3 flex-shrink-0" style={{ borderTop: `1px solid ${containerBorder}` }}>
         <div className="flex items-center gap-3 flex-wrap text-[9px]">
-          <span className="text-gray-500">Click bars for insights</span>
-          <span className="text-gray-600">•</span>
+          <span style={{ color: subtextColor }}>Click bars for insights</span>
+          <span style={{ color: subtextColor }}>•</span>
           {fraudPatterns.map((pattern) => (
             <div key={pattern} className="flex items-center gap-1.5">
               <div
                 className="w-2.5 h-2.5 rounded"
                 style={{ backgroundColor: fraudPatternColors[pattern] }}
               />
-              <span className="text-gray-400 text-[9px]">{pattern}</span>
+              <span className="text-[9px]" style={{ color: subtextColor }}>{pattern}</span>
             </div>
           ))}
         </div>
       </div>
-
-      {/* Scrollbar styling */}
-      <style jsx>{`
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 4px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: rgba(255,255,255,0.02);
-          border-radius: 2px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.1);
-          border-radius: 2px;
-        }
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-          background: rgba(255,255,255,0.2);
-        }
-      `}</style>
     </div>
   );
 }

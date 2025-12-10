@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { AlertTriangle, Brain, Lightbulb } from 'lucide-react';
 
 interface CellData {
@@ -168,40 +169,75 @@ const insights = {
 
 // Helper function to get background color based on risk score
 // CRITICAL ≥76: Red, HIGH ≥65: Orange, MEDIUM ≥50: Yellow, LOW ≥40: Green
-const getBackgroundColor = (riskScore: number): string => {
-  if (riskScore === 0) return 'rgba(0, 0, 0, 0.3)'; // Empty
-  if (riskScore >= 76) return 'rgba(239, 68, 68, 0.6)'; // Red - CRITICAL
-  if (riskScore >= 65) return 'rgba(249, 115, 22, 0.6)'; // Orange - HIGH
-  if (riskScore >= 50) return 'rgba(234, 179, 8, 0.6)'; // Yellow - MEDIUM
-  if (riskScore >= 40) return 'rgba(34, 197, 94, 0.6)'; // Green - LOW
-  return 'rgba(0, 0, 0, 0.3)'; // Fallback
+const getBackgroundColor = (riskScore: number, isDarkMode: boolean): string => {
+  if (riskScore === 0) return isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)'; // Empty
+  if (riskScore >= 76) return isDarkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.4)'; // Red - CRITICAL
+  if (riskScore >= 65) return isDarkMode ? 'rgba(249, 115, 22, 0.6)' : 'rgba(249, 115, 22, 0.4)'; // Orange - HIGH
+  if (riskScore >= 50) return isDarkMode ? 'rgba(234, 179, 8, 0.6)' : 'rgba(234, 179, 8, 0.4)'; // Yellow - MEDIUM
+  if (riskScore >= 40) return isDarkMode ? 'rgba(34, 197, 94, 0.6)' : 'rgba(34, 197, 94, 0.4)'; // Green - LOW
+  return isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)'; // Fallback
 };
 
 export default function FraudSignalIntensityGrid() {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === 'dark');
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      observer.disconnect();
+    };
+  }, []);
+
+  const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
+  const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
+  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
+  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
+  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(55, 65, 81)';
+
   // Get row labels from patterns
   const rowLabels = patterns.map(p => p.title);
 
   return (
-    <div className="rounded-lg border border-white/10 bg-[#0d0d0d]">
+    <div 
+      className="rounded-xl border shadow-sm"
+      style={{ backgroundColor: containerBg, borderColor: containerBorder }}
+    >
       {/* Header */}
-      <div className="flex flex-col space-y-1.5 p-6">
-        <h3 className="text-lg font-semibold text-white">
+      <div className="flex flex-col space-y-1.5 p-5 md:p-6">
+        <h3 className="text-lg font-semibold" style={{ color: textColor }}>
           Fraud Signal Intensity Grid
         </h3>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm" style={{ color: subtextColor }}>
           Pattern intensity across communication channels
         </p>
       </div>
 
       {/* Grid Content */}
-      <div className="p-6 pt-0 space-y-6 px-6 pb-8">
+      <div className="p-5 md:p-6 pt-0 space-y-6">
         <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-1">
           {/* Row Labels */}
           <div className="flex flex-col gap-2 pt-5">
             {rowLabels.map((label) => (
               <div
                 key={label}
-                className="flex h-10 items-center text-[10px] font-semibold uppercase tracking-wide text-gray-400"
+                className="flex h-10 items-center text-[10px] font-semibold uppercase tracking-wide"
+                style={{ color: labelColor }}
               >
                 {label}
               </div>
@@ -219,7 +255,8 @@ export default function FraudSignalIntensityGrid() {
                 {channels.map((channel) => (
                   <div
                     key={channel}
-                    className="text-center text-[10px] uppercase tracking-wide text-gray-400"
+                    className="text-center text-[10px] uppercase tracking-wide"
+                    style={{ color: labelColor }}
                   >
                     {channel}
                   </div>
@@ -229,13 +266,17 @@ export default function FraudSignalIntensityGrid() {
                 {patterns.map((pattern) =>
                   channels.map((channel) => {
                     const cell = pattern.channels[channel];
-                    const bgColor = getBackgroundColor(cell.riskScore);
+                    const bgColor = getBackgroundColor(cell.riskScore, isDarkMode);
 
                     return (
                       <div
                         key={`${pattern.id}-${channel}`}
-                        className="relative flex h-10 flex-col justify-between rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-[10px] text-white shadow-inner"
-                        style={{ backgroundColor: bgColor }}
+                        className="relative flex h-10 flex-col justify-between rounded-lg border px-2 py-1.5 text-[10px]"
+                        style={{ 
+                          backgroundColor: bgColor,
+                          borderColor: containerBorder,
+                          color: textColor
+                        }}
                       >
                         {cell.volume > 0 ? (
                           <>
@@ -245,13 +286,19 @@ export default function FraudSignalIntensityGrid() {
                                 {cell.detection}% detected
                               </span>
                             </div>
-                            <div className="flex items-center justify-between text-[8.5px] font-medium text-white/85">
+                            <div className="flex items-center justify-between text-[8.5px] font-medium">
                               <span>Vol {cell.volume}</span>
                               <span>Risk {cell.riskScore}</span>
                             </div>
                           </>
                         ) : (
-                          <div className="flex items-center justify-center h-full text-gray-500 text-[8px]">
+                          <div 
+                            className="flex items-center justify-center h-full text-[8px]"
+                            style={{ 
+                              color: subtextColor,
+                              backgroundColor: summaryBg
+                            }}
+                          >
                             -
                           </div>
                         )}
@@ -265,18 +312,36 @@ export default function FraudSignalIntensityGrid() {
         </div>
 
         {/* Insights Section */}
-        <div className="grid gap-2.5 md:grid-cols-3">
-          <div className="rounded-xl border p-4 border-rose-400/30 bg-rose-500/10 space-y-2">
-            <div className="text-sm font-semibold text-white">🔥 Bottleneck</div>
-            <div className="text-xs text-gray-300">{insights.threat.text}</div>
+        <div className="grid gap-6 md:grid-cols-3">
+          <div 
+            className="rounded-xl border p-4 space-y-2"
+            style={{ 
+              backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(254, 242, 242, 0.9)',
+              borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+            }}
+          >
+            <div className="text-sm font-semibold" style={{ color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)' }}>🔥 Bottleneck</div>
+            <div className="text-xs" style={{ color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(153, 27, 27)' }}>{insights.threat.text}</div>
           </div>
-          <div className="rounded-xl border p-4 border-white/10 bg-black/40 space-y-2">
-            <div className="text-sm font-semibold text-white">🏢 Ownership</div>
-            <div className="text-xs text-gray-300">{insights.behavioral.text}</div>
+          <div 
+            className="rounded-xl border p-4 space-y-2"
+            style={{ 
+              backgroundColor: summaryBg,
+              borderColor: summaryBorder
+            }}
+          >
+            <div className="text-sm font-semibold" style={{ color: textColor }}>🏢 Ownership</div>
+            <div className="text-xs" style={{ color: summaryTextColor }}>{insights.behavioral.text}</div>
           </div>
-          <div className="rounded-xl border p-4 border-emerald-400/30 bg-emerald-500/10 space-y-2">
-            <div className="text-sm font-semibold text-white">⚡ Efficiency</div>
-            <div className="text-xs text-gray-300">{insights.recommendation.text}</div>
+          <div 
+            className="rounded-xl border p-4 space-y-2"
+            style={{ 
+              backgroundColor: isDarkMode ? 'rgba(34, 197, 94, 0.05)' : 'rgba(240, 253, 244, 0.9)',
+              borderColor: isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.25)'
+            }}
+          >
+            <div className="text-sm font-semibold" style={{ color: isDarkMode ? 'rgb(134, 239, 172)' : 'rgb(22, 101, 52)' }}>⚡ Efficiency</div>
+            <div className="text-xs" style={{ color: isDarkMode ? 'rgb(134, 239, 172)' : 'rgb(20, 83, 45)' }}>{insights.recommendation.text}</div>
           </div>
         </div>
       </div>

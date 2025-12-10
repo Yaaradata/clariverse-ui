@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Components
 import {
@@ -99,6 +99,27 @@ const fraudPatterns: FraudPattern[] = fraudInsightsData.map((insight, idx) => {
 export default function FraudulentPage() {
   const [selectedPattern, setSelectedPattern] = useState<FraudPattern | null>(null);
   const [modalType, setModalType] = useState<'cases' | 'agents' | 'pincodes' | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === 'dark');
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      observer.disconnect();
+    };
+  }, []);
 
   // Calculate totals
   const criticalCount = fraudInsightsData.filter(i => i.severity === 'CRITICAL').length;
@@ -164,13 +185,21 @@ export default function FraudulentPage() {
     setModalType(null);
   };
 
+  const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
+  const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
+
   return (
-    <div className="min-h-screen w-full px-0 space-y-3">
+    <div className="min-h-screen w-full px-0 space-y-6">
         
-        {/* ROW 1: Two-column grid, equal widths, 16px gap */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+        {/* ROW 1: Two-column grid, equal widths, gap-6 */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Left: Fraud Risk Snapshot */}
-          <div className="w-full h-full">
+          <div 
+            className="w-full h-full animate-fade-in"
+            style={{ 
+              animationDelay: '0ms',
+            }}
+          >
             <FraudRiskSnapshot 
               score={overallRiskScore}
               totalCases={totalPatternVolume}
@@ -185,7 +214,12 @@ export default function FraudulentPage() {
           </div>
           
           {/* Right: AI Pattern Brain */}
-          <div className="w-full h-full">
+          <div 
+            className="w-full h-full animate-fade-in"
+            style={{ 
+              animationDelay: '50ms',
+            }}
+          >
             <AIPatternBrain 
               patterns={fraudPatterns}
               onViewCases={handleViewCases}
@@ -196,13 +230,32 @@ export default function FraudulentPage() {
         </div>
 
         {/* ROW 2: Cross-Channel Fraud Consistency Wheel + Fraud Signal Intensity Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.8fr] gap-4">
-          <CrossChannelFraudConsistencyWheel />
-          <FraudSignalIntensityGrid />
+        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.8fr] gap-6">
+          <div 
+            className="animate-fade-in"
+            style={{ 
+              animationDelay: '100ms',
+            }}
+          >
+            <CrossChannelFraudConsistencyWheel />
+          </div>
+          <div 
+            className="animate-fade-in"
+            style={{ 
+              animationDelay: '150ms',
+            }}
+          >
+            <FraudSignalIntensityGrid />
+          </div>
         </div>
 
         {/* ROW 3: Regional Fraud Burden Bar - Full Width */}
-        <div className="w-full">
+        <div 
+          className="w-full animate-fade-in"
+          style={{ 
+            animationDelay: '200ms',
+          }}
+        >
           <RegionalFraudBurdenBar />
         </div>
 

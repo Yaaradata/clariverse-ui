@@ -2,51 +2,52 @@
 
 /* your variables */
 :root {
-    /* Brand Color Palette - Professional Dark Theme */
-    --background: #141414; /* dark grey - background */
-    --foreground: #ffffff; /* white - text/button color */
-    --card: #1a1a1a; /* slightly lighter dark grey for cards */
-    --card-foreground: #ffffff; /* white - text/button color */
-    --popover: #1a1a1a; /* slightly lighter dark grey for popovers */
-    --popover-foreground: #ffffff; /* white - text/button color */
-    --primary: #b90abd; /* Electric Violet - bg +shade */
-    --primary-foreground: #ffffff; /* white - text/button color */
-    --secondary: #2a2a2a; /* darker grey for secondary elements */
-    --secondary-foreground: #d6d9d8; /* iron - footer */
-    --muted: #2a2a2a; /* darker grey for muted elements */
-    --muted-foreground: #939394; /* manatee - text boxes */
-    --accent: #5332ff; /* blue - text boxes */
-    --accent-foreground: #ffffff; /* white - text/button color */
-    --destructive: #ef4444;
-    --destructive-foreground: #ffffff; /* white - text/button color */
-    --border: #333333; /* subtle border color */
-    --input: #2a2a2a; /* input background */
-    --ring: #b90abd; /* Electric Violet - focus ring */
+    /* Enterprise Light Dashboard - Pure white, crisp text, soft pastels */
+    --background: 255 255 255;
+    --foreground: 23 23 23;
+    --card: 255 255 255;
+    --card-foreground: 23 23 23;
+    --popover: 255 255 255;
+    --popover-foreground: 23 23 23;
+    --primary: 99 102 241;
+    --primary-foreground: 255 255 255;
+    --secondary: 249 249 249;
+    --secondary-foreground: 23 23 23;
+    --muted: 245 245 245;
+    --muted-foreground: 82 82 91;
+    --accent: 245 245 245;
+    --accent-foreground: 23 23 23;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
+    --border: 225 225 225;
+    --input: 225 225 225;
+    --ring: 99 102 241;
+    --shadow: 0 4px 12px rgba(0,0,0,0.06);
     --chart-1: #b90abd; /* Electric Violet - bg +shade */
     --chart-2: #5332ff; /* blue - text boxes */
-    --chart-3: #d6d9d8; /* iron - footer */
-    --chart-4: #939394; /* manatee - text boxes */
-    --chart-5: #ffffff; /* white - text/button color */
-    --sidebar: #141414; /* dark grey - background */
-    --sidebar-foreground: #d6d9d8; /* iron - footer */
+    --chart-3: #6b7280; /* gray */
+    --chart-4: #9ca3af; /* gray */
+    --chart-5: #141414; /* dark grey - text/button color */
+    --sidebar: #ffffff; /* white - background */
+    --sidebar-foreground: #141414; /* dark grey - footer */
     --sidebar-primary: #b90abd; /* Electric Violet - bg +shade */
     --sidebar-primary-foreground: #ffffff; /* white - text/button color */
     --sidebar-accent: #5332ff; /* blue - text boxes */
     --sidebar-accent-foreground: #ffffff; /* white - text/button color */
-    --sidebar-border: #333333; /* subtle border color */
+    --sidebar-border: #e5e7eb; /* light border color */
     --sidebar-ring: #b90abd; /* Electric Violet - focus ring */
   --font-sans: Roboto, sans-serif;
   --font-serif: Playfair Display, serif;
   --font-mono: Fira Code, monospace;
   --radius: 0.625rem;
-  --shadow-2xs: 2px 2px 4px 0px rgba(185, 10, 189, 0.10);
-  --shadow-xs: 2px 2px 4px 0px rgba(185, 10, 189, 0.10);
-  --shadow-sm: 2px 2px 4px 0px rgba(185, 10, 189, 0.20), 2px 1px 2px -1px rgba(185, 10, 189, 0.20);
-  --shadow: 2px 2px 4px 0px rgba(185, 10, 189, 0.20), 2px 1px 2px -1px rgba(185, 10, 189, 0.20);
-  --shadow-md: 2px 2px 4px 0px rgba(185, 10, 189, 0.20), 2px 2px 4px -1px rgba(185, 10, 189, 0.20);
-  --shadow-lg: 2px 2px 4px 0px rgba(185, 10, 189, 0.20), 2px 4px 6px -1px rgba(185, 10, 189, 0.20);
-  --shadow-xl: 2px 2px 4px 0px rgba(185, 10, 189, 0.20), 2px 8px 10px -1px rgba(185, 10, 189, 0.20);
-  --shadow-2xl: 2px 2px 4px 0px rgba(185, 10, 189, 0.50);
+  --shadow-2xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-xs: 0 1px 3px rgba(0,0,0,0.05);
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+  --shadow: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 8px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 16px rgba(0,0,0,0.08);
+  --shadow-xl: 0 12px 24px rgba(0,0,0,0.1);
+  --shadow-2xl: 0 16px 32px rgba(0,0,0,0.12);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 }

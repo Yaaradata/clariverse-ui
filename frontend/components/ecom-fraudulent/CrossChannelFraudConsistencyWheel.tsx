@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layers, MessageSquare, Mail, Ticket, Phone, Share2 } from 'lucide-react';
 
 interface ChannelPresence {
@@ -227,6 +227,36 @@ const fraudPatternsData: FraudPatternData[] = [
 
 export default function CrossChannelFraudConsistencyWheel() {
   const [selectedPattern, setSelectedPattern] = useState<string | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === 'dark');
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      observer.disconnect();
+    };
+  }, []);
+
+  const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
+  const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
+  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
+  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
+  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(55, 65, 81)';
 
   const getChannelCount = (channels: ChannelPresence): number => {
     return Object.values(channels).filter(Boolean).length;
@@ -240,21 +270,35 @@ export default function CrossChannelFraudConsistencyWheel() {
   };
 
   return (
-    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-5 h-[670px] shadow-lg shadow-black/30 flex flex-col">
-      {/* Header - Sticky */}
-      <div className="flex flex-col gap-3 mb-4 flex-shrink-0 sticky top-0 bg-[#0d0d0d] z-10 pb-2">
+    <div 
+      className="rounded-xl p-5 md:p-6 h-[670px] shadow-sm flex flex-col"
+      style={{ backgroundColor: containerBg, border: `1px solid ${containerBorder}` }}
+    >
+      {/* Header */}
+      <div 
+        className="flex flex-col gap-3 mb-4 flex-shrink-0 pb-2"
+        style={{ backgroundColor: containerBg }}
+      >
         <div className="flex items-center gap-2">
-          <div className="p-1.5 bg-blue-500/10 rounded-lg">
-            <Layers className="w-4 h-4 text-blue-400" />
+          <div 
+            className="p-1.5 rounded-lg border"
+            style={{ 
+              backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.125)' : 'rgba(59, 130, 246, 0.12)',
+              borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)'
+            }}
+          >
+            <Layers className="w-4 h-4" style={{ color: 'rgb(59, 130, 246)' }} />
           </div>
           <div>
-            <h3 className="text-white font-semibold text-sm">Cross-Channel Fraud Consistency Index</h3>
-            <p className="text-gray-500 text-[10px]">Pattern recurrence across communication channels</p>
+            <h3 className="font-semibold text-sm" style={{ color: textColor }}>Cross-Channel Fraud Consistency Index</h3>
+            <p className="text-[10px]" style={{ color: subtextColor }}>Pattern recurrence across communication channels</p>
           </div>
         </div>
         
         {/* Channel Indicator Legend - Single Line */}
-        <div className="flex items-center gap-2 flex-nowrap overflow-x-auto scrollbar-thin">
+        <div 
+          className="flex items-center gap-2 flex-nowrap overflow-x-auto hide-scrollbar"
+        >
           {channelOrder.map((channel) => {
             const Icon = channelIcons[channel];
             return (
@@ -265,20 +309,20 @@ export default function CrossChannelFraudConsistencyWheel() {
                 >
                   ⬤
                 </span>
-                <Icon className="w-2.5 h-2.5 text-gray-400" />
-                <span className="text-gray-400 text-[8px] whitespace-nowrap">{channelLabels[channel]}</span>
+                <Icon className="w-2.5 h-2.5" style={{ color: subtextColor }} />
+                <span className="text-[8px] whitespace-nowrap" style={{ color: subtextColor }}>{channelLabels[channel]}</span>
               </div>
             );
           })}
           <div className="flex items-center gap-1 flex-shrink-0 ml-1">
-            <span className="text-sm leading-none text-gray-600">○</span>
-            <span className="text-gray-400 text-[8px] whitespace-nowrap">= Absent</span>
+            <span className="text-sm leading-none" style={{ color: subtextColor }}>○</span>
+            <span className="text-[8px] whitespace-nowrap" style={{ color: subtextColor }}>= Absent</span>
           </div>
         </div>
       </div>
 
       {/* Main Content: Wheel + Details - Scrollable */}
-      <div className="flex-1 overflow-y-auto space-y-4 pr-1 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto space-y-4 pr-2 scrollbar-visible">
         {fraudPatternsData.map((pattern) => {
           const channelCount = getChannelCount(pattern.channels);
           const isExpanded = selectedPattern === pattern.id;
@@ -287,11 +331,17 @@ export default function CrossChannelFraudConsistencyWheel() {
           return (
             <div
               key={pattern.id}
-              className={`rounded-xl transition-all border ${
-                isExpanded
-                  ? 'bg-blue-500/10 border-blue-500/30 shadow-md shadow-blue-900/30'
-                  : 'bg-black/30 border-white/5 hover:border-white/10'
+              className={`rounded-xl border cursor-pointer ${
+                isExpanded ? 'shadow-sm' : ''
               }`}
+              style={{
+                backgroundColor: isExpanded 
+                  ? (isDarkMode ? 'rgba(59, 130, 246, 0.05)' : 'rgba(239, 246, 255, 0.9)')
+                  : (isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.9)'),
+                borderColor: isExpanded
+                  ? (isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)')
+                  : containerBorder
+              }}
             >
               {/* Pattern Row Header */}
               <div
@@ -303,8 +353,8 @@ export default function CrossChannelFraudConsistencyWheel() {
                   <div className="flex items-center justify-between gap-2">
                     {/* Left: Pattern Title and Channel Count */}
                     <div className="flex items-center gap-1.5 flex-1 min-w-0">
-                      <h4 className="text-white text-sm font-semibold truncate">{pattern.title}</h4>
-                      <span className="text-gray-500 text-[10px] whitespace-nowrap">({channelCount} channels)</span>
+                      <h4 className="text-sm font-semibold truncate" style={{ color: textColor }}>{pattern.title}</h4>
+                      <span className="text-[10px] whitespace-nowrap" style={{ color: subtextColor }}>({channelCount} channels)</span>
                     </div>
                     
                     {/* Right: Channel Consistency Indicators */}
@@ -329,8 +379,11 @@ export default function CrossChannelFraudConsistencyWheel() {
 
                   {/* Row 2: Pattern Strength */}
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500 text-[9px] uppercase whitespace-nowrap">Pattern Strength:</span>
-                    <div className="flex-1 bg-white/5 rounded-full h-1.5 overflow-hidden">
+                    <span className="text-[9px] uppercase whitespace-nowrap" style={{ color: labelColor }}>Pattern Strength:</span>
+                    <div 
+                      className="flex-1 rounded-full h-1.5 overflow-hidden"
+                      style={{ backgroundColor: summaryBg }}
+                    >
                       <div
                         className="h-full rounded-full transition-all"
                         style={{
@@ -339,7 +392,7 @@ export default function CrossChannelFraudConsistencyWheel() {
                         }}
                       />
                     </div>
-                    <span className="text-white text-[10px] font-medium whitespace-nowrap flex-shrink-0">{pattern.consistency}%</span>
+                    <span className="text-[10px] font-medium whitespace-nowrap flex-shrink-0" style={{ color: textColor }}>{pattern.consistency}%</span>
                   </div>
 
                   {/* Row 3: Channel Indicators */}
@@ -350,11 +403,18 @@ export default function CrossChannelFraudConsistencyWheel() {
                       return (
                         <div
                           key={channel}
-                          className={`flex items-center gap-1 px-1.5 py-0.5 rounded ${
-                            isPresent
-                              ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
-                              : 'bg-white/5 text-gray-600 border border-white/5'
-                          }`}
+                          className="flex items-center gap-1 px-1.5 py-0.5 rounded border"
+                          style={{
+                            backgroundColor: isPresent
+                              ? (isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 246, 255, 0.9)')
+                              : summaryBg,
+                            borderColor: isPresent
+                              ? (isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)')
+                              : summaryBorder,
+                            color: isPresent
+                              ? (isDarkMode ? 'rgb(147, 197, 253)' : 'rgb(37, 99, 235)')
+                              : summaryTextColor
+                          }}
                         >
                           <Icon className="w-2.5 h-2.5" />
                           <span className="text-[9px]">{channelLabels[channel]}</span>
@@ -367,13 +427,19 @@ export default function CrossChannelFraudConsistencyWheel() {
 
               {/* Expanded Content */}
               {isExpanded && (
-                <div className="px-4 pb-4 pt-3.5 border-t border-white/5 space-y-3">
+                <div className="px-4 pb-4 pt-3.5 space-y-3" style={{ borderTop: `1px solid ${containerBorder}` }}>
                   {/* Pattern Signatures */}
-                  <div className="bg-blue-500/5 border border-blue-500/20 rounded-lg p-3">
-                    <div className="text-gray-500 text-[10px] uppercase tracking-wider mb-2">Pattern Signature</div>
+                  <div 
+                    className="rounded-lg p-3 border"
+                    style={{ 
+                      backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.05)' : 'rgba(239, 246, 255, 0.9)',
+                      borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)'
+                    }}
+                  >
+                    <div className="text-[10px] uppercase tracking-wider mb-2" style={{ color: labelColor }}>Pattern Signature</div>
                     <div className="space-y-1">
                       {pattern.signature.phrases.map((phrase, idx) => (
-                        <div key={idx} className="text-gray-300 text-[11px] leading-relaxed">
+                        <div key={idx} className="text-[11px] leading-relaxed" style={{ color: summaryTextColor }}>
                           • {phrase}
                         </div>
                       ))}
@@ -382,7 +448,7 @@ export default function CrossChannelFraudConsistencyWheel() {
 
                   {/* Pattern Snippet Triangulation */}
                   <div>
-                    <div className="text-gray-500 text-[10px] uppercase tracking-wider mb-2">Cross-Channel Evidence</div>
+                    <div className="text-[10px] uppercase tracking-wider mb-2" style={{ color: labelColor }}>Cross-Channel Evidence</div>
                     <div className="space-y-2">
                       {pattern.snippets.map((snippet, idx) => {
                         const channelKey = channelLabelToKey[snippet.channel];
@@ -390,16 +456,26 @@ export default function CrossChannelFraudConsistencyWheel() {
                         return (
                           <div
                             key={idx}
-                            className="bg-white/5 border border-white/10 rounded-lg p-2.5 flex items-start gap-2"
+                            className="rounded-lg p-2.5 flex items-start gap-2 border"
+                            style={{ 
+                              backgroundColor: summaryBg,
+                              borderColor: summaryBorder
+                            }}
                           >
                             <div className="flex-shrink-0 mt-0.5">
-                              <div className="p-1 bg-blue-500/20 rounded">
-                                <Icon className="w-3 h-3 text-blue-400" />
+                              <div 
+                                className="p-1 rounded border"
+                                style={{ 
+                                  backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(239, 246, 255, 0.9)',
+                                  borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)'
+                                }}
+                              >
+                                <Icon className="w-3 h-3" style={{ color: 'rgb(59, 130, 246)' }} />
                               </div>
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="text-gray-400 text-[9px] uppercase mb-0.5">{snippet.channel}</div>
-                              <div className="text-gray-300 text-[11px] leading-relaxed italic">"{snippet.text}"</div>
+                              <div className="text-[9px] uppercase mb-0.5" style={{ color: labelColor }}>{snippet.channel}</div>
+                              <div className="text-[11px] leading-relaxed italic" style={{ color: summaryTextColor }}>"{snippet.text}"</div>
                             </div>
                           </div>
                         );
@@ -408,9 +484,15 @@ export default function CrossChannelFraudConsistencyWheel() {
                   </div>
 
                   {/* Interpretation */}
-                  <div className="bg-white/5 border border-white/10 rounded-lg p-2.5">
-                    <div className="text-gray-500 text-[10px] uppercase tracking-wider mb-1">Operational Insight</div>
-                    <div className="text-gray-300 text-[11px] leading-relaxed">
+                  <div 
+                    className="rounded-lg p-2.5 border"
+                    style={{ 
+                      backgroundColor: summaryBg,
+                      borderColor: summaryBorder
+                    }}
+                  >
+                    <div className="text-[10px] uppercase tracking-wider mb-1" style={{ color: labelColor }}>Operational Insight</div>
+                    <div className="text-[11px] leading-relaxed" style={{ color: summaryTextColor }}>
                       {pattern.consistency >= 80
                         ? `High pattern consistency (${pattern.consistency}%) indicates coordinated or syndicated fraud across ${channelCount} channels.`
                         : pattern.consistency >= 60
@@ -425,21 +507,25 @@ export default function CrossChannelFraudConsistencyWheel() {
         })}
       </div>
 
-      {/* Scrollbar styling */}
+      {/* Scrollbar styles */}
       <style jsx>{`
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 4px;
+        .scrollbar-visible::-webkit-scrollbar {
+          width: 8px;
         }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: rgba(255,255,255,0.02);
-          border-radius: 2px;
+        .scrollbar-visible::-webkit-scrollbar-track {
+          background: ${isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(243, 244, 246)'};
+          border-radius: 4px;
         }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.1);
-          border-radius: 2px;
+        .scrollbar-visible::-webkit-scrollbar-thumb {
+          background: ${isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(156, 163, 175)'};
+          border-radius: 4px;
         }
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-          background: rgba(255,255,255,0.2);
+        .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+          background: ${isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)'};
+        }
+        .scrollbar-visible {
+          scrollbar-width: thin; /* Firefox */
+          scrollbar-color: ${isDarkMode ? 'rgb(107, 114, 128) rgb(39, 39, 42)' : 'rgb(156, 163, 175) rgb(243, 244, 246)'}; /* Firefox */
         }
       `}</style>
     </div>

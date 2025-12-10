@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   AlertTriangle,
   ChevronDown,
@@ -37,11 +37,11 @@ interface AIPatternBrainProps {
 
 const getSeverityColor = (severity: string) => {
   switch (severity) {
-    case 'CRITICAL': return 'bg-red-500 text-white'; // 76-100
-    case 'HIGH': return 'bg-orange-500 text-white'; // 65-75
-    case 'MEDIUM': return 'bg-amber-500 text-black'; // 50-64 (Yellow/Amber)
-    case 'LOW': return 'bg-green-500 text-white'; // 40-49 (Light Green/Teal)
-    default: return 'bg-gray-500 text-white';
+    case 'CRITICAL': return 'bg-red-50 text-red-600 border-red-200 dark:bg-red-500 dark:text-white dark:border-red-500/30'; // 76-100
+    case 'HIGH': return 'bg-orange-50 text-orange-600 border-orange-200 dark:bg-orange-500 dark:text-white dark:border-orange-500/30'; // 65-75
+    case 'MEDIUM': return 'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-500 dark:text-black dark:border-amber-500/30'; // 50-64 (Yellow/Amber)
+    case 'LOW': return 'bg-green-50 text-green-600 border-green-200 dark:bg-green-500 dark:text-white dark:border-green-500/30'; // 40-49 (Light Green/Teal)
+    default: return 'bg-muted text-muted-foreground border-border';
   }
 };
 
@@ -73,6 +73,27 @@ export default function AIPatternBrain({
 }: AIPatternBrainProps) {
   const [expandedPatternId, setExpandedPatternId] = useState<string | null>(null);
   const [severityFilter, setSeverityFilter] = useState<'all' | 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW'>('all');
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === 'dark');
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      observer.disconnect();
+    };
+  }, []);
   
   // Apply filters
   const filteredPatterns = patterns.filter(p => {
@@ -89,42 +110,99 @@ export default function AIPatternBrain({
     setSeverityFilter('all');
   };
 
+  const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
+  const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
+  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
+  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
+  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(55, 65, 81)';
+  const actionTextColor = isDarkMode ? 'rgb(229, 231, 235)' : 'rgb(31, 41, 55)';
+
   return (
-    <div className="bg-[#0d0d0d] border border-white/10 rounded-2xl p-4  h-full flex flex-col shadow-lg shadow-black/30 overflow-hidden w-full">
+    <div 
+      className="rounded-xl p-5 md:p-6 h-full flex flex-col shadow-sm overflow-hidden w-full"
+      style={{ backgroundColor: containerBg, border: `1px solid ${containerBorder}` }}
+    >
       {/* Header */}
       <div className="flex flex-col gap-2 mb-2">
         <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div>
-            <h3 className="text-white font-semibold text-sm">✨ Predictive Threat Intelligence</h3>
-            <p className="text-gray-500 text-[10px]">{filteredPatterns.length} of {patterns.length} patterns</p>
+            <h3 className="font-semibold text-sm" style={{ color: textColor }}>✨ Predictive Threat Intelligence</h3>
+            <p className="text-[10px]" style={{ color: subtextColor }}>{filteredPatterns.length} of {patterns.length} patterns</p>
           </div>
         </div>
           <div className="flex items-center gap-2 flex-wrap justify-end">
-            <div className="flex items-center gap-1 p-0.5 bg-white/5 rounded-lg">
-              {(['all', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const).map((sev) => (
-                <button
-                  key={sev}
-                  onClick={() => setSeverityFilter(sev)}
-                  className={`px-2 py-1 text-[10px] font-medium rounded transition-all ${
-                    severityFilter === sev
-                      ? sev === 'CRITICAL' ? 'bg-red-500/30 text-red-400'
-                        : sev === 'HIGH' ? 'bg-orange-500/30 text-orange-400'
-                        : sev === 'MEDIUM' ? 'bg-amber-500/30 text-amber-400'
-                        : sev === 'LOW' ? 'bg-green-500/30 text-green-400'
-                        : 'bg-purple-500/30 text-purple-400'
-                      : 'text-gray-500 hover:text-gray-300'
-                  }`}
-                >
-                  {sev === 'all' ? 'All' : sev.charAt(0) + sev.slice(1).toLowerCase()}
-                </button>
-              ))}
+            <div 
+              className="flex items-center gap-1 p-0.5 rounded-lg border"
+              style={{ 
+                backgroundColor: isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(244, 244, 245)',
+                borderColor: containerBorder
+              }}
+            >
+              {(['all', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW'] as const).map((sev) => {
+                const getSeverityStyle = (severity: string) => {
+                  if (severityFilter !== sev) {
+                    return {
+                      backgroundColor: 'transparent',
+                      color: subtextColor,
+                      borderColor: 'transparent'
+                    };
+                  }
+                  switch (severity) {
+                    case 'CRITICAL':
+                      return {
+                        backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.12)',
+                        color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)',
+                        borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+                      };
+                    case 'HIGH':
+                      return {
+                        backgroundColor: isDarkMode ? 'rgba(251, 146, 60, 0.2)' : 'rgba(249, 115, 22, 0.12)',
+                        color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)',
+                        borderColor: isDarkMode ? 'rgba(249, 115, 22, 0.3)' : 'rgba(249, 115, 22, 0.25)'
+                      };
+                    case 'MEDIUM':
+                      return {
+                        backgroundColor: isDarkMode ? 'rgba(250, 204, 21, 0.2)' : 'rgba(234, 179, 8, 0.15)',
+                        color: isDarkMode ? 'rgb(253, 224, 71)' : 'rgb(161, 98, 7)',
+                        borderColor: isDarkMode ? 'rgba(234, 179, 8, 0.3)' : 'rgba(234, 179, 8, 0.25)'
+                      };
+                    case 'LOW':
+                      return {
+                        backgroundColor: isDarkMode ? 'rgba(147, 197, 253, 0.2)' : 'rgba(59, 130, 246, 0.15)',
+                        color: isDarkMode ? 'rgb(147, 197, 253)' : 'rgb(29, 78, 216)',
+                        borderColor: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)'
+                      };
+                    default:
+                      return {
+                        backgroundColor: isDarkMode ? 'rgba(168, 85, 247, 0.2)' : 'rgba(168, 85, 247, 0.12)',
+                        color: isDarkMode ? 'rgb(196, 181, 253)' : 'rgb(126, 34, 206)',
+                        borderColor: isDarkMode ? 'rgba(168, 85, 247, 0.3)' : 'rgba(168, 85, 247, 0.25)'
+                      };
+                  }
+                };
+                const sevStyle = getSeverityStyle(sev);
+                return (
+                  <button
+                    key={sev}
+                    onClick={() => setSeverityFilter(sev)}
+                    className="px-2 py-1 text-[10px] font-medium rounded transition-all border"
+                    style={sevStyle}
+                  >
+                    {sev === 'all' ? 'All' : sev.charAt(0) + sev.slice(1).toLowerCase()}
+                  </button>
+                );
+              })}
             </div>
             {hasActiveFilters && (
-              <button
-                onClick={clearFilters}
-                className="flex items-center gap-1 px-2 py-1 text-[10px] text-gray-400 hover:text-white transition-all"
-              >
+              <button 
+              onClick={clearFilters}
+              className="flex items-center gap-1 px-2 py-1 text-[10px]"
+              style={{ color: subtextColor }}
+            >
                 <X className="w-3 h-3" />
                 Clear
               </button>
@@ -134,29 +212,58 @@ export default function AIPatternBrain({
       </div>
 
       {/* Expandable Pattern List */}
-      <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin max-h-[600px]">
+      <div className="flex-1 overflow-y-auto space-y-3 max-h-[600px] pr-2 scrollbar-visible">
         {filteredPatterns.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Filter className="w-8 h-8 text-gray-600 mb-2" />
-            <p className="text-gray-500 text-sm">No patterns match filters</p>
+            <Filter className="w-8 h-8 mb-2" style={{ color: subtextColor }} />
+            <p className="text-sm" style={{ color: subtextColor }}>No patterns match filters</p>
             <button 
               onClick={clearFilters}
-              className="mt-2 text-purple-400 text-xs hover:underline"
+              className="mt-2 text-xs"
+              style={{ color: 'rgb(168, 85, 247)' }}
             >
               Clear filters
             </button>
           </div>
         ) : filteredPatterns.map((pattern) => {
           const isExpanded = expandedPatternId === pattern.id;
+          const getSeverityColors = (severity: string) => {
+            switch (severity) {
+              case 'CRITICAL':
+                return {
+                  bgColor: isDarkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(254, 242, 242, 0.9)',
+                  borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.6)' : 'rgba(239, 68, 68, 0.4)',
+                };
+              case 'HIGH':
+                return {
+                  bgColor: isDarkMode ? 'rgba(251, 146, 60, 0.05)' : 'rgba(255, 247, 237, 0.9)',
+                  borderColor: isDarkMode ? 'rgba(251, 146, 60, 0.6)' : 'rgba(249, 115, 22, 0.4)',
+                };
+              case 'MEDIUM':
+                return {
+                  bgColor: isDarkMode ? 'rgba(250, 204, 21, 0.05)' : 'rgba(254, 252, 232, 0.9)',
+                  borderColor: isDarkMode ? 'rgba(250, 204, 21, 0.4)' : 'rgba(234, 179, 8, 0.4)',
+                };
+              case 'LOW':
+              default:
+                return {
+                  bgColor: isDarkMode ? 'rgba(147, 197, 253, 0.05)' : 'rgba(239, 246, 255, 0.9)',
+                  borderColor: isDarkMode ? 'rgba(147, 197, 253, 0.4)' : 'rgba(59, 130, 246, 0.4)',
+                };
+            }
+          };
+          const patternColors = getSeverityColors(pattern.severity);
               
               return (
                 <div 
                   key={pattern.id}
-              className={`rounded-xl transition-all ${
-                isExpanded 
-                  ? 'bg-purple-500/10 border border-purple-500/30 shadow-md shadow-purple-900/30' 
-                      : 'bg-black/30 border border-white/5 hover:border-white/10'
+              className={`rounded-xl border cursor-pointer ${
+                isExpanded ? 'shadow-sm' : ''
                   }`}
+              style={{
+                backgroundColor: isExpanded ? patternColors.bgColor : (isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.9)'),
+                borderColor: isExpanded ? patternColors.borderColor : containerBorder
+              }}
             >
               {/* Collapsed Header - Always Visible */}
               <div 
@@ -166,62 +273,112 @@ export default function AIPatternBrain({
                   <div className="flex items-start gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${getSeverityColor(pattern.severity)}`}>
+                        <span 
+                          className="text-[9px] px-1.5 py-0.5 rounded font-semibold"
+                          style={{
+                            backgroundColor: pattern.severity === 'CRITICAL' 
+                              ? (isDarkMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.12)')
+                              : pattern.severity === 'HIGH'
+                              ? (isDarkMode ? 'rgba(251, 146, 60, 0.2)' : 'rgba(249, 115, 22, 0.12)')
+                              : pattern.severity === 'MEDIUM'
+                              ? (isDarkMode ? 'rgba(250, 204, 21, 0.2)' : 'rgba(234, 179, 8, 0.15)')
+                              : (isDarkMode ? 'rgba(147, 197, 253, 0.2)' : 'rgba(59, 130, 246, 0.15)'),
+                            color: pattern.severity === 'CRITICAL'
+                              ? (isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)')
+                              : pattern.severity === 'HIGH'
+                              ? (isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)')
+                              : pattern.severity === 'MEDIUM'
+                              ? (isDarkMode ? 'rgb(253, 224, 71)' : 'rgb(161, 98, 7)')
+                              : (isDarkMode ? 'rgb(147, 197, 253)' : 'rgb(29, 78, 216)')
+                          }}
+                        >
                           {pattern.severity}
                         </span>
                       </div>
-                    <h4 className="text-white text-sm font-semibold truncate">{pattern.title}</h4>
-                    <div className="flex items-center gap-2 mt-1 text-[11px] text-gray-500">
+                    <h4 className="text-sm font-semibold truncate" style={{ color: textColor }}>{pattern.title}</h4>
+                    <div className="flex items-center gap-2 mt-1 text-[11px]" style={{ color: subtextColor }}>
                         <span>{pattern.affected.toLocaleString()} cases</span>
                         <span>•</span>
                         <span>{pattern.detected}</span>
                     </div>
                   </div>
-                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                  <ChevronDown 
+                    className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    style={{ color: subtextColor }}
+                  />
                 </div>
               </div>
 
               {/* Expanded Content */}
               {isExpanded && (
-                <div className="px-4 pb-4 pt-3.5 border-t border-white/5">
+                <div className="px-4 pb-4 pt-3.5" style={{ borderTop: `1px solid ${containerBorder}` }}>
               {/* AI Summary */}
-                  <div className="bg-purple-500/5 border border-purple-500/20 rounded-lg p-3 mb-3">
-                    <p className="text-gray-300 text-[12px] leading-relaxed">{pattern.aiSummary}</p>
+                  <div 
+                    className="rounded-lg p-3 mb-3 border"
+                    style={{ 
+                      backgroundColor: isDarkMode ? 'rgba(168, 85, 247, 0.05)' : 'rgba(245, 243, 255, 0.9)',
+                      borderColor: isDarkMode ? 'rgba(168, 85, 247, 0.3)' : 'rgba(168, 85, 247, 0.25)'
+                    }}
+                  >
+                    <p className="text-[12px] leading-relaxed" style={{ color: isDarkMode ? 'rgb(196, 181, 253)' : 'rgb(126, 34, 206)' }}>{pattern.aiSummary}</p>
               </div>
 
               {/* Metric Chips */}
                   <div className="grid grid-cols-3 gap-3 mb-3">
-                <div className="bg-white/5 rounded-lg p-2 text-center">
-                      <div className="text-white text-base font-bold">{pattern.affected.toLocaleString()}</div>
-                      <div className="text-gray-500 text-[10px]">Volume</div>
+                <div 
+                  className="rounded-lg p-2 text-center border"
+                  style={{ 
+                    backgroundColor: summaryBg,
+                    borderColor: summaryBorder
+                  }}
+                >
+                      <div className="text-base font-bold" style={{ color: textColor }}>{pattern.affected.toLocaleString()}</div>
+                      <div className="text-[10px]" style={{ color: labelColor }}>Volume</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-2 text-center">
-                      <div className="text-yellow-400 text-base font-bold">{pattern.riskScore}</div>
-                      <div className="text-gray-500 text-[10px]">Risk Score</div>
+                <div 
+                  className="rounded-lg p-2 text-center border"
+                  style={{ 
+                    backgroundColor: isDarkMode ? 'rgba(250, 204, 21, 0.05)' : 'rgba(254, 252, 232, 0.9)',
+                    borderColor: isDarkMode ? 'rgba(250, 204, 21, 0.3)' : 'rgba(234, 179, 8, 0.25)'
+                  }}
+                >
+                      <div className="text-base font-bold" style={{ color: isDarkMode ? 'rgb(234, 179, 8)' : 'rgb(161, 98, 7)' }}>{pattern.riskScore}</div>
+                      <div className="text-[10px]" style={{ color: labelColor }}>Risk Score</div>
                 </div>
-                <div className="bg-white/5 rounded-lg p-2 text-center">
-                      <div className="text-red-400 text-base font-bold">{formatCurrency(pattern.exposure)}</div>
-                      <div className="text-gray-500 text-[10px]">Exposure</div>
+                <div 
+                  className="rounded-lg p-2 text-center border"
+                  style={{ 
+                    backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(254, 242, 242, 0.9)',
+                    borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+                  }}
+                >
+                      <div className="text-base font-bold" style={{ color: 'rgb(239, 68, 68)' }}>{formatCurrency(pattern.exposure)}</div>
+                      <div className="text-[10px]" style={{ color: labelColor }}>Exposure</div>
                 </div>
               </div>
 
               {/* Root Cause & Action */}
                   <div className="space-y-3 mb-3">
                 <div>
-                      <span className="text-gray-500 text-[10px] uppercase tracking-wider">Root Cause</span>
-                      <p className="text-gray-300 text-[12px] leading-relaxed mt-1 whitespace-pre-line">{pattern.rootCause}</p>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: labelColor }}>Root Cause</span>
+                      <p className="text-[12px] leading-relaxed mt-1 whitespace-pre-line" style={{ color: summaryTextColor }}>{pattern.rootCause}</p>
                 </div>
                 <div>
-                      <span className="text-orange-400 text-[10px] uppercase tracking-wider">Recommended Action</span>
-                      <p className="text-gray-300 text-[12px] leading-relaxed mt-1 whitespace-pre-line">{pattern.correctiveAction}</p>
+                      <span className="text-[10px] uppercase tracking-wider" style={{ color: 'rgb(249, 115, 22)' }}>Recommended Action</span>
+                      <p className="text-[12px] leading-relaxed mt-1 whitespace-pre-line" style={{ color: summaryTextColor }}>{pattern.correctiveAction}</p>
                 </div>
               </div>
 
               {/* CTA Buttons */}
-                  <div className="flex justify-end pt-3 border-t border-white/5">
+                  <div className="flex justify-end pt-3" style={{ borderTop: `1px solid ${containerBorder}` }}>
                 <button 
                       onClick={(e) => { e.stopPropagation(); onViewCases?.(pattern.id); }}
-                      className="flex items-center justify-center gap-1 px-3.5 py-1.75 bg-red-500/10 text-red-300 rounded-lg text-[11px] font-semibold hover:bg-red-500/20 transition-all"
+                      className="flex items-center justify-center gap-1 px-3.5 py-1.75 rounded-lg text-[11px] font-semibold transition-all border"
+                      style={{
+                        backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.063)' : 'rgba(254, 226, 226, 0.8)',
+                        borderColor: 'rgba(239, 68, 68, 0.25)',
+                        color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)'
+                      }}
                 >
                   <AlertTriangle className="w-3 h-3" />
                   View Cases
@@ -234,21 +391,25 @@ export default function AIPatternBrain({
         })}
       </div>
 
-      {/* Scrollbar styling */}
+      {/* Scrollbar styles */}
       <style jsx>{`
-        .scrollbar-thin::-webkit-scrollbar {
-          width: 4px;
+        .scrollbar-visible::-webkit-scrollbar {
+          width: 6px;
         }
-        .scrollbar-thin::-webkit-scrollbar-track {
-          background: rgba(255,255,255,0.02);
-          border-radius: 2px;
+        .scrollbar-visible::-webkit-scrollbar-track {
+          background: ${isDarkMode ? 'rgb(39, 39, 42)' : 'rgb(243, 244, 246)'};
+          border-radius: 3px;
         }
-        .scrollbar-thin::-webkit-scrollbar-thumb {
-          background: rgba(255,255,255,0.1);
-          border-radius: 2px;
+        .scrollbar-visible::-webkit-scrollbar-thumb {
+          background: ${isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(156, 163, 175)'};
+          border-radius: 3px;
         }
-        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-          background: rgba(255,255,255,0.2);
+        .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+          background: ${isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(107, 114, 128)'};
+        }
+        .scrollbar-visible {
+          scrollbar-width: thin; /* Firefox */
+          scrollbar-color: ${isDarkMode ? 'rgb(107, 114, 128) rgb(39, 39, 42)' : 'rgb(156, 163, 175) rgb(243, 244, 246)'}; /* Firefox */
         }
       `}</style>
     </div>

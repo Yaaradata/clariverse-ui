@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   X, 
   MapPin, 
@@ -427,32 +427,52 @@ const formatCurrency = (value: number) => {
   return `₹${value.toLocaleString()}`;
 };
 
-const getRiskScoreColor = (score: number) => {
-  if (score >= 90) return 'bg-red-500 text-white';
-  if (score >= 80) return 'bg-orange-500 text-white';
-  if (score >= 70) return 'bg-yellow-500 text-black';
-  return 'bg-green-500 text-white';
+const getRiskScoreColor = (score: number, isDarkMode: boolean) => {
+  if (score >= 90) return { bg: isDarkMode ? 'rgb(239, 68, 68)' : 'rgb(185, 28, 28)', text: 'rgb(255, 255, 255)' };
+  if (score >= 80) return { bg: isDarkMode ? 'rgb(249, 115, 22)' : 'rgb(194, 65, 12)', text: 'rgb(255, 255, 255)' };
+  if (score >= 70) return { bg: isDarkMode ? 'rgb(234, 179, 8)' : 'rgb(161, 98, 7)', text: isDarkMode ? 'rgb(0, 0, 0)' : 'rgb(0, 0, 0)' };
+  return { bg: isDarkMode ? 'rgb(34, 197, 94)' : 'rgb(22, 101, 52)', text: 'rgb(255, 255, 255)' };
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: string, isDarkMode: boolean) => {
   switch (status) {
     case 'Escalated': 
     case 'Suspended':
     case 'Critical':
-      return 'bg-red-500/20 text-red-400 border-red-500/30';
+      return {
+        bg: isDarkMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(239, 68, 68, 0.12)',
+        text: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)',
+        border: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+      };
     case 'Open': 
     case 'Under Investigation':
     case 'High':
-      return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
+      return {
+        bg: isDarkMode ? 'rgba(249, 115, 22, 0.2)' : 'rgba(249, 115, 22, 0.12)',
+        text: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)',
+        border: isDarkMode ? 'rgba(249, 115, 22, 0.3)' : 'rgba(249, 115, 22, 0.25)'
+      };
     case 'Under Review':
     case 'Medium':
-      return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30';
+      return {
+        bg: isDarkMode ? 'rgba(234, 179, 8, 0.2)' : 'rgba(234, 179, 8, 0.15)',
+        text: isDarkMode ? 'rgb(253, 224, 71)' : 'rgb(161, 98, 7)',
+        border: isDarkMode ? 'rgba(234, 179, 8, 0.3)' : 'rgba(234, 179, 8, 0.25)'
+      };
     case 'Resolved':
     case 'Active':
     case 'Low':
-      return 'bg-green-500/20 text-green-400 border-green-500/30';
+      return {
+        bg: isDarkMode ? 'rgba(34, 197, 94, 0.2)' : 'rgba(34, 197, 94, 0.12)',
+        text: isDarkMode ? 'rgb(134, 239, 172)' : 'rgb(22, 101, 52)',
+        border: isDarkMode ? 'rgba(34, 197, 94, 0.3)' : 'rgba(34, 197, 94, 0.25)'
+      };
     default: 
-      return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
+      return {
+        bg: isDarkMode ? 'rgba(107, 114, 128, 0.2)' : 'rgba(107, 114, 128, 0.12)',
+        text: isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(75, 85, 99)',
+        border: isDarkMode ? 'rgba(107, 114, 128, 0.3)' : 'rgba(107, 114, 128, 0.25)'
+      };
   }
 };
 
@@ -471,19 +491,24 @@ const getChannelIcon = (channel: string) => {
   }
 };
 
-const getChannelColor = (channel: string) => {
-  switch (channel) {
-    case 'Chat': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-    case 'Email': return 'bg-indigo-500/20 text-indigo-400 border-indigo-500/30';
-    case 'Voice Transcript': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-    case 'Ticket': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
-    case 'Trustpilot': return 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30';
-    case 'X (Twitter)': return 'bg-sky-500/20 text-sky-400 border-sky-500/30';
-    case 'Reddit': return 'bg-red-500/20 text-red-400 border-red-500/30';
-    case 'App Store': return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
-    case 'Play Store': return 'bg-green-500/20 text-green-400 border-green-500/30';
-    default: return 'bg-gray-500/20 text-gray-400 border-gray-500/30';
-  }
+const getChannelColor = (channel: string, isDarkMode: boolean) => {
+  const baseColors: Record<string, { bg: string; text: string; border: string }> = {
+    'Chat': { bg: 'rgb(59, 130, 246)', text: 'rgb(255, 255, 255)', border: 'rgb(59, 130, 246)' },
+    'Email': { bg: 'rgb(99, 102, 241)', text: 'rgb(255, 255, 255)', border: 'rgb(99, 102, 241)' },
+    'Voice Transcript': { bg: 'rgb(168, 85, 247)', text: 'rgb(255, 255, 255)', border: 'rgb(168, 85, 247)' },
+    'Ticket': { bg: 'rgb(249, 115, 22)', text: 'rgb(255, 255, 255)', border: 'rgb(249, 115, 22)' },
+    'Trustpilot': { bg: 'rgb(6, 182, 212)', text: 'rgb(255, 255, 255)', border: 'rgb(6, 182, 212)' },
+    'X (Twitter)': { bg: 'rgb(14, 165, 233)', text: 'rgb(255, 255, 255)', border: 'rgb(14, 165, 233)' },
+    'Reddit': { bg: 'rgb(239, 68, 68)', text: 'rgb(255, 255, 255)', border: 'rgb(239, 68, 68)' },
+    'App Store': { bg: 'rgb(107, 114, 128)', text: 'rgb(255, 255, 255)', border: 'rgb(107, 114, 128)' },
+    'Play Store': { bg: 'rgb(34, 197, 94)', text: 'rgb(255, 255, 255)', border: 'rgb(34, 197, 94)' },
+  };
+  const color = baseColors[channel] || baseColors['App Store'];
+  return {
+    backgroundColor: isDarkMode ? `${color.bg}33` : `${color.bg}1F`,
+    color: isDarkMode ? color.text : color.bg,
+    borderColor: isDarkMode ? `${color.border}4D` : `${color.border}40`
+  };
 };
 
 // ============ MAIN COMPONENT ============
@@ -497,6 +522,36 @@ export default function ForensicEvidenceModal({
   viewType,
 }: ForensicEvidenceModalProps) {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === 'dark');
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      observer.disconnect();
+    };
+  }, []);
+
+  const containerBg = isDarkMode ? 'rgb(13, 13, 13)' : 'rgb(255, 255, 255)';
+  const containerBorder = isDarkMode ? 'rgb(31, 31, 31)' : 'rgb(229, 231, 235)';
+  const textColor = isDarkMode ? 'rgb(243, 244, 246)' : 'rgb(17, 24, 39)';
+  const subtextColor = isDarkMode ? 'rgb(156, 163, 175)' : 'rgb(75, 85, 99)';
+  const labelColor = isDarkMode ? 'rgb(107, 114, 128)' : 'rgb(75, 85, 99)';
+  const summaryBg = isDarkMode ? 'rgba(0, 0, 0, 0.3)' : 'rgb(243, 244, 246)';
+  const summaryBorder = isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgb(209, 213, 219)';
+  const summaryTextColor = isDarkMode ? 'rgb(209, 213, 219)' : 'rgb(55, 65, 81)';
 
   if (!isOpen) return null;
 
@@ -514,60 +569,70 @@ export default function ForensicEvidenceModal({
 
   const getIcon = () => {
     switch (viewType) {
-      case 'cases': return <AlertTriangle className="w-5 h-5 text-red-400" />;
-      case 'agents': return <Users className="w-5 h-5 text-purple-400" />;
-      case 'pincodes': return <MapPin className="w-5 h-5 text-blue-400" />;
-      default: return <Shield className="w-5 h-5 text-red-400" />;
+      case 'cases': return <AlertTriangle className="w-5 h-5" style={{ color: 'rgb(239, 68, 68)' }} />;
+      case 'agents': return <Users className="w-5 h-5" style={{ color: 'rgb(168, 85, 247)' }} />;
+      case 'pincodes': return <MapPin className="w-5 h-5" style={{ color: 'rgb(59, 130, 246)' }} />;
+      default: return <Shield className="w-5 h-5" style={{ color: 'rgb(239, 68, 68)' }} />;
     }
   };
 
   const getIconBg = () => {
     switch (viewType) {
-      case 'cases': return 'bg-red-500/10';
-      case 'agents': return 'bg-purple-500/10';
-      case 'pincodes': return 'bg-blue-500/10';
-      default: return 'bg-red-500/10';
+      case 'cases': return { bg: isDarkMode ? 'rgba(239, 68, 68, 0.125)' : 'rgba(239, 68, 68, 0.12)', border: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)' };
+      case 'agents': return { bg: isDarkMode ? 'rgba(168, 85, 247, 0.125)' : 'rgba(168, 85, 247, 0.12)', border: isDarkMode ? 'rgba(168, 85, 247, 0.3)' : 'rgba(168, 85, 247, 0.25)' };
+      case 'pincodes': return { bg: isDarkMode ? 'rgba(59, 130, 246, 0.125)' : 'rgba(59, 130, 246, 0.12)', border: isDarkMode ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.25)' };
+      default: return { bg: isDarkMode ? 'rgba(239, 68, 68, 0.125)' : 'rgba(239, 68, 68, 0.12)', border: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)' };
     }
   };
+
+  const iconBgStyle = getIconBg();
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm" 
+        className="absolute inset-0" 
+        style={{ backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)' }}
         onClick={onClose} 
       />
       
       {/* Modal Panel */}
-      <div className="relative w-[85%] max-w-[1400px] bg-slate-900 border-l border-white/10 flex flex-col overflow-hidden animate-slide-in">
+      <div 
+        className="relative w-[85%] max-w-[1400px] flex flex-col overflow-hidden animate-slide-in shadow-xl border-l"
+        style={{ 
+          backgroundColor: containerBg,
+          borderColor: containerBorder
+        }}
+      >
         {/* Header */}
-        <div className="flex-shrink-0 border-b border-white/10 p-5">
+        <div className="flex-shrink-0 p-5 md:p-6" style={{ borderBottom: `1px solid ${containerBorder}` }}>
           <div className="flex items-start justify-between">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <div className={`p-2 rounded-lg ${getIconBg()}`}>
+                <div className="p-2 rounded-lg border" style={{ backgroundColor: iconBgStyle.bg, borderColor: iconBgStyle.border }}>
                   {getIcon()}
                 </div>
                 <div>
-                  <h2 className="text-white text-xl font-semibold">{patternTitle}</h2>
-                  <p className="text-gray-500 text-sm">{getTitle()}</p>
+                  <h2 className="text-xl font-semibold" style={{ color: textColor }}>{patternTitle}</h2>
+                  <p className="text-sm" style={{ color: subtextColor }}>{getTitle()}</p>
                 </div>
               </div>
               <div className="flex items-center gap-6 mt-3">
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500 text-sm">Total Exposure:</span>
-                  <span className="text-red-400 text-lg font-bold">{formatCurrency(totalExposure)}</span>
+                  <span className="text-sm" style={{ color: subtextColor }}>Total Exposure:</span>
+                  <span className="text-lg font-bold" style={{ color: 'rgb(239, 68, 68)' }}>{formatCurrency(totalExposure)}</span>
                 </div>
-                <div className="w-px h-5 bg-white/10" />
+                <div className="w-px h-5" style={{ backgroundColor: containerBorder }} />
                 <div className="flex items-center gap-2">
-                  <span className="text-gray-500 text-sm">Volume:</span>
-                  <span className="text-white text-lg font-bold">{totalVolume.toLocaleString()} cases</span>
+                  <span className="text-sm" style={{ color: subtextColor }}>Volume:</span>
+                  <span className="text-lg font-bold" style={{ color: textColor }}>{totalVolume.toLocaleString()} cases</span>
                 </div>
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-all"
+              className="p-2 rounded-lg"
+              style={{ color: subtextColor }}
             >
               <X className="w-5 h-5" />
             </button>
@@ -578,55 +643,72 @@ export default function ForensicEvidenceModal({
         <div className="flex-1 overflow-y-auto p-5">
           {/* Cases View */}
           {viewType === 'cases' && (
-            <div className="bg-slate-800/50 border border-white/5 rounded-xl overflow-hidden">
-              <div className="px-4 py-3 border-b border-white/5">
-                <h3 className="text-white text-sm font-semibold">Fraud Cases</h3>
+            <div className="rounded-xl overflow-hidden shadow-sm border" style={{ backgroundColor: containerBg, borderColor: containerBorder }}>
+              <div className="px-4 py-3" style={{ borderBottom: `1px solid ${containerBorder}` }}>
+                <h3 className="text-sm font-semibold" style={{ color: textColor }}>Fraud Cases</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-white/5">
-                      <th className="text-left py-3 px-4 text-gray-500 text-xs font-medium uppercase tracking-wider">Case ID</th>
-                      <th className="text-left py-3 px-4 text-gray-500 text-xs font-medium uppercase tracking-wider">Risk</th>
-                      <th className="text-left py-3 px-4 text-gray-500 text-xs font-medium uppercase tracking-wider">Customer</th>
-                      <th className="text-left py-3 px-4 text-gray-500 text-xs font-medium uppercase tracking-wider">Channel</th>
-                      <th className="text-left py-3 px-4 text-gray-500 text-xs font-medium uppercase tracking-wider">Value</th>
-                      <th className="text-left py-3 px-4 text-gray-500 text-xs font-medium uppercase tracking-wider">Status</th>
+                    <tr style={{ borderBottom: `1px solid ${containerBorder}` }}>
+                      <th className="text-left py-3 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: labelColor }}>Case ID</th>
+                      <th className="text-left py-3 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: labelColor }}>Risk</th>
+                      <th className="text-left py-3 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: labelColor }}>Customer</th>
+                      <th className="text-left py-3 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: labelColor }}>Channel</th>
+                      <th className="text-left py-3 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: labelColor }}>Value</th>
+                      <th className="text-left py-3 px-4 text-xs font-medium uppercase tracking-wider" style={{ color: labelColor }}>Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
-                    {mockCases.map((caseItem) => (
-                      <tr key={caseItem.id} className="hover:bg-white/[0.02] transition-colors">
+                  <tbody>
+                    {mockCases.map((caseItem, idx) => (
+                      <tr 
+                        key={caseItem.id} 
+                        className="transition-colors"
+                        style={{ 
+                          borderBottom: idx < mockCases.length - 1 ? `1px solid ${containerBorder}` : 'none',
+                          backgroundColor: 'transparent'
+                        }}
+                      >
                         <td className="py-3 px-4">
                           <div className="flex flex-col">
-                            <span className="text-white text-sm font-medium">{caseItem.caseId}</span>
-                            <span className="text-gray-500 text-xs">{caseItem.timestamp}</span>
+                            <span className="text-sm font-medium" style={{ color: textColor }}>{caseItem.caseId}</span>
+                            <span className="text-xs" style={{ color: subtextColor }}>{caseItem.timestamp}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <span className={`text-xs px-2 py-1 rounded font-bold ${getRiskScoreColor(caseItem.riskScore)}`}>
-                            {caseItem.riskScore}
-                          </span>
+                          {(() => {
+                            const riskColor = getRiskScoreColor(caseItem.riskScore, isDarkMode);
+                            return (
+                              <span className="text-xs px-2 py-1 rounded font-bold" style={{ backgroundColor: riskColor.bg, color: riskColor.text }}>
+                                {caseItem.riskScore}
+                              </span>
+                            );
+                          })()}
                         </td>
                         <td className="py-3 px-4">
                           <div className="flex flex-col">
-                            <span className="text-white text-sm">{caseItem.customerName}</span>
-                            <span className="text-gray-500 text-xs">{caseItem.customerPhone}</span>
+                            <span className="text-sm" style={{ color: textColor }}>{caseItem.customerName}</span>
+                            <span className="text-xs" style={{ color: subtextColor }}>{caseItem.customerPhone}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4">
-                          <span className={`text-[10px] px-2 py-1 rounded-full border flex items-center gap-1 ${getChannelColor(caseItem.channel)}`}>
+                          <span className="text-[10px] px-2 py-1 rounded-full border flex items-center gap-1" style={getChannelColor(caseItem.channel, isDarkMode)}>
                             {getChannelIcon(caseItem.channel)}
                             {caseItem.channel}
                           </span>
                         </td>
                         <td className="py-3 px-4">
-                          <span className="text-red-400 text-sm font-medium">{formatCurrency(caseItem.value)}</span>
+                          <span className="text-sm font-medium" style={{ color: 'rgb(239, 68, 68)' }}>{formatCurrency(caseItem.value)}</span>
                         </td>
                         <td className="py-3 px-4">
-                          <span className={`text-xs px-2 py-1 rounded border ${getStatusColor(caseItem.status)}`}>
-                            {caseItem.status}
-                          </span>
+                          {(() => {
+                            const statusColor = getStatusColor(caseItem.status, isDarkMode);
+                            return (
+                              <span className="text-xs px-2 py-1 rounded border" style={{ backgroundColor: statusColor.bg, color: statusColor.text, borderColor: statusColor.border }}>
+                                {caseItem.status}
+                              </span>
+                            );
+                          })()}
                         </td>
                       </tr>
                     ))}
@@ -638,49 +720,97 @@ export default function ForensicEvidenceModal({
 
           {/* Agents View */}
           {viewType === 'agents' && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {agentsForPattern.map((agent) => (
-                <div key={agent.id} className="bg-slate-800/50 border border-white/5 rounded-xl p-4 hover:border-white/10 transition-all">
+                <div 
+                  key={agent.id} 
+                  className="rounded-xl p-5 md:p-6 transition-all shadow-sm border"
+                  style={{ 
+                    backgroundColor: containerBg,
+                    borderColor: containerBorder
+                  }}
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center">
-                        <User className="w-6 h-6 text-purple-400" />
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center"
+                        style={{ 
+                          backgroundColor: isDarkMode ? 'rgba(168, 85, 247, 0.2)' : 'rgba(168, 85, 247, 0.12)'
+                        }}
+                      >
+                        <User className="w-6 h-6" style={{ color: 'rgb(168, 85, 247)' }} />
                       </div>
                       <div>
-                        <h4 className="text-white font-semibold">{agent.name}</h4>
-                        <p className="text-gray-500 text-sm">{agent.employeeId} • {agent.department}</p>
+                        <h4 className="font-semibold" style={{ color: textColor }}>{agent.name}</h4>
+                        <p className="text-sm" style={{ color: subtextColor }}>{agent.employeeId} • {agent.department}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-xs px-2 py-1 rounded border ${getStatusColor(agent.status)}`}>
-                        {agent.status}
-                      </span>
-                      <span className={`text-sm px-3 py-1 rounded font-bold ${getRiskScoreColor(agent.riskScore)}`}>
-                        Risk: {agent.riskScore}
-                      </span>
+                      {(() => {
+                        const statusColor = getStatusColor(agent.status, isDarkMode);
+                        return (
+                          <span className="text-xs px-2 py-1 rounded border" style={{ backgroundColor: statusColor.bg, color: statusColor.text, borderColor: statusColor.border }}>
+                            {agent.status}
+                          </span>
+                        );
+                      })()}
+                      {(() => {
+                        const riskColor = getRiskScoreColor(agent.riskScore, isDarkMode);
+                        return (
+                          <span className="text-sm px-3 py-1 rounded font-bold" style={{ backgroundColor: riskColor.bg, color: riskColor.text }}>
+                            Risk: {agent.riskScore}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
 
                   <div className="grid grid-cols-3 gap-4 mb-3">
-                    <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-                      <div className="text-red-400 text-xl font-bold">{agent.fraudCases}</div>
-                      <div className="text-gray-500 text-xs">Fraud Cases</div>
+                    <div 
+                      className="rounded-lg p-3 text-center border"
+                      style={{ 
+                        backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(254, 242, 242, 0.9)',
+                        borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+                      }}
+                    >
+                      <div className="text-xl font-bold" style={{ color: 'rgb(239, 68, 68)' }}>{agent.fraudCases}</div>
+                      <div className="text-xs" style={{ color: labelColor }}>Fraud Cases</div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-                      <div className="text-orange-400 text-xl font-bold">{agent.policyOverrides}</div>
-                      <div className="text-gray-500 text-xs">Policy Overrides</div>
+                    <div 
+                      className="rounded-lg p-3 text-center border"
+                      style={{ 
+                        backgroundColor: isDarkMode ? 'rgba(249, 115, 22, 0.05)' : 'rgba(255, 247, 237, 0.9)',
+                        borderColor: isDarkMode ? 'rgba(249, 115, 22, 0.3)' : 'rgba(249, 115, 22, 0.25)'
+                      }}
+                    >
+                      <div className="text-xl font-bold" style={{ color: 'rgb(249, 115, 22)' }}>{agent.policyOverrides}</div>
+                      <div className="text-xs" style={{ color: labelColor }}>Policy Overrides</div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-                      <div className="text-yellow-400 text-xl font-bold">{agent.goodwillAbuse}</div>
-                      <div className="text-gray-500 text-xs">Goodwill Abuse</div>
+                    <div 
+                      className="rounded-lg p-3 text-center border"
+                      style={{ 
+                        backgroundColor: isDarkMode ? 'rgba(234, 179, 8, 0.05)' : 'rgba(254, 252, 232, 0.9)',
+                        borderColor: isDarkMode ? 'rgba(234, 179, 8, 0.3)' : 'rgba(234, 179, 8, 0.25)'
+                      }}
+                    >
+                      <div className="text-xl font-bold" style={{ color: isDarkMode ? 'rgb(234, 179, 8)' : 'rgb(161, 98, 7)' }}>{agent.goodwillAbuse}</div>
+                      <div className="text-xs" style={{ color: labelColor }}>Goodwill Abuse</div>
                     </div>
                   </div>
 
-                  <div className="border-t border-white/5 pt-3">
-                    <span className="text-gray-500 text-xs uppercase tracking-wider">Flagged Phrases</span>
+                  <div className="pt-3" style={{ borderTop: `1px solid ${containerBorder}` }}>
+                    <span className="text-xs uppercase tracking-wider" style={{ color: labelColor }}>Flagged Phrases</span>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {agent.flaggedPhrases.map((phrase, idx) => (
-                        <span key={idx} className="text-xs px-2 py-1 bg-red-500/10 text-red-400 rounded border border-red-500/20">
+                        <span 
+                          key={idx} 
+                          className="text-xs px-2 py-1 rounded border"
+                          style={{ 
+                            backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.1)' : 'rgba(254, 226, 226, 0.8)',
+                            color: isDarkMode ? 'rgb(252, 165, 165)' : 'rgb(185, 28, 28)',
+                            borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+                          }}
+                        >
                           "{phrase}"
                         </span>
                       ))}
@@ -693,25 +823,42 @@ export default function ForensicEvidenceModal({
 
           {/* Pincodes View */}
           {viewType === 'pincodes' && (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {mockPincodes.map((pincode) => (
-                <div key={pincode.id} className="bg-slate-800/50 border border-white/5 rounded-xl p-4 hover:border-white/10 transition-all">
+                <div 
+                  key={pincode.id} 
+                  className="rounded-xl p-5 md:p-6 transition-all shadow-sm border"
+                  style={{ 
+                    backgroundColor: containerBg,
+                    borderColor: containerBorder
+                  }}
+                >
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                        <MapPin className="w-6 h-6 text-blue-400" />
+                      <div 
+                        className="w-12 h-12 rounded-full flex items-center justify-center"
+                        style={{ 
+                          backgroundColor: isDarkMode ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.12)'
+                        }}
+                      >
+                        <MapPin className="w-6 h-6" style={{ color: 'rgb(59, 130, 246)' }} />
                       </div>
                       <div>
-                        <h4 className="text-white font-semibold">{pincode.pincode}</h4>
-                        <p className="text-gray-500 text-sm">{pincode.area}, {pincode.city}</p>
-                        <p className="text-gray-600 text-xs">{pincode.state}</p>
+                        <h4 className="font-semibold" style={{ color: textColor }}>{pincode.pincode}</h4>
+                        <p className="text-sm" style={{ color: subtextColor }}>{pincode.area}, {pincode.city}</p>
+                        <p className="text-xs" style={{ color: subtextColor }}>{pincode.state}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-xs px-2 py-1 rounded border ${getStatusColor(pincode.riskLevel)}`}>
-                        {pincode.riskLevel}
-                      </span>
-                      <div className={`flex items-center gap-1 text-sm font-medium ${pincode.trend > 0 ? 'text-red-400' : 'text-green-400'}`}>
+                      {(() => {
+                        const statusColor = getStatusColor(pincode.riskLevel, isDarkMode);
+                        return (
+                          <span className="text-xs px-2 py-1 rounded border" style={{ backgroundColor: statusColor.bg, color: statusColor.text, borderColor: statusColor.border }}>
+                            {pincode.riskLevel}
+                          </span>
+                        );
+                      })()}
+                      <div className="flex items-center gap-1 text-sm font-medium" style={{ color: pincode.trend > 0 ? 'rgb(239, 68, 68)' : 'rgb(34, 197, 94)' }}>
                         {pincode.trend > 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                         {pincode.trend > 0 ? '+' : ''}{pincode.trend}%
                       </div>
@@ -719,25 +866,51 @@ export default function ForensicEvidenceModal({
                   </div>
 
                   <div className="grid grid-cols-3 gap-4 mb-3">
-                    <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-                      <div className="text-white text-xl font-bold">{pincode.fraudCases}</div>
-                      <div className="text-gray-500 text-xs">Fraud Cases</div>
+                    <div 
+                      className="rounded-lg p-3 text-center border"
+                      style={{ 
+                        backgroundColor: summaryBg,
+                        borderColor: summaryBorder
+                      }}
+                    >
+                      <div className="text-xl font-bold" style={{ color: textColor }}>{pincode.fraudCases}</div>
+                      <div className="text-xs" style={{ color: labelColor }}>Fraud Cases</div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-                      <div className="text-red-400 text-xl font-bold">{formatCurrency(pincode.totalExposure)}</div>
-                      <div className="text-gray-500 text-xs">Total Exposure</div>
+                    <div 
+                      className="rounded-lg p-3 text-center border"
+                      style={{ 
+                        backgroundColor: isDarkMode ? 'rgba(239, 68, 68, 0.05)' : 'rgba(254, 242, 242, 0.9)',
+                        borderColor: isDarkMode ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.25)'
+                      }}
+                    >
+                      <div className="text-xl font-bold" style={{ color: 'rgb(239, 68, 68)' }}>{formatCurrency(pincode.totalExposure)}</div>
+                      <div className="text-xs" style={{ color: labelColor }}>Total Exposure</div>
                     </div>
-                    <div className="bg-slate-900/50 rounded-lg p-3 text-center">
-                      <div className="text-orange-400 text-sm font-medium">{pincode.topCategory}</div>
-                      <div className="text-gray-500 text-xs">Top Category</div>
+                    <div 
+                      className="rounded-lg p-3 text-center border"
+                      style={{ 
+                        backgroundColor: isDarkMode ? 'rgba(249, 115, 22, 0.05)' : 'rgba(255, 247, 237, 0.9)',
+                        borderColor: isDarkMode ? 'rgba(249, 115, 22, 0.3)' : 'rgba(249, 115, 22, 0.25)'
+                      }}
+                    >
+                      <div className="text-sm font-medium" style={{ color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)' }}>{pincode.topCategory}</div>
+                      <div className="text-xs" style={{ color: labelColor }}>Top Category</div>
                     </div>
                   </div>
 
-                  <div className="border-t border-white/5 pt-3">
-                    <span className="text-gray-500 text-xs uppercase tracking-wider">Courier Issues</span>
+                  <div className="pt-3" style={{ borderTop: `1px solid ${containerBorder}` }}>
+                    <span className="text-xs uppercase tracking-wider" style={{ color: labelColor }}>Courier Issues</span>
                     <div className="flex flex-wrap gap-2 mt-2">
                       {pincode.courierIssues.map((issue, idx) => (
-                        <span key={idx} className="text-xs px-2 py-1 bg-orange-500/10 text-orange-400 rounded border border-orange-500/20">
+                        <span 
+                          key={idx} 
+                          className="text-xs px-2 py-1 rounded border"
+                          style={{ 
+                            backgroundColor: isDarkMode ? 'rgba(249, 115, 22, 0.1)' : 'rgba(255, 237, 213, 0.8)',
+                            color: isDarkMode ? 'rgb(253, 186, 116)' : 'rgb(194, 65, 12)',
+                            borderColor: isDarkMode ? 'rgba(249, 115, 22, 0.3)' : 'rgba(249, 115, 22, 0.25)'
+                          }}
+                        >
                           {issue}
                         </span>
                       ))}
