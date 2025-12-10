@@ -86,7 +86,7 @@ export function ImperfectnessKPICards({ data }: ImperfectnessKPICardsProps) {
             }}
           >
             {/* Purple glow effect on hover */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent" />
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-linear-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent" />
 
             <div className="relative z-10 w-full px-4 py-4 flex flex-col">
               <div className="flex items-center justify-between mb-2 w-full">
