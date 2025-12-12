@@ -27,12 +27,14 @@ export default function AddonPage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
             <Image 
-              src="/bank-of-america.png" 
-              alt="Bank of America Logo" 
+              src="/hdfc.png" 
+              alt="HDFC Logo" 
               width={70} 
               height={30}
+              priority
+              unoptimized
             />
-            <h1 className="text-xl font-bold text-white">Bank of America</h1>
+            <h1 className="text-xl font-bold text-white">HDFC</h1>
           </div>
         </div>
       </header>
