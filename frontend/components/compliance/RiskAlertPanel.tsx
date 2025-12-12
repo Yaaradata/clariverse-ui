@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { 
-  AlertTriangle, Shield, Server, MessageSquare, Users, 
+  AlertTriangle, Server, MessageSquare, Users, 
   Clock, ChevronDown, ChevronUp, MapPin, Activity
 } from 'lucide-react';
 import { 
@@ -33,13 +33,6 @@ export function RiskAlertPanel({ data, isDarkMode = false }: RiskAlertPanelProps
           color: '#ef4444',
           label: 'Fraud',
           bgGradient: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)'
-        };
-      case 'cyber':
-        return {
-          icon: Shield,
-          color: '#8b5cf6',
-          label: 'Cyber Security',
-          bgGradient: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)'
         };
       case 'operational':
         return {
@@ -116,13 +109,12 @@ export function RiskAlertPanel({ data, isDarkMode = false }: RiskAlertPanelProps
   const categoryCounts = {
     all: data.length,
     fraud: data.filter(a => a.category === 'fraud').length,
-    cyber: data.filter(a => a.category === 'cyber').length,
     operational: data.filter(a => a.category === 'operational').length,
     reputation: data.filter(a => a.category === 'reputation').length,
     'third-party': data.filter(a => a.category === 'third-party').length,
   };
 
-  const categories: (RiskCategory | 'all')[] = ['all', 'fraud', 'cyber', 'operational', 'reputation', 'third-party'];
+  const categories: (RiskCategory | 'all')[] = ['all', 'fraud', 'operational', 'reputation', 'third-party'];
 
   return (
     <div
@@ -417,8 +409,8 @@ export function RiskAlertPanel({ data, isDarkMode = false }: RiskAlertPanelProps
           backgroundColor: isDarkMode ? '#0a0a0a' : '#FAFAFA'
         }}
       >
-        <div className="grid grid-cols-5 gap-2">
-          {(['fraud', 'cyber', 'operational', 'reputation', 'third-party'] as RiskCategory[]).map((cat) => {
+        <div className="grid grid-cols-4 gap-2">
+          {(['fraud', 'operational', 'reputation', 'third-party'] as RiskCategory[]).map((cat) => {
             const config = getCategoryConfig(cat);
             const count = data.filter(a => a.category === cat).length;
 

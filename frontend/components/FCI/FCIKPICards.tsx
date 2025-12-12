@@ -40,11 +40,10 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
     },
     riskSignal: {
       fraud: { percentage: 2.5, cases: 20, trend: -0.5 },
-      cyber: { percentage: 1.8, cases: 15, trend: 0.3 },
       operational: { percentage: 2.2, cases: 18, trend: -0.2 },
       reputation: { percentage: 1.5, cases: 12, trend: 0.1 },
       thirdParty: { percentage: 1.9, cases: 15, trend: 0.4 },
-      totalFlagged: 80,
+      totalFlagged: 65,
       highPriority: 12,
       critical: 3,
       resolvedToday: 24,
@@ -260,7 +259,6 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                   {(() => {
                     const riskCategories = [
                       { key: 'fraud', label: 'Fraud', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-                      { key: 'cyber', label: 'Cyber', color: '#8b5cf6', cases: kpiData.riskSignal.cyber.cases },
                       { key: 'operational', label: 'Operational', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
                       { key: 'reputation', label: 'Reputation', color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
                       { key: 'thirdParty', label: 'Third-Party', color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },

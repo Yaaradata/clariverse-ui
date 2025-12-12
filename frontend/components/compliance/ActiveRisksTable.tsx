@@ -3,7 +3,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import { 
   AlertTriangle, Building2, Clock, RefreshCw, ChevronRight, Filter,
-  FileText, Target, ArrowRight, Users, Shield, Zap,
+  FileText, Target, ArrowRight, Users, Shield,
   MessageSquare, CheckCircle2, XCircle, TrendingUp, TrendingDown,
   DollarSign, Globe, Activity
 } from 'lucide-react';
@@ -36,7 +36,7 @@ interface RiskDetails {
   notes: string;
 }
 
-// Generate risk data with counts: Fraud: 20, Cyber: 15, Operational: 18, Reputation: 12, Third-Party: 15
+// Generate risk data with counts: Fraud: 20, Operational: 18, Reputation: 12, Third-Party: 15
 const generateRiskData = (): RiskItem[] => {
   const risks: RiskItem[] = [];
   const regions: Region[] = ['APAC', 'India', 'Europe', 'Americas'];
@@ -65,29 +65,6 @@ const generateRiskData = (): RiskItem[] => {
       timestamp: new Date(Date.now() - i * 3600000).toISOString(),
       impactScore: 95 - i * 2,
       likelihood: 90 - i * 2
-    });
-  });
-
-  // Cyber risks (15) - mapped to Technology type
-  const cyberCategories = [
-    'Security Breach Attempt', 'DDoS Attack', 'Malware Detection', 'Data Exfiltration',
-    'Ransomware Threat', 'SQL Injection', 'Zero-Day Exploit', 'Credential Stuffing',
-    'MITM Attack', 'API Breach', 'Network Intrusion', 'Endpoint Compromise',
-    'Cloud Security Risk', 'Email Threat', 'Encryption Failure'
-  ];
-  cyberCategories.forEach((cat, i) => {
-    risks.push({
-      id: `RSK-CY-${String(i + 1).padStart(3, '0')}`,
-      type: 'Technology',
-      category: cat,
-      description: `${cat} - security team engagement required immediately`,
-      severity: i < 2 ? 'critical' : i < 6 ? 'high' : i < 11 ? 'medium' : 'low',
-      region: regions[i % regions.length],
-      status: i < 9 ? 'active' : i < 12 ? 'monitoring' : 'mitigated',
-      channel: channels[i % channels.length],
-      timestamp: new Date(Date.now() - i * 4200000).toISOString(),
-      impactScore: 92 - i * 3,
-      likelihood: 85 - i * 3
     });
   });
 
@@ -183,18 +160,6 @@ const generateRiskDetails = (risk: RiskItem): RiskDetails => {
         'Notify affected customers',
         'Engage fraud investigation team',
         'Document incident for regulatory reporting'
-      ]
-    },
-    'Technology': {
-      processes: ['Security Operations', 'Infrastructure Management', 'Access Control', 'Data Protection'],
-      controls: ['SIEM monitoring', 'Endpoint protection', 'Access logging'],
-      owner: 'CISO / IT Security Manager',
-      actions: [
-        'Isolate affected systems',
-        'Deploy emergency patches',
-        'Conduct forensic analysis',
-        'Reset compromised credentials',
-        'Strengthen security controls'
       ]
     },
     'Operational': {
@@ -302,7 +267,6 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
       case 'Operational': return <Activity className="w-4 h-4" />;
       case 'Financial': return <DollarSign className="w-4 h-4" />;
       case 'Reputational': return <Globe className="w-4 h-4" />;
-      case 'Technology': return <Zap className="w-4 h-4" />;
       default: return <AlertTriangle className="w-4 h-4" />;
     }
   };
@@ -312,7 +276,7 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
   };
 
   const severityOptions = ['all', 'critical', 'high', 'medium', 'low'];
-  const typeOptions = ['all', 'Regulatory', 'Operational', 'Financial', 'Reputational', 'Technology'];
+  const typeOptions = ['all', 'Regulatory', 'Operational', 'Financial', 'Reputational'];
 
   return (
     <div

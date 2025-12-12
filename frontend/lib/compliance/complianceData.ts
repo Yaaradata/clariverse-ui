@@ -3,7 +3,7 @@
 export type TimeFilter = '24h' | '7d' | '30d';
 export type Severity = 'critical' | 'high' | 'medium' | 'low';
 export type Region = 'APAC' | 'India' | 'Europe' | 'Americas' | 'MEA';
-export type RiskCategory = 'fraud' | 'operational' | 'reputation' | 'third-party' | 'cyber';
+export type RiskCategory = 'fraud' | 'operational' | 'reputation' | 'third-party';
 export type ViolationCategory = 'Sanctions / PEP Screening' | 'AML Compliance' | 'Customer Identification Program' | 'Regulatory Reporting' | 'Data Privacy Compliance' | 'Cross-Border Compliance' | 'Vendor Compliance';
 
 export interface ComplianceScore {
@@ -265,7 +265,7 @@ export const complianceInsightsData: ComplianceInsight[] = [
   }
 ];
 
-// Generate risk alerts data with proper counts: Fraud: 20, Cyber: 15, Operational: 18, Reputation: 12, Third-Party: 15
+// Generate risk alerts data with proper counts: Fraud: 20, Operational: 18, Reputation: 12, Third-Party: 15
 const generateRiskAlerts = (): RiskAlert[] => {
   const alerts: RiskAlert[] = [];
   const regions: Region[] = ['APAC', 'India', 'Europe', 'Americas', 'MEA'];
@@ -293,29 +293,6 @@ const generateRiskAlerts = (): RiskAlert[] => {
       impactedAgents: Math.floor(Math.random() * 10) + 1,
       impactedCustomers: Math.floor(Math.random() * 100) + 10,
       status: i < 12 ? 'active' : i < 16 ? 'monitoring' : 'resolved'
-    });
-  });
-
-  // Cyber alerts (15)
-  const cyberTitles = [
-    'Cyber Security Breach Attempt', 'DDoS Attack Detected', 'Malware Infection Risk',
-    'Data Exfiltration Alert', 'Ransomware Threat', 'SQL Injection Attempt', 'Zero-Day Vulnerability',
-    'Credential Stuffing Attack', 'Man-in-the-Middle Attack', 'API Security Breach',
-    'Network Intrusion Detected', 'Endpoint Compromise', 'Cloud Security Alert', 'Email Security Threat',
-    'Encryption Failure Detected'
-  ];
-  cyberTitles.forEach((title, i) => {
-    alerts.push({
-      id: `RA-CY-${String(i + 1).padStart(3, '0')}`,
-      title,
-      description: `${title} - Security team engagement required immediately`,
-      category: 'cyber',
-      severity: i < 2 ? 'critical' : i < 6 ? 'high' : i < 11 ? 'medium' : 'low',
-      region: regions[i % regions.length],
-      timestamp: new Date(Date.now() - i * 4200000).toISOString(),
-      impactedAgents: Math.floor(Math.random() * 50) + 5,
-      impactedCustomers: Math.floor(Math.random() * 500),
-      status: i < 9 ? 'active' : i < 12 ? 'monitoring' : 'resolved'
     });
   });
 
@@ -434,7 +411,6 @@ export const getSeverityColor = (severity: Severity): string => {
 export const getRiskCategoryIcon = (category: RiskCategory): string => {
   switch (category) {
     case 'fraud': return '🚨';
-    case 'cyber': return '🔐';
     case 'operational': return '⚙️';
     case 'reputation': return '📢';
     case 'third-party': return '🤝';
