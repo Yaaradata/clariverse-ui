@@ -27,14 +27,14 @@ export default function AddonPage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center gap-3">
             <Image 
-              src="/hdfc.png" 
-              alt="HDFC Logo" 
+              src="/stanchart.png" 
+              alt="Standard Chartered Logo" 
               width={70} 
               height={30}
               priority
               unoptimized
             />
-            <h1 className="text-xl font-bold text-white">HDFC</h1>
+            <h1 className="text-xl font-bold text-white">Standard Chartered</h1>
           </div>
         </div>
       </header>

@@ -72,14 +72,14 @@ export default function AddonLayout({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Image 
-                src="/hdfc.png" 
-                alt="HDFC Logo" 
+                src="/stanchart.png" 
+                alt="Standard Chartered Logo" 
                 width={50} 
                 height={20}
                 priority
                 unoptimized
               />
-              <h1 className="text-3xl font-bold text-white">HDFC</h1>
+              <h1 className="text-3xl font-bold text-white">Standard Chartered</h1>
             </div>
             
             <div className="flex items-center gap-4">

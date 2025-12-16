@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { BarChart3, Mail, MessageCircle, Ticket, Share2, Mic, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -74,12 +75,20 @@ export default function Sidebar() {
       {/* Logo Section */}
       <div className={`mb-8 animate-fade-in ${isExpanded ? 'p-6 pb-4' : 'p-3 pb-4'}`}>
         <div className="flex items-center space-x-3 mb-3">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <BarChart3 className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden">
+            <Image 
+              src="/stanchart.png" 
+              alt="Standard Chartered Logo" 
+              width={40} 
+              height={40}
+              className="object-contain"
+              priority
+              unoptimized
+            />
           </div>
           {isExpanded && (
             <div className="animate-fade-in">
-              <h1 className="text-2xl font-bold text-white">Clariverse</h1>
+              <h1 className="text-2xl font-bold text-white">Standard Chartered</h1>
             </div>
           )}
         </div>
