@@ -19,6 +19,7 @@ export default function AddonPage() {
 
   const isComplianceActive = pathname === '/addon/compliance';
   const isFCIActive = pathname === '/addon/fci';
+  const isVendorActive = pathname === '/addon/vendor';
 
   return (
     <div className="min-h-screen bg-white">
@@ -62,6 +63,16 @@ export default function AddonPage() {
               }}
             >
               Failed Customer Interaction
+            </Link>
+            <Link
+              href="/addon/vendor"
+              className="py-4 px-2 font-semibold transition-all relative"
+              style={{
+                color: isVendorActive ? '#5332FF' : '#939394',
+                borderBottom: isVendorActive ? '3px solid #5332FF' : 'none',
+              }}
+            >
+              Vendor
             </Link>
           </div>
         </div>

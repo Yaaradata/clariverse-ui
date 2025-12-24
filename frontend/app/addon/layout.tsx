@@ -19,6 +19,7 @@ export default function AddonLayout({
   
   const isComplianceActive = pathname === '/addon/compliance';
   const isFCIActive = pathname === '/addon/fci';
+  const isVendorActive = pathname === '/addon/vendor';
 
   const timeFilterOptions: { value: TimeFilter; label: string }[] = [
     { value: '24h', label: 'Last 24 Hours' },
@@ -172,6 +173,16 @@ export default function AddonLayout({
               }}
             >
               Failed Customer Interaction
+            </Link>
+            <Link
+              href="/addon/vendor"
+              className="py-4 px-2 font-semibold transition-all relative"
+              style={{
+                color: isVendorActive ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#939394'),
+                borderBottom: isVendorActive ? '3px solid #5332FF' : 'none',
+              }}
+            >
+              Compliance Signals
             </Link>
           </div>
         </div>
