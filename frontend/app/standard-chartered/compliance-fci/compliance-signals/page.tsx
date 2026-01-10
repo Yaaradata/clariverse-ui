@@ -15,7 +15,7 @@ import { AIActionSuggestionWall } from '@/components/vendor/AIActionSuggestionWa
 
 export default function VendorDashboard() {
   const [data, setData] = useState<VendorDashboardData | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [hoveredOutcome, setHoveredOutcome] = useState<{ cardId: string; outcomeIndex: number } | null>(null);
 
   useEffect(() => {
@@ -23,11 +23,12 @@ export default function VendorDashboard() {
     setData(dashboardData);
   }, []);
 
-  // Check for dark mode from localStorage
+  // Check for dark mode from localStorage, default to dark mode
   useEffect(() => {
     const checkTheme = () => {
       const theme = localStorage.getItem('theme');
-      setIsDarkMode(theme === 'dark');
+      // Default to dark mode if no theme is saved
+      setIsDarkMode(theme === null ? true : theme === 'dark');
     };
 
     checkTheme();

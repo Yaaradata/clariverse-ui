@@ -14,7 +14,14 @@ export default function AddonLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Initialize theme from localStorage if available, default to dark mode
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedTheme = localStorage.getItem('theme');
+      return savedTheme === null ? true : savedTheme === 'dark';
+    }
+    return true;
+  });
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   
   const isComplianceActive = pathname === '/swedbank/compliance-fci/compliance';
@@ -27,11 +34,18 @@ export default function AddonLayout({
     { value: '30d', label: 'Last 30 Days' }
   ];
 
-  // Load theme preference from localStorage
+  // Load theme preference from localStorage and apply immediately
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      setIsDarkMode(true);
+    // Default to dark mode if no theme is saved, otherwise use saved preference
+    const initialDarkMode = savedTheme === null ? true : savedTheme === 'dark';
+    setIsDarkMode(initialDarkMode);
+    
+    // Apply theme immediately to prevent flash
+    if (initialDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
     // Load time filter preference
     const savedTimeFilter = localStorage.getItem('complianceTimeFilter') as TimeFilter;

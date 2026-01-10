@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react';
 
 export function useTheme() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  // Default to dark mode (will be updated immediately by useEffect)
+  const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
     // Check if dark class exists on html element

@@ -25,12 +25,17 @@ export default function RootLayout({
               (function() {
                 try {
                   const theme = localStorage.getItem('theme');
+                  // Default to dark mode if no theme is saved
                   if (theme === 'light') {
                     document.documentElement.classList.remove('dark');
                   } else {
+                    // Default to dark mode (if theme is null or 'dark')
                     document.documentElement.classList.add('dark');
                   }
-                } catch (e) {}
+                } catch (e) {
+                  // If localStorage fails, default to dark mode
+                  document.documentElement.classList.add('dark');
+                }
               })();
             `,
           }}

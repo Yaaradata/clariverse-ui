@@ -22,15 +22,16 @@ import {
 type TabType = 'summary' | 'workforce';
 
 export default function CompliancePage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   const [activeTab, setActiveTab] = useState<TabType>('summary');
 
-  // Check for dark mode and time filter from layout
+  // Check for dark mode and time filter from layout, default to dark mode
   useEffect(() => {
     const checkSettings = () => {
       const theme = localStorage.getItem('theme');
-      setIsDarkMode(theme === 'dark');
+      // Default to dark mode if no theme is saved
+      setIsDarkMode(theme === null ? true : theme === 'dark');
       
       const savedTimeFilter = localStorage.getItem('complianceTimeFilter') as TimeFilter;
       if (savedTimeFilter) {

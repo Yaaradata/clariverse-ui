@@ -23,14 +23,15 @@ const tabs: { id: FCITab; label: string; icon: typeof LayoutGrid }[] = [
 ];
 
 export default function FCIPage() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [activeTab, setActiveTab] = useState<FCITab>('summary');
 
-  // Check for dark mode from parent
+  // Check for dark mode from parent, default to dark mode
   useEffect(() => {
     const checkTheme = () => {
       const theme = localStorage.getItem('theme');
-      setIsDarkMode(theme === 'dark');
+      // Default to dark mode if no theme is saved
+      setIsDarkMode(theme === null ? true : theme === 'dark');
     };
     
     checkTheme();
