@@ -259,7 +259,7 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
                     Financial Impact
                   </div>
                   <div className="text-sm font-semibold text-red-400">
-                    {currencySymbol}{(violation.financialImpact.expectedLoss / 1000).toFixed(0)}K
+                    {currencySymbol}{(violation.financialImpact.expectedLoss / 1000).toFixed(0)}
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {violation.financialImpact.probability}% probability
@@ -334,7 +334,7 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
                       <span className="text-white/40">Agent:</span> {selectedViolation.agentName}
                     </div>
                     <div>
-                      <span className="text-white/40">Financial Impact:</span> {currencySymbol}{(selectedViolation.financialImpact.expectedLoss / 1000).toFixed(0)}K expected
+                      <span className="text-white/40">Financial Impact:</span> {currencySymbol}{(selectedViolation.financialImpact.expectedLoss / 1000).toFixed(0)} expected
                     </div>
                     <div>
                       <span className="text-white/40">Probability:</span> {selectedViolation.financialImpact.probability}%
