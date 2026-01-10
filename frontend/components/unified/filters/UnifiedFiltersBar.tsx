@@ -60,12 +60,12 @@ export function UnifiedFiltersBar({
           </div>
 
           <div className="flex flex-wrap items-center gap-2 justify-end">
-            <span className="text-xs text-gray-400 whitespace-nowrap">Date:</span>
+            <span className="text-xs text-muted-foreground whitespace-nowrap">Date:</span>
             <Select value={dateFilterPreset} onValueChange={onPresetChange}>
-              <SelectTrigger className="w-[160px] border border-[color:var(--border)] bg-[color:var(--card)] text-white text-sm h-[38px]">
+              <SelectTrigger className="w-[160px] border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] text-sm h-[38px]">
                 <SelectValue placeholder="Select period" />
               </SelectTrigger>
-              <SelectContent className="border border-[color:var(--border)] bg-[color:var(--card)] text-white z-[9999] w-[160px] min-w-[160px] max-w-[160px]">
+              <SelectContent className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] z-[9999] w-[160px] min-w-[160px] max-w-[160px]">
                 <SelectItem value="All">All</SelectItem>
                 <SelectItem value="Current day">Current day</SelectItem>
                 <SelectItem value="Current Month">Current Month</SelectItem>
@@ -84,16 +84,16 @@ export function UnifiedFiltersBar({
                   onChange={(event) =>
                     onDateRangeChange({ ...dateRange, start: event.target.value })
                   }
-                  className="border border-[color:var(--border)] bg-[color:var(--card)] text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
+                  className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
                 />
-                <span className="text-xs text-gray-500">→</span>
+                <span className="text-xs text-muted-foreground">→</span>
                 <input
                   type="date"
                   value={dateRange.end}
                   onChange={(event) =>
                     onDateRangeChange({ ...dateRange, end: event.target.value })
                   }
-                  className="border border-[color:var(--border)] bg-[color:var(--card)] text-white text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
+                  className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
                 />
               </>
             )}
@@ -111,14 +111,14 @@ export function UnifiedFiltersBar({
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-        <span className="uppercase tracking-wide text-gray-500">Active Filters</span>
+        <span className="uppercase tracking-wide text-muted-foreground">Active Filters</span>
         {activeFilters.length === 0 && (
-          <Badge variant="outline" className="border-[color:var(--border)] text-gray-400">
+          <Badge variant="outline" className="border-[color:var(--border)] text-muted-foreground">
             None
           </Badge>
         )}
         {activeFilters.map((filter) => (
-          <Badge key={filter} variant="secondary" className="border border-[color:var(--border)] bg-[color:var(--card)] text-gray-200">
+          <Badge key={filter} variant="secondary" className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)]">
             {filter}
           </Badge>
         ))}

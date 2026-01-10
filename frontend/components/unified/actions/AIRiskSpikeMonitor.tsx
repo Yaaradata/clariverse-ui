@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useEffect } from 'react';
+
 type RiskSpike = {
   id: string;
   timestamp: string;
@@ -109,17 +111,32 @@ const mockRiskSpikes: RiskSpike[] = [
 ];
 
 export function AIRiskSpikeMonitor({ spikes = mockRiskSpikes }: { spikes?: RiskSpike[] }) {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === null ? true : theme === 'dark');
+    };
+    checkTheme();
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <h2 className="text-lg font-semibold text-white flex items-center gap-2">
+        <h2 className={`text-lg font-semibold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           ✨ AI Risk Spike Monitor
         </h2>
         <span className="text-xs px-2 py-1 rounded-full bg-rose-500/20 text-rose-200 tracking-wide uppercase">
           Operational Alerts
         </span>
       </div>
-      <p className="text-xs text-gray-400">
+      <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.
       </p>
       <div className="flex gap-4 overflow-x-auto pb-3 items-stretch">
@@ -132,6 +149,21 @@ export function AIRiskSpikeMonitor({ spikes = mockRiskSpikes }: { spikes?: RiskS
 }
 
 function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsDarkMode(theme === null ? true : theme === 'dark');
+    };
+    checkTheme();
+    const observer = new MutationObserver(() => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, []);
+
   const iconMeta = spikeIcon[spike.spikeType];
   const severityClass = severityStyles[spike.severity];
 
@@ -139,34 +171,34 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
 
   return (
     <div
-      className={`w-70 min-w-[16rem] rounded-2xl border px-4 py-4 text-sm text-gray-200 shadow-lg flex flex-col ${severityClass}`}
+      className={`w-70 min-w-[16rem] rounded-2xl border px-4 py-4 text-sm shadow-lg flex flex-col ${severityClass} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
     >
-      <div className="flex items-center gap-2 text-sm font-semibold">
+      <div className={`flex items-center gap-2 text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
         <span className={`${iconMeta.color} text-lg`}>{iconMeta.icon}</span>
         <span>{labelForSpike(spike.spikeType)}</span>
       </div>
-      <div className="mt-3 space-y-1 text-[11px] text-gray-400">
+      <div className={`mt-3 space-y-1 text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         <div className="flex justify-between">
-          <span className="uppercase tracking-wide text-gray-500">Channel</span>
-          <span className="text-white">{spike.channel}</span>
+          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Channel</span>
+          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.channel}</span>
         </div>
         <div className="flex justify-between">
-          <span className="uppercase tracking-wide text-gray-500">Top Intent</span>
-          <span className="text-white">{spike.topIntent}</span>
+          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Top Intent</span>
+          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.topIntent}</span>
         </div>
         <div className="flex justify-between">
-          <span className="uppercase tracking-wide text-gray-500">Time</span>
-          <span className="text-white">{spike.timestamp}</span>
+          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Time</span>
+          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.timestamp}</span>
         </div>
       </div>
 
-      <div className="mt-6 space-y-2 rounded-xl border border-white/5 bg-black/30 p-3 text-xs text-gray-200 flex-1 flex flex-col justify-center">
+      <div className={`mt-6 space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? 'border-white/5 bg-black/30 text-gray-200' : 'border-gray-300 bg-gray-50 text-gray-800'}`}>
         {detailRows.map((row) => (
           <div key={row.label} className="flex items-center justify-between gap-3">
-            <span className="text-gray-400">{row.label}</span>
+            <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>{row.label}</span>
             <div className="text-right">
-              <div className="font-semibold text-white">{row.value}</div>
-              {row.delta ? <div className="text-[11px] text-gray-400">{row.delta}</div> : null}
+              <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{row.value}</div>
+              {row.delta ? <div className={`text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{row.delta}</div> : null}
             </div>
           </div>
         ))}
