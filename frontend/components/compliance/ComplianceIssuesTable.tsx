@@ -6,7 +6,21 @@ import {
   FileText, Target, ArrowRight, Users, Calendar, Shield, 
   MessageSquare, CheckCircle2, XCircle
 } from 'lucide-react';
-import { ComplianceIssue, getSeverityColor, getRegionFlag } from '@/lib/compliance/complianceData';
+import { ComplianceIssue as StandardComplianceIssue, getSeverityColor, getRegionFlag } from '@/lib/compliance/complianceData';
+
+// Flexible interface that accepts data from either standard or client-specific sources
+interface ComplianceIssue {
+  id: string;
+  issue: string;
+  category: string;
+  agentId: string;
+  agentName: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  region: 'APAC' | 'India' | 'Europe' | 'Americas' | 'MEA';
+  timestamp: string;
+  status: 'open' | 'investigating' | 'resolved';
+  repeatOffense: boolean;
+}
 
 // Extended issue details
 interface IssueDetails {

@@ -11,47 +11,57 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // Determine if we're on a swedbank or standard-chartered route
+  const isSwedbankRoute = pathname?.startsWith("/swedbank") ?? false;
+  const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered") ?? false;
+  const basePath = isSwedbankRoute ? "/swedbank" : (isStandardCharteredRoute ? "/standard-chartered" : "");
+  
+  // Set branding based on route
+  const logoPath = isSwedbankRoute ? "/swedbank.png" : "/stanchart.png";
+  const logoAlt = isSwedbankRoute ? "Swedbank Logo" : "Standard Chartered Logo";
+  const brandName = isSwedbankRoute ? "Swedbank" : "Standard Chartered";
+
   const navigationItems = [
     {
       id: "dashboard",
       label: "Dashboard",
       icon: BarChart3,
-      href: "/",
+      href: `${basePath}/`,
       hasSubItems: false,
     },
     {
       id: "email",
       label: "Email",
       icon: Mail,
-      href: "/email",
+      href: `${basePath}/email`,
       hasSubItems: false,
     },
     {
       id: "chat",
       label: "Chat",
       icon: MessageCircle,
-      href: "/chat",
+      href: `${basePath}/chat`,
       hasSubItems: false,
     },
     {
       id: "ticket",
       label: "Ticket",
       icon: Ticket,
-      href: "/ticket",
+      href: `${basePath}/ticket`,
       hasSubItems: false,
     },
     {
       id: "social",
       label: "Social Media",
       icon: Share2,
-      href: "/social",
+      href: `${basePath}/social`,
       hasSubItems: false,
     },
     {
       id: "voice",
       label: "Voice Transcript",
       icon: Mic,
-      href: "/voice",
+      href: `${basePath}/voice`,
       hasSubItems: false,
     },
     // {
@@ -75,20 +85,21 @@ export default function Sidebar() {
       {/* Logo Section */}
       <div className={`mb-8 animate-fade-in ${isExpanded ? 'p-6 pb-4' : 'p-3 pb-4'}`}>
         <div className="flex items-center space-x-3 mb-3">
-          <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden">
+          <div className={`${isSwedbankRoute ? 'w-14 h-14' : 'w-10 h-10'} rounded-lg flex items-center justify-center overflow-hidden`} suppressHydrationWarning>
             <Image 
-              src="/stanchart.png" 
-              alt="Standard Chartered Logo" 
-              width={40} 
-              height={40}
+              src={logoPath}
+              alt={logoAlt}
+              width={isSwedbankRoute ? 56 : 40} 
+              height={isSwedbankRoute ? 56 : 40}
               className="object-contain"
               priority
               unoptimized
+              suppressHydrationWarning
             />
           </div>
           {isExpanded && (
-            <div className="animate-fade-in">
-              <h1 className="text-2xl font-bold text-white">Standard Chartered</h1>
+            <div className="animate-fade-in" suppressHydrationWarning>
+              <h1 className="text-2xl font-bold text-white">{brandName}</h1>
             </div>
           )}
         </div>
@@ -96,30 +107,36 @@ export default function Sidebar() {
 
       {/* Main Navigation */}
       <nav className={`sidebar-nav space-y-2 ${isExpanded ? 'px-6' : 'px-3'}`}>
-        {navigationItems.map((item, index) => (
-          <div key={item.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-            <Link href={item.href}>
-              <Button
-                variant={pathname === item.href ? "default" : "ghost"}
-                className={`w-full h-9 border transition-all duration-200 ${
-                  isExpanded 
-                    ? 'justify-start gap-2 px-2' 
-                    : 'justify-center p-0'
-                } ${
-                  pathname === item.href
-                    ? 'btn-gradient-primary border-white/20 hover:border-white/30'
-                    : 'text-muted-foreground hover:bg-secondary hover:text-foreground border-transparent hover:border-white/20'
-                }`}
-                title={!isExpanded ? item.label : undefined}
-              >
-                <item.icon className="h-4 w-4 flex-shrink-0" />
-                {isExpanded && (
-                  <span className="animate-fade-in truncate min-w-0">{item.label}</span>
-                )}
-              </Button>
-            </Link>
-          </div>
-        ))}
+        {navigationItems.map((item, index) => {
+          // Normalize paths for comparison (handle trailing slashes)
+          const normalizePath = (path: string) => path.replace(/\/$/, '') || '/';
+          const isActive = normalizePath(pathname || '') === normalizePath(item.href);
+          
+          return (
+            <div key={item.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+              <Link href={item.href}>
+                <Button
+                  variant={isActive ? "default" : "ghost"}
+                  className={`w-full h-9 border transition-all duration-200 ${
+                    isExpanded 
+                      ? 'justify-start gap-2 px-2' 
+                      : 'justify-center p-0'
+                  } ${
+                    isActive
+                      ? 'btn-gradient-primary border-white/20 hover:border-white/30'
+                      : 'text-muted-foreground hover:bg-secondary hover:text-foreground border-transparent hover:border-white/20'
+                  }`}
+                  title={!isExpanded ? item.label : undefined}
+                >
+                  <item.icon className="h-4 w-4 flex-shrink-0" />
+                  {isExpanded && (
+                    <span className="animate-fade-in truncate min-w-0">{item.label}</span>
+                  )}
+                </Button>
+              </Link>
+            </div>
+          );
+        })}
       </nav>
     </div>
   );

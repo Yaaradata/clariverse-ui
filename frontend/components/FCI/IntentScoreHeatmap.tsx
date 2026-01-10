@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Flame, Users, Zap, ThumbsUp, Heart, Target, CheckCircle } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
@@ -106,7 +107,22 @@ const getScoreBgColor = (score: number, isDarkMode: boolean): string => {
   return isDarkMode ? 'rgba(220, 38, 38, 0.3)' : 'rgba(220, 38, 38, 0.25)';
 };
 
-const CONTACT_CENTER_UNITS = [
+const STANDARD_CHARTERED_CONTACT_CENTER_UNITS = [
+  { value: 'chennai', label: 'India (Chennai)' },
+  { value: 'bengaluru', label: 'India (Bengaluru)' },
+  { value: 'kualalumpur', label: 'Malaysia (Kuala Lumpur)' },
+  { value: 'shanghai', label: 'China (Shanghai)' },
+  { value: 'manila', label: 'Philippines (Manila)' },
+  { value: 'singapore', label: 'Singapore' },
+  { value: 'hongkong', label: 'Hong Kong' },
+  { value: 'london', label: 'United Kingdom (London)' },
+  { value: 'warsaw', label: 'Poland (Warsaw)' },
+  { value: 'frankfurt', label: 'Germany (Frankfurt)' },
+  { value: 'newyork', label: 'United States (New York)' },
+  { value: 'nairobi', label: 'Kenya (Nairobi)' }
+];
+
+const STANDARD_CONTACT_CENTER_UNITS = [
   { value: 'manila', label: 'Manila (Taguig)' },
   { value: 'newark', label: 'Newark, DE' },
   { value: 'chester', label: 'Chester, UK' },
@@ -118,7 +134,26 @@ const CONTACT_CENTER_UNITS = [
   { value: 'phoenix', label: 'Phoenix, AZ' }
 ];
 
+const SWEDBANK_CONTACT_CENTER_UNITS = [
+  { value: 'stockholm', label: 'Sweden (Stockholm - Sundbyberg)' },
+  { value: 'tallinn', label: 'Estonia (Tallinn)' },
+  { value: 'riga', label: 'Latvia (Riga)' },
+  { value: 'vilnius', label: 'Lithuania (Vilnius)' },
+  { value: 'oslo', label: 'Norway (Oslo)' },
+  { value: 'helsinki', label: 'Finland (Helsinki)' },
+  { value: 'shanghai', label: 'China (Shanghai)' },
+  { value: 'newyork', label: 'USA (New York)' }
+];
+
 export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
+  const CONTACT_CENTER_UNITS = isSwedbankRoute 
+    ? SWEDBANK_CONTACT_CENTER_UNITS 
+    : isStandardCharteredRoute 
+    ? STANDARD_CHARTERED_CONTACT_CENTER_UNITS 
+    : STANDARD_CONTACT_CENTER_UNITS;
   const [hoveredCell, setHoveredCell] = useState<{ pillar: string; intent: string } | null>(null);
   const [selectedUnit, setSelectedUnit] = useState<string>('');
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { KPIData, EisenhowerThread } from '@/lib/api';
 import { Sparkles } from 'lucide-react';
@@ -18,6 +19,9 @@ interface Insight {
 }
 
 export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const [insights, setInsights] = useState<Insight[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -33,9 +37,12 @@ export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps
           (threads.length * kpiData.sla_breach_risk_percentage) / 100
         );
         const estimatedValue = Math.round(atRiskCount * (kpiData.business_impact_score || 72.3) * 10000);
+        const currencySymbol = isSwedbankRoute ? '€' : isStandardCharteredRoute ? '$' : '₹';
+        const divisor = isSwedbankRoute || isStandardCharteredRoute ? 1000000 : 100000;
+        const unit = isSwedbankRoute || isStandardCharteredRoute ? 'M' : 'Cr';
         newInsights.push({
           id: 'sla-breach',
-          text: `${atRiskCount} threads likely to breach SLA today (₹${(estimatedValue / 100000).toFixed(1)} Cr)`,
+          text: `${atRiskCount} threads likely to breach SLA today (${currencySymbol}${(estimatedValue / divisor).toFixed(1)} ${unit})`,
           severity: kpiData.sla_breach_risk_percentage > 20 ? 'critical' : 'warning',
         });
       }

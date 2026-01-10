@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { 
   Map, AlertTriangle, TrendingUp, TrendingDown,
   Building2, Phone, Shield, Users,
@@ -32,7 +33,209 @@ const riskCategories: RiskCategory[] = [
   { id: 'sentiment', name: 'Negative Sentiment', shortName: 'Sentiment' },
 ];
 
-const callCenterUnits: CallCenterUnit[] = [
+// Standard Chartered locations (for Standard Chartered routes)
+const standardCharteredCallCenterUnits: CallCenterUnit[] = [
+  // Primary GBS Centers - Asia-Pacific
+  {
+    id: 'CC-CHE',
+    name: 'India (Chennai)',
+    location: 'Chennai, Tamil Nadu, India',
+    agents: 1300,
+    totalCalls: 185000,
+    risks: {
+      compliance: 72,
+      fraud: 35,
+      kyc: 58,
+      script: 65,
+      disclosure: 70,
+      aml: 36,
+      sentiment: 30
+    }
+  },
+  {
+    id: 'CC-BLR',
+    name: 'India (Bengaluru)',
+    location: 'Bengaluru, Karnataka, India',
+    agents: 500,
+    totalCalls: 72500,
+    risks: {
+      compliance: 35,
+      fraud: 45,
+      kyc: 42,
+      script: 30,
+      disclosure: 38,
+      aml: 75,
+      sentiment: 28
+    }
+  },
+  {
+    id: 'CC-KUL',
+    name: 'Malaysia (Kuala Lumpur)',
+    location: 'Kuala Lumpur, Malaysia',
+    agents: 500,
+    totalCalls: 68900,
+    risks: {
+      compliance: 32,
+      fraud: 75,
+      kyc: 68,
+      script: 25,
+      disclosure: 35,
+      aml: 78,
+      sentiment: 28
+    }
+  },
+  {
+    id: 'CC-SHA',
+    name: 'China (Shanghai)',
+    location: 'Shanghai, China',
+    agents: 230,
+    totalCalls: 32560,
+    risks: {
+      compliance: 28,
+      fraud: 22,
+      kyc: 30,
+      script: 18,
+      disclosure: 25,
+      aml: 24,
+      sentiment: 20
+    }
+  },
+  {
+    id: 'CC-MNL',
+    name: 'Philippines (Manila)',
+    location: 'Manila, Philippines',
+    agents: 485,
+    totalCalls: 52340,
+    risks: {
+      compliance: 25,
+      fraud: 72,
+      kyc: 35,
+      script: 28,
+      disclosure: 32,
+      aml: 38,
+      sentiment: 22
+    }
+  },
+  // Major Hubs - Asia-Pacific
+  {
+    id: 'CC-SIN',
+    name: 'Singapore',
+    location: 'Singapore',
+    agents: 450,
+    totalCalls: 62500,
+    risks: {
+      compliance: 30,
+      fraud: 28,
+      kyc: 32,
+      script: 22,
+      disclosure: 28,
+      aml: 26,
+      sentiment: 24
+    }
+  },
+  {
+    id: 'CC-HKG',
+    name: 'Hong Kong',
+    location: 'Hong Kong',
+    agents: 380,
+    totalCalls: 52800,
+    risks: {
+      compliance: 18,
+      fraud: 15,
+      kyc: 22,
+      script: 12,
+      disclosure: 20,
+      aml: 16,
+      sentiment: 14
+    }
+  },
+  // Europe Region
+  {
+    id: 'CC-LON',
+    name: 'United Kingdom (London)',
+    location: 'London, United Kingdom',
+    agents: 174,
+    totalCalls: 24500,
+    risks: {
+      compliance: 20,
+      fraud: 18,
+      kyc: 25,
+      script: 15,
+      disclosure: 22,
+      aml: 20,
+      sentiment: 16
+    }
+  },
+  {
+    id: 'CC-WAW',
+    name: 'Poland (Warsaw)',
+    location: 'Warsaw, Poland',
+    agents: 200,
+    totalCalls: 28500,
+    risks: {
+      compliance: 22,
+      fraud: 20,
+      kyc: 28,
+      script: 18,
+      disclosure: 25,
+      aml: 22,
+      sentiment: 18
+    }
+  },
+  {
+    id: 'CC-FRA',
+    name: 'Germany (Frankfurt)',
+    location: 'Frankfurt, Germany',
+    agents: 165,
+    totalCalls: 23450,
+    risks: {
+      compliance: 35,
+      fraud: 45,
+      kyc: 42,
+      script: 30,
+      disclosure: 38,
+      aml: 75,
+      sentiment: 28
+    }
+  },
+  // Americas Region
+  {
+    id: 'CC-NYC',
+    name: 'United States (New York)',
+    location: 'New York, NY, USA',
+    agents: 245,
+    totalCalls: 34560,
+    risks: {
+      compliance: 32,
+      fraud: 75,
+      kyc: 68,
+      script: 25,
+      disclosure: 35,
+      aml: 78,
+      sentiment: 28
+    }
+  },
+  // Africa Region
+  {
+    id: 'CC-NAI',
+    name: 'Kenya (Nairobi)',
+    location: 'Nairobi, Kenya',
+    agents: 195,
+    totalCalls: 26750,
+    risks: {
+      compliance: 28,
+      fraud: 22,
+      kyc: 30,
+      script: 18,
+      disclosure: 25,
+      aml: 24,
+      sentiment: 20
+    }
+  }
+];
+
+// Standard locations (for non-Swedbank, non-Standard Chartered routes)
+const standardCallCenterUnits: CallCenterUnit[] = [
   // USA Locations
   {
     id: 'CC-PHX',
@@ -181,11 +384,151 @@ const callCenterUnits: CallCenterUnit[] = [
   }
 ];
 
+// Swedbank locations (based on actual operations)
+const swedbankCallCenterUnits: CallCenterUnit[] = [
+  {
+    id: 'CC-STO',
+    name: 'Sweden (Stockholm - Sundbyberg)',
+    location: 'Stockholm, Sweden',
+    agents: 450,
+    totalCalls: 62500,
+    risks: {
+      compliance: 72,
+      fraud: 35,
+      kyc: 58,
+      script: 65,
+      disclosure: 70,
+      aml: 36,
+      sentiment: 30
+    }
+  },
+  {
+    id: 'CC-TAL',
+    name: 'Estonia (Tallinn)',
+    location: 'Tallinn, Estonia',
+    agents: 280,
+    totalCalls: 38900,
+    risks: {
+      compliance: 32,
+      fraud: 75,
+      kyc: 68,
+      script: 25,
+      disclosure: 35,
+      aml: 78,
+      sentiment: 28
+    }
+  },
+  {
+    id: 'CC-RIG',
+    name: 'Latvia (Riga)',
+    location: 'Riga, Latvia',
+    agents: 220,
+    totalCalls: 31200,
+    risks: {
+      compliance: 35,
+      fraud: 45,
+      kyc: 42,
+      script: 30,
+      disclosure: 38,
+      aml: 75,
+      sentiment: 28
+    }
+  },
+  {
+    id: 'CC-VIL',
+    name: 'Lithuania (Vilnius)',
+    location: 'Vilnius, Lithuania',
+    agents: 400,
+    totalCalls: 54800,
+    risks: {
+      compliance: 25,
+      fraud: 72,
+      kyc: 35,
+      script: 28,
+      disclosure: 32,
+      aml: 38,
+      sentiment: 22
+    }
+  },
+  {
+    id: 'CC-OSL',
+    name: 'Oslo',
+    location: 'Oslo, Norway',
+    agents: 120,
+    totalCalls: 16800,
+    risks: {
+      compliance: 30,
+      fraud: 28,
+      kyc: 32,
+      script: 22,
+      disclosure: 28,
+      aml: 26,
+      sentiment: 24
+    }
+  },
+  {
+    id: 'CC-HEL',
+    name: 'Helsinki',
+    location: 'Helsinki, Finland',
+    agents: 110,
+    totalCalls: 15200,
+    risks: {
+      compliance: 28,
+      fraud: 22,
+      kyc: 30,
+      script: 18,
+      disclosure: 25,
+      aml: 24,
+      sentiment: 20
+    }
+  },
+  {
+    id: 'CC-SHA',
+    name: 'Shanghai',
+    location: 'Shanghai, China',
+    agents: 85,
+    totalCalls: 11200,
+    risks: {
+      compliance: 22,
+      fraud: 20,
+      kyc: 28,
+      script: 18,
+      disclosure: 25,
+      aml: 22,
+      sentiment: 18
+    }
+  },
+  {
+    id: 'CC-NYC',
+    name: 'New York',
+    location: 'New York, USA',
+    agents: 95,
+    totalCalls: 12800,
+    risks: {
+      compliance: 20,
+      fraud: 18,
+      kyc: 25,
+      script: 15,
+      disclosure: 22,
+      aml: 20,
+      sentiment: 16
+    }
+  }
+];
+
 interface CallCenterRiskHeatMapProps {
   isDarkMode?: boolean;
 }
 
 export function CallCenterRiskHeatMap({ isDarkMode = false }: CallCenterRiskHeatMapProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
+  const callCenterUnits = isSwedbankRoute 
+    ? swedbankCallCenterUnits 
+    : isStandardCharteredRoute 
+    ? standardCharteredCallCenterUnits 
+    : standardCallCenterUnits;
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredCell, setHoveredCell] = useState<{ unit: string; category: string } | null>(null);
   const [selectedUnit, setSelectedUnit] = useState<CallCenterUnit | null>(null);

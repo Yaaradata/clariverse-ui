@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, Fragment } from 'react';
+import { usePathname } from 'next/navigation';
 import { 
   AlertTriangle, Building2, Clock, RefreshCw, ChevronRight, Filter,
   FileText, Target, ArrowRight, Users, Shield,
@@ -143,7 +144,7 @@ const generateRiskData = (): RiskItem[] => {
 const riskData: RiskItem[] = generateRiskData();
 
 // Dynamic function to generate risk details based on risk item
-const generateRiskDetails = (risk: RiskItem): RiskDetails => {
+const generateRiskDetails = (risk: RiskItem, isSwedbankRoute: boolean = false, isStandardCharteredRoute: boolean = false): RiskDetails => {
   const typeDetails: Record<string, { 
     processes: string[], 
     controls: string[], 
@@ -201,9 +202,22 @@ const generateRiskDetails = (risk: RiskItem): RiskDetails => {
   };
 
   const details = typeDetails[risk.type] || typeDetails['Operational'];
-  const exposureBase = risk.severity === 'critical' ? '$5M - $20M' : 
-                       risk.severity === 'high' ? '$1M - $5M' : 
-                       risk.severity === 'medium' ? '$500K - $2M' : '$100K - $500K';
+  
+  // Format exposure based on route
+  let exposureBase: string;
+  if (isSwedbankRoute) {
+    exposureBase = risk.severity === 'critical' ? '€5M - €20M' : 
+                   risk.severity === 'high' ? '€1M - €5M' : 
+                   risk.severity === 'medium' ? '€500K - €2M' : '€100K - €500K';
+  } else if (isStandardCharteredRoute) {
+    exposureBase = risk.severity === 'critical' ? '$5M - $20M' : 
+                   risk.severity === 'high' ? '$1M - $5M' : 
+                   risk.severity === 'medium' ? '$500K - $2M' : '$100K - $500K';
+  } else {
+    exposureBase = risk.severity === 'critical' ? '$5M - $20M' : 
+                   risk.severity === 'high' ? '$1M - $5M' : 
+                   risk.severity === 'medium' ? '$500K - $2M' : '$100K - $500K';
+  }
 
   return {
     rootCause: `${risk.category} identified in ${risk.channel} channel within ${risk.region} region. Investigation ongoing to determine full scope and contributing factors.`,
@@ -224,6 +238,9 @@ interface ActiveRisksTableProps {
 }
 
 export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const [isVisible, setIsVisible] = useState(false);
   const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
   const [selectedType, setSelectedType] = useState<string>('all');
@@ -265,7 +282,14 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
     switch (type) {
       case 'Regulatory': return <Shield className="w-4 h-4" />;
       case 'Operational': return <Activity className="w-4 h-4" />;
-      case 'Financial': return <DollarSign className="w-4 h-4" />;
+      case 'Financial': 
+        if (isSwedbankRoute) {
+          return <span className="text-[14px] font-semibold">€</span>;
+        } else if (isStandardCharteredRoute) {
+          return <DollarSign className="w-4 h-4" />;
+        } else {
+          return <DollarSign className="w-4 h-4" />;
+        }
       case 'Reputational': return <Globe className="w-4 h-4" />;
       default: return <AlertTriangle className="w-4 h-4" />;
     }
@@ -378,7 +402,7 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
             const severityColor = getSeverityColor(risk.severity);
             const statusColor = getStatusColor(risk.status);
             const isExpanded = expandedRow === risk.id;
-            const riskDetails = generateRiskDetails(risk);
+            const riskDetails = generateRiskDetails(risk, isSwedbankRoute, isStandardCharteredRoute);
             const riskScore = getRiskScore(risk.impactScore, risk.likelihood);
 
             return (
@@ -399,7 +423,7 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
                   {/* Main Row */}
                   <div className="flex items-start gap-3">
                     <div 
-                      className="p-1.5 rounded-lg flex-shrink-0"
+                      className="p-1.5 rounded-lg shrink-0"
                       style={{ backgroundColor: `${severityColor}15` }}
                     >
                       <AlertTriangle className="w-4 h-4" style={{ color: severityColor }} />
@@ -505,7 +529,7 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
                     </div>
                     
                     <ChevronRight 
-                      className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`}
+                      className={`w-4 h-4 shrink-0 transition-transform duration-300 ${isExpanded ? 'rotate-90' : ''}`}
                       style={{ color: '#939394' }}
                     />
                   </div>
@@ -615,7 +639,7 @@ export function ActiveRisksTable({ isDarkMode = false }: ActiveRisksTableProps) 
                                     style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
                                   >
                                     <span 
-                                      className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5"
+                                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] font-bold mt-0.5"
                                       style={{ 
                                         backgroundColor: `${severityColor}20`,
                                         color: severityColor

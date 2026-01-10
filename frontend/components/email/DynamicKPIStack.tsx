@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { KPIData } from '@/lib/api';
 import { TrendingUp, TrendingDown, AlertCircle, Clock, DollarSign, Activity } from 'lucide-react';
@@ -24,6 +25,9 @@ interface KPIItem {
 }
 
 export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const [displayData, setDisplayData] = useState<KPIData>(data);
 
   // Update display data when new data arrives
@@ -36,7 +40,7 @@ export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
     (data.internal_pending_count || 0) * (data.avg_resolution_time_days || 2.3) * 24
   );
 
-  // Calculate value at risk (₹) - approximate based on P1 threads and business impact
+  // Calculate value at risk - approximate based on P1 threads and business impact
   const valueAtRisk = Math.round(
     (data.urgent_threads_count || 0) * (data.business_impact_score || 72.3) * 10000
   );
@@ -79,8 +83,12 @@ export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
     },
     {
       id: 'value-at-risk',
-      label: '₹ At-Risk',
-      value: `₹${(valueAtRisk / 100000).toFixed(1)}Cr`,
+      label: isSwedbankRoute ? '€ At-Risk' : isStandardCharteredRoute ? '$ At-Risk' : '₹ At-Risk',
+      value: isSwedbankRoute 
+        ? `€${(valueAtRisk / 1000000).toFixed(1)}M`
+        : isStandardCharteredRoute
+        ? `$${(valueAtRisk / 1000000).toFixed(1)}M`
+        : `₹${(valueAtRisk / 100000).toFixed(1)}Cr`,
       icon: DollarSign,
       color: valueAtRisk > 50000000 ? 'text-red-400' : valueAtRisk > 20000000 ? 'text-yellow-400' : 'text-green-400',
       bgColor: valueAtRisk > 50000000 ? 'bg-red-500/10' : valueAtRisk > 20000000 ? 'bg-yellow-500/10' : 'bg-green-500/10',

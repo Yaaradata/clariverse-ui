@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { 
   Globe, TrendingUp, TrendingDown, AlertTriangle, 
   Users, Shield, MapPin, Activity
@@ -18,7 +19,144 @@ interface RegionData {
   coordinates: { x: number; y: number };
 }
 
-const regionData: RegionData[] = [
+// Standard Chartered locations (for Standard Chartered routes)
+const standardCharteredRegionData: RegionData[] = [
+  {
+    id: 'chennai',
+    name: 'India (Chennai)',
+    code: 'CHE',
+    violations: 15,
+    complianceScore: 82,
+    agents: 1300,
+    trend: 8,
+    riskLevel: 'high',
+    coordinates: { x: 72, y: 42 }
+  },
+  {
+    id: 'bengaluru',
+    name: 'India (Bengaluru)',
+    code: 'BLR',
+    violations: 11,
+    complianceScore: 86,
+    agents: 500,
+    trend: 3,
+    riskLevel: 'medium',
+    coordinates: { x: 71, y: 40 }
+  },
+  {
+    id: 'kualalumpur',
+    name: 'Malaysia (Kuala Lumpur)',
+    code: 'KUL',
+    violations: 12,
+    complianceScore: 85,
+    agents: 500,
+    trend: 2,
+    riskLevel: 'medium',
+    coordinates: { x: 78, y: 48 }
+  },
+  {
+    id: 'shanghai',
+    name: 'China (Shanghai)',
+    code: 'SHA',
+    violations: 10,
+    complianceScore: 87,
+    agents: 230,
+    trend: -2,
+    riskLevel: 'medium',
+    coordinates: { x: 82, y: 42 }
+  },
+  {
+    id: 'manila',
+    name: 'Philippines (Manila)',
+    code: 'MNL',
+    violations: 9,
+    complianceScore: 88,
+    agents: 485,
+    trend: -4,
+    riskLevel: 'low',
+    coordinates: { x: 78, y: 52 }
+  },
+  {
+    id: 'singapore',
+    name: 'Singapore',
+    code: 'SIN',
+    violations: 6,
+    complianceScore: 91,
+    agents: 450,
+    trend: -6,
+    riskLevel: 'low',
+    coordinates: { x: 79, y: 50 }
+  },
+  {
+    id: 'hongkong',
+    name: 'Hong Kong',
+    code: 'HKG',
+    violations: 8,
+    complianceScore: 89,
+    agents: 380,
+    trend: -3,
+    riskLevel: 'low',
+    coordinates: { x: 82, y: 45 }
+  },
+  {
+    id: 'london',
+    name: 'United Kingdom (London)',
+    code: 'LON',
+    violations: 7,
+    complianceScore: 90,
+    agents: 174,
+    trend: -4,
+    riskLevel: 'low',
+    coordinates: { x: 48, y: 32 }
+  },
+  {
+    id: 'warsaw',
+    name: 'Poland (Warsaw)',
+    code: 'WAW',
+    violations: 5,
+    complianceScore: 92,
+    agents: 200,
+    trend: -5,
+    riskLevel: 'low',
+    coordinates: { x: 52, y: 34 }
+  },
+  {
+    id: 'frankfurt',
+    name: 'Germany (Frankfurt)',
+    code: 'FRA',
+    violations: 11,
+    complianceScore: 86,
+    agents: 165,
+    trend: 3,
+    riskLevel: 'medium',
+    coordinates: { x: 50, y: 35 }
+  },
+  {
+    id: 'newyork',
+    name: 'United States (New York)',
+    code: 'NYC',
+    violations: 12,
+    complianceScore: 85,
+    agents: 245,
+    trend: 2,
+    riskLevel: 'medium',
+    coordinates: { x: 24, y: 38 }
+  },
+  {
+    id: 'nairobi',
+    name: 'Kenya (Nairobi)',
+    code: 'NAI',
+    violations: 10,
+    complianceScore: 87,
+    agents: 195,
+    trend: -2,
+    riskLevel: 'medium',
+    coordinates: { x: 54, y: 58 }
+  }
+];
+
+// Standard locations (for non-Swedbank, non-Standard Chartered routes)
+const standardRegionData: RegionData[] = [
   {
     id: 'phoenix',
     name: 'Phoenix, AZ',
@@ -120,11 +258,111 @@ const regionData: RegionData[] = [
   }
 ];
 
+// Swedbank locations (based on actual operations)
+const swedbankRegionData: RegionData[] = [
+  {
+    id: 'stockholm',
+    name: 'Sweden (Stockholm - Sundbyberg)',
+    code: 'STO',
+    violations: 8,
+    complianceScore: 91,
+    agents: 450,
+    trend: -2,
+    riskLevel: 'low',
+    coordinates: { x: 50, y: 28 }
+  },
+  {
+    id: 'tallinn',
+    name: 'Estonia (Tallinn)',
+    code: 'TAL',
+    violations: 6,
+    complianceScore: 93,
+    agents: 280,
+    trend: -3,
+    riskLevel: 'low',
+    coordinates: { x: 54, y: 32 }
+  },
+  {
+    id: 'riga',
+    name: 'Latvia (Riga)',
+    code: 'RIG',
+    violations: 7,
+    complianceScore: 92,
+    agents: 220,
+    trend: -2,
+    riskLevel: 'low',
+    coordinates: { x: 53, y: 33 }
+  },
+  {
+    id: 'vilnius',
+    name: 'Lithuania (Vilnius)',
+    code: 'VIL',
+    violations: 5,
+    complianceScore: 94,
+    agents: 400,
+    trend: -4,
+    riskLevel: 'low',
+    coordinates: { x: 54, y: 34 }
+  },
+  {
+    id: 'oslo',
+    name: 'Oslo',
+    code: 'OSL',
+    violations: 4,
+    complianceScore: 95,
+    agents: 120,
+    trend: -3,
+    riskLevel: 'low',
+    coordinates: { x: 49, y: 27 }
+  },
+  {
+    id: 'helsinki',
+    name: 'Helsinki',
+    code: 'HEL',
+    violations: 5,
+    complianceScore: 94,
+    agents: 110,
+    trend: -2,
+    riskLevel: 'low',
+    coordinates: { x: 55, y: 30 }
+  },
+  {
+    id: 'shanghai',
+    name: 'Shanghai',
+    code: 'SHA',
+    violations: 9,
+    complianceScore: 88,
+    agents: 85,
+    trend: 1,
+    riskLevel: 'medium',
+    coordinates: { x: 82, y: 42 }
+  },
+  {
+    id: 'newyork',
+    name: 'New York',
+    code: 'NYC',
+    violations: 10,
+    complianceScore: 87,
+    agents: 95,
+    trend: 2,
+    riskLevel: 'medium',
+    coordinates: { x: 22, y: 38 }
+  }
+];
+
 interface RegionalComplianceMapProps {
   isDarkMode?: boolean;
 }
 
 export function RegionalComplianceMap({ isDarkMode = false }: RegionalComplianceMapProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
+  const regionData = isSwedbankRoute 
+    ? swedbankRegionData 
+    : isStandardCharteredRoute 
+    ? standardCharteredRegionData 
+    : standardRegionData;
   const [isVisible, setIsVisible] = useState(false);
   const [selectedRegion, setSelectedRegion] = useState<RegionData | null>(null);
   const [hoveredRegion, setHoveredRegion] = useState<string | null>(null);
@@ -332,7 +570,7 @@ export function RegionalComplianceMap({ isDarkMode = false }: RegionalCompliance
       <div className="flex">
         {/* Left Stats Panel */}
         <div 
-          className="w-64 p-5 border-r flex-shrink-0"
+          className="w-64 p-5 border-r shrink-0"
           style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
         >
           <h4 

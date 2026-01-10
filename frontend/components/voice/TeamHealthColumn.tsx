@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, RadialBarChart, RadialBar, Cell } from 'recharts';
@@ -42,6 +43,10 @@ export function TeamHealthColumn({
   escalationData,
   dateRange
 }: TeamHealthColumnProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
+  const currencySymbol = isStandardCharteredRoute ? '$' : (isSwedbankRoute ? '€' : '€');
   return (
     <div className="space-y-4 min-w-0 w-full">
       {/* Team Quality Overview */}
@@ -92,7 +97,7 @@ export function TeamHealthColumn({
           )}
           {granularCompliance && (
             <p className="text-xs text-muted-foreground mt-2">
-              Expected Loss: €{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M | 
+              Expected Loss: {currencySymbol}{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M | 
               Risk Level: <span className={`font-semibold ${
                 granularCompliance.riskLevel === 'critical' ? 'text-red-400' :
                 granularCompliance.riskLevel === 'high' ? 'text-orange-400' :
@@ -170,19 +175,19 @@ export function TeamHealthColumn({
                   <div className="bg-gray-800/50 rounded p-2">
                     <div className="text-xs text-muted-foreground mb-1">Potential Fines</div>
                     <div className="text-sm font-semibold text-red-400">
-                      €{(granularCompliance.financialRisk.totalPotentialFines / 1000000).toFixed(0)}M
+                      {currencySymbol}{(granularCompliance.financialRisk.totalPotentialFines / 1000000).toFixed(0)}M
                     </div>
                   </div>
                   <div className="bg-gray-800/50 rounded p-2">
                     <div className="text-xs text-muted-foreground mb-1">Expected Loss</div>
                     <div className="text-sm font-semibold text-orange-400">
-                      €{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M
+                      {currencySymbol}{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M
                     </div>
                   </div>
                   <div className="bg-gray-800/50 rounded p-2">
                     <div className="text-xs text-muted-foreground mb-1">Worst Case</div>
                     <div className="text-sm font-semibold text-red-400">
-                      €{(granularCompliance.financialRisk.worstCaseScenario / 1000000).toFixed(0)}M
+                      {currencySymbol}{(granularCompliance.financialRisk.worstCaseScenario / 1000000).toFixed(0)}M
                     </div>
                   </div>
                 </div>

@@ -1,10 +1,11 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AlertTriangle, Clock, Euro, FileText, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Clock, Euro, DollarSign, FileText, CheckCircle } from 'lucide-react';
 import { Violation } from '@/lib/voiceData';
 
 interface ViolationCenterProps {
@@ -12,6 +13,11 @@ interface ViolationCenterProps {
 }
 
 export function ViolationCenter({ violations }: ViolationCenterProps) {
+  const pathname = usePathname();
+  const isSwedbankRoute = pathname?.startsWith('/swedbank');
+  const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
+  const CurrencyIcon = isStandardCharteredRoute ? DollarSign : Euro;
+  const currencySymbol = isStandardCharteredRoute ? '$' : (isSwedbankRoute ? '€' : '€');
   // Helper function to format dates
   const formatDate = (dateString: string, format: 'short' | 'date' = 'short') => {
     const date = new Date(dateString);
@@ -195,11 +201,11 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
           </div>
           <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-3 hover:bg-purple-500/15 transition-colors">
             <div className="text-xs text-purple-400 mb-1 flex items-center gap-1">
-              <Euro className="w-3 h-3" />
+              <CurrencyIcon className="w-3 h-3" />
               Expected Loss
             </div>
             <div className="text-xl font-bold text-white">
-              €{(totalFinancialRisk / 1000000).toFixed(1)}M
+              {currencySymbol}{(totalFinancialRisk / 1000000).toFixed(1)}M
             </div>
           </div>
         </div>
@@ -249,11 +255,11 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
                 </div>
                 <div className="bg-white/5 rounded p-2 border border-white/10">
                   <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1">
-                    <Euro className="w-3 h-3" />
+                    <CurrencyIcon className="w-3 h-3" />
                     Financial Impact
                   </div>
                   <div className="text-sm font-semibold text-red-400">
-                    €{(violation.financialImpact.expectedLoss / 1000).toFixed(0)}K
+                    {currencySymbol}{(violation.financialImpact.expectedLoss / 1000).toFixed(0)}K
                   </div>
                   <div className="text-xs text-muted-foreground">
                     {violation.financialImpact.probability}% probability
@@ -328,7 +334,7 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
                       <span className="text-white/40">Agent:</span> {selectedViolation.agentName}
                     </div>
                     <div>
-                      <span className="text-white/40">Financial Impact:</span> €{(selectedViolation.financialImpact.expectedLoss / 1000).toFixed(0)}K expected
+                      <span className="text-white/40">Financial Impact:</span> {currencySymbol}{(selectedViolation.financialImpact.expectedLoss / 1000).toFixed(0)}K expected
                     </div>
                     <div>
                       <span className="text-white/40">Probability:</span> {selectedViolation.financialImpact.probability}%

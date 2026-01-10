@@ -28,7 +28,16 @@ import {
   AlertTriangle,
   CheckCheck
 } from 'lucide-react';
-import { ViolationData, getSeverityColor } from '@/lib/compliance/complianceData';
+import { ViolationData as StandardViolationData, getSeverityColor } from '@/lib/compliance/complianceData';
+
+// Flexible interface that accepts data from either standard or client-specific sources
+interface ViolationData {
+  category: string;
+  count: number;
+  trend: number;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  percentage: number;
+}
 
 interface ChannelBreakdown {
   email: number;
@@ -216,6 +225,7 @@ const getChannelBreakdown = (category: string, total: number): ChannelBreakdown 
     'Customer Identification Program': [0.20, 0.30, 0.20, 0.25, 0.05],
     'Regulatory Reporting': [0.40, 0.10, 0.35, 0.10, 0.05],
     'Data Privacy Compliance': [0.25, 0.25, 0.20, 0.15, 0.15],
+    'GDPR Compliance': [0.25, 0.25, 0.20, 0.15, 0.15],
     'Cross-Border Compliance': [0.30, 0.15, 0.25, 0.20, 0.10],
     'Vendor Compliance': [0.35, 0.20, 0.30, 0.10, 0.05]
   };
@@ -252,7 +262,8 @@ export function ViolationCategoryChart({ data, isDarkMode = false }: ViolationCa
       case 'AML Compliance': return <Banknote {...iconProps} />;
       case 'Customer Identification Program': return <UserCheck {...iconProps} />;
       case 'Regulatory Reporting': return <FileBarChart {...iconProps} />;
-      case 'Data Privacy Compliance': return <ShieldCheck {...iconProps} />;
+      case 'Data Privacy Compliance':
+      case 'GDPR Compliance': return <ShieldCheck {...iconProps} />;
       case 'Cross-Border Compliance': return <Globe {...iconProps} />;
       case 'Vendor Compliance': return <Building2 {...iconProps} />;
       default: return <AlertCircle {...iconProps} />;
