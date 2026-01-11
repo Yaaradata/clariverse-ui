@@ -33,13 +33,13 @@ export default function HomePage() {
               <div className="flex flex-col space-y-2 w-full">
                 <Link 
                   href="/standard-chartered"
-                  className="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors hover:underline"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/50 hover:scale-105"
                 >
                   Unified Dashboard
                 </Link>
                 <Link 
                   href="/standard-chartered/compliance-fci"
-                  className="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors hover:underline"
+                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/50 hover:scale-105"
                 >
                   Compliance Dashboard
                 </Link>
@@ -66,13 +66,13 @@ export default function HomePage() {
               <div className="flex flex-col space-y-2 w-full">
                 <Link 
                   href="/swedbank"
-                  className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors hover:underline"
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/50 hover:scale-105"
                 >
                   Unified Dashboard
                 </Link>
                 <Link 
                   href="/swedbank/compliance-fci"
-                  className="text-orange-400 hover:text-orange-300 text-sm font-medium transition-colors hover:underline"
+                  className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-orange-500/50 hover:scale-105"
                 >
                   Compliance Dashboard
                 </Link>
