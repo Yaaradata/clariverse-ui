@@ -16,7 +16,7 @@ export default function SwedbankLayout({
   if (isComplianceFCIRoute) {
     return <>{children}</>;
   }
-   
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
