@@ -248,7 +248,7 @@ export default function FinanceDashboard() {
               Approval Gravity & Financial Impact Analysis
             </p>
             <div className="flex items-center gap-2 mt-3">
-              <Link href="/email">
+              <Link href="/standard-chartered/email">
                 <Button
                   variant="outline"
                   size="sm"
@@ -257,7 +257,7 @@ export default function FinanceDashboard() {
                   📊 Executive Summary
                 </Button>
               </Link>
-              <Link href="/email/executive">
+              <Link href="/standard-chartered/email/executive">
                 <Button
                   variant="outline"
                   size="sm"
@@ -266,7 +266,7 @@ export default function FinanceDashboard() {
                   🧭 Executive Cockpit
                 </Button>
               </Link>
-              <Link href="/email/manager">
+              <Link href="/standard-chartered/email/manager">
                 <Button
                   variant="outline"
                   size="sm"
@@ -275,7 +275,7 @@ export default function FinanceDashboard() {
                   ⚙️ Manager View
                 </Button>
               </Link>
-              <Link href="/email/finance">
+              <Link href="/standard-chartered/email/finance">
                 <Button
                   variant="outline"
                   size="sm"
@@ -284,7 +284,7 @@ export default function FinanceDashboard() {
                   🧑‍💼 Finance View
                 </Button>
               </Link>
-              <Link href="/email/ops">
+              <Link href="/standard-chartered/email/ops">
                 <Button
                   variant="outline"
                   size="sm"

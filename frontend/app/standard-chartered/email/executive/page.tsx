@@ -96,7 +96,7 @@ export default function ExecutiveCockpit() {
               F1 telemetry wall for communications intelligence
             </p>
             <div className="flex items-center gap-2 mt-3">
-              <Link href="/email">
+              <Link href="/standard-chartered/email">
                 <Button
                   variant="outline"
                   size="sm"
@@ -105,7 +105,7 @@ export default function ExecutiveCockpit() {
                   📊 Executive Summary
                 </Button>
               </Link>
-              <Link href="/email/executive">
+              <Link href="/standard-chartered/email/executive">
                 <Button
                   variant="outline"
                   size="sm"
@@ -114,7 +114,7 @@ export default function ExecutiveCockpit() {
                   🧭 Executive Cockpit
                 </Button>
               </Link>
-              <Link href="/email/manager">
+              <Link href="/standard-chartered/email/manager">
                 <Button
                   variant="outline"
                   size="sm"
@@ -123,7 +123,7 @@ export default function ExecutiveCockpit() {
                   ⚙️ Manager View
                 </Button>
               </Link>
-              <Link href="/email/finance">
+              <Link href="/standard-chartered/email/finance">
                 <Button
                   variant="outline"
                   size="sm"
@@ -132,7 +132,7 @@ export default function ExecutiveCockpit() {
                   🧑‍💼 Finance View
                 </Button>
               </Link>
-              <Link href="/email/ops">
+              <Link href="/standard-chartered/email/ops">
                 <Button
                   variant="outline"
                   size="sm"
