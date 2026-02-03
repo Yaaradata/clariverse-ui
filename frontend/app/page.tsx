@@ -81,6 +81,39 @@ export default function HomePage() {
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-orange-500/0 to-yellow-500/0 group-hover:from-orange-500/10 group-hover:to-yellow-500/10 transition-all duration-300 pointer-events-none" />
           </div>
 
+          {/* HDFC Card */}
+          <div className="group relative bg-gradient-to-br from-red-900/20 to-blue-900/20 border border-red-500/30 rounded-2xl p-8 hover:border-red-400/50 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 transform hover:-translate-y-2">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <div className="relative w-24 h-24 bg-white/5 rounded-xl p-4 group-hover:bg-white/10 transition-colors flex items-center justify-center">
+                <Image
+                  src="/hdfc.png"
+                  alt="HDFC Logo"
+                  width={64}
+                  height={64}
+                  className="object-contain max-w-full max-h-full"
+                />
+              </div>
+              <h2 className="text-2xl font-semibold text-white group-hover:text-red-300 transition-colors">
+                HDFC
+              </h2>
+              <div className="flex flex-col space-y-2 w-full">
+                <Link 
+                  href="/hdfc"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-red-500/50 hover:scale-105"
+                >
+                  Unified Dashboard
+                </Link>
+                <Link 
+                  href="/hdfc/compliance-fci"
+                  className="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-red-500/50 hover:scale-105"
+                >
+                  Compliance Dashboard
+                </Link>
+              </div>
+            </div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/0 to-blue-500/0 group-hover:from-red-500/10 group-hover:to-blue-500/10 transition-all duration-300 pointer-events-none" />
+          </div>
+
           {/* Flipkart Card */}
           <Link 
             href="/flipkart"

@@ -16,12 +16,13 @@ export default function ConditionalSidebar({
     setMounted(true);
   }, []);
 
-  const isAddonRoute = pathname?.startsWith("/compliance-fci") || pathname?.startsWith("/standard-chartered/compliance-fci");
+  const isAddonRoute = pathname?.startsWith("/compliance-fci") || pathname?.startsWith("/standard-chartered/compliance-fci") || pathname?.startsWith("/hdfc/compliance-fci");
   const isSwedbankRoute = pathname?.startsWith("/swedbank");
   const isFlipkartRoute = pathname?.startsWith("/flipkart");
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered");
+  const isHdfcRoute = pathname?.startsWith("/hdfc");
   const isRootPage = pathname === "/";
-  const isStandalonePage = isAddonRoute || isSwedbankRoute || isFlipkartRoute || isStandardCharteredRoute || isRootPage;
+  const isStandalonePage = isAddonRoute || isSwedbankRoute || isFlipkartRoute || isStandardCharteredRoute || isHdfcRoute || isRootPage;
 
   // Render children only during SSR to avoid hydration mismatch
   // The correct layout will be applied after mounting

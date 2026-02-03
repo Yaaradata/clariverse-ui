@@ -11,15 +11,16 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Determine if we're on a swedbank or standard-chartered route
+  // Determine if we're on a swedbank, standard-chartered, or HDFC route
   const isSwedbankRoute = pathname?.startsWith("/swedbank") ?? false;
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered") ?? false;
-  const basePath = isSwedbankRoute ? "/swedbank" : (isStandardCharteredRoute ? "/standard-chartered" : "");
+  const isHdfcRoute = pathname?.startsWith("/hdfc") ?? false;
+  const basePath = isSwedbankRoute ? "/swedbank" : (isStandardCharteredRoute ? "/standard-chartered" : (isHdfcRoute ? "/hdfc" : ""));
   
   // Set branding based on route
-  const logoPath = isSwedbankRoute ? "/swedbank.png" : "/stanchart.png";
-  const logoAlt = isSwedbankRoute ? "Swedbank Logo" : "Standard Chartered Logo";
-  const brandName = isSwedbankRoute ? "Swedbank" : "Standard Chartered";
+  const logoPath = isSwedbankRoute ? "/swedbank.png" : (isHdfcRoute ? "/hdfc.png" : "/stanchart.png");
+  const logoAlt = isSwedbankRoute ? "Swedbank Logo" : (isHdfcRoute ? "HDFC Logo" : "Standard Chartered Logo");
+  const brandName = isSwedbankRoute ? "Swedbank" : (isHdfcRoute ? "HDFC" : "Standard Chartered");
 
   const navigationItems = [
     {
@@ -85,12 +86,12 @@ export default function Sidebar() {
       {/* Logo Section */}
       <div className={`mb-8 animate-fade-in ${isExpanded ? 'p-6 pb-4' : 'p-3 pb-4'}`}>
         <div className="flex items-center space-x-3 mb-3">
-          <div className={`${isSwedbankRoute ? 'w-14 h-14' : 'w-10 h-10'} rounded-lg flex items-center justify-center overflow-hidden`} suppressHydrationWarning>
+          <div className={`${isSwedbankRoute || isHdfcRoute ? 'w-14 h-14' : 'w-10 h-10'} rounded-lg flex items-center justify-center overflow-hidden`} suppressHydrationWarning>
             <Image 
               src={logoPath}
               alt={logoAlt}
-              width={isSwedbankRoute ? 56 : 40} 
-              height={isSwedbankRoute ? 56 : 40}
+              width={isSwedbankRoute || isHdfcRoute ? 56 : 40} 
+              height={isSwedbankRoute || isHdfcRoute ? 56 : 40}
               className="object-contain"
               priority
               unoptimized
@@ -110,7 +111,12 @@ export default function Sidebar() {
         {navigationItems.map((item, index) => {
           // Normalize paths for comparison (handle trailing slashes)
           const normalizePath = (path: string) => path.replace(/\/$/, '') || '/';
-          const isActive = normalizePath(pathname || '') === normalizePath(item.href);
+          const current = normalizePath(pathname || '');
+          const itemPath = normalizePath(item.href);
+          // Dashboard: active only on exact base path. Others: active on exact match or any sub-route (e.g. /email/ops)
+          const isActive = item.id === 'dashboard'
+            ? current === itemPath || current === basePath
+            : current === itemPath || (current.startsWith(itemPath + '/'));
           
           return (
             <div key={item.id} className="animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>

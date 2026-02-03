@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import { ChevronDown } from "lucide-react"
 import { clsx } from "clsx"
 
@@ -158,12 +159,12 @@ export function SelectContent({ children, className, style }: SelectContentProps
 
   if (!open) return null
 
-  return (
+  const content = (
     <div
       ref={contentRef}
       className={clsx(
-        "neu-raised fixed z-[9999] min-w-[8rem] overflow-visible rounded-md border border-border",
-        "bg-card text-card-foreground shadow-md",
+        "neu-raised fixed z-[99999] min-w-[8rem] overflow-visible rounded-md border border-border",
+        "bg-card text-card-foreground shadow-lg",
         className
       )}
       style={{
@@ -177,6 +178,12 @@ export function SelectContent({ children, className, style }: SelectContentProps
       </div>
     </div>
   )
+
+  // Render in portal so dropdown always appears above other content (avoids overlay/stacking issues)
+  if (typeof document !== "undefined") {
+    return createPortal(content, document.body)
+  }
+  return content
 }
 
 // Select item component
