@@ -7,7 +7,7 @@ import ConsoleFilter from '@/components/ConsoleFilter';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Standard Chartered - Yaaralabs.ai',
+  title: 'Yaaralabs.ai',
   description: 'AI-powered customer intent intelligence platform',
 };
 
