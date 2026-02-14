@@ -7,7 +7,6 @@ import {
   FraudRiskSnapshot,
   AIPatternBrain,
   ForensicEvidenceModal,
-  CrossChannelFraudConsistencyWheel,
   RegionalFraudBurdenBar,
   FraudSignalIntensityGrid,
 } from '@/components/ecom-fraudulent';
@@ -229,24 +228,12 @@ export default function FraudulentPage() {
           </div>
         </div>
 
-        {/* ROW 2: Cross-Channel Fraud Consistency Wheel + Fraud Signal Intensity Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-[1fr_1.8fr] gap-6">
-          <div 
-            className="animate-fade-in"
-            style={{ 
-              animationDelay: '100ms',
-            }}
-          >
-            <CrossChannelFraudConsistencyWheel />
-          </div>
-          <div 
-            className="animate-fade-in"
-            style={{ 
-              animationDelay: '150ms',
-            }}
-          >
-            <FraudSignalIntensityGrid />
-          </div>
+        {/* ROW 2: Fraud Signal Intensity Grid */}
+        <div 
+          className="w-full animate-fade-in"
+          style={{ animationDelay: '100ms' }}
+        >
+          <FraudSignalIntensityGrid />
         </div>
 
         {/* ROW 3: Regional Fraud Burden Bar - Full Width */}

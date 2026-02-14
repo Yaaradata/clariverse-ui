@@ -20,7 +20,15 @@ const CHANNEL_LABELS: Record<string, string> = {
 };
 
 const CHANNEL_ORDER: ChannelKey[] = ["email", "chat", "ticket", "social", "voice"];
-const STAGE_ORDER = ["Receive", "Authenticate", "Resolution", "Escalation", "Closure"];
+
+/** Canonical stage order for the heatmap. All adapters should use these exact strings. */
+const CANONICAL_STAGE_ORDER = ["Receive", "Authenticate", "Resolution", "Escalation", "Closure"];
+
+function normalizeStage(stage: string): string {
+  const s = String(stage ?? "").trim();
+  if (!s) return s;
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
+}
 
 function getHeatmapColor(value: number, max: number) {
   if (max <= 0) return "rgba(59,130,246,0.15)";
@@ -42,12 +50,22 @@ interface UnifiedIntelligenceWallProps {
 
 export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallProps) {
   const actionGridMatrix = useMemo(() => {
-    if (!actionGrid) return {};
+    if (!actionGrid?.entries?.length) return {};
     return actionGrid.entries.reduce<Record<string, Record<string, (typeof actionGrid.entries)[number]>>>((acc, entry) => {
-      if (!acc[entry.stage]) acc[entry.stage] = {};
-      acc[entry.stage][entry.channel] = entry;
+      const stageKey = normalizeStage(entry.stage);
+      if (!stageKey || !entry.channel) return acc;
+      if (!acc[stageKey]) acc[stageKey] = {};
+      acc[stageKey][entry.channel] = entry;
       return acc;
     }, {});
+  }, [actionGrid]);
+
+  const stageOrder = useMemo(() => {
+    if (!actionGrid?.entries?.length) return CANONICAL_STAGE_ORDER;
+    const fromData = [...new Set(actionGrid.entries.map((e) => normalizeStage(e.stage)).filter(Boolean))];
+    const ordered = CANONICAL_STAGE_ORDER.filter((s) => fromData.includes(s));
+    const rest = fromData.filter((s) => !CANONICAL_STAGE_ORDER.includes(s));
+    return ordered.length > 0 ? [...ordered, ...rest] : fromData;
   }, [actionGrid]);
 
   const actionGridMaxScore = useMemo(() => {
@@ -60,7 +78,7 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
   return (
     <div className="space-y-10">
       <div className="space-y-6">
-        <Card>
+        <Card className="border border-(--border) bg-(--card) shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
           <CardHeader>
             <CardTitle>Cross-Channel Action Grid</CardTitle>
             <CardDescription>Heatmap of stage latency and ownership pressure across channels.</CardDescription>
@@ -70,10 +88,10 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
               <>
                 <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-1">
                   <div className="flex flex-col gap-0.5 pt-2">
-                    {STAGE_ORDER.map((stage) => (
+                    {stageOrder.map((stage) => (
                       <div
                         key={stage}
-                        className="flex h-10 items-center text-[10px] font-semibold uppercase tracking-wide text-gray-400"
+                        className="flex h-12 items-center text-[10px] font-semibold uppercase tracking-wide text-gray-400"
                       >
                         {stage}
                       </div>
@@ -94,14 +112,14 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
                           </div>
                         ))}
 
-                        {STAGE_ORDER.flatMap((stage) =>
+                        {stageOrder.flatMap((stage) =>
                           CHANNEL_ORDER.map((channel) => {
                             const entry = actionGridMatrix[stage]?.[channel];
                             if (!entry) {
                               return (
                                 <div
                                   key={`${stage}-${channel}`}
-                                  className="h-10 rounded-lg border border-dashed border-white/10 bg-black/30"
+                                  className="h-12 rounded-lg border border-dashed border-white/10 bg-black/30"
                                 />
                               );
                             }
@@ -109,13 +127,13 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
                             return (
                               <div
                                 key={`${stage}-${channel}`}
-                                className="relative flex h-10 flex-col justify-between rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-[10px] text-white shadow-inner"
+                                className="relative flex h-12 flex-col justify-between rounded-lg border border-white/10 bg-black/30 px-2 py-1.5 text-[10px] text-white shadow-inner"
                                 style={{ backgroundColor: getHeatmapColor(score, actionGridMaxScore) }}
                               >
                                 <div className="flex items-center justify-between font-semibold leading-none">
                                   <span>{entry.avgDelayHours.toFixed(1)}h</span>
                                   <span className="text-[8.5px] uppercase tracking-widest">
-                                    {(entry.pendingFromCompany * 100).toFixed(0)}% company
+                                    {(entry.pendingFromCompany * 100).toFixed(0)}% COMPANY
                                   </span>
                                 </div>
                                 <div className="flex items-center justify-between text-[8.5px] font-medium text-white/85">
@@ -139,9 +157,10 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
                   ]).map((insight, index) => (
                     <InsightCard
                       key={`${insight}-${index}`}
-                      title={index === 0 ? "🔥 Bottleneck" : index === 1 ? "🏢 Ownership" : "⚡ Efficiency"}
+                      title={index === 0 ? "Bottleneck" : index === 1 ? "Ownership" : "Efficiency"}
                       description={insight}
-                      tone={index === 0 ? "danger" : index === 2 ? "success" : "default"}
+                      tone={index === 0 ? "danger" : index === 1 ? "info" : "success"}
+                      icon={index === 0 ? "🔥" : index === 1 ? "🏢" : "⚡"}
                     />
                   ))}
                 </div>
@@ -793,15 +812,17 @@ function InsightCard({
   description,
   tone = "default",
   dense = false,
+  icon,
 }: {
   title: string;
   description: string;
   tone?: "default" | "info" | "success" | "warning" | "danger";
   dense?: boolean;
+  icon?: string;
 }) {
   const toneClasses: Record<string, string> = {
     default: "border-white/10 bg-black/40",
-    info: "border-indigo-400/30 bg-indigo-500/10",
+    info: "border-blue-400/30 bg-blue-500/10",
     success: "border-emerald-400/30 bg-emerald-500/10",
     warning: "border-amber-400/30 bg-amber-500/10",
     danger: "border-rose-400/30 bg-rose-500/10",
@@ -809,7 +830,10 @@ function InsightCard({
 
   return (
     <div className={`rounded-xl border p-4 ${toneClasses[tone]} ${dense ? "space-y-1" : "space-y-2"}`}>
-      <div className="text-sm font-semibold text-white">{title}</div>
+      <div className="flex items-center gap-2 text-sm font-semibold text-white">
+        {icon ? <span className="text-base">{icon}</span> : null}
+        <span>{title}</span>
+      </div>
       <div className="text-xs text-gray-300">{description}</div>
     </div>
   );

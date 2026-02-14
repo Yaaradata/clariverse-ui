@@ -10,6 +10,7 @@ import {
   UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligence/IntentIntelligenceCommandCenter";
+import { getBankingIntentIntelligenceData } from "@/lib/unified/intentIntelligenceData";
 import { Target } from "lucide-react";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
@@ -233,7 +234,7 @@ function EisenhowerSummaryCard({
   const activeQuadrant = selectedQuadrant;
 
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+    <Card className="border border-(--border) bg-(--card) shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <CardHeader>
         <div className="flex items-center justify-between mb-2">
           <CardTitle className="flex items-center gap-2 text-white">
@@ -264,15 +265,15 @@ function EisenhowerSummaryCard({
                 key={`${channel}-${quadrant}`}
                 className={`relative rounded-lg p-5 cursor-pointer transition-all duration-200 text-center ${
                   isSelected
-                    ? "bg-[color:var(--background)] ring-2 ring-[#b90abd] shadow-lg"
-                    : "bg-[color:var(--card)] hover:bg-[color:var(--background)]"
+                    ? "bg-(--background) ring-2 ring-[#b90abd] shadow-lg"
+                    : "bg-(--card) hover:bg-(--background)"
                 } ${
-                  isLeftColumn ? "lg:border-r lg:border-[color:var(--border)]" : ""
-                } ${isTopRow ? "border-b border-[color:var(--border)]" : ""}`}
+                  isLeftColumn ? "lg:border-r lg:border-(--border)" : ""
+                } ${isTopRow ? "border-b border-(--border)" : ""}`}
                 onClick={() => onQuadrantSelect(quadrant)}
               >
                 {hasHighPriorityGlow && (
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg" />
+                  <div className="absolute inset-0 bg-linear-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg" />
                 )}
                 <div className="relative z-10 flex items-center justify-center mb-3 gap-2">
                   {hasHighPriorityGlow && <span className="text-sm animate-pulse">✨</span>}
@@ -285,7 +286,7 @@ function EisenhowerSummaryCard({
 
                 {quadrant === "do" && count > 0 && (
                   <Button
-                    className="relative z-10 mt-4 w-full bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white text-xs"
+                    className="relative z-10 mt-4 w-full bg-linear-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white text-xs"
                     onClick={(event) => {
                       event.stopPropagation();
                       onQuadrantSelect("do");
@@ -682,7 +683,7 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="space-y-6 animate-fade-in pb-6 bg-[var(--background)] min-h-screen">
+    <div className="space-y-6 animate-fade-in pb-6 bg-(--background) min-h-screen">
       <UnifiedFiltersBar
         dateFilterPreset={dateFilterPreset}
         dateRange={dateRange}
@@ -693,7 +694,7 @@ export default function HomePage() {
       />
 
       <div className="overflow-x-auto">
-        <div className="flex w-full gap-3 rounded-xl border border-[color:var(--border)] bg-[color:var(--card)]/80 p-2 backdrop-blur">
+        <div className="flex w-full gap-3 rounded-xl border border-(--border) bg-(--card)/80 p-2 backdrop-blur">
           {PRIMARY_SECTION_TABS.map((tab) => {
             const isActive = activePrimarySection === tab.id;
             return (
@@ -704,7 +705,7 @@ export default function HomePage() {
                 onClick={() => handlePrimarySectionSelect(tab.id)}
                 className={`flex min-w-[240px] flex-1 flex-col rounded-lg border px-4 py-3 text-left transition-all duration-200 ${
                   isActive
-                    ? "border-[#b90abd]/70 bg-gradient-to-r from-[#b90abd]/20 to-[#5332ff]/10 text-white shadow-lg"
+                    ? "border-[#b90abd]/70 bg-linear-to-r from-[#b90abd]/20 to-[#5332ff]/10 text-white shadow-lg"
                     : "border-white/5 bg-black/20 text-gray-300 hover:border-[#b90abd]/40 hover:text-white"
                 }`}
               >
@@ -764,7 +765,7 @@ export default function HomePage() {
                               onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
                             />
 
-                            <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+                            <Card className="border border-(--border) bg-(--card) shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
                               <CardHeader>
                                 <div className="flex items-center justify-between">
                                   <CardTitle className="flex items-center gap-2 text-white">
@@ -969,8 +970,8 @@ export default function HomePage() {
             </Card>
           </div>
 
-          {/* Intent Intelligence Command Center - Full-page, no-scroll 3-zone component */}
-          <IntentIntelligenceCommandCenter />
+          {/* Intent Intelligence Command Center - Banking data from lib/unified */}
+          <IntentIntelligenceCommandCenter {...getBankingIntentIntelligenceData()} />
         </section>
       )}
     </div>

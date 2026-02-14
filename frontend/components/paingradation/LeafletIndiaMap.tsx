@@ -197,6 +197,7 @@ function ResetZoomControl() {
 
   // Track zoom level changes
   useEffect(() => {
+    if (!map || !map.getContainer()) return;
     const handleZoomEnd = () => {
       const currentZoom = map.getZoom();
       const currentCenter = map.getCenter();
@@ -291,6 +292,8 @@ function MapUpdater({
   const highlightAreaRef = useRef<L.Circle | null>(null);
 
   useEffect(() => {
+    if (!map) return;
+
     // Load India GeoJSON from a CDN or local file
     const loadIndiaGeoJSON = async () => {
       const geoJsonSources = [
@@ -319,8 +322,8 @@ function MapUpdater({
         throw lastError || new Error('Failed to load GeoJSON from all sources');
       }
       
-      // Clear existing layer
-      if (geoJsonLayerRef.current) {
+      // Clear existing layer (guard: map may be unmounted after async fetch)
+      if (map && geoJsonLayerRef.current) {
         map.removeLayer(geoJsonLayerRef.current);
       }
 
@@ -459,6 +462,7 @@ function MapUpdater({
       });
 
       geoJsonLayerRef.current = geoJsonLayer;
+      if (!map || !map.getContainer()) return;
       geoJsonLayer.addTo(map);
 
       // Fit bounds to India
@@ -471,6 +475,7 @@ function MapUpdater({
     if (drillDownLevel === 'state') {
       loadIndiaGeoJSON().catch((error) => {
         console.error('Failed to load India GeoJSON:', error);
+        if (!map || !map.getContainer()) return;
         // Fallback: create a simple rectangle for India and show markers for states
         const bounds = [[6.5, 68.0], [35.5, 97.5]] as [number, number][];
         map.fitBounds(bounds);
@@ -522,6 +527,7 @@ function MapUpdater({
 
   // Handle pincode markers
   useEffect(() => {
+    if (!map || !map.getContainer()) return;
     if (drillDownLevel === 'pincode' && pincodeData.length > 0) {
       // Clear existing markers
       if (markerGroupRef.current) {
@@ -577,7 +583,7 @@ function MapUpdater({
         ));
         map.fitBounds(group.getBounds().pad(0.1));
       }
-    } else if (markerGroupRef.current) {
+    } else if (markerGroupRef.current && map) {
       map.removeLayer(markerGroupRef.current);
       markerGroupRef.current = null;
     }
@@ -585,6 +591,7 @@ function MapUpdater({
 
   // Handle location markers with category icons (state view)
   useEffect(() => {
+    if (!map || !map.getContainer()) return;
     if (drillDownLevel === 'state' && filteredLocations.length > 0) {
       // Clear existing location markers
       if (locationMarkersRef.current) {
@@ -809,6 +816,7 @@ function MapUpdater({
 
   // Handle zoom to location from sidebar click
   useEffect(() => {
+    if (!map || !map.getContainer()) return;
     if (locationToZoom && locationToZoom.coordinates && locationToZoom.coordinates.lat && locationToZoom.coordinates.lon) {
       // Remove previous highlight if exists
       if (highlightAreaRef.current) {

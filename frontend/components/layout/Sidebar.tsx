@@ -11,58 +11,92 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Determine if we're on a swedbank, standard-chartered, or HDFC route
+  // Determine if we're on a swedbank, standard-chartered, HDFC, or Flipkart unified route
   const isSwedbankRoute = pathname?.startsWith("/swedbank") ?? false;
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered") ?? false;
   const isHdfcRoute = pathname?.startsWith("/hdfc") ?? false;
-  const basePath = isSwedbankRoute ? "/swedbank" : (isStandardCharteredRoute ? "/standard-chartered" : (isHdfcRoute ? "/hdfc" : ""));
-  
+  const isFlipkartRoute =
+    pathname?.startsWith("/flipkart/") &&
+    pathname !== "/flipkart" &&
+    !pathname.startsWith("/flipkart/comp") &&
+    !pathname.startsWith("/flipkart/paingradation");
+  const basePath = isSwedbankRoute
+    ? "/swedbank"
+    : isStandardCharteredRoute
+      ? "/standard-chartered"
+      : isHdfcRoute
+        ? "/hdfc"
+        : isFlipkartRoute
+          ? "/flipkart"
+          : "";
+
   // Set branding based on route
-  const logoPath = isSwedbankRoute ? "/swedbank.png" : (isHdfcRoute ? "/hdfc.png" : "/stanchart.png");
-  const logoAlt = isSwedbankRoute ? "Swedbank Logo" : (isHdfcRoute ? "HDFC Logo" : "Standard Chartered Logo");
-  const brandName = isSwedbankRoute ? "Swedbank" : (isHdfcRoute ? "HDFC" : "Standard Chartered");
+  const logoPath = isSwedbankRoute
+    ? "/swedbank.png"
+    : isHdfcRoute
+      ? "/hdfc.png"
+      : isFlipkartRoute
+        ? "/flipkartlogo.png"
+        : "/stanchart.png";
+  const logoAlt = isSwedbankRoute
+    ? "Swedbank Logo"
+    : isHdfcRoute
+      ? "HDFC Logo"
+      : isFlipkartRoute
+        ? "Flipkart Logo"
+        : "Standard Chartered Logo";
+  const brandName = isSwedbankRoute
+    ? "Swedbank"
+    : isHdfcRoute
+      ? "HDFC"
+      : isFlipkartRoute
+        ? "Flipkart"
+        : "Standard Chartered";
+
+  // For Flipkart, nav hrefs use basePath directly; for others subHref === basePath (kept for any legacy refs)
+  const subHref = basePath;
 
   const navigationItems = [
     {
       id: "dashboard",
       label: "Dashboard",
       icon: BarChart3,
-      href: `${basePath}/`,
+      href: basePath ? (basePath === "/flipkart" ? "/flipkart/main-page" : `${basePath}/`) : "",
       hasSubItems: false,
     },
     {
       id: "email",
       label: "Email",
       icon: Mail,
-      href: `${basePath}/email`,
+      href: basePath ? (basePath === "/flipkart" ? "/flipkart/email" : `${basePath}/email`) : "",
       hasSubItems: false,
     },
     {
       id: "chat",
       label: "Chat",
       icon: MessageCircle,
-      href: `${basePath}/chat`,
+      href: basePath ? (basePath === "/flipkart" ? "/flipkart/chat" : `${basePath}/chat`) : "",
       hasSubItems: false,
     },
     {
       id: "ticket",
       label: "Ticket",
       icon: Ticket,
-      href: `${basePath}/ticket`,
+      href: basePath ? (basePath === "/flipkart" ? "/flipkart/ticket" : `${basePath}/ticket`) : "",
       hasSubItems: false,
     },
     {
       id: "social",
       label: "Social Media",
       icon: Share2,
-      href: `${basePath}/social`,
+      href: basePath ? (basePath === "/flipkart" ? "/flipkart/social" : `${basePath}/social`) : "",
       hasSubItems: false,
     },
     {
       id: "voice",
       label: "Voice Transcript",
       icon: Mic,
-      href: `${basePath}/voice`,
+      href: basePath ? (basePath === "/flipkart" ? "/flipkart/voice" : `${basePath}/voice`) : "",
       hasSubItems: false,
     },
     // {
@@ -86,12 +120,12 @@ export default function Sidebar() {
       {/* Logo Section */}
       <div className={`mb-8 animate-fade-in ${isExpanded ? 'p-6 pb-4' : 'p-3 pb-4'}`}>
         <div className="flex items-center space-x-3 mb-3">
-          <div className={`${isSwedbankRoute || isHdfcRoute ? 'w-14 h-14' : 'w-10 h-10'} rounded-lg flex items-center justify-center overflow-hidden`} suppressHydrationWarning>
+          <div className={`${isSwedbankRoute || isHdfcRoute || isFlipkartRoute ? 'w-14 h-14' : 'w-10 h-10'} rounded-lg flex items-center justify-center overflow-hidden`} suppressHydrationWarning>
             <Image 
               src={logoPath}
               alt={logoAlt}
-              width={isSwedbankRoute || isHdfcRoute ? 56 : 40} 
-              height={isSwedbankRoute || isHdfcRoute ? 56 : 40}
+              width={isSwedbankRoute || isHdfcRoute || isFlipkartRoute ? 56 : 40} 
+              height={isSwedbankRoute || isHdfcRoute || isFlipkartRoute ? 56 : 40}
               className="object-contain"
               priority
               unoptimized
@@ -134,7 +168,7 @@ export default function Sidebar() {
                   }`}
                   title={!isExpanded ? item.label : undefined}
                 >
-                  <item.icon className="h-4 w-4 flex-shrink-0" />
+                  <item.icon className="h-4 w-4 shrink-0" />
                   {isExpanded && (
                     <span className="animate-fade-in truncate min-w-0">{item.label}</span>
                   )}

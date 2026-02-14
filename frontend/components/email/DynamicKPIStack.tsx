@@ -26,6 +26,7 @@ interface KPIItem {
 
 export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
   const pathname = usePathname();
+  const isFlipkartRoute = pathname?.startsWith('/flipkart');
   const isSwedbankRoute = pathname?.startsWith('/swedbank');
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const [displayData, setDisplayData] = useState<KPIData>(data);
@@ -83,8 +84,10 @@ export function DynamicKPIStack({ data, previousData }: DynamicKPIStackProps) {
     },
     {
       id: 'value-at-risk',
-      label: isSwedbankRoute ? '€ At-Risk' : isStandardCharteredRoute ? '$ At-Risk' : '₹ At-Risk',
-      value: isSwedbankRoute 
+      label: isFlipkartRoute ? '₹ At-Risk' : isSwedbankRoute ? '€ At-Risk' : isStandardCharteredRoute ? '$ At-Risk' : '₹ At-Risk',
+      value: isFlipkartRoute
+        ? `₹${(valueAtRisk / 100000).toFixed(1)}Cr`
+        : isSwedbankRoute
         ? `€${(valueAtRisk / 1000000).toFixed(1)}M`
         : isStandardCharteredRoute
         ? `$${(valueAtRisk / 1000000).toFixed(1)}M`

@@ -281,7 +281,7 @@ export default function XIntelligenceDashboard() {
       <XKPIRibbon data={kpis} />
 
       <div className="space-y-6 overflow-x-hidden">
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,_2fr)_minmax(0,_1fr)] gap-6 items-start min-h-[560px] w-full max-w-full">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-6 items-start min-h-[560px] w-full max-w-full">
           <XEngagementColumn hashtagTrends={hashtags} trendingPosts={posts} />
           <div className="flex flex-col h-full min-h-0">
             <XActionColumn responseAlerts={alerts} creatorWatchlist={creators} />

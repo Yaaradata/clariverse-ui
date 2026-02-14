@@ -44,9 +44,10 @@ export function TeamHealthColumn({
   dateRange
 }: TeamHealthColumnProps) {
   const pathname = usePathname();
+  const isFlipkartRoute = pathname?.startsWith('/flipkart');
   const isSwedbankRoute = pathname?.startsWith('/swedbank');
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
-  const currencySymbol = isStandardCharteredRoute ? '$' : (isSwedbankRoute ? '€' : '€');
+  const currencySymbol = isFlipkartRoute ? '₹' : isStandardCharteredRoute ? '$' : isSwedbankRoute ? '€' : '€';
   return (
     <div className="space-y-4 min-w-0 w-full">
       {/* Team Quality Overview */}
@@ -66,7 +67,7 @@ export function TeamHealthColumn({
                 <span className="text-sm text-muted-foreground capitalize">{key}</span>
                 <div className="flex items-center gap-2">
                   <div className="w-24 h-2 bg-gray-800 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-[#b90abd] to-[#5332ff]" style={{ width: `${value}%` }} />
+                    <div className="h-full bg-linear-to-r from-[#b90abd] to-[#5332ff]" style={{ width: `${value}%` }} />
                   </div>
                   <span className="text-sm font-semibold text-white w-10 text-right">{value}%</span>
                 </div>
@@ -106,7 +107,7 @@ export function TeamHealthColumn({
             </p>
           )}
         </CardHeader>
-        <CardContent className="space-y-4 max-h-[26rem] overflow-y-auto pr-2">
+        <CardContent className="space-y-4 max-h-104 overflow-y-auto pr-2">
           {granularCompliance ? (
             <>
               {/* Regulation Breakdown */}
@@ -334,7 +335,7 @@ export function TeamHealthColumn({
                     </div>
                     <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
                       <div 
-                        className="h-full bg-gradient-to-r from-orange-500 to-orange-400" 
+                        className="h-full bg-linear-to-r from-orange-500 to-orange-400" 
                         style={{ width: `${impact}%` }} 
                       />
                     </div>

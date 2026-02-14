@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { usePathname } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -38,6 +39,8 @@ export default function RootCauseAnalysis({
   reviews,
   onActionUpdate,
 }: RootCauseAnalysisProps) {
+  const pathname = usePathname();
+  const currencyCode = pathname?.startsWith('/flipkart') ? 'INR' : 'EUR';
   const [expandedClusters, setExpandedClusters] = useState<Set<string>>(new Set());
   const [selectedTab, setSelectedTab] = useState<'analysis' | 'history'>('analysis');
   
@@ -194,7 +197,7 @@ export default function RootCauseAnalysis({
                             <span className="flex items-center gap-1">
                               {analysis.revenue_impact_per_week.toLocaleString(undefined, {
                                 style: 'currency',
-                                currency: 'EUR',
+                                currency: currencyCode,
                                 maximumFractionDigits: 0,
                               })}
                               /week at risk
@@ -299,7 +302,7 @@ export default function RootCauseAnalysis({
                                   {analysis.trustpilot_only.revenue_impact.estimated_revenue_at_risk
                                     .toLocaleString(undefined, {
                                       style: 'currency',
-                                      currency: 'EUR',
+                                      currency: currencyCode,
                                       maximumFractionDigits: 0,
                                     })}
                                   /month

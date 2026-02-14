@@ -2,78 +2,49 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 
+/**
+ * Flipkart landing page – same pattern as banks: two buttons for Unified Dashboard and Compliance Dashboard.
+ */
 export default function FlipkartPage() {
-  const pathname = usePathname();
-  const router = useRouter();
-
-  // Redirect to comp (Compliance and Risk) page by default
-  useEffect(() => {
-    if (pathname === '/flipkart') {
-      router.replace('/flipkart/comp');
-    }
-  }, [pathname, router]);
-
-  const isPaingradationActive = pathname === '/flipkart/paingradation';
-  const isCompActive = pathname === '/flipkart/comp';
-
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#010101' }}>
-      {/* Header with company name using Yaara brand colors */}
-      <header className="shadow-lg" style={{ backgroundColor: '#010101' }}>
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center">
-            <div className="relative w-14 h-14 flex-shrink-0">
-              <Image 
-                src="/flipkartlogo.png" 
-                alt="Flipkart Logo" 
-                fill
-                className="object-contain"
+    <div className="min-h-screen bg-linear-to-br from-gray-950 via-gray-900 to-gray-950 flex items-center justify-center p-6">
+      <div className="max-w-2xl w-full">
+        <div className="group relative bg-linear-to-br from-blue-900/20 to-cyan-900/20 border border-blue-500/30 rounded-2xl p-8 hover:border-blue-400/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 transform hover:-translate-y-2">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="relative w-24 h-24 bg-white/5 rounded-xl p-4 group-hover:bg-white/10 transition-colors flex items-center justify-center">
+              <Image
+                src="/flipkartlogo.png"
+                alt="Flipkart Logo"
+                width={80}
+                height={80}
+                className="object-contain max-w-full max-h-full"
               />
             </div>
-            <h1 className="text-xl font-bold text-white ml-2">Flipkart</h1>
+            <h2 className="text-2xl font-semibold text-white group-hover:text-blue-300 transition-colors">
+              Flipkart
+            </h2>
+            <p className="text-gray-400 text-sm">
+              Select a dashboard to continue
+            </p>
+            <div className="flex flex-col space-y-2 w-full">
+              <Link
+                href="/flipkart/main-page"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/50 hover:scale-105"
+              >
+                Unified Dashboard
+              </Link>
+              <Link
+                href="/flipkart/comp"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/50 hover:scale-105"
+              >
+                Compliance Dashboard
+              </Link>
+            </div>
           </div>
+          <div className="absolute inset-0 rounded-2xl bg-linear-to-br from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/10 group-hover:to-cyan-500/10 transition-all duration-300 pointer-events-none" />
         </div>
-      </header>
-
-      {/* Tabs */}
-      <div className="border-b" style={{ borderColor: '#D6D9D8' }}>
-        <div className="container mx-auto px-6">
-          <div className="flex gap-8">
-            <Link
-              href="/flipkart/comp"
-              className="py-4 px-2 font-semibold transition-all relative"
-              style={{
-                color: isCompActive ? '#5332FF' : '#939394',
-                borderBottom: isCompActive ? '3px solid #5332FF' : 'none',
-              }}
-            >
-              Trust & Safety
-            </Link>
-            <Link
-              href="/flipkart/paingradation"
-              className="py-4 px-2 font-semibold transition-all relative"
-              style={{
-                color: isPaingradationActive ? '#5332FF' : '#939394',
-                borderBottom: isPaingradationActive ? '3px solid #5332FF' : 'none',
-              }}
-            >
-              Operational Pain Intelligence
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Content message */}
-      <div className="container mx-auto p-6">
-        <p style={{ color: '#939394' }}>
-          Please select a tab above to view the dashboard.
-        </p>
       </div>
     </div>
   );
 }
-

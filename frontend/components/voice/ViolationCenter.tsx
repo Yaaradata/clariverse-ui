@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AlertTriangle, Clock, Euro, DollarSign, FileText, CheckCircle } from 'lucide-react';
+import { AlertTriangle, Clock, Euro, DollarSign, FileText, CheckCircle, IndianRupee } from 'lucide-react';
 import { Violation } from '@/lib/voiceData';
 
 interface ViolationCenterProps {
@@ -14,10 +14,11 @@ interface ViolationCenterProps {
 
 export function ViolationCenter({ violations }: ViolationCenterProps) {
   const pathname = usePathname();
+  const isFlipkartRoute = pathname?.startsWith('/flipkart');
   const isSwedbankRoute = pathname?.startsWith('/swedbank');
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
-  const CurrencyIcon = isStandardCharteredRoute ? DollarSign : Euro;
-  const currencySymbol = isStandardCharteredRoute ? '$' : (isSwedbankRoute ? '€' : '€');
+  const CurrencyIcon = isFlipkartRoute ? IndianRupee : isStandardCharteredRoute ? DollarSign : Euro;
+  const currencySymbol = isFlipkartRoute ? '₹' : isStandardCharteredRoute ? '$' : isSwedbankRoute ? '€' : '€';
   // Helper function to format dates
   const formatDate = (dateString: string, format: 'short' | 'date' = 'short') => {
     const date = new Date(dateString);

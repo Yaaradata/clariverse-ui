@@ -20,6 +20,7 @@ interface Insight {
 
 export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps) {
   const pathname = usePathname();
+  const isFlipkartRoute = pathname?.startsWith('/flipkart');
   const isSwedbankRoute = pathname?.startsWith('/swedbank');
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const [insights, setInsights] = useState<Insight[]>([]);
@@ -37,7 +38,7 @@ export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps
           (threads.length * kpiData.sla_breach_risk_percentage) / 100
         );
         const estimatedValue = Math.round(atRiskCount * (kpiData.business_impact_score || 72.3) * 10000);
-        const currencySymbol = isSwedbankRoute ? '€' : isStandardCharteredRoute ? '$' : '₹';
+        const currencySymbol = isFlipkartRoute ? '₹' : isSwedbankRoute ? '€' : isStandardCharteredRoute ? '$' : '₹';
         const divisor = isSwedbankRoute || isStandardCharteredRoute ? 1000000 : 100000;
         const unit = isSwedbankRoute || isStandardCharteredRoute ? 'M' : 'Cr';
         newInsights.push({
@@ -135,7 +136,7 @@ export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps
   return (
     <Card className="overflow-hidden">
       <div className="flex items-center gap-3 px-4 py-3">
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Sparkles className="h-4 w-4 text-purple-400" />
           <span className="text-xs font-medium text-gray-400">Auto-Insights</span>
         </div>
@@ -151,7 +152,7 @@ export function AutoInsightsTicker({ kpiData, threads }: AutoInsightsTickerProps
             <p className="text-sm font-medium whitespace-nowrap">{currentInsight.text}</p>
           </motion.div>
         </div>
-        <div className="flex-shrink-0 text-xs text-gray-500">
+        <div className="shrink-0 text-xs text-gray-500">
           {currentIndex + 1}/{insights.length}
         </div>
       </div>

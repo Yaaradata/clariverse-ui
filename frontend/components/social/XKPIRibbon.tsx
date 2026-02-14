@@ -38,7 +38,6 @@ export function XKPIRibbon({ data }: XKPIRibbonProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {data.map((kpi) => {
-        // Show AI indicator for problematic metrics
         const showAI = kpi.trend === 'down' || 
                       (kpi.value.includes('%') && parseFloat(kpi.value) < 70) ||
                       (kpi.label.includes('Sentiment') && parseFloat(kpi.value) < 4.0);
@@ -46,28 +45,18 @@ export function XKPIRibbon({ data }: XKPIRibbonProps) {
         return (
           <Card
             key={kpi.id}
-            className={`relative overflow-hidden group transition-all duration-300 shadow-lg hover:shadow-2xl ${
-              showAI ? 'border-l-4 border-l-[#b90abd] hover:border-l-[#a009b3]' : 'hover:border-[#b90abd]/30'
-            } hover:scale-[1.02] hover:-translate-y-1`}
+            className="relative overflow-hidden group transition-all duration-300 shadow-lg hover:shadow-2xl border-l-4 border-l-[#b90abd] hover:border-l-[#a009b3] hover:scale-[1.02] hover:-translate-y-1 flex flex-col h-full"
           >
-            {/* AI Sparkle Indicator */}
-            {showAI && (
-              <div className="absolute top-2 left-2 z-10">
-                <span className="text-lg animate-pulse">✨</span>
-              </div>
-            )}
-            
-            {/* Purple glow effect on hover */}
-            <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none ${
-              showAI ? 'bg-gradient-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent' : ''
-            }`} />
-            
-            <CardContent className={`p-6 relative z-10 ${showAI ? 'pt-8' : ''}`}>
-              <div className="flex items-start justify-between mb-4">
+            <div className="absolute top-2 left-2 z-10">
+              <span className="text-lg animate-pulse">✨</span>
+            </div>
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-linear-to-br from-[#b90abd]/10 via-[#b90abd]/5 to-transparent" />
+            <CardContent className="p-6 pt-8 relative z-10 flex flex-col flex-1 min-h-0">
+              <div className="flex items-start justify-between mb-4 min-h-10 shrink-0">
                 <div className="text-xs uppercase tracking-wider text-slate-400 font-medium">
                   {kpi.label}
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1e293b] text-sky-400 group-hover:scale-110 transition-transform duration-200">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#1e293b] text-sky-400 group-hover:scale-110 transition-transform duration-200">
                   {resolveIcon(kpi.id)}
                 </div>
               </div>

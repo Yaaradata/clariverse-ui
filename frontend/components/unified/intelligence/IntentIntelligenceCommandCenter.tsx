@@ -17,6 +17,15 @@ const CHANNEL_LABELS: Record<string, string> = {
 
 const CHANNEL_ORDER: ChannelKey[] = ["email", "chat", "ticket", "social", "voice"];
 
+const DEFAULT_INSIGHT_WALL_CARDS: InsightWallCard[] = [
+  { icon: "🔥", title: "Highest Pressure Cluster", context: "Payment Failures", detail: "Voice dominates backlog at 22%, sentiment 4.3, urgency 0.69.", aiInsight: "Re-route authentication into Chat to reduce Voice escalations and cut handle time." },
+  { icon: "⚡", title: "Most Volatile Intent", context: "KYC Resubmission", detail: "Sentiment swings +2.1 → -1.4 with 3 escalation spikes per week.", aiInsight: "Standardize document requirements; surface checklist in Email and Chat concurrently." },
+  { icon: "❌", title: "Multi-Channel Conflict", context: "Payment Timeout", detail: "Ticket shows closed; Chat pending customer; Voice escalated with sentiment 4.6.", aiInsight: "Require CRM timeline acknowledgment before agents close any related channel thread." },
+  { icon: "📊", title: "Backlog Concentration", context: "Billing Issues", detail: "426 unresolved, sentiment 4.0, urgency flagged high.", aiInsight: "Expand automated refund approval thresholds for P2 tickets to relieve backlog." },
+  { icon: "🏢", title: "Accountability Mismatch", context: "Account Recovery", detail: "Company-owned actions at 68%, sentiment 4.5, backlog trending upward.", aiInsight: "Shift low-risk resets to self-service scheduling with biometric verification." },
+  { icon: "🔁", title: "Cross-Channel Escalation Loop", context: "Mortgage Rate Lock", detail: "Email → Chat → Voice loop raises sentiment from 2.4 to 4.6 within 48 hours.", aiInsight: "Inject underwriting updates into Chat transcripts and proactive email digests." },
+];
+
 const channelDotClass: Record<ChannelKey, string> = {
   email: "bg-blue-400",
   chat: "bg-emerald-400",
@@ -69,6 +78,14 @@ type AIRecommendation = {
   text: string;
 };
 
+type InsightWallCard = {
+  icon: string;
+  title: string;
+  context: string;
+  detail: string;
+  aiInsight: string;
+};
+
 interface IntentIntelligenceCommandCenterProps {
   scatterData?: PressureScatterDatum[];
   clusters?: ClusterSummary[];
@@ -76,6 +93,8 @@ interface IntentIntelligenceCommandCenterProps {
   highPressureIntents?: HighPressureIntent[];
   conflicts?: CrossChannelConflict[];
   recommendations?: AIRecommendation[];
+  /** AI Pressure Insight Wall cards (column 3). When omitted, banking defaults are shown. */
+  insightWallCards?: InsightWallCard[];
 }
 
 // Mock data generators - expanded dataset for better visualization
@@ -256,7 +275,9 @@ export function IntentIntelligenceCommandCenter({
   highPressureIntents = defaultHighPressureIntents,
   conflicts = defaultConflicts,
   recommendations = defaultRecommendations,
+  insightWallCards,
 }: IntentIntelligenceCommandCenterProps) {
+  const insightCards = insightWallCards ?? DEFAULT_INSIGHT_WALL_CARDS;
   // State for selected filter: null means "All", otherwise a single channel
   const [selectedFilter, setSelectedFilter] = useState<ChannelKey | "all" | null>("all");
 
@@ -292,14 +313,14 @@ export function IntentIntelligenceCommandCenter({
   };
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6 items-stretch">
       {/* COLUMN 1 - Intent Landscape Map */}
-      <Card className="border border-white/10 bg-black/30 shadow-lg">
-        <CardHeader className="pb-3">
+      <Card className="border border-white/10 bg-black/30 shadow-lg flex flex-col overflow-hidden min-h-0">
+        <CardHeader className="pb-3 shrink-0 min-h-20">
           <CardTitle className="text-sm font-semibold text-white">Intent Landscape Map</CardTitle>
           <CardDescription className="text-xs text-gray-400">High-level distribution of 100+ intents</CardDescription>
         </CardHeader>
-        <CardContent className="p-4">
+        <CardContent className="p-4 flex-1 min-h-0">
           {/* Dominant Channel Legend - Now clickable filters */}
           <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-gray-300">
             <span className="font-semibold">Dominant Channel •</span>
@@ -406,12 +427,13 @@ export function IntentIntelligenceCommandCenter({
         </CardContent>
       </Card>
       {/* COLUMN 2 - Cluster Summary Board */}
-      <Card className="border border-white/10 bg-black/30 shadow-lg">
-        <CardHeader className="pb-3">
+      <Card className="border border-white/10 bg-black/30 shadow-lg flex flex-col overflow-hidden min-h-0">
+        <CardHeader className="pb-3 shrink-0 min-h-20">
           <CardTitle className="text-sm font-semibold text-white">Cluster Summary Board</CardTitle>
+          <CardDescription className="text-xs text-gray-400">AI-clustered intents with sentiment, urgency & pressure</CardDescription>
         </CardHeader>
-        <CardContent className="p-4">
-          <ScrollArea className="h-[600px]">
+        <CardContent className="p-4 flex-1 min-h-0">
+          <ScrollArea className="h-[680px]">
             <div className="space-y-3 pr-2">
               {clusters.map((cluster) => (
                 <div
@@ -462,91 +484,25 @@ export function IntentIntelligenceCommandCenter({
       </Card>
 
       {/* COLUMN 3 - AI Pressure Insight Wall */}
-      <Card className="border border-white/10 bg-black/30 shadow-lg">
-        <CardHeader className="pb-3">
+      <Card className="border border-white/10 bg-black/30 shadow-lg flex flex-col overflow-hidden min-h-0">
+        <CardHeader className="pb-3 shrink-0 min-h-20">
           <CardTitle className="text-sm font-semibold text-white">AI Pressure Insight Wall</CardTitle>
           <CardDescription className="text-xs text-gray-400">Critical insights and AI-driven recommendations</CardDescription>
         </CardHeader>
-        <CardContent className="p-4">
-          <ScrollArea className="h-[600px]">
+        <CardContent className="p-4 flex-1 min-h-0">
+          <ScrollArea className="h-[680px]">
             <div className="space-y-3 pr-2">
-              {/* Highest Pressure Cluster */}
-              <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                  <span className="text-base">🔥</span>
-                  <span>Highest Pressure Cluster</span>
+              {insightCards.map((card, idx) => (
+                <div key={idx} className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
+                  <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
+                    <span className="text-base">{card.icon}</span>
+                    <span>{card.title}</span>
+                  </div>
+                  <div className="text-base font-semibold text-white mb-1">{card.context}</div>
+                  <p className="text-xs text-gray-400 mb-2">{card.detail}</p>
+                  <p className="text-xs text-purple-300">✨ {card.aiInsight}</p>
                 </div>
-                <div className="text-base font-semibold text-white mb-1">Payment Failures</div>
-                <p className="text-xs text-gray-400 mb-2">
-                  Voice dominates backlog at 22%, sentiment 4.3, urgency 0.69.
-                </p>
-                <p className="text-xs text-purple-300">✨ Re-route authentication into Chat to reduce Voice escalations and cut handle time.</p>
-              </div>
-
-              {/* Most Volatile Intent */}
-              <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                  <span className="text-base">⚡</span>
-                  <span>Most Volatile Intent</span>
-                </div>
-                <div className="text-base font-semibold text-white mb-1">KYC Resubmission</div>
-                <p className="text-xs text-gray-400 mb-2">
-                  Sentiment swings +2.1 → -1.4 with 3 escalation spikes per week.
-                </p>
-                <p className="text-xs text-purple-300">✨ Standardize document requirements; surface checklist in Email and Chat concurrently.</p>
-              </div>
-
-              {/* Multi-Channel Conflict */}
-              <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                  <span className="text-base">❌</span>
-                  <span>Multi-Channel Conflict</span>
-                </div>
-                <div className="text-base font-semibold text-white mb-1">Payment Timeout</div>
-                <p className="text-xs text-gray-400 mb-2">
-                  Ticket shows closed; Chat pending customer; Voice escalated with sentiment 4.6.
-                </p>
-                <p className="text-xs text-purple-300">✨ Require CRM timeline acknowledgment before agents close any related channel thread.</p>
-              </div>
-
-              {/* Backlog Concentration */}
-              <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                  <span className="text-base">📊</span>
-                  <span>Backlog Concentration</span>
-                </div>
-                <div className="text-base font-semibold text-white mb-1">Billing Issues</div>
-                <p className="text-xs text-gray-400 mb-2">
-                  426 unresolved, sentiment 4.0, urgency flagged high.
-                </p>
-                <p className="text-xs text-purple-300">✨ Expand automated refund approval thresholds for P2 tickets to relieve backlog.</p>
-              </div>
-
-              {/* Accountability Mismatch */}
-              <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                  <span className="text-base">🏢</span>
-                  <span>Accountability Mismatch</span>
-                </div>
-                <div className="text-base font-semibold text-white mb-1">Account Recovery</div>
-                <p className="text-xs text-gray-400 mb-2">
-                  Company-owned actions at 68%, sentiment 4.5, backlog trending upward.
-                </p>
-                <p className="text-xs text-purple-300">✨ Shift low-risk resets to self-service scheduling with biometric verification.</p>
-              </div>
-
-              {/* Cross-Channel Escalation Loop */}
-              <div className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                  <span className="text-base">🔁</span>
-                  <span>Cross-Channel Escalation Loop</span>
-                </div>
-                <div className="text-base font-semibold text-white mb-1">Mortgage Rate Lock</div>
-                <p className="text-xs text-gray-400 mb-2">
-                  Email → Chat → Voice loop raises sentiment from 2.4 to 4.6 within 48 hours.
-                </p>
-                <p className="text-xs text-purple-300">✨ Inject underwriting updates into Chat transcripts and proactive email digests.</p>
-              </div>
+              ))}
             </div>
           </ScrollArea>
         </CardContent>

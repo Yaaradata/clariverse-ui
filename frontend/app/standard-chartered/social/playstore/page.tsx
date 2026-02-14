@@ -143,7 +143,7 @@ export default function PlayStoreDashboard() {
       <PlayStoreKPIRibbon data={kpis} />
 
       <div className="space-y-6">
-        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,_2fr)_minmax(0,_1fr)] gap-6 items-start min-h-[560px]">
+        <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-6 items-start min-h-[560px]">
           <PlayStoreCommunityColumn viralityTopics={viralityTopics} />
           <div className="flex flex-col gap-6 min-h-0">
             <PlayStoreActionColumn alerts={reviewAlerts} />
