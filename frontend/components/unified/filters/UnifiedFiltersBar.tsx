@@ -52,7 +52,7 @@ export function UnifiedFiltersBar({
           <div className="flex justify-end">
             <Button
               onClick={onOpenAI}
-              className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 group h-[38px] px-6"
+              className="bg-linear-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 group h-[38px] px-6"
             >
               <span className="text-lg mr-2 group-hover:rotate-180 transition-transform duration-500 inline-block">✨</span>
               Generate your day in 2 minutes
@@ -62,10 +62,10 @@ export function UnifiedFiltersBar({
           <div className="flex flex-wrap items-center gap-2 justify-end">
             <span className="text-xs text-muted-foreground whitespace-nowrap">Date:</span>
             <Select value={dateFilterPreset} onValueChange={onPresetChange}>
-              <SelectTrigger className="w-[160px] border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] text-sm h-[38px]">
+              <SelectTrigger className="w-[160px] border border-(--border) bg-(--card) text-(--foreground) text-sm h-[38px]">
                 <SelectValue placeholder="Select period" />
               </SelectTrigger>
-              <SelectContent className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] z-[9999] w-[160px] min-w-[160px] max-w-[160px]">
+              <SelectContent className="border border-(--border) bg-(--card) text-(--foreground) z-9999 w-[160px] min-w-[160px] max-w-[160px]">
                 <SelectItem value="All">All</SelectItem>
                 <SelectItem value="Current day">Current day</SelectItem>
                 <SelectItem value="Current Month">Current Month</SelectItem>
@@ -84,7 +84,7 @@ export function UnifiedFiltersBar({
                   onChange={(event) =>
                     onDateRangeChange({ ...dateRange, start: event.target.value })
                   }
-                  className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
+                  className="border border-(--border) bg-(--card) text-(--foreground) text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
                 />
                 <span className="text-xs text-muted-foreground">→</span>
                 <input
@@ -93,7 +93,7 @@ export function UnifiedFiltersBar({
                   onChange={(event) =>
                     onDateRangeChange({ ...dateRange, end: event.target.value })
                   }
-                  className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)] text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
+                  className="border border-(--border) bg-(--card) text-(--foreground) text-sm px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#b90abd] h-[38px]"
                 />
               </>
             )}
@@ -102,7 +102,7 @@ export function UnifiedFiltersBar({
               size="sm"
               type="button"
               onClick={onApply}
-              className="bg-gradient-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 h-[38px]"
+              className="bg-linear-to-r from-[#b90abd] to-[#5332ff] hover:from-[#a009b3] hover:to-[#4a2ae6] text-white transition-all duration-200 h-[38px]"
             >
               Apply
             </Button>
@@ -113,12 +113,12 @@ export function UnifiedFiltersBar({
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
         <span className="uppercase tracking-wide text-muted-foreground">Active Filters</span>
         {activeFilters.length === 0 && (
-          <Badge variant="outline" className="border-[color:var(--border)] text-muted-foreground">
+          <Badge variant="outline" className="border-(--border) text-muted-foreground">
             None
           </Badge>
         )}
         {activeFilters.map((filter) => (
-          <Badge key={filter} variant="secondary" className="border border-[color:var(--border)] bg-[color:var(--card)] text-[color:var(--foreground)]">
+          <Badge key={filter} variant="secondary" className="border border-(--border) bg-(--card) text-(--foreground)">
             {filter}
           </Badge>
         ))}

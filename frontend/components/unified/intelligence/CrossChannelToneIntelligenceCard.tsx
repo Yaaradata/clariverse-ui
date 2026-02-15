@@ -746,7 +746,7 @@ export function CrossChannelToneIntelligenceCard() {
 
 
     return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 shadow-lg">
+    <Card className="border border-(--border) bg-(--card) p-6 shadow-lg">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <h2 className="text-2xl font-bold text-white">Cross channel Escalation</h2>

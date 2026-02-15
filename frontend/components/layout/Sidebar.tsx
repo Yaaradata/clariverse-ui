@@ -108,6 +108,12 @@ export default function Sidebar() {
     // },
   ];
 
+  // Flipkart: hide Chat and Ticket in the sidebar
+  const sidebarItems =
+    basePath === "/flipkart"
+      ? navigationItems.filter((item) => item.id !== "chat" && item.id !== "ticket")
+      : navigationItems;
+
   return (
     <div 
       className={`h-screen sticky top-0 border-r border-border transition-all duration-300 ease-in-out ${
@@ -142,7 +148,7 @@ export default function Sidebar() {
 
       {/* Main Navigation */}
       <nav className={`sidebar-nav space-y-2 ${isExpanded ? 'px-6' : 'px-3'}`}>
-        {navigationItems.map((item, index) => {
+        {sidebarItems.map((item, index) => {
           // Normalize paths for comparison (handle trailing slashes)
           const normalizePath = (path: string) => path.replace(/\/$/, '') || '/';
           const current = normalizePath(pathname || '');
