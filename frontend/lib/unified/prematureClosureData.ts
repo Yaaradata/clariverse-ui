@@ -35,8 +35,42 @@ const getSentimentLabel = (score: number): string => {
   return "Anger";
 };
 
+// E-commerce (Flipkart) copy overrides — same case structure, order/refund/delivery intent
+const FLIPKART_CASE_OVERRIDES: Record<string, { issueType: string; description: string; aiAction: string }> = {
+  "1": { issueType: "Refund Not Received", description: "Chat marked refund resolved at 3:45 PM, yet customer sent email at 4:00 PM expressing anger that refund is NOT received.", aiAction: "Link channels in returns workflow and confirm refund credit before closing." },
+  "2": { issueType: "Order / Account Security", description: "Email closed as resolved at 10:15 AM, but customer escalated to ticket at 11:30 AM with extreme frustration.", aiAction: "Escalate to security and support. Reopen related channels." },
+  "3": { issueType: "Payment / Refund Dispute", description: "Voice call closed payment dispute at 3:30 PM, but customer followed up via chat at 4:45 PM with order evidence.", aiAction: "Verify refund/payment resolution and sync all channels before closure." },
+  "4": { issueType: "Coupon / Price Dispute", description: "Ticket closed coupon dispute at 2:00 PM, but customer opened email at 4:00 PM with ongoing concerns.", aiAction: "Review offer terms and provide clear response to prevent escalation." },
+  "5": { issueType: "Order Status Update", description: "Chat closed order inquiry at 9:00 AM, but customer called at 11:00 AM with urgent delivery status request.", aiAction: "Update order status across all channels before closing chat." },
+  "6": { issueType: "Delivery / OTP Verification", description: "Email closed verification as complete at 3:00 PM, but customer opened ticket at 5:00 PM reporting delivery still pending.", aiAction: "Confirm delivery/OTP completion before closing multiple channels." },
+  "7": { issueType: "Refund Amount Discrepancy", description: "Voice call closed refund inquiry at 2:30 PM, but customer sent email at 3:15 PM that refund amount was not corrected.", aiAction: "Verify refund amount and sync channels before closing voice." },
+  "8": { issueType: "Payment Failed for Order", description: "Ticket closed payment error at 11:00 AM, but customer started chat at 11:45 AM reporting same payment failure.", aiAction: "Investigate payment failure and sync channels before closing ticket." },
+  "9": { issueType: "Wallet Balance Discrepancy", description: "Chat closed wallet inquiry at 9:00 AM, but customer called at 9:30 AM reporting balance still wrong.", aiAction: "Verify wallet balance and sync before closing chat." },
+  "10": { issueType: "Refund Statement Error", description: "Email closed refund statement at 4:00 PM, but customer called at 5:30 PM that statement was not corrected.", aiAction: "Confirm refund statement update before closing email." },
+  "11": { issueType: "Payment / Checkout Error", description: "Email and chat both closed payment issue as resolved on Nov 2, but same error recurred and customer created new ticket on Nov 3.", aiAction: "Root cause analysis. Recurring payment errors need systemic fix." },
+  "12": { issueType: "Account / Login Access", description: "Ticket and email closed account access on Nov 1, but customer called on Nov 2 reporting access still blocked.", aiAction: "Verify account access restored before closing channels." },
+  "13": { issueType: "Refund Reversal", description: "Email and chat both closed refund reversal as resolved on Nov 1, but same issue returned requiring ticket on Nov 2.", aiAction: "Investigate why refund reversal was marked resolved when issue persists." },
+  "14": { issueType: "Account / Order Hold", description: "Voice and ticket closed account hold on Nov 2, but customer escalated to email on Nov 4 with extreme anger.", aiAction: "Review hold status and provide resolution timeline." },
+  "15": { issueType: "Refund / Payment Failed Notification", description: "Customer contacted email, chat, and voice simultaneously about same refund or payment failure within 12 minutes, creating duplicate cases.", aiAction: "Consolidate all channels into single case and assign dedicated agent to prevent duplicate work." },
+  "16": { issueType: "Order / Refund Status Inquiry", description: "Customer opened order and refund status in chat, email, and ticket within 20 minutes, creating duplicate interactions.", aiAction: "Link all status inquiries and provide one response to avoid confusion." },
+  "17": { issueType: "Replacement / Exchange Request", description: "Customer contacted email, voice, and chat about replacement request within 15 minutes, creating duplicate work.", aiAction: "Consolidate replacement requests and assign single agent." },
+  "18": { issueType: "Suspected Fraud / Unauthorised Order", description: "Customer bounced between chat and email - chat closed at 3:45 PM, email at 4:30 PM, but customer returned to chat at 6:00 PM about order being blocked.", aiAction: "Unify case and assign specialist; ensure block reason communicated." },
+  "19": { issueType: "Delivery Charge Dispute", description: "Customer bounced between email and chat - email closed at 4:00 PM, chat at 6:00 PM, but customer returned to email at 7:00 PM about unfair charges.", aiAction: "Review delivery charges and provide clear resolution." },
+  "20": { issueType: "EMI / Payment Plan", description: "Customer bounced between ticket and voice - ticket closed at 9:00 AM, voice at 11:30 AM, but customer returned to ticket at 2:00 PM about payment plan.", aiAction: "Sync EMI/payment plan status across channels." },
+  "21": { issueType: "Account / Order Hold", description: "Customer bounced between chat and email - chat closed at 2:00 PM, email at 4:30 PM, but customer returned to chat at 6:00 PM about account hold.", aiAction: "Resolve hold and communicate consistently." },
+  "22": { issueType: "Refund Transfer Delay", description: "Customer bounced between email and voice - email closed at 9:30 AM, voice at 11:30 AM, but customer returned to email at 1:00 PM about delayed refund.", aiAction: "Confirm refund credit and timeline; sync channels." },
+  "23": { issueType: "Credit Limit / Buy Now Pay Later", description: "Customer bounced between voice and chat - voice closed at 3:15 PM, chat at 5:30 PM, but customer returned to voice at 7:00 PM about limit denial.", aiAction: "Provide clear eligibility response and sync channels." },
+  "24": { issueType: "Payment Method / Card Not Working", description: "Customer bounced between ticket and voice - ticket closed at 1:45 PM, voice at 4:00 PM, but customer returned to ticket at 5:30 PM about payment not working.", aiAction: "Fix payment method issue and confirm across channels." },
+  "25": { issueType: "EMI / Payment Not Reflected", description: "Customer bounced between email and voice - email closed at 10:20 AM, voice at 2:30 PM, but customer returned to email at 4:00 PM about payment not reflected.", aiAction: "Verify payment posting and sync channels." },
+  "26": { issueType: "Rewards / Cashback Calculation", description: "Customer bounced between chat and ticket - chat closed at 2:30 PM, ticket at 4:45 PM, but customer returned to chat at 6:00 PM about incorrect cashback.", aiAction: "Correct rewards/cashback and communicate clearly." },
+  "27": { issueType: "Replacement Delivery", description: "Ticket closed for replacement on Nov 4, but customer sent follow-up email on Nov 5 that remains pending for delivery confirmation.", aiAction: "Confirm replacement delivery and close pending investigation." },
+  "28": { issueType: "Refund / Statement Error", description: "Email closed refund/statement on Nov 4, but customer opened ticket that remains pending for back office review.", aiAction: "Review refund correction and update ticket before closing email." },
+};
+
+export type PrematureClosureTheme = "default" | "flipkart";
+
 // Generate premature closure risk cases with realistic breakdown patterns
-export const generatePrematureClosureCases = (): PrematureClosureCase[] => {
+export const generatePrematureClosureCases = (theme: PrematureClosureTheme = "default"): PrematureClosureCase[] => {
   const cases: PrematureClosureCase[] = [];
 
   // ============================================
@@ -1213,5 +1247,11 @@ export const generatePrematureClosureCases = (): PrematureClosureCase[] => {
     description: "Email closed statement error on Nov 4, but customer opened ticket that remains pending without action for back office review.",
   });
 
+  if (theme === "flipkart") {
+    return cases.map((c) => {
+      const o = FLIPKART_CASE_OVERRIDES[c.id];
+      return o ? { ...c, issueType: o.issueType, description: o.description, aiAction: o.aiAction } : c;
+    });
+  }
   return cases;
 };

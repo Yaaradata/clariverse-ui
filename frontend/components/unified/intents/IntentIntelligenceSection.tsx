@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -113,12 +114,19 @@ const EmotionTooltip = ({ active, payload }: any) => {
 };
 
 export function EmotionShockboard({
-  bars = emotionShockBars,
-  events = emotionShockEvents,
+  bars: barsProp,
+  events: eventsProp,
 }: {
   bars?: ShockBar[];
   events?: ShockEvent[];
 } = {}) {
+  const pathname = usePathname();
+  const isFlipkart = pathname?.startsWith("/flipkart/");
+  const bars = barsProp ?? useMemo(
+    () => getEmotionShockboardData(isFlipkart ? "flipkart" : "default"),
+    [isFlipkart]
+  );
+  const events = eventsProp ?? (isFlipkart ? emotionShockEventsFlipkart : emotionShockEvents);
   const chartData = useMemo(
     () =>
       bars.map((entry) => ({
@@ -323,8 +331,6 @@ export function IntentIntelligenceSection({
   );
 }
 
-const emotionShockBars: ShockBar[] = getEmotionShockboardData();
-
 const emotionShockEvents: ShockEvent[] = [
   {
     id: "shock-critical-email",
@@ -354,6 +360,39 @@ const emotionShockEvents: ShockEvent[] = [
     shiftType: "Sentiment stabilizing",
     intent: "Self-Service Deflection Success",
     cause: "Knowledge base articles reduced frustrated escalations by 35%",
+    suggestion: "Monitor for sustained improvement over next 4 hours",
+  },
+];
+
+const emotionShockEventsFlipkart: ShockEvent[] = [
+  {
+    id: "shock-critical-email-fk",
+    tone: "critical",
+    channel: "Email",
+    spike: 4.2,
+    shiftType: "Negative surge",
+    intent: "Refund / Order Status Spike",
+    cause: "150+ threads with frustration about refund status and order clarity in past 2 hours",
+    suggestion: "Deploy refund/order status template to waiting queue",
+  },
+  {
+    id: "shock-warning-voice-fk",
+    tone: "warning",
+    channel: "Voice",
+    spike: 2.8,
+    shiftType: "Positive spike",
+    intent: "Resolution Appreciation",
+    cause: "Agent performance on returns and delivery issues exceeded targets by 40%",
+    suggestion: "Capture call recordings for training library",
+  },
+  {
+    id: "shock-positive-chat-fk",
+    tone: "positive",
+    channel: "Chat",
+    spike: -1.8,
+    shiftType: "Sentiment stabilizing",
+    intent: "Self-Service Deflection Success",
+    cause: "Order tracking and return FAQs reduced frustrated escalations by 35%",
     suggestion: "Monitor for sustained improvement over next 4 hours",
   },
 ];

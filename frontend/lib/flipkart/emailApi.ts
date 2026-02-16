@@ -13,7 +13,6 @@ import {
   getSentimentTrend,
   getTopicDistribution,
   getPriorityResolutionData,
-  getActionableCards,
   getNetworkGraphData,
   getPredictiveMetrics,
 } from "@/lib/api";
@@ -27,6 +26,104 @@ import type {
   NetworkGraphData,
   QuadrantSummary,
 } from "@/lib/api";
+
+/** Flipkart actionable cards: e-commerce titles, descriptions, and distinct next actions per type. */
+function generateFlipkartActionableCards(): ActionableCard[] {
+  const cardTypes: Array<"top_risk" | "overdue_followup" | "opportunity" | "sla_failure" | "watchlist"> = [
+    "top_risk",
+    "overdue_followup",
+    "opportunity",
+    "sla_failure",
+    "watchlist",
+  ];
+
+  const config: Record<
+    string,
+    {
+      title: string;
+      description: string;
+      next_action_suggestion: string;
+      subject_norm: string;
+      defaultPriority: "critical" | "high" | "medium" | "low";
+    }
+  > = {
+    top_risk: {
+      title: "High Risk Thread Detected",
+      description: "This thread has escalated (return/refund or delivery dispute) and needs immediate attention.",
+      next_action_suggestion:
+        "Assign to returns/refunds team; respond with refund ETA or delivery resolution within 2 hours. Offer replacement or partial refund if applicable.",
+      subject_norm: "Refund not received / Delivery dispute",
+      defaultPriority: "high",
+    },
+    overdue_followup: {
+      title: "Overdue Follow-up Required",
+      description: "Customer has been waiting for a response for over 24 hours on order or refund.",
+      next_action_suggestion:
+        "Reply with current order or refund status within 1 hour. If refund is stuck, escalate to payments ops and send proactive SMS with ETA.",
+      subject_norm: "Refund status / Order tracking",
+      defaultPriority: "critical",
+    },
+    opportunity: {
+      title: "Customer Upsell Opportunity",
+      description: "Customer showed interest in similar products or offers based on conversation.",
+      next_action_suggestion:
+        "Add customer to post-purchase campaign; send personalised offer or product recommendations via email/app within 24 hours.",
+      subject_norm: "Product enquiry / Recommendations",
+      defaultPriority: "medium",
+    },
+    sla_failure: {
+      title: "SLA Breach Risk",
+      description: "Thread is approaching 24h first-response SLA and needs priority handling.",
+      next_action_suggestion:
+        "Prioritise reply to meet 24h SLA. If return/refund, trigger pickup or refund workflow and confirm to customer with timeline.",
+      subject_norm: "Return request / Refund delay",
+      defaultPriority: "critical",
+    },
+    watchlist: {
+      title: "VIP / High-Value Customer Thread",
+      description: "High-value or repeat customer thread requires priority handling.",
+      next_action_suggestion:
+        "Assign to priority queue; ensure refund or delivery resolution within 4 hours. Consider goodwill gesture (e.g. coupon or expedited refund).",
+      subject_norm: "Priority support / Refund",
+      defaultPriority: "critical",
+    },
+  };
+
+  return cardTypes.map((type, index) => {
+    const c = config[type];
+    const threadId = [555, 773, 379, 410, 750][index] ?? Math.floor(Math.random() * 1000);
+    return {
+      id: `card_fk_${type}_${index}`,
+      type,
+      title: c.title,
+      description: c.description,
+      priority: c.defaultPriority,
+      thread_id: `thread_${threadId}`,
+      subject_norm: c.subject_norm,
+      participants: [
+        { name: "Customer", email: "customer@example.com", type: "customer" },
+        { name: "Support Agent", email: "support@flipkart.com", type: "external" },
+      ],
+      next_action_suggestion: c.next_action_suggestion,
+      cta_buttons: [
+        { label: "Escalate", action: "escalate", variant: "danger" },
+        { label: "Assign Owner", action: "assign_owner", variant: "primary" },
+        { label: "Reply", action: "reply", variant: "secondary" },
+      ],
+      metadata: {
+        urgency: c.defaultPriority,
+        sentiment: [1, 3, 2, 3, 2][index] ?? Math.round(Math.random() * 4) + 1,
+        follow_up_date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        sla_breach_risk: [11.7, 48.8, 77.1, 47.1, 42.1][index] ?? Math.random() * 100,
+      },
+    };
+  });
+}
+
+export async function getActionableCards(): Promise<ActionableCard[]> {
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  return generateFlipkartActionableCards();
+}
 
 export type {
   KPIData,
@@ -139,7 +236,6 @@ export {
   getSentimentTrend,
   getTopicDistribution,
   getPriorityResolutionData,
-  getActionableCards,
   getNetworkGraphData,
   getPredictiveMetrics,
 };

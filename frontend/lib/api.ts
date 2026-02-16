@@ -407,7 +407,14 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
 
   const priorities: Array<'P1' | 'P2' | 'P3' | 'P4' | 'P5'> = ['P1', 'P2', 'P3', 'P4', 'P5'];
   const urgencies: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
-  const topics = ['Billing', 'Technical Support', 'Account Management', 'General Inquiry', 'Security', 'Feature Request'];
+  // Priority-specific topic pools so "Topics by Priority" shows distinct intents per P1–P5 (no repetition)
+  const topicsByPriority: Record<string, string[]> = {
+    P1: ['Security breach', 'Billing escalation', 'Service outage', 'VIP complaint', 'Compliance violation', 'Data breach concern'],
+    P2: ['Payment processing', 'Technical support', 'Account lock', 'Refund request', 'Data export', 'Login failure'],
+    P3: ['Feature request', 'Billing inquiry', 'General support', 'Password reset', 'Integration issue', 'Upgrade inquiry'],
+    P4: ['General inquiry', 'Feedback', 'Contract renewal', 'Partnership', 'Documentation', 'Pricing question'],
+    P5: ['Newsletter', 'Survey', 'Information only', 'Follow-up', 'Archive', 'Out of scope'],
+  };
   const dominantClusters = ['Billing Issues', 'Technical Support', 'Account Management', 'General Inquiry', 'Security Concerns', 'Feature Requests'];
   const actionPendingFrom: Array<'customer' | 'company'> = ['customer', 'company'];
   const assignedTo = ['John Smith', 'Sarah Johnson', 'Mike Chen', 'Lisa Wang', 'David Brown', 'Emma Davis'];
@@ -459,7 +466,8 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
     const follow_up_required = seededRandom(seed + 4) > 0.6;
     const escalation_count = Math.floor(seededRandom(seed + 5) * 3);
     const sla_compliance_rate = seededRandom(seed + 6) * 100;
-    const topic = topics[Math.floor(seededRandom(seed + 7) * topics.length)];
+    const topicPool = topicsByPriority[priority] ?? topicsByPriority.P5;
+    const topic = topicPool[Math.floor(seededRandom(seed + 7) * topicPool.length)];
     const dominantCluster = dominantClusters[Math.floor(seededRandom(seed + 7.5) * dominantClusters.length)];
     const actionPending = actionPendingFrom[Math.floor(seededRandom(seed + 8) * actionPendingFrom.length)];
     const channel = supportChannels[Math.floor(seededRandom(seed + 8.5) * supportChannels.length)];

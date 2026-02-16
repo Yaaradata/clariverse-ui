@@ -36,7 +36,7 @@ import {
   getEisenhowerThreads,
   generatePriorityResolutionDataForQuadrant,
   type EisenhowerThread,
-} from "@/lib/api";
+} from "@/lib/flipkart/api";
 import { Button } from "@/components/ui/button";
 
 type DateRange = {

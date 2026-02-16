@@ -36,7 +36,49 @@ const ecommerceSubjects = [
   "Invoice not received",
 ];
 
-const ecommerceTopics = ["Returns", "Delivery", "Payment", "Order", "Refund"];
+// Priority-specific topic pools so "Topics by Priority" shows distinct intents per P1–P5 (no repetition)
+const TOPICS_BY_PRIORITY: Record<string, string[]> = {
+  P1: [
+    "SLA breach risk",
+    "Refund escalation",
+    "Payment dispute",
+    "Delivery failure",
+    "Return not picked",
+    "Wrong item delivered",
+  ],
+  P2: [
+    "Order tracking",
+    "Return request",
+    "Refund delay",
+    "Delivery delay",
+    "Cancellation pending",
+    "Replacement request",
+  ],
+  P3: [
+    "Product enquiry",
+    "Exchange request",
+    "Coupon issue",
+    "Invoice request",
+    "Seller query",
+    "Warranty claim",
+  ],
+  P4: [
+    "General enquiry",
+    "Feedback",
+    "Recommendation",
+    "Order history",
+    "Account update",
+    "Promotion enquiry",
+  ],
+  P5: [
+    "Newsletter",
+    "Wishlist",
+    "Rating request",
+    "FAQ",
+    "Info only",
+    "Archive",
+  ],
+};
 const ecommerceClusters = [
   "Order Issues",
   "Returns & Refunds",
@@ -97,7 +139,8 @@ function generateFlipkartEisenhowerThreads(): EisenhowerThread[] {
     const follow_up_required = seededRandom(seed + 4) > 0.6;
     const escalation_count = Math.floor(seededRandom(seed + 5) * 3);
     const sla_compliance_rate = seededRandom(seed + 6) * 100;
-    const topic = ecommerceTopics[Math.floor(seededRandom(seed + 7) * ecommerceTopics.length)];
+    const pool = TOPICS_BY_PRIORITY[priority] ?? TOPICS_BY_PRIORITY.P5;
+    const topic = pool[Math.floor(seededRandom(seed + 7) * pool.length)];
     const dominantCluster =
       ecommerceClusters[Math.floor(seededRandom(seed + 7.5) * ecommerceClusters.length)];
     const actionPending =

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, AlertTriangle, X, CheckCircle, Clock, UserX, Mail, MessageSquare, Ticket, Phone, Share2 } from "lucide-react";
@@ -184,14 +185,16 @@ const caseMatchesBreakdown = (caseItem: PrematureClosureCase, breakdownType: Bre
 };
 
 export function PrematureClosureRiskCard() {
+  const pathname = usePathname();
   const [cases, setCases] = useState<PrematureClosureCase[]>([]);
   const [hoveredBreakdown, setHoveredBreakdown] = useState<BreakdownType | null>(null);
   const [selectedBreakdown, setSelectedBreakdown] = useState<BreakdownType | null>(null);
 
   useEffect(() => {
-    const prematureCases = generatePrematureClosureCases();
+    const isFlipkart = pathname?.startsWith("/flipkart/");
+    const prematureCases = generatePrematureClosureCases(isFlipkart ? "flipkart" : "default");
     setCases(prematureCases);
-  }, []);
+  }, [pathname]);
 
   // Channel pair breakdown data - cases can belong to multiple breakdown types
   const channelPairData = useMemo((): ChannelPair[] => {
@@ -535,7 +538,9 @@ export function PrematureClosureRiskCard() {
           <h2 className="text-2xl font-bold text-white">Cross-Channel Interaction Breakdown Audit</h2>
         </div>
         <p className="text-sm text-gray-400">
-          Spots closure conflicts across channels for the same active banking intent.
+          {pathname?.startsWith("/flipkart/")
+            ? "Spots closure conflicts across channels for the same active order or support intent."
+            : "Spots closure conflicts across channels for the same active banking intent."}
         </p>
       </div>
 
@@ -662,7 +667,11 @@ export function PrematureClosureRiskCard() {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-semibold text-white mb-1">{selectedBreakdown}</h3>
-              <p className="text-sm text-gray-400">Spots closure conflicts across channels for the same active banking intent.</p>
+              <p className="text-sm text-gray-400">
+                {pathname?.startsWith("/flipkart/")
+                  ? "Spots closure conflicts across channels for the same active order or support intent."
+                  : "Spots closure conflicts across channels for the same active banking intent."}
+              </p>
             </div>
             <button
               onClick={() => setSelectedBreakdown(null)}

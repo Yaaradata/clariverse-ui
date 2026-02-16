@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -367,12 +368,17 @@ function ToneDriftSequence({ sequence }: { sequence: ToneDriftSequencePoint[] })
 }
 
 export function PrematureClosureAuditWall({ audits = prematureClosureAuditData }: { audits?: PrematureClosureAuditEntry[] } = {}) {
+  const pathname = usePathname();
+  const auditDescription =
+    pathname?.startsWith("/flipkart/")
+      ? "Spots closure conflicts across channels for the same active order or support intent."
+      : "Spots closure conflicts across channels for the same active banking intent.";
   return (
     <Card className="border border-(--border) bg-(--card) shadow-lg shadow-rose-500/10 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
       <CardHeader className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
           <CardTitle>✨ Cross-Channel Interaction Breakdown Audit</CardTitle>
-          <CardDescription>Spots closure conflicts across channels for the same active banking intent.</CardDescription>
+          <CardDescription>{auditDescription}</CardDescription>
         </div>
         <Badge className="border-rose-400/40 bg-rose-500/10 text-rose-100">Cross-Channel</Badge>
       </CardHeader>
