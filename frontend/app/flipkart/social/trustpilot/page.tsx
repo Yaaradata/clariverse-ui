@@ -79,6 +79,8 @@ export interface TrustpilotDashboardProps {
     trendData: Array<{ date: string; sentiment: number; reviewVolume: number }>,
     channel: Channel
   ) => React.ReactElement;
+  /** E-commerce topic whitelist for Flipkart; when set, dominant topics and viral negative posts use these instead of bank topics. */
+  topicWhitelist?: string[];
 }
 
 const TrustpilotDashboard = (props: any) => {
@@ -96,6 +98,7 @@ const TrustpilotDashboard = (props: any) => {
     filteredAndSortedReviews,
     getReviewsForSelection,
     renderSentimentChart = renderDefaultSentimentChart,
+    topicWhitelist,
   } = props as TrustpilotDashboardProps;
   if (!trustpilotEnhancedData && !trustpilotData) {
     return (
@@ -167,8 +170,8 @@ const TrustpilotDashboard = (props: any) => {
     sentimentAreaData,
     hasAreaData,
   } = useMemo(
-    () => buildTrustpilotInsights({ enhancedData, legacyData }),
-    [enhancedData, legacyData]
+    () => buildTrustpilotInsights({ enhancedData, legacyData, bankTopics: topicWhitelist }),
+    [enhancedData, legacyData, topicWhitelist]
   );
 
   const gradientColors: Record<(typeof SENTIMENT_LEVELS)[number]['key'], string> = {

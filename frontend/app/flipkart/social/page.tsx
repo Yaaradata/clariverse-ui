@@ -58,6 +58,7 @@ import AppStoreDashboard from './appstore/page';
 import PlayStoreDashboard from './playstore/page';
 import {
   getTrustpilotTopicVolumeSplit,
+  ECOMMERCE_TOPICS,
   TrustpilotTopicVolumeSplitEntry,
   getXTopicVolumeSplit,
   XTopicVolumeSplitEntry,
@@ -2067,6 +2068,7 @@ export default function SocialMediaDashboard() {
           filteredAndSortedReviews={filteredAndSortedReviews}
           getReviewsForSelection={getReviewsForSelection}
           renderSentimentChart={renderSentimentChart}
+          topicWhitelist={ECOMMERCE_TOPICS}
         />
       );
     }

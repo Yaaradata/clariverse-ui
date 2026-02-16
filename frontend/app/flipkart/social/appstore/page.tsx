@@ -14,7 +14,7 @@ import {
   AppStoreViralityTopic,
   AppStoreReviewAlert,
   AppStoreTopicVolumeSplitEntry,
-} from '@/lib/social/appstore';
+} from '@/lib/flipkart/social/appstore';
 import { AppStoreKPIRibbon } from '@/components/social/AppStoreKPIRibbon';
 import { AppStoreCommunityColumn } from '@/components/social/AppStoreCommunityColumn';
 import { AppStoreActionColumn } from '@/components/social/AppStoreActionColumn';

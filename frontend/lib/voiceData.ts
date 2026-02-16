@@ -21,7 +21,7 @@ export interface ComplianceItem {
   severity: 'critical' | 'high' | 'medium' | 'low';
   financialImpact: {
     potentialFine: number;
-    currency: 'EUR' | 'GBP' | 'CHF';
+    currency: 'EUR' | 'GBP' | 'CHF' | 'INR';
     fineCalculation: string;
   };
   remediation: {
@@ -45,7 +45,7 @@ export interface Violation {
   severityReason: string;
   financialImpact: {
     potentialFine: number;
-    currency: 'EUR' | 'GBP' | 'CHF';
+    currency: 'EUR' | 'GBP' | 'CHF' | 'INR';
     fineCalculation: string;
     probability: number;
     expectedLoss: number;
@@ -108,7 +108,7 @@ export interface GranularComplianceScore {
     totalPotentialFines: number;
     expectedLoss: number;
     worstCaseScenario: number;
-    currency: 'EUR';
+    currency: 'EUR' | 'INR';
   };
   riskLevel: 'low' | 'medium' | 'high' | 'critical';
   riskFactors: Array<{
@@ -207,7 +207,7 @@ export interface CallDetail {
   financialRisk: {
     potentialFines: number;
     expectedLoss: number;
-    currency: 'EUR';
+    currency: 'EUR' | 'INR';
   };
 }
 

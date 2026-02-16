@@ -14,7 +14,7 @@ import {
   PlayStoreViralityTopic,
   PlayStoreReviewAlert,
   PlayStoreTopicVolumeSplitEntry,
-} from '@/lib/social/playstore';
+} from '@/lib/flipkart/social/playstore';
 import { PlayStoreKPIRibbon } from '@/components/social/PlayStoreKPIRibbon';
 import { PlayStoreCommunityColumn } from '@/components/social/PlayStoreCommunityColumn';
 import { PlayStoreActionColumn } from '@/components/social/PlayStoreActionColumn';
