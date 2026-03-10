@@ -243,14 +243,14 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
               onMouseLeave={() => setHoveredCard(null)}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Risk Signals</span>
+                <span className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>Top Intent</span>
               </div>
               
               <div className="flex items-baseline gap-2 mb-3">
                 <div className="text-4xl font-bold" style={{ color: '#ef4444' }}>
                   {formatNumber(kpiData.riskSignal.totalFlagged)}
                 </div>
-                <span className="text-sm" style={{ color: '#939394' }}>flagged</span>
+                <span className="text-sm" style={{ color: '#939394' }}>identified</span>
               </div>
               
               <div className="flex-1 flex flex-col gap-7">
@@ -258,9 +258,9 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                 <div>
                   {(() => {
                     const riskCategories = [
-                      { key: 'fraud', label: 'Fraud', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-                      { key: 'operational', label: 'Operational', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
-                      { key: 'reputation', label: 'Reputation', color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
+                      { key: 'fraud', label: 'Suspicious Activity', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
+                      { key: 'operational', label: 'Rate lock inquiry', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
+                      { key: 'reputation', label: 'Feedback', color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
                       { key: 'thirdParty', label: 'Third-Party', color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
                     ];
                     const total = riskCategories.reduce((sum, r) => sum + r.cases, 0);
@@ -298,7 +298,7 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>RISK BY SEGMENT</p>
+                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>TOP INTENT BY SEGMENT</p>
                   <div className="grid grid-cols-4 gap-1.5">
                     {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
                       const segmentColors: Record<string, string> = {

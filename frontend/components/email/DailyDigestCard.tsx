@@ -24,11 +24,24 @@ import {
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface AdditionalDigestTask {
+  id: string;
+  title: string;
+  subtitle: string;
+  priority: Priority;
+  channel: string;
+  quadrant: 'do' | 'schedule' | 'delegate' | 'delete';
+  topic: string;
+  actionTag?: string;
+}
+
 interface DailyDigestCardProps {
   kpiData: KPIData | null;
   threads: EisenhowerThread[];
   /** Optional insight explaining what drives priorities (e.g. rate-cycle context). Shown at top of content. */
   contextInsight?: string;
+  /** Optional additional tasks to prepend (e.g. mortgage-related items for banking context). */
+  additionalTasks?: AdditionalDigestTask[];
 }
 
 type Priority = 'P1' | 'P2' | 'P3' | 'P4' | 'P5';
@@ -171,13 +184,37 @@ function RiskBadge({ score }: { score: number }) {
   return <span className="text-[10px] font-semibold text-gray-500 bg-gray-500/10 border border-gray-500/20 rounded px-1.5 py-0.5">LOW</span>;
 }
 
-export function DailyDigestCard({ kpiData, threads, contextInsight }: DailyDigestCardProps) {
+function additionalToDigestTask(extra: AdditionalDigestTask, index: number): DigestTask {
+  const timeBlock = TIME_BLOCKS[index % TIME_BLOCKS.length];
+  return {
+    id: extra.id,
+    title: extra.title,
+    subtitle: extra.subtitle,
+    priority: extra.priority,
+    channel: extra.channel,
+    timeBlock: timeBlock.label,
+    durationMin: timeBlock.minutes,
+    quadrant: extra.quadrant,
+    sentiment: 3,
+    riskScore: 55,
+    escalated: false,
+    actionTag: extra.actionTag ?? 'Review and action',
+    topic: extra.topic,
+  };
+}
+
+export function DailyDigestCard({ kpiData, threads, contextInsight, additionalTasks }: DailyDigestCardProps) {
   const [generated, setGenerated] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [activeSection, setActiveSection] = useState<'all' | 'do' | 'schedule' | 'delegate'>('all');
 
-  const { tasks, stats } = useMemo(() => buildDayPlan(threads), [threads]);
+  const { tasks: baseTasks, stats } = useMemo(() => buildDayPlan(threads), [threads]);
+  const tasks = useMemo(() => {
+    if (!additionalTasks?.length) return baseTasks;
+    const extra = additionalTasks.map((a, i) => additionalToDigestTask(a, i));
+    return [...extra, ...baseTasks];
+  }, [baseTasks, additionalTasks]);
 
   const todayStr = new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
 
@@ -458,21 +495,6 @@ export function DailyDigestCard({ kpiData, threads, contextInsight }: DailyDiges
                 )}
               </div>
 
-              {/* Footer summary */}
-              <div className="rounded-xl border border-white/[0.07] bg-white/[0.025] px-4 py-3 grid grid-cols-3 gap-3 mt-1">
-                <div className="text-center">
-                  <div className="text-lg font-bold text-white">{tasks.filter(t => t.quadrant === 'do').length}</div>
-                  <div className="text-[10px] text-red-400 uppercase tracking-wide mt-0.5">Do Now</div>
-                </div>
-                <div className="text-center border-x border-white/[0.07]">
-                  <div className="text-lg font-bold text-white">{tasks.filter(t => t.quadrant === 'schedule').length}</div>
-                  <div className="text-[10px] text-yellow-400 uppercase tracking-wide mt-0.5">Schedule</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-bold text-white">{tasks.filter(t => t.quadrant === 'delegate').length}</div>
-                  <div className="text-[10px] text-[#5332ff] uppercase tracking-wide mt-0.5">Delegate</div>
-                </div>
-              </div>
             </motion.div>
           )}
         </AnimatePresence>

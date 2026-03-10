@@ -14,7 +14,7 @@ import { AIPressureInsightWall } from "@/components/unified/intelligence/AIPress
 import { Target } from "lucide-react";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
-import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { AIRiskSpikeMonitor, bankingRiskSpikes } from "@/components/unified/actions/AIRiskSpikeMonitor";
 import { DailyDigestCard } from "@/components/email/DailyDigestCard";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,7 +38,7 @@ import {
   getEisenhowerThreads,
   generatePriorityResolutionDataForQuadrant,
   type EisenhowerThread,
-} from "@/lib/api";
+} from "@/lib/swedbank/api";
 import { Button } from "@/components/ui/button";
 
 type DateRange = {
@@ -607,10 +607,8 @@ function EisenhowerSummaryCard({
             <span className="text-xs text-[#b90abd] font-medium">AI Priority Analysis</span>
           </div>
         </div>
-        <CardDescription className="text-gray-400 flex items-center gap-2">
-          <span>Focus on critical items first</span>
-          <span className="text-[#b90abd]">•</span>
-          <span>Thread distribution across priority quadrants</span>
+        <CardDescription className="text-gray-400">
+          Thread distribution across priority quadrants
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -884,7 +882,7 @@ export default function HomePage() {
       {activePrimarySection === "operational-indicators" && (
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
-            <AIRiskSpikeMonitor />
+            <AIRiskSpikeMonitor spikes={bankingRiskSpikes} />
             {eisenhowerThreads.length > 0 && (
               <Tabs
                 value={activeEisenhowerChannel}
@@ -1035,7 +1033,32 @@ export default function HomePage() {
                 })}
               </Tabs>
             )}
-            <DailyDigestCard kpiData={null} threads={eisenhowerThreads} />
+            <DailyDigestCard
+              kpiData={null}
+              threads={eisenhowerThreads}
+              additionalTasks={[
+                {
+                  id: "mortgage-rate-lock-surge",
+                  title: "Mortgage rate-lock inquiries surge (+34%)",
+                  subtitle: "Review pending lock requests before expiry — many customers near deadline",
+                  priority: "P1",
+                  channel: "voice",
+                  quadrant: "do",
+                  topic: "Lending & Housing",
+                  actionTag: "Reply immediately",
+                },
+                {
+                  id: "refinancing-eligibility-wave",
+                  title: "Refinancing eligibility check wave",
+                  subtitle: "Batch eligibility reviews and prep response templates for common scenarios",
+                  priority: "P2",
+                  channel: "email",
+                  quadrant: "schedule",
+                  topic: "Lending & Housing",
+                  actionTag: "Block time this week",
+                },
+              ]}
+            />
           </section>
 
           <AIDayGeneratorChat

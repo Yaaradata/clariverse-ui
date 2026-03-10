@@ -366,12 +366,21 @@ function seededRandom(seed: number) {
 function generateMockEisenhowerThreads(): EisenhowerThread[] {
   const threads: EisenhowerThread[] = [];
   
-  // Target counts for each quadrant
+  // Target counts for each quadrant (Do always smallest — urgent few)
+  // Do per channel: Email 2, Chat 1, Ticket 2, Social 1, Voice 5 = 11 total
+  const doPerChannel: Record<string, number> = {
+    email: 2,
+    chat: 1,
+    ticket: 2,
+    social: 1,
+    voice: 5,
+  };
+  const totalDo = Object.values(doPerChannel).reduce((a, b) => a + b, 0);
   const targetCounts = {
-    do: 12,        // 10-15 range
-    schedule: 35,  // 30-40 range
-    delegate: 500,  // hundreds
-    delete: 1457   // thousands (2004 - 12 - 35 - 500 = 1457)
+    do: totalDo,   // 11 total; always less than other quadrants
+    schedule: 35,
+    delegate: 500,
+    delete: 2004 - totalDo - 35 - 500,  // 1458
   };
   
   // Counters to track current assignments
@@ -383,45 +392,45 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
   };
   
   const subjects = [
-    'Payment processing issue',
-    'Account verification required', 
-    'Service outage notification',
-    'Feature request submission',
-    'Billing inquiry',
-    'Technical support ticket',
-    'Refund request',
-    'Account upgrade inquiry',
-    'Password reset request',
-    'General feedback',
-    'Security breach report',
-    'Customer complaint escalation',
-    'VIP account issue',
-    'System performance degradation',
-    'Data export request',
-    'Integration failure',
-    'Compliance violation',
-    'Contract renewal inquiry',
-    'Partnership proposal',
-    'Emergency support request'
+    'Rate lock inquiry',
+    'Refinancing eligibility request',
+    'Savings rate adjustment question',
+    'Loan payment clarification',
+    'Interest rate comparison request',
+    'Housing loan application status follow-up',
+    'Savings account rate inquiry',
+    'Loan eligibility verification',
+    'Rate lock extension request',
+    'Refinancing quote inquiry',
+    'Deposit rate change notification',
+    'Pre-approval follow-up',
+    'Personal loan rate question',
+    'Savings product comparison request',
+    'Interest rate forecast inquiry',
+    'Loan modification request',
+    'Closing timeline question',
+    'Deposit account upgrade inquiry',
+    'Rate adjustment impact clarification',
+    'Refinancing cost-benefit inquiry'
   ];
 
   const priorities: Array<'P1' | 'P2' | 'P3' | 'P4' | 'P5'> = ['P1', 'P2', 'P3', 'P4', 'P5'];
   const urgencies: Array<'critical' | 'high' | 'medium' | 'low'> = ['critical', 'high', 'medium', 'low'];
-  const topics = ['Billing', 'Technical Support', 'Account Management', 'General Inquiry', 'Security', 'Feature Request'];
-  const dominantClusters = ['Billing Issues', 'Technical Support', 'Account Management', 'General Inquiry', 'Security Concerns', 'Feature Requests'];
+  const topics = ['Lending & Housing', 'Savings & Deposits', 'Loan Applications', 'Interest Rate Inquiries', 'Card Services', 'Account Management'];
+  const dominantClusters = ['Refinancing', 'Savings Rate Questions', 'Loan Eligibility', 'Rate Lock Support', 'Deposit Product Inquiry', 'Lending Journey'];
   const actionPendingFrom: Array<'customer' | 'company'> = ['customer', 'company'];
   const assignedTo = ['John Smith', 'Sarah Johnson', 'Mike Chen', 'Lisa Wang', 'David Brown', 'Emma Davis'];
   const nextActions = [
-    'Follow up with customer within 2 hours',
-    'Escalate to senior support team',
-    'Schedule follow-up call',
-    'Update customer on progress',
-    'Close ticket after verification',
-    'Assign to billing specialist',
-    'Review security logs',
-    'Prepare refund documentation',
-    'Coordinate with technical team',
-    'Send confirmation email'
+    'Follow up on rate lock within 2 hours',
+    'Escalate to lending specialist',
+    'Schedule lending advisor callback',
+    'Update customer on rate application status',
+    'Close inquiry after rate confirmation',
+    'Assign to lending team',
+    'Review savings rate tier eligibility',
+    'Prepare refinancing comparison documentation',
+    'Coordinate with underwriting on loan status',
+    'Send rate change confirmation email'
   ];
 
   // Use fixed seed for consistent data
@@ -462,7 +471,25 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
     const topic = topics[Math.floor(seededRandom(seed + 7) * topics.length)];
     const dominantCluster = dominantClusters[Math.floor(seededRandom(seed + 7.5) * dominantClusters.length)];
     const actionPending = actionPendingFrom[Math.floor(seededRandom(seed + 8) * actionPendingFrom.length)];
-    const channel = supportChannels[Math.floor(seededRandom(seed + 8.5) * supportChannels.length)];
+    
+    // Determine quadrant first (needed for channel assignment)
+    const isDoQuadrant = quadrantCounts.do < targetCounts.do;
+    // Do quadrant: assign by doPerChannel (Email 2, Chat 1, Ticket 2, Social 1, Voice 5)
+    let channel: (typeof supportChannels)[number];
+    if (isDoQuadrant) {
+      let idx = quadrantCounts.do;
+      for (const ch of supportChannels) {
+        const cap = doPerChannel[ch] ?? 0;
+        if (idx < cap) {
+          channel = ch;
+          break;
+        }
+        idx -= cap;
+      }
+      channel ??= supportChannels[Math.floor(seededRandom(seed + 8.5) * supportChannels.length)];
+    } else {
+      channel = supportChannels[Math.floor(seededRandom(seed + 8.5) * supportChannels.length)];
+    }
     
     const assigned = assignedTo[Math.floor(seededRandom(seed + 9) * assignedTo.length)];
     const nextAction = nextActions[Math.floor(seededRandom(seed + 10) * nextActions.length)];

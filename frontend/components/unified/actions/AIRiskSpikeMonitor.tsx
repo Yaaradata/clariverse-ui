@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
+type CustomMetric = { label: string; value: string; delta?: string };
+
 type RiskSpike = {
   id: string;
   timestamp: string;
   spikeType: "Sentiment Crash" | "Urgency Surge" | "SLA Spike" | "Unresolved Surge" | "Volume Surge";
   magnitude: number;
-  channel: "Email" | "Chat" | "Ticket" | "Social" | "Voice";
+  channel: "Email" | "Chat" | "Ticket" | "Social" | "Voice" | string;
   topIntent: string;
   sentimentBefore?: number;
   sentimentAfter?: number;
@@ -19,6 +21,18 @@ type RiskSpike = {
   slaAfter?: number;
   aiAction: string;
   severity: "critical" | "moderate" | "low";
+  triggerExplanation?: string;
+  correlationConfidence?: "High" | "Medium" | "Low";
+  /** Bank-specific card title (e.g. "Mortgage Inquiry Surge"). */
+  cardTitle?: string;
+  /** Custom metrics when provided (overrides standard detail rows). */
+  customMetrics?: CustomMetric[];
+  /** Detected phrases for sentiment/complaint cards. */
+  detectedPhrases?: string[];
+  /** Trigger insight text for rate-event correlation. */
+  triggerInsight?: string;
+  /** Region for geographic cards (shows Region instead of Channel). */
+  region?: string;
 };
 
 const spikeIcon: Record<RiskSpike["spikeType"], { icon: string; color: string }> = {
@@ -49,8 +63,10 @@ const mockRiskSpikes: RiskSpike[] = [
     sentimentAfter: 3.9,
     unresolvedBefore: 124,
     unresolvedAfter: 187,
-    aiAction: "Enable real-time callback routing and suppress repeat MFA checks.",
+    aiAction: "Possible trigger: recent interest-rate adjustment. Enable real-time callback routing and suppress repeat MFA checks.",
     severity: "critical",
+    triggerExplanation: "Mortgage/savings rate adjustment",
+    correlationConfidence: "High",
   },
   {
     id: "spike-sentiment-chat",
@@ -65,8 +81,10 @@ const mockRiskSpikes: RiskSpike[] = [
     sentimentAfter: 4.0,
     unresolvedBefore: 210,
     unresolvedAfter: 380,
-    aiAction: "Inject payment timeline updates into chatbot and escalate unresolved cases to Ticket.",
+    aiAction: "Possible trigger: interest-rate change driving pricing dissatisfaction. Inject payment timeline updates into chatbot and escalate unresolved cases to Ticket.",
     severity: "critical",
+    triggerExplanation: "Mortgage/savings rate adjustment",
+    correlationConfidence: "High",
   },
   {
     id: "spike-sla-social",
@@ -107,6 +125,88 @@ const mockRiskSpikes: RiskSpike[] = [
     unresolvedAfter: 166,
     aiAction: "Borrow capacity from Chat agents to triage new dispute tickets for the next 4 hours.",
     severity: "low",
+  },
+];
+
+/** Bank-specific CX anomaly cards for interest-rate context. */
+export const bankingRiskSpikes: RiskSpike[] = [
+  {
+    id: "spike-mortgage-inquiry",
+    timestamp: "3h ago",
+    spikeType: "Volume Surge",
+    magnitude: 200,
+    channel: "Voice / App",
+    topIntent: "Refinancing",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Mortgage Inquiry Surge",
+    customMetrics: [
+      { label: "Call Volume", value: "1,500 → 4,500", delta: "+200%" },
+      { label: "Calculator Usage", value: "40k → 95k", delta: "+137%" },
+      { label: "Refinancing Requests", value: "", delta: "+210%" },
+    ],
+    triggerInsight: "Recent rate reduction triggered refinancing interest. Demand concentrated in urban markets.",
+  },
+  {
+    id: "spike-savings-sentiment",
+    timestamp: "1h ago",
+    spikeType: "Sentiment Crash",
+    magnitude: 32,
+    channel: "Chat / Secure Messages",
+    topIntent: "Savings rate complaints",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Sentiment Drop",
+    customMetrics: [
+      { label: "Sentiment", value: "", delta: "-32%" },
+      { label: "Complaint Volume", value: "120 → 650", delta: "+442%" },
+      { label: "Topic Cluster", value: "Pricing fairness", delta: undefined },
+    ],
+    detectedPhrases: ['"unfair interest rate"', '"savings rates still low"'],
+    triggerInsight: "Deposit customers reacting to lag between lending rate cuts and savings pricing.",
+  },
+  {
+    id: "spike-sla-social",
+    timestamp: "45m ago",
+    spikeType: "SLA Spike",
+    magnitude: 19,
+    channel: "Social",
+    topIntent: "Card Declined",
+    slaBefore: 9,
+    slaAfter: 28,
+    unresolvedBefore: 91,
+    unresolvedAfter: 164,
+    aiAction: "Trigger expedited follow-up for decline disputes; Social backlog expanding rapidly.",
+    severity: "moderate",
+  },
+  {
+    id: "spike-unresolved-email",
+    timestamp: "4h ago",
+    spikeType: "Unresolved Surge",
+    magnitude: 140,
+    channel: "Email",
+    topIntent: "KYC Resubmission",
+    unresolvedBefore: 212,
+    unresolvedAfter: 352,
+    aiAction: "Auto-prioritize KYC documentation in verification queue to prevent compliance delays.",
+    severity: "moderate",
+  },
+  {
+    id: "spike-geographic-demand",
+    timestamp: "2h ago",
+    spikeType: "Volume Surge",
+    magnitude: 212,
+    channel: "Voice",
+    topIntent: "Eligibility",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Regional Mortgage Demand Spike",
+    region: "Stockholm",
+    customMetrics: [
+      { label: "Mortgage calls", value: "", delta: "+212%" },
+      { label: "Loan applications", value: "", delta: "+160%" },
+    ],
+    triggerInsight: "Urban housing markets reacting faster to interest-rate changes.",
   },
 ];
 
@@ -195,8 +295,9 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
 
   const iconMeta = spikeIcon[spike.spikeType];
   const severityClass = severityStyles[spike.severity];
-
-  const detailRows = getDetailRows(spike);
+  const detailRows = spike.customMetrics ?? getDetailRows(spike);
+  const cardTitle = spike.cardTitle ?? labelForSpike(spike.spikeType);
+  const insightText = spike.triggerInsight ?? spike.aiAction;
 
   return (
     <div
@@ -204,12 +305,16 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
     >
       <div className={`flex items-center gap-2 text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
         <span className={`${iconMeta.color} text-lg`}>{iconMeta.icon}</span>
-        <span>{labelForSpike(spike.spikeType)}</span>
+        <span>{cardTitle}</span>
       </div>
       <div className={`mt-3 space-y-1 text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         <div className="flex justify-between">
-          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Channel</span>
-          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.channel}</span>
+          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>
+            {spike.region ? "Region" : "Channel"}
+          </span>
+          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>
+            {spike.region ?? spike.channel}
+          </span>
         </div>
         <div className="flex justify-between">
           <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Top Intent</span>
@@ -222,20 +327,25 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
       </div>
 
       <div className={`mt-6 space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? 'border-white/5 bg-black/30 text-gray-200' : 'border-gray-300 bg-gray-50 text-gray-800'}`}>
-        {detailRows.map((row) => (
-          <div key={row.label} className="flex items-center justify-between gap-3">
-            <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>{row.label}</span>
-            <div className="text-right">
-              <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{row.value}</div>
-              {row.delta ? <div className={`text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{row.delta}</div> : null}
+        {detailRows.map((row, idx) => {
+          const r = row as CustomMetric;
+          return (
+            <div key={`${row.label}-${idx}`} className="flex items-center justify-between gap-3">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>{row.label}</span>
+              <div className="text-right">
+                {r.value ? <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{r.value}</div> : null}
+                {r.delta ? <div className={`text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{r.delta}</div> : null}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      <div className="mt-4 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-100">
-        ✨ {spike.aiAction}
-      </div>
+      {insightText ? (
+        <div className="mt-4 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-100">
+          ✨ {insightText}
+        </div>
+      ) : null}
     </div>
   );
 }
