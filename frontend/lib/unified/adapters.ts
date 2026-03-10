@@ -58,7 +58,10 @@ export interface SeverityMatrixResponse {
 export interface CrossChannelActionGridEntry {
   stage: string;
   channel: ChannelKey;
+  /** Delay in hours — used for Escalation and Closure stages. */
   avgDelayHours: number;
+  /** Delay in seconds — used for Receive, Authenticate, Resolution stages. When set, display uses seconds. */
+  avgDelaySeconds?: number;
   pendingFromCompany: number;
   sentiment: number;
   urgencyRatio: number;
@@ -742,14 +745,30 @@ export async function fetchCrossChannelActionGrid(): Promise<CrossChannelActionG
   const stages = ["Receive", "Authenticate", "Resolution", "Escalation", "Closure"];
   const channels: ChannelKey[] = ["email", "chat", "ticket", "social", "voice"];
   const entries = stages.flatMap((stage, stageIndex) =>
-    channels.map((channel, channelIndex) => ({
-      stage,
-      channel,
-      avgDelayHours: Number((2 + stageIndex * 1.4 + channelIndex * 0.8).toFixed(1)),
-      pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
-      sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
-      urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
-    })),
+    channels.map((channel, channelIndex) => {
+      const isSecondsStage = stageIndex <= 2; // Receive, Authenticate, Resolution
+      const useSecondsForVoiceOnly = isSecondsStage && channel === "voice";
+      if (useSecondsForVoiceOnly) {
+        const avgDelaySeconds = Number((0.1 + stageIndex * 0.15 + channelIndex * 0.08).toFixed(1));
+        return {
+          stage,
+          channel,
+          avgDelayHours: avgDelaySeconds / 3600,
+          avgDelaySeconds,
+          pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+          sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+          urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+        };
+      }
+      return {
+        stage,
+        channel,
+        avgDelayHours: Number((2 + stageIndex * 1.4 + channelIndex * 0.8).toFixed(1)),
+        pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+        sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+        urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+      };
+    }),
   );
 
   return Promise.resolve({

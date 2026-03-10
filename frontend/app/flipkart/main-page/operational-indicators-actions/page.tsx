@@ -14,6 +14,7 @@ import { Target } from "lucide-react";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { DailyDigestCard } from "@/components/email/DailyDigestCard";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -207,11 +208,15 @@ function EisenhowerSummaryCard({
   threads,
   selectedQuadrant,
   onQuadrantSelect,
+  getQuadrantSummary,
 }: {
   channel: ChannelKey;
   threads: EisenhowerThread[];
   selectedQuadrant: string | null;
   onQuadrantSelect: (quadrant: string) => void;
+  getQuadrantSummary?: (threads: EisenhowerThread[], quadrant: string) => {
+    insights: Array<{ title: string; description: string; tone: string }>;
+  };
 }) {
   const total = threads.length || 1;
 
@@ -229,6 +234,14 @@ function EisenhowerSummaryCard({
       colors: QUADRANT_COLORS[quadrant],
     };
   });
+
+  const TONE_CLASSES: Record<string, string> = {
+    default: "border-white/10 bg-black/40",
+    info: "border-indigo-400/30 bg-indigo-500/10",
+    success: "border-emerald-400/30 bg-emerald-500/10",
+    warning: "border-amber-400/30 bg-amber-500/10",
+    danger: "border-rose-400/30 bg-rose-500/10",
+  };
 
   const activeQuadrant = selectedQuadrant;
 
@@ -258,6 +271,8 @@ function EisenhowerSummaryCard({
             const isLeftColumn = quadrant === "do" || quadrant === "delegate";
             const isTopRow = quadrant === "do" || quadrant === "schedule";
             const hasHighPriorityGlow = quadrant === "do" && count > 500;
+            const summary = getQuadrantSummary?.(threads, quadrant);
+            const insights = summary?.insights?.slice(0, 2) ?? [];
 
             return (
               <div
@@ -281,7 +296,25 @@ function EisenhowerSummaryCard({
                 </div>
                 <div className="relative z-10 text-3xl font-bold text-white mb-1">{count}</div>
                 <div className="relative z-10 text-xs text-gray-400 mb-3">{percentage}%</div>
-                <div className="relative z-10 text-xs text-gray-500">{description}</div>
+                <div className="relative z-10 text-xs text-gray-500 mb-3">{description}</div>
+
+                {insights.length > 0 && (
+                  <div className="relative z-10 mt-3 text-left space-y-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex items-center gap-1.5 text-[10px] font-medium text-[#b90abd] uppercase tracking-wide mb-1.5">
+                      <span>✨</span>
+                      <span>AI Summary</span>
+                    </div>
+                    {insights.map((insight, idx) => (
+                      <div
+                        key={`${quadrant}-insight-${idx}`}
+                        className={`rounded-md border px-2.5 py-2 text-xs ${TONE_CLASSES[insight.tone] ?? TONE_CLASSES.default}`}
+                      >
+                        <div className="font-medium text-gray-200 leading-tight">{insight.title}</div>
+                        <div className="text-[11px] text-gray-400 leading-snug mt-0.5 line-clamp-2">{insight.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 {quadrant === "do" && count > 0 && (
                   <Button
@@ -720,9 +753,7 @@ export default function HomePage() {
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
             <AIRiskSpikeMonitor />
-          </section>
-
-          <section id="channel-analysis" className="space-y-6 scroll-mt-20">
+            {/* Eisenhower Quadrant Distribution - per channel tabs */}
             {eisenhowerThreads.length > 0 && (
               <Tabs
                 value={activeEisenhowerChannel}
@@ -744,7 +775,6 @@ export default function HomePage() {
                     );
                   })}
                 </TabsList>
-
                 {CHANNEL_TABS.map((channel) => {
                   const channelThreads = threadsByChannel[channel];
                   const channelQuadrant = selectedQuadrants[channel];
@@ -753,7 +783,7 @@ export default function HomePage() {
                     : [];
 
                   return (
-                    <TabsContent key={channel} value={channel} className="space-y-6">
+                    <TabsContent key={channel} value={channel} className="space-y-6 mt-2">
                       <div className="space-y-4">
                         {channelQuadrant ? (
                           <div className="grid gap-4 lg:grid-cols-2">
@@ -762,6 +792,7 @@ export default function HomePage() {
                               threads={channelThreads}
                               selectedQuadrant={channelQuadrant}
                               onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
+                              getQuadrantSummary={(t, q) => generateQuadrantSummary(t, q, channel)}
                             />
 
                             <Card className="border border-(--border) bg-(--card) shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
@@ -794,26 +825,24 @@ export default function HomePage() {
                                 >
                                   <div className="relative mb-4">
                                     <TabsList className="grid w-full grid-cols-2 relative bg-transparent border-b border-white/10">
-                                      <TabsTrigger 
-                                        value="summary" 
+                                      <TabsTrigger
+                                        value="summary"
                                         className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
                                       >
                                         ✨ AI Summary Wall
                                       </TabsTrigger>
-                                      <TabsTrigger 
-                                        value="details" 
+                                      <TabsTrigger
+                                        value="details"
                                         className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
                                       >
                                         Details
                                       </TabsTrigger>
-                                      {/* Red underline indicator */}
                                       <div
                                         className="absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all duration-300 ease-in-out"
                                         style={{
-                                          width: '50%',
-                                          transform: activeQuadrantTab[channel] === 'summary' 
-                                            ? 'translateX(0%)' 
-                                            : 'translateX(100%)',
+                                          width: "50%",
+                                          transform:
+                                            activeQuadrantTab[channel] === "summary" ? "translateX(0%)" : "translateX(100%)",
                                         }}
                                       />
                                     </TabsList>
@@ -853,7 +882,9 @@ export default function HomePage() {
                                         selectedQuadrant={channelQuadrant}
                                       />
                                     ) : (
-                                      <div className="py-8 text-center text-sm text-gray-400">No priority data available.</div>
+                                      <div className="py-8 text-center text-sm text-gray-400">
+                                        No priority data available.
+                                      </div>
                                     )}
                                   </TabsContent>
                                 </Tabs>
@@ -866,6 +897,7 @@ export default function HomePage() {
                             threads={channelThreads}
                             selectedQuadrant={channelQuadrant}
                             onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
+                            getQuadrantSummary={(t, q) => generateQuadrantSummary(t, q, channel)}
                           />
                         )}
                       </div>
@@ -874,7 +906,7 @@ export default function HomePage() {
                 })}
               </Tabs>
             )}
-
+            <DailyDigestCard kpiData={null} threads={eisenhowerThreads} />
           </section>
 
           <AIDayGeneratorChat

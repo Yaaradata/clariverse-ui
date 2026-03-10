@@ -10,10 +10,12 @@ import {
   UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligence/IntentIntelligenceCommandCenter";
+import { AIPressureInsightWall } from "@/components/unified/intelligence/AIPressureInsightWall";
 import { Target } from "lucide-react";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { DailyDigestCard } from "@/components/email/DailyDigestCard";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -720,9 +722,7 @@ export default function HomePage() {
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
             <AIRiskSpikeMonitor />
-          </section>
-
-          <section id="channel-analysis" className="space-y-6 scroll-mt-20">
+            {/* Eisenhower Quadrant Distribution - per channel tabs */}
             {eisenhowerThreads.length > 0 && (
               <Tabs
                 value={activeEisenhowerChannel}
@@ -744,7 +744,6 @@ export default function HomePage() {
                     );
                   })}
                 </TabsList>
-
                 {CHANNEL_TABS.map((channel) => {
                   const channelThreads = threadsByChannel[channel];
                   const channelQuadrant = selectedQuadrants[channel];
@@ -753,7 +752,7 @@ export default function HomePage() {
                     : [];
 
                   return (
-                    <TabsContent key={channel} value={channel} className="space-y-6">
+                    <TabsContent key={channel} value={channel} className="space-y-6 mt-2">
                       <div className="space-y-4">
                         {channelQuadrant ? (
                           <div className="grid gap-4 lg:grid-cols-2">
@@ -762,9 +761,10 @@ export default function HomePage() {
                               threads={channelThreads}
                               selectedQuadrant={channelQuadrant}
                               onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
+                              getQuadrantSummary={(t, q) => generateQuadrantSummary(t, q, channel)}
                             />
 
-                            <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+                            <Card className="border border-(--border) bg-(--card) shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
                               <CardHeader>
                                 <div className="flex items-center justify-between">
                                   <CardTitle className="flex items-center gap-2 text-white">
@@ -794,26 +794,24 @@ export default function HomePage() {
                                 >
                                   <div className="relative mb-4">
                                     <TabsList className="grid w-full grid-cols-2 relative bg-transparent border-b border-white/10">
-                                      <TabsTrigger 
-                                        value="summary" 
+                                      <TabsTrigger
+                                        value="summary"
                                         className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
                                       >
                                         ✨ AI Summary Wall
                                       </TabsTrigger>
-                                      <TabsTrigger 
-                                        value="details" 
+                                      <TabsTrigger
+                                        value="details"
                                         className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
                                       >
                                         Details
                                       </TabsTrigger>
-                                      {/* Red underline indicator */}
                                       <div
                                         className="absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all duration-300 ease-in-out"
                                         style={{
-                                          width: '50%',
-                                          transform: activeQuadrantTab[channel] === 'summary' 
-                                            ? 'translateX(0%)' 
-                                            : 'translateX(100%)',
+                                          width: "50%",
+                                          transform:
+                                            activeQuadrantTab[channel] === "summary" ? "translateX(0%)" : "translateX(100%)",
                                         }}
                                       />
                                     </TabsList>
@@ -853,7 +851,9 @@ export default function HomePage() {
                                         selectedQuadrant={channelQuadrant}
                                       />
                                     ) : (
-                                      <div className="py-8 text-center text-sm text-gray-400">No priority data available.</div>
+                                      <div className="py-8 text-center text-sm text-gray-400">
+                                        No priority data available.
+                                      </div>
                                     )}
                                   </TabsContent>
                                 </Tabs>
@@ -866,6 +866,7 @@ export default function HomePage() {
                             threads={channelThreads}
                             selectedQuadrant={channelQuadrant}
                             onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
+                            getQuadrantSummary={(t, q) => generateQuadrantSummary(t, q, channel)}
                           />
                         )}
                       </div>
@@ -874,7 +875,7 @@ export default function HomePage() {
                 })}
               </Tabs>
             )}
-
+            <DailyDigestCard kpiData={null} threads={eisenhowerThreads} />
           </section>
 
           <AIDayGeneratorChat
@@ -968,6 +969,8 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </div>
+
+          <AIPressureInsightWall />
 
           {/* Intent Intelligence Command Center - Full-page, no-scroll 3-zone component */}
           <IntentIntelligenceCommandCenter />

@@ -11,7 +11,6 @@ import {
   getPriorityResolutionData,
   generatePriorityResolutionDataForQuadrant,
   getActionableCards,
-  getNetworkGraphData,
   KPIData, 
   EisenhowerThread, 
   ThreadDetail,
@@ -20,7 +19,6 @@ import {
   TopicDistributionData,
   PriorityResolutionData,
   ActionableCard,
-  NetworkGraphData,
 } from '@/lib/flipkart/emailApi';
 import { KPICards } from '@/components/email/KPICards';
 import { FilterState } from '@/components/email/EmailFilters';
@@ -31,7 +29,6 @@ import { SentimentTrendChart } from '@/components/email/SentimentTrendChart';
 import { TopicDistributionChart } from '@/components/email/TopicDistributionChart';
 import { PriorityResolutionChart } from '@/components/email/PriorityResolutionChart';
 import { ActionableCards } from '@/components/charts/ActionableCards';
-import { NetworkGraph } from '@/components/charts/NetworkGraph';
 import { EisenhowerMatrix } from '@/components/email/EisenhowerMatrix';
 import { RiskAssessmentCard } from '@/components/email/RiskAssessmentCard';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,7 +46,6 @@ export default function EmailDashboard() {
   const [topicDistribution, setTopicDistribution] = useState<TopicDistributionData[]>([]);
   const [priorityResolution, setPriorityResolution] = useState<PriorityResolutionData[]>([]);
   const [actionableCards, setActionableCards] = useState<ActionableCard[]>([]);
-  const [networkGraph, setNetworkGraph] = useState<NetworkGraphData | null>(null);
   
   // UI states
   const [selectedThread, setSelectedThread] = useState<ThreadDetail | null>(null);
@@ -164,7 +160,6 @@ export default function EmailDashboard() {
         topics, 
         priorities,
         cards,
-        network
       ] = await Promise.all([
         getKPIs(),
         getEisenhowerThreads(),
@@ -172,7 +167,6 @@ export default function EmailDashboard() {
         getTopicDistribution(),
         getPriorityResolutionData(),
         getActionableCards(),
-        getNetworkGraphData(),
       ]);
       
       setKpiData(kpis);
@@ -181,7 +175,6 @@ export default function EmailDashboard() {
       setTopicDistribution(topics);
       setPriorityResolution(priorities);
       setActionableCards(cards);
-      setNetworkGraph(network);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
@@ -715,10 +708,6 @@ export default function EmailDashboard() {
               />
             )}
 
-            {/* Network Graph */}
-            {networkGraph && (
-              <NetworkGraph data={networkGraph} />
-            )}
         </div>
 
         {/* Thread Detail Drawer */}

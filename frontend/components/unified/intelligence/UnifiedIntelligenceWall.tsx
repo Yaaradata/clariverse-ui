@@ -72,9 +72,18 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
   const actionGridMaxScore = useMemo(() => {
     if (!actionGrid) return 0;
     return Math.max(
-      ...actionGrid.entries.map((entry) => entry.avgDelayHours * Math.max(0.01, entry.pendingFromCompany)),
+      ...actionGrid.entries.map((entry) => {
+        const delayForScore =
+          entry.avgDelaySeconds != null ? entry.avgDelaySeconds : entry.avgDelayHours * 3600;
+        return delayForScore * Math.max(0.01, entry.pendingFromCompany);
+      }),
     );
   }, [actionGrid]);
+
+  const stagesInSeconds = useMemo(
+    () => new Set(["Receive", "Authenticate", "Resolution"]),
+    [],
+  );
 
   return (
     <div className="space-y-10">
@@ -124,7 +133,15 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
                                 />
                               );
                             }
-                            const score = entry.avgDelayHours * Math.max(0.01, entry.pendingFromCompany);
+                            const delayForScore =
+                              entry.avgDelaySeconds != null
+                                ? entry.avgDelaySeconds
+                                : entry.avgDelayHours * 3600;
+                            const score = delayForScore * Math.max(0.01, entry.pendingFromCompany);
+                            const isSecondsStage = stagesInSeconds.has(stage);
+                            const displayValue = isSecondsStage && entry.avgDelaySeconds != null
+                              ? `${entry.avgDelaySeconds.toFixed(1)}s`
+                              : `${entry.avgDelayHours.toFixed(1)}h`;
                             return (
                               <div
                                 key={`${stage}-${channel}`}
@@ -132,7 +149,7 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
                                 style={{ backgroundColor: getHeatmapColor(score, actionGridMaxScore) }}
                               >
                                 <div className="flex items-center justify-between font-semibold leading-none">
-                                  <span>{entry.avgDelayHours.toFixed(1)}h</span>
+                                  <span>{displayValue}</span>
                                   <span className="text-[8.5px] uppercase tracking-widest">
                                     {(entry.pendingFromCompany * 100).toFixed(0)}% COMPANY
                                   </span>

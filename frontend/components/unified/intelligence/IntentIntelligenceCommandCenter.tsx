@@ -17,15 +17,6 @@ const CHANNEL_LABELS: Record<string, string> = {
 
 const CHANNEL_ORDER: ChannelKey[] = ["email", "chat", "ticket", "social", "voice"];
 
-const DEFAULT_INSIGHT_WALL_CARDS: InsightWallCard[] = [
-  { icon: "🔥", title: "Highest Pressure Cluster", context: "Payment Failures", detail: "Voice dominates backlog at 22%, sentiment 4.3, urgency 0.69.", aiInsight: "Re-route authentication into Chat to reduce Voice escalations and cut handle time." },
-  { icon: "⚡", title: "Most Volatile Intent", context: "KYC Resubmission", detail: "Sentiment swings +2.1 → -1.4 with 3 escalation spikes per week.", aiInsight: "Standardize document requirements; surface checklist in Email and Chat concurrently." },
-  { icon: "❌", title: "Multi-Channel Conflict", context: "Payment Timeout", detail: "Ticket shows closed; Chat pending customer; Voice escalated with sentiment 4.6.", aiInsight: "Require CRM timeline acknowledgment before agents close any related channel thread." },
-  { icon: "📊", title: "Backlog Concentration", context: "Billing Issues", detail: "426 unresolved, sentiment 4.0, urgency flagged high.", aiInsight: "Expand automated refund approval thresholds for P2 tickets to relieve backlog." },
-  { icon: "🏢", title: "Accountability Mismatch", context: "Account Recovery", detail: "Company-owned actions at 68%, sentiment 4.5, backlog trending upward.", aiInsight: "Shift low-risk resets to self-service scheduling with biometric verification." },
-  { icon: "🔁", title: "Cross-Channel Escalation Loop", context: "Mortgage Rate Lock", detail: "Email → Chat → Voice loop raises sentiment from 2.4 to 4.6 within 48 hours.", aiInsight: "Inject underwriting updates into Chat transcripts and proactive email digests." },
-];
-
 const channelDotClass: Record<ChannelKey, string> = {
   email: "bg-blue-400",
   chat: "bg-emerald-400",
@@ -78,14 +69,6 @@ type AIRecommendation = {
   text: string;
 };
 
-type InsightWallCard = {
-  icon: string;
-  title: string;
-  context: string;
-  detail: string;
-  aiInsight: string;
-};
-
 interface IntentIntelligenceCommandCenterProps {
   scatterData?: PressureScatterDatum[];
   clusters?: ClusterSummary[];
@@ -93,8 +76,6 @@ interface IntentIntelligenceCommandCenterProps {
   highPressureIntents?: HighPressureIntent[];
   conflicts?: CrossChannelConflict[];
   recommendations?: AIRecommendation[];
-  /** AI Pressure Insight Wall cards (column 3). When omitted, banking defaults are shown. */
-  insightWallCards?: InsightWallCard[];
 }
 
 // Mock data generators - expanded dataset for better visualization
@@ -275,9 +256,7 @@ export function IntentIntelligenceCommandCenter({
   highPressureIntents = defaultHighPressureIntents,
   conflicts = defaultConflicts,
   recommendations = defaultRecommendations,
-  insightWallCards,
 }: IntentIntelligenceCommandCenterProps) {
-  const insightCards = insightWallCards ?? DEFAULT_INSIGHT_WALL_CARDS;
   // State for selected filter: null means "All", otherwise a single channel
   const [selectedFilter, setSelectedFilter] = useState<ChannelKey | "all" | null>("all");
 
@@ -313,7 +292,7 @@ export function IntentIntelligenceCommandCenter({
   };
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6 items-stretch">
+    <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 items-stretch">
       {/* COLUMN 1 - Intent Landscape Map */}
       <Card className="border border-white/10 bg-black/30 shadow-lg flex flex-col overflow-hidden min-h-0">
         <CardHeader className="pb-3 shrink-0 min-h-20">
@@ -476,31 +455,6 @@ export function IntentIntelligenceCommandCenter({
                   <div className="text-xs text-purple-300">
                     ✨ {cluster.aiInsight}
                   </div>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-        </CardContent>
-      </Card>
-
-      {/* COLUMN 3 - AI Pressure Insight Wall */}
-      <Card className="border border-white/10 bg-black/30 shadow-lg flex flex-col overflow-hidden min-h-0">
-        <CardHeader className="pb-3 shrink-0 min-h-20">
-          <CardTitle className="text-sm font-semibold text-white">AI Pressure Insight Wall</CardTitle>
-          <CardDescription className="text-xs text-gray-400">Critical insights and AI-driven recommendations</CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 flex-1 min-h-0">
-          <ScrollArea className="h-[680px]">
-            <div className="space-y-3 pr-2">
-              {insightCards.map((card, idx) => (
-                <div key={idx} className="rounded-xl border border-white/10 bg-[rgba(26,26,26,0.45)] p-4 text-sm text-gray-200 shadow-inner">
-                  <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-indigo-200/80 mb-2">
-                    <span className="text-base">{card.icon}</span>
-                    <span>{card.title}</span>
-                  </div>
-                  <div className="text-base font-semibold text-white mb-1">{card.context}</div>
-                  <p className="text-xs text-gray-400 mb-2">{card.detail}</p>
-                  <p className="text-xs text-purple-300">✨ {card.aiInsight}</p>
                 </div>
               ))}
             </div>

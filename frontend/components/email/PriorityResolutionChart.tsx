@@ -81,31 +81,28 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
   const totalClosed = data.reduce((sum, d) => sum + d.closed, 0);
   const totalThreads = totalOpen + totalInProgress + totalClosed;
 
-  // Calculate topic distribution grouped by priority
+  // Topic label: prefer subject_norm / dominant_cluster_name for clearer, less vague labels
+  const getTopicLabel = (thread: EisenhowerThread): string => {
+    const t = thread as { subject_norm?: string; dominant_cluster_name?: string; topic?: string };
+    return t.subject_norm || t.dominant_cluster_name || t.topic || 'Other';
+  };
+
+  // Calculate topic distribution grouped by priority (using clearer labels)
   const topicsByPriority = useMemo(() => {
     if (!threads.length || !selectedQuadrant) return {};
 
-    // Filter threads by quadrant
-    let filteredThreads = threads.filter(thread => thread.quadrant === selectedQuadrant);
-
-    // Get priorities from the data
+    const filteredThreads = threads.filter(thread => thread.quadrant === selectedQuadrant);
     const prioritiesInData = data.map(d => d.priority);
-
-    // Group topics by priority
     const topicsByPriorityMap: Record<string, Array<{ topic: string; count: number }>> = {};
 
     prioritiesInData.forEach(priority => {
-      // Filter threads for this specific priority
       const priorityThreads = filteredThreads.filter(thread => thread.priority === priority);
-      
-      // Count topics for this priority
       const topicCounts: Record<string, number> = {};
       priorityThreads.forEach(thread => {
-        const topic = thread.topic || 'Unknown';
+        const topic = getTopicLabel(thread);
         topicCounts[topic] = (topicCounts[topic] || 0) + 1;
       });
 
-      // Convert to array and sort by count (descending)
       topicsByPriorityMap[priority] = Object.entries(topicCounts)
         .map(([topic, count]) => ({ topic, count }))
         .sort((a, b) => b.count - a.count);
@@ -117,95 +114,95 @@ export function PriorityResolutionChart({ data, threads = [], selectedQuadrant, 
   return (
     <Card>
       <CardContent className="pt-6">
-        <div className="h-80 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-              onClick={handleBarClick}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-              <XAxis
-                dataKey="priority"
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                axisLine={{ stroke: '#4b5563' }}
-                tickLine={{ stroke: '#4b5563' }}
-              />
-              <YAxis
-                tick={{ fill: '#9ca3af', fontSize: 12 }}
-                axisLine={{ stroke: '#4b5563' }}
-                tickLine={{ stroke: '#4b5563' }}
-                domain={[0, 'auto']}
-              />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar
-                dataKey="openCustomer"
-                stackId="a"
-                fill="#5332ff"
-                name="Open - Customer"
-                radius={[4, 4, 0, 0]}
-              />
-              <Bar
-                dataKey="openCompany"
-                stackId="a"
-                fill="#f97316"
-                name="Open - Company"
-                radius={[0, 0, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Topics Summary - Grouped by Priority */}
-        <div className="mt-6 space-y-6">
-          <h4 className="text-sm font-medium text-gray-300">Topics by Priority</h4>
-          {Object.keys(topicsByPriority).length > 0 ? (
-            <div className="space-y-4">
-              {data.map((priorityData) => {
-                const priority = priorityData.priority;
-                const topics = topicsByPriority[priority] || [];
-                
-                if (topics.length === 0) return null;
-
-                return (
-                  <div key={priority} className="space-y-2">
-                    <div className="flex items-center gap-2 mb-2">
-                      {getPriorityIcon(priority)}
-                      <h5 className="text-sm font-semibold text-white">
-                        {priority} Topics
-                      </h5>
-                      <span className="text-xs text-gray-400">
-                        ({topics.length} {topics.length === 1 ? 'topic' : 'topics'})
-                      </span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {topics.map((item) => (
-                        <div
-                          key={`${priority}-${item.topic}`}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors"
-                        >
-                          <Target className="h-3.5 w-3.5 text-purple-400 flex-shrink-0" />
-                          <span className="text-sm font-medium text-white">
-                            {item.topic}
-                          </span>
-                          <span className="text-xs font-semibold text-purple-400 bg-purple-400/10 px-2 py-0.5 rounded-full">
-                            {item.count}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Left: Resolution plot */}
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-gray-300">Resolution by priority</h4>
+            <div className="h-60 w-full min-h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={data}
+                  margin={{ top: 16, right: 16, left: 0, bottom: 16 }}
+                  onClick={handleBarClick}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis
+                    dataKey="priority"
+                    tick={{ fill: '#9ca3af', fontSize: 12 }}
+                    axisLine={{ stroke: '#4b5563' }}
+                    tickLine={{ stroke: '#4b5563' }}
+                  />
+                  <YAxis
+                    tick={{ fill: '#9ca3af', fontSize: 12 }}
+                    axisLine={{ stroke: '#4b5563' }}
+                    tickLine={{ stroke: '#4b5563' }}
+                    domain={[0, 'auto']}
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar
+                    dataKey="openCustomer"
+                    stackId="open"
+                    fill="#5332ff"
+                    name="Open (customer)"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    dataKey="openCompany"
+                    stackId="open"
+                    fill="#f97316"
+                    name="Open (company)"
+                    radius={[0, 0, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
-          ) : (
-            <div className="text-center py-8 text-gray-400 text-sm">
-              No topics found for the selected criteria
-            </div>
-          )}
-        </div>
+          </div>
 
+          {/* Right: Topics by priority */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-gray-300">Topics by priority</h4>
+            {Object.keys(topicsByPriority).length > 0 ? (
+              <div className="space-y-4 max-h-[260px] overflow-y-auto pr-1">
+                {data.map((priorityData) => {
+                  const priority = priorityData.priority;
+                  const topics = topicsByPriority[priority] || [];
+                  if (topics.length === 0) return null;
+                  return (
+                    <div key={priority} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        {getPriorityIcon(priority)}
+                        <span className="text-sm font-semibold text-white">{priority}</span>
+                        <span className="text-xs text-gray-400">
+                          ({topics.length} {topics.length === 1 ? 'topic' : 'topics'})
+                        </span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {topics.map((item) => (
+                          <div
+                            key={`${priority}-${item.topic}`}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors"
+                          >
+                            <span className="text-sm text-white line-clamp-1" title={item.topic}>
+                              {item.topic}
+                            </span>
+                            <span className="text-xs font-semibold text-emerald-400 bg-emerald-400/10 px-1.5 py-0.5 rounded">
+                              {item.count}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-12 text-gray-400 text-sm">
+                No topics for this quadrant
+              </div>
+            )}
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

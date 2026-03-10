@@ -11,7 +11,6 @@ import { QueueHealthMonitor } from '@/components/email/QueueHealthMonitor';
 import { BottleneckHeatmap } from '@/components/email/BottleneckHeatmap';
 import { DecisionDebtTracker } from '@/components/email/DecisionDebtTracker';
 import { AnomalyAlertsPanel } from '@/components/email/AnomalyAlertsPanel';
-import { DailyDigestCard } from '@/components/email/DailyDigestCard';
 import { RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -130,9 +129,6 @@ export default function ManagerDashboard() {
             Refresh
           </Button>
         </div>
-
-        {/* Daily Digest */}
-        <DailyDigestCard kpiData={kpiData} threads={threads} />
 
         {/* Queue Health Monitor */}
         <QueueHealthMonitor threads={threads} onRebalance={loadData} />

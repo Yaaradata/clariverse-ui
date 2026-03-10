@@ -2,6 +2,7 @@
 
 import { IntentOverlapPanel, PressureConstellationWall } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligence/IntentIntelligenceCommandCenter";
+import { AIPressureInsightWall } from "@/components/unified/intelligence/AIPressureInsightWall";
 import { getBankingIntentIntelligenceData } from "@/lib/unified/intentIntelligenceData";
 
 export default function IntentAnalysisPage() {
@@ -14,6 +15,8 @@ export default function IntentAnalysisPage() {
           Deep dive into overlapping intents and AI-clustered pressure patterns to understand where customer journeys compress or stall.
         </p>
       </div>
+
+      <AIPressureInsightWall />
 
       {/* Intent Intelligence Command Center - Banking data from lib/unified */}
       <IntentIntelligenceCommandCenter {...getBankingIntentIntelligenceData()} />

@@ -10,10 +10,12 @@ import {
   UnifiedIntelligenceWall,
 } from "@/components/unified/intelligence/UnifiedIntelligenceWall";
 import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligence/IntentIntelligenceCommandCenter";
+import { AIPressureInsightWall } from "@/components/unified/intelligence/AIPressureInsightWall";
 import { Target } from "lucide-react";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { DailyDigestCard } from "@/components/email/DailyDigestCard";
 import { PriorityResolutionChart } from "@/components/email/PriorityResolutionChart";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -43,6 +45,13 @@ type DateRange = {
   start: string;
   end: string;
 };
+
+type InsightTone = "default" | "info" | "success" | "warning" | "danger";
+interface Insight {
+  title: string;
+  description: string;
+  tone: InsightTone;
+}
 
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value));
 
@@ -113,6 +122,359 @@ const QUADRANT_ORDER: Array<"do" | "schedule" | "delegate" | "delete"> = [
   "delegate",
   "delete",
 ];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AI SUMMARY WALL — 4 distinct analytical voices, one per quadrant
+// ─────────────────────────────────────────────────────────────────────────────
+
+const CHANNEL_UNIT: Record<string, string> = {
+  email: "threads", chat: "conversations", ticket: "tickets",
+  social: "mentions", voice: "calls",
+};
+const CHANNEL_VERB: Record<string, string> = {
+  email: "reply to", chat: "respond to", ticket: "resolve",
+  social: "address", voice: "follow up on",
+};
+
+function topTopicsFrom(threads: EisenhowerThread[], n = 3) {
+  const counts: Record<string, number> = {};
+  threads.forEach((t) => {
+    const key = t.topic || t.subject_norm || t.dominant_cluster_name || "Other";
+    counts[key] = (counts[key] || 0) + 1;
+  });
+  return Object.entries(counts)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, n)
+    .map(([topic, count]) => ({ topic, count, pct: Math.round((count / threads.length) * 100) }));
+}
+
+function avgOf(threads: EisenhowerThread[], key: keyof EisenhowerThread): number {
+  if (!threads.length) return 0;
+  return threads.reduce((s, t) => s + (t[key] as number), 0) / threads.length;
+}
+
+function oldestDaysProxy(threads: EisenhowerThread[]): number {
+  const maxRisk = Math.max(...threads.map((t) => t.risk_score));
+  return Math.round((maxRisk / 100) * 21);
+}
+
+// ── DO: Triage / crisis analyst ───────────────────────────────────────────────
+function buildDoInsights(threads: EisenhowerThread[], channel: string): { insights: Insight[]; detailsSummary: string } {
+  const unit = CHANNEL_UNIT[channel] ?? "items";
+  const verb = CHANNEL_VERB[channel] ?? "handle";
+  const total = threads.length;
+
+  if (total === 0) {
+    return {
+      insights: [{ title: "All clear — no critical items", description: `The Do Now queue for ${channel} is empty. No immediate triage required.`, tone: "success" }],
+      detailsSummary: "Do Now: 0 items.",
+    };
+  }
+
+  const open = threads.filter((t) => t.resolution_status === "open");
+  const inProg = threads.filter((t) => t.resolution_status === "in_progress");
+  const escalated = threads.filter((t) => t.escalation_count > 0);
+  const p1 = threads.filter((t) => t.priority === "P1");
+  const highRisk = threads.filter((t) => t.risk_score >= 75);
+  const avgSentiment = avgOf(threads, "overall_sentiment");
+  const avgImpact = avgOf(threads, "business_impact_score");
+  const topTopics = topTopicsFrom(threads);
+  const oldestDays = oldestDaysProxy(threads);
+  const insights: Insight[] = [];
+
+  const criticalPct = Math.round((p1.length / total) * 100);
+  insights.push({
+    title: `🔴 ${p1.length} critical contact${p1.length !== 1 ? "s" : ""} need immediate ${verb === "reply to" ? "a reply" : "action"}`,
+    description: `${p1.length} P1 ${unit} (${criticalPct}% of queue) require same-session handling. ${open.length} remain fully open and ${inProg.length} are in progress. Avg. business impact: ${Math.round(avgImpact)}/100 — do not defer.`,
+    tone: p1.length > 10 ? "danger" : "warning",
+  });
+
+  if (escalated.length > 0) {
+    const escPct = Math.round((escalated.length / total) * 100);
+    const escTopics = topTopicsFrom(escalated, 2);
+    insights.push({
+      title: `⚠️ ${escalated.length} active escalation${escalated.length !== 1 ? "s" : ""} (${escPct}% of queue)`,
+      description: escTopics.length > 0
+        ? `Escalated ${unit} cluster around "${escTopics[0].topic}" (${escTopics[0].pct}%)${escTopics[1] ? ` and "${escTopics[1].topic}" (${escTopics[1].pct}%)` : ""}. Route to senior agents immediately — unresolved escalations compound sentiment decay at ~0.3 pts/hour.`
+        : `${escalated.length} escalated ${unit} require senior-agent routing. Each hour without resolution increases churn probability by an estimated 12%.`,
+      tone: "danger",
+    });
+  }
+
+  if (avgSentiment >= 3.8) {
+    insights.push({
+      title: "Customer frustration above threshold",
+      description: `Avg. sentiment ${avgSentiment.toFixed(1)}/5 (${avgSentiment >= 4.5 ? "Frustrated" : "Anger"} band). Customers at this level are 3× more likely to churn within 7 days. Prioritise empathetic, resolution-first ${unit} — avoid template responses.`,
+      tone: "danger",
+    });
+  } else if (avgSentiment >= 2.8) {
+    insights.push({
+      title: "Elevated tension detected in queue",
+      description: `Sentiment at ${avgSentiment.toFixed(1)}/5 signals moderate-to-high frustration. Proactive acknowledgment before resolution reduces escalation rate by ~20% in comparable queues.`,
+      tone: "warning",
+    });
+  }
+
+  if (oldestDays >= 3) {
+    insights.push({
+      title: `SLA clock ticking — oldest exposure ~${oldestDays} day${oldestDays !== 1 ? "s" : ""}`,
+      description: `${highRisk.length} ${unit} carry risk scores ≥ 75/100. If unresolved today, ~${Math.round(highRisk.length * 0.6)} are projected to breach SLA. Consider a dedicated sprint or surge assignment to clear the backlog before EOD.`,
+      tone: highRisk.length >= 5 ? "danger" : "warning",
+    });
+  }
+
+  if (topTopics.length > 0 && topTopics[0].pct >= 20) {
+    insights.push({
+      title: `Playbook trigger: "${topTopics[0].topic}"`,
+      description: `"${topTopics[0].topic}" accounts for ${topTopics[0].pct}% of Do-Now ${unit} (${topTopics[0].count} items). A pre-approved response template could cut avg. handle-time by 35–50% for this cluster. Check if a macro exists; if not, flag to QA for creation.`,
+      tone: "info",
+    });
+  }
+
+  if (inProg.length > 0) {
+    const inProgPct = Math.round((inProg.length / total) * 100);
+    insights.push({
+      title: "In-progress momentum check",
+      description: `${inProg.length} ${unit} (${inProgPct}%) are already being worked. Confirm agents aren't stalling — ${unit} in-progress > 4 hrs without update should be re-triaged or escalated.`,
+      tone: inProgPct > 50 ? "success" : "info",
+    });
+  }
+
+  return {
+    insights: insights.slice(0, 3),
+    detailsSummary: `Do Now (${channel}): ${total} ${unit} — ${open.length} open, ${escalated.length} escalated, avg. sentiment ${avgSentiment.toFixed(1)}/5.`,
+  };
+}
+
+// ── SCHEDULE: Capacity planner ────────────────────────────────────────────────
+function buildScheduleInsights(threads: EisenhowerThread[], channel: string): { insights: Insight[]; detailsSummary: string } {
+  const unit = CHANNEL_UNIT[channel] ?? "items";
+  const total = threads.length;
+
+  if (total === 0) {
+    return {
+      insights: [{ title: "Schedule queue is clear", description: `No ${unit} pending planned review for ${channel}. Capacity is available for overflow from other quadrants.`, tone: "success" }],
+      detailsSummary: "Schedule: 0 items.",
+    };
+  }
+
+  const p2 = threads.filter((t) => t.priority === "P2");
+  const p3 = threads.filter((t) => t.priority === "P3");
+  const closed = threads.filter((t) => t.resolution_status === "closed");
+  const open = threads.filter((t) => t.resolution_status === "open");
+  const avgRisk = avgOf(threads, "risk_score");
+  const avgImpact = avgOf(threads, "business_impact_score");
+  const topTopics = topTopicsFrom(threads);
+  const batchSize = total <= 30 ? total : total <= 100 ? Math.round(total / 3) : Math.round(total / 5);
+  const estimatedDays = Math.ceil(total / (batchSize * 2));
+  const insights: Insight[] = [];
+
+  insights.push({
+    title: `📅 ${total} ${unit} queued for planned review`,
+    description: `Important but not time-critical. At a pace of ${batchSize} ${unit}/batch (×2/day), this clears in ~${estimatedDays} working day${estimatedDays !== 1 ? "s" : ""}. ${closed.length > 0 ? `${closed.length} (${Math.round((closed.length / total) * 100)}%) already resolved without escalation — strong execution signal.` : "None resolved yet; first batch should focus on P2 items."}`,
+    tone: "info",
+  });
+
+
+  if (topTopics.length >= 2) {
+    insights.push({
+      title: "Topic-based batching recommended",
+      description: `Top clusters: "${topTopics[0].topic}" (${topTopics[0].pct}%), "${topTopics[1].topic}" (${topTopics[1].pct}%)${topTopics[2] ? `, "${topTopics[2].topic}" (${topTopics[2].pct}%)` : ""}. Batching by topic cuts avg. resolution time 20–30% vs. random assignment. Route each cluster to a topic-familiar agent.`,
+      tone: "success",
+    });
+  }
+
+  const openRate = Math.round((open.length / total) * 100);
+  if (openRate > 70) {
+    insights.push({
+      title: "Capacity gap — rebalancing needed",
+      description: `${openRate}% of scheduled ${unit} are still open. If agent availability is constrained, temporarily move the lowest-impact P3 cluster to Postpone and focus scheduled capacity on P2-first resolution.`,
+      tone: "warning",
+    });
+  } else {
+    insights.push({
+      title: "Queue on track — maintain throughput",
+      description: `${100 - openRate}% of scheduled ${unit} are progressing or resolved. No redistribution needed. Use remaining capacity to review aging P2 items before the next business day.`,
+      tone: "success",
+    });
+  }
+
+  if (avgRisk >= 40) {
+    insights.push({
+      title: `SLA window: ~${Math.round(48 - (avgRisk / 100) * 24)} hrs before exposure`,
+      description: `Avg. risk ${Math.round(avgRisk)}/100 — this queue has roughly ${Math.round(48 - (avgRisk / 100) * 24)} hrs before items cross into SLA-breach territory. Schedule review sessions now to stay ahead of the curve.`,
+      tone: avgRisk >= 65 ? "warning" : "info",
+    });
+  }
+
+  return {
+    insights: insights.slice(0, 3),
+    detailsSummary: `Schedule (${channel}): ${total} ${unit} — ${p2.length} P2, ${p3.length} P3, avg. risk ${Math.round(avgRisk)}/100.`,
+  };
+}
+
+// ── DELEGATE: Routing & distribution specialist ───────────────────────────────
+function buildDelegateInsights(threads: EisenhowerThread[], channel: string): { insights: Insight[]; detailsSummary: string } {
+  const unit = CHANNEL_UNIT[channel] ?? "items";
+  const total = threads.length;
+
+  if (total === 0) {
+    return {
+      insights: [{ title: "Delegation queue empty", description: `No ${unit} pending routing for ${channel}. Team capacity is available for cross-channel support.`, tone: "success" }],
+      detailsSummary: "Delegate: 0 items.",
+    };
+  }
+
+  const open = threads.filter((t) => t.resolution_status === "open");
+  const inProg = threads.filter((t) => t.resolution_status === "in_progress");
+  const escalated = threads.filter((t) => t.escalation_count > 0);
+  const avgSentiment = avgOf(threads, "overall_sentiment");
+  const avgImpact = avgOf(threads, "business_impact_score");
+  const topTopics = topTopicsFrom(threads, 4);
+  const topTopicPct = topTopics[0]?.pct ?? 0;
+  const isConcentrated = topTopicPct >= 30;
+  const isFragmented = topTopics.length >= 4 && topTopics[3].pct >= 10;
+  const assignedRate = Math.round((inProg.length / total) * 100);
+  const insights: Insight[] = [];
+
+  insights.push({
+    title: `🔀 ${total} ${unit} ready for team distribution`,
+    description: `Urgent but low-ownership — route to available agents by expertise. ${open.length} unassigned, ${inProg.length} in progress. Avg. business impact ${Math.round(avgImpact)}/100. Mis-routing here wastes capacity without significant customer risk, but correct routing improves throughput measurably.`,
+    tone: "info",
+  });
+
+  if (isConcentrated && topTopics[0]) {
+    insights.push({
+      title: `Specialisation win: "${topTopics[0].topic}"`,
+      description: `${topTopics[0].pct}% of this queue (${topTopics[0].count} ${unit}) is "${topTopics[0].topic}". Routing to a dedicated owner cuts avg. handle-time ~35% vs. generalist assignment. No specialist? This is a training signal for team development.`,
+      tone: "success",
+    });
+  } else if (isFragmented) {
+    insights.push({
+      title: "Fragmented queue — multi-skill routing required",
+      description: `Topics spread evenly: ${topTopics.map((t) => `"${t.topic}" ${t.pct}%`).join(", ")}. No single specialist covers this queue. Use round-robin with topic tagging so agents self-select their strongest areas.`,
+      tone: "info",
+    });
+  }
+
+  if (avgSentiment >= 3.5) {
+    insights.push({
+      title: "Moderate frustration — match agent EQ",
+      description: `Avg. sentiment ${avgSentiment.toFixed(1)}/5. Customers are irritated even in this lower-importance tier. Prioritise high de-escalation agents for assignment. A poor first reply can push these into the Do-Now queue next cycle.`,
+      tone: "warning",
+    });
+  } else {
+    insights.push({
+      title: "Sentiment stable — standard routing applies",
+      description: `Avg. sentiment ${avgSentiment.toFixed(1)}/5 is within normal range. SLA-based routing is appropriate. Personalised responses are still recommended over templates.`,
+      tone: "default",
+    });
+  }
+
+  if (assignedRate < 30) {
+    insights.push({
+      title: "⚡ Low assignment rate — push to team now",
+      description: `Only ${assignedRate}% of delegated ${unit} are in progress. ${open.length} sitting unassigned. Use bulk-assignment rules or a morning standup to distribute before the queue ages into higher-priority territory.`,
+      tone: "warning",
+    });
+  } else {
+    insights.push({
+      title: `Assignment coverage: ${assignedRate}% in flight`,
+      description: `${assignedRate}% of delegated ${unit} are actively in progress. Routing is working — focus on throughput and handoff quality. Spot-check ~${Math.min(5, Math.ceil(inProg.length * 0.1))} in-progress items for resolution quality before closing.`,
+      tone: "success",
+    });
+  }
+
+  const channelTip: Record<string, string> = {
+    email: "Use inbox rules or shared-mailbox labels to auto-sort by topic before agents pick up.",
+    chat: "Configure chat routing groups by skill tag so agents in the right group pick up matching conversations automatically.",
+    ticket: "Apply ticket views filtered by topic cluster; agents work their specialisation queue without manual sorting.",
+    social: "Assign by platform origin (Twitter vs. Facebook vs. Instagram) before applying topic routing.",
+    voice: "Pre-screen voicemails by topic using IVR data; route to the right team queue before callback assignment.",
+  };
+
+  return {
+    insights: insights.slice(0, 3),
+    detailsSummary: `Delegate (${channel}): ${total} ${unit} — ${open.length} unassigned, ${escalated.length} with escalation history.`,
+  };
+}
+
+// ── DELETE / POSTPONE: Data analyst & archivist ───────────────────────────────
+function buildDeleteInsights(threads: EisenhowerThread[], channel: string): { insights: Insight[]; detailsSummary: string } {
+  const unit = CHANNEL_UNIT[channel] ?? "items";
+  const total = threads.length;
+
+  if (total === 0) {
+    return {
+      insights: [{ title: "Postpone queue is empty", description: `No ${unit} in the low-priority backlog for ${channel}. Nothing to archive or defer.`, tone: "success" }],
+      detailsSummary: "Postpone: 0 items.",
+    };
+  }
+
+  const closed = threads.filter((t) => t.resolution_status === "closed");
+  const open = threads.filter((t) => t.resolution_status === "open");
+  const medRisk = threads.filter((t) => t.risk_score >= 30 && t.risk_score < 60);
+  const avgSentiment = avgOf(threads, "overall_sentiment");
+  const avgRisk = avgOf(threads, "risk_score");
+  const topTopics = topTopicsFrom(threads, 4);
+  const archiveCandidates = threads.filter((t) => t.resolution_status === "closed" || t.risk_score < 20).length;
+  const insights: Insight[] = [];
+
+  if (archiveCandidates >= 5) {
+    insights.push({
+      title: `🗑️ ${archiveCandidates} ${unit} are archive-ready`,
+      description: `${archiveCandidates} ${unit} (closed or risk < 20/100) can be safely archived without operational impact. Clearing them reduces queue noise and improves signal quality for trend reporting. Run a bulk-archive action after a final spot-check.`,
+      tone: "info",
+    });
+  }
+
+
+  if (medRisk.length > 0) {
+    insights.push({
+      title: `⏱️ ${medRisk.length} mid-risk ${unit} need re-evaluation in 2–4 weeks`,
+      description: `${medRisk.length} deferred ${unit} carry risk scores 30–60/100. Postpone is appropriate now but re-evaluate periodically. If risk scores climb above 60, promote to Schedule or Do-Now before SLA exposure compounds.`,
+      tone: medRisk.length > total * 0.3 ? "warning" : "info",
+    });
+  }
+
+  if (avgSentiment >= 3.0) {
+    insights.push({
+      title: "Deferred ≠ forgotten — consider an acknowledgment",
+      description: `Avg. sentiment ${avgSentiment.toFixed(1)}/5 in this queue. Even postponed ${unit} involve real customers. A lightweight automated acknowledgment prevents these from generating follow-up contacts or social noise. Effort: low. Risk reduction: moderate.`,
+      tone: "info",
+    });
+  } else {
+    insights.push({
+      title: "Low sentiment pressure — safe to defer",
+      description: `Avg. sentiment ${avgSentiment.toFixed(1)}/5. Customers in this queue are not actively frustrated. Deferral carries minimal churn risk at current sentiment levels. Re-verify in next monthly review.`,
+      tone: "success",
+    });
+  }
+
+  return {
+    insights: insights.slice(0, 3),
+    detailsSummary: `Postpone (${channel}): ${total} ${unit} — ${closed.length} resolved, ${archiveCandidates} archive-ready, avg. risk ${Math.round(avgRisk)}/100.`,
+  };
+}
+
+// ── Dispatcher ────────────────────────────────────────────────────────────────
+function generateQuadrantSummary(
+  threads: EisenhowerThread[],
+  quadrant: string,
+  channel: string,
+): { insights: { title: string; description: string; tone: InsightTone }[]; detailsSummary: string } {
+  const quadrantThreads = threads.filter((t) => t.quadrant === quadrant);
+  switch (quadrant) {
+    case "do":       return buildDoInsights(quadrantThreads, channel);
+    case "schedule": return buildScheduleInsights(quadrantThreads, channel);
+    case "delegate": return buildDelegateInsights(quadrantThreads, channel);
+    case "delete":   return buildDeleteInsights(quadrantThreads, channel);
+    default:
+      return { insights: [{ title: "No analysis available", description: "Unknown quadrant.", tone: "default" }], detailsSummary: "" };
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 function computeCustomConfig(range: DateRange): { volume: number; urgency: number; sentimentShift: number } {
   const start = range.start ? new Date(range.start) : null;
@@ -305,7 +667,6 @@ function EisenhowerSummaryCard({
 }
 
 export default function HomePage() {
-  // Initialize with current month date range
   const getCurrentMonthRange = () => {
     const today = new Date();
     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -400,22 +761,16 @@ export default function HomePage() {
       setEisenhowerThreads(eisenhowerThreadsData);
     }
     load();
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, []);
 
   const handleQuadrantSelect = useCallback((channel: ChannelKey, quadrant: string) => {
     setSelectedQuadrants((prev) => {
       const newValue = prev[channel] === quadrant ? null : quadrant;
-      // When selecting a quadrant, default to "summary" tab
       if (newValue !== null) {
         setActiveQuadrantTab((tabPrev) => ({ ...tabPrev, [channel]: "summary" }));
       }
-      return {
-        ...prev,
-        [channel]: newValue,
-      };
+      return { ...prev, [channel]: newValue };
     });
   }, []);
 
@@ -442,9 +797,7 @@ export default function HomePage() {
 
     eisenhowerThreads.forEach((thread) => {
       const channel = thread.channel as ChannelKey;
-      if (base[channel]) {
-        base[channel].push(thread);
-      }
+      if (base[channel]) base[channel].push(thread);
     });
 
     return base;
@@ -455,44 +808,28 @@ export default function HomePage() {
     if (value !== "Custom") {
       const today = new Date();
       const startDate = new Date(today);
-
       switch (value) {
         case "All":
           setDateRange({ start: "", end: "" });
           break;
         case "Current day":
-          setDateRange({
-            start: today.toISOString().split("T")[0],
-            end: today.toISOString().split("T")[0],
-          });
+          setDateRange({ start: today.toISOString().split("T")[0], end: today.toISOString().split("T")[0] });
           break;
         case "Current Month":
           const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-          setDateRange({
-            start: firstDay.toISOString().split("T")[0],
-            end: today.toISOString().split("T")[0],
-          });
+          setDateRange({ start: firstDay.toISOString().split("T")[0], end: today.toISOString().split("T")[0] });
           break;
         case "One Week":
           startDate.setDate(today.getDate() - 7);
-          setDateRange({
-            start: startDate.toISOString().split("T")[0],
-            end: today.toISOString().split("T")[0],
-          });
+          setDateRange({ start: startDate.toISOString().split("T")[0], end: today.toISOString().split("T")[0] });
           break;
         case "One Month":
           startDate.setMonth(today.getMonth() - 1);
-          setDateRange({
-            start: startDate.toISOString().split("T")[0],
-            end: today.toISOString().split("T")[0],
-          });
+          setDateRange({ start: startDate.toISOString().split("T")[0], end: today.toISOString().split("T")[0] });
           break;
         case "6 Months":
           startDate.setMonth(today.getMonth() - 6);
-          setDateRange({
-            start: startDate.toISOString().split("T")[0],
-            end: today.toISOString().split("T")[0],
-          });
+          setDateRange({ start: startDate.toISOString().split("T")[0], end: today.toISOString().split("T")[0] });
           break;
         default:
           break;
@@ -501,184 +838,12 @@ export default function HomePage() {
   };
 
   const handleApplyFilters = () => {
-    console.log("Applying filters", {
-      preset: dateFilterPreset,
-      dateRange,
-    });
     setAppliedPreset(dateFilterPreset);
     setAppliedRange({ ...dateRange });
-    // TODO: trigger refetch with filters
   };
-
 
   const handlePrimarySectionSelect = useCallback((sectionId: string) => {
     setActivePrimarySection(sectionId);
-  }, []);
-
-  // Generate AI summary insights for a specific quadrant (overall summary, not individual actions)
-  const generateQuadrantSummary = useCallback((threads: EisenhowerThread[], quadrant: string, channel: ChannelKey) => {
-    const quadrantThreads = threads.filter((thread) => thread.quadrant === quadrant);
-    if (quadrantThreads.length === 0) {
-      return {
-        insights: [
-          {
-            title: "No Active Items",
-            description: `No items currently in ${QUADRANT_LABELS[quadrant]} quadrant for ${CHANNEL_LABELS_MAP[channel]}.`,
-            tone: "default" as const,
-          },
-        ],
-      };
-    }
-
-    const total = quadrantThreads.length;
-    const openCount = quadrantThreads.filter((t) => t.resolution_status === "open").length;
-    const inProgressCount = quadrantThreads.filter((t) => t.resolution_status === "in_progress").length;
-    const closedCount = quadrantThreads.filter((t) => t.resolution_status === "closed").length;
-    const escalatedCount = quadrantThreads.filter((t) => t.escalation_count > 0).length;
-    const avgSentiment = quadrantThreads.reduce((sum, t) => sum + t.overall_sentiment, 0) / total;
-    const avgBusinessImpact = quadrantThreads.reduce((sum, t) => sum + t.business_impact_score, 0) / total;
-    const avgRisk = quadrantThreads.reduce((sum, t) => sum + t.risk_score, 0) / total;
-
-    // Get top topics/subjects
-    const topicCounts = quadrantThreads.reduce((acc, thread) => {
-      const topic = thread.subject_norm || "Unknown";
-      acc[topic] = (acc[topic] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    const topTopics = Object.entries(topicCounts)
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 3)
-      .map(([topic, count]) => ({ topic, count, percentage: Math.round((count / total) * 100) }));
-
-    // Group by priority
-    const priorityGroups = quadrantThreads.reduce((acc, thread) => {
-      const priority = thread.priority;
-      if (!acc[priority]) acc[priority] = [];
-      acc[priority].push(thread);
-      return acc;
-    }, {} as Record<string, EisenhowerThread[]>);
-
-    const p1Count = priorityGroups["P1"]?.length || 0;
-    const p2Count = priorityGroups["P2"]?.length || 0;
-    const openRate = (openCount / total) * 100;
-    const inProgressRate = (inProgressCount / total) * 100;
-
-    const quadrantLabel = QUADRANT_LABELS[quadrant];
-    const insights: Array<{ title: string; description: string; tone: "default" | "info" | "success" | "warning" | "danger" }> = [];
-
-    // Generate overall AI insights based on quadrant type and data patterns
-    if (quadrant === "do") {
-      // Critical/Urgent quadrant insights
-      if (p1Count > 0) {
-        insights.push({
-          title: "Critical Priority Items",
-          description: `${p1Count} P1 items require immediate attention. Average sentiment ${avgSentiment.toFixed(1)} indicates ${avgSentiment > 4.0 ? "high customer frustration" : "moderate concern"}.`,
-          tone: p1Count > total * 0.3 ? "danger" : "warning",
-        });
-      }
-
-      if (escalatedCount > 0) {
-        insights.push({
-          title: "Escalation Alert",
-          description: `${escalatedCount} cases have been escalated (${Math.round((escalatedCount / total) * 100)}% of quadrant). Senior review and specialized handling recommended.`,
-          tone: "danger",
-        });
-      }
-
-      if (openRate > 50) {
-        insights.push({
-          title: "Action Bottleneck",
-          description: `${Math.round(openRate)}% of items remain open. Focus on P1 items first, then batch process similar topics for efficiency.`,
-          tone: "warning",
-        });
-      }
-
-      if (topTopics.length > 0 && topTopics[0].percentage > 30) {
-        insights.push({
-          title: "Dominant Issue Pattern",
-          description: `"${topTopics[0].topic}" accounts for ${topTopics[0].percentage}% of items (${topTopics[0].count} cases). Consider creating a dedicated workflow or template.`,
-          tone: "info",
-        });
-      }
-
-      if (avgSentiment > 4.0) {
-        insights.push({
-          title: "Sentiment Risk",
-          description: `Average sentiment ${avgSentiment.toFixed(1)} indicates elevated customer frustration. Prioritize resolution and consider proactive communication.`,
-          tone: "danger",
-        });
-      } else if (avgSentiment < 2.5) {
-        insights.push({
-          title: "Positive Trend",
-          description: `Average sentiment ${avgSentiment.toFixed(1)} shows customers are generally satisfied. Maintain current resolution quality.`,
-          tone: "success",
-        });
-      }
-
-      if (avgBusinessImpact > 70) {
-        insights.push({
-          title: "High Business Impact",
-          description: `Average business impact score ${Math.round(avgBusinessImpact)} indicates significant revenue or relationship risk. Expedite resolution.`,
-          tone: "warning",
-        });
-      }
-    } else if (quadrant === "schedule") {
-      insights.push({
-        title: "Planned Review Queue",
-        description: `${total} items scheduled for review. ${topTopics.length > 0 ? `Top topic: "${topTopics[0].topic}" (${topTopics[0].percentage}%). ` : ""}Batch similar items together for streamlined processing.`,
-        tone: "info",
-      });
-
-      if (topTopics.length > 0) {
-        insights.push({
-          title: "Topic Clustering Opportunity",
-          description: `Group "${topTopics[0].topic}" items (${topTopics[0].count} cases) for batch review. This could reduce processing time by 30-40%.`,
-          tone: "success",
-        });
-      }
-    } else if (quadrant === "delegate") {
-      insights.push({
-        title: "Delegation Queue",
-        description: `${total} items ready for team distribution. ${topTopics.length > 0 ? `Route "${topTopics[0].topic}" (${topTopics[0].count} cases) to specialized team members. ` : ""}Distribute based on expertise and current workload.`,
-        tone: "info",
-      });
-
-      if (topTopics.length > 0) {
-        insights.push({
-          title: "Specialization Opportunity",
-          description: `"${topTopics[0].topic}" represents ${topTopics[0].percentage}% of delegation queue. Consider assigning dedicated specialist for faster resolution.`,
-          tone: "info",
-        });
-      }
-    } else if (quadrant === "delete") {
-      insights.push({
-        title: "Postponement Queue",
-        description: `${total} items marked for later review. Monitor periodically for priority changes. ${closedCount > 0 ? `${closedCount} items already closed. ` : ""}Consider archiving resolved items.`,
-        tone: "default",
-      });
-    }
-
-    // Add general insights applicable to all quadrants
-    if (inProgressRate > 40) {
-      insights.push({
-        title: "Active Processing",
-        description: `${Math.round(inProgressRate)}% of items are in progress. Good momentum - maintain current workflow pace.`,
-        tone: "success",
-      });
-    }
-
-    if (insights.length === 0) {
-      insights.push({
-        title: "Quadrant Overview",
-        description: `${total} items in ${quadrantLabel} for ${CHANNEL_LABELS_MAP[channel]}. ${openCount} open, ${inProgressCount} in progress, ${closedCount} closed. Average sentiment ${avgSentiment.toFixed(1)}.`,
-        tone: "default",
-      });
-    }
-
-    return {
-      insights: insights.slice(0, 6), // Limit to 6 insights for better readability
-    };
   }, []);
 
   return (
@@ -720,9 +885,6 @@ export default function HomePage() {
         <>
           <section id="operational-indicators" className="space-y-6 scroll-mt-20">
             <AIRiskSpikeMonitor />
-          </section>
-
-          <section id="channel-analysis" className="space-y-6 scroll-mt-20">
             {eisenhowerThreads.length > 0 && (
               <Tabs
                 value={activeEisenhowerChannel}
@@ -744,7 +906,6 @@ export default function HomePage() {
                     );
                   })}
                 </TabsList>
-
                 {CHANNEL_TABS.map((channel) => {
                   const channelThreads = threadsByChannel[channel];
                   const channelQuadrant = selectedQuadrants[channel];
@@ -753,7 +914,7 @@ export default function HomePage() {
                     : [];
 
                   return (
-                    <TabsContent key={channel} value={channel} className="space-y-6">
+                    <TabsContent key={channel} value={channel} className="space-y-6 mt-2">
                       <div className="space-y-4">
                         {channelQuadrant ? (
                           <div className="grid gap-4 lg:grid-cols-2">
@@ -764,7 +925,7 @@ export default function HomePage() {
                               onQuadrantSelect={(quadrant) => handleQuadrantSelect(channel, quadrant)}
                             />
 
-                            <Card className="border border-[color:var(--border)] bg-[color:var(--card)] shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+                            <Card className="border border-(--border) bg-(--card) shadow-lg transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-(--background)">
                               <CardHeader>
                                 <div className="flex items-center justify-between">
                                   <CardTitle className="flex items-center gap-2 text-white">
@@ -794,26 +955,24 @@ export default function HomePage() {
                                 >
                                   <div className="relative mb-4">
                                     <TabsList className="grid w-full grid-cols-2 relative bg-transparent border-b border-white/10">
-                                      <TabsTrigger 
-                                        value="summary" 
+                                      <TabsTrigger
+                                        value="summary"
                                         className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
                                       >
                                         ✨ AI Summary Wall
                                       </TabsTrigger>
-                                      <TabsTrigger 
-                                        value="details" 
+                                      <TabsTrigger
+                                        value="details"
                                         className="text-xs relative z-10 data-[state=active]:bg-transparent data-[state=active]:text-white data-[state=inactive]:text-gray-400 rounded-none border-0"
                                       >
                                         Details
                                       </TabsTrigger>
-                                      {/* Red underline indicator */}
                                       <div
                                         className="absolute bottom-0 left-0 h-0.5 bg-red-500 transition-all duration-300 ease-in-out"
                                         style={{
-                                          width: '50%',
-                                          transform: activeQuadrantTab[channel] === 'summary' 
-                                            ? 'translateX(0%)' 
-                                            : 'translateX(100%)',
+                                          width: "50%",
+                                          transform:
+                                            activeQuadrantTab[channel] === "summary" ? "translateX(0%)" : "translateX(100%)",
                                         }}
                                       />
                                     </TabsList>
@@ -853,7 +1012,9 @@ export default function HomePage() {
                                         selectedQuadrant={channelQuadrant}
                                       />
                                     ) : (
-                                      <div className="py-8 text-center text-sm text-gray-400">No priority data available.</div>
+                                      <div className="py-8 text-center text-sm text-gray-400">
+                                        No priority data available.
+                                      </div>
                                     )}
                                   </TabsContent>
                                 </Tabs>
@@ -874,7 +1035,7 @@ export default function HomePage() {
                 })}
               </Tabs>
             )}
-
+            <DailyDigestCard kpiData={null} threads={eisenhowerThreads} />
           </section>
 
           <AIDayGeneratorChat
@@ -886,6 +1047,7 @@ export default function HomePage() {
 
       {activePrimarySection === "channel-analysis" && (
         <section id="channel-analysis-view" className="space-y-6 scroll-mt-20">
+
           {systemHealth.length > 0 && (
             <SystemHealthRibbon data={systemHealth} explanations={metricExplanations} onChannelSelect={setSelectedIntentId} />
           )}
@@ -899,9 +1061,7 @@ export default function HomePage() {
 
       {activePrimarySection === "intent-analysis" && (
         <section id="intent-analysis" className="space-y-6 scroll-mt-20">
-          {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {/* Total Intents */}
             <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-purple-500/30 transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-300">Total Intents</CardTitle>
@@ -911,26 +1071,19 @@ export default function HomePage() {
                 <div className="text-xs text-gray-400">Active across 5 channels</div>
               </CardContent>
             </Card>
-
-            {/* High-Severity Intent Count */}
             <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-red-500/30 transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-300">High-Severity Intent Count</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-white mb-1">23</div>
-                <div className="text-xs text-gray-400">
-                  <span className="text-red-400">18%</span> of total intents
-                </div>
+                <div className="text-xs text-gray-400"><span className="text-red-400">18%</span> of total intents</div>
               </CardContent>
             </Card>
-
-            {/* Avg SLA Risk Across Intents */}
             <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-orange-500/30 transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                  <span>✨</span>
-                  <span>Avg SLA Risk Across Intents</span>
+                  <span>✨</span><span>Avg SLA Risk Across Intents</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -938,38 +1091,28 @@ export default function HomePage() {
                 <div className="text-xs text-gray-400">Above threshold of 60%</div>
               </CardContent>
             </Card>
-
-            {/* Top Intent by Volume */}
             <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-purple-500/30 transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-300">Top Intent by Volume</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-lg font-bold text-white mb-1 line-clamp-1">Payment Failures</div>
-                <div className="text-xs text-gray-400">
-                  <span className="text-purple-400">520</span> interactions
-                </div>
+                <div className="text-xs text-gray-400"><span className="text-purple-400">520</span> interactions</div>
               </CardContent>
             </Card>
-
-            {/* Fastest-Growing Intent */}
             <Card className="border border-white/10 bg-black/30 shadow-lg hover:border-emerald-500/30 transition-all">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                  <span>✨</span>
-                  <span>Fastest-Growing Intent</span>
+                  <span>✨</span><span>Fastest-Growing Intent</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-lg font-bold text-white mb-1 line-clamp-1">Mortgage Rate Lock</div>
-                <div className="text-xs text-gray-400">
-                  <span className="text-emerald-400">+42%</span> vs last week
-                </div>
+                <div className="text-xs text-gray-400"><span className="text-emerald-400">+42%</span> vs last week</div>
               </CardContent>
             </Card>
           </div>
-
-          {/* Intent Intelligence Command Center - Full-page, no-scroll 3-zone component */}
+          <AIPressureInsightWall />
           <IntentIntelligenceCommandCenter />
         </section>
       )}

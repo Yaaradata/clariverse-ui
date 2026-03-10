@@ -110,7 +110,17 @@ const mockRiskSpikes: RiskSpike[] = [
   },
 ];
 
-export function AIRiskSpikeMonitor({ spikes = mockRiskSpikes }: { spikes?: RiskSpike[] }) {
+export function AIRiskSpikeMonitor({
+  spikes = mockRiskSpikes,
+  driverContext,
+  driverSignals,
+}: {
+  spikes?: RiskSpike[];
+  /** Optional line explaining what drives volume/sentiment (e.g. rate changes). Shown under the subtitle. */
+  driverContext?: string;
+  /** Optional list of related CX signals (e.g. "Mortgage inquiries +185%"). Rendered as pills when driverContext is set. */
+  driverSignals?: string[];
+}) {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   useEffect(() => {
@@ -139,6 +149,25 @@ export function AIRiskSpikeMonitor({ spikes = mockRiskSpikes }: { spikes?: RiskS
       <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.
       </p>
+      {driverContext ? (
+        <div className="space-y-2">
+          <p className={`text-xs italic ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+            Drivers: {driverContext}
+          </p>
+          {driverSignals && driverSignals.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {driverSignals.map((signal, i) => (
+                <span
+                  key={i}
+                  className={`text-[11px] px-2.5 py-1 rounded-md border ${isDarkMode ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'}`}
+                >
+                  {signal}
+                </span>
+              ))}
+            </div>
+          ) : null}
+        </div>
+      ) : null}
       <div className="flex gap-4 overflow-x-auto pb-3 items-stretch">
         {spikes.map((spike) => (
           <RiskSpikeCard key={spike.id} spike={spike} />
