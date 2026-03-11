@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Yaaralabs.ai',
   description: 'AI-powered customer intent intelligence platform',
+  icons: {
+    icon: '/yaaralogo-circle.png',
+  },
 };
 
 export default function RootLayout({
