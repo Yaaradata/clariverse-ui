@@ -18,7 +18,7 @@ export default function AddonPage() {
   }, [pathname, router]);
 
   const isComplianceActive = pathname === '/swedbank/compliance-fci/compliance';
-  const isFCIActive = pathname === '/swedbank/compliance-fci/fci';
+  const isUnitPerformanceActive = pathname === '/swedbank/compliance-fci/unit-performance';
   const isVendorActive = pathname === '/swedbank/compliance-fci/compliance-signals';
 
   return (
@@ -55,14 +55,14 @@ export default function AddonPage() {
               Compliance and Risk
             </Link>
             <Link
-              href="/swedbank/compliance-fci/fci"
+              href="/swedbank/compliance-fci/unit-performance"
               className="py-4 px-2 font-semibold transition-all relative"
               style={{
-                color: isFCIActive ? '#5332FF' : '#939394',
-                borderBottom: isFCIActive ? '3px solid #5332FF' : 'none',
+                color: isUnitPerformanceActive ? '#5332FF' : '#939394',
+                borderBottom: isUnitPerformanceActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Failed Customer Interaction
+              Unit Performance
             </Link>
             <Link
               href="/swedbank/compliance-fci/compliance-signals"
@@ -72,7 +72,7 @@ export default function AddonPage() {
                 borderBottom: isVendorActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Compliance Signals
+              Third Party Compliance Signals
             </Link>
           </div>
         </div>

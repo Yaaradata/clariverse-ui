@@ -6,7 +6,8 @@ import {
   AlertCircle, FileText, Zap,
   Eye, Sparkles, Award, X, Phone, User,
   Clock, Calendar, MessageSquare, CreditCard,
-  Building, MapPin, Hash, Shield, Edit3
+  Building, MapPin, Hash, Shield, Edit3,
+  Gauge, Timer, Mic, TrendingUp
 } from 'lucide-react';
 
 interface FormField {
@@ -30,6 +31,11 @@ interface RecentACWForm {
   timestamp: string;
   callSummary?: string;
   fields?: FormField[];
+  /** Process insights */
+  autoFillAccuracy?: number;
+  processingTimeSaved?: number; // minutes
+  fieldsFromVoice?: number;
+  confidenceLevel?: 'High' | 'Medium' | 'Low';
 }
 
 const recentForms: RecentACWForm[] = [
@@ -45,6 +51,10 @@ const recentForms: RecentACWForm[] = [
     totalFields: 24,
     confidenceScore: 98.5,
     timestamp: '2 min ago',
+    autoFillAccuracy: 98.5,
+    processingTimeSaved: 2,
+    fieldsFromVoice: 22,
+    confidenceLevel: 'High',
     callSummary: 'Customer inquired about recent transaction on checking account ending in 4521. Verified identity, explained transaction was a recurring subscription charge. Customer satisfied with explanation.',
     fields: [
       { label: 'Customer Name', value: 'John Davidson', confidence: 99.8, source: 'verified' },
@@ -69,6 +79,10 @@ const recentForms: RecentACWForm[] = [
     totalFields: 42,
     confidenceScore: 99.2,
     timestamp: '5 min ago',
+    autoFillAccuracy: 99.2,
+    processingTimeSaved: 5,
+    fieldsFromVoice: 40,
+    confidenceLevel: 'High',
     callSummary: 'Customer called to initiate personal loan application for home improvement. Collected all required information, verified employment and income. Application submitted for processing.',
     fields: [
       { label: 'Applicant Name', value: 'Maria Santos', confidence: 99.9, source: 'verified' },
@@ -117,6 +131,10 @@ const recentForms: RecentACWForm[] = [
     totalFields: 38,
     confidenceScore: 99.8,
     timestamp: '12 min ago',
+    autoFillAccuracy: 99.8,
+    processingTimeSaved: 3,
+    fieldsFromVoice: 32,
+    confidenceLevel: 'High',
     callSummary: 'Customer inquired about mortgage refinancing options. Discussed current rates, collected property and income details. Scheduled follow-up call with mortgage specialist.',
     fields: [
       { label: 'Customer Name', value: 'Lisa Martinez', confidence: 99.9, source: 'verified' },
@@ -141,6 +159,10 @@ const recentForms: RecentACWForm[] = [
     totalFields: 28,
     confidenceScore: 97.1,
     timestamp: '15 min ago',
+    autoFillAccuracy: 97.1,
+    processingTimeSaved: 2,
+    fieldsFromVoice: 26,
+    confidenceLevel: 'High',
     callSummary: 'Customer requested domestic wire transfer to family member. Verified identity with security questions, confirmed transfer details. Wire initiated for next business day.',
     fields: [
       { label: 'Sender Name', value: 'David Wilson', confidence: 99.8, source: 'verified' },
@@ -250,15 +272,6 @@ export function AIAfterCallWork({ isDarkMode = false }: AIAfterCallWorkProps) {
                 </p>
               </div>
             </div>
-            
-            {/* Live indicator */}
-            <div 
-              className="flex items-center gap-1.5 px-2 py-1 rounded-full"
-              style={{ backgroundColor: '#22c55e20' }}
-            >
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-[10px] font-medium" style={{ color: '#22c55e' }}>Live</span>
-            </div>
           </div>
         </div>
 
@@ -268,10 +281,11 @@ export function AIAfterCallWork({ isDarkMode = false }: AIAfterCallWorkProps) {
             {recentForms.map((form, index) => {
               const statusConfig = getStatusConfig(form.status);
               const StatusIcon = statusConfig.icon;
+              const isExpanded = selectedForm?.id === form.id;
               return (
                 <div
                   key={form.id}
-                  className={`p-3 rounded-xl transition-all duration-300 ${
+                  className={`rounded-xl transition-all duration-300 ${
                     isVisible ? 'opacity-100' : 'opacity-0'
                   }`}
                   style={{ 
@@ -280,351 +294,301 @@ export function AIAfterCallWork({ isDarkMode = false }: AIAfterCallWorkProps) {
                     border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
                   }}
                 >
-                  {/* Form Header */}
-                  <div className="flex items-start justify-between mb-2">
-                    <div>
-                      <div className="flex items-center gap-2">
+                  <div className="p-3">
+                    {/* Form Header */}
+                    <div className="flex items-start justify-between mb-2">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span 
+                            className="text-sm font-semibold"
+                            style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                          >
+                            {form.formType}
+                          </span>
+                          <span 
+                            className="text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-1"
+                            style={{ backgroundColor: statusConfig.bg, color: statusConfig.color }}
+                          >
+                            <StatusIcon className="w-3 h-3" />
+                            {statusConfig.label}
+                          </span>
+                        </div>
+                        <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
+                          {form.agentName} • {form.customerName}
+                        </p>
+                      </div>
+                      
+                      {/* Confidence Score */}
+                      <div 
+                        className="flex items-center gap-1 px-2 py-1 rounded-lg"
+                        style={{ 
+                          backgroundColor: form.confidenceScore >= 95 ? '#22c55e15' : '#f9731615',
+                        }}
+                      >
+                        <Brain className="w-3 h-3" style={{ color: form.confidenceScore >= 95 ? '#22c55e' : '#f97316' }} />
                         <span 
-                          className="text-sm font-semibold"
-                          style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                          className="text-xs font-bold"
+                          style={{ color: form.confidenceScore >= 95 ? '#22c55e' : '#f97316' }}
                         >
-                          {form.formType}
-                        </span>
-                        <span 
-                          className="text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-1"
-                          style={{ backgroundColor: statusConfig.bg, color: statusConfig.color }}
-                        >
-                          <StatusIcon className="w-3 h-3" />
-                          {statusConfig.label}
+                          {form.confidenceScore}%
                         </span>
                       </div>
-                      <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
-                        {form.agentName} • {form.customerName}
-                      </p>
                     </div>
-                    
-                    {/* Confidence Score */}
-                    <div 
-                      className="flex items-center gap-1 px-2 py-1 rounded-lg"
-                      style={{ 
-                        backgroundColor: form.confidenceScore >= 95 ? '#22c55e15' : '#f9731615',
-                      }}
-                    >
-                      <Brain className="w-3 h-3" style={{ color: form.confidenceScore >= 95 ? '#22c55e' : '#f97316' }} />
-                      <span 
-                        className="text-xs font-bold"
-                        style={{ color: form.confidenceScore >= 95 ? '#22c55e' : '#f97316' }}
+
+                    {/* Process Insights */}
+                    {(form.autoFillAccuracy != null || form.processingTimeSaved != null || form.fieldsFromVoice != null || form.confidenceLevel) && (
+                      <div 
+                        className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2 py-2 rounded-lg px-2"
+                        style={{ 
+                          backgroundColor: isDarkMode ? 'rgba(83, 50, 255, 0.06)' : 'rgba(83, 50, 255, 0.06)',
+                          border: `1px solid ${isDarkMode ? 'rgba(83, 50, 255, 0.2)' : 'rgba(83, 50, 255, 0.15)'}`
+                        }}
                       >
-                        {form.confidenceScore}%
-                      </span>
+                        {form.autoFillAccuracy != null && (
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Gauge className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5332FF' }} />
+                            <div className="min-w-0">
+                              <p className="text-[9px] truncate" style={{ color: '#939394' }}>Auto-fill accuracy</p>
+                              <p className="text-xs font-bold truncate" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                                {form.autoFillAccuracy}%
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        {form.processingTimeSaved != null && (
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Timer className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5332FF' }} />
+                            <div className="min-w-0">
+                              <p className="text-[9px] truncate" style={{ color: '#939394' }}>Time saved</p>
+                              <p className="text-xs font-bold truncate" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                                {form.processingTimeSaved} min
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        {form.fieldsFromVoice != null && (
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <Mic className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5332FF' }} />
+                            <div className="min-w-0">
+                              <p className="text-[9px] truncate" style={{ color: '#939394' }}>From voice</p>
+                              <p className="text-xs font-bold truncate" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                                {form.fieldsFromVoice} fields
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                        {form.confidenceLevel && (
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <TrendingUp className="w-3.5 h-3.5 flex-shrink-0" style={{ color: '#5332FF' }} />
+                            <div className="min-w-0">
+                              <p className="text-[9px] truncate" style={{ color: '#939394' }}>Confidence</p>
+                              <p 
+                                className="text-xs font-bold truncate capitalize"
+                                style={{ 
+                                  color: form.confidenceLevel === 'High' ? '#22c55e' : form.confidenceLevel === 'Medium' ? '#eab308' : '#ef4444'
+                                }}
+                              >
+                                {form.confidenceLevel}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Form Details */}
+                    <div className="flex items-center justify-between text-[10px]">
+                      <div className="flex items-center gap-3">
+                        <span style={{ color: '#939394' }}>
+                          <FileCheck className="w-3 h-3 inline mr-1" />
+                          {form.filledFields}/{form.totalFields} fields
+                        </span>
+                        <span style={{ color: '#939394' }}>
+                          {form.callDuration}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span style={{ color: '#939394' }}>{form.timestamp}</span>
+                        <button 
+                          onClick={() => setSelectedForm(isExpanded ? null : form)}
+                          className="flex items-center gap-1 font-medium hover:opacity-80 transition-opacity"
+                          style={{ color: '#5332FF' }}
+                        >
+                          <Eye className="w-3 h-3" />
+                          {isExpanded ? 'Close' : 'View'}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Form Details */}
-                  <div className="flex items-center justify-between text-[10px]">
-                    <div className="flex items-center gap-3">
-                      <span style={{ color: '#939394' }}>
-                        <FileCheck className="w-3 h-3 inline mr-1" />
-                        {form.filledFields}/{form.totalFields} fields
-                      </span>
-                      <span style={{ color: '#939394' }}>
-                        {form.callDuration}
-                      </span>
+                  {/* Expanded inline detail - appears on the spot */}
+                  {isExpanded && form && (
+                    <div 
+                      className="border-t px-3 py-4 space-y-4"
+                      style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
+                    >
+                      {/* Process Insights (expanded) */}
+                      {(form.autoFillAccuracy != null || form.processingTimeSaved != null || form.fieldsFromVoice != null || form.confidenceLevel) && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Gauge className="w-4 h-4" style={{ color: '#5332FF' }} />
+                            <h4 className="text-sm font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                              Process Insights
+                            </h4>
+                          </div>
+                          <div 
+                            className="grid grid-cols-2 gap-3 p-3 rounded-lg"
+                            style={{ 
+                              backgroundColor: isDarkMode ? '#0d0d0d' : '#F5F5F5',
+                              border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                            }}
+                          >
+                            {form.autoFillAccuracy != null && (
+                              <div>
+                                <p className="text-[10px] mb-0.5" style={{ color: '#939394' }}>Auto-fill accuracy</p>
+                                <p className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{form.autoFillAccuracy}%</p>
+                              </div>
+                            )}
+                            {form.processingTimeSaved != null && (
+                              <div>
+                                <p className="text-[10px] mb-0.5" style={{ color: '#939394' }}>Avg. processing time saved</p>
+                                <p className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{form.processingTimeSaved} min</p>
+                              </div>
+                            )}
+                            {form.fieldsFromVoice != null && (
+                              <div>
+                                <p className="text-[10px] mb-0.5" style={{ color: '#939394' }}>Fields extracted from voice</p>
+                                <p className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>{form.fieldsFromVoice}</p>
+                              </div>
+                            )}
+                            {form.confidenceLevel && (
+                              <div>
+                                <p className="text-[10px] mb-0.5" style={{ color: '#939394' }}>Confidence score</p>
+                                <p 
+                                  className="text-sm font-bold capitalize"
+                                  style={{ 
+                                    color: form.confidenceLevel === 'High' ? '#22c55e' : form.confidenceLevel === 'Medium' ? '#eab308' : '#ef4444'
+                                  }}
+                                >
+                                  {form.confidenceLevel}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Call Summary */}
+                      {form.callSummary && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <MessageSquare className="w-4 h-4" style={{ color: '#5332FF' }} />
+                            <h4 className="text-sm font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                              Call Summary
+                            </h4>
+                          </div>
+                          <p 
+                            className="text-sm p-3 rounded-lg leading-relaxed"
+                            style={{ 
+                              backgroundColor: isDarkMode ? '#0d0d0d' : '#F5F5F5',
+                              color: isDarkMode ? '#D6D9D8' : '#4a4a4a',
+                              border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                            }}
+                          >
+                            {form.callSummary}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Auto-Filled Fields */}
+                      {form.fields && form.fields.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-2 mb-2">
+                            <Brain className="w-4 h-4" style={{ color: '#22c55e' }} />
+                            <h4 className="text-sm font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                              Auto-Filled Fields
+                            </h4>
+                            <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}>
+                              {form.fields.length} fields extracted
+                            </span>
+                          </div>
+                          <div className="space-y-2 max-h-[280px] overflow-y-auto">
+                            {form.fields.map((field, idx) => {
+                              const sourceConfig = getSourceConfig(field.source);
+                              const SourceIcon = sourceConfig.icon;
+                              return (
+                                <div 
+                                  key={idx}
+                                  className="p-2.5 rounded-lg flex items-center justify-between"
+                                  style={{ 
+                                    backgroundColor: isDarkMode ? '#0d0d0d' : '#F5F5F5',
+                                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                                  }}
+                                >
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-[10px]" style={{ color: '#939394' }}>{field.label}</p>
+                                    <p className="text-xs font-medium truncate" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                                      {field.value}
+                                    </p>
+                                  </div>
+                                  <div className="flex items-center gap-1.5 flex-shrink-0">
+                                    <span 
+                                      className="text-[10px] px-1.5 py-0.5 rounded-full flex items-center gap-1"
+                                      style={{ backgroundColor: `${sourceConfig.color}20`, color: sourceConfig.color }}
+                                    >
+                                      <SourceIcon className="w-2.5 h-2.5" />
+                                      {sourceConfig.label}
+                                    </span>
+                                    <span 
+                                      className="text-[10px] font-bold"
+                                      style={{ color: field.confidence >= 95 ? '#22c55e' : field.confidence >= 85 ? '#eab308' : '#ef4444' }}
+                                    >
+                                      {field.confidence}%
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Footer actions */}
+                      <div className="flex items-center justify-between pt-2 border-t" style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}>
+                        <span className="text-[10px]" style={{ color: '#939394' }}>
+                          Processed in 1.2s • {form.timestamp}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button 
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-medium"
+                            style={{ 
+                              backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF',
+                              color: isDarkMode ? '#FFFFFF' : '#010101',
+                              border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                            }}
+                          >
+                            <Edit3 className="w-3 h-3" />
+                            Edit Form
+                          </button>
+                          <button 
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-medium"
+                            style={{ backgroundColor: '#5332FF', color: '#FFFFFF' }}
+                          >
+                            <CheckCircle2 className="w-3 h-3" />
+                            Approve
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span style={{ color: '#939394' }}>{form.timestamp}</span>
-                      <button 
-                        onClick={() => setSelectedForm(form)}
-                        className="flex items-center gap-1 font-medium hover:opacity-80 transition-opacity"
-                        style={{ color: '#5332FF' }}
-                      >
-                        <Eye className="w-3 h-3" />
-                        View
-                      </button>
-                    </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Footer */}
-        <div 
-          className="p-4 border-t"
-          style={{ 
-            borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-            backgroundColor: isDarkMode ? '#0a0a0a' : '#FAFAFA'
-          }}
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4" style={{ color: '#eab308' }} />
-              <span className="text-[10px]" style={{ color: '#939394' }}>
-                Avg. processing: <span style={{ color: '#22c55e' }}>1.2s</span>
-              </span>
-            </div>
-            <button 
-              className="text-xs font-medium hover:opacity-80"
-              style={{ color: '#5332FF' }}
-            >
-              View All Forms →
-            </button>
-          </div>
-        </div>
       </div>
 
-      {/* Form Detail Modal */}
-      {selectedForm && (
-        <>
-          {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-50 animate-in fade-in duration-300"
-            style={{
-              backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.7)',
-              backdropFilter: 'blur(8px)',
-            }}
-            onClick={() => setSelectedForm(null)}
-          />
-
-          {/* Modal */}
-          <div 
-            className="fixed z-50 rounded-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col"
-            style={{ 
-              top: '2rem',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 'min(600px, calc(100vw - 2rem))',
-              maxHeight: 'calc(100vh - 4rem)',
-              backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-              border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`,
-              boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.6)'
-            }}
-          >
-            {/* Modal Header */}
-            <div 
-              className="p-5 border-b flex-shrink-0"
-              style={{ 
-                borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-                background: isDarkMode 
-                  ? 'linear-gradient(135deg, #0d1a0d 0%, #0d0d0d 100%)'
-                  : 'linear-gradient(135deg, #F0FFF4 0%, #FFFFFF 100%)'
-              }}
-            >
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  {(() => {
-                    const FormIcon = getFormTypeIcon(selectedForm.formType);
-                    const statusConfig = getStatusConfig(selectedForm.status);
-                    return (
-                      <>
-                        <div 
-                          className="p-3 rounded-xl"
-                          style={{ 
-                            backgroundColor: statusConfig.bg,
-                          }}
-                        >
-                          <FormIcon className="w-6 h-6" style={{ color: statusConfig.color }} />
-                        </div>
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h3 
-                              className="text-lg font-bold"
-                              style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                            >
-                              {selectedForm.formType}
-                            </h3>
-                            <span 
-                              className="text-xs px-2 py-0.5 rounded-full flex items-center gap-1"
-                              style={{ backgroundColor: statusConfig.bg, color: statusConfig.color }}
-                            >
-                              <statusConfig.icon className="w-3 h-3" />
-                              {statusConfig.label}
-                            </span>
-                          </div>
-                          <p className="text-sm mt-1" style={{ color: '#939394' }}>
-                            {selectedForm.id} • {selectedForm.callId}
-                          </p>
-                        </div>
-                      </>
-                    );
-                  })()}
-                </div>
-                <button 
-                  onClick={() => setSelectedForm(null)}
-                  className="p-2 rounded-xl transition-all hover:scale-105"
-                  style={{ 
-                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
-                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                  }}
-                >
-                  <X className="w-5 h-5" style={{ color: '#939394' }} />
-                </button>
-              </div>
-
-              {/* Quick Info */}
-              <div className="grid grid-cols-4 gap-3 mt-4">
-                <div 
-                  className="p-2 rounded-lg text-center"
-                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
-                >
-                  <User className="w-4 h-4 mx-auto mb-1" style={{ color: '#5332FF' }} />
-                  <p className="text-[10px]" style={{ color: '#939394' }}>Agent</p>
-                  <p className="text-xs font-medium truncate" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                    {selectedForm.agentName.split(' ')[0]}
-                  </p>
-                </div>
-                <div 
-                  className="p-2 rounded-lg text-center"
-                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
-                >
-                  <Clock className="w-4 h-4 mx-auto mb-1" style={{ color: '#f97316' }} />
-                  <p className="text-[10px]" style={{ color: '#939394' }}>Duration</p>
-                  <p className="text-xs font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                    {selectedForm.callDuration}
-                  </p>
-                </div>
-                <div 
-                  className="p-2 rounded-lg text-center"
-                  style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
-                >
-                  <FileCheck className="w-4 h-4 mx-auto mb-1" style={{ color: '#22c55e' }} />
-                  <p className="text-[10px]" style={{ color: '#939394' }}>Fields</p>
-                  <p className="text-xs font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                    {selectedForm.filledFields}/{selectedForm.totalFields}
-                  </p>
-                </div>
-                <div 
-                  className="p-2 rounded-lg text-center"
-                  style={{ backgroundColor: selectedForm.confidenceScore >= 95 ? '#22c55e15' : '#f9731615' }}
-                >
-                  <Brain className="w-4 h-4 mx-auto mb-1" style={{ color: selectedForm.confidenceScore >= 95 ? '#22c55e' : '#f97316' }} />
-                  <p className="text-[10px]" style={{ color: '#939394' }}>Confidence</p>
-                  <p className="text-xs font-bold" style={{ color: selectedForm.confidenceScore >= 95 ? '#22c55e' : '#f97316' }}>
-                    {selectedForm.confidenceScore}%
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Content */}
-            <div className="flex-1 overflow-y-auto p-5">
-              {/* Call Summary */}
-              {selectedForm.callSummary && (
-                <div className="mb-5">
-                  <div className="flex items-center gap-2 mb-2">
-                    <MessageSquare className="w-4 h-4" style={{ color: '#5332FF' }} />
-                    <h4 className="text-sm font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                      Call Summary
-                    </h4>
-                  </div>
-                  <p 
-                    className="text-sm p-3 rounded-lg leading-relaxed"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                      color: isDarkMode ? '#D6D9D8' : '#4a4a4a',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    {selectedForm.callSummary}
-                  </p>
-                </div>
-              )}
-
-              {/* Auto-Filled Fields */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <Brain className="w-4 h-4" style={{ color: '#22c55e' }} />
-                  <h4 className="text-sm font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                    Auto-Filled Fields
-                  </h4>
-                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: '#22c55e20', color: '#22c55e' }}>
-                    {selectedForm.fields?.length || 0} fields extracted
-                  </span>
-                </div>
-                
-                <div className="space-y-2">
-                  {selectedForm.fields?.map((field, index) => {
-                    const sourceConfig = getSourceConfig(field.source);
-                    const SourceIcon = sourceConfig.icon;
-                    return (
-                      <div 
-                        key={index}
-                        className="p-3 rounded-lg flex items-center justify-between"
-                        style={{ 
-                          backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                          border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                        }}
-                      >
-                        <div className="flex-1">
-                          <p className="text-xs" style={{ color: '#939394' }}>{field.label}</p>
-                          <p className="text-sm font-medium" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                            {field.value}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span 
-                            className="text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1"
-                            style={{ backgroundColor: `${sourceConfig.color}20`, color: sourceConfig.color }}
-                          >
-                            <SourceIcon className="w-3 h-3" />
-                            {sourceConfig.label}
-                          </span>
-                          <span 
-                            className="text-xs font-bold"
-                            style={{ color: field.confidence >= 95 ? '#22c55e' : field.confidence >= 85 ? '#eab308' : '#ef4444' }}
-                          >
-                            {field.confidence}%
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div 
-              className="p-4 border-t flex items-center justify-between flex-shrink-0"
-              style={{ 
-                borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-                backgroundColor: isDarkMode ? '#0a0a0a' : '#FAFAFA'
-              }}
-            >
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4" style={{ color: '#eab308' }} />
-                <span className="text-xs" style={{ color: '#939394' }}>
-                  Processed in <span style={{ color: '#22c55e' }}>1.2s</span> • {selectedForm.timestamp}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium"
-                  style={{ 
-                    backgroundColor: isDarkMode ? '#1a1a1a' : '#FFFFFF',
-                    color: isDarkMode ? '#FFFFFF' : '#010101',
-                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                  }}
-                >
-                  <Edit3 className="w-3 h-3" />
-                  Edit Form
-                </button>
-                <button 
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium"
-                  style={{ 
-                    backgroundColor: '#5332FF',
-                    color: '#FFFFFF'
-                  }}
-                >
-                  <CheckCircle2 className="w-3 h-3" />
-                  Approve
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
     </>
   );
 }

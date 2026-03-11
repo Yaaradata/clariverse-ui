@@ -242,7 +242,7 @@ export default function VoiceTranscript() {
       <KPIRibbon data={kpiData} />
 
       {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-[minmax(0,28fr)_minmax(0,50fr)_minmax(0,22fr)] gap-4 items-start w-full max-w-full overflow-x-hidden">
+      <div className="grid grid-cols-[minmax(0,28fr)_minmax(0,50fr)_minmax(0,22fr)] gap-4 items-stretch w-full max-w-full overflow-x-hidden">
         {/* Left Column - Team Health */}
         <TeamHealthColumn
           qaScore={teamHealthData.qaScore}
@@ -257,9 +257,7 @@ export default function VoiceTranscript() {
         {/* Center Column - Core Intelligence */}
         <CoreIntelligenceColumn
           highRiskCalls={highRiskCalls}
-          intentDistribution={intentDistribution}
           issueHeatmap={issueHeatmap}
-          violations={violations}
           coachingTickets={coachingTickets}
           onCallClick={handleCallClick}
           onAgentClick={handleAgentClick}
@@ -270,7 +268,6 @@ export default function VoiceTranscript() {
           agentsNeedingAttention={agentsNeedingAttention}
           agentLeaderboard={agentLeaderboard}
           skillGapData={skillGapData}
-          emotionData={teamHealthData.emotionData}
           dateRange={dateRange}
           onAgentClick={handleAgentClick}
         />

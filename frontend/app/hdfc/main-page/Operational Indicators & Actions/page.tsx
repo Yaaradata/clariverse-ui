@@ -209,11 +209,15 @@ function EisenhowerSummaryCard({
   threads,
   selectedQuadrant,
   onQuadrantSelect,
+  getQuadrantSummary,
 }: {
   channel: ChannelKey;
   threads: EisenhowerThread[];
   selectedQuadrant: string | null;
   onQuadrantSelect: (quadrant: string) => void;
+  getQuadrantSummary?: (threads: EisenhowerThread[], quadrant: string) => {
+    insights: Array<{ title: string; description: string; tone: string }>;
+  };
 }) {
   const total = threads.length || 1;
 

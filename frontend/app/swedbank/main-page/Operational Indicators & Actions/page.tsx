@@ -40,6 +40,12 @@ import {
   type EisenhowerThread,
 } from "@/lib/swedbank/api";
 import { Button } from "@/components/ui/button";
+import { FCIKPICards } from "@/components/FCI/FCIKPICards";
+import { FailureClusters } from "@/components/FCI/FailureClusters";
+import { SmartAgentActionList } from "@/components/FCI/SmartAgentActionList";
+import { IntentScoreHeatmap } from "@/components/FCI/IntentScoreHeatmap";
+import { fciKPIData, fciClusters } from "@/lib/swedbank/fci-lib/fciData";
+import { agentActionData } from "@/lib/swedbank/fci-lib/fciAdvancedData";
 
 type DateRange = {
   start: string;
@@ -80,9 +86,19 @@ const PRIMARY_SECTION_TABS = [
     description: "Health, trends, and guided actions",
   },
   {
+    id: "failed-customer-interaction",
+    label: "Customer Analysis",
+    description: "Customer behaviour, severity & recommendations",
+  },
+  {
     id: "channel-analysis",
     label: "Channel Analysis",
     description: "Cross-channel workload & prioritization",
+  },
+  {
+    id: "workforce-performance",
+    label: "Workforce Performance",
+    description: "Intent heatmap & agent training",
   },
   {
     id: "intent-analysis",
@@ -664,6 +680,54 @@ function EisenhowerSummaryCard({
   );
 }
 
+function CustomerAnalysisSection() {
+  const isDarkMode = true;
+
+  return (
+    <section id="failed-customer-interaction" className="space-y-6 scroll-mt-20">
+      <div className="mb-6">
+        <FCIKPICards data={fciKPIData} isDarkMode={isDarkMode} />
+      </div>
+      <div
+        className="rounded-2xl mb-6"
+        style={{
+          backgroundColor: isDarkMode ? "#0d0d0d" : "#FFFFFF",
+          border: `1px solid ${isDarkMode ? "#1f1f1f" : "#E5E5E5"}`,
+        }}
+      >
+        <FailureClusters clusters={fciClusters} isDarkMode={isDarkMode} />
+      </div>
+    </section>
+  );
+}
+
+function WorkforcePerformanceSection() {
+  const isDarkMode = true;
+
+  return (
+    <section id="workforce-performance" className="space-y-6 scroll-mt-20">
+      <div
+        className="rounded-2xl p-6 mb-6"
+        style={{
+          backgroundColor: isDarkMode ? "#0d0d0d" : "#FFFFFF",
+          border: `1px solid ${isDarkMode ? "#1f1f1f" : "#E5E5E5"}`,
+        }}
+      >
+        <IntentScoreHeatmap isDarkMode={isDarkMode} />
+      </div>
+      <div
+        className="rounded-2xl mb-6"
+        style={{
+          backgroundColor: isDarkMode ? "#0d0d0d" : "#FFFFFF",
+          border: `1px solid ${isDarkMode ? "#1f1f1f" : "#E5E5E5"}`,
+        }}
+      >
+        <SmartAgentActionList data={agentActionData} isDarkMode={isDarkMode} />
+      </div>
+    </section>
+  );
+}
+
 export default function HomePage() {
   const getCurrentMonthRange = () => {
     const today = new Date();
@@ -1076,8 +1140,8 @@ export default function HomePage() {
           )}
           {trendData.length > 0 && <CrossChannelTrendChart data={trendData} />}
           <UnifiedIntelligenceWall actionGrid={actionGrid} />
-          <CrossChannelToneIntelligenceCard />
           <PrematureClosureRiskCard />
+          <CrossChannelToneIntelligenceCard />
           <EmotionShockboard />
         </section>
       )}
@@ -1138,6 +1202,14 @@ export default function HomePage() {
           <AIPressureInsightWall />
           <IntentIntelligenceCommandCenter />
         </section>
+      )}
+
+      {activePrimarySection === "failed-customer-interaction" && (
+        <CustomerAnalysisSection />
+      )}
+
+      {activePrimarySection === "workforce-performance" && (
+        <WorkforcePerformanceSection />
       )}
     </div>
   );

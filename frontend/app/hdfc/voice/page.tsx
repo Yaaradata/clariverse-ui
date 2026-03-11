@@ -257,9 +257,7 @@ export default function VoiceTranscript() {
         {/* Center Column - Core Intelligence */}
         <CoreIntelligenceColumn
           highRiskCalls={highRiskCalls}
-          intentDistribution={intentDistribution}
           issueHeatmap={issueHeatmap}
-          violations={violations}
           coachingTickets={coachingTickets}
           onCallClick={handleCallClick}
           onAgentClick={handleAgentClick}
@@ -270,7 +268,6 @@ export default function VoiceTranscript() {
           agentsNeedingAttention={agentsNeedingAttention}
           agentLeaderboard={agentLeaderboard}
           skillGapData={skillGapData}
-          emotionData={teamHealthData.emotionData}
           dateRange={dateRange}
           onAgentClick={handleAgentClick}
         />

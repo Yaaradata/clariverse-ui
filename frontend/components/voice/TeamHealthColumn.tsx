@@ -2,9 +2,9 @@
 
 import { usePathname } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, RadialBarChart, RadialBar, Cell } from 'recharts';
 import { AlertTriangle, CheckCircle, TrendingUp } from 'lucide-react';
+import { AIAfterCallWork } from '@/components/compliance/AIAfterCallWork';
 
 import { GranularComplianceScore } from '@/lib/voiceData';
 
@@ -49,7 +49,11 @@ export function TeamHealthColumn({
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const currencySymbol = isFlipkartRoute ? '₹' : isStandardCharteredRoute ? '$' : isSwedbankRoute ? '€' : '€';
   return (
-    <div className="space-y-4 min-w-0 w-full">
+    <div className="flex flex-col h-full min-h-0 min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-h-0 gap-4 overflow-hidden">
+      {/* AI Auto-Filled Forms - top of first column */}
+      <AIAfterCallWork isDarkMode={true} />
+
       {/* Team Quality Overview */}
       <Card>
         <CardHeader>
@@ -75,174 +79,18 @@ export function TeamHealthColumn({
             ))}
           </div>
         </CardContent>
-      </Card>
+        </Card>
 
-      {/* Compliance Health - Enhanced with Granular EU Compliance */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-lg">Compliance Health</CardTitle>
-            {granularCompliance && (
-              <div className="text-right">
-                <div className="text-2xl font-bold text-white">
-                  {granularCompliance.overallScore.toFixed(1)}%
-                </div>
-                <div className="text-xs text-muted-foreground">Overall Score</div>
-              </div>
-            )}
-          </div>
-          {granularCompliance && (
-            <p className="text-[10px] uppercase tracking-wide text-white/40 mt-1">
-              Derived from voice transcript compliance checks
-            </p>
-          )}
-          {granularCompliance && (
-            <p className="text-xs text-muted-foreground mt-2">
-              Expected Loss: {currencySymbol}{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M | 
-              Risk Level: <span className={`font-semibold ${
-                granularCompliance.riskLevel === 'critical' ? 'text-red-400' :
-                granularCompliance.riskLevel === 'high' ? 'text-orange-400' :
-                granularCompliance.riskLevel === 'medium' ? 'text-yellow-400' : 'text-green-400'
-              }`}>{granularCompliance.riskLevel.toUpperCase()}</span>
-            </p>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-4 max-h-104 overflow-y-auto pr-2">
-          {granularCompliance ? (
-            <>
-              {/* Regulation Breakdown */}
-              <div className="space-y-3">
-                {Object.entries(granularCompliance.byRegulation).map(([key, regulation]) => {
-                  const label = regulation.label;
-                  const getColor = (score: number) => {
-                    if (score >= 90) return 'text-green-400';
-                    if (score >= 80) return 'text-yellow-400';
-                    if (score >= 70) return 'text-orange-400';
-                    return 'text-red-400';
-                  };
-                  
-                  return (
-                    <div key={key} className="bg-gray-800/50 rounded-lg p-3 border border-gray-700">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-semibold text-white">{label}</span>
-                          <Badge className="bg-white/10 text-xs text-white/80 border border-white/10" title={regulation.regulatoryReference}>
-                            {regulation.violations} voice flags
-                          </Badge>
-                          {regulation.criticalViolations > 0 && (
-                            <Badge className="bg-red-500/20 text-red-400 border-red-500/50">
-                              {regulation.criticalViolations} critical
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="text-right">
-                          <div className={`text-lg font-bold ${getColor(regulation.score)}`}>
-                            {regulation.score.toFixed(1)}%
-                          </div>
-                          <div className="text-xs text-muted-foreground">
-                            Weight: {(regulation.weight * 100).toFixed(0)}%
-                          </div>
-                        </div>
-                      </div>
-                      <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full ${
-                            regulation.score >= 90 ? 'bg-green-500' :
-                            regulation.score >= 80 ? 'bg-yellow-500' :
-                            regulation.score >= 70 ? 'bg-orange-500' : 'bg-red-500'
-                          }`}
-                          style={{ width: `${regulation.score}%` }}
-                        />
-                      </div>
-                      <div className="mt-2 grid grid-cols-1 gap-1">
-                        {regulation.focusAreas.map((area) => (
-                          <div key={area.label} className="flex items-center justify-between text-xs text-muted-foreground bg-white/5 border border-white/10 rounded px-2 py-1">
-                            <span>{area.label}</span>
-                            <span className={getColor(area.score)}>{area.score}%</span>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-2 text-[10px] text-white/40 uppercase tracking-wide">
-                        Transcript cues: {regulation.transcriptSignals.join(' • ')}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {/* Financial Risk Summary */}
-              <div className="pt-3 border-t border-white/10">
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-xs text-muted-foreground mb-1">Potential Fines</div>
-                    <div className="text-sm font-semibold text-red-400">
-                      {currencySymbol}{(granularCompliance.financialRisk.totalPotentialFines / 1000000).toFixed(0)}M
-                    </div>
-                  </div>
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-xs text-muted-foreground mb-1">Expected Loss</div>
-                    <div className="text-sm font-semibold text-orange-400">
-                      {currencySymbol}{(granularCompliance.financialRisk.expectedLoss / 1000000).toFixed(1)}M
-                    </div>
-                  </div>
-                  <div className="bg-gray-800/50 rounded p-2">
-                    <div className="text-xs text-muted-foreground mb-1">Worst Case</div>
-                    <div className="text-sm font-semibold text-red-400">
-                      {currencySymbol}{(granularCompliance.financialRisk.worstCaseScenario / 1000000).toFixed(0)}M
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : (
-            // Fallback to old view if granular data not available
-            <>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">KYC Verification</span>
-                  <span className="text-sm font-semibold text-white">{complianceData.kycRate}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Identity Confirmation</span>
-                  <span className="text-sm font-semibold text-white">{complianceData.identityConfirmation}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Fraud Safety Script</span>
-                  <span className="text-sm font-semibold text-white">{complianceData.fraudScript}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Regulatory Statement</span>
-                  <span className="text-sm font-semibold text-white">{complianceData.regulatoryStatement}%</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Privacy Disclaimer</span>
-                  <span className="text-sm font-semibold text-white">{complianceData.privacyDisclaimer}%</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-white/10">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-red-400 flex items-center gap-1">
-                    <AlertTriangle className="w-4 h-4" />
-                    Violations
-                  </span>
-                  <span className="text-sm font-semibold text-white">{complianceData.violations}</span>
-                </div>
-              </div>
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Escalation Risk Monitor */}
-      <Card>
+      {/* Escalation Risk Monitor - flex-1 extends upto High-Risk Calls with scrollbar */}
+      <Card className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <CardHeader>
           <CardTitle className="text-lg">Escalation Risk Monitor</CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
             AI predicts how likely calls will escalate to supervisors. Lower % = better. Monitor daily to prevent issues.
           </p>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="flex-shrink-0">
           {/* Risk Score with Trend */}
           <div className="text-center">
             <div className="h-48 flex items-center justify-center relative">
@@ -297,9 +145,12 @@ export function TeamHealthColumn({
               </div>
             )}
           </div>
+          </div>
 
+          {/* Scrollable section - Key Metrics, Causes, Agents */}
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-4 pt-4 border-t border-white/10">
           {/* Key Metrics */}
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-white/10">
+          <div className="grid grid-cols-2 gap-3">
             <div className="bg-white/5 rounded p-3">
               <p className="text-xs text-muted-foreground mb-1">Calls at Risk</p>
               <p className="text-2xl font-bold text-white">{escalationData.callsAtRisk}</p>
@@ -359,9 +210,11 @@ export function TeamHealthColumn({
               </div>
             </div>
           )}
+          </div>
 
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

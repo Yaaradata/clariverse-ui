@@ -98,6 +98,7 @@ export interface ComplianceCategoryBreakdown {
     label: string;
     score: number;
   }[];
+  unit?: string; // Contact Centre Unit name (e.g. "Stockholm, Sweden")
 }
 
 export interface GranularComplianceScore {
@@ -119,6 +120,16 @@ export interface GranularComplianceScore {
   }>;
 }
 
+/** Enrichment context for KPI metrics */
+export interface KPIEnrichment {
+  teamQAScore?: { vsLastWeek: number; topImprovement: string; weakArea: string };
+  complianceScore?: { vsLastWeek: number; strongestRegulation: string; needsAttention: string };
+  customerEmotion?: { positive: number; neutral: number; negative: number; mostNegativeCallTypes: string[] };
+  highRiskCalls?: { vsLastWeek: number; topRiskCategory: string; topAgentInvolved: string };
+  escalationRisk?: { vsLastWeek: number; topCause: string; agentsAtRisk: number };
+  totalCalls?: { peakHour: string; topCallReason: string; avgDailyVolume: number };
+}
+
 export interface KPIData {
   overallTeamQAScore: { value: number; trend: number[] };
   complianceAdherence: { value: number; breakdown: { fully: number; partial: number; non: number } };
@@ -133,6 +144,7 @@ export interface KPIData {
   totalCallsHandled: { value: number; trend: number[] };
   firstCallResolutionRate: { value: number; resolved: number; unresolved: number };
   fraudDisputeCount: { value: number; breakdown: { fraud: number; dispute: number } };
+  enrichment?: KPIEnrichment;
 }
 
 export interface IntentDistribution {
@@ -140,6 +152,15 @@ export interface IntentDistribution {
   percentage: number;
   count: number;
   [key: string]: any;
+}
+
+/** Root cause explanations per metric for Issue Heatmap */
+export interface IssueHeatmapRootCauses {
+  complianceDeviation?: string[];
+  toneProblems?: string[];
+  silence?: string[];
+  incorrectInfo?: string[];
+  emotionalSpikes?: string[];
 }
 
 export interface IssueHeatmapData {
@@ -150,6 +171,7 @@ export interface IssueHeatmapData {
   incorrectInfo: number;
   emotionalSpikes: number;
   escalationRisk: number;
+  rootCauses?: IssueHeatmapRootCauses;
 }
 
 export interface AgentPerformance {

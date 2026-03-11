@@ -135,6 +135,11 @@ export default function VendorDashboard() {
       className="min-h-screen p-6 space-y-8"
       style={{ backgroundColor: isDarkMode ? '#0a0a0a' : '#F5F5F5' }}
     >
+      {/* Compliance Signals - Full Width on Top */}
+      <div className="w-full">
+        <VendorSignalsBarChart data={vendorSignalsData} isDarkMode={isDarkMode} />
+      </div>
+
       {/* 6 KPI Cards Grid - Compact Style */}
       <TooltipProvider>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6">
@@ -325,11 +330,6 @@ export default function VendorDashboard() {
         <div className="lg:col-span-1" style={{ minHeight: '600px' }}>
           <AIActionSuggestionWall isDarkMode={isDarkMode} />
         </div>
-      </div>
-
-      {/* Vendor Deliverable Signals - Full Width Component */}
-      <div className="w-full">
-        <VendorSignalsBarChart data={vendorSignalsData} isDarkMode={isDarkMode} />
       </div>
     </div>
   );

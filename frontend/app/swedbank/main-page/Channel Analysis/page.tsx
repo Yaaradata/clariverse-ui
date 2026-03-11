@@ -104,9 +104,9 @@ export default function ChannelAnalysisPage() {
         <CrossChannelTrendChart data={trendData} />
       )}
 
-      <CrossChannelToneIntelligenceCard />
-
       <UnifiedIntelligenceWall actionGrid={actionGrid} />
+
+      <CrossChannelToneIntelligenceCard />
 
       <ToneDriftWall />
       <EmotionShockboard />

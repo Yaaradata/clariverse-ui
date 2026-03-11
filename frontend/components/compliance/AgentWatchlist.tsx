@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { 
   UserX, AlertTriangle, TrendingUp, TrendingDown, 
   Eye, ChevronRight, Shield, Clock, X, FileText,
   Target, ArrowRight, Calendar, Phone, Mail, Building,
   CheckCircle2, XCircle, AlertCircle, BarChart3, Users,
-  MessageSquare, Ticket, Mic, Share2
+  MessageSquare, Ticket, Mic, Share2, Euro
 } from 'lucide-react';
 import { getRegionFlag, Region } from '@/lib/compliance/complianceData';
+import type { Violation } from '@/lib/swedbank/voiceData';
 
 interface WatchlistAgent {
   id: string;
@@ -19,6 +20,7 @@ interface WatchlistAgent {
   lastViolation: string;
   riskLevel: 'critical' | 'high' | 'medium';
   categories: string[];
+  regulations?: string[];  // Act/regulation names from violations
   channel: 'email' | 'chat' | 'ticket' | 'voice' | 'social';
 }
 
@@ -42,6 +44,7 @@ interface AgentDetails {
     type: string;
     description: string;
     status: 'open' | 'resolved' | 'investigating';
+    regulation?: string;  // Act/regulation name
   }[];
   recommendations: string[];
   trainingStatus: {
@@ -66,9 +69,9 @@ const agentDetailsMap: Record<string, AgentDetails> = {
       { area: 'Documentation', description: 'Incomplete call notes and missing customer verification logs', severity: 'medium', occurrences: 8 }
     ],
     recentViolations: [
-      { date: '2 hours ago', type: 'Script Violation', description: 'Skipped risk disclosure during investment product discussion', status: 'open' },
-      { date: '1 day ago', type: 'Consent', description: 'Recording started before verbal consent obtained', status: 'investigating' },
-      { date: '3 days ago', type: 'Script Violation', description: 'Missing fee disclosure for premium account upgrade', status: 'resolved' }
+      { date: '2 hours ago', type: 'Script Violation', description: 'Skipped risk disclosure during investment product discussion', status: 'open', regulation: 'MiFID II Art. 25 - Suitability & risk disclosure' },
+      { date: '1 day ago', type: 'Consent', description: 'Recording started before verbal consent obtained', status: 'investigating', regulation: 'GDPR Art. 13 - Recording disclosure & purpose notice' },
+      { date: '3 days ago', type: 'Script Violation', description: 'Missing fee disclosure for premium account upgrade', status: 'resolved', regulation: 'EU Sanctions Regime - Prohibited jurisdictions' }
     ],
     recommendations: [
       'Mandatory re-training on script compliance (Priority: Immediate)',
@@ -96,8 +99,8 @@ const agentDetailsMap: Record<string, AgentDetails> = {
       { area: 'Documentation', description: 'Incomplete customer risk assessment forms', severity: 'medium', occurrences: 4 }
     ],
     recentViolations: [
-      { date: '5 hours ago', type: 'KYC', description: 'Customer identity not verified before high-value transaction', status: 'open' },
-      { date: '2 days ago', type: 'KYC', description: 'Document verification skipped for VIP customer', status: 'investigating' }
+      { date: '5 hours ago', type: 'KYC', description: 'Customer identity not verified before high-value transaction', status: 'open', regulation: 'AML/KYC - Identity verification before account access' },
+      { date: '2 days ago', type: 'KYC', description: 'Document verification skipped for VIP customer', status: 'investigating', regulation: 'AML Directive Art. 13 - Beneficial ownership identification' }
     ],
     recommendations: [
       'Refresher training on KYC protocols and regulatory requirements',
@@ -124,8 +127,8 @@ const agentDetailsMap: Record<string, AgentDetails> = {
       { area: 'Access Logging', description: 'Incomplete audit trails for data access', severity: 'high', occurrences: 5 }
     ],
     recentViolations: [
-      { date: '8 hours ago', type: 'Data Privacy', description: 'Bulk customer data export detected at 2:15 AM', status: 'open' },
-      { date: '2 days ago', type: 'Third-Party', description: '15,000 customer records found on local storage', status: 'investigating' }
+      { date: '8 hours ago', type: 'Data Privacy', description: 'Bulk customer data export detected at 2:15 AM', status: 'open', regulation: 'GDPR Art. 5 - Data minimization & purpose limitation' },
+      { date: '2 days ago', type: 'Third-Party', description: '15,000 customer records found on local storage', status: 'investigating', regulation: 'EU Outsourcing Directive - Vendor data security' }
     ],
     recommendations: [
       'IMMEDIATE: Suspend all database access pending investigation',
@@ -153,7 +156,7 @@ const agentDetailsMap: Record<string, AgentDetails> = {
       { area: 'Documentation', description: 'SAR reports missing key transaction details', severity: 'medium', occurrences: 2 }
     ],
     recentViolations: [
-      { date: '1 day ago', type: 'AML', description: 'Flagged transaction approved without supervisor review', status: 'resolved' }
+      { date: '1 day ago', type: 'AML', description: 'Flagged transaction approved without supervisor review', status: 'resolved', regulation: 'AML Directive Art. 13 - Beneficial ownership identification' }
     ],
     recommendations: [
       'Additional training on SAR documentation requirements',
@@ -176,7 +179,7 @@ const channelConfig = {
   social: { label: 'Social', icon: Share2, color: '#ec4899' }
 };
 
-const watchlistData: WatchlistAgent[] = [
+const baseWatchlistData: WatchlistAgent[] = [
   {
     id: 'AGT-1823',
     name: 'Sarah Williams',
@@ -186,6 +189,7 @@ const watchlistData: WatchlistAgent[] = [
     lastViolation: '2 hours ago',
     riskLevel: 'critical',
     categories: ['Script Violation', 'Consent'],
+    regulations: ['GDPR Art. 13 - Recording disclosure', 'EU Sanctions Regime - Prohibited jurisdictions', 'MiFID II Art. 25 - Suitability & risk disclosure'],
     channel: 'voice'
   },
   {
@@ -197,6 +201,7 @@ const watchlistData: WatchlistAgent[] = [
     lastViolation: '5 hours ago',
     riskLevel: 'high',
     categories: ['KYC'],
+    regulations: ['AML/KYC - Identity verification before account access'],
     channel: 'chat'
   },
   {
@@ -208,6 +213,7 @@ const watchlistData: WatchlistAgent[] = [
     lastViolation: '8 hours ago',
     riskLevel: 'critical',
     categories: ['Data Privacy', 'Third-Party'],
+    regulations: ['GDPR Art. 5 - Data minimization', 'EU Outsourcing Directive - Vendor data security'],
     channel: 'email'
   },
   {
@@ -219,19 +225,63 @@ const watchlistData: WatchlistAgent[] = [
     lastViolation: '1 day ago',
     riskLevel: 'medium',
     categories: ['AML'],
+    regulations: ['AML Directive Art. 13 - Beneficial ownership identification'],
     channel: 'ticket'
   }
 ];
 
+// Map violation agent names to watchlist agent ids (for merging transcript-derived violations)
+const violationAgentToWatchlistId: Record<string, string> = {
+  'Sarah Johnson': 'AGT-1823',
+  'Sarah Williams': 'AGT-1823',
+  'Michael Chen': 'AGT-2451',
+  'Emily Rodriguez': 'AGT-1823',  // Maps to same unit for display
+  'David Kim': 'AGT-2789',
+  'Jessica Martinez': 'AGT-2789',
+};
+
 interface AgentWatchlistProps {
   isDarkMode?: boolean;
+  violations?: Violation[];  // Transcript-derived violations (from Violation Center) - merged into watchlist
 }
 
-export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
+function useViolationSummary(violations: Violation[]) {
+  return useMemo(() => {
+    if (violations.length === 0) return null;
+    const critical = violations.filter((v) => v.severity === 'critical').length;
+    const high = violations.filter((v) => v.severity === 'high').length;
+    const overdue = violations.filter((v) => {
+      if (v.remediation.deadline) {
+        return new Date(v.remediation.deadline) < new Date() && v.remediation.status !== 'completed';
+      }
+      return false;
+    }).length;
+    const totalExpectedLoss = violations.reduce((sum, v) => sum + v.financialImpact.expectedLoss, 0);
+    return { critical, high, overdue, totalExpectedLoss };
+  }, [violations]);
+}
+
+export function AgentWatchlist({ isDarkMode = false, violations = [] }: AgentWatchlistProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredAgent, setHoveredAgent] = useState<string | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<WatchlistAgent | null>(null);
   const [showAllAgents, setShowAllAgents] = useState(false);
+
+  // Merge violations into watchlist: enrich with regulations from transcript-derived violations
+  const watchlistData = useMemo(() => {
+    if (violations.length === 0) return baseWatchlistData;
+    const regulationByAgentId = new Map<string, Set<string>>();
+    for (const v of violations) {
+      const watchlistId = violationAgentToWatchlistId[v.agentName] ?? v.agentId;
+      if (!regulationByAgentId.has(watchlistId)) regulationByAgentId.set(watchlistId, new Set());
+      regulationByAgentId.get(watchlistId)!.add(v.regulation);
+    }
+    return baseWatchlistData.map((agent) => {
+      const fromViolations = Array.from(regulationByAgentId.get(agent.id) ?? []);
+      const mergedRegulations = fromViolations.length > 0 ? fromViolations : (agent.regulations ?? []);
+      return { ...agent, regulations: mergedRegulations.length > 0 ? mergedRegulations : agent.regulations };
+    });
+  }, [violations]);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 600);
@@ -281,6 +331,16 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
   const selectedDetails = selectedAgent ? agentDetailsMap[selectedAgent.id] : null;
   const selectedRiskConfig = selectedAgent ? getRiskConfig(selectedAgent.riskLevel) : null;
 
+  const violationSummary = useViolationSummary(violations);
+
+  // Violations from transcript (Violation Center data) for the selected agent
+  const agentViolations = useMemo(() => {
+    if (!selectedAgent || violations.length === 0) return [];
+    return violations.filter(
+      (v) => violationAgentToWatchlistId[v.agentName] === selectedAgent.id || v.agentName === selectedAgent.name
+    );
+  }, [selectedAgent, violations]);
+
   return (
     <>
       <div
@@ -328,15 +388,39 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
                 </p>
               </div>
             </div>
-            <div 
-              className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium"
-              style={{ 
-                backgroundColor: '#ef444420',
-                color: '#ef4444'
-              }}
-            >
-              <AlertTriangle className="w-3 h-3" />
-              {watchlistData.filter(a => a.riskLevel === 'critical').length} Critical
+            <div className="flex items-center gap-2">
+              {violationSummary && (
+                <div className="flex items-center gap-1.5">
+                  <span 
+                    className="px-2 py-0.5 rounded text-[10px] font-medium"
+                    style={{ backgroundColor: '#ef444420', color: '#ef4444' }}
+                  >
+                    {violationSummary.critical} Critical
+                  </span>
+                  <span 
+                    className="px-2 py-0.5 rounded text-[10px] font-medium"
+                    style={{ backgroundColor: '#f9731620', color: '#f97316' }}
+                  >
+                    {violationSummary.high} High
+                  </span>
+                  <span 
+                    className="px-2 py-0.5 rounded text-[10px] font-medium flex items-center gap-1"
+                    style={{ backgroundColor: '#eab30820', color: '#eab308' }}
+                  >
+                    <Euro className="w-3 h-3" />
+                    {(violationSummary.totalExpectedLoss / 1000000).toFixed(1)}M risk
+                  </span>
+                </div>
+              )}
+              {(!violationSummary || violationSummary.critical === 0) && (
+                <div 
+                  className="flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium"
+                  style={{ backgroundColor: '#ef444420', color: '#ef4444' }}
+                >
+                  <AlertTriangle className="w-3 h-3" />
+                  {watchlistData.filter(a => a.riskLevel === 'critical').length} Critical
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -467,27 +551,52 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
                       </div>
                     </div>
 
-                    {/* Categories */}
-                    <div className="flex items-center gap-1.5 mt-2">
-                      {agent.categories.slice(0, 2).map((cat, i) => (
-                        <span 
-                          key={i}
-                          className="text-[9px] px-1.5 py-0.5 rounded"
-                          style={{ 
-                            backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
-                            color: '#939394'
-                          }}
-                        >
-                          {cat}
-                        </span>
-                      ))}
-                      {agent.categories.length > 2 && (
-                        <span 
-                          className="text-[9px]"
-                          style={{ color: '#939394' }}
-                        >
-                          +{agent.categories.length - 2}
-                        </span>
+                    {/* Categories & Act names (regulations) */}
+                    <div className="flex flex-col gap-1.5 mt-2">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        {agent.categories.slice(0, 2).map((cat, i) => (
+                          <span 
+                            key={i}
+                            className="text-[9px] px-1.5 py-0.5 rounded"
+                            style={{ 
+                              backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
+                              color: '#939394'
+                            }}
+                          >
+                            {cat}
+                          </span>
+                        ))}
+                        {agent.categories.length > 2 && (
+                          <span 
+                            className="text-[9px]"
+                            style={{ color: '#939394' }}
+                          >
+                            +{agent.categories.length - 2}
+                          </span>
+                        )}
+                      </div>
+                      {agent.regulations && agent.regulations.length > 0 && (
+                        <div className="flex items-center gap-1 flex-wrap">
+                          {agent.regulations.slice(0, 2).map((reg, i) => (
+                            <span 
+                              key={i}
+                              className="text-[9px] px-1.5 py-0.5 rounded border"
+                              style={{ 
+                                backgroundColor: '#5332FF15',
+                                color: '#5332FF',
+                                borderColor: '#5332FF40'
+                              }}
+                              title={reg}
+                            >
+                              {reg.length > 40 ? reg.slice(0, 37) + '…' : reg}
+                            </span>
+                          ))}
+                          {agent.regulations.length > 2 && (
+                            <span className="text-[9px]" style={{ color: '#939394' }}>
+                              +{agent.regulations.length - 2} acts
+                            </span>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>
@@ -572,7 +681,7 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
           >
             {/* Modal Header */}
             <div 
-              className="p-6 border-b flex-shrink-0"
+              className="p-4 border-b flex-shrink-0"
               style={{ 
                 borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
                 background: isDarkMode 
@@ -642,7 +751,7 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-4 gap-4 mt-5">
+              <div className="grid grid-cols-4 gap-3 mt-4">
                 <div 
                   className="p-3 rounded-xl text-center"
                   style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
@@ -696,286 +805,370 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
 
             {/* Modal Content */}
             <div 
-              className="flex-1 overflow-y-auto p-6"
+              className="flex-1 overflow-y-auto p-4 min-h-0"
               style={{ 
                 scrollbarWidth: 'thin',
                 scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5'
               }}
             >
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                {/* Left Column */}
-                <div className="space-y-6">
-                  {/* Compliance Gaps */}
-                  <div 
-                    className="rounded-xl p-5"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <Target className="w-5 h-5" style={{ color: selectedRiskConfig.color }} />
-                      <h3 
-                        className="text-sm font-bold uppercase tracking-wide"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                      >
-                        Compliance Gaps
-                      </h3>
-                    </div>
-                    <div className="space-y-3">
-                      {selectedDetails.gaps.map((gap, i) => (
-                        <div 
-                          key={i}
-                          className="p-3 rounded-lg"
-                          style={{ 
-                            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-                            border: `1px solid ${getSeverityColor(gap.severity)}30`
-                          }}
-                        >
-                          <div className="flex items-center justify-between mb-2">
-                            <span 
-                              className="text-sm font-semibold"
-                              style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                            >
-                              {gap.area}
-                            </span>
-                            <span 
-                              className="text-[10px] px-2 py-0.5 rounded-full uppercase font-medium"
-                              style={{ 
-                                backgroundColor: `${getSeverityColor(gap.severity)}20`,
-                                color: getSeverityColor(gap.severity)
-                              }}
-                            >
-                              {gap.severity}
-                            </span>
-                          </div>
-                          <p 
-                            className="text-xs leading-relaxed mb-2"
-                            style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-                          >
-                            {gap.description}
-                          </p>
-                          <p 
-                            className="text-[10px]"
-                            style={{ color: getSeverityColor(gap.severity) }}
-                          >
-                            {gap.occurrences} occurrences recorded
-                          </p>
-                        </div>
-                      ))}
-                    </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch content-start lg:grid-rows-[auto_auto_1fr]">
+                {/* Row 1 Col 1: Compliance Gaps */}
+                <div
+                  className="rounded-xl p-4 min-w-0 flex flex-col lg:col-start-1 lg:row-start-1"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
+                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <Target className="w-5 h-5 flex-shrink-0" style={{ color: selectedRiskConfig.color }} />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-wide"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      Compliance Gaps
+                    </h3>
                   </div>
-
-                  {/* Recent Violations */}
-                  <div 
-                    className="rounded-xl p-5"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <AlertCircle className="w-5 h-5" style={{ color: '#ef4444' }} />
-                      <h3 
-                        className="text-sm font-bold uppercase tracking-wide"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                  <div className="space-y-3">
+                    {selectedDetails.gaps.map((gap, i) => (
+                      <div
+                        key={i}
+                        className="p-3 rounded-lg"
+                        style={{
+                          backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                          border: `1px solid ${getSeverityColor(gap.severity)}30`
+                        }}
                       >
-                        Recent Violations
-                      </h3>
-                    </div>
-                    <div className="space-y-3">
-                      {selectedDetails.recentViolations.map((violation, i) => (
-                        <div 
-                          key={i}
-                          className="p-3 rounded-lg flex items-start gap-3"
-                          style={{ 
-                            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-                            border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                          }}
-                        >
-                          <div 
-                            className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0"
-                            style={{ backgroundColor: getStatusColor(violation.status) }}
-                          />
-                          <div className="flex-1">
-                            <div className="flex items-center justify-between mb-1">
-                              <span 
-                                className="text-xs font-semibold"
-                                style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                              >
-                                {violation.type}
-                              </span>
-                              <span className="text-[10px]" style={{ color: '#939394' }}>
-                                {violation.date}
-                              </span>
-                            </div>
-                            <p 
-                              className="text-xs leading-relaxed"
-                              style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-                            >
-                              {violation.description}
-                            </p>
-                            <span 
-                              className="inline-block mt-2 text-[10px] px-2 py-0.5 rounded-full capitalize"
-                              style={{ 
-                                backgroundColor: `${getStatusColor(violation.status)}20`,
-                                color: getStatusColor(violation.status)
-                              }}
-                            >
-                              {violation.status}
-                            </span>
-                          </div>
+                        <div className="flex items-center justify-between mb-2">
+                          <span
+                            className="text-sm font-semibold"
+                            style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                          >
+                            {gap.area}
+                          </span>
+                          <span
+                            className="text-[10px] px-2 py-0.5 rounded-full uppercase font-medium"
+                            style={{
+                              backgroundColor: `${getSeverityColor(gap.severity)}20`,
+                              color: getSeverityColor(gap.severity)
+                            }}
+                          >
+                            {gap.severity}
+                          </span>
                         </div>
-                      ))}
-                    </div>
+                        <p
+                          className="text-xs leading-relaxed mb-2"
+                          style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                        >
+                          {gap.description}
+                        </p>
+                        <p
+                          className="text-[10px]"
+                          style={{ color: getSeverityColor(gap.severity) }}
+                        >
+                          {gap.occurrences} occurrences recorded
+                        </p>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {/* Right Column */}
-                <div className="space-y-6">
-                  {/* Recommendations */}
-                  <div 
-                    className="rounded-xl p-5"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <ArrowRight className="w-5 h-5" style={{ color: '#5332FF' }} />
-                      <h3 
-                        className="text-sm font-bold uppercase tracking-wide"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-                      >
-                        Recommended Actions
-                      </h3>
-                    </div>
-                    <ul className="space-y-2">
-                      {selectedDetails.recommendations.map((rec, i) => (
-                        <li 
-                          key={i}
-                          className="flex items-start gap-2 text-sm p-2 rounded-lg"
-                          style={{ 
-                            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-                            color: isDarkMode ? '#D6D9D8' : '#4a4a4a'
-                          }}
-                        >
-                          <span 
-                            className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold"
-                            style={{ 
-                              backgroundColor: '#5332FF20',
-                              color: '#5332FF'
-                            }}
-                          >
-                            {i + 1}
-                          </span>
-                          {rec}
-                        </li>
-                      ))}
-                    </ul>
+                {/* Row 2 Col 1: Recent Violations */}
+                <div
+                  className="rounded-xl p-4 min-w-0 flex flex-col min-h-0 lg:col-start-1 lg:row-start-2"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
+                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <AlertCircle className="w-5 h-5 flex-shrink-0" style={{ color: '#ef4444' }} />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-wide"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      Recent Violations
+                    </h3>
                   </div>
-
-                  {/* Training Status */}
-                  <div 
-                    className="rounded-xl p-5"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
+                  <div
+                    className="space-y-3 overflow-y-auto pr-1"
+                    style={{ maxHeight: '200px', scrollbarWidth: 'thin', scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5' }}
                   >
-                    <div className="flex items-center gap-2 mb-4">
-                      <BarChart3 className="w-5 h-5" style={{ color: '#22c55e' }} />
-                      <h3 
-                        className="text-sm font-bold uppercase tracking-wide"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    {selectedDetails.recentViolations.map((violation, i) => (
+                      <div
+                        key={i}
+                        className="p-3 rounded-lg flex items-start gap-3"
+                        style={{
+                          backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                          border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                        }}
                       >
-                        Training Status
-                      </h3>
-                    </div>
-                    <div className="space-y-2">
-                      {selectedDetails.trainingStatus.map((training, i) => (
-                        <div 
-                          key={i}
-                          className="flex items-center justify-between p-3 rounded-lg"
-                          style={{ 
-                            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
-                            border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                          }}
-                        >
-                          <div className="flex items-center gap-2">
-                            {training.completed ? (
-                              <CheckCircle2 className="w-4 h-4" style={{ color: '#22c55e' }} />
-                            ) : (
-                              <XCircle className="w-4 h-4" style={{ color: '#ef4444' }} />
-                            )}
-                            <span 
-                              className="text-sm"
+                        <div
+                          className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0 self-start"
+                          style={{ backgroundColor: getStatusColor(violation.status) }}
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between gap-2 mb-1">
+                            <span
+                              className="text-xs font-semibold truncate"
                               style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
                             >
-                              {training.name}
+                              {violation.type}
+                            </span>
+                            <span className="text-[10px] flex-shrink-0" style={{ color: '#939394' }}>
+                              {violation.date}
                             </span>
                           </div>
-                          {training.dueDate && (
-                            <span 
-                              className="text-[10px]"
-                              style={{ color: training.dueDate.includes('Overdue') ? '#ef4444' : '#939394' }}
+                          {violation.regulation && (
+                            <div
+                              className="text-[10px] mb-1.5 px-2 py-1 rounded block w-full break-words"
+                              style={{
+                                backgroundColor: '#5332FF15',
+                                color: '#5332FF',
+                                border: '1px solid #5332FF40'
+                              }}
                             >
-                              {training.dueDate}
+                              <span className="font-medium">Act:</span> {violation.regulation}
+                            </div>
+                          )}
+                          <p
+                            className="text-xs leading-relaxed break-words"
+                            style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                          >
+                            {violation.description}
+                          </p>
+                          <span
+                            className="inline-block mt-2 text-[10px] px-2 py-0.5 rounded-full capitalize"
+                            style={{
+                              backgroundColor: `${getStatusColor(violation.status)}20`,
+                              color: getStatusColor(violation.status)
+                            }}
+                          >
+                            {violation.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Row 3 Col 1: Training Status */}
+                <div
+                  className="rounded-xl p-4 min-w-0 flex flex-col min-h-0 lg:col-start-1 lg:row-start-3"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
+                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <BarChart3 className="w-5 h-5 flex-shrink-0" style={{ color: '#22c55e' }} />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-wide"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      Training Status
+                    </h3>
+                  </div>
+                  <div className="space-y-2">
+                    {selectedDetails.trainingStatus.map((training, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between p-3 rounded-lg"
+                        style={{
+                          backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                          border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                        }}
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          {training.completed ? (
+                            <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: '#22c55e' }} />
+                          ) : (
+                            <XCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#ef4444' }} />
+                          )}
+                          <span
+                            className="text-sm truncate"
+                            style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                          >
+                            {training.name}
+                          </span>
+                        </div>
+                        {training.dueDate && (
+                          <span
+                            className="text-[10px] flex-shrink-0"
+                            style={{ color: training.dueDate.includes('Overdue') ? '#ef4444' : '#939394' }}
+                          >
+                            {training.dueDate}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Row 1 Col 2: Transcript-Detected Violations */}
+                <div
+                  className="rounded-xl p-4 min-w-0 flex flex-col min-h-0 lg:col-start-2 lg:row-start-1"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
+                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4 flex-wrap">
+                    <AlertTriangle className="w-5 h-5 flex-shrink-0" style={{ color: '#ef4444' }} />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-wide"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      Transcript-Detected Violations
+                    </h3>
+                    {agentViolations.length > 0 && (
+                      <span
+                        className="text-[10px] px-2 py-0.5 rounded-full flex-shrink-0"
+                        style={{ backgroundColor: '#ef444420', color: '#ef4444' }}
+                      >
+                        {agentViolations.length} active
+                      </span>
+                    )}
+                  </div>
+                  <div className="space-y-3 flex-1 min-h-0 overflow-y-auto">
+                    {agentViolations.length > 0 ? agentViolations.slice(0, 5).map((v) => (
+                        <div
+                          key={v.violationId}
+                          className="p-3 rounded-lg"
+                          style={{
+                            backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                            border: `1px solid ${getSeverityColor(v.severity)}40`
+                          }}
+                        >
+                          <div
+                            className="text-[10px] mb-2 px-2 py-1 rounded block w-full break-words"
+                            style={{ backgroundColor: '#5332FF15', color: '#5332FF', border: '1px solid #5332FF40' }}
+                          >
+                            {v.regulation}
+                          </div>
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <span
+                              className="text-[10px] px-2 py-0.5 rounded-full uppercase"
+                              style={{ backgroundColor: `${getSeverityColor(v.severity)}20`, color: getSeverityColor(v.severity) }}
+                            >
+                              {v.severity}
                             </span>
+                            <span className="text-[10px] flex items-center gap-1" style={{ color: '#22c55e' }}>
+                              <Euro className="w-3 h-3" />
+                              {(v.financialImpact.expectedLoss / 1000).toFixed(0)} expected loss
+                            </span>
+                          </div>
+                          <p className="text-xs leading-relaxed mb-2" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+                            {v.severityReason}
+                          </p>
+                          {v.evidence.transcriptExcerpt && (
+                            <p className="text-[10px] italic" style={{ color: '#939394' }}>
+                              &quot;{v.evidence.transcriptExcerpt.length > 120
+                                ? v.evidence.transcriptExcerpt.slice(0, 120) + '...'
+                                : v.evidence.transcriptExcerpt}&quot;
+                            </p>
                           )}
                         </div>
-                      ))}
-                    </div>
+                      )) : (
+                        <div
+                          className="py-8 text-center text-sm"
+                          style={{ color: isDarkMode ? '#939394' : '#6b7280' }}
+                        >
+                          No transcript violations detected for this agent
+                        </div>
+                      )}
                   </div>
+                </div>
 
-                  {/* Contact Info */}
-                  <div 
-                    className="rounded-xl p-5"
-                    style={{ 
-                      backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
-                      border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-4">
-                      <FileText className="w-5 h-5" style={{ color: '#939394' }} />
-                      <h3 
-                        className="text-sm font-bold uppercase tracking-wide"
-                        style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                {/* Row 2 Col 2: Recommendations */}
+                <div
+                  className="rounded-xl p-4 min-w-0 flex flex-col min-h-0 lg:col-start-2 lg:row-start-2"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
+                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <ArrowRight className="w-5 h-5 flex-shrink-0" style={{ color: '#5332FF' }} />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-wide"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      Recommended Actions
+                    </h3>
+                  </div>
+                  <ul className="space-y-2">
+                    {selectedDetails.recommendations.map((rec, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-3 text-sm p-3 rounded-lg"
+                        style={{
+                          backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF',
+                          color: isDarkMode ? '#D6D9D8' : '#4a4a4a'
+                        }}
                       >
-                        Agent Information
-                      </h3>
+                        <span
+                          className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold mt-0.5"
+                          style={{
+                            backgroundColor: '#5332FF20',
+                            color: '#5332FF'
+                          }}
+                        >
+                          {i + 1}
+                        </span>
+                        <span className="flex-1 min-w-0 break-words pt-px">{rec}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Row 3 Col 2: Agent Information */}
+                <div
+                  className="rounded-xl p-4 min-w-0 flex flex-col min-h-0 lg:col-start-2 lg:row-start-3"
+                  style={{
+                    backgroundColor: isDarkMode ? '#1a1a1a' : '#F8F8F8',
+                    border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
+                  }}
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <FileText className="w-5 h-5 flex-shrink-0" style={{ color: '#939394' }} />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-wide"
+                      style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                    >
+                      Agent Information
+                    </h3>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Mail className="w-4 h-4 flex-shrink-0" style={{ color: '#939394' }} />
+                      <span className="text-sm break-words flex-1 min-w-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+                        {selectedDetails.email}
+                      </span>
                     </div>
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Mail className="w-4 h-4" style={{ color: '#939394' }} />
-                        <span className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                          {selectedDetails.email}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Phone className="w-4 h-4" style={{ color: '#939394' }} />
-                        <span className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                          {selectedDetails.phone}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Building className="w-4 h-4" style={{ color: '#939394' }} />
-                        <span className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                          {selectedDetails.department}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Users className="w-4 h-4" style={{ color: '#939394' }} />
-                        <span className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                          Supervisor: {selectedDetails.supervisor}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Calendar className="w-4 h-4" style={{ color: '#939394' }} />
-                        <span className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-                          Tenure: {selectedDetails.tenure}
-                        </span>
-                      </div>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Phone className="w-4 h-4 flex-shrink-0" style={{ color: '#939394' }} />
+                      <span className="text-sm break-words flex-1 min-w-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+                        {selectedDetails.phone}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Building className="w-4 h-4 flex-shrink-0" style={{ color: '#939394' }} />
+                      <span className="text-sm break-words flex-1 min-w-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+                        {selectedDetails.department}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Users className="w-4 h-4 flex-shrink-0" style={{ color: '#939394' }} />
+                      <span className="text-sm break-words flex-1 min-w-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+                        Supervisor: {selectedDetails.supervisor}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Calendar className="w-4 h-4 flex-shrink-0" style={{ color: '#939394' }} />
+                      <span className="text-sm break-words flex-1 min-w-0" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
+                        Tenure: {selectedDetails.tenure}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -984,7 +1177,7 @@ export function AgentWatchlist({ isDarkMode = false }: AgentWatchlistProps) {
 
             {/* Modal Footer */}
             <div 
-              className="p-4 border-t flex items-center justify-between flex-shrink-0"
+              className="px-4 py-3 border-t flex items-center justify-between flex-shrink-0 gap-4"
               style={{ 
                 borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
                 backgroundColor: isDarkMode ? '#0a0a0a' : '#FAFAFA'

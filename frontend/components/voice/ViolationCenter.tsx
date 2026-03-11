@@ -185,7 +185,7 @@ export function ViolationCenter({ violations }: ViolationCenterProps) {
           Transcript-detected compliance violations with financial impact tracking and remediation status
         </p>
       </CardHeader>
-      <CardContent className="space-y-4 max-h-128 overflow-y-auto pr-2">
+      <CardContent className="space-y-4 max-h-[560px] overflow-y-auto pr-2">
         {/* Summary Stats */}
         <div className="grid grid-cols-4 gap-3">
           <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 hover:bg-red-500/15 transition-colors">

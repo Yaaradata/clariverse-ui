@@ -20,7 +20,6 @@ import {
   getCallList,
   getCallDetail,
   getTeamHealthData,
-  getViolations,
   KPIData,
   IntentDistribution,
   IssueHeatmapData,
@@ -31,7 +30,6 @@ import {
   CallListItem,
   CallDetail
 } from '@/lib/swedbank/voiceData';
-import { ViolationCenter } from '@/components/voice/ViolationCenter';
 import { AIDayGeneratorChat } from '@/components/voice/AIDayGeneratorChat';
 
 export default function VoiceTranscript() {
@@ -46,7 +44,6 @@ export default function VoiceTranscript() {
   const [selectedCall, setSelectedCall] = useState<CallDetail | null>(null);
   const [isCallModalOpen, setIsCallModalOpen] = useState(false);
   const [teamHealthData, setTeamHealthData] = useState<any>(null);
-  const [violations, setViolations] = useState<any[]>([]);
   const [dateFilterPreset, setDateFilterPreset] = useState<string>('One Month');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -71,7 +68,6 @@ export default function VoiceTranscript() {
         setCoachingTickets(getCoachingTickets());
         setCallList(getCallList());
         setTeamHealthData(getTeamHealthData());
-        setViolations(getViolations());
       }, []);
 
   const handleCallClick = (callId: string) => {
@@ -151,7 +147,6 @@ export default function VoiceTranscript() {
         setCoachingTickets(getCoachingTickets());
         setCallList(getCallList());
         setTeamHealthData(getTeamHealthData());
-        setViolations(getViolations());
       };
 
   if (!kpiData || !teamHealthData) {
@@ -242,7 +237,7 @@ export default function VoiceTranscript() {
       <KPIRibbon data={kpiData} />
 
       {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-[minmax(0,28fr)_minmax(0,50fr)_minmax(0,22fr)] gap-4 items-start w-full max-w-full overflow-x-hidden">
+      <div className="grid grid-cols-[minmax(0,28fr)_minmax(0,50fr)_minmax(0,22fr)] gap-4 items-stretch w-full max-w-[1600px] mx-auto overflow-x-hidden">
         {/* Left Column - Team Health */}
         <TeamHealthColumn
           qaScore={teamHealthData.qaScore}
@@ -257,9 +252,7 @@ export default function VoiceTranscript() {
         {/* Center Column - Core Intelligence */}
         <CoreIntelligenceColumn
           highRiskCalls={highRiskCalls}
-          intentDistribution={intentDistribution}
           issueHeatmap={issueHeatmap}
-          violations={violations}
           coachingTickets={coachingTickets}
           onCallClick={handleCallClick}
           onAgentClick={handleAgentClick}
@@ -270,7 +263,6 @@ export default function VoiceTranscript() {
           agentsNeedingAttention={agentsNeedingAttention}
           agentLeaderboard={agentLeaderboard}
           skillGapData={skillGapData}
-          emotionData={teamHealthData.emotionData}
           dateRange={dateRange}
           onAgentClick={handleAgentClick}
         />

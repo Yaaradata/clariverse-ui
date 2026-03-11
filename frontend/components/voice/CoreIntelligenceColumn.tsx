@@ -4,27 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line, AreaChart, Area } from 'recharts';
-import { HighRiskCall, IntentDistribution, IssueHeatmapData, Violation, CoachingTicket } from '@/lib/voiceData';
+import { HighRiskCall, IssueHeatmapData, CoachingTicket } from '@/lib/voiceData';
 import { AlertTriangle, ExternalLink, BookOpen } from 'lucide-react';
-import { ViolationCenter } from './ViolationCenter';
 
 interface CoreIntelligenceColumnProps {
   highRiskCalls: HighRiskCall[];
-  intentDistribution: IntentDistribution[];
   issueHeatmap: IssueHeatmapData[];
-  violations: Violation[];
   coachingTickets: CoachingTicket[];
   onCallClick: (callId: string) => void;
   onAgentClick: (agentId: string) => void;
 }
 
-const COLORS = ['#b90abd', '#5332ff', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#8b5cf6', '#f97316'];
-
 export function CoreIntelligenceColumn({
   highRiskCalls,
-  intentDistribution,
   issueHeatmap,
-  violations,
   coachingTickets,
   onCallClick,
   onAgentClick
@@ -52,7 +45,157 @@ export function CoreIntelligenceColumn({
   };
 
   return (
-    <div className="space-y-4 min-w-0 w-full">
+    <div className="flex flex-col h-full min-h-0 min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-h-0 gap-4 overflow-hidden">
+      {/* Issue Heatmap - top of second column */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Issue Heatmap</CardTitle>
+          <p className="text-xs text-muted-foreground mt-1">
+            Shows issue frequency by call type. Higher numbers = more issues detected. Hover cells for details.
+          </p>
+        </CardHeader>
+        <CardContent className="overflow-auto">
+          <TooltipProvider>
+            <div className="space-y-3">
+              {/* Column Headers */}
+              <div className="grid gap-3 text-xs font-semibold text-muted-foreground mb-3 pb-2 border-b border-white/20 min-w-0" style={{ gridTemplateColumns: 'minmax(100px, 140px) repeat(5, minmax(60px, 1fr))' }}>
+                <div className="text-left">Call Type</div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="text-center cursor-help px-2">
+                      <div className="truncate">Compliance</div>
+                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Deviation</div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-semibold">Compliance Deviation</p>
+                    <p className="text-xs">How often agents miss required banking scripts (KYC, fraud protocols, regulatory statements)</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="text-center cursor-help px-2">
+                      <div className="truncate">Tone</div>
+                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Problems</div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-semibold">Tone Problems</p>
+                    <p className="text-xs">Issues with agent tone, empathy, or communication style that affect customer experience</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="text-center cursor-help px-2">
+                      <div className="truncate">Silence</div>
+                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Issues</div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-semibold">Silence Issues</p>
+                    <p className="text-xs">Long pauses or awkward silence patterns during calls that indicate confusion or delays</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="text-center cursor-help px-2">
+                      <div className="truncate">Incorrect</div>
+                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Information</div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-semibold">Incorrect Information</p>
+                    <p className="text-xs">Cases where agents provided wrong information to customers, leading to confusion or errors</p>
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="text-center cursor-help px-2">
+                      <div className="truncate">Emotional</div>
+                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Spikes</div>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="font-semibold">Emotional Spikes</p>
+                    <p className="text-xs">Moments when customer emotion became negative or escalated during the call</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+
+              {/* Heatmap Rows */}
+              <div className="space-y-2 max-h-[500px] overflow-y-auto">
+                {issueHeatmap.map((item, idx) => (
+                  <div key={idx} className="grid gap-3 items-start py-1.5 hover:bg-white/5 rounded px-1 transition-colors min-w-0" style={{ gridTemplateColumns: 'minmax(100px, 140px) repeat(5, minmax(60px, 1fr))' }}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="text-sm text-white font-medium cursor-help pr-2 leading-tight" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                          <div className="line-clamp-2">{item.intent}</div>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="font-semibold">{item.intent}</p>
+                        <p className="text-xs">Call type category showing issue frequency</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    {[
+                      { value: item.complianceDeviation, key: 'complianceDeviation', label: 'Compliance Deviation', fullLabel: 'Compliance Deviation' },
+                      { value: item.toneProblems, key: 'toneProblems', label: 'Tone Problems', fullLabel: 'Tone Problems' },
+                      { value: item.silence, key: 'silence', label: 'Silence Issues', fullLabel: 'Silence Issues' },
+                      { value: item.incorrectInfo, key: 'incorrectInfo', label: 'Incorrect Information', fullLabel: 'Incorrect Information' },
+                      { value: item.emotionalSpikes, key: 'emotionalSpikes', label: 'Emotional Spikes', fullLabel: 'Emotional Spikes' }
+                    ].map((issue, vIdx) => {
+                      const causes = item.rootCauses?.[issue.key as keyof typeof item.rootCauses];
+                      return (
+                      <Tooltip key={vIdx}>
+                        <TooltipTrigger asChild>
+                          <div
+                            className="h-10 rounded flex items-center justify-center cursor-help transition-all hover:scale-105 border border-white/10 mx-auto w-full"
+                            style={{ backgroundColor: getHeatmapColor(issue.value) }}
+                          >
+                            <span className="text-sm font-bold text-white">
+                              {issue.value.toFixed(0)}
+                            </span>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="max-w-sm">
+                          <div className="space-y-2">
+                            <p className="font-semibold">{item.intent}</p>
+                            <p className="text-sm">{issue.fullLabel}: <span className="font-bold text-white">{issue.value.toFixed(0)}</span></p>
+                            <p className="text-xs text-muted-foreground">
+                              {issue.value.toFixed(0)} occurrences detected
+                            </p>
+                            {causes && causes.length > 0 && (
+                              <div className="mt-2 pt-2 border-t border-white/20">
+                                <p className="text-xs font-semibold text-amber-400 mb-1">
+                                  {causes.length > 1 ? 'Main causes:' : 'Reason:'}
+                                </p>
+                                <ul className="text-xs text-muted-foreground space-y-0.5 list-disc list-inside">
+                                  {causes.map((cause: string, i: number) => (
+                                    <li key={i}>{cause}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                            <p className="text-xs mt-1 pt-1 border-t border-white/20">
+                              {issue.value >= 30 ? '🔴 Critical - Immediate attention needed' :
+                               issue.value >= 20 ? '🟡 High - Review recommended' :
+                               issue.value >= 10 ? '🟠 Moderate - Monitor closely' :
+                               '🟢 Low - Within acceptable range'}
+                            </p>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </TooltipProvider>
+        </CardContent>
+      </Card>
+
       {/* Coaching Recommendations */}
       <Card>
         <CardHeader>
@@ -61,7 +204,7 @@ export function CoreIntelligenceColumn({
             Coaching Recommendations
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
+        <CardContent className="space-y-3 max-h-[520px] overflow-y-auto">
           {coachingTickets.map((ticket) => (
             <Card key={ticket.agentId} className="p-3 border-blue-500/30">
               <div className="space-y-2">
@@ -100,10 +243,7 @@ export function CoreIntelligenceColumn({
         </CardContent>
       </Card>
 
-      {/* Violation Center */}
-      <ViolationCenter violations={violations} />
-
-      {/* High-Risk Calls Carousel */}
+      {/* High-Risk Calls */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
@@ -112,7 +252,7 @@ export function CoreIntelligenceColumn({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-3 max-h-[400px] overflow-y-auto">
+          <div className="grid grid-cols-2 gap-3 max-h-[490px] overflow-y-auto">
             {highRiskCalls.slice(0, 6).map((call) => (
               <Card key={call.callId} className="p-3 border-red-500/30">
                 <div className="space-y-2">
@@ -258,224 +398,7 @@ export function CoreIntelligenceColumn({
           </div>
         </CardContent>
       </Card>
-
-      {/* Intent Distribution - Full Width */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Intent Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-6 min-w-0">
-            {/* Left Side Legend */}
-            <div className="flex-shrink-0 space-y-2 min-w-[120px] max-w-[140px]">
-              {intentDistribution.slice(0, Math.ceil(intentDistribution.length / 2)).map((intent, idx) => (
-                <div key={idx} className="flex items-center gap-2">
-                  <div 
-                    className="w-4 h-4 rounded-full border-2 border-white/20 flex-shrink-0" 
-                    style={{ backgroundColor: COLORS[idx % COLORS.length] }} 
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs text-white font-medium truncate">{intent.intent}</div>
-                    <div className="text-xs text-muted-foreground">{intent.percentage}% • {intent.count} calls</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Donut Chart */}
-            <div className="flex-1 h-64 relative">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={intentDistribution}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={100}
-                    paddingAngle={2}
-                    dataKey="percentage"
-                  >
-                    {intentDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <RechartsTooltip 
-                    contentStyle={{ 
-                      background: 'rgba(1, 1, 1, 0.95)',
-                      border: '2px solid rgba(185, 10, 189, 0.4)',
-                      borderRadius: '12px',
-                      color: '#ffffff',
-                      boxShadow: 'none',
-                      padding: '8px 12px'
-                    }}
-                    itemStyle={{ color: '#ffffff' }}
-                    labelStyle={{ color: '#ffffff' }}
-                    formatter={(value: number, name: string, props: any) => {
-                      const intent = props.payload;
-                      return [`${intent.count || 0} calls (${value}%)`, intent.intent || name];
-                    }}
-                    labelFormatter={() => ''}
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* Right Side Legend */}
-            <div className="flex-shrink-0 space-y-2 min-w-[120px] max-w-[140px]">
-              {intentDistribution.slice(Math.ceil(intentDistribution.length / 2)).map((intent, idx) => {
-                const actualIdx = Math.ceil(intentDistribution.length / 2) + idx;
-                return (
-                  <div key={actualIdx} className="flex items-center gap-2">
-                    <div 
-                      className="w-4 h-4 rounded-full border-2 border-white/20 flex-shrink-0" 
-                      style={{ backgroundColor: COLORS[actualIdx % COLORS.length] }} 
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="text-xs text-white font-medium truncate">{intent.intent}</div>
-                      <div className="text-xs text-muted-foreground">{intent.percentage}% • {intent.count} calls</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Issue Heatmap */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Issue Heatmap</CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            Shows issue frequency by call type. Higher numbers = more issues detected. Hover cells for details.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <TooltipProvider>
-            <div className="space-y-3">
-              {/* Column Headers */}
-              <div className="grid gap-3 text-xs font-semibold text-muted-foreground mb-3 pb-2 border-b border-white/20 min-w-0" style={{ gridTemplateColumns: 'minmax(100px, 140px) repeat(5, minmax(60px, 1fr))' }}>
-                <div className="text-left">Call Type</div>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="text-center cursor-help px-2" title="Compliance Deviation">
-                      <div className="truncate">Compliance</div>
-                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Deviation</div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="font-semibold">Compliance Deviation</p>
-                    <p className="text-xs">How often agents miss required banking scripts (KYC, fraud protocols, regulatory statements)</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="text-center cursor-help px-2" title="Tone Problems">
-                      <div className="truncate">Tone</div>
-                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Problems</div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="font-semibold">Tone Problems</p>
-                    <p className="text-xs">Issues with agent tone, empathy, or communication style that affect customer experience</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="text-center cursor-help px-2" title="Silence Issues">
-                      <div className="truncate">Silence</div>
-                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Issues</div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="font-semibold">Silence Issues</p>
-                    <p className="text-xs">Long pauses or awkward silence patterns during calls that indicate confusion or delays</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="text-center cursor-help px-2" title="Incorrect Information">
-                      <div className="truncate">Incorrect</div>
-                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Information</div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="font-semibold">Incorrect Information</p>
-                    <p className="text-xs">Cases where agents provided wrong information to customers, leading to confusion or errors</p>
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="text-center cursor-help px-2" title="Emotional Spikes">
-                      <div className="truncate">Emotional</div>
-                      <div className="text-[10px] text-muted-foreground/70 mt-0.5">Spikes</div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="font-semibold">Emotional Spikes</p>
-                    <p className="text-xs">Moments when customer emotion became negative or escalated during the call</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              
-              {/* Heatmap Rows */}
-              <div className="space-y-2 max-h-[500px] overflow-y-auto">
-                {issueHeatmap.map((item, idx) => (
-                  <div key={idx} className="grid gap-3 items-start py-1.5 hover:bg-white/5 rounded px-1 transition-colors min-w-0" style={{ gridTemplateColumns: 'minmax(100px, 140px) repeat(5, minmax(60px, 1fr))' }}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="text-sm text-white font-medium cursor-help pr-2 leading-tight" title={item.intent} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
-                          <div className="line-clamp-2">{item.intent}</div>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p className="font-semibold">{item.intent}</p>
-                        <p className="text-xs">Call type category showing issue frequency</p>
-                      </TooltipContent>
-                    </Tooltip>
-                    {[
-                      { value: item.complianceDeviation, label: 'Compliance Deviation', fullLabel: 'Compliance Deviation' },
-                      { value: item.toneProblems, label: 'Tone Problems', fullLabel: 'Tone Problems' },
-                      { value: item.silence, label: 'Silence Issues', fullLabel: 'Silence Issues' },
-                      { value: item.incorrectInfo, label: 'Incorrect Information', fullLabel: 'Incorrect Information' },
-                      { value: item.emotionalSpikes, label: 'Emotional Spikes', fullLabel: 'Emotional Spikes' }
-                    ].map((issue, vIdx) => (
-                      <Tooltip key={vIdx}>
-                        <TooltipTrigger asChild>
-                          <div
-                            className="h-10 rounded flex items-center justify-center cursor-help transition-all hover:scale-105 border border-white/10 mx-auto w-full"
-                            style={{ backgroundColor: getHeatmapColor(issue.value) }}
-                            title={`${item.intent} - ${issue.fullLabel}: ${issue.value.toFixed(0)} occurrences`}
-                          >
-                            <span className="text-sm font-bold text-white">
-                              {issue.value.toFixed(0)}
-                            </span>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="space-y-1">
-                            <p className="font-semibold">{item.intent}</p>
-                            <p className="text-sm">{issue.fullLabel}</p>
-                            <p className="text-xs text-muted-foreground">
-                              <span className="font-semibold text-white">{issue.value.toFixed(0)}</span> occurrences detected
-                            </p>
-                            <p className="text-xs mt-1 pt-1 border-t border-white/20">
-                              {issue.value >= 30 ? '🔴 Critical - Immediate attention needed' :
-                               issue.value >= 20 ? '🟡 High - Review recommended' :
-                               issue.value >= 10 ? '🟠 Moderate - Monitor closely' :
-                               '🟢 Low - Within acceptable range'}
-                            </p>
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </TooltipProvider>
-        </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

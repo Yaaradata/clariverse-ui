@@ -24,8 +24,8 @@ export default function AddonLayout({
   });
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('24h');
   
-  const isComplianceActive = pathname === '/swedbank/compliance-fci/compliance';
-  const isFCIActive = pathname === '/swedbank/compliance-fci/fci';
+  const isComplianceActive = pathname === '/swedbank/compliance-fci/compliance' || pathname === '/swedbank/compliance-fci';
+  const isUnitPerformanceActive = pathname === '/swedbank/compliance-fci/unit-performance';
   const isVendorActive = pathname === '/swedbank/compliance-fci/compliance-signals';
 
   const timeFilterOptions: { value: TimeFilter; label: string }[] = [
@@ -98,8 +98,8 @@ export default function AddonLayout({
             </div>
             
             <div className="flex items-center gap-4">
-              {/* Time Filter - Show on Compliance and FCI pages */}
-              {(isComplianceActive || isFCIActive) && (
+              {/* Time Filter - Show on all compliance-fci tabs */}
+              {(isComplianceActive || isUnitPerformanceActive || isVendorActive) && (
                 <div 
                   className="flex items-center rounded-xl p-1"
                   style={{ backgroundColor: '#1a1a1a', border: '1px solid #2a2a2a' }}
@@ -179,14 +179,14 @@ export default function AddonLayout({
               Compliance and Risk
             </Link>
             <Link
-              href="/swedbank/compliance-fci/fci"
+              href="/swedbank/compliance-fci/unit-performance"
               className="py-4 px-2 font-semibold transition-all relative"
               style={{
-                color: isFCIActive ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#939394'),
-                borderBottom: isFCIActive ? '3px solid #5332FF' : 'none',
+                color: isUnitPerformanceActive ? '#5332FF' : (isDarkMode ? '#D6D9D8' : '#939394'),
+                borderBottom: isUnitPerformanceActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Failed Customer Interaction
+              Unit Performance
             </Link>
             <Link
               href="/swedbank/compliance-fci/compliance-signals"
@@ -196,7 +196,7 @@ export default function AddonLayout({
                 borderBottom: isVendorActive ? '3px solid #5332FF' : 'none',
               }}
             >
-              Compliance Signals
+              Third Party Compliance Signals
             </Link>
           </div>
         </div>

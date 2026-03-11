@@ -98,6 +98,7 @@ export interface ComplianceCategoryBreakdown {
     label: string;
     score: number;
   }[];
+  unit?: string; // Contact Centre Unit (e.g. "Stockholm, Sweden")
 }
 
 export interface GranularComplianceScore {
@@ -119,6 +120,41 @@ export interface GranularComplianceScore {
   }>;
 }
 
+/** Enrichment context for KPI metrics */
+export interface KPIEnrichment {
+  teamQAScore?: {
+    vsLastWeek: number;
+    topImprovement: string;
+    weakArea: string;
+  };
+  complianceScore?: {
+    vsLastWeek: number;
+    strongestRegulation: string;
+    needsAttention: string;
+  };
+  customerEmotion?: {
+    positive: number;
+    neutral: number;
+    negative: number;
+    mostNegativeCallTypes: string[];
+  };
+  highRiskCalls?: {
+    vsLastWeek: number;
+    topRiskCategory: string;
+    topAgentInvolved: string;
+  };
+  escalationRisk?: {
+    vsLastWeek: number;
+    topCause: string;
+    agentsAtRisk: number;
+  };
+  totalCalls?: {
+    peakHour: string;
+    topCallReason: string;
+    avgDailyVolume: number;
+  };
+}
+
 export interface KPIData {
   overallTeamQAScore: { value: number; trend: number[] };
   complianceAdherence: { value: number; breakdown: { fully: number; partial: number; non: number } };
@@ -133,6 +169,8 @@ export interface KPIData {
   totalCallsHandled: { value: number; trend: number[] };
   firstCallResolutionRate: { value: number; resolved: number; unresolved: number };
   fraudDisputeCount: { value: number; breakdown: { fraud: number; dispute: number } };
+  /** Optional enrichment for richer metric display */
+  enrichment?: KPIEnrichment;
 }
 
 export interface IntentDistribution {
@@ -140,6 +178,15 @@ export interface IntentDistribution {
   percentage: number;
   count: number;
   [key: string]: any;
+}
+
+/** Root cause explanations per metric for Issue Heatmap */
+export interface IssueHeatmapRootCauses {
+  complianceDeviation?: string[];
+  toneProblems?: string[];
+  silence?: string[];
+  incorrectInfo?: string[];
+  emotionalSpikes?: string[];
 }
 
 export interface IssueHeatmapData {
@@ -150,6 +197,8 @@ export interface IssueHeatmapData {
   incorrectInfo: number;
   emotionalSpikes: number;
   escalationRisk: number;
+  /** Root cause explanations shown on hover - makes heatmap actionable */
+  rootCauses?: IssueHeatmapRootCauses;
 }
 
 export interface AgentPerformance {
@@ -416,6 +465,7 @@ export function getGranularComplianceScore(): GranularComplianceScore {
       consentDisclosure: {
         label: 'Consent & Disclosure (GDPR)',
         regulatoryReference: 'GDPR Articles 6, 7 & 13',
+        unit: 'Stockholm, Sweden',
         score: 84,
         weight: 0.30,
         violations: 4,
@@ -435,6 +485,7 @@ export function getGranularComplianceScore(): GranularComplianceScore {
       identityVerification: {
         label: 'Identity & CDD Questions (AML/KYC)',
         regulatoryReference: 'EU AMLD Art. 13',
+        unit: 'Tallinn, Estonia',
         score: 89,
         weight: 0.25,
         violations: 3,
@@ -454,6 +505,7 @@ export function getGranularComplianceScore(): GranularComplianceScore {
       sanctionsHandling: {
         label: 'Sanctions & High-Risk Jurisdictions',
         regulatoryReference: 'EU Sanctions Regime & AMLD',
+        unit: 'Riga, Latvia',
         score: 91,
         weight: 0.20,
         violations: 1,
@@ -473,6 +525,7 @@ export function getGranularComplianceScore(): GranularComplianceScore {
       suitabilityAndAdvice: {
         label: 'Product Suitability & Risk Disclosure',
         regulatoryReference: 'MiFID II Art. 25 & Consumer Duty',
+        unit: 'Vilnius, Lithuania',
         score: 86,
         weight: 0.25,
         violations: 2,
@@ -850,6 +903,39 @@ export function getKPIData(): KPIData {
     fraudDisputeCount: {
       value: 34,
       breakdown: { fraud: 18, dispute: 16 }
+    },
+    enrichment: {
+      teamQAScore: {
+        vsLastWeek: 3.2,
+        topImprovement: 'Compliance',
+        weakArea: 'Emotional tone'
+      },
+      complianceScore: {
+        vsLastWeek: 1.8,
+        strongestRegulation: 'KYC verification',
+        needsAttention: 'Privacy disclaimer'
+      },
+      customerEmotion: {
+        positive: 52,
+        neutral: 33,
+        negative: 15,
+        mostNegativeCallTypes: ['Fraud report', 'Loan rejection']
+      },
+      highRiskCalls: {
+        vsLastWeek: -4,
+        topRiskCategory: 'Compliance Error',
+        topAgentInvolved: 'Michael Chen'
+      },
+      escalationRisk: {
+        vsLastWeek: -4.5,
+        topCause: 'Compliance miss',
+        agentsAtRisk: 3
+      },
+      totalCalls: {
+        peakHour: '10–11 AM',
+        topCallReason: 'Account inquiry',
+        avgDailyVolume: 42
+      }
     }
   };
 }
@@ -867,6 +953,52 @@ export function getIntentDistribution(): IntentDistribution[] {
   ];
 }
 
+/** Root cause explanations per intent × metric - makes heatmap actionable */
+const HEATMAP_ROOT_CAUSES: Record<string, IssueHeatmapRootCauses> = {
+  'Account Inquiry': {
+    complianceDeviation: ['Identity verification skipped', 'Account disclosure incomplete', 'Terms & conditions not read'],
+    toneProblems: ['Rushed explanations', 'Inconsistent empathy when explaining fees'],
+    silence: ['Long pauses during balance lookup', 'Uncertainty when checking transaction history'],
+    incorrectInfo: ['Wrong interest rate quoted', 'Incorrect fee structure explained', 'Statement cycle dates wrong'],
+    emotionalSpikes: ['Frustration when account locked', 'Confusion over multiple products']
+  },
+  'Fraud Report': {
+    complianceDeviation: ['Fraud reporting script incomplete', 'Customer rights not explained', 'Documentation requirements unclear'],
+    toneProblems: ['Anxious tone amplifies customer stress', 'Overly formal language in crisis'],
+    silence: ['Delays while verifying with security team', 'Pauses during escalation process'],
+    incorrectInfo: ['Agents failed to explain fraud escalation process', 'Timeline for resolution misstated', 'Refund process explained incorrectly'],
+    emotionalSpikes: ['Customer panic not de-escalated', 'Blame directed at customer']
+  },
+  'Loan Application': {
+    complianceDeviation: ['Missing KYC confirmation', 'Interest rate explanation unclear', 'Documentation requirement confusion', 'Affordability check script skipped'],
+    toneProblems: ['Impatient when repeating documents', 'Condescending tone on credit questions'],
+    silence: ['Long holds during credit check', 'Uncertainty about approval criteria'],
+    incorrectInfo: ['APR calculation wrong', 'Loan term options misrepresented', 'Early repayment fees unclear'],
+    emotionalSpikes: ['Rejection delivery lacking empathy', 'Frustration when documents requested again']
+  },
+  'Dispute Resolution': {
+    complianceDeviation: ['Chargeback rights not explained', 'Evidence submission timeline unclear', 'Regulatory timeframe omitted'],
+    toneProblems: ['Defensive with merchant', 'Dismissive of customer concern'],
+    silence: ['Extended silence during merchant contact', 'Unclear next steps communicated'],
+    incorrectInfo: ['Dispute timeline misstated', 'Refund method confused', 'Merchant liability rules wrong'],
+    emotionalSpikes: ['Customer anger not acknowledged', 'Escalation promised then delayed']
+  },
+  'Payment Issue': {
+    complianceDeviation: ['Payment failure reason not disclosed', 'Retry policy unclear', 'Mandate cancellation steps wrong'],
+    toneProblems: ['Blaming tone toward customer', 'Impatience with repeated failures'],
+    silence: ['Long pauses during system checks', 'Vague "technical issue" explanations'],
+    incorrectInfo: ['Payment cut-off times wrong', 'Failed payment retry process incorrect', 'Alternative payment methods unclear'],
+    emotionalSpikes: ['Billing frustration not diffused', 'Late fee justification tone harsh']
+  },
+  'Card Replacement': {
+    complianceDeviation: ['PIN setup instructions incomplete', 'Card activation steps unclear', 'Overseas usage disclosure missing'],
+    toneProblems: ['Rushed through activation', 'Generic script read without personalization'],
+    silence: ['Pauses during system verification', 'Delivery timeline uncertainty'],
+    incorrectInfo: ['Delivery timeframe wrong', 'PIN delivery method confused', 'Temporary card limits incorrect'],
+    emotionalSpikes: ['Urgency of lost card not acknowledged', 'Frustration with wait time dismissed']
+  }
+};
+
 export function getTeamHeatmap(): IssueHeatmapData[] {
   const intents = ['Account Inquiry', 'Fraud Report', 'Loan Application', 'Dispute Resolution', 'Payment Issue', 'Card Replacement'];
   return intents.map(intent => ({
@@ -876,7 +1008,8 @@ export function getTeamHeatmap(): IssueHeatmapData[] {
     silence: Math.random() * 20 + 2,
     incorrectInfo: Math.random() * 35 + 4,
     emotionalSpikes: Math.random() * 40 + 5,
-    escalationRisk: Math.random() * 25 + 3
+    escalationRisk: Math.random() * 25 + 3,
+    rootCauses: HEATMAP_ROOT_CAUSES[intent]
   }));
 }
 

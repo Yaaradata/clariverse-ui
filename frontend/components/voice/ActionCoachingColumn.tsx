@@ -3,18 +3,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AgentPerformance, SkillGapData } from '@/lib/voiceData';
 import { AlertCircle, TrendingUp, TrendingDown, User } from 'lucide-react';
-import { AreaChart, Area, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 
 interface ActionCoachingColumnProps {
   agentsNeedingAttention: AgentPerformance[];
   agentLeaderboard: AgentPerformance[];
   skillGapData: SkillGapData[];
-  emotionData: {
-    positive: number;
-    neutral: number;
-    negative: number;
-    timeline: number[];
-  };
   dateRange?: {
     start: string;
     end: string;
@@ -26,7 +19,6 @@ export function ActionCoachingColumn({
   agentsNeedingAttention,
   agentLeaderboard,
   skillGapData,
-  emotionData,
   dateRange,
   onAgentClick
 }: ActionCoachingColumnProps) {
@@ -45,211 +37,9 @@ export function ActionCoachingColumn({
     return 'text-red-500';
   };
 
-  // Calculate date range and determine chart granularity
-  const getChartConfig = () => {
-    if (!dateRange?.start || !dateRange?.end) {
-      // Default: 24 hours
-      return {
-        granularity: 'hourly' as const,
-        label: '24 Hours',
-        xAxisLabel: 'Time (Hours)',
-        tooltipFormatter: (label: number) => `Hour: ${label}:00`,
-        dataKey: 'hour'
-      };
-    }
-
-    const start = new Date(dateRange.start);
-    const end = new Date(dateRange.end);
-    const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
-
-    if (diffDays <= 1) {
-      // Single day: Show hourly (24 hours)
-      return {
-        granularity: 'hourly' as const,
-        label: '24 Hours',
-        xAxisLabel: 'Time (Hours)',
-        tooltipFormatter: (label: number) => `Hour: ${label}:00`,
-        dataKey: 'hour'
-      };
-    } else if (diffDays <= 7) {
-      // Up to 7 days: Show daily
-      return {
-        granularity: 'daily' as const,
-        label: `${diffDays} Days`,
-        xAxisLabel: 'Date',
-        tooltipFormatter: (label: number) => {
-          const date = new Date(start);
-          date.setDate(date.getDate() + label);
-          return `Date: ${date.toLocaleDateString()}`;
-        },
-        dataKey: 'day'
-      };
-    } else if (diffDays <= 90) {
-      // Up to 3 months: Show weekly
-      const weeks = Math.ceil(diffDays / 7);
-      return {
-        granularity: 'weekly' as const,
-        label: `${weeks} Weeks`,
-        xAxisLabel: 'Week',
-        tooltipFormatter: (label: number) => `Week ${label + 1}`,
-        dataKey: 'week'
-      };
-    } else {
-      // More than 3 months: Show monthly
-      const months = Math.ceil(diffDays / 30);
-      return {
-        granularity: 'monthly' as const,
-        label: `${months} Months`,
-        xAxisLabel: 'Month',
-        tooltipFormatter: (label: number) => {
-          const date = new Date(start);
-          date.setMonth(date.getMonth() + label);
-          return `Month: ${date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`;
-        },
-        dataKey: 'month'
-      };
-    }
-  };
-
-  const chartConfig = getChartConfig();
-
-  // Transform timeline data based on granularity
-  const getChartData = () => {
-    const baseTimeline = emotionData.timeline;
-    
-    if (chartConfig.granularity === 'hourly') {
-      // Use original 24-hour timeline
-      return baseTimeline.map((v, i) => ({
-        [chartConfig.dataKey]: i,
-        emotion: v,
-        label: `${i}:00`
-      }));
-    } else if (chartConfig.granularity === 'daily') {
-      // Aggregate into daily averages
-      const days = Math.ceil((new Date(dateRange!.end).getTime() - new Date(dateRange!.start).getTime()) / (1000 * 60 * 60 * 24));
-      return Array.from({ length: Math.min(days, 30) }, (_, i) => ({
-        [chartConfig.dataKey]: i,
-        emotion: baseTimeline[i % baseTimeline.length] || 0.5,
-        label: `Day ${i + 1}`
-      }));
-    } else if (chartConfig.granularity === 'weekly') {
-      // Aggregate into weekly averages
-      const weeks = Math.ceil((new Date(dateRange!.end).getTime() - new Date(dateRange!.start).getTime()) / (1000 * 60 * 60 * 24 * 7));
-      return Array.from({ length: Math.min(weeks, 26) }, (_, i) => ({
-        [chartConfig.dataKey]: i,
-        emotion: baseTimeline[i % baseTimeline.length] || 0.5,
-        label: `Week ${i + 1}`
-      }));
-    } else {
-      // Monthly aggregation
-      const months = Math.ceil((new Date(dateRange!.end).getTime() - new Date(dateRange!.start).getTime()) / (1000 * 60 * 60 * 24 * 30));
-      return Array.from({ length: Math.min(months, 24) }, (_, i) => ({
-        [chartConfig.dataKey]: i,
-        emotion: baseTimeline[i % baseTimeline.length] || 0.5,
-        label: `Month ${i + 1}`
-      }));
-    }
-  };
-
-  const chartData = getChartData();
-
   return (
-    <div className="space-y-4 min-w-0 w-full">
-      {/* Customer Emotion Flow */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Customer Emotion Flow</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Summary Stats */}
-          <div className="grid grid-cols-3 gap-2">
-            <div className="text-center bg-green-500/10 rounded p-2 border border-green-500/20">
-              <p className="text-2xl font-bold text-green-500">{emotionData.positive}%</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Positive</p>
-            </div>
-            <div className="text-center bg-gray-500/10 rounded p-2 border border-gray-500/20">
-              <p className="text-2xl font-bold text-gray-400">{emotionData.neutral}%</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Neutral</p>
-            </div>
-            <div className="text-center bg-red-500/10 rounded p-2 border border-red-500/20">
-              <p className="text-2xl font-bold text-red-500">{emotionData.negative}%</p>
-              <p className="text-xs text-muted-foreground mt-0.5">Negative</p>
-            </div>
-          </div>
-
-          {/* Timeline Chart */}
-          <div className="pt-2 border-t border-white/10">
-            <p className="text-xs font-semibold text-muted-foreground mb-1">
-              Emotion Timeline ({chartConfig.label}):
-            </p>
-            <div className="h-40 relative">
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 transform -rotate-90 origin-center z-10">
-                <p className="text-xs text-muted-foreground whitespace-nowrap">Emotion Level</p>
-              </div>
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart 
-                  data={chartData}
-                  margin={{ top: 10, right: 10, left: 10, bottom: 30 }}
-                >
-                  <defs>
-                    <linearGradient id="emotionGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#b90abd" stopOpacity={0.4}/>
-                      <stop offset="100%" stopColor="#b90abd" stopOpacity={0.1}/>
-                    </linearGradient>
-                  </defs>
-                  <XAxis 
-                    dataKey={chartConfig.dataKey}
-                    stroke="#939394"
-                    fontSize={10}
-                    tick={{ fill: '#939394' }}
-                    axisLine={false}
-                    tickLine={false}
-                    interval={chartConfig.granularity === 'hourly' ? 2 : chartConfig.granularity === 'daily' ? 1 : chartConfig.granularity === 'weekly' ? 1 : 1}
-                  />
-                  <YAxis 
-                    stroke="#939394"
-                    fontSize={10}
-                    tick={{ fill: '#939394' }}
-                    axisLine={false}
-                    tickLine={false}
-                    domain={[0, 1]}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      background: 'rgba(1, 1, 1, 0.95)',
-                      border: '2px solid rgba(185, 10, 189, 0.4)',
-                      borderRadius: '12px',
-                      color: '#ffffff',
-                      boxShadow: 'none',
-                      padding: '8px 12px'
-                    }}
-                    itemStyle={{ color: '#ffffff' }}
-                    labelStyle={{ color: '#ffffff' }}
-                    formatter={(value: number) => {
-                      const emotion = value > 0.7 ? 'Very Positive' : value > 0.4 ? 'Neutral' : 'Negative';
-                      return [`${emotion} (${(value * 100).toFixed(0)}%)`, 'Emotion'];
-                    }}
-                    labelFormatter={(label) => chartConfig.tooltipFormatter(Number(label))}
-                  />
-                  <Area 
-                    type="monotone" 
-                    dataKey="emotion" 
-                    stroke="#b90abd" 
-                    strokeWidth={2}
-                    fill="url(#emotionGradient)" 
-                    dot={false}
-                    activeDot={{ r: 5, fill: '#b90abd', stroke: '#fff', strokeWidth: 2 }}
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-3 z-10">
-                <p className="text-xs text-muted-foreground whitespace-nowrap">{chartConfig.xAxisLabel}</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
+    <div className="flex flex-col h-full min-h-0 min-w-0 w-full">
+      <div className="flex-1 flex flex-col min-h-0 gap-4 overflow-hidden">
       {/* Agents Needing Attention */}
       <Card>
         <CardHeader>
@@ -334,16 +124,16 @@ export function ActionCoachingColumn({
         </CardContent>
       </Card>
 
-      {/* Team Skill Gap Matrix */}
-      <Card>
+      {/* Team Skill Gap Matrix - flex-1 extends upto High-Risk Calls */}
+      <Card className="flex-1 min-h-0 flex flex-col overflow-hidden">
         <CardHeader>
           <CardTitle className="text-lg">Team Skill Gap Matrix</CardTitle>
           <p className="text-xs text-muted-foreground mt-1">
             Compares current team performance vs. target goals. Shows where training is needed to reach excellence.
           </p>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="space-y-4 flex-shrink-0">
             {/* Legend */}
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-2">
@@ -355,9 +145,10 @@ export function ActionCoachingColumn({
                 <span className="text-muted-foreground">Target Goal</span>
               </div>
             </div>
+          </div>
 
-            {/* Skills List */}
-            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-2">
+          {/* Skills List - scrollbar, extends to end of card */}
+          <div className="space-y-3 flex-1 min-h-0 max-h-[700px] overflow-y-auto pr-2 pb-[60px] mt-8">
               {skillGapData.map((skill, idx) => {
                 const gap = skill.expected - skill.current;
                 const gapPercent = (gap / skill.expected) * 100;
@@ -446,10 +237,10 @@ export function ActionCoachingColumn({
                   </div>
                 );
               })}
-            </div>
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }

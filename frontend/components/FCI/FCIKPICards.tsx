@@ -119,7 +119,7 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
   };
 
   return (
-    <div className="p-4" style={{ backgroundColor: isDarkMode ? '#000000' : '#f8f9fa' }}>
+    <div className="p-4">
       <div className="flex gap-4">
         {/* Left Side - 4 KPI Cards in 2x2 grid */}
         <div className="flex-[2] grid grid-cols-2 gap-4">
@@ -284,7 +284,7 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                           ))}
                         </div>
                         {/* Legend */}
-                        <div className="flex flex-wrap gap-x-4 gap-y-1 mt-6">
+                        <div className="flex flex-nowrap gap-x-2 gap-y-1 mt-6">
                           {riskCategories.map((risk) => (
                             <div key={risk.key} className="flex items-center gap-1.5">
                               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: risk.color }} />
