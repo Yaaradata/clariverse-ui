@@ -153,11 +153,14 @@ function buildDayPlan(threads: EisenhowerThread[]): { tasks: DigestTask[]; stats
     };
   });
 
-  // Stats
-  const totalP1 = threads.filter(t => t.priority === 'P1').length;
-  const totalEscalated = threads.filter(t => t.escalation_count > 0).length;
+  // Stats — match Eisenhower Quadrant Distribution counts
+  const doCount = threads.filter(t => t.quadrant === 'do').length;
+  const scheduleCount = threads.filter(t => t.quadrant === 'schedule').length;
+  const delegateCount = threads.filter(t => t.quadrant === 'delegate').length;
+  const totalP1 = doCount;           // Critical P1 = Do quadrant
+  const totalEscalated = delegateCount;  // Escalated = Delegate quadrant
+  const slaAtRisk = scheduleCount;  // SLA at Risk = Schedule quadrant
   const avgSentiment = threads.length ? threads.reduce((s, t) => s + t.overall_sentiment, 0) / threads.length : 0;
-  const slaAtRisk = threads.filter(t => t.risk_score >= 70).length;
   const channelBreakdown = threads.reduce((acc, t) => {
     acc[t.channel] = (acc[t.channel] || 0) + 1;
     return acc;

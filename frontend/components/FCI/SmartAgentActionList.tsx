@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { AgentActionData, getCallTranscriptByAgentId, CallTranscript } from '@/lib/fci-lib/fciAdvancedData';
 import { 
   Search, ChevronDown, ChevronLeft, ChevronRight, Phone, Mail, MessageCircle, 
@@ -609,17 +610,14 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
   const closeModal = () => { setSelectedAgent(null); setSelectedCase(null); };
   const handleBackToAgent = () => { setSelectedCase(null); };
 
-  // Prevent background scrolling when modal is open
+  // Prevent background scrolling when modal is open; scroll viewport to top so modal is visible
   useEffect(() => {
     if (selectedAgent) {
-      // Disable body scroll
       document.body.style.overflow = 'hidden';
+      window.scrollTo({ top: 0, behavior: 'instant' });
     } else {
-      // Re-enable body scroll
       document.body.style.overflow = 'unset';
     }
-
-    // Cleanup function to restore scroll when component unmounts
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -666,7 +664,7 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
           </div>
       </div>
 
-        <div className="overflow-x-auto flex-1">
+        <div className="overflow-auto flex-1 min-h-0 max-h-[420px]">
         <table className="w-full text-sm table-fixed">
           <colgroup>
             <col style={{ width: '25%' }} />
@@ -722,14 +720,15 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
         </div>
       </div>
 
-      {/* MODAL POPUP */}
-      {selectedAgent && (
+      {/* MODAL POPUP - portaled to body to avoid main page scroll conflicts */}
+      {selectedAgent && createPortal(
         <>
           {/* Backdrop */}
-          <div className="fixed inset-0 z-50 animate-in fade-in duration-300" style={{ backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)' }} onClick={closeModal} />
+          <div className="fixed inset-0 z-[100] animate-in fade-in duration-300" style={{ backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.85)' : 'rgba(0, 0, 0, 0.7)', backdropFilter: 'blur(8px)' }} onClick={closeModal} />
 
           {/* Modal */}
-          <div className="fixed z-50 rounded-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col" style={{ top: '1rem', left: '1rem', right: '1rem', bottom: '1rem', backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`, boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.6)' }}>
+          <div className="fixed inset-0 z-[101] flex items-center justify-center p-4" aria-modal="true">
+            <div className="rounded-2xl overflow-hidden animate-in zoom-in-95 fade-in duration-300 flex flex-col w-full max-w-6xl h-[calc(100vh-2rem)]" style={{ backgroundColor: isDarkMode ? '#0d0d0d' : '#FFFFFF', border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`, boxShadow: '0 25px 80px -12px rgba(0, 0, 0, 0.6)' }}>
             
             {/* Modal Header */}
             <div className="p-6 border-b shrink-0" style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5', background: isDarkMode ? 'linear-gradient(135deg, #ef444410 0%, transparent 100%)' : 'linear-gradient(135deg, #ef444408 0%, transparent 100%)' }}>
@@ -874,9 +873,10 @@ export function SmartAgentActionList({ data, isDarkMode = false }: SmartAgentAct
         </div>
       )}
     </div>
+            </div>
           </div>
         </>
-      )}
+      , document.body)}
     </>
   );
 }

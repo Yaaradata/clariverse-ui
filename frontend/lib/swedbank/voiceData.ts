@@ -1015,26 +1015,39 @@ export function getTeamHeatmap(): IssueHeatmapData[] {
 
 export function getAgentLeaderboard(): AgentPerformance[] {
   const agents = [
-    { name: 'Sarah Johnson', id: 'agent_001' },
-    { name: 'Michael Chen', id: 'agent_002' },
-    { name: 'Emily Rodriguez', id: 'agent_003' },
-    { name: 'David Kim', id: 'agent_004' },
-    { name: 'Jessica Martinez', id: 'agent_005' },
-    { name: 'Robert Taylor', id: 'agent_006' },
-    { name: 'Amanda White', id: 'agent_007' },
-    { name: 'James Wilson', id: 'agent_008' }
+    { name: 'Sarah Johnson', id: 'agent_001', qaScore: 89.2, severity: 'medium' as const, issues: ['Rushed closure'] },
+    { name: 'Michael Chen', id: 'agent_002', qaScore: 92.3, severity: 'high' as const, issues: ['Tone inconsistency', 'Long pauses'] },
+    { name: 'Emily Rodriguez', id: 'agent_003', qaScore: 90.1, severity: 'medium' as const, issues: [] },
+    { name: 'David Kim', id: 'agent_004', qaScore: 88.5, severity: 'medium' as const, issues: ['Clarity of explanation'] },
+    { name: 'Jessica Martinez', id: 'agent_005', qaScore: 94.2, severity: 'low' as const, issues: [] },
+    { name: 'Robert Taylor', id: 'agent_006', qaScore: 91.0, severity: 'low' as const, issues: [] },
+    { name: 'Amanda White', id: 'agent_007', qaScore: 93.5, severity: 'low' as const, issues: [] },
+    { name: 'James Wilson', id: 'agent_008', qaScore: 87.8, severity: 'low' as const, issues: [] }
   ];
 
-  return agents.map((agent, idx) => ({
+  const orderForAttention = ['Michael Chen', 'David Kim', 'Sarah Johnson', 'Emily Rodriguez'];
+
+  return agents.map((agent) => ({
     agentId: agent.id,
     agentName: agent.name,
-    qaScore: 85 + Math.random() * 15,
+    qaScore: agent.qaScore,
     complianceScore: 88 + Math.random() * 12,
     aht: 280 + Math.random() * 120,
     sentimentHandling: 3.5 + Math.random() * 1.5,
-    issues: idx < 3 ? ['Tone inconsistency', 'Long pauses'] : [],
-    severity: idx < 2 ? 'high' as const : idx < 4 ? 'medium' as const : 'low' as const
-  })).sort((a, b) => b.qaScore - a.qaScore);
+    issues: agent.issues,
+    severity: agent.severity
+  })).sort((a, b) => {
+    const aNeedsAttention = a.severity !== 'low';
+    const bNeedsAttention = b.severity !== 'low';
+    if (aNeedsAttention && !bNeedsAttention) return -1;
+    if (!aNeedsAttention && bNeedsAttention) return 1;
+    if (aNeedsAttention && bNeedsAttention) {
+      const aOrder = orderForAttention.indexOf(a.agentName);
+      const bOrder = orderForAttention.indexOf(b.agentName);
+      return (aOrder === -1 ? 99 : aOrder) - (bOrder === -1 ? 99 : bOrder);
+    }
+    return b.qaScore - a.qaScore;
+  });
 }
 
 export function getHighRiskCalls(): HighRiskCall[] {

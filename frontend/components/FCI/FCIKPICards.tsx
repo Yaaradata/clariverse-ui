@@ -11,7 +11,6 @@ interface FCIKPICardsProps {
 
 export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [hoveredSegment, setHoveredSegment] = useState<{ label: string; score: number; percentage: number } | null>(null);
 
   const kpiData = {
     totalInteraction: {
@@ -68,6 +67,12 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
         hvlf: { label: 'High Value Low Freq', score: 72, color: '#06b6d4' },
         lvhf: { label: 'Low Value High Freq', score: 65, color: '#f59e0b' },
         lvlf: { label: 'Low Value Low Freq', score: 58, color: '#ef4444' }
+      },
+      segmentSentimentBreakdown: {
+        hvhf: { label: 'High Value High Freq', positive: 48, neutral: 35, negative: 17, positiveCount: 113, neutralCount: 83, negativeCount: 40 },
+        hvlf: { label: 'High Value Low Freq', positive: 40, neutral: 38, negative: 22, positiveCount: 94, neutralCount: 90, negativeCount: 52 },
+        lvhf: { label: 'Low Value High Freq', positive: 35, neutral: 40, negative: 25, positiveCount: 77, neutralCount: 88, negativeCount: 55 },
+        lvlf: { label: 'Low Value Low Freq', positive: 28, neutral: 38, negative: 34, positiveCount: 56, neutralCount: 76, negativeCount: 68 }
       }
     }
   };
@@ -120,9 +125,9 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
 
   return (
     <div className="p-4">
-      <div className="flex gap-4">
+      <div className="flex flex-nowrap gap-4 items-stretch min-w-0">
         {/* Left Side - 4 KPI Cards in 2x2 grid */}
-        <div className="flex-[2] grid grid-cols-2 gap-4">
+        <div className="flex-[2] min-w-0 grid grid-cols-2 gap-4">
             {/* Card 1 - Total Interaction */}
             <div 
               className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
@@ -298,7 +303,7 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                 </div>
 
                 <div>
-                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>TOP INTENT BY SEGMENT</p>
+                  <p className="text-[10px] font-bold mb-1" style={{ color: '#939394' }}>INTENT VOLUME BY SEGMENT</p>
                   <div className="grid grid-cols-4 gap-1.5">
                     {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
                       const segmentColors: Record<string, string> = {
@@ -340,7 +345,7 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
 
             {/* Sentiment */}
             <div 
-              className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
+              className="border rounded-xl p-3 cursor-pointer flex flex-col h-full"
               style={getCardStyle(hoveredCard === 'sentiment')}
               onMouseEnter={() => setHoveredCard('sentiment')}
               onMouseLeave={() => setHoveredCard(null)}
@@ -355,90 +360,55 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
               <div className="flex-1 flex flex-col justify-between">
                 <div>
                   <p className="text-xs font-bold mb-2" style={{ color: '#939394' }}>SENTIMENT BY SEGMENT</p>
-                  <div className="flex items-center justify-center">
-                    {/* Pie Chart */}
-                    <div className="relative">
-                      <svg width="90" height="90" viewBox="0 0 100 100">
-                        {(() => {
-                          const segments = Object.values(kpiData.customerSentiment.segmentSentiment);
-                          const total = segments.reduce((sum, s) => sum + s.score, 0);
-                          const overallSentiment = kpiData.customerSentiment.value; // 72%
-                          let currentAngle = -90;
-                          
-                          return segments.map((segment, idx) => {
-                            const piePercentage = (segment.score / total) * 100;
-                            // Calculate weighted contribution to overall sentiment
-                            const weightedPercentage = (segment.score / total) * overallSentiment;
-                            const angle = (piePercentage / 100) * 360;
-                            const startAngle = currentAngle;
-                            const endAngle = currentAngle + angle;
-                            currentAngle = endAngle;
-                            
-                            const startRad = (startAngle * Math.PI) / 180;
-                            const endRad = (endAngle * Math.PI) / 180;
-                            const largeArc = angle > 180 ? 1 : 0;
-                            
-                            const x1 = 50 + 40 * Math.cos(startRad);
-                            const y1 = 50 + 40 * Math.sin(startRad);
-                            const x2 = 50 + 40 * Math.cos(endRad);
-                            const y2 = 50 + 40 * Math.sin(endRad);
-                            
-                            return (
-                              <path
-                                key={idx}
-                                d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArc} 1 ${x2} ${y2} Z`}
-                                fill={segment.color}
-                                stroke={isDarkMode ? '#0d0d0d' : '#FFFFFF'}
-                                strokeWidth="1"
-                                className="cursor-pointer transition-opacity duration-200 hover:opacity-80"
-                                onMouseEnter={() => setHoveredSegment({ label: segment.label, score: segment.score, percentage: Math.round(weightedPercentage * 10) / 10 })}
-                                onMouseLeave={() => setHoveredSegment(null)}
-                              />
-                            );
-                          });
-                        })()}
-                        <circle cx="50" cy="50" r="22" fill={isDarkMode ? '#0d0d0d' : '#FFFFFF'} />
-                        {hoveredSegment && (
-                          <text x="50" y="55" textAnchor="middle" fontSize="12" fontWeight="bold" fill={isDarkMode ? '#FFFFFF' : '#010101'}>
-                            {hoveredSegment.percentage}%
-                          </text>
-                        )}
-                      </svg>
-                    </div>
-                    {/* Legend */}
-                    <div className="ml-3 space-y-1">
-                      {Object.entries(kpiData.customerSentiment.segmentSentiment).map(([key, segment]) => {
-                        const segments = Object.values(kpiData.customerSentiment.segmentSentiment);
-                        const total = segments.reduce((sum, s) => sum + s.score, 0);
-                        const overallSentiment = kpiData.customerSentiment.value;
-                        const weightedPercentage = Math.round(((segment.score / total) * overallSentiment) * 10) / 10;
-                        return (
+                  <div className="space-y-2">
+                    {Object.entries(kpiData.customerSentiment.segmentSentimentBreakdown).map(([key, breakdown]) => {
+                      const total = breakdown.positive + breakdown.neutral + breakdown.negative || 1;
+                      const posPct = (breakdown.positive / total) * 100;
+                      const neuPct = (breakdown.neutral / total) * 100;
+                      const negPct = (breakdown.negative / total) * 100;
+                      const b = breakdown as typeof breakdown & { positiveCount?: number; neutralCount?: number; negativeCount?: number };
+                      const posCount = b.positiveCount ?? breakdown.positive;
+                      const neuCount = b.neutralCount ?? breakdown.neutral;
+                      const negCount = b.negativeCount ?? breakdown.negative;
+                      const segmentColors: Record<string, string> = {
+                        hvhf: '#10b981',
+                        hvlf: '#06b6d4',
+                        lvhf: '#f59e0b',
+                        lvlf: '#ef4444'
+                      };
+                      return (
+                        <div key={key} className="space-y-1">
+                          <span className="text-[10px] block font-medium" style={{ color: segmentColors[key] ?? '#939394' }}>{breakdown.label}</span>
                           <div 
-                            key={key} 
-                            className="flex items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity"
-                            onMouseEnter={() => setHoveredSegment({ label: segment.label, score: segment.score, percentage: weightedPercentage })}
-                            onMouseLeave={() => setHoveredSegment(null)}
+                            className="flex h-4 rounded-full overflow-hidden"
+                            style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f0f0f0' }}
+                            title={`Positive ${breakdown.positive}% (${posCount}) · Neutral ${breakdown.neutral}% (${neuCount}) · Negative ${breakdown.negative}% (${negCount})`}
                           >
-                            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: segment.color }} />
-                            <span className="text-[10px]" style={{ color: hoveredSegment?.label === segment.label ? segment.color : '#939394' }}>
-                              {segment.label}
-                            </span>
+                            <div className="h-full flex items-center justify-center shrink-0" style={{ width: `${posPct}%`, backgroundColor: '#34d399', boxShadow: '0 0 6px rgba(52,211,153,0.4)', minWidth: posPct > 0 ? '2px' : 0 }}>
+                              {posPct >= 8 && <span className="text-[9px] font-bold text-black" style={{ textShadow: '0 0 4px #fff' }}>{posCount}</span>}
+                            </div>
+                            <div className="h-full flex items-center justify-center shrink-0" style={{ width: `${neuPct}%`, backgroundColor: '#fbbf24', boxShadow: '0 0 6px rgba(251,191,36,0.4)', minWidth: neuPct > 0 ? '2px' : 0 }}>
+                              {neuPct >= 8 && <span className="text-[9px] font-bold text-black" style={{ textShadow: '0 0 4px #fff' }}>{neuCount}</span>}
+                            </div>
+                            <div className="h-full flex items-center justify-center shrink-0" style={{ width: `${negPct}%`, backgroundColor: '#ff073a', boxShadow: '0 0 8px #ff073a', minWidth: negPct > 0 ? '2px' : 0 }}>
+                              {negPct >= 8 && <span className="text-[9px] font-bold text-white" style={{ textShadow: '0 0 4px #000' }}>{negCount}</span>}
+                            </div>
                           </div>
-                        );
-                      })}
-                    </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 mt-2">
                   <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <p className="text-[10px] font-bold" style={{ color: '#10b981' }}>POSITIVE</p>
+                    <p className="text-[10px] font-bold" style={{ color: '#34d399' }}>POSITIVE</p>
                     <p className="text-[10px]" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
                       {kpiData.customerSentiment.positiveTopics.join(' • ')}
                     </p>
                   </div>
                   <div className="p-2 rounded-lg" style={{ backgroundColor: isDarkMode ? '#1f1f1f' : '#f8f9fa' }}>
-                    <p className="text-[10px] font-bold" style={{ color: '#ef4444' }}>NEGATIVE</p>
+                    <p className="text-[10px] font-bold" style={{ color: '#f87171' }}>NEGATIVE</p>
                     <p className="text-[10px]" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
                       {kpiData.customerSentiment.negativeTopics.join(' • ')}
                     </p>
@@ -449,7 +419,7 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
         </div>
 
         {/* Right Side - AI Summary Wall */}
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <AISummaryWall isDarkMode={isDarkMode} />
         </div>
       </div>

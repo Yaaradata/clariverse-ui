@@ -62,6 +62,8 @@ export interface CrossChannelActionGridEntry {
   avgDelayHours: number;
   /** Delay in seconds — used for Receive, Authenticate, Resolution stages. When set, display uses seconds. */
   avgDelaySeconds?: number;
+  /** When true, cell is shown but time value is hidden. */
+  hideDelay?: boolean;
   pendingFromCompany: number;
   sentiment: number;
   urgencyRatio: number;
@@ -746,6 +748,37 @@ export async function fetchCrossChannelActionGrid(): Promise<CrossChannelActionG
   const channels: ChannelKey[] = ["email", "chat", "ticket", "social", "voice"];
   const entries = stages.flatMap((stage, stageIndex) =>
     channels.map((channel, channelIndex) => {
+      // Voice overrides: Receive = hide time only, Authenticate = 0.2h, Resolution = 5.2h
+      if (channel === "voice") {
+        if (stage === "Receive")
+          return {
+            stage,
+            channel,
+            avgDelayHours: 0,
+            hideDelay: true,
+            pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+            sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+            urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+          };
+        if (stage === "Authenticate")
+          return {
+            stage,
+            channel,
+            avgDelayHours: 0.2,
+            pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+            sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+            urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+          };
+        if (stage === "Resolution")
+          return {
+            stage,
+            channel,
+            avgDelayHours: 5.2,
+            pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+            sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+            urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+          };
+      }
       const isSecondsStage = stageIndex <= 2; // Receive, Authenticate, Resolution
       const useSecondsForVoiceOnly = isSecondsStage && channel === "voice";
       if (useSecondsForVoiceOnly) {

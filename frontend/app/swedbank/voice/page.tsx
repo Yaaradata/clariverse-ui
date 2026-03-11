@@ -236,8 +236,8 @@ export default function VoiceTranscript() {
       {/* KPI Ribbon */}
       <KPIRibbon data={kpiData} />
 
-      {/* Main Dashboard Grid */}
-      <div className="grid grid-cols-[minmax(0,28fr)_minmax(0,50fr)_minmax(0,22fr)] gap-4 items-stretch w-full max-w-[1600px] mx-auto overflow-x-hidden">
+      {/* Main Dashboard Grid - 2 columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch w-full max-w-[1600px] mx-auto overflow-x-hidden">
         {/* Left Column - Team Health */}
         <TeamHealthColumn
           qaScore={teamHealthData.qaScore}
@@ -249,7 +249,7 @@ export default function VoiceTranscript() {
           dateRange={dateRange}
         />
 
-        {/* Center Column - Core Intelligence */}
+        {/* Right Column - Core Intelligence */}
         <CoreIntelligenceColumn
           highRiskCalls={highRiskCalls}
           issueHeatmap={issueHeatmap}
@@ -257,8 +257,10 @@ export default function VoiceTranscript() {
           onCallClick={handleCallClick}
           onAgentClick={handleAgentClick}
         />
+      </div>
 
-        {/* Right Column - Action & Coaching */}
+      {/* Agents Needing Attention & Team Skill Gap Matrix - 2 columns at bottom */}
+      <div className="w-full max-w-[1600px] mx-auto">
         <ActionCoachingColumn
           agentsNeedingAttention={agentsNeedingAttention}
           agentLeaderboard={agentLeaderboard}

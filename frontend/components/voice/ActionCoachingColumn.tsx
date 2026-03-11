@@ -2,11 +2,11 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AgentPerformance, SkillGapData } from '@/lib/voiceData';
-import { AlertCircle, TrendingUp, TrendingDown, User } from 'lucide-react';
+import { AlertCircle, User } from 'lucide-react';
 
 interface ActionCoachingColumnProps {
   agentsNeedingAttention: AgentPerformance[];
-  agentLeaderboard: AgentPerformance[];
+  agentLeaderboard?: AgentPerformance[]; // Kept for backward compatibility with other voice pages
   skillGapData: SkillGapData[];
   dateRange?: {
     start: string;
@@ -17,9 +17,7 @@ interface ActionCoachingColumnProps {
 
 export function ActionCoachingColumn({
   agentsNeedingAttention,
-  agentLeaderboard,
   skillGapData,
-  dateRange,
   onAgentClick
 }: ActionCoachingColumnProps) {
   const getSeverityColor = (severity: string) => {
@@ -38,8 +36,7 @@ export function ActionCoachingColumn({
   };
 
   return (
-    <div className="flex flex-col h-full min-h-0 min-w-0 w-full">
-      <div className="flex-1 flex flex-col min-h-0 gap-4 overflow-hidden">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 w-full">
       {/* Agents Needing Attention */}
       <Card>
         <CardHeader>
@@ -48,7 +45,7 @@ export function ActionCoachingColumn({
             Agents Needing Attention
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3 max-h-[400px] overflow-y-auto">
+        <CardContent className="space-y-3 max-h-[340px] overflow-y-auto">
           {agentsNeedingAttention.filter(a => a.severity !== 'low').map((agent) => (
             <Card
               key={agent.agentId}
@@ -85,70 +82,31 @@ export function ActionCoachingColumn({
         </CardContent>
       </Card>
 
-      {/* Agent Performance Snapshot */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Performance Snapshot</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            <div className="text-xs text-muted-foreground grid grid-cols-5 gap-1 mb-2">
-              <div>Agent</div>
-              <div className="text-center">QA</div>
-              <div className="text-center">Comp</div>
-              <div className="text-center">AHT</div>
-              <div className="text-center">Sent</div>
-            </div>
-            {agentLeaderboard.slice(0, 5).map((agent) => (
-              <div
-                key={agent.agentId}
-                className="grid grid-cols-5 gap-1 text-xs p-2 rounded hover:bg-white/5 cursor-pointer transition-colors"
-                onClick={() => onAgentClick(agent.agentId)}
-              >
-                <div className="truncate text-white">{agent.agentName.split(' ')[0]}</div>
-                <div className={`text-center font-semibold ${getScoreColor(agent.qaScore)}`}>
-                  {agent.qaScore.toFixed(0)}
-                </div>
-                <div className={`text-center font-semibold ${getScoreColor(agent.complianceScore)}`}>
-                  {agent.complianceScore.toFixed(0)}
-                </div>
-                <div className={`text-center ${agent.aht > 350 ? 'text-red-500' : 'text-green-500'}`}>
-                  {Math.round(agent.aht)}s
-                </div>
-                <div className={`text-center ${agent.sentimentHandling >= 4 ? 'text-green-500' : agent.sentimentHandling >= 3 ? 'text-yellow-500' : 'text-red-500'}`}>
-                  {agent.sentimentHandling.toFixed(1)}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Team Skill Gap Matrix - flex-1 extends upto High-Risk Calls */}
-      <Card className="flex-1 min-h-0 flex flex-col overflow-hidden">
-        <CardHeader>
-          <CardTitle className="text-lg">Team Skill Gap Matrix</CardTitle>
-          <p className="text-xs text-muted-foreground mt-1">
-            Compares current team performance vs. target goals. Shows where training is needed to reach excellence.
+      {/* Team Skill Gap Matrix */}
+      <Card className="flex flex-col overflow-hidden max-h-[420px]">
+        <CardHeader className="py-3">
+          <CardTitle className="text-base">Team Skill Gap Matrix</CardTitle>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Current vs target. Training needed where gaps exist.
           </p>
         </CardHeader>
-        <CardContent className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <div className="space-y-4 flex-shrink-0">
+        <CardContent className="flex-1 min-h-0 flex flex-col overflow-hidden py-3 pt-0">
+          <div className="flex-shrink-0">
             {/* Legend */}
             <div className="flex items-center gap-4 text-xs">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-3 rounded bg-gradient-to-r from-[#b90abd] to-[#5332ff]"></div>
-                <span className="text-muted-foreground">Current Performance</span>
+                <div className="w-6 h-2 rounded bg-gradient-to-r from-[#b90abd] to-[#5332ff]"></div>
+                <span className="text-muted-foreground">Current</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-8 h-3 rounded bg-gray-600"></div>
-                <span className="text-muted-foreground">Target Goal</span>
+                <div className="w-6 h-2 rounded bg-gray-600"></div>
+                <span className="text-muted-foreground">Target</span>
               </div>
             </div>
           </div>
 
-          {/* Skills List - scrollbar, extends to end of card */}
-          <div className="space-y-3 flex-1 min-h-0 max-h-[700px] overflow-y-auto pr-2 pb-[60px] mt-8">
+          {/* Skills List - scrollbar */}
+          <div className="space-y-2 flex-1 min-h-0 max-h-[280px] overflow-y-auto pr-2 mt-3">
               {skillGapData.map((skill, idx) => {
                 const gap = skill.expected - skill.current;
                 const gapPercent = (gap / skill.expected) * 100;
@@ -157,81 +115,40 @@ export function ActionCoachingColumn({
                 const isModerate = gapPercent > 5 && gapPercent <= 10;
                 
                 return (
-                  <div key={idx} className="space-y-2 p-3 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-colors">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-white">{skill.skill}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {skill.skill === 'Empathy' && 'Ability to understand and respond to customer emotions'}
-                          {skill.skill === 'Product Knowledge' && 'Understanding of banking products and services'}
-                          {skill.skill === 'Fraud Handling' && 'Expertise in detecting and handling fraud cases'}
-                          {skill.skill === 'Clarity of Explanation' && 'How clearly agents explain complex information'}
-                          {skill.skill === 'Process Accuracy' && 'Following correct procedures and workflows'}
-                          {skill.skill === 'Listening Skill' && 'Active listening and understanding customer needs'}
-                          {skill.skill === 'Tone Stability' && 'Consistent professional tone throughout calls'}
-                        </p>
-                      </div>
-                      <div className="text-right ml-4">
-                        <p className="text-sm font-bold text-white">
-                          {skill.current}<span className="text-muted-foreground">/{skill.expected}</span>
-                        </p>
-                        <p className="text-xs text-muted-foreground">{currentPercent.toFixed(0)}% of target</p>
-                      </div>
+                  <div key={idx} className="space-y-1.5 p-2 bg-white/5 rounded-lg border border-white/10 hover:border-white/20 transition-colors">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-xs font-semibold text-white">{skill.skill}</p>
+                      <span className="text-xs font-bold text-white shrink-0">{skill.current}<span className="text-muted-foreground">/{skill.expected}</span> <span className="text-muted-foreground">({currentPercent.toFixed(0)}%)</span></span>
                     </div>
                     
                     {/* Progress Bars */}
-                    <div className="space-y-2">
+                    <div className="space-y-1">
                       <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-muted-foreground">Current: {skill.current} points</span>
-                          <span className="text-white font-semibold">{currentPercent.toFixed(1)}%</span>
-                        </div>
-                        <div className="h-3 bg-gray-800 rounded-full overflow-hidden">
+                        <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
                           <div 
                             className="h-full bg-gradient-to-r from-[#b90abd] to-[#5332ff] transition-all" 
                             style={{ width: `${currentPercent}%` }} 
                           />
                         </div>
                       </div>
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="text-muted-foreground">Target: {skill.expected} points</span>
-                          <span className="text-muted-foreground">100%</span>
-                        </div>
-                        <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-                          <div className="h-full bg-gray-600" style={{ width: '100%' }} />
-                        </div>
-                      </div>
                     </div>
 
                     {/* Gap Information */}
                     {gap > 0 && (
-                      <div className={`pt-2 border-t border-white/10 ${isCritical ? 'bg-red-500/10' : isModerate ? 'bg-orange-500/10' : 'bg-yellow-500/10'} rounded p-2`}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            {isCritical && <span className="text-red-400">🔴</span>}
-                            {isModerate && <span className="text-orange-400">🟡</span>}
-                            {!isCritical && !isModerate && <span className="text-yellow-400">🟢</span>}
-                            <span className="text-xs font-semibold text-white">
-                              Gap: {gap.toFixed(1)} points ({gapPercent.toFixed(1)}% below target)
-                            </span>
-                          </div>
+                      <div className={`pt-1 border-t border-white/10 ${isCritical ? 'bg-red-500/10' : isModerate ? 'bg-orange-500/10' : 'bg-yellow-500/10'} rounded px-2 py-1`}>
+                        <div className="flex items-center gap-2">
+                          {isCritical && <span className="text-red-400 text-xs">🔴</span>}
+                          {isModerate && <span className="text-orange-400 text-xs">🟡</span>}
+                          {!isCritical && !isModerate && <span className="text-yellow-400 text-xs">🟢</span>}
+                          <span className="text-xs text-white">
+                            Gap {gap.toFixed(0)} pts ({gapPercent.toFixed(0)}% below)
+                          </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {isCritical 
-                            ? '⚠️ Critical gap - Priority training needed'
-                            : isModerate
-                            ? 'Training recommended to close gap'
-                            : 'Minor gap - Monitor and provide feedback'}
-                        </p>
                       </div>
                     )}
                     {gap === 0 && (
-                      <div className="pt-2 border-t border-white/10 bg-green-500/10 rounded p-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-green-400">✓</span>
-                          <span className="text-xs font-semibold text-green-400">Target achieved!</span>
-                        </div>
+                      <div className="pt-1 border-t border-white/10 bg-green-500/10 rounded px-2 py-1">
+                        <span className="text-xs font-semibold text-green-400">✓ Target achieved</span>
                       </div>
                     )}
                   </div>
@@ -240,7 +157,6 @@ export function ActionCoachingColumn({
           </div>
         </CardContent>
       </Card>
-      </div>
     </div>
   );
 }

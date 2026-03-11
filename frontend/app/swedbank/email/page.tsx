@@ -35,7 +35,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RefreshCw, Target, AlertCircle, CheckCircle, Clock, ArrowUpRight, ArrowRight, Bot, Wand2, Zap, MessageSquare } from 'lucide-react';
-import Link from 'next/link';
 
 export default function EmailDashboard() {
   // Data states
@@ -388,53 +387,6 @@ export default function EmailDashboard() {
               <span className="text-lg">✨</span>
               AI-powered insights for email threads, priorities, and team performance
             </p>
-            <div className="flex items-center gap-2 mt-3">
-              <Link href="/swedbank/email">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-indigo-600/10 border-indigo-500/30 text-indigo-300 hover:bg-indigo-600/20 border-2"
-                >
-                  📊 Executive Summary
-                </Button>
-              </Link>
-              <Link href="/swedbank/email/executive">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
-                >
-                  🧭 Executive Cockpit
-                </Button>
-              </Link>
-              <Link href="/swedbank/email/manager">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-[#b90abd]/10 border-[#b90abd]/30 text-[#b90abd] hover:bg-[#b90abd]/20"
-                >
-                  ⚙️ Manager View
-                </Button>
-              </Link>
-              <Link href="/swedbank/email/finance">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-green-600/10 border-green-500/30 text-green-300 hover:bg-green-600/20"
-                >
-                  🧑‍💼 Finance View
-                </Button>
-              </Link>
-              <Link href="/swedbank/email/ops">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="bg-yellow-600/10 border-yellow-500/30 text-yellow-300 hover:bg-yellow-600/20"
-                >
-                  🧑‍💼 Ops View
-                </Button>
-              </Link>
-            </div>
           </div>
           <div className="flex flex-col gap-3">
             {/* AI Insights Button */}

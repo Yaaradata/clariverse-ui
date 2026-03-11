@@ -139,9 +139,11 @@ export function UnifiedIntelligenceWall({ actionGrid }: UnifiedIntelligenceWallP
                                 : entry.avgDelayHours * 3600;
                             const score = delayForScore * Math.max(0.01, entry.pendingFromCompany);
                             const isSecondsStage = stagesInSeconds.has(stage);
-                            const displayValue = isSecondsStage && entry.avgDelaySeconds != null
-                              ? `${entry.avgDelaySeconds.toFixed(1)}s`
-                              : `${entry.avgDelayHours.toFixed(1)}h`;
+                            const displayValue = entry.hideDelay
+                              ? ""
+                              : isSecondsStage && entry.avgDelaySeconds != null
+                                ? `${entry.avgDelaySeconds.toFixed(1)}s`
+                                : `${entry.avgDelayHours.toFixed(1)}h`;
                             return (
                               <div
                                 key={`${stage}-${channel}`}

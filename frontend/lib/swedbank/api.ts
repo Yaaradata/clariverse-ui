@@ -539,9 +539,12 @@ function generateMockEisenhowerThreads(): EisenhowerThread[] {
     // Update counter
     quadrantCounts[quadrant]++;
 
+    const baseSubject = subjects[i % subjects.length];
+    const subject_norm = (isDoQuadrant && channel === 'email') ? 'Mortgage Lock Inquiry' : baseSubject;
+
     threads.push({
       thread_id: `thread_${i + 1}`,
-      subject_norm: subjects[i % subjects.length],
+      subject_norm,
       channel,
       participants: [
         {

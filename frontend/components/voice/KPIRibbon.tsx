@@ -10,7 +10,6 @@ interface KPIRibbonProps {
 }
 
 export function KPIRibbon({ data }: KPIRibbonProps) {
-  const e = data.enrichment;
   const complianceCategories = Object.values(data.euComplianceScore.byRegulation);
   const primaryComplianceCategory = complianceCategories[0];
   const complianceTrend = primaryComplianceCategory && primaryComplianceCategory.trend.length > 1
@@ -28,19 +27,8 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
       value: data.overallTeamQAScore.value.toFixed(1),
       unit: '%',
       trend: data.overallTeamQAScore.trend[6] > data.overallTeamQAScore.trend[0] ? 'up' : 'down',
-      subtitle: e?.teamQAScore
-        ? `+${e.teamQAScore.vsLastWeek}% vs last week`
-        : null,
-      tooltipExtra: e?.teamQAScore ? (
-        <>
-          <p className="text-xs text-green-400 mt-2 pt-2 border-t border-white/20">
-            Top improvement: {e.teamQAScore.topImprovement}
-          </p>
-          <p className="text-xs text-amber-400">
-            Weak area: {e.teamQAScore.weakArea}
-          </p>
-        </>
-      ) : null
+      subtitle: null,
+      tooltipExtra: null
     },
     {
       label: 'Compliance Score',
@@ -48,19 +36,8 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
       value: data.euComplianceScore.overallScore.toFixed(1),
       unit: '%',
       trend: complianceTrend,
-      subtitle: e?.complianceScore
-        ? `+${e.complianceScore.vsLastWeek}% vs last week`
-        : null,
-      tooltipExtra: e?.complianceScore ? (
-        <>
-          <p className="text-xs text-green-400 mt-2 pt-2 border-t border-white/20">
-            Strongest: {e.complianceScore.strongestRegulation}
-          </p>
-          <p className="text-xs text-amber-400">
-            Needs attention: {e.complianceScore.needsAttention}
-          </p>
-        </>
-      ) : null
+      subtitle: null,
+      tooltipExtra: null
     },
     {
       label: 'Customer Emotion',
@@ -68,24 +45,8 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
       value: data.customerEmotionIndex.value.toFixed(1),
       unit: ' /5',
       trend: data.customerEmotionIndex.trend[6] < data.customerEmotionIndex.trend[0] ? 'up' : 'down',
-      subtitle: e?.customerEmotion
-        ? `Pos: ${e.customerEmotion.positive}% · Neu: ${e.customerEmotion.neutral}% · Neg: ${e.customerEmotion.negative}%`
-        : null,
-      tooltipExtra: e?.customerEmotion ? (
-        <>
-          <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-white/20">
-            Positive: {e.customerEmotion.positive}% · Neutral: {e.customerEmotion.neutral}% · Negative: {e.customerEmotion.negative}%
-          </p>
-          <p className="text-xs text-amber-400 mt-1">
-            Most negative call types:
-          </p>
-          <ul className="text-xs text-muted-foreground list-disc list-inside">
-            {e.customerEmotion.mostNegativeCallTypes.map((t, i) => (
-              <li key={i}>{t}</li>
-            ))}
-          </ul>
-        </>
-      ) : null
+      subtitle: null,
+      tooltipExtra: null
     },
     {
       label: 'High-Risk Calls',
@@ -93,19 +54,8 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
       value: data.highRiskCallsCount.value.toString(),
       unit: '',
       trend: data.highRiskCallsCount.trend,
-      subtitle: e?.highRiskCalls
-        ? `${e.highRiskCalls.vsLastWeek >= 0 ? '+' : ''}${e.highRiskCalls.vsLastWeek} vs last week`
-        : null,
-      tooltipExtra: e?.highRiskCalls ? (
-        <>
-          <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-white/20">
-            Top risk category: {e.highRiskCalls.topRiskCategory}
-          </p>
-          <p className="text-xs text-amber-400">
-            Top agent involved: {e.highRiskCalls.topAgentInvolved}
-          </p>
-        </>
-      ) : null
+      subtitle: null,
+      tooltipExtra: null
     },
     {
       label: 'Escalation Risk',
@@ -113,19 +63,8 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
       value: data.escalationRiskScore.value.toFixed(1),
       unit: '%',
       trend: 'down' as const,
-      subtitle: e?.escalationRisk
-        ? `${e.escalationRisk.agentsAtRisk} agents at risk`
-        : null,
-      tooltipExtra: e?.escalationRisk ? (
-        <>
-          <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-white/20">
-            vs last week: {e.escalationRisk.vsLastWeek >= 0 ? '+' : ''}{e.escalationRisk.vsLastWeek}%
-          </p>
-          <p className="text-xs text-amber-400">
-            Top cause: {e.escalationRisk.topCause}
-          </p>
-        </>
-      ) : null
+      subtitle: null,
+      tooltipExtra: null
     },
     {
       label: 'Total Calls',
@@ -133,22 +72,8 @@ export function KPIRibbon({ data }: KPIRibbonProps) {
       value: data.totalCallsHandled.value.toString(),
       unit: ' calls',
       trend: 'up' as const,
-      subtitle: e?.totalCalls
-        ? `Peak: ${e.totalCalls.peakHour}`
-        : null,
-      tooltipExtra: e?.totalCalls ? (
-        <>
-          <p className="text-xs text-muted-foreground mt-2 pt-2 border-t border-white/20">
-            Peak hour: {e.totalCalls.peakHour}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Top call reason: {e.totalCalls.topCallReason}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Avg daily: {e.totalCalls.avgDailyVolume} calls
-          </p>
-        </>
-      ) : null
+      subtitle: null,
+      tooltipExtra: null
     }
   ];
 

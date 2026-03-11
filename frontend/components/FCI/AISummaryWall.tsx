@@ -45,8 +45,8 @@ export const fciInsightsData: FCIInsight[] = [
     id: 'FCI-001',
     severity: 'info',
     category: 'product-update',
-    title: 'High Volume Surge - Atmos Credit Card',
-    message: 'Significant increase in inquiries due to new Atmos Credit Card launch - 2,340 calls today about card features and eligibility',
+    title: 'High Volume Surge - Platinum Credit Card',
+    message: 'Significant increase in inquiries due to new Platinum Credit Card launch - 2,340 calls today about card features and eligibility',
     trend: 'up',
     change: 156,
     metrics: {
@@ -104,10 +104,10 @@ export const fciInsightsData: FCIInsight[] = [
 
 export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
   'FCI-001': {
-    rootCause: 'New Atmos Credit Card launched with premium cashback rewards driving high customer interest. Marketing campaign exceeded projections by 3x, resulting in call volume surge. Agents need updated product knowledge to handle feature and eligibility inquiries.',
+    rootCause: 'New Platinum Credit Card launched with premium cashback rewards driving high customer interest. Marketing campaign exceeded projections by 3x, resulting in call volume surge. Agents need updated product knowledge to handle feature and eligibility inquiries.',
     affectedAreas: ['Card Services', 'Call Center', 'Product Knowledge', 'Marketing Alignment', 'Digital Channels'],
     recommendedActions: [
-      'Deploy Atmos Credit Card quick reference guide to all agents immediately',
+      'Deploy Platinum Credit Card quick reference guide to all agents immediately',
       'Add dedicated IVR option for Atmos Card inquiries to reduce wait times',
       'Enable self-service eligibility checker on mobile app and website',
       'Schedule additional agent shifts for next 2 weeks to handle surge',
@@ -309,11 +309,11 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
         boxShadow: isDarkMode 
           ? '0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
           : '0 4px 24px rgba(0, 0, 0, 0.06)',
-        height: '615px'
+        height: '650px'
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-5 flex-shrink-0">
+      <div className="flex items-center justify-between mb-5 flex-shrink-0 py-2 px-2">
         <div className="flex items-center gap-3">
           <span className="text-2xl">✨</span>
           <div>
@@ -341,7 +341,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
       </div>
 
       {/* Scrollable Content Area - includes both detail view and insights list */}
-      <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin relative" style={{ 
+      <div className="flex-1 overflow-y-auto py-2 pr-2 scrollbar-thin relative" style={{ 
         scrollbarWidth: 'thin',
         scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5',
         minHeight: 0
