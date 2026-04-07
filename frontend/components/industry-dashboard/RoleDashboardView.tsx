@@ -24,11 +24,14 @@ import { CardOpsDashboard } from "./CardOpsDashboard";
 import {
   T,
   ROLE_DATA,
+  LOB_DATA,
+  LOB_DRILL_KPIS,
   type Industry,
   type Role,
   type RoleDashboardData,
   type ScreenId,
   type LensId,
+  type LobDataEntry,
 } from "@/lib/industry-dashboard/registry";
 type BadgeColor = "red" | "amber" | "green" | "teal" | "purple" | "blue" | "gold" | "cyan";
 
@@ -46,7 +49,7 @@ function Sec({ title, sub, action, children }: { title: string; sub?: ReactNode;
 
 const SCREENS: { id: ScreenId; label: string; sub: string; icon: LucideIcon }[] = [
   { id: 1, label: "Executive View", sub: "Promise · Stability · Risk", icon: HomeIcon },
-  { id: 2, label: "LOB View", sub: "Business KPIs + AI Insights", icon: Grid },
+  { id: 2, label: "LOB / Industry Filter", sub: "Business Context + KPIs", icon: Grid },
   { id: 3, label: "KPI Signals", sub: "CX · Ops · Risk · Compliance", icon: Activity },
   { id: 4, label: "Functional Lens", sub: "Operations / Risk / Compliance", icon: Layers },
   { id: 5, label: "Root Cause + Action", sub: "Signal → Cause → Action", icon: Crosshair },
@@ -56,6 +59,9 @@ function Screen1({ data, goTo }: { data: RoleDashboardData; goTo: (n: ScreenId) 
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ background: T.cyanGlow, border: `1px solid ${T.cyan}20`, borderRadius: 10, padding: "10px 16px", fontSize: 12, color: T.cyan }}>
+        <strong>Unified Executive View</strong> — this screen provides a consolidated view across the entire business. LOB / Industry drill-down begins at Screen 2.
+      </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
         {data.tiles.map((tile, i) => {
           const Icon = tile.icon; const sc = gC(tile.score);
@@ -85,25 +91,58 @@ function Screen1({ data, goTo }: { data: RoleDashboardData; goTo: (n: ScreenId) 
           );
         })}
       </div>
-      <div style={{ textAlign: "center", fontSize: 12, color: T.textMut }}><ArrowDown size={14} color={T.cyan} style={{ verticalAlign: "middle", marginRight: 6 }}/>Click any tile to drill into <strong style={{ color: T.cyan }}>Screen 2: LOB View</strong></div>
+      <div style={{ textAlign: "center", fontSize: 12, color: T.textMut }}><ArrowDown size={14} color={T.cyan} style={{ verticalAlign: "middle", marginRight: 6 }}/>Click any tile to drill into <strong style={{ color: T.cyan }}>Screen 2: LOB / Industry Filter</strong></div>
     </div>
   );
 }
 
-function Screen2({ data, goTo }: { data: RoleDashboardData; goTo: (n: ScreenId) => void }) {
+function Screen2({ data, goTo, industry, onLobChange, activeLob }: { data: RoleDashboardData; goTo: (n: ScreenId) => void; industry: Industry; onLobChange: (lob: string) => void; activeLob: string }) {
+  // Determine available LOBs based on industry
+  const lobTabs: { id: string; label: string }[] = [];
+  if (industry.id === "retail_banking") {
+    lobTabs.push({ id: "retail_banking", label: "Retail Banking" });
+    lobTabs.push({ id: "cards_business", label: "Cards Business" });
+  } else if (industry.id === "credit_cards") {
+    lobTabs.push({ id: "cards_business", label: "Cards Business" });
+  } else if (industry.id === "insurance") {
+    lobTabs.push({ id: "insurance", label: "Insurance" });
+  } else if (industry.id === "ecommerce") {
+    lobTabs.push({ id: "retail_banking", label: "Marketplace" });
+  }
+
+  const lobData = LOB_DATA[activeLob] ?? LOB_DATA.retail_banking;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ background: T.cyanGlow, border: `1px solid ${T.cyan}20`, borderRadius: 10, padding: "10px 16px", fontSize: 12, color: T.cyan }}>
+        <strong>Key Principle:</strong> LOB / Industry is introduced here as a filter — not at the executive layer. KPIs differ by LOB, reflecting the shift from call-center metrics to a broader business lens.
+      </div>
+      {lobTabs.length > 1 && (
+        <div style={{ display: "flex", gap: 8 }}>
+          {lobTabs.map((tab) => (
+            <button key={tab.id} onClick={() => onLobChange(tab.id)} style={{
+              background: activeLob === tab.id ? `${industry.color}12` : T.surface,
+              border: `1px solid ${activeLob === tab.id ? industry.color : T.border}`,
+              borderRadius: 10, padding: "10px 20px", cursor: "pointer",
+              color: activeLob === tab.id ? industry.color : T.textSec,
+              fontWeight: activeLob === tab.id ? 700 : 500, fontSize: 13, fontFamily: "inherit",
+              transition: "all 0.2s",
+            }}>{tab.label}</button>
+          ))}
+        </div>
+      )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 16 }}>
         <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: T.text, marginBottom: 10 }}>{lobData.label} <span style={{ color: T.textMut, fontWeight: 400 }}>— Core KPIs</span></div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 16 }}>
-            {data.lobKpis.map((k, i) => {
+            {lobData.kpis.map((k, i) => {
               const col = k.st === "red" ? T.red : k.st === "amber" ? T.amber : T.green;
               return (
                 <div key={i} onClick={() => goTo(3)} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: "14px 12px", borderTop: `2px solid ${col}`, cursor: "pointer" }}>
                   <div style={{ fontSize: 10, fontWeight: 600, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 8 }}>{k.l}</div>
                   <div style={{ fontSize: 22, fontWeight: 800, color: col, fontFamily: "var(--mono)", lineHeight: 1 }}>{k.v}</div>
                   <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, fontSize: 11 }}>
-                    <span style={{ color: T.red, fontWeight: 600 }}>{k.delta >= 0 ? "▲" : "▼"} {Math.abs(k.delta)}</span>
+                    <span style={{ color: k.delta >= 0 ? T.red : T.green, fontWeight: 600 }}>{k.delta >= 0 ? "▲" : "▼"} {Math.abs(k.delta)}</span>
                     <span style={{ color: T.textMut }}>T: {k.target}</span>
                   </div>
                 </div>
@@ -111,7 +150,7 @@ function Screen2({ data, goTo }: { data: RoleDashboardData; goTo: (n: ScreenId) 
             })}
           </div>
           <Sec title="AI Insights" sub="Top issues driving KPI movement" action={<Badge color="gold">Max 2–3</Badge>}>
-            {data.insights.map((ins, i) => (
+            {lobData.insights.map((ins, i) => (
               <div key={i} onClick={() => goTo(5)} style={{ background: T.surface, border: `1px solid ${T.amber}20`, borderLeft: `3px solid ${T.amber}`, borderRadius: 10, padding: "12px 16px", marginBottom: 10, cursor: "pointer" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}><Bot size={12} color={T.amber}/><span style={{ fontSize: 10, fontWeight: 700, color: T.amber, textTransform: "uppercase" }}>AI Insight #{i + 1}</span></div>
                 <div style={{ fontSize: 13, color: T.text, lineHeight: 1.6 }}>{ins}</div>
@@ -121,7 +160,7 @@ function Screen2({ data, goTo }: { data: RoleDashboardData; goTo: (n: ScreenId) 
         </div>
         <Sec title="Priority Matrix" sub="Eisenhower: what needs action now?">
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gridTemplateRows: "1fr 1fr", gap: 6 }}>
-            {[{ label: "DO NOW", items: data.eisenhower.do, bg: T.redGlow, bc: T.red }, { label: "PLAN", items: data.eisenhower.plan, bg: T.amberGlow, bc: T.amber }, { label: "DELEGATE", items: data.eisenhower.delegate, bg: T.blueGlow, bc: T.blue }, { label: "MONITOR", items: data.eisenhower.monitor, bg: `${T.textMut}08`, bc: T.textMut }].map((q, i) => (
+            {[{ label: "DO NOW", items: lobData.eisenhower.do, bg: T.redGlow, bc: T.red }, { label: "PLAN", items: lobData.eisenhower.plan, bg: T.amberGlow, bc: T.amber }, { label: "DELEGATE", items: lobData.eisenhower.delegate, bg: T.blueGlow, bc: T.blue }, { label: "MONITOR", items: lobData.eisenhower.monitor, bg: `${T.textMut}08`, bc: T.textMut }].map((q, i) => (
               <div key={i} style={{ background: q.bg, border: `1px solid ${q.bc}20`, borderRadius: 8, padding: "8px 10px" }}>
                 <div style={{ fontSize: 9, fontWeight: 800, color: q.bc, letterSpacing: 1, textTransform: "uppercase", marginBottom: 6 }}>{q.label}</div>
                 {q.items.map((item, j) => (<div key={j} style={{ fontSize: 11, color: T.textSec, lineHeight: 1.5, marginBottom: 4, paddingLeft: 8, borderLeft: `2px solid ${q.bc}30` }}>{item}</div>))}
@@ -135,20 +174,65 @@ function Screen2({ data, goTo }: { data: RoleDashboardData; goTo: (n: ScreenId) 
   );
 }
 
-function Screen3({ goTo }: { goTo: (n: ScreenId) => void }) {
-  const groups = [
-    { label: "CX Metrics", color: T.cyan, icon: Target, kpis: [{ n: "NPS", v: "+38", a: "▼6 pts in 4 weeks" }, { n: "CSAT", v: "81%", a: null }, { n: "Sentiment", v: "0.58", a: "Below 0.60 threshold" }, { n: "Complaint Rate", v: "2.8%", a: "▲40% in 6 weeks" }] },
-    { label: "Operational", color: T.gold, icon: Activity, kpis: [{ n: "AHT", v: "8.3m", a: "Above 8 min target" }, { n: "SLA Compliance", v: "87%", a: "Below 95% — 3rd week" }, { n: "Vol vs Capacity", v: "112%", a: "Exceeded 9–11 AM" }, { n: "FCR", v: "74%", a: "Below 80% target" }] },
-    { label: "Risk", color: T.red, icon: Shield, kpis: [{ n: "Fraud Signals", v: "69", a: "FL cluster + MCC 7995" }, { n: "System Failures", v: "4", a: "KYC API + payment" }, { n: "Breach Exposure", v: "1,247", a: "Active merchant breach" }, { n: "ATO Attempts", v: "23", a: "Social engineering" }] },
-    { label: "Regulatory", color: T.purple, icon: Globe, kpis: [{ n: "CFPB Risk Cases", v: "7", a: ">60% escalation" }, { n: "Social Velocity", v: "3.4×", a: "Above 2× threshold" }, { n: "Compliance", v: "91%", a: null }, { n: "Cmpl→Social", v: "4.2%", a: "Posting after complaints" }] },
+function Screen3({ goTo, activeLob, industry }: { goTo: (n: ScreenId) => void; activeLob: string; industry: Industry }) {
+  const [userFilter, setUserFilter] = useState<string>("all");
+  const userFilters = [
+    { id: "all", label: "All Signals" },
+    { id: "ops", label: "Operations" },
+    { id: "fraud", label: "Fraud" },
+    { id: "training", label: "Training" },
+    { id: "staffing", label: "Staffing" },
   ];
+
+  const groups = [
+    { label: "CX Metrics", color: T.cyan, icon: Target, filterTag: "ops", kpis: [{ n: "NPS", v: "+38", a: "▼6 pts in 4 weeks" }, { n: "CSAT", v: "81%", a: null }, { n: "Sentiment", v: "0.58", a: "Below 0.60 threshold" }, { n: "Complaint Rate", v: "2.8%", a: "▲40% in 6 weeks" }] },
+    { label: "Operational", color: T.gold, icon: Activity, filterTag: "ops", kpis: [{ n: "AHT", v: "8.3m", a: "Above 8 min target" }, { n: "SLA Compliance", v: "87%", a: "Below 95% — 3rd week" }, { n: "Vol vs Capacity", v: "112%", a: "Exceeded 9–11 AM" }, { n: "FCR", v: "74%", a: "Below 80% target" }] },
+    { label: "Risk", color: T.red, icon: Shield, filterTag: "fraud", kpis: [{ n: "Fraud Signals", v: "69", a: "FL cluster + MCC 7995" }, { n: "System Failures", v: "4", a: "KYC API + payment" }, { n: "Breach Exposure", v: "1,247", a: "Active merchant breach" }, { n: "ATO Attempts", v: "23", a: "Social engineering" }] },
+    { label: "Regulatory", color: T.purple, icon: Globe, filterTag: "ops", kpis: [{ n: "CFPB Risk Cases", v: "7", a: ">60% escalation" }, { n: "Social Velocity", v: "3.4×", a: "Above 2× threshold" }, { n: "Compliance", v: "91%", a: null }, { n: "Cmpl→Social", v: "4.2%", a: "Posting after complaints" }] },
+  ];
+
+  // Add LOB-specific drill KPIs
+  const extraGroups: typeof groups = [];
+  if (activeLob === "retail_banking" || industry.id === "retail_banking") {
+    const mortgageData = LOB_DRILL_KPIS.mortgage_loans;
+    if (mortgageData) {
+      mortgageData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.amber, icon: AlertTriangle, filterTag: "ops", kpis: g.kpis });
+      });
+    }
+  }
+  if (activeLob === "insurance" || industry.id === "insurance") {
+    const insData = LOB_DRILL_KPIS.insurance_lob;
+    if (insData) {
+      insData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTag: "fraud", kpis: g.kpis });
+      });
+    }
+  }
+
+  const allGroups = [...groups, ...extraGroups];
+  const filteredGroups = userFilter === "all" ? allGroups : allGroups.filter(g => g.filterTag === userFilter);
+
+  const lobLabel = LOB_DATA[activeLob]?.label ?? "All";
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ background: T.cyanGlow, border: `1px solid ${T.cyan}20`, borderRadius: 10, padding: "10px 16px", fontSize: 12, color: T.cyan }}>
-        <strong>Balanced view:</strong> Where performance is strong (green), breaking (red), shifting (amber). Click any KPI for functional lens.
+        <strong>Active signals:</strong> Where performance is <span style={{ color: T.green }}>strong</span>, where it is <span style={{ color: T.red }}>breaking</span>, and where it is <span style={{ color: T.amber }}>shifting</span>. Filtered by <strong>{lobLabel}</strong>.
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 14 }}>
-        {groups.map((g, gi) => {
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {userFilters.map((f) => (
+          <button key={f.id} onClick={() => setUserFilter(f.id)} style={{
+            background: userFilter === f.id ? `${T.cyan}12` : T.surface,
+            border: `1px solid ${userFilter === f.id ? T.cyan : T.border}`,
+            borderRadius: 8, padding: "6px 14px", cursor: "pointer",
+            color: userFilter === f.id ? T.cyan : T.textSec,
+            fontWeight: userFilter === f.id ? 700 : 500, fontSize: 12, fontFamily: "inherit",
+          }}>{f.label}</button>
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(filteredGroups.length, 4)}, 1fr)`, gap: 14 }}>
+        {filteredGroups.map((g, gi) => {
           const Icon = g.icon;
           return (
             <div key={gi} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: "16px 14px", borderTop: `2px solid ${g.color}` }}>
@@ -171,7 +255,7 @@ function Screen3({ goTo }: { goTo: (n: ScreenId) => void }) {
   );
 }
 
-function Screen4({ goTo, defaultLens }: { goTo: (n: ScreenId) => void; defaultLens?: LensId }) {
+function Screen4({ goTo, defaultLens, activeLob }: { goTo: (n: ScreenId) => void; defaultLens?: LensId; activeLob: string }) {
   const [lens, setLens] = useState<LensId>(defaultLens ?? "ops");
   const lenses: Record<LensId, { label: string; icon: LucideIcon; color: string; cols: { t: string; items: [string, string, string, string][] }[] }> = { ops: { label: "Operations", icon: Activity, color: T.gold, cols: [
     { t: "Process Breakdown", items: [["Vol vs Capacity", "112%", "Exceeded 9–11 AM", T.red], ["Queue Depth", "847", "Peak: 10:15 AM", T.amber], ["SLA Adherence", "87%", "Below 95%", T.red], ["Backlog Age", "312 >48h", "Growing 8%/week", T.amber]] },
@@ -188,8 +272,12 @@ function Screen4({ goTo, defaultLens }: { goTo: (n: ScreenId) => void; defaultLe
   ]}};
 
   const L = lenses[lens];
+  const lobLabel = LOB_DATA[activeLob]?.label ?? "All";
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ background: `${T.textMut}08`, border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 14px", fontSize: 11, color: T.textSec, display: "flex", alignItems: "center", gap: 6 }}>
+        <Layers size={12} color={T.cyan}/> Continuing filter from Screen 2: <strong style={{ color: T.cyan }}>{lobLabel}</strong>
+      </div>
       <div style={{ display: "flex", gap: 8 }}>
         {Object.entries(lenses).map(([id, l]) => {
           const Icon = l.icon;
@@ -293,6 +381,9 @@ function Screen5({ data }: { data: RoleDashboardData }) {
 
 export function RoleDashboardView({ industry, role, onExit }: { industry: Industry; role: Role; onExit: () => void }) {
   const [screen, setScreen] = useState<ScreenId>(1);
+  // Default LOB based on industry
+  const defaultLob = industry.id === "insurance" ? "insurance" : industry.id === "credit_cards" ? "cards_business" : "retail_banking";
+  const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
   const data = roleDataMap[role.id] ?? ROLE_DATA.ceo;
 
@@ -317,9 +408,9 @@ export function RoleDashboardView({ industry, role, onExit }: { industry: Indust
 
   const screenComponents: Record<ScreenId, ReactElement> = {
     1: <Screen1 data={data} goTo={setScreen} />,
-    2: <Screen2 data={data} goTo={setScreen} />,
-    3: <Screen3 goTo={setScreen} />,
-    4: <Screen4 goTo={setScreen} defaultLens={initialLens} />,
+    2: <Screen2 data={data} goTo={setScreen} industry={industry} onLobChange={setActiveLob} activeLob={activeLob} />,
+    3: <Screen3 goTo={setScreen} activeLob={activeLob} industry={industry} />,
+    4: <Screen4 goTo={setScreen} defaultLens={initialLens} activeLob={activeLob} />,
     5: <Screen5 data={data} />,
   };
 
@@ -357,7 +448,7 @@ export function RoleDashboardView({ industry, role, onExit }: { industry: Indust
         <div style={{ padding: "12px 24px", borderBottom: `1px solid ${T.border}`, background: T.surface, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <h1 style={{ fontSize: 17, fontWeight: 700, color: T.text, margin: 0 }}><span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>{active?.label}</h1>
-            <div style={{ fontSize: 11, color: T.textMut, marginTop: 2 }}>{industry.name} · {role.name} · {active?.sub}</div>
+            <div style={{ fontSize: 11, color: T.textMut, marginTop: 2 }}>{industry.name} · {role.name}{screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}</div>
           </div>
           <button style={{ background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`, color: T.bg, border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Export Report</button>
         </div>

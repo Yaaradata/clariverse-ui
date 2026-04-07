@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Usha Jawaharlal/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/a5eae39a-f36d-4805-9898-c313c02a694e/7b63fe15-71c3-463d-97fd-1a71241b8f2f/skills/docx/**)",
+      "Bash(python scripts/office/unpack.py \"C:\\\\Users\\\\Usha Jawaharlal\\\\Downloads\\\\Customer Dashboard_Framework v2.docx\" unpacked/)",
+      "Bash(cat \"/d/office/clariverse-ui/frontend/app/standard-chartered/main-page/Operational Indicators & Actions/page.tsx\")",
+      "Bash(npx next:*)",
+      "Bash(npx tsc:*)",
+      "mcp__Claude_Preview__preview_start"
+    ]
+  }
+}

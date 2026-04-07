@@ -207,11 +207,88 @@ export const ROLE_DATA = {
     eisenhower: { do: ["Activate 12 overflow agents before 9:45 AM", "Agent 2847 immediate coaching pull-aside"], plan: ["BPO evidence collection SLA renegotiation", "Evening shift tone-coaching program"], delegate: ["IVR step-3 escape hatch implementation", "FAQ script update for new fees"], monitor: ["Overtime budget utilisation", "New hire ramp-up progress"] },
   },
 };
+// ═══════════════════════════
+// LOB-SPECIFIC KPI DATA (Screen 2 onward)
+// ═══════════════════════════
+export const LOB_DATA: Record<string, { label: string; kpis: { l: string; v: string; delta: number; target: string; st: "red" | "amber" | "green" }[]; insights: string[]; eisenhower: { do: string[]; plan: string[]; delegate: string[]; monitor: string[] } }> = {
+  retail_banking: {
+    label: "Retail Banking",
+    kpis: [
+      { l: "Customer Promise Score", v: "76", delta: -2, target: "> 80", st: "amber" },
+      { l: "Complaint Volume", v: "312", delta: +28, target: "< 250", st: "red" },
+      { l: "First Contact Resolution", v: "74%", delta: -3, target: "> 80%", st: "red" },
+      { l: "Onboarding Drop-off", v: "18%", delta: +2, target: "< 12%", st: "amber" },
+      { l: "SLA Compliance", v: "87%", delta: -4, target: "> 95%", st: "red" },
+    ],
+    insights: [
+      "Onboarding delays and complaint spike driven by KYC processing lag — API latency increased 3× since Tuesday.",
+      "FCR drop concentrated in HELOC product — agents lack rate-lookup tool access after system update.",
+      "EMI failure complaints up 22% MoM — rate-reset mortgage cohort over-indexes.",
+    ],
+    eisenhower: { do: ["KYC API fix — 18% onboarding drop", "HELOC rate-lookup restoration"], plan: ["BPO quality review", "Agent training on fees"], delegate: ["3 branch ATM outages", "Social media viral post response"], monitor: ["Quarterly report formatting", "Dashboard updates"] },
+  },
+  cards_business: {
+    label: "Cards Business",
+    kpis: [
+      { l: "Transaction Success Rate", v: "97.2%", delta: -0.8, target: "> 99%", st: "red" },
+      { l: "Fraud Detection Rate", v: "82%", delta: -3, target: "> 90%", st: "red" },
+      { l: "Dispute Volume", v: "1,247", delta: +189, target: "< 800", st: "red" },
+      { l: "Authorization Latency", v: "340ms", delta: +80, target: "< 200ms", st: "red" },
+      { l: "Complaint Rate", v: "2.8%", delta: +0.6, target: "< 1.5%", st: "amber" },
+    ],
+    insights: [
+      "Merchant breach exposed 1,247 cards — reissuance at 68%. Fraud cluster in FL targeting seniors with social engineering scripts.",
+      "Authorization latency spiked 80ms after payment gateway update — retry anomalies at 2,340.",
+      "Dispute volume up 24% — MCC 7995 (gaming) category driving 40% of new disputes.",
+    ],
+    eisenhower: { do: ["FL fraud cluster — proactive freeze on 127 accounts", "Payment gateway rollback assessment"], plan: ["Merchant breach full reissuance", "MCC 7995 dispute pattern investigation"], delegate: ["Chargeback documentation backlog", "Rewards program complaint triage"], monitor: ["Card testing pattern evolution", "Competitor rate changes"] },
+  },
+  insurance: {
+    label: "Insurance",
+    kpis: [
+      { l: "Claims Processing Time", v: "14.2d", delta: +3.1, target: "< 10d", st: "red" },
+      { l: "Claim Rejection Rate", v: "18%", delta: +4, target: "< 12%", st: "red" },
+      { l: "Policy Issuance TAT", v: "3.8d", delta: +0.9, target: "< 2d", st: "amber" },
+      { l: "Customer Complaint Rate", v: "3.1%", delta: +0.7, target: "< 2%", st: "amber" },
+      { l: "Persistency / Renewal Rate", v: "78%", delta: -4, target: "> 85%", st: "red" },
+    ],
+    insights: [
+      "Claims processing backlog grew 31% — adjuster capacity gap in auto claims after storm season surge.",
+      "Claim rejection rate spiked due to documentation gaps in digital-first submissions — 62% of rejections are re-submittable.",
+      "Persistency dropped 4 pts — renewal reminders not triggered for 1,200 policies due to CRM sync failure.",
+    ],
+    eisenhower: { do: ["CRM sync fix — 1,200 renewal reminders pending", "Adjuster overtime for storm claims backlog"], plan: ["Digital submission documentation guide", "Claims automation pilot expansion"], delegate: ["Policy issuance template updates", "Complaint categorisation review"], monitor: ["Renewal rate recovery trend", "Adjuster quality scores"] },
+  },
+};
+
+// LOB-specific KPIs for Screen 3–5 drill-down
+export const LOB_DRILL_KPIS: Record<string, { label: string; kpis: { n: string; v: string; a: string | null }[] }[]> = {
+  mortgage_loans: [
+    { label: "Mortgage / Loans", kpis: [
+      { n: "Loan Servicing Call Rate", v: "4.2/1K", a: "Above 3.6 target" },
+      { n: "EMI Failure Rate", v: "2.1%", a: "Repayment failures rising" },
+      { n: "EMI Complaint Volume", v: "67", a: "▲22% MoM" },
+      { n: "Delinquency Rate (30+ DPD)", v: "1.8%", a: "Rate-reset cohort" },
+      { n: "Mis-selling / Policy Flags", v: "14", a: "Fair lending queue" },
+    ]},
+  ],
+  insurance_lob: [
+    { label: "Insurance LOB", kpis: [
+      { n: "Claims Leakage / Fraud", v: "3.2%", a: "Above 2% threshold" },
+      { n: "Underwriting Exception Rate", v: "8.4%", a: "▲2.1% in 6 weeks" },
+      { n: "Mis-selling Flags", v: "11", a: "Policy suitability issues" },
+      { n: "High-Value Claim Escalation", v: "23", a: "Risk of regulatory action" },
+      { n: "Regulatory Complaint Escalation", v: "68%", a: "Probability rising" },
+    ]},
+  ],
+};
+
 export type ScreenId = 1 | 2 | 3 | 4 | 5;
 export type LensId = "ops" | "risk" | "compliance";
 export type Industry = (typeof INDUSTRIES)[number];
 export type Role = Industry["roles"][number];
 export type RoleDashboardData = (typeof ROLE_DATA)["ceo"];
+export type LobDataEntry = (typeof LOB_DATA)["retail_banking"];
 
 export function getIndustryById(id: string): Industry | null {
   return INDUSTRIES.find((i) => i.id === id) ?? null;
