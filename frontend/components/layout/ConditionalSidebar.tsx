@@ -22,7 +22,15 @@ export default function ConditionalSidebar({
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered");
   const isHdfcRoute = pathname?.startsWith("/hdfc");
   const isRootPage = pathname === "/";
-  const isStandalonePage = isAddonRoute || isSwedbankRoute || isFlipkartRoute || isStandardCharteredRoute || isHdfcRoute || isRootPage;
+  const isIndustryDashboardRoute = pathname === "/industry-dashboard" || pathname?.startsWith("/industry-dashboard/");
+  const isStandalonePage =
+    isAddonRoute ||
+    isSwedbankRoute ||
+    isFlipkartRoute ||
+    isStandardCharteredRoute ||
+    isHdfcRoute ||
+    isRootPage ||
+    isIndustryDashboardRoute;
 
   // Render children only during SSR to avoid hydration mismatch
   // The correct layout will be applied after mounting
