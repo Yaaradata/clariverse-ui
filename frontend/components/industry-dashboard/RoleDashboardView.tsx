@@ -185,10 +185,12 @@ function Screen3({ goTo, activeLob, industry }: { goTo: (n: ScreenId) => void; a
   ];
 
   const groups = [
-    { label: "CX Metrics", color: T.cyan, icon: Target, filterTag: "ops", kpis: [{ n: "NPS", v: "+38", a: "▼6 pts in 4 weeks" }, { n: "CSAT", v: "81%", a: null }, { n: "Sentiment", v: "0.58", a: "Below 0.60 threshold" }, { n: "Complaint Rate", v: "2.8%", a: "▲40% in 6 weeks" }] },
-    { label: "Operational", color: T.gold, icon: Activity, filterTag: "ops", kpis: [{ n: "AHT", v: "8.3m", a: "Above 8 min target" }, { n: "SLA Compliance", v: "87%", a: "Below 95% — 3rd week" }, { n: "Vol vs Capacity", v: "112%", a: "Exceeded 9–11 AM" }, { n: "FCR", v: "74%", a: "Below 80% target" }] },
-    { label: "Risk", color: T.red, icon: Shield, filterTag: "fraud", kpis: [{ n: "Fraud Signals", v: "69", a: "FL cluster + MCC 7995" }, { n: "System Failures", v: "4", a: "KYC API + payment" }, { n: "Breach Exposure", v: "1,247", a: "Active merchant breach" }, { n: "ATO Attempts", v: "23", a: "Social engineering" }] },
-    { label: "Regulatory", color: T.purple, icon: Globe, filterTag: "ops", kpis: [{ n: "CFPB Risk Cases", v: "7", a: ">60% escalation" }, { n: "Social Velocity", v: "3.4×", a: "Above 2× threshold" }, { n: "Compliance", v: "91%", a: null }, { n: "Cmpl→Social", v: "4.2%", a: "Posting after complaints" }] },
+    { label: "CX Metrics", color: T.cyan, icon: Target, filterTags: ["ops", "training"], kpis: [{ n: "NPS", v: "+38", a: "▼6 pts in 4 weeks" }, { n: "CSAT", v: "81%", a: null }, { n: "Sentiment", v: "0.58", a: "Below 0.60 threshold" }, { n: "Complaint Rate", v: "2.8%", a: "▲40% in 6 weeks" }] },
+    { label: "Operational", color: T.gold, icon: Activity, filterTags: ["ops", "staffing"], kpis: [{ n: "AHT", v: "8.3m", a: "Above 8 min target" }, { n: "SLA Compliance", v: "87%", a: "Below 95% — 3rd week" }, { n: "Vol vs Capacity", v: "112%", a: "Exceeded 9–11 AM" }, { n: "FCR", v: "74%", a: "Below 80% target" }] },
+    { label: "Risk / Fraud", color: T.red, icon: Shield, filterTags: ["fraud"], kpis: [{ n: "Fraud Signals", v: "69", a: "FL cluster + MCC 7995" }, { n: "System Failures", v: "4", a: "KYC API + payment" }, { n: "Breach Exposure", v: "1,247", a: "Active merchant breach" }, { n: "ATO Attempts", v: "23", a: "Social engineering" }] },
+    { label: "Regulatory", color: T.purple, icon: Globe, filterTags: ["ops", "fraud"], kpis: [{ n: "CFPB Risk Cases", v: "7", a: ">60% escalation" }, { n: "Social Velocity", v: "3.4×", a: "Above 2× threshold" }, { n: "Compliance", v: "91%", a: null }, { n: "Cmpl→Social", v: "4.2%", a: "Posting after complaints" }] },
+    { label: "Training & Quality", color: T.blue, icon: Target, filterTags: ["training"], kpis: [{ n: "QA Score", v: "78%", a: "Below 85% benchmark" }, { n: "Agent Knowledge Gap", v: "23%", a: "HELOC + fee queries" }, { n: "Script Adherence", v: "94%", a: null }, { n: "Coaching Completion", v: "62%", a: "Behind schedule" }, { n: "Cross-sell Misfire", v: "18%", a: "During complaint calls" }] },
+    { label: "Staffing & Workforce", color: T.green, icon: Activity, filterTags: ["staffing"], kpis: [{ n: "Staffing Gap", v: "12 short", a: "10–12 PM window" }, { n: "Agent Utilisation", v: "94%", a: "Above 88% target" }, { n: "Overtime Hours", v: "+34%", a: "3rd week rising" }, { n: "BPO Quality Score", v: "68%", a: "Below 85% SLA" }, { n: "New Hire Ramp", v: "14 agents", a: "4 weeks to ready" }] },
   ];
 
   // Add LOB-specific drill KPIs
@@ -197,7 +199,7 @@ function Screen3({ goTo, activeLob, industry }: { goTo: (n: ScreenId) => void; a
     const mortgageData = LOB_DRILL_KPIS.mortgage_loans;
     if (mortgageData) {
       mortgageData.forEach((g) => {
-        extraGroups.push({ label: g.label, color: T.amber, icon: AlertTriangle, filterTag: "ops", kpis: g.kpis });
+        extraGroups.push({ label: g.label, color: T.amber, icon: AlertTriangle, filterTags: ["ops", "fraud"], kpis: g.kpis });
       });
     }
   }
@@ -205,13 +207,13 @@ function Screen3({ goTo, activeLob, industry }: { goTo: (n: ScreenId) => void; a
     const insData = LOB_DRILL_KPIS.insurance_lob;
     if (insData) {
       insData.forEach((g) => {
-        extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTag: "fraud", kpis: g.kpis });
+        extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTags: ["fraud", "ops"], kpis: g.kpis });
       });
     }
   }
 
   const allGroups = [...groups, ...extraGroups];
-  const filteredGroups = userFilter === "all" ? allGroups : allGroups.filter(g => g.filterTag === userFilter);
+  const filteredGroups = userFilter === "all" ? allGroups : allGroups.filter(g => g.filterTags.includes(userFilter));
 
   const lobLabel = LOB_DATA[activeLob]?.label ?? "All";
 
