@@ -66,6 +66,8 @@ export function TrendExplorerChart({ series }: TrendExplorerChartProps) {
                 borderRadius: "12px",
                 color: "#f3f4f6",
               }}
+              labelStyle={{ color: "#f9fafb", fontWeight: 600 }}
+              itemStyle={{ color: "#e5e7eb" }}
             />
             {series.map((s, idx) =>
               activeIds.includes(s.id) ? (

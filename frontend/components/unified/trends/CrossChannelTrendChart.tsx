@@ -105,6 +105,8 @@ export function CrossChannelTrendChart({ data }: CrossChannelTrendChartProps) {
                 border: "1px solid rgba(185, 10, 189, 0.4)",
                 backdropFilter: "blur(14px)",
               }}
+              labelStyle={{ color: "#f9fafb", fontWeight: 600 }}
+              itemStyle={{ color: "#e5e7eb" }}
               labelFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "long", day: "numeric" })}
               formatter={(value: number, name: string) =>
                 name === "Sentiment"

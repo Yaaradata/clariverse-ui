@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 
-import { T } from "@/lib/industry-dashboard/registry";
+import { T } from "@/lib/role-based-dashboard/registry";
 
 export function IndustryChrome({ children }: { children: ReactNode }) {
   return (

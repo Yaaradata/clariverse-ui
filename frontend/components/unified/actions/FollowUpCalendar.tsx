@@ -26,9 +26,12 @@ export function FollowUpCalendar({ followUps, onSelect }: FollowUpCalendarProps)
   });
 
   return (
-    <Card className="border border-[color:var(--border)] bg-[color:var(--card)] p-6 space-y-4 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
-      <h3 className="text-lg font-semibold text-white">Follow-Up Calendar</h3>
-      <div className="grid grid-cols-7 gap-2 text-center text-xs text-gray-300">
+    <Card className="flex h-full min-h-0 flex-col gap-4 border border-[color:var(--border)] bg-[color:var(--card)] p-6 transition-all duration-200 hover:border-[#b90abd]/40 hover:bg-[color:var(--background)]">
+      <h3 className="shrink-0 text-lg font-semibold text-white">Follow-Up Calendar</h3>
+      <p className="shrink-0 text-sm text-muted-foreground">
+        Two-week horizon; dots mark follow-ups by severity. Select a day to open the linked item.
+      </p>
+      <div className="grid min-h-0 flex-1 grid-cols-7 gap-2 text-center text-xs text-gray-300">
         {days.map((day) => {
           const key = formatDate(day);
           const items = map.get(key) ?? [];

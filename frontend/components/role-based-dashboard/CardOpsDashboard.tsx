@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, type ReactNode, type CSSProperties, type ComponentType } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode, type CSSProperties, type ComponentType } from "react";
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ComposedChart, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, PieChart, Pie, Cell } from "recharts";
 import type { LucideIcon } from "lucide-react";
 import { Activity, Shield, Globe, Bell, Zap, Target, CreditCard, DollarSign, FileText, AlertTriangle, Percent, ExternalLink, Layers, AlertCircle, ArrowLeft } from "lucide-react";
@@ -10,9 +10,10 @@ export type CardOpsDashboardProps = {
   roleName: string;
   industryColor: string;
   onExit: () => void;
+  theme?: CardOpsThemeTokens;
 };
 
-const T = {
+export const CARD_OPS_DEFAULT_THEME = {
   bg: "#04080f", surface: "#0a1220", card: "#0e1830",
   elevated: "#142040", border: "#1a2d50", borderLight: "#243a60",
   cyan: "#06b6d4", cyanGlow: "rgba(6,182,212,0.12)",
@@ -26,6 +27,29 @@ const T = {
   text: "#e2e8f0", textSec: "#94a3b8", textMut: "#5e718a", white: "#fff",
 };
 
+export type CardOpsThemeTokens = { [K in keyof typeof CARD_OPS_DEFAULT_THEME]: string };
+
+const CardOpsThemeContext = createContext<CardOpsThemeTokens>(CARD_OPS_DEFAULT_THEME);
+
+function useCardOpsTheme(): CardOpsThemeTokens {
+  return useContext(CardOpsThemeContext);
+}
+
+function cardOpsRechartsTooltip(T: CardOpsThemeTokens) {
+  return {
+    contentStyle: {
+      background: T.elevated,
+      border: `1px solid ${T.borderLight}`,
+      borderRadius: 8,
+      fontSize: 11,
+      color: T.text,
+      boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+    },
+    labelStyle: { color: T.text, fontWeight: 600 },
+    itemStyle: { color: T.text },
+  };
+}
+
 // Tabs — fundamentally different structure from retail banking
 type CardTabId = "promise" | "external" | "internal" | "portfolio" | "signals";
 
@@ -37,17 +61,17 @@ const TABS: { id: CardTabId; label: string; sub: string; icon: LucideIcon }[] = 
   { id: "signals", label: "Signals & Alerts", sub: "Anomalies, Journeys & Churn", icon: AlertTriangle },
 ];
 
-const tt = { background: T.elevated, border: `1px solid ${T.borderLight}`, borderRadius: 8, fontSize: 11, color: T.text, boxShadow: "0 8px 24px rgba(0,0,0,0.5)" };
-
 type CardBadgeColor = "red" | "amber" | "green" | "teal" | "purple" | "blue" | "gold" | "cyan";
 
 function Badge({ color = "blue", children }: { color?: CardBadgeColor; children: ReactNode }) {
+  const T = useCardOpsTheme();
   const m: Record<CardBadgeColor, [string, string]> = { red: [T.red, T.redGlow], amber: [T.amber, T.amberGlow], green: [T.green, T.greenGlow], teal: [T.teal, T.tealGlow], purple: [T.purple, T.purpleGlow], blue: [T.blue, T.blueGlow], gold: [T.gold, T.goldGlow], cyan: [T.cyan, T.cyanGlow] };
   const [fg, bg] = m[color] ?? m.blue;
   return <span style={{ background: bg, color: fg, fontSize: 9, fontWeight: 700, padding: "3px 8px", borderRadius: 6, letterSpacing: 0.8, textTransform: "uppercase", whiteSpace: "nowrap" }}>{children}</span>;
 }
 
 function Sec({ title, sub, action, children, style: sx }: { title: string; sub?: ReactNode; action?: ReactNode; children: ReactNode; style?: CSSProperties }) {
+  const T = useCardOpsTheme();
   return (
     <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 14, padding: 20, ...sx }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
@@ -59,6 +83,7 @@ function Sec({ title, sub, action, children, style: sx }: { title: string; sub?:
 }
 
 function KPI({ label, value, unit, delta, target, status, icon: Icon, sub }: { label: string; value: string | number; unit?: string; delta?: number; target?: string; status: "red" | "amber" | "green" | "neutral"; icon?: LucideIcon; sub?: string }) {
+  const T = useCardOpsTheme();
   const col = status === "red" ? T.red : status === "amber" ? T.amber : status === "green" ? T.green : T.text;
   return (
     <div style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: 14, borderTop: `2px solid ${col}` }}>
@@ -84,6 +109,8 @@ function KPI({ label, value, unit, delta, target, status, icon: Icon, sub }: { l
 // External ↔ Internal gap analysis
 // ═══════════════════════════════════
 function ScreenPromise() {
+  const T = useCardOpsTheme();
+  const tip = cardOpsRechartsTooltip(T);
   const extScore = 62, intScore = 71, gap = intScore - extScore;
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
 
@@ -153,7 +180,7 @@ function ScreenPromise() {
               <PolarRadiusAxis tick={{ fontSize: 9, fill: T.textMut }} domain={[0, 100]} stroke={T.border}/>
               <Radar name="External" dataKey="ext" stroke={T.purple} fill={T.purple} fillOpacity={0.15} strokeWidth={2}/>
               <Radar name="Internal" dataKey="int" stroke={T.teal} fill={T.teal} fillOpacity={0.15} strokeWidth={2}/>
-              <Tooltip contentStyle={tt}/>
+              <Tooltip {...tip}/>
             </RadarChart>
           </ResponsiveContainer>
           <div style={{ display: "flex", justifyContent: "center", gap: 20, fontSize: 10 }}>
@@ -204,6 +231,8 @@ function ScreenPromise() {
 // Market position, rankings, competitors
 // ═══════════════════════════════════
 function ScreenExternal() {
+  const T = useCardOpsTheme();
+  const tip = cardOpsRechartsTooltip(T);
   const rankings = [
     { site: "NerdWallet", cat: "Best Travel Cards", rank: 3, prev: 2, change: "down", competitor: "CompetitorZ took #2 with new sign-up bonus" },
     { site: "Bankrate", cat: "Best Cashback Cards", rank: 5, prev: 4, change: "down", competitor: "CompetitorY 5% unlimited cashback" },
@@ -282,7 +311,7 @@ function ScreenExternal() {
               <CartesianGrid strokeDasharray="3 3" stroke={T.border}/>
               <XAxis dataKey="w" tick={{ fontSize: 10, fill: T.textMut }} stroke={T.border}/>
               <YAxis tick={{ fontSize: 10, fill: T.textMut }} stroke={T.border} width={35} domain={[0.4, 0.8]}/>
-              <Tooltip contentStyle={tt}/>
+              <Tooltip {...tip}/>
               <Line type="monotone" dataKey="ours" stroke={T.cyan} strokeWidth={2.5} dot={{ fill: T.cyan, r: 4 }} name="Our Brand"/>
               <Line type="monotone" dataKey="comp" stroke={T.red} strokeWidth={2} strokeDasharray="5 3" dot={{ fill: T.red, r: 3 }} name="Top Competitor Avg"/>
             </LineChart>
@@ -323,6 +352,8 @@ function ScreenExternal() {
 // Process efficiency, throughput, quality
 // ═══════════════════════════════════
 function ScreenInternal() {
+  const T = useCardOpsTheme();
+  const tip = cardOpsRechartsTooltip(T);
   const resTime = [
     { intent: "Fraud Claim", fastest: 2.1, avg: 6.8, slowest: 18.4 },
     { intent: "Billing Dispute", fastest: 1.5, avg: 8.2, slowest: 22.1 },
@@ -360,7 +391,7 @@ function ScreenInternal() {
             <CartesianGrid strokeDasharray="3 3" stroke={T.border} horizontal={false}/>
             <XAxis type="number" tick={{ fontSize: 10, fill: T.textMut }} stroke={T.border} unit="d"/>
             <YAxis type="category" dataKey="intent" tick={{ fontSize: 10, fill: T.textSec }} width={100} stroke={T.border}/>
-            <Tooltip contentStyle={tt}/>
+            <Tooltip {...tip}/>
             <Bar dataKey="fastest" fill={T.green} name="Fastest" radius={[0,0,0,0]}/>
             <Bar dataKey="avg" fill={T.amber} name="Average" radius={[0,0,0,0]}/>
             <Bar dataKey="slowest" fill={T.red} name="Slowest" radius={[0,4,4,0]}/>
@@ -420,6 +451,8 @@ function ScreenInternal() {
 // Card-specific P&L, fraud, delinquency
 // ═══════════════════════════════════
 function ScreenPortfolio() {
+  const T = useCardOpsTheme();
+  const tip = cardOpsRechartsTooltip(T);
   const delinquency = [
     { bucket: "Current", pct: 92.1, accounts: "4.6M", trend: "stable" },
     { bucket: "30 day", pct: 4.2, accounts: "210K", trend: "up" },
@@ -495,7 +528,7 @@ function ScreenPortfolio() {
                   <Pie data={fraudByType} dataKey="value" cx="50%" cy="50%" innerRadius={40} outerRadius={70} paddingAngle={2}>
                     {fraudByType.map((e, i) => <Cell key={i} fill={e.color}/>)}
                   </Pie>
-                  <Tooltip contentStyle={tt}/>
+                  <Tooltip {...tip}/>
                 </PieChart>
               </ResponsiveContainer>
               <div style={{ flex: 1 }}>
@@ -516,7 +549,7 @@ function ScreenPortfolio() {
                 <CartesianGrid strokeDasharray="3 3" stroke={T.border}/><XAxis dataKey="m" tick={{ fontSize: 10, fill: T.textMut }} stroke={T.border}/>
                 <YAxis yAxisId="l" tick={{ fontSize: 10, fill: T.textMut }} stroke={T.border} width={30} domain={[88, 94]}/>
                 <YAxis yAxisId="r" orientation="right" tick={{ fontSize: 10, fill: T.textMut }} stroke={T.border} width={30}/>
-                <Tooltip contentStyle={tt}/>
+                <Tooltip {...tip}/>
                 <Line yAxisId="l" type="monotone" dataKey="approval" stroke={T.green} strokeWidth={2} dot={{ fill: T.green, r: 3 }} name="Approval %"/>
                 <Bar yAxisId="r" dataKey="loss" fill={`${T.red}50`} name="Loss (bps)" radius={[3,3,0,0]}/>
               </ComposedChart>
@@ -563,6 +596,7 @@ function ScreenPortfolio() {
 // Anomalies, journeys, churn
 // ═══════════════════════════════════
 function ScreenSignals() {
+  const T = useCardOpsTheme();
   const anomalies = [
     { severity: "critical", time: "02:30", title: "Merchant Breach — 1,247 Cards Still Exposed", desc: "Visa CAID 72 hrs ago. Reissuance 68% complete. 4 fraudulent txns on exposed cards.", impact: "Est exposure: $312K", action: "Expedite remaining 32% reissuance" },
     { severity: "critical", time: "04:15", title: "CNP Fraud Spike — MCC 7995 (Gaming)", desc: "180% increase. Pattern: $1-5 test txns → $200-800 purchases. 89 cards flagged.", impact: "Est losses: $47K/week", action: "Temp MCC velocity limit" },
@@ -666,7 +700,8 @@ const CARD_SCREENS: Record<CardTabId, ComponentType> = {
   signals: ScreenSignals,
 };
 
-export function CardOpsDashboard({ industryName, roleName, industryColor, onExit }: CardOpsDashboardProps) {
+export function CardOpsDashboard({ industryName, roleName, industryColor, onExit, theme }: CardOpsDashboardProps) {
+  const tokens = theme ?? CARD_OPS_DEFAULT_THEME;
   const [tab, setTab] = useState<CardTabId>("promise");
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
@@ -676,10 +711,12 @@ export function CardOpsDashboard({ industryName, roleName, industryColor, onExit
 
   const Screen = CARD_SCREENS[tab];
   const active = TABS.find((x) => x.id === tab);
+  const T = tokens;
 
   return (
-    <div style={{ display: "flex", height: "100vh", background: T.bg, fontFamily: "var(--font)", color: T.text, overflow: "hidden" }}>
-      <style>{`
+    <CardOpsThemeContext.Provider value={tokens}>
+      <div style={{ display: "flex", height: "100vh", background: T.bg, fontFamily: "var(--font)", color: T.text, overflow: "hidden" }}>
+        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap');
         :root { --font: 'Outfit', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -687,64 +724,65 @@ export function CardOpsDashboard({ industryName, roleName, industryColor, onExit
         @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
       `}</style>
 
-      {/* SIDEBAR */}
-      <div style={{ width: 240, background: T.surface, borderRight: `1px solid ${T.border}`, display: "flex", flexDirection: "column", flexShrink: 0 }}>
-        <div style={{ padding: "22px 20px 18px", borderBottom: `1px solid ${T.border}` }}>
-          <div style={{ fontSize: 10, fontWeight: 800, color: T.cyan, letterSpacing: 2.5, textTransform: "uppercase" }}>Yaaralabs</div>
-          <div style={{ fontSize: 11, color: T.textMut, marginTop: 2 }}>Fluid Intelligence · Card Ops</div>
-        </div>
-        <div style={{ padding: "12px 14px", borderBottom: `1px solid ${T.border}` }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-            <div style={{ width: 22, height: 22, borderRadius: 6, background: `${industryColor}18`, border: `1px solid ${industryColor}35` }} />
-            <span style={{ fontSize: 11, fontWeight: 600, color: T.text }}>{industryName}</span>
+        {/* SIDEBAR */}
+        <div style={{ width: 240, background: T.surface, borderRight: `1px solid ${T.border}`, display: "flex", flexDirection: "column", flexShrink: 0 }}>
+          <div style={{ padding: "22px 20px 18px", borderBottom: `1px solid ${T.border}` }}>
+            <div style={{ fontSize: 10, fontWeight: 800, color: T.cyan, letterSpacing: 2.5, textTransform: "uppercase" }}>Yaaralabs</div>
+            <div style={{ fontSize: 11, color: T.textMut, marginTop: 2 }}>Fluid Intelligence · Card Ops</div>
           </div>
-          <div style={{ fontSize: 10, color: T.cyan, fontWeight: 600 }}>{roleName}</div>
-        </div>
-        <div style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 4, overflowY: "auto" }}>
-          {TABS.map((tb) => {
-            const Icon = tb.icon;
-            const act = tab === tb.id;
-            return (
-              <button key={tb.id} type="button" onClick={() => setTab(tb.id)} style={{
-                display: "flex", alignItems: "center", gap: 12, padding: "11px 14px",
-                background: act ? `linear-gradient(90deg, ${T.cyanGlow}, transparent)` : "transparent",
-                border: "none", borderRadius: 10, cursor: "pointer", borderLeft: act ? `3px solid ${T.cyan}` : "3px solid transparent",
-                width: "100%", textAlign: "left",
-              }}>
-                <div style={{ width: 30, height: 30, borderRadius: 8, background: act ? T.cyanGlow : `${T.textMut}10`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Icon size={15} color={act ? T.cyan : T.textMut}/>
-                </div>
-                <div>
-                  <div style={{ fontSize: 12, fontWeight: act ? 700 : 500, color: act ? T.text : T.textSec }}>{tb.label}</div>
-                  <div style={{ fontSize: 9, color: T.textMut }}>{tb.sub}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-        <div style={{ padding: "10px 12px", borderTop: `1px solid ${T.border}` }}>
-          <button type="button" onClick={onExit} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", color: T.textSec, fontSize: 11, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontFamily: "inherit" }}>
-            <ArrowLeft size={11}/> Change role
-          </button>
-        </div>
-      </div>
-
-      {/* MAIN */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ padding: "14px 24px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: T.surface }}>
-          <div>
-            <h1 style={{ fontSize: 18, fontWeight: 700, color: T.text, letterSpacing: -0.3, margin: 0 }}>{active?.label}</h1>
-            <div style={{ fontSize: 11, color: T.textMut, marginTop: 2 }}>{active?.sub} · {now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} · <span style={{ fontFamily: "var(--mono)", fontSize: 10 }}>{now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</span></div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-            <div style={{ position: "relative", cursor: "pointer" }}>
-              <Bell size={17} color={T.textSec}/><span style={{ position: "absolute", top: -5, right: -6, width: 16, height: 16, borderRadius: "50%", background: T.red, fontSize: 9, fontWeight: 800, color: T.white, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${T.surface}` }}>5</span>
+          <div style={{ padding: "12px 14px", borderBottom: `1px solid ${T.border}` }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: `${industryColor}18`, border: `1px solid ${industryColor}35` }} />
+              <span style={{ fontSize: 11, fontWeight: 600, color: T.text }}>{industryName}</span>
             </div>
-            <button style={{ background: `linear-gradient(135deg, ${T.cyan}, ${T.teal})`, color: T.bg, border: "none", borderRadius: 8, padding: "8px 18px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Export Report</button>
+            <div style={{ fontSize: 10, color: T.cyan, fontWeight: 600 }}>{roleName}</div>
+          </div>
+          <div style={{ flex: 1, padding: "12px 10px", display: "flex", flexDirection: "column", gap: 4, overflowY: "auto" }}>
+            {TABS.map((tb) => {
+              const Icon = tb.icon;
+              const act = tab === tb.id;
+              return (
+                <button key={tb.id} type="button" onClick={() => setTab(tb.id)} style={{
+                  display: "flex", alignItems: "center", gap: 12, padding: "11px 14px",
+                  background: act ? `linear-gradient(90deg, ${T.cyanGlow}, transparent)` : "transparent",
+                  border: "none", borderRadius: 10, cursor: "pointer", borderLeft: act ? `3px solid ${T.cyan}` : "3px solid transparent",
+                  width: "100%", textAlign: "left",
+                }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, background: act ? T.cyanGlow : `${T.textMut}10`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Icon size={15} color={act ? T.cyan : T.textMut}/>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: act ? 700 : 500, color: act ? T.text : T.textSec }}>{tb.label}</div>
+                    <div style={{ fontSize: 9, color: T.textMut }}>{tb.sub}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          <div style={{ padding: "10px 12px", borderTop: `1px solid ${T.border}` }}>
+            <button type="button" onClick={onExit} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 8, padding: "8px 14px", cursor: "pointer", color: T.textSec, fontSize: 11, width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontFamily: "inherit" }}>
+              <ArrowLeft size={11}/> Change role
+            </button>
           </div>
         </div>
-        <div style={{ flex: 1, padding: "20px 24px", overflowY: "auto" }}><Screen/></div>
+
+        {/* MAIN */}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+          <div style={{ padding: "14px 24px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0, background: T.surface }}>
+            <div>
+              <h1 style={{ fontSize: 18, fontWeight: 700, color: T.text, letterSpacing: -0.3, margin: 0 }}>{active?.label}</h1>
+              <div style={{ fontSize: 11, color: T.textMut, marginTop: 2 }}>{active?.sub} · {now.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })} · <span style={{ fontFamily: "var(--mono)", fontSize: 10 }}>{now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" })}</span></div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{ position: "relative", cursor: "pointer" }}>
+                <Bell size={17} color={T.textSec}/><span style={{ position: "absolute", top: -5, right: -6, width: 16, height: 16, borderRadius: "50%", background: T.red, fontSize: 9, fontWeight: 800, color: T.white, display: "flex", alignItems: "center", justifyContent: "center", border: `2px solid ${T.surface}` }}>5</span>
+              </div>
+              <button style={{ background: `linear-gradient(135deg, ${T.cyan}, ${T.teal})`, color: T.bg, border: "none", borderRadius: 8, padding: "8px 18px", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>Export Report</button>
+            </div>
+          </div>
+          <div style={{ flex: 1, padding: "20px 24px", overflowY: "auto" }}><Screen/></div>
+        </div>
       </div>
-    </div>
+    </CardOpsThemeContext.Provider>
   );
 }

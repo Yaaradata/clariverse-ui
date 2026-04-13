@@ -1,0 +1,903 @@
+"use client";
+
+import { useState, type CSSProperties, type ReactNode, type ReactElement } from "react";
+import type { LucideIcon } from "lucide-react";
+import {
+  Activity,
+  AlertTriangle,
+  ArrowLeft,
+  Bot,
+  CheckCircle,
+  ChevronRight,
+  Crosshair,
+  Globe,
+  Grid,
+  Home as HomeIcon,
+  Layers,
+  Lock,
+  MessageCircle,
+  Shield,
+  Target,
+} from "lucide-react";
+import { CardOpsDashboard, type CardOpsThemeTokens } from "./CardOpsDashboard";
+import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
+import { RoleBasedComplianceTimePills } from "@/components/role-based-dashboard/RoleBasedComplianceTimePills";
+import { RoleBasedUnifiedChrome } from "@/components/role-based-dashboard/RoleBasedUnifiedChrome";
+import { RoleBasedUnifiedReadingShell } from "@/components/role-based-dashboard/RoleBasedUnifiedReadingShell";
+import {
+  RoleBasedUnifiedScreen1Addon,
+  RoleBasedUnifiedScreen2Addon,
+  RoleBasedUnifiedScreen3Addon,
+  RoleBasedUnifiedScreen4Addon,
+  RoleBasedUnifiedScreen5Addon,
+} from "@/components/role-based-dashboard/RoleBasedUnifiedScreenExtensions";
+import { useEisenhowerThreadsSnapshot } from "@/components/role-based-dashboard/useEisenhowerThreadsSnapshot";
+import { initialKpiSignalFilter, skipExecutiveScreen } from "@/lib/role-based-dashboard/personaUnifiedConfig";
+import type { EisenhowerThread } from "@/lib/api";
+import {
+  T as INDUSTRY_THEME,
+  ROLE_DATA,
+  LOB_DATA,
+  LOB_DRILL_KPIS,
+  type Industry,
+  type Role,
+  type RoleDashboardData,
+  type ScreenId,
+  type LensId,
+} from "@/lib/role-based-dashboard/registry";
+type BadgeColor = "red" | "amber" | "green" | "teal" | "purple" | "blue" | "gold" | "cyan";
+
+function Badge({ color = "blue", children }: { color?: BadgeColor; children: ReactNode }) {
+  const T = useDashboardTheme();
+  const m: Record<BadgeColor, [string, string]> = { red: [T.red, `${T.red}25`], amber: [T.amber, `${T.amber}25`], green: [T.green, `${T.green}25`], teal: [T.cyan, `${T.cyan}25`], purple: [T.purple, `${T.purple}25`], blue: [T.blue, `${T.blue}25`], gold: [T.gold, `${T.gold}25`], cyan: [T.cyan, `${T.cyan}25`] };
+  const [fg, bg] = m[color] ?? m.blue;
+  return <span style={{ background: bg, color: fg, fontSize: 10, fontWeight: 700, padding: "4px 10px", borderRadius: 6, letterSpacing: 0.6, textTransform: "uppercase", whiteSpace: "nowrap" }}>{children}</span>;
+}
+type SecLane = "default" | "recorded" | "conversation";
+
+function Sec({
+  title,
+  sub,
+  action,
+  lane = "default",
+  children,
+}: {
+  title: string;
+  sub?: ReactNode;
+  action?: ReactNode;
+  lane?: SecLane;
+  children: ReactNode;
+}) {
+  const T = useDashboardTheme();
+  const wrap: CSSProperties = {
+    background: T.elevated,
+    border: `1px solid ${T.borderLight}`,
+    borderRadius: 14,
+    padding: 20,
+  };
+  if (lane === "recorded") wrap.borderLeft = `4px solid ${T.cyan}`;
+  if (lane === "conversation") {
+    wrap.borderLeft = `4px solid ${T.gold}`;
+    wrap.backgroundImage = `linear-gradient(135deg, ${T.gold}0d 0%, transparent 45%)`;
+  }
+  return (
+    <div style={wrap}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16, gap: 12 }}>
+        <div>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
+            <div style={{ fontSize: 15, fontWeight: 700, color: T.text }}>{title}</div>
+            {lane === "recorded" ? <Badge color="cyan">Recorded</Badge> : null}
+            {lane === "conversation" ? <Badge color="gold">Conversation AI</Badge> : null}
+          </div>
+          {sub && <div style={{ fontSize: 12, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>{sub}</div>}
+        </div>
+        {action}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+const SCREENS: { id: ScreenId; label: string; sub: string; icon: LucideIcon }[] = [
+  { id: 1, label: "Executive View", sub: "Promise · Stability · Risk", icon: HomeIcon },
+  { id: 2, label: "LOB / Industry Filter", sub: "Business Context + KPIs", icon: Grid },
+  { id: 3, label: "KPI Signals", sub: "CX · Ops · Risk · Compliance", icon: Activity },
+  { id: 4, label: "Functional Lens", sub: "Operations / Risk / Compliance", icon: Layers },
+  { id: 5, label: "Root Cause + Action", sub: "Signal → Cause → Action", icon: Crosshair },
+];
+
+function Screen1({
+  data,
+  goTo,
+  role,
+  unifiedNavigation,
+}: {
+  data: RoleDashboardData;
+  goTo: (n: ScreenId) => void;
+  role: Role;
+  unifiedNavigation: boolean;
+}) {
+  const T = useDashboardTheme();
+  const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
+  const primaryIdx =
+    unifiedNavigation && "primaryTile" in role && typeof role.primaryTile === "number" ? role.primaryTile : null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+        {data.tiles.map((tile, i) => {
+          const Icon = tile.icon; const sc = gC(tile.score);
+          const isPrimary = primaryIdx === i;
+          return (
+            <div key={i} onClick={() => goTo(2)} style={{ background: T.elevated, border: `1px solid ${isPrimary ? T.cyan : sc}40`, borderRadius: 16, padding: "24px 22px", cursor: "pointer", transition: "all 0.25s", boxShadow: isPrimary ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22` : undefined }}
+              onMouseEnter={e => { if (!isPrimary) e.currentTarget.style.boxShadow = `0 8px 32px ${sc}15`; }} onMouseLeave={e => { if (!isPrimary) e.currentTarget.style.boxShadow = "none"; else e.currentTarget.style.boxShadow = `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22`; }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: `${tile.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={18} color={tile.color}/></div>
+                  <div><div style={{ fontSize: 18, fontWeight: 700, color: T.text }}>{tile.title}</div><div style={{ fontSize: 14, color: T.textMut, lineHeight: 1.4 }}>{tile.sub}</div></div>
+                </div>
+                <ChevronRight size={16} color={T.textMut}/>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
+                <div style={{ width: 68, height: 68, borderRadius: "50%", border: `3px solid ${sc}`, display: "flex", alignItems: "center", justifyContent: "center", background: `${sc}18`, boxShadow: `0 0 24px ${sc}25` }}>
+                  <span style={{ fontSize: 30, fontWeight: 800, color: sc, fontFamily: "var(--mono)" }}>{tile.score}</span>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px", flex: 1 }}>
+                  {tile.kpis.map((k, j) => (<div key={j}><div style={{ fontSize: 12, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>{k.l}</div><div style={{ fontSize: 16, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>{k.v}</div></div>))}
+                </div>
+              </div>
+              <div
+                style={{
+                  background: `linear-gradient(135deg, ${T.gold}10 0%, ${sc}08 38%)`,
+                  border: `1px solid ${T.gold}28`,
+                  borderLeft: `4px solid ${T.gold}`,
+                  borderRadius: 10,
+                  padding: "10px 14px",
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <Bot size={11} color={T.gold} />
+                  <span style={{ fontSize: 12, fontWeight: 700, color: T.gold, letterSpacing: 0.5, textTransform: "uppercase" }}>Conversation AI</span>
+                </div>
+                <div style={{ fontSize: 15, color: T.textSec, lineHeight: 1.55 }}>{tile.insight}</div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {unifiedNavigation ? <RoleBasedUnifiedScreen1Addon role={role} /> : null}
+    </div>
+  );
+}
+
+function Screen2({
+  goTo,
+  industry,
+  onLobChange,
+  activeLob,
+  role,
+  unifiedNavigation,
+  eisenhowerThreads,
+}: {
+  goTo: (n: ScreenId) => void;
+  industry: Industry;
+  onLobChange: (lob: string) => void;
+  activeLob: string;
+  role: Role;
+  unifiedNavigation: boolean;
+  eisenhowerThreads: EisenhowerThread[];
+}) {
+  const T = useDashboardTheme();
+  // Determine available LOBs based on industry
+  const lobTabs: { id: string; label: string }[] = [];
+  if (industry.id === "retail_banking") {
+    lobTabs.push({ id: "retail_banking", label: "Retail Banking" });
+    lobTabs.push({ id: "cards_business", label: "Cards Business" });
+  } else if (industry.id === "credit_cards") {
+    lobTabs.push({ id: "cards_business", label: "Cards Business" });
+  } else if (industry.id === "insurance") {
+    lobTabs.push({ id: "insurance", label: "Insurance" });
+  } else if (industry.id === "ecommerce") {
+    lobTabs.push({ id: "retail_banking", label: "Marketplace" });
+  }
+
+  const lobData = LOB_DATA[activeLob] ?? LOB_DATA.retail_banking;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+      {lobTabs.length > 1 && (
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {lobTabs.map((tab) => (
+            <button key={tab.id} onClick={() => onLobChange(tab.id)} style={{
+              background: activeLob === tab.id ? `${industry.color}20` : T.elevated,
+              border: `1px solid ${activeLob === tab.id ? industry.color : T.borderLight}`,
+              borderRadius: 10, padding: "10px 20px", cursor: "pointer",
+              color: activeLob === tab.id ? T.text : T.textSec,
+              fontWeight: activeLob === tab.id ? 700 : 500, fontSize: 13, fontFamily: "inherit",
+              transition: "all 0.2s",
+            }}>{tab.label}</button>
+          ))}
+        </div>
+      )}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: 18, alignItems: "start" }}>
+        <div>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: T.text }}>
+              {lobData.label} <span style={{ color: T.textSec, fontWeight: 400 }}>— Core KPIs</span>
+            </div>
+            <Badge color="cyan">Recorded</Badge>
+            <span style={{ fontSize: 12, color: T.textSec, lineHeight: 1.45, flex: "1 1 200px" }}>
+              From contact-centre and core banking feeds (queues, SLAs, volumes). Not model-generated.
+            </span>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 10, marginBottom: 16 }}>
+            {lobData.kpis.map((k, i) => {
+              const col = k.st === "red" ? T.red : k.st === "amber" ? T.amber : T.green;
+              return (
+                <div key={i} onClick={() => goTo(3)} style={{ background: T.elevated, border: `1px solid ${T.borderLight}`, borderRadius: 12, padding: "16px 14px", borderTop: `3px solid ${col}`, cursor: "pointer" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: T.textSec, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 10 }}>{k.l}</div>
+                  <div style={{ fontSize: 24, fontWeight: 800, color: col, fontFamily: "var(--mono)", lineHeight: 1 }}>{k.v}</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8, fontSize: 11 }}>
+                    <span style={{ color: k.delta >= 0 ? T.red : T.green, fontWeight: 700 }}>{k.delta >= 0 ? "▲" : "▼"} {Math.abs(k.delta)}</span>
+                    <span style={{ color: T.textSec }}>T: {k.target}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <Sec title="AI Insights" sub="Model-ranked themes from conversations — validate before executive use." lane="conversation">
+            {lobData.insights.map((ins, i) => (
+              <div key={i} onClick={() => goTo(5)} style={{ background: T.surface, border: `1px solid ${T.amber}30`, borderLeft: `3px solid ${T.amber}`, borderRadius: 10, padding: "14px 16px", marginBottom: 10, cursor: "pointer" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}><Bot size={12} color={T.amber}/><span style={{ fontSize: 10, fontWeight: 700, color: T.amber, textTransform: "uppercase", letterSpacing: 0.5 }}>Insight #{i + 1}</span></div>
+                <div style={{ fontSize: 13, color: T.text, lineHeight: 1.6 }}>{ins}</div>
+              </div>
+            ))}
+          </Sec>
+        </div>
+        <Sec title="Priority Matrix" sub="Eisenhower: what needs action now?" lane="recorded">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+            {[{ label: "DO NOW", items: lobData.eisenhower.do, bg: `${T.red}18`, bc: T.red }, { label: "PLAN", items: lobData.eisenhower.plan, bg: `${T.amber}18`, bc: T.amber }, { label: "DELEGATE", items: lobData.eisenhower.delegate, bg: `${T.blue}18`, bc: T.blue }, { label: "MONITOR", items: lobData.eisenhower.monitor, bg: `${T.textMut}15`, bc: T.textMut }].map((q, i) => (
+              <div key={i} style={{ background: q.bg, border: `1px solid ${q.bc}35`, borderRadius: 10, padding: "10px 12px" }}>
+                <div style={{ fontSize: 9, fontWeight: 800, color: q.bc, letterSpacing: 1, textTransform: "uppercase", marginBottom: 8 }}>{q.label}</div>
+                {q.items.map((item, j) => (<div key={j} style={{ fontSize: 11, color: T.text, lineHeight: 1.5, marginBottom: 5, paddingLeft: 8, borderLeft: `2px solid ${q.bc}50` }}>{item}</div>))}
+              </div>
+            ))}
+          </div>
+        </Sec>
+      </div>
+      {unifiedNavigation ? <RoleBasedUnifiedScreen2Addon role={role} threads={eisenhowerThreads} activeLob={activeLob} /> : null}
+    </div>
+  );
+}
+
+function Screen3({
+  goTo,
+  activeLob,
+  industry,
+  role,
+  unifiedNavigation,
+  personaInitialFilter,
+}: {
+  goTo: (n: ScreenId) => void;
+  activeLob: string;
+  industry: Industry;
+  role: Role;
+  unifiedNavigation: boolean;
+  personaInitialFilter: string;
+}) {
+  const T = useDashboardTheme();
+  const [userFilter, setUserFilter] = useState<string>(() => (unifiedNavigation ? personaInitialFilter : "all"));
+  const userFilters = [
+    { id: "all", label: "All Signals" },
+    { id: "ops", label: "Operations" },
+    { id: "fraud", label: "Fraud" },
+    { id: "training", label: "Training" },
+    { id: "staffing", label: "Staffing" },
+  ];
+
+  const groups = [
+    { label: "CX Metrics", color: T.cyan, icon: Target, filterTags: ["ops", "training"], kpis: [{ n: "NPS", v: "+38", a: "▼6 pts in 4 weeks" }, { n: "CSAT", v: "81%", a: null }, { n: "Sentiment", v: "0.58", a: "Below 0.60 threshold" }, { n: "Complaint Rate", v: "2.8%", a: "▲40% in 6 weeks" }] },
+    { label: "Operational", color: T.gold, icon: Activity, filterTags: ["ops", "staffing"], kpis: [{ n: "AHT", v: "8.3m", a: "Above 8 min target" }, { n: "SLA Compliance", v: "87%", a: "Below 95% — 3rd week" }, { n: "Vol vs Capacity", v: "112%", a: "Exceeded 9–11 AM" }, { n: "FCR", v: "74%", a: "Below 80% target" }] },
+    { label: "Risk / Fraud", color: T.red, icon: Shield, filterTags: ["fraud"], kpis: [{ n: "Fraud Signals", v: "69", a: "FL cluster + MCC 7995" }, { n: "System Failures", v: "4", a: "KYC API + payment" }, { n: "Breach Exposure", v: "1,247", a: "Active merchant breach" }, { n: "ATO Attempts", v: "23", a: "Social engineering" }] },
+    { label: "Regulatory", color: T.purple, icon: Globe, filterTags: ["ops", "fraud"], kpis: [{ n: "CFPB Risk Cases", v: "7", a: ">60% escalation" }, { n: "Social Velocity", v: "3.4×", a: "Above 2× threshold" }, { n: "Compliance", v: "91%", a: null }, { n: "Cmpl→Social", v: "4.2%", a: "Posting after complaints" }] },
+    { label: "Training & Quality", color: T.blue, icon: Target, filterTags: ["training"], kpis: [{ n: "QA Score", v: "78%", a: "Below 85% benchmark" }, { n: "Agent Knowledge Gap", v: "23%", a: "HELOC + fee queries" }, { n: "Script Adherence", v: "94%", a: null }, { n: "Coaching Completion", v: "62%", a: "Behind schedule" }, { n: "Cross-sell Misfire", v: "18%", a: "During complaint calls" }] },
+    { label: "Staffing & Workforce", color: T.green, icon: Activity, filterTags: ["staffing"], kpis: [{ n: "Staffing Gap", v: "12 short", a: "10–12 PM window" }, { n: "Agent Utilisation", v: "94%", a: "Above 88% target" }, { n: "Overtime Hours", v: "+34%", a: "3rd week rising" }, { n: "BPO Quality Score", v: "68%", a: "Below 85% SLA" }, { n: "New Hire Ramp", v: "14 agents", a: "4 weeks to ready" }] },
+  ];
+
+  // Add LOB-specific drill KPIs
+  const extraGroups: typeof groups = [];
+  if (activeLob === "retail_banking" || industry.id === "retail_banking") {
+    const mortgageData = LOB_DRILL_KPIS.mortgage_loans;
+    if (mortgageData) {
+      mortgageData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.amber, icon: AlertTriangle, filterTags: ["ops", "fraud"], kpis: g.kpis });
+      });
+    }
+  }
+  if (activeLob === "insurance" || industry.id === "insurance") {
+    const insData = LOB_DRILL_KPIS.insurance_lob;
+    if (insData) {
+      insData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTags: ["fraud", "ops"], kpis: g.kpis });
+      });
+    }
+  }
+  // CRO-specific drill KPIs (Financial Crime, Consumer Duty, Cross-Jurisdiction)
+  if (role.id === "cro") {
+    const fcData = LOB_DRILL_KPIS.cro_financial_crime;
+    if (fcData) {
+      fcData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.red, icon: Shield, filterTags: ["fraud"], kpis: g.kpis });
+      });
+    }
+    const cdData = LOB_DRILL_KPIS.cro_consumer_duty;
+    if (cdData) {
+      cdData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.purple, icon: Lock, filterTags: ["fraud", "ops"], kpis: g.kpis });
+      });
+    }
+    const cjData = LOB_DRILL_KPIS.cro_cross_jurisdiction;
+    if (cjData) {
+      cjData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.blue, icon: Globe, filterTags: ["ops", "fraud"], kpis: g.kpis });
+      });
+    }
+  }
+
+  const allGroups = [...groups, ...extraGroups];
+  const filteredGroups = userFilter === "all" ? allGroups : allGroups.filter(g => g.filterTags.includes(userFilter));
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        {userFilters.map((f) => (
+          <button key={f.id} onClick={() => setUserFilter(f.id)} style={{
+            background: userFilter === f.id ? `${T.cyan}20` : T.elevated,
+            border: `1px solid ${userFilter === f.id ? T.cyan : T.borderLight}`,
+            borderRadius: 8, padding: "7px 16px", cursor: "pointer",
+            color: userFilter === f.id ? T.text : T.textSec,
+            fontWeight: userFilter === f.id ? 700 : 500, fontSize: 12, fontFamily: "inherit",
+          }}>{f.label}</button>
+        ))}
+      </div>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 10,
+          padding: "10px 14px",
+          borderRadius: 10,
+          border: `1px solid ${T.borderLight}`,
+          background: T.elevated,
+        }}
+      >
+        <Badge color="cyan">Recorded</Badge>
+        <span style={{ fontSize: 12, color: T.textSec, lineHeight: 1.45 }}>
+          KPI tiles = operational and risk metrics from systems of record. Unified blocks below may add conversation-derived panels (CRO: financial crime, Consumer Duty).
+        </span>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: `repeat(${Math.min(filteredGroups.length, 4)}, 1fr)`, gap: 14 }}>
+        {filteredGroups.map((g, gi) => {
+          const Icon = g.icon;
+          return (
+            <div key={gi} style={{ background: T.elevated, border: `1px solid ${T.borderLight}`, borderRadius: 14, padding: "16px 14px", borderTop: `3px solid ${g.color}` }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14, paddingBottom: 10, borderBottom: `1px solid ${T.borderLight}` }}><Icon size={14} color={g.color}/><span style={{ fontSize: 13, fontWeight: 700, color: g.color }}>{g.label}</span></div>
+              {g.kpis.map((k, ki) => {
+                const tc = k.a ? T.red : T.green;
+                return (
+                  <div key={ki} onClick={() => goTo(4)} style={{ background: T.surface, border: `1px solid ${T.borderLight}`, borderRadius: 8, padding: "10px 12px", marginBottom: 8, cursor: "pointer", borderLeft: k.a ? `3px solid ${tc}` : "3px solid transparent" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}><span style={{ fontSize: 12, fontWeight: 600, color: T.text }}>{k.n}</span><span style={{ fontSize: 16, fontWeight: 800, color: tc, fontFamily: "var(--mono)" }}>{k.v}</span></div>
+                    {k.a && <div style={{ fontSize: 10, color: tc, fontWeight: 600 }}>⚠ {k.a}</div>}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+      {unifiedNavigation ? <RoleBasedUnifiedScreen3Addon role={role} /> : null}
+    </div>
+  );
+}
+
+function Screen4({
+  goTo,
+  defaultLens,
+  role,
+  unifiedNavigation,
+  eisenhowerThreads,
+}: {
+  goTo: (n: ScreenId) => void;
+  defaultLens?: LensId;
+  role: Role;
+  unifiedNavigation: boolean;
+  eisenhowerThreads: EisenhowerThread[];
+}) {
+  const T = useDashboardTheme();
+  const [lens, setLens] = useState<LensId>(defaultLens ?? "ops");
+  const lenses: Record<LensId, { label: string; icon: LucideIcon; color: string; cols: { t: string; items: [string, string, string, string][] }[] }> = { ops: { label: "Operations", icon: Activity, color: T.gold, cols: [
+    { t: "Process Breakdown", items: [["Vol vs Capacity", "112%", "Exceeded 9–11 AM", T.red], ["Queue Depth", "847", "Peak: 10:15 AM", T.amber], ["SLA Adherence", "87%", "Below 95%", T.red], ["Backlog Age", "312 >48h", "Growing 8%/week", T.amber]] },
+    { t: "Workforce Layer", items: [["Staffing Gap", "12 short", "10–12 PM window", T.red], ["AHT Trend", "8.3m ▲", "3rd week above target", T.amber], ["Agent Variation", "3.2× spread", "Best 4.1, Worst 13.2", T.amber], ["BPO Performance", "2.7× slower", "Evidence collection", T.red]] },
+    { t: "Pattern Signals", items: [["Peak Spike", "9–11 AM", "32% over capacity", T.red], ["Region Skew", "Florida", "3× avg complaints", T.amber], ["Channel Shift", "Voice→Chat", "12% migration", T.cyan], ["Segment", "Premium", "Highest dissatisfaction", T.amber]] },
+  ]}, risk: { label: "Risk", icon: Shield, color: T.red, cols: [
+    { t: "Fraud Signals", items: [["Active Alerts", "69", "▲12 in 24h", T.red], ["Social Eng.", "23 calls", "FL seniors targeted", T.red], ["Card Testing", "89 cards", "MCC 7995 gaming", T.amber], ["ATO Attempts", "23", "Via contact centre", T.amber]] },
+    { t: "System Risk", items: [["KYC API", "3× latency", "Since Tuesday", T.red], ["Payment Gateway", "0.4% errors", "Above 0.1%", T.amber], ["Retry Anomalies", "2,340", "Unusual auth pattern", T.amber], ["App Crashes", "847", "iOS password loop", T.amber]] },
+    { t: "Exposure View", items: [["Customers Hit", "2,847", "All active events", T.red], ["Breach Cards", "1,247", "Reissuance 68%", T.red], ["Value at Risk", "$312K", "Merchant breach", T.red], ["Fraud Loss/Wk", "$47K", "MCC 7995", T.amber]] },
+  ]}, compliance: { label: "Compliance", icon: Lock, color: T.purple, cols: [
+    { t: "Complaint Risk", items: [["Backlog", "312 open", "28 new this week", T.red], ["SLA Breach", "43 cases", "Within 3 days", T.red], ["Escalation Delays", "7 cases", ">60% CFPB prob", T.red], ["Unactioned", "3", ">4 hours", T.amber]] },
+    { t: "Reputation", items: [["Sentiment", "0.58 ▼", "Below 0.60 — 2nd wk", T.red], ["Social Velocity", "3.4×", "Backlash + competitor", T.red], ["App Store", "4.1 ▼0.2", "Dropped 30 days", T.amber], ["Cmpl→Social", "4.2%", "Posting after filing", T.amber]] },
+    { t: "Regulatory", items: [["CFPB Risk", "7", ">60% escalation", T.red], ["Reg E Deadline", "43", "Provisional credit due", T.red], ["Doc Gaps", "12%", "Incomplete trails", T.amber], ["Compliance/Unit", "91%", "Cards 88%, Retail 94%", T.green]] },
+  ]}};
+
+  const L = lenses[lens];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "flex", gap: 8 }}>
+        {Object.entries(lenses).map(([id, l]) => {
+          const Icon = l.icon;
+          return (<button key={id} onClick={() => setLens(id as LensId)} style={{ background: lens === id ? `${l.color}20` : T.elevated, border: `1px solid ${lens === id ? l.color : T.borderLight}`, borderRadius: 10, padding: "10px 18px", cursor: "pointer", display: "flex", alignItems: "center", gap: 8, color: lens === id ? T.text : T.textSec, fontWeight: lens === id ? 700 : 500, fontSize: 13, fontFamily: "inherit" }}><Icon size={14}/> {l.label}</button>);
+        })}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}>
+        {L.cols.map((col, ci) => (
+          <Sec key={ci} title={col.t} lane="recorded">
+            {col.items.map(([l, v, s, c], i) => (
+              <div key={i} onClick={c === T.red ? () => goTo(5) : undefined} style={{ background: T.surface, border: `1px solid ${c === T.red ? `${T.red}35` : T.borderLight}`, borderRadius: 8, padding: "10px 14px", marginBottom: 8, cursor: c === T.red ? "pointer" : "default", borderLeft: c === T.red ? `3px solid ${T.red}` : "3px solid transparent" }}>
+                <div style={{ display: "flex", justifyContent: "space-between" }}><span style={{ fontSize: 12, color: T.text }}>{l}</span><span style={{ fontSize: 15, fontWeight: 700, color: c, fontFamily: "var(--mono)" }}>{v}</span></div>
+                <div style={{ fontSize: 11, color: T.textSec, marginTop: 3 }}>{s}</div>
+              </div>
+            ))}
+          </Sec>
+        ))}
+      </div>
+      {unifiedNavigation ? <RoleBasedUnifiedScreen4Addon lens={lens} role={role} threads={eisenhowerThreads} /> : null}
+    </div>
+  );
+}
+
+function Screen5({ data, role, unifiedNavigation }: { data: RoleDashboardData; role: Role; unifiedNavigation: boolean }) {
+  const T = useDashboardTheme();
+  const incidents = [
+    { sev: "critical", title: data.insights[0]?.split("—")[0] || "Critical Issue", what: data.insights[0] || "", where: { ch: "Voice + Digital", region: "National", product: "Retail Banking" }, why: [data.insights[0] || "", data.insights[1] || ""], impact: { cust: "2,847 impacted", fin: "$312K exposure", sla: "SLA breach — 3 days" },
+      actions: [{ type: "fix", text: data.eisenhower.do[0] || "Fix primary issue" }, { type: "fix", text: data.eisenhower.do[1] || "Fix secondary issue" }, { type: "escalate", text: data.eisenhower.plan[0] || "Escalate to team" }, { type: "outreach", text: "Proactive customer notification for affected accounts" }] },
+  ];
+  if (data.insights[2]) {
+    incidents.push({ sev: "warning", title: data.insights[2].split("—")[0] || "Warning", what: data.insights[2], where: { ch: "Multiple channels", region: "Specific cohort", product: "Retail Banking" }, why: [data.insights[2]], impact: { cust: "Cohort affected", fin: "Revenue / compliance risk", sla: "Monitoring required" },
+      actions: [{ type: "fix", text: data.eisenhower.plan[1] || "Address root cause" }, { type: "escalate", text: "Escalate for review" }] });
+  }
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {incidents.map((inc, i) => {
+        const col = inc.sev === "critical" ? T.red : T.amber;
+        return (
+          <div key={i} style={{ background: T.elevated, border: `1px solid ${col}40`, borderRadius: 14, padding: 22, borderLeft: `4px solid ${col}` }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <Badge color={inc.sev === "critical" ? "red" : "amber"}>{inc.sev}</Badge>
+              <span style={{ fontSize: 16, fontWeight: 700, color: T.text }}>{inc.title}</span>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: T.textSec, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>1. What Happened</div>
+              <div style={{ fontSize: 13, color: T.text, lineHeight: 1.65, background: `${col}10`, border: `1px solid ${col}25`, borderRadius: 10, padding: "12px 16px" }}>{inc.what}</div>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: T.textSec, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>2. Where</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                {[["Channel", inc.where.ch], ["Region", inc.where.region], ["Product", inc.where.product]].map(([l, v], j) => (
+                  <div key={j} style={{ background: T.surface, border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "10px 14px" }}><div style={{ fontSize: 10, color: T.textSec, textTransform: "uppercase", marginBottom: 3 }}>{l}</div><div style={{ fontSize: 13, color: T.text, fontWeight: 600 }}>{v}</div></div>
+                ))}
+              </div>
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}><span style={{ fontSize: 11, fontWeight: 700, color: T.textSec, textTransform: "uppercase", letterSpacing: 1 }}>3. Why</span><Badge color="gold">AI Root Cause</Badge></div>
+              {inc.why.filter(Boolean).map((w, j) => (
+                <div key={j} style={{ background: `${T.amber}10`, border: `1px solid ${T.amber}25`, borderRadius: 8, padding: "10px 14px", marginBottom: 6, display: "flex", alignItems: "flex-start", gap: 10 }}>
+                  <span style={{ width: 22, height: 22, borderRadius: "50%", background: `${T.amber}25`, color: T.amber, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, flexShrink: 0 }}>{j + 1}</span>
+                  <span style={{ fontSize: 12, color: T.text, lineHeight: 1.55 }}>{w}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: T.textSec, textTransform: "uppercase", letterSpacing: 1, marginBottom: 8 }}>4. Impact</div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
+                {[["Customers", inc.impact.cust, T.amber], ["Financial", inc.impact.fin, T.red], ["SLA", inc.impact.sla, T.amber]].map(([l, v, c], j) => (
+                  <div key={j} style={{ background: `${c}15`, border: `1px solid ${c}35`, borderRadius: 10, padding: "10px 14px" }}><div style={{ fontSize: 10, color: T.textSec, textTransform: "uppercase", marginBottom: 3 }}>{l}</div><div style={{ fontSize: 14, color: T.text, fontWeight: 700 }}>{v}</div></div>
+                ))}
+              </div>
+            </div>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}><span style={{ fontSize: 11, fontWeight: 700, color: T.textSec, textTransform: "uppercase", letterSpacing: 1 }}>5. Actions</span><Badge color="teal">AI-Proposed</Badge></div>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {inc.actions.map((a, j) => {
+                  const ac = a.type === "fix" ? T.cyan : a.type === "escalate" ? T.amber : T.green;
+                  return (
+                    <div key={j} style={{ background: `${ac}10`, border: `1px solid ${ac}30`, borderRadius: 10, padding: "10px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+                      <div style={{ width: 24, height: 24, borderRadius: 7, background: `${ac}25`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        {a.type === "fix" ? <CheckCircle size={13} color={ac}/> : a.type === "escalate" ? <AlertTriangle size={13} color={ac}/> : <MessageCircle size={13} color={ac}/>}
+                      </div>
+                      <span style={{ fontSize: 12, color: T.text, flex: 1 }}>{a.text}</span>
+                      <Badge color={a.type === "fix" ? "teal" : a.type === "escalate" ? "amber" : "green"}>{a.type}</Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+      {unifiedNavigation ? <RoleBasedUnifiedScreen5Addon role={role} /> : null}
+    </div>
+  );
+}
+
+// ═══════════════════════════
+// DASHBOARD SHELL (per role route)
+// ═══════════════════════════
+
+export type RoleDashboardViewProps = {
+  industry: Industry;
+  role: Role;
+  onExit: () => void;
+  /** When set (e.g. Swedbank compliance styling), overrides default industry dashboard colors. */
+  theme?: DashboardThemeTokens;
+  /** Theme for Head of Credit Cards (card ops) view only. */
+  cardOpsTheme?: CardOpsThemeTokens;
+  /**
+   * When true, embeds unified intelligence components (AI spikes, filters bar, persona-specific panels)
+   * per screen. Used by `/role-based` routes.
+   */
+  unifiedNavigation?: boolean;
+};
+
+function RoleDashboardShell({
+  industry,
+  role,
+  onExit,
+  unifiedNavigation,
+  eisenhowerThreads,
+}: {
+  industry: Industry;
+  role: Role;
+  onExit: () => void;
+  unifiedNavigation: boolean;
+  eisenhowerThreads: EisenhowerThread[];
+}) {
+  const T = useDashboardTheme();
+  const [screen, setScreen] = useState<ScreenId>(() => (skipExecutiveScreen(industry, role) ? 3 : 1));
+  const defaultLob = industry.id === "insurance" ? "insurance" : industry.id === "credit_cards" ? "cards_business" : "retail_banking";
+  const [activeLob, setActiveLob] = useState<string>(defaultLob);
+  const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
+  const data = roleDataMap[role.id] ?? ROLE_DATA.ceo;
+
+  const IndIcon = industry.icon;
+  const RoleIcon = role.icon;
+  const active = SCREENS.find(s => s.id === screen);
+  const initialLens: LensId =
+    "defaultLens" in role &&
+    (role.defaultLens === "ops" || role.defaultLens === "risk" || role.defaultLens === "compliance")
+      ? role.defaultLens
+      : "ops";
+
+  const personaFilter = initialKpiSignalFilter(role.id);
+
+  const [sidebarHover, setSidebarHover] = useState(false);
+  const SIDEBAR_W_EXPANDED = 268;
+  const SIDEBAR_W_COLLAPSED = 76;
+  const sidebarW = sidebarHover ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
+
+  const screenComponents: Record<ScreenId, ReactElement> = {
+    1: <Screen1 data={data} goTo={setScreen} role={role} unifiedNavigation={unifiedNavigation} />,
+    2: (
+      <Screen2
+        goTo={setScreen}
+        industry={industry}
+        onLobChange={setActiveLob}
+        activeLob={activeLob}
+        role={role}
+        unifiedNavigation={unifiedNavigation}
+        eisenhowerThreads={eisenhowerThreads}
+      />
+    ),
+    3: (
+      <Screen3
+        goTo={setScreen}
+        activeLob={activeLob}
+        industry={industry}
+        role={role}
+        unifiedNavigation={unifiedNavigation}
+        personaInitialFilter={personaFilter}
+      />
+    ),
+    4: (
+      <Screen4
+        goTo={setScreen}
+        defaultLens={initialLens}
+        role={role}
+        unifiedNavigation={unifiedNavigation}
+        eisenhowerThreads={eisenhowerThreads}
+      />
+    ),
+    5: <Screen5 data={data} role={role} unifiedNavigation={unifiedNavigation} />,
+  };
+
+  return (
+    <div style={{ display: "flex", height: "100vh", overflow: "hidden", fontFamily: "var(--font), system-ui, sans-serif" }}>
+      <div
+        onMouseEnter={() => setSidebarHover(true)}
+        onMouseLeave={() => setSidebarHover(false)}
+        style={{
+          width: sidebarW,
+          minWidth: sidebarW,
+          transition: "width 0.22s ease, min-width 0.22s ease",
+          background: T.surface,
+          borderRight: `1px solid ${T.border}`,
+          display: "flex",
+          flexDirection: "column",
+          flexShrink: 0,
+          overflow: "hidden",
+          zIndex: 5,
+        }}
+      >
+        <div
+          style={{
+            padding: sidebarHover ? "18px 16px" : "14px 10px",
+            borderBottom: `1px solid ${T.border}`,
+            textAlign: sidebarHover ? "left" : "center",
+          }}
+        >
+          {sidebarHover ? (
+            <>
+              <div style={{ fontSize: 12, fontWeight: 800, color: T.cyan, letterSpacing: 2.5, textTransform: "uppercase" }}>Yaaralabs</div>
+              <div style={{ fontSize: 13, color: T.textMut, marginTop: 2 }}>Fluid Intelligence</div>
+            </>
+          ) : (
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                margin: "0 auto",
+                borderRadius: 10,
+                background: T.cyanGlow,
+                border: `1px solid ${T.cyan}40`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 15,
+                fontWeight: 800,
+                color: T.cyan,
+                fontFamily: "var(--mono)",
+              }}
+              title="Yaaralabs · Fluid Intelligence"
+            >
+              Y
+            </div>
+          )}
+        </div>
+        <div
+          style={{
+            padding: sidebarHover ? "12px 14px" : "10px 8px",
+            borderBottom: `1px solid ${T.border}`,
+            display: "flex",
+            flexDirection: "column",
+            gap: sidebarHover ? 8 : 6,
+            alignItems: sidebarHover ? "stretch" : "center",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: sidebarHover ? "flex-start" : "center" }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: `${industry.color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <IndIcon size={12} color={industry.color} />
+            </div>
+            {sidebarHover ? <span style={{ fontSize: 13, fontWeight: 600, color: T.text, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{industry.name}</span> : null}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: sidebarHover ? "flex-start" : "center" }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: `${industry.color}12`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+              <RoleIcon size={12} color={industry.color} />
+            </div>
+            {sidebarHover ? <span style={{ fontSize: 13, fontWeight: 600, color: T.cyan, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{role.name}</span> : null}
+          </div>
+        </div>
+        <div style={{ padding: sidebarHover ? "10px 8px" : "8px 6px", flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+          {sidebarHover ? (
+            <div style={{ fontSize: 12, fontWeight: 700, color: T.textMut, letterSpacing: 1.5, textTransform: "uppercase", marginBottom: 8, paddingLeft: 4 }}>Drill-Down</div>
+          ) : (
+            <div style={{ fontSize: 12, fontWeight: 700, color: T.textMut, letterSpacing: 0.8, textTransform: "uppercase", marginBottom: 6, textAlign: "center", opacity: 0.85 }} title="Drill-down navigation">
+              Nav
+            </div>
+          )}
+          {SCREENS.map((s, i) => {
+            const Icon = s.icon;
+            const act = screen === s.id;
+            const tip = `Screen ${s.id}: ${s.label} — ${s.sub}`;
+            return (
+              <div key={s.id}>
+                <button
+                  type="button"
+                  title={tip}
+                  onClick={() => setScreen(s.id)}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: sidebarHover ? 8 : 0,
+                    padding: sidebarHover ? "8px 10px" : "10px 8px",
+                    width: "100%",
+                    textAlign: "left",
+                    background: act ? T.cyanGlow : "transparent",
+                    border: "none",
+                    borderRadius: 8,
+                    cursor: "pointer",
+                    borderLeft: act ? `3px solid ${T.cyan}` : "3px solid transparent",
+                    justifyContent: sidebarHover ? "flex-start" : "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: 6,
+                      background: act ? T.cyanGlow : `${T.textMut}10`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon size={11} color={act ? T.cyan : T.textMut} />
+                  </div>
+                  {sidebarHover ? (
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ fontSize: 14, fontWeight: act ? 700 : 500, color: act ? T.text : T.textSec }}>
+                        <span style={{ color: act ? T.cyan : T.textMut, fontFamily: "var(--mono)", marginRight: 4, fontSize: 12 }}>{s.id}.</span>
+                        {s.label}
+                      </div>
+                      <div style={{ fontSize: 12, color: T.textMut, lineHeight: 1.35 }}>{s.sub}</div>
+                    </div>
+                  ) : null}
+                </button>
+                {sidebarHover && i < SCREENS.length - 1 ? (
+                  <div style={{ textAlign: "center", color: T.border, fontSize: 11, padding: "1px 0" }}>↓</div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ padding: sidebarHover ? "10px 12px" : "10px 8px", borderTop: `1px solid ${T.border}` }}>
+          <button
+            type="button"
+            title="Change role"
+            onClick={onExit}
+            style={{
+              background: T.card,
+              border: `1px solid ${T.border}`,
+              borderRadius: 8,
+              padding: sidebarHover ? "8px 14px" : "10px 8px",
+              cursor: "pointer",
+              color: T.textSec,
+              fontSize: 13,
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: sidebarHover ? 6 : 0,
+              fontFamily: "inherit",
+            }}
+          >
+            <ArrowLeft size={11} />
+            {sidebarHover ? "Change Role" : null}
+          </button>
+        </div>
+      </div>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {unifiedNavigation ? (
+          <div
+            style={{
+              padding: "12px 24px",
+              borderBottom: `1px solid ${T.border}`,
+              background: T.surface,
+              display: "flex",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+              gap: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ flex: "1 1 220px", minWidth: 0 }}>
+              <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
+                <span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>
+                {active?.label}
+              </h1>
+              <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>
+                {industry.name} · {role.name}
+                {screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                gap: 12,
+                flexShrink: 0,
+                marginLeft: "auto",
+              }}
+            >
+              <button
+                type="button"
+                style={{
+                  background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`,
+                  color: T.bg,
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "7px 16px",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                Export Report
+              </button>
+              <RoleBasedComplianceTimePills />
+            </div>
+          </div>
+        ) : (
+          <div style={{ padding: "12px 24px", borderBottom: `1px solid ${T.border}`, background: T.surface, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div>
+              <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}><span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>{active?.label}</h1>
+              <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>{industry.name} · {role.name}{screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}</div>
+            </div>
+            <button type="button" style={{ background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`, color: T.bg, border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Export Report</button>
+          </div>
+        )}
+        <div
+          style={{
+            flex: 1,
+            padding: unifiedNavigation ? "16px 18px 20px" : "18px 22px",
+            overflowY: "auto",
+          }}
+        >
+          {unifiedNavigation ? (
+            <RoleBasedUnifiedReadingShell>{screenComponents[screen]}</RoleBasedUnifiedReadingShell>
+          ) : (
+            screenComponents[screen]
+          )}
+        </div>
+        {unifiedNavigation ? <RoleBasedUnifiedChrome /> : null}
+      </div>
+    </div>
+  );
+}
+
+export function RoleDashboardView({
+  industry,
+  role,
+  onExit,
+  theme,
+  cardOpsTheme,
+  unifiedNavigation = false,
+}: RoleDashboardViewProps) {
+  const eisenhowerThreads = useEisenhowerThreadsSnapshot(unifiedNavigation);
+
+  if (industry.id === "credit_cards" && role.id === "head_cards") {
+    return (
+      <CardOpsDashboard
+        industryName={industry.name}
+        roleName={role.name}
+        industryColor={industry.color}
+        onExit={onExit}
+        theme={cardOpsTheme}
+      />
+    );
+  }
+
+  return (
+    <DashboardThemeProvider value={theme ?? INDUSTRY_THEME}>
+      <RoleDashboardShell
+        industry={industry}
+        role={role}
+        onExit={onExit}
+        unifiedNavigation={unifiedNavigation}
+        eisenhowerThreads={eisenhowerThreads}
+      />
+    </DashboardThemeProvider>
+  );
+}

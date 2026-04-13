@@ -33,6 +33,8 @@ export function IntentLifecycleFunnel({ data }: IntentLifecycleFunnelProps) {
                 borderRadius: "12px",
                 color: "#f3f4f6",
               }}
+              labelStyle={{ color: "#f9fafb", fontWeight: 600 }}
+              itemStyle={{ color: "#e5e7eb" }}
             />
             <Area type="monotone" dataKey="count" stroke="#c084fc" fill="url(#funnelGradient)" />
           </AreaChart>

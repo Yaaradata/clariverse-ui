@@ -1,0 +1,8 @@
+# deploy.s1 — Auto-generated 2026-04-11T23:36:50.839778
+DEPLOY_TYPE=frontend
+SERVICE_NAME=clariverse-ui-frontend
+FRAMEWORK=Next.js
+LANGUAGE=typescript
+GCP_PROJECT=clariversev1
+PORT=3000
+LAST_DEPLOY_URL=https://clariverse-ui-frontend-bhr99ui0t-yaaracommontech.vercel.app

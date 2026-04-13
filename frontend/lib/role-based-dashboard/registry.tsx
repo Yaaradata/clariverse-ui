@@ -108,23 +108,23 @@ export const ROLE_DATA = {
   },
   cro: {
     tiles: [
-      { title: "Promise Health", score: 74, color: T.cyan, icon: Target, sub: "CX + Sentiment + Effort + Accuracy", insight: "Compliance score at 91% — Cards unit at 88% dragging average. 6 mis-selling flags tied to outbound collections script.", kpis: [{ l: "Compliance", v: "91%" }, { l: "Sentiment", v: "0.58" }, { l: "Complaint Rate", v: "2.8%" }, { l: "Audit Trail", v: "88%" }] },
-      { title: "Operational Stability", score: 68, color: T.gold, icon: Activity, sub: "Volume vs Capacity + SLA Risk", insight: "43 disputes within 3 days of Reg E deadline. Documentation gaps at 12% — incomplete audit trails.", kpis: [{ l: "SLA Breach", v: "43" }, { l: "Doc Gaps", v: "12%" }, { l: "Unactioned", v: "3" }, { l: "Backlog", v: "312" }] },
-      { title: "Risk Exposure", score: 52, color: T.red, icon: Shield, sub: "Fraud · Regulatory · Compliance · Reputation", insight: "Fraud cluster FL — 23 social engineering calls targeting seniors. Merchant breach: 1,247 cards, reissuance 68%. 7 complaints at >60% CFPB escalation probability. UDAAP flags from collections.", kpis: [{ l: "Fraud Alerts", v: "69" }, { l: "CFPB Risk", v: "7" }, { l: "Breach Cards", v: "1,247" }, { l: "UDAAP Flags", v: "6" }] },
+      { title: "Risk Appetite & Consumer Duty", score: 76, color: T.cyan, icon: Target, sub: "Risk Appetite · FCA Consumer Duty · SMCR", insight: "Risk appetite score 76/100 — Consumer Duty pillar 4 (Harm Prevention) at 73%, dragging overall. SMCR clean but 3 CRO findings open. FCA Consumer Duty becoming global standard.", kpis: [{ l: "Risk Appetite", v: "76" }, { l: "Consumer Duty", v: "82%" }, { l: "SMCR Breaches", v: "0" }, { l: "Open Findings", v: "3" }] },
+      { title: "Financial Crime & AML", score: 58, color: T.red, icon: Shield, sub: "SAR Pipeline · AML · Fraud · Money Laundering", insight: "47 open SARs — 12 new this week. Third-party coaching detected in 18 calls (FL cluster). Source-of-funds compliance at 76% — well below 95% target. Conversation-derived risk profiles flagging organised pattern.", kpis: [{ l: "Open SARs", v: "47" }, { l: "AML Alerts/day", v: "34" }, { l: "Fraud Signals", v: "69" }, { l: "SOF Compliance", v: "76%" }] },
+      { title: "Vulnerable Customer & Conduct", score: 64, color: T.amber, icon: Activity, sub: "Vulnerability Detection · Mis-selling · Conduct Risk", insight: "234 vulnerable customers flagged — 81% confirmed. 26 mis-selling flags across LOBs. 6% of mortgage renewal calls missed vulnerability signals. Conversation intelligence detecting what agents miss.", kpis: [{ l: "Vulnerable Flags", v: "234" }, { l: "Mis-sell Risk", v: "26" }, { l: "Detection Rate", v: "94.2%" }, { l: "Agent Gaps", v: "7" }] },
     ],
     lobKpis: [
+      { l: "SAR Pipeline (Open)", v: "47", delta: +12, target: "< 30", st: "red" },
+      { l: "Consumer Duty Score", v: "82%", delta: -3, target: "> 90%", st: "amber" },
       { l: "Fraud Detection Rate", v: "82%", delta: -3, target: "> 90%", st: "red" },
-      { l: "CFPB-Risk Complaints", v: "7", delta: +3, target: "0", st: "red" },
-      { l: "Compliance Score", v: "91%", delta: -1, target: "> 95%", st: "amber" },
-      { l: "Elder Fraud Intercept", v: "68%", delta: -5, target: "> 80%", st: "red" },
-      { l: "Mis-selling / UDAAP Flags", v: "6", delta: +4, target: "0", st: "red" },
+      { l: "Vulnerable Customer Detection", v: "94.2%", delta: +3.1, target: "> 95%", st: "amber" },
+      { l: "Mis-selling / Conduct Flags", v: "26", delta: +8, target: "0", st: "red" },
     ],
     insights: [
-      "Fraud cluster emerging in FL for 36 hours — 23 calls match known social engineering script targeting seniors. 4 ATO succeeded before detection.",
-      "7 complaints at >60% probability of CFPB escalation. 43 disputes approaching Reg E deadline — compliance breach imminent.",
-      "6 UDAAP / mis-selling referrals tied to outbound collections script after rate resets — legal review needed within 48 hrs.",
+      "Third-party coaching detected in 18 calls (FL cluster) — NLP flagged scripted responses during KYC. Conversation-derived risk profiles correlating with dormant account reactivation. SAR filing required within 24h.",
+      "Consumer Duty pillar 4 (Harm Prevention) at 73% — 7 mis-selling flags from collections scripts + 6% vulnerability protocol bypasses on mortgage renewals. FCA regulatory risk imminent.",
+      "Cross-jurisdictional gap: APAC operations below UK Consumer Duty standard — highest jurisdiction controls must apply. 3 compliance gaps identified in APAC + US.",
     ],
-    eisenhower: { do: ["FL fraud cluster — proactive freeze on 127 accounts", "43 Reg E deadline disputes — provisional credit now"], plan: ["Collections script UDAAP review", "Merchant breach reissuance completion"], delegate: ["Documentation gap remediation", "Compliance training refresh"], monitor: ["Social velocity on reward backlash", "App store rating trend"] },
+    eisenhower: { do: ["File SARs for 18 FL coaching-flagged accounts", "Halt collections script variant A — RESPA + UDAAP"], plan: ["Consumer Duty pillar 4 remediation plan", "Cross-jurisdiction compliance alignment"], delegate: ["Vulnerability tool UX fix (reduce clicks)", "AML training refresh for 7 agents below threshold"], monitor: ["SMCR exposure tracking", "Insurance claims fraud trend"] },
   },
   head_retail: {
     tiles: [
@@ -279,6 +279,34 @@ export const LOB_DRILL_KPIS: Record<string, { label: string; kpis: { n: string; 
       { n: "Mis-selling Flags", v: "11", a: "Policy suitability issues" },
       { n: "High-Value Claim Escalation", v: "23", a: "Risk of regulatory action" },
       { n: "Regulatory Complaint Escalation", v: "68%", a: "Probability rising" },
+    ]},
+  ],
+  // CRO-specific drill-down KPIs (Shridar insights: Financial Crime + Consumer Duty + AML)
+  cro_financial_crime: [
+    { label: "Financial Crime & AML", kpis: [
+      { n: "SAR Pipeline (Open)", v: "47", a: "12 new this week" },
+      { n: "Third-Party Coaching Flags", v: "18", a: "FL cluster — organised pattern" },
+      { n: "Source of Funds Compliance", v: "76%", a: "Below 95% — 7 agents failing" },
+      { n: "PEP Screening Gaps", v: "3", a: "Digital-to-voice handoff miss" },
+      { n: "Transaction Monitoring Alerts", v: "34/day", a: "▲89% vs baseline" },
+    ]},
+  ],
+  cro_consumer_duty: [
+    { label: "Consumer Duty (FCA)", kpis: [
+      { n: "Harm Prevention Score", v: "73%", a: "Below 80% — regulatory risk" },
+      { n: "Vulnerable Customer Protocol", v: "94%", a: "6% bypass rate on mortgages" },
+      { n: "Mis-selling Flags", v: "26", a: "7 from collections scripts" },
+      { n: "Fair Value Gaps", v: "3 products", a: "Fee transparency issues" },
+      { n: "SMCR Accountability Gaps", v: "3 findings", a: "CRO-owned remediation" },
+    ]},
+  ],
+  cro_cross_jurisdiction: [
+    { label: "Cross-Jurisdiction Compliance", kpis: [
+      { n: "UK Compliance", v: "94%", a: null },
+      { n: "EU Compliance", v: "87%", a: "Conduct gap identified" },
+      { n: "APAC Compliance", v: "72%", a: "Consumer Duty + Privacy gaps" },
+      { n: "US Compliance", v: "81%", a: "Consumer Duty gap" },
+      { n: "Highest-Jurisdiction Delta", v: "22pts", a: "UK vs APAC spread" },
     ]},
   ],
 };

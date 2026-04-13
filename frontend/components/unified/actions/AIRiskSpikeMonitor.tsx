@@ -268,7 +268,7 @@ export function AIRiskSpikeMonitor({
           ) : null}
         </div>
       ) : null}
-      <div className="flex gap-4 overflow-x-auto pb-3 items-stretch">
+      <div className="flex w-full min-w-0 gap-4 overflow-x-auto pb-3 items-stretch">
         {spikes.map((spike) => (
           <RiskSpikeCard key={spike.id} spike={spike} />
         ))}
@@ -301,7 +301,7 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
 
   return (
     <div
-      className={`w-70 min-w-[16rem] rounded-2xl border px-4 py-4 text-sm shadow-lg flex flex-col ${severityClass} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
+      className={`min-w-[15rem] min-h-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] ${severityClass} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
     >
       <div className={`flex items-center gap-2 text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
         <span className={`${iconMeta.color} text-lg`}>{iconMeta.icon}</span>
@@ -326,7 +326,7 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
         </div>
       </div>
 
-      <div className={`mt-6 space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? 'border-white/5 bg-black/30 text-gray-200' : 'border-gray-300 bg-gray-50 text-gray-800'}`}>
+      <div className={`mt-5 min-h-[7.25rem] space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? 'border-white/5 bg-black/30 text-gray-200' : 'border-gray-300 bg-gray-50 text-gray-800'}`}>
         {detailRows.map((row, idx) => {
           const r = row as CustomMetric;
           return (
@@ -342,9 +342,10 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
       </div>
 
       {insightText ? (
-        <div className="mt-4 rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-xs text-rose-100">
+        <div className="mt-5 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs leading-loose text-rose-100">
           ✨ {insightText}
         </div>
+   
       ) : null}
     </div>
   );

@@ -22,7 +22,7 @@ export default function ConditionalSidebar({
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered");
   const isHdfcRoute = pathname?.startsWith("/hdfc");
   const isRootPage = pathname === "/";
-  const isIndustryDashboardRoute = pathname === "/industry-dashboard" || pathname?.startsWith("/industry-dashboard/");
+  const isRoleBasedRoute = pathname === "/role-based" || pathname?.startsWith("/role-based/");
   const isStandalonePage =
     isAddonRoute ||
     isSwedbankRoute ||
@@ -30,7 +30,7 @@ export default function ConditionalSidebar({
     isStandardCharteredRoute ||
     isHdfcRoute ||
     isRootPage ||
-    isIndustryDashboardRoute;
+    isRoleBasedRoute;
 
   // Render children only during SSR to avoid hydration mismatch
   // The correct layout will be applied after mounting

@@ -34,7 +34,7 @@ export function AIPressureInsightWall({ cards = defaultCards }: AIPressureInsigh
       <p className="text-xs text-gray-400">
         Critical insights and AI-driven recommendations across pressure clusters, volatility, conflicts, and backlog.
       </p>
-      <div className="flex gap-4 overflow-x-auto pb-3 items-stretch">
+      <div className="flex w-full min-w-0 gap-4 overflow-x-auto pb-6 items-stretch">
         {cards.map((card, idx) => (
           <InsightCardBlock key={`${card.title}-${idx}`} card={card} index={idx} />
         ))}
@@ -56,19 +56,19 @@ function InsightCardBlock({ card, index }: { card: IntentIntelligenceInsightCard
   const IconComponent = EMOJI_TO_ICON[card.icon] ?? DEFAULT_ICON;
   const colors = CARD_COLORS[index % CARD_COLORS.length];
   return (
-    <div className={`w-70 min-w-[16rem] rounded-2xl border px-4 py-4 text-sm shadow-lg flex flex-col bg-black/30 text-gray-200 ${colors.border} ${colors.bg}`}>
+    <div className={`min-w-[15rem] min-h-[15.5rem] flex-1 basis-0 rounded-2xl border px-5 py-5 text-sm shadow-lg flex flex-col bg-black/30 text-gray-200 sm:min-w-[16rem] ${colors.border} ${colors.bg}`}>
       <div className="flex items-center gap-2 text-sm font-semibold text-white">
         <IconComponent className={`h-4 w-4 shrink-0 ${colors.icon}`} aria-hidden />
         <span>{card.title}</span>
       </div>
       <div className="mt-3 text-[11px]">
-        <div className="uppercase tracking-wide text-gray-500 mb-0.5">Cluster</div>
+        <div className="mb-1 uppercase tracking-wide text-gray-500">Cluster</div>
         <div className="font-semibold text-white">{card.context}</div>
       </div>
-      <div className="mt-4 space-y-2 rounded-xl border border-white/10 bg-black/40 p-3 text-xs flex-1 flex flex-col justify-center text-gray-300">
+      <div className="mt-5 min-h-[7.75rem] rounded-xl border border-white/10 bg-black/40 p-3.5 text-xs leading-snug flex-1 flex flex-col justify-center text-gray-300">
         {card.detail}
       </div>
-      <div className={`mt-4 rounded-xl border p-3 text-xs flex items-start gap-2 ${colors.recommendationBorder} ${colors.recommendationBg} ${colors.recommendationText}`}>
+      <div className={`mt-4 rounded-xl border p-3.5 text-xs leading-snug flex items-start gap-2 ${colors.recommendationBorder} ${colors.recommendationBg} ${colors.recommendationText}`}>
         <Sparkles className={`h-3.5 w-3.5 shrink-0 mt-0.5 ${colors.sparkle}`} aria-hidden />
         <span>{card.aiInsight}</span>
       </div>

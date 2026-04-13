@@ -6,7 +6,9 @@
       "Bash(cat \"/d/office/clariverse-ui/frontend/app/standard-chartered/main-page/Operational Indicators & Actions/page.tsx\")",
       "Bash(npx next:*)",
       "Bash(npx tsc:*)",
-      "mcp__Claude_Preview__preview_start"
+      "mcp__Claude_Preview__preview_start",
+      "Bash(wc -l \"D:/office/clariverse-ui/frontend/components/role-based-dashboard\"/*.tsx)",
+      "Bash(grep -E \"\\\\.\\(tsx?|json\\)$\")"
     ]
   }
 }

@@ -4,19 +4,30 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
-import { getIndustryById, T } from "@/lib/industry-dashboard/registry";
+import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
+import { getIndustryById } from "@/lib/role-based-dashboard/registry";
 
-export default function IndustryRolesPage() {
+const accent = "#5332FF";
+
+export default function RoleBasedIndustryRolesPage() {
+  const { isDarkMode } = useRoleBasedUi();
   const params = useParams();
   const industryId = typeof params.industryId === "string" ? params.industryId : "";
   const industry = getIndustryById(industryId);
 
+  const pageBg = isDarkMode ? "#010101" : "#F5F5F5";
+  const cardBg = isDarkMode ? "#1a1a1a" : "#FAFAFA";
+  const border = isDarkMode ? "#2a2a2a" : "#D6D9D8";
+  const text = isDarkMode ? "#ffffff" : "#1a1a1a";
+  const textSec = isDarkMode ? "#e8e9e9" : "#4b5563";
+  const textMut = isDarkMode ? "#b9b9ba" : "#6b7280";
+
   if (!industry) {
     return (
-      <div style={{ padding: "60px 40px", maxWidth: 560, margin: "0 auto" }}>
-        <p style={{ color: T.textSec, marginBottom: 20 }}>Unknown industry &quot;{industryId}&quot;.</p>
-        <Link href="/industry-dashboard" style={{ color: T.cyan }}>
-          ← Back to industries
+      <div className="container mx-auto px-6 py-16" style={{ backgroundColor: pageBg, minHeight: "calc(100vh - 140px)" }}>
+        <p style={{ color: textSec, marginBottom: 20, fontSize: 16, lineHeight: 1.5 }}>Unknown industry &quot;{industryId}&quot;.</p>
+        <Link href="/role-based" style={{ color: accent, marginRight: 16, fontSize: 15 }}>
+          All industries
         </Link>
       </div>
     );
@@ -25,24 +36,27 @@ export default function IndustryRolesPage() {
   const IndIcon = industry.icon;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: "40px 60px", maxWidth: 1000, margin: "0 auto", width: "100%" }}>
+    <div
+      className="container mx-auto px-6 py-10"
+      style={{ maxWidth: 1000, backgroundColor: pageBg, minHeight: "calc(100vh - 140px)" }}
+    >
       <Link
-        href="/industry-dashboard"
+        href="/role-based"
         style={{
           background: "none",
           border: "none",
-          color: T.textMut,
+          color: textMut,
           cursor: "pointer",
           display: "flex",
           alignItems: "center",
           gap: 6,
-          fontSize: 13,
+          fontSize: 15,
           marginBottom: 28,
           textDecoration: "none",
           width: "fit-content",
         }}
       >
-        <ArrowLeft size={14} /> Back to industries
+        <ArrowLeft size={16} /> Back to industries
       </Link>
       <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 36 }}>
         <div
@@ -50,17 +64,18 @@ export default function IndustryRolesPage() {
             width: 48,
             height: 48,
             borderRadius: 14,
-            background: `${industry.color}15`,
+            background: `${accent}18`,
+            border: `1px solid ${accent}30`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <IndIcon size={24} color={industry.color} />
+          <IndIcon size={24} color={accent} />
         </div>
         <div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: T.text, margin: 0 }}>{industry.name}</h1>
-          <p style={{ fontSize: 13, color: T.textMut, margin: "4px 0 0" }}>Select your role</p>
+          <h1 style={{ fontSize: 30, fontWeight: 800, color: text, margin: 0 }}>{industry.name}</h1>
+          <p style={{ fontSize: 15, color: textMut, margin: "4px 0 0" }}>Select your role</p>
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
@@ -69,10 +84,10 @@ export default function IndustryRolesPage() {
           return (
             <Link
               key={role.id}
-              href={`/industry-dashboard/${industry.id}/${role.id}`}
+              href={`/role-based/${industry.id}/${role.id}`}
               style={{
-                background: T.card,
-                border: `1px solid ${T.border}`,
+                background: cardBg,
+                border: `1px solid ${border}`,
                 borderRadius: 14,
                 padding: "20px 22px",
                 cursor: "pointer",
@@ -89,20 +104,20 @@ export default function IndustryRolesPage() {
                   width: 42,
                   height: 42,
                   borderRadius: 10,
-                  background: `${industry.color}12`,
+                  background: `${accent}14`,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
                   flexShrink: 0,
                 }}
               >
-                <Icon size={20} color={industry.color} />
+                <Icon size={20} color={accent} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 16, fontWeight: 700, color: T.text, marginBottom: 4 }}>{role.name}</div>
-                <div style={{ fontSize: 12, color: T.textSec, lineHeight: 1.5 }}>{role.sub}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 4 }}>{role.name}</div>
+                <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
               </div>
-              <ChevronRight size={16} color={T.textMut} />
+              <ChevronRight size={18} color={textMut} />
             </Link>
           );
         })}
