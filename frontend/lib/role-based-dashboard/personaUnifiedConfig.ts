@@ -56,6 +56,44 @@ export function showScreen3FciKpis(roleId: string): boolean {
 }
 
 // ═══════════════════════════
+// HEAD OF RETAIL BANKING FLAGS (Ranjith feedback)
+// ═══════════════════════════
+
+/** Screen 2: Show valuable customer segmentation + pain points */
+export function showRetailValuedCustomers(roleId: string): boolean {
+  return roleId === "head_retail";
+}
+
+/** Screen 3: Show cross-channel sentiment + intent SLA tracking + bottlenecks */
+export function showRetailChannelSentiment(roleId: string): boolean {
+  return roleId === "head_retail";
+}
+
+/** Screen 4: Show intent heat map (moved from contact centre to retail) */
+export function showRetailIntentHeatmap(roleId: string): boolean {
+  return ["head_retail", "ceo", "coo"].includes(roleId);
+}
+
+// ═══════════════════════════
+// HEAD OF CONTACT CENTRE FLAGS (Ranjith feedback)
+// ═══════════════════════════
+
+/** Screen 2: Show outsourced vs insourced agent health + cross-centre monitor */
+export function showContactAgentHealth(roleId: string): boolean {
+  return roleId === "head_contact";
+}
+
+/** Screen 3: Show promise adherence + developing issues (intent spikes) */
+export function showContactPromiseAdherence(roleId: string): boolean {
+  return roleId === "head_contact";
+}
+
+/** Screen 4: Show cluster summary (moved from retail to contact centre) */
+export function showContactClusterSummary(roleId: string): boolean {
+  return ["head_contact", "coo"].includes(roleId);
+}
+
+// ═══════════════════════════
 // CRO-SPECIFIC FLAGS (Shridar meeting insights)
 // ═══════════════════════════
 

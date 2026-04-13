@@ -128,23 +128,23 @@ export const ROLE_DATA = {
   },
   head_retail: {
     tiles: [
-      { title: "Promise Health", score: 76, color: T.cyan, icon: Target, sub: "Retail Banking CX + Service Promise", insight: "FCR at 74% driven by HELOC tool outage. Onboarding drop-off at 18% from KYC lag. Branch footfall down 3% but digital migration positive.", kpis: [{ l: "FCR", v: "74%" }, { l: "NPS", v: "+38" }, { l: "Onboarding", v: "18% drop" }, { l: "Branch CSAT", v: "4.1" }] },
-      { title: "Operational Stability", score: 70, color: T.amber, icon: Activity, sub: "Branches + Contact Centre + Digital", insight: "KYC API 3× latency causing onboarding failures. EMI failure complaints up 22% MoM. 2 branch ATM outages in Ohio.", kpis: [{ l: "KYC Latency", v: "3×" }, { l: "EMI Complaints", v: "67" }, { l: "Branch Issues", v: "2" }, { l: "Loan Servicing", v: "4.2/1K" }] },
-      { title: "Risk Exposure", score: 62, color: T.amber, icon: Shield, sub: "Complaints + Delinquency + Reputation", insight: "Delinquency 30+ DPD at 1.8% — rate-reset HELOC cohort over-indexes. 14 mis-selling flags open in fair lending queue.", kpis: [{ l: "DPD 30+", v: "1.8%" }, { l: "Mis-sell Flags", v: "14" }, { l: "Complaints", v: "312" }, { l: "Social", v: "0.58" }] },
+      { title: "Valuable Customer Health", score: 72, color: T.cyan, icon: Target, sub: "High-Value Segment · Pain Points · Retention Risk", insight: "312 high-value customers called this week — 68% about mortgage servicing & HELOC. Top pain: EMI failures (31%), fee confusion (24%), onboarding delays (18%). 3 HNI at 72–89% churn probability.", kpis: [{ l: "HV Calls", v: "312" }, { l: "Top Pain", v: "EMI 31%" }, { l: "Churn Risk", v: "3 HNI" }, { l: "Retention", v: "94.2%" }] },
+      { title: "Brand & Reputation Risk", score: 64, color: T.amber, icon: Shield, sub: "Cross-Channel Sentiment · Social Virality · Trustpilot", insight: "Cross-channel sentiment at 0.58 — below 0.65 threshold. Social virality 3.4× baseline on fee complaints. Trustpilot score dropped to 3.2 (was 3.8). 4 posts trending on X about 'hidden fees'.", kpis: [{ l: "Sentiment", v: "0.58" }, { l: "Social Vel.", v: "3.4×" }, { l: "Trustpilot", v: "3.2 ▼" }, { l: "Viral Posts", v: "4" }] },
+      { title: "Intent SLA & Bottlenecks", score: 68, color: T.gold, icon: Activity, sub: "Intent-Based SLA Tracking · Process Bottlenecks", insight: "4 top intents tracked: Mortgage Servicing (SLA 72%), Fee Dispute (SLA 64%), Account Closure (SLA 81%), Card Replacement (SLA 91%). Fee Dispute SLA worst — avg 3.2 days vs 1-day target. KYC bottleneck driving 580 abandoned applications.", kpis: [{ l: "Mortgage SLA", v: "72%" }, { l: "Fee Dispute", v: "64%" }, { l: "Acct Close", v: "81%" }, { l: "Card Replace", v: "91%" }] },
     ],
     lobKpis: [
-      { l: "Customer Promise Score", v: "76", delta: -2, target: "> 80", st: "amber" },
-      { l: "Onboarding Drop-off", v: "18%", delta: +2, target: "< 12%", st: "amber" },
-      { l: "Loan Servicing Call Rate", v: "4.2/1K", delta: +0.6, target: "< 3.6", st: "red" },
-      { l: "EMI Failure Complaints", v: "67", delta: +12, target: "< 40", st: "red" },
-      { l: "Branch NPS", v: "4.1", delta: -0.2, target: "> 4.3", st: "amber" },
+      { l: "High-Value Customer Calls", v: "312", delta: +28, target: "< 250", st: "red" },
+      { l: "Cross-Channel Sentiment", v: "0.58", delta: -0.08, target: "> 0.65", st: "red" },
+      { l: "Intent SLA Compliance (Avg)", v: "77%", delta: -6, target: "> 90%", st: "red" },
+      { l: "Social Virality Index", v: "3.4×", delta: +1.2, target: "< 1.5×", st: "red" },
+      { l: "HNI Churn Probability (Top 3)", v: "72–89%", delta: +12, target: "< 30%", st: "red" },
     ],
     insights: [
-      "KYC API latency 3× since Tuesday — 580 abandoned applications. Est. $290K first-year revenue lost.",
-      "EMI failure complaints up 22% MoM — rate-reset mortgage cohort over-indexes. 6 UDAAP flags tied to collections script.",
-      "HELOC rate-lookup tool offline since 2:15 PM — 341 customers impacted. Agents improvising answers.",
+      "High-value customers calling mostly about mortgage servicing (31%) and fee confusion (24%) — these are the biggest pain points driving churn risk.",
+      "Cross-channel sentiment at 0.58 — Trustpilot dropped 0.6 pts, 4 viral X posts about 'hidden fees'. Brand reputation risk escalating.",
+      "Fee Dispute intent has worst SLA at 64% — avg resolution 3.2 days vs 1-day target. KYC API bottleneck blocking 580 onboarding applications.",
     ],
-    eisenhower: { do: ["KYC API vendor escalation", "HELOC tool restoration — 341 impacted"], plan: ["EMI batch retry timing fix", "Mortgage servicing escrow review"], delegate: ["Branch ATM vendor dispatch", "FAQ update for fee structure"], monitor: ["Digital migration rate", "Branch consolidation metrics"] },
+    eisenhower: { do: ["Proactive outreach to 3 HNI churn risks ($1.2M combined deposits)", "Fee Dispute SLA remediation — 3.2 day avg is 3× target"], plan: ["KYC API bottleneck fix — 580 abandoned apps", "Cross-channel sentiment recovery plan"], delegate: ["Trustpilot response strategy", "Social media viral post containment"], monitor: ["Intent heat map for emerging patterns", "Channel-specific concern trends"] },
   },
   head_cx: {
     tiles: [
@@ -188,23 +188,23 @@ export const ROLE_DATA = {
   },
   head_contact: {
     tiles: [
-      { title: "Promise Health", score: 74, color: T.cyan, icon: Target, sub: "Contact Centre Service Quality", insight: "FCR at 74% — HELOC queries driving failures. Agent quality variation: best 4.1 min AHT, worst 13.2 min. Cross-sell during complaints destroying CSAT.", kpis: [{ l: "FCR", v: "74%" }, { l: "CSAT", v: "81%" }, { l: "QA Score", v: "78%" }, { l: "Agent Var.", v: "3.2×" }] },
-      { title: "Operational Stability", score: 60, color: T.red, icon: Activity, sub: "Volume · Staffing · Throughput · BPO", insight: "12 agents short in 10–12 PM window. Volume exceeded capacity 32% yesterday 9–11 AM. BPO quality scores slipping — representment win rate at 38% vs 71% in-house.", kpis: [{ l: "Vol vs Cap", v: "112%" }, { l: "Staffing Gap", v: "12" }, { l: "AHT", v: "8.3m" }, { l: "BPO Quality", v: "68%" }] },
-      { title: "Risk Exposure", score: 64, color: T.amber, icon: Shield, sub: "Agent Risk + Compliance + Escalations", insight: "18% of evening shift collections calls show aggressive tone. Agent ID 2847: 34 calls with incorrect overdraft info. 3 unactioned escalations >4 hours.", kpis: [{ l: "Tone Flags", v: "18%" }, { l: "Info Errors", v: "34" }, { l: "Unactioned", v: "3" }, { l: "Abandon", v: "8.2%" }] },
+      { title: "Agent Health (In-house vs Outsourced)", score: 68, color: T.cyan, icon: Target, sub: "Insourced · Outsourced · Cross-Centre Performance", insight: "In-house agents: FCR 81%, AHT 6.4m, CSAT 87%. Outsourced (BPO Beta): FCR 62%, AHT 11.1m, CSAT 68%. BPO representment win rate collapsed to 38% vs 71% in-house. 3 centres below performance threshold.", kpis: [{ l: "In-house FCR", v: "81%" }, { l: "BPO FCR", v: "62%" }, { l: "Centre Gap", v: "3 below" }, { l: "BPO Quality", v: "68%" }] },
+      { title: "Promise Adherence", score: 64, color: T.amber, icon: Activity, sub: "Receiving · Authenticating · Escalating · Resolution", insight: "Receiving: 94% calls answered within SLA. Authenticating: 12% fail at ID verification — KYC handoff broken. Escalating: 3 unactioned escalations >4h. Cross-sell during complaints destroying CSAT — policy breach.", kpis: [{ l: "Receiving", v: "94%" }, { l: "Auth Pass", v: "88%" }, { l: "Escalation", v: "3 stuck" }, { l: "Promise", v: "72%" }] },
+      { title: "Developing Issues & Root Causes", score: 60, color: T.red, icon: Shield, sub: "Intent Spikes · Cluster Summary · Root Causes", insight: "Fee Dispute intent spiked 3.2× in 48h — root cause: hidden fee policy change. Mortgage Servicing cluster: 67% mention 'transferred too many times'. Agent ID 2847: 34 calls with incorrect overdraft info. Evening shift tone flags at 18%.", kpis: [{ l: "Intent Spike", v: "3.2×" }, { l: "Top Cluster", v: "Fee 67%" }, { l: "Tone Flags", v: "18%" }, { l: "Root Causes", v: "4 active" }] },
     ],
     lobKpis: [
-      { l: "Call Volume vs Capacity", v: "112%", delta: +8, target: "< 100%", st: "red" },
-      { l: "Average Handle Time", v: "8.3m", delta: +0.8, target: "< 8 min", st: "amber" },
-      { l: "First Contact Resolution", v: "74%", delta: -3, target: "> 80%", st: "red" },
-      { l: "Call Abandonment Rate", v: "8.2%", delta: +1.4, target: "< 5%", st: "red" },
-      { l: "BPO Quality Score", v: "68%", delta: -7, target: "> 85%", st: "red" },
+      { l: "In-house Agent FCR", v: "81%", delta: -1, target: "> 85%", st: "amber" },
+      { l: "Outsourced (BPO) FCR", v: "62%", delta: -8, target: "> 80%", st: "red" },
+      { l: "Promise Adherence Score", v: "72%", delta: -5, target: "> 90%", st: "red" },
+      { l: "Cross-Centre Health (Below Threshold)", v: "3 centres", delta: +2, target: "0", st: "red" },
+      { l: "Intent Spike Alerts (Active)", v: "4", delta: +2, target: "< 2", st: "red" },
     ],
     insights: [
-      "Volume exceeded capacity 32% between 9–11 AM — KYC API failure generated 340 extra calls. Staffing gap: 12 agents short in peak window.",
-      "BPO Vendor Beta representment win rate collapsed to 38% (vs 71% in-house) — evidence collection step taking 4 extra days.",
-      "Agent ID 2847: 34 calls this week with incorrect overdraft fee information. Evening shift tone flags at 18% — coaching alert generated.",
+      "BPO Vendor Beta: FCR at 62% vs 81% in-house — representment win rate 38% vs 71%. Evidence collection step taking 4 extra days. Root cause: insufficient training on new dispute framework.",
+      "Promise adherence broken at authentication step — 12% fail rate due to KYC API handoff failure. 3 escalations unactioned >4h. Policy breach: cross-selling during active complaints.",
+      "Fee Dispute intent spiked 3.2× — cluster analysis shows 67% mention 'transferred too many times'. Agent 2847: 34 incorrect overdraft calls. Evening shift tone flags at 18%.",
     ],
-    eisenhower: { do: ["Activate 12 overflow agents before 9:45 AM", "Agent 2847 immediate coaching pull-aside"], plan: ["BPO evidence collection SLA renegotiation", "Evening shift tone-coaching program"], delegate: ["IVR step-3 escape hatch implementation", "FAQ script update for new fees"], monitor: ["Overtime budget utilisation", "New hire ramp-up progress"] },
+    eisenhower: { do: ["BPO vendor Beta performance review — 38% win rate unacceptable", "Fix authentication handoff — 12% fail rate"], plan: ["Cross-centre health parity programme", "Evening shift tone-coaching rollout"], delegate: ["IVR step-3 escape hatch", "FAQ script update for new fees"], monitor: ["Intent spike trends (Fee Dispute cluster)", "New hire ramp-up progress"] },
   },
 };
 // ═══════════════════════════
@@ -307,6 +307,57 @@ export const LOB_DRILL_KPIS: Record<string, { label: string; kpis: { n: string; 
       { n: "APAC Compliance", v: "72%", a: "Consumer Duty + Privacy gaps" },
       { n: "US Compliance", v: "81%", a: "Consumer Duty gap" },
       { n: "Highest-Jurisdiction Delta", v: "22pts", a: "UK vs APAC spread" },
+    ]},
+  ],
+  // Head of Retail Banking — valuable customer pain points + intent SLA
+  retail_valuable_customers: [
+    { label: "High-Value Customer Pain Points", kpis: [
+      { n: "Mortgage Servicing Calls (HV)", v: "97", a: "31% of all HV calls" },
+      { n: "Fee Confusion Calls (HV)", v: "75", a: "24% — fee policy change" },
+      { n: "Onboarding Delays (HV)", v: "56", a: "18% — KYC bottleneck" },
+      { n: "HELOC Rate Queries (HV)", v: "48", a: "15% — tool offline" },
+      { n: "Account Closure Requests (HV)", v: "36", a: "12% — competitor offers" },
+    ]},
+    { label: "Intent-Based SLA Tracking", kpis: [
+      { n: "Mortgage Servicing SLA", v: "72%", a: "28% breached — avg 2.1 days" },
+      { n: "Fee Dispute SLA", v: "64%", a: "Worst — avg 3.2 days vs 1-day target" },
+      { n: "Account Closure SLA", v: "81%", a: "19% breached — retention attempts" },
+      { n: "Card Replacement SLA", v: "91%", a: "On track" },
+    ]},
+  ],
+  retail_channel_sentiment: [
+    { label: "Channel-Specific Concerns", kpis: [
+      { n: "Social (X/Twitter) — Viral Risk", v: "4 posts", a: "Hidden fees trending — 3.4× velocity" },
+      { n: "Trustpilot — Rating Drop", v: "3.2 ★", a: "▼0.6 in 4 weeks — fee complaints" },
+      { n: "App Store — Feature Requests", v: "68 reviews", a: "'Budgeting tool' most requested" },
+      { n: "Voice — Repeat Callers", v: "22%", a: "Fee confusion + transfer loops" },
+      { n: "Email — Unresolved Backlog", v: "143", a: "47 > 48h old — mortgage queries" },
+    ]},
+  ],
+  // Head of Contact Centre — agent segmentation + promise adherence
+  contact_agent_health: [
+    { label: "In-house vs Outsourced Agent Performance", kpis: [
+      { n: "In-house FCR", v: "81%", a: "Stable — target 85%" },
+      { n: "In-house AHT", v: "6.4 min", a: "Within target" },
+      { n: "BPO (Outsourced) FCR", v: "62%", a: "▼8% — evidence collection gaps" },
+      { n: "BPO AHT", v: "11.1 min", a: "73% above in-house" },
+      { n: "BPO Win Rate (Disputes)", v: "38%", a: "vs 71% in-house — critical gap" },
+    ]},
+    { label: "Cross-Centre Health Monitor", kpis: [
+      { n: "Centre A (London) Health", v: "92%", a: null },
+      { n: "Centre B (Manchester) Health", v: "78%", a: "Staffing gap — 8 agents short" },
+      { n: "Centre C (BPO Mumbai) Health", v: "64%", a: "Quality + AHT breach" },
+      { n: "Centre D (BPO Manila) Health", v: "71%", a: "Authentication pass-rate low" },
+      { n: "Centre E (Edinburgh) Health", v: "86%", a: "Evening shift tone concern" },
+    ]},
+  ],
+  contact_promise_adherence: [
+    { label: "Promise Adherence by Stage", kpis: [
+      { n: "Receiving (Answer SLA)", v: "94%", a: "6% missed in 9–11 AM peak" },
+      { n: "Authenticating (ID Verify)", v: "88%", a: "12% fail — KYC handoff broken" },
+      { n: "Escalating (Timely Transfer)", v: "76%", a: "3 unactioned > 4h — policy breach" },
+      { n: "Resolving (FCR)", v: "74%", a: "HELOC queries driving failures" },
+      { n: "Following Up (Callback SLA)", v: "68%", a: "32% callbacks missed/late" },
     ]},
   ],
 };

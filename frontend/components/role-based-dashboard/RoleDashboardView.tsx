@@ -18,6 +18,7 @@ import {
   MessageCircle,
   Shield,
   Target,
+  Users,
 } from "lucide-react";
 import { CardOpsDashboard, type CardOpsThemeTokens } from "./CardOpsDashboard";
 import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
@@ -318,6 +319,36 @@ function Screen3({
     if (insData) {
       insData.forEach((g) => {
         extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTags: ["fraud", "ops"], kpis: g.kpis });
+      });
+    }
+  }
+  // Head of Retail Banking drill KPIs (Valuable Customers, Channel Sentiment)
+  if (role.id === "head_retail") {
+    const vcData = LOB_DRILL_KPIS.retail_valuable_customers;
+    if (vcData) {
+      vcData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.cyan, icon: Target, filterTags: ["ops"], kpis: g.kpis });
+      });
+    }
+    const chData = LOB_DRILL_KPIS.retail_channel_sentiment;
+    if (chData) {
+      chData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTags: ["ops", "fraud"], kpis: g.kpis });
+      });
+    }
+  }
+  // Head of Contact Centre drill KPIs (Agent Health, Promise Adherence)
+  if (role.id === "head_contact") {
+    const agData = LOB_DRILL_KPIS.contact_agent_health;
+    if (agData) {
+      agData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.cyan, icon: Users, filterTags: ["staffing", "ops"], kpis: g.kpis });
+      });
+    }
+    const paData = LOB_DRILL_KPIS.contact_promise_adherence;
+    if (paData) {
+      paData.forEach((g) => {
+        extraGroups.push({ label: g.label, color: T.gold, icon: Shield, filterTags: ["ops"], kpis: g.kpis });
       });
     }
   }
@@ -629,8 +660,8 @@ function RoleDashboardShell({
           width: sidebarW,
           minWidth: sidebarW,
           transition: "width 0.22s ease, min-width 0.22s ease",
-          background: T.surface,
-          borderRight: `1px solid ${T.border}`,
+          background: T.elevated,
+          borderRight: `1px solid ${T.borderLight}`,
           display: "flex",
           flexDirection: "column",
           flexShrink: 0,
@@ -641,7 +672,7 @@ function RoleDashboardShell({
         <div
           style={{
             padding: sidebarHover ? "18px 16px" : "14px 10px",
-            borderBottom: `1px solid ${T.border}`,
+            borderBottom: `1px solid ${T.borderLight}`,
             textAlign: sidebarHover ? "left" : "center",
           }}
         >
@@ -676,7 +707,7 @@ function RoleDashboardShell({
         <div
           style={{
             padding: sidebarHover ? "12px 14px" : "10px 8px",
-            borderBottom: `1px solid ${T.border}`,
+            borderBottom: `1px solid ${T.borderLight}`,
             display: "flex",
             flexDirection: "column",
             gap: sidebarHover ? 8 : 6,
@@ -684,13 +715,13 @@ function RoleDashboardShell({
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: sidebarHover ? "flex-start" : "center" }}>
-            <div style={{ width: 24, height: 24, borderRadius: 6, background: `${industry.color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: `${industry.color}25`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <IndIcon size={12} color={industry.color} />
             </div>
             {sidebarHover ? <span style={{ fontSize: 13, fontWeight: 600, color: T.text, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{industry.name}</span> : null}
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: sidebarHover ? "flex-start" : "center" }}>
-            <div style={{ width: 24, height: 24, borderRadius: 6, background: `${industry.color}12`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <div style={{ width: 24, height: 24, borderRadius: 6, background: `${industry.color}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
               <RoleIcon size={12} color={industry.color} />
             </div>
             {sidebarHover ? <span style={{ fontSize: 13, fontWeight: 600, color: T.cyan, minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{role.name}</span> : null}
@@ -734,7 +765,7 @@ function RoleDashboardShell({
                       width: 24,
                       height: 24,
                       borderRadius: 6,
-                      background: act ? T.cyanGlow : `${T.textMut}10`,
+                      background: act ? T.cyanGlow : `${T.textMut}20`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -754,20 +785,20 @@ function RoleDashboardShell({
                   ) : null}
                 </button>
                 {sidebarHover && i < SCREENS.length - 1 ? (
-                  <div style={{ textAlign: "center", color: T.border, fontSize: 11, padding: "1px 0" }}>↓</div>
+                  <div style={{ textAlign: "center", color: T.borderLight, fontSize: 11, padding: "1px 0" }}>↓</div>
                 ) : null}
               </div>
             );
           })}
         </div>
-        <div style={{ padding: sidebarHover ? "10px 12px" : "10px 8px", borderTop: `1px solid ${T.border}` }}>
+        <div style={{ padding: sidebarHover ? "10px 12px" : "10px 8px", borderTop: `1px solid ${T.borderLight}` }}>
           <button
             type="button"
             title="Change role"
             onClick={onExit}
             style={{
-              background: T.card,
-              border: `1px solid ${T.border}`,
+              background: T.surface,
+              border: `1px solid ${T.borderLight}`,
               borderRadius: 8,
               padding: sidebarHover ? "8px 14px" : "10px 8px",
               cursor: "pointer",
@@ -791,8 +822,8 @@ function RoleDashboardShell({
           <div
             style={{
               padding: "12px 24px",
-              borderBottom: `1px solid ${T.border}`,
-              background: T.surface,
+              borderBottom: `1px solid ${T.borderLight}`,
+              background: T.elevated,
               display: "flex",
               alignItems: "flex-start",
               justifyContent: "space-between",
@@ -840,7 +871,7 @@ function RoleDashboardShell({
             </div>
           </div>
         ) : (
-          <div style={{ padding: "12px 24px", borderBottom: `1px solid ${T.border}`, background: T.surface, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ padding: "12px 24px", borderBottom: `1px solid ${T.borderLight}`, background: T.elevated, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
               <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}><span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>{active?.label}</h1>
               <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>{industry.name} · {role.name}{screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}</div>

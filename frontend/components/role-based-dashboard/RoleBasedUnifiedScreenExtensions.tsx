@@ -49,6 +49,12 @@ import {
   showCroConsumerDuty,
   showCroCrossJurisdiction,
   showCroInvestigations,
+  showRetailValuedCustomers,
+  showRetailChannelSentiment,
+  showRetailIntentHeatmap,
+  showContactAgentHealth,
+  showContactPromiseAdherence,
+  showContactClusterSummary,
 } from "@/lib/role-based-dashboard/personaUnifiedConfig";
 import {
   CROScreen1Addon,
@@ -58,6 +64,14 @@ import {
   CROScreen4Jurisdiction,
   CROScreen5Investigations,
 } from "@/components/role-based-dashboard/CROScreenExtensions";
+import {
+  RetailScreen2Addon,
+  RetailScreen3Addon,
+  RetailScreen4IntentHeatmap,
+  ContactScreen2AgentHealth,
+  ContactScreen3PromiseAdherence,
+  ContactScreen4ClusterSummary,
+} from "@/components/role-based-dashboard/RetailContactScreenExtensions";
 
 /** Consistent vertical rhythm between unified blocks (role-based embed). */
 const sectionGap = "mt-6 flex flex-col gap-8";
@@ -87,6 +101,8 @@ export function RoleBasedUnifiedScreen2Addon({ role, threads, activeLob }: { rol
   const matrixThreads = useMemo(() => threads.slice(0, 400), [threads]);
   return (
     <div className={sectionGap}>
+      {showRetailValuedCustomers(rid) ? <RetailScreen2Addon /> : null}
+      {showContactAgentHealth(rid) ? <ContactScreen2AgentHealth /> : null}
       {showCroLobRiskProfiling(rid) ? <CROScreen2Addon activeLob={activeLob ?? "retail_banking"} /> : null}
       {showScreen2PressureWall(rid) ? <AIPressureInsightWall /> : null}
       {showScreen2Eisenhower(rid) && matrixThreads.length > 0 ? (
@@ -102,6 +118,8 @@ export function RoleBasedUnifiedScreen3Addon({ role }: { role: Role }) {
   const rid = role.id;
   return (
     <div className={sectionGap}>
+      {showRetailChannelSentiment(rid) ? <RetailScreen3Addon /> : null}
+      {showContactPromiseAdherence(rid) ? <ContactScreen3PromiseAdherence /> : null}
       {showCroFinancialCrime(rid) ? <CROScreen3FinancialCrime /> : null}
       {showScreen3IntentCommandCenter(rid) ? (
         <div className="rounded-xl border border-white/[0.14] bg-black/25 p-4">
@@ -134,6 +152,8 @@ export function RoleBasedUnifiedScreen4Addon({
   if (lens === "ops") {
     return (
       <div className={sectionGap}>
+        {showRetailIntentHeatmap(role.id) ? <RetailScreen4IntentHeatmap /> : null}
+        {showContactClusterSummary(role.id) ? <ContactScreen4ClusterSummary /> : null}
         <div className="rounded-xl border border-white/[0.14] bg-black/25 p-5 space-y-8">
           <QueueHealthMonitor threads={sliceThreads} />
           <FailureClusters clusters={fciClusters.slice(0, 4)} isDarkMode />
