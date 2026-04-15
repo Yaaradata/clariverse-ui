@@ -266,17 +266,14 @@ export const LOB_DRILL_KPIS: Record<string, { label: string; kpis: { n: string; 
   mortgage_loans: [
     { label: "Mortgage / Loans", kpis: [
       { n: "Loan Servicing Call Rate", v: "4.2/1K", a: "Above 3.6 target" },
-      { n: "EMI Failure Rate", v: "2.1%", a: "Repayment failures rising" },
+      { n: "EMI Failure Complaint Rate", v: "2.1%", a: "Customer contacts about failed payments" },
       { n: "EMI Complaint Volume", v: "67", a: "▲22% MoM" },
-      { n: "Delinquency Rate (30+ DPD)", v: "1.8%", a: "Rate-reset cohort" },
       { n: "Mis-selling / Policy Flags", v: "14", a: "Fair lending queue" },
     ]},
   ],
   insurance_lob: [
     { label: "Insurance LOB", kpis: [
-      { n: "Claims Leakage / Fraud", v: "3.2%", a: "Above 2% threshold" },
-      { n: "Underwriting Exception Rate", v: "8.4%", a: "▲2.1% in 6 weeks" },
-      { n: "Mis-selling Flags", v: "11", a: "Policy suitability issues" },
+      { n: "Mis-selling Flags", v: "11", a: "Policy suitability issues — from interactions" },
       { n: "High-Value Claim Escalation", v: "23", a: "Risk of regulatory action" },
       { n: "Regulatory Complaint Escalation", v: "68%", a: "Probability rising" },
     ]},
