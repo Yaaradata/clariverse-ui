@@ -3,7 +3,6 @@
 import {
   AlertTriangle,
   BarChart3,
-  Globe,
   Heart,
   Layers,
   MessageCircle,
@@ -34,7 +33,6 @@ import { useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeCo
 import {
   RETAIL_VALUABLE_CUSTOMER_SEGMENTS,
   RETAIL_HV_PAIN_POINTS,
-  RETAIL_CHANNEL_SENTIMENT,
   RETAIL_INTENT_SLA,
   RETAIL_BOTTLENECKS,
   RETAIL_INTENT_HEATMAP,
@@ -172,25 +170,6 @@ export function RetailScreen3Addon() {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <Card>
-        <SectionHeader icon={Globe} color={T.purple} title="Cross-Channel Sentiment" sub="Brand & reputation risk by channel — sentiment trends" />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10 }}>
-          {RETAIL_CHANNEL_SENTIMENT.map((ch) => (
-            <div key={ch.channel} style={{ background: T.surface, border: `1px solid ${T.borderLight}`, borderRadius: 8, padding: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{ch.channel}</span>
-                <span style={{ fontSize: 11, color: T.textMut }}>{ch.volume} contacts</span>
-              </div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
-                <span style={{ fontSize: 22, fontWeight: 700, color: ch.sentiment < 0.5 ? T.red : ch.sentiment < 0.65 ? T.amber : T.green }}>{ch.sentiment}</span>
-                <span style={{ fontSize: 11, color: ch.trend < 0 ? T.red : T.green, fontWeight: 600 }}>{ch.trend > 0 ? "+" : ""}{ch.trend}</span>
-              </div>
-              <div style={{ fontSize: 11, color: T.textSec, lineHeight: 1.4 }}>{ch.topConcern}</div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
       <Card>
         <SectionHeader icon={BarChart3} color={T.gold} title="Intent-Based SLA Tracking" sub="Closed vs not-closed per intent — 4 key intents" />
         <ResponsiveContainer width="100%" height={240}>

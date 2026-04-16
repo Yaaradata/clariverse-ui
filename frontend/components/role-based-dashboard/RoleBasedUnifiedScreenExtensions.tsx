@@ -11,11 +11,9 @@ import { EmotionShockboard } from "@/components/unified/intents/IntentIntelligen
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { ComplianceInsightsCards } from "@/components/compliance/ComplianceInsightsCards";
 import { FCIKPICards } from "@/components/FCI/FCIKPICards";
-import { QueueHealthMonitor } from "@/components/email/QueueHealthMonitor";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
 import { AISummaryWall } from "@/components/FCI/AISummaryWall";
 import { BottleneckHeatmap } from "@/components/email/BottleneckHeatmap";
-import { EmpathyToneAnalyzer } from "@/components/FCI/EmpathyToneAnalyzer";
 import { PrematureClosureRiskCard } from "@/components/unified/intelligence/PrematureClosureRiskCard";
 import { IntentNetworkGraph } from "@/components/unified/intelligence/IntentNetworkGraph";
 import { CustomerEmotion } from "@/components/FCI/CustomerEmotion";
@@ -23,7 +21,6 @@ import { ComplianceScoreMeter } from "@/components/compliance/ComplianceScoreMet
 import { CallCenterRiskHeatMap } from "@/components/compliance/CallCenterRiskHeatMap";
 import { ViolationCategoryChart } from "@/components/compliance/ViolationCategoryChart";
 import { fciClusters, customerEmotionData } from "@/lib/fci-lib/fciData";
-import { empathyToneData } from "@/lib/fci-lib/fciAdvancedData";
 import { complianceScoreData, violationCategoryData } from "@/lib/compliance/complianceData";
 import type { EisenhowerThread } from "@/lib/api";
 import type { Role } from "@/lib/role-based-dashboard/registry";
@@ -155,11 +152,9 @@ export function RoleBasedUnifiedScreen4Addon({
         {showRetailIntentHeatmap(role.id) ? <RetailScreen4IntentHeatmap /> : null}
         {showContactClusterSummary(role.id) ? <ContactScreen4ClusterSummary /> : null}
         <div className="rounded-xl border border-white/[0.14] bg-black/25 p-5 space-y-8">
-          <QueueHealthMonitor threads={sliceThreads} />
           <FailureClusters clusters={fciClusters.slice(0, 4)} isDarkMode />
           <AISummaryWall isDarkMode />
           <BottleneckHeatmap threads={sliceThreads} />
-          <EmpathyToneAnalyzer data={empathyToneData} isDarkMode />
         </div>
       </div>
     );
