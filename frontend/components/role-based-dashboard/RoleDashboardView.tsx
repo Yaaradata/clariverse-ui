@@ -20,8 +20,10 @@ import {
   Target,
   Users,
 } from "lucide-react";
+import { Line, LineChart, PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
 import { CardOpsDashboard, type CardOpsThemeTokens } from "./CardOpsDashboard";
 import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
+import { CustomerHappinessDrillDown, BrandReputationDrillDown, ServiceFulfilmentDrillDown } from "./RetailDrillDownScreens";
 import { RoleBasedComplianceTimePills } from "@/components/role-based-dashboard/RoleBasedComplianceTimePills";
 import { RoleBasedUnifiedChrome } from "@/components/role-based-dashboard/RoleBasedUnifiedChrome";
 import { RoleBasedUnifiedReadingShell } from "@/components/role-based-dashboard/RoleBasedUnifiedReadingShell";
@@ -107,44 +109,328 @@ const SCREENS: { id: ScreenId; label: string; sub: string; icon: LucideIcon }[] 
   { id: 5, label: "Root Cause + Action", sub: "Signal → Cause → Action", icon: Crosshair },
 ];
 
+// Happiness % → color (aligned with tile gauge `gC`): high ≥80 green, medium 60–79 amber only, low <60 red.
+function happinessPctColor(pct: number, T: DashboardThemeTokens): string {
+  if (pct >= 80) return T.green;
+  if (pct >= 60) return T.amber;
+  return T.red;
+}
+
+// ── Head of Retail Banking: custom chart content inside each tile ──────────────
+function retailTileKpiSection(tileIdx: number, T: DashboardThemeTokens): ReactElement {
+  if (tileIdx === 0) {
+    // Card 1: Customer Happiness — HV vs LV distribution bars + 2 KPIs
+    const rows = [
+      { label: "High Value", pct: 68 },
+      { label: "Low Value", pct: 81 },
+    ].map((r) => ({ ...r, color: happinessPctColor(r.pct, T) }));
+    const trend = [
+      { w: "W-5", v: 68 },
+      { w: "W-4", v: 67 },
+      { w: "W-3", v: 69 },
+      { w: "W-2", v: 70 },
+      { w: "W-1", v: 68 },
+      { w: "Now", v: 72 },
+    ];
+    return (
+      <div style={{ flex: 1, minWidth: 0, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 190px", gap: 10, alignItems: "stretch" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}>
+          {rows.map((r) => (
+            <div key={r.label} style={{ minWidth: 0 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                <span style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>{r.label}</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: r.color, fontFamily: "var(--mono)" }}>{r.pct}% happy</span>
+              </div>
+              <div style={{ height: 7, borderRadius: 4, background: `${r.color}20` }}>
+                <div style={{ height: "100%", width: `${r.pct}%`, background: r.color, borderRadius: 4 }} />
+              </div>
+            </div>
+          ))}
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", marginTop: 4 }}>
+            <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Top Pain</div><div style={{ fontSize: 14, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>EMI 31%</div></div>
+            <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Churn Risk</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>3 HNI</div></div>
+          </div>
+        </div>
+        <div style={{ border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 8px 6px", background: `${T.surface}80` }}>
+          <div style={{ fontSize: 10, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>6W Trend</div>
+          <div style={{ width: "100%", height: 74 }}>
+            <ResponsiveContainer>
+              <LineChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+                <XAxis dataKey="w" hide />
+                <YAxis
+                  hide
+                  domain={[
+                    (min: number) => Math.max(0, min - 6),
+                    (max: number) => max + 4,
+                  ]}
+                />
+                <RechartsTooltip
+                  cursor={false}
+                  labelFormatter={(label) => `${label}`}
+                  formatter={(value: number) => [`${value} pts`, "Score"]}
+                  contentStyle={{
+                    background: "rgba(10,14,22,0.96)",
+                    border: `1px solid ${T.borderLight}`,
+                    borderRadius: 8,
+                    fontSize: 11,
+                    color: T.text,
+                  }}
+                />
+                <Line type="linear" dataKey="v" stroke={T.green} strokeWidth={2.5} dot={{ fill: T.green, stroke: T.green, r: 2.2 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ fontSize: 11, color: T.green, fontWeight: 700, fontFamily: "var(--mono)" }}>+4 pts vs W-1</div>
+        </div>
+      </div>
+    );
+  }
+  if (tileIdx === 1) {
+    // Card 2: Brand — per-channel sentiment bars
+    const channels = [
+      { name: "App Store", v: 0.71 },
+      { name: "Voice", v: 0.64 },
+      { name: "Chat", v: 0.62 },
+      { name: "Email", v: 0.56 },
+      { name: "Social/X", v: 0.41 },
+    ];
+    const trend = [
+      { w: "W-5", v: 70 },
+      { w: "W-4", v: 68 },
+      { w: "W-3", v: 66 },
+      { w: "W-2", v: 65 },
+      { w: "W-1", v: 63 },
+      { w: "Now", v: 64 },
+    ];
+    return (
+      <div style={{ flex: 1, minWidth: 0, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 190px", gap: 10, alignItems: "stretch" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
+          {channels.map((ch) => {
+            const barColor = ch.v >= 0.65 ? T.green : ch.v >= 0.55 ? T.amber : T.red;
+            return (
+              <div key={ch.name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 10, color: T.textMut, width: 52, flexShrink: 0 }}>{ch.name}</span>
+                <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
+                  <div style={{ height: "100%", width: `${ch.v * 100}%`, background: barColor, borderRadius: 3 }} />
+                </div>
+                <span style={{ fontSize: 11, fontWeight: 700, color: barColor, width: 28, textAlign: "right", fontFamily: "var(--mono)" }}>{ch.v.toFixed(2)}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div style={{ border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 8px 6px", background: `${T.surface}80` }}>
+          <div style={{ fontSize: 10, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>6W Trend</div>
+          <div style={{ width: "100%", height: 74 }}>
+            <ResponsiveContainer>
+              <LineChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+                <XAxis dataKey="w" hide />
+                <YAxis
+                  hide
+                  domain={[
+                    (min: number) => Math.max(0, min - 6),
+                    (max: number) => max + 4,
+                  ]}
+                />
+                <RechartsTooltip
+                  cursor={false}
+                  labelFormatter={(label) => `${label}`}
+                  formatter={(value: number) => [`${value} pts`, "Score"]}
+                  contentStyle={{
+                    background: "rgba(10,14,22,0.96)",
+                    border: `1px solid ${T.borderLight}`,
+                    borderRadius: 8,
+                    fontSize: 11,
+                    color: T.text,
+                  }}
+                />
+                <Line type="linear" dataKey="v" stroke={T.amber} strokeWidth={2.5} dot={{ r: 2.2 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ fontSize: 11, color: T.green, fontWeight: 700, fontFamily: "var(--mono)" }}>+1 pt vs W-1</div>
+        </div>
+      </div>
+    );
+  }
+  // Card 3: Process Promise — best vs worst SLA + trend
+  const bars = [
+    { label: "Best · Card Replace", pct: 91, color: T.green },
+    { label: "Worst · Fee Dispute", pct: 64, color: T.red },
+  ];
+  const trend = [
+    { w: "W-5", v: 82 },
+    { w: "W-4", v: 76 },
+    { w: "W-3", v: 79 },
+    { w: "W-2", v: 71 },
+    { w: "W-1", v: 74 },
+    { w: "Now", v: 68 },
+  ];
+  return (
+    <div style={{ flex: 1, minWidth: 0, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 190px", gap: 10, alignItems: "stretch" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}>
+        {bars.map((b) => (
+          <div key={b.label} style={{ minWidth: 0 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+              <span style={{ fontSize: 11, color: T.textMut }}>{b.label}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: b.color, fontFamily: "var(--mono)" }}>{b.pct}%</span>
+            </div>
+            <div style={{ height: 7, borderRadius: 4, background: `${b.color}20` }}>
+              <div style={{ height: "100%", width: `${b.pct}%`, background: b.color, borderRadius: 4 }} />
+            </div>
+          </div>
+        ))}
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", marginTop: 4 }}>
+          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Trend</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>▼ −6%</div></div>
+          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Bottleneck</div><div style={{ fontSize: 14, fontWeight: 700, color: T.amber, fontFamily: "var(--mono)" }}>KYC API</div></div>
+        </div>
+      </div>
+      <div style={{ border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 8px 6px", background: `${T.surface}80` }}>
+        <div style={{ fontSize: 10, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>6W Trend</div>
+        <div style={{ width: "100%", height: 74 }}>
+          <ResponsiveContainer>
+            <LineChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+              <XAxis dataKey="w" hide />
+              <YAxis
+                hide
+                domain={[
+                  (min: number) => Math.max(0, min - 8),
+                  (max: number) => max + 5,
+                ]}
+              />
+              <RechartsTooltip
+                cursor={false}
+                labelFormatter={(label) => `${label}`}
+                formatter={(value: number) => [`${value} pts`, "Score"]}
+                contentStyle={{
+                  background: "rgba(10,14,22,0.96)",
+                  border: `1px solid ${T.borderLight}`,
+                  borderRadius: 8,
+                  fontSize: 11,
+                  color: T.text,
+                }}
+              />
+              <Line type="linear" dataKey="v" stroke={T.red} strokeWidth={2.5} dot={{ r: 2.2 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ fontSize: 11, color: T.red, fontWeight: 700, fontFamily: "var(--mono)" }}>-6 pts vs W-1</div>
+      </div>
+    </div>
+  );
+}
+
+function TileScoreGauge({
+  score,
+  color,
+  T,
+}: {
+  score: number;
+  color: string;
+  T: DashboardThemeTokens;
+}) {
+  const clamped = Math.max(0, Math.min(100, score));
+  const data = [{ name: "Score", value: clamped, fill: color }];
+
+  return (
+    <div
+      style={{
+        width: 214,
+        height: 106,
+        position: "relative",
+        flexShrink: 0,
+      }}
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        <RadialBarChart
+          data={data}
+          startAngle={180}
+          endAngle={0}
+          innerRadius="65%"
+          outerRadius="94%"
+          cx="50%"
+          cy="84%"
+        >
+          <PolarAngleAxis
+            type="number"
+            domain={[0, 100]}
+            tick={false}
+            axisLine={false}
+          />
+          <RadialBar
+            dataKey="value"
+            cornerRadius={6}
+            background={{ fill: `${T.borderLight}90` }}
+       
+          />
+        </RadialBarChart>
+      </ResponsiveContainer>
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: 14,
+          transform: "translateX(-50%)",
+          fontSize: 17,
+          fontWeight: 800,
+          color,
+          fontFamily: "var(--mono)",
+          letterSpacing: 0.2,
+          pointerEvents: "none",
+        }}
+      >
+        {clamped}
+      </div>
+    </div>
+  );
+}
+
 function Screen1({
   data,
   goTo,
   role,
   unifiedNavigation,
+  onDrillCard,
 }: {
   data: RoleDashboardData;
   goTo: (n: ScreenId) => void;
   role: Role;
   unifiedNavigation: boolean;
+  onDrillCard?: (idx: number) => void;
 }) {
   const T = useDashboardTheme();
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
+  const isRetail = role.id === "head_retail";
   const primaryIdx =
     unifiedNavigation && "primaryTile" in role && typeof role.primaryTile === "number" ? role.primaryTile : null;
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 20, minWidth: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16, minWidth: 0 }}>
         {data.tiles.map((tile, i) => {
           const Icon = tile.icon; const sc = gC(tile.score);
           const isPrimary = primaryIdx === i;
+          const handleClick = isRetail && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
           return (
-            <div key={i} onClick={() => goTo(2)} style={{ background: T.elevated, border: `1px solid ${isPrimary ? T.cyan : sc}40`, borderRadius: 16, padding: "24px 22px", cursor: "pointer", transition: "all 0.25s", boxShadow: isPrimary ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22` : undefined }}
+            <div key={i} onClick={handleClick} style={{ position: "relative", background: T.elevated, border: `1px solid ${isPrimary ? T.cyan : sc}40`, borderRadius: 16, padding: "24px 22px", cursor: "pointer", transition: "all 0.25s", boxShadow: isPrimary ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22` : undefined, minWidth: 0 }}
               onMouseEnter={e => { if (!isPrimary) e.currentTarget.style.boxShadow = `0 8px 32px ${sc}15`; }} onMouseLeave={e => { if (!isPrimary) e.currentTarget.style.boxShadow = "none"; else e.currentTarget.style.boxShadow = `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22`; }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: `${tile.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={18} color={tile.color}/></div>
-                  <div><div style={{ fontSize: 18, fontWeight: 700, color: T.text }}>{tile.title}</div><div style={{ fontSize: 14, color: T.textMut, lineHeight: 1.4 }}>{tile.sub}</div></div>
-                </div>
+              <div style={{ position: "absolute", top: -18, right: 12, pointerEvents: "none", display: "flex", alignItems: "center", gap: 8 }}>
+                <TileScoreGauge score={tile.score} color={sc} T={T} />
                 <ChevronRight size={16} color={T.textMut}/>
               </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, gap: 14, paddingRight: 232 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: `${tile.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={18} color={tile.color}/></div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tile.title}</div>
+                    <div style={{ fontSize: 14, color: T.textMut, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tile.sub}</div>
+                  </div>
+                </div>
+              </div>
               <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-                <div style={{ width: 68, height: 68, borderRadius: "50%", border: `3px solid ${sc}`, display: "flex", alignItems: "center", justifyContent: "center", background: `${sc}18`, boxShadow: `0 0 24px ${sc}25` }}>
-                  <span style={{ fontSize: 30, fontWeight: 800, color: sc, fontFamily: "var(--mono)" }}>{tile.score}</span>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px", flex: 1 }}>
-                  {tile.kpis.map((k, j) => (<div key={j}><div style={{ fontSize: 12, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>{k.l}</div><div style={{ fontSize: 16, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>{k.v}</div></div>))}
-                </div>
+                {isRetail ? retailTileKpiSection(i, T) : (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px", flex: 1 }}>
+                    {tile.kpis.map((k, j) => (<div key={j}><div style={{ fontSize: 12, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>{k.l}</div><div style={{ fontSize: 16, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>{k.v}</div></div>))}
+                  </div>
+                )}
               </div>
               <div
                 style={{
@@ -611,13 +897,14 @@ function RoleDashboardShell({
 
   const personaFilter = initialKpiSignalFilter(role.id);
 
+  const [drillCard, setDrillCard] = useState<number | null>(null);
   const [sidebarHover, setSidebarHover] = useState(false);
   const SIDEBAR_W_EXPANDED = 268;
   const SIDEBAR_W_COLLAPSED = 76;
   const sidebarW = sidebarHover ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
 
   const screenComponents: Record<ScreenId, ReactElement> = {
-    1: <Screen1 data={data} goTo={setScreen} role={role} unifiedNavigation={unifiedNavigation} />,
+    1: <Screen1 data={data} goTo={setScreen} role={role} unifiedNavigation={unifiedNavigation} onDrillCard={setDrillCard} />,
     2: (
       <Screen2
         goTo={setScreen}
@@ -735,7 +1022,7 @@ function RoleDashboardShell({
               Nav
             </div>
           )}
-          {SCREENS.map((s, i) => {
+          {SCREENS.filter((s) => role.id === "head_retail" ? s.id <= 2 : true).map((s, i, visibleScreens) => {
             const Icon = s.icon;
             const act = screen === s.id;
             const tip = `Screen ${s.id}: ${s.label} — ${s.sub}`;
@@ -744,7 +1031,7 @@ function RoleDashboardShell({
                 <button
                   type="button"
                   title={tip}
-                  onClick={() => setScreen(s.id)}
+                  onClick={() => { setScreen(s.id); setDrillCard(null); }}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -784,7 +1071,7 @@ function RoleDashboardShell({
                     </div>
                   ) : null}
                 </button>
-                {sidebarHover && i < SCREENS.length - 1 ? (
+                {sidebarHover && i < visibleScreens.length - 1 ? (
                   <div style={{ textAlign: "center", color: T.borderLight, fontSize: 11, padding: "1px 0" }}>↓</div>
                 ) : null}
               </div>
@@ -882,11 +1169,41 @@ function RoleDashboardShell({
         <div
           style={{
             flex: 1,
+            minWidth: 0,
             padding: unifiedNavigation ? "16px 18px 20px" : "18px 22px",
             overflowY: "auto",
+            overflowX: "hidden",
           }}
         >
-          {unifiedNavigation ? (
+          {role.id === "head_retail" && drillCard !== null ? (
+            (() => {
+              const onBack = () => setDrillCard(null);
+              const drillContent =
+                drillCard === 0 ? <CustomerHappinessDrillDown onBack={onBack} /> :
+                drillCard === 1 ? <BrandReputationDrillDown onBack={onBack} /> :
+                <ServiceFulfilmentDrillDown onBack={onBack} />;
+              // Unify every card / panel / pill background on the three
+              // retail drill-down tiers (Customer Happiness · Brand & Reputation ·
+              // Service Fulfilment) to #0D0D0D by overriding the theme tokens
+              // that power their `background` styles (`T.elevated`, `T.card`,
+              // `T.surface`). This cascades through every descendant that
+              // reads the dashboard theme via `useDashboardTheme()`.
+              const drillTheme: DashboardThemeTokens = {
+                ...T,
+                elevated: "#0D0D0D",
+                card: "#0D0D0D",
+                surface: "#0D0D0D",
+              };
+              const themedDrill = (
+                <DashboardThemeProvider value={drillTheme}>
+                  {drillContent}
+                </DashboardThemeProvider>
+              );
+              return unifiedNavigation ? (
+                <RoleBasedUnifiedReadingShell>{themedDrill}</RoleBasedUnifiedReadingShell>
+              ) : themedDrill;
+            })()
+          ) : unifiedNavigation ? (
             <RoleBasedUnifiedReadingShell>{screenComponents[screen]}</RoleBasedUnifiedReadingShell>
           ) : (
             screenComponents[screen]

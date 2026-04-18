@@ -3,6 +3,7 @@
 import {
   AlertTriangle,
   BarChart3,
+  Globe,
   Heart,
   Layers,
   MessageCircle,
@@ -86,6 +87,123 @@ function SevDot({ severity }: { severity: string }) {
 // ═══════════════════════════
 // HEAD OF RETAIL BANKING EXTENSIONS
 // ═══════════════════════════
+
+const RETAIL_HAPPINESS_DISTRIBUTION = [
+  { segment: "High Value", happy: 68, color: "#22d3ee" },
+  { segment: "Low Value", happy: 81, color: "#a78bfa" },
+];
+
+const RETAIL_BRAND_CHANNEL_SENTIMENT = [
+  { channel: "App Store", sentiment: 0.71 },
+  { channel: "Voice", sentiment: 0.64 },
+  { channel: "Chat", sentiment: 0.62 },
+  { channel: "Email", sentiment: 0.56 },
+  { channel: "Social/X", sentiment: 0.41 },
+];
+
+const RETAIL_KEY_INSIGHTS = [
+  { type: "Feature", icon: "✦", text: "2 new features surfaced: budgeting tool & instant HELOC rate alerts" },
+  { type: "Creator", icon: "★", text: "Finance creator @moneymaven positively reviewed savings rate — 14K reach" },
+  { type: "Review", icon: "◈", text: "Trustpilot: customers praising new app UX (+12 reviews this week)" },
+];
+
+const RETAIL_INTENT_SPIKES = [
+  { intent: "Mortgage Servicing", change: "+18%", severity: "high", reason: "Rate reset notifications sent last Tuesday" },
+  { intent: "Fee Dispute", change: "+31%", severity: "critical", reason: "New fee policy change — customers unaware" },
+  { intent: "HELOC Rate Query", change: "+24%", severity: "high", reason: "Competitor rate drop triggered comparison calls" },
+];
+
+/** Screen 1 Addon: Retail-specific bottom cards — customer happiness, brand channel sentiment, intent spikes, key insights */
+export function RetailScreen1Cards() {
+  const T = useDashboardTheme();
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        {/* Customer Happiness Distribution */}
+        <Card>
+          <SectionHeader icon={Heart} color={T.cyan} title="Customer Happiness Distribution" sub="Are high-value customers happier than low-value?" />
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {RETAIL_HAPPINESS_DISTRIBUTION.map((row) => (
+              <div key={row.segment}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
+                  <span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{row.segment}</span>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    <span style={{ fontSize: 12, color: row.color }}>Happy {row.happy}%</span>
+                    <span style={{ fontSize: 12, color: T.red }}>Not happy {100 - row.happy}%</span>
+                  </div>
+                </div>
+                <div style={{ height: 10, borderRadius: 6, background: `${T.red}20`, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${row.happy}%`, background: row.color, borderRadius: 6 }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 14, padding: "10px 14px", borderRadius: 10, background: `${T.gold}10`, border: `1px solid ${T.gold}28`, borderLeft: `3px solid ${T.gold}` }}>
+            <div style={{ fontSize: 11, color: T.gold, fontWeight: 700, marginBottom: 3, textTransform: "uppercase", letterSpacing: 0.5 }}>Top pain driving unhappiness</div>
+            <div style={{ fontSize: 13, color: T.textSec }}>EMI failures (31%) and fee confusion (24%) — concentrated in high-value segment</div>
+          </div>
+        </Card>
+
+        {/* Rising Intent Spikes */}
+        <Card>
+          <SectionHeader icon={TrendingUp} color={T.amber} title="Rising Intent Signals" sub="Which customer needs are growing this week?" />
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {RETAIL_INTENT_SPIKES.map((spike) => (
+              <div key={spike.intent} style={{ display: "flex", gap: 12, alignItems: "flex-start", padding: "10px 12px", borderRadius: 10, background: T.elevated, border: `1px solid ${spike.severity === "critical" ? T.red : T.amber}30` }}>
+                <SevDot severity={spike.severity} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: T.text }}>{spike.intent}</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: spike.severity === "critical" ? T.red : T.amber, fontFamily: "var(--mono)" }}>{spike.change}</span>
+                  </div>
+                  <div style={{ fontSize: 11, color: T.textSec, lineHeight: 1.4 }}>{spike.reason}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        {/* Per-Channel Brand Sentiment */}
+        <Card>
+          <SectionHeader icon={BarChart3} color={T.gold} title="Brand Sentiment by Channel" sub="Which channels are helping or hurting your brand?" />
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {RETAIL_BRAND_CHANNEL_SENTIMENT.map((ch) => {
+              const barColor = ch.sentiment >= 0.65 ? T.green : ch.sentiment >= 0.55 ? T.amber : T.red;
+              return (
+                <div key={ch.channel} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <span style={{ fontSize: 12, color: T.textSec, width: 70, flexShrink: 0 }}>{ch.channel}</span>
+                  <div style={{ flex: 1, height: 8, borderRadius: 4, background: `${barColor}20`, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${ch.sentiment * 100}%`, background: barColor, borderRadius: 4 }} />
+                  </div>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: barColor, width: 34, textAlign: "right", fontFamily: "var(--mono)" }}>{ch.sentiment.toFixed(2)}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: 10, fontSize: 11, color: T.textMut }}>Target: 0.65 · Overall avg: 0.58 ▼</div>
+        </Card>
+
+        {/* Key Insights from Conversations */}
+        <Card>
+          <SectionHeader icon={Zap} color={T.purple} title="Key Insights This Week" sub="What are customers telling you that you didn't know before?" />
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {RETAIL_KEY_INSIGHTS.map((ins) => (
+              <div key={ins.type} style={{ display: "flex", gap: 12, padding: "10px 12px", borderRadius: 10, background: `${T.purple}08`, border: `1px solid ${T.purple}20` }}>
+                <span style={{ fontSize: 16, color: T.purple, flexShrink: 0 }}>{ins.icon}</span>
+                <div>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: T.purple, textTransform: "uppercase", letterSpacing: 0.6, marginRight: 6 }}>{ins.type}</span>
+                  <div style={{ fontSize: 12, color: T.textSec, lineHeight: 1.45, marginTop: 2 }}>{ins.text}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
 
 /** Screen 2 Addon: Valuable Customer Segmentation + Pain Points */
 export function RetailScreen2Addon() {

@@ -210,6 +210,104 @@ export const bankingRiskSpikes: RiskSpike[] = [
   },
 ];
 
+/** Head of Retail Banking — role-specific risk & CX spike signals.
+ *  Order: EMI first, HNI second, Social Complaint + App in the middle, Fee Dispute last. */
+export const headRetailRiskSpikes: RiskSpike[] = [
+  {
+    id: "hretail-emi-urgency",
+    timestamp: "2h ago",
+    spikeType: "Urgency Surge",
+    magnitude: 39,
+    channel: "Voice / Chat",
+    topIntent: "Loan EMI Failure",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "EMI Repayment Surge",
+    customMetrics: [
+      { label: "Urgency", value: "28% → 67%", delta: "+39 pts" },
+      { label: "Unresolved cases", value: "180 → 410", delta: "+128%" },
+      { label: "HV accounts at risk", value: "3 HNI", delta: "Churn flag" },
+    ],
+    triggerInsight:
+      "Rate reset + missed standing instructions — 3 HNI accounts flagged for churn. Escalate to relationship managers immediately.",
+  },
+  {
+    id: "hretail-hni-churn",
+    timestamp: "1h ago",
+    spikeType: "Sentiment Crash",
+    magnitude: 36,
+    channel: "Voice",
+    topIntent: "Account Closure Inquiry",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "HNI Churn Risk",
+    customMetrics: [
+      { label: "Sentiment", value: "0.67 → 0.31", delta: "−0.36" },
+      { label: "Closure intents", value: "4 → 19", delta: "+375% this week" },
+      { label: "HNI at risk", value: "3 accounts", delta: undefined },
+    ],
+    detectedPhrases: ['"switching to competitor"', '"closing my account"'],
+    triggerInsight:
+      "3 high-net-worth customers actively exploring account closure. Initiate retention calls via relationship managers within 2 hours.",
+  },
+  {
+    id: "hretail-social-complaint-trend",
+    timestamp: "3h ago",
+    spikeType: "Volume Surge",
+    magnitude: 182,
+    channel: "Social/X · Reddit",
+    topIntent: "Hidden Fees / App Outage",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Social Complaint Trending",
+    customMetrics: [
+      { label: "Mentions (4h)", value: "480 → 1,354", delta: "+182%" },
+      { label: "Top hashtag", value: "#BankAppCrash", delta: "+287% growth" },
+      { label: "Influencer reach", value: "2.4M impressions", delta: undefined },
+    ],
+    triggerInsight:
+      "Complaint cluster viral on X/Reddit. #BankAppCrash + hidden-fee posts amplified by influencers. Push PR + in-app status in 60 min.",
+  },
+  {
+    id: "hretail-app-drop",
+    timestamp: "45m ago",
+    spikeType: "SLA Spike",
+    magnitude: 23,
+    channel: "App Store / Social/X",
+    topIntent: "App Login / Password Reset",
+    slaBefore: 8,
+    slaAfter: 31,
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "App Experience Drop",
+    customMetrics: [
+      { label: "App Store rating", value: "4.3 → 3.8", delta: "▼ 30 days" },
+      { label: "iOS crash reports", value: "", delta: "+195%" },
+      { label: "Top error", value: "Password loop", delta: undefined },
+    ],
+    triggerInsight:
+      "iOS password loop bug hitting mobile-first customers. App Store rating at risk — escalate to tech team now before next review cycle.",
+  },
+  {
+    id: "hretail-fee-dispute",
+    timestamp: "4h ago",
+    spikeType: "Volume Surge",
+    magnitude: 31,
+    channel: "App / Chat",
+    topIntent: "Fee Dispute",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Fee Dispute Surge",
+    customMetrics: [
+      { label: "Volume WoW", value: "310 → 660", delta: "+31%" },
+      { label: "Top Reason", value: "Acct maint. fee", delta: undefined },
+      { label: "Channels", value: "App 44% · Chat 38%", delta: undefined },
+    ],
+    triggerInsight:
+      "New account maintenance fee poorly communicated. Customers unaware of policy change — update in-app messaging today.",
+  },
+];
+
 export function AIRiskSpikeMonitor({
   spikes = mockRiskSpikes,
   driverContext,

@@ -18,14 +18,14 @@ interface AIDayGeneratorChatProps {
 }
 
 const DEFAULT_QUESTIONS = [
-  "What are the top priorities across all 5 channels today?",
-  "Show me today's key insights from email, chat, ticket, social, and voice",
-  "Give me a unified dashboard summary for all channels",
-  "What needs immediate attention across all 5 channels?",
-  "What are the common trends across email, chat, ticket, social, and voice?",
-  "Analyze overall customer sentiment across all channels",
-  "Which channel has the highest escalation rates?",
-  "Compare performance across all 5 channels"
+  "Which of my high-value customers are at risk of churning this week?",
+  "Why is Fee Dispute SLA at 64% — what's causing the delay?",
+  "What are my HNI customers calling about most today?",
+  "Which intents are spiking this week and what's driving them?",
+  "How is our brand sentiment trending across channels?",
+  "What pain points are putting high-value customer retention at risk?",
+  "Where are we losing our process promise this week?",
+  "What are customers saying about us on Trustpilot and App Store?"
 ];
 
 export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps) {
@@ -33,10 +33,14 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -50,259 +54,185 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
   }, [isOpen]);
 
   const generateAIResponse = async (userMessage: string): Promise<string> => {
-    // Simulate AI response generation
-    await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+    await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
 
     const lowerMessage = userMessage.toLowerCase();
 
-    // Generate contextual responses based on the question
-    if (lowerMessage.includes('priority') || lowerMessage.includes('priorities')) {
-      return `**Top Priorities Across All 5 Channels**\n\n` +
-        `Based on your unified dashboard, here are the key priorities:\n\n` +
-        `📧 **Email Channel**:\n` +
-        `• 47 high-priority threads requiring immediate attention\n` +
-        `• 12 escalated cases needing urgent response\n` +
-        `• Average response time: 2.4 hours\n\n` +
-        `💬 **Chat Channel**:\n` +
-        `• 89 active conversations in queue\n` +
-        `• 15 customers waiting over 5 minutes\n` +
-        `• Average handle time: 6.2 minutes\n\n` +
-        `🎫 **Ticket Channel**:\n` +
-        `• 34 tickets approaching SLA breach\n` +
-        `• 8 VIP customer tickets pending\n` +
-        `• First response time: 1.8 hours\n\n` +
-        `📱 **Social Media**:\n` +
-        `• 156 mentions requiring response\n` +
-        `• 34 negative sentiment posts\n` +
-        `• Trending topics: product quality, delivery times\n\n` +
-        `📞 **Voice Transcripts**:\n` +
-        `• 23 high-risk calls identified\n` +
-        `• 8 compliance violations detected\n` +
-        `• QA score: 87.5% (above target)\n\n` +
-        `**Recommendation**: Focus on SLA-risk tickets first, then handle chat queue, followed by escalated email cases and negative social sentiment.`;
+    // Q1 — HNI / high-value churn risk
+    if (lowerMessage.includes('churn') || lowerMessage.includes('high-value customers are at risk') || lowerMessage.includes('churning')) {
+      return `**High-Value Customers at Churn Risk This Week**\n\n` +
+        `🔴 **3 HNI customers flagged at 72–89% churn probability** (combined deposits: £1.2M)\n\n` +
+        `**Customer Breakdown**:\n` +
+        `• **HNI-001** — Churn probability 89% · Trigger: 3 failed EMI transactions + fee dispute unresolved for 14 days\n` +
+        `• **HNI-002** — Churn probability 81% · Trigger: Mortgage servicing complaint escalated twice, no resolution\n` +
+        `• **HNI-003** — Churn probability 72% · Trigger: Competitor rate mentioned twice in last call; HELOC rate query unresolved\n\n` +
+        `**What's driving their unhappiness**:\n` +
+        `• EMI processing failures — not communicated proactively\n` +
+        `• Fee confusion — new policy not explained at onboarding\n` +
+        `• Long wait on mortgage servicing queries (avg 2.1 days vs same-day expectation for HNI)\n\n` +
+        `**Recommended Action**:\n` +
+        `1. Relationship Manager outreach to all 3 within 24 hours\n` +
+        `2. Waive fee for HNI-001 as goodwill gesture\n` +
+        `3. Escalate HNI-002 mortgage query to senior servicing team today\n` +
+        `4. Provide HNI-003 a personalised HELOC rate comparison briefing`;
     }
 
-    if (lowerMessage.includes('insight') || lowerMessage.includes('key insights') || lowerMessage.includes('summary')) {
-      return `**Unified Dashboard Insights - All 5 Channels**\n\n` +
-        `📊 **Overall Performance**:\n` +
-        `• Total interactions: 2,485 across all 5 channels\n` +
-        `• Average customer sentiment: 72/100 (Good)\n` +
-        `• Overall resolution rate: 81.7%\n` +
-        `• Overall escalation rate: 8.2% (slightly elevated)\n\n` +
-        `🎯 **Channel Performance**:\n` +
-        `• 📧 Email: 543 threads (67% resolved, 2.4hr avg response)\n` +
-        `• 💬 Chat: 782 conversations (89% resolved, 6.2min handle time)\n` +
-        `• 🎫 Ticket: 456 tickets (76% resolved, 1.8hr first response)\n` +
-        `• 📱 Social: 415 interactions (78% positive sentiment)\n` +
-        `• 📞 Voice: 289 calls (87.5% QA score, 8.3min avg call)\n\n` +
-        `⚠️ **Areas Requiring Attention**:\n` +
-        `• Ticket SLA breaches: 34 tickets at risk\n` +
-        `• Chat queue: 15 customers waiting over 5 minutes\n` +
-        `• Email escalation rate 2.3% above normal\n` +
-        `• Social media response time increased by 15%\n` +
-        `• Voice compliance: 8 violations flagged\n\n` +
-        `**Action Items**: Prioritize ticket SLAs, reduce chat wait times, and address email escalations.`;
+    // Q2 — Fee Dispute SLA 64%
+    if (lowerMessage.includes('fee dispute') || lowerMessage.includes('sla at 64') || lowerMessage.includes('causing the delay')) {
+      return `**Fee Dispute SLA at 64% — Root Cause Analysis**\n\n` +
+        `⚠️ **Current performance**: 64% SLA hit rate vs 90% target · Avg resolution time: 3.2 days vs 1-day target\n\n` +
+        `**Why it's at 64% — 3 confirmed root causes**:\n\n` +
+        `🔴 **1. KYC API Latency (Primary cause — 51% of delays)**\n` +
+        `• KYC API running at 3× normal latency since Tuesday\n` +
+        `• Every fee dispute requires identity re-verification — this step is now taking 4.2 hours instead of 20 minutes\n` +
+        `• 580 applications and disputes currently stuck in this bottleneck\n\n` +
+        `🟠 **2. Manual Evidence Collection Step (31% of delays)**\n` +
+        `• Disputes routed to BPO team take 2.4× longer at evidence-gathering stage\n` +
+        `• BPO team is not following the updated dispute framework — training gap confirmed\n\n` +
+        `🟡 **3. Missing Escalation Routing (18% of delays)**\n` +
+        `• 3 disputes have been sitting unactioned for >4 hours with no owner assigned\n` +
+        `• Escalation routing rule not triggering correctly after the system update last Friday\n\n` +
+        `**Immediate Actions**:\n` +
+        `1. Engineering: prioritise KYC API fix — estimated resolution 6–8 hours\n` +
+        `2. Temporarily bypass KYC re-verification for existing verified customers on disputes <£500\n` +
+        `3. Pull back BPO fee dispute queue to in-house team until training is complete`;
     }
 
-    if (lowerMessage.includes('attention') || lowerMessage.includes('immediate') || lowerMessage.includes('urgent')) {
-      return `**Immediate Attention Required Across All 5 Channels**\n\n` +
-        `🔴 **Critical Items Summary**:\n\n` +
-        `📧 **Email** (15 items):\n` +
-        `• 8 P1 priority threads\n` +
-        `• 7 escalated cases over 24 hours\n\n` +
-        `💬 **Chat** (18 items):\n` +
-        `• 15 customers waiting over 5 minutes\n` +
-        `• 3 escalated conversations\n\n` +
-        `🎫 **Ticket** (34 items):\n` +
-        `• 26 tickets approaching SLA breach\n` +
-        `• 8 VIP customer issues\n\n` +
-        `📱 **Social Media** (23 items):\n` +
-        `• 18 negative posts requiring response\n` +
-        `• 5 viral complaints gaining traction\n\n` +
-        `📞 **Voice Transcripts** (12 items):\n` +
-        `• 5 high-risk calls requiring follow-up\n` +
-        `• 7 compliance violations to resolve\n\n` +
-        `**Total**: **102 critical items** need your immediate attention today.\n\n` +
-        `**Recommended Priority Order**:\n` +
-        `1. Ticket SLA breaches (prevent penalties)\n` +
-        `2. Chat queue (customers actively waiting)\n` +
-        `3. P1 email threads (high business impact)\n` +
-        `4. Viral social complaints (reputation risk)\n` +
-        `5. Voice compliance issues (regulatory requirement)`;
+    // Q3 — HNI customers calling about most
+    if (lowerMessage.includes('hni') || lowerMessage.includes('calling about most') || lowerMessage.includes('high-value') && lowerMessage.includes('calling')) {
+      return `**What HNI & High-Value Customers Are Calling About Today**\n\n` +
+        `📞 **Total HV calls this week: 312** (High-Value: >£100K portfolio)\n\n` +
+        `**Top Intents — High-Value Segment**:\n` +
+        `• 🏠 Mortgage Servicing — **31%** (97 calls) · SLA hit rate: 72% · Avg wait: 2.1 days\n` +
+        `• 💸 Fee Confusion — **24%** (75 calls) · SLA hit rate: 64% · Avg wait: 3.2 days ← **Worst**\n` +
+        `• 🏡 HELOC Rate Query — **15%** (47 calls) · SLA hit rate: 88% · Mainly rate comparisons\n` +
+        `• 🚪 Account Closure — **12%** (37 calls) · SLA hit rate: 81% · Competitor mentions rising\n` +
+        `• 📋 Onboarding Delays — **18%** (56 calls) · KYC bottleneck — 580 apps stuck\n\n` +
+        `**What's changed vs last week**:\n` +
+        `• Mortgage Servicing calls up +18% — rate reset notifications sent last Tuesday triggered a wave\n` +
+        `• Fee Confusion up +31% — new fee policy communicated poorly at point of change\n` +
+        `• HELOC Rate Query up +24% — competitor dropped rates, customers comparing\n` +
+        `• Account Closure up +9% — likely linked to fee dissatisfaction\n\n` +
+        `**Key insight**: 68% of HNI unhappy calls trace back to 2 fixable issues — fee policy communication and KYC API speed.`;
     }
 
-    if (lowerMessage.includes('trend') || lowerMessage.includes('trends') || lowerMessage.includes('common')) {
-      return `**Common Trends Across All 5 Channels**\n\n` +
-        `📈 **Emerging Patterns**:\n\n` +
-        `**Top Customer Pain Points**:\n` +
-        `• Delivery delays (mentioned 142 times across all channels)\n` +
-        `• Product quality concerns (89 mentions)\n` +
-        `• Billing issues (67 mentions)\n` +
-        `• Account access problems (54 mentions)\n` +
-        `• Technical support needs (48 mentions)\n\n` +
-        `**Positive Trends**:\n` +
-        `• Customer service satisfaction: +12% vs. last week\n` +
-        `• First-contact resolution: +8%\n` +
-        `• Overall response time: 15% faster\n` +
-        `• Chat resolution rate: +6%\n\n` +
-        `**Channel-Specific Insights**:\n` +
-        `• 📧 Email: Technical support queries increasing (+18%)\n` +
-        `• 💬 Chat: Quick resolution preference (+23%)\n` +
-        `• 🎫 Ticket: Complex issue escalations trending\n` +
-        `• 📱 Social: Product feedback and feature requests (+31%)\n` +
-        `• 📞 Voice: More complex troubleshooting calls (+14%)\n\n` +
-        `**Recommendation**: Create a unified response playbook for delivery delays. Consider proactive notifications across all channels.`;
+    // Q4 — Intents spiking
+    if (lowerMessage.includes('spike') || lowerMessage.includes('spiking') || lowerMessage.includes('intents are')) {
+      return `**Intent Spikes This Week — Retail Banking**\n\n` +
+        `📈 **3 intents showing significant volume growth**:\n\n` +
+        `🔴 **Fee Dispute — +31% spike**\n` +
+        `• Volume: 75 open disputes (up from 57 last week)\n` +
+        `• Root cause: New fee policy introduced 10 days ago with no proactive customer communication\n` +
+        `• Sentiment on these calls: 0.31 (very negative) — customers feel blindsided\n` +
+        `• SLA hit rate: 64% — this is your most urgent problem\n\n` +
+        `🟠 **HELOC Rate Query — +24% spike**\n` +
+        `• Volume: 47 calls this week (up from 38)\n` +
+        `• Root cause: Competitor bank dropped HELOC rate by 0.4% — customers calling to renegotiate\n` +
+        `• Risk: 12 of these callers mentioned switching — 3 already classified as churn risk\n` +
+        `• Action: Equip agents with competitive rate response script today\n\n` +
+        `🟡 **Mortgage Servicing — +18% spike**\n` +
+        `• Volume: 97 calls this week (up from 82)\n` +
+        `• Root cause: Rate reset notifications sent last Tuesday — customers confused about new EMI amounts\n` +
+        `• 31% of HNI calls are on this intent — your highest-value customers are frustrated\n` +
+        `• Action: Proactive outreach to all customers who received rate reset notices\n\n` +
+        `**Positive signal**: Card Replacement stable at 91% SLA — no spike, well handled.`;
     }
 
-    if (lowerMessage.includes('sentiment') || lowerMessage.includes('emotion') || lowerMessage.includes('customer sentiment')) {
-      return `**Overall Customer Sentiment Analysis Across All 5 Channels**\n\n` +
-        `📊 **Unified Sentiment Score**: **72/100** (Good)\n\n` +
-        `**Breakdown by Channel**:\n` +
-        `• 📧 Email: 68/100 (Neutral-Positive)\n` +
-        `• 💬 Chat: 78/100 (Positive)\n` +
-        `• 🎫 Ticket: 70/100 (Positive)\n` +
-        `• 📱 Social Media: 65/100 (Mixed)\n` +
-        `• 📞 Voice: 81/100 (Very Positive)\n\n` +
-        `**Overall Sentiment Distribution**:\n` +
-        `• 😊 Very Positive: 28%\n` +
-        `• 🙂 Positive: 34%\n` +
-        `• 😐 Neutral: 21%\n` +
-        `• 😕 Negative: 12%\n` +
-        `• 😠 Very Negative: 5%\n\n` +
-        `**Key Drivers of Negative Sentiment**:\n` +
-        `• Delayed responses (38% of negative mentions)\n` +
-        `• Unresolved issues (29%)\n` +
-        `• Product defects (18%)\n` +
-        `• Billing errors (15%)\n\n` +
-        `**Best Practices**:\n` +
-        `• Voice and Chat channels have highest satisfaction\n` +
-        `• Real-time interaction correlates with better sentiment\n` +
-        `• Consider implementing chat-style quick responses in email\n\n` +
-        `**Recommendation**: Replicate voice and chat service practices across email, ticket, and social channels.`;
+    // Q5 — Brand sentiment across channels
+    if (lowerMessage.includes('brand sentiment') || lowerMessage.includes('sentiment trending') || lowerMessage.includes('brand') && lowerMessage.includes('channel')) {
+      return `**Brand Sentiment Across Channels — This Week**\n\n` +
+        `📊 **Overall brand sentiment: 0.58** (Target: 0.65 · Below threshold for 2nd consecutive week)\n\n` +
+        `**Channel Breakdown**:\n` +
+        `• 📱 App Store — **0.71** ✅ Best channel · Budgeting tool praised, instant rate alerts getting 4-star reviews\n` +
+        `• 📞 Voice — **0.64** 🟡 Just below target · Transfer loops still frustrating HV customers\n` +
+        `• 💬 Chat — **0.62** 🟡 Moderate · 62% containment rate, bot handoff still rough\n` +
+        `• 📧 Email — **0.56** 🟠 Below target · 143 emails unresolved >48h pulling score down\n` +
+        `• 📲 Social / X — **0.41** 🔴 Worst channel · Fee complaint backlash, 4 posts trending\n\n` +
+        `**What's being said**:\n` +
+        `• Trustpilot: Dropped from 3.8 → 3.2 this week. Top complaint: "Hidden fees — no warning"\n` +
+        `• App Store: Customers praising new budgeting feature. 2 feature requests surfaced: mortgage calculator & HELOC rate alert\n` +
+        `• Social/X: 4 posts trending on "fee increase" — not yet viral but growing at 1.8× baseline\n\n` +
+        `**Key insight**: Social/X sentiment is low but banking customers rarely escalate socially unless severely frustrated. Fee communication is the single biggest brand risk right now.`;
     }
 
-    if (lowerMessage.includes('escalation') || lowerMessage.includes('escalate')) {
-      return `**Escalation Analysis Across All 5 Channels**\n\n` +
-        `⚠️ **Overall Escalation Rate**: **8.2%** (Target: 6%)\n\n` +
-        `**By Channel**:\n` +
-        `• 📧 Email: 9.7% (↑ 2.3% above normal)\n` +
-        `• 💬 Chat: 5.4% (✅ Below target - best performer)\n` +
-        `• 🎫 Ticket: 7.8% (↑ Slightly elevated)\n` +
-        `• 📱 Social Media: 11.4% (↑ Highest rate)\n` +
-        `• 📞 Voice: 6.1% (✅ Within target)\n\n` +
-        `**Escalation Reasons Across All Channels**:\n` +
-        `1. Unresolved after 3+ interactions (34%)\n` +
-        `2. Customer requested manager (28%)\n` +
-        `3. Policy exception needed (19%)\n` +
-        `4. Technical complexity (12%)\n` +
-        `5. VIP customer (7%)\n\n` +
-        `**Top Escalated Topics**:\n` +
-        `• Refund requests: 42 escalations\n` +
-        `• Technical issues: 35 escalations\n` +
-        `• Delivery problems: 28 escalations\n` +
-        `• Account access: 19 escalations\n` +
-        `• Billing disputes: 16 escalations\n\n` +
-        `**Recommendations**:\n` +
-        `• Empower agents with $100 refund authority\n` +
-        `• Improve first-contact resolution training\n` +
-        `• Create escalation prevention playbooks for top topics\n` +
-        `• Replicate chat's success practices in email and social`;
+    // Q6 — Pain points and retention risk
+    if (lowerMessage.includes('pain point') || lowerMessage.includes('retention at risk') || lowerMessage.includes('putting high-value')) {
+      return `**Pain Points Putting High-Value Customer Retention at Risk**\n\n` +
+        `🎯 **Customer Happiness Score: 72** — 32% of HV customers currently unhappy\n\n` +
+        `**Top Pain Points Driving Retention Risk**:\n\n` +
+        `🔴 **1. EMI Processing Failures — 31% of HV unhappy calls**\n` +
+        `• Customers not notified when EMI fails — they find out from overdraft charges\n` +
+        `• Average time to resolve: 4.1 hours\n` +
+        `• Business impact: Each unresolved EMI failure has 3.2× higher churn signal than an average complaint\n\n` +
+        `🔴 **2. Fee Confusion — 24% of HV unhappy calls**\n` +
+        `• New fee policy introduced without adequate communication\n` +
+        `• Customers feel deceived — sentiment score on fee calls: 0.31 (very negative)\n` +
+        `• 4 posts on Social/X trending — reputational risk building\n\n` +
+        `🟠 **3. KYC Onboarding Delays — 580 applications stuck**\n` +
+        `• New HV customers experiencing 4.2-hour delays at verification step\n` +
+        `• First impression damage — churn probability highest in first 90 days\n\n` +
+        `🟠 **4. Mortgage Servicing Response Time — 2.1 days avg**\n` +
+        `• HNI expectation: same-day response. Current: 2.1 days\n` +
+        `• 97 HV customers waiting — 3 already flagged as churn risk\n\n` +
+        `**If nothing changes**: Based on current churn probability signals, estimated £1.2M in deposits at risk within 30 days.`;
     }
 
-    if (lowerMessage.includes('performance') || lowerMessage.includes('channel') || lowerMessage.includes('compare')) {
-      return `**Performance Summary - All 5 Channels Comparison**\n\n` +
-        `📊 **Channel Metrics Overview**:\n\n` +
-        `📧 **Email**:\n` +
-        `• Volume: 543 threads\n` +
-        `• Resolution Rate: 67.2%\n` +
-        `• Avg Response Time: 2.4 hours\n` +
-        `• Customer Satisfaction: 68/100\n` +
-        `• Status: ⚠️ Needs improvement\n\n` +
-        `💬 **Chat**:\n` +
-        `• Volume: 782 conversations\n` +
-        `• Resolution Rate: 89.1%\n` +
-        `• Avg Handle Time: 6.2 minutes\n` +
-        `• Customer Satisfaction: 78/100\n` +
-        `• Status: ✅ Performing well\n\n` +
-        `🎫 **Ticket**:\n` +
-        `• Volume: 456 tickets\n` +
-        `• Resolution Rate: 76.3%\n` +
-        `• Avg First Response: 1.8 hours\n` +
-        `• Customer Satisfaction: 70/100\n` +
-        `• Status: 🟡 Moderate\n\n` +
-        `📱 **Social Media**:\n` +
-        `• Volume: 415 interactions\n` +
-        `• Response Rate: 89.2%\n` +
-        `• Avg Response Time: 45 minutes\n` +
-        `• Sentiment Score: 65/100\n` +
-        `• Status: 🟡 Moderate\n\n` +
-        `📞 **Voice**:\n` +
-        `• Volume: 289 calls\n` +
-        `• QA Score: 87.5%\n` +
-        `• Avg Handle Time: 8.3 minutes\n` +
-        `• Customer Satisfaction: 81/100\n` +
-        `• Status: ✅ Performing well\n\n` +
-        `**Rankings**:\n` +
-        `🥇 Best: Voice (81/100 satisfaction)\n` +
-        `🥈 Second: Chat (78/100 satisfaction)\n` +
-        `🥉 Third: Ticket (70/100 satisfaction)\n` +
-        `⚠️ Needs Focus: Email & Social (escalation & response time)`;
+    // Q7 — Process promise / SLA
+    if (lowerMessage.includes('process promise') || lowerMessage.includes('losing') || lowerMessage.includes('where are we')) {
+      return `**Where We Are Losing Our Process Promise This Week**\n\n` +
+        `📉 **Overall Service Fulfilment Score: 68** · SLA compliance trending ▼ 6% week-on-week\n\n` +
+        `**SLA Performance by Intent**:\n` +
+        `• ✅ Card Replacement — **91%** SLA hit · Avg: 0.3 days · On promise\n` +
+        `• ✅ Account Closure — **81%** SLA hit · Avg: 1.5 days · Acceptable\n` +
+        `• 🟠 Mortgage Servicing — **72%** SLA hit · Avg: 2.1 days · Slipping\n` +
+        `• 🔴 Fee Dispute — **64%** SLA hit · Avg: 3.2 days vs 1-day target · **Biggest breach**\n\n` +
+        `**Where the promise breaks — ranked by impact**:\n\n` +
+        `1. 🔴 **KYC API bottleneck** — 4.2hr delay per case · 580 customers impacted · Blocking both Fee Dispute and Mortgage Servicing resolution\n` +
+        `2. 🟠 **BPO evidence collection** — 2.4× slower than in-house · 75 fee disputes stuck here\n` +
+        `3. 🟠 **Escalation routing failure** — 3 disputes unactioned >4h · Routing rule broken since Friday update\n` +
+        `4. 🟡 **Mortgage query backlog** — 97 calls, agents lack rate-lookup tool access after system update\n\n` +
+        `**What good looks like**: Card Replacement at 91% — automated fulfilment, no human bottleneck. This is the model to replicate.`;
     }
 
-    if (lowerMessage.includes('day') || lowerMessage.includes('generate') || lowerMessage.includes('2 minutes')) {
-      return `**Your Day in 2 Minutes - All 5 Channels Unified**\n\n` +
-        `⏰ **Time**: ${new Date().toLocaleTimeString()}\n` +
-        `📅 **Date**: ${new Date().toLocaleDateString()}\n\n` +
-        `🎯 **Your Priority Action Plan**:\n\n` +
-        `**🔥 Immediate (Next 90 minutes)**:\n` +
-        `1. 🎫 Address 26 tickets at SLA risk (Est. 30 min)\n` +
-        `2. 💬 Clear chat queue - 15 waiting customers (Est. 20 min)\n` +
-        `3. 📧 Handle 8 P1 email threads (Est. 40 min)\n\n` +
-        `**⚡ Morning (Next 2 hours)**:\n` +
-        `4. 📱 Respond to 18 negative social posts (Est. 30 min)\n` +
-        `5. 📞 Review 5 high-risk call recordings (Est. 30 min)\n` +
-        `6. 🔄 Follow up on 12 escalated cases (Est. 60 min)\n\n` +
-        `**📊 Afternoon**:\n` +
-        `7. Review performance metrics across all channels\n` +
-        `8. Implement chat best practices in email\n` +
-        `9. Analyze delivery delay complaints (142 mentions)\n` +
-        `10. Team coaching session on first-contact resolution\n\n` +
-        `**📈 Key Numbers Across All Channels**:\n` +
-        `• Total critical items: 102\n` +
-        `• Total interactions: 2,485\n` +
-        `• Estimated time to clear critical items: 5.5 hours\n` +
-        `• Team support available: 12 agents\n\n` +
-        `**🎁 Quick Wins**:\n` +
-        `• Delegate 34 routine tickets to team leads\n` +
-        `• Automate 15 standard responses\n` +
-        `• Schedule 8 non-urgent items for tomorrow\n` +
-        `• Net reduction: 57 items off your plate\n\n` +
-        `**🎯 End-of-Day Goals**:\n` +
-        `• Clear all SLA-risk tickets (0 breaches)\n` +
-        `• Reduce overall escalation rate to <7%\n` +
-        `• Improve social sentiment to 70+\n` +
-        `• Achieve <2min chat wait time\n` +
-        `• Close all P1 email threads`;
+    // Q8 — Trustpilot and App Store
+    if (lowerMessage.includes('trustpilot') || lowerMessage.includes('app store') || lowerMessage.includes('customers saying about us')) {
+      return `**What Customers Are Saying — Trustpilot & App Store**\n\n` +
+        `**Trustpilot** · Score: **3.2 / 5** (↓ from 3.8 last month)\n\n` +
+        `🔴 **Negative reviews (dominant theme — fee complaints)**:\n` +
+        `• "Charged fees I didn't know about. No warning. No explanation." — 4 similar reviews this week\n` +
+        `• "Tried to dispute a fee, waited 3 days, still no resolution. Switching banks."\n` +
+        `• "Mortgage rate reset notification was confusing — had to call 3 times to understand my new EMI"\n\n` +
+        `🟢 **Positive reviews**:\n` +
+        `• "New app update is great — budgeting tool actually useful for the first time"\n` +
+        `• "Card replacement was done overnight — very impressed"\n` +
+        `• 12 new 4-5 star reviews this week on app experience\n\n` +
+        `**App Store** · Sentiment: **0.71** ✅ Best performing channel\n\n` +
+        `🟢 **What customers love**:\n` +
+        `• Budgeting tool: "Finally a bank app that shows me where I'm overspending"\n` +
+        `• Instant HELOC rate alerts requested by multiple users — feature opportunity\n` +
+        `• Card freeze / unfreeze UX praised\n\n` +
+        `🟡 **Feature requests surfaced this week**:\n` +
+        `• Mortgage EMI calculator — 18 requests\n` +
+        `• Real-time HELOC rate comparison — 11 requests\n\n` +
+        `**Key insight**: Your app is your strongest brand asset right now. Fee communication is destroying Trustpilot. Fix the communication, not the fees.`;
     }
 
-    // Default response
-    return `I understand you're asking about "${userMessage}". Based on your unified dashboard across all 5 channels:\n\n` +
-      `📊 **Quick Overview**:\n` +
-      `• Total interactions: 2,485 (Email: 543, Chat: 782, Ticket: 456, Social: 415, Voice: 289)\n` +
-      `• Overall customer satisfaction: 72/100\n` +
-      `• Critical items requiring attention: 102\n` +
-      `• Average resolution rate: 81.7%\n` +
-      `• Overall escalation rate: 8.2%\n\n` +
-      `**Would you like me to dive deeper into**:\n` +
-      `• 📧 Email performance & priorities\n` +
-      `• 💬 Chat queue & response times\n` +
-      `• 🎫 Ticket SLA status & risks\n` +
-      `• 📱 Social media sentiment & trends\n` +
-      `• 📞 Voice call quality & compliance\n` +
-      `• 📊 Cross-channel comparison\n` +
-      `• 🎯 Your personalized action plan for today\n` +
-      `• 🔍 Sentiment, escalation, or trend analysis\n\n` +
-      `Just ask, and I'll provide detailed insights!`;
+    // Default retail banking response
+    return `**Retail Banking Dashboard — Head of Retail Banking**\n\n` +
+      `📊 **Your dashboard at a glance**:\n` +
+      `• Customer Happiness Score: **72** · HV happy: 68% · LV happy: 81%\n` +
+      `• Brand & Reputation: **64** · Overall sentiment: 0.58 (below 0.65 target)\n` +
+      `• Service Fulfilment: **68** · SLA trending ▼ 6% this week\n\n` +
+      `**Top 3 things that need your attention today**:\n` +
+      `1. 🔴 3 HNI customers at churn risk (£1.2M deposits) — RM outreach needed today\n` +
+      `2. 🔴 Fee Dispute SLA at 64% — KYC API fix required urgently\n` +
+      `3. 🟠 Fee policy communication gap — driving Trustpilot drop and Social/X backlash\n\n` +
+      `**Ask me about**:\n` +
+      `• Which high-value customers are at churn risk\n` +
+      `• Why Fee Dispute SLA is at 64%\n` +
+      `• What intents are spiking and why\n` +
+      `• How brand sentiment is trending across channels\n` +
+      `• Where we are losing our process promise`;
   };
 
   const handleSendMessage = async (message?: string) => {
@@ -391,26 +321,15 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50">
-          {/* Backdrop */}
-          <motion.div 
-            className="absolute inset-0 pointer-events-auto"
-            onClick={onClose}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{ backgroundColor: 'transparent' }}
-          />
-          
-          {/* Chat Drawer */}
-          <motion.div 
-            className="absolute right-0 top-0 h-[90vh] max-h-[800px] w-full max-w-2xl border-l border-white/10 flex flex-col rounded-l-lg overflow-hidden"
+        <div className="fixed z-50 bottom-6 right-6 flex flex-col" style={{ width: 420 }}>
+          {/* Chat Popup */}
+          <motion.div
+            className="w-full h-[600px] border border-white/10 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 40, scale: 0.95 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 260 }}
             style={{ backgroundColor: 'var(--sidebar)' }}
           >
             {/* Header */}
@@ -439,21 +358,33 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
               <div className="p-4 border-b border-white/10 bg-app-black/30">
                 <p className="text-sm text-gray-400 mb-3">Try asking:</p>
                 <div className="flex flex-wrap gap-2">
-                  {DEFAULT_QUESTIONS.map((question, index) => (
-                    <button
-                      key={index}
-                      onClick={() => handleQuestionClick(question)}
-                      className="px-3 py-1.5 text-xs bg-[#b90abd]/10 border border-[#b90abd]/30 text-[#b90abd] rounded-full hover:bg-[#b90abd]/20 hover:border-[#b90abd]/50 transition-all duration-200"
-                    >
-                      {question}
-                    </button>
-                  ))}
+                  {DEFAULT_QUESTIONS.map((question, index) => {
+                    const colors = [
+                      { base: "#06b6d4", bg: "rgba(6,182,212,0.10)", border: "rgba(6,182,212,0.30)", hover: "rgba(6,182,212,0.20)" },
+                      { base: "#60a5fa", bg: "rgba(96,165,250,0.10)", border: "rgba(96,165,250,0.30)", hover: "rgba(96,165,250,0.20)" },
+                      { base: "#2dd4bf", bg: "rgba(45,212,191,0.10)", border: "rgba(45,212,191,0.30)", hover: "rgba(45,212,191,0.20)" },
+                      { base: "#818cf8", bg: "rgba(129,140,248,0.10)", border: "rgba(129,140,248,0.30)", hover: "rgba(129,140,248,0.20)" },
+                    ];
+                    const c = colors[index % colors.length];
+                    return (
+                      <button
+                        key={index}
+                        onClick={() => handleQuestionClick(question)}
+                        style={{ background: c.bg, border: `1px solid ${c.border}`, color: c.base }}
+                        className="px-3 py-1.5 text-xs rounded-full transition-all duration-200"
+                        onMouseEnter={e => (e.currentTarget.style.background = c.hover)}
+                        onMouseLeave={e => (e.currentTarget.style.background = c.bg)}
+                      >
+                        {question}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
               {messages.map((message) => (
                 <div
                   key={message.id}

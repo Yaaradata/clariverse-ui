@@ -12,17 +12,22 @@ interface FCIKPICardsProps {
 export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
+  // Aligned with HV/LV panel in the drill-down:
+  //   HV monthly contacts = 15,910  (Private · HNI · Mass Affluent · 148K accounts)
+  //   LV monthly contacts = 37,830  (Mass Retail · Digital-only · 2.41M accounts)
+  //   HV avg sentiment = -0.42, LV avg sentiment = -0.48
+  // Within each HV/LV bucket we split 60/40 into HF/LF to preserve the 4-tier UI.
   const kpiData = {
     totalInteraction: {
       value: 87.5,
       trend: 3.2,
-      totalVolume: 243253,
+      totalVolume: 53740,
       lastWeekComparison: '+1,842',
       customerSegments: {
-        hvhf: { label: 'High Value High Frequency', count: 48650, percentage: 20 },
-        hvlf: { label: 'High Value Low Frequency', count: 72976, percentage: 30 },
-        lvhf: { label: 'Low Value High Frequency', count: 60813, percentage: 25 },
-        lvlf: { label: 'Low Value Low Frequency', count: 60814, percentage: 25 }
+        hvhf: { label: 'High Value High Frequency', count: 9550,  percentage: 18 },
+        hvlf: { label: 'High Value Low Frequency',  count: 6360,  percentage: 12 },
+        lvhf: { label: 'Low Value High Frequency',  count: 22700, percentage: 42 },
+        lvlf: { label: 'Low Value Low Frequency',   count: 15130, percentage: 28 }
       },
       peakHour: '2:00 PM',
       peakIncrease: 12
@@ -38,41 +43,54 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
       }
     },
     riskSignal: {
-      fraud: { percentage: 2.5, cases: 20, trend: -0.5 },
-      operational: { percentage: 2.2, cases: 18, trend: -0.2 },
-      reputation: { percentage: 1.5, cases: 12, trend: 0.1 },
-      thirdParty: { percentage: 1.9, cases: 15, trend: 0.4 },
-      totalFlagged: 65,
-      highPriority: 12,
-      critical: 3,
-      resolvedToday: 24,
+      // Top 4 intents by monthly volume (in thousands) from HV+LV intent lists
+      //   App Login & Authentication (LV 9.8K) + Account Access (LV 3.4K)  ≈ 13
+      //   Card Declines (LV everyday 7.95K + HV travel/FX 1.75K)            ≈ 10
+      //   Fee Disputes (LV overdraft 6.43K + HV fees 3.02K)                 ≈ 9
+      //   Wealth / RM issues (HV wealth 3.82K + HV RM access 1.59K)         ≈ 5
+      fraud:      { percentage: 2.5, cases: 13, trend: -0.5 },
+      operational:{ percentage: 2.2, cases: 10, trend: -0.2 },
+      reputation: { percentage: 1.5, cases:  9, trend:  0.1 },
+      thirdParty: { percentage: 1.9, cases:  5, trend:  0.4 },
+      totalFlagged: 16,
+      highPriority: 6,
+      critical: 2,
+      resolvedToday: 4,
+      // Distinct intents surfaced per tier (sum must equal totalFlagged = 16)
       segmentRisk: {
-        hvhf: { count: 8, level: 'low' },
-        hvlf: { count: 15, level: 'medium' },
-        lvhf: { count: 32, level: 'high' },
-        lvlf: { count: 25, level: 'high' }
+        hvhf: { count: 3, level: 'low' },
+        hvlf: { count: 5, level: 'medium' },
+        lvhf: { count: 4, level: 'high' },
+        lvlf: { count: 4, level: 'high' }
       }
     },
     customerSentiment: {
-      value: 72,
-      trend: 2.1,
-      analyzedInteractions: 945,
-      improvementFromYesterday: '+0.8%',
-      negativeTopics: ['Wait times', 'Transfer issues'],
-      positiveTopics: ['Quick resolution', 'Agent helpfulness'],
-      npsScore: 68,
-      detractors: 18,
+      // Weighted positive share across tiers = 28%
+      // Maps the -0.42 / -0.48 HV/LV averages to a % positive-share index.
+      value: 28,
+      trend: -1.8,
+      analyzedInteractions: 540,
+      improvementFromYesterday: '-1.2%',
+      negativeTopics: ['App login / auth', 'Fee & charge disputes'],
+      positiveTopics: ['Rewards uplift', 'New product onboarding'],
+      npsScore: -12,
+      detractors: 38,
       segmentSentiment: {
-        hvhf: { label: 'High Value High Freq', score: 85, color: '#10b981' },
-        hvlf: { label: 'High Value Low Freq', score: 72, color: '#06b6d4' },
-        lvhf: { label: 'Low Value High Freq', score: 65, color: '#f59e0b' },
-        lvlf: { label: 'Low Value Low Freq', score: 58, color: '#ef4444' }
+        hvhf: { label: 'High Value High Freq', score: 38, color: '#10b981' },
+        hvlf: { label: 'High Value Low Freq',  score: 32, color: '#06b6d4' },
+        lvhf: { label: 'Low Value High Freq',  score: 26, color: '#f59e0b' },
+        lvlf: { label: 'Low Value Low Freq',   score: 22, color: '#ef4444' }
       },
+      // Per-tier pos/neu/neg split. Counts are "interactions analyzed ≈ volume/100"
+      //   HVHF 9,550 → 95 analyzed → 36 pos / 31 neu / 28 neg
+      //   HVLF 6,360 → 64          → 20 / 21 / 23
+      //   LVHF 22,700 → 227         → 59 / 73 / 95
+      //   LVLF 15,130 → 151         → 33 / 45 / 73
       segmentSentimentBreakdown: {
-        hvhf: { label: 'High Value High Freq', positive: 48, neutral: 35, negative: 17, positiveCount: 113, neutralCount: 83, negativeCount: 40 },
-        hvlf: { label: 'High Value Low Freq', positive: 40, neutral: 38, negative: 22, positiveCount: 94, neutralCount: 90, negativeCount: 52 },
-        lvhf: { label: 'Low Value High Freq', positive: 35, neutral: 40, negative: 25, positiveCount: 77, neutralCount: 88, negativeCount: 55 },
-        lvlf: { label: 'Low Value Low Freq', positive: 28, neutral: 38, negative: 34, positiveCount: 56, neutralCount: 76, negativeCount: 68 }
+        hvhf: { label: 'High Value High Freq', positive: 38, neutral: 32, negative: 30, positiveCount: 36, neutralCount: 31, negativeCount: 28 },
+        hvlf: { label: 'High Value Low Freq',  positive: 32, neutral: 33, negative: 35, positiveCount: 20, neutralCount: 21, negativeCount: 23 },
+        lvhf: { label: 'Low Value High Freq',  positive: 26, neutral: 32, negative: 42, positiveCount: 59, neutralCount: 73, negativeCount: 95 },
+        lvlf: { label: 'Low Value Low Freq',   positive: 22, neutral: 30, negative: 48, positiveCount: 33, neutralCount: 45, negativeCount: 73 }
       }
     }
   };
@@ -263,10 +281,10 @@ export function FCIKPICards({ data, isDarkMode = false }: FCIKPICardsProps) {
                 <div>
                   {(() => {
                     const riskCategories = [
-                      { key: 'fraud', label: 'Suspicious Activity', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-                      { key: 'operational', label: 'Rate lock inquiry', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
-                      { key: 'reputation', label: 'Feedback', color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
-                      { key: 'thirdParty', label: 'Third-Party', color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
+                      { key: 'fraud',       label: 'App Login & Auth',  color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
+                      { key: 'operational', label: 'Card Declines',     color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
+                      { key: 'reputation',  label: 'Fee Disputes',      color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
+                      { key: 'thirdParty',  label: 'Wealth / RM',       color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
                     ];
                     const total = riskCategories.reduce((sum, r) => sum + r.cases, 0);
                     

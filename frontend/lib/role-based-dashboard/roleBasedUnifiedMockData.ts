@@ -1,4 +1,75 @@
 import type { SystemHealthMetric } from "@/components/unified/kpi/SystemHealthRibbon";
+import type { ChannelKey, CrossChannelActionGridResponse } from "@/lib/unified/adapters";
+
+/** Same shape as `fetchCrossChannelActionGrid` in adapters — sync for role-based embeds. */
+export const ROLE_BASED_MOCK_CROSS_CHANNEL_ACTION_GRID: CrossChannelActionGridResponse = (() => {
+  const stages = ["Receive", "Authenticate", "Resolution", "Escalation", "Closure"];
+  const channels: ChannelKey[] = ["email", "chat", "ticket", "social", "voice"];
+  const entries = stages.flatMap((stage, stageIndex) =>
+    channels.map((channel, channelIndex) => {
+      if (channel === "voice") {
+        if (stage === "Receive")
+          return {
+            stage,
+            channel,
+            avgDelayHours: 0,
+            hideDelay: true,
+            pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+            sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+            urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+          };
+        if (stage === "Authenticate")
+          return {
+            stage,
+            channel,
+            avgDelayHours: 0.2,
+            pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+            sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+            urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+          };
+        if (stage === "Resolution")
+          return {
+            stage,
+            channel,
+            avgDelayHours: 5.2,
+            pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+            sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+            urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+          };
+      }
+      const isSecondsStage = stageIndex <= 2;
+      const useSecondsForVoiceOnly = isSecondsStage && channel === "voice";
+      if (useSecondsForVoiceOnly) {
+        const avgDelaySeconds = Number((0.1 + stageIndex * 0.15 + channelIndex * 0.08).toFixed(1));
+        return {
+          stage,
+          channel,
+          avgDelayHours: avgDelaySeconds / 3600,
+          avgDelaySeconds,
+          pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+          sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+          urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+        };
+      }
+      return {
+        stage,
+        channel,
+        avgDelayHours: Number((2 + stageIndex * 1.4 + channelIndex * 0.8).toFixed(1)),
+        pendingFromCompany: Math.min(0.9, 0.25 + stageIndex * 0.12 + channelIndex * 0.05),
+        sentiment: 2.2 + (channelIndex % 2 === 0 ? -0.3 : 0.4) - stageIndex * 0.1,
+        urgencyRatio: Math.min(0.95, 0.3 + stageIndex * 0.16 + channelIndex * 0.04),
+      };
+    }),
+  );
+  return {
+    entries,
+    insights: [
+      "Voice channel escalation stage shows longest delay (avg 9.3 hrs).",
+      "Email has highest internal dependency — 68% company-pending.",
+      "Chat resolves 42% faster than Ticket; optimize ticket workflow.",
+    ],
+  };
+})();
 
 const dr = { start: "2026-04-01", end: "2026-04-09" };
 

@@ -168,9 +168,19 @@ export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
 interface AISummaryWallProps {
   data?: FCIInsight[];
   isDarkMode?: boolean;
+  /**
+   * Outer wrapper height. Defaults to '650px' to preserve the original FCI
+   * product screen layout. Pass '100%' (or any CSS length) to let the wall
+   * stretch to fill a flex/grid parent — useful for the role-based drill-downs.
+   */
+  height?: string | number;
 }
 
-export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AISummaryWallProps) {
+export function AISummaryWall({
+  data = fciInsightsData,
+  isDarkMode = false,
+  height = '650px',
+}: AISummaryWallProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
   const [selectedInsight, setSelectedInsight] = useState<FCIInsight | null>(null);
@@ -309,7 +319,7 @@ export function AISummaryWall({ data = fciInsightsData, isDarkMode = false }: AI
         boxShadow: isDarkMode 
           ? '0 4px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05)'
           : '0 4px 24px rgba(0, 0, 0, 0.06)',
-        height: '650px'
+        height,
       }}
     >
       {/* Header */}

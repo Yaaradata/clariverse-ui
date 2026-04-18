@@ -59,6 +59,11 @@ export function showScreen3FciKpis(roleId: string): boolean {
 // HEAD OF RETAIL BANKING FLAGS (Ranjith feedback)
 // ═══════════════════════════
 
+/** Screen 1: Show retail-specific bottom cards (happiness distribution, brand insights, intent spikes) */
+export function showRetailScreen1Cards(roleId: string): boolean {
+  return roleId === "head_retail";
+}
+
 /** Screen 2: Show valuable customer segmentation + pain points */
 export function showRetailValuedCustomers(roleId: string): boolean {
   return roleId === "head_retail";
@@ -66,6 +71,11 @@ export function showRetailValuedCustomers(roleId: string): boolean {
 
 /** Screen 3: Show cross-channel sentiment + intent SLA tracking + bottlenecks */
 export function showRetailChannelSentiment(roleId: string): boolean {
+  return roleId === "head_retail";
+}
+
+/** Screen 3: Full unified intelligence wall (same UI as unified operational pages). */
+export function showRetailUnifiedIntelligenceWall(roleId: string): boolean {
   return roleId === "head_retail";
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { AIRiskSpikeMonitor, headRetailRiskSpikes } from "@/components/unified/actions/AIRiskSpikeMonitor";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { SystemHealthRibbon } from "@/components/unified/kpi/SystemHealthRibbon";
 import { EisenhowerMatrix } from "@/components/email/EisenhowerMatrix";
@@ -10,7 +10,7 @@ import { IntentIntelligenceCommandCenter } from "@/components/unified/intelligen
 import { EmotionShockboard } from "@/components/unified/intents/IntentIntelligenceSection";
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { ComplianceInsightsCards } from "@/components/compliance/ComplianceInsightsCards";
-import { FCIKPICards } from "@/components/FCI/FCIKPICards";
+import { RetailFCIKPICards } from "./RetailFCIKPICards";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
 import { AISummaryWall } from "@/components/FCI/AISummaryWall";
 import { BottleneckHeatmap } from "@/components/email/BottleneckHeatmap";
@@ -26,6 +26,7 @@ import type { EisenhowerThread } from "@/lib/api";
 import type { Role } from "@/lib/role-based-dashboard/registry";
 import type { LensId } from "@/lib/role-based-dashboard/registry";
 import {
+  ROLE_BASED_MOCK_CROSS_CHANNEL_ACTION_GRID,
   ROLE_BASED_MOCK_SYSTEM_HEALTH,
   ROLE_BASED_MOCK_TREND,
   ROLE_BASED_SYSTEM_HEALTH_EXPLANATIONS,
@@ -46,8 +47,10 @@ import {
   showCroConsumerDuty,
   showCroCrossJurisdiction,
   showCroInvestigations,
+  showRetailScreen1Cards,
   showRetailValuedCustomers,
   showRetailChannelSentiment,
+  showRetailUnifiedIntelligenceWall,
   showRetailIntentHeatmap,
   showContactAgentHealth,
   showContactPromiseAdherence,
@@ -62,6 +65,7 @@ import {
   CROScreen5Investigations,
 } from "@/components/role-based-dashboard/CROScreenExtensions";
 import {
+  RetailScreen1Cards,
   RetailScreen2Addon,
   RetailScreen3Addon,
   RetailScreen4IntentHeatmap,
@@ -69,15 +73,24 @@ import {
   ContactScreen3PromiseAdherence,
   ContactScreen4ClusterSummary,
 } from "@/components/role-based-dashboard/RetailContactScreenExtensions";
+import { UnifiedIntelligenceWall } from "@/components/role-based-dashboard/RetailUnifiedIntelligenceWall";
 
 /** Consistent vertical rhythm between unified blocks (role-based embed). */
 const sectionGap = "mt-6 flex flex-col gap-8";
 
 export function RoleBasedUnifiedScreen1Addon({ role }: { role: Role }) {
   const rid = role.id;
+  const isRetail = rid === "head_retail";
   return (
     <div className={sectionGap}>
-      <AIRiskSpikeMonitor />
+      {isRetail ? (
+        <AIRiskSpikeMonitor
+          spikes={headRetailRiskSpikes}
+          driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"
+        />
+      ) : (
+        <AIRiskSpikeMonitor />
+      )}
       {showCroRiskCockpit(rid) ? <CROScreen1Addon /> : null}
       {showExecTrendCharts(rid) ? (
         <div className="rounded-xl border border-white/[0.14] bg-black/25 p-3">
@@ -116,6 +129,11 @@ export function RoleBasedUnifiedScreen3Addon({ role }: { role: Role }) {
   return (
     <div className={sectionGap}>
       {showRetailChannelSentiment(rid) ? <RetailScreen3Addon /> : null}
+      {showRetailUnifiedIntelligenceWall(rid) ? (
+        <div className="rounded-xl border border-white/[0.14] bg-black/25 p-4 overflow-x-auto">
+          <UnifiedIntelligenceWall actionGrid={ROLE_BASED_MOCK_CROSS_CHANNEL_ACTION_GRID} />
+        </div>
+      ) : null}
       {showContactPromiseAdherence(rid) ? <ContactScreen3PromiseAdherence /> : null}
       {showCroFinancialCrime(rid) ? <CROScreen3FinancialCrime /> : null}
       {showScreen3IntentCommandCenter(rid) ? (
@@ -128,7 +146,7 @@ export function RoleBasedUnifiedScreen3Addon({ role }: { role: Role }) {
       {showScreen3ComplianceInsights(rid) ? <ComplianceInsightsCards isDarkMode /> : null}
       {showScreen3FciKpis(rid) ? (
         <div className="rounded-xl border border-white/[0.14] overflow-hidden bg-black/20">
-          <FCIKPICards data={{}} isDarkMode />
+          <RetailFCIKPICards isDarkMode />
         </div>
       ) : null}
     </div>
