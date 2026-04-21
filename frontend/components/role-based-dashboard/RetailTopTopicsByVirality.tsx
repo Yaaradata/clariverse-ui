@@ -1,34 +1,22 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  LabelList,
-  Cell,
-} from "recharts";
 import { TrendingUp } from "lucide-react";
 
 /**
- * Standalone copy of the social-page "Top 10 Topics by Virality" chart,
- * scoped to the role-based dashboard with its own embedded mock data so it
- * stays independent from the live social page feed.
+ * Top Topics Causing Reputational Risk — simple ranked list with discrete
+ * risk tiers (no rainbow gradient). Ordered descending by mentions, small
+ * channel dots under each topic name provide cross-channel context.
  */
 
 type ChannelKey = "appStore" | "playStore" | "reddit" | "trustpilot" | "x";
 
 const CHANNEL_META: { key: ChannelKey; label: string; color: string }[] = [
-  { key: "appStore",   label: "App Store",    color: "#10b981" },
-  { key: "playStore",  label: "Play Store",   color: "#f59e0b" },
-  { key: "reddit",     label: "Reddit",       color: "#f97316" },
-  { key: "trustpilot", label: "Trustpilot",   color: "#ef4444" },
-  { key: "x",          label: "X (Twitter)",  color: "#b91c1c" },
+  { key: "appStore",   label: "App Store",    color: "#9333EA" },
+  { key: "playStore",  label: "Play Store",   color: "#0891B2" },
+  { key: "reddit",     label: "Reddit",       color: "#B45309" },
+  { key: "trustpilot", label: "Trustpilot",   color: "#65A30D" },
+  { key: "x",          label: "X (Twitter)",  color: "#64748B" },
 ];
 
 type TopicRow = {
@@ -38,226 +26,151 @@ type TopicRow = {
   reddit: number;
   trustpilot: number;
   x: number;
+  wow: number; // week-over-week % change
 };
 
 const TOPIC_ROWS: TopicRow[] = [
-  { topic: "Payment Processing Failure",    appStore: 74, playStore: 52, reddit: 38, trustpilot: 32, x: 16 },
-  { topic: "Mobile App Crashes",            appStore: 50, playStore: 44, reddit: 36, trustpilot: 29, x: 25 },
-  { topic: "Account Access Problems",       appStore: 105, playStore: 25, reddit: 18, trustpilot: 12, x: 7 },
-  { topic: "Fee Structure Criticism",       appStore: 46, playStore: 37, reddit: 22, trustpilot: 20, x: 16 },
-  { topic: "System Outage Frustration",     appStore: 44, playStore: 31, reddit: 31, trustpilot: 13, x: 10 },
-  { topic: "Cross Border Issues",           appStore: 49, playStore: 27, reddit: 21, trustpilot: 13, x: 8 },
-  { topic: "Customer Service Disappointment", appStore: 43, playStore: 24, reddit: 20, trustpilot: 11, x: 4 },
-  { topic: "Regulatory Compliance Questions", appStore: 50, playStore: 27, reddit: 19, trustpilot: 0, x: 0 },
-  { topic: "Digital Innovation Appreciation", appStore: 52, playStore: 36, reddit: 0, trustpilot: 0, x: 0 },
-  { topic: "Trade Finance Satisfaction",    appStore: 31, playStore: 20, reddit: 14, trustpilot: 11, x: 0 },
+  { topic: "Payment Processing Failure",      appStore: 74,  playStore: 52, reddit: 38, trustpilot: 32, x: 16, wow: 18 },
+  { topic: "Mobile App Crashes",              appStore: 50,  playStore: 44, reddit: 36, trustpilot: 29, x: 25, wow: 12 },
+  { topic: "Account Access Problems",         appStore: 105, playStore: 25, reddit: 18, trustpilot: 12, x: 7,  wow: 9  },
+  { topic: "Fee Structure Criticism",         appStore: 46,  playStore: 37, reddit: 22, trustpilot: 20, x: 16, wow: 14 },
+  { topic: "System Outage Frustration",       appStore: 44,  playStore: 31, reddit: 31, trustpilot: 13, x: 10, wow: 22 },
+  { topic: "Cross Border Issues",             appStore: 49,  playStore: 27, reddit: 21, trustpilot: 13, x: 8,  wow: 4  },
+  { topic: "Customer Service Disappointment", appStore: 43,  playStore: 24, reddit: 20, trustpilot: 11, x: 4,  wow: -3 },
+  { topic: "Regulatory Compliance Questions", appStore: 50,  playStore: 27, reddit: 19, trustpilot: 0,  x: 0,  wow: -6 },
 ];
 
+// Discrete risk tiers — matches the shared section legend.
+// Cutoffs are inclusive of the lower bound.
+type TierKey = "critical" | "high" | "watch" | "stable";
+const TIERS: Record<TierKey, { label: string; color: string; min: number }> = {
+  critical: { label: "Critical", color: "#EF4444", min: 150 },
+  high:     { label: "High",     color: "#F59E0B", min: 100 },
+  watch:    { label: "Watch",    color: "#E8B931", min: 50  },
+  stable:   { label: "Stable",   color: "#64748B", min: 0   },
+};
+
+function tierFor(count: number): TierKey {
+  if (count >= TIERS.critical.min) return "critical";
+  if (count >= TIERS.high.min)     return "high";
+  if (count >= TIERS.watch.min)    return "watch";
+  return "stable";
+}
+
 export function RetailTopTopicsByVirality() {
-  const data = useMemo(() => {
-    return TOPIC_ROWS.map(row => {
-      const totalVolume =
-        row.appStore + row.playStore + row.reddit + row.trustpilot + row.x;
-      let cumulative = 0;
-      const stops: { offset: number; color: string }[] = [];
-      CHANNEL_META.forEach(meta => {
-        const value = row[meta.key];
-        if (!value || totalVolume === 0) return;
-        if (stops.length === 0) {
-          stops.push({ offset: 0, color: meta.color });
-        }
-        cumulative += value / totalVolume;
-        stops.push({ offset: Math.min(1, cumulative), color: meta.color });
-      });
-      if (stops.length === 0) {
-        stops.push({ offset: 0, color: "#10b981" });
-        stops.push({ offset: 1, color: "#10b981" });
-      }
-      const activeChannels = CHANNEL_META.filter(m => row[m.key] > 0).length;
-      return {
-        ...row,
-        totalVolume,
-        totalPercent: 100,
-        activeChannels,
-        gradientStops: stops,
-      };
+  const rows = useMemo(() => {
+    const prepared = TOPIC_ROWS.map((r) => {
+      const total = r.appStore + r.playStore + r.reddit + r.trustpilot + r.x;
+      const channels = CHANNEL_META.filter((m) => r[m.key] > 0);
+      return { ...r, total, channels, tier: tierFor(total) };
     });
+    prepared.sort((a, b) => b.total - a.total);
+    return prepared;
   }, []);
 
-  const renderTooltip = ({ active, payload, label }: any) => {
-    if (!active || !payload || payload.length === 0) return null;
-    const row = payload[0].payload as (typeof data)[number];
-    const total = row.totalVolume || 0;
-    return (
-      <div className="min-w-[240px] rounded-xl border border-white/10 bg-[#090f1f]/95 px-4 py-3 text-xs text-slate-100 shadow-2xl">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="text-sm font-semibold text-white">{label}</div>
-            <div className="text-[11px] text-slate-400">
-              Shared topic across {row.activeChannels} channels
-            </div>
-          </div>
-          <div className="text-[11px] font-semibold text-emerald-300">
-            🔥 {total.toLocaleString()} posts
-          </div>
-        </div>
-        <div className="mt-3 space-y-2">
-          {CHANNEL_META.map((meta, idx) => {
-            const count = (row as any)[meta.key] ?? 0;
-            const percent = total > 0 ? ((count / total) * 100).toFixed(1) : "0.0";
-            return (
-              <div
-                key={meta.key}
-                className="flex items-center justify-between gap-3 rounded-md px-3 py-2"
-                style={{
-                  background:
-                    idx % 2 === 0
-                      ? "rgba(148, 163, 184, 0.08)"
-                      : "rgba(30, 41, 59, 0.45)",
-                  border: "1px solid rgba(148, 163, 184, 0.15)",
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className="h-2.5 w-2.5 rounded-full"
-                    style={{ backgroundColor: meta.color }}
-                  />
-                  <span className="text-[11px] text-slate-200 font-medium">
-                    {meta.label}
-                  </span>
-                </div>
-                <div
-                  className="text-[11px] font-semibold"
-                  style={{ color: meta.color }}
-                >
-                  {count.toLocaleString()} ({percent}%)
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  const renderLegend = () => (
-    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[11px] text-slate-300 pt-3">
-      {CHANNEL_META.map(meta => (
-        <div key={meta.key} className="flex items-center gap-2">
-          <span
-            className="inline-block h-3 w-8 rounded-full"
-            style={{ background: meta.color }}
-          />
-          <span>{meta.label}</span>
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderTotalLabel = (props: any) => {
-    const { x = 0, y = 0, width = 0, height = 0, value } = props;
-    if (!value || Number.isNaN(value)) return null;
-    return (
-      <g>
-        <text
-          x={x + width + 14}
-          y={y + height / 2 + 4}
-          fill="#fb923c"
-          fontSize={12}
-          fontWeight={600}
-        >
-          🔥 {Number(value).toLocaleString()}
-        </text>
-      </g>
-    );
-  };
-
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#0D0D0D] shadow-xl">
-      <div className="flex flex-col space-y-1.5 p-6">
-        <h3 className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-white">
-          <TrendingUp className="h-5 w-5 text-purple-400" />
-          Top 10 Topics by Virality
+    <div className="rounded-2xl border border-white/10 bg-[#0D0D0D] shadow-xl h-full flex flex-col overflow-hidden">
+      <div className="flex flex-col space-y-1 p-5 pb-3 flex-shrink-0">
+        <h3 className="text-[15px] font-semibold leading-none tracking-tight flex items-center gap-2 text-white">
+          <TrendingUp className="h-4 w-4 text-red-400" />
+          Top Topics at Risk
         </h3>
-        <p className="text-sm text-slate-400">
-          Most viral cross-channel topics
+        <p className="text-[11px] text-slate-400">
+          Ranked by total mentions — highest reputational risk first
         </p>
       </div>
-      <div className="p-6 pt-0">
-        <ResponsiveContainer width="100%" height={420}>
-          <BarChart
-            data={data}
-            layout="vertical"
-            barCategoryGap="28%"
-            barGap={8}
-            barSize={18}
-            margin={{ top: 12, right: 115, left: 16, bottom: 8 }}
-          >
-            <defs>
-              {data.map((row, index) => (
-                <linearGradient
-                  key={row.topic}
-                  id={`retail-topic-gradient-${index}`}
-                  x1="0"
-                  y1="0"
-                  x2="1"
-                  y2="0"
+      <div className="px-5 pb-5 flex-1 min-h-0 flex flex-col gap-[6px] overflow-y-auto">
+        {rows.map((r, i) => {
+          const tier = TIERS[r.tier];
+          const wowPositive = r.wow > 0;
+          const wowColor = wowPositive ? "#EF4444" : r.wow < 0 ? "#22C55E" : "#94A3B8";
+          const wowArrow = wowPositive ? "▲" : r.wow < 0 ? "▼" : "→";
+          return (
+            <div
+              key={r.topic}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "22px minmax(0, 1fr) 62px 60px",
+                alignItems: "center",
+                gap: 10,
+                padding: "8px 4px",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: "#64748B",
+                  textAlign: "right",
+                }}
+              >
+                {i + 1}.
+              </span>
+
+              <div style={{ minWidth: 0, display: "flex", alignItems: "center", gap: 8 }}>
+                <span
+                  style={{
+                    fontSize: 12.5,
+                    color: "#E2E8F0",
+                    fontWeight: 500,
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                  }}
+                  title={r.topic}
                 >
-                  {row.gradientStops.map((stop, stopIdx) => (
-                    <stop
-                      key={`${row.topic}-stop-${stopIdx}`}
-                      offset={`${stop.offset * 100}%`}
-                      stopColor={stop.color}
+                  {r.topic}
+                </span>
+                <span style={{ display: "inline-flex", gap: 3, flexShrink: 0 }}>
+                  {r.channels.map((c) => (
+                    <span
+                      key={c.key}
+                      title={c.label}
+                      style={{
+                        width: 6,
+                        height: 6,
+                        borderRadius: "50%",
+                        background: c.color,
+                        display: "inline-block",
+                      }}
                     />
                   ))}
-                </linearGradient>
-              ))}
-            </defs>
-            <CartesianGrid
-              stroke="#1e293b"
-              strokeDasharray="3 6"
-              horizontal
-              vertical={false}
-            />
-            <XAxis
-              type="number"
-              tickFormatter={value => `${Math.round(value || 0)}%`}
-              tick={{ fill: "#94a3b8", fontSize: 11 }}
-              axisLine={false}
-              tickLine={false}
-              allowDecimals
-              domain={[0, 100]}
-            />
-            <YAxis
-              dataKey="topic"
-              type="category"
-              width={240}
-              tick={{ fill: "#cbd5f5", fontSize: 12 }}
-              axisLine={false}
-              tickLine={false}
-            />
-            <Tooltip content={renderTooltip} />
-            <Legend
-              verticalAlign="bottom"
-              align="center"
-              content={renderLegend}
-              wrapperStyle={{ paddingTop: 8 }}
-            />
-            <Bar
-              dataKey="totalPercent"
-              isAnimationActive={false}
-              radius={[14, 14, 14, 14]}
-            >
-              {data.map((row, index) => (
-                <Cell
-                  key={`${row.topic}-cell`}
-                  fill={`url(#retail-topic-gradient-${index})`}
-                />
-              ))}
-              <LabelList dataKey="totalVolume" content={renderTotalLabel} />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+                </span>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 4,
+                  fontFamily: "var(--mono)",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: tier.color,
+                }}
+              >
+                {r.total.toLocaleString()}
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 3,
+                  fontFamily: "var(--mono)",
+                  fontSize: 10.5,
+                  fontWeight: 700,
+                  color: wowColor,
+                }}
+              >
+                {wowArrow} {Math.abs(r.wow)}%
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

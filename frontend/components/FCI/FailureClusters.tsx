@@ -15,11 +15,11 @@ const CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Social Media', 'Ticket'];
 
 // Channel colors for stacked bars (matching severity theme)
 const CHANNEL_COLORS: Record<string, string> = {
-  'Voice': '#ef4444',        // Red
-  'Chat': '#f97316',         // Orange
-  'Email': '#eab308',        // Yellow
+  'Voice': '#E11D48',        // Deep Rose
+  'Chat': '#EA580C',         // Burnt Orange
+  'Email': '#0D9488',        // Teal / Pine
   'Social Media': '#22c55e', // Green
-  'Ticket': '#06b6d4' // Cyan
+  'Ticket': '#2563EB'        // Royal Blue
 };
 
 // Custom bar shape that only curves the topmost segment
@@ -73,10 +73,10 @@ const CustomBar = (props: any) => {
 
 // Channel breakdown colors
 const BREAKDOWN_CHANNEL_COLORS: Record<string, string> = {
-  'Email': '#eab308',        // Yellow
-  'Chat': '#f97316',         // Orange
-  'Ticket': '#22c55e',       // Green
-  'Voice': '#a855f7',        // Purple
+  'Email': '#0D9488',        // Teal / Pine
+  'Chat': '#EA580C',         // Burnt Orange
+  'Ticket': '#2563EB',       // Royal Blue
+  'Voice': '#E11D48',        // Deep Rose
   'Social': '#06b6d4'        // Cyan
 };
 
@@ -425,12 +425,12 @@ const CUSTOMER_SEGMENTS = [
   'Low Value Low Frequency'
 ];
 
-// Colors for customer segments - matching channel color theme
+// Colors for customer segments - distinct from status/trend colors
 const SEGMENT_COLORS: Record<string, string> = {
-  'High Value High Frequency': '#ef4444',  // Red (same as Voice)
-  'High Value Low Frequency': '#f97316',   // Orange (same as Chat)
-  'Low Value High Frequency': '#eab308',   // Yellow (same as Email)
-  'Low Value Low Frequency': '#22c55e'     // Green (same as Social Media)
+  'High Value High Frequency': '#A855F7',  // Electric Purple
+  'High Value Low Frequency': '#06B6D4',   // Cyan
+  'Low Value High Frequency': '#6366F1',   // Indigo
+  'Low Value Low Frequency': '#94A3B8'     // Cool Slate
 };
 
 export function FailureClusters({ clusters, isDarkMode = false }: FailureClustersProps) {

@@ -57,10 +57,10 @@ const SEVERITY_COLOR: Record<Severity, string> = {
 };
 
 const CHANNEL_CONFIG = [
-  { key: "email",  label: "Email",  icon: Mail,          color: "#3b82f6" },
-  { key: "chat",   label: "Chat",   icon: MessageSquare, color: "#22c55e" },
-  { key: "ticket", label: "Ticket", icon: Ticket,        color: "#f97316" },
-  { key: "voice",  label: "Voice",  icon: Mic,           color: "#8b5cf6" },
+  { key: "email",  label: "Email",  icon: Mail,          color: "#0D9488" },
+  { key: "chat",   label: "Chat",   icon: MessageSquare, color: "#EA580C" },
+  { key: "ticket", label: "Ticket", icon: Ticket,        color: "#2563EB" },
+  { key: "voice",  label: "Voice",  icon: Mic,           color: "#E11D48" },
   { key: "social", label: "Social", icon: Share2,        color: "#ec4899" },
 ] as const;
 

@@ -63,9 +63,9 @@ const HASHTAGS: HashtagTrend[] = [
 
 export function RetailMomentumHashtags() {
   return (
-    <div className="rounded-2xl bg-[#0D0D0D] border border-[#2b2b2b] shadow-[0_18px_40px_rgba(0,0,0,0.4)] text-white">
-      <div className="flex flex-col space-y-1.5 p-6">
-        <div className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-white text-lg">
+    <div className="flex h-full min-h-0 flex-col rounded-2xl bg-[#0D0D0D] border border-[#2b2b2b] shadow-[0_18px_40px_rgba(0,0,0,0.4)] text-white overflow-hidden">
+      <div className="flex flex-col space-y-1.5 px-6 pt-6 pb-3 flex-shrink-0">
+        <div className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2 text-white">
           <Hash className="h-5 w-5 text-purple-400" />
           Momentum Hashtags
         </div>
@@ -73,18 +73,18 @@ export function RetailMomentumHashtags() {
           Fastest growing conversation entry points
         </div>
       </div>
-      <div className="p-6 pt-0 grid gap-3 sm:grid-cols-2 pb-4">
+      <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-4 grid gap-2.5 sm:grid-cols-2 content-start">
         {HASHTAGS.map(hashtag => (
           <div
             key={hashtag.hashtag}
-            className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-sm space-y-2.5 p-4"
+            className="rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm space-y-1.5 p-3"
           >
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <p className="text-sm font-semibold text-white break-words">
+              <p className="text-[13px] font-semibold text-white break-words">
                 {hashtag.hashtag}
               </p>
               <span
-                className={`text-xs uppercase tracking-wide px-2 py-0.5 rounded flex-shrink-0 ${
+                className={`text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded flex-shrink-0 ${
                   hashtag.sentiment === "positive"
                     ? "text-emerald-400"
                     : hashtag.sentiment === "negative"
@@ -95,11 +95,11 @@ export function RetailMomentumHashtags() {
                 {hashtag.sentiment}
               </span>
             </div>
-            <div className="flex items-end gap-3 flex-wrap">
-              <span className="text-3xl text-white font-semibold leading-none">
+            <div className="flex items-end gap-2.5 flex-wrap">
+              <span className="text-[40px] text-white font-semibold leading-none">
                 {hashtag.growthPercent}%
               </span>
-              <span className="text-xs text-gray-400 pb-0.5">
+              <span className="text-[11px] text-gray-400 pb-0.5">
                 Growth ·{" "}
                 <span className="font-medium">
                   {hashtag.volume.toLocaleString()}
@@ -107,7 +107,7 @@ export function RetailMomentumHashtags() {
                 posts
               </span>
             </div>
-            <p className="text-xs text-gray-400 leading-relaxed break-words">
+            <p className="text-[11px] text-gray-400 leading-relaxed break-words">
               {hashtag.summary}
             </p>
           </div>

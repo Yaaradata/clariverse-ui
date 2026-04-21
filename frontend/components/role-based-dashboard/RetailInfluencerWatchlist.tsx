@@ -28,7 +28,7 @@ const INFLUENCERS: Influencer[] = [
   {
     id: "u2",
     username: "fintech_teardowns",
-    sentiment: "neutral",
+    sentiment: "negative",
     karma: 92410,
     followers: 41600,
     engagementRate: 4.8,
@@ -106,8 +106,22 @@ export function RetailInfluencerWatchlist() {
                 <p className="text-sm font-semibold text-white break-words">
                   u/{profile.username}
                 </p>
-                <p className="text-xs text-gray-400 capitalize mt-0.5">
-                  {profile.sentiment}
+                <p
+                  className="text-xs capitalize mt-0.5 font-medium"
+                  style={{
+                    color:
+                      profile.sentiment === "positive"
+                        ? "#22c55e"
+                        : profile.sentiment === "negative"
+                        ? "#ef4444"
+                        : "#9ca3af",
+                  }}
+                >
+                  {profile.sentiment === "positive"
+                    ? "▲ Positive posts trending"
+                    : profile.sentiment === "negative"
+                    ? "▼ Negative posts trending"
+                    : "→ Neutral post trend"}
                 </p>
               </div>
               <div className="text-right text-xs text-gray-400 whitespace-nowrap leading-relaxed flex-shrink-0">

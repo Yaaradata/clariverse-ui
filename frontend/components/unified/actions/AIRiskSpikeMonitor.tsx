@@ -2,7 +2,15 @@
 
 import { useState, useEffect } from 'react';
 
-type CustomMetric = { label: string; value: string; delta?: string };
+type CustomMetric = {
+  label: string;
+  value: string;
+  delta?: string;
+  /** Semantic intent of the delta — drives color (bad=red, good=green, neutral=gray). */
+  deltaIntent?: "bad" | "good" | "neutral";
+  /** Direction arrow shown next to delta. */
+  trend?: "up" | "down" | "flat";
+};
 
 type RiskSpike = {
   id: string;
@@ -11,6 +19,8 @@ type RiskSpike = {
   magnitude: number;
   channel: "Email" | "Chat" | "Ticket" | "Social" | "Voice" | string;
   topIntent: string;
+  /** Short impact/severity/resolution qualifier rendered under Top Intent. */
+  topIntentContext?: string;
   sentimentBefore?: number;
   sentimentAfter?: number;
   urgencyBefore?: number;
@@ -34,6 +44,30 @@ type RiskSpike = {
   /** Region for geographic cards (shows Region instead of Channel). */
   region?: string;
 };
+
+const severityBadge: Record<RiskSpike["severity"], { label: string; icon: string; className: string }> = {
+  critical: { label: "Critical", icon: "🔥", className: "bg-rose-500/20 text-rose-200 border-rose-500/40" },
+  moderate: { label: "High", icon: "⚠️", className: "bg-amber-500/20 text-amber-200 border-amber-400/40" },
+  low: { label: "Watch", icon: "🔔", className: "bg-yellow-500/15 text-yellow-200 border-yellow-400/30" },
+};
+
+const deltaIntentClass: Record<NonNullable<CustomMetric["deltaIntent"]>, string> = {
+  bad: "text-rose-300",
+  good: "text-emerald-300",
+  neutral: "text-gray-400",
+};
+
+const trendArrow: Record<NonNullable<CustomMetric["trend"]>, string> = {
+  up: "↑",
+  down: "↓",
+  flat: "→",
+};
+
+/** When trend is up/down, direction is shown by the arrow only — strip leading +/−/−. */
+function deltaForTrendDisplay(delta: string, trend: CustomMetric["trend"]): string {
+  if (trend !== "up" && trend !== "down") return delta;
+  return delta.replace(/^[\u002B\u2212\u002D]+/, "");
+}
 
 const spikeIcon: Record<RiskSpike["spikeType"], { icon: string; color: string }> = {
   "Urgency Surge": { icon: "", color: "text-amber-300" },
@@ -135,7 +169,7 @@ export const bankingRiskSpikes: RiskSpike[] = [
     timestamp: "3h ago",
     spikeType: "Volume Surge",
     magnitude: 200,
-    channel: "Voice / App",
+    channel: "Voice, App",
     topIntent: "Refinancing",
     aiAction: "",
     severity: "critical",
@@ -152,7 +186,7 @@ export const bankingRiskSpikes: RiskSpike[] = [
     timestamp: "1h ago",
     spikeType: "Sentiment Crash",
     magnitude: 32,
-    channel: "Chat / Secure Messages",
+    channel: "Chat, Secure Messages",
     topIntent: "Savings rate complaints",
     aiAction: "",
     severity: "critical",
@@ -196,7 +230,7 @@ export const bankingRiskSpikes: RiskSpike[] = [
     timestamp: "30m ago",
     spikeType: "Volume Surge",
     magnitude: 195,
-    channel: "Voice / Mobile App",
+    channel: "Voice, Mobile App",
     topIntent: "Payment declined",
     aiAction: "",
     severity: "critical",
@@ -215,36 +249,37 @@ export const bankingRiskSpikes: RiskSpike[] = [
 export const headRetailRiskSpikes: RiskSpike[] = [
   {
     id: "hretail-emi-urgency",
-    timestamp: "2h ago",
+    timestamp: "Last 4h",
     spikeType: "Urgency Surge",
     magnitude: 39,
-    channel: "Voice / Chat",
+    channel: "Voice, Chat",
     topIntent: "Loan EMI Failure",
+    topIntentContext: "High impact · Low resolution",
     aiAction: "",
     severity: "critical",
     cardTitle: "EMI Repayment Surge",
     customMetrics: [
-      { label: "Urgency", value: "28% → 67%", delta: "+39 pts" },
-      { label: "Unresolved cases", value: "180 → 410", delta: "+128%" },
-      { label: "HV accounts at risk", value: "3 HNI", delta: "Churn flag" },
+      { label: "Urgency", value: "28% → 67%", delta: "+39 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Unresolved cases", value: "180 → 410", delta: "+128%", deltaIntent: "bad", trend: "up" },
     ],
     triggerInsight:
       "Rate reset + missed standing instructions — 3 HNI accounts flagged for churn. Escalate to relationship managers immediately.",
   },
   {
     id: "hretail-hni-churn",
-    timestamp: "1h ago",
+    timestamp: "Last 4h",
     spikeType: "Sentiment Crash",
     magnitude: 36,
     channel: "Voice",
     topIntent: "Account Closure Inquiry",
+    topIntentContext: "Critical impact · Retention window open",
     aiAction: "",
     severity: "critical",
     cardTitle: "HNI Churn Risk",
     customMetrics: [
-      { label: "Sentiment", value: "0.67 → 0.31", delta: "−0.36" },
-      { label: "Closure intents", value: "4 → 19", delta: "+375% this week" },
-      { label: "HNI at risk", value: "3 accounts", delta: undefined },
+      { label: "Sentiment", value: "0.67 → 0.31", delta: "−0.36", deltaIntent: "bad", trend: "down" },
+      { label: "Closure intents", value: "4 → 19", delta: "+375% this week", deltaIntent: "bad", trend: "up" },
+      { label: "HNI at risk", value: "3 accounts", delta: undefined, deltaIntent: "bad" },
     ],
     detectedPhrases: ['"switching to competitor"', '"closing my account"'],
     triggerInsight:
@@ -252,56 +287,59 @@ export const headRetailRiskSpikes: RiskSpike[] = [
   },
   {
     id: "hretail-social-complaint-trend",
-    timestamp: "3h ago",
+    timestamp: "Last 12h",
     spikeType: "Volume Surge",
     magnitude: 182,
-    channel: "Social/X · Reddit",
+    channel: "Social/X, Reddit",
     topIntent: "Hidden Fees / App Outage",
+    topIntentContext: "High impact · PR risk",
     aiAction: "",
     severity: "moderate",
     cardTitle: "Social Complaint Trending",
     customMetrics: [
-      { label: "Mentions (4h)", value: "480 → 1,354", delta: "+182%" },
-      { label: "Top hashtag", value: "#BankAppCrash", delta: "+287% growth" },
-      { label: "Influencer reach", value: "2.4M impressions", delta: undefined },
+      { label: "Mentions (4h)", value: "480 → 1,354", delta: "+182%", deltaIntent: "bad", trend: "up" },
+      { label: "Top hashtag", value: "#BankAppCrash", delta: "+287% growth", deltaIntent: "bad", trend: "up" },
+      { label: "Reach", value: "2.4M impressions", delta: undefined, deltaIntent: "neutral" },
     ],
     triggerInsight:
       "Complaint cluster viral on X/Reddit. #BankAppCrash + hidden-fee posts amplified by influencers. Push PR + in-app status in 60 min.",
   },
   {
     id: "hretail-app-drop",
-    timestamp: "45m ago",
+    timestamp: "Last 4h",
     spikeType: "SLA Spike",
     magnitude: 23,
-    channel: "App Store / Social/X",
+    channel: "App Store, Social/X",
     topIntent: "App Login / Password Reset",
+    topIntentContext: "High impact · Fix in-flight",
     slaBefore: 8,
     slaAfter: 31,
     aiAction: "",
     severity: "moderate",
     cardTitle: "App Experience Drop",
     customMetrics: [
-      { label: "App Store rating", value: "4.3 → 3.8", delta: "▼ 30 days" },
-      { label: "iOS crash reports", value: "", delta: "+195%" },
-      { label: "Top error", value: "Password loop", delta: undefined },
+      { label: "App Store rating", value: "4.3 → 3.8", delta: "0.5", deltaIntent: "bad", trend: "down" },
+      { label: "iOS crash reports", value: "", delta: "+195%", deltaIntent: "bad", trend: "up" },
+      { label: "Top error", value: "Password loop", delta: undefined, deltaIntent: "bad" },
     ],
     triggerInsight:
       "iOS password loop bug hitting mobile-first customers. App Store rating at risk — escalate to tech team now before next review cycle.",
   },
   {
     id: "hretail-fee-dispute",
-    timestamp: "4h ago",
+    timestamp: "Last 24h",
     spikeType: "Volume Surge",
     magnitude: 31,
-    channel: "App / Chat",
+    channel: "App, Chat",
     topIntent: "Fee Dispute",
+    topIntentContext: "Medium impact · Policy comms gap",
     aiAction: "",
     severity: "critical",
     cardTitle: "Fee Dispute Surge",
     customMetrics: [
-      { label: "Volume WoW", value: "310 → 660", delta: "+31%" },
-      { label: "Top Reason", value: "Acct maint. fee", delta: undefined },
-      { label: "Channels", value: "App 44% · Chat 38%", delta: undefined },
+      { label: "Volume WoW", value: "310 → 660", delta: "+113%", deltaIntent: "bad", trend: "up" },
+      { label: "Top Reason", value: "Acct maint. fee", delta: undefined, deltaIntent: "neutral" },
+      { label: "Primary channel", value: "App (44%)", delta: undefined, deltaIntent: "neutral" },
     ],
     triggerInsight:
       "New account maintenance fee poorly communicated. Customers unaware of policy change — update in-app messaging today.",
@@ -396,14 +434,23 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
   const detailRows = spike.customMetrics ?? getDetailRows(spike);
   const cardTitle = spike.cardTitle ?? labelForSpike(spike.spikeType);
   const insightText = spike.triggerInsight ?? spike.aiAction;
+  const sevBadge = severityBadge[spike.severity];
 
   return (
     <div
       className={`min-w-[15rem] min-h-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] ${severityClass} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}
     >
-      <div className={`flex items-center gap-2 text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-        <span className={`${iconMeta.color} text-lg`}>{iconMeta.icon}</span>
-        <span>{cardTitle}</span>
+      <div className="flex items-start justify-between gap-2">
+        <div className={`flex items-center gap-2 text-sm font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <span className={`${iconMeta.color} text-lg`}>{iconMeta.icon}</span>
+          <span>{cardTitle}</span>
+        </div>
+        <span
+          className={`shrink-0 flex items-center gap-1 text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full border ${sevBadge.className}`}
+        >
+          <span className="text-[11px] leading-none">{sevBadge.icon}</span>
+          <span>{sevBadge.label}</span>
+        </span>
       </div>
       <div className={`mt-3 space-y-1 text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
         <div className="flex justify-between">
@@ -414,9 +461,14 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
             {spike.region ?? spike.channel}
           </span>
         </div>
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-3">
           <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Top Intent</span>
-          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.topIntent}</span>
+          <div className="text-right min-w-0">
+            <div className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.topIntent}</div>
+            {spike.topIntentContext ? (
+              <div className={`text-[10px] ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>{spike.topIntentContext}</div>
+            ) : null}
+          </div>
         </div>
         <div className="flex justify-between">
           <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Time</span>
@@ -427,12 +479,20 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
       <div className={`mt-5 min-h-[7.25rem] space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? 'border-white/5 bg-black/30 text-gray-200' : 'border-gray-300 bg-gray-50 text-gray-800'}`}>
         {detailRows.map((row, idx) => {
           const r = row as CustomMetric;
+          const intent = r.deltaIntent ?? "neutral";
+          const deltaClass = deltaIntentClass[intent];
+          const arrow = r.trend ? trendArrow[r.trend] : null;
           return (
             <div key={`${row.label}-${idx}`} className="flex items-center justify-between gap-3">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>{row.label}</span>
               <div className="text-right">
                 {r.value ? <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{r.value}</div> : null}
-                {r.delta ? <div className={`text-[11px] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{r.delta}</div> : null}
+                {r.delta ? (
+                  <div className={`text-[11px] font-semibold flex items-center justify-end gap-1 ${deltaClass}`}>
+                    {arrow ? <span aria-hidden>{arrow}</span> : null}
+                    <span>{deltaForTrendDisplay(r.delta, r.trend)}</span>
+                  </div>
+                ) : null}
               </div>
             </div>
           );
@@ -443,7 +503,6 @@ function RiskSpikeCard({ spike }: { spike: RiskSpike }) {
         <div className="mt-5 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs leading-loose text-rose-100">
           ✨ {insightText}
         </div>
-   
       ) : null}
     </div>
   );

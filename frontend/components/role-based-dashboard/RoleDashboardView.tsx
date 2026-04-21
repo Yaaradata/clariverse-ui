@@ -20,7 +20,7 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { Line, LineChart, PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, Line, LineChart, PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
 import { CardOpsDashboard, type CardOpsThemeTokens } from "./CardOpsDashboard";
 import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
 import { CustomerHappinessDrillDown, BrandReputationDrillDown, ServiceFulfilmentDrillDown } from "./RetailDrillDownScreens";
@@ -116,77 +116,81 @@ function happinessPctColor(pct: number, T: DashboardThemeTokens): string {
   return T.red;
 }
 
-// ── Head of Retail Banking: custom chart content inside each tile ──────────────
-function retailTileKpiSection(tileIdx: number, T: DashboardThemeTokens): ReactElement {
+// ── Head of Retail Banking: trend meta + info body for each tier card ────────
+type RetailTileTrend = {
+  value: number;
+  delta: string;
+  deltaColor: string;
+  stroke: string;
+  trendData: { w: string; v: number }[];
+  yPadBelow: number;
+  yPadAbove: number;
+};
+
+function formatPtsDelta(from: number, to: number, T: DashboardThemeTokens): { delta: string; deltaColor: string; value: number } {
+  const value = to;
+  const diff = Math.round(to - from);
+  const abs = Math.abs(diff);
+  const ptWord = abs === 1 ? "pt" : "pts";
+  if (diff === 0) return { value, delta: `0 ${ptWord}`, deltaColor: T.textMut };
+  if (diff > 0) return { value, delta: `+${abs} ${ptWord}`, deltaColor: T.green };
+  return { value, delta: `−${abs} ${ptWord}`, deltaColor: T.red };
+}
+
+/** Head of Retail tier cards: six daily points (D1…D6, D6 = now); headline + delta from D1 vs D6. */
+function retailDailyTrendFromSeries(
+  values: readonly [number, number, number, number, number, number],
+  stroke: string,
+  T: DashboardThemeTokens,
+  yPadBelow: number,
+  yPadAbove: number,
+): RetailTileTrend {
+  const trendData = values.map((v, i) => ({ w: `D${i + 1}`, v }));
+  const first = values[0];
+  const last = values[5];
+  const { value, delta, deltaColor } = formatPtsDelta(first, last, T);
+  return {
+    value,
+    delta,
+    deltaColor,
+    stroke,
+    trendData,
+    yPadBelow,
+    yPadAbove,
+  };
+}
+
+function retailTileTrendMeta(tileIdx: number, T: DashboardThemeTokens): RetailTileTrend {
   if (tileIdx === 0) {
-    // Card 1: Customer Happiness — HV vs LV distribution bars + 2 KPIs
+    return retailDailyTrendFromSeries([68, 61, 73, 63, 68, 72], T.green, T, 6, 4);
+  }
+  if (tileIdx === 1) {
+    return retailDailyTrendFromSeries([70, 62, 68, 59, 63, 64], T.amber, T, 6, 4);
+  }
+  return retailDailyTrendFromSeries([82, 70, 84, 66, 74, 68], T.red, T, 8, 5);
+}
+
+function retailTileInfo(tileIdx: number, T: DashboardThemeTokens): ReactElement {
+  if (tileIdx === 0) {
     const rows = [
       { label: "High Value", pct: 68 },
       { label: "Low Value", pct: 81 },
     ].map((r) => ({ ...r, color: happinessPctColor(r.pct, T) }));
-    const trend = [
-      { w: "W-5", v: 68 },
-      { w: "W-4", v: 67 },
-      { w: "W-3", v: 69 },
-      { w: "W-2", v: 70 },
-      { w: "W-1", v: 68 },
-      { w: "Now", v: 72 },
-    ];
     return (
-      <div style={{ flex: 1, minWidth: 0, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 190px", gap: 10, alignItems: "stretch" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}>
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
           {rows.map((r) => (
-            <div key={r.label} style={{ minWidth: 0 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                <span style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>{r.label}</span>
-                <span style={{ fontSize: 12, fontWeight: 700, color: r.color, fontFamily: "var(--mono)" }}>{r.pct}% happy</span>
-              </div>
-              <div style={{ height: 7, borderRadius: 4, background: `${r.color}20` }}>
-                <div style={{ height: "100%", width: `${r.pct}%`, background: r.color, borderRadius: 4 }} />
-              </div>
-            </div>
+            <MiniGauge key={r.label} label={r.label} value={r.pct} color={r.color} suffix="%" T={T} />
           ))}
-          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", marginTop: 4 }}>
-            <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Top Pain</div><div style={{ fontSize: 14, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>EMI 31%</div></div>
-            <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Churn Risk</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>3 HNI</div></div>
-          </div>
         </div>
-        <div style={{ border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 8px 6px", background: `${T.surface}80` }}>
-          <div style={{ fontSize: 10, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>6W Trend</div>
-          <div style={{ width: "100%", height: 74 }}>
-            <ResponsiveContainer>
-              <LineChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
-                <XAxis dataKey="w" hide />
-                <YAxis
-                  hide
-                  domain={[
-                    (min: number) => Math.max(0, min - 6),
-                    (max: number) => max + 4,
-                  ]}
-                />
-                <RechartsTooltip
-                  cursor={false}
-                  labelFormatter={(label) => `${label}`}
-                  formatter={(value: number) => [`${value} pts`, "Score"]}
-                  contentStyle={{
-                    background: "rgba(10,14,22,0.96)",
-                    border: `1px solid ${T.borderLight}`,
-                    borderRadius: 8,
-                    fontSize: 11,
-                    color: T.text,
-                  }}
-                />
-                <Line type="linear" dataKey="v" stroke={T.green} strokeWidth={2.5} dot={{ fill: T.green, stroke: T.green, r: 2.2 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{ fontSize: 11, color: T.green, fontWeight: 700, fontFamily: "var(--mono)" }}>+4 pts vs W-1</div>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
+          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Top Pain</div><div style={{ fontSize: 14, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>EMI 31%</div></div>
+          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Churn Risk</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>3 HNI</div></div>
         </div>
       </div>
     );
   }
   if (tileIdx === 1) {
-    // Card 2: Brand — per-channel sentiment bars
     const channels = [
       { name: "App Store", v: 0.71 },
       { name: "Voice", v: 0.64 },
@@ -194,127 +198,153 @@ function retailTileKpiSection(tileIdx: number, T: DashboardThemeTokens): ReactEl
       { name: "Email", v: 0.56 },
       { name: "Social/X", v: 0.41 },
     ];
-    const trend = [
-      { w: "W-5", v: 70 },
-      { w: "W-4", v: 68 },
-      { w: "W-3", v: 66 },
-      { w: "W-2", v: 65 },
-      { w: "W-1", v: 63 },
-      { w: "Now", v: 64 },
-    ];
     return (
-      <div style={{ flex: 1, minWidth: 0, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 190px", gap: 10, alignItems: "stretch" }}>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, minWidth: 0 }}>
-          {channels.map((ch) => {
-            const barColor = ch.v >= 0.65 ? T.green : ch.v >= 0.55 ? T.amber : T.red;
-            return (
-              <div key={ch.name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ fontSize: 10, color: T.textMut, width: 52, flexShrink: 0 }}>{ch.name}</span>
-                <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
-                  <div style={{ height: "100%", width: `${ch.v * 100}%`, background: barColor, borderRadius: 3 }} />
-                </div>
-                <span style={{ fontSize: 11, fontWeight: 700, color: barColor, width: 28, textAlign: "right", fontFamily: "var(--mono)" }}>{ch.v.toFixed(2)}</span>
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 6 }}>
+        {channels.map((ch) => {
+          const barColor = ch.v >= 0.65 ? T.green : ch.v >= 0.55 ? T.amber : T.red;
+          return (
+            <div key={ch.name} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+              <span style={{ fontSize: 10, color: T.textMut, width: 52, flexShrink: 0 }}>{ch.name}</span>
+              <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
+                <div style={{ height: "100%", width: `${ch.v * 100}%`, background: barColor, borderRadius: 3 }} />
               </div>
-            );
-          })}
-        </div>
-        <div style={{ border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 8px 6px", background: `${T.surface}80` }}>
-          <div style={{ fontSize: 10, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>6W Trend</div>
-          <div style={{ width: "100%", height: 74 }}>
-            <ResponsiveContainer>
-              <LineChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
-                <XAxis dataKey="w" hide />
-                <YAxis
-                  hide
-                  domain={[
-                    (min: number) => Math.max(0, min - 6),
-                    (max: number) => max + 4,
-                  ]}
-                />
-                <RechartsTooltip
-                  cursor={false}
-                  labelFormatter={(label) => `${label}`}
-                  formatter={(value: number) => [`${value} pts`, "Score"]}
-                  contentStyle={{
-                    background: "rgba(10,14,22,0.96)",
-                    border: `1px solid ${T.borderLight}`,
-                    borderRadius: 8,
-                    fontSize: 11,
-                    color: T.text,
-                  }}
-                />
-                <Line type="linear" dataKey="v" stroke={T.amber} strokeWidth={2.5} dot={{ r: 2.2 }} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{ fontSize: 11, color: T.green, fontWeight: 700, fontFamily: "var(--mono)" }}>+1 pt vs W-1</div>
-        </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: barColor, width: 28, textAlign: "right", fontFamily: "var(--mono)" }}>{ch.v.toFixed(2)}</span>
+            </div>
+          );
+        })}
       </div>
     );
   }
-  // Card 3: Process Promise — best vs worst SLA + trend
   const bars = [
-    { label: "Best · Card Replace", pct: 91, color: T.green },
-    { label: "Worst · Fee Dispute", pct: 64, color: T.red },
-  ];
-  const trend = [
-    { w: "W-5", v: 82 },
-    { w: "W-4", v: 76 },
-    { w: "W-3", v: 79 },
-    { w: "W-2", v: 71 },
-    { w: "W-1", v: 74 },
-    { w: "Now", v: 68 },
+    { label: "Best · Card Replacement", topLabel: "Best", bottomLabel: "Card Replacement", pct: 91, color: T.green },
+    { label: "Worst · Fee Dispute", topLabel: "Worst", bottomLabel: "Fee Dispute", pct: 64, color: T.red, offsetY: -0.5 },
   ];
   return (
-    <div style={{ flex: 1, minWidth: 0, display: "grid", gridTemplateColumns: "minmax(0, 1fr) 190px", gap: 10, alignItems: "stretch" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}>
+    <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
         {bars.map((b) => (
-          <div key={b.label} style={{ minWidth: 0 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-              <span style={{ fontSize: 11, color: T.textMut }}>{b.label}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: b.color, fontFamily: "var(--mono)" }}>{b.pct}%</span>
-            </div>
-            <div style={{ height: 7, borderRadius: 4, background: `${b.color}20` }}>
-              <div style={{ height: "100%", width: `${b.pct}%`, background: b.color, borderRadius: 4 }} />
-            </div>
-          </div>
+          <MiniGauge
+            key={b.label}
+            label={b.label}
+            topLabel={b.topLabel}
+            bottomLabel={b.bottomLabel}
+            offsetY={b.offsetY}
+            value={b.pct}
+            color={b.color}
+            suffix="%"
+            T={T}
+          />
         ))}
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", marginTop: 4 }}>
-          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Trend</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>▼ −6%</div></div>
-          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Bottleneck</div><div style={{ fontSize: 14, fontWeight: 700, color: T.amber, fontFamily: "var(--mono)" }}>KYC API</div></div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
+        <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Trend</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>▼ −6%</div></div>
+        <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Bottleneck</div><div style={{ fontSize: 14, fontWeight: 700, color: T.amber, fontFamily: "var(--mono)" }}>KYC API</div></div>
+      </div>
+    </div>
+  );
+}
+
+function MiniGauge({
+  label,
+  topLabel,
+  bottomLabel,
+  offsetY = 0,
+  value,
+  color,
+  suffix = "%",
+  T,
+}: {
+  label: string;
+  topLabel?: string;
+  bottomLabel?: string;
+  offsetY?: number;
+  value: number;
+  color: string;
+  suffix?: string;
+  T: DashboardThemeTokens;
+}) {
+  const clamped = Math.max(0, Math.min(100, value));
+  const data = [{ name: label, value: clamped, fill: color }];
+  const GAUGE_H = 54;
+  const OUTER_R = 46;
+  const INNER_R = 32;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, gap: 2, transform: offsetY === 0 ? undefined : `translateY(${offsetY}px)` }}>
+      <div
+        style={{
+          fontSize: 10,
+          color: T.textMut,
+          textTransform: "uppercase",
+          letterSpacing: 0.4,
+          textAlign: "center",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          width: "100%",
+        }}
+      >
+        {topLabel ?? label}
+      </div>
+      <div style={{ position: "relative", width: "100%", height: GAUGE_H }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <RadialBarChart
+            data={data}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={INNER_R}
+            outerRadius={OUTER_R}
+            cx="50%"
+            cy="100%"
+          >
+            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} axisLine={false} />
+            <RadialBar
+              dataKey="value"
+              cornerRadius={4}
+              background={{ fill: `${T.borderLight}90` }}
+            />
+          </RadialBarChart>
+        </ResponsiveContainer>
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: 2,
+            transform: "translateX(-50%)",
+            fontSize: 14,
+            fontWeight: 800,
+            color,
+            fontFamily: "var(--mono)",
+            pointerEvents: "none",
+            whiteSpace: "nowrap",
+            lineHeight: 1,
+          }}
+        >
+          {clamped}
+          {suffix}
         </div>
       </div>
-      <div style={{ border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 8px 6px", background: `${T.surface}80` }}>
-        <div style={{ fontSize: 10, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginBottom: 4 }}>6W Trend</div>
-        <div style={{ width: "100%", height: 74 }}>
-          <ResponsiveContainer>
-            <LineChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
-              <XAxis dataKey="w" hide />
-              <YAxis
-                hide
-                domain={[
-                  (min: number) => Math.max(0, min - 8),
-                  (max: number) => max + 5,
-                ]}
-              />
-              <RechartsTooltip
-                cursor={false}
-                labelFormatter={(label) => `${label}`}
-                formatter={(value: number) => [`${value} pts`, "Score"]}
-                contentStyle={{
-                  background: "rgba(10,14,22,0.96)",
-                  border: `1px solid ${T.borderLight}`,
-                  borderRadius: 8,
-                  fontSize: 11,
-                  color: T.text,
-                }}
-              />
-              <Line type="linear" dataKey="v" stroke={T.red} strokeWidth={2.5} dot={{ r: 2.2 }} />
-            </LineChart>
-          </ResponsiveContainer>
+      {bottomLabel ? (
+        <div
+          style={{
+            fontSize: 10,
+            color: T.textMut,
+            textTransform: "uppercase",
+            letterSpacing: 0.4,
+            textAlign: "center",
+            whiteSpace: "normal",
+            overflow: "visible",
+            textOverflow: "clip",
+            lineHeight: 1.15,
+            minHeight: 24,
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          {bottomLabel}
         </div>
-        <div style={{ fontSize: 11, color: T.red, fontWeight: 700, fontFamily: "var(--mono)" }}>-6 pts vs W-1</div>
-      </div>
+      ) : null}
     </div>
   );
 }
@@ -409,31 +439,108 @@ function Screen1({
           const Icon = tile.icon; const sc = gC(tile.score);
           const isPrimary = primaryIdx === i;
           const handleClick = isRetail && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
+          const retailTrend = isRetail ? retailTileTrendMeta(i, T) : null;
           return (
-            <div key={i} onClick={handleClick} style={{ position: "relative", background: T.elevated, border: `1px solid ${isPrimary ? T.cyan : sc}40`, borderRadius: 16, padding: "24px 22px", cursor: "pointer", transition: "all 0.25s", boxShadow: isPrimary ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22` : undefined, minWidth: 0 }}
+            <div key={i} onClick={handleClick} style={{ position: "relative", background: T.elevated, border: `1px solid ${isPrimary ? T.cyan : sc}40`, borderRadius: 16, padding: "24px 22px", cursor: "pointer", transition: "all 0.25s", boxShadow: isPrimary ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22` : undefined, minWidth: 0, display: "flex", flexDirection: "column", height: "100%" }}
               onMouseEnter={e => { if (!isPrimary) e.currentTarget.style.boxShadow = `0 8px 32px ${sc}15`; }} onMouseLeave={e => { if (!isPrimary) e.currentTarget.style.boxShadow = "none"; else e.currentTarget.style.boxShadow = `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22`; }}>
-              <div style={{ position: "absolute", top: -18, right: 12, pointerEvents: "none", display: "flex", alignItems: "center", gap: 8 }}>
-                <TileScoreGauge score={tile.score} color={sc} T={T} />
-                <ChevronRight size={16} color={T.textMut}/>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16, gap: 14, paddingRight: 232 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: `${tile.color}15`, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={18} color={tile.color}/></div>
+              {isRetail ? null : (
+                <div style={{ position: "absolute", top: -18, right: 12, pointerEvents: "none", display: "flex", alignItems: "center", gap: 8 }}>
+                  <TileScoreGauge score={tile.score} color={sc} T={T} />
+                  <ChevronRight size={16} color={T.textMut}/>
+                </div>
+              )}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isRetail ? 10 : 16, gap: 14, paddingRight: isRetail ? 0 : 232 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, background: `${tile.color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Icon size={18} color={tile.color}/></div>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontSize: 18, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tile.title}</div>
                     <div style={{ fontSize: 14, color: T.textMut, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tile.sub}</div>
                   </div>
                 </div>
+                {isRetail ? (
+                  <ChevronRight size={36} color={T.textMut} style={{ flexShrink: 0, alignSelf: "stretch", height: "100%", width: 36 }} strokeWidth={1.75} />
+                ) : null}
               </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-                {isRetail ? retailTileKpiSection(i, T) : (
+              {retailTrend ? (
+                <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)", gap: 16, alignItems: "stretch", marginBottom: 16, flex: 1 }}>
+                  <div style={{ display: "flex", flexDirection: "column", minWidth: 0, position: "relative" }}>
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                        fontSize: 13,
+                        color: retailTrend.deltaColor,
+                        fontWeight: 700,
+                        fontFamily: "var(--mono)",
+                        flexShrink: 0,
+                      }}
+                    >
+                      {retailTrend.delta}
+                    </span>
+                    <div style={{ marginBottom: 6, paddingRight: 64 }}>
+                      <div style={{ fontSize: 34, fontWeight: 800, color: T.text, fontFamily: "var(--mono)", lineHeight: 1 }}>
+                        {retailTrend.value}
+                      </div>
+                    </div>
+                    <div style={{ width: "100%", flex: 1, minHeight: 96 }}>
+                      <ResponsiveContainer>
+                        <AreaChart data={retailTrend.trendData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id={`retail-trend-grad-${i}`} x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="0%" stopColor={retailTrend.stroke} stopOpacity={0.42} />
+                              <stop offset="55%" stopColor={retailTrend.stroke} stopOpacity={0.16} />
+                              <stop offset="100%" stopColor={retailTrend.stroke} stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <XAxis dataKey="w" hide />
+                          <YAxis
+                            hide
+                            domain={[
+                              (min: number) => Math.max(0, min - retailTrend.yPadBelow),
+                              (max: number) => max + retailTrend.yPadAbove,
+                            ]}
+                          />
+                          <RechartsTooltip
+                            cursor={false}
+                            labelFormatter={(label) => `${label}`}
+                            formatter={(value: number) => [`${value} pts`, "Score"]}
+                            contentStyle={{
+                              background: "rgba(10,14,22,0.96)",
+                              border: `1px solid ${T.borderLight}`,
+                              borderRadius: 8,
+                              fontSize: 11,
+                              color: T.text,
+                            }}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="v"
+                            stroke={retailTrend.stroke}
+                            strokeWidth={3}
+                            fill={`url(#retail-trend-grad-${i})`}
+                            fillOpacity={1}
+                            dot={false}
+                            activeDot={{ r: 3.5, fill: retailTrend.stroke, stroke: retailTrend.stroke }}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "stretch", minWidth: 0 }}>
+                    {retailTileInfo(i, T)}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 14px", flex: 1 }}>
                     {tile.kpis.map((k, j) => (<div key={j}><div style={{ fontSize: 12, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>{k.l}</div><div style={{ fontSize: 16, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>{k.v}</div></div>))}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
               <div
                 style={{
+                  marginTop: isRetail ? "auto" : 0,
                   background: `linear-gradient(135deg, ${T.gold}10 0%, ${sc}08 38%)`,
                   border: `1px solid ${T.gold}28`,
                   borderLeft: `4px solid ${T.gold}`,

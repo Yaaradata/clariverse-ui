@@ -149,10 +149,10 @@ const CASES: PrematureClosureCase[] = [
 
 const getChannelColor = (channel: string) => {
   switch (channel) {
-    case 'ticket': return { bg: '#a78bfa', border: '#8b5cf6', text: '#c4b5fd' };
-    case 'chat': return { bg: '#34d399', border: '#10b981', text: '#6ee7b7' };
-    case 'voice': return { bg: '#f87171', border: '#ef4444', text: '#fca5a5' };
-    case 'email': return { bg: '#60a5fa', border: '#3b82f6', text: '#93c5fd' };
+    case 'ticket': return { bg: '#60a5fa', border: '#2563eb', text: '#93c5fd' };
+    case 'chat': return { bg: '#fb923c', border: '#ea580c', text: '#fdba74' };
+    case 'voice': return { bg: '#fb7185', border: '#e11d48', text: '#fda4af' };
+    case 'email': return { bg: '#2dd4bf', border: '#0d9488', text: '#5eead4' };
     case 'social': return { bg: '#f472b6', border: '#ec4899', text: '#f9a8d4' };
     default: return { bg: '#6b7280', border: '#4b5563', text: '#9ca3af' };
   }

@@ -635,7 +635,7 @@ export function PressureConstellationWall({
               <span className="rounded-full border border-lime-400/30 bg-lime-500/10 px-2 py-1">Glow = Pressure Score</span>
             </div>
             <div className="rounded-full border border-white/10 bg-white/5 px-2 py-1">
-              Dominant Channel • Email 🔵 Chat 🟢 Ticket 🟣 Social 🟠 Voice 🔴
+              Dominant Channel • Email (Teal) · Chat (Burnt Orange) · Ticket (Royal Blue) · Social (Pink) · Voice (Deep Rose)
             </div>
           </div>
           <div className="mt-5 grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.5fr)]">

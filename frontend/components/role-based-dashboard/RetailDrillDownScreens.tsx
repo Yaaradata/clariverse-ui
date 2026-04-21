@@ -1,12 +1,12 @@
 "use client";
 
 import { Fragment, type CSSProperties, type ReactNode } from "react";
-import { ArrowLeft, Sparkles, Newspaper } from "lucide-react";
+import { ArrowLeft, Sparkles, Newspaper, Mail, Ticket, MessageSquare, Phone } from "lucide-react";
 import {
   Line,
   BarChart, Bar,
-  Area,
   ComposedChart,
+  Area, AreaChart,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell,
 } from "recharts";
 import { useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
@@ -15,20 +15,16 @@ import { useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeCo
 import { RetailFCIKPICards } from "./RetailFCIKPICards";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
 import { fciClusters } from "@/lib/fci-lib/fciData";
-import { NarrativeLens } from "@/components/paingradation/NarrativeLens";
+
 import { CrossChannelToneIntelligenceCard } from "@/components/unified/intelligence/CrossChannelToneIntelligenceCard";
 import { IntentScoreHeatmap } from "@/components/FCI/IntentScoreHeatmap";
-import { TopicBubbleMap } from "@/components/social/TopicBubbleMap";
 // Brand & Reputation — role-based local copies (self-contained mock data)
 import { RetailTopTopicsByVirality } from "./RetailTopTopicsByVirality";
 import { RetailMomentumHashtags } from "./RetailMomentumHashtags";
 import { RetailInfluencerWatchlist } from "./RetailInfluencerWatchlist";
-import { RetailViolationsAndRiskAlerts } from "./RetailViolationsAndRiskAlerts";
-import { RetailComplianceHealth } from "./RetailComplianceHealth";
-import { RetailCrossChannelInteractionBreakdownAudit } from "./RetailCrossChannelInteractionBreakdownAudit";
-import { RetailCrossChannelEmotionShockboard } from "./RetailCrossChannelEmotionShockboard";
 import { RetailIntentPressureAlerts } from "./RetailIntentPressureAlerts";
-import { RetailEscalationRiskMonitor } from "./RetailEscalationRiskMonitor";
+import { RetailSLAPerformanceOverview } from "./RetailSLAPerformanceOverview";
+
 /* ─────────────────────────────────────────────────────────────────────────
    Shared helpers — chart panels + optional AI Executive Insight blocks
    ──────────────────────────────────────────────────────────────────────── */
@@ -130,7 +126,7 @@ function DrillHeader({ title, sub, score, scoreColor }: { title: string; sub: st
  *   and an "AI · {model}" pill (same language as the AI Risk Spike Monitor).
  */
 function AIPanel({
-  title, subtitle, children, accentColor, minHeight, ai = false, aiModel, headerRight, fill = false, compact = false,
+  title, subtitle, children, accentColor, minHeight, ai = false, aiModel, headerRight, fill = false, compact = false, borderless = false,
 }: {
   title: string; subtitle?: string; children: ReactNode;
   accentColor?: string; minHeight?: number;
@@ -143,16 +139,18 @@ function AIPanel({
   fill?: boolean;
   /** Tighter padding and header for dense stacks (e.g. sidebar leaderboards). */
   compact?: boolean;
+  /** Removes card border lines while preserving layout. */
+  borderless?: boolean;
 }) {
   const T = useDashboardTheme();
   const accent = accentColor || T.cyan;
   return (
     <div style={{
       background: T.elevated,
-      borderTop: `1px solid ${ai ? `${accent}35` : T.borderLight}`,
-      borderRight: `1px solid ${ai ? `${accent}35` : T.borderLight}`,
-      borderBottom: `1px solid ${ai ? `${accent}35` : T.borderLight}`,
-      borderLeft: `3px solid ${accent}`,
+      borderTop: borderless ? "none" : `1px solid ${ai ? `${accent}35` : T.borderLight}`,
+      borderRight: borderless ? "none" : `1px solid ${ai ? `${accent}35` : T.borderLight}`,
+      borderBottom: borderless ? "none" : `1px solid ${ai ? `${accent}35` : T.borderLight}`,
+      borderLeft: borderless ? "none" : `3px solid ${accent}`,
       borderRadius: compact ? 12 : 14,
       padding: compact ? 11 : 18,
       minHeight,
@@ -191,7 +189,7 @@ function AIPanel({
               lineHeight: compact ? 1.35 : undefined,
             }}>
               {subtitle}
-            </div>
+        </div>
           ) : null}
         </div>
         {headerRight ? (
@@ -212,7 +210,7 @@ function AIPanel({
       </div>
       {fill ? (
         <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
-          {children}
+      {children}
         </div>
       ) : (
         children
@@ -269,18 +267,32 @@ function sentimentFace(s: number) {
 }
 
 /**
- * Sentiment-aware gradient for the share bar.
- * - Positive sentiment  → green → lime (no yellow, no red)
- * - Mild negative       → green → yellow-green
- * - Moderate negative   → green → amber
- * - Severe negative     → green → amber → red
+ * BrandRowPlaceholder — empty dashed card used to reserve a slot in the
+ * Brand & Reputation top row until the final visualization is decided.
  */
-function sentimentBarGradient(T: DashboardThemeTokens, s: number) {
-  if (s >=  0.2) return `linear-gradient(90deg, ${T.green} 0%, #84cc16 100%)`;
-  if (s >=  0)   return `linear-gradient(90deg, ${T.green} 0%, #a3e635 100%)`;
-  if (s >= -0.3) return `linear-gradient(90deg, ${T.green} 0%, #bef264 60%, ${T.amber} 100%)`;
-  if (s >= -0.5) return `linear-gradient(90deg, ${T.green} 0%, ${T.amber} 100%)`;
-  return `linear-gradient(90deg, ${T.green} 0%, ${T.amber} 55%, ${T.red} 100%)`;
+function BrandRowPlaceholder({ T, label }: { T: DashboardThemeTokens; label: string }) {
+  return (
+    <div
+      aria-label={label}
+      style={{
+        background: T.elevated,
+        border: `1px dashed ${T.borderLight}`,
+        borderRadius: 14,
+        padding: 18,
+        minHeight: 260,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: T.textMut,
+        fontSize: 12,
+        fontWeight: 600,
+        textTransform: "uppercase",
+        letterSpacing: 0.8,
+      }}
+    >
+      {label}
+    </div>
+  );
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -301,83 +313,84 @@ const SENT_HEATMAP = [
 ];
 const HEATMAP_WEEKS = ["W-5", "W-4", "W-3", "W-2", "W-1", "Now"];
 
-// HNI broken out into 3 tiers — directly requested in the meeting
-// ("can we see churn risk for three HNIs"). Deposits in £M, happiness as %.
-const HNI_TIERS = [
-  { tier: "H1  · £1M+",     happy: 44, neutral: 26, unhappy: 30, deposits: 184, accounts: 312 },
-  { tier: "H2  · £500K–1M", happy: 51, neutral: 24, unhappy: 25, deposits: 276, accounts: 624 },
-  { tier: "H3  · £250–500K",happy: 58, neutral: 22, unhappy: 20, deposits: 312, accounts: 1085 },
-];
-
 // Vulnerability indicators surfaced by an NLP model from live conversations —
 // maps to FCA Consumer Duty requirements (bereavement, financial difficulty, health).
 // ─── Mock data adapters for reused existing components ───────────────────────
+// Phrases grouped by parent topic and ordered to mirror Top Topics at Risk
+// (topics by total desc → phrases by count desc within each topic).
+//   1. Payment Processing Failure 212 → 86 + 66 + 60
+//   2. Account Access Problems 167 → 167
+//   3. Fee Structure Criticism 141 → 95 + 46
+//   4. Cross Border Issues 118 → 118
+//   5. Customer Service (Disappointment) 102 → 47 + 32 + 23
+// Percentages are of the extracted phrase total (740).
 const REUSED_NARRATIVE_PHRASES = [
-  { phrase: "Why is the fee on my account?", count: 1420, percentage: 18.4, trend: "up" as const },
-  { phrase: "Payment didn't go through", count: 1180, percentage: 15.3, trend: "up" as const },
-  { phrase: "Can't log in to the app", count: 1060, percentage: 13.8, trend: "up" as const },
-  { phrase: "Card was declined again", count: 910, percentage: 11.8, trend: "stable" as const },
-  { phrase: "Still waiting on my refund", count: 820, percentage: 10.6, trend: "up" as const },
-  { phrase: "Hidden charges on my statement", count: 680, percentage: 8.8, trend: "up" as const },
-  { phrase: "Nobody called me back", count: 560, percentage: 7.3, trend: "stable" as const },
-  { phrase: "Transfer stuck for 3 days", count: 450, percentage: 5.8, trend: "down" as const },
-  { phrase: "Agent couldn't resolve", count: 380, percentage: 4.9, trend: "stable" as const },
-  { phrase: "I've called 4 times now", count: 270, percentage: 3.5, trend: "down" as const },
+  { phrase: "Payment didn't go through",       count: 86,  percentage: 11.6, trend: "up" as const,     channels: ["App Store", "Play Store"],                    topic: "Payment Processing Failure" },
+  { phrase: "Card was declined again",         count: 66,  percentage: 8.9,  trend: "stable" as const, channels: ["Trustpilot"],                                 topic: "Payment Processing Failure" },
+  { phrase: "Still waiting on my refund",      count: 60,  percentage: 8.1,  trend: "up" as const,     channels: ["X (Twitter)", "Reddit", "Play Store"],        topic: "Payment Processing Failure" },
+  { phrase: "Can't log in to the app",         count: 167, percentage: 22.6, trend: "up" as const,     channels: ["Play Store", "Reddit"],                       topic: "Account Access Problems" },
+  { phrase: "Why is the fee on my account?",   count: 95,  percentage: 12.8, trend: "up" as const,     channels: ["App Store", "Trustpilot", "X (Twitter)"],     topic: "Fee Structure Criticism" },
+  { phrase: "Hidden charges on my statement",  count: 46,  percentage: 6.2,  trend: "up" as const,     channels: ["Trustpilot", "X (Twitter)"],                  topic: "Fee Structure Criticism" },
+  { phrase: "Transfer stuck for 3 days",       count: 118, percentage: 15.9, trend: "down" as const,   channels: ["Play Store", "X (Twitter)"],                  topic: "Cross Border Issues" },
+  { phrase: "Nobody called me back",           count: 47,  percentage: 6.4,  trend: "stable" as const, channels: ["App Store", "Reddit"],                        topic: "Customer Service" },
+  { phrase: "Agent couldn't resolve",          count: 32,  percentage: 4.3,  trend: "stable" as const, channels: ["Trustpilot", "Reddit", "X (Twitter)"],        topic: "Customer Service" },
+  { phrase: "I've called 4 times now",         count: 23,  percentage: 3.1,  trend: "down" as const,   channels: ["X (Twitter)"],                                topic: "Customer Service" },
 ];
 
+const VOC_CHANNEL_COLORS: Record<string, string> = {
+  "App Store": "#9333EA",
+  "Play Store": "#0891B2",
+  Reddit: "#B45309",
+  Trustpilot: "#65A30D",
+  "X (Twitter)": "#64748B",
+};
+
+// Mirror of total-mentions tiers used in RetailTopTopicsByVirality so the
+// Friction Driver tag color matches its parent topic tier in Card 1.
+// Critical ≥150 (red) · High 100–149 (amber) · Watch 50–99 (gold) · Stable <50 (slate)
+const TOPIC_TIER_COLOR: Record<string, string> = {
+  "Payment Processing Failure":      "#EF4444", // 212 → Critical
+  "Mobile App Crashes":              "#EF4444", // 184 → Critical
+  "Account Access Problems":         "#EF4444", // 167 → Critical
+  "Fee Structure Criticism":         "#F59E0B", // 141 → High
+  "System Outage Frustration":       "#F59E0B", // 129 → High
+  "Cross Border Issues":             "#F59E0B", // 118 → High
+  "Customer Service":                "#F59E0B", // 102 → High
+  "Customer Service Disappointment": "#F59E0B", // 102 → High
+  "Regulatory Compliance Questions": "#E8B931", //  96 → Watch
+};
 
 
-// Coordinates spread out so bubbles don't cluster in the upper-right quadrant.
-// Volumes drive bubble size (see ZAxis range passed below).
-const REUSED_TOPIC_BUBBLES = [
-  { topic: "Fee Disputes",  volume: 1240, sentiment: -0.72, businessImpact: 88, resolutionDifficulty: 70, mentions: 1240, sampleQuotes: ["Why is this charge on my account?", "Never told me there was a fee"] },
-  { topic: "App Login",     volume: 1060, sentiment: -0.61, businessImpact: 74, resolutionDifficulty: 28, mentions: 1060, sampleQuotes: ["Cannot login after update", "Face ID broken"] },
-  { topic: "KYC Delays",    volume:  920, sentiment: -0.48, businessImpact: 56, resolutionDifficulty: 58, mentions:  920, sampleQuotes: ["Waiting 9 days for KYC"] },
-  { topic: "Card Declines", volume:  780, sentiment: -0.33, businessImpact: 46, resolutionDifficulty: 40, mentions:  780, sampleQuotes: ["Card declined at ATM abroad"] },
-  { topic: "HNI Wealth",    volume:  410, sentiment: -0.21, businessImpact: 94, resolutionDifficulty: 86, mentions:  410, sampleQuotes: ["RM unreachable for 2 weeks"] },
-  { topic: "Branch Wait",   volume:  520, sentiment:  0.12, businessImpact: 30, resolutionDifficulty: 62, mentions:  520, sampleQuotes: ["Branch was empty but still slow"] },
-  { topic: "Rewards",       volume:  280, sentiment:  0.54, businessImpact: 18, resolutionDifficulty: 22, mentions:  280, sampleQuotes: ["Love the new cashback tier"] },
-];
 
 // ─── Top intents × sentiment · HV vs LV (first block in drill-down) ────────
 type IntentRow = {
   intent: string;
   share: number;      // % of that segment's contact volume
-  volume: number;     // absolute contacts / month
   sentiment: number;  // -1..+1
   delta: number;      // sentiment delta vs prior 4 weeks
   sampleQuote: string;
 };
 
 const HV_INTENTS: IntentRow[] = [
-  { intent: "Wealth / Investment Advice",    share: 24, volume: 3820, sentiment: -0.58, delta: -0.14, sampleQuote: "My RM hasn't called me back in 3 weeks." },
-  { intent: "Fee & Charge Disputes",         share: 19, volume: 3020, sentiment: -0.64, delta: -0.08, sampleQuote: "Why am I paying £45 when I'm a Private client?" },
-  { intent: "Mortgage / Large Loan",         share: 14, volume: 2230, sentiment: -0.28, delta: -0.05, sampleQuote: "Offer expired while you kept asking for docs." },
-  { intent: "Card Declines (Travel / FX)",   share: 11, volume: 1750, sentiment: -0.41, delta: -0.10, sampleQuote: "Card blocked in Dubai, no one answered." },
-  { intent: "Relationship Manager Access",   share: 10, volume: 1590, sentiment: -0.52, delta: -0.17, sampleQuote: "Three different RMs in six months." },
-  { intent: "Complaint Escalation",          share: 8,  volume: 1270, sentiment: -0.71, delta: -0.12, sampleQuote: "I've escalated this twice already." },
-  { intent: "Tax / Statement Requests",      share: 8,  volume: 1270, sentiment:  0.12, delta:  0.02, sampleQuote: "Quick and polite service, thanks." },
-  { intent: "Rewards / Concierge",           share: 6,  volume:  960, sentiment:  0.38, delta:  0.04, sampleQuote: "Loved the airport lounge upgrade." },
+  { intent: "Wealth / Investment Advice",    share: 24, sentiment: -0.58, delta: -0.14, sampleQuote: "My RM hasn't called me back in 3 weeks." },
+  { intent: "Fee & Charge Disputes",         share: 19, sentiment: -0.64, delta: -0.08, sampleQuote: "Why am I paying £45 when I'm a Private client?" },
+  { intent: "Mortgage / Large Loan",         share: 14, sentiment: -0.28, delta: -0.05, sampleQuote: "Offer expired while you kept asking for docs." },
+  { intent: "Card Declines (Travel / FX)",   share: 11, sentiment: -0.41, delta: -0.10, sampleQuote: "Card blocked in Dubai, no one answered." },
+  { intent: "Relationship Manager Access",   share: 10, sentiment: -0.52, delta: -0.17, sampleQuote: "Three different RMs in six months." },
+  { intent: "Complaint Escalation",          share: 8,  sentiment: -0.71, delta: -0.12, sampleQuote: "I've escalated this twice already." },
+  { intent: "Tax / Statement Requests",      share: 8,  sentiment:  0.12, delta:  0.02, sampleQuote: "Quick and polite service, thanks." },
+  { intent: "Rewards / Concierge",           share: 6,  sentiment:  0.38, delta:  0.04, sampleQuote: "Loved the airport lounge upgrade." },
 ];
 
 const LV_INTENTS: IntentRow[] = [
-  { intent: "App Login & Authentication",    share: 26, volume: 9840, sentiment: -0.56, delta: -0.11, sampleQuote: "Face ID broken after the update." },
-  { intent: "Card Declines (Everyday)",      share: 21, volume: 7950, sentiment: -0.62, delta: -0.15, sampleQuote: "Declined at Tesco in front of everyone." },
-  { intent: "Fee Disputes (Overdraft)",      share: 17, volume: 6430, sentiment: -0.69, delta: -0.09, sampleQuote: "£35 overdraft fee for £2 shortfall." },
-  { intent: "Payment / Transfer Issues",     share: 12, volume: 4540, sentiment: -0.44, delta: -0.06, sampleQuote: "Transfer stuck pending for 3 days." },
-  { intent: "Account Access / Password",     share: 9,  volume: 3400, sentiment: -0.32, delta: -0.03, sampleQuote: "Locked out again after reset." },
-  { intent: "Balance & Statements",          share: 6,  volume: 2270, sentiment:  0.18, delta:  0.01, sampleQuote: "App shows balance clearly, helpful." },
-  { intent: "New Product Inquiry",           share: 5,  volume: 1890, sentiment:  0.22, delta:  0.03, sampleQuote: "Opened a savings account in 5 minutes." },
-  { intent: "Complaint / Social Escalation", share: 4,  volume: 1510, sentiment: -0.74, delta: -0.18, sampleQuote: "Posting this on Twitter — no response." },
-];
-
-const VULNERABILITY_ROWS = [
-  { id: "CX-48122", segment: "HNI",       indicator: "Bereavement",         source: "Voice · Branch",    flagged: "2h ago",  severity: "High",   action: "Specialist desk routing pending" },
-  { id: "CX-48090", segment: "Mass Aff.", indicator: "Financial difficulty",source: "Chat · Web",        flagged: "5h ago",  severity: "High",   action: "Forbearance offer not yet made" },
-  { id: "CX-47984", segment: "Mass",      indicator: "Health / mobility",   source: "Voice · IVR",       flagged: "1d ago",  severity: "Medium", action: "Accessibility path triggered" },
-  { id: "CX-47861", segment: "HNI",       indicator: "Debt stress",         source: "Email · Complaint", flagged: "1d ago",  severity: "High",   action: "Collections pause — flagged" },
-  { id: "CX-47702", segment: "Affluent",  indicator: "Cognitive / age",     source: "Chat · App",        flagged: "2d ago",  severity: "Medium", action: "Trusted contact prompt offered" },
-  { id: "CX-47590", segment: "Mass",      indicator: "Financial difficulty",source: "Social · DM",       flagged: "3d ago",  severity: "Low",    action: "Budgeting tool resource sent" },
+  { intent: "App Login & Authentication",    share: 26, sentiment: -0.56, delta: -0.11, sampleQuote: "Face ID broken after the update." },
+  { intent: "Card Declines (Everyday)",      share: 21, sentiment: -0.62, delta: -0.15, sampleQuote: "Declined at Tesco in front of everyone." },
+  { intent: "Fee Disputes (Overdraft)",      share: 17, sentiment: -0.69, delta: -0.09, sampleQuote: "£35 overdraft fee for £2 shortfall." },
+  { intent: "Payment / Transfer Issues",     share: 12, sentiment: -0.44, delta: -0.06, sampleQuote: "Transfer stuck pending for 3 days." },
+  { intent: "Account Access / Password",     share: 9,  sentiment: -0.32, delta: -0.03, sampleQuote: "Locked out again after reset." },
+  { intent: "Balance & Statements",          share: 6,  sentiment:  0.18, delta:  0.01, sampleQuote: "App shows balance clearly, helpful." },
+  { intent: "New Product Inquiry",           share: 5,  sentiment:  0.22, delta:  0.03, sampleQuote: "Opened a savings account in 5 minutes." },
+  { intent: "Complaint / Social Escalation", share: 4,  sentiment: -0.74, delta: -0.18, sampleQuote: "Posting this on Twitter — no response." },
 ];
 
 export function CustomerHappinessDrillDown({ onBack }: { onBack: () => void }) {
@@ -395,216 +408,24 @@ export function CustomerHappinessDrillDown({ onBack }: { onBack: () => void }) {
       {/* Row 0 — FCI KPI wall (requested to appear on top) */}
       <RetailFCIKPICards isDarkMode />
 
-      {/* Row 0 — TOP INTENTS × SENTIMENT · HV vs LV (lead signal) */}
-      <HVvsLVIntentPanel T={T} />
-
       {/* Tier 1 — What's Failing? diagnostic wall promoted by request */}
       <FailureClusters clusters={fciClusters} isDarkMode />
 
-      {/* Row 1 — Sentiment Heatmap + Topic Bubble Map (NPS Segment Monitor promoted into RetailFCIKPICards above) */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "stretch" }}>
-        <AIPanel
-          title="Sentiment Heatmap"
-          subtitle="Weekly customer sentiment by channel · red tiles mark where complaints are concentrated"
-          accentColor={T.red}
-          ai
-          aiModel="Sentiment NLP"
-          fill
-        >
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "72px repeat(6, 1fr)",
-            gridTemplateRows: "auto repeat(5, 1fr)",
-            gap: 6,
-            flex: 1,
-            minHeight: 0,
-          }}>
-            <div />
-            {HEATMAP_WEEKS.map((w) => (
-              <div key={w} style={{ fontSize: 10, color: T.textMut, textAlign: "center", fontFamily: "var(--mono)" }}>{w}</div>
-            ))}
-            {SENT_HEATMAP.map((row) => (
-              <Fragment key={row.ch}>
-                <div style={{ fontSize: 11, color: T.textSec, alignSelf: "center" }}>{row.ch}</div>
-                {row.cells.map((v, ci) => {
-                  const neg = 1 - v;
-                  const color = neg > 0.5 ? T.red : neg > 0.4 ? T.amber : neg > 0.3 ? T.gold : T.green;
-                  return (
-                    <div
-                      key={`${row.ch}-${HEATMAP_WEEKS[ci] ?? ci}`}
-                      title={`${row.ch} · ${HEATMAP_WEEKS[ci]}: ${v.toFixed(2)} sentiment`}
-                      style={{
-                        background: `${color}${neg > 0.5 ? "cc" : neg > 0.4 ? "99" : neg > 0.3 ? "66" : "44"}`,
-                        border: `1px solid ${color}50`, borderRadius: 6,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 11, color: T.text, fontFamily: "var(--mono)", fontWeight: 700,
-                        cursor: "pointer", transition: "transform 0.15s",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                    >
-                      {v.toFixed(2)}
-                    </div>
-                  );
-                })}
-              </Fragment>
-            ))}
-          </div>
-          <div style={{
-            display: "flex", flexWrap: "wrap", gap: 10, marginTop: 14,
-            alignItems: "center",
-          }}>
-            {[
-              { label: "Healthy",  color: T.green, hint: "≥ 0.70" },
-              { label: "Watch",    color: T.gold,  hint: "0.60 – 0.69" },
-              { label: "Strain",   color: T.amber, hint: "0.50 – 0.59" },
-              { label: "Acute",    color: T.red,   hint: "< 0.50" },
-            ].map((chip) => (
-              <div
-                key={chip.label}
-                style={{
-                  display: "inline-flex", alignItems: "center", gap: 8,
-                  padding: "5px 10px", borderRadius: 999,
-                  background: `${chip.color}18`,
-                  border: `1px solid ${chip.color}55`,
-                }}
-              >
-                <span style={{
-                  width: 10, height: 10, borderRadius: 3,
-                  background: chip.color,
-                  boxShadow: `0 0 0 2px ${chip.color}33`,
-                  display: "inline-block",
-                }} />
-                <span style={{
-                  fontSize: 12, fontWeight: 700, color: T.text,
-                  textTransform: "uppercase", letterSpacing: 0.4,
-                }}>{chip.label}</span>
-                <span style={{
-                  fontSize: 11, color: T.textMut,
-                  fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
-                }}>{chip.hint}</span>
-              </div>
-            ))}
-          </div>
-        </AIPanel>
-
-        <AIPanel
-          title="Topic Bubble Map"
-          subtitle="Impact vs resolution difficulty · crisis zone highlighted"
-          accentColor={T.amber}
-          fill
-        >
-          <div className="dark" style={{ colorScheme: "dark", flex: 1, minHeight: 0 }}>
-            <TopicBubbleMap
-              data={REUSED_TOPIC_BUBBLES}
-              showTopicCards={false}
-              bubbleSizeRange={[40, 180]}
-            />
-          </div>
-        </AIPanel>
-      </div>
+      {/* Row 1 removed — Topic Bubble Map dropped from Customer Happiness drill-down;
+          Sentiment Heatmap now lives in the Brand & Reputation drill-down and
+          NPS Segment Monitor sits in the RetailFCIKPICards block above. */}
 
       {/* Row 2 removed — Churn Signal Index + Repeat Contact Tracker now live in the
           RetailFCIKPICards block at the top of this drill-down. */}
 
-      {/* Row 4 — HNI tier tracker + Revenue-at-Risk attribution */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-        <AIPanel
-          title="Wealth Tier Health"
-          subtitle="Sentiment split across H1 · H2 · H3 wealth tiers · deposits at stake (£M)"
-          accentColor={T.cyan}
-        >
-          <div style={{ width: "100%", height: 220 }}>
-            <ResponsiveContainer>
-              <BarChart data={HNI_TIERS} layout="vertical" margin={{ top: 6, right: 12, left: 20, bottom: 0 }} stackOffset="expand">
-                <CartesianGrid stroke={T.borderLight} strokeDasharray="3 3" horizontal={false} />
-                <XAxis type="number" hide domain={[0, 1]} />
-                <YAxis type="category" dataKey="tier" tick={axisTickStyle(T)} stroke={T.borderLight} width={110} />
-                <Tooltip content={<ChartTip T={T} valueSuffix="%" />} />
-                <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
-                <Bar dataKey="happy"   name="Happy"   stackId="a" fill={T.green} />
-                <Bar dataKey="neutral" name="Neutral" stackId="a" fill={T.amber} />
-                <Bar dataKey="unhappy" name="Unhappy" stackId="a" fill={T.red} radius={[0, 4, 4, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-          <div style={{
-            display: "flex", alignItems: "center", justifyContent: "space-between",
-            marginTop: 16, marginBottom: 8,
-          }}>
-            <span style={{
-              fontSize: 11, fontWeight: 800, color: T.textSec,
-              textTransform: "uppercase", letterSpacing: 0.8,
-            }}>
-              Deposits at stake per tier
-            </span>
-            <span style={{ fontSize: 10.5, color: T.textMut }}>
-              Balances held · active accounts
-            </span>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8 }}>
-            {HNI_TIERS.map((t) => (
-              <div key={t.tier} style={{
-                border: `1px solid ${T.borderLight}`, borderRadius: 10, padding: "8px 10px", background: T.card,
-              }}>
-                <div style={{ fontSize: 10.5, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.6 }}>{t.tier.split("·")[0].trim()}</div>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}>
-                  <span style={{ fontSize: 18, fontWeight: 800, color: T.text, fontFamily: "var(--mono)" }}>£{t.deposits}M</span>
-                  <span style={{ fontSize: 10, color: T.textMut }}>{t.accounts} accts</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </AIPanel>
-        <AIPanel title="Vulnerable Customer Watchlist" subtitle="FCA Consumer Duty · vulnerability indicators auto-detected from live conversations" accentColor={T.amber} ai aiModel="Vulnerability NLP">
-          <div style={{ overflow: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 12 }}>
-              <thead>
-                <tr style={{ textAlign: "left", color: T.textMut, fontSize: 10.5, textTransform: "uppercase", letterSpacing: 0.7 }}>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Case</th>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Segment</th>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Indicator</th>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Source</th>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Flagged</th>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Severity</th>
-                  <th style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {VULNERABILITY_ROWS.map((r) => {
-                  const sevColor = r.severity === "High" ? T.red : r.severity === "Medium" ? T.amber : T.green;
-                  return (
-                    <tr key={r.id} style={{ color: T.textSec }}>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}`, fontFamily: "var(--mono)", color: T.text }}>{r.id}</td>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>{r.segment}</td>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}`, color: T.text }}>{r.indicator}</td>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>{r.source}</td>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}`, fontFamily: "var(--mono)" }}>{r.flagged}</td>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>
-                        <span style={{
-                          fontSize: 10, fontWeight: 700, color: sevColor, textTransform: "uppercase", letterSpacing: 0.6,
-                          padding: "2px 8px", borderRadius: 999, background: `${sevColor}18`, border: `1px solid ${sevColor}40`,
-                        }}>{r.severity}</span>
-                      </td>
-                      <td style={{ padding: "8px 10px", borderBottom: `1px solid ${T.borderLight}` }}>{r.action}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          <div style={{ fontSize: 10.5, color: T.textMut, marginTop: 8 }}>
-            Model surfaces bereavement, financial difficulty, health, age and debt-stress signals across voice, chat, email, social and app.
-          </div>
-        </AIPanel>
-      </div>
+      {/* Bottom row — TOP INTENTS × SENTIMENT · HV vs LV */}
+      <HVvsLVIntentPanel T={T} />
 
       {/* Reused components: most were curated away after review.
-          TopicBubbleMap is now rendered beside the Sentiment Heatmap in Row 1.
           Previously here: SentimentChart, RepeatContactRate, CustomerEmotion,
-          SeverePainIncidents, TimeInPain, NarrativeLens, CrossChannelToneIntelligenceCard,
-          IntentScoreHeatmap. */}
-    </div>
+          SeverePainIncidents, TimeInPain, NarrativeLens, TopicBubbleMap,
+          CrossChannelToneIntelligenceCard, IntentScoreHeatmap. */}
+          </div>
   );
 }
 
@@ -646,20 +467,19 @@ function ReusedSlot({
    Shows what HV and LV customers are calling about AND how they feel about it.
    ──────────────────────────────────────────────────────────────────────── */
 
-function IntentRowCard({
-  row, color, T, max, isLast,
-}: { row: IntentRow; color: string; T: DashboardThemeTokens; max: number; isLast: boolean }) {
-  const sColor = sentimentColor(T, row.sentiment);
-  const deltaUp = row.delta > 0;
-  const deltaFlat = Math.abs(row.delta) < 0.02;
-  const deltaColor = deltaFlat ? T.textMut : deltaUp ? T.green : T.red;
-  const pct = Math.min(100, (row.share / max) * 100);
+const INTENT_GRID_COLUMNS = "10px minmax(0, 1fr) 54px 72px 52px";
 
-  return (
-    <div
-      style={{
+function IntentRowCard({
+  row, color, T, isLast,
+}: { row: IntentRow; color: string; T: DashboardThemeTokens; isLast: boolean }) {
+  const sColor = sentimentColor(T, row.sentiment);
+  const nps = Math.round(row.sentiment * 100);
+
+                  return (
+                    <div
+                      style={{
         display: "grid",
-        gridTemplateColumns: "10px minmax(0, 1fr) 60px 76px 58px",
+        gridTemplateColumns: INTENT_GRID_COLUMNS,
         columnGap: 10,
         rowGap: 6,
         alignItems: "center",
@@ -674,31 +494,15 @@ function IntentRowCard({
         boxShadow: `0 0 0 3px ${color}22`,
       }} />
 
-      <div style={{
-        display: "flex", alignItems: "center", gap: 8, minWidth: 0,
-      }}>
+      <div style={{ minWidth: 0 }}>
         <span style={{
           fontSize: 12.5, fontWeight: 700, color: T.text,
           overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+          display: "block",
         }}>
           {row.intent}
         </span>
-        <span style={{
-          display: "inline-flex", alignItems: "center", gap: 4,
-          fontSize: 10, fontWeight: 800, color: sColor,
-          fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
-          padding: "1px 6px", borderRadius: 999,
-          background: `${sColor}15`,
-          borderTop: `1px solid ${sColor}40`,
-          borderRight: `1px solid ${sColor}40`,
-          borderBottom: `1px solid ${sColor}40`,
-          borderLeft: `1px solid ${sColor}40`,
-          whiteSpace: "nowrap", flexShrink: 0,
-        }}>
-          <span style={{ fontSize: 10.5, lineHeight: 1 }}>{sentimentFace(row.sentiment)}</span>
-          {row.sentiment > 0 ? "+" : ""}{row.sentiment.toFixed(2)}
-        </span>
-      </div>
+          </div>
 
       <span style={{
         textAlign: "right", fontSize: 13, fontWeight: 800, color: T.text,
@@ -709,48 +513,32 @@ function IntentRowCard({
       </span>
 
       <span style={{
-        textAlign: "right", fontSize: 10.5, color: T.textMut,
+        display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: 4,
+        fontSize: 11.5, fontWeight: 800, color: sColor,
         fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
+        whiteSpace: "nowrap",
       }}>
-        {row.volume.toLocaleString()}/mo
+        <span>{row.sentiment > 0 ? "+" : ""}{row.sentiment.toFixed(2)}</span>
       </span>
 
       <span style={{
-        display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: 3,
-        textAlign: "right", fontSize: 11, fontWeight: 700, color: deltaColor,
+        textAlign: "right", fontSize: 12, fontWeight: 800, color: sColor,
         fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
+        letterSpacing: -0.2,
       }}>
-        <span style={{ fontSize: 9, lineHeight: 1 }}>
-          {deltaFlat ? "●" : deltaUp ? "▲" : "▼"}
-        </span>
-        {deltaFlat ? "0.00" : `${Math.abs(row.delta).toFixed(2)}`}
+        {nps > 0 ? "+" : ""}{nps}
       </span>
-
-      {/* Full-width sentiment thermometer at bottom */}
-      <div style={{
-        gridColumn: "1 / -1",
-        height: 4, borderRadius: 999, background: T.borderLight,
-        position: "relative", overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", top: 0, left: 0, bottom: 0,
-          width: `${pct}%`,
-          background: sentimentBarGradient(T, row.sentiment),
-          borderRadius: 999,
-          boxShadow: `0 0 6px ${sColor}66`,
-        }} />
-      </div>
-    </div>
+              </div>
   );
 }
 
 function IntentGroupCard({
-  title, subtitle, color, rows, T, max,
+  title, subtitle, color, rows, T,
 }: {
   title: string; subtitle: string; color: string;
-  rows: IntentRow[]; T: DashboardThemeTokens; max: number;
+  rows: IntentRow[]; T: DashboardThemeTokens;
 }) {
-  return (
+              return (
     <div style={{
       borderRadius: 12,
       background: T.card,
@@ -763,7 +551,7 @@ function IntentGroupCard({
       {/* Group header */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "10px minmax(0, 1fr) 60px 76px 58px",
+        gridTemplateColumns: INTENT_GRID_COLUMNS,
         columnGap: 10,
         alignItems: "center",
         padding: "10px 14px",
@@ -778,12 +566,12 @@ function IntentGroupCard({
           {title}
         </span>
         <span style={{ fontSize: 9.5, fontWeight: 700, color: T.textMut, textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>Share</span>
-        <span style={{ fontSize: 9.5, fontWeight: 700, color: T.textMut, textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>Volume</span>
-        <span style={{ fontSize: 9.5, fontWeight: 700, color: T.textMut, textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>Δ30d</span>
-      </div>
+        <span style={{ fontSize: 9.5, fontWeight: 700, color: T.textMut, textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>Happiness</span>
+        <span style={{ fontSize: 9.5, fontWeight: 700, color: T.textMut, textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>NPS</span>
+                  </div>
       <div style={{ padding: "0 2px", fontSize: 10.5, color: T.textMut, margin: "6px 14px 0" }}>
         {subtitle}
-      </div>
+                </div>
       <div>
         {rows.map((r, i) => (
           <IntentRowCard
@@ -791,19 +579,15 @@ function IntentGroupCard({
             row={r}
             color={color}
             T={T}
-            max={max}
             isLast={i === rows.length - 1}
           />
         ))}
-      </div>
-    </div>
+          </div>
+          </div>
   );
 }
 
 function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
-  const maxHV = Math.max(...HV_INTENTS.map((r) => r.share));
-  const maxLV = Math.max(...LV_INTENTS.map((r) => r.share));
-
   const avgHV = HV_INTENTS.reduce((a, r) => a + r.sentiment * r.share, 0) / HV_INTENTS.reduce((a, r) => a + r.share, 0);
   const avgLV = LV_INTENTS.reduce((a, r) => a + r.sentiment * r.share, 0) / LV_INTENTS.reduce((a, r) => a + r.share, 0);
 
@@ -822,17 +606,17 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
     .map((r) => ({ intent: r.intent, gap: Math.abs(r.hv - r.lv) }))
     .sort((a, b) => b.gap - a.gap);
 
-  // Roll-up numbers for the summary strip
-  const hvAtRisk = HV_INTENTS.filter((r) => r.sentiment <= -0.3).reduce((a, r) => a + r.volume, 0);
-  const lvAtRisk = LV_INTENTS.filter((r) => r.sentiment <= -0.3).reduce((a, r) => a + r.volume, 0);
-  const totalAtRisk = hvAtRisk + lvAtRisk;
+  // Roll-up experience metrics for the summary strip
   const sentimentGap = avgHV - avgLV; // + means HV happier than LV
+  const hvNps = Math.round(avgHV * 100);
+  const lvNps = Math.round(avgLV * 100);
 
   const summaryChips: { k: string; v: string; c: string }[] = [
-    { k: "HV avg",       v: `${avgHV > 0 ? "+" : ""}${avgHV.toFixed(2)}`, c: sentimentColor(T, avgHV) },
-    { k: "LV avg",       v: `${avgLV > 0 ? "+" : ""}${avgLV.toFixed(2)}`, c: sentimentColor(T, avgLV) },
+    { k: "HV happiness", v: `${avgHV > 0 ? "+" : ""}${avgHV.toFixed(2)}`, c: sentimentColor(T, avgHV) },
+    { k: "LV happiness", v: `${avgLV > 0 ? "+" : ""}${avgLV.toFixed(2)}`, c: sentimentColor(T, avgLV) },
+    { k: "HV NPS",       v: `${hvNps > 0 ? "+" : ""}${hvNps}`, c: sentimentColor(T, avgHV) },
+    { k: "LV NPS",       v: `${lvNps > 0 ? "+" : ""}${lvNps}`, c: sentimentColor(T, avgLV) },
     { k: "HV−LV gap",    v: `${sentimentGap > 0 ? "+" : ""}${sentimentGap.toFixed(2)}`, c: sentimentGap >= 0 ? T.green : T.red },
-    { k: "At-risk vol",  v: `${totalAtRisk.toLocaleString()}/mo`, c: T.amber },
     { k: "Widest gap",   v: `${gaps[0].intent} · ${gaps[0].gap.toFixed(2)}`, c: T.red },
   ];
 
@@ -859,10 +643,10 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
             fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
           }}>
             {chip.v}
-          </span>
-        </div>
+                  </span>
+                </div>
       ))}
-    </div>
+          </div>
   );
 
   return (
@@ -876,8 +660,8 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
       {/* Compact segment meta — avg sentiment dials */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 14 }}>
         {[
-          { label: "HV Customers", color: T.cyan,  count: "148K accounts", vol: HV_INTENTS.reduce((a, r) => a + r.volume, 0), avg: avgHV, note: "Private · HNI · Mass Affluent" },
-          { label: "LV Customers", color: T.amber, count: "2.41M accounts", vol: LV_INTENTS.reduce((a, r) => a + r.volume, 0), avg: avgLV, note: "Mass Retail · Digital-only" },
+          { label: "HV Customers", color: T.cyan,  count: "148K accounts", avg: avgHV, nps: hvNps, note: "Private · HNI · Mass Affluent" },
+          { label: "LV Customers", color: T.amber, count: "2.41M accounts", avg: avgLV, nps: lvNps, note: "Mass Retail · Digital-only" },
         ].map((m) => {
           const avgColor = sentimentColor(T, m.avg);
           const dialPct = ((m.avg + 1) / 2) * 100; // map -1..+1 to 0..100%
@@ -903,12 +687,10 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
                   fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
                 }}>
                   <span>{m.count}</span>
-                  <span style={{ color: T.borderLight }}>·</span>
-                  <span>{m.vol.toLocaleString()} contacts/mo</span>
-                </div>
-              </div>
+          </div>
+          </div>
               <div style={{ textAlign: "right", minWidth: 110 }}>
-                <div style={{ fontSize: 9.5, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.7 }}>Avg sentiment</div>
+                <div style={{ fontSize: 9.5, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.7 }}>Happiness score</div>
                 <div style={{
                   fontSize: 22, fontWeight: 800, color: avgColor,
                   fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
@@ -916,7 +698,13 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
                 }}>
                   <span style={{ fontSize: 18 }}>{sentimentFace(m.avg)}</span>
                   <span>{m.avg > 0 ? "+" : ""}{m.avg.toFixed(2)}</span>
-                </div>
+      </div>
+                <div style={{
+                  marginTop: 4, fontSize: 10, color: T.textMut,
+                  textTransform: "uppercase", letterSpacing: 0.65,
+                }}>
+                  NPS score <span style={{ color: avgColor, fontWeight: 800, fontFamily: "var(--mono)" }}>{m.nps > 0 ? "+" : ""}{m.nps}</span>
+          </div>
                 {/* Mini sentiment scale -1 → +1 */}
                 <div style={{
                   marginTop: 8, position: "relative", height: 4, borderRadius: 999,
@@ -935,12 +723,12 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
                   fontFamily: "var(--mono)", fontVariantNumeric: "tabular-nums",
                 }}>
                   <span>-1</span><span>0</span><span>+1</span>
-                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
+          </div>
+          </div>
+                );
+              })}
+        </div>
 
       {/* Two-column ranking tables */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
@@ -950,7 +738,6 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
           color={T.cyan}
           rows={HV_INTENTS}
           T={T}
-          max={maxHV}
         />
         <IntentGroupCard
           title="LV · Top Intents"
@@ -958,9 +745,8 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
           color={T.amber}
           rows={LV_INTENTS}
           T={T}
-          max={maxLV}
-        />
-      </div>
+      />
+    </div>
 
     </AIPanel>
   );
@@ -970,15 +756,6 @@ function HVvsLVIntentPanel({ T }: { T: DashboardThemeTokens }) {
    CARD 2 — BRAND & REPUTATION RISK
    ──────────────────────────────────────────────────────────────────────── */
 
-const BRAND_RT = [
-  { t: "-6h", mentions: 210, sentiment: 0.58 },
-  { t: "-5h", mentions: 240, sentiment: 0.54 },
-  { t: "-4h", mentions: 290, sentiment: 0.49 },
-  { t: "-3h", mentions: 380, sentiment: 0.42 },
-  { t: "-2h", mentions: 470, sentiment: 0.38 },
-  { t: "-1h", mentions: 520, sentiment: 0.35 },
-  { t: "Now", mentions: 580, sentiment: 0.33 },
-];
 
 const MEDIA = [
   { outlet: "This Is Money",   tone: "negative", reach: 840,  time: "2h ago",  title: "UK bank under fire for hidden EMI penalties" },
@@ -990,74 +767,456 @@ const MEDIA = [
 
 // Feature requests surfaced from voice, chat, social, app store and community forums —
 // Ranjith's explicit ask: "show what conversations are uncovering… new feature requests".
-const FEATURE_REQUESTS = [
-  { req: "Joint account in-app invites",         mentions: 284, sentiment: 0.72, channels: "App · Chat · Reddit" },
-  { req: "Savings pots / auto-rules",            mentions: 246, sentiment: 0.78, channels: "App · Trustpilot"    },
-  { req: "Real-time FX transfers",               mentions: 198, sentiment: 0.66, channels: "Social · Email"      },
-  { req: "Biometric re-auth on high-value txns", mentions: 162, sentiment: 0.70, channels: "Chat · App"          },
-  { req: "Investment dashboard integration",     mentions: 141, sentiment: 0.64, channels: "App · Voice"         },
-  { req: "Pay-by-link for small business",       mentions: 104, sentiment: 0.69, channels: "Email · Social"      },
+const SOCIAL_CHANNEL_ORDER = ["App Store", "Play Store", "Reddit", "Trustpilot", "X (Twitter)"] as const;
+type SocialChannel = (typeof SOCIAL_CHANNEL_ORDER)[number];
+const SOCIAL_CHANNEL_COLORS: Record<SocialChannel, string> = {
+  "App Store": "#9333EA",
+  "Play Store": "#0891B2",
+  Reddit: "#B45309",
+  Trustpilot: "#65A30D",
+  "X (Twitter)": "#64748B",
+};
+type FeatureRequestRow = {
+  req: string;
+  mentions: number;
+  sentiment: number;
+  channels: string;
+  channelSplit: Record<SocialChannel, number>;
+};
+const FEATURE_REQUESTS: FeatureRequestRow[] = [
+  {
+    req: "Joint account in-app invites",
+    mentions: 284,
+    sentiment: 0.72,
+    channels: "App Store · Play Store · Reddit",
+    channelSplit: { "App Store": 142, "Play Store": 68, Reddit: 49, Trustpilot: 17, "X (Twitter)": 8 },
+  },
+  {
+    req: "Savings pots / auto-rules",
+    mentions: 246,
+    sentiment: 0.78,
+    channels: "App Store · Trustpilot · X (Twitter)",
+    channelSplit: { "App Store": 124, "Play Store": 30, Reddit: 18, Trustpilot: 52, "X (Twitter)": 22 },
+  },
+  {
+    req: "Real-time FX transfers",
+    mentions: 198,
+    sentiment: 0.66,
+    channels: "Reddit · X (Twitter) · Play Store",
+    channelSplit: { "App Store": 31, "Play Store": 44, Reddit: 69, Trustpilot: 18, "X (Twitter)": 36 },
+  },
+  {
+    req: "Biometric re-auth on high-value txns",
+    mentions: 162,
+    sentiment: 0.70,
+    channels: "Play Store · App Store · X (Twitter)",
+    channelSplit: { "App Store": 55, "Play Store": 61, Reddit: 16, Trustpilot: 10, "X (Twitter)": 20 },
+  },
+  {
+    req: "Investment dashboard integration",
+    mentions: 141,
+    sentiment: 0.64,
+    channels: "App Store · Reddit · Trustpilot",
+    channelSplit: { "App Store": 62, "Play Store": 22, Reddit: 34, Trustpilot: 15, "X (Twitter)": 8 },
+  },
+  {
+    req: "Pay-by-link for small business",
+    mentions: 104,
+    sentiment: 0.69,
+    channels: "X (Twitter) · Reddit · Trustpilot",
+    channelSplit: { "App Store": 15, "Play Store": 17, Reddit: 33, Trustpilot: 19, "X (Twitter)": 20 },
+  },
 ];
 
 export function BrandReputationDrillDown({ onBack }: { onBack: () => void }) {
   const T = useDashboardTheme();
+  const renderFeatureRequestTooltip = ({ active, payload }: any) => {
+    if (!active || !payload || payload.length === 0) return null;
+    const row = payload[0].payload as FeatureRequestRow;
+    const total = Math.max(row.mentions, 1);
+    return (
+      <div style={{
+        minWidth: 260,
+        background: "#090f1f",
+        border: "1px solid rgba(148,163,184,0.2)",
+        borderRadius: 10,
+        padding: "10px 12px",
+        boxShadow: "0 10px 28px rgba(0,0,0,0.45)",
+      }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: T.text, marginBottom: 2, textTransform: "uppercase", letterSpacing: 0.45 }}>
+          {row.req}
+        </div>
+        <div style={{ fontSize: 10, color: T.textMut, marginBottom: 8 }}>
+          Mentions by social channel · total {row.mentions}
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          {SOCIAL_CHANNEL_ORDER.map((ch) => {
+            const count = row.channelSplit[ch] ?? 0;
+            const pct = ((count / total) * 100).toFixed(1);
+            return (
+              <div key={ch} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                  <span style={{ width: 7, height: 7, borderRadius: "50%", background: SOCIAL_CHANNEL_COLORS[ch], display: "inline-block" }} />
+                  <span style={{ fontSize: 10.5, color: T.textSec }}>{ch}</span>
+                </div>
+                <span style={{ fontSize: 10.5, fontWeight: 700, color: SOCIAL_CHANNEL_COLORS[ch], fontFamily: "var(--mono)" }}>
+                  {count} ({pct}%)
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  const RISK_TIERS = [
+    { label: "Critical ≥150", color: T.red },
+    { label: "High 100–149",  color: T.amber },
+    { label: "Watch 50–99",   color: T.gold },
+    { label: "Stable <50",    color: "#64748B" },
+  ];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <DrillPageHeader
-        onBack={onBack}
-        title="Brand & Reputation Risk"
-        sub="Real-time brand, social, review-site and media signals — where is perception eroding and what is driving it?"
-      />
+      <div style={{
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "space-between",
+        gap: 16,
+        flexWrap: "wrap",
+      }}>
+        <DrillPageHeader
+          onBack={onBack}
+          title="Brand & Reputation Risk"
+          sub="Real-time brand, social, review-site and media signals — where is perception eroding and what is driving it?"
+        />
 
-      <div style={{ display: "grid", gridTemplateColumns: "1.3fr 1fr", gap: 16, alignItems: "start" }}>
-        <RetailTopTopicsByVirality />
-        <RetailMomentumHashtags />
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "auto 1fr",
+          columnGap: 14,
+          rowGap: 9,
+          alignItems: "center",
+          padding: "5px 7px",
+          borderRadius: 10,
+          background: T.elevated,
+          border: `1px solid ${T.borderLight}`,
+        }}>
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: T.textMut,
+            textTransform: "uppercase", letterSpacing: 0.7,
+          }}>
+            Channels
+          </span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+            {Object.entries(VOC_CHANNEL_COLORS).map(([ch, color]) => (
+              <div key={ch} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", background: color, display: "inline-block" }} />
+                <span style={{ fontSize: 12, color: T.text, fontWeight: 500 }}>{ch}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ gridColumn: "1 / -1", height: 1, background: T.borderLight }} />
+
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: T.textMut,
+            textTransform: "uppercase", letterSpacing: 0.7,
+          }}>
+            Risk
+          </span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+            {RISK_TIERS.map((chip) => (
+              <div key={chip.label} style={{
+                display: "inline-flex", alignItems: "center", gap: 5,
+                padding: "2px 8px", borderRadius: 999,
+                background: `${chip.color}14`,
+                border: `1px solid ${chip.color}55`,
+                whiteSpace: "nowrap",
+              }}>
+                <span style={{ width: 7, height: 7, borderRadius: "50%", background: chip.color, display: "inline-block", flexShrink: 0 }} />
+                <span style={{ fontSize: 10, fontWeight: 600, color: T.text, letterSpacing: 0.2 }}>{chip.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
+      {/* Row 0 — 1. Top Topics at Risk · 2. Friction Drivers · 3. Channels at Risk */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr)",
-        gridAutoRows: "380px",
+        gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(0, 1.05fr)",
+        gridAutoRows: "420px",
         gap: 16,
         alignItems: "stretch",
       }}>
+        <RetailTopTopicsByVirality />
+
+        {/* Card 2 — Friction Drivers (linked to top topics) */}
         <AIPanel
-          title="VoC Friction Drivers"
-          subtitle="Issue Statement Extractor · Top 10 complaint phrases"
+          title="✨ Top Friction Drivers"
+          subtitle="Complaint phrases extracted from the top reputational topics"
           accentColor="#b90abd"
           fill
         >
-          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
-            <NarrativeLens phrases={REUSED_NARRATIVE_PHRASES} variant="embedded" />
-          </div>
-        </AIPanel>
+          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ flex: 1, minHeight: 0, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+              {REUSED_NARRATIVE_PHRASES.map((p, i) => {
+                const tierColor = TOPIC_TIER_COLOR[p.topic] ?? "#64748B";
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "20px minmax(0, 1fr) auto",
+                      alignItems: "center",
+                      gap: 10,
+                      padding: "7px 0",
+                      borderBottom: i === REUSED_NARRATIVE_PHRASES.length - 1 ? "none" : `1px solid ${T.borderLight}`,
+                    }}
+                  >
+                    <span style={{
+                      fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700,
+                      color: "#64748B", textAlign: "right",
+                    }}>
+                      {i + 1}.
+                    </span>
 
-        <AIPanel title="Brand Pulse" subtitle="Mentions (bars) vs net sentiment (line) · last 6 hours" accentColor={T.red} fill>
-          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", width: "100%" }}>
-            <div style={{ width: "100%", flex: 1, minHeight: 250 }}>
-              <ResponsiveContainer>
-                <ComposedChart data={BRAND_RT} margin={{ top: 6, right: 14, left: -10, bottom: 0 }}>
-                  <defs>
-                    <linearGradient id="mentionsGrad" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor={T.red} stopOpacity={0.7} />
-                      <stop offset="100%" stopColor={T.red} stopOpacity={0.08} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid stroke={T.borderLight} strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="t" tick={axisTickStyle(T)} stroke={T.borderLight} />
-                  <YAxis yAxisId="left"  tick={axisTickStyle(T)} stroke={T.borderLight} />
-                  <YAxis yAxisId="right" orientation="right" domain={[0, 1]} tick={axisTickStyle(T)} stroke={T.borderLight} />
-                  <Tooltip content={<ChartTip T={T} />} />
-                  <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
-                  <Area yAxisId="left"  type="monotone" dataKey="mentions"  name="Mentions"  stroke={T.red}  fill="url(#mentionsGrad)" strokeWidth={2} />
-                  <Line yAxisId="right" type="monotone" dataKey="sentiment" name="Sentiment" stroke={T.cyan} strokeWidth={2.5} dot={{ r: 3 }} />
-                </ComposedChart>
-              </ResponsiveContainer>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{
+                        fontSize: 12.5, fontWeight: 600, color: T.text,
+                        overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                      }}>
+                        &ldquo;{p.phrase}&rdquo;
+                      </div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 3, flexWrap: "wrap" }}>
+                        <span style={{
+                          fontSize: 9.5, fontWeight: 700, color: tierColor,
+                          padding: "1px 6px", borderRadius: 4,
+                          background: `${tierColor}18`,
+                          border: `1px solid ${tierColor}44`,
+                          textTransform: "uppercase", letterSpacing: 0.3,
+                        }}>
+                          → {p.topic}
+                        </span>
+                        <span style={{ fontSize: 9.5, color: T.textMut, fontFamily: "var(--mono)" }}>
+                          {p.count.toLocaleString()} · {p.percentage}%
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                      <span style={{ display: "inline-flex", gap: 3 }}>
+                        {p.channels.map((ch) => (
+                          <span
+                            key={ch}
+                            title={ch}
+                            style={{
+                              width: 6, height: 6, borderRadius: "50%",
+                              background: VOC_CHANNEL_COLORS[ch] ?? T.textMut,
+                              display: "inline-block",
+                            }}
+                          />
+                        ))}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </AIPanel>
 
+        {/* Card 3 — Channels at Risk (sentiment · hot drivers · 6-week trend) */}
+        {(() => {
+          type HotDriver = { label: string; topic: string };
+          type ChannelRisk = {
+            name: string;
+            channelColor: string;
+            trend: number[]; // 6 weekly sentiment points, oldest → now
+            hot: HotDriver[];
+            note?: string;
+          };
+          const tierFor = (v: number) =>
+            v < 0.50 ? T.red : v < 0.60 ? T.amber : v < 0.70 ? T.gold : "#22C55E";
+
+          const CHANNELS: ChannelRisk[] = [
+            {
+              name: "X (Twitter)", channelColor: VOC_CHANNEL_COLORS["X (Twitter)"],
+              trend: [0.55, 0.50, 0.44, 0.49, 0.41, 0.36],
+              hot: [
+                { label: "PAY", topic: "Payment Processing Failure" },
+                { label: "FEE", topic: "Fee Structure Criticism" },
+                { label: "CSV", topic: "Customer Service" },
+              ],
+            },
+            {
+              name: "Play Store", channelColor: VOC_CHANNEL_COLORS["Play Store"],
+              trend: [0.63, 0.58, 0.62, 0.55, 0.57, 0.52],
+              hot: [
+                { label: "APP", topic: "Mobile App Crashes" },
+                { label: "ACC", topic: "Account Access Problems" },
+                { label: "PAY", topic: "Payment Processing Failure" },
+              ],
+            },
+            {
+              name: "Trustpilot", channelColor: VOC_CHANNEL_COLORS["Trustpilot"],
+              trend: [0.60, 0.62, 0.56, 0.59, 0.55, 0.54],
+              hot: [
+                { label: "FEE", topic: "Fee Structure Criticism" },
+                { label: "PAY", topic: "Payment Processing Failure" },
+                { label: "CSV", topic: "Customer Service" },
+              ],
+            },
+            {
+              name: "Reddit", channelColor: VOC_CHANNEL_COLORS["Reddit"],
+              trend: [0.62, 0.59, 0.61, 0.57, 0.59, 0.56],
+              hot: [
+                { label: "ACC", topic: "Account Access Problems" },
+                { label: "CSV", topic: "Customer Service" },
+                { label: "CRB", topic: "Cross Border Issues" },
+              ],
+            },
+            {
+              name: "App Store", channelColor: VOC_CHANNEL_COLORS["App Store"],
+              trend: [0.71, 0.73, 0.71, 0.74, 0.72, 0.74],
+              hot: [{ label: "APP", topic: "Mobile App Crashes" }],
+              note: "(quality praise)",
+            },
+          ];
+
+          const ranked = [...CHANNELS].sort((a, b) => a.trend[5] - b.trend[5]);
+
+          const Sparkline = ({ data, color, id, channel }: { data: number[]; color: string; id: string; channel: string }) => {
+            const chartData = data.map((v, i) => ({
+              week: i === data.length - 1 ? "Now" : `W-${data.length - 1 - i}`,
+              v,
+            }));
+            const gradId = `spark-grad-${id}`;
+            const renderTip = ({ active, payload }: any) => {
+              if (!active || !payload || payload.length === 0) return null;
+              const d = payload[0].payload;
+              return (
+                <div style={{
+                  background: "#0D0D0D",
+                  border: `1px solid ${color}66`,
+                  borderRadius: 6,
+                  padding: "4px 8px",
+                  boxShadow: "0 6px 18px rgba(0,0,0,0.45)",
+                  fontFamily: "var(--mono)",
+                }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color }}>{d.v.toFixed(2)}</div>
+                  <div style={{ fontSize: 9, color: "#94A3B8" }}>{channel} · {d.week}</div>
+                </div>
+              );
+            };
+            return (
+              <ResponsiveContainer width="100%" height={32}>
+                <AreaChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
+                  <defs>
+                    <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"   stopColor={color} stopOpacity={0.55} />
+                      <stop offset="100%" stopColor={color} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area
+                    type="monotone"
+                    dataKey="v"
+                    stroke={color}
+                    strokeWidth={1.75}
+                    fill={`url(#${gradId})`}
+                    isAnimationActive={false}
+                    dot={false}
+                    activeDot={{ r: 3, fill: color, stroke: "#0D0D0D", strokeWidth: 1 }}
+                  />
+                  <Tooltip
+                    cursor={{ stroke: color, strokeWidth: 1, strokeDasharray: "2 3" }}
+                    content={renderTip}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            );
+          };
+
+          return (
+            <AIPanel
+              title="Channels at Risk"
+              subtitle="Sorted by current sentiment · 6-week trend"
+              accentColor={T.red}
+              fill
+            >
+              <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 8 }}>
+                {ranked.map((c) => {
+                  const now = c.trend[5];
+                  const first = c.trend[0];
+                  const delta = now - first;
+                  const nowColor = tierFor(now);
+                  const deltaColor = delta < 0 ? T.red : delta > 0 ? "#22C55E" : T.textMut;
+                  const deltaSign = delta > 0 ? "+" : "";
+                  return (
+                    <div
+                      key={c.name}
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr) auto",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "8px 2px",
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                        <span style={{ width: 8, height: 8, borderRadius: "50%", background: c.channelColor, display: "inline-block", flexShrink: 0 }} />
+                        <span style={{ fontSize: 12.5, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {c.name}
+                        </span>
+                      </div>
+
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0, width: "100%" }}>
+                        <Sparkline
+                          data={c.trend}
+                          color={deltaColor}
+                          id={c.name.replace(/[^a-z0-9]/gi, "")}
+                          channel={c.name}
+                        />
+                      </div>
+
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, whiteSpace: "nowrap" }}>
+                        <span style={{ fontSize: 15, fontFamily: "var(--mono)", fontWeight: 700, color: nowColor, lineHeight: 1 }}>
+                          {now.toFixed(2)}
+                        </span>
+                        <span style={{ fontSize: 9.5, fontFamily: "var(--mono)", fontWeight: 700, color: deltaColor, lineHeight: 1 }}>
+                          {deltaSign}{delta.toFixed(2)} over 6wks
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </AIPanel>
+          );
+        })()}
+      </div>
+
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "1.3fr 1fr",
+        gridAutoRows: "460px",
+        gap: 16,
+        alignItems: "stretch",
+      }}>
+        <RetailMomentumHashtags />
+        <RetailInfluencerWatchlist />
+      </div>
+
+      {/* Media Monitor + Customer Feature Requests side by side */}
+      <div style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr)",
+        gridAutoRows: "380px",
+        gap: 16,
+        alignItems: "stretch",
+      }}>
         <AIPanel title="Media Monitor" subtitle="Tier-1 outlets · weighted by reach · tone auto-classified" accentColor={T.red} fill>
           <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0, overflowY: "auto" }}>
             {MEDIA.map((m, i) => {
@@ -1082,18 +1241,15 @@ export function BrandReputationDrillDown({ onBack }: { onBack: () => void }) {
             })}
           </div>
         </AIPanel>
-      </div>
 
-      {/* Row 3 — Feature request surfacer */}
-      <AIPanel title="Customer Feature Requests" subtitle="Requests surfaced from conversations across voice, chat, app store and social — ranked by mention volume" accentColor={T.green} ai aiModel="Request Mining">
-        <div style={{ display: "grid", gridTemplateColumns: "1.2fr 0.8fr", gap: 16 }}>
-          <div style={{ width: "100%", height: 260 }}>
-            <ResponsiveContainer>
+        <AIPanel title="Top Requests for Features" subtitle="Requests surfaced from conversations across voice, chat, app store and social — ranked by mention volume" accentColor={T.green} ai aiModel="Request Mining" fill>
+          <div style={{ flex: 1, minHeight: 0, width: "100%" }}>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={FEATURE_REQUESTS} layout="vertical" margin={{ top: 6, right: 16, left: 6, bottom: 0 }}>
                 <CartesianGrid stroke={T.borderLight} strokeDasharray="3 3" horizontal={false} />
                 <XAxis type="number" tick={axisTickStyle(T)} stroke={T.borderLight} />
                 <YAxis type="category" dataKey="req" tick={axisTickStyle(T)} stroke={T.borderLight} width={210} />
-                <Tooltip content={<ChartTip T={T} />} />
+                <Tooltip content={renderFeatureRequestTooltip} />
                 <Bar dataKey="mentions" name="Mentions" fill={T.green} radius={[0, 4, 4, 0]}>
                   {FEATURE_REQUESTS.map((d, i) => (
                     <Cell key={i} fill={d.sentiment > 0.72 ? T.green : d.sentiment > 0.66 ? T.cyan : T.amber} />
@@ -1102,37 +1258,8 @@ export function BrandReputationDrillDown({ onBack }: { onBack: () => void }) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-            {FEATURE_REQUESTS.map((f) => (
-              <div key={f.req} style={{
-                padding: "8px 10px", borderRadius: 10, background: T.card,
-                border: `1px solid ${T.borderLight}`,
-              }}>
-                <div style={{ fontSize: 11.5, color: T.text, fontWeight: 600 }}>{f.req}</div>
-                <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 3 }}>
-                  <span style={{ fontSize: 10, color: T.textMut }}>{f.channels}</span>
-                  <span style={{ fontSize: 10, color: T.green, fontFamily: "var(--mono)", fontWeight: 700 }}>
-                    sent. {f.sentiment.toFixed(2)}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </AIPanel>
-
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(0, 1.15fr) minmax(0, 1fr)",
-        gridAutoRows: "520px",
-        gap: 16,
-        alignItems: "stretch",
-      }}>
-        <RetailInfluencerWatchlist />
-        <RetailComplianceHealth />
+        </AIPanel>
       </div>
-
-      <RetailViolationsAndRiskAlerts />
     </div>
   );
 }
@@ -1140,6 +1267,14 @@ export function BrandReputationDrillDown({ onBack }: { onBack: () => void }) {
 /* ─────────────────────────────────────────────────────────────────────────
    CARD 3 — SERVICE FULFILMENT
    ──────────────────────────────────────────────────────────────────────── */
+
+const FCR_CHANNEL_COLORS: Record<string, string> = {
+  Voice:    "#E11D48",  // Deep Rose
+  Chat:     "#EA580C",  // Burnt Orange
+  Email:    "#0D9488",  // Teal / Pine
+  "Social/X": "#22c55e",  // Green
+  "App SS": "#2563EB",  // Royal Blue
+};
 
 const FCR_CH = [
   { ch: "Voice",    actual: 74, target: 80, last: 78 },
@@ -1421,154 +1556,109 @@ function ContactResolutionTree({
 }
 
 function ServiceFulfilmentBackOfficeQueueDepth({ T }: { T: DashboardThemeTokens }) {
-  const bodyScroll: CSSProperties = {
-    maxHeight: "min(337px, 40vh)",
-    overflowY: "auto",
-    overflowX: "hidden",
-    minWidth: 0,
+  const channels = ["email", "ticket", "chat", "voice"] as const;
+  const channelIcons = {
+    email: Mail,
+    ticket: Ticket,
+    chat: MessageSquare,
+    voice: Phone,
+  } as const;
+  const channelIconColors = {
+    email: "#bfdbfe",
+    ticket: "#e9d5ff",
+    chat: "#bbf7d0",
+    voice: "#fecaca",
+  } as const;
+  const heatmapCounts: Record<typeof channels[number], Record<typeof channels[number], number>> = {
+    email: { email: 0, ticket: 2, chat: 1, voice: 0 },
+    ticket: { email: 1, ticket: 1, chat: 0, voice: 1 },
+    chat: { email: 0, ticket: 1, chat: 1, voice: 1 },
+    voice: { email: 0, ticket: 1, chat: 0, voice: 0 },
   };
+
+  let maxCount = 0;
+  channels.forEach((origin) => {
+    channels.forEach((target) => {
+      maxCount = Math.max(maxCount, heatmapCounts[origin][target]);
+    });
+  });
+
+  const heatTone = (count: number) => {
+    if (count <= 0) return { bg: "transparent", glow: "none" };
+    const ratio = count / Math.max(1, maxCount);
+    if (ratio >= 0.85) return { bg: "rgba(223,22,22,0.80)", glow: "0 0 12px rgba(223,22,22,0.96), 0 0 6px rgba(223,22,22,0.96)" };
+    if (ratio >= 0.45) return { bg: "rgba(223,131,22,0.68)", glow: "0 0 12px rgba(223,131,22,0.81), 0 0 6px rgba(223,131,22,0.81)" };
+    return { bg: "rgba(43,223,22,0.42)", glow: "0 0 10px rgba(43,223,22,0.62), 0 0 5px rgba(43,223,22,0.62)" };
+  };
+
   return (
     <AIPanel
-      title="Back-office Queue Depth"
-      subtitle="Pending cases by team · bucketed by SLA age · how much are we over / under SLA?"
+      title="Cross channel Escalation"
+      subtitle="Customer escalation flow visualization"
       accentColor={T.amber}
+      fill
     >
-      <div style={bodyScroll}>
-      {/* Legend: bucket tones are mapped against each team's SLA line */}
-      <div style={{
-        display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center",
-        fontSize: 10.5, color: T.textMut, marginBottom: 10,
-      }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 10, height: 10, borderRadius: 2, background: T.green }} /> Within SLA
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 10, height: 10, borderRadius: 2, background: T.amber }} /> Breached
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <span style={{ width: 10, height: 10, borderRadius: 2, background: T.red }} /> Far-breach (critical)
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginLeft: "auto" }}>
-          <span style={{
-            display: "inline-block", width: 18, height: 0,
-            borderTop: `2px dashed ${T.text}`, opacity: 0.7,
-          }} /> SLA threshold
-        </div>
-      </div>
-
-      {/* Per-team rows: name + SLA pill, stacked bar split at SLA cut, story under */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        {BACKOFFICE_QUEUE.map((row) => {
-          const total = row["0-1d"] + row["1-3d"] + row["3-7d"] + row[">7d"];
-          const buckets: Array<{ key: "0-1d" | "1-3d" | "3-7d" | ">7d"; label: string; value: number }> = [
-            { key: "0-1d", label: "0–1d", value: row["0-1d"] },
-            { key: "1-3d", label: "1–3d", value: row["1-3d"] },
-            { key: "3-7d", label: "3–7d", value: row["3-7d"] },
-            { key: ">7d",  label: ">7d",  value: row[">7d"] },
-          ];
-          const withinSla = buckets
-            .filter((b) => bucketTone(b.key, row.slaDays) === "ok")
-            .reduce((s, b) => s + b.value, 0);
-          const breached = total - withinSla;
-          const farBreach = row[">7d"] > 0 && row.slaDays < 7 ? row[">7d"] : 0;
-
-          let thresholdPct = 0;
-          let running = 0;
-          for (const b of buckets) {
-            running += b.value;
-            if (bucketTone(b.key, row.slaDays) === "ok") {
-              thresholdPct = total > 0 ? running / total : 0;
-            }
-          }
-
-          return (
-            <div key={row.team} style={{
-              padding: "10px 12px", borderRadius: 10,
-              background: T.elevated,
-              border: `1px solid ${T.borderLight}`,
-              borderLeft: `3px solid ${farBreach > 0 ? T.red : breached > 0 ? T.amber : T.green}`,
-            }}>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6, flexWrap: "wrap", gap: 6 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
-                  <span style={{ fontSize: 12.5, fontWeight: 700, color: T.text }}>{row.team}</span>
-                  <span style={{
-                    fontSize: 9.5, fontWeight: 700, color: T.text, fontFamily: "var(--mono)",
-                    padding: "2px 7px", borderRadius: 999,
-                    background: `${T.text}14`, border: `1px solid ${T.borderLight}`,
-                  }}>
-                    SLA {row.slaDays}d
-                  </span>
-                </div>
-                <div style={{ fontSize: 11, color: T.textMut, fontFamily: "var(--mono)" }}>
-                  <span style={{ color: T.text, fontWeight: 700 }}>{total.toLocaleString()}</span> total
-                  <span style={{ margin: "0 6px", color: T.borderLight }}>·</span>
-                  <span style={{ color: T.green, fontWeight: 700 }}>{withinSla.toLocaleString()}</span> within
-                  <span style={{ margin: "0 6px", color: T.borderLight }}>·</span>
-                  <span style={{ color: breached > 0 ? T.amber : T.textMut, fontWeight: 700 }}>{breached.toLocaleString()}</span> breached
-                  {farBreach > 0 ? (
-                    <>
-                      <span style={{ margin: "0 6px", color: T.borderLight }}>·</span>
-                      <span style={{ color: T.red, fontWeight: 700 }}>{farBreach.toLocaleString()}</span> critical
-                    </>
-                  ) : null}
-                </div>
-              </div>
-
-              <div style={{
-                position: "relative",
-                display: "flex", height: 18, borderRadius: 6, overflow: "hidden",
-                background: `${T.borderLight}`, border: `1px solid ${T.borderLight}`,
-              }}>
-                {buckets.map((b) => {
-                  const tone = bucketTone(b.key, row.slaDays);
-                  const c = tone === "ok" ? T.green : tone === "warn" ? T.amber : T.red;
-                  const w = total > 0 ? (b.value / total) * 100 : 0;
-                  return (
-                    <div
-                      key={b.key}
-                      title={`${b.label}: ${b.value} cases · ${tone === "ok" ? "within SLA" : tone === "warn" ? "breached" : "critical"}`}
-                      style={{
-                        width: `${w}%`, background: c,
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 10, fontWeight: 700, color: "#0a0e16", fontFamily: "var(--mono)",
-                        transition: "width 0.5s",
-                      }}
-                    >
-                      {w >= 10 ? b.value : ""}
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <thead>
+            <tr>
+              <th style={{ padding: "10px 12px", textAlign: "left", fontSize: 12, fontWeight: 700, color: T.textSec }}>
+                Origin Channels
+              </th>
+              {channels.map((target) => {
+                const Icon = channelIcons[target];
+                return (
+                  <th key={target} style={{ padding: "10px 12px", textAlign: "center", fontSize: 12, fontWeight: 700, color: T.textSec }}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                      <Icon size={16} style={{ color: channelIconColors[target] }} />
+                      <span style={{ textTransform: "capitalize", fontSize: 11 }}>{target}</span>
                     </div>
-                  );
-                })}
-                {thresholdPct > 0 && thresholdPct < 1 ? (
-                  <div style={{
-                    position: "absolute",
-                    left: `${thresholdPct * 100}%`,
-                    top: -3, bottom: -3,
-                    width: 0,
-                    borderLeft: `2px dashed ${T.text}`,
-                    opacity: 0.85,
-                    pointerEvents: "none",
-                  }} />
-                ) : null}
-              </div>
-
-              <div style={{ fontSize: 10.5, color: T.textMut, marginTop: 6, lineHeight: 1.5 }}>
-                {total.toLocaleString()} in queue → <span style={{ color: T.green, fontWeight: 600 }}>{withinSla.toLocaleString()} within {row.slaDays}d</span>
-                {breached > 0 ? (
-                  <> → <span style={{ color: T.amber, fontWeight: 600 }}>{breached.toLocaleString()} past SLA</span></>
-                ) : null}
-                {farBreach > 0 ? (
-                  <> → <span style={{ color: T.red, fontWeight: 600 }}>{farBreach.toLocaleString()} over 7d</span></>
-                ) : null}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ fontSize: 10.5, color: T.textMut, marginTop: 10, lineHeight: 1.55 }}>
-        <span style={{ color: T.red, fontWeight: 700 }}>Mortgage Ops</span> has 52 cases over 7 days against a 3d SLA — the driver of the Mortgage Servicing FCR drop.
-        KYC &amp; Onboarding also shows {BACKOFFICE_QUEUE[0]["3-7d"] + BACKOFFICE_QUEUE[0][">7d"]} cases past the 3-day target.
-      </div>
+                  </th>
+                );
+              })}
+            </tr>
+          </thead>
+          <tbody>
+            {channels.map((origin) => {
+              const OriginIcon = channelIcons[origin];
+              return (
+                <tr key={origin}>
+                  <td style={{ padding: "10px 12px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <OriginIcon size={16} style={{ color: channelIconColors[origin] }} />
+                      <span style={{ textTransform: "capitalize", fontSize: 12, fontWeight: 600, color: T.text }}>{origin}</span>
+                    </div>
+                  </td>
+                  {channels.map((target) => {
+                    const count = heatmapCounts[origin][target];
+                    const tone = heatTone(count);
+                    return (
+                      <td
+                        key={`${origin}-${target}`}
+                        style={{
+                          padding: "12px",
+                          textAlign: "center",
+                          background: tone.bg,
+                          boxShadow: tone.glow,
+                          borderRadius: 6,
+                        }}
+                      >
+                        {count > 0 ? (
+                          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+                            <span style={{ fontSize: 18, fontWeight: 800, color: "#fff", lineHeight: 1 }}>{count}</span>
+                            <span style={{ fontSize: 10, color: T.textSec }}>customers</span>
+                          </div>
+                        ) : (
+                          <span style={{ fontSize: 12, color: T.textMut }}>-</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </AIPanel>
   );
@@ -1663,56 +1753,23 @@ export function ServiceFulfilmentDrillDown({ onBack }: { onBack: () => void }) {
         sub="Which channels, intents and stages are breaking SLA, FCR and AHT?"
       />
 
+      <RetailSLAPerformanceOverview />
+
       <RetailIntentPressureAlerts />
 
       <div style={{
-        display: "grid",
-        gridTemplateColumns: "minmax(300px, 0.95fr) minmax(0, 1.35fr)",
-        gap: 16,
-        alignItems: "start",
+        background: "rgba(10,10,10,0.85)",
+        border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: 16,
+        padding: 20,
       }}>
-        <div style={{ minWidth: 0 }}>
-          <RetailEscalationRiskMonitor />
-        </div>
-        <div style={{
-          minWidth: 0,
-          display: "flex",
-          flexDirection: "column",
-          gap: 16,
-        }}>
-          <div style={{ minWidth: 0 }}>
-            <ServiceFulfilmentBackOfficeQueueDepth T={T} />
-          </div>
-          <div style={{ minWidth: 0, flexShrink: 0 }}>
-            <ServiceFulfilmentIntentLeaderboard T={T} />
-          </div>
-        </div>
+        <IntentScoreHeatmap isDarkMode />
       </div>
 
-      {/* Row 1 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: 16 }}>
-        <AIPanel title="FCR Intelligence" subtitle="Actual vs. target · dashed line = last month" accentColor={T.green}>
-          <div style={{ width: "100%", height: 240 }}>
-            <ResponsiveContainer>
-              <ComposedChart data={FCR_CH} margin={{ top: 6, right: 12, left: -14, bottom: 0 }}>
-                <CartesianGrid stroke={T.borderLight} strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="ch" tick={axisTickStyle(T)} stroke={T.borderLight} />
-                <YAxis tick={axisTickStyle(T)} stroke={T.borderLight} domain={[0, 100]} />
-                <Tooltip content={<ChartTip T={T} valueSuffix="%" />} />
-                <Legend wrapperStyle={{ fontSize: 11 }} iconType="circle" />
-                <Bar dataKey="actual" name="Actual" radius={[4, 4, 0, 0]}>
-                  {FCR_CH.map((d, i) => (
-                    <Cell key={i} fill={d.actual >= d.target ? T.green : d.actual >= d.target - 10 ? T.amber : T.red} />
-                  ))}
-                </Bar>
-                <Bar dataKey="target" name="Target" fill={T.textMut} fillOpacity={0.35} radius={[4, 4, 0, 0]} />
-                <Line dataKey="last" name="Last month" stroke={T.cyan} strokeWidth={2} strokeDasharray="4 3" dot={{ r: 3 }} />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-        </AIPanel>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "stretch" }}>
+        <ServiceFulfilmentBackOfficeQueueDepth T={T} />
 
-        <AIPanel title="SLA Heatmap" subtitle="Intent × channel · intensity = compliance gap" accentColor={T.red}>
+        <AIPanel title="SLA Heatmap" subtitle="Intent × channel · intensity = compliance gap" accentColor={T.red} fill>
           <div style={{ display: "grid", gridTemplateColumns: "120px repeat(4, 1fr)", gap: 4 }}>
             <div />
             {SLA_CHANNELS.map((c) => (
@@ -1745,72 +1802,28 @@ export function ServiceFulfilmentDrillDown({ onBack }: { onBack: () => void }) {
               </Fragment>
             ))}
           </div>
-        </AIPanel>
-      </div>
-
-      {/* Row 2 */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 16 }}>
-        <AIPanel
-          title="Contact Resolution Tree"
-          subtitle={`${CONTACT_TREE.total.toLocaleString()} contacts → Bot vs Human → Closed vs Escalated · escalations have their own SLA`}
-          accentColor={T.red}
-        >
-          <ContactResolutionTree tree={CONTACT_TREE} T={T} />
-        </AIPanel>
-
-        <AIPanel title="Bottleneck Detector" subtitle="Actual vs. SLA at each resolution stage (hours)" accentColor={T.amber} ai aiModel="Process ML">
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {PROCESS_STAGES.map((s, i) => {
-              const color = s.status === "ok" ? T.green : s.status === "warn" ? T.amber : T.red;
-              const ratio = Math.min(s.actual / Math.max(s.sla, 0.3) * 50, 100);
-              const overage = s.actual > s.sla ? (((s.actual - s.sla) / s.sla) * 100).toFixed(0) + "% over" : "within SLA";
-              return (
-                <div key={s.stage} style={{
-                  padding: "10px 12px", borderRadius: 10,
-                  background: `${color}10`,
-                  borderTop: `1px solid ${color}28`,
-                  borderRight: `1px solid ${color}28`,
-                  borderBottom: `1px solid ${color}28`,
-                  borderLeft: `3px solid ${color}`,
-                }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 5 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      <span style={{
-                        width: 20, height: 20, borderRadius: "50%", background: `${color}28`,
-                        display: "inline-flex", alignItems: "center", justifyContent: "center",
-                        fontSize: 10, fontWeight: 800, color, fontFamily: "var(--mono)",
-                      }}>{i + 1}</span>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: T.text }}>{s.stage}</span>
-                    </div>
-                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                      <span style={{ fontSize: 10, color: T.textMut }}>SLA {s.sla}h</span>
-                      <span style={{ fontSize: 13, fontWeight: 800, color, fontFamily: "var(--mono)" }}>{s.actual}h</span>
-                    </div>
-                  </div>
-                  <div style={{ height: 6, borderRadius: 3, background: `${color}25`, overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${ratio}%`, background: color, transition: "width 0.6s" }} />
-                  </div>
-                  <div style={{ fontSize: 10, color: T.textMut, marginTop: 4 }}>{overage}</div>
-                </div>
-              );
-            })}
+          <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 10, paddingTop: 8, borderTop: `1px solid ${T.borderLight}` }}>
+            {[
+              { color: T.green, intensity: "44", label: "≥ 90% — On Track" },
+              { color: T.amber, intensity: "66", label: "75–89% — At Risk" },
+              { color: T.red, intensity: "cc", label: "< 75% — Breaching" },
+            ].map((item) => (
+              <div key={item.label} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <span
+                  style={{
+                    width: 14, height: 14, borderRadius: 4, display: "inline-block",
+                    background: `${item.color}${item.intensity}`,
+                    border: `1px solid ${item.color}55`,
+                  }}
+                />
+                <span style={{ fontSize: 10, color: T.textMut }}>{item.label}</span>
+              </div>
+            ))}
           </div>
         </AIPanel>
+
       </div>
 
-      {/* Moved from Customer Happiness — escalation paths and pillar × intent scoring
-          are operational service-fulfilment signals, not brand/happiness ones. */}
-      <ReusedSlot T={T} label="unified / CrossChannelToneIntelligenceCard" note="Escalation paths across channels (auto-data)">
-        <CrossChannelToneIntelligenceCard />
-      </ReusedSlot>
-
-      <ReusedSlot T={T} label="FCI / IntentScoreHeatmap" note="Pillars × intents score heatmap">
-        <IntentScoreHeatmap isDarkMode />
-      </ReusedSlot>
-
-      <RetailCrossChannelInteractionBreakdownAudit />
-
-      <RetailCrossChannelEmotionShockboard />
     </div>
   );
 }

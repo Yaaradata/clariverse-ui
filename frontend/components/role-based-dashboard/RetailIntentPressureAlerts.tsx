@@ -8,7 +8,12 @@ import {
   Building2,
   RefreshCw,
   Sparkles,
+  ShieldAlert,
+  Layers,
+  Repeat2,
+  BellOff,
 } from "lucide-react";
+
 
 type Accent = "amber" | "rose" | "indigo" | "emerald" | "cyan" | "violet";
 
@@ -74,6 +79,42 @@ const CARDS: Array<{
     cluster: "Wealth / RM handoffs",
     body: "Premier clients ping-pong App → RM email → service centre; average 4.2 touches before resolution; revenue-at-risk flag on 120 relationships.",
     action: "Institute warm transfer protocol with RM presence on first escalation; cap loops at two touches with executive inbox for breaches.",
+  },
+  {
+    id: "escalation-resolved",
+    accent: "rose",
+    title: "Escalation after Resolved",
+    icon: ShieldAlert,
+    cluster: "12 cases · Critical · P1: 9, P2: 3",
+    body: "43% of escalations caused by agents closing tickets without checking other active channels. Agents close cases based on customer acknowledgment, not backend system verification.",
+    action: "Link channels in dispute workflow; enforce cross-channel status verification and backend confirmation before any closure sign-off.",
+  },
+  {
+    id: "duplicate-interactions",
+    accent: "amber",
+    title: "Duplicate Interactions",
+    icon: Layers,
+    cluster: "3 cases · High · P2: 2, P3: 1",
+    body: "Customers contact multiple channels simultaneously when response time exceeds 10 minutes. Multiple agents working same case without coordination provide conflicting information.",
+    action: "Merge threads under one case ID and assign single specialist; publish queue-time SLA on digital entry points.",
+  },
+  {
+    id: "escalation-loops",
+    accent: "violet",
+    title: "Escalation Loops",
+    icon: Repeat2,
+    cluster: "9 cases · Critical · P1: 8, P2: 1",
+    body: "Agents transfer issues between channels instead of escalating to specialists, creating loops. Customer sentiment deteriorates from 2.3 to 4.8 with each bounce across channels.",
+    action: "Mandatory specialist queue after first dispute transfer; freeze channel bouncing with warm transfer checklist.",
+  },
+  {
+    id: "unactioned-escalations",
+    accent: "cyan",
+    title: "Unactioned Escalations",
+    icon: BellOff,
+    cluster: "2 cases · High · P2: 2",
+    body: "Agents close one channel while related channel remains pending, leaving issues unresolved. Cases marked \"Pending Review\" lack follow-up, forcing customers to reopen via new channels.",
+    action: "Auto-assign escalation subtypes to team leads; SLA clock visible on queue dashboard with callback automation on dropped transfers.",
   },
 ];
 

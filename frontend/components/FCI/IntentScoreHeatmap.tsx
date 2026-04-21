@@ -198,12 +198,12 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
   const efficiency = getEfficiencyInsight();
 
   return (
-    <div className="mt-6">
+    <div>
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-center gap-4 mb-3 flex-wrap">
           <h3 className="text-lg font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-            Cross-Intent Performance Grid
+            How well are we serving customers?
           </h3>
           {/* Contact Center Units Filter */}
           <Select value={selectedUnit} onValueChange={setSelectedUnit}>
@@ -265,7 +265,7 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
                 className="flex-1 px-1 pb-3 text-center"
               >
                 <span 
-                  className="text-[9px] font-bold leading-tight"
+                  className="text-[11px] font-semibold leading-snug"
                   style={{ color: '#939394' }}
                 >
                   {intent.label}
