@@ -1187,7 +1187,9 @@ function RoleDashboardShell({
                   {sidebarHover ? (
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: act ? 700 : 500, color: act ? T.text : T.textSec }}>
-                        <span style={{ color: act ? T.cyan : T.textMut, fontFamily: "var(--mono)", marginRight: 4, fontSize: 12 }}>{s.id}.</span>
+                        {role.id !== "head_retail" ? (
+                          <span style={{ color: act ? T.cyan : T.textMut, fontFamily: "var(--mono)", marginRight: 4, fontSize: 12 }}>{s.id}.</span>
+                        ) : null}
                         {nav.label}
                       </div>
                       <div style={{ fontSize: 12, color: T.textMut, lineHeight: 1.35 }}>{s.sub}</div>
