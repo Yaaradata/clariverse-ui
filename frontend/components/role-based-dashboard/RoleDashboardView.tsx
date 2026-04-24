@@ -109,6 +109,18 @@ const SCREENS: { id: ScreenId; label: string; sub: string; icon: LucideIcon }[] 
   { id: 5, label: "Root Cause + Action", sub: "Signal → Cause → Action", icon: Crosshair },
 ];
 
+/** Head of Retail uses shorter screen names and no "Screen #" title prefix. */
+function screenNavEntry(roleId: string, s: (typeof SCREENS)[number]): (typeof SCREENS)[number] {
+  if (roleId === "head_retail" && s.id === 2) return { ...s, label: "LOB" };
+  return s;
+}
+
+function screenNavTooltip(roleId: string, s: (typeof SCREENS)[number]): string {
+  const e = screenNavEntry(roleId, s);
+  if (roleId === "head_retail") return `${e.label} — ${e.sub}`;
+  return `Screen ${s.id}: ${e.label} — ${e.sub}`;
+}
+
 // Happiness % → color (aligned with tile gauge `gC`): high ≥80 green, medium 60–79 amber only, low <60 red.
 function happinessPctColor(pct: number, T: DashboardThemeTokens): string {
   if (pct >= 80) return T.green;
@@ -995,7 +1007,10 @@ function RoleDashboardShell({
 
   const IndIcon = industry.icon;
   const RoleIcon = role.icon;
-  const active = SCREENS.find(s => s.id === screen);
+  const active = (() => {
+    const row = SCREENS.find(s => s.id === screen);
+    return row ? screenNavEntry(role.id, row) : undefined;
+  })();
   const initialLens: LensId =
     "defaultLens" in role &&
     (role.defaultLens === "ops" || role.defaultLens === "risk" || role.defaultLens === "compliance")
@@ -1132,7 +1147,8 @@ function RoleDashboardShell({
           {SCREENS.filter((s) => role.id === "head_retail" ? s.id <= 2 : true).map((s, i, visibleScreens) => {
             const Icon = s.icon;
             const act = screen === s.id;
-            const tip = `Screen ${s.id}: ${s.label} — ${s.sub}`;
+            const nav = screenNavEntry(role.id, s);
+            const tip = screenNavTooltip(role.id, s);
             return (
               <div key={s.id}>
                 <button
@@ -1172,7 +1188,7 @@ function RoleDashboardShell({
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: act ? 700 : 500, color: act ? T.text : T.textSec }}>
                         <span style={{ color: act ? T.cyan : T.textMut, fontFamily: "var(--mono)", marginRight: 4, fontSize: 12 }}>{s.id}.</span>
-                        {s.label}
+                        {nav.label}
                       </div>
                       <div style={{ fontSize: 12, color: T.textMut, lineHeight: 1.35 }}>{s.sub}</div>
                     </div>
@@ -1227,7 +1243,9 @@ function RoleDashboardShell({
           >
             <div style={{ flex: "1 1 220px", minWidth: 0 }}>
               <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
-                <span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>
+                {role.id !== "head_retail" ? (
+                  <span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>
+                ) : null}
                 {active?.label}
               </h1>
               <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>
@@ -1267,7 +1285,12 @@ function RoleDashboardShell({
         ) : (
           <div style={{ padding: "12px 24px", borderBottom: `1px solid ${T.borderLight}`, background: T.elevated, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
-              <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}><span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>{active?.label}</h1>
+              <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
+                {role.id !== "head_retail" ? (
+                  <span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>
+                ) : null}
+                {active?.label}
+              </h1>
               <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>{industry.name} · {role.name}{screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}</div>
             </div>
             <button type="button" style={{ background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`, color: T.bg, border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Export Report</button>
@@ -1290,8 +1313,8 @@ function RoleDashboardShell({
                 drillCard === 1 ? <BrandReputationDrillDown onBack={onBack} /> :
                 <ServiceFulfilmentDrillDown onBack={onBack} />;
               // Unify every card / panel / pill background on the three
-              // retail drill-down tiers (Customer Happiness · Brand & Reputation ·
-              // Service Fulfilment) to #0D0D0D by overriding the theme tokens
+              // retail drill-down tiers (Are our Customers happy? · Is the Brand at risk? ·
+              // How is our Service delivery?) to #0D0D0D by overriding the theme tokens
               // that power their `background` styles (`T.elevated`, `T.card`,
               // `T.surface`). This cascades through every descendant that
               // reads the dashboard theme via `useDashboardTheme()`.

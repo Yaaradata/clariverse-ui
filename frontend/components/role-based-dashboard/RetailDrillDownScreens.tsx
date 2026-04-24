@@ -52,8 +52,8 @@ function BackButton({ onBack }: { onBack: () => void }) {
 
 /**
  * Inline drill-down page header — back button beside title + subtitle on one row.
- * Used as the first element of each Screen 1 drill-down (Customer Happiness,
- * Brand & Reputation, Service Fulfilment).
+ * Used as the first element of each Screen 1 drill-down (Are our Customers happy?,
+ * Is the Brand at risk?, How is our Service delivery?).
  */
 function DrillPageHeader({
   onBack, title, sub,
@@ -401,7 +401,7 @@ export function CustomerHappinessDrillDown({ onBack }: { onBack: () => void }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <DrillPageHeader
         onBack={onBack}
-        title="Customer Happiness"
+        title="Are our Customers happy?"
         sub="How happy are your customers and what is driving unhappiness across segments, journeys, products and channels?"
       />
 
@@ -888,7 +888,7 @@ export function BrandReputationDrillDown({ onBack }: { onBack: () => void }) {
       }}>
         <DrillPageHeader
           onBack={onBack}
-          title="Brand & Reputation Risk"
+          title="Is the Brand at risk?"
           sub="Real-time brand, social, review-site and media signals — where is perception eroding and what is driving it?"
         />
 
@@ -1749,7 +1749,7 @@ export function ServiceFulfilmentDrillDown({ onBack }: { onBack: () => void }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <DrillPageHeader
         onBack={onBack}
-        title="Service Fulfilment"
+        title="How is our Service delivery?"
         sub="Which channels, intents and stages are breaking SLA, FCR and AHT?"
       />
 
