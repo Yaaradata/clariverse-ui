@@ -1167,7 +1167,7 @@ function JourneyWhatsFailingPanel() {
           <div style={{ width: "100%", height: 460 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={JH_FAILING_DATA}
+                data={JH_FAILING_DATA as unknown as any[]}
                 margin={{ top: 0, right: 10, left: 10, bottom: 80 }}
                 barSize={47}
                 barCategoryGap={12}
