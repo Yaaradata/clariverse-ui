@@ -550,7 +550,7 @@ function AIRiskSpikeMonitor() {
         { label: "Spend at risk", value: "$2.7M → $4.2M", delta: "↑ 56%" },
       ],
       callout:
-        "HNIs are citing CompetitorY cashback and reward-value erosion. Trigger RM outreach within 2 hours with pre-approved retention offers.",
+        "HSHFs are citing CompetitorY cashback and reward-value erosion. Trigger RM outreach within 2 hours with pre-approved retention offers.",
     },
     "reward-devaluation": {
       topIntent: "Rewards Value Complaint",
