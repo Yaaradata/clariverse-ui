@@ -130,7 +130,7 @@ export default function GlowingLineChart({
                   minute: '2-digit'
                 });
               }}
-              formatter={(value: number) => [`${value.toFixed(1)}%`, 'Sentiment']}
+              formatter={(value) => [`${Number(value ?? 0).toFixed(1)}%`, 'Sentiment']}
             />
             
             <Area 

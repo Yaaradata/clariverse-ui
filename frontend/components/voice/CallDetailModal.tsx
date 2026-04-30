@@ -156,10 +156,11 @@ export function CallDetailModal({ call, open, onClose }: CallDetailModalProps) {
                           boxShadow: 'none',
                           padding: '8px 12px'
                         }}
-                        formatter={(value: number) => {
+                        formatter={(value) => {
                           // Lower values (0-1.5) = Negative, Middle (1.5-3.5) = Neutral, Higher (3.5-5) = Positive
-                          const emotion = value >= 3.5 ? 'Positive' : value <= 1.5 ? 'Negative' : 'Neutral';
-                          return [`${emotion} (${value.toFixed(2)}/5)`, 'Emotion'];
+                          const safeValue = Number(value ?? 0);
+                          const emotion = safeValue >= 3.5 ? 'Positive' : safeValue <= 1.5 ? 'Negative' : 'Neutral';
+                          return [`${emotion} (${safeValue.toFixed(2)}/5)`, 'Emotion'];
                         }}
                         labelFormatter={(label) => `Time: ${label.toFixed(1)}s`}
                       />
@@ -242,7 +243,7 @@ export function CallDetailModal({ call, open, onClose }: CallDetailModalProps) {
                           boxShadow: 'none',
                           padding: '8px 12px'
                         }}
-                        formatter={(value: number) => [`${value.toFixed(2)}s`, 'Silence Duration']}
+                        formatter={(value) => [`${Number(value ?? 0).toFixed(2)}s`, 'Silence Duration']}
                         labelFormatter={(label) => `Time: ${label.toFixed(1)}s`}
                       />
                       <Bar 

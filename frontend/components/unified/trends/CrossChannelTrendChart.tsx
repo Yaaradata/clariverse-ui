@@ -108,11 +108,13 @@ export function CrossChannelTrendChart({ data }: CrossChannelTrendChartProps) {
               labelStyle={{ color: "#f9fafb", fontWeight: 600 }}
               itemStyle={{ color: "#e5e7eb" }}
               labelFormatter={(value) => new Date(value).toLocaleDateString("en-US", { month: "long", day: "numeric" })}
-              formatter={(value: number, name: string) =>
-                name === "Sentiment"
-                  ? [`${value.toFixed(2)} · ${sentimentLabel(value)}`, name]
-                  : [value, name]
-              }
+              formatter={(value, name) => {
+                const safeValue = Number(value ?? 0);
+                const safeName = String(name);
+                return safeName === "Sentiment"
+                  ? [`${safeValue.toFixed(2)} · ${sentimentLabel(safeValue)}`, safeName]
+                  : [safeValue, safeName];
+              }}
             />
             <Legend
               wrapperStyle={{ color: "#9ca3af" }}

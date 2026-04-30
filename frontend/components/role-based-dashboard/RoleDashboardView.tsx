@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { Area, AreaChart, Line, LineChart, PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
 import { CardOpsDashboard, type CardOpsThemeTokens } from "./CardOpsDashboard";
+import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
+import { HeadOfCreditCardsV3Dashboard } from "./HeadOfCreditCardsV3Dashboard";
 import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
 import { CustomerHappinessDrillDown, BrandReputationDrillDown, ServiceFulfilmentDrillDown } from "./RetailDrillDownScreens";
 import { RoleBasedComplianceTimePills } from "@/components/role-based-dashboard/RoleBasedComplianceTimePills";
@@ -516,7 +518,7 @@ function Screen1({
                           <RechartsTooltip
                             cursor={false}
                             labelFormatter={(label) => `${label}`}
-                            formatter={(value: number) => [`${value} pts`, "Score"]}
+                            formatter={(value) => [`${Number(value ?? 0)} pts`, "Score"]}
                             contentStyle={{
                               background: "rgba(10,14,22,0.96)",
                               border: `1px solid ${T.borderLight}`,
@@ -1365,6 +1367,30 @@ export function RoleDashboardView({
         industryColor={industry.color}
         onExit={onExit}
         theme={cardOpsTheme}
+      />
+    );
+  }
+
+  if (industry.id === "credit_cards" && role.id === "head_cards_v2") {
+    return (
+      <HeadOfCreditCardsDashboard
+        industryName={industry.name}
+        roleName={role.name}
+        industryColor={industry.color}
+        onExit={onExit}
+        theme={theme}
+      />
+    );
+  }
+
+  if (industry.id === "credit_cards" && role.id === "head_cards_v3") {
+    return (
+      <HeadOfCreditCardsV3Dashboard
+        industryName={industry.name}
+        roleName={role.name}
+        industryColor={industry.color}
+        onExit={onExit}
+        theme={theme}
       />
     );
   }

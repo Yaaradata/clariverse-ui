@@ -574,9 +574,9 @@ export function CROScreen3FinancialCrime() {
               <YAxis type="category" dataKey="name" tick={{ fill: T.text, fontSize: 10 }} axisLine={false} tickLine={false} width={140} />
               <Tooltip
                 {...croRechartsTooltipProps(T)}
-                formatter={(value: number, _name: string, item) => {
+                formatter={(value, _name, item) => {
                   const full = (item?.payload as { fullName?: string } | undefined)?.fullName;
-                  return [value, full ?? _name];
+                  return [Number(value ?? 0), full ?? String(_name)];
                 }}
               />
               <Bar dataKey="count" radius={[0, 6, 6, 0]} barSize={18}>

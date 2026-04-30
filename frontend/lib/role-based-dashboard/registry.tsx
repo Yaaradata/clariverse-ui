@@ -44,6 +44,8 @@ export const INDUSTRIES = [
     roles: [
       { id: "ceo", name: "CEO / MD", icon: Crown, sub: "Card portfolio health — promise, stability, risk" },
       { id: "head_cards", name: "Head of Credit Cards", icon: CreditCard, sub: "P&L, disputes, rewards, competitive intelligence" },
+      { id: "head_cards_v2", name: "Head of Credit Cards (V2)", icon: CreditCard, sub: "CX promise command center with 2-level drills and AI guidance" },
+      { id: "head_cards_v3", name: "Head of Credit Cards (V3)", icon: CreditCard, sub: "Executive View · 3 tiles · AI Risk Spike Monitor · Day Generator — retail-mirrored" },
       { id: "head_fraud", name: "Head of Fraud", icon: Shield, sub: "CNP patterns, MCC clustering, merchant breaches" },
       { id: "head_compliance", name: "Head of Compliance", icon: Lock, sub: "Reg E/Z, Visa/MC chargeback, CFPB risk" },
     ]

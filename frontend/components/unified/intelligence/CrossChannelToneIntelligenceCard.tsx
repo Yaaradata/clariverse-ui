@@ -1198,7 +1198,7 @@ export function CrossChannelToneIntelligenceCard() {
                                                        fontSize: '11px'
                                                      }}
                                                      labelStyle={{ color: '#9ca3af' }}
-                                                     formatter={(value: number) => [`${value.toFixed(1)}/5`, 'Sentiment']}
+                                                    formatter={(value) => [`${Number(value ?? 0).toFixed(1)}/5`, 'Sentiment']}
                                                    />
                                                    <Area 
                                                      type="monotone" 

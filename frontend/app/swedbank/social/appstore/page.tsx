@@ -240,7 +240,7 @@ export default function AppStoreDashboardPage() {
                         />
                         <RechartsTooltip
                           contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', borderRadius: '12px' }}
-                          formatter={(value: number, name: string) => [`${Number(value).toFixed(1)}%`, name]}
+                          formatter={(value, name) => [`${Number(value ?? 0).toFixed(1)}%`, String(name)]}
                         />
                         <Legend verticalAlign="bottom" wrapperStyle={{ color: '#CBD5F5', fontSize: 12, paddingTop: 16 }} />
                         <Area

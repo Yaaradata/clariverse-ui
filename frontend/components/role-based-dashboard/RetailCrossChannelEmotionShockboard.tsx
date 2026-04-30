@@ -61,7 +61,13 @@ const ALERTS: Array<{
 ];
 
 // Recharts injects full tooltip props; we only read active + payload.
-function ShockTooltip({ active, payload }: { active?: boolean; payload?: ReadonlyArray<{ name?: string; value?: number; payload?: unknown }> }) {
+function ShockTooltip({
+  active,
+  payload,
+}: {
+  active?: boolean;
+  payload?: ReadonlyArray<{ name?: unknown; value?: unknown; payload?: unknown }>;
+}) {
   if (!active || !payload?.length) return null;
   const row = payload[0]?.payload as (typeof SHOCK_SCORE_DATA)[number] | undefined;
   const channel = row?.channel ?? "Channel";
@@ -70,8 +76,8 @@ function ShockTooltip({ active, payload }: { active?: boolean; payload?: Readonl
       <p className="mb-1 font-semibold text-white">{channel}</p>
       {payload.map((p) => (
         <p key={String(p.name)} className="text-slate-300">
-          <span className="font-medium text-slate-100">{p.name}:</span>{" "}
-          {typeof p.value === "number" ? Math.abs(p.value).toLocaleString() : p.value}
+          <span className="font-medium text-slate-100">{String(p.name)}:</span>{" "}
+          {typeof p.value === "number" ? Math.abs(p.value).toLocaleString() : String(p.value)}
         </p>
       ))}
     </div>

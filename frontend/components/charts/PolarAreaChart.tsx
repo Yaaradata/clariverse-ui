@@ -114,9 +114,9 @@ export default function PolarAreaChart({ data, title, className = '' }: PolarAre
                 fontSize: '14px',
                 padding: '12px 16px'
               }} 
-              formatter={(value: number, name: string) => [
-                `${value}%`, 
-                name.charAt(0).toUpperCase() + name.slice(1)
+              formatter={(value, name) => [
+                `${Number(value ?? 0)}%`,
+                String(name).charAt(0).toUpperCase() + String(name).slice(1),
               ]}
             />
           </PieChart>

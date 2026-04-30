@@ -148,9 +148,11 @@ export function ResolutionQualityTracker({ data, isDarkMode = false }: Resolutio
                 borderRadius: '8px',
                 fontSize: '12px'
               }}
-              formatter={(value: number, name: string) => {
-                const label = name === 'fcrRate' ? 'FCR Rate' : 'Re-open Rate';
-                return [`${value}%`, label];
+              formatter={(value, name) => {
+                const safeValue = Number(value ?? 0);
+                const safeName = String(name);
+                const label = safeName === 'fcrRate' ? 'FCR Rate' : 'Re-open Rate';
+                return [`${safeValue}%`, label];
               }}
             />
             <Legend 

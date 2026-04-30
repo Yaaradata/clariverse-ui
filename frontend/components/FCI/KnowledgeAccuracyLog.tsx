@@ -133,9 +133,9 @@ export function KnowledgeAccuracyLog({ data, isDarkMode = false }: KnowledgeAccu
                   borderRadius: '8px',
                   fontSize: '12px'
                 }}
-                formatter={(value: number, name: string, props: any) => [
-                  `${value} errors`,
-                  name
+                formatter={(value, name) => [
+                  `${Number(value ?? 0)} errors`,
+                  String(name)
                 ]}
               />
               <Bar dataKey="Process Error" fill="#B90ABD" radius={[0, 4, 4, 0]} barSize={16} />

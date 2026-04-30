@@ -157,7 +157,7 @@ export function AvoidableEscalationSplitBar({ data, isDarkMode = false }: Avoida
                 border: `1px solid ${isDarkMode ? '#939394' : '#D6D9D8'}`,
                 borderRadius: '8px'
               }}
-              formatter={(value: number, name: string) => [`${value}%`, name]}
+              formatter={(value, name) => [`${Number(value ?? 0)}%`, String(name)]}
             />
             <Bar dataKey="Confidence Gap" stackId="a" fill="#B90ABD" radius={[0, 4, 4, 0]}>
               <Cell
