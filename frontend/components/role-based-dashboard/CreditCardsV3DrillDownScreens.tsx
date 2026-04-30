@@ -1,7 +1,35 @@
 "use client";
 
-import { ArrowLeft, Sparkles } from "lucide-react";
-import { type CSSProperties, type ReactNode, useState } from "react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  ChevronRight,
+  CircleAlert,
+  CreditCard,
+  Info,
+  Target,
+  RefreshCw,
+  Sparkles,
+  Timer,
+  TrendingUp,
+  TriangleAlert,
+  Users,
+  Zap,
+} from "lucide-react";
+import { type CSSProperties, type ComponentType, type MouseEvent, type ReactNode, useRef, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import {
   V3_BRAND_PROMISE_GAP,
   V3_COMPARISON_RANKS,
@@ -855,6 +883,1042 @@ const JH_REPEAT: {
   },
 ];
 
+const JH_TOP_SEGMENT_ROWS = [
+  { seg: "HSHF", interactions: "9,550", wow: "+2.1%", wowUp: true, sentiment: "0.08", sentimentColor: "#10b981", fci: "0.8%" },
+  { seg: "HSLF", interactions: "6,360", wow: "-0.8%", wowUp: false, sentiment: "0.03", sentimentColor: "#f59e0b", fci: "1.2%" },
+  { seg: "LSHF", interactions: "22,700", wow: "+3.4%", wowUp: true, sentiment: "0.16", sentimentColor: "#ef4444", fci: "2.1%" },
+  { seg: "LSLF", interactions: "15,130", wow: "-1.5%", wowUp: false, sentiment: "0.26", sentimentColor: "#ef4444", fci: "2.8%" },
+] as const;
+
+const JH_AI_SUMMARY_ROWS = [
+  { sev: "CRITICAL", title: "Debit Card Dispute Flow Broken", detail: "900 repeat calls today without dispute form submission.", color: "#ef4444" },
+  { sev: "ALERT", title: "Branch + Phone Loop Detected", detail: "340 customers are bouncing channels without closure.", color: "#f97316" },
+  { sev: "WARNING", title: "SLA Failure: VIP Emails", detail: "156 high-value customers delayed beyond 48 hours.", color: "#eab308" },
+  { sev: "INFO", title: "Platinum Card Launch Volume Surge", detail: "2,340 feature and eligibility calls logged today.", color: "#22c55e" },
+] as const;
+
+const JH_FAILING_DATA = [
+  {
+    topic: "Dispute follow-up",
+    Voice: 1082,
+    Chat: 911,
+    Email: 512,
+    Social: 163,
+    Ticket: 179,
+    HSHF: 812,
+    HSLF: 534,
+    LSHF: 853,
+    LSLF: 448,
+    totalCases: 2847,
+    interactions: 8234,
+    resolution: "2.8 hours",
+    gap: "28%",
+    affected: "2,156",
+    processError: "72%",
+    insight:
+      "Chargeback status ambiguity and delayed evidence confirmation are driving repeated dispute follow-up calls.",
+    recommendation:
+      "Auto-push dispute stage updates in app/SMS and provide same-screen agent visibility of chargeback timeline.",
+    topics: ["Chargeback Status", "Merchant Reversal", "Dispute Documents", "Provisional Credit", "Fraud Review"],
+  },
+  {
+    topic: "Cashback not credited",
+    Voice: 960,
+    Chat: 256,
+    Email: 301,
+    Social: 0,
+    Ticket: 355,
+    HSHF: 540,
+    HSLF: 488,
+    LSHF: 366,
+    LSLF: 178,
+    totalCases: 1872,
+    interactions: 6390,
+    resolution: "3.9 hours",
+    gap: "34%",
+    affected: "1,484",
+    processError: "68%",
+    insight:
+      "Cycle-cutoff confusion and merchant category exclusions are causing repeat contacts on cashback eligibility.",
+    recommendation:
+      "Expose cashback eligibility reason codes in app and trigger proactive alerts when payout is deferred.",
+    topics: ["Cashback Missing", "MCC Exclusion", "Statement Cycle", "Offer Eligibility", "Reward Posting Delay"],
+  },
+  {
+    topic: "Annual fee complaint",
+    Voice: 525,
+    Chat: 788,
+    Email: 238,
+    Social: 134,
+    Ticket: 112,
+    HSHF: 462,
+    HSLF: 406,
+    LSHF: 292,
+    LSLF: 0,
+    totalCases: 1797,
+    interactions: 5216,
+    resolution: "2.1 hours",
+    gap: "22%",
+    affected: "1,210",
+    processError: "59%",
+    insight:
+      "Waiver promise mismatch between campaign terms and servicing scripts is creating trust loss for cardholders.",
+    recommendation:
+      "Standardize fee-waiver policy by card tier and surface real-time waiver eligibility in agent desktop.",
+    topics: ["Fee Waiver", "Renewal Fee", "Spend Milestone", "Retention Offer", "Reversal Request"],
+  },
+  {
+    topic: "PIN / OTP failure",
+    Voice: 793,
+    Chat: 149,
+    Email: 441,
+    Social: 0,
+    Ticket: 188,
+    HSHF: 383,
+    HSLF: 0,
+    LSHF: 299,
+    LSLF: 188,
+    totalCases: 1571,
+    interactions: 4010,
+    resolution: "2.6 hours",
+    gap: "31%",
+    affected: "964",
+    processError: "64%",
+    insight:
+      "OTP expiry and PIN reset fallback failures are increasing authentication retries and repeat support contacts.",
+    recommendation:
+      "Enable one-tap OTP resend with trusted-device fallback and simplify card PIN reset journey in-app.",
+    topics: ["OTP Timeout", "PIN Reset Failed", "3DS Verification", "CVV Auth Failure", "Login Lockout"],
+  },
+  {
+    topic: "Reward redemption failed",
+    Voice: 476,
+    Chat: 842,
+    Email: 408,
+    Social: 116,
+    Ticket: 139,
+    HSHF: 328,
+    HSLF: 421,
+    LSHF: 0,
+    LSLF: 219,
+    totalCases: 1981,
+    interactions: 5746,
+    resolution: "3.1 hours",
+    gap: "24%",
+    affected: "1,098",
+    processError: "57%",
+    insight:
+      "Points ledger sync delays and catalogue rejection errors are causing repeat redemption attempts.",
+    recommendation:
+      "Add instant redemption status tracking and auto-retry for failed partner fulfilment transactions.",
+    topics: ["Points Not Visible", "Voucher Failure", "Partner Rejection", "Catalogue Error", "Miles Transfer Delay"],
+  },
+  {
+    topic: "Card declined — first use",
+    Voice: 612,
+    Chat: 743,
+    Email: 384,
+    Social: 192,
+    Ticket: 255,
+    HSHF: 212,
+    HSLF: 167,
+    LSHF: 519,
+    LSLF: 0,
+    totalCases: 1618,
+    interactions: 4692,
+    resolution: "2.4 hours",
+    gap: "33%",
+    affected: "1,005",
+    processError: "66%",
+    insight:
+      "First-transaction declines are mostly linked to activation mismatch and risk-rule false positives.",
+    recommendation:
+      "Trigger proactive first-use readiness checks and allow instant secure unblock for verified cardholders.",
+    topics: ["Card Not Activated", "POS Decline", "Risk Block", "International Toggle", "First Swipe Failure"],
+  },
+  {
+    topic: "EMI conversion failed",
+    Voice: 548,
+    Chat: 476,
+    Email: 239,
+    Social: 82,
+    Ticket: 121,
+    HSHF: 431,
+    HSLF: 0,
+    LSHF: 269,
+    LSLF: 214,
+    totalCases: 1366,
+    interactions: 3928,
+    resolution: "2.7 hours",
+    gap: "26%",
+    affected: "892",
+    processError: "58%",
+    insight:
+      "Post-purchase EMI conversion failures are concentrated around merchant mapping and tenure validation breaks.",
+    recommendation:
+      "Add real-time EMI eligibility checks at transaction level and provide instant fallback conversion path.",
+    topics: ["EMI Eligibility", "Tenure Mismatch", "Merchant Mapping", "Conversion Timeout", "Interest Dispute"],
+  },
+  {
+    topic: "Credit limit not updated",
+    Voice: 433,
+    Chat: 501,
+    Email: 184,
+    Social: 67,
+    Ticket: 96,
+    HSHF: 392,
+    HSLF: 297,
+    LSHF: 242,
+    LSLF: 0,
+    totalCases: 1281,
+    interactions: 3614,
+    resolution: "3.0 hours",
+    gap: "29%",
+    affected: "774",
+    processError: "61%",
+    insight:
+      "Limit-enhancement promises are not reflecting after bureau refresh, creating repeat complaint loops.",
+    recommendation:
+      "Surface approval/decline reason codes and sync limit updates instantly across app and contact center tools.",
+    topics: ["Limit Increase", "Bureau Refresh", "Utilization Threshold", "Pre-Approved Offer", "Statement Update"],
+  },
+  {
+    topic: "Statement not generated",
+    Voice: 384,
+    Chat: 418,
+    Email: 296,
+    Social: 51,
+    Ticket: 88,
+    HSHF: 0,
+    HSLF: 0,
+    LSHF: 389,
+    LSLF: 313,
+    totalCases: 1237,
+    interactions: 3478,
+    resolution: "2.9 hours",
+    gap: "23%",
+    affected: "736",
+    processError: "53%",
+    insight:
+      "Billing-cycle statement generation delays are causing payment confusion and avoidable late-fee anxiety.",
+    recommendation:
+      "Push statement-ready notifications with due-date context and auto-share downloadable copies in-app.",
+    topics: ["Billing Cycle", "Statement Delay", "Due Date", "Late Fee Concern", "E-Statement Download"],
+  },
+  {
+    topic: "International usage blocked",
+    Voice: 362,
+    Chat: 334,
+    Email: 177,
+    Social: 73,
+    Ticket: 69,
+    HSHF: 286,
+    HSLF: 0,
+    LSHF: 0,
+    LSLF: 0,
+    totalCases: 1015,
+    interactions: 2892,
+    resolution: "2.5 hours",
+    gap: "21%",
+    affected: "628",
+    processError: "49%",
+    insight:
+      "Travel-mode toggles and geofence checks are not consistently applied, causing legitimate international declines.",
+    recommendation:
+      "Pre-authorize travel windows with dynamic risk thresholds and send real-time unblock prompts to cardholders.",
+    topics: ["Travel Notice", "International Toggle", "FX Transaction Decline", "Geo-Risk Rule", "POS Unblock"],
+  },
+] as const;
+
+function JourneyWhatsFailingPanel() {
+  const [selectedTopic, setSelectedTopic] = useState<string>(JH_FAILING_DATA[0].topic);
+  const selected =
+    JH_FAILING_DATA.find((d) => d.topic === selectedTopic) ?? JH_FAILING_DATA[0];
+  const handleBarSelect = (entry: unknown) => {
+    const topic = (
+      entry as
+        | { topic?: string; payload?: { topic?: string } }
+        | undefined
+    )?.topic ?? (
+      entry as
+        | { topic?: string; payload?: { topic?: string } }
+        | undefined
+    )?.payload?.topic;
+    if (topic) setSelectedTopic(topic);
+  };
+
+  const series = [
+    { key: "HSHF", color: "#A855F7", label: "HSHF — High Spend High Frequency" },
+    { key: "HSLF", color: "#06B6D4", label: "HSLF — High Spend Low Frequency" },
+    { key: "LSHF", color: "#6366F1", label: "LSHF — Low Spend High Frequency" },
+    { key: "LSLF", color: "#94A3B8", label: "LSLF — Low Spend Low Frequency" },
+  ] as const;
+
+  return (
+    <div style={{ background: JH.card, border: `1px solid ${JH.borderInner}`, borderRadius: 14, padding: 20, marginBottom: 12 }}>
+      <div style={{ marginBottom: 12 }}>
+        <h3 style={{ fontSize: 18, fontWeight: 800, color: JH.text, margin: "0 0 12px" }}>Repeat contact analysis - By Customer Segment</h3>
+        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", gap: 16, minHeight: 450 }}>
+        <div style={{ width: "50%", transition: "width 0.3s ease" }}>
+          <div style={{ width: "100%", height: 460 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={JH_FAILING_DATA}
+                margin={{ top: 0, right: 10, left: 10, bottom: 80 }}
+                barSize={47}
+                barCategoryGap={12}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#3a3a3a" />
+                <XAxis
+                  dataKey="topic"
+                  angle={-35}
+                  textAnchor="end"
+                  interval={0}
+                  height={78}
+                  tick={{ fontSize: 9, fill: JH.sub }}
+                />
+                <YAxis tick={{ fontSize: 11, fill: JH.sub }} />
+                <Tooltip
+                  contentStyle={{
+                    background: "#0d0d0d",
+                    border: `1px solid ${JH.borderInner}`,
+                    borderRadius: 10,
+                  }}
+                  formatter={(value, name) => [Number(value ?? 0), String(name)]}
+                />
+                {series.map((s) => (
+                  <Bar
+                    key={s.key}
+                    dataKey={s.key}
+                    stackId="a"
+                    fill={s.color}
+                    radius={[0, 0, 0, 0]}
+                    cursor="pointer"
+                    onClick={(data) => handleBarSelect(data)}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 14, marginTop: -70, padding: 12, borderRadius: 10, background: JH.surfaceInset, border: `1px solid ${JH.borderInner}` }}>
+            {series.map((s) => (
+              <div key={s.key} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 999, background: s.color, display: "inline-block" }} />
+                <span style={{ fontSize: 13, color: JH.sub }}>{s.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ width: "50%", transition: "width 0.3s ease", border: `1px solid ${JH.borderInner}`, borderRadius: 12, padding: 14, background: JH.card, overflowY: "auto" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <h4 style={{ margin: 0, fontSize: 18, color: JH.text }}>{selected.topic}</h4>
+                <span style={{ fontSize: 11, fontWeight: 800, color: "#fff", background: JH.red, borderRadius: 4, padding: "3px 8px" }}>High Impact</span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: 30, fontWeight: 900, color: JH.red }}>{selected.totalCases}</span>
+                <span style={{ fontSize: 12, color: JH.dim }}>cases</span>
+                <span style={{ fontSize: 11, color: JH.red, fontWeight: 700 }}>+12.5%</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              style={{
+                border: "none",
+                background: "transparent",
+                color: JH.dim,
+                fontSize: 18,
+                lineHeight: 1,
+                cursor: "default",
+                padding: 2,
+              }}
+            >
+              ×
+            </button>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, padding: 12, borderRadius: 10, background: JH.surfaceInset, marginBottom: 10 }}>
+            <div><div style={{ fontSize: 10, color: JH.dim }}>Total Interactions</div><div style={{ fontSize: 13, color: JH.text, fontWeight: 800 }}>{selected.interactions}</div></div>
+            <div><div style={{ fontSize: 10, color: JH.dim }}>Avg Resolution</div><div style={{ fontSize: 13, color: JH.text, fontWeight: 800 }}>{selected.resolution}</div></div>
+            <div><div style={{ fontSize: 10, color: JH.dim }}>Knowledge Gap</div><div style={{ fontSize: 13, color: JH.amber, fontWeight: 800 }}>{selected.gap}</div></div>
+            <div><div style={{ fontSize: 10, color: JH.dim }}>Customers Affected</div><div style={{ fontSize: 13, color: JH.text, fontWeight: 800 }}>{selected.affected}</div></div>
+            <div><div style={{ fontSize: 10, color: JH.dim }}>Process Error</div><div style={{ fontSize: 13, color: JH.red, fontWeight: 800 }}>{selected.processError}</div></div>
+          </div>
+
+          <div style={{ border: "1px solid rgba(245,158,11,0.35)", background: "rgba(245,158,11,0.08)", borderRadius: 10, padding: 12, marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: JH.amber, textTransform: "uppercase", marginBottom: 4 }}>AI Insight</div>
+            <div style={{ fontSize: 13, color: JH.sub, lineHeight: 1.5 }}>{selected.insight}</div>
+          </div>
+          <div style={{ border: "1px solid rgba(34,197,94,0.35)", background: "rgba(34,197,94,0.08)", borderRadius: 10, padding: 12, marginBottom: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 800, color: JH.green, textTransform: "uppercase", marginBottom: 4 }}>Recommendation</div>
+            <div style={{ fontSize: 13, color: JH.sub, lineHeight: 1.5 }}>{selected.recommendation}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: 10, color: JH.dim, textTransform: "uppercase", fontWeight: 700, marginBottom: 6 }}>Dominant Topics</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+              {selected.topics.map((t) => (
+                <span key={t} style={{ fontSize: 11, color: JH.sub, background: JH.surfaceInset, border: `1px solid ${JH.borderInner}`, borderRadius: 999, padding: "4px 10px" }}>
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JourneyTopCommandCenter() {
+  const npsData = [
+    { week: "W-11", HSHF: 48, HSLF: 40, LSHF: 54, LSLF: 30 },
+    { week: "W-10", HSHF: 46, HSLF: 39, LSHF: 55, LSLF: 28 },
+    { week: "W-9", HSHF: 44, HSLF: 37, LSHF: 56, LSLF: 25 },
+    { week: "W-8", HSHF: 42, HSLF: 36, LSHF: 58, LSLF: 23 },
+    { week: "W-7", HSHF: 39, HSLF: 34, LSHF: 59, LSLF: 21 },
+    { week: "W-6", HSHF: 36, HSLF: 32, LSHF: 60, LSLF: 18 },
+    { week: "W-5", HSHF: 33, HSLF: 31, LSHF: 61, LSLF: 16 },
+    { week: "W-4", HSHF: 31, HSLF: 30, LSHF: 62, LSLF: 14 },
+    { week: "W-3", HSHF: 28, HSLF: 29, LSHF: 63, LSLF: 13 },
+    { week: "W-2", HSHF: 25, HSLF: 27, LSHF: 64, LSLF: 11 },
+    { week: "W-1", HSHF: 23, HSLF: 26, LSHF: 65, LSLF: 10 },
+    { week: "Now", HSHF: 20, HSLF: 25, LSHF: 66, LSLF: 9 },
+  ];
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 12 }}>
+      <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 14, background: JH.card, display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 10, gap: 10, flexWrap: "wrap" }}>
+          <div>
+            <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", color: JH.dim, margin: 0 }}>TOTAL INTERACTIONS</p>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginTop: 3 }}>
+              <span style={{ fontSize: 32, fontWeight: 800, lineHeight: 1, background: "linear-gradient(135deg, #5332ff 0%, #7c3aed 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>53,740</span>
+              <span style={{ fontSize: 10.5, fontWeight: 700, color: "#10b981", background: "rgba(16,185,129,0.12)", border: "1px solid rgba(16,185,129,0.35)", borderRadius: 999, padding: "2px 8px" }}>▲ +1,842 vs last week</span>
+            </div>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 10.5, color: JH.dim }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: "#34d399" }} />Positive</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: "#fbbf24" }} />Neutral</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: "#ff073a" }} />Negative</span>
+          </div>
+        </div>
+        <div style={{ border: `1px solid ${JH.border}`, borderRadius: 8, overflow: "hidden", flex: 1 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "64px minmax(88px,1fr) 80px 64px 60px", gap: 12, padding: "8px 12px", background: JH.surfaceRow, borderBottom: `1px solid ${JH.border}` }}>
+            {["SEGMENT", "INTERACTIONS", "WoW", "SENTIMENT", "FCI RATE"].map((h) => (
+              <span key={h} style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.08em", color: JH.dim }}>{h}</span>
+            ))}
+          </div>
+          {[
+            ["HSHF", "9,550", true, "2.1%", "0.08", "0.8%", JH.SEG.HSHF, "#10b981"],
+            ["HSLF", "6,360", false, "0.8%", "0.03", "1.2%", JH.SEG.HSLF, "#f59e0b"],
+            ["LSHF", "22,700", true, "3.4%", "0.16", "2.1%", JH.SEG.LSHF, "#ef4444"],
+            ["LSLF", "15,130", false, "1.5%", "0.26", "2.8%", JH.SEG.LSLF, "#ef4444"],
+          ].map(([seg, itx, up, wow, sent, fci, segColor, sentColor], i) => (
+            <div key={String(seg)} style={{ display: "grid", gridTemplateColumns: "64px minmax(88px,1fr) 80px 64px 60px", gap: 12, padding: "8px 12px", borderTop: i === 0 ? "none" : `1px solid ${JH.border}` }}>
+              <span style={{ fontSize: 10, fontWeight: 700, color: String(segColor), background: `${segColor}18`, border: `1px solid ${segColor}40`, borderRadius: 999, width: "max-content", padding: "2px 8px" }}>{seg}</span>
+              <span style={{ fontSize: 13, fontWeight: 600, color: JH.text }}>{itx}</span>
+              <span style={{ fontSize: 11, fontWeight: 600, color: up ? "#10b981" : "#ef4444" }}>{up ? "▲" : "▼"} {wow}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: String(sentColor) }}>{sent}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: JH.text }}>{fci}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card, position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: 3, background: "#5332ff" }} />
+        <div style={{ marginLeft: 6 }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: JH.text }}>Sentiment by Relationship Value</div>
+          <div style={{ fontSize: 10, color: JH.dim, marginBottom: 8 }}>Sentiment split · deposits at stake</div>
+          {[
+            ["H1 · £1M+", "£184M · 312 accts", 44, 26, 30],
+            ["H2 · £500K–1M", "£276M · 624 accts", 51, 24, 25],
+            ["H3 · £250–500K", "£312M · 1085 accts", 58, 22, 20],
+          ].map(([l, sub, h, n, u]) => (
+            <div key={String(l)} style={{ marginBottom: 8 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                <span style={{ fontSize: 10.5, fontWeight: 700, color: JH.text }}>{l}</span>
+                <span style={{ fontSize: 10, color: JH.dim }}>{sub}</span>
+              </div>
+              <div style={{ display: "flex", height: 20, borderRadius: 6, overflow: "hidden", background: JH.track }}>
+                <div style={{ width: `${h}%`, background: "#22c55e", fontSize: 10, fontWeight: 700, color: "#000", display: "flex", justifyContent: "center", alignItems: "center" }}>{h}%</div>
+                <div style={{ width: `${n}%`, background: "#f59e0b", fontSize: 10, fontWeight: 700, color: "#000", display: "flex", justifyContent: "center", alignItems: "center" }}>{n}%</div>
+                <div style={{ width: `${u}%`, background: "#ef4444", fontSize: 10, fontWeight: 700, color: "#fff", display: "flex", justifyContent: "center", alignItems: "center" }}>{u}%</div>
+              </div>
+            </div>
+          ))}
+          <div style={{ borderTop: `1px solid ${JH.border}`, paddingTop: 6, display: "flex", gap: 12, fontSize: 9.5, color: JH.dim }}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: "#22c55e" }} />Happy</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: "#f59e0b" }} />Neutral</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><span style={{ width: 8, height: 8, borderRadius: 999, background: "#ef4444" }} />Unhappy</span>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card }}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: JH.text, marginBottom: 4 }}>Top Intent</div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 8 }}>
+          <span style={{ fontSize: 30, fontWeight: 800, color: JH.red, lineHeight: 1 }}>16</span>
+          <span style={{ fontSize: 11, color: JH.dim }}>identified</span>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: 2, height: 20, marginBottom: 8, borderRadius: 8, overflow: "hidden" }}>
+          {[
+            ["App Login & Auth", 13, "#ef4444"],
+            ["Card Declines", 10, "#f59e0b"],
+            ["Fee Disputes", 9, "#06b6d4"],
+            ["Wealth / RM", 5, "#10b981"],
+          ].map(([label, val, c]) => (
+            <div key={String(label)} style={{ background: String(c), display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 9, fontWeight: 700 }}>{val}</div>
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0,1fr))", gap: 6, marginBottom: 8 }}>
+          {[
+            ["App Login & Auth", "#ef4444"],
+            ["Card Declines", "#f59e0b"],
+            ["Fee Disputes", "#06b6d4"],
+            ["Wealth / RM", "#10b981"],
+          ].map(([l, c]) => (
+            <div key={String(l)} style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: String(c), flexShrink: 0 }} />
+              <span style={{ fontSize: 11, color: JH.sub, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l}</span>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.05em", color: JH.dim, marginBottom: 6 }}>INTENT VOLUME BY SEGMENT</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: 4 }}>
+          {[
+            ["HSHF", 3, JH.SEG.HSHF],
+            ["HSLF", 5, JH.SEG.HSLF],
+            ["LSHF", 4, JH.SEG.LSHF],
+            ["LSLF", 4, JH.SEG.LSLF],
+          ].map(([seg, n, c]) => (
+            <div key={String(seg)} style={{ background: JH.track, borderRadius: 8, padding: "4px 2px", textAlign: "center" }}>
+              <div style={{ width: 20, height: 20, borderRadius: 999, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", color: String(c), border: `1.5px solid ${c}`, fontSize: 9, fontWeight: 700, background: `${c}20` }}>{n}</div>
+              <div style={{ marginTop: 2, fontSize: 8.5, color: JH.dim }}>{seg}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card }}>
+        <div style={{ fontSize: 14, fontWeight: 800, color: JH.text, marginBottom: 2 }}>NPS Segment Monitor</div>
+        <div style={{ fontSize: 10, color: JH.dim, marginBottom: 6 }}>12-week rolling · HSHF deterioration is fastest (-28 pts)</div>
+        <div style={{ height: 142, marginTop: 8 }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={npsData} margin={{ top: 10, right: 15, left: 0, bottom: 12 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke={JH.border} />
+              <XAxis dataKey="week" tick={{ fill: JH.dim, fontSize: 10 }} tickMargin={8} axisLine={{ stroke: "#393939" }} tickLine={false} />
+              <YAxis tick={{ fill: JH.dim, fontSize: 10 }} width={28} domain={[0, 70]} tickLine={false} axisLine={false} />
+              <Line type="monotone" dataKey="HSHF" stroke={JH.SEG.HSHF} strokeWidth={2.5} dot={{ r: 2, fill: "#fff" }} />
+              <Line type="monotone" dataKey="HSLF" stroke={JH.SEG.HSLF} strokeWidth={2} dot={{ r: 2, fill: "#fff" }} />
+              <Line type="monotone" dataKey="LSHF" stroke={JH.SEG.LSHF} strokeWidth={2} strokeDasharray="4 3" dot={{ r: 2, fill: "#fff" }} />
+              <Line type="monotone" dataKey="LSLF" stroke={JH.SEG.LSLF} strokeWidth={2} dot={{ r: 2, fill: "#fff" }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginTop: 4, borderTop: `1px solid ${JH.border}`, paddingTop: 4 }}>
+          {(["HSHF", "HSLF", "LSHF", "LSLF"] as const).map((seg) => (
+            <div key={seg} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: JH.SEG[seg] }} />
+              <span style={{ fontSize: 10, color: JH.dim }}>{seg}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card, position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, width: 3, background: "#f59e0b" }} />
+        <div style={{ marginLeft: 6 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: JH.text }}>Vulnerable Watchlist</div>
+              <div style={{ fontSize: 10, color: JH.dim }}>High Churn Signals</div>
+            </div>
+            <span style={{ fontSize: 9, fontWeight: 800, color: "#f59e0b", background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.25)", borderRadius: 999, padding: "2px 6px" }}>
+              AI
+            </span>
+          </div>
+          {[
+            ["HSHF", "2 customers", "High", JH.SEG.HSHF, "#ef4444"],
+            ["HSLF", "1 customer", "High", JH.SEG.HSLF, "#ef4444"],
+            ["LSHF", "2 customers", "Medium", JH.SEG.LSHF, "#f59e0b"],
+            ["LSLF", "1 customer", "Medium", JH.SEG.LSLF, "#f59e0b"],
+          ].map(([seg, n, level, segColor, levelColor]) => (
+            <div
+              key={String(seg)}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 6,
+                padding: "6px 8px",
+                borderRadius: 6,
+                background: `${segColor}12`,
+                border: `1px solid ${segColor}30`,
+              }}
+            >
+              <span style={{ fontSize: 11, fontWeight: 700, color: String(segColor) }}>
+                {seg} <span style={{ color: JH.dim, fontWeight: 500 }}>· {n}</span>
+              </span>
+              <span style={{ fontSize: 9, fontWeight: 800, color: String(levelColor), background: `${levelColor}15`, border: `1px solid ${levelColor}40`, borderRadius: 999, padding: "2px 6px" }}>
+                {level}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+          <span style={{ fontSize: 14, fontWeight: 800, color: JH.text }}>Strain &amp; Friction</span>
+          <span style={{ fontSize: 9.5, color: JH.dim }}>+2.1% vs last</span>
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+            <span style={{ fontSize: 11, color: JH.text, fontWeight: 600 }}>Strained Conversations</span>
+            <span style={{ fontSize: 11, color: "#5332ff", fontWeight: 700 }}>34.2%</span>
+          </div>
+          <div style={{ height: 14, borderRadius: 999, background: JH.track, overflow: "hidden" }}>
+            <div style={{ width: "34.2%", height: "100%", background: "linear-gradient(90deg, #5332ff 0%, #7c3aed 100%)" }} />
+          </div>
+        </div>
+        <div style={{ border: `1px solid ${JH.borderInner}`, borderRadius: 8, overflow: "hidden", background: JH.track }}>
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 44px 44px 44px 44px 56px", gap: 4, padding: "5px 8px", borderBottom: `1px solid ${JH.borderInner}` }}>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: JH.dim }}>SIGNAL</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: JH.SEG.HSHF, textAlign: "center" }}>HSHF</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: JH.SEG.HSLF, textAlign: "center" }}>HSLF</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: JH.SEG.LSHF, textAlign: "center" }}>LSHF</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: JH.SEG.LSLF, textAlign: "center" }}>LSLF</span>
+            <span style={{ fontSize: 8.5, fontWeight: 700, color: "#5332ff", textAlign: "right" }}>TOTAL</span>
+          </div>
+          {[
+            ["Escalations", 182, 118, 94, 62, 456],
+            ["Long Handling Time", 246, 204, 168, 105, 723],
+            ["Interruptions", 96, 84, 78, 54, 312],
+            ["High Agitation Calls", 72, 48, 42, 27, 189],
+          ].map((r, i) => (
+            <div key={String(r[0])} style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) 44px 44px 44px 44px 56px", gap: 4, padding: "5px 8px", borderTop: i === 0 ? "none" : `1px solid ${JH.borderInner}`, alignItems: "center" }}>
+              <span style={{ fontSize: 10.5, color: JH.sub, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{r[0]}</span>
+              <span style={{ fontSize: 10, color: JH.SEG.HSHF, textAlign: "center", fontWeight: 600 }}>{r[1]}</span>
+              <span style={{ fontSize: 10, color: JH.SEG.HSLF, textAlign: "center", fontWeight: 600 }}>{r[2]}</span>
+              <span style={{ fontSize: 10, color: JH.SEG.LSHF, textAlign: "center", fontWeight: 600 }}>{r[3]}</span>
+              <span style={{ fontSize: 10, color: JH.SEG.LSLF, textAlign: "center", fontWeight: 600 }}>{r[4]}</span>
+              <span style={{ fontSize: 11.5, color: "#5332ff", textAlign: "right", fontWeight: 700 }}>{r[5]}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function JourneyTopAISummaryWall() {
+  type SummaryWallRow = {
+    id: string;
+    level: "CRITICAL" | "ALERT" | "WARNING" | "INFO";
+    levelColor: string;
+    tag: string;
+    title: string;
+    body: string;
+    metric: string;
+    delta: string;
+    icon: ComponentType<{ size?: number; color?: string }>;
+    tagIcon: ComponentType<{ size?: number; color?: string }>;
+    pulse?: boolean;
+    extra?: string;
+    details: string[];
+    action: string;
+    rootCause: string;
+    affectedAreas: string[];
+    recommendedActions: string[];
+    timeline: string;
+    owner: string;
+    priorityLabel: "High" | "Immediate" | "Medium" | "Low";
+  };
+
+  const rows: SummaryWallRow[] = [
+    {
+      id: "critical-journey-decline",
+      level: "CRITICAL",
+      levelColor: "#ef4444",
+      tag: "Journey Outcome",
+      title: "NPS erosion concentrated in HSHF cardholders",
+      body: "NPS monitor shows HSHF dropping from 48 to 20 over 12 weeks while LSLF remains in single digits, signaling urgent retention risk in high-value cohorts.",
+      metric: "HSHF down 28 points",
+      delta: "+12.5% dissatisfaction trend",
+      icon: CircleAlert,
+      tagIcon: CreditCard,
+      pulse: true,
+      details: [
+        "HSHF trajectory declines from 48 to 20 across 12 weeks.",
+        "LSLF remains single-digit NPS, indicating structural dissatisfaction.",
+        "Retention-stage negative sentiment is highest in vulnerable cohorts.",
+      ],
+      action:
+        "Launch HSHF recovery program: proactive outreach + priority resolution on dispute and authentication journeys.",
+      rootCause:
+        "High-value cardholders face unresolved repeat issues across dispute, authentication, and first-use failure paths with limited proactive recovery.",
+      affectedAreas: ["Retention", "Card Servicing", "Disputes", "Premium Desk", "NPS Governance"],
+      recommendedActions: [
+        "Launch HSHF rescue queue with <4 hour callback SLA",
+        "Enable proactive outreach for NPS-critical cardholders",
+        "Escalate repeat-contact cases to specialized resolution pod",
+        "Track weekly NPS recovery by segment and issue intent",
+      ],
+      timeline: "1-2 weeks for operating model, 3-4 weeks for sustained NPS lift tracking",
+      owner: "Head of Cardholder Experience",
+      priorityLabel: "Immediate",
+    },
+    {
+      id: "alert-repeat-intents",
+      level: "ALERT",
+      levelColor: "#f97316",
+      tag: "Repeat Contact Driver",
+      title: "Dispute follow-up + cashback gaps dominate repeat demand",
+      body: "The highest-volume failure intents are Dispute follow-up and Cashback not credited, with multi-segment spread and elevated process error levels.",
+      metric: "4,719 combined cases",
+      delta: "+31% pressure vs next cluster",
+      icon: TriangleAlert,
+      tagIcon: RefreshCw,
+      details: [
+        "Dispute follow-up is the highest-volume repeat contact intent.",
+        "Cashback not credited is the second-most persistent callback driver.",
+        "Both intents show elevated process error and cross-segment spread.",
+      ],
+      action:
+        "Fix dispute status transparency and cashback posting visibility first to reduce avoidable repeat load quickly.",
+      rootCause:
+        "Status opacity in dispute lifecycle and delayed cashback posting create avoidable callbacks and trust erosion.",
+      affectedAreas: ["Disputes", "Rewards Engine", "App Experience", "Contact Center", "Operations"],
+      recommendedActions: [
+        "Expose real-time dispute stage in app and agent desktop",
+        "Publish cashback eligibility and posting ETA per transaction",
+        "Trigger proactive notification when payout is deferred",
+        "Create single owner for dispute + cashback escalations",
+      ],
+      timeline: "1-2 weeks for policy/visibility fixes, 4-6 weeks for full workflow integration",
+      owner: "Disputes & Rewards Operations Manager",
+      priorityLabel: "High",
+    },
+    {
+      id: "warning-service-friction",
+      level: "WARNING",
+      levelColor: "#eab308",
+      tag: "Service Friction",
+      title: "Authentication and first-use issues still unresolved",
+      body: "PIN/OTP failures and first-use card declines continue to trigger preventable callbacks and onboarding friction in early lifecycle stages.",
+      metric: "3,189 affected cases",
+      extra: "2.4-2.6 hrs avg resolution",
+      delta: "+22% repeat propensity",
+      icon: Zap,
+      tagIcon: Timer,
+      details: [
+        "PIN/OTP failures continue to break first-touch resolution.",
+        "Card declined-first-use impacts onboarding confidence.",
+        "Authentication friction is concentrated in high-repeat sub-journeys.",
+      ],
+      action:
+        "Prioritize OTP fallback hardening and first-use card readiness checks before next billing cycle.",
+      rootCause:
+        "Authentication pathways fail under retry scenarios and first-use decline rules are not consistently contextualized for cardholders.",
+      affectedAreas: ["Auth Platform", "Card Controls", "Fraud Rules", "Mobile App", "Onboarding"],
+      recommendedActions: [
+        "Deploy resilient OTP retry with trusted-device fallback",
+        "Add first-use readiness checklist before card activation",
+        "Tune fraud thresholds for first 7-day card usage window",
+        "Surface unblock guidance directly in app journey",
+      ],
+      timeline: "2-3 weeks for auth hardening, 4-5 weeks for first-use decline reduction",
+      owner: "Authentication & Risk Journey Lead",
+      priorityLabel: "High",
+    },
+    {
+      id: "info-improvement-focus",
+      level: "INFO",
+      levelColor: "#22c55e",
+      tag: "Execution Focus",
+      title: "Highest payoff levers are visible and actionable",
+      body: "Automating dispute status, fixing cashback visibility, and tightening OTP fallback can reduce repeat load quickly without major channel redesign.",
+      metric: "Top 3 fixes identified",
+      delta: "Potential repeat rate <20%",
+      icon: Info,
+      tagIcon: BookOpen,
+      details: [
+        "Top levers are operational, not structural platform rebuilds.",
+        "Current data supports phased execution by issue cluster.",
+        "Impact is measurable via repeat-rate and NPS recovery deltas.",
+      ],
+      action:
+        "Track weekly execution scorecard across dispute, cashback, and authentication to sustain repeat-rate reduction.",
+      rootCause:
+        "Improvement opportunities exist, but execution depends on cross-team governance and consistent scorecard ownership.",
+      affectedAreas: ["Journey Analytics", "CX Operations", "Product", "Service Design", "Leadership Review"],
+      recommendedActions: [
+        "Run weekly issue-level execution review for top intents",
+        "Assign metric owners per action with due dates",
+        "Link action closure to repeat-rate and NPS movement",
+        "Publish monthly recovery dashboard to leadership",
+      ],
+      timeline: "1 week to start governance, 4 weeks to establish stable improvement cadence",
+      owner: "Journey Excellence PMO",
+      priorityLabel: "Medium",
+    },
+  ];
+  const [selectedSignalId, setSelectedSignalId] = useState<string>(rows[0].id);
+  const [selectedSignal, setSelectedSignal] = useState<SummaryWallRow | null>(null);
+  const [detailTop, setDetailTop] = useState<number | null>(null);
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+
+  const handleSignalClick = (row: SummaryWallRow, event: MouseEvent<HTMLDivElement>) => {
+    const scrollEl = scrollAreaRef.current;
+    if (scrollEl) {
+      const rowRect = event.currentTarget.getBoundingClientRect();
+      const scrollRect = scrollEl.getBoundingClientRect();
+      const relativeTop = rowRect.top - scrollRect.top + scrollEl.scrollTop;
+      setDetailTop(relativeTop);
+    } else {
+      setDetailTop(0);
+    }
+    setSelectedSignalId(row.id);
+    setSelectedSignal(row);
+  };
+
+  const closeDetail = () => {
+    setSelectedSignal(null);
+    setDetailTop(null);
+  };
+
+  return (
+    <div
+      style={{
+        borderRadius: 16,
+        padding: 24,
+        background: "#0d0d0d",
+        border: "1px solid #2a2a2a",
+        boxShadow: "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+        display: "flex",
+        flexDirection: "column",
+        height: 780,
+        maxHeight: 840,
+        minHeight: 0,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 20, flexShrink: 0, padding: "8px 8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <span style={{ fontSize: 24 }}>✨</span>
+          <div>
+            <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#fff" }}>AI Summary Wall</h3>
+            <p style={{ margin: 0, fontSize: 12, color: "#939394" }}>Real-time FCI intelligence</p>
+          </div>
+        </div>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 10px", borderRadius: 999, fontSize: 12, fontWeight: 500, background: "#1a1a1a", color: "#939394" }}>
+          <span style={{ width: 8, height: 8, borderRadius: 999, background: "#22c55e" }} />
+          Live
+        </div>
+      </div>
+
+      <div ref={scrollAreaRef} style={{ flex: 1, overflowY: "auto", padding: "8px 8px 8px 0", minHeight: 0, position: "relative" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {rows.map((row) => {
+            const Icon = row.icon;
+            const TagIcon = row.tagIcon;
+            return (
+              <div
+                key={row.id}
+                onClick={(event) => handleSignalClick(row, event)}
+                style={{
+                  position: "relative",
+                  borderRadius: 12,
+                  padding: 16,
+                  cursor: "pointer",
+                  background: `linear-gradient(135deg, ${row.levelColor}26 0%, ${row.levelColor}0d 100%)`,
+                  border: `1px solid ${row.levelColor}50`,
+                  boxShadow: selectedSignalId === row.id ? `0 0 0 1px ${row.levelColor}80 inset` : "none",
+                }}
+              >
+                {row.pulse ? (
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: 12,
+                      background: `radial-gradient(circle, ${row.levelColor}10 0%, transparent 70%)`,
+                      pointerEvents: "none",
+                    }}
+                  />
+                ) : null}
+                <div style={{ position: "relative", display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <div style={{ padding: 8, borderRadius: 8, background: `${row.levelColor}20`, flexShrink: 0 }}>
+                    <Icon size={16} color={row.levelColor} />
+                  </div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", padding: "2px 6px", borderRadius: 4, background: `${row.levelColor}25`, color: row.levelColor }}>
+                        {row.level}
+                      </span>
+                      <span style={{ fontSize: 11, padding: "2px 6px", borderRadius: 4, display: "inline-flex", alignItems: "center", gap: 4, background: "#2a2a2a", color: "#939394" }}>
+                        <TagIcon size={12} />
+                        {row.tag}
+                      </span>
+                    </div>
+                    <p style={{ margin: "0 0 4px", fontSize: 14, fontWeight: 700, color: "#fff" }}>{row.title}</p>
+                    <p style={{ margin: 0, fontSize: 12, lineHeight: 1.55, color: "#d6d9d8" }}>{row.body}</p>
+                    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
+                      <span style={{ fontSize: 12, fontWeight: 500, color: row.levelColor }}>{row.metric}</span>
+                      {row.extra ? (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, color: "#939394" }}>
+                          <Timer size={12} />
+                          {row.extra}
+                        </span>
+                      ) : null}
+                    </div>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 8, color: "#ef4444" }}>
+                      <TrendingUp size={14} />
+                      <span style={{ fontSize: 12, fontWeight: 700 }}>{row.delta}</span>
+                    </div>
+                    <div style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 8, fontSize: 10, color: row.levelColor, opacity: selectedSignalId === row.id ? 1 : 0.7 }}>
+                      <span>Click for details</span>
+                      <ArrowRight size={12} />
+                    </div>
+                  </div>
+                  <ChevronRight size={16} color={row.levelColor} style={{ flexShrink: 0, opacity: selectedSignalId === row.id ? 1 : 0.4 }} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {selectedSignal && detailTop !== null ? (
+          <>
+            <div
+              onClick={closeDetail}
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "rgba(0,0,0,0.35)",
+                zIndex: 20,
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: 8,
+                right: 8,
+                top: detailTop,
+                zIndex: 30,
+                background: "#1a1a1a",
+                border: `2px solid ${selectedSignal.levelColor}`,
+                borderRadius: 12,
+                padding: 12,
+                boxShadow: `0 8px 32px ${selectedSignal.levelColor}40, 0 4px 16px rgba(0,0,0,0.3)`,
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                  <div style={{ padding: 6, borderRadius: 8, background: `${selectedSignal.levelColor}20` }}>
+                    <TriangleAlert size={14} color={selectedSignal.levelColor} />
+                  </div>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: "#fff" }}>{selectedSignal.title}</div>
+                </div>
+                <button
+                  type="button"
+                  onClick={closeDetail}
+                  style={{ border: "none", background: "transparent", color: "#939394", fontSize: 16, cursor: "pointer" }}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: `${selectedSignal.levelColor}20`, color: selectedSignal.levelColor }}>
+                  {selectedSignal.priorityLabel} Priority
+                </span>
+                <span style={{ fontSize: 11, padding: "2px 8px", borderRadius: 999, background: "#2a2a2a", color: "#939394" }}>
+                  {selectedSignal.tag}
+                </span>
+              </div>
+
+              <div style={{ marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <CreditCard size={13} color={selectedSignal.levelColor} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#939394", textTransform: "uppercase" }}>Root Cause</span>
+                </div>
+                <div style={{ fontSize: 12, color: "#e0e0e0", lineHeight: 1.5 }}>{selectedSignal.rootCause}</div>
+              </div>
+
+              <div style={{ marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <Target size={13} color={selectedSignal.levelColor} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#939394", textTransform: "uppercase" }}>Affected Areas</span>
+                </div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {selectedSignal.affectedAreas.map((a) => (
+                    <span key={a} style={{ fontSize: 10, padding: "2px 8px", borderRadius: 6, background: "#2a2a2a", color: "#d6d9d8" }}>
+                      {a}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+                  <ArrowRight size={13} color={selectedSignal.levelColor} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#939394", textTransform: "uppercase" }}>Recommended Actions</span>
+                </div>
+                {selectedSignal.recommendedActions.map((a, idx) => (
+                  <div key={a} style={{ display: "flex", alignItems: "flex-start", gap: 8, marginBottom: 4 }}>
+                    <span style={{ width: 16, height: 16, borderRadius: 999, display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 700, background: `${selectedSignal.levelColor}20`, color: selectedSignal.levelColor, flexShrink: 0 }}>
+                      {idx + 1}
+                    </span>
+                    <span style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}>{a}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div style={{ marginTop: 8, borderTop: "1px solid #2a2a2a", paddingTop: 8, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: "#939394" }}>
+                    <Timer size={11} />
+                    {selectedSignal.timeline}
+                  </span>
+                  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 10, color: "#939394" }}>
+                    <Users size={11} />
+                    {selectedSignal.owner}
+                  </span>
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 700, color: selectedSignal.levelColor }}>
+                  {selectedSignal.priorityLabel}
+                </span>
+              </div>
+            </div>
+          </>
+        ) : null}
+      </div>
+
+      <div style={{ marginTop: 20, paddingTop: 16, borderTop: "1px solid #2a2a2a", display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 16, flexShrink: 0 }}>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 30, fontWeight: 700, color: "#ef4444" }}>1</p>
+          <p style={{ margin: 0, fontSize: 12, color: "#939394" }}>Critical</p>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 30, fontWeight: 700, color: "#f97316" }}>2</p>
+          <p style={{ margin: 0, fontSize: 12, color: "#939394" }}>Warnings</p>
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <p style={{ margin: 0, fontSize: 30, fontWeight: 700, color: "#22c55e" }}>1</p>
+          <p style={{ margin: 0, fontSize: 12, color: "#939394" }}>Improving</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ═════════════════════════════════════════════════════════════════════
 // DRILL 1 — Cardholder journey (Are cardholders satisfied with their journey?)
 // ═════════════════════════════════════════════════════════════════════
@@ -887,798 +1951,72 @@ export function CustomerCardJourneyV3Drill({ onBack }: DrillProps) {
       />
       </div>
 
-      {/* Two-column row: left stack + right radar */}
       <div
         style={{
-          width: "100%",
-          marginBottom: 8,
-          overflowX: "auto",
-          overscrollBehaviorX: "contain",
-          WebkitOverflowScrolling: "touch",
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 2fr) minmax(320px, 1fr)",
+          gap: 12,
+          marginBottom: 12,
+          alignItems: "start",
         }}
-        >
-          <div
-            style={{
-              display: "grid",
-            width: "max(100%, 700px)",
-            gridTemplateColumns: "minmax(0, 1.6fr) minmax(0, 0.8fr)",
-            gap: 12,
-            alignItems: "start",
-          }}
-        >
-        <div
-                  style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 0.8fr) minmax(0, 1.2fr)",
-            gap: 12,
-                    minWidth: 0,
-          }}
-        >
-        <JhCard
-          accent={JH.amber}
-          s={{
-                    display: "flex",
-                    flexDirection: "column",
-            minHeight: 0,
-                  }}
-                >
-          <JhSLbl>How happy are cardholders?</JhSLbl>
-                  <div
-                    style={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: 8,
-              marginBottom: 22,
-            }}
-          >
-            <JhN v="62" s={44} c={JH.amber} />
-            <span style={{ fontSize: 16, color: JH.muted }}>/100</span>
-            <JhStatus h="At Risk" />
-                  </div>
+      >
+        <JourneyTopCommandCenter />
+        <JourneyTopAISummaryWall />
+      </div>
+      <JourneyWhatsFailingPanel />
 
-          {JH_SEG_ROWS.map((s) => {
-            const churnN = Number.parseFloat(s.churn);
-            return (
-              <div key={s.k} style={{ marginBottom: 7 }}>
-                  <div
-                    style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 3,
-                  }}
-                >
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 5 }}
-                  >
-                    <JhSeg k={s.k} />
-                    <span style={{ fontSize: 11, color: JH.dim }}>{s.desc}</span>
-                  </div>
-                  <span style={{ fontSize: 11, color: JH.muted }}>
-                    churn{" "}
-                    <JhN
-                      v={s.churn}
-                      s={11}
-                      c={churnN >= 6 ? JH.red : JH.amber}
-                    />
-                  </span>
-          </div>
-        <div
-          style={{
-                    height: 5,
-                    display: "flex",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    gap: 1,
-                  }}
-                >
-                  <div
-            style={{
-                      flex: s.happy,
-                      background: JH.green,
-                      opacity: 0.7,
-                    }}
-                  />
-                  <div style={{ flex: s.neu, background: JH.neutralStack }} />
-                <div
-                  style={{
-                      flex: s.unhappy,
-                      background: JH.red,
-                      opacity: 0.7,
-                    }}
-                  />
-              </div>
-              <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    marginTop: 2,
-                  }}
-                >
-                  <span style={{ fontSize: 10, color: JH.green }}>
-                    {s.happy}% happy
-                  </span>
-                  <span style={{ fontSize: 10, color: JH.red }}>
-                    {s.unhappy}% unhappy 
-                  </span>
-              </div>
-            </div>
-            );
-          })}
-
-          <div style={{ display: "flex", gap: 10, marginTop: 4 }}>
-            {(
-              [
-                ["Happy", JH.green],
-                ["Neutral", JH.neutralStack],
-                ["Unhappy", JH.red],
-              ] as const
-            ).map(([l, c]) => (
-              <div
-                key={l}
-                style={{ display: "flex", alignItems: "center", gap: 3 }}
-              >
-                <div
-                  style={{
-                    width: 8,
-                    height: 3,
-                    borderRadius: 1,
-                    background: c,
-                  }}
-                />
-                <span style={{ fontSize: 10, color: JH.dim }}>{l}</span>
-                </div>
-              ))}
-            </div>
-          <JhHR />
-          <JhInsight color={JH.amber}>
-            LSLF and HSHF are the unhappiest segments. LSLF at 44% unhappy
-            driven by statement confusion and cashback delays. HSHF at 41%
-            unhappy with fee value — highest churn risk.
-          </JhInsight>
-          <JhActionBar>
-            Prioritise HSHF retention outreach. Fix cashback posting visibility
-            for LSLF.
-          </JhActionBar>
-        </JhCard>
-
-        <JhCard
-          accent={JH.red}
-          s={{
-              display: "flex",
-              flexDirection: "column",
-            minHeight: 0,
-          }}
-        >
+      <JhCard
+        accent={JH.red}
+        s={{
+          display: "flex",
+          flexDirection: "column",
+          minHeight: 0,
+          marginBottom: 10,
+        }}
+      >
           <JhSLbl>
             Where are they struggling? — pain concentration by journey stage
           </JhSLbl>
           <p style={{ fontSize: 12, color: JH.dim, margin: "0 0 9px" }}>
-            Block width = conversation volume · Color = churn signal intensity
+            Stage-level concentration of dissatisfaction across the journey.
           </p>
-
-          <div
-                style={{
-              width: "100%",
-              overflowX: "auto",
-              overflowY: "hidden",
-              overscrollBehaviorX: "contain",
-              WebkitOverflowScrolling: "touch",
-              scrollbarGutter: "stable",
-              paddingBottom: 8,
-              marginBottom: 4,
-            }}
-          >
+          <div style={{ border: `1px solid ${JH.borderInner}`, borderRadius: 8, overflow: "hidden" }}>
             <div
               style={{
-                display: "flex",
-                flexDirection: "column",
-                  gap: 10,
-                /* Wide enough so pain rows don’t clip before horizontal scroll activates */
-                minWidth: "max(100%, 1100px)",
+                display: "grid",
+                gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
+                gap: 8,
+                padding: "9px 10px",
+                background: JH.surfaceRow,
               }}
             >
-          {JH_STAGES.map((st) => {
-            const stageHc = jhHealthColor(st.health);
-            return (
-              <div key={st.id}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    marginBottom: 4,
-                  }}
-                >
-                  <div
-                    style={{ display: "flex", alignItems: "center", gap: 6 }}
-                  >
-                    <span
-                      style={{
-                        width: 3,
-                        height: 12,
-                        borderRadius: 1,
-                        background: stageHc,
-                      }}
-                    />
-                    <span
-                      style={{ fontSize: 12, fontWeight: 600, color: JH.text }}
-                    >
-                      {st.label}
-                    </span>
-                    <JhStatus h={st.health} />
-              </div>
-        </div>
-        <div
-          style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    flexWrap: "nowrap",
-            alignItems: "stretch",
-                    gap: 8,
-                  }}
-                >
-                  {st.pains.map((p) => {
-                    const pc = jhChurnBlockColor(p.churn);
-                    /** Landscape pills: wider than tall — scale × floor so small shares still feel horizontal */
-                    const px = Math.max(
-                      Math.round((p.pct / 100) * 760),
-                      188,
-                    );
-                    return (
-                      <div
-                        key={p.label}
-                        title={`${p.label}: ${p.churn}% churn signal`}
-                        style={{
-                          flex: "none",
-                          width: px,
-                          minWidth: px,
-                          minHeight: 56,
-                          maxHeight: 74,
-                          background: `${pc}18`,
-                          border: `1px solid ${pc}30`,
-                          borderRadius: 6,
-                          padding: "6px 12px",
-                          display: "flex",
-                          flexDirection: "column",
-                          alignItems: "stretch",
-                          justifyContent: "center",
-                          gap: 4,
-                          boxSizing: "border-box",
-                        }}
-                      >
-                        <span
-                          style={{
-                            display: "-webkit-box",
-                            WebkitBoxOrient: "vertical",
-                            WebkitLineClamp: 2,
-                            overflow: "hidden",
-                            fontSize: 12,
-                            lineHeight: 1.3,
-                            fontWeight: 600,
-                            color: JH.text,
-                            wordBreak: "break-word",
-                          }}
-                        >
-                          {p.label}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: 11,
-                            color: pc,
-                            fontFamily: "var(--mono), ui-monospace, monospace",
-                            fontWeight: 700,
-                            flexShrink: 0,
-                          }}
-                        >
-                          {p.pct}% conv · {p.churn}% churn
-                        </span>
-                  </div>
-                    );
-                  })}
-              </div>
+              <span style={{ fontSize: 10, fontWeight: 800, color: JH.dim, letterSpacing: "0.05em" }}>Journey</span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: JH.dim, letterSpacing: "0.05em" }}>Total Conversations</span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: JH.dim, letterSpacing: "0.05em" }}>Negative Sentiment</span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: JH.dim, letterSpacing: "0.05em" }}>Repeat Contact</span>
+              <span style={{ fontSize: 10, fontWeight: 800, color: JH.dim, letterSpacing: "0.05em" }}>Churn Signal</span>
             </div>
-            );
-          })}
-            </div>
-          </div>
-        </JhCard>
-        </div>
-
-        <div
-          style={{
-            alignSelf: "start",
-            display: "flex",
-            flexDirection: "column",
-            width: "100%",
-          }}
-        >
-          <JhCard
-            accent={JH.red}
-            s={{
-              display: "flex",
-              flexDirection: "column",
-              minWidth: 0,
-              minHeight: 420,
-              maxHeight: 580,
-              overflow: "hidden",
-            }}
-          >
-            <JhSLbl>✨What should you worry about? </JhSLbl>
-            <div style={{ flexShrink: 0, marginBottom: 10 }}>
-              <JhN v={String(jhRadarCrit)} s={32} c={JH.red} />
-              <span style={{ fontSize: 13, color: JH.muted }}> critical · </span>
-              <JhN v={String(jhRadarAlert)} s={32} c={JH.amber} />
-              <span style={{ fontSize: 13, color: JH.muted }}> alerts · </span>
-              <JhN v={String(jhRadarWarn)} s={32} c={JH.watchYellow} />
-              <span style={{ fontSize: 13, color: JH.muted }}> warning</span>
-            </div>
-
-            <div
-                  style={{
-                flex: "1 1 0%",
-                minHeight: 0,
-                overflowY: "auto",
-                overflowX: "hidden",
-                overscrollBehavior: "contain",
-                touchAction: "pan-y",
-                paddingRight: 8,
-                paddingBottom: 2,
-                scrollbarGutter: "stable",
-                WebkitOverflowScrolling: "touch",
-              }}
-            >
-              {JH_ALERTS.map((a, idx) => (
-                <div
-                  key={`${a.sev}-${idx}-${a.msg.slice(0, 32)}`}
-                  style={{
-                    padding: "8px 10px",
-                    marginBottom: idx === JH_ALERTS.length - 1 ? 0 : 6,
-                    background: `${a.c}07`,
-                    borderLeft: `2px solid ${a.c}`,
-                    borderRadius: "0 5px 5px 0",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      marginBottom: 4,
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 10,
-                    fontWeight: 700,
-                        padding: "2px 6px",
-                        borderRadius: 3,
-                        background: `${a.c}20`,
-                        color: a.c,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                      }}
-                    >
-                      {a.sev}
-                    </span>
-            </div>
-                  <p
-                        style={{
-                      fontSize: 12,
-                      color: JH.sub,
-                      margin: "0 0 4px",
-                      lineHeight: 1.45,
-                    }}
-                  >
-                    {a.msg}
-                  </p>
-                  <span style={{ fontSize: 11, color: a.c, fontWeight: 600 }}>
-                    → {a.action}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </JhCard>
-        </div>
-        </div>
-      </div>
-
-      <JhCard s={{ marginBottom: 10 }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 10,
-            gap: 8,
-            flexWrap: "wrap",
-          }}
-        >
-          <div>
-            <JhSLbl>Journey stage health — select stage</JhSLbl>
-            <p style={{ fontSize: 12, color: JH.dim, margin: 0 }}>
-              Metrics, channel mix, insight, evidence, and recommended action
-            </p>
-          </div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {JH_STAGES.map((x) => (
-                <button
-                key={x.id}
-                  type="button"
-                onClick={() => setStageTab(x.id)}
-                  style={{
-                  padding: "6px 12px",
-                  borderRadius: 5,
-                  fontSize: 11,
-                  fontWeight: 600,
-                    cursor: "pointer",
-                  border: `1px solid ${stageTab === x.id ? jhHealthColor(x.health) : JH.border}`,
-                  background:
-                    stageTab === x.id
-                      ? `${jhHealthColor(x.health)}12`
-                      : JH.surfaceInset,
-                  color: stageTab === x.id ? jhHealthColor(x.health) : JH.muted,
-                  transition: "all 0.15s",
-                }}
-              >
-                {x.label.split(" & ")[0]?.split(" ")[0] ?? x.id}
-                </button>
-              ))}
-            </div>
-                </div>
-
-        {sel ? (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-              gap: 12,
-            }}
-          >
-            <div>
+            {JH_STAGES.map((st) => (
               <div
+                key={st.id}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
                   gap: 8,
-                  marginBottom: 10,
-                  flexWrap: "wrap",
-                }}
-              >
-                <span style={{ fontSize: 15, fontWeight: 700 }}>
-                  {sel.label}
-                </span>
-                <JhStatus h={sel.health} />
-                <span
-                  style={{ fontSize: 11, color: JH.red, marginLeft: "auto" }}
-                >
-                  {sel.wow} WoW
-                </span>
-            </div>
-        <div
-          style={{
-            display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 6,
-                }}
-              >
-                {[
-                  { l: "Conversations", v: sel.convos, c: JH.text },
-                  {
-                    l: "Negative sentiment",
-                    v: `${sel.neg}%`,
-                    c:
-                      sel.neg >= 50
-                        ? JH.red
-                        : sel.neg >= 40
-                          ? JH.amber
-                          : JH.watchYellow,
-                  },
-                  {
-                    l: "Repeat contact",
-                    v: `${sel.repeat}%`,
-                    c:
-                      sel.repeat >= 40
-                        ? JH.red
-                        : sel.repeat >= 28
-                          ? JH.amber
-                          : JH.watchYellow,
-                  },
-                  {
-                    l: "Churn signal",
-                    v: `${sel.churn}%`,
-                    c:
-                      sel.churn >= 10
-                        ? JH.red
-                        : sel.churn >= 5
-                          ? JH.amber
-                          : JH.watchYellow,
-                  },
-                ].map((m) => (
-                  <div
-                    key={m.l}
-                    style={{
-                      background: JH.surfaceInset,
-                      borderRadius: 5,
-                      padding: "8px 10px",
-                    }}
-                  >
-                    <div
-                  style={{
-                        fontSize: 10,
-                        color: JH.dim,
-                        textTransform: "uppercase",
-                        fontWeight: 600,
-                        marginBottom: 3,
-                      }}
-                    >
-                      {m.l}
-                    </div>
-                    <JhN v={m.v} s={18} c={m.c} />
-                  </div>
-              ))}
-            </div>
-            </div>
-
-            <div>
-              <JhSLbl>Where customers raise issues at this stage</JhSLbl>
-              {(Object.entries(sel.channel) as [JhChannelKey, number][]).map(
-                ([ch, pct]) => (
-                  <div key={ch} style={{ marginBottom: 5 }}>
-                    <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: 2,
-                      }}
-                    >
-                      <JhCh k={ch} />
-                      <JhN v={`${pct}%`} s={11} />
-                    </div>
-                    <div
-                      style={{
-                        height: 4,
-                        background: JH.track,
-                        borderRadius: 2,
-                        overflow: "hidden",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: `${pct}%`,
-                          height: "100%",
-                          background: JH.CH[ch],
-                          opacity: 0.6,
-                          borderRadius: 2,
-                        }}
-                      />
-                    </div>
-                  </div>
-                ),
-              )}
-                </div>
-
-            <div>
-              <JhSLbl>AI insight</JhSLbl>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: JH.sub,
-                  lineHeight: 1.55,
-                  margin: "0 0 8px",
-                  padding: "8px 10px",
-                  background: `${stageHcSel}07`,
-                  borderLeft: `2px solid ${stageHcSel}`,
-                  borderRadius: "0 4px 4px 0",
-                }}
-              >
-                {sel.insight}
-              </p>
-              <div
-                    style={{
-                  padding: "6px 10px",
-                  background: JH.surfaceInset,
-                  borderRadius: 4,
-                  marginBottom: 6,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 10,
-                    color: JH.dim,
-                    textTransform: "uppercase",
-                    fontWeight: 600,
-                    marginBottom: 2,
-                  }}
-                >
-                  Evidence
-                    </div>
-                <p
-                  style={{
-                    fontSize: 11,
-                    color: JH.muted,
-                    margin: 0,
-                    fontStyle: "italic",
-                    lineHeight: 1.45,
-                  }}
-                >
-                  {sel.evidence}
-                </p>
-                  </div>
-              <JhActionBar>{sel.action}</JhActionBar>
-            </div>
-        </div>
-        ) : null}
-      </JhCard>
-
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-        <JhCard>
-          <JhSLbl>Channel sentiment — complaints and severity</JhSLbl>
-          <table
-          style={{
-              width: "100%",
-              borderCollapse: "collapse",
-              fontSize: 12,
-              marginBottom: 8,
-            }}
-          >
-            <thead>
-              <tr
-                style={{
-                  borderBottom: `1px solid ${JH.borderInner}`,
-                  background: JH.surfaceRow,
-                }}
-              >
-                {[
-                  "Channel",
-                  "Volume",
-                  "Neg sentiment",
-                  "Top issue",
-                ].map((h) => (
-                  <th
-                    key={h}
-                    style={{
-                      padding: "5px 4px",
-                      textAlign:
-                        h === "Channel" || h === "Top issue"
-                          ? "left"
-                          : "center",
-                      color: JH.dim,
-                      fontSize: 10,
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {JH_CHANNEL_TABLE.map((r) => {
-                const nc = negTone(r.neg);
-                return (
-                  <tr
-                    key={r.ch}
-                    style={{ borderBottom: `1px solid ${JH.border}` }}
-                  >
-                    <td style={{ padding: "8px 4px" }}>
-                      <JhCh k={r.ch} />
-                    </td>
-                    <td style={{ padding: "8px 4px", textAlign: "center" }}>
-                      <JhN v={r.vol} s={12} />
-                    </td>
-                    <td style={{ padding: "8px 4px", textAlign: "center" }}>
-                      <JhN v={`${r.neg}%`} s={13} c={nc} />
-                    </td>
-                    <td
-                      style={{
-                        padding: "8px 4px",
-                        fontSize: 11,
-                        color: JH.muted,
-                      }}
-                    >
-                      {r.topIssue}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <JhInsight color={JH.red}>
-            Social is 62% negative — highest of all channels despite lowest
-            volume. Customers go public when internal channels fail. Voice at
-            54% is driven almost entirely by Disputes and Retention traffic.
-          </JhInsight>
-          <JhActionBar>
-            Monitor Social for early warning signals. Reduce Dispute-related
-            Voice volume with proactive case updates.
-          </JhActionBar>
-        </JhCard>
-
-        <JhCard>
-          <JhSLbl>Repeat contact analysis — unresolved on first touch</JhSLbl>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: 8,
-              marginBottom: 10,
-            }}
-          >
-            <JhN v="34%" s={28} c={JH.red} />
-            <span style={{ fontSize: 12, color: JH.muted }}>
-              overall repeat rate ·{" "}
-              <span style={{ color: JH.dim }}>
-                each repeat callback materially increases handling cost
-              </span>
-            </span>
-          </div>
-
-          {JH_REPEAT.map((r) => (
-            <div key={r.issue} style={{ marginBottom: 7 }}>
-              <div
-                  style={{
-                    display: "flex",
-                  justifyContent: "space-between",
+                  padding: "9px 10px",
+                  borderTop: `1px solid ${JH.borderInner}`,
                   alignItems: "center",
-                  marginBottom: 2,
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 5,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <span
-                    style={{ fontSize: 12, fontWeight: 600, color: JH.text }}
-                  >
-                    {r.issue}
-                  </span>
-                  <JhSeg k={r.seg} />
-                  <JhCh k={r.ch} />
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ fontSize: 11, color: JH.dim }}>{r.vol}</span>
-                  <JhN v={`${r.rate}%`} s={13} c={repeatTone(r.rate)} />
-          </div>
-      </div>
-              <div
-                style={{
-                  height: 4,
-                  background: JH.track,
-                  borderRadius: 2,
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${r.rate}%`,
-                    height: "100%",
-                    background: repeatTone(r.rate),
-                    opacity: 0.7,
-                    borderRadius: 2,
-                  }}
-                />
+                <span style={{ fontSize: 12, color: JH.text, fontWeight: 700 }}>{st.label}</span>
+                <span style={{ fontSize: 12, color: JH.sub, fontFamily: "var(--mono), ui-monospace, monospace", fontWeight: 700 }}>{st.convos}</span>
+                <span style={{ fontSize: 12, color: negTone(st.neg), fontFamily: "var(--mono), ui-monospace, monospace", fontWeight: 700 }}>{st.neg}%</span>
+                <span style={{ fontSize: 12, color: repeatTone(st.repeat), fontFamily: "var(--mono), ui-monospace, monospace", fontWeight: 700 }}>{st.repeat}%</span>
+                <span style={{ fontSize: 12, color: jhChurnBlockColor(st.churn), fontFamily: "var(--mono), ui-monospace, monospace", fontWeight: 700 }}>{st.churn}%</span>
               </div>
-            </div>
-          ))}
-          <JhHR />
-          <JhInsight color={JH.amber}>
-            Dispute follow-up (47%) and Cashback (42%) are the top repeat
-            contact drivers. Both solvable: dispute needs operational fix;
-            cashback needs visibility in-channel. Combined: ~6,260 unnecessary
-            callbacks this month.
-          </JhInsight>
-          <JhActionBar>
-            Prioritise dispute status automation and cashback posting
-            transparency. Target: repeat below 20%.
-          </JhActionBar>
-        </JhCard>
-      </div>
+            ))}
+          </div>
+      </JhCard>
     </>
     </RoleBasedUnifiedReadingShell>
   );
