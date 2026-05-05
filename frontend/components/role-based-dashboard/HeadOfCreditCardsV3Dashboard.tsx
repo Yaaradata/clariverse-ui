@@ -229,6 +229,8 @@ function ExecutiveTile({ tile, onOpen }: { tile: V3Tile; onOpen: () => void }) {
     align?: "start" | "end";
     /** Muted sub-label in a pill (Fraud & Fulfillment style) */
     subPill?: boolean;
+    /** Optional footnote below sub (sentence case, not uppercased) */
+    footnote?: string;
   };
 
   const compactMeta: Record<
@@ -243,16 +245,21 @@ function ExecutiveTile({ tile, onOpen }: { tile: V3Tile; onOpen: () => void }) {
   > = {
     customer_card_journey: {
       micro: "Satisfaction · Closure Risk · Top Pain",
-      leftGauge: { label: "Positive Resolution", value: 61, sub: "resolution quality" },
-      rightGauge: { label: "Closure Intent", value: 24, sub: "at-risk share" },
+      leftGauge: { label: "High Spend ", value: 61, sub: "resolution quality" },
+      rightGauge: { label: "Low Spend", value: 24, sub: "at-risk share" },
       bottomLeft: { label: "Top Pain", value: "PIN Reset", sub: "topic cluster" },
-      bottomRight: { label: "High Spend At Risk", value: "18 HSHF accounts", sub: "segment risk" },
+      bottomRight: {
+        label: "HSHF at-risk",
+        value: "18 accounts",
+        sub: "churn signals",
+        valueColor: "#ef4444"
+      },
     },
     market_reputation: {
-      micro: "Channel Sentiment · Competitor Echo · Social",
-      leftGauge: { label: "Negativity Share", value: 42, sub: "weekly mix" },
-      rightGauge: { label: "Rank Pressure", value: 67, sub: "review risk" },
-      bottomLeft: { label: "Competitor Echo", value: "+142% WoW", sub: "entity extract" },
+      micro: "Standalone vs co-brand · Rankings · Social echo",
+      leftGauge: { label: "Standalone", value: 54, sub: "rank + narrative pressure" },
+      rightGauge: { label: "Co-branded", value: 63, sub: "partner + review risk" },
+      bottomLeft: { label: "Competitor Mentions ", value: "+142% WoW", sub: "entity extract" },
       bottomRight: { label: "Social Driver", value: "#RewardScam", sub: "hashtag vol" },
     },
     fraud_fulfillment: {
@@ -413,39 +420,22 @@ function ExecutiveTile({ tile, onOpen }: { tile: V3Tile; onOpen: () => void }) {
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12, justifyContent: "flex-start" }}>
-          {tile.id === "market_reputation" ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {tile.channelSentiment.map((c) => {
-                const ctone = c.score >= 0.62 ? "#22c55e" : c.score >= 0.52 ? "#f59e0b" : "#ef4444";
-                return (
-                  <div key={c.channel} style={{ display: "grid", gridTemplateColumns: "44px 1fr 30px", gap: 6, alignItems: "center" }}>
-                    <span style={{ fontSize: 9, color: "#b9b9ba" }}>{c.channel === "Social" ? "Social/X" : c.channel}</span>
-                    <div style={{ height: 5, borderRadius: 3, background: `${ctone}25` }}>
-                      <div style={{ width: `${Math.round(c.score * 100)}%`, height: "100%", borderRadius: 3, background: ctone }} />
-                    </div>
-                    <span style={{ fontSize: 10, color: ctone, fontFamily: "var(--mono)", textAlign: "right", fontWeight: 700 }}>{c.score.toFixed(2)}</span>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
-            <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 12, minWidth: 0, alignItems: "start" }}>
-              {[m.leftGauge, m.rightGauge].map((g) => (
-                <MiniHalfGauge
-                  key={g.label}
-                  label={g.label}
-                  value={g.value}
-                  color={
-                    g.label === "Positive Resolution" ||
-                    g.label === "Resolution Quality" ||
-                    g.label === "Follow-up Rate"
-                      ? T.amber
-                      : trendLineColor
-                  }
-                />
-              ))}
-            </div>
-          )}
+          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 12, minWidth: 0, alignItems: "start" }}>
+            {[m.leftGauge, m.rightGauge].map((g) => (
+              <MiniHalfGauge
+                key={g.label}
+                label={g.label}
+                value={g.value}
+                color={
+                  g.label === "Positive Resolution" ||
+                  g.label === "Resolution Quality" ||
+                  g.label === "Follow-up Rate"
+                    ? T.amber
+                    : trendLineColor
+                }
+              />
+            ))}
+          </div>
 
           <div
             style={{

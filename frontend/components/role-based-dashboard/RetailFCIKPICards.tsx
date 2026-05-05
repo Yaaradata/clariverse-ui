@@ -67,9 +67,9 @@ const NPS_TREND = [
 
 // Sentiment by Relationship Value — sentiment split (Happy / Neutral / Unhappy) + deposits at stake
 const WEALTH_TIERS = [
-  { id: 'H1', label: 'H1 · £1M+',      happy: 44, neutral: 26, unhappy: 30, deposits: '£184M', accts: 312  },
-  { id: 'H2', label: 'H2 · £500K–1M',  happy: 51, neutral: 24, unhappy: 25, deposits: '£276M', accts: 624  },
-  { id: 'H3', label: 'H3 · £250–500K', happy: 58, neutral: 22, unhappy: 20, deposits: '£312M', accts: 1085 },
+  { id: 'H1', label: 'H1 · $1M+',      happy: 44, neutral: 26, unhappy: 30, deposits: '$184M', accts: 312  },
+  { id: 'H2', label: 'H2 · $500K–1M',  happy: 51, neutral: 24, unhappy: 25, deposits: '$276M', accts: 624  },
+  { id: 'H3', label: 'H3 · $250K–500K', happy: 58, neutral: 22, unhappy: 20, deposits: '$312M', accts: 1085 },
 ];
 
 // Vulnerable Customer Watchlist — condensed executive view keyed by wealth tier

@@ -1,15 +1,13 @@
 "use client";
 
-import { type CSSProperties, type ReactNode, useState } from "react";
+import { type CSSProperties, type ReactNode, useMemo, useState } from "react";
 
 /*
  * Head of Credit Cards (V3) — Are we keeping our service promise?
  * Compact executive version:
  * Service Promise Score + Risk Wall
- * Promise Performance Chart + Agent Promise Breakage
  * Service Failure Map + Dispute Recovery Funnel
  * Ownership Board
- * Evidence + Actions
  */
 
 const C = {
@@ -36,16 +34,6 @@ const SEG = {
 } as const;
 
 type SegKey = keyof typeof SEG;
-
-const CH = {
-  Voice: C.red,
-  Chat: C.orange,
-  Email: C.yellow,
-  Ticket: C.cyan,
-  Social: C.green,
-} as const;
-
-type ChKey = keyof typeof CH;
 
 function M({
   children,
@@ -265,25 +253,6 @@ const SERVICE_WORRY_ALERTS = [
     action: "Pause upsell scripts until active complaint is resolved.",
   },
 ] as const;
-
-const PROMISE_PERFORMANCE = [
-  { promise: "Card delivery", kept: 92, missed: 8, repeat: 12, type: "kept" },
-  { promise: "Card closure", kept: 96, missed: 4, repeat: 8, type: "kept" },
-  { promise: "Statement query", kept: 88, missed: 12, repeat: 19, type: "kept" },
-  { promise: "Activation / PIN", kept: 84, missed: 16, repeat: 28, type: "watch" },
-  { promise: "Callback 24h", kept: 78, missed: 22, repeat: 31, type: "watch" },
-  { promise: "Dispute update", kept: 58, missed: 42, repeat: 47, type: "miss" },
-  { promise: "Fee waiver", kept: 46, missed: 54, repeat: 38, type: "miss" },
-  { promise: "Provisional credit", kept: 62, missed: 38, repeat: 41, type: "miss" },
-];
-
-const BROKEN_PROMISES_TOP = [
-  { promise: "Fee waiver in next bill", count: 92, color: C.red },
-  { promise: "Dispute callback in 24h", count: 64, color: C.red },
-  { promise: "Provisional credit by date", count: 48, color: C.orange },
-  { promise: "EMI conversion confirmation", count: 32, color: C.orange },
-  { promise: "Limit increase decision", count: 18, color: C.yellow },
-];
 
 const SERVICE_FAILURES = [
   {
@@ -546,64 +515,6 @@ const RISK_ACTION_QUEUE = [
   },
 ] as const;
 
-const EVIDENCE_SNIPPETS: { ch: ChKey; seg: SegKey; type: string; text: string }[] = [
-  {
-    ch: "Voice",
-    seg: "HSHF",
-    type: "AGENT PROMISE",
-    text: "Last call agent told me fee will be reversed in next bill. Bill came, fee is still there. This is the third call.",
-  },
-  {
-    ch: "Chat",
-    seg: "HSLF",
-    type: "PARTNER BLAME",
-    text: "Amazon refund issued 20 days back. Bank says it is Amazon’s problem. Amazon says contact bank. I am stuck.",
-  },
-  {
-    ch: "Voice",
-    seg: "LSHF",
-    type: "AGING DISPUTE",
-    text: "Disputed transaction in March. Today is May. No update. I will escalate this now.",
-  },
-  {
-    ch: "Voice",
-    seg: "LSLF",
-    type: "RECOVERY CONDUCT",
-    text: "Your collection agent called my office at 9pm and spoke to my colleague. This is harassment.",
-  },
-];
-
-const RECOMMENDED_ACTIONS = [
-  {
-    title: "Resolve 8 externally escalatable cases today",
-    owner: "Dispute Ops + Legal",
-    impact: "Prevent high-risk service escalation",
-    p: "Critical",
-    c: C.red,
-  },
-  {
-    title: "Audit promise-to-resolution tracking",
-    owner: "Training + QA",
-    impact: "Reduce 54% broken-promise rate",
-    p: "Critical",
-    c: C.red,
-  },
-  {
-    title: "Create same-call fee waiver path",
-    owner: "Service Design + Billing Ops",
-    impact: "Reduce HSHF churn language",
-    p: "High",
-    c: C.orange,
-  },
-  {
-    title: "Cap Vendor Beta to low-complexity disputes",
-    owner: "Vendor Management",
-    impact: "Reduce repeat contact and poor close sentiment",
-    p: "High",
-    c: C.orange,
-  },
-];
-
 function ServiceScoreCard() {
   return (
     <Bx accent={C.red} s={{ minHeight: 320 }}>
@@ -629,8 +540,8 @@ function ServiceScoreCard() {
         ))}
       </div>
 
-      <div
-        style={{
+    <div
+      style={{
           marginTop: 12,
           padding: "8px 10px",
           background: `${C.red}07`,
@@ -718,190 +629,6 @@ function WorryWall() {
   );
 }
 
-function PromisePerformanceChart() {
-  return (
-    <Bx accent={C.purple} s={{ minHeight: 355 }}>
-      <Hd sub="Combined view of promises kept vs missed. Repeat contact shows where customers come back.">
-        Promise Performance
-      </Hd>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-        {PROMISE_PERFORMANCE.map((p) => {
-          const missColor = p.missed >= 40 ? C.red : p.missed >= 20 ? C.orange : C.yellow;
-          return (
-            <div key={p.promise}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "120px 1fr 56px 56px",
-                  gap: 8,
-                  alignItems: "center",
-                  marginBottom: 3,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 10,
-                    color: C.text,
-                    fontWeight: 600,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                >
-                  {p.promise}
-                </span>
-
-                <div
-                  style={{
-                    height: 9,
-                    background: "rgba(255,255,255,0.05)",
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    display: "flex",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${p.kept}%`,
-                      background: p.kept >= 80 ? C.green : C.yellow,
-                    }}
-                    title={`${p.kept}% kept`}
-                  />
-                  <div
-                    style={{
-                      width: `${p.missed}%`,
-                      background: missColor,
-                    }}
-                    title={`${p.missed}% missed`}
-                  />
-                </div>
-
-                <M s={10} c={p.kept >= 80 ? C.green : C.yellow}>
-                  {p.kept}% kept
-                </M>
-
-                <M s={10} c={p.repeat >= 35 ? C.red : C.orange}>
-                  {p.repeat}% rpt
-                </M>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          marginTop: 12,
-          paddingTop: 10,
-          borderTop: `1px solid ${C.border}`,
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 10, height: 6, borderRadius: 3, background: C.green }} />
-          <span style={{ color: C.muted, fontSize: 10 }}>Kept</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 10, height: 6, borderRadius: 3, background: C.orange }} />
-          <span style={{ color: C.muted, fontSize: 10 }}>Watch</span>
-        </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-          <span style={{ width: 10, height: 6, borderRadius: 3, background: C.red }} />
-          <span style={{ color: C.muted, fontSize: 10 }}>Missed</span>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: 10,
-          padding: "7px 10px",
-          background: `${C.red}07`,
-          borderLeft: `2px solid ${C.red}`,
-          borderRadius: "0 5px 5px 0",
-        }}
-      >
-        <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.45 }}>
-          ✦ Fee waiver and dispute update are the weakest promises. Card closure and delivery are not the main problem.
-        </span>
-      </div>
-    </Bx>
-  );
-}
-
-function AgentPromiseBreakage() {
-  return (
-    <Bx accent={C.orange} s={{ minHeight: 355 }}>
-      <Hd sub="Agent said it · system did not deliver · customer called back." badge="AI">
-        Agent Promise Breakage
-      </Hd>
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
-        <MetricTile label="Promises detected" value="342" />
-        <MetricTile label="Customer called back" value="184" color={C.red} />
-        <MetricTile label="Breakage rate" value="54%" color={C.red} />
-        <MetricTile label="WoW change" value="+28%" color={C.red} />
-      </div>
-
-      <div
-        style={{
-          fontSize: 9,
-          color: C.dim,
-          textTransform: "uppercase",
-          fontWeight: 700,
-          marginTop: 12,
-          marginBottom: 6,
-        }}
-      >
-        Top broken promises
-      </div>
-
-      {BROKEN_PROMISES_TOP.map((p) => (
-        <div key={p.promise} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-          <span style={{ fontSize: 10, color: C.sub, flex: 1 }}>{p.promise}</span>
-          <div
-            style={{
-              width: 92,
-              height: 6,
-              background: "rgba(255,255,255,0.05)",
-              borderRadius: 3,
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${(p.count / 92) * 100}%`,
-                height: "100%",
-                background: p.color,
-                borderRadius: 3,
-              }}
-            />
-          </div>
-          <M s={10} c={p.color}>
-            {p.count}
-          </M>
-        </div>
-      ))}
-
-      <div
-        style={{
-          marginTop: 10,
-          padding: "7px 10px",
-          background: `${C.orange}07`,
-          borderLeft: `2px solid ${C.orange}`,
-          borderRadius: "0 5px 5px 0",
-        }}
-      >
-        <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.45 }}>
-          ✦ This is the clearest conversation-derived service failure: promise made, no fulfillment, repeat contact created.
-        </span>
-      </div>
-    </Bx>
-  );
-}
-
 function ServiceFailureRanking() {
   const maxVol = Math.max(...SERVICE_FAILURES.map((f) => f.y));
   const ranked = [...SERVICE_FAILURES].sort((a, b) => b.y - a.y);
@@ -913,7 +640,7 @@ function ServiceFailureRanking() {
     >
       <Hd sub="Ranked by conversation volume, repeat contact, and sentiment impact.">
         Top Service Failures
-      </Hd>
+          </Hd>
 
       <div
         style={{
@@ -932,18 +659,18 @@ function ServiceFailureRanking() {
           const repeatColor = repeatNum >= 45 ? C.red : repeatNum >= 35 ? C.orange : C.yellow;
           const volPct = Math.round((f.y / maxVol) * 100);
 
-          return (
-            <div
+              return (
+                <div
               key={f.label}
-              style={{
+                  style={{
                 padding: "9px 10px",
                 borderRadius: 8,
                 background: idx < 2 ? `${C.red}08` : "rgba(255,255,255,0.025)",
                 border: `1px solid ${idx < 2 ? `${C.red}22` : C.border}`,
-              }}
-            >
-              <div
-                style={{
+                  }}
+                >
+                  <div
+                    style={{
                   display: "grid",
                   gridTemplateColumns: "24px 1fr 70px 64px 54px",
                   gap: 8,
@@ -970,8 +697,8 @@ function ServiceFailureRanking() {
                   </div>
                   <div style={{ fontSize: 9, color: C.muted, marginTop: 2 }}>
                     Segment most affected: <Bd c={SEG[f.seg]}>{f.seg}</Bd>
+                    </div>
                   </div>
-                </div>
 
                 <div style={{ textAlign: "right" }}>
                   <M s={11}>{f.y.toLocaleString()}</M>
@@ -983,7 +710,7 @@ function ServiceFailureRanking() {
                     {f.repeat}
                   </M>
                   <div style={{ fontSize: 8, color: C.muted }}>repeat</div>
-                </div>
+          </div>
 
                 <div style={{ textAlign: "right" }}>
                   <M s={11} c={f.sent <= -0.55 ? C.red : C.orange}>
@@ -993,8 +720,8 @@ function ServiceFailureRanking() {
                 </div>
               </div>
 
-              <div
-                style={{
+            <div
+              style={{
                   height: 6,
                   background: "rgba(255,255,255,0.05)",
                   borderRadius: 4,
@@ -1009,27 +736,27 @@ function ServiceFailureRanking() {
                     borderRadius: 4,
                   }}
                 />
-              </div>
+                </div>
             </div>
           );
         })}
-      </div>
+          </div>
 
-      <div
-        style={{
+          <div
+            style={{
           marginTop: 10,
           padding: "7px 10px",
           background: `${C.red}07`,
-          borderLeft: `2px solid ${C.red}`,
+              borderLeft: `2px solid ${C.red}`,
           borderRadius: "0 5px 5px 0",
         }}
       >
         <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.45 }}>
           ✦ Dispute follow-up and fee waiver failures are the biggest service breaks by volume and repeat contact.
           These should drive today&apos;s operations focus.
-        </span>
-      </div>
-    </Bx>
+            </span>
+          </div>
+        </Bx>
   );
 }
 
@@ -1038,7 +765,7 @@ function DisputeRecoveryFunnel() {
     <Bx accent={C.orange} s={{ minHeight: 360 }}>
       <Hd sub="Compact dispute lifecycle. Disputes are one part of the service promise.">
         Dispute Recovery Funnel
-      </Hd>
+          </Hd>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
         {DISPUTE_FUNNEL.map((s, idx) => {
@@ -1061,7 +788,7 @@ function DisputeRecoveryFunnel() {
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
                   <span style={{ color: C.text, fontWeight: 700, fontSize: 11 }}>{s.stage}</span>
                   <Bd c={s.color}>{s.status}</Bd>
-                </div>
+              </div>
                 <div style={{ display: "flex", gap: 12, marginTop: 5, flexWrap: "wrap" }}>
                   <span style={{ color: C.sub, fontSize: 10 }}>
                     Vol: <M s={10}>{s.vol.toLocaleString()}</M>
@@ -1072,15 +799,15 @@ function DisputeRecoveryFunnel() {
                   <span style={{ color: C.sub, fontSize: 10 }}>
                     Sent: <M s={10} c={s.color}>{s.sentiment.toFixed(2)}</M>
                   </span>
-                </div>
+            </div>
               </div>
             </div>
           );
         })}
       </div>
 
-      <div
-        style={{
+              <div
+                style={{
           marginTop: 10,
           padding: "7px 10px",
           background: `${C.orange}07`,
@@ -1091,7 +818,7 @@ function DisputeRecoveryFunnel() {
         <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.45 }}>
           ✦ Evidence pending is the operational bottleneck. Sentiment collapses once cases move toward final decision and escalation risk.
         </span>
-      </div>
+              </div>
     </Bx>
   );
 }
@@ -1101,25 +828,25 @@ function RiskBreakdownPanel() {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 12 }}>
-      <div>
-        <div
-          style={{
+            <div>
+              <div
+                style={{
             fontSize: 10,
-            color: C.dim,
-            textTransform: "uppercase",
+                  color: C.dim,
+                  textTransform: "uppercase",
             fontWeight: 800,
             letterSpacing: "0.06em",
             marginBottom: 8,
-          }}
-        >
+                }}
+              >
           Escalation Pipeline
-        </div>
+              </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {RISK_PIPELINE.map((r, idx) => (
             <div
               key={r.label}
-              style={{
+                style={{
                 background: idx === 0 ? `${C.red}08` : "rgba(255,255,255,0.025)",
                 borderTop: `1px solid ${idx === 0 ? `${C.red}25` : C.border}`,
                 borderRight: `1px solid ${idx === 0 ? `${C.red}25` : C.border}`,
@@ -1140,12 +867,12 @@ function RiskBreakdownPanel() {
                 <div>
                   <M s={24} c={r.color}>
                     {r.value}
-                  </M>
-                </div>
+              </M>
+            </div>
 
                 <div style={{ minWidth: 0 }}>
-                  <div
-                    style={{
+          <div
+            style={{
                       fontSize: 11,
                       color: C.text,
                       fontWeight: 800,
@@ -1153,31 +880,31 @@ function RiskBreakdownPanel() {
                     }}
                   >
                     {r.label}
-                  </div>
+          </div>
                   <div style={{ fontSize: 9, color: C.muted }}>{r.sub}</div>
 
-                  <div
-                    style={{
+              <div
+                style={{
                       marginTop: 7,
                       height: 6,
                       background: "rgba(255,255,255,0.05)",
                       borderRadius: 4,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: `${r.pct}%`,
-                        height: "100%",
-                        background: r.color,
-                        borderRadius: 4,
-                      }}
-                    />
-                  </div>
-                </div>
-
+                  overflow: "hidden",
+                }}
+              >
                 <div
                   style={{
+                        width: `${r.pct}%`,
+                    height: "100%",
+                        background: r.color,
+                        borderRadius: 4,
+                  }}
+                />
+              </div>
+            </div>
+
+          <div
+            style={{
                     background: "rgba(255,255,255,0.025)",
                     border: `1px solid ${C.border}`,
                     borderRadius: 7,
@@ -1186,7 +913,7 @@ function RiskBreakdownPanel() {
                 >
                   <div style={{ fontSize: 8, color: C.dim, textTransform: "uppercase", fontWeight: 700 }}>
                     Owner
-                  </div>
+          </div>
                   <div style={{ fontSize: 10, color: C.sub, fontWeight: 700, marginBottom: 4 }}>{r.owner}</div>
                   <div style={{ fontSize: 9, color: r.color, fontWeight: 700 }}>→ {r.action}</div>
                 </div>
@@ -1224,11 +951,11 @@ function RiskBreakdownPanel() {
 
               return (
                 <div key={r.issue} style={{ marginBottom: 10 }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      gap: 8,
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 8,
                       alignItems: "center",
                       marginBottom: 4,
                     }}
@@ -1240,7 +967,7 @@ function RiskBreakdownPanel() {
                   </div>
 
                   <div
-                    style={{
+                  style={{
                       height: 6,
                       background: "rgba(255,255,255,0.05)",
                       borderRadius: 4,
@@ -1255,8 +982,8 @@ function RiskBreakdownPanel() {
                         borderRadius: 4,
                       }}
                     />
-                  </div>
-                </div>
+            </div>
+          </div>
               );
             })}
           </div>
@@ -1264,10 +991,10 @@ function RiskBreakdownPanel() {
 
         <div>
           <div
-            style={{
+                      style={{
               fontSize: 10,
-              color: C.dim,
-              textTransform: "uppercase",
+                        color: C.dim,
+                        textTransform: "uppercase",
               fontWeight: 800,
               letterSpacing: "0.06em",
               marginBottom: 8,
@@ -1280,7 +1007,7 @@ function RiskBreakdownPanel() {
             {RISK_ACTION_QUEUE.map((r) => (
               <div
                 key={r.label}
-                style={{
+                      style={{
                   background: `${r.color}08`,
                   border: `1px solid ${r.color}25`,
                   borderRadius: 8,
@@ -1292,7 +1019,7 @@ function RiskBreakdownPanel() {
                   {r.count}
                 </M>
                 <div
-                  style={{
+                      style={{
                     fontSize: 10,
                     color: C.text,
                     fontWeight: 800,
@@ -1308,8 +1035,8 @@ function RiskBreakdownPanel() {
           </div>
         </div>
 
-        <div
-          style={{
+          <div
+            style={{
             padding: "8px 10px",
             background: `${C.red}07`,
             borderLeft: `2px solid ${C.red}`,
@@ -1319,851 +1046,942 @@ function RiskBreakdownPanel() {
           <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.45 }}>
             ✦ Risk is not only complaint count. The real risk is aging + broken promise + recovery conduct. Same-day
             closure should focus on 8 escalatable cases first.
-          </span>
-        </div>
+            </span>
+          </div>
       </div>
     </div>
   );
 }
 
-type OwnershipLens = "segment" | "queue" | "partner" | "risk";
+type SegmentKey = "HSHF" | "HSLF" | "LSHF" | "LSLF";
+type CardKind = "standalone" | "cobrand";
 
-type OwnershipSeverity = "Critical" | "High" | "Watch" | "Stable";
+type Category =
+  | "all"
+  | "cashback"
+  | "rewards"
+  | "intro_apr"
+  | "travel"
+  | "balance_transfer"
+  | "no_annual_fee"
+  | "business";
 
-type OwnershipCard = {
-  name: string;
-  label: string;
-  value: string;
-  valueLabel: string;
-  severity: OwnershipSeverity;
-  color: string;
+type SegmentMetric = {
+  failures: number;
+  repeat: number;
+  sentiment: number;
+  topIssue: string;
   owner: string;
-  issue: string;
-  action: string;
-  evidence: string;
-  chain: {
-    segment: string;
-    queue: string;
-    partner: string;
-    risk: string;
-  };
 };
 
-type OwnershipLensData = {
-  title: string;
-  subtitle: string;
-  insight: string;
-  strongestActions: {
-    title: string;
-    owner: string;
-    impact: string;
-    priority: OwnershipSeverity;
-    color: string;
-  }[];
-  cards: OwnershipCard[];
+type CardProduct = {
+  name: string;
+  kind: CardKind;
+  partner?: string;
+  categories: Exclude<Category, "all">[];
+  bySegment: Record<SegmentKey, SegmentMetric>;
 };
 
-const OWNER_LENS_DATA: Record<OwnershipLens, OwnershipLensData> = {
-  segment: {
-    title: "Segment Ownership",
-    subtitle: "Which cardholder segment is being failed by service?",
-    insight:
-      "HSHF is the highest business-risk segment because repeat dispute follow-up is high and service failure directly impacts spend retention.",
-    strongestActions: [
-      {
-        title: "Route HSHF disputes and service recovery cases in-house",
-        owner: "Dispute Ops",
-        impact: "Protect high-value cardholders and reduce external escalation risk.",
-        priority: "Critical",
-        color: C.red,
-      },
-      {
-        title: "Create same-call fee waiver decision path",
-        owner: "Billing Ops",
-        impact: "Reduce HSLF fee-waiver repeat contacts and broken promise language.",
-        priority: "High",
-        color: C.orange,
-      },
-      {
-        title: "Auto-escalate missed callback promises",
-        owner: "Care Ops",
-        impact: "Lower LSLF callback dissatisfaction and repeat follow-up load.",
-        priority: "Watch",
-        color: C.yellow,
-      },
-    ],
-    cards: [
-      {
-        name: "HSHF",
-        label: "High Spend / High Frequency",
-        value: "1,240",
-        valueLabel: "failures",
-        severity: "Critical",
-        color: C.red,
-        owner: "Dispute Ops",
-        issue: "Dispute update promise is breaking for high-value cardholders.",
-        action: "Route HSHF disputes to in-house priority queue.",
-        evidence: "“I have called three times and still no dispute update.”",
-        chain: {
-          segment: "HSHF",
-          queue: "Vendor Beta + In-house Dispute",
-          partner: "Amazon Pay / Travel co-brand",
-          risk: "8 escalatable cases",
-        },
-      },
-      {
-        name: "HSLF",
-        label: "High Spend / Low Frequency",
-        value: "980",
-        valueLabel: "failures",
-        severity: "High",
-        color: C.orange,
-        owner: "Billing Ops",
-        issue: "Fee waiver and benefit promises are not fulfilled after agent commitment.",
-        action: "Create same-call fee waiver decision path.",
-        evidence: "“Agent promised the waiver, but the fee is still in the next bill.”",
-        chain: {
-          segment: "HSLF",
-          queue: "Billing Ops",
-          partner: "Cashback / reward partners",
-          risk: "Fee-value dissatisfaction",
-        },
-      },
-      {
-        name: "LSHF",
-        label: "Low Spend / High Frequency",
-        value: "1,620",
-        valueLabel: "failures",
-        severity: "High",
-        color: C.orange,
-        owner: "Digital + Service",
-        issue: "Payment status and failed-transaction support are creating repeat contacts.",
-        action: "Improve payment-status and failed-transaction self-serve explanations.",
-        evidence: "“Payment failed but money is debited. No one is explaining the status.”",
-        chain: {
-          segment: "LSHF",
-          queue: "Digital Service Queue",
-          partner: "RuPay / payment network",
-          risk: "High contact volume",
-        },
-      },
-      {
-        name: "LSLF",
-        label: "Low Spend / Low Frequency",
-        value: "860",
-        valueLabel: "failures",
-        severity: "Watch",
-        color: C.yellow,
-        owner: "Care Ops",
-        issue: "Callback promises are not being completed.",
-        action: "Create callback SLA queue and auto-alert missed callbacks.",
-        evidence: "“Nobody called back even though the agent promised 24 hours.”",
-        chain: {
-          segment: "LSLF",
-          queue: "Care Ops",
-          partner: "None",
-          risk: "Callback dissatisfaction",
-        },
-      },
-    ],
-  },
-
-  queue: {
-    title: "Queue Ownership",
-    subtitle: "Which internal or outsourced queue is creating repeat contact?",
-    insight:
-      "Vendor Beta and Recovery Queue are the two ownership hotspots because they combine poor close sentiment with high repeat contact.",
-    strongestActions: [
-      {
-        title: "Cap Vendor Beta to low-complexity cases within 48 hours",
-        owner: "Vendor Management",
-        impact: "Reduce repeat contact and move high-risk disputes to stronger teams.",
-        priority: "Critical",
-        color: C.red,
-      },
-      {
-        title: "Keep HSHF and 14+ day disputes in-house",
-        owner: "Dispute Ops",
-        impact: "Preserve close quality on high-risk queues.",
-        priority: "High",
-        color: C.orange,
-      },
-      {
-        title: "Run weekly queue-level close sentiment review",
-        owner: "Service Ops",
-        impact: "Detect queue deterioration before repeat spikes.",
-        priority: "Watch",
-        color: C.yellow,
-      },
-    ],
-    cards: [
-      {
-        name: "Vendor Beta",
-        label: "Outsourced dispute queue",
-        value: "52%",
-        valueLabel: "repeat",
-        severity: "Critical",
-        color: C.red,
-        owner: "Vendor Management",
-        issue: "Worst repeat-contact rate and weakest close sentiment.",
-        action: "Cap to low-complexity cases and move high-risk disputes in-house.",
-        evidence: "Close sentiment is -0.56 vs in-house -0.24.",
-        chain: {
-          segment: "HSHF / HSLF",
-          queue: "Vendor Beta",
-          partner: "Amazon / Flipkart cases",
-          risk: "Repeat contact + escalation",
-        },
-      },
-      {
-        name: "Recovery Queue",
-        label: "Collections / recovery handling",
-        value: "64",
-        valueLabel: "conduct complaints",
-        severity: "Critical",
-        color: C.red,
-        owner: "Recovery Ops",
-        issue: "Recovery conduct complaints are creating reputation risk.",
-        action: "Audit recovery scripts, call timing, and family-contact violations.",
-        evidence: "“Collection agent called my office and spoke to my colleague.”",
-        chain: {
-          segment: "LSLF",
-          queue: "Recovery Queue",
-          partner: "None",
-          risk: "Conduct escalation",
-        },
-      },
-      {
-        name: "Vendor Alpha",
-        label: "Low-complexity vendor queue",
-        value: "31%",
-        valueLabel: "repeat",
-        severity: "Watch",
-        color: C.yellow,
-        owner: "Vendor Management",
-        issue: "Acceptable only for low-complexity service requests.",
-        action: "Keep Vendor Alpha restricted to simple cases.",
-        evidence: "Repeat contact is better than Vendor Beta, but weaker than in-house.",
-        chain: {
-          segment: "HSLF / LSHF",
-          queue: "Vendor Alpha",
-          partner: "Low-complexity cases",
-          risk: "Complexity creep",
-        },
-      },
-      {
-        name: "In-house Dispute",
-        label: "Best-performing dispute queue",
-        value: "22%",
-        valueLabel: "repeat",
-        severity: "Stable",
-        color: C.green,
-        owner: "Dispute Ops",
-        issue: "Strongest close quality and lowest repeat rate.",
-        action: "Keep HSHF, 14+ day, and high-value disputes here.",
-        evidence: "In-house close sentiment is -0.24 with the lowest repeat rate.",
-        chain: {
-          segment: "HSHF",
-          queue: "In-house Dispute",
-          partner: "High-risk cases",
-          risk: "Risk reduction",
-        },
-      },
-    ],
-  },
-
-  partner: {
-    title: "Partner Ownership",
-    subtitle: "Which partner dependency is increasing service failure?",
-    insight:
-      "Partner blame-shift is a service failure because the cardholder experiences one card brand, not separate partner and bank back offices.",
-    strongestActions: [
-      {
-        title: "Launch joint resolution SOP with major co-brand partners",
-        owner: "Partnerships",
-        impact: "Reduce partner blame-shift, refund follow-ups, and dispute aging.",
-        priority: "High",
-        color: C.orange,
-      },
-      {
-        title: "Create shared refund-status visibility for care agents",
-        owner: "Partnerships + Care Ops",
-        impact: "Cut callback loops caused by missing handoff visibility.",
-        priority: "High",
-        color: C.orange,
-      },
-      {
-        title: "Publish partner-specific promise wording in scripts",
-        owner: "Training + Partnerships",
-        impact: "Prevent over-promising on partner-controlled timelines.",
-        priority: "Watch",
-        color: C.yellow,
-      },
-    ],
-    cards: [
-      {
-        name: "Amazon Pay card",
-        label: "Co-brand refund issue",
-        value: "312",
-        valueLabel: "complaints",
-        severity: "High",
-        color: C.orange,
-        owner: "Partnerships",
-        issue: "Customers are bounced between bank and partner for refund ownership.",
-        action: "Create joint refund ownership SOP with partner.",
-        evidence: "“Bank says contact Amazon. Amazon says contact bank. I am stuck.”",
-        chain: {
-          segment: "HSLF",
-          queue: "Vendor Beta",
-          partner: "Amazon Pay",
-          risk: "Partner blame-shift",
-        },
-      },
-      {
-        name: "Flipkart card",
-        label: "Refund delay",
-        value: "184",
-        valueLabel: "complaints",
-        severity: "Watch",
-        color: C.yellow,
-        owner: "Partnerships",
-        issue: "Refund status visibility is weak between partner and bank.",
-        action: "Build shared refund-status view for care agents.",
-        evidence: "“Refund not credited after return.”",
-        chain: {
-          segment: "HSLF",
-          queue: "Partner Ops",
-          partner: "Flipkart",
-          risk: "Refund delay",
-        },
-      },
-      {
-        name: "Online gaming merchants",
-        label: "Unrecognized charge disputes",
-        value: "268",
-        valueLabel: "complaints",
-        severity: "Critical",
-        color: C.red,
-        owner: "Dispute Ops",
-        issue: "Gaming merchant disputes have high anger and unclear authorization narratives.",
-        action: "Create merchant-category dispute playbook.",
-        evidence: "“I never played, but charges keep coming.”",
-        chain: {
-          segment: "LSHF",
-          queue: "Dispute Ops",
-          partner: "Gaming merchants",
-          risk: "Fraud dispute escalation",
-        },
-      },
-      {
-        name: "Travel co-brand",
-        label: "Miles / benefit credit issue",
-        value: "142",
-        valueLabel: "complaints",
-        severity: "Watch",
-        color: C.yellow,
-        owner: "Partnerships",
-        issue: "Travel benefit crediting is creating premium-value dissatisfaction.",
-        action: "Agree benefit-credit SLA and visibility with travel partner.",
-        evidence: "“Miles were not credited after the flight.”",
-        chain: {
-          segment: "HSHF",
-          queue: "Partnerships",
-          partner: "Travel co-brand",
-          risk: "Benefit trust erosion",
-        },
-      },
-    ],
-  },
-
-  risk: {
-    title: "Escalation Ownership",
-    subtitle: "Which risk needs same-day recovery or senior ownership?",
-    insight:
-      "The immediate risk is not count alone. It is aging plus broken promise plus conduct failure.",
-    strongestActions: [
-      {
-        title: "Close externally escalatable cases today",
-        owner: "Dispute Ops + Legal",
-        impact: "Prevent external escalation and reduce compensation / reputation risk.",
-        priority: "Critical",
-        color: C.red,
-      },
-      {
-        title: "Move approaching-threshold cases into 14-day watchlist",
-        owner: "Dispute Ops",
-        impact: "Intercept risk before it becomes externally escalatable.",
-        priority: "High",
-        color: C.orange,
-      },
-      {
-        title: "QA audit recovery conduct and call-hour compliance",
-        owner: "Recovery Ops",
-        impact: "Reduce conduct complaints and reputational escalation.",
-        priority: "Critical",
-        color: C.red,
-      },
-    ],
-    cards: [
-      {
-        name: "Externally escalatable",
-        label: "Past threshold",
-        value: "8",
-        valueLabel: "cases",
-        severity: "Critical",
-        color: C.red,
-        owner: "Dispute Ops + Legal",
-        issue: "Eight cases need same-day recovery before escalation worsens.",
-        action: "Close all eight cases today with legal and dispute ops oversight.",
-        evidence: "“No update for more than a month. I will escalate now.”",
-        chain: {
-          segment: "HSHF / LSHF",
-          queue: "Dispute Ops + Legal",
-          partner: "Merchant disputes",
-          risk: "External escalation",
-        },
-      },
-      {
-        name: "Approaching threshold",
-        label: "Early warning",
-        value: "23",
-        valueLabel: "cases",
-        severity: "High",
-        color: C.orange,
-        owner: "Dispute Ops",
-        issue: "Cases are approaching escalation window and need early recovery.",
-        action: "Move all approaching cases into 14-day watchlist and callback queue.",
-        evidence: "“It has been weeks and no one is giving a clear answer.”",
-        chain: {
-          segment: "HSHF",
-          queue: "Dispute Ops",
-          partner: "Multiple",
-          risk: "Early warning",
-        },
-      },
-      {
-        name: "Recovery conduct",
-        label: "Reputation risk",
-        value: "64",
-        valueLabel: "complaints",
-        severity: "Critical",
-        color: C.red,
-        owner: "Recovery Ops",
-        issue: "Recovery conduct complaints are creating reputational risk.",
-        action: "QA audit recovery scripts, call-hour compliance, and family-contact complaints.",
-        evidence: "“Your recovery agent called my office and spoke to my colleague.”",
-        chain: {
-          segment: "LSLF",
-          queue: "Recovery Queue",
-          partner: "None",
-          risk: "Conduct escalation",
-        },
-      },
-      {
-        name: "Filed this month",
-        label: "Active external complaints",
-        value: "14",
-        valueLabel: "active",
-        severity: "High",
-        color: C.orange,
-        owner: "Legal + Service",
-        issue: "Filed complaints need root-cause handling, not only case closure.",
-        action: "Run root-cause review and feed fixes to Service Ops.",
-        evidence: "Filed complaints cluster around dispute aging, fee waiver promises, and partner blame-shift.",
-        chain: {
-          segment: "Mixed",
-          queue: "Legal + Service",
-          partner: "Multiple",
-          risk: "Active complaints",
-        },
-      },
-    ],
-  },
+const SEGMENT_LABEL: Record<SegmentKey, string> = {
+  HSHF: "High Spend / High Frequency",
+  HSLF: "High Spend / Low Frequency",
+  LSHF: "Low Spend / High Frequency",
+  LSLF: "Low Spend / Low Frequency",
 };
 
-function riskColor(severity: OwnershipSeverity) {
-  if (severity === "Critical") return C.red;
-  if (severity === "High") return C.orange;
-  if (severity === "Watch") return C.yellow;
+const SEGMENT_COLOR: Record<SegmentKey, string> = {
+  HSHF: C.gold,
+  HSLF: C.cyan,
+  LSHF: C.purple,
+  LSLF: C.orange,
+};
+
+const CATEGORY_ORDER: Category[] = [
+  "all",
+  "cashback",
+  "rewards",
+  "intro_apr",
+  "travel",
+  "balance_transfer",
+  "no_annual_fee",
+  "business",
+];
+
+const CATEGORY_LABEL: Record<Category, string> = {
+  all: "All cards",
+  cashback: "Cash back",
+  rewards: "Rewards",
+  intro_apr: "0% intro APR",
+  travel: "Travel",
+  balance_transfer: "Balance transfer",
+  no_annual_fee: "No annual fee",
+  business: "Business",
+};
+
+const KIND_LABEL: Record<CardKind, string> = {
+  standalone: "Standalone",
+  cobrand: "Co-brand",
+};
+
+const KIND_COLOR: Record<CardKind, string> = {
+  standalone: C.gold,
+  cobrand: C.purple,
+};
+
+/**
+ * Wells Fargo-style product naming.
+ * Metrics are demo/simulated conversation-derived service failure metrics.
+ * The important modeling rule:
+ * - standalone = bank-owned SLA path
+ * - cobrand = partner + bank SLA path
+ */
+const CARD_PRODUCTS: CardProduct[] = [
+  {
+    name: "Active Cash Card",
+    kind: "standalone",
+    categories: ["cashback", "no_annual_fee", "balance_transfer"],
+    bySegment: {
+      HSHF: { failures: 180, repeat: 32, sentiment: -0.41, topIssue: "Cash-back posting delay", owner: "Billing Ops" },
+      HSLF: { failures: 220, repeat: 38, sentiment: -0.45, topIssue: "Statement bonus dispute", owner: "Billing Ops" },
+      LSHF: { failures: 320, repeat: 41, sentiment: -0.46, topIssue: "Failed transaction status", owner: "Service Ops" },
+      LSLF: { failures: 240, repeat: 35, sentiment: -0.43, topIssue: "Callback missed", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Attune Card",
+    kind: "standalone",
+    categories: ["cashback", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 70, repeat: 28, sentiment: -0.38, topIssue: "Lifestyle MCC dispute", owner: "Billing Ops" },
+      HSLF: { failures: 95, repeat: 32, sentiment: -0.41, topIssue: "Bonus posting delay", owner: "Billing Ops" },
+      LSHF: { failures: 140, repeat: 36, sentiment: -0.43, topIssue: "Failed merchant transaction", owner: "Service Ops" },
+      LSLF: { failures: 85, repeat: 26, sentiment: -0.36, topIssue: "Callback missed", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Autograph Card",
+    kind: "standalone",
+    categories: ["rewards", "travel", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 240, repeat: 42, sentiment: -0.48, topIssue: "3X category miscoded", owner: "Rewards Ops" },
+      HSLF: { failures: 195, repeat: 39, sentiment: -0.45, topIssue: "Bonus point shortfall", owner: "Rewards Ops" },
+      LSHF: { failures: 165, repeat: 34, sentiment: -0.42, topIssue: "Redemption stuck", owner: "Service Ops" },
+      LSLF: { failures: 110, repeat: 28, sentiment: -0.38, topIssue: "Statement query", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Autograph Journey Card",
+    kind: "standalone",
+    categories: ["travel", "rewards"],
+    bySegment: {
+      HSHF: { failures: 280, repeat: 38, sentiment: -0.44, topIssue: "Travel insurance aging", owner: "Dispute Ops" },
+      HSLF: { failures: 145, repeat: 35, sentiment: -0.43, topIssue: "Travel credit not posted", owner: "Rewards Ops" },
+      LSHF: { failures: 60, repeat: 28, sentiment: -0.36, topIssue: "Travel category mismatch", owner: "Service Ops" },
+      LSLF: { failures: 22, repeat: 22, sentiment: -0.32, topIssue: "Statement clarity", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Reflect Card",
+    kind: "standalone",
+    categories: ["intro_apr", "balance_transfer", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 95, repeat: 31, sentiment: -0.42, topIssue: "Balance transfer fee dispute", owner: "Billing Ops" },
+      HSLF: { failures: 280, repeat: 49, sentiment: -0.54, topIssue: "Intro APR end confusion", owner: "Billing Ops" },
+      LSHF: { failures: 220, repeat: 44, sentiment: -0.51, topIssue: "BT credit posting", owner: "Billing Ops" },
+      LSLF: { failures: 165, repeat: 36, sentiment: -0.45, topIssue: "Late fee on transfer balance", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Signify Business Cash Card",
+    kind: "standalone",
+    categories: ["business", "cashback", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 165, repeat: 38, sentiment: -0.45, topIssue: "Business cash-back tier dispute", owner: "Business Service Ops" },
+      HSLF: { failures: 140, repeat: 35, sentiment: -0.43, topIssue: "Statement bonus query", owner: "Business Service Ops" },
+      LSHF: { failures: 230, repeat: 41, sentiment: -0.47, topIssue: "Failed B2B transaction", owner: "Business Service Ops" },
+      LSLF: { failures: 95, repeat: 28, sentiment: -0.38, topIssue: "Statement clarity", owner: "Care Ops" },
+    },
+  },
+
+  {
+    name: "One Key Card",
+    kind: "cobrand",
+    partner: "Expedia / Hotels.com / Vrbo",
+    categories: ["travel", "rewards", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 260, repeat: 49, sentiment: -0.56, topIssue: "OneKeyCash posting delay", owner: "Partnerships + Rewards Ops" },
+      HSLF: { failures: 190, repeat: 44, sentiment: -0.5, topIssue: "Travel booking credit dispute", owner: "Partnerships" },
+      LSHF: { failures: 120, repeat: 36, sentiment: -0.43, topIssue: "Partner refund status", owner: "Partner Recovery Queue" },
+      LSLF: { failures: 58, repeat: 29, sentiment: -0.37, topIssue: "Benefit explanation", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "One Key+ Card",
+    kind: "cobrand",
+    partner: "Expedia / Hotels.com / Vrbo",
+    categories: ["travel", "rewards"],
+    bySegment: {
+      HSHF: { failures: 210, repeat: 47, sentiment: -0.54, topIssue: "Gold / Platinum tier benefit gap", owner: "Partnerships" },
+      HSLF: { failures: 135, repeat: 41, sentiment: -0.48, topIssue: "Annual travel benefit not visible", owner: "Partnerships" },
+      LSHF: { failures: 80, repeat: 32, sentiment: -0.41, topIssue: "Travel credit posting", owner: "Service Ops" },
+      LSLF: { failures: 30, repeat: 24, sentiment: -0.34, topIssue: "Statement clarity", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Choice Privileges Mastercard",
+    kind: "cobrand",
+    partner: "Choice Hotels",
+    categories: ["travel", "rewards", "no_annual_fee", "balance_transfer"],
+    bySegment: {
+      HSHF: { failures: 142, repeat: 41, sentiment: -0.49, topIssue: "Hotel benefit not applied", owner: "Partnerships" },
+      HSLF: { failures: 110, repeat: 38, sentiment: -0.46, topIssue: "Bonus night dispute", owner: "Partnerships" },
+      LSHF: { failures: 65, repeat: 30, sentiment: -0.4, topIssue: "Reward booking error", owner: "Service Ops" },
+      LSLF: { failures: 24, repeat: 22, sentiment: -0.32, topIssue: "Statement query", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Choice Privileges Select Mastercard",
+    kind: "cobrand",
+    partner: "Choice Hotels",
+    categories: ["travel", "rewards"],
+    bySegment: {
+      HSHF: { failures: 120, repeat: 39, sentiment: -0.46, topIssue: "Elite status crediting", owner: "Partnerships" },
+      HSLF: { failures: 88, repeat: 34, sentiment: -0.43, topIssue: "Annual stay bonus", owner: "Partnerships" },
+      LSHF: { failures: 35, repeat: 26, sentiment: -0.36, topIssue: "Reward booking issue", owner: "Service Ops" },
+      LSLF: { failures: 12, repeat: 18, sentiment: -0.28, topIssue: "Statement clarity", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Bilt Mastercard",
+    kind: "cobrand",
+    partner: "Bilt Rewards",
+    categories: ["rewards", "travel", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 175, repeat: 43, sentiment: -0.49, topIssue: "Rent-day points posting", owner: "Partnerships + Rewards Ops" },
+      HSLF: { failures: 132, repeat: 37, sentiment: -0.44, topIssue: "Transfer partner delay", owner: "Partnerships" },
+      LSHF: { failures: 98, repeat: 33, sentiment: -0.41, topIssue: "Merchant earn mismatch", owner: "Service Ops" },
+      LSLF: { failures: 44, repeat: 27, sentiment: -0.35, topIssue: "Benefit FAQ confusion", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "BJ's One Mastercard",
+    kind: "cobrand",
+    partner: "BJ's Wholesale Club",
+    categories: ["cashback", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 125, repeat: 36, sentiment: -0.44, topIssue: "Club cash-back tier dispute", owner: "Partnerships" },
+      HSLF: { failures: 108, repeat: 34, sentiment: -0.42, topIssue: "Warehouse bonus not posted", owner: "Partnerships" },
+      LSHF: { failures: 155, repeat: 38, sentiment: -0.45, topIssue: "Checkout earn mismatch", owner: "Service Ops" },
+      LSLF: { failures: 72, repeat: 29, sentiment: -0.37, topIssue: "Statement clarity", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "BJ's One+ Mastercard",
+    kind: "cobrand",
+    partner: "BJ's Wholesale Club",
+    categories: ["cashback", "rewards", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 98, repeat: 33, sentiment: -0.41, topIssue: "Plus-tier earn dispute", owner: "Partnerships" },
+      HSLF: { failures: 86, repeat: 31, sentiment: -0.39, topIssue: "Annual perk visibility", owner: "Partnerships" },
+      LSHF: { failures: 118, repeat: 35, sentiment: -0.43, topIssue: "Gas / dining category coding", owner: "Service Ops" },
+      LSLF: { failures: 54, repeat: 26, sentiment: -0.34, topIssue: "Callback on partner query", owner: "Care Ops" },
+    },
+  },
+  {
+    name: "Concur Business Mastercard",
+    kind: "cobrand",
+    partner: "Concur / SAP",
+    categories: ["business", "rewards", "no_annual_fee"],
+    bySegment: {
+      HSHF: { failures: 142, repeat: 40, sentiment: -0.47, topIssue: "Expense sync failure", owner: "Business Service Ops" },
+      HSLF: { failures: 128, repeat: 37, sentiment: -0.44, topIssue: "Corporate policy mismatch", owner: "Business Service Ops" },
+      LSHF: { failures: 188, repeat: 42, sentiment: -0.48, topIssue: "Receipt dispute aging", owner: "Business Service Ops" },
+      LSLF: { failures: 62, repeat: 28, sentiment: -0.36, topIssue: "Travel charge clarification", owner: "Care Ops" },
+    },
+  },
+];
+
+function filterByCategory(products: CardProduct[], category: Category) {
+  if (category === "all") return products;
+  return products.filter((p) => p.categories.includes(category));
+}
+
+function severityFor(repeat: number) {
+  if (repeat >= 45) return { label: "Critical", color: C.red };
+  if (repeat >= 35) return { label: "High", color: C.orange };
+  if (repeat >= 25) return { label: "Watch", color: C.yellow };
+  return { label: "Stable", color: C.green };
+}
+
+function repeatColor(n: number) {
+  if (n >= 45) return C.red;
+  if (n >= 35) return C.orange;
+  if (n >= 25) return C.yellow;
   return C.green;
 }
 
-function OwnershipLensTabs({
-  lens,
-  onChange,
+function sentimentColor(n: number) {
+  if (n <= -0.55) return C.red;
+  if (n <= -0.45) return C.orange;
+  if (n <= -0.35) return C.yellow;
+  return C.green;
+}
+
+function aggregateSegment(products: CardProduct[], segment: SegmentKey) {
+  let totalFailures = 0;
+  let weightedRepeat = 0;
+  let weightedSentiment = 0;
+  let cobrandFailures = 0;
+  let standaloneFailures = 0;
+
+  let topDriver: {
+    cardName: string;
+    issue: string;
+    failures: number;
+    kind: CardKind;
+    owner: string;
+  } | null = null;
+
+  for (const product of products) {
+    const metric = product.bySegment[segment];
+
+    totalFailures += metric.failures;
+    weightedRepeat += metric.repeat * metric.failures;
+    weightedSentiment += metric.sentiment * metric.failures;
+
+    if (product.kind === "cobrand") cobrandFailures += metric.failures;
+    else standaloneFailures += metric.failures;
+
+    if (!topDriver || metric.failures > topDriver.failures) {
+      topDriver = {
+        cardName: product.name,
+        issue: metric.topIssue,
+        failures: metric.failures,
+        kind: product.kind,
+        owner: metric.owner,
+      };
+    }
+  }
+
+  const repeat = totalFailures ? weightedRepeat / totalFailures : 0;
+  const sentiment = totalFailures ? weightedSentiment / totalFailures : 0;
+  const cobrandPct = totalFailures ? Math.round((cobrandFailures / totalFailures) * 100) : 0;
+  const standalonePct = 100 - cobrandPct;
+
+  return {
+    totalFailures,
+    repeat,
+    sentiment,
+    cobrandFailures,
+    standaloneFailures,
+    cobrandPct,
+    standalonePct,
+    topDriver,
+  };
+}
+
+const SEGMENT_KEYS: SegmentKey[] = ["HSHF", "HSLF", "LSHF", "LSLF"];
+
+type ProductDriverRow = {
+  product: CardProduct;
+  totalFailures: number;
+  repeat: number;
+  sentiment: number;
+  topIssue: string;
+  owner: string;
+};
+
+function getTopProductDrivers(products: CardProduct[], limit: number): ProductDriverRow[] {
+  const rows: ProductDriverRow[] = products.map((product) => {
+    let totalFailures = 0;
+    let weightedRepeat = 0;
+    let weightedSentiment = 0;
+    let maxSegFailures = -1;
+    let topSeg: SegmentKey = "HSHF";
+
+    for (const seg of SEGMENT_KEYS) {
+      const m = product.bySegment[seg];
+      totalFailures += m.failures;
+      weightedRepeat += m.repeat * m.failures;
+      weightedSentiment += m.sentiment * m.failures;
+      if (m.failures > maxSegFailures) {
+        maxSegFailures = m.failures;
+        topSeg = seg;
+      }
+    }
+
+    const metric = product.bySegment[topSeg];
+
+    return {
+      product,
+      totalFailures,
+      repeat: totalFailures ? weightedRepeat / totalFailures : 0,
+      sentiment: totalFailures ? weightedSentiment / totalFailures : 0,
+      topIssue: metric.topIssue,
+      owner: metric.owner,
+    };
+  });
+
+  return rows
+    .filter((r) => r.totalFailures > 0)
+    .sort((a, b) => b.totalFailures - a.totalFailures)
+    .slice(0, limit);
+}
+
+function categoryFitLabels(product: CardProduct): string {
+  return product.categories.map((c) => CATEGORY_LABEL[c]).join(", ");
+}
+
+function executiveInsight(
+  category: Category,
+  filteredProducts: CardProduct[],
+  coBrandShare: number,
+  standaloneShare: number,
+): string {
+  const label = CATEGORY_LABEL[category];
+  const drivers = getTopProductDrivers(filteredProducts, 1)[0];
+  let worstSeg: SegmentKey = "HSHF";
+  let worstFailures = -1;
+  for (const seg of SEGMENT_KEYS) {
+    const agg = aggregateSegment(filteredProducts, seg);
+    if (agg.totalFailures > worstFailures) {
+      worstFailures = agg.totalFailures;
+      worstSeg = seg;
+    }
+  }
+
+  const mixLead =
+    coBrandShare > standaloneShare
+      ? `Co-brand-led mix (${coBrandShare}% co-brand vs ${standaloneShare}% standalone)`
+      : coBrandShare < standaloneShare
+        ? `Standalone-led mix (${standaloneShare}% standalone vs ${coBrandShare}% co-brand)`
+        : `Balanced co-brand / standalone (${coBrandShare}% / ${standaloneShare}%)`;
+
+  const driverPhrase = drivers
+    ? `${drivers.product.name} drives volume (${drivers.topIssue}).`
+    : "No drivers in this slice.";
+
+  return `${label}: ${mixLead}. ${driverPhrase} Highest failure load sits in ${worstSeg} (${SEGMENT_LABEL[worstSeg]}).`;
+}
+
+function Th({ children, align = "left" }: { children: ReactNode; align?: "left" | "right" }) {
+  return (
+    <th
+      style={{
+        textAlign: align,
+        padding: "9px 12px",
+        fontSize: 9,
+        fontWeight: 900,
+        textTransform: "uppercase",
+        letterSpacing: "0.06em",
+        color: C.dim,
+        borderBottom: `1px solid ${C.border}`,
+      }}
+    >
+      {children}
+    </th>
+  );
+}
+
+function Td({
+  children,
+  align = "left",
+  muted,
+  colSpan,
 }: {
-  lens: OwnershipLens;
-  onChange: (lens: OwnershipLens) => void;
+  children: ReactNode;
+  align?: "left" | "right";
+  muted?: boolean;
+  colSpan?: number;
 }) {
   return (
-    <div style={{ display: "flex", gap: 5, flexWrap: "wrap", justifyContent: "flex-end" }}>
-      {(
-        [
-          ["segment", "Segment"],
-          ["queue", "Queue"],
-          ["partner", "Partner"],
-          ["risk", "Risk"],
-        ] as const
-      ).map(([key, label]) => (
-        <button
-          key={key}
-          type="button"
-          onClick={() => onChange(key)}
-          style={{
-            background: lens === key ? C.purple : "rgba(255,255,255,0.05)",
-            color: lens === key ? "#fff" : C.muted,
-            border: `1px solid ${lens === key ? C.purple : C.border}`,
-            borderRadius: 7,
-            padding: "8px 12px",
-            fontSize: 10,
-            fontWeight: 800,
-            cursor: "pointer",
-          }}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
+    <td
+      colSpan={colSpan}
+      style={{
+        textAlign: align,
+        padding: "11px 12px",
+        fontSize: 11,
+        color: muted ? C.muted : C.sub,
+        verticalAlign: "middle",
+        borderBottom: `1px solid ${C.border}`,
+      }}
+    >
+      {children}
+    </td>
   );
 }
 
-function OwnershipItemCard({ item }: { item: OwnershipCard }) {
-  const sevColor = riskColor(item.severity);
+function MixBar({ cobrandPct }: { cobrandPct: number }) {
+  const standalonePct = 100 - cobrandPct;
 
   return (
-    <div
-      style={{
-        background: `${item.color}07`,
-        borderTop: `1px solid ${item.color}28`,
-        borderRight: `1px solid ${item.color}28`,
-        borderBottom: `1px solid ${item.color}28`,
-        boxShadow: `inset 3px 0 0 ${item.color}`,
-        borderRadius: 11,
-        padding: "12px 13px",
-        minHeight: 170,
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 7 }}>
-        <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: 13,
-              fontWeight: 900,
-              color: C.text,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {item.name}
-          </div>
-          <div style={{ fontSize: 9, color: C.muted, marginTop: 3 }}>{item.label}</div>
-        </div>
-        <Bd c={sevColor}>{item.severity}</Bd>
+    <div style={{ minWidth: 150 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 8,
+          fontSize: 9,
+          color: C.muted,
+          marginBottom: 5,
+          fontWeight: 800,
+        }}
+      >
+        <span>
+          Co-brand <M s={9} c={C.purple}>{cobrandPct}%</M>
+        </span>
+        <span>
+          Standalone <M s={9} c={C.gold}>{standalonePct}%</M>
+        </span>
       </div>
-
-      <div style={{ marginBottom: 8 }}>
-        <M s={24} c={item.color}>
-          {item.value}
-        </M>
-        <span style={{ fontSize: 9, color: C.muted, marginLeft: 5 }}>{item.valueLabel}</span>
-      </div>
-
-      <div style={{ fontSize: 10, color: C.sub, lineHeight: 1.4, marginBottom: 8 }}>{item.issue}</div>
 
       <div
         style={{
-          marginTop: "auto",
-          paddingTop: 8,
-          borderTop: `1px solid ${C.border}`,
+          height: 6,
+          borderRadius: 4,
+          overflow: "hidden",
+          display: "flex",
+          background: "rgba(255,255,255,0.05)",
         }}
       >
-        <div style={{ fontSize: 9, color: C.muted }}>
-          Owner: <strong style={{ color: C.text }}>{item.owner}</strong>
-        </div>
-        <div style={{ fontSize: 9, color: item.color, fontWeight: 800, marginTop: 4, lineHeight: 1.35 }}>
-          → {item.action}
-        </div>
+        <div style={{ width: `${cobrandPct}%`, background: C.purple }} />
+        <div style={{ width: `${standalonePct}%`, background: C.gold }} />
       </div>
     </div>
   );
 }
 
-function OwnershipLinkedChain({ cards }: { cards: OwnershipCard[] }) {
-  const primary = cards[0];
+function CategoryFilterBar({
+  category,
+  onChange,
+  counts,
+}: {
+  category: Category;
+  onChange: (category: Category) => void;
+  counts: Record<Category, number>;
+}) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+      {CATEGORY_ORDER.map((key) => {
+        const active = key === category;
 
+        return (
+          <button
+            key={key}
+            type="button"
+            onClick={() => onChange(key)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "7px 11px",
+              borderRadius: 8,
+              border: `1px solid ${active ? C.purple : C.border}`,
+              background: active ? C.purple : "rgba(255,255,255,0.025)",
+              color: active ? "#fff" : C.sub,
+              fontSize: 11,
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            <span>{CATEGORY_LABEL[key]}</span>
+            <span
+              style={{
+                fontSize: 9,
+                fontWeight: 900,
+                fontFamily: "var(--mono), ui-monospace, monospace",
+                color: active ? "rgba(255,255,255,0.85)" : C.muted,
+                background: active ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.05)",
+                padding: "1px 6px",
+                borderRadius: 4,
+              }}
+            >
+              {counts[key]}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function SegmentOwnershipTable({ products }: { products: CardProduct[] }) {
   return (
     <div
       style={{
-        background: "rgba(255,255,255,0.025)",
         border: `1px solid ${C.border}`,
         borderRadius: 11,
-        padding: "11px 12px",
+        overflow: "hidden",
+        background: "rgba(255,255,255,0.02)",
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 900, color: C.text, marginBottom: 8 }}>Linked ownership chain</div>
-
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          gap: 8,
+          padding: "8px 12px",
+          background: "rgba(255,255,255,0.025)",
+          borderBottom: `1px solid ${C.border}`,
         }}
       >
-        {[
-          ["Segment", primary.chain.segment, C.gold],
-          ["Queue", primary.chain.queue, C.red],
-          ["Partner", primary.chain.partner, C.orange],
-          ["Risk", primary.chain.risk, C.purple],
-        ].map(([label, value, color]) => (
-          <div
-            key={String(label)}
-            style={{
-              background: `${color}08`,
-              border: `1px solid ${color}25`,
-              borderRadius: 8,
-              padding: "9px 10px",
-              minHeight: 66,
-            }}
-          >
-            <div style={{ fontSize: 8, color: C.dim, textTransform: "uppercase", fontWeight: 900 }}>{label}</div>
-            <div style={{ fontSize: 10, color: C.text, marginTop: 5, lineHeight: 1.35 }}>{value}</div>
-          </div>
-        ))}
+        <div style={{ fontSize: 12, fontWeight: 900, color: C.text }}>Segment ownership</div>
+      </div>
+
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: 720 }}>
+          <colgroup>
+            <col style={{ width: "14%" }} />
+            <col style={{ width: "8%" }} />
+            <col style={{ width: "9%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "7%" }} />
+            <col style={{ width: "8%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "14%" }} />
+          </colgroup>
+
+          <thead>
+            <tr style={{ background: "rgba(255,255,255,0.015)" }}>
+              <Th>Segment</Th>
+              <Th>Risk</Th>
+              <Th align="right">Failures</Th>
+              <Th>Co-brand / Standalone</Th>
+              <Th align="right">Repeat</Th>
+              <Th align="right">Sentiment</Th>
+              <Th>Top driver</Th>
+              <Th>Owner</Th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {SEGMENT_KEYS.map((segment) => {
+              const aggregate = aggregateSegment(products, segment);
+              const severity = severityFor(aggregate.repeat);
+              const accent = SEGMENT_COLOR[segment];
+
+              return (
+                <tr key={segment}>
+                  <Td>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                      <div
+                        style={{
+                          width: 3,
+                          height: 32,
+                          borderRadius: 2,
+                          background: accent,
+                          flexShrink: 0,
+                        }}
+                      />
+                      <div>
+                        <div style={{ color: C.text, fontWeight: 900, fontSize: 11 }}>{segment}</div>
+                        <div style={{ color: C.muted, fontSize: 9, marginTop: 1 }}>
+                          {SEGMENT_LABEL[segment]}
+                        </div>
+                      </div>
+                    </div>
+                  </Td>
+
+                  <Td>
+                    <Bd c={severity.color}>{severity.label}</Bd>
+                  </Td>
+
+                  <Td align="right">
+                    <M s={12} c={accent}>
+                      {aggregate.totalFailures.toLocaleString()}
+                    </M>
+                    <div style={{ fontSize: 8, color: C.muted, marginTop: 1 }}>failures</div>
+                  </Td>
+
+                  <Td>
+                    <MixBar cobrandPct={aggregate.cobrandPct} />
+                  </Td>
+
+                  <Td align="right">
+                    <M s={11} c={repeatColor(aggregate.repeat)}>
+                      {aggregate.repeat.toFixed(0)}%
+                    </M>
+                  </Td>
+
+                  <Td align="right">
+                    <M s={11} c={sentimentColor(aggregate.sentiment)}>
+                      {aggregate.sentiment.toFixed(2)}
+                    </M>
+                  </Td>
+
+                  <Td>
+                    {aggregate.topDriver ? (
+                      <div>
+                        <div style={{ color: C.sub, fontSize: 10, lineHeight: 1.35, marginBottom: 4 }}>
+                          <span style={{ color: C.text, fontWeight: 800 }}>
+                            {aggregate.topDriver.cardName}
+                          </span>
+                          {" — "}
+                          {aggregate.topDriver.issue}
+                        </div>
+                        <Bd c={KIND_COLOR[aggregate.topDriver.kind]}>
+                          {KIND_LABEL[aggregate.topDriver.kind]}
+                        </Bd>
+                      </div>
+                    ) : (
+                      <span style={{ color: C.muted }}>—</span>
+                    )}
+                  </Td>
+
+                  <Td>
+                    {aggregate.topDriver ? (
+                      <span style={{ color: C.sub, fontSize: 10, lineHeight: 1.35 }}>
+                        {aggregate.topDriver.owner}
+                      </span>
+                    ) : (
+                      <span style={{ color: C.muted }}>—</span>
+                    )}
+                  </Td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
 }
 
-function OwnershipActionPanel({ data }: { data: OwnershipLensData }) {
-  const actions = data.strongestActions;
-  const topAction = actions[0];
+function TopCardDriversTable({
+  products,
+  category,
+}: {
+  products: CardProduct[];
+  category: Category;
+}) {
+  const rows = getTopProductDrivers(products, 5);
 
   return (
     <div
       style={{
-        background: `${topAction?.color ?? C.purple}07`,
-        borderTop: `1px solid ${(topAction?.color ?? C.purple)}28`,
-        borderRight: `1px solid ${(topAction?.color ?? C.purple)}28`,
-        borderBottom: `1px solid ${(topAction?.color ?? C.purple)}28`,
-        boxShadow: `inset 3px 0 0 ${topAction?.color ?? C.purple}`,
+        border: `1px solid ${C.border}`,
         borderRadius: 11,
-        padding: "12px 13px",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
+        overflow: "hidden",
+        background: "rgba(255,255,255,0.02)",
       }}
     >
-      <div style={{ fontSize: 12, fontWeight: 900, color: C.text, marginBottom: 3 }}>Strongest actions</div>
-      <div style={{ fontSize: 9, color: C.muted, marginBottom: 10 }}>For selected ownership lens</div>
+      <div
+        style={{
+          padding: "8px 12px",
+          background: "rgba(255,255,255,0.025)",
+          borderBottom: `1px solid ${C.border}`,
+        }}
+      >
+        <div style={{ fontSize: 12, fontWeight: 900, color: C.text }}>Top card drivers</div>
+        <div style={{ fontSize: 9, color: C.muted, marginTop: 2 }}>
+          Top 5 products by total service failures in {CATEGORY_LABEL[category]}.
+        </div>
+      </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1, minHeight: 0 }}>
-        {actions.map((action, idx) => (
-          <div
-            key={`${action.title}-${idx}`}
-            style={{
-              background: "rgba(255,255,255,0.03)",
-              borderTop: `1px solid ${action.color}28`,
-              borderRight: `1px solid ${action.color}28`,
-              borderBottom: `1px solid ${action.color}28`,
-              boxShadow: `inset 3px 0 0 ${action.color}`,
-              borderRadius: 8,
-              padding: "8px 10px",
-            }}
-          >
-            <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
-              <div style={{ fontSize: 11, fontWeight: 800, color: C.text, lineHeight: 1.35 }}>
-                {idx + 1}. {action.title}
-              </div>
-              <Bd c={action.color}>{action.priority}</Bd>
-            </div>
-            <div style={{ fontSize: 9, color: C.muted, marginBottom: 3 }}>
-              Owner: <strong style={{ color: C.text }}>{action.owner}</strong>
-            </div>
-            <div style={{ fontSize: 10, color: C.sub, lineHeight: 1.35 }}>Impact: {action.impact}</div>
+      <div style={{ overflowX: "auto" }}>
+        <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed", minWidth: 680 }}>
+          <colgroup>
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "10%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "9%" }} />
+            <col style={{ width: "7%" }} />
+            <col style={{ width: "8%" }} />
+            <col style={{ width: "18%" }} />
+            <col style={{ width: "12%" }} />
+          </colgroup>
+
+          <thead>
+            <tr style={{ background: "rgba(255,255,255,0.015)" }}>
+              <Th>Card product</Th>
+              <Th>Type</Th>
+              <Th>Category fit</Th>
+              <Th align="right">Failures</Th>
+              <Th align="right">Repeat</Th>
+              <Th align="right">Sentiment</Th>
+              <Th>Top issue</Th>
+              <Th>Owner</Th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {rows.length === 0 ? (
+              <tr>
+                <Td colSpan={8} muted>
+                  No products in this category.
+                </Td>
+              </tr>
+            ) : (
+              rows.map((row) => (
+                <tr key={row.product.name}>
+                  <Td>
+                    <div style={{ color: C.text, fontWeight: 800, fontSize: 11 }}>{row.product.name}</div>
+                    {row.product.partner ? (
+                      <div style={{ color: C.muted, fontSize: 8, marginTop: 2 }}>{row.product.partner}</div>
+                    ) : null}
+                  </Td>
+                  <Td>
+                    <Bd c={KIND_COLOR[row.product.kind]}>{KIND_LABEL[row.product.kind]}</Bd>
+                  </Td>
+                  <Td>
+                    <span style={{ fontSize: 9, color: C.muted, lineHeight: 1.35 }}>
+                      {categoryFitLabels(row.product)}
+                    </span>
+                  </Td>
+                  <Td align="right">
+                    <M s={11} c={C.text}>
+                      {row.totalFailures.toLocaleString()}
+                    </M>
+                  </Td>
+                  <Td align="right">
+                    <M s={11} c={repeatColor(row.repeat)}>{row.repeat.toFixed(0)}%</M>
+                  </Td>
+                  <Td align="right">
+                    <M s={11} c={sentimentColor(row.sentiment)}>{row.sentiment.toFixed(2)}</M>
+                  </Td>
+                  <Td>
+                    <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.35 }}>{row.topIssue}</span>
+                  </Td>
+                  <Td>
+                    <span style={{ fontSize: 10, color: C.sub, lineHeight: 1.35 }}>{row.owner}</span>
+                  </Td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function OwnershipBoard() {
+  const [category, setCategory] = useState<Category>("cashback");
+
+  const productCounts = useMemo<Record<Category, number>>(() => {
+    const counts = {} as Record<Category, number>;
+
+    for (const key of CATEGORY_ORDER) {
+      counts[key] = filterByCategory(CARD_PRODUCTS, key).length;
+    }
+
+    return counts;
+  }, []);
+
+  const filteredProducts = useMemo(
+    () => filterByCategory(CARD_PRODUCTS, category),
+    [category],
+  );
+
+  const portfolioTotal = useMemo(() => {
+    return filteredProducts.reduce((sum, product) => {
+      return (
+        sum +
+        product.bySegment.HSHF.failures +
+        product.bySegment.HSLF.failures +
+        product.bySegment.LSHF.failures +
+        product.bySegment.LSLF.failures
+      );
+    }, 0);
+  }, [filteredProducts]);
+
+  const coBrandFailures = useMemo(() => {
+    return filteredProducts
+      .filter((p) => p.kind === "cobrand")
+      .reduce((sum, product) => {
+        return (
+          sum +
+          product.bySegment.HSHF.failures +
+          product.bySegment.HSLF.failures +
+          product.bySegment.LSHF.failures +
+          product.bySegment.LSLF.failures
+        );
+      }, 0);
+  }, [filteredProducts]);
+
+  const coBrandShare = portfolioTotal ? Math.round((coBrandFailures / portfolioTotal) * 100) : 0;
+  const standaloneShare = 100 - coBrandShare;
+
+  const aiInsight = useMemo(
+    () => executiveInsight(category, filteredProducts, coBrandShare, standaloneShare),
+    [category, filteredProducts, coBrandShare, standaloneShare],
+  );
+
+  return (
+    <Bx accent={C.purple} s={{ padding: 16 }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 14,
+          marginBottom: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ minWidth: 0, flex: "1 1 320px" }}>
+          <h3 style={{ fontSize: 16, fontWeight: 900, margin: 0, color: C.text }}>
+            Operational Ownership Board
+          </h3>
+          <p style={{ fontSize: 11, color: C.muted, margin: "5px 0 0", lineHeight: 1.4 }}>
+            Category-filtered segment ownership with Co-branded vs Standalone split.
+          </p>
+        </div>
+
+        <div style={{ minWidth: 220, textAlign: "right" }}>
+          <div style={{ fontSize: 9, color: C.dim, textTransform: "uppercase", fontWeight: 900, letterSpacing: "0.06em" }}>
+            Portfolio in scope
           </div>
-        ))}
+          <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "baseline", gap: 6, marginTop: 2 }}>
+            <M s={18}>{portfolioTotal.toLocaleString()}</M>
+            <span style={{ fontSize: 10, color: C.muted }}>service failures</span>
+          </div>
+          <div style={{ fontSize: 10, color: C.muted, marginTop: 4 }}>
+            Co-brand <M s={10} c={C.purple}>{coBrandShare}%</M> · Standalone{" "}
+            <M s={10} c={C.gold}>{standaloneShare}%</M>
+          </div>
+        </div>
+      </div>
+
+      <CategoryFilterBar category={category} onChange={setCategory} counts={productCounts} />
+
+      <div
+        style={{
+          marginTop: 10,
+          padding: "8px 11px",
+          borderRadius: 10,
+          background: `${C.purple}08`,
+          borderLeft: `3px solid ${C.purple}`,
+          color: C.sub,
+          fontSize: 11,
+          lineHeight: 1.45,
+        }}
+      >
+        <span style={{ fontSize: 9, fontWeight: 900, color: C.dim, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+          AI insight ·{" "}
+        </span>
+        {aiInsight}
+      </div>
+
+      <div style={{ marginTop: 10 }}>
+        <SegmentOwnershipTable products={filteredProducts} />
+      </div>
+
+      <div style={{ marginTop: 10 }}>
+        <TopCardDriversTable products={filteredProducts} category={category} />
       </div>
 
       <div
         style={{
           marginTop: 10,
           padding: "8px 10px",
-          background: "rgba(255,255,255,0.03)",
-          borderRadius: 8,
-          color: C.sub,
+          background: "rgba(255,255,255,0.025)",
+          border: `1px solid ${C.border}`,
+          borderRadius: 10,
           fontSize: 10,
+          color: C.muted,
           lineHeight: 1.45,
         }}
       >
-        ✦ This keeps the board action-led instead of becoming a table of observations.
+        Standalone failures are usually bank-owned SLA paths. Co-branded failures need joint bank + partner ownership.
       </div>
-    </div>
-  );
-}
-
-function OwnershipEvidenceStrip({ cards }: { cards: OwnershipCard[] }) {
-  return (
-    <div
-      style={{
-        marginTop: 12,
-        padding: "10px 12px",
-        borderRadius: 10,
-        background: `${C.purple}08`,
-        borderLeft: `3px solid ${C.purple}`,
-        color: C.sub,
-        fontSize: 11,
-        lineHeight: 1.5,
-      }}
-    >
-      ✦ <strong style={{ color: C.text }}>Conversation evidence:</strong>{" "}
-      {cards
-        .slice(0, 2)
-        .map((c) => c.evidence)
-        .join(" · ")}
-    </div>
-  );
-}
-
-function OwnershipBoard() {
-  const [lens, setLens] = useState<OwnershipLens>("segment");
-  const data = OWNER_LENS_DATA[lens];
-
-  return (
-    <Bx accent={C.purple} s={{ padding: 18 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 16,
-          alignItems: "flex-start",
-          marginBottom: 14,
-        }}
-      >
-        <div>
-          <h3 style={{ fontSize: 16, fontWeight: 900, margin: 0, color: C.text }}>Operational Ownership Board</h3>
-          <p style={{ fontSize: 11, color: C.muted, margin: "5px 0 0", lineHeight: 1.35 }}>
-            Switch between Segment, Queue, Partner, and Risk to see who owns the service recovery.
-          </p>
-        </div>
-
-        <OwnershipLensTabs lens={lens} onChange={setLens} />
-      </div>
-
-      <div
-        style={{
-          padding: "11px 13px",
-          borderRadius: 10,
-          background: `${C.purple}08`,
-          borderLeft: `3px solid ${C.purple}`,
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ fontSize: 14, fontWeight: 900, color: C.text }}>{data.title}</div>
-        <div style={{ fontSize: 10, color: C.sub, marginTop: 3 }}>{data.subtitle}</div>
-        <div style={{ fontSize: 10, color: C.muted, marginTop: 5 }}>✦ {data.insight}</div>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 0.8fr)",
-          gap: 12,
-          alignItems: "stretch",
-        }}
-      >
-        <div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-              gap: 10,
-            }}
-          >
-            {data.cards.map((item) => (
-              <OwnershipItemCard key={item.name} item={item} />
-            ))}
-          </div>
-
-          <div style={{ marginTop: 10 }}>
-            <OwnershipLinkedChain cards={data.cards} />
-          </div>
-        </div>
-
-        <OwnershipActionPanel data={data} />
-      </div>
-
-      <OwnershipEvidenceStrip cards={data.cards} />
-    </Bx>
-  );
-}
-
-function EvidenceCard() {
-  return (
-    <Bx s={{ minHeight: 320 }}>
-      <Hd sub="Anonymised service-promise breach snippets. Only top evidence shown." badge="AI">
-        Conversation Evidence
-      </Hd>
-
-      {EVIDENCE_SNIPPETS.map((e, i) => (
-        <div
-          key={`${e.ch}-${e.seg}-${i}`}
-          style={{
-            padding: "8px 9px",
-            background: "rgba(255,255,255,0.025)",
-            border: `1px solid ${C.border}`,
-            borderRadius: 5,
-            marginBottom: 7,
-          }}
-        >
-          <div style={{ display: "flex", gap: 4, marginBottom: 4, flexWrap: "wrap" }}>
-            <Bd c={CH[e.ch]}>{e.ch}</Bd>
-            <Bd c={SEG[e.seg]}>{e.seg}</Bd>
-            <Bd c={C.red}>{e.type}</Bd>
-          </div>
-          <p style={{ fontSize: 11, color: C.text, margin: 0, lineHeight: 1.45, fontStyle: "italic" }}>
-            “{e.text}”
-          </p>
-        </div>
-      ))}
-    </Bx>
-  );
-}
-
-function ActionCard() {
-  return (
-    <Bx accent={C.green} s={{ minHeight: 320 }}>
-      <Hd sub="Only top actions shown on the executive view.">Recommended Actions</Hd>
-
-      {RECOMMENDED_ACTIONS.map((a) => (
-        <div
-          key={a.title}
-          style={{
-            padding: "9px 10px",
-            background: "rgba(255,255,255,0.025)",
-            border: `1px solid ${C.border}`,
-            borderRadius: 6,
-            marginBottom: 7,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              gap: 8,
-              marginBottom: 3,
-            }}
-          >
-            <span style={{ fontSize: 11, fontWeight: 700, color: C.text, lineHeight: 1.35 }}>{a.title}</span>
-            <Bd c={a.c}>{a.p}</Bd>
-          </div>
-          <div style={{ fontSize: 10, color: C.muted, marginBottom: 2 }}>Owner: {a.owner}</div>
-          <div style={{ fontSize: 10, color: C.sub, lineHeight: 1.35 }}>Impact: {a.impact}</div>
-        </div>
-      ))}
     </Bx>
   );
 }
@@ -2194,19 +2012,7 @@ export function ServicePromiseIndiaDrillBody() {
         <WorryWall />
       </div>
 
-      {/* ROW 2: compact promise view */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.15fr) minmax(0, 0.85fr)",
-          gap: 10,
-        }}
-      >
-        <PromisePerformanceChart />
-        <AgentPromiseBreakage />
-      </div>
-
-      {/* ROW 3: plots instead of long tables */}
+      {/* ROW 2: plots instead of long tables */}
       <div
         style={{
           display: "grid",
@@ -2218,20 +2024,8 @@ export function ServicePromiseIndiaDrillBody() {
         <DisputeRecoveryFunnel />
       </div>
 
-      {/* ROW 4: combined ownership board */}
+      {/* ROW 3: combined ownership board */}
       <OwnershipBoard />
-
-      {/* ROW 5: proof + action */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 0.95fr) minmax(0, 1.05fr)",
-          gap: 10,
-        }}
-      >
-        <EvidenceCard />
-        <ActionCard />
-      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
   ChevronRight,
   CircleAlert,
   CreditCard,
+  Hash,
   Info,
   Target,
   RefreshCw,
@@ -17,7 +18,7 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import { type CSSProperties, type ComponentType, type MouseEvent, type ReactNode, useRef, useState } from "react";
+import { type CSSProperties, type ComponentType, type MouseEvent, type ReactNode, useMemo, useRef, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -31,20 +32,36 @@ import {
   YAxis,
 } from "recharts";
 import {
-  V3_BRAND_PROMISE_GAP,
-  V3_COMPARISON_RANKS,
-  V3_COMPETITORS,
-  V3_CONVERSATION_EVIDENCE_MARKET,
-  V3_ECHO_SUMMARY,
-  V3_ECHO_TRACKER,
+  type BrandPromiseCard,
+  type BrandPromiseGapRow,
+  type BrandPromiseLens,
+  type EngagementCardKind,
+  type EngagementChannel,
+  type EngagementImpact,
+  type EngagementSentiment,
+  type RankingImpact,
+  type RankingLens,
+  type RankingReviewRow,
+  type V3JourneyIntentSegmentKey,
+  BRAND_PROMISE_LENS_LABEL,
+  BRAND_PROMISE_LENS_ORDER,
+  V3_BRAND_PROMISE_LENS_ROW_COUNTS,
+  getBrandPromiseGapRows,
+  getSortedRankingReviewRows,
+  RANKING_AI_SUMMARY_BY_LENS,
+  RANKING_LENS_LABEL,
+  RANKING_LENS_ORDER,
+  RANKING_LENS_ROW_COUNTS,
+  V3_JOURNEY_INTENT_SEGMENT_KEYS,
+  V3_JOURNEY_INTENT_SEGMENT_RING_COUNTS,
+  V3_JOURNEY_TOP_INTENT_AGGREGATE,
+  V3_JOURNEY_TOP_INTENT_BY_SEGMENT,
   V3_EXECUTIVE_DIAGNOSIS_MARKET,
-  V3_HASHTAGS,
-  V3_MARKET_RANKS_INSIGHT,
-  V3_MARKET_REPUTATION_ACTIONS,
-  V3_MARKET_REPUTATION_COMMAND,
-  V3_MEDIA,
-  V3_SOCIAL_AI,
-  V3_SOCIAL_SENTIMENT,
+  ENGAGEMENT_CHANNEL_LABEL,
+  ENGAGEMENT_CHANNEL_ORDER,
+  getInfluentialEngagementItems,
+  INFLUENTIAL_ENGAGEMENT_ITEMS,
+  V3_MOMENTUM_HASHTAGS,
 } from "@/lib/role-based-dashboard/creditCardsV3Data";
 import { useDashboardTheme } from "./DashboardThemeContext";
 import { RoleBasedUnifiedReadingShell } from "./RoleBasedUnifiedReadingShell";
@@ -1147,12 +1164,18 @@ function JourneyWhatsFailingPanel() {
     if (topic) setSelectedTopic(topic);
   };
 
-  const series = [
-    { key: "HSHF", color: "#A855F7", label: "HSHF — High Spend High Frequency" },
-    { key: "HSLF", color: "#06B6D4", label: "HSLF — High Spend Low Frequency" },
-    { key: "LSHF", color: "#6366F1", label: "LSHF — Low Spend High Frequency" },
-    { key: "LSLF", color: "#94A3B8", label: "LSLF — Low Spend Low Frequency" },
-  ] as const;
+  const series = (
+    [
+      ["HSHF", "HSHF — High Spend High Frequency"],
+      ["HSLF", "HSLF — High Spend Low Frequency"],
+      ["LSHF", "LSHF — Low Spend High Frequency"],
+      ["LSLF", "LSLF — Low Spend Low Frequency"],
+    ] as const
+  ).map(([key, label]) => ({
+    key,
+    label,
+    color: JH.SEG[key],
+  }));
 
   return (
     <div style={{ background: JH.card, border: `1px solid ${JH.borderInner}`, borderRadius: 14, padding: 20, marginBottom: 12 }}>
@@ -1276,6 +1299,10 @@ function JourneyWhatsFailingPanel() {
 }
 
 function JourneyTopCommandCenter() {
+  const [topIntentSegment, setTopIntentSegment] = useState<V3JourneyIntentSegmentKey | null>(null);
+  const intentSlice =
+    topIntentSegment === null ? V3_JOURNEY_TOP_INTENT_AGGREGATE : V3_JOURNEY_TOP_INTENT_BY_SEGMENT[topIntentSegment];
+
   const npsData = [
     { week: "W-11", HSHF: 48, HSLF: 40, LSHF: 54, LSLF: 30 },
     { week: "W-10", HSHF: 46, HSLF: 39, LSHF: 55, LSLF: 28 },
@@ -1337,9 +1364,9 @@ function JourneyTopCommandCenter() {
           <div style={{ fontSize: 14, fontWeight: 800, color: JH.text }}>Sentiment by Relationship Value</div>
           <div style={{ fontSize: 10, color: JH.dim, marginBottom: 8 }}>Sentiment split · deposits at stake</div>
           {[
-            ["H1 · £1M+", "£184M · 312 accts", 44, 26, 30],
-            ["H2 · £500K–1M", "£276M · 624 accts", 51, 24, 25],
-            ["H3 · £250–500K", "£312M · 1085 accts", 58, 22, 20],
+            ["H1 · $1M+", "$184M · 312 accts", 44, 26, 30],
+            ["H2 · $500K–1M", "$276M · 624 accts", 51, 24, 25],
+            ["H3 · $250K–500K", "$312M · 1085 accts", 58, 22, 20],
           ].map(([l, sub, h, n, u]) => (
             <div key={String(l)} style={{ marginBottom: 8 }}>
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
@@ -1362,48 +1389,125 @@ function JourneyTopCommandCenter() {
       </div>
 
       <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card }}>
-        <div style={{ fontSize: 14, fontWeight: 800, color: JH.text, marginBottom: 4 }}>Top Intent</div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
+          <div style={{ fontSize: 14, fontWeight: 800, color: JH.text }}>Top Intent</div>
+          {topIntentSegment ? (
+            <span
+              style={{
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: "0.06em",
+                color: JH.SEG[topIntentSegment],
+                background: `${JH.SEG[topIntentSegment]}18`,
+                border: `1px solid ${JH.SEG[topIntentSegment]}44`,
+                borderRadius: 999,
+                padding: "2px 8px",
+              }}
+            >
+              {topIntentSegment} lens
+            </span>
+          ) : (
+            <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.05em", color: JH.dim }}>All segments</span>
+          )}
+        </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 8 }}>
-          <span style={{ fontSize: 30, fontWeight: 800, color: JH.red, lineHeight: 1 }}>16</span>
+          <span style={{ fontSize: 30, fontWeight: 800, color: JH.red, lineHeight: 1 }}>{intentSlice.identifiedCount}</span>
           <span style={{ fontSize: 11, color: JH.dim }}>identified</span>
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: 2, height: 20, marginBottom: 8, borderRadius: 8, overflow: "hidden" }}>
-          {[
-            ["App Login & Auth", 13, "#ef4444"],
-            ["Card Declines", 10, "#f59e0b"],
-            ["Fee Disputes", 9, "#06b6d4"],
-            ["Wealth / RM", 5, "#10b981"],
-          ].map(([label, val, c]) => (
-            <div key={String(label)} style={{ background: String(c), display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 9, fontWeight: 700 }}>{val}</div>
+        <div
+          style={{
+            display: "flex",
+            height: 22,
+            marginBottom: 8,
+            borderRadius: 8,
+            overflow: "hidden",
+            gap: 2,
+          }}
+          title={intentSlice.intents.map((i) => `${i.label}: ${i.count}`).join(" · ")}
+        >
+          {intentSlice.intents.map((row) => (
+            <div
+              key={row.label}
+              style={{
+                flex: row.count,
+                minWidth: 0,
+                background: row.color,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#fff",
+                fontSize: 9,
+                fontWeight: 700,
+              }}
+            >
+              {row.count}
+            </div>
           ))}
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0,1fr))", gap: 6, marginBottom: 8 }}>
-          {[
-            ["App Login & Auth", "#ef4444"],
-            ["Card Declines", "#f59e0b"],
-            ["Fee Disputes", "#06b6d4"],
-            ["Wealth / RM", "#10b981"],
-          ].map(([l, c]) => (
-            <div key={String(l)} style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
-              <span style={{ width: 8, height: 8, borderRadius: 999, background: String(c), flexShrink: 0 }} />
-              <span style={{ fontSize: 11, color: JH.sub, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{l}</span>
+          {intentSlice.intents.map((row) => (
+            <div key={row.label} style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+              <span style={{ width: 8, height: 8, borderRadius: 999, background: row.color, flexShrink: 0 }} />
+              <span
+                style={{
+                  fontSize: 11,
+                  color: JH.sub,
+                  lineHeight: 1.3,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                }}
+              >
+                {row.label}
+              </span>
             </div>
           ))}
         </div>
         <div style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.05em", color: JH.dim, marginBottom: 6 }}>INTENT VOLUME BY SEGMENT</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0,1fr))", gap: 4 }}>
-          {[
-            ["HSHF", 3, JH.SEG.HSHF],
-            ["HSLF", 5, JH.SEG.HSLF],
-            ["LSHF", 4, JH.SEG.LSHF],
-            ["LSLF", 4, JH.SEG.LSLF],
-          ].map(([seg, n, c]) => (
-            <div key={String(seg)} style={{ background: JH.track, borderRadius: 8, padding: "4px 2px", textAlign: "center" }}>
-              <div style={{ width: 20, height: 20, borderRadius: 999, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", color: String(c), border: `1.5px solid ${c}`, fontSize: 9, fontWeight: 700, background: `${c}20` }}>{n}</div>
-              <div style={{ marginTop: 2, fontSize: 8.5, color: JH.dim }}>{seg}</div>
-            </div>
-          ))}
+          {V3_JOURNEY_INTENT_SEGMENT_KEYS.map((seg) => {
+            const c = JH.SEG[seg];
+            const n = V3_JOURNEY_INTENT_SEGMENT_RING_COUNTS[seg];
+            const selected = topIntentSegment === seg;
+            return (
+              <button
+                key={seg}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => setTopIntentSegment((prev) => (prev === seg ? null : seg))}
+                style={{
+                  background: selected ? `${c}22` : JH.track,
+                  borderRadius: 8,
+                  padding: "6px 2px",
+                  textAlign: "center",
+                  border: selected ? `2px solid ${c}` : `1px solid ${JH.borderInner}`,
+                  cursor: "pointer",
+                  color: "inherit",
+                }}
+              >
+                <div
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: 999,
+                    margin: "0 auto",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: c,
+                    border: `1.5px solid ${c}`,
+                    fontSize: 9,
+                    fontWeight: 700,
+                    background: `${c}20`,
+                  }}
+                >
+                  {n}
+                </div>
+                <div style={{ marginTop: 4, fontSize: 8.5, fontWeight: selected ? 800 : 600, color: selected ? c : JH.dim }}>{seg}</div>
+              </button>
+            );
+          })}
         </div>
+
       </div>
 
       <div style={{ border: `1px solid ${JH.border}`, borderRadius: 12, padding: 12, background: JH.card }}>
@@ -1975,7 +2079,7 @@ export function CustomerCardJourneyV3Drill({ onBack }: DrillProps) {
         }}
       >
           <JhSLbl>
-            Where are they struggling? — pain concentration by journey stage
+            Where is the struggle? — pain concentration by journey stage
           </JhSLbl>
           <p style={{ fontSize: 12, color: JH.dim, margin: "0 0 9px" }}>
             Stage-level concentration of dissatisfaction across the journey.
@@ -2041,21 +2145,6 @@ const MR = {
   purple: "#8b5cf6",
   gold: "#f59e0b",
 } as const;
-
-type MrGap = "NONE" | "MODERATE" | "WIDE" | "SEVERE";
-
-const MR_GAP_BADGE: Record<MrGap, string> = {
-  NONE: MR.green,
-  MODERATE: MR.yellow,
-  WIDE: MR.orange,
-  SEVERE: MR.red,
-};
-
-const MR_CMD_TONE: Record<"orange" | "red" | "cyan", string> = {
-  orange: MR.orange,
-  red: MR.red,
-  cyan: MR.cyan,
-};
 
 function MrMono({
   children,
@@ -2201,174 +2290,111 @@ function MrDivider({ label }: { label: string }) {
   );
 }
 
-function rankDeltaColor(rank: number, prev: number): string {
-  if (rank < prev) return MR.green;
-  if (rank > prev) return MR.red;
-  return MR.orange;
+function rankingPortfolioLensLabel(lens: RankingReviewRow["lens"]): string {
+  if (lens === "standalone") return "Standalone";
+  if (lens === "cobrand") return "Co-branded";
+  return "Business";
 }
 
-function MrRankRow({
-  site,
-  category,
-  rank,
-  prev,
-  competitor,
-  reason,
-  color,
+function rankingPortfolioBadgeStyle(lens: RankingReviewRow["lens"]): { border: string; background: string; color: string } {
+  if (lens === "standalone") {
+    return { border: `${MR.gold}90`, background: `${MR.gold}14`, color: MR.gold };
+  }
+  if (lens === "cobrand") {
+    return { border: `${MR.purple}90`, background: `${MR.purple}12`, color: MR.purple };
+  }
+  return { border: `${MR.cyan}90`, background: `${MR.cyan}12`, color: MR.cyan };
+}
+
+function rankingImpactBadgeColor(impact: RankingImpact): string {
+  switch (impact) {
+    case "Critical":
+      return MR.red;
+    case "High":
+      return MR.orange;
+    case "Medium":
+      return MR.yellow;
+    case "Positive":
+      return MR.green;
+    default: {
+      const _e: never = impact;
+      return _e;
+    }
+  }
+}
+
+function rankingRankMoveParts(row: RankingReviewRow): { line: string; sub: string; color: string } {
+  const { previousRank: prev, currentRank: cur, direction } = row;
+  const line = `#${prev} → #${cur}`;
+  if (direction === "flat") return { line, sub: "held", color: MR.yellow };
+  if (direction === "up") {
+    const n = prev - cur;
+    return { line, sub: `up ${n}`, color: MR.green };
+  }
+  const n = cur - prev;
+  return { line, sub: `down ${n}`, color: MR.red };
+}
+
+function RankingLensFilterBar({
+  lens,
+  onChange,
+  counts,
 }: {
-  site: string;
-  category: string;
-  rank: number;
-  prev: number;
-  competitor: string;
-  reason: string;
-  color: string;
+  lens: RankingLens;
+  onChange: (next: RankingLens) => void;
+  counts: Record<RankingLens, number>;
 }) {
   return (
     <div
       style={{
         display: "flex",
+        flexWrap: "wrap",
+        gap: 6,
         alignItems: "center",
-        padding: "12px 0",
-        borderBottom: `1px solid ${MR.border}`,
-        gap: 12,
+        marginTop: 8,
+        marginBottom: 4,
       }}
     >
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: MR.text }}>
-          {site}
-        </div>
-        <div style={{ fontSize: 10, color: MR.muted }}>{category}</div>
-      </div>
-      <div style={{ textAlign: "center", minWidth: 50 }}>
-        <MrMono size={22} color={color}>
-          #{rank}
-        </MrMono>
-        <div style={{ fontSize: 9, color: MR.muted }}>was #{prev}</div>
-      </div>
-      <div style={{ flex: 1.2 }}>
-        <div style={{ fontSize: 10, color: MR.dim }}>#1: {competitor}</div>
-        <div style={{ fontSize: 10, color: MR.orange, marginTop: 2 }}>
-          ✦ {reason}
-        </div>
-      </div>
+      {RANKING_LENS_ORDER.map((key) => {
+        const active = lens === key;
+        return (
+          <button
+            key={key}
+            type="button"
+            onClick={() => onChange(key)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "5px 10px",
+              borderRadius: 8,
+              border: `1px solid ${active ? MR.orange : MR.border}`,
+              background: active ? `${MR.orange}14` : "rgba(255,255,255,0.03)",
+              color: active ? MR.text : MR.sub,
+              fontSize: 11,
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            <span>{RANKING_LENS_LABEL[key]}</span>
+            <span
+              style={{
+                fontSize: 9,
+                fontWeight: 900,
+                fontFamily: "var(--mono), ui-monospace, monospace",
+                color: active ? "rgba(255,255,255,0.85)" : MR.muted,
+                background: active ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.05)",
+                padding: "1px 6px",
+                borderRadius: 4,
+              }}
+            >
+              {counts[key]}
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
-}
-
-function MrEchoRow({
-  source,
-  narrative,
-  echoCount,
-  channels,
-  churnPct,
-  phrase,
-  velocity,
-}: {
-  source: string;
-  narrative: string;
-  echoCount: string;
-  channels: string;
-  churnPct: string;
-  phrase: string;
-  velocity: string;
-}) {
-  const churnN = parseFloat(churnPct);
-  return (
-    <div
-      style={{
-        padding: "14px 16px",
-        background: "rgba(255,255,255,0.02)",
-        borderRadius: 10,
-        marginBottom: 8,
-        borderLeft: `3px solid ${MR.cyan}`,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-          marginBottom: 8,
-        }}
-      >
-        <div>
-          <div style={{ fontSize: 13, fontWeight: 700, color: MR.text }}>
-            {narrative}
-          </div>
-          <div style={{ fontSize: 10, color: MR.muted, marginTop: 2 }}>
-            Source: {source}
-          </div>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <MrMono size={18} color={MR.cyan}>
-            {echoCount}
-          </MrMono>
-          <div style={{ fontSize: 9, color: MR.muted }}>internal convos</div>
-        </div>
-      </div>
-      <div
-        style={{ display: "flex", gap: 16, flexWrap: "wrap", marginBottom: 6 }}
-      >
-        <div>
-          <span
-            style={{
-              fontSize: 9,
-              color: MR.dim,
-              textTransform: "uppercase",
-              fontWeight: 600,
-            }}
-          >
-            Channels:{" "}
-          </span>
-          <span style={{ fontSize: 11, color: MR.sub }}>{channels}</span>
-        </div>
-        <div>
-          <span
-            style={{
-              fontSize: 9,
-              color: MR.dim,
-              textTransform: "uppercase",
-              fontWeight: 600,
-            }}
-          >
-            Churn in echo:{" "}
-          </span>
-          <MrMono
-            size={11}
-            color={!Number.isNaN(churnN) && churnN > 5 ? MR.red : MR.orange}
-          >
-            {churnPct}
-          </MrMono>
-        </div>
-        <div>
-          <span
-            style={{
-              fontSize: 9,
-              color: MR.dim,
-              textTransform: "uppercase",
-              fontWeight: 600,
-            }}
-          >
-            Velocity:{" "}
-          </span>
-          <MrMono size={11} color={MR.orange}>
-            {velocity}
-          </MrMono>
-        </div>
-      </div>
-      <div style={{ fontSize: 11, color: MR.orange, fontStyle: "italic" }}>
-        Top phrase: &ldquo;{phrase}&rdquo;
-      </div>
-    </div>
-  );
-}
-
-function socialBarColor(score: number): string {
-  if (score >= 0.6) return MR.green;
-  if (score >= 0.5) return MR.yellow;
-  if (score >= 0.4) return MR.orange;
-  return MR.red;
 }
 
 function diagnosisLabelColor(
@@ -2383,798 +2409,902 @@ function diagnosisLabelColor(
   return m[tone];
 }
 
+function mrMomentumStanceStyles(stance: (typeof V3_MOMENTUM_HASHTAGS)[number]["stance"]) {
+  if (stance === "negative") return { label: "negative", color: MR.red };
+  if (stance === "positive") return { label: "positive", color: MR.green };
+  return { label: "neutral", color: "#9ca3af" };
+}
+
+function engagementImpactColor(impact: EngagementImpact): string {
+  switch (impact) {
+    case "Severe":
+      return MR.red;
+    case "High":
+      return MR.orange;
+    case "Medium":
+      return MR.yellow;
+    case "Low":
+      return MR.green;
+    default: {
+      const _e: never = impact;
+      return _e;
+    }
+  }
+}
+
+function engagementSentimentColor(sentiment: EngagementSentiment): string {
+  switch (sentiment) {
+    case "Negative":
+      return MR.red;
+    case "Mixed":
+      return MR.yellow;
+    case "Positive":
+      return MR.green;
+    default: {
+      const _e: never = sentiment;
+      return _e;
+    }
+  }
+}
+
+function engagementAffectedCardPillStyle(kind: EngagementCardKind): { border: string; background: string } {
+  if (kind === "cobrand") return { border: `${MR.purple}90`, background: `${MR.purple}12` };
+  if (kind === "business") return { border: `${MR.cyan}90`, background: `${MR.cyan}12` };
+  return { border: `${MR.gold}90`, background: `${MR.gold}10` };
+}
+
+function MarketReputationMomentumWatchRow() {
+  const [engagementChannel, setEngagementChannel] = useState<EngagementChannel>("all");
+  const engagementChannelCounts = useMemo(() => {
+    const counts: Record<EngagementChannel, number> = {
+      all: INFLUENTIAL_ENGAGEMENT_ITEMS.length,
+      app_store: 0,
+      play_store: 0,
+      reddit: 0,
+      trustpilot: 0,
+      x: 0,
+    };
+    for (const row of INFLUENTIAL_ENGAGEMENT_ITEMS) {
+      counts[row.channel]++;
+    }
+    return counts;
+  }, []);
+  const engagementRows = useMemo(
+    () => getInfluentialEngagementItems(engagementChannel),
+    [engagementChannel],
+  );
+
+  const cardChrome = {
+    borderRadius: 16,
+    border: "1px solid #2b2b2b",
+    background: MR.card,
+    boxShadow: "0 18px 40px rgba(0,0,0,0.4)",
+    height: "100%" as const,
+    display: "flex" as const,
+    flexDirection: "column" as const,
+    minHeight: 0,
+    overflow: "hidden" as const,
+  };
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.22fr)",
+        gridAutoRows: "minmax(400px, 1fr)",
+        gap: 16,
+        alignItems: "stretch",
+        marginBottom: 16,
+      }}
+    >
+      <div style={cardChrome}>
+        <div style={{ flexShrink: 0, padding: "24px 24px 12px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              fontSize: 18,
+              fontWeight: 600,
+              color: MR.text,
+              letterSpacing: "-0.02em",
+              lineHeight: 1,
+            }}
+          >
+            <Hash size={20} strokeWidth={2} color={MR.purple} aria-hidden />
+            Momentum Hashtags
+          </div>
+          <div style={{ fontSize: 13, color: "#9ca3af", marginTop: 6 }}>
+            Fastest growing conversation entry points
+          </div>
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
+            padding: "0 24px 16px",
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+            gap: 10,
+            alignContent: "start",
+          }}
+        >
+          {V3_MOMENTUM_HASHTAGS.map((h) => {
+            const st = mrMomentumStanceStyles(h.stance);
+            return (
+              <div
+                key={h.tag}
+                style={{
+                  borderRadius: 12,
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  background: "rgba(255,255,255,0.03)",
+                  padding: 12,
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 6,
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: 10,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: MR.text, wordBreak: "break-word" }}>
+                    {h.tag}
+                  </p>
+                  <span
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.06em",
+                      color: st.color,
+                      flexShrink: 0,
+                    }}
+                  >
+                    {st.label}
+                  </span>
+                </div>
+                <div style={{ display: "flex", alignItems: "flex-end", gap: 10, flexWrap: "wrap" }}>
+                  <span style={{ fontSize: 40, fontWeight: 600, color: MR.text, lineHeight: 1 }}>{h.growth}</span>
+                  <span style={{ fontSize: 11, color: "#9ca3af", paddingBottom: 2 }}>
+                    Growth · <span style={{ fontWeight: 600, color: MR.sub }}>{h.volume.toLocaleString()}</span> posts
+                  </span>
+                </div>
+                <p style={{ margin: 0, fontSize: 11, color: "#9ca3af", lineHeight: 1.45, wordBreak: "break-word" }}>
+                  {h.context}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div style={cardChrome}>
+        <div style={{ flexShrink: 0, padding: "20px 20px 10px" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 10,
+              flexWrap: "wrap",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+              <Users size={20} strokeWidth={2} color={MR.purple} aria-hidden />
+              <span
+                style={{
+                  fontSize: 18,
+                  fontWeight: 600,
+                  color: MR.text,
+                  letterSpacing: "-0.02em",
+                  lineHeight: 1,
+                }}
+              >
+                Influential Engagement
+              </span>
+            </div>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                fontSize: 9,
+                fontWeight: 800,
+                padding: "3px 8px",
+                borderRadius: 6,
+                border: `1px solid ${MR.purple}55`,
+                background: `${MR.purple}18`,
+                color: MR.text,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+                flexShrink: 0,
+              }}
+            >
+              <Sparkles size={11} aria-hidden />
+              AI
+            </span>
+          </div>
+          <div style={{ fontSize: 12, color: "#9ca3af", marginTop: 8, lineHeight: 1.45 }}>
+            Cross-channel posts, reviews, and communities shaping external card sentiment
+          </div>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 12 }}>
+            {ENGAGEMENT_CHANNEL_ORDER.map((key) => {
+              const active = key === engagementChannel;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setEngagementChannel(key)}
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 5,
+                    padding: "5px 10px",
+                    borderRadius: 8,
+                    border: `1px solid ${active ? MR.purple : MR.border}`,
+                    background: active ? `${MR.purple}22` : "rgba(255,255,255,0.03)",
+                    color: active ? MR.text : MR.sub,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  <span>{ENGAGEMENT_CHANNEL_LABEL[key]}</span>
+                  <span
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 800,
+                      fontFamily: "var(--mono), ui-monospace, monospace",
+                      color: active ? "rgba(255,255,255,0.9)" : MR.muted,
+                    }}
+                  >
+                    {engagementChannelCounts[key]}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            maxHeight: 400,
+            overflowY: "auto",
+            padding: "0 20px 20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          {engagementRows.map((row) => (
+            <div
+              key={`${row.channel}-${row.source}-${row.topic}`}
+              style={{
+                borderRadius: 14,
+                border: "1px solid rgba(255,255,255,0.1)",
+                background: "rgba(255,255,255,0.03)",
+                padding: "12px 14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0, 1.15fr) minmax(0, 1fr) minmax(160px, 0.85fr)",
+                  gap: 12,
+                  alignItems: "start",
+                }}
+              >
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: MR.dim, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    {ENGAGEMENT_CHANNEL_LABEL[row.channel]}
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: MR.text, marginTop: 4, wordBreak: "break-word" }}>
+                    {row.source}
+                  </div>
+                  <div style={{ fontSize: 10, color: MR.muted, marginTop: 2 }}>{row.sourceType}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: MR.sub, marginTop: 8 }}>{row.topic}</div>
+                  <p style={{ margin: "6px 0 0", fontSize: 11, color: "#9ca3af", lineHeight: 1.45, wordBreak: "break-word" }}>
+                    {row.narrative}
+                  </p>
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 10, fontWeight: 800, color: MR.dim, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Channel metrics
+                  </div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: MR.text, marginTop: 6 }}>{row.metrics.primary}</div>
+                  <div style={{ fontSize: 11, color: MR.sub, marginTop: 4, lineHeight: 1.4 }}>{row.metrics.secondary}</div>
+                  {row.metrics.tertiary ? (
+                    <div style={{ fontSize: 10, color: MR.muted, marginTop: 4, lineHeight: 1.4 }}>{row.metrics.tertiary}</div>
+                  ) : null}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, minWidth: 0 }}>
+                  <span
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 800,
+                      padding: "2px 8px",
+                      borderRadius: 6,
+                      border: `1px solid ${engagementSentimentColor(row.sentiment)}55`,
+                      color: engagementSentimentColor(row.sentiment),
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    {row.sentiment}
+                  </span>
+                  <MrBadge color={engagementImpactColor(row.impact)}>{row.impact}</MrBadge>
+                  <div style={{ fontSize: 10, color: MR.muted, textAlign: "right", lineHeight: 1.35 }}>
+                    {row.engagementLabel}
+                    {row.engagementRate ? (
+                      <>
+                        <br />
+                        <span style={{ fontWeight: 700, color: MR.sub }}>{row.engagementRate}</span>
+                      </>
+                    ) : null}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: MR.orange,
+                      textAlign: "right",
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    {row.action}
+                  </div>
+                </div>
+              </div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center", paddingTop: 2, borderTop: `1px solid ${MR.border}` }}>
+                {row.affectedCards.map((c) => {
+                  const pill = engagementAffectedCardPillStyle(c.kind);
+                  return (
+                    <span
+                      key={`${row.source}-${c.name}`}
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 700,
+                        padding: "3px 8px",
+                        borderRadius: 6,
+                        border: `1px solid ${pill.border}`,
+                        background: pill.background,
+                        color: MR.sub,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {c.name}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function brandPromiseImportanceColor(importance: BrandPromiseGapRow["importance"]): string {
+  if (importance === "Critical") return MR.red;
+  if (importance === "High") return MR.orange;
+  if (importance === "Moderate") return MR.yellow;
+  return MR.green;
+}
+
+function brandPromiseCardPillStyle(lens: BrandPromiseCard["lens"]): { border: string; background: string } {
+  if (lens === "cobrand") return { border: `${MR.purple}90`, background: `${MR.purple}12` };
+  if (lens === "business") return { border: `${MR.cyan}90`, background: `${MR.cyan}12` };
+  return { border: `${MR.gold}90`, background: `${MR.gold}10` };
+}
+
+function BrandPromiseLensFilterBar({
+  lens,
+  onChange,
+  counts,
+}: {
+  lens: BrandPromiseLens;
+  onChange: (l: BrandPromiseLens) => void;
+  counts: Record<BrandPromiseLens, number>;
+}) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
+      {BRAND_PROMISE_LENS_ORDER.map((key) => {
+        const active = key === lens;
+        return (
+          <button
+            key={key}
+            type="button"
+            onClick={() => onChange(key)}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "7px 11px",
+              borderRadius: 8,
+              border: `1px solid ${active ? MR.orange : MR.border}`,
+              background: active ? `${MR.orange}22` : "rgba(255,255,255,0.025)",
+              color: active ? MR.text : MR.sub,
+              fontSize: 11,
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            <span>{BRAND_PROMISE_LENS_LABEL[key]}</span>
+            <span
+              style={{
+                fontSize: 9,
+                fontWeight: 900,
+                fontFamily: "var(--mono), ui-monospace, monospace",
+                color: active ? "rgba(255,255,255,0.85)" : MR.muted,
+                background: active ? "rgba(0,0,0,0.25)" : "rgba(255,255,255,0.05)",
+                padding: "1px 6px",
+                borderRadius: 4,
+              }}
+            >
+              {counts[key]}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function brandPromiseChannelsLine(ch: BrandPromiseGapRow["channelsPct"]): string {
+  return `Voice ${ch.voice}% · Chat ${ch.chat}% · Social ${ch.social}% · Email ${ch.email}% · Ticket ${ch.ticket}%`;
+}
+
+function BrandPromiseAffectedCardPills({ cards }: { cards: readonly BrandPromiseCard[] }) {
+  return (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 5, alignItems: "center", minWidth: 0 }}>
+      {cards.map((c) => {
+        const pill = brandPromiseCardPillStyle(c.lens);
+        return (
+          <span
+            key={`${c.shortName}-${c.fullName}`}
+            title={c.partner ? `Partner: ${c.partner}` : c.fullName}
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              padding: "3px 8px",
+              borderRadius: 6,
+              border: `1px solid ${pill.border}`,
+              background: pill.background,
+              color: MR.sub,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {c.shortName}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 export function MarketReputationV3Drill({ onBack }: DrillProps) {
-  const socialHashtagInsight = V3_SOCIAL_AI.replace(/^\s*✨\s*/u, "✦ ");
-  const leadCompetitor = V3_COMPETITORS[0];
-  const ranks5 = V3_COMPARISON_RANKS.slice(0, 5);
-  const media4 = V3_MEDIA.slice(0, 4);
-  const comp5 = V3_COMPETITORS.slice(0, 5);
+  const [brandPromiseLens, setBrandPromiseLens] = useState<BrandPromiseLens>("all");
+  const brandGapTableRows = useMemo(
+    () => getBrandPromiseGapRows(brandPromiseLens),
+    [brandPromiseLens],
+  );
+  const brandPromiseLensCounts = V3_BRAND_PROMISE_LENS_ROW_COUNTS;
+
+  const [rankingLens, setRankingLens] = useState<RankingLens>("all");
+  const rankingReviewRows = useMemo(() => getSortedRankingReviewRows(rankingLens), [rankingLens]);
+  const rankingLensCounts = RANKING_LENS_ROW_COUNTS;
 
   return (
     <V3DrillShell>
       <DrillPageHeader
         onBack={onBack}
         title="What is the market saying about us?"
-        sub="Reviews, social, and ranking sites — how we compare to Amex, Chase, and peers. External narrative vs. internal conversation echo."
+        sub="Reviews, social, and ranking sites. External narrative and internal conversation mentions."
         comfortable
       />
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          gap: 12,
-        }}
-      >
-        {V3_MARKET_REPUTATION_COMMAND.map((m) => {
-          const c = MR_CMD_TONE[m.tone];
-          return (
-            <MrCard key={m.label} accent={c}>
-              <div
-                style={{
-                  fontSize: 9,
-                  color: c,
-                  textTransform: "uppercase",
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  marginBottom: 6,
-                }}
-              >
-                {m.label}
-              </div>
-              <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                <MrMono size={36} color={MR.text}>
-                  {m.value}
-                </MrMono>
-                {m.unit ? (
-                  <span style={{ fontSize: 14, color: MR.muted }}>
-                    {m.unit}
-                  </span>
-                ) : null}
-              </div>
-              <div style={{ fontSize: 10, color: MR.sub, marginTop: 4 }}>
-                {m.sub}
-              </div>
-            </MrCard>
-          );
-        })}
-      </div>
-
-      <MrDivider label="What's being said externally" />
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-          gap: 16,
-        }}
-      >
-        <MrCard>
-          <MrHead
-            icon="⭐"
-            sub="NerdWallet · Bankrate · WalletHub · Forbes · CreditKarma"
-          >
-            Rankings &amp; Reviews
-          </MrHead>
-          {ranks5.map((r) => (
-            <MrRankRow
-              key={`${r.site}-${r.category}`}
-              site={r.site}
-              category={r.category}
-              rank={r.rank}
-              prev={r.prev}
-              competitor={`${r.top1} · ${r.score}`}
-              reason={r.aiNote}
-              color={rankDeltaColor(r.rank, r.prev)}
-            />
-          ))}
-          <div
-            style={{
-              marginTop: 12,
-              padding: "10px 12px",
-              background: `${MR.red}08`,
-              borderRadius: 8,
-              borderLeft: `3px solid ${MR.red}`,
-            }}
-          >
-            <span style={{ fontSize: 11, color: MR.sub }}>
-              {V3_MARKET_RANKS_INSIGHT.before}
-            </span>
-            <MrMono size={12} color={MR.red}>
-              {V3_MARKET_RANKS_INSIGHT.highlight}
-            </MrMono>
-          </div>
-        </MrCard>
-
-        <MrCard>
-          <MrHead
-            icon="💬"
-            sub="App Store · Play Store · Trustpilot · Reddit · X — 6-week trend"
-          >
-            Social Sentiment &amp; Hashtags
-          </MrHead>
-          {V3_SOCIAL_SENTIMENT.map((s) => {
-            const barColor = socialBarColor(s.score);
-            return (
-              <div
-                key={s.channel}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  marginBottom: 6,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 11,
-                    color: MR.sub,
-                    width: 72,
-                    textAlign: "right",
-                    flexShrink: 0,
-                  }}
-                >
-                  {s.channel}
-                </span>
-                <MrMono size={12} color={barColor}>
-                  {s.score.toFixed(2)}
-                </MrMono>
-                <div
-                  style={{
-                    flex: 1,
-                    height: 6,
-                    background: "rgba(255,255,255,0.05)",
-                    borderRadius: 3,
-                    overflow: "hidden",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${s.score * 100}%`,
-                      height: "100%",
-                      background: barColor,
-                      borderRadius: 3,
-                    }}
-                  />
-                </div>
-                <MrMono size={10} color={MR.red}>
-                  {s.delta6w.toFixed(2)}
-                </MrMono>
-              </div>
-            );
-          })}
-
-          <div
-            style={{
-              marginTop: 14,
-              marginBottom: 8,
-              fontSize: 10,
-              color: MR.dim,
-              textTransform: "uppercase",
-              fontWeight: 600,
-              letterSpacing: "0.05em",
-            }}
-          >
-            Hashtag Momentum
-          </div>
-          <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}
-          >
-            {V3_HASHTAGS.map((h) => {
-              const neg = h.stance === "Negative";
-              const cellBg = neg ? `${MR.red}08` : `${MR.green}08`;
-              const cellBorder = neg ? `${MR.red}20` : `${MR.green}20`;
-              const nameColor = neg ? MR.red : MR.green;
-              return (
-                <div
-                  key={h.tag}
-                  style={{
-                    background: cellBg,
-                    borderRadius: 8,
-                    padding: "10px 12px",
-                    border: `1px solid ${cellBorder}`,
-                  }}
-                >
-                  <div
-                    style={{ fontSize: 13, fontWeight: 800, color: nameColor }}
-                  >
-                    {h.tag}
-                  </div>
-                  <div style={{ fontSize: 10, color: MR.sub, marginTop: 2 }}>
-                    {h.growth} · {h.volume.toLocaleString()} posts
-                  </div>
-                  <div style={{ fontSize: 10, color: MR.muted, marginTop: 2 }}>
-                    {h.context}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div
-            style={{
-              marginTop: 12,
-              padding: "10px 12px",
-              background: `${MR.orange}08`,
-              borderRadius: 8,
-              borderLeft: `3px solid ${MR.orange}`,
-            }}
-          >
-            <span style={{ fontSize: 11, color: MR.sub }}>
-              {socialHashtagInsight}
-            </span>
-          </div>
-        </MrCard>
-
-        <MrCard>
-          <MrHead
-            icon="🏦"
-            sub="Competitor mentions inside OUR voice, chat, and social conversations"
-          >
-            Competitor Mention Monitor
-          </MrHead>
-          {comp5.map((c) => {
-            const threatS = c.threat.toFixed(1);
-            const th = parseFloat(threatS);
-            return (
-              <div
-                key={c.name}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "10px 0",
-                  borderBottom: `1px solid ${MR.border}`,
-                  gap: 10,
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div
-                    style={{ fontSize: 12, fontWeight: 700, color: MR.text }}
-                  >
-                    {c.name}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 10,
-                      color: MR.muted,
-                      fontStyle: "italic",
-                      marginTop: 2,
-                    }}
-                  >
-                    {c.context}
-                  </div>
-                </div>
-                <div style={{ textAlign: "center", minWidth: 40 }}>
-                  <MrMono size={14}>{c.mentions}</MrMono>
-                </div>
-                <MrMono
-                  size={12}
-                  color={!Number.isNaN(th) && th > 5 ? MR.red : MR.orange}
-                >
-                  {threatS}/10
-                </MrMono>
-              </div>
-            );
-          })}
-
-          <div
-            style={{
-              marginTop: 12,
-              padding: "10px 12px",
-              background: `${MR.orange}08`,
-              borderRadius: 8,
-              borderLeft: `3px solid ${MR.orange}`,
-            }}
-          >
-            <span style={{ fontSize: 11, color: MR.sub }}>
-              CompetitorY growth:{" "}
-            </span>
-            <MrMono size={11} color={MR.red}>
-              {leadCompetitor.growth}
-            </MrMono>
-            <span style={{ fontSize: 11, color: MR.sub }}>
-              {" "}
-              — leading churn-intent signal.
-            </span>
-          </div>
-
-          <div style={{ marginTop: 16 }}>
-            <div
-              style={{
-                fontSize: 10,
-                color: MR.dim,
-                textTransform: "uppercase",
-                fontWeight: 600,
-                letterSpacing: "0.05em",
-                marginBottom: 8,
-              }}
-            >
-              Tier-1 Media This Week
-            </div>
-            {media4.map((m) => (
-              <div
-                key={m.headline}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "6px 0",
-                  borderBottom: `1px solid ${MR.border}`,
-                }}
-              >
-                <div>
-                  <span
-                    style={{ fontSize: 11, fontWeight: 600, color: MR.sub }}
-                  >
-                    {m.outlet}
-                  </span>
-                  <span
-                    style={{ fontSize: 11, color: MR.muted, marginLeft: 8 }}
-                  >
-                    {m.headline}
-                  </span>
-                </div>
-                <MrMono size={10} color={MR.sub}>
-                  {m.reach}
-                </MrMono>
-              </div>
-            ))}
-          </div>
-        </MrCard>
-      </div>
-
-      <MrDivider label="Is it leaking into customer conversations?" />
-
-      <MrCard accent={MR.cyan} style={{ marginBottom: 0 }}>
+      <MrCard accent={MR.orange}>
         <MrHead
-          icon="🔗"
-          sub="Which external narratives are appearing in internal voice, chat, email, and ticket conversations — ranked by echo frequency"
+          icon="⚖"
+          sub="Promise made vs. where customers say it breaks — by portfolio type and affected card brands."
           badge="AI"
         >
-          Echo Tracker — External → Internal Bridge
+          Brand Promise Gap
         </MrHead>
 
+        <BrandPromiseLensFilterBar
+          lens={brandPromiseLens}
+          onChange={setBrandPromiseLens}
+          counts={brandPromiseLensCounts}
+        />
+
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,1fr) 280px",
-            gap: 20,
+            marginTop: 4,
+            maxHeight: 540,
+            overflowY: "auto",
+            overflowX: "auto",
+            paddingRight: 4,
           }}
         >
-          <div>
-            {V3_ECHO_TRACKER.map((row) => (
-              <MrEchoRow
-                key={row.source}
-                source={row.source}
-                narrative={row.narrative}
-                echoCount={row.echoCount}
-                channels={row.channels}
-                churnPct={row.churnPct}
-                velocity={row.velocity}
-                phrase={row.phrase}
-              />
-            ))}
-          </div>
-
-          <div
-            style={{ borderLeft: `1px solid ${MR.border}`, paddingLeft: 20 }}
-          >
-            <div
-              style={{
-                fontSize: 10,
-                color: MR.cyan,
-                textTransform: "uppercase",
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                marginBottom: 12,
-              }}
-            >
-              Echo Summary
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <div
-                style={{
-                  fontSize: 9,
-                  color: MR.dim,
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                }}
-              >
-                Total echo conversations
-              </div>
-              <MrMono size={32} color={MR.text}>
-                {V3_ECHO_SUMMARY.totalEcho}
-              </MrMono>
-              <div style={{ fontSize: 10, color: MR.muted }}>
-                of {V3_ECHO_SUMMARY.totalConversations} total (
-                {V3_ECHO_SUMMARY.penetrationPct} penetration)
-              </div>
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <div
-                style={{
-                  fontSize: 9,
-                  color: MR.dim,
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                }}
-              >
-                Echo → Churn conversion
-              </div>
-              <MrMono size={22} color={MR.red}>
-                {V3_ECHO_SUMMARY.echoToChurn}
-              </MrMono>
-              <div style={{ fontSize: 10, color: MR.muted }}>
-                vs {V3_ECHO_SUMMARY.baselineChurn} baseline churn intent
-              </div>
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <div
-                style={{
-                  fontSize: 9,
-                  color: MR.dim,
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                }}
-              >
-                Fastest growing echo
-              </div>
-              <MrMono size={14} color={MR.red}>
-                {V3_ECHO_SUMMARY.fastestLabel}
-              </MrMono>
-              <div style={{ fontSize: 10, color: MR.muted }}>
-                {V3_ECHO_SUMMARY.fastestDetail}
-              </div>
-            </div>
-
-            <div style={{ marginBottom: 16 }}>
-              <div
-                style={{
-                  fontSize: 9,
-                  color: MR.dim,
-                  textTransform: "uppercase",
-                  fontWeight: 600,
-                }}
-              >
-                Highest churn echo
-              </div>
-              <MrMono size={14} color={MR.red}>
-                {V3_ECHO_SUMMARY.highestChurnLabel}
-              </MrMono>
-              <div style={{ fontSize: 10, color: MR.muted }}>
-                {V3_ECHO_SUMMARY.highestChurnDetail}
-              </div>
-            </div>
-
-            <div
-              style={{
-                background: `${MR.cyan}10`,
-                borderRadius: 8,
-                padding: "12px",
-                marginTop: 8,
-              }}
-            >
-              <span style={{ fontSize: 11, color: MR.cyan }}>✦ </span>
-              <span style={{ fontSize: 11, color: MR.sub }}>
-                Customers who cite external sources in conversations are{" "}
-              </span>
-              <MrMono size={11} color={MR.red}>
-                {V3_ECHO_SUMMARY.liftMultiple}
-              </MrMono>
-              <span style={{ fontSize: 11, color: MR.sub }}>
-                {" "}
-                more likely to express churn intent than those who don&apos;t.
-              </span>
-            </div>
-          </div>
-        </div>
-      </MrCard>
-
-      <MrDivider label="Are we keeping our brand promises?" />
-
-      <MrCard accent={MR.orange}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0,1fr) 200px",
-            gap: 20,
-          }}
-        >
-          <div>
-            <MrHead
-              icon="⚖"
-              sub="What we advertise vs. what customers + reviewers are actually saying"
-              badge="AI"
-            >
-              Brand Promise Gap
-            </MrHead>
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: 12,
-              }}
-            >
-              <thead>
-                <tr style={{ borderBottom: `1px solid ${MR.border}` }}>
-                  {["We Promise", "They Say (Evidence)", "Gap", "Evidence"].map(
-                    (h) => (
-                    <th
-                      key={h}
-                        style={{
-                          padding: "10px 6px",
-                          textAlign: h === "Evidence" ? "right" : "left",
-                          color: MR.dim,
-                          fontWeight: 600,
-                          fontSize: 9,
-                          textTransform: "uppercase",
-                        }}
-                    >
-                      {h}
-                    </th>
-                    ),
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {V3_BRAND_PROMISE_GAP.gaps.map((r) => {
-                  const g = r.gap as MrGap;
-                  const fill = g in MR_GAP_BADGE ? MR_GAP_BADGE[g] : MR.yellow;
-                  return (
-                    <tr
-                      key={r.promise}
-                      style={{ borderBottom: `1px solid ${MR.border}` }}
-                    >
-                      <td
-                        style={{
-                          padding: "12px 6px",
-                          fontWeight: 600,
-                          color: MR.text,
-                        }}
-                      >
-                        {r.promise}
-                      </td>
-                      <td
-                        style={{
-                          padding: "12px 6px",
-                          color: MR.sub,
-                          fontSize: 11,
-                        }}
-                      >
-                        {r.reality}
-                      </td>
-                      <td style={{ padding: "12px 6px" }}>
-                        <MrBadge color={fill}>{g}</MrBadge>
-                      </td>
-                      <td style={{ padding: "12px 6px", textAlign: "right" }}>
-                        <MrMono size={12}>
-                          {r.evidenceCount > 0
-                            ? r.evidenceCount.toLocaleString()
-                            : "—"}
-                        </MrMono>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            <div
-              style={{
-                marginTop: 14,
-                padding: "12px 16px",
-                background: `${MR.red}08`,
-                borderRadius: 8,
-                borderLeft: `3px solid ${MR.red}`,
-              }}
-            >
-              <span style={{ fontSize: 11, color: MR.sub }}>
-                {V3_BRAND_PROMISE_GAP.aiNarrative.replace(/^\s*✨\s*/u, "✦ ")}
-              </span>
-            </div>
-          </div>
-          <div
+          <table
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              borderLeft: `1px solid ${MR.border}`,
-              paddingLeft: 20,
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 11,
+              tableLayout: "fixed",
+              minWidth: 920,
             }}
           >
-            <div
+            <colgroup>
+              <col style={{ width: "16%" }} />
+              <col style={{ width: "26%" }} />
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "16%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "14%" }} />
+            </colgroup>
+            <thead
               style={{
-                fontSize: 9,
-                color: MR.dim,
-                textTransform: "uppercase",
-                fontWeight: 700,
-                letterSpacing: "0.06em",
-                marginBottom: 8,
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
+                background: MR.card,
+                boxShadow: `0 1px 0 ${MR.border}`,
               }}
             >
-              Brand Promise Score
-            </div>
-            <MrMono size={72} color={MR.orange}>
-              {V3_BRAND_PROMISE_GAP.compositeScore}
-            </MrMono>
-            <p
-              style={{
-                fontSize: 10,
-                color: MR.muted,
-                textAlign: "center",
-                lineHeight: 1.4,
-                marginTop: 10,
-                marginBottom: 0,
-              }}
-            >
-              &ldquo;How&apos;s the brand?&rdquo; — the number the Head of Cards
-              shows the CEO.
-            </p>
+              <tr style={{ borderBottom: `1px solid ${MR.border}` }}>
+                {[
+                  ["We promise", "left"],
+                  ["Where it breaks", "left"],
+                  ["Affected card brands", "left"],
+                  ["Volume + channels", "left"],
+                  ["Sentiment impact", "right"],
+                  ["Importance", "left"],
+                ].map(([h, align]) => (
+                  <th
+                    key={h}
+                    style={{
+                      padding: "8px 8px",
+                      textAlign: align as "left" | "right",
+                      color: MR.dim,
+                      fontWeight: 700,
+                      fontSize: 9,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      background: MR.card,
+                    }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {brandGapTableRows.map((r) => {
+                const sentColor =
+                  r.negativeSentiment <= -0.45
+                    ? MR.red
+                    : r.negativeSentiment <= -0.35
+                      ? MR.orange
+                      : MR.green;
+                return (
+                  <tr key={r.id} style={{ borderBottom: `1px solid ${MR.border}` }}>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top", wordBreak: "break-word" }}>
+                      <div style={{ fontWeight: 700, color: MR.text, fontSize: 12, lineHeight: 1.35 }}>
+                        {r.promise}
+                      </div>
+                      <div style={{ fontSize: 10, color: MR.muted, marginTop: 4, lineHeight: 1.35 }}>
+                        {r.promiseCategory}
+                      </div>
+                    </td>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top", wordBreak: "break-word" }}>
+                      <div style={{ fontSize: 11, color: MR.text, lineHeight: 1.45 }}>{r.whereItBreaks}</div>
+                      <div
+                        style={{
+                          fontSize: 9,
+                          color: MR.muted,
+                          marginTop: 6,
+                          lineHeight: 1.4,
+                          fontStyle: "italic",
+                        }}
+                      >
+                        {r.evidenceNote}
+                      </div>
+                    </td>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top" }}>
+                      <BrandPromiseAffectedCardPills cards={r.cards} />
+                    </td>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top" }}>
+                      <MrMono size={18} color={MR.text}>
+                        {r.volume.toLocaleString()}
+                      </MrMono>
+                      <div
+                        style={{
+                          marginTop: 6,
+                          fontSize: 9,
+                          color: MR.muted,
+                          lineHeight: 1.35,
+                          fontFamily: "var(--mono), ui-monospace, monospace",
+                        }}
+                      >
+                        {brandPromiseChannelsLine(r.channelsPct)}
+                      </div>
+                    </td>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top", textAlign: "right", whiteSpace: "nowrap" }}>
+                      <MrMono size={11} color={sentColor}>
+                        {r.negativeSentiment.toFixed(2)}
+                      </MrMono>
+                    </td>
+                    <td style={{ padding: "10px 8px", verticalAlign: "top" }}>
+                      <MrBadge color={brandPromiseImportanceColor(r.importance)}>{r.importance}</MrBadge>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {brandGapTableRows.length === 0 ? (
+          <div style={{ fontSize: 11, color: MR.muted, marginTop: 10 }}>
+            No promise gaps for this portfolio slice.
           </div>
+        ) : null}
+      </MrCard>
+
+      <MarketReputationMomentumWatchRow />
+
+      <MrCard>
+        <MrHead
+          icon="⭐"
+          badge="AI"
+          sub="Track card-category rank movement across review sites and comparison sites"
+        >
+          Rankings &amp; Reviews
+        </MrHead>
+
+        <RankingLensFilterBar lens={rankingLens} onChange={setRankingLens} counts={rankingLensCounts} />
+
+        <div
+          style={{
+            marginTop: 4,
+            maxHeight: 420,
+            overflowY: "auto",
+            overflowX: "auto",
+            paddingRight: 4,
+          }}
+        >
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 11,
+              tableLayout: "fixed",
+              minWidth: 1040,
+            }}
+          >
+            <colgroup>
+              <col style={{ width: "12%" }} />
+              <col style={{ width: "11%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "12%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "12%" }} />
+              <col style={{ width: "19%" }} />
+              <col style={{ width: "14%" }} />
+              <col style={{ width: "8%" }} />
+            </colgroup>
+            <thead
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
+                background: MR.card,
+                boxShadow: `0 1px 0 ${MR.border}`,
+              }}
+            >
+              <tr style={{ borderBottom: `1px solid ${MR.border}` }}>
+                {[
+                  "Site",
+                  "Category",
+                  "Portfolio",
+                  "Our card",
+                  "Rank move",
+                  "#1 competitor",
+                  "Why it moved",
+                  "Internal echo",
+                  "Impact",
+                ].map((h) => (
+                  <th
+                    key={h}
+                    style={{
+                      padding: "8px 8px",
+                      textAlign: "left",
+                      color: MR.dim,
+                      fontWeight: 700,
+                      fontSize: 9,
+                      textTransform: "uppercase",
+                      letterSpacing: "0.04em",
+                      background: MR.card,
+                    }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rankingReviewRows.map((r) => {
+                const pf = rankingPortfolioBadgeStyle(r.lens);
+                const rm = rankingRankMoveParts(r);
+                return (
+                  <tr key={`${r.site}-${r.ourCard}-${r.category}`} style={{ borderBottom: `1px solid ${MR.border}` }}>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top", wordBreak: "break-word" }}>
+                      <div style={{ fontWeight: 700, color: MR.text, fontSize: 12, lineHeight: 1.3 }}>{r.site}</div>
+                      <div style={{ fontSize: 9, color: MR.muted, marginTop: 3 }}>{r.siteSource}</div>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top" }}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          fontSize: 9,
+                          fontWeight: 700,
+                          padding: "3px 8px",
+                          borderRadius: 6,
+                          border: `1px solid ${V3D.borderBtn}`,
+                          background: "rgba(255,255,255,0.04)",
+                          color: MR.sub,
+                          lineHeight: 1.25,
+                        }}
+                      >
+                        {r.category}
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top" }}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          fontSize: 9,
+                          fontWeight: 800,
+                          padding: "3px 8px",
+                          borderRadius: 6,
+                          border: `1px solid ${pf.border}`,
+                          background: pf.background,
+                          color: pf.color,
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {rankingPortfolioLensLabel(r.lens)}
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top" }}>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          fontSize: 9,
+                          fontWeight: 700,
+                          padding: "3px 8px",
+                          borderRadius: 6,
+                          border: `1px solid ${V3D.borderBtn}`,
+                          background: "rgba(255,255,255,0.06)",
+                          color: MR.text,
+                          lineHeight: 1.25,
+                        }}
+                      >
+                        {r.ourCard}
+                      </span>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top", whiteSpace: "nowrap" }}>
+                      <MrMono size={12} color={rm.color}>
+                        {rm.line}
+                      </MrMono>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: rm.color, marginTop: 3 }}>{rm.sub}</div>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top", wordBreak: "break-word" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: MR.text, lineHeight: 1.35 }}>
+                        {r.competitorRankOne}
+                      </div>
+                      {r.competitorScore ? (
+                        <div style={{ fontSize: 10, color: MR.muted, marginTop: 3 }}>{r.competitorScore}</div>
+                      ) : null}
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top", wordBreak: "break-word" }}>
+                      <div style={{ fontSize: 11, color: MR.sub, lineHeight: 1.45 }}>{r.reason}</div>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top", wordBreak: "break-word" }}>
+                      <div style={{ fontSize: 11, color: MR.text, lineHeight: 1.35 }}>
+                        <MrMono size={12} color={MR.text}>
+                          {r.internalEcho.toLocaleString()}
+                        </MrMono>
+                        <span style={{ fontSize: 10, color: MR.muted }}> conversations</span>
+                      </div>
+                      <div style={{ fontSize: 9, color: MR.muted, marginTop: 5, lineHeight: 1.35, fontStyle: "italic" }}>
+                        “{r.echoLabel}”
+                      </div>
+                    </td>
+                    <td style={{ padding: "8px 8px", verticalAlign: "top" }}>
+                      <MrBadge color={rankingImpactBadgeColor(r.impact)}>{r.impact}</MrBadge>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+
+        {rankingReviewRows.length === 0 ? (
+          <div style={{ fontSize: 11, color: MR.muted, marginTop: 10 }}>No ranking movements for this portfolio slice.</div>
+        ) : null}
+
+        <div
+          style={{
+            marginTop: 12,
+            padding: "10px 12px",
+            background: `${MR.purple}0d`,
+            borderRadius: 8,
+            borderLeft: `3px solid ${MR.purple}`,
+          }}
+        >
+          <div style={{ fontSize: 9, fontWeight: 800, color: MR.purple, letterSpacing: "0.06em", marginBottom: 4 }}>
+            AI note
+          </div>
+          <div style={{ fontSize: 11, color: MR.sub, lineHeight: 1.5 }}>{RANKING_AI_SUMMARY_BY_LENS[rankingLens]}</div>
         </div>
       </MrCard>
 
-      <MrDivider label="Evidence & What to do about it" />
+      <MrDivider label="Executive diagnosis" />
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 16,
-        }}
-      >
-        <MrCard>
-          <MrHead
-            icon="🗣"
-            sub="Anonymised mixed-channel snippets where customers cite external sources"
-            badge="AI"
-          >
-            Conversation Evidence
-          </MrHead>
-          {V3_CONVERSATION_EVIDENCE_MARKET.map((e) => {
-            const sentColor =
-              e.sentiment === "NEGATIVE"
-                ? MR.red
-                : e.sentiment === "NEUTRAL"
-                  ? MR.yellow
-                  : MR.green;
-            return (
-              <div
-                key={`${e.channel}-${e.segment}-${e.text.slice(0, 120)}`}
-                style={{
-                  background: "rgba(255,255,255,0.02)",
-                  borderRadius: 8,
-                  padding: "14px 16px",
-                  marginBottom: 8,
-                }}
-              >
-                <div
+      <MrCard accent={MR.purple}>
+        <MrHead icon="✦">AI Executive Diagnosis</MrHead>
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <tbody>
+            {V3_EXECUTIVE_DIAGNOSIS_MARKET.map((r) => (
+              <tr key={r.label} style={{ borderBottom: `1px solid ${MR.border}` }}>
+                <td
                   style={{
-                    display: "flex",
-                    gap: 6,
-                    marginBottom: 8,
-                    flexWrap: "wrap",
+                    padding: "10px 8px 10px 0",
+                    verticalAlign: "top",
+                    width: 130,
                   }}
                 >
-                  <MrTag color={MR.cyan}>{e.channel}</MrTag>
-                  <MrTag color={MR.gold}>{e.segment}</MrTag>
-                  <MrTag color={sentColor}>{e.sentiment}</MrTag>
-                </div>
-                <p
-                  style={{
-                    fontSize: 12,
-                    color: MR.text,
-                    lineHeight: 1.5,
-                    margin: 0,
-                    fontStyle: "italic",
-                  }}
-                >
-                  &ldquo;{e.text}&rdquo;
-                </p>
-              </div>
-            );
-          })}
-        </MrCard>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <MrCard accent={MR.purple}>
-            <MrHead icon="✦">AI Executive Diagnosis</MrHead>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <tbody>
-                {V3_EXECUTIVE_DIAGNOSIS_MARKET.map((r) => (
-                  <tr
-                    key={r.label}
-                    style={{ borderBottom: `1px solid ${MR.border}` }}
-                  >
-                    <td
-                      style={{
-                        padding: "10px 8px 10px 0",
-                        verticalAlign: "top",
-                        width: 130,
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: 11,
-                          fontWeight: 700,
-                          color: diagnosisLabelColor(r.tone),
-                        }}
-                      >
-                        {r.label}
-                      </span>
-                    </td>
-                    <td
-                      style={{
-                        padding: "10px 0",
-                        fontSize: 12,
-                        color: MR.text,
-                        lineHeight: 1.55,
-                      }}
-                    >
-                      {r.value}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </MrCard>
-
-          <MrCard accent={MR.green}>
-            <MrHead>Recommended Actions</MrHead>
-            {V3_MARKET_REPUTATION_ACTIONS.map((a) => {
-              const bColor =
-                a.priority === "Critical"
-                  ? MR.red
-                  : a.priority === "High"
-                    ? MR.orange
-                    : MR.yellow;
-              return (
-                <div
-                  key={a.title}
-                style={{
-                    padding: "12px 14px",
-                    background: "rgba(255,255,255,0.02)",
-                    borderRadius: 8,
-                    marginBottom: 8,
-                  }}
-                >
-                  <div
-                style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "flex-start",
-                      gap: 8,
+                  <span
+                    style={{
+                      fontSize: 11,
+                      fontWeight: 700,
+                      color: diagnosisLabelColor(r.tone),
                     }}
                   >
-                    <h4
+                    {r.label}
+                  </span>
+                </td>
+                <td
                   style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        margin: "0 0 4px",
-                        color: MR.text,
-                        flex: 1,
-                        minWidth: 0,
-                      }}
-                    >
-                      {a.title}
-                    </h4>
-                    <MrBadge color={bColor}>{a.priority}</MrBadge>
-                </div>
-                  <div style={{ fontSize: 11, color: MR.muted }}>
-                    Owner: {a.owner}
-              </div>
-                  <div style={{ fontSize: 11, color: MR.sub, marginTop: 2 }}>
-                    Impact: {a.impact}
-                  </div>
-                </div>
-              );
-            })}
-          </MrCard>
-          </div>
-                  </div>
+                    padding: "10px 0",
+                    fontSize: 12,
+                    color: MR.text,
+                    lineHeight: 1.55,
+                  }}
+                >
+                  {r.value}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </MrCard>
     </V3DrillShell>
   );
 }
