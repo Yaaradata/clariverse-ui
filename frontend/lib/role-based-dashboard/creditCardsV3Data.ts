@@ -143,7 +143,7 @@ export const V3_TILES: V3Tile[] = [
     id: "fraud_fulfillment",
     title: "Are we keeping our service promise?",
     subtitle:
-      "Speed, accuracy, and fairness on fraud, disputes, regulatory commitments, and recovery.",
+      "Dispute resolution, repeat contact, and service recovery.",
     score: 58,
     delta: -11,
     deltaLabel: "▼ 11 pts WoW",
@@ -156,7 +156,7 @@ export const V3_TILES: V3Tile[] = [
       { label: "Fraud loss",    value: "$312K/wk" },
     ],
     aiInsight:
-      "Dispute repeat contact: 47%, up from 39% WoW. 43 conversations cite evidence-collection delays. Evidence collection stage: 3.2× more negative contacts. BPO Vendor Beta is the bottleneck.",
+      "Service promise score fell because dispute follow-up, fee-waiver decisions, and callback misses are driving repeat contact. 43 disputes are beyond promise window; evidence collection is the leading delay.",
   },
 ];
 

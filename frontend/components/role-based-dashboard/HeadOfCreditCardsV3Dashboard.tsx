@@ -263,11 +263,11 @@ function ExecutiveTile({ tile, onOpen }: { tile: V3Tile; onOpen: () => void }) {
       bottomRight: { label: "Social Driver", value: "#RewardScam", sub: "hashtag vol" },
     },
     fraud_fulfillment: {
-      micro: "Dispute CSAT · Repeat Contact · Bottleneck",
-      leftGauge: { label: "Resolution Quality", value: 42, sub: "csat" },
-      rightGauge: { label: "Follow-up Rate", value: 47, sub: "repeat contact" },
+      micro: "Dispute resolution · Repeat contact · Service recovery",
+      leftGauge: { label: "Resolved in Promise", value: 42, sub: "resolution SLA" },
+      rightGauge: { label: "Repeat Contact", value: 47, sub: "same issue callbacks" },
       bottomLeft: {
-        label: "Dispute Aging",
+        label: "Beyond Promise",
         value: "43 overdue",
         sub: "AGING DETECT",
         valueColor: "#ef4444",
@@ -275,9 +275,9 @@ function ExecutiveTile({ tile, onOpen }: { tile: V3Tile; onOpen: () => void }) {
         subPill: true,
       },
       bottomRight: {
-        label: "Top Fraud Type",
-        value: "Friendly",
-        sub: "TOPIC CLUSTER",
+        label: "Top Service Break",
+        value: "Dispute follow-up",
+        sub: "ROOT CAUSE",
         valueColor: "#f97316",
         align: "end",
         subPill: true,
@@ -429,7 +429,9 @@ function ExecutiveTile({ tile, onOpen }: { tile: V3Tile; onOpen: () => void }) {
                 color={
                   g.label === "Positive Resolution" ||
                   g.label === "Resolution Quality" ||
-                  g.label === "Follow-up Rate"
+                  g.label === "Follow-up Rate" ||
+                  g.label === "Resolved in Promise" ||
+                  g.label === "Repeat Contact"
                     ? T.amber
                     : trendLineColor
                 }
