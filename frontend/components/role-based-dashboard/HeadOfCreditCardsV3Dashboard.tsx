@@ -1190,36 +1190,151 @@ export function HeadOfCreditCardsV3Dashboard({
           </div>
         </aside>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div
+          style={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            overflow: activeDrill ? "hidden" : "auto",
+          }}
+        >
           <div
             style={{
-              padding: "12px 24px",
-              borderBottom: `1px solid ${T.borderLight}`,
-              background: T.elevated,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
+              padding: activeDrill ? "12px 24px" : "10px 24px 0",
+              borderBottom: activeDrill ? `1px solid ${T.borderLight}` : "none",
+              background: activeDrill ? T.elevated : "transparent",
             }}
           >
-            <div>
-              <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
-                {activeScreenMeta.label}
-              </h1>
-              <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>
-                {industryName} · {roleName} · {activeScreenMeta.sub}
+            {activeDrill ? (
+              <div>
+                <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
+                  {activeScreenMeta.label}
+                </h1>
+                <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>
+                  {industryName} · {roleName} · {activeScreenMeta.sub}
+                </div>
               </div>
-            </div>
+            ) : null}
           </div>
           <main
             style={{
               flex: 1,
               minWidth: 0,
               padding: activeDrill ? "16px 18px 20px" : 16,
-              overflowY: "auto",
+              overflowY: activeDrill ? "auto" : "visible",
               overflowX: "hidden",
               position: "relative",
             }}
           >
+            {!activeDrill ? (
+              <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 12 }}>
+                <div
+                  style={{
+                    background: T.elevated,
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    border: `1px solid ${T.borderLight}`,
+                    boxShadow: `0 0 0 1px ${T.amber}12 inset`,
+                  }}
+                >
+                  <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 1fr) auto", gap: 10, alignItems: "center" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+                      <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: T.amber, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+                          Executive Brief
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 7, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                    <div style={{ fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
+                      All three executive signals weakened this week, with service promise showing the sharpest
+                      deterioration.
+                    </div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {[
+                        { label: "Satisfaction", delta: -4 },
+                        { label: "Market", delta: -8 },
+                        { label: "Service promise", delta: -11 },
+                      ].map((m) => {
+                        const tone = m.delta <= -8 ? T.red : m.delta < 0 ? T.amber : T.green;
+                        const direction = m.delta < 0 ? "↓" : m.delta > 0 ? "↑" : "•";
+                        return (
+                          <span
+                            key={m.label}
+                            style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: 6,
+                              fontSize: 12,
+                              fontWeight: 700,
+                              color: tone,
+                              border: `1px solid ${tone}50`,
+                              background: `${tone}18`,
+                              borderRadius: 999,
+                              padding: "6px 10px",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            <span style={{ color: T.textSec }}>{m.label}</span>
+                            <span>{direction}</span>
+                            <span>{m.delta > 0 ? `+${m.delta}` : m.delta} pts</span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: T.elevated,
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                    borderLeft: `3px solid ${T.amber}`,
+                    border: `1px solid ${T.borderLight}`,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 9 }}>
+                    <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: T.amber, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+                      Executive Pulse
+                    </span>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+                    {[
+                      { q: "What is broken?", main: "🔴 18 HSHF accounts: churn signals detected - activation friction #1 journey detractor, retention window open", support: "", pill: "Critical", tone: T.red },
+                      { q: "How bad is it?",  main: "🎯 Dispute repeat contact at 47%, up from 39% WoW with 43 cases aging beyond promise window", support: "", pill: "High severity", tone: T.amber },
+                      { q: "How do we fix it?",  main: "🟡 Co-branded at 63% vs standalone 54% - gap stable, monitoring #RewardScam movement", support: "", pill: "Monitoring", tone: T.cyan },
+                    ].map((item, idx) => (
+                      <div
+                        key={item.q}
+                        style={{
+                          background: "rgba(255,255,255,0.03)",
+                          border: `1px solid ${T.borderLight}`,
+                          borderRadius: 8,
+                          padding: "9px 10px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 4,
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                          <div style={{ fontSize: 13.5, fontWeight: 700, color: "#b7a6ff" }}>
+                            {idx + 1}. {item.q}
+                          </div>
+                          <span style={{ fontSize: 12, color: item.tone }}></span>
+                        </div>
+                        <div style={{ fontSize: 13.5, color: T.textSec, lineHeight: 1.35, fontWeight: 600 }}>{item.main}</div>
+                        {item.support ? <div style={{ fontSize: 11.5, color: T.textMut, lineHeight: 1.35 }}>{item.support}</div> : null}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : null}
             {content}
             <FloatingAIDayGenerator hidden={!!activeDrill} />
           </main>

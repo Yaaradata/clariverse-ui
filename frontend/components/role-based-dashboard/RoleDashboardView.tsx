@@ -1232,7 +1232,103 @@ function RoleDashboardShell({
         </div>
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {unifiedNavigation ? (
+        {role.id === "head_retail" && drillCard === null && screen === 1 ? (
+          <div style={{ padding: "10px 24px 0", background: "transparent" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div
+                style={{
+                  background: T.elevated,
+                  borderRadius: 10,
+                  padding: "10px 12px",
+                  border: `1px solid ${T.borderLight}`,
+                  boxShadow: `0 0 0 1px ${T.amber}12 inset`,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+                  <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                  <div style={{ minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 700,
+                        color: T.amber,
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Executive Brief
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ marginTop: 7, fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
+                  ↕ Satisfaction up +4pts only score improving; brand -6pts, service delivery -14pts
+                </div>
+              </div>
+
+              <div
+                style={{
+                  background: T.elevated,
+                  borderRadius: 10,
+                  padding: "12px 14px",
+                  borderLeft: `3px solid ${T.amber}`,
+                  border: `1px solid ${T.borderLight}`,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 9 }}>
+                  <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: T.amber,
+                      letterSpacing: "0.1em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    Executive Pulse
+                  </span>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+                  {[
+                    {
+                      q: "What is broken?",
+                      main: "🔴 3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
+                    },
+                    {
+                      q: "How bad is it?",
+                      main: "🎯 KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
+                    },
+                    {
+                      q: "How do we fix it?",
+                      main: "🟢 App Store holding at 0.71 — best performing channel, digital migration positive",
+                    },
+                  ].map((item, idx) => (
+                    <div
+                      key={item.q}
+                      style={{
+                        background: "rgba(255,255,255,0.03)",
+                        border: `1px solid ${T.borderLight}`,
+                        borderRadius: 8,
+                        padding: "9px 10px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 4,
+                      }}
+                    >
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                        <div style={{ fontSize: 13.5, fontWeight: 700, color: "#b7a6ff" }}>
+                          {idx + 1}. {item.q}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: 13.5, color: T.textSec, lineHeight: 1.35, fontWeight: 600 }}>{item.main}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : unifiedNavigation ? (
           <div
             style={{
               padding: "12px 24px",
