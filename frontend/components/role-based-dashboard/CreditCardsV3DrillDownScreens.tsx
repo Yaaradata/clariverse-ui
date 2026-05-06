@@ -56,7 +56,6 @@ import {
   V3_JOURNEY_INTENT_SEGMENT_RING_COUNTS,
   V3_JOURNEY_TOP_INTENT_AGGREGATE,
   V3_JOURNEY_TOP_INTENT_BY_SEGMENT,
-  V3_EXECUTIVE_DIAGNOSIS_MARKET,
   ENGAGEMENT_CHANNEL_LABEL,
   ENGAGEMENT_CHANNEL_ORDER,
   getInfluentialEngagementItems,
@@ -2263,33 +2262,6 @@ function MrHead({
   );
 }
 
-function MrDivider({ label }: { label: string }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-        margin: "28px 0 18px",
-      }}
-    >
-      <div style={{ height: 1, flex: 1, background: MR.border }} />
-      <span
-        style={{
-          fontSize: 12,
-          fontWeight: 700,
-          color: MR.sub,
-          textTransform: "uppercase",
-          letterSpacing: "0.1em",
-        }}
-      >
-        {label}
-      </span>
-      <div style={{ height: 1, flex: 1, background: MR.border }} />
-    </div>
-  );
-}
-
 function rankingPortfolioLensLabel(lens: RankingReviewRow["lens"]): string {
   if (lens === "standalone") return "Standalone";
   if (lens === "cobrand") return "Co-branded";
@@ -2395,18 +2367,6 @@ function RankingLensFilterBar({
       })}
     </div>
   );
-}
-
-function diagnosisLabelColor(
-  tone: "red" | "orange" | "yellow" | "green",
-): string {
-  const m: Record<"red" | "orange" | "yellow" | "green", string> = {
-    red: MR.red,
-    orange: MR.orange,
-    yellow: MR.yellow,
-    green: MR.green,
-  };
-  return m[tone];
 }
 
 function mrMomentumStanceStyles(stance: (typeof V3_MOMENTUM_HASHTAGS)[number]["stance"]) {
@@ -3265,46 +3225,6 @@ export function MarketReputationV3Drill({ onBack }: DrillProps) {
         </div>
       </MrCard>
 
-      <MrDivider label="Executive diagnosis" />
-
-      <MrCard accent={MR.purple}>
-        <MrHead icon="✦">AI Executive Diagnosis</MrHead>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <tbody>
-            {V3_EXECUTIVE_DIAGNOSIS_MARKET.map((r) => (
-              <tr key={r.label} style={{ borderBottom: `1px solid ${MR.border}` }}>
-                <td
-                  style={{
-                    padding: "10px 8px 10px 0",
-                    verticalAlign: "top",
-                    width: 130,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: diagnosisLabelColor(r.tone),
-                    }}
-                  >
-                    {r.label}
-                  </span>
-                </td>
-                <td
-                  style={{
-                    padding: "10px 0",
-                    fontSize: 12,
-                    color: MR.text,
-                    lineHeight: 1.55,
-                  }}
-                >
-                  {r.value}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </MrCard>
     </V3DrillShell>
   );
 }
@@ -3318,7 +3238,7 @@ export function FraudAndFulfillmentV3Drill({ onBack }: DrillProps) {
       <DrillPageHeader
         onBack={onBack}
         title="Are we keeping our service promise?"
-        sub="Where service promises break, repeat contacts rise, and recovery is needed"
+        sub="Where promised service timelines break, and where cardholders start asking to close."
         comfortable
       />
       <ServicePromiseIndiaDrillBody />
