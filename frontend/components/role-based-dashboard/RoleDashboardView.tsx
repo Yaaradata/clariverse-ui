@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type CSSProperties, type ReactNode, type ReactElement } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode, type ReactElement } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   Activity,
@@ -26,6 +26,9 @@ import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { HeadOfCreditCardsV3Dashboard } from "./HeadOfCreditCardsV3Dashboard";
 import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
 import { CustomerHappinessDrillDown, BrandReputationDrillDown, ServiceFulfilmentDrillDown } from "./RetailDrillDownScreens";
+import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown";
+import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
+import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown";
 import { RoleBasedComplianceTimePills } from "@/components/role-based-dashboard/RoleBasedComplianceTimePills";
 import { RoleBasedUnifiedChrome } from "@/components/role-based-dashboard/RoleBasedUnifiedChrome";
 import { RoleBasedUnifiedReadingShell } from "@/components/role-based-dashboard/RoleBasedUnifiedReadingShell";
@@ -111,16 +114,33 @@ const SCREENS: { id: ScreenId; label: string; sub: string; icon: LucideIcon }[] 
   { id: 5, label: "Root Cause + Action", sub: "Signal → Cause → Action", icon: Crosshair },
 ];
 
-/** Head of Retail uses shorter screen names and no "Screen #" title prefix. */
+/** Roles that use the click-into-tile drill-down model (no "Screen #" prefix). */
+const DRILL_ROLE_IDS = new Set(["head_retail", "head_contact"]);
+function isDrillRoleId(roleId: string): boolean {
+  return DRILL_ROLE_IDS.has(roleId);
+}
+
+/** Drill-model roles use shorter screen names and no "Screen #" title prefix. */
 function screenNavEntry(roleId: string, s: (typeof SCREENS)[number]): (typeof SCREENS)[number] {
-  if (roleId === "head_retail" && s.id === 2) return { ...s, label: "LOB" };
+  if (isDrillRoleId(roleId) && s.id === 2) return { ...s, label: "LOB" };
   return s;
 }
 
 function screenNavTooltip(roleId: string, s: (typeof SCREENS)[number]): string {
   const e = screenNavEntry(roleId, s);
-  if (roleId === "head_retail") return `${e.label} — ${e.sub}`;
+  if (isDrillRoleId(roleId)) return `${e.label} — ${e.sub}`;
   return `Screen ${s.id}: ${e.label} — ${e.sub}`;
+}
+
+function visibleSidebarScreens(roleId: string): (typeof SCREENS) {
+  if (roleId === "head_contact") return SCREENS.filter((s) => s.id === 1);
+  if (isDrillRoleId(roleId)) return SCREENS.filter((s) => s.id <= 2);
+  return SCREENS;
+}
+
+function defaultScreenForRole(industry: Industry, role: Role): ScreenId {
+  if (role.id === "head_contact") return 1;
+  return skipExecutiveScreen(industry, role) ? 3 : 1;
 }
 
 // Happiness % → color (aligned with tile gauge `gC`): high ≥80 green, medium 60–79 amber only, low <60 red.
@@ -182,6 +202,96 @@ function retailTileTrendMeta(tileIdx: number, T: DashboardThemeTokens): RetailTi
     return retailDailyTrendFromSeries([70, 62, 68, 59, 63, 64], T.amber, T, 6, 4);
   }
   return retailDailyTrendFromSeries([82, 70, 84, 66, 74, 68], T.red, T, 8, 5);
+}
+
+// ── Head of Contact Centre: tile trend meta (mirrors retail pattern) ─────────
+function contactTileTrendMeta(tileIdx: number, T: DashboardThemeTokens): RetailTileTrend {
+  if (tileIdx === 0) {
+    // Customer Experience — post-contact outcome quality
+    return retailDailyTrendFromSeries([69, 71, 70, 72, 71, 72], T.cyan, T, 6, 4);
+  }
+  if (tileIdx === 1) {
+    // Service Reputation — service-driven brand sentiment dropping
+    return retailDailyTrendFromSeries([70, 68, 66, 64, 63, 62], T.amber, T, 6, 4);
+  }
+  // Service Operations — SLA / workforce gap deepening
+  return retailDailyTrendFromSeries([72, 68, 66, 62, 60, 60], T.red, T, 8, 5);
+}
+
+// Tile info renderers for Head of Contact Centre (mirrors retailTileInfo shape).
+function contactTileInfo(tileIdx: number, T: DashboardThemeTokens): ReactElement {
+  if (tileIdx === 0) {
+    const rows = [
+      { label: "Post-CSAT", pct: 87 },
+      { label: "FCR", pct: 78 },
+    ].map((r) => ({ ...r, color: happinessPctColor(r.pct, T) }));
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
+          {rows.map((r) => (
+            <MiniGauge key={r.label} label={r.label} value={r.pct} color={r.color} suffix="%" T={T} />
+          ))}
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
+          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Repeat</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>14%</div></div>
+          <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Sentiment</div><div style={{ fontSize: 14, fontWeight: 700, color: T.amber, fontFamily: "var(--mono)" }}>72%</div></div>
+        </div>
+      </div>
+    );
+  }
+  if (tileIdx === 1) {
+    const platforms = [
+      { name: "Trustpilot", v: 0.46 },
+      { name: "App Store", v: 0.55 },
+      { name: "Reddit",    v: 0.48 },
+      { name: "Play Store", v: 0.54 },
+      { name: "X / Twitter", v: 0.38 },
+    ];
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 6 }}>
+        {platforms.map((p) => {
+          const barColor = p.v >= 0.65 ? T.green : p.v >= 0.55 ? T.amber : T.red;
+          return (
+            <div key={p.name} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+              <span style={{ fontSize: 10, color: T.textMut, width: 64, flexShrink: 0 }}>{p.name}</span>
+              <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
+                <div style={{ height: "100%", width: `${p.v * 100}%`, background: barColor, borderRadius: 3 }} />
+              </div>
+              <span style={{ fontSize: 11, fontWeight: 700, color: barColor, width: 28, textAlign: "right", fontFamily: "var(--mono)" }}>{p.v.toFixed(2)}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  // tileIdx === 2 — Service Operations: best vs worst SLA + workforce signal
+  const bars = [
+    { label: "In-house · FCR", topLabel: "In-house", bottomLabel: "FCR 81%", pct: 81, color: T.green },
+    { label: "BPO Beta · FCR", topLabel: "BPO Beta", bottomLabel: "FCR 62%", pct: 62, color: T.red, offsetY: -0.5 },
+  ];
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
+        {bars.map((b) => (
+          <MiniGauge
+            key={b.label}
+            label={b.label}
+            topLabel={b.topLabel}
+            bottomLabel={b.bottomLabel}
+            offsetY={b.offsetY}
+            value={b.pct}
+            color={b.color}
+            suffix="%"
+            T={T}
+          />
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
+        <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>SL 80/20</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>76/22</div></div>
+        <div><div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>Abandon</div><div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>6.4%</div></div>
+      </div>
+    </div>
+  );
 }
 
 function retailTileInfo(tileIdx: number, T: DashboardThemeTokens): ReactElement {
@@ -444,6 +554,8 @@ function Screen1({
   const T = useDashboardTheme();
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
   const isRetail = role.id === "head_retail";
+  const isContact = role.id === "head_contact";
+  const isDrillRole = isRetail || isContact;
   const primaryIdx =
     unifiedNavigation && "primaryTile" in role && typeof role.primaryTile === "number" ? role.primaryTile : null;
   return (
@@ -452,18 +564,27 @@ function Screen1({
         {data.tiles.map((tile, i) => {
           const Icon = tile.icon; const sc = gC(tile.score);
           const isPrimary = primaryIdx === i;
-          const handleClick = isRetail && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
-          const retailTrend = isRetail ? retailTileTrendMeta(i, T) : null;
+          const handleClick = isDrillRole && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
+          const drillTrend = isRetail
+            ? retailTileTrendMeta(i, T)
+            : isContact
+              ? contactTileTrendMeta(i, T)
+              : null;
+          const drillInfo = isRetail
+            ? retailTileInfo(i, T)
+            : isContact
+              ? contactTileInfo(i, T)
+              : null;
           return (
             <div key={i} onClick={handleClick} style={{ position: "relative", background: T.elevated, border: `1px solid ${isPrimary ? T.cyan : sc}40`, borderRadius: 16, padding: "24px 22px", cursor: "pointer", transition: "all 0.25s", boxShadow: isPrimary ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22` : undefined, minWidth: 0, display: "flex", flexDirection: "column", height: "100%" }}
               onMouseEnter={e => { if (!isPrimary) e.currentTarget.style.boxShadow = `0 8px 32px ${sc}15`; }} onMouseLeave={e => { if (!isPrimary) e.currentTarget.style.boxShadow = "none"; else e.currentTarget.style.boxShadow = `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22`; }}>
-              {isRetail ? null : (
+              {isDrillRole ? null : (
                 <div style={{ position: "absolute", top: -18, right: 12, pointerEvents: "none", display: "flex", alignItems: "center", gap: 8 }}>
                   <TileScoreGauge score={tile.score} color={sc} T={T} />
                   <ChevronRight size={16} color={T.textMut}/>
                 </div>
               )}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isRetail ? 10 : 16, gap: 14, paddingRight: isRetail ? 0 : 232 }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: isDrillRole ? 10 : 16, gap: 14, paddingRight: isDrillRole ? 0 : 232 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, background: `${tile.color}15`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Icon size={18} color={tile.color}/></div>
                   <div style={{ minWidth: 0 }}>
@@ -471,11 +592,11 @@ function Screen1({
                     <div style={{ fontSize: 14, color: T.textMut, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{tile.sub}</div>
                   </div>
                 </div>
-                {isRetail ? (
+                {isDrillRole ? (
                   <ChevronRight size={36} color={T.textMut} style={{ flexShrink: 0, alignSelf: "stretch", height: "100%", width: 36 }} strokeWidth={1.75} />
                 ) : null}
               </div>
-              {retailTrend ? (
+              {drillTrend ? (
                 <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)", gap: 16, alignItems: "stretch", marginBottom: 16, flex: 1 }}>
                   <div style={{ display: "flex", flexDirection: "column", minWidth: 0, position: "relative" }}>
                     <span
@@ -484,35 +605,35 @@ function Screen1({
                         top: 0,
                         right: 0,
                         fontSize: 13,
-                        color: retailTrend.deltaColor,
+                        color: drillTrend.deltaColor,
                         fontWeight: 700,
                         fontFamily: "var(--mono)",
                         flexShrink: 0,
                       }}
                     >
-                      {retailTrend.delta}
+                      {drillTrend.delta}
                     </span>
                     <div style={{ marginBottom: 6, paddingRight: 64 }}>
                       <div style={{ fontSize: 34, fontWeight: 800, color: T.text, fontFamily: "var(--mono)", lineHeight: 1 }}>
-                        {retailTrend.value}
+                        {drillTrend.value}
                       </div>
                     </div>
                     <div style={{ width: "100%", flex: 1, minHeight: 96 }}>
                       <ResponsiveContainer>
-                        <AreaChart data={retailTrend.trendData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+                        <AreaChart data={drillTrend.trendData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
                           <defs>
                             <linearGradient id={`retail-trend-grad-${i}`} x1="0" y1="0" x2="0" y2="1">
-                              <stop offset="0%" stopColor={retailTrend.stroke} stopOpacity={0.42} />
-                              <stop offset="55%" stopColor={retailTrend.stroke} stopOpacity={0.16} />
-                              <stop offset="100%" stopColor={retailTrend.stroke} stopOpacity={0} />
+                              <stop offset="0%" stopColor={drillTrend.stroke} stopOpacity={0.42} />
+                              <stop offset="55%" stopColor={drillTrend.stroke} stopOpacity={0.16} />
+                              <stop offset="100%" stopColor={drillTrend.stroke} stopOpacity={0} />
                             </linearGradient>
                           </defs>
                           <XAxis dataKey="w" hide />
                           <YAxis
                             hide
                             domain={[
-                              (min: number) => Math.max(0, min - retailTrend.yPadBelow),
-                              (max: number) => max + retailTrend.yPadAbove,
+                              (min: number) => Math.max(0, min - drillTrend.yPadBelow),
+                              (max: number) => max + drillTrend.yPadAbove,
                             ]}
                           />
                           <RechartsTooltip
@@ -530,19 +651,19 @@ function Screen1({
                           <Area
                             type="monotone"
                             dataKey="v"
-                            stroke={retailTrend.stroke}
+                            stroke={drillTrend.stroke}
                             strokeWidth={3}
                             fill={`url(#retail-trend-grad-${i})`}
                             fillOpacity={1}
                             dot={false}
-                            activeDot={{ r: 3.5, fill: retailTrend.stroke, stroke: retailTrend.stroke }}
+                            activeDot={{ r: 3.5, fill: drillTrend.stroke, stroke: drillTrend.stroke }}
                           />
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
                   </div>
                   <div style={{ display: "flex", alignItems: "stretch", minWidth: 0 }}>
-                    {retailTileInfo(i, T)}
+                    {drillInfo}
                   </div>
                 </div>
               ) : (
@@ -554,7 +675,7 @@ function Screen1({
               )}
               <div
                 style={{
-                  marginTop: isRetail ? "auto" : 0,
+                  marginTop: isDrillRole ? "auto" : 0,
                   background: `linear-gradient(135deg, ${T.gold}10 0%, ${sc}08 38%)`,
                   border: `1px solid ${T.gold}28`,
                   borderLeft: `4px solid ${T.gold}`,
@@ -728,6 +849,21 @@ function Screen3({
         extraGroups.push({ label: g.label, color: T.purple, icon: Globe, filterTags: ["fraud", "ops"], kpis: g.kpis });
       });
     }
+  }
+  // Head of Contact Centre drill KPIs (Per-contact CX, Service Reputation, Service Operations)
+  if (role.id === "head_contact") {
+    const cx = LOB_DRILL_KPIS.contact_experience;
+    if (cx) cx.forEach((g) => {
+      extraGroups.push({ label: g.label, color: T.cyan, icon: Target, filterTags: ["ops", "training"], kpis: g.kpis });
+    });
+    const rep = LOB_DRILL_KPIS.contact_service_reputation;
+    if (rep) rep.forEach((g) => {
+      extraGroups.push({ label: g.label, color: T.amber, icon: Shield, filterTags: ["ops"], kpis: g.kpis });
+    });
+    const ops = LOB_DRILL_KPIS.contact_service_operations;
+    if (ops) ops.forEach((g) => {
+      extraGroups.push({ label: g.label, color: T.red, icon: Activity, filterTags: ["ops", "staffing"], kpis: g.kpis });
+    });
   }
   // Head of Retail Banking drill KPIs (Valuable Customers, Channel Sentiment)
   if (role.id === "head_retail") {
@@ -1001,7 +1137,7 @@ function RoleDashboardShell({
   eisenhowerThreads: EisenhowerThread[];
 }) {
   const T = useDashboardTheme();
-  const [screen, setScreen] = useState<ScreenId>(() => (skipExecutiveScreen(industry, role) ? 3 : 1));
+  const [screen, setScreen] = useState<ScreenId>(() => defaultScreenForRole(industry, role));
   const defaultLob = industry.id === "insurance" ? "insurance" : industry.id === "credit_cards" ? "cards_business" : "retail_banking";
   const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
@@ -1026,6 +1162,14 @@ function RoleDashboardShell({
   const SIDEBAR_W_EXPANDED = 268;
   const SIDEBAR_W_COLLAPSED = 76;
   const sidebarW = sidebarHover ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
+
+  useEffect(() => {
+    const visibleIds = new Set(visibleSidebarScreens(role.id).map((entry) => entry.id));
+    if (!visibleIds.has(screen)) {
+      setScreen(defaultScreenForRole(industry, role));
+      setDrillCard(null);
+    }
+  }, [industry, role, screen]);
 
   const screenComponents: Record<ScreenId, ReactElement> = {
     1: <Screen1 data={data} goTo={setScreen} role={role} unifiedNavigation={unifiedNavigation} onDrillCard={setDrillCard} />,
@@ -1146,7 +1290,7 @@ function RoleDashboardShell({
               Nav
             </div>
           )}
-          {SCREENS.filter((s) => role.id === "head_retail" ? s.id <= 2 : true).map((s, i, visibleScreens) => {
+          {visibleSidebarScreens(role.id).map((s, i, visibleScreens) => {
             const Icon = s.icon;
             const act = screen === s.id;
             const nav = screenNavEntry(role.id, s);
@@ -1189,7 +1333,7 @@ function RoleDashboardShell({
                   {sidebarHover ? (
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ fontSize: 14, fontWeight: act ? 700 : 500, color: act ? T.text : T.textSec }}>
-                        {role.id !== "head_retail" ? (
+                        {!isDrillRoleId(role.id) ? (
                           <span style={{ color: act ? T.cyan : T.textMut, fontFamily: "var(--mono)", marginRight: 4, fontSize: 12 }}>{s.id}.</span>
                         ) : null}
                         {nav.label}
@@ -1232,7 +1376,7 @@ function RoleDashboardShell({
         </div>
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {role.id === "head_retail" && drillCard === null && screen === 1 ? (
+        {isDrillRoleId(role.id) && drillCard === null && screen === 1 ? (
           <div style={{ padding: "10px 24px 0", background: "transparent" }}>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <div
@@ -1262,7 +1406,9 @@ function RoleDashboardShell({
                 </div>
 
                 <div style={{ marginTop: 7, fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
-                  ↕ Satisfaction up +4pts only score improving; brand -6pts, service delivery -14pts
+                  {role.id === "head_contact"
+                    ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
+                    : "↕ Satisfaction up +4pts only score improving; brand -6pts, service delivery -14pts"}
                 </div>
               </div>
 
@@ -1290,20 +1436,36 @@ function RoleDashboardShell({
                   </span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
-                  {[
-                    {
-                      q: "What is broken?",
-                      main: "🔴 3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
-                    },
-                    {
-                      q: "How bad is it?",
-                      main: "🎯 KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
-                    },
-                    {
-                      q: "How do we fix it?",
-                      main: "🟢 App Store holding at 0.71 — best performing channel, digital migration positive",
-                    },
-                  ].map((item, idx) => (
+                  {(role.id === "head_contact"
+                    ? [
+                        {
+                          q: "What is broken?",
+                          main: "🔴 BPO Beta dispute win-rate dropped to 38% vs 71% in-house. Evidence-collection step ~4 days slow.",
+                        },
+                        {
+                          q: "How bad is it?",
+                          main: "🎯 SLA 87% (3rd week below 95%) · 12-agent staffing gap 10–11 AM · 22% repeat-contact rate.",
+                        },
+                        {
+                          q: "How do we fix it?",
+                          main: "🟢 In-house FCR holding at 81% · App SS deflection 89% — escalate BPO QA + activate overflow before 9:45 AM.",
+                        },
+                      ]
+                    : [
+                        {
+                          q: "What is broken?",
+                          main: "🔴 3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
+                        },
+                        {
+                          q: "How bad is it?",
+                          main: "🎯 KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
+                        },
+                        {
+                          q: "How do we fix it?",
+                          main: "🟢 App Store holding at 0.71 — best performing channel, digital migration positive",
+                        },
+                      ]
+                  ).map((item, idx) => (
                     <div
                       key={item.q}
                       style={{
@@ -1343,14 +1505,13 @@ function RoleDashboardShell({
           >
             <div style={{ flex: "1 1 220px", minWidth: 0 }}>
               <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
-                {role.id !== "head_retail" ? (
+                {!isDrillRoleId(role.id) ? (
                   <span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>
                 ) : null}
                 {active?.label}
               </h1>
               <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>
-                {industry.name} · {role.name}
-                {screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}
+                {industry.name} · {role.name} · {active?.sub}
               </div>
             </div>
             <div
@@ -1386,12 +1547,12 @@ function RoleDashboardShell({
           <div style={{ padding: "12px 24px", borderBottom: `1px solid ${T.borderLight}`, background: T.elevated, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
             <div>
               <h1 style={{ fontSize: 20, fontWeight: 700, color: T.text, margin: 0, letterSpacing: "-0.01em" }}>
-                {role.id !== "head_retail" ? (
+                {!isDrillRoleId(role.id) ? (
                   <span style={{ color: T.cyan, fontFamily: "var(--mono)", marginRight: 8 }}>Screen {active?.id}</span>
                 ) : null}
                 {active?.label}
               </h1>
-              <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>{industry.name} · {role.name}{screen >= 2 ? ` · ${LOB_DATA[activeLob]?.label ?? ""}` : ""} · {active?.sub}</div>
+              <div style={{ fontSize: 14, color: T.textSec, marginTop: 4, lineHeight: 1.45 }}>{industry.name} · {role.name} · {active?.sub}</div>
             </div>
             <button type="button" style={{ background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`, color: T.bg, border: "none", borderRadius: 8, padding: "7px 16px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>Export Report</button>
           </div>
@@ -1405,19 +1566,26 @@ function RoleDashboardShell({
             overflowX: "hidden",
           }}
         >
-          {role.id === "head_retail" && drillCard !== null ? (
+          {isDrillRoleId(role.id) && drillCard !== null ? (
             (() => {
               const onBack = () => setDrillCard(null);
-              const drillContent =
-                drillCard === 0 ? <CustomerHappinessDrillDown onBack={onBack} /> :
-                drillCard === 1 ? <BrandReputationDrillDown onBack={onBack} /> :
-                <ServiceFulfilmentDrillDown onBack={onBack} />;
-              // Unify every card / panel / pill background on the three
-              // retail drill-down tiers (Are our Customers happy? · Is the Brand at risk? ·
-              // How is our Service delivery?) to #0D0D0D by overriding the theme tokens
-              // that power their `background` styles (`T.elevated`, `T.card`,
-              // `T.surface`). This cascades through every descendant that
-              // reads the dashboard theme via `useDashboardTheme()`.
+              const drillContent = role.id === "head_contact"
+                ? (
+                    drillCard === 0 ? <ContactExperienceDrillDown onBack={onBack} /> :
+                    drillCard === 1 ? <ServiceReputationDrillDown onBack={onBack} /> :
+                    <ServiceOperationsDrillDown onBack={onBack} />
+                  )
+                : (
+                    drillCard === 0 ? <CustomerHappinessDrillDown onBack={onBack} /> :
+                    drillCard === 1 ? <BrandReputationDrillDown onBack={onBack} /> :
+                    <ServiceFulfilmentDrillDown onBack={onBack} />
+                  );
+              // Unify every card / panel / pill background on the drill-down
+              // tiers (retail: Customers happy? · Brand at risk? · Service delivery?
+              //  · contact: Contact ending well? · Service reputation? · Service engine?)
+              // to #0D0D0D by overriding the theme tokens that power their `background`
+              // styles (`T.elevated`, `T.card`, `T.surface`). This cascades through
+              // every descendant that reads the dashboard theme via `useDashboardTheme()`.
               const drillTheme: DashboardThemeTokens = {
                 ...T,
                 elevated: "#0D0D0D",

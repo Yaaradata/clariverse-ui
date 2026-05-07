@@ -37,7 +37,7 @@ export const INDUSTRIES = [
       { id: "head_retail", name: "Head of Retail Banking", icon: Building2, sub: "Deposits, loans, branches — service promise + complaints", defaultLens: "ops", primaryTile: 0 },
       { id: "head_cx", name: "Head of Customer Experience", icon: Headphones, sub: "NPS, sentiment, effort, journeys, social perception", defaultLens: "ops", primaryTile: 0 },
       { id: "head_compliance", name: "Head of Compliance", icon: Lock, sub: "CFPB/OCC risk, audit readiness, complaint aging", defaultLens: "compliance", primaryTile: 2 },
-      { id: "head_contact", name: "Head of Contact Centre", icon: Users, sub: "Volume, AHT, FCR, agent performance, BPO, staffing", defaultLens: "ops", primaryTile: 1 },
+      { id: "head_contact", name: "Head of Contact Centre", icon: Users, sub: "Per-contact CX · service-driven brand · ops & workforce", defaultLens: "ops", primaryTile: 0 },
     ]
   },
   { id: "credit_cards", name: "Credit Cards", icon: CreditCard, color: "#eab308", desc: "Card portfolio, disputes, fraud, rewards, collections",
@@ -190,23 +190,23 @@ export const ROLE_DATA = {
   },
   head_contact: {
     tiles: [
-      { title: "Agent Health (In-house vs Outsourced)", score: 68, color: T.cyan, icon: Target, sub: "Insourced · Outsourced · Cross-Centre Performance", insight: "In-house agents: FCR 81%, AHT 6.4m, CSAT 87%. Outsourced (BPO Beta): FCR 62%, AHT 11.1m, CSAT 68%. BPO representment win rate collapsed to 38% vs 71% in-house. 3 centres below performance threshold.", kpis: [{ l: "In-house FCR", v: "81%" }, { l: "BPO FCR", v: "62%" }, { l: "Centre Gap", v: "3 below" }, { l: "BPO Quality", v: "68%" }] },
-      { title: "Promise Adherence", score: 64, color: T.amber, icon: Activity, sub: "Receiving · Authenticating · Escalating · Resolution", insight: "Receiving: 94% calls answered within SLA. Authenticating: 12% fail at ID verification — KYC handoff broken. Escalating: 3 unactioned escalations >4h. Cross-sell during complaints destroying CSAT — policy breach.", kpis: [{ l: "Receiving", v: "94%" }, { l: "Auth Pass", v: "88%" }, { l: "Escalation", v: "3 stuck" }, { l: "Promise", v: "72%" }] },
-      { title: "Developing Issues & Root Causes", score: 60, color: T.red, icon: Shield, sub: "Intent Spikes · Cluster Summary · Root Causes", insight: "Fee Dispute intent spiked 3.2× in 48h — root cause: hidden fee policy change. Mortgage Servicing cluster: 67% mention 'transferred too many times'. Agent ID 2847: 34 calls with incorrect overdraft info. Evening shift tone flags at 18%.", kpis: [{ l: "Intent Spike", v: "3.2×" }, { l: "Top Cluster", v: "Fee 67%" }, { l: "Tone Flags", v: "18%" }, { l: "Root Causes", v: "4 active" }] },
+      { title: "Are contacts ending well?", score: 72, color: T.cyan, icon: Target, sub: "Per-interaction outcome quality", insight: "Post-CSAT 87% and FCR 78% remain under pressure as repeat-contact rises to 14%. Sentiment-at-close is softening, signaling avoidable poor endings across voice and chat.", kpis: [{ l: "Post-CSAT", v: "87%" }, { l: "FCR", v: "78%" }, { l: "Repeat Contact", v: "14%" }, { l: "Sentiment@Close", v: "72%" }] },
+      { title: "Is service hurting our reputation?", score: 62, color: T.amber, icon: Shield, sub: "Brand & regulatory exposure from CC failures", insight: "Service-driven complaint spillover is rising across Trustpilot, App Store, and X. CFPB-risk cases and escalation velocity indicate contact-center issues are now visible as brand risk.", kpis: [{ l: "Open Complaints", v: "247" }, { l: "CFPB-risk Cases", v: "18" }, { l: "Escalation", v: "12%" }, { l: "Social Spillover", v: "38%" }] },
+      { title: "Can the engine deliver?", score: 60, color: T.red, icon: Activity, sub: "Workforce, SLA, BPO, capacity", insight: "SLA 80/20 is running below target at 76/22 with 6.4% abandon and 42s ASA. BPO drag and avoidable contacts continue to drive weekly cost-at-risk and workforce stress.", kpis: [{ l: "SL 80/20", v: "76/22" }, { l: "Abandon", v: "6.4%" }, { l: "Sched Adherence", v: "91%" }, { l: "Occupancy", v: "88%" }] },
     ],
     lobKpis: [
-      { l: "In-house Agent FCR", v: "81%", delta: -1, target: "> 85%", st: "amber" },
-      { l: "Outsourced (BPO) FCR", v: "62%", delta: -8, target: "> 80%", st: "red" },
-      { l: "Promise Adherence Score", v: "72%", delta: -5, target: "> 90%", st: "red" },
-      { l: "Cross-Centre Health (Below Threshold)", v: "3 centres", delta: +2, target: "0", st: "red" },
-      { l: "Intent Spike Alerts (Active)", v: "4", delta: +2, target: "< 2", st: "red" },
+      { l: "Post-Contact CSAT", v: "78%", delta: -4, target: "> 85%", st: "amber" },
+      { l: "Repeat Contact Rate", v: "22%", delta: +4, target: "< 15%", st: "red" },
+      { l: "Service-Driven Brand Sentiment", v: "0.46", delta: -0.09, target: "> 0.65", st: "red" },
+      { l: "SLA Compliance", v: "87%", delta: -4, target: "> 95%", st: "red" },
+      { l: "BPO vs In-house FCR Gap", v: "19 pts", delta: +6, target: "< 5 pts", st: "red" },
     ],
     insights: [
-      "BPO Vendor Beta: FCR at 62% vs 81% in-house — representment win rate 38% vs 71%. Evidence collection step taking 4 extra days. Root cause: insufficient training on new dispute framework.",
-      "Promise adherence broken at authentication step — 12% fail rate due to KYC API handoff failure. 3 escalations unactioned >4h. Policy breach: cross-selling during active complaints.",
-      "Fee Dispute intent spiked 3.2× — cluster analysis shows 67% mention 'transferred too many times'. Agent 2847: 34 incorrect overdraft calls. Evening shift tone flags at 18%.",
+      "Per-contact resolution quality eroding: 22% repeat-contact rate + 7% premature closure. Fee Dispute and HELOC clusters account for 49% of repeats — playbooks/macros missing.",
+      "Service-driven brand decay is concentrated on X and App reviews. 4 viral posts about hold-time + 68 'no one answered' app reviews suggest staffing-gap visibility on the outside.",
+      "BPO Vendor Beta is the top operational risk — 19pt FCR gap, 38% dispute win-rate vs 71% in-house. Evidence-collection step 4 days slower; representment training missing.",
     ],
-    eisenhower: { do: ["BPO vendor Beta performance review — 38% win rate unacceptable", "Fix authentication handoff — 12% fail rate"], plan: ["Cross-centre health parity programme", "Evening shift tone-coaching rollout"], delegate: ["IVR step-3 escape hatch", "FAQ script update for new fees"], monitor: ["Intent spike trends (Fee Dispute cluster)", "New hire ramp-up progress"] },
+    eisenhower: { do: ["Activate 12 overflow agents before 9:45 AM peak", "BPO Vendor Beta QA escalation — 38% win rate unacceptable"], plan: ["Repeat-contact playbook for Fee + HELOC clusters", "Evening-shift tone coaching rollout"], delegate: ["Service-only response macros for App / Trustpilot", "Recording-consent script audit (240 calls/mo at risk)"], monitor: ["Premature-closure trend by channel", "Cross-centre health parity gaps"] },
   },
 };
 // ═══════════════════════════
@@ -333,30 +333,46 @@ export const LOB_DRILL_KPIS: Record<string, { label: string; kpis: { n: string; 
       { n: "Email — Unresolved Backlog", v: "143", a: "47 > 48h old — mortgage queries" },
     ]},
   ],
-  // Head of Contact Centre — agent segmentation + promise adherence
-  contact_agent_health: [
-    { label: "In-house vs Outsourced Agent Performance", kpis: [
-      { n: "In-house FCR", v: "81%", a: "Stable — target 85%" },
-      { n: "In-house AHT", v: "6.4 min", a: "Within target" },
-      { n: "BPO (Outsourced) FCR", v: "62%", a: "▼8% — evidence collection gaps" },
-      { n: "BPO AHT", v: "11.1 min", a: "73% above in-house" },
-      { n: "BPO Win Rate (Disputes)", v: "38%", a: "vs 71% in-house — critical gap" },
-    ]},
-    { label: "Cross-Centre Health Monitor", kpis: [
-      { n: "Centre A (London) Health", v: "92%", a: null },
-      { n: "Centre B (Manchester) Health", v: "78%", a: "Staffing gap — 8 agents short" },
-      { n: "Centre C (BPO Mumbai) Health", v: "64%", a: "Quality + AHT breach" },
-      { n: "Centre D (BPO Manila) Health", v: "71%", a: "Authentication pass-rate low" },
-      { n: "Centre E (Edinburgh) Health", v: "86%", a: "Evening shift tone concern" },
+  // Head of Contact Centre — per-contact CX, service-reputation, ops & workforce
+  contact_experience: [
+    { label: "Per-Contact Quality", kpis: [
+      { n: "Post-Contact CSAT", v: "78%", a: "▼4 vs 85% target" },
+      { n: "First Contact Resolution", v: "74%", a: "Below 80% — HELOC + Fee gaps" },
+      { n: "Repeat Contact Rate", v: "22%", a: "Fee 31% · HELOC 18% of repeats" },
+      { n: "Premature Closure Rate", v: "7%", a: "Voice + Chat — flagged by AI" },
+      { n: "Tone Drift Flags", v: "18%", a: "Evening shift concentrated" },
     ]},
   ],
-  contact_promise_adherence: [
-    { label: "Promise Adherence by Stage", kpis: [
-      { n: "Receiving (Answer SLA)", v: "94%", a: "6% missed in 9–11 AM peak" },
-      { n: "Authenticating (ID Verify)", v: "88%", a: "12% fail — KYC handoff broken" },
-      { n: "Escalating (Timely Transfer)", v: "76%", a: "3 unactioned > 4h — policy breach" },
-      { n: "Resolving (FCR)", v: "74%", a: "HELOC queries driving failures" },
-      { n: "Following Up (Callback SLA)", v: "68%", a: "32% callbacks missed/late" },
+  contact_service_reputation: [
+    { label: "Service-Driven Brand Signals", kpis: [
+      { n: "Trustpilot (Service Mentions)", v: "3.1 ★", a: "▼0.5 in 4 weeks" },
+      { n: "X — Viral Service Posts", v: "4", a: "'On hold' theme · 3.4× velocity" },
+      { n: "App Store — Service Reviews", v: "68", a: "'No one answered' / 'rude agent'" },
+      { n: "Reddit — Service Threads", v: "12", a: "IVR-loop and callback failures" },
+      { n: "Service Sentiment (Cross-channel)", v: "0.46", a: "Below 0.65 target" },
+    ]},
+  ],
+  contact_service_operations: [
+    { label: "Operational Delivery", kpis: [
+      { n: "SLA Compliance", v: "87%", a: "▼4 — 3rd week below 95%" },
+      { n: "Average Handle Time", v: "8.3 min", a: "▲0.8 min vs target" },
+      { n: "Abandonment Rate", v: "8.2%", a: "Peak 9–11 AM" },
+      { n: "Callback SLA", v: "68%", a: "32% callbacks missed/late" },
+      { n: "Recording Consent Miss", v: "0.8%", a: "~240 calls/mo at risk" },
+    ]},
+    { label: "In-house vs Outsourced", kpis: [
+      { n: "In-house FCR", v: "81%", a: "Stable — target 85%" },
+      { n: "BPO (Outsourced) FCR", v: "62%", a: "▼8% — evidence collection" },
+      { n: "BPO AHT", v: "11.1 min", a: "73% above in-house" },
+      { n: "BPO Dispute Win Rate", v: "38%", a: "vs 71% in-house — critical gap" },
+      { n: "Cross-Centre Health (Below)", v: "3 centres", a: "Mumbai · Manila · Manchester" },
+    ]},
+    { label: "Workforce & Coaching", kpis: [
+      { n: "Staffing Gap", v: "12 short", a: "10–11 AM peak window" },
+      { n: "Agent Utilisation", v: "94%", a: "Above 88% target — burnout risk" },
+      { n: "QA Score", v: "78%", a: "Below 85% benchmark" },
+      { n: "Coaching Tickets Open", v: "23", a: "AI-generated this week" },
+      { n: "New Hire Ramp", v: "14 agents", a: "4 weeks to ready" },
     ]},
   ],
 };
