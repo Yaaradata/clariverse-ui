@@ -1376,121 +1376,7 @@ function RoleDashboardShell({
         </div>
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {isDrillRoleId(role.id) && drillCard === null && screen === 1 ? (
-          <div style={{ padding: "10px 24px 0", background: "transparent" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-              <div
-                style={{
-                  background: T.elevated,
-                  borderRadius: 10,
-                  padding: "10px 12px",
-                  border: `1px solid ${T.borderLight}`,
-                  boxShadow: `0 0 0 1px ${T.amber}12 inset`,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
-                  <span style={{ fontSize: 13, color: T.amber }}>✨</span>
-                  <div style={{ minWidth: 0 }}>
-                    <div
-                      style={{
-                        fontSize: 13,
-                        fontWeight: 700,
-                        color: T.amber,
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                      }}
-                    >
-                      Executive Brief
-                    </div>
-                  </div>
-                </div>
-
-                <div style={{ marginTop: 7, fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
-                  {role.id === "head_contact"
-                    ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
-                    : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: T.elevated,
-                  borderRadius: 10,
-                  padding: "12px 14px",
-                  borderLeft: `3px solid ${T.amber}`,
-                  border: `1px solid ${T.borderLight}`,
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 9 }}>
-                  <span style={{ fontSize: 13, color: T.amber }}>✨</span>
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      color: T.amber,
-                      letterSpacing: "0.1em",
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    Executive Pulse
-                  </span>
-                </div>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
-                  {(role.id === "head_contact"
-                    ? [
-                        {
-                          q: "🔴 What's critical",
-                          main: "🔴 BPO Beta dispute win-rate dropped to 38% vs 71% in-house. Evidence-collection step ~4 days slow.",
-                        },
-                        {
-                          q: "🎯 Where's your focus",
-                          main: "🎯 SLA 87% (3rd week below 95%) · 12-agent staffing gap 10–11 AM · 22% repeat-contact rate.",
-                        },
-                        {
-                          q: "🟢 What's stable/ on-track",
-                          main: "🟢 In-house FCR holding at 81% · App SS deflection 89% — escalate BPO QA + activate overflow before 9:45 AM.",
-                        },
-                      ]
-                    : [
-                        {
-                          q: "🔴 What's critical",
-                          main: "3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
-                        },
-                        {
-                          q: "🎯 Where's your focus",
-                          main: "KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
-                        },
-                        {
-                          q: "🟢 What's stable/ on-track",
-                          main: "App Store holding at 0.71 — best performing channel, digital migration positive",
-                        },
-                      ]
-                  ).map((item, idx) => (
-                    <div
-                      key={item.q}
-                      style={{
-                        background: "rgba(255,255,255,0.03)",
-                        border: `1px solid ${T.borderLight}`,
-                        borderRadius: 8,
-                        padding: "9px 10px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 4,
-                      }}
-                    >
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                        <div style={{ fontSize: 13.5, fontWeight: 700, color: "#b7a6ff" }}>
-                          {idx + 1}. {item.q}
-                        </div>
-                      </div>
-                      <div style={{ fontSize: 13.5, color: T.textSec, lineHeight: 1.35, fontWeight: 600 }}>{item.main}</div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        ) : unifiedNavigation ? (
+        {isDrillRoleId(role.id) && drillCard === null && screen === 1 ? null : unifiedNavigation ? (
           <div
             style={{
               padding: "12px 24px",
@@ -1566,6 +1452,127 @@ function RoleDashboardShell({
             overflowX: "hidden",
           }}
         >
+          {isDrillRoleId(role.id) && drillCard === null && screen === 1 ? (
+            <div
+              style={{
+                margin: unifiedNavigation ? "-16px -18px 10px -18px" : "-18px -22px 10px -22px",
+                padding: "10px 24px 0",
+                background: "transparent",
+              }}
+            >
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div
+                  style={{
+                    background: T.elevated,
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    border: `1px solid ${T.borderLight}`,
+                    boxShadow: `0 0 0 1px ${T.amber}12 inset`,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+                    <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: T.amber,
+                          letterSpacing: "0.08em",
+                          textTransform: "uppercase",
+                        }}
+                      >
+                        Executive Brief
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: 7, fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
+                    {role.id === "head_contact"
+                      ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
+                      : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    background: T.elevated,
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                    borderLeft: `3px solid ${T.amber}`,
+                    border: `1px solid ${T.borderLight}`,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 9 }}>
+                    <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                    <span
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: T.amber,
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                      }}
+                    >
+                      Executive Pulse
+                    </span>
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+                    {(role.id === "head_contact"
+                      ? [
+                          {
+                            q: "🔴 What's critical",
+                            main: "BPO Beta dispute win-rate dropped to 38% vs 71% in-house. Evidence-collection step ~4 days slow.",
+                          },
+                          {
+                            q: "🎯 Where's your focus",
+                            main: "SLA 87% (3rd week below 95%) · 12-agent staffing gap 10–11 AM · 22% repeat-contact rate.",
+                          },
+                          {
+                            q: "🟢 What's stable/ on-track",
+                            main: "In-house FCR holding at 81% · App SS deflection 89% — escalate BPO QA + activate overflow before 9:45 AM.",
+                          },
+                        ]
+                      : [
+                          {
+                            q: "🔴 What's critical",
+                            main: "3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
+                          },
+                          {
+                            q: "🎯 Where's your focus",
+                            main: "KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
+                          },
+                          {
+                            q: "🟢 What's stable/ on-track",
+                            main: "App Store holding at 0.71 — best performing channel, digital migration positive",
+                          },
+                        ]
+                    ).map((item, idx) => (
+                      <div
+                        key={item.q}
+                        style={{
+                          background: "rgba(255,255,255,0.03)",
+                          border: `1px solid ${T.borderLight}`,
+                          borderRadius: 8,
+                          padding: "9px 10px",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 4,
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                          <div style={{ fontSize: 13.5, fontWeight: 700, color: "#b7a6ff" }}>
+                            {idx + 1}. {item.q}
+                          </div>
+                        </div>
+                        <div style={{ fontSize: 13.5, color: T.textSec, lineHeight: 1.35, fontWeight: 600 }}>{item.main}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
           {isDrillRoleId(role.id) && drillCard !== null ? (
             (() => {
               const onBack = () => setDrillCard(null);
