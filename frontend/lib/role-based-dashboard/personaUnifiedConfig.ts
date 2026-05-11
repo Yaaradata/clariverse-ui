@@ -11,7 +11,6 @@ export function initialKpiSignalFilter(roleId: string): string {
     coo: "ops",
     cro: "fraud",
     head_retail: "ops",
-    head_cards: "fraud",
     head_contact: "staffing",
     head_compliance: "all",
     head_cx: "training",
@@ -28,7 +27,7 @@ export function showExecSystemHealthRibbon(roleId: string): boolean {
 }
 
 export function showScreen2Eisenhower(roleId: string): boolean {
-  return ["ceo", "coo", "head_retail", "head_cards"].includes(roleId);
+  return ["ceo", "coo", "head_retail"].includes(roleId);
 }
 
 export function showScreen2PressureWall(roleId: string): boolean {
@@ -36,7 +35,7 @@ export function showScreen2PressureWall(roleId: string): boolean {
 }
 
 export function showScreen3IntentCommandCenter(roleId: string): boolean {
-  return ["coo", "head_retail", "head_cards", "head_contact"].includes(roleId);
+  return ["coo", "head_retail", "head_contact"].includes(roleId);
 }
 
 export function showScreen3EmotionShockboard(roleId: string): boolean {

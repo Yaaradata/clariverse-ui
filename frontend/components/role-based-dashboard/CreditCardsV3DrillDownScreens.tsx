@@ -80,7 +80,7 @@ const V3D = {
   muted: "#939394",
 } as const;
 
-/** Column layout for drill bodies; outer padding matches retail via `HeadOfCreditCardsV3Dashboard` main when a drill is open. */
+/** Column layout for drill bodies; outer padding matches retail via `HeadOfCreditCardsDashboard` main when a drill is open. */
 function V3DrillShell({
   children,
   bodyFontSize = 18,
@@ -340,7 +340,7 @@ const TOOLTIP_STYLE = {
 };
 
 /**
- * Head of Credit Cards V3 — "Are cardholders satisfied with their journey?" drill
+ * Head of Credit Cards — "Are cardholders satisfied with their journey?" drill
  * (conversation-first layout: Are cardholders satisfied with their journey?)
  */
 const JH = {

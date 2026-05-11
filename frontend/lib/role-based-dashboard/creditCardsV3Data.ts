@@ -1,5 +1,5 @@
 // ═══════════════════════════════════════════════════════════════════════════
-// HEAD OF CREDIT CARDS — V3
+// HEAD OF CREDIT CARDS — executive dashboard mock data
 // Built to the "Head of Credit Cards Dashboard — Design Ideas & Component
 // Blueprint" spec. Mirrors the Head of Retail Banking pattern exactly:
 //   • 2-layer drill-down

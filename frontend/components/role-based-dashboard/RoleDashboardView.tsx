@@ -21,9 +21,7 @@ import {
   Users,
 } from "lucide-react";
 import { Area, AreaChart, Line, LineChart, PolarAngleAxis, RadialBar, RadialBarChart, ResponsiveContainer, Tooltip as RechartsTooltip, XAxis, YAxis } from "recharts";
-import { CardOpsDashboard, type CardOpsThemeTokens } from "./CardOpsDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
-import { HeadOfCreditCardsV3Dashboard } from "./HeadOfCreditCardsV3Dashboard";
 import { DashboardThemeProvider, useDashboardTheme, type DashboardThemeTokens } from "./DashboardThemeContext";
 import { CustomerHappinessDrillDown, BrandReputationDrillDown, ServiceFulfilmentDrillDown } from "./RetailDrillDownScreens";
 import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown";
@@ -1114,8 +1112,6 @@ export type RoleDashboardViewProps = {
   onExit: () => void;
   /** When set (e.g. Swedbank compliance styling), overrides default industry dashboard colors. */
   theme?: DashboardThemeTokens;
-  /** Theme for Head of Credit Cards (card ops) view only. */
-  cardOpsTheme?: CardOpsThemeTokens;
   /**
    * When true, embeds unified intelligence components (AI spikes, filters bar, persona-specific panels)
    * per screen. Used by `/role-based` routes.
@@ -1625,38 +1621,13 @@ export function RoleDashboardView({
   role,
   onExit,
   theme,
-  cardOpsTheme,
   unifiedNavigation = false,
 }: RoleDashboardViewProps) {
   const eisenhowerThreads = useEisenhowerThreadsSnapshot(unifiedNavigation);
 
   if (industry.id === "credit_cards" && role.id === "head_cards") {
     return (
-      <CardOpsDashboard
-        industryName={industry.name}
-        roleName={role.name}
-        industryColor={industry.color}
-        onExit={onExit}
-        theme={cardOpsTheme}
-      />
-    );
-  }
-
-  if (industry.id === "credit_cards" && role.id === "head_cards_v2") {
-    return (
       <HeadOfCreditCardsDashboard
-        industryName={industry.name}
-        roleName={role.name}
-        industryColor={industry.color}
-        onExit={onExit}
-        theme={theme}
-      />
-    );
-  }
-
-  if (industry.id === "credit_cards" && role.id === "head_cards_v3") {
-    return (
-      <HeadOfCreditCardsV3Dashboard
         industryName={industry.name}
         roleName={role.name}
         industryColor={industry.color}
