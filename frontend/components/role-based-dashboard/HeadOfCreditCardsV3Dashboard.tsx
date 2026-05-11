@@ -1252,40 +1252,7 @@ export function HeadOfCreditCardsV3Dashboard({
 
                   <div style={{ marginTop: 7, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                     <div style={{ fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
-                      All three executive signals weakened this week, with service promise showing the sharpest
-                      deterioration.
-                    </div>
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                      {[
-                        { label: "Satisfaction", delta: -4 },
-                        { label: "Market", delta: -8 },
-                        { label: "Service promise", delta: -11 },
-                      ].map((m) => {
-                        const tone = m.delta <= -8 ? T.red : m.delta < 0 ? T.amber : T.green;
-                        const direction = m.delta < 0 ? "↓" : m.delta > 0 ? "↑" : "•";
-                        return (
-                          <span
-                            key={m.label}
-                            style={{
-                              display: "inline-flex",
-                              alignItems: "center",
-                              gap: 6,
-                              fontSize: 12,
-                              fontWeight: 700,
-                              color: tone,
-                              border: `1px solid ${tone}50`,
-                              background: `${tone}18`,
-                              borderRadius: 999,
-                              padding: "6px 10px",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            <span style={{ color: T.textSec }}>{m.label}</span>
-                            <span>{direction}</span>
-                            <span>{m.delta > 0 ? `+${m.delta}` : m.delta} pts</span>
-                          </span>
-                        );
-                      })}
+                      All three scores down this week — Satisfaction -4pts, Market -8pts, Service Promise -11pts
                     </div>
                   </div>
                 </div>
@@ -1307,9 +1274,9 @@ export function HeadOfCreditCardsV3Dashboard({
                   </div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
                     {[
-                      { q: "What is broken?", main: "🔴 18 HSHF accounts: churn signals detected - activation friction #1 journey detractor, retention window open", support: "", pill: "Critical", tone: T.red },
-                      { q: "How bad is it?",  main: "🎯 Dispute repeat contact at 47%, up from 39% WoW with 43 cases aging beyond promise window", support: "", pill: "High severity", tone: T.amber },
-                      { q: "How do we fix it?",  main: "🟡 Co-branded at 63% vs standalone 54% - gap stable, monitoring #RewardScam movement", support: "", pill: "Monitoring", tone: T.cyan },
+                      { q: "🔴 What's critical", main: "18 HSHF accounts: churn signals detected - activation friction #1 journey detractor, retention window open", support: "", pill: "Critical", tone: T.red },
+                      { q: "🎯 Where's your focus", main: "Dispute repeat contact at 47%, up from 39% WoW with 43 cases aging beyond promise window", support: "", pill: "High severity", tone: T.amber },
+                      { q: "🟢 What's stable/ on-track", main: "Co-branded at 63% vs standalone 54% - gap stable, monitoring #RewardScam movement", support: "", pill: "Monitoring", tone: T.cyan },
                     ].map((item, idx) => (
                       <div
                         key={item.q}

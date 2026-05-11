@@ -1408,7 +1408,7 @@ function RoleDashboardShell({
                 <div style={{ marginTop: 7, fontSize: 13.5, color: T.textSec, lineHeight: 1.4 }}>
                   {role.id === "head_contact"
                     ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
-                    : "↕ Satisfaction up +4pts only score improving; brand -6pts, service delivery -14pts"}
+                    : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
                 </div>
               </div>
 
@@ -1439,30 +1439,30 @@ function RoleDashboardShell({
                   {(role.id === "head_contact"
                     ? [
                         {
-                          q: "What is broken?",
+                          q: "🔴 What's critical",
                           main: "🔴 BPO Beta dispute win-rate dropped to 38% vs 71% in-house. Evidence-collection step ~4 days slow.",
                         },
                         {
-                          q: "How bad is it?",
+                          q: "🎯 Where's your focus",
                           main: "🎯 SLA 87% (3rd week below 95%) · 12-agent staffing gap 10–11 AM · 22% repeat-contact rate.",
                         },
                         {
-                          q: "How do we fix it?",
+                          q: "🟢 What's stable/ on-track",
                           main: "🟢 In-house FCR holding at 81% · App SS deflection 89% — escalate BPO QA + activate overflow before 9:45 AM.",
                         },
                       ]
                     : [
                         {
-                          q: "What is broken?",
-                          main: "🔴 3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
+                          q: "🔴 What's critical",
+                          main: "3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
                         },
                         {
-                          q: "How bad is it?",
-                          main: "🎯 KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
+                          q: "🎯 Where's your focus",
+                          main: "KYC API delays blocking 580 applications. SLA trend down 6% WoW, bottleneck identified",
                         },
                         {
-                          q: "How do we fix it?",
-                          main: "🟢 App Store holding at 0.71 — best performing channel, digital migration positive",
+                          q: "🟢 What's stable/ on-track",
+                          main: "App Store holding at 0.71 — best performing channel, digital migration positive",
                         },
                       ]
                   ).map((item, idx) => (
