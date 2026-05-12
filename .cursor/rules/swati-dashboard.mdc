@@ -1,0 +1,40 @@
+---
+description: Swati / Openbank CX dashboard build rules
+globs:
+  - "frontend/**/*"
+alwaysApply: false
+---
+
+You are building the Openbank CX Signal Room dashboard.
+
+Before making any decision, always read and use the reference folder:
+frontend/public/swati-dashboard
+
+This folder contains:
+- Swati profile
+- meeting transcript
+- product feedback
+- Openbank / Santander research
+- public review research
+- screenshots / existing dashboard references
+
+Do not invent product direction from memory.
+Do not copy the old Head of Credit Cards dashboard.
+Use only its layout discipline if needed: compact dark cards, tight grids, clear rows, polished UI alignment.
+
+The dashboard must be built from Swati feedback:
+- lead with insight, not dashboard metrics
+- daily-engagement surface
+- top 3 best calls and top 3 worst calls
+- internal calls/chats/emails/tickets first
+- public reviews as one separate component only
+- closed-loop customer pain recovery
+- risk layer that shows UDAAP / Reg E / CFPB-like signals
+- executive-ready but operationally useful
+
+Never use the word "Swati" in the UI.
+Never use wording that attacks the client's analytics team.
+Never say "analytics team would not have surfaced this."
+Never create play/pause/transcript/open-queue buttons.
+Never put public grounding in every component.
+Never include X/Twitter unless verified public grounding is available.

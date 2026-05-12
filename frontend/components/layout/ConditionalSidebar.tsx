@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 
 export default function ConditionalSidebar({
@@ -16,13 +16,20 @@ export default function ConditionalSidebar({
     setMounted(true);
   }, []);
 
-  const isAddonRoute = pathname?.startsWith("/compliance-fci") || pathname?.startsWith("/standard-chartered/compliance-fci") || pathname?.startsWith("/hdfc/compliance-fci");
+  const isAddonRoute =
+    pathname?.startsWith("/compliance-fci") ||
+    pathname?.startsWith("/standard-chartered/compliance-fci") ||
+    pathname?.startsWith("/hdfc/compliance-fci");
   const isSwedbankRoute = pathname?.startsWith("/swedbank");
   const isFlipkartRoute = pathname?.startsWith("/flipkart");
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered");
   const isHdfcRoute = pathname?.startsWith("/hdfc");
   const isRootPage = pathname === "/";
-  const isRoleBasedRoute = pathname === "/role-based" || pathname?.startsWith("/role-based/");
+  const isRoleBasedRoute =
+    pathname === "/role-based" || pathname?.startsWith("/role-based/");
+  /** Legacy / mistaken URL uses underscore; same full-width treatment as hyphenated route. */
+  const isRoleBasedUnderscoreRoute =
+    pathname === "/role_based" || pathname?.startsWith("/role_based/");
   const isStandalonePage =
     isAddonRoute ||
     isSwedbankRoute ||
@@ -30,7 +37,8 @@ export default function ConditionalSidebar({
     isStandardCharteredRoute ||
     isHdfcRoute ||
     isRootPage ||
-    isRoleBasedRoute;
+    isRoleBasedRoute ||
+    isRoleBasedUnderscoreRoute;
 
   // Render children only during SSR to avoid hydration mismatch
   // The correct layout will be applied after mounting
@@ -45,10 +53,7 @@ export default function ConditionalSidebar({
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-y-auto p-6">
-        {children}
-      </main>
+      <main className="flex-1 overflow-y-auto p-6">{children}</main>
     </div>
   );
 }
-
