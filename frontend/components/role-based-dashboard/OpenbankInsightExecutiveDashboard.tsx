@@ -420,16 +420,15 @@ const riskPulseHeader = {
   score: 67,
   status: "Elevated",
   mainExposure: "Money access + transfer dispute + no-answer patterns",
-  regulatoryLanesActive: [
+  whyItMatters:
+    "Customer cannot access money, repeats contact, and starts using complaint language.",
+  activeLanes: [
     "CFPB complaint watch",
     "UDAAP watch",
     "Reg E review",
     "Vulnerable customer review",
   ] as const,
-  cfpbClock:
-    "CFPB complaint response: generally 15 calendar days; if not final, final response generally up to 60 days while in progress.",
-  regEClock:
-    "Reg E: when issues involve EFT errors, unauthorized/incorrect EFTs, missing or unclear EFT information, or documentation requests — error-resolution review may trigger a 10-business-day investigation window.",
+  urgencyChips: ["CFPB 15d / 60d", "Reg E clock may apply", "UDAAP harm + unclear terms"] as const,
 } as const;
 
 const riskLayerCards: readonly RiskLayerCard[] = [
@@ -452,7 +451,7 @@ const riskLayerCards: readonly RiskLayerCard[] = [
     evidenceVolume: "31 tickets · 11 complaint notes · 18 clarification requests",
     sourceEvidence: ["Tickets", "Complaint notes", "Email"],
     whyItMatters: "EFT error-resolution timelines may apply.",
-    urgency: "10 business day investigation trigger",
+    urgency: "Reg E clock",
     severity: "High",
   },
   {
@@ -462,7 +461,7 @@ const riskLayerCards: readonly RiskLayerCard[] = [
     regulatoryLanes: ["CFPB complaint watch", "Vulnerable customer review"],
     evidenceVolume: "86 auth calls · 31 repeat loops · 7 vulnerable-customer cues",
     sourceEvidence: ["Voice", "Chat", "Case notes"],
-    whyItMatters: "Access failure becomes more serious when the customer cannot reach funds.",
+    whyItMatters: "Access failure becomes serious when the customer cannot reach funds.",
     urgency: "Same-day review",
     severity: "High",
   },
@@ -470,7 +469,7 @@ const riskLayerCards: readonly RiskLayerCard[] = [
     title: "Payment / Collection Pressure",
     serviceDispute: "Payment website failure / payoff confusion / collection pressure",
     customerIntent: "“I tried to pay but the system failed”",
-    regulatoryLanes: ["UDAAP watch", "FDCPA watch"],
+    regulatoryLanes: ["UDAAP watch", "FDCPA watch — where collection conduct applies"],
     evidenceVolume: "27 calls · 18 emails · 9 collection-pressure phrases",
     sourceEvidence: ["Voice", "Email", "Complaint notes"],
     whyItMatters: "Customer may be penalized for a bank-side payment or communication failure.",
@@ -1710,128 +1709,139 @@ function PublicVoiceWall() {
 }
 
 function RiskLayer() {
-  const lanes = list(riskPulseHeader.regulatoryLanesActive);
+  const lanes = list(riskPulseHeader.activeLanes);
+  const urgencyChips = list(riskPulseHeader.urgencyChips);
 
   return (
     <ShellCard
       title="Risk Signal Layer"
-      subtitle="What service disputes are becoming regulatory exposure? Start from dispute + intent, then map lanes."
+      subtitle="What service disputes are becoming regulatory exposure?"
       accent={COLORS.red}
       className="flex min-h-[668px] max-h-[min(72vh,820px)] flex-col overflow-hidden"
     >
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pr-2 [scrollbar-gutter:stable]">
         <div className="space-y-3">
-        <div className="grid gap-3 rounded-2xl border border-red-500/35 bg-red-500/5 p-4 lg:grid-cols-[auto_1fr]">
-          <div className="flex flex-col items-start gap-1">
-            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-zinc-500">Risk pulse</p>
-            <p className="text-4xl font-black tabular-nums text-white">{riskPulseHeader.score}</p>
-            <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-500">/ 100</p>
-            <Pill severity="High">{riskPulseHeader.status}</Pill>
-          </div>
-          <div className="min-w-0 space-y-2">
-            <div>
-              <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Main exposure</p>
-              <p className="mt-1 text-xs font-semibold leading-relaxed text-zinc-200">{riskPulseHeader.mainExposure}</p>
+          <div className="grid gap-3 rounded-2xl border border-red-500/35 bg-red-500/5 p-3 lg:grid-cols-[minmax(0,7.5rem)_1fr] lg:items-start">
+            <div className="flex flex-col items-start gap-1.5 border-b border-white/10 pb-3 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-3">
+              <p className="text-[9px] font-black uppercase tracking-[0.14em] text-zinc-500">Risk pulse</p>
+              <p className="text-3xl font-black tabular-nums leading-none text-white">
+                {riskPulseHeader.score}
+                <span className="text-xs font-bold text-zinc-500"> /100</span>
+              </p>
+              <Pill severity="High">{riskPulseHeader.status}</Pill>
             </div>
-            <div>
-              <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Regulatory lanes active</p>
-              <div className="mt-1.5 flex flex-wrap gap-1">
-                {lanes.map((lane) => (
-                  <span
-                    key={lane}
-                    className="rounded-full border border-red-500/40 bg-black/40 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-red-100/90"
-                  >
-                    {lane}
-                  </span>
-                ))}
+            <div className="min-w-0 space-y-2">
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Main exposure</p>
+                <p className="mt-0.5 text-xs font-semibold leading-snug text-zinc-100">{riskPulseHeader.mainExposure}</p>
               </div>
-            </div>
-            <p className="text-[10px] font-semibold leading-snug text-zinc-500">
-              UDAAP risk rises when terms or practices increase misunderstanding or consumer harm; Reg E applies when EFT errors,
-              unauthorized/incorrect transfers, or documentation gaps appear in the narrative.
-            </p>
-            <div className="rounded-xl border border-white/10 bg-black/30 p-3">
-              <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Regulatory clock summary</p>
-              <p className="mt-1.5 text-[11px] font-semibold leading-snug text-zinc-300">{riskPulseHeader.cfpbClock}</p>
-              <p className="mt-1 text-[11px] font-semibold leading-snug text-zinc-400">{riskPulseHeader.regEClock}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-zinc-500">Service dispute → exposure</p>
-          {list(riskLayerCards).map((risk) => {
-            const c = colorFor(risk.severity);
-            return (
-              <div
-                key={risk.title}
-                className="rounded-2xl border p-3.5"
-                style={{ borderColor: `${c}55`, background: `${c}0c` }}
-              >
-                <div className="flex flex-wrap items-start justify-between gap-2">
-                  <h4 className="text-sm font-black leading-tight text-white">{risk.title}</h4>
-                  <span
-                    className="shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-zinc-300"
-                    style={{ borderColor: `${c}55`, background: `${c}14` }}
-                  >
-                    {risk.urgency}
-                  </span>
-                </div>
-
-                <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Service dispute</p>
-                <p className="mt-0.5 text-xs font-semibold text-zinc-200">{risk.serviceDispute}</p>
-
-                <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Customer intent</p>
-                <p className="mt-0.5 text-xs font-semibold italic text-zinc-300">{risk.customerIntent}</p>
-
-                <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Regulatory lane</p>
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Why it matters</p>
+                <p className="mt-0.5 text-[11px] font-semibold leading-snug text-zinc-400">{riskPulseHeader.whyItMatters}</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Active lanes</p>
                 <div className="mt-1 flex flex-wrap gap-1">
-                  {list(risk.regulatoryLanes).map((lane) => (
+                  {lanes.map((lane) => (
                     <span
                       key={lane}
-                      className="rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wide"
-                      style={{ borderColor: `${c}66`, color: c, background: `${c}12` }}
+                      className="rounded-full border border-red-500/45 bg-black/45 px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-red-100/95"
                     >
                       {lane}
                     </span>
                   ))}
                 </div>
-
-                <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Evidence volume</p>
-                <p className="mt-0.5 text-xs font-bold tabular-nums text-zinc-200">{risk.evidenceVolume}</p>
-
-                <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Source evidence</p>
+              </div>
+              <div>
+                <p className="text-[9px] font-black uppercase tracking-[0.12em] text-zinc-500">Regulatory urgency</p>
                 <div className="mt-1 flex flex-wrap gap-1">
-                  {list(risk.sourceEvidence).map((s) => (
+                  {urgencyChips.map((chip) => (
                     <span
-                      key={s}
-                      className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-zinc-400"
+                      key={chip}
+                      className="rounded-full border border-white/15 bg-black/35 px-2 py-0.5 text-[9px] font-bold text-zinc-400"
                     >
-                      {s}
+                      {chip}
                     </span>
                   ))}
                 </div>
-
-                <p className="mt-2 border-t border-white/10 pt-2 text-[11px] font-semibold leading-snug text-zinc-400">
-                  <span className="font-black text-zinc-600">Why it matters: </span>
-                  {risk.whyItMatters}
-                </p>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          </div>
 
-        <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
-          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-zinc-500">Escalation queue</p>
-          <ul className="mt-2 space-y-2">
-            {list(riskEscalationQueue).map((q) => (
-              <li key={q.id} className="flex flex-wrap items-baseline justify-between gap-2 text-[11px]">
-                <span className="font-black text-white">{q.label}</span>
-                <span className="min-w-0 text-right font-semibold text-zinc-400">{q.detail}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <div className="space-y-2">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-zinc-500">Service dispute → exposure</p>
+            {list(riskLayerCards).map((risk) => {
+              const c = colorFor(risk.severity);
+              return (
+                <div
+                  key={risk.title}
+                  className="rounded-2xl border p-3.5"
+                  style={{ borderColor: `${c}55`, background: `${c}0c` }}
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-2">
+                    <h4 className="min-w-0 flex-1 text-sm font-black leading-tight text-white">{risk.title}</h4>
+                    <span
+                      className="shrink-0 rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wide text-zinc-300"
+                      style={{ borderColor: `${c}55`, background: `${c}14` }}
+                    >
+                      {risk.urgency}
+                    </span>
+                  </div>
+
+                  <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Customer intent</p>
+                  <p className="mt-0.5 text-xs font-semibold italic text-zinc-300">{risk.customerIntent}</p>
+
+                  <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Service dispute</p>
+                  <p className="mt-0.5 text-xs font-semibold text-zinc-200">{risk.serviceDispute}</p>
+
+                  <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Exposure lane</p>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {list(risk.regulatoryLanes).map((lane) => (
+                      <span
+                        key={lane}
+                        className="rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wide"
+                        style={{ borderColor: `${c}66`, color: c, background: `${c}12` }}
+                      >
+                        {lane}
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Evidence volume</p>
+                  <p className="mt-0.5 text-xs font-bold tabular-nums text-zinc-200">{risk.evidenceVolume}</p>
+
+                  <p className="mt-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">Source evidence</p>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {list(risk.sourceEvidence).map((s) => (
+                      <span
+                        key={s}
+                        className="rounded-full border border-white/10 bg-black/35 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-zinc-400"
+                      >
+                        {s}
+                      </span>
+                    ))}
+                  </div>
+
+                  <p className="mt-2 border-t border-white/10 pt-2 text-[11px] font-semibold leading-snug text-zinc-400">
+                    <span className="font-black text-zinc-600">Why this matters: </span>
+                    {risk.whyItMatters}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="rounded-2xl border border-white/10 bg-black/25 p-3">
+            <p className="text-[10px] font-black uppercase tracking-[0.14em] text-zinc-500">Escalation queue</p>
+            <ul className="mt-2 space-y-2">
+              {list(riskEscalationQueue).map((q) => (
+                <li key={q.id} className="flex flex-wrap items-baseline justify-between gap-2 text-[11px]">
+                  <span className="font-black text-white">{q.label}</span>
+                  <span className="min-w-0 text-right font-semibold text-zinc-400">{q.detail}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </ShellCard>
