@@ -199,7 +199,6 @@ export const INDUSTRIES = [
     roles: [
       {
         id: "ceo_insight",
-        name: "CEO — Daily insight surface",
         icon: Crown,
         sub: "Trust brief · public voice · fix progress — CX Command Center",
         defaultLens: "ops",

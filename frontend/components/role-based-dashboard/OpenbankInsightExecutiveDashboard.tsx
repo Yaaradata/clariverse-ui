@@ -1840,7 +1840,7 @@ const TIME_WINDOWS = ["Today", "7 Days", "30 Days"] as const;
 type TimeWindow = (typeof TIME_WINDOWS)[number];
 
 export function OpenbankInsightExecutiveDashboard({
-  industryName,
+  industryName: _industryName,
   roleName,
   industryColor,
   onExit,
@@ -1865,17 +1865,6 @@ export function OpenbankInsightExecutiveDashboard({
               </button>
 
               <div className="flex min-w-0 flex-1 flex-col items-center text-center">
-                <div className="mb-2 flex flex-wrap justify-center gap-2">
-                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-zinc-300">
-                    {industryName} - CX Signal Room
-                  </span>
-                  <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1 text-xs font-semibold text-amber-200">
-                    Internal interactions first
-                  </span>
-                  <span className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">
-                    Public voice is one validation panel
-                  </span>
-                </div>
                 <h1 className="text-3xl font-black tracking-tight text-white md:text-5xl">
                   Openbank CX Signal Room
                 </h1>
