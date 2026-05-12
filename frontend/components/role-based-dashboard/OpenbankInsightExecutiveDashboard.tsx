@@ -5,6 +5,7 @@ import {
   type Dispatch,
   type ReactNode,
   type SetStateAction,
+  useId,
   useState,
 } from "react";
 
@@ -69,7 +70,6 @@ const headlineSignals = [
     title: "First funding is the trust break",
     outcome: "Money-access anxiety",
     impact: "214 contacts, 43 past promise, 18 closure-intent signals",
-    owner: "Deposit Ops + CX Ops",
     insight:
       "Customers are not only asking when the transfer clears. They are asking whether their money is safe because available balance, hold period, and support explanation do not align.",
     chain: [
@@ -92,7 +92,6 @@ const headlineSignals = [
     title: "Trusted-device recovery is forcing support dependency",
     outcome: "Digital self-service failure",
     impact: "86 auth calls, 31 loops, 41 failed auth events",
-    owner: "Digital Auth",
     insight:
       "Phone-change and OTP issues are not isolated login failures. They create multi-contact loops because the recovery path requires the unavailable trusted device.",
     chain: [
@@ -115,7 +114,6 @@ const headlineSignals = [
     title: "Case context is not traveling across channels",
     outcome: "Repeat-contact loop",
     impact: "142 repeat contacts, 4 channels, 23 complaint phrases",
-    owner: "CX Ops",
     insight:
       "Customers are re-explaining the same issue across voice, chat, email, and tickets. The failure is not a single interaction; it is lack of persistent case ownership.",
     chain: [
@@ -154,7 +152,7 @@ const channelSignals = [
     issue: "money-access anxiety",
     phrase: "I need to know when this clears",
     severity: "Critical" as const,
-    trend: [42, 46, 51, 58, 64, 72, 81, 88],
+    trend: [38, 44, 52, 58, 65, 73, 80, 30],
     delta: "+18% WoW",
     topDispute: "First-deposit hold / available balance",
     disputeCount: "214 cases",
@@ -169,7 +167,7 @@ const channelSignals = [
     issue: "balance confusion",
     phrase: "available balance does not match",
     severity: "High" as const,
-    trend: [32, 34, 35, 41, 43, 48, 52, 57],
+    trend: [40, 36, 42, 38, 45, 41, 48, 52],
     delta: "+11% WoW",
     topDispute: "Balance display mismatch",
     disputeCount: "163 cases",
@@ -184,7 +182,7 @@ const channelSignals = [
     issue: "generic replies",
     phrase: "same answer, no date",
     severity: "High" as const,
-    trend: [28, 30, 31, 31, 35, 37, 39, 43],
+    trend: [30, 30, 32, 31, 34, 35, 36, 43],
     delta: "+9% WoW",
     topDispute: "No clear ETA after escalation",
     disputeCount: "88 cases",
@@ -199,7 +197,7 @@ const channelSignals = [
     issue: "owner gap",
     phrase: "pending back office",
     severity: "Critical" as const,
-    trend: [24, 29, 33, 36, 42, 51, 58, 66],
+    trend: [22, 25, 33, 31, 44, 48, 55, 10],
     delta: "+22% WoW",
     topDispute: "No owner after 48 hours",
     disputeCount: "142 cases",
@@ -897,7 +895,7 @@ function SignalStory({
 
   return (
     <ShellCard
-      title="Today’s Arc · cross-channel pattern"
+      title="✨Today’s Arc · cross-channel pattern"
       subtitle="Pattern switcher and selected pattern view sit side by side so the story changes visibly on click."
       accent={color}
       className="min-h-[470px]"
@@ -974,9 +972,6 @@ function SignalStory({
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <Pill severity={current.severity}>{current.severity}</Pill>
-                <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-zinc-400">
-                  Owner: {current.owner}
-                </span>
               </div>
               <span className="rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-zinc-500">
                 Selected pattern view
@@ -986,7 +981,7 @@ function SignalStory({
             <div className="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
               <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-zinc-500">
-                  Detected pattern
+                ✨Detected pattern
                 </p>
                 <h2 className="mt-2 text-3xl font-black leading-tight text-white">
                   {current.title}
@@ -1023,9 +1018,7 @@ function SignalStory({
                   channels.
                 </p>
               </div>
-              <span className="hidden rounded-full border border-white/10 bg-black/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.12em] text-zinc-500 md:inline-flex">
-                Live correlation
-              </span>
+
             </div>
 
             <div className="grid gap-2 md:grid-cols-5">
@@ -1087,46 +1080,122 @@ function SignalStory({
   );
 }
 
+function sentimentSparklineColor(sentimentStr: string): string {
+  const n = Number(sentimentStr);
+  if (Number.isNaN(n)) {
+    return COLORS.purple;
+  }
+  // Negative CSAT-style scores: closer to zero / positive is better.
+  if (n >= -0.38) {
+    return COLORS.green;
+  }
+  if (n >= -0.55) {
+    return COLORS.amber;
+  }
+  return COLORS.red;
+}
+
+type SparkPt = { x: number; y: number };
+
+function sparkCoordsFromValues(
+  data: number[],
+  width: number,
+  yTop: number,
+  yBottom: number,
+): SparkPt[] {
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const range = Math.max(1e-6, max - min);
+  return data.map((value, index) => ({
+    x: data.length <= 1 ? width / 2 : (index / (data.length - 1)) * width,
+    y: yBottom - ((value - min) / range) * (yBottom - yTop),
+  }));
+}
+
+/** Smooth top edge (cubic segments), Catmull-style control points at joints. */
+function sparkSmoothTopPath(coords: SparkPt[]): string {
+  if (coords.length === 0) {
+    return "";
+  }
+  if (coords.length === 1) {
+    const { x, y } = coords[0];
+    return `M 0,${y} L 100,${y}`;
+  }
+  let d = `M ${coords[0].x},${coords[0].y}`;
+  for (let i = 0; i < coords.length - 1; i++) {
+    const p0 = coords[Math.max(0, i - 1)];
+    const p1 = coords[i];
+    const p2 = coords[i + 1];
+    const p3 = coords[Math.min(coords.length - 1, i + 2)];
+    const cp1x = p1.x + (p2.x - p0.x) / 6;
+    const cp1y = p1.y + (p2.y - p0.y) / 6;
+    const cp2x = p2.x - (p3.x - p1.x) / 6;
+    const cp2y = p2.y - (p3.y - p1.y) / 6;
+    d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`;
+  }
+  return d;
+}
+
 function MicroSparkline({
   values = [],
   color = COLORS.purple,
+  title = "Sentiment trend",
 }: {
   values?: readonly number[];
   color?: string;
+  title?: string;
 }) {
+  const gradId = useId().replace(/:/g, "");
   const data = list(values).length > 0 ? list(values) : [0, 0];
-  const max = Math.max(...data);
-  const min = Math.min(...data);
-  const range = Math.max(1, max - min);
-  const points = data
-    .map((value, index) => {
-      const x = data.length <= 1 ? 0 : (index / (data.length - 1)) * 100;
-      const y = 34 - ((value - min) / range) * 28;
-      return `${x},${y}`;
-    })
-    .join(" ");
-  const last = points.split(" ").pop();
-  const lastY = last ? Number(last.split(",")[1]) : 6;
-  const lastX = last ? Number(last.split(",")[0]) : 0;
+  const yTop = 5;
+  const yBottom = 32;
+  const baseline = 37;
+  const coords = sparkCoordsFromValues(data, 100, yTop, yBottom);
+  const topPath = sparkSmoothTopPath(coords);
+  const firstX = coords[0]?.x ?? 0;
+  const lastX = coords[coords.length - 1]?.x ?? 100;
+  const lastY = coords[coords.length - 1]?.y ?? yBottom;
+  const areaPath =
+    topPath.length > 0
+      ? `${topPath} L ${lastX},${baseline} L ${firstX},${baseline} Z`
+      : "";
 
   return (
     <svg
-      viewBox="0 0 100 38"
+      viewBox="0 0 100 40"
       className="h-10 w-full"
       preserveAspectRatio="none"
       role="img"
-      aria-label="Micro trend sparkline"
+      aria-label={title}
     >
-      <title>Sentiment trend</title>
-      <polyline
-        points={points}
-        fill="none"
-        stroke={color}
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle cx={lastX} cy={lastY} r="2.8" fill={color} />
+      <title>{title}</title>
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.42" />
+          <stop offset="45%" stopColor={color} stopOpacity="0.16" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {areaPath ? (
+        <path
+          d={areaPath}
+          fill={`url(#${gradId})`}
+          fillOpacity={1}
+          stroke="none"
+          strokeWidth={0}
+        />
+      ) : null}
+      {topPath ? (
+        <path
+          d={topPath}
+          fill="none"
+          stroke={color}
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : null}
+      <circle cx={lastX} cy={lastY} r="2.6" fill={color} stroke="#0a0a0a" strokeWidth="0.6" />
     </svg>
   );
 }
@@ -1219,7 +1288,11 @@ function ChannelConstellation() {
                       last 8 intervals
                     </p>
                   </div>
-                  <MicroSparkline values={item.trend} color={c} />
+                  <MicroSparkline
+                    values={item.trend}
+                    color={sentimentSparklineColor(item.sentiment)}
+                    title={`${item.channel}: sentiment trend (last 8 intervals)`}
+                  />
                 </div>
 
                 <div className="mt-2 rounded-xl border border-white/10 bg-black/25 p-2.5">
@@ -1787,7 +1860,7 @@ export function OpenbankCXSignalRoom() {
         <div className="grid grid-cols-12 items-stretch gap-4">
           <div className="col-span-12 lg:col-span-6">
             <CallsColumn
-              title="Top 3 Best Calls"
+              title="✨Top 3 Best Calls"
               subtitle="Excellence patterns to replicate across internal teams."
               data={bestCalls}
               accent={COLORS.green}
@@ -1795,7 +1868,7 @@ export function OpenbankCXSignalRoom() {
           </div>
           <div className="col-span-12 lg:col-span-6">
             <CallsColumn
-              title="Top 3 Worst Calls"
+              title="✨Top 3 Worst Calls"
               subtitle="Failure patterns to fix without turning this into agent prep."
               data={worstCalls}
               accent={COLORS.red}
