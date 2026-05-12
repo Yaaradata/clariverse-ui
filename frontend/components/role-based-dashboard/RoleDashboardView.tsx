@@ -63,6 +63,7 @@ import {
   LOB_DRILL_KPIS,
   ROLE_DATA,
   type Role,
+  roleDisplayName,
   type RoleDashboardData,
   type ScreenId,
 } from "@/lib/role-based-dashboard/registry";
@@ -3089,7 +3090,7 @@ function RoleDashboardShell({
                   whiteSpace: "nowrap",
                 }}
               >
-                {role.name}
+                {roleDisplayName(role)}
               </span>
             ) : null}
           </div>
@@ -3314,7 +3315,7 @@ function RoleDashboardShell({
                   lineHeight: 1.45,
                 }}
               >
-                {industry.name} · {role.name} · {active?.sub}
+                {industry.name} · {roleDisplayName(role)} · {active?.sub}
               </div>
             </div>
             <div
@@ -3388,7 +3389,7 @@ function RoleDashboardShell({
                   lineHeight: 1.45,
                 }}
               >
-                {industry.name} · {role.name} · {active?.sub}
+                {industry.name} · {roleDisplayName(role)} · {active?.sub}
               </div>
             </div>
             <button
@@ -3662,7 +3663,7 @@ export function RoleDashboardView({
     return (
       <HeadOfCreditCardsDashboard
         industryName={industry.name}
-        roleName={role.name}
+        roleName={roleDisplayName(role)}
         industryColor={industry.color}
         onExit={onExit}
         theme={theme}
@@ -3674,7 +3675,6 @@ export function RoleDashboardView({
     return (
       <OpenbankInsightExecutiveDashboard
         industryName={industry.name}
-        roleName={role.name}
         industryColor={industry.color}
         onExit={onExit}
         theme={theme}

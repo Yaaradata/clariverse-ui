@@ -1903,7 +1903,6 @@ const OPENBANK_FALLBACK_THEME: DashboardThemeTokens = {
 
 export type OpenbankInsightExecutiveDashboardProps = {
   industryName: string;
-  roleName: string;
   industryColor: string;
   onExit: () => void;
   theme?: DashboardThemeTokens;
@@ -1914,7 +1913,6 @@ type TimeWindow = (typeof TIME_WINDOWS)[number];
 
 export function OpenbankInsightExecutiveDashboard({
   industryName: _industryName,
-  roleName,
   industryColor,
   onExit,
   theme,
@@ -1941,9 +1939,6 @@ export function OpenbankInsightExecutiveDashboard({
                 <h1 className="text-3xl font-black tracking-tight text-white md:text-5xl">
                   Openbank CX Signal Room
                 </h1>
-                <p className="mt-1 text-[11px] font-semibold tracking-wide text-zinc-500">
-                  {roleName}
-                </p>
                 <p className="mx-auto mt-2 max-w-5xl text-sm leading-relaxed text-zinc-400">
                   A daily intelligence room for customer trust: internal calls,
                   chats, emails, tickets, account activity, risk language, and

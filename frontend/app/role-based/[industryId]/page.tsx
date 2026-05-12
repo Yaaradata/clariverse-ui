@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
-import { getIndustryById } from "@/lib/role-based-dashboard/registry";
+import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
 const accent = "#5332FF";
 
@@ -114,7 +114,7 @@ export default function RoleBasedIndustryRolesPage() {
                 <Icon size={20} color={accent} />
               </div>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 4 }}>{role.name}</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 4 }}>{roleDisplayName(role)}</div>
                 <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
               </div>
               <ChevronRight size={18} color={textMut} />

@@ -1417,6 +1417,17 @@ export type Role = Industry["roles"][number];
 export type RoleDashboardData = (typeof ROLE_DATA)["ceo"];
 export type LobDataEntry = (typeof LOB_DATA)["retail_banking"];
 
+/** Display label: registry `name` when present, otherwise title-cased role id. */
+export function roleDisplayName(role: Role): string {
+  if ("name" in role && typeof role.name === "string" && role.name.length > 0) {
+    return role.name;
+  }
+  return role.id
+    .split("_")
+    .map((w) => (w.length ? w.charAt(0).toUpperCase() + w.slice(1).toLowerCase() : w))
+    .join(" ");
+}
+
 export function getIndustryById(id: string): Industry | null {
   return INDUSTRIES.find((i) => i.id === id) ?? null;
 }
