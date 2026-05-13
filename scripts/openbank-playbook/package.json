@@ -1,0 +1,11 @@
+{
+  "name": "openbank-playbook",
+  "private": true,
+  "description": "Builds OpenbankCX_DemoPlaybook.docx from build-playbook.js",
+  "scripts": {
+    "build": "node build-playbook.js"
+  },
+  "dependencies": {
+    "docx": "^9.5.1"
+  }
+}
