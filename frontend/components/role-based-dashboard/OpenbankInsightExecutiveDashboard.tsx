@@ -1,6 +1,8 @@
 "use client";
 
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import {
   createContext,
   type CSSProperties,
@@ -17,6 +19,16 @@ import {
   DashboardThemeProvider,
   type DashboardThemeTokens,
 } from "./DashboardThemeContext";
+
+/** Geometric sans in the spirit of the Openbank wordmark (medium / semi-bold, tight). */
+const openbankHeadlineFont = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
+});
+
+/** Public file is `openbank .png` (space in filename). */
+const OPENBANK_HEADER_LOGO_SRC = "/openbank%20.png";
 
 const TIME_WINDOWS = ["Today", "7 Days", "30 Days"] as const;
 type TimeWindow = (typeof TIME_WINDOWS)[number];
@@ -2335,17 +2347,11 @@ function RecoveryRoom({
       accent={color}
       className={cx(className, "flex flex-col overflow-hidden")}
     >
-      <p className={DASH_CONSTELLATION_INTRO}>
-        Recovery is measured from customer-signal movement: repeat contact, unresolved language, sentiment, reopen rate, and
-        complaint-intent phrases.{" "}
-        <span className="font-black text-zinc-500">Observed recovery signal</span> unless workflow / ticket / CRM confirms an
-        intervention.
-      </p>
 
       <div
         className={cx(
           DASH_CONSTELLATION_STACK_SCROLL,
-          compact ? "max-h-[min(82vh,600px)]" : "max-h-[min(72vh,680px)]",
+          compact ? "max-h-[min(95vh,670px)]" : "max-h-[min(72vh,680px)]",
         )}
       >
         <div className={cx(recoveryRow.className, "space-y-3")} style={recoveryRow.style}>
@@ -2860,9 +2866,24 @@ export function OpenbankInsightExecutiveDashboard({
               </button>
 
               <div className="flex min-w-0 flex-1 flex-col items-center text-center">
-                <h1 className="text-3xl font-black tracking-tight text-white md:text-5xl">
-                  Openbank CX Signal Room
-                </h1>
+                <div className="flex flex-wrap items-center justify-center gap-3 md:gap-4">
+                  <Image
+                    src={OPENBANK_HEADER_LOGO_SRC}
+                    alt="Openbank"
+                    width={220}
+                    height={56}
+                    className="h-8 w-auto max-w-[min(100%,220px)] shrink-0 object-contain object-left md:h-12"
+                    priority
+                  />
+                  <h2
+                    className={cx(
+                      openbankHeadlineFont.className,
+                      "text-xl font-semibold leading-tight tracking-tight text-white md:text-3xl",
+                    )}
+                  >
+                    CX Signal Room
+                  </h2>
+                </div>
                 <p className="mx-auto mt-2 max-w-5xl text-sm leading-relaxed text-zinc-400">
                   A daily intelligence room for customer trust: internal calls,
                   chats, emails, tickets, account activity, risk language, and
