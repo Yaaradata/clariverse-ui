@@ -1321,7 +1321,7 @@ const RISK_ALERTS: readonly RiskAlert[] = [
     routedToOwnerId: "OWN-CX01",
     status: "OPEN",
     recommendedAction:
-      "Push the 47 detected complaints to CMS as proposed SRs for Head of CX approval before EOD.",
+      "Surface the 47 detected complaints to Head of CX for CMS SR creation. Fluid does not write SR records — route via CMS complaint intake workflow.",
     boardPackInclusion: true,
     evidenceIds: ["EVD-7744", "EVD-7745"],
   },
@@ -1541,25 +1541,6 @@ const RISK_ALERTS: readonly RiskAlert[] = [
     evidenceIds: ["EVD-7756"],
   },
   {
-    alertId: "ALT-3314",
-    alertTitle: "Dark-pattern audit pending — partner workflow (OUT_OF_SCOPE)",
-    obligationId: "OBL-032",
-    themeId: "THM-04",
-    severity: "LOW",
-    signalIds: [],
-    affectedAgentIds: [],
-    affectedVendorIds: [],
-    firstObservedTs: "2026-04-01T00:00:00+05:30",
-    lastObservedTs: "2026-05-20T00:00:00+05:30",
-    occurrenceCount: 0,
-    routedToOwnerId: "OWN-AUDIT01",
-    status: "CLOSED",
-    recommendedAction:
-      "Outside Fluid CX scope — refer to Digital & Design team's quarterly audit tool.",
-    boardPackInclusion: false,
-    evidenceIds: [],
-  },
-  {
     alertId: "ALT-3315",
     alertTitle:
       "Bereavement empathy retraining cohort delivered (closure pack)",
@@ -1749,7 +1730,7 @@ type VendorBPOScore = {
   agents: number;
   conductScoreOverall: number;
   complaintRatePer10k: number;
-  benchmarkVsInhouse: "BETTER" | "PARITY" | "WORSE";
+  benchmarkVsInhouse: "BETTER" | "PARITY" | "WORSE" | "BASELINE";
   fluidCoveragePct: number;
   sampleCoveragePctLegacy: number;
   trend: readonly number[];
@@ -1799,7 +1780,7 @@ const VENDORS: readonly VendorBPOScore[] = [
     agents: 1100,
     conductScoreOverall: 81,
     complaintRatePer10k: 6.4,
-    benchmarkVsInhouse: "BETTER",
+    benchmarkVsInhouse: "BASELINE",
     fluidCoveragePct: 100,
     sampleCoveragePctLegacy: 5,
     trend: [80, 81, 81, 82, 81],
@@ -2750,6 +2731,25 @@ function SeverityBadge({
   return <Pill severity={severity}>{label}</Pill>;
 }
 
+function ObligationStatusBadge({
+  status,
+}: {
+  status: "IN_FORCE" | "DRAFT_PROPOSED";
+}) {
+  if (status === "IN_FORCE") {
+    return (
+      <span className="inline-flex items-center rounded-full border border-blue-500/60 bg-blue-900/30 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-blue-300">
+        In Force
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center rounded-full border-2 border-dashed border-amber-500/70 bg-amber-900/20 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-amber-400">
+      Draft · Proposed
+    </span>
+  );
+}
+
 function StatusBadge({
   status,
 }: {
@@ -2806,8 +2806,8 @@ function DeadlinePill({ date, label }: { date: string; label: string }) {
   let color: string = COLORS.blue;
   let body = `${days} days`;
   if (days < 0) {
-    color = COLORS.dim;
-    body = "Passed";
+    color = COLORS.red;
+    body = "In Force";
   } else if (days <= 60) {
     color = COLORS.red;
   } else if (days <= 180) {
@@ -3107,10 +3107,9 @@ function TranscriptSnippet({ signal }: { signal: InteractionSignal }) {
           ) : null}
           <button
             type="button"
-            onClick={() =>
-              alert("Recording player connects via Fluid CX integration.")
-            }
-            className="rounded-md border border-teal-500/40 bg-teal-500/15 px-2 py-0.5 font-black uppercase tracking-wide text-teal-200 hover:bg-teal-500/25"
+            disabled
+            title="Recording playback available in Fluid CX integrated mode"
+            className="cursor-not-allowed rounded-md border border-teal-500/40 bg-teal-500/15 px-2 py-0.5 font-black uppercase tracking-wide text-teal-200 opacity-50"
           >
             Play clip
           </button>
@@ -3210,7 +3209,10 @@ function VendorScorecard({ vendor }: { vendor: VendorBPOScore }) {
       ? COLORS.green
       : bm === "PARITY"
         ? COLORS.amber
-        : COLORS.red;
+        : bm === "BASELINE"
+          ? COLORS.teal
+          : COLORS.red;
+  const bmLabel = bm === "BASELINE" ? "Baseline" : `${bm.toLowerCase()} vs in-house`;
   return (
     <div className="rounded-2xl border border-white/10 bg-black/35 p-4">
       <div className="flex items-start justify-between gap-3">
@@ -3228,7 +3230,7 @@ function VendorScorecard({ vendor }: { vendor: VendorBPOScore }) {
             background: `${bmColor}14`,
           }}
         >
-          {bm.toLowerCase()} vs in-house
+          {bmLabel}
         </span>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-3">
@@ -3307,6 +3309,12 @@ function EvidenceDrawer() {
   const persona = usePersona();
   const alertId = persona.drawerAlertId;
   const alert = alertId ? ALERTS_BY_ID[alertId] : null;
+  const [ioEscalated, setIoEscalated] = useState(false);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: alertId is the intentional trigger; we want to reset the IO-escalation state whenever a different alert is opened.
+  useEffect(() => {
+    setIoEscalated(false);
+  }, [alertId]);
 
   useEffect(() => {
     if (!alert) return;
@@ -3489,6 +3497,7 @@ function EvidenceDrawer() {
               </button>
               <button
                 type="button"
+                onClick={() => setIoEscalated(true)}
                 className="rounded-lg border border-purple-400/40 bg-purple-400/15 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-purple-100 hover:bg-purple-400/25"
               >
                 Escalate to IO
@@ -3500,6 +3509,15 @@ function EvidenceDrawer() {
                 Add note
               </button>
             </div>
+            {ioEscalated ? (
+              <div className="mt-3">
+                <BoundaryNote
+                  partnerSystem="Internal Ombudsman — IO referral package created"
+                  reason="Fluid has assembled the evidence package. IO independent review and judgment (OBL-021) is a human function — Fluid provides interaction history and evidence, not the decision."
+                  displayType="HONEST_GAP_SHELF"
+                />
+              </div>
+            ) : null}
           </section>
         </div>
       </aside>
@@ -3512,6 +3530,7 @@ function EvidenceDrawer() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function HorizonBand() {
+  const persona = usePersona();
   return (
     <div
       className="overflow-hidden rounded-2xl border bg-[#0d0d0d]"
@@ -3533,16 +3552,29 @@ function HorizonBand() {
           const d = daysUntil(m.isoDate);
           const color =
             d < 0
-              ? COLORS.dim
+              ? COLORS.red
               : d <= 60
                 ? COLORS.red
                 : d <= 180
                   ? COLORS.amber
                   : COLORS.blue;
+          const statusLabel = d < 0 ? "In Force · Effective" : `${d}d`;
           return (
-            <div
+            <button
+              type="button"
               key={m.isoDate}
-              className="min-w-[180px] shrink-0 rounded-xl border bg-black/35 p-3"
+              onClick={() => {
+                const oblId = m.linkedObligationIds[0] ?? null;
+                if (oblId) {
+                  persona.navigate("S3", oblId);
+                } else {
+                  persona.navigate("S11");
+                }
+              }}
+              title={`${m.label} — effective ${m.isoDate}${
+                d < 0 ? " — obligation is in force" : ""
+              }`}
+              className="min-w-[180px] shrink-0 cursor-pointer rounded-xl border bg-black/35 p-3 text-left transition-colors hover:bg-black/55 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400/60"
               style={{ borderColor: `${color}55` }}
             >
               <div className="flex items-center justify-between gap-2">
@@ -3550,7 +3582,7 @@ function HorizonBand() {
                   className="text-[9px] font-black uppercase tracking-[0.14em]"
                   style={{ color }}
                 >
-                  {d < 0 ? "Passed" : `${d}d`}
+                  {statusLabel}
                 </span>
                 <span className="text-[10px] font-bold text-zinc-500">
                   {new Date(m.isoDate).toLocaleDateString("en-IN", {
@@ -3566,11 +3598,31 @@ function HorizonBand() {
               <p className="mt-1 text-[10px] font-bold text-zinc-500">
                 {m.linkedObligationIds.length} linked obligations
               </p>
-            </div>
+            </button>
           );
         })}
       </div>
     </div>
+  );
+}
+
+const PERSONA_OWNER_MAP: Record<PersonaId, readonly string[]> = {
+  L1: ["OWN-AUDIT01"],
+  L2: ["OWN-CUST01", "OWN-SALES01"],
+  L3: ["OWN-CX01"],
+  L4: ["OWN-COLL01", "OWN-OUTS01", "OWN-CCR01"],
+  L5: ["OWN-IO01"],
+};
+
+function getPersonaAlerts(
+  personaId: PersonaId,
+  alerts: readonly RiskAlert[],
+  statuses: ReadonlyArray<RiskAlert["status"]>,
+): RiskAlert[] {
+  const ownerIds = PERSONA_OWNER_MAP[personaId] ?? [];
+  return alerts.filter(
+    (a) =>
+      statuses.includes(a.status) && ownerIds.includes(a.routedToOwnerId),
   );
 }
 
@@ -3594,7 +3646,11 @@ function S0Landing() {
     (v) => v.vendorId !== "VEN-INHOUSE" && v.conductScoreOverall < 75,
   ).length;
 
-  const myQueue = RISK_ALERTS.filter((a) => a.status === "OPEN")
+  const myQueue = getPersonaAlerts(persona.activePersonaId, RISK_ALERTS, [
+    "OPEN",
+    "IN_REVIEW",
+    "ESCALATED_TO_IO",
+  ])
     .sort((x, y) => {
       const order = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 } as const;
       return order[x.severity] - order[y.severity];
@@ -3757,7 +3813,9 @@ function S0Landing() {
                   <button
                     key={t.themeId}
                     type="button"
-                    onClick={() => persona.navigate("S2")}
+                    onClick={() =>
+                      persona.navigate(THEME_SCREEN_MAP[t.themeId] ?? "S2")
+                    }
                     className="rounded-xl border border-white/10 bg-black/35 p-3 text-left transition hover:border-white/25"
                   >
                     <div className="flex items-center justify-between gap-2">
@@ -3808,21 +3866,27 @@ function S1Worklist() {
   }));
 
   const filtered = useMemo(() => {
-    return RISK_ALERTS.filter(
-      (a) =>
-        filters.severities.has(a.severity) &&
-        filters.statuses.has(a.status) &&
-        filters.themeIds.has(a.themeId),
-    ).sort((x, y) => {
-      const order = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 } as const;
-      const sev = order[x.severity] - order[y.severity];
-      if (sev !== 0) return sev;
-      return (
-        new Date(x.firstObservedTs).getTime() -
-        new Date(y.firstObservedTs).getTime()
-      );
-    });
-  }, [filters]);
+    const personaFiltered = getPersonaAlerts(
+      persona.activePersonaId,
+      RISK_ALERTS,
+      Array.from(filters.statuses),
+    );
+    return personaFiltered
+      .filter(
+        (a) =>
+          filters.severities.has(a.severity) &&
+          filters.themeIds.has(a.themeId),
+      )
+      .sort((x, y) => {
+        const order = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 } as const;
+        const sev = order[x.severity] - order[y.severity];
+        if (sev !== 0) return sev;
+        return (
+          new Date(x.firstObservedTs).getTime() -
+          new Date(y.firstObservedTs).getTime()
+        );
+      });
+  }, [filters, persona.activePersonaId]);
 
   function toggleSet<T>(s: Set<T>, value: T): Set<T> {
     const next = new Set(s);
@@ -4041,6 +4105,17 @@ function S1Worklist() {
 //  SCREEN: S2 — CONDUCT THEMES INDEX
 // ─────────────────────────────────────────────────────────────────────────────
 
+const THEME_SCREEN_MAP: Record<string, ScreenKey> = {
+  "THM-01": "S4",
+  "THM-02": "S5",
+  "THM-03": "S6",
+  "THM-04": "S4",
+  "THM-05": "S6",
+  "THM-06": "S10",
+  "THM-07": "S3",
+  "THM-08": "S9",
+};
+
 function S2ThemesIndex() {
   const persona = usePersona();
   const [drilledTheme, setDrilledTheme] = useState<string | null>(null);
@@ -4145,13 +4220,7 @@ function S2ThemesIndex() {
                   <p className="line-clamp-2 text-[12px] font-bold text-zinc-200">
                     {o.statement}
                   </p>
-                  <Pill
-                    severity={
-                      o.status === "IN_FORCE" ? "IN_FORCE" : "DRAFT_PROPOSED"
-                    }
-                  >
-                    {o.status === "IN_FORCE" ? "In force" : "Draft · proposed"}
-                  </Pill>
+                  <ObligationStatusBadge status={o.status} />
                   <ComplianceLabelBadge buildTier={o.buildTier} />
                   <span className="text-[12px] font-black tabular-nums text-white">
                     {fmt(o.exceptionCount)}
@@ -4263,7 +4332,7 @@ function HorizonTimeline() {
           const d = daysUntil(m.isoDate);
           const color =
             d < 0
-              ? COLORS.dim
+              ? COLORS.red
               : d <= 60
                 ? COLORS.red
                 : d <= 180
@@ -4280,7 +4349,7 @@ function HorizonTimeline() {
                     className="text-[9px] font-black uppercase tracking-[0.14em]"
                     style={{ color }}
                   >
-                    {d < 0 ? "Passed" : `${d}d remaining`}
+                    {d < 0 ? "In Force · Effective" : `${d}d remaining`}
                   </span>
                   <span className="text-[10px] font-semibold text-zinc-500">
                     {new Date(m.isoDate).toLocaleDateString("en-IN", {
@@ -4351,6 +4420,13 @@ function S3ObligationDetail() {
                 </option>
               ))}
             </select>
+            <ObligationStatusBadge
+              status={
+                obligation.status === "DRAFT_PROPOSED"
+                  ? "DRAFT_PROPOSED"
+                  : "IN_FORCE"
+              }
+            />
             <ComplianceLabelBadge buildTier={obligation.buildTier} />
             <DeadlinePill date={obligation.effectiveDate} label="Effective" />
           </div>
@@ -4546,11 +4622,11 @@ function S4MissedComplaint() {
           icon={Activity}
         />
         <KPICard
-          label="Force-create SR (S4 stub)"
-          value="Disabled"
-          delta="SR creation is managed by your CMS"
-          severity="neutral"
-          icon={Lock}
+          label="Complaint-to-SR gap rate"
+          value="12%"
+          delta="47 complaints detected, no CMS SR created"
+          severity="red"
+          icon={AlertTriangle}
         />
       </div>
 
@@ -4562,18 +4638,19 @@ function S4MissedComplaint() {
             accent={COLORS.red}
           >
             <div className="overflow-hidden rounded-xl border border-white/10">
-              <div className="grid grid-cols-[80px_minmax(0,1fr)_90px_110px_120px] gap-2 border-b border-white/10 bg-black/40 px-3 py-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">
+              <div className="grid grid-cols-[80px_minmax(0,1fr)_90px_110px_120px_120px] gap-2 border-b border-white/10 bg-black/40 px-3 py-2 text-[10px] font-black uppercase tracking-wide text-zinc-500">
                 <span>Severity</span>
                 <span>Complaint phrase</span>
                 <span>Channel</span>
                 <span>Product</span>
                 <span>CMS SR</span>
+                <span>Action</span>
               </div>
               <div className="divide-y divide-white/5">
                 {COMPLAINT_SIGNALS.map((c) => (
                   <div
                     key={c.id}
-                    className="grid grid-cols-[80px_minmax(0,1fr)_90px_110px_120px] items-center gap-2 px-3 py-2.5"
+                    className="grid grid-cols-[80px_minmax(0,1fr)_90px_110px_120px_120px] items-center gap-2 px-3 py-2.5"
                   >
                     <SeverityBadge severity={c.severity} />
                     <p className="truncate text-[12px] font-bold text-zinc-200">
@@ -4592,8 +4669,23 @@ function S4MissedComplaint() {
                         {c.srId}
                       </span>
                     )}
+                    <button
+                      type="button"
+                      disabled
+                      title="SR creation is managed by your CMS. Fluid feeds discovered complaints to CMS."
+                      className="inline-flex cursor-not-allowed items-center gap-1 rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-zinc-500"
+                    >
+                      <Lock className="size-2.5" aria-hidden /> Force-create SR
+                    </button>
                   </div>
                 ))}
+              </div>
+              <div className="border-t border-white/10 px-3 py-2.5">
+                <BoundaryNote
+                  partnerSystem="TCS BaNCS CMS — SR creation owner"
+                  reason="SR creation is managed by your CMS. Fluid surfaces detected complaints for CMS to action. Fluid does not write SR records."
+                  displayType="DO_NOT_BUILD_BANNER"
+                />
               </div>
             </div>
           </ShellCard>
@@ -5208,6 +5300,7 @@ function S6Vulnerable() {
 // ─────────────────────────────────────────────────────────────────────────────
 
 function S7Vendor() {
+  const [attestationToast, setAttestationToast] = useState(false);
   const compareChart = VENDORS.map((v) => ({
     name: v.vendorName.split(" ").slice(0, 2).join(" "),
     score: v.conductScoreOverall,
@@ -5254,16 +5347,21 @@ function S7Vendor() {
             subtitle="Coverage = 100% via Fluid CX · Outsourcing Directions (REG-004) compliant"
             accent={COLORS.teal}
             actions={
-              <button
-                type="button"
-                onClick={() =>
-                  alert("Attestation pack generation queued — Fluid CX API.")
-                }
-                className="inline-flex items-center gap-1 rounded-lg border border-teal-500/50 bg-teal-500/15 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-teal-100 hover:bg-teal-500/25"
-              >
-                <FileText className="size-3" aria-hidden /> Generate attestation
-                pack
-              </button>
+              <div className="flex items-center gap-2">
+                {attestationToast ? (
+                  <span className="rounded-md border border-teal-500/40 bg-teal-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-teal-200">
+                    Attestation pack preview generated
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setAttestationToast(true)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-teal-500/50 bg-teal-500/15 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-teal-100 hover:bg-teal-500/25"
+                >
+                  <FileText className="size-3" aria-hidden /> Generate
+                  attestation pack
+                </button>
+              </div>
             }
           >
             <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -5343,6 +5441,7 @@ function S7Vendor() {
 
 function S8RCA() {
   const persona = usePersona();
+  const [cscbToast, setCscbToast] = useState(false);
   const treemapData = RCA_CLUSTERS.map((c) => ({
     name: c.clusterTheme,
     size: c.volume,
@@ -5404,26 +5503,16 @@ function S8RCA() {
                   dataKey="size"
                   stroke={COLORS.border2}
                   fill={COLORS.indigo}
-                  content={(props: unknown) => {
-                    const p = (props ?? {}) as {
-                      x?: number;
-                      y?: number;
-                      width?: number;
-                      height?: number;
-                      name?: string;
-                      size?: number;
-                      value?: number;
-                      depth?: number;
-                      root?: unknown;
-                      payload?: { severity?: number; size?: number; name?: string };
-                    };
+                  // biome-ignore lint/suspicious/noExplicitAny: Recharts Treemap ContentProps shape is not exported in our pinned version; runtime fields used below are well-known and guarded.
+                  content={(props: any) => {
+                    const p = props ?? {};
                     const x = p.x ?? 0;
                     const y = p.y ?? 0;
                     const width = p.width ?? 0;
                     const height = p.height ?? 0;
                     // Recharts renders the root + any parent containers in addition to leaves.
-                    // Only draw leaf cells (depth >= 1) that have a usable size.
-                    const isLeaf = (p.depth ?? 0) >= 1;
+                    // Use children to identify leaves — leaves never have a children array.
+                    const isLeaf = !p.children || p.children.length === 0;
                     if (!isLeaf || width <= 0 || height <= 0) {
                       return <g />;
                     }
@@ -5490,15 +5579,20 @@ function S8RCA() {
             subtitle="Sortable by severity · board-pack inclusion toggle"
             accent={COLORS.amber}
             actions={
-              <button
-                type="button"
-                onClick={() =>
-                  alert("CSCB board-pack export queued — Fluid CX API.")
-                }
-                className="inline-flex items-center gap-1 rounded-lg border border-amber-500/50 bg-amber-500/15 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-amber-100 hover:bg-amber-500/25"
-              >
-                <Download className="size-3" aria-hidden /> Export CSCB pack
-              </button>
+              <div className="flex items-center gap-2">
+                {cscbToast ? (
+                  <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-black uppercase tracking-wide text-amber-200">
+                    Board pack preview generated — download PDF below
+                  </span>
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => setCscbToast(true)}
+                  className="inline-flex items-center gap-1 rounded-lg border border-amber-500/50 bg-amber-500/15 px-2.5 py-1 text-[10px] font-black uppercase tracking-wide text-amber-100 hover:bg-amber-500/25"
+                >
+                  <Download className="size-3" aria-hidden /> Export CSCB pack
+                </button>
+              </div>
             }
           >
             <div className="space-y-2.5">
