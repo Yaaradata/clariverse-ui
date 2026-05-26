@@ -1,0 +1,367 @@
+# Fluid CX — RBI Conduct Intelligence: Dashboard Use-Case Map
+
+Sixteen dashboard use cases, each built on the spine **Regulation → Obligation → Signal → Owner → Evidence → Action**. Use cases are grouped by build tier. Persona priority and Do-Not-Build list close the document.
+
+---
+
+## MAIN FLUID CX FEATURES (interaction monitoring is the principal control)
+
+### UC-01. Missed-Complaint Detector
+
+1. **Use-case name:** Missed-Complaint Detector (complaints in conversations that never reached CMS)
+2. **RBI regulation:** RBI (Commercial Banks – IO) Directions, 2026 (RBI/CEPD/2025-26/381); RB-IOS 2026 (Press Release 2025-2026/1936, effective 1 July 2026)
+3. **Obligation ID(s):** OBL-020
+4. **Conduct theme:** Grievance Handling Conduct
+5. **Interaction surface:** Inbound service call, chat, email, social, ticket
+6. **Detected signal:** Dissatisfaction language, explicit escalation requests, repeat-contact patterns, complaint markers with no corresponding SR created in CMS within 24 hours
+7. **Business risk:** Customer complaint surfaces at RB-IOS instead of internal CMS; ₹30 lakh consequential-loss exposure under new cap. *Failure-mode example:* Customer expresses clear grievance on service call → agent treats as enquiry → no SR → customer escalates to RB-IOS three weeks later → bank caught flat-footed.
+8. **Owner:** Head of Customer Service (1LoD); Principal Nodal Officer + Internal Ombudsman (2LoD)
+9. **Evidence needed:** Conversation excerpt with complaint markers, channel of origin, customer identifier, CMS-gap reconciliation log (was an SR created? when?), agent disposition
+10. **Recommended action:** Route to CMS as discovered complaint with pre-categorised severity; alert Customer Service supervisor on high-severity missed complaints; daily CMS-gap dashboard for Principal Nodal Officer
+11. **Build tier:** Main Fluid CX feature
+
+### UC-02. Recovery Conduct Monitor
+
+1. **Use-case name:** Recovery Conduct Monitor (threat, harassment, shaming, tone)
+2. **RBI regulation:** RBC Directions 2025 (RBI/DOR/2025-26/170); Draft uniform recovery framework (12 Feb 2026, revised mid-May 2026, proposed 1 July 2026)
+3. **Obligation ID(s):** OBL-010
+4. **Conduct theme:** Collections & Recovery Conduct
+5. **Interaction surface:** Outbound collections call (in-house and vendor)
+6. **Detected signal:** Profanity, threat language ("we will come to your house", "we will tell your office"), public-shaming patterns, raised tone, harassment sequences (repeat-call escalation), customer-distress markers, agent-side intimidation
+7. **Business risk:** Reputational and regulatory exposure; harassment complaint upheld at RB-IOS with consequential-loss compensation; media incident if a single severe case goes public. *Failure-mode example:* Agent repeatedly threatens borrower; family member is a journalist; story breaks; supervisory action follows.
+8. **Owner:** Head of Collections (1LoD, in-house and vendor); Conduct Risk Head (2LoD); HR consequence-management uses Fluid signal as primary evidence
+9. **Evidence needed:** Full call audio with severity-tagged segments, agent ID, vendor ID, recovery bucket, customer-distress overlay, repeat-occurrence count
+10. **Recommended action:** Real-time severe-exception alert to Head of Collections + HR; daily conduct exception dashboard; weekly harassment-pattern report; agent-level retraining queue; vendor-level scorecard input
+11. **Build tier:** Main Fluid CX feature
+
+### UC-03. Borrower-Distress Identifier
+
+1. **Use-case name:** Borrower-Distress Identifier (early-bucket engagement vs dismissal)
+2. **RBI regulation:** Draft RBI (NBFCs / Commercial Banks – RBC) Second Amendment Directions, 2026 (12 Feb 2026; revised mid-May 2026; proposed 1 July 2026). **Draft, not yet binding.**
+3. **Obligation ID(s):** OBL-011
+4. **Conduct theme:** Vulnerable Customer Protection (with Collections overlap)
+5. **Interaction surface:** Early-bucket collections call (DPD 1–30); pre-NPA call; hardship discussion call
+6. **Detected signal:** Customer distress language ("I lost my job", "medical emergency", "my husband died"), emotional escalation, financial-hardship statements; paired with agent response — engagement with hardship pathway vs dismissal
+7. **Business risk:** Distressed borrowers harassed instead of engaged; NPA flow increases; mandatory mechanism deemed absent at supervisory review. *Failure-mode example:* Customer mentions job loss; agent demands payment anyway; borrower defaults; later complaint cites the call as evidence the bank ignored distress.
+8. **Owner:** Head of Collections (engagement execution, 1LoD); Hardship/Restructuring Desk Lead (pathway execution); Conduct Risk Head + Credit Risk (2LoD)
+9. **Evidence needed:** Distress-marker timestamps within call, agent response classification (engaged / dismissed / silent), CRM disposition code, downstream hardship-desk handoff status
+10. **Recommended action:** Real-time distress alert routed to Hardship Desk; weekly distress-engagement coverage report; agent coaching queue for repeated dismissals
+11. **Build tier:** Main Fluid CX feature
+
+### UC-04. Cross-Sell Consent & Bundling Detector
+
+1. **Use-case name:** Cross-Sell Consent & Compulsory-Bundling Detector
+2. **RBI regulation:** RBC Amendment Directions 2025 para 86A (RBI/2025-26/103, 4 Dec 2025; effective 1 April 2026); Draft RBI (Commercial Banks – RBC) Amendment Directions, 2026 (11 Feb 2026)
+3. **Obligation ID(s):** OBL-002
+4. **Conduct theme:** Sales & Suitability Conduct
+5. **Interaction surface:** Outbound cross-sell call, inbound service-to-sell upgrade, branch product enquiry call (branch leg dependent on branch recording)
+6. **Detected signal:** Bundling language ("this comes with", "you must also take"), conditional framing ("you can't get this account without"), buried-consent patterns, customer-objection overrides, "negative consent" wording on add-on products
+7. **Business risk:** Bundling-driven mis-selling complaint to RB-IOS; supervisory finding on consent extraction. *Failure-mode example:* Customer opens savings account; told they "must" take credit card and ULIP; complaint six months later; refund + reputational exposure.
+8. **Owner:** Head of Contact Centre Operations (CC leg) + Head of Branch Banking (branch leg, 1LoD); Conduct Risk Head (2LoD)
+9. **Evidence needed:** Conversation segments showing bundling/conditional language, CRM consent flag reconciliation, campaign ID, agent ID, customer-objection trail
+10. **Recommended action:** Real-time alert on severe bundling cases; daily exception dashboard; weekly campaign-level bundling-pattern report; agent and campaign disposition queue
+11. **Build tier:** Main Fluid CX feature
+
+### UC-05. Outbound Script Adherence Monitor
+
+1. **Use-case name:** Outbound Sales Script Adherence Monitor
+2. **RBI regulation:** Draft RBI (Commercial Banks – RBC) Amendment Directions, 2026 (11 Feb 2026, proposed Section F); anti-mis-selling provisions of RBC Directions 2025 [INFERRED — see open legal question]
+3. **Obligation ID(s):** OBL-004
+4. **Conduct theme:** Sales & Suitability Conduct
+5. **Interaction surface:** Outbound telesales call (in-house and outsourced)
+6. **Detected signal:** Script deviation from approved campaign content; off-script claims about returns, benefits or risks; missing mandatory disclosures; unapproved promotional language
+7. **Business risk:** Campaign-wide mis-selling exposure; multiple complaints traceable to specific agents or vendors. *Failure-mode example:* Campaign approved with cautious claims; 30% of agents over-promise on calls; complaints spike; pre-issuance review's value is undermined.
+8. **Owner:** Head of Contact Centre Operations (in-house) + Vendor Governance Head (outsourced, 1LoD); Conduct Risk Head + Compliance pre-issuance reviewers (2LoD)
+9. **Evidence needed:** Approved-script library, per-call deviation taxonomy, agent/team/vendor/campaign segmentation, complaint correlation
+10. **Recommended action:** Real-time severe-deviation alert; daily deviation dashboard; weekly campaign-deviation report; agent retraining queue; vendor scorecard input
+11. **Build tier:** Main Fluid CX feature
+
+### UC-06. Graduated-Escalation Reconstruction
+
+1. **Use-case name:** Pre-Legal Graduated-Escalation Reconstruction (Legal Not as First Resort)
+2. **RBI regulation:** Draft RBI Second Amendment Directions 2026 (12 Feb 2026; revised mid-May 2026; proposed 1 July 2026)
+3. **Obligation ID(s):** OBL-012
+4. **Conduct theme:** Collections & Recovery Conduct
+5. **Interaction surface:** Multi-channel sequence — outbound calls, SMS, written notices, settlement offers
+6. **Detected signal:** Sequence of interactions per borrower across channels; presence/absence of settlement-discussion language before legal-action mention; gaps in the escalation ladder
+7. **Business risk:** SARFAESI proceeding challenged on procedural grounds; legal-action defensibility breaks. *Failure-mode example:* SARFAESI possession quashed because the bank cannot demonstrate that settlement was attempted before legal escalation.
+8. **Owner:** Head of Collections (operates pre-legal trail, 1LoD); Legal team (initiates and warrants action, 1LoD); Conduct Risk Head (2LoD)
+9. **Evidence needed:** Per-borrower interaction journey reconstruction, settlement-discussion phrase audit, escalation-sequence chronology, gap analysis vs policy
+10. **Recommended action:** On-trigger pre-legal case-file package for Legal review; monthly escalation-gap report; per-borrower defensibility flag before SARFAESI initiation
+11. **Build tier:** Main Fluid CX feature
+
+### UC-07. Quarterly RCA & Top-5 Grounds Engine
+
+1. **Use-case name:** Quarterly Root-Cause-Analysis Engine + Annual Top-5 Grounds Categorisation
+2. **RBI regulation:** RBI (Commercial Banks – IO) Directions, 2026 (RBI/CEPD/2025-26/381); RBC Directions 2025 (RCA and top-5 grounds disclosure consolidated)
+3. **Obligation ID(s):** OBL-023, OBL-024 (one engine, two outputs)
+4. **Conduct theme:** Grievance Handling Conduct
+5. **Interaction surface:** All channels (cross-channel complaint volume)
+6. **Detected signal:** Root-cause clusters across interactions; systemic patterns by agent, branch, region, product, campaign; emerging conduct issues before they reach material complaint volume; CMS-label mis-categorisation
+7. **Business risk:** Board pack misses an emerging conduct issue; auditor finds categorisation inconsistent; annual top-5 grounds disclosure not regulator-defensible. *Failure-mode example:* Pattern grows for 6 months before Board sees it; supervisor identifies the same pattern first.
+8. **Owner:** Head of Customer Service + Internal Ombudsman (1LoD pack operator); CRO and Customer Service Committee of the Board (governance); Internal Audit reviews methodology
+9. **Evidence needed:** Categorisation taxonomy with methodology, cluster heatmaps by dimension, year-on-year movement, sample-call evidence per cluster, CMS-label reconciliation
+10. **Recommended action:** Quarterly CSCB pack auto-generated with cluster surfacing and remedial-action prompts; monthly preview to Conduct Risk; annual top-5 grounds disclosure pack with audit-trail
+11. **Build tier:** Main Fluid CX feature
+
+### UC-08. Bereaved-Customer Empathy Monitor
+
+1. **Use-case name:** Bereaved-Customer / Deceased-Claim Empathy Monitor
+2. **RBI regulation:** RBI (Settlement of Claims in respect of Deceased Customers of Banks) Directions, 2025 (RBI/2025-26/82, 26 Sept 2025; compliance no later than 31 March 2026)
+3. **Obligation ID(s):** OBL-027
+4. **Conduct theme:** Vulnerable Customer Protection
+5. **Interaction surface:** Deceased-claim inbound call; branch visit (branch-dependent); status-update outbound call
+6. **Detected signal:** Agent empathy markers; tone trajectory through call; documentation-clarity in guidance; customer-distress signals; repeat-contact patterns indicating poor first handling; bureaucratic-handling markers
+7. **Business risk:** Highest reputational-risk vulnerable journey in the bank; harassment/insensitivity complaint to RB-IOS. *Failure-mode example:* Bereaved spouse handled by general queue with bureaucratic tone; complaint cites the call as harassment.
+8. **Owner:** Head of Customer Service (CC leg) + Head of Branch Banking (branch leg, 1LoD); Principal Nodal Officer + Internal Ombudsman (2LoD)
+9. **Evidence needed:** Empathy/tone scoring per call, agent disposition, repeat-contact trail per claim, documentation-clarity scoring, settlement-status correlation
+10. **Recommended action:** Real-time empathy-failure exception alert to Customer Service; specialised-desk routing recommendation; weekly bereaved-customer handling quality report
+11. **Build tier:** Main Fluid CX feature
+
+### UC-09. MSE Borrower-Protection Monitor
+
+1. **Use-case name:** MSE Borrower Protection Monitor (origination + recovery)
+2. **RBI regulation:** RBC Directions 2025 (RBI/DOR/2025-26/170) MSE chapter; NBFC RBC Directions 2025 (RBI/DOR/2025-26/362)
+3. **Obligation ID(s):** OBL-028
+4. **Conduct theme:** Vulnerable Customer Protection
+5. **Interaction surface:** SME / MSE origination call; SME servicing and recovery call
+6. **Detected signal:** Comprehension-check presence in disclosure; vulnerable-indicator signals (low-literacy, distress, first-time borrower markers); coercive recovery language directed at MSE borrowers; simplified-disclosure adherence
+7. **Business risk:** MSE borrower treated like defaulting retail customer; complaint; regulatory finding on enhanced-conduct violation. *Failure-mode example:* MSE borrower in distress receives coercive recovery; supervisor flags inadequate MSE conduct overlay.
+8. **Owner:** Head of SME / Business Banking + Head of Collections SME (1LoD); Conduct Risk Head + Credit Risk on MSE classification (2LoD)
+9. **Evidence needed:** Comprehension-probe coverage in MSE calls, vulnerable-indicator overlay, recovery-conduct scoring on MSE segment, CRM MSE-classification reconciliation
+10. **Recommended action:** Weekly MSE-conduct coverage report; agent retraining queue for MSE-specific scripts; recovery-script audit for MSE segment
+11. **Build tier:** Main Fluid CX feature
+
+### UC-10. Vendor Governance Scorecard
+
+1. **Use-case name:** BPO / Contact-Centre Vendor Governance Scorecard
+2. **RBI regulation:** RBI (Commercial Banks – Managing Risks in Outsourcing) Directions, 2025 (RBI/DOR/2025-26/171, 28 Nov 2025); NBFC equivalent (/363); IT-outsourcing contract compliance deadline 10 April 2026
+3. **Obligation ID(s):** OBL-037
+4. **Conduct theme:** Third-Party & Outsourcing Conduct
+5. **Interaction surface:** All outsourced-agent interactions across voice, chat, email
+6. **Detected signal:** Vendor-segmented conduct signals across every monitored obligation — tone, threats, script adherence, complaint capture, suitability, distress engagement — at vendor-agent-level granularity; vendor-vs-in-house benchmarking
+7. **Business risk:** Bank remains accountable for outsourced grievance redressal; sampling-based vendor QA does not survive supervisory examination. *Failure-mode example:* Vendor agent harasses customer; complaint trail leads to bank; bank cannot demonstrate vendor oversight beyond sampling.
+8. **Owner:** Vendor Governance Head + Head of Contact Centre Operations (1LoD); Conduct Risk Head + Outsourcing Compliance owner (2LoD)
+9. **Evidence needed:** Vendor-level conduct scorecard across all monitored signals, vendor-vs-in-house benchmarking, complaint volume by vendor, data-handling pattern audit, attestation pack
+10. **Recommended action:** Weekly vendor scorecard with severity-tagged exceptions; monthly governance review pack; quarterly board feed; vendor consequence-management queue
+11. **Build tier:** Main Fluid CX feature
+
+### UC-11. Digital-Lending Cooling-Off Disclosure Monitor
+
+1. **Use-case name:** Digital-Lending Cooling-Off Period Disclosure Monitor
+2. **RBI regulation:** RBI Digital Lending Directions, 2025 (RBI/2025-26/36, 8 May 2025)
+3. **Obligation ID(s):** OBL-017
+4. **Conduct theme:** Disclosure & Transparency Conduct
+5. **Interaction surface:** Post-disbursement welcome call; exit-request inbound call
+6. **Detected signal:** Cooling-off announcement presence in welcome call; exit-request handling quality on inbound calls; agent attempts to dissuade exit; refund-discussion clarity
+7. **Business risk:** Complaint that cooling-off was not announced; supervisory observation on digital-lending conduct. *Failure-mode example:* Borrower attempts to exit; agent dissuades through inappropriate pressure; complaint cites cooling-off violation.
+8. **Owner:** Head of Digital Lending + Head of Contact Centre Operations (1LoD); Conduct Risk Head + Principal Nodal Officer (2LoD)
+9. **Evidence needed:** Cooling-off announcement adherence per welcome call, exit-handling quality scoring, refund-issued correlation, CRM exit-flag audit
+10. **Recommended action:** Daily cooling-off adherence dashboard; agent-level non-adherence queue; exit-handling quality review for repeat-offender agents
+11. **Build tier:** Main Fluid CX feature
+
+### UC-12. Pre-Payment-Charge Prohibition Detector
+
+1. **Use-case name:** Pre-Payment-Charge Prohibition Detector (Floating-Rate Loans, Individuals)
+2. **RBI regulation:** RBC Directions 2025 — pre-payment provisions on floating-rate loans to individuals
+3. **Obligation ID(s):** OBL-019
+4. **Conduct theme:** Disclosure & Transparency Conduct
+5. **Interaction surface:** Foreclosure request call; inbound query on charges
+6. **Detected signal:** Pre-payment charge quoted to a customer entitled to none; legacy-script language inappropriately used; customer-dispute markers post-quote
+7. **Business risk:** Inappropriate charge collected; refund + complaint; pattern indicates training/script gap. *Failure-mode example:* Agent quotes pre-payment charge to a floating-rate individual borrower; customer pays out of confusion; later complaint and refund.
+8. **Owner:** Head of Retail Assets (Foreclosure Operations, 1LoD); Conduct Risk Head + Product team on charge structure (2LoD)
+9. **Evidence needed:** Banned-quote logs per call, agent-level frequency, dispute-correlation, customer segment validation
+10. **Recommended action:** Real-time alert on banned quote; daily exception dashboard; agent-level retraining queue
+11. **Build tier:** Main Fluid CX feature
+
+---
+
+## FEATURES WITH INTEGRATION DEPENDENCY (Fluid is named co-control; partner system holds factual decision or workflow)
+
+### UC-13. Suitability-Conversation-vs-CRM Reconciliation
+
+1. **Use-case name:** Suitability Execution Monitor (third-party financial products)
+2. **RBI regulation:** Draft RBI (Commercial Banks – RBC) Amendment Directions, 2026 (11 Feb 2026, proposed Section F); IRDAI Insurance Fraud Monitoring Framework Guidelines (effective 1 April 2026, bancassurance)
+3. **Obligation ID(s):** OBL-001
+4. **Conduct theme:** Sales & Suitability Conduct
+5. **Interaction surface:** Bancassurance and wealth advisory outbound sales call
+6. **Detected signal:** Absence of mandatory suitability probes; pressure language; sale proceeding despite customer expressing risk-aversion; "appropriate for you" claims without supporting probes
+7. **Business risk:** Mis-sold ULIP / structured product to unsuitable customer; complaint 12–18 months later upheld at RB-IOS. *Failure-mode example:* 70-year-old sold equity-linked product; CRM shows compliant suitability score, but the call never actually went through the questions.
+8. **Owner:** Head of Wealth & Bancassurance (1LoD); Conduct Risk Head + Product team on CRM suitability rules (2LoD)
+9. **Evidence needed:** Suitability-probe coverage per call, CRM suitability-classification reconciliation, agent-level coverage trend
+10. **Recommended action:** Weekly suitability-coverage report; CRM-vs-conversation gap dashboard; agent retraining queue
+11. **Integration dependency:** CRM suitability questionnaire system holds factual classification
+12. **Build tier:** Feature with integration dependency
+
+### UC-14. KFS Conversation-Delivery Monitor
+
+1. **Use-case name:** KFS-in-Conversation Delivery Monitor (APR, charges, recovery agent contact, grievance redressal)
+2. **RBI regulation:** RBC Directions 2025 (responsible lending chapter); Digital Lending Directions 2025; KFS Circular 15 April 2024
+3. **Obligation ID(s):** OBL-015
+4. **Conduct theme:** Disclosure & Transparency Conduct
+5. **Interaction surface:** Loan origination call (KFS read-out or post-delivery call); contact-centre query call
+6. **Detected signal:** Presence/absence of KFS read-out in sales call; APR disclosure language; comprehension probes by agent; customer confusion markers ("what does this mean", "I don't understand"); language preference mismatch
+7. **Business risk:** Customer claims they were never told about a disclosed fee; complaint upheld despite signed acknowledgement. *Failure-mode example:* Ombudsman discounts signed acknowledgement because the call shows no read-out occurred.
+8. **Owner:** Head of Retail Assets (1LoD); Conduct Risk Head + Legal/Product on KFS template (2LoD)
+9. **Evidence needed:** KFS-disclosure-presence per call, comprehension-probe coverage, customer-confusion overlay, agent and product segmentation
+10. **Recommended action:** Weekly KFS read-out adherence report; agent coaching queue for low-coverage agents; product-level disclosure gap analysis
+11. **Integration dependency:** Document delivery system holds KFS content; Product team validates template
+12. **Build tier:** Feature with integration dependency
+
+### UC-15. Recovery Call Disclaimer + Time-Window Audit
+
+1. **Use-case name:** Recovery Call Disclaimer & Time-Window Compliance Audit
+2. **RBI regulation:** Draft RBI Second Amendment Directions 2026 (12 Feb 2026; revised mid-May 2026; proposed 1 July 2026)
+3. **Obligation ID(s):** OBL-007 + OBL-008 + OBL-009 (combined into one disclaimer-and-opening audit)
+4. **Conduct theme:** Collections & Recovery Conduct
+5. **Interaction surface:** Outbound collections call (first 30 seconds + metadata)
+6. **Detected signal:** Disclaimer announcement presence at call start; agent identification + authorisation reference; non-borrower-contact language ("I am his neighbour", "this is his wife"); time-of-call metadata
+7. **Business risk:** Borrower complaint that call was recorded without intimation; non-borrower disclosure to third parties. *Failure-mode example:* Recovery agent calls borrower's neighbour, discloses default details; neighbour complains; compensation + observation.
+8. **Owner:** Head of Collections (in-house and vendor, 1LoD); Conduct Risk Head + Recovery Vendor Governance (2LoD)
+9. **Evidence needed:** First-30-seconds adherence score per call, identification-element coverage, non-borrower-contact flags, time-window reconciliation, HR/vendor training-certificate registry cross-reference
+10. **Recommended action:** Daily adherence dashboard; real-time alert on non-borrower contact; agent retraining queue
+11. **Integration dependency:** Dialer infrastructure (recording itself, time scheduling); HR/vendor system (training certificates)
+12. **Build tier:** Feature with integration dependency
+
+### UC-16. Fraud-Dispute Interaction Quality Monitor
+
+1. **Use-case name:** Fraud-Dispute Interaction Quality Monitor (Authentication Compensation Defensibility)
+2. **RBI regulation:** RBI (Authentication Mechanisms for Digital Payment Transactions) Directions, 2025 (RBI/2025-26/79, 25 Sept 2025; **effective 1 April 2026**)
+3. **Obligation ID(s):** OBL-033 (with OBL-034 24×7 line quality overlay)
+4. **Conduct theme:** Fraud & Unauthorised Transaction Conduct
+5. **Interaction surface:** Fraud-dispute inbound call; 24×7 fraud reporting line call; investigation-update outbound call
+6. **Detected signal:** Fraud-dispute interaction quality (treatment tone, dismissiveness markers); compensation-communication clarity; customer-distress overlay; refused-compensation patterns where weak-authentication signal was present; reporting-line operational signals (hold times, abandonment)
+7. **Business risk:** Refused compensation under Authentication Directions 2025 does not survive RB-IOS scrutiny; ₹30 lakh consequential-loss cap exposure per case. *Failure-mode example:* Customer reports unauthorised transaction; agent denies refund despite weak-auth signal; customer escalates; bank pays full consequential-loss + harassment compensation.
+8. **Owner:** Head of Fraud Risk + Head of Contact Centre Operations (1LoD); Chief Risk Officer + Principal Nodal Officer (2LoD)
+9. **Evidence needed:** Fraud-dispute quality scoring, refused-compensation pattern with weak-auth correlation flag, treatment-tone evidence on high-stakes reports, reporting-line operational metrics
+10. **Recommended action:** Real-time severe-case alert; weekly fraud-dispute quality report; monthly RB-IOS exposure brief; agent retraining queue for treatment-tone failures
+11. **Integration dependency:** Fraud-risk system (authentication metadata); finance system (refund disposition)
+12. **Build tier:** Feature with integration dependency
+
+### UC-17. DSA / DMA Conduct Monitor
+
+1. **Use-case name:** DSA / DMA Sourcing Conduct Monitor
+2. **RBI regulation:** Draft RBI Second Amendment Directions 2026 (DSA/DMA conduct sections); existing FPC for DSA/DMA
+3. **Obligation ID(s):** OBL-038
+4. **Conduct theme:** Third-Party & Outsourcing Conduct
+5. **Interaction surface:** DSA outbound sales call; sourcing-stage interaction
+6. **Detected signal:** DSA-level conduct signals — mis-selling, pressure tactics, script deviation, false claims, identification absence; sourcing-stage mis-selling correlation to downstream complaints
+7. **Business risk:** DSA mis-sells; complaint; bank pays compensation; same DSA continues mis-selling pattern. *Failure-mode example:* DSA sources 200 loans/month with persistent mis-selling; bank discovers only through complaint volume.
+8. **Owner:** Head of Retail Assets (DSA sourcing) + Vendor Governance Head (1LoD); Conduct Risk Head + HR/Vendor management on training (2LoD)
+9. **Evidence needed:** DSA-level conduct scorecard, sourcing-to-complaint correlation, training-certificate cross-reference, conduct-violation log
+10. **Recommended action:** Weekly DSA scorecard; consequence-management queue; sourcing-channel quality benchmark
+11. **Integration dependency:** HR / vendor system (training certificate registry)
+12. **Build tier:** Feature with integration dependency
+
+### UC-18. Mis-Selling Original-Call Reconstruction
+
+1. **Use-case name:** Mis-Selling Complaint Original-Call Reconstruction Engine
+2. **RBI regulation:** Draft RBI (Commercial Banks – RBC) Amendment Directions, 2026 (11 Feb 2026, mis-selling compensation framework)
+3. **Obligation ID(s):** OBL-005
+4. **Conduct theme:** Sales & Suitability Conduct
+5. **Interaction surface:** Original sale call (retrospective on complaint trigger); complaint intake call
+6. **Detected signal:** Mis-selling signals in original sale call retrieved on complaint trigger; complaint precursor signals in intervening service calls; root-cause clusters across mis-sold cases
+7. **Business risk:** Compensation paid case by case without root-cause learning; same pattern recurs across cohorts. *Failure-mode example:* Bank pays five ULIP mis-selling claims in a quarter; same agent involved in three; pattern unseen until external observation.
+8. **Owner:** Head of Customer Service (complaint intake) + Conduct Risk Investigation Lead (1LoD investigation); Conduct Risk Head + Principal Nodal Officer (2LoD)
+9. **Evidence needed:** Reconstructed original-call package on complaint trigger, agent/product/branch clustering, complaint-precursor trail
+10. **Recommended action:** On-trigger evidence package to Investigation team; monthly mis-selling root-cause report; agent and product clustering for remediation
+11. **Integration dependency:** CMS trigger (complaint workflow); investigation workflow system
+12. **Build tier:** Feature with integration dependency
+
+### UC-19. Banned-Phrase Monitor — "Penal Interest"
+
+1. **Use-case name:** Penal-Charges Language Compliance Monitor
+2. **RBI regulation:** Fair Lending Practice – Penal Charges in Loan Accounts (RBI circular 18 Aug 2023, effective 1 Jan 2024; now consolidated into RBC Directions 2025)
+3. **Obligation ID(s):** OBL-016
+4. **Conduct theme:** Disclosure & Transparency Conduct
+5. **Interaction surface:** Dunning/delinquency call; foreclosure call; charge-dispute call
+6. **Detected signal:** Use of "penal interest" language (banned); legacy script vocabulary; customer dispute on charge framing
+7. **Business risk:** Customer dispute on charge framing triggers regulatory examination of bank's penal-charge policy. *Failure-mode example:* Customer challenges "penal interest" framing; supervisor opens scope review.
+8. **Owner:** Head of Collections + Head of Retail Assets (1LoD); Conduct Risk Head + Board-approved policy owner (2LoD)
+9. **Evidence needed:** Banned-phrase exception log per call, agent-level retraining list, dispute-correlation
+10. **Recommended action:** Real-time alert on above-threshold agents; daily exception dashboard; weekly remediation trend
+11. **Integration dependency:** Script library and policy management system
+12. **Build tier:** Feature with integration dependency
+
+### UC-20. Language-Mismatch Monitor
+
+1. **Use-case name:** Trilingual Customer-Language Mismatch Monitor
+2. **RBI regulation:** RBC Directions 2025 (consolidated trilingual obligation); underlying RBI letter 30 Sept 2024
+3. **Obligation ID(s):** OBL-030
+4. **Conduct theme:** Communication & Outbound Conduct
+5. **Interaction surface:** Inbound and outbound calls across all channels; IVR routing logs
+6. **Detected signal:** Customer's preferred language vs language of service; forced switches from regional to Hindi/English; customer-frustration markers on language switch
+7. **Business risk:** Vulnerable / low-literacy customer cannot be served effectively; complaint cites accessibility failure. *Failure-mode example:* Tamil-speaking customer routed to Hindi/English-only agent; frustration; complaint to Customer Service Committee on accessibility.
+8. **Owner:** Head of Contact Centre Operations (1LoD); Conduct Risk Head + HR on multilingual staffing (2LoD)
+9. **Evidence needed:** Per-call language-mismatch detection, agent-routing reconciliation, regional breakdown, IVR-routing audit
+10. **Recommended action:** Weekly language-mismatch report; agent-skill-routing optimisation recommendation; regional-staffing gap analysis
+11. **Integration dependency:** IVR system + agent skill-routing platform
+12. **Build tier:** Feature with integration dependency
+
+### UC-21. Campaign-Execution Deviation Monitor
+
+1. **Use-case name:** Advertising / Marketing Campaign Execution Deviation Monitor
+2. **RBI regulation:** Draft RBI (Commercial Banks – RBC) Amendment Directions, 2026 (11 Feb 2026, proposed Section F)
+3. **Obligation ID(s):** OBL-031
+4. **Conduct theme:** Communication & Outbound Conduct
+5. **Interaction surface:** Outbound campaign call across products
+6. **Detected signal:** Outbound call deviation from approved campaign claims; off-script claims about returns, benefits, risks; complaint-text categorisation on misleading communication
+7. **Business risk:** Compliance pre-issuance review undermined by execution; misleading-communication complaint at RB-IOS. *Failure-mode example:* Cautious campaign script; agents over-promise returns on calls; complaints attribute to bank's campaign content.
+8. **Owner:** Head of Marketing (content) + Head of Contact Centre Operations (execution, 1LoD); Conduct Risk Head + Compliance pre-issuance review (2LoD)
+9. **Evidence needed:** Campaign-script library reconciliation, agent off-script pattern, complaint-correlation evidence
+10. **Recommended action:** Daily campaign-deviation report; agent off-script queue; campaign-content review trigger when execution gap is systematic
+11. **Integration dependency:** Approved-script and template library system
+12. **Build tier:** Feature with integration dependency
+
+---
+
+## EVIDENCE SUPPORT ONLY (Fluid contributes context but is not the control)
+
+These are shown in the Honest-Gap shelf of the dashboard, NOT as main features. List only — do not build dedicated workflows.
+
+- **IO Independent Review evidence package (OBL-021)** — Fluid attaches interaction-history evidence to CMS cases; the IO review itself is human judgment.
+- **PNO / RB-IOS response context (OBL-025)** — Fluid surfaces complainant interaction history; RB-IOS correspondence is workflow-tool managed.
+- **SEBI IA call-recording time-stamp verification (OBL-006)** — Fluid verifies announcement presence; recording infrastructure performs the time-stamping.
+- **Dark-pattern UI signal from complaints (OBL-032)** — Fluid surfaces complaint references to specific UI flows; UI audit itself belongs to Product.
+- **Real-time transaction alerts feedback (OBL-035)** — Fluid sees inbound calls following alerts; alert generation is core-banking.
+- **Refund-timeline customer-experience signal (OBL-036)** — Fluid surfaces customer-experience around the 10-day shadow-credit timeline; finance system runs the workflow.
+- **Floating-rate reset query handling (OBL-018)** — Fluid monitors inbound queries only where reset is communicated by SMS/email; outbound notification ingestion is roadmap.
+- **Closure-communication clarity (OBL-026)** — Fluid sees inbound follow-up calls; written closure correspondence is outside ingestion today.
+
+---
+
+## Persona priority
+
+**Primary buyers (in budget-conversation order):**
+
+- **L4 — Chief Risk Officer / Chief Compliance Officer.** Owns the budget and the regulatory reporting interface. The 30 June 2026 IO Directions deadline, the 1 July 2026 RB-IOS cutover, the 1 April 2026 Authentication Directions effective date, and the 10 April 2026 IT-outsourcing contract deadline all concentrate on this lens. Best opening artefacts: UC-07 (Quarterly RCA + Top-5 Grounds), UC-10 (Vendor Governance Scorecard), UC-16 (Fraud-Dispute Interaction Quality). L4 is where the cheque comes from.
+
+- **L3 — Head of CX / Head of Customer Service / Head of Contact Centre.** Largest single slice — 10 of 38 obligations primary, 80% Fluid coverage. The execution layer for almost every recorded-interaction obligation. Best opening artefacts: UC-01 (Missed-Complaint Detector), UC-02 (Recovery Conduct Monitor), UC-05 (Script Adherence). L3 is the highest-volume daily user inside the bank.
+
+- **L2 — Chief Customer Officer / Head of Customer.** Fluid's cleanest coverage profile — 100% of L2 primary obligations are FULL or PARTIAL, no adjacent, no out-of-scope. Best opening artefacts: UC-03 (Borrower-Distress Identifier), UC-08 (Bereaved Empathy Monitor), UC-04 (Cross-Sell Consent). L2 is where Fluid is most differentiated and where vulnerable-customer narrative lands strongest.
+
+**Secondary / stakeholder buyers:**
+
+- **L1 — Head of Product / Digital.** Stakeholder in disclosure obligations (UC-11 Cooling-Off, UC-12 Pre-Payment, UC-14 KFS) but the bulk of L1 work sits outside Fluid (UI audit, alert engine, journey design). Not a primary cheque-writer.
+- **L5 — Head of Marketing.** Stakeholder only — narrow primary surface (UC-20, UC-21), high-visibility outputs. Most often benefits from L3-led purchases.
+
+**Sequencing recommendation:** Open the door with L3 or L4 by named obligation pain (30 June / 1 July 2026 deadlines). L2 buys the strongest emotional narrative once Fluid is in the room. L1 and L5 ride along.
+
+---
+
+## Do-Not-Build list
+
+The following obligations must NOT become main dashboard features. Build them as context-only or do not build at all — saying so protects credibility with CROs who can spot over-claiming. Each has a real-system owner who is the primary control.
+
+- **OBL-013 — Data governance for borrower information shared with recovery agents.** Out of scope. Data-infrastructure access control, DPDP compliance, vendor data-handling audit. **Do not build.**
+- **OBL-022 — Automated CMS with auto-escalation to Internal Ombudsman.** Adjacent. The bank's CMS provider must deliver workflow automation by 30 June 2026. Fluid feeds CMS upward; **do not replace CMS workflow.**
+- **OBL-032 — UI audit to prevent dark patterns.** Adjacent. UI/UX audit is a product/design discipline; **do not build a UI auditor**.
+- **OBL-021 — Internal Ombudsman independent review.** Adjacent. IO is a person exercising independent judgment. Fluid contributes evidence; **do not build IO workflow**.
+- **OBL-025 — Principal Nodal Officer + RB-IOS correspondence workflow.** Adjacent. PNO workflow is correspondence management. Fluid contributes context; **do not build PNO workflow**.
+- **OBL-035 — Real-time transaction alerts via SMS/email.** Adjacent. Alert engine is core-banking infrastructure. **Do not build an alert engine.**
+- **OBL-036 — Unauthorised transaction refund timelines.** Adjacent. Refund workflow is finance/operations. **Do not build refund workflow.**
+- **Branch interaction recording infrastructure.** Three use cases (UC-04 branch leg of cross-sell, UC-08 branch leg of bereaved-claim, KYC accessibility branch leg) depend on branch recording. **Fluid does not record branch interactions** — this is a precondition the programme creates demand for, not a Fluid feature. The CRO brief (Pass 4B) names this as a precondition; the dashboard must respect it.
+
+---
+
+*End of Dashboard Use-Case Map. 21 use cases — 12 Main Features, 9 Features with Integration Dependency, 8 Evidence-Support-Only items listed, 7 obligations explicitly Do-Not-Build. Spine respected throughout: Regulation → Obligation → Signal → Owner → Evidence → Action.*

@@ -206,6 +206,56 @@ export const INDUSTRIES = [
       },
     ],
   },
+  {
+    id: "rbi_conduct",
+    name: "RBI Conduct Intelligence",
+    icon: ShieldCheck,
+    color: "#14b8a6",
+    desc:
+      "Suvarna Bank · post-Nov 2025 RBI rulebook · conduct evidence, missed-complaints, recovery, vendor BPO, vulnerable customer",
+    roles: [
+      {
+        id: "cro_conduct",
+        name: "CRO / Chief Conduct Officer (L4)",
+        icon: Shield,
+        sub: "Regulatory exposure · vendor governance · 30-Jun & 1-Jul 2026 deadlines",
+        defaultLens: "risk",
+        primaryTile: null,
+      },
+      {
+        id: "head_cx",
+        name: "Head of CX (L3)",
+        icon: Headphones,
+        sub: "Daily worklist · missed complaints · first-90s adherence · repeat / FCR",
+        defaultLens: "ops",
+        primaryTile: null,
+      },
+      {
+        id: "cco_customer",
+        name: "Chief Customer Officer (L2)",
+        icon: Users,
+        sub: "Vulnerable care · bereavement · borrower distress · bundling pressure",
+        defaultLens: "ops",
+        primaryTile: null,
+      },
+      {
+        id: "io_office",
+        name: "Internal Ombudsman (L5)",
+        icon: Lock,
+        sub: "Escalations · IO referrals · RB-IOS exposure pre-screen",
+        defaultLens: "compliance",
+        primaryTile: null,
+      },
+      {
+        id: "board_nrc",
+        name: "Board / NRC (L1)",
+        icon: Crown,
+        sub: "Board pack · top-5 grounds engine · disclosure-in-conversation",
+        defaultLens: "compliance",
+        primaryTile: null,
+      },
+    ],
+  },
 ];
 
 // ═══════════════════════════

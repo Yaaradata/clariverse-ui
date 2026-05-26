@@ -1,0 +1,163 @@
+I've read all 7 files. Below is the Master Research Context Pack — designed to be pasted whole into Sonnet so the dashboard build can proceed without re-reading the source files. Stays under 3,500 words.
+
+---
+
+# Fluid CX — RBI Conduct Intelligence: Master Research Context Pack
+
+**Product spine throughout:** Regulation → Obligation → Customer Interaction Signal → Control Owner → Evidence → Recommended Action.
+
+## 1. One-paragraph story of the research chain
+
+The seven files trace a single argument from the outside in. Perplexity Research (Pass 0) and Claude Pass 1 together map the post-November 2025 RBI customer-conduct rulebook for Indian Scheduled Commercial Banks and NBFCs — roughly 39 instruments anchored on six primary directions, with adjacent DPDP, FREE-AI, SEBI and IRDAI regimes. Pass 2 decomposes that map into 38 named obligations (OBL-001 to OBL-038) across 8 conduct themes, each linked to a business process, a Business Process Owner, an Accountable Executive, and one of five executive lenses (L1–L5). Pass 3 Parts A and B then assess where Fluid CX is honestly the primary control, where it co-controls with the 2nd Line of Defence, where it is merely adjacent, and where it should not claim to help at all — producing a 13 / 17 / 7 / 1 distribution that defines the credible sales boundary. Pass 4A converts the FULL and PARTIAL ratings into a 30-row Integrated Control Register that a CRO and Head of Operational Risk would recognise, with explicit Three-Lines-of-Defence ownership and monitoring outputs. Pass 4B is a two-page CRO investment-case framing addressed from a fictional Head of Conduct Risk to the CRO, arguing the structural case for funding interaction-level monitoring in Q2 2026 ahead of the 30 June 2026 and 1 July 2026 cliff edges.
+
+## 2. File-by-file purpose
+
+1. **Perplexity Research – RBI.** External-source baseline regulatory inventory; useful but cautious, marks several real items as "unverified".
+2. **Claude RBI Research – Pass 1.** Verified merged regulatory map; the canonical source for circular numbers, dates, status (in-force vs draft), and which six primary instruments to anchor the CRO conversation on.
+3. **Claude RBI Research – Pass 2.** Obligation–Process–Owner–Lens map: 38 obligations across 8 conduct themes, with monitorable conduct surface and vulnerable-customer flags.
+4. **Claude RBI Research – Pass 3 Part A.** Executive Summary + per-process capability-fit ratings (Layer A) for all 38 obligations, with the working assumption that branch calls are recorded.
+5. **Claude RBI Research – Pass 3 Part B.** Obligation-level roll-up (Layer B), executive-lens reconciliation (Layer C), product roadmap candidates, and open legal questions.
+6. **Claude RBI Research – Pass 4A Control Register.** 30 (Obligation × Process) rows mapped across OBL-ID, obligation statement, business process, control point, Three Lines of Defence, Fluid CX role, and monitoring & reporting output. Includes Honest Gaps section.
+7. **Claude RBI Research – Pass 4B CRO Executive Brief.** Two-page investment case from Head of Conduct Risk to CRO — Q2 2026 framing, hard deadlines, honest gap statement, and the 60-minute working-session ask.
+
+## 3. The key RBI regulations that matter for the dashboard
+
+**Anchor on these six primary instruments** (cite by reference and effective date):
+
+- **RBI (Commercial Banks – Responsible Business Conduct) Directions, 2025 — RBI/DOR/2025-26/170.** Issued 28 Nov 2025, **in force**. The consolidated rulebook that subsumed the 2015 Master Circular on Customer Service and the 2014 Charter of Customer Rights. The parent regulation for most disclosure, suitability, recovery and grievance obligations.
+- **RBI (Internal Ombudsman) Directions, 2026 — RBI/CEPD/2025-26/381 (Banks) and /384 (NBFCs).** Issued 14 Jan 2026, **in force**, with key staffing/CMS clauses 7(2), 14(2), 14(4) hard-dated to **30 June 2026**. Mandates IO independent review of every rejected complaint, automated CMS auto-escalation, quarterly RCA to the Customer Service Committee of the Board.
+- **RB-Integrated Ombudsman Scheme, 2026 — Press Release 2025-2026/1936.** Notified 16 Jan 2026, **effective 1 July 2026**. Replaces RB-IOS 2021. No monetary ceiling on disputes; consequential-loss cap raised from ₹20 lakh to ₹30 lakh; harassment/mental-anguish cap raised from ₹1 lakh to ₹3 lakh; mandatory Principal Nodal Officer.
+- **RBI (Authentication Mechanisms for Digital Payment Transactions) Directions, 2025 — RBI/2025-26/79.** Issued 25 Sept 2025, **effective 1 April 2026** (cross-border CNP from 1 Oct 2026). Issuer accountability for losses from weak authentication; reshapes fraud-dispute scripts, customer-liability communications, SMS/IVR/email alerts.
+- **Draft RBI (Commercial Banks / NBFCs / HFCs – RBC) Second Amendment Directions, 2026 — uniform recovery framework.** First draft 12 Feb 2026; **revised draft mid-May 2026**; proposed effective 1 July 2026. **Draft / proposed** — not yet binding. Adds 8 distinct recorded-interaction obligations on Collections including mandatory call recording with prior intimation, time-window restriction (08:00–19:00), prohibition on contacting non-borrowers, mandatory borrower-distress identification, graduated escalation.
+- **RBI Statement on Developmental and Regulatory Policies — 6 Feb 2026.** **Supervisory signal, not binding.** Announces the three draft frameworks (anti-mis-selling, recovery conduct, revised limited liability). Useful as the "regulator-said-it-first" anchor.
+
+**Adjacent regimes worth naming (in-force unless flagged):**
+
+- **RBI (Commercial Banks – RBC) Amendment Directions, 2025 — RBI/2025-26/103** (4 Dec 2025; effective 1 April 2026): para 86A on customer choice / no negative consent for ATM, internet, mobile, cheque book.
+- **RBI Digital Lending Directions, 2025 — RBI/2025-26/36** (8 May 2025, in force): KFS, cooling-off, recovery-agent intimation, data minimisation.
+- **RBI (Commercial Banks / NBFCs – Managing Risks in Outsourcing) Directions, 2025 — RBI/DOR/2025-26/171 and /363** (28 Nov 2025): bank remains responsible for grievance redressal of outsourced services; IT-outsourcing contract compliance deadline 10 April 2026.
+- **RBI (Settlement of Claims in respect of Deceased Customers) Directions, 2025 — RBI/2025-26/82** (26 Sept 2025; compliance no later than 31 March 2026).
+- **RBI (Commercial Banks – KYC) Directions, 2025 — RBI/DOR/2025-26/169** (28 Nov 2025): accessibility — no mandatory facial gestures, Aadhaar non-mandatory.
+- **Fair Lending Practice – Penal Charges in Loan Accounts** (RBI circular 18 Aug 2023; effective 1 Jan 2024): "penal charges" not "penal interest"; now consolidated in RBC Directions 2025.
+- **DPDP Act 2023 + DPDP Rules 2025 (G.S.R. 846(E), 13 Nov 2025)**: substantive obligations on consent, breach notification (72 hours), retention, erasure **effective ~13 May 2027**.
+- **SEBI Master Circular for IAs — SEBI/HO/MIRSD/MIRSD-PoD-1/P/CIR/2025/003** (8 Jan 2025, in force): explicit call-recording and time-stamping of implementation instructions. Cross-applies to bank IA arms.
+- **IRDAI Insurance Fraud Monitoring Framework Guidelines — IRDAI/IID/GDL/MISC/112/10/2025** (9 Oct 2025; effective 1 April 2026): extends to bancassurance.
+- **RBI FREE-AI Report** (released 13 Aug 2025): **advisory, not binding** — 7 Sutras and 26 recommendations on responsible AI.
+
+## 4. The 8 conduct themes
+
+1. **Sales & Suitability Conduct** — standards on how products are offered: suitability, consent, anti-mis-selling, script adherence, mis-selling compensation.
+2. **Collections & Recovery Conduct** — call recording, time restrictions, agent conduct, distress identification, graduated escalation, data governance for borrower information.
+3. **Disclosure & Transparency Conduct** — KFS, APR, penal charges, cooling-off, floating-rate reset, language understood.
+4. **Grievance Handling Conduct** — complaint capture, internal review, escalation, RCA, top-5 grounds reporting, external Ombudsman interface.
+5. **Vulnerable Customer Protection** — bereaved, MSE, elderly, low-comprehension, persons with disabilities, financially distressed.
+6. **Communication & Outbound Conduct** — trilingual coverage, truthful advertising, dark-pattern prohibition, outbound campaign integrity.
+7. **Fraud & Unauthorised Transaction Conduct** — fraud handling, customer liability, authentication accountability, alert thresholds, refund timelines.
+8. **Third-Party & Outsourcing Conduct** — BPO governance, DSA/DMA conduct, recovery vendor oversight.
+
+## 5. The strongest 12 obligations for Fluid CX
+
+These are the obligations to lead with — chosen by combination of regulatory weight, near-term deadline, and capability strength.
+
+- **OBL-020 — Complaint capture across all customer-interaction channels.** Detect complaints expressed in any channel that never reach CMS. **The anchor obligation — Fluid's "hear the 95% you miss" capability.**
+- **OBL-010 — Code of conduct for recovery agents (tone, threats, harassment, public shaming).** Detect threat language, profanity, harassment, customer distress across 100% of recovery calls vs the 2–5% sample-based QA today.
+- **OBL-011 — Borrower distress identification mechanism.** Surface distress signals in DPD 1–30 collections calls and whether the agent engaged the hardship pathway. Mandatory from the 12 Feb 2026 draft.
+- **OBL-002 — Explicit prior consent for cross-sell; prohibition on compulsory bundling.** Detect bundling language and consent-extraction patterns across 100% of cross-sell interactions.
+- **OBL-004 — Outbound telesales script approval and adherence.** Detect script deviation at agent, team, vendor and campaign level across 100% of outbound calls.
+- **OBL-007 — Recording of recovery calls with prior borrower intimation.** Detect disclaimer-announcement presence at call start across 100% of recovery calls (recording itself is dialer infrastructure).
+- **OBL-012 — "Legal action not as first resort" (graduated escalation).** Reconstruct the borrower's interaction trail across channels and evidence settlement was offered before legal action.
+- **OBL-023 — Quarterly Root Cause Analysis to the Customer Service Committee of the Board.** Cluster complaint root causes across the full interaction volume; quarterly board pack ready.
+- **OBL-024 — Annual disclosure of top-5 grounds of complaints.** Same engine as OBL-023; year-on-year comparable, defensible to auditors.
+- **OBL-027 — Bereaved next-of-kin / deceased customer claims settlement.** Detect empathy markers and tone; surface where bereaved customers got bureaucratic instead of human handling.
+- **OBL-037 — BPO / contact-centre vendor governance.** 100% vendor-agent monitoring on the same conduct signals as in-house, producing vendor-level scorecards the supervisor will accept as evidence of governance.
+- **OBL-038 — DSA / DMA code of conduct.** Monitor DSA outbound interactions on the same sales-conduct signals; surface DSAs with persistent mis-selling.
+
+## 6. The strongest customer-interaction signals Fluid can detect
+
+These are the detection primitives the dashboard surfaces. Group them and reuse across obligations:
+
+- **Threat and harassment language** — explicit threats ("we'll come to your house"), public-shaming ("we'll tell your office"), repeated escalation, intimidation patterns.
+- **Profanity and raised-tone markers** — agent-side civility failures.
+- **Customer-distress signals** — "I lost my job", "medical emergency", "my husband died", emotional escalation; pairs with whether the agent engaged or dismissed.
+- **Missed-complaint markers** — dissatisfaction language, escalation requests, complaint markers expressed in calls or chats that were never logged in CMS.
+- **Bundling and consent-extraction pressure** — "this comes with…", "you must take…", consent buried in account-opening terms, customer-objection overrides.
+- **Script deviation** — outbound calls departing from approved campaign scripts; off-script claims about returns, benefits, risks.
+- **Mandatory-disclosure absence** — KFS not read out, cooling-off not announced, identification skipped at recovery-call open, time-stamp announcement missing on advisory call.
+- **Empathy and tone failures** — bereaved customer handled bureaucratically, distress dismissed, tone deteriorating across the call.
+- **Banned-phrase usage** — "penal interest" (instead of "penal charges"), forced-gesture KYC instructions ("please blink twice"), pre-payment-charge quotes where prohibited.
+- **Non-borrower contact patterns** — agent confirming caller is not the borrower yet continuing the conversation.
+- **Language mismatch** — customer's preferred regional language vs language of service; forced switches.
+- **Comprehension-check absence** — agent fails to test whether the customer understood the disclosure.
+- **Repeat-contact and graduated-escalation gaps** — sequence reconstruction across channels showing legal action without settlement attempt; status-query loops on document release.
+
+## 7. Strongest use cases by buyer (executive lens)
+
+- **L1 — Head of Product / Digital (9 primary obligations).** Lead with **OBL-019 (pre-payment charges)** and **OBL-017 (cooling-off in digital lending)** — both at primary-control strength. Pitch: every product flow that touches a recorded interaction has a disclosure conversation Fluid monitors. Honest gap: not your dark-pattern UI audit (OBL-032), not your alert engine (OBL-035).
+- **L2 — Head of Customer / Chief Customer Officer (7 primary obligations, 100% coverage; Fluid's strongest lens).** Lead with **OBL-011 (borrower distress)**, **OBL-027 (deceased customers)**, **OBL-002 (cross-sell consent)** — all primary-control. Pitch: you own outcomes; sampling QA was never going to find suitability gaps, vulnerable-customer empathy failures, or bundling pressure at scale.
+- **L3 — Head of CX / Head of Customer Service / Head of Contact Centre (10 primary obligations; largest single slice).** Lead with **OBL-020 (complaint capture)**, **OBL-010 (recovery conduct)**, **OBL-004 (script adherence)**. Pitch: two hard dates — 30 June 2026 (CMS auto-escalation) and 1 July 2026 (RB-IOS cutover) — converge on you. Honest gap: not the CMS workflow engine (OBL-022).
+- **L4 — Chief Risk Officer / Chief Compliance Officer (10 primary obligations).** Lead with **OBL-037 (vendor governance)**, **OBL-023 (quarterly RCA to CSCB)**, **OBL-024 (annual top-5 grounds)**. Pitch: this is what makes your Board pack and annual report regulator-defensible — today they are only as good as coarse CMS dropdown labels. Honest gap: not data governance for recovery information (OBL-013, out of scope), not the IO judgment itself (OBL-021), not the PNO correspondence workflow (OBL-025).
+- **L5 — Head of Marketing (2 primary obligations, both co-control).** **OBL-031 (advertising / sales) execution monitoring** and **OBL-030 (trilingual mismatch)**. Pitch: narrow but high-visibility; Fluid earns a seat as a stakeholder in L3 conversations rather than as a primary buyer.
+
+## 8. What Fluid CX monitors directly ("Monitored by Fluid CX")
+
+These are the obligations where interaction-layer monitoring is the principal mechanism — 13 obligations:
+
+OBL-002 (cross-sell consent), OBL-004 (script adherence), OBL-010 (recovery conduct), OBL-011 (borrower distress), OBL-012 (graduated escalation), OBL-017 (digital-lending cooling-off), OBL-019 (pre-payment charges), OBL-020 (complaint capture across channels), OBL-023 (quarterly RCA to CSCB), OBL-024 (annual top-5 grounds disclosure), OBL-027 (deceased-customer empathy), OBL-028 (MSE borrower protection), OBL-037 (BPO vendor governance).
+
+## 9. What Fluid CX supports only with integration ("Monitored with system integration" / "Evidence support only")
+
+These 17 obligations are co-controls. Fluid evidences the conversation side; the named 2LoD or partner system holds the factual decision, the workflow, or the underlying classification.
+
+- **CRM / underwriting / policy partners required:** OBL-001 (suitability — CRM holds the factual classification), OBL-003 (affordability — credit-scoring model holds underwriting), OBL-005 (mis-selling compensation — investigation workflow holds decision), OBL-015 (KFS — document content owned by Product/Legal), OBL-016 (penal charges — Board-approved policy).
+- **Dialer / scheduling / vendor / HR partners required:** OBL-007 (recording is dialer infrastructure), OBL-008 (time-restriction enforcement is dialer), OBL-009 (training certificate registry is HR/vendor), OBL-038 (DSA training registry is HR/vendor).
+- **Operations / fraud-risk / finance partners required:** OBL-014 (document-release workflow is Operations), OBL-033 (authentication metadata is fraud-risk system), OBL-034 (liability decision and 24×7 line infrastructure).
+- **Product / digital / IVR / template partners required:** OBL-029 (video-KYC journey design is Product/Digital), OBL-030 (IVR configuration, template library, multilingual staffing), OBL-031 (Compliance pre-issuance content review).
+- **Outbound-correspondence ingestion roadmap dependency:** OBL-018 (most reset notifications are SMS/email), OBL-026 (closure communications mostly written letters/emails).
+
+## 10. What Fluid CX should NOT claim to solve ("Outside Fluid CX scope")
+
+Saying so protects credibility — over-claiming kills RegTech credibility in BFSI.
+
+- **OBL-013 — Data governance for borrower information shared with recovery agents.** Out of scope. This is data-infrastructure access control, vendor data-handling audit, and DPDP compliance — not an interaction-layer problem. Fluid may detect occasional surface signals of unauthorised data reference in agent speech, but the primary control belongs elsewhere.
+- **OBL-021 — Internal Ombudsman independent review.** Adjacent. The IO review is human judgment exercised on CMS workflow; Fluid feeds the evidence base but is not the IO function.
+- **OBL-022 — Automated CMS with auto-escalation (30 June 2026 deadline).** Adjacent. The bank's CMS provider must deliver the workflow automation. Fluid sits above CMS feeding it discovered complaints — but does not replace CMS workflow.
+- **OBL-025 — Principal Nodal Officer + RB-IOS response timelines.** Adjacent. The workflow is correspondence-led; Fluid provides interaction-history context to the PNO but does not run the RB-IOS workflow.
+- **OBL-032 — UI audit to prevent dark patterns.** Adjacent. UI/UX audit is a product/design discipline with journey instrumentation. Fluid surfaces complaint signals that reference UI flows, but does not audit the UI itself.
+- **OBL-035 — Real-time transaction alerts via SMS/email.** Adjacent. Alert generation is core-banking infrastructure; Fluid sees only the consequence.
+- **OBL-036 — Unauthorised transaction refund timelines (credit shadow within 10 days).** Adjacent. Refund workflow and finance system manage the timeline; Fluid surfaces the customer-experience signal around it.
+- **OBL-006 — SEBI IA call recording and time-stamping.** Adjacent. The recording infrastructure handles the obligation; Fluid verifies announcement presence but does not perform the time-stamping.
+
+## 11. The strongest dashboard opportunities
+
+These are where the add-on is most differentiated and where it earns the regulatory conversation:
+
+1. **Complaint-capture-vs-CMS reconciliation view.** Surfaces complaints expressed in any channel that never made it into CMS — the data spine for the entire grievance theme and the most defensible artefact for the IO Directions 2026 / RB-IOS 2026 cliff.
+2. **Recovery conduct scorecard** (agent × vendor × bucket). Threat/harassment/profanity/distress detection across 100% of recovery calls — the answer to the 12 Feb 2026 draft framework. Includes the borrower-distress engagement flag (OBL-011) which is the operational redefinition of "vulnerability" in lending.
+3. **Quarterly board-pack RCA engine** that drives both OBL-023 (CSCB pack) and OBL-024 (annual top-5 grounds). Same engine, year-on-year comparable, methodology-defensible to statutory auditors.
+4. **Vendor governance evidence pack** (OBL-037) producing the supervisor-acceptable evidence of governance the Outsourcing Directions 2025 demand — week-on-week vendor-versus-in-house benchmarking.
+5. **Pre-legal escalation reconstruction** (OBL-012) — borrower-level journey across calls/SMS/letter/settlement attempts, ready for Legal before SARFAESI initiation.
+6. **Suitability and consent execution view** (OBL-001 + OBL-002 + OBL-004) — closes the gap between CRM-recorded suitability and what was actually said on the sales call.
+7. **Bereavement-handling empathy view** (OBL-027) — highest-reputational-risk vulnerable-customer journey, with empathy markers, tone trajectory, and repeat-contact patterns.
+8. **Fraud-dispute interaction quality monitor** (OBL-033 / OBL-034) — surfaces refused-compensation patterns that may not survive RB-IOS scrutiny under the new ₹30 lakh consequential-loss cap.
+9. **Honest-gap shelf.** A dedicated UI region that names the obligations Fluid does NOT solve (OBL-013, OBL-022, OBL-032, etc.) with the partner system that does. This is what a CRO will respect.
+
+## 12. The most important product boundaries (must-not-replace list)
+
+- Fluid is **not the CMS workflow engine** (the 30 June 2026 IO Directions deadline belongs to the bank's CMS provider).
+- Fluid is **not the Internal Ombudsman function** (IO is human judgment).
+- Fluid is **not the Principal Nodal Officer workflow** for RB-IOS correspondence.
+- Fluid is **not the dialer or recording infrastructure** (recording itself, time-stamping, time-window enforcement).
+- Fluid is **not the alert engine** (core-banking infrastructure).
+- Fluid is **not the refund or credit-shadow workflow**.
+- Fluid is **not the UI / dark-pattern auditor** for digital journeys.
+- Fluid is **not the data-infrastructure access-control or DPDP compliance layer** for borrower-data handling with recovery agents.
+- Fluid is **not the policy-validation layer** for Board-approved penal charges, suitability rules, KFS template content, or campaign creative.
+- Fluid does **not record branch interactions today** — the analysis assumes branch calls are recorded as a forward assumption. Three rows in the Control Register (OBL-002 branch leg, OBL-027 branch leg, OBL-029 branch KYC) collapse to outside-scope wherever branch calls are not recorded. Pass 4B explicitly treats branch interaction recording as a precondition the programme creates demand for, not as a separate ask.
+
+## 13. The best executive positioning line for this add-on
+
+*Fluid CX is the primary monitoring control on roughly one-third of the post-November 2025 customer-conduct obligations Indian Private Banks now carry, and a named co-control with the 2nd Line of Defence on a further forty-five percent — covering recovery conduct, complaint capture across every channel, suitability and consent execution, deceased-customer empathy, vendor and DSA governance, and the quarterly Board RCA that the Internal Ombudsman Directions 2026 and RB-IOS 2026 will hold the Bank to from 30 June and 1 July 2026. Fluid is not the CMS, not the IO, not the dialer, not the alert engine, and not the data-infrastructure layer — and we will tell you which obligations belong to those controls. What Fluid is, is the layer that converts every recorded customer interaction into supervisable conduct evidence at the cadence and coverage the new rulebook expects, so the Bank no longer answers a Supervisor with a 2-5% QA sample on obligations the Ombudsman is now ruling on.*
+
+---
+
+*End of Master Research Context Pack. Coverage: all 7 files; 39 regulations; 38 obligations; 8 themes; 5 lenses; 13 / 17 / 7 / 1 capability distribution; branch-recording forward assumption documented.*

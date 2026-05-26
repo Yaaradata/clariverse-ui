@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "codegraph": {
+      "command": "c:/Users/Usha Jawaharlal/AppData/Local/Programs/cursor/resources/app/resources/helpers/node.exe",
+      "args": [
+        "D:/office/clariverse-ui/scripts/codegraph-mcp.js"
+      ]
+    }
+  }
+}

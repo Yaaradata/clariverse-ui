@@ -1,0 +1,511 @@
+# Fluid CX — RBI Conduct Intelligence: Mock-Data Model Pack
+
+Compact entity model supporting the spine **Regulation → Obligation → Signal → Owner → Evidence → Action.** Fictional Indian Private Bank context throughout — "Suvarna Bank" (private bank, ~600 branches, mixed in-house + BPO contact centre, retail + SME + bancassurance + wealth). All sample data fictitious.
+
+---
+
+## 1. Regulation
+
+**Purpose:** The regulatory anchor for every obligation. Drives "why this matters" framing in dashboard tooltips and reports.
+
+**Key fields:**
+- `regulationId` (PK)
+- `shortName` — display name
+- `circularRef` — RBI/SEBI/IRDAI/MeitY reference number
+- `issuingBody` — RBI | SEBI | IRDAI | MeitY
+- `dateIssued`
+- `effectiveDate`
+- `status` — `IN_FORCE` | `DRAFT_PROPOSED` | `SUPERVISORY_SIGNAL` | `ADVISORY`
+- `instrumentType` — `MasterDirection` | `Circular` | `Directions` | `Scheme` | `Act` | `Rules` | `Report` | `PolicyStatement`
+- `scopeApplicable` — `CommercialBanks` | `NBFCs` | `Both` | `Bancassurance` | `IAOnly`
+- `relevantObligationIds` (FK array → Obligation)
+
+**Sample records:**
+
+```
+REG-001 | "RBC Directions 2025" | RBI/DOR/2025-26/170 | RBI | 2025-11-28 | 2025-11-28 | IN_FORCE | MasterDirection | CommercialBanks | [OBL-001, OBL-003, OBL-014, OBL-015, OBL-016, OBL-019, OBL-028, OBL-030]
+
+REG-002 | "Internal Ombudsman Directions 2026" | RBI/CEPD/2025-26/381 | RBI | 2026-01-14 | 2026-06-30 | IN_FORCE | MasterDirection | CommercialBanks | [OBL-020, OBL-021, OBL-022, OBL-023, OBL-026]
+
+REG-003 | "RB-IOS 2026" | Press Release 2025-2026/1936 | RBI | 2026-01-16 | 2026-07-01 | IN_FORCE | Scheme | Both | [OBL-020, OBL-025]
+
+REG-004 | "Authentication Mechanisms Directions 2025" | RBI/2025-26/79 | RBI | 2025-09-25 | 2026-04-01 | IN_FORCE | Directions | Both | [OBL-033, OBL-034, OBL-035]
+
+REG-005 | "Draft Uniform Recovery Framework" | Draft (rev. mid-May 2026) | RBI | 2026-02-12 | 2026-07-01 (proposed) | DRAFT_PROPOSED | Directions | Both | [OBL-007, OBL-008, OBL-009, OBL-010, OBL-011, OBL-012, OBL-013]
+```
+
+**Dashboard use:** Tooltip on every obligation card; filter by issuer/status; deadline countdowns derive from `effectiveDate`; "Draft" badge applied when `status = DRAFT_PROPOSED`.
+
+---
+
+## 2. Obligation
+
+**Purpose:** The atomic unit of conduct compliance — the link between regulation and what Fluid actually monitors.
+
+**Key fields:**
+- `oblId` (PK, format `OBL-NNN`)
+- `obligationStatement` — one-line plain English
+- `themeId` (FK → ConductTheme)
+- `parentRegulationId` (FK → Regulation)
+- `effectiveDate`
+- `status` — `IN_FORCE` | `DRAFT_PROPOSED`
+- `buildTier` — `MAIN_FEATURE` | `INTEGRATION_DEPENDENT` | `EVIDENCE_ONLY` | `OUT_OF_SCOPE`
+- `accountableExecutivePersonaId` (FK → ExecutivePersona)
+- `businessProcessOwnerRole` — string (e.g. "Head of Collections")
+- `vulnerableCustomerFlag` — boolean
+- `interactionSurfaces` — array of strings
+- `branchDependentFlag` — boolean
+
+**Sample records:**
+
+```
+OBL-020 | "Capture every customer complaint expressed in any channel into CMS" | THM-04 | REG-002 | 2026-06-30 | IN_FORCE | MAIN_FEATURE | L3 | "Head of Customer Service" | true | ["inbound_call","chat","email","social","ticket"] | false
+
+OBL-010 | "Recovery agents must maintain civil tone; no threats, harassment, public shaming" | THM-02 | REG-005 | 2026-07-01 | DRAFT_PROPOSED | MAIN_FEATURE | L3 | "Head of Collections" | true | ["recovery_call"] | false
+
+OBL-027 | "Bereaved next-of-kin claims to be handled with empathy and timely settlement" | THM-05 | REG-001 (Deceased Customers Directions, REG-007) | 2026-03-31 | IN_FORCE | MAIN_FEATURE | L2 | "Head of Customer Service" | true | ["inbound_call","branch_visit"] | true
+
+OBL-013 | "Data minimisation and audit for borrower information shared with recovery agents" | THM-02 | REG-005 | 2026-07-01 | DRAFT_PROPOSED | OUT_OF_SCOPE | L4 | "Head of Vendor Management" | true | ["case_allocation_feed"] | false
+```
+
+**Dashboard use:** The primary navigation entity — every panel, alert, and report scopes to one or more obligations. `buildTier` drives whether the obligation appears as a main monitor, a co-control card, an evidence shelf entry, or a Do-Not-Build banner.
+
+---
+
+## 3. ConductTheme
+
+**Purpose:** The 8-theme grouping used for cross-obligation aggregation and Board-pack RCA categorisation.
+
+**Key fields:**
+- `themeId` (PK)
+- `themeName`
+- `themeDefinition` — one-line
+- `primaryLensId` (FK → ExecutivePersona)
+- `obligationCount` — derived
+
+**Sample records:**
+
+```
+THM-01 | "Sales & Suitability Conduct" | "How products are offered — suitability, consent, anti-mis-selling, script adherence, mis-selling compensation" | L2 | 6
+THM-02 | "Collections & Recovery Conduct" | "Recording, time restrictions, agent conduct, distress identification, graduated escalation, data governance in recovery" | L3 | 8
+THM-03 | "Disclosure & Transparency Conduct" | "What banks must tell customers — KFS, APR, penal charges, cooling-off, rate-reset, language understood" | L1 | 5
+THM-04 | "Grievance Handling Conduct" | "Complaint capture, internal review, escalation, RCA, top-5 grounds, external Ombudsman interface" | L3 | 7
+THM-05 | "Vulnerable Customer Protection" | "Enhanced conduct for bereaved, MSE, elderly, low-comprehension, PwD, financially distressed" | L2 | 3
+THM-06 | "Communication & Outbound Conduct" | "Trilingual coverage, truthful advertising, dark-pattern prohibition, outbound campaign integrity" | L5 | 3
+THM-07 | "Fraud & Unauthorised Transaction Conduct" | "Fraud handling, customer liability, authentication accountability, alerts, refund timelines" | L4 | 4
+THM-08 | "Third-Party & Outsourcing Conduct" | "Governance of vendors, DSAs, DMAs, recovery agents, BPOs" | L4 | 2
+```
+
+**Dashboard use:** Top-level navigation tab; RCA cluster grouping in OBL-023 quarterly board pack; theme-level heatmaps on the home view.
+
+---
+
+## 4. CustomerInteractionSignal
+
+**Purpose:** The atomic unit of "what Fluid heard" — the raw signal feeding every alert, evidence package, and cluster.
+
+**Key fields:**
+- `signalId` (PK)
+- `interactionId` (FK → interaction master)
+- `interactionType` — `recovery_call` | `sales_call` | `service_call` | `fraud_dispute_call` | `chat` | `email` | `social` | `ticket` | `welcome_call` | `branch_visit`
+- `channel` — voice | text | social | branch
+- `signalType` — taxonomy (see below)
+- `severity` — `LOW` | `MEDIUM` | `HIGH` | `CRITICAL`
+- `transcriptSnippet` — short quoted segment, redacted
+- `timestamp`
+- `agentId` (FK → Agent)
+- `vendorId` (FK → Vendor, nullable for in-house)
+- `customerSegment` — `retail` | `MSE` | `wealth` | `NRI` | `bancassurance`
+- `productCode` — Cards | PL | HL | Auto | SavAcct | ULIP | MF | TermDeposit
+- `language` — `en` | `hi` | `ta` | `te` | `kn` | `mr` | `bn` | `gu` | `pa` | etc.
+- `relatedObligationIds` (FK array → Obligation)
+- `relatedAlertId` (FK → RiskAlert, nullable)
+
+**Signal taxonomy (sample):** `threat_language`, `profanity`, `harassment_pattern`, `public_shaming`, `customer_distress`, `bundling_pressure`, `consent_extraction`, `script_deviation`, `missing_disclosure`, `banned_phrase_penal_interest`, `non_borrower_contact`, `empathy_failure`, `language_mismatch`, `complaint_marker_no_SR`, `forced_KYC_gesture`, `pre_payment_charge_quoted`, `refused_compensation_weak_auth`.
+
+**Sample records:**
+
+```
+SIG-018472 | INT-9921 | recovery_call | voice | threat_language | CRITICAL | "...agar kal tak nahi diya toh hum aapke office aa jayenge aur sabko bata denge..." | 2026-05-22 14:08 | AGT-1142 | VEN-002 (Krescent BPO Pune) | retail | Cards | hi | [OBL-010] | ALT-3301
+
+SIG-018931 | INT-10044 | service_call | voice | complaint_marker_no_SR | HIGH | "...I have been calling for three weeks now, no one is resolving my dispute..." | 2026-05-23 11:42 | AGT-1788 | null (in-house) | retail | Cards | en | [OBL-020] | ALT-3340
+
+SIG-019004 | INT-10089 | sales_call | voice | bundling_pressure | HIGH | "...madam, salary account ke saath insurance lena compulsory hai..." | 2026-05-23 16:15 | AGT-2014 | null | retail | SavAcct | hi | [OBL-002] | ALT-3358
+
+SIG-019112 | INT-10131 | recovery_call | voice | customer_distress + empathy_failure | CRITICAL | Customer: "...mere husband ka abhi operation hua hai...". Agent: "Madam EMI toh deni hi padegi..." | 2026-05-24 10:03 | AGT-1342 | VEN-001 (Sutherland Chennai) | retail | PL | hi | [OBL-011, OBL-010] | ALT-3372
+```
+
+**Dashboard use:** The granular layer behind every alert and evidence item; transcript player anchors to the signal timestamp; filter/search across all dashboard views runs on signal taxonomy.
+
+---
+
+## 5. RiskAlert
+
+**Purpose:** Aggregated, scored, actionable exception routed to the right owner — what the dashboard actually surfaces.
+
+**Key fields:**
+- `alertId` (PK)
+- `alertTitle` — short plain-English
+- `obligationId` (FK → Obligation)
+- `themeId` (FK → ConductTheme)
+- `severity` — `LOW` | `MEDIUM` | `HIGH` | `CRITICAL`
+- `signalIds` (FK array → CustomerInteractionSignal)
+- `affectedAgentIds` / `affectedVendorIds` / `affectedCampaignIds`
+- `affectedCustomerSegment`
+- `firstObservedTs` / `lastObservedTs` / `occurrenceCount`
+- `routedToOwnerId` (FK → ControlOwner)
+- `status` — `OPEN` | `IN_REVIEW` | `ACTIONED` | `CLOSED` | `ESCALATED_TO_IO`
+- `recommendedAction` — string
+- `boardPackInclusion` — boolean
+
+**Sample records:**
+
+```
+ALT-3301 | "Threat language in Cards recovery — Agent AGT-1142 (Krescent BPO Pune)" | OBL-010 | THM-02 | CRITICAL | [SIG-018472, SIG-018501, SIG-018603] | [AGT-1142] / [VEN-002] / [] | retail | 2026-05-22 14:08 / 2026-05-24 09:21 / 7 | OWN-COLL-01 | OPEN | "Suspend agent from queue; vendor conduct review; HR consequence under recovery COC" | true
+
+ALT-3340 | "12 service calls with complaint markers and no CMS SR — last 7 days" | OBL-020 | THM-04 | HIGH | [SIG-018931, ...11 more] | [AGT-1788, AGT-1801, ...] / [] / [] | mixed | 2026-05-17 / 2026-05-23 / 12 | OWN-CS-01 | IN_REVIEW | "Force-create SR for each; agent retraining on complaint-disposition coding" | true
+
+ALT-3372 | "Distress dismissed in PL recovery — Sutherland Chennai" | OBL-011 + OBL-010 | THM-05 + THM-02 | CRITICAL | [SIG-019112] | [AGT-1342] / [VEN-001] / [] | retail-distressed | 2026-05-24 10:03 | OWN-COLL-01 (notified Hardship Desk OWN-CUST-02) | OPEN | "Route customer to Hardship Desk within 24h; agent coaching; vendor review" | true
+```
+
+**Dashboard use:** Primary worklist surface on every persona home view; drives queue-counts, severity-coloured tiles, "what needs my attention today" lists, and the CSCB board pack feed.
+
+---
+
+## 6. EvidenceItem
+
+**Purpose:** The proof artefact — the dashboard's bridge from "we detected something" to "here's why the supervisor will accept this".
+
+**Key fields:**
+- `evidenceId` (PK)
+- `evidenceType` — `transcript_snippet` | `call_recording_clip` | `chat_excerpt` | `email_text` | `CRM_field_snapshot` | `dialer_metadata` | `journey_reconstruction` | `cluster_proof`
+- `obligationId` (FK → Obligation)
+- `linkedSignalIds` (FK array)
+- `linkedAlertId` (FK, nullable)
+- `interactionRef` — interaction ID, agent, vendor, timestamp
+- `snippet` — quoted transcript text or referenced artefact
+- `whyThisIsEvidence` — one-line plain explanation
+- `attestationReady` — boolean (passes audit standard)
+- `auditTrailId` — immutable reference
+
+**Sample records:**
+
+```
+EVD-7741 | transcript_snippet | OBL-010 | [SIG-018472] | ALT-3301 | "INT-9921, AGT-1142, VEN-002, 2026-05-22 14:08, 02:14 mark" | "...hum aapke office aa jayenge aur sabko bata denge..." | "Explicit threat to disclose default to customer's employer — direct breach of recovery COC" | true | AUD-22-9921-3
+
+EVD-7798 | journey_reconstruction | OBL-012 | [SIG-019220, SIG-019221, SIG-019234, SIG-019301] | ALT-3390 | "Borrower CUS-44521 across 6 contacts 2026-04-10 to 2026-05-20" | "4 reminder calls + 1 SMS, no settlement offer recorded before legal-notice draft on 2026-05-22" | "Graduated-escalation gap — no settlement discussion before legal initiation" | true | AUD-22-44521-1
+
+EVD-7820 | cluster_proof | OBL-023 | [38 linked signals] | null | "Bundling-pressure cluster, Cards cross-sell campaign C-2026-MAY-04" | "Bundling-pressure signals on 38 of 412 sampled Cards-cross-sell calls (9.2%) over 14 days; 22 attributed to AGT cluster of 6 agents" | "Systemic pattern, not random — meets CSCB material-issue threshold" | true | AUD-22-CLUS-MAY-04
+```
+
+**Dashboard use:** Drilldown from every alert; attaches to CMS cases (OBL-020 feed); becomes the "Evidence pack" in IO referrals and PNO RB-IOS responses; supports quarterly RCA board pack.
+
+---
+
+## 7. ControlOwner
+
+**Purpose:** Routing layer — who receives a given alert and is accountable for the response.
+
+**Key fields:**
+- `ownerId` (PK)
+- `roleTitle` — string
+- `lineOfDefence` — `1LoD` | `2LoD` | `3LoD`
+- `businessLine` — Cards | RetailAssets | RetailLiabilities | Wealth | Bancassurance | SME | Collections | NRI | ContactCentre | CrossCutting
+- `executivePersonaId` (FK → ExecutivePersona)
+- `escalationOwnerId` (FK, nullable — who I escalate to)
+- `obligationsOwned` (FK array → Obligation)
+
+**Sample records:**
+
+```
+OWN-COLL-01 | "Head of Collections — Suvarna Bank" | 1LoD | Collections | L3 | OWN-CRO-01 | [OBL-007, OBL-008, OBL-009, OBL-010, OBL-011, OBL-012, OBL-013, OBL-016]
+OWN-CS-01 | "Head of Customer Service — Suvarna Bank" | 1LoD | ContactCentre | L3 | OWN-CRO-01 | [OBL-004, OBL-020, OBL-022, OBL-026, OBL-027 (CC leg)]
+OWN-CUST-02 | "Chief Customer Officer — Suvarna Bank" | 2LoD | CrossCutting | L2 | OWN-MD | [OBL-001, OBL-002, OBL-003, OBL-005, OBL-011, OBL-027, OBL-028]
+OWN-CRO-01 | "Chief Risk Officer — Suvarna Bank" | 2LoD | CrossCutting | L4 | OWN-MD | [OBL-013, OBL-021, OBL-023, OBL-024, OBL-025, OBL-033, OBL-034, OBL-036, OBL-037, OBL-038]
+OWN-VEN-01 | "Head of Vendor Governance — Suvarna Bank" | 1LoD | CrossCutting | L4 | OWN-CRO-01 | [OBL-037, OBL-038 (sourcing)]
+OWN-IO-01 | "Internal Ombudsman — Suvarna Bank" | 2LoD | CrossCutting | L4 | OWN-CSCB | [OBL-021, OBL-023, OBL-024, OBL-026]
+```
+
+**Dashboard use:** Determines whose worklist an alert appears on; sets escalation chain; populates "your queue" counts on persona home views.
+
+---
+
+## 8. ExecutivePersona
+
+**Purpose:** The 5 buyer/user lenses (L1–L5) — drives dashboard view personalisation and budget-conversation framing.
+
+**Key fields:**
+- `personaId` (PK)
+- `personaCode` — L1 | L2 | L3 | L4 | L5
+- `realWorldTitles` — array of strings
+- `slogan` — short pitch sentence
+- `primaryObligationIds` (FK array)
+- `coverageProfile` — `%FULL / %PARTIAL / %ADJACENT / %OOS` (internal scoping; not displayed)
+- `topThreeUseCases` — array of use-case IDs
+
+**Sample records:**
+
+```
+L1 | "Head of Product / Digital" | ["Head of Retail Banking Products","Chief Digital Officer","Head of Digital Banking"] | "Your product flows have disclosure conversations Fluid monitors" | [OBL-014, OBL-015, OBL-016, OBL-017, OBL-018, OBL-019, OBL-029, OBL-032, OBL-035] | "22/56/22/0" | [UC-11, UC-12, UC-14]
+
+L2 | "Head of Customer / Chief Customer Officer" | ["Chief Customer Officer","Head of Customer Outcomes","Head of Customer Experience (strategic)"] | "100% coverage of your primary obligations — Fluid's strongest lens" | [OBL-001, OBL-002, OBL-003, OBL-005, OBL-011, OBL-027, OBL-028] | "57/43/0/0" | [UC-03, UC-08, UC-04]
+
+L3 | "Head of CX / Head of Contact Centre" | ["Head of Customer Service","Head of Service Operations","Head of Contact Centre Operations"] | "Largest single slice — 10 obligations, two hard deadlines this quarter" | [OBL-004, OBL-006, OBL-007, OBL-008, OBL-009, OBL-010, OBL-012, OBL-020, OBL-022, OBL-026] | "40/40/20/0" | [UC-01, UC-02, UC-05]
+
+L4 | "CRO / CCO" | ["Chief Risk Officer","Chief Compliance Officer","Head of Conduct Risk"] | "Control framework + RCA + vendor governance — Board pack ready" | [OBL-013, OBL-021, OBL-023, OBL-024, OBL-025, OBL-033, OBL-034, OBL-036, OBL-037, OBL-038] | "30/30/30/10" | [UC-07, UC-10, UC-16]
+
+L5 | "Head of Marketing" | ["Chief Marketing Officer","Head of Brand & Communications","Head of Campaign Management"] | "Narrow but high-visibility — campaign execution monitoring + language accessibility" | [OBL-030, OBL-031] | "0/100/0/0" | [UC-20, UC-21]
+```
+
+**Dashboard use:** Persona toggle on the dashboard home; tailors which obligations, themes, alerts, and reports are foregrounded; drives executive-friendly framing in tooltips.
+
+---
+
+## 9. RCACluster
+
+**Purpose:** The systemic-pattern entity behind the quarterly Board-pack RCA (OBL-023) and annual top-5 grounds disclosure (OBL-024).
+
+**Key fields:**
+- `clusterId` (PK)
+- `clusterTheme` — short label
+- `themeId` (FK → ConductTheme)
+- `linkedObligationIds` (FK array)
+- `volume` — interaction count contributing
+- `trendDirection` — `RISING` | `STABLE` | `FALLING`
+- `dimensionBreakdown` — JSON of agent/branch/region/product/campaign segments with counts
+- `firstDetected` / `lastUpdated`
+- `severityScore` — 0–100
+- `boardPackInclusion` — boolean
+- `recommendedRemediation` — string
+
+**Sample records:**
+
+```
+RCA-00012 | "Cards cross-sell bundling pressure" | THM-01 | [OBL-002, OBL-004] | 412 | RISING | {"campaign":"C-2026-MAY-04 (288)", "agent_cluster":["AGT-2014","AGT-2031","AGT-2055","AGT-2087","AGT-2099","AGT-2114"] (244)","region":["TN(112)","KA(98)","MH(76)"]} | 2026-05-08 | 2026-05-24 | 78 | true | "Halt C-2026-MAY-04 campaign; script audit; agent-cluster retraining"
+
+RCA-00018 | "Document-release delay complaints — HL closures, Bengaluru zone" | THM-04 | [OBL-014, OBL-020] | 64 | RISING | {"branch":["BLR-Whitefield(28)","BLR-Indiranagar(19)","BLR-Koramangala(17)"], "product":"HL", "ageing":"45-90 days post-closure"} | 2026-04-15 | 2026-05-22 | 71 | true | "Operations workflow audit on Bengaluru HL closure desk; compensation accrual review"
+
+RCA-00021 | "Distress dismissal in PL early-bucket recovery — vendor concentration" | THM-05 | [OBL-011, OBL-010] | 187 | RISING | {"vendor":"VEN-001 Sutherland Chennai (142)", "product":"PL", "DPD_bucket":"1-30"} | 2026-04-01 | 2026-05-24 | 84 | true | "Mandatory Hardship-Desk-routing training at Sutherland Chennai; vendor consequence-management"
+```
+
+**Dashboard use:** RCA module backing the quarterly CSCB pack; trend tiles on CRO home view; cluster-drilldown surface for Conduct Risk Head.
+
+---
+
+## 10. VendorBPOScore
+
+**Purpose:** Vendor-level governance evidence (OBL-037) — the "supervisor-acceptable proof of governance" deliverable.
+
+**Key fields:**
+- `vendorId` (PK)
+- `vendorName`
+- `vendorType` — `BPO_voice` | `BPO_chat` | `recovery_agency` | `DSA` | `DMA`
+- `agentHeadcount`
+- `monthlyInteractionVolume`
+- `sampleCoveragePctLegacy` — old QA sampling rate
+- `fluidCoveragePct` — current Fluid monitoring %
+- `conductScoreOverall` — 0–100
+- `conductScoreByObligation` — JSON {oblId: score}
+- `complaintVolumeLast30d`
+- `complaintRatePer10k`
+- `severeExceptionCountLast30d`
+- `benchmarkVsInhouse` — `BETTER` | `PARITY` | `WORSE`
+- `lastGovernanceReviewDate`
+- `attestationPackUrl`
+
+**Sample records:**
+
+```
+VEN-001 | "Sutherland Chennai" | BPO_voice | 480 | 287000 | 3% | 100% | 68 | {"OBL-004":74,"OBL-010":61,"OBL-011":52,"OBL-020":71} | 142 | 4.95 | 12 | WORSE | 2026-04-30 | /attest/VEN-001-q1-fy27.pdf
+VEN-002 | "Krescent BPO Pune" | BPO_voice | 220 | 118000 | 4% | 100% | 71 | {"OBL-004":76,"OBL-010":58,"OBL-020":78} | 47 | 3.98 | 7 | WORSE | 2026-04-30 | /attest/VEN-002-q1-fy27.pdf
+VEN-014 | "Pinnacle Recovery Agency (Hyd)" | recovery_agency | 95 | 41000 | 2% | 100% | 59 | {"OBL-007":81,"OBL-008":92,"OBL-009":74,"OBL-010":48,"OBL-011":51} | 38 | 9.27 | 14 | WORSE | 2026-04-30 | /attest/VEN-014-q1-fy27.pdf
+```
+
+**Dashboard use:** Vendor scorecard module; benchmarking view on CRO/Vendor Governance home; quarterly outsourcing-governance attestation pack output; drives vendor-consequence-management queue.
+
+---
+
+## 11. RecoveryConductSignal
+
+**Purpose:** Specialised view on recovery-call interactions — combined detector for OBL-007/008/009/010/011/012.
+
+**Key fields:**
+- `recoverySignalId` (PK)
+- `interactionId` (FK)
+- `agentId` / `vendorId` / `bucketDPD` / `productCode`
+- `disclaimerPresent` — boolean (OBL-007)
+- `identificationPresent` — boolean (OBL-009)
+- `timeWindowCompliant` — boolean (OBL-008)
+- `nonBorrowerContactFlag` — boolean (OBL-008)
+- `threatFlag` / `profanityFlag` / `harassmentFlag` / `shamingFlag` — booleans (OBL-010)
+- `distressLanguageDetected` — boolean (OBL-011)
+- `agentEngagementWithHardship` — `ENGAGED` | `DISMISSED` | `SILENT` | `NA` (OBL-011)
+- `settlementDiscussionPresent` — boolean (OBL-012)
+- `borrowerJourneyEscalationStep` — 1..7
+- `severity` — derived score
+- `relatedAlertId` (FK)
+
+**Sample records:**
+
+```
+RCS-99221 | INT-9921 | AGT-1142 / VEN-002 / DPD-45 / Cards | true | true | true | false | true (threat) | true (profanity) | false | true (shaming via office-disclosure) | false | NA | false | step 3 | 91 | ALT-3301
+
+RCS-99244 | INT-10131 | AGT-1342 / VEN-001 / DPD-12 / PL | true | true | true | false | false | false | false | false | true | DISMISSED | false | step 2 | 88 | ALT-3372
+
+RCS-99301 | INT-10220 | AGT-1980 / null / DPD-180 / HL | true | true | true | false | false | false | false | false | false | NA | false | step 6 (legal-prep) | 12 | null (clean call, flagged for OBL-012 journey audit only)
+```
+
+**Dashboard use:** Recovery-conduct module (UC-02, UC-03, UC-06, UC-15); per-agent / per-vendor conduct scoring; feeds VendorBPOScore aggregation; journey reconstruction for pre-legal cases.
+
+---
+
+## 12. ComplaintCaptureSignal
+
+**Purpose:** Specialised detector for OBL-020 — the missed-complaint engine.
+
+**Key fields:**
+- `complaintSignalId` (PK)
+- `interactionId` (FK)
+- `channel` — voice | chat | email | social | ticket | branch
+- `customerId` (FK, hashed)
+- `complaintMarkerType` — `dissatisfaction` | `escalation_request` | `repeat_contact` | `unresolved_query` | `mis_selling_allegation` | `recovery_grievance` | `fraud_dispute_grievance`
+- `cmsSrCreatedFlag` — boolean
+- `cmsSrId` — nullable (FK to CMS system if available)
+- `gapHoursToSr` — null if no SR
+- `presumedCategoryRBI` — RBI top-5 grounds taxonomy
+- `severity` — 0–100
+- `productCode` / `agentId` / `vendorId`
+- `relatedAlertId` (FK)
+
+**Sample records:**
+
+```
+CCS-50012 | INT-10044 | voice | CUS-83441 | escalation_request + repeat_contact | false | null | null | "Loans - HL - Document release delay" | 82 | HL | AGT-1788 | null | ALT-3340
+CCS-50019 | INT-10067 | chat | CUS-91207 | mis_selling_allegation | false | null | null | "Mis-selling - Bancassurance - ULIP" | 76 | ULIP | AGT-2114 | null | ALT-3358
+CCS-50031 | INT-10128 | social | CUS-77821 (Twitter @customer) | recovery_grievance | true | SR-447821 | 14h | "Recovery - harassment" | 89 | Cards | AGT-1142 | VEN-002 | ALT-3301
+```
+
+**Dashboard use:** Missed-complaint detector module (UC-01); CMS-gap reconciliation log; top-5 grounds categorisation feed to RCACluster engine; channel-coverage attestation.
+
+---
+
+## 13. FraudDisputeSignal
+
+**Purpose:** Specialised detector for OBL-033 + OBL-034 — fraud-dispute interaction quality under Authentication Directions 2025.
+
+**Key fields:**
+- `fraudSignalId` (PK)
+- `interactionId` (FK) / `agentId` / `customerSegment`
+- `disputeType` — `UPI_unauthorised` | `card_CNP_domestic` | `card_CNP_crossborder` | `account_takeover` | `phishing_victim` | `OTP_compromise`
+- `treatmentToneScore` — 0–100
+- `dismissivenessFlag` — boolean
+- `customerDistressFlag` — boolean
+- `compensationDecision` — `APPROVED` | `REFUSED` | `PENDING` | `PARTIAL`
+- `weakAuthSignalPresent` — boolean (from fraud-risk system, partner-fed)
+- `refusedDespiteWeakAuthFlag` — boolean (derived)
+- `customerLiabilityCommunicationClarityScore` — 0–100
+- `reportingLineHoldTimeSeconds` — number
+- `rbiosRiskScore` — 0–100 (proxy for ₹30 lakh consequential-loss exposure)
+- `relatedAlertId` (FK)
+
+**Sample records:**
+
+```
+FDS-22011 | INT-10412 / AGT-1612 / retail | UPI_unauthorised | 42 (low) | true | true | REFUSED | true | true | 31 (poor) | 187s (hold) | 88 | ALT-3401
+FDS-22019 | INT-10455 / AGT-1755 / wealth | card_CNP_crossborder | 78 | false | false | APPROVED | false | false | 84 | 22s | 9 | null (clean)
+FDS-22031 | INT-10488 / AGT-1612 / retail | OTP_compromise | 38 | true | true | REFUSED | true | true | 28 | 244s | 91 | ALT-3411 (third refused-weak-auth case from AGT-1612 in 14 days)
+```
+
+**Dashboard use:** Fraud-dispute quality monitor (UC-16); RB-IOS exposure brief for CRO; agent-level treatment-tone retraining queue; weekly fraud-conduct report.
+
+---
+
+## 14. IntegrationDependency
+
+**Purpose:** Explicit registry of external systems Fluid co-controls with — drives the "Integration dependent" build-tier obligations and the dashboard's honest co-control surface.
+
+**Key fields:**
+- `integrationId` (PK)
+- `externalSystemName`
+- `systemType` — `CRM` | `CMS` | `dialer` | `recording_platform` | `fraud_risk` | `finance` | `HR_vendor` | `IVR` | `script_library` | `outbound_notification` | `core_banking` | `correspondence`
+- `whatItProvides`
+- `dependentObligationIds` (FK array)
+- `currentlyIntegratedFlag` — boolean
+- `roadmapTargetQuarter` — nullable
+
+**Sample records:**
+
+```
+INT-001 | "Suvarna CRM (Salesforce-based)" | CRM | "Suitability-questionnaire results, customer financial profile, CRM consent flag" | [OBL-001, OBL-002, OBL-003] | true | NA
+INT-002 | "Suvarna CMS (TCS BaNCS Customer Care)" | CMS | "Formal complaint records, SR workflow, IO referral routing" | [OBL-020, OBL-021, OBL-022, OBL-023, OBL-024, OBL-026] | partial (read-only feed today) | Q3 FY27 (bidirectional)
+INT-003 | "Genesys dialer + NICE recording" | dialer + recording_platform | "Call recording, time-window enforcement, time-stamp metadata" | [OBL-006, OBL-007, OBL-008] | true | NA
+INT-004 | "Suvarna Fraud Hub (in-house + Falcon)" | fraud_risk | "Authentication metadata, weak-auth signal, compensation decision input" | [OBL-033, OBL-034] | not yet | Q2 FY27
+INT-005 | "Outbound SMS/Email gateway (Netcore)" | outbound_notification | "Reset notifications, closure communications, KFS delivery confirmations" | [OBL-015, OBL-018, OBL-026] | not yet | Q2 FY27 (roadmap)
+INT-006 | "HR & vendor management (SuccessFactors + in-house)" | HR_vendor | "Agent training certificate registry, vendor master, agent-vendor mapping" | [OBL-009, OBL-038] | true (vendor master) / partial (cert registry) | Q3 FY27
+```
+
+**Dashboard use:** Integration-health status panel on admin view; co-control banner on obligation cards showing "depends on [external system]"; gates which alerts are full-coverage vs partial.
+
+---
+
+## 15. CapabilityBoundary
+
+**Purpose:** The explicit Honest-Gap shelf — obligations Fluid does NOT solve, with the named partner that does. Protects credibility and frames Do-Not-Build.
+
+**Key fields:**
+- `boundaryId` (PK)
+- `obligationId` (FK → Obligation)
+- `boundaryReason` — short plain-English
+- `primaryControlOwner` — partner system or function
+- `displayInDashboard` — `HONEST_GAP_SHELF` | `DO_NOT_BUILD_BANNER` | `EVIDENCE_ONLY_CARD`
+- `relatedRegulationId` (FK)
+
+**Sample records:**
+
+```
+BND-001 | OBL-013 | "Data-layer obligation — access control, vendor data-handling audit, DPDP compliance" | "Data Infrastructure + DPDP Compliance Programme + Vendor Management" | DO_NOT_BUILD_BANNER | REG-005
+BND-002 | OBL-022 | "CMS workflow automation — bank's CMS provider must deliver auto-escalation by 30 Jun 2026" | "TCS BaNCS / CMS vendor" | DO_NOT_BUILD_BANNER | REG-002
+BND-003 | OBL-021 | "Human judgment by the Internal Ombudsman; Fluid feeds evidence base only" | "Internal Ombudsman office" | EVIDENCE_ONLY_CARD | REG-002
+BND-004 | OBL-025 | "RB-IOS correspondence workflow handled by Principal Nodal Officer team" | "PNO workflow tool / correspondence management" | EVIDENCE_ONLY_CARD | REG-003
+BND-005 | OBL-032 | "UI/UX audit is a product/design discipline with journey instrumentation" | "Product Team + UX Research + Journey Analytics" | DO_NOT_BUILD_BANNER | REG-009 (Draft RBC Amendment 2026)
+BND-006 | OBL-035 | "Alert engine is core-banking infrastructure" | "Core Banking + Payments Engineering" | EVIDENCE_ONLY_CARD | REG-004
+BND-007 | OBL-036 | "Refund workflow and 10-day timeline are finance/operations system" | "Finance Ops + Reconciliation Engine" | EVIDENCE_ONLY_CARD | REG-004
+BND-008 | "Branch interaction recording" (cross-OBL precondition) | "Branch calls not currently recorded — three obligations partially blocked" | "Branch Operations + Network Infrastructure investment" | HONEST_GAP_SHELF | REG-001
+```
+
+**Dashboard use:** Honest-Gap shelf module; Do-Not-Build banner on the relevant obligation tile; CRO conversation aid in the "what we don't claim" tooltip.
+
+---
+
+## Key deadlines reference
+
+The dashboard should display these dates as a "Regulatory horizon" timeline against obligations and on every persona home view countdown band:
+
+- **31 March 2026** — Deceased-customer settlement compliance (OBL-027) — REG-007 Deceased Customers Directions 2025
+- **1 April 2026** — Authentication Directions 2025 issuer-compensation effective (OBL-033, OBL-034, OBL-035); IRDAI Bancassurance Fraud Monitoring (cross-cuts OBL-001 bancassurance); NBFC KFS + penal-charges (OBL-015, OBL-016) for NBFC group entities
+- **10 April 2026** — IT-outsourcing contract compliance (OBL-037 cross-ref) — REG-008 Outsourcing Directions 2025
+- **30 June 2026** — IO Directions 2026 staffing + automated CMS auto-escalation + quarterly RCA (OBL-022, OBL-023, OBL-026) — REG-002
+- **1 July 2026** — RB-IOS 2026 cutover, consequential-loss cap ₹30 lakh (OBL-025); proposed effective date for uniform recovery framework + mis-selling + dark-pattern drafts (OBL-007 to OBL-013, OBL-031, OBL-032) — REG-003 + REG-005 + REG-009
+- **1 October 2026** — Cross-border CNP authentication effective (OBL-033 cross-border leg) — REG-004
+- **~13 May 2027** — DPDP Rules 2025 substantive obligations effective (consent, retention, breach notification, erasure) — cross-cuts recorded-interaction infrastructure
+
+These dates should drive a horizon-band visualisation at the top of every persona home view, with countdown coloured by proximity (red < 60 days, amber 60–180, blue > 180).
+
+---
+
+## Entity relationship summary (paste-ready for Sonnet)
+
+- **Regulation** has many **Obligation** (1:M via `parentRegulationId`)
+- **Obligation** belongs to one **ConductTheme** (M:1 via `themeId`), assigned to one **ExecutivePersona** (M:1 via `accountableExecutivePersonaId`), owned by one or more **ControlOwner** (M:M)
+- **CustomerInteractionSignal** links to many **Obligation** (M:M via `relatedObligationIds`)
+- **RiskAlert** aggregates many **CustomerInteractionSignal** (1:M) for one **Obligation**, routed to one **ControlOwner**
+- **EvidenceItem** belongs to one **Obligation** and zero or one **RiskAlert**, sources from many **CustomerInteractionSignal**
+- **RCACluster** aggregates many **CustomerInteractionSignal** across one or more **Obligation**; outputs to **ExecutivePersona** L4 (CSCB pack)
+- **VendorBPOScore** aggregates conduct signals scoped to one vendor across many **Obligation**
+- **RecoveryConductSignal**, **ComplaintCaptureSignal**, **FraudDisputeSignal** are specialised projections of **CustomerInteractionSignal** for the three highest-leverage themes
+- **IntegrationDependency** links external systems to **Obligation** carrying the `INTEGRATION_DEPENDENT` build tier
+- **CapabilityBoundary** marks **Obligation** with build tier `EVIDENCE_ONLY` or `OUT_OF_SCOPE`
+
+---
+
+*End of Mock-Data Model Pack. 15 entities, sample data anchored on fictional Suvarna Bank context, key-deadline reference set, and ER summary included. Designed to be pasted directly into Sonnet for component-design and Cursor build prompts without re-reading the seven source files.*

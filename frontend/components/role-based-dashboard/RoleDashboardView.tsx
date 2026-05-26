@@ -77,6 +77,7 @@ import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown
 import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
+import { RbiConductIntelligenceDashboard } from "./RbiConductIntelligenceDashboard";
 import {
   BrandReputationDrillDown,
   CustomerHappinessDrillDown,
@@ -3674,6 +3675,17 @@ export function RoleDashboardView({
   if (industry.id === "openbank" && role.id === "ceo_insight") {
     return (
       <OpenbankInsightExecutiveDashboard
+        industryName={industry.name}
+        industryColor={industry.color}
+        onExit={onExit}
+        theme={theme}
+      />
+    );
+  }
+
+  if (industry.id === "rbi_conduct") {
+    return (
+      <RbiConductIntelligenceDashboard
         industryName={industry.name}
         industryColor={industry.color}
         onExit={onExit}

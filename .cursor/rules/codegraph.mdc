@@ -1,0 +1,14 @@
+---
+description: Use CodeGraph for clariverse-ui navigation (callers, callees, symbols)
+alwaysApply: true
+---
+
+## CodeGraph
+
+This repo has `.codegraph/` indexed (435 TS/TSX files). For callers, callees, or symbol search:
+
+1. Call **`codegraph_callers`** / **`codegraph_search`** first — **no grep first**.
+2. Use **`limit: 100`** (max supported).
+3. Do not grep after CodeGraph to verify. Do not read `mcps/*.json` tool descriptors.
+
+If MCP fails, restart the **codegraph** MCP server in Settings.
