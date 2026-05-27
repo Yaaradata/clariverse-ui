@@ -77,7 +77,7 @@ import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown
 import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
-import { RbiConductIntelligenceDashboard } from "./RbiConductIntelligenceDashboard";
+import { RbiConductIntelligencePreview } from "./RbiConductIntelligencePreview";
 import {
   BrandReputationDrillDown,
   CustomerHappinessDrillDown,
@@ -3684,12 +3684,21 @@ export function RoleDashboardView({
   }
 
   if (industry.id === "rbi_conduct") {
+    const lensByRole: Record<string, "L1" | "L2" | "L3" | "L4" | "L5"> = {
+      head_product_digital: "L1",
+      board_nrc: "L1",
+      cco_customer: "L2",
+      head_cx: "L3",
+      cro_conduct: "L4",
+      io_office: "L5",
+    };
     return (
-      <RbiConductIntelligenceDashboard
+      <RbiConductIntelligencePreview
         industryName={industry.name}
         industryColor={industry.color}
         onExit={onExit}
         theme={theme}
+        defaultLens={lensByRole[role.id] ?? "L1"}
       />
     );
   }

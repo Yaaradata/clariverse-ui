@@ -212,8 +212,16 @@ export const INDUSTRIES = [
     icon: ShieldCheck,
     color: "#14b8a6",
     desc:
-      "Suvarna Bank · post-Nov 2025 RBI rulebook · conduct evidence, missed-complaints, recovery, vendor BPO, vulnerable customer",
+      "Post-Nov 2025 RBI rulebook · obligation coverage · outbound conduct · contact-centre intelligence",
     roles: [
+      {
+        id: "head_product_digital",
+        name: "Head of Product / Digital (L1)",
+        icon: Target,
+        sub: "Digital journey · KFS · disclosure-in-conversation · product-flow conduct",
+        defaultLens: "compliance",
+        primaryTile: null,
+      },
       {
         id: "cro_conduct",
         name: "CRO / Chief Conduct Officer (L4)",

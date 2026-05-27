@@ -1,0 +1,53 @@
+{
+  "controls": 37,
+  "obligations": 24,
+  "risk_score": 80,
+  "overall_met": 80,
+  "summary": [
+    {
+      "obligationId": "OBL-001",
+      "theme": "01 \u00b7 Complaint Capture & First-90s",
+      "obligation": "Detect & reconcile every complaint expressed in conversation against CMS SR records.",
+      "process": "Complaint Capture & Reconciliation",
+      "metPct": 86,
+      "controlCount": 3,
+      "fluidAloneControls": 3
+    },
+    {
+      "obligationId": "OBL-002",
+      "theme": "01 \u00b7 Complaint Capture & First-90s",
+      "obligation": "First 90s of every inbound complaint must include acknowledgement, SR offer & escalation route.",
+      "process": "Inbound Complaint Handling \u2014 First 90 Seconds",
+      "metPct": 64,
+      "controlCount": 3,
+      "fluidAloneControls": 3
+    },
+    {
+      "obligationId": "OBL-003",
+      "theme": "01 \u00b7 Complaint Capture & First-90s",
+      "obligation": "Complaint must be tagged to the correct grievance category.",
+      "process": "Complaint Classification",
+      "metPct": 89,
+      "controlCount": 1,
+      "fluidAloneControls": 1
+    },
+    {
+      "obligationId": "OBL-004",
+      "theme": "01 \u00b7 Complaint Capture & First-90s",
+      "obligation": "Nodal / escalation contact shared when customer asks for it.",
+      "process": "Escalation Disclosure",
+      "metPct": 83,
+      "controlCount": 1,
+      "fluidAloneControls": 1
+    },
+    {
+      "obligationId": "OBL-005",
+      "theme": "02 \u00b7 Recovery Conduct",
+      "obligation": "Recovery calls shall not threaten, shame, harass, or contact non-borrowers.",
+      "process": "Outbound Recovery Conduct",
+      "metPct": 88,
+      "controlCount": 3,
+      "fluidAloneControls": 3
+    }
+  ]
+}
