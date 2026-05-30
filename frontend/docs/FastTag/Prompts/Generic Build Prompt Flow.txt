@@ -1,0 +1,91 @@
+## Generic Multi-Pass Breakdown: Research → MVP
+
+Here's the staged framework, abstracted from what we just did:
+
+---
+
+### **Stage 0 — Domain Research & Foundational Understanding**
+- **Role**: Domain Researcher + Subject Matter Expert
+- **Input**: Topic, target user industry, geographies/regulatory contexts, any seed materials
+- **Output**: Foundational understanding document — ontology, stakeholder mental models, frictions, jurisdictional nuances, design implications
+
+---
+
+### **Stage 1 — Persona Definition**
+- **Role**: User Researcher + Product Strategist
+- **Input**: Foundational document from Stage 0
+- **Output**: 2–4 detailed personas — mental models, primary goals, key questions, pain points, success criteria. Explicit mapping of persona goals → system goals
+
+---
+
+### **Stage 2 — System Capabilities & Data Model**
+- **Role**: Product Architect + Data Architect
+- **Input**: Personas + foundational document
+- **Output**: 
+  - Numbered capability list (C1, C2…) with descriptions
+  - Normalized data model: entities, fields, relationships, derived metrics with formulas
+  - Sample reference data (if domain has canonical artifacts like an RCM, schema, taxonomy)
+
+---
+
+### **Stage 3 — UI Specification**
+- **Role**: Senior UX Designer for the target domain
+- **Input**: Personas + capabilities + data model
+- **Output**: Per-persona screen specs — layout zones, visualizations, interaction patterns, design rules (e.g., explainability-first, time-travel default). Goal → Capability → UI mapping
+
+---
+
+### **Stage 4 — Prototype-Ready UX Blueprint**
+- **Role**: Senior Product Designer
+- **Input**: UI spec from Stage 3
+- **Output**: 
+  - MVP cut (which screens stay, which collapse into drill views, which defer to v2)
+  - Wireframes per MVP screen
+  - Drill flow specs with click counts
+  - Demo narrative / storyline
+
+---
+
+### **Stage 5 — Frontend & Data Architecture**
+- **Role**: Senior Frontend Architect + Data Architect
+- **Input**: UX blueprint + data model
+- **Output**: 
+  - Component tree (shell → layout → screens → cross-cutting overlays)
+  - Reusable component library catalog
+  - State model (slices, what persists vs clears on persona/screen change)
+  - Data model in frontend-ergonomic form (camelCase, denormalized fields, index maps)
+  - Interaction model (primitive actions, worked examples)
+
+---
+
+### **Stage 6 — Mock Data Generation**
+- **Role**: Data Architect + Domain Expert + Demo Designer
+- **Input**: Frontend data model + demo narrative
+- **Output**: High-fidelity mock fixture file — realistic entity names, narrative-bearing values, time-series degradation patterns, consistent cross-entity relationships, deterministic seed for reproducibility
+
+---
+
+### **Stage 7 — Prototype Build**
+- **Role**: Senior Frontend Engineer + Product Designer
+- **Input**: Component architecture + mock data + design system rules
+- **Output**: Single-file working prototype, copy-paste deployable, all screens + drill flows + persona switching + theme toggle
+
+---
+
+### **Stage 8+ — Iteration Passes (optional)**
+Common follow-ups:
+- TypeScript types module
+- API contract layer
+- Additional drill views
+- Specific interaction polish (e.g., time scrubber wiring)
+- Build-order sprint roadmap
+
+---
+
+**Key principles that make this work**
+1. Each stage strictly consumes prior stage outputs — no skipping
+2. Assign an explicit expert role per stage (changes the model's voice and depth)
+3. Preserve stable IDs across all stages (entities defined in Stage 2 keep their IDs through to the prototype)
+4. Lock the demo narrative early (Stage 4) — Stages 6 and 7 must serve it
+5. Front-load source materials as project files, not repeated inline pastes
+6. Use Opus-class models for stages with high cascading-error risk (2, 5, 6); Sonnet-class for bulk generation (7)

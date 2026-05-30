@@ -75,6 +75,7 @@ import {
 import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown";
 import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown";
 import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
+import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
 import { RbiConductIntelligencePreview } from "./RbiConductIntelligencePreview";
@@ -3699,6 +3700,18 @@ export function RoleDashboardView({
         onExit={onExit}
         theme={theme}
         defaultLens={lensByRole[role.id] ?? "L1"}
+      />
+    );
+  }
+
+  if (industry.id === "fastag") {
+    return (
+      <FastagIntelligenceDashboard
+        industryName={industry.name}
+        industryColor={industry.color}
+        initialPersona={role.id === "head_cx" ? "coh" : "hob"}
+        onExit={onExit}
+        theme={theme}
       />
     );
   }
