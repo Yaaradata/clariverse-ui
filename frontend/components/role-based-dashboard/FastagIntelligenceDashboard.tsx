@@ -1,11 +1,11 @@
 "use client";
 
-import { Component, type CSSProperties, type ErrorInfo } from "react";
+import { Component, createContext, type CSSProperties, type ErrorInfo, useContext } from "react";
 import {
+  Activity,
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
-  Bell,
   CheckCircle2,
   ChevronRight,
   Crown,
@@ -13,12 +13,15 @@ import {
   Flame,
   Headphones,
   MapPin,
-  Pause,
-  Play,
+  Moon,
   Radio,
   RefreshCw,
-  RotateCw,
+  Send,
+  Shield,
   ShieldCheck,
+  Sparkles,
+  Sun,
+  Target,
   TrendingDown,
   TrendingUp,
   Users,
@@ -29,6 +32,7 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -42,6 +46,9 @@ import {
   Cell,
   Line,
   LineChart,
+  PolarAngleAxis,
+  RadialBar,
+  RadialBarChart,
   ReferenceLine,
   ResponsiveContainer,
   Tooltip as RechartsTooltip,
@@ -53,12 +60,56 @@ import {
   DashboardThemeProvider,
   type DashboardThemeTokens,
 } from "./DashboardThemeContext";
+import { periodPulseLines, resolveGatewayTile } from "@/lib/fastag-period/hob-gateway";
+import { FastagAiInsightsSection, FastagRiskSpikeMonitor } from "./FastagHobFrontInsights";
+import { FastagHobDrillRouter, type HobDrillId } from "./FastagHobDrillDownScreens";
+import { FastagPeriodFilterRow, FastagPeriodProvider, useFastagPeriod } from "./FastagPeriodContext";
 import { T } from "@/lib/role-based-dashboard/registry";
 
 // ─────────────────────────────────────────────────────────────────────────
-// PALETTE — YaaraLabs × FASTag (per Stage 3 §A)
+// PALETTE — YaaraLabs × FASTag (light default · dark optional)
 // ─────────────────────────────────────────────────────────────────────────
-const FT = {
+export type FastagColorMode = "light" | "dark";
+
+export type FastagPalette = {
+  primary: string;
+  primarySoft: string;
+  primaryBorder: string;
+  accent: string;
+  accentSoft: string;
+  urgency: string;
+  urgencySoft: string;
+  bg: string;
+  canvas: string;
+  surface: string;
+  card: string;
+  elevated: string;
+  border: string;
+  borderLight: string;
+  lavender: string;
+  text: string;
+  textSec: string;
+  textMut: string;
+  green: string;
+  greenSoft: string;
+  amber: string;
+  amberSoft: string;
+  red: string;
+  redSoft: string;
+  pillNeutralBg: string;
+  pillNeutralBorder: string;
+  headerBackdrop: string;
+  backButtonBg: string;
+  backButtonBorder: string;
+  accentOnFill: string;
+  chartCursorFill: string;
+  overlayScrim: string;
+  overlayScrimStrong: string;
+  panelShadow: string;
+  toastShadow: string;
+};
+
+const FT_DARK: FastagPalette = {
   primary: "#7B2FF0",
   primarySoft: "rgba(123,47,240,0.14)",
   primaryBorder: "rgba(123,47,240,0.32)",
@@ -66,6 +117,7 @@ const FT = {
   accentSoft: "rgba(0,212,255,0.14)",
   urgency: "#FF7043",
   urgencySoft: "rgba(255,112,67,0.14)",
+  bg: "#0D1117",
   canvas: "#0D1117",
   surface: "#121823",
   card: "#161D2B",
@@ -82,34 +134,93 @@ const FT = {
   amberSoft: "rgba(245,158,11,0.16)",
   red: "#EF4444",
   redSoft: "rgba(239,68,68,0.16)",
-} as const;
-
-const FASTAG_THEME: DashboardThemeTokens = {
-  bg: FT.canvas,
-  surface: FT.surface,
-  card: FT.card,
-  elevated: FT.elevated,
-  border: FT.border,
-  borderLight: FT.borderLight,
-  cyan: FT.accent,
-  cyanGlow: "rgba(0,212,255,0.12)",
-  gold: FT.amber,
-  goldGlow: "rgba(245,158,11,0.12)",
-  green: FT.green,
-  greenGlow: "rgba(34,197,94,0.10)",
-  red: FT.red,
-  redGlow: "rgba(239,68,68,0.10)",
-  amber: FT.amber,
-  amberGlow: "rgba(245,158,11,0.10)",
-  purple: FT.primary,
-  purpleGlow: "rgba(123,47,240,0.12)",
-  blue: "#3b82f6",
-  blueGlow: "rgba(59,130,246,0.10)",
-  text: FT.text,
-  textSec: FT.textSec,
-  textMut: FT.textMut,
-  white: "#ffffff",
+  pillNeutralBg: "rgba(255,255,255,0.06)",
+  pillNeutralBorder: "rgba(255,255,255,0.10)",
+  headerBackdrop: "rgba(13,17,23,0.92)",
+  backButtonBg: "rgba(255,255,255,0.05)",
+  backButtonBorder: "rgba(255,255,255,0.10)",
+  accentOnFill: "#04222b",
+  chartCursorFill: "rgba(255,255,255,0.04)",
+  overlayScrim: "rgba(4,8,15,0.55)",
+  overlayScrimStrong: "rgba(4,8,15,0.6)",
+  panelShadow: "0 0 0 1px rgba(123,47,240,0.10), 0 12px 32px rgba(123,47,240,0.10)",
+  toastShadow: "0 18px 40px rgba(0,0,0,0.45)",
 };
+
+const FT_LIGHT: FastagPalette = {
+  primary: "#7B2FF0",
+  primarySoft: "rgba(123,47,240,0.10)",
+  primaryBorder: "rgba(123,47,240,0.22)",
+  accent: "#00D4FF",
+  accentSoft: "rgba(0,212,255,0.12)",
+  urgency: "#FF7043",
+  urgencySoft: "rgba(255,112,67,0.12)",
+  bg: "#F5F7FA",
+  canvas: "#F5F7FA",
+  surface: "#FFFFFF",
+  card: "#FFFFFF",
+  elevated: "#FFFFFF",
+  border: "#E0E4ED",
+  borderLight: "#E8ECF2",
+  lavender: "#EEEAF4",
+  text: "#1A1A2E",
+  textSec: "#4B5563",
+  textMut: "#6B7280",
+  green: "#22C55E",
+  greenSoft: "rgba(34,197,94,0.12)",
+  amber: "#F59E0B",
+  amberSoft: "rgba(245,158,11,0.14)",
+  red: "#EF4444",
+  redSoft: "rgba(239,68,68,0.12)",
+  pillNeutralBg: "rgba(26,26,46,0.05)",
+  pillNeutralBorder: "rgba(26,26,46,0.10)",
+  headerBackdrop: "rgba(245,247,250,0.92)",
+  backButtonBg: "rgba(26,26,46,0.04)",
+  backButtonBorder: "rgba(26,26,46,0.08)",
+  accentOnFill: "#04222b",
+  chartCursorFill: "rgba(26,26,46,0.04)",
+  overlayScrim: "rgba(26,26,46,0.35)",
+  overlayScrimStrong: "rgba(26,26,46,0.45)",
+  panelShadow: "0 0 0 1px rgba(123,47,240,0.08), 0 12px 32px rgba(26,26,46,0.08)",
+  toastShadow: "0 18px 40px rgba(26,26,46,0.12)",
+};
+
+const FASTAG_COLOR_MODE_KEY = "fastag-dashboard-color-mode";
+
+const FastagPaletteContext = createContext<FastagPalette>(FT_LIGHT);
+
+function useFT(): FastagPalette {
+  return useContext(FastagPaletteContext);
+}
+
+function buildFastagTheme(ft: FastagPalette): DashboardThemeTokens {
+  return {
+    bg: ft.bg,
+    surface: ft.surface,
+    card: ft.card,
+    elevated: ft.elevated,
+    border: ft.border,
+    borderLight: ft.borderLight,
+    cyan: ft.accent,
+    cyanGlow: ft.accentSoft,
+    gold: ft.amber,
+    goldGlow: ft.amberSoft,
+    green: ft.green,
+    greenGlow: ft.greenSoft,
+    red: ft.red,
+    redGlow: ft.redSoft,
+    amber: ft.amber,
+    amberGlow: ft.amberSoft,
+    purple: ft.primary,
+    purpleGlow: ft.primarySoft,
+    blue: "#3b82f6",
+    blueGlow: "rgba(59,130,246,0.10)",
+    text: ft.text,
+    textSec: ft.textSec,
+    textMut: ft.textMut,
+    white: "#ffffff",
+  };
+}
 
 // ─────────────────────────────────────────────────────────────────────────
 // ERROR BOUNDARY — one widget crash must not blank the demo (Stage 7 §7)
@@ -125,38 +236,47 @@ class DashboardErrorBoundary extends Component<{ children: ReactNode }, { hasErr
   render() {
     if (this.state.hasError) {
       return (
-        <div
-          style={{
-            background: "#161D2B",
-            border: "1px solid #324269",
-            borderRadius: 12,
-            padding: 18,
-            color: "#F4F6FB",
-          }}
-        >
-          <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>A panel failed to load</div>
-          <div style={{ fontSize: 12, color: "#B8C0D3", marginBottom: 10 }}>
-            Refresh to recover. The rest of the dashboard is still interactive.
-          </div>
-          <button
-            onClick={() => this.setState({ hasError: false, message: undefined })}
-            style={{
-              background: "rgba(123,47,240,0.14)",
-              border: "1px solid rgba(123,47,240,0.32)",
-              color: "#F4F6FB",
-              padding: "6px 12px",
-              borderRadius: 8,
-              fontSize: 12,
-              cursor: "pointer",
-            }}
-          >
-            Retry
-          </button>
-        </div>
+        <DashboardErrorFallback
+          onRetry={() => this.setState({ hasError: false, message: undefined })}
+        />
       );
     }
     return this.props.children;
   }
+}
+
+function DashboardErrorFallback({ onRetry }: { onRetry: () => void }) {
+  const FT = useFT();
+  return (
+    <div
+      style={{
+        background: FT.card,
+        border: `1px solid ${FT.borderLight}`,
+        borderRadius: 12,
+        padding: 18,
+        color: FT.text,
+      }}
+    >
+      <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>A panel failed to load</div>
+      <div style={{ fontSize: 12, color: FT.textSec, marginBottom: 10 }}>
+        Refresh to recover. The rest of the dashboard is still interactive.
+      </div>
+      <button
+        onClick={onRetry}
+        style={{
+          background: FT.primarySoft,
+          border: `1px solid ${FT.primaryBorder}`,
+          color: FT.text,
+          padding: "6px 12px",
+          borderRadius: 8,
+          fontSize: 12,
+          cursor: "pointer",
+        }}
+      >
+        Retry
+      </button>
+    </div>
+  );
 }
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -174,12 +294,24 @@ const RB_IOS_TARGET_LABEL = "RB-IOS · 30-Jun";
 type PersonaId = "hob" | "coh";
 type ScreenId =
   | "primary"
-  | "live_alerts"
   | "plaza_heatmap"
   | "io_evidence"
   | "compliance_watch";
 
+const FASTAG_SECTION_IDS: Record<Exclude<ScreenId, "primary">, string> = {
+  plaza_heatmap: "fastag-section-plaza",
+  io_evidence: "fastag-section-io-evidence",
+  compliance_watch: "fastag-section-compliance",
+};
+
 type TimeWindow = "12h" | "24h" | "7d" | "30d";
+
+const TIME_WINDOW_LABEL: Record<TimeWindow, string> = {
+  "12h": "trailing 12h",
+  "24h": "trailing 24h",
+  "7d": "trailing 7d",
+  "30d": "trailing 30d",
+};
 
 type PersonaMeta = {
   id: PersonaId;
@@ -196,10 +328,10 @@ const PERSONAS: Record<PersonaId, PersonaMeta> = {
   hob: {
     id: "hob",
     shortLabel: "HoB",
-    longLabel: "Head of Business — Setu FASTag",
+    longLabel: "Head of Business — FASTag",
     initials: "RV",
     name: "Rajesh Venkatesh",
-    primaryLabel: "Setu Intelligence",
+    primaryLabel: "Morning Brief",
     primarySub:
       "What is moving this morning — and what do I do about it before the 10am ops huddle?",
     icon: Crown,
@@ -212,7 +344,7 @@ const PERSONAS: Record<PersonaId, PersonaMeta> = {
     name: "Sneha Choudhury",
     primaryLabel: "Operations Console",
     primarySub:
-      "Floor state across Trinetra · Anandam · DigitalReach — with named, IO-defensible evidence.",
+      "Floor state across Trinetra · Anandam · Digital — with named, IO-defensible evidence.",
     icon: Headphones,
   },
 };
@@ -221,7 +353,7 @@ const PERSONAS: Record<PersonaId, PersonaMeta> = {
 // MOCK DATA — Stage-1/2/3 default populated state (Stage 4 §B)
 // ─────────────────────────────────────────────────────────────────────────
 const SIGNAL_LABELS = {
-  S001: "Churn-intent language",
+  S001: "Tag closure or issuer-switch intent",
   S002: "Annual Pass cross-sell miss",
   S003: "Social flare-up · plaza-correlated",
   S004: "AVC misread queue · z-score",
@@ -280,7 +412,7 @@ const SIGNAL_STATUS: Record<SignalId, "live" | "stub" | "oos"> = {
   S021: "live", S022: "live", S024: "live", S025: "live", S029: "live",
   S030: "live", S032: "live", S034: "live", S035: "live", S036: "live",
   S037: "live", S040: "live",
-  S011: "live", S014: "live", S028: "live",
+  S011: "stub", S014: "live", S028: "live",
   S012: "stub", S019: "stub", S020: "stub", S023: "stub", S026: "stub",
   S027: "stub", S031: "stub", S033: "stub", S038: "stub",
   S039: "oos",
@@ -308,7 +440,7 @@ const HEADLINE_CARDS: HeadlineCard[] = [
     window: "trailing 12h",
     snippet:
       "Charged two axles. My car is a Maruti. This is not right.",
-    source: "Genesys · Voice",
+    source: "Voice",
     capturedAt: "07:51",
   },
   {
@@ -319,7 +451,7 @@ const HEADLINE_CARDS: HeadlineCard[] = [
     calls: 61,
     window: "trailing 12h",
     snippet: "My balance shows ₹280. Why is the tag blacklisted?",
-    source: "Genesys · Voice",
+    source: "Voice",
     capturedAt: "08:04",
   },
   {
@@ -330,7 +462,7 @@ const HEADLINE_CARDS: HeadlineCard[] = [
     calls: 48,
     window: "trailing 12h",
     snippet: "Debited from PhonePe but the FASTag app shows zero.",
-    source: "DigitalReach · Chat",
+    source: "Chat",
     capturedAt: "08:12",
   },
 ];
@@ -379,7 +511,7 @@ const COH_ACTION_QUEUE: ActionRow[] = [
   {
     id: "ca-1",
     signal: "S016",
-    title: "OC 005 evidence-pack gap — 23 chargeback-eligible calls",
+    title: "OC 005 evidence-pack gap — 23 excess toll refund-eligible calls",
     count: 23,
     impact: "NPCI upload window closes 18:00 IST",
     owner: "→ Trinetra dispute desk",
@@ -428,7 +560,7 @@ const CHANNEL_QUALITY = [
   { channel: "Branch", rate: 8.6, median: 10.2, fill: T.green },
 ];
 
-const CHARGEBACK_SPARK = [
+const EXCESS_TOLL_SPARK = [
   { w: "W-6", v: 168 },
   { w: "W-5", v: 159 },
   { w: "W-4", v: 174 },
@@ -497,6 +629,195 @@ const STRATEGY_TILES: StrategyTile[] = [
   },
 ];
 
+// HoB executive primary — 3 gateway tiles + drill-down pages
+type HobExecutiveTileId = HobDrillId;
+
+type HobGatewayTileData = {
+  id: HobExecutiveTileId;
+  title: string;
+  subtitle: string;
+  score: number;
+  delta: number;
+  deltaLabel: string;
+  visualTone: string;
+  spark: readonly [number, number, number, number, number, number];
+  aiInsight: string;
+};
+
+const HOB_GATEWAY_TILES: HobGatewayTileData[] = [
+  {
+    id: "sales_issuance",
+    title: "How is the overall FASTag business performing?",
+    subtitle: "Toll Volume · Active Tags · Collection",
+    score: 72,
+    delta: -3,
+    deltaLabel: "▼ 3 pts",
+    visualTone: "#7B2FF0",
+    spark: [52, 44, 60, 50, 66, 72],
+    aiInsight:
+      "Daily toll transactions held at 11.2M but recharge-to-transaction ratio slipped this week. Dormant tags rose to 16% from 12% WoW. 12 fleet accounts are flagged, making wallet-recharge friction the #1 business detractor.",
+  },
+  {
+    id: "ecosystem_partner",
+    title: "What is driving FASTag growth?",
+    subtitle: "Acquisition · Recharge · Highway Mix",
+    score: 66,
+    delta: 4,
+    deltaLabel: "+4 pts",
+    visualTone: "#FF7043",
+    spark: [38, 34, 46, 52, 58, 66],
+    aiInsight:
+      "Tag acquisition is led by new vehicle sales and the ₹3,000 Annual Pass launch, now 18% of fresh activations. Auto-recharge enrolment is up +31% WoW. Commercial-vehicle volume remains the strongest forward growth lever.",
+  },
+  {
+    id: "operations_escalations",
+    title: "Are customer and partner issues affecting business growth?",
+    subtitle: "Complaints · SLA · Recurrence",
+    score: 59,
+    delta: -9,
+    deltaLabel: "▼ 9 pts",
+    visualTone: "#F59E0B",
+    spark: [66, 52, 58, 46, 44, 59],
+    aiInsight:
+      "Service score fell because double-deduction refunds, blacklist-on-low-balance disputes, and acquirer reconciliation delays are driving repeat contact. 56 disputes are beyond the refund window.",
+  },
+];
+
+const HOB_TILE_COMPACT_META: Record<
+  HobExecutiveTileId,
+  {
+    micro: string;
+    leftGauge: { label: string; value: number };
+    rightGauge: { label: string; value: number };
+    bottomLeft: { label: string; value: string; valueColor?: string };
+    bottomRight: { label: string; value: string; valueColor?: string };
+  }
+> = {
+  sales_issuance: {
+    micro: "Volume · Activation · Collection",
+    leftGauge: { label: "Active tags", value: 84 },
+    rightGauge: { label: "Dormant", value: 16 },
+    bottomLeft: { label: "Top volume driver", value: "Highway Toll" },
+    bottomRight: { label: "Fleets at-risk", value: "12 accounts", valueColor: "#EF4444" },
+  },
+  ecosystem_partner: {
+    micro: "Acquisition · Recharge · Segment",
+    leftGauge: { label: "New tags", value: 58 },
+    rightGauge: { label: "Repeat recharge", value: 71 },
+    bottomLeft: { label: "Growth driver", value: "Annual Pass", valueColor: "#22C55E" },
+    bottomRight: { label: "Top segment", value: "Commercial" },
+  },
+  operations_escalations: {
+    micro: "Complaints · SLA · Recurrence",
+    leftGauge: { label: "Resolved in SLA", value: 51 },
+    rightGauge: { label: "Repeat contact", value: 44 },
+    bottomLeft: { label: "Beyond SLA", value: "56 overdue", valueColor: "#F59E0B" },
+    bottomRight: { label: "Top issue", value: "Double Deduct", valueColor: "#EF4444" },
+  },
+};
+
+const COH_GATEWAY_TILES: HobGatewayTileData[] = [
+  {
+    id: "sales_issuance",
+    title: "Where are customers struggling in the journey?",
+    subtitle: "Onboarding · Recharge · Disputes",
+    score: 64,
+    delta: -5,
+    deltaLabel: "▼ 5 pts",
+    visualTone: "#7B2FF0",
+    spark: [64, 68, 58, 52, 44, 46],
+    aiInsight:
+      "412 onboarding conversations are stuck on KYC + tag-affixing, the steepest drop-off in the journey. Wallet-recharge failure is #2 friction point. Customer-effort rose to 43% high-effort from 36% WoW.",
+  },
+  {
+    id: "ecosystem_partner",
+    title: "Are we resolving issues within SLA?",
+    subtitle: "Resolution · FCR · Queue Age",
+    score: 58,
+    delta: -7,
+    deltaLabel: "▼ 7 pts",
+    visualTone: "#FF7043",
+    spark: [66, 70, 60, 54, 46, 48],
+    aiInsight:
+      "Within-SLA resolution slipped to 61%, with first-contact resolution at 48%. Refund/double-deduction disputes are slowest, averaging 78h vs a 48h promise; backlog ageing is the leading breach driver.",
+  },
+  {
+    id: "operations_escalations",
+    title: "Which issues recur after support responds?",
+    subtitle: "Reopens · Repeat Contact · Root Cause",
+    score: 55,
+    delta: -10,
+    deltaLabel: "▼ 10 pts",
+    visualTone: "#F59E0B",
+    spark: [48, 44, 56, 62, 68, 55],
+    aiInsight:
+      "Reopen rate climbed to 29%; double-deduction and blacklist-on-low-balance lead recurrence. 312 tickets reopened in 7 days because root causes are not closed at first response.",
+  },
+];
+
+const COH_TILE_COMPACT_META: Record<
+  HobExecutiveTileId,
+  {
+    micro: string;
+    leftGauge: { label: string; value: number };
+    rightGauge: { label: string; value: number };
+    bottomLeft: { label: string; value: string; valueColor?: string };
+    bottomRight: { label: string; value: string; valueColor?: string };
+  }
+> = {
+  sales_issuance: {
+    micro: "Onboarding · Recharge · Disputes",
+    leftGauge: { label: "High effort", value: 43 },
+    rightGauge: { label: "Self-served", value: 57 },
+    bottomLeft: { label: "Top friction point", value: "KYC Stall" },
+    bottomRight: { label: "Worst stage", value: "Activation", valueColor: "#EF4444" },
+  },
+  ecosystem_partner: {
+    micro: "Resolution · FCR · Queue age",
+    leftGauge: { label: "Within SLA", value: 61 },
+    rightGauge: { label: "First contact", value: 48 },
+    bottomLeft: { label: "Beyond SLA", value: "56 cases", valueColor: "#F59E0B" },
+    bottomRight: { label: "Slowest queue", value: "Refunds", valueColor: "#EF4444" },
+  },
+  operations_escalations: {
+    micro: "Reopens · Repeat contact · Root cause",
+    leftGauge: { label: "Reopen rate", value: 29 },
+    rightGauge: { label: "Repeat contact", value: 44 },
+    bottomLeft: { label: "Top repeat issue", value: "Double Deduct", valueColor: "#EF4444" },
+    bottomRight: { label: "Reopened (7d)", value: "312 tickets", valueColor: "#EF4444" },
+  },
+};
+
+const HOB_TILE_TREND_PAD: Record<HobExecutiveTileId, { below: number; above: number }> = {
+  sales_issuance: { below: 6, above: 4 },
+  ecosystem_partner: { below: 8, above: 5 },
+  operations_escalations: { below: 6, above: 4 },
+};
+
+/** Short labels for drill page headers (tiles use question-style titles). */
+const HOB_DRILL_PAGE_TITLES: Record<HobExecutiveTileId, string> = {
+  sales_issuance: "Sales & Issuance Health",
+  ecosystem_partner: "Ecosystem & Partner Issues",
+  operations_escalations: "Operations & Internal Escalations",
+};
+
+const HOB_SUMMARY_KPIS = [
+  { label: "Total Issuances Today", value: "4,218", delta: -4.2, deltaLabel: "vs yesterday" },
+  { label: "Revenue Today", value: "₹2.34 Cr", delta: 2.1, deltaLabel: "vs yesterday" },
+  { label: "Top Call Reason", value: "AVC mismatch / wrong toll class", delta: null as number | null, deltaLabel: "" },
+  { label: "Open Flags", value: "7", delta: 2, deltaLabel: "AI-detected today" },
+];
+
+const FASTAG_AI_PROMPTS = [
+  "What is driving the NH-48 spike this morning and do I need to call the PNO?",
+  "How many of yesterday's calls had the Annual Pass offer missed?",
+  "Which of my 186 open IO cases are most at risk before 30 June?",
+  "Is the Khalapur complaint pattern a one-plaza event or a wider corridor problem?",
+  "What is Saksham's conduct compliance rate this week?",
+  "Which issuance channel is generating the most Day-1 complaints and why?",
+  "Give me a 5-bullet brief for the 10am ops huddle",
+];
+
 // COH — shift status + BPO heatmap
 type ShiftStat = {
   label: string;
@@ -527,9 +848,9 @@ const BPO_HEATMAP: BpoCell[] = [
   { vendor: "Anandam · Coimbatore", shift: "Morning", repeatRate: 12.1, ocGap: 2, sentiment: -0.1 },
   { vendor: "Anandam · Coimbatore", shift: "Afternoon", repeatRate: 16.4, ocGap: 5, sentiment: -0.6, flag: "watch" },
   { vendor: "Anandam · Coimbatore", shift: "Night", repeatRate: 11.9, ocGap: 1, sentiment: -0.2 },
-  { vendor: "DigitalReach · Bengaluru", shift: "Morning", repeatRate: 9.4, ocGap: 0, sentiment: 0.2 },
-  { vendor: "DigitalReach · Bengaluru", shift: "Afternoon", repeatRate: 10.8, ocGap: 1, sentiment: 0.1 },
-  { vendor: "DigitalReach · Bengaluru", shift: "Night", repeatRate: 9.0, ocGap: 0, sentiment: 0.3 },
+  { vendor: "Digital · Bengaluru", shift: "Morning", repeatRate: 9.4, ocGap: 0, sentiment: 0.2 },
+  { vendor: "Digital · Bengaluru", shift: "Afternoon", repeatRate: 10.8, ocGap: 1, sentiment: 0.1 },
+  { vendor: "Digital · Bengaluru", shift: "Night", repeatRate: 9.0, ocGap: 0, sentiment: 0.3 },
 ];
 
 // Plaza heatmap
@@ -622,7 +943,7 @@ type ComplianceItem = {
 const COMPLIANCE_ITEMS: ComplianceItem[] = [
   {
     id: "cw-saksham",
-    label: "Saksham Recovery conduct (S018)",
+    label: "Saksham Recovery conduct",
     metric: "3 calls flagged · 24h",
     trend: "up",
     band: "breach",
@@ -630,11 +951,27 @@ const COMPLIANCE_ITEMS: ComplianceItem[] = [
   },
   {
     id: "cw-trilingual",
-    label: "Trilingual rule (S015)",
+    label: "Trilingual rule",
     metric: "9 sessions · 24h",
     trend: "up",
     band: "watch",
     note: "Marathi/Tamil preferences handled in Hindi · Anandam afternoon",
+  },
+  {
+    id: "cw-kyv",
+    label: "KYV root-cause check",
+    metric: "82% adherence · today",
+    trend: "down",
+    band: "watch",
+    note: "Trinetra afternoon cohort below 80% target — unlock-without-KYV pattern",
+  },
+  {
+    id: "cw-tat",
+    label: "TAT promise adherence",
+    metric: "91% · shift",
+    trend: "flat",
+    band: "ok",
+    note: "14 refund-promised calls aged > 5 days flagged separately in action queue",
   },
   {
     id: "cw-rbios",
@@ -646,220 +983,11 @@ const COMPLIANCE_ITEMS: ComplianceItem[] = [
   },
   {
     id: "cw-annual",
-    label: "Annual Pass mis-disclosure (S020)",
+    label: "Annual Pass mis-disclosure",
     metric: "0 · 7d",
     trend: "flat",
     band: "ok",
     note: "No commercial-vehicle mis-sell events in trailing week",
-  },
-];
-
-// Live alerts — persona-scoped per Stage 4 SCR-SHR-01 (HoB notified · COH immediate)
-type LiveAlert = {
-  id: string;
-  signal: SignalId;
-  severity: "critical" | "high" | "medium";
-  title: string;
-  context: string;
-  capturedAt: string;
-  ackd?: boolean;
-  /** Which persona sees this alert in their Live Alerts feed */
-  audience: PersonaId | "both";
-  excerpt?: string;
-  preThreatContext?: string;
-  bpoSite?: string;
-  shift?: string;
-  /** Saksham S018 — distinct action path per Stage 4 §SCR-SHR-01 */
-  saksham?: boolean;
-  /** Stage 4: HoB routes to PNO brief · COH routes to floor action */
-  actionLabel?: string;
-  secondaryAction?: { label: string; target: "plaza_heatmap" | "compliance_watch" };
-};
-
-const HOB_SEED_ALERTS: LiveAlert[] = [
-  {
-    id: "la-hob-1",
-    signal: "S003",
-    severity: "critical",
-    audience: "hob",
-    title: "Social flare-up · Mumbai–Pune Expressway",
-    context: "62 mentions in 90m · auto journalist amplifying · Khalapur cluster — triangulate before 9am PNO call",
-    excerpt: "'Charged two axles at Khopol plaza again — third time this week on NH-48'",
-    capturedAt: "07:38",
-    actionLabel: "See plaza pattern",
-    secondaryAction: { label: "See on Plaza Heatmap", target: "plaza_heatmap" },
-  },
-  {
-    id: "la-hob-2",
-    signal: "S005",
-    severity: "high",
-    audience: "hob",
-    title: "Plaza cluster — Khalapur (NH-48)",
-    context: "87 mentions in 3h · AVC misread + double-deduction · acquirer-side sensor cluster likely",
-    excerpt: "'Charged two axles. My car is a Maruti. This is not right.'",
-    capturedAt: "08:14",
-    actionLabel: "Review for PNO brief",
-    secondaryAction: { label: "See on Plaza Heatmap", target: "plaza_heatmap" },
-  },
-  {
-    id: "la-hob-3",
-    signal: "S006",
-    severity: "critical",
-    audience: "both",
-    title: "Ombudsman threat · Trinetra Hyderabad · Morning shift",
-    context: "1 interaction · High confidence · Route context to PNO before media escalation",
-    excerpt: "I will call 14448 right now. This is the third time.",
-    preThreatContext: "90s before the threat: Agent said 'The refund will be processed in 3–5 working days.'",
-    bpoSite: "Trinetra · Hyderabad",
-    shift: "Morning",
-    capturedAt: "09:03",
-    actionLabel: "Review for IO / PNO",
-  },
-];
-
-const COH_SEED_ALERTS: LiveAlert[] = [
-  {
-    id: "la-coh-1",
-    signal: "S006",
-    severity: "critical",
-    audience: "both",
-    title: "Ombudsman threat · Trinetra Hyderabad · Morning shift",
-    context: "1 interaction · High confidence · Route to senior agent now",
-    excerpt: "I will call 14448 right now. This is the third time.",
-    preThreatContext: "90s before the threat: Agent said 'The refund will be processed in 3–5 working days.'",
-    bpoSite: "Trinetra · Hyderabad",
-    shift: "Morning",
-    capturedAt: "09:03",
-    actionLabel: "Route to Senior Agent",
-  },
-  {
-    id: "la-coh-2",
-    signal: "S021",
-    severity: "high",
-    audience: "coh",
-    title: "Queue spike + plaza pattern · NH-4 · 08:00–08:30",
-    context: "48 interactions · 2.1× queue baseline · 22 calls reference 'wrong class'",
-    excerpt: "'Charged for two axles at Khopoli plaza'",
-    capturedAt: "08:09",
-    actionLabel: "Review shift load",
-    secondaryAction: { label: "See on Plaza Heatmap", target: "plaza_heatmap" },
-  },
-  {
-    id: "la-coh-3",
-    signal: "S028",
-    severity: "high",
-    audience: "coh",
-    title: "Recharge failure cluster · PhonePe gateway · 07:45–08:15",
-    context: "23 interactions · gateway-side reconciliation lag · escalate to Tech if >30",
-    excerpt: "'Debited ₹200 but tag not recharged'",
-    capturedAt: "08:12",
-    actionLabel: "Review cluster",
-  },
-  {
-    id: "la-coh-4",
-    signal: "S018",
-    severity: "critical",
-    audience: "coh",
-    title: "Saksham conduct flag · post-19:00 call",
-    context: "Aggressive-language confidence: High · employer mentioned · compliance review required",
-    excerpt: "Saksham agent (cohort: morning shift): 'Your employer will know about this if you don't pay.'",
-    capturedAt: "19:42",
-    saksham: true,
-    actionLabel: "Route to Compliance",
-    secondaryAction: { label: "Open Compliance Watch", target: "compliance_watch" },
-  },
-];
-
-// ─────────────────────────────────────────────────────────────────────────
-// SIMULATED STREAM — ambient events only (per Stage 7 §6A)
-// ─────────────────────────────────────────────────────────────────────────
-type StreamEvent =
-  | {
-      id: string;
-      at: number;
-      kind: "alert-toast";
-      signal: SignalId;
-      title: string;
-      body: string;
-    }
-  | {
-      id: string;
-      at: number;
-      kind: "saksham-conduct";
-      signal: SignalId;
-      title: string;
-      body: string;
-    }
-  | {
-      id: string;
-      at: number;
-      kind: "stream-recalc";
-      title: string;
-      body: string;
-    }
-  | {
-      id: string;
-      at: number;
-      kind: "calm-baseline";
-      title: string;
-      body: string;
-    };
-
-// Stage 4 §F · Demo Rhythm — events land at the seconds specified in the spec
-// so the founder can narrate at the rehearsed cadence. `persona` gates
-// persona-specific events to the matching screen.
-type ScheduledEvent = StreamEvent & { persona?: PersonaId };
-
-const SIMULATED_STREAM: ScheduledEvent[] = [
-  {
-    id: "evt-1",
-    at: 45, // T+45s — Storyline 1 AlertToast
-    persona: "hob",
-    kind: "alert-toast",
-    signal: "S006",
-    title: "Ombudsman threat detected",
-    body: "Trinetra · 08:14 · caller used '14448' + 'I will go to RBI'",
-  },
-  {
-    id: "evt-2",
-    at: 90, // T+1m30s — Storyline 4 social flare-up
-    persona: "hob",
-    kind: "alert-toast",
-    signal: "S003",
-    title: "Social flare-up · Mumbai-Pune",
-    body: "62 mentions in 90m · auto journalist amplifying · Khalapur cluster",
-  },
-  {
-    id: "evt-3",
-    at: 210, // T+3m30s — Storyline 2 OC 005 new row on COH primary
-    persona: "coh",
-    kind: "alert-toast",
-    signal: "S016",
-    title: "New dispute row · OC 005 at risk",
-    body: "Trinetra · last 20m · 1 fresh chargeback-eligible call · evidence 60%",
-  },
-  {
-    id: "evt-4",
-    at: 240, // T+4m — Storyline 2 Saksham conduct flip
-    persona: "coh",
-    kind: "saksham-conduct",
-    signal: "S018",
-    title: "Saksham recovery — conduct flag",
-    body: "Saksham morning shift · post-19:00 call · aggressive-language confidence: High",
-  },
-  {
-    id: "evt-5",
-    at: 280,
-    kind: "stream-recalc",
-    title: "Stream recalculated",
-    body: "HeadlineBrief refreshed · AVC misread 94 → 97 · z-score 3.4×",
-  },
-  {
-    id: "evt-6",
-    at: 360,
-    kind: "calm-baseline",
-    title: "Calm-baseline signal",
-    body: "Auto-recharge opt-in inched up · 37% → 39%",
   },
 ];
 
@@ -881,6 +1009,7 @@ function Panel({
   glow?: boolean;
   className?: string;
 }) {
+  const FT = useFT();
   return (
     <section
       className={className}
@@ -889,7 +1018,7 @@ function Panel({
         border: `1px solid ${FT.border}`,
         borderRadius: 14,
         padding: 18,
-        boxShadow: glow ? `0 0 0 1px ${FT.primaryBorder}, 0 12px 32px rgba(123,47,240,0.10)` : undefined,
+        boxShadow: glow ? FT.panelShadow : undefined,
       }}
     >
       {(title || action) && (
@@ -912,6 +1041,29 @@ function Panel({
   );
 }
 
+/** Visible Fluid / AI marker on generated insights (meeting feedback §2). */
+function AiGeneratedMark({ compact = false }: { compact?: boolean }) {
+  const FT = useFT();
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        fontSize: compact ? 9 : 10,
+        fontWeight: 700,
+        color: FT.primary,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <Sparkles size={compact ? 10 : 11} color={FT.primary} />
+      {compact ? "AI" : "AI-generated"}
+    </span>
+  );
+}
+
 function Pill({
   children,
   tone = "neutral",
@@ -921,8 +1073,9 @@ function Pill({
   tone?: "neutral" | "primary" | "cyan" | "urgency" | "ok" | "warn" | "bad";
   size?: "xs" | "sm";
 }) {
+  const FT = useFT();
   const palette: Record<string, [string, string, string]> = {
-    neutral: [FT.textSec, "rgba(255,255,255,0.06)", "rgba(255,255,255,0.10)"],
+    neutral: [FT.textSec, FT.pillNeutralBg, FT.pillNeutralBorder],
     primary: [FT.primary, FT.primarySoft, FT.primaryBorder],
     cyan: [FT.accent, FT.accentSoft, "rgba(0,212,255,0.32)"],
     urgency: [FT.urgency, FT.urgencySoft, "rgba(255,112,67,0.32)"],
@@ -965,13 +1118,15 @@ function ProvenancePill({ count, window: w, confidence }: { count: number; windo
   );
 }
 
-function Spark({ data, color }: { data: { w: string; v: number }[]; color: string }) {
+function Spark({ data, color, gradId }: { data: { w: string; v: number }[]; color: string; gradId?: string }) {
+  const reactId = useId().replace(/:/g, "");
+  const gradientId = gradId ?? `spk-grad-${reactId}`;
   return (
     <div style={{ width: "100%", height: 60 }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
           <defs>
-            <linearGradient id="spk-grad" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor={color} stopOpacity={0.5} />
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
@@ -981,7 +1136,7 @@ function Spark({ data, color }: { data: { w: string; v: number }[]; color: strin
             dataKey="v"
             stroke={color}
             strokeWidth={2}
-            fill="url(#spk-grad)"
+            fill={`url(#${gradientId})`}
             isAnimationActive={false}
             dot={false}
           />
@@ -992,13 +1147,938 @@ function Spark({ data, color }: { data: { w: string; v: number }[]; color: strin
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// HoB — SETU INTELLIGENCE WIDGETS
+// HoB — EXECUTIVE PRIMARY (Head of Credit Cards ExecutiveView pattern)
 // ─────────────────────────────────────────────────────────────────────────
-function HeadlineBrief({ onPick, liveLabel }: { onPick: (c: HeadlineCard) => void; liveLabel: string }) {
+function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+  const h = hex.replace("#", "");
+  if (h.length === 3) {
+    const r = parseInt(h[0] + h[0], 16);
+    const g = parseInt(h[1] + h[1], 16);
+    const b = parseInt(h[2] + h[2], 16);
+    if ([r, g, b].some((n) => Number.isNaN(n))) return null;
+    return { r, g, b };
+  }
+  if (h.length === 6) {
+    const r = parseInt(h.slice(0, 2), 16);
+    const g = parseInt(h.slice(2, 4), 16);
+    const b = parseInt(h.slice(4, 6), 16);
+    if ([r, g, b].some((n) => Number.isNaN(n))) return null;
+    return { r, g, b };
+  }
+  return null;
+}
+
+function withAlpha(hex: string, a: number) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return `rgba(0,0,0,${a})`;
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;
+}
+
+function trendLineColorFromSpark(spark: number[], FT: FastagPalette): string {
+  const diff = spark[spark.length - 1] - spark[0];
+  const flatBand = 1;
+  if (diff > flatBand) return FT.green;
+  if (diff < -flatBand) return FT.red;
+  return FT.amber;
+}
+
+function MiniHalfGaugeFt({ label, value, color, trackFill }: { label: string; value: number; color: string; trackFill: string }) {
+  const clamped = Math.max(0, Math.min(100, value));
+  const data = [{ name: label, value: clamped, fill: color }];
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flex: 1, minWidth: 0, gap: 6 }}>
+      <div style={{ position: "relative", width: "100%", height: 58 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <RadialBarChart data={data} startAngle={180} endAngle={0} innerRadius={32} outerRadius={46} cx="50%" cy="100%">
+            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} axisLine={false} />
+            <RadialBar dataKey="value" cornerRadius={4} background={{ fill: trackFill }} />
+          </RadialBarChart>
+        </ResponsiveContainer>
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            bottom: 2,
+            transform: "translateX(-50%)",
+            fontSize: 14,
+            fontWeight: 800,
+            color,
+            fontFamily: "var(--mono)",
+            pointerEvents: "none",
+            whiteSpace: "nowrap",
+            lineHeight: 1,
+          }}
+        >
+          {clamped}%
+        </div>
+      </div>
+      <div
+        style={{
+          fontSize: 10,
+          color: "inherit",
+          opacity: 0.72,
+          textTransform: "uppercase",
+          letterSpacing: 0.4,
+          textAlign: "center",
+          lineHeight: 1.2,
+          minHeight: 30,
+          paddingTop: 2,
+          width: "100%",
+        }}
+      >
+        {label}
+      </div>
+    </div>
+  );
+}
+
+function FastagAiInsightCallout({ text, accent }: { text: string; accent: string }) {
+  const FT = useFT();
+  return (
+    <div
+      style={{
+        background: FT.elevated,
+        borderRadius: 10,
+        padding: "14px 16px",
+        borderTop: `1px solid ${FT.borderLight}`,
+        borderRight: `1px solid ${FT.borderLight}`,
+        borderBottom: `1px solid ${FT.borderLight}`,
+        borderLeft: `3px solid ${accent}`,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <Sparkles size={12} color={accent} />
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              color: accent,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+            }}
+          >
+            Conversation AI
+          </span>
+        </div>
+        <AiGeneratedMark compact />
+      </div>
+      <p style={{ fontSize: 12.5, color: FT.textSec, lineHeight: 1.55, margin: 0 }}>{text}</p>
+    </div>
+  );
+}
+
+function HobGatewayTile({
+  tile,
+  onOpen,
+  compactMetaMap = HOB_TILE_COMPACT_META,
+}: {
+  tile: HobGatewayTileData;
+  onOpen: () => void;
+  compactMetaMap?: Record<
+    HobExecutiveTileId,
+    {
+      micro: string;
+      leftGauge: { label: string; value: number };
+      rightGauge: { label: string; value: number };
+      bottomLeft: { label: string; value: string; valueColor?: string };
+      bottomRight: { label: string; value: string; valueColor?: string };
+    }
+  >;
+}) {
+  const FT = useFT();
+  const gradUid = useId().replace(/:/g, "");
+  const visualTone = tile.visualTone;
+  const TileIcon = tile.id === "sales_issuance" ? Target : tile.id === "ecosystem_partner" ? Flame : Shield;
+  const m = compactMetaMap[tile.id];
+  const trendPad = HOB_TILE_TREND_PAD[tile.id];
+  const trendData = tile.spark.map((v, i) => ({ w: `D${i + 1}`, v }));
+  const trendLineColor = trendLineColorFromSpark([...tile.spark], FT);
+  const gaugeTrack = withAlpha(FT.border, 0.65);
+  const defaultTileShadow = `0 8px 32px ${withAlpha(visualTone, 0.082)}`;
+  const hoverTileShadow = `0 0 0 2px ${visualTone}, 0 8px 28px ${withAlpha(visualTone, 0.133)}`;
+  const deltaColor = tile.delta < 0 ? FT.red : FT.green;
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      style={{
+        textAlign: "left",
+        background: FT.elevated,
+        border: `1px solid ${withAlpha(visualTone, 0.25)}`,
+        borderRadius: 16,
+        padding: "20px 20px 16px",
+        cursor: "pointer",
+        transition: "all 0.25s",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        height: "100%",
+        minWidth: 0,
+        boxShadow: defaultTileShadow,
+        color: FT.text,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-2px)";
+        e.currentTarget.style.boxShadow = hoverTileShadow;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = defaultTileShadow;
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            background: withAlpha(visualTone, 0.12),
+            display: "grid",
+            placeItems: "center",
+            flexShrink: 0,
+          }}
+        >
+          <TileIcon size={18} color={visualTone} />
+        </div>
+        <div style={{ minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: 15,
+              fontWeight: 700,
+              color: FT.text,
+              lineHeight: 1.2,
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {tile.title}
+          </div>
+          <div style={{ fontSize: 11, color: FT.textMut, marginTop: 4, lineHeight: 1.35 }}>{m.micro}</div>
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)",
+          gap: 12,
+          flex: 1,
+          minHeight: 0,
+          alignItems: "stretch",
+        }}
+      >
+        <div style={{ minWidth: 0, position: "relative", display: "flex", flexDirection: "column", flex: 1 }}>
+          <span
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              fontSize: 12,
+              color: deltaColor,
+              fontWeight: 700,
+              fontFamily: "var(--mono)",
+            }}
+          >
+            {tile.delta >= 0 ? "+" : ""}
+            {tile.delta} pts
+          </span>
+          <div style={{ marginBottom: 6, paddingRight: 56 }}>
+            <div style={{ fontSize: 34, fontWeight: 800, color: FT.text, fontFamily: "var(--mono)", lineHeight: 1 }}>
+              {tile.score}
+            </div>
+          </div>
+          <div style={{ width: "100%", flex: 1, minHeight: 88 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trendData} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id={`hob-grad-${gradUid}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={trendLineColor} stopOpacity={0.42} />
+                    <stop offset="55%" stopColor={trendLineColor} stopOpacity={0.16} />
+                    <stop offset="100%" stopColor={trendLineColor} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="w" hide />
+                <YAxis
+                  hide
+                  domain={[
+                    (min: number) => Math.max(0, min - trendPad.below),
+                    (max: number) => max + trendPad.above,
+                  ]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="v"
+                  stroke={trendLineColor}
+                  strokeWidth={3}
+                  fill={`url(#hob-grad-${gradUid})`}
+                  fillOpacity={1}
+                  dot={false}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, color: FT.textMut }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <MiniHalfGaugeFt label={m.leftGauge.label} value={m.leftGauge.value} color={trendLineColor} trackFill={gaugeTrack} />
+            <MiniHalfGaugeFt
+              label={m.rightGauge.label}
+              value={Math.min(100, m.rightGauge.value)}
+              color={tile.id === "ecosystem_partner" ? FT.urgency : FT.amber}
+              trackFill={gaugeTrack}
+            />
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "10px 12px",
+              paddingTop: 10,
+              borderTop: `1px solid ${FT.borderLight}`,
+            }}
+          >
+            {[m.bottomLeft, m.bottomRight].map((b) => (
+              <div key={b.label}>
+                <div style={{ fontSize: 10, textTransform: "uppercase", letterSpacing: 0.4 }}>{b.label}</div>
+                <div
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 700,
+                    fontFamily: "var(--mono)",
+                    marginTop: 4,
+                    color: b.valueColor ?? FT.text,
+                  }}
+                >
+                  {b.value}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <FastagAiInsightCallout text={tile.aiInsight} accent={visualTone} />
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-end",
+          gap: 4,
+          fontSize: 12,
+          fontWeight: 700,
+          color: visualTone,
+        }}
+      >
+        View details <ArrowRight size={14} />
+      </div>
+    </button>
+  );
+}
+
+type ExecutivePulseItem = {
+  q: string;
+  main: string;
+  pill: string;
+  tone: string;
+};
+
+function ExecutiveBriefStrip({ summary }: { summary: string }) {
+  const FT = useFT();
+  return (
+    <div
+      style={{
+        background: FT.elevated,
+        borderRadius: 10,
+        padding: "10px 12px",
+        border: `1px solid ${FT.borderLight}`,
+        boxShadow: `0 0 0 1px ${FT.amber}12 inset`,
+        marginBottom: 10,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          <Sparkles size={13} color={FT.amber} />
+          <span style={{ fontSize: 13, fontWeight: 700, color: FT.amber, letterSpacing: "0.08em", textTransform: "uppercase" }}>
+            Executive Brief
+          </span>
+        </div>
+        <AiGeneratedMark compact />
+      </div>
+      <div style={{ marginTop: 7, fontSize: 13.5, color: FT.textSec, lineHeight: 1.4 }}>{summary}</div>
+    </div>
+  );
+}
+
+const PROCESS_GAP_INSIGHTS = [
+  {
+    gap: "Vehicle class set at fitment",
+    call: "Issued two-wheeler tag on my four-wheeler",
+    process: "KYV / vehicle-class verification missing at OEM fitment",
+    impact: "1.6× Day-1 complaints on OEM channel",
+  },
+  {
+    gap: "Plaza AVC sensor calibration",
+    call: "Charged ₹220 instead of ₹110 at Khalapur",
+    process: "Acquirer-side axle-class sensor — not bank dispute workflow",
+    impact: "87 signals · NH-48 corridor · IDFC FIRST acquirer",
+  },
+  {
+    gap: "Annual Pass not offered on recharge",
+    call: "I drive Pune three times a week — nobody mentioned the pass",
+    process: "Agent script miss on 3rd+ recharge trigger",
+    impact: "37 missed prompts yesterday · ₹1.11L flow at risk",
+  },
+];
+
+function ProcessGapInsightsPanel() {
+  const FT = useFT();
+  return (
+    <Panel
+      title={
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          Process gaps from customer calls
+          <AiGeneratedMark compact />
+        </span>
+      }
+      subtitle="Every call maps to a fixable process step — Fluid CX surfaces gaps for operations and compliance"
+    >
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12 }}>
+        {PROCESS_GAP_INSIGHTS.map((row) => (
+          <div
+            key={row.gap}
+            style={{
+              background: FT.elevated,
+              border: `1px solid ${FT.borderLight}`,
+              borderLeft: `3px solid ${FT.primary}`,
+              borderRadius: 10,
+              padding: 12,
+            }}
+          >
+            <div style={{ fontSize: 12, fontWeight: 700, color: FT.text, marginBottom: 6 }}>{row.gap}</div>
+            <div style={{ fontSize: 11, color: FT.accent, fontStyle: "italic", lineHeight: 1.45, marginBottom: 8 }}>
+              “{row.call}”
+            </div>
+            <div style={{ fontSize: 11, color: FT.textSec, lineHeight: 1.45 }}>
+              <strong style={{ color: FT.text }}>Process:</strong> {row.process}
+            </div>
+            <div style={{ fontSize: 11, color: FT.textMut, marginTop: 6 }}>{row.impact}</div>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function ExecutivePulseStrip({
+  items,
+  variant = "default",
+}: {
+  items: ExecutivePulseItem[];
+  variant?: "default" | "partition";
+}) {
+  const FT = useFT();
+  const isPartition = variant === "partition";
+  const partitionCardBg = FT.bg === FT_LIGHT.bg ? "rgba(26,26,46,0.04)" : "rgba(255,255,255,0.03)";
+
+  return (
+    <div
+      style={{
+        background: FT.elevated,
+        borderRadius: 10,
+        padding: "12px 14px",
+        borderTop: `1px solid ${FT.borderLight}`,
+        borderRight: `1px solid ${FT.borderLight}`,
+        borderBottom: `1px solid ${FT.borderLight}`,
+        borderLeft: `3px solid ${FT.amber}`,
+        marginBottom: 4,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 9 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          {isPartition ? (
+            <span style={{ fontSize: 13, color: FT.amber }}>✨</span>
+          ) : (
+            <Sparkles size={13} color={FT.amber} />
+          )}
+          <span style={{ fontSize: 12, fontWeight: 700, color: FT.amber, letterSpacing: "0.1em", textTransform: "uppercase" }}>
+            Executive Pulse
+          </span>
+        </div>
+        <AiGeneratedMark compact />
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+        {items.map((item, idx) => (
+          <div
+            key={item.q}
+            style={{
+              background: isPartition ? partitionCardBg : FT.card,
+              border: `1px solid ${FT.borderLight}`,
+              borderRadius: 8,
+              padding: "9px 10px",
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+              <div
+                style={{
+                  fontSize: 13.5,
+                  fontWeight: 700,
+                  color: isPartition ? "#b7a6ff" : FT.primary,
+                  lineHeight: 1.35,
+                }}
+              >
+                {idx + 1}. {item.q}
+              </div>
+              {!isPartition && item.pill ? (
+                <span style={{ fontSize: 10, fontWeight: 700, color: item.tone, whiteSpace: "nowrap" }}>{item.pill}</span>
+              ) : null}
+            </div>
+            <div style={{ fontSize: 13.5, color: FT.textSec, lineHeight: 1.35, fontWeight: 600 }}>{item.main}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HobSummaryKpiStrip() {
+  const FT = useFT();
+  return (
+    <div
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 20,
+        background: FT.headerBackdrop,
+        backdropFilter: "blur(10px)",
+        borderRadius: 12,
+        border: `1px solid ${FT.border}`,
+        padding: "12px 14px",
+        marginBottom: 4,
+      }}
+    >
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 10 }}>
+        {HOB_SUMMARY_KPIS.map((kpi) => (
+          <div
+            key={kpi.label}
+            style={{
+              background: FT.elevated,
+              border: `1px solid ${FT.borderLight}`,
+              borderRadius: 10,
+              padding: "10px 12px",
+              minWidth: 0,
+            }}
+          >
+            <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", letterSpacing: 0.5, fontWeight: 700, marginBottom: 6 }}>
+              {kpi.label}
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: FT.text, fontFamily: "var(--mono)", lineHeight: 1.2, marginBottom: 4 }}>
+              {kpi.value}
+            </div>
+            {kpi.delta !== null ? (
+              <div
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color:
+                    kpi.label === "Revenue Today"
+                      ? kpi.delta >= 0
+                        ? FT.green
+                        : FT.red
+                      : kpi.label === "Open Flags"
+                        ? kpi.delta > 0
+                          ? FT.red
+                          : FT.green
+                        : kpi.delta >= 0
+                          ? FT.green
+                          : FT.red,
+                }}
+              >
+                {kpi.delta >= 0 ? "+" : ""}
+                {kpi.delta}%
+                {kpi.deltaLabel ? <span style={{ color: FT.textMut, fontWeight: 500 }}> {kpi.deltaLabel}</span> : null}
+              </div>
+            ) : (
+              <div style={{ fontSize: 11, color: FT.textMut }}>#1 today</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HobExecutivePulseStrip() {
+  const { period } = useFastagPeriod();
+  const lines = periodPulseLines(period);
+  const pulse: ExecutivePulseItem[] = [
+    { q: "🔴 What's critical", main: lines[0], pill: "", tone: "" },
+    { q: "🎯 Where's your focus", main: lines[1], pill: "", tone: "" },
+    { q: "🟢 What's stable/ on-track", main: lines[2], pill: "", tone: "" },
+  ];
+  return <ExecutivePulseStrip items={pulse} variant="partition" />;
+}
+
+function CohExecutiveBriefStrip() {
+  return (
+    <ExecutiveBriefStrip summary="CX board tracks three outcomes: where customers struggle in journey, whether SLA promise is being kept, and which resolved issues are still recurring after support response." />
+  );
+}
+
+function CohExecutivePulseStrip() {
+  const pulse: ExecutivePulseItem[] = [
+    {
+      q: "🔴 What's critical",
+      main: "1 in 3 new users stall at KYC/tag-affixing; onboarding friction is the #1 journey detractor and frustration sentiment is climbing.",
+      pill: "",
+      tone: "",
+    },
+    {
+      q: "🎯 Where's your focus",
+      main: "Refund-dispute resolution is breaching SLA at 34%, up from 26% WoW, with 56 double-deduction cases ageing past the promise window.",
+      pill: "",
+      tone: "",
+    },
+    {
+      q: "🟢 What's stable / on-track",
+      main: "App-channel CSAT is steady at 4.1/5 vs IVR 3.4; self-serve deflection is holding while #FASTagFail movement is monitored.",
+      pill: "",
+      tone: "",
+    },
+  ];
+  return <ExecutivePulseStrip items={pulse} variant="partition" />;
+}
+
+function mockFastagAIAnswer(q: string): string {
+  const l = q.toLowerCase();
+  if (l.includes("pno") || l.includes("nh-48") || l.includes("khalapur"))
+    return "All 87 Khalapur signals point to IDFC FIRST's AVC sensor on NH-48 — vehicle class misread, not a Vahan Bank dispute process failure. Social flare (62 mentions, auto journalist amplifying) is geo-clustered to the same plaza. Brief the PNO before 9am with: plaza = Khalapur, acquirer = IDFC FIRST, volume = 94 calls in 12h at 3.2× baseline. Do not issue public statement until acquirer confirms sensor recalibration window.";
+  if (l.includes("annual pass") || l.includes("missed"))
+    return "37 calls yesterday met the Annual Pass trigger (3rd+ recharge in 30 days OR commute mention) and the agent did not surface the ₹3,000 offer. At ₹3,000 per pass, that is ₹1.11L in missed gross flow from yesterday alone. Top trigger phrase missed: 'I drive to Pune three times a week' — agent processed the recharge without asking about toll frequency.";
+  if (l.includes("io") || l.includes("june") || l.includes("evidence"))
+    return "54 of your 186 open cases are below 70% evidence readiness. The 4 highest-risk: Case 4421 (38% ready, 18 days old, 6 days to IO review), Case 7803 (52%, 12 days old), Case 2219 (61%, 7 days old), Case 5534 (64%, 9 days old). Auto-assembling all 54 takes under 3 minutes in Fluid CX — the IO desk samples oldest cases first.";
+  if (l.includes("corridor") || l.includes("pattern") || l.includes("one plaza"))
+    return "This is a corridor pattern, not a single plaza event. Khalapur (87 signals), Talegaon (61 signals), and Manesar (28 signals) are all NH-48 and all share the IDFC FIRST acquirer. The pattern is AVC sensor firmware — the same sensor version is deployed across that corridor. Nelamangala and Devanahalli (Axis acquirer, NH-44) are clean. This is an acquirer-specific infrastructure issue.";
+  if (l.includes("saksham") || l.includes("conduct"))
+    return "1 conduct flag this shift: SK-07 (Rajesh Bhosale), call at 19:42 IST — post-permitted-hours + employer threat language. Aggressive-language confidence: High. 2 prior calls from this agent in the trailing 7 days were clean. Route this to Compliance via the Saksham governance contract within 30 minutes. Fluid CX does not act on the recovery workflow directly.";
+  if (l.includes("issuance") || l.includes("channel") || l.includes("day-1"))
+    return "OEM-fitted tags are generating 16.4 complaints per 1,000 tags in the first 30 days — 1.6× the cohort median of 10.2. Root cause: 3 of 5 OEM partners are not running KYV vehicle-class verification at fitment, so the class is set by the dealer's guess. Dealer channel is at 11.5× (above median but improving). E-com and Branch are within range.";
+  if (l.includes("huddle") || l.includes("brief") || l.includes("10am"))
+    return "5-bullet ops huddle brief:\n1. NH-48 Khalapur AVC cluster (94 calls, 3.2×) — IDFC FIRST acquirer, PNO briefed, no Vahan Bank action pending\n2. RB-IOS: 54 cases below 70% evidence readiness, 32 days to deadline — COH assembling packs today\n3. PhonePe gateway: 23 recharge failures in 30 min — Tech monitoring, below escalation threshold\n4. Annual Pass: 37 missed prompts yesterday — script refresh for afternoon shift\n5. Saksham conduct flag: 1 case routed to Compliance — SK-07, post-hours call";
+  return "Synthesising from Fluid CX conversation data across Voice, Chat, Social, and 1033 streams. Try one of the suggested prompts or ask specifically about a plaza, signal, or deadline.";
+}
+
+function FastagAIDayGenerator({ hidden = false }: { hidden?: boolean }) {
+  const FT = useFT();
+  const [open, setOpen] = useState(false);
+  const [prompt, setPrompt] = useState("");
+  const [messages, setMessages] = useState<{ role: "user" | "ai"; text: string }[]>([]);
+  const [busy, setBusy] = useState(false);
+
+  if (hidden) return null;
+
+  const send = (text: string) => {
+    if (!text.trim()) return;
+    setMessages((m) => [...m, { role: "user", text }]);
+    setPrompt("");
+    setBusy(true);
+    window.setTimeout(() => {
+      setMessages((m) => [
+        ...m,
+        {
+          role: "ai",
+          text: `✨ Based on current conversation data across Voice, Chat, Social, and 1033 streams:\n\n${mockFastagAIAnswer(text)}`,
+        },
+      ]);
+      setBusy(false);
+    }, 900);
+  };
+
+  return (
+    <>
+      {!open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          title="AI Day Generator — Ask anything about your FASTag portfolio"
+          style={{
+            position: "fixed",
+            bottom: 22,
+            right: 22,
+            width: 56,
+            height: 56,
+            borderRadius: 28,
+            border: "none",
+            background: `linear-gradient(135deg, ${FT.primary} 0%, #5532D6 100%)`,
+            color: "#ffffff",
+            boxShadow: `0 12px 30px ${FT.primarySoft}`,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 50,
+          }}
+        >
+          <Sparkles size={22} />
+        </button>
+      )}
+
+      {open && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 22,
+            right: 22,
+            width: 420,
+            maxHeight: "78vh",
+            background: FT.elevated,
+            border: `1px solid ${FT.primaryBorder}`,
+            borderRadius: 16,
+            boxShadow: FT.toastShadow,
+            display: "flex",
+            flexDirection: "column",
+            zIndex: 50,
+            overflow: "hidden",
+          }}
+        >
+          <div
+            style={{
+              padding: "12px 14px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              background: `linear-gradient(135deg, ${FT.primarySoft} 0%, ${FT.accentSoft} 100%)`,
+              borderBottom: `1px solid ${FT.borderLight}`,
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <Sparkles size={14} color={FT.primary} />
+              <div>
+                <div style={{ fontSize: 13, color: FT.text, fontWeight: 800 }}>AI Day Generator · FASTag</div>
+                <div style={{ fontSize: 10, color: FT.textMut }}>Head of Business · Vahan Bank</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              style={{ background: "transparent", border: "none", color: FT.textSec, cursor: "pointer" }}
+            >
+              <X size={16} />
+            </button>
+          </div>
+
+          <div style={{ flex: 1, overflowY: "auto", padding: 12, display: "flex", flexDirection: "column", gap: 10 }}>
+            {messages.length === 0 && (
+              <>
+                <div style={{ fontSize: 11, color: FT.textMut, marginBottom: 4 }}>
+                  Ask me about your FASTag portfolio — listening across Voice, Chat, Social, and 1033.
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {FASTAG_AI_PROMPTS.map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => send(p)}
+                      style={{
+                        textAlign: "left",
+                        background: FT.surface,
+                        borderTop: `1px solid ${FT.border}`,
+                        borderRight: `1px solid ${FT.border}`,
+                        borderBottom: `1px solid ${FT.border}`,
+                        borderLeft: `2px solid ${FT.primary}`,
+                        color: FT.textSec,
+                        borderRadius: 8,
+                        padding: "8px 10px",
+                        fontSize: 11,
+                        cursor: "pointer",
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      <Sparkles size={10} color={FT.primary} style={{ marginRight: 5, marginBottom: -1 }} />
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {messages.map((m, i) => (
+              <div
+                key={i}
+                style={{
+                  background: m.role === "user" ? FT.accentSoft : FT.primarySoft,
+                  border: `1px solid ${m.role === "user" ? FT.accent : FT.primary}40`,
+                  borderRadius: 10,
+                  padding: "8px 10px",
+                  fontSize: 11.5,
+                  color: FT.text,
+                  whiteSpace: "pre-wrap",
+                  lineHeight: 1.5,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 9,
+                    color: m.role === "user" ? FT.accent : FT.primary,
+                    marginBottom: 3,
+                    fontWeight: 700,
+                    letterSpacing: 0.5,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {m.role === "user" ? "You" : "AI"}
+                </div>
+                {m.text}
+              </div>
+            ))}
+            {busy && (
+              <div style={{ fontSize: 11, color: FT.textMut, display: "flex", alignItems: "center", gap: 6 }}>
+                <RefreshCw size={11} />
+                <span>Synthesising conversation data…</span>
+              </div>
+            )}
+          </div>
+
+          <div style={{ padding: 10, borderTop: `1px solid ${FT.borderLight}`, display: "flex", gap: 6 }}>
+            <input
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") send(prompt);
+              }}
+              placeholder="Ask about NH-48, IO cases, issuance channels…"
+              style={{
+                flex: 1,
+                background: FT.surface,
+                border: `1px solid ${FT.border}`,
+                borderRadius: 8,
+                padding: "8px 10px",
+                color: FT.text,
+                fontSize: 12,
+                outline: "none",
+              }}
+            />
+            <button
+              type="button"
+              onClick={() => send(prompt)}
+              style={{
+                background: FT.primary,
+                border: "none",
+                borderRadius: 8,
+                width: 36,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                color: "#ffffff",
+              }}
+            >
+              <Send size={14} />
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function CohPrimaryView({
+  onTileOpen,
+}: {
+  onTileOpen: (tileId: HobExecutiveTileId) => void;
+}) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <CohExecutivePulseStrip />
+      <section style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12, alignItems: "stretch" }}>
+        {COH_GATEWAY_TILES.map((tile) => (
+          <HobGatewayTile key={tile.id} tile={tile} onOpen={() => onTileOpen(tile.id)} compactMetaMap={COH_TILE_COMPACT_META} />
+        ))}
+      </section>
+    </div>
+  );
+}
+
+function HobPrimaryView({ onTileOpen }: { onTileOpen: (tileId: HobExecutiveTileId) => void }) {
+  const FT = useFT();
+  const { period } = useFastagPeriod();
+  const { tiles, compactMetaMap } = useMemo(() => {
+    const nextCompact = { ...HOB_TILE_COMPACT_META };
+    const nextTiles = HOB_GATEWAY_TILES.map((tile) => {
+      const meta = HOB_TILE_COMPACT_META[tile.id];
+      const snap = resolveGatewayTile(
+        tile.id,
+        {
+          score: tile.score,
+          delta: tile.delta,
+          deltaLabel: tile.deltaLabel,
+          spark: [...tile.spark],
+          aiInsight: tile.aiInsight,
+          compact: { leftGauge: meta.leftGauge.value, rightGauge: meta.rightGauge.value },
+        },
+        period,
+      );
+      if (snap.compact) {
+        nextCompact[tile.id] = {
+          ...meta,
+          leftGauge: { ...meta.leftGauge, value: snap.compact.leftGauge },
+          rightGauge: { ...meta.rightGauge, value: snap.compact.rightGauge },
+        };
+      }
+      return {
+        ...tile,
+        score: snap.score,
+        delta: snap.delta,
+        deltaLabel: snap.deltaLabel,
+        spark: snap.spark as unknown as HobGatewayTileData["spark"],
+        aiInsight: snap.aiInsight,
+      };
+    });
+    return { tiles: nextTiles, compactMetaMap: nextCompact };
+  }, [period]);
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, width: "100%" }}>
+      <style>{`
+        .fastag-hob-tiles {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 12px;
+          align-items: stretch;
+        }
+        @media (max-width: 1180px) {
+          .fastag-hob-tiles { grid-template-columns: 1fr; }
+        }
+      `}</style>
+      <HobExecutivePulseStrip />
+      <section className="fastag-hob-tiles">
+        {tiles.map((tile) => (
+          <HobGatewayTile key={tile.id} tile={tile} compactMetaMap={compactMetaMap} onOpen={() => onTileOpen(tile.id)} />
+        ))}
+      </section>
+      <FastagRiskSpikeMonitor tokens={FT} />
+      <FastagAiInsightsSection tokens={FT} />
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// HoB — LEGACY WIDGETS (drills / COH / shared screens)
+// ─────────────────────────────────────────────────────────────────────────
+function HeadlineBrief({ onPick, liveLabel, timeWindow }: { onPick: (c: HeadlineCard) => void; liveLabel: string; timeWindow: TimeWindow }) {
+  const FT = useFT();
   return (
     <Panel
       title="Today's Headline — top 3 growing this morning"
-      subtitle="Vs 8-week baseline · computed at 08:30 · refreshes live"
+      subtitle={`Vs 8-week baseline · ${TIME_WINDOW_LABEL[timeWindow]} · computed at 08:30 · refreshes live`}
       action={
         <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: FT.accent }}>
           <span style={{ width: 8, height: 8, borderRadius: "50%", background: FT.accent, boxShadow: `0 0 12px ${FT.accent}` }} />
@@ -1034,7 +2114,6 @@ function HeadlineBrief({ onPick, liveLabel }: { onPick: (c: HeadlineCard) => voi
                 <Pill tone={isCritical ? "urgency" : "cyan"} size="xs">
                   {c.zScore.toFixed(1)}× baseline
                 </Pill>
-                <Pill tone="neutral" size="xs">{c.signal}</Pill>
                 <ProvenancePill count={c.calls} window={c.window} confidence="High" />
               </div>
               <div style={{ fontSize: 16, fontWeight: 700, color: FT.text, marginBottom: 12 }}>{c.category}</div>
@@ -1066,6 +2145,7 @@ function HeadlineBrief({ onPick, liveLabel }: { onPick: (c: HeadlineCard) => voi
 }
 
 function ActionQueueList({ rows, onPick }: { rows: ActionRow[]; onPick: (r: ActionRow) => void }) {
+  const FT = useFT();
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {rows.map((r) => (
@@ -1098,7 +2178,7 @@ function ActionQueueList({ rows, onPick }: { rows: ActionRow[]; onPick: (r: Acti
               flexShrink: 0,
             }}
           >
-            <span style={{ fontSize: 10, fontWeight: 800, color: FT.primary }}>{r.signal}</span>
+            <span style={{ fontSize: 10, fontWeight: 800, color: FT.primary }}>{r.count}</span>
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: FT.text, marginBottom: 4 }}>{r.title}</div>
@@ -1116,18 +2196,24 @@ function ActionQueueList({ rows, onPick }: { rows: ActionRow[]; onPick: (r: Acti
   );
 }
 
-function ChargebackIntel({ onPick }: { onPick: (r: ActionRow) => void }) {
+function ExcessTollRefundIntel({ onPick }: { onPick: (r: ActionRow) => void }) {
+  const FT = useFT();
   return (
     <Panel
-      title="Chargeback Intelligence"
-      subtitle="Dispute potential + churn-intent — conversation-side signals"
+      title={
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          Excess toll refund intelligence
+          <AiGeneratedMark compact />
+        </span>
+      }
+      subtitle="Wrong toll amount or double deduction — conversation-side leading indicator"
     >
       <button
         onClick={() =>
           onPick({
             id: "cb-s013",
             signal: "S013",
-            title: "Dispute potential — 146 chargeback-eligible calls this week",
+            title: "Excess toll refund potential — 146 eligible calls this week",
             count: 146,
             impact: "Conversation-side only · full ratio needs NPCI feed",
             owner: "→ HoB / NPCI dispute desk",
@@ -1148,20 +2234,20 @@ function ChargebackIntel({ onPick }: { onPick: (r: ActionRow) => void }) {
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <span style={{ fontSize: 12, color: FT.textSec, fontWeight: 600 }}>Dispute potential · this week</span>
-          <Pill tone="warn" size="xs">PARTIAL · S013</Pill>
+          <Pill tone="warn" size="xs">PARTIAL</Pill>
         </div>
         <div style={{ fontSize: 28, fontWeight: 800, color: FT.text, marginBottom: 4 }}>146</div>
         <div style={{ fontSize: 11, color: FT.textMut, marginBottom: 10 }}>
-          Chargeback-eligible calls · conversation-side only · [Full ratio needs NPCI feed]
+          Excess toll refund-eligible calls · conversation-side only · [Full ratio needs NPCI feed]
         </div>
-        <Spark data={CHARGEBACK_SPARK} color={FT.accent} />
+        <Spark data={EXCESS_TOLL_SPARK} color={FT.accent} gradId="spk-grad-dispute" />
       </button>
       <button
         onClick={() =>
           onPick({
             id: "cb-s001",
             signal: "S001",
-            title: "Churn-intent mentions — 23 calls (trailing 30d)",
+            title: "Tag closure or issuer-switch intent — 23 calls (trailing 30d)",
             count: 23,
             impact: "0.8× baseline · within range",
             owner: "→ HoB · Marketing",
@@ -1179,7 +2265,7 @@ function ChargebackIntel({ onPick }: { onPick: (r: ActionRow) => void }) {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-          <span style={{ fontSize: 12, color: FT.textSec, fontWeight: 600 }}>Churn-intent mentions · 30d</span>
+          <span style={{ fontSize: 12, color: FT.textSec, fontWeight: 600 }}>Closure / switch intent · 30d</span>
           <Pill tone="ok" size="xs">0.8× baseline</Pill>
         </div>
         <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
@@ -1192,10 +2278,16 @@ function ChargebackIntel({ onPick }: { onPick: (r: ActionRow) => void }) {
 }
 
 function ChannelQualityBar() {
+  const FT = useFT();
   return (
     <Panel
-      title="Day-1 Channel Quality — complaints per 1K tags (30d cohort)"
-      subtitle="Issuance channel · complaint rate in the first 30 days of tag life · dotted = cohort median"
+      title={
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          Channel issuance complaint rate (first 30 days)
+          <AiGeneratedMark compact />
+        </span>
+      }
+      subtitle="Complaints per 1,000 tags in the first 30 days of tag life"
     >
       <div style={{ width: "100%", height: 220 }}>
         <ResponsiveContainer width="100%" height="100%">
@@ -1206,9 +2298,9 @@ function ChannelQualityBar() {
             <RechartsTooltip
               contentStyle={{ background: FT.elevated, border: `1px solid ${FT.border}`, borderRadius: 8, fontSize: 12 }}
               labelStyle={{ color: FT.text }}
-              cursor={{ fill: "rgba(255,255,255,0.04)" }}
+              cursor={{ fill: FT.chartCursorFill }}
             />
-            <ReferenceLine y={10.2} stroke={T.textMut} strokeDasharray="4 4" label={{ value: "median 10.2", fill: T.textMut, fontSize: 10, position: "insideTopRight" }} />
+            <ReferenceLine y={10.2} stroke={FT.textMut} strokeDasharray="4 4" />
             <Bar dataKey="rate" radius={[6, 6, 0, 0]}>
               {CHANNEL_QUALITY.map((row) => (
                 <Cell key={row.channel} fill={row.fill} />
@@ -1217,14 +2309,12 @@ function ChannelQualityBar() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <div style={{ marginTop: 10, fontSize: 11, color: FT.textMut }}>
-        OEM-fitted at 1.6× cohort median — surfaces Day-1 KYV/AVC fitment errors · S007
-      </div>
     </Panel>
   );
 }
 
 function SentimentDriftChart({ onExplore }: { onExplore: () => void }) {
+  const FT = useFT();
   return (
     <Panel
       title="Sentiment Drift — early warning"
@@ -1277,14 +2367,17 @@ function SentimentDriftChart({ onExplore }: { onExplore: () => void }) {
   );
 }
 
-function StrategyTileGrid({ onPick }: { onPick: (t: StrategyTile) => void }) {
+function StrategyTileGrid({ onPick, tileIds }: { onPick: (t: StrategyTile) => void; tileIds?: string[] }) {
+  const FT = useFT();
+  const tiles = tileIds ? STRATEGY_TILES.filter((t) => tileIds.includes(t.id)) : STRATEGY_TILES;
+  const visible = tiles.filter((t) => t.id !== "st-campaign" || t.value !== "—");
   return (
     <Panel
-      title="Strategy Signals"
+      title="Operational Signals"
       subtitle="Slower signals — none fire as alerts · click any tile to drill in"
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12 }}>
-        {STRATEGY_TILES.map((t) => {
+        {visible.map((t) => {
           // Stage 4 §D — distinct EMPTY state: muted styling and a calm
           // "no active campaign" caption instead of looking like missing data.
           const isEmpty = t.value === "—";
@@ -1307,7 +2400,7 @@ function StrategyTileGrid({ onPick }: { onPick: (t: StrategyTile) => void }) {
               }}
             >
               <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", letterSpacing: 0.6, fontWeight: 700, marginBottom: 6 }}>
-                {t.signal} · {t.title}
+                {t.title}
               </div>
               <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
                 {isEmpty ? (
@@ -1331,7 +2424,8 @@ function StrategyTileGrid({ onPick }: { onPick: (t: StrategyTile) => void }) {
 // ─────────────────────────────────────────────────────────────────────────
 // COH — OPERATIONS CONSOLE WIDGETS
 // ─────────────────────────────────────────────────────────────────────────
-function ShiftStatusBar({ oc005Gap }: { oc005Gap: number }) {
+function ShiftStatusBar({ oc005Gap, timeWindow }: { oc005Gap: number; timeWindow: TimeWindow }) {
+  const FT = useFT();
   // Stage 4 §B.2.1 — the OC 005 cell is wired to the COH action-queue counter,
   // so acking the OC 005 row visibly drops this number. Other cells stay
   // static for now (they read from background queue telemetry that the MVP
@@ -1349,7 +2443,7 @@ function ShiftStatusBar({ oc005Gap }: { oc005Gap: number }) {
   return (
     <Panel
       title="Shift Status — current 8h window"
-      subtitle="Genesys + Ozonetel + Salesforce · live · 65,000 daily interactions baseline"
+      subtitle={`Voice · chat · cases · live · ${TIME_WINDOW_LABEL[timeWindow]} window`}
       action={
         <Pill tone="cyan" size="xs">
           Shift · Morning · Trinetra primary
@@ -1383,6 +2477,7 @@ function ShiftStatusBar({ oc005Gap }: { oc005Gap: number }) {
 }
 
 function BpoHeatmap({ onPick }: { onPick: (cell: BpoCell) => void }) {
+  const FT = useFT();
   const vendors = Array.from(new Set(BPO_HEATMAP.map((c) => c.vendor)));
   const shifts = ["Morning", "Afternoon", "Night"] as const;
 
@@ -1402,7 +2497,7 @@ function BpoHeatmap({ onPick }: { onPick: (cell: BpoCell) => void }) {
   return (
     <Panel
       title="BPO Vendor × Shift Heatmap — repeat-call rate"
-      subtitle="Same-tag callbacks within 14 days · S017 · click any cell to coach"
+      subtitle="Same-tag callbacks within 14 days · click any cell to coach"
     >
       <div style={{ overflowX: "auto" }}>
         <div style={{ display: "grid", gridTemplateColumns: `minmax(220px,1fr) repeat(${shifts.length}, 1fr)`, gap: 8, minWidth: 480 }}>
@@ -1456,9 +2551,15 @@ function BpoHeatmap({ onPick }: { onPick: (cell: BpoCell) => void }) {
 }
 
 function ComplianceTilesRow({ onPick }: { onPick: (id: string) => void }) {
+  const FT = useFT();
   return (
     <Panel
-      title="Compliance Watch — live exposures"
+      title={
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          Compliance Watch — live exposures
+          <AiGeneratedMark compact />
+        </span>
+      }
       subtitle="Saksham conduct · Trilingual rule · RB-IOS 30-Jun · Annual Pass mis-disclosure"
     >
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 10 }}>
@@ -1495,241 +2596,8 @@ function ComplianceTilesRow({ onPick }: { onPick: (id: string) => void }) {
 // ─────────────────────────────────────────────────────────────────────────
 // SHARED SCREENS
 // ─────────────────────────────────────────────────────────────────────────
-function LiveAlertsScreen({
-  persona,
-  alerts,
-  onAck,
-  onPick,
-  onNavigate,
-}: {
-  persona: PersonaId;
-  alerts: LiveAlert[];
-  onAck: (id: string) => void;
-  onPick: (a: LiveAlert) => void;
-  onNavigate: (screen: ScreenId) => void;
-}) {
-  const [filter, setFilter] = useState<string | null>(null);
-  const visible = alerts.filter((a) => a.audience === persona || a.audience === "both");
-  const filtered = filter
-    ? visible.filter((a) => {
-        if (filter === "ombudsman") return a.signal === "S006";
-        if (filter === "queue") return a.signal === "S021";
-        if (filter === "recharge") return a.signal === "S028";
-        if (filter === "social") return a.signal === "S003";
-        if (filter === "saksham") return a.saksham || a.signal === "S018";
-        if (filter === "plaza") return a.signal === "S005";
-        return true;
-      })
-    : visible;
-  const active = filtered.filter((a) => !a.ackd);
-  const acknowledged = filtered.filter((a) => a.ackd);
-
-  const filterPills =
-    persona === "hob"
-      ? [
-          { id: null, label: "All" },
-          { id: "social", label: "Social flare" },
-          { id: "plaza", label: "Plaza cluster" },
-          { id: "ombudsman", label: "Ombudsman" },
-        ]
-      : [
-          { id: null, label: "All" },
-          { id: "ombudsman", label: "Ombudsman" },
-          { id: "queue", label: "Queue spike" },
-          { id: "recharge", label: "Recharge failure" },
-          { id: "saksham", label: "Saksham conduct" },
-        ];
-
-  const resolveAction = (a: LiveAlert) => {
-    if (persona === "hob") {
-      if (a.saksham) return "Note for Compliance";
-      if (a.signal === "S006") return a.actionLabel ?? "Review for IO / PNO";
-      if (a.signal === "S003" || a.signal === "S005") return a.actionLabel ?? "Review for PNO brief";
-      return a.actionLabel ?? "Review";
-    }
-    if (a.saksham) return "Route to Compliance";
-    if (a.signal === "S006") return "Route to Senior Agent";
-    return a.actionLabel ?? "Review";
-  };
-
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <Panel
-        title={persona === "hob" ? "Live Alerts · strategic signals" : "Live Alerts · floor actions this shift"}
-        subtitle={
-          persona === "hob"
-            ? "Social flare-ups · plaza clusters · Ombudsman threats — triangulate before the 10am ops huddle"
-            : "Ombudsman routing · queue spikes · recharge clusters · Saksham conduct — under 5-min latency"
-        }
-        action={
-          <Pill tone={persona === "hob" ? "primary" : "cyan"} size="xs">
-            {persona === "hob" ? "HoB · notified" : "COH · immediate"}
-          </Pill>
-        }
-        glow
-      >
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-          {filterPills.map((p) => {
-            const activeF = filter === p.id;
-            return (
-              <button
-                key={p.label}
-                onClick={() => setFilter(p.id)}
-                style={{
-                  background: activeF ? FT.urgency : FT.elevated,
-                  color: activeF ? "white" : FT.textSec,
-                  border: `1px solid ${activeF ? FT.urgency : FT.borderLight}`,
-                  borderRadius: 999,
-                  padding: "5px 12px",
-                  fontSize: 11,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                {p.label}
-              </button>
-            );
-          })}
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {active.length === 0 ? (
-            <div style={{ padding: 24, textAlign: "center", color: FT.textMut, fontSize: 13 }}>
-              No alerts this shift · 847 interactions processed · Baseline holding since 08:00.
-              <div style={{ marginTop: 8, fontSize: 11 }}>Last alert: yesterday 18:42 · S028 recharge cluster</div>
-            </div>
-          ) : (
-            active.map((a) => {
-              const tone = a.severity === "critical" ? "bad" : a.severity === "high" ? "warn" : "primary";
-              return (
-                <div
-                  key={a.id}
-                  style={{
-                    background: FT.elevated,
-                    border: `1px solid ${FT.borderLight}`,
-                    borderLeft: `4px solid ${a.severity === "critical" ? FT.red : a.severity === "high" ? FT.urgency : FT.primary}`,
-                    borderRadius: 10,
-                    padding: 14,
-                  }}
-                >
-                  <div style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                    <AlertTriangle size={20} color={a.severity === "critical" ? FT.red : a.severity === "high" ? FT.urgency : FT.primary} />
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                        <Pill tone={tone} size="xs">{a.signal}</Pill>
-                        <Pill tone={tone} size="xs">{a.severity}</Pill>
-                        {a.bpoSite ? <Pill tone="neutral" size="xs">{a.bpoSite}{a.shift ? ` · ${a.shift}` : ""}</Pill> : null}
-                        <span style={{ fontSize: 11, color: FT.textMut }}>· {a.capturedAt}</span>
-                      </div>
-                      <div style={{ fontSize: 14, fontWeight: 700, color: FT.text, marginBottom: 4 }}>{a.title}</div>
-                      <div style={{ fontSize: 12, color: FT.textSec, marginBottom: a.excerpt ? 8 : 0 }}>{a.context}</div>
-                      {a.excerpt ? (
-                        <div style={{ fontSize: 12, color: FT.accent, fontStyle: "italic", borderLeft: `2px solid ${FT.accent}`, paddingLeft: 10, marginBottom: 8 }}>
-                          “{a.excerpt}”
-                        </div>
-                      ) : null}
-                      {a.preThreatContext ? (
-                        <div style={{ fontSize: 11, color: FT.amber, marginBottom: 8 }}>{a.preThreatContext}</div>
-                      ) : null}
-                      {a.saksham ? (
-                        <div style={{ fontSize: 11, color: FT.textSec, background: FT.urgencySoft, borderRadius: 8, padding: "8px 10px", marginBottom: 8 }}>
-                          Fluid CX does not act on Saksham&apos;s workflow. This pattern has been flagged for Compliance review.
-                        </div>
-                      ) : null}
-                      {persona === "hob" && a.signal === "S006" ? (
-                        <div style={{ fontSize: 11, color: FT.textMut }}>Downstream owner: PNO desk + IO office · Fluid CX surfaces only</div>
-                      ) : null}
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 8, alignItems: "stretch" }}>
-                      <button
-                        onClick={() => onPick(a)}
-                        style={{
-                          background: FT.primarySoft,
-                          color: FT.primary,
-                          border: `1px solid ${FT.primaryBorder}`,
-                          borderRadius: 8,
-                          padding: "8px 14px",
-                          fontSize: 12,
-                          fontWeight: 700,
-                          cursor: "pointer",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {resolveAction(a)}
-                      </button>
-                      {a.secondaryAction ? (
-                        <button
-                          onClick={() => onNavigate(a.secondaryAction!.target)}
-                          style={{
-                            background: "transparent",
-                            color: FT.textSec,
-                            border: `1px solid ${FT.borderLight}`,
-                            borderRadius: 8,
-                            padding: "8px 14px",
-                            fontSize: 11,
-                            fontWeight: 700,
-                            cursor: "pointer",
-                          }}
-                        >
-                          {a.secondaryAction.label}
-                        </button>
-                      ) : null}
-                      <button
-                        onClick={() => onAck(a.id)}
-                        style={{
-                          background: "transparent",
-                          color: FT.textMut,
-                          border: `1px solid ${FT.borderLight}`,
-                          borderRadius: 8,
-                          padding: "6px 12px",
-                          fontSize: 11,
-                          fontWeight: 700,
-                          cursor: "pointer",
-                        }}
-                      >
-                        Acknowledge
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
-      </Panel>
-
-      {acknowledged.length > 0 && (
-        <Panel title={`Acknowledged today · ${acknowledged.length}`}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {acknowledged.map((a) => (
-              <div
-                key={a.id}
-                style={{
-                  background: FT.elevated,
-                  border: `1px solid ${FT.borderLight}`,
-                  borderRadius: 8,
-                  padding: 10,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 10,
-                  fontSize: 12,
-                  color: FT.textSec,
-                }}
-              >
-                <CheckCircle2 size={14} color={FT.green} />
-                <span style={{ fontWeight: 700, color: FT.text }}>{a.title}</span>
-                <span>· {a.capturedAt}</span>
-                <Pill tone="neutral" size="xs">{a.signal}</Pill>
-              </div>
-            ))}
-          </div>
-        </Panel>
-      )}
-    </div>
-  );
-}
-
 function PlazaHeatmapScreen({ persona, onPick }: { persona: PersonaId; onPick: (p: PlazaCell) => void }) {
+  const FT = useFT();
   const color: Record<string, string> = {
     low: "rgba(34,197,94,0.20)",
     med: "rgba(245,158,11,0.30)",
@@ -1759,7 +2627,7 @@ function PlazaHeatmapScreen({ persona, onPick }: { persona: PersonaId; onPick: (
             <div style={{ background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10, padding: 12 }}>
               <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", marginBottom: 4 }}>1033 forwards · top plaza</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: FT.text }}>Khalapur</div>
-              <div style={{ fontSize: 11, color: FT.textSec }}>41 forwards this week · S025</div>
+              <div style={{ fontSize: 11, color: FT.textSec }}>41 forwards this week</div>
             </div>
             <div style={{ background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10, padding: 12 }}>
               <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", marginBottom: 4 }}>PNO decision window</div>
@@ -1779,11 +2647,11 @@ function PlazaHeatmapScreen({ persona, onPick }: { persona: PersonaId; onPick: (
             <div style={{ background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10, padding: 12 }}>
               <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", marginBottom: 4 }}>1033 forwarded · 24h</div>
               <div style={{ fontSize: 20, fontWeight: 800, color: FT.text }}>18</div>
-              <div style={{ fontSize: 11, color: FT.textSec }}>Khalapur + Talegaon · S025 overlay</div>
+              <div style={{ fontSize: 11, color: FT.textSec }}>Khalapur + Talegaon overlay</div>
             </div>
             <div style={{ background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10, padding: 12 }}>
               <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", marginBottom: 4 }}>Blacklist FP cluster</div>
-              <div style={{ fontSize: 20, fontWeight: 800, color: FT.amber }}>S022</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: FT.amber }}>Blacklist FP</div>
               <div style={{ fontSize: 11, color: FT.textSec }}>Nelamangala · KYV root-cause misses</div>
             </div>
           </div>
@@ -1794,8 +2662,8 @@ function PlazaHeatmapScreen({ persona, onPick }: { persona: PersonaId; onPick: (
         title={persona === "hob" ? "Plaza Heatmap — leakage & acquirer strategy · 24h" : "Plaza Heatmap — operational surge · 24h"}
         subtitle={
           persona === "hob"
-            ? "S005 / S022 / S025 · geographic concentration for PNO + IHMCL conversations"
-            : "S005 / S021 / S025 · hour-of-day clustering for floor capacity + NPCI desk"
+            ? "Plaza leakage · blacklist · 1033 forwards — geographic concentration for PNO + IHMCL"
+            : "Plaza leakage · queue spike · 1033 forwards — hour-of-day clustering for floor capacity"
         }
         action={<Pill tone="cyan" size="xs">{cells.length} plazas · trailing 24h</Pill>}
       >
@@ -1859,6 +2727,7 @@ function PlazaHeatmapScreen({ persona, onPick }: { persona: PersonaId; onPick: (
 }
 
 function AssemblingPackOverlay({ onComplete }: { onComplete: () => void }) {
+  const FT = useFT();
   // Stage 4 §B.1.6 — 5-step ASSEMBLING animation, ~3s total. CSS keyframes
   // drive the progress bar; the steps tick via setTimeout because each one
   // has its own copy. setTimeout firing at 0,600,1200,1800,2400ms is cheap
@@ -1867,7 +2736,7 @@ function AssemblingPackOverlay({ onComplete }: { onComplete: () => void }) {
     "Fetching transcripts (call, chat, email, agent-note)",
     "Validating OC 005 evidence completeness",
     "Running KYV mismatch + vehicle-class check",
-    "Stamping chain-of-custody (acquirer, plaza, agent)",
+    "Linking acquirer ID, plaza reference, and agent call record",
     "Pack ready · IO-defensible",
   ];
   const [idx, setIdx] = useState(0);
@@ -1988,6 +2857,7 @@ function IOEvidencePackScreen({
   onAssembled: () => void;
   onAssembleRequest: () => void;
 }) {
+  const FT = useFT();
   const readOnly = persona === "hob";
 
   if (assembling && !readOnly) {
@@ -2034,7 +2904,7 @@ function IOEvidencePackScreen({
               <div style={{ fontSize: 22, fontWeight: 800, color: FT.urgency }}>{RB_IOS_DAYS_REMAINING}d</div>
             </div>
             <div style={{ background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10, padding: 12 }}>
-              <div style={{ fontSize: 11, color: FT.textMut, marginBottom: 4 }}>Quarterly pack · S032</div>
+              <div style={{ fontSize: 11, color: FT.textMut, marginBottom: 4 }}>Quarterly pack</div>
               <div style={{ fontSize: 22, fontWeight: 800, color: FT.amber }}>71%</div>
             </div>
           </div>
@@ -2078,7 +2948,7 @@ function IOEvidencePackScreen({
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Panel
         title="OC 005 Evidence Queue · this shift"
-        subtitle="S016 · dispute-bound calls with incomplete packs · NPCI upload window closes 18:00 IST"
+        subtitle="Dispute-bound calls with incomplete packs · NPCI upload window closes 18:00 IST"
         action={<Pill tone="bad" size="xs">{COH_DISPUTE_QUEUE.length} at risk</Pill>}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -2132,7 +3002,7 @@ function IOEvidencePackScreen({
                   whiteSpace: "nowrap",
                 }}
               >
-                Complete Now →
+                Assemble Evidence Pack →
               </button>
             </div>
           ))}
@@ -2217,24 +3087,36 @@ function IOEvidencePackScreen({
 }
 
 const COMPLIANCE_HEATMAP_ROWS = [
-  { type: "Trilingual rule (S015)", target: "≥85%", cells: ["78%", "91%", "88%", "92%", "86%", "90%", "87%", "89%", "85%"] },
-  { type: "Annual Pass eligibility (S020)", target: "0 mis-sell", cells: ["100%", "92%", "100%", "100%", "88%", "100%", "100%", "100%", "100%"] },
-  { type: "KYV root-cause (S038)", target: "≥80%", cells: ["82%", "79%", "84%", "88%", "81%", "86%", "83%", "80%", "85%"] },
-  { type: "TAT promise (S029)", target: "≥90%", cells: ["91%", "87%", "93%", "90%", "89%", "92%", "88%", "91%", "90%"] },
-  { type: "Saksham conduct (S018)", target: "0 flags", cells: ["100%", "100%", "100%", "100%", "100%", "100%", "72%", "100%", "100%"] },
+  { type: "Trilingual rule", shortLabel: "Trilingual", drillId: "cw-trilingual", target: "≥85%", cells: ["78%", "91%", "88%", "92%", "86%", "90%", "87%", "89%", "85%"] },
+  { type: "Annual Pass eligibility", shortLabel: "Annual Pass", drillId: "cw-annual", target: "0 mis-sell", cells: ["100%", "92%", "100%", "100%", "88%", "100%", "100%", "100%", "100%"] },
+  { type: "KYV root-cause", shortLabel: "KYV check", drillId: "cw-kyv", target: "≥80%", cells: ["82%", "79%", "84%", "88%", "81%", "86%", "83%", "80%", "85%"] },
+  { type: "TAT promise", shortLabel: "TAT promise", drillId: "cw-tat", target: "≥90%", cells: ["91%", "87%", "93%", "90%", "89%", "92%", "88%", "91%", "90%"] },
+  { type: "Saksham conduct", shortLabel: "Saksham", drillId: "cw-saksham", target: "0 flags", cells: ["100%", "100%", "100%", "100%", "100%", "100%", "72%", "100%", "100%"] },
 ];
+
+const COMPLIANCE_SHIFT_COLUMNS = [
+  { vendor: "Trinetra", shift: "AM" },
+  { vendor: "Trinetra", shift: "PM" },
+  { vendor: "Trinetra", shift: "NT" },
+  { vendor: "Anandam", shift: "AM" },
+  { vendor: "Anandam", shift: "PM" },
+  { vendor: "Anandam", shift: "NT" },
+  { vendor: "Digital", shift: "AM" },
+  { vendor: "Digital", shift: "PM" },
+  { vendor: "Digital", shift: "NT" },
+] as const;
 
 const COH_BREACH_QUEUE = [
   {
     id: "br-1",
-    type: "Trilingual violation · S015",
+    type: "Trilingual violation",
     time: "09:03",
     site: "Trinetra · Morning",
     excerpt: "Marathi preference · agent continued in Hindi for 4 minutes",
   },
   {
     id: "br-2",
-    type: "Annual Pass mis-disclosure · S020",
+    type: "Annual Pass mis-disclosure",
     time: "09:17",
     site: "Anandam · Morning",
     excerpt: "Commercial vehicle sold Annual Pass — private non-commercial only",
@@ -2250,6 +3132,7 @@ function ComplianceWatchScreen({
   onPick: (id: string) => void;
   sakshamAlert?: boolean;
 }) {
+  const FT = useFT();
   if (persona === "hob") {
     return (
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -2275,7 +3158,7 @@ function ComplianceWatchScreen({
               </div>
               <div style={{ fontSize: 12, color: FT.textSec }}>
                 {sakshamAlert
-                  ? "S018 flagged · routed to Compliance — Fluid CX does not act on Saksham workflow"
+                  ? "Saksham conduct flagged · routed to Compliance — Fluid CX does not act on Saksham workflow"
                   : "No Saksham conduct violations in trailing 24h"}
               </div>
             </div>
@@ -2306,8 +3189,6 @@ function ComplianceWatchScreen({
     );
   }
 
-  const vendors = ["Trinetra AM", "Trinetra PM", "Trinetra NT", "Anandam AM", "Anandam PM", "Anandam NT", "Digital AM", "Digital PM", "Digital NT"];
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       {sakshamAlert ? (
@@ -2328,43 +3209,80 @@ function ComplianceWatchScreen({
         </div>
       ) : null}
 
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.2fr) minmax(0,1fr) minmax(0,0.8fr)", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.55fr) minmax(0, 0.9fr) minmax(0, 0.65fr)", gap: 14 }}>
         <Panel title="Compliance heatmap · today" subtitle="5 types × 9 shift cells · [OBSERVED] signals">
-          <div style={{ overflowX: "auto" }}>
-            <div style={{ display: "grid", gridTemplateColumns: `140px repeat(9, minmax(52px, 1fr))`, gap: 4, minWidth: 720 }}>
-              <div />
-              {vendors.map((v) => (
-                <div key={v} style={{ fontSize: 9, color: FT.textMut, textAlign: "center", fontWeight: 700 }}>{v}</div>
-              ))}
-              {COMPLIANCE_HEATMAP_ROWS.map((row) => (
-                <Fragment key={row.type}>
-                  <div style={{ fontSize: 10, color: FT.textSec, alignSelf: "center", lineHeight: 1.3 }}>{row.type}</div>
-                  {row.cells.map((val, i) => {
-                    const n = parseInt(val, 10);
-                    const bad = n < 85 || val.includes("72");
-                    const warn = n >= 85 && n < 90;
-                    return (
-                      <button
-                        key={`${row.type}-${i}`}
-                        onClick={() => onPick("cw-saksham")}
-                        style={{
-                          background: bad ? FT.redSoft : warn ? FT.amberSoft : FT.greenSoft,
-                          border: `1px solid ${FT.borderLight}`,
-                          borderRadius: 6,
-                          padding: "6px 4px",
-                          fontSize: 10,
-                          fontWeight: 700,
-                          color: FT.text,
-                          cursor: "pointer",
-                        }}
-                      >
-                        {val}
-                      </button>
-                    );
-                  })}
-                </Fragment>
-              ))}
-            </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(88px, 1.1fr) repeat(9, minmax(0, 1fr))",
+              gap: 3,
+              width: "100%",
+              alignItems: "stretch",
+            }}
+          >
+            <div />
+            {COMPLIANCE_SHIFT_COLUMNS.map((col) => (
+              <div
+                key={`${col.vendor}-${col.shift}`}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  gap: 1,
+                  minHeight: 32,
+                  fontSize: 8,
+                  color: FT.textMut,
+                  fontWeight: 700,
+                  textAlign: "center",
+                  lineHeight: 1.15,
+                }}
+              >
+                <span>{col.vendor}</span>
+                <span>{col.shift}</span>
+              </div>
+            ))}
+            {COMPLIANCE_HEATMAP_ROWS.map((row) => (
+              <Fragment key={row.type}>
+                <div
+                  title={row.type}
+                  style={{
+                    fontSize: 9,
+                    color: FT.textSec,
+                    alignSelf: "center",
+                    lineHeight: 1.25,
+                    paddingRight: 4,
+                  }}
+                >
+                  {row.shortLabel}
+                </div>
+                {row.cells.map((val, i) => {
+                  const n = parseInt(val, 10);
+                  const bad = n < 85 || val.includes("72");
+                  const warn = n >= 85 && n < 90;
+                  return (
+                    <button
+                      key={`${row.type}-${i}`}
+                      onClick={() => onPick(row.drillId)}
+                      style={{
+                        background: bad ? FT.redSoft : warn ? FT.amberSoft : FT.greenSoft,
+                        border: `1px solid ${FT.borderLight}`,
+                        borderRadius: 5,
+                        padding: "5px 2px",
+                        fontSize: 9,
+                        fontWeight: 700,
+                        color: FT.text,
+                        cursor: "pointer",
+                        minWidth: 0,
+                        width: "100%",
+                      }}
+                    >
+                      {val}
+                    </button>
+                  );
+                })}
+              </Fragment>
+            ))}
           </div>
         </Panel>
 
@@ -2464,7 +3382,6 @@ type DrillContext =
   | { kind: "bpo"; data: BpoCell }
   | { kind: "plaza"; data: PlazaCell }
   | { kind: "evidence"; data: EvidencePack }
-  | { kind: "alert"; data: LiveAlert }
   | { kind: "compliance"; data: ComplianceItem }
   | { kind: "channel"; data: { channel: string } };
 
@@ -2525,7 +3442,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "Charged two axles, my car is a Maruti hatchback. Why this is happening every week at Khalapur?",
-              channel: "Voice · Genesys",
+              channel: "Voice",
               time: "07:51",
               tag: "TAG-3398172",
               plaza: "Khalapur (NH-48)",
@@ -2534,7 +3451,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "मेरी कार sedan है, truck class में charge हो गया है। ये गलत है।",
-              channel: "Voice · Genesys",
+              channel: "Voice",
               time: "07:58",
               tag: "TAG-7710002",
               plaza: "Talegaon (NH-48)",
@@ -2543,11 +3460,11 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Twice in one trip — entering and exiting Manesar both charged wrong class. Please refund and fix permanently.",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "08:07",
               tag: "TAG-2218110",
               plaza: "Manesar (NH-48)",
-              bpo: "DigitalReach · Bengaluru",
+              bpo: "Digital · Bengaluru",
               language: "EN",
             },
           ],
@@ -2578,7 +3495,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "My balance shows ₹280 in the app, why is the tag blacklisted? I have not done anything wrong.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "08:04",
               tag: "TAG-5598441",
               plaza: "Nelamangala",
@@ -2587,16 +3504,16 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Last week also same thing — agent unblocked, today again blacklisted. Please fix the root cause.",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "08:09",
               tag: "TAG-5598441",
               plaza: "Devanahalli",
-              bpo: "DigitalReach · Bengaluru",
+              bpo: "Digital · Bengaluru",
               language: "EN",
             },
             {
               text: "I have not even used the tag today, balance is ₹420 and still showing blacklisted at every plaza I try.",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "08:21",
               tag: "TAG-9981120",
               plaza: "Krishnagiri",
@@ -2612,7 +3529,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
                 { label: "KYV mismatch checked", state: "fail" as const },
                 { label: "Vehicle class re-confirmed with customer", state: "fail" as const },
                 { label: "Tag unblocked without root cause", state: "pass" as const },
-                { label: "Repeat-call risk flagged in Salesforce", state: "fail" as const },
+                { label: "Repeat-call risk flagged in case system", state: "fail" as const },
               ],
               caption: "When agents unblock without running the KYV check, the same tag is blacklisted again within 7 days — that's the repeat-call wave.",
             },
@@ -2632,16 +3549,16 @@ function getDrillContent(ctx: DrillContext): DrillContent {
         snippets: [
           {
             text: "Debited ₹500 from PhonePe but the FASTag app still shows zero balance, screenshot attached.",
-            channel: "Chat · DigitalReach",
+            channel: "Chat",
             time: "08:12",
             tag: "TAG-1140991",
             plaza: "—",
-            bpo: "DigitalReach · Bengaluru",
+            bpo: "Digital · Bengaluru",
             language: "EN",
           },
           {
             text: "Money cut from GPay 2 hours back, recharge still pending. I have to cross toll in 30 minutes.",
-            channel: "Voice · Trinetra",
+            channel: "Voice",
             time: "08:18",
             tag: "TAG-6620031",
             plaza: "—",
@@ -2650,11 +3567,11 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           },
           {
             text: "UPI शो कर रहा है success, app में balance update नहीं हो रहा। please जल्दी solve करें।",
-            channel: "Chat · DigitalReach",
+            channel: "Chat",
             time: "08:24",
             tag: "TAG-2298110",
             plaza: "—",
-            bpo: "DigitalReach · Bengaluru",
+            bpo: "Digital · Bengaluru",
             language: "HI",
           },
         ],
@@ -2690,7 +3607,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "Agent said: 'I'll raise a dispute for you' — but plaza name and vehicle class were never confirmed on the call.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "13:42",
               tag: "TAG-4421110",
               plaza: "[not captured]",
@@ -2699,7 +3616,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Customer stated TXN reference, agent acknowledged but did not read it back — missed in dispute pack.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "14:18",
               tag: "TAG-4421181",
               plaza: "Khalapur",
@@ -2707,8 +3624,8 @@ function getDrillContent(ctx: DrillContext): DrillContent {
               language: "EN",
             },
             {
-              text: "Wrap-up summary in Salesforce: 'cust raised concern' — no plaza, no class, no statement quoted.",
-              channel: "Voice · Trinetra",
+              text: "Wrap-up summary in case notes: 'cust raised concern' — no plaza, no class, no statement quoted.",
+              channel: "Voice",
               time: "14:51",
               tag: "TAG-4421203",
               plaza: "[not captured]",
@@ -2747,7 +3664,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "Your agent told me on Monday it will work in 24 hours, today again blacklisted at every plaza.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "10:11",
               tag: "TAG-7740012",
               plaza: "Devanahalli",
@@ -2756,7 +3673,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Third call this week — last time agent confirmed refund, no refund has come yet.",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "11:22",
               tag: "TAG-2298007",
               plaza: "Krishnagiri",
@@ -2765,11 +3682,11 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "मुझे already दो बार बोला गया है ये fix हो जाएगा, अभी तक कुछ नहीं हुआ।",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "12:08",
               tag: "TAG-5512098",
               plaza: "Manesar",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "HI",
             },
           ],
@@ -2804,7 +3721,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "मराठीत बोला नं — agent continued in Hindi for the remaining 7 minutes of the call.",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "11:42",
               tag: "TAG-3398401",
               plaza: "Talegaon",
@@ -2813,7 +3730,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "தமிழ்ல பேசுங்க sir — agent responded once, then switched back to English for the technical step.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "12:18",
               tag: "TAG-7790112",
               plaza: "Krishnagiri",
@@ -2822,11 +3739,11 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Customer asked for Kannada twice; agent acknowledged but did not transfer to the Kannada queue.",
-              channel: "Voice · DigitalReach",
+              channel: "Voice",
               time: "13:01",
               tag: "TAG-1141998",
               plaza: "Nelamangala",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "KN",
             },
           ],
@@ -2842,7 +3759,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
           },
           boundary:
-            "Fluid CX detects the language preference signal. Routing to the regional-language queue is owned by Genesys IVR configuration, not Fluid CX.",
+            "Fluid CX detects the language preference signal. Routing to the regional-language queue is owned by IVR configuration, not Fluid CX.",
           primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
         };
       }
@@ -2857,7 +3774,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "I am recharging fourth time this month, agent only confirmed the amount and ended the call — Annual Pass never came up.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "16:32",
               tag: "TAG-7820001",
               bpo: "Trinetra · Afternoon",
@@ -2865,7 +3782,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "I drive to Pune three times a week. Customer asked about a 'monthly pass' — agent said 'we don't have any such product'.",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "17:08",
               tag: "TAG-3309012",
               bpo: "Anandam · Afternoon",
@@ -2873,7 +3790,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Agent processed the recharge in 90 seconds — never asked about toll usage pattern or eligibility for the ₹3000 pass.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "17:45",
               tag: "TAG-7820219",
               bpo: "Trinetra · Afternoon",
@@ -2908,7 +3825,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "I have 35 vehicles in my company fleet, can I get one bulk recharge instead of 35 separate ones? Need GST invoice also.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "10:42",
               tag: "TAG-8810022",
               bpo: "Trinetra · Morning",
@@ -2916,15 +3833,15 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Looking for FASTag for our company trucks — 18 vehicles, need single dashboard for all.",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "11:18",
               tag: "TAG-7720981",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "EN",
             },
             {
               text: "Currently using a competitor for our 22 cabs, want to consolidate. Who do I speak to in corporate FASTag?",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "13:08",
               tag: "TAG-3398881",
               bpo: "Anandam · Afternoon",
@@ -2948,7 +3865,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
         };
       }
-      // S013 Chargeback dispute potential
+      // S013 Excess toll refund potential
       if (r.signal === "S013") {
         return {
           title: r.title,
@@ -2959,7 +3876,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "Wrong amount deducted at Khalapur on Tuesday, I want a refund. ₹220 instead of ₹110.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "Tue 14:22",
               tag: "TAG-4421110",
               plaza: "Khalapur",
@@ -2968,16 +3885,16 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Double deduction on the same toll booth, both entries within 60 seconds.",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "Wed 11:08",
               tag: "TAG-7790881",
               plaza: "Talegaon",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "EN",
             },
             {
               text: "Charged for SUV, my vehicle is hatchback — I want refund + permanent fix in my tag.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "Thu 09:33",
               tag: "TAG-1141022",
               plaza: "Manesar",
@@ -2988,32 +3905,32 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           extra: {
             kind: "evidence-checklist",
             data: {
-              title: "Of the 146 dispute-eligible calls this week:",
+              title: "Of the 146 excess toll refund-eligible calls this week:",
               items: [
                 { label: "23 are missing 1+ OC 005 element (will auto-reject under 5225)", state: "fail" as const },
                 { label: "89 have full evidence pack — ready to file", state: "pass" as const },
                 { label: "34 are within Good Faith TAT window", state: "pass" as const },
               ],
-              caption: "Fluid CX cannot tell you the chargeback win-rate — only the NPCI dispute switch feed can. This is the conversation-side leading indicator.",
+              caption: "Fluid CX cannot tell you NPCI representment win-rate — only the NETC dispute switch feed can. This is the conversation-side leading indicator.",
             },
           },
           boundary:
-            "Conversation-side only. The actual chargeback ratio and win-rate require an NPCI NETC dispute system feed — that integration is out of scope for Fluid CX in this MVP.",
+            "Conversation-side only. Actual excess toll refund ratio and NPCI outcomes require the NETC dispute system feed — out of scope for Fluid CX in this MVP.",
           primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
         };
       }
-      // S001 Churn intent
+      // S001 Tag closure / issuer-switch intent
       if (r.signal === "S001") {
         return {
           title: r.title,
           sub: `${r.impact} · ${r.owner}`,
           signalId: "S001",
-          badge: { tone: "primary", label: "CHURN INTENT" },
+          badge: { tone: "primary", label: "CLOSURE / SWITCH INTENT" },
           provenance: baseProvenance(r.count, "trailing 30d", "High", ["competitor-mention NER v1.1"]),
           snippets: [
             {
               text: "I'm switching to IDFC FIRST FASTag — they don't have these AVC issues at Khalapur, my friend uses it.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "Wed 16:22",
               tag: "TAG-3398777",
               bpo: "Trinetra · Afternoon",
@@ -3021,15 +3938,15 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Close this tag, I'll move to ICICI. Three times this month wrong deduction — enough.",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "Thu 11:18",
               tag: "TAG-7720441",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "EN",
             },
             {
               text: "मुझे Axis FASTag लेना है — आपके agent कुछ solve नहीं कर रहे।",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "Fri 09:42",
               tag: "TAG-1141998",
               bpo: "Anandam · Morning",
@@ -3039,7 +3956,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           extra: {
             kind: "cross-sell",
             data: {
-              note: "23 churn-intent mentions in trailing 30d · 0.8× baseline (within range, monitoring).",
+              note: "23 closure or issuer-switch intent mentions in trailing 30d · 0.8× baseline (within range, monitoring).",
               breakdown: [
                 { label: "IDFC FIRST mentioned", value: 11 },
                 { label: "ICICI mentioned", value: 7 },
@@ -3049,7 +3966,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
           },
           boundary:
-            "Fluid CX detects the churn-intent language. Retention offer is configured in Salesforce + the Marketing offer engine — Fluid CX does not trigger offers.",
+            "Fluid CX surfaces closure or competitor-switch language. Retention offers are configured in CRM + Marketing — Fluid CX does not trigger offers.",
           primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
         };
       }
@@ -3064,7 +3981,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "By the way, do you also have car loan? Thinking of upgrading my vehicle next month.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "10:18",
               tag: "TAG-2298881",
               bpo: "Trinetra · Morning",
@@ -3072,15 +3989,15 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "I want to move my salary account also — currently with HDFC. What's the process?",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "11:42",
               tag: "TAG-7790021",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "EN",
             },
             {
               text: "Personal loan के बारे में बताइए — agent ने ignore करके सिर्फ FASTag का बात की।",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "13:08",
               tag: "TAG-1141881",
               bpo: "Anandam · Afternoon",
@@ -3100,7 +4017,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
           },
           boundary:
-            "Fluid CX surfaces the cross-sell moment inside the inbound call. The lead handoff to Branch Banking happens through your existing Salesforce lead flow — Fluid CX does not write Salesforce leads.",
+            "Fluid CX surfaces the cross-sell moment inside the inbound call. The lead handoff to Branch Banking happens through your existing CRM lead flow — Fluid CX does not write CRM leads.",
           primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
         };
       }
@@ -3115,7 +4032,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           snippets: [
             {
               text: "Refund was promised within 5 working days — today is day 11, still nothing in the wallet.",
-              channel: "Voice · Trinetra",
+              channel: "Voice",
               time: "Day 11",
               tag: "TAG-7820881",
               bpo: "Trinetra",
@@ -3123,15 +4040,15 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             },
             {
               text: "Three follow-up calls already, every time agent says 'it is in process' — nothing has moved.",
-              channel: "Chat · DigitalReach",
+              channel: "Chat",
               time: "Day 9",
               tag: "TAG-3398012",
-              bpo: "DigitalReach",
+              bpo: "Digital",
               language: "EN",
             },
             {
               text: "I will go to RBI Ombudsman if this is not refunded by tomorrow — already given enough chances.",
-              channel: "Voice · Anandam",
+              channel: "Voice",
               time: "Day 13",
               tag: "TAG-1140999",
               bpo: "Anandam",
@@ -3165,7 +4082,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
         snippets: [
           {
             text: "Generic representative excerpt — supervised classifier matched this conversation to the action signal.",
-            channel: "Voice · Trinetra",
+            channel: "Voice",
             time: "—",
             tag: "TAG-…",
             language: "EN",
@@ -3188,9 +4105,9 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           badge: { tone: "cyan", label: "AWARENESS PULSE" },
           provenance: baseProvenance(14, "this week", "Medium"),
           snippets: [
-            { text: "Is FASTag going away? Heard from a friend about satellite tolling.", channel: "Voice · Trinetra", time: "Tue 11:22", language: "EN" },
-            { text: "GNSS tolling means I don't need FASTag at all? Should I close my tag?", channel: "Chat · DigitalReach", time: "Wed 14:08", language: "EN" },
-            { text: "Government is removing toll booths? When will it happen?", channel: "Voice · Anandam", time: "Thu 16:42", language: "EN" },
+            { text: "Is FASTag going away? Heard from a friend about satellite tolling.", channel: "Voice", time: "Tue 11:22", language: "EN" },
+            { text: "GNSS tolling means I don't need FASTag at all? Should I close my tag?", channel: "Chat", time: "Wed 14:08", language: "EN" },
+            { text: "Government is removing toll booths? When will it happen?", channel: "Voice", time: "Thu 16:42", language: "EN" },
           ],
           extra: {
             kind: "channel-cohort",
@@ -3216,9 +4133,9 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           badge: { tone: "primary", label: "FAQ GAPS" },
           provenance: baseProvenance(41, "this week", "High"),
           snippets: [
-            { text: "Will Annual Pass work on Mumbai-Pune Expressway? Most important route for me.", channel: "Voice · Trinetra", time: "Tue 09:18", language: "EN" },
-            { text: "Can I use the ₹3,000 pass on my commercial vehicle? I run a taxi.", channel: "Chat · DigitalReach", time: "Wed 12:42", language: "EN" },
-            { text: "How many plazas are covered under Annual Pass? I drive across 4 states.", channel: "Voice · Anandam", time: "Thu 15:08", language: "EN" },
+            { text: "Will Annual Pass work on Mumbai-Pune Expressway? Most important route for me.", channel: "Voice", time: "Tue 09:18", language: "EN" },
+            { text: "Can I use the ₹3,000 pass on my commercial vehicle? I run a taxi.", channel: "Chat", time: "Wed 12:42", language: "EN" },
+            { text: "How many plazas are covered under Annual Pass? I drive across 4 states.", channel: "Voice", time: "Thu 15:08", language: "EN" },
           ],
           extra: {
             kind: "channel-cohort",
@@ -3264,12 +4181,57 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           primaryCta: { label: "Open IO Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
         };
       }
+      if (t.signal === "S037") {
+        return {
+          title: t.title,
+          sub: t.sub,
+          signalId: "S037",
+          badge: { tone: "warn", label: "BRANCH HANDOFF FRICTION" },
+          provenance: baseProvenance(23, "trailing 7d", "High", ["branch-escalation phrase detector"]),
+          snippets: [
+            { text: "Agent said visit your home branch with KYC documents — I already uploaded everything in the app twice.", channel: "Voice", time: "Mon 11:08", language: "EN" },
+            { text: "Branch in Koramangala sent me back to call centre — nobody knows how to transfer tag ownership.", channel: "Chat", time: "Wed 15:22", language: "EN" },
+            { text: "Used-vehicle tag transfer stuck 19 days — branch says wait, call centre says branch.", channel: "Voice", time: "Fri 09:41", language: "EN" },
+          ],
+          extra: {
+            kind: "channel-cohort",
+            data: {
+              note: "23 'visit branch' reports this week · ▲6 vs last week — concentrated in tag transfer + KYV update journeys.",
+              breakdown: [
+                { label: "Tag transfer / inheritance", value: 11 },
+                { label: "KYV update after issuance", value: 7 },
+                { label: "Security deposit refund", value: 5 },
+              ],
+            },
+          },
+          boundary:
+            "Fluid CX surfaces the handoff friction in customer language. Branch queue management and branch scripts are owned by Branch Banking — Fluid CX does not route branch appointments.",
+          primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
+        };
+      }
+      if (t.signal === "S011") {
+        return {
+          title: t.title,
+          sub: t.sub,
+          signalId: "S011",
+          badge: { tone: "warn", label: "PARTIAL · STATED INTENT" },
+          provenance: baseProvenance(37, "trailing 7d", "Medium", ["auto-recharge phrase detector · wallet feed not joined"]),
+          snippets: [
+            { text: "Customer said yes to auto-recharge when agent offered — outcome not logged in CRM.", channel: "Voice", time: "Tue 16:40", language: "EN" },
+            { text: "Agent offered auto-recharge at ₹150 threshold — customer declined but agent logged 'opted in'.", channel: "Voice", time: "Wed 11:02", language: "EN" },
+          ],
+          boundary:
+            "Conversation-side stated intent only. Verified opt-in rate requires Tech wallet / auto-recharge feed — partial signal in this MVP.",
+          boundarySeverity: "soft" as const,
+          primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
+        };
+      }
       // Default strategy
       return {
         title: t.title,
         sub: t.sub,
         signalId: t.signal,
-        badge: { tone: "primary", label: "STRATEGY SIGNAL" },
+        badge: { tone: "primary", label: "OPERATIONAL SIGNAL" },
         provenance: baseProvenance(20, "this week", "Medium"),
         snippets: [
           { text: "Strategy-level signal — sampled from conversation data this week.", channel: "Voice/Chat", time: "—" },
@@ -3344,7 +4306,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
         snippets: [
           {
             text: `Wrong class charged at ${p.plaza} — third time this week, same toll booth.`,
-            channel: "Voice · Trinetra",
+            channel: "Voice",
             time: "07:42",
             tag: "TAG-2298881",
             plaza: p.plaza,
@@ -3352,7 +4314,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           },
           {
             text: `Double deduction within 90 seconds at ${p.plaza}, please refund.`,
-            channel: "Chat · DigitalReach",
+            channel: "Chat",
             time: "08:18",
             tag: "TAG-7790012",
             plaza: p.plaza,
@@ -3360,7 +4322,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           },
           {
             text: `${p.plaza} पर हर बार गलत charge होता है, क्या problem है?`,
-            channel: "Voice · Anandam",
+            channel: "Voice",
             time: "08:51",
             tag: "TAG-1141881",
             plaza: p.plaza,
@@ -3417,174 +4379,33 @@ function getDrillContent(ctx: DrillContext): DrillContent {
       };
     }
 
-    // ─── LIVE ALERT ─────────────────────────────────────────────────────
-    case "alert": {
-      const a = ctx.data;
-      if (a.signal === "S006") {
-        return {
-          title: a.title,
-          sub: a.context,
-          signalId: "S006",
-          badge: { tone: "bad", label: "OMBUDSMAN THREAT · CRITICAL" },
-          provenance: baseProvenance(1, "this call · live", "High", ["threat-language lexicon v1.0"]),
-          snippets: [
-            {
-              text: "If you do not solve this today, I will call 14448 and file with RBI Banking Ombudsman.",
-              channel: "Voice · Trinetra",
-              time: a.capturedAt,
-              tag: "TAG-7790881",
-              bpo: "Trinetra · Hyderabad",
-              language: "EN",
-            },
-            {
-              text: "I have already taken screenshots, I will tweet your CEO and post on cms.rbi.org.in tonight.",
-              channel: "Voice · Trinetra",
-              time: a.capturedAt,
-              tag: "TAG-7790881",
-              language: "EN",
-            },
-            {
-              text: "This is the 4th call, your agents only say 'we will solve' — enough, I will go to consumer court.",
-              channel: "Voice · Trinetra",
-              time: a.capturedAt,
-              tag: "TAG-7790881",
-              language: "EN",
-            },
-          ],
-          extra: {
-            kind: "ombudsman",
-            data: {
-              triggers: ["RBI Ombudsman", "14448", "cms.rbi.org.in", "consumer court", "tweet your CEO"],
-              context90s:
-                "In the 90 seconds before the threat, the agent confirmed the issue but did not offer a concrete resolution timeline — the threat triggered immediately after.",
-            },
-          },
-          boundary:
-            "Fluid CX flags the threat language in real time. Case handling continues in Salesforce + the IO desk — Fluid CX does not adjudicate or settle.",
-          primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
-        };
-      }
-      if (a.signal === "S003") {
-        return {
-          title: a.title,
-          sub: a.context,
-          signalId: "S003",
-          badge: { tone: "urgency", label: "SOCIAL FLARE-UP" },
-          provenance: baseProvenance(62, "trailing 90m", "High", ["social-listening · X/Twitter"]),
-          snippets: [
-            {
-              text: "@SetuFASTag charged me 2-axle at Khalapur for my hatchback AGAIN — this is the 3rd time. Fix your AVC or I'm out.",
-              channel: "X · social",
-              time: a.capturedAt,
-              plaza: "Khalapur",
-              language: "EN",
-            },
-            {
-              text: "Same thing happening to me at Khalapur this morning — wrong class deduction. Looks like a plaza-level bug.",
-              channel: "X · social",
-              time: a.capturedAt,
-              plaza: "Khalapur",
-              language: "EN",
-            },
-            {
-              text: "Auto journalist @CarSpyHQ now amplifying — calling for IHMCL investigation. Tweet has 1.2K retweets.",
-              channel: "X · social",
-              time: a.capturedAt,
-              plaza: "Khalapur",
-              language: "EN",
-            },
-          ],
-          extra: {
-            kind: "plaza-cluster",
-            data: {
-              note: "All 3 snippets reference Khalapur (NH-48) — same cluster as the morning HeadlineBrief AVC misread spike.",
-              breakdown: [
-                { label: "X / Twitter mentions", value: 47 },
-                { label: "Instagram", value: 9 },
-                { label: "WhatsApp groups (auto journos)", value: 6 },
-              ],
-            },
-          },
-          boundary:
-            "Fluid CX surfaces the social pattern + plaza correlation. The PR / comms response is owned by Marketing — Fluid CX does not generate or send public statements.",
-          primaryCta: { label: "See on Plaza Heatmap", icon: MapPin, targetScreen: "plaza_heatmap" },
-        };
-      }
-      if (a.signal === "S018") {
-        return {
-          title: a.title,
-          sub: a.context,
-          signalId: "S018",
-          badge: { tone: "bad", label: "SAKSHAM CONDUCT BREACH" },
-          provenance: baseProvenance(1, "this call · 24h", "High", ["recovery-conduct classifier v0.6"]),
-          snippets: [
-            {
-              text: "Saksham agent (cohort: morning shift): 'Your employer will know about this if you don't pay by tonight.' [conduct breach — employer threat] · Agent identity in chain-of-custody",
-              channel: "Voice · Saksham",
-              time: "19:42",
-              tag: "REC-7741981",
-              bpo: "Saksham Recovery",
-              language: "EN",
-            },
-            {
-              text: "Agent voice raised, called customer 'irresponsible' — repeated 4 times in the call.",
-              channel: "Voice · Saksham",
-              time: "19:48",
-              tag: "REC-7741981",
-              language: "EN",
-            },
-            {
-              text: "Call placed at 21:12 IST — past the RBI-permitted recovery-calling window of 19:00.",
-              channel: "Voice · Saksham",
-              time: "21:12",
-              tag: "REC-3398881",
-              language: "EN",
-            },
-          ],
-          extra: {
-            kind: "saksham",
-            data: {
-              breaches: [
-                { label: "Aggressive language", count: 2 },
-                { label: "Reference to employer", count: 1 },
-                { label: "Late-hour call (post-19:00)", count: 1 },
-                { label: "Threat language", count: 1 },
-              ],
-              note: "Surface within 30 minutes of call ending — gives COH time to act before the customer tweets or escalates.",
-            },
-          },
-          boundary:
-            "Fluid CX surfaces the customer-side / call-side signal. The Saksham recovery workflow itself is out of Fluid CX scope per the product boundary contract — action is taken via the recovery governance contract with Saksham.",
-          primaryCta: { label: "Open Compliance Watch", icon: ShieldCheck, targetScreen: "compliance_watch" },
-        };
-      }
-      // Default alert (plaza, queue spike)
-      return {
-        title: a.title,
-        sub: a.context,
-        signalId: a.signal,
-        badge: { tone: "urgency", label: a.severity.toUpperCase() },
-        provenance: baseProvenance(87, "trailing 3h", "High"),
-        snippets: [
-          { text: a.context, channel: "Voice + social", time: a.capturedAt, language: "EN" },
-        ],
-        boundary:
-          "Fluid CX surfaces live alerts under 5-minute latency. Downstream action flows through your existing CRM / dispute / IO / acquirer channels.",
-        primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
-      };
-    }
-
     // ─── COMPLIANCE WATCH tile ──────────────────────────────────────────
     case "compliance": {
       const c = ctx.data;
       const isSaksham = c.id === "cw-saksham";
       const isTri = c.id === "cw-trilingual";
+      const isKyv = c.id === "cw-kyv";
+      const isTat = c.id === "cw-tat";
+      const isAnnual = c.id === "cw-annual";
+      const signalId: SignalId = isSaksham
+        ? "S018"
+        : isTri
+          ? "S015"
+          : isKyv
+            ? "S038"
+            : isTat
+              ? "S029"
+              : isAnnual
+                ? "S020"
+                : c.id === "cw-rbios"
+                  ? "S024"
+                  : "S020";
       return {
         title: c.label,
         sub: c.note,
-        signalId: isSaksham ? "S018" : isTri ? "S015" : c.id === "cw-rbios" ? "S024" : "S020",
+        signalId,
         badge: { tone: c.band === "ok" ? "ok" : c.band === "watch" ? "warn" : "bad", label: c.band.toUpperCase() },
-        provenance: baseProvenance(isSaksham ? 3 : isTri ? 9 : 186, "trailing 24h", "High"),
+        provenance: baseProvenance(isSaksham ? 3 : isTri ? 9 : isKyv ? 41 : isTat ? 14 : 186, "trailing 24h", "High"),
         snippets: isSaksham
           ? [
               { text: "Saksham agent (cohort: morning shift): 'Your employer will know about this if you don't pay.' · Agent identity in chain-of-custody", channel: "Voice · Saksham", time: "19:42", bpo: "Saksham Recovery", language: "EN" },
@@ -3593,15 +4414,32 @@ function getDrillContent(ctx: DrillContext): DrillContent {
             ]
           : isTri
             ? [
-                { text: "मराठीत बोला नं — agent continued in Hindi.", channel: "Voice · Anandam", time: "11:42", language: "MR" },
-                { text: "தமிழ்ல பேசுங்க sir — agent switched to English mid-call.", channel: "Voice · Trinetra", time: "12:18", language: "TA" },
-                { text: "Customer asked for Kannada twice; agent did not transfer.", channel: "Voice · DigitalReach", time: "13:01", language: "KN" },
+                { text: "मराठीत बोला नं — agent continued in Hindi.", channel: "Voice", time: "11:42", language: "MR" },
+                { text: "தமிழ்ல பேசுங்க sir — agent switched to English mid-call.", channel: "Voice", time: "12:18", language: "TA" },
+                { text: "Customer asked for Kannada twice; agent did not transfer.", channel: "Voice", time: "13:01", language: "KN" },
               ]
-            : [
-                { text: "Sampled case 1 — evidence pack 60% complete.", channel: "Case-scoped", time: "—" },
-                { text: "Sampled case 2 — evidence pack 75% complete.", channel: "Case-scoped", time: "—" },
-                { text: "Sampled case 3 — evidence pack 100% — ready.", channel: "Case-scoped", time: "—" },
-              ],
+            : isKyv
+              ? [
+                  { text: "Agent unblocked the tag without running KYV mismatch check — customer called back 6 days later, same blacklist.", channel: "Voice", time: "14:22", bpo: "Trinetra · Afternoon", language: "EN" },
+                  { text: "Vehicle class was never re-confirmed with customer before unlock.", channel: "Voice", time: "14:18", bpo: "Trinetra · Afternoon", language: "EN" },
+                  { text: "Wrap-up note: 'unblocked per customer request' — no root-cause logged.", channel: "Voice", time: "14:51", bpo: "Trinetra · Afternoon", language: "EN" },
+                ]
+              : isTat
+                ? [
+                    { text: "Refund was promised in 5 working days — today is day 8, customer calling again.", channel: "Voice", time: "10:11", language: "EN" },
+                    { text: "Agent said 'it is in process' — no case disposition update since first call.", channel: "Chat", time: "11:04", language: "EN" },
+                    { text: "Customer referenced prior agent promise verbatim — promise-gap detected.", channel: "Voice", time: "12:30", language: "EN" },
+                  ]
+                : isAnnual
+                  ? [
+                      { text: "Commercial vehicle customer sold Annual Pass — private non-commercial only per IHMCL rules.", channel: "Voice", time: "09:17", language: "EN" },
+                      { text: "Agent did not verify vehicle class before discussing ₹3,000 pass.", channel: "Voice", time: "09:42", language: "EN" },
+                    ]
+                  : [
+                      { text: "Sampled case 1 — evidence pack 60% complete.", channel: "Case-scoped", time: "—" },
+                      { text: "Sampled case 2 — evidence pack 75% complete.", channel: "Case-scoped", time: "—" },
+                      { text: "Sampled case 3 — evidence pack 100% — ready.", channel: "Case-scoped", time: "—" },
+                    ],
         extra: isSaksham
           ? {
               kind: "saksham",
@@ -3626,12 +4464,28 @@ function getDrillContent(ctx: DrillContext): DrillContent {
                   ],
                 },
               }
-            : undefined,
+            : isKyv
+              ? {
+                  kind: "evidence-checklist",
+                  data: {
+                    title: "KYV root-cause check — did the agent verify before unlocking?",
+                    items: [
+                      { label: "KYV mismatch checked", state: "fail" as const },
+                      { label: "Vehicle class re-confirmed", state: "fail" as const },
+                      { label: "Tag unblocked without root cause", state: "pass" as const },
+                      { label: "Repeat-call risk flagged", state: "fail" as const },
+                    ],
+                    caption: "Trinetra afternoon cohort at 79% adherence — below 80% target.",
+                  },
+                }
+              : undefined,
         boundary: isSaksham
           ? "Saksham recovery workflow is out of Fluid CX scope per the product boundary contract. Action via the Saksham governance contract."
           : isTri
-            ? "Genesys IVR routing for regional-language queues is owned by Tech. Fluid CX detects the breach, does not route."
-            : "Fluid CX assembles the record. IO desk makes the finding — Fluid CX does not adjudicate.",
+            ? "IVR routing for regional-language queues is owned by Tech. Fluid CX detects the breach, does not route."
+            : isKyv
+              ? "Fluid CX surfaces coaching adherence on KYV checks. Fluid CX does not unlock tags or write to NPCI blacklist state."
+              : "Fluid CX assembles the record. IO desk makes the finding — Fluid CX does not adjudicate.",
         primaryCta: { label: "Open Evidence Pack", icon: ShieldCheck, targetScreen: "io_evidence" },
       };
     }
@@ -3642,7 +4496,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
       const isOEM = ch === "OEM-fitted";
       return {
         title: `Channel · ${ch}`,
-        sub: `Day-1 complaint cohort · 30d window · ${isOEM ? "1.6× cohort median" : "within cohort median"}`,
+        sub: `First 30 days of tag life · complaint rate vs peer channels · ${isOEM ? "1.6× above median" : "within median band"}`,
         signalId: "S007",
         badge: { tone: isOEM ? "bad" : "primary", label: isOEM ? "DAY-1 CHANNEL ISSUE" : "CHANNEL COHORT" },
         provenance: baseProvenance(isOEM ? 1240 : 980, "30d cohort", "High", [`channel: ${ch}`]),
@@ -3650,21 +4504,21 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           ? [
               {
                 text: "Tag was already fitted by the OEM dealer when I bought the car — wrong vehicle class was set, every plaza charges wrong amount.",
-                channel: "Voice · Trinetra",
+                channel: "Voice",
                 time: "Day 8",
                 tag: "TAG-7820001",
                 language: "EN",
               },
               {
                 text: "Bought car last month, KYV was never confirmed — dealer just stuck the tag. Now I'm chasing this for refund.",
-                channel: "Chat · DigitalReach",
+                channel: "Chat",
                 time: "Day 14",
                 tag: "TAG-3398012",
                 language: "EN",
               },
               {
                 text: "OEM-fitted tag stopped working in 21 days — dealer says go to bank, bank says go to dealer.",
-                channel: "Voice · Anandam",
+                channel: "Voice",
                 time: "Day 21",
                 tag: "TAG-1141998",
                 language: "EN",
@@ -3677,7 +4531,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
           ? {
               kind: "channel-cohort",
               data: {
-                note: "OEM-fitted complaint rate is 1.6× the cohort median — driven by Day-1 KYV / AVC fitment errors at the dealership.",
+                note: "OEM-fitted complaint rate is 1.6× peer median — driven by KYV / AVC fitment errors at the dealership.",
                 breakdown: [
                   { label: "KYV mismatch · wrong class set", value: 412 },
                   { label: "Tag-not-activated at fitment", value: 198 },
@@ -3696,6 +4550,7 @@ function getDrillContent(ctx: DrillContext): DrillContent {
 
 // Helper rendering blocks for the extra views
 function CoachingChecklist({ data }: { data: { checklist: { label: string; state: "pass" | "fail" }[]; suggestedPhrase: string; note: string } }) {
+  const FT = useFT();
   return (
     <Panel title="Coaching view — OC 005 evidence checklist" subtitle="What was captured · what was missed · suggested next phrasing for the agent">
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -3744,6 +4599,7 @@ function CoachingChecklist({ data }: { data: { checklist: { label: string; state
 }
 
 function PromiseGap({ data }: { data: { firstCall: { when: string; agentSaid: string; outcomeLogged: string }; callback: { when: string; customerSaid: string; gap: string } } }) {
+  const FT = useFT();
   return (
     <Panel title="Promise gap — first call vs. callback" subtitle="What the agent said vs. what the customer experienced 3 days later">
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -3767,6 +4623,7 @@ function PromiseGap({ data }: { data: { firstCall: { when: string; agentSaid: st
 }
 
 function ChecklistBlock({ data }: { data: { title: string; items: { label: string; state: "pass" | "fail" }[]; caption?: string } }) {
+  const FT = useFT();
   return (
     <Panel title={data.title}>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -3794,6 +4651,7 @@ function ChecklistBlock({ data }: { data: { title: string; items: { label: strin
 }
 
 function BreakdownBlock({ title, subtitle, data }: { title: string; subtitle?: string; data: { note: string; breakdown: { label: string; value: number }[]; missedFlow?: string } }) {
+  const FT = useFT();
   const max = Math.max(...data.breakdown.map((b) => b.value), 1);
   return (
     <Panel title={title} subtitle={subtitle}>
@@ -3829,6 +4687,7 @@ function BreakdownBlock({ title, subtitle, data }: { title: string; subtitle?: s
 }
 
 function OmbudsmanBlock({ data }: { data: { triggers: string[]; context90s: string } }) {
+  const FT = useFT();
   return (
     <Panel title="Threat-language detection" subtitle="What the customer said + what the agent said in the 90 seconds before">
       <div style={{ fontSize: 11, color: FT.textMut, textTransform: "uppercase", letterSpacing: 0.6, fontWeight: 700, marginBottom: 8 }}>
@@ -3861,6 +4720,7 @@ function OmbudsmanBlock({ data }: { data: { triggers: string[]; context90s: stri
 }
 
 function SakshamBlock({ data }: { data: { breaches: { label: string; count: number }[]; note: string } }) {
+  const FT = useFT();
   return (
     <Panel title="Conduct breaches detected" subtitle="Saksham Recovery Services · trailing 24h">
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
@@ -3903,13 +4763,14 @@ type DrillShell = {
   headerVariant: "standard" | "urgent" | "coaching" | "evidence" | "map";
 };
 
-const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
+function getDrillShells(ft: FastagPalette): Record<DrillKind, DrillShell> {
+  return {
   headline: {
     viewLabel: "HEADLINE DRILL",
     placement: "right",
     width: "min(680px, 94vw)",
-    accent: FT.primary,
-    accentGlow: FT.primarySoft,
+    accent: ft.primary,
+    accentGlow: ft.primarySoft,
     order: ["snippets", "extra", "provenance", "boundary"],
     snippetStyle: "cards",
     provenanceInline: true,
@@ -3920,8 +4781,8 @@ const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
     placement: "bottom",
     width: "min(920px, 96vw)",
     maxHeight: "min(78vh, 720px)",
-    accent: FT.urgency,
-    accentGlow: FT.urgencySoft,
+    accent: ft.urgency,
+    accentGlow: ft.urgencySoft,
     order: ["extra", "snippets", "provenance", "boundary"],
     snippetStyle: "timeline",
     headerVariant: "coaching",
@@ -3930,8 +4791,8 @@ const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
     viewLabel: "STRATEGY DRILL",
     placement: "right",
     width: "min(520px, 92vw)",
-    accent: FT.accent,
-    accentGlow: FT.accentSoft,
+    accent: ft.accent,
+    accentGlow: ft.accentSoft,
     order: ["extra", "provenance", "snippets", "boundary"],
     snippetStyle: "cards",
     headerVariant: "standard",
@@ -3940,8 +4801,8 @@ const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
     viewLabel: "COHORT COACHING",
     placement: "right",
     width: "min(600px, 94vw)",
-    accent: FT.amber,
-    accentGlow: FT.amberSoft,
+    accent: ft.amber,
+    accentGlow: ft.amberSoft,
     order: ["extra", "snippets", "provenance", "boundary"],
     snippetStyle: "cards",
     headerVariant: "coaching",
@@ -3951,8 +4812,8 @@ const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
     placement: "center",
     width: "min(720px, 94vw)",
     maxHeight: "min(85vh, 800px)",
-    accent: FT.accent,
-    accentGlow: FT.accentSoft,
+    accent: ft.accent,
+    accentGlow: ft.accentSoft,
     order: ["extra", "snippets", "provenance", "boundary"],
     snippetStyle: "cards",
     headerVariant: "map",
@@ -3962,28 +4823,18 @@ const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
     placement: "bottom",
     width: "min(1040px, 98vw)",
     maxHeight: "min(88vh, 860px)",
-    accent: FT.green,
-    accentGlow: FT.greenSoft,
+    accent: ft.green,
+    accentGlow: ft.greenSoft,
     order: ["snippets", "extra", "provenance", "boundary"],
     snippetStyle: "transcript",
     headerVariant: "evidence",
-  },
-  alert: {
-    viewLabel: "LIVE ALERT · REVIEW",
-    placement: "right",
-    width: "min(640px, 94vw)",
-    accent: FT.red,
-    accentGlow: FT.redSoft,
-    order: ["extra", "snippets", "provenance", "boundary"],
-    snippetStyle: "timeline",
-    headerVariant: "urgent",
   },
   compliance: {
     viewLabel: "COMPLIANCE · TRANSCRIPT",
     placement: "left",
     width: "min(580px, 94vw)",
-    accent: FT.amber,
-    accentGlow: FT.amberSoft,
+    accent: ft.amber,
+    accentGlow: ft.amberSoft,
     order: ["snippets", "extra", "provenance", "boundary"],
     snippetStyle: "transcript",
     headerVariant: "standard",
@@ -3993,14 +4844,15 @@ const DRILL_SHELLS: Record<DrillKind, DrillShell> = {
     placement: "right",
     width: "min(440px, 92vw)",
     maxHeight: "min(70vh, 560px)",
-    accent: FT.accent,
-    accentGlow: FT.accentSoft,
+    accent: ft.accent,
+    accentGlow: ft.accentSoft,
     order: ["provenance", "snippets", "extra", "boundary"],
     snippetStyle: "compact",
     provenanceInline: true,
     headerVariant: "standard",
   },
-};
+  };
+}
 
 function DrillSnippets({
   snippets,
@@ -4013,6 +4865,7 @@ function DrillSnippets({
   accent: string;
   langColor: Record<string, string>;
 }) {
+  const FT = useFT();
   if (style === "hero" && snippets[0]) {
     const s = snippets[0];
     return (
@@ -4148,7 +5001,7 @@ function DrillSnippets({
                   alignItems: "center",
                   padding: "2px 8px",
                   borderRadius: 999,
-                  background: "rgba(255,255,255,0.04)",
+                  background: FT.chartCursorFill,
                   border: `1px solid ${langColor[s.language] ?? FT.borderLight}`,
                   color: langColor[s.language] ?? FT.textSec,
                   fontSize: 10,
@@ -4202,6 +5055,7 @@ function DrillDownPanel({
   onPrimaryAction: (target: ScreenId) => void;
   onCopyExport: (summary: string) => void;
 }) {
+  const FT = useFT();
   // Hooks must run on every render even when ctx is null, so Escape-to-close
   // wiring lives above the early-return.
   useEffect(() => {
@@ -4217,8 +5071,7 @@ function DrillDownPanel({
   const content = getDrillContent(ctx);
   const { title, sub, signalId, badge, provenance, snippets, extra, boundary, primaryCta, boundarySeverity = "hard" } = content;
   const PrimaryIcon = primaryCta.icon;
-  const signalLabel = SIGNAL_LABELS[signalId as SignalId] ?? "Signal";
-  const shell = DRILL_SHELLS[ctx.kind];
+  const shell = getDrillShells(FT)[ctx.kind];
 
   const langColor: Record<string, string> = {
     EN: FT.textSec,
@@ -4239,17 +5092,16 @@ function DrillDownPanel({
 
   const panelStyle: CSSProperties = {
     width: shell.width,
-    maxHeight: shell.maxHeight ?? (shell.placement === "bottom" || shell.placement === "center" ? undefined : "100vh"),
+    maxHeight:
+      shell.maxHeight ??
+      (shell.placement === "center"
+        ? "min(85vh, 800px)"
+        : shell.placement === "bottom"
+          ? "min(88vh, 860px)"
+          : "100vh"),
     height: shell.placement === "bottom" || shell.placement === "center" ? "auto" : "100vh",
     background: FT.surface,
-    boxShadow:
-      shell.placement === "left"
-        ? "24px 0 60px rgba(0,0,0,0.6)"
-        : shell.placement === "bottom"
-          ? "0 -24px 60px rgba(0,0,0,0.6)"
-          : shell.placement === "center"
-            ? "0 24px 80px rgba(0,0,0,0.75)"
-            : "-24px 0 60px rgba(0,0,0,0.6)",
+    boxShadow: FT.toastShadow,
     overflow: "auto",
     padding: shell.placement === "bottom" ? "20px 24px 24px" : 22,
     color: FT.text,
@@ -4366,7 +5218,6 @@ function DrillDownPanel({
       `${title}`,
       `${sub}`,
       "",
-      `Signal: ${signalId} · ${signalLabel}`,
       `Provenance: ${provenance.count.toLocaleString()} interactions · ${provenance.window} · confidence ${provenance.confidence}`,
       "",
       "Representative snippets:",
@@ -4389,7 +5240,7 @@ function DrillDownPanel({
         padding: shell.placement === "center" || shell.placement === "bottom" ? 16 : 0,
       }}
     >
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(4,8,15,0.55)" }} />
+      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: FT.overlayScrim }} />
       <aside style={{ position: "relative", zIndex: 1, ...panelStyle }}>
         <div
           style={{
@@ -4432,8 +5283,8 @@ function DrillDownPanel({
         >
           <div style={{ minWidth: 0 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
-              <Pill tone="primary" size="xs">{String(signalId)} · {signalLabel}</Pill>
               <Pill tone={badge.tone} size="xs">{badge.label}</Pill>
+              <AiGeneratedMark compact />
             </div>
             <h2 style={{ fontSize: shell.placement === "center" ? 22 : 20, fontWeight: 800, color: FT.text, margin: 0 }}>{title}</h2>
             <div style={{ fontSize: 12, color: FT.textSec, marginTop: 4, lineHeight: 1.5 }}>{sub}</div>
@@ -4537,6 +5388,7 @@ function DrillDownPanel({
 // TREND EXPLORER (SCR-SHR-06 · Stage 4 §A)
 // ─────────────────────────────────────────────────────────────────────────
 function TrendExplorerOverlay({ onClose }: { onClose: () => void }) {
+  const FT = useFT();
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -4553,7 +5405,7 @@ function TrendExplorerOverlay({ onClose }: { onClose: () => void }) {
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 80, display: "flex", justifyContent: "center", alignItems: "stretch" }}>
-      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: "rgba(4,8,15,0.6)" }} />
+      <div onClick={onClose} style={{ position: "absolute", inset: 0, background: FT.overlayScrimStrong }} />
       <div
         style={{
           position: "relative",
@@ -4561,7 +5413,7 @@ function TrendExplorerOverlay({ onClose }: { onClose: () => void }) {
           maxHeight: "92vh",
           marginTop: "4vh",
           marginBottom: "4vh",
-          background: FT.surface,
+          background: FT.card,
           border: `1px solid ${FT.border}`,
           borderRadius: 14,
           padding: 22,
@@ -4629,7 +5481,6 @@ function TrendExplorerOverlay({ onClose }: { onClose: () => void }) {
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginBottom: 6 }}>
                   <div style={{ fontSize: 13, fontWeight: 700 }}>{c.label}</div>
                   <div style={{ display: "flex", gap: 6 }}>
-                    <Pill tone="neutral" size="xs">{c.signal}</Pill>
                     <Pill tone={c.z <= -1.5 ? "bad" : c.z <= -0.5 ? "warn" : "cyan"} size="xs">{c.z.toFixed(1)}σ · {c.calls} calls</Pill>
                   </div>
                 </div>
@@ -4646,100 +5497,58 @@ function TrendExplorerOverlay({ onClose }: { onClose: () => void }) {
 }
 
 // ─────────────────────────────────────────────────────────────────────────
-// TOASTS
-// ─────────────────────────────────────────────────────────────────────────
-type Toast = { id: string; signal: SignalId | string; title: string; body: string; kind: StreamEvent["kind"] };
-
-function ToastStack({ toasts, onClose }: { toasts: Toast[]; onClose: (id: string) => void }) {
-  if (toasts.length === 0) return null;
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 90,
-        right: 22,
-        zIndex: 70,
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        width: 340,
-      }}
-    >
-      {toasts.map((t) => {
-        const tone =
-          t.kind === "alert-toast" ? FT.red : t.kind === "saksham-conduct" ? FT.urgency : t.kind === "stream-recalc" ? FT.accent : FT.green;
-        return (
-          <div
-            key={t.id}
-            style={{
-              background: FT.elevated,
-              border: `1px solid ${FT.borderLight}`,
-              borderLeft: `4px solid ${tone}`,
-              borderRadius: 12,
-              padding: 12,
-              color: FT.text,
-              boxShadow: "0 18px 40px rgba(0,0,0,0.45)",
-              animation: "ft-slide-in 200ms ease-out",
-            }}
-          >
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <Flame size={14} color={tone} />
-                <Pill tone={t.kind === "alert-toast" ? "bad" : t.kind === "saksham-conduct" ? "urgency" : "cyan"} size="xs">
-                  {String(t.signal)}
-                </Pill>
-              </div>
-              <button
-                onClick={() => onClose(t.id)}
-                style={{ background: "transparent", border: "none", color: FT.textMut, cursor: "pointer" }}
-              >
-                <X size={14} />
-              </button>
-            </div>
-            <div style={{ fontSize: 13, fontWeight: 700, color: FT.text, marginBottom: 2 }}>{t.title}</div>
-            <div style={{ fontSize: 12, color: FT.textSec, lineHeight: 1.5 }}>{t.body}</div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────
 // MAIN DASHBOARD
 // ─────────────────────────────────────────────────────────────────────────
 export type FastagIntelligenceDashboardProps = {
   industryName: string;
   industryColor: string;
+  roleName?: string;
   initialPersona?: PersonaId;
   onExit: () => void;
   theme?: DashboardThemeTokens;
 };
 
-export function FastagIntelligenceDashboard({
+export function FastagIntelligenceDashboard(props: FastagIntelligenceDashboardProps) {
+  const [colorMode, setColorMode] = useState<FastagColorMode>(() => {
+    if (typeof window === "undefined") return "light";
+    const stored = localStorage.getItem(FASTAG_COLOR_MODE_KEY);
+    return stored === "dark" ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    localStorage.setItem(FASTAG_COLOR_MODE_KEY, colorMode);
+  }, [colorMode]);
+
+  const ft = colorMode === "light" ? FT_LIGHT : FT_DARK;
+
+  return (
+    <FastagPaletteContext.Provider value={ft}>
+      <DashboardThemeProvider value={props.theme ?? buildFastagTheme(ft)}>
+        <FastagDashboardShell {...props} colorMode={colorMode} onColorModeChange={setColorMode} />
+      </DashboardThemeProvider>
+    </FastagPaletteContext.Provider>
+  );
+}
+
+function FastagDashboardShell({
   industryName,
   industryColor,
+  roleName,
   initialPersona = "hob",
   onExit,
-  theme,
-}: FastagIntelligenceDashboardProps) {
+  colorMode,
+  onColorModeChange,
+}: FastagIntelligenceDashboardProps & {
+  colorMode: FastagColorMode;
+  onColorModeChange: (mode: FastagColorMode) => void;
+}) {
+  const FT = useFT();
   const [persona, setPersona] = useState<PersonaId>(initialPersona);
-  const [screen, setScreen] = useState<ScreenId>("primary");
+  const [sidebarHover, setSidebarHover] = useState(false);
+  const mainScrollRef = useRef<HTMLDivElement>(null);
   const [timeWindow, setTimeWindow] = useState<TimeWindow>("24h");
   const [drill, setDrill] = useState<DrillContext | null>(null);
-  const [alerts, setAlerts] = useState<LiveAlert[]>(() => {
-    const ids = new Set<string>();
-    return [...HOB_SEED_ALERTS, ...COH_SEED_ALERTS].filter((a) => {
-      if (ids.has(a.id)) return false;
-      ids.add(a.id);
-      return true;
-    });
-  });
-  const [toasts, setToasts] = useState<Toast[]>([]);
-  const [streamPlaying, setStreamPlaying] = useState(true);
-  const [tick, setTick] = useState(0);
-  const firedRef = useRef<Set<string>>(new Set());
-  const toastTimersRef = useRef<Map<string, number>>(new Map());
+  const [hobDrill, setHobDrill] = useState<HobDrillId | null>(null);
 
   // Stage 4 §B.1.6 — money shot #3: "4 hours of manual case assembly → 3 seconds".
   // We track an `evidenceAssembling` flag so navigating into IO Evidence via a
@@ -4750,221 +5559,49 @@ export function FastagIntelligenceDashboard({
   // opened from the SentimentDrift "Explore" button.
   const [trendExplorerOpen, setTrendExplorerOpen] = useState(false);
 
-  // Stage 4 §B.2.1 — COH shift bar, action queue, and compliance tiles share
-  // the same underlying counters so acking an item visibly lowers the bar.
-  const [cohState, setCohState] = useState({
-    oc005Gap: 23, // matches COH_ACTION_QUEUE[0]
-    repeatCalls: 41, // matches COH_ACTION_QUEUE[1]
-    trilingualBreaches: 9, // matches COH_ACTION_QUEUE[2]
-    refundSlaBreached: 14, // matches COH_ACTION_QUEUE[3]
-    sakshamGreen: true, // Stage 4 §B.1.6 — flips to coral when evt-4 fires
-  });
-
-  // When the Saksham conduct event fires, flip the tile from green → coral so
-  // the corresponding compliance row turns "exposure-bad".
-  useEffect(() => {
-    if (firedRef.current.has("evt-4") && cohState.sakshamGreen) {
-      setCohState((s) => ({ ...s, sakshamGreen: false }));
-    }
-  }, [tick, cohState.sakshamGreen]);
-
-  const ackCohAction = useCallback((signal: SignalId) => {
-    setCohState((s) => {
-      switch (signal) {
-        case "S016": return { ...s, oc005Gap: Math.max(0, s.oc005Gap - 1) };
-        case "S014": return { ...s, repeatCalls: Math.max(0, s.repeatCalls - 1) };
-        case "S015": return { ...s, trilingualBreaches: Math.max(0, s.trilingualBreaches - 1) };
-        case "S029": return { ...s, refundSlaBreached: Math.max(0, s.refundSlaBreached - 1) };
-        default: return s;
-      }
-    });
-  }, []);
-
   const personaMeta = PERSONAS[persona];
-
-  // Ambient stream — ticks every 1s (Stage 4 §F); events fire at the exact
-  // second specified in their `at` field.
-  useEffect(() => {
-    if (!streamPlaying) return;
-    const id = window.setInterval(() => setTick((t) => t + 1), 1000);
-    return () => window.clearInterval(id);
-  }, [streamPlaying]);
-
-  useEffect(() => {
-    SIMULATED_STREAM.forEach((ev) => {
-      if (firedRef.current.has(ev.id)) return;
-      if (tick < ev.at) return;
-      // Persona-gate: events tagged for the other persona never fire on this screen.
-      if (ev.persona && ev.persona !== persona) return;
-      firedRef.current.add(ev.id);
-
-      const toastId = `t-${ev.id}-${Date.now()}`;
-      const signal = "signal" in ev ? ev.signal : "STREAM";
-      setToasts((prev) => [...prev, { id: toastId, signal, title: ev.title, body: ev.body, kind: ev.kind }]);
-      const handle = window.setTimeout(() => {
-        setToasts((prev) => prev.filter((t) => t.id !== toastId));
-        toastTimersRef.current.delete(toastId);
-      }, 8000);
-      toastTimersRef.current.set(toastId, handle);
-
-      if (ev.kind === "alert-toast" || ev.kind === "saksham-conduct") {
-        const sig = "signal" in ev ? ev.signal : "S006";
-        const aud: PersonaId | "both" =
-          ev.persona ?? (sig === "S006" ? "both" : sig === "S003" ? "hob" : "coh");
-        setAlerts((prev) => [
-          {
-            id: `live-${ev.id}`,
-            signal: sig,
-            severity: ev.kind === "alert-toast" && sig === "S006" ? "critical" : "high",
-            title: ev.title,
-            context: ev.body,
-            capturedAt: new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" }),
-            audience: aud,
-            saksham: ev.kind === "saksham-conduct",
-            actionLabel: ev.kind === "saksham-conduct" ? "Route to Compliance" : sig === "S006" ? "Route to Senior Agent" : "Review",
-          },
-          ...prev,
-        ]);
-      }
-    });
-  }, [tick, persona]);
-
-  const restartStream = useCallback(() => {
-    firedRef.current = new Set();
-    toastTimersRef.current.forEach((handle) => window.clearTimeout(handle));
-    toastTimersRef.current.clear();
-    setTick(0);
-    setToasts([]);
-    setAlerts(() => {
-      const ids = new Set<string>();
-      return [...HOB_SEED_ALERTS, ...COH_SEED_ALERTS].filter((a) => {
-        if (ids.has(a.id)) return false;
-        ids.add(a.id);
-        return true;
-      });
-    });
-  }, []);
-
-  // Clear all toast timers on unmount so dev-mode StrictMode double-mount
-  // and route changes don't leak callbacks.
-  useEffect(
-    () => () => {
-      toastTimersRef.current.forEach((handle) => window.clearTimeout(handle));
-      toastTimersRef.current.clear();
-    },
-    []
-  );
-
-  const liveAgoLabel = useMemo(() => {
-    // "Live · X min ago" is computed from the simulated tick so it visibly
-    // updates during a 7-minute demo, instead of staying frozen at "4 min ago".
-    const base = 4; // base minute offset at T+0
-    const mins = base + Math.floor(tick / 60);
-    return `Live · ${mins} min ago`;
-  }, [tick]);
+  const displayRoleName = roleName ?? personaMeta.longLabel;
+  const sidebarW = sidebarHover ? 268 : 76;
 
   const switchPersona = useCallback((next: PersonaId) => {
     setPersona(next);
-    setScreen("primary");
     setDrill(null);
+    setHobDrill(null);
+    mainScrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
-  const goScreen = useCallback((s: ScreenId) => {
-    setScreen(s);
-    setDrill(null);
-  }, []);
+  const handleEvidenceAssembled = useCallback(() => setEvidenceAssembling(false), []);
 
-  const ackAlert = useCallback((id: string) => {
-    setAlerts((prev) => prev.map((a) => (a.id === id ? { ...a, ackd: true } : a)));
-  }, []);
-
-  const personaAlerts = useMemo(
-    () => alerts.filter((a) => (a.audience === persona || a.audience === "both") && !a.ackd),
-    [alerts, persona]
-  );
-
-  const sidebarItems: { id: ScreenId; label: string; icon: typeof Bell; sub: string }[] = useMemo(
-    () =>
-      persona === "hob"
-        ? [
-            { id: "primary", label: PERSONAS.hob.primaryLabel, icon: Crown, sub: "Morning brief · revenue" },
-            {
-              id: "live_alerts",
-              label: "Live Alerts",
-              icon: Bell,
-              sub: `${personaAlerts.length} active · PNO / strategic`,
-            },
-            { id: "plaza_heatmap", label: "Plaza Heatmap", icon: MapPin, sub: "Corridor read · acquirer 24h" },
-            {
-              id: "io_evidence",
-              label: "IO Evidence Pack",
-              icon: ShieldCheck,
-              sub: `IO readiness · read-only · ${RB_IOS_DAYS_REMAINING}d`,
-            },
-            { id: "compliance_watch", label: "Compliance Watch", icon: ShieldCheck, sub: "Exposure monitor · read-only" },
-          ]
-        : [
-            { id: "primary", label: PERSONAS.coh.primaryLabel, icon: Headphones, sub: "Floor console · this shift" },
-            {
-              id: "live_alerts",
-              label: "Live Alerts",
-              icon: Bell,
-              sub: `${personaAlerts.length} active · route / coach`,
-            },
-            { id: "plaza_heatmap", label: "Plaza Heatmap", icon: MapPin, sub: "Floor surge · BPO × plaza" },
-            { id: "io_evidence", label: "IO Evidence Pack", icon: ShieldCheck, sub: "OC 005 · assemble packs" },
-            { id: "compliance_watch", label: "Compliance Watch", icon: ShieldCheck, sub: "Heatmap · breach queue" },
-          ],
-    [persona, personaAlerts.length]
-  );
-
-  const renderPrimary = () => {
-    if (persona === "hob") {
-      return (
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <HeadlineBrief liveLabel={liveAgoLabel} onPick={(c) => setDrill({ kind: "headline", data: c })} />
-          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.6fr) minmax(0, 1fr)", gap: 16 }}>
-            <Panel title="Action Queue" subtitle="3–5 actionable items sorted by revenue impact today">
-              <ActionQueueList rows={HOB_ACTION_QUEUE} onPick={(r) => setDrill({ kind: "action", data: r })} />
-            </Panel>
-            <ChargebackIntel onPick={(r) => setDrill({ kind: "action", data: r })} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)", gap: 16 }}>
-            <ChannelQualityBar />
-            <SentimentDriftChart onExplore={() => setTrendExplorerOpen(true)} />
-          </div>
-          <StrategyTileGrid onPick={(t) => setDrill({ kind: "strategy", data: t })} />
-        </div>
-      );
+  const scrollToFastagSection = useCallback((target: ScreenId) => {
+    const root = mainScrollRef.current;
+    if (!root) return;
+    if (target === "primary") {
+      root.scrollTo({ top: 0, behavior: "smooth" });
+      return;
     }
-    return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <ShiftStatusBar oc005Gap={cohState.oc005Gap} />
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr)", gap: 16 }}>
-          <Panel title="Action Queue · this shift" subtitle="OC 005 gaps · repeat-call clusters · trilingual · refund SLA">
-            <ActionQueueList
-              rows={COH_ACTION_QUEUE}
-              onPick={(r) => {
-                ackCohAction(r.signal);
-                setDrill({ kind: "action", data: r });
-              }}
-            />
-          </Panel>
-          <ComplianceTilesRow
-            onPick={(id) => {
-              const item = COMPLIANCE_ITEMS.find((c) => c.id === id);
-              if (item) setDrill({ kind: "compliance", data: item });
-            }}
-          />
-        </div>
-        <BpoHeatmap onPick={(cell) => setDrill({ kind: "bpo", data: cell })} />
-      </div>
-    );
-  };
+    const el = root.querySelector(`#${FASTAG_SECTION_IDS[target]}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  const openHobExecutiveTile = useCallback((tileId: HobExecutiveTileId) => {
+    setDrill(null);
+    setHobDrill(tileId);
+    mainScrollRef.current?.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
+
+  const sectionAnchorStyle: CSSProperties = { scrollMarginTop: 16 };
 
   return (
-    <DashboardThemeProvider value={theme ?? FASTAG_THEME}>
-      <div style={{ minHeight: "100vh", background: FT.canvas, color: FT.text }}>
+    <FastagPeriodProvider>
+      <div
+        style={{
+          display: "flex",
+          height: "100vh",
+          background: FT.bg,
+          color: FT.text,
+          overflow: "hidden",
+        }}
+      >
         <style jsx global>{`
           @keyframes ft-slide-in {
             from { transform: translateY(-8px); opacity: 0; }
@@ -4974,6 +5611,7 @@ export function FastagIntelligenceDashboard({
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
           }
+          @keyframes ft-slide-in-left {
             from { transform: translateX(-100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
           }
@@ -4989,333 +5627,381 @@ export function FastagIntelligenceDashboard({
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
           }
+          * {
+            scrollbar-width: thin;
+            scrollbar-color: ${FT.borderLight} ${FT.canvas};
+          }
+          *::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+          }
+          *::-webkit-scrollbar-track {
+            background: ${FT.canvas};
+          }
+          *::-webkit-scrollbar-thumb {
+            background: ${FT.borderLight};
+            border-radius: 5px;
+            border: 2px solid ${FT.canvas};
+          }
         `}</style>
 
-        {/* HEADER */}
-        <header
+        {/* Collapsible brand sidebar — same pattern as Head of Credit Cards */}
+        <aside
+          onMouseEnter={() => setSidebarHover(true)}
+          onMouseLeave={() => setSidebarHover(false)}
           style={{
-            position: "sticky",
-            top: 0,
-            zIndex: 50,
-            background: "rgba(13,17,23,0.92)",
-            backdropFilter: "blur(10px)",
-            borderBottom: `1px solid ${FT.border}`,
-            padding: "14px 20px",
+            width: sidebarW,
+            minWidth: sidebarW,
+            transition: "width 0.22s ease, min-width 0.22s ease",
+            borderRight: `1px solid ${FT.borderLight}`,
+            background: FT.elevated,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            zIndex: 5,
+            flexShrink: 0,
           }}
         >
-          <div style={{ maxWidth: 1840, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-              <button
-                onClick={onExit}
+          <div
+            style={{
+              padding: sidebarHover ? "18px 16px" : "14px 10px",
+              borderBottom: `1px solid ${FT.borderLight}`,
+              textAlign: sidebarHover ? "left" : "center",
+            }}
+          >
+            {sidebarHover ? (
+              <>
+                <div style={{ fontSize: 12, fontWeight: 800, color: FT.accent, letterSpacing: 2.5, textTransform: "uppercase" }}>Yaaralabs</div>
+                <div style={{ fontSize: 13, color: FT.textMut, marginTop: 2 }}>Fluid CX · FASTag</div>
+              </>
+            ) : (
+              <div
                 style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  background: "rgba(255,255,255,0.05)",
-                  color: FT.text,
-                  border: `1px solid ${FT.borderLight}`,
-                  borderLeft: `3px solid ${industryColor || FT.primary}`,
+                  width: 36,
+                  height: 36,
+                  margin: "0 auto",
                   borderRadius: 10,
-                  padding: "8px 12px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: "pointer",
+                  background: FT.accentSoft,
+                  border: `1px solid ${FT.accent}40`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: 15,
+                  fontWeight: 800,
+                  color: FT.accent,
+                }}
+                title="Yaaralabs · Fluid CX"
+              >
+                Y
+              </div>
+            )}
+          </div>
+          <div
+            style={{
+              padding: sidebarHover ? "12px 14px" : "10px 8px",
+              borderBottom: `1px solid ${FT.borderLight}`,
+              display: "flex",
+              flexDirection: "column",
+              gap: sidebarHover ? 8 : 6,
+              alignItems: sidebarHover ? "stretch" : "center",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: sidebarHover ? "flex-start" : "center" }}>
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: `${industryColor}25`,
+                  border: `1px solid ${industryColor}60`,
+                  flexShrink: 0,
+                }}
+              />
+              {sidebarHover ? <span style={{ fontSize: 13, fontWeight: 600, color: FT.text }}>{industryName}</span> : null}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, justifyContent: sidebarHover ? "flex-start" : "center" }}>
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: `${industryColor}20`,
+                  border: `1px solid ${industryColor}50`,
+                  flexShrink: 0,
+                }}
+              />
+              {sidebarHover ? <span style={{ fontSize: 13, fontWeight: 600, color: FT.primary }}>{displayRoleName}</span> : null}
+            </div>
+          </div>
+          <div style={{ padding: sidebarHover ? "10px 8px" : "8px 6px", flex: 1, overflowY: "auto", overflowX: "hidden" }}>
+            <button
+              type="button"
+              onClick={() => scrollToFastagSection("primary")}
+              style={{
+                width: "100%",
+                textAlign: "left",
+                border: "none",
+                background: FT.primarySoft,
+                color: FT.text,
+                borderRadius: 8,
+                padding: sidebarHover ? "8px 10px" : "10px 8px",
+                marginBottom: 6,
+                display: "flex",
+                alignItems: "center",
+                gap: sidebarHover ? 8 : 0,
+                cursor: "pointer",
+                borderLeft: `3px solid ${FT.primary}`,
+                justifyContent: sidebarHover ? "flex-start" : "center",
+              }}
+            >
+              <div
+                style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: FT.primarySoft,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
                 }}
               >
-                <ArrowLeft size={14} /> Back
+                <Activity size={11} color={FT.primary} />
+              </div>
+              {sidebarHover ? (
+                <span style={{ fontSize: 13, fontWeight: 700 }}>
+                  {persona === "hob" ? "Executive view" : "Operations console"}
+                </span>
+              ) : null}
+            </button>
+            {sidebarHover ? (
+              <div style={{ fontSize: 10, color: FT.textMut, lineHeight: 1.5, padding: "4px 10px 12px" }}>
+                3 areas · open a tile for detailed cards
+              </div>
+            ) : null}
+          </div>
+          {sidebarHover ? (
+            <div style={{ padding: "8px 12px", borderTop: `1px solid ${FT.borderLight}`, fontSize: 10, color: FT.textSec, lineHeight: 1.55 }}>
+              <div style={{ fontWeight: 700, color: FT.text, marginBottom: 4 }}>BPO partners</div>
+              Trinetra · Anandam · Digital · Saksham
+            </div>
+          ) : null}
+          <div
+            style={{
+              padding: sidebarHover ? "10px 12px" : "10px 8px",
+              borderTop: `1px solid ${FT.borderLight}`,
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+            }}
+          >
+            {persona !== "hob" || hobDrill ? (
+              <button
+                type="button"
+                onClick={() => onColorModeChange(colorMode === "light" ? "dark" : "light")}
+                aria-label={colorMode === "light" ? "Switch to dark mode" : "Switch to light mode"}
+                title={colorMode === "light" ? "Dark mode" : "Light mode"}
+                style={{
+                  width: "100%",
+                  border: `1px solid ${FT.borderLight}`,
+                  borderRadius: 8,
+                  background: FT.surface,
+                  color: FT.textSec,
+                  padding: sidebarHover ? "8px 14px" : "10px 8px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: sidebarHover ? "flex-start" : "center",
+                  gap: sidebarHover ? 8 : 0,
+                  cursor: "pointer",
+                  fontSize: 12,
+                  fontWeight: 600,
+                }}
+              >
+                {colorMode === "light" ? <Moon size={14} /> : <Sun size={14} />}
+                {sidebarHover ? (colorMode === "light" ? "Dark mode" : "Light mode") : null}
               </button>
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 38,
-                    height: 38,
-                    borderRadius: 10,
-                    background: `linear-gradient(135deg, ${FT.primary}, #5532D6)`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: `0 4px 20px ${FT.primarySoft}`,
-                  }}
-                >
-                  <Radio size={18} color="white" />
-                </div>
-                <div>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: FT.text, lineHeight: 1.1 }}>
-                    Setu FASTag · Fluid CX
-                  </div>
-                  <div style={{ fontSize: 11, color: FT.textSec, marginTop: 3 }}>
-                    {industryName} · Vahan Bank · 18M TIF · 22L daily NETC
-                  </div>
+            ) : null}
+            <button
+              type="button"
+              onClick={onExit}
+              style={{
+                width: "100%",
+                border: `1px solid ${FT.borderLight}`,
+                borderRadius: 8,
+                background: FT.surface,
+                color: FT.textSec,
+                padding: sidebarHover ? "8px 14px" : "10px 8px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: sidebarHover ? "flex-start" : "center",
+                gap: sidebarHover ? 8 : 0,
+                cursor: "pointer",
+                fontSize: 12,
+                fontWeight: 600,
+              }}
+            >
+              <ArrowLeft size={12} />
+              {sidebarHover ? "Change Role" : null}
+            </button>
+          </div>
+        </aside>
+
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}>
+        {persona !== "hob" || hobDrill ? (
+        <header
+          style={{
+            flexShrink: 0,
+            zIndex: 50,
+            background: persona === "hob" ? "transparent" : FT.headerBackdrop,
+            backdropFilter: persona === "hob" ? undefined : "blur(10px)",
+            borderBottom: persona === "hob" ? "none" : `1px solid ${FT.border}`,
+            padding: "12px 20px",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              borderRadius: persona === "hob" && hobDrill ? 12 : 0,
+              border: persona === "hob" && hobDrill ? `1px solid ${FT.border}` : "none",
+              background: persona === "hob" && hobDrill ? FT.elevated : "transparent",
+              padding: persona === "hob" && hobDrill ? "12px 16px" : persona === "hob" ? "0 0 4px" : 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: persona === "hob" && hobDrill ? 12 : 0,
+            }}
+          >
+          {persona === "hob" && hobDrill ? (
+              <FastagPeriodFilterRow
+                border={FT.border}
+                elevated={FT.surface}
+                text={FT.text}
+                textSec={FT.textSec}
+                accent={FT.accent}
+                accentOnFill={FT.accentOnFill}
+                backButtonBg={FT.backButtonBg}
+                backButtonBorder={FT.backButtonBorder}
+                drillTitle={HOB_GATEWAY_TILES.find((t) => t.id === hobDrill)?.title}
+                onBack={() => setHobDrill(null)}
+                showPeriodControls
+              />
+          ) : persona !== "hob" ? (
+          <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: `linear-gradient(135deg, ${FT.primary}, #5532D6)`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  boxShadow: `0 4px 20px ${FT.primarySoft}`,
+                }}
+              >
+                <Radio size={18} color="white" />
+              </div>
+              <div>
+                <div style={{ fontSize: 15, fontWeight: 800, color: FT.text, lineHeight: 1.1 }}>FASTag · Fluid CX</div>
+                <div style={{ fontSize: 11, color: FT.textSec, marginTop: 3 }}>
+                  {industryName} · {displayRoleName}
                 </div>
               </div>
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              {/* Persona switcher */}
-              <div style={{ display: "flex", background: FT.elevated, border: `1px solid ${FT.border}`, borderRadius: 10, padding: 4 }}>
-                {(Object.keys(PERSONAS) as PersonaId[]).map((p) => {
-                  const meta = PERSONAS[p];
-                  const Icon = meta.icon;
-                  const active = persona === p;
-                  return (
-                    <button
-                      key={p}
-                      onClick={() => switchPersona(p)}
-                      style={{
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: 8,
-                        background: active ? FT.primary : "transparent",
-                        color: active ? "white" : FT.textSec,
-                        border: "none",
-                        borderRadius: 8,
-                        padding: "6px 12px",
-                        fontSize: 12,
-                        fontWeight: 700,
-                        cursor: "pointer",
-                      }}
-                    >
-                      <Icon size={13} />
-                      {meta.shortLabel} · {meta.name.split(" ")[0]}
-                    </button>
-                  );
-                })}
-              </div>
+              <>
+                  {/* Persona switcher */}
+                  <div style={{ display: "flex", background: FT.elevated, border: `1px solid ${FT.border}`, borderRadius: 10, padding: 4 }}>
+                    {(Object.keys(PERSONAS) as PersonaId[]).map((p) => {
+                      const meta = PERSONAS[p];
+                      const Icon = meta.icon;
+                      const active = persona === p;
+                      return (
+                        <button
+                          key={p}
+                          onClick={() => switchPersona(p)}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 8,
+                            background: active ? FT.primary : "transparent",
+                            color: active ? "white" : FT.textSec,
+                            border: "none",
+                            borderRadius: 8,
+                            padding: "6px 12px",
+                            fontSize: 12,
+                            fontWeight: 700,
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Icon size={13} />
+                          {meta.shortLabel} · {meta.name.split(" ")[0]}
+                        </button>
+                      );
+                    })}
+                  </div>
 
-              {/* Time window */}
-              <div style={{ display: "flex", background: FT.elevated, border: `1px solid ${FT.border}`, borderRadius: 10, padding: 4 }}>
-                {(["12h", "24h", "7d", "30d"] as TimeWindow[]).map((w) => (
-                  <button
-                    key={w}
-                    onClick={() => setTimeWindow(w)}
-                    style={{
-                      background: timeWindow === w ? FT.accent : "transparent",
-                      color: timeWindow === w ? "#04222b" : FT.textSec,
-                      border: "none",
-                      borderRadius: 7,
-                      padding: "6px 10px",
-                      fontSize: 11,
-                      fontWeight: 800,
-                      cursor: "pointer",
-                    }}
-                  >
-                    {w}
-                  </button>
-                ))}
-              </div>
-
-              {/* Stream controls */}
-              <div style={{ display: "flex", background: FT.elevated, border: `1px solid ${FT.border}`, borderRadius: 10, padding: 4 }}>
-                <button
-                  onClick={() => setStreamPlaying((s) => !s)}
-                  title={streamPlaying ? "Pause stream" : "Resume stream"}
-                  style={{ background: "transparent", border: "none", padding: 6, color: FT.text, cursor: "pointer" }}
-                >
-                  {streamPlaying ? <Pause size={14} /> : <Play size={14} />}
-                </button>
-                <button
-                  onClick={restartStream}
-                  title="Restart stream"
-                  style={{ background: "transparent", border: "none", padding: 6, color: FT.text, cursor: "pointer" }}
-                >
-                  <RotateCw size={14} />
-                </button>
-                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "0 8px", fontSize: 11, color: FT.textSec }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: streamPlaying ? FT.green : FT.amber, boxShadow: streamPlaying ? `0 0 10px ${FT.green}` : undefined }} />
-                  T+{tick}s
-                </span>
-              </div>
+                  {/* Time window */}
+                  <div style={{ display: "flex", background: FT.elevated, border: `1px solid ${FT.border}`, borderRadius: 10, padding: 4 }}>
+                    {(["12h", "24h", "7d", "30d"] as TimeWindow[]).map((w) => (
+                      <button
+                        key={w}
+                        onClick={() => setTimeWindow(w)}
+                        style={{
+                          background: timeWindow === w ? FT.accent : "transparent",
+                          color: timeWindow === w ? FT.accentOnFill : FT.textSec,
+                          border: "none",
+                          borderRadius: 7,
+                          padding: "6px 10px",
+                          fontSize: 11,
+                          fontWeight: 800,
+                          cursor: "pointer",
+                        }}
+                      >
+                        {w}
+                      </button>
+                    ))}
+                  </div>
+              </>
             </div>
           </div>
+          ) : null}
+          </div>
         </header>
+        ) : null}
 
-        {/* BODY */}
-        <div style={{ maxWidth: 1840, margin: "0 auto", padding: 18, display: "grid", gridTemplateColumns: "260px 1fr", gap: 18 }}>
-          {/* LEFT RAIL */}
-          <aside
-            style={{
-              background: FT.surface,
-              border: `1px solid ${FT.border}`,
-              borderRadius: 14,
-              padding: 14,
-              alignSelf: "start",
-              position: "sticky",
-              top: 96,
-            }}
-          >
-            <div
-              style={{
-                background: FT.elevated,
-                border: `1px solid ${FT.borderLight}`,
-                borderRadius: 12,
-                padding: 12,
-                marginBottom: 14,
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: 999,
-                    background: FT.primary,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "white",
-                    fontWeight: 800,
-                    fontSize: 12,
-                  }}
-                >
-                  {personaMeta.initials}
-                </div>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: FT.text }}>{personaMeta.name}</div>
-                  <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>
-                    {personaMeta.longLabel}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              {sidebarItems.map((item) => {
-                const Icon = item.icon;
-                const active = screen === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => goScreen(item.id)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 10,
-                      background: active ? FT.primarySoft : "transparent",
-                      borderLeft: `3px solid ${active ? FT.primary : "transparent"}`,
-                      border: `1px solid ${active ? FT.primaryBorder : "transparent"}`,
-                      borderRadius: 10,
-                      padding: "10px 12px",
-                      cursor: "pointer",
-                      color: active ? FT.text : FT.textSec,
-                      textAlign: "left",
-                    }}
-                  >
-                    <Icon size={16} color={active ? FT.primary : FT.textMut} />
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: active ? FT.text : FT.textSec }}>{item.label}</div>
-                      <div style={{ fontSize: 10, color: FT.textMut, textTransform: "uppercase", letterSpacing: 0.5, marginTop: 2 }}>
-                        {item.sub}
-                      </div>
-                    </div>
-                    {active ? <ChevronRight size={14} color={FT.primary} /> : null}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div style={{ marginTop: 16, padding: 12, background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                <Users size={12} color={FT.accent} />
-                <span style={{ fontSize: 11, color: FT.textSec, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.5 }}>BPO Partners</span>
-              </div>
-              <div style={{ fontSize: 11, color: FT.textSec, lineHeight: 1.65 }}>
-                Trinetra Hyderabad · voice<br />
-                Anandam Coimbatore · voice<br />
-                DigitalReach Bengaluru · chat/social<br />
-                <span style={{ color: FT.textMut }}>Saksham Recovery · recovery</span>
-              </div>
-            </div>
-
-            <div style={{ marginTop: 10, padding: 12, background: FT.elevated, border: `1px solid ${FT.borderLight}`, borderRadius: 10, fontSize: 11, color: FT.textSec }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                <RefreshCw size={12} color={FT.green} />
-                <span style={{ fontWeight: 700, color: FT.text }}>Stream live</span>
-              </div>
-              Last refresh: 4 min ago<br />
-              <span style={{ color: FT.textMut }}>Genesys + Ozonetel + Salesforce</span>
-            </div>
-          </aside>
-
-          {/* MAIN */}
-          <main style={{ minWidth: 0 }}>
-            {/* SCREEN HEADER */}
-            <div
-              style={{
-                marginBottom: 14,
-                padding: "14px 18px",
-                background: FT.surface,
-                border: `1px solid ${FT.border}`,
-                borderRadius: 12,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: 14,
-                flexWrap: "wrap",
-              }}
-            >
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 11, color: FT.textMut, textTransform: "uppercase", letterSpacing: 0.6, fontWeight: 700, marginBottom: 4 }}>
-                  {screen === "primary" ? personaMeta.shortLabel : "Shared surface"}
-                </div>
-                <h1 style={{ fontSize: 22, fontWeight: 800, color: FT.text, margin: 0 }}>
-                  {sidebarItems.find((i) => i.id === screen)?.label}
-                </h1>
-                {screen === "primary" && (
-                  <div style={{ fontSize: 12, color: FT.textSec, marginTop: 4, lineHeight: 1.5 }}>
-                    {personaMeta.primarySub}
-                  </div>
-                )}
-              </div>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                <Pill tone="primary" size="xs">{timeWindow}</Pill>
-                <Pill tone="cyan" size="xs">65,000 daily interactions</Pill>
-                <Pill tone="neutral" size="xs">[representative sample · preview build]</Pill>
-              </div>
-            </div>
-
-            {/* SCREEN CONTENT */}
+        <main
+          ref={mainScrollRef}
+          style={{
+            flex: 1,
+            overflow: "auto",
+            minHeight: 0,
+            padding: "16px 20px",
+          }}
+        >
+          <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: 24 }}>
             <DashboardErrorBoundary>
-              {screen === "primary" && renderPrimary()}
-              {screen === "live_alerts" && (
-                <LiveAlertsScreen
-                  persona={persona}
-                  alerts={alerts}
-                  onAck={ackAlert}
-                  onPick={(a) => setDrill({ kind: "alert", data: a })}
-                  onNavigate={(target) => {
-                    setDrill(null);
-                    setScreen(target);
-                  }}
-                />
-              )}
-              {screen === "plaza_heatmap" && (
-                <PlazaHeatmapScreen persona={persona} onPick={(p) => setDrill({ kind: "plaza", data: p })} />
-              )}
-              {screen === "io_evidence" && (
-                <IOEvidencePackScreen
-                  persona={persona}
-                  onPick={(e) => setDrill({ kind: "evidence", data: e })}
-                  assembling={evidenceAssembling}
-                  onAssembled={() => setEvidenceAssembling(false)}
-                  onAssembleRequest={() => setEvidenceAssembling(true)}
-                />
-              )}
-              {screen === "compliance_watch" && (
-                <ComplianceWatchScreen
-                  persona={persona}
-                  sakshamAlert={!cohState.sakshamGreen}
-                  onPick={(id) => {
-                    const item = COMPLIANCE_ITEMS.find((c) => c.id === id);
-                    if (item) setDrill({ kind: "compliance", data: item });
-                  }}
-                />
+              {persona === "hob" ? (
+                hobDrill ? (
+                  <FastagHobDrillRouter drillId={hobDrill} />
+                ) : (
+                  <HobPrimaryView onTileOpen={openHobExecutiveTile} />
+                )
+              ) : (
+                <>
+                  <CohPrimaryView
+                    onTileOpen={openHobExecutiveTile}
+                  />
+                </>
               )}
             </DashboardErrorBoundary>
 
-            <div style={{ marginTop: 18, fontSize: 10, color: FT.textMut, textAlign: "center", textTransform: "uppercase", letterSpacing: 0.6 }}>
-              Signal coverage shown: {Object.keys(SIGNAL_LABELS).length} of 40 · Fluid CX boundary contract honoured
+            <div style={{ fontSize: 10, color: FT.textMut, textAlign: "center", letterSpacing: 0.4, paddingBottom: 8 }}>
+              Fluid CX · conversation intelligence · boundary contract honoured on every drill-down
             </div>
-          </main>
+          </div>
+        </main>
         </div>
 
         <DrillDownPanel
@@ -5324,36 +6010,20 @@ export function FastagIntelligenceDashboard({
           onPrimaryAction={(target) => {
             setDrill(null);
             if (target === "io_evidence" && persona === "coh") setEvidenceAssembling(true);
-            setScreen(target);
+            scrollToFastagSection(target);
           }}
           onCopyExport={(summary) => {
             if (typeof navigator !== "undefined" && navigator.clipboard) {
               void navigator.clipboard.writeText(summary).catch(() => undefined);
             }
-            const toastId = `t-copy-${Date.now()}`;
-            setToasts((prev) => [
-              ...prev,
-              {
-                id: toastId,
-                signal: "EXPORT",
-                title: "Drill summary copied",
-                body: "Paste into the PNO Slack channel or the IO note thread.",
-                kind: "calm-baseline",
-              },
-            ]);
-            const handle = window.setTimeout(() => {
-              setToasts((prev) => prev.filter((t) => t.id !== toastId));
-              toastTimersRef.current.delete(toastId);
-            }, 4000);
-            toastTimersRef.current.set(toastId, handle);
           }}
         />
 
         {trendExplorerOpen ? <TrendExplorerOverlay onClose={() => setTrendExplorerOpen(false)} /> : null}
 
-        <ToastStack toasts={toasts} onClose={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))} />
+        <FastagAIDayGenerator hidden={!!drill || !!hobDrill || persona !== "hob"} />
       </div>
-    </DashboardThemeProvider>
+    </FastagPeriodProvider>
   );
 }
 

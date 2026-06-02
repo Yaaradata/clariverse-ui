@@ -277,7 +277,7 @@ export const INDUSTRIES = [
         id: "head_business",
         name: "Head of Business",
         icon: Crown,
-        sub: "Setu Intelligence · issuance share · chargeback win · IO defensibility · GNSS posture",
+        sub: "Morning brief · issuance health · excess toll refunds · IO readiness · corridor risk",
         defaultLens: "ops",
         primaryTile: null,
       },

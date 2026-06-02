@@ -15,6 +15,8 @@ export default function RoleBasedIndustryRolesPage() {
   const industryId = typeof params.industryId === "string" ? params.industryId : "";
   const industry = getIndustryById(industryId);
 
+  const prefetchFastagRole = industryId === "fastag";
+
   const pageBg = isDarkMode ? "#010101" : "#F5F5F5";
   const cardBg = isDarkMode ? "#1a1a1a" : "#FAFAFA";
   const border = isDarkMode ? "#2a2a2a" : "#D6D9D8";
@@ -85,6 +87,12 @@ export default function RoleBasedIndustryRolesPage() {
             <Link
               key={role.id}
               href={`/role-based/${industry.id}/${role.id}`}
+              prefetch={prefetchFastagRole}
+              onMouseEnter={() => {
+                if (prefetchFastagRole) {
+                  void import("@/components/role-based-dashboard/FastagIntelligenceDashboard");
+                }
+              }}
               style={{
                 background: cardBg,
                 border: `1px solid ${border}`,

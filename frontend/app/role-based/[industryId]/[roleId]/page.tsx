@@ -1,12 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import { RoleDashboardView } from "@/components/role-based-dashboard/RoleDashboardView";
 import { SWEDBANK_DASHBOARD_THEME } from "@/lib/role-based-dashboard/swedbank-compliance-theme";
 import { resolveIndustryAndRole } from "@/lib/role-based-dashboard/registry";
+
+const RoleDashboardView = dynamic(
+  () => import("@/components/role-based-dashboard/RoleDashboardView").then((mod) => mod.RoleDashboardView),
+  { loading: () => null }
+);
 
 const accent = "#5332FF";
 const textSec = "#e8e9e9";
@@ -46,16 +51,15 @@ export default function RoleBasedRoleDashboardPage() {
   }
 
   const { industry, role } = resolved;
+  const onExit = () => router.push(`/role-based/${industry.id}`);
 
   return (
     <RoleDashboardView
       industry={industry}
       role={role}
       theme={SWEDBANK_DASHBOARD_THEME}
-      unifiedNavigation
-      onExit={() => {
-        router.push(`/role-based/${industry.id}`);
-      }}
+      unifiedNavigation={industry.id !== "fastag"}
+      onExit={onExit}
     />
   );
 }

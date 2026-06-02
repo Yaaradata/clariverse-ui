@@ -3709,6 +3709,7 @@ export function RoleDashboardView({
       <FastagIntelligenceDashboard
         industryName={industry.name}
         industryColor={industry.color}
+        roleName={roleDisplayName(role)}
         initialPersona={role.id === "head_cx" ? "coh" : "hob"}
         onExit={onExit}
         theme={theme}
