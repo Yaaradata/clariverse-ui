@@ -461,16 +461,32 @@ export function mainGapForObligation(oblId: string): string {
   const gaps: Record<string, string> = {
     "OBL-001": "Complaint expressed · no CMS SR match",
     "OBL-002": "SR offer missing in first 90 seconds",
+    "OBL-003": "Complaint tagged to wrong grievance category",
+    "OBL-004": "Nodal / escalation contact not shared when requested",
     "OBL-005": "Threat / shaming language on recovery",
-    "OBL-008": "Hardship pathway not offered after distress cue",
-    "OBL-011": "Empathy language below threshold",
+    "OBL-006": "Recovery calls outside permitted hours (08:00–19:00)",
+    "OBL-007": "Agent ID / bank / purpose missing at recovery call open",
+    "OBL-008": "Hardship pathway not offered after borrower distress cue",
+    "OBL-011": "Empathy language below threshold on bereavement calls",
     "OBL-012": "Priority action missing on fraud-victim queue",
     "OBL-014": "KFS read-out not detected on sales calls",
-    "OBL-018": "Compulsory bundling phrasing",
-    "OBL-024": "Vendor parity below in-house benchmark",
-    "OBL-029": "Language mismatch · delayed re-route",
+    "OBL-015": "Cooling-off period not mentioned at point of sale",
+    "OBL-016": "Suitability / needs check missing before product pitch",
+    "OBL-017": "Pre-payment / foreclosure terms not disclosed when asked",
+    "OBL-018": "Compulsory bundling / pressure phrasing detected",
+    "OBL-019": "Penal charges phrased as penal interest",
+    "OBL-024": "Vendor conduct parity below in-house benchmark",
+    "OBL-025": "Vendor script adherence below expected standard",
+    "OBL-026": "Campaign script deviation detected in outbound calls",
+    "OBL-027": "Vulnerable customer left on general queue after detection",
+    "OBL-028": "Regional language offer missing at contact open",
+    "OBL-029": "Language mismatch detected; delayed re-routing",
+    "OBL-030": "Repeat same-issue contact cluster detected",
+    "OBL-031": "Unresolved-at-close cue detected",
   };
-  return gaps[oblId] ?? "Signal cluster requires owner review";
+  if (gaps[oblId]) return gaps[oblId];
+  const control = FLUID_ALONE_CONTROLS.find((c) => c.obligationId === oblId);
+  return control?.detectionSignal ?? "Conduct gap detected in monitored conversations";
 }
 
 export const OUTBOUND_LOCATIONS = [
@@ -486,7 +502,7 @@ export const OUTBOUND_LOCATIONS = [
     breaches: 42,
     missingData: 0,
     riskScore: 38,
-    topIssue: "KFS read-out 62% on PL outbound",
+    topIssue: "KFS read-out gap",
   },
   {
     id: "LOC-PUN-BPO",
@@ -500,7 +516,7 @@ export const OUTBOUND_LOCATIONS = [
     breaches: 87,
     missingData: 2,
     riskScore: 78,
-    topIssue: "Threat language cluster · 19 calls",
+    topIssue: "Threat language + non-borrower contact",
   },
   {
     id: "LOC-MUM",
@@ -528,7 +544,7 @@ export const OUTBOUND_LOCATIONS = [
     breaches: 54,
     missingData: 3,
     riskScore: 62,
-    topIssue: "Bundling pressure · ULIP cross-sell",
+    topIssue: "Mandatory bundling script",
   },
   {
     id: "LOC-BLR",
@@ -542,7 +558,7 @@ export const OUTBOUND_LOCATIONS = [
     breaches: 12,
     missingData: 0,
     riskScore: 28,
-    topIssue: "Stable · campaign script adherence",
+    topIssue: "Campaign script deviation",
   },
   {
     id: "LOC-KOL-BPO",
@@ -556,7 +572,7 @@ export const OUTBOUND_LOCATIONS = [
     breaches: 28,
     missingData: 4,
     riskScore: 55,
-    topIssue: "Tamil/Marathi routing mismatch",
+    topIssue: "Regional language mismatch / missing recording",
   },
 ] as const;
 
@@ -567,7 +583,7 @@ export const OUTBOUND_PURPOSE_STATS = [
     obligations: 12,
     breaches: 186,
     passRate: 74,
-    topIssue: "Bundling pressure · KFS read-out",
+    topIssue: "Bundling pressure + KFS read-out missing",
     color: "#a78bfa",
   },
   {
@@ -585,7 +601,7 @@ export const OUTBOUND_PURPOSE_STATS = [
     obligations: 9,
     breaches: 142,
     passRate: 68,
-    topIssue: "Threat language · non-borrower contact",
+    topIssue: "Threat language + non-borrower contact",
     color: "#f59e0b",
   },
 ] as const;
@@ -651,7 +667,7 @@ export const OUTBOUND_VIOLATIONS = [
     location: "Pune Recovery BPO",
     purpose: "Recovery",
     obligationId: "OBL-008",
-    signal: "Distress cue ignored · no hardship offer",
+    signal: "Distress cue ignored; no hardship offer",
     severity: "HIGH" as const,
   },
   {

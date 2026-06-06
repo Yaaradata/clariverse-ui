@@ -147,6 +147,7 @@ function Shell({
   accent = C.teal,
   className,
   bodyClassName,
+  headerClassName,
   children,
 }: {
   title: string;
@@ -154,6 +155,7 @@ function Shell({
   accent?: string;
   className?: string;
   bodyClassName?: string;
+  headerClassName?: string;
   children: ReactNode;
 }) {
   return (
@@ -171,7 +173,7 @@ function Shell({
         }}
         aria-hidden
       />
-      <header className="px-5 pt-5 pb-3">
+      <header className={cx("px-5 pt-5 pb-3", headerClassName)}>
         <h3 className="text-base font-black text-white">{title}</h3>
         {subtitle ? (
           <p className="mt-1 text-[12px] font-semibold text-zinc-400">
@@ -189,21 +191,30 @@ function Kpi({
   value,
   delta,
   accent = C.teal,
+  compact = false,
 }: {
   label: string;
   value: string | number;
   delta?: string;
   accent?: string;
+  compact?: boolean;
 }) {
   return (
     <div
-      className="rounded-2xl border bg-[#0d0d0d] p-4"
+      className={cx("rounded-2xl border bg-[#0d0d0d]", compact ? "p-3" : "p-4")}
       style={{ borderColor: C.border, borderLeft: `4px solid ${accent}` }}
     >
       <p className={LABEL}>{label}</p>
-      <p className="mt-2 text-2xl font-black tabular-nums text-white">{value}</p>
+      <p
+        className={cx(
+          "font-black tabular-nums text-white",
+          compact ? "mt-1 text-xl" : "mt-2 text-2xl",
+        )}
+      >
+        {value}
+      </p>
       {delta ? (
-        <p className="mt-1 text-[11px] font-semibold text-zinc-400">{delta}</p>
+        <p className="mt-0.5 text-[10px] font-semibold text-zinc-400">{delta}</p>
       ) : null}
     </div>
   );
@@ -238,8 +249,8 @@ function HeroRiskGauge() {
   const riskColor = score >= 75 ? C.red : score >= 60 ? C.amber : C.green;
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-      <div className="relative mx-auto size-[200px] shrink-0 lg:mx-0">
+    <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div className="relative mx-auto size-[168px] shrink-0 lg:mx-0">
         <svg
           viewBox="0 0 200 200"
           className="size-full -rotate-90"
@@ -260,30 +271,30 @@ function HeroRiskGauge() {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-4xl font-black text-white">{score}</p>
-          <p className="text-[11px] font-black uppercase" style={{ color: riskColor }}>
+          <p className="text-3xl font-black text-white">{score}</p>
+          <p className="text-[10px] font-black uppercase" style={{ color: riskColor }}>
             {riskLabel}
           </p>
         </div>
       </div>
-      <div className="grid flex-1 grid-cols-2 gap-2">
+      <div className="grid flex-1 grid-cols-2 gap-1.5">
         <div className={NEST}>
           <p className={LABEL}>Obligations met</p>
-          <p className="text-xl font-black text-white">{REGISTER_OVERALL_MET_PCT}%</p>
+          <p className="text-lg font-black text-white">{REGISTER_OVERALL_MET_PCT}%</p>
         </div>
         <div className={NEST}>
           <p className={LABEL}>Breached</p>
-          <p className="text-xl font-black text-red-400">{breached}</p>
+          <p className="text-lg font-black text-red-400">{breached}</p>
         </div>
         <div className={NEST}>
           <p className={LABEL}>Missing data impact</p>
-          <p className="text-xl font-black text-amber-300">
+          <p className="text-lg font-black text-amber-300">
             {REGISTER_STATS.missingChannelGaps} gaps
           </p>
         </div>
         <div className={NEST}>
           <p className={LABEL}>Critical signals</p>
-          <p className="text-xl font-black text-red-300">
+          <p className="text-lg font-black text-red-300">
             {REGISTER_STATS.criticalSignals}
           </p>
         </div>
@@ -295,22 +306,22 @@ function HeroRiskGauge() {
 function CoverageAiInsight() {
   return (
     <section
-      className="flex h-full min-h-[240px] flex-col rounded-3xl border bg-gradient-to-br from-indigo-950/50 via-[#0d0d0d] to-[#0d0d0d] p-5"
+      className="flex h-full min-h-0 flex-col rounded-3xl border bg-gradient-to-br from-indigo-950/50 via-[#0d0d0d] to-[#0d0d0d] p-4"
       style={{ borderColor: `${C.indigo}55` }}
     >
-      <div className="flex items-start gap-3">
-        <span className="grid size-10 place-items-center rounded-xl bg-indigo-500/20 text-indigo-300">
-          <Sparkles className="size-5" aria-hidden />
+      <div className="flex items-start gap-2.5">
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-indigo-500/20 text-indigo-300">
+          <Sparkles className="size-4" aria-hidden />
         </span>
         <div>
           <p className={LABEL}>AI insight · obligation coverage</p>
-          <p className="text-sm font-black leading-snug text-white">
+          <p className="text-[13px] font-black leading-snug text-white">
             OBL-002 First-90s and OBL-001 Complaint Capture drive 64% of this
             week&apos;s exposure
           </p>
         </div>
       </div>
-      <ul className="mt-4 flex-1 space-y-2.5 text-[12px] font-semibold leading-relaxed text-zinc-300">
+      <ul className="mt-3 flex-1 space-y-2 text-[11px] font-semibold leading-snug text-zinc-300">
         <li>
           <strong className="text-white">312</strong> complaint-like contacts had
           no CMS SR mapping — start with Mumbai in-house queue.
@@ -325,11 +336,18 @@ function CoverageAiInsight() {
           30-Jun IO deadline.
         </li>
       </ul>
-      <p className="mt-3 text-[10px] font-bold text-zinc-500">
+      <p className="mt-2 text-[10px] font-bold text-zinc-500">
         Recommended action · Review OBL-002 SR-offer control with Head of CX today
       </p>
     </section>
   );
+}
+
+function formatLocationBreachLabel(breaches: number, missingData: number): string {
+  const breachLabel = `${breaches} breach${breaches === 1 ? "" : "es"}`;
+  if (missingData === 0) return breachLabel;
+  const gapLabel = `${missingData} data gap${missingData === 1 ? "" : "s"}`;
+  return `${breachLabel} · ${gapLabel}`;
 }
 
 const CHANNEL_KEYS: ChannelKey[] = [
@@ -474,19 +492,30 @@ function MeetingObligationPanel() {
   );
 }
 
-function ContactReasonsMap() {
+function ContactReasonsMap({ scrollable = false }: { scrollable?: boolean }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[880px] table-fixed border-collapse">
+    <div
+      className={cx(
+        "w-full overflow-x-auto",
+        scrollable && "max-h-[min(480px,65vh)] overflow-y-auto pr-1",
+      )}
+    >
+      <table className="w-full border-collapse">
         <colgroup>
-          <col style={{ width: "22%" }} />
-          <col style={{ width: "72px" }} />
-          <col style={{ width: "14%" }} />
-          <col style={{ width: "12%" }} />
-          <col />
-          <col style={{ width: "72px" }} />
+          <col className="w-[20%]" />
+          <col className="w-[9%]" />
+          <col className="w-[14%]" />
+          <col className="w-[12%]" />
+          <col className="w-[33%]" />
+          <col className="w-[12%]" />
         </colgroup>
-        <thead>
+        <thead
+          className={
+            scrollable
+              ? "sticky top-0 z-10 bg-[#0a0a0a] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]"
+              : undefined
+          }
+        >
           <tr className="border-b border-white/10 bg-black/40 text-[9px] font-black uppercase tracking-wide text-zinc-500">
             <th className="px-3 py-2 text-left font-black">Contact reason</th>
             <th className="px-3 py-2 text-left font-black">Volume</th>
@@ -498,31 +527,33 @@ function ContactReasonsMap() {
         </thead>
         <tbody>
           {CONTACT_REASONS_RICH.map((r) => (
-            <tr key={r.reason} className="border-b border-white/5 align-middle">
-              <td className="px-3 py-2.5 align-middle">
-                <p className="text-[11px] font-black text-white">{r.reason}</p>
+            <tr key={r.reason} className="border-b border-white/5 align-top">
+              <td className="px-3 py-2.5 align-top">
+                <p className="whitespace-normal break-words text-[11px] font-black leading-snug text-white">
+                  {r.reason}
+                </p>
               </td>
-              <td className="px-3 py-2.5 align-middle">
+              <td className="px-3 py-2.5 align-top">
                 <span className="text-[11px] font-black tabular-nums text-zinc-200">
                   {fmt(r.volume)}
                 </span>
               </td>
-              <td className="px-3 py-2.5 align-middle">
-                <span className="text-[10px] font-bold text-teal-300">
+              <td className="px-3 py-2.5 align-top">
+                <span className="whitespace-normal break-words text-[10px] font-bold leading-snug text-teal-300">
                   {r.obligations.join(" · ")}
                 </span>
               </td>
-              <td className="px-3 py-2.5 align-middle">
-                <span className="text-[10px] font-semibold text-zinc-400">
+              <td className="px-3 py-2.5 align-top">
+                <span className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
                   {r.topChannel}
                 </span>
               </td>
-              <td className="px-3 py-2.5 align-middle">
-                <p className="truncate text-[10px] font-semibold text-zinc-400">
+              <td className="min-w-0 px-3 py-2.5 align-top">
+                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
                   {r.topSignal}
                 </p>
               </td>
-              <td className="px-3 py-2.5 align-middle">
+              <td className="px-3 py-2.5 align-top">
                 <Pill
                   color={
                     r.risk === "CRITICAL"
@@ -571,12 +602,12 @@ function ProcessControlCoverage() {
   const rows = topControlsByProcess(FLUID_ALONE_CONTROLS, 14);
   return (
     <div className="max-h-[min(480px,65vh)] overflow-x-hidden overflow-y-auto">
-      <table className="w-full table-fixed border-collapse">
+      <table className="w-full border-collapse">
         <colgroup>
-          <col style={{ width: "24%" }} />
-          <col style={{ width: "10%" }} />
-          <col style={{ width: "26%" }} />
-          <col style={{ width: "32%" }} />
+          <col style={{ width: "18%" }} />
+          <col style={{ width: "9%" }} />
+          <col style={{ width: "30%" }} />
+          <col style={{ width: "35%" }} />
           <col style={{ width: "8%" }} />
         </colgroup>
         <thead className="sticky top-0 z-10 bg-[#0a0a0a] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]">
@@ -592,29 +623,29 @@ function ProcessControlCoverage() {
           {rows.map((c) => (
             <tr
               key={c.controlId}
-              className="border-b border-white/5 align-middle"
+              className="border-b border-white/5 align-top"
             >
               <td className="px-3 py-2.5 align-top">
                 <p className="whitespace-normal break-words text-[10px] font-bold leading-snug text-zinc-300">
                   {c.process}
                 </p>
               </td>
-              <td className="max-w-0 px-3 py-2.5 align-middle">
-                <span className="truncate text-[10px] font-black text-teal-300">
+              <td className="px-3 py-2.5 align-top">
+                <span className="text-[10px] font-black text-teal-300">
                   {c.obligationId}
                 </span>
               </td>
-              <td className="max-w-0 px-3 py-2.5 align-middle">
-                <p className="truncate text-[10px] font-semibold text-white">
+              <td className="px-3 py-2.5 align-top">
+                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-white">
                   {c.control}
                 </p>
               </td>
-              <td className="max-w-0 px-3 py-2.5 align-middle">
-                <p className="truncate text-[10px] font-semibold text-zinc-500">
+              <td className="px-3 py-2.5 align-top">
+                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
                   {c.detectionSignal}
                 </p>
               </td>
-              <td className="max-w-0 px-3 py-2.5 align-middle">
+              <td className="px-3 py-2.5 align-top">
                 <span
                   className="text-[11px] font-black tabular-nums"
                   style={{ color: metColor(c.adherencePct ?? 0) }}
@@ -630,26 +661,31 @@ function ProcessControlCoverage() {
   );
 }
 
-function SensitiveWidgets() {
+function SensitiveWidgets({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <div
+      className={cx(
+        "grid gap-2",
+        compact
+          ? "grid-cols-2 md:grid-cols-4 xl:grid-cols-4"
+          : "grid-cols-2 md:grid-cols-4",
+      )}
+    >
       {SENSITIVE_WIDGETS.map((w) => (
         <div
           key={w.label}
-          className="rounded-2xl border p-3"
+          className="rounded-xl border px-2.5 py-2"
           style={{
             borderColor: `${w.color}44`,
             background: `${w.color}0a`,
           }}
         >
-          <p className="text-[11px] font-black text-white">{w.label}</p>
-          <div className="mt-2 flex items-end justify-between">
-            <p className="text-2xl font-black tabular-nums text-white">
-              {w.count}
-            </p>
+          <p className="truncate text-[10px] font-black text-white">{w.label}</p>
+          <div className="mt-1 flex items-center justify-between gap-1">
+            <p className="text-lg font-black tabular-nums text-white">{w.count}</p>
             <span
               className={cx(
-                "text-[10px] font-black",
+                "text-[9px] font-black",
                 w.trend.startsWith("+")
                   ? "text-red-400"
                   : w.trend.startsWith("-")
@@ -660,7 +696,7 @@ function SensitiveWidgets() {
               {w.trend}
             </span>
           </div>
-          <p className="mt-2 text-[10px] font-semibold text-zinc-500">
+          <p className="mt-1 truncate text-[9px] font-semibold text-zinc-500">
             {w.obligationId} · {w.channel}
           </p>
         </div>
@@ -672,13 +708,15 @@ function SensitiveWidgets() {
 function CoverageScreen() {
   const dist = healthDistribution();
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-12">
         <Shell
           className="xl:col-span-5"
           title="Overall conduct risk score"
           subtitle="Met obligations · breach load · missing data · critical signals"
           accent={C.teal}
+          headerClassName="px-4 pt-4 pb-2"
+          bodyClassName="px-4 pb-4"
         >
           <HeroRiskGauge />
         </Shell>
@@ -687,22 +725,25 @@ function CoverageScreen() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-8">
-        <Kpi label="RBI obligations" value={REGISTER_STATS.totalObligations} />
+      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 xl:grid-cols-8">
+        <Kpi compact label="RBI obligations" value={REGISTER_STATS.totalObligations} />
         <Kpi
+          compact
           label="Interaction-monitorable"
           value={REGISTER_STATS.interactionMonitorable}
         />
-        <Kpi label="Meeting expected conduct" value={dist.MEETING} accent={C.green} />
-        <Kpi label="At risk" value={dist.WATCH + dist.BREACH} accent={C.amber} />
+        <Kpi compact label="Meeting expected conduct" value={dist.MEETING} accent={C.green} />
+        <Kpi compact label="At risk" value={dist.WATCH + dist.BREACH} accent={C.amber} />
         <Kpi
+          compact
           label="Conversation controls"
           value={REGISTER_STATS.conversationControls}
           delta={`of ${REGISTER_STATS.totalControls} in register`}
         />
-        <Kpi label="Contacts analysed" value={fmt(REGISTER_STATS.contactsAnalysed)} />
-        <Kpi label="Conduct signals" value={fmt(REGISTER_STATS.conductSignals)} accent={C.amber} />
+        <Kpi compact label="Contacts analysed" value={fmt(REGISTER_STATS.contactsAnalysed)} />
+        <Kpi compact label="Conduct signals" value={fmt(REGISTER_STATS.conductSignals)} accent={C.amber} />
         <Kpi
+          compact
           label="Evidence ready"
           value={`${REGISTER_STATS.evidenceReadyPct}%`}
           accent={C.green}
@@ -710,11 +751,13 @@ function CoverageScreen() {
       </div>
 
       <Shell
-        title="Obligation × channel signal map"
-        subtitle="Contacts analysed and signals detected per obligation group and channel"
-        accent={C.cyan}
+        title="Sensitive conduct signals"
+        subtitle="Key indicators · count · trend · obligation · channel"
+        accent={C.red}
+        headerClassName="px-4 pt-4 pb-2"
+        bodyClassName="px-4 pb-4 pt-0"
       >
-        <ObligationChannelMatrix />
+        <SensitiveWidgets compact />
       </Shell>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
@@ -733,9 +776,25 @@ function CoverageScreen() {
           subtitle="Inbound drivers · volume · obligations · channel · signal · risk"
           accent={C.purple}
         >
-          <ContactReasonsMap />
+          <ContactReasonsMap scrollable />
         </Shell>
       </div>
+
+      <Shell
+        title="Process · obligation · control coverage"
+        subtitle="What is checked from recorded conversation · detection signal · adherence"
+        accent={C.teal}
+      >
+        <ProcessControlCoverage />
+      </Shell>
+
+      <Shell
+        title="Obligation × channel signal map"
+        subtitle="Contacts analysed and signals detected per obligation group and channel"
+        accent={C.cyan}
+      >
+        <ObligationChannelMatrix />
+      </Shell>
 
       <Shell
         title="Contacts analysed by interaction type"
@@ -744,25 +803,6 @@ function CoverageScreen() {
       >
         <ContactTypeCards />
       </Shell>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
-        <Shell
-          className="xl:col-span-8"
-          title="Process · obligation · control coverage"
-          subtitle="What is checked from recorded conversation · detection signal · adherence"
-          accent={C.teal}
-        >
-          <ProcessControlCoverage />
-        </Shell>
-        <Shell
-          className="xl:col-span-4"
-          title="Sensitive conduct signals"
-          subtitle="Compact widgets · count · trend · obligation"
-          accent={C.red}
-        >
-          <SensitiveWidgets />
-        </Shell>
-      </div>
     </div>
   );
 }
@@ -772,7 +812,7 @@ function CoverageScreen() {
 function OutboundAiInsight() {
   return (
     <section
-      className="rounded-3xl border bg-gradient-to-br from-amber-950/40 via-[#0d0d0d] to-[#0d0d0d] p-5"
+      className="flex h-full min-h-0 flex-col rounded-3xl border bg-gradient-to-br from-amber-950/40 via-[#0d0d0d] to-[#0d0d0d] p-4"
       style={{ borderColor: `${C.amber}55` }}
     >
       <div className="flex items-start gap-3">
@@ -853,120 +893,174 @@ function OutboundPurposeCards() {
   );
 }
 
-function LocationTable() {
+function LocationTypeBadge({ type }: { type: "IN_SOURCE" | "OUTSOURCE" }) {
+  const color = type === "IN_SOURCE" ? C.teal : C.purple;
+  const label = type === "IN_SOURCE" ? "In-house" : "Outsource";
   return (
-    <div className="overflow-x-auto">
+    <span
+      className="inline-flex shrink-0 justify-self-start rounded-full border px-2 py-0.5 text-[9px] font-bold leading-none whitespace-nowrap"
+      style={{ borderColor: `${color}55`, background: `${color}14`, color }}
+    >
+      {label}
+    </span>
+  );
+}
+
+function LocationTable() {
+  const locationGrid =
+    "minmax(0,1.35fr) minmax(84px,92px) minmax(112px,1.2fr) 52px 60px 36px minmax(0,0.95fr) 36px";
+
+  return (
+    <div className="w-full">
       <div
-        className="grid min-w-[1100px] border-b border-white/10 bg-black/40 px-3 py-2 text-[9px] font-black uppercase tracking-wide text-zinc-500"
-        style={{
-          gridTemplateColumns:
-            "minmax(160px,1.2fr) 90px 110px 90px 80px 80px 70px 70px minmax(160px,1fr)",
-        }}
+        className="grid w-full gap-x-3 border-b border-white/10 bg-black/40 px-3 py-2 text-[9px] font-black uppercase tracking-wide text-zinc-500"
+        style={{ gridTemplateColumns: locationGrid }}
       >
-        <span>Location</span>
+        <span>Location · top issue</span>
         <span>Type</span>
-        <span>Vendor</span>
+        <span className="hidden sm:inline">Vendor</span>
         <span>Calls</span>
         <span>Purpose</span>
         <span>Obls</span>
-        <span>Breach</span>
+        <span>Breaches</span>
         <span>Risk</span>
-        <span>Top issue</span>
       </div>
       <div className="divide-y divide-white/5">
-        {OUTBOUND_LOCATIONS.map((l) => (
-          <div
-            key={l.id}
-            className="grid min-w-[1100px] items-center gap-2 px-3 py-2.5"
-            style={{
-              gridTemplateColumns:
-                "minmax(160px,1.2fr) 90px 110px 90px 80px 80px 70px 70px minmax(160px,1fr)",
-            }}
-          >
-            <div>
-              <p className="text-[11px] font-black text-white">{l.name}</p>
-              <p className="text-[10px] font-semibold text-zinc-500">{l.city}</p>
-            </div>
-            <Pill color={l.type === "IN_SOURCE" ? C.teal : C.purple}>
-              {l.type === "IN_SOURCE" ? "In-house" : "Outsource"}
-            </Pill>
-            <span className="truncate text-[10px] font-bold text-zinc-300">
-              {l.vendor ?? "—"}
-            </span>
-            <span className="text-[11px] font-black tabular-nums text-white">
-              {fmt(l.calls)}
-            </span>
-            <span className="text-[10px] font-semibold text-zinc-400">
-              {l.purpose}
-            </span>
-            <span className="text-[11px] font-black text-zinc-200">
-              {l.obligations}
-            </span>
-            <span className="text-[11px] font-black text-red-300">
-              {l.breaches}
-              {l.missingData > 0 ? (
-                <span className="text-amber-400"> · {l.missingData}md</span>
-              ) : null}
-            </span>
-            <span
-              className="text-[11px] font-black"
-              style={{
-                color:
-                  l.riskScore >= 70
-                    ? C.red
-                    : l.riskScore >= 45
-                      ? C.amber
-                      : C.green,
-              }}
+        {OUTBOUND_LOCATIONS.map((l) => {
+          const riskReasonColor =
+            l.riskScore >= 70 ? C.red : l.riskScore >= 45 ? C.amber : C.green;
+          return (
+            <div
+              key={l.id}
+              className="grid w-full items-start gap-x-3 gap-y-1 px-3 py-2.5"
+              style={{ gridTemplateColumns: locationGrid }}
             >
-              {l.riskScore}
-            </span>
-            <p className="truncate text-[10px] font-semibold text-zinc-400">
-              {l.topIssue}
-            </p>
-          </div>
-        ))}
+              <div className="min-w-0">
+                <p className="text-[11px] font-black text-white">{l.name}</p>
+                <p className="text-[10px] font-semibold text-zinc-500">{l.city}</p>
+                <p
+                  className="mt-1 whitespace-normal break-words text-[10px] font-semibold leading-snug"
+                  style={{ color: riskReasonColor }}
+                >
+                  {l.topIssue}
+                </p>
+              </div>
+              <LocationTypeBadge type={l.type} />
+              <span className="hidden min-w-0 whitespace-normal break-words pr-1 text-[10px] font-bold leading-snug text-zinc-300 sm:inline">
+                {l.vendor ?? "—"}
+              </span>
+              <span className="text-[11px] font-black tabular-nums text-white">
+                {fmt(l.calls)}
+              </span>
+              <span className="text-[10px] font-semibold text-zinc-400">
+                {l.purpose}
+              </span>
+              <span className="text-[11px] font-black text-zinc-200">
+                {l.obligations}
+              </span>
+              <p className="min-w-0 whitespace-normal break-words text-[10px] font-semibold leading-snug text-red-300">
+                {formatLocationBreachLabel(l.breaches, l.missingData)}
+              </p>
+              <span
+                className="text-[11px] font-black"
+                style={{ color: riskReasonColor }}
+              >
+                {l.riskScore}
+              </span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-function LocationBreachChart() {
+function LocationBreachInsightChip({
+  label,
+  value,
+  accent = C.teal,
+}: {
+  label: string;
+  value: string;
+  accent?: string;
+}) {
+  return (
+    <div
+      className="rounded-xl border bg-black/25 px-2.5 py-2"
+      style={{ borderColor: `${accent}33` }}
+    >
+      <p className="text-[9px] font-black uppercase tracking-wide text-zinc-500">
+        {label}
+      </p>
+      <p className="mt-1 text-[11px] font-black leading-snug text-white">{value}</p>
+    </div>
+  );
+}
+
+function LocationBreachPanel() {
   const data = OUTBOUND_LOCATIONS.map((l) => ({
     name: l.city,
     breaches: l.breaches,
     risk: l.riskScore,
   }));
+
+  const highestBreach = [...OUTBOUND_LOCATIONS].sort((a, b) => b.breaches - a.breaches)[0];
+  const highestRisk = [...OUTBOUND_LOCATIONS].sort((a, b) => b.riskScore - a.riskScore)[0];
+  const dataGapHotspot = [...OUTBOUND_LOCATIONS].sort(
+    (a, b) => b.missingData - a.missingData,
+  )[0];
+
   return (
-    <div className="h-[260px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data}>
-          <CartesianGrid stroke={C.border} strokeDasharray="3 3" />
-          <XAxis dataKey="name" tick={{ fill: C.muted, fontSize: 10 }} />
-          <YAxis tick={{ fill: C.muted, fontSize: 10 }} />
-          <Tooltip
-            contentStyle={{
-              background: "#121212",
-              border: `1px solid ${C.border}`,
-              borderRadius: 12,
-              fontSize: 11,
-            }}
-          />
-          <Bar dataKey="breaches" fill={C.red} radius={[4, 4, 0, 0]} name="Breaches" />
-          <Bar dataKey="risk" fill={C.amber} radius={[4, 4, 0, 0]} name="Risk score" />
-        </BarChart>
-      </ResponsiveContainer>
+    <div className="flex h-full flex-col gap-3">
+      <div className="h-[370px] w-full shrink-0">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
+            <CartesianGrid stroke={C.border} strokeDasharray="3 3" />
+            <XAxis dataKey="name" tick={{ fill: C.muted, fontSize: 10 }} />
+            <YAxis tick={{ fill: C.muted, fontSize: 10 }} />
+            <Tooltip
+              contentStyle={{
+                background: "#121212",
+                border: `1px solid ${C.border}`,
+                borderRadius: 12,
+                fontSize: 11,
+              }}
+            />
+            <Bar dataKey="breaches" fill={C.red} radius={[4, 4, 0, 0]} name="Breaches" />
+            <Bar dataKey="risk" fill={C.amber} radius={[4, 4, 0, 0]} name="Risk score" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <div className="mt-auto grid grid-cols-1 gap-2 sm:grid-cols-3">
+        <LocationBreachInsightChip
+          label="Highest breach site"
+          value={`${highestBreach.city} — ${highestBreach.breaches} breaches`}
+          accent={C.red}
+        />
+        <LocationBreachInsightChip
+          label="Highest risk site"
+          value={`${highestRisk.city} — risk score ${highestRisk.riskScore}`}
+          accent={C.amber}
+        />
+        <LocationBreachInsightChip
+          label="Data gap hotspot"
+          value={`${dataGapHotspot.city} — ${dataGapHotspot.missingData} data gap${
+            dataGapHotspot.missingData === 1 ? "" : "s"
+          }`}
+          accent={C.cyan}
+        />
+      </div>
     </div>
   );
 }
 
 function OutboundViolationFeed() {
   return (
-    <div className="space-y-2">
+    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
       {OUTBOUND_VIOLATIONS.map((v) => (
         <div
           key={v.ts + v.signal}
-          className="flex items-start gap-3 rounded-xl border border-white/10 bg-black/25 px-3 py-2.5"
+          className="flex items-start gap-2 rounded-xl border border-white/10 bg-black/25 px-2.5 py-1.5"
         >
           <Pill
             color={
@@ -980,8 +1074,8 @@ function OutboundViolationFeed() {
             {v.severity}
           </Pill>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-black text-white">{v.signal}</p>
-            <p className="mt-0.5 text-[10px] font-semibold text-zinc-500">
+            <p className="text-[11px] font-black leading-snug text-white">{v.signal}</p>
+            <p className="mt-0.5 text-[9px] font-semibold leading-snug text-zinc-500">
               {v.location} · {v.purpose} · {v.obligationId} ·{" "}
               {new Date(v.ts).toLocaleString("en-IN", {
                 day: "2-digit",
@@ -1087,7 +1181,21 @@ function OutboundObligationByPurpose() {
 function OutboundScreen() {
   return (
     <div className="space-y-5">
-      <OutboundAiInsight />
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-12">
+        <div className="xl:col-span-5">
+          <OutboundAiInsight />
+        </div>
+        <Shell
+          className="h-full xl:col-span-7"
+          title="Top outbound conduct breaches"
+          subtitle="Recent violations · severity · location · purpose · obligation"
+          accent={C.red}
+          headerClassName="px-4 pt-4 pb-2"
+          bodyClassName="px-4 pb-4 pt-0"
+        >
+          <OutboundViolationFeed />
+        </Shell>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <Kpi label="Outbound calls / 7d" value={fmt(110_600)} accent={C.teal} />
@@ -1114,22 +1222,23 @@ function OutboundScreen() {
         <OutboundPurposeCards />
       </Shell>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-12">
         <Shell
-          className="xl:col-span-7"
+          className="xl:col-span-8"
           title="Conduct by contact centre / location"
-          subtitle="In-house vs outsourced · obligations · breaches · risk · missing data flagged"
+          subtitle="In-house vs outsourced · obligations · breaches · risk reason · missing data flagged"
           accent={C.teal}
         >
           <LocationTable />
         </Shell>
         <Shell
-          className="xl:col-span-5"
+          className="flex h-full flex-col xl:col-span-4"
           title="Breaches & risk by location"
           subtitle="Where action is needed first"
           accent={C.red}
+          bodyClassName="flex flex-1 flex-col pb-4"
         >
-          <LocationBreachChart />
+          <LocationBreachPanel />
         </Shell>
       </div>
 
@@ -1149,14 +1258,6 @@ function OutboundScreen() {
           <OutboundViolationTrend />
         </Shell>
       </div>
-
-      <Shell
-        title="Recent outbound violations"
-        subtitle="Sales · recovery · feedback — obligation · location · detected signal"
-        accent={C.red}
-      >
-        <OutboundViolationFeed />
-      </Shell>
 
       <Shell
         title="Why customers receive outbound calls — obligation map"
