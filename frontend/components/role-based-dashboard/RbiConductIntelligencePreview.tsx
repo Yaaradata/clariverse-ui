@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Activity,
   ArrowLeft,
   Briefcase,
   ChevronRight,
@@ -9,7 +8,6 @@ import {
   Globe,
   Headphones,
   Heart,
-  Languages,
   Megaphone,
   MessagesSquare,
   Phone,
@@ -18,7 +16,9 @@ import {
   ShieldAlert,
   ShieldCheck,
   Siren,
+  Moon,
   Sparkles,
+  Sun,
   Target,
   TrendingDown,
   TrendingUp,
@@ -76,6 +76,11 @@ import {
   DashboardThemeProvider,
   type DashboardThemeTokens,
 } from "./DashboardThemeContext";
+import {
+  RbiConductThemeProvider,
+  useRbiConductTheme,
+} from "./RbiConductThemeContext";
+import { RBI_ACCENT } from "./rbiConductTheme";
 
 const headlineFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -85,23 +90,8 @@ const headlineFont = Plus_Jakarta_Sans({
 
 const TODAY = "2026-05-25";
 
-const C = {
-  bg: "#070707",
-  card: "#0d0d0d",
-  inset: "#1a1a1a",
-  border: "#242424",
-  muted: "#939394",
-  teal: "#14b8a6",
-  indigo: "#6366f1",
-  purple: "#a78bfa",
-  red: "#ef4444",
-  amber: "#f59e0b",
-  yellow: "#eab308",
-  green: "#22c55e",
-  cyan: "#38bdf8",
-  blue: "#60a5fa",
-  saffron: "#f97316",
-} as const;
+/** Accent colors — shared across light and dark RBI Conduct themes. */
+const C = RBI_ACCENT;
 
 type Tab = "coverage" | "outbound";
 
@@ -138,8 +128,10 @@ function statusColor(s: string): string {
   }
 }
 
-const LABEL = "text-[10px] font-black uppercase tracking-wide text-zinc-500";
-const NEST = "rounded-xl border border-white/10 bg-black/25 p-3";
+const LABEL =
+  "text-[10px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]";
+const NEST =
+  "rounded-xl border border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-subtle-bg)] p-3";
 
 function Shell({
   title,
@@ -161,10 +153,10 @@ function Shell({
   return (
     <section
       className={cx(
-        "relative overflow-hidden rounded-3xl border bg-[#0d0d0d] shadow-[0_18px_64px_-32px_rgba(0,0,0,0.85)]",
+        "relative overflow-hidden rounded-3xl border bg-[var(--rbi-card)] shadow-[0_18px_64px_-32px_var(--rbi-shell-shadow)]",
         className,
       )}
-      style={{ borderColor: C.border }}
+      style={{ borderColor: "var(--rbi-border)" }}
     >
       <span
         className="absolute inset-x-0 top-0 h-[3px]"
@@ -174,9 +166,9 @@ function Shell({
         aria-hidden
       />
       <header className={cx("px-5 pt-5 pb-3", headerClassName)}>
-        <h3 className="text-base font-black text-white">{title}</h3>
+        <h3 className="text-base font-black text-[var(--rbi-text)]">{title}</h3>
         {subtitle ? (
-          <p className="mt-1 text-[12px] font-semibold text-zinc-400">
+          <p className="mt-1 text-[12px] font-semibold text-[var(--rbi-text-muted)]">
             {subtitle}
           </p>
         ) : null}
@@ -201,20 +193,20 @@ function Kpi({
 }) {
   return (
     <div
-      className={cx("rounded-2xl border bg-[#0d0d0d]", compact ? "p-3" : "p-4")}
-      style={{ borderColor: C.border, borderLeft: `4px solid ${accent}` }}
+      className={cx("rounded-2xl border bg-[var(--rbi-card)]", compact ? "p-3" : "p-4")}
+      style={{ borderColor: "var(--rbi-border)", borderLeft: `4px solid ${accent}` }}
     >
       <p className={LABEL}>{label}</p>
       <p
         className={cx(
-          "font-black tabular-nums text-white",
+          "font-black tabular-nums text-[var(--rbi-text)]",
           compact ? "mt-1 text-xl" : "mt-2 text-2xl",
         )}
       >
         {value}
       </p>
       {delta ? (
-        <p className="mt-0.5 text-[10px] font-semibold text-zinc-400">{delta}</p>
+        <p className="mt-0.5 text-[10px] font-semibold text-[var(--rbi-text-muted)]">{delta}</p>
       ) : null}
     </div>
   );
@@ -257,7 +249,7 @@ function HeroRiskGauge() {
           role="img"
           aria-label={`Conduct risk ${score}, ${riskLabel}`}
         >
-          <circle cx="100" cy="100" r={r} fill="none" stroke={C.inset} strokeWidth="14" />
+          <circle cx="100" cy="100" r={r} fill="none" stroke="var(--rbi-inset)" strokeWidth="14" />
           <circle
             cx="100"
             cy="100"
@@ -271,7 +263,7 @@ function HeroRiskGauge() {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-3xl font-black text-white">{score}</p>
+          <p className="text-3xl font-black text-[var(--rbi-text)]">{score}</p>
           <p className="text-[10px] font-black uppercase" style={{ color: riskColor }}>
             {riskLabel}
           </p>
@@ -280,7 +272,7 @@ function HeroRiskGauge() {
       <div className="grid flex-1 grid-cols-2 gap-1.5">
         <div className={NEST}>
           <p className={LABEL}>Obligations met</p>
-          <p className="text-lg font-black text-white">{REGISTER_OVERALL_MET_PCT}%</p>
+          <p className="text-lg font-black text-[var(--rbi-text)]">{REGISTER_OVERALL_MET_PCT}%</p>
         </div>
         <div className={NEST}>
           <p className={LABEL}>Breached</p>
@@ -306,7 +298,7 @@ function HeroRiskGauge() {
 function CoverageAiInsight() {
   return (
     <section
-      className="flex h-full min-h-0 flex-col rounded-3xl border bg-gradient-to-br from-indigo-950/50 via-[#0d0d0d] to-[#0d0d0d] p-4"
+      className="flex h-full min-h-0 flex-col rounded-3xl border bg-gradient-to-br from-[var(--rbi-gradient-coverage-from)] via-[var(--rbi-card)] to-[var(--rbi-card)] p-4"
       style={{ borderColor: `${C.indigo}55` }}
     >
       <div className="flex items-start gap-2.5">
@@ -315,19 +307,19 @@ function CoverageAiInsight() {
         </span>
         <div>
           <p className={LABEL}>AI insight · obligation coverage</p>
-          <p className="text-[13px] font-black leading-snug text-white">
+          <p className="text-[13px] font-black leading-snug text-[var(--rbi-text)]">
             OBL-002 First-90s and OBL-001 Complaint Capture drive 64% of this
             week&apos;s exposure
           </p>
         </div>
       </div>
-      <ul className="mt-3 flex-1 space-y-2 text-[11px] font-semibold leading-snug text-zinc-300">
+      <ul className="mt-3 flex-1 space-y-2 text-[11px] font-semibold leading-snug text-[var(--rbi-text-secondary)]">
         <li>
-          <strong className="text-white">312</strong> complaint-like contacts had
+          <strong className="text-[var(--rbi-text)]">312</strong> complaint-like contacts had
           no CMS SR mapping — start with Mumbai in-house queue.
         </li>
         <li>
-          <strong className="text-white">27</strong> recovery calls contain
+          <strong className="text-[var(--rbi-text)]">27</strong> recovery calls contain
           threat or distress-dismissal signals — Pune Recovery BPO is the hotspot.
         </li>
         <li>
@@ -336,7 +328,7 @@ function CoverageAiInsight() {
           30-Jun IO deadline.
         </li>
       </ul>
-      <p className="mt-2 text-[10px] font-bold text-zinc-500">
+      <p className="mt-2 text-[10px] font-bold text-[var(--rbi-text-dim)]">
         Recommended action · Review OBL-002 SR-offer control with Head of CX today
       </p>
     </section>
@@ -365,13 +357,13 @@ function ObligationChannelMatrix() {
       <table className="w-full min-w-[980px] border-separate border-spacing-1">
         <thead>
           <tr>
-            <th className="px-2 py-2 text-left text-[10px] font-black uppercase tracking-wide text-zinc-500">
+            <th className="px-2 py-2 text-left text-[10px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]">
               Obligation group
             </th>
             {CHANNEL_KEYS.map((ch) => (
               <th
                 key={ch}
-                className="px-2 py-2 text-center text-[10px] font-black uppercase tracking-wide text-zinc-500"
+                className="px-2 py-2 text-center text-[10px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]"
               >
                 {CHANNEL_LABELS[ch]}
               </th>
@@ -381,9 +373,9 @@ function ObligationChannelMatrix() {
         <tbody>
           {OBLIGATION_GROUPS.map((g) => (
             <tr key={g.key}>
-              <td className="rounded-lg bg-black/40 px-2 py-2">
-                <p className="text-[11px] font-black text-white">{g.label}</p>
-                <p className="text-[10px] font-semibold text-zinc-500">
+              <td className="rounded-lg bg-[var(--rbi-table-head)] px-2 py-2">
+                <p className="text-[11px] font-black text-[var(--rbi-text)]">{g.label}</p>
+                <p className="text-[10px] font-semibold text-[var(--rbi-text-dim)]">
                   {g.obligationIds.join(" · ")}
                 </p>
               </td>
@@ -394,7 +386,7 @@ function ObligationChannelMatrix() {
                   return (
                     <td
                       key={ch}
-                      className="rounded-lg bg-zinc-900/40 px-1 py-2 text-center text-[10px] text-zinc-600"
+                      className="rounded-lg bg-[var(--rbi-subtle-bg)] px-1 py-2 text-center text-[10px] text-[var(--rbi-text-dim)]"
                     >
                       N/A
                     </td>
@@ -410,7 +402,7 @@ function ObligationChannelMatrix() {
                     }}
                     title={`${fmt(cell.contacts)} contacts · ${fmt(cell.signals)} signals`}
                   >
-                    <p className="text-[10px] font-black tabular-nums text-white">
+                    <p className="text-[10px] font-black tabular-nums text-[var(--rbi-text)]">
                       {fmt(cell.contacts)}
                     </p>
                     <p className="text-[9px] font-bold" style={{ color: col }}>
@@ -441,8 +433,8 @@ function MeetingObligationPanel() {
           <col style={{ width: "16%" }} />
           <col style={{ width: "26%" }} />
         </colgroup>
-        <thead className="sticky top-0 z-10 bg-[#0a0a0a] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]">
-          <tr className="border-b border-white/10 bg-black/40 text-[9px] font-black uppercase tracking-wide text-zinc-500">
+        <thead className="sticky top-0 z-10 bg-[var(--rbi-table-head-sticky)] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]">
+          <tr className="border-b border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-table-head)] text-[9px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]">
             <th className="px-3 py-2 text-left font-black">ID</th>
             <th className="px-3 py-2 text-left font-black">Obligation</th>
             <th className="px-3 py-2 text-left font-black">Met % · Status</th>
@@ -455,7 +447,7 @@ function MeetingObligationPanel() {
             return (
               <tr
                 key={o.obligationId}
-                className="border-b border-white/5 align-top"
+                className="border-b border-[color:var(--rbi-border-subtle)] align-top"
               >
                 <td className="px-3 py-2.5 align-top">
                   <span className="text-[11px] font-black text-teal-300">
@@ -463,7 +455,7 @@ function MeetingObligationPanel() {
                   </span>
                 </td>
                 <td className="px-3 py-2.5 align-top">
-                  <p className="whitespace-normal break-words text-[11px] font-bold leading-snug text-white">
+                  <p className="whitespace-normal break-words text-[11px] font-bold leading-snug text-[var(--rbi-text)]">
                     {o.obligation}
                   </p>
                 </td>
@@ -479,7 +471,7 @@ function MeetingObligationPanel() {
                   </div>
                 </td>
                 <td className="px-3 py-2.5 align-top">
-                  <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
+                  <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-[var(--rbi-text-muted)]">
                     {mainGapForObligation(o.obligationId)}
                   </p>
                 </td>
@@ -512,11 +504,11 @@ function ContactReasonsMap({ scrollable = false }: { scrollable?: boolean }) {
         <thead
           className={
             scrollable
-              ? "sticky top-0 z-10 bg-[#0a0a0a] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]"
+              ? "sticky top-0 z-10 bg-[var(--rbi-table-head-sticky)] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]"
               : undefined
           }
         >
-          <tr className="border-b border-white/10 bg-black/40 text-[9px] font-black uppercase tracking-wide text-zinc-500">
+          <tr className="border-b border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-table-head)] text-[9px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]">
             <th className="px-3 py-2 text-left font-black">Contact reason</th>
             <th className="px-3 py-2 text-left font-black">Volume</th>
             <th className="px-3 py-2 text-left font-black">Obligations</th>
@@ -527,14 +519,14 @@ function ContactReasonsMap({ scrollable = false }: { scrollable?: boolean }) {
         </thead>
         <tbody>
           {CONTACT_REASONS_RICH.map((r) => (
-            <tr key={r.reason} className="border-b border-white/5 align-top">
+            <tr key={r.reason} className="border-b border-[color:var(--rbi-border-subtle)] align-top">
               <td className="px-3 py-2.5 align-top">
-                <p className="whitespace-normal break-words text-[11px] font-black leading-snug text-white">
+                <p className="whitespace-normal break-words text-[11px] font-black leading-snug text-[var(--rbi-text)]">
                   {r.reason}
                 </p>
               </td>
               <td className="px-3 py-2.5 align-top">
-                <span className="text-[11px] font-black tabular-nums text-zinc-200">
+                <span className="text-[11px] font-black tabular-nums text-[var(--rbi-text-secondary)]">
                   {fmt(r.volume)}
                 </span>
               </td>
@@ -544,12 +536,12 @@ function ContactReasonsMap({ scrollable = false }: { scrollable?: boolean }) {
                 </span>
               </td>
               <td className="px-3 py-2.5 align-top">
-                <span className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
+                <span className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-[var(--rbi-text-muted)]">
                   {r.topChannel}
                 </span>
               </td>
               <td className="min-w-0 px-3 py-2.5 align-top">
-                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
+                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-[var(--rbi-text-muted)]">
                   {r.topSignal}
                 </p>
               </td>
@@ -580,16 +572,16 @@ function ContactTypeCards() {
       {CONTACT_TYPE_COVERAGE.map((t) => (
         <div
           key={t.type}
-          className="rounded-2xl border border-white/10 bg-black/25 p-3"
+          className="rounded-2xl border border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-subtle-bg)] p-3"
         >
           <div className="flex items-start justify-between gap-2">
-            <p className="text-[12px] font-black text-white">{t.type}</p>
+            <p className="text-[12px] font-black text-[var(--rbi-text)]">{t.type}</p>
             <Pill color={statusColor(t.status)}>{t.status}</Pill>
           </div>
-          <p className="mt-2 text-xl font-black tabular-nums text-white">
+          <p className="mt-2 text-xl font-black tabular-nums text-[var(--rbi-text)]">
             {fmt(t.contacts)}
           </p>
-          <p className="mt-1 text-[10px] font-semibold text-zinc-500">
+          <p className="mt-1 text-[10px] font-semibold text-[var(--rbi-text-dim)]">
             {t.obligations} obligations · {fmt(t.signals)} signals
           </p>
         </div>
@@ -610,8 +602,8 @@ function ProcessControlCoverage() {
           <col style={{ width: "35%" }} />
           <col style={{ width: "8%" }} />
         </colgroup>
-        <thead className="sticky top-0 z-10 bg-[#0a0a0a] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]">
-          <tr className="border-b border-white/10 bg-black/40 text-[9px] font-black uppercase tracking-wide text-zinc-500">
+        <thead className="sticky top-0 z-10 bg-[var(--rbi-table-head-sticky)] shadow-[0_1px_0_0_rgba(255,255,255,0.08)]">
+          <tr className="border-b border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-table-head)] text-[9px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]">
             <th className="px-3 py-2 text-left font-black">Process</th>
             <th className="px-3 py-2 text-left font-black">Obligation</th>
             <th className="px-3 py-2 text-left font-black">Control checked</th>
@@ -623,10 +615,10 @@ function ProcessControlCoverage() {
           {rows.map((c) => (
             <tr
               key={c.controlId}
-              className="border-b border-white/5 align-top"
+              className="border-b border-[color:var(--rbi-border-subtle)] align-top"
             >
               <td className="px-3 py-2.5 align-top">
-                <p className="whitespace-normal break-words text-[10px] font-bold leading-snug text-zinc-300">
+                <p className="whitespace-normal break-words text-[10px] font-bold leading-snug text-[var(--rbi-text-secondary)]">
                   {c.process}
                 </p>
               </td>
@@ -636,12 +628,12 @@ function ProcessControlCoverage() {
                 </span>
               </td>
               <td className="px-3 py-2.5 align-top">
-                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-white">
+                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-[var(--rbi-text)]">
                   {c.control}
                 </p>
               </td>
               <td className="px-3 py-2.5 align-top">
-                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-zinc-400">
+                <p className="whitespace-normal break-words text-[10px] font-semibold leading-snug text-[var(--rbi-text-muted)]">
                   {c.detectionSignal}
                 </p>
               </td>
@@ -680,9 +672,9 @@ function SensitiveWidgets({ compact = false }: { compact?: boolean }) {
             background: `${w.color}0a`,
           }}
         >
-          <p className="truncate text-[10px] font-black text-white">{w.label}</p>
+          <p className="truncate text-[10px] font-black text-[var(--rbi-text)]">{w.label}</p>
           <div className="mt-1 flex items-center justify-between gap-1">
-            <p className="text-lg font-black tabular-nums text-white">{w.count}</p>
+            <p className="text-lg font-black tabular-nums text-[var(--rbi-text)]">{w.count}</p>
             <span
               className={cx(
                 "text-[9px] font-black",
@@ -690,13 +682,13 @@ function SensitiveWidgets({ compact = false }: { compact?: boolean }) {
                   ? "text-red-400"
                   : w.trend.startsWith("-")
                     ? "text-green-400"
-                    : "text-zinc-400",
+                    : "text-[var(--rbi-text-muted)]",
               )}
             >
               {w.trend}
             </span>
           </div>
-          <p className="mt-1 truncate text-[9px] font-semibold text-zinc-500">
+          <p className="mt-1 truncate text-[9px] font-semibold text-[var(--rbi-text-dim)]">
             {w.obligationId} · {w.channel}
           </p>
         </div>
@@ -812,7 +804,7 @@ function CoverageScreen() {
 function OutboundAiInsight() {
   return (
     <section
-      className="flex h-full min-h-0 flex-col rounded-3xl border bg-gradient-to-br from-amber-950/40 via-[#0d0d0d] to-[#0d0d0d] p-4"
+      className="flex h-full min-h-0 flex-col rounded-3xl border bg-gradient-to-br from-[var(--rbi-gradient-outbound-from)] via-[var(--rbi-card)] to-[var(--rbi-card)] p-4"
       style={{ borderColor: `${C.amber}55` }}
     >
       <div className="flex items-start gap-3">
@@ -821,20 +813,20 @@ function OutboundAiInsight() {
         </span>
         <div>
           <p className={LABEL}>AI insight · outbound & location</p>
-          <p className="text-sm font-black text-white">
+          <p className="text-sm font-black text-[var(--rbi-text)]">
             Recovery outbound at Pune BPO accounts for 41% of location-level
             breaches — sales bundling concentrated at Hyderabad outsource site
           </p>
         </div>
       </div>
-      <ul className="mt-3 space-y-2 text-[12px] font-semibold text-zinc-300">
+      <ul className="mt-3 space-y-2 text-[12px] font-semibold text-[var(--rbi-text-secondary)]">
         <li>
-          <strong className="text-white">OBL-005</strong> threat-language on
+          <strong className="text-[var(--rbi-text)]">OBL-005</strong> threat-language on
           recovery: 87 breaches / 7d · suspend dialler batch #RC-441 pending
           vendor attestation.
         </li>
         <li>
-          <strong className="text-white">OBL-018</strong> bundling on salary-a/c
+          <strong className="text-[var(--rbi-text)]">OBL-018</strong> bundling on salary-a/c
           outbound: Helios Hyderabad 54 breaches vs 12 in-house Bengaluru.
         </li>
         <li>
@@ -859,19 +851,19 @@ function OutboundPurposeCards() {
           }}
         >
           <div className="flex items-center justify-between">
-            <p className="text-[12px] font-black uppercase text-white">
+            <p className="text-[12px] font-black uppercase text-[var(--rbi-text)]">
               {p.purpose}
             </p>
             <Megaphone className="size-4" style={{ color: p.color }} aria-hidden />
           </div>
-          <p className="mt-3 text-2xl font-black tabular-nums text-white">
+          <p className="mt-3 text-2xl font-black tabular-nums text-[var(--rbi-text)]">
             {fmt(p.calls)}
           </p>
-          <p className="text-[10px] font-semibold text-zinc-500">calls / 7d</p>
+          <p className="text-[10px] font-semibold text-[var(--rbi-text-dim)]">calls / 7d</p>
           <div className="mt-3 grid grid-cols-3 gap-2 text-center">
             <div className={NEST}>
               <p className={LABEL}>Obls</p>
-              <p className="text-sm font-black text-white">{p.obligations}</p>
+              <p className="text-sm font-black text-[var(--rbi-text)]">{p.obligations}</p>
             </div>
             <div className={NEST}>
               <p className={LABEL}>Breach</p>
@@ -884,7 +876,7 @@ function OutboundPurposeCards() {
               </p>
             </div>
           </div>
-          <p className="mt-3 text-[11px] font-semibold text-zinc-400">
+          <p className="mt-3 text-[11px] font-semibold text-[var(--rbi-text-muted)]">
             Top issue: {p.topIssue}
           </p>
         </div>
@@ -913,7 +905,7 @@ function LocationTable() {
   return (
     <div className="w-full">
       <div
-        className="grid w-full gap-x-3 border-b border-white/10 bg-black/40 px-3 py-2 text-[9px] font-black uppercase tracking-wide text-zinc-500"
+        className="grid w-full gap-x-3 border-b border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-table-head)] px-3 py-2 text-[9px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]"
         style={{ gridTemplateColumns: locationGrid }}
       >
         <span>Location · top issue</span>
@@ -925,7 +917,7 @@ function LocationTable() {
         <span>Breaches</span>
         <span>Risk</span>
       </div>
-      <div className="divide-y divide-white/5">
+      <div className="divide-y divide-[color:var(--rbi-border-subtle)]">
         {OUTBOUND_LOCATIONS.map((l) => {
           const riskReasonColor =
             l.riskScore >= 70 ? C.red : l.riskScore >= 45 ? C.amber : C.green;
@@ -936,8 +928,8 @@ function LocationTable() {
               style={{ gridTemplateColumns: locationGrid }}
             >
               <div className="min-w-0">
-                <p className="text-[11px] font-black text-white">{l.name}</p>
-                <p className="text-[10px] font-semibold text-zinc-500">{l.city}</p>
+                <p className="text-[11px] font-black text-[var(--rbi-text)]">{l.name}</p>
+                <p className="text-[10px] font-semibold text-[var(--rbi-text-dim)]">{l.city}</p>
                 <p
                   className="mt-1 whitespace-normal break-words text-[10px] font-semibold leading-snug"
                   style={{ color: riskReasonColor }}
@@ -946,16 +938,16 @@ function LocationTable() {
                 </p>
               </div>
               <LocationTypeBadge type={l.type} />
-              <span className="hidden min-w-0 whitespace-normal break-words pr-1 text-[10px] font-bold leading-snug text-zinc-300 sm:inline">
+              <span className="hidden min-w-0 whitespace-normal break-words pr-1 text-[10px] font-bold leading-snug text-[var(--rbi-text-secondary)] sm:inline">
                 {l.vendor ?? "—"}
               </span>
-              <span className="text-[11px] font-black tabular-nums text-white">
+              <span className="text-[11px] font-black tabular-nums text-[var(--rbi-text)]">
                 {fmt(l.calls)}
               </span>
-              <span className="text-[10px] font-semibold text-zinc-400">
+              <span className="text-[10px] font-semibold text-[var(--rbi-text-muted)]">
                 {l.purpose}
               </span>
-              <span className="text-[11px] font-black text-zinc-200">
+              <span className="text-[11px] font-black text-[var(--rbi-text-secondary)]">
                 {l.obligations}
               </span>
               <p className="min-w-0 whitespace-normal break-words text-[10px] font-semibold leading-snug text-red-300">
@@ -986,13 +978,13 @@ function LocationBreachInsightChip({
 }) {
   return (
     <div
-      className="rounded-xl border bg-black/25 px-2.5 py-2"
+      className="rounded-xl border bg-[var(--rbi-subtle-bg)] px-2.5 py-2"
       style={{ borderColor: `${accent}33` }}
     >
-      <p className="text-[9px] font-black uppercase tracking-wide text-zinc-500">
+      <p className="text-[9px] font-black uppercase tracking-wide text-[var(--rbi-text-dim)]">
         {label}
       </p>
-      <p className="mt-1 text-[11px] font-black leading-snug text-white">{value}</p>
+      <p className="mt-1 text-[11px] font-black leading-snug text-[var(--rbi-text)]">{value}</p>
     </div>
   );
 }
@@ -1015,13 +1007,13 @@ function LocationBreachPanel() {
       <div className="h-[370px] w-full shrink-0">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 4, right: 4, left: -18, bottom: 0 }}>
-            <CartesianGrid stroke={C.border} strokeDasharray="3 3" />
-            <XAxis dataKey="name" tick={{ fill: C.muted, fontSize: 10 }} />
-            <YAxis tick={{ fill: C.muted, fontSize: 10 }} />
+            <CartesianGrid stroke="var(--rbi-border)" strokeDasharray="3 3" />
+            <XAxis dataKey="name" tick={{ fill: "var(--rbi-text-muted)", fontSize: 10 }} />
+            <YAxis tick={{ fill: "var(--rbi-text-muted)", fontSize: 10 }} />
             <Tooltip
               contentStyle={{
-                background: "#121212",
-                border: `1px solid ${C.border}`,
+                background: "var(--rbi-card)",
+                border: "1px solid var(--rbi-border)",
                 borderRadius: 12,
                 fontSize: 11,
               }}
@@ -1060,7 +1052,7 @@ function OutboundViolationFeed() {
       {OUTBOUND_VIOLATIONS.map((v) => (
         <div
           key={v.ts + v.signal}
-          className="flex items-start gap-2 rounded-xl border border-white/10 bg-black/25 px-2.5 py-1.5"
+          className="flex items-start gap-2 rounded-xl border border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-subtle-bg)] px-2.5 py-1.5"
         >
           <Pill
             color={
@@ -1074,8 +1066,8 @@ function OutboundViolationFeed() {
             {v.severity}
           </Pill>
           <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-black leading-snug text-white">{v.signal}</p>
-            <p className="mt-0.5 text-[9px] font-semibold leading-snug text-zinc-500">
+            <p className="text-[11px] font-black leading-snug text-[var(--rbi-text)]">{v.signal}</p>
+            <p className="mt-0.5 text-[9px] font-semibold leading-snug text-[var(--rbi-text-dim)]">
               {v.location} · {v.purpose} · {v.obligationId} ·{" "}
               {new Date(v.ts).toLocaleString("en-IN", {
                 day: "2-digit",
@@ -1096,13 +1088,13 @@ function OutboundViolationTrend() {
     <div className="h-[220px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={[...VIOLATION_TREND_WEEKLY]}>
-          <CartesianGrid stroke={C.border} strokeDasharray="3 3" />
-          <XAxis dataKey="week" tick={{ fill: C.muted, fontSize: 10 }} />
-          <YAxis tick={{ fill: C.muted, fontSize: 10 }} />
+          <CartesianGrid stroke="var(--rbi-border)" strokeDasharray="3 3" />
+          <XAxis dataKey="week" tick={{ fill: "var(--rbi-text-muted)", fontSize: 10 }} />
+          <YAxis tick={{ fill: "var(--rbi-text-muted)", fontSize: 10 }} />
           <Tooltip
             contentStyle={{
-              background: "#121212",
-              border: `1px solid ${C.border}`,
+              background: "var(--rbi-card)",
+              border: "1px solid var(--rbi-border)",
               borderRadius: 12,
               fontSize: 11,
             }}
@@ -1141,13 +1133,13 @@ function OutboundObligationByPurpose() {
     <div className="h-[240px] w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData}>
-          <CartesianGrid stroke={C.border} strokeDasharray="3 3" />
-          <XAxis dataKey="purpose" tick={{ fill: C.muted, fontSize: 10 }} />
-          <YAxis domain={[0, 100]} tick={{ fill: C.muted, fontSize: 10 }} />
+          <CartesianGrid stroke="var(--rbi-border)" strokeDasharray="3 3" />
+          <XAxis dataKey="purpose" tick={{ fill: "var(--rbi-text-muted)", fontSize: 10 }} />
+          <YAxis domain={[0, 100]} tick={{ fill: "var(--rbi-text-muted)", fontSize: 10 }} />
           <Tooltip
             contentStyle={{
-              background: "#121212",
-              border: `1px solid ${C.border}`,
+              background: "var(--rbi-card)",
+              border: "1px solid var(--rbi-border)",
               borderRadius: 12,
               fontSize: 11,
             }}
@@ -1305,41 +1297,75 @@ export type RbiConductIntelligencePreviewProps = {
   defaultLens?: ExecutiveLens;
 };
 
-export function RbiConductIntelligencePreview({
+function RbiThemeToggle() {
+  const { isDarkMode, toggleTheme } = useRbiConductTheme();
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isDarkMode}
+      onClick={toggleTheme}
+      title={isDarkMode ? "Switch to light theme" : "Switch to dark theme"}
+      aria-label={isDarkMode ? "Switch to light theme" : "Switch to dark theme"}
+      className="relative h-8 w-[3.25rem] shrink-0 rounded-full border border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-chip-bg)] p-0.5 transition-colors"
+    >
+      <span
+        className={cx(
+          "absolute top-0.5 flex size-7 items-center justify-center rounded-full bg-white shadow-[0_1px_3px_rgba(0,0,0,0.12)] transition-all duration-200 ease-out",
+          isDarkMode ? "left-[calc(100%-1.875rem)]" : "left-0.5",
+        )}
+      >
+        {isDarkMode ? (
+          <Moon className="size-3.5 text-zinc-700" aria-hidden />
+        ) : (
+          <Sun className="size-3.5 text-zinc-700" aria-hidden />
+        )}
+      </span>
+    </button>
+  );
+}
+
+function RbiConductDashboard({
   industryColor,
   onExit,
-  theme,
   defaultLens = "L1",
-}: RbiConductIntelligencePreviewProps) {
+}: Pick<
+  RbiConductIntelligencePreviewProps,
+  "industryColor" | "onExit" | "defaultLens"
+>) {
   const [tab, setTab] = useState<Tab>("coverage");
-  const [lens, setLens] = useState<ExecutiveLens>(defaultLens);
   const [sidebarHover, setSidebarHover] = useState(false);
-  const lensMeta = EXECUTIVE_LENSES[lens];
+  const lensMeta = EXECUTIVE_LENSES[defaultLens];
   const SIDEBAR_W_EXPANDED = 268;
   const SIDEBAR_W_COLLAPSED = 76;
   const sidebarW = sidebarHover ? SIDEBAR_W_EXPANDED : SIDEBAR_W_COLLAPSED;
 
   return (
-    <DashboardThemeProvider value={theme ?? FALLBACK_THEME}>
-      <div className="relative flex h-screen overflow-hidden bg-[#070707] text-white">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(20,184,166,0.14),transparent_32%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.10),transparent_34%)]" />
+    <div className="relative flex h-screen overflow-hidden bg-[var(--rbi-bg)] text-[var(--rbi-text)]">
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(circle at top left, var(--rbi-radial-a), transparent 32%), radial-gradient(circle at top right, var(--rbi-radial-b), transparent 34%)",
+        }}
+      />
 
-        <aside
-          onMouseEnter={() => setSidebarHover(true)}
-          onMouseLeave={() => setSidebarHover(false)}
-          className="relative z-20 flex shrink-0 flex-col overflow-hidden border-r bg-[#0a0a0a]/98"
-          style={{
-            width: sidebarW,
-            minWidth: sidebarW,
-            borderColor: C.border,
-            transition: "width 0.22s ease, min-width 0.22s ease",
-          }}
+      <aside
+        onMouseEnter={() => setSidebarHover(true)}
+        onMouseLeave={() => setSidebarHover(false)}
+        className="relative z-20 flex shrink-0 flex-col overflow-hidden border-r bg-[var(--rbi-sidebar)]"
+        style={{
+          width: sidebarW,
+          minWidth: sidebarW,
+          borderColor: "var(--rbi-border)",
+          transition: "width 0.22s ease, min-width 0.22s ease",
+        }}
           aria-label="Dashboard views"
         >
           <div
             className="border-b"
             style={{
-              borderColor: C.border,
+              borderColor: "var(--rbi-border)",
               padding: sidebarHover ? "18px 16px" : "14px 10px",
               textAlign: sidebarHover ? "left" : "center",
             }}
@@ -1349,7 +1375,7 @@ export function RbiConductIntelligencePreview({
                 <p className="text-[10px] font-black uppercase tracking-[0.14em] text-teal-300">
                   Views
                 </p>
-                <p className="mt-1 text-[11px] font-semibold text-zinc-500">
+                <p className="mt-1 text-[11px] font-semibold text-[var(--rbi-text-dim)]">
                   Coverage · outbound intelligence
                 </p>
               </>
@@ -1382,7 +1408,7 @@ export function RbiConductIntelligencePreview({
                   title={t.label}
                   className={cx(
                     "mb-1.5 flex w-full items-center rounded-lg border-none text-left transition",
-                    active ? "bg-teal-500/10" : "bg-transparent hover:bg-white/[0.04]",
+                    active ? "bg-teal-500/10" : "bg-transparent hover:bg-[var(--rbi-chip-bg)]",
                   )}
                   style={{
                     padding: sidebarHover ? "8px 10px" : "10px 8px",
@@ -1407,12 +1433,12 @@ export function RbiConductIntelligencePreview({
                       <span
                         className={cx(
                           "block text-[12px] leading-snug",
-                          active ? "font-bold text-white" : "font-medium text-zinc-300",
+                          active ? "font-bold text-[var(--rbi-text)]" : "font-medium text-[var(--rbi-text-secondary)]",
                         )}
                       >
                         {t.label}
                       </span>
-                      <span className="mt-0.5 block text-[10px] leading-snug text-zinc-500">
+                      <span className="mt-0.5 block text-[10px] leading-snug text-[var(--rbi-text-dim)]">
                         {t.sub}
                       </span>
                     </span>
@@ -1425,15 +1451,15 @@ export function RbiConductIntelligencePreview({
 
         <div className="relative z-10 flex min-w-0 flex-1 flex-col overflow-hidden">
           <header
-            className="shrink-0 border-b bg-[#070707]/95 backdrop-blur"
-            style={{ borderColor: C.border }}
+            className="shrink-0 border-b bg-[var(--rbi-bg)]/95 backdrop-blur"
+            style={{ borderColor: "var(--rbi-border)" }}
           >
             <div className="flex flex-col gap-3 px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
               <div className="flex flex-wrap items-center gap-3">
                 <button
                   type="button"
                   onClick={onExit}
-                  className="inline-flex items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] py-2 pr-3 pl-2.5 text-sm font-semibold text-zinc-200 hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-xl border border-[color:var(--rbi-border-subtle)] bg-[var(--rbi-chip-bg)] py-2 pr-3 pl-2.5 text-sm font-semibold text-[var(--rbi-text-secondary)] hover:bg-[var(--rbi-hover)]"
                   style={{ borderLeftWidth: 3, borderLeftColor: industryColor }}
                 >
                   <ArrowLeft className="size-4" aria-hidden />
@@ -1441,7 +1467,7 @@ export function RbiConductIntelligencePreview({
                 </button>
                 <div className="flex items-center gap-3">
                   <span
-                    className="grid size-10 place-items-center rounded-2xl text-white"
+                    className="grid size-10 place-items-center rounded-2xl text-[var(--rbi-text)]"
                     style={{
                       background: `linear-gradient(135deg, ${C.teal}, ${C.indigo})`,
                     }}
@@ -1461,7 +1487,7 @@ export function RbiConductIntelligencePreview({
                       {TABS.find((t) => t.key === tab)?.label ??
                         "RBI Conduct Intelligence"}
                     </h1>
-                    <p className="text-[11px] font-semibold text-zinc-400">
+                    <p className="text-[11px] font-semibold text-[var(--rbi-text-muted)]">
                       Private sector bank · post-Nov 2025 RBI rulebook · {TODAY}{" "}
                       · {lensMeta.title}
                     </p>
@@ -1469,40 +1495,8 @@ export function RbiConductIntelligencePreview({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 md:flex">
-                  <Activity className="size-3.5 text-teal-300" aria-hidden />
-                  <span className="text-[10px] font-black uppercase text-zinc-400">
-                    {fmt(REGISTER_STATS.contactsAnalysed)} interactions · 100%
-                    voice
-                  </span>
-                </div>
-                <div className="hidden items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-1.5 md:flex">
-                  <Languages className="size-3.5 text-teal-300" aria-hidden />
-                  <span className="text-[10px] font-black uppercase text-zinc-400">
-                    en · hi · ta · te · kn · mr
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-1 rounded-xl border border-white/10 bg-white/[0.04] p-1">
-                  {(Object.keys(EXECUTIVE_LENSES) as ExecutiveLens[]).map(
-                    (id) => (
-                      <button
-                        key={id}
-                        type="button"
-                        onClick={() => setLens(id)}
-                        title={EXECUTIVE_LENSES[id].title}
-                        className={cx(
-                          "rounded-lg px-2 py-1 text-[10px] font-black uppercase tracking-wide transition",
-                          lens === id
-                            ? "bg-teal-500/25 text-teal-100 ring-1 ring-teal-500/50"
-                            : "text-zinc-500 hover:text-white",
-                        )}
-                      >
-                        {id}
-                      </button>
-                    ),
-                  )}
-                </div>
+              <div className="flex items-center">
+                <RbiThemeToggle />
               </div>
             </div>
           </header>
@@ -1512,6 +1506,24 @@ export function RbiConductIntelligencePreview({
           </main>
         </div>
       </div>
+  );
+}
+
+export function RbiConductIntelligencePreview({
+  industryColor,
+  onExit,
+  theme,
+  defaultLens = "L1",
+}: RbiConductIntelligencePreviewProps) {
+  return (
+    <DashboardThemeProvider value={theme ?? FALLBACK_THEME}>
+      <RbiConductThemeProvider>
+        <RbiConductDashboard
+          industryColor={industryColor}
+          onExit={onExit}
+          defaultLens={defaultLens}
+        />
+      </RbiConductThemeProvider>
     </DashboardThemeProvider>
   );
 }
