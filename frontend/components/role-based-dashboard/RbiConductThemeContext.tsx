@@ -13,6 +13,7 @@ import {
 
 import {
   getRbiThemeVars,
+  RBI_ACCENT,
   RBI_THEME_STORAGE_KEY,
   type RbiAccent,
 } from "./rbiConductTheme";
@@ -53,19 +54,7 @@ export function RbiConductThemeProvider({ children }: { children: ReactNode }) {
       setIsDarkMode,
       toggleTheme,
       themeVars: getRbiThemeVars(isDarkMode),
-      accent: {
-        teal: "#14b8a6",
-        indigo: "#6366f1",
-        purple: "#a78bfa",
-        red: "#ef4444",
-        amber: "#f59e0b",
-        yellow: "#eab308",
-        green: "#22c55e",
-        cyan: "#38bdf8",
-        blue: "#60a5fa",
-        saffron: "#f97316",
-        muted: isDarkMode ? "#939394" : "#71717a",
-      },
+      accent: RBI_ACCENT,
     }),
     [isDarkMode, toggleTheme],
   );
