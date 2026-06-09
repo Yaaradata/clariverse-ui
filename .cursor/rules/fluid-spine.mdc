@@ -1,0 +1,26 @@
+---
+description: Fluid dashboard spine and design rules. Applies to all Fluid dashboard work.
+alwaysApply: true
+---
+
+# Fluid Spine (non-negotiable)
+Every Fluid dashboard converts customer interactions into business action. Trace:
+Customer Interaction → Signal → Business Issue → Persona Owner → Evidence → Recommended Action
+Conduct/obligation dashboards: Obligation → Customer Contacts → Channel Signals → Met % → Evidence → Owner Action
+If a screen shows a number or "risk" without the customer signal + evidence behind it, it fails.
+
+# The test for every choice: time-to-decision
+Does this component help THIS executive decide and act faster? If not, cut it.
+
+# Hard design rules
+1. One screen answers one business question. Persona-specific. Never generic SaaS.
+2. 5-second headline: a single headline answer/score graspable in 5 seconds.
+3. Full story readable in ~2 minutes (drivers → evidence → action).
+4. F-pattern layout: PRIMARY answer/score TOP-LEFT (largest, highest contrast); AI-insight narrative TOP-RIGHT (secondary); drivers/trends/hotspots middle; evidence + action queue bottom.
+5. 5-9 headline KPIs per screen. Reject above 12.
+6. No decorative charts (data-ink ratio: a pixel that adds no information is removed).
+7. No excessive dropdowns; never hide value behind drilldowns.
+8. Never copy another persona's layout. Never add tabs not in the spec.
+
+# Hard fail — reject if the dashboard
+Doesn't answer the main question · feels generic · isn't persona-specific · has no action queue · has no evidence/signal layer · uses decorative charts · buries the headline (not top-left) · looks like another persona with the title swapped.

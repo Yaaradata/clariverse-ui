@@ -1,0 +1,15 @@
+---
+description: Scoring rubric for reviewing a Fluid dashboard. Invoke with @fluid-dashboard-audit.
+alwaysApply: false
+---
+
+# Fluid Dashboard Audit — score /100
+Business question clarity 15 · Persona fit 15 · Insight depth 15 · Fluid spine coverage 15 · Component usefulness 10 · Visual hierarchy 10 · Actionability 10 · Data quality 5 · Build quality 5.
+If the persona is known, apply that persona's weighting from .cursor/skills/fluid-dashboard/references/industry-persona-checklists.md.
+
+# Hard fails (reject regardless of score)
+Main question not answered · persona generic · no signal/evidence layer · no action queue · decorative charts · >12 KPIs · headline not top-left · same layout as another persona · numbers inconsistent.
+
+# Output
+1. Score /100 + verdict (Demo-ready 90+ / Refine 80-89 / Rework 60-79 / Rebuild <60)
+2. What works · 3. What fails · 4. Missing components · 5. Components to remove · 6. Persona mismatch · 7. Exact Cursor fix prompt.

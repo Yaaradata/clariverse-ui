@@ -1,0 +1,25 @@
+---
+description: Build rules for Fluid TSX/JSX dashboards. Auto-attaches when editing component files.
+globs:
+  - "**/*.tsx"
+  - "**/*.jsx"
+alwaysApply: false
+---
+
+# Build rules
+1. Start from persona + main question. Build only the requested screens.
+2. Structured mock data, not scattered hardcoded values.
+3. Reuse existing layout/card/chart components and styling — do not rebuild what exists.
+4. Clean, responsive, maintainable TSX. No unused imports.
+5. Every chart explains trend, comparison, distribution, or hotspot. Tables only if they drive action.
+6. KPI card anatomy — each shows four things at a glance: current value (large), comparison (vs target/prior), variance indicator, trend direction.
+7. Layout: 12-column grid; primary elements span 6-8 columns, secondary 3-4; ~16px between elements, 32px between sections, 48px margins.
+
+# Good components
+KPI cards · AI insight card · trend chart · driver breakdown · heatmap · channel matrix · journey funnel · obligation/status matrix · location/vendor scorecard · evidence feed · action queue.
+
+# Bad components
+radar charts · generic bubble maps · decorative treemaps · large text blocks · raw data dumps · repeated KPI cards · vague "Operations Overview" sections.
+
+# Do not research
+Implement the approved spec. Do not invent product context or add screens/tabs not in the spec.
