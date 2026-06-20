@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { AIRiskSpikeMonitor, headRetailRiskSpikes } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { CardsRiskSpikeMonitor } from "./CardsRiskSpikeMonitor";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { SystemHealthRibbon } from "@/components/unified/kpi/SystemHealthRibbon";
 import { EisenhowerMatrix } from "@/components/email/EisenhowerMatrix";
@@ -81,6 +82,7 @@ const sectionGap = "mt-6 flex flex-col gap-8";
 export function RoleBasedUnifiedScreen1Addon({ role }: { role: Role }) {
   const rid = role.id;
   const isRetail = rid === "head_retail";
+  const isCardsPortfolio = rid === "cards_portfolio";
   return (
     <div className={sectionGap}>
       {isRetail ? (
@@ -88,6 +90,8 @@ export function RoleBasedUnifiedScreen1Addon({ role }: { role: Role }) {
           spikes={headRetailRiskSpikes}
           driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"
         />
+      ) : isCardsPortfolio ? (
+        <CardsRiskSpikeMonitor />
       ) : (
         <AIRiskSpikeMonitor />
       )}

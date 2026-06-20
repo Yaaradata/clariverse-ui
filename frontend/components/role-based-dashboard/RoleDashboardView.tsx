@@ -75,6 +75,11 @@ import {
 import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown";
 import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown";
 import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
+import {
+  CardsConductRegulatoryDrill,
+  CardsForwardRiskDrill,
+  CardsRevenueRecoveryDrill,
+} from "./CardsPortfolioDrillScreens";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
@@ -246,7 +251,7 @@ const SCREENS: {
 ];
 
 /** Roles that use the click-into-tile drill-down model (no "Screen #" prefix). */
-const DRILL_ROLE_IDS = new Set(["head_retail", "head_contact"]);
+const DRILL_ROLE_IDS = new Set(["head_retail", "head_contact", "cards_portfolio"]);
 function isDrillRoleId(roleId: string): boolean {
   return DRILL_ROLE_IDS.has(roleId);
 }
@@ -385,6 +390,86 @@ function contactTileTrendMeta(
   }
   // Service Operations — SLA / workforce gap deepening
   return retailDailyTrendFromSeries([72, 68, 66, 62, 60, 60], T.red, T, 8, 5);
+}
+
+// ── Cards Portfolio Manager: tile trend meta (mirrors retail/contact pattern) ──
+function cardsPortfolioTileTrendMeta(
+  tileIdx: number,
+  T: DashboardThemeTokens,
+): RetailTileTrend {
+  if (tileIdx === 0) {
+    // Revenue & Recovery — leakage / recoverable score eroding
+    return retailDailyTrendFromSeries([72, 70, 71, 66, 65, 64], T.cyan, T, 6, 4);
+  }
+  if (tileIdx === 1) {
+    // Conduct & Regulatory — exposure rising (score falling)
+    return retailDailyTrendFromSeries([68, 66, 64, 61, 60, 58], T.amber, T, 6, 4);
+  }
+  // Forward Credit & Attrition — cost forming first
+  return retailDailyTrendFromSeries([70, 67, 66, 63, 61, 60], T.red, T, 8, 5);
+}
+
+// Tile info renderers for Cards Portfolio Manager (mirrors retailTileInfo shape).
+function cardsPortfolioTileInfo(
+  tileIdx: number,
+  T: DashboardThemeTokens,
+): ReactElement {
+  const statCell = (label: string, value: string, color: string) => (
+    <div>
+      <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: 700, color, fontFamily: "var(--mono)" }}>{value}</div>
+    </div>
+  );
+  if (tileIdx === 0) {
+    // Revenue: two gauges (curable %, approval drop magnitude) + stat cells
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
+          <MiniGauge label="Curable" value={62} color={T.green} suffix="%" T={T} />
+          <MiniGauge label="Recovered (48h)" value={41} color={T.amber} suffix="%" T={T} />
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
+          {statCell("Recoverable", "₹2.4 Cr", T.green)}
+          {statCell("Decline WoW", "+38%", T.red)}
+        </div>
+      </div>
+    );
+  }
+  if (tileIdx === 1) {
+    // Conduct: exposure bars by regulatory lane
+    const lanes = [
+      { name: "IO clock", v: 0.82, c: T.red },
+      { name: "Weak-auth", v: 0.7, c: T.red },
+      { name: "Cross-border", v: 0.5, c: T.amber },
+      { name: "Activation", v: 0.6, c: T.amber },
+      { name: "Cmpl /1k", v: 0.55, c: T.amber },
+    ];
+    return (
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 6 }}>
+        {lanes.map((l) => (
+          <div key={l.name} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+            <span style={{ fontSize: 10, color: T.textMut, width: 78, flexShrink: 0 }}>{l.name}</span>
+            <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${l.c}20` }}>
+              <div style={{ height: "100%", width: `${l.v * 100}%`, background: l.c, borderRadius: 3 }} />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  // Forward Risk: lead-time gauge + hardship + stat cells
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
+        <MiniGauge label="Genuine hardship" topLabel="Genuine" bottomLabel="hardship" value={64} color={T.amber} suffix="%" T={T} />
+        <MiniGauge label="Strategic" topLabel="Strategic" bottomLabel="non-payment" value={36} color={T.red} offsetY={-0.5} suffix="%" T={T} />
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
+        {statCell("Voice lead", "~2 wks", T.amber)}
+        {statCell("Credit cost", "9 bps", T.red)}
+      </div>
+    </div>
+  );
 }
 
 // Tile info renderers for Head of Contact Centre (mirrors retailTileInfo shape).
@@ -1142,7 +1227,8 @@ function Screen1({
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
   const isRetail = role.id === "head_retail";
   const isContact = role.id === "head_contact";
-  const isDrillRole = isRetail || isContact;
+  const isCardsPortfolio = role.id === "cards_portfolio";
+  const isDrillRole = isRetail || isContact || isCardsPortfolio;
   const primaryIdx =
     unifiedNavigation &&
     "primaryTile" in role &&
@@ -1171,12 +1257,16 @@ function Screen1({
             ? retailTileTrendMeta(i, T)
             : isContact
               ? contactTileTrendMeta(i, T)
-              : null;
+              : isCardsPortfolio
+                ? cardsPortfolioTileTrendMeta(i, T)
+                : null;
           const drillInfo = isRetail
             ? retailTileInfo(i, T)
             : isContact
               ? contactTileInfo(i, T)
-              : null;
+              : isCardsPortfolio
+                ? cardsPortfolioTileInfo(i, T)
+                : null;
           return (
             <div
               key={i}
@@ -3433,52 +3523,54 @@ function RoleDashboardShell({
               <div
                 style={{ display: "flex", flexDirection: "column", gap: 10 }}
               >
-                <div
-                  style={{
-                    background: T.elevated,
-                    borderRadius: 10,
-                    padding: "10px 12px",
-                    border: `1px solid ${T.borderLight}`,
-                    boxShadow: `0 0 0 1px ${T.amber}12 inset`,
-                  }}
-                >
+                {role.id !== "cards_portfolio" ? (
                   <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 7,
-                      minWidth: 0,
+                      background: T.elevated,
+                      borderRadius: 10,
+                      padding: "10px 12px",
+                      border: `1px solid ${T.borderLight}`,
+                      boxShadow: `0 0 0 1px ${T.amber}12 inset`,
                     }}
                   >
-                    <span style={{ fontSize: 13, color: T.amber }}>✨</span>
-                    <div style={{ minWidth: 0 }}>
-                      <div
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: T.amber,
-                          letterSpacing: "0.08em",
-                          textTransform: "uppercase",
-                        }}
-                      >
-                        Executive Brief
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 7,
+                        minWidth: 0,
+                      }}
+                    >
+                      <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                      <div style={{ minWidth: 0 }}>
+                        <div
+                          style={{
+                            fontSize: 13,
+                            fontWeight: 700,
+                            color: T.amber,
+                            letterSpacing: "0.08em",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          Executive Brief
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div
-                    style={{
-                      marginTop: 7,
-                      fontSize: 13.5,
-                      color: T.textSec,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {role.id === "head_contact"
-                      ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
-                      : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
+                    <div
+                      style={{
+                        marginTop: 7,
+                        fontSize: 13.5,
+                        color: T.textSec,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {role.id === "head_contact"
+                        ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
+                        : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
+                    </div>
                   </div>
-                </div>
+                ) : null}
 
                 <div
                   style={{
@@ -3532,7 +3624,22 @@ function RoleDashboardShell({
                             main: "In-house FCR holding at 81% · App SS deflection 89% — escalate BPO QA + activate overflow before 9:45 AM.",
                           },
                         ]
-                      : [
+                      : role.id === "cards_portfolio"
+                        ? [
+                            {
+                              q: "🔴 What's critical",
+                              main: "Premium-HNI declines +38% WoW since 11:00 — a CoFT re-tokenisation break, ₹2.4 Cr at risk. Route the fix to Ops now.",
+                            },
+                            {
+                              q: "🎯 Where's your focus",
+                              main: "4 'incorrect late fee' cases sit inside the 30-day IO clock on one co-brand (queue Q-07); weak-auth adds ₹6–9L exposure.",
+                            },
+                            {
+                              q: "🟢 What's stable / on-track",
+                              main: "62% of the decline spike is curable — ₹2.4 Cr recoverable today via a cohort-level EMI-conversion nudge.",
+                            },
+                          ]
+                        : [
                           {
                             q: "🔴 What's critical",
                             main: "3 HNI accounts flagged for churn. Closure intents up 375% this week, escalate to relationship managers today",
@@ -3605,6 +3712,14 @@ function RoleDashboardShell({
                     <ServiceReputationDrillDown onBack={onBack} />
                   ) : (
                     <ServiceOperationsDrillDown onBack={onBack} />
+                  )
+                ) : role.id === "cards_portfolio" ? (
+                  drillCard === 0 ? (
+                    <CardsRevenueRecoveryDrill onBack={onBack} />
+                  ) : drillCard === 1 ? (
+                    <CardsConductRegulatoryDrill onBack={onBack} />
+                  ) : (
+                    <CardsForwardRiskDrill onBack={onBack} />
                   )
                 ) : drillCard === 0 ? (
                   <CustomerHappinessDrillDown onBack={onBack} />

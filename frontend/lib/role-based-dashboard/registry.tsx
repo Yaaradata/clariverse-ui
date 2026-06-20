@@ -130,6 +130,12 @@ export const INDUSTRIES = [
         sub: "Executive view · portfolio tiles · AI risk spike monitor · day generator",
       },
       {
+        id: "cards_portfolio",
+        name: "Cards Portfolio Manager",
+        icon: BarChart3,
+        sub: "LiSN morning brief · transaction × voice joins · routed anomaly signals",
+      },
+      {
         id: "head_fraud",
         name: "Head of Fraud",
         icon: Shield,
@@ -594,6 +600,115 @@ export const ROLE_DATA = {
         "AML training refresh for 7 agents below threshold",
       ],
       monitor: ["SMCR exposure tracking", "Insurance claims fraud trend"],
+    },
+  },
+  cards_portfolio: {
+    tiles: [
+      {
+        title: "Where is money leaking now?",
+        score: 64,
+        color: T.cyan,
+        icon: Target,
+        sub: "Declines, recovery, switch & offer leakage",
+        insight:
+          "Premium-HNI declines +38% WoW since 11:00 — a CoFT re-tokenisation break joined to a 4× 'payment failed' voice spike, ₹2.4 Cr attempted spend at risk. 62% is curable and recoverable today via an EMI-conversion nudge.",
+        kpis: [
+          { l: "Recoverable", v: "₹2.4 Cr" },
+          { l: "Decline WoW", v: "+38%" },
+          { l: "Curable", v: "62%" },
+          { l: "Approval", v: "−18 pts" },
+        ],
+      },
+      {
+        title: "Are we heading to the regulator?",
+        score: 58,
+        color: T.amber,
+        icon: Shield,
+        sub: "Ombudsman, weak-auth, activation clock",
+        insight:
+          "'Incorrect late fee' complaints tripled on one co-brand with 4 cases inside the 30-day IO clock. A weak-authentication cluster adds ₹6–9L compensation exposure under RBI Authentication Directions 2025.",
+        kpis: [
+          { l: "IO Clock", v: "4 cases" },
+          { l: "Weak-Auth", v: "₹6–9L" },
+          { l: "Cmpl / 1k", v: "0.42" },
+          { l: "CAC @ Risk", v: "₹93L" },
+        ],
+      },
+      {
+        title: "Where is cost forming first?",
+        score: 60,
+        color: T.red,
+        icon: Activity,
+        sub: "Hardship→roll, fraud-rule misfire, attrition",
+        insight:
+          "Hardship language in one sourcing vintage is up 1.9× and leads the 0→30 roll the bureau EWS flags ~2 weeks later (~9 bps credit cost). Fraud-rule R-77 is over-blocking 3+-year customers before any fraud KPI moves.",
+        kpis: [
+          { l: "Voice Lead", v: "~2 wks" },
+          { l: "Hardship", v: "1.9×" },
+          { l: "Credit Cost", v: "9 bps" },
+          { l: "Misfire", v: "R-77" },
+        ],
+      },
+    ],
+    lobKpis: [
+      {
+        l: "Curable-Decline Recovery (today)",
+        v: "₹2.4 Cr",
+        delta: +12,
+        target: "capture",
+        st: "amber",
+      },
+      {
+        l: "Approval-Rate Drop",
+        v: "−18 pts",
+        delta: -18,
+        target: "0",
+        st: "red",
+      },
+      {
+        l: "Ombudsman-Clock Cases",
+        v: "4",
+        delta: +3,
+        target: "0",
+        st: "red",
+      },
+      {
+        l: "Weak-Auth Exposure",
+        v: "₹6–9L",
+        delta: +6,
+        target: "0",
+        st: "red",
+      },
+      {
+        l: "Voice→Roll Lead-time",
+        v: "~2 wks",
+        delta: 0,
+        target: "early",
+        st: "amber",
+      },
+    ],
+    insights: [
+      "Decline-spike ↔ voice root-cause join names the cause same-morning: a CoFT re-tokenisation break, not behaviour or fraud — ₹2.4 Cr recoverable via a cohort-level EMI-conversion nudge.",
+      "Conduct exposure is concentrating: late-fee complaints inside the 30-day IO clock plus a weak-authentication compensation cluster under Auth Directions 2025.",
+      "Credit cost forms in the voice corpus first — hardship language leads the 0→30 roll by ~2 weeks; advisory, cohort-level, fair-offer only.",
+    ],
+    eisenhower: {
+      do: [
+        "Route the CoFT re-tokenisation fix to Ops; approve the recovery nudge draft",
+        "Re-open 4 late-fee cases before the IO decision window closes",
+      ],
+      plan: [
+        "Scope weak-auth feed before committing the liability monitor to MVP",
+        "Fair-offer hardship outreach for the genuine-hardship sub-segment",
+      ],
+      delegate: [
+        "Brief resolution queue Q-07 on the late-fee misconfiguration",
+        "Co-brand retention draft for the attrition cohort",
+      ],
+      monitor: [
+        "Fraud-rule R-77 rollback impact on good-customer declines",
+        "Activation curve vs the 30+7 closure clock for batch #4471",
+      ],
     },
   },
   head_retail: {
