@@ -13,6 +13,7 @@ import {
   Shield,
   ShieldCheck,
   ShoppingCart,
+  Sparkles,
   Target,
   Users,
 } from "lucide-react";
@@ -134,6 +135,12 @@ export const INDUSTRIES = [
         name: "Cards Portfolio Manager",
         icon: BarChart3,
         sub: "LiSN morning brief · transaction × voice joins · routed anomaly signals",
+      },
+      {
+        id: "cards_portfolio_v2",
+        name: "Cards Portfolio Manager (v2)",
+        icon: BarChart3,
+        sub: "Transaction-first · 3 question cards · command-center drills · voice-join differentiator",
       },
       {
         id: "head_fraud",
@@ -605,48 +612,48 @@ export const ROLE_DATA = {
   cards_portfolio: {
     tiles: [
       {
-        title: "Where is money leaking now?",
+        title: "How are my transactions & offers doing?",
         score: 64,
         color: T.cyan,
         icon: Target,
-        sub: "Declines, recovery, switch & offer leakage",
+        sub: "Spend, offers, yield & reward economics",
         insight:
-          "Premium-HNI declines +38% WoW since 11:00 — a CoFT re-tokenisation break joined to a 4× 'payment failed' voice spike, ₹2.4 Cr attempted spend at risk. 62% is curable and recoverable today via an EMI-conversion nudge.",
+          "Offer incrementality vs a matched control flags two net-negative offers (₹1.3 Cr reallocatable); the RuPay-on-UPI mix shift is compressing interchange yield ~₹1.2 Cr while GMV holds, and one category turned reward-negative — all judged against each cell's own seasonal baseline.",
         kpis: [
-          { l: "Recoverable", v: "₹2.4 Cr" },
-          { l: "Decline WoW", v: "+38%" },
-          { l: "Curable", v: "62%" },
-          { l: "Approval", v: "−18 pts" },
+          { l: "Spend vs base", v: "+6.2%" },
+          { l: "Offers to kill", v: "2" },
+          { l: "Yield leak", v: "₹1.2 Cr" },
+          { l: "Reward-neg", v: "+1 cat" },
         ],
       },
       {
-        title: "Are we heading to the regulator?",
+        title: "Where are my blockers & problems today?",
         score: 58,
         color: T.amber,
-        icon: Shield,
-        sub: "Ombudsman, weak-auth, activation clock",
+        icon: Activity,
+        sub: "Declines, fraud-rule, token gaps, roll & 30+7 clock",
         insight:
-          "'Incorrect late fee' complaints tripled on one co-brand with 4 cases inside the 30-day IO clock. A weak-authentication cluster adds ₹6–9L compensation exposure under RBI Authentication Directions 2025.",
+          "Decline taxonomy splits today's spike as a token break (₹2.4 Cr, 62% curable); fraud-rule R-77 stepped approval down 13 pts; tokenised CNP is approving below non-tokenised; and Batch #4471 risks ₹93 L CAC against the RBI 30+7 closure clock.",
         kpis: [
-          { l: "IO Clock", v: "4 cases" },
-          { l: "Weak-Auth", v: "₹6–9L" },
-          { l: "Cmpl / 1k", v: "0.42" },
-          { l: "CAC @ Risk", v: "₹93L" },
+          { l: "Recoverable", v: "₹2.4 Cr" },
+          { l: "Approval drop", v: "−13 pts" },
+          { l: "CAC @ Risk", v: "₹93 L" },
+          { l: "Token gap", v: "1 path" },
         ],
       },
       {
-        title: "Where is cost forming first?",
+        title: "Transaction × voice — the LiSN join",
         score: 60,
-        color: T.red,
-        icon: Activity,
-        sub: "Hardship→roll, fraud-rule misfire, attrition",
+        color: T.purple,
+        icon: Sparkles,
+        sub: "LiSN ONLY · the join nobody else makes — cause + ₹ with the alert",
         insight:
-          "Hardship language in one sourcing vintage is up 1.9× and leads the 0→30 roll the bureau EWS flags ~2 weeks later (~9 bps credit cost). Fraud-rule R-77 is over-blocking 3+-year customers before any fraud KPI moves.",
+          "Decline-spike ↔ 'payment-failed' voice on one timeline names the cause same-morning; a fraud-rule misfire is confirmed in voice within 2h; hardship language leads the 0→30 roll by ~2 weeks; and 4 late-fee cases sit inside the 30-day IO clock. A join no self-built dashboard makes.",
         kpis: [
-          { l: "Voice Lead", v: "~2 wks" },
-          { l: "Hardship", v: "1.9×" },
-          { l: "Credit Cost", v: "9 bps" },
-          { l: "Misfire", v: "R-77" },
+          { l: "Live joins", v: "15" },
+          { l: "Voice lead", v: "~2 wks" },
+          { l: "IO clock", v: "4 cases" },
+          { l: "Recoverable", v: "₹2.4 Cr" },
         ],
       },
     ],
@@ -688,9 +695,9 @@ export const ROLE_DATA = {
       },
     ],
     insights: [
-      "Decline-spike ↔ voice root-cause join names the cause same-morning: a CoFT re-tokenisation break, not behaviour or fraud — ₹2.4 Cr recoverable via a cohort-level EMI-conversion nudge.",
-      "Conduct exposure is concentrating: late-fee complaints inside the 30-day IO clock plus a weak-authentication compensation cluster under Auth Directions 2025.",
-      "Credit cost forms in the voice corpus first — hardship language leads the 0→30 roll by ~2 weeks; advisory, cohort-level, fair-offer only.",
+      "Transactions & offers (txn-only): two offers run net-negative vs control (₹1.3 Cr reallocatable) and the RuPay-on-UPI shift is compressing interchange yield ~₹1.2 Cr while GMV holds.",
+      "Blockers & problems (txn-only): today's decline spike is a token break (₹2.4 Cr, 62% curable); fraud-rule R-77 stepped approval −13 pts; Batch #4471 risks ₹93 L CAC on the 30+7 clock.",
+      "Transaction × voice (LiSN only): the decline-spike ↔ voice join names the cause same-morning, a fraud-rule misfire is confirmed in 2h, and hardship leads the 0→30 roll by ~2 weeks — a join no self-built dashboard makes.",
     ],
     eisenhower: {
       do: [

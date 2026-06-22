@@ -76,12 +76,13 @@ import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown
 import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown";
 import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
 import {
-  CardsConductRegulatoryDrill,
-  CardsForwardRiskDrill,
-  CardsRevenueRecoveryDrill,
+  CardsBlockersProblemsDrill,
+  CardsTransactionsOffersDrill,
+  CardsVoiceJoinDrill,
 } from "./CardsPortfolioDrillScreens";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
+import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
 import { RbiConductIntelligencePreview } from "./RbiConductIntelligencePreview";
 import {
@@ -421,28 +422,28 @@ function cardsPortfolioTileInfo(
     </div>
   );
   if (tileIdx === 0) {
-    // Revenue: two gauges (curable %, approval drop magnitude) + stat cells
+    // A — Transactions & offers: incremental / profitable gauges + yield/offer stats
     return (
       <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
-          <MiniGauge label="Curable" value={62} color={T.green} suffix="%" T={T} />
-          <MiniGauge label="Recovered (48h)" value={41} color={T.amber} suffix="%" T={T} />
+          <MiniGauge label="Incremental" value={58} color={T.green} suffix="%" T={T} />
+          <MiniGauge label="Profitable spend" topLabel="Profitable" bottomLabel="spend" value={55} color={T.amber} suffix="%" T={T} />
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
-          {statCell("Recoverable", "₹2.4 Cr", T.green)}
-          {statCell("Decline WoW", "+38%", T.red)}
+          {statCell("Yield leak", "₹1.2 Cr", T.red)}
+          {statCell("Offers to kill", "2", T.amber)}
         </div>
       </div>
     );
   }
   if (tileIdx === 1) {
-    // Conduct: exposure bars by regulatory lane
+    // B — Blockers & problems: decline-taxonomy / blocker pressure lanes
     const lanes = [
-      { name: "IO clock", v: 0.82, c: T.red },
-      { name: "Weak-auth", v: 0.7, c: T.red },
-      { name: "Cross-border", v: 0.5, c: T.amber },
+      { name: "Token break", v: 0.82, c: T.red },
+      { name: "Fraud-rule", v: 0.7, c: T.red },
+      { name: "Limit / util", v: 0.5, c: T.amber },
       { name: "Activation", v: 0.6, c: T.amber },
-      { name: "Cmpl /1k", v: 0.55, c: T.amber },
+      { name: "Roll Q2-24", v: 0.55, c: T.amber },
     ];
     return (
       <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 6 }}>
@@ -457,16 +458,16 @@ function cardsPortfolioTileInfo(
       </div>
     );
   }
-  // Forward Risk: lead-time gauge + hardship + stat cells
+  // C — Transaction × voice join (LiSN only): curable / hardship-split gauges + join stats
   return (
     <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, minWidth: 0, alignItems: "end" }}>
-        <MiniGauge label="Genuine hardship" topLabel="Genuine" bottomLabel="hardship" value={64} color={T.amber} suffix="%" T={T} />
-        <MiniGauge label="Strategic" topLabel="Strategic" bottomLabel="non-payment" value={36} color={T.red} offsetY={-0.5} suffix="%" T={T} />
+        <MiniGauge label="Curable" value={62} color={T.green} suffix="%" T={T} />
+        <MiniGauge label="Genuine hardship" topLabel="Genuine" bottomLabel="hardship" value={64} color={T.purple} suffix="%" T={T} />
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "end" }}>
-        {statCell("Voice lead", "~2 wks", T.amber)}
-        {statCell("Credit cost", "9 bps", T.red)}
+        {statCell("Voice lead", "~2 wks", T.purple)}
+        {statCell("IO clock", "4 cases", T.red)}
       </div>
     </div>
   );
@@ -1251,6 +1252,7 @@ function Screen1({
           const Icon = tile.icon;
           const sc = gC(tile.score);
           const isPrimary = primaryIdx === i;
+          const isLisnJoinTile = isCardsPortfolio && i === 2;
           const handleClick =
             isDrillRole && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
           const drillTrend = isRetail
@@ -1273,15 +1275,20 @@ function Screen1({
               onClick={handleClick}
               style={{
                 position: "relative",
-                background: T.elevated,
-                border: `1px solid ${isPrimary ? T.cyan : sc}40`,
+                background: isLisnJoinTile ? `${T.purple}0d` : T.elevated,
+                border: isLisnJoinTile
+                  ? `1px solid ${T.purple}66`
+                  : `1px solid ${isPrimary ? T.cyan : sc}40`,
+                borderTop: isLisnJoinTile ? `3px solid ${T.gold}` : undefined,
                 borderRadius: 16,
                 padding: "24px 22px",
                 cursor: "pointer",
                 transition: "all 0.25s",
                 boxShadow: isPrimary
                   ? `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22`
-                  : undefined,
+                  : isLisnJoinTile
+                    ? `0 0 0 1px ${T.purple}1f inset`
+                    : undefined,
                 minWidth: 0,
                 display: "flex",
                 flexDirection: "column",
@@ -1297,6 +1304,26 @@ function Screen1({
                   e.currentTarget.style.boxShadow = `0 0 0 2px ${T.cyan}, 0 8px 28px ${T.cyan}22`;
               }}
             >
+              {isLisnJoinTile ? (
+                <div
+                  style={{
+                    position: "absolute",
+                    top: 12,
+                    right: 12,
+                    pointerEvents: "none",
+                    fontSize: 9,
+                    fontWeight: 800,
+                    letterSpacing: "0.06em",
+                    textTransform: "uppercase",
+                    color: "#0a0a0a",
+                    background: T.gold,
+                    borderRadius: 4,
+                    padding: "2px 7px",
+                  }}
+                >
+                  ✨ LiSN only
+                </div>
+              ) : null}
               {isDrillRole ? null : (
                 <div
                   style={{
@@ -3715,11 +3742,11 @@ function RoleDashboardShell({
                   )
                 ) : role.id === "cards_portfolio" ? (
                   drillCard === 0 ? (
-                    <CardsRevenueRecoveryDrill onBack={onBack} />
+                    <CardsTransactionsOffersDrill onBack={onBack} />
                   ) : drillCard === 1 ? (
-                    <CardsConductRegulatoryDrill onBack={onBack} />
+                    <CardsBlockersProblemsDrill onBack={onBack} />
                   ) : (
-                    <CardsForwardRiskDrill onBack={onBack} />
+                    <CardsVoiceJoinDrill onBack={onBack} />
                   )
                 ) : drillCard === 0 ? (
                   <CustomerHappinessDrillDown onBack={onBack} />
@@ -3786,6 +3813,10 @@ export function RoleDashboardView({
         theme={theme}
       />
     );
+  }
+
+  if (industry.id === "credit_cards" && role.id === "cards_portfolio_v2") {
+    return <CardsPortfolioV2Dashboard onExit={onExit} />;
   }
 
   if (industry.id === "openbank" && role.id === "ceo_insight") {

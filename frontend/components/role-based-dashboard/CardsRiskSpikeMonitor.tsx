@@ -97,7 +97,21 @@ export const cardsPortfolioRiskSpikes: CardsSpike[] = [
       { label: "Issuer Exposure", value: "₹6–9 L", intent: "bad" },
       { label: "Liability", value: "full-comp", intent: "neutral" },
     ],
-    insight: "Missing dynamic factor (Auth Directions 2025) — systemic gap. Route to Compliance.",
+    insight: "Missing dynamic factor — Auth Directions 2025 domestic 2FA is in force since 1 Apr 2026, so this is a full-comp liability now, not a future risk. Route to Compliance.",
+  },
+  {
+    id: "cps-crossborder-cnp",
+    title: "Cross-border CNP Clock",
+    severity: "high",
+    cohort: "1 corridor · India-issued CNP",
+    voiceSignal: "Declined abroad / OTP failed",
+    timestamp: "Due 1 Oct 2026",
+    metrics: [
+      { label: "Days to deadline", value: "103", delta: "validation + BIN", intent: "bad" },
+      { label: "Decline ↔ complaint", value: "co-move", intent: "bad" },
+      { label: "Exposure", value: "CX + liability", intent: "neutral" },
+    ],
+    insight: "Cross-border CNP validation + BIN registration is the live auth clock (1 Oct 2026). One corridor already shows declines co-moving with 'declined abroad' complaints. Route to Risk · Compliance.",
   },
   {
     id: "cps-ombudsman-clock",

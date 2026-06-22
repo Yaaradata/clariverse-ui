@@ -7,18 +7,21 @@
  * drills: near-black `JH` surfaces, `DrillPageHeader`, a 3-second headshot
  * (command-center chart + AI Summary Wall), signature charts, colored heatmaps.
  *
- * Each drill carries its OWN signature list form (no shared register) so the
- * three screens never read the same:
- *   1 Revenue   → RecoveryWorklist   (money split-bars: recoverable vs structural)
- *   2 Conduct   → ConductCaseBoard   (severity kanban with clause / clock chips)
- *   3 Forward   → EarlyWarningLadder (lead-time bars: voice-leads-book) + blast-radius card
- * Selecting any row reveals a single one-line cause strip — never a wall of prose.
+ * Ranjith's transaction-first model — two transaction-only cards, then the join
+ * as a distinct, visually-gated third card:
+ *   A Transactions & Offers → OfferIncrementalityBar + YieldRewardCard + RecoveryWorklist (txn-only)
+ *   B Blockers & Problems   → DeclineHeatmap + RecoverableByCohortBar + RollByVintageBar
+ *                             + ActivationDecayCurve + RegulatoryClocks + RecoveryWorklist (txn-only)
+ *   C Transaction × voice   → DeclineVoiceDualCurve + HardshipRollCurve + FraudMisfireBlastCard
+ *                             + EarlyWarningLadder + ConductCaseBoard (LiSN ONLY — the join)
+ * Each screen ends with an Ask-LiSN NL-query strip; selecting any row reveals a
+ * single one-line cause strip — never a wall of prose. Every AI element is ✨.
  *
- * All 31 merged-research use cases are mapped:
- *   Revenue & Recovery        — MB1(hero) · MA1 MB7 MA3 MB6 MA4 MB10 MB15 MA7 MA8 MA13 MA14 MB8 MB13
- *   Conduct & Regulatory      — MB5(hero) · MB3 MA9 MB12 MA10 MA11 MA12 MB9 MB14 MB17
- *   Forward Credit & Attrition — MB4(hero) · MA5 MB2 MA2 MB11 MA6
- *   Substrate                 — MB16 (DPDP gate, footer)
+ * Use-case map (Tier-2 → A/B/C, Tier-3 join hooks promoted into C):
+ *   A — MA14 MA4 MA7 MA8 MA15 · gated hook MB6
+ *   B — MA1 MA2 MA13 MA9 MA3 MA5 MA16 MA17 MB15 · gated hook MB1/MB2
+ *   C — MB1(hero) MB2 MB4 MB5 MB10 MB7 MB8 MB11 MB13 MB3 MB14 MB12 MB6 MB9 MB17
+ *   Substrate — MB16 (DPDP gate, footer)
  */
 
 import { type CSSProperties, type ReactNode, useState } from "react";
@@ -39,7 +42,7 @@ import {
 
 /* ═════════════════════════ THEME (mirrors V3 `JH`) ═════════════════════════ */
 
-const JH = {
+export const JH = {
   card: "#0d0d0d",
   surfaceRow: "#151515",
   inset: "#1a1a1a",
@@ -93,7 +96,7 @@ function DrillPageHeader({ onBack, title, sub, accent }: { onBack: () => void; t
   );
 }
 
-function SectionCard({
+export function SectionCard({
   title,
   subtitle,
   accent,
@@ -127,7 +130,7 @@ function SectionCard({
   );
 }
 
-function AIInsightStrip({ children, tone = JH.gold }: { children: ReactNode; tone?: string }) {
+export function AIInsightStrip({ children, tone = JH.gold }: { children: ReactNode; tone?: string }) {
   return (
     <div style={{ background: `${tone}10`, border: `1px solid ${tone}40`, borderLeft: `3px solid ${tone}`, borderRadius: 8, padding: "8px 10px", display: "flex", alignItems: "flex-start", gap: 7, fontSize: 11.5, color: JH.sub, lineHeight: 1.5 }}>
       <Sparkles size={12} color={tone} style={{ marginTop: 2, flexShrink: 0 }} />
@@ -136,7 +139,7 @@ function AIInsightStrip({ children, tone = JH.gold }: { children: ReactNode; ton
   );
 }
 
-function Pill({ children, color, solid = false }: { children: ReactNode; color: string; solid?: boolean }) {
+export function Pill({ children, color, solid = false }: { children: ReactNode; color: string; solid?: boolean }) {
   return (
     <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", padding: "2px 7px", borderRadius: 4, whiteSpace: "nowrap", color: solid ? "#0a0a0a" : color, background: solid ? color : `${color}1c`, border: solid ? "none" : `1px solid ${color}44` }}>
       {children}
@@ -144,7 +147,7 @@ function Pill({ children, color, solid = false }: { children: ReactNode; color: 
   );
 }
 
-function Num({ v, c, s = 13 }: { v: ReactNode; c?: string; s?: number }) {
+export function Num({ v, c, s = 13 }: { v: ReactNode; c?: string; s?: number }) {
   return <span style={{ fontFamily: "var(--mono), ui-monospace, monospace", fontWeight: 700, color: c ?? JH.text, fontSize: s, lineHeight: 1 }}>{v}</span>;
 }
 
@@ -152,13 +155,13 @@ const TIP_STYLE: CSSProperties = { background: JH.inset, border: `1px solid ${JH
 
 /* ═════════════════════════ AI SUMMARY WALL + HEADSHOT ═════════════════════════ */
 
-type WallInsight = { sev: Severity; title: string; body: string };
+export type WallInsight = { sev: Severity; title: string; body: string };
 
-function AISummaryWall({ insights }: { insights: WallInsight[] }) {
+export function AISummaryWall({ insights }: { insights: WallInsight[] }) {
   return (
-    <SectionCard title="AI Summary Wall" subtitle="3-second takeaway · ranked by business impact" accent={JH.gold} aiPill style={{ height: "100%" }}>
+    <SectionCard title="AI Summary Wall" subtitle="3-second takeaway · ranked by business impact · top 5" accent={JH.gold} aiPill style={{ height: "100%" }}>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {insights.map((ins, i) => {
+        {insights.slice(0, 5).map((ins, i) => {
           const c = sevColor(ins.sev);
           return (
             <div key={i} style={{ background: `${c}0f`, border: `1px solid ${c}33`, borderLeft: `3px solid ${c}`, borderRadius: 8, padding: "9px 11px" }}>
@@ -172,7 +175,7 @@ function AISummaryWall({ insights }: { insights: WallInsight[] }) {
   );
 }
 
-function HeadshotRow({ left, insights }: { left: ReactNode; insights: WallInsight[] }) {
+export function HeadshotRow({ left, insights }: { left: ReactNode; insights: WallInsight[] }) {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.55fr) minmax(300px, 1fr)", gap: 12, alignItems: "stretch" }}>
       {left}
@@ -187,7 +190,7 @@ const DECLINE_VOICE_SERIES = [
   { t: "08:00", decl: 7.9, calls: 100 }, { t: "09:00", decl: 8.1, calls: 104 }, { t: "10:00", decl: 8.0, calls: 101 },
   { t: "11:00", decl: 8.3, calls: 110 }, { t: "12:00", decl: 17.4, calls: 268 }, { t: "13:00", decl: 23.6, calls: 372 }, { t: "14:00", decl: 26.1, calls: 418 },
 ];
-function DeclineVoiceDualCurve() {
+export function DeclineVoiceDualCurve() {
   return (
     <div style={{ width: "100%", height: 184 }}>
       <ResponsiveContainer>
@@ -267,7 +270,7 @@ const RECOVERABLE_BY_SIGNAL = [
   { sig: "Reward-negative", id: "MA8", cr: 0.6 },
   { sig: "App defect", id: "MB13", cr: 0.5 },
 ];
-function RecoverableByCohortBar() {
+export function RecoverableByCohortBar() {
   return (
     <SectionCard title="Rupees in play, by signal" subtitle="Recoverable / at-risk ₹ Cr per revenue signal — ranks where the money is" accent={JH.cyan} aiPill>
       <div style={{ width: "100%", height: 300 }}>
@@ -315,17 +318,18 @@ function RollByVintageBar() {
   );
 }
 
-/* Regulatory clocks — horizontal countdown bars */
-const REG_CLOCKS = [
+/* Regulatory clocks — horizontal countdown bars + in-force markers */
+type RegClock = { label: string; id: string; left: number; window: number; unit: string; tone: string; inForce?: boolean; since?: string };
+const REG_CLOCKS: RegClock[] = [
   { label: "Ombudsman decision", id: "MB5", left: 4, window: 30, unit: "days", tone: JH.red },
   { label: "Dispute → CIC report", id: "MB14", left: 3, window: 30, unit: "days", tone: JH.red },
   { label: "Unactivated 30+7 closure", id: "MA9", left: 17, window: 37, unit: "days", tone: JH.amber },
-  { label: "Auth Directions 2025", id: "MB3", left: 120, window: 365, unit: "days", tone: JH.amber },
-  { label: "Cross-border CNP validation", id: "MB12", left: 200, window: 365, unit: "days", tone: JH.gold },
+  { label: "Cross-border CNP + BIN registration", id: "MB12", left: 103, window: 365, unit: "days", tone: JH.amber },
+  { label: "Auth Directions 2025 · domestic 2FA", id: "MB3", left: 0, window: 365, unit: "", tone: JH.green, inForce: true, since: "1 Apr 2026" },
 ];
 function RegulatoryClocks() {
   return (
-    <SectionCard title="Regulatory clocks" subtitle="Time remaining before each window closes — shortest first" accent={JH.violet} aiPill>
+    <SectionCard title="Regulatory clocks" subtitle="Time remaining before each window closes — shortest first · in-force obligations marked" accent={JH.violet} aiPill>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {REG_CLOCKS.map((c) => {
           const pct = Math.max(4, Math.round((c.left / c.window) * 100));
@@ -335,15 +339,30 @@ function RegulatoryClocks() {
                 <Pill color={JH.dim}>{c.id}</Pill>
                 <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c.label}</span>
               </span>
-              <div style={{ height: 10, borderRadius: 5, background: JH.track, overflow: "hidden" }}>
-                <div style={{ height: "100%", width: `${pct}%`, background: c.tone, borderRadius: 5 }} />
-              </div>
-              <span style={{ textAlign: "right", display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: 4, color: c.tone }}>
-                <Clock size={11} /> <Num v={c.left} c={c.tone} s={13} /> <span style={{ fontSize: 10, color: JH.muted }}>{c.unit}</span>
-              </span>
+              {c.inForce ? (
+                <div style={{ height: 10, borderRadius: 5, background: `${JH.green}33`, overflow: "hidden", border: `1px solid ${JH.green}66` }}>
+                  <div style={{ height: "100%", width: "100%", background: `repeating-linear-gradient(45deg, ${JH.green}cc, ${JH.green}cc 5px, ${JH.green}88 5px, ${JH.green}88 10px)` }} />
+                </div>
+              ) : (
+                <div style={{ height: 10, borderRadius: 5, background: JH.track, overflow: "hidden" }}>
+                  <div style={{ height: "100%", width: `${pct}%`, background: c.tone, borderRadius: 5 }} />
+                </div>
+              )}
+              {c.inForce ? (
+                <span style={{ textAlign: "right", display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: 4, color: JH.green }}>
+                  <ShieldCheck size={11} /> <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: "0.04em" }}>IN FORCE</span>
+                </span>
+              ) : (
+                <span style={{ textAlign: "right", display: "inline-flex", alignItems: "center", justifyContent: "flex-end", gap: 4, color: c.tone }}>
+                  <Clock size={11} /> <Num v={c.left} c={c.tone} s={13} /> <span style={{ fontSize: 10, color: JH.muted }}>{c.unit}</span>
+                </span>
+              )}
             </div>
           );
         })}
+      </div>
+      <div style={{ marginTop: 9 }}>
+        <AIInsightStrip tone={JH.green}>Auth Directions 2025 domestic 2FA is <strong style={{ color: JH.text }}>in force since 1 Apr 2026</strong> — now an enforcement baseline, not a countdown. The live auth clock is cross-border CNP validation + BIN registration, due <strong style={{ color: JH.text }}>1 Oct 2026</strong>.</AIInsightStrip>
       </div>
     </SectionCard>
   );
@@ -359,7 +378,7 @@ const DECLINE_MATRIX: Record<string, number[]> = {
   "Fraud rule": [61, 33, 29, 81],
   "Limit / velocity": [28, 35, 22, 19],
 };
-function DeclineHeatmap() {
+export function DeclineHeatmap() {
   const cell = (v: number) => {
     const c = v >= 70 ? JH.red : v >= 45 ? JH.amber : v >= 30 ? JH.gold : JH.green;
     const intensity = v >= 70 ? "cc" : v >= 45 ? "88" : v >= 30 ? "66" : "44";
@@ -405,7 +424,7 @@ function Fragment({ children }: { children: ReactNode }) {
 
 /* ═════════════════════════ SHARED SIGNAL MODEL ═════════════════════════ */
 
-type SignalRow = {
+export type SignalRow = {
   id: string;
   sev: Severity;
   signal: string;
@@ -419,6 +438,8 @@ type SignalRow = {
   action: string;
   feed?: boolean;
   advisory?: boolean;
+  /** Mandatory regulatory path (closure / CIC / fraud-reporting) — routed, not optional. */
+  obligation?: boolean;
   /** Revenue worklist — share of the at-risk ₹ recoverable today (green) vs structural. */
   recoverablePct?: number;
   /** Conduct board — the clause / clock this case maps to. */
@@ -438,6 +459,7 @@ function SelectedCause({ row }: { row: SignalRow }) {
     <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 8 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
         <Pill color={c}>{row.advisory ? "advisory" : sevLabel(row.sev)}</Pill>
+        {row.obligation ? <Pill color={JH.gold} solid>obligation</Pill> : null}
         <span style={{ fontSize: 12.5, fontWeight: 800, color: JH.text }}>{row.signal}</span>
         <span style={{ fontSize: 9, fontWeight: 800, color: JH.dim, fontFamily: "var(--mono), ui-monospace, monospace" }}>{row.id}</span>
       </div>
@@ -457,14 +479,28 @@ function SelectedCause({ row }: { row: SignalRow }) {
 
 /* ───────── DRILL 1 form: RECOVERY WORKLIST (money split-bars) ───────── */
 
-function RecoveryWorklist({ rows }: { rows: SignalRow[] }) {
+function RecoveryWorklist({
+  rows,
+  title = "Recovery worklist",
+  subtitle,
+  accent = JH.cyan,
+  barHeader = "Recoverable vs structural",
+  valueHeader = "₹ in play",
+}: {
+  rows: SignalRow[];
+  title?: string;
+  subtitle?: string;
+  accent?: string;
+  barHeader?: string;
+  valueHeader?: string;
+}) {
   const [sel, setSel] = useState<string>(rows[0].id);
   const selected = rows.find((r) => r.id === sel) ?? rows[0];
   const cols = "minmax(0, 1.7fr) 152px 84px 116px";
   return (
-    <SectionCard title="Recovery worklist" subtitle={`${rows.length} revenue signals · bar = share recoverable today (green) vs structural · ranked by ₹ in play`} accent={JH.cyan} aiPill>
+    <SectionCard title={title} subtitle={subtitle ?? `${rows.length} signals · bar = share recoverable today (green) vs structural · ranked by ₹ in play`} accent={accent} aiPill>
       <div style={{ display: "grid", gridTemplateColumns: cols, gap: 8, padding: "0 10px 6px" }}>
-        {["Signal", "Recoverable vs structural", "₹ in play", "Route"].map((h, i) => (
+        {["Signal", barHeader, valueHeader, "Route"].map((h, i) => (
           <span key={h} style={{ fontSize: 9, fontWeight: 800, letterSpacing: "0.06em", color: JH.dim, textTransform: "uppercase", textAlign: i === 2 ? "right" : "left" }}>{h}</span>
         ))}
       </div>
@@ -507,7 +543,17 @@ function RecoveryWorklist({ rows }: { rows: SignalRow[] }) {
 
 /* ───────── DRILL 2 form: CONDUCT CASE BOARD (severity kanban) ───────── */
 
-function ConductCaseBoard({ rows }: { rows: SignalRow[] }) {
+function ConductCaseBoard({
+  rows,
+  title = "Conduct case board",
+  subtitle,
+  accent = JH.violet,
+}: {
+  rows: SignalRow[];
+  title?: string;
+  subtitle?: string;
+  accent?: string;
+}) {
   const [sel, setSel] = useState<string>(rows[0].id);
   const selected = rows.find((r) => r.id === sel) ?? rows[0];
   const columns: { sev: Severity; label: string }[] = [
@@ -516,7 +562,7 @@ function ConductCaseBoard({ rows }: { rows: SignalRow[] }) {
     { sev: "advisory", label: "Advisory" },
   ];
   return (
-    <SectionCard title="Conduct case board" subtitle={`${rows.length} conduct & regulatory signals grouped by severity · each tagged with its clause / clock and owner`} accent={JH.violet} aiPill>
+    <SectionCard title={title} subtitle={subtitle ?? `${rows.length} signals grouped by severity · each tagged with its clause / clock and owner`} accent={accent} aiPill>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 10, alignItems: "start" }}>
         {columns.map((col) => {
           const cr = sevColor(col.sev);
@@ -537,6 +583,7 @@ function ConductCaseBoard({ rows }: { rows: SignalRow[] }) {
                       <span style={{ fontSize: 8, fontWeight: 800, color: JH.dim, fontFamily: "var(--mono), ui-monospace, monospace", flexShrink: 0 }}>{r.id}</span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      {r.obligation ? <Pill color={JH.gold} solid>obligation</Pill> : null}
                       {r.impact !== "—" ? <Pill color={cr}>{r.impact}</Pill> : null}
                       {r.clause ? <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 9.5, fontWeight: 600, color: JH.violet }}><Clock size={10} /> {r.clause}</span> : null}
                       {r.feed ? <Radio size={10} color={JH.amber} /> : null}
@@ -579,6 +626,7 @@ function EarlyWarningLadder({ rows }: { rows: SignalRow[] }) {
                 <span style={{ fontSize: 12, fontWeight: active ? 700 : 600, color: active ? JH.text : JH.sub, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.signal}</span>
                 <span style={{ fontSize: 8.5, fontWeight: 800, color: JH.dim, fontFamily: "var(--mono), ui-monospace, monospace", flexShrink: 0 }}>{r.id}</span>
                 {r.advisory ? <Pill color={JH.cyan}>adv</Pill> : null}
+                {r.obligation ? <Pill color={JH.gold} solid>obligation</Pill> : null}
               </span>
               <span style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                 <span style={{ width: 6, height: 6, borderRadius: 999, background: JH.amber, flexShrink: 0 }} title="voice signal lands now" />
@@ -627,7 +675,7 @@ function FraudMisfireBlastCard() {
   );
 }
 
-function SubstrateFooter() {
+export function SubstrateFooter() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", background: JH.card, border: `1px dashed ${JH.borderInner}`, borderRadius: 10, padding: "10px 14px" }}>
       <ShieldCheck size={15} color={JH.green} />
@@ -640,43 +688,324 @@ function SubstrateFooter() {
   );
 }
 
-/* ═════════════════════════ DRILL 1 — REVENUE & RECOVERY ═════════════════════════ */
+/* ═════════════════════════ LiSN DIFFERENTIATOR (the join — visually gated) ═════════════════════════ */
+/**
+ * The transaction × voice/complaint join, rendered DISTINCT from the
+ * transaction-only content: violet border, gold top-rule, inset background, and
+ * a solid "LiSN ONLY" ribbon. Used to demote each drill's former voice hero
+ * below the transaction-first content, and composed (full-width) into the
+ * Overview's differentiator band. This is the Tier-3 upgrade path — present on
+ * every screen, but concentrated so the "nobody else can do this" punch lands.
+ */
+export function LiSNDifferentiatorCard({
+  title,
+  subtitle,
+  idTag,
+  advisory = false,
+  children,
+}: {
+  title: string;
+  subtitle?: string;
+  idTag?: string;
+  advisory?: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <section style={{ background: `${JH.violet}0c`, border: `1px solid ${JH.violet}55`, borderTop: `3px solid ${JH.gold}`, borderRadius: 12, padding: 14, display: "flex", flexDirection: "column", minWidth: 0, boxShadow: `0 0 0 1px ${JH.violet}14 inset` }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            <Sparkles size={13} color={JH.gold} />
+            <span style={{ fontSize: 12.5, fontWeight: 800, color: JH.text, lineHeight: 1.3 }}>{title}</span>
+            {idTag ? <span style={{ fontSize: 8.5, fontWeight: 800, color: JH.dim, fontFamily: "var(--mono), ui-monospace, monospace" }}>{idTag}</span> : null}
+            {advisory ? <Pill color={JH.cyan}>advisory</Pill> : null}
+          </div>
+          {subtitle ? <div style={{ fontSize: 10.5, color: JH.muted, marginTop: 2, lineHeight: 1.45 }}>{subtitle}</div> : null}
+        </div>
+        <Pill color={JH.gold} solid>LiSN ONLY</Pill>
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+      <div style={{ marginTop: 9, fontSize: 9.5, color: JH.dim, display: "inline-flex", alignItems: "center", gap: 5 }}>
+        <span style={{ width: 6, height: 6, borderRadius: 999, background: JH.gold }} /> Transaction × customer-voice join — a view a self-built dashboard cannot produce. Tier-3 upgrade path.
+      </div>
+    </section>
+  );
+}
 
-const REVENUE_ROWS: SignalRow[] = [
-  { id: "MA1", sev: "watch", signal: "Curable-decline recovery", cohort: "PREM HNI · CNP", metric: "62% curable", delta: "+38%", deltaTone: "bad", impact: "₹2.4 Cr", route: "Head of Cards", action: "Review nudge draft", recoverablePct: 62, cause: "Insufficient-funds declines run 38% above the cohort's own month-end band — curable, not structural. EMI-conversion nudge drafted to the eligible HNI sub-segment." },
-  { id: "MB7", sev: "critical", signal: "Switch incident ↔ voice true-impact", cohort: "Route P-3 (in-SLA)", metric: "calls ×5", delta: "~14k", deltaTone: "bad", impact: "₹68–70L/hr", route: "Ops · Comms", action: "Draft customer comms", recoverablePct: 40, cause: "A processor route reads green but 'payment failing' contacts rose 5× and app-store reviews dipped. The voice side quantifies the human impact the health dashboard hides." },
-  { id: "MA3", sev: "watch", signal: "Switch / token-CoFT attribution", cohort: "2 routes", metric: "issuer-side", impact: "—", route: "Ops · Tech", action: "Open attribution", cause: "Transaction-side attribution isolates which switch/processor route and token/CoFT step drives a decline cluster — before the voice join confirms it. Ranks by recoverable spend." },
-  { id: "MB6", sev: "watch", signal: "Offer → complaint / mis-selling echo", cohort: "No-cost EMI", metric: "complaints ×3.5", delta: "48h", deltaTone: "bad", impact: "MITC", route: "Cards · Conduct", action: "Hold wave 2", feed: true, cause: "The push converts on the spend dashboard but triggers an MITC-disclosure complaint echo within 48h. Catch the fallout before the second wave sends." },
-  { id: "MA4", sev: "watch", signal: "Offer incrementality & cannibalisation", cohort: "2,200+ offers", metric: "control-cohort", impact: "—", route: "Cards · Mktg", action: "Rank by incrementality", cause: "Separates genuine incremental spend from cannibalised spend across the live offer portfolio using a control-cohort method — the lift the spend dashboard averages away." },
-  { id: "MB10", sev: "watch", signal: "Co-brand churn ↔ voice", cohort: "Co-brand X", metric: "spend −22%", delta: "switch ×3", deltaTone: "bad", impact: "₹18 Cr", route: "Co-brand mgr", action: "Draft retention", recoverablePct: 70, cause: "Spend fell 22% over three cycles while 'how do I switch / close this card' chatter tripled after a competitor launch — attrition, not merchant softness. Retention drafted before closures register." },
-  { id: "MB15", sev: "watch", signal: "Co-brand / aggregator diagnostic join", cohort: "1 partner", metric: "decline+cmpl", impact: "—", route: "Co-brand · Ops", action: "Open partner view", feed: true, cause: "Localises a decline+complaint cluster to a single co-brand partner/aggregator — the auth/fraud-logs ↔ merchant-systems join among the hardest and most manual in India's fragmented ecosystem." },
-  { id: "MA7", sev: "watch", signal: "Interchange / fee-yield leakage", cohort: "RuPay-UPI", metric: "yield ▼", impact: "₹1.2 Cr", route: "Cards · Finance", action: "Open yield view", recoverablePct: 45, cause: "Two leak paths: RuPay-UPI mix-compression eroding interchange yield, and reversal-as-dispute leakage. Fee-yield decaying while GMV holds — invisible on a spend chart." },
-  { id: "MA8", sev: "watch", signal: "Reward-negative category anomaly", cohort: "+1 category", metric: "reward < 0", impact: "—", route: "Cards · Finance", action: "Flag category", feed: true, cause: "A spend category turns reward-negative — reward + fraud cost exceeds interchange — the long-tail margin leak a blended reward P&L hides. Needs reward + fraud allocation by category." },
-  { id: "MA13", sev: "watch", signal: "Tokenised vs non-tokenised approval-gap", cohort: "tok vs non-tok", metric: "approval gap", impact: "—", route: "Ops · Risk", action: "Open token gap", feed: true, cause: "Isolates a token-lifecycle/ACS misconfiguration the blended approval rate hides — economically large at ~98% CoFT penetration. Tokenised CNP approving below non-tokenised on one path." },
+/* ═════════════════════════ A-CARD SIGNATURE CHARTS + NL HINTS ═════════════════════════ */
+
+/* Offer incrementality — true lift vs a matched control; negative = cannibalised (kill) */
+const OFFER_LIFT = [
+  { o: "No-cost EMI", lift: -6 },
+  { o: "5% fuel cashback", lift: -2 },
+  { o: "Dining 10X", lift: 4 },
+  { o: "Travel 2X", lift: 9 },
+  { o: "Grocery flat", lift: 12 },
+  { o: "UPI-on-CC", lift: 16 },
+];
+function OfferIncrementalityBar() {
+  return (
+    <SectionCard title="Offer incrementality vs control" subtitle="True lift over a matched control cohort (%) — negative = cannibalised spend, a kill candidate" accent={JH.cyan} aiPill right={<Pill color={JH.red}>2 kill</Pill>}>
+      <div style={{ width: "100%", height: 270 }}>
+        <ResponsiveContainer>
+          <BarChart data={OFFER_LIFT} layout="vertical" margin={{ top: 4, right: 28, left: 8, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={JH.borderInner} horizontal={false} />
+            <XAxis type="number" stroke={JH.dim} fontSize={10} tickFormatter={(v) => `${v}%`} />
+            <YAxis type="category" dataKey="o" stroke={JH.sub} fontSize={10.5} width={110} />
+            <Tooltip contentStyle={TIP_STYLE} labelStyle={{ color: JH.text }} formatter={(v: number) => [`${v}% lift`, v < 0 ? "cannibalised" : "incremental"]} cursor={{ fill: `${JH.cyan}10` }} />
+            <ReferenceLine x={0} stroke={JH.borderBtn} />
+            <Bar dataKey="lift" radius={[0, 4, 4, 0]}>
+              {OFFER_LIFT.map((r, i) => (
+                <Cell key={i} fill={r.lift < 0 ? JH.red : r.lift < 6 ? JH.amber : `${JH.green}cc`} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </SectionCard>
+  );
+}
+
+/* Yield & reward economics — interchange yield by network mix + reward-negative flag */
+const YIELD_MIX: { net: string; idx: number; tone: string }[] = [
+  { net: "Visa credit", idx: 100, tone: JH.green },
+  { net: "Mastercard", idx: 97, tone: JH.green },
+  { net: "RuPay card", idx: 71, tone: JH.amber },
+  { net: "RuPay-on-UPI", idx: 38, tone: JH.red },
+];
+function YieldRewardCard() {
+  return (
+    <SectionCard title="Interchange yield by network mix" subtitle="Yield index vs Visa-credit = 100 · the RuPay-on-UPI shift compresses fee yield while GMV holds" accent={JH.cyan} aiPill right={<Pill color={JH.red}>reward-neg: +1 cat</Pill>}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {YIELD_MIX.map((y) => (
+          <div key={y.net} style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) 1fr 46px", gap: 12, alignItems: "center" }}>
+            <span style={{ fontSize: 11.5, color: JH.sub }}>{y.net}</span>
+            <span style={{ height: 9, borderRadius: 5, background: JH.track, overflow: "hidden" }}>
+              <span style={{ display: "block", height: "100%", width: `${y.idx}%`, background: y.tone, borderRadius: 5 }} />
+            </span>
+            <span style={{ textAlign: "right", fontSize: 11, fontWeight: 700, color: y.tone, fontFamily: "var(--mono), ui-monospace, monospace" }}>{y.idx}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 12 }}>
+        <AIInsightStrip>The mix shift to RuPay-on-UPI is eroding ~<strong style={{ color: JH.text }}>₹1.2 Cr</strong> interchange yield while GMV holds — invisible on a spend chart. One category is now reward-negative (interchange − reward − fraud &lt; 0).</AIInsightStrip>
+      </div>
+    </SectionCard>
+  );
+}
+
+/* Natural-language query hints — the questions each screen is built to answer */
+function NLQueryStrip({ queries, accent }: { queries: string[]; accent: string }) {
+  return (
+    <div style={{ background: JH.card, border: `1px solid ${JH.border}`, borderRadius: 12, padding: 14 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
+        <Sparkles size={13} color={accent} />
+        <span style={{ fontSize: 12.5, fontWeight: 700, color: JH.text }}>Ask LiSN</span>
+        <span style={{ fontSize: 10.5, color: JH.muted }}>— natural-language questions this screen answers</span>
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {queries.map((q) => (
+          <span key={q} style={{ fontSize: 11.5, color: JH.sub, background: JH.inset, border: `1px solid ${accent}33`, borderRadius: 999, padding: "5px 12px", display: "inline-flex", alignItems: "center", gap: 6 }}>
+            <ArrowRight size={11} color={accent} /> {q}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═════════════════════════ DRILL A — TRANSACTIONS & OFFERS (transaction-only) ═════════════════════════ */
+
+const A_ROWS: SignalRow[] = [
   { id: "MA14", sev: "watch", signal: "Profitable-spend / premiumisation drift", cohort: "profitable spend", metric: "▼ vs GMV", impact: "₹1.5 Cr", route: "Head of Cards", action: "Open spend quality", recoverablePct: 55, cause: "Retained, profitable spend (net of reward and fraud) is decaying while gross GMV holds — the premiumisation-quality gap a GMV dashboard averages away." },
-  { id: "MB8", sev: "watch", signal: "Token/CoFT breakage ↔ voice (recurring)", cohort: "Subs cohort", metric: "auto-pay fail", impact: "—", route: "Ops · Tech", action: "Open recurring view", feed: true, cause: "Recurring/subscription token (CoFT) breakage joined to 'subscription declined / auto-pay failed' voice — the recurring-payment failure customers feel before the metric moves." },
-  { id: "MB13", sev: "watch", signal: "App-release-defect impact pack", cohort: "v3.2", metric: "journey break", impact: "—", route: "Tech · Comms", action: "Open release pack", feed: true, cause: "Ties a named app version to card-journey breakage via app-store/complaint text — release dashboards show crash/adoption, not journey breakage. v3.2 correlates with a 'can't add card / pay' spike." },
+  { id: "MA4", sev: "watch", signal: "Offer incrementality & cannibalisation", cohort: "2,200+ offers", metric: "control-cohort", impact: "₹1.3 Cr", route: "Cards · Mktg", action: "Rank by incrementality", recoverablePct: 58, cause: "Separates genuine incremental spend from cannibalised spend across the live offer portfolio using a control-cohort method. Two offers run net-negative — kill candidates the gross-redemption view hides." },
+  { id: "MA7", sev: "watch", signal: "Interchange / fee-yield leakage", cohort: "RuPay-UPI", metric: "yield ▼", impact: "₹1.2 Cr", route: "Cards · Finance", action: "Open yield view", recoverablePct: 45, cause: "Two leak paths: RuPay-UPI mix-compression eroding interchange yield, and reversal-as-dispute leakage. Fee-yield decaying while GMV holds — invisible on a spend chart." },
+  { id: "MA8", sev: "watch", signal: "Reward-negative category anomaly", cohort: "+1 category", metric: "reward < 0", impact: "₹0.6 Cr", route: "Cards · Finance", action: "Flag category", feed: true, cause: "A spend category turns reward-negative — reward + fraud cost exceeds interchange — the long-tail margin leak a blended reward P&L hides. Needs reward + fraud allocation by category." },
+  { id: "MA15", sev: "watch", signal: "Spend-velocity shock by cell", cohort: "3 cells", metric: "± vs base", impact: "—", route: "Head of Cards", action: "Open velocity", cause: "Spend velocity in three product×cohort cells breaks its own seasonal band — two drops (drift / issue) and one spike (opportunity / fraud-adjacent), each judged against the cell's baseline, not a portfolio average." },
 ];
 
-const REVENUE_INSIGHTS: WallInsight[] = [
-  { sev: "critical", title: "Premium-HNI declines are a tokenisation break, not behaviour", body: "Decline 8%→26% from 11:00 with a 4× 'payment failed' voice spike. CoFT re-tokenisation on one network push. ₹2.4 Cr at risk — route the fix to Ops now." },
-  { sev: "watch", title: "₹2.4 Cr is recoverable today via curable declines", body: "62% of the spike is curable (soft-decline / insufficient-funds at month-end). An EMI-conversion nudge to the eligible HNI sub-segment is drafted." },
-  { sev: "watch", title: "Co-brand X is the biggest pool of at-risk spend", body: "₹18 Cr annual spend reads as attrition (not merchant softness) — switch-intent confirms it weeks before closures register." },
+const A_INSIGHTS: WallInsight[] = [
+  { sev: "watch", title: "Two offers cost more than they create — kill candidates", body: "No-cost EMI and 5% fuel run net-negative vs a matched control: gross redemption masks cannibalised spend. ₹1.3 Cr reallocatable." },
+  { sev: "watch", title: "RuPay-on-UPI shift is compressing interchange yield", body: "Fee-yield down ~₹1.2 Cr while GMV holds — a mix-compression + reversal-as-dispute leak invisible on a spend chart." },
+  { sev: "watch", title: "Profitable spend is drifting below GMV", body: "Retained spend net of reward and fraud decays while gross GMV holds — the premiumisation-quality gap, ₹1.5 Cr." },
+  { sev: "watch", title: "One category turned reward-negative this month", body: "Interchange − reward − fraud < 0 on a long-tail category — the margin leak a blended reward P&L hides." },
+  { sev: "watch", title: "Spend velocity broke its band in 3 cells", body: "Two drops (drift/issue) and one spike (opportunity), each judged against the cell's own seasonal base — not a portfolio average." },
 ];
 
-export function CardsRevenueRecoveryDrill({ onBack }: { onBack: () => void }) {
+const A_QUERIES = [
+  "Which cohorts are not growing this week, and why?",
+  "Show offers where cost is rising faster than incremental spend.",
+  "Which categories turned reward-negative this month?",
+  "Where is the RuPay-UPI shift compressing my interchange yield?",
+  "Is yesterday's spike real, or just three merchants?",
+];
+
+export function CardsTransactionsOffersDrill({ onBack }: { onBack: () => void }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <DrillPageHeader
         onBack={onBack}
         accent={JH.cyan}
-        title="Where is money leaking now?"
-        sub="Revenue & Recovery — LiSN joins the decline grid to the voice/complaint corpus so the cause and the recoverable rupees arrive with the alert. Routes to Head of Cards · Ops."
+        title="How are my transactions & offers doing?"
+        sub="Transaction-only — spend, offers, yield and reward economics judged against each cell's own seasonal baseline. ✨ marks every AI-derived read. The customer-voice join is the LiSN-only layer at the bottom."
       />
+      <HeadshotRow insights={A_INSIGHTS} left={<OfferIncrementalityBar />} />
+      <YieldRewardCard />
+      <RecoveryWorklist
+        rows={A_ROWS}
+        title="Offers & yield worklist"
+        subtitle={`${A_ROWS.length} transaction & offer signals · bar = incremental / profitable share (green) vs leak · ranked by ₹ in play`}
+        accent={JH.cyan}
+        barHeader="Incremental vs leak"
+      />
+      <LiSNDifferentiatorCard
+        title="Offer → mis-selling complaint echo"
+        subtitle="The gated join — an offer that converts on the spend dashboard but triggers an MITC-disclosure complaint echo within 48h"
+        idTag="MB6"
+      >
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", marginBottom: 8 }}>
+          <Num v="×3.5" c={JH.amber} s={22} />
+          <span style={{ fontSize: 11.5, color: JH.muted }}>complaint echo within 48h of the No-cost EMI push</span>
+        </div>
+        <AIInsightStrip>Hold wave 2 until the MITC disclosure is fixed — the conversion is real but the complaint fallout lands two days later, routed to <strong style={{ color: JH.text }}>Cards · Conduct</strong>.</AIInsightStrip>
+      </LiSNDifferentiatorCard>
+      <NLQueryStrip queries={A_QUERIES} accent={JH.cyan} />
+      <SubstrateFooter />
+    </div>
+  );
+}
+
+/* ═════════════════════════ DRILL B — BLOCKERS & PROBLEMS (transaction-only) ═════════════════════════ */
+
+const B_ROWS: SignalRow[] = [
+  { id: "MA1", sev: "critical", signal: "Curable-decline recovery", cohort: "PREM HNI · CNP", metric: "62% curable", delta: "+38%", deltaTone: "bad", impact: "₹2.4 Cr", route: "Head of Cards", action: "Review nudge draft", recoverablePct: 62, cause: "Insufficient-funds + soft declines run 38% above the cohort's own month-end band — curable, not structural. EMI-conversion nudge drafted to the eligible HNI sub-segment." },
+  { id: "MA2", sev: "watch", signal: "Fraud-rule approval step-change", cohort: "Rule R-77", metric: "−13 pts", delta: "post-rule", deltaTone: "bad", impact: "—", route: "Head of Fraud", action: "Open rule diff", feed: true, cause: "Change-point detection on the approval rate right after a fraud-rule edit — a clean step-down, not a noisy dip. The over-block signal before the voice join confirms it." },
+  { id: "MA13", sev: "watch", signal: "Tokenised vs non-tokenised approval-gap", cohort: "tok vs non-tok", metric: "approval gap", impact: "—", route: "Ops · Risk", action: "Open token gap", feed: true, cause: "Isolates a token-lifecycle/ACS misconfiguration the blended approval rate hides — economically large at ~98% CoFT penetration. Tokenised CNP approving below non-tokenised on one path." },
+  { id: "MA9", sev: "watch", signal: "Activation-decay vs 30+7 closure clock", cohort: "Batch #4471", metric: "58% vs 71%", delta: "D37", deltaTone: "bad", impact: "₹93 L CAC", route: "Cards · Tech", action: "Send flow fix", obligation: true, cause: "18,000 co-brand cards activate at day-20 at 58% vs a 71% baseline. 'Can't set PIN' points to a broken flow — fix it and force-closures fall to ~900 before the RBI 30+7 deadline." },
+  { id: "MA3", sev: "watch", signal: "Switch / token-CoFT attribution", cohort: "2 routes", metric: "issuer-side", impact: "—", route: "Ops · Tech", action: "Open attribution", cause: "Transaction-side attribution isolates which switch/processor route and token/CoFT step drives a decline cluster. Ranks by recoverable spend." },
+  { id: "MA5", sev: "watch", signal: "Early roll-rate inflection by vintage", cohort: "Vintage Q2-24", metric: "+9 bps", delta: "above band", deltaTone: "bad", impact: "—", route: "Risk · Collections", action: "Prioritise cohort", cause: "A sourcing vintage's 0→30 migration inflects above its own seasonal band — flagged before the portfolio-level roll-rate confirms it. Concentrate collections capacity here now." },
+  { id: "MA16", sev: "watch", signal: "Limit-exhaustion clusters (good vs stressed)", cohort: "2 cohorts", metric: "split", impact: "—", route: "Risk · Cards", action: "Split good vs stressed", cause: "Limit-exhaustion clusters separated into 'good customer hitting limit' (limit-increase opportunity) vs 'stressed customer maxed out' (early risk) by utilisation trend — the blended limit-hit rate hides both." },
+  { id: "MA17", sev: "watch", signal: "Utilisation-band migration surge", cohort: "+1 band", metric: "leads roll", impact: "—", route: "Risk · Collections", action: "Open migration", cause: "A surge of customers crossing into high-utilisation bands leads the 0→30 roll by weeks — an early-risk lead indicator before delinquency forms on the book." },
+  { id: "MB15", sev: "watch", signal: "Co-brand / aggregator diagnostic", cohort: "1 partner", metric: "decline cluster", impact: "—", route: "Co-brand · Ops", action: "Open partner view", feed: true, cause: "Localises a decline cluster to a single co-brand partner/aggregator via the auth/fraud-logs ↔ merchant-systems join — among the hardest and most manual in India's fragmented ecosystem." },
+];
+
+const B_INSIGHTS: WallInsight[] = [
+  { sev: "critical", title: "Today's decline spike is token, not behaviour", body: "Decline taxonomy splits the spike into tech / limit / fraud-rule / token: a CoFT re-tokenisation break drives it. ₹2.4 Cr at risk, 62% curable today." },
+  { sev: "watch", title: "Fraud-rule R-77 stepped approval down 13 pts", body: "A clean change-point right after the rule edit — over-block, not noise. Open the rule diff and recommend rollback." },
+  { sev: "watch", title: "Tokenised CNP is approving below non-tokenised", body: "A gap the blended approval rate hides entirely — economically large at ~98% CoFT penetration. One path mis-configured." },
+  { sev: "watch", title: "Batch #4471 will strand ₹93 L CAC on the 30+7 clock", body: "Activation 13 pts below baseline; ~6,200 cards projected unactivated at day-37. Obligation route — fixable onboarding flow." },
+  { sev: "watch", title: "Utilisation migration surge leads the roll", body: "Q2-24 vintage 0→30 inflects above its own band as customers cross into high-utilisation — weeks before the book confirms." },
+];
+
+const B_QUERIES = [
+  "Of today's decline spike, how much is tech vs limit vs fraud-rule vs token?",
+  "Which BIN's approval rate stepped down after the last rule change?",
+  "Show cohorts crossing high-utilisation this week.",
+  "Which sourcing vintage's 0→30 roll is above its own band?",
+  "Which onboarding batch will breach the 30+7 closure deadline, and how much CAC is at stake?",
+];
+
+export function CardsBlockersProblemsDrill({ onBack }: { onBack: () => void }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <DrillPageHeader
+        onBack={onBack}
+        accent={JH.amber}
+        title="Where are my blockers & problems today?"
+        sub="Transaction-only — decline quality, fraud-rule misfires, token gaps, roll inflection and the regulatory closure clocks, severity-ranked and routed. The customer-voice confirmation is the LiSN-only layer at the bottom."
+      />
+      <HeadshotRow insights={B_INSIGHTS} left={<DeclineHeatmap />} />
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.1fr) minmax(0, 1fr)", gap: 12, alignItems: "stretch" }}>
+        <RecoverableByCohortBar />
+        <RollByVintageBar />
+      </div>
+      <SectionCard title="Activation-decay vs RBI 30+7 closure clock" subtitle="Batch #4471 · activation curve vs baseline with the day-37 force-closure line" accent={JH.amber} aiPill right={<div style={{ display: "flex", gap: 6 }}><Pill color={JH.gold} solid>obligation</Pill><Pill color={JH.dim}>MA9</Pill></div>}>
+        <ActivationDecayCurve />
+        <div style={{ marginTop: 10 }}>
+          <AIInsightStrip tone={JH.amber}>~6,200 cards projected unactivated at day-37 — <strong style={{ color: JH.text }}>₹93 L CAC</strong> at risk. 'Can't set PIN' points to a fixable flow; fix it and force-closures fall to ~900.</AIInsightStrip>
+        </div>
+      </SectionCard>
+      <RegulatoryClocks />
+      <RecoveryWorklist
+        rows={B_ROWS}
+        title="Blockers worklist"
+        subtitle={`${B_ROWS.length} transaction-side blockers · bar = share recoverable today (green) vs structural · ranked by ₹ in play`}
+        accent={JH.amber}
+      />
+      <LiSNDifferentiatorCard
+        title="Are these blockers something customers actually feel?"
+        subtitle="The gated join — decline-spike ↔ 'payment-failed' voice on one timeline, so cause + recoverable ₹ arrive with the alert"
+        idTag="MB1 · MB2"
+      >
+        <DeclineVoiceDualCurve />
+        <div style={{ marginTop: 10 }}>
+          <AIInsightStrip>Cause: <strong style={{ color: JH.text }}>CoFT re-tokenisation break</strong> at 11:00 — not behaviour, not fraud. The same join confirms fraud-rule R-77 over-block via 'card blocked' voice within 2h, before any fraud KPI moves.</AIInsightStrip>
+        </div>
+      </LiSNDifferentiatorCard>
+      <NLQueryStrip queries={B_QUERIES} accent={JH.amber} />
+      <SubstrateFooter />
+    </div>
+  );
+}
+
+/* ═════════════════════════ DRILL C — TRANSACTION × VOICE JOIN (LiSN ONLY) ═════════════════════════ */
+
+/* Predictive joins — voice leads the book (lead-time ladder) */
+const C_LADDER_ROWS: SignalRow[] = [
+  { id: "MB4", sev: "advisory", signal: "Hardship-language → roll-rate predictor", cohort: "Vintage Q2-24", metric: "1.9× hardship", impact: "—", route: "Risk · Collections", action: "Draft fair-offer", advisory: true, lead: { label: "~2 wks", pct: 70 }, cause: "Hardship language leads the 0→30 roll the bureau EWS flags ~2 weeks later. Advisory, fair-offer only — genuine-hardship split from strategic-non-payment, never a risk action against the customer." },
+  { id: "MB2", sev: "critical", signal: "Fraud-rule misfire, voice-confirmed", cohort: "Rule R-77", metric: "blocked ×3", delta: "80% 3+yr", deltaTone: "bad", impact: "80% 3+yr", route: "Head of Fraud", action: "Recommend rollback", feed: true, obligation: true, lead: { label: "< 2h", pct: 14 }, cause: "Within two hours of R-77, 'card blocked at [merchant]' tripled — 80% from 3+-year customers with rising switch-intent — before the fraud KPI moved. Same-morning detect-to-rollback." },
+  { id: "MB10", sev: "watch", signal: "Co-brand churn ↔ switch-intent voice", cohort: "Co-brand X", metric: "spend −22%", delta: "switch ×3", deltaTone: "bad", impact: "₹18 Cr", route: "Co-brand mgr", action: "Draft retention", lead: { label: "weeks", pct: 60 }, cause: "Spend fell 22% over three cycles while 'how do I switch / close this card' chatter tripled after a competitor launch — attrition, not merchant softness. Retention drafted before closures register." },
+  { id: "MB7", sev: "watch", signal: "Switch incident ↔ voice true-impact", cohort: "Route P-3 (in-SLA)", metric: "calls ×5", delta: "~14k", deltaTone: "bad", impact: "₹68–70L/hr", route: "Ops · Comms", action: "Draft customer comms", lead: { label: "now", pct: 40 }, cause: "A processor route reads green but 'payment failing' contacts rose 5× and app-store reviews dipped. The voice side quantifies the human impact the health dashboard hides." },
+  { id: "MB8", sev: "watch", signal: "Token/CoFT breakage ↔ voice (recurring)", cohort: "Subs cohort", metric: "auto-pay fail", impact: "—", route: "Ops · Tech", action: "Open recurring view", feed: true, lead: { label: "pre-metric", pct: 35 }, cause: "Recurring/subscription token (CoFT) breakage joined to 'subscription declined / auto-pay failed' voice — the recurring-payment failure customers feel before the metric moves." },
+  { id: "MB11", sev: "watch", signal: "Fraud-rule misfire × social-media surge", cohort: "viral", metric: "blast radius", impact: "—", route: "Risk · Conduct", action: "Open blast radius", lead: { label: "viral 24h", pct: 30 }, cause: "Attributes a viral / app-store reputational surge to a specific internal rule edit and quantifies the blast radius — a coordinated comms + revert decision." },
+  { id: "MB13", sev: "watch", signal: "App-release-defect impact pack", cohort: "v3.2", metric: "journey break", impact: "—", route: "Tech · Comms", action: "Open release pack", feed: true, lead: { label: "release", pct: 25 }, cause: "Ties a named app version to card-journey breakage via app-store/complaint text — release dashboards show crash/adoption, not journey breakage. v3.2 correlates with a 'can't add card / pay' spike." },
+];
+
+/* Regulatory / obligation joins — complaint cluster × clause / clock (case board) */
+const C_BOARD_ROWS: SignalRow[] = [
+  { id: "MB5", sev: "critical", signal: "Ombudsman-escalation pre-empt", cohort: "Q-07 queue", metric: "4 cases", delta: "30-day IO", deltaTone: "bad", impact: "—", route: "Conduct · Compliance", action: "Re-open 4 cases", clause: "30-day IO", cause: "Complaint cluster × transaction root cause × the 30-day IO decision clock — 'incorrect late fee' tripled on one co-brand, root-caused to a billing-cycle misconfiguration concentrated in queue Q-07. Resolve before the window closes." },
+  { id: "MB3", sev: "critical", signal: "Weak-authentication liability cluster", cohort: "Path M-12 · CNP", metric: "47 auths", delta: "31 cmpl", deltaTone: "bad", impact: "₹6–9 L", route: "Compliance", action: "Route to Compliance", feed: true, obligation: true, clause: "Auth Dir 2025", cause: "47 CNP authorisations missing a completed dynamic factor on one merchant path, joined to 31 'money taken, no OTP' complaints. Auth Directions 2025 domestic 2FA is in force — the issuer carries full-compensation liability now." },
+  { id: "MB14", sev: "critical", signal: "Dispute-before-CIC-reporting breach", cohort: "CIC queue", metric: "imminent", delta: "RBI breach", deltaTone: "bad", impact: "—", route: "Collections · Compliance", action: "Hold CIC report", feed: true, obligation: true, clause: "CIC breach", cause: "Joins an active customer-asserted dispute to an imminent CIC default-reporting event — the exact RBI breach (disputes must settle before bureau reporting)." },
+  { id: "MB12", sev: "watch", signal: "Cross-border CNP friction & liability", cohort: "1 corridor", metric: "co-move", delta: "1 Oct 2026", deltaTone: "bad", impact: "—", route: "Risk · Compliance", action: "Flag corridor", feed: true, obligation: true, clause: "1 Oct 2026", cause: "Cross-border CNP declines co-move with 'declined abroad / OTP failed' complaints on one corridor — a CX-friction fix and an emerging weak-auth exposure ahead of the 1 Oct 2026 validation + BIN-registration deadline." },
+  { id: "MB6", sev: "watch", signal: "Offer → mis-selling complaint echo", cohort: "No-cost EMI", metric: "cmpl ×3.5", delta: "48h", deltaTone: "bad", impact: "MITC", route: "Cards · Conduct", action: "Hold wave 2", feed: true, clause: "MITC 48h", cause: "An offer converts on the spend dashboard but triggers an MITC-disclosure complaint echo within 48h. Catch the fallout before the second wave sends." },
+  { id: "MB9", sev: "watch", signal: "Double-debit / reversal-failure ↔ voice", cohort: "reversal-fail", metric: "charged ×2", impact: "—", route: "Ops · Conduct", action: "Open reversal cases", clause: "reversal", cause: "Double-debit / failed-reversal transactions joined to 'charged twice / money not returned' voice — the operational grievance that drives repeat contacts and IO escalation." },
+  { id: "MB17", sev: "advisory", signal: "Fair-treatment / disparate-treatment scan", cohort: "cohort parity", metric: "outcome gap", impact: "—", route: "Conduct · Compliance", action: "Open parity scan", advisory: true, clause: "parity", cause: "Detects abnormal grievance-handling/outcome gaps across cohorts/geographies — a fairness analogue no transaction tool or sampling QA can produce. Cohort-level and advisory given false-positive risk." },
+];
+
+const C_INSIGHTS: WallInsight[] = [
+  { sev: "critical", title: "These declines are something customers actually feel", body: "Decline 8%→26% with a 4× 'payment failed' voice spike on one timeline — a CoFT re-tokenisation break. Cause + ₹2.4 Cr recoverable arrive with the alert (MB1)." },
+  { sev: "critical", title: "Fraud-rule misfire confirmed by voice within 2h", body: "'Card blocked' contacts tripled — 80% from 3+-year customers — before any fraud KPI moved. Same-morning detect-to-rollback (MB2)." },
+  { sev: "critical", title: "Four late-fee cases are inside the 30-day IO clock", body: "Complaint cluster × billing-cycle root cause × the IO decision clock — re-open and brief Q-07 before the window closes (MB5)." },
+  { sev: "watch", title: "Co-brand X spend-drop is attrition, not merchant softness", body: "Spend −22% as switch-intent chatter tripled after a competitor launch — ₹18 Cr at risk, weeks before closures register (MB10)." },
+  { sev: "advisory", title: "Hardship language leads the 0→30 roll by ~2 weeks", body: "Up 1.9× in vintage Q2-24 ahead of the bureau EWS. Advisory, fair-offer only — never a risk action against the customer (MB4)." },
+];
+
+const C_QUERIES = [
+  "Is this decline spike something customers are actually feeling?",
+  "Which complaint themes are emerging before they show in case counts?",
+  "Where is hardship-language rising ahead of the roll-rate?",
+  "Which co-brand's spend drop is attrition vs merchant softness?",
+  "Which complaint clusters are inside the 30-day IO window right now?",
+];
+
+export function CardsVoiceJoinDrill({ onBack }: { onBack: () => void }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+      <DrillPageHeader
+        onBack={onBack}
+        accent={JH.violet}
+        title="Transaction × voice — the join nobody else makes"
+        sub="LiSN ONLY — transaction analytics and complaint/voice systems are separate stacks, so this join is essentially never made in production. Cause + recoverable ₹ arrive with the alert. Advisory items are fair-offer only, never a risk action against the customer."
+      />
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", background: `${JH.violet}0f`, border: `1px solid ${JH.violet}55`, borderLeft: `3px solid ${JH.gold}`, borderRadius: 10, padding: "9px 13px" }}>
+        <Pill color={JH.gold} solid>LiSN ONLY</Pill>
+        <span style={{ fontSize: 11.5, color: JH.sub, lineHeight: 1.5, flex: "1 1 320px" }}>Every signal below joins a transaction event to the customer-voice / complaint corpus — the wedge no self-built dashboard can reproduce.</span>
+        <Pill color={JH.violet}>MB1 · MB2 · MB4 · MB5 · MB10</Pill>
+      </div>
       <HeadshotRow
-        insights={REVENUE_INSIGHTS}
+        insights={C_INSIGHTS}
         left={
-          <SectionCard title="Decline-spike ↔ customer-voice root-cause join" subtitle="The join no self-built dashboard has — both curves on one timeline" accent={JH.red} aiPill right={<Pill color={JH.red} solid>HERO · MB1</Pill>}>
+          <SectionCard title="Decline-spike ↔ customer-voice, one timeline" subtitle="Both curves together — the cause and the recoverable rupees arrive with the alert" accent={JH.violet} aiPill right={<Pill color={JH.gold} solid>HERO · MB1</Pill>}>
             <DeclineVoiceDualCurve />
             <div style={{ marginTop: 10 }}>
               <AIInsightStrip>Cause: <strong style={{ color: JH.text }}>CoFT re-tokenisation break</strong> at 11:00 — not behaviour, not fraud. ₹2.4 Cr attempted spend at risk on PREM 25–34 HNI; 62% curable.</AIInsightStrip>
@@ -684,122 +1013,23 @@ export function CardsRevenueRecoveryDrill({ onBack }: { onBack: () => void }) {
           </SectionCard>
         }
       />
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 1fr)", gap: 12, alignItems: "stretch" }}>
-        <RecoverableByCohortBar />
-        <DeclineHeatmap />
-      </div>
-      <RecoveryWorklist rows={REVENUE_ROWS} />
-      <SubstrateFooter />
-    </div>
-  );
-}
-
-/* ═════════════════════════ DRILL 2 — CONDUCT & REGULATORY ═════════════════════════ */
-
-const CONDUCT_ROWS: SignalRow[] = [
-  { id: "MB3", sev: "critical", signal: "Weak-authentication liability cluster", cohort: "Path M-12 · CNP", metric: "47 auths", delta: "31 cmpl", deltaTone: "bad", impact: "₹6–9 L", route: "Compliance", action: "Route to Compliance", feed: true, clause: "Auth Dir 2025", cause: "47 CNP authorisations missing a completed dynamic factor on one merchant path, joined to 31 'money taken, no OTP' complaints. Under Auth Directions 2025 the issuer carries full-compensation liability." },
-  { id: "MA9", sev: "watch", signal: "Activation-decay vs 30+7 closure clock", cohort: "Batch #4471", metric: "58% vs 71%", delta: "D37", deltaTone: "bad", impact: "₹93 L CAC", route: "Cards · Tech", action: "Send flow fix", clause: "30+7 day", cause: "18,000 co-brand cards activate at day-20 at 58% vs a 71% baseline. 'Can't set PIN' complaints point to a broken flow — fix it and force-closures fall to ~900." },
-  { id: "MB12", sev: "watch", signal: "Cross-border CNP friction & liability", cohort: "1 corridor", metric: "co-move", delta: "Oct 2026", deltaTone: "bad", impact: "—", route: "Risk · Compliance", action: "Flag corridor", feed: true, clause: "Oct 2026", cause: "Cross-border CNP declines co-move with 'declined abroad / OTP failed' complaints on one corridor — both a CX-friction fix and an emerging weak-auth exposure ahead of the 1 Oct 2026 mechanism." },
-  { id: "MA10", sev: "watch", signal: "Complaint-theme emergence radar", cohort: "interaction-native", metric: "+2 themes", impact: "—", route: "Conduct · CX", action: "Open themes", clause: "IO radar", cause: "A complaint theme is emerging in the interaction corpus before it shows in case counts — LiSN's core capability. Two new clusters this week, surfaced for early IO framing." },
-  { id: "MA11", sev: "watch", signal: "Vendor-level mis-selling surveillance", cohort: "BPO pools", metric: "100% QA", delta: "vs 1–2%", deltaTone: "good", impact: "—", route: "Conduct · Vendor", action: "Open vendor QA", feed: true, clause: "100% QA", cause: "100%-QA across vendor/BPO pools vs the ~1–2% manual sample — audits the sourcing channel, not the customer. Flags mis-selling phrasing; feeds IO pattern analysis." },
-  { id: "MA12", sev: "watch", signal: "Complaint-intensity per 1,000 cards", cohort: "private vs PSB", metric: "0.42", delta: "vs 0.11", deltaTone: "bad", impact: "—", route: "Head of Conduct", action: "Open benchmark", clause: "per 1k cards", cause: "Normalises complaints by active-card base (private 0.420 vs PSB 0.114), catching conduct hot spots raw counts hide as the base grows. Board-relevant." },
-  { id: "MB9", sev: "watch", signal: "Double-debit / reversal-failure ↔ voice", cohort: "reversal-fail", metric: "charged ×2", impact: "—", route: "Ops · Conduct", action: "Open reversal cases", clause: "reversal", cause: "Double-debit / failed-reversal transactions joined to 'charged twice / money not returned' voice — the operational grievance that drives repeat contacts and IO escalation." },
-  { id: "MB14", sev: "critical", signal: "Dispute-before-CIC-reporting breach", cohort: "CIC queue", metric: "imminent", delta: "RBI breach", deltaTone: "bad", impact: "—", route: "Collections · Compliance", action: "Hold CIC report", feed: true, clause: "CIC breach", cause: "Joins an active customer-asserted dispute to an imminent CIC default-reporting event — the exact RBI breach (disputes must settle before bureau reporting)." },
-  { id: "MB17", sev: "advisory", signal: "Fair-treatment / disparate-treatment scan", cohort: "cohort parity", metric: "outcome gap", impact: "—", route: "Conduct · Compliance", action: "Open parity scan", advisory: true, clause: "parity", cause: "Detects abnormal grievance-handling/outcome gaps across cohorts/geographies — a fairness analogue no transaction tool or sampling QA can produce. Cohort-level and advisory given false-positive risk." },
-];
-
-const CONDUCT_INSIGHTS: WallInsight[] = [
-  { sev: "critical", title: "Four late-fee complaints are inside the 30-day IO clock", body: "'Incorrect late fee' tripled on one co-brand, root-caused to a billing-cycle misconfiguration and concentrated in queue Q-07. Resolve before the IO window closes." },
-  { sev: "critical", title: "A weak-authentication liability cluster is forming", body: "47 CNP auths missing a dynamic factor joined to 31 'no-OTP' complaints — ~₹6–9 lakh exposure and a systemic auth-flow gap under Auth Directions 2025." },
-  { sev: "watch", title: "Batch #4471 will strand CAC against the 30+7 clock", body: "Activation tracks 13 pts below baseline; ~6,200 cards projected unactivated at day-37 — ₹93 lakh CAC at risk from a fixable onboarding flow." },
-];
-
-export function CardsConductRegulatoryDrill({ onBack }: { onBack: () => void }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <DrillPageHeader
-        onBack={onBack}
-        accent={JH.violet}
-        title="Are we heading to the regulator?"
-        sub="Conduct & Regulatory — complaint clusters joined to their transaction root cause, scored against the RBI / Internal Ombudsman clocks. Routes to Conduct · Compliance."
-      />
-      <HeadshotRow
-        insights={CONDUCT_INSIGHTS}
-        left={
-          <SectionCard title="Ombudsman-escalation pre-empt" subtitle="Complaint cluster × transaction root cause × the 30-day IO decision clock" accent={JH.red} aiPill right={<Pill color={JH.red} solid>HERO · MB5</Pill>}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap", marginBottom: 10 }}>
-              <Num v="4 cases" c={JH.red} s={24} />
-              <span style={{ fontSize: 11.5, color: JH.muted, display: "inline-flex", alignItems: "center", gap: 5 }}><Clock size={12} color={JH.red} /> within days of the 30-day IO deadline · 'incorrect late fee' ×3</span>
-            </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-              <div style={{ background: JH.inset, border: `1px solid ${JH.border}`, borderRadius: 10, padding: "11px 12px" }}>
-                <div style={{ fontSize: 9.5, fontWeight: 700, color: JH.muted, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Root cause</div>
-                <div style={{ fontSize: 12, color: JH.sub, lineHeight: 1.45 }}>Billing-cycle misconfiguration on one co-brand · maps to MITC clause 4.2</div>
-              </div>
-              <div style={{ background: JH.inset, border: `1px solid ${JH.border}`, borderRadius: 10, padding: "11px 12px" }}>
-                <div style={{ fontSize: 9.5, fontWeight: 700, color: JH.muted, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Mishandling locus</div>
-                <div style={{ fontSize: 12, color: JH.sub, lineHeight: 1.45 }}>Resolution queue Q-07 · 41% rejection rate vs 12% portfolio</div>
-              </div>
-            </div>
-            <div style={{ marginTop: 10 }}>
-              <AIInsightStrip>Feeds the quarterly IO board pattern report against 41,457 national credit-card complaints (+20.04%). Fix the config, re-open the 4 cases, brief Q-07.</AIInsightStrip>
-            </div>
-          </SectionCard>
-        }
-      />
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 12, alignItems: "stretch" }}>
-        <RegulatoryClocks />
-        <SectionCard title="Activation-decay vs RBI 30+7 closure clock" subtitle="Batch #4471 · activation curve vs baseline with the day-37 force-closure line" accent={JH.amber} aiPill right={<Pill color={JH.dim}>MA9</Pill>}>
-          <ActivationDecayCurve />
+        <SectionCard title="Hardship-language → roll-rate predictor" subtitle="Credit cost forms in the voice corpus weeks before the book" accent={JH.violet} aiPill right={<div style={{ display: "flex", gap: 6 }}><Pill color={JH.cyan}>advisory</Pill><Pill color={JH.dim}>MB4</Pill></div>}>
+          <HardshipRollCurve />
+          <div style={{ marginTop: 10 }}>
+            <AIInsightStrip tone={JH.cyan}>Advisory only — no credit decisioning. Genuine-hardship is split from strategic-non-payment for <strong style={{ color: JH.text }}>fair, early support</strong>; cohort-level, human-approved.</AIInsightStrip>
+          </div>
         </SectionCard>
-      </div>
-      <ConductCaseBoard rows={CONDUCT_ROWS} />
-      <SubstrateFooter />
-    </div>
-  );
-}
-
-/* ═════════════════════════ DRILL 3 — FORWARD CREDIT & ATTRITION RISK ═════════════════════════ */
-
-const FORWARD_ROWS: SignalRow[] = [
-  { id: "MA5", sev: "watch", signal: "Early roll-rate inflection by vintage", cohort: "Vintage Q2-24", metric: "+9 bps", delta: "above band", deltaTone: "bad", impact: "—", route: "Risk · Collections", action: "Prioritise cohort", lead: { label: "~2 wks", pct: 62 }, cause: "A sourcing vintage's 0→30 migration inflects above its own seasonal band — flagged before the portfolio-level roll-rate confirms it. Concentrate collections capacity here now." },
-  { id: "MB2", sev: "critical", signal: "Fraud-rule misfire, voice-confirmed", cohort: "Rule R-77", metric: "blocked ×3", delta: "< 2h", deltaTone: "bad", impact: "80% 3+yr", route: "Head of Fraud", action: "Recommend rollback", feed: true, lead: { label: "< 2h", pct: 14 }, cause: "Within two hours of R-77, 'card blocked at [merchant]' tripled — 80% from 3+-year customers with rising switch-intent — before the fraud KPI moved. Same-morning detect-to-rollback." },
-  { id: "MA2", sev: "watch", signal: "Approval-rate step-change (txn-side)", cohort: "Rule R-77", metric: "−13 pts", delta: "post-rule", deltaTone: "bad", impact: "—", route: "Head of Fraud", action: "Open rule diff", feed: true, lead: { label: "post-rule", pct: 22 }, cause: "Transaction-side detection of an approval-rate step-change right after a fraud-rule change — the over-block signal before the voice join confirms it. Needs the fraud-rule change feed." },
-  { id: "MB11", sev: "watch", signal: "Fraud-rule misfire × social-media surge", cohort: "viral", metric: "blast radius", impact: "—", route: "Risk · Conduct", action: "Open blast radius", lead: { label: "viral 24h", pct: 30 }, cause: "Attributes a viral / app-store reputational surge to a specific internal rule edit and quantifies the blast radius — a different decision (coordinated comms + revert) from the contact-centre fraud-rule card." },
-  { id: "MA6", sev: "watch", signal: "Dormancy-onset / engagement-cliff radar", cohort: "+1 cohort", metric: "cadence ▼", delta: "onset", deltaTone: "bad", impact: "—", route: "Head of Cards", action: "Draft re-engage", lead: { label: "onset", pct: 46 }, cause: "A cohort's transaction cadence is decaying toward the dormancy threshold — caught at onset, not after the cliff. Pairs with closure-intent voice to separate attrition from a temporary pause." },
-];
-
-const FORWARD_INSIGHTS: WallInsight[] = [
-  { sev: "advisory", title: "Voice is leading 0→30 roll by ~2 weeks", body: "Hardship language in vintage Q2-24 is up 1.9× and leads the roll the bureau EWS flags a fortnight later — ~9 bps. Advisory, fair-offer only, never a risk action against the customer." },
-  { sev: "watch", title: "Fraud-rule R-77 is over-blocking good customers", body: "'Card blocked' contacts tripled within 2h — 80% from 3+-year customers — before any fraud KPI moved. Same-morning detect-to-rollback." },
-  { sev: "watch", title: "Q2-24 vintage is inflecting above its band", body: "0→30 migration crosses its own cohort band first; concentrate collections capacity before the book-level number confirms it." },
-];
-
-export function CardsForwardRiskDrill({ onBack }: { onBack: () => void }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      <DrillPageHeader
-        onBack={onBack}
-        accent={JH.amber}
-        title="Where is cost forming first?"
-        sub="Forward Credit & Attrition — credit cost and churn form in the voice corpus before the book sees them. Advisory, cohort-level, fair-offer only. Routes to Risk · Collections · Fraud."
-      />
-      <HeadshotRow
-        insights={FORWARD_INSIGHTS}
-        left={
-          <SectionCard title="Hardship-language → roll-rate pre-delinquency predictor" subtitle="Credit cost forms in the voice corpus weeks before the book" accent={JH.amber} aiPill right={<div style={{ display: "flex", gap: 6 }}><Pill color={JH.cyan}>advisory</Pill><Pill color={JH.amber} solid>HERO · MB4</Pill></div>}>
-            <HardshipRollCurve />
-            <div style={{ marginTop: 10 }}>
-              <AIInsightStrip tone={JH.cyan}>Advisory only — no credit decisioning. Genuine-hardship is split from strategic-non-payment for <strong style={{ color: JH.text }}>fair, early support</strong>; cohort-level, human-approved.</AIInsightStrip>
-            </div>
-          </SectionCard>
-        }
-      />
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 12, alignItems: "stretch" }}>
-        <RollByVintageBar />
         <FraudMisfireBlastCard />
       </div>
-      <EarlyWarningLadder rows={FORWARD_ROWS} />
+      <EarlyWarningLadder rows={C_LADDER_ROWS} />
+      <ConductCaseBoard
+        rows={C_BOARD_ROWS}
+        title="Regulatory & conduct join board"
+        subtitle={`${C_BOARD_ROWS.length} complaint × transaction signals grouped by severity · obligation paths and clause / clock tagged · owner-routed`}
+        accent={JH.violet}
+      />
+      <NLQueryStrip queries={C_QUERIES} accent={JH.violet} />
       <SubstrateFooter />
     </div>
   );
