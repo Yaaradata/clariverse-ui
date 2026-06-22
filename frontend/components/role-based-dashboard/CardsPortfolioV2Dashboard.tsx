@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /**
  * LiSN — Cards Portfolio Manager (v2).
@@ -8,7 +8,7 @@
  * AIInsightStrip, Mono, route/brand pills. JH near-black palette.
  *
  *   Overview        → 3 question cards + distillation scatter + today's routed signals (ranked, once)
- *   Drill 1 Offers  → Command Center grid + AI Summary Wall (expand) + "Where is spend leaking?" (select→detail)
+ *   Drill 1 Offers  → Command Center + AI Wall + LeakPanel + deep matrix / decision board / economics / cohort / action queue
  *   Drill 2 Blockers→ Decline heatmap (select cell) + Incident pack + Problem board (kanban)
  *   Drill 3 Voice   → Correlation hero + Join-proof (select signal→detail) + roadmap grid + governance
  */
@@ -44,12 +44,9 @@ import {
   LineChart,
   ReferenceLine,
   ResponsiveContainer,
-  Scatter,
-  ScatterChart,
   Tooltip,
   XAxis,
   YAxis,
-  ZAxis,
 } from "recharts";
 
 /* ───────────── theme (JH) ───────────── */
@@ -121,27 +118,6 @@ const LEVEL: Record<string, string> = {
 type TrendPoint = { v: number };
 type DeclinePart = { cause: string; v: number; c: string };
 type CorrPoint = { t: string; d: number; c: number };
-type DistillRow = {
-  n: string;
-  id: string;
-  dev: number;
-  impact: number;
-  route: string;
-  sub?: boolean;
-};
-type RoutedRow = {
-  id: string;
-  n: string;
-  band: [number, number];
-  val: number;
-  max: number;
-  dev: string;
-  impact: string;
-  route: string;
-  sev: string;
-  feed?: boolean;
-  obl?: boolean;
-};
 type AiRow = {
   id: string;
   level: string;
@@ -649,102 +625,6 @@ const CORR: CorrPoint[] = [
   { t: "13:00", d: 23, c: 372 },
   { t: "14:00", d: 26, c: 418 },
 ];
-const DISTILL: DistillRow[] = [
-  { n: "Tokenised CNP gap", id: "MA13", dev: 3.1, impact: 2.4, route: "ops" },
-  { n: "Curable declines", id: "MA1", dev: 1.9, impact: 2.4, route: "cards" },
-  { n: "Fraud-rule R-77", id: "MA2", dev: 2.6, impact: 1.1, route: "fraud" },
-  { n: "Offer O-142", id: "MA4", dev: 2.3, impact: 0.78, route: "mktg" },
-  { n: "Activation 4471", id: "MA9", dev: 1.7, impact: 0.93, route: "conduct" },
-  { n: "Yield leakage", id: "MA7", dev: 1.2, impact: 1.2, route: "fin" },
-  { n: "Util migration", id: "T2-13", dev: 1.6, impact: 0.5, route: "risk" },
-  {
-    n: "POS approvals",
-    id: "—",
-    dev: 0.6,
-    impact: 0.3,
-    route: "ops",
-    sub: true,
-  },
-  { n: "EMI mix", id: "—", dev: 0.8, impact: 0.5, route: "fin", sub: true },
-  {
-    n: "Mass spend",
-    id: "—",
-    dev: 0.4,
-    impact: 0.9,
-    route: "cards",
-    sub: true,
-  },
-  {
-    n: "Reversal base",
-    id: "—",
-    dev: 0.9,
-    impact: 0.6,
-    route: "fin",
-    sub: true,
-  },
-  { n: "3DS base", id: "—", dev: 1.2, impact: 0.25, route: "ops", sub: true },
-];
-const ROUTED: RoutedRow[] = [
-  {
-    id: "MA13",
-    n: "Tokenised CNP approval gap",
-    band: [2, 5],
-    val: 14,
-    max: 18,
-    dev: "+9 pts",
-    impact: "₹2.4 Cr",
-    route: "ops",
-    sev: "red",
-    feed: true,
-  },
-  {
-    id: "MA1",
-    n: "Curable-decline recovery",
-    band: [20, 45],
-    val: 62,
-    max: 80,
-    dev: "+38%",
-    impact: "₹2.4 Cr",
-    route: "cards",
-    sev: "amber",
-  },
-  {
-    id: "MA2",
-    n: "Fraud-rule R-77 step-change",
-    band: [90, 96],
-    val: 81,
-    max: 100,
-    dev: "−13 pts",
-    impact: "GMV",
-    route: "fraud",
-    sev: "red",
-    feed: true,
-  },
-  {
-    id: "MA9",
-    n: "Activation vs 30+7 clock",
-    band: [68, 75],
-    val: 58,
-    max: 100,
-    dev: "−13 pts",
-    impact: "₹93 L",
-    route: "conduct",
-    sev: "amber",
-    obl: true,
-  },
-  {
-    id: "MA4",
-    n: "Offer O-142 cannibalisation",
-    band: [55, 80],
-    val: 18,
-    max: 100,
-    dev: "lift −62%",
-    impact: "₹78 L",
-    route: "mktg",
-    sev: "amber",
-  },
-];
-
 function MiniSpark({ data, c }: { data: TrendPoint[]; c: string }) {
   return (
     <div style={{ height: 64 }}>
@@ -835,93 +715,6 @@ function AttributionBar({
           </span>
         ))}
       </div>
-    </div>
-  );
-}
-function BaselineBar({
-  band,
-  val,
-  max,
-  sev = "amber",
-  h = 22,
-}: {
-  band: [number, number];
-  val: number;
-  max: number;
-  sev?: string;
-  h?: number;
-}) {
-  const c = tone(sev);
-  const p = (v: number) => Math.max(0, Math.min(100, (v / max) * 100));
-  const below = val < band[0];
-  const bl = below ? p(val) : p(band[1]);
-  const bw = below ? p(band[0]) - p(val) : p(val) - p(band[1]);
-  return (
-    <div
-      style={{
-        position: "relative",
-        height: h,
-        background: T.inset,
-        borderRadius: 6,
-        border: `1px solid ${T.inner}`,
-        overflow: "hidden",
-      }}
-      title={`band ${band[0]}–${band[1]} · now ${val}`}
-    >
-      <div
-        style={{
-          position: "absolute",
-          left: `${p(band[0])}%`,
-          width: `${p(band[1]) - p(band[0])}%`,
-          top: 0,
-          bottom: 0,
-          background: `${T.muted}26`,
-          borderLeft: `1px dashed ${T.dim}`,
-          borderRight: `1px dashed ${T.dim}`,
-        }}
-      />
-      {(val > band[1] || below) && (
-        <div
-          style={{
-            position: "absolute",
-            left: `${bl}%`,
-            width: `${Math.max(0, bw)}%`,
-            top: 4,
-            bottom: 4,
-            background: `${c}66`,
-            borderRadius: 3,
-          }}
-        />
-      )}
-      <div
-        style={{
-          position: "absolute",
-          left: `calc(${p(val)}% - 1.5px)`,
-          top: -1,
-          bottom: -1,
-          width: 3,
-          background: c,
-        }}
-      />
-    </div>
-  );
-}
-function ScatterTip({
-  active,
-  payload,
-}: {
-  active?: boolean;
-  payload?: Array<{ payload: DistillRow }>;
-}) {
-  if (!active || !payload || !payload[0]) return null;
-  const d = payload[0].payload;
-  return (
-    <div style={{ ...TIP, padding: "7px 9px", fontWeight: 700 }}>
-      {d.n} · {d.id}
-      <br />
-      <span style={{ color: T.muted }}>
-        {d.dev}σ · ₹{d.impact} Cr · {ROUTE[d.route].l}
-      </span>
     </div>
   );
 }
@@ -1051,6 +844,347 @@ function BigCard({
   );
 }
 
+type MonitorAlert = {
+  id: string;
+  title: string;
+  sev: "critical" | "high" | "later";
+  sevLabel: string;
+  variant: "critical" | "default" | "voice";
+  fields: [string, string][];
+  stats: [string, string][];
+  ai: string;
+  aiPurple?: boolean;
+};
+
+const SEV_STYLE: Record<
+  "critical" | "high" | "later",
+  { color: string; bg: string; border: string }
+> = {
+  critical: { color: "#ff5050", bg: "#5a1f1f", border: "#9d3030" },
+  high: { color: T.gold, bg: "#3a2e0b", border: "#765c12" },
+  later: { color: "#b79cff", bg: "#2d1d55", border: "#6845c7" },
+};
+
+const MONITOR_ALERTS: MonitorAlert[] = [
+  {
+    id: "token-cnp",
+    title: "Tokenised CNP Approval Gap",
+    sev: "critical",
+    sevLabel: "Critical",
+    variant: "critical",
+    fields: [
+      ["Cohort", "Premium · CNP"],
+      ["Data source", "Token + auth feed"],
+      ["Time", "Since 11:00"],
+    ],
+    stats: [
+      ["Approval Gap", "14 pts"],
+      ["Spend at Risk", "₹2.4 Cr"],
+      ["Route", "Ops / Risk"],
+    ],
+    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue.",
+  },
+  {
+    id: "o142",
+    title: "Offer O-142 Cannibalisation",
+    sev: "critical",
+    sevLabel: "Critical",
+    variant: "critical",
+    fields: [
+      ["Cohort", "Cashback Plus"],
+      ["Data source", "Offer + spend"],
+      ["Time", "Day 6"],
+    ],
+    stats: [
+      ["Redemption", "High"],
+      ["True Lift", "Low"],
+      ["Leakage", "₹78 L"],
+    ],
+    ai: "Matched-control baseline says spend would have happened anyway. Recommend pause or retarget.",
+  },
+  {
+    id: "r77",
+    title: "Fraud Rule R-77 Misfire",
+    sev: "high",
+    sevLabel: "High",
+    variant: "default",
+    fields: [
+      ["Cohort", "3+ yr customers"],
+      ["Data source", "Rule change feed"],
+      ["Time", "Within 2h"],
+    ],
+    stats: [
+      ["Approval Rate", "94% → 81%"],
+      ["Good Blocks", "+210%"],
+      ["Feed", "Needs rule log"],
+    ],
+    ai: "Approval step-change tied to a rule edit. Data confidence depends on the fraud-rule event feed.",
+  },
+  {
+    id: "activation",
+    title: "Activation Closure Clock",
+    sev: "high",
+    sevLabel: "Obligation",
+    variant: "default",
+    fields: [
+      ["Cohort", "Batch 4471"],
+      ["Data source", "Issue + first txn"],
+      ["Time", "D27"],
+    ],
+    stats: [
+      ["Below baseline", "13 pts"],
+      ["Cards at risk", "6.2k"],
+      ["Route", "PM + Conduct"],
+    ],
+    ai: "Treat as obligation, not opportunity. Surface the closure countdown and activation intervention.",
+  },
+  {
+    id: "util",
+    title: "Utilisation Migration Surge",
+    sev: "high",
+    sevLabel: "Advisory",
+    variant: "default",
+    fields: [
+      ["Cohort", "Sourcing Q2"],
+      ["Data source", "Balance + limit"],
+      ["Time", "This week"],
+    ],
+    stats: [
+      ["80%+ crossing", "1.8×"],
+      ["Projected roll", "9 bps"],
+      ["Route", "Risk"],
+    ],
+    ai: "Advisory only. No automatic customer treatment; route to EWS / model-risk review.",
+  },
+  {
+    id: "voice-join",
+    title: "Decline ↔ Payment-Failed Voice",
+    sev: "later",
+    sevLabel: "Later",
+    variant: "voice",
+    fields: [
+      ["Cohort", "Premium CNP"],
+      ["Needs", "Voice corpus"],
+      ["Join", "Temporal + cohort"],
+    ],
+    stats: [
+      ["Payment failed", "×4"],
+      ["Link strength", "87%"],
+      ["Use", "Prove pain"],
+    ],
+    ai: "This is the nobody-else-can-do LiSN layer. Keep separate from the transaction-only cards.",
+    aiPurple: true,
+  },
+];
+
+function TransactionBaselineMonitor() {
+  return (
+    <div style={{ marginTop: 28 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 12,
+        }}
+      >
+        <div
+          style={{
+            color: T.gold,
+            fontSize: 13,
+            letterSpacing: ".08em",
+            textTransform: "uppercase",
+            fontWeight: 900,
+          }}
+        >
+          ✨ Transaction Baseline Monitor
+        </div>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 900,
+            letterSpacing: ".08em",
+            textTransform: "uppercase",
+            border: "1px solid #7e1f1f",
+            background: "#301818",
+            color: "#ff4444",
+            borderRadius: 999,
+            padding: "6px 12px",
+          }}
+        >
+          Portfolio Alerts
+        </span>
+      </div>
+      <div
+        style={{
+          color: "#bebec7",
+          fontSize: 13,
+          marginBottom: 14,
+          fontWeight: 600,
+        }}
+      >
+        Live detection from transaction / summary data alone — voice joins are
+        kept separate in the later purple card.
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: 14,
+          overflowX: "auto",
+          paddingBottom: 14,
+        }}
+      >
+        {MONITOR_ALERTS.map((a) => {
+          const sv = SEV_STYLE[a.sev];
+          const border =
+            a.variant === "critical"
+              ? "#8a2b2b"
+              : a.variant === "voice"
+                ? "#6d44d4"
+                : "#66420a";
+          const bg =
+            a.variant === "voice"
+              ? "linear-gradient(180deg,#171127,#111)"
+              : "#121212";
+          return (
+            <div
+              key={a.id}
+              style={{
+                minWidth: 260,
+                maxWidth: 260,
+                background: bg,
+                border: `1px solid ${border}`,
+                borderRadius: 14,
+                padding: "16px 16px 14px",
+                minHeight: 400,
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  gap: 8,
+                  marginBottom: 16,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 17,
+                    lineHeight: 1.1,
+                    fontWeight: 900,
+                    color: T.text,
+                  }}
+                >
+                  {a.title}
+                </div>
+                <span
+                  style={{
+                    fontSize: 10,
+                    textTransform: "uppercase",
+                    fontWeight: 900,
+                    borderRadius: 999,
+                    padding: "5px 9px",
+                    whiteSpace: "nowrap",
+                    color: sv.color,
+                    background: sv.bg,
+                    border: `1px solid ${sv.border}`,
+                  }}
+                >
+                  {a.sevLabel}
+                </span>
+              </div>
+              {a.fields.map(([k, v]) => (
+                <div
+                  key={k}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "105px 1fr",
+                    gap: 8,
+                    marginBottom: 13,
+                    fontSize: 12,
+                  }}
+                >
+                  <span
+                    style={{
+                      color: "#8c8c95",
+                      textTransform: "uppercase",
+                      letterSpacing: ".06em",
+                      fontWeight: 900,
+                    }}
+                  >
+                    {k}
+                  </span>
+                  <span
+                    style={{
+                      textAlign: "right",
+                      fontWeight: 800,
+                      color: "#fff",
+                    }}
+                  >
+                    {v}
+                  </span>
+                </div>
+              ))}
+              <div
+                style={{
+                  background: "#191919",
+                  border: "1px solid #333",
+                  borderRadius: 10,
+                  padding: 12,
+                  margin: "10px 0 16px",
+                }}
+              >
+                {a.stats.map(([k, v], i) => (
+                  <div
+                    key={k}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1.15fr 1fr",
+                      gap: 8,
+                      marginBottom: i === a.stats.length - 1 ? 0 : 13,
+                      fontSize: 13,
+                      color: "#bfbfc6",
+                    }}
+                  >
+                    <span>{k}</span>
+                    <b
+                      style={{
+                        textAlign: "right",
+                        color: "#fff",
+                        fontFamily: MONO,
+                      }}
+                    >
+                      {v}
+                    </b>
+                  </div>
+                ))}
+              </div>
+              <div
+                style={{
+                  marginTop: "auto",
+                  background: a.aiPurple ? "#21163a" : "#2d2414",
+                  border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`,
+                  borderRadius: 9,
+                  padding: 12,
+                  fontSize: 13,
+                  lineHeight: 1.45,
+                  color: "#fff",
+                  fontWeight: 700,
+                }}
+              >
+                ✨ {a.ai}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function Overview({ go }: { go: (s: string) => void }) {
   return (
     <div className="fade">
@@ -1163,177 +1297,7 @@ function Overview({ go }: { go: (s: string) => void }) {
         />
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0,1.1fr) minmax(0,1fr)",
-          gap: 14,
-          marginTop: 24,
-          alignItems: "stretch",
-        }}
-      >
-        <SectionCard
-          title="What surfaced today"
-          subtitle="Distilled from 2,418 baselines → 5 routed · impact × deviation"
-          accent={T.gold}
-          aiPill
-          right={
-            <span style={{ fontSize: 10, color: T.muted, fontFamily: MONO }}>
-              2418 → 37 → 7 → 5
-            </span>
-          }
-        >
-          <div style={{ height: 234 }}>
-            <ResponsiveContainer>
-              <ScatterChart margin={{ top: 12, right: 14, left: 2, bottom: 6 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke={T.inner} />
-                <XAxis
-                  type="number"
-                  dataKey="dev"
-                  domain={[0, 3.4]}
-                  stroke={T.dim}
-                  fontSize={10}
-                  tickLine={false}
-                  label={{
-                    value: "deviation (σ)",
-                    fill: T.muted,
-                    fontSize: 10,
-                    position: "insideBottom",
-                    dy: 12,
-                  }}
-                />
-                <YAxis
-                  type="number"
-                  dataKey="impact"
-                  domain={[0, 2.8]}
-                  stroke={T.dim}
-                  fontSize={10}
-                  tickLine={false}
-                  width={30}
-                  tickFormatter={(v) => `₹${v}`}
-                />
-                <ZAxis type="number" dataKey="impact" range={[50, 300]} />
-                <ReferenceLine
-                  x={1.5}
-                  stroke={`${T.gold}88`}
-                  strokeDasharray="4 3"
-                  label={{
-                    value: "surface ≥1.5σ",
-                    fill: T.gold,
-                    fontSize: 9,
-                    position: "top",
-                  }}
-                />
-                <Tooltip
-                  content={<ScatterTip />}
-                  cursor={{ strokeDasharray: "3 3", stroke: T.dim }}
-                />
-                <Scatter data={DISTILL}>
-                  {DISTILL.map((d) => (
-                    <Cell
-                      key={`${d.id}-${d.n}`}
-                      fill={d.sub ? `${T.dim}99` : ROUTE[d.route].c}
-                    />
-                  ))}
-                </Scatter>
-              </ScatterChart>
-            </ResponsiveContainer>
-          </div>
-          <div
-            style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: 4 }}
-          >
-            {Object.entries(ROUTE).map(([k, m]) => (
-              <span
-                key={k}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  fontSize: 10,
-                  color: T.muted,
-                }}
-              >
-                <Dot c={m.c} />
-                {m.l}
-              </span>
-            ))}
-            <span
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 5,
-                fontSize: 10,
-                color: T.muted,
-              }}
-            >
-              <Dot c={T.dim} />
-              suppressed
-            </span>
-          </div>
-        </SectionCard>
-
-        <SectionCard
-          title="Today's routed signals"
-          subtitle="Ranked by impact × deviation — each vs its own band"
-          accent={T.red}
-          aiPill
-        >
-          {ROUTED.map((s) => (
-            <div
-              key={s.id}
-              style={{
-                display: "grid",
-                gridTemplateColumns:
-                  "minmax(140px,1.3fr) minmax(110px,1.5fr) 84px 110px",
-                gap: 10,
-                alignItems: "center",
-                padding: "8px 6px",
-                borderBottom: `1px solid ${T.border}`,
-              }}
-            >
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 7,
-                  minWidth: 0,
-                }}
-              >
-                <Dot c={tone(s.sev)} />
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: T.text,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {s.n}
-                </span>
-                <span style={{ fontSize: 8.5, fontFamily: MONO, color: T.dim }}>
-                  {s.id}
-                </span>
-                {s.feed && <Radio size={10} color={T.amber} />}
-                {s.obl && <Pill t="amber">OBL</Pill>}
-              </span>
-              <BaselineBar band={s.band} val={s.val} max={s.max} sev={s.sev} />
-              <Mono c={tone(s.sev)} s={11.5}>
-                {s.dev}
-              </Mono>
-              <RouteChip r={s.route} />
-            </div>
-          ))}
-          <div style={{ marginTop: 10 }}>
-            <AIInsightStrip tone="red">
-              Top signal is a{" "}
-              <b style={{ color: T.text }}>tokenisation break</b>, not behaviour
-              — route to Ops, recover ₹2.4 Cr.
-            </AIInsightStrip>
-          </div>
-        </SectionCard>
-      </div>
+      <TransactionBaselineMonitor />
       <div style={{ height: 44 }} />
     </div>
   );
@@ -2667,13 +2631,653 @@ function LeakPanel() {
   );
 }
 
+/* ───────────── Drill 1 — post-fold panels ───────────── */
+type BrandDeepRow = {
+  k: string;
+  name: string;
+  spend: string;
+  wow: string;
+  wowUp: boolean;
+  txn: string;
+  active: string;
+  activeUp: boolean;
+  repeat: string;
+  repeatUp: boolean;
+  roi: string;
+  rewardCost: string;
+  profitable: string;
+  profitableUp: boolean;
+  status: string;
+  statusAi?: boolean;
+  owner: string;
+};
+
+const BRAND_DEEP: BrandDeepRow[] = [
+  {
+    k: "travel",
+    name: "Premium Travel",
+    spend: "₹312 Cr",
+    wow: "−6.2%",
+    wowUp: false,
+    txn: "2.1M",
+    active: "−3.1%",
+    activeUp: false,
+    repeat: "−4.8%",
+    repeatUp: false,
+    roi: "Weak",
+    rewardCost: "High",
+    profitable: "−6.4%",
+    profitableUp: false,
+    status: "Watch",
+    statusAi: true,
+    owner: "Product",
+  },
+  {
+    k: "cashback",
+    name: "Cashback Plus",
+    spend: "₹468 Cr",
+    wow: "+8.4%",
+    wowUp: true,
+    txn: "5.4M",
+    active: "+4.7%",
+    activeUp: true,
+    repeat: "+6.2%",
+    repeatUp: true,
+    roi: "Strong",
+    rewardCost: "Normal",
+    profitable: "+2.1%",
+    profitableUp: true,
+    status: "Healthy",
+    owner: "Marketing",
+  },
+  {
+    k: "fuel",
+    name: "Fuel Co-brand",
+    spend: "₹214 Cr",
+    wow: "+3.2%",
+    wowUp: true,
+    txn: "1.7M",
+    active: "+1.1%",
+    activeUp: true,
+    repeat: "−1.9%",
+    repeatUp: false,
+    roi: "Weak",
+    rewardCost: "High",
+    profitable: "−3.8%",
+    profitableUp: false,
+    status: "Retarget",
+    statusAi: true,
+    owner: "Partner PM",
+  },
+  {
+    k: "biz",
+    name: "Business Card",
+    spend: "₹290 Cr",
+    wow: "+1.1%",
+    wowUp: true,
+    txn: "1.2M",
+    active: "+0.8%",
+    activeUp: true,
+    repeat: "+1.3%",
+    repeatUp: true,
+    roi: "Neutral",
+    rewardCost: "Stable",
+    profitable: "+0.5%",
+    profitableUp: true,
+    status: "Monitor",
+    owner: "Portfolio PM",
+  },
+];
+
+type OfferBoardCard = {
+  name: string;
+  leak: string;
+  lift: string;
+  conf: string;
+  owner: string;
+  decision: string;
+};
+
+const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
+  keep: [
+    {
+      name: "Travel 5X",
+      leak: "₹2 L",
+      lift: "74%",
+      conf: "High",
+      owner: "Marketing",
+      decision: "Keep",
+    },
+    {
+      name: "Dining 3X",
+      leak: "₹4 L",
+      lift: "67%",
+      conf: "High",
+      owner: "Marketing",
+      decision: "Keep",
+    },
+  ],
+  retarget: [
+    {
+      name: "Fuel Friday",
+      leak: "₹21 L",
+      lift: "46%",
+      conf: "High",
+      owner: "Partner PM",
+      decision: "Retarget",
+    },
+    {
+      name: "Grocery 2%",
+      leak: "₹19 L",
+      lift: "31%",
+      conf: "Medium",
+      owner: "Marketing",
+      decision: "Monitor",
+    },
+  ],
+  kill: [
+    {
+      name: "O-142 Cashback",
+      leak: "₹78 L",
+      lift: "18%",
+      conf: "Medium",
+      owner: "Marketing",
+      decision: "Kill / Narrow",
+    },
+    {
+      name: "Wallet-load booster",
+      leak: "₹42 L",
+      lift: "12%",
+      conf: "Medium",
+      owner: "Marketing",
+      decision: "Kill",
+    },
+  ],
+  wait: [
+    {
+      name: "Co-brand Launch",
+      leak: "tbd",
+      lift: "?",
+      conf: "Low",
+      owner: "Marketing",
+      decision: "Wait 24h",
+    },
+    {
+      name: "Festival EMI",
+      leak: "tbd",
+      lift: "?",
+      conf: "Low",
+      owner: "Marketing",
+      decision: "Wait",
+    },
+  ],
+};
+
+const BOARD_COL_META: Record<string, { l: string; c: string }> = {
+  keep: { l: "Keep", c: T.green },
+  retarget: { l: "Retarget", c: T.amber },
+  kill: { l: "Kill", c: T.red },
+  wait: { l: "Wait", c: T.dim },
+};
+
+const YIELD_ROWS: [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  boolean,
+  string,
+][] = [
+  [
+    "Wallet Load",
+    "₹86 Cr",
+    "Low",
+    "₹4.2 Cr",
+    "₹0.6 Cr",
+    "−₹1.8 Cr",
+    true,
+    "Exclude / cap",
+  ],
+  [
+    "Fuel-adjacent",
+    "₹61 Cr",
+    "Low",
+    "₹2.1 Cr",
+    "₹0.3 Cr",
+    "−₹0.7 Cr",
+    true,
+    "Retier reward",
+  ],
+  [
+    "Online Travel",
+    "₹142 Cr",
+    "Good",
+    "₹1.7 Cr",
+    "₹0.2 Cr",
+    "+₹4.8 Cr",
+    false,
+    "Keep",
+  ],
+  [
+    "Grocery",
+    "₹94 Cr",
+    "Medium",
+    "₹1.1 Cr",
+    "₹0.1 Cr",
+    "+₹0.9 Cr",
+    false,
+    "Monitor",
+  ],
+];
+
+const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
+  [
+    ["New-to-card", "+4.2%", "+3.1%", "Building", "Low", "Healthy", false],
+    [
+      "Activated 0–30 days",
+      "+2.8%",
+      "+1.4%",
+      "Rising",
+      "Med",
+      "Healthy",
+      false,
+    ],
+    ["Repeat spenders", "+1.9%", "+0.8%", "Stable", "Low", "Healthy", false],
+    [
+      "High-frequency high-spend",
+      "+2.1%",
+      "+0.8%",
+      "Stable",
+      "Low",
+      "Healthy",
+      false,
+    ],
+    ["Low-frequency premium", "−4.8%", "−6.1%", "Weak", "Med", "Falling", true],
+    ["Dormancy-risk", "−9.2%", "−11%", "Weak", "High", "Poor", true],
+  ];
+
+function BrandCoBrandDeepPerformanceMatrix() {
+  const cols = "minmax(100px,1.1fr) repeat(9,minmax(68px,.9fr))";
+  return (
+    <SectionCard
+      title="Brand / Co-brand deep performance"
+      subtitle="Which brand is growing, flat, or unhealthy — and what cost problem is attached"
+      accent={T.cyan}
+      aiPill
+    >
+      <div
+        style={{
+          border: `1px solid ${T.border}`,
+          borderRadius: 8,
+          overflowX: "auto",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: cols,
+            gap: 8,
+            padding: "8px 10px",
+            background: T.row,
+            minWidth: 960,
+          }}
+        >
+          {[
+            "Brand",
+            "Spend",
+            "WoW",
+            "Txn",
+            "Active",
+            "Repeat",
+            "Offer ROI",
+            "Reward",
+            "Profit",
+            "Status",
+            "Owner",
+          ].map((h) => (
+            <Eyebrow key={h}>{h}</Eyebrow>
+          ))}
+        </div>
+        {BRAND_DEEP.map((b, i) => (
+          <div
+            key={b.k}
+            style={{
+              display: "grid",
+              gridTemplateColumns: cols,
+              gap: 8,
+              padding: "8px 10px",
+              borderTop: i ? `1px solid ${T.border}` : "none",
+              alignItems: "center",
+              minWidth: 960,
+              fontSize: 11,
+            }}
+          >
+            <BrandPill k={b.k}>{b.name}</BrandPill>
+            <Mono s={10.5}>{b.spend}</Mono>
+            <Mono c={b.wowUp ? T.green : T.red} s={10}>
+              {b.wow}
+            </Mono>
+            <Mono s={10.5}>{b.txn}</Mono>
+            <Mono c={b.activeUp ? T.green : T.red} s={10}>
+              {b.active}
+            </Mono>
+            <Mono c={b.repeatUp ? T.green : T.red} s={10}>
+              {b.repeat}
+            </Mono>
+            <span>{b.roi}</span>
+            <span>{b.rewardCost}</span>
+            <Mono c={b.profitableUp ? T.green : T.red} s={10}>
+              {b.profitable}
+            </Mono>
+            <span
+              style={{ fontWeight: 700, color: b.statusAi ? T.amber : T.green }}
+            >
+              {b.statusAi ? "✨ " : ""}
+              {b.status}
+            </span>
+            <span style={{ color: T.muted }}>{b.owner}</span>
+          </div>
+        ))}
+      </div>
+      <AIInsightStrip>
+        Premium Travel is not a volume problem; it is a profitable-spend
+        problem. Fuel Co-brand is growing, but reward cost is eating the growth.
+      </AIInsightStrip>
+    </SectionCard>
+  );
+}
+
+function OfferPortfolioDecisionBoard() {
+  return (
+    <SectionCard
+      title="Offer portfolio decision board"
+      subtitle="Executive action view — keep, retarget, kill, or wait"
+      accent={T.gold}
+      aiPill
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,minmax(0,1fr))",
+          gap: 12,
+          alignItems: "start",
+        }}
+      >
+        {(["keep", "retarget", "kill", "wait"] as const).map((bucket) => {
+          const m = BOARD_COL_META[bucket];
+          const items = OFFER_BOARD[bucket];
+          return (
+            <div key={bucket}>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 6,
+                  paddingBottom: 6,
+                  borderBottom: `2px solid ${m.c}66`,
+                  marginBottom: 8,
+                }}
+              >
+                <Dot c={m.c} sq />
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 800,
+                    textTransform: "uppercase",
+                    letterSpacing: ".06em",
+                  }}
+                >
+                  {m.l}
+                </span>
+                <span
+                  style={{ fontSize: 10, fontFamily: MONO, color: T.muted }}
+                >
+                  {items.length}
+                </span>
+              </div>
+              {items.map((x) => (
+                <div
+                  key={x.name}
+                  style={{
+                    background: T.inset,
+                    border: `1px solid ${m.c}40`,
+                    borderLeft: `3px solid ${m.c}`,
+                    borderRadius: 9,
+                    padding: "10px 11px",
+                    marginBottom: 8,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontSize: 12.5,
+                      fontWeight: 700,
+                      color: T.text,
+                      marginBottom: 6,
+                    }}
+                  >
+                    {x.name}
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: 6,
+                      marginBottom: 6,
+                    }}
+                  >
+                    <Mono c={m.c} s={10}>
+                      {x.leak}
+                    </Mono>
+                    <span style={{ fontSize: 10, color: T.muted }}>
+                      lift {x.lift}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: 10, color: T.dim, marginBottom: 4 }}>
+                    {x.owner} · {x.conf} conf
+                  </div>
+                  <Pill
+                    t={
+                      bucket === "keep"
+                        ? "green"
+                        : bucket === "kill"
+                          ? "red"
+                          : bucket === "retarget"
+                            ? "amber"
+                            : "muted"
+                    }
+                  >
+                    {x.decision}
+                  </Pill>
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </SectionCard>
+  );
+}
+
+function RewardYieldUnitEconomicsPanel() {
+  return (
+    <SectionCard
+      title="Reward yield unit economics"
+      subtitle="Where is cost rising faster than value?"
+      accent={T.red}
+      aiPill
+    >
+      <div
+        style={{
+          border: `1px solid ${T.border}`,
+          borderRadius: 8,
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.1fr .7fr .6fr .7fr .7fr .7fr .8fr .8fr",
+            gap: 8,
+            padding: "7px 10px",
+            background: T.row,
+          }}
+        >
+          {[
+            "MCC / Category",
+            "Spend",
+            "Yield",
+            "Reward",
+            "Fraud/Rev",
+            "Net",
+            "Status",
+            "Action",
+          ].map((h) => (
+            <Eyebrow key={h}>{h}</Eyebrow>
+          ))}
+        </div>
+        {YIELD_ROWS.map(
+          ([cat, spend, yld, reward, fraud, net, neg, action], i) => (
+            <div
+              key={cat}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1.1fr .7fr .6fr .7fr .7fr .7fr .8fr .8fr",
+                gap: 8,
+                padding: "7px 10px",
+                borderTop: i ? `1px solid ${T.border}` : "none",
+                alignItems: "center",
+                fontSize: 11,
+              }}
+            >
+              <span style={{ color: T.sub }}>{cat}</span>
+              <Mono s={10.5}>{spend}</Mono>
+              <span>{yld}</span>
+              <Mono s={10.5}>{reward}</Mono>
+              <Mono s={10.5}>{fraud}</Mono>
+              <Mono c={neg ? T.red : T.green} s={10.5}>
+                {net}
+              </Mono>
+              <span
+                style={{
+                  fontWeight: 700,
+                  color: neg ? T.red : action === "Monitor" ? T.amber : T.green,
+                }}
+              >
+                {neg
+                  ? "✨ Negative"
+                  : action === "Monitor"
+                    ? "Watch"
+                    : "Healthy"}
+              </span>
+              <span style={{ color: T.muted, fontSize: 10 }}>{action}</span>
+            </div>
+          ),
+        )}
+      </div>
+      <AIInsightStrip tone="red">
+        Reward cost crossed yield in two MCCs. Cap accelerated rewards for
+        wallet-load and fuel-adjacent transactions.
+      </AIInsightStrip>
+    </SectionCard>
+  );
+}
+
+function CohortGrowthQualityMatrix() {
+  const cols = "minmax(140px,1.2fr) repeat(6,minmax(72px,.9fr))";
+  return (
+    <SectionCard
+      title="Cohort growth quality"
+      subtitle="Growth quality by lifecycle stage — activation → repeat → dormancy"
+      accent={T.cyan}
+      aiPill
+    >
+      <div
+        style={{
+          border: `1px solid ${T.border}`,
+          borderRadius: 8,
+          overflowX: "auto",
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: cols,
+            gap: 8,
+            padding: "8px 10px",
+            background: T.row,
+            minWidth: 820,
+          }}
+        >
+          {[
+            "Cohort",
+            "Spend Δ",
+            "Txn Freq Δ",
+            "Repeat",
+            "Offer Dep.",
+            "Profitability",
+            "AI Status",
+          ].map((h) => (
+            <Eyebrow key={h}>{h}</Eyebrow>
+          ))}
+        </div>
+        {COHORT_ROWS.map(
+          ([cohort, spend, freq, repeat, dep, prof, watch], i) => (
+            <div
+              key={cohort}
+              style={{
+                display: "grid",
+                gridTemplateColumns: cols,
+                gap: 8,
+                padding: "8px 10px",
+                borderTop: i ? `1px solid ${T.border}` : "none",
+                alignItems: "center",
+                minWidth: 820,
+                fontSize: 11,
+              }}
+            >
+              <span style={{ fontWeight: 600, color: T.text }}>{cohort}</span>
+              <Mono c={spend.startsWith("−") ? T.red : T.green} s={10.5}>
+                {spend}
+              </Mono>
+              <Mono c={freq.startsWith("−") ? T.red : T.green} s={10.5}>
+                {freq}
+              </Mono>
+              <span>{repeat}</span>
+              <span>{dep}</span>
+              <span
+                style={{
+                  color:
+                    prof === "Poor" || prof === "Falling" ? T.red : T.green,
+                }}
+              >
+                {prof}
+              </span>
+              <span
+                style={{ fontWeight: 700, color: watch ? T.amber : T.green }}
+              >
+                {watch ? "✨ Watch" : "Keep growing"}
+              </span>
+            </div>
+          ),
+        )}
+      </div>
+      <AIInsightStrip tone="cyan">
+        Growth is concentrated in offer-sensitive Cashback cohorts. Premium
+        low-frequency cohorts are slipping without showing full dormancy yet.
+      </AIInsightStrip>
+    </SectionCard>
+  );
+}
+
 function Drill1({ go }: { go: (s: string) => void }) {
   return (
     <div className="fade">
       <DrillHeader
         onBack={() => go("overview")}
         title="How are my transactions & offers doing?"
-        sub="Growth, brand / co-brand performance, offer keep-kill, reward cost and profitable spend — from transaction data alone."
+        sub="Transaction-only view of portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
         chips={
           <>
             <Chip t="cyan">Transaction-only</Chip>
@@ -2695,17 +3299,27 @@ function Drill1({ go }: { go: (s: string) => void }) {
       <div style={{ marginTop: 14 }}>
         <LeakPanel />
       </div>
-      <div style={{ marginTop: 14 }}>
-        <SectionCard title="Ask LiSN" subtitle="natural-language">
-          <NLRow
-            queries={[
-              ["Growth", "which cohorts are flat?"],
-              ["Offers", "which offer should I kill?"],
-              ["Economics", "is growth profitable or reward-heavy?"],
-              ["Drift", "which premium cohort is losing profitability?"],
-            ]}
-          />
-        </SectionCard>
+      <div
+        style={{
+          marginTop: 14,
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <BrandCoBrandDeepPerformanceMatrix />
+        <OfferPortfolioDecisionBoard />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2,minmax(0,1fr))",
+            gap: 12,
+            alignItems: "stretch",
+          }}
+        >
+          <RewardYieldUnitEconomicsPanel />
+          <CohortGrowthQualityMatrix />
+        </div>
       </div>
       <div style={{ height: 44 }} />
     </div>
