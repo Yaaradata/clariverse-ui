@@ -413,7 +413,7 @@ function DrillHeader({
 }: {
   title: ReactNode;
   sub: ReactNode;
-  chips: ReactNode;
+  chips?: ReactNode;
   onBack: () => void;
 }) {
   return (
@@ -471,16 +471,18 @@ function DrillHeader({
             {sub}
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            gap: 8,
-            flexWrap: "wrap",
-            justifyContent: "flex-end",
-          }}
-        >
-          {chips}
-        </div>
+        {chips ? (
+          <div
+            style={{
+              display: "flex",
+              gap: 8,
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
+            }}
+          >
+            {chips}
+          </div>
+        ) : null}
       </div>
     </>
   );
