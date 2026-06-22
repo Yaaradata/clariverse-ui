@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { AIRiskSpikeMonitor, headRetailRiskSpikes } from "@/components/unified/actions/AIRiskSpikeMonitor";
-import { CardsRiskSpikeMonitor } from "./CardsRiskSpikeMonitor";
+import { TransactionBaselineMonitor } from "./CardsPortfolioDrillScreens";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { SystemHealthRibbon } from "@/components/unified/kpi/SystemHealthRibbon";
 import { EisenhowerMatrix } from "@/components/email/EisenhowerMatrix";
@@ -91,7 +91,7 @@ export function RoleBasedUnifiedScreen1Addon({ role }: { role: Role }) {
           driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"
         />
       ) : isCardsPortfolio ? (
-        <CardsRiskSpikeMonitor />
+        <TransactionBaselineMonitor />
       ) : (
         <AIRiskSpikeMonitor />
       )}

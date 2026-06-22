@@ -675,6 +675,218 @@ function FraudMisfireBlastCard() {
   );
 }
 
+/* ═════════════════════════ TRANSACTION BASELINE MONITOR ═════════════════════════ */
+/**
+ * Transaction-first portfolio alert strip — live detection from transaction /
+ * summary data alone. The customer-voice join is kept as a single, visually
+ * distinct "Later" card at the end, never mixed into the transaction-only
+ * signals. Replaces the older voice-led AI spike monitor on the overview.
+ */
+type MonitorTone = "critical" | "high" | "obligation" | "advisory" | "voice";
+
+function monitorToneColor(tone: MonitorTone): string {
+  switch (tone) {
+    case "critical":
+      return JH.red;
+    case "high":
+      return JH.amber;
+    case "obligation":
+      return JH.gold;
+    case "advisory":
+      return JH.cyan;
+    case "voice":
+      return JH.violet;
+    default: {
+      const _exhaustive: never = tone;
+      return _exhaustive;
+    }
+  }
+}
+
+export type MonitorAlert = {
+  id: string;
+  title: string;
+  badge: string;
+  tone: MonitorTone;
+  fields: { label: string; value: string }[];
+  stats: { label: string; value: string }[];
+  insight: string;
+};
+
+export const TRANSACTION_BASELINE_ALERTS: MonitorAlert[] = [
+  {
+    id: "tbm-token-cnp",
+    title: "Tokenised CNP Approval Gap",
+    badge: "Critical",
+    tone: "critical",
+    fields: [
+      { label: "Cohort", value: "Premium · CNP" },
+      { label: "Data source", value: "Token + auth feed" },
+      { label: "Time", value: "Since 11:00" },
+    ],
+    stats: [
+      { label: "Approval Gap", value: "14 pts" },
+      { label: "Spend at Risk", value: "₹2.4 Cr" },
+      { label: "Route", value: "Ops/Risk" },
+    ],
+    insight: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue.",
+  },
+  {
+    id: "tbm-offer-o142",
+    title: "Offer O-142 Cannibalisation",
+    badge: "Critical",
+    tone: "critical",
+    fields: [
+      { label: "Cohort", value: "Cashback Plus" },
+      { label: "Data source", value: "Offer + spend" },
+      { label: "Time", value: "Day 6" },
+    ],
+    stats: [
+      { label: "Redemption", value: "High" },
+      { label: "True Lift", value: "Low" },
+      { label: "Leakage", value: "₹78 L" },
+    ],
+    insight: "Matched-control baseline says spend would have happened anyway. Recommend pause or retarget.",
+  },
+  {
+    id: "tbm-fraud-r77",
+    title: "Fraud Rule R-77 Misfire",
+    badge: "High",
+    tone: "high",
+    fields: [
+      { label: "Cohort", value: "3+ yr customers" },
+      { label: "Data source", value: "Rule change feed" },
+      { label: "Time", value: "Within 2h" },
+    ],
+    stats: [
+      { label: "Approval Rate", value: "94% → 81%" },
+      { label: "Good Blocks", value: "+210%" },
+      { label: "Feed", value: "Needs rule log" },
+    ],
+    insight: "Approval step-change tied to a rule edit. Data confidence depends on the fraud-rule event feed.",
+  },
+  {
+    id: "tbm-activation-clock",
+    title: "Activation Closure Clock",
+    badge: "Obligation",
+    tone: "obligation",
+    fields: [
+      { label: "Cohort", value: "Batch 4471" },
+      { label: "Data source", value: "Issue + first txn" },
+      { label: "Time", value: "D27" },
+    ],
+    stats: [
+      { label: "Below baseline", value: "13 pts" },
+      { label: "Cards at risk", value: "6.2k" },
+      { label: "Route", value: "PM + Conduct" },
+    ],
+    insight: "Treat as obligation, not opportunity. Surface the closure countdown and activation intervention.",
+  },
+  {
+    id: "tbm-utilisation-surge",
+    title: "Utilisation Migration Surge",
+    badge: "Advisory",
+    tone: "advisory",
+    fields: [
+      { label: "Cohort", value: "Sourcing Q2" },
+      { label: "Data source", value: "Balance + limit" },
+      { label: "Time", value: "This week" },
+    ],
+    stats: [
+      { label: "80%+ crossing", value: "1.8×" },
+      { label: "Projected roll", value: "9 bps" },
+      { label: "Route", value: "Risk" },
+    ],
+    insight: "Advisory only. No automatic customer treatment; route to EWS / model-risk review.",
+  },
+  {
+    id: "tbm-decline-voice",
+    title: "Decline ↔ Payment-Failed Voice",
+    badge: "Later",
+    tone: "voice",
+    fields: [
+      { label: "Cohort", value: "Premium CNP" },
+      { label: "Needs", value: "Voice corpus" },
+      { label: "Join", value: "Temporal + cohort" },
+    ],
+    stats: [
+      { label: "Payment failed", value: "×4" },
+      { label: "Link strength", value: "87%" },
+      { label: "Use", value: "Prove pain" },
+    ],
+    insight: "This is the nobody-else-can-do LiSN layer. Kept separate from the transaction-only cards.",
+  },
+];
+
+function MonitorAlertCard({ alert }: { alert: MonitorAlert }) {
+  const c = monitorToneColor(alert.tone);
+  const isVoice = alert.tone === "voice";
+  return (
+    <div
+      style={{
+        minWidth: 264,
+        maxWidth: 300,
+        flex: "1 1 264px",
+        background: isVoice ? `${JH.violet}10` : JH.card,
+        border: `1px solid ${c}`,
+        borderRadius: 14,
+        padding: "16px 16px 14px",
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: `0 8px 24px ${c}14`,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8, marginBottom: 14 }}>
+        <div style={{ fontSize: 15.5, fontWeight: 800, color: JH.text, lineHeight: 1.15 }}>{alert.title}</div>
+        <Pill color={c} solid>{alert.badge}</Pill>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+        {alert.fields.map((f) => (
+          <div key={f.label} style={{ display: "grid", gridTemplateColumns: "104px 1fr", gap: 8, alignItems: "baseline" }}>
+            <span style={{ fontSize: 10, fontWeight: 800, color: JH.dim, textTransform: "uppercase", letterSpacing: "0.06em" }}>{f.label}</span>
+            <span style={{ fontSize: 11.5, fontWeight: 700, color: JH.sub, textAlign: "right" }}>{f.value}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: 14, background: JH.inset, border: `1px solid ${JH.borderInner}`, borderRadius: 10, padding: 12, display: "flex", flexDirection: "column", gap: 11 }}>
+        {alert.stats.map((s) => (
+          <div key={s.label} style={{ display: "grid", gridTemplateColumns: "1.15fr 1fr", gap: 8, alignItems: "baseline" }}>
+            <span style={{ fontSize: 11.5, color: JH.muted }}>{s.label}</span>
+            <span style={{ fontSize: 12.5, fontWeight: 700, color: JH.text, textAlign: "right", fontFamily: "var(--mono), ui-monospace, monospace" }}>{s.value}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginTop: "auto", paddingTop: 14 }}>
+        <div style={{ background: `${c}12`, border: `1px solid ${c}40`, borderLeft: `3px solid ${c}`, borderRadius: 9, padding: "11px 12px", display: "flex", alignItems: "flex-start", gap: 7, fontSize: 12, color: JH.sub, lineHeight: 1.5 }}>
+          <Sparkles size={12} color={c} style={{ marginTop: 2, flexShrink: 0 }} />
+          <span>{alert.insight}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function TransactionBaselineMonitor({ alerts = TRANSACTION_BASELINE_ALERTS }: { alerts?: MonitorAlert[] }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <h2 style={{ fontSize: 17, fontWeight: 800, color: JH.text, margin: 0, display: "inline-flex", alignItems: "center", gap: 7 }}>
+          <Sparkles size={16} color={JH.gold} /> Transaction Baseline Monitor
+        </h2>
+        <Pill color={JH.red}>Portfolio Alerts</Pill>
+      </div>
+      <p style={{ fontSize: 11.5, color: JH.muted, margin: 0, lineHeight: 1.5 }}>
+        Live detection from transaction / summary data alone — the customer-voice join is kept separate in the &quot;Later&quot; card at the end.
+      </p>
+      <div style={{ display: "flex", width: "100%", minWidth: 0, gap: 14, overflowX: "auto", paddingBottom: 8, alignItems: "stretch" }}>
+        {alerts.map((alert) => (
+          <MonitorAlertCard key={alert.id} alert={alert} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function SubstrateFooter() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", background: JH.card, border: `1px dashed ${JH.borderInner}`, borderRadius: 10, padding: "10px 14px" }}>
