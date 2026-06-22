@@ -140,7 +140,7 @@ export const INDUSTRIES = [
         id: "cards_portfolio_v2",
         name: "Cards Portfolio Manager (v2)",
         icon: BarChart3,
-        sub: "Transaction-first · 3 question cards · command-center drills · voice-join differentiator",
+        sub: "Transactions & offers · blockers & problems · 2 drilldowns · AI day generator",
       },
       {
         id: "head_fraud",
