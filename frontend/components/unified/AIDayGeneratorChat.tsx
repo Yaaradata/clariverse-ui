@@ -15,6 +15,9 @@ interface Message {
 interface AIDayGeneratorChatProps {
   isOpen: boolean;
   onClose: () => void;
+  starterQuestions?: string[];
+  chatSubtitle?: string;
+  generateResponse?: (userMessage: string) => Promise<string>;
 }
 
 const DEFAULT_QUESTIONS = [
@@ -28,7 +31,13 @@ const DEFAULT_QUESTIONS = [
   "What are customers saying about us on Trustpilot and App Store?"
 ];
 
-export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps) {
+export function AIDayGeneratorChat({
+  isOpen,
+  onClose,
+  starterQuestions = DEFAULT_QUESTIONS,
+  chatSubtitle = "Unified insights across Email, Chat, Ticket, Social & Voice",
+  generateResponse,
+}: AIDayGeneratorChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -54,6 +63,10 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
   }, [isOpen]);
 
   const generateAIResponse = async (userMessage: string): Promise<string> => {
+    if (generateResponse) {
+      return generateResponse(userMessage);
+    }
+
     await new Promise(resolve => setTimeout(resolve, 800 + Math.random() * 1200));
 
     const lowerMessage = userMessage.toLowerCase();
@@ -339,8 +352,8 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">AI Day Generator</h2>
-                  <p className="text-xs text-gray-400">Unified insights across Email, Chat, Ticket, Social & Voice</p>
+                  <h2 className="text-lg font-semibold text-white">AI Analyst</h2>
+                  <p className="text-xs text-gray-400">{chatSubtitle}</p>
                 </div>
               </div>
               <Button
@@ -358,7 +371,7 @@ export function AIDayGeneratorChat({ isOpen, onClose }: AIDayGeneratorChatProps)
               <div className="p-4 border-b border-white/10 bg-app-black/30">
                 <p className="text-sm text-gray-400 mb-3">Try asking:</p>
                 <div className="flex flex-wrap gap-2">
-                  {DEFAULT_QUESTIONS.map((question, index) => {
+                  {starterQuestions.map((question, index) => {
                     const colors = [
                       { base: "#06b6d4", bg: "rgba(6,182,212,0.10)", border: "rgba(6,182,212,0.30)", hover: "rgba(6,182,212,0.20)" },
                       { base: "#60a5fa", bg: "rgba(96,165,250,0.10)", border: "rgba(96,165,250,0.30)", hover: "rgba(96,165,250,0.20)" },

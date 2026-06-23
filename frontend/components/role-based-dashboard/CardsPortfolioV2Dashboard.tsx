@@ -30,6 +30,11 @@ import {
   Zap,
 } from "lucide-react";
 import { RoleBasedUnifiedChrome } from "@/components/role-based-dashboard/RoleBasedUnifiedChrome";
+import {
+  CARDS_PORTFOLIO_V2_AI_ANALYST_QUESTIONS,
+  CARDS_PORTFOLIO_V2_AI_ANALYST_SUBTITLE,
+  generateCardsPortfolioV2AIResponse,
+} from "@/lib/role-based-dashboard/cardsPortfolioV2Data";
 import type { CSSProperties, ReactNode } from "react";
 import { useState } from "react";
 import {
@@ -3816,7 +3821,11 @@ export function CardsPortfolioV2Dashboard({ onExit }: { onExit?: () => void }) {
         {screen === "d1" && <Drill1 go={go} />}
         {screen === "d2" && <Drill2 go={go} />}
       </main>
-      <RoleBasedUnifiedChrome />
+      <RoleBasedUnifiedChrome
+        starterQuestions={CARDS_PORTFOLIO_V2_AI_ANALYST_QUESTIONS}
+        chatSubtitle={CARDS_PORTFOLIO_V2_AI_ANALYST_SUBTITLE}
+        generateResponse={generateCardsPortfolioV2AIResponse}
+      />
     </div>
   );
 }
