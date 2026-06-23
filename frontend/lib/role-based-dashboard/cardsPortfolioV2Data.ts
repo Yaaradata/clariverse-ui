@@ -54,12 +54,10 @@ export async function generateCardsPortfolioV2AIResponse(
   if (m.includes("reward-negative") || (m.includes("mdr") && m.includes("fraud"))) {
     return (
       `**Reward-negative spend categories**\n\n` +
-      `🔴 **2 MCC bands crossed net-negative** after the earn-rate change · **₹61 L net leak** (interchange − reward − fraud < 0)\n\n` +
+      `🔴 **2 MCC bands crossed net-negative** after the earn-rate change · **₹2.5 Cr combined net strain** (interchange − reward − fraud)\n\n` +
       `**Categories**:\n` +
-      `1. **Wallet-load MCCs** — low MDR (~0.8%) vs accelerated earn · **₹42 L** strain · fraud adj. elevated on prepaid loads\n` +
-      `2. **Fuel-adjacent MCCs** — earn uplift applied where interchange can't cover reward cost · **₹19 L** strain\n\n` +
-      `**Economics breakdown (wallet-load example)**:\n` +
-      `• Interchange earned: 0.8% · Reward cost: 1.4% · Fraud loss alloc.: 0.3% · **Net: −0.9%**\n\n` +
+      `1. **Wallet-load MCCs** — interchange **₹3.0 Cr** vs reward **₹4.2 Cr** + fraud **₹0.6 Cr** · **net −₹1.8 Cr** on ₹86 Cr spend (~3.5% interchange, 4.9% reward)\n` +
+      `2. **Fuel-adjacent MCCs** — interchange **₹1.7 Cr** vs reward **₹2.1 Cr** + fraud **₹0.3 Cr** · **net −₹0.7 Cr** on ₹61 Cr spend\n\n` +
       `**Recommended action**:\n` +
       `1. Cap or exclude the 2 MCC bands from accelerated earn\n` +
       `2. Re-tier earn by MDR band in rewards engine\n` +
@@ -151,7 +149,7 @@ export async function generateCardsPortfolioV2AIResponse(
     `📊 **Today's read** (transaction-only):\n` +
     `• Approval rate: **81%** (−13 pts) · Decline spike **+38%** since 11:00\n` +
     `• **62% curable** · **₹2.4 Cr** recoverable on tokenised CNP path\n` +
-    `• Offer O-142 leaking **₹78 L** · 2 reward-negative MCC bands (**₹61 L**)\n` +
+    `• Offer O-142 leaking **₹78 L** · 2 reward-negative MCC bands (**₹2.5 Cr** net strain)\n` +
     `• Fraud Rule R-77 stepped approval down · Batch #4471 at D27 (**₹93 L CAC** at risk)\n\n` +
     `**Top 3 actions before EOD**:\n` +
     `1. Open ACS/token incident — tokenised CNP gap (Ops / Risk)\n` +

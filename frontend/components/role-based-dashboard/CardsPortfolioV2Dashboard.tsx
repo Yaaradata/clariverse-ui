@@ -1264,7 +1264,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹61 L net leak",
+    metric: "₹2.5 Cr net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -2683,12 +2683,14 @@ const YIELD_ROWS: [
   string,
   string,
   string,
+  string,
   boolean,
   string,
 ][] = [
   [
     "Wallet Load",
     "₹86 Cr",
+    "₹3.0 Cr",
     "Low",
     "₹4.2 Cr",
     "₹0.6 Cr",
@@ -2699,6 +2701,7 @@ const YIELD_ROWS: [
   [
     "Fuel-adjacent",
     "₹61 Cr",
+    "₹1.7 Cr",
     "Low",
     "₹2.1 Cr",
     "₹0.3 Cr",
@@ -2709,6 +2712,7 @@ const YIELD_ROWS: [
   [
     "Online Travel",
     "₹142 Cr",
+    "₹6.7 Cr",
     "Good",
     "₹1.7 Cr",
     "₹0.2 Cr",
@@ -2719,6 +2723,7 @@ const YIELD_ROWS: [
   [
     "Grocery",
     "₹94 Cr",
+    "₹2.1 Cr",
     "Medium",
     "₹1.1 Cr",
     "₹0.1 Cr",
@@ -2960,7 +2965,7 @@ function RewardYieldUnitEconomicsPanel() {
   return (
     <SectionCard
       title="Reward yield unit economics"
-      subtitle="Where is cost rising faster than value?"
+      subtitle="Net = Interchange − Reward − Fraud · band = interchange yield vs category baseline"
       accent={T.red}
       aiPill
     >
@@ -2974,7 +2979,7 @@ function RewardYieldUnitEconomicsPanel() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.1fr .7fr .6fr .7fr .7fr .7fr .8fr .8fr",
+            gridTemplateColumns: "1fr .65fr .7fr .55fr .65fr .65fr .65fr .75fr .75fr",
             gap: 8,
             padding: "7px 10px",
             background: T.row,
@@ -2983,7 +2988,8 @@ function RewardYieldUnitEconomicsPanel() {
           {[
             "MCC / Category",
             "Spend",
-            "Yield",
+            "Interchange",
+            "Band",
             "Reward",
             "Fraud/Rev",
             "Net",
@@ -2994,12 +3000,12 @@ function RewardYieldUnitEconomicsPanel() {
           ))}
         </div>
         {YIELD_ROWS.map(
-          ([cat, spend, yld, reward, fraud, net, neg, action], i) => (
+          ([cat, spend, interchange, band, reward, fraud, net, neg, action], i) => (
             <div
               key={cat}
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.1fr .7fr .6fr .7fr .7fr .7fr .8fr .8fr",
+                gridTemplateColumns: "1fr .65fr .7fr .55fr .65fr .65fr .65fr .75fr .75fr",
                 gap: 8,
                 padding: "7px 10px",
                 borderTop: i ? `1px solid ${T.border}` : "none",
@@ -3009,7 +3015,10 @@ function RewardYieldUnitEconomicsPanel() {
             >
               <span style={{ color: T.sub }}>{cat}</span>
               <Mono s={10.5}>{spend}</Mono>
-              <span>{yld}</span>
+              <Mono s={10.5}>{interchange}</Mono>
+              <span style={{ color: neg ? T.red : band === "Medium" ? T.amber : T.green }}>
+                {band}
+              </span>
               <Mono s={10.5}>{reward}</Mono>
               <Mono s={10.5}>{fraud}</Mono>
               <Mono c={neg ? T.red : T.green} s={10.5}>
@@ -3033,8 +3042,9 @@ function RewardYieldUnitEconomicsPanel() {
         )}
       </div>
       <AIInsightStrip tone="red">
-        Reward cost crossed yield in two MCCs. Cap accelerated rewards for
-        wallet-load and fuel-adjacent transactions.
+        Wallet-load interchange is ₹3.0 Cr on ₹86 Cr spend (~3.5%) but reward
+        runs 4.9% — net −₹1.8 Cr. Combined with fuel-adjacent, ₹2.5 Cr net
+        strain across two MCC bands. Cap accelerated rewards on both.
       </AIInsightStrip>
     </SectionCard>
   );
