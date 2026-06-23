@@ -925,16 +925,6 @@ function TodayTransactionSignalMonitor() {
       </div>
       <div
         style={{
-          color: "#bebec7",
-          fontSize: 13,
-          marginBottom: 14,
-          fontWeight: 600,
-        }}
-      >
-        Live detection from transaction / summary data alone — spend, offers, declines, auth, activation and roll-risk signals.
-      </div>
-      <div
-        style={{
           display: "flex",
           gap: 14,
           overflowX: "auto",
