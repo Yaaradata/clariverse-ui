@@ -163,6 +163,22 @@ export const INDUSTRIES = [
         sub: "Contact volume, refunds, delivery complaints",
       },
       {
+        id: "head_cx_retail",
+        name: "Head of CX (Retail)",
+        icon: Building2,
+        sub: "Fluid CX — store pickup, delivery, returns, omnichannel",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        id: "head_cx_retail_v2",
+        name: "Head of CX (Retail) · V2",
+        icon: Building2,
+        sub: "Compact Fluid CX — UI refresh",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
         id: "head_marketplace",
         name: "Head of Marketplace",
         icon: BarChart3,

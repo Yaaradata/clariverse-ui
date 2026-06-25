@@ -75,6 +75,8 @@ import {
 import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown";
 import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown";
 import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
+import { CXVoCHeadDashboard } from "./CXVoCHeadDashboard";
+import { CXVoCHeadDashboardV2 } from "./CXVoCHeadDashboardV2";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
@@ -2859,7 +2861,9 @@ function RoleDashboardShell({
         : "retail_banking";
   const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
-  const data = roleDataMap[role.id] ?? ROLE_DATA.ceo;
+  const roleDataKey =
+    role.id === "head_cx_retail" || role.id === "head_cx_retail_v2" ? "head_cx" : role.id;
+  const data = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
 
   const IndIcon = industry.icon;
   const RoleIcon = role.icon;
@@ -3713,6 +3717,28 @@ export function RoleDashboardView({
         initialPersona={role.id === "head_cx" ? "coh" : "hob"}
         onExit={onExit}
         theme={theme}
+      />
+    );
+  }
+
+  if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
+    return (
+      <CXVoCHeadDashboard
+        industryName={industry.name}
+        roleName={roleDisplayName(role)}
+        industryColor={industry.color}
+        onExit={onExit}
+      />
+    );
+  }
+
+  if (industry.id === "ecommerce" && role.id === "head_cx_retail_v2") {
+    return (
+      <CXVoCHeadDashboardV2
+        industryName={industry.name}
+        roleName={roleDisplayName(role)}
+        industryColor={industry.color}
+        onExit={onExit}
       />
     );
   }

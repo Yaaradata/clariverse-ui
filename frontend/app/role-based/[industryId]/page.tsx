@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ChevronRight } from "lucide-react";
@@ -8,6 +9,23 @@ import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrom
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
 const accent = "#5332FF";
+
+function versionButtonStyle(): CSSProperties {
+  return {
+    flexShrink: 0,
+    fontSize: 11,
+    fontWeight: 800,
+    letterSpacing: 0.6,
+    padding: "7px 14px",
+    borderRadius: 8,
+    background: `${accent}1a`,
+    border: `1px solid ${accent}55`,
+    color: accent,
+    textDecoration: "none",
+    lineHeight: 1,
+    cursor: "pointer",
+  };
+}
 
 export default function RoleBasedIndustryRolesPage() {
   const { isDarkMode } = useRoleBasedUi();
@@ -81,8 +99,71 @@ export default function RoleBasedIndustryRolesPage() {
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
-        {industry.roles.map((role) => {
+        {industry.roles
+          .filter((role) => role.id !== "head_cx_retail_v2")
+          .map((role) => {
           const Icon = role.icon;
+          const cardStyle = {
+            background: cardBg,
+            border: `1px solid ${border}`,
+            borderRadius: 14,
+            padding: "20px 22px",
+            cursor: "pointer",
+            transition: "all 0.2s",
+            display: "flex",
+            gap: 16,
+            alignItems: "center",
+            textDecoration: "none",
+            color: "inherit",
+          } as const;
+
+          if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
+            return (
+              <div key={role.id} style={{ ...cardStyle, cursor: "default" }}>
+                <div
+                  style={{
+                    width: 42,
+                    height: 42,
+                    borderRadius: 10,
+                    background: `${accent}14`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <Icon size={20} color={accent} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 4 }}>
+                    {roleDisplayName(role)}
+                  </div>
+                  <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
+                </div>
+                <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+                  <Link
+                    href={`/role-based/${industry.id}/head_cx_retail`}
+                    onMouseEnter={() => {
+                      void import("@/components/role-based-dashboard/CXVoCHeadDashboard");
+                    }}
+                    style={versionButtonStyle()}
+                  >
+                    V1
+                  </Link>
+                  <Link
+                    href={`/role-based/${industry.id}/head_cx_retail_v2`}
+                    onMouseEnter={() => {
+                      void import("@/components/role-based-dashboard/CXVoCHeadDashboardV2");
+                    }}
+                    style={versionButtonStyle()}
+                  >
+                    V2
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+
           return (
             <Link
               key={role.id}
@@ -93,19 +174,7 @@ export default function RoleBasedIndustryRolesPage() {
                   void import("@/components/role-based-dashboard/FastagIntelligenceDashboard");
                 }
               }}
-              style={{
-                background: cardBg,
-                border: `1px solid ${border}`,
-                borderRadius: 14,
-                padding: "20px 22px",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                display: "flex",
-                gap: 16,
-                alignItems: "center",
-                textDecoration: "none",
-                color: "inherit",
-              }}
+              style={cardStyle}
             >
               <div
                 style={{
