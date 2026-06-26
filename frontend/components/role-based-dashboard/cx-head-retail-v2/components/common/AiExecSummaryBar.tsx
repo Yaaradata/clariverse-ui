@@ -1,20 +1,22 @@
 import React from "react";
-import type { ConfidenceBand } from "../../lib/cxHeadRetailData";
+import type { ConfidenceBand as Band } from "../../lib/cxHeadRetailData";
 import { AiMarker } from "./AiMarker";
+import { ConfidenceBand } from "./ConfidenceBand";
 import { cssVar, radius } from "../../theme/tokens";
 
-/** Dense exec triad — one optional AI line, no confidence band on the face. */
+/** Thin exec summary — AP-011 / CL-004. Not a wide AI bar (RP-006). */
 export function AiExecSummaryBar({
   critical,
   focus,
   stable,
   aiLine,
+  aiConfidence = "High",
 }: {
   critical: string;
   focus: string;
   stable: string;
-  aiLine?: string;
-  aiConfidence?: ConfidenceBand;
+  aiLine: string;
+  aiConfidence?: Band;
 }): React.ReactElement {
   const sections = [
     { label: "Critical", value: critical, color: cssVar("severity-high") },
@@ -28,66 +30,47 @@ export function AiExecSummaryBar({
         borderRadius: radius.md,
         border: `1px solid ${cssVar("border")}`,
         background: cssVar("surface"),
-        padding: "8px 12px",
+        padding: "10px 14px",
       }}
     >
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 10 }}>
         {sections.map((s) => (
           <div key={s.label}>
             <div
               style={{
                 fontSize: 9,
                 fontWeight: 700,
-                letterSpacing: 0.5,
+                letterSpacing: 0.55,
                 color: s.color,
                 textTransform: "uppercase",
               }}
             >
               {s.label}
             </div>
-            <div
-              style={{
-                fontSize: 11.5,
-                color: cssVar("text-secondary"),
-                marginTop: 2,
-                lineHeight: 1.3,
-                display: "-webkit-box",
-                WebkitLineClamp: 2,
-                WebkitBoxOrient: "vertical",
-                overflow: "hidden",
-              }}
-            >
+            <div style={{ fontSize: 12.5, color: cssVar("text-secondary"), marginTop: 3, lineHeight: 1.35 }}>
               {s.value}
             </div>
           </div>
         ))}
       </div>
-      {aiLine ? (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-            marginTop: 6,
-            paddingTop: 6,
-            borderTop: `1px solid ${cssVar("border")}`,
-          }}
-        >
-          <AiMarker size={11} />
-          <span
-            style={{
-              fontSize: 11,
-              color: cssVar("text-muted"),
-              lineHeight: 1.3,
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {aiLine}
-          </span>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 6,
+          marginTop: 8,
+          paddingTop: 8,
+          borderTop: `1px solid ${cssVar("border")}`,
+        }}
+      >
+        <AiMarker size={12} />
+        <div style={{ flex: 1 }}>
+          <span style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{aiLine}</span>
+          <div style={{ marginTop: 6 }}>
+            <ConfidenceBand band={aiConfidence} />
+          </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

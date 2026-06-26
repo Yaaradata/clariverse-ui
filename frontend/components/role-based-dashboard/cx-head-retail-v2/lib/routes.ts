@@ -1,6 +1,6 @@
 // lib/routes.ts
 // Locked 5-screen set — Stage 10 route map (in-memory ids mirror URL paths).
-// Default landing: command-centre (CX Command /).
+// Default landing: command-centre (What's Breaking /).
 
 import {
   Radar,
@@ -29,37 +29,37 @@ export interface ScreenRoute {
 export const SCREENS: ScreenRoute[] = [
   {
     id: 'command-centre',
-    label: 'CX Command',
-    shortLabel: 'Command',
-    purpose: 'Breaking now · owners',
+    label: "What's Breaking",
+    shortLabel: 'Breaking',
+    purpose: 'What is breaking right now, and who owns it?',
     icon: Radar,
   },
   {
     id: 'quick-commerce',
-    label: 'Quick-Commerce',
-    shortLabel: 'Q-Comm',
-    purpose: 'Dark-store signals',
+    label: 'Dark-Store Signals',
+    shortLabel: 'Dark-store',
+    purpose: 'Dark-store and perishable signals before ops dashboards move.',
     icon: Bike,
   },
   {
     id: 'compliance',
-    label: 'Compliance',
-    shortLabel: 'Compliance',
-    purpose: 'Statutory clocks',
+    label: 'Regulatory Exposure',
+    shortLabel: 'Regulatory',
+    purpose: 'Statutory clocks and conduct exposure from customer voice.',
     icon: Scale,
   },
   {
     id: 'cx-quality',
-    label: 'CX Quality',
+    label: 'Trust & Quality',
     shortLabel: 'Quality',
-    purpose: 'Trust · FCR · bot',
+    purpose: 'Seller trust, repeat contacts, bot containment, and suppression watchdog.',
     icon: Target,
   },
   {
     id: 'revenue-bridge',
-    label: 'Revenue Bridge',
-    shortLabel: 'Bridge',
-    purpose: 'Voice → rupees',
+    label: 'Voice → P&L',
+    shortLabel: 'P&L',
+    purpose: 'Turn interaction signals into revenue read-through.',
     icon: ArrowRightLeft,
   },
 ];

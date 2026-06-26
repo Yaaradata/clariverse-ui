@@ -1,5 +1,6 @@
 import React from "react";
 import type { RadarSignal } from "../../lib/cxHeadRetailData";
+import { AiMarker } from "./AiMarker";
 import { cssVar, radius } from "../../theme/tokens";
 
 function severityColor(sev: RadarSignal["severity"]): string {
@@ -9,15 +10,21 @@ function severityColor(sev: RadarSignal["severity"]): string {
   return cssVar("positive");
 }
 
-/** Compact radar card — channels + stat only; detail in drill. */
+/** Honest card slots — RP-004 / RP-007 per-channel corroboration, never blended. */
 export function InsightCard({
   signal,
+  timeMode = "week",
   onOpen,
 }: {
   signal: RadarSignal;
+  timeMode?: "week" | "intraday";
   onOpen: () => void;
 }): React.ReactElement {
   const muted = signal.suppressed;
+  const funnel =
+    signal.signalsDistilled > 0
+      ? `${signal.mentions.toLocaleString("en-IN")} mentions → ${signal.signalsDistilled} signal`
+      : `${signal.mentions.toLocaleString("en-IN")} mentions → suppressed`;
 
   return (
     <button
@@ -25,43 +32,31 @@ export function InsightCard({
       onClick={onOpen}
       disabled={muted}
       style={{
-        width: "100%",
+        flex: "0 0 312px",
         textAlign: "left",
         background: muted ? "transparent" : cssVar("surface"),
         border: `1px solid ${muted ? cssVar("border") : cssVar("border-strong")}`,
-        borderRadius: radius.md,
-        padding: "10px 12px",
+        borderRadius: radius.lg,
+        padding: "14px 16px",
         cursor: muted ? "default" : "pointer",
-        opacity: muted ? 0.5 : 1,
+        opacity: muted ? 0.55 : 1,
         display: "flex",
         flexDirection: "column",
-        gap: 6,
+        gap: 8,
         boxShadow: muted ? "none" : cssVar("shadow-card"),
-        minHeight: 108,
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 6, alignItems: "flex-start" }}>
-        <span
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            color: cssVar("text-primary"),
-            lineHeight: 1.25,
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-          }}
-        >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
+        <span style={{ fontSize: 14, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.3 }}>
           {signal.title}
         </span>
         <span
           style={{
-            fontSize: 9,
+            fontSize: 10,
             fontWeight: 700,
             textTransform: "uppercase",
             color: severityColor(signal.severity),
-            letterSpacing: 0.35,
+            letterSpacing: 0.4,
             flexShrink: 0,
           }}
         >
@@ -69,26 +64,49 @@ export function InsightCard({
         </span>
       </div>
 
-      <div className="lisn-num" style={{ fontSize: 11, fontWeight: 600, color: cssVar("accent") }}>
-        {signal.stats}
+      <div style={{ fontSize: 11, color: cssVar("text-muted") }}>{signal.cohort}</div>
+      <div style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{signal.honestyLine}</div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, fontSize: 11 }}>
+        <span style={{ color: timeMode === "intraday" ? cssVar("accent") : cssVar("text-muted"), fontWeight: timeMode === "intraday" ? 600 : 400 }}>
+          {timeMode === "intraday" ? "Last seen" : "Onset"} {signal.onset}
+        </span>
+        <span className="lisn-num" style={{ color: cssVar("accent"), fontWeight: 600 }}>
+          {funnel}
+        </span>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: "auto" }}>
-        {signal.channels.slice(0, 3).map((ch) => (
-          <span
-            key={`${ch.name}-${ch.time}`}
-            style={{
-              fontSize: 10,
-              padding: "2px 6px",
-              borderRadius: radius.pill,
-              background: cssVar("surface-raised"),
-              border: `1px solid ${cssVar("border")}`,
-              color: cssVar("text-muted"),
-            }}
-          >
-            {ch.name}
-          </span>
-        ))}
+      <div style={{ fontSize: 12, color: cssVar("text-secondary") }}>
+        {timeMode === "week" ? signal.stats : `Intraday · ${signal.stats}`}
+      </div>
+
+      <div>
+        <div style={{ fontSize: 10, fontWeight: 600, color: cssVar("text-muted"), marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.4 }}>
+          Corroboration per channel
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {signal.channels.map((ch) => (
+            <span
+              key={`${ch.name}-${ch.time}`}
+              style={{
+                fontSize: 11,
+                padding: "3px 8px",
+                borderRadius: radius.pill,
+                background: cssVar("surface-raised"),
+                border: `1px solid ${cssVar("border")}`,
+                color: cssVar("text-secondary"),
+              }}
+            >
+              {ch.name}
+              {ch.time !== "—" ? ` · ${ch.time}` : ""}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "flex-start", gap: 6 }}>
+        <AiMarker size={12} />
+        <span style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{signal.aiVerdict}</span>
       </div>
     </button>
   );

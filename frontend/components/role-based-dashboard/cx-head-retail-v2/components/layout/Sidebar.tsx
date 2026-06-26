@@ -1,6 +1,6 @@
 // components/layout/Sidebar.tsx
 // Pass 1 — collapsible rail (hover-expand, HeadOfCreditCards pattern).
-// Five locked routes; industry + role context; change-role exit.
+// Five locked routes; change-role exit.
 
 import React from 'react';
 import { ArrowLeft } from 'lucide-react';
@@ -21,10 +21,9 @@ export function Sidebar({
   onMouseLeave,
 }: SidebarProps): React.ReactElement {
   const { activeScreen, navigate } = useNavigation();
-  const { onExit, industryColor } = useDashboardShell();
+  const { onExit } = useDashboardShell();
 
   const width = expanded ? layout.sidebarWidth : layout.sidebarCollapsedWidth;
-  const roleLabel = 'Head of CX';
 
   return (
     <nav
@@ -45,11 +44,47 @@ export function Sidebar({
     >
       <div
         style={{
-          padding: expanded ? '14px 16px' : '12px 8px',
+          padding: expanded ? '18px 16px' : '14px 10px',
           borderBottom: `1px solid ${cssVar('border')}`,
+          textAlign: expanded ? 'left' : 'center',
         }}
       >
-        <ContextRow expanded={expanded} color={industryColor} label={roleLabel} accent />
+        {expanded ? (
+          <>
+            <div
+              style={{
+                fontSize: 12,
+                fontWeight: type.weight.bold,
+                color: cssVar('accent'),
+                letterSpacing: 2,
+                textTransform: 'uppercase',
+              }}
+            >
+              LiSN
+            </div>
+            <div style={{ fontSize: 13, color: cssVar('text-secondary'), marginTop: 2 }}>Fluid CX</div>
+          </>
+        ) : (
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              margin: '0 auto',
+              borderRadius: 10,
+              background: cssVar('accent-soft'),
+              border: `1px solid ${cssVar('accent')}40`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 14,
+              fontWeight: type.weight.bold,
+              color: cssVar('accent'),
+            }}
+            title="LiSN · Fluid CX"
+          >
+            L
+          </div>
+        )}
       </div>
 
       <ul
@@ -130,51 +165,5 @@ export function Sidebar({
         </button>
       </div>
     </nav>
-  );
-}
-
-function ContextRow({
-  expanded,
-  color,
-  label,
-  accent,
-}: {
-  expanded: boolean;
-  color: string;
-  label: string;
-  accent?: boolean;
-}): React.ReactElement {
-  return (
-    <div
-      title={expanded ? undefined : label}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 8,
-        justifyContent: expanded ? 'flex-start' : 'center',
-      }}
-    >
-      <div
-        style={{
-          width: 24,
-          height: 24,
-          borderRadius: 6,
-          background: `${color}25`,
-          border: `1px solid ${color}60`,
-          flexShrink: 0,
-        }}
-      />
-      {expanded && (
-        <span
-          style={{
-            fontSize: 14,
-            fontWeight: type.weight.bold,
-            color: accent ? cssVar('accent') : cssVar('text-primary'),
-          }}
-        >
-          {label}
-        </span>
-      )}
-    </div>
   );
 }

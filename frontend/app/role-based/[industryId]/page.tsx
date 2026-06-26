@@ -1,31 +1,14 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
+import { CxRetailVersionToggle } from "@/components/role-based-dashboard/CxRetailVersionToggle";
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
 const accent = "#5332FF";
-
-function versionButtonStyle(): CSSProperties {
-  return {
-    flexShrink: 0,
-    fontSize: 11,
-    fontWeight: 800,
-    letterSpacing: 0.6,
-    padding: "7px 14px",
-    borderRadius: 8,
-    background: `${accent}1a`,
-    border: `1px solid ${accent}55`,
-    color: accent,
-    textDecoration: "none",
-    lineHeight: 1,
-    cursor: "pointer",
-  };
-}
 
 export default function RoleBasedIndustryRolesPage() {
   const { isDarkMode } = useRoleBasedUi();
@@ -140,26 +123,7 @@ export default function RoleBasedIndustryRolesPage() {
                   </div>
                   <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
                 </div>
-                <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-                  <Link
-                    href={`/role-based/${industry.id}/head_cx_retail`}
-                    onMouseEnter={() => {
-                      void import("@/components/role-based-dashboard/CXVoCHeadDashboard");
-                    }}
-                    style={versionButtonStyle()}
-                  >
-                    V1
-                  </Link>
-                  <Link
-                    href={`/role-based/${industry.id}/head_cx_retail_v2`}
-                    onMouseEnter={() => {
-                      void import("@/components/role-based-dashboard/CXVoCHeadDashboardV2");
-                    }}
-                    style={versionButtonStyle()}
-                  >
-                    V2
-                  </Link>
-                </div>
+                <CxRetailVersionToggle industryId={industry.id} isDarkMode={isDarkMode} />
               </div>
             );
           }

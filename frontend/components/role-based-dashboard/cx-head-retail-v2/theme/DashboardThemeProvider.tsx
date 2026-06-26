@@ -2,7 +2,7 @@
 // -----------------------------------------------------------------------------
 // Theme context for the CX Head room. Dark is the demo default; a light/dark
 // toggle is always present and both modes target WCAG AA (CF-002):
-//   - dark  text #F4F2FB on bg #0D0B16  → ~17:1
+//   - dark  text #FAFAFA on bg #000000  → high contrast
 //   - light text #1A1530 on bg #F6F5FC  → ~14:1
 //   - secondary text and accents checked against their own surfaces.
 //

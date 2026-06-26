@@ -50,15 +50,15 @@ export interface ColorRamp {
 }
 
 const dark: ColorRamp = {
-  bg: '#0D0B16',
-  surface: '#171327',
-  surfaceRaised: '#211B38',
-  border: '#2C2545',
-  borderStrong: '#3D3460',
+  bg: '#000000',
+  surface: '#0A0A0A',
+  surfaceRaised: '#141414',
+  border: '#262626',
+  borderStrong: '#333333',
 
-  textPrimary: '#F4F2FB',
-  textSecondary: '#ABA3CC',
-  textMuted: '#736B95',
+  textPrimary: '#FAFAFA',
+  textSecondary: '#A3A3A3',
+  textMuted: '#6B6B6B',
 
   accent: '#8B7CF6',
   accent2: '#A78BFA',
@@ -175,9 +175,6 @@ export const layout = {
   sidebarCollapsedWidth: 64,
   headerHeight: 60,
   contentMaxWidth: 1440,
-  /** V2 — fit primary story in ≤2 viewport scrolls on 1080p. */
-  pagePadding: '14px 20px 16px',
-  pageGap: 10,
 } as const;
 
 /**

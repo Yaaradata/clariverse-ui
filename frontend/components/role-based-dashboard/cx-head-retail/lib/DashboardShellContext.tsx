@@ -1,12 +1,15 @@
 "use client";
 
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
+import type { CxRetailVersion } from "@/components/role-based-dashboard/CxRetailVersionToggle";
 import type { AuditEntry } from "./cxHeadRetailData";
 
 export type DashboardShellContextValue = {
+  industryId: string;
   industryName: string;
   roleName: string;
   industryColor: string;
+  retailVersion: CxRetailVersion;
   onExit: () => void;
   auditLog: AuditEntry[];
   approveDraft: (action: string, acceptedBy?: string) => void;
@@ -21,15 +24,19 @@ export function useDashboardShell(): DashboardShellContextValue {
 }
 
 export function DashboardShellProvider({
+  industryId,
   industryName,
   roleName,
   industryColor,
+  retailVersion = "v1",
   onExit,
   children,
 }: {
+  industryId: string;
   industryName: string;
   roleName: string;
   industryColor: string;
+  retailVersion?: CxRetailVersion;
   onExit: () => void;
   children: React.ReactNode;
 }): React.ReactElement {
@@ -47,8 +54,8 @@ export function DashboardShellProvider({
   }, []);
 
   const value = useMemo(
-    () => ({ industryName, roleName, industryColor, onExit, auditLog, approveDraft }),
-    [industryName, roleName, industryColor, onExit, auditLog, approveDraft],
+    () => ({ industryId, industryName, roleName, industryColor, retailVersion, onExit, auditLog, approveDraft }),
+    [industryId, industryName, roleName, industryColor, retailVersion, onExit, auditLog, approveDraft],
   );
 
   return <DashboardShellContext.Provider value={value}>{children}</DashboardShellContext.Provider>;

@@ -537,9 +537,9 @@ function BridgeDrill({ tile }: { tile: (typeof BRIDGE_TILES)[number] }): React.R
             Join key: {evidence?.joinKey ?? "cohort-level"}
           </div>
           <div className="lisn-num" style={{ fontSize: 22, fontWeight: 800, color: cssVar("severity-med") }}>
-            {tile.illustrativeValue}
+            {tile.bridgeValue}
           </div>
-          <div style={{ fontSize: 11, color: cssVar("text-muted"), marginTop: 4 }}>[illustrative, Phase 2]</div>
+          <div style={{ fontSize: 11, color: cssVar("text-muted"), marginTop: 4 }}>[Phase 2]</div>
         </div>
       </Section>
 
@@ -548,7 +548,7 @@ function BridgeDrill({ tile }: { tile: (typeof BRIDGE_TILES)[number] }): React.R
           {(evidence?.guardrails ?? [
             "Cohort-level join only",
             "Human-approved pilot data ask",
-            "Bridge-ready — illustrative until feed lands",
+            "Bridge-ready until feed lands",
           ]).map((g) => (
             <li key={g}>{g}</li>
           ))}

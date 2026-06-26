@@ -52,19 +52,40 @@ export function MiniGauge({
   value,
   label,
   color,
+  compact = false,
 }: {
   value: number;
   label: string;
   color: string;
+  compact?: boolean;
 }): React.ReactElement {
   const clamped = Math.max(0, Math.min(100, value));
   const data = [{ name: label, value: clamped, fill: color }];
+  const chartHeight = compact ? 40 : 52;
+  const innerRadius = compact ? 18 : 22;
+  const outerRadius = compact ? 28 : 34;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, minWidth: 64 }}>
-      <div style={{ position: "relative", width: "100%", height: 40 }}>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: compact ? 1 : 2,
+        minWidth: compact ? 64 : 72,
+      }}
+    >
+      <div style={{ position: "relative", width: "100%", height: chartHeight }}>
         <ResponsiveContainer width="100%" height="100%">
-          <RadialBarChart data={data} startAngle={180} endAngle={0} innerRadius={22} outerRadius={34} cx="50%" cy="100%">
+          <RadialBarChart
+            data={data}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={innerRadius}
+            outerRadius={outerRadius}
+            cx="50%"
+            cy="100%"
+          >
             <PolarAngleAxis type="number" domain={[0, 100]} tick={false} axisLine={false} />
             <RadialBar dataKey="value" cornerRadius={3} background={{ fill: `${cssVar("border")}` }} />
           </RadialBarChart>
@@ -76,7 +97,7 @@ export function MiniGauge({
             left: "50%",
             bottom: 0,
             transform: "translateX(-50%)",
-            fontSize: 13,
+            fontSize: compact ? 11 : 13,
             fontWeight: 800,
             color,
             pointerEvents: "none",
@@ -93,7 +114,7 @@ export function MiniGauge({
           letterSpacing: 0.3,
           textAlign: "center",
           lineHeight: 1.2,
-          maxWidth: 72,
+          maxWidth: compact ? 64 : 72,
         }}
       >
         {label}

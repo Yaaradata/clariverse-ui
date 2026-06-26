@@ -8,14 +8,16 @@ import { DashboardShellProvider } from "./cx-head-retail-v2/lib/DashboardShellCo
 import { AppShell } from "./cx-head-retail-v2/components/layout/AppShell";
 
 export type CXVoCHeadDashboardV2Props = {
+  industryId: string;
   industryName: string;
   roleName: string;
   industryColor: string;
   onExit: () => void;
 };
 
-/** V2 — fork of V1 (cx-head-retail). Edit here without affecting V1. */
+/** V2 — fork of V1 with V2-only copy and routing. */
 export default function CXVoCHeadDashboardV2({
+  industryId,
   industryName,
   roleName,
   industryColor,
@@ -25,10 +27,12 @@ export default function CXVoCHeadDashboardV2({
     <DashboardThemeProvider defaultMode="dark">
       <GlobalStyles />
       <DashboardShellProvider
+        industryId={industryId}
         industryName={industryName}
         roleName={roleName}
         industryColor={industryColor}
         onExit={onExit}
+        retailVersion="v2"
       >
         <NavigationProvider>
           <AppShell />

@@ -1,25 +1,54 @@
 "use client";
 
 import React from "react";
-import { CX_QUALITY_HEADLINE, CX_QUALITY_SUMMARY } from "../../lib/cxHeadRetailData";
 import { useNavigation } from "../../lib/NavigationContext";
-import { AiExecSummaryBar } from "../common/AiExecSummaryBar";
-import { CompactPageHeader, pageShellStyle } from "../common/CompactPageHeader";
 import { BotQualityCard } from "../cx-quality/BotQualityCard";
+import { CxQualityWedgeCards } from "../cx-quality/CxQualityWedgeCards";
 import { FcrRepeatCard } from "../cx-quality/FcrRepeatCard";
 import { SellerTrustCard } from "../cx-quality/SellerTrustCard";
-import { SuppressionWatchdogCard } from "../cx-quality/SuppressionWatchdogCard";
+import { cssVar, layout, type } from "../../theme/tokens";
 
+function CxQualityHeadline(): React.ReactElement {
+  return (
+    <div
+      style={{
+        borderLeft: `3px solid ${cssVar("accent")}`,
+        paddingLeft: 14,
+        maxWidth: 920,
+      }}
+    >
+      <h2
+        style={{
+          margin: 0,
+          fontSize: type.scale.display,
+          fontWeight: type.weight.bold,
+          color: cssVar("text-primary"),
+          lineHeight: 1.12,
+          letterSpacing: -0.55,
+        }}
+      >
+        Looks{" "}
+        <span style={{ color: cssVar("accent"), fontWeight: 800 }}>Good</span>
+        <span style={{ color: cssVar("accent") }}>.</span> Isn't{" "}
+        <span
+          style={{
+            color: cssVar("accent-2"),
+            fontWeight: 800,
+            boxShadow: `inset 0 -3px 0 ${cssVar("accent")}40`,
+          }}
+        >
+          Business
+        </span>{" "}
+        Good
+        <span style={{ color: cssVar("accent") }}>.</span>
+      </h2>
+    </div>
+  );
+}
+
+/** Pass 6 — S4 CX Quality & the Wedge. */
 export function CXQualityWedgeScreen(): React.ReactElement {
   const { openDrill } = useNavigation();
-
-  const openSuppressionDrill = () => {
-    openDrill({
-      screenId: "cx-quality",
-      itemId: "electronics-suppression",
-      drillSignature: "inverse-anomaly",
-    });
-  };
 
   const openSellerTrustDrill = () => {
     openDrill({
@@ -30,18 +59,22 @@ export function CXQualityWedgeScreen(): React.ReactElement {
   };
 
   return (
-    <div className="lisn-anim-fade" style={pageShellStyle()}>
-      <CompactPageHeader
-        eyebrow="CX quality"
-        title={CX_QUALITY_HEADLINE.title}
-        subtitle={CX_QUALITY_HEADLINE.soWhat}
-      />
+    <div
+      className="lisn-anim-fade"
+      style={{
+        maxWidth: layout.contentMaxWidth,
+        margin: "0 auto",
+        padding: "24px 32px 48px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 18,
+      }}
+    >
+      <CxQualityHeadline />
 
-      <AiExecSummaryBar {...CX_QUALITY_SUMMARY} />
+      <CxQualityWedgeCards />
 
-      <SuppressionWatchdogCard onOpenDrill={openSuppressionDrill} />
-
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, alignItems: "stretch" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, alignItems: "stretch" }}>
         <SellerTrustCard onOpenDrill={openSellerTrustDrill} />
         <FcrRepeatCard />
         <BotQualityCard />

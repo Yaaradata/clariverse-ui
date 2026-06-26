@@ -3870,6 +3870,7 @@ export function RoleDashboardView({
   if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
     return (
       <CXVoCHeadDashboard
+        industryId={industry.id}
         industryName={industry.name}
         roleName={roleDisplayName(role)}
         industryColor={industry.color}
@@ -3881,6 +3882,7 @@ export function RoleDashboardView({
   if (industry.id === "ecommerce" && role.id === "head_cx_retail_v2") {
     return (
       <CXVoCHeadDashboardV2
+        industryId={industry.id}
         industryName={industry.name}
         roleName={roleDisplayName(role)}
         industryColor={industry.color}

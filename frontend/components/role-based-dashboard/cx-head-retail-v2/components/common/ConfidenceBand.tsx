@@ -15,6 +15,7 @@ export function ConfidenceBand({ band }: { band: Band }): React.ReactElement {
       style={{
         display: "inline-flex",
         alignItems: "center",
+        gap: 6,
         padding: "2px 8px",
         borderRadius: radius.pill,
         fontSize: 11,
@@ -24,6 +25,16 @@ export function ConfidenceBand({ band }: { band: Band }): React.ReactElement {
         border: `1px solid ${tone}40`,
       }}
     >
+      <span
+        aria-hidden
+        style={{
+          width: 6,
+          height: 6,
+          borderRadius: "50%",
+          background: tone,
+          flexShrink: 0,
+        }}
+      />
       {band} confidence
     </span>
   );
