@@ -2,6 +2,7 @@
 
 import React from "react";
 import {
+  COMMAND_PAGE,
   COMMAND_TIME_COMPARE,
   EXEC_SUMMARY,
   EXECUTIVE_TILES,
@@ -15,7 +16,7 @@ import { CommandShiftBrief } from "../common/CommandShiftBrief";
 import { ExecutiveTile } from "../common/ExecutiveTile";
 import { FloatingAIDayGenerator } from "../common/FloatingAIDayGenerator";
 import { RadarRail } from "../common/RadarRail";
-import { cssVar, layout, radius, type } from "../../theme/tokens";
+import { cssVar, layout, radius, space, type } from "../../theme/tokens";
 
 function CommandHeadline(): React.ReactElement {
   return (
@@ -50,6 +51,17 @@ function CommandHeadline(): React.ReactElement {
         </span>
         <span style={{ color: cssVar("accent") }}>?</span>
       </h2>
+      <p
+        style={{
+          margin: `${space["2"]} 0 0`,
+          fontSize: type.scale.small,
+          color: cssVar("text-secondary"),
+          lineHeight: 1.5,
+          maxWidth: 720,
+        }}
+      >
+        {COMMAND_PAGE.purpose}
+      </p>
     </div>
   );
 }

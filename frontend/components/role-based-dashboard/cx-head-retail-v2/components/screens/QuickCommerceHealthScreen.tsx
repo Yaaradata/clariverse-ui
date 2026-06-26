@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import {
   getBridgeTileById,
   QUICK_COMMERCE_ACTIONS,
+  QUICK_COMMERCE_PAGE,
   QUICK_COMMERCE_RADAR_CARDS,
   QUICK_COMMERCE_SUMMARY,
   type QuickCommerceRadarCard,
@@ -50,6 +51,17 @@ function DarkStoreHeadline(): React.ReactElement {
         sees it
         <span style={{ color: cssVar("accent") }}>.</span>
       </h2>
+      <p
+        style={{
+          margin: `${space["2"]} 0 0`,
+          fontSize: type.scale.small,
+          color: cssVar("text-secondary"),
+          lineHeight: 1.5,
+          maxWidth: 720,
+        }}
+      >
+        {QUICK_COMMERCE_PAGE.purpose}
+      </p>
     </div>
   );
 }

@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+import { CX_QUALITY_PAGE } from "../../lib/cxHeadRetailData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { BotQualityCard } from "../cx-quality/BotQualityCard";
 import { CxQualityWedgeCards } from "../cx-quality/CxQualityWedgeCards";
 import { FcrRepeatCard } from "../cx-quality/FcrRepeatCard";
 import { SellerTrustCard } from "../cx-quality/SellerTrustCard";
-import { cssVar, layout, type } from "../../theme/tokens";
+import { cssVar, layout, space, type } from "../../theme/tokens";
 
 function CxQualityHeadline(): React.ReactElement {
   return (
@@ -42,6 +43,17 @@ function CxQualityHeadline(): React.ReactElement {
         Good
         <span style={{ color: cssVar("accent") }}>.</span>
       </h2>
+      <p
+        style={{
+          margin: `${space["2"]} 0 0`,
+          fontSize: type.scale.small,
+          color: cssVar("text-secondary"),
+          lineHeight: 1.5,
+          maxWidth: 720,
+        }}
+      >
+        {CX_QUALITY_PAGE.purpose}
+      </p>
     </div>
   );
 }

@@ -118,6 +118,12 @@ export type AuditEntry = {
 /** Default comparison basis for the command screen (intraday toggle lands in Pass 3). */
 export const COMMAND_TIME_COMPARE = "This week vs last";
 
+/** S1 page copy — headline lives in screen. */
+export const COMMAND_PAGE = {
+  purpose:
+    "Breaking themes ranked by cross-channel corroboration — each signal carries a named owner and draft route.",
+};
+
 export const EXEC_SUMMARY = {
   critical: "UPI checkout · D07 spoilage cluster · statutory clock",
   focus: "Seller trust erosion · refund-status repeat · bot containment drop",
@@ -134,6 +140,11 @@ export const QUICK_COMMERCE_SUMMARY = {
   stable: "5 of 8 dark-stores flat",
   aiLine: "48 of 50 spoilage complaints trace to one node; seven peer stores hold flat.",
   aiConfidence: "High" as ConfidenceBand,
+};
+
+/** S2 page copy — headline lives in screen. */
+export const QUICK_COMMERCE_PAGE = {
+  purpose: "Node breaks before the warehouse dashboard — peer-normalised, not raw volume.",
 };
 
 export type DarkStoreKpiBar = {
@@ -579,6 +590,12 @@ export const CX_QUALITY_SUMMARY = {
   stable: "6 of 8 intents healthy FCR",
   aiLine: "Tickets −18% but contact-per-order flat — support-entry change logged same week.",
   aiConfidence: "Med-High" as ConfidenceBand,
+};
+
+/** S4 page copy — headline lives in screen. */
+export const CX_QUALITY_PAGE = {
+  purpose:
+    "Order-normalised contact metrics — ticket drops flagged when support-entry changes in the same window.",
 };
 
 export type CxQualityWedgeProof = {
