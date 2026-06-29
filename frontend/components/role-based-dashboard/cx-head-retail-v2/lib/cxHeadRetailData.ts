@@ -634,7 +634,6 @@ export const CX_QUALITY_WEDGE_CARDS: CxQualityWedgeCardConfig[] = [
       right: { value: "91%", label: "Delivery FCR", tag: "Strongest" },
     },
     proofs: [
-      { label: "Delivery", value: "91% FCR", tone: "positive" },
       { label: "Warranty", value: "88% FCR", tone: "positive" },
       { label: "Order status", value: "86% FCR", tone: "positive" },
     ],
@@ -650,7 +649,6 @@ export const CX_QUALITY_WEDGE_CARDS: CxQualityWedgeCardConfig[] = [
     },
     proofs: [
       { label: "Seller trust", value: "Neg-review velocity break", tone: "high" },
-      { label: "Refund repeat", value: "34% vs p50 22%", tone: "high" },
       { label: "Bot containment", value: "64%→58% on flow change", tone: "med" },
     ],
   },
@@ -666,7 +664,6 @@ export const CX_QUALITY_WEDGE_CARDS: CxQualityWedgeCardConfig[] = [
     proofs: [
       { label: "Access change", value: "Chat buried on PDP · W-1", tone: "trap" },
       { label: "Ruled out", value: "Fewer orders · seasonal dip", tone: "muted" },
-      { label: "Status", value: "Warning, not a win", tone: "high" },
     ],
   },
 ];

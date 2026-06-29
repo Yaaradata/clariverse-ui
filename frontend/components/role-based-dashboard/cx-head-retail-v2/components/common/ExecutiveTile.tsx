@@ -51,40 +51,61 @@ export function ExecutiveTile({
       }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0, flex: 1 }}>
-          <span
-            style={{
-              fontSize: 9,
-              fontWeight: 700,
-              letterSpacing: 0.35,
-              textTransform: "uppercase",
-              color: sevColor,
-              padding: "2px 6px",
-              borderRadius: radius.pill,
-              background: `${sevColor}18`,
-              flexShrink: 0,
-            }}
-          >
-            {tile.severity}
-          </span>
+        <div style={{ minWidth: 0, flex: 1, lineHeight: 1.25 }}>
           <span
             style={{
               fontSize: 12,
               fontWeight: 700,
               color: cssVar("text-primary"),
-              lineHeight: 1.25,
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
             }}
           >
             {tile.breakingIssue}
           </span>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              marginLeft: 6,
+              verticalAlign: "middle",
+              padding: "2px 6px",
+              borderRadius: radius.pill,
+              background: `${sevColor}14`,
+              border: `1px solid ${sevColor}33`,
+            }}
+          >
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                borderRadius: "50%",
+                background: sevColor,
+                flexShrink: 0,
+              }}
+            />
+            <span
+              style={{
+                fontSize: 9,
+                fontWeight: 700,
+                letterSpacing: 0.35,
+                textTransform: "uppercase",
+                color: sevColor,
+              }}
+            >
+              {tile.severity}
+            </span>
+          </span>
         </div>
-        <span style={{ fontSize: 10, color: cssVar("text-muted"), flexShrink: 0, lineHeight: 1.3, textAlign: "right" }}>
-          Owner{" "}
-          <strong style={{ color: accent, fontWeight: 700 }}>{tile.owner}</strong>
-        </span>
+        <div style={{ flexShrink: 0, textAlign: "right", lineHeight: 1.35 }}>
+          <div style={{ fontSize: 10, color: cssVar("text-muted") }}>
+            Owner{" "}
+            <strong style={{ color: accent, fontWeight: 700 }}>{tile.owner}</strong>
+          </div>
+          <div style={{ fontSize: 10, color: cssVar("text-muted"), marginTop: 2 }}>
+            Onset {tile.onset}
+          </div>
+        </div>
       </div>
 
       <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
@@ -97,21 +118,10 @@ export function ExecutiveTile({
         <span style={{ fontSize: 11, fontWeight: 600, color: cssVar("text-secondary") }}>{tile.primaryLabel}</span>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 6,
-          fontSize: 10,
-          flexWrap: "wrap",
-          marginTop: -2,
-        }}
-      >
+      <div style={{ fontSize: 10, marginTop: -2 }}>
         <span className="lisn-num" style={{ color: deltaColor(tile.deltaTone), fontWeight: 600 }}>
           {tile.delta}
         </span>
-        <span style={{ color: cssVar("text-muted") }}>Onset {tile.onset}</span>
       </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 4 }}>
@@ -133,8 +143,8 @@ export function ExecutiveTile({
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 64px", gap: 6, alignItems: "end" }}>
-        <MiniSparkline data={tile.spark} color={accent} height={34} />
-        <MiniGauge value={tile.gaugeValue} label={tile.gaugeLabel} color={accent} compact />
+        <MiniSparkline data={tile.spark} color={sevColor} height={34} />
+        <MiniGauge value={tile.gaugeValue} label={tile.gaugeLabel} color={sevColor} compact />
       </div>
 
       <div
