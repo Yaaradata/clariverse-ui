@@ -80,6 +80,7 @@ import {
   CardsTransactionsOffersDrill,
   CardsVoiceJoinDrill,
 } from "./CardsPortfolioDrillScreens";
+import { CategoryIntelligenceDashboard } from "./CategoryIntelligenceDashboard";
 import { CXVoCHeadDashboard } from "./CXVoCHeadDashboard";
 import { CXVoCHeadDashboardV2 } from "./CXVoCHeadDashboardV2";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
@@ -3863,6 +3864,17 @@ export function RoleDashboardView({
         initialPersona={role.id === "head_cx" ? "coh" : "hob"}
         onExit={onExit}
         theme={theme}
+      />
+    );
+  }
+
+  if (industry.id === "ecommerce" && role.id === "business_head") {
+    return (
+      <CategoryIntelligenceDashboard
+        industryName={industry.name}
+        roleName={roleDisplayName(role)}
+        industryColor={industry.color}
+        onExit={onExit}
       />
     );
   }

@@ -170,6 +170,12 @@ export const INDUSTRIES = [
         sub: "Marketplace health, satisfaction, stability",
       },
       {
+        id: "business_head",
+        name: "Business Head",
+        icon: Briefcase,
+        sub: "Category P&L, returns margin, seller trust",
+      },
+      {
         id: "head_cx",
         name: "Head of CX",
         icon: Headphones,
