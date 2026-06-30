@@ -112,6 +112,31 @@ export const INDUSTRIES = [
     ],
   },
   {
+    id: "sterling_bank",
+    name: "Sterling Bank",
+    icon: Building2,
+    color: "#3b82f6",
+    desc: "Deposits, loans, branches, contact centres — service promise & CX",
+    roles: [
+      {
+        id: "head_retail",
+        name: "Head of Retail Banking",
+        icon: Building2,
+        sub: "Deposits, loans, branches — service promise + complaints",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        id: "head_contact",
+        name: "Head of Contact Centre",
+        icon: Users,
+        sub: "Per-contact CX · service-driven brand · ops & workforce",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+    ],
+  },
+  {
     id: "credit_cards",
     name: "Credit Cards",
     icon: CreditCard,
@@ -846,6 +871,115 @@ export const ROLE_DATA = {
       monitor: [
         "Intent heat map for emerging patterns",
         "Channel-specific concern trends",
+      ],
+    },
+  },
+  sterling_head_retail: {
+    tiles: [
+      {
+        title: "Are we leaking deposits at the door?",
+        score: 61,
+        color: T.amber,
+        icon: Target,
+        sub: "Savings declines · HV outflow · no-reason gap",
+        insight:
+          "57% of savings applicants declined with no reason — FOS upheld a conflicting-explanation case. HV savers withdrawing ~£310K/wk. Draft reason-code disclosure review — never auto-send.",
+        kpis: [
+          { l: "Avg balance", v: "£4,241" },
+          { l: "Declined, no reason", v: "57%" },
+          { l: "HV savers hit", v: "[CONFIRM]" },
+          { l: "Est. £ leak/wk", v: "£310K" },
+        ],
+      },
+      {
+        title: "Is our deposit base flying out?",
+        score: 58,
+        color: T.red,
+        icon: Shield,
+        sub: "Interest flight · primacy · CASS outflow",
+        insight:
+          "ARPAU £302→£275. 'Moving to Chase/Monzo/Nationwide' in voice before balances clear. Switch intent leads CASS by ~3 months. Draft save-offer for flight-risk cohort.",
+        kpis: [
+          { l: "ARPAU", v: "£275 ▼" },
+          { l: "Retail primacy", v: "35%" },
+          { l: "CASS net", v: "net loss" },
+          { l: "£/wk leaving", v: "£[CONFIRM]" },
+        ],
+      },
+      {
+        title: "Are we losing viable new customers?",
+        score: 63,
+        color: T.amber,
+        icon: Activity,
+        sub: "Onboarding block · viable rejected · growth lost",
+        insight:
+          "Post-fine KYC suppressing viable acquisition — SME openings 3× in April once eased. Draft criteria-calibration brief: crime-constraint vs viable-but-rejected.",
+        kpis: [
+          { l: "SME openings", v: "3× when eased" },
+          { l: "Viable rejected", v: "[CONFIRM]" },
+          { l: "Growth lost £LTV", v: "£2.3M" },
+          { l: "Bottleneck", v: "KYC tightening" },
+        ],
+      },
+    ],
+    lobKpis: [
+      {
+        l: "ARPAU (£/active user)",
+        v: "£275",
+        delta: -27,
+        target: "> £302",
+        st: "red",
+      },
+      {
+        l: "Retail primacy",
+        v: "35%",
+        delta: -3,
+        target: "> 40%",
+        st: "red",
+      },
+      {
+        l: "CASS net flows",
+        v: "net loss",
+        delta: -1,
+        target: "net gain",
+        st: "red",
+      },
+      {
+        l: "Savings decline (no-reason)",
+        v: "57%",
+        delta: +9,
+        target: "< 20%",
+        st: "red",
+      },
+      {
+        l: "SME primacy",
+        v: "56%",
+        delta: +2,
+        target: "> 60%",
+        st: "amber",
+      },
+    ],
+    insights: [
+      "Deposits leak at acquisition (savings declines, no reason given) and fly at retention (interest-removal flight to Chase/Monzo/Nationwide) — ARPAU £302→£275, net CASS losses.",
+      "Switching intent appears in voice ~3 months before provider-level CASS data — primacy erosion is visible now, not at quarter-end.",
+      "Post-fine KYC tightening suppresses viable acquisition; CFO confirms SME openings tripled in April once eased. SME deepening via MTD/Ember (compulsory 6 Apr 2026, >£50k) is the live growth front.",
+    ],
+    eisenhower: {
+      do: [
+        "Draft save-offer for flight-risk deposit cohort (never auto-send)",
+        "Draft reason-code disclosure review for high-balance savings declines",
+      ],
+      plan: [
+        "KYC criteria-calibration brief — separate crime-constraint from viable-rejected",
+        "Easy-Saver fast-track for flight-risk savers",
+      ],
+      delegate: [
+        "SME MTD/Ember stalled-adopter guidance + accountant-referral play",
+        "Assistant retrain/whitelist brief to reduce containment-failure cost",
+      ],
+      monitor: [
+        "CASS net flows vs switching-intent voice (3-month lead)",
+        "Primacy decay among salaried/primary relationships",
       ],
     },
   },
@@ -1645,6 +1779,13 @@ export type Industry = (typeof INDUSTRIES)[number];
 export type Role = Industry["roles"][number];
 export type RoleDashboardData = (typeof ROLE_DATA)["ceo"];
 export type LobDataEntry = (typeof LOB_DATA)["retail_banking"];
+
+export const STERLING_BANK_INDUSTRY_ID = "sterling_bank" as const;
+
+/** Industries that reuse retail-banking role dashboards (Sterling fork — customize per industry later). */
+export function usesRetailBankingDashboard(industryId: string): boolean {
+  return industryId === "retail_banking" || industryId === STERLING_BANK_INDUSTRY_ID;
+}
 
 /** Display label: registry `name` when present, otherwise title-cased role id. */
 export function roleDisplayName(role: Role): string {

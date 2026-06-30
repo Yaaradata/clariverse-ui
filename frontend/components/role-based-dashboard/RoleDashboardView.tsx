@@ -66,6 +66,8 @@ import {
   roleDisplayName,
   type RoleDashboardData,
   type ScreenId,
+  STERLING_BANK_INDUSTRY_ID,
+  usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import {
   DashboardThemeProvider,
@@ -365,6 +367,19 @@ function retailTileTrendMeta(
     );
   }
   return retailDailyTrendFromSeries([82, 70, 84, 66, 74, 68], T.red, T, 8, 5);
+}
+
+function sterlingRetailTileTrendMeta(
+  tileIdx: number,
+  T: DashboardThemeTokens,
+): RetailTileTrend {
+  if (tileIdx === 0) {
+    return retailDailyTrendFromSeries([55, 58, 60, 59, 62, 61], T.amber, T, 6, 4);
+  }
+  if (tileIdx === 1) {
+    return retailDailyTrendFromSeries([68, 64, 62, 60, 59, 58], T.red, T, 6, 4);
+  }
+  return retailDailyTrendFromSeries([58, 60, 62, 61, 64, 63], T.amber, T, 8, 5);
 }
 
 // ── Head of Contact Centre: tile trend meta (mirrors retail pattern) ─────────
@@ -1030,6 +1045,212 @@ function retailTileInfo(
   );
 }
 
+function sterlingRetailTileInfo(
+  tileIdx: number,
+  T: DashboardThemeTokens,
+): ReactElement {
+  if (tileIdx === 0) {
+    const rows = [
+      { label: "Declined", pct: 57 },
+      { label: "Accepted", pct: 43 },
+    ].map((r) => ({ ...r, color: happinessPctColor(r.pct, T) }));
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+          flex: 1,
+          justifyContent: "space-between",
+          gap: 10,
+        }}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: 8,
+            minWidth: 0,
+            alignItems: "end",
+          }}
+        >
+          {rows.map((r) => (
+            <MiniGauge
+              key={r.label}
+              label={r.label}
+              value={r.pct}
+              color={r.color}
+              suffix="%"
+              T={T}
+            />
+          ))}
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: "4px 14px",
+            alignItems: "end",
+          }}
+        >
+          <div>
+            <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>
+              Avg balance
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: T.text, fontFamily: "var(--mono)" }}>
+              £4,241
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>
+              Est. leak/wk
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>
+              £310K
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (tileIdx === 1) {
+    const channels = [
+      { name: "App Store", v: 0.62 },
+      { name: "Voice", v: 0.55 },
+      { name: "Chat", v: 0.57 },
+      { name: "Email", v: 0.50 },
+      { name: "Social/X", v: 0.41 },
+    ];
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 0,
+          flex: 1,
+          justifyContent: "space-between",
+          gap: 6,
+        }}
+      >
+        {channels.map((ch) => {
+          const barColor =
+            ch.v >= 0.65 ? T.red : ch.v >= 0.55 ? T.amber : T.green;
+          return (
+            <div
+              key={ch.name}
+              style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}
+            >
+              <span style={{ fontSize: 10, color: T.textMut, width: 52, flexShrink: 0 }}>
+                {ch.name}
+              </span>
+              <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
+                <div
+                  style={{
+                    height: "100%",
+                    width: `${ch.v * 100}%`,
+                    background: barColor,
+                    borderRadius: 3,
+                  }}
+                />
+              </div>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: barColor,
+                  width: 28,
+                  textAlign: "right",
+                  fontFamily: "var(--mono)",
+                }}
+              >
+                {ch.v.toFixed(2)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  const bars = [
+    {
+      label: "Best · When eased",
+      topLabel: "Best",
+      bottomLabel: "When eased",
+      pct: 78,
+      color: T.green,
+    },
+    {
+      label: "Worst · Rejected",
+      topLabel: "Worst",
+      bottomLabel: "Rejected",
+      pct: 57,
+      color: T.red,
+      offsetY: -0.5,
+    },
+  ];
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minWidth: 0,
+        flex: 1,
+        justifyContent: "space-between",
+        gap: 10,
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: 8,
+          minWidth: 0,
+          alignItems: "end",
+        }}
+      >
+        {bars.map((b) => (
+          <MiniGauge
+            key={b.label}
+            label={b.label}
+            topLabel={b.topLabel}
+            bottomLabel={b.bottomLabel}
+            offsetY={b.offsetY}
+            value={b.pct}
+            color={b.color}
+            suffix="%"
+            T={T}
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: "4px 14px",
+          alignItems: "end",
+        }}
+      >
+        <div>
+          <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>
+            Growth lost
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: T.red, fontFamily: "var(--mono)" }}>
+            £2.3M
+          </div>
+        </div>
+        <div>
+          <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>
+            Bottleneck
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 700, color: T.amber, fontFamily: "var(--mono)" }}>
+            KYC
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MiniGauge({
   label,
   topLabel,
@@ -1218,18 +1439,21 @@ function Screen1({
   data,
   goTo,
   role,
+  industry,
   unifiedNavigation,
   onDrillCard,
 }: {
   data: RoleDashboardData;
   goTo: (n: ScreenId) => void;
   role: Role;
+  industry: Industry;
   unifiedNavigation: boolean;
   onDrillCard?: (idx: number) => void;
 }) {
   const T = useDashboardTheme();
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
   const isRetail = role.id === "head_retail";
+  const isSterlingRetail = isRetail && industry.id === STERLING_BANK_INDUSTRY_ID;
   const isContact = role.id === "head_contact";
   const isCardsPortfolio = role.id === "cards_portfolio";
   const isDrillRole = isRetail || isContact || isCardsPortfolio;
@@ -1259,14 +1483,18 @@ function Screen1({
           const handleClick =
             isDrillRole && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
           const drillTrend = isRetail
-            ? retailTileTrendMeta(i, T)
+            ? isSterlingRetail
+              ? sterlingRetailTileTrendMeta(i, T)
+              : retailTileTrendMeta(i, T)
             : isContact
               ? contactTileTrendMeta(i, T)
               : isCardsPortfolio
                 ? cardsPortfolioTileTrendMeta(i, T)
                 : null;
           const drillInfo = isRetail
-            ? retailTileInfo(i, T)
+            ? isSterlingRetail
+              ? sterlingRetailTileInfo(i, T)
+              : retailTileInfo(i, T)
             : isContact
               ? contactTileInfo(i, T)
               : isCardsPortfolio
@@ -1631,7 +1859,9 @@ function Screen1({
           );
         })}
       </div>
-      {unifiedNavigation ? <RoleBasedUnifiedScreen1Addon role={role} /> : null}
+      {unifiedNavigation ? (
+        <RoleBasedUnifiedScreen1Addon role={role} industryId={industry.id} />
+      ) : null}
     </div>
   );
 }
@@ -2041,7 +2271,7 @@ function Screen3({
 
   // Add LOB-specific drill KPIs
   const extraGroups: typeof groups = [];
-  if (activeLob === "retail_banking" || industry.id === "retail_banking") {
+  if (activeLob === "retail_banking" || usesRetailBankingDashboard(industry.id)) {
     const mortgageData = LOB_DRILL_KPIS.mortgage_loans;
     if (mortgageData) {
       mortgageData.forEach((g) => {
@@ -2980,7 +3210,11 @@ function RoleDashboardShell({
   const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
   const roleDataKey =
-    role.id === "head_cx_retail" || role.id === "head_cx_retail_v2" ? "head_cx" : role.id;
+    industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
+      ? "sterling_head_retail"
+      : role.id === "head_cx_retail" || role.id === "head_cx_retail_v2"
+        ? "head_cx"
+        : role.id;
   const data = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
 
   const IndIcon = industry.icon;
@@ -3021,6 +3255,7 @@ function RoleDashboardShell({
         data={data}
         goTo={setScreen}
         role={role}
+        industry={industry}
         unifiedNavigation={unifiedNavigation}
         onDrillCard={setDrillCard}
       />
@@ -3599,7 +3834,9 @@ function RoleDashboardShell({
                     >
                       {role.id === "head_contact"
                         ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
-                        : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
+                        : industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
+                          ? "Deposits leak at acquisition and fly at retention — ARPAU £302→£275, primacy 35%, KYC tightening suppressing growth."
+                          : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
                     </div>
                   </div>
                 ) : null}
@@ -3671,6 +3908,21 @@ function RoleDashboardShell({
                               main: "62% of the decline spike is curable — ₹2.4 Cr recoverable today via a cohort-level EMI-conversion nudge.",
                             },
                           ]
+                        : industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
+                          ? [
+                              {
+                                q: "🔴 What's critical",
+                                main: "Savings no-reason declines + interest-removal flight — ARPAU falling, net CASS losses. Draft save-offer for flight-risk cohort today.",
+                              },
+                              {
+                                q: "🎯 Where's your focus",
+                                main: "KYC tightening blocking viable applicants — SME openings 3× when eased. Draft criteria-calibration brief.",
+                              },
+                              {
+                                q: "🟢 What's stable/ on-track",
+                                main: "SME primacy 56% — MTD/Ember (>£50k, 6 Apr) is the growth front. Push guidance for stalled adopters.",
+                              },
+                            ]
                         : [
                           {
                             q: "🔴 What's critical",
@@ -3754,9 +4006,19 @@ function RoleDashboardShell({
                     <CardsVoiceJoinDrill onBack={onBack} />
                   )
                 ) : drillCard === 0 ? (
-                  <CustomerHappinessDrillDown onBack={onBack} />
+                  industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail" ? (
+                    <CustomerHappinessDrillDown onBack={onBack} variant="sterling-deposit-leak" />
+                  ) : (
+                    <CustomerHappinessDrillDown onBack={onBack} />
+                  )
                 ) : drillCard === 1 ? (
-                  <BrandReputationDrillDown onBack={onBack} />
+                  industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail" ? (
+                    <BrandReputationDrillDown onBack={onBack} variant="sterling-deposit-flight" />
+                  ) : (
+                    <BrandReputationDrillDown onBack={onBack} />
+                  )
+                ) : industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail" ? (
+                  <ServiceFulfilmentDrillDown onBack={onBack} variant="sterling-h4-acquisition" />
                 ) : (
                   <ServiceFulfilmentDrillDown onBack={onBack} />
                 );

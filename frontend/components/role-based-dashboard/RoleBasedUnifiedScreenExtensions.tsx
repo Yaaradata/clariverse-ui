@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { AIRiskSpikeMonitor, headRetailRiskSpikes } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import { AIRiskSpikeMonitor, headRetailRiskSpikes, sterlingHeadRetailRiskSpikes } from "@/components/unified/actions/AIRiskSpikeMonitor";
 import { TransactionBaselineMonitor } from "./CardsPortfolioDrillScreens";
 import { CrossChannelTrendChart } from "@/components/unified/trends/CrossChannelTrendChart";
 import { SystemHealthRibbon } from "@/components/unified/kpi/SystemHealthRibbon";
@@ -24,8 +24,9 @@ import { ViolationCategoryChart } from "@/components/compliance/ViolationCategor
 import { fciClusters, customerEmotionData } from "@/lib/fci-lib/fciData";
 import { complianceScoreData, violationCategoryData } from "@/lib/compliance/complianceData";
 import type { EisenhowerThread } from "@/lib/api";
-import type { Role } from "@/lib/role-based-dashboard/registry";
+import type { Industry, Role } from "@/lib/role-based-dashboard/registry";
 import type { LensId } from "@/lib/role-based-dashboard/registry";
+import { STERLING_BANK_INDUSTRY_ID } from "@/lib/role-based-dashboard/registry";
 import {
   ROLE_BASED_MOCK_CROSS_CHANNEL_ACTION_GRID,
   ROLE_BASED_MOCK_SYSTEM_HEALTH,
@@ -79,13 +80,26 @@ import { UnifiedIntelligenceWall } from "@/components/role-based-dashboard/Retai
 /** Consistent vertical rhythm between unified blocks (role-based embed). */
 const sectionGap = "mt-6 flex flex-col gap-8";
 
-export function RoleBasedUnifiedScreen1Addon({ role }: { role: Role }) {
+export function RoleBasedUnifiedScreen1Addon({
+  role,
+  industryId,
+}: {
+  role: Role;
+  industryId?: Industry["id"];
+}) {
   const rid = role.id;
   const isRetail = rid === "head_retail";
+  const isSterlingRetail = isRetail && industryId === STERLING_BANK_INDUSTRY_ID;
   const isCardsPortfolio = rid === "cards_portfolio";
   return (
     <div className={sectionGap}>
-      {isRetail ? (
+      {isSterlingRetail ? (
+        <AIRiskSpikeMonitor
+          spikes={sterlingHeadRetailRiskSpikes}
+          driverContext="interest-rate removal · savings decline-reason vacuum · CASS net outflow · post-fine KYC tightening · Assistant containment failure"
+          forceDarkMode
+        />
+      ) : isRetail ? (
         <AIRiskSpikeMonitor
           spikes={headRetailRiskSpikes}
           driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"

@@ -1,8 +1,12 @@
-import type { Industry, Role } from "@/lib/role-based-dashboard/registry";
+import {
+  usesRetailBankingDashboard,
+  type Industry,
+  type Role,
+} from "@/lib/role-based-dashboard/registry";
 
 /** Head of Contact Centre lands on KPI Signals (staffing) instead of Executive. */
 export function skipExecutiveScreen(industry: Industry, role: Role): boolean {
-  return industry.id === "retail_banking" && role.id === "head_contact";
+  return usesRetailBankingDashboard(industry.id) && role.id === "head_contact";
 }
 
 export function initialKpiSignalFilter(roleId: string): string {

@@ -1,6 +1,7 @@
 "use client";
 
 import { Hash } from "lucide-react";
+import type { RetailBrandDrillVariant } from "./RetailTopTopicsByVirality";
 
 type HashtagTrend = {
   hashtag: string;
@@ -10,7 +11,7 @@ type HashtagTrend = {
   summary: string;
 };
 
-const HASHTAGS: HashtagTrend[] = [
+const DEFAULT_HASHTAGS: HashtagTrend[] = [
   {
     hashtag: "#BankAppCrash",
     sentiment: "negative",
@@ -61,20 +62,80 @@ const HASHTAGS: HashtagTrend[] = [
   },
 ];
 
-export function RetailMomentumHashtags() {
+const STERLING_FLIGHT_HASHTAGS: HashtagTrend[] = [
+  {
+    hashtag: "#SavingsRate",
+    sentiment: "negative",
+    growthPercent: 214,
+    volume: 3280,
+    summary:
+      "Spike after Easy-Saver rate removal · customers comparing headline rates across UK challengers.",
+  },
+  {
+    hashtag: "#BetterRateElsewhere",
+    sentiment: "negative",
+    growthPercent: 186,
+    volume: 2740,
+    summary:
+      "Flight-intent posts citing competitor savings rates before outbound transfers complete.",
+  },
+  {
+    hashtag: "#SwitchMyBank",
+    sentiment: "negative",
+    growthPercent: 152,
+    volume: 2190,
+    summary:
+      "CASS and primacy-switch narratives · salary redirection mentioned in 42% of posts.",
+  },
+  {
+    hashtag: "#PrimacyMove",
+    sentiment: "negative",
+    growthPercent: 94,
+    volume: 1420,
+    summary:
+      "Direct-debit and salary redirection precursors · silent-switch pattern 3 months ahead of CASS data.",
+  },
+  {
+    hashtag: "#SaveOfferHeld",
+    sentiment: "positive",
+    growthPercent: 67,
+    volume: 980,
+    summary:
+      "Retention rate-hold posts after draft save-offer · flight-intent neutralised in 38% of flagged cohort.",
+  },
+  {
+    hashtag: "#ServiceStillWins",
+    sentiment: "positive",
+    growthPercent: 41,
+    volume: 720,
+    summary:
+      "Relationship-primary savers citing branch access and fee-free banking · slower bleed vs rate-only switchers.",
+  },
+];
+
+export function RetailMomentumHashtags({
+  variant = "default",
+}: {
+  variant?: RetailBrandDrillVariant;
+}) {
+  const isSterling = variant === "sterling-deposit-flight";
+  const hashtags = isSterling ? STERLING_FLIGHT_HASHTAGS : DEFAULT_HASHTAGS;
+
   return (
     <div className="flex h-full min-h-0 flex-col rounded-2xl bg-[#0D0D0D] border border-[#2b2b2b] shadow-[0_18px_40px_rgba(0,0,0,0.4)] text-white overflow-hidden">
       <div className="flex flex-col space-y-1.5 px-6 pt-6 pb-3 flex-shrink-0">
         <div className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2 text-white">
           <Hash className="h-5 w-5 text-purple-400" />
-          Momentum Hashtags
+          {isSterling ? "Flight-Intent Social Themes" : "Momentum Hashtags"}
         </div>
         <div className="text-sm text-gray-400">
-          Fastest growing conversation entry points
+          {isSterling
+            ? "Fastest-growing deposit-flight conversation entry points"
+            : "Fastest growing conversation entry points"}
         </div>
       </div>
       <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-4 grid gap-2.5 sm:grid-cols-2 content-start">
-        {HASHTAGS.map(hashtag => (
+        {hashtags.map((hashtag) => (
           <div
             key={hashtag.hashtag}
             className="rounded-xl border border-white/10 bg-white/[0.03] backdrop-blur-sm space-y-1.5 p-3"
@@ -88,8 +149,8 @@ export function RetailMomentumHashtags() {
                   hashtag.sentiment === "positive"
                     ? "text-emerald-400"
                     : hashtag.sentiment === "negative"
-                    ? "text-red-400"
-                    : "text-gray-400"
+                      ? "text-red-400"
+                      : "text-gray-400"
                 }`}
               >
                 {hashtag.sentiment}
@@ -101,10 +162,7 @@ export function RetailMomentumHashtags() {
               </span>
               <span className="text-[11px] text-gray-400 pb-0.5">
                 Growth ·{" "}
-                <span className="font-medium">
-                  {hashtag.volume.toLocaleString()}
-                </span>{" "}
-                posts
+                <span className="font-medium">{hashtag.volume.toLocaleString()}</span> posts
               </span>
             </div>
             <p className="text-[11px] text-gray-400 leading-relaxed break-words">
