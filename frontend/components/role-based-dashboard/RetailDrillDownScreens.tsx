@@ -24,6 +24,12 @@ import { RetailMomentumHashtags } from "./RetailMomentumHashtags";
 import { RetailInfluencerWatchlist } from "./RetailInfluencerWatchlist";
 import { RetailIntentPressureAlerts } from "./RetailIntentPressureAlerts";
 import { RetailSLAPerformanceOverview } from "./RetailSLAPerformanceOverview";
+import { swapUsdSymbolDeep, useSterlingHeadRetailCurrencyActive } from "@/lib/role-based-dashboard/sterlingHeadRetailCurrency";
+import { STERLING_HEAD_RETAIL_HAPPINESS } from "@/lib/role-based-dashboard/sterlingHeadRetailHappinessData";
+import {
+  STERLING_HEAD_RETAIL_LEADING_INTENTS,
+  STERLING_HEAD_RETAIL_SLA_MATRIX,
+} from "@/lib/role-based-dashboard/sterlingHeadRetailServiceData";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Shared helpers — chart panels + optional AI Executive Insight blocks
@@ -127,6 +133,7 @@ function DrillHeader({ title, sub, score, scoreColor }: { title: string; sub: st
  */
 function AIPanel({
   title, subtitle, children, accentColor, minHeight, ai = false, aiModel, headerRight, fill = false, compact = false, borderless = false,
+  titleFontSize, subtitleFontSize,
 }: {
   title: string; subtitle?: string; children: ReactNode;
   accentColor?: string; minHeight?: number;
@@ -141,9 +148,13 @@ function AIPanel({
   compact?: boolean;
   /** Removes card border lines while preserving layout. */
   borderless?: boolean;
+  titleFontSize?: number;
+  subtitleFontSize?: number;
 }) {
   const T = useDashboardTheme();
   const accent = accentColor || T.cyan;
+  const resolvedTitleFontSize = titleFontSize ?? (compact ? 11 : 12.5);
+  const resolvedSubtitleFontSize = subtitleFontSize ?? (compact ? 9.5 : 11);
   return (
     <div style={{
       background: T.elevated,
@@ -177,13 +188,13 @@ function AIPanel({
           <div style={{ display: "flex", alignItems: "center", gap: compact ? 5 : 7 }}>
             {ai ? <span style={{ fontSize: 14, lineHeight: 1 }}>✨</span> : null}
             <span style={{
-              fontSize: compact ? 11 : 12.5, fontWeight: 700, color: T.text,
+              fontSize: resolvedTitleFontSize, fontWeight: 700, color: T.text,
               textTransform: "uppercase", letterSpacing: compact ? 0.65 : 0.8,
             }}>{title}</span>
           </div>
           {subtitle ? (
             <div style={{
-              fontSize: compact ? 9.5 : 11,
+              fontSize: resolvedSubtitleFontSize,
               color: T.textMut,
               marginTop: compact ? 2 : 4,
               lineHeight: compact ? 1.35 : undefined,
@@ -409,9 +420,9 @@ const STERLING_HV_INTENTS: IntentRow[] = [
   { intent: "Decline reason not given",          share: 18, sentiment: -0.71, delta: -0.15, sampleQuote: "No explanation, no appeal — told to call a fraud-prevention agency." },
   { intent: "Interest removed / rate cut",       share: 15, sentiment: -0.58, delta: -0.12, sampleQuote: "3.25% gone — why would I keep my money here?" },
   { intent: "ISA vs Easy-Saver confusion",       share: 12, sentiment: -0.24, delta: -0.04, sampleQuote: "Which one actually pays interest now?" },
-  { intent: "High-balance consolidation / FSCS", share: 11, sentiment: -0.18, delta: -0.03, sampleQuote: "Is £150k still protected if I bring it all here?" },
-  { intent: "Relationship Manager access",       share:  9, sentiment: -0.50, delta: -0.10, sampleQuote: "No one can tell me why I was turned down." },
-  { intent: "Proof of funds / documentation",    share:  5, sentiment: -0.30, delta: -0.05, sampleQuote: "Sent everything twice, still declined." },
+  { intent: "FSCS / protection question",        share: 11, sentiment: -0.18, delta: -0.03, sampleQuote: "Is £85k still protected if I bring it all here?" },
+  { intent: "In-app support escalation",         share:  9, sentiment: -0.50, delta: -0.10, sampleQuote: "Three chats, no one can tell me why I was turned down." },
+  { intent: "Source-of-funds query",             share:  5, sentiment: -0.30, delta: -0.05, sampleQuote: "Sent everything twice, still declined." },
   { intent: "Fair-value of savings query",       share:  3, sentiment:  0.10, delta:  0.02, sampleQuote: "At least explain the rate change." },
 ];
 
@@ -447,21 +458,22 @@ const h1FailureClusters: FCICluster[] = [
       "High-balance saver declined after proof-of-funds submission",
       "Savings account opening failed at final verification step",
     ],
-    affectedCustomers: 312,
+    affectedCustomers: 276,
     businessImpact: "~£310K/week deposit outflow from declined high-balance savers",
     totalInteractions: 1842,
-    avgResolutionTime: "4.6 hours",
+    depositAtRisk: "£186K",
+    moveToCompetitorPct: 34,
+    franchiseInsight:
+      "Savings-eligibility declines are the top driver of deposit-at-risk and move-to-competitor intent; the harm is in the decline-reason gap, not the queue.",
     topChannels: [
-      { channel: "App", percentage: 34 },
       { channel: "Voice", percentage: 28 },
-      { channel: "Chat", percentage: 18 },
+      { channel: "Chat", percentage: 22 },
       { channel: "Email", percentage: 12 },
-      { channel: "Social", percentage: 8 },
+      { channel: "Complaints", percentage: 18 },
+      { channel: "Social Media", percentage: 8 },
     ],
     topics: ["No reason given", "Fraud-prevention referral", "Rate removed", "Appeal / re-apply", "Move to competitor"],
     nextActionSuggestion: "Draft reason-code disclosure review for savings declines — never auto-send",
-    processError: 68,
-    productKnowledgeGap: 32,
   },
   {
     id: "h1-2",
@@ -477,18 +489,19 @@ const h1FailureClusters: FCICluster[] = [
     affectedCustomers: 287,
     businessImpact: "FOS upheld conflicting-explanation complaint — conduct risk on tipping-off / SAR tension",
     totalInteractions: 1240,
-    avgResolutionTime: "3.8 hours",
+    depositAtRisk: "£124K",
+    moveToCompetitorPct: 29,
+    franchiseInsight:
+      "Decline-reason vacuum drives repeat contact and switch-intent before balances move — franchise harm sits in the explanation gap, not resolution SLA.",
     topChannels: [
       { channel: "Voice", percentage: 42 },
-      { channel: "App", percentage: 26 },
-      { channel: "Chat", percentage: 16 },
+      { channel: "Chat", percentage: 26 },
       { channel: "Email", percentage: 10 },
-      { channel: "Social", percentage: 6 },
+      { channel: "Complaints", percentage: 14 },
+      { channel: "Social Media", percentage: 8 },
     ],
     topics: ["No reason given", "Fraud-prevention referral", "Appeal / re-apply"],
     nextActionSuggestion: "Draft disclosure playbook for savings decline handling — propose only, never auto-send",
-    processError: 74,
-    productKnowledgeGap: 26,
   },
   {
     id: "h1-3",
@@ -603,12 +616,41 @@ const h1FailureClusters: FCICluster[] = [
 export function CustomerHappinessDrillDown({
   onBack,
   variant = "default",
+  sterlingCurrency = false,
 }: {
   onBack: () => void;
   variant?: CustomerHappinessDrillVariant;
+  sterlingCurrency?: boolean;
 }) {
   const T = useDashboardTheme();
   const isSterlingDepositLeak = variant === "sterling-deposit-leak";
+  const sterlingActive = useSterlingHeadRetailCurrencyActive(sterlingCurrency);
+  const isSterlingHeadRetail = sterlingActive && !isSterlingDepositLeak;
+
+  const failureClusters = isSterlingDepositLeak
+    ? h1FailureClusters
+    : isSterlingHeadRetail
+      ? STERLING_HEAD_RETAIL_HAPPINESS.failureClusters
+      : fciClusters;
+  const resolvedFailureClusters = sterlingActive
+    ? swapUsdSymbolDeep(failureClusters)
+    : failureClusters;
+
+  const hvIntents = isSterlingDepositLeak
+    ? STERLING_HV_INTENTS
+    : isSterlingHeadRetail
+      ? STERLING_HEAD_RETAIL_HAPPINESS.hvIntents
+      : HV_INTENTS;
+  const lvIntents = isSterlingDepositLeak
+    ? STERLING_LV_INTENTS
+    : isSterlingHeadRetail
+      ? STERLING_HEAD_RETAIL_HAPPINESS.lvIntents
+      : LV_INTENTS;
+  const commonIntents = isSterlingDepositLeak
+    ? STERLING_COMMON_INTENTS
+    : isSterlingHeadRetail
+      ? STERLING_HEAD_RETAIL_HAPPINESS.commonIntents
+      : HV_COMMON_INTENTS;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -622,16 +664,19 @@ export function CustomerHappinessDrillDown({
         sub={
           isSterlingDepositLeak
             ? "Where high-value savers are declined for Savings / Easy-Saver with no reason given — and how much deposit walks out as a result. Decline-reason vacuum → deposit outflow."
-            : "How happy are your customers and what is driving unhappiness across segments, journeys, products and channels?"
+            : isSterlingHeadRetail
+              ? STERLING_HEAD_RETAIL_HAPPINESS.drillSub
+              : "How happy are your customers and what is driving unhappiness across segments, journeys, products and channels?"
         }
       />
 
       {/* Row 0 — FCI KPI wall (requested to appear on top) */}
-      <RetailFCIKPICards isDarkMode variant={variant} />
+      <RetailFCIKPICards isDarkMode variant={variant} sterlingCurrency={sterlingCurrency} />
 
       {/* Tier 1 — What's Failing? diagnostic wall promoted by request */}
       <FailureClusters
-        clusters={isSterlingDepositLeak ? h1FailureClusters : fciClusters}
+        clusters={resolvedFailureClusters}
+        variant={isSterlingDepositLeak ? "sterling-franchise" : "default"}
         isDarkMode
       />
 
@@ -645,13 +690,34 @@ export function CustomerHappinessDrillDown({
       {/* Bottom row — TOP INTENTS × SENTIMENT · HV vs LV */}
       <HVvsLVIntentPanel
         T={T}
-        hvIntents={isSterlingDepositLeak ? STERLING_HV_INTENTS : HV_INTENTS}
-        lvIntents={isSterlingDepositLeak ? STERLING_LV_INTENTS : LV_INTENTS}
-        commonIntents={isSterlingDepositLeak ? STERLING_COMMON_INTENTS : HV_COMMON_INTENTS}
+        hvIntents={hvIntents}
+        lvIntents={lvIntents}
+        commonIntents={commonIntents}
+        franchiseMode={isSterlingDepositLeak}
+        segmentMeta={
+          isSterlingDepositLeak
+            ? {
+                hv: {
+                  label: "HV Customers",
+                  count: "412K accounts",
+                  note: "High-balance / primary-account savers",
+                },
+                lv: {
+                  label: "LV Customers",
+                  count: "3.19M accounts",
+                  note: "Mass-retail / low-balance savers",
+                },
+              }
+            : isSterlingHeadRetail
+              ? STERLING_HEAD_RETAIL_HAPPINESS.segmentMeta
+              : undefined
+        }
         panelSubtitle={
           isSterlingDepositLeak
-            ? "What high-value and mass-retail savers are contacting about after savings declines (last 30 days)"
-            : "What High-Value and Low-Value customers are calling about, and how they feel about each intent (last 30 days)"
+            ? "What high-balance and mass-retail savers are contacting about after savings declines (last 30 days)"
+            : isSterlingHeadRetail
+              ? STERLING_HEAD_RETAIL_HAPPINESS.panelSubtitle
+              : "What High-Value and Low-Value customers are calling about, and how they feel about each intent (last 30 days)"
         }
       />
 
@@ -827,12 +893,19 @@ function HVvsLVIntentPanel({
   lvIntents,
   commonIntents,
   panelSubtitle,
+  franchiseMode = false,
+  segmentMeta,
 }: {
   T: DashboardThemeTokens;
   hvIntents: IntentRow[];
   lvIntents: IntentRow[];
   commonIntents: { intent: string; hv: number; lv: number }[];
   panelSubtitle: string;
+  franchiseMode?: boolean;
+  segmentMeta?: {
+    hv: { label: string; count: string; note: string };
+    lv: { label: string; count: string; note: string };
+  };
 }) {
   const avgHV = hvIntents.reduce((a, r) => a + r.sentiment * r.share, 0) / hvIntents.reduce((a, r) => a + r.share, 0);
   const avgLV = lvIntents.reduce((a, r) => a + r.sentiment * r.share, 0) / lvIntents.reduce((a, r) => a + r.share, 0);
@@ -841,19 +914,28 @@ function HVvsLVIntentPanel({
     .map((r) => ({ intent: r.intent, gap: Math.abs(r.hv - r.lv) }))
     .sort((a, b) => b.gap - a.gap);
 
-  // Roll-up experience metrics for the summary strip
-  const sentimentGap = avgHV - avgLV; // + means HV happier than LV
+  const sentimentGap = avgHV - avgLV;
   const hvNps = Math.round(avgHV * 100);
   const lvNps = Math.round(avgLV * 100);
+  const hvShare = hvIntents.reduce((a, r) => a + r.share, 0);
+  const lvShare = lvIntents.reduce((a, r) => a + r.share, 0);
 
-  const summaryChips: { k: string; v: string; c: string }[] = [
-    { k: "HV happiness", v: `${avgHV > 0 ? "+" : ""}${avgHV.toFixed(2)}`, c: sentimentColor(T, avgHV) },
-    { k: "LV happiness", v: `${avgLV > 0 ? "+" : ""}${avgLV.toFixed(2)}`, c: sentimentColor(T, avgLV) },
-    { k: "HV NPS",       v: `${hvNps > 0 ? "+" : ""}${hvNps}`, c: sentimentColor(T, avgHV) },
-    { k: "LV NPS",       v: `${lvNps > 0 ? "+" : ""}${lvNps}`, c: sentimentColor(T, avgLV) },
-    { k: "HV−LV gap",    v: `${sentimentGap > 0 ? "+" : ""}${sentimentGap.toFixed(2)}`, c: sentimentGap >= 0 ? T.green : T.red },
-    { k: "Widest gap",   v: `${gaps[0].intent} · ${gaps[0].gap.toFixed(2)}`, c: T.red },
-  ];
+  const summaryChips: { k: string; v: string; c: string }[] = franchiseMode
+    ? [
+        { k: "Deposit at risk", v: "£310K/wk", c: T.red },
+        { k: "HV contact share", v: `${hvShare}%`, c: T.cyan },
+        { k: "LV contact share", v: `${lvShare}%`, c: T.amber },
+        { k: "HV happiness", v: `${avgHV > 0 ? "+" : ""}${avgHV.toFixed(2)}`, c: sentimentColor(T, avgHV) },
+        { k: "Widest gap", v: `${gaps[0].intent} · ${gaps[0].gap.toFixed(2)}`, c: T.red },
+      ]
+    : [
+        { k: "HV happiness", v: `${avgHV > 0 ? "+" : ""}${avgHV.toFixed(2)}`, c: sentimentColor(T, avgHV) },
+        { k: "LV happiness", v: `${avgLV > 0 ? "+" : ""}${avgLV.toFixed(2)}`, c: sentimentColor(T, avgLV) },
+        { k: "HV NPS",       v: `${hvNps > 0 ? "+" : ""}${hvNps}`, c: sentimentColor(T, avgHV) },
+        { k: "LV NPS",       v: `${lvNps > 0 ? "+" : ""}${lvNps}`, c: sentimentColor(T, avgLV) },
+        { k: "HV−LV gap",    v: `${sentimentGap > 0 ? "+" : ""}${sentimentGap.toFixed(2)}`, c: sentimentGap >= 0 ? T.green : T.red },
+        { k: "Widest gap",   v: `${gaps[0].intent} · ${gaps[0].gap.toFixed(2)}`, c: T.red },
+      ];
 
   const summaryStrip = (
     <div style={{
@@ -895,8 +977,22 @@ function HVvsLVIntentPanel({
       {/* Compact segment meta — avg sentiment dials */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 14 }}>
         {[
-          { label: "HV Customers", color: T.cyan,  count: "148K accounts", avg: avgHV, nps: hvNps, note: "Private · HNI · Mass Affluent" },
-          { label: "LV Customers", color: T.amber, count: "2.41M accounts", avg: avgLV, nps: lvNps, note: "Mass Retail · Digital-only" },
+          {
+            label: segmentMeta?.hv.label ?? "HV Customers",
+            color: T.cyan,
+            count: segmentMeta?.hv.count ?? "148K accounts",
+            avg: avgHV,
+            nps: hvNps,
+            note: segmentMeta?.hv.note ?? "Private · HNI · Mass Affluent",
+          },
+          {
+            label: segmentMeta?.lv.label ?? "LV Customers",
+            color: T.amber,
+            count: segmentMeta?.lv.count ?? "2.41M accounts",
+            avg: avgLV,
+            nps: lvNps,
+            note: segmentMeta?.lv.note ?? "Mass Retail · Digital-only",
+          },
         ].map((m) => {
           const avgColor = sentimentColor(T, m.avg);
           const dialPct = ((m.avg + 1) / 2) * 100; // map -1..+1 to 0..100%
@@ -1102,6 +1198,98 @@ const STERLING_FLIGHT_PHRASES: FlightPhrase[] = [
   { phrase: "Cancelling my direct debits", count: 72, percentage: 7.2, trend: "up", channels: ["Chat"], topic: "Primacy decay" },
 ];
 
+const STERLING_BRAND_TOPIC_TIER_COLOR: Record<string, string> = {
+  "ACCOUNT RESTRICTION": "#EF4444",
+  "PAYMENT BLOCK": "#EF4444",
+  "PAYMENT DECLINED": "#EF4444",
+  "SAVINGS / INTEREST REMOVAL": "#EF4444",
+  "ACCOUNT CLOSURE": "#F59E0B",
+  "APP / SPACES ISSUE": "#F59E0B",
+  "SECURITY LOCKOUT": "#F59E0B",
+  "SME ONBOARDING": "#E8B931",
+};
+
+const STERLING_BRAND_PHRASES: FlightPhrase[] = [
+  { phrase: "Frozen the moment I paid money in", count: 92, percentage: 12.1, trend: "up", channels: ["Trustpilot", "X (Twitter)", "Reddit"], topic: "ACCOUNT RESTRICTION" },
+  { phrase: "Blocked a normal payment, wouldn't say why", count: 71, percentage: 9.3, trend: "up", channels: ["Play Store", "Trustpilot"], topic: "PAYMENT BLOCK" },
+  { phrase: "Declining my card though I have money", count: 64, percentage: 8.4, trend: "up", channels: ["App Store", "Play Store"], topic: "PAYMENT DECLINED" },
+  { phrase: "Interest gone — rejected for the new saver", count: 88, percentage: 11.6, trend: "up", channels: ["Trustpilot", "Reddit"], topic: "SAVINGS / INTEREST REMOVAL" },
+  { phrase: "No longer welcome, and no explanation", count: 58, percentage: 7.6, trend: "up", channels: ["Trustpilot", "X (Twitter)"], topic: "ACCOUNT CLOSURE" },
+  { phrase: "Can't move money out of my Spaces", count: 49, percentage: 6.4, trend: "up", channels: ["App Store", "Play Store"], topic: "APP / SPACES ISSUE" },
+  { phrase: "Couldn't pass app security, then closed", count: 44, percentage: 5.8, trend: "up", channels: ["App Store", "Reddit"], topic: "SECURITY LOCKOUT" },
+  { phrase: "Can't open sole-trader without already trading", count: 38, percentage: 5.0, trend: "up", channels: ["Reddit", "Trustpilot"], topic: "SME ONBOARDING" },
+];
+
+/** Sterling head_retail brand drill — friction list shows 5 rows then scrolls. */
+const STERLING_BRAND_FRICTION_LIST = {
+  visibleRows: 5,
+  rowMinHeight: 68,
+  rowPadding: "13px 0",
+  rankColumnWidth: 22,
+  rowGap: 8,
+  phraseLineHeight: 1.38,
+  metaMarginTop: 6,
+  rankFontSize: 12.5,
+  phraseFontSize: 14,
+  metaFontSize: 11,
+} as const;
+
+const STERLING_BRAND_FRICTION_VIEWPORT_HEIGHT =
+  STERLING_BRAND_FRICTION_LIST.visibleRows * STERLING_BRAND_FRICTION_LIST.rowMinHeight;
+
+const STERLING_BRAND_MEDIA = [
+  { outlet: "This Is Money", tone: "negative" as const, reach: 848, time: "2h ago", title: "Digital bank faces wave of account-freeze complaints on Trustpilot" },
+  { outlet: "Financial Times", tone: "neutral" as const, reach: 1288, time: "5h ago", title: "FCA Consumer Duty: unexplained restrictions under scrutiny" },
+  { outlet: "MoneyWeek", tone: "negative" as const, reach: 420, time: "9h ago", title: "App-first banks struggle to scale human support for locked accounts" },
+  { outlet: "The Guardian", tone: "negative" as const, reach: 1880, time: "1d ago", title: "Which? survey flags opaque account-closure letters at UK challengers" },
+  { outlet: "TechCrunch", tone: "positive" as const, reach: 620, time: "1d ago", title: "Spaces budgeting tool wins UX award — rare banking bright spot" },
+];
+
+const STERLING_BRAND_FEATURE_REQUESTS: FeatureRequestRow[] = [
+  {
+    req: "Explain restriction reason in-app",
+    mentions: 276,
+    sentiment: 0.71,
+    channels: "Trustpilot · Reddit · X (Twitter)",
+    channelSplit: { "App Store": 42, "Play Store": 38, Reddit: 86, Trustpilot: 72, "X (Twitter)": 38 },
+  },
+  {
+    req: "Live chat human escalation",
+    mentions: 238,
+    sentiment: 0.68,
+    channels: "App Store · Play Store · Trustpilot",
+    channelSplit: { "App Store": 68, "Play Store": 54, Reddit: 44, Trustpilot: 48, "X (Twitter)": 24 },
+  },
+  {
+    req: "Savings rate eligibility clarity",
+    mentions: 194,
+    sentiment: 0.66,
+    channels: "Trustpilot · Reddit · App Store",
+    channelSplit: { "App Store": 52, "Play Store": 28, Reddit: 58, Trustpilot: 42, "X (Twitter)": 14 },
+  },
+  {
+    req: "Sole-trader onboarding path",
+    mentions: 162,
+    sentiment: 0.64,
+    channels: "Reddit · Trustpilot · Play Store",
+    channelSplit: { "App Store": 22, "Play Store": 34, Reddit: 62, Trustpilot: 32, "X (Twitter)": 12 },
+  },
+  {
+    req: "Spaces transfer reliability",
+    mentions: 138,
+    sentiment: 0.70,
+    channels: "App Store · Play Store · Reddit",
+    channelSplit: { "App Store": 58, "Play Store": 44, Reddit: 22, Trustpilot: 8, "X (Twitter)": 6 },
+  },
+  {
+    req: "Faster-payment status tracking",
+    mentions: 104,
+    sentiment: 0.67,
+    channels: "Trustpilot · Reddit · X (Twitter)",
+    channelSplit: { "App Store": 18, "Play Store": 16, Reddit: 28, Trustpilot: 34, "X (Twitter)": 8 },
+  },
+];
+
 const STERLING_MEDIA = [
   { outlet: "This Is Money", tone: "negative" as const, reach: 840, time: "2h ago", title: "Easy-access savers move billions as rates are cut" },
   { outlet: "MoneyWeek", tone: "negative" as const, reach: 420, time: "9h ago", title: "Fee policy confusion driving switching activity" },
@@ -1271,14 +1459,68 @@ const DEFAULT_CHANNELS_AT_RISK: ChannelRiskRow[] = [
   },
 ];
 
+const STERLING_BRAND_CHANNELS_AT_RISK: ChannelRiskRow[] = [
+  {
+    name: "X (Twitter)",
+    channelColor: VOC_CHANNEL_COLORS["X (Twitter)"],
+    trend: [0.54, 0.50, 0.46, 0.42, 0.39, 0.36],
+    hot: [
+      { label: "FREEZE", topic: "Account freeze" },
+      { label: "CLOSE", topic: "Account closure without explanation" },
+      { label: "PAY", topic: "Payment blocked despite funds" },
+    ],
+  },
+  {
+    name: "Play Store",
+    channelColor: VOC_CHANNEL_COLORS["Play Store"],
+    trend: [0.62, 0.60, 0.58, 0.55, 0.53, 0.52],
+    hot: [
+      { label: "ANDROID", topic: "App and Spaces errors" },
+      { label: "PAY", topic: "Payment declined despite funds" },
+      { label: "LOCK", topic: "Security lockout / bot loop" },
+    ],
+  },
+  {
+    name: "Trustpilot",
+    channelColor: VOC_CHANNEL_COLORS.Trustpilot,
+    trend: [0.61, 0.60, 0.58, 0.57, 0.55, 0.54],
+    hot: [
+      { label: "FREEZE", topic: "Account freeze" },
+      { label: "CLOSE", topic: "Account closure" },
+      { label: "RATE", topic: "Savings interest removed" },
+    ],
+  },
+  {
+    name: "Reddit",
+    channelColor: VOC_CHANNEL_COLORS.Reddit,
+    trend: [0.62, 0.61, 0.59, 0.58, 0.57, 0.56],
+    hot: [
+      { label: "FREEZE", topic: "r/UKPersonalFinance restriction threads" },
+      { label: "SME", topic: "Sole-trader onboarding rejection" },
+      { label: "FOS", topic: "FOS-decision complaint amplifiers" },
+    ],
+  },
+  {
+    name: "App Store",
+    channelColor: VOC_CHANNEL_COLORS["App Store"],
+    trend: [0.71, 0.72, 0.73, 0.73, 0.74, 0.74],
+    hot: [{ label: "UX", topic: "Award-winning app praise" }],
+    note: "(quality praise)",
+  },
+];
+
 function ChannelRiskLegend({
   T,
   channelLegend,
   riskTiers,
+  showChannels = true,
+  tierLegendLabel = "Risk",
 }: {
   T: DashboardThemeTokens;
-  channelLegend: Record<string, string>;
+  channelLegend?: Record<string, string>;
   riskTiers: { label: string; color: string }[];
+  showChannels?: boolean;
+  tierLegendLabel?: string;
 }) {
   return (
     <div style={{
@@ -1294,28 +1536,32 @@ function ChannelRiskLegend({
       flexShrink: 0,
       alignSelf: "flex-start",
     }}>
-      <span style={{
-        fontSize: 11, fontWeight: 700, color: T.textMut,
-        textTransform: "uppercase", letterSpacing: 0.7,
-      }}>
-        Channels
-      </span>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
-        {Object.entries(channelLegend).map(([ch, color]) => (
-          <div key={ch} style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
-            <span style={{ width: 9, height: 9, borderRadius: "50%", background: color, display: "inline-block" }} />
-            <span style={{ fontSize: 12, color: T.text, fontWeight: 500 }}>{ch}</span>
+      {showChannels && channelLegend ? (
+        <>
+          <span style={{
+            fontSize: 11, fontWeight: 700, color: T.textMut,
+            textTransform: "uppercase", letterSpacing: 0.7,
+          }}>
+            Channels
+          </span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+            {Object.entries(channelLegend).map(([ch, color]) => (
+              <div key={ch} style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap" }}>
+                <span style={{ width: 9, height: 9, borderRadius: "50%", background: color, display: "inline-block" }} />
+                <span style={{ fontSize: 12, color: T.text, fontWeight: 500 }}>{ch}</span>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
 
-      <div style={{ gridColumn: "1 / -1", height: 1, background: T.borderLight }} />
+          <div style={{ gridColumn: "1 / -1", height: 1, background: T.borderLight }} />
+        </>
+      ) : null}
 
       <span style={{
         fontSize: 11, fontWeight: 700, color: T.textMut,
         textTransform: "uppercase", letterSpacing: 0.7,
       }}>
-        Risk
+        {tierLegendLabel}
       </span>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
         {riskTiers.map((chip) => (
@@ -1335,6 +1581,25 @@ function ChannelRiskLegend({
   );
 }
 
+const BRAND_DRILL_ROW_COLUMNS: Record<
+  "default" | "sterling-brand" | "deposit-flight",
+  string
+> = {
+  default: "minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(0, 1.05fr)",
+  "sterling-brand": "repeat(3, minmax(0, 1fr))",
+  "deposit-flight": "minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(0, 1.05fr)",
+};
+
+function brandDrillRowColumns(variant: BrandReputationDrillVariant): string {
+  if (variant === "sterling-brand-reputation") {
+    return BRAND_DRILL_ROW_COLUMNS["sterling-brand"];
+  }
+  if (variant === "sterling-deposit-flight") {
+    return BRAND_DRILL_ROW_COLUMNS["deposit-flight"];
+  }
+  return BRAND_DRILL_ROW_COLUMNS.default;
+}
+
 export function BrandReputationDrillDown({
   onBack,
   variant = "default",
@@ -1343,24 +1608,45 @@ export function BrandReputationDrillDown({
   variant?: BrandReputationDrillVariant;
 }) {
   const T = useDashboardTheme();
-  const isSterling = variant === "sterling-deposit-flight";
-  const channelLegend = isSterling ? STERLING_VOC_CHANNEL_COLORS : VOC_CHANNEL_COLORS;
-  const mediaRows = isSterling ? STERLING_MEDIA : MEDIA;
-  const featureRequests = isSterling ? STERLING_FEATURE_REQUESTS : FEATURE_REQUESTS;
-  const narrativePhrases = isSterling ? STERLING_FLIGHT_PHRASES : REUSED_NARRATIVE_PHRASES;
-  const topicTierColor = isSterling ? STERLING_TOPIC_TIER_COLOR : TOPIC_TIER_COLOR;
-  const channelsAtRisk = isSterling ? STERLING_CHANNELS_AT_RISK : DEFAULT_CHANNELS_AT_RISK;
+  const isDepositFlight = variant === "sterling-deposit-flight";
+  const isBrandReputation = variant === "sterling-brand-reputation";
+  const channelLegend = isDepositFlight ? STERLING_VOC_CHANNEL_COLORS : VOC_CHANNEL_COLORS;
+  const mediaRows = isDepositFlight
+    ? STERLING_MEDIA
+    : isBrandReputation
+      ? STERLING_BRAND_MEDIA
+      : MEDIA;
+  const featureRequests = isDepositFlight
+    ? STERLING_FEATURE_REQUESTS
+    : isBrandReputation
+      ? STERLING_BRAND_FEATURE_REQUESTS
+      : FEATURE_REQUESTS;
+  const narrativePhrases = isDepositFlight
+    ? STERLING_FLIGHT_PHRASES
+    : isBrandReputation
+      ? STERLING_BRAND_PHRASES
+      : REUSED_NARRATIVE_PHRASES;
+  const topicTierColor = isDepositFlight
+    ? STERLING_TOPIC_TIER_COLOR
+    : isBrandReputation
+      ? STERLING_BRAND_TOPIC_TIER_COLOR
+      : TOPIC_TIER_COLOR;
+  const channelsAtRisk = isDepositFlight
+    ? STERLING_CHANNELS_AT_RISK
+    : isBrandReputation
+      ? STERLING_BRAND_CHANNELS_AT_RISK
+      : DEFAULT_CHANNELS_AT_RISK;
 
   const renderFeatureRequestTooltip = ({ active, payload }: { active?: boolean; payload?: ReadonlyArray<{ payload: unknown }> }) => {
     if (!active || !payload || payload.length === 0) return null;
     const row = payload[0].payload as FeatureRequestRow | SterlingFeatureRequestRow;
     const total = Math.max(row.mentions, 1);
-    const channelOrder = isSterling ? STERLING_CHANNEL_ORDER : SOCIAL_CHANNEL_ORDER;
-    const channelColors: Record<string, string> = isSterling ? STERLING_VOC_CHANNEL_COLORS : SOCIAL_CHANNEL_COLORS;
+    const channelOrder = isDepositFlight ? STERLING_CHANNEL_ORDER : SOCIAL_CHANNEL_ORDER;
+    const channelColors: Record<string, string> = isDepositFlight ? STERLING_VOC_CHANNEL_COLORS : SOCIAL_CHANNEL_COLORS;
 
-    const isSterlingSmallBar = isSterling && row.mentions <= STERLING_SMALL_FEATURE_BAR_MENTIONS;
+    const isSterlingSmallBar = isDepositFlight && row.mentions <= STERLING_SMALL_FEATURE_BAR_MENTIONS;
 
-    const channelEntries = isSterling
+    const channelEntries = isDepositFlight
       ? isSterlingSmallBar
         ? channelOrder
             .map((ch) => ({ ch, count: row.channelSplit[ch as keyof typeof row.channelSplit] ?? 0 }))
@@ -1390,7 +1676,7 @@ export function BrandReputationDrillDown({
         </div>
         <div style={{ fontSize: 10, color: T.textMut, marginBottom: 8 }}>
           Mentions by channel · total {row.mentions}
-          {isSterlingSmallBar ? " · top 3 channels" : isSterling ? " · all channels" : ""}
+          {isSterlingSmallBar ? " · top 3 channels" : isDepositFlight ? " · all channels" : ""}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
           {channelEntries.map(({ ch, count }) => {
@@ -1420,7 +1706,7 @@ export function BrandReputationDrillDown({
   ];
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: isSterling ? 12 : 16 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: isDepositFlight ? 12 : 16 }}>
       {/* Header — title left · Channels/Risk legend top-right (same row as reference layout) */}
       <div style={{
         display: "flex",
@@ -1433,21 +1719,29 @@ export function BrandReputationDrillDown({
           <DrillPageHeader
             onBack={onBack}
             title={
-              isSterling
+              isDepositFlight
                 ? "Is our deposit base flying out?"
                 : "Is the Brand at risk?"
             }
             sub={
-              isSterling
+              isDepositFlight
                 ? "Where balances are leaving and primary relationships are decaying — interest-removal flight, silent-switch precursors, and the CASS gap."
-                : "Real-time brand, social, review-site and media signals — where is perception eroding and what is driving it?"
+                : isBrandReputation
+                  ? "Voice-of-customer reputation from reviews and social — restriction, closure and payment-block themes Distil extracts from complaint text alone."
+                  : "Real-time brand, social, review-site and media signals — where is perception eroding and what is driving it?"
             }
           />
         </div>
-        <ChannelRiskLegend T={T} channelLegend={channelLegend} riskTiers={RISK_TIERS} />
+        <ChannelRiskLegend
+          T={T}
+          channelLegend={channelLegend}
+          riskTiers={RISK_TIERS}
+          showChannels={!isBrandReputation}
+          tierLegendLabel={isBrandReputation ? "Volume" : "Risk"}
+        />
       </div>
 
-      {isSterling ? (
+      {isDepositFlight ? (
         <AIPanel
           title="Primacy & CASS Pulse"
           subtitle="H3 evidence — relationship decay before balances clear · switching intent leads provider CASS data by ~3 months"
@@ -1495,7 +1789,7 @@ export function BrandReputationDrillDown({
       {/* Row 0 — 1. Top Topics at Risk · 2. Friction Drivers · 3. Channels at Risk */}
       <div style={{
         display: "grid",
-        gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 0.95fr) minmax(0, 1.05fr)",
+        gridTemplateColumns: brandDrillRowColumns(variant),
         gridAutoRows: "420px",
         gap: 16,
         alignItems: "stretch",
@@ -1504,34 +1798,53 @@ export function BrandReputationDrillDown({
 
         {/* Card 2 — Friction Drivers (linked to top topics) */}
         <AIPanel
-          title={isSterling ? "✨ Flight-Intent Verbatims" : "✨ Top Friction Drivers"}
+          title={isDepositFlight ? "✨ Flight-Intent Verbatims" : "✨ Top Friction Drivers"}
           subtitle={
-            isSterling
+            isDepositFlight
               ? "Flight-intent phrases extracted from voice before balances clear"
               : "Complaint phrases extracted from the top reputational topics"
           }
           accentColor="#b90abd"
           fill
+          titleFontSize={isBrandReputation ? 13.5 : undefined}
+          subtitleFontSize={isBrandReputation ? 12 : undefined}
         >
-          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 6 }}>
-            <div style={{ flex: 1, minHeight: 0, overflowY: "auto", display: "flex", flexDirection: "column" }}>
+          <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: isBrandReputation ? 4 : 6 }}>
+            <div
+              style={{
+                flex: isBrandReputation ? "0 0 auto" : 1,
+                minHeight: 0,
+                maxHeight: isBrandReputation ? STERLING_BRAND_FRICTION_VIEWPORT_HEIGHT : undefined,
+                overflowY: "auto",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
               {narrativePhrases.map((p, i) => {
                 const tierColor = topicTierColor[p.topic] ?? "#64748B";
-                const phraseChannelColors = isSterling ? STERLING_VOC_CHANNEL_COLORS : VOC_CHANNEL_COLORS;
+                const phraseChannelColors = isDepositFlight ? STERLING_VOC_CHANNEL_COLORS : VOC_CHANNEL_COLORS;
+                const frictionRankFs = isBrandReputation ? STERLING_BRAND_FRICTION_LIST.rankFontSize : 11;
+                const frictionPhraseFs = isBrandReputation ? STERLING_BRAND_FRICTION_LIST.phraseFontSize : 12.5;
+                const frictionMetaFs = isBrandReputation ? STERLING_BRAND_FRICTION_LIST.metaFontSize : 9.5;
+                const frictionRowPad = isBrandReputation ? STERLING_BRAND_FRICTION_LIST.rowPadding : "7px 0";
                 return (
                   <div
                     key={i}
                     style={{
                       display: "grid",
-                      gridTemplateColumns: "20px minmax(0, 1fr) auto",
+                      gridTemplateColumns: isBrandReputation
+                        ? `${STERLING_BRAND_FRICTION_LIST.rankColumnWidth}px minmax(0, 1fr)`
+                        : "20px minmax(0, 1fr) auto",
                       alignItems: "center",
-                      gap: 10,
-                      padding: "7px 0",
+                      gap: isBrandReputation ? STERLING_BRAND_FRICTION_LIST.rowGap : 10,
+                      padding: frictionRowPad,
+                      minHeight: isBrandReputation ? STERLING_BRAND_FRICTION_LIST.rowMinHeight : undefined,
+                      boxSizing: "border-box",
                       borderBottom: i === narrativePhrases.length - 1 ? "none" : `1px solid ${T.borderLight}`,
                     }}
                   >
                     <span style={{
-                      fontFamily: "var(--mono)", fontSize: 11, fontWeight: 700,
+                      fontFamily: "var(--mono)", fontSize: frictionRankFs, fontWeight: 700,
                       color: "#64748B", textAlign: "right",
                     }}>
                       {i + 1}.
@@ -1539,42 +1852,51 @@ export function BrandReputationDrillDown({
 
                     <div style={{ minWidth: 0 }}>
                       <div style={{
-                        fontSize: 12.5, fontWeight: 600, color: T.text,
+                        fontSize: frictionPhraseFs, fontWeight: 600, color: T.text,
+                        lineHeight: isBrandReputation ? STERLING_BRAND_FRICTION_LIST.phraseLineHeight : undefined,
                         overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                       }}>
                         &ldquo;{p.phrase}&rdquo;
                       </div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 3, flexWrap: "wrap" }}>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 8,
+                        marginTop: isBrandReputation ? STERLING_BRAND_FRICTION_LIST.metaMarginTop : 3,
+                        flexWrap: "wrap",
+                      }}>
                         <span style={{
-                          fontSize: 9.5, fontWeight: 700, color: tierColor,
-                          padding: "1px 6px", borderRadius: 4,
+                          fontSize: frictionMetaFs, fontWeight: 700, color: tierColor,
+                          padding: isBrandReputation ? "1px 5px" : "1px 6px", borderRadius: 4,
                           background: `${tierColor}18`,
                           border: `1px solid ${tierColor}44`,
                           textTransform: "uppercase", letterSpacing: 0.3,
                         }}>
                           → {p.topic}
                         </span>
-                        <span style={{ fontSize: 9.5, color: T.textMut, fontFamily: "var(--mono)" }}>
+                        <span style={{ fontSize: frictionMetaFs, color: T.textMut, fontFamily: "var(--mono)" }}>
                           {p.count.toLocaleString()} · {p.percentage}%
                         </span>
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                      <span style={{ display: "inline-flex", gap: 3 }}>
-                        {p.channels.map((ch) => (
-                          <span
-                            key={ch}
-                            title={ch}
-                            style={{
-                              width: 6, height: 6, borderRadius: "50%",
-                              background: phraseChannelColors[ch] ?? T.textMut,
-                              display: "inline-block",
-                            }}
-                          />
-                        ))}
-                      </span>
-                    </div>
+                    {!isBrandReputation ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                        <span style={{ display: "inline-flex", gap: 3 }}>
+                          {p.channels.map((ch) => (
+                            <span
+                              key={ch}
+                              title={ch}
+                              style={{
+                                width: 6, height: 6, borderRadius: "50%",
+                                background: phraseChannelColors[ch] ?? T.textMut,
+                                display: "inline-block",
+                              }}
+                            />
+                          ))}
+                        </span>
+                      </div>
+                    ) : null}
                   </div>
                 );
               })}
@@ -1644,7 +1966,7 @@ export function BrandReputationDrillDown({
             <AIPanel
               title="Channels at Risk"
               subtitle={
-                isSterling
+                isDepositFlight
                   ? "Flight-intent sentiment by channel · 6-week trend · hot drivers: RATE · SWITCH · PRIMACY"
                   : "Sorted by current sentiment · 6-week trend"
               }
@@ -1656,8 +1978,8 @@ export function BrandReputationDrillDown({
                 minHeight: 0,
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: isSterling ? "stretch" : "space-between",
-                gap: isSterling ? 8 : 8,
+                justifyContent: isDepositFlight ? "stretch" : "space-between",
+                gap: isDepositFlight ? 8 : 8,
               }}>
                 {ranked.map((c) => {
                   const now = c.trend[5];
@@ -1671,20 +1993,20 @@ export function BrandReputationDrillDown({
                       key={c.name}
                       style={{
                         display: "grid",
-                        gridTemplateColumns: isSterling ? "92px 1fr auto" : "minmax(0, 1fr) minmax(0, 1.2fr) auto",
+                        gridTemplateColumns: isDepositFlight ? "92px 1fr auto" : "minmax(0, 1fr) minmax(0, 1.2fr) auto",
                         alignItems: "center",
-                        gap: isSterling ? 10 : 12,
-                        padding: isSterling ? "10px 12px" : "8px 2px",
-                        flex: isSterling ? "1 1 0" : undefined,
-                        minHeight: isSterling ? 0 : undefined,
-                        borderRadius: isSterling ? 10 : undefined,
-                        background: isSterling ? `${nowColor}0c` : undefined,
-                        border: isSterling ? `1px solid ${nowColor}28` : undefined,
+                        gap: isDepositFlight ? 10 : 12,
+                        padding: isDepositFlight ? "10px 12px" : "8px 2px",
+                        flex: isDepositFlight ? "1 1 0" : undefined,
+                        minHeight: isDepositFlight ? 0 : undefined,
+                        borderRadius: isDepositFlight ? 10 : undefined,
+                        background: isDepositFlight ? `${nowColor}0c` : undefined,
+                        border: isDepositFlight ? `1px solid ${nowColor}28` : undefined,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                         <span style={{ width: 8, height: 8, borderRadius: "50%", background: c.channelColor, display: "inline-block", flexShrink: 0 }} />
-                        <span style={{ fontSize: isSterling ? 13 : 12.5, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        <span style={{ fontSize: isDepositFlight ? 13 : 12.5, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {c.name}
                         </span>
                       </div>
@@ -1695,23 +2017,23 @@ export function BrandReputationDrillDown({
                         justifyContent: "center",
                         minWidth: 0,
                         width: "100%",
-                        height: isSterling ? "100%" : undefined,
-                        minHeight: isSterling ? 44 : undefined,
+                        height: isDepositFlight ? "100%" : undefined,
+                        minHeight: isDepositFlight ? 44 : undefined,
                       }}>
                         <Sparkline
                           data={c.trend}
                           color={deltaColor}
                           id={c.name.replace(/[^a-z0-9]/gi, "")}
                           channel={c.name}
-                          height={isSterling ? 52 : 32}
+                          height={isDepositFlight ? 52 : 32}
                         />
                       </div>
 
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, whiteSpace: "nowrap" }}>
-                        <span style={{ fontSize: isSterling ? 17 : 15, fontFamily: "var(--mono)", fontWeight: 700, color: nowColor, lineHeight: 1 }}>
+                        <span style={{ fontSize: isDepositFlight ? 17 : 15, fontFamily: "var(--mono)", fontWeight: 700, color: nowColor, lineHeight: 1 }}>
                           {now.toFixed(2)}
                         </span>
-                        <span style={{ fontSize: isSterling ? 10 : 9.5, fontFamily: "var(--mono)", fontWeight: 700, color: deltaColor, lineHeight: 1 }}>
+                        <span style={{ fontSize: isDepositFlight ? 10 : 9.5, fontFamily: "var(--mono)", fontWeight: 700, color: deltaColor, lineHeight: 1 }}>
                           {deltaSign}{delta.toFixed(2)} over 6wks
                         </span>
                       </div>
@@ -1769,9 +2091,9 @@ export function BrandReputationDrillDown({
         </AIPanel>
 
         <AIPanel
-          title={isSterling ? "Top Requests for Retention Features" : "Top Requests for Features"}
+          title={isDepositFlight ? "Top Requests for Retention Features" : "Top Requests for Features"}
           subtitle={
-            isSterling
+            isDepositFlight
               ? "Retention and savings requests from voice, chat, app store and social — ranked by mention volume"
               : "Requests surfaced from conversations across voice, chat, app store and social — ranked by mention volume"
           }
@@ -2396,79 +2718,140 @@ function ServiceFulfilmentIntentLeaderboard({ T }: { T: DashboardThemeTokens }) 
   );
 }
 
-function ConstraintLeakHeroPanel({ T }: { T: DashboardThemeTokens }) {
+function OnboardingStageHeatmapPanel({
+  T,
+  slaMatrix,
+  intentColWidth,
+}: {
+  T: DashboardThemeTokens;
+  slaMatrix: typeof STERLING_H4_SLA_MATRIX;
+  intentColWidth: number;
+}) {
+  return (
+    <AIPanel
+      title="Onboarding Stage Heatmap"
+      subtitle="Onboarding stage × channel · intensity = approval-time SLA / drop-off"
+      accentColor={T.red}
+      fill
+    >
+      <div style={{ display: "grid", gridTemplateColumns: `${intentColWidth}px repeat(4, 1fr)`, gap: 4, flex: 1, minHeight: 0, alignContent: "start" }}>
+        <div />
+        {SLA_CHANNELS.map((c) => (
+          <div key={c} style={{ fontSize: 10, color: T.textMut, textAlign: "center", fontFamily: "var(--mono)" }}>{c}</div>
+        ))}
+        {slaMatrix.map((row) => (
+          <Fragment key={row.intent}>
+            <div style={{ fontSize: 11, color: T.textSec, alignSelf: "center", lineHeight: 1.25 }}>{row.intent}</div>
+            {SLA_CHANNELS.map((c) => {
+              const v = row[c];
+              const color = v >= 90 ? T.green : v >= 75 ? T.amber : T.red;
+              const intensity = v >= 90 ? "44" : v >= 80 ? "66" : v >= 70 ? "88" : "cc";
+              return (
+                <div
+                  key={`${row.intent}-${c}`}
+                  title={`${row.intent} · ${c}: ${v}% SLA`}
+                  style={{
+                    background: `${color}${intensity}`, border: `1px solid ${color}55`, borderRadius: 6,
+                    height: 32, display: "flex", alignItems: "center", justifyContent: "center",
+                    fontSize: 11, fontWeight: 800, color: T.text, fontFamily: "var(--mono)",
+                  }}
+                >
+                  {v}
+                </div>
+              );
+            })}
+          </Fragment>
+        ))}
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 10, paddingTop: 8, borderTop: `1px solid ${T.borderLight}` }}>
+        {[
+          { color: T.green, intensity: "44", label: "≥ 90% — On Track" },
+          { color: T.amber, intensity: "66", label: "75–89% — At Risk" },
+          { color: T.red, intensity: "cc", label: "< 75% — Breaching" },
+        ].map((item) => (
+          <div key={item.label} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+            <span
+              style={{
+                width: 14, height: 14, borderRadius: 4, display: "inline-block",
+                background: `${item.color}${item.intensity}`,
+                border: `1px solid ${item.color}55`,
+              }}
+            />
+            <span style={{ fontSize: 10, color: T.textMut }}>{item.label}</span>
+          </div>
+        ))}
+      </div>
+    </AIPanel>
+  );
+}
+
+function ConstraintLeakHeroPanel({ T, fill = false }: { T: DashboardThemeTokens; fill?: boolean }) {
   return (
     <AIPanel
       title="Constraint Leak — Growth Lost to Controls"
       subtitle="Post-fine KYC tightening · viable acquisition suppressed"
       accentColor={T.red}
-      ai
-      aiModel="Acquisition Leak"
+      fill={fill}
+      compact
     >
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 12, marginBottom: 14 }}>
-        <span style={{ fontSize: 28, fontWeight: 800, color: T.text, fontFamily: "var(--mono)" }}>
-          Growth lost £2.3M
-        </span>
-        <span style={{ fontSize: 14, color: T.textMut }}>·</span>
-        <span style={{ fontSize: 16, fontWeight: 700, color: T.amber }}>
-          ~900 viable applicants suppressed
-        </span>
-      </div>
-
-      <div style={{ marginBottom: 14 }}>
-        <div style={{ fontSize: 11, color: T.textSec, marginBottom: 6 }}>Decline split</div>
-        <div style={{ display: "flex", height: 12, borderRadius: 999, overflow: "hidden" }}>
-          <div style={{ width: "38%", background: T.amber }} title="Genuine crime-constraint 38%" />
-          <div style={{ width: "62%", background: T.red }} title="Viable-but-rejected 62%" />
-        </div>
-        <div style={{ fontSize: 11, color: T.textSec, marginTop: 6 }}>
-          Genuine crime-constraint <strong style={{ color: T.amber }}>38%</strong>
-          {" · "}
-          Viable-but-rejected <strong style={{ color: T.red }}>62%</strong>
-        </div>
-      </div>
-
       <div style={{
-        padding: "10px 12px", borderRadius: 10,
-        background: `${T.cyan}10`, border: `1px solid ${T.cyan}28`,
-        marginBottom: 12, fontSize: 12, color: T.textSec,
+        display: "flex",
+        flexDirection: "column",
+        flex: fill ? 1 : undefined,
+        minHeight: fill ? 0 : undefined,
+        height: fill ? "100%" : undefined,
+        justifyContent: "space-between",
+        gap: 10,
       }}>
-        <strong style={{ color: T.cyan }}>CFO evidence:</strong>{" "}
-        SME openings more than tripled in April once constraints eased.
-      </div>
+        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: 8, flexShrink: 0 }}>
+          <span style={{ fontSize: 20, fontWeight: 800, color: T.text, fontFamily: "var(--mono)", lineHeight: 1.2 }}>
+            Growth lost £2.3M
+          </span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: T.amber, lineHeight: 1.3 }}>
+            ~900 viable applicants suppressed
+          </span>
+        </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 10, marginBottom: 12 }}>
-        {[
-          "Rejected, no reason — prove I already trade.",
-          "Sent my accounts twice, still turned away.",
-        ].map((quote) => (
-          <div
-            key={quote}
-            style={{
-              padding: "10px 12px", borderRadius: 10,
-              background: T.elevated, border: `1px solid ${T.borderLight}`,
-              borderLeft: `3px solid ${T.red}`,
-              fontSize: 12, color: T.textSec, fontStyle: "italic",
-            }}
-          >
-            &ldquo;{quote}&rdquo;
+        <div style={{
+          flex: fill ? 1 : undefined,
+          minHeight: fill ? 0 : undefined,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 10,
+        }}>
+          <div style={{
+            padding: "8px 10px", borderRadius: 8,
+            background: `${T.cyan}10`, border: `1px solid ${T.cyan}28`,
+            fontSize: 11, color: T.textSec, lineHeight: 1.4,
+          }}>
+            <strong style={{ color: T.cyan }}>CFO evidence:</strong>{" "}
+            SME openings more than tripled in April once constraints eased.
           </div>
-        ))}
-      </div>
 
-      <div style={{
-        padding: "10px 12px", borderRadius: 10,
-        background: `${T.gold}10`, border: `1px solid ${T.gold}28`,
-        borderLeft: `4px solid ${T.gold}`,
-        fontSize: 12, color: T.textSec, marginBottom: 10,
-      }}>
-        <strong style={{ color: T.gold }}>Action:</strong>{" "}
-        Draft criteria-calibration brief separating genuine crime-constraint declines from
-        viable-but-rejected (never auto-approve).
-      </div>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 8 }}>
+            {[
+              "Rejected, no reason — prove I already trade.",
+              "Sent my accounts twice, still turned away.",
+            ].map((quote) => (
+              <div
+                key={quote}
+                style={{
+                  padding: "8px 10px", borderRadius: 8,
+                  background: T.elevated, border: `1px solid ${T.borderLight}`,
+                  borderLeft: `3px solid ${T.red}`,
+                  fontSize: 11, color: T.textSec, fontStyle: "italic", lineHeight: 1.4,
+                }}
+              >
+                &ldquo;{quote}&rdquo;
+              </div>
+            ))}
+          </div>
+        </div>
 
-      <div style={{ fontSize: 10, color: T.textMut, fontStyle: "italic" }}>
-        Conduct freeze/closure slice routes to the CRO underneath as depth.
+        <div style={{ fontSize: 9.5, color: T.textMut, fontStyle: "italic", lineHeight: 1.35, flexShrink: 0 }}>
+          Conduct freeze/closure slice routes to the CRO underneath as depth.
+        </div>
       </div>
     </AIPanel>
   );
@@ -2477,14 +2860,21 @@ function ConstraintLeakHeroPanel({ T }: { T: DashboardThemeTokens }) {
 export function ServiceFulfilmentDrillDown({
   onBack,
   variant = "default",
+  sterlingCurrency,
 }: {
   onBack: () => void;
   variant?: ServiceFulfilmentDrillVariant;
+  sterlingCurrency?: boolean;
 }) {
   const T = useDashboardTheme();
   const isH4 = variant === "sterling-h4-acquisition";
-  const slaMatrix = isH4 ? STERLING_H4_SLA_MATRIX : SLA_MATRIX;
-  const intentColWidth = isH4 ? 168 : 120;
+  const isSterlingHeadRetail = useSterlingHeadRetailCurrencyActive(sterlingCurrency) && !isH4;
+  const slaMatrix = isH4
+    ? STERLING_H4_SLA_MATRIX
+    : isSterlingHeadRetail
+      ? STERLING_HEAD_RETAIL_SLA_MATRIX
+      : SLA_MATRIX;
+  const intentColWidth = isH4 ? 168 : isSterlingHeadRetail ? 200 : 120;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -2502,9 +2892,39 @@ export function ServiceFulfilmentDrillDown({
         }
       />
 
-      {isH4 ? <ConstraintLeakHeroPanel T={T} /> : null}
+      {isH4 ? (
+        <>
+          {/* Row 1 — Constraint Leak · Acquisition Funnel · Onboarding Stages */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
+            gap: 12,
+            alignItems: "stretch",
+          }}>
+            <ConstraintLeakHeroPanel T={T} fill />
+            <RetailSLAPerformanceOverview variant="retail_h4" section="funnel" />
+            <RetailSLAPerformanceOverview variant="retail_h4" section="stages" />
+          </div>
 
-      <RetailSLAPerformanceOverview variant={isH4 ? "retail_h4" : "default"} />
+          {/* Row 2 — Queue Depth · Stage Heatmap · Channel Approval */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
+            gap: 16,
+            alignItems: "stretch",
+            minHeight: 380,
+          }}>
+            <ServiceFulfilmentBackOfficeQueueDepth T={T} variant={variant} />
+            <OnboardingStageHeatmapPanel T={T} slaMatrix={STERLING_H4_SLA_MATRIX} intentColWidth={intentColWidth} />
+            <RetailSLAPerformanceOverview variant="retail_h4" section="channel" />
+          </div>
+        </>
+      ) : (
+        <RetailSLAPerformanceOverview
+          variant="default"
+          leadingIntents={isSterlingHeadRetail ? STERLING_HEAD_RETAIL_LEADING_INTENTS : undefined}
+        />
+      )}
 
       <RetailIntentPressureAlerts variant={isH4 ? "retail_h4" : "default"} />
 
@@ -2517,19 +2937,11 @@ export function ServiceFulfilmentDrillDown({
         <IntentScoreHeatmap isDarkMode />
       </div>
 
+      {!isH4 ? (
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "stretch" }}>
         <ServiceFulfilmentBackOfficeQueueDepth T={T} variant={variant} />
 
-        <AIPanel
-          title={isH4 ? "Onboarding Stage Heatmap" : "SLA Heatmap"}
-          subtitle={
-            isH4
-              ? "Onboarding stage × channel · intensity = approval-time SLA / drop-off"
-              : "Intent × channel · intensity = compliance gap"
-          }
-          accentColor={T.red}
-          fill
-        >
+        <AIPanel title="SLA Heatmap" subtitle="Intent × channel · intensity = compliance gap" accentColor={T.red} fill>
           <div style={{ display: "grid", gridTemplateColumns: `${intentColWidth}px repeat(4, 1fr)`, gap: 4 }}>
             <div />
             {SLA_CHANNELS.map((c) => (
@@ -2583,6 +2995,7 @@ export function ServiceFulfilmentDrillDown({
         </AIPanel>
 
       </div>
+      ) : null}
 
     </div>
   );

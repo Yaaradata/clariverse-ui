@@ -113,23 +113,88 @@ const STERLING_FLIGHT_HASHTAGS: HashtagTrend[] = [
   },
 ];
 
+/** Starling Bank head_retail — Brand at risk · restriction / closure complaint momentum */
+const STERLING_BRAND_HASHTAGS: HashtagTrend[] = [
+  {
+    hashtag: "#AccountFrozen",
+    sentiment: "negative",
+    growthPercent: 248,
+    volume: 4120,
+    summary:
+      "Restriction threads spiking on Trustpilot and X after pay-in freezes — no reason given in most posts.",
+  },
+  {
+    hashtag: "#StarlingFrozeMyMoney",
+    sentiment: "negative",
+    growthPercent: 214,
+    volume: 3680,
+    summary:
+      "Customer voice quote reposted across Reddit and X — Distil flags matching phrases in chat transcripts.",
+  },
+  {
+    hashtag: "#InterestGone",
+    sentiment: "negative",
+    growthPercent: 186,
+    volume: 2940,
+    summary:
+      "Savings rate removal discourse — reviewers cite rejected new saver applications in the same thread.",
+  },
+  {
+    hashtag: "#LetMeSpendMyMoney",
+    sentiment: "negative",
+    growthPercent: 152,
+    volume: 2410,
+    summary:
+      "Payment-block complaints despite available balance — Play Store and Trustpilot co-trending.",
+  },
+  {
+    hashtag: "#ClosedMyAccount",
+    sentiment: "negative",
+    growthPercent: 128,
+    volume: 1980,
+    summary:
+      "'No longer welcome' closure language — FOS-decision amplifiers picking up verbatim quotes.",
+  },
+  {
+    hashtag: "#StuckWithBot",
+    sentiment: "negative",
+    growthPercent: 94,
+    volume: 1560,
+    summary:
+      "Security lockout loops in app chat — cannot reach a human before account closed.",
+  },
+  {
+    hashtag: "#BestBankingApp",
+    sentiment: "positive",
+    growthPercent: 62,
+    volume: 1120,
+    summary:
+      "Counter-signal — App Store praise for Spaces and UX; healthiest channel on the brand screen.",
+  },
+];
+
 export function RetailMomentumHashtags({
   variant = "default",
 }: {
   variant?: RetailBrandDrillVariant;
 }) {
-  const isSterling = variant === "sterling-deposit-flight";
-  const hashtags = isSterling ? STERLING_FLIGHT_HASHTAGS : DEFAULT_HASHTAGS;
+  const isDepositFlight = variant === "sterling-deposit-flight";
+  const isBrandReputation = variant === "sterling-brand-reputation";
+  const hashtags = isBrandReputation
+    ? STERLING_BRAND_HASHTAGS
+    : isDepositFlight
+      ? STERLING_FLIGHT_HASHTAGS
+      : DEFAULT_HASHTAGS;
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-2xl bg-[#0D0D0D] border border-[#2b2b2b] shadow-[0_18px_40px_rgba(0,0,0,0.4)] text-white overflow-hidden">
       <div className="flex flex-col space-y-1.5 px-6 pt-6 pb-3 flex-shrink-0">
         <div className="text-lg font-semibold leading-none tracking-tight flex items-center gap-2 text-white">
           <Hash className="h-5 w-5 text-purple-400" />
-          {isSterling ? "Flight-Intent Social Themes" : "Momentum Hashtags"}
+          {isDepositFlight ? "Flight-Intent Social Themes" : "Momentum Hashtags"}
         </div>
         <div className="text-sm text-gray-400">
-          {isSterling
+          {isDepositFlight
             ? "Fastest-growing deposit-flight conversation entry points"
             : "Fastest growing conversation entry points"}
         </div>

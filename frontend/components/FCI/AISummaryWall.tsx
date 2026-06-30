@@ -10,7 +10,7 @@ import {
 
 // Types
 export type FCISeverity = 'critical' | 'alert' | 'warning' | 'info';
-export type FCICategory = 'system-issue' | 'sla-breach' | 'customer-experience' | 'product-update' | 'compliance' | 'security' | 'operational';
+export type FCICategory = 'system-issue' | 'sla-breach' | 'customer-experience' | 'product-update' | 'compliance' | 'security' | 'operational' | 'franchise';
 
 export interface FCIInsight {
   id: string;
@@ -37,6 +37,8 @@ export interface FCIInsightDetails {
   timeToResolve: string;
   assignedTo?: string;
   priority: 'immediate' | 'high' | 'medium' | 'low';
+  /** Override default priority badge label in drill-down (e.g. "Action Needed", "Monitor"). */
+  priorityLabel?: string;
 }
 
 // Sample Data
@@ -176,6 +178,8 @@ interface AISummaryWallProps {
    * stretch to fill a flex/grid parent — useful for the role-based drill-downs.
    */
   height?: string | number;
+  /** Override default "Real-time FCI intelligence" subtitle */
+  intelligenceSubtitle?: string;
 }
 
 export function AISummaryWall({
@@ -183,6 +187,7 @@ export function AISummaryWall({
   insightDetailsMap,
   isDarkMode = false,
   height = '650px',
+  intelligenceSubtitle,
 }: AISummaryWallProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
@@ -246,6 +251,7 @@ export function AISummaryWall({
       case 'customer-experience': return RefreshCw;
       case 'product-update': return BookOpen;
       case 'operational': return GitBranch;
+      case 'franchise': return Target;
       default: return Info;
     }
   };
@@ -259,6 +265,7 @@ export function AISummaryWall({
       case 'compliance': return 'Compliance';
       case 'security': return 'Security';
       case 'operational': return 'Operational';
+      case 'franchise': return 'Franchise';
       default: return category;
     }
   };
@@ -339,7 +346,7 @@ export function AISummaryWall({
               AI Summary Wall
             </h3>
             <p className="text-xs" style={{ color: '#939394' }}>
-              {selectedInsight ? 'Viewing details' : 'Real-time FCI intelligence'}
+              {selectedInsight ? 'Viewing details' : (intelligenceSubtitle ?? 'Real-time FCI intelligence')}
             </p>
           </div>
         </div>
@@ -555,6 +562,7 @@ export function AISummaryWall({
               <div className="flex items-center gap-2 mb-3">
                 {(() => {
                   const priorityConfig = getPriorityConfig(selectedDetails.priority);
+                  const badgeLabel = selectedDetails.priorityLabel ?? priorityConfig.label;
                   return (
                     <span 
                       className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full"
@@ -564,7 +572,7 @@ export function AISummaryWall({
                       }}
                     >
                       <priorityConfig.icon className="w-3 h-3" />
-                      {priorityConfig.label}
+                      {badgeLabel}
                     </span>
                   );
                 })()}

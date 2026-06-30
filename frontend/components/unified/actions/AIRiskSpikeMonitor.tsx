@@ -420,7 +420,7 @@ export const sterlingHeadRetailRiskSpikes: RiskSpike[] = [
     ],
     detectedPhrases: ['"rejected, no reason"', '"prove I already trade"'],
     triggerInsight:
-      "KYC tightening suppressing viable acquisition. Draft criteria-calibration brief — crime-constraint vs viable-but-rejected.",
+      "KYC tightening suppressing viable acquisition. Escalate criteria-calibration to CRO; Raghu's slice = growth lost + experience of viable-rejected.",
   },
   {
     id: "sterling-assistant-containment",
@@ -439,7 +439,103 @@ export const sterlingHeadRetailRiskSpikes: RiskSpike[] = [
     ],
     detectedPhrases: ['"let me pay"', '"stop asking"', '"speak to a human"'],
     triggerInsight:
-      "Assistant doom-loop + false-positive payee blocks driving override calls. Draft retrain/whitelist/routing brief.",
+      "Assistant doom-loop + false-positive payee blocks driving override calls. Route rule-tuning to fraud-ops; track containment cost-to-serve here.",
+  },
+];
+
+/** Sterling Bank Head of Contact — Raghu Narula franchise-altitude spike signals (CCBO). */
+export const sterlingHeadContactRiskSpikes: RiskSpike[] = [
+  {
+    id: "sterling-contact-switch-intent",
+    timestamp: "Last 3h",
+    spikeType: "Urgency Surge",
+    magnitude: 41,
+    channel: "Voice",
+    topIntent: "Switch-intent precursor",
+    topIntentContext: "Service-driven attrition · franchise",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Service-Driven Switch-Intent",
+    customMetrics: [
+      { label: "Switch-intent", value: "14% → 22%", delta: "+8 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Sentiment@close", value: "72% → 64%", delta: "−8 pts", deltaIntent: "bad", trend: "down" },
+    ],
+    detectedPhrases: ['"moving my salary"', '"Monzo is faster"', '"closing this account"'],
+    triggerInsight:
+      "Switch-intent in voice before balances move. Draft retention fix — never auto-send.",
+  },
+  {
+    id: "sterling-contact-assistant-fail",
+    timestamp: "Last 4h",
+    spikeType: "Volume Surge",
+    magnitude: 38,
+    channel: "Assistant, Voice",
+    topIntent: "Payee block override",
+    topIntentContext: "Agentic-AI containment failure · H6",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Agentic-AI Containment Failure",
+    customMetrics: [
+      { label: "Containment", value: "87% → 84%", delta: "−3 pts", deltaIntent: "bad", trend: "down" },
+      { label: "OPEX leak/wk", value: "£142K", delta: "↑ w/w", deltaIntent: "bad", trend: "up" },
+    ],
+    detectedPhrases: ['"let me pay"', '"stop asking"', '"speak to a human"'],
+    triggerInsight:
+      "Doom-loops and payee blocks driving override calls. Route rule-tuning to fraud-ops.",
+  },
+  {
+    id: "sterling-contact-reputation-drag",
+    timestamp: "Last 2h",
+    spikeType: "Sentiment Crash",
+    magnitude: 28,
+    channel: "Social, App Store",
+    topIntent: "Service complaint spillover",
+    topIntentContext: "Reputation→acquisition drag",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Reputation→Acquisition Drag",
+    customMetrics: [
+      { label: "Trustpilot", value: "3.46 → 3.38", delta: "−0.08", deltaIntent: "bad", trend: "down" },
+      { label: "Social spillover", value: "38%", delta: "+11 pts", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "Spillover denting acquisition. Quantify reputation→acquisition drag — never auto-send.",
+  },
+  {
+    id: "sterling-contact-cost-serve",
+    timestamp: "Last 6h",
+    spikeType: "Volume Surge",
+    magnitude: 33,
+    channel: "Assistant, Chat",
+    topIntent: "Avoidable repeat-contact",
+    topIntentContext: "Cost-to-serve leak",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Avoidable Cost-to-Serve Leak",
+    customMetrics: [
+      { label: "Avoidable repeat", value: "14% → 19%", delta: "+5 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Doom-loop sessions", value: "↑ rising", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "Containment failures inflating cost-to-serve. Expand app deflection; route ops to COO.",
+  },
+  {
+    id: "sterling-contact-fos-duty",
+    timestamp: "Last 24h",
+    spikeType: "Volume Surge",
+    magnitude: 22,
+    channel: "Email, Voice",
+    topIntent: "Payee block dispute",
+    topIntentContext: "FOS / Consumer Duty exposure",
+    aiAction: "",
+    severity: "low",
+    cardTitle: "FOS / Consumer Duty Exposure",
+    customMetrics: [
+      { label: "Open cases", value: "18", delta: "+4", deltaIntent: "bad", trend: "up" },
+      { label: "Escalation", value: "12%", delta: "+3 pts", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "FOS / Consumer Duty exposure on payee-block journeys. Draft fair-outcome review — never auto-send.",
   },
 ];
 
@@ -448,6 +544,9 @@ export function AIRiskSpikeMonitor({
   driverContext,
   driverSignals,
   forceDarkMode = false,
+  alertBadgeLabel = 'Operational Alerts',
+  alertSubtitle = 'Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.',
+  cardLayout = 'default',
 }: {
   spikes?: RiskSpike[];
   /** Optional line explaining what drives volume/sentiment (e.g. rate changes). Shown under the subtitle. */
@@ -456,6 +555,10 @@ export function AIRiskSpikeMonitor({
   driverSignals?: string[];
   /** Always render dark-theme card styles (role-dashboard embeds without `dark` on html). */
   forceDarkMode?: boolean;
+  alertBadgeLabel?: string;
+  alertSubtitle?: string;
+  /** Equal-height franchise cards (Sterling head_contact — matches head_retail rhythm). */
+  cardLayout?: 'default' | 'franchise';
 }) {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
@@ -482,11 +585,11 @@ export function AIRiskSpikeMonitor({
           ✨ AI Risk Spike Monitor
         </h2>
         <span className="text-xs px-2 py-1 rounded-full bg-rose-500/20 text-rose-200 tracking-wide uppercase">
-          Operational Alerts
+          {alertBadgeLabel}
         </span>
       </div>
       <p className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
-        Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.
+        {alertSubtitle}
       </p>
       {driverContext ? (
         <div className="space-y-2">
@@ -509,7 +612,12 @@ export function AIRiskSpikeMonitor({
       ) : null}
       <div className="flex w-full min-w-0 gap-4 overflow-x-auto pb-3 items-stretch">
         {spikes.map((spike) => (
-          <RiskSpikeCard key={spike.id} spike={spike} isDarkMode={dark} />
+          <RiskSpikeCard
+            key={spike.id}
+            spike={spike}
+            isDarkMode={dark}
+            cardLayout={cardLayout}
+          />
         ))}
       </div>
     </div>
@@ -519,10 +627,13 @@ export function AIRiskSpikeMonitor({
 function RiskSpikeCard({
   spike,
   isDarkMode,
+  cardLayout = 'default',
 }: {
   spike: RiskSpike;
   isDarkMode: boolean;
+  cardLayout?: 'default' | 'franchise';
 }) {
+  const franchise = cardLayout === 'franchise';
   const iconMeta = spikeIcon[spike.spikeType];
   const severityClass = severityStyles[spike.severity];
   const detailRows = spike.customMetrics ?? getDetailRows(spike);
@@ -532,7 +643,7 @@ function RiskSpikeCard({
 
   return (
     <div
-      className={`min-w-[15rem] min-h-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] ${severityClass} ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
+      className={`min-w-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] ${franchise ? "min-h-[17.5rem] h-full" : "min-h-[15rem]"} ${severityClass} ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className={`flex items-center gap-2 text-sm font-semibold min-w-0 flex-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
@@ -571,7 +682,11 @@ function RiskSpikeCard({
       </div>
 
       <div
-        className={`mt-5 min-h-[7.25rem] space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? "border-white/5 bg-black/30 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`}
+        className={
+          franchise
+            ? `mt-4 h-[6.5rem] shrink-0 space-y-2 rounded-xl border p-3 text-xs flex flex-col justify-center ${isDarkMode ? "border-white/5 bg-black/30 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`
+            : `mt-5 min-h-[7.25rem] space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? "border-white/5 bg-black/30 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`
+        }
       >
         {detailRows.map((row, idx) => {
           const r = row as CustomMetric;
@@ -599,7 +714,13 @@ function RiskSpikeCard({
       </div>
 
       {insightText ? (
-        <div className="mt-5 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs leading-loose text-rose-100">
+        <div
+          className={
+            franchise
+              ? "mt-auto min-h-[3.75rem] rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-[11px] leading-snug text-rose-100"
+              : "mt-5 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs leading-loose text-rose-100"
+          }
+        >
           ✨ {insightText}
         </div>
       ) : null}

@@ -17,6 +17,9 @@ import {
   Target,
   Users,
 } from "lucide-react";
+import { STERLING_BANK_INDUSTRY_ID } from "./sterlingBankIndustry";
+
+export { STERLING_BANK_INDUSTRY_ID };
 
 export const T = {
   bg: "#04080f",
@@ -913,12 +916,12 @@ export const ROLE_DATA = {
         icon: Activity,
         sub: "Onboarding block · viable rejected · growth lost",
         insight:
-          "Post-fine KYC suppressing viable acquisition — SME openings 3× in April once eased. Draft criteria-calibration brief: crime-constraint vs viable-but-rejected.",
+          "Post-fine KYC suppressing viable acquisition — ~£2.3M growth lost and viable-but-rejected CX worsening. Escalate KYC-criteria calibration to CRO; Raghu's slice = growth lost + experience of viable-rejected.",
         kpis: [
-          { l: "SME openings", v: "3× when eased" },
-          { l: "Viable rejected", v: "[CONFIRM]" },
-          { l: "Growth lost £LTV", v: "£2.3M" },
-          { l: "Bottleneck", v: "KYC tightening" },
+          { l: "Growth lost", v: "£2.3M" },
+          { l: "Viable rejected", v: "↑ rising" },
+          { l: "SME when eased", v: "3× openings" },
+          { l: "CX harm", v: "decline gap" },
         ],
       },
     ],
@@ -970,12 +973,12 @@ export const ROLE_DATA = {
         "Draft reason-code disclosure review for high-balance savings declines",
       ],
       plan: [
-        "KYC criteria-calibration brief — separate crime-constraint from viable-rejected",
+        "Escalate KYC-criteria calibration to CRO — Raghu tracks growth lost + viable-rejected CX",
         "Easy-Saver fast-track for flight-risk savers",
       ],
       delegate: [
         "SME MTD/Ember stalled-adopter guidance + accountant-referral play",
-        "Assistant retrain/whitelist brief to reduce containment-failure cost",
+        "Route rule-tuning to fraud-ops; track containment cost-to-serve here",
       ],
       monitor: [
         "CASS net flows vs switching-intent voice (3-month lead)",
@@ -1193,6 +1196,7 @@ export const ROLE_DATA = {
     },
   },
   head_contact: {
+    // sterling_bank/head_contact resolves here via resolveRoleDataKey() — same as retail_banking/head_contact.
     tiles: [
       {
         title: "Are contacts ending well?",
@@ -1779,8 +1783,6 @@ export type Industry = (typeof INDUSTRIES)[number];
 export type Role = Industry["roles"][number];
 export type RoleDashboardData = (typeof ROLE_DATA)["ceo"];
 export type LobDataEntry = (typeof LOB_DATA)["retail_banking"];
-
-export const STERLING_BANK_INDUSTRY_ID = "sterling_bank" as const;
 
 /** Industries that reuse retail-banking role dashboards (Sterling fork — customize per industry later). */
 export function usesRetailBankingDashboard(industryId: string): boolean {

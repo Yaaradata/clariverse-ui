@@ -24,6 +24,7 @@ import {
   type ReactElement,
   type ReactNode,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import {
@@ -66,17 +67,28 @@ import {
   roleDisplayName,
   type RoleDashboardData,
   type ScreenId,
-  STERLING_BANK_INDUSTRY_ID,
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
+import {
+  isSterlingHeadRetail,
+  resolveRoleDataKey,
+  shouldShowExecutiveBrief,
+} from "@/lib/role-based-dashboard/sterlingHeadContactScreen";
+import { renderHeadContactDrillCard } from "@/lib/role-based-dashboard/headContactDrill";
+import {
+  swapUsdSymbolDeep,
+  swapUsdSymbolForSterling,
+  useSterlingHeadRetailCurrencyActive,
+} from "@/lib/role-based-dashboard/sterlingHeadRetailCurrency";
+import {
+  swapUsdSymbolDeep as swapContactUsdDeep,
+  useSterlingHeadContactCurrencyActive,
+} from "@/lib/role-based-dashboard/sterlingHeadContactCurrency";
 import {
   DashboardThemeProvider,
   type DashboardThemeTokens,
   useDashboardTheme,
 } from "./DashboardThemeContext";
-import ContactExperienceDrillDown from "./drill-downs/ContactExperienceDrillDown";
-import ServiceOperationsDrillDown from "./drill-downs/ServiceOperationsDrillDown";
-import ServiceReputationDrillDown from "./drill-downs/ServiceReputationDrillDown";
 import {
   CardsBlockersProblemsDrill,
   CardsTransactionsOffersDrill,
@@ -277,8 +289,12 @@ function screenNavTooltip(roleId: string, s: (typeof SCREENS)[number]): string {
   return `Screen ${s.id}: ${e.label} — ${e.sub}`;
 }
 
-function visibleSidebarScreens(roleId: string): typeof SCREENS {
+function visibleSidebarScreens(
+  industryId: string,
+  roleId: string,
+): typeof SCREENS {
   if (roleId === "head_contact") return SCREENS.filter((s) => s.id === 1);
+  if (isSterlingHeadRetail(industryId, roleId)) return SCREENS.filter((s) => s.id === 1);
   if (isDrillRoleId(roleId)) return SCREENS.filter((s) => s.id <= 2);
   return SCREENS;
 }
@@ -1240,10 +1256,10 @@ function sterlingRetailTileInfo(
         </div>
         <div>
           <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.4 }}>
-            Bottleneck
+            Viable rejected
           </div>
           <div style={{ fontSize: 14, fontWeight: 700, color: T.amber, fontFamily: "var(--mono)" }}>
-            KYC
+            ↑ rising
           </div>
         </div>
       </div>
@@ -1453,7 +1469,6 @@ function Screen1({
   const T = useDashboardTheme();
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
   const isRetail = role.id === "head_retail";
-  const isSterlingRetail = isRetail && industry.id === STERLING_BANK_INDUSTRY_ID;
   const isContact = role.id === "head_contact";
   const isCardsPortfolio = role.id === "cards_portfolio";
   const isDrillRole = isRetail || isContact || isCardsPortfolio;
@@ -1465,7 +1480,12 @@ function Screen1({
       : null;
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", gap: 20, minWidth: 0 }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 20,
+        minWidth: 0,
+      }}
     >
       <div
         style={{
@@ -1483,18 +1503,14 @@ function Screen1({
           const handleClick =
             isDrillRole && onDrillCard ? () => onDrillCard(i) : () => goTo(2);
           const drillTrend = isRetail
-            ? isSterlingRetail
-              ? sterlingRetailTileTrendMeta(i, T)
-              : retailTileTrendMeta(i, T)
+            ? retailTileTrendMeta(i, T)
             : isContact
               ? contactTileTrendMeta(i, T)
               : isCardsPortfolio
                 ? cardsPortfolioTileTrendMeta(i, T)
                 : null;
           const drillInfo = isRetail
-            ? isSterlingRetail
-              ? sterlingRetailTileInfo(i, T)
-              : retailTileInfo(i, T)
+            ? retailTileInfo(i, T)
             : isContact
               ? contactTileInfo(i, T)
               : isCardsPortfolio
@@ -1691,7 +1707,13 @@ function Screen1({
                         {drillTrend.value}
                       </div>
                     </div>
-                    <div style={{ width: "100%", flex: 1, minHeight: 96 }}>
+                    <div
+                      style={{
+                        width: "100%",
+                        flex: 1,
+                        minHeight: 96,
+                      }}
+                    >
                       <ResponsiveContainer>
                         <AreaChart
                           data={drillTrend.trendData}
@@ -1826,6 +1848,8 @@ function Screen1({
                   borderLeft: `4px solid ${T.gold}`,
                   borderRadius: 10,
                   padding: "10px 14px",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
                 <div
@@ -1850,7 +1874,12 @@ function Screen1({
                   </span>
                 </div>
                 <div
-                  style={{ fontSize: 15, color: T.textSec, lineHeight: 1.55 }}
+                  style={{
+                    fontSize: 15,
+                    color: T.textSec,
+                    lineHeight: 1.55,
+                    flex: 1,
+                  }}
                 >
                   {tile.insight}
                 </div>
@@ -2574,14 +2603,18 @@ function Screen4({
   goTo,
   defaultLens,
   role,
+  industryId,
   unifiedNavigation,
   eisenhowerThreads,
+  sterlingCurrency = false,
 }: {
   goTo: (n: ScreenId) => void;
   defaultLens?: LensId;
   role: Role;
+  industryId: Industry["id"];
   unifiedNavigation: boolean;
   eisenhowerThreads: EisenhowerThread[];
+  sterlingCurrency?: boolean;
 }) {
   const T = useDashboardTheme();
   const [lens, setLens] = useState<LensId>(defaultLens ?? "ops");
@@ -2699,6 +2732,24 @@ function Screen4({
   };
 
   const L = lenses[lens];
+  const displayCols = useMemo(
+    () =>
+      sterlingCurrency
+        ? L.cols.map((col) => ({
+            ...col,
+            items: col.items.map(
+              (row) =>
+                [row[0], swapUsdSymbolForSterling(row[1]), row[2], row[3]] as [
+                  string,
+                  string,
+                  string,
+                  string,
+                ],
+            ),
+          }))
+        : L.cols,
+    [L.cols, sterlingCurrency],
+  );
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div style={{ display: "flex", gap: 8 }}>
@@ -2731,7 +2782,7 @@ function Screen4({
       <div
         style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 16 }}
       >
-        {L.cols.map((col, ci) => (
+        {displayCols.map((col, ci) => (
           <Sec key={ci} title={col.t} lane="recorded">
             {col.items.map(([l, v, s, c], i) => (
               <div
@@ -2778,6 +2829,7 @@ function Screen4({
           lens={lens}
           role={role}
           threads={eisenhowerThreads}
+          industryId={industryId}
         />
       ) : null}
     </div>
@@ -2788,10 +2840,12 @@ function Screen5({
   data,
   role,
   unifiedNavigation,
+  sterlingCurrency = false,
 }: {
   data: RoleDashboardData;
   role: Role;
   unifiedNavigation: boolean;
+  sterlingCurrency?: boolean;
 }) {
   const T = useDashboardTheme();
   const incidents = [
@@ -2807,7 +2861,7 @@ function Screen5({
       why: [data.insights[0] || "", data.insights[1] || ""],
       impact: {
         cust: "2,847 impacted",
-        fin: "$312K exposure",
+        fin: sterlingCurrency ? "£312K exposure" : "$312K exposure",
         sla: "SLA breach — 3 days",
       },
       actions: [
@@ -3209,13 +3263,24 @@ function RoleDashboardShell({
         : "retail_banking";
   const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
-  const roleDataKey =
-    industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
-      ? "sterling_head_retail"
-      : role.id === "head_cx_retail" || role.id === "head_cx_retail_v2"
-        ? "head_cx"
-        : role.id;
-  const data = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
+  const roleDataKey = resolveRoleDataKey(industry.id, role.id);
+  const rawData = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
+  const sterlingHeadContactCurrency = useSterlingHeadContactCurrencyActive(
+    undefined,
+    industry.id,
+    role.id,
+  );
+  const sterlingCurrency = useSterlingHeadRetailCurrencyActive(
+    undefined,
+    industry.id,
+    role.id,
+  );
+  const data = useMemo(() => {
+    let next = rawData;
+    if (sterlingHeadContactCurrency) next = swapContactUsdDeep(next);
+    else if (sterlingCurrency) next = swapUsdSymbolDeep(next);
+    return next;
+  }, [rawData, sterlingCurrency, sterlingHeadContactCurrency]);
 
   const IndIcon = industry.icon;
   const RoleIcon = role.icon;
@@ -3223,6 +3288,10 @@ function RoleDashboardShell({
     const row = SCREENS.find((s) => s.id === screen);
     return row ? screenNavEntry(role.id, row) : undefined;
   })();
+  const executiveSub =
+    sterlingCurrency && active?.sub === "Promise · Stability · Risk"
+      ? "Promise · Stability · Volume"
+      : active?.sub;
   const initialLens: LensId =
     "defaultLens" in role &&
     (role.defaultLens === "ops" ||
@@ -3241,7 +3310,7 @@ function RoleDashboardShell({
 
   useEffect(() => {
     const visibleIds = new Set(
-      visibleSidebarScreens(role.id).map((entry) => entry.id),
+      visibleSidebarScreens(industry.id, role.id).map((entry) => entry.id),
     );
     if (!visibleIds.has(screen)) {
       setScreen(defaultScreenForRole(industry, role));
@@ -3286,12 +3355,19 @@ function RoleDashboardShell({
         goTo={setScreen}
         defaultLens={initialLens}
         role={role}
+        industryId={industry.id}
         unifiedNavigation={unifiedNavigation}
         eisenhowerThreads={eisenhowerThreads}
+        sterlingCurrency={sterlingCurrency}
       />
     ),
     5: (
-      <Screen5 data={data} role={role} unifiedNavigation={unifiedNavigation} />
+      <Screen5
+        data={data}
+        role={role}
+        unifiedNavigation={unifiedNavigation}
+        sterlingCurrency={sterlingCurrency}
+      />
     ),
   };
 
@@ -3493,7 +3569,7 @@ function RoleDashboardShell({
               Nav
             </div>
           )}
-          {visibleSidebarScreens(role.id).map((s, i, visibleScreens) => {
+          {visibleSidebarScreens(industry.id, role.id).map((s, i, visibleScreens) => {
             const Icon = s.icon;
             const act = screen === s.id;
             const nav = screenNavEntry(role.id, s);
@@ -3674,7 +3750,7 @@ function RoleDashboardShell({
                   lineHeight: 1.45,
                 }}
               >
-                {industry.name} · {roleDisplayName(role)} · {active?.sub}
+                {industry.name} · {roleDisplayName(role)} · {executiveSub}
               </div>
             </div>
             <div
@@ -3748,7 +3824,7 @@ function RoleDashboardShell({
                   lineHeight: 1.45,
                 }}
               >
-                {industry.name} · {roleDisplayName(role)} · {active?.sub}
+                {industry.name} · {roleDisplayName(role)} · {executiveSub}
               </div>
             </div>
             <button
@@ -3790,7 +3866,7 @@ function RoleDashboardShell({
               <div
                 style={{ display: "flex", flexDirection: "column", gap: 10 }}
               >
-                {role.id !== "cards_portfolio" ? (
+                {shouldShowExecutiveBrief(industry.id, role.id) ? (
                   <div
                     style={{
                       background: T.elevated,
@@ -3834,9 +3910,7 @@ function RoleDashboardShell({
                     >
                       {role.id === "head_contact"
                         ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
-                        : industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
-                          ? "Deposits leak at acquisition and fly at retention — ARPAU £302→£275, primacy 35%, KYC tightening suppressing growth."
-                          : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
+                        : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
                     </div>
                   </div>
                 ) : null}
@@ -3858,7 +3932,14 @@ function RoleDashboardShell({
                       marginBottom: 9,
                     }}
                   >
-                    <span style={{ fontSize: 13, color: T.amber }}>✨</span>
+                    <span
+                      style={{
+                        fontSize: 13,
+                        color: T.amber,
+                      }}
+                    >
+                      ✨
+                    </span>
                     <span
                       style={{
                         fontSize: 12,
@@ -3876,6 +3957,7 @@ function RoleDashboardShell({
                       display: "grid",
                       gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
                       gap: 8,
+                      alignItems: "stretch",
                     }}
                   >
                     {(role.id === "head_contact"
@@ -3908,21 +3990,6 @@ function RoleDashboardShell({
                               main: "62% of the decline spike is curable — ₹2.4 Cr recoverable today via a cohort-level EMI-conversion nudge.",
                             },
                           ]
-                        : industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
-                          ? [
-                              {
-                                q: "🔴 What's critical",
-                                main: "Savings no-reason declines + interest-removal flight — ARPAU falling, net CASS losses. Draft save-offer for flight-risk cohort today.",
-                              },
-                              {
-                                q: "🎯 Where's your focus",
-                                main: "KYC tightening blocking viable applicants — SME openings 3× when eased. Draft criteria-calibration brief.",
-                              },
-                              {
-                                q: "🟢 What's stable/ on-track",
-                                main: "SME primacy 56% — MTD/Ember (>£50k, 6 Apr) is the growth front. Push guidance for stalled adopters.",
-                              },
-                            ]
                         : [
                           {
                             q: "🔴 What's critical",
@@ -3990,12 +4057,11 @@ function RoleDashboardShell({
               const onBack = () => setDrillCard(null);
               const drillContent =
                 role.id === "head_contact" ? (
-                  drillCard === 0 ? (
-                    <ContactExperienceDrillDown onBack={onBack} />
-                  ) : drillCard === 1 ? (
-                    <ServiceReputationDrillDown onBack={onBack} />
-                  ) : (
-                    <ServiceOperationsDrillDown onBack={onBack} />
+                  renderHeadContactDrillCard(
+                    drillCard,
+                    onBack,
+                    industry.id,
+                    role.id,
                   )
                 ) : role.id === "cards_portfolio" ? (
                   drillCard === 0 ? (
@@ -4006,21 +4072,22 @@ function RoleDashboardShell({
                     <CardsVoiceJoinDrill onBack={onBack} />
                   )
                 ) : drillCard === 0 ? (
-                  industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail" ? (
-                    <CustomerHappinessDrillDown onBack={onBack} variant="sterling-deposit-leak" />
-                  ) : (
-                    <CustomerHappinessDrillDown onBack={onBack} />
-                  )
+                  <CustomerHappinessDrillDown
+                    onBack={onBack}
+                    sterlingCurrency={sterlingCurrency}
+                  />
                 ) : drillCard === 1 ? (
-                  industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail" ? (
-                    <BrandReputationDrillDown onBack={onBack} variant="sterling-deposit-flight" />
-                  ) : (
-                    <BrandReputationDrillDown onBack={onBack} />
-                  )
-                ) : industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail" ? (
-                  <ServiceFulfilmentDrillDown onBack={onBack} variant="sterling-h4-acquisition" />
+                  <BrandReputationDrillDown
+                    onBack={onBack}
+                    variant={
+                      sterlingCurrency ? "sterling-brand-reputation" : "default"
+                    }
+                  />
                 ) : (
-                  <ServiceFulfilmentDrillDown onBack={onBack} />
+                  <ServiceFulfilmentDrillDown
+                    onBack={onBack}
+                    sterlingCurrency={sterlingCurrency}
+                  />
                 );
               // Unify every card / panel / pill background on the drill-down
               // tiers (retail: Customers happy? · Brand at risk? · Service delivery?
@@ -4068,7 +4135,19 @@ export function RoleDashboardView({
   theme,
   unifiedNavigation = false,
 }: RoleDashboardViewProps) {
-  const eisenhowerThreads = useEisenhowerThreadsSnapshot(unifiedNavigation);
+  const eisenhowerThreadsRaw = useEisenhowerThreadsSnapshot(unifiedNavigation);
+  const sterlingHeadRetailRoute = useSterlingHeadRetailCurrencyActive(
+    undefined,
+    industry.id,
+    role.id,
+  );
+  const eisenhowerThreads = useMemo(
+    () =>
+      sterlingHeadRetailRoute
+        ? swapUsdSymbolDeep(eisenhowerThreadsRaw)
+        : eisenhowerThreadsRaw,
+    [eisenhowerThreadsRaw, sterlingHeadRetailRoute],
+  );
 
   if (industry.id === "credit_cards" && role.id === "head_cards") {
     return (

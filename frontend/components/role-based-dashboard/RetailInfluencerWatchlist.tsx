@@ -93,38 +93,110 @@ const INFLUENCERS: Influencer[] = [
   },
 ];
 
-const FLIGHT_RISK_ACCOUNTS: FlightRiskAccount[] = [
+/** Sterling deposit-flight — behavioural tiers (balance + primacy), not wealth-desk labels. */
+const STERLING_FLIGHT_RISK_ACCOUNTS: FlightRiskAccount[] = [
   {
-    id: "fr1",
-    segmentAccount: "HNI · ••4821",
-    balanceAtRisk: 480_000,
-    arpau: 612,
+    id: "sfr1",
+    segmentAccount: "High-balance · primary · ••4821",
+    balanceAtRisk: 42_800,
+    arpau: 318,
     daysToExit: 6,
     retentionWindow: true,
     flightQuote: "Moving to Chase — better rate",
   },
   {
-    id: "fr2",
-    segmentAccount: "Mass Affluent · ••2207",
-    balanceAtRisk: 92_000,
-    arpau: 318,
+    id: "sfr2",
+    segmentAccount: "High-balance · secondary · ••2207",
+    balanceAtRisk: 22_400,
+    arpau: 286,
     daysToExit: 11,
     retentionWindow: true,
     flightQuote: "3.25% gone, why stay?",
   },
   {
-    id: "fr3",
+    id: "sfr3",
     segmentAccount: "SME · ••5590",
-    balanceAtRisk: 210_000,
-    arpau: 540,
+    balanceAtRisk: 94_200,
+    arpau: 412,
     daysToExit: 9,
     retentionWindow: true,
     flightQuote: "Switching salary + DDs to Monzo",
   },
 ];
 
+/** Starling head_retail — Brand at risk · UK voices shaping restriction/closure sentiment */
+const STERLING_BRAND_INFLUENCERS: Influencer[] = [
+  {
+    id: "sb1",
+    username: "uk_personal_finance",
+    sentiment: "negative",
+    karma: 214680,
+    followers: 62400,
+    engagementRate: 6.8,
+    watchlist: true,
+    lastPostSummary:
+      "r/UKPersonalFinance megathread on unexplained account freezes — 3.4k upvotes, Distil-matched phrases in chat transcripts.",
+  },
+  {
+    id: "sb2",
+    username: "moneysaving_watch",
+    sentiment: "negative",
+    karma: 168420,
+    followers: 89200,
+    engagementRate: 5.9,
+    watchlist: true,
+    lastPostSummary:
+      "Consumer Duty piece on savings rate removals — cites FCA guidance and FOS escalation paths for rejected savers.",
+  },
+  {
+    id: "sb3",
+    username: "fos_decisions_amp",
+    sentiment: "negative",
+    karma: 94210,
+    followers: 31800,
+    engagementRate: 7.4,
+    watchlist: true,
+    lastPostSummary:
+      "Amplifies FOS decision summaries on account closures — 'no longer welcome' language trending across Trustpilot.",
+  },
+  {
+    id: "sb4",
+    username: "digital_bank_reviews",
+    sentiment: "negative",
+    karma: 78640,
+    followers: 45200,
+    engagementRate: 4.6,
+    watchlist: true,
+    lastPostSummary:
+      "Comparative app-store review breakdown — flags payment-block complaints despite available balance on Android.",
+  },
+  {
+    id: "sb5",
+    username: "sme_banking_uk",
+    sentiment: "negative",
+    karma: 52830,
+    followers: 24100,
+    engagementRate: 5.2,
+    watchlist: false,
+    lastPostSummary:
+      "Sole-trader onboarding thread — 'can't open without already trading' quote reposted from Reddit and Trustpilot.",
+  },
+  {
+    id: "sb6",
+    username: "app_first_praise",
+    sentiment: "positive",
+    karma: 41220,
+    followers: 38600,
+    engagementRate: 6.1,
+    watchlist: false,
+    lastPostSummary:
+      "Counter-signal — Spaces UX praise on App Store; healthiest channel on the brand reputation screen.",
+  },
+];
+
 function formatBalance(value: number): string {
   if (value >= 1_000_000) return `£${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 10_000) return `£${(value / 1_000).toFixed(1)}K`;
   if (value >= 1_000) return `£${Math.round(value / 1_000)}K`;
   return `£${value.toLocaleString()}`;
 }
@@ -134,9 +206,10 @@ export function RetailInfluencerWatchlist({
 }: {
   variant?: RetailBrandDrillVariant;
 }) {
-  const isSterling = variant === "sterling-deposit-flight";
+  const isDepositFlight = variant === "sterling-deposit-flight";
+  const isBrandReputation = variant === "sterling-brand-reputation";
 
-  if (isSterling) {
+  if (isDepositFlight) {
     return (
       <div className="flex h-full min-h-0 flex-col rounded-2xl border border-[#2b2b2b] bg-[#0D0D0D] text-white shadow-[0_18px_40px_rgba(0,0,0,0.4)]">
         <div className="flex flex-col space-y-1.5 px-6 pt-6 pb-3">
@@ -146,11 +219,11 @@ export function RetailInfluencerWatchlist({
           </div>
           <div className="text-sm text-gray-400">
             High-balance accounts showing flight-intent voice — caught before the balance clears.
-            Draft save-offer (never auto-send).
+            Top 1% by balance · draft save-offer (never auto-send).
           </div>
         </div>
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-6 pb-6">
-          {FLIGHT_RISK_ACCOUNTS.map((account) => (
+          {STERLING_FLIGHT_RISK_ACCOUNTS.map((account) => (
             <div
               key={account.id}
               className="rounded-2xl border border-white/10 bg-white/[0.03] space-y-2.5 p-4"
@@ -160,7 +233,10 @@ export function RetailInfluencerWatchlist({
                   <p className="text-sm font-semibold text-white break-words">
                     {account.segmentAccount}
                   </p>
-                  <p className="text-xs text-red-400 mt-0.5 font-medium">
+                  <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-wide">
+                    Top 1% by balance
+                  </p>
+                  <p className="text-xs text-red-400 mt-1 font-medium">
                     ▼ Flight-intent voice detected
                   </p>
                 </div>
@@ -184,12 +260,20 @@ export function RetailInfluencerWatchlist({
                   </span>
                 ) : null}
               </div>
+              <p className="text-[10px] text-purple-300/90 font-medium pt-0.5">
+                Draft save-offer — never auto-send
+              </p>
             </div>
           ))}
         </div>
       </div>
     );
   }
+
+  const influencers = isBrandReputation ? STERLING_BRAND_INFLUENCERS : INFLUENCERS;
+  const subtitle = isBrandReputation
+    ? "Monitor high-reach creators shaping sentiment around UK retail & SME banking topics"
+    : "Monitor high-reach creators shaping sentiment around EU retail banking topics";
 
   return (
     <div className="flex h-full min-h-0 flex-col rounded-2xl border border-[#2b2b2b] bg-[#0D0D0D] text-white shadow-[0_18px_40px_rgba(0,0,0,0.4)]">
@@ -199,11 +283,11 @@ export function RetailInfluencerWatchlist({
           Influencer & Watchlist Accounts
         </div>
         <div className="text-sm text-gray-400">
-          Monitor high-reach creators shaping sentiment around EU retail banking topics
+          {subtitle}
         </div>
       </div>
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-6 pb-6">
-        {INFLUENCERS.map((profile) => (
+        {influencers.map((profile) => (
           <div
             key={profile.id}
             className="rounded-2xl border border-white/10 bg-white/[0.03] space-y-2.5 p-4"
