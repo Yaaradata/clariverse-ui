@@ -166,6 +166,18 @@ const Mono = ({
     {children}
   </span>
 );
+type RupeeHorizonKind = "at-risk" | "mtd" | "cac";
+const RUPEE_METHOD: Record<RupeeHorizonKind, string> = {
+  "at-risk": "at-risk = affected authorised volume × decline delta vs baseline",
+  mtd: "incremental vs matched control, month-to-date",
+  cac: "acquisition cost per sourcing cohort, one-time",
+};
+function rupeeMethodForLabel(label: string): string | undefined {
+  if (label.includes("(CAC, one-time)")) return RUPEE_METHOD.cac;
+  if (label.includes("/ day (at-risk run-rate)")) return RUPEE_METHOD["at-risk"];
+  if (label.includes(" MTD")) return RUPEE_METHOD.mtd;
+  return undefined;
+}
 const Eyebrow = ({
   children,
   c = T.muted,
@@ -538,11 +550,11 @@ const TREND: { g: TrendPoint[]; r: TrendPoint[]; v: TrendPoint[] } = {
 const EXEC_PULSE = [
   {
     label: "1. 🔴 What's critical",
-    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr at risk. Route fix to Ops / Risk.",
+    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr / day (at-risk run-rate). Route fix to Ops / Risk.",
   },
   {
     label: "2. 🎯 Where's your focus",
-    text: "Offer O-142 is leaking ₹78L; fraud-rule R-77 stepped approval down 13 pts.",
+    text: "Offer O-142 is leaking ₹78 L MTD; fraud-rule R-77 stepped approval down 13 pts.",
   },
   {
     label: "3. 🟢 What's stable / on-track",
@@ -741,7 +753,11 @@ function ExecutiveQuestionCard({
         {miniMetrics.map(([l, v, tc]) => (
           <div key={l}>
             <Eyebrow>{l}</Eyebrow>
-            <Mono c={tone(tc)} s={14}>{v}</Mono>
+            <span title={rupeeMethodForLabel(v)}>
+              <Mono c={tone(tc)} s={14}>
+                {v}
+              </Mono>
+            </span>
           </div>
         ))}
       </div>
@@ -792,7 +808,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     ],
     stats: [
       ["Approval Gap", "14 pts"],
-      ["Spend at Risk", "₹2.4 Cr"],
+      ["Spend at Risk", "₹2.4 Cr / day (at-risk run-rate)"],
       ["Route", "Ops / Risk"],
     ],
     ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path.",
@@ -811,7 +827,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     stats: [
       ["Redemption", "High"],
       ["True Lift", "Low"],
-      ["Leakage", "₹78 L"],
+      ["Leakage", "₹78 L MTD"],
     ],
     ai: "Matched-control baseline says spend would have happened anyway. Recommend pause or retarget.",
   },
@@ -884,7 +900,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     stats: [
       ["Concentration", "↑ 2.1×"],
       ["Merchants", "47"],
-      ["Spend at Risk", "₹52 L"],
+      ["Spend at Risk", "₹52 L / day (at-risk run-rate)"],
       ["Route", "Finance / Ops"],
     ],
     ai: "Merchant concentration spike on fuel MCC — review interchange recovery and settlement lag before it becomes a decline driver.",
@@ -1068,6 +1084,7 @@ function TodayTransactionSignalMonitor() {
                       fontWeight: 800,
                       color: "#fff",
                     }}
+                    title={rupeeMethodForLabel(v)}
                   >
                     {v}
                   </span>
@@ -1101,6 +1118,7 @@ function TodayTransactionSignalMonitor() {
                         color: "#fff",
                         fontFamily: MONO,
                       }}
+                      title={rupeeMethodForLabel(v)}
                     >
                       {v}
                     </b>
@@ -1190,10 +1208,10 @@ function Overview({ go }: { go: NavigateFn }) {
             { label: "spend", topLabel: "Profitable", value: 55, color: T.amber },
           ]}
           miniMetrics={[
-            ["Yield leak", "₹1.2 Cr", "red"],
+            ["Yield leak", "₹1.2 Cr MTD", "red"],
             ["Offers to kill", "2", "amber"],
           ]}
-          aiText="Offer incrementality vs matched control flags two net-negative offers. ₹1.3 Cr reallocatable; RuPay-on-UPI mix is compressing interchange yield by ~₹1.2 Cr."
+          aiText="Offer incrementality vs matched control flags two net-negative offers. ₹1.3 Cr MTD reallocatable; RuPay-on-UPI mix is compressing interchange yield by ~₹1.2 Cr MTD."
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
@@ -1211,9 +1229,9 @@ function Overview({ go }: { go: NavigateFn }) {
           bars={BLOCKER_BARS}
           miniMetrics={[
             ["Curable", "62%", "green"],
-            ["At risk", "₹2.4 Cr", "red"],
+            ["At risk", "₹2.4 Cr / day (at-risk run-rate)", "red"],
           ]}
-          aiText="Decline taxonomy splits today's spike as a token break: ₹2.4 Cr at risk, 62% curable. Fraud-rule R-77 stepped approval down 13 pts; Batch #4471 risks ₹93L CAC against the 30+7 closure clock."
+          aiText="Decline taxonomy splits today's spike as a token break: ₹2.4 Cr / day (at-risk run-rate), 62% curable. Fraud-rule R-77 stepped approval down 13 pts; Batch #4471 risks ₹93 L (CAC, one-time) against the 30+7 closure clock."
           cta="Open blocker command center →"
           onClick={() => go("d2")}
         />
@@ -1239,7 +1257,7 @@ const D1_BRANDS: {
   {
     k: "travel",
     name: "Premium Travel",
-    spend: "₹312 Cr",
+    spend: "₹312 Cr MTD",
     wow: "−6.2%",
     up: false,
     prof: 38,
@@ -1249,7 +1267,7 @@ const D1_BRANDS: {
   {
     k: "cashback",
     name: "Cashback Plus",
-    spend: "₹468 Cr",
+    spend: "₹468 Cr MTD",
     wow: "+8.4%",
     up: true,
     prof: 71,
@@ -1259,7 +1277,7 @@ const D1_BRANDS: {
   {
     k: "fuel",
     name: "Fuel Co-brand",
-    spend: "₹214 Cr",
+    spend: "₹214 Cr MTD",
     wow: "+3.2%",
     up: true,
     prof: 52,
@@ -1269,7 +1287,7 @@ const D1_BRANDS: {
   {
     k: "biz",
     name: "Business",
-    spend: "₹290 Cr",
+    spend: "₹290 Cr MTD",
     wow: "+1.1%",
     up: true,
     prof: 64,
@@ -1278,9 +1296,9 @@ const D1_BRANDS: {
   },
 ];
 const D1_TIERS: [string, string, number, number, number][] = [
-  ["H1 · ₹1L+ spend", "₹420 Cr", 44, 30, 26],
-  ["H2 · ₹50k–1L", "₹312 Cr", 51, 27, 22],
-  ["H3 · ₹25–50k", "₹256 Cr", 58, 22, 20],
+  ["H1 · ₹1L+ spend", "₹420 Cr MTD", 44, 30, 26],
+  ["H2 · ₹50k–1L", "₹312 Cr MTD", 51, 27, 22],
+  ["H3 · ₹25–50k", "₹256 Cr MTD", 58, 22, 20],
 ];
 const D1_GMV = [
   { w: "W-6", g: 100, p: 100 },
@@ -1292,10 +1310,10 @@ const D1_GMV = [
   { w: "Now", g: 104, p: 93.6 },
 ];
 const D1_LEAK_WATCH: [string, string, string, string][] = [
-  ["O-142 Cashback", "₹78 L", "High", T.red],
-  ["Wallet-load MCC", "₹42 L", "High", T.red],
-  ["Fuel Friday", "₹21 L", "Medium", T.amber],
-  ["Grocery 2%", "₹19 L", "Medium", T.amber],
+  ["O-142 Cashback", "₹78 L MTD", "High", T.red],
+  ["Wallet-load MCC", "₹42 L MTD", "High", T.red],
+  ["Fuel Friday", "₹21 L MTD", "Medium", T.amber],
+  ["Grocery 2%", "₹19 L MTD", "Medium", T.amber],
 ];
 const D1_STRAIN: [string, number, number, number, number][] = [
   ["Wallet load", 18, 6, 9, 33],
@@ -1310,7 +1328,7 @@ const D1_AI: AiRow[] = [
     tag: "Offer economics",
     title: "Offer O-142 is cannibalising spend",
     body: "High redemption, near-zero incremental lift vs a matched control. Reward budget is subsidising spend that would have happened anyway.",
-    metric: "₹78 L leakage",
+    metric: "₹78 L MTD leakage",
     delta: "redemption 82% · lift 18%",
     icon: CircleAlert,
     root: "Eligibility is too broad — high-frequency customers who already spend in these MCCs are claiming the reward.",
@@ -1330,7 +1348,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹2.5 Cr net strain",
+    metric: "₹2.5 Cr MTD net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -1387,8 +1405,8 @@ const OFFERS: Offer[] = [
     d: "kill",
     redemption: "82%",
     lift: "18%",
-    cost: "₹96 L",
-    leakage: "₹78 L",
+    cost: "₹96 L MTD",
+    leakage: "₹78 L MTD",
     control: "+2% vs control",
     insight:
       "Redemption is largely non-incremental — matched-control spend is nearly identical. The offer subsidises spend that would have happened anyway.",
@@ -1402,8 +1420,8 @@ const OFFERS: Offer[] = [
     d: "retarget",
     redemption: "78%",
     lift: "46%",
-    cost: "₹46 L",
-    leakage: "₹21 L",
+    cost: "₹46 L MTD",
+    leakage: "₹21 L MTD",
     control: "+24% vs control",
     insight:
       "Roughly half the spend is incremental — works for new fuel-cohort but leaks on existing heavy users.",
@@ -1417,8 +1435,8 @@ const OFFERS: Offer[] = [
     d: "retarget",
     redemption: "71%",
     lift: "31%",
-    cost: "₹52 L",
-    leakage: "₹19 L",
+    cost: "₹52 L MTD",
+    leakage: "₹19 L MTD",
     control: "+14% vs control",
     insight:
       "Weak lift on an always-on category; reward is mostly going to baseline grocery spend.",
@@ -1432,8 +1450,8 @@ const OFFERS: Offer[] = [
     d: "keep",
     redemption: "55%",
     lift: "74%",
-    cost: "₹58 L",
-    leakage: "₹2 L",
+    cost: "₹58 L MTD",
+    leakage: "₹2 L MTD",
     control: "+41% vs control",
     insight:
       "Strong, clearly incremental lift in the target premium cohort. Protect it.",
@@ -1447,8 +1465,8 @@ const OFFERS: Offer[] = [
     d: "keep",
     redemption: "60%",
     lift: "67%",
-    cost: "₹38 L",
-    leakage: "₹4 L",
+    cost: "₹38 L MTD",
+    leakage: "₹4 L MTD",
     control: "+36% vs control",
     insight: "Healthy incremental dining spend; low leakage.",
     rec: "Keep; test a weekend-only variant for higher lift.",
@@ -1461,7 +1479,7 @@ const OFFERS: Offer[] = [
     d: "wait",
     redemption: "26%",
     lift: "?",
-    cost: "₹40 L",
+    cost: "₹40 L MTD",
     leakage: "tbd",
     control: "n too small",
     insight: "Cohort below the minimum size for a confident control read.",
@@ -1856,8 +1874,9 @@ function CommandCenter() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
+            title={RUPEE_METHOD.mtd}
           >
-            ₹1,284 Cr
+            ₹1,284 Cr MTD
           </span>
           <span
             style={{
@@ -2377,7 +2396,7 @@ function LeakPanel() {
                 type="number"
                 stroke={T.dim}
                 fontSize={10}
-                tickFormatter={(v) => `₹${v}L`}
+                tickFormatter={(v) => `₹${v}L MTD`}
               />
               <YAxis
                 type="category"
@@ -2389,7 +2408,7 @@ function LeakPanel() {
               <Tooltip
                 contentStyle={TIP}
                 cursor={{ fill: `${T.amber}10` }}
-                formatter={(v) => [`₹${v} L leakage`, ""]}
+                formatter={(v) => [`₹${v} L MTD leakage`, ""]}
               />
               <Bar
                 dataKey="leak"
@@ -2578,7 +2597,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "travel",
     name: "Premium Travel",
-    spend: "₹312 Cr",
+    spend: "₹312 Cr MTD",
     wow: "−6.2%",
     wowUp: false,
     txn: "2.1M",
@@ -2597,7 +2616,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "cashback",
     name: "Cashback Plus",
-    spend: "₹468 Cr",
+    spend: "₹468 Cr MTD",
     wow: "+8.4%",
     wowUp: true,
     txn: "5.4M",
@@ -2615,7 +2634,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "fuel",
     name: "Fuel Co-brand",
-    spend: "₹214 Cr",
+    spend: "₹214 Cr MTD",
     wow: "+3.2%",
     wowUp: true,
     txn: "1.7M",
@@ -2634,7 +2653,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "biz",
     name: "Business Card",
-    spend: "₹290 Cr",
+    spend: "₹290 Cr MTD",
     wow: "+1.1%",
     wowUp: true,
     txn: "1.2M",
@@ -2664,7 +2683,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   keep: [
     {
       name: "Travel 5X",
-      leak: "₹2 L",
+      leak: "₹2 L MTD",
       lift: "74%",
       conf: "High",
       owner: "Marketing",
@@ -2672,7 +2691,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
     },
     {
       name: "Dining 3X",
-      leak: "₹4 L",
+      leak: "₹4 L MTD",
       lift: "67%",
       conf: "High",
       owner: "Marketing",
@@ -2682,7 +2701,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   retarget: [
     {
       name: "Fuel Friday",
-      leak: "₹21 L",
+      leak: "₹21 L MTD",
       lift: "46%",
       conf: "High",
       owner: "Partner PM",
@@ -2690,7 +2709,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
     },
     {
       name: "Grocery 2%",
-      leak: "₹19 L",
+      leak: "₹19 L MTD",
       lift: "31%",
       conf: "Medium",
       owner: "Marketing",
@@ -2700,7 +2719,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   kill: [
     {
       name: "O-142 Cashback",
-      leak: "₹78 L",
+      leak: "₹78 L MTD",
       lift: "18%",
       conf: "Medium",
       owner: "Marketing",
@@ -2708,7 +2727,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
     },
     {
       name: "Wallet-load booster",
-      leak: "₹42 L",
+      leak: "₹42 L MTD",
       lift: "12%",
       conf: "Medium",
       owner: "Marketing",
@@ -2755,45 +2774,45 @@ const YIELD_ROWS: [
 ][] = [
   [
     "Wallet Load",
-    "₹86 Cr",
-    "₹3.0 Cr",
+    "₹86 Cr MTD",
+    "₹3.0 Cr MTD",
     "Low",
-    "₹4.2 Cr",
-    "₹0.6 Cr",
-    "−₹1.8 Cr",
+    "₹4.2 Cr MTD",
+    "₹0.6 Cr MTD",
+    "−₹1.8 Cr MTD",
     true,
     "Exclude / cap",
   ],
   [
     "Fuel-adjacent",
-    "₹61 Cr",
-    "₹1.7 Cr",
+    "₹61 Cr MTD",
+    "₹1.7 Cr MTD",
     "Low",
-    "₹2.1 Cr",
-    "₹0.3 Cr",
-    "−₹0.7 Cr",
+    "₹2.1 Cr MTD",
+    "₹0.3 Cr MTD",
+    "−₹0.7 Cr MTD",
     true,
     "Retier reward",
   ],
   [
     "Online Travel",
-    "₹142 Cr",
-    "₹6.7 Cr",
+    "₹142 Cr MTD",
+    "₹6.7 Cr MTD",
     "Good",
-    "₹1.7 Cr",
-    "₹0.2 Cr",
-    "+₹4.8 Cr",
+    "₹1.7 Cr MTD",
+    "₹0.2 Cr MTD",
+    "+₹4.8 Cr MTD",
     false,
     "Keep",
   ],
   [
     "Grocery",
-    "₹94 Cr",
-    "₹2.1 Cr",
+    "₹94 Cr MTD",
+    "₹2.1 Cr MTD",
     "Medium",
-    "₹1.1 Cr",
-    "₹0.1 Cr",
-    "+₹0.9 Cr",
+    "₹1.1 Cr MTD",
+    "₹0.1 Cr MTD",
+    "+₹0.9 Cr MTD",
     false,
     "Monitor",
   ],
@@ -3111,8 +3130,8 @@ function RewardYieldUnitEconomicsPanel() {
         * Fraud leg requires the dispute / fraud-loss extract (not in a transaction dump).
       </div>
       <AIInsightStrip tone="red">
-        Wallet-load interchange is ₹3.0 Cr on ₹86 Cr spend (~3.5%) but reward
-        runs 4.9% — net −₹1.8 Cr. Combined with fuel-adjacent, ₹2.5 Cr net
+        Wallet-load interchange is ₹3.0 Cr MTD on ₹86 Cr MTD spend (~3.5%) but reward
+        runs 4.9% — net −₹1.8 Cr MTD. Combined with fuel-adjacent, ₹2.5 Cr MTD net
         strain across two MCC bands. Cap accelerated rewards on both.
       </AIInsightStrip>
     </SectionCard>
@@ -3306,7 +3325,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
   "Tokenised CNP|Premium CNP": {
     strength: "4.2× baseline",
     approvalGap: "14 pts",
-    atRisk: "₹2.4 Cr",
+    atRisk: "₹2.4 Cr / day (at-risk run-rate)",
     curable: "62%",
     started: "11:00",
     owner: "ops",
@@ -3352,7 +3371,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
 const defaultBlockerEvidence = (): BlockerEvidence => ({
   strength: "2.4× baseline",
   approvalGap: "—",
-  atRisk: "₹68 L",
+  atRisk: "₹68 L / day (at-risk run-rate)",
   curable: "48%",
   started: "Today",
   owner: "ops",
@@ -3376,7 +3395,7 @@ const D2_BLOCKER_ACTION_ROWS: {
 }[] = [
   {
     signal: "Tokenised CNP approval gap",
-    evidence: "14 pts · ₹2.4 Cr",
+    evidence: "14 pts · ₹2.4 Cr / day (at-risk run-rate)",
     impact: "Payment blocker",
     owner: "ops",
     action: "Open ACS/token incident",
@@ -3425,7 +3444,7 @@ const D2_SPLIT_BARS = [
 ];
 
 const D2_PRIORITY_ALERTS: { n: number; text: string; owner: string; c: string }[] = [
-  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr", owner: "ops", c: T.red },
+  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr / day (at-risk run-rate)", owner: "ops", c: T.red },
   { n: 2, text: "Fraud Rule R-77 · −13 pts", owner: "fraud", c: T.amber },
   { n: 3, text: "Activation clock · 6.2K cards", owner: "conduct", c: T.violet },
 ];
@@ -3450,7 +3469,11 @@ function ApprovalHealthCard() {
           </div>
           <div>
             <Eyebrow>Curable</Eyebrow>
-            <Mono c={T.green} s={12}>62% · ₹2.4 Cr</Mono>
+            <Mono c={T.green} s={12}>
+              <span title={rupeeMethodForLabel("₹2.4 Cr / day (at-risk run-rate)")}>
+                62% · ₹2.4 Cr / day (at-risk run-rate)
+              </span>
+            </Mono>
           </div>
         </div>
         <div style={{ width: 88, flexShrink: 0 }}>
@@ -3571,7 +3594,7 @@ function OwnerSplitGrid() {
         title="Activation clock"
         accent={T.violet}
         owner="conduct"
-        lines={["Batch #4471", "D27", "6.2K cards", "₹93L CAC at risk"]}
+        lines={["Batch #4471", "D27", "6.2K cards", "₹93 L (CAC, one-time) at risk"]}
       />
     </div>
   );
@@ -3657,7 +3680,9 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
         </div>
         <div style={{ background: T.inset, borderRadius: 7, padding: "6px 8px" }}>
           <Eyebrow>Spend at risk</Eyebrow>
-          <Mono s={12}>{ev.atRisk}</Mono>
+          <span title={rupeeMethodForLabel(ev.atRisk)}>
+            <Mono s={12}>{ev.atRisk}</Mono>
+          </span>
         </div>
         <div style={{ background: T.inset, borderRadius: 7, padding: "6px 8px" }}>
           <Eyebrow>Curable share</Eyebrow>
