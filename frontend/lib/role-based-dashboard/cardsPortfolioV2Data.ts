@@ -28,9 +28,9 @@ export async function generateCardsPortfolioV2AIResponse(
       `**Curable decline clusters today**\n\n` +
       `🔴 **62% of today's decline spike is curable** · **₹2.4 Cr / day (at-risk run-rate) GMV recoverable** before the next working session\n\n` +
       `**Top 3 recoverable clusters** (ranked by ₹ at risk × recovery propensity):\n` +
-      `1. **Tokenised CNP · Premium CNP** — authentication step-up / token path · **₹2.4 Cr / day (at-risk run-rate)** · 14 pt approval gap since 11:00 · Owner: Ops / Risk\n` +
+      `1. **Tokenised CNP · Premium CNP** — authentication step-up / token path · **₹2.4 Cr / day (at-risk run-rate)** · 14 pt approval gap since 11:00 · Owner: Payments & Authorisation\n` +
       `2. **Insufficient-funds soft declines · Cashback Plus** — salary-cycle bulge suppressed · **₹38 L / day (at-risk run-rate)** · limit/EMI nudge eligible · Owner: Product\n` +
-      `3. **3-DS challenge timeouts · Travel co-brand** — route latency, not fraud · **₹22 L / day (at-risk run-rate)** · retry + step-up tuning · Owner: Ops\n\n` +
+      `3. **3-DS challenge timeouts · Travel co-brand** — route latency, not fraud · **₹22 L / day (at-risk run-rate)** · retry + step-up tuning · Owner: Payments & Authorisation\n\n` +
       `**Structural (not curable today)**: fraud-rule R-77 blocks on tenured BINs — needs rule review, not a customer nudge.\n\n` +
       `**Recommended action**: Open ACS/token incident for cluster #1; draft recovery nudge for eligible soft-decline cohort only (RBI consent-compliant).`
     );
@@ -109,7 +109,7 @@ export async function generateCardsPortfolioV2AIResponse(
       `• Processor-wide outage — other routes normal\n` +
       `• Merchant payload batch — CP path unaffected\n` +
       `• Campaign-driven spend surge — volume flat, approval collapsed\n\n` +
-      `**Recommended action**: Open ACS/token incident · check 3DS / CoFT config · Owner: Ops / Risk (immediate)`
+      `**Recommended action**: Open ACS/token incident · check 3DS / CoFT config · Owner: Payments & Authorisation (immediate)`
     );
   }
 
@@ -152,7 +152,7 @@ export async function generateCardsPortfolioV2AIResponse(
     `• Offer O-142 leaking **₹78 L MTD** · 2 reward-negative MCC bands (**₹2.5 Cr MTD** net strain)\n` +
     `• Fraud Rule R-77 stepped approval down · Batch #4471 at D27 (**₹93 L (CAC, one-time)** at risk)\n\n` +
     `**Top 3 actions before EOD**:\n` +
-    `1. Open ACS/token incident — tokenised CNP gap (Ops / Risk)\n` +
+    `1. Open ACS/token incident — tokenised CNP gap (Payments & Authorisation)\n` +
     `2. Roll-back review — Fraud Rule R-77 (Fraud)\n` +
     `3. Pause O-142 wave 2 — non-incremental cashback (Marketing)\n\n` +
     `**Ask me about** curable declines, offer incrementality, reward-negative categories, brand drift, fraud-rule blocks, token/CoFT attribution, activation clocks, or roll/util advisories.`

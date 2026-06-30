@@ -105,6 +105,7 @@ const BRAND: Record<string, string> = {
 };
 const ROUTE: Record<string, { l: string; c: string }> = {
   ops: { l: "Ops / Risk", c: T.cyan },
+  payments: { l: "Payments & Authorisation", c: T.cyan },
   risk: { l: "Risk", c: T.amber },
   mktg: { l: "Marketing", c: T.yellow },
   cards: { l: "Head of Cards", c: T.green },
@@ -550,7 +551,7 @@ const TREND: { g: TrendPoint[]; r: TrendPoint[]; v: TrendPoint[] } = {
 const EXEC_PULSE = [
   {
     label: "1. 🔴 What's critical",
-    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr / day (at-risk run-rate). Route fix to Ops / Risk.",
+    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr / day (at-risk run-rate). Route fix to Payments & Authorisation.",
   },
   {
     label: "2. 🎯 Where's your focus",
@@ -809,7 +810,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     stats: [
       ["Approval Gap", "14 pts"],
       ["Spend at Risk", "₹2.4 Cr / day (at-risk run-rate)"],
-      ["Route", "Ops / Risk"],
+      ["Route", "Payments & Authorisation"],
     ],
     ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path.",
   },
@@ -3328,7 +3329,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
     atRisk: "₹2.4 Cr / day (at-risk run-rate)",
     curable: "62%",
     started: "11:00",
-    owner: "ops",
+    owner: "payments",
     source: "token + auth feed",
     confidence: "High",
     evidence: [
@@ -3397,7 +3398,7 @@ const D2_BLOCKER_ACTION_ROWS: {
     signal: "Tokenised CNP approval gap",
     evidence: "14 pts · ₹2.4 Cr / day (at-risk run-rate)",
     impact: "Payment blocker",
-    owner: "ops",
+    owner: "payments",
     action: "Open ACS/token incident",
     risk: "Service risk",
     riskT: "cyan",
@@ -3444,7 +3445,7 @@ const D2_SPLIT_BARS = [
 ];
 
 const D2_PRIORITY_ALERTS: { n: number; text: string; owner: string; c: string }[] = [
-  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr / day (at-risk run-rate)", owner: "ops", c: T.red },
+  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr / day (at-risk run-rate)", owner: "payments", c: T.red },
   { n: 2, text: "Fraud Rule R-77 · −13 pts", owner: "fraud", c: T.amber },
   { n: 3, text: "Activation clock · 6.2K cards", owner: "conduct", c: T.violet },
 ];
@@ -3581,7 +3582,7 @@ function OwnerSplitGrid() {
       <OwnerIssueCard
         title="Token / Auth"
         accent={T.red}
-        owner="ops"
+        owner="payments"
         lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 11:00"]}
       />
       <OwnerIssueCard
