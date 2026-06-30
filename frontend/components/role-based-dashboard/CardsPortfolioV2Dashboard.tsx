@@ -3136,7 +3136,7 @@ function Drill1({ go }: { go: NavigateFn }) {
         sub="Transaction-only view of portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
         chips={
           <>
-            <Chip t="cyan">Transaction-only</Chip>
+            <Chip t="cyan">Transaction + offer / reward / settlement</Chip>
             <Chip t="gold">Brand + Marketing lens</Chip>
           </>
         }
