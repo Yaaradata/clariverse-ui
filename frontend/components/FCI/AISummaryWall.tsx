@@ -158,7 +158,7 @@ export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
       'Create escalation path for breached SLAs',
       'Send proactive status updates for pending VIP cases'
     ],
-    estimatedImpact: 'High - VIP churn risk, $2.3M annual revenue at risk',
+    estimatedImpact: 'High - VIP churn-risk, $2.3M annual revenue at risk',
     timeToResolve: '3-5 business days',
     assignedTo: 'Email Support Lead + VIP Services',
     priority: 'high'
