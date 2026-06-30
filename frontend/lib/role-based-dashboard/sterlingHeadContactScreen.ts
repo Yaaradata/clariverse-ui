@@ -38,13 +38,14 @@ export function resolveRoleDataKey(industryId: string, roleId: string): string {
   return roleId;
 }
 
-/** Executive Brief hidden for Sterling head_retail only (head_contact matches retail). */
+/** Executive Brief hidden for Sterling head_retail and Sterling head_contact. */
 export function shouldShowExecutiveBrief(
   industryId: string,
   roleId: string,
 ): boolean {
   if (roleId === "cards_portfolio") return false;
   if (isSterlingHeadRetail(industryId, roleId)) return false;
+  if (isSterlingHeadContact(industryId, roleId)) return false;
   return true;
 }
 
