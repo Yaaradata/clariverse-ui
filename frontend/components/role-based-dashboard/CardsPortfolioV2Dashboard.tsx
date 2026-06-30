@@ -795,7 +795,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["Spend at Risk", "₹2.4 Cr"],
       ["Route", "Ops / Risk"],
     ],
-    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue.",
+    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
   },
   {
     id: "o142",
@@ -3296,6 +3296,7 @@ type BlockerEvidence = {
   confidence: string;
   evidence: string[];
   actions: string[];
+  verdict?: string;
 };
 
 const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
@@ -3320,6 +3321,8 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
       "Prepare customer workaround script",
       "Monitor recovery within 2 hours",
     ],
+    verdict:
+      "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
   },
   "Fraud-rule block|3+ yr customers": {
     strength: "3.6× baseline",
@@ -3354,6 +3357,8 @@ const defaultBlockerEvidence = (): BlockerEvidence => ({
   confidence: "Med",
   evidence: ["Cohort-specific decline above seasonal baseline", "Repeat pattern in same time window"],
   actions: ["Open incident pack", "Route to owner with evidence"],
+  verdict:
+    "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
 });
 
 const D2_BLOCKER_ACTION_ROWS: {
@@ -3671,6 +3676,14 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
           {e}
         </div>
       ))}
+      {ev.verdict ? (
+        <>
+          <Eyebrow>Verdict</Eyebrow>
+          <div style={{ fontSize: 11, color: T.sub, padding: "2px 0 6px", lineHeight: 1.35 }}>
+            {ev.verdict}
+          </div>
+        </>
+      ) : null}
       <Eyebrow>Action</Eyebrow>
       {ev.actions.slice(0, 3).map((a) => (
         <div key={a} style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>• {a}</div>
