@@ -167,6 +167,8 @@ export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
 
 interface AISummaryWallProps {
   data?: FCIInsight[];
+  /** Override default FCI-00x detail map — e.g. Sterling deposit-leak insights */
+  insightDetailsMap?: Record<string, FCIInsightDetails>;
   isDarkMode?: boolean;
   /**
    * Outer wrapper height. Defaults to '650px' to preserve the original FCI
@@ -178,6 +180,7 @@ interface AISummaryWallProps {
 
 export function AISummaryWall({
   data = fciInsightsData,
+  insightDetailsMap,
   isDarkMode = false,
   height = '650px',
 }: AISummaryWallProps) {
@@ -304,8 +307,10 @@ export function AISummaryWall({
     return priority[a.severity] - priority[b.severity];
   });
 
+  const resolvedDetailsMap = insightDetailsMap ?? fciInsightDetailsMap;
+
   // Get details for selected insight
-  const selectedDetails = selectedInsight ? fciInsightDetailsMap[selectedInsight.id] : null;
+  const selectedDetails = selectedInsight ? resolvedDetailsMap[selectedInsight.id] : null;
   const selectedConfig = selectedInsight ? getTypeConfig(selectedInsight.severity) : null;
 
   return (

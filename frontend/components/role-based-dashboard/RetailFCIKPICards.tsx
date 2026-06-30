@@ -34,7 +34,7 @@ import {
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
-import { AISummaryWall, type FCIInsight } from '@/components/FCI/AISummaryWall';
+import { AISummaryWall, type FCIInsight, type FCIInsightDetails } from '@/components/FCI/AISummaryWall';
 
 export type RetailFCIVariant = 'default' | 'sterling-deposit-leak';
 
@@ -197,6 +197,13 @@ const STERLING_AI_SUMMARY: FCIInsight[] = [
     message:
       'Savings declines with no reason — deposit outflow accelerating. ~£310K/week leaving from declined high-balance savers.',
     trend: 'up',
+    change: 9,
+    metrics: {
+      volume: 750,
+      volumeLabel: 'savings applicants (poll)',
+      customerImpact: 'Critical',
+      repeatRate: 57,
+    },
   },
   {
     id: 'sterling-proposition-friction',
@@ -206,6 +213,13 @@ const STERLING_AI_SUMMARY: FCIInsight[] = [
     message:
       "MoneyWeek poll: 57% of 750 savings applicants rejected, 41% successful. 'Rejected, no reason, fraud-prevention agency' recurring in voice.",
     trend: 'up',
+    change: 12,
+    metrics: {
+      volume: 428,
+      volumeLabel: 'rejected applicants',
+      customerImpact: 'High',
+      repeatRate: 34,
+    },
   },
   {
     id: 'sterling-conduct-disclosure',
@@ -215,8 +229,83 @@ const STERLING_AI_SUMMARY: FCIInsight[] = [
     message:
       'FOS upheld a conflicting-explanation complaint. Reason-code disclosure gap — tipping-off / SAR tension flagged. Draft disclosure review (never auto-send).',
     trend: 'stable',
+    metrics: {
+      volume: 1,
+      volumeLabel: 'FOS upheld case',
+      customerImpact: 'High',
+      responseTime: 'DISP clock active',
+    },
   },
 ];
+
+const STERLING_AI_INSIGHT_DETAILS: Record<string, FCIInsightDetails> = {
+  'sterling-deposit-leak': {
+    rootCause:
+      'Post–Easy-Saver rate removal, 57% of savings applicants are declined with no reason given — creating a decline-reason vacuum. High-balance savers escalate on Voice and App; FOS upheld a conflicting-explanation case. Estimated ~£310K/week deposit outflow from declined HV savers who withdraw or switch rather than re-apply.',
+    affectedAreas: [
+      'Savings / Easy-Saver onboarding',
+      'Voice & App decline journeys',
+      'Deposit retention',
+      'FOS / DISP exposure',
+      'HV balance bands (H1–H3)',
+    ],
+    recommendedActions: [
+      'Draft reason-code disclosure review separating tipping-off constraints from service failure (never auto-send)',
+      'Propose HV saver retention callback for declined applicants with balance >£250K',
+      'Publish internal decline-reason taxonomy for agents — draft only, compliance sign-off required',
+      'Route repeat decline contacts to specialist queue with case continuity across Voice and App',
+      'Track weekly £ leak/wk metric against £310K baseline until disclosure policy is live',
+    ],
+    estimatedImpact: 'Critical — ~£310K/week deposit outflow · £16M+ annualised retention at risk',
+    timeToResolve: '14 days for disclosure policy draft · 30 days for journey fix',
+    assignedTo: 'Chief Customer & Banking Officer · Conduct · Savings Product',
+    priority: 'immediate',
+  },
+  'sterling-proposition-friction': {
+    rootCause:
+      "MoneyWeek poll signal: 57% of 750 savings applicants rejected vs 41% successful. Voice verbatims cluster on 'rejected, no reason, fraud-prevention agency' — customers cannot understand whether decline is crime-constraint or proposition failure. Friction suppresses viable acquisition and erodes brand trust among rate-sensitive savers.",
+    affectedAreas: [
+      'Savings proposition',
+      'App Store & Voice',
+      'Applicant communications',
+      'Fraud-prevention messaging',
+      'New-customer NPS',
+    ],
+    recommendedActions: [
+      'Draft applicant-facing decline explanation template — compliance review before any send',
+      'Propose A/B test on reason transparency for low-risk salary-funded applicants',
+      'Brief contact-centre on approved scripting for decline follow-ups (never auto-approve)',
+      'Align App decline screen copy with Voice script to remove channel conflict',
+      'Monitor rejection rate vs peer poll benchmark weekly',
+    ],
+    estimatedImpact: 'High — 428 rejected applicants in poll window · acquisition drag on savings growth target',
+    timeToResolve: '7–14 days for comms draft · 4 weeks for journey alignment',
+    assignedTo: 'Head of Retail Banking · Marketing · Fraud Ops liaison',
+    priority: 'high',
+  },
+  'sterling-conduct-disclosure': {
+    rootCause:
+      'FOS upheld a complaint where the bank gave conflicting explanations for a savings decline — conduct failure under DISP. Reason-code disclosure is blocked by tipping-off / SAR tension: agents cannot explain declines without risking regulatory breach. Until policy clarifies what can be said, the decline-reason vacuum persists and repeat contact grows.',
+    affectedAreas: [
+      'Conduct & DISP',
+      'SAR / tipping-off policy',
+      'Complaints & FOS',
+      'Agent scripting',
+      'Legal & Compliance',
+    ],
+    recommendedActions: [
+      'Draft conduct disclosure framework: what can be said at decline vs what requires specialist review',
+      'Propose FOS response pack for upheld conflicting-explanation cases — legal review required',
+      'Never auto-send decline explanations; all outbound comms require compliance sign-off',
+      'Schedule CRO depth session for conduct freeze/closure slice (separate from acquisition leak)',
+      'Track upheld-case count and repeat-contact rate on conduct-related declines',
+    ],
+    estimatedImpact: 'High — regulatory reputational risk · repeat-contact cost on conduct-related declines',
+    timeToResolve: '21 days for disclosure framework draft',
+    assignedTo: 'Conduct · Legal · Chief Customer & Banking Officer',
+    priority: 'high',
+  },
+};
 
 export function RetailFCIKPICards({
   isDarkMode = false,
@@ -996,6 +1085,7 @@ export function RetailFCIKPICards({
           <div className="absolute inset-0">
             <AISummaryWall
               data={isSterling ? STERLING_AI_SUMMARY : undefined}
+              insightDetailsMap={isSterling ? STERLING_AI_INSIGHT_DETAILS : undefined}
               isDarkMode={isDarkMode}
               height="100%"
             />

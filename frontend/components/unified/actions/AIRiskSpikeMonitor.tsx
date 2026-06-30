@@ -361,7 +361,7 @@ export const sterlingHeadRetailRiskSpikes: RiskSpike[] = [
     cardTitle: "Savings Decline Leak",
     customMetrics: [
       { label: "Declined no-reason", value: "57%", delta: "+9 pts", deltaIntent: "bad", trend: "up" },
-      { label: "Est. £ leak/wk", value: "£[CONFIRM]", delta: "↑ w/w", deltaIntent: "bad", trend: "up" },
+      { label: "Est. £ leak/wk", value: "£310K", delta: "↑ w/w", deltaIntent: "bad", trend: "up" },
     ],
     triggerInsight:
       "57% declined with no reason; FOS upheld conflicting explanation. Draft reason-code disclosure review — never auto-send.",

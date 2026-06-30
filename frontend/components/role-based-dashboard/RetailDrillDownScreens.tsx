@@ -1126,28 +1126,28 @@ const STERLING_FEATURE_REQUESTS: SterlingFeatureRequestRow[] = [
     req: "Rate-match / save-offer on outflow intent",
     mentions: 312,
     sentiment: 0.74,
-    channels: "Voice · App Store · Chat",
+    channels: "Voice · App Store · Chat · Email · Social/X",
     channelSplit: { "App Store": 98, Voice: 142, Chat: 48, Email: 14, "Social/X": 10 },
   },
   {
     req: "Easy-Saver fast-track",
     mentions: 268,
     sentiment: 0.71,
-    channels: "App Store · Voice · Email",
-    channelSplit: { "App Store": 112, Voice: 86, Chat: 32, Email: 28, "Social/X": 10 },
+    channels: "App Store · Voice · Email · Chat · Social/X",
+    channelSplit: { "App Store": 112, Voice: 86, Chat: 14, Email: 48, "Social/X": 8 },
   },
   {
     req: "Savings pots / auto-rules",
     mentions: 246,
     sentiment: 0.78,
-    channels: "App Store · Chat · Social/X",
-    channelSplit: { "App Store": 104, Voice: 38, Chat: 62, Email: 18, "Social/X": 24 },
+    channels: "App Store · Chat · Social/X · Voice · Email",
+    channelSplit: { "App Store": 104, Voice: 22, Chat: 62, Email: 10, "Social/X": 48 },
   },
   {
     req: "Rate-change proactive alerts",
     mentions: 218,
     sentiment: 0.69,
-    channels: "App Store · Email · Voice",
+    channels: "App Store · Voice · Email · Chat · Social/X",
     channelSplit: { "App Store": 88, Voice: 64, Chat: 22, Email: 34, "Social/X": 10 },
   },
   {
@@ -1155,16 +1155,19 @@ const STERLING_FEATURE_REQUESTS: SterlingFeatureRequestRow[] = [
     mentions: 174,
     sentiment: 0.66,
     channels: "Voice · Email · Chat",
-    channelSplit: { "App Store": 28, Voice: 72, Chat: 38, Email: 28, "Social/X": 8 },
+    channelSplit: { "App Store": 0, Voice: 72, Chat: 50, Email: 52, "Social/X": 0 },
   },
   {
     req: "Primary-account switch incentives",
     mentions: 156,
     sentiment: 0.72,
     channels: "Voice · App Store · Social/X",
-    channelSplit: { "App Store": 42, Voice: 68, Chat: 18, Email: 12, "Social/X": 16 },
+    channelSplit: { "App Store": 48, Voice: 68, Chat: 0, Email: 0, "Social/X": 40 },
   },
 ];
+
+/** Sterling retention bars above this count show all 5 channels in hover; at or below → top 3 only */
+const STERLING_SMALL_FEATURE_BAR_MENTIONS = 200;
 
 type ChannelRiskRow = {
   name: string;
@@ -1354,6 +1357,25 @@ export function BrandReputationDrillDown({
     const total = Math.max(row.mentions, 1);
     const channelOrder = isSterling ? STERLING_CHANNEL_ORDER : SOCIAL_CHANNEL_ORDER;
     const channelColors: Record<string, string> = isSterling ? STERLING_VOC_CHANNEL_COLORS : SOCIAL_CHANNEL_COLORS;
+
+    const isSterlingSmallBar = isSterling && row.mentions <= STERLING_SMALL_FEATURE_BAR_MENTIONS;
+
+    const channelEntries = isSterling
+      ? isSterlingSmallBar
+        ? channelOrder
+            .map((ch) => ({ ch, count: row.channelSplit[ch as keyof typeof row.channelSplit] ?? 0 }))
+            .filter((e) => e.count > 0)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 3)
+        : channelOrder.map((ch) => ({
+            ch,
+            count: row.channelSplit[ch as keyof typeof row.channelSplit] ?? 0,
+          }))
+      : channelOrder.map((ch) => ({
+          ch,
+          count: row.channelSplit[ch as keyof typeof row.channelSplit] ?? 0,
+        }));
+
     return (
       <div style={{
         minWidth: 260,
@@ -1368,10 +1390,10 @@ export function BrandReputationDrillDown({
         </div>
         <div style={{ fontSize: 10, color: T.textMut, marginBottom: 8 }}>
           Mentions by channel · total {row.mentions}
+          {isSterlingSmallBar ? " · top 3 channels" : isSterling ? " · all channels" : ""}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-          {channelOrder.map((ch) => {
-            const count = row.channelSplit[ch as keyof typeof row.channelSplit] ?? 0;
+          {channelEntries.map(({ ch, count }) => {
             const pct = ((count / total) * 100).toFixed(1);
             return (
               <div key={ch} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
@@ -1417,7 +1439,7 @@ export function BrandReputationDrillDown({
             }
             sub={
               isSterling
-                ? "Where balances are leaving and primary relationships are decaying — interest-removal flight, silent-switch precursors, and the CASS gap. Intent-voice caught before the balance clears."
+                ? "Where balances are leaving and primary relationships are decaying — interest-removal flight, silent-switch precursors, and the CASS gap."
                 : "Real-time brand, social, review-site and media signals — where is perception eroding and what is driving it?"
             }
           />
@@ -1466,19 +1488,6 @@ export function BrandReputationDrillDown({
                 </div>
               </div>
             ))}
-          </div>
-          <div style={{
-            marginTop: 10,
-            padding: "10px 12px",
-            borderRadius: 10,
-            background: `${T.gold}10`,
-            border: `1px solid ${T.gold}28`,
-            borderLeft: `4px solid ${T.gold}`,
-            fontSize: 12,
-            color: T.textSec,
-            lineHeight: 1.45,
-          }}>
-            Switching intent in voice precedes outbound transfers by ~3 months — draft save-offer for flight-risk cohort within the retention window (never auto-send).
           </div>
         </AIPanel>
       ) : null}
@@ -1580,7 +1589,7 @@ export function BrandReputationDrillDown({
 
           const ranked = [...channelsAtRisk].sort((a, b) => a.trend[5] - b.trend[5]);
 
-          const Sparkline = ({ data, color, id, channel }: { data: number[]; color: string; id: string; channel: string }) => {
+          const Sparkline = ({ data, color, id, channel, height = 32 }: { data: number[]; color: string; id: string; channel: string; height?: number }) => {
             const chartData = data.map((v, i) => ({
               week: i === data.length - 1 ? "Now" : `W-${data.length - 1 - i}`,
               v,
@@ -1604,7 +1613,7 @@ export function BrandReputationDrillDown({
               );
             };
             return (
-              <ResponsiveContainer width="100%" height={32}>
+              <ResponsiveContainer width="100%" height={height}>
                 <AreaChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
                   <defs>
                     <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
@@ -1642,7 +1651,14 @@ export function BrandReputationDrillDown({
               accentColor={T.red}
               fill
             >
-              <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 8 }}>
+              <div style={{
+                flex: 1,
+                minHeight: 0,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: isSterling ? "stretch" : "space-between",
+                gap: isSterling ? 8 : 8,
+              }}>
                 {ranked.map((c) => {
                   const now = c.trend[5];
                   const first = c.trend[0];
@@ -1655,33 +1671,47 @@ export function BrandReputationDrillDown({
                       key={c.name}
                       style={{
                         display: "grid",
-                        gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.2fr) auto",
+                        gridTemplateColumns: isSterling ? "92px 1fr auto" : "minmax(0, 1fr) minmax(0, 1.2fr) auto",
                         alignItems: "center",
-                        gap: 12,
-                        padding: "8px 2px",
+                        gap: isSterling ? 10 : 12,
+                        padding: isSterling ? "10px 12px" : "8px 2px",
+                        flex: isSterling ? "1 1 0" : undefined,
+                        minHeight: isSterling ? 0 : undefined,
+                        borderRadius: isSterling ? 10 : undefined,
+                        background: isSterling ? `${nowColor}0c` : undefined,
+                        border: isSterling ? `1px solid ${nowColor}28` : undefined,
                       }}
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                         <span style={{ width: 8, height: 8, borderRadius: "50%", background: c.channelColor, display: "inline-block", flexShrink: 0 }} />
-                        <span style={{ fontSize: 12.5, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        <span style={{ fontSize: isSterling ? 13 : 12.5, fontWeight: 700, color: T.text, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                           {c.name}
                         </span>
                       </div>
 
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minWidth: 0, width: "100%" }}>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: 0,
+                        width: "100%",
+                        height: isSterling ? "100%" : undefined,
+                        minHeight: isSterling ? 44 : undefined,
+                      }}>
                         <Sparkline
                           data={c.trend}
                           color={deltaColor}
                           id={c.name.replace(/[^a-z0-9]/gi, "")}
                           channel={c.name}
+                          height={isSterling ? 52 : 32}
                         />
                       </div>
 
                       <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 2, whiteSpace: "nowrap" }}>
-                        <span style={{ fontSize: 15, fontFamily: "var(--mono)", fontWeight: 700, color: nowColor, lineHeight: 1 }}>
+                        <span style={{ fontSize: isSterling ? 17 : 15, fontFamily: "var(--mono)", fontWeight: 700, color: nowColor, lineHeight: 1 }}>
                           {now.toFixed(2)}
                         </span>
-                        <span style={{ fontSize: 9.5, fontFamily: "var(--mono)", fontWeight: 700, color: deltaColor, lineHeight: 1 }}>
+                        <span style={{ fontSize: isSterling ? 10 : 9.5, fontFamily: "var(--mono)", fontWeight: 700, color: deltaColor, lineHeight: 1 }}>
                           {deltaSign}{delta.toFixed(2)} over 6wks
                         </span>
                       </div>
