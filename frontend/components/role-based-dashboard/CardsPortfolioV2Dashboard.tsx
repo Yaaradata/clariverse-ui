@@ -759,6 +759,9 @@ type MonitorAlert = {
   sev: "critical" | "high" | "later";
   sevLabel: string;
   variant: "critical" | "default" | "voice";
+  feed: string;
+  needsExtraFeed?: boolean;
+  causeNeedsAcs?: boolean;
   fields: [string, string][];
   stats: [string, string][];
   ai: string;
@@ -781,9 +784,10 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "critical",
     sevLabel: "Critical",
     variant: "critical",
+    feed: "Token + auth feed",
+    causeNeedsAcs: true,
     fields: [
       ["Cohort", "Premium · CNP"],
-      ["Data source", "Token + auth feed"],
       ["Time", "Since 11:00"],
     ],
     stats: [
@@ -799,9 +803,9 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "critical",
     sevLabel: "Critical",
     variant: "critical",
+    feed: "Offer + spend",
     fields: [
       ["Cohort", "Cashback Plus"],
-      ["Data source", "Offer + spend"],
       ["Time", "Day 6"],
     ],
     stats: [
@@ -817,9 +821,10 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "High",
     variant: "default",
+    feed: "Rule change feed",
+    needsExtraFeed: true,
     fields: [
       ["Cohort", "3+ yr customers"],
-      ["Data source", "Rule change feed"],
       ["Time", "Within 2h"],
     ],
     stats: [
@@ -835,9 +840,9 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "Obligation",
     variant: "default",
+    feed: "Issue + first txn",
     fields: [
       ["Cohort", "Batch 4471"],
-      ["Data source", "Issue + first txn"],
       ["Time", "D27"],
     ],
     stats: [
@@ -853,9 +858,9 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "Advisory",
     variant: "default",
+    feed: "Balance + limit",
     fields: [
       ["Cohort", "Sourcing Q2"],
-      ["Data source", "Balance + limit"],
       ["Time", "This week"],
     ],
     stats: [
@@ -871,14 +876,15 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "Watch",
     variant: "default",
+    feed: "Settlement feed",
     fields: [
       ["Cohort", "Fuel Co-brand"],
-      ["Data source", "Settlement feed"],
       ["Time", "This week"],
     ],
     stats: [
       ["Concentration", "↑ 2.1×"],
       ["Merchants", "47"],
+      ["Spend at Risk", "₹52 L"],
       ["Route", "Finance / Ops"],
     ],
     ai: "Merchant concentration spike on fuel MCC — review interchange recovery and settlement lag before it becomes a decline driver.",
@@ -993,6 +999,48 @@ function TodayTransactionSignalMonitor() {
                   {a.sevLabel}
                 </span>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 6,
+                  marginBottom: 12,
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 800,
+                    letterSpacing: ".04em",
+                    textTransform: "uppercase",
+                    padding: "3px 8px",
+                    borderRadius: 999,
+                    color: T.muted,
+                    background: T.inset,
+                    border: `1px solid ${T.inner}`,
+                  }}
+                >
+                  {a.feed}
+                </span>
+                {a.needsExtraFeed ? (
+                  <span
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 800,
+                      letterSpacing: ".04em",
+                      textTransform: "uppercase",
+                      padding: "3px 8px",
+                      borderRadius: 999,
+                      color: T.amber,
+                      background: `${T.amber}14`,
+                      border: `1px solid ${T.amber}40`,
+                    }}
+                  >
+                    needs extra feed
+                  </span>
+                ) : null}
+              </div>
               {a.fields.map(([k, v]) => (
                 <div
                   key={k}
@@ -1072,7 +1120,35 @@ function TodayTransactionSignalMonitor() {
                   fontWeight: 700,
                 }}
               >
-                ✨ {a.ai}
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 6,
+                    alignItems: "flex-start",
+                    marginBottom: a.causeNeedsAcs ? 8 : 0,
+                  }}
+                >
+                  <span>✨ {a.ai}</span>
+                  {a.causeNeedsAcs ? (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 800,
+                        letterSpacing: ".04em",
+                        textTransform: "uppercase",
+                        padding: "3px 8px",
+                        borderRadius: 999,
+                        color: T.amber,
+                        background: `${T.amber}14`,
+                        border: `1px solid ${T.amber}40`,
+                        flexShrink: 0,
+                      }}
+                    >
+                      cause needs ACS / token-vault
+                    </span>
+                  ) : null}
+                </div>
               </div>
             </div>
           );
