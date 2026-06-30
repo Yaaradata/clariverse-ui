@@ -32,7 +32,7 @@ export async function generateCardsPortfolioV2AIResponse(
       `2. **Insufficient-funds soft declines · Cashback Plus** — salary-cycle bulge suppressed · **₹38 L / day (at-risk run-rate)** · limit/EMI nudge eligible · Owner: Product\n` +
       `3. **3-DS challenge timeouts · Travel co-brand** — route latency, not fraud · **₹22 L / day (at-risk run-rate)** · retry + step-up tuning · Owner: Payments & Authorisation\n\n` +
       `**Structural (not curable today)**: fraud-rule R-77 blocks on tenured BINs — needs rule review, not a customer nudge.\n\n` +
-      `**Recommended action**: Open ACS/token incident for cluster #1; draft recovery nudge for eligible soft-decline cohort only (RBI consent-compliant).`
+      `**Recommended action**: Open ACS/token incident for cluster #1; draft recovery nudge for eligible soft-decline cohort only (RBI consent-compliant) · Consent: service-comms · human approves`
     );
   }
 

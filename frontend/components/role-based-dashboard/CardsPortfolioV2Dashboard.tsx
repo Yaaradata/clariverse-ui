@@ -369,6 +369,28 @@ function Chip({ children, t = "muted" }: { children: ReactNode; t?: string }) {
     </span>
   );
 }
+function ConsentChip() {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        fontSize: 9,
+        fontWeight: 800,
+        letterSpacing: ".04em",
+        textTransform: "uppercase",
+        padding: "3px 8px",
+        borderRadius: 999,
+        color: T.muted,
+        background: T.inset,
+        border: `1px solid ${T.inner}`,
+        whiteSpace: "nowrap",
+        marginLeft: 6,
+      }}
+    >
+      Consent: service-comms · human approves
+    </span>
+  );
+}
 function RouteChip({ r }: { r: string }) {
   const m = ROUTE[r];
   return (
@@ -3393,6 +3415,7 @@ const D2_BLOCKER_ACTION_ROWS: {
   risk: string;
   riskT: string;
   status: string;
+  customerFacing?: boolean;
 }[] = [
   {
     signal: "Tokenised CNP approval gap",
@@ -3423,6 +3446,7 @@ const D2_BLOCKER_ACTION_ROWS: {
     risk: "Obligation",
     riskT: "amber",
     status: "Draft ready",
+    customerFacing: true,
   },
   {
     signal: "Utilisation migration surge",
@@ -3715,7 +3739,22 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
       ) : null}
       <Eyebrow>Action</Eyebrow>
       {ev.actions.slice(0, 3).map((a) => (
-        <div key={a} style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>• {a}</div>
+        <div
+          key={a}
+          style={{
+            fontSize: 11,
+            color: T.sub,
+            padding: "2px 0",
+            lineHeight: 1.35,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
+          <span>• {a}</span>
+          {a === "Prepare customer workaround script" ? <ConsentChip /> : null}
+        </div>
       ))}
       <div style={{ marginTop: 6 }}><RouteChip r={ev.owner} /></div>
     </SectionCard>
@@ -3783,7 +3822,10 @@ function BlockerActionQueue() {
             <span style={{ color: T.sub }}>{r.evidence}</span>
             <span style={{ color: T.sub }}>{r.impact}</span>
             <RouteChip r={r.owner} />
-            <span style={{ color: T.sub, lineHeight: 1.35 }}>{r.action}</span>
+            <span style={{ color: T.sub, lineHeight: 1.35 }}>
+              {r.action}
+              {r.customerFacing ? <ConsentChip /> : null}
+            </span>
             <Pill t={r.riskT}>{r.risk}</Pill>
             <span style={{ fontSize: 9.5, color: T.muted }}>{r.status}</span>
           </div>
