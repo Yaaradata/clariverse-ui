@@ -1873,7 +1873,7 @@ function CommandCenter() {
             ▲ +3.8%
           </span>
           <span style={{ fontSize: 10.5, fontWeight: 700, color: T.red }}>
-            profit −6.4%
+            contribution (after interchange & reward) −6.4%
           </span>
         </div>
         <div
@@ -2045,11 +2045,11 @@ function CommandCenter() {
           </span>
         </div>
       </W>
-      {/* gmv vs profitable monitor */}
+      {/* gmv vs contribution monitor */}
       <W
         accent={T.cyan}
-        title="Gross vs profitable spend"
-        sub="7-week · gross holds, profitable falls"
+        title="Gross vs contribution monitor"
+        sub="7-week · gross holds, contribution falls"
       >
         <div style={{ height: 132 }}>
           <ResponsiveContainer>
@@ -2083,7 +2083,7 @@ function CommandCenter() {
               <Line
                 type="monotone"
                 dataKey="p"
-                name="Profitable"
+                name="Contribution"
                 stroke={T.red}
                 strokeWidth={2.4}
                 dot={false}
