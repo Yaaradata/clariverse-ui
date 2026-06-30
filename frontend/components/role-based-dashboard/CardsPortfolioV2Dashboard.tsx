@@ -795,7 +795,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["Spend at Risk", "₹2.4 Cr"],
       ["Route", "Ops / Risk"],
     ],
-    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
+    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path.",
   },
   {
     id: "o142",
@@ -3057,7 +3057,7 @@ function RewardYieldUnitEconomicsPanel() {
             "Interchange",
             "Band",
             "Reward",
-            "Fraud/Rev",
+            "Fraud/Rev*",
             "Net",
             "Status",
             "Action",
@@ -3106,6 +3106,9 @@ function RewardYieldUnitEconomicsPanel() {
             </div>
           ),
         )}
+      </div>
+      <div style={{ fontSize: 9.5, color: T.dim, marginTop: 6, lineHeight: 1.4 }}>
+        * Fraud leg requires the dispute / fraud-loss extract (not in a transaction dump).
       </div>
       <AIInsightStrip tone="red">
         Wallet-load interchange is ₹3.0 Cr on ₹86 Cr spend (~3.5%) but reward
