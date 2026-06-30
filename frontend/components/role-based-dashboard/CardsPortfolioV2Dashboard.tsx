@@ -816,6 +816,15 @@ const SEV_STYLE: Record<
   later: { color: "#b79cff", bg: "#2d1d55", border: "#6845c7" },
 };
 
+const MONITOR_STAT_SLOTS = 4;
+const monitorStatRows = (stats: [string, string][]): [string, string][] => {
+  const rows = [...stats];
+  while (rows.length < MONITOR_STAT_SLOTS) {
+    rows.push(["", ""]);
+  }
+  return rows;
+};
+
 const MONITOR_ALERTS: MonitorAlert[] = [
   {
     id: "token-cnp",
@@ -974,6 +983,7 @@ function TodayTransactionSignalMonitor() {
           gap: 14,
           overflowX: "auto",
           paddingBottom: 14,
+          alignItems: "stretch",
         }}
       >
         {MONITOR_ALERTS.map((a) => {
@@ -994,11 +1004,11 @@ function TodayTransactionSignalMonitor() {
               style={{
                 minWidth: 260,
                 maxWidth: 260,
+                alignSelf: "stretch",
                 background: bg,
                 border: `1px solid ${border}`,
                 borderRadius: 14,
                 padding: "16px 16px 14px",
-                minHeight: 400,
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -1009,7 +1019,8 @@ function TodayTransactionSignalMonitor() {
                   justifyContent: "space-between",
                   alignItems: "flex-start",
                   gap: 8,
-                  marginBottom: 16,
+                  marginBottom: 12,
+                  minHeight: 52,
                 }}
               >
                 <div
@@ -1043,8 +1054,9 @@ function TodayTransactionSignalMonitor() {
                   display: "flex",
                   flexWrap: "wrap",
                   gap: 6,
-                  marginBottom: 12,
+                  marginBottom: 10,
                   alignItems: "center",
+                  minHeight: 44,
                 }}
               >
                 <span
@@ -1087,7 +1099,7 @@ function TodayTransactionSignalMonitor() {
                     display: "grid",
                     gridTemplateColumns: "105px 1fr",
                     gap: 8,
-                    marginBottom: 13,
+                    marginBottom: 8,
                     fontSize: 12,
                   }}
                 >
@@ -1119,19 +1131,22 @@ function TodayTransactionSignalMonitor() {
                   border: "1px solid #333",
                   borderRadius: 10,
                   padding: 12,
-                  margin: "10px 0 16px",
+                  marginTop: 8,
+                  boxSizing: "border-box",
                 }}
               >
-                {a.stats.map(([k, v], i) => (
+                {monitorStatRows(a.stats).map(([k, v], i, rows) => (
                   <div
-                    key={k}
+                    key={k || `slot-${i}`}
                     style={{
                       display: "grid",
                       gridTemplateColumns: "1.15fr 1fr",
                       gap: 8,
-                      marginBottom: i === a.stats.length - 1 ? 0 : 13,
+                      marginBottom: i === rows.length - 1 ? 0 : 10,
                       fontSize: 13,
                       color: "#bfbfc6",
+                      minHeight: 18,
+                      visibility: k ? "visible" : "hidden",
                     }}
                   >
                     <span>{k}</span>
@@ -1150,7 +1165,7 @@ function TodayTransactionSignalMonitor() {
               </div>
               <div
                 style={{
-                  marginTop: "auto",
+                  marginTop: 10,
                   background: a.aiPurple ? "#21163a" : "#2d2414",
                   border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`,
                   borderRadius: 9,
@@ -1159,6 +1174,10 @@ function TodayTransactionSignalMonitor() {
                   lineHeight: 1.45,
                   color: "#fff",
                   fontWeight: 700,
+                  minHeight: 120,
+                  boxSizing: "border-box",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
                 <div
@@ -1167,7 +1186,7 @@ function TodayTransactionSignalMonitor() {
                     flexWrap: "wrap",
                     gap: 6,
                     alignItems: "flex-start",
-                    marginBottom: a.causeNeedsAcs ? 8 : 0,
+                    marginBottom: 8,
                   }}
                 >
                   <span>✨ {a.ai}</span>
@@ -1188,7 +1207,23 @@ function TodayTransactionSignalMonitor() {
                     >
                       cause needs ACS / token-vault
                     </span>
-                  ) : null}
+                  ) : (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 800,
+                        letterSpacing: ".04em",
+                        textTransform: "uppercase",
+                        padding: "3px 8px",
+                        borderRadius: 999,
+                        visibility: "hidden",
+                        flexShrink: 0,
+                      }}
+                      aria-hidden
+                    >
+                      cause needs ACS / token-vault
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

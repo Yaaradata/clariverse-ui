@@ -67,6 +67,11 @@ import {
   roleDisplayName,
   type RoleDashboardData,
   type ScreenId,
+<<<<<<< Updated upstream
+=======
+  NUVAMA_INDUSTRY_ID,
+  STERLING_BANK_INDUSTRY_ID,
+>>>>>>> Stashed changes
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import {
@@ -100,6 +105,7 @@ import { CXVoCHeadDashboardV2 } from "./CXVoCHeadDashboardV2";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
+import { NuvamaWealthDashboard } from "./NuvamaWealthDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
 import { RbiConductIntelligencePreview } from "./RbiConductIntelligencePreview";
 import {
@@ -3263,6 +3269,7 @@ function RoleDashboardShell({
         : "retail_banking";
   const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
+<<<<<<< Updated upstream
   const roleDataKey = resolveRoleDataKey(industry.id, role.id);
   const rawData = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
   const sterlingHeadContactCurrency = useSterlingHeadContactCurrencyActive(
@@ -3281,6 +3288,17 @@ function RoleDashboardShell({
     else if (sterlingCurrency) next = swapUsdSymbolDeep(next);
     return next;
   }, [rawData, sterlingCurrency, sterlingHeadContactCurrency]);
+=======
+  const roleDataKey =
+    industry.id === STERLING_BANK_INDUSTRY_ID && role.id === "head_retail"
+      ? "sterling_head_retail"
+      : role.id === "head_cx_retail" ||
+          role.id === "head_cx_retail_v2" ||
+          role.id === "head_client_experience"
+        ? "head_cx"
+        : role.id;
+  const data = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
+>>>>>>> Stashed changes
 
   const IndIcon = industry.icon;
   const RoleIcon = role.icon;
@@ -4205,6 +4223,17 @@ export function RoleDashboardView({
         initialPersona={role.id === "head_cx" ? "coh" : "hob"}
         onExit={onExit}
         theme={theme}
+      />
+    );
+  }
+
+  if (industry.id === NUVAMA_INDUSTRY_ID && role.id === "head_client_experience") {
+    return (
+      <NuvamaWealthDashboard
+        industryName={industry.name}
+        roleName={roleDisplayName(role)}
+        industryColor={industry.color}
+        onExit={onExit}
       />
     );
   }
