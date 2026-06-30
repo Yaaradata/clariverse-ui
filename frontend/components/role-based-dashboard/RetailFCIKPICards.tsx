@@ -35,6 +35,11 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { AISummaryWall, type FCIInsight, type FCIInsightDetails } from '@/components/FCI/AISummaryWall';
+import { swapUsdSymbolDeep, useSterlingHeadRetailCurrencyActive } from '@/lib/role-based-dashboard/sterlingHeadRetailCurrency';
+import {
+  STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS,
+  STERLING_HEAD_RETAIL_AI_SUMMARY,
+} from '@/lib/role-based-dashboard/sterlingHeadRetailAISummaryData';
 
 export type RetailFCIVariant = 'default' | 'sterling-deposit-leak';
 
@@ -42,6 +47,8 @@ interface RetailFCIKPICardsProps {
   data?: unknown;
   isDarkMode?: boolean;
   variant?: RetailFCIVariant;
+  /** Sterling Bank / head_retail — display £ instead of $ (symbol swap only). */
+  sterlingCurrency?: boolean;
 }
 
 const SEGMENT_COLORS = {
@@ -129,9 +136,9 @@ const FRICTION_SIGNALS: Array<{
 ];
 
 const STERLING_WEALTH_TIERS = [
-  { id: 'H1', label: 'H1 · £1M+',       happy: 44, neutral: 26, unhappy: 30, deposits: '£184M', accts: 312  },
-  { id: 'H2', label: 'H2 · £500K–1M',   happy: 51, neutral: 24, unhappy: 25, deposits: '£276M', accts: 624  },
-  { id: 'H3', label: 'H3 · £250K–500K', happy: 58, neutral: 22, unhappy: 20, deposits: '£312M', accts: 1085 },
+  { id: 'A', label: 'Band A · £2K–10K',  happy: 52, neutral: 28, unhappy: 20, deposits: '£142M', accts: 84_200 },
+  { id: 'B', label: 'Band B · £10K–50K', happy: 48, neutral: 26, unhappy: 26, deposits: '£218M', accts: 12_400 },
+  { id: 'C', label: 'Band C · £50K+',    happy: 41, neutral: 24, unhappy: 35, deposits: '£96M',  accts: 1_840 },
 ];
 
 const STERLING_NPS_TREND = [
@@ -188,11 +195,97 @@ const STERLING_FRICTION_SIGNALS: Array<{
   },
 ];
 
+type TopIntentCategory = {
+  key: string;
+  label: string;
+  color: string;
+  cases: number;
+};
+
+type TopIntentSegmentRisk = Record<
+  keyof FrictionSegmentBreakdown,
+  { count: number; level: 'low' | 'medium' | 'high' }
+>;
+
+type TopIntentProfile = {
+  title: string;
+  totalFlagged: number;
+  categories: TopIntentCategory[];
+  segmentRisk: TopIntentSegmentRisk;
+};
+
+/** Retail banking head_retail — generic retail intents */
+const DEFAULT_TOP_INTENT_PROFILE: TopIntentProfile = {
+  title: 'Top Intent',
+  totalFlagged: 16,
+  categories: [
+    { key: 'login', label: 'App Login & Auth', color: '#ef4444', cases: 13 },
+    { key: 'card', label: 'Card Declines', color: '#f59e0b', cases: 10 },
+    { key: 'fee', label: 'Fee Disputes', color: '#06b6d4', cases: 9 },
+    { key: 'wealth', label: 'Wealth / RM', color: '#10b981', cases: 5 },
+  ],
+  segmentRisk: {
+    hvhf: { count: 3, level: 'low' },
+    hvlf: { count: 5, level: 'medium' },
+    lvhf: { count: 4, level: 'high' },
+    lvlf: { count: 4, level: 'high' },
+  },
+};
+
+/** Sterling Bank head_retail — communication-derived restriction / closure intents */
+const STERLING_HEAD_RETAIL_TOP_INTENT_PROFILE: TopIntentProfile = {
+  title: 'Top Intent',
+  totalFlagged: 16,
+  categories: [
+    { key: 'freeze', label: 'Account freeze', color: '#ef4444', cases: 13 },
+    { key: 'payment', label: 'Payment declined', color: '#f59e0b', cases: 10 },
+    { key: 'interest', label: 'Savings interest removed', color: '#06b6d4', cases: 9 },
+    { key: 'closure', label: 'Account closure', color: '#10b981', cases: 5 },
+  ],
+  segmentRisk: {
+    hvhf: { count: 4, level: 'high' },
+    hvlf: { count: 5, level: 'medium' },
+    lvhf: { count: 4, level: 'high' },
+    lvlf: { count: 3, level: 'medium' },
+  },
+};
+
+/** Sterling deposit-leak variant — savings decline handling intents */
+const STERLING_DEPOSIT_LEAK_TOP_INTENT_PROFILE: TopIntentProfile = {
+  title: 'Top Intent — Savings Declines',
+  totalFlagged: 16,
+  categories: [
+    { key: 'decline', label: 'Savings / Easy-Saver decline', color: '#ef4444', cases: 13 },
+    { key: 'reason', label: 'Decline reason not given', color: '#f59e0b', cases: 10 },
+    { key: 'interest', label: 'Interest removal queries', color: '#06b6d4', cases: 9 },
+    { key: 'isa', label: 'ISA / product confusion', color: '#10b981', cases: 5 },
+  ],
+  segmentRisk: {
+    hvhf: { count: 4, level: 'high' },
+    hvlf: { count: 5, level: 'medium' },
+    lvhf: { count: 4, level: 'high' },
+    lvlf: { count: 3, level: 'medium' },
+  },
+};
+
+function resolveTopIntentProfile(
+  variant: RetailFCIVariant,
+  sterlingHeadRetailRoute: boolean,
+): TopIntentProfile {
+  if (variant === 'sterling-deposit-leak') {
+    return STERLING_DEPOSIT_LEAK_TOP_INTENT_PROFILE;
+  }
+  if (sterlingHeadRetailRoute) {
+    return STERLING_HEAD_RETAIL_TOP_INTENT_PROFILE;
+  }
+  return DEFAULT_TOP_INTENT_PROFILE;
+}
+
 const STERLING_AI_SUMMARY: FCIInsight[] = [
   {
     id: 'sterling-deposit-leak',
     severity: 'critical',
-    category: 'operational',
+    category: 'franchise',
     title: 'Deposit Leak',
     message:
       'Savings declines with no reason — deposit outflow accelerating. ~£310K/week leaving from declined high-balance savers.',
@@ -247,7 +340,7 @@ const STERLING_AI_INSIGHT_DETAILS: Record<string, FCIInsightDetails> = {
       'Voice & App decline journeys',
       'Deposit retention',
       'FOS / DISP exposure',
-      'HV balance bands (H1–H3)',
+      'HV balance bands (A–C)',
     ],
     recommendedActions: [
       'Draft reason-code disclosure review separating tipping-off constraints from service failure (never auto-send)',
@@ -280,7 +373,7 @@ const STERLING_AI_INSIGHT_DETAILS: Record<string, FCIInsightDetails> = {
     ],
     estimatedImpact: 'High — 428 rejected applicants in poll window · acquisition drag on savings growth target',
     timeToResolve: '7–14 days for comms draft · 4 weeks for journey alignment',
-    assignedTo: 'Head of Retail Banking · Marketing · Fraud Ops liaison',
+    assignedTo: 'Chief Customer & Banking Officer · Marketing · Fraud Ops liaison',
     priority: 'high',
   },
   'sterling-conduct-disclosure': {
@@ -310,9 +403,17 @@ const STERLING_AI_INSIGHT_DETAILS: Record<string, FCIInsightDetails> = {
 export function RetailFCIKPICards({
   isDarkMode = false,
   variant = 'default',
+  sterlingCurrency = false,
 }: RetailFCIKPICardsProps) {
   const isSterling = variant === 'sterling-deposit-leak';
-  const wealthTiers = isSterling ? STERLING_WEALTH_TIERS : WEALTH_TIERS;
+  const sterlingActive = useSterlingHeadRetailCurrencyActive(sterlingCurrency);
+  const isSterlingHeadRetail = sterlingActive && !isSterling;
+  const topIntentProfile = resolveTopIntentProfile(variant, isSterlingHeadRetail);
+  const wealthTiers = sterlingActive
+    ? swapUsdSymbolDeep(isSterling ? STERLING_WEALTH_TIERS : WEALTH_TIERS)
+    : isSterling
+      ? STERLING_WEALTH_TIERS
+      : WEALTH_TIERS;
   const npsTrend = isSterling ? STERLING_NPS_TREND : NPS_TREND;
   const vulnerableSegments = isSterling ? STERLING_VULNERABLE_SEGMENTS : VULNERABLE_SEGMENTS;
   const frictionSignals = isSterling ? STERLING_FRICTION_SIGNALS : FRICTION_SIGNALS;
@@ -372,12 +473,16 @@ export function RetailFCIKPICards({
       trend: -1.8,
       analyzedInteractions: 540,
       improvementFromYesterday: '-1.2%',
-      negativeTopics: isSterling
-        ? ['Savings decline no reason', 'Interest removal queries']
-        : ['App login / auth', 'Fee & charge disputes'],
-      positiveTopics: isSterling
-        ? ['Clear rate communication', 'Successful ISA opening']
-        : ['Rewards uplift', 'New product onboarding'],
+      negativeTopics: isSterlingHeadRetail
+        ? ['Account freeze — no reason', 'Payment blocked despite funds']
+        : isSterling
+          ? ['Savings decline no reason', 'Interest removal queries']
+          : ['App login / auth', 'Fee & charge disputes'],
+      positiveTopics: isSterlingHeadRetail
+        ? ['Spaces UX praise', 'Fast in-app chat when resolved']
+        : isSterling
+          ? ['Clear rate communication', 'Successful ISA opening']
+          : ['Rewards uplift', 'New product onboarding'],
       npsScore: -12,
       detractors: 38,
       segmentSentiment: {
@@ -410,26 +515,14 @@ export function RetailFCIKPICards({
     transition: 'all 0.2s ease',
   });
 
-  const topIntentCategories = isSterling
-    ? [
-        { key: 'fraud',       label: 'Savings / Easy-Saver decline', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-        { key: 'operational', label: 'Decline reason not given',     color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
-        { key: 'reputation',  label: 'Interest removal queries',     color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
-        { key: 'thirdParty',  label: 'ISA / product confusion',      color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
-      ]
-    : [
-        { key: 'fraud',       label: 'App Login & Auth', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-        { key: 'operational', label: 'Card Declines',    color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
-        { key: 'reputation',  label: 'Fee Disputes',     color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
-        { key: 'thirdParty',  label: 'Wealth / RM',      color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
-      ];
+  const topIntentCategories = topIntentProfile.categories;
 
   const copy = isSterling
     ? {
         totalInteractionsKicker: 'Savings applications & decline-handling volume',
         wealthTitle: 'Deposits at Risk by Balance Band',
         wealthSub: 'Declined-saver deposits at stake',
-        topIntentTitle: 'Top Intent — Savings Declines',
+        topIntentTitle: topIntentProfile.title,
         npsTitle: 'Savings Decline Rate Monitor',
         npsSub: '12-week rolling · HV decline rate worsening fastest (+19 pts)',
         vulnerableTitle: 'High-balance decliners at flight risk',
@@ -441,7 +534,7 @@ export function RetailFCIKPICards({
         totalInteractionsKicker: null as string | null,
         wealthTitle: 'Sentiment by Relationship Value',
         wealthSub: 'Sentiment split · deposits at stake',
-        topIntentTitle: 'Top Intent',
+        topIntentTitle: topIntentProfile.title,
         npsTitle: 'NPS Segment Monitor',
         npsSub: '12-week rolling · HVHF deterioration is fastest (-28 pts)',
         vulnerableTitle: 'Vulnerable Watchlist',
@@ -523,7 +616,7 @@ export function RetailFCIKPICards({
               {(() => {
                 const tableCols = '64px minmax(88px,1fr) 80px 64px 60px';
                 const segmentKeysArr = ['hvhf', 'hvlf', 'lvhf', 'lvlf'] as const;
-                const headers = ['SEGMENT', 'INTERACTIONS', 'WoW', 'SENTIMENT', 'FCI RATE'];
+                const headers = ['SEGMENT', 'INTERACTIONS', 'WoW', 'SENTIMENT', isSterling ? 'FRICTION RATE' : 'FCI RATE'];
                 return (
                   <>
                     <div
@@ -578,7 +671,7 @@ export function RetailFCIKPICards({
                             gridTemplateColumns: tableCols,
                             borderTop: idx === 0 ? 'none' : `1px solid ${isDarkMode ? '#1f1f1f' : '#e5e5e5'}`,
                           }}
-                          title={`${k.toUpperCase()} · ${formatNumber(seg.count)} interactions · WoW ${isUp ? '+' : ''}${delta.toFixed(1)}% · Sentiment ${sentimentLabel} · FCI ${fci.rate}%`}
+                          title={`${k.toUpperCase()} · ${formatNumber(seg.count)} interactions · WoW ${isUp ? '+' : ''}${delta.toFixed(1)}% · Sentiment ${sentimentLabel} · ${isSterling ? 'Friction' : 'FCI'} ${fci.rate}%`}
                         >
                           <span
                             className="inline-flex items-center justify-center text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -733,7 +826,7 @@ export function RetailFCIKPICards({
 
             <div className="flex items-baseline gap-2 mb-2">
               <div className="text-2xl font-bold leading-none" style={{ color: '#ef4444' }}>
-                {formatNumber(kpiData.riskSignal.totalFlagged)}
+                {formatNumber(topIntentProfile.totalFlagged)}
               </div>
               <span className="text-[11px]" style={{ color: '#939394' }}>identified</span>
             </div>
@@ -777,7 +870,7 @@ export function RetailFCIKPICards({
               <div>
                 <p className="text-[9px] font-bold mb-1 tracking-wide" style={{ color: '#939394' }}>INTENT VOLUME BY SEGMENT</p>
                 <div className="grid grid-cols-4 gap-1">
-                  {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
+                  {Object.entries(topIntentProfile.segmentRisk).map(([key, segment]) => {
                     const labels: Record<string, string> = {
                       hvhf: 'HVHF',
                       hvlf: 'HVLF',
@@ -1084,8 +1177,25 @@ export function RetailFCIKPICards({
         <div className="flex-1 min-w-0 relative self-stretch">
           <div className="absolute inset-0">
             <AISummaryWall
-              data={isSterling ? STERLING_AI_SUMMARY : undefined}
-              insightDetailsMap={isSterling ? STERLING_AI_INSIGHT_DETAILS : undefined}
+              data={
+                isSterling
+                  ? STERLING_AI_SUMMARY
+                  : isSterlingHeadRetail
+                    ? STERLING_HEAD_RETAIL_AI_SUMMARY
+                    : undefined
+              }
+              insightDetailsMap={
+                isSterling
+                  ? STERLING_AI_INSIGHT_DETAILS
+                  : isSterlingHeadRetail
+                    ? STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS
+                    : undefined
+              }
+              intelligenceSubtitle={
+                isSterling || isSterlingHeadRetail
+                  ? 'Real-time franchise intelligence'
+                  : undefined
+              }
               isDarkMode={isDarkMode}
               height="100%"
             />

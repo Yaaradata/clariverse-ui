@@ -29,6 +29,17 @@ import { ChannelSentimentSplitChart, type ChannelSentimentSplitEntry } from "@/c
 // Reused from retail drill-downs (these are role-based local copies — generic content)
 import { RetailSLAPerformanceOverview } from "./RetailSLAPerformanceOverview";
 import { RetailIntentPressureAlerts } from "./RetailIntentPressureAlerts";
+import {
+  STERLING_HEAD_CONTACT_LEADING_INTENTS,
+  STERLING_HEAD_CONTACT_REPEAT_BY_INTENT,
+  STERLING_HEAD_CONTACT_RECOVERY_TOP_INTENTS,
+  type SterlingContactRecoveryQuadrantId,
+} from "@/lib/role-based-dashboard/sterlingHeadContactIntentsData";
+import {
+  STERLING_HEAD_CONTACT_DRILL1_INSIGHTS,
+  STERLING_HEAD_CONTACT_DRILL2_INSIGHTS,
+  STERLING_HEAD_CONTACT_DRILL3_INSIGHTS,
+} from "@/lib/role-based-dashboard/sterlingHeadContactAISummaryData";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Shared shells — DrillPageHeader · AIPanel · HeroSummaryWall · ChartTip
@@ -256,16 +267,23 @@ function StatPill({
 }
 
 /* ═════════════════════════════════════════════════════════════════════════
-   DRILL 1 — Is every contact ending well?
-   FLOW (headshot → diagnosis → breakdown → prioritisation)
-     ROW 1  · Contact Health Score + 12-week trend  +  AI Summary Wall
-     ROW 2  · KPI strip (Post-CSAT · FCR · Repeat · Premature · Tone)
-     ROW 3  · Per-channel Quality Matrix (operational diagnosis up front)
-     ROW 4  · Where contacts fail to end well — stacked-bar + lightweight
-              click panel (worst channel, repeat/premature/tone, fix)
-     ROW 5  · Repeat-Contact Drivers  |  Contact Recovery Priority Matrix
-              (Eisenhower-style: Do Now · Schedule · Delegate · Monitor)
+   DRILL 1 — Is every contact ending well?  (default)
+   Sterling variant: sterling-service-attrition — franchise consequence drill
+   sterling-contact — retail layout with UK intent labels (Sterling head_contact)
    ═════════════════════════════════════════════════════════════════════════ */
+
+export type ContactExperienceDrillVariant =
+  | "default"
+  | "sterling-contact"
+  | "sterling-service-attrition";
+
+function usesSterlingContactIntents(
+  variant?: ContactExperienceDrillVariant,
+): boolean {
+  return (
+    variant === "sterling-contact" || variant === "sterling-service-attrition"
+  );
+}
 
 const CONTACT_HEALTH_TREND = [
   { w: "W-11", v: 76 }, { w: "W-10", v: 74 }, { w: "W-9", v: 73 }, { w: "W-8", v: 72 },
@@ -298,36 +316,227 @@ const REPEAT_BY_INTENT = [
   { intent: "Other",                repeats: 134, share: 10, color: "#64748B" },
 ];
 
-function ContactHealthHero() {
+const STERLING_ATTRITION_RISK_TREND = [
+  { w: "W-11", v: 62 }, { w: "W-10", v: 63 }, { w: "W-9", v: 63 }, { w: "W-8", v: 64 },
+  { w: "W-7",  v: 65 }, { w: "W-6",  v: 65 }, { w: "W-5", v: 66 }, { w: "W-4", v: 66 },
+  { w: "W-3",  v: 67 }, { w: "W-2",  v: 67 }, { w: "W-1", v: 68 }, { w: "Now", v: 68 },
+];
+
+const STERLING_FRANCHISE_KPI_PACK = [
+  { label: "Service-driven switch-intent", value: "22%", delta: "+8", target: "Franchise risk ↑", color: "#EF4444", deltaTone: "down" as const },
+  { label: "Avoidable cost-to-serve / wk", value: "£142K", delta: "+£18K", target: "vs £124K prior wk", color: "#EF4444", deltaTone: "down" as const },
+  { label: "Agentic-AI containment", value: "84%", delta: "−3", target: "H6 · target > 90%", color: "#F59E0B", deltaTone: "down" as const },
+  { label: "Avoidable repeat-contact", value: "19%", delta: "+5", target: "Cost-to-serve driver", color: "#EF4444", deltaTone: "down" as const },
+  { label: "Reputation→acquisition drag", value: "−11 pts", delta: "w/w", target: "Acquisition-channel NPS", color: "#EF4444", deltaTone: "down" as const },
+];
+
+const STERLING_COST_MATRIX = [
+  { ch: "Phone",       icon: Phone,         switchIntent: 22, avoidRepeat: 19, costLeak: 48, containment: 86 },
+  { ch: "In-app chat", icon: MessageSquare, switchIntent: 26, avoidRepeat: 24, costLeak: 62, containment: 82 },
+  { ch: "Email",       icon: Mail,          switchIntent: 18, avoidRepeat: 20, costLeak: 34, containment: 88 },
+  { ch: "Complaints",  icon: Flag,          switchIntent: 24, avoidRepeat: 27, costLeak: 41, containment: 79 },
+];
+
+const STERLING_POOR_ENDING_CHANNELS = ["Phone", "Chat", "Email", "Complaints"] as const;
+type SterlingPoorEndingChannel = typeof STERLING_POOR_ENDING_CHANNELS[number];
+
+const STERLING_POOR_ENDING_CHANNEL_COLORS: Record<SterlingPoorEndingChannel, string> = {
+  Phone: "#EF4444",
+  Chat: "#F59E0B",
+  Email: "#06B6D4",
+  Complaints: "#A78BFA",
+};
+
+type SterlingPoorEndingDetail = {
+  category: string;
+  total: number;
+  channels: Record<SterlingPoorEndingChannel, number>;
+  worstChannels: SterlingPoorEndingChannel[];
+  switchIntent: number;
+  avoidRepeat: number;
+  costLeakK: number;
+  mainReason: string;
+  aiInsight: string;
+  recommendedFix: string;
+};
+
+const STERLING_POOR_ENDING_CONTACTS: SterlingPoorEndingDetail[] = [
+  {
+    category: "Account Access & Security",
+    total: 2847,
+    channels: { Phone: 712, Chat: 1023, Email: 398, Complaints: 714 },
+    worstChannels: ["Chat", "Complaints"],
+    switchIntent: 28, avoidRepeat: 24, costLeakK: 38,
+    mainReason: "Passcode/PIN reset and account-lockout flows close before the customer can transact — switch-intent follows.",
+    aiInsight: "Passcode/PIN reset and account-lockout flows are creating unresolved closures and override calls.",
+    recommendedFix: "Push passcode reset to in-app self-serve; add closure-confirmation step before ending chat — route flow change to COO.",
+  },
+  {
+    category: "Card & Payments",
+    total: 2134,
+    channels: { Phone: 982, Chat: 254, Email: 543, Complaints: 355 },
+    worstChannels: ["Phone", "Email"],
+    switchIntent: 31, avoidRepeat: 27, costLeakK: 44,
+    mainReason: "Payment declines and card blocks drive repeat contacts before funds clear — cost-to-serve leak on avoidable voice.",
+    aiInsight: "False-positive payee blocks trigger override calls; customers re-contact before the decline reason is visible in-app.",
+    recommendedFix: "Route rule-tuning to fraud-ops; surface decline reason in-app before human handoff — never auto-send.",
+  },
+  {
+    category: "Savings & Easy-Saver",
+    total: 1432,
+    channels: { Phone: 467, Chat: 524, Email: 178, Complaints: 263 },
+    worstChannels: ["Chat", "Phone"],
+    switchIntent: 35, avoidRepeat: 22, costLeakK: 29,
+    mainReason: "Interest-rate and Easy-Saver queries end without save context — switch language appears in voice within 48h.",
+    aiInsight: "Savings decline and rate-removal voice precedes outbound transfers; franchise attrition risk concentrated here.",
+    recommendedFix: "Draft save-offer for flight-risk savers — never auto-send; Distil switch-intent for primacy cohort.",
+  },
+  {
+    category: "Fraud & Scam",
+    total: 1654,
+    channels: { Phone: 794, Chat: 149, Email: 463, Complaints: 248 },
+    worstChannels: ["Phone", "Complaints"],
+    switchIntent: 24, avoidRepeat: 19, costLeakK: 31,
+    mainReason: "Scam-report journeys close at 'report logged' while funds remain at risk — repeat contacts inflate cost-to-serve.",
+    aiInsight: "Containment failures on scam intents drive avoidable repeats; FOS / Consumer Duty exposure on outcome clarity.",
+    recommendedFix: "Escalate fraud-ops playbook update to COO; Raghu tracks franchise harm from repeat scam contacts.",
+  },
+  {
+    category: "Direct Debit & Payroll",
+    total: 1287,
+    channels: { Phone: 232, Chat: 579, Email: 154, Complaints: 322 },
+    worstChannels: ["Chat", "Complaints"],
+    switchIntent: 26, avoidRepeat: 21, costLeakK: 26,
+    mainReason: "Payroll and mandate failures close without confirming the next payment date — primacy customers re-contact.",
+    aiInsight: "Salary-switch precursors cluster on mandate failures; switch-intent rises before CASS data moves.",
+    recommendedFix: "Expand Assistant containment on mandate status; draft payroll-switch retention outreach — never auto-send.",
+  },
+  {
+    category: "Onboarding & KYC",
+    total: 1184,
+    channels: { Phone: 312, Chat: 498, Email: 214, Complaints: 160 },
+    worstChannels: ["Chat", "Phone"],
+    switchIntent: 19, avoidRepeat: 18, costLeakK: 22,
+    mainReason: "Viable applicants stall on document re-submission — growth lost and avoidable support cost compound.",
+    aiInsight: "Onboarding friction inflates cost-to-serve without deposit capture; viable-rejected voice rising.",
+    recommendedFix: "Escalate KYC-criteria calibration to CRO; Raghu tracks growth lost + experience of viable-rejected.",
+  },
+  {
+    category: "Account Closure & Switching",
+    total: 1543,
+    channels: { Phone: 821, Chat: 198, Email: 312, Complaints: 212 },
+    worstChannels: ["Phone", "Complaints"],
+    switchIntent: 38, avoidRepeat: 16, costLeakK: 36,
+    mainReason: "Closure intents handled as informational — switch-intent in voice precedes outbound transfers.",
+    aiInsight: "'Moving to Monzo/Chase' language in voice before balances clear; retention window narrowing.",
+    recommendedFix: "Draft retention/service-fix for switch-intent cohort — never auto-send; route queue execution to COO.",
+  },
+];
+
+const STERLING_RETENTION_EXPOSURE = [
+  {
+    rank: 1,
+    label: "Primary-account · switch-intent voice",
+    balance: "£842K",
+    accounts: 284,
+    primacy: "Primary",
+    action: "Draft save-offer for flight-risk cohort — never auto-send",
+  },
+  {
+    rank: 2,
+    label: "High-balance · fee/charge dispute repeat",
+    balance: "£410K",
+    accounts: 156,
+    primacy: "Primary",
+    action: "Draft fee-resolution outreach — never auto-send",
+  },
+  {
+    rank: 3,
+    label: "Easy-Saver · rate-removal voice",
+    balance: "£318K",
+    accounts: 92,
+    primacy: "Secondary",
+    action: "Draft Easy-Saver save-offer — never auto-send",
+  },
+  {
+    rank: 4,
+    label: "Payment-declined · repeat within 7d",
+    balance: "£186K",
+    accounts: 214,
+    primacy: "Primary",
+    action: "Route containment fix to fraud-ops; quantify cost-to-serve here",
+  },
+];
+
+const STERLING_DRILL1_INSIGHTS: HeroInsight[] = [
+  {
+    tone: "danger",
+    title: "Avoidable cost-to-serve concentrates on Email + Chat",
+    body: "Email avoid-repeat 20% and Chat switch-intent 26% are the worst cells. These two channels account for ~58% of avoidable cost-to-serve this week.",
+  },
+  {
+    tone: "warning",
+    title: "Fee/charge disputes and payment declines drive ~49% of avoidable repeats",
+    body: "412 + 248 avoidable repeats — 49% of total. Avoidable repeats inflate cost-to-serve; route containment and dispute flows to COO.",
+  },
+  {
+    tone: "info",
+    title: "Switch-intent rising fastest among primary-account holders",
+    body: "Service-driven switch-intent up 8 pts among primacy customers — £842K balance-at-risk in voice before transfers move. Draft retention exposure review.",
+  },
+];
+
+function ContactHealthHero({
+  variant = "default",
+}: {
+  variant?: ContactExperienceDrillVariant;
+}) {
   const T = useDashboardTheme();
-  const score = CONTACT_HEALTH_TREND[CONTACT_HEALTH_TREND.length - 1].v;
-  const start = CONTACT_HEALTH_TREND[0].v;
+  const isSterling = variant === "sterling-service-attrition";
+  const trend = isSterling ? STERLING_ATTRITION_RISK_TREND : CONTACT_HEALTH_TREND;
+  const score = trend[trend.length - 1].v;
+  const start = trend[0].v;
   const delta = score - start;
-  const stroke = T.amber;
+  const stroke = isSterling ? T.red : T.amber;
+  const deltaWorsening = isSterling ? delta > 0 : delta < 0;
+  const DeltaIcon = isSterling
+    ? delta > 0
+      ? TrendingUp
+      : TrendingDown
+    : TrendingDown;
   return (
     <AIPanel
-      title="Contact Health Score"
-      subtitle="Composite of post-contact CSAT, FCR, repeat-contact and tone drift · 12-week trend"
+      title={isSterling ? "Service-driven attrition risk" : "Contact Health Score"}
+      subtitle={
+        isSterling
+          ? "Composite switch-intent, avoidable repeat-contact and cost-to-serve leak · 12-week trend"
+          : "Composite of post-contact CSAT, FCR, repeat-contact and tone drift · 12-week trend"
+      }
       accentColor={stroke}
       ai
-      aiModel="Contact Quality Index"
+      aiModel={isSterling ? "Franchise Risk Index" : "Contact Quality Index"}
       fill
     >
       <div style={{ display: "grid", gridTemplateColumns: "minmax(220px, 280px) minmax(280px, 1fr)", gap: 16, alignItems: "stretch", flex: 1, width: "100%", minWidth: 0 }}>
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 6, minWidth: 0 }}>
           <div style={{ fontSize: 56, fontWeight: 800, color: stroke, fontFamily: "var(--mono)", lineHeight: 1 }}>{score}</div>
-          <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>out of 100</div>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 800, color: T.red, fontFamily: "var(--mono)", marginTop: 6 }}>
-            <TrendingDown size={12} />
-            {delta} pts vs 12w ago
+          <div style={{ fontSize: 11, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.5 }}>
+            {isSterling ? "attrition risk index" : "out of 100"}
+          </div>
+          <div style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 800, color: deltaWorsening ? T.red : T.green, fontFamily: "var(--mono)", marginTop: 6 }}>
+            <DeltaIcon size={12} />
+            {delta > 0 ? `+${delta}` : delta} pts vs 12w ago
           </div>
           <div style={{ fontSize: 11, color: T.textSec, marginTop: 4, lineHeight: 1.4 }}>
-            <strong style={{ color: T.text }}>Verdict:</strong> contact-quality eroding for the 11th week. Per-contact CSAT and Tone Drift are the lead drag.
+            <strong style={{ color: T.text }}>Verdict:</strong>{" "}
+            {isSterling
+              ? "Softening service endings are converting to switch-intent in voice before balances move; cost-to-serve rising on avoidable contacts."
+              : "contact-quality eroding for the 11th week. Per-contact CSAT and Tone Drift are the lead drag."}
           </div>
         </div>
         <div style={{ minHeight: 160, flex: 1 }}>
           <ResponsiveContainer>
-            <AreaChart data={CONTACT_HEALTH_TREND} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
+            <AreaChart data={trend} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id="contact-health-grad" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor={stroke} stopOpacity={0.5} />
@@ -336,8 +545,8 @@ function ContactHealthHero() {
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke={T.borderLight} vertical={false} />
               <XAxis dataKey="w" stroke={T.textMut} fontSize={10} />
-              <YAxis domain={[55, 80]} stroke={T.textMut} fontSize={10} />
-              <Tooltip content={(p: any) => <ChartTip {...p} T={T} valueSuffix=" / 100" />} />
+              <YAxis domain={isSterling ? [58, 72] : [55, 80]} stroke={T.textMut} fontSize={10} />
+              <Tooltip content={(p: any) => <ChartTip {...p} T={T} valueSuffix={isSterling ? " risk" : " / 100"} />} />
               <Area type="monotone" dataKey="v" stroke={stroke} strokeWidth={2.5} fill="url(#contact-health-grad)" />
             </AreaChart>
           </ResponsiveContainer>
@@ -347,16 +556,26 @@ function ContactHealthHero() {
   );
 }
 
-function ContactKPIPack() {
+function ContactKPIPack({
+  variant = "default",
+}: {
+  variant?: ContactExperienceDrillVariant;
+}) {
+  const isSterling = variant === "sterling-service-attrition";
+  const pack = isSterling ? STERLING_FRANCHISE_KPI_PACK : CONTACT_KPI_PACK;
   return (
     <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-      {CONTACT_KPI_PACK.map((k) => (
+      {pack.map((k) => (
         <StatPill
           key={k.label}
           label={k.label}
           value={k.value}
           delta={k.delta}
-          deltaTone="down"
+          deltaTone={
+            isSterling
+              ? (k as (typeof STERLING_FRANCHISE_KPI_PACK)[number]).deltaTone
+              : "down"
+          }
           target={k.target}
           color={k.color}
         />
@@ -365,10 +584,15 @@ function ContactKPIPack() {
   );
 }
 
-function QualityMatrixPanel() {
+function QualityMatrixPanel({
+  variant = "default",
+}: {
+  variant?: ContactExperienceDrillVariant;
+}) {
   const T = useDashboardTheme();
-  const cell = (val: number, kind: "good" | "bad") => {
-    // good: higher is better (csat/fcr); bad: lower is better (repeat/premature/tone)
+  const isSterling = variant === "sterling-service-attrition";
+
+  const pctCell = (val: number, kind: "good" | "bad") => {
     const isHealthy = kind === "good" ? val >= 80 : val <= 10;
     const isWatch = kind === "good" ? val >= 70 : val <= 20;
     const c = isHealthy ? T.green : isWatch ? T.amber : T.red;
@@ -384,6 +608,103 @@ function QualityMatrixPanel() {
       </span>
     );
   };
+
+  const sterlingCell = (val: number | string, tone: "good" | "bad" | "money") => {
+    const num = typeof val === "number" ? val : parseFloat(val);
+    const c =
+      tone === "money"
+        ? num >= 50
+          ? T.red
+          : num >= 35
+            ? T.amber
+            : T.green
+        : tone === "good"
+          ? num >= 85
+            ? T.green
+            : num >= 78
+              ? T.amber
+              : T.red
+          : num <= 20
+            ? T.green
+            : num <= 25
+              ? T.amber
+              : T.red;
+    return (
+      <span style={{
+        display: "inline-flex", alignItems: "center", justifyContent: "center",
+        minWidth: 56, padding: "5px 10px",
+        background: `${c}18`, border: `1px solid ${c}45`,
+        borderRadius: 6, color: c,
+        fontSize: 12.5, fontWeight: 800, fontFamily: "var(--mono)",
+      }}>
+        {typeof val === "number" && tone === "money" ? `£${val}K` : `${val}${tone === "money" ? "" : "%"}`}
+      </span>
+    );
+  };
+
+  if (isSterling) {
+    const sterlingHeaders = ["Channel", "Switch-intent ↑", "Avoid repeat ↓", "Cost leak/wk ↑", "Containment ↑"];
+    return (
+      <AIPanel
+        title="Where avoidable cost-to-serve concentrates by channel"
+        subtitle="Switch-intent, avoidable repeat, weekly cost leak and Assistant containment — franchise-weighted read"
+        accentColor={T.cyan}
+      >
+        <div style={{ overflowX: "auto" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(140px, 1fr) repeat(4, minmax(110px, 1fr))",
+            gap: 0, minWidth: 680,
+            border: `1px solid ${T.borderLight}`, borderRadius: 10, overflow: "hidden",
+          }}>
+            {sterlingHeaders.map((label, i) => (
+              <div key={`sh-${i}`} style={{
+                padding: "10px 12px", background: T.surface,
+                borderBottom: `1px solid ${T.borderLight}`,
+                fontSize: 10.5, fontWeight: 800, color: T.textSec,
+                letterSpacing: 0.6, textTransform: "uppercase",
+              }}>
+                {label}
+              </div>
+            ))}
+            {STERLING_COST_MATRIX.map((row, ri) => {
+              const Icon = row.icon;
+              return (
+                <div key={`sr-${ri}`} style={{ display: "contents" }}>
+                  <div style={{
+                    padding: "12px", display: "flex", alignItems: "center", gap: 8,
+                    borderTop: ri === 0 ? "none" : `1px solid ${T.borderLight}`,
+                    background: ri % 2 === 0 ? "transparent" : `${T.borderLight}12`,
+                  }}>
+                    <Icon size={14} color={T.cyan} />
+                    <span style={{ fontSize: 12.5, fontWeight: 700, color: T.text }}>{row.ch}</span>
+                  </div>
+                  {[
+                    { v: row.switchIntent, tone: "bad" as const },
+                    { v: row.avoidRepeat, tone: "bad" as const },
+                    { v: row.costLeak, tone: "money" as const },
+                    { v: row.containment, tone: "good" as const },
+                  ].map((c, ci) => (
+                    <div key={`sr-${ri}-c-${ci}`} style={{
+                      padding: "12px", display: "flex", alignItems: "center", justifyContent: "flex-start",
+                      borderTop: ri === 0 ? "none" : `1px solid ${T.borderLight}`,
+                      background: ri % 2 === 0 ? "transparent" : `${T.borderLight}12`,
+                    }}>
+                      {sterlingCell(c.v, c.tone)}
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <div style={{ marginTop: 10, fontSize: 11, color: T.textMut, lineHeight: 1.5 }}>
+          <strong style={{ color: T.red }}>Hotspot:</strong> In-app chat and Complaints carry the highest cost leak and switch-intent · Phone containment holds best.
+        </div>
+      </AIPanel>
+    );
+  }
+
   const headers: { label: string; tip: string }[] = [
     { label: "Channel", tip: "" },
     { label: "Post-CSAT ↑", tip: "Higher = healthier" },
@@ -439,7 +760,7 @@ function QualityMatrixPanel() {
                     borderTop: ri === 0 ? "none" : `1px solid ${T.borderLight}`,
                     background: ri % 2 === 0 ? "transparent" : `${T.borderLight}12`,
                   }}>
-                    {cell(c.v, c.kind)}
+                    {pctCell(c.v, c.kind)}
                   </div>
                 ))}
               </div>
@@ -454,13 +775,26 @@ function QualityMatrixPanel() {
   );
 }
 
-function RepeatContactByIntentPanel() {
+function RepeatContactByIntentPanel({
+  variant = "default",
+}: {
+  variant?: ContactExperienceDrillVariant;
+}) {
   const T = useDashboardTheme();
-  const data = REPEAT_BY_INTENT.map((r) => ({ ...r }));
+  const isSterlingFranchise = variant === "sterling-service-attrition";
+  const data = (
+    usesSterlingContactIntents(variant)
+      ? STERLING_HEAD_CONTACT_REPEAT_BY_INTENT
+      : REPEAT_BY_INTENT
+  ).map((r) => ({ ...r }));
   return (
     <AIPanel
       title="Where do customers come back?"
-      subtitle="Repeat-contact volume by intent · top playbook gaps"
+      subtitle={
+        isSterlingFranchise
+          ? "Avoidable repeat-contact by intent · cost-to-serve concentration"
+          : "Repeat-contact volume by intent · top playbook gaps"
+      }
       accentColor={T.amber}
       ai
       aiModel="Repeat-Contact Mining"
@@ -480,8 +814,10 @@ function RepeatContactByIntentPanel() {
         </ResponsiveContainer>
       </div>
       <div style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${T.borderLight}`, display: "flex", justifyContent: "space-between", fontSize: 11, color: T.textMut }}>
-        <span>Top 2 intents = 49% of all repeats</span>
-        <span style={{ color: T.amber, fontWeight: 700 }}>Playbook gap detected</span>
+        <span>Top 2 intents = 49% of {isSterlingFranchise ? "avoidable repeats" : "all repeats"}</span>
+        <span style={{ color: T.amber, fontWeight: 700 }}>
+          {isSterlingFranchise ? "Cost-to-serve concentration" : "Playbook gap detected"}
+        </span>
       </div>
     </AIPanel>
   );
@@ -688,9 +1024,156 @@ function PoorEndingDetailPanel({ selected }: { selected: PoorEndingDetail }) {
   );
 }
 
-function PoorEndingContactsPanel() {
+function SterlingPoorEndingDetailPanel({
+  selected,
+}: {
+  selected: SterlingPoorEndingDetail;
+}) {
   const T = useDashboardTheme();
-  const [selectedId, setSelectedId] = useState<string>(POOR_ENDING_CONTACTS[0].category);
+  const metricColor = (val: number, threshold: number) =>
+    val >= threshold ? T.red : T.amber;
+  const metrics: { label: string; value: number; threshold: number; suffix: string }[] = [
+    { label: "Switch-intent", value: selected.switchIntent, threshold: 25, suffix: "%" },
+    { label: "Avoid repeat", value: selected.avoidRepeat, threshold: 22, suffix: "%" },
+    { label: "Cost leak", value: selected.costLeakK, threshold: 35, suffix: "K/wk" },
+  ];
+  return (
+    <div style={{
+      display: "flex", flexDirection: "column", gap: 12,
+      background: T.surface, border: `1px solid ${T.borderLight}`,
+      borderRadius: 12, padding: 14, minHeight: 340,
+    }}>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 800, color: T.text, marginBottom: 4 }}>{selected.category}</div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 26, fontWeight: 800, color: T.red, fontFamily: "var(--mono)", lineHeight: 1 }}>
+            {selected.total.toLocaleString()}
+          </span>
+          <span style={{ fontSize: 11, color: T.textMut }}>avoidable cost-to-serve contacts</span>
+        </div>
+        <div style={{ fontSize: 11, color: T.textSec, marginTop: 6 }}>
+          <span style={{ color: T.textMut }}>Worst channel: </span>
+          <strong style={{ color: T.red }}>{selected.worstChannels.join(" + ")}</strong>
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+        {metrics.map((m) => {
+          const c = metricColor(m.value, m.threshold);
+          return (
+            <div key={m.label} style={{
+              background: `${c}12`, border: `1px solid ${c}40`,
+              borderRadius: 8, padding: "8px 10px", textAlign: "center",
+            }}>
+              <div style={{ fontSize: 9, fontWeight: 800, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.6 }}>
+                {m.label}
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 800, color: c, fontFamily: "var(--mono)", marginTop: 2 }}>
+                {m.suffix === "K/wk" ? `£${m.value}${m.suffix.replace("/wk", "")}` : `${m.value}${m.suffix}`}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div>
+        <div style={{ fontSize: 9, fontWeight: 800, color: T.textMut, textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 4 }}>
+          Franchise signal
+        </div>
+        <div style={{ fontSize: 12, color: T.textSec, lineHeight: 1.5 }}>{selected.mainReason}</div>
+      </div>
+
+      <div style={{
+        background: `${T.purple}10`, border: `1px solid ${T.purple}35`,
+        borderRadius: 10, padding: "10px 12px",
+      }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+          <Sparkles size={11} color={T.purple} />
+          <span style={{ fontSize: 9, fontWeight: 800, color: T.purple, textTransform: "uppercase", letterSpacing: 0.7 }}>
+            AI Insight
+          </span>
+        </div>
+        <div style={{ fontSize: 12, color: T.textSec, lineHeight: 1.5 }}>{selected.aiInsight}</div>
+      </div>
+
+      <div style={{
+        background: `${T.green}10`, border: `1px solid ${T.green}35`,
+        borderRadius: 10, padding: "10px 12px",
+      }}>
+        <div style={{ display: "inline-flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+          <ShieldCheck size={11} color={T.green} />
+          <span style={{ fontSize: 9, fontWeight: 800, color: T.green, textTransform: "uppercase", letterSpacing: 0.7 }}>
+            Draft action
+          </span>
+        </div>
+        <div style={{ fontSize: 12, color: T.textSec, lineHeight: 1.5 }}>{selected.recommendedFix}</div>
+      </div>
+    </div>
+  );
+}
+
+function PoorEndingContactsPanel({
+  variant = "default",
+}: {
+  variant?: ContactExperienceDrillVariant;
+}) {
+  const T = useDashboardTheme();
+  const isSterling = variant === "sterling-service-attrition";
+  const [selectedId, setSelectedId] = useState<string>(
+    isSterling
+      ? STERLING_POOR_ENDING_CONTACTS[0].category
+      : POOR_ENDING_CONTACTS[0].category,
+  );
+
+  if (isSterling) {
+    const selected =
+      STERLING_POOR_ENDING_CONTACTS.find((c) => c.category === selectedId) ??
+      STERLING_POOR_ENDING_CONTACTS[0];
+    const chartData = STERLING_POOR_ENDING_CONTACTS.map((c) => ({
+      category: c.category,
+      Phone: c.channels.Phone,
+      Chat: c.channels.Chat,
+      Email: c.channels.Email,
+      Complaints: c.channels.Complaints,
+    }));
+    return (
+      <AIPanel
+        title="Where avoidable cost-to-serve concentrates"
+        subtitle="Stacked by channel · click a bar to see switch-intent exposure and draft franchise action"
+        accentColor={T.red}
+        ai
+        aiModel="Cost-to-Serve Diagnostics"
+      >
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.4fr) minmax(280px, 1fr)", gap: 16, alignItems: "stretch" }}>
+          <div style={{ minHeight: 380 }}>
+            <ResponsiveContainer width="100%" height={380}>
+              <BarChart data={chartData} layout="vertical" margin={{ top: 4, right: 14, left: 14, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke={T.borderLight} horizontal={false} />
+                <XAxis type="number" stroke={T.textMut} fontSize={10} />
+                <YAxis type="category" dataKey="category" stroke={T.textSec} fontSize={10} width={190} />
+                <Tooltip cursor={{ fill: `${T.cyan}10` }} content={(p: any) => <StackedChannelTooltip {...p} T={T} />} />
+                <Legend wrapperStyle={{ fontSize: 10, color: T.textMut }} />
+                {STERLING_POOR_ENDING_CHANNELS.map((ch) => (
+                  <Bar
+                    key={ch}
+                    dataKey={ch}
+                    stackId="ch"
+                    fill={STERLING_POOR_ENDING_CHANNEL_COLORS[ch]}
+                    cursor="pointer"
+                    onClick={(p: any) => {
+                      if (p && typeof p.category === "string") setSelectedId(p.category);
+                    }}
+                  />
+                ))}
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <SterlingPoorEndingDetailPanel selected={selected} />
+        </div>
+      </AIPanel>
+    );
+  }
+
   const selected = POOR_ENDING_CONTACTS.find((c) => c.category === selectedId) ?? POOR_ENDING_CONTACTS[0];
   const chartData = POOR_ENDING_CONTACTS.map((c) => ({
     category: c.category,
@@ -813,10 +1296,25 @@ const RECOVERY_QUADRANTS: RecoveryQuadrant[] = [
   },
 ];
 
-function ContactRecoveryPriorityMatrix() {
+function ContactRecoveryPriorityMatrix({
+  variant = "default",
+}: {
+  variant?: ContactExperienceDrillVariant;
+}) {
   const T = useDashboardTheme();
   const [selectedId, setSelectedId] = useState<RecoveryQuadrantId>("do_now");
-  const selected = RECOVERY_QUADRANTS.find((q) => q.id === selectedId) ?? RECOVERY_QUADRANTS[0];
+  const quadrants =
+    variant === "sterling-contact"
+      ? RECOVERY_QUADRANTS.map((q) => ({
+          ...q,
+          topIntents: [
+            ...STERLING_HEAD_CONTACT_RECOVERY_TOP_INTENTS[
+              q.id as SterlingContactRecoveryQuadrantId
+            ],
+          ],
+        }))
+      : RECOVERY_QUADRANTS;
+  const selected = quadrants.find((q) => q.id === selectedId) ?? quadrants[0];
   return (
     <AIPanel
       title="Contact Recovery Priority Matrix"
@@ -827,7 +1325,7 @@ function ContactRecoveryPriorityMatrix() {
       fill
     >
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-        {RECOVERY_QUADRANTS.map((q) => {
+        {quadrants.map((q) => {
           const active = q.id === selectedId;
           const QIcon = q.Icon;
           return (
@@ -898,6 +1396,73 @@ function ContactRecoveryPriorityMatrix() {
   );
 }
 
+function ServiceDrivenRetentionPanel() {
+  const T = useDashboardTheme();
+  const [selectedRank, setSelectedRank] = useState(STERLING_RETENTION_EXPOSURE[0].rank);
+  const selected =
+    STERLING_RETENTION_EXPOSURE.find((r) => r.rank === selectedRank) ??
+    STERLING_RETENTION_EXPOSURE[0];
+  return (
+    <AIPanel
+      title="Service-driven retention exposure"
+      subtitle="Poor-ending / switch-intent contacts ranked by balance-at-risk and primacy"
+      accentColor={T.cyan}
+      ai
+      aiModel="Franchise Retention Ranker"
+      fill
+    >
+      <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        {STERLING_RETENTION_EXPOSURE.map((row) => {
+          const active = row.rank === selectedRank;
+          return (
+            <button
+              key={row.rank}
+              type="button"
+              onClick={() => setSelectedRank(row.rank)}
+              style={{
+                textAlign: "left",
+                background: active ? `${T.red}14` : T.surface,
+                border: `1px solid ${active ? T.red : T.borderLight}`,
+                borderLeft: `3px solid ${active ? T.red : T.borderLight}`,
+                borderRadius: 10,
+                padding: "10px 12px",
+                cursor: "pointer",
+                color: T.text,
+                fontFamily: "inherit",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "baseline" }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: T.text }}>{row.rank}. {row.label}</span>
+                <span style={{ fontSize: 14, fontWeight: 800, color: T.red, fontFamily: "var(--mono)" }}>{row.balance}</span>
+              </div>
+              <div style={{ fontSize: 11, color: T.textMut, marginTop: 4 }}>
+                {row.accounts} accounts · {row.primacy} primacy
+              </div>
+            </button>
+          );
+        })}
+      </div>
+      <div style={{
+        marginTop: 10, padding: "10px 12px",
+        background: `${T.amber}10`,
+        borderTop: `1px solid ${T.amber}40`,
+        borderRight: `1px solid ${T.amber}40`,
+        borderBottom: `1px solid ${T.amber}40`,
+        borderLeft: `3px solid ${T.amber}`,
+        borderRadius: 10,
+      }}>
+        <div style={{ fontSize: 9, fontWeight: 800, color: T.amber, textTransform: "uppercase", letterSpacing: 0.6, marginBottom: 4 }}>
+          Draft action · never auto-send
+        </div>
+        <div style={{ fontSize: 12, color: T.textSec, lineHeight: 1.5 }}>{selected.action}</div>
+      </div>
+      <div style={{ marginTop: 8, fontSize: 11, color: T.textMut, lineHeight: 1.45 }}>
+        Recovery-queue execution routes to COO — Raghu tracks franchise harm, not staffing.
+      </div>
+    </AIPanel>
+  );
+}
+
 const DRILL1_INSIGHTS: HeroInsight[] = [
   { tone: "danger",
     title: "Per-contact resolution is breaking on Ticket + Chat",
@@ -910,34 +1475,50 @@ const DRILL1_INSIGHTS: HeroInsight[] = [
     body: "18% of evening contacts show negative tone-drift mid-conversation — 2.4× the day-shift rate. Coaching window opens after 6pm shift handover." },
 ];
 
-export function ContactExperienceDrillDown({ onBack }: { onBack: () => void }) {
+export function ContactExperienceDrillDown({
+  onBack,
+  variant = "default",
+}: {
+  onBack: () => void;
+  variant?: ContactExperienceDrillVariant;
+}) {
+  const isSterlingFranchise = variant === "sterling-service-attrition";
+  const isSterlingContact = variant === "sterling-contact";
+  const drill1Insights = isSterlingFranchise
+    ? STERLING_DRILL1_INSIGHTS
+    : isSterlingContact
+      ? STERLING_HEAD_CONTACT_DRILL1_INSIGHTS
+      : DRILL1_INSIGHTS;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <DrillPageHeader
         onBack={onBack}
-        title="Is every contact ending well?"
-        sub="Per-contact resolution quality across voice, chat, email and ticket — sentiment exit, FCR, repeats, premature closure and tone drift."
+        title={isSterlingFranchise ? "Is service driving customers away?" : "Is every contact ending well?"}
+        sub={
+          isSterlingFranchise
+            ? "Where poor service endings turn into switch-intent, avoidable cost-to-serve, and reputation drag — the franchise cost of service, not agent scorecards."
+            : "Per-contact resolution quality across voice, chat, email and ticket — sentiment exit, FCR, repeats, premature closure and tone drift."
+        }
       />
 
-      {/* ROW 1 — Executive headshot */}
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.6fr) minmax(320px, 1fr)", gap: 16, alignItems: "stretch" }}>
-        <ContactHealthHero />
-        <HeroSummaryWall accentColor="#F59E0B" insights={DRILL1_INSIGHTS} />
+        <ContactHealthHero variant={variant} />
+        <HeroSummaryWall accentColor="#F59E0B" insights={drill1Insights} />
       </div>
 
-      {/* ROW 2 — KPI strip */}
-      <ContactKPIPack />
+      <ContactKPIPack variant={variant} />
 
-      {/* ROW 3 — Per-channel Quality Matrix (operational diagnosis up front) */}
-      <QualityMatrixPanel />
+      <QualityMatrixPanel variant={variant} />
 
-      {/* ROW 4 — Where contacts fail to end well · stacked bar + lightweight click panel */}
-      <PoorEndingContactsPanel />
+      <PoorEndingContactsPanel variant={variant} />
 
-      {/* ROW 5 — Repeat-Contact Drivers · Contact Recovery Priority Matrix */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, alignItems: "stretch" }}>
-        <RepeatContactByIntentPanel />
-        <ContactRecoveryPriorityMatrix />
+        <RepeatContactByIntentPanel variant={variant} />
+        {isSterlingFranchise ? (
+          <ServiceDrivenRetentionPanel />
+        ) : (
+          <ContactRecoveryPriorityMatrix variant={variant} />
+        )}
       </div>
     </div>
   );
@@ -1616,8 +2197,17 @@ const DRILL2_INSIGHTS: HeroInsight[] = [
     body: "Trustpilot and App Store carry the most durable negative service evidence; X and Reddit are accelerating the narrative." },
 ];
 
-export function ServiceReputationDrillDown({ onBack }: { onBack: () => void }) {
+export function ServiceReputationDrillDown({
+  onBack,
+  sterlingContact = false,
+}: {
+  onBack: () => void;
+  sterlingContact?: boolean;
+}) {
   const T = useDashboardTheme();
+  const reputationInsights = sterlingContact
+    ? STERLING_HEAD_CONTACT_DRILL2_INSIGHTS
+    : DRILL2_INSIGHTS;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <DrillPageHeader
@@ -1651,7 +2241,7 @@ export function ServiceReputationDrillDown({ onBack }: { onBack: () => void }) {
       {/* ROW 1 — Reputation headshot */}
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.6fr) minmax(320px, 1fr)", gap: 16, alignItems: "stretch" }}>
         <ReputationHero />
-        <HeroSummaryWall accentColor="#F59E0B" insights={DRILL2_INSIGHTS} />
+        <HeroSummaryWall accentColor="#F59E0B" insights={reputationInsights} />
       </div>
 
       {/* ROW 2 — Channel Reputation Snapshot */}
@@ -1948,7 +2538,16 @@ const DRILL3_INSIGHTS: HeroInsight[] = [
     body: "RESPA collections variant A halted (7 calls), KYC handoff failing on 12% of digital→voice transitions. Recording-consent miss steady at 0.8%." },
 ];
 
-export function ServiceOperationsDrillDown({ onBack }: { onBack: () => void }) {
+export function ServiceOperationsDrillDown({
+  onBack,
+  sterlingContact = false,
+}: {
+  onBack: () => void;
+  sterlingContact?: boolean;
+}) {
+  const operationsInsights = sterlingContact
+    ? STERLING_HEAD_CONTACT_DRILL3_INSIGHTS
+    : DRILL3_INSIGHTS;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <DrillPageHeader
@@ -1960,14 +2559,18 @@ export function ServiceOperationsDrillDown({ onBack }: { onBack: () => void }) {
       {/* TIER 0 — HEADSHOT */}
       <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.6fr) minmax(320px, 1fr)", gap: 16, alignItems: "stretch" }}>
         <VitalSignsHero />
-        <HeroSummaryWall accentColor="#EF4444" insights={DRILL3_INSIGHTS} />
+        <HeroSummaryWall accentColor="#EF4444" insights={operationsInsights} />
       </div>
 
       {/* TIER 0b — KPI strip */}
       <OpsKPIPack />
 
       {/* TIER 1 — SLA & Intent pressure */}
-      <RetailSLAPerformanceOverview />
+      <RetailSLAPerformanceOverview
+        leadingIntents={
+          sterlingContact ? STERLING_HEAD_CONTACT_LEADING_INTENTS : undefined
+        }
+      />
 
       {/* TIER 2 — Workforce 2-col */}
       <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 16, alignItems: "stretch" }}>
@@ -1988,11 +2591,13 @@ export function ServiceOperationsDrillDown({ onBack }: { onBack: () => void }) {
         <IntentScoreHeatmap isDarkMode />
       </div>
 
-      {/* TIER 5 — Compliance + Coaching 2-col */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 16, alignItems: "stretch" }}>
-        <ComplianceSpotlightsPanel />
-        <SmartAgentActionList data={agentActionData} isDarkMode />
-      </div>
+      {/* TIER 5 — Compliance + Coaching 2-col (retail head_contact only) */}
+      {!sterlingContact ? (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 16, alignItems: "stretch" }}>
+          <ComplianceSpotlightsPanel />
+          <SmartAgentActionList data={agentActionData} isDarkMode />
+        </div>
+      ) : null}
     </div>
   );
 }

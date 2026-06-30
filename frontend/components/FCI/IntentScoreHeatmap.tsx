@@ -4,6 +4,9 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Flame, Users, Zap, ThumbsUp, Heart, Target, CheckCircle } from 'lucide-react';
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
+import { useSterlingHeadRetailCurrencyRoute } from '@/lib/role-based-dashboard/sterlingHeadRetailCurrency';
+import { useSterlingHeadContactCurrencyRoute } from '@/lib/role-based-dashboard/sterlingHeadContactCurrency';
+import { STERLING_HEAD_RETAIL_FCI_INTENTS } from '@/lib/role-based-dashboard/sterlingHeadRetailServiceData';
 
 interface HeatmapCell {
   score: number;
@@ -147,6 +150,12 @@ const SWEDBANK_CONTACT_CENTER_UNITS = [
 
 export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapProps) {
   const pathname = usePathname();
+  const isSterlingHeadRetail = useSterlingHeadRetailCurrencyRoute();
+  const isSterlingHeadContact = useSterlingHeadContactCurrencyRoute();
+  const intents =
+    isSterlingHeadRetail || isSterlingHeadContact
+      ? STERLING_HEAD_RETAIL_FCI_INTENTS
+      : INTENTS;
   const isSwedbankRoute = pathname?.startsWith('/swedbank');
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const CONTACT_CENTER_UNITS = isSwedbankRoute 
@@ -164,7 +173,7 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
     let worstIntent = '';
     
     PILLARS.forEach(pillar => {
-      INTENTS.forEach(intent => {
+      intents.forEach(intent => {
         const score = heatmapData[pillar.id][intent.id].score;
         if (score < worstScore) {
           worstScore = score;
@@ -180,7 +189,7 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
   const getOwnershipInsight = () => {
     let totalScore = 0;
     let count = 0;
-    INTENTS.forEach(intent => {
+    intents.forEach(intent => {
       totalScore += heatmapData['takeOwnership'][intent.id].score;
       count++;
     });
@@ -190,7 +199,9 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
   const getEfficiencyInsight = () => {
     const digitalScore = heatmapData['makeItEasy']['digitalBanking'].score;
     const feeScore = heatmapData['makeItEasy']['feeComplaints'].score;
-    return { better: 'Digital Banking', betterScore: digitalScore, worse: 'Fee Complaints', worseScore: feeScore };
+    const digitalLabel = intents.find((i) => i.id === 'digitalBanking')?.label ?? 'Digital Banking';
+    const feeLabel = intents.find((i) => i.id === 'feeComplaints')?.label ?? 'Fee Complaints';
+    return { better: digitalLabel, betterScore: digitalScore, worse: feeLabel, worseScore: feeScore };
   };
 
   const bottleneck = getBottleneck();
@@ -259,7 +270,7 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
           {/* Column Headers */}
           <div className="flex">
             <div className="w-36 shrink-0" />
-            {INTENTS.map(intent => (
+            {intents.map(intent => (
               <div
                 key={intent.id}
                 className="flex-1 px-1 pb-3 text-center"
@@ -291,7 +302,7 @@ export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapPro
               </div>
 
               {/* Cells */}
-              {INTENTS.map((intent, intentIdx) => {
+              {intents.map((intent, intentIdx) => {
                 const cell = heatmapData[pillar.id][intent.id];
                 const isHovered = hoveredCell?.pillar === pillar.id && hoveredCell?.intent === intent.id;
                 
