@@ -1481,6 +1481,8 @@ export function InfluencerWatchlistVisual({
         display: "flex",
         flexDirection: "column",
         gap: 8,
+        flex: 1,
+        minHeight: 300,
         maxHeight: 300,
         overflowY: "auto",
         paddingRight: 2,
@@ -1565,20 +1567,31 @@ export function TopFeatureRequestsVisual({
     () => [...featureRequests].sort((a, b) => b.mentions - a.mentions),
     [featureRequests],
   );
+  const axisTick = { fontSize: 10, fill: cssVar("text-secondary") };
+  const xMax = useMemo(() => {
+    const peak = chartData.reduce((max, row) => Math.max(max, row.mentions), 0);
+    return Math.ceil(peak / 40) * 40;
+  }, [chartData]);
 
   return (
-    <div style={{ width: "100%", height: 300 }}>
+    <div style={{ flex: 1, width: "100%", minHeight: 300, height: "100%" }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={chartData} layout="vertical" margin={{ top: 4, right: 12, left: 4, bottom: 0 }}>
+        <BarChart
+          data={chartData}
+          layout="vertical"
+          margin={{ top: 2, right: 8, left: 0, bottom: 2 }}
+          barCategoryGap="18%"
+        >
           <CartesianGrid stroke={cssVar("border")} strokeDasharray="3 3" horizontal={false} />
-          <XAxis type="number" {...hubChartAxis} stroke={cssVar("border")} tick={{ fontSize: 10 }} />
+          <XAxis type="number" domain={[0, xMax]} {...hubChartAxis} stroke={cssVar("border")} tick={axisTick} />
           <YAxis
             type="category"
             dataKey="req"
             {...hubChartAxis}
             stroke={cssVar("border")}
-            width={148}
-            tick={{ fontSize: 10, fill: cssVar("text-muted") }}
+            width={168}
+            interval={0}
+            tick={axisTick}
           />
           <Tooltip content={<FeatureRequestTooltip />} />
           <Bar dataKey="mentions" name="Mentions" radius={[0, 4, 4, 0]} isAnimationActive={false}>

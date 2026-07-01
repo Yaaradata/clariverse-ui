@@ -26,7 +26,7 @@ import {
 } from 'lucide-react';
 import { AISummaryWall } from '@/components/FCI/AISummaryWall';
 import { CUSTOMER_RELATIONSHIP_TIERS } from '../../lib/cxHeadRetailV3CustomerFciData';
-import { FLIPKART_FCI_INSIGHTS } from '../../lib/cxHeadRetailV3FlipkartFciInsights';
+import { FLIPKART_FCI_INSIGHTS, FLIPKART_FCI_INSIGHT_DETAILS } from '../../lib/cxHeadRetailV3FlipkartFciInsights';
 
 interface FlipkartFciKpiCardsProps {
   isDarkMode?: boolean;
@@ -827,7 +827,13 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             adopts the left grid's natural height and scrolls internally. */}
         <div className="flex-1 min-w-0 relative self-stretch">
           <div className="absolute inset-0">
-            <AISummaryWall data={FLIPKART_FCI_INSIGHTS} isDarkMode={isDarkMode} height="100%" />
+            <AISummaryWall
+              data={FLIPKART_FCI_INSIGHTS}
+              insightDetailsMap={FLIPKART_FCI_INSIGHT_DETAILS}
+              intelligenceSubtitle="Real-time shopper CX intelligence"
+              isDarkMode={isDarkMode}
+              height="100%"
+            />
           </div>
         </div>
       </div>

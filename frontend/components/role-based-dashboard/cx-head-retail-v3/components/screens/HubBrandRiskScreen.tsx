@@ -86,14 +86,14 @@ export function HubBrandRiskScreen(): React.ReactElement {
           display: "grid",
           gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
           gap: 16,
-          alignItems: "start",
+          alignItems: "stretch",
         }}
       >
-        <DetailSection premium title="Influencer & Watchlist Accounts">
+        <DetailSection premium fill title="Influencer & Watchlist Accounts">
           <InfluencerWatchlistVisual influencers={drill.influencers} />
         </DetailSection>
 
-        <DetailSection premium title="Top Requests for Features">
+        <DetailSection premium fill title="Top Requests for Features">
           <TopFeatureRequestsVisual featureRequests={drill.featureRequests} />
         </DetailSection>
       </div>
