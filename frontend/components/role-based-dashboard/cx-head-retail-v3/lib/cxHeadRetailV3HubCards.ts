@@ -909,7 +909,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "FCR Resolution", topLabel: "FCR", bottomLabel: "Resolution", value: 71, color: "#F6A93B", suffix: "%" },
-            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 88, color: "#F6A93B", suffix: "%" },
+            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 88, color: "#4ADE80", suffix: "%" },
           ],
           stats: [
             { label: "Repeat Contact", value: "18%", color: "#ef4444" },
@@ -943,7 +943,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "FCR Resolution", topLabel: "FCR", bottomLabel: "Resolution", value: 68, color: "#ef4444", suffix: "%" },
-            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 82, color: "#ef4444", suffix: "%" },
+            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 82, color: "#F6A93B", suffix: "%" },
           ],
           stats: [
             { label: "Repeat Contact", value: "24%", color: "#ef4444" },
@@ -960,7 +960,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "FCR Resolution", topLabel: "FCR", bottomLabel: "Resolution", value: 70, color: "#F6A93B", suffix: "%" },
-            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 86, color: "#F6A93B", suffix: "%" },
+            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 86, color: "#4ADE80", suffix: "%" },
           ],
           stats: [
             { label: "Repeat Contact", value: "21%", color: "#ef4444" },
@@ -977,7 +977,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "FCR Resolution", topLabel: "FCR", bottomLabel: "Resolution", value: 69, color: "#F6A93B", suffix: "%" },
-            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 84, color: "#ef4444", suffix: "%" },
+            { label: "Delivery Success Rate", topLabel: "Delivery", bottomLabel: "Success Rate", value: 84, color: "#4ADE80", suffix: "%" },
           ],
           stats: [
             { label: "Repeat Contact", value: "22%", color: "#ef4444" },
