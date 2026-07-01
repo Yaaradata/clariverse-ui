@@ -29,10 +29,18 @@ export function sterlingHeadContactUsesRetailParity(
 
 /** Registry ROLE_DATA key — Sterling head_contact resolves to retail head_contact. */
 export function resolveRoleDataKey(industryId: string, roleId: string): string {
+  if (isSterlingHeadRetail(industryId, roleId)) {
+    return "sterling_head_retail";
+  }
   if (sterlingHeadContactUsesRetailParity(industryId, roleId)) {
     return "head_contact";
   }
-  if (roleId === "head_cx_retail" || roleId === "head_cx_retail_v2") {
+  if (
+    roleId === "head_cx_retail" ||
+    roleId === "head_cx_retail_v2" ||
+    roleId === "head_cx_retail_v3" ||
+    roleId === "head_client_experience"
+  ) {
     return "head_cx";
   }
   return roleId;

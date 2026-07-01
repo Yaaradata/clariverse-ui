@@ -45,10 +45,25 @@ type RiskSpike = {
   region?: string;
 };
 
-const severityBadge: Record<RiskSpike["severity"], { label: string; icon: string; className: string }> = {
-  critical: { label: "Critical", icon: "🔥", className: "bg-rose-500/20 text-rose-200 border-rose-500/40" },
-  moderate: { label: "High", icon: "⚠️", className: "bg-amber-500/20 text-amber-200 border-amber-400/40" },
-  low: { label: "Watch", icon: "🔔", className: "bg-yellow-500/15 text-yellow-200 border-yellow-400/30" },
+const severityBadge: Record<RiskSpike["severity"], { label: string; icon: string; light: string; dark: string }> = {
+  critical: {
+    label: "Critical",
+    icon: "🔥",
+    light: "bg-rose-500/20 text-rose-700 border-rose-500/40",
+    dark: "bg-rose-500/25 text-rose-100 border-rose-400/50",
+  },
+  moderate: {
+    label: "High",
+    icon: "⚠️",
+    light: "bg-amber-500/20 text-amber-800 border-amber-400/40",
+    dark: "bg-amber-500/25 text-amber-100 border-amber-400/50",
+  },
+  low: {
+    label: "Watch",
+    icon: "🔔",
+    light: "bg-yellow-500/15 text-yellow-800 border-yellow-400/30",
+    dark: "bg-yellow-500/20 text-yellow-100 border-yellow-400/40",
+  },
 };
 
 const deltaIntentClass: Record<NonNullable<CustomMetric["deltaIntent"]>, string> = {
@@ -77,10 +92,19 @@ const spikeIcon: Record<RiskSpike["spikeType"], { icon: string; color: string }>
   "Volume Surge": { icon: "", color: "text-emerald-300" },
 };
 
-const severityStyles: Record<RiskSpike["severity"], string> = {
-  critical: "border-rose-500/60 bg-rose-500/5 shadow-rose-500/30",
-  moderate: "border-amber-400/60 bg-amber-500/5 shadow-amber-500/20",
-  low: "border-yellow-400/40 bg-yellow-500/5 shadow-yellow-500/10",
+const severityStyles: Record<RiskSpike["severity"], { light: string; dark: string }> = {
+  critical: {
+    light: "border-rose-500/60 bg-rose-500/5 shadow-rose-500/30",
+    dark: "border-rose-500/55 bg-rose-950/35 shadow-rose-900/40",
+  },
+  moderate: {
+    light: "border-amber-400/60 bg-amber-500/5 shadow-amber-500/20",
+    dark: "border-amber-500/50 bg-amber-950/30 shadow-amber-900/30",
+  },
+  low: {
+    light: "border-yellow-400/40 bg-yellow-500/5 shadow-yellow-500/10",
+    dark: "border-yellow-500/40 bg-yellow-950/25 shadow-yellow-900/20",
+  },
 };
 
 const mockRiskSpikes: RiskSpike[] = [
@@ -543,65 +567,55 @@ export function AIRiskSpikeMonitor({
   spikes = mockRiskSpikes,
   driverContext,
   driverSignals,
+  isDarkMode: isDarkModeProp,
   forceDarkMode = false,
-  alertBadgeLabel = 'Operational Alerts',
-  alertSubtitle = 'Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.',
-  cardLayout = 'default',
+  alertBadgeLabel = "Operational Alerts",
+  alertSubtitle = "Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.",
+  cardLayout = "default",
 }: {
   spikes?: RiskSpike[];
   /** Optional line explaining what drives volume/sentiment (e.g. rate changes). Shown under the subtitle. */
   driverContext?: string;
   /** Optional list of related CX signals (e.g. "Mortgage inquiries +185%"). Rendered as pills when driverContext is set. */
   driverSignals?: string[];
+  /** When embedded in a themed shell (e.g. Fluid CX V3), pass the parent theme explicitly. */
+  isDarkMode?: boolean;
   /** Always render dark-theme card styles (role-dashboard embeds without `dark` on html). */
   forceDarkMode?: boolean;
   alertBadgeLabel?: string;
   alertSubtitle?: string;
   /** Equal-height franchise cards (Sterling head_contact — matches head_retail rhythm). */
-  cardLayout?: 'default' | 'franchise';
+  cardLayout?: "default" | "franchise";
 }) {
-  const [isDarkMode, setIsDarkMode] = useState(true);
-
-  useEffect(() => {
-    if (forceDarkMode) return;
-    const checkTheme = () => {
-      const theme = localStorage.getItem('theme');
-      setIsDarkMode(theme === null ? true : theme === 'dark');
-    };
-    checkTheme();
-    const observer = new MutationObserver(() => {
-      setIsDarkMode(document.documentElement.classList.contains('dark'));
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    return () => observer.disconnect();
-  }, [forceDarkMode]);
-
-  const dark = forceDarkMode || isDarkMode;
+  const detectedDark = useRiskMonitorDarkMode();
+  const isDarkMode = forceDarkMode || (isDarkModeProp ?? detectedDark);
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <h2 className={`text-lg font-semibold flex items-center gap-2 ${dark ? 'text-white' : 'text-gray-900'}`}>
+        <h2 className={`text-lg font-semibold flex items-center gap-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
           ✨ AI Risk Spike Monitor
         </h2>
-        <span className="text-xs px-2 py-1 rounded-full bg-rose-500/20 text-rose-200 tracking-wide uppercase">
+        <span
+          className={`text-xs px-2 py-1 rounded-full tracking-wide uppercase border ${isDarkMode ? "bg-rose-500/25 text-rose-100 border-rose-400/45" : "bg-rose-500/20 text-rose-700 border-rose-500/40"}`}
+        >
           {alertBadgeLabel}
         </span>
       </div>
-      <p className={`text-xs ${dark ? 'text-gray-400' : 'text-gray-600'}`}>
+      <p className={`text-xs leading-relaxed ${isDarkMode ? "text-gray-200" : "text-gray-600"}`}>
         {alertSubtitle}
       </p>
       {driverContext ? (
         <div className="space-y-2">
-          <p className={`text-xs italic ${dark ? 'text-gray-500' : 'text-gray-500'}`}>
-            Drivers: {driverContext}
+          <p className={`text-xs leading-relaxed ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+            <span className={isDarkMode ? "text-gray-400" : "text-gray-500"}>Drivers:</span> {driverContext}
           </p>
           {driverSignals && driverSignals.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {driverSignals.map((signal, i) => (
                 <span
                   key={i}
-                  className={`text-[11px] px-2.5 py-1 rounded-md border ${dark ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'}`}
+                  className={`text-[11px] px-2.5 py-1 rounded-md border ${isDarkMode ? "bg-white/5 border-white/10 text-gray-300" : "bg-gray-100 border-gray-200 text-gray-700"}`}
                 >
                   {signal}
                 </span>
@@ -615,7 +629,7 @@ export function AIRiskSpikeMonitor({
           <RiskSpikeCard
             key={spike.id}
             spike={spike}
-            isDarkMode={dark}
+            isDarkMode={isDarkMode}
             cardLayout={cardLayout}
           />
         ))}
@@ -624,60 +638,114 @@ export function AIRiskSpikeMonitor({
   );
 }
 
+function useRiskMonitorDarkMode(): boolean {
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const stored = localStorage.getItem("theme");
+      if (stored === "dark") {
+        setIsDarkMode(true);
+        return;
+      }
+      if (stored === "light") {
+        setIsDarkMode(false);
+        return;
+      }
+      const inLisnDarkShell = document.querySelector('.lisn-shell[data-theme="dark"]') !== null;
+      setIsDarkMode(document.documentElement.classList.contains("dark") || inLisnDarkShell);
+    };
+    checkTheme();
+    const observer = new MutationObserver(checkTheme);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    const shell = document.querySelector(".lisn-shell");
+    if (shell) {
+      observer.observe(shell, { attributes: true, attributeFilter: ["data-theme"] });
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  return isDarkMode;
+}
+
 function RiskSpikeCard({
   spike,
   isDarkMode,
-  cardLayout = 'default',
+  cardLayout = "default",
 }: {
   spike: RiskSpike;
   isDarkMode: boolean;
-  cardLayout?: 'default' | 'franchise';
+  cardLayout?: "default" | "franchise";
 }) {
-  const franchise = cardLayout === 'franchise';
+  const franchise = cardLayout === "franchise";
   const iconMeta = spikeIcon[spike.spikeType];
-  const severityClass = severityStyles[spike.severity];
-  const detailRows = spike.customMetrics ?? getDetailRows(spike);
+  const severityClass = isDarkMode ? severityStyles[spike.severity].dark : severityStyles[spike.severity].light;
+  const detailRows = (spike.customMetrics ?? getDetailRows(spike)).slice(0, 2);
   const cardTitle = spike.cardTitle ?? labelForSpike(spike.spikeType);
   const insightText = spike.triggerInsight ?? spike.aiAction;
   const sevBadge = severityBadge[spike.severity];
+  const metaLabelClass = isDarkMode ? "text-gray-300" : "text-gray-700";
+  const metaValueClass = isDarkMode ? "text-gray-50" : "text-gray-900";
+  const metaSubClass = isDarkMode ? "text-gray-400" : "text-gray-600";
 
   return (
     <div
-      className={`min-w-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] ${franchise ? "min-h-[17.5rem] h-full" : "min-h-[15rem]"} ${severityClass} ${isDarkMode ? "text-gray-200" : "text-gray-800"}`}
+      className={
+        franchise
+          ? `min-w-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] min-h-[17.5rem] h-full ${severityClass} ${isDarkMode ? "text-gray-200" : "text-gray-800"}`
+          : `w-[17rem] shrink-0 sm:w-[18rem] h-[22.5rem] rounded-2xl border px-4 py-4 text-sm shadow-lg flex flex-col ${severityClass} ${isDarkMode ? "text-gray-100" : "text-gray-800"}`
+      }
     >
-      <div className="flex items-start justify-between gap-2">
-        <div className={`flex items-center gap-2 text-sm font-semibold min-w-0 flex-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-          <span className={`${iconMeta.color} text-lg shrink-0`}>{iconMeta.icon}</span>
+      <div className={`flex items-start justify-between gap-2 ${franchise ? "" : "min-h-[2.75rem]"}`}>
+        <div
+          className={`flex gap-2 text-sm font-semibold min-w-0 flex-1 ${franchise ? "items-center" : "items-start leading-snug line-clamp-2"} ${isDarkMode ? "text-white" : "text-gray-900"}`}
+        >
+          <span className={`${iconMeta.color} text-lg ${franchise ? "shrink-0" : "leading-none shrink-0 pt-0.5"}`}>
+            {iconMeta.icon}
+          </span>
           <span>{cardTitle}</span>
         </div>
         <span
-          className={`shrink-0 flex items-center gap-1 text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full border ${sevBadge.className}`}
+          className={`shrink-0 flex items-center gap-1 text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full border ${isDarkMode ? sevBadge.dark : sevBadge.light}`}
         >
           <span className="text-[11px] leading-none">{sevBadge.icon}</span>
           <span>{sevBadge.label}</span>
         </span>
       </div>
-      <div className={`mt-3 space-y-1 text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-        <div className="flex justify-between">
-          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>
+
+      <div
+        className={
+          franchise
+            ? `mt-3 space-y-1 text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-600"}`
+            : `mt-2 h-[4.75rem] space-y-1.5 text-[11px] ${isDarkMode ? "text-gray-200" : "text-gray-600"}`
+        }
+      >
+        <div className={`flex justify-between gap-3 ${franchise ? "" : "items-baseline min-h-[1rem]"}`}>
+          <span
+            className={`uppercase tracking-wide shrink-0 ${franchise ? (isDarkMode ? "text-gray-500" : "text-gray-700") : `font-semibold ${metaLabelClass}`}`}
+          >
             {spike.region ? "Region" : "Channel"}
           </span>
-          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>
+          <span className={`font-semibold text-right truncate ${metaValueClass}`}>
             {spike.region ?? spike.channel}
           </span>
         </div>
-        <div className="flex justify-between gap-3">
-          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Top Intent</span>
-          <div className="text-right min-w-0">
-            <div className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.topIntent}</div>
-            {spike.topIntentContext ? (
-              <div className={`text-[10px] ${isDarkMode ? 'text-gray-500' : 'text-gray-600'}`}>{spike.topIntentContext}</div>
-            ) : null}
+        <div className="flex justify-between gap-3 min-h-[2.25rem]">
+          <span className={`uppercase tracking-wide font-semibold shrink-0 pt-0.5 ${metaLabelClass}`}>
+            Top Intent
+          </span>
+          <div className="text-right min-w-0 flex-1">
+            <div className={`font-semibold leading-snug line-clamp-1 ${metaValueClass}`}>
+              {spike.topIntent}
+            </div>
+            <div className={`text-[10px] leading-snug line-clamp-1 min-h-[0.875rem] ${metaSubClass}`}>
+              {spike.topIntentContext ?? "\u00A0"}
+            </div>
           </div>
         </div>
-        <div className="flex justify-between">
-          <span className={`uppercase tracking-wide ${isDarkMode ? 'text-gray-500' : 'text-gray-700'}`}>Time</span>
-          <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>{spike.timestamp}</span>
+        <div className="flex justify-between gap-3 items-baseline min-h-[1rem]">
+          <span className={`uppercase tracking-wide font-semibold ${metaLabelClass}`}>Time</span>
+          <span className={`font-semibold ${metaValueClass}`}>{spike.timestamp}</span>
         </div>
       </div>
 
@@ -685,45 +753,98 @@ function RiskSpikeCard({
         className={
           franchise
             ? `mt-4 h-[6.5rem] shrink-0 space-y-2 rounded-xl border p-3 text-xs flex flex-col justify-center ${isDarkMode ? "border-white/5 bg-black/30 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`
-            : `mt-5 min-h-[7.25rem] space-y-2 rounded-xl border p-3 text-xs flex-1 flex flex-col justify-center ${isDarkMode ? "border-white/5 bg-black/30 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`
+            : `mt-3 h-[7.25rem] space-y-0 rounded-xl border p-3 text-xs flex flex-col justify-center ${
+                isDarkMode
+                  ? "border-white/20 bg-zinc-950/85 text-gray-100 shadow-inner shadow-black/30"
+                  : "border-gray-300 bg-gray-50 text-gray-800"
+              }`
         }
       >
         {detailRows.map((row, idx) => {
           const r = row as CustomMetric;
           const intent = r.deltaIntent ?? "neutral";
-          const deltaClass = deltaIntentClass[intent];
+          const deltaClass = isDarkMode
+            ? intent === "bad"
+              ? "text-rose-400"
+              : intent === "good"
+                ? "text-emerald-400"
+                : "text-gray-400"
+            : deltaIntentClass[intent];
           const arrow = r.trend ? trendArrow[r.trend] : null;
           const showDelta = Boolean(r.delta && !(r.delta === "↑" && r.value));
           return (
-            <div key={`${row.label}-${idx}`} className="flex items-center justify-between gap-3">
-              <span className={isDarkMode ? "text-gray-400" : "text-gray-600"}>{row.label}</span>
-              <div className="text-right">
-                {r.value ? (
-                  <div className={`font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{r.value}</div>
-                ) : null}
-                {showDelta ? (
-                  <div className={`text-[11px] font-semibold flex items-center justify-end gap-1 ${deltaClass}`}>
-                    {arrow ? <span aria-hidden>{arrow}</span> : null}
-                    <span>{deltaForTrendDisplay(r.delta!, r.trend)}</span>
-                  </div>
-                ) : null}
+            <div
+              key={`${row.label}-${idx}`}
+              className={`flex items-center justify-between gap-3 ${franchise ? "" : "min-h-[2.5rem] py-0.5"}`}
+            >
+              <span
+                className={
+                  franchise
+                    ? isDarkMode
+                      ? "text-gray-400"
+                      : "text-gray-600"
+                    : `shrink-0 ${isDarkMode ? "text-gray-300 font-medium" : "text-gray-600"}`
+                }
+              >
+                {row.label}
+              </span>
+              <div className={`text-right ${franchise ? "" : "min-w-0"}`}>
+                {franchise ? (
+                  <>
+                    {r.value ? (
+                      <div className={`font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{r.value}</div>
+                    ) : null}
+                    {showDelta ? (
+                      <div className={`text-[11px] font-semibold flex items-center justify-end gap-1 ${deltaClass}`}>
+                        {arrow ? <span aria-hidden>{arrow}</span> : null}
+                        <span>{deltaForTrendDisplay(r.delta!, r.trend)}</span>
+                      </div>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    <div className={`font-semibold leading-tight min-h-[1rem] ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                      {r.value || "\u00A0"}
+                    </div>
+                    <div
+                      className={`text-[11px] font-semibold flex items-center justify-end gap-1 min-h-[0.875rem] leading-tight ${deltaClass}`}
+                    >
+                      {r.delta ? (
+                        <>
+                          {arrow ? <span aria-hidden>{arrow}</span> : null}
+                          <span className="truncate max-w-[7.5rem]">{deltaForTrendDisplay(r.delta, r.trend)}</span>
+                        </>
+                      ) : (
+                        "\u00A0"
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      {insightText ? (
+      {franchise ? (
+        insightText ? (
+          <div className="mt-auto min-h-[3.75rem] rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-[11px] leading-snug text-rose-100">
+            ✨ {insightText}
+          </div>
+        ) : null
+      ) : (
         <div
-          className={
-            franchise
-              ? "mt-auto min-h-[3.75rem] rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-[11px] leading-snug text-rose-100"
-              : "mt-5 rounded-xl border border-rose-500/40 bg-rose-500/10 p-4 text-xs leading-loose text-rose-100"
-          }
+          className={`mt-auto h-[4.75rem] rounded-xl border p-3 text-xs leading-relaxed overflow-hidden ${
+            isDarkMode
+              ? "border-amber-500/40 bg-zinc-950/70 text-gray-100"
+              : "border-rose-500/40 bg-rose-500/10 text-rose-900"
+          }`}
         >
-          ✨ {insightText}
+          <p className={`line-clamp-4 m-0 ${isDarkMode ? "text-gray-100" : ""}`}>
+            {insightText ? `✨ ${insightText}` : "\u00A0"}
+          </p>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const ACCENT = "#5332FF";
 
-export type CxRetailVersion = "v1" | "v2";
+export type CxRetailVersion = "v1" | "v2" | "v3";
 
 const VERSION_OPTIONS: ReadonlyArray<{
   version: CxRetailVersion;
@@ -24,6 +24,12 @@ const VERSION_OPTIONS: ReadonlyArray<{
     label: "V2",
     roleId: "head_cx_retail_v2",
     preload: () => import("@/components/role-based-dashboard/CXVoCHeadDashboardV2"),
+  },
+  {
+    version: "v3",
+    label: "V3",
+    roleId: "head_cx_retail_v3",
+    preload: () => import("@/components/role-based-dashboard/CXVoCHeadDashboardV3"),
   },
 ];
 
@@ -70,15 +76,8 @@ export function CxRetailVersionToggle({
           cursor: "pointer",
           transition: "background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease",
           ...(isActive
-            ? {
-                background: ACCENT,
-                color: "#ffffff",
-                boxShadow: `0 1px 4px ${ACCENT}55`,
-              }
-            : {
-                background: "transparent",
-                color: ACCENT,
-              }),
+            ? { background: ACCENT, color: "#ffffff", boxShadow: `0 1px 4px ${ACCENT}55` }
+            : { background: "transparent", color: ACCENT }),
         };
 
         return (
@@ -97,4 +96,11 @@ export function CxRetailVersionToggle({
       })}
     </div>
   );
+}
+
+export function cxRetailVersionFromRoleId(roleId: string): CxRetailVersion | null {
+  if (roleId === "head_cx_retail") return "v1";
+  if (roleId === "head_cx_retail_v2") return "v2";
+  if (roleId === "head_cx_retail_v3") return "v3";
+  return null;
 }
