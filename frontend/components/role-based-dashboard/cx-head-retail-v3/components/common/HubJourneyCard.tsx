@@ -1,0 +1,235 @@
+"use client";
+
+import React from "react";
+import { Bot, ChevronRight } from "lucide-react";
+import type { HubCardRightPanel, HubJourneyCardData } from "../../lib/cxHeadRetailV3HubCards";
+import { hubHeroDelta } from "../../lib/cxHeadRetailV3HubCards";
+import { MiniGauge } from "./MiniSparkline";
+import { RetailTrendAreaChart } from "./RetailTrendAreaChart";
+import { cssVar, radius } from "../../theme/tokens";
+
+function channelBarColor(v: number): string {
+  if (v >= 0.65) return cssVar("positive");
+  if (v >= 0.55) return cssVar("severity-med");
+  return cssVar("severity-high");
+}
+
+function ChannelBars({ channels }: { channels: Extract<HubCardRightPanel, { kind: "channels" }>["channels"] }): React.ReactElement {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 6 }}>
+      {channels.map((ch) => {
+        const barColor = channelBarColor(ch.v);
+        return (
+          <div key={ch.name} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+            <span style={{ fontSize: 10, color: cssVar("text-muted"), width: 52, flexShrink: 0 }}>{ch.name}</span>
+            <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
+              <div style={{ height: "100%", width: `${ch.v * 100}%`, background: barColor, borderRadius: 3 }} />
+            </div>
+            <span className="lisn-num" style={{ fontSize: 11, fontWeight: 700, color: barColor, width: 28, textAlign: "right" }}>
+              {ch.v.toFixed(2)}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function GaugePanel({
+  gauges,
+  stats,
+}: Pick<Extract<HubCardRightPanel, { kind: "gauges" }>, "gauges" | "stats">): React.ReactElement {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: 8, alignItems: "start" }}>
+        {gauges.map((g) => (
+          <MiniGauge
+            key={g.label}
+            label={g.label}
+            topLabel={g.topLabel}
+            bottomLabel={g.bottomLabel}
+            value={g.value}
+            color={g.color}
+            suffix={g.suffix}
+          />
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "start" }}>
+        {stats.map((s) => (
+          <div key={s.label} style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 11, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>{s.label}</div>
+            <div
+              className="lisn-num"
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: s.color ?? cssVar("text-primary"),
+              }}
+            >
+              {s.value}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RightPanel({ panel }: { panel: HubCardRightPanel }): React.ReactElement {
+  if (panel.kind === "channels") return <ChannelBars channels={panel.channels} />;
+  return <GaugePanel gauges={panel.gauges} stats={panel.stats} />;
+}
+
+const INSIGHT_LINE_COUNT = 4;
+const INSIGHT_FONT_SIZE = 15;
+const INSIGHT_LINE_HEIGHT = 1.55;
+const INSIGHT_BLOCK_HEIGHT = INSIGHT_LINE_COUNT * INSIGHT_FONT_SIZE * INSIGHT_LINE_HEIGHT;
+
+function ConversationInsightLines({ text }: { text: string }): React.ReactElement {
+  const lines = text.split("\n").slice(0, INSIGHT_LINE_COUNT);
+  while (lines.length < INSIGHT_LINE_COUNT) {
+    lines.push("");
+  }
+
+  return (
+    <div style={{ height: INSIGHT_BLOCK_HEIGHT, maxHeight: INSIGHT_BLOCK_HEIGHT, overflow: "hidden" }}>
+      {lines.map((line, index) => (
+        <div
+          key={`insight-line-${index}`}
+          style={{
+            fontSize: INSIGHT_FONT_SIZE,
+            lineHeight: INSIGHT_LINE_HEIGHT,
+            color: cssVar("text-secondary"),
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {line}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function HubJourneyCard({
+  card,
+  onClick,
+}: {
+  card: HubJourneyCardData;
+  onClick: () => void;
+}): React.ReactElement {
+  const Icon = card.icon;
+  const lastIndex = card.timeline.length - 1;
+  const point = card.timeline[lastIndex];
+  const trendData = card.timeline.map((t) => ({ w: t.label, v: t.heroValue }));
+  const { text: heroDelta, positive: deltaPositive } = hubHeroDelta(card.timeline, lastIndex);
+  const deltaColor = deltaPositive ? cssVar("positive") : cssVar("severity-high");
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        position: "relative",
+        textAlign: "left",
+        background: cssVar("surface"),
+        border: `1px solid ${card.sparkColor}40`,
+        borderRadius: radius.lg,
+        padding: "24px 22px",
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        gap: 16,
+        minWidth: 0,
+        width: "100%",
+        boxShadow: String(cssVar("shadow-card")),
+        transition: "box-shadow 0.2s ease",
+        fontFamily: "inherit",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = `0 8px 32px ${card.sparkColor}15`;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = String(cssVar("shadow-card"));
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 14 }}>
+        <div style={{ display: "flex", alignItems: "flex-start", gap: 10, minWidth: 0, flex: 1 }}>
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: `${card.iconColor}15`,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+              marginTop: 2,
+            }}
+          >
+            <Icon size={18} color={card.iconColor} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 18, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.25 }}>{card.title}</div>
+            <div style={{ fontSize: 14, color: cssVar("text-muted"), lineHeight: 1.4, marginTop: 2 }}>{card.subtitle}</div>
+          </div>
+        </div>
+        <ChevronRight size={36} color={cssVar("text-muted")} style={{ flexShrink: 0, opacity: 0.5 }} strokeWidth={1.75} />
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)",
+          gap: 16,
+          alignItems: "stretch",
+          flex: 1,
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", minWidth: 0, position: "relative" }}>
+          <span
+            className="lisn-num"
+            style={{ position: "absolute", top: 0, right: 0, fontSize: 13, color: deltaColor, fontWeight: 700 }}
+          >
+            {heroDelta}
+          </span>
+          <div style={{ marginBottom: 6, paddingRight: 64 }}>
+            <div className="lisn-num" style={{ fontSize: 34, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1 }}>
+              {point.heroValue}
+            </div>
+          </div>
+          <div style={{ width: "100%", flex: 1, minHeight: 96 }}>
+            <RetailTrendAreaChart
+              data={trendData}
+              stroke={card.sparkColor}
+              yPadBelow={card.sparkYPadBelow ?? 6}
+              yPadAbove={card.sparkYPadAbove ?? 4}
+              gradientKey={`hub-${card.id}`}
+            />
+          </div>
+        </div>
+        <RightPanel panel={point.rightPanel} />
+      </div>
+
+      <div
+        style={{
+          background: `linear-gradient(135deg, ${cssVar("severity-med")}10 0%, ${card.iconColor}08 38%)`,
+          border: `1px solid ${cssVar("severity-med")}28`,
+          borderLeft: `4px solid ${cssVar("severity-med")}`,
+          borderRadius: radius.md,
+          padding: "10px 14px",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
+          <Bot size={11} color={cssVar("severity-med")} />
+          <span style={{ fontSize: 12, fontWeight: 700, color: cssVar("severity-med"), letterSpacing: 0.5, textTransform: "uppercase" }}>
+            Conversation AI
+          </span>
+        </div>
+        <ConversationInsightLines text={point.conversationInsight} />
+      </div>
+    </button>
+  );
+}

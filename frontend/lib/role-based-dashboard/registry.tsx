@@ -176,6 +176,12 @@ export const INDUSTRIES = [
         sub: "Category P&L, returns margin, seller trust",
       },
       {
+        id: "business_head_v2",
+        name: "Business Head · V2",
+        icon: Briefcase,
+        sub: "Category intelligence — overview hub + drill screens",
+      },
+      {
         id: "head_cx",
         name: "Head of CX",
         icon: Headphones,
@@ -194,6 +200,14 @@ export const INDUSTRIES = [
         name: "Head of CX (Retail) · V2",
         icon: Building2,
         sub: "Compact Fluid CX — UI refresh",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        id: "head_cx_retail_v3",
+        name: "Head of CX (Retail) · V3",
+        icon: Building2,
+        sub: "Fluid CX evolution — experience pulse, fulfilment signals, trust wedge, revenue bridge",
         defaultLens: "ops",
         primaryTile: 0,
       },

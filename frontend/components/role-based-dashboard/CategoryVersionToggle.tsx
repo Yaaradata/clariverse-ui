@@ -3,12 +3,12 @@
 import type { CSSProperties, ReactElement } from "react";
 import Link from "next/link";
 
-const ACCENT = "#5332FF";
+const ACCENT = "#8B7CF6";
 
-export type CxRetailVersion = "v1" | "v2" | "v3";
+export type CategoryVersion = "v1" | "v2";
 
 const VERSION_OPTIONS: ReadonlyArray<{
-  version: CxRetailVersion;
+  version: CategoryVersion;
   label: string;
   roleId: string;
   preload: () => Promise<unknown>;
@@ -16,34 +16,28 @@ const VERSION_OPTIONS: ReadonlyArray<{
   {
     version: "v1",
     label: "V1",
-    roleId: "head_cx_retail",
-    preload: () => import("@/components/role-based-dashboard/CXVoCHeadDashboard"),
+    roleId: "business_head",
+    preload: () => import("@/components/role-based-dashboard/CategoryIntelligenceDashboard"),
   },
   {
     version: "v2",
     label: "V2",
-    roleId: "head_cx_retail_v2",
-    preload: () => import("@/components/role-based-dashboard/CXVoCHeadDashboardV2"),
-  },
-  {
-    version: "v3",
-    label: "V3",
-    roleId: "head_cx_retail_v3",
-    preload: () => import("@/components/role-based-dashboard/CXVoCHeadDashboardV3"),
+    roleId: "business_head_v2",
+    preload: () => import("@/components/role-based-dashboard/CategoryIntelligenceDashboardV2"),
   },
 ];
 
-export type CxRetailVersionToggleProps = {
+export type CategoryVersionToggleProps = {
   industryId: string;
-  activeVersion?: CxRetailVersion | null;
+  activeVersion?: CategoryVersion | null;
   isDarkMode?: boolean;
 };
 
-export function CxRetailVersionToggle({
+export function CategoryVersionToggle({
   industryId,
   activeVersion = null,
-  isDarkMode = true,
-}: CxRetailVersionToggleProps): ReactElement {
+  isDarkMode = false,
+}: CategoryVersionToggleProps): ReactElement {
   const trackBg = isDarkMode ? `${ACCENT}14` : `${ACCENT}10`;
   const trackBorder = isDarkMode ? `${ACCENT}33` : `${ACCENT}40`;
 
@@ -76,8 +70,8 @@ export function CxRetailVersionToggle({
           cursor: "pointer",
           transition: "background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease",
           ...(isActive
-            ? { background: ACCENT, color: "#ffffff", boxShadow: `0 1px 4px ${ACCENT}55` }
-            : { background: "transparent", color: ACCENT }),
+            ? { background: ACCENT, color: "#FAFAFA", boxShadow: `0 1px 4px ${ACCENT}55` }
+            : { background: "transparent", color: isDarkMode ? ACCENT : "#6D5CE0" }),
         };
 
         return (
@@ -98,9 +92,8 @@ export function CxRetailVersionToggle({
   );
 }
 
-export function cxRetailVersionFromRoleId(roleId: string): CxRetailVersion | null {
-  if (roleId === "head_cx_retail") return "v1";
-  if (roleId === "head_cx_retail_v2") return "v2";
-  if (roleId === "head_cx_retail_v3") return "v3";
+export function categoryVersionFromRoleId(roleId: string): CategoryVersion | null {
+  if (roleId === "business_head") return "v1";
+  if (roleId === "business_head_v2") return "v2";
   return null;
 }

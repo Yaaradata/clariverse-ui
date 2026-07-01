@@ -81,8 +81,10 @@ import {
   CardsVoiceJoinDrill,
 } from "./CardsPortfolioDrillScreens";
 import { CategoryIntelligenceDashboard } from "./CategoryIntelligenceDashboard";
+import { CategoryIntelligenceDashboardV2 } from "./CategoryIntelligenceDashboardV2";
 import { CXVoCHeadDashboard } from "./CXVoCHeadDashboard";
 import { CXVoCHeadDashboardV2 } from "./CXVoCHeadDashboardV2";
+import { CXVoCHeadDashboardV3 } from "./CXVoCHeadDashboardV3";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
@@ -2976,11 +2978,15 @@ function RoleDashboardShell({
       ? "insurance"
       : industry.id === "credit_cards"
         ? "cards_business"
-        : "retail_banking";
+        : industry.id === "ecommerce"
+          ? "ecommerce"
+          : "retail_banking";
   const [activeLob, setActiveLob] = useState<string>(defaultLob);
   const roleDataMap = ROLE_DATA as Record<string, RoleDashboardData>;
   const roleDataKey =
-    role.id === "head_cx_retail" || role.id === "head_cx_retail_v2" ? "head_cx" : role.id;
+    role.id === "head_cx_retail" || role.id === "head_cx_retail_v2" || role.id === "head_cx_retail_v3"
+      ? "head_cx"
+      : role.id;
   const data = roleDataMap[roleDataKey] ?? ROLE_DATA.ceo;
 
   const IndIcon = industry.icon;
@@ -3879,6 +3885,18 @@ export function RoleDashboardView({
     );
   }
 
+  if (industry.id === "ecommerce" && role.id === "business_head_v2") {
+    return (
+      <CategoryIntelligenceDashboardV2
+        industryId={industry.id}
+        industryName={industry.name}
+        roleName={roleDisplayName(role)}
+        industryColor={industry.color}
+        onExit={onExit}
+      />
+    );
+  }
+
   if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
     return (
       <CXVoCHeadDashboard
@@ -3894,6 +3912,18 @@ export function RoleDashboardView({
   if (industry.id === "ecommerce" && role.id === "head_cx_retail_v2") {
     return (
       <CXVoCHeadDashboardV2
+        industryId={industry.id}
+        industryName={industry.name}
+        roleName={roleDisplayName(role)}
+        industryColor={industry.color}
+        onExit={onExit}
+      />
+    );
+  }
+
+  if (industry.id === "ecommerce" && role.id === "head_cx_retail_v3") {
+    return (
+      <CXVoCHeadDashboardV3
         industryId={industry.id}
         industryName={industry.name}
         roleName={roleDisplayName(role)}
