@@ -105,6 +105,7 @@ const BRAND: Record<string, string> = {
 };
 const ROUTE: Record<string, { l: string; c: string }> = {
   ops: { l: "Ops / Risk", c: T.cyan },
+  payments: { l: "Payments & Authorisation", c: T.cyan },
   risk: { l: "Risk", c: T.amber },
   mktg: { l: "Marketing", c: T.yellow },
   cards: { l: "Head of Cards", c: T.green },
@@ -166,6 +167,18 @@ const Mono = ({
     {children}
   </span>
 );
+type RupeeHorizonKind = "at-risk" | "mtd" | "cac";
+const RUPEE_METHOD: Record<RupeeHorizonKind, string> = {
+  "at-risk": "at-risk = affected authorised volume × decline delta vs baseline",
+  mtd: "incremental vs matched control, month-to-date",
+  cac: "acquisition cost per sourcing cohort, one-time",
+};
+function rupeeMethodForLabel(label: string): string | undefined {
+  if (label.includes("(CAC, one-time)")) return RUPEE_METHOD.cac;
+  if (label.includes("/ day (at-risk run-rate)")) return RUPEE_METHOD["at-risk"];
+  if (label.includes(" MTD")) return RUPEE_METHOD.mtd;
+  return undefined;
+}
 const Eyebrow = ({
   children,
   c = T.muted,
@@ -356,6 +369,28 @@ function Chip({ children, t = "muted" }: { children: ReactNode; t?: string }) {
     </span>
   );
 }
+function ConsentChip() {
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        fontSize: 9,
+        fontWeight: 800,
+        letterSpacing: ".04em",
+        textTransform: "uppercase",
+        padding: "3px 8px",
+        borderRadius: 999,
+        color: T.muted,
+        background: T.inset,
+        border: `1px solid ${T.inner}`,
+        whiteSpace: "nowrap",
+        marginLeft: 6,
+      }}
+    >
+      Consent: service-comms · human approves
+    </span>
+  );
+}
 function RouteChip({ r }: { r: string }) {
   const m = ROUTE[r];
   return (
@@ -538,11 +573,11 @@ const TREND: { g: TrendPoint[]; r: TrendPoint[]; v: TrendPoint[] } = {
 const EXEC_PULSE = [
   {
     label: "1. 🔴 What's critical",
-    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr at risk. Route fix to Ops / Risk.",
+    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr / day (at-risk run-rate). Route fix to Payments & Authorisation.",
   },
   {
     label: "2. 🎯 Where's your focus",
-    text: "Offer O-142 is leaking ₹78L; fraud-rule R-77 stepped approval down 13 pts.",
+    text: "Offer O-142 is leaking ₹78 L MTD; fraud-rule R-77 stepped approval down 13 pts.",
   },
   {
     label: "3. 🟢 What's stable / on-track",
@@ -741,7 +776,11 @@ function ExecutiveQuestionCard({
         {miniMetrics.map(([l, v, tc]) => (
           <div key={l}>
             <Eyebrow>{l}</Eyebrow>
-            <Mono c={tone(tc)} s={14}>{v}</Mono>
+            <span title={rupeeMethodForLabel(v)}>
+              <Mono c={tone(tc)} s={14}>
+                {v}
+              </Mono>
+            </span>
           </div>
         ))}
       </div>
@@ -759,6 +798,9 @@ type MonitorAlert = {
   sev: "critical" | "high" | "later";
   sevLabel: string;
   variant: "critical" | "default" | "voice";
+  feed: string;
+  needsExtraFeed?: boolean;
+  causeNeedsAcs?: boolean;
   fields: [string, string][];
   stats: [string, string][];
   ai: string;
@@ -774,6 +816,15 @@ const SEV_STYLE: Record<
   later: { color: "#b79cff", bg: "#2d1d55", border: "#6845c7" },
 };
 
+const MONITOR_STAT_SLOTS = 4;
+const monitorStatRows = (stats: [string, string][]): [string, string][] => {
+  const rows = [...stats];
+  while (rows.length < MONITOR_STAT_SLOTS) {
+    rows.push(["", ""]);
+  }
+  return rows;
+};
+
 const MONITOR_ALERTS: MonitorAlert[] = [
   {
     id: "token-cnp",
@@ -781,17 +832,18 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "critical",
     sevLabel: "Critical",
     variant: "critical",
+    feed: "Token + auth feed",
+    causeNeedsAcs: true,
     fields: [
       ["Cohort", "Premium · CNP"],
-      ["Data source", "Token + auth feed"],
       ["Time", "Since 11:00"],
     ],
     stats: [
       ["Approval Gap", "14 pts"],
-      ["Spend at Risk", "₹2.4 Cr"],
-      ["Route", "Ops / Risk"],
+      ["Spend at Risk", "₹2.4 Cr / day (at-risk run-rate)"],
+      ["Route", "Payments & Authorisation"],
     ],
-    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue.",
+    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path.",
   },
   {
     id: "o142",
@@ -799,15 +851,15 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "critical",
     sevLabel: "Critical",
     variant: "critical",
+    feed: "Offer + spend",
     fields: [
       ["Cohort", "Cashback Plus"],
-      ["Data source", "Offer + spend"],
       ["Time", "Day 6"],
     ],
     stats: [
       ["Redemption", "High"],
       ["True Lift", "Low"],
-      ["Leakage", "₹78 L"],
+      ["Leakage", "₹78 L MTD"],
     ],
     ai: "Matched-control baseline says spend would have happened anyway. Recommend pause or retarget.",
   },
@@ -817,9 +869,10 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "High",
     variant: "default",
+    feed: "Rule change feed",
+    needsExtraFeed: true,
     fields: [
       ["Cohort", "3+ yr customers"],
-      ["Data source", "Rule change feed"],
       ["Time", "Within 2h"],
     ],
     stats: [
@@ -835,9 +888,9 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "Obligation",
     variant: "default",
+    feed: "Issue + first txn",
     fields: [
       ["Cohort", "Batch 4471"],
-      ["Data source", "Issue + first txn"],
       ["Time", "D27"],
     ],
     stats: [
@@ -853,9 +906,9 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "Advisory",
     variant: "default",
+    feed: "Balance + limit",
     fields: [
       ["Cohort", "Sourcing Q2"],
-      ["Data source", "Balance + limit"],
       ["Time", "This week"],
     ],
     stats: [
@@ -871,14 +924,15 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sev: "high",
     sevLabel: "Watch",
     variant: "default",
+    feed: "Settlement feed",
     fields: [
       ["Cohort", "Fuel Co-brand"],
-      ["Data source", "Settlement feed"],
       ["Time", "This week"],
     ],
     stats: [
       ["Concentration", "↑ 2.1×"],
       ["Merchants", "47"],
+      ["Spend at Risk", "₹52 L / day (at-risk run-rate)"],
       ["Route", "Finance / Ops"],
     ],
     ai: "Merchant concentration spike on fuel MCC — review interchange recovery and settlement lag before it becomes a decline driver.",
@@ -929,6 +983,7 @@ function TodayTransactionSignalMonitor() {
           gap: 14,
           overflowX: "auto",
           paddingBottom: 14,
+          alignItems: "stretch",
         }}
       >
         {MONITOR_ALERTS.map((a) => {
@@ -949,11 +1004,11 @@ function TodayTransactionSignalMonitor() {
               style={{
                 minWidth: 260,
                 maxWidth: 260,
+                alignSelf: "stretch",
                 background: bg,
                 border: `1px solid ${border}`,
                 borderRadius: 14,
                 padding: "16px 16px 14px",
-                minHeight: 400,
                 display: "flex",
                 flexDirection: "column",
               }}
@@ -964,7 +1019,8 @@ function TodayTransactionSignalMonitor() {
                   justifyContent: "space-between",
                   alignItems: "flex-start",
                   gap: 8,
-                  marginBottom: 16,
+                  marginBottom: 12,
+                  minHeight: 52,
                 }}
               >
                 <div
@@ -993,6 +1049,49 @@ function TodayTransactionSignalMonitor() {
                   {a.sevLabel}
                 </span>
               </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: 6,
+                  marginBottom: 10,
+                  alignItems: "center",
+                  minHeight: 44,
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 800,
+                    letterSpacing: ".04em",
+                    textTransform: "uppercase",
+                    padding: "3px 8px",
+                    borderRadius: 999,
+                    color: T.muted,
+                    background: T.inset,
+                    border: `1px solid ${T.inner}`,
+                  }}
+                >
+                  {a.feed}
+                </span>
+                {a.needsExtraFeed ? (
+                  <span
+                    style={{
+                      fontSize: 9,
+                      fontWeight: 800,
+                      letterSpacing: ".04em",
+                      textTransform: "uppercase",
+                      padding: "3px 8px",
+                      borderRadius: 999,
+                      color: T.amber,
+                      background: `${T.amber}14`,
+                      border: `1px solid ${T.amber}40`,
+                    }}
+                  >
+                    needs extra feed
+                  </span>
+                ) : null}
+              </div>
               {a.fields.map(([k, v]) => (
                 <div
                   key={k}
@@ -1000,7 +1099,7 @@ function TodayTransactionSignalMonitor() {
                     display: "grid",
                     gridTemplateColumns: "105px 1fr",
                     gap: 8,
-                    marginBottom: 13,
+                    marginBottom: 8,
                     fontSize: 12,
                   }}
                 >
@@ -1020,6 +1119,7 @@ function TodayTransactionSignalMonitor() {
                       fontWeight: 800,
                       color: "#fff",
                     }}
+                    title={rupeeMethodForLabel(v)}
                   >
                     {v}
                   </span>
@@ -1031,19 +1131,22 @@ function TodayTransactionSignalMonitor() {
                   border: "1px solid #333",
                   borderRadius: 10,
                   padding: 12,
-                  margin: "10px 0 16px",
+                  marginTop: 8,
+                  boxSizing: "border-box",
                 }}
               >
-                {a.stats.map(([k, v], i) => (
+                {monitorStatRows(a.stats).map(([k, v], i, rows) => (
                   <div
-                    key={k}
+                    key={k || `slot-${i}`}
                     style={{
                       display: "grid",
                       gridTemplateColumns: "1.15fr 1fr",
                       gap: 8,
-                      marginBottom: i === a.stats.length - 1 ? 0 : 13,
+                      marginBottom: i === rows.length - 1 ? 0 : 10,
                       fontSize: 13,
                       color: "#bfbfc6",
+                      minHeight: 18,
+                      visibility: k ? "visible" : "hidden",
                     }}
                   >
                     <span>{k}</span>
@@ -1053,6 +1156,7 @@ function TodayTransactionSignalMonitor() {
                         color: "#fff",
                         fontFamily: MONO,
                       }}
+                      title={rupeeMethodForLabel(v)}
                     >
                       {v}
                     </b>
@@ -1061,7 +1165,7 @@ function TodayTransactionSignalMonitor() {
               </div>
               <div
                 style={{
-                  marginTop: "auto",
+                  marginTop: 10,
                   background: a.aiPurple ? "#21163a" : "#2d2414",
                   border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`,
                   borderRadius: 9,
@@ -1070,9 +1174,57 @@ function TodayTransactionSignalMonitor() {
                   lineHeight: 1.45,
                   color: "#fff",
                   fontWeight: 700,
+                  minHeight: 120,
+                  boxSizing: "border-box",
+                  display: "flex",
+                  flexDirection: "column",
                 }}
               >
-                ✨ {a.ai}
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 6,
+                    alignItems: "flex-start",
+                    marginBottom: 8,
+                  }}
+                >
+                  <span>✨ {a.ai}</span>
+                  {a.causeNeedsAcs ? (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 800,
+                        letterSpacing: ".04em",
+                        textTransform: "uppercase",
+                        padding: "3px 8px",
+                        borderRadius: 999,
+                        color: T.amber,
+                        background: `${T.amber}14`,
+                        border: `1px solid ${T.amber}40`,
+                        flexShrink: 0,
+                      }}
+                    >
+                      cause needs ACS / token-vault
+                    </span>
+                  ) : (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        fontWeight: 800,
+                        letterSpacing: ".04em",
+                        textTransform: "uppercase",
+                        padding: "3px 8px",
+                        borderRadius: 999,
+                        visibility: "hidden",
+                        flexShrink: 0,
+                      }}
+                      aria-hidden
+                    >
+                      cause needs ACS / token-vault
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           );
@@ -1114,10 +1266,10 @@ function Overview({ go }: { go: NavigateFn }) {
             { label: "spend", topLabel: "Profitable", value: 55, color: T.amber },
           ]}
           miniMetrics={[
-            ["Yield leak", "₹1.2 Cr", "red"],
+            ["Yield leak", "₹1.2 Cr MTD", "red"],
             ["Offers to kill", "2", "amber"],
           ]}
-          aiText="Offer incrementality vs matched control flags two net-negative offers. ₹1.3 Cr reallocatable; RuPay-on-UPI mix is compressing interchange yield by ~₹1.2 Cr."
+          aiText="Offer incrementality vs matched control flags two net-negative offers. ₹1.3 Cr MTD reallocatable; RuPay-on-UPI mix is compressing interchange yield by ~₹1.2 Cr MTD."
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
@@ -1135,9 +1287,9 @@ function Overview({ go }: { go: NavigateFn }) {
           bars={BLOCKER_BARS}
           miniMetrics={[
             ["Curable", "62%", "green"],
-            ["At risk", "₹2.4 Cr", "red"],
+            ["At risk", "₹2.4 Cr / day (at-risk run-rate)", "red"],
           ]}
-          aiText="Decline taxonomy splits today's spike as a token break: ₹2.4 Cr at risk, 62% curable. Fraud-rule R-77 stepped approval down 13 pts; Batch #4471 risks ₹93L CAC against the 30+7 closure clock."
+          aiText="Decline taxonomy splits today's spike as a token break: ₹2.4 Cr / day (at-risk run-rate), 62% curable. Fraud-rule R-77 stepped approval down 13 pts; Batch #4471 risks ₹93 L (CAC, one-time) against the 30+7 closure clock."
           cta="Open blocker command center →"
           onClick={() => go("d2")}
         />
@@ -1163,7 +1315,7 @@ const D1_BRANDS: {
   {
     k: "travel",
     name: "Premium Travel",
-    spend: "₹312 Cr",
+    spend: "₹312 Cr MTD",
     wow: "−6.2%",
     up: false,
     prof: 38,
@@ -1173,7 +1325,7 @@ const D1_BRANDS: {
   {
     k: "cashback",
     name: "Cashback Plus",
-    spend: "₹468 Cr",
+    spend: "₹468 Cr MTD",
     wow: "+8.4%",
     up: true,
     prof: 71,
@@ -1183,7 +1335,7 @@ const D1_BRANDS: {
   {
     k: "fuel",
     name: "Fuel Co-brand",
-    spend: "₹214 Cr",
+    spend: "₹214 Cr MTD",
     wow: "+3.2%",
     up: true,
     prof: 52,
@@ -1193,7 +1345,7 @@ const D1_BRANDS: {
   {
     k: "biz",
     name: "Business",
-    spend: "₹290 Cr",
+    spend: "₹290 Cr MTD",
     wow: "+1.1%",
     up: true,
     prof: 64,
@@ -1202,9 +1354,9 @@ const D1_BRANDS: {
   },
 ];
 const D1_TIERS: [string, string, number, number, number][] = [
-  ["H1 · ₹1L+ spend", "₹420 Cr", 44, 30, 26],
-  ["H2 · ₹50k–1L", "₹312 Cr", 51, 27, 22],
-  ["H3 · ₹25–50k", "₹256 Cr", 58, 22, 20],
+  ["H1 · ₹1L+ spend", "₹420 Cr MTD", 44, 30, 26],
+  ["H2 · ₹50k–1L", "₹312 Cr MTD", 51, 27, 22],
+  ["H3 · ₹25–50k", "₹256 Cr MTD", 58, 22, 20],
 ];
 const D1_GMV = [
   { w: "W-6", g: 100, p: 100 },
@@ -1216,10 +1368,10 @@ const D1_GMV = [
   { w: "Now", g: 104, p: 93.6 },
 ];
 const D1_LEAK_WATCH: [string, string, string, string][] = [
-  ["O-142 Cashback", "₹78 L", "High", T.red],
-  ["Wallet-load MCC", "₹42 L", "High", T.red],
-  ["Fuel Friday", "₹21 L", "Medium", T.amber],
-  ["Grocery 2%", "₹19 L", "Medium", T.amber],
+  ["O-142 Cashback", "₹78 L MTD", "High", T.red],
+  ["Wallet-load MCC", "₹42 L MTD", "High", T.red],
+  ["Fuel Friday", "₹21 L MTD", "Medium", T.amber],
+  ["Grocery 2%", "₹19 L MTD", "Medium", T.amber],
 ];
 const D1_STRAIN: [string, number, number, number, number][] = [
   ["Wallet load", 18, 6, 9, 33],
@@ -1234,7 +1386,7 @@ const D1_AI: AiRow[] = [
     tag: "Offer economics",
     title: "Offer O-142 is cannibalising spend",
     body: "High redemption, near-zero incremental lift vs a matched control. Reward budget is subsidising spend that would have happened anyway.",
-    metric: "₹78 L leakage",
+    metric: "₹78 L MTD leakage",
     delta: "redemption 82% · lift 18%",
     icon: CircleAlert,
     root: "Eligibility is too broad — high-frequency customers who already spend in these MCCs are claiming the reward.",
@@ -1254,7 +1406,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹2.5 Cr net strain",
+    metric: "₹2.5 Cr MTD net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -1311,8 +1463,8 @@ const OFFERS: Offer[] = [
     d: "kill",
     redemption: "82%",
     lift: "18%",
-    cost: "₹96 L",
-    leakage: "₹78 L",
+    cost: "₹96 L MTD",
+    leakage: "₹78 L MTD",
     control: "+2% vs control",
     insight:
       "Redemption is largely non-incremental — matched-control spend is nearly identical. The offer subsidises spend that would have happened anyway.",
@@ -1326,8 +1478,8 @@ const OFFERS: Offer[] = [
     d: "retarget",
     redemption: "78%",
     lift: "46%",
-    cost: "₹46 L",
-    leakage: "₹21 L",
+    cost: "₹46 L MTD",
+    leakage: "₹21 L MTD",
     control: "+24% vs control",
     insight:
       "Roughly half the spend is incremental — works for new fuel-cohort but leaks on existing heavy users.",
@@ -1341,8 +1493,8 @@ const OFFERS: Offer[] = [
     d: "retarget",
     redemption: "71%",
     lift: "31%",
-    cost: "₹52 L",
-    leakage: "₹19 L",
+    cost: "₹52 L MTD",
+    leakage: "₹19 L MTD",
     control: "+14% vs control",
     insight:
       "Weak lift on an always-on category; reward is mostly going to baseline grocery spend.",
@@ -1356,8 +1508,8 @@ const OFFERS: Offer[] = [
     d: "keep",
     redemption: "55%",
     lift: "74%",
-    cost: "₹58 L",
-    leakage: "₹2 L",
+    cost: "₹58 L MTD",
+    leakage: "₹2 L MTD",
     control: "+41% vs control",
     insight:
       "Strong, clearly incremental lift in the target premium cohort. Protect it.",
@@ -1371,8 +1523,8 @@ const OFFERS: Offer[] = [
     d: "keep",
     redemption: "60%",
     lift: "67%",
-    cost: "₹38 L",
-    leakage: "₹4 L",
+    cost: "₹38 L MTD",
+    leakage: "₹4 L MTD",
     control: "+36% vs control",
     insight: "Healthy incremental dining spend; low leakage.",
     rec: "Keep; test a weekend-only variant for higher lift.",
@@ -1385,7 +1537,7 @@ const OFFERS: Offer[] = [
     d: "wait",
     redemption: "26%",
     lift: "?",
-    cost: "₹40 L",
+    cost: "₹40 L MTD",
     leakage: "tbd",
     control: "n too small",
     insight: "Cohort below the minimum size for a confident control read.",
@@ -1780,8 +1932,9 @@ function CommandCenter() {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
+            title={RUPEE_METHOD.mtd}
           >
-            ₹1,284 Cr
+            ₹1,284 Cr MTD
           </span>
           <span
             style={{
@@ -1797,7 +1950,7 @@ function CommandCenter() {
             ▲ +3.8%
           </span>
           <span style={{ fontSize: 10.5, fontWeight: 700, color: T.red }}>
-            profit −6.4%
+            contribution (after interchange & reward) −6.4%
           </span>
         </div>
         <div
@@ -1969,11 +2122,11 @@ function CommandCenter() {
           </span>
         </div>
       </W>
-      {/* gmv vs profitable monitor */}
+      {/* gmv vs contribution monitor */}
       <W
         accent={T.cyan}
-        title="Gross vs profitable spend"
-        sub="7-week · gross holds, profitable falls"
+        title="Gross vs contribution monitor"
+        sub="7-week · gross holds, contribution falls"
       >
         <div style={{ height: 132 }}>
           <ResponsiveContainer>
@@ -2007,7 +2160,7 @@ function CommandCenter() {
               <Line
                 type="monotone"
                 dataKey="p"
-                name="Profitable"
+                name="Contribution"
                 stroke={T.red}
                 strokeWidth={2.4}
                 dot={false}
@@ -2301,7 +2454,7 @@ function LeakPanel() {
                 type="number"
                 stroke={T.dim}
                 fontSize={10}
-                tickFormatter={(v) => `₹${v}L`}
+                tickFormatter={(v) => `₹${v}L MTD`}
               />
               <YAxis
                 type="category"
@@ -2313,7 +2466,7 @@ function LeakPanel() {
               <Tooltip
                 contentStyle={TIP}
                 cursor={{ fill: `${T.amber}10` }}
-                formatter={(v) => [`₹${v} L leakage`, ""]}
+                formatter={(v) => [`₹${v} L MTD leakage`, ""]}
               />
               <Bar
                 dataKey="leak"
@@ -2502,7 +2655,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "travel",
     name: "Premium Travel",
-    spend: "₹312 Cr",
+    spend: "₹312 Cr MTD",
     wow: "−6.2%",
     wowUp: false,
     txn: "2.1M",
@@ -2521,7 +2674,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "cashback",
     name: "Cashback Plus",
-    spend: "₹468 Cr",
+    spend: "₹468 Cr MTD",
     wow: "+8.4%",
     wowUp: true,
     txn: "5.4M",
@@ -2539,7 +2692,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "fuel",
     name: "Fuel Co-brand",
-    spend: "₹214 Cr",
+    spend: "₹214 Cr MTD",
     wow: "+3.2%",
     wowUp: true,
     txn: "1.7M",
@@ -2558,7 +2711,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "biz",
     name: "Business Card",
-    spend: "₹290 Cr",
+    spend: "₹290 Cr MTD",
     wow: "+1.1%",
     wowUp: true,
     txn: "1.2M",
@@ -2588,7 +2741,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   keep: [
     {
       name: "Travel 5X",
-      leak: "₹2 L",
+      leak: "₹2 L MTD",
       lift: "74%",
       conf: "High",
       owner: "Marketing",
@@ -2596,7 +2749,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
     },
     {
       name: "Dining 3X",
-      leak: "₹4 L",
+      leak: "₹4 L MTD",
       lift: "67%",
       conf: "High",
       owner: "Marketing",
@@ -2606,7 +2759,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   retarget: [
     {
       name: "Fuel Friday",
-      leak: "₹21 L",
+      leak: "₹21 L MTD",
       lift: "46%",
       conf: "High",
       owner: "Partner PM",
@@ -2614,7 +2767,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
     },
     {
       name: "Grocery 2%",
-      leak: "₹19 L",
+      leak: "₹19 L MTD",
       lift: "31%",
       conf: "Medium",
       owner: "Marketing",
@@ -2624,7 +2777,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   kill: [
     {
       name: "O-142 Cashback",
-      leak: "₹78 L",
+      leak: "₹78 L MTD",
       lift: "18%",
       conf: "Medium",
       owner: "Marketing",
@@ -2632,7 +2785,7 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
     },
     {
       name: "Wallet-load booster",
-      leak: "₹42 L",
+      leak: "₹42 L MTD",
       lift: "12%",
       conf: "Medium",
       owner: "Marketing",
@@ -2679,45 +2832,45 @@ const YIELD_ROWS: [
 ][] = [
   [
     "Wallet Load",
-    "₹86 Cr",
-    "₹3.0 Cr",
+    "₹86 Cr MTD",
+    "₹3.0 Cr MTD",
     "Low",
-    "₹4.2 Cr",
-    "₹0.6 Cr",
-    "−₹1.8 Cr",
+    "₹4.2 Cr MTD",
+    "₹0.6 Cr MTD",
+    "−₹1.8 Cr MTD",
     true,
     "Exclude / cap",
   ],
   [
     "Fuel-adjacent",
-    "₹61 Cr",
-    "₹1.7 Cr",
+    "₹61 Cr MTD",
+    "₹1.7 Cr MTD",
     "Low",
-    "₹2.1 Cr",
-    "₹0.3 Cr",
-    "−₹0.7 Cr",
+    "₹2.1 Cr MTD",
+    "₹0.3 Cr MTD",
+    "−₹0.7 Cr MTD",
     true,
     "Retier reward",
   ],
   [
     "Online Travel",
-    "₹142 Cr",
-    "₹6.7 Cr",
+    "₹142 Cr MTD",
+    "₹6.7 Cr MTD",
     "Good",
-    "₹1.7 Cr",
-    "₹0.2 Cr",
-    "+₹4.8 Cr",
+    "₹1.7 Cr MTD",
+    "₹0.2 Cr MTD",
+    "+₹4.8 Cr MTD",
     false,
     "Keep",
   ],
   [
     "Grocery",
-    "₹94 Cr",
-    "₹2.1 Cr",
+    "₹94 Cr MTD",
+    "₹2.1 Cr MTD",
     "Medium",
-    "₹1.1 Cr",
-    "₹0.1 Cr",
-    "+₹0.9 Cr",
+    "₹1.1 Cr MTD",
+    "₹0.1 Cr MTD",
+    "+₹0.9 Cr MTD",
     false,
     "Monitor",
   ],
@@ -2981,7 +3134,7 @@ function RewardYieldUnitEconomicsPanel() {
             "Interchange",
             "Band",
             "Reward",
-            "Fraud/Rev",
+            "Fraud/Rev*",
             "Net",
             "Status",
             "Action",
@@ -3031,9 +3184,12 @@ function RewardYieldUnitEconomicsPanel() {
           ),
         )}
       </div>
+      <div style={{ fontSize: 9.5, color: T.dim, marginTop: 6, lineHeight: 1.4 }}>
+        * Fraud leg requires the dispute / fraud-loss extract (not in a transaction dump).
+      </div>
       <AIInsightStrip tone="red">
-        Wallet-load interchange is ₹3.0 Cr on ₹86 Cr spend (~3.5%) but reward
-        runs 4.9% — net −₹1.8 Cr. Combined with fuel-adjacent, ₹2.5 Cr net
+        Wallet-load interchange is ₹3.0 Cr MTD on ₹86 Cr MTD spend (~3.5%) but reward
+        runs 4.9% — net −₹1.8 Cr MTD. Combined with fuel-adjacent, ₹2.5 Cr MTD net
         strain across two MCC bands. Cap accelerated rewards on both.
       </AIInsightStrip>
     </SectionCard>
@@ -3136,7 +3292,7 @@ function Drill1({ go }: { go: NavigateFn }) {
         sub="Transaction-only view of portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
         chips={
           <>
-            <Chip t="cyan">Transaction-only</Chip>
+            <Chip t="cyan">Transaction + offer / reward / settlement</Chip>
             <Chip t="gold">Brand + Marketing lens</Chip>
           </>
         }
@@ -3220,16 +3376,17 @@ type BlockerEvidence = {
   confidence: string;
   evidence: string[];
   actions: string[];
+  verdict?: string;
 };
 
 const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
   "Tokenised CNP|Premium CNP": {
     strength: "4.2× baseline",
     approvalGap: "14 pts",
-    atRisk: "₹2.4 Cr",
+    atRisk: "₹2.4 Cr / day (at-risk run-rate)",
     curable: "62%",
     started: "11:00",
-    owner: "ops",
+    owner: "payments",
     source: "token + auth feed",
     confidence: "High",
     evidence: [
@@ -3244,6 +3401,8 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
       "Prepare customer workaround script",
       "Monitor recovery within 2 hours",
     ],
+    verdict:
+      "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
   },
   "Fraud-rule block|3+ yr customers": {
     strength: "3.6× baseline",
@@ -3270,7 +3429,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
 const defaultBlockerEvidence = (): BlockerEvidence => ({
   strength: "2.4× baseline",
   approvalGap: "—",
-  atRisk: "₹68 L",
+  atRisk: "₹68 L / day (at-risk run-rate)",
   curable: "48%",
   started: "Today",
   owner: "ops",
@@ -3278,6 +3437,8 @@ const defaultBlockerEvidence = (): BlockerEvidence => ({
   confidence: "Med",
   evidence: ["Cohort-specific decline above seasonal baseline", "Repeat pattern in same time window"],
   actions: ["Open incident pack", "Route to owner with evidence"],
+  verdict:
+    "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
 });
 
 const D2_BLOCKER_ACTION_ROWS: {
@@ -3289,12 +3450,13 @@ const D2_BLOCKER_ACTION_ROWS: {
   risk: string;
   riskT: string;
   status: string;
+  customerFacing?: boolean;
 }[] = [
   {
     signal: "Tokenised CNP approval gap",
-    evidence: "14 pts · ₹2.4 Cr",
+    evidence: "14 pts · ₹2.4 Cr / day (at-risk run-rate)",
     impact: "Payment blocker",
-    owner: "ops",
+    owner: "payments",
     action: "Open ACS/token incident",
     risk: "Service risk",
     riskT: "cyan",
@@ -3319,6 +3481,7 @@ const D2_BLOCKER_ACTION_ROWS: {
     risk: "Obligation",
     riskT: "amber",
     status: "Draft ready",
+    customerFacing: true,
   },
   {
     signal: "Utilisation migration surge",
@@ -3341,7 +3504,7 @@ const D2_SPLIT_BARS = [
 ];
 
 const D2_PRIORITY_ALERTS: { n: number; text: string; owner: string; c: string }[] = [
-  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr", owner: "ops", c: T.red },
+  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr / day (at-risk run-rate)", owner: "payments", c: T.red },
   { n: 2, text: "Fraud Rule R-77 · −13 pts", owner: "fraud", c: T.amber },
   { n: 3, text: "Activation clock · 6.2K cards", owner: "conduct", c: T.violet },
 ];
@@ -3366,7 +3529,11 @@ function ApprovalHealthCard() {
           </div>
           <div>
             <Eyebrow>Curable</Eyebrow>
-            <Mono c={T.green} s={12}>62% · ₹2.4 Cr</Mono>
+            <Mono c={T.green} s={12}>
+              <span title={rupeeMethodForLabel("₹2.4 Cr / day (at-risk run-rate)")}>
+                62% · ₹2.4 Cr / day (at-risk run-rate)
+              </span>
+            </Mono>
           </div>
         </div>
         <div style={{ width: 88, flexShrink: 0 }}>
@@ -3474,7 +3641,7 @@ function OwnerSplitGrid() {
       <OwnerIssueCard
         title="Token / Auth"
         accent={T.red}
-        owner="ops"
+        owner="payments"
         lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 11:00"]}
       />
       <OwnerIssueCard
@@ -3487,7 +3654,7 @@ function OwnerSplitGrid() {
         title="Activation clock"
         accent={T.violet}
         owner="conduct"
-        lines={["Batch #4471", "D27", "6.2K cards", "₹93L CAC at risk"]}
+        lines={["Batch #4471", "D27", "6.2K cards", "₹93 L (CAC, one-time) at risk"]}
       />
     </div>
   );
@@ -3573,7 +3740,9 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
         </div>
         <div style={{ background: T.inset, borderRadius: 7, padding: "6px 8px" }}>
           <Eyebrow>Spend at risk</Eyebrow>
-          <Mono s={12}>{ev.atRisk}</Mono>
+          <span title={rupeeMethodForLabel(ev.atRisk)}>
+            <Mono s={12}>{ev.atRisk}</Mono>
+          </span>
         </div>
         <div style={{ background: T.inset, borderRadius: 7, padding: "6px 8px" }}>
           <Eyebrow>Curable share</Eyebrow>
@@ -3595,9 +3764,32 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
           {e}
         </div>
       ))}
+      {ev.verdict ? (
+        <>
+          <Eyebrow>Verdict</Eyebrow>
+          <div style={{ fontSize: 11, color: T.sub, padding: "2px 0 6px", lineHeight: 1.35 }}>
+            {ev.verdict}
+          </div>
+        </>
+      ) : null}
       <Eyebrow>Action</Eyebrow>
       {ev.actions.slice(0, 3).map((a) => (
-        <div key={a} style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>• {a}</div>
+        <div
+          key={a}
+          style={{
+            fontSize: 11,
+            color: T.sub,
+            padding: "2px 0",
+            lineHeight: 1.35,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
+          <span>• {a}</span>
+          {a === "Prepare customer workaround script" ? <ConsentChip /> : null}
+        </div>
       ))}
       <div style={{ marginTop: 6 }}><RouteChip r={ev.owner} /></div>
     </SectionCard>
@@ -3665,7 +3857,10 @@ function BlockerActionQueue() {
             <span style={{ color: T.sub }}>{r.evidence}</span>
             <span style={{ color: T.sub }}>{r.impact}</span>
             <RouteChip r={r.owner} />
-            <span style={{ color: T.sub, lineHeight: 1.35 }}>{r.action}</span>
+            <span style={{ color: T.sub, lineHeight: 1.35 }}>
+              {r.action}
+              {r.customerFacing ? <ConsentChip /> : null}
+            </span>
             <Pill t={r.riskT}>{r.risk}</Pill>
             <span style={{ fontSize: 9.5, color: T.muted }}>{r.status}</span>
           </div>

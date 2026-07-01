@@ -370,11 +370,208 @@ export const headRetailRiskSpikes: RiskSpike[] = [
   },
 ];
 
+/** Sterling Bank Head of Retail Banking — Raghu Narula research-aligned spike signals. */
+export const sterlingHeadRetailRiskSpikes: RiskSpike[] = [
+  {
+    id: "sterling-savings-decline-leak",
+    timestamp: "Last 4h",
+    spikeType: "Volume Surge",
+    magnitude: 57,
+    channel: "App, Voice",
+    topIntent: "Savings/Easy-Saver decline",
+    topIntentContext: "High impact · deposit outflow",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Savings Decline Leak",
+    customMetrics: [
+      { label: "Declined no-reason", value: "57%", delta: "+9 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Est. £ leak/wk", value: "£310K", delta: "↑ w/w", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "57% declined with no reason; FOS upheld conflicting explanation. Draft reason-code disclosure review — never auto-send.",
+  },
+  {
+    id: "sterling-deposit-flight",
+    timestamp: "Last 4h",
+    spikeType: "Sentiment Crash",
+    magnitude: 27,
+    channel: "App, Voice",
+    topIntent: "Interest removal → switch",
+    topIntentContext: "Critical · balances clearing",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Deposit Flight",
+    customMetrics: [
+      { label: "ARPAU", value: "£302 → £275", delta: "−£27", deltaIntent: "bad", trend: "down" },
+      { label: "Flight-risk balances", value: "↑ rising", deltaIntent: "bad", trend: "up" },
+    ],
+    detectedPhrases: ['"moving to Chase"', '"3.25% gone"', '"Monzo/Nationwide"'],
+    triggerInsight:
+      "Switch voice precedes outbound transfers. Draft save-offer for flight-risk cohort within the retention window.",
+  },
+  {
+    id: "sterling-primacy-cass-precursor",
+    timestamp: "Last 12h",
+    spikeType: "Volume Surge",
+    magnitude: 35,
+    channel: "Voice, App",
+    topIntent: "Silent-switch precursor",
+    topIntentContext: "Primacy erosion · 3mo lead",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Primacy / CASS-Loss Precursor",
+    customMetrics: [
+      { label: "Retail primacy", value: "35%", delta: "−3 pts", deltaIntent: "bad", trend: "down" },
+      { label: "CASS", value: "net loss", delta: "↘ outflow", deltaIntent: "bad" },
+    ],
+    triggerInsight:
+      "Switching intent ~3 months ahead of CASS data. Draft retention play for primacy customers showing disengagement voice.",
+  },
+  {
+    id: "sterling-acquisition-leak",
+    timestamp: "Last 24h",
+    spikeType: "Volume Surge",
+    magnitude: 42,
+    channel: "Onboarding, Chat",
+    topIntent: "Viable-but-rejected",
+    topIntentContext: "Growth suppressed by controls",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Acquisition Leak (Onboarding)",
+    customMetrics: [
+      { label: "SME openings", value: "3× when eased", deltaIntent: "good", trend: "up" },
+      { label: "Viable rejected", value: "↑ rising", deltaIntent: "bad", trend: "up" },
+    ],
+    detectedPhrases: ['"rejected, no reason"', '"prove I already trade"'],
+    triggerInsight:
+      "KYC tightening suppressing viable acquisition. Escalate criteria-calibration to CRO; Raghu's slice = growth lost + experience of viable-rejected.",
+  },
+  {
+    id: "sterling-assistant-containment",
+    timestamp: "Last 4h",
+    spikeType: "Volume Surge",
+    magnitude: 38,
+    channel: "Assistant, Voice",
+    topIntent: "Containment failure",
+    topIntentContext: "Cost-to-serve · OPEX leak",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "AI Cost-to-Serve / Assistant Containment",
+    customMetrics: [
+      { label: "Override calls", value: "↑ rising", deltaIntent: "bad", trend: "up" },
+      { label: "False-positive blocks", value: "↑ rising", deltaIntent: "bad", trend: "up" },
+    ],
+    detectedPhrases: ['"let me pay"', '"stop asking"', '"speak to a human"'],
+    triggerInsight:
+      "Assistant doom-loop + false-positive payee blocks driving override calls. Route rule-tuning to fraud-ops; track containment cost-to-serve here.",
+  },
+];
+
+/** Sterling Bank Head of Contact — Raghu Narula franchise-altitude spike signals (CCBO). */
+export const sterlingHeadContactRiskSpikes: RiskSpike[] = [
+  {
+    id: "sterling-contact-switch-intent",
+    timestamp: "Last 3h",
+    spikeType: "Urgency Surge",
+    magnitude: 41,
+    channel: "Voice",
+    topIntent: "Switch-intent precursor",
+    topIntentContext: "Service-driven attrition · franchise",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Service-Driven Switch-Intent",
+    customMetrics: [
+      { label: "Switch-intent", value: "14% → 22%", delta: "+8 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Sentiment@close", value: "72% → 64%", delta: "−8 pts", deltaIntent: "bad", trend: "down" },
+    ],
+    detectedPhrases: ['"moving my salary"', '"Monzo is faster"', '"closing this account"'],
+    triggerInsight:
+      "Switch-intent in voice before balances move. Draft retention fix — never auto-send.",
+  },
+  {
+    id: "sterling-contact-assistant-fail",
+    timestamp: "Last 4h",
+    spikeType: "Volume Surge",
+    magnitude: 38,
+    channel: "Assistant, Voice",
+    topIntent: "Payee block override",
+    topIntentContext: "Agentic-AI containment failure · H6",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Agentic-AI Containment Failure",
+    customMetrics: [
+      { label: "Containment", value: "87% → 84%", delta: "−3 pts", deltaIntent: "bad", trend: "down" },
+      { label: "OPEX leak/wk", value: "£142K", delta: "↑ w/w", deltaIntent: "bad", trend: "up" },
+    ],
+    detectedPhrases: ['"let me pay"', '"stop asking"', '"speak to a human"'],
+    triggerInsight:
+      "Doom-loops and payee blocks driving override calls. Route rule-tuning to fraud-ops.",
+  },
+  {
+    id: "sterling-contact-reputation-drag",
+    timestamp: "Last 2h",
+    spikeType: "Sentiment Crash",
+    magnitude: 28,
+    channel: "Social, App Store",
+    topIntent: "Service complaint spillover",
+    topIntentContext: "Reputation→acquisition drag",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Reputation→Acquisition Drag",
+    customMetrics: [
+      { label: "Trustpilot", value: "3.46 → 3.38", delta: "−0.08", deltaIntent: "bad", trend: "down" },
+      { label: "Social spillover", value: "38%", delta: "+11 pts", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "Spillover denting acquisition. Quantify reputation→acquisition drag — never auto-send.",
+  },
+  {
+    id: "sterling-contact-cost-serve",
+    timestamp: "Last 6h",
+    spikeType: "Volume Surge",
+    magnitude: 33,
+    channel: "Assistant, Chat",
+    topIntent: "Avoidable repeat-contact",
+    topIntentContext: "Cost-to-serve leak",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Avoidable Cost-to-Serve Leak",
+    customMetrics: [
+      { label: "Avoidable repeat", value: "14% → 19%", delta: "+5 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Doom-loop sessions", value: "↑ rising", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "Containment failures inflating cost-to-serve. Expand app deflection; route ops to COO.",
+  },
+  {
+    id: "sterling-contact-fos-duty",
+    timestamp: "Last 24h",
+    spikeType: "Volume Surge",
+    magnitude: 22,
+    channel: "Email, Voice",
+    topIntent: "Payee block dispute",
+    topIntentContext: "FOS / Consumer Duty exposure",
+    aiAction: "",
+    severity: "low",
+    cardTitle: "FOS / Consumer Duty Exposure",
+    customMetrics: [
+      { label: "Open cases", value: "18", delta: "+4", deltaIntent: "bad", trend: "up" },
+      { label: "Escalation", value: "12%", delta: "+3 pts", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "FOS / Consumer Duty exposure on payee-block journeys. Draft fair-outcome review — never auto-send.",
+  },
+];
+
 export function AIRiskSpikeMonitor({
   spikes = mockRiskSpikes,
   driverContext,
   driverSignals,
   isDarkMode: isDarkModeProp,
+  forceDarkMode = false,
+  alertBadgeLabel = "Operational Alerts",
+  alertSubtitle = "Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.",
+  cardLayout = "default",
 }: {
   spikes?: RiskSpike[];
   /** Optional line explaining what drives volume/sentiment (e.g. rate changes). Shown under the subtitle. */
@@ -383,22 +580,30 @@ export function AIRiskSpikeMonitor({
   driverSignals?: string[];
   /** When embedded in a themed shell (e.g. Fluid CX V3), pass the parent theme explicitly. */
   isDarkMode?: boolean;
+  /** Always render dark-theme card styles (role-dashboard embeds without `dark` on html). */
+  forceDarkMode?: boolean;
+  alertBadgeLabel?: string;
+  alertSubtitle?: string;
+  /** Equal-height franchise cards (Sterling head_contact — matches head_retail rhythm). */
+  cardLayout?: "default" | "franchise";
 }) {
   const detectedDark = useRiskMonitorDarkMode();
-  const isDarkMode = isDarkModeProp ?? detectedDark;
+  const isDarkMode = forceDarkMode || (isDarkModeProp ?? detectedDark);
 
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
-        <h2 className={`text-lg font-semibold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <h2 className={`text-lg font-semibold flex items-center gap-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
           ✨ AI Risk Spike Monitor
         </h2>
-        <span className={`text-xs px-2 py-1 rounded-full tracking-wide uppercase border ${isDarkMode ? "bg-rose-500/25 text-rose-100 border-rose-400/45" : "bg-rose-500/20 text-rose-700 border-rose-500/40"}`}>
-          Operational Alerts
+        <span
+          className={`text-xs px-2 py-1 rounded-full tracking-wide uppercase border ${isDarkMode ? "bg-rose-500/25 text-rose-100 border-rose-400/45" : "bg-rose-500/20 text-rose-700 border-rose-500/40"}`}
+        >
+          {alertBadgeLabel}
         </span>
       </div>
       <p className={`text-xs leading-relaxed ${isDarkMode ? "text-gray-200" : "text-gray-600"}`}>
-        Live detection of sudden sentiment, SLA, urgency, volume, and backlog shocks across channels.
+        {alertSubtitle}
       </p>
       {driverContext ? (
         <div className="space-y-2">
@@ -410,7 +615,7 @@ export function AIRiskSpikeMonitor({
               {driverSignals.map((signal, i) => (
                 <span
                   key={i}
-                  className={`text-[11px] px-2.5 py-1 rounded-md border ${isDarkMode ? 'bg-white/5 border-white/10 text-gray-300' : 'bg-gray-100 border-gray-200 text-gray-700'}`}
+                  className={`text-[11px] px-2.5 py-1 rounded-md border ${isDarkMode ? "bg-white/5 border-white/10 text-gray-300" : "bg-gray-100 border-gray-200 text-gray-700"}`}
                 >
                   {signal}
                 </span>
@@ -421,7 +626,12 @@ export function AIRiskSpikeMonitor({
       ) : null}
       <div className="flex w-full min-w-0 gap-4 overflow-x-auto pb-3 items-stretch">
         {spikes.map((spike) => (
-          <RiskSpikeCard key={spike.id} spike={spike} isDarkMode={isDarkMode} />
+          <RiskSpikeCard
+            key={spike.id}
+            spike={spike}
+            isDarkMode={isDarkMode}
+            cardLayout={cardLayout}
+          />
         ))}
       </div>
     </div>
@@ -433,24 +643,24 @@ function useRiskMonitorDarkMode(): boolean {
 
   useEffect(() => {
     const checkTheme = () => {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'dark') {
+      const stored = localStorage.getItem("theme");
+      if (stored === "dark") {
         setIsDarkMode(true);
         return;
       }
-      if (stored === 'light') {
+      if (stored === "light") {
         setIsDarkMode(false);
         return;
       }
       const inLisnDarkShell = document.querySelector('.lisn-shell[data-theme="dark"]') !== null;
-      setIsDarkMode(document.documentElement.classList.contains('dark') || inLisnDarkShell);
+      setIsDarkMode(document.documentElement.classList.contains("dark") || inLisnDarkShell);
     };
     checkTheme();
     const observer = new MutationObserver(checkTheme);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-    const shell = document.querySelector('.lisn-shell');
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    const shell = document.querySelector(".lisn-shell");
     if (shell) {
-      observer.observe(shell, { attributes: true, attributeFilter: ['data-theme'] });
+      observer.observe(shell, { attributes: true, attributeFilter: ["data-theme"] });
     }
     return () => observer.disconnect();
   }, []);
@@ -458,7 +668,16 @@ function useRiskMonitorDarkMode(): boolean {
   return isDarkMode;
 }
 
-function RiskSpikeCard({ spike, isDarkMode }: { spike: RiskSpike; isDarkMode: boolean }) {
+function RiskSpikeCard({
+  spike,
+  isDarkMode,
+  cardLayout = "default",
+}: {
+  spike: RiskSpike;
+  isDarkMode: boolean;
+  cardLayout?: "default" | "franchise";
+}) {
+  const franchise = cardLayout === "franchise";
   const iconMeta = spikeIcon[spike.spikeType];
   const severityClass = isDarkMode ? severityStyles[spike.severity].dark : severityStyles[spike.severity].light;
   const detailRows = (spike.customMetrics ?? getDetailRows(spike)).slice(0, 2);
@@ -471,11 +690,19 @@ function RiskSpikeCard({ spike, isDarkMode }: { spike: RiskSpike; isDarkMode: bo
 
   return (
     <div
-      className={`w-[17rem] shrink-0 sm:w-[18rem] h-[22.5rem] rounded-2xl border px-4 py-4 text-sm shadow-lg flex flex-col ${severityClass} ${isDarkMode ? "text-gray-100" : "text-gray-800"}`}
+      className={
+        franchise
+          ? `min-w-[15rem] flex-1 basis-0 rounded-2xl border px-4 py-5 text-sm shadow-lg flex flex-col sm:min-w-[16rem] min-h-[17.5rem] h-full ${severityClass} ${isDarkMode ? "text-gray-200" : "text-gray-800"}`
+          : `w-[17rem] shrink-0 sm:w-[18rem] h-[22.5rem] rounded-2xl border px-4 py-4 text-sm shadow-lg flex flex-col ${severityClass} ${isDarkMode ? "text-gray-100" : "text-gray-800"}`
+      }
     >
-      <div className="flex items-start justify-between gap-2 min-h-[2.75rem]">
-        <div className={`flex items-start gap-2 text-sm font-semibold leading-snug line-clamp-2 min-w-0 flex-1 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-          <span className={`${iconMeta.color} text-lg leading-none shrink-0 pt-0.5`}>{iconMeta.icon}</span>
+      <div className={`flex items-start justify-between gap-2 ${franchise ? "" : "min-h-[2.75rem]"}`}>
+        <div
+          className={`flex gap-2 text-sm font-semibold min-w-0 flex-1 ${franchise ? "items-center" : "items-start leading-snug line-clamp-2"} ${isDarkMode ? "text-white" : "text-gray-900"}`}
+        >
+          <span className={`${iconMeta.color} text-lg ${franchise ? "shrink-0" : "leading-none shrink-0 pt-0.5"}`}>
+            {iconMeta.icon}
+          </span>
           <span>{cardTitle}</span>
         </div>
         <span
@@ -486,9 +713,17 @@ function RiskSpikeCard({ spike, isDarkMode }: { spike: RiskSpike; isDarkMode: bo
         </span>
       </div>
 
-      <div className={`mt-2 h-[4.75rem] space-y-1.5 text-[11px] ${isDarkMode ? "text-gray-200" : "text-gray-600"}`}>
-        <div className="flex justify-between gap-3 items-baseline min-h-[1rem]">
-          <span className={`uppercase tracking-wide font-semibold shrink-0 ${metaLabelClass}`}>
+      <div
+        className={
+          franchise
+            ? `mt-3 space-y-1 text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-600"}`
+            : `mt-2 h-[4.75rem] space-y-1.5 text-[11px] ${isDarkMode ? "text-gray-200" : "text-gray-600"}`
+        }
+      >
+        <div className={`flex justify-between gap-3 ${franchise ? "" : "items-baseline min-h-[1rem]"}`}>
+          <span
+            className={`uppercase tracking-wide shrink-0 ${franchise ? (isDarkMode ? "text-gray-500" : "text-gray-700") : `font-semibold ${metaLabelClass}`}`}
+          >
             {spike.region ? "Region" : "Channel"}
           </span>
           <span className={`font-semibold text-right truncate ${metaValueClass}`}>
@@ -515,11 +750,15 @@ function RiskSpikeCard({ spike, isDarkMode }: { spike: RiskSpike; isDarkMode: bo
       </div>
 
       <div
-        className={`mt-3 h-[7.25rem] space-y-0 rounded-xl border p-3 text-xs flex flex-col justify-center ${
-          isDarkMode
-            ? "border-white/20 bg-zinc-950/85 text-gray-100 shadow-inner shadow-black/30"
-            : "border-gray-300 bg-gray-50 text-gray-800"
-        }`}
+        className={
+          franchise
+            ? `mt-4 h-[6.5rem] shrink-0 space-y-2 rounded-xl border p-3 text-xs flex flex-col justify-center ${isDarkMode ? "border-white/5 bg-black/30 text-gray-200" : "border-gray-300 bg-gray-50 text-gray-800"}`
+            : `mt-3 h-[7.25rem] space-y-0 rounded-xl border p-3 text-xs flex flex-col justify-center ${
+                isDarkMode
+                  ? "border-white/20 bg-zinc-950/85 text-gray-100 shadow-inner shadow-black/30"
+                  : "border-gray-300 bg-gray-50 text-gray-800"
+              }`
+        }
       >
         {detailRows.map((row, idx) => {
           const r = row as CustomMetric;
@@ -532,45 +771,80 @@ function RiskSpikeCard({ spike, isDarkMode }: { spike: RiskSpike; isDarkMode: bo
                 : "text-gray-400"
             : deltaIntentClass[intent];
           const arrow = r.trend ? trendArrow[r.trend] : null;
+          const showDelta = Boolean(r.delta && !(r.delta === "↑" && r.value));
           return (
             <div
               key={`${row.label}-${idx}`}
-              className="flex items-center justify-between gap-3 min-h-[2.5rem] py-0.5"
+              className={`flex items-center justify-between gap-3 ${franchise ? "" : "min-h-[2.5rem] py-0.5"}`}
             >
-              <span className={`shrink-0 ${isDarkMode ? "text-gray-300 font-medium" : "text-gray-600"}`}>{row.label}</span>
-              <div className="text-right min-w-0">
-                <div className={`font-semibold leading-tight min-h-[1rem] ${isDarkMode ? "text-white" : "text-gray-900"}`}>
-                  {r.value || "\u00A0"}
-                </div>
-                <div
-                  className={`text-[11px] font-semibold flex items-center justify-end gap-1 min-h-[0.875rem] leading-tight ${deltaClass}`}
-                >
-                  {r.delta ? (
-                    <>
-                      {arrow ? <span aria-hidden>{arrow}</span> : null}
-                      <span className="truncate max-w-[7.5rem]">{deltaForTrendDisplay(r.delta, r.trend)}</span>
-                    </>
-                  ) : (
-                    "\u00A0"
-                  )}
-                </div>
+              <span
+                className={
+                  franchise
+                    ? isDarkMode
+                      ? "text-gray-400"
+                      : "text-gray-600"
+                    : `shrink-0 ${isDarkMode ? "text-gray-300 font-medium" : "text-gray-600"}`
+                }
+              >
+                {row.label}
+              </span>
+              <div className={`text-right ${franchise ? "" : "min-w-0"}`}>
+                {franchise ? (
+                  <>
+                    {r.value ? (
+                      <div className={`font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{r.value}</div>
+                    ) : null}
+                    {showDelta ? (
+                      <div className={`text-[11px] font-semibold flex items-center justify-end gap-1 ${deltaClass}`}>
+                        {arrow ? <span aria-hidden>{arrow}</span> : null}
+                        <span>{deltaForTrendDisplay(r.delta!, r.trend)}</span>
+                      </div>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    <div className={`font-semibold leading-tight min-h-[1rem] ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                      {r.value || "\u00A0"}
+                    </div>
+                    <div
+                      className={`text-[11px] font-semibold flex items-center justify-end gap-1 min-h-[0.875rem] leading-tight ${deltaClass}`}
+                    >
+                      {r.delta ? (
+                        <>
+                          {arrow ? <span aria-hidden>{arrow}</span> : null}
+                          <span className="truncate max-w-[7.5rem]">{deltaForTrendDisplay(r.delta, r.trend)}</span>
+                        </>
+                      ) : (
+                        "\u00A0"
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           );
         })}
       </div>
 
-      <div
-        className={`mt-auto h-[4.75rem] rounded-xl border p-3 text-xs leading-relaxed overflow-hidden ${
-          isDarkMode
-            ? "border-amber-500/40 bg-zinc-950/70 text-gray-100"
-            : "border-rose-500/40 bg-rose-500/10 text-rose-900"
-        }`}
-      >
-        <p className={`line-clamp-4 m-0 ${isDarkMode ? "text-gray-100" : ""}`}>
-          {insightText ? `✨ ${insightText}` : "\u00A0"}
-        </p>
-      </div>
+      {franchise ? (
+        insightText ? (
+          <div className="mt-auto min-h-[3.75rem] rounded-xl border border-rose-500/40 bg-rose-500/10 p-3 text-[11px] leading-snug text-rose-100">
+            ✨ {insightText}
+          </div>
+        ) : null
+      ) : (
+        <div
+          className={`mt-auto h-[4.75rem] rounded-xl border p-3 text-xs leading-relaxed overflow-hidden ${
+            isDarkMode
+              ? "border-amber-500/40 bg-zinc-950/70 text-gray-100"
+              : "border-rose-500/40 bg-rose-500/10 text-rose-900"
+          }`}
+        >
+          <p className={`line-clamp-4 m-0 ${isDarkMode ? "text-gray-100" : ""}`}>
+            {insightText ? `✨ ${insightText}` : "\u00A0"}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

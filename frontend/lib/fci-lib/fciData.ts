@@ -50,6 +50,10 @@ export interface FCICluster {
   // Root cause breakdown
   processError?: number;        // Percentage due to process/system issues
   productKnowledgeGap?: number; // Percentage due to agent knowledge gaps
+  /** Sterling franchise drill-down — replaces ops metrics in detail panel */
+  franchiseInsight?: string;
+  depositAtRisk?: string;
+  moveToCompetitorPct?: number;
   // Channel breakdown for root causes
   processErrorByChannel?: { channel: string; count: number; percentage: number }[];
   productKnowledgeGapByChannel?: { channel: string; count: number; percentage: number }[];

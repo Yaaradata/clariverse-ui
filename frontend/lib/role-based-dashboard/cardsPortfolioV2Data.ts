@@ -26,38 +26,38 @@ export async function generateCardsPortfolioV2AIResponse(
   if (m.includes("curable") || (m.includes("decline") && m.includes("recoverable"))) {
     return (
       `**Curable decline clusters today**\n\n` +
-      `🔴 **62% of today's decline spike is curable** · **₹2.4 Cr GMV recoverable** before the next working session\n\n` +
+      `🔴 **62% of today's decline spike is curable** · **₹2.4 Cr / day (at-risk run-rate) GMV recoverable** before the next working session\n\n` +
       `**Top 3 recoverable clusters** (ranked by ₹ at risk × recovery propensity):\n` +
-      `1. **Tokenised CNP · Premium CNP** — authentication step-up / token path · **₹2.4 Cr** · 14 pt approval gap since 11:00 · Owner: Ops / Risk\n` +
-      `2. **Insufficient-funds soft declines · Cashback Plus** — salary-cycle bulge suppressed · **₹38 L** · limit/EMI nudge eligible · Owner: Product\n` +
-      `3. **3-DS challenge timeouts · Travel co-brand** — route latency, not fraud · **₹22 L** · retry + step-up tuning · Owner: Ops\n\n` +
+      `1. **Tokenised CNP · Premium CNP** — authentication step-up / token path · **₹2.4 Cr / day (at-risk run-rate)** · 14 pt approval gap since 11:00 · Owner: Payments & Authorisation\n` +
+      `2. **Insufficient-funds soft declines · Cashback Plus** — salary-cycle bulge suppressed · **₹38 L / day (at-risk run-rate)** · limit/EMI nudge eligible · Owner: Product\n` +
+      `3. **3-DS challenge timeouts · Travel co-brand** — route latency, not fraud · **₹22 L / day (at-risk run-rate)** · retry + step-up tuning · Owner: Payments & Authorisation\n\n` +
       `**Structural (not curable today)**: fraud-rule R-77 blocks on tenured BINs — needs rule review, not a customer nudge.\n\n` +
-      `**Recommended action**: Open ACS/token incident for cluster #1; draft recovery nudge for eligible soft-decline cohort only (RBI consent-compliant).`
+      `**Recommended action**: Open ACS/token incident for cluster #1; draft recovery nudge for eligible soft-decline cohort only (RBI consent-compliant) · Consent: service-comms · human approves`
     );
   }
 
   if (m.includes("offer") && (m.includes("subsidis") || m.includes("incremental") || m.includes("zero"))) {
     return (
       `**Offers subsidising existing spend**\n\n` +
-      `🔴 **2 offers flagged as net-negative on incrementality** · **₹1.3 Cr reallocatable** this week\n\n` +
+      `🔴 **2 offers flagged as net-negative on incrementality** · **₹1.3 Cr MTD reallocatable** this week\n\n` +
       `**Kill / pause now**:\n` +
-      `• **O-142 Cashback** — 82% redemption but only **+2% vs matched control** · **₹78 L leakage** on grocery, wallet-load, recharge · Recommendation: pause wave 2 or narrow to lapsing low-frequency users\n` +
-      `• **Grocery 2%** — healthy redemption masking near-zero lift on existing heavy grocery spend · **₹19 L** run-rate leak\n\n` +
+      `• **O-142 Cashback** — 82% redemption but only **+2% vs matched control** · **₹78 L MTD leakage** on grocery, wallet-load, recharge · Recommendation: pause wave 2 or narrow to lapsing low-frequency users\n` +
+      `• **Grocery 2%** — healthy redemption masking near-zero lift on existing heavy grocery spend · **₹19 L MTD** run-rate leak\n\n` +
       `**Retarget, don't kill**:\n` +
       `• **Fuel Friday** — ~50% incremental on new fuel cohort; leaks on existing heavy users · cap to first-spend band\n\n` +
       `**Protect**:\n` +
       `• **Premium dining 5×** — clearly incremental in target premium cohort · keep\n\n` +
-      `**Owner**: Head of Cards — Marketing · LiSN draft: pause O-142 wave 2 and reallocate ₹78 L to incremental dining offer.`
+      `**Owner**: Head of Cards — Marketing · LiSN draft: pause O-142 wave 2 and reallocate ₹78 L MTD to incremental dining offer.`
     );
   }
 
   if (m.includes("reward-negative") || (m.includes("mdr") && m.includes("fraud"))) {
     return (
       `**Reward-negative spend categories**\n\n` +
-      `🔴 **2 MCC bands crossed net-negative** after the earn-rate change · **₹2.5 Cr combined net strain** (interchange − reward − fraud)\n\n` +
+      `🔴 **2 MCC bands crossed net-negative** after the earn-rate change · **₹2.5 Cr MTD combined net strain** (interchange − reward − fraud)\n\n` +
       `**Categories**:\n` +
-      `1. **Wallet-load MCCs** — interchange **₹3.0 Cr** vs reward **₹4.2 Cr** + fraud **₹0.6 Cr** · **net −₹1.8 Cr** on ₹86 Cr spend (~3.5% interchange, 4.9% reward)\n` +
-      `2. **Fuel-adjacent MCCs** — interchange **₹1.7 Cr** vs reward **₹2.1 Cr** + fraud **₹0.3 Cr** · **net −₹0.7 Cr** on ₹61 Cr spend\n\n` +
+      `1. **Wallet-load MCCs** — interchange **₹3.0 Cr MTD** vs reward **₹4.2 Cr MTD** + fraud **₹0.6 Cr MTD** · **net −₹1.8 Cr MTD** on ₹86 Cr MTD spend (~3.5% interchange, 4.9% reward)\n` +
+      `2. **Fuel-adjacent MCCs** — interchange **₹1.7 Cr MTD** vs reward **₹2.1 Cr MTD** + fraud **₹0.3 Cr MTD** · **net −₹0.7 Cr MTD** on ₹61 Cr MTD spend\n\n` +
       `**Recommended action**:\n` +
       `1. Cap or exclude the 2 MCC bands from accelerated earn\n` +
       `2. Re-tier earn by MDR band in rewards engine\n` +
@@ -104,19 +104,19 @@ export async function generateCardsPortfolioV2AIResponse(
       `• **Tokenised CNP approval gap: 14 pts** on Premium CNP since **11:00**\n` +
       `• **Non-tokenised CNP remains within baseline** — same merchants, same cohort\n` +
       `• Technical decline codes elevated on token-provisioning / ACS route after config window\n` +
-      `• **₹2.4 Cr at risk** · **62% curable** via token re-provision + retry flow\n\n` +
+      `• **₹2.4 Cr / day (at-risk run-rate)** · **62% curable** via token re-provision + retry flow\n\n` +
       `**Ruled out**:\n` +
       `• Processor-wide outage — other routes normal\n` +
       `• Merchant payload batch — CP path unaffected\n` +
       `• Campaign-driven spend surge — volume flat, approval collapsed\n\n` +
-      `**Recommended action**: Open ACS/token incident · check 3DS / CoFT config · Owner: Ops / Risk (immediate)`
+      `**Recommended action**: Open ACS/token incident · check 3DS / CoFT config · Owner: Payments & Authorisation (immediate)`
     );
   }
 
   if (m.includes("activation") || m.includes("30+7") || m.includes("closure clock") || m.includes("batch")) {
     return (
       `**Activation batch — RBI 30+7 closure clock**\n\n` +
-      `🟠 **Batch #4471** · **D27** · **6.2K cards** at risk · **₹93 L CAC** stranded if closure fires\n\n` +
+      `🟠 **Batch #4471** · **D27** · **6.2K cards** at risk · **₹93 L (CAC, one-time)** stranded if closure fires\n\n` +
       `**Trajectory**:\n` +
       `• Activation curve tracking **11 pts below** sourcing-channel baseline\n` +
       `• Projected closure line: **day 37** (30+7 RBI unactivated-card mandate)\n` +
@@ -148,11 +148,11 @@ export async function generateCardsPortfolioV2AIResponse(
     `**Cards Portfolio Manager — transaction & blocker posture**\n\n` +
     `📊 **Today's read** (transaction-only):\n` +
     `• Approval rate: **81%** (−13 pts) · Decline spike **+38%** since 11:00\n` +
-    `• **62% curable** · **₹2.4 Cr** recoverable on tokenised CNP path\n` +
-    `• Offer O-142 leaking **₹78 L** · 2 reward-negative MCC bands (**₹2.5 Cr** net strain)\n` +
-    `• Fraud Rule R-77 stepped approval down · Batch #4471 at D27 (**₹93 L CAC** at risk)\n\n` +
+    `• **62% curable** · **₹2.4 Cr / day (at-risk run-rate)** recoverable on tokenised CNP path\n` +
+    `• Offer O-142 leaking **₹78 L MTD** · 2 reward-negative MCC bands (**₹2.5 Cr MTD** net strain)\n` +
+    `• Fraud Rule R-77 stepped approval down · Batch #4471 at D27 (**₹93 L (CAC, one-time)** at risk)\n\n` +
     `**Top 3 actions before EOD**:\n` +
-    `1. Open ACS/token incident — tokenised CNP gap (Ops / Risk)\n` +
+    `1. Open ACS/token incident — tokenised CNP gap (Payments & Authorisation)\n` +
     `2. Roll-back review — Fraud Rule R-77 (Fraud)\n` +
     `3. Pause O-142 wave 2 — non-incremental cashback (Marketing)\n\n` +
     `**Ask me about** curable declines, offer incrementality, reward-negative categories, brand drift, fraud-rule blocks, token/CoFT attribution, activation clocks, or roll/util advisories.`

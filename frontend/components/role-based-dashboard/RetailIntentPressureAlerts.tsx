@@ -12,8 +12,11 @@ import {
   Layers,
   Repeat2,
   BellOff,
+  FileWarning,
+  ClipboardList,
 } from "lucide-react";
 
+export type RetailIntentPressureVariant = "default" | "retail_h4";
 
 type Accent = "amber" | "rose" | "indigo" | "emerald" | "cyan" | "violet";
 
@@ -118,6 +121,62 @@ const CARDS: Array<{
   },
 ];
 
+const H4_CARDS: Array<{
+  id: string;
+  accent: Accent;
+  title: string;
+  icon: typeof Flame;
+  cluster: string;
+  body: string;
+  action: string;
+}> = [
+  {
+    id: "acquisition-leak",
+    accent: "amber",
+    title: "Acquisition Leak — KYC/onboarding queue",
+    icon: Flame,
+    cluster: "Post-fine constraint · viable tail suppressed",
+    body: "612 retail accounts past 3-day SLA; 38% source-of-wealth refresh; viable-but-rejected tail growing · ~£2.3M growth lost to controls.",
+    action: "Propose risk-based tiering for low-risk salary accounts; draft calibration brief to release the viable tail in 14 days (never auto-approve).",
+  },
+  {
+    id: "sme-entity",
+    accent: "rose",
+    title: "SME Entity-Check Friction",
+    icon: Building2,
+    cluster: "Sole-trader / PSC verification",
+    body: "Manual entity checks blocking 340 SME applications · PSC mismatch and proof-of-trading loops drive 48% stage approval rate vs 72% retail KYC.",
+    action: "Draft entity-check playbook separating sole-trader fast-track from complex PSC cases; propose BPO surge for manual entity queue.",
+  },
+  {
+    id: "sow-backlog",
+    accent: "indigo",
+    title: "Source-of-Wealth Refresh Backlog",
+    icon: BarChart3,
+    cluster: "Source-of-wealth refresh · manual review",
+    body: "612-account backlog · 38% of past-SLA queue · average 4.6 days in manual review vs 2-day SLA target · highest decline-to-reapply correlation.",
+    action: "Propose risk-based tiering for salary-funded accounts; draft document checklist to cut re-submission loops (never auto-send).",
+  },
+  {
+    id: "proof-trading",
+    accent: "emerald",
+    title: "Proof-of-Trading Viable Rejections",
+    icon: FileWarning,
+    cluster: "SME viable-but-rejected",
+    body: "280 applications declined despite trading evidence submitted twice · 'prove I already trade' voice theme in 41% of SME reject appeals.",
+    action: "Draft criteria-calibration brief for proof-of-trading thresholds; propose specialist review lane for repeat submitters.",
+  },
+  {
+    id: "appeal-reapply",
+    accent: "cyan",
+    title: "Appeal / Re-Apply Volume",
+    icon: ClipboardList,
+    cluster: "Rejected viables · re-application loop",
+    body: "1,313 viable-but-rejected applicants in period · 22% re-applied within 30 days · duplicate KYC cost and NPS drag on acquisition channel.",
+    action: "Propose appeal fast-track with preserved documentation; draft comms template explaining decline reason (never auto-approve re-applications).",
+  },
+];
+
 const accentRing: Record<Accent, string> = {
   amber: "border-amber-500/40 bg-amber-500/5",
   rose: "border-rose-500/40 bg-rose-500/5",
@@ -154,22 +213,42 @@ const accentSparkle: Record<Accent, string> = {
   violet: "text-violet-300",
 };
 
-export function RetailIntentPressureAlerts() {
+export function RetailIntentPressureAlerts({
+  variant = "default",
+}: {
+  variant?: RetailIntentPressureVariant;
+}) {
+  const isH4 = variant === "retail_h4";
+  const cards = isH4 ? H4_CARDS : CARDS;
+
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-3">
         <h2 className="flex items-center gap-2 text-lg font-semibold text-white">
           <span aria-hidden>✨</span>
-          Intent Pressure Alerts
+          {isH4 ? "Acquisition Pressure Alerts" : "Intent Pressure Alerts"}
         </h2>
       </div>
       <p className="text-xs text-gray-400">
-        Service Fulfilment view for the <span className="font-semibold text-gray-300">Head of Retail Banking</span> —
-        where demand, regulatory risk, and channel execution collide. AI surfaces the clusters that need your capacity,
-        policy, or partner decisions this week.
+        {isH4 ? (
+          <>
+            Growth / acquisition view for{" "}
+            <span className="font-semibold text-gray-300">Chief Customer &amp; Banking Officer</span>
+            {" — "}
+            where post-fine KYC constraints suppress viable new customers and where to draft release actions this week.
+          </>
+        ) : (
+          <>
+            Service Fulfilment view for the{" "}
+            <span className="font-semibold text-gray-300">Head of Retail Banking</span>
+            {" — "}
+            where demand, regulatory risk, and channel execution collide. AI surfaces the clusters that need your capacity,
+            policy, or partner decisions this week.
+          </>
+        )}
       </p>
       <div className="flex min-w-0 w-full items-stretch gap-4 overflow-x-auto pb-6">
-        {CARDS.map((c) => {
+        {cards.map((c) => {
           const Icon = c.icon;
           return (
             <div

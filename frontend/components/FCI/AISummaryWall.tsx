@@ -10,7 +10,7 @@ import {
 
 // Types
 export type FCISeverity = 'critical' | 'alert' | 'warning' | 'info';
-export type FCICategory = 'system-issue' | 'sla-breach' | 'customer-experience' | 'product-update' | 'compliance' | 'security' | 'operational';
+export type FCICategory = 'system-issue' | 'sla-breach' | 'customer-experience' | 'product-update' | 'compliance' | 'security' | 'operational' | 'franchise';
 
 export interface FCIInsight {
   id: string;
@@ -37,6 +37,8 @@ export interface FCIInsightDetails {
   timeToResolve: string;
   assignedTo?: string;
   priority: 'immediate' | 'high' | 'medium' | 'low';
+  /** Override default priority badge label in drill-down (e.g. "Action Needed", "Monitor"). */
+  priorityLabel?: string;
 }
 
 // Sample Data
@@ -158,7 +160,7 @@ export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
       'Create escalation path for breached SLAs',
       'Send proactive status updates for pending VIP cases'
     ],
-    estimatedImpact: 'High - VIP churn risk, $2.3M annual revenue at risk',
+    estimatedImpact: 'High - VIP churn-risk, $2.3M annual revenue at risk',
     timeToResolve: '3-5 business days',
     assignedTo: 'Email Support Lead + VIP Services',
     priority: 'high'
@@ -167,6 +169,8 @@ export const fciInsightDetailsMap: Record<string, FCIInsightDetails> = {
 
 interface AISummaryWallProps {
   data?: FCIInsight[];
+  /** Override default FCI-00x detail map — e.g. Sterling deposit-leak insights */
+  insightDetailsMap?: Record<string, FCIInsightDetails>;
   isDarkMode?: boolean;
   /**
    * Outer wrapper height. Defaults to '650px' to preserve the original FCI
@@ -174,12 +178,16 @@ interface AISummaryWallProps {
    * stretch to fill a flex/grid parent — useful for the role-based drill-downs.
    */
   height?: string | number;
+  /** Override default "Real-time FCI intelligence" subtitle */
+  intelligenceSubtitle?: string;
 }
 
 export function AISummaryWall({
   data = fciInsightsData,
+  insightDetailsMap,
   isDarkMode = false,
   height = '650px',
+  intelligenceSubtitle,
 }: AISummaryWallProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
@@ -243,6 +251,7 @@ export function AISummaryWall({
       case 'customer-experience': return RefreshCw;
       case 'product-update': return BookOpen;
       case 'operational': return GitBranch;
+      case 'franchise': return Target;
       default: return Info;
     }
   };
@@ -256,6 +265,7 @@ export function AISummaryWall({
       case 'compliance': return 'Compliance';
       case 'security': return 'Security';
       case 'operational': return 'Operational';
+      case 'franchise': return 'Franchise';
       default: return category;
     }
   };
@@ -304,8 +314,10 @@ export function AISummaryWall({
     return priority[a.severity] - priority[b.severity];
   });
 
+  const resolvedDetailsMap = insightDetailsMap ?? fciInsightDetailsMap;
+
   // Get details for selected insight
-  const selectedDetails = selectedInsight ? fciInsightDetailsMap[selectedInsight.id] : null;
+  const selectedDetails = selectedInsight ? resolvedDetailsMap[selectedInsight.id] : null;
   const selectedConfig = selectedInsight ? getTypeConfig(selectedInsight.severity) : null;
 
   return (
@@ -334,7 +346,7 @@ export function AISummaryWall({
               AI Summary Wall
             </h3>
             <p className="text-xs" style={{ color: '#939394' }}>
-              {selectedInsight ? 'Viewing details' : 'Real-time FCI intelligence'}
+              {selectedInsight ? 'Viewing details' : (intelligenceSubtitle ?? 'Real-time FCI intelligence')}
             </p>
           </div>
         </div>
@@ -550,6 +562,7 @@ export function AISummaryWall({
               <div className="flex items-center gap-2 mb-3">
                 {(() => {
                   const priorityConfig = getPriorityConfig(selectedDetails.priority);
+                  const badgeLabel = selectedDetails.priorityLabel ?? priorityConfig.label;
                   return (
                     <span 
                       className="flex items-center gap-1.5 text-xs font-semibold px-2 py-1 rounded-full"
@@ -559,7 +572,7 @@ export function AISummaryWall({
                       }}
                     >
                       <priorityConfig.icon className="w-3 h-3" />
-                      {priorityConfig.label}
+                      {badgeLabel}
                     </span>
                   );
                 })()}

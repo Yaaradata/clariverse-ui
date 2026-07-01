@@ -34,11 +34,21 @@ import {
   Sparkles,
   type LucideIcon,
 } from 'lucide-react';
-import { AISummaryWall } from '@/components/FCI/AISummaryWall';
+import { AISummaryWall, type FCIInsight, type FCIInsightDetails } from '@/components/FCI/AISummaryWall';
+import { swapUsdSymbolDeep, useSterlingHeadRetailCurrencyActive } from '@/lib/role-based-dashboard/sterlingHeadRetailCurrency';
+import {
+  STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS,
+  STERLING_HEAD_RETAIL_AI_SUMMARY,
+} from '@/lib/role-based-dashboard/sterlingHeadRetailAISummaryData';
+
+export type RetailFCIVariant = 'default' | 'sterling-deposit-leak';
 
 interface RetailFCIKPICardsProps {
   data?: unknown;
   isDarkMode?: boolean;
+  variant?: RetailFCIVariant;
+  /** Sterling Bank / head_retail — display £ instead of $ (symbol swap only). */
+  sterlingCurrency?: boolean;
 }
 
 const SEGMENT_COLORS = {
@@ -125,7 +135,288 @@ const FRICTION_SIGNALS: Array<{
   },
 ];
 
-export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps) {
+const STERLING_WEALTH_TIERS = [
+  { id: 'A', label: 'Band A · £2K–10K',  happy: 52, neutral: 28, unhappy: 20, deposits: '£142M', accts: 84_200 },
+  { id: 'B', label: 'Band B · £10K–50K', happy: 48, neutral: 26, unhappy: 26, deposits: '£218M', accts: 12_400 },
+  { id: 'C', label: 'Band C · £50K+',    happy: 41, neutral: 24, unhappy: 35, deposits: '£96M',  accts: 1_840 },
+];
+
+const STERLING_NPS_TREND = [
+  { week: 'W-11', HVHF: 38, HVLF: 41, LVLF: 52, LVHF: 45 },
+  { week: 'W-10', HVHF: 40, HVLF: 42, LVLF: 53, LVHF: 46 },
+  { week: 'W-9',  HVHF: 42, HVLF: 44, LVLF: 54, LVHF: 47 },
+  { week: 'W-8',  HVHF: 44, HVLF: 46, LVLF: 55, LVHF: 48 },
+  { week: 'W-7',  HVHF: 46, HVLF: 48, LVLF: 56, LVHF: 49 },
+  { week: 'W-6',  HVHF: 48, HVLF: 50, LVLF: 57, LVHF: 50 },
+  { week: 'W-5',  HVHF: 50, HVLF: 51, LVLF: 58, LVHF: 51 },
+  { week: 'W-4',  HVHF: 52, HVLF: 52, LVLF: 59, LVHF: 52 },
+  { week: 'W-3',  HVHF: 54, HVLF: 53, LVLF: 60, LVHF: 53 },
+  { week: 'W-2',  HVHF: 55, HVLF: 54, LVLF: 60, LVHF: 54 },
+  { week: 'W-1',  HVHF: 56, HVLF: 55, LVLF: 61, LVHF: 55 },
+  { week: 'Now',  HVHF: 57, HVLF: 56, LVLF: 61, LVHF: 56 },
+];
+
+const STERLING_VULNERABLE_SEGMENTS: Array<{ segment: string; count: number; severity: VulnerabilitySeverity }> = [
+  { segment: 'HVHF', count: 3, severity: 'High'   },
+  { segment: 'HVLF', count: 2, severity: 'High'   },
+  { segment: 'LVHF', count: 2, severity: 'Medium' },
+  { segment: 'LVLF', count: 1, severity: 'Medium' },
+];
+
+const STERLING_FRICTION_SIGNALS: Array<{
+  label: string;
+  value: number;
+  icon: LucideIcon;
+  bySegment: FrictionSegmentBreakdown;
+}> = [
+  {
+    label: 'Decline escalations',
+    value: 412,
+    icon: AlertTriangle,
+    bySegment: { hvhf: 168, hvlf: 112, lvhf: 86, lvlf: 46 },
+  },
+  {
+    label: 'Long hold — reason chase',
+    value: 638,
+    icon: Clock,
+    bySegment: { hvhf: 224, hvlf: 186, lvhf: 142, lvlf: 86 },
+  },
+  {
+    label: 'Repeat decline contacts',
+    value: 284,
+    icon: MessageSquare,
+    bySegment: { hvhf: 88, hvlf: 76, lvhf: 68, lvlf: 52 },
+  },
+  {
+    label: 'Agitated balance transfers',
+    value: 156,
+    icon: Phone,
+    bySegment: { hvhf: 62, hvlf: 42, lvhf: 34, lvlf: 18 },
+  },
+];
+
+type TopIntentCategory = {
+  key: string;
+  label: string;
+  color: string;
+  cases: number;
+};
+
+type TopIntentSegmentRisk = Record<
+  keyof FrictionSegmentBreakdown,
+  { count: number; level: 'low' | 'medium' | 'high' }
+>;
+
+type TopIntentProfile = {
+  title: string;
+  totalFlagged: number;
+  categories: TopIntentCategory[];
+  segmentRisk: TopIntentSegmentRisk;
+};
+
+/** Retail banking head_retail — generic retail intents */
+const DEFAULT_TOP_INTENT_PROFILE: TopIntentProfile = {
+  title: 'Top Intent',
+  totalFlagged: 16,
+  categories: [
+    { key: 'login', label: 'App Login & Auth', color: '#ef4444', cases: 13 },
+    { key: 'card', label: 'Card Declines', color: '#f59e0b', cases: 10 },
+    { key: 'fee', label: 'Fee Disputes', color: '#06b6d4', cases: 9 },
+    { key: 'wealth', label: 'Wealth / RM', color: '#10b981', cases: 5 },
+  ],
+  segmentRisk: {
+    hvhf: { count: 3, level: 'low' },
+    hvlf: { count: 5, level: 'medium' },
+    lvhf: { count: 4, level: 'high' },
+    lvlf: { count: 4, level: 'high' },
+  },
+};
+
+/** Sterling Bank head_retail — communication-derived restriction / closure intents */
+const STERLING_HEAD_RETAIL_TOP_INTENT_PROFILE: TopIntentProfile = {
+  title: 'Top Intent',
+  totalFlagged: 16,
+  categories: [
+    { key: 'freeze', label: 'Account freeze', color: '#ef4444', cases: 13 },
+    { key: 'payment', label: 'Payment declined', color: '#f59e0b', cases: 10 },
+    { key: 'interest', label: 'Savings interest removed', color: '#06b6d4', cases: 9 },
+    { key: 'closure', label: 'Account closure', color: '#10b981', cases: 5 },
+  ],
+  segmentRisk: {
+    hvhf: { count: 4, level: 'high' },
+    hvlf: { count: 5, level: 'medium' },
+    lvhf: { count: 4, level: 'high' },
+    lvlf: { count: 3, level: 'medium' },
+  },
+};
+
+/** Sterling deposit-leak variant — savings decline handling intents */
+const STERLING_DEPOSIT_LEAK_TOP_INTENT_PROFILE: TopIntentProfile = {
+  title: 'Top Intent — Savings Declines',
+  totalFlagged: 16,
+  categories: [
+    { key: 'decline', label: 'Savings / Easy-Saver decline', color: '#ef4444', cases: 13 },
+    { key: 'reason', label: 'Decline reason not given', color: '#f59e0b', cases: 10 },
+    { key: 'interest', label: 'Interest removal queries', color: '#06b6d4', cases: 9 },
+    { key: 'isa', label: 'ISA / product confusion', color: '#10b981', cases: 5 },
+  ],
+  segmentRisk: {
+    hvhf: { count: 4, level: 'high' },
+    hvlf: { count: 5, level: 'medium' },
+    lvhf: { count: 4, level: 'high' },
+    lvlf: { count: 3, level: 'medium' },
+  },
+};
+
+function resolveTopIntentProfile(
+  variant: RetailFCIVariant,
+  sterlingHeadRetailRoute: boolean,
+): TopIntentProfile {
+  if (variant === 'sterling-deposit-leak') {
+    return STERLING_DEPOSIT_LEAK_TOP_INTENT_PROFILE;
+  }
+  if (sterlingHeadRetailRoute) {
+    return STERLING_HEAD_RETAIL_TOP_INTENT_PROFILE;
+  }
+  return DEFAULT_TOP_INTENT_PROFILE;
+}
+
+const STERLING_AI_SUMMARY: FCIInsight[] = [
+  {
+    id: 'sterling-deposit-leak',
+    severity: 'critical',
+    category: 'franchise',
+    title: 'Deposit Leak',
+    message:
+      'Savings declines with no reason — deposit outflow accelerating. ~£310K/week leaving from declined high-balance savers.',
+    trend: 'up',
+    change: 9,
+    metrics: {
+      volume: 750,
+      volumeLabel: 'savings applicants (poll)',
+      customerImpact: 'Critical',
+      repeatRate: 57,
+    },
+  },
+  {
+    id: 'sterling-proposition-friction',
+    severity: 'alert',
+    category: 'customer-experience',
+    title: 'Proposition Friction',
+    message:
+      "MoneyWeek poll: 57% of 750 savings applicants rejected, 41% successful. 'Rejected, no reason, fraud-prevention agency' recurring in voice.",
+    trend: 'up',
+    change: 12,
+    metrics: {
+      volume: 428,
+      volumeLabel: 'rejected applicants',
+      customerImpact: 'High',
+      repeatRate: 34,
+    },
+  },
+  {
+    id: 'sterling-conduct-disclosure',
+    severity: 'warning',
+    category: 'compliance',
+    title: 'Conduct',
+    message:
+      'FOS upheld a conflicting-explanation complaint. Reason-code disclosure gap — tipping-off / SAR tension flagged. Draft disclosure review (never auto-send).',
+    trend: 'stable',
+    metrics: {
+      volume: 1,
+      volumeLabel: 'FOS upheld case',
+      customerImpact: 'High',
+      responseTime: 'DISP clock active',
+    },
+  },
+];
+
+const STERLING_AI_INSIGHT_DETAILS: Record<string, FCIInsightDetails> = {
+  'sterling-deposit-leak': {
+    rootCause:
+      'Post–Easy-Saver rate removal, 57% of savings applicants are declined with no reason given — creating a decline-reason vacuum. High-balance savers escalate on Voice and App; FOS upheld a conflicting-explanation case. Estimated ~£310K/week deposit outflow from declined HV savers who withdraw or switch rather than re-apply.',
+    affectedAreas: [
+      'Savings / Easy-Saver onboarding',
+      'Voice & App decline journeys',
+      'Deposit retention',
+      'FOS / DISP exposure',
+      'HV balance bands (A–C)',
+    ],
+    recommendedActions: [
+      'Draft reason-code disclosure review separating tipping-off constraints from service failure (never auto-send)',
+      'Propose HV saver retention callback for declined applicants with balance >£250K',
+      'Publish internal decline-reason taxonomy for agents — draft only, compliance sign-off required',
+      'Route repeat decline contacts to specialist queue with case continuity across Voice and App',
+      'Track weekly £ leak/wk metric against £310K baseline until disclosure policy is live',
+    ],
+    estimatedImpact: 'Critical — ~£310K/week deposit outflow · £16M+ annualised retention at risk',
+    timeToResolve: '14 days for disclosure policy draft · 30 days for journey fix',
+    assignedTo: 'Chief Customer & Banking Officer · Conduct · Savings Product',
+    priority: 'immediate',
+  },
+  'sterling-proposition-friction': {
+    rootCause:
+      "MoneyWeek poll signal: 57% of 750 savings applicants rejected vs 41% successful. Voice verbatims cluster on 'rejected, no reason, fraud-prevention agency' — customers cannot understand whether decline is crime-constraint or proposition failure. Friction suppresses viable acquisition and erodes brand trust among rate-sensitive savers.",
+    affectedAreas: [
+      'Savings proposition',
+      'App Store & Voice',
+      'Applicant communications',
+      'Fraud-prevention messaging',
+      'New-customer NPS',
+    ],
+    recommendedActions: [
+      'Draft applicant-facing decline explanation template — compliance review before any send',
+      'Propose A/B test on reason transparency for low-risk salary-funded applicants',
+      'Brief contact-centre on approved scripting for decline follow-ups (never auto-approve)',
+      'Align App decline screen copy with Voice script to remove channel conflict',
+      'Monitor rejection rate vs peer poll benchmark weekly',
+    ],
+    estimatedImpact: 'High — 428 rejected applicants in poll window · acquisition drag on savings growth target',
+    timeToResolve: '7–14 days for comms draft · 4 weeks for journey alignment',
+    assignedTo: 'Chief Customer & Banking Officer · Marketing · Fraud Ops liaison',
+    priority: 'high',
+  },
+  'sterling-conduct-disclosure': {
+    rootCause:
+      'FOS upheld a complaint where the bank gave conflicting explanations for a savings decline — conduct failure under DISP. Reason-code disclosure is blocked by tipping-off / SAR tension: agents cannot explain declines without risking regulatory breach. Until policy clarifies what can be said, the decline-reason vacuum persists and repeat contact grows.',
+    affectedAreas: [
+      'Conduct & DISP',
+      'SAR / tipping-off policy',
+      'Complaints & FOS',
+      'Agent scripting',
+      'Legal & Compliance',
+    ],
+    recommendedActions: [
+      'Draft conduct disclosure framework: what can be said at decline vs what requires specialist review',
+      'Propose FOS response pack for upheld conflicting-explanation cases — legal review required',
+      'Never auto-send decline explanations; all outbound comms require compliance sign-off',
+      'Schedule CRO depth session for conduct freeze/closure slice (separate from acquisition leak)',
+      'Track upheld-case count and repeat-contact rate on conduct-related declines',
+    ],
+    estimatedImpact: 'High — regulatory reputational risk · repeat-contact cost on conduct-related declines',
+    timeToResolve: '21 days for disclosure framework draft',
+    assignedTo: 'Conduct · Legal · Chief Customer & Banking Officer',
+    priority: 'high',
+  },
+};
+
+export function RetailFCIKPICards({
+  isDarkMode = false,
+  variant = 'default',
+  sterlingCurrency = false,
+}: RetailFCIKPICardsProps) {
+  const isSterling = variant === 'sterling-deposit-leak';
+  const sterlingActive = useSterlingHeadRetailCurrencyActive(sterlingCurrency);
+  const isSterlingHeadRetail = sterlingActive && !isSterling;
+  const topIntentProfile = resolveTopIntentProfile(variant, isSterlingHeadRetail);
+  const wealthTiers = sterlingActive
+    ? swapUsdSymbolDeep(isSterling ? STERLING_WEALTH_TIERS : WEALTH_TIERS)
+    : isSterling
+      ? STERLING_WEALTH_TIERS
+      : WEALTH_TIERS;
+  const npsTrend = isSterling ? STERLING_NPS_TREND : NPS_TREND;
+  const vulnerableSegments = isSterling ? STERLING_VULNERABLE_SEGMENTS : VULNERABLE_SEGMENTS;
+  const frictionSignals = isSterling ? STERLING_FRICTION_SIGNALS : FRICTION_SIGNALS;
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const kpiData = {
@@ -182,8 +473,16 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
       trend: -1.8,
       analyzedInteractions: 540,
       improvementFromYesterday: '-1.2%',
-      negativeTopics: ['App login / auth', 'Fee & charge disputes'],
-      positiveTopics: ['Rewards uplift', 'New product onboarding'],
+      negativeTopics: isSterlingHeadRetail
+        ? ['Account freeze — no reason', 'Payment blocked despite funds']
+        : isSterling
+          ? ['Savings decline no reason', 'Interest removal queries']
+          : ['App login / auth', 'Fee & charge disputes'],
+      positiveTopics: isSterlingHeadRetail
+        ? ['Spaces UX praise', 'Fast in-app chat when resolved']
+        : isSterling
+          ? ['Clear rate communication', 'Successful ISA opening']
+          : ['Rewards uplift', 'New product onboarding'],
       npsScore: -12,
       detractors: 38,
       segmentSentiment: {
@@ -216,6 +515,34 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
     transition: 'all 0.2s ease',
   });
 
+  const topIntentCategories = topIntentProfile.categories;
+
+  const copy = isSterling
+    ? {
+        totalInteractionsKicker: 'Savings applications & decline-handling volume',
+        wealthTitle: 'Deposits at Risk by Balance Band',
+        wealthSub: 'Declined-saver deposits at stake',
+        topIntentTitle: topIntentProfile.title,
+        npsTitle: 'Savings Decline Rate Monitor',
+        npsSub: '12-week rolling · HV decline rate worsening fastest (+19 pts)',
+        vulnerableTitle: 'High-balance decliners at flight risk',
+        vulnerableSub: 'Savers declined · now withdrawing',
+        strainTitle: 'Strain & Friction — Decline Handling',
+        strainedLabel: 'Strained decline-handling conversations',
+      }
+    : {
+        totalInteractionsKicker: null as string | null,
+        wealthTitle: 'Sentiment by Relationship Value',
+        wealthSub: 'Sentiment split · deposits at stake',
+        topIntentTitle: topIntentProfile.title,
+        npsTitle: 'NPS Segment Monitor',
+        npsSub: '12-week rolling · HVHF deterioration is fastest (-28 pts)',
+        vulnerableTitle: 'Vulnerable Watchlist',
+        vulnerableSub: 'High Churn Signals',
+        strainTitle: 'Strain & Friction',
+        strainedLabel: 'Strained Conversations',
+      };
+
   const segmentColors: Record<string, string> = SEGMENT_COLORS;
 
   return (
@@ -238,6 +565,11 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
                 <p className="text-[10px] font-bold tracking-wider" style={{ color: '#939394' }}>
                   TOTAL INTERACTIONS
                 </p>
+                {copy.totalInteractionsKicker ? (
+                  <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
+                    {copy.totalInteractionsKicker}
+                  </p>
+                ) : null}
                 <div className="flex items-baseline gap-2 mt-0.5 flex-wrap">
                   <span
                     className="text-3xl font-bold leading-none"
@@ -284,7 +616,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
               {(() => {
                 const tableCols = '64px minmax(88px,1fr) 80px 64px 60px';
                 const segmentKeysArr = ['hvhf', 'hvlf', 'lvhf', 'lvlf'] as const;
-                const headers = ['SEGMENT', 'INTERACTIONS', 'WoW', 'SENTIMENT', 'FCI RATE'];
+                const headers = ['SEGMENT', 'INTERACTIONS', 'WoW', 'SENTIMENT', isSterling ? 'FRICTION RATE' : 'FCI RATE'];
                 return (
                   <>
                     <div
@@ -339,7 +671,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
                             gridTemplateColumns: tableCols,
                             borderTop: idx === 0 ? 'none' : `1px solid ${isDarkMode ? '#1f1f1f' : '#e5e5e5'}`,
                           }}
-                          title={`${k.toUpperCase()} · ${formatNumber(seg.count)} interactions · WoW ${isUp ? '+' : ''}${delta.toFixed(1)}% · Sentiment ${sentimentLabel} · FCI ${fci.rate}%`}
+                          title={`${k.toUpperCase()} · ${formatNumber(seg.count)} interactions · WoW ${isUp ? '+' : ''}${delta.toFixed(1)}% · Sentiment ${sentimentLabel} · ${isSterling ? 'Friction' : 'FCI'} ${fci.rate}%`}
                         >
                           <span
                             className="inline-flex items-center justify-center text-[10px] font-bold px-2 py-0.5 rounded-full"
@@ -409,16 +741,16 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             <div className="flex items-start justify-between mb-1.5">
               <div className="min-w-0">
                 <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  Sentiment by Relationship Value
+                  {copy.wealthTitle}
                 </span>
                 <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
-                  Sentiment split · deposits at stake
+                  {copy.wealthSub}
                 </p>
               </div>
             </div>
 
             <div className="flex flex-col justify-around mb-2 flex-1 min-h-0">
-              {WEALTH_TIERS.map((tier) => (
+              {wealthTiers.map((tier) => (
                 <div key={tier.id}>
                   <div className="flex items-baseline justify-between mb-1">
                     <span className="text-[10.5px] font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101', letterSpacing: 0.3 }}>
@@ -488,13 +820,13 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
           >
             <div className="flex items-center justify-between mb-1">
               <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                Top Intent
+                {copy.topIntentTitle}
               </span>
             </div>
 
             <div className="flex items-baseline gap-2 mb-2">
               <div className="text-2xl font-bold leading-none" style={{ color: '#ef4444' }}>
-                {formatNumber(kpiData.riskSignal.totalFlagged)}
+                {formatNumber(topIntentProfile.totalFlagged)}
               </div>
               <span className="text-[11px]" style={{ color: '#939394' }}>identified</span>
             </div>
@@ -502,12 +834,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             <div className="flex-1 flex flex-col justify-between gap-2 min-h-0">
               <div>
                 {(() => {
-                  const riskCategories = [
-                    { key: 'fraud',       label: 'App Login & Auth', color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-                    { key: 'operational', label: 'Card Declines',    color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
-                    { key: 'reputation',  label: 'Fee Disputes',     color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
-                    { key: 'thirdParty',  label: 'Wealth / RM',      color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
-                  ];
+                  const riskCategories = topIntentCategories;
                   const total = riskCategories.reduce((sum, r) => sum + r.cases, 0);
 
                   return (
@@ -543,7 +870,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
               <div>
                 <p className="text-[9px] font-bold mb-1 tracking-wide" style={{ color: '#939394' }}>INTENT VOLUME BY SEGMENT</p>
                 <div className="grid grid-cols-4 gap-1">
-                  {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
+                  {Object.entries(topIntentProfile.segmentRisk).map(([key, segment]) => {
                     const labels: Record<string, string> = {
                       hvhf: 'HVHF',
                       hvlf: 'HVLF',
@@ -585,16 +912,16 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             <div className="flex items-start justify-between mb-1">
               <div className="min-w-0">
                 <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  NPS Segment Monitor
+                  {copy.npsTitle}
                 </span>
                 <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
-                  12-week rolling · HVHF deterioration is fastest (-28 pts)
+                  {copy.npsSub}
                 </p>
               </div>
             </div>
             <div className="flex-1 min-h-0" style={{ minHeight: 130 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={NPS_TREND} margin={{ top: 6, right: 8, left: 0, bottom: 0 }}>
+                <LineChart data={npsTrend} margin={{ top: 6, right: 8, left: 0, bottom: 0 }}>
                   <CartesianGrid stroke={isDarkMode ? '#1f1f1f' : '#e5e5e5'} strokeDasharray="3 3" vertical={false} />
                   <XAxis
                     dataKey="week"
@@ -667,10 +994,10 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             <div className="flex items-start justify-between gap-2 mb-1.5">
               <div className="min-w-0">
                 <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  Vulnerable Watchlist
+                  {copy.vulnerableTitle}
                 </span>
                 <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
-                  High Churn Signals
+                  {copy.vulnerableSub}
                 </p>
               </div>
               <span
@@ -683,7 +1010,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             </div>
 
             <div className="flex flex-col justify-around gap-1 flex-1 min-h-0">
-              {VULNERABLE_SEGMENTS.map((row) => {
+              {vulnerableSegments.map((row) => {
                 const sevColor = SEVERITY_COLORS[row.severity];
                 const segmentKey = row.segment.toLowerCase() as keyof typeof SEGMENT_COLORS;
                 const segmentColor = SEGMENT_COLORS[segmentKey] ?? '#939394';
@@ -729,7 +1056,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
           >
             <div className="flex items-center justify-between mb-1.5">
               <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                Strain &amp; Friction
+                {copy.strainTitle}
               </span>
               <div className="flex items-center gap-1">
                 <TrendingUp size={11} style={{ color: '#ef4444' }} />
@@ -740,7 +1067,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             <div className="mb-2">
               <div className="flex items-center justify-between mb-0.5">
                 <span className="text-[11px] font-semibold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  Strained Conversations
+                  {copy.strainedLabel}
                 </span>
                 <span className="text-[11px] font-bold" style={{ color: '#5332FF', fontVariantNumeric: 'tabular-nums' }}>34.2%</span>
               </div>
@@ -804,7 +1131,7 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
                     </div>
 
                     {/* Data rows */}
-                    {FRICTION_SIGNALS.map(({ label, value, icon: Icon, bySegment }, idx) => (
+                    {frictionSignals.map(({ label, value, icon: Icon, bySegment }, idx) => (
                       <div
                         key={label}
                         className="grid items-center px-2 py-1 gap-x-1"
@@ -849,7 +1176,29 @@ export function RetailFCIKPICards({ isDarkMode = false }: RetailFCIKPICardsProps
             adopts the left grid's natural height and scrolls internally. */}
         <div className="flex-1 min-w-0 relative self-stretch">
           <div className="absolute inset-0">
-            <AISummaryWall isDarkMode={isDarkMode} height="100%" />
+            <AISummaryWall
+              data={
+                isSterling
+                  ? STERLING_AI_SUMMARY
+                  : isSterlingHeadRetail
+                    ? STERLING_HEAD_RETAIL_AI_SUMMARY
+                    : undefined
+              }
+              insightDetailsMap={
+                isSterling
+                  ? STERLING_AI_INSIGHT_DETAILS
+                  : isSterlingHeadRetail
+                    ? STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS
+                    : undefined
+              }
+              intelligenceSubtitle={
+                isSterling || isSterlingHeadRetail
+                  ? 'Real-time franchise intelligence'
+                  : undefined
+              }
+              isDarkMode={isDarkMode}
+              height="100%"
+            />
           </div>
         </div>
       </div>

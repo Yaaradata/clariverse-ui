@@ -14,6 +14,7 @@ type CostOfBadServiceOverlayProps = {
   weeklyAtRisk?: number;
   weekOverWeek?: number;
   breakdown?: BreakdownItem[];
+  currencySymbol?: "$" | "£";
 };
 
 const DEFAULT_BREAKDOWN: BreakdownItem[] = [
@@ -26,6 +27,7 @@ export function CostOfBadServiceOverlay({
   weeklyAtRisk = 312_400,
   weekOverWeek = 0.18,
   breakdown = DEFAULT_BREAKDOWN,
+  currencySymbol = "$",
 }: CostOfBadServiceOverlayProps) {
   return (
     <div className="rounded-2xl border border-rose-500/30 bg-gradient-to-r from-rose-950/40 to-slate-900/60 p-5">
@@ -33,10 +35,11 @@ export function CostOfBadServiceOverlay({
         <div>
           <div className="flex items-center gap-2 text-xs uppercase tracking-wide text-rose-300/80">
             <TrendingUp className="h-3.5 w-3.5" />
-            Weekly $ at risk from bad service
+            Weekly {currencySymbol} at risk from bad service
           </div>
           <div className="mt-1 font-jetbrains text-3xl font-semibold text-white">
-            ${weeklyAtRisk.toLocaleString()}
+            {currencySymbol}
+            {weeklyAtRisk.toLocaleString()}
           </div>
         </div>
         <div className="text-sm text-rose-300">+{(weekOverWeek * 100).toFixed(0)}% WoW</div>
@@ -52,7 +55,8 @@ export function CostOfBadServiceOverlay({
                 {item.label}
               </div>
               <div className="mt-1 font-jetbrains text-lg font-semibold text-white">
-                ${item.amount.toLocaleString()}
+                {currencySymbol}
+                {item.amount.toLocaleString()}
               </div>
             </div>
           );

@@ -22,10 +22,22 @@ import { ComplianceScoreMeter } from "@/components/compliance/ComplianceScoreMet
 import { CallCenterRiskHeatMap } from "@/components/compliance/CallCenterRiskHeatMap";
 import { ViolationCategoryChart } from "@/components/compliance/ViolationCategoryChart";
 import { fciClusters, customerEmotionData } from "@/lib/fci-lib/fciData";
+import { fciInsightDetailsMap, fciInsightsData } from "@/components/FCI/AISummaryWall";
 import { complianceScoreData, violationCategoryData } from "@/lib/compliance/complianceData";
 import type { EisenhowerThread } from "@/lib/api";
-import type { Role } from "@/lib/role-based-dashboard/registry";
+import type { Industry, Role } from "@/lib/role-based-dashboard/registry";
 import type { LensId } from "@/lib/role-based-dashboard/registry";
+import {
+  isSterlingHeadContact,
+  isSterlingHeadRetail,
+  sterlingHeadContactRiskSpikeMonitorProps,
+} from "@/lib/role-based-dashboard/sterlingHeadContactScreen";
+import { STERLING_HEAD_CONTACT_OPERATIONAL_RISK_SPIKES } from "@/lib/role-based-dashboard/sterlingHeadContactIntentsData";
+import {
+  STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS,
+  STERLING_HEAD_RETAIL_AI_SUMMARY,
+} from "@/lib/role-based-dashboard/sterlingHeadRetailAISummaryData";
+import { swapUsdSymbolDeep, useSterlingHeadRetailCurrencyActive } from "@/lib/role-based-dashboard/sterlingHeadRetailCurrency";
 import {
   ROLE_BASED_MOCK_CROSS_CHANNEL_ACTION_GRID,
   ROLE_BASED_MOCK_SYSTEM_HEALTH,
@@ -79,13 +91,32 @@ import { UnifiedIntelligenceWall } from "@/components/role-based-dashboard/Retai
 /** Consistent vertical rhythm between unified blocks (role-based embed). */
 const sectionGap = "mt-6 flex flex-col gap-8";
 
-export function RoleBasedUnifiedScreen1Addon({ role }: { role: Role }) {
+export function RoleBasedUnifiedScreen1Addon({
+  role,
+  industryId,
+}: {
+  role: Role;
+  industryId?: Industry["id"];
+}) {
   const rid = role.id;
   const isRetail = rid === "head_retail";
+  const isSterlingContact = isSterlingHeadContact(industryId ?? "", rid);
+  const isSterlingHeadRetailRoute = isSterlingHeadRetail(industryId ?? "", rid);
   const isCardsPortfolio = rid === "cards_portfolio";
   return (
     <div className={sectionGap}>
-      {isRetail ? (
+      {isSterlingHeadRetailRoute ? (
+        <AIRiskSpikeMonitor
+          spikes={headRetailRiskSpikes}
+          driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"
+          forceDarkMode
+        />
+      ) : isSterlingContact ? (
+        <AIRiskSpikeMonitor
+          {...sterlingHeadContactRiskSpikeMonitorProps()}
+          spikes={STERLING_HEAD_CONTACT_OPERATIONAL_RISK_SPIKES}
+        />
+      ) : isRetail ? (
         <AIRiskSpikeMonitor
           spikes={headRetailRiskSpikes}
           driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"
@@ -161,12 +192,41 @@ export function RoleBasedUnifiedScreen4Addon({
   lens,
   role,
   threads,
+  industryId,
 }: {
   lens: LensId;
   role: Role;
   threads: EisenhowerThread[];
+  industryId?: Industry["id"];
 }) {
   const sliceThreads = useMemo(() => threads.slice(0, 500), [threads]);
+  const sterlingCurrency = useSterlingHeadRetailCurrencyActive(
+    undefined,
+    industryId,
+    role.id,
+  );
+  const isSterlingHeadRetailRoute = isSterlingHeadRetail(industryId ?? "", role.id);
+  const failureClusters = useMemo(
+    () =>
+      sterlingCurrency
+        ? swapUsdSymbolDeep(fciClusters.slice(0, 4))
+        : fciClusters.slice(0, 4),
+    [sterlingCurrency],
+  );
+  const fciInsights = useMemo(
+    () =>
+      isSterlingHeadRetailRoute
+        ? STERLING_HEAD_RETAIL_AI_SUMMARY
+        : fciInsightsData,
+    [isSterlingHeadRetailRoute],
+  );
+  const fciInsightDetails = useMemo(
+    () =>
+      isSterlingHeadRetailRoute
+        ? STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS
+        : fciInsightDetailsMap,
+    [isSterlingHeadRetailRoute],
+  );
 
   if (lens === "ops") {
     return (
@@ -174,8 +234,15 @@ export function RoleBasedUnifiedScreen4Addon({
         {showRetailIntentHeatmap(role.id) ? <RetailScreen4IntentHeatmap /> : null}
         {showContactClusterSummary(role.id) ? <ContactScreen4ClusterSummary /> : null}
         <div className="rounded-xl border border-white/[0.14] bg-black/25 p-5 space-y-8">
-          <FailureClusters clusters={fciClusters.slice(0, 4)} isDarkMode />
-          <AISummaryWall isDarkMode />
+          <FailureClusters clusters={failureClusters} isDarkMode />
+          <AISummaryWall
+            isDarkMode
+            data={isSterlingHeadRetailRoute ? fciInsights : undefined}
+            insightDetailsMap={isSterlingHeadRetailRoute ? fciInsightDetails : undefined}
+            intelligenceSubtitle={
+              isSterlingHeadRetailRoute ? "Real-time franchise intelligence" : undefined
+            }
+          />
           <BottleneckHeatmap threads={sliceThreads} />
         </div>
       </div>

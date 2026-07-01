@@ -4,8 +4,17 @@ import { ServiceReputationDrillDown as LegacyServiceReputationDrillDown } from "
 
 type Props = {
   onBack: () => void;
+  sterlingContact?: boolean;
 };
 
-export default function ServiceReputationDrillDown({ onBack }: Props) {
-  return <LegacyServiceReputationDrillDown onBack={onBack} />;
+export default function ServiceReputationDrillDown({
+  onBack,
+  sterlingContact = false,
+}: Props) {
+  return (
+    <LegacyServiceReputationDrillDown
+      onBack={onBack}
+      sterlingContact={sterlingContact}
+    />
+  );
 }

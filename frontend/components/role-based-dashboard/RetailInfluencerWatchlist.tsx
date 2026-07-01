@@ -1,6 +1,7 @@
 "use client";
 
 import { Users } from "lucide-react";
+import type { RetailBrandDrillVariant } from "./RetailTopTopicsByVirality";
 
 type Influencer = {
   id: string;
@@ -11,6 +12,16 @@ type Influencer = {
   engagementRate: number;
   watchlist: boolean;
   lastPostSummary: string;
+};
+
+type FlightRiskAccount = {
+  id: string;
+  segmentAccount: string;
+  balanceAtRisk: number;
+  arpau: number;
+  daysToExit: number;
+  retentionWindow: boolean;
+  flightQuote: string;
 };
 
 const INFLUENCERS: Influencer[] = [
@@ -82,7 +93,188 @@ const INFLUENCERS: Influencer[] = [
   },
 ];
 
-export function RetailInfluencerWatchlist() {
+/** Sterling deposit-flight — behavioural tiers (balance + primacy), not wealth-desk labels. */
+const STERLING_FLIGHT_RISK_ACCOUNTS: FlightRiskAccount[] = [
+  {
+    id: "sfr1",
+    segmentAccount: "High-balance · primary · ••4821",
+    balanceAtRisk: 42_800,
+    arpau: 318,
+    daysToExit: 6,
+    retentionWindow: true,
+    flightQuote: "Moving to Chase — better rate",
+  },
+  {
+    id: "sfr2",
+    segmentAccount: "High-balance · secondary · ••2207",
+    balanceAtRisk: 22_400,
+    arpau: 286,
+    daysToExit: 11,
+    retentionWindow: true,
+    flightQuote: "3.25% gone, why stay?",
+  },
+  {
+    id: "sfr3",
+    segmentAccount: "SME · ••5590",
+    balanceAtRisk: 94_200,
+    arpau: 412,
+    daysToExit: 9,
+    retentionWindow: true,
+    flightQuote: "Switching salary + DDs to Monzo",
+  },
+];
+
+/** Starling head_retail — Brand at risk · UK voices shaping restriction/closure sentiment */
+const STERLING_BRAND_INFLUENCERS: Influencer[] = [
+  {
+    id: "sb1",
+    username: "uk_personal_finance",
+    sentiment: "negative",
+    karma: 214680,
+    followers: 62400,
+    engagementRate: 6.8,
+    watchlist: true,
+    lastPostSummary:
+      "r/UKPersonalFinance megathread on unexplained account freezes — 3.4k upvotes, Distil-matched phrases in chat transcripts.",
+  },
+  {
+    id: "sb2",
+    username: "moneysaving_watch",
+    sentiment: "negative",
+    karma: 168420,
+    followers: 89200,
+    engagementRate: 5.9,
+    watchlist: true,
+    lastPostSummary:
+      "Consumer Duty piece on savings rate removals — cites FCA guidance and FOS escalation paths for rejected savers.",
+  },
+  {
+    id: "sb3",
+    username: "fos_decisions_amp",
+    sentiment: "negative",
+    karma: 94210,
+    followers: 31800,
+    engagementRate: 7.4,
+    watchlist: true,
+    lastPostSummary:
+      "Amplifies FOS decision summaries on account closures — 'no longer welcome' language trending across Trustpilot.",
+  },
+  {
+    id: "sb4",
+    username: "digital_bank_reviews",
+    sentiment: "negative",
+    karma: 78640,
+    followers: 45200,
+    engagementRate: 4.6,
+    watchlist: true,
+    lastPostSummary:
+      "Comparative app-store review breakdown — flags payment-block complaints despite available balance on Android.",
+  },
+  {
+    id: "sb5",
+    username: "sme_banking_uk",
+    sentiment: "negative",
+    karma: 52830,
+    followers: 24100,
+    engagementRate: 5.2,
+    watchlist: false,
+    lastPostSummary:
+      "Sole-trader onboarding thread — 'can't open without already trading' quote reposted from Reddit and Trustpilot.",
+  },
+  {
+    id: "sb6",
+    username: "app_first_praise",
+    sentiment: "positive",
+    karma: 41220,
+    followers: 38600,
+    engagementRate: 6.1,
+    watchlist: false,
+    lastPostSummary:
+      "Counter-signal — Spaces UX praise on App Store; healthiest channel on the brand reputation screen.",
+  },
+];
+
+function formatBalance(value: number): string {
+  if (value >= 1_000_000) return `£${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 10_000) return `£${(value / 1_000).toFixed(1)}K`;
+  if (value >= 1_000) return `£${Math.round(value / 1_000)}K`;
+  return `£${value.toLocaleString()}`;
+}
+
+export function RetailInfluencerWatchlist({
+  variant = "default",
+}: {
+  variant?: RetailBrandDrillVariant;
+}) {
+  const isDepositFlight = variant === "sterling-deposit-flight";
+  const isBrandReputation = variant === "sterling-brand-reputation";
+
+  if (isDepositFlight) {
+    return (
+      <div className="flex h-full min-h-0 flex-col rounded-2xl border border-[#2b2b2b] bg-[#0D0D0D] text-white shadow-[0_18px_40px_rgba(0,0,0,0.4)]">
+        <div className="flex flex-col space-y-1.5 px-6 pt-6 pb-3">
+          <div className="text-2xl font-semibold leading-none tracking-tight flex items-center gap-2 text-white text-lg">
+            <Users className="h-5 w-5 text-purple-400" />
+            Flight-Risk Account Watchlist
+          </div>
+          <div className="text-sm text-gray-400">
+            High-balance accounts showing flight-intent voice — caught before the balance clears.
+            Top 1% by balance · draft save-offer (never auto-send).
+          </div>
+        </div>
+        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-6 pb-6">
+          {STERLING_FLIGHT_RISK_ACCOUNTS.map((account) => (
+            <div
+              key={account.id}
+              className="rounded-2xl border border-white/10 bg-white/[0.03] space-y-2.5 p-4"
+            >
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-white break-words">
+                    {account.segmentAccount}
+                  </p>
+                  <p className="text-[10px] text-gray-500 mt-0.5 uppercase tracking-wide">
+                    Top 1% by balance
+                  </p>
+                  <p className="text-xs text-red-400 mt-1 font-medium">
+                    ▼ Flight-intent voice detected
+                  </p>
+                </div>
+                <div className="text-right text-xs text-gray-400 whitespace-nowrap leading-relaxed flex-shrink-0">
+                  <div className="font-medium">
+                    {formatBalance(account.balanceAtRisk)} balance at risk
+                  </div>
+                  <div className="font-medium">ARPAU £{account.arpau}</div>
+                </div>
+              </div>
+              <p className="text-xs text-gray-300 leading-relaxed break-words italic">
+                &ldquo;{account.flightQuote}&rdquo;
+              </p>
+              <div className="flex items-center justify-between text-xs text-gray-400 flex-wrap gap-2">
+                <span className="font-medium">
+                  Days to likely exit: {account.daysToExit}
+                </span>
+                {account.retentionWindow ? (
+                  <span className="text-amber-400 text-[10px] uppercase tracking-wide font-semibold">
+                    Retention window
+                  </span>
+                ) : null}
+              </div>
+              <p className="text-[10px] text-purple-300/90 font-medium pt-0.5">
+                Draft save-offer — never auto-send
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const influencers = isBrandReputation ? STERLING_BRAND_INFLUENCERS : INFLUENCERS;
+  const subtitle = isBrandReputation
+    ? "Monitor high-reach creators shaping sentiment around UK retail & SME banking topics"
+    : "Monitor high-reach creators shaping sentiment around EU retail banking topics";
+
   return (
     <div className="flex h-full min-h-0 flex-col rounded-2xl border border-[#2b2b2b] bg-[#0D0D0D] text-white shadow-[0_18px_40px_rgba(0,0,0,0.4)]">
       <div className="flex flex-col space-y-1.5 px-6 pt-6 pb-3">
@@ -91,12 +283,11 @@ export function RetailInfluencerWatchlist() {
           Influencer & Watchlist Accounts
         </div>
         <div className="text-sm text-gray-400">
-          Monitor high-reach creators shaping sentiment around EU retail
-          banking topics
+          {subtitle}
         </div>
       </div>
       <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-6 pb-6">
-        {INFLUENCERS.map(profile => (
+        {influencers.map((profile) => (
           <div
             key={profile.id}
             className="rounded-2xl border border-white/10 bg-white/[0.03] space-y-2.5 p-4"
@@ -113,38 +304,32 @@ export function RetailInfluencerWatchlist() {
                       profile.sentiment === "positive"
                         ? "#22c55e"
                         : profile.sentiment === "negative"
-                        ? "#ef4444"
-                        : "#9ca3af",
+                          ? "#ef4444"
+                          : "#9ca3af",
                   }}
                 >
                   {profile.sentiment === "positive"
                     ? "▲ Positive posts trending"
                     : profile.sentiment === "negative"
-                    ? "▼ Negative posts trending"
-                    : "→ Neutral post trend"}
+                      ? "▼ Negative posts trending"
+                      : "→ Neutral post trend"}
                 </p>
               </div>
               <div className="text-right text-xs text-gray-400 whitespace-nowrap leading-relaxed flex-shrink-0">
-                <div className="font-medium">
-                  {profile.karma.toLocaleString()} karma
-                </div>
-                <div className="font-medium">
-                  {profile.followers.toLocaleString()} followers
-                </div>
+                <div className="font-medium">{profile.karma.toLocaleString()} karma</div>
+                <div className="font-medium">{profile.followers.toLocaleString()} followers</div>
               </div>
             </div>
             <p className="text-xs text-gray-400 leading-relaxed break-words">
               {profile.lastPostSummary}
             </p>
             <div className="flex items-center justify-between text-xs text-gray-400 flex-wrap gap-2">
-              <span className="font-medium">
-                Engagement rate: {profile.engagementRate}%
-              </span>
-              {profile.watchlist && (
+              <span className="font-medium">Engagement rate: {profile.engagementRate}%</span>
+              {profile.watchlist ? (
                 <span className="text-red-400 text-[10px] uppercase tracking-wide font-semibold">
                   Watch closely
                 </span>
-              )}
+              ) : null}
             </div>
           </div>
         ))}

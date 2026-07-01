@@ -3,15 +3,19 @@
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Tooltip, Legend } from 'recharts';
 import { FCICluster } from '@/lib/fci-lib/fciData';
-import { TrendingUp, TrendingDown, X, Users, Clock, MessageSquare, Mail, MessageCircle, Ticket, Phone, Share2, Sparkles, AlertTriangle, Lightbulb } from 'lucide-react';
+import { TrendingUp, TrendingDown, X, Users, Clock, MessageSquare, Mail, MessageCircle, Ticket, Phone, Share2, Sparkles, AlertTriangle, Lightbulb, Target } from 'lucide-react';
 
 interface FailureClustersProps {
   clusters: FCICluster[];
   isDarkMode?: boolean;
+  /** Sterling head_retail: franchise metrics + Complaints channel legend */
+  variant?: 'default' | 'sterling-franchise';
 }
 
 // Fixed channel order for consistent stacking
 const CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Social Media', 'Ticket'];
+
+const STERLING_CHANNEL_ORDER = ['Voice', 'Chat', 'Email', 'Complaints', 'Social Media'];
 
 // Channel colors for stacked bars (matching severity theme)
 const CHANNEL_COLORS: Record<string, string> = {
@@ -19,7 +23,8 @@ const CHANNEL_COLORS: Record<string, string> = {
   'Chat': '#EA580C',         // Burnt Orange
   'Email': '#0D9488',        // Teal / Pine
   'Social Media': '#22c55e', // Green
-  'Ticket': '#2563EB'        // Royal Blue
+  'Ticket': '#2563EB',        // Royal Blue
+  'Complaints': '#2563EB',
 };
 
 // Custom bar shape that only curves the topmost segment
@@ -132,17 +137,21 @@ const generateRecommendation = (cluster: FCICluster): string => {
 const ClusterDetailCard = ({ 
   cluster, 
   isDarkMode, 
-  onClose 
+  onClose,
+  variant = 'default',
 }: { 
   cluster: FCICluster; 
   isDarkMode: boolean; 
   onClose: () => void;
+  variant?: 'default' | 'sterling-franchise';
 }) => {
   const getSeverityColor = (severity: string) => {
     if (severity === 'High Impact') return '#ef4444';  // Red
     if (severity === 'Medium') return '#f97316';       // Orange
     return '#22c55e';                                   // Green for Low
   };
+
+  const isFranchise = variant === 'sterling-franchise';
 
   return (
     <div
@@ -202,6 +211,57 @@ const ClusterDetailCard = ({
         className="grid grid-cols-3 gap-4 p-4 rounded-lg mb-4"
         style={{ backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5' }}
       >
+        {isFranchise ? (
+          <>
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#5332FF20' }}>
+                <MessageSquare className="w-4 h-4" style={{ color: '#5332FF' }} />
+              </div>
+              <div>
+                <p className="text-xs" style={{ color: '#939394' }}>Total Interactions</p>
+                <p className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                  {cluster.totalInteractions ? cluster.totalInteractions.toLocaleString() : 'N/A'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#ef444420' }}>
+                <Target className="w-4 h-4" style={{ color: '#ef4444' }} />
+              </div>
+              <div>
+                <p className="text-xs" style={{ color: '#939394' }}>Deposit at Risk</p>
+                <p className="text-sm font-bold" style={{ color: '#ef4444' }}>
+                  {cluster.depositAtRisk ?? 'N/A'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#f59e0b20' }}>
+                <TrendingUp className="w-4 h-4" style={{ color: '#f59e0b' }} />
+              </div>
+              <div>
+                <p className="text-xs" style={{ color: '#939394' }}>Move-to-Competitor intent</p>
+                <p className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                  {cluster.moveToCompetitorPct != null ? `${cluster.moveToCompetitorPct}%` : 'N/A'}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#ef444420' }}>
+                <Users className="w-4 h-4" style={{ color: '#ef4444' }} />
+              </div>
+              <div>
+                <p className="text-xs" style={{ color: '#939394' }}>Customers Affected</p>
+                <p className="text-sm font-bold" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                  {cluster.affectedCustomers.toLocaleString()}
+                </p>
+              </div>
+            </div>
+            <div />
+            <div />
+          </>
+        ) : (
+          <>
         {/* Row 1 */}
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg" style={{ backgroundColor: '#5332FF20' }}>
@@ -261,6 +321,8 @@ const ClusterDetailCard = ({
           </div>
         </div>
         <div /> {/* Empty cell for alignment */}
+          </>
+        )}
       </div>
 
       {/* AI Insight Card */}
@@ -280,7 +342,7 @@ const ClusterDetailCard = ({
           </span>
         </div>
         <p className="text-sm" style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}>
-          {generateAIInsight(cluster)}
+          {cluster.franchiseInsight ?? generateAIInsight(cluster)}
         </p>
       </div>
 
@@ -433,8 +495,9 @@ const SEGMENT_COLORS: Record<string, string> = {
   'Low Value Low Frequency': '#94A3B8'     // Cool Slate
 };
 
-export function FailureClusters({ clusters, isDarkMode = false }: FailureClustersProps) {
+export function FailureClusters({ clusters, isDarkMode = false, variant = 'default' }: FailureClustersProps) {
   const [viewMode, setViewMode] = useState<ViewMode>('channel');
+  const channelOrder = variant === 'sterling-franchise' ? STERLING_CHANNEL_ORDER : CHANNEL_ORDER;
   
   // Filter and transform clusters - no filtering needed, just use original clusters
   const filteredClusters = useMemo(() => {
@@ -517,15 +580,15 @@ export function FailureClusters({ clusters, isDarkMode = false }: FailureCluster
   }, [filteredClusters, viewMode]);
 
   // Use fixed channel order for consistent stacking
-  const channelList = CHANNEL_ORDER;
+  const channelList = channelOrder;
   
   // Get active items for chart based on view mode
   const activeChartItems = useMemo(() => {
     if (viewMode === 'customerSegment') {
       return CUSTOMER_SEGMENTS;
     }
-    return CHANNEL_ORDER;
-  }, [viewMode]);
+    return channelOrder;
+  }, [viewMode, channelOrder]);
 
   const handleBarClick = (data: any) => {
     if (data && data.fullName) {
@@ -696,6 +759,7 @@ export function FailureClusters({ clusters, isDarkMode = false }: FailureCluster
             <ClusterDetailCard 
               cluster={selectedCluster} 
               isDarkMode={isDarkMode}
+              variant={variant}
               onClose={() => setSelectedCluster(null)}
             />
           </div>

@@ -1,8 +1,12 @@
-import type { Industry, Role } from "@/lib/role-based-dashboard/registry";
+import {
+  usesRetailBankingDashboard,
+  type Industry,
+  type Role,
+} from "@/lib/role-based-dashboard/registry";
 
 /** Head of Contact Centre lands on KPI Signals (staffing) instead of Executive. */
 export function skipExecutiveScreen(industry: Industry, role: Role): boolean {
-  return industry.id === "retail_banking" && role.id === "head_contact";
+  return usesRetailBankingDashboard(industry.id) && role.id === "head_contact";
 }
 
 export function initialKpiSignalFilter(roleId: string): string {
@@ -17,6 +21,7 @@ export function initialKpiSignalFilter(roleId: string): string {
     head_cx_retail: "training",
     head_cx_retail_v2: "training",
     head_cx_retail_v3: "training",
+    head_client_experience: "training",
   };
   return map[roleId] ?? "all";
 }
@@ -42,11 +47,25 @@ export function showScreen3IntentCommandCenter(roleId: string): boolean {
 }
 
 export function showScreen3EmotionShockboard(roleId: string): boolean {
-  return ["head_cx", "head_cx_retail", "head_cx_retail_v2", "head_cx_retail_v3", "head_contact"].includes(roleId);
+  return [
+    "head_cx",
+    "head_cx_retail",
+    "head_cx_retail_v2",
+    "head_cx_retail_v3",
+    "head_client_experience",
+    "head_contact",
+  ].includes(roleId);
 }
 
 export function showScreen3ToneIntelligence(roleId: string): boolean {
-  return ["head_cx", "head_cx_retail", "head_cx_retail_v2", "head_cx_retail_v3", "head_compliance"].includes(roleId);
+  return [
+    "head_cx",
+    "head_cx_retail",
+    "head_cx_retail_v2",
+    "head_cx_retail_v3",
+    "head_client_experience",
+    "head_compliance",
+  ].includes(roleId);
 }
 
 export function showScreen3ComplianceInsights(roleId: string): boolean {
@@ -131,7 +150,15 @@ export function showCroConsumerDuty(roleId: string): boolean {
 
 /** CRO Screen 4: Show vulnerable customer detection panel */
 export function showCroVulnerableCustomer(roleId: string): boolean {
-  return ["cro", "head_compliance", "head_cx", "head_cx_retail", "head_cx_retail_v2", "head_cx_retail_v3"].includes(roleId);
+  return [
+    "cro",
+    "head_compliance",
+    "head_cx",
+    "head_cx_retail",
+    "head_cx_retail_v2",
+    "head_cx_retail_v3",
+    "head_client_experience",
+  ].includes(roleId);
 }
 
 /** CRO Screen 4: Show cross-jurisdiction compliance heatmap */
