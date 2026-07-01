@@ -1801,12 +1801,8 @@ export type Role = Industry["roles"][number];
 export type RoleDashboardData = (typeof ROLE_DATA)["ceo"];
 export type LobDataEntry = (typeof LOB_DATA)["retail_banking"];
 
-<<<<<<< Updated upstream
-=======
-export const STERLING_BANK_INDUSTRY_ID = "sterling_bank" as const;
 export const NUVAMA_INDUSTRY_ID = "nuvama" as const;
 
->>>>>>> Stashed changes
 /** Industries that reuse retail-banking role dashboards (Sterling fork — customize per industry later). */
 export function usesRetailBankingDashboard(industryId: string): boolean {
   return industryId === "retail_banking" || industryId === STERLING_BANK_INDUSTRY_ID;
