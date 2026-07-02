@@ -38,6 +38,7 @@ import {
   TrendingUp,
   TriangleAlert,
   Users,
+  X,
   Zap,
 } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
@@ -1373,63 +1374,255 @@ function Drill3({ go }: { go: NavigateFn }) {
 
 /* ============ Floating AI analyst (canned, self-contained) ============ */
 const AI_PROMPTS = [
-  "Which clients are most likely to leave?",
-  "Which promises are we breaking most?",
-  "Is service actually getting cheaper to run?",
-  "What should I fix first this week?",
+  "Why is South Core-HNI spiking exit language this week?",
+  "Which broken promise is eroding trust fastest?",
+  "Can we still recover the 312 clients who went quiet?",
+  "What is the single highest-leverage move for book value this week?",
+  "Where are clients mentioning competitors or switching advisors?",
+  "Is automation actually pulling down cost-to-serve?",
+  "Which segment should worry me after South Core-HNI?",
+  "What do I need to hand off to Compliance this week?",
 ];
-function cannedAnswer(q: string): string {
+
+function AiReply({ headline, bullets }: { headline: string; bullets: { bold: string; rest: string }[] }) {
+  return (
+    <div>
+      <div style={{ fontWeight: 800, color: T.text, marginBottom: 8, lineHeight: 1.45 }}>{headline}</div>
+      <ul style={{ margin: 0, paddingLeft: 16, display: "flex", flexDirection: "column", gap: 6, listStyleType: "disc" }}>
+        {bullets.map((b) => (
+          <li key={b.bold} style={{ lineHeight: 1.5 }}>
+            <strong style={{ color: T.text, fontWeight: 800 }}>{b.bold}</strong>
+            {b.rest}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function cannedAnswer(q: string): ReactNode {
   const s = q.toLowerCase();
-  if (s.includes("leave") || s.includes("staying") || s.includes("attriti") || s.includes("risk"))
-    return "The clearest attrition risk is South Core-HNI: 47 clients using exit-intent language versus a baseline of 6, sentiment down 0.58. Behind them, 312 high-value clients have gone quiet after cooling sentiment - a leading signal, not a neutral one. Both go to the RM team as human-approved evidence packs; nothing auto-contacts a client.";
-  if (s.includes("promise") || s.includes("call") || s.includes("break"))
-    return "Call-back promises are the weakest at 79% adherence with 9 broken this week, followed by grievance-SLA at 72%. Both are flagged where they could become a Compliance matter - CX surfaces, Compliance owns any filing. The biggest leak is between actioning a promise and the client seeing it kept, so a status-push at completion is the fastest fix.";
-  if (s.includes("cheap") || s.includes("cost") || s.includes("paying") || s.includes("roi") || s.includes("service"))
-    return "Yes - automation covers 62% of eligible requests and containment value is Rs 1.84 Cr month-to-date, a 3.2x payback against run cost. The largest remaining lever is deflecting Voice at Rs 142 per request to App / Chat at Rs 12. Report requests are the weakest deflection at 34% and the clearest next investment.";
-  if (s.includes("fix") || s.includes("first") || s.includes("priorit") || s.includes("week"))
-    return "This week, in order: (1) work the South Core-HNI exit-intent cohort with RM evidence packs - highest book value at risk; (2) clear the 9 broken call-back promises and turn on an 18-hour breach alert, which also lifts the South NPS; (3) start the Voice-to-App deflection for balance and statement queries to bank the cost-to-serve saving. The first two share a root, so they compound.";
-  return "I read every client conversation across channels and organise it three ways: are our best clients staying, are we keeping our promises, and is service paying off. Ask about attrition risk, broken promises, or cost-to-serve and I will trace it to a root cause and a human-approved next step.";
+
+  if (s.includes("south") || s.includes("core-hni") || s.includes("exit") || s.includes("leave") || s.includes("attriti") || s.includes("portfolio") || s.includes("close account"))
+    return (
+      <AiReply
+        headline="South Core-HNI is the book's hottest attrition cell right now."
+        bullets={[
+          { bold: "47 clients", rest: " used relationship-ending language this week vs a baseline of 6 — an 8× spike." },
+          { bold: "Top phrases", rest: ": 'move my portfolio', 'close account', 'disappointed with returns' — mostly Voice and WhatsApp." },
+          { bold: "Sentiment", rest: " in that cell is -0.58; attrition radar scores South × HNI at 78 (hottest intersection)." },
+          { bold: "Root cause", rest: ": unmet call-back promises compounding with responsiveness complaints — not product performance." },
+          { bold: "Next step", rest: ": RM evidence packs per flagged client (human approves before outreach) + regional head briefing. Nothing auto-contacts a client." },
+        ]}
+      />
+    );
+
+  if (s.includes("quiet") || s.includes("silent") || s.includes("gone quiet") || s.includes("recover") || s.includes("312"))
+    return (
+      <AiReply
+        headline="Yes — but the window is closing. Silence after cooling sentiment is recoverable."
+        bullets={[
+          { bold: "312 clients", rest: " (Private + HNI) have had zero inbound for 60+ days." },
+          { bold: "68%", rest: " showed cooling sentiment before going quiet — this is a leading signal, not random churn." },
+          { bold: "41%", rest: " still had an unresolved request; 29% missed a promised call-back before silence." },
+          { bold: "Risk", rest: ": without action, these clients graduate into exit-intent language like South Core-HNI." },
+          { bold: "Next step", rest: ": weekly silent-after-cooling flags to RMs, prioritise open requests, draft re-engagement for human send — no automated blast." },
+        ]}
+      />
+    );
+
+  if (s.includes("promise") || s.includes("call-back") || s.includes("callback") || s.includes("break") || s.includes("trust") || s.includes("nps"))
+    return (
+      <AiReply
+        headline="Call-back promises are eroding trust fastest — and they overlap the attrition cohort."
+        bullets={[
+          { bold: "79%", rest: " 24h call-back adherence; 9 broken this week, 8 overdue." },
+          { bold: "South Core-HNI", rest: " clients are over-represented in the breach list — same cohort showing exit language." },
+          { bold: "South NPS 78", rest: " vs group 85; detractor verbatims are 'no call back' and 'had to chase', not product." },
+          { bold: "Funnel leak", rest: ": 7 pts lost between 'actioned' and 'kept' — clients never see completion status." },
+          { bold: "Next step", rest: ": outbound on 9 broken promises today, 18h breach alerts, status-push when work is done." },
+        ]}
+      />
+    );
+
+  if (s.includes("mass affluent") || (s.includes("segment") && s.includes("worry")) || s.includes("after south"))
+    return (
+      <AiReply
+        headline="After South Core-HNI, watch Mass Affluent — volume risk before value risk."
+        bullets={[
+          { bold: "30% negative", rest: " sentiment in Mass Affluent, rising +3 pts — fastest slip of any segment." },
+          { bold: "Volume exposure", rest: ": largest interaction pool; thinner RM coverage means friction stacks unnoticed." },
+          { bold: "Pattern", rest: ": South-HNI started as sentiment drift before exit language appeared." },
+          { bold: "HNI watch", rest: ": West-HNI already shows broken call-back promises (9 clients, trust dropping)." },
+          { bold: "Next step", rest: ": strengthen self-service for balance/statement queries; monitor exit phrases bleeding upward." },
+        ]}
+      />
+    );
+
+  if (s.includes("sentiment") || s.includes("slipping"))
+    return (
+      <AiReply
+        headline="Sentiment is slipping fastest in Mass Affluent; Private-UHNI is the control."
+        bullets={[
+          { bold: "Mass Affluent", rest: ": 30% negative, +3 pts — highest negative share and rising." },
+          { bold: "HNI", rest: ": 27% negative; South-HNI cell driving the segment risk score." },
+          { bold: "Private-UHNI", rest: ": 52% positive, stable — dedicated RM coverage surfaces issues early." },
+          { bold: "Driver", rest: ": unresolved routine friction in thinner service models, not advisory performance." },
+          { bold: "Next step", rest: ": fix responsiveness in Mass Affluent before patterns replicate in HNI." },
+        ]}
+      />
+    );
+
+  if (s.includes("cheap") || s.includes("cost") || s.includes("roi") || s.includes("paying") || s.includes("automation") || s.includes("contain"))
+    return (
+      <AiReply
+        headline="Yes — automation is pulling cost-to-serve down with measurable containment value."
+        bullets={[
+          { bold: "62%", rest: " of eligible requests auto-handled (+5 pts month-on-month)." },
+          { bold: "Rs 1.84 Cr", rest: " containment value MTD; 3.2× payback on run cost." },
+          { bold: "Rs 61 / request", rest: " blended cost-to-serve (-9% trend)." },
+          { bold: "Biggest lever", rest: ": Voice at Rs 142 vs App/Chat at Rs 12 — deflect balance and statement queries." },
+          { bold: "Weakest deflection", rest: ": report requests at 34% — clearest next investment for economics." },
+        ]}
+      />
+    );
+
+  if (s.includes("fix") || s.includes("first") || s.includes("priorit") || s.includes("leverage") || s.includes("single") || s.includes("move") || (s.includes("week") && !s.includes("compliance")))
+    return (
+      <AiReply
+        headline="Highest book-value move: tie retention and promise repair into one motion."
+        bullets={[
+          { bold: "1. South Core-HNI", rest: ": RM evidence packs for 47 exit-intent clients — highest AUM at risk." },
+          { bold: "2. Broken call-backs", rest: ": clear 9 breaches today + turn on 18h alerts — lifts South NPS." },
+          { bold: "3. Silent 312", rest: ": weekly gone-quiet flags to RMs; prioritise those with open requests." },
+          { bold: "Why together", rest: ": responsiveness failure is the shared root — steps 1 and 2 compound." },
+          { bold: "Parallel play", rest: ": Voice-to-App deflection for cost — important, not the retention emergency." },
+        ]}
+      />
+    );
+
+  if (s.includes("private") || s.includes("uhni") || s.includes("healthy") || s.includes("holding"))
+    return (
+      <AiReply
+        headline="Private-UHNI is holding — use it as the coverage model to replicate."
+        bullets={[
+          { bold: "52% positive", rest: " sentiment, stable week-on-week." },
+          { bold: "Exit language", rest: " rare outside the flagged EWM advisory cluster." },
+          { bold: "What works", rest: ": dedicated RM coverage — problems surface before 'move my portfolio' language." },
+          { bold: "Do not", rest: " dilate the model downward without testing; HNI at-risk cells need selective elements." },
+          { bold: "Next step", rest: ": document Private coverage playbook; pilot with West-HNI broken-promise cohort." },
+        ]}
+      />
+    );
+
+  if (s.includes("competitor") || s.includes("switch") || s.includes("advisor"))
+    return (
+      <AiReply
+        headline="Competitor and switch-advisor language is rising where attrition risk is already hot."
+        bullets={[
+          { bold: "South + EWM Advisory", rest: ": highest concentration of 'switching advisor' mentions." },
+          { bold: "+6 WoW", rest: " in 'switching advisor' phrase count in South-HNI." },
+          { bold: "Pattern", rest: ": clients shop before they formally leave — mentions precede exit-intent language." },
+          { bold: "Private-UHNI", rest: ": competitor mentions remain low — another sign coverage model works." },
+          { bold: "Next step", rest: ": pipe competitor verbatims into RM evidence packs before clients go silent." },
+        ]}
+      />
+    );
+
+  if (s.includes("compliance") || s.includes("grievance") || s.includes("hand off") || s.includes("handoff") || s.includes("escalat") || (s.includes("sla") && !s.includes("promise")))
+    return (
+      <AiReply
+        headline="CX detects and surfaces — Compliance owns the regulatory response."
+        bullets={[
+          { bold: "Grievance SLA", rest: " at 72% adherence; a small breach set is already flagged to Compliance/CRO." },
+          { bold: "Your role", rest: ": early detection + clean hand-off — not filing or regulatory narrative." },
+          { bold: "Do not", rest: " let broken client promises sit in limbo while the compliance path runs." },
+          { bold: "Confirm", rest: ": Compliance acknowledged receipt of the flagged grievance set." },
+          { bold: "Keep tracking", rest: ": experience metrics and client-facing promise status in parallel." },
+        ]}
+      />
+    );
+
+  if (s.includes("ewm") || s.includes("advisory") || s.includes("returns"))
+    return (
+      <AiReply
+        headline="EWM Advisory is the second hotspot — performance language, not service friction."
+        bullets={[
+          { bold: "14 clients", rest: " using returns-disappointment language this week." },
+          { bold: "Top phrase", rest: ": 'disappointed with returns' (+7 WoW) — concentrated in advisory conversations." },
+          { bold: "Different from South-HNI", rest: ": product/performance concern more than call-back breach — route to advisory desk." },
+          { bold: "Attrition radar", rest: ": EWM cluster scores elevated but below South-HNI (78)." },
+          { bold: "Next step", rest: ": advisory evidence pack + performance review outreach — human approves." },
+        ]}
+      />
+    );
+
+  return (
+    <AiReply
+      headline="I read conversations — not CRM snapshots."
+      bullets={[
+        { bold: "Channels", rest: ": Voice, WhatsApp, Email, Service Desk." },
+        { bold: "Three lenses", rest: ": clients staying, promises kept, service economics." },
+        { bold: "Try asking", rest: ": 'Why is South Core-HNI spiking?' or 'Which broken promise hurts trust fastest?'" },
+        { bold: "Every answer", rest: " traces to root cause + human-approved next step." },
+      ]}
+    />
+  );
 }
 
 function FloatingAI() {
   const [open, setOpen] = useState(false);
   const [q, setQ] = useState("");
-  const [thread, setThread] = useState<{ role: "user" | "ai"; text: string }[]>([]);
+  const [thread, setThread] = useState<{ role: "user" | "ai"; text: string; content?: ReactNode }[]>([]);
   const ask = (question: string) => {
     if (!question.trim()) return;
-    setThread((t) => [...t, { role: "user", text: question }, { role: "ai", text: cannedAnswer(question) }]);
+    setThread((t) => [...t, { role: "user", text: question }, { role: "ai", text: "", content: cannedAnswer(question) }]);
     setQ("");
   };
+  const close = () => setOpen(false);
   return (
     <>
       <button type="button" onClick={() => setOpen((o) => !o)} style={{ position: "fixed", right: 22, bottom: 22, zIndex: 60, width: 52, height: 52, borderRadius: 999, border: `1px solid ${T.gold}`, background: "linear-gradient(135deg,#3a2e0b,#161616)", color: T.gold, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 10px 30px rgba(0,0,0,.5)" }} aria-label="Ask LiSN">
         {open ? <ChevronDown size={20} /> : <Sparkles size={20} />}
       </button>
       {open ? (
-        <div style={{ position: "fixed", right: 22, bottom: 84, zIndex: 60, width: 380, maxWidth: "calc(100vw - 44px)", height: 520, maxHeight: "calc(100vh - 120px)", background: T.card, border: `1px solid ${T.btn}`, borderRadius: 16, display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,.6)" }}>
-          <div style={{ padding: "14px 16px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 30, height: 30, borderRadius: 8, background: `${T.gold}20`, display: "flex", alignItems: "center", justifyContent: "center" }}><Sparkles size={16} color={T.gold} /></div>
-            <div>
+        <div style={{ position: "fixed", right: 22, bottom: 84, zIndex: 60, width: 400, maxWidth: "calc(100vw - 44px)", height: 540, maxHeight: "calc(100vh - 120px)", background: T.card, border: `1px solid ${T.btn}`, borderRadius: 16, display: "flex", flexDirection: "column", overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,.6)" }}>
+          <div style={{ padding: "12px 14px", borderBottom: `1px solid ${T.border}`, display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: `${T.gold}20`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><Sparkles size={16} color={T.gold} /></div>
+            <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 13, fontWeight: 800, color: T.text }}>Ask LiSN</div>
-              <div style={{ fontSize: 10.5, color: T.muted }}>Client-experience analyst - conversation-grounded</div>
+              <div style={{ fontSize: 10.5, color: T.muted }}>Conversation-grounded · Nuvama CX</div>
             </div>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Close Ask LiSN"
+              style={{ width: 32, height: 32, borderRadius: 8, border: `1px solid ${T.inner}`, background: T.inset, color: T.muted, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}
+            >
+              <X size={16} />
+            </button>
           </div>
-          <div style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ flex: 1, overflowY: "auto", padding: 14, display: "flex", flexDirection: "column", gap: 10, minHeight: 0 }}>
             {thread.length === 0 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                <div style={{ fontSize: 11, color: T.muted, marginBottom: 2 }}>Try asking:</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ background: `${T.gold}12`, border: `1px solid ${T.gold}30`, borderRadius: 10, padding: "10px 12px", fontSize: 11.5, color: T.sub, lineHeight: 1.55 }}>
+                  <strong style={{ color: T.text }}>This week:</strong> South Core-HNI exit language is up 8× and call-back adherence slipped to 79%.
+                </div>
+                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.dim }}>Suggested questions</div>
                 {AI_PROMPTS.map((p) => (
-                  <button key={p} type="button" onClick={() => ask(p)} style={{ textAlign: "left", background: T.inset, border: `1px solid ${T.inner}`, borderRadius: 10, padding: "9px 11px", color: T.sub, fontSize: 12, cursor: "pointer", fontFamily: "inherit" }}>{p}</button>
+                  <button key={p} type="button" onClick={() => ask(p)} style={{ textAlign: "left", background: T.inset, border: `1px solid ${T.inner}`, borderRadius: 10, padding: "10px 12px", color: T.sub, fontSize: 12, lineHeight: 1.45, cursor: "pointer", fontFamily: "inherit" }}>{p}</button>
                 ))}
               </div>
             ) : (
               thread.map((m, i) => (
-                <div key={i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "88%", background: m.role === "user" ? T.blue : T.inset, color: m.role === "user" ? "#fff" : T.sub, border: m.role === "user" ? "none" : `1px solid ${T.inner}`, borderRadius: 12, padding: "9px 12px", fontSize: 12, lineHeight: 1.5 }}>{m.text}</div>
+                <div key={i} style={{ alignSelf: m.role === "user" ? "flex-end" : "flex-start", maxWidth: "92%", background: m.role === "user" ? T.blue : T.inset, color: m.role === "user" ? "#fff" : T.sub, border: m.role === "user" ? "none" : `1px solid ${T.inner}`, borderRadius: 12, padding: "10px 12px", fontSize: 12, lineHeight: 1.55 }}>
+                  {m.role === "user" ? m.text : m.content}
+                </div>
               ))
             )}
           </div>
-          <div style={{ padding: 12, borderTop: `1px solid ${T.border}`, display: "flex", gap: 8 }}>
-            <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ask(q); }} placeholder="Ask about clients, promises or cost..." style={{ flex: 1, background: T.inset, border: `1px solid ${T.inner}`, borderRadius: 10, padding: "9px 11px", color: T.text, fontSize: 12, fontFamily: "inherit", outline: "none" }} />
+          <div style={{ padding: 12, borderTop: `1px solid ${T.border}`, display: "flex", gap: 8, flexShrink: 0 }}>
+            <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") ask(q); }} placeholder="Ask about attrition, promises, or cost-to-serve..." style={{ flex: 1, background: T.inset, border: `1px solid ${T.inner}`, borderRadius: 10, padding: "9px 11px", color: T.text, fontSize: 12, fontFamily: "inherit", outline: "none" }} />
             <button type="button" onClick={() => ask(q)} style={{ background: T.gold, border: "none", borderRadius: 10, width: 38, display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }} aria-label="Send"><Send size={16} color="#0d0d0d" /></button>
           </div>
         </div>
