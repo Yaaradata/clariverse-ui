@@ -41,7 +41,14 @@ import {
   Zap,
 } from "lucide-react";
 import type { CSSProperties, ReactNode } from "react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { AISummaryWall } from "@/components/FCI/AISummaryWall";
+import {
+  NUVAMA_D1_RETENTION_AI,
+  NUVAMA_D1_RETENTION_DETAILS,
+  NUVAMA_D2_PROMISE_AI,
+  NUVAMA_D2_PROMISE_DETAILS,
+} from "@/lib/role-based-dashboard/nuvamaClientExperienceAISummaryData";
 import {
   Bar,
   BarChart,
@@ -112,12 +119,12 @@ const Dot = ({ c, sq }: { c: string; sq?: boolean }) => (
   <span style={{ width: 8, height: 8, borderRadius: sq ? 2 : 999, background: c, flexShrink: 0, display: "inline-block" }} />
 );
 
-function SectionCard({ title, subtitle, accent, aiPill, right, children, style }: {
-  title: ReactNode; subtitle?: ReactNode; accent?: string; aiPill?: boolean; right?: ReactNode; children: ReactNode; style?: CSSProperties;
+function SectionCard({ title, subtitle, accent, aiPill, right, children, style, bodyStyle }: {
+  title: ReactNode; subtitle?: ReactNode; accent?: string; aiPill?: boolean; right?: ReactNode; children: ReactNode; style?: CSSProperties; bodyStyle?: CSSProperties;
 }) {
   return (
     <section style={{ background: T.card, border: `1px solid ${T.border}`, borderTop: accent ? `3px solid ${accent}` : `1px solid ${T.border}`, borderRadius: 12, padding: 14, display: "flex", flexDirection: "column", minWidth: 0, ...style }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 10 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 10, flexShrink: 0 }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ fontSize: 13, fontWeight: 700, color: T.text }}>{title}</span>
@@ -127,7 +134,7 @@ function SectionCard({ title, subtitle, accent, aiPill, right, children, style }
         </div>
         {right}
       </div>
-      <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+      <div style={{ flex: 1, minWidth: 0, minHeight: 0, ...bodyStyle }}>{children}</div>
     </section>
   );
 }
@@ -285,81 +292,6 @@ function CCWell({ children, accent, title, sub, right }: { children: ReactNode; 
         {children}
       </div>
     </div>
-  );
-}
-
-/* shared AI Summary Wall (used by D1 full, D2 slim) */
-type AiRow = {
-  id: string; level: string; tag: string; title: string; body: string; metric: string; delta: string; icon: LucideIcon;
-  root: string; areas: string[]; actions: string[]; owner: string; priority: string;
-};
-
-function AISummaryWall({ rows, title = "AI Summary Wall", subtitle = "Ranked - click to expand root cause & actions" }: { rows: AiRow[]; title?: string; subtitle?: string }) {
-  const [open, setOpen] = useState<string | null>(rows[0].id);
-  const counts = rows.reduce<Record<string, number>>((m, r) => { m[r.level] = (m[r.level] || 0) + 1; return m; }, {});
-  return (
-    <SectionCard title={title} subtitle={subtitle} accent={T.gold} aiPill style={{ height: "100%" }}>
-      <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-        {rows.map((r) => {
-          const c = LEVEL[r.level];
-          const isOpen = open === r.id;
-          const Icon = r.icon;
-          return (
-            <div key={r.id} style={{ borderRadius: 11, border: `1px solid ${c}50`, background: `linear-gradient(135deg,${c}22,${c}0a)`, overflow: "hidden" }}>
-              <button type="button" onClick={() => setOpen(isOpen ? null : r.id)} style={{ width: "100%", textAlign: "left", cursor: "pointer", background: "transparent", border: "none", padding: 13, fontFamily: "inherit", display: "flex", gap: 11, alignItems: "flex-start" }}>
-                <div style={{ padding: 7, borderRadius: 8, background: `${c}20`, flexShrink: 0 }}><Icon size={15} color={c} /></div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 4, flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", padding: "2px 6px", borderRadius: 4, background: `${c}25`, color: c }}>{r.level}</span>
-                    <span style={{ fontSize: 10, padding: "2px 6px", borderRadius: 4, background: T.inner, color: T.muted, display: "inline-flex", gap: 4, alignItems: "center" }}><RefreshCw size={10} />{r.tag}</span>
-                  </div>
-                  <div style={{ fontSize: 13.5, fontWeight: 700, color: T.text }}>{r.title}</div>
-                  <div style={{ fontSize: 11.5, color: T.sub, lineHeight: 1.5, marginTop: 3 }}>{r.body}</div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 7, flexWrap: "wrap" }}>
-                    <Mono c={c} s={12}>{r.metric}</Mono>
-                    <span style={{ fontSize: 11, color: T.muted }}>{r.delta}</span>
-                  </div>
-                </div>
-                <ChevronDown size={16} color={c} style={{ flexShrink: 0, transform: isOpen ? "rotate(180deg)" : "none", transition: ".2s" }} />
-              </button>
-              {isOpen && (
-                <div style={{ padding: "0 13px 13px 13px", borderTop: `1px solid ${c}30` }}>
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", margin: "10px 0 8px", flexWrap: "wrap" }}>
-                    <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 999, background: `${c}20`, color: c }}>{r.priority} priority</span>
-                    <Users size={12} color={T.muted} />
-                    <span style={{ fontSize: 11, color: T.muted }}>{r.owner}</span>
-                    <ConsentChip />
-                  </div>
-                  <Eyebrow>Root cause</Eyebrow>
-                  <div style={{ fontSize: 12, color: T.sub, lineHeight: 1.5, margin: "4px 0 10px" }}>{r.root}</div>
-                  <Eyebrow>Affected areas</Eyebrow>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 6, margin: "6px 0 10px" }}>
-                    {r.areas.map((a) => <span key={a} style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: T.inner, color: T.sub }}>{a}</span>)}
-                  </div>
-                  <Eyebrow>Recommended actions</Eyebrow>
-                  <div style={{ marginTop: 6 }}>
-                    {r.actions.map((a, i) => (
-                      <div key={a} style={{ display: "flex", gap: 8, alignItems: "flex-start", marginBottom: 5 }}>
-                        <span style={{ width: 16, height: 16, borderRadius: 999, fontSize: 9.5, fontWeight: 800, display: "inline-flex", alignItems: "center", justifyContent: "center", background: `${c}20`, color: c, flexShrink: 0 }}>{i + 1}</span>
-                        <span style={{ fontSize: 11.5, color: T.sub, lineHeight: 1.45 }}>{a}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      <div style={{ marginTop: 12, paddingTop: 12, borderTop: `1px solid ${T.inner}`, display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 8 }}>
-        {["CRITICAL", "ALERT", "WARNING", "INFO"].map((l) => (
-          <div key={l} style={{ textAlign: "center" }}>
-            <div style={{ fontSize: 22, fontWeight: 800, color: LEVEL[l], fontFamily: MONO }}>{counts[l] || 0}</div>
-            <Eyebrow>{l}</Eyebrow>
-          </div>
-        ))}
-      </div>
-    </SectionCard>
   );
 }
 
@@ -660,36 +592,8 @@ function D1CommandCenter() {
   );
 }
 
-const D1_AI: AiRow[] = [
-  { id: "d1a1", level: "CRITICAL", tag: "Exit-intent", title: "South Core-HNI showing relationship-ending language",
-    body: "'Move my portfolio', 'close account', 'disappointed with returns' concentrated in one region-segment cell, across Voice and WhatsApp.",
-    metric: "47 clients vs 6 baseline", delta: "sentiment -0.58", icon: CircleAlert,
-    root: "Unmet call-back promises and responsiveness complaints compounding in the South Core-HNI book; the language is relationship-ending, not transactional.",
-    areas: ["RM team", "South region", "Retention"],
-    actions: ["Draft evidence pack per client - human approves", "Prioritise RM call-backs in this cell", "Brief regional head on the cluster"],
-    owner: "Head of Client Experience", priority: "Immediate" },
-  { id: "d1a2", level: "ALERT", tag: "Silent clients", title: "312 high-value clients have gone quiet",
-    body: "Previously-active Private and HNI clients with no inbound for 60 days+, whose sentiment was already cooling before the silence.",
-    metric: "312 clients", delta: "leading attrition signal", icon: TriangleAlert,
-    root: "No proactive trigger fires when an active high-value client goes quiet; the relationship cools unobserved until it is too late to recover.",
-    areas: ["Retention", "RM team", "Digital"],
-    actions: ["Flag silent-after-cooling clients to RMs weekly", "Draft a re-engagement outreach - human sends", "Prioritise those with an unresolved request"],
-    owner: "Retention Lead", priority: "High" },
-  { id: "d1a3", level: "WARNING", tag: "Segment drift", title: "Mass Affluent sentiment slipping fastest",
-    body: "Negative-sentiment share is highest and rising in Mass Affluent, the largest interaction pool - a volume risk even if per-client value is lower.",
-    metric: "30% negative", delta: "+3 pts", icon: Zap,
-    root: "Service model is thinner for Mass Affluent; routine friction goes unresolved and accumulates into detractor sentiment.",
-    areas: ["Service Ops", "Digital"],
-    actions: ["Strengthen self-service for this segment", "Watch for exit-intent bleed upward"],
-    owner: "Service Ops", priority: "Medium" },
-  { id: "d1a4", level: "INFO", tag: "Healthy core", title: "Private-UHNI relationships holding",
-    body: "The top segment retains the healthiest sentiment mix, with exit-intent language rare outside the flagged advisory cluster.",
-    metric: "52% positive", delta: "stable", icon: Info,
-    root: "Dedicated RM coverage keeps the top book close; the model that works here is the one to extend downward.",
-    areas: ["RM team", "Private"],
-    actions: ["Document what is working in Private coverage", "Test elements with HNI at-risk cells"],
-    owner: "Head of Client Experience", priority: "Low" },
-];
+const D1_AI = NUVAMA_D1_RETENTION_AI;
+const D1_AI_DETAILS = NUVAMA_D1_RETENTION_DETAILS;
 
 /* Attrition Radar - segment x region risk heatmap */
 const RADAR_COLS = ["South", "West", "North", "East"];
@@ -874,16 +778,61 @@ function ChurnDriverAnalysis() {
   );
 }
 
+function MatchedHeightRow({
+  left,
+  right,
+  columns = "minmax(0,2fr) minmax(320px,1fr)",
+}: {
+  left: ReactNode;
+  right: ReactNode;
+  columns?: string;
+}) {
+  const leftRef = useRef<HTMLDivElement>(null);
+  const [matchedHeight, setMatchedHeight] = useState<number>();
+
+  useEffect(() => {
+    const el = leftRef.current;
+    if (!el) return;
+    const sync = () => setMatchedHeight(el.offsetHeight);
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    window.addEventListener("resize", sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", sync);
+    };
+  }, []);
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: columns, gap: 12, alignItems: "start" }}>
+      <div ref={leftRef}>{left}</div>
+      <div style={{ height: matchedHeight, minHeight: 0, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        {right}
+      </div>
+    </div>
+  );
+}
+
 function Drill1({ go }: { go: NavigateFn }) {
   return (
     <div className="fade">
       <DrillHeader onBack={() => go("overview")} title="Are our best clients staying?"
         sub="A retention war-room read entirely from client conversations - who is signalling they might leave, who has gone quiet, and which cohorts to work before the book walks."
         chips={<><Chip t="red">Conversation-only</Chip><Chip t="gold">Retention - attrition-risk</Chip></>} />
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,2fr) minmax(320px,1fr)", gap: 12, alignItems: "start" }}>
-        <D1CommandCenter />
-        <AISummaryWall rows={D1_AI} title="AI Retention Wall" subtitle="Ranked - click to expand root cause & actions" />
-      </div>
+      <MatchedHeightRow
+        left={<D1CommandCenter />}
+        right={(
+          <AISummaryWall
+            isDarkMode
+            height="100%"
+            title="AI Retention Wall"
+            intelligenceSubtitle="Ranked - click to expand root cause & actions"
+            data={D1_AI}
+            insightDetailsMap={D1_AI_DETAILS}
+          />
+        )}
+      />
       <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14, alignItems: "start" }}>
         <AttritionRadar />
         <ClientAtRiskQueue />
@@ -952,29 +901,8 @@ function PromiseLedgerHero() {
   );
 }
 
-const D2_AI: AiRow[] = [
-  { id: "d2a1", level: "CRITICAL", tag: "Broken promises", title: "Call-back promises breaking on at-risk clients",
-    body: "24h call-back adherence is 79%, with 9 broken this week - concentrated on the same South Core-HNI clients showing exit-intent language.",
-    metric: "79% - 9 broken", delta: "-9 pts vs baseline", icon: CircleAlert,
-    root: "Promises made on one channel are invisible on another; there is no single ledger, so commitments slip silently until the client chases.",
-    areas: ["Service Ops", "Branch", "RM team"],
-    actions: ["Alert owners at 18h before breach", "Outbound the 9 broken promises today", "Link promise breaches to the retention queue"],
-    owner: "Service Ops Lead", priority: "Immediate" },
-  { id: "d2a2", level: "ALERT", tag: "Trust erosion", title: "Detractor verbatims cluster on 'no call back'",
-    body: "South NPS is 78 vs group 85, and the detractor language is specifically about responsiveness and unmet call-backs - trust, not product.",
-    metric: "NPS 78 vs 85", delta: "responsiveness theme", icon: TriangleAlert,
-    root: "Repeated broken promises convert neutral clients into detractors; the trust cost compounds each time a client has to chase.",
-    areas: ["Service Ops", "Quality", "Retention"],
-    actions: ["Proactive status-push on open promises", "Recover the flagged detractor cohort", "Track sentiment recovery post-fix"],
-    owner: "CX Quality Lead", priority: "High" },
-  { id: "d2a3", level: "WARNING", tag: "Hand-off", title: "Grievance-SLA breaches flagged to Compliance",
-    body: "A small set of grievance-resolution promises breached SLA. CX has flagged these to Compliance / CRO - detection and surfacing only.",
-    metric: "flagged - not owned", delta: "Compliance owns filing", icon: ShieldCheck,
-    root: "Grievance-SLA breaches can carry regulatory weight; the CX role is to detect early and hand off cleanly, not to run the regulatory response.",
-    areas: ["Compliance / CRO", "Grievance Cell"],
-    actions: ["Confirm hand-off received by Compliance", "Keep CX view to experience metrics"],
-    owner: "Compliance / CRO", priority: "Medium" },
-];
+const D2_AI = NUVAMA_D2_PROMISE_AI;
+const D2_AI_DETAILS = NUVAMA_D2_PROMISE_DETAILS;
 
 /* Promise-flow funnel */
 function PromiseFlowFunnel() {
@@ -1158,10 +1086,20 @@ function Drill2({ go }: { go: NavigateFn }) {
       <DrillHeader onBack={() => go("overview")} title="Are we keeping our promises?"
         sub="Every commitment we make to a client - call-backs, resolutions, follow-ups - and the trust we keep or lose by honouring them. Regulatory matters are flagged to Compliance, not owned here."
         chips={<><Chip t="amber">Conversation-only</Chip><Chip t="green">Compliance flag - not owned</Chip></>} />
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.85fr) minmax(300px,1fr)", gap: 12, alignItems: "start" }}>
-        <PromiseLedgerHero />
-        <AISummaryWall rows={D2_AI} title="AI Promise Wall" subtitle="Ranked - promise & trust risks" />
-      </div>
+      <MatchedHeightRow
+        columns="minmax(0,1.85fr) minmax(300px,1fr)"
+        left={<PromiseLedgerHero />}
+        right={(
+          <AISummaryWall
+            isDarkMode
+            height="100%"
+            title="AI Promise Wall"
+            intelligenceSubtitle="Ranked - promise & trust risks"
+            data={D2_AI}
+            insightDetailsMap={D2_AI_DETAILS}
+          />
+        )}
+      />
       <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14, alignItems: "start" }}>
         <PromiseFlowFunnel />
         <TrustErosionTimeline />
