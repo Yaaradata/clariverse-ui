@@ -194,7 +194,7 @@ function TopBar() {
   return (
     <div style={{ marginBottom: 14 }}>
       <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
-        Client Experience Command <span style={{ color: T.dim, fontWeight: 600, fontSize: 14 }}>- Nuvama Wealth - Rahul Jain</span>
+        Client Experience Command <span style={{ color: T.dim, fontWeight: 600, fontSize: 14 }}></span>
       </div>
       <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
         Read across every client conversation - are they staying, do we keep our word, is service paying off
