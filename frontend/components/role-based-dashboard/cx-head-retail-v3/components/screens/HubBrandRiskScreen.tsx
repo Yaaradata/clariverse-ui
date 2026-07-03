@@ -1,33 +1,16 @@
 "use client";
 
-import React from "react";
-import { getHubCardById } from "../../lib/cxHeadRetailV3HubCards";
-import type { BrandRiskDrill } from "../../lib/cxHeadRetailV3HubCards";
+import React, { useState } from "react";
+import type { TrustRangeKey } from "../../lib/cxHeadRetailV3TrustBreakdownData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
 import { ScreenBackBar } from "../common/ScreenBackBar";
-import { DetailSection } from "../hub/HubDetailPrimitives";
-import {
-  BrandChannelSentimentVisual,
-  CompetitorBuzzVisual,
-  InfluencerWatchlistVisual,
-  PublicVoiceRankVisual,
-  QualityTrustVisual,
-  TopFeatureRequestsVisual,
-} from "../hub/HubBrandRiskVisuals";
+import { TrustBreakdownIntelligence, TrustRangeSelector } from "../hub/TrustBreakdownIntelligence";
 import { layout } from "../../theme/tokens";
 
 export function HubBrandRiskScreen(): React.ReactElement {
   const { navigate } = useNavigation();
-  const card = getHubCardById("brand-risk");
-  const drill = card?.drill as BrandRiskDrill | undefined;
-  const latest = card?.timeline[card.timeline.length - 1];
-
-  if (!card || !drill || !latest?.brand) {
-    return <div style={{ padding: 32 }}>Card data unavailable.</div>;
-  }
-
-  const channels = latest.rightPanel.kind === "channels" ? latest.rightPanel.channels : [];
+  const [range, setRange] = useState<TrustRangeKey>("7D");
 
   return (
     <div
@@ -43,60 +26,15 @@ export function HubBrandRiskScreen(): React.ReactElement {
     >
       <HubFluidHeadline
         variant="brand-risk"
-        trailing={<ScreenBackBar onBack={() => navigate("overview")} />}
+        trailing={
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <TrustRangeSelector range={range} onChange={setRange} />
+            <ScreenBackBar onBack={() => navigate("overview")} />
+          </div>
+        }
       />
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 16,
-          marginBottom: 16,
-          alignItems: "stretch",
-        }}
-      >
-        <DetailSection premium fill title="Channels at risk" subtitle="Sorted by current sentiment · 6-week trend">
-          <BrandChannelSentimentVisual channels={channels} timeline={card.timeline} />
-        </DetailSection>
-
-        <DetailSection premium fill title="What people say about us" subtitle="Top themes ranked #1–#5 · trust erosion voice per theme">
-          <PublicVoiceRankVisual nodes={drill.spreadMap} />
-        </DetailSection>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 16,
-          alignItems: "stretch",
-        }}
-      >
-        <DetailSection premium fill title="Competitor buzz" subtitle="Click a competitor for channel signals, quotes & action.">
-          <CompetitorBuzzVisual competitors={drill.competitor} />
-        </DetailSection>
-
-        <DetailSection premium fill title="Quality-related trust issues" subtitle="Share of quality complaints driving returns.">
-          <QualityTrustVisual quality={drill.quality} />
-        </DetailSection>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 16,
-          alignItems: "stretch",
-        }}
-      >
-        <DetailSection premium fill title="Influencer & Watchlist Accounts">
-          <InfluencerWatchlistVisual influencers={drill.influencers} />
-        </DetailSection>
-
-        <DetailSection premium fill title="Top Requests for Features">
-          <TopFeatureRequestsVisual featureRequests={drill.featureRequests} />
-        </DetailSection>
-      </div>
+      <TrustBreakdownIntelligence range={range} />
     </div>
   );
 }

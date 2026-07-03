@@ -21,7 +21,7 @@ function ChannelBars({ channels }: { channels: Extract<HubCardRightPanel, { kind
         const barColor = channelBarColor(ch.v);
         return (
           <div key={ch.name} style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
-            <span style={{ fontSize: 10, color: cssVar("text-muted"), width: 52, flexShrink: 0 }}>{ch.name}</span>
+            <span style={{ fontSize: 10, color: cssVar("text-muted"), width: 58, flexShrink: 0 }}>{ch.name}</span>
             <div style={{ flex: 1, height: 6, borderRadius: 3, background: `${barColor}20` }}>
               <div style={{ height: "100%", width: `${ch.v * 100}%`, background: barColor, borderRadius: 3 }} />
             </div>
