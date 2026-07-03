@@ -30,8 +30,8 @@ function HubHeadlineTitle({ variant }: { variant: HubCardId }): React.ReactEleme
     case "brand-risk":
       return (
         <>
-          Is our <span style={accentSpan}>brand</span> at{" "}
-          <span style={accent2Span}>risk</span>
+          Where is customer <span style={accentSpan}>trust</span> breaking — and{" "}
+          <span style={accent2Span}>why</span>
           <span style={{ color: cssVar("accent") }}>?</span>
         </>
       );

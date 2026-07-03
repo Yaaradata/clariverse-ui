@@ -37,6 +37,58 @@ export function MiniSparkline({
   );
 }
 
+/** Jagged line spark — sharp linear segments, no area fill. */
+export function SpikySparkline({
+  data,
+  color,
+  height = 32,
+  strokeWidth = 2.25,
+}: {
+  data: number[];
+  color: string;
+  height?: number;
+  strokeWidth?: number;
+}): React.ReactElement {
+  const width = 120;
+  const padX = 4;
+  const padY = 5;
+  const plotW = width - padX * 2;
+  const plotH = height - padY * 2;
+  const min = Math.min(...data);
+  const max = Math.max(...data);
+  const range = max - min || 1;
+
+  const points = data
+    .map((v, i) => {
+      const x = padX + (i / Math.max(data.length - 1, 1)) * plotW;
+      const y = padY + (1 - (v - min) / range) * plotH;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  return (
+    <svg
+      viewBox={`0 0 ${width} ${height}`}
+      width="100%"
+      height={height}
+      preserveAspectRatio="none"
+      style={{ display: "block", overflow: "visible" }}
+      aria-hidden
+    >
+      <polyline
+        points={points}
+        fill="none"
+        stroke={color}
+        strokeWidth={strokeWidth}
+        strokeLinecap="square"
+        strokeLinejoin="miter"
+        vectorEffect="non-scaling-stroke"
+        style={{ filter: `drop-shadow(0 0 3px ${color}55)` }}
+      />
+    </svg>
+  );
+}
+
 /** Half radial dial — AP-014 dial + sparkline pairing on executive tiles. */
 export function MiniGauge({
   value,
