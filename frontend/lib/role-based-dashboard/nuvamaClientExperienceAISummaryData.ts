@@ -148,12 +148,12 @@ export const NUVAMA_D2_PROMISE_AI: FCIInsight[] = [
     category: "customer-experience",
     title: "Detractor verbatims cluster on 'no call back'",
     message:
-      "South NPS is 78 vs group 85, and the detractor language is specifically about responsiveness and unmet call-backs - trust, not product.",
+      "South NPS is 78 vs book 82, and the detractor language is specifically about responsiveness and unmet call-backs - trust, not product.",
     trend: "up",
     change: 7,
     metrics: {
       volume: 78,
-      volumeLabel: "South NPS vs 85 group",
+      volumeLabel: "South NPS vs book 82",
       customerImpact: "High",
     },
   },
@@ -161,9 +161,9 @@ export const NUVAMA_D2_PROMISE_AI: FCIInsight[] = [
     id: "d2a3",
     severity: "warning",
     category: "compliance",
-    title: "Grievance-SLA breaches flagged to Compliance",
+    title: "Grievance-SLA breaches flagged to Governance",
     message:
-      "A small set of grievance-resolution promises breached SLA. CX has flagged these to Compliance / CRO - detection and surfacing only.",
+      "A small set of grievance-resolution promises breached SLA. CX has flagged these to Governance → CRO - detection and surfacing only.",
     trend: "up",
     change: 12,
     metrics: {
@@ -205,15 +205,15 @@ export const NUVAMA_D2_PROMISE_DETAILS: Record<string, FCIInsightDetails> = {
   },
   d2a3: {
     rootCause:
-      "Grievance-SLA breaches can carry regulatory weight; the CX role is to detect early and hand off cleanly, not to run the regulatory response.",
-    affectedAreas: ["Compliance / CRO", "Grievance Cell"],
+      "Grievance-SLA breaches can carry regulatory weight; the CX role is to detect early and hand off cleanly to Governance (triage + redressal) — CRO files where required.",
+    affectedAreas: ["Governance → CRO", "Grievance Cell"],
     recommendedActions: [
       "Confirm hand-off received by Compliance",
       "Keep CX view to experience metrics",
     ],
     estimatedImpact: "Medium - regulatory hand-off required",
     timeToResolve: "Compliance-owned",
-    assignedTo: "Compliance / CRO",
+    assignedTo: "Governance → CRO",
     priority: "medium",
     priorityLabel: "Monitor",
   },

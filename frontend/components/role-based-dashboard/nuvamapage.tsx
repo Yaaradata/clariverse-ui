@@ -8,7 +8,7 @@
  * Three CX-owned drills, each with a DISTINCT signature layout:
  *   D1 "Are our best clients staying?"  -> retention war-room: 2x2 Command Center + AI Wall,
  *                                          Attrition Radar + Client-at-Risk queue,
- *                                          exit-language phrases, competitor mentions, churn drivers. Conversation-only.
+ *                                          exit-language phrases, competitor mentions, attrition drivers. Conversation-only.
  *   D2 "Are we keeping our promises?"    -> full-width Promise Ledger hero + slim AI rail,
  *                                          Promise-flow funnel + Trust-erosion timeline,
  *                                          breach-language tracker, repeat-contact loop, service-recovery detection.
@@ -104,10 +104,21 @@ const ROUTE: Record<string, { l: string; c: string }> = {
   service: { l: "Service Ops", c: T.blue },
   advisory: { l: "Advisory Desk", c: T.violet },
   retention: { l: "Retention", c: T.red },
-  compliance: { l: "Compliance / CRO", c: T.amber },
+  compliance: { l: "Governance → CRO", c: T.amber },
   digital: { l: "Digital CX", c: T.green },
 };
 const LEVEL: Record<string, string> = { CRITICAL: T.red, ALERT: "#f97316", WARNING: T.yellow, INFO: T.green, OBLIGATION: T.amber };
+
+/** Single source of truth for NPS across the dashboard */
+const BOOK_NPS = 82;
+const SOUTH_NPS = 78;
+
+const NAV_LABELS: Record<string, string> = {
+  overview: "Overview",
+  d1: "Staying",
+  d2: "Promises",
+  d3: "Paying off",
+};
 
 /* primitives */
 const Mono = ({ children, c = T.text, s = 14 }: { children: ReactNode; c?: string; s?: number }) => (
@@ -119,6 +130,14 @@ const Eyebrow = ({ children, c = T.muted }: { children: ReactNode; c?: string })
 const Dot = ({ c, sq }: { c: string; sq?: boolean }) => (
   <span style={{ width: 8, height: 8, borderRadius: sq ? 2 : 999, background: c, flexShrink: 0, display: "inline-block" }} />
 );
+
+function SourceTag({ children }: { children: string }) {
+  return (
+    <span style={{ fontFamily: MONO, fontSize: 9, color: T.dim, letterSpacing: ".03em", whiteSpace: "nowrap", lineHeight: 1.3 }}>
+      {children}
+    </span>
+  );
+}
 
 function SectionCard({ title, subtitle, accent, aiPill, right, children, style, bodyStyle }: {
   title: ReactNode; subtitle?: ReactNode; accent?: string; aiPill?: boolean; right?: ReactNode; children: ReactNode; style?: CSSProperties; bodyStyle?: CSSProperties;
@@ -202,10 +221,10 @@ function TopBar() {
   return (
     <div style={{ marginBottom: 14 }}>
       <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
-        Client Experience Command <span style={{ color: T.dim, fontWeight: 600, fontSize: 14 }}></span>
+        Client Experience Command
       </div>
       <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
-        Read across every client conversation - are they staying, do we keep our word, is service paying off
+        Nuvama Wealth · Client Experience Office · reporting to the Head of Wealth
       </div>
     </div>
   );
@@ -298,9 +317,9 @@ function CCWell({ children, accent, title, sub, right }: { children: ReactNode; 
 
 /* ============ OVERVIEW ============ */
 const TREND: { stay: TrendPoint[]; promise: TrendPoint[]; pay: TrendPoint[] } = {
-  stay: [{ v: 88 }, { v: 87 }, { v: 86 }, { v: 84 }, { v: 82 }, { v: 79 }],
-  promise: [{ v: 88 }, { v: 86 }, { v: 85 }, { v: 83 }, { v: 81 }, { v: 79 }],
-  pay: [{ v: 44 }, { v: 48 }, { v: 52 }, { v: 55 }, { v: 59 }, { v: 62 }],
+  stay: [{ v: 512 }, { v: 505 }, { v: 521 }, { v: 498 }, { v: 540 }, { v: 560 }, { v: 548 }, { v: 612 }, { v: 640 }, { v: 700 }, { v: 760 }, { v: 800 }],
+  promise: [{ v: 88 }, { v: 87 }, { v: 89 }, { v: 85 }, { v: 84 }, { v: 86 }, { v: 82 }, { v: 83 }, { v: 80 }, { v: 79 }, { v: 81 }, { v: 79 }],
+  pay: [{ v: 44 }, { v: 47 }, { v: 46 }, { v: 51 }, { v: 54 }, { v: 53 }, { v: 57 }, { v: 59 }, { v: 58 }, { v: 61 }, { v: 60 }, { v: 62 }],
 };
 
 const EXEC_PULSE = [
@@ -319,7 +338,7 @@ function ExecutivePulse() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 8 }}>
         {EXEC_PULSE.map((p) => (
           <div key={p.label} style={{ background: T.inset, border: `1px solid ${T.inner}`, borderRadius: 8, padding: "10px 11px" }}>
-            <div style={{ fontSize: 10, fontWeight: 800, color: T.sub, marginBottom: 5 }}>{p.label}</div>
+            <div style={{ fontSize: 12.5, fontWeight: 800, color: T.gold, letterSpacing: ".02em", marginBottom: 6 }}>{p.label}</div>
             <div style={{ fontSize: 11.5, color: T.sub, lineHeight: 1.45 }}>{p.text}</div>
           </div>
         ))}
@@ -330,14 +349,14 @@ function ExecutivePulse() {
 
 type NavigateFn = (screen: string) => void;
 
-function ExecutiveQuestionCard({ accent, iTone, icon, title, subtitle, score, delta, deltaColor, trend, trendColor, visualType, gauges, bars, miniMetrics, aiText, cta, chip, onClick }: {
+function ExecutiveQuestionCard({ accent, iTone, icon, title, subtitle, score, delta, deltaColor, trend, trendColor, visualType, gauges, bars, miniMetrics, aiText, cta, chip, gaugeSource, onClick }: {
   accent: string; iTone: string; icon: ReactNode; title: string; subtitle: string; score: string; delta: string; deltaColor?: string;
   trend: TrendPoint[]; trendColor: string; visualType: "gauges" | "bars"; gauges?: { label: string; topLabel?: string; value: number; color: string }[];
-  bars?: { name: string; v: number; c: string }[]; miniMetrics: [string, string, string][]; aiText: string; cta: string; chip?: string; onClick: () => void;
+  bars?: { name: string; v: number; c: string }[]; miniMetrics: [string, string, string][]; aiText: string; cta: string; chip?: string; gaugeSource?: string; onClick: () => void;
 }) {
   const a = tone(accent);
   return (
-    <button type="button" className="bigcard" onClick={onClick} style={{ textAlign: "left", font: "inherit", width: "100%", background: `linear-gradient(180deg,${a}0e,${T.card})`, border: `1px solid ${a}3a`, borderRadius: 16, padding: "16px 18px", display: "flex", flexDirection: "column", gap: 10, cursor: "pointer", minHeight: 380, color: "inherit" }}>
+    <button type="button" className="bigcard" onClick={onClick} style={{ textAlign: "left", font: "inherit", width: "100%", background: `linear-gradient(180deg,${a}0e,${T.card})`, border: `1px solid ${a}3a`, borderRadius: 16, padding: "16px 18px", display: "flex", flexDirection: "column", gap: 7, cursor: "pointer", minHeight: 340, color: "inherit" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10 }}>
         <div style={{ display: "flex", gap: 10, minWidth: 0 }}>
           <div style={{ width: 36, height: 36, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", background: `${tone(iTone)}22`, color: tone(iTone), flexShrink: 0 }}>{icon}</div>
@@ -349,15 +368,18 @@ function ExecutiveQuestionCard({ accent, iTone, icon, title, subtitle, score, de
         </div>
         <ChevronRight size={22} color={T.dim} style={{ flexShrink: 0 }} />
       </div>
-      <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-        <div style={{ fontSize: 30, fontWeight: 900, fontFamily: MONO, letterSpacing: "-.04em" }}>{score}</div>
-        <Mono c={deltaColor ?? T.red} s={12}>{delta}</Mono>
+      <div style={{ display: "flex", alignItems: "baseline", gap: 6, minWidth: 0 }}>
+        <div style={{ fontSize: 26, fontWeight: 900, fontFamily: MONO, letterSpacing: "-.04em", whiteSpace: "nowrap", flexShrink: 0 }}>{score}</div>
+        <span style={{ fontFamily: MONO, fontWeight: 700, color: deltaColor ?? T.red, fontSize: 11, lineHeight: 1.25, whiteSpace: "nowrap", flexShrink: 1, minWidth: 0 }}>{delta}</span>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,0.9fr) minmax(0,1.1fr)", gap: 10, alignItems: "center" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,0.9fr) minmax(0,1.1fr)", gap: 8, alignItems: "center", marginTop: -2 }}>
         <MiniSpark data={trend} c={trendColor} />
         {visualType === "gauges" && gauges ? (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
-            {gauges.map((g) => <MiniGauge key={g.label} label={g.label} topLabel={g.topLabel} value={g.value} color={g.color} />)}
+          <div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4 }}>
+              {gauges.map((g) => <MiniGauge key={g.label} label={g.label} topLabel={g.topLabel} value={g.value} color={g.color} />)}
+            </div>
+            {gaugeSource ? <div style={{ marginTop: 4, textAlign: "center" }}><SourceTag>{gaugeSource}</SourceTag></div> : null}
           </div>
         ) : bars ? <MiniBars bars={bars} /> : null}
       </div>
@@ -408,12 +430,12 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     ai: "Promised 24h call-backs are slipping vs the ~88% baseline, concentrated on grievance and statement intents - the same clients showing exit-intent language.", route: "service" },
   { id: "trust", title: "Trust-Erosion Cluster", sev: "high", sevLabel: "Trust", variant: "default", feed: "NPS + CSAT",
     fields: [["Cohort", "South region"], ["Window", "This week"]],
-    stats: [["NPS", "78"], ["Group", "85"], ["Detractor theme", "'no call back'"]],
+    stats: [["NPS", `${SOUTH_NPS}`], ["Book", `${BOOK_NPS}`], ["Detractor theme", "'no call back'"]],
     ai: "Detractor verbatims cluster on responsiveness and broken call-backs - the same root as the promise slippage. One fix clears three signals.", route: "service" },
   { id: "suitability", title: "Suitability-Language Gap", sev: "high", sevLabel: "Hand-off", variant: "default", feed: "Advisory calls", needsExtraFeed: true,
     fields: [["Cohort", "Advisory interactions"], ["Window", "Rolling 30d"]],
-    stats: [["Missing phrasing", "8 / 1,000"], ["CX role", "Detect + flag"], ["Owner", "Compliance"]],
-    ai: "A subset of advisory conversations lack expected suitability phrasing. CX surfaces the signal and hands it to Compliance / CRO - CX does not own the filing.", route: "compliance" },
+    stats: [["Missing phrasing", "8 / 1,000"], ["CX role", "Detect + flag"], ["Owner", "Governance → CRO"]],
+    ai: "A subset of advisory conversations lack expected suitability phrasing (SEBI RA/IA). Governance triages; CRO files where required.", route: "compliance" },
   { id: "deflection", title: "Self-Service Deflection Rising", sev: "later", sevLabel: "Payoff", variant: "voice", feed: "App / Chat",
     fields: [["Cohort", "Balance + statement"], ["Window", "This week"]],
     stats: [["Deflection", "+14% WoW"], ["Cost-to-serve", "Falling"], ["Channel", "App / Chat"]],
@@ -427,13 +449,13 @@ function ClientSignalMonitor() {
         <div style={{ color: T.gold, fontSize: 13, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 900 }}>Today's Client-Signal Monitor</div>
         <span style={{ fontSize: 10, fontWeight: 900, letterSpacing: ".08em", textTransform: "uppercase", border: "1px solid #7e1f1f", background: "#301818", color: "#ff4444", borderRadius: 999, padding: "6px 12px" }}>Experience Alerts</span>
       </div>
-      <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 14, alignItems: "stretch" }}>
+      <div style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 14, alignItems: "flex-start" }}>
         {MONITOR_ALERTS.map((a) => {
           const sv = SEV_STYLE[a.sev];
           const border = a.variant === "critical" ? "#8a2b2b" : a.variant === "voice" ? "#6d44d4" : "#66420a";
           const bg = a.variant === "voice" ? "linear-gradient(180deg,#171127,#111)" : "#121212";
           return (
-            <div key={a.id} style={{ minWidth: 264, maxWidth: 264, alignSelf: "stretch", background: bg, border: `1px solid ${border}`, borderRadius: 14, padding: "16px 16px 14px", display: "flex", flexDirection: "column" }}>
+            <div key={a.id} style={{ minWidth: 264, maxWidth: 264, alignSelf: "flex-start", background: bg, border: `1px solid ${border}`, borderRadius: 14, padding: "16px 16px 14px", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8, marginBottom: 12, minHeight: 52 }}>
                 <div style={{ fontSize: 17, lineHeight: 1.1, fontWeight: 900, color: T.text }}>{a.title}</div>
                 <span style={{ fontSize: 10, textTransform: "uppercase", fontWeight: 900, borderRadius: 999, padding: "5px 9px", whiteSpace: "nowrap", color: sv.color, background: sv.bg, border: `1px solid ${sv.border}` }}>{a.sevLabel}</span>
@@ -456,9 +478,9 @@ function ClientSignalMonitor() {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: 10, background: "#2d2414", border: "1px solid #5a4314", borderRadius: 9, padding: 12, fontSize: 13, lineHeight: 1.45, color: "#fff", fontWeight: 700, minHeight: 132, boxSizing: "border-box", display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ marginTop: 10, background: "#2d2414", border: "1px solid #5a4314", borderRadius: 9, padding: 12, fontSize: 13, lineHeight: 1.45, color: "#fff", fontWeight: 700, boxSizing: "border-box", display: "flex", flexDirection: "column", gap: 10 }}>
                 <span>{a.ai}</span>
-                <div style={{ marginTop: "auto", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                   <RouteChip r={a.route} />
                   <ConsentChip />
                 </div>
@@ -478,23 +500,26 @@ function Overview({ go }: { go: NavigateFn }) {
       <ExecutivePulse />
       <div className="overview-cards">
         <ExecutiveQuestionCard accent="red" iTone="red" icon={<Users size={18} />} title="Are our best clients staying?" subtitle="Attrition-risk - exit-intent language - silent clients"
-          score="47" delta="at-risk clients, up from 6" trend={TREND.stay} trendColor={T.red} visualType="gauges"
-          gauges={[{ label: "at risk", topLabel: "Book health", value: 71, color: T.amber }, { label: "silent 60d+", topLabel: "High-value", value: 34, color: T.red }]}
-          miniMetrics={[["Exit-intent clients", "47", "red"], ["Silent high-value", "312", "amber"]]}
-          aiText="Exit-intent language is concentrated in South Core-HNI - 47 clients vs 6 baseline - and 312 high-value clients have gone quiet after cooling sentiment. This is the book at risk of walking."
+          score="Rs 800 Cr" delta="AUM at risk · 47 exit-intent clients" trend={TREND.stay} trendColor={T.red} visualType="gauges"
+          gauges={[{ label: "latest wave", topLabel: "NPS (book)", value: BOOK_NPS, color: T.green }, { label: "silent 60d+", topLabel: "High-value", value: 34, color: T.red }]}
+          gaugeSource="Source: NPS vendor · latest wave"
+          miniMetrics={[["Exit-intent clients", "47", "red"], ["Silent high-value", "312", "amber"], ["Dormant AUM (silent HV)", "Rs 2,140 Cr", "amber"], ["AUM at risk (exit-intent)", "Rs 800 Cr", "red"]]}
+          aiText="Exit-intent language is concentrated in South Core-HNI - Rs 800 Cr AUM at risk across 47 clients vs 6 baseline - and 312 high-value clients have gone quiet after cooling sentiment. This is the book at risk of walking."
           cta="Open retention war-room" onClick={() => go("d1")} />
         <ExecutiveQuestionCard accent="amber" iTone="amber" icon={<ShieldCheck size={18} />} title="Are we keeping our promises?" subtitle="Promise ledger - complaint-handling - trust erosion"
           score="79%" delta="-9 pts adherence" trend={TREND.promise} trendColor={T.amber} visualType="gauges"
-          gauges={[{ label: "kept", topLabel: "Promises", value: 79, color: T.amber }, { label: "recovered", topLabel: "Trust", value: 58, color: T.red }]}
-          miniMetrics={[["Promises overdue", "12", "amber"], ["Broken this week", "9", "red"]]}
-          aiText="Call-back adherence fell to 79% from ~88%, with 12 overdue and 9 broken. Trust is eroding on the same clients - detractor verbatims cluster on 'no call back'. Compliance flags handed off, not owned."
+          gauges={[{ label: "kept", topLabel: "Promises", value: 79, color: T.amber }, { label: "recovered", topLabel: "Sentiment", value: 41, color: T.green }]}
+          gaugeSource="Source: CRM & service-desk SLA"
+          miniMetrics={[["Promises overdue", "12", "amber"], ["Broken this week", "9", "red"], ["Grievance SLA", "72%", "amber"], ["Repeat contacts", "340", "red"]]}
+          aiText="Call-back adherence fell to 79% from ~88%, with 12 overdue and 9 broken. Trust is eroding on the same clients - detractor verbatims cluster on 'no call back'. Governance flags triaged to CRO where filing is required."
           cta="Open promise & trust ledger" onClick={() => go("d2")} />
         <ExecutiveQuestionCard accent="green" iTone="green" icon={<TrendingUp size={18} />} title="Is service paying off?" subtitle="Automation - deflection - cost-to-serve"
           score="62%" delta="+18% containment MTD" deltaColor={T.green} trend={TREND.pay} trendColor={T.green} visualType="gauges"
           gauges={[{ label: "auto-handled", topLabel: "Automation", value: 62, color: T.green }, { label: "deflected", topLabel: "Self-service", value: 48, color: T.cyan }]}
-          miniMetrics={[["Auto-resolved", "62%", "green"], ["Cost avoided MTD", "Rs 1.84 Cr", "green"]]}
+          gaugeSource="Source: cost ledger & fulfilment"
+          miniMetrics={[["Auto-resolved", "62%", "green"], ["Cost avoided MTD", "Rs 1.84 Cr", "green"], ["Retained NNM", "Rs 64 Cr", "green"], ["Cost-to-serve", "Rs 61 / req", "green"]]}
           aiText="Automation covers 62% of eligible requests and containment value is Rs 1.84 Cr month-to-date. This drill joins fulfilment data to prove cost-to-serve and ROI - the only place hard numbers appear."
-          chip="Includes transaction data" cta="Open service economics" onClick={() => go("d3")} />
+          cta="Open service economics" onClick={() => go("d3")} />
       </div>
       <ClientSignalMonitor />
       <div style={{ height: 44 }} />
@@ -513,12 +538,14 @@ const D1_SEGMENT_SENT: [string, string, number, number, number][] = [
 function D1CommandCenter() {
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 12 }}>
-      <CCWell accent={T.red} title="Exit-intent monitor" sub="attrition-risk language - cohort level, never named client">
-        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 10 }}>
+      <CCWell accent={T.red} title="Exit-intent monitor" sub="attrition-risk language - cohort level, never named client"
+        right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
           <span style={{ fontSize: 34, fontWeight: 900, fontFamily: MONO, color: T.red }}>47</span>
           <span style={{ fontSize: 11, color: T.dim }}>clients this week</span>
           <span style={{ fontSize: 11, color: T.red, fontWeight: 700 }}>vs 6 baseline</span>
         </div>
+        <div style={{ fontSize: 11.5, color: T.sub, marginBottom: 10, fontWeight: 700 }}>Rs 800 Cr AUM at risk across flagged cells</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 8 }}>
           {[["South - Core-HNI", "47", T.red], ["EWM advisory", "14", T.amber], ["West - HNI", "9", T.yellow], ["Other cells", "6", T.green]].map(([l, v, c]) => (
             <div key={l as string} style={{ background: `${c as string}12`, border: `1px solid ${c as string}30`, borderRadius: 8, padding: "8px 10px" }}>
@@ -532,11 +559,13 @@ function D1CommandCenter() {
         </AIInsightStrip>
       </CCWell>
 
-      <CCWell accent={T.amber} title="Silent-client detection" sub="high-value clients who have gone quiet - a leading signal">
-        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 12 }}>
+      <CCWell accent={T.amber} title="Long-tail / silent clients" sub="the book the Relationship Manager isn't working"
+        right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 10, marginBottom: 6 }}>
           <span style={{ fontSize: 34, fontWeight: 900, fontFamily: MONO, color: T.amber }}>312</span>
           <span style={{ fontSize: 11, color: T.dim }}>gone quiet 60d+</span>
         </div>
+        <div style={{ fontSize: 10, color: T.muted, marginBottom: 10 }}>Overlaps NPS non-responders</div>
         {[["Sentiment was cooling pre-silence", 68, T.red], ["Had an unresolved request", 41, T.amber], ["Missed a promised call-back", 29, T.amber]].map(([l, v, c]) => (
           <div key={l as string} style={{ marginBottom: 8 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
@@ -551,7 +580,8 @@ function D1CommandCenter() {
         <div style={{ fontSize: 9.5, color: T.dim, marginTop: 2, lineHeight: 1.4 }}>Silence after cooling sentiment is not neutral - it is the quiet phase before attrition.</div>
       </CCWell>
 
-      <CCWell accent={T.cyan} title="Sentiment trajectory by segment" sub="positive / neutral / negative - conversation-derived">
+      <CCWell accent={T.cyan} title="Sentiment trajectory by segment" sub="positive / neutral / negative - conversation-derived"
+        right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
         {D1_SEGMENT_SENT.map(([l, sub, h, n, u]) => (
           <div key={l} style={{ marginBottom: 9 }}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
@@ -608,7 +638,8 @@ const radarTone = (v: number): string => (v >= 65 ? T.red : v >= 45 ? "#f97316" 
 
 function AttritionRadar() {
   return (
-    <SectionCard title="Attrition radar" subtitle="Attrition-risk score by segment x region - intensity = concentration of exit signals" accent={T.red} aiPill>
+    <SectionCard title="Attrition radar" subtitle="Attrition-risk score by segment x region - intensity = concentration of exit signals" accent={T.red} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ display: "grid", gridTemplateColumns: `minmax(120px,1.2fr) repeat(${RADAR_COLS.length},1fr)`, gap: 5 }}>
         <div />
         {RADAR_COLS.map((c) => <div key={c} style={{ fontSize: 9, color: T.muted, textAlign: "center", alignSelf: "end", paddingBottom: 4, fontWeight: 700 }}>{c}</div>)}
@@ -637,27 +668,29 @@ function RadarRow({ label, cells }: { label: string; cells: number[] }) {
 }
 
 /* Client-at-Risk queue */
-const AT_RISK: { cohort: string; driver: string; signal: string; trend: string; sev: string; route: string }[] = [
-  { cohort: "South - Core-HNI", driver: "Exit-intent language spike", signal: "47 clients - sentiment -0.58", trend: "worsening", sev: "red", route: "rm" },
-  { cohort: "EWM Advisory", driver: "Performance-concern language", signal: "14 clients - returns complaints", trend: "worsening", sev: "red", route: "advisory" },
-  { cohort: "Private - silent set", driver: "Went quiet after complaint", signal: "38 clients - no inbound 60d+", trend: "watch", sev: "amber", route: "retention" },
-  { cohort: "West - HNI", driver: "Broken call-back promises", signal: "9 clients - trust dropping", trend: "watch", sev: "amber", route: "service" },
+const AT_RISK: { cohort: string; driver: string; signal: string; trend: string; sev: string; route: string; nnm: string; rmTeam: string }[] = [
+  { cohort: "South - Core-HNI", driver: "Exit-intent language spike", signal: "47 clients - sentiment -0.58", trend: "worsening", sev: "red", route: "rm", nnm: "Rs 520 Cr", rmTeam: "RM pod · South-2" },
+  { cohort: "EWM Advisory", driver: "Performance-concern language", signal: "14 clients - returns complaints", trend: "worsening", sev: "red", route: "advisory", nnm: "Rs 180 Cr", rmTeam: "Advisory desk · West" },
+  { cohort: "Private - silent set", driver: "Went quiet after complaint", signal: "38 clients - no inbound 60d+", trend: "watch", sev: "amber", route: "retention", nnm: "Rs 460 Cr (dormant)", rmTeam: "RM pod · Pvt-1" },
+  { cohort: "West - HNI", driver: "Broken call-back promises", signal: "9 clients - trust dropping", trend: "watch", sev: "amber", route: "service", nnm: "Rs 95 Cr", rmTeam: "RM pod · West-3" },
 ];
 
 function ClientAtRiskQueue() {
   return (
-    <SectionCard title="Client-at-risk queue" subtitle="Ranked cohorts to work now - each with the signal and the human-approved next step" accent={T.gold} aiPill>
+    <SectionCard title="Client-at-risk queue" subtitle="Ranked cohorts to work now - each with AUM at risk, RM pod, and the human-approved next step" accent={T.gold} aiPill>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {AT_RISK.map((r) => {
           const c = tone(r.sev);
           return (
-            <div key={r.cohort} style={{ display: "grid", gridTemplateColumns: "1.3fr 1.4fr 1.2fr auto", gap: 12, alignItems: "center", padding: "11px 12px", borderRadius: 10, background: `${c}10`, border: `1px solid ${c}35`, borderLeft: `3px solid ${c}` }}>
+            <div key={r.cohort} style={{ display: "grid", gridTemplateColumns: "1.2fr 1.3fr 1fr 1fr auto", gap: 10, alignItems: "center", padding: "11px 12px", borderRadius: 10, background: `${c}10`, border: `1px solid ${c}35`, borderLeft: `3px solid ${c}` }}>
               <div>
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: T.text }}>{r.cohort}</div>
                 <span style={{ marginTop: 4, display: "inline-block" }}><Pill t={r.trend === "worsening" ? "red" : "amber"}>{r.trend}</Pill></span>
+                <div style={{ marginTop: 5 }}><Chip t="muted">{r.rmTeam}</Chip></div>
               </div>
               <div style={{ fontSize: 11.5, color: T.sub }}>{r.driver}</div>
               <Mono c={c} s={11}>{r.signal}</Mono>
+              <Mono c={c} s={13}>{r.nnm}</Mono>
               <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
                 <RouteChip r={r.route} />
                 <ConsentChip />
@@ -683,7 +716,8 @@ const EXIT_PHRASES: { phrase: string; count: number; wow: number; cohort: string
 function ExitLanguageTracker() {
   const max = Math.max(...EXIT_PHRASES.map((p) => p.count));
   return (
-    <SectionCard title="Exit-language phrase tracker" subtitle="Exact attrition phrases detected in client conversations - count & week-on-week move" accent={T.red} aiPill>
+    <SectionCard title="Exit-language phrase tracker" subtitle="Exact attrition phrases detected in client conversations - count & week-on-week move" accent={T.red} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
         {EXIT_PHRASES.map((p) => (
           <div key={p.phrase} style={{ display: "grid", gridTemplateColumns: "1.7fr 1.6fr auto", gap: 10, alignItems: "center" }}>
@@ -708,16 +742,17 @@ function ExitLanguageTracker() {
 }
 
 const COMPETITOR_MENTIONS: { name: string; count: number; context: string; tiedToExit: number; t: string }[] = [
-  { name: "360 ONE", count: 14, context: "better returns", tiedToExit: 71, t: "red" },
-  { name: "Kotak", count: 9, context: "lower fees", tiedToExit: 44, t: "amber" },
-  { name: "ICICI", count: 7, context: "digital experience", tiedToExit: 29, t: "amber" },
-  { name: "Motilal Oswal", count: 5, context: "research quality", tiedToExit: 40, t: "amber" },
-  { name: "Anand Rathi", count: 4, context: "RM attention", tiedToExit: 50, t: "amber" },
+  { name: "Competitor A", count: 14, context: "better returns", tiedToExit: 71, t: "red" },
+  { name: "Competitor B", count: 9, context: "lower fees", tiedToExit: 44, t: "amber" },
+  { name: "Competitor C", count: 7, context: "digital experience", tiedToExit: 29, t: "amber" },
+  { name: "Competitor D", count: 5, context: "research quality", tiedToExit: 40, t: "amber" },
+  { name: "Competitor E", count: 4, context: "RM attention", tiedToExit: 50, t: "amber" },
 ];
 
 function CompetitorMentionMonitor() {
   return (
-    <SectionCard title="Competitor mention monitor" subtitle="Rivals clients name in conversations - and how often it co-occurs with exit-intent" accent={T.amber} aiPill>
+    <SectionCard title="Competitor mention monitor" subtitle="Rivals clients name in conversations - and how often it co-occurs with exit-intent" accent={T.amber} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
         {COMPETITOR_MENTIONS.map((m) => {
           const c = tone(m.t);
@@ -737,13 +772,13 @@ function CompetitorMentionMonitor() {
         })}
       </div>
       <AIInsightStrip tone="amber">
-        360 ONE is the sharpest threat - most-named, and 71% of its mentions sit inside an exit-intent conversation, almost always on the returns argument. This is a competitive-positioning brief for the RM team, not a service issue.
+        Competitor A is the sharpest threat - most-named, and 71% of its mentions sit inside an exit-intent conversation, almost always on the returns argument. This is a competitive-positioning brief for the Relationship Manager team, not a service issue.
       </AIInsightStrip>
     </SectionCard>
   );
 }
 
-const CHURN_DRIVERS: { driver: string; share: number; wow: number; theme: string; c: string }[] = [
+const ATTRITION_DRIVERS: { driver: string; share: number; wow: number; theme: string; c: string }[] = [
   { driver: "Returns / performance concern", share: 34, wow: 6, theme: "underperformed vs expectation", c: T.red },
   { driver: "Responsiveness / no call back", share: 28, wow: 8, theme: "had to chase repeatedly", c: "#f97316" },
   { driver: "Fees perception", share: 16, wow: 2, theme: "not justified by value", c: T.amber },
@@ -751,16 +786,17 @@ const CHURN_DRIVERS: { driver: string; share: number; wow: number; theme: string
   { driver: "Product / advice fit", share: 9, wow: -1, theme: "not what I needed", c: T.cyan },
 ];
 
-function ChurnDriverAnalysis() {
+function AttritionDriverAnalysis() {
   return (
-    <SectionCard title="Churn-driver analysis" subtitle="Why at-risk clients are at risk - reason-coded from conversation themes, not surveys" accent={T.violet} aiPill>
+    <SectionCard title="Attrition-driver analysis" subtitle="Why at-risk clients are at risk - reason-coded from conversation themes, not surveys" accent={T.violet} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ display: "flex", height: 26, borderRadius: 6, overflow: "hidden", gap: 2, marginBottom: 14 }}>
-        {CHURN_DRIVERS.map((d) => (
+        {ATTRITION_DRIVERS.map((d) => (
           <div key={d.driver} style={{ flex: d.share, background: d.c, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 800, color: "#0d0d0d" }} title={`${d.driver}: ${d.share}%`}>{d.share}</div>
         ))}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        {CHURN_DRIVERS.map((d) => (
+        {ATTRITION_DRIVERS.map((d) => (
           <div key={d.driver} style={{ display: "grid", gridTemplateColumns: "auto 1.6fr 1.6fr auto", gap: 10, alignItems: "center" }}>
             <Dot c={d.c} sq />
             <span style={{ fontSize: 11.5, color: T.text, fontWeight: 600 }}>{d.driver}</span>
@@ -827,6 +863,7 @@ function Drill1({ go }: { go: NavigateFn }) {
           <AISummaryWall
             isDarkMode
             height="100%"
+            defaultCollapsed
             title="AI Retention Wall"
             intelligenceSubtitle="Ranked - click to expand root cause & actions"
             data={D1_AI}
@@ -843,7 +880,7 @@ function Drill1({ go }: { go: NavigateFn }) {
         <CompetitorMentionMonitor />
       </div>
       <div style={{ marginTop: 14 }}>
-        <ChurnDriverAnalysis />
+        <AttritionDriverAnalysis />
       </div>
       <div style={{ height: 44 }} />
     </div>
@@ -862,7 +899,7 @@ const PROMISE_LEDGER: { type: string; made: number; kept: number; overdue: numbe
 function PromiseLedgerHero() {
   return (
     <SectionCard title="Promise ledger" subtitle="Every commitment made to a client, and whether we kept it - the single source of promise truth" accent={T.amber} aiPill
-      right={<span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, color: T.muted }}><Clock size={12} color={T.amber} /> live</span>}>
+      right={<SourceTag>Source: CRM & service-desk SLA log</SourceTag>}>
       <div style={{ border: `1px solid ${T.border}`, borderRadius: 8, overflow: "hidden" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.9fr .8fr .8fr .8fr .8fr 1.3fr", gap: 8, padding: "8px 12px", background: T.row }}>
           {["PROMISE TYPE", "MADE", "KEPT", "OVERDUE", "BROKEN", "ADHERENCE"].map((h) => <Eyebrow key={h}>{h}</Eyebrow>)}
@@ -873,7 +910,7 @@ function PromiseLedgerHero() {
             <div key={r.type} style={{ display: "grid", gridTemplateColumns: "1.9fr .8fr .8fr .8fr .8fr 1.3fr", gap: 8, padding: "10px 12px", borderTop: i ? `1px solid ${T.border}` : "none", alignItems: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 12, color: T.text, fontWeight: 600 }}>{r.type}</span>
-                {r.flag ? <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 8.5, fontWeight: 800, textTransform: "uppercase", color: T.amber, background: `${T.amber}18`, border: `1px solid ${T.amber}40`, borderRadius: 999, padding: "2px 6px" }}><ShieldCheck size={9} /> flag Compliance</span> : null}
+                {r.flag ? <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 8.5, fontWeight: 800, textTransform: "uppercase", color: T.amber, background: `${T.amber}18`, border: `1px solid ${T.amber}40`, borderRadius: 999, padding: "2px 6px" }}><ShieldCheck size={9} /> flag Governance</span> : null}
               </div>
               <Mono c={T.sub} s={11}>{r.made.toLocaleString()}</Mono>
               <Mono c={T.green} s={11}>{r.kept.toLocaleString()}</Mono>
@@ -892,7 +929,7 @@ function PromiseLedgerHero() {
       <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 10, padding: "9px 11px", borderRadius: 8, background: `${T.amber}0e`, border: `1px solid ${T.amber}30`, borderLeft: `3px solid ${T.amber}` }}>
         <ShieldCheck size={13} color={T.amber} style={{ marginTop: 1, flexShrink: 0 }} />
         <div style={{ fontSize: 11, color: T.sub, lineHeight: 1.5 }}>
-          <b style={{ color: T.text }}>Compliance hand-off, not ownership.</b> Two clusters (call-back, grievance SLA) are flagged where broken promises could become a regulatory matter. CX surfaces them; Compliance / CRO owns any filing or SCORES action. This screen tracks the client experience, not the regulator's clock.
+          <b style={{ color: T.text }}>Governance triage → CRO filing.</b> Two clusters (call-back, grievance SLA) are flagged where broken promises could become a regulatory matter. Governance triages and routes redressal; CRO files where required. CX surfaces them — CX does not own the filing. This screen tracks the client experience, not the regulator&apos;s clock.
         </div>
       </div>
       <AIInsightStrip tone="amber">
@@ -905,16 +942,120 @@ function PromiseLedgerHero() {
 const D2_AI = NUVAMA_D2_PROMISE_AI;
 const D2_AI_DETAILS = NUVAMA_D2_PROMISE_DETAILS;
 
+const GRIEVANCE_STATUS = [
+  { label: "Open", count: 214, tone: "cyan" as const },
+  { label: "In progress", count: 96, tone: "amber" as const },
+  { label: "Aged (past SLA)", count: 38, tone: "red" as const },
+  { label: "Closed", count: 1842, tone: "green" as const },
+];
+const GRIEVANCE_TOTAL = GRIEVANCE_STATUS.reduce((s, x) => s + x.count, 0);
+
+const GRIEVANCE_ROWS: { cat: string; recv: number; closed: number; open: number; fcr: number; reopen: number; tat: number }[] = [
+  { cat: "Service / responsiveness", recv: 640, closed: 548, open: 92, fcr: 61, reopen: 12, tat: 3.2 },
+  { cat: "Transaction / settlement", recv: 310, closed: 271, open: 39, fcr: 70, reopen: 8, tat: 2.6 },
+  { cat: "Mis-selling / suitability", recv: 88, closed: 61, open: 27, fcr: 39, reopen: 19, tat: 6.4 },
+  { cat: "Onboarding / documentation", recv: 176, closed: 150, open: 26, fcr: 66, reopen: 9, tat: 4.1 },
+  { cat: "Other", recv: 120, closed: 104, open: 16, fcr: 72, reopen: 6, tat: 2.2 },
+];
+
+const GRIEVANCE_SCORES: { band: string; count: number; tone: string }[] = [
+  { band: "Breaching (<3 days)", count: 3, tone: "red" },
+  { band: "Due within 7 days", count: 6, tone: "amber" },
+  { band: "Within 21 days", count: 5, tone: "green" },
+];
+
+const fcrTone = (v: number): string => (v >= 65 ? T.green : v >= 50 ? T.amber : T.red);
+const reopenTone = (v: number): string => (v <= 10 ? T.green : v <= 15 ? T.amber : T.red);
+
+function GrievanceCloseLoop() {
+  const statusTone: Record<string, string> = { cyan: T.cyan, amber: T.amber, red: T.red, green: T.green };
+  return (
+    <SectionCard title="Complaints & grievance close-loop" subtitle="Every client complaint from raise to closure, with the regulatory clock" accent={T.amber} aiPill
+      right={<SourceTag>Source: grievance case system + CRM</SourceTag>}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 8, marginBottom: 14 }}>
+        {GRIEVANCE_STATUS.map((s) => {
+          const c = statusTone[s.tone];
+          const share = Math.round((s.count / GRIEVANCE_TOTAL) * 100);
+          return (
+            <div key={s.label} style={{ padding: "10px 12px", borderRadius: 10, background: `${c}12`, border: `1px solid ${c}35`, borderTop: `3px solid ${c}` }}>
+              <div style={{ fontSize: 10, color: T.muted, fontWeight: 700, marginBottom: 4 }}>{s.label}</div>
+              <Mono c={c} s={18}>{s.count.toLocaleString()}</Mono>
+              <div style={{ fontSize: 10, color: T.dim, marginTop: 2 }}>{share}% of open book</div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ border: `1px solid ${T.border}`, borderRadius: 8, overflow: "hidden", marginBottom: 14 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1.6fr repeat(6,1fr)", gap: 6, padding: "7px 10px", background: T.row }}>
+          {["CATEGORY", "RECEIVED", "CLOSED", "OPEN", "FCR%", "REOPEN%", "TAT"].map((h) => <Eyebrow key={h}>{h}</Eyebrow>)}
+        </div>
+        {GRIEVANCE_ROWS.map((r, i) => (
+          <div key={r.cat} style={{ display: "grid", gridTemplateColumns: "1.6fr repeat(6,1fr)", gap: 6, padding: "8px 10px", borderTop: i ? `1px solid ${T.border}` : "none", alignItems: "center" }}>
+            <span style={{ fontSize: 11, color: T.text, fontWeight: 600 }}>{r.cat}</span>
+            <Mono c={T.sub} s={10}>{r.recv}</Mono>
+            <Mono c={T.green} s={10}>{r.closed}</Mono>
+            <Mono c={r.open > 20 ? T.amber : T.sub} s={10}>{r.open}</Mono>
+            <Mono c={fcrTone(r.fcr)} s={10}>{r.fcr}%</Mono>
+            <Mono c={reopenTone(r.reopen)} s={10}>{r.reopen}%</Mono>
+            <Mono c={r.tat >= 5 ? T.amber : T.sub} s={10}>{r.tat}d</Mono>
+          </div>
+        ))}
+      </div>
+      <div style={{ marginBottom: 12 }}>
+        <Eyebrow>SCORES regulatory clock — 21-day ATR window · Governance triages, CRO files</Eyebrow>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginTop: 8 }}>
+          {GRIEVANCE_SCORES.map((s) => {
+            const c = tone(s.tone);
+            return (
+              <div key={s.band} style={{ padding: "10px 12px", borderRadius: 10, background: `${c}10`, border: `1px solid ${c}35`, textAlign: "center" }}>
+                <Mono c={c} s={20}>{s.count}</Mono>
+                <div style={{ fontSize: 10, color: T.sub, marginTop: 4, lineHeight: 1.35 }}>{s.band}</div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      <AIInsightStrip tone="amber">
+        Mis-selling / suitability complaints have the weakest first-contact resolution at 39% and the highest reopen at 19% — the same suitability-language gaps flagged in conduct watch. Closing these first cuts grievance volume and conduct risk together.
+      </AIInsightStrip>
+      <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <RouteChip r="compliance" />
+        <ConsentChip />
+      </div>
+    </SectionCard>
+  );
+}
+
+function ConductSuitabilityWatch() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "11px 14px", borderRadius: 12, background: `${T.amber}0e`, border: `1px solid ${T.amber}35`, borderLeft: `3px solid ${T.amber}` }}>
+      <ShieldCheck size={16} color={T.amber} style={{ flexShrink: 0 }} />
+      <div style={{ flex: 1, minWidth: 200 }}>
+        <div style={{ fontSize: 12.5, fontWeight: 800, color: T.text }}>Conduct & suitability watch</div>
+        <div style={{ fontSize: 11.5, color: T.sub, marginTop: 3, lineHeight: 1.45 }}>
+          8 / 1,000 advisory conversations missing expected suitability phrasing (SEBI RA/IA)
+        </div>
+      </div>
+      <Pill t="amber">Governance triages · CRO files</Pill>
+      <RouteChip r="compliance" />
+      <ConsentChip />
+    </div>
+  );
+}
+
+const PROMISE_FUNNEL_BASE = 6040; // must match PROMISE_LEDGER made sum
+
 /* Promise-flow funnel */
 function PromiseFlowFunnel() {
   const stages: { label: string; pct: number; c: string; note: string }[] = [
-    { label: "Promise made", pct: 100, c: T.cyan, note: "5,040 commitments" },
-    { label: "Acknowledged", pct: 94, c: T.green, note: "logged to a queue" },
-    { label: "Actioned in time", pct: 86, c: T.amber, note: "work started pre-breach" },
-    { label: "Kept", pct: 79, c: T.red, note: "client saw it honoured" },
+    { label: "Promise made", pct: 100, c: T.cyan, note: `${PROMISE_FUNNEL_BASE.toLocaleString()} commitments` },
+    { label: "Acknowledged", pct: 94, c: T.green, note: `${Math.round(PROMISE_FUNNEL_BASE * 0.94).toLocaleString()} logged to a queue` },
+    { label: "Actioned in time", pct: 86, c: T.amber, note: `${Math.round(PROMISE_FUNNEL_BASE * 0.86).toLocaleString()} work started pre-breach` },
+    { label: "Kept", pct: 79, c: T.red, note: `${Math.round(PROMISE_FUNNEL_BASE * 0.79).toLocaleString()} client saw it honoured` },
   ];
   return (
-    <SectionCard title="Promise-flow funnel" subtitle="Where a commitment leaks between being made and being kept" accent={T.violet} aiPill>
+    <SectionCard title="Promise-flow funnel" subtitle="Where a commitment leaks between being made and being kept" accent={T.violet} aiPill
+      right={<SourceTag>Source: CRM & service-desk SLA log</SourceTag>}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {stages.map((s, i) => (
           <div key={s.label}>
@@ -948,7 +1089,8 @@ function TrustErosionTimeline() {
     { label: "Escalation", sentiment: -64, c: T.red },
   ];
   return (
-    <SectionCard title="Trust-erosion timeline" subtitle="How client sentiment moves as a promise is kept or broken" accent={T.red} aiPill>
+    <SectionCard title="Trust-erosion timeline" subtitle="How client sentiment moves as a promise is kept or broken" accent={T.red} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ height: 150 }}>
         <ResponsiveContainer>
           <LineChart data={steps.map((s) => ({ name: s.label, v: s.sentiment }))} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -987,7 +1129,8 @@ const BREACH_PHRASES: { phrase: string; count: number; wow: number; attaches: st
 function BreachLanguageTracker() {
   const max = Math.max(...BREACH_PHRASES.map((p) => p.count));
   return (
-    <SectionCard title={"\u201cYou promised\u201d language tracker"} subtitle="Direct trust-breach phrases detected in conversations - the client telling us we broke our word" accent={T.red} aiPill>
+    <SectionCard title={"\u201cYou promised\u201d language tracker"} subtitle="Direct trust-breach phrases detected in conversations - the client telling us we broke our word" accent={T.red} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
         {BREACH_PHRASES.map((p) => (
           <div key={p.phrase} style={{ display: "grid", gridTemplateColumns: "1.8fr 1.4fr auto", gap: 10, alignItems: "center" }}>
@@ -1022,7 +1165,7 @@ function BrokenPromiseLoop() {
   const max = Math.max(...BROKEN_LOOP.map((r) => r.chases));
   return (
     <SectionCard title="Broken-promise repeat-contact loop" subtitle="When we miss a promise the client chases - the volume that manufactures itself" accent={T.amber} aiPill
-      right={<span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10, color: T.muted }}><RefreshCw size={12} color={T.amber} /> self-inflicted</span>}>
+      right={<SourceTag>Source: CRM & service-desk SLA log</SourceTag>}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {BROKEN_LOOP.map((r) => {
           const c = r.chases >= 3 ? T.red : r.chases >= 2 ? "#f97316" : T.amber;
@@ -1056,7 +1199,8 @@ const RECOVERY_BY_TYPE: { type: string; recovered: number; c: string }[] = [
 
 function ServiceRecoveryDetection() {
   return (
-    <SectionCard title="Service-recovery detection" subtitle="After a broken promise - did an apology or fix follow, and did sentiment recover?" accent={T.green} aiPill>
+    <SectionCard title="Service-recovery detection" subtitle="After a broken promise - did an apology or fix follow, and did sentiment recover?" accent={T.green} aiPill
+      right={<SourceTag>Source: transcripts · ~84% coverage</SourceTag>}>
       <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
         <MiniGauge label="attempted" topLabel="Recovery" value={62} color={T.cyan} />
         <MiniGauge label="recovered" topLabel="Sentiment" value={41} color={T.green} />
@@ -1085,8 +1229,8 @@ function Drill2({ go }: { go: NavigateFn }) {
   return (
     <div className="fade">
       <DrillHeader onBack={() => go("overview")} title="Are we keeping our promises?"
-        sub="Every commitment we make to a client - call-backs, resolutions, follow-ups - and the trust we keep or lose by honouring them. Regulatory matters are flagged to Compliance, not owned here."
-        chips={<><Chip t="amber">Conversation-only</Chip><Chip t="green">Compliance flag - not owned</Chip></>} />
+        sub="Every commitment we make to a client - call-backs, resolutions, follow-ups - and the trust we keep or lose by honouring them. Regulatory matters are triaged by Governance and filed by CRO — not owned here."
+        chips={<><Chip t="amber">Conversation-only</Chip><Chip t="green">Governance flag · CRO files</Chip></>} />
       <MatchedHeightRow
         columns="minmax(0,1.85fr) minmax(300px,1fr)"
         left={<PromiseLedgerHero />}
@@ -1094,6 +1238,7 @@ function Drill2({ go }: { go: NavigateFn }) {
           <AISummaryWall
             isDarkMode
             height="100%"
+            defaultCollapsed
             title="AI Promise Wall"
             intelligenceSubtitle="Ranked - promise & trust risks"
             data={D2_AI}
@@ -1101,6 +1246,12 @@ function Drill2({ go }: { go: NavigateFn }) {
           />
         )}
       />
+      <div style={{ marginTop: 14 }}>
+        <GrievanceCloseLoop />
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <ConductSuitabilityWatch />
+      </div>
       <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14, alignItems: "start" }}>
         <PromiseFlowFunnel />
         <TrustErosionTimeline />
@@ -1119,23 +1270,23 @@ function Drill2({ go }: { go: NavigateFn }) {
 
 /* ============ DRILL 3 - IS SERVICE PAYING OFF? (economics + 3 transaction panels) ============ */
 function RoiScorecardBand() {
-  const cells: { label: string; value: string; delta: string; c: string; icon: LucideIcon }[] = [
-    { label: "Containment value MTD", value: "Rs 1.84 Cr", delta: "+18% vs last month", c: T.green, icon: Coins },
-    { label: "Cost avoided vs all-manual", value: "Rs 4.6 Cr", delta: "run-rate, annualised", c: T.cyan, icon: TrendingUp },
-    { label: "Blended cost-to-serve", value: "Rs 61 / req", delta: "-9% trend", c: T.green, icon: Activity },
-    { label: "Automation payback", value: "3.2x", delta: "value vs run cost", c: T.violet, icon: Zap },
+  const cells: { label: string; value: string; delta: string; c: string; icon: LucideIcon; hero?: boolean }[] = [
+    { label: "Retained NNM (attrition prevented)", value: "Rs 64 Cr", delta: "+ this quarter", c: T.green, icon: TrendingUp, hero: true },
+    { label: "Long-tail AUM re-activated", value: "Rs 310 Cr", delta: "pipeline", c: T.cyan, icon: Users },
+    { label: "Containment value MTD", value: "Rs 1.84 Cr", delta: "+18%", c: T.green, icon: Coins },
+    { label: "Blended cost-to-serve", value: "Rs 61 / req", delta: "-9%", c: T.green, icon: Activity },
   ];
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 12 }}>
       {cells.map((c) => {
         const Icon = c.icon;
         return (
-          <div key={c.label} style={{ background: `linear-gradient(180deg,${c.c}12,${T.card})`, border: `1px solid ${c.c}35`, borderTop: `3px solid ${c.c}`, borderRadius: 12, padding: "14px 15px" }}>
+          <div key={c.label} style={{ background: `linear-gradient(180deg,${c.c}12,${T.card})`, border: `1px solid ${c.c}35`, borderTop: `3px solid ${c.c}`, borderRadius: 12, padding: "14px 15px", ...(c.hero ? { boxShadow: `0 0 0 1px ${c.c}25` } : {}) }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
               <div style={{ width: 28, height: 28, borderRadius: 8, background: `${c.c}22`, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={15} color={c.c} /></div>
               <Eyebrow>{c.label}</Eyebrow>
             </div>
-            <div style={{ fontSize: 26, fontWeight: 900, fontFamily: MONO, color: T.text, letterSpacing: "-.02em" }}>{c.value}</div>
+            <div style={{ fontSize: c.hero ? 28 : 26, fontWeight: 900, fontFamily: MONO, color: T.text, letterSpacing: "-.02em" }}>{c.value}</div>
             <Mono c={c.c} s={11}>{c.delta}</Mono>
           </div>
         );
@@ -1235,10 +1386,10 @@ function OperationsJoinBanner() {
       <div style={{ minWidth: 220, flex: 1 }}>
         <div style={{ fontSize: 12.5, fontWeight: 800, color: T.text }}>Operations join - fulfilment & cost data</div>
         <div style={{ fontSize: 11, color: T.muted, lineHeight: 1.45 }}>
-          The three panels below join hard fulfilment and cost-to-serve records to the conversation layer. This is the only place transaction data appears - every other screen is conversation-only.
+          The three panels below join hard fulfilment and cost-to-serve records to the conversation layer. This is the only place fulfilment, case and cost records appear — every other screen is conversation-only.
         </div>
       </div>
-      <Chip t="blue">Transaction data</Chip>
+      <Chip t="blue">Fulfilment / case / cost</Chip>
     </div>
   );
 }
@@ -1253,7 +1404,8 @@ const STR_ROWS: { type: string; volume: string; stp: number; manual: number; sla
 
 function StraightThroughResolutionPanel() {
   return (
-    <SectionCard title="Straight-through resolution" subtitle="Fulfilment records - share resolved end-to-end without manual handling" accent={T.blue} aiPill right={<Chip t="blue">Transaction</Chip>}>
+    <SectionCard title="Straight-through resolution" subtitle="Fulfilment records - share resolved end-to-end without manual handling" accent={T.blue} aiPill
+      right={<SourceTag>Source: case / fulfilment system</SourceTag>}>
       <div style={{ border: `1px solid ${T.border}`, borderRadius: 8, overflow: "hidden" }}>
         <div style={{ display: "grid", gridTemplateColumns: "1.6fr .9fr 1.4fr .8fr", gap: 8, padding: "7px 10px", background: T.row }}>
           {["REQUEST TYPE", "VOLUME", "STP vs MANUAL", "SLA"].map((h) => <Eyebrow key={h}>{h}</Eyebrow>)}
@@ -1291,7 +1443,8 @@ const CTS_ROWS: { ch: string; perReq: number; volume: string; trend: number }[] 
 function CostToServePanel() {
   const max = Math.max(...CTS_ROWS.map((r) => r.perReq));
   return (
-    <SectionCard title="Cost-to-serve by channel" subtitle="Fulfilment cost ledger - rupee per resolved request - trend vs last month" accent={T.blue} aiPill right={<Chip t="blue">Transaction</Chip>}>
+    <SectionCard title="Cost-to-serve by channel" subtitle="Fulfilment cost ledger - rupee per resolved request - trend vs last month" accent={T.blue} aiPill
+      right={<SourceTag>Source: cost ledger</SourceTag>}>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {CTS_ROWS.map((r) => {
           const c = r.perReq >= 100 ? T.red : r.perReq >= 50 ? T.amber : T.green;
@@ -1320,7 +1473,8 @@ function CostToServePanel() {
 
 function ContainmentValuePanel() {
   return (
-    <SectionCard title="Containment value - automation ROI" subtitle="Fulfilment + cost ledger - rupee removed from assisted channels, month-to-date" accent={T.blue} aiPill right={<Chip t="blue">Transaction</Chip>}>
+    <SectionCard title="Containment value - automation ROI" subtitle="Fulfilment + cost ledger - rupee removed from assisted channels, month-to-date" accent={T.blue} aiPill
+      right={<SourceTag>Source: case / fulfilment system</SourceTag>}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 12 }}>
         {[["Containment MTD", "Rs 1.84 Cr", "+18%", T.green], ["Requests deflected", "48,200", "+12%", T.cyan], ["Cost avoided / req", "Rs 38", "+6%", T.green]].map(([l, v, d, c]) => (
           <div key={l as string} style={{ padding: "12px 14px", borderRadius: 12, background: T.inset, border: `1px solid ${c as string}35`, borderLeft: `3px solid ${c as string}` }}>
@@ -1355,7 +1509,8 @@ function Drill3({ go }: { go: NavigateFn }) {
     <div className="fade">
       <DrillHeader onBack={() => go("overview")} title="Is service paying off?"
         sub="Whether the service machine is getting faster and cheaper - automation, self-service and the manual overhead still in the flow - proven against hard fulfilment and cost-to-serve data."
-        chips={<><Chip t="green">Conversation + operations</Chip><Chip t="blue">Includes transaction data</Chip></>} />
+        chips={<><Chip t="green">Conversation + operations</Chip><Chip t="blue">Includes fulfilment & cost data</Chip></>} />
+      <div style={{ marginBottom: 8 }}><SourceTag>Source: cost ledger · scorecard band</SourceTag></div>
       <RoiScorecardBand />
       <div style={{ marginTop: 14 }}><EconomicsSplit /></div>
       <div style={{ marginTop: 14 }}><AiRecommendationsStrip /></div>
@@ -1423,7 +1578,7 @@ function cannedAnswer(q: string): ReactNode {
         headline="Yes — but the window is closing. Silence after cooling sentiment is recoverable."
         bullets={[
           { bold: "312 clients", rest: " (Private + HNI) have had zero inbound for 60+ days." },
-          { bold: "68%", rest: " showed cooling sentiment before going quiet — this is a leading signal, not random churn." },
+          { bold: "68%", rest: " showed cooling sentiment before going quiet — this is a leading signal, not random attrition." },
           { bold: "41%", rest: " still had an unresolved request; 29% missed a promised call-back before silence." },
           { bold: "Risk", rest: ": without action, these clients graduate into exit-intent language like South Core-HNI." },
           { bold: "Next step", rest: ": weekly silent-after-cooling flags to RMs, prioritise open requests, draft re-engagement for human send — no automated blast." },
@@ -1438,7 +1593,7 @@ function cannedAnswer(q: string): ReactNode {
         bullets={[
           { bold: "79%", rest: " 24h call-back adherence; 9 broken this week, 8 overdue." },
           { bold: "South Core-HNI", rest: " clients are over-represented in the breach list — same cohort showing exit language." },
-          { bold: "South NPS 78", rest: " vs group 85; detractor verbatims are 'no call back' and 'had to chase', not product." },
+          { bold: "South NPS 78", rest: " vs book 82; detractor verbatims are 'no call back' and 'had to chase', not product." },
           { bold: "Funnel leak", rest: ": 7 pts lost between 'actioned' and 'kept' — clients never see completion status." },
           { bold: "Next step", rest: ": outbound on 9 broken promises today, 18h breach alerts, status-push when work is done." },
         ]}
@@ -1532,14 +1687,14 @@ function cannedAnswer(q: string): ReactNode {
   if (s.includes("compliance") || s.includes("grievance") || s.includes("hand off") || s.includes("handoff") || s.includes("escalat") || (s.includes("sla") && !s.includes("promise")))
     return (
       <AiReply
-        headline="CX detects and surfaces — Compliance owns the regulatory response."
-        bullets={[
-          { bold: "Grievance SLA", rest: " at 72% adherence; a small breach set is already flagged to Compliance/CRO." },
-          { bold: "Your role", rest: ": early detection + clean hand-off — not filing or regulatory narrative." },
-          { bold: "Do not", rest: " let broken client promises sit in limbo while the compliance path runs." },
-          { bold: "Confirm", rest: ": Compliance acknowledged receipt of the flagged grievance set." },
-          { bold: "Keep tracking", rest: ": experience metrics and client-facing promise status in parallel." },
-        ]}
+      headline="Governance triages — CRO files where required."
+      bullets={[
+        { bold: "Grievance SLA", rest: " at 72% adherence; a small breach set is already flagged to Governance → CRO." },
+        { bold: "CX role", rest: ": early detection + clean hand-off — not filing or regulatory narrative." },
+        { bold: "Do not", rest: " let broken client promises sit in limbo while the governance path runs." },
+        { bold: "Confirm", rest: ": Governance acknowledged receipt of the flagged grievance set." },
+        { bold: "Keep tracking", rest: ": experience metrics and client-facing promise status in parallel." },
+      ]}
       />
     );
 
@@ -1663,13 +1818,13 @@ export function ClientExperienceDashboard({ onExit }: { onExit?: () => void }) {
           const active = screen === n.key;
           const Ic = n.icon;
           return (
-            <button key={n.key} type="button" onClick={() => go(n.key)} title={n.key} style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: active ? T.violet : T.dim, background: active ? "#221a40" : "transparent", borderLeft: active ? `3px solid ${T.violet}` : "3px solid transparent", border: active ? undefined : "none", cursor: "pointer" }}>
+            <button key={n.key} type="button" onClick={() => go(n.key)} title={NAV_LABELS[n.key] ?? n.key} style={{ width: 38, height: 38, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "center", color: active ? T.violet : T.dim, background: active ? "#221a40" : "transparent", borderLeft: active ? `3px solid ${T.violet}` : "3px solid transparent", border: active ? undefined : "none", cursor: "pointer" }}>
               <Ic size={17} />
             </button>
           );
         })}
         <div style={{ flex: 1 }} />
-        <div style={{ width: 32, height: 32, borderRadius: 9, background: T.inset, display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, fontSize: 12, fontWeight: 800 }}>RJ</div>
+        <div style={{ width: 32, height: 32, borderRadius: 9, background: T.inset, display: "flex", alignItems: "center", justifyContent: "center", color: T.muted, fontSize: 12, fontWeight: 800 }}>CX</div>
       </aside>
       <main style={{ padding: "16px 22px 36px", overflow: "auto", minWidth: 0 }}>
         {screen === "overview" && <Overview go={go} />}
