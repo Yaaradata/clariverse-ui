@@ -103,7 +103,7 @@ import { CXVoCHeadDashboardV3 } from "./CXVoCHeadDashboardV3";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
-import { NuvamaWealthDashboard } from "./NuvamaWealthDashboard";
+import { ClientExperienceDashboard } from "./nuvamapage";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
 import { RbiConductIntelligencePreview } from "./RbiConductIntelligencePreview";
 import {
@@ -4216,14 +4216,7 @@ export function RoleDashboardView({
   }
 
   if (industry.id === NUVAMA_INDUSTRY_ID && role.id === "head_client_experience") {
-    return (
-      <NuvamaWealthDashboard
-        industryName={industry.name}
-        roleName={roleDisplayName(role)}
-        industryColor={industry.color}
-        onExit={onExit}
-      />
-    );
+    return <ClientExperienceDashboard onExit={onExit} />;
   }
 
   if (industry.id === "ecommerce" && role.id === "business_head") {

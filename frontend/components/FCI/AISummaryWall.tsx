@@ -178,6 +178,8 @@ interface AISummaryWallProps {
    * stretch to fill a flex/grid parent — useful for the role-based drill-downs.
    */
   height?: string | number;
+  /** Override default "AI Summary Wall" header title */
+  title?: string;
   /** Override default "Real-time FCI intelligence" subtitle */
   intelligenceSubtitle?: string;
 }
@@ -187,6 +189,7 @@ export function AISummaryWall({
   insightDetailsMap,
   isDarkMode = false,
   height = '650px',
+  title = 'AI Summary Wall',
   intelligenceSubtitle,
 }: AISummaryWallProps) {
   const [isVisible, setIsVisible] = useState(false);
@@ -315,6 +318,7 @@ export function AISummaryWall({
   });
 
   const resolvedDetailsMap = insightDetailsMap ?? fciInsightDetailsMap;
+  const fillsParent = height === '100%';
 
   // Get details for selected insight
   const selectedDetails = selectedInsight ? resolvedDetailsMap[selectedInsight.id] : null;
@@ -322,7 +326,9 @@ export function AISummaryWall({
 
   return (
     <div
-      className={`rounded-2xl p-6 transition-all duration-500 flex flex-col ${
+      className={`rounded-2xl p-6 transition-all duration-500 flex flex-col min-h-0 ${
+        fillsParent ? 'overflow-hidden' : ''
+      } ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{
@@ -343,7 +349,7 @@ export function AISummaryWall({
               className="text-lg font-bold"
               style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
             >
-              AI Summary Wall
+              {title}
             </h3>
             <p className="text-xs" style={{ color: '#939394' }}>
               {selectedInsight ? 'Viewing details' : (intelligenceSubtitle ?? 'Real-time FCI intelligence')}
