@@ -317,7 +317,7 @@ function CCWell({ children, accent, title, sub, right }: { children: ReactNode; 
 
 /* ============ OVERVIEW ============ */
 const TREND: { stay: TrendPoint[]; promise: TrendPoint[]; pay: TrendPoint[] } = {
-  stay: [{ v: 512 }, { v: 505 }, { v: 521 }, { v: 498 }, { v: 540 }, { v: 560 }, { v: 548 }, { v: 612 }, { v: 640 }, { v: 700 }, { v: 760 }, { v: 800 }],
+  stay: [{ v: 6 }, { v: 8 }, { v: 7 }, { v: 11 }, { v: 14 }, { v: 13 }, { v: 19 }, { v: 24 }, { v: 28 }, { v: 34 }, { v: 40 }, { v: 47 }],
   promise: [{ v: 88 }, { v: 87 }, { v: 89 }, { v: 85 }, { v: 84 }, { v: 86 }, { v: 82 }, { v: 83 }, { v: 80 }, { v: 79 }, { v: 81 }, { v: 79 }],
   pay: [{ v: 44 }, { v: 47 }, { v: 46 }, { v: 51 }, { v: 54 }, { v: 53 }, { v: 57 }, { v: 59 }, { v: 58 }, { v: 61 }, { v: 60 }, { v: 62 }],
 };
@@ -500,11 +500,11 @@ function Overview({ go }: { go: NavigateFn }) {
       <ExecutivePulse />
       <div className="overview-cards">
         <ExecutiveQuestionCard accent="red" iTone="red" icon={<Users size={18} />} title="Are our best clients staying?" subtitle="Attrition-risk - exit-intent language - silent clients"
-          score="Rs 800 Cr" delta="AUM at risk · 47 exit-intent clients" trend={TREND.stay} trendColor={T.red} visualType="gauges"
+          score="47" delta="clients showing exit intent · up from 6 baseline" trend={TREND.stay} trendColor={T.red} visualType="gauges"
           gauges={[{ label: "latest wave", topLabel: "NPS (book)", value: BOOK_NPS, color: T.green }, { label: "silent 60d+", topLabel: "High-value", value: 34, color: T.red }]}
           gaugeSource="Source: NPS vendor · latest wave"
-          miniMetrics={[["Exit-intent clients", "47", "red"], ["Silent high-value", "312", "amber"], ["Dormant AUM (silent HV)", "Rs 2,140 Cr", "amber"], ["AUM at risk (exit-intent)", "Rs 800 Cr", "red"]]}
-          aiText="Exit-intent language is concentrated in South Core-HNI - Rs 800 Cr AUM at risk across 47 clients vs 6 baseline - and 312 high-value clients have gone quiet after cooling sentiment. This is the book at risk of walking."
+          miniMetrics={[["Exit-intent clients", "47", "red"], ["Silent high-value", "312", "amber"], ["Sentiment shift", "-0.58", "red"], ["At-risk + critical", "19%", "amber"]]}
+          aiText="Exit-intent language is concentrated in South Core-HNI - 47 clients vs 6 baseline - and 312 high-value clients have gone quiet after cooling sentiment. This is the book most at risk of walking."
           cta="Open retention war-room" onClick={() => go("d1")} />
         <ExecutiveQuestionCard accent="amber" iTone="amber" icon={<ShieldCheck size={18} />} title="Are we keeping our promises?" subtitle="Promise ledger - complaint-handling - trust erosion"
           score="79%" delta="-9 pts adherence" trend={TREND.promise} trendColor={T.amber} visualType="gauges"
@@ -516,9 +516,9 @@ function Overview({ go }: { go: NavigateFn }) {
         <ExecutiveQuestionCard accent="green" iTone="green" icon={<TrendingUp size={18} />} title="Is service paying off?" subtitle="Automation - deflection - cost-to-serve"
           score="62%" delta="+18% containment MTD" deltaColor={T.green} trend={TREND.pay} trendColor={T.green} visualType="gauges"
           gauges={[{ label: "auto-handled", topLabel: "Automation", value: 62, color: T.green }, { label: "deflected", topLabel: "Self-service", value: 48, color: T.cyan }]}
-          gaugeSource="Source: cost ledger & fulfilment"
-          miniMetrics={[["Auto-resolved", "62%", "green"], ["Cost avoided MTD", "Rs 1.84 Cr", "green"], ["Retained NNM", "Rs 64 Cr", "green"], ["Cost-to-serve", "Rs 61 / req", "green"]]}
-          aiText="Automation covers 62% of eligible requests and containment value is Rs 1.84 Cr month-to-date. This drill joins fulfilment data to prove cost-to-serve and ROI - the only place hard numbers appear."
+          gaugeSource="Source: interaction & resolution logs"
+          miniMetrics={[["Auto-resolved", "62%", "green"], ["Self-service deflection", "48%", "cyan"], ["Requests contained MTD", "48,200", "green"], ["First-contact resolution", "71%", "green"]]}
+          aiText="Automation now covers 62% of eligible requests and self-service deflection is climbing - routine queries are resolving without an agent. The cost proof sits in the service-economics drill, the one place fulfilment data is joined."
           cta="Open service economics" onClick={() => go("d3")} />
       </div>
       <ClientSignalMonitor />
@@ -545,7 +545,6 @@ function D1CommandCenter() {
           <span style={{ fontSize: 11, color: T.dim }}>clients this week</span>
           <span style={{ fontSize: 11, color: T.red, fontWeight: 700 }}>vs 6 baseline</span>
         </div>
-        <div style={{ fontSize: 11.5, color: T.sub, marginBottom: 10, fontWeight: 700 }}>Rs 800 Cr AUM at risk across flagged cells</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 8 }}>
           {[["South - Core-HNI", "47", T.red], ["EWM advisory", "14", T.amber], ["West - HNI", "9", T.yellow], ["Other cells", "6", T.green]].map(([l, v, c]) => (
             <div key={l as string} style={{ background: `${c as string}12`, border: `1px solid ${c as string}30`, borderRadius: 8, padding: "8px 10px" }}>
@@ -616,7 +615,7 @@ function D1CommandCenter() {
           ))}
         </div>
         <AIInsightStrip tone="violet">
-          The critical + at-risk 19% is where NNM leak concentrates. Working the critical band first protects the most book value per RM hour.
+          The critical + at-risk 19% is where exit signals concentrate. Working the critical band first protects the most at-risk relationships per RM hour.
         </AIInsightStrip>
       </CCWell>
     </div>
@@ -668,21 +667,21 @@ function RadarRow({ label, cells }: { label: string; cells: number[] }) {
 }
 
 /* Client-at-Risk queue */
-const AT_RISK: { cohort: string; driver: string; signal: string; trend: string; sev: string; route: string; nnm: string; rmTeam: string }[] = [
-  { cohort: "South - Core-HNI", driver: "Exit-intent language spike", signal: "47 clients - sentiment -0.58", trend: "worsening", sev: "red", route: "rm", nnm: "Rs 520 Cr", rmTeam: "RM pod · South-2" },
-  { cohort: "EWM Advisory", driver: "Performance-concern language", signal: "14 clients - returns complaints", trend: "worsening", sev: "red", route: "advisory", nnm: "Rs 180 Cr", rmTeam: "Advisory desk · West" },
-  { cohort: "Private - silent set", driver: "Went quiet after complaint", signal: "38 clients - no inbound 60d+", trend: "watch", sev: "amber", route: "retention", nnm: "Rs 460 Cr (dormant)", rmTeam: "RM pod · Pvt-1" },
-  { cohort: "West - HNI", driver: "Broken call-back promises", signal: "9 clients - trust dropping", trend: "watch", sev: "amber", route: "service", nnm: "Rs 95 Cr", rmTeam: "RM pod · West-3" },
+const AT_RISK: { cohort: string; driver: string; signal: string; trend: string; sev: string; route: string; rmTeam: string }[] = [
+  { cohort: "South - Core-HNI", driver: "Exit-intent language spike", signal: "47 clients - sentiment -0.58", trend: "worsening", sev: "red", route: "rm", rmTeam: "RM pod · South-2" },
+  { cohort: "EWM Advisory", driver: "Performance-concern language", signal: "14 clients - returns complaints", trend: "worsening", sev: "red", route: "advisory", rmTeam: "Advisory desk · West" },
+  { cohort: "Private - silent set", driver: "Went quiet after complaint", signal: "38 clients - no inbound 60d+", trend: "watch", sev: "amber", route: "retention", rmTeam: "RM pod · Pvt-1" },
+  { cohort: "West - HNI", driver: "Broken call-back promises", signal: "9 clients - trust dropping", trend: "watch", sev: "amber", route: "service", rmTeam: "RM pod · West-3" },
 ];
 
 function ClientAtRiskQueue() {
   return (
-    <SectionCard title="Client-at-risk queue" subtitle="Ranked cohorts to work now - each with AUM at risk, RM pod, and the human-approved next step" accent={T.gold} aiPill>
+    <SectionCard title="Client-at-risk queue" subtitle="Ranked cohorts to work now - each with signal strength, RM pod, and the human-approved next step" accent={T.gold} aiPill>
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {AT_RISK.map((r) => {
           const c = tone(r.sev);
           return (
-            <div key={r.cohort} style={{ display: "grid", gridTemplateColumns: "1.2fr 1.3fr 1fr 1fr auto", gap: 10, alignItems: "center", padding: "11px 12px", borderRadius: 10, background: `${c}10`, border: `1px solid ${c}35`, borderLeft: `3px solid ${c}` }}>
+            <div key={r.cohort} style={{ display: "grid", gridTemplateColumns: "1.2fr 1.3fr 1fr auto", gap: 10, alignItems: "center", padding: "11px 12px", borderRadius: 10, background: `${c}10`, border: `1px solid ${c}35`, borderLeft: `3px solid ${c}` }}>
               <div>
                 <div style={{ fontSize: 12.5, fontWeight: 800, color: T.text }}>{r.cohort}</div>
                 <span style={{ marginTop: 4, display: "inline-block" }}><Pill t={r.trend === "worsening" ? "red" : "amber"}>{r.trend}</Pill></span>
@@ -690,7 +689,6 @@ function ClientAtRiskQueue() {
               </div>
               <div style={{ fontSize: 11.5, color: T.sub }}>{r.driver}</div>
               <Mono c={c} s={11}>{r.signal}</Mono>
-              <Mono c={c} s={13}>{r.nnm}</Mono>
               <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
                 <RouteChip r={r.route} />
                 <ConsentChip />
@@ -873,10 +871,10 @@ function Drill1({ go }: { go: NavigateFn }) {
       />
       <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14, alignItems: "start" }}>
         <AttritionRadar />
-        <ClientAtRiskQueue />
+        <ExitLanguageTracker />
       </div>
       <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14, alignItems: "start" }}>
-        <ExitLanguageTracker />
+        <ClientAtRiskQueue />
         <CompetitorMentionMonitor />
       </div>
       <div style={{ marginTop: 14 }}>
@@ -1271,10 +1269,10 @@ function Drill2({ go }: { go: NavigateFn }) {
 /* ============ DRILL 3 - IS SERVICE PAYING OFF? (economics + 3 transaction panels) ============ */
 function RoiScorecardBand() {
   const cells: { label: string; value: string; delta: string; c: string; icon: LucideIcon; hero?: boolean }[] = [
-    { label: "Retained NNM (attrition prevented)", value: "Rs 64 Cr", delta: "+ this quarter", c: T.green, icon: TrendingUp, hero: true },
-    { label: "Long-tail AUM re-activated", value: "Rs 310 Cr", delta: "pipeline", c: T.cyan, icon: Users },
-    { label: "Containment value MTD", value: "Rs 1.84 Cr", delta: "+18%", c: T.green, icon: Coins },
-    { label: "Blended cost-to-serve", value: "Rs 61 / req", delta: "-9%", c: T.green, icon: Activity },
+    { label: "Containment value MTD", value: "Rs 1.84 Cr", delta: "+18% vs last month", c: T.green, icon: Coins, hero: true },
+    { label: "Requests deflected", value: "48,200", delta: "+12%", c: T.cyan, icon: Users },
+    { label: "Blended cost-to-serve", value: "Rs 61 / req", delta: "-9% trend", c: T.green, icon: Activity },
+    { label: "Automation payback", value: "3.2x", delta: "value vs run cost", c: T.violet, icon: Zap },
   ];
   return (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 12 }}>
@@ -1305,10 +1303,10 @@ function EconomicsSplit() {
         </div>
         <div style={{ height: 92 }}>
           <ResponsiveContainer>
-            <LineChart data={[{ w: "W-6", v: 52 }, { w: "W-5", v: 54 }, { w: "W-4", v: 56 }, { w: "W-3", v: 58 }, { w: "W-2", v: 60 }, { w: "Now", v: 62 }]} margin={{ top: 6, right: 6, left: -26, bottom: 0 }}>
+            <LineChart data={[{ w: "W-6", v: 52 }, { w: "W-5", v: 55 }, { w: "W-4", v: 53 }, { w: "W-3", v: 58 }, { w: "W-2", v: 57 }, { w: "Now", v: 62 }]} margin={{ top: 6, right: 6, left: -26, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke={T.border} />
               <XAxis dataKey="w" tick={{ fill: T.dim, fontSize: 8 }} tickLine={false} />
-              <YAxis domain={[40, 70]} tick={{ fill: T.dim, fontSize: 8 }} width={24} tickLine={false} axisLine={false} />
+              <YAxis domain={["dataMin", "dataMax"]} tick={{ fill: T.dim, fontSize: 8 }} width={24} tickLine={false} axisLine={false} />
               <Tooltip contentStyle={TIP} />
               <Line type="monotone" dataKey="v" stroke={T.green} strokeWidth={2.2} dot={false} isAnimationActive={false} />
             </LineChart>
@@ -1532,7 +1530,7 @@ const AI_PROMPTS = [
   "Why is South Core-HNI spiking exit language this week?",
   "Which broken promise is eroding trust fastest?",
   "Can we still recover the 312 clients who went quiet?",
-  "What is the single highest-leverage move for book value this week?",
+  "What is the single highest-leverage CX move this week?",
   "Where are clients mentioning competitors or switching advisors?",
   "Is automation actually pulling down cost-to-serve?",
   "Which segment should worry me after South Core-HNI?",
@@ -1645,9 +1643,9 @@ function cannedAnswer(q: string): ReactNode {
   if (s.includes("fix") || s.includes("first") || s.includes("priorit") || s.includes("leverage") || s.includes("single") || s.includes("move") || (s.includes("week") && !s.includes("compliance")))
     return (
       <AiReply
-        headline="Highest book-value move: tie retention and promise repair into one motion."
+        headline="Highest-leverage CX move: tie retention and promise repair into one motion."
         bullets={[
-          { bold: "1. South Core-HNI", rest: ": RM evidence packs for 47 exit-intent clients — highest AUM at risk." },
+          { bold: "1. South Core-HNI", rest: ": RM evidence packs for 47 exit-intent clients — densest exit-signal cluster." },
           { bold: "2. Broken call-backs", rest: ": clear 9 breaches today + turn on 18h alerts — lifts South NPS." },
           { bold: "3. Silent 312", rest: ": weekly gone-quiet flags to RMs; prioritise those with open requests." },
           { bold: "Why together", rest: ": responsiveness failure is the shared root — steps 1 and 2 compound." },
