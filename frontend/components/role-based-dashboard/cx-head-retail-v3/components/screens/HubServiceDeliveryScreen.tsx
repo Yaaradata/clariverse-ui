@@ -1,32 +1,24 @@
 "use client";
 
-import React from "react";
-import { getHubCardById } from "../../lib/cxHeadRetailV3HubCards";
-import type { ServiceDeliveryDrill } from "../../lib/cxHeadRetailV3HubCards";
+import React, { useEffect, useState } from "react";
+import { ANXIETY_PERIODS, type AnxietyFreshKey, type AnxietyPeriodKey } from "../../lib/cxHeadRetailV3AnxietyData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
 import { ScreenBackBar } from "../common/ScreenBackBar";
-import { DetailSection } from "../hub/HubDetailPrimitives";
 import {
-  FcrIntelligenceVisual,
-  ServicePromiseBoardVisual,
-  SlaHeatmapVisual,
-} from "../hub/HubServiceDeliveryVisuals";
-import { EcommerceCrossChannelEscalationSection } from "../hub/EcommerceCrossChannelEscalationSection";
-import { EcommerceFciHeatmapSection } from "../hub/EcommerceFciHeatmapSection";
+  AnxietyPeriodControls,
+  ServiceDeliveryAnxietyDashboard,
+} from "../hub/ServiceDeliveryAnxietyDashboard";
 import { layout } from "../../theme/tokens";
 
 export function HubServiceDeliveryScreen(): React.ReactElement {
   const { navigate } = useNavigation();
-  const card = getHubCardById("service-delivery");
-  const drill = card?.drill as ServiceDeliveryDrill | undefined;
-  const latest = card?.timeline[card.timeline.length - 1];
+  const [period, setPeriod] = useState<AnxietyPeriodKey>("today");
+  const [fresh, setFresh] = useState<AnxietyFreshKey>("nrt");
 
-  if (!card || !drill || !latest?.service) {
-    return <div style={{ padding: 32 }}>Card data unavailable.</div>;
-  }
-
-  const s = latest.service;
+  useEffect(() => {
+    setFresh(ANXIETY_PERIODS[period].freshDefault);
+  }, [period]);
 
   return (
     <div
@@ -34,47 +26,28 @@ export function HubServiceDeliveryScreen(): React.ReactElement {
       style={{
         maxWidth: layout.contentMaxWidth,
         margin: "0 auto",
-        padding: "24px 32px 48px",
+        padding: "20px 28px 40px",
         display: "flex",
         flexDirection: "column",
-        gap: 18,
+        gap: 14,
       }}
     >
       <HubFluidHeadline
         variant="service-delivery"
-        trailing={<ScreenBackBar onBack={() => navigate("overview")} />}
+        trailing={
+          <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+            <AnxietyPeriodControls
+              period={period}
+              fresh={fresh}
+              onPeriodChange={setPeriod}
+              onFreshChange={setFresh}
+            />
+            <ScreenBackBar onBack={() => navigate("overview")} />
+          </div>
+        }
       />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 14, alignItems: "stretch", marginBottom: 14 }}>
-        <DetailSection premium fill title="Service promise & breach map">
-          <ServicePromiseBoardVisual service={s} failures={drill.slaFailures} />
-        </DetailSection>
-
-        <DetailSection premium fill title="FCR Intelligence" subtitle="Actual vs. target · dashed line = last month">
-          <FcrIntelligenceVisual />
-        </DetailSection>
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 14,
-          alignItems: "stretch",
-        }}
-      >
-        <DetailSection premium fill title="SLA heatmap" subtitle="Intent × channel · intensity = compliance gap">
-          <SlaHeatmapVisual heatmap={drill.slaHeatmap} />
-        </DetailSection>
-
-        <EcommerceCrossChannelEscalationSection
-          fill
-          channels={drill.channels}
-          escalationFlows={drill.escalationFlows}
-        />
-      </div>
-
-      <EcommerceFciHeatmapSection fill />
+      <ServiceDeliveryAnxietyDashboard period={period} />
     </div>
   );
 }

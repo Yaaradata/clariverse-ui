@@ -32,7 +32,7 @@ export const HUB_PAGE_PURPOSE: Record<HubCardId, string> = {
   "brand-risk":
     "Trust drivers, cliff vs slope risk, segment impact, evidence, and cross-functional actions — measured facts vs inferred signals.",
   "service-delivery":
-    "SLA promise, centre performance, and escalation load in one view — breach hotspots carry queue depth and aging.",
+    "Anxiety command triad, containment queue, reliability × anxiety split, and escalation patterns — contact pressure before breach.",
 };
 
 export type SentimentSplit = {
