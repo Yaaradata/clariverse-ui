@@ -182,6 +182,8 @@ interface AISummaryWallProps {
   title?: string;
   /** Override default "Real-time FCI intelligence" subtitle */
   intelligenceSubtitle?: string;
+  /** Ranked rows start collapsed (headline + severity + tag + metric only); expand on click */
+  defaultCollapsed?: boolean;
 }
 
 export function AISummaryWall({
@@ -191,11 +193,13 @@ export function AISummaryWall({
   height = '650px',
   title = 'AI Summary Wall',
   intelligenceSubtitle,
+  defaultCollapsed = false,
 }: AISummaryWallProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
   const [selectedInsight, setSelectedInsight] = useState<FCIInsight | null>(null);
   const [popupPosition, setPopupPosition] = useState<{ top: number } | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 400);
@@ -297,6 +301,10 @@ export function AISummaryWall({
   };
 
   const handleInsightClick = (insight: FCIInsight, event: React.MouseEvent) => {
+    if (defaultCollapsed) {
+      setExpandedId((prev) => (prev === insight.id ? null : insight.id));
+      return;
+    }
     const rect = event.currentTarget.getBoundingClientRect();
     const containerRect = event.currentTarget.closest('.flex-1.overflow-y-auto')?.getBoundingClientRect();
     if (containerRect) {
@@ -352,7 +360,11 @@ export function AISummaryWall({
               {title}
             </h3>
             <p className="text-xs" style={{ color: '#939394' }}>
-              {selectedInsight ? 'Viewing details' : (intelligenceSubtitle ?? 'Real-time FCI intelligence')}
+              {defaultCollapsed && expandedId
+                ? 'Viewing details'
+                : selectedInsight
+                  ? 'Viewing details'
+                  : (intelligenceSubtitle ?? 'Real-time FCI intelligence')}
             </p>
           </div>
         </div>
@@ -383,6 +395,8 @@ export function AISummaryWall({
             const CategoryIcon = getCategoryIcon(insight.category);
             const isActive = activeInsight === insight.id;
             const isSelected = selectedInsight?.id === insight.id;
+            const isExpanded = !defaultCollapsed || expandedId === insight.id;
+            const inlineDetails = defaultCollapsed && expandedId === insight.id ? resolvedDetailsMap[insight.id] : null;
 
             return (
               <div
@@ -449,6 +463,8 @@ export function AISummaryWall({
                       {insight.title}
                     </p>
 
+                    {isExpanded ? (
+                      <>
                     <p 
                       className="text-xs leading-relaxed"
                       style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
@@ -456,8 +472,33 @@ export function AISummaryWall({
                       {insight.message}
                     </p>
 
-                    {/* Metrics */}
-                    {insight.metrics && (
+                    {insight.change !== undefined && TrendIcon ? (
+                      <div 
+                        className="flex items-center gap-1.5 mt-2"
+                        style={{ color: insight.trend === 'up' ? '#ef4444' : '#22c55e' }}
+                      >
+                        <TrendIcon className="w-3.5 h-3.5" />
+                        <span className="text-xs font-semibold">
+                          {insight.change > 0 ? '+' : ''}{insight.change}% from last period
+                        </span>
+                      </div>
+                    ) : null}
+
+                    {!defaultCollapsed ? (
+                    <div 
+                      className={`flex items-center gap-1 mt-2 text-[10px] transition-opacity duration-200 ${
+                        isActive && !isSelected ? 'opacity-100' : 'opacity-0'
+                      }`}
+                      style={{ color: config.color }}
+                    >
+                      <span>Click for details</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </div>
+                    ) : null}
+                      </>
+                    ) : null}
+
+                    {insight.metrics ? (
                       <div className="flex items-center gap-3 mt-2 flex-wrap">
                         {insight.metrics.volume !== undefined && (
                           <span 
@@ -476,41 +517,33 @@ export function AISummaryWall({
                             {insight.metrics.responseTime}
                           </span>
                         )}
+                        {!insight.metrics.volume && insight.metrics.volumeLabel && (
+                          <span className="text-xs font-medium" style={{ color: config.color }}>
+                            {insight.metrics.volumeLabel}
+                          </span>
+                        )}
                       </div>
-                    )}
+                    ) : null}
 
-                    {/* Trend indicator */}
-                    {insight.change !== undefined && TrendIcon && (
-                      <div 
-                        className="flex items-center gap-1.5 mt-2"
-                        style={{ 
-                          color: insight.trend === 'up' ? '#ef4444' : '#22c55e'
-                        }}
-                      >
-                        <TrendIcon className="w-3.5 h-3.5" />
-                        <span className="text-xs font-semibold">
-                          {insight.change > 0 ? '+' : ''}{insight.change}% from last period
-                        </span>
+                    {inlineDetails ? (
+                      <div className="mt-3 pt-3 border-t text-xs space-y-2" style={{ borderColor: `${config.color}40` }}>
+                        <p style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a', lineHeight: 1.5 }}>
+                          <span className="font-semibold" style={{ color: config.color }}>Root cause: </span>
+                          {inlineDetails.rootCause}
+                        </p>
+                        <p style={{ color: isDarkMode ? '#939394' : '#666' }}>
+                          <span className="font-semibold">Actions: </span>
+                          {inlineDetails.recommendedActions.slice(0, 2).join(' · ')}
+                        </p>
                       </div>
-                    )}
-
-                    {/* Click hint */}
-                    <div 
-                      className={`flex items-center gap-1 mt-2 text-[10px] transition-opacity duration-200 ${
-                        isActive && !isSelected ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{ color: config.color }}
-                    >
-                      <span>Click for details</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </div>
+                    ) : null}
                   </div>
 
                   <ChevronRight 
                     className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${
-                      isActive ? 'translate-x-1 opacity-100' : 'opacity-40'
+                      isActive || (defaultCollapsed && isExpanded) ? 'translate-x-1 opacity-100' : 'opacity-40'
                     }`}
-                    style={{ color: config.color }}
+                    style={{ color: config.color, transform: defaultCollapsed && isExpanded ? 'rotate(90deg)' : undefined }}
                   />
                 </div>
               </div>
@@ -518,8 +551,8 @@ export function AISummaryWall({
           })}
         </div>
 
-        {/* Popup Detail View - positioned overlay */}
-        {selectedInsight && selectedDetails && selectedConfig && popupPosition && (
+        {/* Popup Detail View - positioned overlay (non-collapsed mode only) */}
+        {!defaultCollapsed && selectedInsight && selectedDetails && selectedConfig && popupPosition && (
           <>
             {/* Backdrop */}
             <div 
