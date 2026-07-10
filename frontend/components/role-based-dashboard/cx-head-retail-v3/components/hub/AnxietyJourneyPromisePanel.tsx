@@ -4,18 +4,23 @@ import React, { useMemo, useState } from "react";
 import {
   Package,
   RotateCcw,
+  Sparkles,
   Truck,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
-import type { AnxietyPeriodData } from "../../lib/cxHeadRetailV3AnxietyData";
 import {
+  adjustMatrixAnxietyScore,
+  adjustMatrixIpdMet,
   ANXIETY_CAT_RELIABILITY,
   ANXIETY_NODE_DRILL,
   ANXIETY_NODE_SPLIT,
+  scaleAnxietyUnits,
+  type AnxietyPeriodData,
 } from "../../lib/cxHeadRetailV3AnxietyData";
 import { cssVar, radius } from "../../theme/tokens";
 import { anxietyFmt } from "./AnxietyPrimitives";
+import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 
 const IPD_TARGET = 92;
 const ROW_LABEL_WIDTH = 144;
@@ -140,22 +145,137 @@ function NodeRowLabel({
   );
 }
 
-function MatrixHeatmapCell({
-  cell,
+type SelectedMatrixCell = HoveredCell;
+
+const NODE_INSIGHT_ACTION: Record<string, string> = {
+  "Last-mile": "Fire honest re-promise + revised ETA containment before the contact window closes.",
+  "In-transit": "Push proactive lane status — anxiety is building in-hub before breach surfaces at last-mile.",
+  Returns: "Accelerate return re-initiation and pickup confirmation to stop repeat contacts.",
+  Installation: "Lock installation slot confirmation within 24h of delivery to cap anxiety escalation.",
+};
+
+function buildMatrixInsight({
   node,
   category,
+  cell,
+  tierLabel,
+  riskIdx,
+}: {
+  node: string;
+  category: string;
+  cell: MatrixCell;
+  tierLabel: string;
+  riskIdx: number;
+}): string {
+  const ipdGap = Math.max(0, IPD_TARGET - cell.ipdMet);
+  const units = anxietyFmt(cell.units);
+  const nodeAction = NODE_INSIGHT_ACTION[node] ?? "Route to containment queue.";
+
+  if (tierLabel === "HIGH") {
+    const ipdNote =
+      ipdGap > 0
+        ? `${category} IPD sits ${ipdGap.toFixed(1)} pts below the ${IPD_TARGET}% bar.`
+        : `${category} IPD holds at ${cell.ipdMet.toFixed(1)}% but anxiety score is elevated.`;
+    return `${units} anxious units at risk index ${riskIdx} on ${node.toLowerCase()} — ${ipdNote} ${nodeAction}`;
+  }
+
+  if (tierLabel === "MEDIUM") {
+    const ipdNote = ipdGap > 0 ? `IPD gap of ${ipdGap.toFixed(1)} pts amplifies exposure — ` : "";
+    return `${units} units building anxiety (score ${cell.anxietyScore}) on ${node.toLowerCase()}. ${ipdNote}Pre-empt with status reassurance before this crosses into the breach queue.`;
+  }
+
+  return `${category} is contained on ${node.toLowerCase()} — ${units} units with low composite risk. Maintain IPD-met at ${cell.ipdMet.toFixed(1)}% and watch for hub-load spikes that could flip this lane amber.`;
+}
+
+function MatrixAiInsight({
+  selection,
+}: {
+  selection: SelectedMatrixCell;
+}): React.ReactElement {
+  const score = riskScore(selection);
+  const tier = riskTier(score, selection);
+  const index = riskIndex(selection);
+  const insight = buildMatrixInsight({
+    node: selection.node,
+    category: selection.category,
+    cell: selection,
+    tierLabel: tier.label,
+    riskIdx: index,
+  });
+
+  return (
+    <div
+      style={{
+        marginTop: 14,
+        padding: "12px 14px",
+        borderRadius: radius.md,
+        background: cssVar("accent-soft"),
+        border: `1px solid ${cssVar("accent")}33`,
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start",
+      }}
+    >
+      <Sparkles size={14} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 1 }} />
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
+          <span
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              color: cssVar("accent-2"),
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+            }}
+          >
+            AI insight
+          </span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: tier.color }}>
+            {selection.node} × {selection.category}
+          </span>
+          <span
+            className="lisn-num"
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              color: tier.color,
+              marginLeft: "auto",
+            }}
+          >
+            Risk {index} · {tier.label}
+          </span>
+        </div>
+        <p style={{ margin: "0 0 8px", fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45 }}>{insight}</p>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 12, fontSize: 10, color: cssVar("text-muted") }}>
+          <span>
+            Anxiety <strong style={{ color: cssVar("text-primary") }}>{selection.anxietyScore}</strong>
+          </span>
+          <span>
+            Units <strong style={{ color: cssVar("text-primary") }}>{anxietyFmt(selection.units)}</strong>
+          </span>
+          <span>
+            IPD-met <strong style={{ color: cssVar("text-primary") }}>{selection.ipdMet.toFixed(1)}%</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MatrixHeatmapCell({
+  cell,
   selected,
   onSelect,
 }: {
   cell: MatrixCell;
-  node: string;
-  category: string;
   selected: boolean;
   onSelect: () => void;
 }): React.ReactElement {
   const score = riskScore(cell);
   const tier = riskTier(score, cell);
   const index = riskIndex(cell);
+  const animatedUnits = useAnimatedNumber(cell.units, { duration: 900, delay: 80 });
+  const animatedIndex = useAnimatedNumber(index, { duration: 900, delay: 60 });
 
   return (
     <div style={{ flex: 1, padding: "0 2px", minWidth: 88, position: "relative" }}>
@@ -178,7 +298,7 @@ function MatrixHeatmapCell({
       >
         <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", marginBottom: 4 }}>
           <span className="lisn-num" style={{ fontSize: 18, fontWeight: 800, color: tier.color, lineHeight: 1 }}>
-            {index}
+            {animatedIndex}
           </span>
           <span
             style={{
@@ -192,74 +312,9 @@ function MatrixHeatmapCell({
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 4 }}>
-          <span style={{ fontSize: 9, color: cssVar("text-muted") }}>Units {anxietyFmt(cell.units)}</span>
-          <span style={{ fontSize: 9, color: cssVar("text-muted") }}>IPD {cell.ipdMet}%</span>
+          <span style={{ fontSize: 9, color: cssVar("text-muted") }}>Units {anxietyFmt(animatedUnits)}</span>
+          <span style={{ fontSize: 9, color: cssVar("text-muted") }}>IPD {cell.ipdMet.toFixed(1)}%</span>
         </div>
-
-        {selected ? (
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 50,
-              bottom: "100%",
-              left: "50%",
-              transform: "translateX(-50%)",
-              marginBottom: 8,
-              padding: 12,
-              borderRadius: radius.xl,
-              background: cssVar("surface-raised"),
-              border: `1px solid ${cssVar("border-strong")}`,
-              boxShadow: cssVar("shadow-card"),
-              minWidth: 180,
-              pointerEvents: "none",
-            }}
-          >
-            <p style={{ margin: "0 0 6px", fontSize: 12, fontWeight: 700, color: cssVar("text-primary") }}>{category}</p>
-            <p style={{ margin: "0 0 8px", fontSize: 10, color: cssVar("text-muted") }}>
-              {node} × {category}
-            </p>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                <span style={{ fontSize: 10, color: cssVar("text-muted") }}>Risk index</span>
-                <span className="lisn-num" style={{ fontSize: 12, fontWeight: 700, color: tier.color }}>
-                  {index}/100
-                </span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                <span style={{ fontSize: 10, color: cssVar("text-muted") }}>Anxiety score</span>
-                <span className="lisn-num" style={{ fontSize: 12, fontWeight: 600, color: cssVar("text-primary") }}>
-                  {cell.anxietyScore}/100
-                </span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                <span style={{ fontSize: 10, color: cssVar("text-muted") }}>Anxious units</span>
-                <span className="lisn-num" style={{ fontSize: 12, fontWeight: 600, color: cssVar("text-primary") }}>
-                  {anxietyFmt(cell.units)}
-                </span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
-                <span style={{ fontSize: 10, color: cssVar("text-muted") }}>Category IPD-met</span>
-                <span className="lisn-num" style={{ fontSize: 12, fontWeight: 600, color: cssVar("text-primary") }}>
-                  {cell.ipdMet}%
-                </span>
-              </div>
-            </div>
-            <div
-              aria-hidden
-              style={{
-                position: "absolute",
-                width: 8,
-                height: 8,
-                bottom: -5,
-                left: "50%",
-                transform: "translateX(-50%) rotate(45deg)",
-                background: cssVar("surface-raised"),
-                borderRight: `1px solid ${cssVar("border-strong")}`,
-                borderBottom: `1px solid ${cssVar("border-strong")}`,
-              }}
-            />
-          </div>
-        ) : null}
       </button>
     </div>
   );
@@ -277,13 +332,13 @@ export function getJourneyMatrixTopHotspot(d: AnxietyPeriodData): JourneyTopHots
     for (const cat of categories) {
       const match = drillCats.find(([name]) => name === cat);
       if (!match) continue;
-      const [, units, anxietyScore] = match;
+      const [, baseUnits, anxietyScore] = match;
       hotspots.push({
         node: n.key,
         category: cat,
-        units,
-        anxietyScore,
-        ipdMet: ipdByCategory[cat],
+        units: scaleAnxietyUnits(baseUnits, d.high),
+        anxietyScore: adjustMatrixAnxietyScore(anxietyScore, d),
+        ipdMet: adjustMatrixIpdMet(ipdByCategory[cat], d),
       });
     }
   }
@@ -365,17 +420,25 @@ export function AnxietyJourneyPromisePanel({
           cells[cat] = null;
           continue;
         }
-        const [, units, anxietyScore] = match;
+        const [, baseUnits, anxietyScore] = match;
         cells[cat] = {
-          units,
-          anxietyScore,
-          ipdMet: ipdByCategory[cat],
+          units: scaleAnxietyUnits(baseUnits, d.high),
+          anxietyScore: adjustMatrixAnxietyScore(anxietyScore, d),
+          ipdMet: adjustMatrixIpdMet(ipdByCategory[cat], d),
         };
       }
 
       return { key: n.key, totalUnits, share: Math.round(n.prop * 100), cells };
     });
-  }, [categories, d.high, ipdByCategory]);
+  }, [categories, d, ipdByCategory]);
+
+  const selectedCell = useMemo((): SelectedMatrixCell | null => {
+    if (!selected) return null;
+    const row = nodeRows.find((r) => r.key === selected.node);
+    const cell = row?.cells[selected.category];
+    if (!cell) return null;
+    return { node: selected.node, category: selected.category, ...cell };
+  }, [nodeRows, selected]);
 
   return (
     <div
@@ -441,8 +504,6 @@ export function AnxietyJourneyPromisePanel({
                     <MatrixHeatmapCell
                       key={`${row.key}-${cat}`}
                       cell={cell}
-                      node={row.key}
-                      category={cat}
                       selected={isSelected}
                       onSelect={() =>
                         setSelected(isSelected ? null : { node: row.key, category: cat })
@@ -455,6 +516,8 @@ export function AnxietyJourneyPromisePanel({
           })}
         </div>
       </div>
+
+      {selectedCell ? <MatrixAiInsight selection={selectedCell} /> : null}
     </div>
   );
 }

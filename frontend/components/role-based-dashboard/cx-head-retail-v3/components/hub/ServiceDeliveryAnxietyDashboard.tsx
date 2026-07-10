@@ -8,9 +8,11 @@ import {
   ANXIETY_PERIODS,
   ANXIETY_SCREEN_QUESTIONS,
   ANXIETY_SCREENS,
-  ANXIETY_TOP10,
+  getEscalationTop10,
+  getImperfectionEvidence,
+  scaleAnxietyUnits,
   type AnxietyContribDim,
-  type AnxietyFreshKey,
+  type AnxietyPeriodData,
   type AnxietyPeriodKey,
   type AnxietyScreenId,
 } from "../../lib/cxHeadRetailV3AnxietyData";
@@ -38,6 +40,7 @@ import {
   TileHead,
   anxietyFmt,
 } from "./AnxietyPrimitives";
+import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 
 type ToastItem = { id: number; msg: string };
 
@@ -181,14 +184,53 @@ function AnxietyCommandScreen({
   );
 }
 
+function AnimatedPct({ value }: { value: number }): React.ReactElement {
+  const animated = useAnimatedNumber(value, { duration: 900, delay: 60 });
+  return <>{animated}%</>;
+}
+
+function AnimatedContribBar({
+  label,
+  pct,
+  color,
+  labelColor,
+  pctColor,
+}: {
+  label: string;
+  pct: number;
+  color?: string;
+  labelColor?: string;
+  pctColor?: string;
+}): React.ReactElement {
+  const animatedPct = useAnimatedNumber(pct, { duration: 900, delay: 80 });
+  return <ContribBar label={label} pct={animatedPct} color={color} labelColor={labelColor} pctColor={pctColor} />;
+}
+
+function ContainmentClusterUnits({ units }: { units: number }): React.ReactElement {
+  const animated = useAnimatedNumber(units, { duration: 900, delay: 80 });
+  return <span style={{ fontFamily: cssVar("font-numeric") }}>{anxietyFmt(animated)}</span>;
+}
+
 function ContainmentQueueScreen({
+  d,
   toast,
 }: {
+  d: AnxietyPeriodData;
   toast: (msg: string) => void;
 }): React.ReactElement {
   const [open, setOpen] = useState<string | null>(null);
   const [approvedIds, setApprovedIds] = useState<ReadonlySet<string>>(() => new Set());
   const [escalatedIds, setEscalatedIds] = useState<ReadonlySet<string>>(() => new Set());
+
+  const clusters = useMemo(
+    () =>
+      ANXIETY_CLUSTERS.map((c) => ({
+        ...c,
+        units: scaleAnxietyUnits(c.units, d.high),
+        sla: Math.round(c.sla * d.clusterSlaScale),
+      })),
+    [d.clusterSlaScale, d.high],
+  );
 
   const markApproved = (id: string): void => {
     setApprovedIds((prev) => new Set(prev).add(id));
@@ -221,7 +263,7 @@ function ContainmentQueueScreen({
           ))}
         </div>
         <div style={{ maxHeight: "none", overflowY: "visible" }}>
-          {ANXIETY_CLUSTERS.map((c) => {
+          {clusters.map((c) => {
             const isApproved = approvedIds.has(c.id);
             const isEscalated = escalatedIds.has(c.id);
 
@@ -246,7 +288,7 @@ function ContainmentQueueScreen({
                   </div>
                 </span>
                 <span style={{ fontFamily: cssVar("font-numeric"), color: cssVar("text-secondary") }}>{c.node}</span>
-                <span style={{ fontFamily: cssVar("font-numeric") }}>{anxietyFmt(c.units)}</span>
+                <ContainmentClusterUnits units={c.units} />
                 <span>
                   <MiniBand band={c.band} />
                 </span>
@@ -345,12 +387,13 @@ function EscalationPatternsScreen({
   d,
   toast,
 }: {
-  d: (typeof ANXIETY_PERIODS)[AnxietyPeriodKey];
+  d: AnxietyPeriodData;
   toast: (msg: string) => void;
 }): React.ReactElement {
   const [selectedTop10, setSelectedTop10] = useState(0);
   const [dim, setDim] = useState<AnxietyContribDim>("Channel");
-  const selectedStatement = ANXIETY_TOP10[selectedTop10];
+  const top10 = useMemo(() => getEscalationTop10(d), [d]);
+  const selectedStatement = top10[selectedTop10];
   const contrib = selectedStatement.contrib;
 
   return (
@@ -361,7 +404,7 @@ function EscalationPatternsScreen({
             <TileHead title="Top-10 problem statements" />
           </div>
           <div style={{ overflowY: "visible" }}>
-            {ANXIETY_TOP10.map((t, i) => {
+            {top10.map((t, i) => {
               const selected = selectedTop10 === i;
 
               return (
@@ -425,7 +468,9 @@ function EscalationPatternsScreen({
                       ) : null}
                     </span>
                   </span>
-                  <span style={{ fontFamily: cssVar("font-numeric"), fontSize: 12 }}>{t.c}%</span>
+                  <span style={{ fontFamily: cssVar("font-numeric"), fontSize: 12 }}>
+                    <AnimatedPct value={t.c} />
+                  </span>
                   <StatePill state={t.state} />
                 </button>
               );
@@ -472,7 +517,7 @@ function EscalationPatternsScreen({
                 const barColor = contribRagColor(v);
 
                 return (
-                  <ContribBar
+                  <AnimatedContribBar
                     key={k}
                     label={k}
                     pct={v}
@@ -502,7 +547,9 @@ function EscalationPatternsScreen({
                     <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{im.title}</span>
                     {im.kind === "inference" ? <InferenceBadge conf={im.conf} small /> : null}
                   </div>
-                  <div style={{ fontSize: 12, color: cssVar("text-muted"), marginBottom: 8 }}>{im.evidence}</div>
+                  <div style={{ fontSize: 12, color: cssVar("text-muted"), marginBottom: 8 }}>
+                    {getImperfectionEvidence(im, d)}
+                  </div>
                   <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                     <GhostBtn
                       onClick={() => toast(`"${im.title.split(" — ")[0]}" flagged as emerging imperfection`)}
@@ -523,14 +570,10 @@ function EscalationPatternsScreen({
 
 export function AnxietyPeriodControls({
   period,
-  fresh,
   onPeriodChange,
-  onFreshChange,
 }: {
   period: AnxietyPeriodKey;
-  fresh: AnxietyFreshKey;
   onPeriodChange: (k: AnxietyPeriodKey) => void;
-  onFreshChange: (k: AnxietyFreshKey) => void;
 }): React.ReactElement {
   const groupStyle: React.CSSProperties = {
     display: "inline-flex",
@@ -558,23 +601,6 @@ export function AnxietyPeriodControls({
 
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-      <div style={groupStyle}>
-        <button type="button" onClick={() => onFreshChange("nrt")} style={btnStyle(fresh === "nrt")}>
-          <span
-            style={{
-              display: "inline-block",
-              width: 6,
-              height: 6,
-              borderRadius: "50%",
-              background: cssVar("positive"),
-            }}
-          />
-          Near-real-time
-        </button>
-        <button type="button" onClick={() => onFreshChange("daily")} style={btnStyle(fresh === "daily")}>
-          Daily
-        </button>
-      </div>
       <div style={groupStyle}>
         {(Object.keys(ANXIETY_PERIODS) as AnxietyPeriodKey[]).map((k) => (
           <button key={k} type="button" onClick={() => onPeriodChange(k)} style={btnStyle(period === k)}>
@@ -619,7 +645,7 @@ export function ServiceDeliveryAnxietyDashboard({
       </AnxietySection>
 
       <AnxietySection sectionNumber="03" screenId={2}>
-        <ContainmentQueueScreen toast={toast} />
+        <ContainmentQueueScreen d={d} toast={toast} />
       </AnxietySection>
 
       <AnxietySection sectionNumber="04" screenId={3} sub="">

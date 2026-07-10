@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { ANXIETY_PERIODS, type AnxietyFreshKey, type AnxietyPeriodKey } from "../../lib/cxHeadRetailV3AnxietyData";
+import React, { useState } from "react";
+import type { AnxietyPeriodKey } from "../../lib/cxHeadRetailV3AnxietyData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
 import { ScreenBackBar } from "../common/ScreenBackBar";
@@ -14,11 +14,6 @@ import { layout } from "../../theme/tokens";
 export function HubServiceDeliveryScreen(): React.ReactElement {
   const { navigate } = useNavigation();
   const [period, setPeriod] = useState<AnxietyPeriodKey>("today");
-  const [fresh, setFresh] = useState<AnxietyFreshKey>("nrt");
-
-  useEffect(() => {
-    setFresh(ANXIETY_PERIODS[period].freshDefault);
-  }, [period]);
 
   return (
     <div
@@ -36,12 +31,7 @@ export function HubServiceDeliveryScreen(): React.ReactElement {
         variant="service-delivery"
         trailing={
           <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-            <AnxietyPeriodControls
-              period={period}
-              fresh={fresh}
-              onPeriodChange={setPeriod}
-              onFreshChange={setFresh}
-            />
+            <AnxietyPeriodControls period={period} onPeriodChange={setPeriod} />
             <ScreenBackBar onBack={() => navigate("overview")} />
           </div>
         }

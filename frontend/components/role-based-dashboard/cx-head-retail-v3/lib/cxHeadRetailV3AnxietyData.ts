@@ -28,8 +28,14 @@ export interface AnxietyPeriodData {
   driverPct: number;
   driverConf: number;
   negTotal: number;
+  pContact: number;
   quad: Record<QuadCellId, number>;
   splitConf: number;
+  top10Shares: readonly number[];
+  matrixAnxietyOffset: number;
+  matrixIpdOffset: number;
+  contribShift: number;
+  clusterSlaScale: number;
 }
 
 export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
@@ -44,10 +50,10 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     scored: 47800,
     contained: 3100,
     deltaIndex: 9,
-    ipd: 91.2,
+    ipd: 91,
     ipdDelta: -1.4,
     breachUnits: 4210,
-    cov: 72,
+    cov: 75,
     ttc: 41,
     ttContact: 68,
     funnelNotified: 9300,
@@ -57,8 +63,14 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     driverPct: 62,
     driverConf: 79,
     negTotal: 18600,
+    pContact: 0.71,
     quad: { ml: 4200, mh: 6900, bl: 2300, bh: 5200 },
     splitConf: 82,
+    top10Shares: [24, 16, 11, 10, 8, 7, 7, 6, 6, 5],
+    matrixAnxietyOffset: 0,
+    matrixIpdOffset: 0,
+    contribShift: 0,
+    clusterSlaScale: 1,
   },
   "7d": {
     label: "7 days",
@@ -71,7 +83,7 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     scored: 312000,
     contained: 22600,
     deltaIndex: -3,
-    ipd: 92.6,
+    ipd: 92,
     ipdDelta: 0.8,
     breachUnits: 23100,
     cov: 74,
@@ -84,8 +96,14 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     driverPct: 58,
     driverConf: 84,
     negTotal: 121400,
+    pContact: 0.69,
     quad: { ml: 28800, mh: 43200, bl: 15600, bh: 33800 },
     splitConf: 86,
+    top10Shares: [20, 16, 12, 10, 9, 8, 7, 6, 6, 6],
+    matrixAnxietyOffset: -2,
+    matrixIpdOffset: 0.4,
+    contribShift: 1,
+    clusterSlaScale: 1.12,
   },
   "30d": {
     label: "30 days",
@@ -98,7 +116,7 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     scored: 1290000,
     contained: 96500,
     deltaIndex: -5,
-    ipd: 93.1,
+    ipd: 93,
     ipdDelta: 1.9,
     breachUnits: 92800,
     cov: 76,
@@ -111,10 +129,33 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     driverPct: 55,
     driverConf: 88,
     negTotal: 512000,
+    pContact: 0.65,
     quad: { ml: 122000, mh: 181000, bl: 66000, bh: 143000 },
     splitConf: 88,
+    top10Shares: [18, 15, 13, 11, 10, 9, 8, 7, 5, 4],
+    matrixAnxietyOffset: -4,
+    matrixIpdOffset: 0.8,
+    contribShift: -1,
+    clusterSlaScale: 1.28,
   },
 };
+
+export const ANXIETY_PERIOD_BASELINE = ANXIETY_PERIODS.today;
+
+export function anxietyPeriodScale(
+  periodHigh: number,
+  baselineHigh: number = ANXIETY_PERIOD_BASELINE.high,
+): number {
+  return periodHigh / baselineHigh;
+}
+
+export function scaleAnxietyUnits(units: number, periodHigh: number): number {
+  return Math.max(1, Math.round(units * anxietyPeriodScale(periodHigh)));
+}
+
+export function scaleAnxietyNegUnits(units: number, negTotal: number): number {
+  return Math.max(1, Math.round(units * (negTotal / ANXIETY_PERIOD_BASELINE.negTotal)));
+}
 
 export const ANXIETY_NODE_SPLIT = [
   { key: "Last-mile", prop: 0.55 },
@@ -707,14 +748,96 @@ export const ANXIETY_IMPERFECTIONS = [
     title: "Jalna in-transit embargo — escalation creep +38% w/w",
     kind: "inference" as const,
     conf: 74,
-    evidence: "12 escalations in 5 days on a lane with no prior pattern; all embargo-tagged.",
+    escalationCount: 12,
+    evidenceDays: 5,
   },
   {
     title: "Kolkata WH open-box mis-tag — new failure code appearing",
     kind: "knowledge" as const,
-    evidence: "8 tickets, identical WH + SKU class + OBD flag. Deterministic — same signature.",
+    ticketCount: 8,
   },
 ] as const;
+
+function normalizeContribRows(rows: readonly (readonly [string, number])[]): [string, number][] {
+  const adjusted = rows.map(([k, v]) => [k, Math.max(1, v)] as [string, number]);
+  const sum = adjusted.reduce((acc, [, v]) => acc + v, 0);
+  if (sum <= 0) return adjusted;
+  return adjusted.map(([k, v]) => [k, Math.round((v / sum) * 100)] as [string, number]);
+}
+
+export function shiftContribBreakdown(
+  breakdown: AnxietyContribBreakdown,
+  shift: number,
+): AnxietyContribBreakdown {
+  if (shift === 0) return breakdown;
+
+  return {
+    Channel: normalizeContribRows(
+      breakdown.Channel.map(([k, v], i) => [k, Math.max(2, v + (i % 2 === 0 ? shift : -shift))] as [string, number]),
+    ),
+    Region: normalizeContribRows(
+      breakdown.Region.map(([k, v], i) => [k, Math.max(2, v + (i % 2 === 0 ? shift : -shift))] as [string, number]),
+    ),
+    Stage: normalizeContribRows(
+      breakdown.Stage.map(([k, v], i) => [k, Math.max(2, v + (i % 2 === 0 ? shift : -shift))] as [string, number]),
+    ),
+  };
+}
+
+function normalizeTop10Shares(shares: readonly number[]): number[] {
+  const sum = shares.reduce((acc, v) => acc + v, 0);
+  if (sum <= 0) return shares.map(() => 0);
+  if (sum === 100) return [...shares];
+
+  const scaled = shares.map((v) => Math.max(1, Math.round((v / sum) * 100)));
+  const scaledSum = scaled.reduce((acc, v) => acc + v, 0);
+  const drift = 100 - scaledSum;
+  if (drift !== 0) {
+    const maxIdx = scaled.indexOf(Math.max(...scaled));
+    scaled[maxIdx] = Math.max(1, scaled[maxIdx] + drift);
+  }
+  return scaled;
+}
+
+export function getEscalationTop10(d: AnxietyPeriodData) {
+  const shares = normalizeTop10Shares(d.top10Shares);
+  return ANXIETY_TOP10.map((item, i) => ({
+    ...item,
+    c: shares[i] ?? item.c,
+    contrib: shiftContribBreakdown(item.contrib, d.contribShift),
+  }));
+}
+
+export function getQuadDriversForPeriod(cellId: QuadCellId, d: AnxietyPeriodData): [string, number][] {
+  const drivers = ANXIETY_QUAD_CELLS[cellId].drivers;
+  if (d.contribShift === 0) {
+    return drivers.map(([k, v]) => [k, v] as [string, number]);
+  }
+  return normalizeContribRows(
+    drivers.map(([k, v], i) => [k, Math.max(5, v + (i % 2 === 0 ? d.contribShift : -d.contribShift))] as [string, number]),
+  );
+}
+
+export function adjustMatrixAnxietyScore(score: number, d: AnxietyPeriodData): number {
+  return Math.max(0, Math.min(100, Math.round(score + d.matrixAnxietyOffset)));
+}
+
+export function adjustMatrixIpdMet(ipdMet: number, d: AnxietyPeriodData): number {
+  return Math.max(0, Math.min(100, Math.round((ipdMet + d.matrixIpdOffset) * 10) / 10));
+}
+
+export function getImperfectionEvidence(
+  imperfection: (typeof ANXIETY_IMPERFECTIONS)[number],
+  d: AnxietyPeriodData,
+): string {
+  const scale = d.negTotal / ANXIETY_PERIOD_BASELINE.negTotal;
+  if ("escalationCount" in imperfection) {
+    const count = Math.max(1, Math.round(imperfection.escalationCount * scale));
+    return `${count} escalations in ${imperfection.evidenceDays} days on a lane with no prior pattern; all embargo-tagged.`;
+  }
+  const tickets = Math.max(1, Math.round(imperfection.ticketCount * scale));
+  return `${tickets} tickets, identical WH + SKU class + OBD flag. Deterministic — same signature.`;
+}
 
 export type AnxietyNodeDrillTab = "pin" | "category" | "market";
 

@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import type { AnxietyPeriodData, QuadCellId } from "../../lib/cxHeadRetailV3AnxietyData";
 import {
   ANXIETY_QUAD_CELLS,
+  getQuadDriversForPeriod,
 } from "../../lib/cxHeadRetailV3AnxietyData";
 import { cssVar, radius } from "../../theme/tokens";
 import type { CliffSlopeEventMode } from "./CliffSlopePieCharts";
@@ -72,6 +73,7 @@ function QuadMatrixCell({
 }): React.ReactElement {
   const accent = ANXIETY_STATE_META[ANXIETY_QUAD_CELLS[id].tone].color;
   const animatedCount = useAnimatedNumber(count, { duration: 900, delay: 80 });
+  const animatedShare = useAnimatedNumber(share, { duration: 900, delay: 120 });
 
   return (
     <button
@@ -107,7 +109,7 @@ function QuadMatrixCell({
             flexShrink: 0,
           }}
         >
-          {share}%
+          {animatedShare}%
         </span>
       </div>
       <div className="lisn-num" style={{ fontSize: 24, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.05, marginTop: 8 }}>
@@ -115,6 +117,23 @@ function QuadMatrixCell({
       </div>
     </button>
   );
+}
+
+function AnimatedContribBar({
+  label,
+  pct,
+  color,
+  labelColor,
+  pctColor,
+}: {
+  label: string;
+  pct: number;
+  color?: string;
+  labelColor?: string;
+  pctColor?: string;
+}): React.ReactElement {
+  const animatedPct = useAnimatedNumber(pct, { duration: 900, delay: 80 });
+  return <ContribBar label={label} pct={animatedPct} color={color} labelColor={labelColor} pctColor={pctColor} />;
 }
 
 function ReliabilityAnxietyLaneMatrix({
@@ -227,6 +246,8 @@ export function ReliabilityVsAnxietyPanel({
     ) as Record<QuadCellId, number>;
   }, [d.negTotal, d.quad]);
 
+  const drivers = useMemo(() => getQuadDriversForPeriod(cell, d), [cell, d]);
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 12, alignItems: "stretch" }}>
@@ -244,8 +265,8 @@ export function ReliabilityVsAnxietyPanel({
               Top drivers
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {meta.drivers.map(([k, v]) => (
-                <ContribBar key={k} label={k} pct={v} color={toneMeta.color} labelColor={cssVar("text-secondary")} pctColor={toneMeta.color} />
+              {drivers.map(([k, v]) => (
+                <AnimatedContribBar key={k} label={k} pct={v} color={toneMeta.color} labelColor={cssVar("text-secondary")} pctColor={toneMeta.color} />
               ))}
             </div>
           </div>
@@ -273,7 +294,7 @@ export function ReliabilityVsAnxietyPanel({
               </SegButton>
             </div>
           </div>
-          <CliffSlopePieCharts mode={cliffSlopeMode} />
+          <CliffSlopePieCharts mode={cliffSlopeMode} negTotal={d.negTotal} />
         </AnxietyCard>
       </div>
     </div>

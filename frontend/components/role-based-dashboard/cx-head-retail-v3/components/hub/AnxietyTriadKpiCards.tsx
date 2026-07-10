@@ -3,7 +3,7 @@
 import React from "react";
 import { Sparkles } from "lucide-react";
 import type { AnxietyPeriodData, AnxietyStateKey } from "../../lib/cxHeadRetailV3AnxietyData";
-import { ANXIETY_CAT_RELIABILITY } from "../../lib/cxHeadRetailV3AnxietyData";
+import { getAnxietyPeriodMetrics, getWeakestCategory } from "../../lib/cxHeadRetailV3AnxietyMetrics";
 import { cssVar, radius, space } from "../../theme/tokens";
 import {
   ANXIETY_STATE_META,
@@ -24,7 +24,7 @@ const KPI_HEADER_MIN_HEIGHT = 44;
 const KPI_TOP_SECTION_MIN_HEIGHT = 3 * METRIC_ROW_HEIGHT;
 const KPI_BODY_BLOCK_MIN_HEIGHT = KPI_TOP_SECTION_MIN_HEIGHT + INNER_KPI_STRIP_MIN_HEIGHT + 8;
 
-type MetricRow = { label: string; value: string; color?: string };
+type MetricRow = { label: string; value: string; color?: string; numeric?: boolean };
 
 function padMetricRows(rows: MetricRow[], rowCount: number): MetricRow[] {
   const padded = [...rows];
@@ -193,26 +193,38 @@ function ConfidenceSignalBadge({ conf }: { conf: number }): React.ReactElement {
   );
 }
 
+const METRIC_RING_DURATION_MS = 1000;
+
 function MetricRing({
   value,
   color,
   label,
   unit = "%",
+  displayDecimals = 0,
 }: {
   value: number;
   color: string;
   label: string;
   unit?: string;
+  displayDecimals?: number;
 }): React.ReactElement {
   const size = 96;
   const stroke = 9;
   const r = size / 2 - stroke / 2 - 2;
   const c = size / 2;
   const displayUnit = unit === "" ? "" : unit;
+  const animated = useAnimatedNumber(value, {
+    duration: METRIC_RING_DURATION_MS,
+    delay: 40,
+    decimals: displayDecimals,
+  });
+  const arcValue = Math.min(100, Math.max(0, animated));
+  const displayValue =
+    displayDecimals > 0 ? animated.toFixed(displayDecimals) : String(Math.round(animated));
 
   return (
     <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size}>
+      <svg width={size} height={size} aria-hidden>
         <circle cx={c} cy={c} r={r} fill="none" stroke={cssVar("border")} strokeWidth={stroke} />
         <circle
           cx={c}
@@ -223,8 +235,9 @@ function MetricRing({
           strokeWidth={stroke}
           strokeLinecap="round"
           pathLength={100}
-          strokeDasharray={`${Math.min(100, Math.max(0, value))} 100`}
+          strokeDasharray={`${arcValue} 100`}
           transform={`rotate(-90 ${c} ${c})`}
+          style={{ transition: "stroke 0.35s ease" }}
         />
       </svg>
       <div
@@ -238,7 +251,7 @@ function MetricRing({
         }}
       >
         <span className="lisn-num" style={{ fontSize: 28, fontWeight: 700, color, lineHeight: 1 }}>
-          {value}
+          {displayValue}
           {displayUnit ? (
             <span style={{ fontSize: 14, color: cssVar("text-secondary") }}>{displayUnit}</span>
           ) : null}
@@ -319,7 +332,7 @@ function KpiMetricPanel({
             >
               <span>{row.label || "\u00a0"}</span>
               <span
-                className="lisn-num"
+                className={row.numeric === false ? undefined : "lisn-num"}
                 style={{ fontWeight: 700, color: row.color ?? cssVar("text-primary"), textAlign: "right" }}
               >
                 {row.value || "\u00a0"}
@@ -447,36 +460,34 @@ export function AnxietyTriadKpiCards({
   d: AnxietyPeriodData;
   periodLabel: string;
 }): React.ReactElement {
-  const stateColor = ANXIETY_STATE_META[d.state].color;
+  const m = getAnxietyPeriodMetrics(d);
+  const worstCategory = getWeakestCategory(d);
   const ipdRounded = Math.round(d.ipd);
+  const stateColor = ANXIETY_STATE_META[d.state].color;
   const ipdColor = ipdTargetAccent(ipdRounded, IPD_TARGET);
-  const worstCategory = [...ANXIETY_CAT_RELIABILITY].sort((a, b) => a.v - b.v)[0];
-  const funnelRate = Math.round((d.funnelAvoided / d.high) * 100);
-  const notifyRate = Math.round((d.funnelNotified / d.high) * 100);
-  const anxietyOnly = d.quad.ml + d.quad.mh;
-  const breachSignals = d.quad.bl + d.quad.bh;
-  const signalTotal = anxietyOnly + breachSignals;
-  const pctAnx = signalTotal > 0 ? Math.round((anxietyOnly / signalTotal) * 100) : 0;
-  const anxietyOnlyColor = anxietyOnlyAccent(pctAnx);
-  const ipdGap = IPD_TARGET - ipdRounded;
-  const ipdTargetColor = ipdTargetAccent(ipdRounded, IPD_TARGET);
+  const anxietyOnlyColor = anxietyOnlyAccent(m.promiseKeptPct);
   const ipdDeltaColor = ipdDeltaAccent(d.ipdDelta);
-  const animatedAnxietyOnly = useAnimatedNumber(anxietyOnly, { duration: 900, delay: 120 });
-  const animatedIpd = useAnimatedNumber(ipdRounded, { duration: 900, delay: 180 });
+  const animatedAnxietyOnly = useAnimatedNumber(m.anxietyOnly, { duration: 900, delay: 120 });
   const animatedIpdDelta = useAnimatedNumber(d.ipdDelta, { duration: 900, delay: 220, decimals: 1 });
-  const highBandShare = Math.round((d.high / d.scored) * 100);
   const animatedContained = useAnimatedNumber(d.contained, { duration: 900, delay: 120 });
   const animatedIndexDelta = useAnimatedNumber(d.deltaIndex, { duration: 900, delay: 220, decimals: 0 });
-  const animatedHighBandShare = useAnimatedNumber(highBandShare, { duration: 900, delay: 180 });
+  const animatedHighBandShare = useAnimatedNumber(m.highBandShare, { duration: 900, delay: 180 });
   const animatedNotified = useAnimatedNumber(d.funnelNotified, { duration: 900, delay: 120 });
-  const animatedFunnelRate = useAnimatedNumber(funnelRate, { duration: 900, delay: 180 });
+  const animatedFunnelRate = useAnimatedNumber(m.funnelRate, { duration: 900, delay: 180 });
   const animatedOptOut = useAnimatedNumber(d.optOut, { duration: 900, delay: 220, decimals: 1 });
-  const containedRate = d.high > 0 ? Math.round((d.contained / d.high) * 100) : 0;
+  const animatedBreachSignals = useAnimatedNumber(m.breachSignals, { duration: 900, delay: 100 });
+  const animatedHigh = useAnimatedNumber(d.high, { duration: 900, delay: 60 });
+  const animatedScored = useAnimatedNumber(d.scored, { duration: 900, delay: 80 });
+  const animatedBreachUnits = useAnimatedNumber(d.breachUnits, { duration: 900, delay: 100 });
+  const animatedTtc = useAnimatedNumber(d.ttc, { duration: 900, delay: 80 });
+  const animatedTtContact = useAnimatedNumber(d.ttContact, { duration: 900, delay: 100 });
+  const animatedHeadroom = useAnimatedNumber(m.headroomMin, { duration: 900, delay: 120 });
+  const animatedPContact = useAnimatedNumber(d.pContact, { duration: 900, delay: 140, decimals: 2 });
   const indexDeltaColor = indexDeltaAccent(d.deltaIndex);
-  const highBandShareColor = highBandShareAccent(highBandShare);
+  const highBandShareColor = highBandShareAccent(m.highBandShare);
   const containedColor = containedAccent(d.contained, d.high);
-  const funnelRateColor = funnelRateAccent(funnelRate);
-  const notifyRateColor = notifyRateAccent(notifyRate);
+  const funnelRateColor = funnelRateAccent(m.funnelRate);
+  const notifyRateColor = notifyRateAccent(m.notifyRate);
   const optOutColor = optOutAccent(d.optOut);
   const containAccent = d.ttc < d.ttContact ? cssVar("positive") : cssVar("severity-med");
 
@@ -547,16 +558,16 @@ export function AnxietyTriadKpiCards({
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "High band units", value: anxietyFmt(d.high), color: cssVar("severity-high") },
-              { label: "Scored units", value: anxietyFmt(d.scored) },
-              { label: "p(contact)", value: "0.71", color: stateColor },
+              { label: "High band units", value: anxietyFmt(animatedHigh), color: cssVar("severity-high") },
+              { label: "Scored units", value: anxietyFmt(animatedScored) },
+              { label: "p(contact)", value: animatedPContact.toFixed(2), color: stateColor },
             ]}
           />,
           <InnerKpiStrip layout="aligned">
             <InnerKpiCard
               label="Contained units"
               accent={containedColor}
-              hint={`${containedRate}% of high band`}
+              hint={`${m.containedRate}% of high band`}
             >
               <span
                 className="lisn-num"
@@ -575,7 +586,7 @@ export function AnxietyTriadKpiCards({
             <InnerKpiCard
               label="High band share"
               accent={highBandShareColor}
-              hint={highBandShare > 25 ? "Above watch band" : "Within watch band · of scored"}
+              hint={m.highBandShare > 25 ? "Above watch band" : "Within watch band · of scored"}
             >
               <span
                 className="lisn-num"
@@ -594,22 +605,22 @@ export function AnxietyTriadKpiCards({
         title="Promise reliability"
         state={ipdRounded >= IPD_TARGET ? "strong" : "shift"}
         signal={<ConfidenceSignalBadge conf={d.splitConf} />}
-        insight={`${anxietyFmt(breachSignals)} signals sit in breach quadrants\nvs ${anxietyFmt(anxietyOnly)} anxiety-only\n${worstCategory.k} is the weakest category at ${worstCategory.v}% IPD-met.`}
+        insight={`${anxietyFmt(m.breachSignals)} signals sit in breach quadrants\nvs ${anxietyFmt(m.anxietyOnly)} anxiety-only\n${worstCategory.k} is the weakest category at ${worstCategory.v.toFixed(1)}% IPD-met.`}
         body={kpiBodyRow(
           <MetricRing value={ipdRounded} color={ipdColor} label="IPD-met" unit="%" />,
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "Breach units", value: anxietyFmt(d.breachUnits), color: cssVar("severity-high") },
-              { label: "Weakest category", value: `${worstCategory.v}%`, color: cssVar("severity-med") },
-              { label: "Trust breach signals", value: anxietyFmt(breachSignals), color: cssVar("severity-high") },
+              { label: "Breach units", value: anxietyFmt(animatedBreachUnits), color: cssVar("severity-high") },
+              { label: "Weakest category", value: worstCategory.k, color: cssVar("severity-med"), numeric: false },
+              { label: "Trust breach signals", value: anxietyFmt(animatedBreachSignals), color: cssVar("severity-high") },
             ]}
           />,
           <InnerKpiStrip layout="aligned">
             <InnerKpiCard
               label="Anxiety signals"
               accent={anxietyOnlyColor}
-              hint={`${pctAnx}% promise kept`}
+              hint={`${m.promiseKeptPct}% promise kept`}
             >
               <span
                 className="lisn-num"
@@ -626,15 +637,15 @@ export function AnxietyTriadKpiCards({
               <Delta v={animatedIpdDelta} unit="%" size={14} />
             </InnerKpiCard>
             <InnerKpiCard
-              label="IPD vs target"
-              accent={ipdTargetColor}
-              hint={ipdGap <= 0 ? "On target" : `${ipdGap} pt${ipdGap === 1 ? "" : "s"} below`}
+              label="IPD target"
+              accent={cssVar("accent-2")}
+              hint="Promise reliability bar"
             >
               <span
                 className="lisn-num"
-                style={{ ...innerKpiValueStyle, color: ipdTargetColor }}
+                style={{ ...innerKpiValueStyle, color: cssVar("accent-2") }}
               >
-                {animatedIpd}%
+                {IPD_TARGET}%
               </span>
             </InnerKpiCard>
           </InnerKpiStrip>,
@@ -647,22 +658,22 @@ export function AnxietyTriadKpiCards({
         title="Containment vs contact window"
         state={d.ttc < d.ttContact ? "strong" : "shift"}
         signal={<ConfidenceSignalBadge conf={d.conf} />}
-        insight={`Headroom of +${d.ttContact - d.ttc} min before untreated units likely contact\n${notifyRate}% notified\n${funnelRate}% contact avoided this period.`}
+        insight={`Headroom of +${m.headroomMin} min before untreated units likely contact\n${m.notifyRate}% notified · ${m.contactAvoidedOfNotifiedPct}% of notified avoided contact\n${m.funnelRate}% contact avoided vs high band.`}
         body={kpiBodyRow(
-          <MetricRing value={d.cov} color={containAccent} label="coverage" unit="%" />,
+          <MetricRing value={m.coverageRate} color={containAccent} label="coverage" unit="%" />,
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "Time-to-contain", value: `${d.ttc} min`, color: containAccent },
-              { label: "Time-to-contact", value: `${d.ttContact} min` },
-              { label: "Headroom", value: `+${d.ttContact - d.ttc} min`, color: containAccent },
+              { label: "Time-to-contain", value: `${animatedTtc} min`, color: containAccent },
+              { label: "Time-to-contact", value: `${animatedTtContact} min` },
+              { label: "Headroom", value: `+${animatedHeadroom} min`, color: containAccent },
             ]}
           />,
           <InnerKpiStrip layout="aligned">
             <InnerKpiCard
               label="Units notified"
               accent={notifyRateColor}
-              hint={`${notifyRate}% of high band`}
+              hint={`${m.notifyRate}% of high band`}
             >
               <span
                 className="lisn-num"
@@ -674,7 +685,13 @@ export function AnxietyTriadKpiCards({
             <InnerKpiCard
               label="Contact avoided"
               accent={funnelRateColor}
-              hint={funnelRate >= 55 ? "Strong avoidance" : funnelRate >= 45 ? "Watch rate" : "Below target"}
+              hint={
+                m.funnelRate >= 55
+                  ? `Strong avoidance · ${m.contactAvoidedOfNotifiedPct}% of notified`
+                  : m.funnelRate >= 45
+                    ? `Watch rate · ${m.contactAvoidedOfNotifiedPct}% of notified`
+                    : `Below target · ${m.contactAvoidedOfNotifiedPct}% of notified`
+              }
             >
               <span
                 className="lisn-num"
