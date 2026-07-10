@@ -287,9 +287,10 @@ export function CliffSlopePieCharts({
   }, [accent, colors.bg, colors.border, colors.surfaceRaised, colors.textMuted, colors.textPrimary, mode, selectedKey, slices, total, unitLabel]);
 
   const handlePlotClick = (event: Readonly<PlotMouseEvent>): void => {
-    const label = event.points?.[0]?.label;
-    if (typeof label === "string") {
-      setSelectedKey(label);
+    const pointNumber = event.points?.[0]?.pointNumber;
+    if (typeof pointNumber === "number") {
+      const slice = slices[pointNumber];
+      if (slice) setSelectedKey(slice.k);
     }
   };
 
