@@ -191,12 +191,12 @@ function KpiFootnote({ label, value, color }: { label: string; value: string; co
   );
 }
 
-function KpiAiLine({ text }: { text: string }): React.ReactElement {
+function KpiAiLine({ heading, text }: { heading: string; text: string }): React.ReactElement {
   return (
     <div style={{ marginTop: "auto", padding: "8px 10px", borderRadius: radius.sm, background: cssVar("accent-soft"), border: `1px solid ${cssVar("accent")}22` }}>
       <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4 }}>
         <Sparkles size={11} color={cssVar("accent-2")} strokeWidth={2.4} />
-        <span style={{ fontSize: 9, fontWeight: 800, textTransform: "uppercase", color: cssVar("accent-2") }}>AI insight</span>
+        <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", color: cssVar("accent-2") }}>{heading}</span>
       </div>
       <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.4, color: cssVar("text-secondary") }}>{text}</p>
     </div>
@@ -219,7 +219,7 @@ function PromiseReliabilityHeroCard({ scale }: { scale: (n: number) => number })
       </div>
 
       <KpiFootnote label="Top breach driver" value={d.topBreachDriver} color={cssVar("severity-high")} />
-      <KpiAiLine text={d.aiInsight} />
+      <KpiAiLine heading="AI · Promise risk" text={d.aiInsight} />
     </KpiCardShell>
   );
 }
@@ -315,7 +315,7 @@ function ServiceDeliveryHeroCard({ scale }: { scale: (n: number) => number }): R
       </div>
 
       <KpiFootnote label="Bottleneck" value={d.topBottleneck} color={ACCENT_DELIVERY} />
-      <KpiAiLine text={d.aiInsight} />
+      <KpiAiLine heading="AI · Execution risk" text={d.aiInsight} />
     </KpiCardShell>
   );
 }
@@ -389,9 +389,9 @@ function AiInsightCompact(): React.ReactElement {
   return (
     <Shell style={{ padding: PAD, background: `linear-gradient(180deg, ${cssVar("surface")}, ${cssVar("accent-soft")})` }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 8 }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 800, color: cssVar("text-primary") }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, fontWeight: 800, color: cssVar("text-primary"), textTransform: "uppercase", letterSpacing: "0.04em" }}>
           <Sparkles size={14} color={cssVar("accent-2")} strokeWidth={2.4} />
-          AI insight
+          AI · Delivery brief
         </span>
         <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("accent-2"), padding: "2px 7px", borderRadius: radius.pill, background: cssVar("accent-soft"), border: `1px solid ${cssVar("accent")}33` }}>
           {i.confidence}% conf.

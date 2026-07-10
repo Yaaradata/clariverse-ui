@@ -221,14 +221,14 @@ function MatrixAiInsight({
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, flexWrap: "wrap" }}>
           <span
             style={{
-              fontSize: 9,
+              fontSize: 10,
               fontWeight: 700,
               color: cssVar("accent-2"),
               letterSpacing: "0.04em",
               textTransform: "uppercase",
             }}
           >
-            AI insight
+            AI · Delivery hotspot
           </span>
           <span style={{ fontSize: 11, fontWeight: 700, color: tier.color }}>
             {selection.node} × {selection.category}

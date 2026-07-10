@@ -18,63 +18,113 @@ export type CliffSlopeEventMode = EventMode;
 
 const SLOPE_ITEMS = ANXIETY_SLOPE_EVENTS.slice(0, 4);
 
-type SliceItem = { k: string; v: number; pct: number; color: string; insight: string };
+type EventInsight = {
+  headline: string;
+  signal: string;
+  impact: string;
+  action: string;
+  owner: string;
+  confidence: number;
+};
 
-function eventColors(mode: EventMode, colors: ColorRamp): Record<string, string> {
-  if (mode === "cliff") {
-    return {
-      "Item missing": colors.severityHigh,
-      "Counterfeit suspicion": colors.accent2,
-      "Account takeover": "#F472B6",
-    };
+type SliceItem = { k: string; v: number; pct: number; color: string; insight: EventInsight };
+
+/** Rank-based palette: majority red, lowest green, middles in between. */
+function colorsByVolumeRank(colors: ColorRamp, count: number): string[] {
+  if (count <= 0) return [];
+  if (count === 1) return [colors.severityHigh];
+  if (count === 2) return [colors.severityHigh, colors.positive];
+
+  const middle = [colors.severityMed, colors.accent, colors.accent2];
+  const result: string[] = [colors.severityHigh];
+  for (let i = 1; i < count - 1; i++) {
+    result.push(middle[Math.min(i - 1, middle.length - 1)]!);
   }
+  result.push(colors.positive);
+  return result;
+}
 
-  return {
-    "Delivery delayed": colors.severityMed,
-    "Refund not credited": colors.accent,
-    "Wrong item on replacement": colors.severityHigh,
-    "Damaged on arrival": colors.positive,
-  };
+function assignSliceColors(
+  items: readonly { k: string; v: number }[],
+  colors: ColorRamp,
+): Record<string, string> {
+  const ranked = [...items].sort((a, b) => b.v - a.v);
+  const paletteByRank = colorsByVolumeRank(colors, ranked.length);
+  return Object.fromEntries(ranked.map((item, i) => [item.k, paletteByRank[i]!]));
 }
 
 function EventAiInsight({
-  label,
   insight,
   color,
 }: {
-  label: string;
-  insight: string;
+  insight: EventInsight;
   color: string;
 }): React.ReactElement {
   return (
     <div
       style={{
-        padding: "10px 12px",
-        borderRadius: radius.md,
-        background: cssVar("accent-soft"),
-        border: `1px solid ${cssVar("accent")}33`,
-        display: "flex",
-        gap: 8,
-        alignItems: "flex-start",
+        width: "100%",
+        boxSizing: "border-box",
+        borderRadius: radius.lg,
+        border: `1px solid ${cssVar("border")}`,
+        background: cssVar("surface-raised"),
+        display: "grid",
+        gridTemplateColumns: "4px 1fr",
+        overflow: "hidden",
       }}
     >
-      <Sparkles size={14} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 1 }} />
-      <div style={{ minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5, flexWrap: "wrap" }}>
+      <div style={{ background: color }} />
+
+      <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, flexWrap: "wrap" }}>
           <span
+            title="Model inference — treat as probabilistic, not fact"
             style={{
-              fontSize: 9,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 11,
               fontWeight: 700,
+              borderRadius: radius.pill,
+              padding: "3px 8px",
+              background: cssVar("accent-soft"),
               color: cssVar("accent-2"),
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
+              border: `1px solid ${cssVar("accent")}55`,
             }}
           >
-            AI insight
+            <Sparkles size={11} strokeWidth={2.4} /> AI Confidence
+            <b className="lisn-num" style={{ fontWeight: 600 }}>
+              {insight.confidence}%
+            </b>
           </span>
-          <span style={{ fontSize: 11, fontWeight: 700, color }}>{label}</span>
+          <span style={{ fontSize: 11, color: cssVar("text-muted"), whiteSpace: "nowrap" }}>
+            Owner · <span style={{ fontWeight: 700, color: cssVar("text-primary") }}>{insight.owner}</span>
+          </span>
         </div>
-        <p style={{ margin: 0, fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45 }}>{insight}</p>
+
+        <div style={{ fontSize: 14, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.3 }}>
+          {insight.headline}
+        </div>
+
+        <p style={{ margin: 0, fontSize: 13, color: cssVar("text-secondary"), lineHeight: 1.45 }}>
+          {insight.signal} — {insight.impact}
+        </p>
+
+        <div
+          style={{
+            padding: "8px 10px",
+            borderRadius: radius.md,
+            border: `1px solid ${color}44`,
+            background: `color-mix(in srgb, ${color} 12%, transparent)`,
+          }}
+        >
+          <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color, marginBottom: 3 }}>
+            Act now
+          </div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.4 }}>
+            {insight.action}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -172,21 +222,25 @@ export function CliffSlopePieCharts({
 }): React.ReactElement {
   const colors = palette.dark;
   const source = mode === "cliff" ? ANXIETY_CLIFF_EVENTS : SLOPE_ITEMS;
-  const colorMap = eventColors(mode, colors);
-  const [selectedKey, setSelectedKey] = useState<string | null>(null);
-
-  useEffect(() => {
-    setSelectedKey(null);
-  }, [mode, negTotal]);
+  const [selectedKey, setSelectedKey] = useState<string>(source[0]!.k);
 
   const scaledSource = useMemo(
     () => source.map((e) => ({ ...e, v: scaleAnxietyNegUnits(e.v, negTotal) })),
     [negTotal, source],
   );
 
+  const majorityKey = useMemo(() => {
+    if (scaledSource.length === 0) return source[0]!.k;
+    return scaledSource.reduce((best, s) => (s.v > best.v ? s : best), scaledSource[0]!).k;
+  }, [scaledSource, source]);
+
+  useEffect(() => {
+    setSelectedKey(majorityKey);
+  }, [majorityKey, mode]);
+
   const total = useMemo(() => scaledSource.reduce((sum, e) => sum + e.v, 0), [scaledSource]);
   const unitLabel = mode === "cliff" ? "incidents" : "signals";
-  const accent = mode === "cliff" ? colors.severityHigh : colors.severityMed;
+  const colorMap = useMemo(() => assignSliceColors(scaledSource, colors), [colors, scaledSource]);
 
   const slices = useMemo<SliceItem[]>(() => {
     return scaledSource.map((e) => ({
@@ -198,16 +252,18 @@ export function CliffSlopePieCharts({
     }));
   }, [colorMap, colors.accent, scaledSource, total]);
 
-  const selectedSlice = slices.find((s) => s.k === selectedKey) ?? null;
+  const majorityColor = useMemo(() => {
+    if (slices.length === 0) return colors.severityHigh;
+    return slices.reduce((best, s) => (s.v > best.v ? s : best), slices[0]!).color;
+  }, [colors.severityHigh, slices]);
+
+  const accent = majorityColor;
+
+  const selectedSlice = slices.find((s) => s.k === selectedKey) ?? slices.find((s) => s.k === majorityKey) ?? null;
 
   const { data, layout } = useMemo(() => {
     const sliceColors = slices.map((s) => s.color);
-    const maxV = Math.max(...slices.map((s) => s.v));
-    const pull = slices.map((s) => {
-      if (selectedKey === s.k) return 0.08;
-      if (!selectedKey && s.v === maxV) return 0.05;
-      return 0;
-    });
+    const pull = slices.map((s) => (selectedKey === s.k ? 0.08 : 0));
 
     const trace: Data = {
       type: "pie",
@@ -295,16 +351,17 @@ export function CliffSlopePieCharts({
   };
 
   return (
-    <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+    <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: "minmax(148px, 1fr) minmax(0, 1.15fr)",
           gap: 12,
           alignItems: "center",
+          flexShrink: 0,
         }}
       >
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0, height: 240, overflow: "hidden", position: "relative" }}>
           <Plot
             data={data}
             layout={layout}
@@ -312,7 +369,7 @@ export function CliffSlopePieCharts({
               displayModeBar: false,
               responsive: true,
             }}
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: 240 }}
             useResizeHandler
             onClick={handlePlotClick}
           />
@@ -322,7 +379,10 @@ export function CliffSlopePieCharts({
       </div>
 
       {selectedSlice ? (
-        <EventAiInsight label={selectedSlice.k} insight={selectedSlice.insight} color={selectedSlice.color} />
+        <EventAiInsight
+          insight={selectedSlice.insight}
+          color={selectedSlice.color}
+        />
       ) : null}
     </div>
   );

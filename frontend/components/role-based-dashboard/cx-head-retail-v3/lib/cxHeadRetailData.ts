@@ -1616,24 +1616,128 @@ export function getBridgeEvidenceById(id: string): BridgeEvidencePack | undefine
 }
 
 export const AI_DAY_PROMPTS = [
-  "Distil what changed in checkout failures since yesterday",
-  "Which dark-store peer set should I compare D07 against?",
-  "Frame the pilot data ask for the D07 margin bridge",
-  "Summarise statutory-clock exposure in plain language",
-  "Why is Electronics ticket volume a warning, not a win?",
+  "Are our customers happy today — and what is driving unhappy contacts?",
+  "Where is customer trust breaking this week — and why?",
+  "How is our service delivery performing against promise and containment?",
+  "Which journey × category intersections carry the highest delivery anxiety?",
+  "Why is Furniture the weakest category on promise reliability?",
+  "Which customer problems should I approve outreach for before they contact support?",
+  "What is pushing Plus members into cancel risk right now?",
+  "Where are refund and delivery failures creating repeat contacts?",
 ];
 
 export function mockAiDayResponse(q: string): string {
   const l = q.toLowerCase();
-  if (l.includes("checkout") || l.includes("upi"))
-    return "UPI-step failures rose across app reviews (09:12), care chat (09:40) and social (11:05). 1,900 mentions distilled to one corroborated signal. Payments owns the checkout step — draft route is prepared.";
-  if (l.includes("d07") || l.includes("dark-store") || l.includes("peer"))
-    return "D07 Koramangala reads 6× its own BURSTY baseline on missing/spoiled. Seven peer stores hold flat — the break is local to D07, not Bengaluru-wide. 48 of 50 spoilage complaints trace to this node.";
-  if (l.includes("bridge") || l.includes("pilot") || l.includes("data ask"))
-    return "Koramangala D07 margin bridge needs a read-only order/GMV feed keyed on dark-store and issue theme. Pilot ask: 90-day cohort join on missing/spoiled at D07 — complaint-adjusted margin available once the feed lands.";
-  if (l.includes("statutory") || l.includes("clock"))
-    return "Three grievances sit within 6 hours of a statutory deadline. One carries a DPDP erasure keyword — re-prioritised above time-waiting. Draft priority alert to the nodal officer is ready for approval.";
-  if (l.includes("electronics") || l.includes("warning") || l.includes("win"))
-    return "Electronics tickets fell 18% but contact-per-order is flat. A support-entry change (buried chat button) logged the same week. Route as a warning to CX Ops and Product — not a quality win.";
-  return "This week vs last: one emerging checkout theme, one local q-commerce outbreak, three statutory-clock items, and a suppression warning on Electronics. All cohort-level, interaction-first, bridge-ready where rupees matter.";
+
+  if (l.includes("happy") || l.includes("unhappy") || l.includes("happiness")) {
+    return (
+      "**Customer happiness — today**\n\n" +
+      "Happy rate is **68%**; unhappy is **32%**, driven mainly by delivery delay and promo-code confusion.\n\n" +
+      "• Top intent: **Delivery Delay**\n" +
+      "• Contact pressure: **18.4K/hr**\n" +
+      "• Top drivers: shipping **31%**, refunds **24%**\n" +
+      "• **12 Plus members** are in cancel risk — retention queue is live\n\n" +
+      "**Action:** Keep retention scripts on Plus cancel-risk and route WH-East shipping pain before evening peak."
+    );
+  }
+
+  if (l.includes("trust") || l.includes("breaker") || l.includes("brand")) {
+    return (
+      "**Trust breakers — this week**\n\n" +
+      "Trust Index is **72 (−4 pts vs week open)**, **8 pts** below the 80 target.\n\n" +
+      "• Weakest scores: **Fulfilment 0.48** · **Payments 0.52**\n" +
+      "• Top breaker: **Damaged product** (35% of trust complaints, +18% WoW)\n" +
+      "• Fastest riser: **Refund not credited** (+22% WoW on prepaid mismatch)\n" +
+      "• Trust contacts: **36.9K** · **17.7K** unique customers impacted\n\n" +
+      "**Action:** Run packaging audit on top pincodes and expose refund ETA in-app."
+    );
+  }
+
+  if (
+    l.includes("service delivery") ||
+    l.includes("promise") ||
+    l.includes("containment") ||
+    l.includes("reliability") ||
+    l.includes("fcr") ||
+    l.includes("reaching customers") ||
+    l.includes("intervention")
+  ) {
+    return (
+      "**Are we reaching customers before they contact us?**\n\n" +
+      "• Reached proactively: **75%** of the high-risk group\n" +
+      "• Average time to customer outreach: **41 min**\n" +
+      "• Average time before customers contact support: **68 min**\n" +
+      "• Available intervention window: **+27 min**\n" +
+      "• Likely contacts avoided: **56%** (~5,200 preventable contacts)\n\n" +
+      "**Action:** Approve outreach on High-risk promise-breached rows in the Proactive Customer Intervention Queue."
+    );
+  }
+
+  if (l.includes("journey") || l.includes("intersection") || l.includes("anxiety") || l.includes("matrix")) {
+    return (
+      "**Highest delivery-anxiety intersections**\n\n" +
+      "Top risk sits on **Last-mile × Large Appliances** and **Last-mile × Furniture** — high anxiety with IPD below the 92% bar.\n\n" +
+      "• Last-mile carries ~**55%** of high-band anxiety units\n" +
+      "• East / Kolkata WH is the hotspot region\n" +
+      "• In-transit anxiety is building where SLA is still intact (carve-out of trust)\n\n" +
+      "**Action:** Fire honest re-promise + revised ETA on last-mile high-band before untreated units contact."
+    );
+  }
+
+  if (l.includes("furniture") || l.includes("weakest") || l.includes("category")) {
+    return (
+      "**Weakest category — Furniture**\n\n" +
+      "Furniture IPD-met is the lowest category at about **82.7%**, well below the **92%** promise bar.\n\n" +
+      "• Large Appliances and Home & Kitchen also sit soft on last-mile\n" +
+      "• Breach signals outweigh anxiety-only in Furniture lanes\n" +
+      "• Installation and last-mile handoff gaps amplify contact pressure\n\n" +
+      "**Action:** Prioritise Furniture last-mile containment and lock installation slots within 24h of delivery."
+    );
+  }
+
+  if (l.includes("cluster") || l.includes("approve") || l.includes("outreach") || l.includes("contact window") || l.includes("intervention")) {
+    return (
+      "**Proactive customer intervention — act before contact**\n\n" +
+      "Priority problems to approve now:\n\n" +
+      "1. **Delivery promise missed — shipment stuck at hub** (2,140 customers)\n" +
+      "2. **Delivery marked failed without an attempt** (980 customers)\n" +
+      "3. **Refund delayed after initiation** (890 customers)\n\n" +
+      "Average outreach time is **41 min** vs **68 min** before customers contact support (**+27 min** intervention window).\n\n" +
+      "**Action:** Approve outreach on High-risk promise-breached rows first."
+    );
+  }
+
+  if (l.includes("plus") || l.includes("cancel")) {
+    return (
+      "**Plus cancel-risk drivers**\n\n" +
+      "**12 Plus members** are in the cancel window.\n\n" +
+      "• Primary drivers: late delivery stacking with UPI/payment friction\n" +
+      "• Promo-code and refund-status confusion are amplifying repeat contacts\n" +
+      "• Retention queue and scripts are already live\n\n" +
+      "**Action:** Keep Plus retention outreach ahead of weekend BBD load; clear WH-East backlog on their open orders."
+    );
+  }
+
+  if (l.includes("refund") || l.includes("repeat") || l.includes("delivery failure") || l.includes("callback")) {
+    return (
+      "**Refund & delivery → repeat contacts**\n\n" +
+      "• Refund-not-credited is the fastest trust riser (**+22% WoW**)\n" +
+      "• FCR at **69%** — refund callbacks are the main repeat driver\n" +
+      "• **412** refund callbacks are overdue; Payments is the bottleneck\n" +
+      "• Delivery success **84%** with WH-East express misses feeding second contacts\n\n" +
+      "**Action:** Expose bank-reference + credit ETA in-app, and escalate Payments on the overdue callback queue."
+    );
+  }
+
+  if (l.includes("checkout") || l.includes("upi")) {
+    return "UPI checkout failures rose across app reviews, care chat, and social. Payments owns the checkout step — draft route is prepared. This is compounding Plus cancel-risk where delivery pain is already high.";
+  }
+
+  return (
+    "**E-commerce CX snapshot**\n\n" +
+    "• Happiness: **68%** happy · **32%** unhappy (shipping + refunds)\n" +
+    "• Trust Index: **72** (−4 pts) — Fulfilment and Payments weakest\n" +
+    "• Service delivery: IPD-met **91%**, FCR **69%**, coverage **75%**\n" +
+    "• Immediate acts: packaging audit, refund ETA in-app, fire last-mile containment, escalate Payments callbacks"
+  );
 }

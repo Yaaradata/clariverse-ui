@@ -11,7 +11,6 @@ import {
 } from "../../lib/cxHeadRetailData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { ExecutiveTile } from "../common/ExecutiveTile";
-import { FloatingAIDayGenerator } from "../common/FloatingAIDayGenerator";
 import { RadarRail } from "../common/RadarRail";
 import { ScreenBackBar } from "../common/ScreenBackBar";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
@@ -151,8 +150,6 @@ export function CXCommandScreen(): React.ReactElement {
 
         <RadarRail signals={RADAR_SIGNALS} onOpen={handleOpenSignal} />
       </div>
-
-      <FloatingAIDayGenerator />
     </>
   );
 }

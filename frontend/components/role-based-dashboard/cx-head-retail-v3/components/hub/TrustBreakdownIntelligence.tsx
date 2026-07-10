@@ -774,14 +774,14 @@ function SegmentAiInsight({ insight }: { insight: string }): React.ReactElement 
         <Sparkles size={11} strokeWidth={2.4} color={cssVar("accent-2")} style={{ flexShrink: 0 }} />
         <span
           style={{
-            fontSize: 9,
+            fontSize: 10,
             fontWeight: 700,
             color: cssVar("accent-2"),
             letterSpacing: "0.04em",
             textTransform: "uppercase",
           }}
         >
-          AI insight
+          AI · Segment risk
         </span>
       </div>
       <p style={{ margin: 0, fontSize: 11, lineHeight: 1.4, color: cssVar("text-secondary") }}>{insight}</p>

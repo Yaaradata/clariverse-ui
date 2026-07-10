@@ -83,30 +83,31 @@ function RightPanel({ panel }: { panel: HubCardRightPanel }): React.ReactElement
 const INSIGHT_LINE_COUNT = 4;
 const INSIGHT_FONT_SIZE = 15;
 const INSIGHT_LINE_HEIGHT = 1.55;
-const INSIGHT_BLOCK_HEIGHT = INSIGHT_LINE_COUNT * INSIGHT_FONT_SIZE * INSIGHT_LINE_HEIGHT;
 
 function ConversationInsightLines({ text }: { text: string }): React.ReactElement {
-  const lines = text.split("\n").slice(0, INSIGHT_LINE_COUNT);
-  while (lines.length < INSIGHT_LINE_COUNT) {
-    lines.push("");
-  }
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .slice(0, INSIGHT_LINE_COUNT);
 
   return (
-    <div style={{ height: INSIGHT_BLOCK_HEIGHT, maxHeight: INSIGHT_BLOCK_HEIGHT, overflow: "hidden" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
       {lines.map((line, index) => (
-        <div
+        <p
           key={`insight-line-${index}`}
           style={{
+            margin: 0,
             fontSize: INSIGHT_FONT_SIZE,
             lineHeight: INSIGHT_LINE_HEIGHT,
             color: cssVar("text-secondary"),
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
+            whiteSpace: "normal",
+            overflowWrap: "break-word",
+            wordBreak: "normal",
           }}
         >
           {line}
-        </div>
+        </p>
       ))}
     </div>
   );

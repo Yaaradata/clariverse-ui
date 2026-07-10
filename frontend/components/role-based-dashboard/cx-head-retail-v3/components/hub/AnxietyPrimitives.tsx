@@ -83,10 +83,10 @@ export function KnowledgeTag({ small = false }: { small?: boolean }): React.Reac
   );
 }
 
-export const INNER_KPI_STRIP_MIN_HEIGHT = 72;
-export const INNER_KPI_LABEL_MIN_HEIGHT = 20;
-export const INNER_KPI_VALUE_MIN_HEIGHT = 16;
-export const INNER_KPI_HINT_MIN_HEIGHT = 14;
+export const INNER_KPI_STRIP_MIN_HEIGHT = 78;
+export const INNER_KPI_LABEL_MIN_HEIGHT = 18;
+export const INNER_KPI_VALUE_MIN_HEIGHT = 20;
+export const INNER_KPI_HINT_MIN_HEIGHT = 16;
 
 export const innerKpiValueStyle = {
   fontSize: 14,
@@ -112,7 +112,7 @@ export function InnerKpiCard({
   return (
     <div
       style={{
-        padding: "8px 10px",
+        padding: "8px 8px 8px 10px",
         borderRadius: radius.sm,
         background: `linear-gradient(145deg, ${accent}28, ${accent}0a)`,
         border: `1px solid ${accent}55`,
@@ -124,8 +124,10 @@ export function InnerKpiCard({
         boxSizing: "border-box",
         position: "relative",
         overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
+        display: "grid",
+        gridTemplateRows: `${INNER_KPI_LABEL_MIN_HEIGHT}px ${INNER_KPI_VALUE_MIN_HEIGHT}px ${INNER_KPI_HINT_MIN_HEIGHT}px`,
+        alignContent: "space-between",
+        rowGap: 4,
       }}
     >
       <div
@@ -143,15 +145,15 @@ export function InnerKpiCard({
         style={{
           fontSize: 9,
           fontWeight: 800,
-          letterSpacing: 0.4,
+          letterSpacing: 0.35,
           textTransform: "uppercase",
           color: accent,
-          marginBottom: 2,
           lineHeight: 1.2,
-          minHeight: INNER_KPI_LABEL_MIN_HEIGHT,
+          height: INNER_KPI_LABEL_MIN_HEIGHT,
           display: "flex",
-          alignItems: "flex-start",
+          alignItems: "center",
           gap: 4,
+          minWidth: 0,
         }}
       >
         <span
@@ -161,35 +163,44 @@ export function InnerKpiCard({
             borderRadius: "50%",
             background: accent,
             flexShrink: 0,
-            marginTop: 2,
           }}
         />
-        <span style={{ display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+        <span
+          style={{
+            minWidth: 0,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
           {label}
         </span>
       </div>
       <div
         style={{
-          minHeight: INNER_KPI_VALUE_MIN_HEIGHT,
+          height: INNER_KPI_VALUE_MIN_HEIGHT,
           display: "flex",
-          alignItems: "flex-start",
+          alignItems: "center",
           lineHeight: 1.1,
-          flexShrink: 0,
+          minWidth: 0,
         }}
       >
         {children}
       </div>
       <div
         style={{
-          marginTop: "auto",
-          minHeight: INNER_KPI_HINT_MIN_HEIGHT,
+          height: INNER_KPI_HINT_MIN_HEIGHT,
           fontSize: 9,
           fontWeight: 600,
           color: accent,
           opacity: hint ? 0.9 : 0,
-          lineHeight: 1.25,
+          lineHeight: 1.2,
           display: "flex",
-          alignItems: "flex-end",
+          alignItems: "center",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          minWidth: 0,
         }}
       >
         {hint ?? "\u00a0"}
@@ -246,6 +257,8 @@ export function Delta({
         gap: 2,
         fontWeight: 600,
         fontFamily: cssVar("font-numeric"),
+        height: "100%",
+        lineHeight: 1.2,
       }}
     >
       <Icon size={size} strokeWidth={2.5} />
@@ -1145,6 +1158,31 @@ export function RelTag({ breached }: { breached: boolean }): React.ReactElement 
     >
       {breached ? <AlertTriangle size={11} /> : <CheckCircle2 size={11} />}
       {breached ? "Breached" : "Met"}
+    </span>
+  );
+}
+
+export function ServiceStatusTag({
+  status,
+}: {
+  status: "Promise breached" | "Service breached" | "Within service window";
+}): React.ReactElement {
+  const breached = status !== "Within service window";
+  const color = breached ? cssVar("severity-high") : cssVar("positive");
+  return (
+    <span
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        fontSize: 11,
+        fontWeight: 600,
+        color,
+        lineHeight: 1.25,
+      }}
+    >
+      {breached ? <AlertTriangle size={11} /> : <CheckCircle2 size={11} />}
+      {status}
     </span>
   );
 }

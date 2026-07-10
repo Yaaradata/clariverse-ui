@@ -186,12 +186,14 @@ export const ANXIETY_CAT_RELIABILITY = [
 export interface AnxietyCluster {
   id: string;
   label: string;
+  /** Secondary CX impact line under the problem title */
+  impactLine: string;
   region: string;
   node: string;
   units: number;
   band: "High" | "Building";
   conf: number;
-  rel: "Breached" | "Met";
+  serviceStatus: "Promise breached" | "Service breached" | "Within service window";
   tmpl: string;
   sla: number;
   evidence: readonly string[];
@@ -201,139 +203,141 @@ export interface AnxietyCluster {
 export const ANXIETY_CLUSTERS: readonly AnxietyCluster[] = [
   {
     id: "CL-2207",
-    label: "IPD breach · stuck-at-hub",
+    label: "Delivery promise missed — shipment stuck at hub",
+    impactLine: "620 likely contacts · 180 escalation-risk customers",
     region: "East · Kolkata WH",
-    node: "Last-mile",
+    node: "Last-mile delivery",
     units: 2140,
     band: "High",
     conf: 86,
-    rel: "Breached",
-    tmpl: "Honest re-promise + revised ETA",
-    sla: 735,
-    evidence: ["IPD 04 Jul missed by 2d 6h", "Shipment stuck-at-hub 41h", "Prior repeat-contact on 312 units"],
+    serviceStatus: "Promise breached",
+    tmpl: "Send revised delivery ETA and callback option",
+    sla: 302,
+    evidence: ["Promised delivery date missed by 2d 6h", "Shipment stuck at hub for 41h", "312 customers already contacted support"],
   },
   {
     id: "CL-2213",
-    label: "Failed delivery marked, no attempt",
+    label: "Delivery marked failed without an attempt",
+    impactLine: "290 likely contacts · 96 escalation-risk customers",
     region: "North · Delhi Hub",
-    node: "Last-mile",
+    node: "Last-mile delivery",
     units: 980,
     band: "High",
     conf: 81,
-    rel: "Breached",
-    tmpl: "Re-attempt schedule + slot pick",
-    sla: 1410,
-    evidence: ["Attempt-failed flag with 0s geo-dwell", "IPD miss 1d 3h", "COD orders 61%"],
+    serviceStatus: "Promise breached",
+    tmpl: "Offer re-attempt slot and confirm delivery window",
+    sla: 977,
+    evidence: ["Failed-delivery flag with no attempt recorded", "Promise miss of 1d 3h", "COD orders 61% of this group"],
   },
   {
     id: "CL-2219",
-    label: "In-transit delay · BBD load",
+    label: "Shipment delayed in transit",
+    impactLine: "410 likely contacts · 74 customers already contacted support",
     region: "West · Bhiwandi",
-    node: "In-transit",
+    node: "In transit",
     units: 1760,
     band: "Building",
     conf: 68,
-    rel: "Met",
-    tmpl: "Proactive status reassurance (no breach)",
-    sla: 2280,
+    serviceStatus: "Within service window",
+    tmpl: "Send proactive delay update and revised ETA",
+    sla: 1847,
     carve: true,
-    evidence: ["Committed 7-day SLA intact (Day 4)", "Customer-desired 3-day expectation gap", "Hub load 1.8× baseline"],
+    evidence: ["Committed delivery window still intact", "Customer expectation ahead of promise", "Hub load elevated vs baseline"],
   },
   {
     id: "CL-2224",
-    label: "Return pickup tech-failure",
+    label: "Return pickup could not be scheduled",
+    impactLine: "210 likely contacts · 88 escalation-risk customers",
     region: "South · Bengaluru",
     node: "Returns",
     units: 540,
     band: "High",
     conf: 79,
-    rel: "Breached",
-    tmpl: "Return re-initiation + confirmation",
-    sla: 540,
-    evidence: ["Return-creation API failure code RT-503", "Pickup unscheduled 2d", "High-value electronics 44%"],
+    serviceStatus: "Service breached",
+    tmpl: "Restart return request and confirm pickup",
+    sla: 107,
+    evidence: ["Return request failed to schedule", "Pickup unscheduled for 2 days", "High-value electronics 44% of group"],
   },
   {
     id: "CL-2231",
-    label: "Installation pending > 48h",
+    label: "Installation pending beyond 48 hours",
+    impactLine: "95 likely contacts · 28 escalation-risk customers",
     region: "East · Large Appliances",
     node: "Installation",
     units: 410,
     band: "Building",
     conf: 63,
-    rel: "Met",
-    tmpl: "Installation slot confirmation",
-    sla: 3120,
+    serviceStatus: "Within service window",
+    tmpl: "Confirm installation slot",
+    sla: 2687,
     carve: true,
-    evidence: ["Delivered on-time (IPD met)", "Installation SLA Day 2 of 3", "Brand-visit pending flag"],
+    evidence: ["Product delivered on time", "Installation still pending past 48h", "Brand visit not yet confirmed"],
   },
   {
     id: "CL-2238",
-    label: "Embargo hold · regional disruption",
+    label: "Delivery delayed by regional disruption",
+    impactLine: "70 likely contacts · 22 escalation-risk customers",
     region: "West · Jalna",
-    node: "In-transit",
+    node: "In transit",
     units: 260,
     band: "Building",
     conf: 61,
-    rel: "Met",
-    tmpl: "Regional disruption honest notice",
-    sla: 2820,
+    serviceStatus: "Within service window",
+    tmpl: "Send disruption notice and revised ETA",
+    sla: 2387,
     carve: true,
-    evidence: ["Embargo flag active on lane", "IPD not yet breached", "Weather advisory in region"],
+    evidence: ["Regional disruption active on lane", "Promise window not yet breached", "Weather advisory in region"],
   },
   {
     id: "CL-2244",
     label: "Open-box delivery pending",
+    impactLine: "120 likely contacts · 48 escalation-risk customers",
     region: "North · Mobiles",
-    node: "Last-mile",
+    node: "Last-mile delivery",
     units: 320,
     band: "High",
     conf: 77,
-    rel: "Breached",
-    tmpl: "OBD slot + agent ETA",
-    sla: 1080,
-    evidence: ["OBD required, agent unassigned", "IPD miss 18h", "Prepaid high-value 92%"],
+    serviceStatus: "Promise breached",
+    tmpl: "Confirm open-box delivery slot and agent ETA",
+    sla: 647,
+    evidence: ["Open-box delivery required, agent unassigned", "Promise miss of 18h", "Prepaid high-value orders 92%"],
   },
   {
     id: "CL-2251",
-    label: "Refund initiated · bank lag",
+    label: "Refund delayed after initiation",
+    impactLine: "340 likely contacts · 218 customers already contacted support",
     region: "South · Chennai WH",
     node: "Post-delivery",
     units: 890,
     band: "High",
     conf: 74,
-    rel: "Breached",
-    tmpl: "Refund reference + credit ETA push",
-    sla: 960,
-    evidence: ["Refund initiated 4d ago, UPI unsettled", "Repeat contact on 218 units", "Plus members 38%"],
+    serviceStatus: "Service breached",
+    tmpl: "Send refund reference and expected credit date",
+    sla: 527,
+    evidence: ["Refund initiated 4 days ago, credit pending", "218 customers already contacted support", "Plus members 38% of this group"],
   },
   {
     id: "CL-2258",
-    label: "Pincode reroute · lane shift",
+    label: "Shipment rerouted due to pincode change",
+    impactLine: "160 likely contacts · 41 escalation-risk customers",
     region: "Central · Nagpur",
-    node: "In-transit",
+    node: "In transit",
     units: 620,
     band: "Building",
     conf: 65,
-    rel: "Met",
-    tmpl: "Lane-shift notice + revised hub ETA",
-    sla: 2640,
+    serviceStatus: "Within service window",
+    tmpl: "Send reroute notice and revised hub ETA",
+    sla: 2207,
     carve: true,
-    evidence: ["Committed IPD still intact (Day 5 of 7)", "Reroute added 18h transit", "Customer anxiety on tracking gap"],
-  },
-  {
-    id: "CL-2265",
-    label: "COD verification stall",
-    region: "East · Patna",
-    node: "Last-mile",
-    units: 470,
-    band: "High",
-    conf: 82,
-    rel: "Breached",
-    tmpl: "COD confirm call + re-attempt window",
-    sla: 720,
-    evidence: ["3+ failed IVR verification attempts", "Agent unreachable 26h", "High-value COD 71%"],
+    evidence: ["Promise window still intact", "Reroute added ~18h transit", "Customers watching tracking with no update"],
   },
 ];
+
+export const ANXIETY_QUEUE_OUTCOME_BASELINE = {
+  atRisk: 7920,
+  preventable: 2180,
+  escalation: 640,
+} as const;
 
 export const ANXIETY_QUAD_CELLS: Record<
   QuadCellId,
@@ -390,20 +394,38 @@ export const ANXIETY_CLIFF_EVENTS = [
   {
     k: "Item missing",
     v: 41,
-    insight:
-      "59% of cliff incidents — open-box and last-mile handoff gaps in East mobiles. Route packaging audit + hub CCTV review before the next IPD wave.",
+    insight: {
+      headline: "59% of cliff — East mobile open-box / handoff gaps",
+      signal: "Missing at open-box or last-mile handoff; contacts spike in the first hour.",
+      impact: "Trust-critical: refund + replacement + complaint risk before the next IPD wave.",
+      action: "Approve packaging audit + hub CCTV on East mobile lanes today.",
+      owner: "CX Ops · Last-mile",
+      confidence: 94,
+    },
   },
   {
     k: "Counterfeit suspicion",
     v: 22,
-    insight:
-      "Trust cliff on marketplace electronics — 31% of cliff volume. Freeze seller payouts on flagged SKUs and push authenticity verification to pre-dispatch.",
+    insight: {
+      headline: "31% of cliff — marketplace authenticity break",
+      signal: "Counterfeit flags on marketplace electronics; trust collapses fast.",
+      impact: "Seller authenticity gaps create brand and compliance risk.",
+      action: "Freeze flagged SKU payouts; push authenticity check to pre-dispatch.",
+      owner: "Marketplace · Compliance",
+      confidence: 91,
+    },
   },
   {
     k: "Account takeover",
     v: 7,
-    insight:
-      "Low volume but irreversible damage — prepaid redirect and address-change fraud. Escalate to Risk for step-up auth on high-value COD-to-prepaid switches.",
+    insight: {
+      headline: "Low volume, irreversible trust damage",
+      signal: "Prepaid redirect / address-change patterns on high-value orders.",
+      impact: "Fraud loss and permanent exit — not a normal delivery miss.",
+      action: "Escalate to Risk for step-up auth on COD-to-prepaid switches.",
+      owner: "Risk · Fraud",
+      confidence: 88,
+    },
   },
 ] as const;
 
@@ -411,32 +433,62 @@ export const ANXIETY_SLOPE_EVENTS = [
   {
     k: "Delivery delayed",
     v: 6200,
-    insight:
-      "55% of slope signals — anxiety-heavy while IPD often still holds. Fire honest re-promise + revised ETA before the ~42 min contact window closes.",
+    insight: {
+      headline: "55% of slope — anxiety before promise breach",
+      signal: "Customers feel late while IPD often still holds.",
+      impact: "Tips into Trust erosion if uncontained inside the ~42 min window.",
+      action: "Send honest re-promise + revised ETA on top delay corridors.",
+      owner: "CX · Promise desk",
+      confidence: 92,
+    },
   },
   {
     k: "Refund not credited",
     v: 2400,
-    insight:
-      "21% of slope — UPI/bank lag drives repeat contacts even when refund is initiated. Surface bank-reference + credit ETA in-app to cut second contacts by ~38%.",
+    insight: {
+      headline: "21% of slope — refund lag, repeat contacts",
+      signal: "UPI/bank lag after refund; no bank reference or credit ETA visible.",
+      impact: "Second contacts inflate containment cost on this lane.",
+      action: "Surface bank-reference + credit ETA in-app on refund-initiated orders.",
+      owner: "Payments · CX Ops",
+      confidence: 90,
+    },
   },
   {
     k: "Wrong item on replacement",
     v: 1600,
-    insight:
-      "14% of slope — replacement pick errors in West fashion. Tighten WMS pick-verify on exchange orders; 44% of cases are second-attempt replacements.",
+    insight: {
+      headline: "14% of slope — West fashion pick errors",
+      signal: "Wrong item on replacement; 44% already on a second attempt.",
+      impact: "Burns replacement slots and pushes customers toward cliff language.",
+      action: "Tighten WMS pick-verify on West fashion exchange orders.",
+      owner: "WMS · West hubs",
+      confidence: 89,
+    },
   },
   {
     k: "Damaged on arrival",
     v: 1100,
-    insight:
-      "10% of slope — Ekart-North route into Tier-2 pincodes. Packaging + handling audit on top 5 pincodes before BBD load peaks.",
+    insight: {
+      headline: "10% of slope — Ekart-North Tier-2 damage",
+      signal: "Damaged-on-arrival concentrated on a few Tier-2 pincodes.",
+      impact: "Left into BBD load, becomes a trust complaint cluster.",
+      action: "Packaging audit on top 5 Tier-2 pincodes before BBD peaks.",
+      owner: "Ekart-North · Packaging",
+      confidence: 87,
+    },
   },
   {
     k: "Hidden fee at checkout",
     v: 720,
-    insight:
-      "Checkout surprise fees on Plus/non-Plus mix — anxiety before delivery breach. Clarify fee line-items at cart review to pre-empt escalation to voice.",
+    insight: {
+      headline: "Checkout fee surprise — pre-delivery anxiety",
+      signal: "Unclear fees at checkout on Plus/non-Plus mix.",
+      impact: "Customers enter the journey primed to escalate on first delay.",
+      action: "Clarify fee line-items at cart review.",
+      owner: "Product · Checkout",
+      confidence: 85,
+    },
   },
 ] as const;
 
@@ -452,7 +504,6 @@ export const ANXIETY_TOP10: ReadonlyArray<{
   c: number;
   kind: "slope" | "cliff";
   state: AnxietyStateKey;
-  chronic?: boolean;
   contrib: AnxietyContribBreakdown;
 }> = [
   {
@@ -460,7 +511,6 @@ export const ANXIETY_TOP10: ReadonlyArray<{
     c: 22,
     kind: "slope",
     state: "break",
-    chronic: true,
     contrib: {
       Channel: [
         ["Voice", 58],
@@ -487,7 +537,6 @@ export const ANXIETY_TOP10: ReadonlyArray<{
     c: 15,
     kind: "slope",
     state: "break",
-    chronic: true,
     contrib: {
       Channel: [
         ["Voice", 41],
@@ -566,7 +615,6 @@ export const ANXIETY_TOP10: ReadonlyArray<{
     c: 8,
     kind: "slope",
     state: "shift",
-    chronic: true,
     contrib: {
       Channel: [
         ["Voice", 64],
@@ -697,7 +745,6 @@ export const ANXIETY_TOP10: ReadonlyArray<{
     c: 3,
     kind: "cliff",
     state: "break",
-    chronic: false,
     contrib: {
       Channel: [
         ["Voice", 54],
@@ -755,6 +802,7 @@ export const ANXIETY_IMPERFECTIONS = [
     title: "Kolkata WH open-box mis-tag — new failure code appearing",
     kind: "knowledge" as const,
     ticketCount: 8,
+    conf: 88,
   },
 ] as const;
 
@@ -933,9 +981,9 @@ export const ANXIETY_NODE_DRILL: Record<
 
 export const ANXIETY_SCREENS = [
   { id: 1 as const, name: "Anxiety Command", plane: "Hot" as const },
-  { id: 2 as const, name: "Containment Queue", plane: "Hot" as const },
-  { id: 3 as const, name: "Reliability vs Anxiety", plane: "Both" as const },
+  { id: 3 as const, name: "Reliability vs Anxiety" },
   { id: 4 as const, name: "Escalation Patterns", plane: "Cold" as const },
+  { id: 2 as const, name: "Proactive Customer Intervention Queue" },
 ];
 
 export const ANXIETY_SCREEN_QUESTIONS: Record<AnxietyScreenId, string> = {

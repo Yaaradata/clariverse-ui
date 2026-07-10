@@ -414,8 +414,23 @@ function BreakerHowToDeal({ text }: { text: string }): React.ReactElement {
         boxSizing: "border-box",
       }}
     >
-      <Sparkles size={14} strokeWidth={2.4} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 1 }} />
-      <span style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45, fontWeight: 500 }}>{text}</span>
+      <Sparkles size={14} strokeWidth={2.4} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 2 }} />
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 800,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: cssVar("accent-2"),
+            marginBottom: 4,
+            lineHeight: 1.2,
+          }}
+        >
+          AI · How to deal
+        </div>
+        <span style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45, fontWeight: 500 }}>{text}</span>
+      </div>
     </div>
   );
 }

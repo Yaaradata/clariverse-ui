@@ -19,8 +19,8 @@ const IPD_TARGET = 92;
 const METRIC_ROW_COUNT = 6;
 const METRIC_ROW_HEIGHT = 30;
 const METRIC_SECTION_TITLE_HEIGHT = 18;
-const KPI_INSIGHT_MIN_HEIGHT = 56;
-const KPI_HEADER_MIN_HEIGHT = 44;
+const KPI_INSIGHT_MIN_HEIGHT = 92;
+const KPI_HEADER_MIN_HEIGHT = 40;
 const KPI_TOP_SECTION_MIN_HEIGHT = 3 * METRIC_ROW_HEIGHT;
 const KPI_BODY_BLOCK_MIN_HEIGHT = KPI_TOP_SECTION_MIN_HEIGHT + INNER_KPI_STRIP_MIN_HEIGHT + 8;
 
@@ -45,9 +45,15 @@ function anxietyOnlyAccent(pctAnx: number): string {
   return cssVar("severity-high");
 }
 
+function breachShareAccent(share: number): string {
+  if (share >= 45) return cssVar("severity-high");
+  if (share >= 30) return cssVar("severity-med");
+  return cssVar("positive");
+}
+
 function ipdTargetAccent(ipd: number, target: number): string {
-  if (ipd >= target) return cssVar("positive");
-  if (ipd >= target - 1) return cssVar("severity-med");
+  if (ipd >= target - 1) return cssVar("positive");
+  if (ipd >= target - 3) return cssVar("severity-med");
   return cssVar("severity-high");
 }
 
@@ -258,12 +264,16 @@ function MetricRing({
         </span>
         <span
           style={{
-            fontSize: 9,
+            fontSize: label.length > 10 ? 7 : 9,
             fontWeight: 800,
-            letterSpacing: 0.35,
+            letterSpacing: 0.2,
             textTransform: "uppercase",
             color: cssVar("text-muted"),
             marginTop: 2,
+            textAlign: "center",
+            lineHeight: 1.15,
+            maxWidth: 84,
+            padding: "0 2px",
           }}
         >
           {label}
@@ -351,6 +361,7 @@ function AnxietyKpiShell({
   state,
   signal,
   body,
+  insightHeading,
   insight,
 }: {
   accent: string;
@@ -358,6 +369,7 @@ function AnxietyKpiShell({
   state: AnxietyStateKey;
   signal: React.ReactNode;
   body: React.ReactNode;
+  insightHeading: string;
   insight: string;
 }): React.ReactElement {
   return (
@@ -398,6 +410,7 @@ function AnxietyKpiShell({
           paddingLeft: 4,
           flexWrap: "nowrap",
           minHeight: KPI_HEADER_MIN_HEIGHT,
+          height: KPI_HEADER_MIN_HEIGHT,
         }}
       >
         <h3
@@ -406,8 +419,11 @@ function AnxietyKpiShell({
             fontSize: 15,
             fontWeight: 700,
             color: cssVar("text-primary"),
-            lineHeight: 1.3,
+            lineHeight: 1.2,
             minWidth: 0,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
           }}
         >
           {title}
@@ -444,10 +460,39 @@ function AnxietyKpiShell({
           gap: 8,
           alignItems: "flex-start",
           minHeight: KPI_INSIGHT_MIN_HEIGHT,
+          height: KPI_INSIGHT_MIN_HEIGHT,
+          boxSizing: "border-box",
+          overflow: "hidden",
         }}
       >
-        <Sparkles size={14} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 1 }} />
-        <p style={{ margin: 0, fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45, whiteSpace: "pre-line" }}>{insight}</p>
+        <Sparkles size={14} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 2 }} />
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 800,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: cssVar("accent-2"),
+              marginBottom: 4,
+              lineHeight: 1.2,
+            }}
+          >
+            {insightHeading}
+          </div>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 12,
+              color: cssVar("text-secondary"),
+              lineHeight: 1.4,
+              whiteSpace: "pre-line",
+              overflow: "hidden",
+            }}
+          >
+            {insight}
+          </p>
+        </div>
       </div>
     </article>
   );
@@ -455,7 +500,7 @@ function AnxietyKpiShell({
 
 export function AnxietyTriadKpiCards({
   d,
-  periodLabel,
+  periodLabel: _periodLabel,
 }: {
   d: AnxietyPeriodData;
   periodLabel: string;
@@ -466,8 +511,11 @@ export function AnxietyTriadKpiCards({
   const stateColor = ANXIETY_STATE_META[d.state].color;
   const ipdColor = ipdTargetAccent(ipdRounded, IPD_TARGET);
   const anxietyOnlyColor = anxietyOnlyAccent(m.promiseKeptPct);
+  const breachShare = m.signalTotal > 0 ? Math.round((m.breachSignals / m.signalTotal) * 100) : 0;
+  const breachShareColor = breachShareAccent(breachShare);
   const ipdDeltaColor = ipdDeltaAccent(d.ipdDelta);
   const animatedAnxietyOnly = useAnimatedNumber(m.anxietyOnly, { duration: 900, delay: 120 });
+  const animatedBreachShare = useAnimatedNumber(breachShare, { duration: 900, delay: 180 });
   const animatedIpdDelta = useAnimatedNumber(d.ipdDelta, { duration: 900, delay: 220, decimals: 1 });
   const animatedContained = useAnimatedNumber(d.contained, { duration: 900, delay: 120 });
   const animatedIndexDelta = useAnimatedNumber(d.deltaIndex, { duration: 900, delay: 220, decimals: 0 });
@@ -549,25 +597,26 @@ export function AnxietyTriadKpiCards({
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, alignItems: "stretch" }}>
       <AnxietyKpiShell
         accent={stateColor}
-        title="Anxiety vs contact window"
+        title="Customer anxiety load"
         state={d.state}
         signal={<ConfidenceSignalBadge conf={d.conf} />}
-        insight={`${d.driverPct}% of high-anxiety units trace to IPD breach + stuck-at-hub in East — fire containment before the ~${d.ttContact} min contact window closes.`}
+        insightHeading="AI · Anxiety driver"
+        insight={`${d.driverPct}% of high-anxiety customers trace to missed delivery promise\nand stuck-at-hub in East\nReach them before the ~${d.ttContact} min contact window closes`}
         body={kpiBodyRow(
           <MetricRing value={d.index} color={stateColor} label="index" unit="" />,
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "High band units", value: anxietyFmt(animatedHigh), color: cssVar("severity-high") },
-              { label: "Scored units", value: anxietyFmt(animatedScored) },
+              { label: "High-risk customers", value: anxietyFmt(animatedHigh), color: cssVar("severity-high") },
+              { label: "Scored customers", value: anxietyFmt(animatedScored) },
               { label: "p(contact)", value: animatedPContact.toFixed(2), color: stateColor },
             ]}
           />,
           <InnerKpiStrip layout="aligned">
             <InnerKpiCard
-              label="Contained units"
+              label="Contained"
               accent={containedColor}
-              hint={`${m.containedRate}% of high band`}
+              hint={`${m.containedRate}% of high-risk`}
             >
               <span
                 className="lisn-num"
@@ -577,16 +626,16 @@ export function AnxietyTriadKpiCards({
               </span>
             </InnerKpiCard>
             <InnerKpiCard
-              label={`Index delta · ${periodLabel}`}
+              label="Index delta"
               accent={indexDeltaColor}
               hint={d.deltaIndex === 0 ? "Flat vs prior" : d.deltaIndex > 0 ? "Pressure rising" : "Easing"}
             >
               <Delta v={animatedIndexDelta} unit=" pts" invert size={14} />
             </InnerKpiCard>
             <InnerKpiCard
-              label="High band share"
+              label="High-risk share"
               accent={highBandShareColor}
-              hint={m.highBandShare > 25 ? "Above watch band" : "Within watch band · of scored"}
+              hint={m.highBandShare > 25 ? "Above watch band" : "Within watch band"}
             >
               <span
                 className="lisn-num"
@@ -603,22 +652,23 @@ export function AnxietyTriadKpiCards({
       <AnxietyKpiShell
         accent={ipdColor}
         title="Promise reliability"
-        state={ipdRounded >= IPD_TARGET ? "strong" : "shift"}
+        state={ipdRounded >= IPD_TARGET - 1 ? "strong" : "shift"}
         signal={<ConfidenceSignalBadge conf={d.splitConf} />}
-        insight={`${anxietyFmt(m.breachSignals)} signals sit in breach quadrants\nvs ${anxietyFmt(m.anxietyOnly)} anxiety-only\n${worstCategory.k} is the weakest category at ${worstCategory.v.toFixed(1)}% IPD-met.`}
+        insightHeading="AI · Promise risk"
+        insight={`${anxietyFmt(m.breachSignals)} breach signals sit in breach quadrants\nvs ${anxietyFmt(m.anxietyOnly)} anxiety-only\n${worstCategory.k} is weakest at ${worstCategory.v.toFixed(1)}% IPD-met.`}
         body={kpiBodyRow(
           <MetricRing value={ipdRounded} color={ipdColor} label="IPD-met" unit="%" />,
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "Breach units", value: anxietyFmt(animatedBreachUnits), color: cssVar("severity-high") },
+              { label: "Breach customers", value: anxietyFmt(animatedBreachUnits), color: cssVar("severity-high") },
               { label: "Weakest category", value: worstCategory.k, color: cssVar("severity-med"), numeric: false },
-              { label: "Trust breach signals", value: anxietyFmt(animatedBreachSignals), color: cssVar("severity-high") },
+              { label: "Breach signals", value: anxietyFmt(animatedBreachSignals), color: cssVar("severity-high") },
             ]}
           />,
           <InnerKpiStrip layout="aligned">
             <InnerKpiCard
-              label="Anxiety signals"
+              label="Anx. signals"
               accent={anxietyOnlyColor}
               hint={`${m.promiseKeptPct}% promise kept`}
             >
@@ -630,22 +680,22 @@ export function AnxietyTriadKpiCards({
               </span>
             </InnerKpiCard>
             <InnerKpiCard
-              label={`IPD delta · ${periodLabel}`}
+              label="IPD delta"
               accent={ipdDeltaColor}
               hint={d.ipdDelta === 0 ? "Flat vs prior" : d.ipdDelta > 0 ? "Improving" : "Slipping"}
             >
               <Delta v={animatedIpdDelta} unit="%" size={14} />
             </InnerKpiCard>
             <InnerKpiCard
-              label="IPD target"
-              accent={cssVar("accent-2")}
-              hint="Promise reliability bar"
+              label="Breach share"
+              accent={breachShareColor}
+              hint="of promise × anxiety mix"
             >
               <span
                 className="lisn-num"
-                style={{ ...innerKpiValueStyle, color: cssVar("accent-2") }}
+                style={{ ...innerKpiValueStyle, color: breachShareColor }}
               >
-                {IPD_TARGET}%
+                {Math.round(animatedBreachShare)}%
               </span>
             </InnerKpiCard>
           </InnerKpiStrip>,
@@ -655,25 +705,26 @@ export function AnxietyTriadKpiCards({
 
       <AnxietyKpiShell
         accent={containAccent}
-        title="Containment vs contact window"
+        title="Reach before contact"
         state={d.ttc < d.ttContact ? "strong" : "shift"}
         signal={<ConfidenceSignalBadge conf={d.conf} />}
-        insight={`Headroom of +${m.headroomMin} min before untreated units likely contact\n${m.notifyRate}% notified · ${m.contactAvoidedOfNotifiedPct}% of notified avoided contact\n${m.funnelRate}% contact avoided vs high band.`}
+        insightHeading="AI · Outreach impact"
+        insight={`Customer outreach started ${m.headroomMin} min before likely contact\nProactive reach: ${m.notifyRate}% of the high-risk group\n${m.funnelRate}% of preventable contacts avoided`}
         body={kpiBodyRow(
-          <MetricRing value={m.coverageRate} color={containAccent} label="coverage" unit="%" />,
+          <MetricRing value={m.coverageRate} color={containAccent} label="Reached proactively" unit="%" />,
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "Time-to-contain", value: `${animatedTtc} min`, color: containAccent },
-              { label: "Time-to-contact", value: `${animatedTtContact} min` },
-              { label: "Headroom", value: `+${animatedHeadroom} min`, color: containAccent },
+              { label: "Avg. time to outreach", value: `${animatedTtc} min`, color: containAccent },
+              { label: "Avg. time before contact", value: `${animatedTtContact} min` },
+              { label: "Intervention window", value: `+${animatedHeadroom} min`, color: containAccent },
             ]}
           />,
           <InnerKpiStrip layout="aligned">
             <InnerKpiCard
-              label="Units notified"
+              label="Cust. Notified"
               accent={notifyRateColor}
-              hint={`${m.notifyRate}% of high band`}
+              hint={`${m.notifyRate}% of high-risk`}
             >
               <span
                 className="lisn-num"
@@ -683,15 +734,9 @@ export function AnxietyTriadKpiCards({
               </span>
             </InnerKpiCard>
             <InnerKpiCard
-              label="Contact avoided"
+              label="Contacts avoided"
               accent={funnelRateColor}
-              hint={
-                m.funnelRate >= 55
-                  ? `Strong avoidance · ${m.contactAvoidedOfNotifiedPct}% of notified`
-                  : m.funnelRate >= 45
-                    ? `Watch rate · ${m.contactAvoidedOfNotifiedPct}% of notified`
-                    : `Below target · ${m.contactAvoidedOfNotifiedPct}% of notified`
-              }
+              hint={`~${anxietyFmt(d.funnelAvoided)} avoided`}
             >
               <span
                 className="lisn-num"
@@ -701,9 +746,9 @@ export function AnxietyTriadKpiCards({
               </span>
             </InnerKpiCard>
             <InnerKpiCard
-              label="Opt-out guardrail"
+              label="Opt-out rate"
               accent={optOutColor}
-              hint={d.optOut < 3 ? "Within 3% cap" : "Cap breached"}
+              hint={d.optOut < 3 ? "Within 3% guardrail" : "Above 3% guardrail"}
             >
               <span
                 className="lisn-num"

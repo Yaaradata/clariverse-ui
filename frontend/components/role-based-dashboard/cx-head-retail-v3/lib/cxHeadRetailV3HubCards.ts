@@ -652,7 +652,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Week opens calm. Delivery ETA questions dominate\nchannels — no UPI spike detected yet.\n68% happy rate; unhappy still contained at 32%.\nChurn watch: 4 Plus members — monitor only.",
+          "The week opens calm, with delivery ETA questions dominating channels.\nNo UPI spike has been detected yet.\nHappy rate holds at 68%, and unhappy volume stays contained at 32%.\nFour Plus members are on churn watch and need monitoring only.",
       },
       {
         label: "D2",
@@ -669,7 +669,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "UPI checkout step failing — Plus shoppers\nhit first on payment errors at BBD peak hour.\nEscalate Payments team before evening traffic surge.\nChurn risk: 8 Plus members flagged — retention queue open.",
+          "The UPI checkout step is failing, and Plus shoppers are hit first.\nPayment errors are peaking during the BBD hour.\nEscalate the Payments team before the evening traffic surge.\nEight Plus members are flagged for churn, and the retention queue is open.",
       },
       {
         label: "D3",
@@ -686,7 +686,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Payment noise eases after gateway patch deployed\novernight. Refund-status confusion now tops chat.\nPlus recovers to 74%; promo-code tickets spike.\nChurn risk stable at 3 Plus members — continue watch.",
+          "Payment noise eases after the overnight gateway patch.\nRefund-status confusion is now the top chat driver.\nPlus recovers to 74%, while promo-code tickets spike.\nChurn risk is stable at three Plus members, so continue the watch.",
       },
       {
         label: "D4",
@@ -703,7 +703,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Late delivery and UPI failures stacking on\nthe same orders — compounding shopper frustration.\n10 Plus members in cancel window this week.\nRoute WH-East backlog before weekend BBD loads.",
+          "Late delivery and UPI failures are stacking on the same orders.\nThis is compounding shopper frustration across channels.\nTen Plus members are in the cancel window this week.\nRoute the WH-East backlog before weekend BBD loads.",
       },
       {
         label: "D5",
@@ -720,7 +720,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Payments stabilising; refund backlog now the top\nfriction driver on repeat voice and chat contacts.\nShipping pain at 30% of negative sentiment volume.\n10 Plus members still at risk — retention scripts live.",
+          "Payments are stabilising, but the refund backlog is now the top friction driver.\nRepeat voice and chat contacts are rising on refund status.\nShipping pain accounts for 30% of negative sentiment volume.\nTen Plus members remain at risk, and retention scripts are live.",
       },
       {
         label: "D6",
@@ -751,7 +751,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           impact: { customers: "18.4K", channels: "Voice, Chat" },
         },
         conversationInsight:
-          "32% unhappy — delivery & promo-code confusion.\n68% happy rate · unhappy spike on shipping pain.\n12 Plus cancel-risk — retention queue live.\nTop drivers: shipping 31%, refunds 24%.",
+          "Unhappy rate is at 32%, driven by delivery and promo-code confusion.\nHappy rate holds at 68%, while shipping pain is spiking unhappy contacts.\nTwelve Plus members are in cancel risk, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
       },
     ],
     drill: CUSTOMER_HAPPINESS_DRILL,
@@ -781,7 +781,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Trust Index 76 at week open — 4 pts above today.\nOutcome signals stable; fulfilment trust soft on damage lane.\nDamaged-product share building on Ekart-North · Tier-2.\nNo cliff breach active — slope erosion only.",
+          "Trust Index opens the week at 76, which is 4 pts above today.\nOutcome signals are stable, but fulfilment trust is soft on the damage lane.\nDamaged-product share is building on Ekart-North in Tier-2 markets.\nNo cliff breach is active; only slope erosion is visible.",
       },
       {
         label: "D2",
@@ -797,7 +797,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Trust Index slips 1 pt as refund-not-credited contacts rise.\nPrepaid ledger mismatch surfacing on voice + email.\nFulfilment score down — damage on mobiles & appliances.\nRepeat-contact rate edging up on refund queue.",
+          "Trust Index slips 1 pt as refund-not-credited contacts rise.\nPrepaid ledger mismatch is surfacing on voice and email.\nFulfilment score is down due to damage on mobiles and appliances.\nRepeat-contact rate is edging up on the refund queue.",
       },
       {
         label: "D3",
@@ -813,7 +813,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Wrong-item fashion picks pulling fulfilment trust lower.\nResolution still above 0.77 but sentiment decaying.\nNew-customer segment hit hardest — 12 pt trust drop.\nRoute flagged sellers for SKU-mapping audit.",
+          "Wrong-item fashion picks are pulling fulfilment trust lower.\nResolution stays above 0.77, but sentiment is decaying.\nNew customers are hit hardest, with a 12 pt trust drop.\nRoute flagged sellers for a SKU-mapping audit.",
       },
       {
         label: "D4",
@@ -829,7 +829,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Never-delivered cohort adding anxiety before contact lands.\nHidden-fee complaints +31% WoW on checkout surprise.\nTrust contacts 36.9K · 17.7K unique customers impacted.\nPayments trust weakest signal this week.",
+          "The never-delivered cohort is adding anxiety before contact lands.\nHidden-fee complaints are up 31% week over week on checkout surprise.\nTrust contacts reach 36.9K, impacting 17.7K unique customers.\nPayments trust is the weakest signal this week.",
       },
       {
         label: "D5",
@@ -845,7 +845,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Trust Index at 72 — 8 pts below 80 target band.\nDamaged product leads 35% of trust complaints (+18% WoW).\nRefund-not-credited fastest riser (+22%) on prepaid mismatch.\nRepeat-contact portfolio avg 2.1× on trust issues.",
+          "Trust Index sits at 72, which is 8 pts below the 80 target band.\nDamaged product leads 35% of trust complaints and is up 18% week over week.\nRefund-not-credited is the fastest riser at plus 22% on prepaid mismatch.\nThe trust portfolio averages 2.1 times repeat contact.",
       },
       {
         label: "D6",
@@ -869,7 +869,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           spread: "Refund + never-delivered · Tier-2",
         },
         conversationInsight:
-          "Trust Index 72 · −4 pts vs week open · gap to target 8 pts.\nWeakest scores: Fulfilment 0.48 · Payments 0.52.\nTop breaker: Damaged product; refund-not-credited +22% WoW.\nAct: packaging audit top pincodes · expose refund ETA.",
+          "Trust Index is at 72, down 4 pts versus week open, with an 8 pt gap to target.\nThe weakest scores are Fulfilment at 0.48 and Payments at 0.52.\nThe top breaker is damaged product, while refund-not-credited is up 22% week over week.\nAct now with a packaging audit on top pincodes and expose refund ETA in-app.",
       },
     ],
     drill: BRAND_RISK_DRILL,
@@ -900,7 +900,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Strong week open across fulfilment nodes. FCR at 76%\nwith delivery success holding at 96% network-wide.\nExchange queue the only soft spot on repeat contacts.\nWarehouse staffing adequate — no escalation needed.",
+          "The week opens strong across fulfilment nodes, with FCR at 76%.\nDelivery success is holding at 96% network-wide.\nThe exchange queue is the only soft spot on repeat contacts.\nWarehouse staffing is adequate, and no escalation is needed.",
       },
       {
         label: "D2",
@@ -917,7 +917,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Refund backlog builds after weekend delivery misses\nhit the returns desk Monday morning. FCR slips to 71%.\nDelivery success down to 88% — WH-East backlog widening.\nInventory API lag driving repeat voice contacts.",
+          "The refund backlog builds after weekend delivery misses hit the returns desk.\nFCR slips to 71% on Monday morning volume.\nDelivery success is down to 88%, and the WH-East backlog is widening.\nInventory API lag is driving repeat voice contacts.",
       },
       {
         label: "D3",
@@ -934,7 +934,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Mid-week peak as weekend orders clear through nodes.\nFCR recovers to 74% after temp staff on returns desk.\nDelivery success back to 92% — above BBD target line.\nRefund queue elevated but trending down vs yesterday.",
+          "Mid-week peak arrives as weekend orders clear through the nodes.\nFCR recovers to 74% after temp staff join the returns desk.\nDelivery success is back to 92%, above the BBD target line.\nThe refund queue is still elevated but trending down versus yesterday.",
       },
       {
         label: "D4",
@@ -951,7 +951,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Payment gateway timeouts hit fulfilment chain —\n2,100 orders blocked at checkout confirmation step.\nFCR drops to 68%; delivery success at 82% this week.\nEscalate Tech + Payments joint bridge before peak.",
+          "Payment gateway timeouts are hitting the fulfilment chain.\nAbout 2,100 orders are blocked at the checkout confirmation step.\nFCR drops to 68%, and delivery success sits at 82% this week.\nEscalate a Tech and Payments joint bridge before peak traffic.",
       },
       {
         label: "D5",
@@ -968,7 +968,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Partial recovery after fallback processor enabled\non payment rail. FCR at 70% — repeat contacts still high.\nDelivery success 86%; Pune hub worst miss on express slots.\nPayment API remains bottleneck on 22% of re-contacts.",
+          "Partial recovery follows after the fallback processor is enabled on the payment rail.\nFCR is at 70%, but repeat contacts remain high.\nDelivery success is at 86%, with Pune hub worst on express slot misses.\nThe payment API remains the bottleneck on 22% of re-contacts.",
       },
       {
         label: "D6",
@@ -993,7 +993,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           repeatContact: "22% within 48h",
         },
         conversationInsight:
-          "FCR at 69% — refund callbacks driving repeat contacts.\nDelivery success 84% with WH-East express misses.\nGateway timeouts blocked 2,400 checkout orders.\n412 refund callbacks overdue — escalate Payments.",
+          "FCR is at 69%, and refund callbacks are driving repeat contacts.\nDelivery success is at 84%, with WH-East missing express slots.\nGateway timeouts blocked 2,400 checkout orders.\nThere are 412 overdue refund callbacks, so escalate Payments now.",
       },
     ],
     drill: SERVICE_DELIVERY_DRILL,

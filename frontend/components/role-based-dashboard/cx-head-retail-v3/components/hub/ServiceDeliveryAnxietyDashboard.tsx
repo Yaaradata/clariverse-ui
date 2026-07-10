@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useCallback, useMemo, useState } from "react";
-import { ChevronRight } from "lucide-react";
 import {
   ANXIETY_CLUSTERS,
   ANXIETY_IMPERFECTIONS,
@@ -29,15 +28,15 @@ import {
   AnxietyToastStack,
   ContribBar,
   GhostBtn,
-  IconBtn,
   InferenceBadge,
   MiniBand,
   PrimaryBtn,
-  RelTag,
   SegButton,
+  ServiceStatusTag,
   SLATimer,
   StatePill,
   TileHead,
+  anxietyBandColor,
   anxietyFmt,
 } from "./AnxietyPrimitives";
 import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
@@ -211,6 +210,65 @@ function ContainmentClusterUnits({ units }: { units: number }): React.ReactEleme
   return <span style={{ fontFamily: cssVar("font-numeric") }}>{anxietyFmt(animated)}</span>;
 }
 
+function shortImpactPills(text: string): readonly string[] {
+  return text
+    .split("·")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part, index) => {
+      const num = part.match(/\d[\d,]*/)?.[0] ?? "0";
+      if (index === 0) return `${num} contacts`;
+      return `${num} escalation`;
+    });
+}
+
+function ImpactLineHighlight({
+  text,
+  band,
+}: {
+  text: string;
+  band: "High" | "Building";
+}): React.ReactElement {
+  const color = anxietyBandColor(band);
+  const pills = shortImpactPills(text);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 6,
+        marginTop: 6,
+        alignItems: "center",
+      }}
+    >
+      {pills.map((pill) => (
+        <span
+          key={pill}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            height: 18,
+            padding: "0 8px",
+            borderRadius: radius.pill,
+            background: color,
+            color: "#ffffff",
+            fontSize: 9,
+            fontWeight: 700,
+            lineHeight: 1,
+            whiteSpace: "nowrap",
+            border: "none",
+            boxShadow: "none",
+          }}
+        >
+          {pill}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function ContainmentQueueScreen({
   d,
   toast,
@@ -240,141 +298,234 @@ function ContainmentQueueScreen({
     setEscalatedIds((prev) => new Set(prev).add(id));
   };
 
+  const queueCols =
+    "minmax(280px, 2.2fr) minmax(110px, 0.9fr) minmax(88px, 0.7fr) minmax(80px, 0.65fr) minmax(130px, 1fr) minmax(150px, 1.2fr) minmax(88px, 0.75fr) minmax(210px, 1fr)";
+
+  const queueHeaders = [
+    "Customer problem",
+    "Journey stage",
+    "Cust. affected",
+    "Cust. risk",
+    "Service status",
+    "Recommended intervention",
+    "Time to act",
+    "Actions",
+  ] as const;
+
+  const headerAlign: Record<(typeof queueHeaders)[number], "left" | "center"> = {
+    "Customer problem": "left",
+    "Journey stage": "left",
+    "Cust. affected": "center",
+    "Cust. risk": "center",
+    "Service status": "left",
+    "Recommended intervention": "left",
+    "Time to act": "center",
+    Actions: "left",
+  };
+
+  /** Nudge header text only. Raise = move right, lower = move left. */
+  const headerPadLeft: Record<(typeof queueHeaders)[number], number> = {
+    "Customer problem": 55,
+    "Journey stage": 0,
+    "Cust. affected": 0,
+    "Cust. risk": 0,
+    "Service status": 15,
+    "Recommended intervention": 0,
+    "Time to act": 0,
+    Actions: 60,
+  };
+
+  const cellAlign = (align: "left" | "center"): React.CSSProperties => ({
+    minWidth: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: align === "center" ? "center" : "flex-start",
+    textAlign: align,
+  });
+
+  const rowGridStyle: React.CSSProperties = {
+    display: "grid",
+    gridTemplateColumns: "subgrid",
+    gridColumn: "1 / -1",
+    alignItems: "center",
+    padding: "12px 16px",
+    minWidth: 0,
+  };
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
       <AnxietyCard pad={0} style={{ overflow: "hidden" }}>
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "1.4fr 0.8fr 0.6fr 0.8fr 0.7fr 1.35fr 0.7fr minmax(248px, 1.45fr)",
-            gap: 8,
-            padding: "10px 14px",
-            fontSize: 10,
-            fontWeight: 700,
-            color: cssVar("text-muted"),
-            textTransform: "uppercase",
-            letterSpacing: 0.35,
-            borderBottom: `1px solid ${cssVar("border")}`,
-            background: cssVar("surface-raised"),
+            gridTemplateColumns: queueCols,
+            columnGap: 12,
+            width: "100%",
+            minWidth: 0,
           }}
         >
-          {["Cluster", "Journey node", "Units", "Anxiety", "Reliability", "Recommended action", "SLA", ""].map((h) => (
-            <span key={h}>{h}</span>
-          ))}
-        </div>
-        <div style={{ maxHeight: "none", overflowY: "visible" }}>
+          <div
+            style={{
+              ...rowGridStyle,
+              fontSize: 11,
+              fontWeight: 700,
+              color: cssVar("text-muted"),
+              textTransform: "uppercase",
+              letterSpacing: 0.35,
+              borderBottom: `1px solid ${cssVar("border")}`,
+              background: cssVar("surface-raised"),
+            }}
+          >
+            {queueHeaders.map((label) => (
+              <span
+                key={label}
+                title={label}
+                style={{
+                  ...cellAlign(headerAlign[label]),
+                  lineHeight: 1.35,
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  paddingLeft: headerPadLeft[label],
+                }}
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+
           {clusters.map((c) => {
             const isApproved = approvedIds.has(c.id);
             const isEscalated = escalatedIds.has(c.id);
 
             return (
-            <React.Fragment key={c.id}>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1.4fr 0.8fr 0.6fr 0.8fr 0.7fr 1.35fr 0.7fr minmax(248px, 1.45fr)",
-                  gap: 8,
-                  padding: "12px 14px",
-                  alignItems: "center",
-                  fontSize: 12,
-                  borderBottom: `1px solid ${cssVar("border")}`,
-                  background: c.carve ? `${cssVar("severity-med")}08` : open === c.id ? cssVar("surface-raised") : undefined,
-                }}
-              >
-                <span>
-                  <div style={{ fontWeight: 600, color: cssVar("text-primary") }}>{c.label}</div>
-                  <div style={{ fontSize: 11, color: cssVar("text-muted"), fontFamily: cssVar("font-numeric") }}>
-                    {c.id} · {c.region}
-                  </div>
-                </span>
-                <span style={{ fontFamily: cssVar("font-numeric"), color: cssVar("text-secondary") }}>{c.node}</span>
-                <ContainmentClusterUnits units={c.units} />
-                <span>
-                  <MiniBand band={c.band} />
-                </span>
-                <span>
-                  <RelTag breached={c.rel === "Breached"} />
-                </span>
-                <span>
-                  <div style={{ color: cssVar("text-primary"), fontWeight: 500 }}>{c.tmpl}</div>
-                </span>
-                <span>
-                  <SLATimer seconds={c.sla} />
-                </span>
-                <span
+              <React.Fragment key={c.id}>
+                <div
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={open === c.id}
+                  aria-label={`Show evidence for ${c.label}`}
+                  onClick={() => setOpen(open === c.id ? null : c.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      setOpen(open === c.id ? null : c.id);
+                    }
+                  }}
                   style={{
-                    display: "inline-flex",
-                    gap: 4,
-                    alignItems: "center",
-                    flexWrap: "nowrap",
-                    flexShrink: 0,
-                    whiteSpace: "nowrap",
+                    ...rowGridStyle,
+                    fontSize: 12,
+                    borderBottom: `1px solid ${cssVar("border")}`,
+                    cursor: "pointer",
+                    background: c.carve
+                      ? `${cssVar("severity-med")}08`
+                      : open === c.id
+                        ? cssVar("surface-raised")
+                        : undefined,
                   }}
                 >
-                  <PrimaryBtn
-                    tiny
-                    disabled={isApproved}
-                    onClick={() => {
-                      if (isApproved) return;
-                      markApproved(c.id);
-                      toast(`Containment fired — ${c.tmpl} · ${anxietyFmt(c.units)} units`);
-                    }}
-                  >
-                    {isApproved ? "Approved" : "Approve & fire"}
-                  </PrimaryBtn>
-                  <GhostBtn
-                    disabled={isEscalated}
-                    onClick={() => {
-                      if (isEscalated) return;
-                      markEscalated(c.id);
-                      toast(`${c.id} escalated to accountable pre-order team`);
-                    }}
-                  >
-                    {isEscalated ? "Escalated" : "Escalate"}
-                  </GhostBtn>
-                  <IconBtn label="Show evidence" onClick={() => setOpen(open === c.id ? null : c.id)}>
-                    <ChevronRight
-                      size={14}
+                  <span style={{ minWidth: 0, padding: 0, margin: 0 }}>
+                    <div
                       style={{
-                        transform: open === c.id ? "rotate(90deg)" : "none",
-                        transition: "transform 0.2s",
+                        fontWeight: 600,
+                        color: cssVar("text-primary"),
+                        lineHeight: 1.35,
+                        margin: 0,
+                        whiteSpace: "nowrap",
                       }}
-                    />
-                  </IconBtn>
-                </span>
-              </div>
-              {open === c.id ? (
-                <div style={{ padding: "12px 18px 16px", background: cssVar("surface-raised"), borderBottom: `1px solid ${cssVar("border")}` }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: cssVar("text-muted"), marginBottom: 8 }}>
-                    Evidence behind the score — confirmed order-state only
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12 }}>
-                    {c.evidence.map((e, i) => (
-                      <div
-                        key={i}
-                        style={{
-                          fontSize: 12,
-                          color: cssVar("text-secondary"),
-                          display: "flex",
-                          gap: 6,
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        {e}
-                      </div>
-                    ))}
-                  </div>
-                  <div style={{ fontSize: 12, color: cssVar("text-secondary") }}>
-                    <span style={{ fontWeight: 700, color: cssVar("text-muted") }}>Re-promise preview:</span>{" "}
-                    &ldquo;
-                    {c.rel === "Met"
-                      ? "Your order is on track — committed by its original date. We're moving it now; here's live status."
-                      : "We missed the promised date on your order. Revised delivery scheduled — here's your new ETA and a slot to confirm."}
-                    &rdquo;
-                  </div>
+                    >
+                      {c.label}
+                    </div>
+                    <ImpactLineHighlight text={c.impactLine} band={c.band} />
+                  </span>
+                  <span style={{ ...cellAlign("left"), color: cssVar("text-secondary") }}>{c.node}</span>
+                  <span style={cellAlign("center")}>
+                    <ContainmentClusterUnits units={c.units} />
+                  </span>
+                  <span style={cellAlign("center")}>
+                    <MiniBand band={c.band} />
+                  </span>
+                  <span style={cellAlign("left")}>
+                    <ServiceStatusTag status={c.serviceStatus} />
+                  </span>
+                  <span style={cellAlign("left")}>
+                    <div style={{ color: cssVar("text-primary"), fontWeight: 500, lineHeight: 1.35 }}>{c.tmpl}</div>
+                  </span>
+                  <span style={cellAlign("center")}>
+                    <SLATimer seconds={c.sla} />
+                  </span>
+                  <span
+                    style={{
+                      ...cellAlign("left"),
+                      gap: 4,
+                      flexWrap: "nowrap",
+                      whiteSpace: "nowrap",
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  >
+                    <PrimaryBtn
+                      tiny
+                      disabled={isApproved}
+                      onClick={() => {
+                        if (isApproved) return;
+                        markApproved(c.id);
+                        toast(`Outreach approved — ${c.tmpl} · ${anxietyFmt(c.units)} customers`);
+                      }}
+                    >
+                      {isApproved ? "Approved" : "Approve outreach"}
+                    </PrimaryBtn>
+                    <GhostBtn
+                      disabled={isEscalated}
+                      onClick={() => {
+                        if (isEscalated) return;
+                        markEscalated(c.id);
+                        toast(`${c.id} escalated to customer operations`);
+                      }}
+                    >
+                      {isEscalated ? "Escalated" : "Escalate"}
+                    </GhostBtn>
+                  </span>
                 </div>
-              ) : null}
-            </React.Fragment>
+                {open === c.id ? (
+                  <div
+                    style={{
+                      gridColumn: "1 / -1",
+                      padding: "12px 18px 16px",
+                      background: cssVar("surface-raised"),
+                      borderBottom: `1px solid ${cssVar("border")}`,
+                    }}
+                  >
+                    <div style={{ fontSize: 11, fontWeight: 700, color: cssVar("text-muted"), marginBottom: 8 }}>
+                      Evidence behind this customer problem
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 12 }}>
+                      {c.evidence.map((e, i) => (
+                        <div
+                          key={i}
+                          style={{
+                            fontSize: 12,
+                            color: cssVar("text-secondary"),
+                            display: "flex",
+                            gap: 6,
+                            alignItems: "flex-start",
+                          }}
+                        >
+                          {e}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ fontSize: 12, color: cssVar("text-secondary") }}>
+                      <span style={{ fontWeight: 700, color: cssVar("text-muted") }}>Outreach preview:</span>{" "}
+                      &ldquo;
+                      {c.serviceStatus === "Within service window"
+                        ? "Your order is still on track for the committed window. We are moving it now and will keep you updated with the latest ETA."
+                        : "We missed the promised timeline on your order. Here is your revised ETA and a way to confirm a convenient slot."}
+                      &rdquo;
+                    </div>
+                  </div>
+                ) : null}
+              </React.Fragment>
             );
           })}
         </div>
@@ -441,31 +592,6 @@ function EscalationPatternsScreen({
                   <span>
                     <span style={{ fontSize: 13, color: cssVar("text-primary"), display: "block" }}>
                       {t.s}
-                      {t.chronic ? (
-                        <span
-                          style={{
-                            marginLeft: 6,
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: cssVar("severity-med"),
-                            textTransform: "uppercase",
-                          }}
-                        >
-                          chronic
-                        </span>
-                      ) : null}
-                      {t.kind === "cliff" ? (
-                        <span
-                          style={{
-                            marginLeft: 6,
-                            fontSize: 10,
-                            fontWeight: 700,
-                            color: cssVar("severity-high"),
-                          }}
-                        >
-                          cliff · trust-critical
-                        </span>
-                      ) : null}
                     </span>
                   </span>
                   <span style={{ fontFamily: cssVar("font-numeric"), fontSize: 12 }}>
@@ -545,7 +671,7 @@ function EscalationPatternsScreen({
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 6 }}>
                     <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{im.title}</span>
-                    {im.kind === "inference" ? <InferenceBadge conf={im.conf} small /> : null}
+                    {"conf" in im ? <InferenceBadge conf={im.conf} small /> : null}
                   </div>
                   <div style={{ fontSize: 12, color: cssVar("text-muted"), marginBottom: 8 }}>
                     {getImperfectionEvidence(im, d)}
@@ -644,12 +770,12 @@ export function ServiceDeliveryAnxietyDashboard({
         <AnxietyCommandScreen d={d} />
       </AnxietySection>
 
-      <AnxietySection sectionNumber="03" screenId={2}>
-        <ContainmentQueueScreen d={d} toast={toast} />
+      <AnxietySection sectionNumber="03" screenId={3} sub="">
+        <ReliabilityVsAnxietyPanel d={d} />
       </AnxietySection>
 
-      <AnxietySection sectionNumber="04" screenId={3} sub="">
-        <ReliabilityVsAnxietyPanel d={d} />
+      <AnxietySection sectionNumber="04" screenId={2}>
+        <ContainmentQueueScreen d={d} toast={toast} />
       </AnxietySection>
 
       <AnxietyToastStack items={toasts} />
