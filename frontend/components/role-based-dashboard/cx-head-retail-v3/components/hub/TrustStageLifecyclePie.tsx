@@ -591,7 +591,7 @@ function JourneyStageNode({
         minWidth: 96,
         height: "100%",
         display: "grid",
-        gridTemplateRows: "auto auto 1fr auto",
+        gridTemplateRows: "auto auto 1fr 40px",
         gap: 8,
         padding: "10px 9px 10px 11px",
         borderRadius: radius.md,
@@ -646,9 +646,6 @@ function JourneyStageNode({
           {fmt(animatedContacts)}
         </div>
         <div style={{ fontSize: 10, color: cssVar("text-muted"), lineHeight: 1.2 }}>{stage.sharePct}% of break</div>
-      </div>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: 5, minWidth: 0 }}>
         <div
           style={{
             fontSize: 9,
@@ -656,29 +653,25 @@ function JourneyStageNode({
             letterSpacing: "0.04em",
             textTransform: "uppercase",
             color,
+            marginTop: 2,
           }}
         >
           {ragLabel(stage.rag)}
         </div>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "flex-end", minHeight: 0 }}>
         <div
           aria-hidden
           style={{
             width: "100%",
-            height: 6,
-            borderRadius: 99,
-            background: `color-mix(in srgb, ${color} 18%, ${cssVar("surface")})`,
-            overflow: "hidden",
+            height: `${Math.max(12, loadPct)}%`,
+            minHeight: 5,
+            borderRadius: "5px 5px 2px 2px",
+            background: `linear-gradient(180deg, ${color}, color-mix(in srgb, ${color} 45%, transparent))`,
+            opacity: selected ? 1 : 0.8,
           }}
-        >
-          <div
-            style={{
-              width: `${loadPct}%`,
-              height: "100%",
-              borderRadius: 99,
-              background: color,
-            }}
-          />
-        </div>
+        />
       </div>
     </button>
   );
