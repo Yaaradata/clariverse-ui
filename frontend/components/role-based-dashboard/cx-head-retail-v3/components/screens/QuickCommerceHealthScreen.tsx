@@ -17,7 +17,6 @@ import { DarkStoreKpiCards } from "../dark-store/DarkStoreKpiCards";
 import { DarkStoreScorecard } from "../dark-store/DarkStoreScorecard";
 import { BridgeReadyTile } from "../quick-commerce/BridgeReadyTile";
 import { DetailPageHeader } from "../common/DetailPageHeader";
-import { ScreenBackBar } from "../common/ScreenBackBar";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
 
 function DarkStoreHeadline(): React.ReactElement {
@@ -120,7 +119,7 @@ function RadarActionCard({ card }: { card: QuickCommerceRadarCard }): React.Reac
 
 /** Pass 4 — S2 Quick-Commerce Health + MB1 bridge reveal. */
 export function QuickCommerceHealthScreen(): React.ReactElement {
-  const { navigate, openDrill } = useNavigation();
+  const { openDrill } = useNavigation();
   const mb1 = getBridgeTileById("MB1");
   const [selectedStoreId, setSelectedStoreId] = useState("DS-BLR-D07");
 
@@ -146,7 +145,6 @@ export function QuickCommerceHealthScreen(): React.ReactElement {
       }}
     >
       <DetailPageHeader headline={<DarkStoreHeadline />} />
-      <ScreenBackBar onBack={() => navigate("overview")} />
 
       <DarkStoreKpiCards
         critical={QUICK_COMMERCE_SUMMARY.critical}

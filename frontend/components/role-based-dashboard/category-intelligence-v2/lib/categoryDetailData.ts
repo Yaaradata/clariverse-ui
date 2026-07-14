@@ -11,23 +11,242 @@ export type DetailKpi = {
   accent?: string;
 };
 
-/* ── Profitability ───────────────────────────────────────────── */
+/* ── Profitability ─────────────────────────────────────────────
+ * Spend-vs-revenue pool: marketplace revenue = 100%.
+ * Returns 24% + CAC 21% + opex 55% + over 3.7% = 103.7% → contribution −₹39.6 Cr.
+ */
 
 export const PROFITABILITY_KPIS: DetailKpi[] = [
-  { label: "Contribution", value: "₹2.42 Cr", sub: "This week" },
-  { label: "vs plan", value: "68%", sub: "▼ 12 pts", accent: "#FF6B6B" },
-  { label: "Gap", value: "₹18L", sub: "vs last week", accent: "#FF6B6B" },
-  { label: "Gross GMV", value: "₹3.18 Cr", sub: "Before deductions" },
+  { label: "Marketplace rev", value: "₹1,058 Cr", sub: "Revenue pool = 100%" },
+  { label: "Spend / revenue", value: "103.7%", sub: "Crosses the line", accent: "#FF6B6B" },
+  { label: "Returns cost", value: "₹258 Cr", sub: "24% of revenue", accent: "#E8A23D" },
+  { label: "Contribution", value: "−₹39.6 Cr", sub: "Below zero", accent: "#F0606B" },
 ];
 
-export const CONTRIBUTION_TREND = [
-  { week: "W-5", actual: 2.58, plan: 2.6 },
-  { week: "W-4", actual: 2.55, plan: 2.6 },
-  { week: "W-3", actual: 2.52, plan: 2.58 },
-  { week: "W-2", actual: 2.48, plan: 2.55 },
-  { week: "W-1", actual: 2.45, plan: 2.52 },
-  { week: "Now", actual: 2.42, plan: 2.6 },
+/** Horizontal spend bar vs marketplace revenue line. */
+export const SPEND_VS_REVENUE = {
+  revenuePoolCr: 1058,
+  spendPctOfRevenue: 103.7,
+  contributionCr: -39.6,
+  returnsAndCacShareOfSpend: 46,
+  segments: [
+    { id: "returns", label: "Returns", pctOfRevenue: 24, legendPct: 24, amountCr: 258, color: "#E8A23D" },
+    { id: "cac", label: "CAC", pctOfRevenue: 21, legendPct: 21, amountCr: 224, color: "#8B7CF6" },
+    /** Legend shows ~58% opex load (55 under-line + 3.7 over). */
+    { id: "opex", label: "Other opex", pctOfRevenue: 55, legendPct: 58, amountCr: 582, color: "#5B6478" },
+    { id: "over", label: "Over the line", pctOfRevenue: 3.7, legendPct: null, amountCr: 39, color: "#E879A0", hatched: true },
+  ],
+} as const;
+
+/** Drivers behind each spend-bar segment — shown when the bar is clicked. */
+export const SPEND_SEGMENT_BREAKDOWN: Record<
+  (typeof SPEND_VS_REVENUE.segments)[number]["id"],
+  { label: string; amountCr: number; sharePct: number; note: string }[]
+> = {
+  returns: [
+    { label: "Fashion sizing", amountCr: 148, sharePct: 57, note: "Aura shirt + apparel chart gaps" },
+    { label: "Electronics DOA", amountCr: 62, sharePct: 24, note: "Seller QC failures on inbound" },
+    { label: "Home mismatch", amountCr: 48, sharePct: 19, note: "Fit / colour expectation miss" },
+  ],
+  cac: [
+    { label: "Paid acquisition", amountCr: 118, sharePct: 53, note: "ROAS below band on Fashion" },
+    { label: "Promo / weekend", amountCr: 64, sharePct: 29, note: "Discount-led traffic, weak contribution" },
+    { label: "Retargeting", amountCr: 42, sharePct: 18, note: "High frequency, low conversion lift" },
+  ],
+  opex: [
+    { label: "Fulfilment & last-mile", amountCr: 246, sharePct: 42, note: "Cost-to-serve on high-return lanes" },
+    { label: "Platform & tech", amountCr: 174, sharePct: 30, note: "Fixed + variable infra load" },
+    { label: "Seller / content ops", amountCr: 162, sharePct: 28, note: "Catalogue, PIM, support overhead" },
+  ],
+  over: [
+    { label: "Returns overage", amountCr: 18, sharePct: 46, note: "Fashion returns past plan band" },
+    { label: "CAC overage", amountCr: 14, sharePct: 36, note: "Acquisition spend not earning" },
+    { label: "Opex spill", amountCr: 7, sharePct: 18, note: "Reverse logistics on RTO spikes" },
+  ],
+};
+
+export type SpendMetricTone = "neutral" | "positive" | "warn" | "critical";
+
+export type SpendMetricCard = {
+  id: string;
+  label: string;
+  value: string;
+  valueColor?: string;
+  delta: string;
+  deltaTone: "up-good" | "up-bad" | "down-good" | "down-bad";
+  barPct: number;
+  barColor: string;
+  barLabel: string;
+  detail: string;
+  /** Trailing hatch share on the metric bar (e.g. returned % of GMV). */
+  barHatchPct?: number;
+  barHatchColor?: string;
+};
+
+export const SPEND_METRIC_CARDS: SpendMetricCard[] = [
+  {
+    id: "gmv",
+    label: "GMV",
+    value: "₹9,020 Cr",
+    delta: "▲ 3.2%",
+    deltaTone: "up-good",
+    barPct: 100,
+    barColor: "#7DD3FC",
+    barLabel: "100%",
+    detail: "Gross demand · funnel top",
+  },
+  {
+    id: "nmv",
+    label: "Net of returns",
+    value: "₹7,700 Cr",
+    delta: "▲ 3.6%",
+    deltaTone: "up-good",
+    barPct: 85,
+    barColor: "#4FD17A",
+    barLabel: "85%",
+    detail: "14.6% returned to shelf",
+    barHatchPct: 15,
+    barHatchColor: "#8B6914",
+  },
+  {
+    id: "marketplace",
+    label: "Marketplace rev",
+    value: "₹1,058 Cr",
+    delta: "▲ 2.9%",
+    deltaTone: "up-good",
+    barPct: 11.7,
+    barColor: "#4FD17A",
+    barLabel: "11.7%",
+    detail: "Take rate on GMV",
+  },
+  {
+    id: "returns",
+    label: "Returns cost",
+    value: "₹258 Cr",
+    valueColor: "#E8A23D",
+    delta: "▲ ₹9.4 Cr",
+    deltaTone: "up-bad",
+    barPct: 24,
+    barColor: "#E8A23D",
+    barLabel: "24%",
+    detail: "Of revenue",
+  },
+  {
+    id: "cac",
+    label: "Total CAC",
+    value: "₹224 Cr",
+    valueColor: "#8B7CF6",
+    delta: "▲ ₹14.0 Cr",
+    deltaTone: "up-bad",
+    barPct: 21,
+    barColor: "#8B7CF6",
+    barLabel: "21%",
+    detail: "Of revenue",
+  },
+  {
+    id: "contribution",
+    label: "Contribution",
+    value: "−₹39.6 Cr",
+    valueColor: "#E879A0",
+    delta: "▲ ₹11.2 Cr",
+    deltaTone: "up-bad",
+    barPct: 3.7,
+    barColor: "#E879A0",
+    barLabel: "−0.5%",
+    detail: "Margin of NMV · below zero",
+  },
 ];
+
+/** Demand cascade steps + leakage between stages + AI takeaways. */
+export const DEMAND_CASCADE = {
+  headline: "GMV → net → take rate",
+  gmvCr: 9020,
+  nmvCr: 7700,
+  marketplaceCr: 1058,
+  returnLeakCr: 1320,
+  returnLeakPct: 14.6,
+  takeRatePct: 11.7,
+  takeOnNmvPct: 13.7,
+  steps: [
+    {
+      id: "gmv",
+      label: "GMV",
+      value: "₹9,020 Cr",
+      delta: "▲ 3.2%",
+      deltaTone: "up-good" as const,
+      barPct: 100,
+      barColor: "#7DD3FC",
+      shareLabel: "100% of demand",
+      detail: "Gross merchandise · all categories MTD",
+      signal: "Demand is growing, but conversion to contribution is not.",
+    },
+    {
+      id: "nmv",
+      label: "Net of returns",
+      value: "₹7,700 Cr",
+      delta: "▲ 3.6%",
+      deltaTone: "up-good" as const,
+      barPct: 85.4,
+      barColor: "#4FD17A",
+      barHatchPct: 14.6,
+      barHatchColor: "#8B6914",
+      shareLabel: "85.4% of GMV",
+      detail: "₹1,320 Cr returned to shelf · Fashion leads leakage",
+      signal: "Return leak is the largest cut before take-rate economics.",
+    },
+    {
+      id: "marketplace",
+      label: "Marketplace rev",
+      value: "₹1,058 Cr",
+      delta: "▲ 2.9%",
+      deltaTone: "up-good" as const,
+      barPct: 11.7,
+      barColor: "#4FD17A",
+      shareLabel: "11.7% take on GMV",
+      detail: "13.7% of NMV · commission + ads on delivered value",
+      signal: "Take rate holds, but spend already exceeds this pool.",
+    },
+  ],
+  leaks: [
+    {
+      id: "return-leak",
+      label: "Return leakage",
+      from: "GMV",
+      to: "Net of returns",
+      amount: "₹1,320 Cr",
+      pct: "14.6%",
+      tone: "warn" as const,
+      note: "Fashion sizing + RTO inflate reverse cost into the spend dial.",
+    },
+    {
+      id: "take-capture",
+      label: "Take-rate capture",
+      from: "Net of returns",
+      to: "Marketplace rev",
+      amount: "₹1,058 Cr",
+      pct: "13.7% of NMV",
+      tone: "neutral" as const,
+      note: "Only this pool funds returns cost, CAC, and opex.",
+    },
+  ],
+  insights: [
+    {
+      severity: "critical" as const,
+      title: "14.6% of GMV never becomes NMV",
+      body: "₹1,320 Cr returns to shelf before take rate — Fashion sizing is the fixable cluster.",
+    },
+    {
+      severity: "high" as const,
+      title: "Take rate cannot fund current spend",
+      body: "Marketplace rev ₹1,058 Cr is the 100% pool; spend already runs to 103.7% of it.",
+    },
+    {
+      severity: "medium" as const,
+      title: "Next best action",
+      body: "Cut return leak first — every point of Fashion return rate recovered expands the revenue pool before CAC cuts.",
+    },
+  ],
+};
 
 export const GAP_TOTAL_LAKHS = 18;
 
@@ -42,56 +261,68 @@ export const GAP_DRIVER_BREAKDOWN: Record<
   { label: string; lakhs: number; fill: string }[]
 > = {
   Returns: [
-    { label: "Fashion", lakhs: 8.8, fill: "#F0606B" },
-    { label: "Electronics", lakhs: 2.2, fill: "#E8A23D" },
-    { label: "Home", lakhs: 1.6, fill: "#8B7CF6" },
+    { label: "Fashion sizing", lakhs: 8.8, fill: "#F0606B" },
+    { label: "Electronics DOA", lakhs: 2.2, fill: "#E8A23D" },
+    { label: "Home mismatch", lakhs: 1.6, fill: "#8B7CF6" },
   ],
   Logistics: [
     { label: "Reverse pickup", lakhs: 2.0, fill: "#E8A23D" },
-    { label: "Last-mile", lakhs: 1.2, fill: "#F6A93B" },
+    { label: "Last-mile RTO", lakhs: 1.2, fill: "#F6A93B" },
   ],
   "Promo / CAC": [
-    { label: "Weekend promo", lakhs: 1.4, fill: "#8B7CF6" },
-    { label: "Blended CAC", lakhs: 0.8, fill: "#4FD17A" },
+    { label: "Weekend promo ROAS", lakhs: 1.4, fill: "#8B7CF6" },
+    { label: "Paid acquisition CAC", lakhs: 0.8, fill: "#A78BFA" },
   ],
 };
 
-export const SUBCATEGORY_PERFORMANCE = [
-  { name: "Fashion", contribution: 0.92, plan: 1.05, returnRate: 31, status: "breach" as const },
-  { name: "Grocery", contribution: 0.78, plan: 0.76, returnRate: 8, status: "ok" as const },
-  { name: "Electronics", contribution: 0.45, plan: 0.48, returnRate: 14, status: "watch" as const },
-  { name: "Home", contribution: 0.27, plan: 0.26, returnRate: 11, status: "ok" as const },
+export type SubCategoryRow = {
+  name: string;
+  contribution: number;
+  plan: number;
+  returnRate: number;
+  /** Blended CAC attributed to sub-category, ₹ lakhs */
+  cacLakhs: number;
+  status: "breach" | "watch" | "ok";
+};
+
+/** Actuals sum ₹2.42 Cr · plans sum ₹2.60 Cr · CAC sums ₹6.0L */
+export const SUBCATEGORY_PERFORMANCE: SubCategoryRow[] = [
+  { name: "Fashion", contribution: 0.92, plan: 1.05, returnRate: 31, cacLakhs: 2.8, status: "breach" },
+  { name: "Grocery", contribution: 0.78, plan: 0.76, returnRate: 8, cacLakhs: 1.1, status: "ok" },
+  { name: "Electronics", contribution: 0.45, plan: 0.48, returnRate: 14, cacLakhs: 1.4, status: "watch" },
+  { name: "Home", contribution: 0.27, plan: 0.31, returnRate: 11, cacLakhs: 0.7, status: "watch" },
 ];
 
+/** 318 − 48 − 14 − 8 − 6 = 242 (₹ lakhs) */
 export const PNL_BRIDGE = [
   { step: "Gross GMV", value: 318, type: "start" as const },
   { step: "Returns", value: -48, type: "neg" as const },
-  { step: "Logistics", value: -22, type: "neg" as const },
-  { step: "Discounts", value: -18, type: "neg" as const },
-  { step: "CAC", value: -12, type: "neg" as const },
+  { step: "Rev. logistics", value: -14, type: "neg" as const },
+  { step: "Discounts", value: -8, type: "neg" as const },
+  { step: "Blended CAC", value: -6, type: "neg" as const },
   { step: "Contribution", value: 242, type: "end" as const },
 ];
 
 export const PROFITABILITY_INSIGHTS: SummaryInsight[] = [
   {
     severity: "critical",
-    title: "Returns explain most of the ₹18L gap",
-    body: "Fashion sub-category drives 70% of the shortfall — Aura shirt is the largest fixable SKU.",
+    title: "Spend crosses the revenue line — contribution −₹39.6 Cr",
+    body: "Spend is 103.7% of marketplace revenue (₹1,058 Cr). Returns + CAC are 46% of that spend.",
   },
   {
     severity: "high",
-    title: "Contribution ≠ gross GMV",
-    body: "Headline is net of returns, reverse logistics, discounts, and blended CAC.",
+    title: "Returns cost ₹258 Cr (24% of revenue)",
+    body: "▲ ₹9.4 Cr vs prior — the largest single drag past the revenue line.",
   },
   {
     severity: "medium",
-    title: "Grocery holds plan",
-    body: "Fill-rate and promo ROAS in band — protect stable sub-category spend.",
+    title: "CAC ₹224 Cr and rising",
+    body: "▲ ₹14.0 Cr — acquisition spend is not earning enough contribution to stay under 100%.",
   },
   {
     severity: "medium",
     title: "Next best action",
-    body: "Fix Aura sizing chart before the weekend promo wave.",
+    body: "Cut Fashion promo CAC and fix return clusters before the next demand wave.",
   },
 ];
 

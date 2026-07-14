@@ -37,8 +37,6 @@ export function resolveRoleDataKey(industryId: string, roleId: string): string {
   }
   if (
     roleId === "head_cx_retail" ||
-    roleId === "head_cx_retail_v2" ||
-    roleId === "head_cx_retail_v3" ||
     roleId === "head_client_experience"
   ) {
     return "head_cx";

@@ -4,6 +4,8 @@ import React from "react";
 import { Bot, ChevronRight } from "lucide-react";
 import type { HubCardRightPanel, HubJourneyCardData } from "../../lib/cxHeadRetailV3HubCards";
 import { hubHeroDelta } from "../../lib/cxHeadRetailV3HubCards";
+import { TRUST_PULSE } from "../../lib/cxHeadRetailV3TrustBreakdownData";
+import { ConfidenceChip } from "./ConfidenceBand";
 import { MiniGauge } from "./MiniSparkline";
 import { RetailTrendAreaChart } from "./RetailTrendAreaChart";
 import { cssVar, radius } from "../../theme/tokens";
@@ -75,9 +77,68 @@ function GaugePanel({
   );
 }
 
+function TrustSeverityPanel({
+  cliffCount,
+  topCliff,
+  incidentRate,
+  topBreaker,
+}: Extract<HubCardRightPanel, { kind: "trustSeverity" }>): React.ReactElement {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 10, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>Top cliff</div>
+        <div className="lisn-num" style={{ fontSize: 14, fontWeight: 700, color: cssVar("text-primary"), marginTop: 2 }}>
+          {topCliff}
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: "6px 12px",
+            marginTop: 8,
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 10, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>
+              Cliffs live
+            </div>
+            <div className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("severity-high"), marginTop: 2 }}>
+              {cliffCount}
+            </div>
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 10, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>
+              Incident
+            </div>
+            <div className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("text-primary"), marginTop: 2 }}>
+              {incidentRate}%
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 10, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>Push to</div>
+        <div className="lisn-num" style={{ fontSize: 13, fontWeight: 700, color: cssVar("accent-2"), marginTop: 2 }}>
+          {topBreaker}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function RightPanel({ panel }: { panel: HubCardRightPanel }): React.ReactElement {
-  if (panel.kind === "channels") return <ChannelBars channels={panel.channels} />;
-  return <GaugePanel gauges={panel.gauges} stats={panel.stats} />;
+  switch (panel.kind) {
+    case "channels":
+      return <ChannelBars channels={panel.channels} />;
+    case "trustSeverity":
+      return <TrustSeverityPanel {...panel} />;
+    case "gauges":
+      return <GaugePanel gauges={panel.gauges} stats={panel.stats} />;
+    default: {
+      const _exhaustive: never = panel;
+      return _exhaustive;
+    }
+  }
 }
 
 const INSIGHT_LINE_COUNT = 4;
@@ -223,11 +284,14 @@ export function HubJourneyCard({
           padding: "10px 14px",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-          <Bot size={11} color={cssVar("severity-med")} />
-          <span style={{ fontSize: 12, fontWeight: 700, color: cssVar("severity-med"), letterSpacing: 0.5, textTransform: "uppercase" }}>
-            Conversation AI
-          </span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, marginBottom: 4 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Bot size={11} color={cssVar("severity-med")} />
+            <span style={{ fontSize: 12, fontWeight: 700, color: cssVar("severity-med"), letterSpacing: 0.5, textTransform: "uppercase" }}>
+              Conversation AI
+            </span>
+          </div>
+          {card.id === "trust" ? <ConfidenceChip conf={TRUST_PULSE.modelConfidence} small /> : null}
         </div>
         <ConversationInsightLines text={point.conversationInsight} />
       </div>

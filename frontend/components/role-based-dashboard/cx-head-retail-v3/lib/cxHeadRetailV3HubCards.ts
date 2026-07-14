@@ -1,12 +1,7 @@
 import type { LucideIcon } from "lucide-react";
-import {
-  BRAND_FEATURE_REQUESTS,
-  BRAND_INFLUENCER_WATCHLIST,
-  type BrandFeatureRequest,
-  type BrandInfluencerProfile,
-} from "./cxHeadRetailV3BrandSocialData";
 import { Activity, Shield, Target } from "lucide-react";
 import type { ScreenId } from "./routes";
+import { TOP_TRUST_DRIVER, TRUST_PULSE } from "./cxHeadRetailV3TrustBreakdownData";
 
 export const OVERVIEW_EXEC_PULSE = [
   {
@@ -23,13 +18,13 @@ export const OVERVIEW_EXEC_PULSE = [
   },
 ] as const;
 
-export type HubCardId = "customer-happiness" | "service-delivery" | "brand-risk";
+export type HubCardId = "customer-happiness" | "service-delivery" | "trust";
 
 /** Hub detail screens — headline lives in screen; purpose copy here. */
 export const HUB_PAGE_PURPOSE: Record<HubCardId, string> = {
   "customer-happiness":
     "How happy are Flipkart shoppers and what is driving unhappiness across segments, orders, sellers and channels?",
-  "brand-risk":
+  trust:
     "Trust drivers, cliff vs slope risk, segment impact, evidence, and cross-functional actions — measured facts vs inferred signals.",
   "service-delivery":
     "Anxiety command triad, containment queue, reliability × anxiety split, and escalation patterns — contact pressure before breach.",
@@ -52,7 +47,13 @@ export type CallerSegmentRow = {
   interactions: number;
   wowDelta: number;
   sentiment: number;
-  fciRate: number;
+  /** Contacts per unit — retail's resolution-effort construct, not a banking "failed call". */
+  cpu: number;
+  /** Escalations prevented per lever unit — the retail P&L-facing construct. */
+  eplu: number;
+  /** Order-cancellation rate for the segment. */
+  ocr: number;
+  relationalNps?: number;
   color: string;
 };
 
@@ -74,10 +75,10 @@ export const DEFAULT_WHO_CALLING: WhoCallingSnapshot = {
   totalInteractions: 53_740,
   lastWeekDeltaLabel: "+1,842",
   segments: [
-    { key: "hvhf", label: "High Value High Frequency", interactions: 9_550, wowDelta: 2.1, sentiment: 0.08, fciRate: 0.8, color: "#A855F7" },
-    { key: "hvlf", label: "High Value Low Frequency", interactions: 6_360, wowDelta: -0.8, sentiment: 0.03, fciRate: 1.2, color: "#06B6D4" },
-    { key: "lvhf", label: "Low Value High Frequency", interactions: 22_700, wowDelta: 3.4, sentiment: 0.16, fciRate: 2.1, color: "#6366F1" },
-    { key: "lvlf", label: "Low Value Low Frequency", interactions: 15_130, wowDelta: -1.5, sentiment: 0.26, fciRate: 2.8, color: "#94A3B8" },
+    { key: "hvhf", label: "High Value High Frequency", interactions: 9_550, wowDelta: 2.1, sentiment: 0.08, cpu: 0.8, eplu: 118, ocr: 0.42, relationalNps: 61, color: "#A855F7" },
+    { key: "hvlf", label: "High Value Low Frequency", interactions: 6_360, wowDelta: -0.8, sentiment: 0.03, cpu: 1.2, eplu: 104, ocr: 0.58, relationalNps: 54, color: "#06B6D4" },
+    { key: "lvhf", label: "Low Value High Frequency", interactions: 22_700, wowDelta: 3.4, sentiment: 0.16, cpu: 2.1, eplu: 92, ocr: 0.71, relationalNps: 44, color: "#6366F1" },
+    { key: "lvlf", label: "Low Value Low Frequency", interactions: 15_130, wowDelta: -1.5, sentiment: 0.26, cpu: 2.8, eplu: 81, ocr: 0.85, relationalNps: 36, color: "#94A3B8" },
   ],
 };
 
@@ -90,13 +91,10 @@ export type ServiceDeliveryTop = {
   repeatContact: string;
 };
 
-export type BrandRiskTop = {
-  severity: "Critical" | "Rising" | "Stable";
-  topTheme: string;
-  competitor: string;
-  trustSignal: string;
-  fraudSignal: string;
-  spread: string;
+export type TrustTopLine = {
+  topCliff: string;
+  cliffCount: number;
+  severityLeader: string;
 };
 
 export type HubGaugeSpec = {
@@ -122,7 +120,8 @@ export type HubChannelSpec = {
 
 export type HubCardRightPanel =
   | { kind: "gauges"; gauges: HubGaugeSpec[]; stats: HubStatSpec[] }
-  | { kind: "channels"; channels: HubChannelSpec[] };
+  | { kind: "channels"; channels: HubChannelSpec[] }
+  | { kind: "trustSeverity"; cliffCount: number; topCliff: string; incidentRate: number; topBreaker: string };
 
 export type HubTimelinePoint = {
   label: string;
@@ -131,7 +130,7 @@ export type HubTimelinePoint = {
   rightPanel: HubCardRightPanel;
   happiness?: CustomerHappinessTop;
   service?: ServiceDeliveryTop;
-  brand?: BrandRiskTop;
+  trust?: TrustTopLine;
 };
 
 export type CallingReasonRow = {
@@ -211,45 +210,6 @@ export type ServiceDeliveryDrill = {
   escalationFlows: CrossChannelEscalationFlow[];
 };
 
-export type SpreadMapRing = "internal" | "reviews" | "social" | "viral";
-
-export type SpreadMapNode = {
-  label: string;
-  volume: number;
-  ring: SpreadMapRing;
-  severity: "critical" | "high" | "muted";
-  angle: number;
-  detail?: string;
-  voiceQuote?: string;
-  voiceCount?: number;
-};
-
-export type CompetitorBuzzDetail = {
-  shopperShift: string;
-  channelSignals: { surface: string; mentions: string; trend: string }[];
-  shopperQuotes: string[];
-  flipkartWeakness: string;
-  recommendedAction: string;
-};
-
-export type { BrandFeatureRequest, BrandInfluencerProfile } from "./cxHeadRetailV3BrandSocialData";
-
-export type BrandRiskDrill = {
-  buzzThemes: { theme: string; mentions: string; viral: boolean }[];
-  competitor: {
-    name: string;
-    theme: string;
-    flipkartComparison: string;
-    comparativeBuzz: number;
-    detail: CompetitorBuzzDetail;
-  }[];
-  fraud: { type: string; trend: string; momentum: number[]; signals: string }[];
-  quality: { issue: string; complaints: string }[];
-  spreadMap: SpreadMapNode[];
-  influencers: BrandInfluencerProfile[];
-  featureRequests: BrandFeatureRequest[];
-};
-
 export type HubJourneyCardData = {
   id: HubCardId;
   title: string;
@@ -261,7 +221,8 @@ export type HubJourneyCardData = {
   sparkYPadBelow?: number;
   sparkYPadAbove?: number;
   timeline: HubTimelinePoint[];
-  drill: CustomerHappinessDrill | ServiceDeliveryDrill | BrandRiskDrill;
+  /** Trust has no brand-marketing drill (§1.1: brand ≠ trust) — the trust drill lives on its own screen. */
+  drill?: CustomerHappinessDrill | ServiceDeliveryDrill;
 };
 
 export function hubSparkSeries(card: HubJourneyCardData): number[] {
@@ -468,168 +429,11 @@ const SERVICE_DELIVERY_DRILL: ServiceDeliveryDrill = {
   ...ECOMMERCE_CROSS_CHANNEL_DATA,
 };
 
-const BRAND_RISK_DRILL: BrandRiskDrill = {
-  buzzThemes: [
-    { theme: "#NeverDelivered", mentions: "1,588", viral: true },
-    { theme: "Hidden platform fee", mentions: "920", viral: true },
-    { theme: "Wrong item received", mentions: "640", viral: false },
-    { theme: "Refund not credited", mentions: "510", viral: false },
-  ],
-  competitor: [
-    {
-      name: "Amazon",
-      theme: "Big Billion sale",
-      flipkartComparison: "Shoppers citing faster refunds",
-      comparativeBuzz: 78,
-      detail: {
-        shopperShift: "412 shoppers explicitly comparing refund speed vs Flipkart this week",
-        channelSignals: [
-          { surface: "Social/X", mentions: "1.2K", trend: "Rising" },
-          { surface: "Reviews", mentions: "640", trend: "Rising" },
-          { surface: "Live Chat", mentions: "286", trend: "Watch" },
-        ],
-        shopperQuotes: [
-          "Amazon refunded in 2 days — Flipkart still pending",
-          "Switching my phone order to Amazon after this sale",
-          "Prime delivery beat Flipkart again on the same SKU",
-        ],
-        flipkartWeakness: "Refund SLA + sale-window delivery promise gap vs Amazon Prime",
-        recommendedAction: "Expedite refund-status comms + match sale-window delivery messaging on top SKUs",
-      },
-    },
-    {
-      name: "Meesho",
-      theme: "Lower price perception",
-      flipkartComparison: "Value comparison spreading on social",
-      comparativeBuzz: 62,
-      detail: {
-        shopperShift: "268 value-seeking shoppers cross-shopping on fashion & home basics",
-        channelSignals: [
-          { surface: "Social/X", mentions: "890", trend: "Rising" },
-          { surface: "Reviews", mentions: "412", trend: "Watch" },
-          { surface: "App Store", mentions: "186", trend: "Stable" },
-        ],
-        shopperQuotes: [
-          "Same kurta ₹200 cheaper on Meesho",
-          "Why pay Flipkart fees when Meesho is zero commission?",
-          "Meesho COD is easier — no platform fee shock",
-        ],
-        flipkartWeakness: "Platform fee + perceived price gap on value-tier fashion",
-        recommendedAction: "Surface all-in price earlier in checkout · target fee-transparency fix on app",
-      },
-    },
-    {
-      name: "Myntra",
-      theme: "Fashion festival pull",
-      flipkartComparison: "Style-led shoppers deferring Flipkart fashion basket",
-      comparativeBuzz: 54,
-      detail: {
-        shopperShift: "194 fashion-intent shoppers delaying Flipkart checkout for Myntra EORS",
-        channelSignals: [
-          { surface: "Reviews", mentions: "520", trend: "Watch" },
-          { surface: "Social/X", mentions: "348", trend: "Rising" },
-          { surface: "Care Email", mentions: "142", trend: "Stable" },
-        ],
-        shopperQuotes: [
-          "Waiting for Myntra sale instead of buying on Flipkart now",
-          "Myntra try-and-buy is easier for fashion returns",
-          "Flipkart fashion filters feel worse than Myntra",
-        ],
-        flipkartWeakness: "Fashion try-and-buy + festival sale timing vs Myntra EORS",
-        recommendedAction: "Pull forward fashion assurance messaging · highlight easy returns on top categories",
-      },
-    },
-  ],
-  fraud: [
-    { type: "Refund fraud concern", trend: "Rising", momentum: [22, 28, 34, 41, 52, 61], signals: "412" },
-    { type: "Fake seller / product", trend: "Rising", momentum: [18, 24, 31, 38, 48, 58], signals: "286" },
-    { type: "Empty box delivery", trend: "Watch", momentum: [30, 38, 32, 40, 36, 44], signals: "194" },
-    { type: "Fake seller account", trend: "Stable", momentum: [42, 44, 41, 43, 42, 44], signals: "128" },
-  ],
-  quality: [
-    { issue: "Damaged product", complaints: "820" },
-    { issue: "Wrong product", complaints: "640" },
-    { issue: "Used product received", complaints: "210" },
-    { issue: "Poor packaging", complaints: "180" },
-    { issue: "Counterfeit suspected", complaints: "156" },
-  ],
-  spreadMap: [
-    {
-      label: "#NeverDelivered",
-      volume: 1588,
-      ring: "viral",
-      severity: "critical",
-      angle: 302,
-      detail: "Viral hashtag · late-delivery posts crossing into public news cycle",
-      voiceQuote: "Complained but nobody acted",
-      voiceCount: 412,
-    },
-    {
-      label: "Hidden platform fee",
-      volume: 928,
-      ring: "reviews",
-      severity: "high",
-      angle: 38,
-      detail: "Review-site spike · shoppers flag unexpected checkout fees",
-      voiceQuote: "I no longer trust Flipkart",
-      voiceCount: 340,
-    },
-    {
-      label: "Damaged product",
-      volume: 828,
-      ring: "reviews",
-      severity: "critical",
-      angle: 132,
-      detail: "Quality trust break · photo evidence in app-store reviews",
-      voiceQuote: "Will never shop here again",
-      voiceCount: 224,
-    },
-    {
-      label: "Wrong item / product",
-      volume: 648,
-      ring: "reviews",
-      severity: "high",
-      angle: 198,
-      detail: "Fulfillment mismatch · repeat contacts after wrong SKU delivered",
-      voiceQuote: "High-frustration repeat contact",
-      voiceCount: 186,
-    },
-    {
-      label: "Refund not credited",
-      volume: 510,
-      ring: "reviews",
-      severity: "critical",
-      angle: 268,
-      detail: "Refund-status confusion · shoppers posting on review surfaces",
-      voiceQuote: "Promised refund never came",
-      voiceCount: 278,
-    },
-    {
-      label: "",
-      volume: 86,
-      ring: "internal",
-      severity: "muted",
-      angle: 182,
-      detail: "Internal care chatter · not yet visible on public surfaces",
-    },
-    {
-      label: "",
-      volume: 64,
-      ring: "internal",
-      severity: "muted",
-      angle: 12,
-      detail: "Early ops signal · contained to voice/chat queues",
-    },
-  ],
-  influencers: BRAND_INFLUENCER_WATCHLIST,
-  featureRequests: BRAND_FEATURE_REQUESTS,
-};
-
 export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
   {
     id: "customer-happiness",
     title: "Are our customers happy?",
-    subtitle: "Happy vs Unhappy · Top Intent · Contacts",
+    subtitle: "Happy · FCR · Top Intent · Contacts",
     targetScreen: "hub-customer-happiness",
     icon: Target,
     iconColor: "#f59e0b",
@@ -644,7 +448,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 68, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
-            { label: "Unhappy", value: 32, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
+            { label: "FCR", value: 74, color: "#F6A93B", suffix: "%", bottomLabel: "Resolve" },
           ],
           stats: [
             { label: "Top Intent", value: "Delivery ETA" },
@@ -652,7 +456,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "The week opens calm, with delivery ETA questions dominating channels.\nNo UPI spike has been detected yet.\nHappy rate holds at 68%, and unhappy volume stays contained at 32%.\nFour Plus members are on churn watch and need monitoring only.",
+          "The week opens calm, with delivery ETA questions dominating channels.\nNo UPI spike has been detected yet.\nHappy rate holds at 68%, and first-contact resolve sits at 74%.\nFour Plus members are on churn watch and need monitoring only.",
       },
       {
         label: "D2",
@@ -661,7 +465,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 61, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
-            { label: "Unhappy", value: 39, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
+            { label: "FCR", value: 66, color: "#ef4444", suffix: "%", bottomLabel: "Resolve" },
           ],
           stats: [
             { label: "Top Intent", value: "UPI Checkout" },
@@ -678,7 +482,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 73, color: "#4ADE80", suffix: "%", bottomLabel: "Rate" },
-            { label: "Unhappy", value: 27, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
+            { label: "FCR", value: 78, color: "#4ADE80", suffix: "%", bottomLabel: "Resolve" },
           ],
           stats: [
             { label: "Top Intent", value: "Refund Status" },
@@ -695,7 +499,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 63, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
-            { label: "Unhappy", value: 37, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
+            { label: "FCR", value: 69, color: "#ef4444", suffix: "%", bottomLabel: "Resolve" },
           ],
           stats: [
             { label: "Top Intent", value: "Delivery Delay" },
@@ -712,7 +516,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 68, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
-            { label: "Unhappy", value: 32, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
+            { label: "FCR", value: 71, color: "#F6A93B", suffix: "%", bottomLabel: "Resolve" },
           ],
           stats: [
             { label: "Top Intent", value: "Refund Backlog" },
@@ -729,7 +533,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 68, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
-            { label: "Unhappy", value: 32, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
+            { label: "FCR", value: 73, color: "#F6A93B", suffix: "%", bottomLabel: "Resolve" },
           ],
           stats: [
             { label: "Top Intent", value: "Delivery Delay" },
@@ -751,16 +555,16 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           impact: { customers: "18.4K", channels: "Voice, Chat" },
         },
         conversationInsight:
-          "Unhappy rate is at 32%, driven by delivery and promo-code confusion.\nHappy rate holds at 68%, while shipping pain is spiking unhappy contacts.\nTwelve Plus members are in cancel risk, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
+          "Happy rate holds at 68%, while first-contact resolve is at 73% on delivery and promo-code confusion.\nShipping pain is spiking repeat contacts before agents close the loop.\nTwelve Plus members are in cancel risk, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
       },
     ],
     drill: CUSTOMER_HAPPINESS_DRILL,
   },
   {
-    id: "brand-risk",
+    id: "trust",
     title: "Where is customer trust breaking — and why?",
-    subtitle: "Trust Index · Outcome Signals · Top Breakers",
-    targetScreen: "hub-brand-risk",
+    subtitle: "Trust Index · Cliff Severity · Top Breaker",
+    targetScreen: "hub-trust",
     icon: Shield,
     iconColor: "#f59e0b",
     sparkColor: "#f59e0b",
@@ -771,108 +575,86 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
         label: "D1",
         heroValue: 76,
         rightPanel: {
-          kind: "channels",
-          channels: [
-            { name: "Sentiment", v: 0.61 },
-            { name: "Resolution", v: 0.79 },
-            { name: "CSAT", v: 0.82 },
-            { name: "Fulfilment", v: 0.62 },
-            { name: "Payments", v: 0.58 },
-          ],
+          kind: "trustSeverity",
+          cliffCount: 2,
+          topCliff: "Account Takeover",
+          incidentRate: 0.4,
+          topBreaker: "Trust & Safety / Fraud",
         },
         conversationInsight:
-          "Trust Index opens the week at 76, which is 4 pts above today.\nOutcome signals are stable, but fulfilment trust is soft on the damage lane.\nDamaged-product share is building on Ekart-North in Tier-2 markets.\nNo cliff breach is active; only slope erosion is visible.",
+          "Trust Index opens the week at 76, which is 4 pts above today.\nTwo cliff events are live — Account Takeover and Item Missing — both low-volume, high blast severity.\nDamaged-product slope is building on Ekart-North in Tier-2 markets.\nNo counterfeit signal has surfaced yet this week.",
       },
       {
         label: "D2",
         heroValue: 75,
         rightPanel: {
-          kind: "channels",
-          channels: [
-            { name: "Sentiment", v: 0.59 },
-            { name: "Resolution", v: 0.78 },
-            { name: "CSAT", v: 0.81 },
-            { name: "Fulfilment", v: 0.58 },
-            { name: "Payments", v: 0.55 },
-          ],
+          kind: "trustSeverity",
+          cliffCount: 2,
+          topCliff: "Item Missing in Order",
+          incidentRate: 0.3,
+          topBreaker: "Supply Chain / Dark Store",
         },
         conversationInsight:
-          "Trust Index slips 1 pt as refund-not-credited contacts rise.\nPrepaid ledger mismatch is surfacing on voice and email.\nFulfilment score is down due to damage on mobiles and appliances.\nRepeat-contact rate is edging up on the refund queue.",
+          "Trust Index slips 1 pt as refund-not-credited contacts rise.\nPrepaid ledger mismatch is surfacing on voice and email.\nItem Missing overtakes Account Takeover as the top cliff today.\nRepeat-contact rate is edging up on the refund queue.",
       },
       {
         label: "D3",
         heroValue: 74,
         rightPanel: {
-          kind: "channels",
-          channels: [
-            { name: "Sentiment", v: 0.58 },
-            { name: "Resolution", v: 0.77 },
-            { name: "CSAT", v: 0.8 },
-            { name: "Fulfilment", v: 0.55 },
-            { name: "Payments", v: 0.54 },
-          ],
+          kind: "trustSeverity",
+          cliffCount: 3,
+          topCliff: "Refund Not Credited",
+          incidentRate: 3.8,
+          topBreaker: "CX + Payments",
         },
         conversationInsight:
-          "Wrong-item fashion picks are pulling fulfilment trust lower.\nResolution stays above 0.77, but sentiment is decaying.\nNew customers are hit hardest, with a 12 pt trust drop.\nRoute flagged sellers for a SKU-mapping audit.",
+          "Refund Not Credited is re-classified as a cliff — three cliff events are now live.\nWrong-item fashion picks are pulling the slope side lower in parallel.\nNew customers are hit hardest, with a 12 pt trust drop.\nPush flagged sellers for a SKU-mapping audit to Marketplace.",
       },
       {
         label: "D4",
         heroValue: 73,
         rightPanel: {
-          kind: "channels",
-          channels: [
-            { name: "Sentiment", v: 0.57 },
-            { name: "Resolution", v: 0.76 },
-            { name: "CSAT", v: 0.79 },
-            { name: "Fulfilment", v: 0.52 },
-            { name: "Payments", v: 0.53 },
-          ],
+          kind: "trustSeverity",
+          cliffCount: 3,
+          topCliff: "Refund Not Credited",
+          incidentRate: 3.8,
+          topBreaker: "CX + Payments",
         },
         conversationInsight:
-          "The never-delivered cohort is adding anxiety before contact lands.\nHidden-fee complaints are up 31% week over week on checkout surprise.\nTrust contacts reach 36.9K, impacting 17.7K unique customers.\nPayments trust is the weakest signal this week.",
+          "The never-delivered cohort is adding anxiety before contact lands.\nHidden-fee complaints are up 31% week over week on checkout surprise.\nTrust contacts reach 36.9K, impacting 17.7K unique customers.\nRefund Not Credited remains the highest-severity cliff today.",
       },
       {
         label: "D5",
         heroValue: 72,
         rightPanel: {
-          kind: "channels",
-          channels: [
-            { name: "Sentiment", v: 0.56 },
-            { name: "Resolution", v: 0.75 },
-            { name: "CSAT", v: 0.785 },
-            { name: "Fulfilment", v: 0.5 },
-            { name: "Payments", v: 0.525 },
-          ],
+          kind: "trustSeverity",
+          cliffCount: 4,
+          topCliff: "Counterfeit Concern",
+          incidentRate: 4.2,
+          topBreaker: "Category / Seller Ops",
         },
         conversationInsight:
-          "Trust Index sits at 72, which is 8 pts below the 80 target band.\nDamaged product leads 35% of trust complaints and is up 18% week over week.\nRefund-not-credited is the fastest riser at plus 22% on prepaid mismatch.\nThe trust portfolio averages 2.1 times repeat contact.",
+          "Counterfeit Concern overtakes Refund Not Credited as the top-severity cliff.\nDamaged product still leads on raw volume, but not on severity.\nFour cliff events are now live across refund, counterfeit, ATO and missing items.\nThe trust portfolio averages 2.1 times repeat contact.",
       },
       {
         label: "D6",
         heroValue: 72,
         rightPanel: {
-          kind: "channels",
-          channels: [
-            { name: "Sentiment", v: 0.55 },
-            { name: "Resolution", v: 0.74 },
-            { name: "CSAT", v: 0.78 },
-            { name: "Fulfilment", v: 0.48 },
-            { name: "Payments", v: 0.52 },
-          ],
+          kind: "trustSeverity",
+          cliffCount: TRUST_PULSE.cliffCount,
+          topCliff: TOP_TRUST_DRIVER.label,
+          incidentRate: TOP_TRUST_DRIVER.incidentRate,
+          topBreaker: TOP_TRUST_DRIVER.fixOwner,
         },
-        brand: {
-          severity: "Rising",
-          topTheme: "Damaged product · 35% share",
-          competitor: "Amazon refund speed gap",
-          trustSignal: "36.9K trust contacts · 17.7K impacted",
-          fraudSignal: "Counterfeit cliff · consumables",
-          spread: "Refund + never-delivered · Tier-2",
+        trust: {
+          topCliff: TOP_TRUST_DRIVER.label,
+          cliffCount: TRUST_PULSE.cliffCount,
+          severityLeader: TOP_TRUST_DRIVER.label,
         },
         conversationInsight:
-          "Trust Index is at 72, down 4 pts versus week open, with an 8 pt gap to target.\nThe weakest scores are Fulfilment at 0.48 and Payments at 0.52.\nThe top breaker is damaged product, while refund-not-credited is up 22% week over week.\nAct now with a packaging audit on top pincodes and expose refund ETA in-app.",
+          "Trust Index is at 72, down 4 pts versus week open, with an 8 pt gap to target.\nCounterfeit Concern leads on severity — 4.2% incidence among trust contacts.\nFour cliff events are live: Refund Not Credited, Counterfeit Concern, Account Takeover, Item Missing.\nPush the top breaker to Category / Seller Ops for a compliance review.",
       },
     ],
-    drill: BRAND_RISK_DRILL,
   },
   {
     id: "service-delivery",

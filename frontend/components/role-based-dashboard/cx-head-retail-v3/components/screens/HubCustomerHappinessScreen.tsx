@@ -4,15 +4,12 @@ import React from "react";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
 import { getHubCardById } from "../../lib/cxHeadRetailV3HubCards";
 import { FLIPKART_FCI_CLUSTERS } from "../../lib/cxHeadRetailV3FlipkartFciClusters";
-import { useNavigation } from "../../lib/NavigationContext";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
-import { ScreenBackBar } from "../common/ScreenBackBar";
 import { CustomerHappinessHvLvIntentPanel } from "../hub/CustomerHappinessHvLvIntentPanel";
 import { FlipkartFciKpiCards } from "../hub/FlipkartFciKpiCards";
 import { layout } from "../../theme/tokens";
 
 export function HubCustomerHappinessScreen(): React.ReactElement {
-  const { navigate } = useNavigation();
   const card = getHubCardById("customer-happiness");
 
   if (!card) {
@@ -31,10 +28,7 @@ export function HubCustomerHappinessScreen(): React.ReactElement {
         gap: 16,
       }}
     >
-      <HubFluidHeadline
-        variant="customer-happiness"
-        trailing={<ScreenBackBar onBack={() => navigate("overview")} />}
-      />
+      <HubFluidHeadline variant="customer-happiness" />
 
       <FlipkartFciKpiCards isDarkMode />
 

@@ -360,7 +360,7 @@ function CallerSegmentTableRow({ row, index }: { row: CallerSegmentRow; index: n
         padding: "10px 12px",
         borderTop: index === 0 ? undefined : `1px solid ${cssVar("border")}`,
       }}
-      title={`${row.key.toUpperCase()} · ${formatInteractions(row.interactions)} interactions · WoW ${row.wowDelta > 0 ? "+" : ""}${row.wowDelta.toFixed(1)}% · Sentiment ${row.sentiment.toFixed(2)} · FCI ${row.fciRate}%`}
+      title={`${row.key.toUpperCase()} · ${formatInteractions(row.interactions)} interactions · WoW ${row.wowDelta > 0 ? "+" : ""}${row.wowDelta.toFixed(1)}% · Sentiment ${row.sentiment.toFixed(2)} · CPU ${row.cpu}%`}
     >
       <span
         style={{
@@ -390,7 +390,7 @@ function CallerSegmentTableRow({ row, index }: { row: CallerSegmentRow; index: n
         {row.sentiment.toFixed(2)}
       </span>
       <span className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("text-primary") }}>
-        {row.fciRate}%
+        {row.cpu}%
       </span>
     </div>
   );
@@ -398,7 +398,7 @@ function CallerSegmentTableRow({ row, index }: { row: CallerSegmentRow; index: n
 
 /** HV/LV × HF/LF segment table — total interactions + per-segment WoW, sentiment, FCI. */
 export function CustomerSegmentVisual({ whoCalling }: { whoCalling: WhoCallingSnapshot }): React.ReactElement {
-  const tableHeaders = ["SEGMENT", "INTERACTIONS", "WoW", "SENTIMENT", "FCI RATE"] as const;
+  const tableHeaders = ["SEGMENT", "INTERACTIONS", "WoW", "SENTIMENT", "CPU"] as const;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>

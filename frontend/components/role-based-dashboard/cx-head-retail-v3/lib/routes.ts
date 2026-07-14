@@ -14,7 +14,7 @@ export type ScreenId =
   | 'overview'
   | 'hub-customer-happiness'
   | 'hub-service-delivery'
-  | 'hub-brand-risk'
+  | 'hub-trust'
   | 'command-centre'
   | 'quick-commerce'
   | 'compliance'

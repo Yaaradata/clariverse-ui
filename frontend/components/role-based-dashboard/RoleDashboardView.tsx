@@ -97,8 +97,6 @@ import {
 } from "./CardsPortfolioDrillScreens";
 import { CategoryIntelligenceDashboard } from "./CategoryIntelligenceDashboard";
 import { CategoryIntelligenceDashboardV2 } from "./CategoryIntelligenceDashboardV2";
-import { CXVoCHeadDashboard } from "./CXVoCHeadDashboard";
-import { CXVoCHeadDashboardV2 } from "./CXVoCHeadDashboardV2";
 import { CXVoCHeadDashboardV3 } from "./CXVoCHeadDashboardV3";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
@@ -4243,30 +4241,6 @@ export function RoleDashboardView({
   }
 
   if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
-    return (
-      <CXVoCHeadDashboard
-        industryId={industry.id}
-        industryName={industry.name}
-        roleName={roleDisplayName(role)}
-        industryColor={industry.color}
-        onExit={onExit}
-      />
-    );
-  }
-
-  if (industry.id === "ecommerce" && role.id === "head_cx_retail_v2") {
-    return (
-      <CXVoCHeadDashboardV2
-        industryId={industry.id}
-        industryName={industry.name}
-        roleName={roleDisplayName(role)}
-        industryColor={industry.color}
-        onExit={onExit}
-      />
-    );
-  }
-
-  if (industry.id === "ecommerce" && role.id === "head_cx_retail_v3") {
     return (
       <CXVoCHeadDashboardV3
         industryId={industry.id}

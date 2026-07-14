@@ -3,17 +3,14 @@
 
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { CxRetailVersionToggle } from '@/components/role-based-dashboard/CxRetailVersionToggle';
 import { useTheme } from '../../theme/DashboardThemeProvider';
 import { useNavigation } from '../../lib/NavigationContext';
-import { useDashboardShell } from '../../lib/DashboardShellContext';
 import { screenById } from '../../lib/routes';
 import { cssVar, layout, radius, type } from '../../theme/tokens';
 
 export function Header(): React.ReactElement {
   const { mode, toggle } = useTheme();
   const { activeScreen } = useNavigation();
-  const { industryId, retailVersion } = useDashboardShell();
   const screen = screenById(activeScreen);
 
   return (
@@ -39,18 +36,9 @@ export function Header(): React.ReactElement {
         >
           {screen.label}
         </div>
-        <div style={{ fontSize: type.scale.small, color: cssVar('text-muted'), marginTop: 2 }}>
-          LiSN · Fluid CX
-        </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <CxRetailVersionToggle
-          industryId={industryId}
-          activeVersion={retailVersion}
-          isDarkMode={mode === 'dark'}
-        />
-        <button
+      <button
         type="button"
         onClick={toggle}
         aria-label={mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
@@ -69,7 +57,6 @@ export function Header(): React.ReactElement {
       >
         {mode === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
       </button>
-      </div>
     </header>
   );
 }

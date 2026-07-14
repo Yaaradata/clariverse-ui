@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Sparkles } from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -17,8 +18,8 @@ import {
 } from "recharts";
 
 import {
-  CONTRIBUTION_TREND,
   COMPLAINT_THEMES,
+  DEMAND_CASCADE,
   GAP_DRIVERS,
   GAP_DRIVER_BREAKDOWN,
   GAP_TOTAL_LAKHS,
@@ -27,7 +28,11 @@ import {
   RETURN_CAUSE_CHART,
   RETURN_RATE_TREND,
   SELLER_TRUST_TREND,
+  SPEND_METRIC_CARDS,
+  SPEND_SEGMENT_BREAKDOWN,
+  SPEND_VS_REVENUE,
   SUBCATEGORY_PERFORMANCE,
+  type SpendMetricCard,
 } from "../../lib/categoryDetailData";
 import { cssVar, radius, space, type } from "../../theme/tokens";
 import { ChartPanel } from "../common/ChartPanel";
@@ -47,399 +52,672 @@ const tip = {
 const PLAN_COLOR = "#4FD17A";
 const ACTUAL_COLOR = "#8B7CF6";
 const SHORTFALL_COLOR = "#F0606B";
-
-type ContributionChartPoint = {
-  week: string;
-  actual: number;
-  plan: number;
-  shortfall: [number, number];
-  gapLakh: number;
-};
-
-const contributionChartData: ContributionChartPoint[] = CONTRIBUTION_TREND.map((d) => ({
-  ...d,
-  shortfall: [d.actual, d.plan],
-  gapLakh: Math.round((d.plan - d.actual) * 100),
-}));
-
-const nowContribution = contributionChartData[contributionChartData.length - 1]!;
-
-function formatCr(value: number): string {
-  return `₹${value.toFixed(2)} Cr`;
-}
-
-function formatGapLakh(lakh: number): string {
-  return lakh <= 0 ? "On plan" : `₹${lakh}L below`;
-}
+const OVER_LINE_COLOR = "#E879A0";
 
 function contributionMean(values: number[]): number {
   return values.reduce((sum, v) => sum + v, 0) / values.length;
 }
 
-const contributionAvgActual = contributionMean(contributionChartData.map((d) => d.actual));
-const contributionAvgPlan = contributionMean(contributionChartData.map((d) => d.plan));
-const contributionAvgGapLakh = Math.round((contributionAvgPlan - contributionAvgActual) * 100);
-const actualVsAvgLakh = Math.round((nowContribution.actual - contributionAvgActual) * 100);
-const planVsAvgLakh = Math.round((nowContribution.plan - contributionAvgPlan) * 100);
-const gapVsAvgLakh = nowContribution.gapLakh - contributionAvgGapLakh;
-
-function formatTrackDelta(lakh: number, invert = false): { text: string; color: string } {
-  if (lakh === 0) {
-    return { text: "On 6-wk avg", color: cssVar("text-muted") };
+function spendDeltaColor(tone: SpendMetricCard["deltaTone"]): string {
+  switch (tone) {
+    case "up-good":
+    case "down-good":
+      return PLAN_COLOR;
+    case "up-bad":
+    case "down-bad":
+      return SHORTFALL_COLOR;
+    default: {
+      const _exhaustive: never = tone;
+      return _exhaustive;
+    }
   }
-  const worse = invert ? lakh > 0 : lakh < 0;
-  const arrow = lakh < 0 ? "▼" : "▲";
-  return {
-    text: `${arrow} ${Math.abs(lakh)}L vs avg`,
-    color: worse ? SHORTFALL_COLOR : PLAN_COLOR,
-  };
 }
 
-const CONTRIBUTION_KPI_CHIPS = [
-  {
-    label: "Actual now",
-    value: formatCr(nowContribution.actual),
-    valueColor: ACTUAL_COLOR,
-    accent: ACTUAL_COLOR,
-    avgLabel: `6-wk avg ${formatCr(contributionAvgActual)}`,
-    track: formatTrackDelta(actualVsAvgLakh),
-    emphasis: false,
-  },
-  {
-    label: "Plan now",
-    value: formatCr(nowContribution.plan),
-    valueColor: cssVar("text-primary"),
-    accent: PLAN_COLOR,
-    avgLabel: `6-wk avg ${formatCr(contributionAvgPlan)}`,
-    track: formatTrackDelta(planVsAvgLakh),
-    emphasis: false,
-  },
-  {
-    label: "Shortfall",
-    value: formatGapLakh(nowContribution.gapLakh),
-    valueColor: SHORTFALL_COLOR,
-    accent: SHORTFALL_COLOR,
-    avgLabel: `Avg gap ₹${contributionAvgGapLakh}L`,
-    track: formatTrackDelta(gapVsAvgLakh, true),
-    emphasis: true,
-  },
-] as const;
+function metricById(id: SpendMetricCard["id"]): SpendMetricCard {
+  return SPEND_METRIC_CARDS.find((c) => c.id === id)!;
+}
 
-function ContributionKpiStrip(): React.ReactElement {
+function SectionLabel({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <div
       style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-        border: `1px solid ${cssVar("border")}`,
-        borderRadius: radius.md,
-        background: cssVar("surface-raised"),
-        overflow: "hidden",
-        marginBottom: space["4"],
-        flexShrink: 0,
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color: cssVar("text-muted"),
+        marginBottom: 10,
       }}
     >
-      {CONTRIBUTION_KPI_CHIPS.map((chip, index) => (
-        <div
-          key={chip.label}
-          style={{
-            padding: `${space["3"]} ${space["4"]}`,
-            borderLeft: index > 0 ? `1px solid ${cssVar("border")}` : undefined,
-            borderTop: `3px solid ${chip.accent}`,
-            background: chip.emphasis ? "rgba(240,96,107,0.07)" : undefined,
-            display: "flex",
-            flexDirection: "column",
-            gap: space["2"],
-            minWidth: 0,
-            minHeight: 88,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-            }}
-          >
-            <span
+      {children}
+    </div>
+  );
+}
+
+export function SpendVsRevenueChart(): React.ReactElement {
+  const returns = metricById("returns");
+  const cac = metricById("cac");
+  const contribution = metricById("contribution");
+  const costRows = [returns, cac, contribution];
+
+  type SegmentId = (typeof SPEND_VS_REVENUE.segments)[number]["id"];
+
+  const [showBreakdown, setShowBreakdown] = useState(false);
+  const [activeSegmentId, setActiveSegmentId] = useState<SegmentId>("returns");
+
+  const activeSegment = SPEND_VS_REVENUE.segments.find((s) => s.id === activeSegmentId)!;
+  const activeBreakdown = SPEND_SEGMENT_BREAKDOWN[activeSegmentId];
+
+  const openBreakdown = (segmentId: SegmentId) => {
+    setActiveSegmentId(segmentId);
+    setShowBreakdown(true);
+  };
+
+  /* Arc dial geometry — spend as stacked ring; dashed tick = revenue 100%. */
+  const dialSize = 220;
+  const stroke = 28;
+  const cx = dialSize / 2;
+  const cy = dialSize / 2;
+  const r = dialSize / 2 - stroke / 2 - 4;
+  const scaleMax = SPEND_VS_REVENUE.spendPctOfRevenue;
+  const revenueDeg = (100 / scaleMax) * 360;
+
+  let arcCursor = 0;
+  const arcSegs = SPEND_VS_REVENUE.segments.map((seg) => {
+    const len = (seg.pctOfRevenue / scaleMax) * 100;
+    const start = arcCursor;
+    arcCursor += len;
+    return { ...seg, dashOffset: -start, dashLen: len };
+  });
+
+  return (
+    <ChartPanel title="Does spend cross the revenue line after returns & CAC?" height="auto">
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(240px, 0.9fr) minmax(0, 1.35fr)", gap: space["5"], alignItems: "start" }}>
+        {/* ── Radial spend dial ── */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: space["3"] }}>
+          <div style={{ position: "relative", width: dialSize, height: dialSize }}>
+            <svg width={dialSize} height={dialSize} role="img" aria-label="Spend as percent of revenue">
+              <circle cx={cx} cy={cy} r={r} fill="none" stroke={cssVar("border")} strokeWidth={stroke} />
+              {arcSegs.map((seg) => {
+                const hatched = "hatched" in seg && seg.hatched;
+                const isActive = showBreakdown && seg.id === activeSegmentId;
+                return (
+                  <circle
+                    key={seg.id}
+                    cx={cx}
+                    cy={cy}
+                    r={r}
+                    fill="none"
+                    stroke={hatched ? OVER_LINE_COLOR : seg.color}
+                    strokeWidth={isActive ? stroke + 4 : stroke}
+                    strokeLinecap="butt"
+                    pathLength={100}
+                    strokeDasharray={`${seg.dashLen} ${100 - seg.dashLen}`}
+                    strokeDashoffset={seg.dashOffset}
+                    opacity={showBreakdown && !isActive ? 0.4 : hatched ? 0.9 : 1}
+                    transform={`rotate(-90 ${cx} ${cy})`}
+                    style={{ cursor: "pointer", transition: "stroke-width 0.2s ease, opacity 0.2s ease" }}
+                    onClick={() => openBreakdown(seg.id)}
+                  >
+                    <title>{`${seg.label}: ₹${seg.amountCr} Cr`}</title>
+                  </circle>
+                );
+              })}
+              {/* Revenue 100% tick on the ring */}
+              <g transform={`rotate(${revenueDeg - 90} ${cx} ${cy})`}>
+                <line
+                  x1={cx}
+                  y1={cy - r - stroke / 2 - 4}
+                  x2={cx}
+                  y2={cy - r + stroke / 2 + 4}
+                  stroke={cssVar("text-secondary")}
+                  strokeWidth={2.5}
+                  strokeDasharray="4 3"
+                />
+              </g>
+            </svg>
+            <div
               style={{
-                width: 7,
-                height: 7,
-                borderRadius: "50%",
-                background: chip.accent,
-                flexShrink: 0,
-                boxShadow: chip.emphasis ? `0 0 8px ${chip.accent}88` : undefined,
-              }}
-            />
-            <span
-              style={{
-                fontSize: type.scale.caption,
-                fontWeight: type.weight.bold,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-                color: chip.accent,
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                pointerEvents: "none",
+                textAlign: "center",
+                padding: 24,
               }}
             >
-              {chip.label}
-            </span>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: OVER_LINE_COLOR }}>
+                Spend / rev
+              </div>
+              <div className="lisn-num" style={{ fontSize: 32, fontWeight: 800, color: OVER_LINE_COLOR, letterSpacing: "-0.04em", lineHeight: 1.1 }}>
+                {SPEND_VS_REVENUE.spendPctOfRevenue}%
+              </div>
+              <div style={{ fontSize: 11, color: cssVar("text-muted"), marginTop: 4 }}>
+                crosses 100%
+              </div>
+              <div className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: OVER_LINE_COLOR, marginTop: 8 }}>
+                −₹{Math.abs(SPEND_VS_REVENUE.contributionCr)} Cr
+              </div>
+            </div>
           </div>
-          <div
-            className="lisn-num"
-            style={{
-              fontSize: 26,
-              fontWeight: 800,
-              lineHeight: type.leading.tight,
-              color: chip.valueColor,
-              letterSpacing: "-0.02em",
-            }}
-          >
-            {chip.value}
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, width: "100%" }}>
+            {SPEND_VS_REVENUE.segments.map((seg) => {
+              const hatched = "hatched" in seg && seg.hatched;
+              const isActive = showBreakdown && seg.id === activeSegmentId;
+              return (
+                <button
+                  key={seg.id}
+                  type="button"
+                  onClick={() => openBreakdown(seg.id)}
+                  style={{
+                    textAlign: "left",
+                    background: isActive ? `${seg.color}18` : cssVar("surface-raised"),
+                    border: `1px solid ${isActive ? `${seg.color}66` : cssVar("border")}`,
+                    borderRadius: radius.md,
+                    padding: "8px 10px",
+                    cursor: "pointer",
+                    minWidth: 0,
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: 2,
+                        flexShrink: 0,
+                        background: hatched
+                          ? `repeating-linear-gradient(-45deg, ${OVER_LINE_COLOR}, ${OVER_LINE_COLOR} 1px, transparent 1px, transparent 3px)`
+                          : seg.color,
+                      }}
+                    />
+                    <span style={{ fontSize: 10, color: cssVar("text-muted"), fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {seg.label}
+                    </span>
+                  </div>
+                  <div className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: hatched ? OVER_LINE_COLOR : cssVar("text-primary") }}>
+                    ₹{seg.amountCr} Cr
+                  </div>
+                  <div className="lisn-num" style={{ fontSize: 10, color: cssVar("text-muted") }}>
+                    {seg.legendPct != null ? `${seg.legendPct}%` : `+${seg.pctOfRevenue}%`}
+                  </div>
+                </button>
+              );
+            })}
           </div>
+          <div style={{ fontSize: 10, color: cssVar("text-muted"), textAlign: "center" }}>
+            Dashed tick = revenue 100% · click a segment for drivers
+          </div>
+        </div>
+
+        {/* ── Costs / segment breakdown ── */}
+        <div style={{ display: "flex", flexDirection: "column", gap: space["4"], minWidth: 0 }}>
+          {showBreakdown ? (
+            <div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
+                <SectionLabel>Spend breakdown · {activeSegment.label}</SectionLabel>
+                <button
+                  type="button"
+                  onClick={() => setShowBreakdown(false)}
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: cssVar("text-secondary"),
+                    background: "transparent",
+                    border: `1px solid ${cssVar("border")}`,
+                    borderRadius: radius.pill,
+                    padding: "4px 10px",
+                    cursor: "pointer",
+                    marginBottom: 10,
+                  }}
+                >
+                  ← Cost bullets
+                </button>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "baseline",
+                  justifyContent: "space-between",
+                  gap: 12,
+                  marginBottom: 12,
+                  paddingBottom: 12,
+                  borderBottom: `1px solid ${cssVar("border")}`,
+                }}
+              >
+                <div>
+                  <div
+                    className="lisn-num"
+                    style={{
+                      fontSize: 24,
+                      fontWeight: 800,
+                      color: "hatched" in activeSegment && activeSegment.hatched ? OVER_LINE_COLOR : cssVar("text-primary"),
+                    }}
+                  >
+                    ₹{activeSegment.amountCr.toLocaleString("en-IN")} Cr
+                  </div>
+                  <div style={{ fontSize: 12, color: cssVar("text-muted"), marginTop: 4 }}>
+                    {activeSegment.legendPct != null
+                      ? `${activeSegment.legendPct}% of revenue pool`
+                      : `+${activeSegment.pctOfRevenue}% past the revenue line`}
+                  </div>
+                </div>
+              </div>
+              {activeBreakdown.map((driver, index) => (
+                <div
+                  key={driver.label}
+                  style={{
+                    padding: "10px 0",
+                    borderBottom: index < activeBreakdown.length - 1 ? `1px solid ${cssVar("border")}` : undefined,
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between", gap: 12 }}>
+                    <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{driver.label}</span>
+                    <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800 }}>
+                      ₹{driver.amountCr} Cr
+                    </span>
+                  </div>
+                  <div style={{ marginTop: 8, height: 5, borderRadius: radius.pill, background: "#1a1a1a", overflow: "hidden" }}>
+                    <div style={{ width: `${driver.sharePct}%`, height: "100%", background: activeSegment.color }} />
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, gap: 12 }}>
+                    <span style={{ fontSize: 11, color: cssVar("text-muted") }}>{driver.note}</span>
+                    <span className="lisn-num" style={{ fontSize: 11, fontWeight: 700, color: cssVar("text-secondary") }}>
+                      {driver.sharePct}%
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <SectionLabel>Cost vs revenue · bullet scale</SectionLabel>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+                {costRows.map((row) => {
+                  const deltaColor = spendDeltaColor(row.deltaTone);
+                  const fillPct = Math.min(100, Math.max(row.barPct, 2));
+                  return (
+                    <div key={row.id}>
+                      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, marginBottom: 6 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
+                          <span style={{ width: 8, height: 8, borderRadius: 2, background: row.barColor, flexShrink: 0 }} />
+                          <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{row.label}</span>
+                        </div>
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 10, flexShrink: 0 }}>
+                          <span className="lisn-num" style={{ fontSize: 15, fontWeight: 800, color: row.valueColor ?? cssVar("text-primary") }}>
+                            {row.value}
+                          </span>
+                          <span className="lisn-num" style={{ fontSize: 11, fontWeight: 700, color: deltaColor }}>
+                            {row.delta}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ position: "relative", height: 10, borderRadius: radius.pill, background: cssVar("surface-raised"), border: `1px solid ${cssVar("border")}`, overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${fillPct}%`, background: row.barColor, borderRadius: radius.pill }} />
+                      </div>
+                      <div style={{ fontSize: 11, color: cssVar("text-muted"), marginTop: 4 }}>
+                        {row.barLabel} · {row.detail}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div
+                style={{
+                  marginTop: space["3"],
+                  padding: "10px 12px",
+                  borderRadius: radius.md,
+                  background: `${OVER_LINE_COLOR}12`,
+                  border: `1px solid ${OVER_LINE_COLOR}33`,
+                  fontSize: 12,
+                  color: cssVar("text-secondary"),
+                  lineHeight: 1.45,
+                }}
+              >
+                Revenue pool{" "}
+                <strong style={{ color: cssVar("text-primary") }}>
+                  ₹{SPEND_VS_REVENUE.revenuePoolCr.toLocaleString("en-IN")} Cr
+                </strong>{" "}
+                = 100%. Spend runs to{" "}
+                <strong style={{ color: OVER_LINE_COLOR }}>{SPEND_VS_REVENUE.spendPctOfRevenue}%</strong> — Returns + CAC are{" "}
+                {SPEND_VS_REVENUE.returnsAndCacShareOfSpend}% of that spend.
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </ChartPanel>
+  );
+}
+
+export function DemandCascadeCard(): React.ReactElement {
+  const severityColor = (severity: (typeof DEMAND_CASCADE.insights)[number]["severity"]): string => {
+    switch (severity) {
+      case "critical":
+        return SHORTFALL_COLOR;
+      case "high":
+        return "#E8A23D";
+      case "medium":
+        return cssVar("accent-2");
+      default: {
+        const _exhaustive: never = severity;
+        return _exhaustive;
+      }
+    }
+  };
+
+  const headlineKpis = [
+    {
+      label: "GMV",
+      value: `₹${DEMAND_CASCADE.gmvCr.toLocaleString("en-IN")} Cr`,
+      note: "Gross demand",
+      color: "#7DD3FC",
+    },
+    {
+      label: "Return leak",
+      value: `₹${DEMAND_CASCADE.returnLeakCr.toLocaleString("en-IN")} Cr`,
+      note: `${DEMAND_CASCADE.returnLeakPct}% of GMV`,
+      color: "#E8A23D",
+    },
+    {
+      label: "Take rate",
+      value: `${DEMAND_CASCADE.takeRatePct}%`,
+      note: `${DEMAND_CASCADE.takeOnNmvPct}% of NMV → ₹${DEMAND_CASCADE.marketplaceCr.toLocaleString("en-IN")} Cr`,
+      color: PLAN_COLOR,
+    },
+  ];
+
+  return (
+    <ChartPanel title="Demand cascade · GMV → take rate" height="auto">
+      {/* Headline strip — equal columns, shared left/right edges with body grid */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gap: space["3"],
+          marginBottom: space["4"],
+        }}
+      >
+        {headlineKpis.map((kpi) => (
           <div
+            key={kpi.label}
             style={{
+              background: cssVar("surface-raised"),
+              border: `1px solid ${cssVar("border")}`,
+              borderTop: `3px solid ${kpi.color}`,
+              borderRadius: radius.md,
+              padding: "10px 12px",
+              minWidth: 0,
               display: "flex",
-              alignItems: "flex-end",
-              justifyContent: "space-between",
-              gap: space["2"],
-              marginTop: "auto",
+              flexDirection: "column",
+              gap: 4,
             }}
           >
-            <span
-              style={{
-                fontSize: type.scale.caption,
-                color: cssVar("text-muted"),
-                lineHeight: type.leading.snug,
-                minWidth: 0,
-              }}
-            >
-              {chip.avgLabel}
-            </span>
-            <span
+            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: cssVar("text-muted") }}>
+              {kpi.label}
+            </div>
+            <div
               className="lisn-num"
               style={{
-                fontSize: type.scale.caption,
-                fontWeight: type.weight.bold,
-                color: chip.track.color,
-                background: `${chip.track.color}1A`,
-                border: `1px solid ${chip.track.color}33`,
-                padding: "3px 8px",
-                borderRadius: radius.pill,
+                fontSize: 20,
+                fontWeight: 800,
+                color: cssVar("text-primary"),
+                letterSpacing: "-0.02em",
                 whiteSpace: "nowrap",
-                flexShrink: 0,
                 lineHeight: 1.2,
               }}
             >
-              {chip.track.text}
-            </span>
+              {kpi.value}
+            </div>
+            <div style={{ fontSize: 11, color: cssVar("text-muted"), lineHeight: 1.35 }}>{kpi.note}</div>
           </div>
-        </div>
-      ))}
-    </div>
-  );
-}
+        ))}
+      </div>
 
-function ContributionTooltip({
-  active,
-  payload,
-  label,
-}: {
-  active?: boolean;
-  payload?: { dataKey: string; value: number; payload: ContributionChartPoint }[];
-  label?: string;
-}): React.ReactElement | null {
-  if (!active || !payload?.length) return null;
-
-  const row = payload[0]?.payload;
-  if (!row) return null;
-
-  return (
-    <div
-      style={{
-        background: "#141414",
-        border: "1px solid #333",
-        borderRadius: 8,
-        padding: "10px 12px",
-        fontSize: 12,
-        minWidth: 168,
-      }}
-    >
-      <div style={{ color: "#A3A3A3", marginBottom: 8, fontWeight: 600 }}>{label}</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
-          <span style={{ color: ACTUAL_COLOR }}>Actual</span>
-          <span className="lisn-num" style={{ color: "#FAFAFA", fontWeight: 700 }}>
-            {formatCr(row.actual)}
-          </span>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 16 }}>
-          <span style={{ color: PLAN_COLOR }}>Plan</span>
-          <span className="lisn-num" style={{ color: "#FAFAFA", fontWeight: 700 }}>
-            {formatCr(row.plan)}
-          </span>
-        </div>
+      {/* Body: headers share one row so columns align; cascade cards are full-width */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.2fr) minmax(260px, 0.8fr)",
+          gridTemplateRows: "auto 1fr",
+          columnGap: space["4"],
+          rowGap: 0,
+          alignItems: "stretch",
+        }}
+      >
+        <SectionLabel>Where demand becomes marketplace revenue</SectionLabel>
         <div
           style={{
-            marginTop: 4,
-            paddingTop: 8,
-            borderTop: "1px solid #262626",
             display: "flex",
-            justifyContent: "space-between",
-            gap: 16,
+            alignItems: "center",
+            gap: 6,
+            marginBottom: 10,
+            minHeight: 14,
           }}
         >
-          <span style={{ color: SHORTFALL_COLOR }}>Gap vs plan</span>
-          <span className="lisn-num" style={{ color: SHORTFALL_COLOR, fontWeight: 700 }}>
-            {formatGapLakh(row.gapLakh)}
+          <Sparkles size={13} color={cssVar("accent-2")} strokeWidth={2.4} />
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: cssVar("accent-2"),
+            }}
+          >
+            AI · Demand cascade
           </span>
         </div>
-      </div>
-    </div>
-  );
-}
 
-function ContributionDot({
-  cx,
-  cy,
-  index,
-  dataKey,
-}: {
-  cx?: number;
-  cy?: number;
-  index?: number;
-  dataKey?: string;
-}): React.ReactElement | null {
-  if (cx === undefined || cy === undefined || index === undefined) return null;
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+          {DEMAND_CASCADE.steps.map((step, index) => {
+            const deltaColor = spendDeltaColor(step.deltaTone);
+            const leak = DEMAND_CASCADE.leaks[index];
+            /* Bar track = 100% of GMV; solid = stage share; hatch = return slice when present. */
+            const solidPct = Math.min(100, Math.max(step.barPct, 0));
+            const hatchPct = step.barHatchPct ?? 0;
+            return (
+              <React.Fragment key={step.id}>
+                <div
+                  style={{
+                    width: "100%",
+                    background: cssVar("surface-raised"),
+                    border: `1px solid ${cssVar("border")}`,
+                    borderLeft: `3px solid ${step.barColor}`,
+                    borderRadius: radius.md,
+                    padding: "12px 14px",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) auto",
+                      columnGap: 12,
+                      alignItems: "baseline",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        letterSpacing: "0.06em",
+                        textTransform: "uppercase",
+                        color: cssVar("text-muted"),
+                      }}
+                    >
+                      {step.label}
+                    </span>
+                    <span className="lisn-num" style={{ fontSize: 11, fontWeight: 700, color: deltaColor, whiteSpace: "nowrap" }}>
+                      {step.delta}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "minmax(0, 1fr) auto",
+                      columnGap: 12,
+                      alignItems: "baseline",
+                      marginTop: 6,
+                    }}
+                  >
+                    <span
+                      className="lisn-num"
+                      style={{
+                        fontSize: 22,
+                        fontWeight: 800,
+                        color: cssVar("text-primary"),
+                        letterSpacing: "-0.02em",
+                        whiteSpace: "nowrap",
+                        lineHeight: 1.15,
+                      }}
+                    >
+                      {step.value}
+                    </span>
+                    <span
+                      className="lisn-num"
+                      style={{
+                        fontSize: 12,
+                        fontWeight: 700,
+                        color: cssVar("text-secondary"),
+                        whiteSpace: "nowrap",
+                        textAlign: "right",
+                      }}
+                    >
+                      {step.shareLabel}
+                    </span>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 10,
+                      height: 8,
+                      borderRadius: radius.pill,
+                      background: cssVar("border"),
+                      overflow: "hidden",
+                      display: "flex",
+                      width: "100%",
+                    }}
+                    aria-hidden
+                  >
+                    <div style={{ width: `${solidPct}%`, height: "100%", background: step.barColor, flexShrink: 0 }} />
+                    {hatchPct > 0 ? (
+                      <div
+                        style={{
+                          width: `${hatchPct}%`,
+                          height: "100%",
+                          flexShrink: 0,
+                          background: `repeating-linear-gradient(-45deg, ${step.barHatchColor}, ${step.barHatchColor} 1px, transparent 1px, transparent 3px)`,
+                        }}
+                      />
+                    ) : null}
+                  </div>
+                  <div style={{ fontSize: 12, color: cssVar("text-secondary"), marginTop: 8, lineHeight: 1.4 }}>{step.detail}</div>
+                  <div style={{ fontSize: 11, color: cssVar("text-muted"), marginTop: 4, lineHeight: 1.4, fontStyle: "italic" }}>
+                    {step.signal}
+                  </div>
+                </div>
 
-  const isNow = index === contributionChartData.length - 1;
-  const isPlan = dataKey === "plan";
-  const color = isPlan ? PLAN_COLOR : ACTUAL_COLOR;
-  const r = isNow ? 5 : 3.5;
+                {leak ? (
+                  <div
+                    style={{
+                      width: "100%",
+                      boxSizing: "border-box",
+                      padding: "8px 12px",
+                      borderRadius: radius.md,
+                      background: leak.tone === "warn" ? "rgba(232,162,61,0.08)" : cssVar("surface-raised"),
+                      border: `1px dashed ${leak.tone === "warn" ? "#E8A23D66" : cssVar("border")}`,
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "grid",
+                        gridTemplateColumns: "minmax(0, 1fr) auto",
+                        columnGap: 12,
+                        alignItems: "baseline",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: 10,
+                          fontWeight: 700,
+                          letterSpacing: "0.05em",
+                          textTransform: "uppercase",
+                          color: leak.tone === "warn" ? "#E8A23D" : cssVar("text-muted"),
+                        }}
+                      >
+                        ▾ {leak.label}
+                      </span>
+                      <span
+                        className="lisn-num"
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 800,
+                          color: leak.tone === "warn" ? "#E8A23D" : cssVar("text-primary"),
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {leak.amount} · {leak.pct}
+                      </span>
+                    </div>
+                    <div style={{ fontSize: 11, color: cssVar("text-muted"), marginTop: 4, lineHeight: 1.4 }}>{leak.note}</div>
+                  </div>
+                ) : null}
+              </React.Fragment>
+            );
+          })}
+        </div>
 
-  return (
-    <circle
-      cx={cx}
-      cy={cy}
-      r={r}
-      fill={color}
-      stroke="#0A0A0A"
-      strokeWidth={isNow ? 2 : 1.5}
-    />
-  );
-}
-
-function ContributionChartLegend(): React.ReactElement {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: 14,
-        fontSize: type.scale.caption,
-        color: cssVar("text-secondary"),
-      }}
-    >
-      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <span style={{ width: 16, height: 2, background: ACTUAL_COLOR, display: "inline-block" }} />
-        Actual
-      </span>
-      <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
-        <span
-          style={{
-            width: 16,
-            height: 0,
-            borderTop: `2px dashed ${PLAN_COLOR}`,
-            display: "inline-block",
-          }}
-        />
-        Plan
-      </span>
-    </div>
-  );
-}
-
-export function ContributionTrendChart(): React.ReactElement {
-  return (
-    <ChartPanel
-      title="Contribution vs plan"
-      subtitle="₹ Cr · 6-week trend · ₹18L below plan at close"
-      subtitlePlacement="header"
-      headerEnd={<ContributionChartLegend />}
-    >
-      <ContributionKpiStrip />
-
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 150 }}>
-        <ResponsiveContainer width="100%" height="100%">
-        <ComposedChart data={contributionChartData} margin={{ top: 8, right: 12, left: 4, bottom: 4 }}>
-          <defs>
-            <linearGradient id="contributionActualFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={ACTUAL_COLOR} stopOpacity={0.42} />
-              <stop offset="100%" stopColor={ACTUAL_COLOR} stopOpacity={0.04} />
-            </linearGradient>
-            <linearGradient id="contributionShortfallFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={SHORTFALL_COLOR} stopOpacity={0.38} />
-              <stop offset="100%" stopColor={SHORTFALL_COLOR} stopOpacity={0.1} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid stroke={cssVar("border")} strokeDasharray="3 3" vertical={false} />
-          <XAxis
-            dataKey="week"
-            tick={{ fill: cssVar("text-secondary"), fontSize: 11, fontWeight: 600 }}
-            axisLine={{ stroke: cssVar("border") }}
-            tickLine={false}
-          />
-          <YAxis
-            domain={[2.38, 2.64]}
-            ticks={[2.4, 2.45, 2.5, 2.55, 2.6]}
-            tick={{ fill: cssVar("text-muted"), fontSize: 10 }}
-            axisLine={false}
-            tickLine={false}
-            width={40}
-            tickFormatter={(v) => `₹${v}`}
-          />
-          <Tooltip content={<ContributionTooltip />} cursor={{ stroke: cssVar("border"), strokeWidth: 1 }} />
-          <Area
-            type="monotone"
-            dataKey="shortfall"
-            name="Shortfall band"
-            stroke="none"
-            fill="url(#contributionShortfallFill)"
-            isAnimationActive={false}
-            legendType="none"
-            tooltipType="none"
-          />
-          <Area
-            type="monotone"
-            dataKey="actual"
-            name="Actual"
-            stroke={ACTUAL_COLOR}
-            fill="url(#contributionActualFill)"
-            strokeWidth={2.75}
-            dot={<ContributionDot dataKey="actual" />}
-            activeDot={{ r: 6, stroke: "#0A0A0A", strokeWidth: 2, fill: ACTUAL_COLOR }}
-            isAnimationActive={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="plan"
-            name="Plan"
-            stroke={PLAN_COLOR}
-            strokeDasharray="7 5"
-            strokeWidth={2.25}
-            dot={<ContributionDot dataKey="plan" />}
-            activeDot={{ r: 6, stroke: "#0A0A0A", strokeWidth: 2, fill: PLAN_COLOR }}
-            isAnimationActive={false}
-          />
-        </ComposedChart>
-        </ResponsiveContainer>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0, height: "100%" }}>
+          {DEMAND_CASCADE.insights.map((ins, i) => (
+            <div
+              key={ins.title}
+              style={{
+                padding: "11px 13px",
+                borderRadius: radius.md,
+                background: cssVar("accent-soft"),
+                border: `1px solid ${cssVar("accent")}22`,
+                borderLeft: `3px solid ${severityColor(ins.severity)}`,
+              }}
+            >
+              <div style={{ fontSize: 12, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.35, marginBottom: 4 }}>
+                <span style={{ color: cssVar("accent-2"), marginRight: 6 }}>{i + 1}.</span>
+                {ins.title}
+              </div>
+              <div style={{ fontSize: 11, color: cssVar("text-secondary"), lineHeight: 1.45 }}>{ins.body}</div>
+            </div>
+          ))}
+          <div
+            style={{
+              marginTop: "auto",
+              padding: "10px 12px",
+              borderRadius: radius.md,
+              background: cssVar("surface-raised"),
+              border: `1px solid ${cssVar("border")}`,
+              fontSize: 12,
+              color: cssVar("text-secondary"),
+              lineHeight: 1.45,
+            }}
+          >
+            Only{" "}
+            <strong style={{ color: cssVar("text-primary") }}>
+              ₹{DEMAND_CASCADE.marketplaceCr.toLocaleString("en-IN")} Cr
+            </strong>{" "}
+            of ₹{DEMAND_CASCADE.gmvCr.toLocaleString("en-IN")} Cr GMV funds the spend dial — return leak is the first cut to close.
+          </div>
+        </div>
       </div>
     </ChartPanel>
   );
 }
 
 const GAP_DRIVER_DETAILS: Record<(typeof GAP_DRIVERS)[number]["driver"], string> = {
-  Returns: "Fashion sub-category · Aura shirt sizing is the largest fixable SKU.",
-  Logistics: "Reverse pickup and last-mile cost on high-return SKUs.",
-  "Promo / CAC": "Weekend promo ROAS below target on acquisition spend.",
+  Returns: "Fashion sizing (Aura shirt) is ₹8.8L of the returns overage — fixable via PIM chart.",
+  Logistics: "Reverse pickup + last-mile RTO on high-return Fashion SKUs inflate cost-to-serve.",
+  "Promo / CAC": "Weekend Fashion promo ROAS below band — acquisition spend is not earning contribution.",
 };
 
 const gapMaxLakhs = Math.max(...GAP_DRIVERS.map((d) => d.lakhs));
@@ -653,11 +931,15 @@ export function GapDriverChart(): React.ReactElement {
 
 export function SubCategoryTable(): React.ReactElement {
   return (
-    <ChartPanel title="Sub-category scorecard" subtitle="Contribution ₹ Cr · return rate vs band" subtitlePlacement="header">
+    <ChartPanel
+      title="Sub-category scorecard"
+      subtitle="Contribution after returns + CAC · by sub-category"
+      subtitlePlacement="header"
+    >
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: type.scale.small }}>
         <thead>
           <tr>
-            {["Sub-category", "Actual", "Plan", "Returns", "Status"].map((h, i) => (
+            {["Sub-category", "Actual", "Plan", "Gap", "Returns", "CAC", "Status"].map((h, i) => (
               <th
                 key={h}
                 style={{
@@ -666,8 +948,8 @@ export function SubCategoryTable(): React.ReactElement {
                   letterSpacing: "0.05em",
                   color: cssVar("text-muted"),
                   textTransform: "uppercase",
-                  textAlign: i === 0 ? "left" : i === 4 ? "center" : "right",
-                  padding: "0 8px 10px",
+                  textAlign: i === 0 ? "left" : i === 6 ? "center" : "right",
+                  padding: "0 6px 10px",
                   borderBottom: `1px solid ${cssVar("border")}`,
                 }}
               >
@@ -678,8 +960,10 @@ export function SubCategoryTable(): React.ReactElement {
         </thead>
         <tbody>
           {SUBCATEGORY_PERFORMANCE.map((row) => {
+            const gapLakh = Math.round((row.plan - row.contribution) * 100);
             const returnColor =
               row.returnRate > 22 ? "#F0606B" : row.returnRate > 12 ? "#E8A23D" : "#4FD17A";
+            const gapColor = gapLakh > 0 ? SHORTFALL_COLOR : gapLakh < 0 ? PLAN_COLOR : cssVar("text-muted");
             const pill =
               row.status === "breach"
                 ? { label: "Breach", bg: "rgba(240,96,107,0.16)", color: "#F0606B" }
@@ -688,35 +972,47 @@ export function SubCategoryTable(): React.ReactElement {
                   : { label: "On plan", bg: "rgba(79,209,122,0.16)", color: "#4FD17A" };
             return (
               <tr key={row.name}>
-                <td style={{ padding: "12px 8px", borderBottom: `1px solid ${cssVar("border")}`, fontWeight: 600 }}>
+                <td style={{ padding: "10px 6px", borderBottom: `1px solid ${cssVar("border")}`, fontWeight: 600 }}>
                   {row.name}
                 </td>
                 <td
                   className="lisn-num"
                   style={{
-                    padding: "12px 8px",
+                    padding: "10px 6px",
                     borderBottom: `1px solid ${cssVar("border")}`,
                     textAlign: "right",
                     color: cssVar("text-secondary"),
                   }}
                 >
-                  ₹{row.contribution.toFixed(2)} Cr
+                  ₹{row.contribution.toFixed(2)}
                 </td>
                 <td
                   className="lisn-num"
                   style={{
-                    padding: "12px 8px",
+                    padding: "10px 6px",
                     borderBottom: `1px solid ${cssVar("border")}`,
                     textAlign: "right",
                     color: cssVar("text-secondary"),
                   }}
                 >
-                  ₹{row.plan.toFixed(2)} Cr
+                  ₹{row.plan.toFixed(2)}
                 </td>
                 <td
                   className="lisn-num"
                   style={{
-                    padding: "12px 8px",
+                    padding: "10px 6px",
+                    borderBottom: `1px solid ${cssVar("border")}`,
+                    textAlign: "right",
+                    fontWeight: 700,
+                    color: gapColor,
+                  }}
+                >
+                  {gapLakh > 0 ? `−₹${gapLakh}L` : gapLakh < 0 ? `+₹${Math.abs(gapLakh)}L` : "—"}
+                </td>
+                <td
+                  className="lisn-num"
+                  style={{
+                    padding: "10px 6px",
                     borderBottom: `1px solid ${cssVar("border")}`,
                     textAlign: "right",
                     fontWeight: 700,
@@ -725,7 +1021,18 @@ export function SubCategoryTable(): React.ReactElement {
                 >
                   {row.returnRate}%
                 </td>
-                <td style={{ padding: "12px 8px", borderBottom: `1px solid ${cssVar("border")}`, textAlign: "center" }}>
+                <td
+                  className="lisn-num"
+                  style={{
+                    padding: "10px 6px",
+                    borderBottom: `1px solid ${cssVar("border")}`,
+                    textAlign: "right",
+                    color: cssVar("text-secondary"),
+                  }}
+                >
+                  ₹{row.cacLakhs.toFixed(1)}L
+                </td>
+                <td style={{ padding: "10px 6px", borderBottom: `1px solid ${cssVar("border")}`, textAlign: "center" }}>
                   <span
                     style={{
                       display: "inline-flex",
@@ -734,9 +1041,9 @@ export function SubCategoryTable(): React.ReactElement {
                       fontSize: 10,
                       fontWeight: 700,
                       letterSpacing: "0.03em",
-                      padding: "4px 10px",
+                      padding: "4px 8px",
                       borderRadius: 999,
-                      minWidth: 64,
+                      minWidth: 58,
                       background: pill.bg,
                       color: pill.color,
                     }}
@@ -764,7 +1071,7 @@ export function PnlBridgeChart(): React.ReactElement {
   const retentionPct = Math.round((contribution.value / gross.value) * 100);
 
   return (
-    <ChartPanel title="P&L bridge to contribution" subtitle="₹ Lakhs · gross GMV to net contribution" subtitlePlacement="header">
+    <ChartPanel title="P&L bridge to contribution" subtitle="₹ Lakhs · GMV → returns → logistics → discounts → CAC → net" subtitlePlacement="header">
       <div
         style={{
           display: "flex",
@@ -843,7 +1150,7 @@ export function PnlBridgeChart(): React.ReactElement {
               key={step.step}
               style={{
                 display: "grid",
-                gridTemplateColumns: "88px 52px 1fr",
+                gridTemplateColumns: "104px 52px 1fr",
                 alignItems: "center",
                 gap: space["2"],
                 padding: "6px 8px",

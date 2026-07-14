@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Sparkles,
   AlertTriangle,
@@ -10,11 +10,11 @@ import {
   Users,
   MessageSquare,
   MapPin,
-  Truck,
-  Tag,
-  Target,
   Layers,
-  ChevronDown,
+  Target,
+  ChevronLeft,
+  ChevronRight,
+  Store,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -22,23 +22,28 @@ import {
   TRUST_DRIVERS,
   TRUST_DRIVER_CUTS,
   TRUST_EVIDENCE,
-  TRUST_PULSE,
   TRUST_RANGES,
-  TRUST_SEGMENTS,
-  SCATTER_BY,
-  SCATTER_IX,
+  TOP_TRUST_DRIVER,
+  getTrustPulse,
+  scaleTrustCount,
+  scaleTrustCrLabel,
+  scaleTrustDelta,
+  scaleTrustDriverCut,
+  sortDriversBySeverity,
   type TrustCategoryCutRow,
   type TrustChannelCutRow,
   type TrustDriver,
   type TrustDriverCut,
   type TrustDriverId,
-  type TrustPathCutRow,
-  type TrustQuadKind,
   type TrustRangeKey,
   type TrustSegmentMatrixRow,
+  type TrustSellerSkuCutRow,
 } from "../../lib/cxHeadRetailV3TrustBreakdownData";
 import { WHATS_FAILING_CHANNEL_COLORS, WHATS_FAILING_SEGMENT_COLORS } from "../../lib/cxHeadRetailV3CustomerFciData";
 import { TrustPulseKpiCards } from "./TrustPulseKpiCards";
+import { TrustStageLifecyclePie } from "./TrustStageLifecyclePie";
+import { ConfidenceChip } from "../common/ConfidenceBand";
+import { DraftActionFooter } from "../common/DraftActionFooter";
 import { cssVar, radius } from "../../theme/tokens";
 
 const nf = new Intl.NumberFormat("en-IN");
@@ -60,67 +65,8 @@ const CHANNEL_TABS = [
   { id: "X", label: "X" },
 ] as const;
 
-function classify(d: TrustDriver): TrustQuadKind {
-  if (d.blast >= SCATTER_BY && d.incident < SCATTER_IX) return "cliff";
-  if (d.blast >= SCATTER_BY && d.incident >= SCATTER_IX) return "hotspot";
-  if (d.blast < SCATTER_BY && d.incident >= SCATTER_IX) return "ops";
-  return "monitor";
-}
-
-const QUAD_META: Record<TrustQuadKind, { color: string; soft: string; label: string; note: string }> = {
-  cliff: {
-    color: cssVar("severity-high"),
-    soft: `${cssVar("severity-high")}18`,
-    label: "Cliff risk",
-    note: "Rare · high blast radius",
-  },
-  hotspot: {
-    color: cssVar("severity-high"),
-    soft: `${cssVar("severity-high")}28`,
-    label: "Trust breakdown hotspot",
-    note: "Frequent · high blast radius",
-  },
-  ops: {
-    color: cssVar("accent"),
-    soft: cssVar("accent-soft"),
-    label: "Operational issue",
-    note: "Frequent · lower blast radius",
-  },
-  monitor: {
-    color: cssVar("positive"),
-    soft: `${cssVar("positive")}18`,
-    label: "Monitor",
-    note: "Rare · lower blast radius",
-  },
-};
-
-function InferredChip({
-  conf,
-  small = false,
-}: {
-  conf: number;
-  small?: boolean;
-}): React.ReactElement {
-  return (
-    <span
-      title="Model inference — treat as probabilistic, not fact"
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        fontSize: small ? 10 : 11,
-        fontWeight: 700,
-        borderRadius: radius.pill,
-        padding: "3px 8px",
-        background: cssVar("accent-soft"),
-        color: cssVar("accent-2"),
-        border: `1px solid ${cssVar("accent")}55`,
-      }}
-    >
-      <Sparkles size={small ? 10 : 11} strokeWidth={2.4} /> Confidence
-      <b className="lisn-num" style={{ fontWeight: 600 }}>{conf}%</b>
-    </span>
-  );
+function driverIconColor(d: TrustDriver): string {
+  return d.cliffOrSlope === "cliff" ? cssVar("severity-high") : cssVar("accent");
 }
 
 function DriverAiHowToDeal({ points }: { points: readonly [string, string, string] }): React.ReactElement {
@@ -382,39 +328,126 @@ function PanelCard({
   );
 }
 
-function donutSlice(cx: number, cy: number, Ro: number, Ri: number, a0: number, a1: number): string {
-  const rad = (d: number) => ((d - 90) * Math.PI) / 180;
-  const x0o = cx + Ro * Math.cos(rad(a0));
-  const y0o = cy + Ro * Math.sin(rad(a0));
-  const x1o = cx + Ro * Math.cos(rad(a1));
-  const y1o = cy + Ro * Math.sin(rad(a1));
-  const x0i = cx + Ri * Math.cos(rad(a1));
-  const y0i = cy + Ri * Math.sin(rad(a1));
-  const x1i = cx + Ri * Math.cos(rad(a0));
-  const y1i = cy + Ri * Math.sin(rad(a0));
-  const large = a1 - a0 > 180 ? 1 : 0;
-  return `M ${x0o} ${y0o} A ${Ro} ${Ro} 0 ${large} 1 ${x1o} ${y1o} L ${x0i} ${y0i} A ${Ri} ${Ri} 0 ${large} 0 ${x1i} ${y1i} Z`;
+function RegionBarChart({ rows, accent }: { rows: [string, number][]; accent: string }): React.ReactElement {
+  const ranked = [...rows].sort((a, b) => b[1] - a[1]);
+  const max = Math.max(...ranked.map((r) => r[1]), 1);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        height: "100%",
+        minHeight: 0,
+        gap: 3,
+      }}
+    >
+      {ranked.map(([k, v], index) => {
+        const isPrimary = index === 0;
+        return (
+          <div
+            key={k}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "minmax(0, 1.05fr) minmax(48px, 1fr) auto",
+              gap: 8,
+              alignItems: "center",
+              padding: isPrimary ? "5px 8px" : "3px 4px",
+              borderRadius: 7,
+              flex: "1 1 0",
+              minHeight: 0,
+              background: isPrimary
+                ? `color-mix(in srgb, ${accent} 12%, ${cssVar("surface-raised")})`
+                : "transparent",
+              border: isPrimary ? `1px solid ${accent}40` : "1px solid transparent",
+              borderLeft: isPrimary ? `3px solid ${accent}` : "3px solid transparent",
+            }}
+          >
+            <span
+              style={{
+                fontSize: isPrimary ? 11.5 : 11,
+                fontWeight: isPrimary ? 700 : 600,
+                color: cssVar("text-primary"),
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {k}
+            </span>
+            <div
+              style={{
+                height: isPrimary ? 7 : 5,
+                borderRadius: 4,
+                background: cssVar("surface-raised"),
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  width: `${(v / max) * 100}%`,
+                  height: "100%",
+                  background: accent,
+                  borderRadius: 4,
+                  opacity: isPrimary ? 1 : 0.85,
+                }}
+              />
+            </div>
+            <span
+              className="lisn-num"
+              style={{
+                fontSize: isPrimary ? 13 : 11,
+                fontWeight: 800,
+                color: isPrimary ? accent : cssVar("text-primary"),
+                width: 32,
+                textAlign: "right",
+              }}
+            >
+              {v}%
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
 }
 
-function DonutChart({ rows, colors }: { rows: TrustCategoryCutRow[]; colors: string[] }): React.ReactElement {
-  const total = rows.reduce((sum, row) => sum + row.share, 0);
-  let angle = 0;
-  const cx = 54;
-  const cy = 54;
-  const slices = rows.map((row, i) => {
-    const sweep = (row.share / total) * 360;
-    const start = angle;
-    const end = angle + sweep;
-    angle = end;
-    return { ...row, path: donutSlice(cx, cy, 40, 26, start, end), color: colors[i % colors.length] };
-  });
+function allocateToHundred(weights: number[]): number[] {
+  const total = weights.reduce((sum, w) => sum + w, 0);
+  if (total <= 0 || weights.length === 0) return weights.map(() => 0);
 
-  const colTemplate = "minmax(0, 1fr) 48px 38px 34px 38px";
+  const exact = weights.map((w) => (w / total) * 100);
+  const floored = exact.map((v) => Math.floor(v));
+  let remainder = 100 - floored.reduce((sum, v) => sum + v, 0);
+  const byFrac = exact
+    .map((v, i) => ({ i, frac: v - floored[i]! }))
+    .sort((a, b) => b.frac - a.frac);
+
+  const result = [...floored];
+  for (let n = 0; n < remainder; n++) {
+    const slot = byFrac[n % byFrac.length];
+    if (slot) result[slot.i] = (result[slot.i] ?? 0) + 1;
+  }
+  return result;
+}
+
+function CategoryCutTable({
+  rows,
+  colors,
+  periodLabel,
+}: {
+  rows: TrustCategoryCutRow[];
+  colors: string[];
+  periodLabel: string;
+}): React.ReactElement {
+  const ranked = [...rows].sort((a, b) => b.share - a.share);
+  const negSplit = allocateToHundred(ranked.map((r) => r.complaints * r.negSentiment));
 
   const th: React.CSSProperties = {
-    fontSize: 9,
+    fontSize: 9.5,
     fontWeight: 700,
-    letterSpacing: "0.06em",
+    letterSpacing: "0.05em",
     textTransform: "uppercase",
     color: cssVar("text-muted"),
     lineHeight: 1.1,
@@ -422,7 +455,7 @@ function DonutChart({ rows, colors }: { rows: TrustCategoryCutRow[]; colors: str
   };
 
   const tdNum: React.CSSProperties = {
-    fontSize: 10,
+    fontSize: 12,
     lineHeight: 1.2,
     textAlign: "right",
     fontVariantNumeric: "tabular-nums",
@@ -430,245 +463,85 @@ function DonutChart({ rows, colors }: { rows: TrustCategoryCutRow[]; colors: str
   };
 
   return (
-    <div style={{ display: "flex", gap: 12, alignItems: "center", height: "100%", minHeight: 0 }}>
-      <svg viewBox="0 0 108 108" width={88} height={88} style={{ flexShrink: 0 }} aria-hidden>
-        {slices.map((s) => (
-          <path key={s.label} d={s.path} fill={s.color} />
-        ))}
-      </svg>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1.35fr) minmax(0, 0.85fr) minmax(0, 0.7fr) minmax(0, 0.7fr) minmax(0, 0.7fr)",
+        columnGap: 10,
+        rowGap: 0,
+        alignItems: "center",
+        height: "100%",
+        minHeight: 0,
+        alignContent: "stretch",
+      }}
+    >
+      <span style={th}>Category</span>
+      <span style={{ ...th, textAlign: "right" }}>Contacts</span>
+      <span style={{ ...th, textAlign: "right" }}>{periodLabel}</span>
+      <span style={{ ...th, textAlign: "right" }}>Neg</span>
+      <span style={{ ...th, textAlign: "right" }}>Share</span>
+
       <div
         style={{
-          flex: 1,
-          minWidth: 0,
-          display: "grid",
-          gridTemplateColumns: colTemplate,
-          columnGap: 8,
-          rowGap: 5,
-          alignItems: "center",
+          gridColumn: "1 / -1",
+          height: 1,
+          background: cssVar("border"),
+          margin: "6px 0 4px",
         }}
-      >
-        <span style={th}>Category</span>
-        <span style={{ ...th, textAlign: "right" }}>Cx</span>
-        <span style={{ ...th, textAlign: "right" }}>WoW</span>
-        <span style={{ ...th, textAlign: "right" }}>Neg</span>
-        <span style={{ ...th, textAlign: "right" }}>Share</span>
+      />
 
-        <div
-          style={{
-            gridColumn: "1 / -1",
-            height: 1,
-            background: cssVar("border"),
-            margin: "1px 0 2px",
-          }}
-        />
-
-        {slices.map((s) => (
-          <React.Fragment key={s.label}>
+      {ranked.map((row, i) => {
+        const color = colors[i % colors.length]!;
+        const negPct = negSplit[i] ?? 0;
+        return (
+          <React.Fragment key={row.label}>
             <span
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 5,
-                fontSize: 10,
-                lineHeight: 1.2,
-                color: cssVar("text-secondary"),
+                gap: 6,
+                fontSize: 12,
+                fontWeight: 650,
+                lineHeight: 1.25,
+                color: cssVar("text-primary"),
                 minWidth: 0,
+                padding: "7px 0",
               }}
             >
-              <i style={{ width: 6, height: 6, borderRadius: 99, background: s.color, flexShrink: 0 }} />
-              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.label}</span>
+              <i style={{ width: 7, height: 7, borderRadius: 99, background: color, flexShrink: 0 }} />
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{row.label}</span>
             </span>
-            <span className="lisn-num" style={{ ...tdNum, fontWeight: 600, color: cssVar("text-primary") }}>
-              {fmt(s.complaints)}
+            <span className="lisn-num" style={{ ...tdNum, fontWeight: 700, color: cssVar("text-primary"), padding: "7px 0" }}>
+              {fmt(row.complaints)}
             </span>
             <span
               className="lisn-num"
               style={{
                 ...tdNum,
                 fontWeight: 700,
-                color: s.wow >= 0 ? cssVar("severity-high") : cssVar("positive"),
+                color: row.wow >= 0 ? cssVar("severity-high") : cssVar("positive"),
+                padding: "7px 0",
               }}
             >
-              {s.wow >= 0 ? "+" : ""}
-              {s.wow}%
+              {row.wow >= 0 ? "+" : ""}
+              {row.wow}%
             </span>
-            <span className="lisn-num" style={{ ...tdNum, fontWeight: 600, color: cssVar("accent-2") }}>
-              {s.negSentiment}%
+            <span className="lisn-num" style={{ ...tdNum, fontWeight: 700, color: cssVar("accent-2"), padding: "7px 0" }}>
+              {negPct}%
             </span>
-            <span className="lisn-num" style={{ ...tdNum, fontWeight: 700, color: cssVar("text-primary") }}>
-              {s.share}%
+            <span className="lisn-num" style={{ ...tdNum, fontWeight: 800, color: cssVar("text-primary"), padding: "7px 0" }}>
+              {row.share}%
             </span>
           </React.Fragment>
-        ))}
-      </div>
+        );
+      })}
     </div>
   );
 }
 
-function RegionBarChart({ rows, accent }: { rows: [string, number][]; accent: string }): React.ReactElement {
-  const max = Math.max(...rows.map((r) => r[1]));
-  return (
-    <div style={{ display: "grid", gap: 9, height: "100%", alignContent: "center" }}>
-      {rows.map(([k, v]) => (
-        <div key={k} style={{ display: "grid", gridTemplateColumns: "minmax(0, 0.9fr) 1fr auto", gap: 8, alignItems: "center" }}>
-          <span style={{ fontSize: 11, color: cssVar("text-secondary"), overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{k}</span>
-          <div
-            style={{
-              height: 8,
-              borderRadius: 4,
-              background: cssVar("surface-raised"),
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: `${(v / max) * 100}%`,
-                height: "100%",
-                background: accent,
-                borderRadius: 4,
-              }}
-            />
-          </div>
-          <span className="lisn-num" style={{ fontSize: 11, fontWeight: 700, color: cssVar("text-primary"), width: 30, textAlign: "right" }}>{v}%</span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function PathFlowViz({ rows, colors }: { rows: TrustPathCutRow[]; colors: string[] }): React.ReactElement {
-  const columnTemplate = rows.map((r) => `${r.share}fr`).join(" ");
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        height: "100%",
-        minHeight: 168,
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          height: 32,
-          borderRadius: 9,
-          overflow: "hidden",
-          border: `1px solid ${cssVar("border")}`,
-        }}
-      >
-        {rows.map((row, i) => {
-          const color = colors[i % colors.length];
-          return (
-            <div
-              key={row.label}
-              title={`${row.label} · ${row.share}% · ${fmt(row.complaints)} cx`}
-              style={{
-                width: `${row.share}%`,
-                background: color,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minWidth: row.share >= 12 ? undefined : 4,
-                borderRight: i < rows.length - 1 ? `1px solid ${cssVar("surface")}44` : undefined,
-              }}
-            >
-              {row.share >= 18 ? (
-                <span className="lisn-num" style={{ fontSize: 10, fontWeight: 800, color: "#fff" }}>
-                  {row.share}%
-                </span>
-              ) : null}
-            </div>
-          );
-        })}
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: columnTemplate,
-          gap: 8,
-          alignItems: "stretch",
-        }}
-      >
-        {rows.map((row, i) => {
-          const color = colors[i % colors.length];
-          return (
-            <div
-              key={row.label}
-              style={{
-                minWidth: 0,
-                padding: "8px 8px 10px",
-                borderRadius: "0 0 8px 8px",
-                background: cssVar("surface-raised"),
-                border: `1px solid ${cssVar("border")}`,
-                borderTop: `3px solid ${color}`,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 11,
-                  fontWeight: 800,
-                  color: cssVar("text-primary"),
-                  lineHeight: 1.3,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                {row.label}
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "baseline",
-                  gap: 4,
-                  marginTop: 8,
-                }}
-              >
-                <span
-                  className="lisn-num"
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 800,
-                    color,
-                    lineHeight: 1,
-                  }}
-                >
-                  {fmt(row.complaints)}
-                </span>
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 700,
-                    letterSpacing: "0.04em",
-                    textTransform: "uppercase",
-                    color: cssVar("text-muted"),
-                  }}
-                >
-                  CX
-                </span>
-              </div>
-              <div
-                style={{
-                  fontSize: 10,
-                  fontWeight: 500,
-                  color: cssVar("text-secondary"),
-                  marginTop: 8,
-                  lineHeight: 1.45,
-                }}
-              >
-                {row.detail}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function TrustAiSummaryBody(): React.ReactElement {
+function TrustAiSummaryBody({ range }: { range: TrustRangeKey }): React.ReactElement {
+  const pulse = getTrustPulse(range);
+  const periodLabel = TRUST_RANGES[range].delta;
   const primaryDrivers = (
     ["damaged", "refund"] as const
   ).map((id) => TRUST_DRIVERS.find((d) => d.id === id))
@@ -678,7 +551,7 @@ function TrustAiSummaryBody(): React.ReactElement {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14, flex: 1, minHeight: 0 }}>
       <p style={{ margin: 0, fontSize: 14, fontWeight: 700, lineHeight: 1.45, color: cssVar("text-primary") }}>
-        {TRUST_PULSE.verdict}
+        {pulse.verdict}
       </p>
 
       <div>
@@ -709,7 +582,7 @@ function TrustAiSummaryBody(): React.ReactElement {
             >
               <div style={{ fontSize: 12, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.25 }}>{d.label}</div>
               <div style={{ fontSize: 10.5, color: cssVar("text-muted"), marginTop: 4 }}>
-                {fmt(d.complaints)} contacts · +{d.wow}% WoW · {d.sentNeg}% neg
+                {fmt(scaleTrustCount(d.complaints, range))} contacts · +{Math.round(scaleTrustDelta(d.wow, range))}% {periodLabel} · {d.sentNeg}% neg
               </div>
             </div>
           ))}
@@ -756,38 +629,12 @@ function TrustAiSummaryBody(): React.ReactElement {
   );
 }
 
-function SegmentAiInsight({ insight }: { insight: string }): React.ReactElement {
-  return (
-    <div
-      style={{
-        padding: "8px 9px",
-        borderRadius: radius.md,
-        background: cssVar("accent-soft"),
-        border: `1px solid ${cssVar("accent")}28`,
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        minHeight: 0,
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 4 }}>
-        <Sparkles size={11} strokeWidth={2.4} color={cssVar("accent-2")} style={{ flexShrink: 0 }} />
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 700,
-            color: cssVar("accent-2"),
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-          }}
-        >
-          AI · Segment risk
-        </span>
-      </div>
-      <p style={{ margin: 0, fontSize: 11, lineHeight: 1.4, color: cssVar("text-secondary") }}>{insight}</p>
-    </div>
-  );
-}
+const SEGMENT_CODE_LABEL: Record<TrustSegmentMatrixRow["code"], string> = {
+  HVHF: "High-value · high-frequency",
+  HVLF: "High-value · low-frequency",
+  LVHF: "Low-value · high-frequency",
+  LVLF: "Low-value · low-frequency",
+};
 
 function SegmentKpiCard({ row }: { row: TrustSegmentMatrixRow }): React.ReactElement {
   const color = WHATS_FAILING_SEGMENT_COLORS[row.code];
@@ -804,12 +651,15 @@ function SegmentKpiCard({ row }: { row: TrustSegmentMatrixRow }): React.ReactEle
         gap: 2,
         minHeight: 0,
       }}
+      title={SEGMENT_CODE_LABEL[row.code]}
     >
-      <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.06em", color }}>{row.code}</span>
-      <span className="lisn-num" style={{ fontSize: 20, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1 }}>
+      <span style={{ fontSize: 9.5, fontWeight: 700, letterSpacing: "0.02em", color, lineHeight: 1.3 }}>
+        {SEGMENT_CODE_LABEL[row.code]}
+      </span>
+      <span className="lisn-num" style={{ fontSize: 20, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1, marginTop: 2 }}>
         {row.share}%
       </span>
-      <span style={{ fontSize: 9, color: cssVar("text-muted") }}>{fmt(row.complaints)} cx</span>
+      <span style={{ fontSize: 9, color: cssVar("text-muted") }}>{fmt(row.complaints)} contacts</span>
     </div>
   );
 }
@@ -828,14 +678,147 @@ function SegmentMatrixViz({ matrix }: { matrix: TrustSegmentMatrixRow[] }): Reac
         gridTemplateColumns: "1fr 1fr",
         gap: 8,
         height: "100%",
-        minHeight: 96,
-        alignContent: "center",
+        alignContent: "stretch",
+        flex: 1,
+        minHeight: 0,
       }}
     >
       {codes.map((code) => (
         <SegmentKpiCard key={code} row={byCode[code]} />
       ))}
     </div>
+  );
+}
+
+function SplitBar({ rows }: { rows: [string, number][] }): React.ReactElement | null {
+  if (rows.length < 2) return null;
+  const a = rows[0]!;
+  const b = rows[1]!;
+  return (
+    <div style={{ flexShrink: 0 }}>
+      <div
+        style={{
+          display: "flex",
+          height: 28,
+          borderRadius: 8,
+          overflow: "hidden",
+          border: `1px solid ${cssVar("border")}`,
+        }}
+      >
+        <div
+          style={{
+            width: `${a[1]}%`,
+            background: cssVar("severity-high"),
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: 8,
+          }}
+        >
+          <span className="lisn-num" style={{ color: "#fff", fontSize: 12, fontWeight: 700 }}>
+            {a[1]}%
+          </span>
+        </div>
+        <div
+          style={{
+            width: `${b[1]}%`,
+            background: cssVar("accent"),
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            paddingRight: 8,
+          }}
+        >
+          <span className="lisn-num" style={{ color: "#fff", fontSize: 12, fontWeight: 700 }}>
+            {b[1]}%
+          </span>
+        </div>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6, gap: 8 }}>
+        <span style={{ fontSize: 11, color: cssVar("text-secondary"), display: "inline-flex", alignItems: "center", gap: 5, minWidth: 0 }}>
+          <i style={{ width: 8, height: 8, borderRadius: 2, background: cssVar("severity-high"), flexShrink: 0 }} />
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a[0]}</span>
+        </span>
+        <span style={{ fontSize: 11, color: cssVar("text-secondary"), display: "inline-flex", alignItems: "center", gap: 5, minWidth: 0 }}>
+          <i style={{ width: 8, height: 8, borderRadius: 2, background: cssVar("accent"), flexShrink: 0 }} />
+          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b[0]}</span>
+        </span>
+      </div>
+    </div>
+  );
+}
+
+/** Seller-type mix + segment 2×2 in one deep-breakdown card. */
+function SellerTypeSegmentCutTile({
+  seller,
+  segmentMatrix,
+}: {
+  seller: [string, number][];
+  segmentMatrix: TrustSegmentMatrixRow[];
+}): React.ReactElement {
+  return (
+    <PanelCard
+      style={{
+        padding: "12px 12px",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        minHeight: 0,
+        boxSizing: "border-box",
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 7, flexShrink: 0 }}>
+        <Users size={14} color={cssVar("text-muted")} strokeWidth={2.2} />
+        <span style={{ fontSize: 13, fontWeight: 700, color: cssVar("text-primary") }}>
+          Customer segment
+        </span>
+        <span style={{ fontSize: 10, fontWeight: 700, color: cssVar("text-muted"), marginLeft: "auto" }}>
+          + seller type
+        </span>
+      </div>
+
+      <div style={{ flexShrink: 0 }}>
+        <div
+          style={{
+            fontSize: 9.5,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: cssVar("text-muted"),
+            marginBottom: 6,
+          }}
+        >
+          By seller type
+        </div>
+        <SplitBar rows={seller} />
+      </div>
+
+      <div
+        style={{
+          height: 1,
+          background: cssVar("border"),
+          flexShrink: 0,
+        }}
+      />
+
+      <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+        <div
+          style={{
+            fontSize: 9.5,
+            fontWeight: 700,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: cssVar("text-muted"),
+            flexShrink: 0,
+          }}
+        >
+          By customer segment
+        </div>
+        <SegmentMatrixViz matrix={segmentMatrix} />
+      </div>
+    </PanelCard>
   );
 }
 
@@ -849,11 +832,13 @@ function ChannelEvidenceCutTile({ rows }: { rows: TrustChannelCutRow[] }): React
   return (
     <PanelCard
       style={{
-        padding: "14px 16px",
+        padding: "12px 12px",
         height: "100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
-        minHeight: 200,
+        minHeight: 0,
+        boxSizing: "border-box",
       }}
     >
       <div
@@ -862,7 +847,7 @@ function ChannelEvidenceCutTile({ rows }: { rows: TrustChannelCutRow[] }): React
           alignItems: "center",
           flexWrap: "wrap",
           gap: "6px 8px",
-          marginBottom: 12,
+          marginBottom: 10,
           flexShrink: 0,
         }}
       >
@@ -903,42 +888,56 @@ function ChannelEvidenceCutTile({ rows }: { rows: TrustChannelCutRow[] }): React
         </div>
       </div>
 
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 8, minHeight: 0 }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 6, minHeight: 0, overflow: "hidden" }}>
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "auto 1fr auto",
             gap: 8,
             alignItems: "center",
+            flexShrink: 0,
           }}
         >
-          <span style={{ fontSize: 10, fontWeight: 800, color, letterSpacing: "0.04em" }}>{channelLabel}</span>
-          <span style={{ fontSize: 9, color: cssVar("text-muted") }}>{fmt(row.complaints)} contacts</span>
-          <span className="lisn-num" style={{ fontSize: 11, fontWeight: 800, color, minWidth: 30, textAlign: "right" }}>
+          <span style={{ fontSize: 11, fontWeight: 800, color, letterSpacing: "0.04em" }}>{channelLabel}</span>
+          <span style={{ fontSize: 10, color: cssVar("text-muted") }}>{fmt(row.complaints)} contacts</span>
+          <span className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color, minWidth: 32, textAlign: "right" }}>
             {row.share}%
           </span>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 2 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            flex: 1,
+            minHeight: 0,
+            gap: 5,
+          }}
+        >
           {row.messages.map((quote, i) => (
             <p
-              key={quote}
+              key={`${active}-${i}-${quote.slice(0, 24)}`}
               style={{
                 margin: 0,
-                padding: "7px 9px",
-                borderRadius: 7,
+                padding: "9px 11px",
+                borderRadius: 8,
                 background: cssVar("surface-raised"),
                 border: `1px solid ${cssVar("border")}`,
-                fontSize: 10.5,
+                fontSize: 12.5,
                 lineHeight: 1.4,
-                color: cssVar("text-secondary"),
+                color: cssVar("text-primary"),
                 fontStyle: "italic",
+                flex: "1 1 0",
+                minHeight: 0,
+                display: "flex",
+                alignItems: "center",
               }}
             >
-              <span style={{ fontStyle: "normal", fontWeight: 700, color: cssVar("text-muted"), marginRight: 6 }}>
+              <span style={{ fontStyle: "normal", fontWeight: 800, color, marginRight: 7, flexShrink: 0 }}>
                 {i + 1}.
               </span>
-              &ldquo;{quote}&rdquo;
+              <span style={{ minWidth: 0 }}>&ldquo;{quote}&rdquo;</span>
             </p>
           ))}
         </div>
@@ -947,58 +946,123 @@ function ChannelEvidenceCutTile({ rows }: { rows: TrustChannelCutRow[] }): React
   );
 }
 
-function SplitBar({ rows }: { rows: [string, number][] }): React.ReactElement {
-  const [a, b] = rows;
+function SellerSkuCutTile({ rows }: { rows: TrustSellerSkuCutRow[] }): React.ReactElement | null {
+  if (rows.length === 0) return null;
+
+  const ranked = [...rows].sort((a, b) => b.share - a.share);
+
   return (
-    <div>
+    <PanelCard
+      style={{
+        padding: "12px 12px",
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 8,
+        minHeight: 0,
+        boxSizing: "border-box",
+        overflow: "hidden",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
+          <Store size={14} color={cssVar("text-muted")} strokeWidth={2.2} />
+          <span style={{ fontSize: 13, fontWeight: 700, color: cssVar("text-primary") }}>Flagged sellers</span>
+        </div>
+        <span style={{ fontSize: 10, fontWeight: 700, color: cssVar("severity-high"), whiteSpace: "nowrap" }}>
+          {ranked.length} sellers
+        </span>
+      </div>
+
       <div
         style={{
           display: "flex",
-          height: 30,
-          borderRadius: 8,
+          flexDirection: "column",
+          justifyContent: "space-between",
+          flex: 1,
+          minHeight: 0,
           overflow: "hidden",
-          border: `1px solid ${cssVar("border")}`,
+          gap: 4,
         }}
       >
-        <div
-          style={{
-            width: `${a[1]}%`,
-            background: cssVar("severity-high"),
-            display: "flex",
-            alignItems: "center",
-            paddingLeft: 8,
-          }}
-        >
-          <span className="lisn-num" style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>
-            {a[1]}%
-          </span>
-        </div>
-        <div
-          style={{
-            width: `${b[1]}%`,
-            background: cssVar("accent"),
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-end",
-            paddingRight: 8,
-          }}
-        >
-          <span className="lisn-num" style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>
-            {b[1]}%
-          </span>
-        </div>
+        {ranked.map((r, index) => {
+          const isPrimary = index === 0;
+          return (
+            <div
+              key={r.sellerId}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+                padding: "8px 10px",
+                borderRadius: 8,
+                flex: "1 1 0",
+                minHeight: 0,
+                background: isPrimary
+                  ? `color-mix(in srgb, ${cssVar("severity-high")} 10%, ${cssVar("surface-raised")})`
+                  : cssVar("surface-raised"),
+                border: `1px solid ${isPrimary ? `${cssVar("severity-high")}44` : cssVar("border")}`,
+                borderLeft: `3px solid ${isPrimary ? cssVar("severity-high") : cssVar("border")}`,
+              }}
+            >
+              <div
+                style={{
+                  minWidth: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  flex: 1,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: isPrimary ? 12.5 : 12,
+                    fontWeight: isPrimary ? 800 : 700,
+                    color: cssVar("text-primary"),
+                    lineHeight: 1.25,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    minWidth: 0,
+                    flexShrink: 1,
+                  }}
+                >
+                  {r.sellerName}
+                </div>
+                <span
+                  style={{
+                    flexShrink: 0,
+                    fontSize: 10,
+                    fontWeight: 700,
+                    color: cssVar("text-secondary"),
+                    padding: "2px 7px",
+                    borderRadius: radius.pill,
+                    background: cssVar("surface"),
+                    border: `1px solid ${cssVar("border")}`,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {r.category}
+                </span>
+              </div>
+              <span
+                className="lisn-num"
+                style={{
+                  fontSize: isPrimary ? 15 : 13,
+                  fontWeight: 800,
+                  color: isPrimary ? cssVar("severity-high") : cssVar("text-primary"),
+                  flexShrink: 0,
+                }}
+              >
+                {r.share}%
+              </span>
+            </div>
+          );
+        })}
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 7 }}>
-        <span style={{ fontSize: 11.5, color: cssVar("text-secondary"), display: "inline-flex", alignItems: "center", gap: 5 }}>
-          <i style={{ width: 8, height: 8, borderRadius: 2, background: cssVar("severity-high") }} />
-          {a[0]}
-        </span>
-        <span style={{ fontSize: 11.5, color: cssVar("text-secondary"), display: "inline-flex", alignItems: "center", gap: 5 }}>
-          <i style={{ width: 8, height: 8, borderRadius: 2, background: cssVar("accent") }} />
-          {b[0]}
-        </span>
-      </div>
-    </div>
+    </PanelCard>
   );
 }
 
@@ -1014,19 +1078,526 @@ function CutTile({
   return (
     <PanelCard
       style={{
-        padding: "14px 16px",
+        padding: "12px 12px",
         height: "100%",
+        width: "100%",
         display: "flex",
         flexDirection: "column",
-        minHeight: 200,
+        minHeight: 0,
+        boxSizing: "border-box",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, flexShrink: 0 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 10, flexShrink: 0 }}>
         <Icon size={14} color={cssVar("text-muted")} strokeWidth={2.2} />
         <span style={{ fontSize: 13, fontWeight: 700, color: cssVar("text-primary") }}>{title}</span>
       </div>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", minHeight: 0 }}>{children}</div>
     </PanelCard>
+  );
+}
+
+function TrustDriverCard({
+  d,
+  scale,
+  periodLabel,
+  range,
+  laneAccent,
+}: {
+  d: TrustDriver;
+  scale: (n: number) => number;
+  periodLabel: string;
+  range: TrustRangeKey;
+  laneAccent?: string;
+}): React.ReactElement {
+  const Icon = d.icon;
+  const edge = laneAccent ?? (d.cliffOrSlope === "cliff" ? cssVar("severity-high") : cssVar("severity-med"));
+
+  return (
+    <div
+      style={{
+        textAlign: "left",
+        padding: 15,
+        background: cssVar("surface"),
+        border: `1px solid ${edge}55`,
+        borderRadius: radius.lg,
+        boxShadow: cssVar("shadow-card"),
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
+        fontFamily: "inherit",
+        width: "100%",
+        maxWidth: 360,
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+          gap: 10,
+          minHeight: 32,
+          flexShrink: 0,
+        }}
+      >
+        <div style={{ display: "flex", gap: 10, alignItems: "center", flex: 1, minWidth: 0 }}>
+          <Icon size={18} color={driverIconColor(d)} strokeWidth={2.3} style={{ flexShrink: 0 }} />
+          <span
+            style={{
+              fontSize: 16,
+              fontWeight: 700,
+              color: cssVar("text-primary"),
+              lineHeight: 1.2,
+              minWidth: 0,
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+            title={d.label}
+          >
+            {d.label}
+          </span>
+          <span style={{ marginLeft: "auto", flexShrink: 0 }}>
+            <ConfidenceChip conf={d.confidence} small />
+          </span>
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 6, width: "100%" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 6,
+            width: "100%",
+          }}
+        >
+          {(
+            [
+              {
+                label: "Blast rate",
+                value: String(d.blastRadius),
+                color: cssVar("severity-high"),
+              },
+              {
+                label: "Incident rate",
+                value: `${d.incidentRate}%`,
+                color: cssVar("severity-med"),
+              },
+            ] as const
+          ).map((item) => (
+            <div
+              key={item.label}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 3,
+                padding: "7px 8px",
+                borderRadius: radius.md,
+                border: `1px solid ${cssVar("border")}`,
+                background: cssVar("surface-raised"),
+                minWidth: 0,
+                boxSizing: "border-box",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  textTransform: "uppercase",
+                  color: cssVar("text-muted"),
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {item.label}
+              </span>
+              <span
+                className="lisn-num"
+                style={{
+                  fontSize: 13,
+                  fontWeight: 800,
+                  color: item.color,
+                  lineHeight: 1.15,
+                  textAlign: "center",
+                }}
+              >
+                {item.value}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div
+          title={`${d.originationStage} → ${d.fixOwner}`}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 3,
+            padding: "7px 10px",
+            borderRadius: radius.md,
+            border: `1px solid ${cssVar("border")}`,
+            background: cssVar("surface-raised"),
+            width: "100%",
+            boxSizing: "border-box",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: cssVar("text-muted"),
+            }}
+          >
+            Owner
+          </span>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: cssVar("text-primary"),
+              lineHeight: 1.25,
+              textAlign: "center",
+              whiteSpace: "normal",
+            }}
+          >
+            {d.fixOwner}
+          </span>
+        </div>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: "9px 14px",
+          margin: "2px 0 4px",
+          padding: "10px 0",
+          borderTop: `1px solid ${cssVar("border")}`,
+          borderBottom: `1px solid ${cssVar("border")}`,
+          justifyItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Complaints</span>
+          <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("text-primary") }}>
+            {fmt(scale(d.complaints))}
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>{periodLabel}</span>
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            <Delta value={Math.round(scaleTrustDelta(d.wow, range))} good="down" />
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Neg. sentiment</span>
+          <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("severity-high") }}>
+            {d.sentNeg}%
+          </div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>GMV risk</span>
+          <div
+            className="lisn-num"
+            style={{ fontSize: 15, fontWeight: 800, color: cssVar("severity-high") }}
+            title={d.pnlMetric}
+          >
+            {scaleTrustCrLabel(d.pnlValue, range)}
+          </div>
+        </div>
+      </div>
+
+      <DriverAiHowToDeal points={d.dealPoints} />
+    </div>
+  );
+}
+
+function DriverLaneHeader({
+  label,
+  accent,
+  index,
+  total,
+  onPrev,
+  onNext,
+}: {
+  label: string;
+  accent: string;
+  index: number;
+  total: number;
+  onPrev: () => void;
+  onNext: () => void;
+}): React.ReactElement {
+  const canPrev = index > 0;
+  const canNext = index < total - 1;
+
+  const navBtn = (dir: "prev" | "next"): React.CSSProperties => ({
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: 34,
+    height: 34,
+    borderRadius: 9,
+    border: `1px solid ${cssVar("border")}`,
+    background: cssVar("surface-raised"),
+    color: (dir === "prev" ? canPrev : canNext) ? accent : cssVar("text-muted"),
+    cursor: (dir === "prev" ? canPrev : canNext) ? "pointer" : "default",
+    opacity: (dir === "prev" ? canPrev : canNext) ? 1 : 0.35,
+    flexShrink: 0,
+    padding: 0,
+    fontFamily: "inherit",
+  });
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, minHeight: 34 }}>
+      <span
+        style={{
+          fontSize: 12,
+          fontWeight: 800,
+          letterSpacing: "0.05em",
+          textTransform: "uppercase",
+          color: accent,
+          flexShrink: 0,
+        }}
+      >
+        {label}
+      </span>
+      <span style={{ fontSize: 11, color: cssVar("text-muted"), flexShrink: 0 }}>
+        {index + 1} / {total}
+      </span>
+      <div style={{ flex: 1, height: 1, background: cssVar("border") }} />
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+        <button type="button" aria-label={`Previous ${label}`} disabled={!canPrev} onClick={onPrev} style={navBtn("prev")}>
+          <ChevronLeft size={18} strokeWidth={2.4} />
+        </button>
+        <button type="button" aria-label={`Next ${label}`} disabled={!canNext} onClick={onNext} style={navBtn("next")}>
+          <ChevronRight size={18} strokeWidth={2.4} />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DeepBreakdownHeader({ accent }: { accent: string }): React.ReactElement {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 8, minHeight: 34 }}>
+      <span
+        style={{
+          fontSize: 12,
+          fontWeight: 800,
+          letterSpacing: "0.05em",
+          textTransform: "uppercase",
+          color: accent,
+          flexShrink: 0,
+        }}
+      >
+        Event Breakdown
+      </span>
+      <div style={{ flex: 1, height: 1, background: cssVar("border") }} />
+    </div>
+  );
+}
+
+function DriverDeepDivePanel({
+  cut,
+  periodLabel,
+}: {
+  cut: TrustDriverCut;
+  periodLabel: string;
+}): React.ReactElement {
+  const tiles: React.ReactNode[] = [
+    <SellerSkuCutTile key="seller-sku" rows={cut.sellerSku} />,
+    <SellerTypeSegmentCutTile key="seller-segment" seller={cut.seller} segmentMatrix={cut.segmentMatrix} />,
+    <CutTile key="region" icon={MapPin} title="By region · pincode">
+      <RegionBarChart rows={cut.region} accent={cssVar("severity-high")} />
+    </CutTile>,
+    <CutTile key="category" icon={Layers} title="By category">
+      <CategoryCutTable
+        rows={cut.category}
+        periodLabel={periodLabel}
+        colors={[
+          cssVar("accent"),
+          cssVar("accent-2"),
+          cssVar("severity-med"),
+          cssVar("severity-high"),
+          cssVar("text-muted"),
+        ]}
+      />
+    </CutTile>,
+  ];
+
+  const pages: React.ReactNode[][] = [];
+  for (let i = 0; i < tiles.length; i += 2) {
+    pages.push(tiles.slice(i, i + 2));
+  }
+
+  return (
+    <aside
+      style={{
+        minWidth: 0,
+        height: "100%",
+        padding: "10px 12px",
+        borderRadius: radius.lg,
+        background: cssVar("surface"),
+        border: `1px solid ${cssVar("border")}`,
+        boxShadow: cssVar("shadow-card"),
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "flex",
+          flexDirection: "row",
+          overflowX: "auto",
+          overflowY: "hidden",
+          scrollSnapType: "x mandatory",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
+        {pages.map((page, pageIndex) => (
+          <div
+            key={pageIndex}
+            style={{
+              flex: "0 0 100%",
+              width: "100%",
+              height: "100%",
+              display: "grid",
+              gridTemplateColumns: page.length === 1 ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)",
+              gap: 8,
+              scrollSnapAlign: "start",
+              scrollSnapStop: "always",
+              boxSizing: "border-box",
+              paddingRight: pageIndex < pages.length - 1 ? 8 : 0,
+            }}
+          >
+            {page.map((tile, tileIndex) => (
+              <div
+                key={tileIndex}
+                style={{
+                  minWidth: 0,
+                  minHeight: 0,
+                  height: "100%",
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {tile}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    </aside>
+  );
+}
+
+function DriverEventLane({
+  label,
+  accent,
+  drivers,
+  scale,
+  periodLabel,
+  range,
+  onVisible,
+}: {
+  label: string;
+  accent: string;
+  drivers: TrustDriver[];
+  scale: (n: number) => number;
+  periodLabel: string;
+  range: TrustRangeKey;
+  onVisible: (id: TrustDriverId) => void;
+}): React.ReactElement | null {
+  const [index, setIndex] = useState(0);
+  const safeIndex = drivers.length === 0 ? 0 : Math.min(index, drivers.length - 1);
+  const current = drivers[safeIndex];
+
+  useEffect(() => {
+    if (current) onVisible(current.id);
+  }, [current?.id, onVisible]);
+
+  if (!current) return null;
+
+  const cut = scaleTrustDriverCut(TRUST_DRIVER_CUTS[current.id], range);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        padding: "14px 14px 16px",
+        borderRadius: radius.lg,
+        border: `1.5px solid ${accent}66`,
+        background: `linear-gradient(165deg, color-mix(in srgb, ${accent} 10%, ${cssVar("surface")}), color-mix(in srgb, ${accent} 3%, ${cssVar("surface-raised")}))`,
+        boxShadow: `inset 3px 0 0 0 ${accent}`,
+        boxSizing: "border-box",
+      }}
+    >
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 360px) minmax(0, 1fr)",
+          gap: 16,
+          alignItems: "center",
+        }}
+      >
+        <DriverLaneHeader
+          label={label}
+          accent={accent}
+          index={safeIndex}
+          total={drivers.length}
+          onPrev={() => setIndex((i) => Math.max(0, i - 1))}
+          onNext={() => setIndex((i) => Math.min(drivers.length - 1, i + 1))}
+        />
+        <DeepBreakdownHeader accent={accent} />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          gap: 16,
+          alignItems: "stretch",
+          width: "100%",
+        }}
+      >
+        <div style={{ flex: "0 0 auto", width: 360, maxWidth: 360, minWidth: 0 }}>
+          <TrustDriverCard
+            key={`${current.id}-${range}`}
+            d={current}
+            scale={scale}
+            periodLabel={periodLabel}
+            range={range}
+            laneAccent={accent}
+          />
+        </div>
+        <div
+          id={`event-breakdown-${current.id}`}
+          style={{
+            flex: 1,
+            minWidth: 0,
+            minHeight: 0,
+            overflow: "hidden",
+            alignSelf: "stretch",
+          }}
+        >
+          <DriverDeepDivePanel cut={cut} periodLabel={periodLabel} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1073,30 +1644,68 @@ export function TrustRangeSelector({
 }
 
 export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }): React.ReactElement {
-  const [selected, setSelected] = useState<TrustDriverId>("damaged");
-  const deepRef = useRef<HTMLDivElement>(null);
-
   const R = TRUST_RANGES[range];
+  const pulse = getTrustPulse(range);
   const scale = (n: number): number => n * R.f;
-  const driver = TRUST_DRIVERS.find((d) => d.id === selected) ?? TRUST_DRIVERS[0];
-  const cut: TrustDriverCut = TRUST_DRIVER_CUTS[selected];
+  const ranked = sortDriversBySeverity(TRUST_DRIVERS);
+  const cliffDrivers = ranked.filter((d) => d.cliffOrSlope === "cliff");
+  const slopeDrivers = ranked.filter((d) => d.cliffOrSlope === "slope");
 
-  const pickDriver = (id: TrustDriverId): void => {
-    setSelected(id);
-    setTimeout(() => deepRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 40);
-  };
+  const [selectedCliff, setSelectedCliff] = useState<TrustDriverId | null>(cliffDrivers[0]?.id ?? null);
+  const [selectedSlope, setSelectedSlope] = useState<TrustDriverId | null>(slopeDrivers[0]?.id ?? null);
+  const [draftingIssue, setDraftingIssue] = useState<string | null>(null);
+
+  const cliffDriver = selectedCliff ? TRUST_DRIVERS.find((d) => d.id === selectedCliff) ?? null : null;
+  const slopeDriver = selectedSlope ? TRUST_DRIVERS.find((d) => d.id === selectedSlope) ?? null : null;
+  const evidenceDriverId = selectedCliff ?? selectedSlope ?? TOP_TRUST_DRIVER.id;
+  const evidenceChannelRows = scaleTrustDriverCut(TRUST_DRIVER_CUTS[evidenceDriverId], range).channel;
+
+  const selectedSummary =
+    cliffDriver || slopeDriver ? (
+      <>
+        {cliffDriver ? (
+          <>
+            Cliff: <b style={{ color: cssVar("text-primary") }}>{cliffDriver.label}</b>
+          </>
+        ) : null}
+        {cliffDriver && slopeDriver ? <span style={{ color: cssVar("border") }}>·</span> : null}
+        {slopeDriver ? (
+          <>
+            Slope: <b style={{ color: cssVar("text-primary") }}>{slopeDriver.label}</b>
+          </>
+        ) : null}
+      </>
+    ) : (
+      <span>Browse cliff / slope events for Event Breakdown</span>
+    );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-      {/* S1 — Trust KPIs */}
+    <div key={range} style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+      {/* Trust Index KPIs — headline first */}
       <section>
         <TrustPulseKpiCards range={range} />
       </section>
 
-      {/* S2 — Why trust breaks */}
+      {/* 01 — Stage where trust breaks */}
       <section>
         <SectionHead
           n="01"
+          titleBesideBadge
+          title={
+            <>
+              Stage where trust got <span style={{ color: cssVar("accent") }}>broken?</span>
+            </>
+          }
+        />
+        <PanelCard style={{ padding: 14 }}>
+          <TrustStageLifecyclePie range={range} />
+        </PanelCard>
+      </section>
+
+      {/* 02 — Why trust breaks · separate cliff / slope lanes */}
+      <section>
+        <SectionHead
+          n="02"
           title={
             <>
               Why trust is <span style={{ color: cssVar("accent") }}>breaking?</span>
@@ -1104,298 +1713,37 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
           }
           titleBesideBadge
           right={
-            <span style={{ fontSize: 12, color: cssVar("text-muted"), display: "inline-flex", alignItems: "center", gap: 6 }}>
-              <Target size={14} strokeWidth={2.2} /> Selected: <b style={{ color: cssVar("text-primary") }}>{driver.label}</b>
+            <span style={{ fontSize: 12, color: cssVar("text-muted"), display: "inline-flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+              <Target size={14} strokeWidth={2.2} /> {selectedSummary}
             </span>
           }
         />
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 14 }}>
-          {TRUST_DRIVERS.map((d) => {
-            const q = QUAD_META[classify(d)];
-            const active = d.id === selected;
-            const Icon = d.icon;
-            return (
-              <button
-                key={d.id}
-                type="button"
-                onClick={() => pickDriver(d.id)}
-                style={{
-                  textAlign: "left",
-                  padding: 15,
-                  cursor: "pointer",
-                  background: cssVar("surface"),
-                  border: `1px solid ${active ? cssVar("accent") : cssVar("border")}`,
-                  borderRadius: radius.lg,
-                  boxShadow: active ? `0 0 0 1px ${cssVar("accent")}, ${cssVar("shadow-card")}` : cssVar("shadow-card"),
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    gap: 12,
-                    height: 32,
-                    flexShrink: 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: 10,
-                      alignItems: "center",
-                      flex: 1,
-                      minWidth: 0,
-                      overflow: "hidden",
-                    }}
-                  >
-                    <Icon size={18} color={q.color} strokeWidth={2.3} style={{ flexShrink: 0 }} />
-                    <span
-                      style={{
-                        fontSize: 16,
-                        fontWeight: 700,
-                        color: cssVar("text-primary"),
-                        lineHeight: 1,
-                        minWidth: 0,
-                        flex: 1,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                      title={d.label}
-                    >
-                      {d.label}
-                    </span>
-                  </div>
-                  <ChevronDown
-                    size={16}
-                    color={cssVar("text-muted")}
-                    strokeWidth={2.4}
-                    style={{ transform: active ? "rotate(180deg)" : "none", flexShrink: 0 }}
-                  />
-                </div>
-
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 1fr",
-                    gap: "9px 14px",
-                    margin: "6px 0 12px",
-                    padding: "10px 0",
-                    borderTop: `1px solid ${cssVar("border")}`,
-                    borderBottom: `1px solid ${cssVar("border")}`,
-                    justifyItems: "center",
-                    textAlign: "center",
-                  }}
-                >
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                    <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Complaints</span>
-                    <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("text-primary") }}>
-                      {fmt(scale(d.complaints))}
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                    <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>{R.delta}</span>
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <Delta value={d.wow} good="down" />
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                    <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Neg. sentiment</span>
-                    <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("severity-high") }}>
-                      {d.sentNeg}%
-                    </div>
-                  </div>
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-                    <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Repeat contact</span>
-                    <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("severity-med") }}>
-                      {d.repeat}×
-                    </div>
-                  </div>
-                </div>
-
-                <DriverAiHowToDeal points={d.dealPoints} />
-              </button>
-            );
-          })}
+        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+          <DriverEventLane
+            label="Cliff events"
+            accent={cssVar("severity-high")}
+            drivers={cliffDrivers}
+            scale={scale}
+            periodLabel={R.delta}
+            range={range}
+            onVisible={setSelectedCliff}
+          />
+          <DriverEventLane
+            label="Slope events"
+            accent={cssVar("severity-med")}
+            drivers={slopeDrivers}
+            scale={scale}
+            periodLabel={R.delta}
+            range={range}
+            onVisible={setSelectedSlope}
+          />
         </div>
       </section>
 
-      {/* S3 — Deep dive */}
-      <section ref={deepRef} style={{ scrollMarginTop: 24 }}>
-        <SectionHead
-          n="02"
-          titleBesideBadge
-          title={
-            <>
-              Driver deep-dive · <span style={{ color: cssVar("accent") }}>{driver.label}</span>
-            </>
-          }
-          right={
-            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
-              <span
-                className="lisn-num"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  fontSize: 11.5,
-                  fontWeight: 600,
-                  padding: "4px 9px",
-                  borderRadius: 8,
-                  background: cssVar("surface-raised"),
-                  border: `1px solid ${cssVar("border")}`,
-                }}
-              >
-                {fmt(scale(driver.complaints))} complaints
-              </span>
-              <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, padding: "4px 9px", borderRadius: 8, background: cssVar("surface-raised"), border: `1px solid ${cssVar("border")}` }}>
-                {R.delta} <Delta value={driver.wow} good="down" />
-              </span>
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 5,
-                  fontSize: 11.5,
-                  padding: "4px 9px",
-                  borderRadius: 8,
-                  background: cssVar("accent-soft"),
-                  border: `1px solid ${cssVar("accent")}44`,
-                  color: cssVar("accent-2"),
-                }}
-              >
-                {driver.sentNeg}% neg · {driver.conf}%
-              </span>
-            </div>
-          }
-        />
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gridTemplateRows: "repeat(2, minmax(200px, auto))",
-            gap: 14,
-            alignItems: "stretch",
-          }}
-        >
-          <CutTile icon={Layers} title="By category">
-            <DonutChart
-              rows={cut.category}
-              colors={[cssVar("accent"), cssVar("accent-2"), cssVar("severity-med"), cssVar("severity-high"), cssVar("text-muted")]}
-            />
-          </CutTile>
-          <CutTile icon={Tag} title="By seller type">
-            <SplitBar rows={cut.seller} />
-          </CutTile>
-          <CutTile icon={MapPin} title="By region · pincode">
-            <RegionBarChart rows={cut.region} accent={cssVar("severity-high")} />
-          </CutTile>
-          <CutTile icon={Truck} title="By fulfilment path">
-            <PathFlowViz
-              rows={cut.path}
-              colors={[cssVar("severity-med"), cssVar("accent"), cssVar("accent-2")]}
-            />
-          </CutTile>
-          <CutTile icon={Users} title="By customer segment">
-            <SegmentMatrixViz matrix={cut.segmentMatrix} />
-          </CutTile>
-          <ChannelEvidenceCutTile rows={cut.channel} />
-        </div>
-      </section>
-
-      {/* S4 — Segments */}
+      {/* 03 — Evidence */}
       <section>
         <SectionHead
           n="03"
-          titleBesideBadge
-          title={
-            <>
-              Trust impact by <span style={{ color: cssVar("accent") }}>customer segment</span>
-            </>
-          }
-        />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: 14,
-            alignItems: "stretch",
-          }}
-        >
-          {TRUST_SEGMENTS.map((s) => (
-            <PanelCard
-              key={s.label}
-              style={{
-                padding: 14,
-                display: "flex",
-                flexDirection: "column",
-                gap: 8,
-                height: "100%",
-              }}
-            >
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0, 1fr) auto",
-                  gridTemplateRows: "auto auto",
-                  columnGap: 10,
-                  rowGap: 6,
-                  alignItems: "center",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    color: cssVar("text-primary"),
-                    lineHeight: 1.25,
-                    gridColumn: 1,
-                    gridRow: 1,
-                  }}
-                >
-                  {s.label}
-                </span>
-                <span
-                  style={{
-                    gridColumn: 2,
-                    gridRow: 1,
-                    justifySelf: "end",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <Delta value={s.wow} good="down" label={R.delta} />
-                </span>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "baseline",
-                    gap: 5,
-                    gridColumn: 1,
-                    gridRow: 2,
-                    minWidth: 0,
-                  }}
-                >
-                  <span
-                    className="lisn-num"
-                    style={{ fontSize: 24, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1 }}
-                  >
-                    {fmt(scale(s.affected))}
-                  </span>
-                  <span style={{ fontSize: 10, color: cssVar("text-muted") }}>affected</span>
-                </div>
-              </div>
-              <SegmentAiInsight insight={s.aiInsight} />
-            </PanelCard>
-          ))}
-        </div>
-      </section>
-
-      {/* S5 — Evidence */}
-      <section>
-        <SectionHead
-          n="04"
           titleBesideBadge
           title={
             <>
@@ -1409,6 +1757,7 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
             gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
             gap: 16,
             alignItems: "stretch",
+            minHeight: 420,
           }}
         >
           <PanelCard
@@ -1434,10 +1783,10 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
               <Sparkles size={16} color={cssVar("accent-2")} strokeWidth={2.4} />
               <span style={{ fontSize: 13.5, fontWeight: 700, color: cssVar("text-primary") }}>AI summary</span>
               <span style={{ marginLeft: "auto" }}>
-                <InferredChip conf={TRUST_PULSE.modelConfidence} small />
+                <ConfidenceChip conf={pulse.modelConfidence} small />
               </span>
             </div>
-            <TrustAiSummaryBody />
+            <TrustAiSummaryBody range={range} />
             <div
               style={{
                 marginTop: "auto",
@@ -1463,91 +1812,16 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
             </div>
           </PanelCard>
 
-          <PanelCard style={{ padding: 18, height: "100%", display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 12,
-                minHeight: 28,
-                flexShrink: 0,
-              }}
-            >
-              <MessageSquare size={16} color={cssVar("accent-2")} strokeWidth={2.4} />
-              <span style={{ fontSize: 13.5, fontWeight: 700, color: cssVar("text-primary") }}>Real interaction evidence</span>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-              {TRUST_EVIDENCE.map((e, i) => {
-                const Icon = e.icon;
-                return (
-                  <div
-                    key={`${e.src}-${e.tag}`}
-                    style={{
-                      display: "flex",
-                      gap: 11,
-                      padding: "12px 0",
-                      flex: 1,
-                      alignItems: "flex-start",
-                      borderTop: i > 0 ? `1px solid ${cssVar("border")}` : undefined,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 30,
-                        height: 30,
-                        borderRadius: 8,
-                        background: cssVar("surface-raised"),
-                        border: `1px solid ${cssVar("border")}`,
-                        display: "grid",
-                        placeItems: "center",
-                        flexShrink: 0,
-                      }}
-                    >
-                      <Icon size={15} color={cssVar("text-muted")} strokeWidth={2.2} />
-                    </div>
-                    <div style={{ minWidth: 0, flex: 1 }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "flex-start",
-                          justifyContent: "space-between",
-                          gap: 10,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: cssVar("text-primary"), fontStyle: "italic", flex: 1, minWidth: 0 }}>
-                          &ldquo;{e.quote}&rdquo;
-                        </p>
-                        <span
-                          style={{
-                            fontSize: 10.5,
-                            fontWeight: 700,
-                            color: cssVar("accent"),
-                            background: cssVar("accent-soft"),
-                            borderRadius: 6,
-                            padding: "2px 7px",
-                            flexShrink: 0,
-                            alignSelf: "flex-start",
-                          }}
-                        >
-                          {e.src}
-                        </span>
-                      </div>
-                      <span style={{ display: "block", marginTop: 5, fontSize: 11, color: cssVar("text-muted") }}>{e.tag}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </PanelCard>
+          <div style={{ minHeight: 0, height: "100%", display: "flex", flexDirection: "column" }}>
+            <ChannelEvidenceCutTile rows={evidenceChannelRows} />
+          </div>
         </div>
       </section>
 
-      {/* S6 — Actions */}
+      {/* 04 — Actions */}
       <section>
         <SectionHead
-          n="05"
+          n="04"
           titleBesideBadge
           title={
             <>
@@ -1589,56 +1863,70 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
                 : a.kind === "Act now"
                   ? cssVar("positive")
                   : cssVar("accent");
+            const draftKind = a.kind === "Act now" ? "prepare" : "route";
+            const isDrafting = draftingIssue === a.issue;
             return (
-              <div
-                key={a.issue}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.7fr) auto",
-                  gap: 14,
-                  padding: "13px 18px",
-                  borderBottom: i < TRUST_ACTIONS.length - 1 ? `1px solid ${cssVar("border")}` : undefined,
-                  alignItems: "center",
-                }}
-              >
-                <span style={{ fontWeight: 600, color: cssVar("text-primary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.issue}</span>
-                <span style={{ color: cssVar("text-secondary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.cause}</span>
-                <span>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      fontSize: 11,
-                      fontWeight: 700,
-                      color: cssVar("accent"),
-                      background: cssVar("accent-soft"),
-                      borderRadius: 6,
-                      padding: "3px 8px",
-                      lineHeight: 1.3,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {a.team}
-                  </span>
-                </span>
-                <span style={{ color: cssVar("text-secondary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.action}</span>
-                <span
+              <div key={a.issue}>
+                <div
                   style={{
-                    display: "inline-flex",
+                    display: "grid",
+                    gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.7fr) auto",
+                    gap: 14,
+                    padding: "13px 18px",
+                    borderBottom: !isDrafting && i < TRUST_ACTIONS.length - 1 ? `1px solid ${cssVar("border")}` : undefined,
                     alignItems: "center",
-                    gap: 5,
-                    border: `1px solid ${btnColor}55`,
-                    background: `${btnColor}14`,
-                    color: btnColor,
-                    fontSize: 11.5,
-                    fontWeight: 700,
-                    padding: "6px 10px",
-                    borderRadius: 8,
-                    whiteSpace: "nowrap",
-                    justifySelf: "end",
                   }}
                 >
-                  {a.kind} <ArrowRight size={13} strokeWidth={2.6} />
-                </span>
+                  <span style={{ fontWeight: 600, color: cssVar("text-primary"), fontSize: 12.5, lineHeight: 1.4 }}>
+                    {a.issue.replace(/WoW/g, R.delta)}
+                  </span>
+                  <span style={{ color: cssVar("text-secondary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.cause}</span>
+                  <span>
+                    <span
+                      style={{
+                        display: "inline-flex",
+                        fontSize: 11,
+                        fontWeight: 700,
+                        color: cssVar("accent"),
+                        background: cssVar("accent-soft"),
+                        borderRadius: 6,
+                        padding: "3px 8px",
+                        lineHeight: 1.3,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {a.team}
+                    </span>
+                  </span>
+                  <span style={{ color: cssVar("text-secondary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.action}</span>
+                  <button
+                    type="button"
+                    onClick={() => setDraftingIssue(isDrafting ? null : a.issue)}
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 5,
+                      border: `1px solid ${btnColor}55`,
+                      background: `${btnColor}14`,
+                      color: btnColor,
+                      fontSize: 11.5,
+                      fontWeight: 700,
+                      padding: "6px 10px",
+                      borderRadius: 8,
+                      whiteSpace: "nowrap",
+                      justifySelf: "end",
+                      cursor: "pointer",
+                      fontFamily: "inherit",
+                    }}
+                  >
+                    {a.kind} <ArrowRight size={13} strokeWidth={2.6} />
+                  </button>
+                </div>
+                {isDrafting ? (
+                  <div style={{ padding: "0 18px 14px", borderBottom: i < TRUST_ACTIONS.length - 1 ? `1px solid ${cssVar("border")}` : undefined }}>
+                    <DraftActionFooter draftText={a.action} draftKind={draftKind} embedded />
+                  </div>
+                ) : null}
               </div>
             );
           })}

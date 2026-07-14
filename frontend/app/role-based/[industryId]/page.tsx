@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { CategoryVersionToggle } from "@/components/role-based-dashboard/CategoryVersionToggle";
-import { CxRetailVersionToggle } from "@/components/role-based-dashboard/CxRetailVersionToggle";
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
@@ -84,12 +83,7 @@ export default function RoleBasedIndustryRolesPage() {
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {industry.roles
-          .filter(
-            (role) =>
-              role.id !== "head_cx_retail_v2" &&
-              role.id !== "head_cx_retail_v3" &&
-              role.id !== "business_head_v2",
-          )
+          .filter((role) => role.id !== "business_head_v2")
           .map((role) => {
           const Icon = role.icon;
           const cardStyle = {
@@ -130,34 +124,6 @@ export default function RoleBasedIndustryRolesPage() {
                   <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
                 </div>
                 <CategoryVersionToggle industryId={industry.id} isDarkMode={isDarkMode} />
-              </div>
-            );
-          }
-
-          if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
-            return (
-              <div key={role.id} style={{ ...cardStyle, cursor: "default" }}>
-                <div
-                  style={{
-                    width: 42,
-                    height: 42,
-                    borderRadius: 10,
-                    background: `${accent}14`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0,
-                  }}
-                >
-                  <Icon size={20} color={accent} />
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: text, marginBottom: 4 }}>
-                    {roleDisplayName(role)}
-                  </div>
-                  <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
-                </div>
-                <CxRetailVersionToggle industryId={industry.id} isDarkMode={isDarkMode} />
               </div>
             );
           }

@@ -6,10 +6,10 @@ export const PAGE_SECTION_GAP = space["5"];
 /** Grid gap between paired charts / panels — reference mock uses 18px. */
 export const DETAIL_GAP = "18px";
 
-/** Profitability drill — three aligned rows (left column wider). */
-export const PROFITABILITY_ROW_TOP = "minmax(0, 1.55fr) minmax(0, 1fr)";
-export const PROFITABILITY_ROW_MID = "minmax(0, 1.55fr) minmax(0, 1fr)";
-export const PROFITABILITY_ROW_BOTTOM = "minmax(0, 1.6fr) minmax(0, 1fr)";
+/** Profitability drill — AI / drivers mid; bridge / scorecard bottom. */
+export const PROFITABILITY_ROW_TOP = "minmax(0, 1.85fr) minmax(0, 1fr)";
+export const PROFITABILITY_ROW_MID = "minmax(0, 1fr) minmax(0, 1.15fr)";
+export const PROFITABILITY_ROW_BOTTOM = "minmax(0, 1fr) minmax(0, 1.1fr)";
 
 /** @deprecated Use PROFITABILITY_ROW_* per row */
 export const PROFITABILITY_GRID_COLUMNS = PROFITABILITY_ROW_TOP;

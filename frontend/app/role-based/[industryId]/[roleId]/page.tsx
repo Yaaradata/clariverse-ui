@@ -22,11 +22,22 @@ export default function RoleBasedRoleDashboardPage() {
   const industryId = typeof params.industryId === "string" ? params.industryId : "";
   const roleId = typeof params.roleId === "string" ? params.roleId : "";
   const normalizedRoleId =
-    industryId === "credit_cards" && roleId === "head_cards_v3" ? "head_cards" : roleId;
+    industryId === "credit_cards" && roleId === "head_cards_v3"
+      ? "head_cards"
+      : industryId === "ecommerce" &&
+          (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
+        ? "head_cx_retail"
+        : roleId;
 
   useEffect(() => {
     if (industryId === "credit_cards" && roleId === "head_cards_v3") {
       router.replace(`/role-based/credit_cards/head_cards`);
+    }
+    if (
+      industryId === "ecommerce" &&
+      (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
+    ) {
+      router.replace(`/role-based/ecommerce/head_cx_retail`);
     }
   }, [industryId, roleId, router]);
 

@@ -8,6 +8,7 @@ import React, {
   useState,
 } from 'react';
 import type { DrillSignature } from './cxHeadRetailData';
+import type { TrustRangeKey } from './cxHeadRetailV3TrustBreakdownData';
 import { DEFAULT_SCREEN, type ScreenId } from './routes';
 
 export interface DrillTarget {
@@ -23,6 +24,8 @@ interface NavigationValue {
   navigate: (screen: ScreenId) => void;
   openDrill: (target: DrillTarget) => void;
   closeDrill: () => void;
+  trustRange: TrustRangeKey;
+  setTrustRange: (range: TrustRangeKey) => void;
 }
 
 const NavigationContext = createContext<NavigationValue | null>(null);
@@ -42,6 +45,7 @@ export function NavigationProvider({
 }): React.ReactElement {
   const [activeScreen, setActiveScreen] = useState<ScreenId>(DEFAULT_SCREEN);
   const [drill, setDrill] = useState<DrillTarget | null>(null);
+  const [trustRange, setTrustRange] = useState<TrustRangeKey>('7D');
 
   const navigate = useCallback((screen: ScreenId) => {
     setActiveScreen(screen);
@@ -55,8 +59,16 @@ export function NavigationProvider({
   const closeDrill = useCallback(() => setDrill(null), []);
 
   const value = useMemo<NavigationValue>(
-    () => ({ activeScreen, drill, navigate, openDrill, closeDrill }),
-    [activeScreen, drill, navigate, openDrill, closeDrill],
+    () => ({
+      activeScreen,
+      drill,
+      navigate,
+      openDrill,
+      closeDrill,
+      trustRange,
+      setTrustRange,
+    }),
+    [activeScreen, drill, navigate, openDrill, closeDrill, trustRange],
   );
 
   return (

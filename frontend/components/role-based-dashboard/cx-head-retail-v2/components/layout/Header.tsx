@@ -1,16 +1,13 @@
 // components/layout/Header.tsx
-// Pass 1 — minimal top bar: active screen label + light/dark toggle only (CL-013).
+// Pass 1 — minimal top bar: light/dark toggle only (CL-013).
 
 import React from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { CxRetailVersionToggle } from '@/components/role-based-dashboard/CxRetailVersionToggle';
 import { useTheme } from '../../theme/DashboardThemeProvider';
-import { useDashboardShell } from '../../lib/DashboardShellContext';
-import { cssVar, layout, radius, type } from '../../theme/tokens';
+import { cssVar, layout, radius } from '../../theme/tokens';
 
 export function Header(): React.ReactElement {
   const { mode, toggle } = useTheme();
-  const { industryId, retailVersion } = useDashboardShell();
 
   return (
     <header
@@ -19,25 +16,13 @@ export function Header(): React.ReactElement {
         flexShrink: 0,
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-end',
         padding: '0 20px',
         background: cssVar('surface'),
         borderBottom: `1px solid ${cssVar('border')}`,
       }}
     >
-      <div>
-        <div style={{ fontSize: type.scale.small, color: cssVar('text-muted') }}>
-          LiSN · Fluid CX
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <CxRetailVersionToggle
-          industryId={industryId}
-          activeVersion={retailVersion}
-          isDarkMode={mode === 'dark'}
-        />
-        <button
+      <button
         type="button"
         onClick={toggle}
         aria-label={mode === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
@@ -56,7 +41,6 @@ export function Header(): React.ReactElement {
       >
         {mode === 'dark' ? <Sun size={17} /> : <Moon size={17} />}
       </button>
-      </div>
     </header>
   );
 }

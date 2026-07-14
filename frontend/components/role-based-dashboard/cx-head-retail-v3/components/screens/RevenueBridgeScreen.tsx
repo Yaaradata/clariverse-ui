@@ -12,7 +12,6 @@ import { BridgeCatalogueList, BRIDGE_CATALOGUE_PANEL_HEIGHT } from "../revenue-b
 import { BridgeDetailPanel } from "../revenue-bridge/BridgeDetailPanel";
 import { RevenueBridgeLedgerKpis } from "../revenue-bridge/RevenueBridgeLedgerKpis";
 import { DetailPageHeader } from "../common/DetailPageHeader";
-import { ScreenBackBar } from "../common/ScreenBackBar";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
 
 function RevenueBridgeHeadline(): React.ReactElement {
@@ -59,7 +58,7 @@ function SectionHeader({ title, hint }: { title: string; hint?: string }): React
 
 /** Pass 7 — S5 Revenue Bridge: triage KPIs → catalogue list + detail → pilot actions. */
 export function RevenueBridgeScreen(): React.ReactElement {
-  const { navigate, openDrill } = useNavigation();
+  const { openDrill } = useNavigation();
   const [selectedId, setSelectedId] = useState<string>(STARRED_BRIDGE_IDS[0]);
 
   const openBridgeDrill = (tileId: string) => {
@@ -102,8 +101,6 @@ export function RevenueBridgeScreen(): React.ReactElement {
           </span>
         }
       />
-
-      <ScreenBackBar onBack={() => navigate("overview")} />
 
       <RevenueBridgeLedgerKpis />
 

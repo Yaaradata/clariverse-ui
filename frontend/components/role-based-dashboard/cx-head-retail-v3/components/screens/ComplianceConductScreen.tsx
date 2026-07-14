@@ -18,7 +18,6 @@ import { ComplianceKpiCards } from "../compliance/ComplianceKpiCards";
 import { RegulationExposureChart } from "../compliance/RegulationExposureChart";
 import { StatutoryClockProximityRunway } from "../compliance/StatutoryClockProximityRunway";
 import { DetailPageHeader } from "../common/DetailPageHeader";
-import { ScreenBackBar } from "../common/ScreenBackBar";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
 
 function ComplianceHeadline(): React.ReactElement {
@@ -105,7 +104,7 @@ const COMPLIANCE_PILOT_ACTIONS = [
 
 /** S3 Regulatory Exposure — KPIs → charts → conduct + actions. */
 export function ComplianceConductScreen(): React.ReactElement {
-  const { navigate, openDrill } = useNavigation();
+  const { openDrill } = useNavigation();
 
   const openStatutoryDrill = (item: StatutoryQueueItem) => {
     openDrill({
@@ -128,7 +127,6 @@ export function ComplianceConductScreen(): React.ReactElement {
       }}
     >
       <DetailPageHeader headline={<ComplianceHeadline />} />
-      <ScreenBackBar onBack={() => navigate("overview")} />
 
       <ComplianceKpiCards />
 

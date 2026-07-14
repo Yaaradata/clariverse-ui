@@ -12,7 +12,6 @@ import {
 import { useNavigation } from "../../lib/NavigationContext";
 import { ExecutiveTile } from "../common/ExecutiveTile";
 import { RadarRail } from "../common/RadarRail";
-import { ScreenBackBar } from "../common/ScreenBackBar";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
 
 function CommandHeadline(): React.ReactElement {
@@ -65,7 +64,7 @@ function CommandHeadline(): React.ReactElement {
 
 /** V3 detail — breaking tiles, corroboration radar, evidence drill-down. */
 export function CXCommandScreen(): React.ReactElement {
-  const { navigate, openDrill } = useNavigation();
+  const { openDrill } = useNavigation();
 
   const handleOpenSignal = (signal: RadarSignal) => {
     openDrill({
@@ -134,8 +133,6 @@ export function CXCommandScreen(): React.ReactElement {
             {COMMAND_TIME_COMPARE}
           </span>
         </div>
-
-        <ScreenBackBar onBack={() => navigate("overview")} />
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12, alignItems: "start" }}>
           {EXECUTIVE_TILES.map((tile, index) => (

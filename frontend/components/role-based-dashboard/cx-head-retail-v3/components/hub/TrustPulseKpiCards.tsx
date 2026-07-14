@@ -9,10 +9,12 @@ import {
 } from "lucide-react";
 import {
   TRUST_DRIVERS,
-  TRUST_PULSE,
   TRUST_RAG,
   TRUST_RANGES,
   TRUST_TOTAL_COMPLAINTS,
+  TOP_TRUST_DRIVER,
+  getTrustPulse,
+  sortDriversBySeverity,
   type TrustRangeKey,
   type TrustRagLevel,
 } from "../../lib/cxHeadRetailV3TrustBreakdownData";
@@ -105,7 +107,7 @@ function SignalBadge({ kind, value }: { kind: "measured" | "inferred"; value?: n
       }}
     >
       {inferred ? <Sparkles size={9} strokeWidth={2.4} /> : <Database size={9} strokeWidth={2.4} />}
-      {inferred ? `Confidence · ${value ?? TRUST_PULSE.modelConfidence}%` : "Measured"}
+      {inferred ? `Confidence · ${value ?? 91}%` : "Measured"}
     </span>
   );
 }
@@ -346,9 +348,9 @@ function MetaStat({
 
 /** Trust Index 2×2 stat tile — primary value scale (matches Gap to target) */
 const statTileValue = {
-  valueSize: 25,
+  valueSize: 22,
   valueWeight: 700,
-  valueLineHeight: 1.35,
+  valueLineHeight: 1.2,
 } as const;
 
 /** Top Trust Breaker side rail — compact stack inside inner card */
@@ -430,6 +432,43 @@ function BreakerHowToDeal({ text }: { text: string }): React.ReactElement {
           AI · How to deal
         </div>
         <span style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45, fontWeight: 500 }}>{text}</span>
+      </div>
+    </div>
+  );
+}
+
+function TrustIndexAiInsight({ text }: { text: string }): React.ReactElement {
+  return (
+    <div
+      style={{
+        display: "flex",
+        gap: 8,
+        alignItems: "flex-start",
+        marginTop: 0,
+        padding: "8px 10px",
+        background: cssVar("accent-soft"),
+        borderRadius: radius.md,
+        border: `1px solid ${cssVar("accent")}28`,
+        width: "100%",
+        boxSizing: "border-box",
+      }}
+    >
+      <Sparkles size={13} strokeWidth={2.4} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 2 }} />
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 800,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: cssVar("accent-2"),
+            marginBottom: 3,
+            lineHeight: 1.2,
+          }}
+        >
+          AI Insight
+        </div>
+        <span style={{ fontSize: 11.5, color: cssVar("text-secondary"), lineHeight: 1.4, fontWeight: 500 }}>{text}</span>
       </div>
     </div>
   );
@@ -591,7 +630,7 @@ function TrustOutcomeSignalRow({
 
 function StatTileDetail({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
-    <div style={{ fontSize: 9.5, color: cssVar("text-muted"), lineHeight: 1.35, marginTop: 6 }}>{children}</div>
+    <div style={{ fontSize: 9.5, color: cssVar("text-muted"), lineHeight: 1.3, marginTop: 3 }}>{children}</div>
   );
 }
 
@@ -649,8 +688,25 @@ function DetailMetaStat({
   const resolvedColor = color ?? cssVar("text-primary");
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", minWidth: 0 }}>
-      <KpiStatLabel style={{ marginBottom: labelMarginBottom ?? 4, letterSpacing: "0.40px" }}>{label}</KpiStatLabel>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        minWidth: 0,
+        width: "100%",
+        gap: 2,
+      }}
+    >
+      <KpiStatLabel
+        style={{
+          marginBottom: labelMarginBottom ?? 2,
+          letterSpacing: "0.3px",
+          fontWeight: 700,
+        }}
+      >
+        {label}
+      </KpiStatLabel>
       <span
         className="lisn-num"
         style={{
@@ -658,7 +714,7 @@ function DetailMetaStat({
           fontWeight: resolvedValueWeight,
           color: resolvedColor,
           lineHeight: resolvedValueLineHeight,
-          flexShrink: 0,
+          maxWidth: "100%",
         }}
       >
         {value}
@@ -704,13 +760,14 @@ function TrustIndexStatTile({
       style={{
         display: "flex",
         flexDirection: "column",
-        justifyContent: "flex-start",
-        padding: "7px 11px 9px",
+        justifyContent: "center",
+        padding: "8px 10px",
         borderRadius: radius.sm,
         border: `1px solid ${cssVar("border")}`,
         background: cssVar("surface-raised"),
         minWidth: 0,
         minHeight: 0,
+        boxSizing: "border-box",
         ...revealStyle,
       }}
     >
@@ -738,6 +795,7 @@ function TrustIndexStatGrid({
   periodLabel,
   rangeDelta,
   customersDelta,
+  cliffCount,
 }: {
   gap: number;
   accent: string;
@@ -748,11 +806,14 @@ function TrustIndexStatGrid({
   periodLabel: string;
   rangeDelta: string;
   customersDelta: number;
+  cliffCount: number;
 }): React.ReactElement {
   const animatedCustomers = useAnimatedNumber(customersImpacted, { duration: 900, delay: 260 });
-  const animatedGap = useAnimatedNumber(gap, { duration: 850, delay: 200 });
   const animatedContacts = useAnimatedNumber(totalComplaints, { duration: 900, delay: 320 });
-  const animatedTargetPct = useAnimatedNumber(targetPct, { duration: 800, delay: 180 });
+  void gap;
+  void accent;
+  void currentState;
+  void targetPct;
 
   const items: {
     label: string;
@@ -774,23 +835,25 @@ function TrustIndexStatGrid({
       ...statTileValue,
     },
     {
-      label: "Gap to target",
-      value: `${animatedGap} pts`,
-      detail: `${animatedTargetPct}% of ${TRUST_TARGET} target`,
-      color: gap > 0 ? cssVar("severity-high") : cssVar("positive"),
+      label: "Cliff events live",
+      value: String(cliffCount),
+      detail: cliffCount > 0 ? "Browse cliff cards below" : "No live cliffs",
+      color: cliffCount > 0 ? cssVar("severity-high") : cssVar("positive"),
       revealDelay: 180,
       ...statTileValue,
     },
     {
-      label: "Risk Level",
-      value: currentState,
-      detail: "Composite risk band",
-      color: accent,
+      label: "Top severity",
+      value: TOP_TRUST_DRIVER.label,
+      detail: `Blast ${TOP_TRUST_DRIVER.blastRadius} · ${TOP_TRUST_DRIVER.cliffOrSlope}`,
+      color: cssVar("severity-high"),
       revealDelay: 240,
-      ...statTileValue,
+      valueSize: 13,
+      valueWeight: 700,
+      valueLineHeight: 1.25,
     },
     {
-      label: "Trust Contacts",
+      label: "Safe Contacts",
       value: fmt(animatedContacts),
       detail: periodLabel,
       color: cssVar("text-primary"),
@@ -804,11 +867,10 @@ function TrustIndexStatGrid({
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-        gridTemplateRows: "repeat(2, minmax(0, 1fr))",
+        gridTemplateRows: "auto auto",
         gap: space["2"],
         width: "100%",
-        height: "100%",
-        minHeight: 168,
+        alignContent: "start",
       }}
     >
       {items.map((item) => (
@@ -920,10 +982,10 @@ function TrustIndexGauge({
         />
         <circle cx={targetPt.x} cy={targetPt.y} r={4} fill={cssVar("positive")} />
         <text
-          x={targetPt.x}
-          y={targetPt.y - 12}
+          x={targetPt.x + 12}
+          y={targetPt.y - 16}
           textAnchor="middle"
-          style={{ fontSize: 7, fontWeight: 700, fill: cssVar("positive"), letterSpacing: "0.3px" }}
+          style={{ fontSize: 7, fontWeight: 700, fill: cssVar("positive"), letterSpacing: "0.5px" }}
         >
           TARGET
         </text>
@@ -949,18 +1011,60 @@ function TrustIndexGauge({
           display: "grid",
           gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
           gap: space["2"],
-          padding: "0 4px",
+          padding: "2px 4px 0",
+          alignItems: "start",
         }}
       >
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 8.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.3, color: cssVar("text-muted") }}>Max Target</div>
-          <div className="lisn-num" style={{ fontSize: kpiType.sub, fontWeight: 800, color: cssVar("positive"), marginTop: 2 }}>
+        <div style={{ textAlign: "center", minWidth: 0 }}>
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              color: cssVar("text-muted"),
+              lineHeight: 1.2,
+            }}
+          >
+            Max Target
+          </div>
+          <div
+            className="lisn-num"
+            style={{
+              fontSize: 14,
+              fontWeight: 800,
+              color: cssVar("positive"),
+              marginTop: 3,
+              lineHeight: 1.2,
+            }}
+          >
             {animatedTargetPct}%
           </div>
         </div>
-        <div style={{ textAlign: "center", borderLeft: `1px solid ${cssVar("border")}` }}>
-          <div style={{ fontSize: 8.5, fontWeight: 700, textTransform: "uppercase", letterSpacing: 0.3, color: cssVar("text-muted") }}>Validation</div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: cssVar("severity-med"), marginTop: 3 }}>CSAT · NPS pending</div>
+        <div style={{ textAlign: "center", borderLeft: `1px solid ${cssVar("border")}`, minWidth: 0, paddingLeft: 6 }}>
+          <div
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              textTransform: "uppercase",
+              letterSpacing: "0.3px",
+              color: cssVar("text-muted"),
+              lineHeight: 1.2,
+            }}
+          >
+            Validation
+          </div>
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              color: cssVar("severity-med"),
+              marginTop: 3,
+              lineHeight: 1.25,
+            }}
+          >
+            CSAT · NPS pending
+          </div>
         </div>
       </div>
     </div>
@@ -968,7 +1072,12 @@ function TrustIndexGauge({
 }
 
 function TrustIndexRiskCard({
+  trustIndex,
+  trustDelta,
   trustRag,
+  insight,
+  modelConfidence,
+  cliffCount,
   rangeLabel,
   rangeDelta,
   periodLabel,
@@ -976,7 +1085,12 @@ function TrustIndexRiskCard({
   customersImpacted,
   customersDelta,
 }: {
+  trustIndex: number;
+  trustDelta: number;
   trustRag: TrustRagLevel;
+  insight: string;
+  modelConfidence: number;
+  cliffCount: number;
   rangeLabel: string;
   rangeDelta: string;
   periodLabel: string;
@@ -985,9 +1099,9 @@ function TrustIndexRiskCard({
   customersDelta: number;
 }): React.ReactElement {
   const accent = ragColor(trustRag);
-  const gap = TRUST_TARGET - TRUST_PULSE.trustIndex;
-  const prior = TRUST_PULSE.trustIndex - TRUST_PULSE.trustDelta;
-  const targetPct = Math.round((TRUST_PULSE.trustIndex / TRUST_TARGET) * 100);
+  const gap = TRUST_TARGET - trustIndex;
+  const prior = trustIndex - trustDelta;
+  const targetPct = Math.round((trustIndex / TRUST_TARGET) * 100);
 
   return (
     <KpiShell
@@ -996,8 +1110,8 @@ function TrustIndexRiskCard({
       title="Trust Index & Risk Level"
       signal={
         <div style={{ display: "flex", alignItems: "center", gap: space["2"], flexWrap: "wrap", justifyContent: "flex-end" }}>
-          <KpiTrend value={TRUST_PULSE.trustDelta} periodLabel={rangeLabel} suffix=" pts" goodWhenDown={false} />
-          <SignalBadge kind="inferred" value={TRUST_PULSE.modelConfidence} />
+          <KpiTrend value={trustDelta} periodLabel={rangeLabel} suffix=" pts" goodWhenDown={false} />
+          <SignalBadge kind="inferred" value={modelConfidence} />
         </div>
       }
       body={
@@ -1007,6 +1121,7 @@ function TrustIndexRiskCard({
             gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
             flex: 1,
             minHeight: 184,
+            alignItems: "stretch",
           }}
         >
           <div
@@ -1020,13 +1135,22 @@ function TrustIndexRiskCard({
             }}
           >
             <TrustIndexGauge
-              value={TRUST_PULSE.trustIndex}
+              value={trustIndex}
               prior={prior}
-              delta={TRUST_PULSE.trustDelta}
+              delta={trustDelta}
               targetPct={targetPct}
             />
           </div>
-          <div style={{ padding: `${space["1"]} 0 ${space["2"]} ${space["2"]}`, minWidth: 0, display: "flex", flexDirection: "column", flex: 1, minHeight: 0, justifyContent: "flex-start" }}>
+          <div
+            style={{
+              padding: `${space["1"]} 0 ${space["2"]} ${space["2"]}`,
+              minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+              gap: 8,
+            }}
+          >
             <TrustIndexStatGrid
               gap={gap}
               accent={accent}
@@ -1037,7 +1161,9 @@ function TrustIndexRiskCard({
               periodLabel={periodLabel}
               rangeDelta={rangeDelta}
               customersDelta={customersDelta}
+              cliffCount={cliffCount}
             />
+            <TrustIndexAiInsight text={insight} />
           </div>
         </div>
       }
@@ -1052,17 +1178,19 @@ function AnimatedKpiColumn({ children, delay }: { children: React.ReactNode; del
 
 export function TrustPulseKpiCards({ range }: { range: TrustRangeKey }): React.ReactElement {
   const R = TRUST_RANGES[range];
+  const pulse = getTrustPulse(range);
   const scale = (n: number): number => n * R.f;
-  const trustRag = TRUST_PULSE.trustRag;
-  const topBreaker = [...TRUST_DRIVERS].sort((a, b) => b.complaints - a.complaints)[0];
+  const trustRag = pulse.trustRag;
+  const topBreaker = sortDriversBySeverity(TRUST_DRIVERS)[0] ?? TOP_TRUST_DRIVER;
   const TopBreakerIcon = topBreaker.icon;
   const breakerComplaints = scale(topBreaker.complaints);
-  const impacted = scale(TRUST_PULSE.customersImpacted);
+  const impacted = pulse.customersImpacted;
   const totalComplaints = scale(TRUST_TOTAL_COMPLAINTS);
   const animatedBreakerContacts = useAnimatedNumber(breakerComplaints, { duration: 900, delay: 240 });
 
   return (
     <div
+      key={range}
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(228px, 1fr))",
@@ -1073,123 +1201,129 @@ export function TrustPulseKpiCards({ range }: { range: TrustRangeKey }): React.R
       <div style={{ gridColumn: "span 2", minWidth: 0 }}>
         <AnimatedKpiColumn delay={0}>
           <TrustIndexRiskCard
-          trustRag={trustRag}
-          rangeLabel={R.delta}
-          rangeDelta={R.delta}
-          periodLabel={R.period}
-          totalComplaints={totalComplaints}
-          customersImpacted={impacted}
-          customersDelta={TRUST_PULSE.customersDelta}
-        />
+            trustIndex={pulse.trustIndex}
+            trustDelta={pulse.trustDelta}
+            trustRag={trustRag}
+            insight={pulse.insight}
+            modelConfidence={pulse.modelConfidence}
+            cliffCount={pulse.cliffCount}
+            rangeLabel={R.delta}
+            rangeDelta={R.delta}
+            periodLabel={R.period}
+            totalComplaints={totalComplaints}
+            customersImpacted={impacted}
+            customersDelta={pulse.customersDelta}
+          />
         </AnimatedKpiColumn>
       </div>
 
       <AnimatedKpiColumn delay={90}>
-      <KpiShell
-        accent={cssVar("severity-high")}
-        title="Top Trust Breaker"
-        signal={<SignalBadge kind="inferred" value={topBreaker.conf} />}
-        bodyAlign="start"
-        body={
-          <div>
-            <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 25, lineHeight: 2.5 }}>
+        <KpiShell
+          accent={cssVar("severity-high")}
+          title="Top Trust Breaker"
+          signal={<SignalBadge kind="inferred" value={topBreaker.confidence} />}
+          bodyAlign="start"
+          body={
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 25, lineHeight: 2.5 }}>
+                <div
+                  style={{
+                    width: "1.35em",
+                    height: "1.35em",
+                    borderRadius: 10,
+                    background: `linear-gradient(145deg, ${cssVar("severity-high")}24, ${cssVar("severity-high")}08)`,
+                    border: `1px solid ${cssVar("severity-high")}45`,
+                    boxShadow: `0 6px 16px ${cssVar("severity-high")}16`,
+                    display: "grid",
+                    placeItems: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  <TopBreakerIcon size={30} color={cssVar("severity-high")} strokeWidth={2.2} />
+                </div>
+                <span
+                  style={{
+                    minWidth: 0,
+                    flex: "1 1 0%",
+                    fontWeight: 800,
+                    color: cssVar("text-primary"),
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {topBreaker.label}
+                </span>
+              </div>
               <div
                 style={{
-                  width: "1.35em",
-                  height: "1.35em",
-                  borderRadius: 10,
-                  background: `linear-gradient(145deg, ${cssVar("severity-high")}24, ${cssVar("severity-high")}08)`,
-                  border: `1px solid ${cssVar("severity-high")}45`,
-                  boxShadow: `0 6px 16px ${cssVar("severity-high")}16`,
                   display: "grid",
-                  placeItems: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <TopBreakerIcon size={30} color={cssVar("severity-high")} strokeWidth={2.2} />
-              </div>
-              <span
-                style={{
+                  gridTemplateColumns: "minmax(0, 1.12fr) minmax(0, 0.88fr)",
+                  alignItems: "start",
+                  columnGap: 12,
+                  marginTop: 4,
+                  width: "100%",
                   minWidth: 0,
-                  flex: "1 1 0%",
-                  fontWeight: 800,
-                  color: cssVar("text-primary"),
                 }}
               >
-                {topBreaker.label}
-              </span>
+                <BreakerShareMetric
+                  share={pulse.topBreakerShare}
+                  wow={pulse.topBreakerWow}
+                  periodLabel={R.delta}
+                />
+                <BreakerSideMetrics
+                  contacts={fmt(animatedBreakerContacts)}
+                  repeatContactRate={`${topBreaker.repeat}×`}
+                />
+              </div>
+              <BreakerHowToDeal text={topBreaker.next} />
             </div>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(0, 1.12fr) minmax(0, 0.88fr)",
-                alignItems: "start",
-                columnGap: 12,
-                marginTop: 4,
-                width: "100%",
-                minWidth: 0,
-              }}
-            >
-              <BreakerShareMetric
-                share={TRUST_PULSE.topBreakerShare}
-                wow={TRUST_PULSE.topBreakerWow}
-                periodLabel={R.delta}
-              />
-              <BreakerSideMetrics
-                contacts={fmt(animatedBreakerContacts)}
-                repeatContactRate={`${topBreaker.repeat}×`}
-              />
-            </div>
-            <BreakerHowToDeal text={topBreaker.next} />
-          </div>
-        }
-      />
+          }
+        />
       </AnimatedKpiColumn>
 
       <AnimatedKpiColumn delay={160}>
-      <KpiShell
-        accent={cssVar("accent-2")}
-        title="Trust outcome signals"
-        bodyAlign="start"
-        body={
-          <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
-            <TrustOutcomeSignalRow
-              label="Sentiment"
-              value={TRUST_PULSE.sentimentScore}
-              delta={TRUST_PULSE.sentimentDelta}
-              spark={TRUST_PULSE.sentimentSpark}
-              revealDelay={200}
-            />
-            <TrustOutcomeSignalRow
-              label="Resolution"
-              value={TRUST_PULSE.resolutionScore}
-              delta={TRUST_PULSE.resolutionDelta}
-              spark={TRUST_PULSE.resolutionSpark}
-              revealDelay={260}
-            />
-            <TrustOutcomeSignalRow
-              label="CSAT"
-              value={TRUST_PULSE.csatScore}
-              delta={TRUST_PULSE.csatDelta}
-              spark={TRUST_PULSE.csatSpark}
-              decimals={1}
-              revealDelay={320}
-            />
-            <TrustOutcomeSignalRow
-              label="Repeat-contact"
-              labelSub="Rate"
-              value={TRUST_PULSE.repeatContactRate}
-              delta={TRUST_PULSE.repeatContactDelta}
-              spark={TRUST_PULSE.repeatContactSpark}
-              decimals={1}
-              suffix="×"
-              goodWhenUp={false}
-              revealDelay={380}
-              isLast
-            />
-          </div>
-        }
-      />
+        <KpiShell
+          accent={cssVar("accent-2")}
+          title="Trust outcome signals"
+          bodyAlign="start"
+          body={
+            <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+              <TrustOutcomeSignalRow
+                label="Sentiment"
+                value={pulse.sentimentScore}
+                delta={pulse.sentimentDelta}
+                spark={pulse.sentimentSpark}
+                revealDelay={200}
+              />
+              <TrustOutcomeSignalRow
+                label="Resolution"
+                value={pulse.resolutionScore}
+                delta={pulse.resolutionDelta}
+                spark={pulse.resolutionSpark}
+                revealDelay={260}
+              />
+              <TrustOutcomeSignalRow
+                label="CSAT"
+                value={pulse.csatScore}
+                delta={pulse.csatDelta}
+                spark={pulse.csatSpark}
+                decimals={1}
+                revealDelay={320}
+              />
+              <TrustOutcomeSignalRow
+                label="Repeat-contact"
+                labelSub="Rate"
+                value={pulse.repeatContactRate}
+                delta={pulse.repeatContactDelta}
+                spark={pulse.repeatContactSpark}
+                decimals={1}
+                suffix="×"
+                goodWhenUp={false}
+                revealDelay={380}
+                isLast
+              />
+            </div>
+          }
+        />
       </AnimatedKpiColumn>
     </div>
   );

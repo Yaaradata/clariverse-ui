@@ -19,8 +19,6 @@ export function initialKpiSignalFilter(roleId: string): string {
     head_compliance: "all",
     head_cx: "training",
     head_cx_retail: "training",
-    head_cx_retail_v2: "training",
-    head_cx_retail_v3: "training",
     head_client_experience: "training",
   };
   return map[roleId] ?? "all";
@@ -50,8 +48,6 @@ export function showScreen3EmotionShockboard(roleId: string): boolean {
   return [
     "head_cx",
     "head_cx_retail",
-    "head_cx_retail_v2",
-    "head_cx_retail_v3",
     "head_client_experience",
     "head_contact",
   ].includes(roleId);
@@ -61,8 +57,6 @@ export function showScreen3ToneIntelligence(roleId: string): boolean {
   return [
     "head_cx",
     "head_cx_retail",
-    "head_cx_retail_v2",
-    "head_cx_retail_v3",
     "head_client_experience",
     "head_compliance",
   ].includes(roleId);
@@ -155,8 +149,6 @@ export function showCroVulnerableCustomer(roleId: string): boolean {
     "head_compliance",
     "head_cx",
     "head_cx_retail",
-    "head_cx_retail_v2",
-    "head_cx_retail_v3",
     "head_client_experience",
   ].includes(roleId);
 }

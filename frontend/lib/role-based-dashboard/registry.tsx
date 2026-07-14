@@ -226,22 +226,6 @@ export const INDUSTRIES = [
         primaryTile: 0,
       },
       {
-        id: "head_cx_retail_v2",
-        name: "Head of CX (Retail) · V2",
-        icon: Building2,
-        sub: "Compact Fluid CX — UI refresh",
-        defaultLens: "ops",
-        primaryTile: 0,
-      },
-      {
-        id: "head_cx_retail_v3",
-        name: "Head of CX (Retail) · V3",
-        icon: Building2,
-        sub: "Fluid CX evolution — experience pulse, fulfilment signals, trust wedge, revenue bridge",
-        defaultLens: "ops",
-        primaryTile: 0,
-      },
-      {
         id: "head_marketplace",
         name: "Head of Marketplace",
         icon: BarChart3,

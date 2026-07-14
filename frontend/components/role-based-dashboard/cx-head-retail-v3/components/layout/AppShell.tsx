@@ -17,7 +17,7 @@ import { ComplianceConductScreen } from "../screens/ComplianceConductScreen";
 import { CXQualityWedgeScreen } from "../screens/CXQualityWedgeScreen";
 import { RevenueBridgeScreen } from "../screens/RevenueBridgeScreen";
 
-import { HubBrandRiskScreen } from "../screens/HubBrandRiskScreen";
+import { HubTrustScreen } from "../screens/HubTrustScreen";
 import { HubCustomerHappinessScreen } from "../screens/HubCustomerHappinessScreen";
 import { HubServiceDeliveryScreen } from "../screens/HubServiceDeliveryScreen";
 
@@ -25,7 +25,7 @@ const SCREEN_COMPONENTS: Record<ScreenId, React.ComponentType> = {
   overview: CXOverviewScreen,
   "hub-customer-happiness": HubCustomerHappinessScreen,
   "hub-service-delivery": HubServiceDeliveryScreen,
-  "hub-brand-risk": HubBrandRiskScreen,
+  "hub-trust": HubTrustScreen,
   "command-centre": CXCommandScreen,
   "quick-commerce": QuickCommerceHealthScreen,
   compliance: ComplianceConductScreen,

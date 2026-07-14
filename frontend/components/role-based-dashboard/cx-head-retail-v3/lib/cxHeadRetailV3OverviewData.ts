@@ -12,5 +12,5 @@ export type {
   HubCardId,
   CustomerHappinessDrill,
   ServiceDeliveryDrill,
-  BrandRiskDrill,
+  TrustTopLine,
 } from "./cxHeadRetailV3HubCards";
