@@ -40,7 +40,6 @@ import {
   type TrustSellerSkuCutRow,
 } from "../../lib/cxHeadRetailV3TrustBreakdownData";
 import { WHATS_FAILING_CHANNEL_COLORS, WHATS_FAILING_SEGMENT_COLORS } from "../../lib/cxHeadRetailV3CustomerFciData";
-import { TrustPulseKpiCards } from "./TrustPulseKpiCards";
 import { TrustStageLifecyclePie } from "./TrustStageLifecyclePie";
 import { ConfidenceChip } from "../common/ConfidenceBand";
 import { DraftActionFooter } from "../common/DraftActionFooter";
@@ -1681,11 +1680,6 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
 
   return (
     <div key={range} style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-      {/* Trust Index KPIs — headline first */}
-      <section>
-        <TrustPulseKpiCards range={range} />
-      </section>
-
       {/* 01 — Stage where trust breaks */}
       <section>
         <SectionHead
