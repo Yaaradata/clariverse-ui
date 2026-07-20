@@ -26,6 +26,7 @@ import type {
 import { useUniqueGradientId } from "../../lib/useUniqueGradientId";
 import { HubAccentPanel, HubAiCallout, HubMicroLabel, HubStatusPill, HubSummaryChip } from "./HubVisualPrimitives";
 import { hubChartAxis, hubChartTooltip } from "./HubChartPrimitives";
+import { ConfidenceBand } from "../common/ConfidenceBand";
 import { cssVar, radius } from "../../theme/tokens";
 
 const SENT_POS = "#34d399";
@@ -264,7 +265,10 @@ export function SentimentVisual({ sentiment }: { sentiment: SentimentSplit }): R
             }}
           >
             <HubMicroLabel>Sentiment</HubMicroLabel>
-            <HubMicroLabel>Share</HubMicroLabel>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <ConfidenceBand band="Med-High" />
+              <HubMicroLabel>Share</HubMicroLabel>
+            </div>
           </div>
           {legendItems.map((item, index) => (
             <div
@@ -318,7 +322,7 @@ export function SentimentVisual({ sentiment }: { sentiment: SentimentSplit }): R
         />
       </div>
 
-      {risingAlert ? <HubAiCallout tone="risk">{risingAlert}</HubAiCallout> : null}
+      {risingAlert ? <HubAiCallout tone="accent">{risingAlert}</HubAiCallout> : null}
     </div>
   );
 }

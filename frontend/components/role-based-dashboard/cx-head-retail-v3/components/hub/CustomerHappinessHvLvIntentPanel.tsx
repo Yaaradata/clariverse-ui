@@ -1,8 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Sparkle } from "../common/Sparkle";
+import { ConfidenceBand, ConfidenceChip } from "../common/ConfidenceBand";
 import { DetailSection } from "./HubDetailPrimitives";
+import {
+  HAPPINESS_BASE_WIDE,
+  VALUE_REACH_CELLS,
+  type ValueLens,
+  type ValueReachCell,
+} from "../../lib/cxHeadRetailV3HappinessLensData";
 import {
   HV_SHOPPER_INTENTS,
   LV_SHOPPER_INTENTS,
@@ -10,7 +17,7 @@ import {
 } from "../../lib/cxHeadRetailV3HvLvIntentData";
 import { cssVar, radius } from "../../theme/tokens";
 
-const INTENT_GRID_COLUMNS = "10px minmax(0, 1fr) 54px 72px 52px";
+const INTENT_GRID_COLUMNS = "10px minmax(0, 1fr) 54px 72px";
 const HV_COLOR = "#06B6D4";
 const LV_COLOR = "#F59E0B";
 
@@ -20,10 +27,11 @@ function sentimentColor(score: number): string {
   return cssVar("severity-med");
 }
 
-function sentimentFace(score: number): string {
-  if (score > 0.2) return "😊";
-  if (score > -0.2) return "😐";
-  return "😞";
+function cellAccent(cell: ValueReachCell): string {
+  if (cell.value === "hv" && cell.reach === "high") return cssVar("severity-high");
+  if (cell.value === "hv") return HV_COLOR;
+  if (cell.reach === "high") return cssVar("severity-med");
+  return LV_COLOR;
 }
 
 function IntentRowCard({
@@ -36,7 +44,6 @@ function IntentRowCard({
   isLast: boolean;
 }): React.ReactElement {
   const sColor = sentimentColor(row.sentiment);
-  const nps = Math.round(row.sentiment * 100);
 
   return (
     <div
@@ -87,216 +94,264 @@ function IntentRowCard({
         {row.sentiment > 0 ? "+" : ""}
         {row.sentiment.toFixed(2)}
       </span>
-      <span className="lisn-num" style={{ textAlign: "right", fontSize: 12, fontWeight: 800, color: sColor }}>
-        {nps > 0 ? "+" : ""}
-        {nps}
-      </span>
     </div>
   );
 }
 
-function IntentGroupCard({
-  title,
-  subtitle,
-  color,
-  rows,
+function ValueReachQuad({ cell }: { cell: ValueReachCell }): React.ReactElement {
+  const accent = cellAccent(cell);
+  return (
+    <div
+      style={{
+        padding: "12px 14px",
+        borderRadius: radius.md,
+        background: `linear-gradient(135deg, ${accent}12 0%, transparent 65%), ${cssVar("surface-raised")}`,
+        border: `1px solid ${accent}40`,
+        borderLeft: `3px solid ${accent}`,
+        minWidth: 0,
+        display: "flex",
+        flexDirection: "column",
+        gap: 6,
+      }}
+    >
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.25 }}>
+          {cell.title}
+        </div>
+        <span
+          style={{
+            fontSize: 9,
+            fontWeight: 800,
+            textTransform: "uppercase",
+            letterSpacing: 0.4,
+            color: accent,
+            flexShrink: 0,
+          }}
+        >
+          {cell.value.toUpperCase()} · {cell.reach}-reach
+        </span>
+      </div>
+      <div style={{ fontSize: 11, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{cell.detail}</div>
+      <div style={{ fontSize: 10, color: cssVar("text-muted") }}>{cell.shoppers}</div>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 2 }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: cssVar("accent-2") }}>{cell.action}</span>
+        <span className="lisn-num" style={{ fontSize: 11, fontWeight: 800, color: cssVar("severity-high") }}>
+          {cell.gmvAtRisk}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function ValueLensToggle({
+  valueLens,
+  onChange,
 }: {
-  title: string;
-  subtitle: string;
-  color: string;
-  rows: HvLvIntentRow[];
+  valueLens: ValueLens;
+  onChange: (lens: ValueLens) => void;
 }): React.ReactElement {
   return (
     <div
       style={{
-        borderRadius: radius.md,
+        display: "inline-flex",
+        gap: 4,
+        padding: 3,
+        borderRadius: radius.pill,
         background: cssVar("surface-raised"),
-        borderTop: `1px solid ${color}30`,
-        borderRight: `1px solid ${color}30`,
-        borderBottom: `1px solid ${color}30`,
-        borderLeft: `3px solid ${color}`,
-        overflow: "hidden",
+        border: `1px solid ${cssVar("border")}`,
       }}
+      role="group"
+      aria-label="Value lens"
     >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: INTENT_GRID_COLUMNS,
-          columnGap: 10,
-          alignItems: "center",
-          padding: "10px 14px",
-          background: `linear-gradient(90deg, ${color}14 0%, transparent 60%)`,
-          borderBottom: `1px solid ${cssVar("border")}`,
-        }}
-      >
-        <span />
-        <span style={{ fontSize: 11, fontWeight: 800, color, letterSpacing: 0.8, textTransform: "uppercase" }}>
-          {title}
-        </span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>
-          Share
-        </span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>
-          Happiness
-        </span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>
-          NPS
-        </span>
-      </div>
-      <div style={{ padding: "0 2px", fontSize: 10, color: cssVar("text-muted"), margin: "6px 14px 0" }}>{subtitle}</div>
-      <div>
-        {rows.map((row, index) => (
-          <IntentRowCard key={`${title}-${row.intent}`} row={row} color={color} isLast={index === rows.length - 1} />
-        ))}
-      </div>
+      {(
+        [
+          { id: "hv" as const, label: "High-value", note: "Plus + high-GMV" },
+          { id: "lv" as const, label: "Low-value", note: "Managed · not dropped" },
+        ] as const
+      ).map((opt) => {
+        const active = valueLens === opt.id;
+        const color = opt.id === "hv" ? HV_COLOR : LV_COLOR;
+        return (
+          <button
+            key={opt.id}
+            type="button"
+            onClick={() => onChange(opt.id)}
+            title={opt.note}
+            style={{
+              fontSize: 11,
+              fontWeight: 700,
+              padding: "5px 12px",
+              borderRadius: radius.pill,
+              border: active ? `1px solid ${color}` : "1px solid transparent",
+              background: active ? `${color}18` : "transparent",
+              color: active ? color : cssVar("text-muted"),
+              cursor: "pointer",
+            }}
+          >
+            {opt.label}
+          </button>
+        );
+      })}
     </div>
   );
 }
 
-function weightedAvg(rows: HvLvIntentRow[]): number {
-  const totalShare = rows.reduce((sum, row) => sum + row.share, 0);
-  if (totalShare <= 0) return 0;
-  return rows.reduce((sum, row) => sum + row.sentiment * row.share, 0) / totalShare;
-}
+/** Value × reach operating panel — HV default; LV is a toggle, never dropped. */
+export function CustomerHappinessHvLvIntentPanel({
+  valueLens: controlledLens,
+  onValueLensChange,
+}: {
+  valueLens?: ValueLens;
+  onValueLensChange?: (lens: ValueLens) => void;
+} = {}): React.ReactElement {
+  const [internalLens, setInternalLens] = useState<ValueLens>("hv");
+  const valueLens = controlledLens ?? internalLens;
+  const setValueLens = onValueLensChange ?? setInternalLens;
 
-/** Top intents × sentiment — HV vs LV (head_retail pattern) */
-export function CustomerHappinessHvLvIntentPanel(): React.ReactElement {
-  const avgHV = weightedAvg(HV_SHOPPER_INTENTS);
-  const avgLV = weightedAvg(LV_SHOPPER_INTENTS);
-  const hvNps = Math.round(avgHV * 100);
-  const lvNps = Math.round(avgLV * 100);
+  const intentRows = valueLens === "hv" ? HV_SHOPPER_INTENTS : LV_SHOPPER_INTENTS;
+  const intentColor = valueLens === "hv" ? HV_COLOR : LV_COLOR;
+  const intentTitle = valueLens === "hv" ? "HV · Top Intents (Plus + high-GMV)" : "LV · Top Intents (managed)";
 
   return (
     <DetailSection
       premium
-      title="Top Intents × Sentiment — HV vs LV"
-      subtitle="What Flipkart Plus & mass shoppers are calling about, and how they feel about each intent (last 30 days)"
+      title="Value × reach — who leads action?"
+      subtitle="Axis 1 = customer value (HV/LV). Axis 2 = reach/influence (social/review virality). High-value leads; low-value stays managed."
       trailing={
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 4,
-            fontSize: 9,
-            fontWeight: 800,
-            letterSpacing: 0.6,
-            textTransform: "uppercase",
-            color: HV_COLOR,
-            padding: "3px 8px",
-            borderRadius: radius.pill,
-            background: `${HV_COLOR}15`,
-            border: `1px solid ${HV_COLOR}40`,
-          }}
-        >
-          <Sparkle size={9} />
-          AI
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+          <ConfidenceChip conf={86} small />
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 9,
+              fontWeight: 800,
+              letterSpacing: 0.6,
+              textTransform: "uppercase",
+              color: HV_COLOR,
+              padding: "3px 8px",
+              borderRadius: radius.pill,
+              background: `${HV_COLOR}15`,
+              border: `1px solid ${HV_COLOR}40`,
+            }}
+          >
+            <Sparkle size={9} />
+            AI
+          </span>
         </span>
       }
     >
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 14 }}>
-        {[
-          { label: "HV Shoppers", color: HV_COLOR, count: "284 Plus · 1.2K high-GMV", avg: avgHV, nps: hvNps, note: "Flipkart Plus · frequent buyers" },
-          { label: "LV Shoppers", color: LV_COLOR, count: "4.8K standard · mass", avg: avgLV, nps: lvNps, note: "Value-seeking · high volume" },
-        ].map((meta) => {
-          const avgColor = sentimentColor(meta.avg);
-          const dialPct = ((meta.avg + 1) / 2) * 100;
-          return (
-            <div
-              key={meta.label}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr auto",
-                gap: 14,
-                padding: "12px 16px",
-                borderRadius: radius.md,
-                background: `linear-gradient(135deg, ${meta.color}10 0%, transparent 70%), ${cssVar("surface-raised")}`,
-                borderTop: `1px solid ${meta.color}35`,
-                borderRight: `1px solid ${meta.color}35`,
-                borderBottom: `1px solid ${meta.color}35`,
-                borderLeft: `3px solid ${meta.color}`,
-              }}
-            >
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 0.7, textTransform: "uppercase", color: meta.color }}>
-                  {meta.label}
-                </div>
-                <div style={{ fontSize: 10, color: cssVar("text-muted"), marginTop: 3 }}>{meta.note}</div>
-                <div className="lisn-num" style={{ fontSize: 10, color: cssVar("text-muted"), marginTop: 8 }}>
-                  {meta.count}
-                </div>
-              </div>
-              <div style={{ textAlign: "right", minWidth: 110 }}>
-                <div style={{ fontSize: 9, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.65 }}>
-                  Happiness score
-                </div>
-                <div
-                  className="lisn-num"
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 800,
-                    color: avgColor,
-                    lineHeight: 1.05,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <span style={{ fontSize: 18 }}>{sentimentFace(meta.avg)}</span>
-                  <span>
-                    {meta.avg > 0 ? "+" : ""}
-                    {meta.avg.toFixed(2)}
-                  </span>
-                </div>
-                <div style={{ marginTop: 4, fontSize: 10, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.65 }}>
-                  NPS{" "}
-                  <span className="lisn-num" style={{ color: avgColor, fontWeight: 800 }}>
-                    {meta.nps > 0 ? "+" : ""}
-                    {meta.nps}
-                  </span>
-                </div>
-                <div
-                  style={{
-                    marginTop: 8,
-                    position: "relative",
-                    height: 4,
-                    borderRadius: 999,
-                    background: `linear-gradient(90deg, ${cssVar("severity-high")} 0%, ${cssVar("severity-med")} 50%, ${cssVar("positive")} 100%)`,
-                    opacity: 0.6,
-                  }}
-                >
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: -3,
-                      left: `calc(${dialPct}% - 5px)`,
-                      width: 10,
-                      height: 10,
-                      borderRadius: 999,
-                      background: avgColor,
-                      boxShadow: `0 0 0 2px ${cssVar("surface")}, 0 0 8px ${avgColor}99`,
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          );
-        })}
+      {/* Base-wide happy rate reminder — independent of value lens */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          alignItems: "center",
+          gap: 12,
+          marginBottom: 14,
+          padding: "10px 14px",
+          borderRadius: radius.md,
+          background: cssVar("surface-raised"),
+          border: `1px solid ${cssVar("border")}`,
+        }}
+        data-testid="happiness-base-wide-rate"
+        data-happy-rate={HAPPINESS_BASE_WIDE.happyRate}
+      >
+        <div>
+          <div style={{ fontSize: 10, fontWeight: 800, color: cssVar("text-muted"), textTransform: "uppercase" }}>
+            Happy rate · base-wide
+          </div>
+          <div className="lisn-num" style={{ fontSize: 26, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.1 }}>
+            {HAPPINESS_BASE_WIDE.happyRate}%
+          </div>
+        </div>
+        <div style={{ fontSize: 11, color: cssVar("text-secondary"), maxWidth: 360, lineHeight: 1.4 }}>
+          {HAPPINESS_BASE_WIDE.note} Measured {HAPPINESS_BASE_WIDE.measuredSharePct}% · inferred{" "}
+          {HAPPINESS_BASE_WIDE.inferredSharePct}%.
+        </div>
+        <ConfidenceBand band={HAPPINESS_BASE_WIDE.confidence} />
+        <div style={{ marginLeft: "auto" }}>
+          <ValueLensToggle valueLens={valueLens} onChange={setValueLens} />
+        </div>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-        <IntentGroupCard
-          title="HV · Top Intents"
-          subtitle="Ranked by share of HV contact volume"
-          color={HV_COLOR}
-          rows={HV_SHOPPER_INTENTS}
-        />
-        <IntentGroupCard
-          title="LV · Top Intents"
-          subtitle="Ranked by share of LV contact volume"
-          color={LV_COLOR}
-          rows={LV_SHOPPER_INTENTS}
-        />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gridTemplateRows: "auto auto",
+          gap: 10,
+          marginBottom: 16,
+        }}
+      >
+        <div style={{ gridColumn: "1 / -1", display: "flex", justifyContent: "space-between", fontSize: 10, color: cssVar("text-muted") }}>
+          <span>← Low reach</span>
+          <span style={{ fontWeight: 700 }}>Reach / influence →</span>
+          <span>High reach →</span>
+        </div>
+        {VALUE_REACH_CELLS.filter((c) => c.reach === "low" && c.value === "hv").map((c) => (
+          <ValueReachQuad key={c.id} cell={c} />
+        ))}
+        {VALUE_REACH_CELLS.filter((c) => c.reach === "high" && c.value === "hv").map((c) => (
+          <ValueReachQuad key={c.id} cell={c} />
+        ))}
+        {VALUE_REACH_CELLS.filter((c) => c.reach === "low" && c.value === "lv").map((c) => (
+          <ValueReachQuad key={c.id} cell={c} />
+        ))}
+        {VALUE_REACH_CELLS.filter((c) => c.reach === "high" && c.value === "lv").map((c) => (
+          <ValueReachQuad key={c.id} cell={c} />
+        ))}
+      </div>
+
+      <div
+        style={{
+          borderRadius: radius.md,
+          background: cssVar("surface-raised"),
+          borderTop: `1px solid ${intentColor}30`,
+          borderRight: `1px solid ${intentColor}30`,
+          borderBottom: `1px solid ${intentColor}30`,
+          borderLeft: `3px solid ${intentColor}`,
+          overflow: "hidden",
+        }}
+        data-testid="happiness-intent-detail"
+        data-value-lens={valueLens}
+      >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: INTENT_GRID_COLUMNS,
+            columnGap: 10,
+            alignItems: "center",
+            padding: "10px 14px",
+            background: `linear-gradient(90deg, ${intentColor}14 0%, transparent 60%)`,
+            borderBottom: `1px solid ${cssVar("border")}`,
+          }}
+        >
+          <span />
+          <span style={{ fontSize: 11, fontWeight: 800, color: intentColor, letterSpacing: 0.8, textTransform: "uppercase" }}>
+            {intentTitle}
+          </span>
+          <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>
+            Share
+          </span>
+          <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>
+            Happiness
+          </span>
+        </div>
+        <div style={{ padding: "6px 14px 0", fontSize: 10, color: cssVar("text-muted") }}>
+          Detail lens defaults to high-value. Low-value remains available — automate vs watch, never dropped from the base-wide headline.
+        </div>
+        <div>
+          {intentRows.map((row, index) => (
+            <IntentRowCard
+              key={`${valueLens}-${row.intent}`}
+              row={row}
+              color={intentColor}
+              isLast={index === intentRows.length - 1}
+            />
+          ))}
+        </div>
       </div>
     </DetailSection>
   );

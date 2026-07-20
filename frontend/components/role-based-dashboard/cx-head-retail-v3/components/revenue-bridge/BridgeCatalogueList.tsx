@@ -63,6 +63,17 @@ export function BridgeCatalogueList({
         paddingRight: 2,
       }}
     >
+      <div
+        style={{
+          flexShrink: 0,
+          fontSize: 10,
+          color: cssVar("text-muted"),
+          lineHeight: 1.35,
+          padding: `0 ${space["1"]} ${space["2"]}`,
+        }}
+      >
+        Cohort joins feed the CX→margin ladder above — select a Ready bridge to preview.
+      </div>
       {BRIDGE_CATALOGUE.map((entry) => {
         const selected = entry.id === selectedId;
         const tone = statusTone(entry);

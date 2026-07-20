@@ -26,7 +26,7 @@ export type WhatsFailingCluster = {
   bySegment: Record<WhatsFailingSegment, number>;
 };
 
-export type RelationshipValueTier = {
+export type CustomerValueTier = {
   id: string;
   shortLabel: string;
   label: string;
@@ -38,7 +38,7 @@ export type RelationshipValueTier = {
   color: string;
 };
 
-export const CUSTOMER_RELATIONSHIP_TIERS: RelationshipValueTier[] = [
+export const CUSTOMER_VALUE_TIERS: CustomerValueTier[] = [
   {
     id: "hvhf",
     shortLabel: "HVHF",

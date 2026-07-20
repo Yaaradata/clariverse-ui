@@ -9,6 +9,7 @@ import {
   QUICK_COMMERCE_SUMMARY,
   type QuickCommerceRadarCard,
 } from "../../lib/cxHeadRetailData";
+import { RTO_BENCHMARK } from "../../lib/cxHeadRetailV3FulfilmentData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { AiMarker } from "../common/AiMarker";
 import { ConfidenceBand } from "../common/ConfidenceBand";
@@ -38,8 +39,8 @@ function DarkStoreHeadline(): React.ReactElement {
           letterSpacing: -0.55,
         }}
       >
-        Dark-stores{" "}
-        <span style={{ color: cssVar("accent"), fontWeight: 800 }}>breaking</span> before{" "}
+        Where is fulfilment{" "}
+        <span style={{ color: cssVar("accent"), fontWeight: 800 }}>hot</span> — and which{" "}
         <span
           style={{
             color: cssVar("accent-2"),
@@ -47,10 +48,9 @@ function DarkStoreHeadline(): React.ReactElement {
             boxShadow: `inset 0 -3px 0 ${cssVar("accent")}40`,
           }}
         >
-          Ops
-        </span>{" "}
-        sees it
-        <span style={{ color: cssVar("accent") }}>.</span>
+          line owns it
+        </span>
+        <span style={{ color: cssVar("accent") }}>?</span>
       </h2>
       <p
         style={{
@@ -117,7 +117,7 @@ function RadarActionCard({ card }: { card: QuickCommerceRadarCard }): React.Reac
   );
 }
 
-/** Pass 4 — S2 Quick-Commerce Health + MB1 bridge reveal. */
+/** S2 Quick-Commerce — dynamic fulfilment scorecard (OTIF / Fill / NDR / RTO·RTS · Rider·Courier). */
 export function QuickCommerceHealthScreen(): React.ReactElement {
   const { openDrill } = useNavigation();
   const mb1 = getBridgeTileById("MB1");
@@ -156,13 +156,27 @@ export function QuickCommerceHealthScreen(): React.ReactElement {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 1fr)",
+          gridTemplateColumns: "minmax(0, 1.25fr) minmax(0, 1fr)",
           gap: 16,
           alignItems: "start",
         }}
       >
         <DarkStoreScorecard selectedId={selectedStoreId} onSelect={openOutbreakDrill} />
         <div style={{ display: "flex", flexDirection: "column", gap: 14, minWidth: 0 }}>
+          <div
+            style={{
+              padding: "10px 12px",
+              borderRadius: radius.md,
+              background: cssVar("surface-raised"),
+              border: `1px solid ${cssVar("border")}`,
+              fontSize: 11,
+              color: cssVar("text-muted"),
+              lineHeight: 1.4,
+            }}
+          >
+            RTO band {RTO_BENCHMARK.low}–{RTO_BENCHMARK.high}% · {RTO_BENCHMARK.costPerRto} ·{" "}
+            <strong style={{ color: cssVar("text-secondary") }}>{RTO_BENCHMARK.tag}</strong>
+          </div>
           {QUICK_COMMERCE_RADAR_CARDS.map((card) => (
             <RadarActionCard key={card.id} card={card} />
           ))}

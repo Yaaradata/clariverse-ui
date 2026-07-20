@@ -522,9 +522,9 @@ function EntityVelocityDrill({ itemId }: { itemId: string }): React.ReactElement
           </Section>
         </>
       )}
-      <Section title="Risk-review gate">
+      <Section title="Signal-review gate">
         <p style={{ fontSize: 13, color: cssVar("text-secondary") }}>
-          Gated to risk review — route never auto-acts on seller-health actions.
+          Gated to signal review — route never auto-acts on seller-health actions.
         </p>
       </Section>
       <AiLine text="Organic spread · not brigading — integrity guard passed before surfacing." />

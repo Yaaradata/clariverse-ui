@@ -10,6 +10,9 @@ import {
   type RadarSignal,
 } from "../../lib/cxHeadRetailData";
 import { useNavigation } from "../../lib/NavigationContext";
+import { EscalationSlaTriad } from "../common/EscalationSlaTriad";
+import { EscalationSourcePanel } from "../common/EscalationSourcePanel";
+import { EscalationTop10Cluster } from "../common/EscalationTop10Cluster";
 import { ExecutiveTile } from "../common/ExecutiveTile";
 import { RadarRail } from "../common/RadarRail";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
@@ -59,6 +62,36 @@ function CommandHeadline(): React.ReactElement {
         {COMMAND_PAGE.purpose}
       </p>
     </div>
+  );
+}
+
+/** Escalation operating block — source lanes · SLA triad · SteerCo clusters. */
+function CommandEscalationSection(): React.ReactElement {
+  return (
+    <section
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 18,
+        padding: 16,
+        borderRadius: radius.lg,
+        background: cssVar("surface-raised"),
+        border: `1px solid ${cssVar("border")}`,
+      }}
+      aria-label="Escalation sources and SLA"
+    >
+      <div>
+        <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: cssVar("text-primary") }}>
+          Escalation command
+        </h2>
+        <p style={{ margin: `${space["1"]} 0 0`, fontSize: 12, color: cssVar("text-muted"), lineHeight: 1.4 }}>
+          Social · CEO-office · Internal helpdesk. Virality stays per-channel — never one merged number.
+        </p>
+      </div>
+      <EscalationSourcePanel />
+      <EscalationSlaTriad />
+      <EscalationTop10Cluster />
+    </section>
   );
 }
 
@@ -146,6 +179,8 @@ export function CXCommandScreen(): React.ReactElement {
         </div>
 
         <RadarRail signals={RADAR_SIGNALS} onOpen={handleOpenSignal} />
+
+        <CommandEscalationSection />
       </div>
     </>
   );

@@ -19,6 +19,7 @@ import {
   type AnxietyPeriodData,
 } from "../../lib/cxHeadRetailV3AnxietyData";
 import { cssVar, radius } from "../../theme/tokens";
+import { ConfidenceChip } from "../common/ConfidenceBand";
 import { anxietyFmt } from "./AnxietyPrimitives";
 import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 
@@ -176,7 +177,7 @@ function buildMatrixInsight({
       ipdGap > 0
         ? `${category} IPD sits ${ipdGap.toFixed(1)} pts below the ${IPD_TARGET}% bar.`
         : `${category} IPD holds at ${cell.ipdMet.toFixed(1)}% but anxiety score is elevated.`;
-    return `${units} anxious units at risk index ${riskIdx} on ${node.toLowerCase()} — ${ipdNote} ${nodeAction}`;
+    return `${units} anxious units at signal index ${riskIdx} on ${node.toLowerCase()} — ${ipdNote} ${nodeAction}`;
   }
 
   if (tierLabel === "MEDIUM") {
@@ -184,7 +185,7 @@ function buildMatrixInsight({
     return `${units} units building anxiety (score ${cell.anxietyScore}) on ${node.toLowerCase()}. ${ipdNote}Pre-empt with status reassurance before this crosses into the breach queue.`;
   }
 
-  return `${category} is contained on ${node.toLowerCase()} — ${units} units with low composite risk. Maintain IPD-met at ${cell.ipdMet.toFixed(1)}% and watch for hub-load spikes that could flip this lane amber.`;
+  return `${category} is contained on ${node.toLowerCase()} — ${units} units with low composite signal. Maintain IPD-met at ${cell.ipdMet.toFixed(1)}% and watch for hub-load spikes that could flip this lane amber.`;
 }
 
 function MatrixAiInsight({
@@ -230,6 +231,7 @@ function MatrixAiInsight({
           >
             AI · Delivery hotspot
           </span>
+          <ConfidenceChip conf={88} small />
           <span style={{ fontSize: 11, fontWeight: 700, color: tier.color }}>
             {selection.node} × {selection.category}
           </span>
@@ -242,7 +244,7 @@ function MatrixAiInsight({
               marginLeft: "auto",
             }}
           >
-            Risk {index} · {tier.label}
+            Signal {index} · {tier.label}
           </span>
         </div>
         <p style={{ margin: "0 0 8px", fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45 }}>{insight}</p>
@@ -347,9 +349,9 @@ export function getJourneyMatrixTopHotspot(d: AnxietyPeriodData): JourneyTopHots
 }
 
 const MATRIX_LEGEND_ITEMS = [
-  { label: "Low risk", color: RAG.green },
-  { label: "Medium risk", color: RAG.amber },
-  { label: "High risk", color: RAG.red },
+  { label: "Low signal", color: RAG.green },
+  { label: "Medium signal", color: RAG.amber },
+  { label: "High signal", color: RAG.red },
 ] as const;
 
 export function JourneyMatrixLegend({

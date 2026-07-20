@@ -41,6 +41,7 @@ import {
 } from "../../lib/cxHeadRetailV3TrustBreakdownData";
 import { WHATS_FAILING_CHANNEL_COLORS, WHATS_FAILING_SEGMENT_COLORS } from "../../lib/cxHeadRetailV3CustomerFciData";
 import { TrustStageLifecyclePie } from "./TrustStageLifecyclePie";
+import { TrustLifecycleMatrix } from "./TrustLifecycleMatrix";
 import { ConfidenceChip } from "../common/ConfidenceBand";
 import { DraftActionFooter } from "../common/DraftActionFooter";
 import { cssVar, radius } from "../../theme/tokens";
@@ -1303,7 +1304,7 @@ function TrustDriverCard({
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>GMV risk</span>
+          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>GMV exposure</span>
           <div
             className="lisn-num"
             style={{ fontSize: 15, fontWeight: 800, color: cssVar("severity-high") }}
@@ -1680,6 +1681,20 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
 
   return (
     <div key={range} style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+      {/* 00 — Lifecycle × complaint matrix + top breakages + actions (above the fold) */}
+      <section>
+        <SectionHead
+          n="00"
+          titleBesideBadge
+          title={
+            <>
+              Where trust breaks across the <span style={{ color: cssVar("accent") }}>lifecycle</span>
+            </>
+          }
+        />
+        <TrustLifecycleMatrix />
+      </section>
+
       {/* 01 — Stage where trust breaks */}
       <section>
         <SectionHead

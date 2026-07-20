@@ -12,7 +12,7 @@ import { useTheme } from "../../theme/DashboardThemeProvider";
 import { HubJourneyCard } from "../common/HubJourneyCard";
 import { cssVar, layout, radius } from "../../theme/tokens";
 
-/** V3 front screen — executive pulse, three hub cards, operational risk spikes. */
+/** V3 front screen — executive pulse, three hub cards, operational spike signals. */
 export function CXOverviewScreen(): React.ReactElement {
   const { navigate } = useNavigation();
   const { mode } = useTheme();
@@ -99,6 +99,7 @@ export function CXOverviewScreen(): React.ReactElement {
           spikes={CX_HEAD_V3_RISK_SPIKES}
           driverContext={CX_HEAD_V3_RISK_DRIVER_CONTEXT}
           isDarkMode={mode === "dark"}
+          alertBadgeLabel="AI · Spike signal"
         />
       </div>
     </div>

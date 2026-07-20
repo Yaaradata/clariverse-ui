@@ -10,6 +10,9 @@ import { useNavigation } from "../../lib/NavigationContext";
 import { DraftActionFooter } from "../common/DraftActionFooter";
 import { BridgeCatalogueList, BRIDGE_CATALOGUE_PANEL_HEIGHT } from "../revenue-bridge/BridgeCatalogueList";
 import { BridgeDetailPanel } from "../revenue-bridge/BridgeDetailPanel";
+import { CategoryPnlStrip } from "../revenue-bridge/CategoryPnlStrip";
+import { CxToMarginBridge } from "../revenue-bridge/CxToMarginBridge";
+import { RelationalNpsTile } from "../revenue-bridge/RelationalNpsTile";
 import { RevenueBridgeLedgerKpis } from "../revenue-bridge/RevenueBridgeLedgerKpis";
 import { DetailPageHeader } from "../common/DetailPageHeader";
 import { cssVar, layout, radius, space, type } from "../../theme/tokens";
@@ -56,7 +59,7 @@ function SectionHeader({ title, hint }: { title: string; hint?: string }): React
   );
 }
 
-/** Pass 7 — S5 Revenue Bridge: triage KPIs → catalogue list + detail → pilot actions. */
+/** S5 Revenue Bridge — margin bridge · category P&L · relational NPS · catalogue. */
 export function RevenueBridgeScreen(): React.ReactElement {
   const { openDrill } = useNavigation();
   const [selectedId, setSelectedId] = useState<string>(STARRED_BRIDGE_IDS[0]);
@@ -103,6 +106,20 @@ export function RevenueBridgeScreen(): React.ReactElement {
       />
 
       <RevenueBridgeLedgerKpis />
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.55fr) minmax(260px, 0.9fr)",
+          gap: space["4"],
+          alignItems: "stretch",
+        }}
+      >
+        <CxToMarginBridge />
+        <RelationalNpsTile />
+      </div>
+
+      <CategoryPnlStrip />
 
       <div
         style={{

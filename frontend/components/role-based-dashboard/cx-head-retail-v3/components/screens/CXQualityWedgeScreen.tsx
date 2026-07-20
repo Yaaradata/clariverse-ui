@@ -6,6 +6,7 @@ import { useNavigation } from "../../lib/NavigationContext";
 import { BotQualityCard } from "../cx-quality/BotQualityCard";
 import { CxQualityWedgeCards } from "../cx-quality/CxQualityWedgeCards";
 import { FcrRepeatCard } from "../cx-quality/FcrRepeatCard";
+import { PerfectOrderCard } from "../cx-quality/PerfectOrderCard";
 import { SellerTrustCard } from "../cx-quality/SellerTrustCard";
 import { SuppressionWatchdogCard } from "../cx-quality/SuppressionWatchdogCard";
 import { cssVar, layout, space, type } from "../../theme/tokens";
@@ -95,9 +96,13 @@ export function CXQualityWedgeScreen(): React.ReactElement {
 
       <CxQualityWedgeCards />
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, alignItems: "stretch" }}>
-        <SellerTrustCard onOpenDrill={openSellerTrustDrill} />
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14, alignItems: "stretch" }}>
+        <PerfectOrderCard />
         <FcrRepeatCard />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 14, alignItems: "stretch" }}>
+        <SellerTrustCard onOpenDrill={openSellerTrustDrill} />
         <BotQualityCard />
       </div>
 

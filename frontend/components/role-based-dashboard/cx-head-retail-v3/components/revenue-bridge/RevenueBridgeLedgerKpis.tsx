@@ -95,13 +95,23 @@ function SimpleKpiCard({ kpi }: { kpi: RevenueBridgeKpiConfig }): React.ReactEle
   );
 }
 
-/** S5 triage KPIs — summary layer above bridge join cards. */
+/** S5 triage KPIs — summary layer above CX→margin bridge and category P&L. */
 export function RevenueBridgeLedgerKpis(): React.ReactElement {
   return (
-    <section style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: space["3"], alignItems: "stretch" }}>
-      {REVENUE_BRIDGE_KPIS.map((kpi) => (
-        <SimpleKpiCard key={kpi.id} kpi={kpi} />
-      ))}
+    <section style={{ display: "flex", flexDirection: "column", gap: space["2"] }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "baseline" }}>
+        <div style={{ fontSize: type.scale.caption, fontWeight: type.weight.bold, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>
+          Voice → P&L ledger
+        </div>
+        <div style={{ fontSize: 11, color: cssVar("text-muted") }}>
+          Margin bridge + category P&L + relational NPS sit below — not on real-time happiness
+        </div>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: space["3"], alignItems: "stretch" }}>
+        {REVENUE_BRIDGE_KPIS.map((kpi) => (
+          <SimpleKpiCard key={kpi.id} kpi={kpi} />
+        ))}
+      </div>
     </section>
   );
 }

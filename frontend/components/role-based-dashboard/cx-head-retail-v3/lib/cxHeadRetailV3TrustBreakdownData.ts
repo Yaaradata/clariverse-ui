@@ -165,7 +165,7 @@ export const TRUST_RANGES: Record<
 export const TRUST_RAG: Record<TrustRagLevel, { label: string }> = {
   good: { label: "Healthy" },
   watch: { label: "Watch" },
-  high: { label: "At risk" },
+  high: { label: "Elevated" },
   crit: { label: "Critical" },
 };
 

@@ -142,7 +142,8 @@ export const QUICK_COMMERCE_SUMMARY = {
 
 /** S2 page copy — headline lives in screen. */
 export const QUICK_COMMERCE_PAGE = {
-  purpose: "Node breaks before the warehouse dashboard — peer-normalised, not raw volume.",
+  purpose:
+    "Dynamic fulfilment scorecard — OTIF vs Fill, NDR containment, RTO vs RTS, Rider vs Courier — hotspot-first, not a fixed grid.",
 };
 
 export type DarkStoreKpiBar = {
@@ -777,7 +778,8 @@ export const REVENUE_BRIDGE_READINESS_PCT = 68;
 
 /** S5 page copy — headline lives in screen; purpose + sections here. */
 export const REVENUE_BRIDGE_PAGE = {
-  purpose: "Trusted CX signals in cohort rupees when the order feed lands — pilot ask only, never live P&L.",
+  purpose:
+    "Trusted CX signals in cohort rupees — returns→CM compression, category P&L, and relational NPS (strategic) when the order feed lands.",
   aiLine: "Four starred bridges join voice cohorts to a mock transaction feed at cohort level. Human-approved pilot only.",
   aiConfidence: "Med-High" as ConfidenceBand,
   sections: {
@@ -1008,37 +1010,38 @@ export type QuickCommerceRadarCard = {
 
 export const PERISHABLE_RADAR: QuickCommerceRadarCard = {
   id: "perishable-d07",
-  title: "Perishable spoilage cluster",
-  stat: "48 of 50 complaints · one node",
-  honestyLine: "SPARSE cluster — node-concentrated; precision-first routing.",
-  aiVerdict: "Spoilage language concentrated at D07 — food-safety routing warranted.",
+  title: "Fill Rate holding — OTIF slipping at D07?",
+  stat: "Fill 91% · OTIF 82% · Rider line",
+  honestyLine: "Stock-facing Fill ≠ customer-facing OTIF — treat as separate levers.",
+  aiVerdict: "Fill is acceptable; OTIF break is last-mile / promise timing, not shelf gap.",
   confidence: "High",
-  draftAction: "Route → Food-safety (FSSAI) — inspect cold-chain at D07.",
+  draftAction: "Route → City Ops (Rider) — protect OTIF without touching Fill playbook.",
   draftKind: "route",
-  flag: "FSSAI-flagged",
+  flag: "OTIF≠Fill",
 };
 
 export const SUBSTITUTION_RADAR: QuickCommerceRadarCard = {
-  id: "substitution-gap",
-  title: "Wrong-substitute theme",
-  stat: "Rising on care chat · not store floor volume",
-  honestyLine: "Process-gap diamond — substitution logic owner, not store Ops.",
-  aiVerdict: "Wrong-substitute intent rising — route to the logic owner who sets substitution rules.",
+  id: "ndr-containment",
+  title: "NDR — can we contain inside ~24h?",
+  stat: "NDR 11.2% at D07 Rider · reattempt window open",
+  honestyLine: "NDR is the containment lever before an RTO path locks in.",
+  aiVerdict: "Reconfirm / reattempt inside 24h — do not fold NDR into RTO headline.",
   confidence: "Med-High",
-  draftAction: "Route → substitution-logic owner — not the dark-store floor.",
-  draftKind: "route",
+  draftAction: "Draft NDR containment playbook for D07 Rider — 24h reattempt SLA.",
+  draftKind: "draft",
+  flag: "24h lever",
 };
 
 export const PICK_PACK_RADAR: QuickCommerceRadarCard = {
-  id: "pick-pack-d07",
-  title: "Pick-pack failure spike",
-  stat: "6× baseline at D07 · peers flat",
-  honestyLine: "Node-local break — picker/pack layer, not city-wide fulfilment drift.",
-  aiVerdict: "D07 issue-rate diverging from seven peer dark-stores in the same catchment window.",
+  id: "courier-rto-band",
+  title: "Courier RTO vs Rider — separate ownership?",
+  stat: "Courier RTO 27.4% · Rider RTO 18.2%",
+  honestyLine: "RTO = failed delivery never reached customer; RTS = customer-initiated return — keep split.",
+  aiVerdict: "Courier RTO above India 20–25% vendor-estimate band — own on 3PL scorecard, not Rider.",
   confidence: "High",
-  draftAction: "Draft localised ops alert for D07 — inspect pick/pack this shift.",
-  draftKind: "draft",
-  flag: "D07-local",
+  draftAction: "Escalate to 3PL partner desk — RTO scorecard separate from Rider fleet.",
+  draftKind: "route",
+  flag: "3PL · RTO",
 };
 
 export const QUICK_COMMERCE_RADAR_CARDS: QuickCommerceRadarCard[] = [
@@ -1262,10 +1265,10 @@ export const SELLER_TRUST_CARD: CxQualityCard = {
   aiVerdict:
     "Dead-on-arrival / not-as-described language ahead of star average — seller-health routing warranted.",
   confidence: "Med-High",
-  draftAction: "Route → Seller-Brand Partnerships (gated to risk review).",
+  draftAction: "Route → Seller-Brand Partnerships (gated to signal review).",
   draftKind: "route",
   gated: true,
-  gateLabel: "Gated to risk review",
+  gateLabel: "Gated to signal review",
   integrityNote: "Integrity guard passed",
   flag: "Integrity-cleared",
 };
@@ -1292,7 +1295,7 @@ export const SELLER_TRUST_EVIDENCE: SellerTrustEvidencePack = {
     "Received used unit in sealed box — care chat",
     "Sound quality nothing like the photos — app review",
   ],
-  draftAction: "Route → Seller-Brand Partnerships (gated to risk review).",
+  draftAction: "Route → Seller-Brand Partnerships (gated to signal review).",
 };
 
 export const FCR_REPEAT_CARD: CxQualityCard = {

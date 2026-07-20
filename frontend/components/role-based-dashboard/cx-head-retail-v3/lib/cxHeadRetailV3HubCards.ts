@@ -25,7 +25,7 @@ export const HUB_PAGE_PURPOSE: Record<HubCardId, string> = {
   "customer-happiness":
     "How happy are Flipkart shoppers and what is driving unhappiness across segments, orders, sellers and channels?",
   trust:
-    "Trust drivers, cliff vs slope risk, segment impact, evidence, and cross-functional actions — measured facts vs inferred signals.",
+    "Trust drivers, cliff vs slope signal, segment impact, evidence, and cross-functional actions — measured facts vs inferred signals.",
   "service-delivery":
     "Anxiety command triad, containment queue, reliability × anxiety split, and escalation patterns — contact pressure before breach.",
 };
@@ -47,7 +47,7 @@ export type CallerSegmentRow = {
   interactions: number;
   wowDelta: number;
   sentiment: number;
-  /** Contacts per unit — retail's resolution-effort construct, not a banking "failed call". */
+  /** Contacts per unit — retail resolution-effort construct (units, not orders). */
   cpu: number;
   /** Escalations prevented per lever unit — the retail P&L-facing construct. */
   eplu: number;
@@ -490,7 +490,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Payment noise eases after the overnight gateway patch.\nRefund-status confusion is now the top chat driver.\nPlus recovers to 74%, while promo-code tickets spike.\nChurn risk is stable at three Plus members, so continue the watch.",
+          "Payment noise eases after the overnight gateway patch.\nRefund-status confusion is now the top chat driver.\nPlus recovers to 74%, while promo-code tickets spike.\nChurn signal is stable at three Plus members, so continue the watch.",
       },
       {
         label: "D4",
@@ -524,7 +524,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           ],
         },
         conversationInsight:
-          "Payments are stabilising, but the refund backlog is now the top friction driver.\nRepeat voice and chat contacts are rising on refund status.\nShipping pain accounts for 30% of negative sentiment volume.\nTen Plus members remain at risk, and retention scripts are live.",
+          "Payments are stabilising, but the refund backlog is now the top friction driver.\nRepeat voice and chat contacts are rising on refund status.\nShipping pain accounts for 30% of negative sentiment volume.\nTen Plus members show elevated churn signal, and retention scripts are live.",
       },
       {
         label: "D6",
@@ -555,7 +555,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           impact: { customers: "18.4K", channels: "Voice, Chat" },
         },
         conversationInsight:
-          "Happy rate holds at 68%, while first-contact resolve is at 73% on delivery and promo-code confusion.\nShipping pain is spiking repeat contacts before agents close the loop.\nTwelve Plus members are in cancel risk, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
+          "Happy rate holds at 68%, while first-contact resolve is at 73% on delivery and promo-code confusion.\nShipping pain is spiking repeat contacts before agents close the loop.\nTwelve Plus members are in cancel signal, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
       },
     ],
     drill: CUSTOMER_HAPPINESS_DRILL,

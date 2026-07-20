@@ -59,7 +59,7 @@ function ragLabel(rag: TrustRagLevel): string {
   const tone = ragTone(rag);
   switch (tone) {
     case "red":
-      return rag === "crit" ? "Critical" : "At risk";
+      return rag === "crit" ? "Critical" : "Elevated";
     case "amber":
       return "Watch";
     case "green":
@@ -531,7 +531,7 @@ function StageDetailBreakdown({
             color={color}
           />
           <StageKpiTile
-            label="GMV at risk"
+            label="GMV exposure"
             value={scaleTrustCrLabel(stage.pnlAtRisk, range)}
             sub={stage.cliffCount > 0 ? `${stage.cliffCount} cliff live` : "No live cliff"}
             color={color}
@@ -731,7 +731,7 @@ export function TrustStageLifecyclePie({ range }: { range: TrustRangeKey }): Rea
         <div style={{ display: "inline-flex", alignItems: "center", gap: 10 }}>
           {(
             [
-              { tone: "red" as const, label: "Critical / At risk", color: cssVar("severity-high") },
+              { tone: "red" as const, label: "Critical / Elevated", color: cssVar("severity-high") },
               { tone: "amber" as const, label: "Watch", color: cssVar("severity-med") },
               { tone: "green" as const, label: "Healthy", color: cssVar("positive") },
             ] as const

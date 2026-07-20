@@ -99,7 +99,7 @@ export function ServicePromiseBoardVisual({
         <PromiseMetricTile label="SLA met" value={service.promise.met} color={MET_COLOR} />
         <PromiseMetricTile label="SLA breached" value={service.promise.breached} color={BREACH_COLOR} />
         <PromiseMetricTile label="Total Pending" value={service.promise.pending} color={cssVar("severity-med")} />
-        <PromiseMetricTile label="At Risk" value={overdueDisplay} color={cssVar("severity-high")} />
+        <PromiseMetricTile label="Breach signal" value={overdueDisplay} color={cssVar("severity-high")} />
       </div>
 
       <div style={{ display: "flex", minHeight: 92, gap: 5, borderRadius: radius.md, overflow: "hidden" }}>
@@ -188,7 +188,7 @@ export function SlaHeatmapVisual({ heatmap }: { heatmap: ServiceDeliveryDrill["s
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
         {[
           { label: "≥ 90% — On Track", colors: slaHeatCellColors(92) },
-          { label: "75–89% — At Risk", colors: slaHeatCellColors(82) },
+          { label: "75–89% — Elevated", colors: slaHeatCellColors(82) },
           { label: "< 75% — Breaching", colors: slaHeatCellColors(64) },
         ].map((item) => (
           <span key={item.label} style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10, color: cssVar("text-muted") }}>

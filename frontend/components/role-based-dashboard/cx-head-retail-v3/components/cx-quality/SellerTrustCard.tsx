@@ -7,7 +7,7 @@ import { ConfidenceBand } from "../common/ConfidenceBand";
 import { DraftActionFooter } from "../common/DraftActionFooter";
 import { cssVar, radius } from "../../theme/tokens";
 
-/** T2-5 — integrity-guarded seller trust erosion; gated to risk review. */
+/** T2-5 — integrity-guarded seller trust erosion; gated to signal review. */
 export function SellerTrustCard({ onOpenDrill }: { onOpenDrill: () => void }): React.ReactElement {
   const card = SELLER_TRUST_CARD;
 

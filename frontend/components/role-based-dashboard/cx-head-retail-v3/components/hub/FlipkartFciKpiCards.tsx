@@ -25,11 +25,19 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { AISummaryWall } from '@/components/FCI/AISummaryWall';
-import { CUSTOMER_RELATIONSHIP_TIERS } from '../../lib/cxHeadRetailV3CustomerFciData';
+import { ConfidenceBand } from '../common/ConfidenceBand';
+import { CUSTOMER_VALUE_TIERS } from '../../lib/cxHeadRetailV3CustomerFciData';
+import {
+  HAPPINESS_BASE_WIDE,
+  segmentsRankedByGmvAtRisk,
+  type ValueLens,
+} from '../../lib/cxHeadRetailV3HappinessLensData';
 import { FLIPKART_FCI_INSIGHTS, FLIPKART_FCI_INSIGHT_DETAILS } from '../../lib/cxHeadRetailV3FlipkartFciInsights';
 
 interface FlipkartFciKpiCardsProps {
   isDarkMode?: boolean;
+  valueLens?: ValueLens;
+  onValueLensChange?: (lens: ValueLens) => void;
 }
 
 const SEGMENT_COLORS = {
@@ -39,9 +47,9 @@ const SEGMENT_COLORS = {
   lvlf: '#94A3B8',
 } as const;
 
-// NPS Segment Monitor — 12-week rolling trend across the 4 HV/LV × HF/LF customer segments
+// Happiness monitor — 12-week rolling trend across the 4 HV/LV × HF/LF customer segments
 // (HVHF deterioration is fastest at -28 pts)
-const NPS_TREND = [
+const HAPPINESS_TREND = [
   { week: 'W-11', HVHF: 46, HVLF: 38, LVLF: 22, LVHF: 52 },
   { week: 'W-10', HVHF: 44, HVLF: 37, LVLF: 20, LVHF: 54 },
   { week: 'W-9',  HVHF: 42, HVLF: 35, LVLF: 17, LVHF: 55 },
@@ -56,19 +64,19 @@ const NPS_TREND = [
   { week: 'Now',  HVHF: 18, HVLF: 23, LVLF:  1, LVHF: 65 },
 ];
 
-// Sentiment by relationship value — HV/LV × HF/LF · GMV at stake (Flipkart)
-const VALUE_TIERS = CUSTOMER_RELATIONSHIP_TIERS;
+// Sentiment by customer value — HV/LV × HF/LF · GMV at stake (Flipkart)
+const VALUE_TIERS = CUSTOMER_VALUE_TIERS;
 
-// Churn-risk shoppers flagged during BBD / payment spike window
-type VulnerabilitySeverity = 'High' | 'Medium' | 'Low';
-const VULNERABLE_SEGMENTS: Array<{ segment: string; count: number; severity: VulnerabilitySeverity }> = [
+// Churn-signal shoppers flagged during BBD / payment spike window
+type ChurnSignalSeverity = 'High' | 'Medium' | 'Low';
+const CHURN_SIGNAL_SEGMENTS: Array<{ segment: string; count: number; severity: ChurnSignalSeverity }> = [
   { segment: 'HVHF', count: 12, severity: 'High' },
   { segment: 'HVLF', count: 8, severity: 'High' },
   { segment: 'LVHF', count: 24, severity: 'Medium' },
   { segment: 'LVLF', count: 18, severity: 'Medium' },
 ];
 
-const SEVERITY_COLORS: Record<VulnerabilitySeverity, string> = {
+const SEVERITY_COLORS: Record<ChurnSignalSeverity, string> = {
   High:   '#ef4444',
   Medium: '#f59e0b',
   Low:    '#22c55e',
@@ -109,8 +117,16 @@ const FRICTION_SIGNALS: Array<{
   },
 ];
 
-export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsProps) {
+export function FlipkartFciKpiCards({
+  isDarkMode = false,
+  valueLens = 'hv',
+  onValueLensChange,
+}: FlipkartFciKpiCardsProps) {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const rankedSegments = segmentsRankedByGmvAtRisk();
+  const churnForLens = CHURN_SIGNAL_SEGMENTS.filter((row) =>
+    valueLens === 'hv' ? row.segment.startsWith('HV') : row.segment.startsWith('LV'),
+  );
 
   const kpiData = {
     totalInteraction: {
@@ -127,31 +143,46 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
       peakHour: '2:00 PM',
       peakIncrease: 12,
     },
-    fciRate: {
+    contactEffort: {
       value: 1.5,
       trend: -0.3,
-      segmentFCI: {
-        hvhf: { label: 'HVHF', rate: 0.8, color: SEGMENT_COLORS.hvhf },
-        hvlf: { label: 'HVLF', rate: 1.2, color: SEGMENT_COLORS.hvlf },
-        lvhf: { label: 'LVHF', rate: 2.1, color: SEGMENT_COLORS.lvhf },
-        lvlf: { label: 'LVLF', rate: 2.8, color: SEGMENT_COLORS.lvlf },
+      /** CPU = contacts ÷ units (not orders). Resolution Rate = first-pass resolve %. */
+      bySegment: {
+        hvhf: { label: 'HVHF', cpu: 0.8, resolutionRate: 58, color: SEGMENT_COLORS.hvhf },
+        hvlf: { label: 'HVLF', cpu: 1.2, resolutionRate: 42, color: SEGMENT_COLORS.hvlf },
+        lvhf: { label: 'LVHF', cpu: 2.1, resolutionRate: 29, color: SEGMENT_COLORS.lvhf },
+        lvlf: { label: 'LVLF', cpu: 2.8, resolutionRate: 15, color: SEGMENT_COLORS.lvlf },
       },
     },
-    riskSignal: {
-      fraud:       { percentage: 2.8, cases: 14, trend: 0.6 },
-      operational: { percentage: 2.4, cases: 11, trend: 0.3 },
-      reputation:  { percentage: 2.0, cases: 9,  trend: 0.2 },
-      thirdParty:  { percentage: 1.6, cases: 6,  trend: -0.1 },
-      totalFlagged: 18,
+    trustSignal: {
+      checkout:    { percentage: 2.8, cases: 14, trend: 0.6 },
+      fulfilment:  { percentage: 2.4, cases: 11, trend: 0.3 },
+      refundDelay: { percentage: 2.0, cases: 9,  trend: 0.2 },
+      sellerTrust: { percentage: 1.6, cases: 6,  trend: -0.1 },
+      totalFlagged: 40,
       highPriority: 7,
       critical: 3,
       resolvedToday: 5,
-      segmentRisk: {
+      segmentVolume: {
         hvhf: { count: 4, level: 'high' },
         hvlf: { count: 5, level: 'medium' },
         lvhf: { count: 5, level: 'high' },
         lvlf: { count: 4, level: 'high' },
       },
+      /** Our trust-breakdown model — cliff (rare, high blast) vs slope (chronic). */
+      cliffEvents: [
+        { key: 'itemMissing', label: 'Item missing', color: '#ef4444', cases: 6 },
+        { key: 'counterfeit', label: 'Counterfeit', color: '#f97316', cases: 5 },
+        { key: 'accountTakeover', label: 'Account takeover', color: '#dc2626', cases: 3 },
+      ],
+      slopeEvents: [
+        { key: 'wrongItem', label: 'Wrong item', color: '#f59e0b', cases: 7 },
+        { key: 'damaged', label: 'Damaged', color: '#eab308', cases: 6 },
+        { key: 'hiddenFee', label: 'Hidden fee', color: '#06b6d4', cases: 4 },
+        { key: 'neverDelivered', label: 'Never delivered', color: '#0ea5e9', cases: 4 },
+        { key: 'deliveryDelay', label: 'Delivery delay', color: '#6366f1', cases: 3 },
+        { key: 'refundNotCredited', label: 'Refund-not-credited', color: '#10b981', cases: 2 },
+      ],
     },
     customerSentiment: {
       // Weighted positive share across tiers = 28%
@@ -198,13 +229,51 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
 
   return (
     <div className="p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-3 px-1">
+        <div className="flex items-center gap-3 flex-wrap">
+          <span className="text-[11px] font-bold tracking-wide" style={{ color: '#939394' }}>
+            VALUE LENS
+          </span>
+          {([
+            { id: 'hv' as const, label: 'High-value (default)' },
+            { id: 'lv' as const, label: 'Low-value (managed)' },
+          ]).map((opt) => {
+            const active = valueLens === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => onValueLensChange?.(opt.id)}
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                  border: active ? '1px solid #5332FF' : '1px solid #393939',
+                  background: active ? 'rgba(83,50,255,0.15)' : 'transparent',
+                  color: active ? '#c4b5fd' : '#939394',
+                  cursor: onValueLensChange ? 'pointer' : 'default',
+                }}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+        <div className="flex items-center gap-2 text-[11px]" style={{ color: '#939394' }}>
+          <span data-testid="flipkart-base-wide-happy" data-happy-rate={HAPPINESS_BASE_WIDE.happyRate}>
+            Base-wide happy {HAPPINESS_BASE_WIDE.happyRate}% (lens does not change this)
+          </span>
+          <ConfidenceBand band={HAPPINESS_BASE_WIDE.confidence} />
+        </div>
+      </div>
       <div className="flex flex-nowrap gap-4 items-stretch min-w-0">
         {/* Left Side — 6 KPI Cards in a 2-col grid (2 per row):
-            Row 1: [Combined Segments · Sentiment by Relationship Value]
-            Row 2: [Top Intent · NPS Segment Monitor]
-            Row 3: [Vulnerable Watchlist · Strain & Friction] */}
+            Row 1: [Combined Segments · Sentiment by Customer Value]
+            Row 2: [Top Intent · Happiness monitor]
+            Row 3: [Churn-signal watchlist · Strain & Friction] */}
         <div className="flex-[2] min-w-0 grid grid-cols-2 gap-4">
-          {/* Card 1 — Combined Segment Table (Total Interactions + Sentiment + FCI) */}
+          {/* Card 1 — Combined Segment Table (Total Interactions + Sentiment + CPU / Resolution) */}
           <div
             className="border rounded-xl p-4 cursor-pointer flex flex-col h-full"
             style={getCardStyle(hoveredCard === 'segments')}
@@ -255,18 +324,33 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
               </div>
             </div>
 
+            <p className="text-[10px] mb-2" style={{ color: '#939394' }} title="Contacts per unit (units, not orders)">
+              CPU = contacts ÷ units (units, not orders) · Resolution Rate beside it
+            </p>
+
             <div
               className="rounded-lg overflow-hidden flex-1 flex flex-col"
               style={{ border: `1px solid ${isDarkMode ? '#1f1f1f' : '#e5e5e5'}` }}
             >
               {(() => {
-                const tableCols = '64px minmax(88px,1fr) 80px 64px 60px';
-                const segmentKeysArr = ['hvhf', 'hvlf', 'lvhf', 'lvlf'] as const;
-                const headers = ['SEGMENT', 'INTERACTIONS', 'WoW', 'SENTIMENT', 'FCI RATE'];
+                const tableCols = '52px minmax(64px,1fr) 56px 52px 44px 48px 56px';
+                const headers = [
+                  { key: 'seg', label: 'SEGMENT' },
+                  { key: 'int', label: 'INTERACTIONS' },
+                  { key: 'wow', label: 'WoW' },
+                  { key: 'sent', label: 'SENTIMENT' },
+                  {
+                    key: 'cpu',
+                    label: 'CPU',
+                    title: 'Contacts per unit (units, not orders)',
+                  },
+                  { key: 'res', label: 'RES.', title: 'Resolution Rate' },
+                  { key: 'gmv', label: 'GMV exposed', title: 'Ranking metric — GMV exposed (₹ Cr). HV rises on its own.' },
+                ] as const;
                 return (
                   <>
                     <div
-                      className="grid items-center px-3 py-2 gap-3"
+                      className="grid items-center px-3 py-2 gap-2"
                       style={{
                         gridTemplateColumns: tableCols,
                         background: isDarkMode ? '#151515' : '#f8f9fa',
@@ -275,66 +359,65 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
                     >
                       {headers.map((h) => (
                         <span
-                          key={h}
+                          key={h.key}
                           className="text-[9px] font-bold tracking-wider"
+                          title={'title' in h ? h.title : undefined}
                           style={{
                             color: '#939394',
-                            paddingLeft: h === 'WoW' ? 8 : 0,
+                            paddingLeft: h.key === 'wow' ? 8 : 0,
                             overflow: 'hidden',
                             whiteSpace: 'nowrap',
                             textOverflow: 'ellipsis',
                             minWidth: 0,
+                            cursor: 'title' in h ? 'help' : undefined,
+                            borderBottom: h.key === 'gmv' || h.key === 'cpu' ? '1px dotted #939394' : undefined,
                           }}
                         >
-                          {h}
+                          {h.label}
                         </span>
                       ))}
                     </div>
-                    {segmentKeysArr.map((k, idx) => {
-                      const seg = kpiData.totalInteraction.customerSegments[k];
-                      const sent = kpiData.customerSentiment.segmentSentimentBreakdown[k];
-                      const fci = kpiData.fciRate.segmentFCI[k];
-                      const color = SEGMENT_COLORS[k];
-                      const delta = seg.delta ?? 0;
+                    {rankedSegments.map((row, idx) => {
+                      const delta = row.wowDelta;
                       const isFlat = Math.abs(delta) < 0.05;
                       const isUp = delta > 0;
                       const deltaColor = isFlat ? '#939394' : isUp ? '#10b981' : '#ef4444';
                       const arrow = isFlat ? '●' : isUp ? '▲' : '▼';
-                      // Sentiment score on -1..+1 scale: (positive% − negative%) / 100
-                      const sentimentScore = (sent.positive - sent.negative) / 100;
                       const sentimentColor =
-                        sentimentScore > 0.05
+                        row.sentiment > 0.05
                           ? '#10b981'
-                          : sentimentScore < -0.05
+                          : row.sentiment < -0.05
                           ? '#ef4444'
                           : '#f59e0b';
-                      const sentimentLabel = Math.abs(sentimentScore).toFixed(2);
+                      const sentimentLabel = Math.abs(row.sentiment).toFixed(2);
+                      const dimmed = row.valueLens !== valueLens;
                       return (
                         <div
-                          key={k}
-                          className="grid items-center px-3 py-2 gap-3"
+                          key={row.key}
+                          className="grid items-center px-3 py-2 gap-2"
                           style={{
                             gridTemplateColumns: tableCols,
                             borderTop: idx === 0 ? 'none' : `1px solid ${isDarkMode ? '#1f1f1f' : '#e5e5e5'}`,
+                            opacity: dimmed ? 0.45 : 1,
                           }}
-                          title={`${k.toUpperCase()} · ${formatNumber(seg.count)} interactions · WoW ${isUp ? '+' : ''}${delta.toFixed(1)}% · Sentiment ${sentimentLabel} · FCI ${fci.rate}%`}
+                          title={`${row.label} · ranked by GMV exposed ₹${row.gmvAtRiskCr} Cr · CPU ${row.cpu} · Res ${row.resolutionRate}%`}
                         >
                           <span
                             className="inline-flex items-center justify-center text-[10px] font-bold px-2 py-0.5 rounded-full"
                             style={{
-                              background: `${color}18`,
-                              color,
-                              border: `1px solid ${color}40`,
+                              background: `${row.color}18`,
+                              color: row.color,
+                              border: `1px solid ${row.color}40`,
                               width: 'max-content',
                             }}
                           >
-                            {k.toUpperCase()}
+                            {row.label}
                           </span>
                           <span
                             className="text-[13px] font-semibold tabular-nums"
                             style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
                           >
-                            {formatNumber(seg.count)}
+                            {formatNumber(row.interactions)}
                           </span>
                           <span
                             className="inline-flex items-center gap-1 text-[11px] font-semibold tabular-nums whitespace-nowrap"
@@ -343,15 +426,25 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
                             <span style={{ fontSize: 9 }}>{arrow}</span>
                             {Math.abs(delta).toFixed(1)}%
                           </span>
-                          <span
-                            className="text-[13px] font-bold tabular-nums"
-                            style={{ color: sentimentColor }}
-                            title={`Positive ${sent.positive}% · Neutral ${sent.neutral}% · Negative ${sent.negative}% → score ${sentimentLabel}`}
-                          >
+                          <span className="text-[13px] font-bold tabular-nums" style={{ color: sentimentColor }}>
                             {sentimentLabel}
                           </span>
-                          <span className="text-[13px] font-bold tabular-nums" style={{ color: '#FFFFFF' }}>
-                            {fci.rate}%
+                          <span
+                            className="text-[13px] font-bold tabular-nums"
+                            style={{ color: '#FFFFFF' }}
+                            title="Contacts per unit (units, not orders)"
+                          >
+                            {row.cpu.toFixed(1)}
+                          </span>
+                          <span className="text-[13px] font-bold tabular-nums" style={{ color: '#a5b4fc' }}>
+                            {row.resolutionRate}%
+                          </span>
+                          <span
+                            className="text-[12px] font-extrabold tabular-nums"
+                            style={{ color: '#fbbf24' }}
+                            title="GMV exposed — ranking metric"
+                          >
+                            ₹{row.gmvAtRiskCr}
                           </span>
                         </div>
                       );
@@ -363,7 +456,7 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
 
           </div>
 
-          {/* Card 2 — Sentiment by Relationship Value */}
+          {/* Card 2 — Sentiment by Customer Value */}
           <div
             className="border rounded-xl p-3 cursor-pointer flex flex-col h-full relative overflow-hidden"
             style={getCardStyle(hoveredCard === 'wealth')}
@@ -387,12 +480,13 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             <div className="flex items-start justify-between mb-1.5">
               <div className="min-w-0">
                 <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  Sentiment by Relationship Value
+                  Sentiment by Customer Value
                 </span>
                 <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
                   Sentiment split · GMV at stake
                 </p>
               </div>
+              <ConfidenceBand band="Med-High" />
             </div>
 
             <div className="flex flex-col justify-around mb-2 flex-1 min-h-0">
@@ -457,71 +551,83 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             </div>
           </div>
 
-          {/* Card 3 — Top Intent */}
+          {/* Card 3 — Top Intent (cliff vs slope trust-breakdown) */}
           <div
             className="border rounded-xl p-3 cursor-pointer flex flex-col h-full"
-            style={getCardStyle(hoveredCard === 'risk')}
-            onMouseEnter={() => setHoveredCard('risk')}
+            style={getCardStyle(hoveredCard === 'intent')}
+            onMouseEnter={() => setHoveredCard('intent')}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                Top Intent
-              </span>
+            <div className="flex items-start justify-between mb-1 gap-2">
+              <div className="min-w-0">
+                <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+                  Top Intent
+                </span>
+                <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
+                  Our trust-breakdown model — scored on incident rate × network effect.
+                </p>
+              </div>
             </div>
 
             <div className="flex items-baseline gap-2 mb-2">
               <div className="text-2xl font-bold leading-none" style={{ color: '#ef4444' }}>
-                {formatNumber(kpiData.riskSignal.totalFlagged)}
+                {formatNumber(kpiData.trustSignal.totalFlagged)}
               </div>
-              <span className="text-[11px]" style={{ color: '#939394' }}>identified</span>
+              <span className="text-[11px]" style={{ color: '#939394' }}>events scored</span>
             </div>
 
             <div className="flex-1 flex flex-col justify-between gap-2 min-h-0">
-              <div>
-                {(() => {
-                  const riskCategories = [
-                    { key: 'fraud',       label: 'UPI / Checkout',   color: '#ef4444', cases: kpiData.riskSignal.fraud.cases },
-                    { key: 'operational', label: 'Order not received', color: '#f59e0b', cases: kpiData.riskSignal.operational.cases },
-                    { key: 'reputation',  label: 'Refund delay',     color: '#06b6d4', cases: kpiData.riskSignal.reputation.cases },
-                    { key: 'thirdParty',  label: 'Seller trust',     color: '#10b981', cases: kpiData.riskSignal.thirdParty.cases },
-                  ];
-                  const total = riskCategories.reduce((sum, r) => sum + r.cases, 0);
-
+              <div className="flex flex-col gap-2">
+                {([
+                  { title: 'Cliff events', items: kpiData.trustSignal.cliffEvents, hint: 'item missing · counterfeit · account takeover' },
+                  { title: 'Slope events', items: kpiData.trustSignal.slopeEvents, hint: 'wrong item · damaged · hidden fee · never delivered · delivery delay · refund-not-credited' },
+                ] as const).map((group) => {
+                  const total = group.items.reduce((sum, r) => sum + r.cases, 0);
                   return (
-                    <>
-                      <div className="flex h-5 rounded-lg overflow-hidden mb-1.5">
-                        {riskCategories.map((risk) => (
+                    <div key={group.title}>
+                      <div className="flex items-baseline justify-between gap-2 mb-1">
+                        <span className="text-[10px] font-extrabold uppercase tracking-wide" style={{ color: isDarkMode ? '#e5e5e5' : '#111' }}>
+                          {group.title}
+                        </span>
+                        <span className="text-[9px] truncate" style={{ color: '#939394' }} title={group.hint}>
+                          {total} cases
+                        </span>
+                      </div>
+                      <div className="flex h-4 rounded-md overflow-hidden mb-1">
+                        {group.items.map((evt) => (
                           <div
-                            key={risk.key}
+                            key={evt.key}
                             className="flex items-center justify-center transition-all hover:opacity-80 cursor-pointer"
                             style={{
-                              width: `${(risk.cases / total) * 100}%`,
-                              backgroundColor: risk.color,
+                              width: `${(evt.cases / total) * 100}%`,
+                              backgroundColor: evt.color,
+                              minWidth: evt.cases > 0 ? 14 : 0,
                             }}
-                            title={`${risk.label}: ${risk.cases}`}
+                            title={`${evt.label}: ${evt.cases}`}
                           >
-                            <span className="text-[9px] font-bold text-white">{risk.cases}</span>
+                            {evt.cases >= 3 ? (
+                              <span className="text-[8px] font-bold text-white">{evt.cases}</span>
+                            ) : null}
                           </div>
                         ))}
                       </div>
-                      <div className="grid grid-cols-2 gap-x-2 gap-y-1">
-                        {riskCategories.map((risk) => (
-                          <div key={risk.key} className="flex items-center gap-1.5 min-w-0">
-                            <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: risk.color }} />
-                            <span className="text-[11px] truncate" style={{ color: '#d6d9d8' }}>{risk.label}</span>
+                      <div className="flex flex-wrap gap-x-2 gap-y-0.5">
+                        {group.items.map((evt) => (
+                          <div key={evt.key} className="flex items-center gap-1 min-w-0">
+                            <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: evt.color }} />
+                            <span className="text-[10px] truncate" style={{ color: '#d6d9d8' }}>{evt.label}</span>
                           </div>
                         ))}
                       </div>
-                    </>
+                    </div>
                   );
-                })()}
+                })}
               </div>
 
               <div>
                 <p className="text-[9px] font-bold mb-1 tracking-wide" style={{ color: '#939394' }}>INTENT VOLUME BY SEGMENT</p>
                 <div className="grid grid-cols-4 gap-1">
-                  {Object.entries(kpiData.riskSignal.segmentRisk).map(([key, segment]) => {
+                  {Object.entries(kpiData.trustSignal.segmentVolume).map(([key, segment]) => {
                     const labels: Record<string, string> = {
                       hvhf: 'HVHF',
                       hvlf: 'HVLF',
@@ -553,7 +659,7 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             </div>
           </div>
 
-          {/* Card 4 — NPS Segment Monitor */}
+          {/* Card 4 — Happiness monitor */}
           <div
             className="border rounded-xl p-3 cursor-pointer flex flex-col h-full"
             style={getCardStyle(hoveredCard === 'nps')}
@@ -563,16 +669,16 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             <div className="flex items-start justify-between mb-1">
               <div className="min-w-0">
                 <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  NPS Segment Monitor
+                  Happiness monitor
                 </span>
                 <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
-                  12-week rolling · HVHF dip fastest during BBD week (-28 pts)
+                  Real-time pulse only · Relational NPS relocated to Voice→P&L (quarterly / strategic)
                 </p>
               </div>
             </div>
             <div className="flex-1 min-h-0" style={{ minHeight: 130 }}>
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={NPS_TREND} margin={{ top: 6, right: 8, left: 0, bottom: 0 }}>
+                <LineChart data={HAPPINESS_TREND} margin={{ top: 6, right: 8, left: 0, bottom: 0 }}>
                   <CartesianGrid stroke={isDarkMode ? '#1f1f1f' : '#e5e5e5'} strokeDasharray="3 3" vertical={false} />
                   <XAxis
                     dataKey="week"
@@ -612,11 +718,11 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             </div>
           </div>
 
-          {/* Card 5 — Vulnerable Customer Watchlist (condensed) */}
+          {/* Card 5 — Churn-signal watchlist (condensed) */}
           <div
             className="border rounded-xl p-3 cursor-pointer flex flex-col h-full relative overflow-hidden"
-            style={getCardStyle(hoveredCard === 'vulnerable')}
-            onMouseEnter={() => setHoveredCard('vulnerable')}
+            style={getCardStyle(hoveredCard === 'churn')}
+            onMouseEnter={() => setHoveredCard('churn')}
             onMouseLeave={() => setHoveredCard(null)}
           >
             <div
@@ -645,23 +751,26 @@ export function FlipkartFciKpiCards({ isDarkMode = false }: FlipkartFciKpiCardsP
             <div className="flex items-start justify-between gap-2 mb-1.5">
               <div className="min-w-0">
                 <span className="font-bold text-sm" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
-                  Vulnerable Watchlist
+                  Churn-signal watchlist
                 </span>
                 <p className="text-[10px] mt-0.5" style={{ color: '#939394' }}>
-                  Churn risk · cancel-window shoppers
+                  Cancel-window shoppers · Plus members lead the queue
                 </p>
               </div>
-              <span
-                className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex-shrink-0 flex items-center gap-1"
-                style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}
-              >
-                <Sparkles size={9} />
-                AI
-              </span>
+              <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                <ConfidenceBand band="Med-High" />
+                <span
+                  className="text-[9px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-full flex items-center gap-1"
+                  style={{ color: '#f59e0b', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.25)' }}
+                >
+                  <Sparkles size={9} />
+                  AI
+                </span>
+              </div>
             </div>
 
             <div className="flex flex-col justify-around gap-1 flex-1 min-h-0">
-              {VULNERABLE_SEGMENTS.map((row) => {
+              {churnForLens.map((row) => {
                 const sevColor = SEVERITY_COLORS[row.severity];
                 const segmentKey = row.segment.toLowerCase() as keyof typeof SEGMENT_COLORS;
                 const segmentColor = SEGMENT_COLORS[segmentKey] ?? '#939394';

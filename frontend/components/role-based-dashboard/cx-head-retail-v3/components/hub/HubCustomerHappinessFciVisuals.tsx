@@ -11,13 +11,13 @@ import {
   YAxis,
 } from "recharts";
 import {
-  CUSTOMER_RELATIONSHIP_TIERS,
+  CUSTOMER_VALUE_TIERS,
   CUSTOMER_WHATS_FAILING,
   WHATS_FAILING_CHANNEL_COLORS,
   WHATS_FAILING_CHANNELS,
   WHATS_FAILING_SEGMENT_COLORS,
   WHATS_FAILING_SEGMENTS,
-  type RelationshipValueTier,
+  type CustomerValueTier,
 } from "../../lib/cxHeadRetailV3CustomerFciData";
 import { hubChartAxis, hubChartTooltip } from "./HubChartPrimitives";
 import { DetailSection } from "./HubDetailPrimitives";
@@ -171,7 +171,7 @@ function formatTierInteractions(count: number): string {
   return count.toLocaleString();
 }
 
-function SegmentPill({ tier }: { tier: RelationshipValueTier }): React.ReactElement {
+function SegmentPill({ tier }: { tier: CustomerValueTier }): React.ReactElement {
   return (
     <span
       title={tier.label}
@@ -243,11 +243,11 @@ function SentimentSplitBar({
   );
 }
 
-/** Sentiment by relationship value — HV/LV × HF/LF segments + GMV at stake */
-export function SentimentRelationshipValueVisual(): React.ReactElement {
+/** Sentiment by customer value — HV/LV × HF/LF segments + GMV at stake */
+export function SentimentCustomerValueVisual(): React.ReactElement {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      {CUSTOMER_RELATIONSHIP_TIERS.map((tier) => (
+      {CUSTOMER_VALUE_TIERS.map((tier) => (
         <div key={tier.id}>
           <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 5 }}>
             <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>

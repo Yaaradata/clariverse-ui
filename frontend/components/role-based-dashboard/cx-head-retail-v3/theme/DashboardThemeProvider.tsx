@@ -6,7 +6,7 @@
 //   - light text #1A1530 on bg #F6F5FC  → ~14:1
 //   - secondary text and accents checked against their own surfaces.
 //
-// State is in React memory only. No localStorage / sessionStorage anywhere —
+// State is in React memory only. No browser persistence APIs anywhere —
 // the toggle resets to dark on reload, which is correct for a demo build.
 //
 // `themeKey` increments on every toggle. Live components (the monitor rail,

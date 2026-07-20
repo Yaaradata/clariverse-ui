@@ -101,6 +101,7 @@ export function BridgeDetailPanel({
       >
         Voice signal is tagged and visible — transaction feed keys and governance review still required. Select a{" "}
         <strong style={{ color: cssVar("positive") }}>Ready</strong> bridge (MB1, MB4, MB8, MB17) to preview the cohort join.
+        Ready joins roll into the CX→margin bridge and category P&L strip above (GMV convention varies — see strip tooltip).
       </div>
     </article>
   );

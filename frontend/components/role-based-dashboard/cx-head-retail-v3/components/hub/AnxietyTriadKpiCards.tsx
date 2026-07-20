@@ -13,6 +13,7 @@ import {
   InnerKpiCard,
   INNER_KPI_STRIP_MIN_HEIGHT,
 } from "./AnxietyPrimitives";
+import { ConfidenceChip } from "../common/ConfidenceBand";
 import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 
 const IPD_TARGET = 92;
@@ -171,30 +172,6 @@ function StateSignalBadge({ state }: { state: AnxietyStateKey }): React.ReactEle
         }}
       />
       {m.label}
-    </span>
-  );
-}
-
-function ConfidenceSignalBadge({ conf }: { conf: number }): React.ReactElement {
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        fontSize: 10,
-        fontWeight: 700,
-        fontFamily: cssVar("font-numeric"),
-        borderRadius: radius.pill,
-        padding: "1px 6px",
-        background: cssVar("accent-soft"),
-        color: cssVar("accent-2"),
-        border: `1px solid ${cssVar("accent")}44`,
-        whiteSpace: "nowrap",
-      }}
-    >
-      <Sparkles size={10} strokeWidth={2.4} />
-      {conf}%
     </span>
   );
 }
@@ -599,7 +576,7 @@ export function AnxietyTriadKpiCards({
         accent={stateColor}
         title="Customer anxiety load"
         state={d.state}
-        signal={<ConfidenceSignalBadge conf={d.conf} />}
+        signal={<ConfidenceChip conf={d.conf} small />}
         insightHeading="AI · Anxiety driver"
         insight={`${d.driverPct}% of high-anxiety customers trace to missed delivery promise\nand stuck-at-hub in East\nReach them before the ~${d.ttContact} min contact window closes`}
         body={kpiBodyRow(
@@ -607,7 +584,7 @@ export function AnxietyTriadKpiCards({
           <KpiMetricPanel
             rowCount={3}
             rows={[
-              { label: "High-risk customers", value: anxietyFmt(animatedHigh), color: cssVar("severity-high") },
+              { label: "High churn-signal customers", value: anxietyFmt(animatedHigh), color: cssVar("severity-high") },
               { label: "Scored customers", value: anxietyFmt(animatedScored) },
               { label: "p(contact)", value: animatedPContact.toFixed(2), color: stateColor },
             ]}
@@ -616,7 +593,7 @@ export function AnxietyTriadKpiCards({
             <InnerKpiCard
               label="Contained"
               accent={containedColor}
-              hint={`${m.containedRate}% of high-risk`}
+              hint={`${m.containedRate}% of churn-signal`}
             >
               <span
                 className="lisn-num"
@@ -633,7 +610,7 @@ export function AnxietyTriadKpiCards({
               <Delta v={animatedIndexDelta} unit=" pts" invert size={14} />
             </InnerKpiCard>
             <InnerKpiCard
-              label="High-risk share"
+              label="Churn-signal share"
               accent={highBandShareColor}
               hint={m.highBandShare > 25 ? "Above watch band" : "Within watch band"}
             >
@@ -653,8 +630,8 @@ export function AnxietyTriadKpiCards({
         accent={ipdColor}
         title="Promise reliability"
         state={ipdRounded >= IPD_TARGET - 1 ? "strong" : "shift"}
-        signal={<ConfidenceSignalBadge conf={d.splitConf} />}
-        insightHeading="AI · Promise risk"
+        signal={<ConfidenceChip conf={d.splitConf} small />}
+        insightHeading="Promise-breach signal"
         insight={`${anxietyFmt(m.breachSignals)} breach signals sit in breach quadrants\nvs ${anxietyFmt(m.anxietyOnly)} anxiety-only\n${worstCategory.k} is weakest at ${worstCategory.v.toFixed(1)}% IPD-met.`}
         body={kpiBodyRow(
           <MetricRing value={ipdRounded} color={ipdColor} label="IPD-met" unit="%" />,
@@ -707,9 +684,9 @@ export function AnxietyTriadKpiCards({
         accent={containAccent}
         title="Reach before contact"
         state={d.ttc < d.ttContact ? "strong" : "shift"}
-        signal={<ConfidenceSignalBadge conf={d.conf} />}
+        signal={<ConfidenceChip conf={d.conf} small />}
         insightHeading="AI · Outreach impact"
-        insight={`Customer outreach started ${m.headroomMin} min before likely contact\nProactive reach: ${m.notifyRate}% of the high-risk group\n${m.funnelRate}% of preventable contacts avoided`}
+        insight={`Customer outreach started ${m.headroomMin} min before likely contact\nProactive reach: ${m.notifyRate}% of the churn-signal group\n${m.funnelRate}% of preventable contacts avoided`}
         body={kpiBodyRow(
           <MetricRing value={m.coverageRate} color={containAccent} label="Reached proactively" unit="%" />,
           <KpiMetricPanel
@@ -724,7 +701,7 @@ export function AnxietyTriadKpiCards({
             <InnerKpiCard
               label="Cust. Notified"
               accent={notifyRateColor}
-              hint={`${m.notifyRate}% of high-risk`}
+              hint={`${m.notifyRate}% of churn-signal`}
             >
               <span
                 className="lisn-num"

@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Database,
   Sparkles,
   TrendingDown,
   TrendingUp,
@@ -21,6 +20,7 @@ import {
 import { useUniqueGradientId } from "../../lib/useUniqueGradientId";
 import { useAnimatedNumber, usePrefersReducedMotion } from "../../lib/useAnimatedNumber";
 import { SpikySparkline } from "../common/MiniSparkline";
+import { ConfidenceChip } from "../common/ConfidenceBand";
 import { cssVar, radius, space, type } from "../../theme/tokens";
 
 const nf = new Intl.NumberFormat("en-IN");
@@ -82,34 +82,6 @@ function trustGaugeColor(value: number): string {
 function trendColor(value: number, goodWhenDown: boolean): string {
   const isGood = goodWhenDown ? value <= 0 : value >= 0;
   return isGood ? cssVar("positive") : cssVar("severity-high");
-}
-
-function SignalBadge({ kind, value }: { kind: "measured" | "inferred"; value?: number }): React.ReactElement {
-  const inferred = kind === "inferred";
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        height: 20,
-        fontSize: 9,
-        fontWeight: 700,
-        letterSpacing: 0.4,
-        textTransform: "uppercase",
-        color: inferred ? cssVar("accent-2") : cssVar("text-muted"),
-        padding: "0 7px",
-        borderRadius: radius.pill,
-        border: `1px solid ${inferred ? `${cssVar("accent")}44` : cssVar("border")}`,
-        background: inferred ? cssVar("accent-soft") : cssVar("surface"),
-        flexShrink: 0,
-        whiteSpace: "nowrap",
-      }}
-    >
-      {inferred ? <Sparkles size={9} strokeWidth={2.4} /> : <Database size={9} strokeWidth={2.4} />}
-      {inferred ? `Confidence · ${value ?? 91}%` : "Measured"}
-    </span>
-  );
 }
 
 function KpiStatLabel({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }): React.ReactElement {
@@ -431,6 +403,9 @@ function BreakerHowToDeal({ text }: { text: string }): React.ReactElement {
         >
           AI · How to deal
         </div>
+        <div style={{ marginBottom: 4 }}>
+          <ConfidenceChip conf={90} small />
+        </div>
         <span style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45, fontWeight: 500 }}>{text}</span>
       </div>
     </div>
@@ -467,6 +442,9 @@ function TrustIndexAiInsight({ text }: { text: string }): React.ReactElement {
           }}
         >
           AI Insight
+        </div>
+        <div style={{ marginBottom: 3 }}>
+          <ConfidenceChip conf={91} small />
         </div>
         <span style={{ fontSize: 11.5, color: cssVar("text-secondary"), lineHeight: 1.4, fontWeight: 500 }}>{text}</span>
       </div>
@@ -1107,11 +1085,11 @@ function TrustIndexRiskCard({
     <KpiShell
       accent={accent}
       compact
-      title="Trust Index & Risk Level"
+      title="Trust Index & signal level"
       signal={
         <div style={{ display: "flex", alignItems: "center", gap: space["2"], flexWrap: "wrap", justifyContent: "flex-end" }}>
           <KpiTrend value={trustDelta} periodLabel={rangeLabel} suffix=" pts" goodWhenDown={false} />
-          <SignalBadge kind="inferred" value={modelConfidence} />
+          <ConfidenceChip conf={modelConfidence} small />
         </div>
       }
       body={
@@ -1221,7 +1199,7 @@ export function TrustPulseKpiCards({ range }: { range: TrustRangeKey }): React.R
         <KpiShell
           accent={cssVar("severity-high")}
           title="Top Trust Breaker"
-          signal={<SignalBadge kind="inferred" value={topBreaker.confidence} />}
+          signal={<ConfidenceChip conf={topBreaker.confidence} small />}
           bodyAlign="start"
           body={
             <div>

@@ -41,6 +41,7 @@ import {
   type ServiceDeliveryRangeKey,
 } from "../../lib/cxHeadRetailV3ServiceDeliveryData";
 import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
+import { ConfidenceChip } from "../common/ConfidenceBand";
 import { cssVar, radius } from "../../theme/tokens";
 import { DetailSection } from "./HubDetailPrimitives";
 import { EcommerceCrossChannelEscalationSection } from "./EcommerceCrossChannelEscalationSection";
@@ -194,9 +195,10 @@ function KpiFootnote({ label, value, color }: { label: string; value: string; co
 function KpiAiLine({ heading, text }: { heading: string; text: string }): React.ReactElement {
   return (
     <div style={{ marginTop: "auto", padding: "8px 10px", borderRadius: radius.sm, background: cssVar("accent-soft"), border: `1px solid ${cssVar("accent")}22` }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 4, flexWrap: "wrap" }}>
         <Sparkles size={11} color={cssVar("accent-2")} strokeWidth={2.4} />
         <span style={{ fontSize: 10, fontWeight: 800, textTransform: "uppercase", color: cssVar("accent-2") }}>{heading}</span>
+        <ConfidenceChip conf={87} small />
       </div>
       <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.4, color: cssVar("text-secondary") }}>{text}</p>
     </div>
@@ -215,11 +217,11 @@ function PromiseReliabilityHeroCard({ scale }: { scale: (n: number) => number })
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
         <KpiChip value={fmt(breached)} label="Breached" note="SLA missed" color={BAR_BREACHED} />
-        <KpiChip value={fmt(atRisk)} label="At risk" note="Next 24–48h" color={BAR_AT_RISK} />
+        <KpiChip value={fmt(atRisk)} label="Breach signal" note="Next 24–48h" color={BAR_AT_RISK} />
       </div>
 
       <KpiFootnote label="Top breach driver" value={d.topBreachDriver} color={cssVar("severity-high")} />
-      <KpiAiLine heading="AI · Promise risk" text={d.aiInsight} />
+      <KpiAiLine heading="Promise-breach signal" text={d.aiInsight} />
     </KpiCardShell>
   );
 }
@@ -315,7 +317,7 @@ function ServiceDeliveryHeroCard({ scale }: { scale: (n: number) => number }): R
       </div>
 
       <KpiFootnote label="Bottleneck" value={d.topBottleneck} color={ACCENT_DELIVERY} />
-      <KpiAiLine heading="AI · Execution risk" text={d.aiInsight} />
+      <KpiAiLine heading="AI · Execution signal" text={d.aiInsight} />
     </KpiCardShell>
   );
 }
@@ -410,7 +412,7 @@ function AnxietyCarveOut({ data, scale }: { data: typeof ANXIETY_CARVE_OUT; scal
     <Shell style={{ padding: PAD, flex: 1, background: `linear-gradient(160deg, ${cssVar("surface")}, #eab3080c)`, border: `1px solid #eab30833` }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
         <AlertTriangle size={14} color="#ca8a04" strokeWidth={2.4} />
-        <span style={{ fontSize: 12, fontWeight: 800, color: cssVar("text-primary") }}>Anxiety vs promise risk</span>
+        <span style={{ fontSize: 12, fontWeight: 800, color: cssVar("text-primary") }}>Anxiety vs promise-breach signal</span>
         <span style={{ marginLeft: "auto", fontSize: 9, fontWeight: 800, color: "#b45309", background: "#eab3081a", padding: "2px 7px", borderRadius: radius.pill }}>
           Spike
         </span>

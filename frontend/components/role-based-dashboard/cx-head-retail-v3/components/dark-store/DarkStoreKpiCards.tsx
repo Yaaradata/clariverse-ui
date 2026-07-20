@@ -1,58 +1,28 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React from "react";
 import {
-  DARK_STORE_KPI_CARDS,
-  type ConfidenceBand,
-  type DarkStoreKpiBar,
-  type DarkStoreKpiCardConfig,
-} from "../../lib/cxHeadRetailData";
-import { DarkStoreTrendChart } from "./DarkStoreTrendChart";
+  FULFILMENT_METRIC_TILES,
+  RTO_BENCHMARK,
+  type FulfilmentMetricTile,
+} from "../../lib/cxHeadRetailV3FulfilmentData";
+import { BenchmarkBandTrack } from "../common/BenchmarkBandTrack";
 import { cssVar, radius, space, type } from "../../theme/tokens";
 
-function accentColor(accent: DarkStoreKpiCardConfig["accent"]): string {
+function accentColor(accent: FulfilmentMetricTile["accent"]): string {
   if (accent === "high") return cssVar("severity-high");
   if (accent === "positive") return cssVar("positive");
   return cssVar("severity-med");
 }
 
-function barToneColor(tone: DarkStoreKpiBar["tone"]): string {
-  if (tone === "high") return cssVar("severity-high");
-  if (tone === "positive") return cssVar("positive");
-  return cssVar("severity-med");
-}
-
-function deltaColor(tone: DarkStoreKpiCardConfig["deltaTone"]): string {
+function deltaColor(tone: FulfilmentMetricTile["deltaTone"]): string {
   if (tone === "warn" || tone === "down") return cssVar("severity-high");
   if (tone === "up") return cssVar("positive");
   return cssVar("text-muted");
 }
 
-function MetricBar({ bar }: { bar: DarkStoreKpiBar }): React.ReactElement {
-  const color = barToneColor(bar.tone);
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: space["2"] }}>
-      <span style={{ fontSize: 10, color: cssVar("text-muted"), width: 52, flexShrink: 0 }}>{bar.label}</span>
-      <div style={{ flex: 1, height: 6, borderRadius: radius.pill, background: `${color}20` }}>
-        <div style={{ height: "100%", width: `${Math.round(bar.pct * 100)}%`, background: color, borderRadius: radius.pill }} />
-      </div>
-      <span className="lisn-num" style={{ fontSize: 11, fontWeight: type.weight.bold, color, width: 28, textAlign: "right" }}>
-        {bar.pct.toFixed(2)}
-      </span>
-    </div>
-  );
-}
-
-function CompactDarkStoreKpiCard({ card, caption }: { card: DarkStoreKpiCardConfig; caption: string }): React.ReactElement {
-  const accent = accentColor(card.accent);
-  const lastDayIndex = card.spark.length - 1;
-  const [dayIndex, setDayIndex] = useState(lastDayIndex);
-
-  const bars = useMemo(
-    () => card.barsByDay[dayIndex] ?? card.barsByDay[lastDayIndex] ?? [],
-    [card.barsByDay, dayIndex, lastDayIndex],
-  );
-
+function FulfilmentMetricCard({ tile }: { tile: FulfilmentMetricTile }): React.ReactElement {
+  const accent = accentColor(tile.accent);
   return (
     <article
       style={{
@@ -63,95 +33,76 @@ function CompactDarkStoreKpiCard({ card, caption }: { card: DarkStoreKpiCardConf
         padding: `${space["3"]} ${space["4"]}`,
         display: "flex",
         flexDirection: "column",
-        gap: space["3"],
+        gap: 8,
         minWidth: 0,
+        height: "100%",
+        boxSizing: "border-box",
       }}
     >
-      <div style={{ display: "flex", alignItems: "baseline", gap: space["2"], minWidth: 0 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "baseline" }}>
         <span
           style={{
             fontSize: type.scale.caption,
             fontWeight: type.weight.bold,
-            letterSpacing: 0.5,
+            letterSpacing: 0.4,
             textTransform: "uppercase",
             color: accent,
-            flexShrink: 0,
           }}
         >
-          {card.eyebrow}
+          {tile.label}
         </span>
-        <span
+        <span className="lisn-num" style={{ fontSize: 11, fontWeight: 700, color: deltaColor(tile.deltaTone) }}>
+          {tile.delta}
+        </span>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+        <span className="lisn-num" style={{ fontSize: 26, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1 }}>
+          {tile.value.toFixed(1)}
+        </span>
+        <span style={{ fontSize: 12, color: cssVar("text-muted") }}>{tile.unit}</span>
+      </div>
+
+      <p style={{ margin: 0, fontSize: 11, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{tile.definition}</p>
+
+      {tile.lever ? (
+        <div
           style={{
-            fontSize: type.scale.caption,
-            color: cssVar("text-secondary"),
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
+            marginTop: "auto",
+            fontSize: 11,
+            fontWeight: 700,
+            color: cssVar("accent-2"),
+            lineHeight: 1.35,
+            paddingTop: 4,
           }}
         >
-          {caption}
-        </span>
-      </div>
+          {tile.lever}
+        </div>
+      ) : null}
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)",
-          gap: space["3"],
-          alignItems: "stretch",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column", minWidth: 0, position: "relative" }}>
-          <span
-            className="lisn-num"
-            style={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              fontSize: type.scale.caption,
-              color: deltaColor(card.deltaTone),
-              fontWeight: type.weight.bold,
-            }}
-          >
-            {card.delta}
-          </span>
-          <div
-            className="lisn-num"
-            style={{
-              fontSize: 24,
-              fontWeight: 800,
-              color: cssVar("text-primary"),
-              lineHeight: 1,
-              paddingRight: 52,
-              marginBottom: space["1"],
-            }}
-          >
-            {card.primaryValue}
-          </div>
-          <div style={{ flex: 1, minHeight: 64, width: "100%" }}>
-            <DarkStoreTrendChart
-              data={card.spark}
-              color={accent}
-              labels={card.timeline}
-              height={64}
-              onDayIndexChange={setDayIndex}
-            />
+      {tile.id === "rto" ? (
+        <div style={{ marginTop: tile.lever ? 0 : "auto", paddingTop: 4 }}>
+          <BenchmarkBandTrack
+            label="RTO vs India band"
+            value={tile.value}
+            low={RTO_BENCHMARK.low}
+            high={RTO_BENCHMARK.high}
+            tag={RTO_BENCHMARK.tag}
+            goodWhenHigher={false}
+          />
+          <div style={{ fontSize: 10, color: cssVar("text-muted"), marginTop: 4, lineHeight: 1.35 }}>
+            {RTO_BENCHMARK.costPerRto} · {RTO_BENCHMARK.note}
           </div>
         </div>
-
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 6, minWidth: 0 }}>
-          {bars.map((bar) => (
-            <MetricBar key={bar.label} bar={bar} />
-          ))}
-        </div>
-      </div>
+      ) : null}
     </article>
   );
 }
 
-const CAPTIONS = ["critical", "focus", "stable"] as const;
-
-/** Compact dark-store KPI row — metric + trend left, bars right. */
+/**
+ * Fulfilment KPI strip — OTIF (customer) · Fill (stock) · NDR · RTO · RTS as distinct metrics.
+ * Props kept for call-site compatibility; captions are secondary context under the strip.
+ */
 export function DarkStoreKpiCards({
   critical,
   focus,
@@ -161,22 +112,64 @@ export function DarkStoreKpiCards({
   focus: string;
   stable: string;
   aiLine: string;
-  aiConfidence?: ConfidenceBand;
 }): React.ReactElement {
-  const captions = { critical, focus, stable };
-
   return (
-    <section
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-        gap: space["3"],
-        alignItems: "stretch",
-      }}
-    >
-      {DARK_STORE_KPI_CARDS.map((card, index) => (
-        <CompactDarkStoreKpiCard key={card.id} card={card} caption={captions[CAPTIONS[index]]} />
-      ))}
+    <section style={{ display: "flex", flexDirection: "column", gap: space["3"] }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
+        <span style={{ fontSize: 12, fontWeight: 800, color: cssVar("text-primary") }}>
+          Fulfilment performance tiles
+        </span>
+        <span style={{ fontSize: 11, color: cssVar("text-muted") }}>
+          OTIF ≠ Fill · RTO ≠ RTS · NDR has a ~24h containment lever
+        </span>
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+          gap: space["3"],
+          alignItems: "stretch",
+        }}
+      >
+        {FULFILMENT_METRIC_TILES.map((tile) => (
+          <FulfilmentMetricCard key={tile.id} tile={tile} />
+        ))}
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gap: space["2"],
+        }}
+      >
+        {(
+          [
+            { label: "Critical hotspot", value: critical },
+            { label: "Focus", value: focus },
+            { label: "Stable peers", value: stable },
+          ] as const
+        ).map((row) => (
+          <div
+            key={row.label}
+            style={{
+              padding: `${space["2"]} ${space["3"]}`,
+              borderRadius: radius.md,
+              background: cssVar("surface-raised"),
+              border: `1px solid ${cssVar("border")}`,
+              fontSize: 11,
+              color: cssVar("text-secondary"),
+              lineHeight: 1.35,
+            }}
+          >
+            <span style={{ fontWeight: 800, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.3 }}>
+              {row.label}
+            </span>
+            <div style={{ marginTop: 2, color: cssVar("text-primary"), fontWeight: 600 }}>{row.value}</div>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

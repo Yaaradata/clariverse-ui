@@ -1,87 +1,96 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { DARK_STORES, type DarkStoreNode, type DarkStoreTrend7d } from "../../lib/cxHeadRetailData";
+import React, { useMemo, useState } from "react";
+import {
+  FULFILMENT_HOTSPOT_ROWS,
+  FULFILMENT_METRIC_TILES,
+  FULFILMENT_SCORECARD_NOTE,
+  LAST_MILE_LINES,
+  RTO_BENCHMARK,
+  sortFulfilmentRows,
+  type FulfilmentHotspotRow,
+  type FulfilmentSortKey,
+  type LastMileLineId,
+} from "../../lib/cxHeadRetailV3FulfilmentData";
 import { cssVar, radius, space, type } from "../../theme/tokens";
 
-const STATUS_ORDER: Record<DarkStoreNode["status"], number> = {
-  outbreak: 0,
-  flat: 1,
-  nominal: 2,
-};
-
-const STATUS_LABEL: Record<DarkStoreNode["status"], string> = {
+const STATUS_LABEL: Record<FulfilmentHotspotRow["status"], string> = {
   outbreak: "Breaking",
   flat: "Flat",
   nominal: "Nominal",
 };
 
-function statusColor(status: DarkStoreNode["status"]): string {
+function statusColor(status: FulfilmentHotspotRow["status"]): string {
   if (status === "outbreak") return cssVar("severity-high");
   if (status === "flat") return cssVar("severity-med");
   return cssVar("positive");
 }
 
+const SORT_OPTIONS: { id: FulfilmentSortKey; label: string }[] = [
+  { id: "hotspot", label: "Hotspot" },
+  ...FULFILMENT_METRIC_TILES.map((t) => ({ id: t.id as FulfilmentSortKey, label: t.label })),
+];
+
 const COL_TEMPLATE =
-  "minmax(0, 1.35fr) minmax(68px, 0.65fr) minmax(80px, 0.75fr) minmax(88px, 0.85fr) minmax(68px, 0.6fr)";
+  "minmax(0, 1.4fr) minmax(56px, 0.55fr) minmax(56px, 0.55fr) minmax(56px, 0.55fr) minmax(56px, 0.55fr) minmax(56px, 0.55fr) minmax(72px, 0.7fr)";
 
-function trendColor(direction: DarkStoreTrend7d["direction"]): string {
-  if (direction === "up") return cssVar("severity-high");
-  if (direction === "down") return cssVar("positive");
-  return cssVar("text-muted");
-}
+function LineStrip({ lineId }: { lineId: LastMileLineId }): React.ReactElement | null {
+  const line = LAST_MILE_LINES.find((l) => l.id === lineId);
+  if (!line) return null;
 
-function Trend7dBars({ data, color }: { data: number[]; color: string }): React.ReactElement {
-  const max = Math.max(...data, 0.01);
   return (
     <div
       style={{
-        display: "flex",
-        alignItems: "flex-end",
-        justifyContent: "flex-end",
-        gap: 2,
-        height: 24,
-        width: 64,
+        display: "grid",
+        gridTemplateColumns: "minmax(0, 1.2fr) repeat(5, minmax(0, 0.7fr))",
+        gap: space["2"],
+        padding: `${space["3"]} ${space["4"]}`,
+        borderBottom: `1px solid ${cssVar("border")}`,
+        background: cssVar("surface-raised"),
+        alignItems: "center",
       }}
     >
-      {data.map((value, index) => {
-        const isLatest = index === data.length - 1;
-        const heightPct = Math.max(14, (value / max) * 100);
-        return (
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 13, fontWeight: 800, color: cssVar("text-primary") }}>
+          {line.title}
+          <span style={{ fontWeight: 600, color: cssVar("text-muted"), marginLeft: 6 }}>{line.subtitle}</span>
+        </div>
+        <div style={{ fontSize: 10, color: cssVar("text-muted"), marginTop: 2, lineHeight: 1.35 }}>
+          SLA · {line.slaOwner} · RTO · {line.rtoOwner}
+        </div>
+        <div style={{ fontSize: 11, color: cssVar("text-secondary"), marginTop: 4, lineHeight: 1.35 }}>
+          {line.hotspotNote}
+        </div>
+      </div>
+      {(
+        [
+          ["OTIF", line.otif],
+          ["Fill", line.fill],
+          ["NDR", line.ndr],
+          ["RTO", line.rto],
+          ["RTS", line.rts],
+        ] as const
+      ).map(([label, value]) => (
+        <div key={label} style={{ textAlign: "right", minWidth: 0 }}>
+          <div style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textTransform: "uppercase" }}>
+            {label}
+          </div>
           <div
-            key={index}
+            className="lisn-num"
             style={{
-              flex: 1,
-              height: `${heightPct}%`,
-              minHeight: 3,
-              borderRadius: 2,
-              background: color,
-              opacity: isLatest ? 1 : 0.35 + (index / data.length) * 0.45,
+              fontSize: 15,
+              fontWeight: 800,
+              color:
+                label === "RTO" && (value < RTO_BENCHMARK.low || value > RTO_BENCHMARK.high)
+                  ? cssVar("severity-high")
+                  : cssVar("text-primary"),
             }}
-          />
-        );
-      })}
+          >
+            {value.toFixed(1)}%
+          </div>
+        </div>
+      ))}
     </div>
-  );
-}
-
-function Trend7dCell({ trend }: { trend: DarkStoreTrend7d }): React.ReactElement {
-  const color = trendColor(trend.direction);
-  return (
-    <span
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-end",
-        gap: 3,
-        minWidth: 0,
-      }}
-    >
-      <Trend7dBars data={trend.spark} color={color} />
-      <span className="lisn-num" style={{ fontSize: type.scale.caption, fontWeight: type.weight.semibold, color }}>
-        {trend.delta}
-      </span>
-    </span>
   );
 }
 
@@ -91,23 +100,30 @@ function ScorecardHeader(): React.ReactElement {
       style={{
         display: "grid",
         gridTemplateColumns: COL_TEMPLATE,
-        gap: space["3"],
+        gap: space["2"],
         padding: `${space["2"]} ${space["4"]}`,
         fontSize: type.scale.caption,
         fontWeight: type.weight.semibold,
-        letterSpacing: 0.4,
+        letterSpacing: 0.35,
         textTransform: "uppercase",
         color: cssVar("text-muted"),
         borderBottom: `1px solid ${cssVar("border")}`,
       }}
     >
-      <span>Dark-store</span>
-      <span style={{ textAlign: "right" }}>Issue / 1k</span>
-      <span style={{ textAlign: "right" }}>vs baseline</span>
-      <span style={{ textAlign: "right" }}>Trend (7D)</span>
+      <span>Node · line</span>
+      <span style={{ textAlign: "right" }}>OTIF</span>
+      <span style={{ textAlign: "right" }}>Fill</span>
+      <span style={{ textAlign: "right" }}>NDR</span>
+      <span style={{ textAlign: "right" }}>RTO</span>
+      <span style={{ textAlign: "right" }}>RTS</span>
       <span style={{ textAlign: "right" }}>Status</span>
     </div>
   );
+}
+
+function storeIdFromRow(row: FulfilmentHotspotRow): string {
+  const match = row.id.match(/^(DS-[A-Z]+-D\d+)/);
+  return match ? match[1] : row.id;
 }
 
 export function DarkStoreScorecard({
@@ -117,15 +133,16 @@ export function DarkStoreScorecard({
   selectedId: string;
   onSelect: (storeId: string) => void;
 }): React.ReactElement {
-  const rows = useMemo(
-    () =>
-      [...DARK_STORES].sort((a, b) => {
-        const statusDiff = STATUS_ORDER[a.status] - STATUS_ORDER[b.status];
-        if (statusDiff !== 0) return statusDiff;
-        return b.peerMultiple - a.peerMultiple;
-      }),
-    [],
-  );
+  const [sortKey, setSortKey] = useState<FulfilmentSortKey>("hotspot");
+  const [lineFilter, setLineFilter] = useState<"all" | LastMileLineId>("all");
+
+  const rows = useMemo(() => {
+    const filtered =
+      lineFilter === "all"
+        ? FULFILMENT_HOTSPOT_ROWS
+        : FULFILMENT_HOTSPOT_ROWS.filter((r) => r.line === lineFilter);
+    return sortFulfilmentRows(filtered, sortKey);
+  }, [sortKey, lineFilter]);
 
   return (
     <section
@@ -142,43 +159,116 @@ export function DarkStoreScorecard({
       <div
         style={{
           display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: space["3"],
+          flexDirection: "column",
+          gap: space["2"],
           padding: `${space["4"]} ${space["4"]} ${space["3"]}`,
         }}
       >
-        <h2 style={{ margin: 0, fontSize: type.scale.h3, fontWeight: type.weight.bold, color: cssVar("text-primary") }}>
-          Catchment scorecard
-        </h2>
-        <span
-          style={{
-            fontSize: type.scale.caption,
-            fontWeight: type.weight.semibold,
-            padding: `${space["1"]} ${space["3"]}`,
-            borderRadius: radius.pill,
-            background: `${cssVar("accent")}18`,
-            color: cssVar("accent"),
-            whiteSpace: "nowrap",
-          }}
-        >
-          All cities
-        </span>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: space["3"] }}>
+          <div style={{ minWidth: 0 }}>
+            <h2 style={{ margin: 0, fontSize: type.scale.h3, fontWeight: type.weight.bold, color: cssVar("text-primary") }}>
+              Dynamic fulfilment scorecard
+            </h2>
+            <p style={{ margin: `${space["1"]} 0 0`, fontSize: 11, color: cssVar("text-muted"), lineHeight: 1.4 }}>
+              {FULFILMENT_SCORECARD_NOTE}
+            </p>
+          </div>
+          <span
+            style={{
+              flexShrink: 0,
+              fontSize: type.scale.caption,
+              fontWeight: type.weight.semibold,
+              padding: `${space["1"]} ${space["3"]}`,
+              borderRadius: radius.pill,
+              background: `${cssVar("accent")}18`,
+              color: cssVar("accent"),
+              whiteSpace: "nowrap",
+            }}
+          >
+            Hotspot-first
+          </span>
+        </div>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+          <span style={{ fontSize: 10, fontWeight: 800, color: cssVar("text-muted"), textTransform: "uppercase" }}>
+            Reorder by
+          </span>
+          {SORT_OPTIONS.map((opt) => {
+            const active = sortKey === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setSortKey(opt.id)}
+                style={{
+                  border: `1px solid ${active ? cssVar("accent") : cssVar("border")}`,
+                  background: active ? `${cssVar("accent")}18` : cssVar("surface-raised"),
+                  color: active ? cssVar("accent") : cssVar("text-secondary"),
+                  borderRadius: radius.pill,
+                  padding: "3px 10px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6, alignItems: "center" }}>
+          <span style={{ fontSize: 10, fontWeight: 800, color: cssVar("text-muted"), textTransform: "uppercase" }}>
+            Line
+          </span>
+          {(
+            [
+              { id: "all" as const, label: "Both lines" },
+              { id: "rider" as const, label: "Rider (own)" },
+              { id: "courier" as const, label: "Courier (3PL)" },
+            ] as const
+          ).map((opt) => {
+            const active = lineFilter === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => setLineFilter(opt.id)}
+                style={{
+                  border: `1px solid ${active ? cssVar("accent-2") : cssVar("border")}`,
+                  background: active ? `${cssVar("accent-2")}18` : cssVar("surface-raised"),
+                  color: active ? cssVar("accent-2") : cssVar("text-secondary"),
+                  borderRadius: radius.pill,
+                  padding: "3px 10px",
+                  fontSize: 11,
+                  fontWeight: 700,
+                  cursor: "pointer",
+                }}
+              >
+                {opt.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
+
+      {(lineFilter === "all" || lineFilter === "rider") && <LineStrip lineId="rider" />}
+      {(lineFilter === "all" || lineFilter === "courier") && <LineStrip lineId="courier" />}
 
       <div style={{ flex: 1, overflow: "auto" }}>
         <ScorecardHeader />
-        {rows.map((store) => {
-          const selected = store.id === selectedId;
+        {rows.map((row) => {
+          const storeId = storeIdFromRow(row);
+          const selected = storeId === selectedId;
           return (
             <button
-              key={store.id}
+              key={row.id}
               type="button"
-              onClick={() => onSelect(store.id)}
+              onClick={() => onSelect(storeId)}
               style={{
                 display: "grid",
                 gridTemplateColumns: COL_TEMPLATE,
-                gap: space["3"],
+                gap: space["2"],
                 width: "100%",
                 padding: `${space["3"]} ${space["4"]}`,
                 border: "none",
@@ -191,20 +281,46 @@ export function DarkStoreScorecard({
               }}
             >
               <span style={{ minWidth: 0 }}>
-                <span style={{ display: "block", fontSize: type.scale.body, fontWeight: type.weight.semibold, color: cssVar("text-primary") }}>
-                  {store.label}
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: type.scale.body,
+                    fontWeight: type.weight.semibold,
+                    color: cssVar("text-primary"),
+                  }}
+                >
+                  {row.label}
                 </span>
                 <span style={{ display: "block", fontSize: type.scale.caption, color: cssVar("text-muted"), marginTop: 2 }}>
-                  {store.city}
+                  {row.city} · {row.line === "rider" ? "Rider" : "Courier"}
                 </span>
               </span>
-              <span className="lisn-num" style={{ textAlign: "right", fontSize: type.scale.body, fontWeight: type.weight.bold, color: statusColor(store.status) }}>
-                {store.issueRate.toFixed(1)}
+              <span className="lisn-num" style={{ textAlign: "right", fontSize: 13, fontWeight: 700, color: cssVar("text-primary") }}>
+                {row.otif.toFixed(1)}
               </span>
-              <span className="lisn-num" style={{ textAlign: "right", fontSize: type.scale.body, fontWeight: type.weight.semibold, color: cssVar("text-secondary") }}>
-                {store.peerMultiple}×
+              <span className="lisn-num" style={{ textAlign: "right", fontSize: 13, fontWeight: 700, color: cssVar("text-primary") }}>
+                {row.fill.toFixed(1)}
               </span>
-              <Trend7dCell trend={store.trend7d} />
+              <span className="lisn-num" style={{ textAlign: "right", fontSize: 13, fontWeight: 700, color: cssVar("text-secondary") }}>
+                {row.ndr.toFixed(1)}
+              </span>
+              <span
+                className="lisn-num"
+                style={{
+                  textAlign: "right",
+                  fontSize: 13,
+                  fontWeight: 800,
+                  color:
+                    row.rto < RTO_BENCHMARK.low || row.rto > RTO_BENCHMARK.high
+                      ? cssVar("severity-high")
+                      : cssVar("text-primary"),
+                }}
+              >
+                {row.rto.toFixed(1)}
+              </span>
+              <span className="lisn-num" style={{ textAlign: "right", fontSize: 13, fontWeight: 700, color: cssVar("text-secondary") }}>
+                {row.rts.toFixed(1)}
+              </span>
               <span
                 style={{
                   justifySelf: "end",
@@ -212,13 +328,13 @@ export function DarkStoreScorecard({
                   fontWeight: type.weight.bold,
                   padding: `${space["1"]} ${space["2"]}`,
                   borderRadius: radius.pill,
-                  background: `${statusColor(store.status)}18`,
-                  color: statusColor(store.status),
+                  background: `${statusColor(row.status)}18`,
+                  color: statusColor(row.status),
                   textTransform: "uppercase",
                   letterSpacing: 0.3,
                 }}
               >
-                {STATUS_LABEL[store.status]}
+                {STATUS_LABEL[row.status]}
               </span>
             </button>
           );
