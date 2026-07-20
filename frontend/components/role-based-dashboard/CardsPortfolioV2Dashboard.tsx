@@ -800,7 +800,6 @@ type MonitorAlert = {
   variant: "critical" | "default" | "voice";
   feed: string;
   needsExtraFeed?: boolean;
-  causeNeedsAcs?: boolean;
   fields: [string, string][];
   stats: [string, string][];
   ai: string;
@@ -833,17 +832,16 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     sevLabel: "Critical",
     variant: "critical",
     feed: "Token + auth feed",
-    causeNeedsAcs: true,
     fields: [
       ["Cohort", "Premium · CNP"],
       ["Time", "Since 11:00"],
     ],
     stats: [
       ["Approval Gap", "14 pts"],
-      ["Spend at Risk", "₹2.4 Cr / day (at-risk run-rate)"],
+      ["Spend at Risk", "₹2.4 Cr / day"],
       ["Route", "Payments & Authorisation"],
     ],
-    ai: "Tokenised path degraded after route change. Open ACS/token incident, not a customer-behaviour issue. Symptom isolated to the tokenised path.",
+    ai: "Tokenised path degraded after route change — open ACS/token incident, not a behaviour issue.",
   },
   {
     id: "o142",
@@ -861,7 +859,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["True Lift", "Low"],
       ["Leakage", "₹78 L MTD"],
     ],
-    ai: "Matched-control baseline says spend would have happened anyway. Recommend pause or retarget.",
+    ai: "Matched-control baseline: spend would have happened anyway. Pause or retarget.",
   },
   {
     id: "r77",
@@ -880,7 +878,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["Good Blocks", "+210%"],
       ["Feed", "Needs rule log"],
     ],
-    ai: "Approval step-change tied to a rule edit. Data confidence depends on the fraud-rule event feed.",
+    ai: "Approval step-change tied to a rule edit — confidence needs the fraud-rule event feed.",
   },
   {
     id: "activation",
@@ -898,7 +896,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["Cards at risk", "6.2k"],
       ["Route", "PM + Conduct"],
     ],
-    ai: "Treat as obligation, not opportunity. Surface the closure countdown and activation intervention.",
+    ai: "Treat as obligation, not opportunity — surface the closure countdown now.",
   },
   {
     id: "util",
@@ -916,7 +914,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["Projected roll", "9 bps"],
       ["Route", "Risk"],
     ],
-    ai: "Advisory only. No automatic customer treatment; route to EWS / model-risk review.",
+    ai: "Advisory only — route to EWS / model-risk review. No auto treatment.",
   },
   {
     id: "settlement",
@@ -932,10 +930,10 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     stats: [
       ["Concentration", "↑ 2.1×"],
       ["Merchants", "47"],
-      ["Spend at Risk", "₹52 L / day (at-risk run-rate)"],
+      ["Spend at Risk", "₹52 L / day"],
       ["Route", "Finance / Ops"],
     ],
-    ai: "Merchant concentration spike on fuel MCC — review interchange recovery and settlement lag before it becomes a decline driver.",
+    ai: "Fuel MCC concentration spike — review settlement lag before it drives declines.",
   },
 ];
 
@@ -1002,15 +1000,16 @@ function TodayTransactionSignalMonitor() {
             <div
               key={a.id}
               style={{
-                minWidth: 260,
-                maxWidth: 260,
-                alignSelf: "stretch",
+                flex: "0 0 260px",
+                width: 260,
+                height: 420,
                 background: bg,
                 border: `1px solid ${border}`,
                 borderRadius: 14,
-                padding: "16px 16px 14px",
+                padding: "14px 14px 12px",
                 display: "flex",
                 flexDirection: "column",
+                boxSizing: "border-box",
               }}
             >
               <div
@@ -1019,16 +1018,21 @@ function TodayTransactionSignalMonitor() {
                   justifyContent: "space-between",
                   alignItems: "flex-start",
                   gap: 8,
-                  marginBottom: 12,
-                  minHeight: 52,
+                  marginBottom: 10,
+                  height: 44,
+                  flexShrink: 0,
                 }}
               >
                 <div
                   style={{
-                    fontSize: 17,
-                    lineHeight: 1.1,
+                    fontSize: 15,
+                    lineHeight: 1.2,
                     fontWeight: 900,
                     color: T.text,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
                   }}
                 >
                   {a.title}
@@ -1044,6 +1048,7 @@ function TodayTransactionSignalMonitor() {
                     color: sv.color,
                     background: sv.bg,
                     border: `1px solid ${sv.border}`,
+                    flexShrink: 0,
                   }}
                 >
                   {a.sevLabel}
@@ -1054,9 +1059,11 @@ function TodayTransactionSignalMonitor() {
                   display: "flex",
                   flexWrap: "wrap",
                   gap: 6,
-                  marginBottom: 10,
+                  marginBottom: 8,
                   alignItems: "center",
-                  minHeight: 44,
+                  height: 28,
+                  flexShrink: 0,
+                  overflow: "hidden",
                 }}
               >
                 <span
@@ -1092,47 +1099,51 @@ function TodayTransactionSignalMonitor() {
                   </span>
                 ) : null}
               </div>
-              {a.fields.map(([k, v]) => (
-                <div
-                  key={k}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "105px 1fr",
-                    gap: 8,
-                    marginBottom: 8,
-                    fontSize: 12,
-                  }}
-                >
-                  <span
+              <div style={{ height: 52, flexShrink: 0, marginBottom: 4 }}>
+                {a.fields.map(([k, v]) => (
+                  <div
+                    key={k}
                     style={{
-                      color: "#8c8c95",
-                      textTransform: "uppercase",
-                      letterSpacing: ".06em",
-                      fontWeight: 900,
+                      display: "grid",
+                      gridTemplateColumns: "105px 1fr",
+                      gap: 8,
+                      marginBottom: 6,
+                      fontSize: 12,
                     }}
                   >
-                    {k}
-                  </span>
-                  <span
-                    style={{
-                      textAlign: "right",
-                      fontWeight: 800,
-                      color: "#fff",
-                    }}
-                    title={rupeeMethodForLabel(v)}
-                  >
-                    {v}
-                  </span>
-                </div>
-              ))}
+                    <span
+                      style={{
+                        color: "#8c8c95",
+                        textTransform: "uppercase",
+                        letterSpacing: ".06em",
+                        fontWeight: 900,
+                      }}
+                    >
+                      {k}
+                    </span>
+                    <span
+                      style={{
+                        textAlign: "right",
+                        fontWeight: 800,
+                        color: "#fff",
+                      }}
+                      title={rupeeMethodForLabel(v)}
+                    >
+                      {v}
+                    </span>
+                  </div>
+                ))}
+              </div>
               <div
                 style={{
                   background: "#191919",
                   border: "1px solid #333",
                   borderRadius: 10,
                   padding: 12,
-                  marginTop: 8,
+                  marginTop: 4,
                   boxSizing: "border-box",
+                  height: 118,
+                  flexShrink: 0,
                 }}
               >
                 {monitorStatRows(a.stats).map(([k, v], i, rows) => (
@@ -1142,8 +1153,8 @@ function TodayTransactionSignalMonitor() {
                       display: "grid",
                       gridTemplateColumns: "1.15fr 1fr",
                       gap: 8,
-                      marginBottom: i === rows.length - 1 ? 0 : 10,
-                      fontSize: 13,
+                      marginBottom: i === rows.length - 1 ? 0 : 8,
+                      fontSize: 12,
                       color: "#bfbfc6",
                       minHeight: 18,
                       visibility: k ? "visible" : "hidden",
@@ -1165,66 +1176,31 @@ function TodayTransactionSignalMonitor() {
               </div>
               <div
                 style={{
-                  marginTop: 10,
+                  marginTop: "auto",
                   background: a.aiPurple ? "#21163a" : "#2d2414",
                   border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`,
                   borderRadius: 9,
-                  padding: 12,
-                  fontSize: 13,
-                  lineHeight: 1.45,
+                  padding: "10px 12px",
+                  fontSize: 12,
+                  lineHeight: 1.4,
                   color: "#fff",
                   fontWeight: 700,
-                  minHeight: 120,
+                  height: 88,
                   boxSizing: "border-box",
-                  display: "flex",
-                  flexDirection: "column",
+                  overflow: "hidden",
+                  flexShrink: 0,
                 }}
               >
-                <div
+                <span
                   style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 6,
-                    alignItems: "flex-start",
-                    marginBottom: 8,
+                    display: "-webkit-box",
+                    WebkitLineClamp: 4,
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
                   }}
                 >
-                  <span>✨ {a.ai}</span>
-                  {a.causeNeedsAcs ? (
-                    <span
-                      style={{
-                        fontSize: 9,
-                        fontWeight: 800,
-                        letterSpacing: ".04em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 999,
-                        color: T.amber,
-                        background: `${T.amber}14`,
-                        border: `1px solid ${T.amber}40`,
-                        flexShrink: 0,
-                      }}
-                    >
-                      cause needs ACS / token-vault
-                    </span>
-                  ) : (
-                    <span
-                      style={{
-                        fontSize: 9,
-                        fontWeight: 800,
-                        letterSpacing: ".04em",
-                        textTransform: "uppercase",
-                        padding: "3px 8px",
-                        borderRadius: 999,
-                        visibility: "hidden",
-                        flexShrink: 0,
-                      }}
-                      aria-hidden
-                    >
-                      cause needs ACS / token-vault
-                    </span>
-                  )}
-                </div>
+                  ✨ {a.ai}
+                </span>
               </div>
             </div>
           );
@@ -1244,12 +1220,222 @@ const BLOCKER_BARS = [
 
 type NavigateFn = (screen: string) => void;
 
-function Overview({ go }: { go: NavigateFn }) {
+/* ═══════════════════ CUSTOMER VOICE × TRANSACTION JOIN (IndusInd — hidden LiSN feature) ═══════════════════ */
+/* Left side = real public voice pulled from app stores, TechnoFino, Trustpilot, complaint boards.
+   Right side = illustrative book metric until wired to the issuer tenant. Gated by showVoiceJoin. */
+const VOICE_BARS: { name: string; v: number; c: string }[] = [
+  { name: "Reward devalue", v: 82, c: T.red },
+  { name: "App access", v: 74, c: T.red },
+  { name: "Mis-selling", v: 55, c: T.amber },
+  { name: "Payment pend", v: 47, c: T.amber },
+  { name: "EMI gap", v: 34, c: T.amber },
+];
+
+const VOICE_JOINS: {
+  id: string;
+  title: string;
+  channel: string;
+  date: string;
+  voice: string;
+  join: string;
+  book: string;
+  impact: string;
+  owner: string;
+  ownerTone: string;
+  action: string;
+}[] = [
+  {
+    id: "rewards",
+    title: "Reward devaluation → top-of-wallet loss",
+    channel: "App reviews · TechnoFino · card press",
+    date: "Feb–Jul 2025",
+    voice:
+      "Legend earn cut to ~0.5% and redemption fee raised to ₹149 + GST; EazyDiner Signature gutted from 15 Dec (dining points removed, discount capped ₹2,000, renewal ₹2,999, BookMyShow + lounge dropped); InterMiles removed. Sentiment: cards going to the drawer, spend migrating.",
+    join: "Devaluation-complaint cohort by card (Legend, EazyDiner, Tiger, Pinnacle) ↔ post-change spend decay on those BINs.",
+    book: "−₹1.4 Cr MTD on devalued BINs",
+    impact: "Top-of-wallet loss / attrition",
+    owner: "Rewards & Portfolio",
+    ownerTone: "violet",
+    action: "targeted retention proposition for the high-value, devaluation-sensitive cohort",
+  },
+  {
+    id: "app",
+    title: "INDIE app access failure → cannot view or pay",
+    channel: "Google Play · TechnoFino",
+    date: "Jun–Aug 2025",
+    voice:
+      "INDIE migration throwing login / OTP / mobile-verification failures; credit-card-only users cannot view card transactions; CVV / card-not-visible from a UCIC mismatch forces a branch visit; rooted-device false-positive lockouts.",
+    join: "App-access complaint spikes ↔ drop in self-service bill payments, first-CNP failures on new cards, and inbound call volume.",
+    book: "−9% self-service payments · roll risk",
+    impact: "Roll-rate / attrition + activation drag + call load",
+    owner: "Payments & Authorisation",
+    ownerTone: "amber",
+    action: "proactive comms + alternate-payment path; flag UCIC-mismatch cards for fix",
+  },
+  {
+    id: "misselling",
+    title: "Unauthorised upgrade / mis-selling → conduct exposure",
+    channel: "Trustpilot · complaints",
+    date: "Mar–Sep 2025",
+    voice:
+      "An unauthorised upgrade charge of ₹10,000 + ₹1,800 GST after an \u201Cupgrade necessary\u201D call; a Celesta\u2192Avios request re-issued as Pinnacle without consent. IndusInd carries a named \u201CMis-selling & Harassment calls\u201D grievance category.",
+    join: "Mis-selling complaints ↔ fee-reversal and upgrade events on the same accounts, traced to the sales channel — examiner-ready.",
+    book: "conduct exposure · fee-reversal cost",
+    impact: "Ombudsman / conduct exposure",
+    owner: "Conduct & Compliance",
+    ownerTone: "red",
+    action: "examiner-ready conduct pack + remediation",
+  },
+  {
+    id: "emi",
+    title: "EMI-conversion gap → interest income leaking",
+    channel: "Trustpilot · complaints",
+    date: "Sep 2025",
+    voice:
+      "The EMI-conversion option was unavailable in-app for a ₹33,000 transaction; an earlier email went unanswered.",
+    join: "\u201CEMI unavailable\u201D complaints ↔ eligible high-ticket transactions never converted.",
+    book: "NII leakage on eligible spend",
+    impact: "Interest income leakage + friction",
+    owner: "Cards Product / Digital",
+    ownerTone: "amber",
+    action: "EMI-eligibility nudge on eligible high-ticket spend",
+  },
+  {
+    id: "upi",
+    title: "UPI / payment \u201Cpending\u201D → payment friction",
+    channel: "Google Play · TechnoFino",
+    date: "2025",
+    voice:
+      "UPI payments stuck pending for 72h with money not credited; a ₹10,000 Razorpay transfer confirmed at source but missing at IndusInd.",
+    join: "Payment-pending complaints ↔ settlement / reconciliation lag and failed retries.",
+    book: "disputes + false-decline friction",
+    impact: "Payment friction → attrition + disputes",
+    owner: "Payments & Authorisation",
+    ownerTone: "amber",
+    action: "reconciliation flag + resolution comms",
+  },
+  {
+    id: "ombudsman",
+    title: "Resolution lag → ombudsman before they file",
+    channel: "Trustpilot · complaints",
+    date: "2025–2026",
+    voice:
+      "Recurring 7–10 day response cycles, copy-paste replies and long holds; guidance circulating to escalate to the RBI Ombudsman after a month.",
+    join: "Unresolved-complaint age ↔ accounts nearing the 30-day ombudsman threshold.",
+    book: "predicted ombudsman escalations",
+    impact: "Ombudsman cases + attrition",
+    owner: "Conduct & Compliance / CX",
+    ownerTone: "red",
+    action: "prioritise ageing complaints nearing the window",
+  },
+];
+
+function VoiceJoinDrill({ go }: { go: NavigateFn }) {
+  return (
+    <div className="fade">
+      <DrillHeader
+        onBack={() => go("overview")}
+        title="Customer voice × transaction join"
+        sub="What IndusInd cardholders are saying in public, joined to the book metric it moves. The left of each card is real and pulled from public channels; the right is illustrative until wired to your tenant."
+        chips={
+          <>
+            <Chip t="violet">Live voice — public channels</Chip>
+            <Chip t="amber">Illustrative book — wire to tenant</Chip>
+          </>
+        }
+      />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
+          gap: 12,
+          alignItems: "start",
+        }}
+      >
+        {VOICE_JOINS.map((j) => (
+          <SectionCard
+            key={j.id}
+            accent={T.violet}
+            aiPill
+            title={j.title}
+            subtitle={`${j.channel} · ${j.date}`}
+          >
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 10,
+                marginBottom: 10,
+              }}
+            >
+              <div>
+                <Eyebrow>Customer voice — live</Eyebrow>
+                <div
+                  style={{
+                    fontSize: 11.5,
+                    color: T.sub,
+                    lineHeight: 1.5,
+                    marginTop: 2,
+                  }}
+                >
+                  {j.voice}
+                </div>
+                <span style={{ marginTop: 6, display: "inline-block" }}>
+                  <Chip t="violet">Live signal</Chip>
+                </span>
+              </div>
+              <div>
+                <Eyebrow>Joined book metric</Eyebrow>
+                <div style={{ marginTop: 2 }}>
+                  <Mono c={T.red} s={14}>
+                    {j.book}
+                  </Mono>
+                </div>
+                <span style={{ marginTop: 6, display: "inline-block" }}>
+                  <Chip t="amber">Illustrative — wire to book</Chip>
+                </span>
+              </div>
+            </div>
+            <div
+              style={{
+                fontSize: 10.5,
+                color: T.muted,
+                lineHeight: 1.45,
+                marginBottom: 8,
+              }}
+            >
+              <span style={{ color: T.violet, fontWeight: 700 }}>Join · </span>
+              {j.join}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                flexWrap: "wrap",
+                marginBottom: 8,
+              }}
+            >
+              <Eyebrow>Impact</Eyebrow>
+              <span style={{ fontSize: 11, color: T.sub }}>{j.impact}</span>
+              <Pill t={j.ownerTone}>{j.owner}</Pill>
+              <ConsentChip />
+            </div>
+            <AIInsightStrip tone="violet">Draft — {j.action}</AIInsightStrip>
+          </SectionCard>
+        ))}
+      </div>
+      <div style={{ height: 44 }} />
+    </div>
+  );
+}
+
+function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boolean }) {
   return (
     <div className="fade">
       <TopBar />
       <ExecutivePulse />
-      <div className="overview-cards">
+      <div className={showVoiceJoin ? "overview-cards overview-cards--3" : "overview-cards"}>
         <ExecutiveQuestionCard
           accent="cyan"
           iTone="cyan"
@@ -1293,6 +1479,28 @@ function Overview({ go }: { go: NavigateFn }) {
           cta="Open blocker command center →"
           onClick={() => go("d2")}
         />
+        {showVoiceJoin && (
+          <ExecutiveQuestionCard
+            accent="violet"
+            iTone="violet"
+            icon={<Sparkles size={18} />}
+            title="What are my customers saying?"
+            subtitle="Voice × transaction join · reviews · app store · Trustpilot · X · complaints"
+            score="58"
+            delta="−15 pts"
+            trend={TREND.r}
+            trendColor={T.violet}
+            visualType="bars"
+            bars={VOICE_BARS}
+            miniMetrics={[
+              ["Live voice channels", "6 sources", "violet"],
+              ["Est. book at risk", "₹1.4 Cr MTD*", "red"],
+            ]}
+            aiText="Real public voice on IndusInd cards is dominated by reward devaluation (Legend, EazyDiner from 15 Dec) and INDIE app-access failures, across app stores, TechnoFino and Trustpilot. Joined to the book these point at top-of-wallet loss and self-service payment drop; mis-selling complaints add conduct exposure. Book figures illustrative until wired to your tenant."
+            cta="Open customer-voice joins →"
+            onClick={() => go("voice")}
+          />
+        )}
       </div>
 
       <TodayTransactionSignalMonitor />
@@ -3897,7 +4105,13 @@ function Drill2({ go }: { go: NavigateFn }) {
   );
 }
 /* ═══════════════════ ROOT ═══════════════════ */
-export function CardsPortfolioV2Dashboard({ onExit }: { onExit?: () => void }) {
+export function CardsPortfolioV2Dashboard({
+  onExit,
+  showVoiceJoin,
+}: {
+  onExit?: () => void;
+  showVoiceJoin?: boolean;
+}) {
   const [screen, setScreen] = useState("overview");
   const go: NavigateFn = (s) => {
     setScreen(s);
@@ -3926,7 +4140,9 @@ export function CardsPortfolioV2Dashboard({ onExit }: { onExit?: () => void }) {
         .lcp input::placeholder{color:${T.dim}}
         @media (prefers-reduced-motion: reduce){.lcp .fade,.lcp .bigcard{animation:none;transition:none}}
         .lcp .overview-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-        @media (max-width:720px){.lcp .overview-cards{grid-template-columns:1fr}}
+        .lcp .overview-cards--3{grid-template-columns:repeat(3,minmax(0,1fr))}
+        @media (max-width:1100px){.lcp .overview-cards--3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media (max-width:720px){.lcp .overview-cards,.lcp .overview-cards--3{grid-template-columns:1fr}}
         .lcp .d2-top-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
         .lcp .d2-investigation-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);gap:12px;margin-bottom:12px;align-items:start}
         .lcp .d2-owner-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
@@ -4012,9 +4228,12 @@ export function CardsPortfolioV2Dashboard({ onExit }: { onExit?: () => void }) {
       <main
         style={{ padding: "16px 22px 36px", overflow: "auto", minWidth: 0 }}
       >
-        {screen === "overview" && <Overview go={go} />}
+        {screen === "overview" && (
+          <Overview go={go} showVoiceJoin={showVoiceJoin} />
+        )}
         {screen === "d1" && <Drill1 go={go} />}
         {screen === "d2" && <Drill2 go={go} />}
+        {screen === "voice" && showVoiceJoin && <VoiceJoinDrill go={go} />}
       </main>
       <RoleBasedUnifiedChrome
         starterQuestions={CARDS_PORTFOLIO_V2_AI_ANALYST_QUESTIONS}

@@ -4155,7 +4155,7 @@ export function RoleDashboardView({
   );
 
   if (industry.id === INDUSIND_BANK_INDUSTRY_ID && role.id === "head_cards") {
-    return <CardsPortfolioV2Dashboard onExit={onExit} />;
+    return <CardsPortfolioV2Dashboard onExit={onExit} showVoiceJoin />;
   }
 
   if (industry.id === "credit_cards" && role.id === "head_cards") {
