@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import {
   Sparkles,
   AlertTriangle,
-  ArrowRight,
   ArrowUpRight,
   ArrowDownRight,
   Users,
@@ -18,7 +17,6 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import {
-  TRUST_ACTIONS,
   TRUST_DRIVERS,
   TRUST_DRIVER_CUTS,
   TRUST_EVIDENCE,
@@ -41,9 +39,7 @@ import {
 } from "../../lib/cxHeadRetailV3TrustBreakdownData";
 import { WHATS_FAILING_CHANNEL_COLORS, WHATS_FAILING_SEGMENT_COLORS } from "../../lib/cxHeadRetailV3CustomerFciData";
 import { TrustStageLifecyclePie } from "./TrustStageLifecyclePie";
-import { TrustLifecycleMatrix } from "./TrustLifecycleMatrix";
 import { ConfidenceChip } from "../common/ConfidenceBand";
-import { DraftActionFooter } from "../common/DraftActionFooter";
 import { cssVar, radius } from "../../theme/tokens";
 
 const nf = new Intl.NumberFormat("en-IN");
@@ -1653,7 +1649,6 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
 
   const [selectedCliff, setSelectedCliff] = useState<TrustDriverId | null>(cliffDrivers[0]?.id ?? null);
   const [selectedSlope, setSelectedSlope] = useState<TrustDriverId | null>(slopeDrivers[0]?.id ?? null);
-  const [draftingIssue, setDraftingIssue] = useState<string | null>(null);
 
   const cliffDriver = selectedCliff ? TRUST_DRIVERS.find((d) => d.id === selectedCliff) ?? null : null;
   const slopeDriver = selectedSlope ? TRUST_DRIVERS.find((d) => d.id === selectedSlope) ?? null : null;
@@ -1681,20 +1676,6 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
 
   return (
     <div key={range} style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-      {/* 00 — Lifecycle × complaint matrix + top breakages + actions (above the fold) */}
-      <section>
-        <SectionHead
-          n="00"
-          titleBesideBadge
-          title={
-            <>
-              Where trust breaks across the <span style={{ color: cssVar("accent") }}>lifecycle</span>
-            </>
-          }
-        />
-        <TrustLifecycleMatrix />
-      </section>
-
       {/* 01 — Stage where trust breaks */}
       <section>
         <SectionHead
@@ -1825,121 +1806,6 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
             <ChannelEvidenceCutTile rows={evidenceChannelRows} />
           </div>
         </div>
-      </section>
-
-      {/* 04 — Actions */}
-      <section>
-        <SectionHead
-          n="04"
-          titleBesideBadge
-          title={
-            <>
-              Recommended <span style={{ color: cssVar("accent") }}>actions</span>
-            </>
-          }
-        />
-        <PanelCard style={{ padding: 0, overflow: "hidden" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.7fr) auto",
-              gap: 14,
-              alignItems: "center",
-              padding: "12px 18px",
-              background: cssVar("surface-raised"),
-              borderBottom: `1px solid ${cssVar("border")}`,
-            }}
-          >
-            {["Trust issue", "Root-cause signal", "Owner team", "Suggested action", ""].map((label) => (
-              <span
-                key={label || "action"}
-                style={{
-                  fontSize: 10.5,
-                  fontWeight: 700,
-                  letterSpacing: "0.06em",
-                  textTransform: "uppercase",
-                  color: cssVar("text-muted"),
-                }}
-              >
-                {label}
-              </span>
-            ))}
-          </div>
-          {TRUST_ACTIONS.map((a, i) => {
-            const btnColor =
-              a.kind === "Escalate"
-                ? cssVar("severity-high")
-                : a.kind === "Act now"
-                  ? cssVar("positive")
-                  : cssVar("accent");
-            const draftKind = a.kind === "Act now" ? "prepare" : "route";
-            const isDrafting = draftingIssue === a.issue;
-            return (
-              <div key={a.issue}>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.7fr) auto",
-                    gap: 14,
-                    padding: "13px 18px",
-                    borderBottom: !isDrafting && i < TRUST_ACTIONS.length - 1 ? `1px solid ${cssVar("border")}` : undefined,
-                    alignItems: "center",
-                  }}
-                >
-                  <span style={{ fontWeight: 600, color: cssVar("text-primary"), fontSize: 12.5, lineHeight: 1.4 }}>
-                    {a.issue.replace(/WoW/g, R.delta)}
-                  </span>
-                  <span style={{ color: cssVar("text-secondary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.cause}</span>
-                  <span>
-                    <span
-                      style={{
-                        display: "inline-flex",
-                        fontSize: 11,
-                        fontWeight: 700,
-                        color: cssVar("accent"),
-                        background: cssVar("accent-soft"),
-                        borderRadius: 6,
-                        padding: "3px 8px",
-                        lineHeight: 1.3,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {a.team}
-                    </span>
-                  </span>
-                  <span style={{ color: cssVar("text-secondary"), fontSize: 12.5, lineHeight: 1.4 }}>{a.action}</span>
-                  <button
-                    type="button"
-                    onClick={() => setDraftingIssue(isDrafting ? null : a.issue)}
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      gap: 5,
-                      border: `1px solid ${btnColor}55`,
-                      background: `${btnColor}14`,
-                      color: btnColor,
-                      fontSize: 11.5,
-                      fontWeight: 700,
-                      padding: "6px 10px",
-                      borderRadius: 8,
-                      whiteSpace: "nowrap",
-                      justifySelf: "end",
-                      cursor: "pointer",
-                      fontFamily: "inherit",
-                    }}
-                  >
-                    {a.kind} <ArrowRight size={13} strokeWidth={2.6} />
-                  </button>
-                </div>
-                {isDrafting ? (
-                  <div style={{ padding: "0 18px 14px", borderBottom: i < TRUST_ACTIONS.length - 1 ? `1px solid ${cssVar("border")}` : undefined }}>
-                    <DraftActionFooter draftText={a.action} draftKind={draftKind} embedded />
-                  </div>
-                ) : null}
-              </div>
-            );
-          })}
-        </PanelCard>
       </section>
     </div>
   );

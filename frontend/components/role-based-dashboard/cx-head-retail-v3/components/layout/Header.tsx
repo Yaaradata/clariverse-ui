@@ -15,7 +15,7 @@ export function Header(): React.ReactElement {
   const { mode, toggle } = useTheme();
   const { activeScreen, trustRange, setTrustRange } = useNavigation();
   const showBack = activeScreen !== "overview";
-  const showTrustRange = activeScreen === "hub-trust";
+  const showTrustRange = activeScreen === "hub-trust" || activeScreen === "hub-customer-happiness";
 
   return (
     <header

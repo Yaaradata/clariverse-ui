@@ -68,6 +68,7 @@ import {
   type RoleDashboardData,
   type ScreenId,
   NUVAMA_INDUSTRY_ID,
+  INDUSIND_BANK_INDUSTRY_ID,
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import {
@@ -4152,6 +4153,10 @@ export function RoleDashboardView({
         : eisenhowerThreadsRaw,
     [eisenhowerThreadsRaw, sterlingHeadRetailRoute],
   );
+
+  if (industry.id === INDUSIND_BANK_INDUSTRY_ID && role.id === "head_cards") {
+    return <CardsPortfolioV2Dashboard onExit={onExit} />;
+  }
 
   if (industry.id === "credit_cards" && role.id === "head_cards") {
     return (

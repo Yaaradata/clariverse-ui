@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { ListChecks, ArrowRight } from "lucide-react";
+import { ArrowRight, ListChecks } from "lucide-react";
 import {
   TRUST_DRIVERS,
   TRUST_LIFECYCLE_STAGES,
   TRUST_RANGES,
   scaleTrustCrLabel,
-  scaleTrustDelta,
+  type TrustDriver,
   type TrustLifecycleStage,
   type TrustLifecycleStageId,
   type TrustRangeKey,
@@ -74,11 +74,9 @@ function ragLabel(rag: TrustRagLevel): string {
 function StageWhatNext({
   stage,
   color,
-  range,
 }: {
   stage: TrustLifecycleStage;
   color: string;
-  range: TrustRangeKey;
 }): React.ReactElement {
   const insight = stage.aiInsight;
   const evidenceLines = stage.evidence.slice(0, 2);
@@ -87,7 +85,7 @@ function StageWhatNext({
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "72px minmax(0, 1fr)",
+        gridTemplateColumns: "64px minmax(0, 1fr)",
         gap: 10,
         alignItems: "start",
       }}
@@ -96,21 +94,21 @@ function StageWhatNext({
         style={{
           fontSize: 10,
           fontWeight: 800,
-          letterSpacing: "0.04em",
+          letterSpacing: "0.05em",
           textTransform: "uppercase",
           color: cssVar("accent-2"),
-          paddingTop: 1,
+          paddingTop: 2,
         }}
       >
         {label}
       </span>
-      <span style={{ fontSize: 12.5, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{body}</span>
+      <span style={{ fontSize: 13, color: cssVar("text-secondary"), lineHeight: 1.45 }}>{body}</span>
     </div>
   );
 
   return (
     <aside
-      aria-label="What to do next"
+      aria-label="Next Action & steps"
       style={{
         display: "flex",
         flexDirection: "column",
@@ -118,7 +116,7 @@ function StageWhatNext({
         minWidth: 0,
         width: "100%",
         height: "100%",
-        padding: "14px 16px",
+        padding: "16px 18px",
         borderRadius: radius.lg,
         border: `1px solid ${cssVar("accent")}44`,
         borderLeft: `4px solid ${cssVar("accent")}`,
@@ -133,18 +131,18 @@ function StageWhatNext({
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 800,
             color: cssVar("accent-2"),
             letterSpacing: "0.05em",
             textTransform: "uppercase",
           }}
         >
-          <ListChecks size={13} strokeWidth={2.4} /> What to do next?
+          <ListChecks size={14} strokeWidth={2.4} /> Next Action &amp; steps
           <ConfidenceChip conf={insight.confidence} small />
         </span>
-        <span style={{ fontSize: 11, color: cssVar("text-muted"), whiteSpace: "nowrap" }}>
-          Owner · <b style={{ color: cssVar("text-primary") }}>{stage.fixOwner}</b>
+        <span style={{ fontSize: 12, color: cssVar("text-muted"), whiteSpace: "nowrap" }}>
+          Owner · <b style={{ color: cssVar("text-primary"), fontWeight: 700 }}>{stage.fixOwner}</b>
         </span>
       </div>
 
@@ -189,22 +187,9 @@ function StageWhatNext({
         >
           {stage.cliffCount > 0 ? `${stage.cliffCount} cliff live` : "No cliff"}
         </span>
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 700,
-            color: cssVar("text-secondary"),
-            padding: "3px 8px",
-            borderRadius: radius.pill,
-            border: `1px solid ${cssVar("border")}`,
-            background: cssVar("surface-raised"),
-          }}
-        >
-          GMV · {scaleTrustCrLabel(stage.pnlAtRisk, range)}
-        </span>
       </div>
 
-      <div style={{ fontSize: 15, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+      <div style={{ fontSize: 16, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.35, letterSpacing: "-0.02em" }}>
         {insight.headline}
       </div>
 
@@ -230,9 +215,9 @@ function StageWhatNext({
         <div style={{ display: "flex", flexDirection: "column", gap: 5, flex: 1, minHeight: 0 }}>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 11,
               fontWeight: 800,
-              letterSpacing: "0.04em",
+              letterSpacing: "0.05em",
               textTransform: "uppercase",
               color: cssVar("text-muted"),
             }}
@@ -246,9 +231,9 @@ function StageWhatNext({
                 display: "flex",
                 alignItems: "flex-start",
                 gap: 7,
-                fontSize: 12,
+                fontSize: 12.5,
                 color: cssVar("text-secondary"),
-                lineHeight: 1.4,
+                lineHeight: 1.45,
               }}
             >
               <span style={{ color, fontWeight: 800, flexShrink: 0, marginTop: 1 }}>·</span>
@@ -263,11 +248,11 @@ function StageWhatNext({
       <div
         style={{
           marginTop: "auto",
-          padding: "9px 11px",
+          padding: "10px 12px",
           borderRadius: radius.sm,
           border: `1px solid ${color}44`,
           background: `color-mix(in srgb, ${color} 12%, transparent)`,
-          fontSize: 12.5,
+          fontSize: 13,
           fontWeight: 700,
           color: cssVar("text-primary"),
           lineHeight: 1.4,
@@ -283,201 +268,166 @@ function StageWhatNext({
   );
 }
 
-function StageKpiTile({
+function PlainBreakdownRow({
   label,
   value,
-  sub,
-  color,
   emphasize,
+  metric,
 }: {
   label: string;
-  value: string;
-  sub?: string;
-  color: string;
+  value: React.ReactNode;
   emphasize?: boolean;
+  metric?: boolean;
 }): React.ReactElement {
+  const valueFontSize = emphasize ? 16 : metric ? 14 : 13;
+  const valueWeight = emphasize ? 800 : metric ? 700 : 600;
+
   return (
     <div
       style={{
-        padding: "10px 10px 9px",
-        borderRadius: radius.md,
-        border: `1px solid ${emphasize ? `${color}40` : cssVar("border")}`,
-        background: emphasize
-          ? `linear-gradient(165deg, color-mix(in srgb, ${color} 10%, ${cssVar("surface-raised")}), ${cssVar("surface-raised")})`
-          : cssVar("surface-raised"),
-        minWidth: 0,
         display: "flex",
-        flexDirection: "column",
-        gap: 3,
-        height: "100%",
-        boxSizing: "border-box",
+        alignItems: "baseline",
+        justifyContent: "space-between",
+        gap: 20,
+        padding: "10px 0",
+        borderBottom: `1px solid ${cssVar("border")}`,
       }}
     >
-      <div
-        style={{
-          fontSize: 9,
-          fontWeight: 700,
-          letterSpacing: "0.05em",
-          textTransform: "uppercase",
-          color: cssVar("text-muted"),
-        }}
-      >
+      <span style={{ fontSize: 12, fontWeight: 600, color: cssVar("text-muted"), flexShrink: 0, lineHeight: 1.3 }}>
         {label}
-      </div>
-      <div
-        className="lisn-num"
+      </span>
+      <span
+        className={emphasize || metric ? "lisn-num" : undefined}
         style={{
-          fontSize: emphasize ? 18 : 16,
-          fontWeight: 800,
-          color: emphasize ? color : cssVar("text-primary"),
-          lineHeight: 1.1,
+          fontSize: valueFontSize,
+          fontWeight: valueWeight,
+          color: cssVar("text-primary"),
+          textAlign: "right",
+          lineHeight: 1.35,
         }}
       >
         {value}
-      </div>
-      {sub ? <div style={{ fontSize: 10, color: cssVar("text-muted"), lineHeight: 1.25, marginTop: 1 }}>{sub}</div> : null}
+      </span>
     </div>
   );
 }
 
-function CxSignalEvidenceCard({
+function stageDriverMetrics(
+  drivers: TrustDriver[],
+  scale: (n: number) => number,
+): {
+  blastRate: string;
+  incidentRate: string;
+  cliffLines: { label: string; count: number }[];
+  slopeLines: { label: string; count: number }[];
+} {
+  if (drivers.length === 0) {
+    return { blastRate: "—", incidentRate: "—", cliffLines: [], slopeLines: [] };
+  }
+
+  const totalComplaints = drivers.reduce((sum, d) => sum + d.complaints, 0);
+  const blastRate = Math.round(
+    drivers.reduce((sum, d) => sum + d.blastRadius * d.complaints, 0) / Math.max(totalComplaints, 1),
+  );
+  const incidentRate = (
+    drivers.reduce((sum, d) => sum + d.incidentRate * d.complaints, 0) / Math.max(totalComplaints, 1)
+  ).toFixed(1);
+
+  return {
+    blastRate: String(blastRate),
+    incidentRate: `${incidentRate} /1k`,
+    cliffLines: drivers
+      .filter((d) => d.cliffOrSlope === "cliff")
+      .map((d) => ({ label: d.label, count: scale(d.complaints) })),
+    slopeLines: drivers
+      .filter((d) => d.cliffOrSlope === "slope")
+      .map((d) => ({ label: d.label, count: scale(d.complaints) })),
+  };
+}
+
+function StageBreakdownPanel({
   stage,
-  color,
-}: {
-  stage: TrustLifecycleStage;
-  color: string;
-}): React.ReactElement {
-  return (
-    <div
-      style={{
-        padding: "12px 13px",
-        borderRadius: radius.md,
-        border: `1px solid ${cssVar("border")}`,
-        background: cssVar("surface"),
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        minWidth: 0,
-        flex: 1,
-      }}
-    >
-      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", color: cssVar("text-muted") }}>
-        CX signal → evidence
-      </div>
-      <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: cssVar("text-primary"), lineHeight: 1.4 }}>{stage.cxSignal}</p>
-      <ul style={{ margin: 0, paddingLeft: 16, display: "flex", flexDirection: "column", gap: 4 }}>
-        {stage.evidence.map((line) => (
-          <li key={line} style={{ fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.4 }}>
-            {line}
-          </li>
-        ))}
-      </ul>
-      <div
-        style={{
-          marginTop: "auto",
-          paddingTop: 8,
-          borderTop: `1px solid ${cssVar("border")}`,
-          fontSize: 12.5,
-          fontWeight: 700,
-          color: cssVar("text-primary"),
-          lineHeight: 1.4,
-          display: "flex",
-          alignItems: "flex-start",
-          gap: 6,
-        }}
-      >
-        <ArrowRight size={13} color={color} style={{ flexShrink: 0, marginTop: 2 }} strokeWidth={2.4} />
-        <span>{stage.action}</span>
-      </div>
-    </div>
-  );
-}
-
-function CliffSlopeDataTile({
-  drivers,
+  range,
   scale,
 }: {
-  drivers: (typeof TRUST_DRIVERS)[number][];
+  stage: TrustLifecycleStage;
+  range: TrustRangeKey;
   scale: (n: number) => number;
 }): React.ReactElement {
-  const cliffs = drivers.filter((d) => d.cliffOrSlope === "cliff");
-  const slopes = drivers.filter((d) => d.cliffOrSlope === "slope");
-  const cliffContacts = cliffs.reduce((sum, d) => sum + scale(d.complaints), 0);
-  const slopeContacts = slopes.reduce((sum, d) => sum + scale(d.complaints), 0);
-  const topCliff = cliffs[0];
-  const topSlope = slopes[0];
+  const { breakdown } = stage;
+  const gmvExposure = scaleTrustCrLabel(stage.pnlAtRisk, range);
+  const drivers = stage.driverIds
+    .map((id) => TRUST_DRIVERS.find((d) => d.id === id))
+    .filter((d): d is TrustDriver => d != null);
+  const metrics = stageDriverMetrics(drivers, scale);
 
   return (
     <div
       style={{
-        padding: "10px 10px 9px",
-        borderRadius: radius.md,
-        border: `1px solid ${cssVar("border")}`,
-        background: cssVar("surface-raised"),
-        minWidth: 0,
-        height: "100%",
-        boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
-        gap: 6,
+        minWidth: 0,
+        height: "100%",
+        padding: "16px 18px",
+        borderRadius: radius.lg,
+        border: `1px solid ${cssVar("border")}`,
+        background: cssVar("surface"),
+        boxShadow: cssVar("shadow-card"),
+        boxSizing: "border-box",
       }}
     >
-      <div
-        style={{
-          fontSize: 9,
-          fontWeight: 700,
-          letterSpacing: "0.05em",
-          textTransform: "uppercase",
-          color: cssVar("text-muted"),
-        }}
-      >
-        Cliff &amp; slope
+      <div style={{ marginBottom: 12 }}>
+        <span style={{ fontSize: 15, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.25, letterSpacing: "-0.01em" }}>
+          {stage.label}
+        </span>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: "auto" }}>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 6, minWidth: 0 }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, minWidth: 0 }}>
-            <span style={{ width: 3, height: 12, borderRadius: 2, background: cssVar("severity-high"), flexShrink: 0 }} />
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: cssVar("text-primary"),
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-              title={topCliff?.label ?? "No cliff"}
-            >
-              {topCliff ? topCliff.label : "No cliff"}
-            </span>
-          </span>
-          <span className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("severity-high"), flexShrink: 0 }}>
-            {cliffs.length > 0 ? fmt(cliffContacts) : "—"}
-          </span>
-        </div>
-        <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 6, minWidth: 0 }}>
-          <span style={{ display: "inline-flex", alignItems: "center", gap: 5, minWidth: 0 }}>
-            <span style={{ width: 3, height: 12, borderRadius: 2, background: cssVar("severity-med"), flexShrink: 0 }} />
-            <span
-              style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: cssVar("text-primary"),
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-              title={topSlope?.label ?? "No slope"}
-            >
-              {topSlope ? topSlope.label : "No slope"}
-            </span>
-          </span>
-          <span className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("severity-med"), flexShrink: 0 }}>
-            {slopes.length > 0 ? fmt(slopeContacts) : "—"}
-          </span>
-        </div>
-      </div>
+      <PlainBreakdownRow label="Categories" value={breakdown.categories} />
+      <PlainBreakdownRow label="Pincode" value={breakdown.pincode} />
+      <PlainBreakdownRow label="Top complaint" value={breakdown.topComplaint} />
+      <PlainBreakdownRow label="GMV exposure" value={gmvExposure} emphasize />
+      <PlainBreakdownRow label="Blast rate" value={metrics.blastRate} metric />
+      <PlainBreakdownRow label="Incident rate" value={metrics.incidentRate} metric />
+
+      {metrics.cliffLines.length > 0 ? (
+        metrics.cliffLines.map((line) => (
+          <PlainBreakdownRow
+            key={`cliff-${line.label}`}
+            label="Cliff · complaint"
+            value={
+              <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{line.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 400, color: cssVar("text-muted") }}>·</span>
+                <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: cssVar("text-primary") }}>
+                  {fmt(line.count)}
+                </span>
+              </span>
+            }
+          />
+        ))
+      ) : (
+        <PlainBreakdownRow label="Cliff · complaint" value="—" />
+      )}
+
+      {metrics.slopeLines.length > 0 ? (
+        metrics.slopeLines.map((line) => (
+          <PlainBreakdownRow
+            key={`slope-${line.label}`}
+            label="Slope · complaint"
+            value={
+              <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{line.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 400, color: cssVar("text-muted") }}>·</span>
+                <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: cssVar("text-primary") }}>
+                  {fmt(line.count)}
+                </span>
+              </span>
+            }
+          />
+        ))
+      ) : (
+        <PlainBreakdownRow label="Slope · complaint" value="—" />
+      )}
     </div>
   );
 }
@@ -486,7 +436,6 @@ function StageDetailBreakdown({
   stage,
   color,
   scale,
-  periodLabel,
   range,
 }: {
   stage: TrustLifecycleStage;
@@ -495,55 +444,20 @@ function StageDetailBreakdown({
   periodLabel: string;
   range: TrustRangeKey;
 }): React.ReactElement {
-  const drivers = stage.driverIds
-    .map((id) => TRUST_DRIVERS.find((d) => d.id === id))
-    .filter((d): d is (typeof TRUST_DRIVERS)[number] => d != null);
-  const velocity = Math.round(scaleTrustDelta(stage.wow, range));
-  const dropPts = Math.max(1, Math.round(stage.trustDropPts * (range === "24H" ? 0.5 : range === "30D" ? 1.15 : 1)));
-
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(0, 0.88fr) minmax(320px, 1.12fr)",
+        gridTemplateColumns: "minmax(0, 0.82fr) minmax(320px, 1.18fr)",
         gap: 14,
         alignItems: "stretch",
         minWidth: 0,
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gridTemplateRows: "1fr 1fr",
-            gap: 8,
-            minWidth: 0,
-            minHeight: 0,
-          }}
-        >
-          <CliffSlopeDataTile drivers={drivers} scale={scale} />
-          <StageKpiTile label="Trust drop" value={`−${dropPts} pts`} sub={periodLabel} color={color} />
-          <StageKpiTile
-            label="Velocity"
-            value={`${velocity >= 0 ? "+" : ""}${velocity}%`}
-            sub={periodLabel}
-            color={color}
-          />
-          <StageKpiTile
-            label="GMV exposure"
-            value={scaleTrustCrLabel(stage.pnlAtRisk, range)}
-            sub={stage.cliffCount > 0 ? `${stage.cliffCount} cliff live` : "No live cliff"}
-            color={color}
-            emphasize
-          />
-        </div>
-
-        <CxSignalEvidenceCard stage={stage} color={color} />
-      </div>
+      <StageBreakdownPanel stage={stage} range={range} scale={scale} />
 
       <div style={{ minWidth: 0, minHeight: 0, display: "flex", alignSelf: "stretch" }}>
-        <StageWhatNext stage={stage} color={color} range={range} />
+        <StageWhatNext stage={stage} color={color} />
       </div>
     </div>
   );

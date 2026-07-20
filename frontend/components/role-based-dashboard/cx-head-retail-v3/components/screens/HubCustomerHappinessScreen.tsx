@@ -4,43 +4,35 @@ import React, { useState } from "react";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
 import { getHubCardById } from "../../lib/cxHeadRetailV3HubCards";
 import { FLIPKART_FCI_CLUSTERS } from "../../lib/cxHeadRetailV3FlipkartFciClusters";
-import { HAPPINESS_BASE_WIDE, type ValueLens } from "../../lib/cxHeadRetailV3HappinessLensData";
+import { type ValueLens } from "../../lib/cxHeadRetailV3HappinessLensData";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
-import { ConfidenceBand } from "../common/ConfidenceBand";
 import { CustomerHappinessHvLvIntentPanel } from "../hub/CustomerHappinessHvLvIntentPanel";
 import { FlipkartFciKpiCards } from "../hub/FlipkartFciKpiCards";
-import { cssVar, layout, radius } from "../../theme/tokens";
+import { cssVar, layout } from "../../theme/tokens";
 
-function BaseWideHappyRateHeadline(): React.ReactElement {
-  const h = HAPPINESS_BASE_WIDE;
+function SectionHead({ n, title }: { n: string; title: React.ReactNode }): React.ReactElement {
   return (
-    <div
-      data-testid="happiness-screen-headline-rate"
-      data-happy-rate={h.happyRate}
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        gap: 16,
-        padding: "14px 18px",
-        borderRadius: radius.lg,
-        background: cssVar("surface"),
-        border: `1px solid ${cssVar("border")}`,
-        borderLeft: `3px solid ${cssVar("positive")}`,
-      }}
-    >
-      <div>
-        <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", color: cssVar("text-muted") }}>
-          Happy rate · all shoppers
-        </div>
-        <div className="lisn-num" style={{ fontSize: 36, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.05 }}>
-          {h.happyRate}%
-        </div>
-      </div>
-      <div style={{ flex: 1, minWidth: 200, fontSize: 12, color: cssVar("text-secondary"), lineHeight: 1.45 }}>
-        {h.note} Contacts scored {h.contactsScored}. Inferred share of the score gets a confidence marker — not presented as a hard count.
-      </div>
-      <ConfidenceBand band={h.confidence} />
+    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+      <span
+        className="lisn-num"
+        style={{
+          width: 26,
+          height: 26,
+          display: "grid",
+          placeItems: "center",
+          fontSize: 11,
+          fontWeight: 800,
+          color: cssVar("accent-2"),
+          borderRadius: 7,
+          border: `1.5px solid ${cssVar("accent")}`,
+          flexShrink: 0,
+        }}
+      >
+        {n}
+      </span>
+      <h3 style={{ margin: 0, fontSize: 15, fontWeight: 800, color: cssVar("text-primary"), letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+        {title}
+      </h3>
     </div>
   );
 }
@@ -67,13 +59,20 @@ export function HubCustomerHappinessScreen(): React.ReactElement {
     >
       <HubFluidHeadline variant="customer-happiness" />
 
-      <BaseWideHappyRateHeadline />
+      <section>
+        <SectionHead n="01" title={<>Are customers <span style={{ color: cssVar("accent") }}>happy?</span></>} />
+        <FlipkartFciKpiCards isDarkMode valueLens={valueLens} onValueLensChange={setValueLens} />
+      </section>
 
-      <FlipkartFciKpiCards isDarkMode valueLens={valueLens} onValueLensChange={setValueLens} />
+      <section>
+        <SectionHead n="02" title={<>Where happiness is <span style={{ color: cssVar("accent") }}>breaking</span></>} />
+        <FailureClusters clusters={FLIPKART_FCI_CLUSTERS} isDarkMode />
+      </section>
 
-      <FailureClusters clusters={FLIPKART_FCI_CLUSTERS} isDarkMode />
-
-      <CustomerHappinessHvLvIntentPanel valueLens={valueLens} onValueLensChange={setValueLens} />
+      <section>
+        <SectionHead n="03" title={<>Who needs action <span style={{ color: cssVar("accent") }}>first</span></>} />
+        <CustomerHappinessHvLvIntentPanel valueLens={valueLens} onValueLensChange={setValueLens} />
+      </section>
     </div>
   );
 }

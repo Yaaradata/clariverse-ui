@@ -1379,6 +1379,14 @@ export interface TrustLifecycleStageDef {
   aiInsight: TrustStageAiInsight;
 }
 
+export interface TrustStageBreakdown {
+  categories: string;
+  pincode: string;
+  topComplaint: string;
+  marketplaceSplit: string;
+  topChannel: string;
+}
+
 export interface TrustLifecycleStage extends TrustLifecycleStageDef {
   contacts: number;
   wow: number;
@@ -1388,6 +1396,7 @@ export interface TrustLifecycleStage extends TrustLifecycleStageDef {
   driverIds: TrustDriverId[];
   cliffCount: number;
   pnlAtRisk: string;
+  breakdown: TrustStageBreakdown;
 }
 
 /** Full customer lifecycle — every slice must appear on the stage pie. */
@@ -1635,6 +1644,57 @@ function formatStagePnl(drivers: readonly TrustDriver[]): string {
   return `₹${cr.toFixed(1)} Cr`;
 }
 
+const LATENT_STAGE_BREAKDOWNS: Record<TrustLifecycleStageId, TrustStageBreakdown> = {
+  S1: { categories: "—", pincode: "—", topComplaint: "—", marketplaceSplit: "—", topChannel: "—" },
+  S2: { categories: "—", pincode: "—", topComplaint: "—", marketplaceSplit: "—", topChannel: "—" },
+  S3: {
+    categories: "Wallet · Prepaid · UPI",
+    pincode: "Mumbai · 400001",
+    topComplaint: "Debited but no order",
+    marketplaceSplit: "52% marketplace / 48% owned",
+    topChannel: "Voice",
+  },
+  S4: { categories: "—", pincode: "—", topComplaint: "—", marketplaceSplit: "—", topChannel: "—" },
+  S5: {
+    categories: "Mobiles · Appliances · Fashion",
+    pincode: "Hyderabad · 500001",
+    topComplaint: "Delay / handoff silence",
+    marketplaceSplit: "61% marketplace / 39% owned",
+    topChannel: "Chat",
+  },
+  S6: { categories: "—", pincode: "—", topComplaint: "—", marketplaceSplit: "—", topChannel: "—" },
+  S7: {
+    categories: "Baby & food · Electronics",
+    pincode: "Delhi · 110006",
+    topComplaint: "Counterfeit after first use",
+    marketplaceSplit: "91% marketplace / 9% owned",
+    topChannel: "LinkedIn",
+  },
+  S8: { categories: "—", pincode: "—", topComplaint: "—", marketplaceSplit: "—", topChannel: "—" },
+  S9: { categories: "—", pincode: "—", topComplaint: "—", marketplaceSplit: "—", topChannel: "—" },
+};
+
+function buildStageBreakdown(
+  stageId: TrustLifecycleStageId,
+  stageDrivers: readonly TrustDriver[],
+): TrustStageBreakdown {
+  if (stageDrivers.length === 0) {
+    return LATENT_STAGE_BREAKDOWNS[stageId];
+  }
+
+  const sorted = [...stageDrivers].sort((a, b) => b.complaints - a.complaints);
+  const top = sorted[0]!;
+  const categories = [...new Set(sorted.map((d) => d.tags.category))].slice(0, 3).join(" · ");
+
+  return {
+    categories,
+    pincode: top.tags.pincode,
+    topComplaint: top.label,
+    marketplaceSplit: top.tags.marketplaceVsOwned,
+    topChannel: top.tags.channel,
+  };
+}
+
 /** Stage × trust-break contacts — pie source for §02. */
 export function buildTrustLifecycleStages(
   drivers: readonly TrustDriver[] = TRUST_DRIVERS,
@@ -1674,6 +1734,7 @@ export function buildTrustLifecycleStages(
       driverIds: stageDrivers.map((d) => d.id),
       cliffCount,
       pnlAtRisk: formatStagePnl(stageDrivers),
+      breakdown: buildStageBreakdown(def.id, stageDrivers),
     } satisfies TrustLifecycleStage;
   });
 

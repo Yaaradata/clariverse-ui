@@ -18,8 +18,9 @@ import {
   Users,
 } from "lucide-react";
 import { STERLING_BANK_INDUSTRY_ID } from "./sterlingBankIndustry";
+import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
 
-export { STERLING_BANK_INDUSTRY_ID };
+export { STERLING_BANK_INDUSTRY_ID, INDUSIND_BANK_INDUSTRY_ID };
 
 export const NUVAMA_INDUSTRY_ID = "nuvama" as const;
 
@@ -366,6 +367,23 @@ export const INDUSTRIES = [
         name: "Head of Client Experience",
         icon: Headphones,
         sub: "Client sentiment · RM service quality · advisory journeys · escalation & retention",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+    ],
+  },
+  {
+    id: INDUSIND_BANK_INDUSTRY_ID,
+    name: "Indus Ind Bank",
+    icon: Landmark,
+    color: "#9333ea",
+    desc: "Retail banking · deposits, loans, cards · branches & contact centres",
+    roles: [
+      {
+        id: "head_cards",
+        name: "Head of Cards",
+        icon: CreditCard,
+        sub: "Transactions & offers · blockers & problems · 2 drilldowns · AI Analyst",
         defaultLens: "ops",
         primaryTile: 0,
       },
