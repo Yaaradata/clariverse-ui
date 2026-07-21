@@ -30,6 +30,7 @@ import {
   Zap,
 } from "lucide-react";
 import { RoleBasedUnifiedChrome } from "@/components/role-based-dashboard/RoleBasedUnifiedChrome";
+import IndusIndCardsCustomerPortfolioDrill from "@/components/role-based-dashboard/IndusIndCardsCustomerPortfolioDrill";
 import {
   CARDS_PORTFOLIO_V2_AI_ANALYST_QUESTIONS,
   CARDS_PORTFOLIO_V2_AI_ANALYST_SUBTITLE,
@@ -1220,9 +1221,10 @@ const BLOCKER_BARS = [
 
 type NavigateFn = (screen: string) => void;
 
-/* ═══════════════════ CUSTOMER VOICE × TRANSACTION JOIN (IndusInd — hidden LiSN feature) ═══════════════════ */
-/* Left side = real public voice pulled from app stores, TechnoFino, Trustpilot, complaint boards.
-   Right side = illustrative book metric until wired to the issuer tenant. Gated by showVoiceJoin. */
+/* ═══════════════════ CUSTOMER PORTFOLIO SIGNAL (IndusInd — hidden LiSN feature) ═══════════════════ */
+/* Bars for the overview question card that routes into the IndusInd customer-portfolio drill
+   (screen === "voice"). Public feedback themes; portfolio figures are illustrative until tenant-wired. */
+
 const VOICE_BARS: { name: string; v: number; c: string }[] = [
   { name: "Reward devalue", v: 82, c: T.red },
   { name: "App access", v: 74, c: T.red },
@@ -1230,205 +1232,6 @@ const VOICE_BARS: { name: string; v: number; c: string }[] = [
   { name: "Payment pend", v: 47, c: T.amber },
   { name: "EMI gap", v: 34, c: T.amber },
 ];
-
-const VOICE_JOINS: {
-  id: string;
-  title: string;
-  channel: string;
-  date: string;
-  voice: string;
-  join: string;
-  book: string;
-  impact: string;
-  owner: string;
-  ownerTone: string;
-  action: string;
-}[] = [
-  {
-    id: "rewards",
-    title: "Reward devaluation → top-of-wallet loss",
-    channel: "App reviews · TechnoFino · card press",
-    date: "Feb–Jul 2025",
-    voice:
-      "Legend earn cut to ~0.5% and redemption fee raised to ₹149 + GST; EazyDiner Signature gutted from 15 Dec (dining points removed, discount capped ₹2,000, renewal ₹2,999, BookMyShow + lounge dropped); InterMiles removed. Sentiment: cards going to the drawer, spend migrating.",
-    join: "Devaluation-complaint cohort by card (Legend, EazyDiner, Tiger, Pinnacle) ↔ post-change spend decay on those BINs.",
-    book: "−₹1.4 Cr MTD on devalued BINs",
-    impact: "Top-of-wallet loss / attrition",
-    owner: "Rewards & Portfolio",
-    ownerTone: "violet",
-    action: "targeted retention proposition for the high-value, devaluation-sensitive cohort",
-  },
-  {
-    id: "app",
-    title: "INDIE app access failure → cannot view or pay",
-    channel: "Google Play · TechnoFino",
-    date: "Jun–Aug 2025",
-    voice:
-      "INDIE migration throwing login / OTP / mobile-verification failures; credit-card-only users cannot view card transactions; CVV / card-not-visible from a UCIC mismatch forces a branch visit; rooted-device false-positive lockouts.",
-    join: "App-access complaint spikes ↔ drop in self-service bill payments, first-CNP failures on new cards, and inbound call volume.",
-    book: "−9% self-service payments · roll risk",
-    impact: "Roll-rate / attrition + activation drag + call load",
-    owner: "Payments & Authorisation",
-    ownerTone: "amber",
-    action: "proactive comms + alternate-payment path; flag UCIC-mismatch cards for fix",
-  },
-  {
-    id: "misselling",
-    title: "Unauthorised upgrade / mis-selling → conduct exposure",
-    channel: "Trustpilot · complaints",
-    date: "Mar–Sep 2025",
-    voice:
-      "An unauthorised upgrade charge of ₹10,000 + ₹1,800 GST after an \u201Cupgrade necessary\u201D call; a Celesta\u2192Avios request re-issued as Pinnacle without consent. IndusInd carries a named \u201CMis-selling & Harassment calls\u201D grievance category.",
-    join: "Mis-selling complaints ↔ fee-reversal and upgrade events on the same accounts, traced to the sales channel — examiner-ready.",
-    book: "conduct exposure · fee-reversal cost",
-    impact: "Ombudsman / conduct exposure",
-    owner: "Conduct & Compliance",
-    ownerTone: "red",
-    action: "examiner-ready conduct pack + remediation",
-  },
-  {
-    id: "emi",
-    title: "EMI-conversion gap → interest income leaking",
-    channel: "Trustpilot · complaints",
-    date: "Sep 2025",
-    voice:
-      "The EMI-conversion option was unavailable in-app for a ₹33,000 transaction; an earlier email went unanswered.",
-    join: "\u201CEMI unavailable\u201D complaints ↔ eligible high-ticket transactions never converted.",
-    book: "NII leakage on eligible spend",
-    impact: "Interest income leakage + friction",
-    owner: "Cards Product / Digital",
-    ownerTone: "amber",
-    action: "EMI-eligibility nudge on eligible high-ticket spend",
-  },
-  {
-    id: "upi",
-    title: "UPI / payment \u201Cpending\u201D → payment friction",
-    channel: "Google Play · TechnoFino",
-    date: "2025",
-    voice:
-      "UPI payments stuck pending for 72h with money not credited; a ₹10,000 Razorpay transfer confirmed at source but missing at IndusInd.",
-    join: "Payment-pending complaints ↔ settlement / reconciliation lag and failed retries.",
-    book: "disputes + false-decline friction",
-    impact: "Payment friction → attrition + disputes",
-    owner: "Payments & Authorisation",
-    ownerTone: "amber",
-    action: "reconciliation flag + resolution comms",
-  },
-  {
-    id: "ombudsman",
-    title: "Resolution lag → ombudsman before they file",
-    channel: "Trustpilot · complaints",
-    date: "2025–2026",
-    voice:
-      "Recurring 7–10 day response cycles, copy-paste replies and long holds; guidance circulating to escalate to the RBI Ombudsman after a month.",
-    join: "Unresolved-complaint age ↔ accounts nearing the 30-day ombudsman threshold.",
-    book: "predicted ombudsman escalations",
-    impact: "Ombudsman cases + attrition",
-    owner: "Conduct & Compliance / CX",
-    ownerTone: "red",
-    action: "prioritise ageing complaints nearing the window",
-  },
-];
-
-function VoiceJoinDrill({ go }: { go: NavigateFn }) {
-  return (
-    <div className="fade">
-      <DrillHeader
-        onBack={() => go("overview")}
-        title="Customer voice × transaction join"
-        sub="What IndusInd cardholders are saying in public, joined to the book metric it moves. The left of each card is real and pulled from public channels; the right is illustrative until wired to your tenant."
-        chips={
-          <>
-            <Chip t="violet">Live voice — public channels</Chip>
-            <Chip t="amber">Illustrative book — wire to tenant</Chip>
-          </>
-        }
-      />
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(360px, 1fr))",
-          gap: 12,
-          alignItems: "start",
-        }}
-      >
-        {VOICE_JOINS.map((j) => (
-          <SectionCard
-            key={j.id}
-            accent={T.violet}
-            aiPill
-            title={j.title}
-            subtitle={`${j.channel} · ${j.date}`}
-          >
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 10,
-                marginBottom: 10,
-              }}
-            >
-              <div>
-                <Eyebrow>Customer voice — live</Eyebrow>
-                <div
-                  style={{
-                    fontSize: 11.5,
-                    color: T.sub,
-                    lineHeight: 1.5,
-                    marginTop: 2,
-                  }}
-                >
-                  {j.voice}
-                </div>
-                <span style={{ marginTop: 6, display: "inline-block" }}>
-                  <Chip t="violet">Live signal</Chip>
-                </span>
-              </div>
-              <div>
-                <Eyebrow>Joined book metric</Eyebrow>
-                <div style={{ marginTop: 2 }}>
-                  <Mono c={T.red} s={14}>
-                    {j.book}
-                  </Mono>
-                </div>
-                <span style={{ marginTop: 6, display: "inline-block" }}>
-                  <Chip t="amber">Illustrative — wire to book</Chip>
-                </span>
-              </div>
-            </div>
-            <div
-              style={{
-                fontSize: 10.5,
-                color: T.muted,
-                lineHeight: 1.45,
-                marginBottom: 8,
-              }}
-            >
-              <span style={{ color: T.violet, fontWeight: 700 }}>Join · </span>
-              {j.join}
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                flexWrap: "wrap",
-                marginBottom: 8,
-              }}
-            >
-              <Eyebrow>Impact</Eyebrow>
-              <span style={{ fontSize: 11, color: T.sub }}>{j.impact}</span>
-              <Pill t={j.ownerTone}>{j.owner}</Pill>
-              <ConsentChip />
-            </div>
-            <AIInsightStrip tone="violet">Draft — {j.action}</AIInsightStrip>
-          </SectionCard>
-        ))}
-      </div>
-      <div style={{ height: 44 }} />
-    </div>
-  );
-}
 
 function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boolean }) {
   return (
@@ -4233,7 +4036,9 @@ export function CardsPortfolioV2Dashboard({
         )}
         {screen === "d1" && <Drill1 go={go} />}
         {screen === "d2" && <Drill2 go={go} />}
-        {screen === "voice" && showVoiceJoin && <VoiceJoinDrill go={go} />}
+        {screen === "voice" && showVoiceJoin && (
+          <IndusIndCardsCustomerPortfolioDrill go={go} />
+        )}
       </main>
       <RoleBasedUnifiedChrome
         starterQuestions={CARDS_PORTFOLIO_V2_AI_ANALYST_QUESTIONS}
