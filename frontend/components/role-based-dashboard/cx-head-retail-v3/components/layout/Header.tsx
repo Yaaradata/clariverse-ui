@@ -32,7 +32,7 @@ export function Header(): React.ReactElement {
         borderBottom: `1px solid ${cssVar("border")}`,
       }}
     >
-      <div style={{ minWidth: 0, displayShrink: 0 }}>
+      <div style={{ minWidth: 0, flexShrink: 0 }}>
         {showBackToRoles ? (
           <button
             type="button"

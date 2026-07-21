@@ -127,7 +127,7 @@ export function getCxHeadV3RiskSpikes(range: TrustRangeKey = "7D"): RiskSpike[] 
     magnitude: Math.max(8, Math.round(spike.magnitude * meta.magnitudeScale)),
     slaBefore: spike.slaBefore != null ? Math.max(1, Math.round(spike.slaBefore * meta.magnitudeScale)) : undefined,
     slaAfter: spike.slaAfter != null ? Math.max(1, Math.round(spike.slaAfter * meta.magnitudeScale)) : undefined,
-    triggerInsight: spike.triggerInsight.replace(/\bevening peak\b/i, `${meta.windowLabel} peak`),
+    triggerInsight: spike.triggerInsight?.replace(/\bevening peak\b/i, `${meta.windowLabel} peak`),
   }));
 }
 
