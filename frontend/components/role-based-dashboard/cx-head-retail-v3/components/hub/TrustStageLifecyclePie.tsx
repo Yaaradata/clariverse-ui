@@ -80,6 +80,7 @@ function StageWhatNext({
 }): React.ReactElement {
   const insight = stage.aiInsight;
   const evidenceLines = stage.evidence.slice(0, 2);
+  const statusLabel = ragLabel(stage.rag);
 
   const beatRow = (label: string, body: string): React.ReactElement => (
     <div
@@ -96,7 +97,7 @@ function StageWhatNext({
           fontWeight: 800,
           letterSpacing: "0.05em",
           textTransform: "uppercase",
-          color: cssVar("accent-2"),
+          color,
           paddingTop: 2,
         }}
       >
@@ -118,9 +119,9 @@ function StageWhatNext({
         height: "100%",
         padding: "16px 18px",
         borderRadius: radius.lg,
-        border: `1px solid ${cssVar("accent")}44`,
-        borderLeft: `4px solid ${cssVar("accent")}`,
-        background: `linear-gradient(165deg, ${cssVar("accent-soft")}, ${cssVar("surface")})`,
+        border: `1px solid ${color}44`,
+        borderLeft: `4px solid ${color}`,
+        background: `linear-gradient(165deg, color-mix(in srgb, ${color} 10%, ${cssVar("surface")}), ${cssVar("surface")})`,
         boxShadow: cssVar("shadow-card"),
         boxSizing: "border-box",
       }}
@@ -133,7 +134,7 @@ function StageWhatNext({
             gap: 6,
             fontSize: 12,
             fontWeight: 800,
-            color: cssVar("accent-2"),
+            color,
             letterSpacing: "0.05em",
             textTransform: "uppercase",
           }}
@@ -160,6 +161,20 @@ function StageWhatNext({
           }}
         >
           {stage.id} · {stage.shortLabel}
+        </span>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 800,
+            letterSpacing: "0.04em",
+            color,
+            padding: "3px 8px",
+            borderRadius: radius.pill,
+            border: `1px solid ${color}44`,
+            background: `color-mix(in srgb, ${color} 12%, transparent)`,
+          }}
+        >
+          {statusLabel}
         </span>
         <span
           style={{
@@ -271,11 +286,13 @@ function StageWhatNext({
 function PlainBreakdownRow({
   label,
   value,
+  color,
   emphasize,
   metric,
 }: {
   label: string;
   value: React.ReactNode;
+  color?: string;
   emphasize?: boolean;
   metric?: boolean;
 }): React.ReactElement {
@@ -301,7 +318,7 @@ function PlainBreakdownRow({
         style={{
           fontSize: valueFontSize,
           fontWeight: valueWeight,
-          color: cssVar("text-primary"),
+          color: color ?? cssVar("text-primary"),
           textAlign: "right",
           lineHeight: 1.35,
         }}
@@ -347,10 +364,12 @@ function stageDriverMetrics(
 
 function StageBreakdownPanel({
   stage,
+  color,
   range,
   scale,
 }: {
   stage: TrustLifecycleStage;
+  color: string;
   range: TrustRangeKey;
   scale: (n: number) => number;
 }): React.ReactElement {
@@ -360,6 +379,9 @@ function StageBreakdownPanel({
     .map((id) => TRUST_DRIVERS.find((d) => d.id === id))
     .filter((d): d is TrustDriver => d != null);
   const metrics = stageDriverMetrics(drivers, scale);
+  const statusLabel = ragLabel(stage.rag);
+  const cliffColor = cssVar("severity-high");
+  const slopeColor = cssVar("severity-med");
 
   return (
     <div
@@ -370,22 +392,38 @@ function StageBreakdownPanel({
         height: "100%",
         padding: "16px 18px",
         borderRadius: radius.lg,
-        border: `1px solid ${cssVar("border")}`,
-        background: cssVar("surface"),
+        border: `1px solid ${color}40`,
+        borderLeft: `4px solid ${color}`,
+        background: `linear-gradient(165deg, color-mix(in srgb, ${color} 8%, ${cssVar("surface")}), ${cssVar("surface")})`,
         boxShadow: cssVar("shadow-card"),
         boxSizing: "border-box",
       }}
     >
-      <div style={{ marginBottom: 12 }}>
+      <div style={{ marginBottom: 12, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
         <span style={{ fontSize: 15, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.25, letterSpacing: "-0.01em" }}>
           {stage.label}
+        </span>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 800,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color,
+            padding: "3px 8px",
+            borderRadius: radius.pill,
+            border: `1px solid ${color}44`,
+            background: `color-mix(in srgb, ${color} 12%, transparent)`,
+          }}
+        >
+          {statusLabel}
         </span>
       </div>
 
       <PlainBreakdownRow label="Categories" value={breakdown.categories} />
       <PlainBreakdownRow label="Pincode" value={breakdown.pincode} />
       <PlainBreakdownRow label="Top complaint" value={breakdown.topComplaint} />
-      <PlainBreakdownRow label="GMV exposure" value={gmvExposure} emphasize />
+      <PlainBreakdownRow label="GMV exposure" value={gmvExposure} color={color} emphasize />
       <PlainBreakdownRow label="Blast rate" value={metrics.blastRate} metric />
       <PlainBreakdownRow label="Incident rate" value={metrics.incidentRate} metric />
 
@@ -398,7 +436,7 @@ function StageBreakdownPanel({
               <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
                 <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{line.label}</span>
                 <span style={{ fontSize: 13, fontWeight: 400, color: cssVar("text-muted") }}>·</span>
-                <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: cssVar("text-primary") }}>
+                <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: cliffColor }}>
                   {fmt(line.count)}
                 </span>
               </span>
@@ -418,7 +456,7 @@ function StageBreakdownPanel({
               <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6, flexWrap: "wrap", justifyContent: "flex-end" }}>
                 <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>{line.label}</span>
                 <span style={{ fontSize: 13, fontWeight: 400, color: cssVar("text-muted") }}>·</span>
-                <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: cssVar("text-primary") }}>
+                <span className="lisn-num" style={{ fontSize: 14, fontWeight: 800, color: slopeColor }}>
                   {fmt(line.count)}
                 </span>
               </span>
@@ -454,7 +492,7 @@ function StageDetailBreakdown({
         minWidth: 0,
       }}
     >
-      <StageBreakdownPanel stage={stage} range={range} scale={scale} />
+      <StageBreakdownPanel stage={stage} color={color} range={range} scale={scale} />
 
       <div style={{ minWidth: 0, minHeight: 0, display: "flex", alignSelf: "stretch" }}>
         <StageWhatNext stage={stage} color={color} />
@@ -611,7 +649,6 @@ export function TrustStageLifecyclePie({ range }: { range: TrustRangeKey }): Rea
 
   return (
     <div
-      key={range}
       style={{
         display: "flex",
         flexDirection: "column",
@@ -710,7 +747,7 @@ export function TrustStageLifecyclePie({ range }: { range: TrustRangeKey }): Rea
 
       <div
         style={{
-          padding: "16px 16px",
+          padding: 1,
           borderRadius: radius.lg,
           border: `1px solid ${selectedColor}44`,
           background: `linear-gradient(180deg, color-mix(in srgb, ${selectedColor} 9%, ${cssVar("surface")}), ${cssVar("surface")})`,

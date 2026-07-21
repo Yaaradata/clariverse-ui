@@ -1675,7 +1675,7 @@ export function TrustBreakdownIntelligence({ range }: { range: TrustRangeKey }):
     );
 
   return (
-    <div key={range} style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
       {/* 01 — Stage where trust breaks */}
       <section>
         <SectionHead

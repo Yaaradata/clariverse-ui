@@ -1,29 +1,108 @@
 import type { LucideIcon } from "lucide-react";
 import { Activity, Shield, Target } from "lucide-react";
 import type { ScreenId } from "./routes";
-import { TOP_TRUST_DRIVER, TRUST_PULSE } from "./cxHeadRetailV3TrustBreakdownData";
+import {
+  TOP_TRUST_DRIVER,
+  TRUST_PULSE,
+  type TrustRangeKey,
+} from "./cxHeadRetailV3TrustBreakdownData";
 
-export const OVERVIEW_EXEC_PULSE = [
-  {
-    q: "🔴 What's critical",
-    main: "Payment failures at checkout — 18.4K shoppers affected today. Route to Payments before evening peak.",
-  },
-  {
-    q: "🎯 Where's your focus",
-    main: "412 refund callbacks overdue · 156 cases escalated to backend with no owner closure.",
-  },
-  {
-    q: "🟢 What's stable/ on-track",
-    main: "Click & Collect holding 91% SLA — in-house care centre outperforming outsourced on refunds.",
-  },
-] as const;
+export type OverviewPulseItem = {
+  q: string;
+  main: string;
+};
+
+/** Executive pulse copy — fully distinct per header timeframe. */
+export const OVERVIEW_EXEC_PULSE_BY_RANGE: Record<TrustRangeKey, readonly OverviewPulseItem[]> = {
+  "24H": [
+    {
+      q: "🔴 What's critical",
+      main: "UPI checkout timeouts in the last 4h — 2.9K shoppers blocked. Escalate Payments before evening peak.",
+    },
+    {
+      q: "🎯 Where's your focus",
+      main: "68 refund callbacks slipped past 2h SLA · 22 Plus cancels opened since noon.",
+    },
+    {
+      q: "🟢 What's stable/ on-track",
+      main: "Click & Collect same-day slots holding 94% — dark-store North on track for tonight's cut-off.",
+    },
+  ],
+  "7D": [
+    {
+      q: "🔴 What's critical",
+      main: "Payment failures at checkout — 18.4K shoppers affected today. Route to Payments before evening peak.",
+    },
+    {
+      q: "🎯 Where's your focus",
+      main: "412 refund callbacks overdue · 156 cases escalated to backend with no owner closure.",
+    },
+    {
+      q: "🟢 What's stable/ on-track",
+      main: "Click & Collect holding 91% SLA — in-house care centre outperforming outsourced on refunds.",
+    },
+  ],
+  "30D": [
+    {
+      q: "🔴 What's critical",
+      main: "Month-to-date refund-not-credited cliff — 64K contacts, ₹11.2 Cr GMV exposure. Push CX + Payments joint bridge.",
+    },
+    {
+      q: "🎯 Where's your focus",
+      main: "1.8K overdue refund callbacks across 30D · WH-East express miss rate still 2.4× network baseline.",
+    },
+    {
+      q: "🟢 What's stable/ on-track",
+      main: "Owned-inventory fulfilment SLA recovered to 88% MoM — marketplace sellers remain the drag.",
+    },
+  ],
+};
+
+/** @deprecated Prefer getOverviewExecPulse(range) — kept as 7D default. */
+export const OVERVIEW_EXEC_PULSE = OVERVIEW_EXEC_PULSE_BY_RANGE["7D"];
+
+export function getOverviewExecPulse(range: TrustRangeKey): readonly OverviewPulseItem[] {
+  return OVERVIEW_EXEC_PULSE_BY_RANGE[range];
+}
+
+/**
+ * Timeline day that drives each hub card face for the header timeframe.
+ * Indices map to D1…D6 in HUB_JOURNEY_CARDS timelines (0-based).
+ */
+export const HUB_RANGE_TIMELINE_INDEX: Record<TrustRangeKey, number> = {
+  "24H": 1,
+  "7D": 5,
+  "30D": 3,
+};
+
+export function hubActiveIndexForRange(timelineLength: number, range: TrustRangeKey): number {
+  const idx = HUB_RANGE_TIMELINE_INDEX[range] ?? timelineLength - 1;
+  return Math.max(0, Math.min(timelineLength - 1, idx));
+}
+
+/** Spark window — short for 24H, full week series for 7D / 30D. */
+export function hubTrendWindow<T>(timeline: readonly T[], range: TrustRangeKey, activeIndex: number): T[] {
+  switch (range) {
+    case "24H": {
+      const start = Math.max(0, activeIndex - 1);
+      return timeline.slice(start, activeIndex + 1) as T[];
+    }
+    case "7D":
+    case "30D":
+      return timeline.slice() as T[];
+    default: {
+      const _exhaustive: never = range;
+      return _exhaustive;
+    }
+  }
+}
 
 export type HubCardId = "customer-happiness" | "service-delivery" | "trust";
 
 /** Hub detail screens — headline lives in screen; purpose copy here. */
 export const HUB_PAGE_PURPOSE: Record<HubCardId, string> = {
   "customer-happiness":
-    "How happy are Flipkart shoppers and what is driving unhappiness across segments, orders, sellers and channels?",
+    "Happiness Index · RFM · lifecycle · contribution value — one period selector across every widget.",
   trust:
     "Trust drivers, cliff vs slope signal, segment impact, evidence, and cross-functional actions — measured facts vs inferred signals.",
   "service-delivery":
@@ -104,6 +183,10 @@ export type HubGaugeSpec = {
   value: number;
   color: string;
   suffix?: string;
+  /** Center text when it should not be the clamped 0–100 fill value (e.g. contact rate). */
+  displayValue?: string;
+  /** When false, render label + number only (no radial meter). Default true. */
+  showMeter?: boolean;
   offsetY?: number;
 };
 
@@ -433,7 +516,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
   {
     id: "customer-happiness",
     title: "Are our customers happy?",
-    subtitle: "Happy · FCR · Top Intent · Contacts",
+    subtitle: "Happy · Contacts · Top Intent",
     targetScreen: "hub-customer-happiness",
     icon: Target,
     iconColor: "#f59e0b",
@@ -448,15 +531,19 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 68, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
-            { label: "FCR", value: 74, color: "#F6A93B", suffix: "%", bottomLabel: "Resolve" },
+            {
+              label: "Contacts",
+              value: 64,
+              color: "#F6A93B",
+              bottomLabel: "Per hour",
+              showMeter: false,
+              displayValue: "12.8k",
+            },
           ],
-          stats: [
-            { label: "Top Intent", value: "Delivery ETA" },
-            { label: "Contacts", value: "12.8k/hr", color: "#f59e0b" },
-          ],
+          stats: [{ label: "Top Intent", value: "Delivery ETA" }],
         },
         conversationInsight:
-          "The week opens calm, with delivery ETA questions dominating channels.\nNo UPI spike has been detected yet.\nHappy rate holds at 68%, and first-contact resolve sits at 74%.\nFour Plus members are on churn watch and need monitoring only.",
+          "The week opens calm, with delivery ETA questions dominating channels.\nNo UPI spike has been detected yet.\nHappy rate holds at 68%, with contact load at 12.8k/hr.\nFour Plus members are on churn watch and need monitoring only.",
       },
       {
         label: "D2",
@@ -465,12 +552,16 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 61, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
-            { label: "FCR", value: 66, color: "#ef4444", suffix: "%", bottomLabel: "Resolve" },
+            {
+              label: "Contacts",
+              value: 80,
+              color: "#ef4444",
+              bottomLabel: "Per hour",
+              showMeter: false,
+              displayValue: "16.1k",
+            },
           ],
-          stats: [
-            { label: "Top Intent", value: "UPI Checkout" },
-            { label: "Contacts", value: "16.1k/hr", color: "#ef4444" },
-          ],
+          stats: [{ label: "Top Intent", value: "UPI Checkout" }],
         },
         conversationInsight:
           "The UPI checkout step is failing, and Plus shoppers are hit first.\nPayment errors are peaking during the BBD hour.\nEscalate the Payments team before the evening traffic surge.\nEight Plus members are flagged for churn, and the retention queue is open.",
@@ -482,12 +573,16 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 73, color: "#4ADE80", suffix: "%", bottomLabel: "Rate" },
-            { label: "FCR", value: 78, color: "#4ADE80", suffix: "%", bottomLabel: "Resolve" },
+            {
+              label: "Contacts",
+              value: 77,
+              color: "#4ADE80",
+              bottomLabel: "Per hour",
+              showMeter: false,
+              displayValue: "15.4k",
+            },
           ],
-          stats: [
-            { label: "Top Intent", value: "Refund Status" },
-            { label: "Contacts", value: "15.4k/hr", color: "#22c55e" },
-          ],
+          stats: [{ label: "Top Intent", value: "Refund Status" }],
         },
         conversationInsight:
           "Payment noise eases after the overnight gateway patch.\nRefund-status confusion is now the top chat driver.\nPlus recovers to 74%, while promo-code tickets spike.\nChurn signal is stable at three Plus members, so continue the watch.",
@@ -499,12 +594,16 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 63, color: "#ef4444", suffix: "%", bottomLabel: "Rate" },
-            { label: "FCR", value: 69, color: "#ef4444", suffix: "%", bottomLabel: "Resolve" },
+            {
+              label: "Contacts",
+              value: 86,
+              color: "#ef4444",
+              bottomLabel: "Per hour",
+              showMeter: false,
+              displayValue: "17.2k",
+            },
           ],
-          stats: [
-            { label: "Top Intent", value: "Delivery Delay" },
-            { label: "Contacts", value: "17.2k/hr", color: "#ef4444" },
-          ],
+          stats: [{ label: "Top Intent", value: "Delivery Delay" }],
         },
         conversationInsight:
           "Late delivery and UPI failures are stacking on the same orders.\nThis is compounding shopper frustration across channels.\nTen Plus members are in the cancel window this week.\nRoute the WH-East backlog before weekend BBD loads.",
@@ -516,12 +615,16 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 68, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
-            { label: "FCR", value: 71, color: "#F6A93B", suffix: "%", bottomLabel: "Resolve" },
+            {
+              label: "Contacts",
+              value: 89,
+              color: "#ef4444",
+              bottomLabel: "Per hour",
+              showMeter: false,
+              displayValue: "17.8k",
+            },
           ],
-          stats: [
-            { label: "Top Intent", value: "Refund Backlog" },
-            { label: "Contacts", value: "17.8k/hr", color: "#ef4444" },
-          ],
+          stats: [{ label: "Top Intent", value: "Refund Backlog" }],
         },
         conversationInsight:
           "Payments are stabilising, but the refund backlog is now the top friction driver.\nRepeat voice and chat contacts are rising on refund status.\nShipping pain accounts for 30% of negative sentiment volume.\nTen Plus members show elevated churn signal, and retention scripts are live.",
@@ -533,12 +636,16 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           kind: "gauges",
           gauges: [
             { label: "Happy", value: 68, color: "#F6A93B", suffix: "%", bottomLabel: "Rate" },
-            { label: "FCR", value: 73, color: "#F6A93B", suffix: "%", bottomLabel: "Resolve" },
+            {
+              label: "Contacts",
+              value: 92,
+              color: "#ef4444",
+              bottomLabel: "Per hour",
+              showMeter: false,
+              displayValue: "18.4k",
+            },
           ],
-          stats: [
-            { label: "Top Intent", value: "Delivery Delay" },
-            { label: "Contacts", value: "18.4k/hr", color: "#ef4444" },
-          ],
+          stats: [{ label: "Top Intent", value: "Delivery Delay" }],
         },
         happiness: {
           sentiment: {
@@ -555,7 +662,7 @@ export const HUB_JOURNEY_CARDS: HubJourneyCardData[] = [
           impact: { customers: "18.4K", channels: "Voice, Chat" },
         },
         conversationInsight:
-          "Happy rate holds at 68%, while first-contact resolve is at 73% on delivery and promo-code confusion.\nShipping pain is spiking repeat contacts before agents close the loop.\nTwelve Plus members are in cancel signal, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
+          "Happy rate holds at 68%, with contact load at 18.4k/hr on delivery and promo-code confusion.\nShipping pain is spiking repeat contacts before agents close the loop.\nTwelve Plus members are in cancel signal, and the retention queue is live.\nTop drivers are shipping at 31% and refunds at 24%.",
       },
     ],
     drill: CUSTOMER_HAPPINESS_DRILL,

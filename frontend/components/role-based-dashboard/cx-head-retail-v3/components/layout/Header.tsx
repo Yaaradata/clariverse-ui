@@ -1,10 +1,11 @@
 // components/layout/Header.tsx
-// Pass 1 — back to overview + trust range (hub-trust) + light/dark toggle.
+// Left: Back to Roles (overview) or Back to Overview · Right: timeframe + theme toggle.
 
 "use client";
 
 import React from "react";
-import { Sun, Moon } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
+import { useDashboardShell } from "../../lib/DashboardShellContext";
 import { useNavigation } from "../../lib/NavigationContext";
 import { useTheme } from "../../theme/DashboardThemeProvider";
 import { cssVar, layout, radius } from "../../theme/tokens";
@@ -13,9 +14,10 @@ import { TrustRangeSelector } from "../hub/TrustBreakdownIntelligence";
 
 export function Header(): React.ReactElement {
   const { mode, toggle } = useTheme();
+  const { onExit } = useDashboardShell();
   const { activeScreen, trustRange, setTrustRange } = useNavigation();
-  const showBack = activeScreen !== "overview";
-  const showTrustRange = activeScreen === "hub-trust" || activeScreen === "hub-customer-happiness";
+  const showBackToOverview = activeScreen !== "overview";
+  const showBackToRoles = activeScreen === "overview";
 
   return (
     <header
@@ -30,12 +32,36 @@ export function Header(): React.ReactElement {
         borderBottom: `1px solid ${cssVar("border")}`,
       }}
     >
-      <div style={{ minWidth: 0 }}>{showBack ? <ScreenBackBar /> : null}</div>
+      <div style={{ minWidth: 0, displayShrink: 0 }}>
+        {showBackToRoles ? (
+          <button
+            type="button"
+            onClick={onExit}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: cssVar("accent-soft"),
+              border: `1px solid ${cssVar("accent")}`,
+              borderRadius: radius.md,
+              padding: "8px 14px",
+              cursor: "pointer",
+              color: cssVar("accent"),
+              fontSize: 13,
+              fontWeight: 600,
+              fontFamily: "inherit",
+              flexShrink: 0,
+            }}
+          >
+            <ArrowLeft size={14} />
+            Back to Roles
+          </button>
+        ) : null}
+        {showBackToOverview ? <ScreenBackBar /> : null}
+      </div>
 
       <div style={{ display: "inline-flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
-        {showTrustRange ? (
-          <TrustRangeSelector range={trustRange} onChange={setTrustRange} />
-        ) : null}
+        <TrustRangeSelector range={trustRange} onChange={setTrustRange} />
         <button
           type="button"
           onClick={toggle}

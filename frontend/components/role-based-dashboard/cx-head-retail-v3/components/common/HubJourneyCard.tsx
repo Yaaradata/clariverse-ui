@@ -3,8 +3,10 @@
 import React from "react";
 import { Bot, ChevronRight } from "lucide-react";
 import type { HubCardRightPanel, HubJourneyCardData } from "../../lib/cxHeadRetailV3HubCards";
-import { hubHeroDelta } from "../../lib/cxHeadRetailV3HubCards";
+import { hubActiveIndexForRange, hubHeroDelta, hubTrendWindow } from "../../lib/cxHeadRetailV3HubCards";
+import type { TrustRangeKey } from "../../lib/cxHeadRetailV3TrustBreakdownData";
 import { TRUST_PULSE } from "../../lib/cxHeadRetailV3TrustBreakdownData";
+import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 import { ConfidenceChip } from "./ConfidenceBand";
 import { MiniGauge } from "./MiniSparkline";
 import { RetailTrendAreaChart } from "./RetailTrendAreaChart";
@@ -53,10 +55,19 @@ function GaugePanel({
             value={g.value}
             color={g.color}
             suffix={g.suffix}
+            displayValue={g.displayValue}
+            showMeter={g.showMeter}
           />
         ))}
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)", gap: "4px 14px", alignItems: "start" }}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: stats.length === 1 ? "1fr" : "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: "4px 14px",
+          alignItems: "start",
+        }}
+      >
         {stats.map((s) => (
           <div key={s.label} style={{ minWidth: 0 }}>
             <div style={{ fontSize: 11, color: cssVar("text-muted"), textTransform: "uppercase", letterSpacing: 0.4 }}>{s.label}</div>
@@ -66,6 +77,7 @@ function GaugePanel({
                 fontSize: 14,
                 fontWeight: 700,
                 color: s.color ?? cssVar("text-primary"),
+                whiteSpace: "nowrap",
               }}
             >
               {s.value}
@@ -83,6 +95,9 @@ function TrustSeverityPanel({
   incidentRate,
   topBreaker,
 }: Extract<HubCardRightPanel, { kind: "trustSeverity" }>): React.ReactElement {
+  const animatedCliffs = useAnimatedNumber(cliffCount, { duration: 700, delay: 40 });
+  const animatedIncident = useAnimatedNumber(incidentRate, { duration: 700, delay: 60, decimals: 1 });
+
   return (
     <div style={{ display: "flex", flexDirection: "column", minWidth: 0, flex: 1, justifyContent: "space-between", gap: 10 }}>
       <div style={{ minWidth: 0 }}>
@@ -103,7 +118,7 @@ function TrustSeverityPanel({
               Cliffs live
             </div>
             <div className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("severity-high"), marginTop: 2 }}>
-              {cliffCount}
+              {animatedCliffs}
             </div>
           </div>
           <div style={{ minWidth: 0 }}>
@@ -111,7 +126,7 @@ function TrustSeverityPanel({
               Incident
             </div>
             <div className="lisn-num" style={{ fontSize: 13, fontWeight: 800, color: cssVar("text-primary"), marginTop: 2 }}>
-              {incidentRate}%
+              {animatedIncident}%
             </div>
           </div>
         </div>
@@ -177,16 +192,20 @@ function ConversationInsightLines({ text }: { text: string }): React.ReactElemen
 export function HubJourneyCard({
   card,
   onClick,
+  range = "7D",
 }: {
   card: HubJourneyCardData;
   onClick: () => void;
+  range?: TrustRangeKey;
 }): React.ReactElement {
   const Icon = card.icon;
-  const lastIndex = card.timeline.length - 1;
-  const point = card.timeline[lastIndex];
-  const trendData = card.timeline.map((t) => ({ w: t.label, v: t.heroValue }));
-  const { text: heroDelta, positive: deltaPositive } = hubHeroDelta(card.timeline, lastIndex);
+  const activeIndex = hubActiveIndexForRange(card.timeline.length, range);
+  const point = card.timeline[activeIndex] ?? card.timeline[card.timeline.length - 1];
+  const trendSlice = hubTrendWindow(card.timeline, range, activeIndex);
+  const trendData = trendSlice.map((t) => ({ w: t.label, v: t.heroValue }));
+  const { text: heroDelta, positive: deltaPositive } = hubHeroDelta(card.timeline, activeIndex);
   const deltaColor = deltaPositive ? cssVar("positive") : cssVar("severity-high");
+  const animatedHero = useAnimatedNumber(point.heroValue, { duration: 750, delay: 20 });
 
   return (
     <button
@@ -259,7 +278,7 @@ export function HubJourneyCard({
           </span>
           <div style={{ marginBottom: 6, paddingRight: 64 }}>
             <div className="lisn-num" style={{ fontSize: 34, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1 }}>
-              {point.heroValue}
+              {animatedHero}
             </div>
           </div>
           <div style={{ width: "100%", flex: 1, minHeight: 96 }}>

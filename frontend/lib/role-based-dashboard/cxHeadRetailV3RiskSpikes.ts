@@ -1,6 +1,7 @@
 import type { RiskSpike } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import type { TrustRangeKey } from "@/components/role-based-dashboard/cx-head-retail-v3/lib/cxHeadRetailV3TrustBreakdownData";
 
-/** V3 overview operational alerts — retail / ecommerce CX spikes. */
+/** V3 overview operational alerts — retail / ecommerce CX spikes (7D baseline). */
 export const CX_HEAD_V3_RISK_SPIKES: RiskSpike[] = [
   {
     id: "v3-checkout-failure",
@@ -95,6 +96,40 @@ export const CX_HEAD_V3_RISK_SPIKES: RiskSpike[] = [
       "Holiday delivery delays driving refunds — warehouse return receipt lag; add weekend shift and update ETA comms.",
   },
 ];
+
+const RANGE_SPIKE_META: Record<
+  TrustRangeKey,
+  { magnitudeScale: number; stamp: (base: string) => string; windowLabel: string }
+> = {
+  "24H": {
+    magnitudeScale: 0.55,
+    stamp: () => "Last 4h",
+    windowLabel: "today",
+  },
+  "7D": {
+    magnitudeScale: 1,
+    stamp: (base) => base,
+    windowLabel: "this week",
+  },
+  "30D": {
+    magnitudeScale: 2.4,
+    stamp: () => "Last 30D",
+    windowLabel: "this month",
+  },
+};
+
+/** Range-aware spike list for overview — magnitudes + timestamps shift with 24H / 7D / 30D. */
+export function getCxHeadV3RiskSpikes(range: TrustRangeKey = "7D"): RiskSpike[] {
+  const meta = RANGE_SPIKE_META[range];
+  return CX_HEAD_V3_RISK_SPIKES.map((spike) => ({
+    ...spike,
+    timestamp: meta.stamp(spike.timestamp),
+    magnitude: Math.max(8, Math.round(spike.magnitude * meta.magnitudeScale)),
+    slaBefore: spike.slaBefore != null ? Math.max(1, Math.round(spike.slaBefore * meta.magnitudeScale)) : undefined,
+    slaAfter: spike.slaAfter != null ? Math.max(1, Math.round(spike.slaAfter * meta.magnitudeScale)) : undefined,
+    triggerInsight: spike.triggerInsight.replace(/\bevening peak\b/i, `${meta.windowLabel} peak`),
+  }));
+}
 
 export const CX_HEAD_V3_RISK_DRIVER_CONTEXT =
   "Sale payment failures · delivery promise miss · Platinum churn · viral late-delivery posts · cart sync bug";

@@ -5,11 +5,27 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, 
 import { FCICluster } from '@/lib/fci-lib/fciData';
 import { TrendingUp, TrendingDown, X, Users, Clock, MessageSquare, Mail, MessageCircle, Ticket, Phone, Share2, Sparkles, AlertTriangle, Lightbulb, Target } from 'lucide-react';
 
+type ViewMode = 'channel' | 'customerSegment';
+
 interface FailureClustersProps {
   clusters: FCICluster[];
   isDarkMode?: boolean;
   /** Sterling head_retail: franchise metrics + Complaints channel legend */
   variant?: 'default' | 'sterling-franchise';
+  /** Header title. Defaults to "What's Failing?" */
+  title?: string;
+  /** When false, hide the title (e.g. parent SectionHeader already shows it). */
+  showTitle?: boolean;
+  /** When false, hide By Channel / By Customer Segment (e.g. parent owns the toggles). */
+  showViewModeTabs?: boolean;
+  /** Controlled view mode. When set with onViewModeChange, parent owns the toggle. */
+  viewMode?: ViewMode;
+  onViewModeChange?: (mode: ViewMode) => void;
+  /**
+   * Optional customer-segment stack for "By Customer Segment".
+   * When set, replaces HVHF/HVLF value-tier labels with these names/colors.
+   */
+  customerSegments?: Array<{ label: string; color: string; weight?: number }>;
 }
 
 // Fixed channel order for consistent stacking
@@ -29,14 +45,13 @@ const CHANNEL_COLORS: Record<string, string> = {
 
 // Custom bar shape that only curves the topmost segment
 const CustomBar = (props: any) => {
-  const { x, y, width, height, fill, payload, dataKey, viewMode } = props;
+  const { x, y, width, height, fill, payload, dataKey, viewMode, stackKeys } = props;
   
   if (!payload || height <= 0) return null;
   
   // Determine which items to check based on view mode
-  const itemsToCheck = viewMode === 'customerSegment' 
-    ? CUSTOMER_SEGMENTS
-    : CHANNEL_ORDER;
+  const itemsToCheck = stackKeys
+    ?? (viewMode === 'customerSegment' ? CUSTOMER_SEGMENTS : CHANNEL_ORDER);
   
   // Find the topmost item for this bar (last item with value > 0 in order)
   let topItem = '';
@@ -166,35 +181,30 @@ const ClusterDetailCard = ({
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-2 flex-wrap">
-            <h4 className="font-bold text-base" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-3 mb-0 flex-wrap">
+            <h4 className="font-bold text-base m-0" style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}>
               {cluster.category}
             </h4>
-            <span
-              className="px-2 py-1 rounded text-xs font-bold text-white"
-              style={{ backgroundColor: getSeverityColor(cluster.severity) }}
-            >
-              {cluster.severity}
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span 
-              className="text-2xl font-bold"
-              style={{ color: getSeverityColor(cluster.severity) }}
-            >
-              {cluster.count.toLocaleString()}
-            </span>
-            <span className="text-sm" style={{ color: '#939394' }}>cases</span>
-            <div 
-              className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold"
-              style={{ 
-                color: cluster.trend > 0 ? '#ef4444' : '#22c55e',
-                backgroundColor: cluster.trend > 0 ? '#ef444415' : '#22c55e15'
-              }}
-            >
-              {cluster.trend > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-              {cluster.trend > 0 ? '+' : ''}{cluster.trend}%
+            <span style={{ color: '#939394', fontSize: 16, fontWeight: 500, lineHeight: 1 }}>-</span>
+            <div className="flex items-center gap-2">
+              <span
+                className="text-2xl font-bold"
+                style={{ color: getSeverityColor(cluster.severity) }}
+              >
+                {cluster.count.toLocaleString()}
+              </span>
+              <span className="text-sm" style={{ color: '#939394' }}>cases</span>
+              <div
+                className="flex items-center gap-1 px-2 py-0.5 rounded text-xs font-semibold"
+                style={{
+                  color: cluster.trend > 0 ? '#ef4444' : '#22c55e',
+                  backgroundColor: cluster.trend > 0 ? '#ef444415' : '#22c55e15'
+                }}
+              >
+                {cluster.trend > 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+                {cluster.trend > 0 ? '+' : ''}{cluster.trend}%
+              </div>
             </div>
           </div>
         </div>
@@ -320,7 +330,14 @@ const ClusterDetailCard = ({
             </p>
           </div>
         </div>
-        <div /> {/* Empty cell for alignment */}
+        <div className="flex items-center">
+          <span
+            className="px-2 py-1 rounded text-xs font-bold text-white"
+            style={{ backgroundColor: getSeverityColor(cluster.severity) }}
+          >
+            {cluster.severity}
+          </span>
+        </div>
           </>
         )}
       </div>
@@ -477,8 +494,6 @@ const CUSTOMER_SEGMENT_MULTIPLIERS: Record<string, Record<string, number>> = {
   }
 };
 
-type ViewMode = 'channel' | 'customerSegment';
-
 // Customer segment options - moved outside component to avoid initialization issues
 const CUSTOMER_SEGMENTS = [
   'High Value High Frequency',
@@ -495,9 +510,36 @@ const SEGMENT_COLORS: Record<string, string> = {
   'Low Value Low Frequency': '#94A3B8'     // Cool Slate
 };
 
-export function FailureClusters({ clusters, isDarkMode = false, variant = 'default' }: FailureClustersProps) {
-  const [viewMode, setViewMode] = useState<ViewMode>('channel');
+export function FailureClusters({
+  clusters,
+  isDarkMode = false,
+  variant = 'default',
+  title = "What's Failing?",
+  showTitle = true,
+  showViewModeTabs = true,
+  viewMode: viewModeProp,
+  onViewModeChange,
+  customerSegments: customerSegmentsProp,
+}: FailureClustersProps) {
+  const [internalViewMode, setInternalViewMode] = useState<ViewMode>('channel');
+  const viewMode = viewModeProp ?? internalViewMode;
   const channelOrder = variant === 'sterling-franchise' ? STERLING_CHANNEL_ORDER : CHANNEL_ORDER;
+
+  const useLifecycleSegments = Boolean(customerSegmentsProp?.length);
+  const segmentLabels = useLifecycleSegments
+    ? customerSegmentsProp!.map((s) => s.label)
+    : CUSTOMER_SEGMENTS;
+  const segmentColors: Record<string, string> = useLifecycleSegments
+    ? Object.fromEntries(customerSegmentsProp!.map((s) => [s.label, s.color]))
+    : SEGMENT_COLORS;
+  const segmentWeightSum = useLifecycleSegments
+    ? customerSegmentsProp!.reduce((sum, s) => sum + (s.weight ?? 1), 0)
+    : 0;
+  const segmentWeights: Record<string, number> = useLifecycleSegments
+    ? Object.fromEntries(
+        customerSegmentsProp!.map((s) => [s.label, (s.weight ?? 1) / (segmentWeightSum || 1)]),
+      )
+    : {};
   
   // Filter and transform clusters - no filtering needed, just use original clusters
   const filteredClusters = useMemo(() => {
@@ -539,15 +581,24 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
           clusterId: cluster.id
         };
         
-        // Calculate values for each customer segment
-        CUSTOMER_SEGMENTS.forEach(segment => {
-          const multiplier = CUSTOMER_SEGMENT_MULTIPLIERS[segment]?.[cluster.category] || 1;
-          const segmentValue = Math.round(cluster.count * multiplier);
-          baseData[segment] = segmentValue;
+        segmentLabels.forEach(segment => {
+          if (useLifecycleSegments) {
+            const weight = segmentWeights[segment] ?? 0;
+            // Light category skew so stacks aren't identical across failure types
+            const skew =
+              (cluster.category.length + segment.length) % 7 === 0
+                ? 1.12
+                : (cluster.category.length + segment.length) % 5 === 0
+                  ? 0.88
+                  : 1;
+            baseData[segment] = Math.max(1, Math.round(cluster.count * weight * skew));
+          } else {
+            const multiplier = CUSTOMER_SEGMENT_MULTIPLIERS[segment]?.[cluster.category] || 1;
+            baseData[segment] = Math.round(cluster.count * multiplier);
+          }
         });
         
-        // Calculate total for sorting
-        baseData.total = CUSTOMER_SEGMENTS.reduce((sum, segment) => {
+        baseData.total = segmentLabels.reduce((sum, segment) => {
           return sum + (baseData[segment] || 0);
         }, 0);
         
@@ -577,7 +628,7 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
         return baseData;
       }).sort((a, b) => b.total - a.total); // Sort by total descending
     }
-  }, [filteredClusters, viewMode]);
+  }, [filteredClusters, viewMode, segmentLabels, segmentWeights, useLifecycleSegments]);
 
   // Use fixed channel order for consistent stacking
   const channelList = channelOrder;
@@ -585,10 +636,10 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
   // Get active items for chart based on view mode
   const activeChartItems = useMemo(() => {
     if (viewMode === 'customerSegment') {
-      return CUSTOMER_SEGMENTS;
+      return segmentLabels;
     }
     return channelOrder;
-  }, [viewMode, channelOrder]);
+  }, [viewMode, channelOrder, segmentLabels]);
 
   const handleBarClick = (data: any) => {
     if (data && data.fullName) {
@@ -600,55 +651,68 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
   };
 
   const handleViewModeChange = (mode: ViewMode) => {
-    setViewMode(mode);
+    if (onViewModeChange) {
+      onViewModeChange(mode);
+      return;
+    }
+    setInternalViewMode(mode);
   };
+
+  const showHeader = showTitle || showViewModeTabs;
 
   return (
     <div className="p-6 h-full">
+      {showHeader ? (
       <div className="mb-4">
-        <h3
-          className="text-lg font-bold mb-4"
-          style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
-        >
-          What's Failing?
-        </h3>
-        
-        {/* Tab Buttons - By Channel and By Customer Segment */}
-        <div className="flex gap-2 mb-4">
-          <button
-            onClick={() => handleViewModeChange('channel')}
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-            style={{
-              backgroundColor: viewMode === 'channel' 
-                ? '#5332FF' 
-                : (isDarkMode ? '#1a1a1a' : '#FFFFFF'),
-              color: viewMode === 'channel' 
-                ? '#FFFFFF' 
-                : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
-              border: `1px solid ${viewMode === 'channel' ? '#5332FF' : (isDarkMode ? '#2a2a2a' : '#E5E5E5')}`,
-              boxShadow: viewMode === 'channel' ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
-            }}
-          >
-            By Channel
-          </button>
-          <button
-            onClick={() => handleViewModeChange('customerSegment')}
-            className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-            style={{
-              backgroundColor: viewMode === 'customerSegment' 
-                ? '#5332FF' 
-                : (isDarkMode ? '#1a1a1a' : '#FFFFFF'),
-              color: viewMode === 'customerSegment' 
-                ? '#FFFFFF' 
-                : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
-              border: `1px solid ${viewMode === 'customerSegment' ? '#5332FF' : (isDarkMode ? '#2a2a2a' : '#E5E5E5')}`,
-              boxShadow: viewMode === 'customerSegment' ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
-            }}
-          >
-            By Customer Segment
-          </button>
+        <div className={`flex items-center gap-3 flex-wrap mb-4 ${showTitle ? 'justify-between' : 'justify-end'}`}>
+          {showTitle ? (
+            <h3
+              className="text-lg font-bold m-0"
+              style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+            >
+              {title}
+            </h3>
+          ) : null}
+
+          {showViewModeTabs ? (
+          <div className="flex gap-2">
+            <button
+              onClick={() => handleViewModeChange('channel')}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+              style={{
+                backgroundColor: viewMode === 'channel' 
+                  ? '#5332FF' 
+                  : (isDarkMode ? '#1a1a1a' : '#FFFFFF'),
+                color: viewMode === 'channel' 
+                  ? '#FFFFFF' 
+                  : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
+                border: `1px solid ${viewMode === 'channel' ? '#5332FF' : (isDarkMode ? '#2a2a2a' : '#E5E5E5')}`,
+                boxShadow: viewMode === 'channel' ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
+              }}
+            >
+              By Channel
+            </button>
+            <button
+              onClick={() => handleViewModeChange('customerSegment')}
+              className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+              style={{
+                backgroundColor: viewMode === 'customerSegment' 
+                  ? '#5332FF' 
+                  : (isDarkMode ? '#1a1a1a' : '#FFFFFF'),
+                color: viewMode === 'customerSegment' 
+                  ? '#FFFFFF' 
+                  : (isDarkMode ? '#D6D9D8' : '#4a4a4a'),
+                border: `1px solid ${viewMode === 'customerSegment' ? '#5332FF' : (isDarkMode ? '#2a2a2a' : '#E5E5E5')}`,
+                boxShadow: viewMode === 'customerSegment' ? '0 2px 8px rgba(83, 50, 255, 0.3)' : 'none'
+              }}
+            >
+              By Customer Segment
+            </button>
+          </div>
+          ) : null}
         </div>
       </div>
+      ) : null}
 
       <div className="flex gap-4" style={{ minHeight: '450px' }}>
         {/* Left - Stacked Bar Chart */}
@@ -678,7 +742,9 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
                       dataKey={channel}
                       stackId="a"
                       fill={CHANNEL_COLORS[channel] || '#939394'}
-                      shape={(props: any) => <CustomBar {...props} viewMode="channel" />}
+                      shape={(props: any) => (
+                        <CustomBar {...props} viewMode="channel" stackKeys={channelOrder} />
+                      )}
                       cursor="pointer"
                       opacity={selectedCluster ? 0.6 : 1}
                       onClick={(data) => handleBarClick(data)}
@@ -691,8 +757,14 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
                       key={segment}
                       dataKey={segment}
                       stackId="a"
-                      fill={SEGMENT_COLORS[segment] || '#939394'}
-                      shape={(props: any) => <CustomBar {...props} viewMode="customerSegment" />}
+                      fill={segmentColors[segment] || '#939394'}
+                      shape={(props: any) => (
+                        <CustomBar
+                          {...props}
+                          viewMode="customerSegment"
+                          stackKeys={segmentLabels}
+                        />
+                      )}
                       cursor="pointer"
                       opacity={selectedCluster ? 0.6 : 1}
                       onClick={(data) => handleBarClick(data)}
@@ -705,7 +777,7 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
           
           {/* Legend - Shows Channels or Customer Segments (Below Chart) */}
           <div 
-            className="flex items-center justify-center gap-6 py-3 px-4 rounded-xl mt-4"
+            className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 py-3 px-4 rounded-xl mt-4"
             style={{ 
               backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
               border: `1px solid ${isDarkMode ? '#2a2a2a' : '#E5E5E5'}`
@@ -732,14 +804,14 @@ export function FailureClusters({ clusters, isDarkMode = false, variant = 'defau
               ))
             ) : (
               // Show customer segment legend
-              CUSTOMER_SEGMENTS.map(segment => (
+              segmentLabels.map(segment => (
                 <div
                   key={segment}
                   className="flex items-center gap-2"
                 >
                   <span 
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: SEGMENT_COLORS[segment] || '#939394' }}
+                    style={{ backgroundColor: segmentColors[segment] || '#939394' }}
                   />
                   <span 
                     className="text-sm font-medium" 

@@ -4,9 +4,9 @@ import React from "react";
 import { AIRiskSpikeMonitor } from "@/components/unified/actions/AIRiskSpikeMonitor";
 import {
   CX_HEAD_V3_RISK_DRIVER_CONTEXT,
-  CX_HEAD_V3_RISK_SPIKES,
+  getCxHeadV3RiskSpikes,
 } from "@/lib/role-based-dashboard/cxHeadRetailV3RiskSpikes";
-import { HUB_JOURNEY_CARDS, OVERVIEW_EXEC_PULSE } from "../../lib/cxHeadRetailV3OverviewData";
+import { HUB_JOURNEY_CARDS, getOverviewExecPulse } from "../../lib/cxHeadRetailV3OverviewData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { useTheme } from "../../theme/DashboardThemeProvider";
 import { HubJourneyCard } from "../common/HubJourneyCard";
@@ -14,8 +14,10 @@ import { cssVar, layout, radius } from "../../theme/tokens";
 
 /** V3 front screen — executive pulse, three hub cards, operational spike signals. */
 export function CXOverviewScreen(): React.ReactElement {
-  const { navigate } = useNavigation();
+  const { navigate, trustRange } = useNavigation();
   const { mode } = useTheme();
+  const pulse = getOverviewExecPulse(trustRange);
+  const spikes = getCxHeadV3RiskSpikes(trustRange);
 
   return (
     <div
@@ -53,7 +55,7 @@ export function CXOverviewScreen(): React.ReactElement {
           </span>
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
-          {OVERVIEW_EXEC_PULSE.map((item, idx) => (
+          {pulse.map((item, idx) => (
             <div
               key={item.q}
               style={{
@@ -83,7 +85,12 @@ export function CXOverviewScreen(): React.ReactElement {
         }}
       >
         {HUB_JOURNEY_CARDS.map((card) => (
-          <HubJourneyCard key={card.id} card={card} onClick={() => navigate(card.targetScreen)} />
+          <HubJourneyCard
+            key={card.id}
+            card={card}
+            range={trustRange}
+            onClick={() => navigate(card.targetScreen)}
+          />
         ))}
       </div>
 
@@ -96,7 +103,7 @@ export function CXOverviewScreen(): React.ReactElement {
         }}
       >
         <AIRiskSpikeMonitor
-          spikes={CX_HEAD_V3_RISK_SPIKES}
+          spikes={spikes}
           driverContext={CX_HEAD_V3_RISK_DRIVER_CONTEXT}
           isDarkMode={mode === "dark"}
           alertBadgeLabel="AI · Spike signal"

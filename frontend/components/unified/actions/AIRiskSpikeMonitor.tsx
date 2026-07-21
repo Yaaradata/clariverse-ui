@@ -686,7 +686,6 @@ function RiskSpikeCard({
   const sevBadge = severityBadge[spike.severity];
   const metaLabelClass = isDarkMode ? "text-gray-300" : "text-gray-700";
   const metaValueClass = isDarkMode ? "text-gray-50" : "text-gray-900";
-  const metaSubClass = isDarkMode ? "text-gray-400" : "text-gray-600";
 
   return (
     <div
@@ -717,7 +716,7 @@ function RiskSpikeCard({
         className={
           franchise
             ? `mt-3 space-y-1 text-[11px] ${isDarkMode ? "text-gray-400" : "text-gray-600"}`
-            : `mt-2 h-[4.75rem] space-y-1.5 text-[11px] ${isDarkMode ? "text-gray-200" : "text-gray-600"}`
+            : `mt-2 h-[3.5rem] space-y-1.5 text-[11px] ${isDarkMode ? "text-gray-200" : "text-gray-600"}`
         }
       >
         <div className={`flex justify-between gap-3 ${franchise ? "" : "items-baseline min-h-[1rem]"}`}>
@@ -730,17 +729,12 @@ function RiskSpikeCard({
             {spike.region ?? spike.channel}
           </span>
         </div>
-        <div className="flex justify-between gap-3 min-h-[2.25rem]">
-          <span className={`uppercase tracking-wide font-semibold shrink-0 pt-0.5 ${metaLabelClass}`}>
+        <div className={`flex justify-between gap-3 ${franchise ? "" : "items-baseline min-h-[1rem]"}`}>
+          <span className={`uppercase tracking-wide font-semibold shrink-0 ${metaLabelClass}`}>
             Top Intent
           </span>
-          <div className="text-right min-w-0 flex-1">
-            <div className={`font-semibold leading-snug line-clamp-1 ${metaValueClass}`}>
-              {spike.topIntent}
-            </div>
-            <div className={`text-[10px] leading-snug line-clamp-1 min-h-[0.875rem] ${metaSubClass}`}>
-              {spike.topIntentContext ?? "\u00A0"}
-            </div>
+          <div className={`font-semibold text-right truncate leading-snug line-clamp-1 min-w-0 flex-1 ${metaValueClass}`}>
+            {spike.topIntent}
           </div>
         </div>
         <div className="flex justify-between gap-3 items-baseline min-h-[1rem]">

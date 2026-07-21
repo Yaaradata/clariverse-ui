@@ -53,10 +53,13 @@ function HubHeadlineTitle({ variant }: { variant: HubCardId }): React.ReactEleme
 export function HubFluidHeadline({
   variant,
   trailing,
+  purpose,
 }: {
   variant: HubCardId;
   /** Aligned top-right on the headline row (e.g. Back to Overview). */
   trailing?: React.ReactNode;
+  /** Overrides the default HUB_PAGE_PURPOSE copy when provided. */
+  purpose?: React.ReactNode;
 }): React.ReactElement {
   return (
     <div
@@ -101,7 +104,7 @@ export function HubFluidHeadline({
           whiteSpace: variant === "trust" ? "nowrap" : "normal",
         }}
       >
-        {HUB_PAGE_PURPOSE[variant]}
+        {purpose ?? HUB_PAGE_PURPOSE[variant]}
       </p>
     </div>
   );

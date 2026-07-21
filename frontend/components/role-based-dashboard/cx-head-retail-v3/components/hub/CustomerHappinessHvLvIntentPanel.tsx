@@ -1,14 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkle } from "../common/Sparkle";
-import { ConfidenceBand, ConfidenceChip } from "../common/ConfidenceBand";
+import { ConfidenceBand } from "../common/ConfidenceBand";
 import { DetailSection } from "./HubDetailPrimitives";
 import {
   HAPPINESS_BASE_WIDE,
-  VALUE_REACH_CELLS,
   type ValueLens,
-  type ValueReachCell,
 } from "../../lib/cxHeadRetailV3HappinessLensData";
 import {
   HV_SHOPPER_INTENTS,
@@ -25,13 +22,6 @@ function sentimentColor(score: number): string {
   if (score > 0.05) return cssVar("positive");
   if (score < -0.05) return cssVar("severity-high");
   return cssVar("severity-med");
-}
-
-function cellAccent(cell: ValueReachCell): string {
-  if (cell.value === "hv" && cell.reach === "high") return cssVar("severity-high");
-  if (cell.value === "hv") return HV_COLOR;
-  if (cell.reach === "high") return cssVar("severity-med");
-  return LV_COLOR;
 }
 
 function IntentRowCard({
@@ -94,51 +84,6 @@ function IntentRowCard({
         {row.sentiment > 0 ? "+" : ""}
         {row.sentiment.toFixed(2)}
       </span>
-    </div>
-  );
-}
-
-function ValueReachQuad({ cell }: { cell: ValueReachCell }): React.ReactElement {
-  const accent = cellAccent(cell);
-  return (
-    <div
-      style={{
-        padding: "12px 14px",
-        borderRadius: radius.md,
-        background: `linear-gradient(135deg, ${accent}12 0%, transparent 65%), ${cssVar("surface-raised")}`,
-        border: `1px solid ${accent}40`,
-        borderLeft: `3px solid ${accent}`,
-        minWidth: 0,
-        display: "flex",
-        flexDirection: "column",
-        gap: 6,
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "flex-start" }}>
-        <div style={{ fontSize: 13, fontWeight: 800, color: cssVar("text-primary"), lineHeight: 1.25 }}>
-          {cell.title}
-        </div>
-        <span
-          style={{
-            fontSize: 9,
-            fontWeight: 800,
-            textTransform: "uppercase",
-            letterSpacing: 0.4,
-            color: accent,
-            flexShrink: 0,
-          }}
-        >
-          {cell.value.toUpperCase()} · {cell.reach}-reach
-        </span>
-      </div>
-      <div style={{ fontSize: 11, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{cell.detail}</div>
-      <div style={{ fontSize: 10, color: cssVar("text-muted") }}>{cell.shoppers}</div>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginTop: 2 }}>
-        <span style={{ fontSize: 11, fontWeight: 700, color: cssVar("accent-2") }}>{cell.action}</span>
-        <span className="lisn-num" style={{ fontSize: 11, fontWeight: 800, color: cssVar("severity-high") }}>
-          {cell.gmvAtRisk}
-        </span>
-      </div>
     </div>
   );
 }
@@ -213,35 +158,7 @@ export function CustomerHappinessHvLvIntentPanel({
   const intentTitle = valueLens === "hv" ? "HV · Top Intents (Plus + high-GMV)" : "LV · Top Intents (managed)";
 
   return (
-    <DetailSection
-      premium
-      title="Value × reach — who leads action?"
-      subtitle="Axis 1 = customer value (HV/LV). Axis 2 = reach/influence (social/review virality). High-value leads; low-value stays managed."
-      trailing={
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
-          <ConfidenceChip conf={86} small />
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-              fontSize: 9,
-              fontWeight: 800,
-              letterSpacing: 0.6,
-              textTransform: "uppercase",
-              color: HV_COLOR,
-              padding: "3px 8px",
-              borderRadius: radius.pill,
-              background: `${HV_COLOR}15`,
-              border: `1px solid ${HV_COLOR}40`,
-            }}
-          >
-            <Sparkle size={9} />
-            AI
-          </span>
-        </span>
-      }
-    >
+    <DetailSection premium>
       {/* Base-wide happy rate reminder — independent of value lens */}
       <div
         style={{
@@ -278,34 +195,6 @@ export function CustomerHappinessHvLvIntentPanel({
 
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gridTemplateRows: "auto auto",
-          gap: 10,
-          marginBottom: 16,
-        }}
-      >
-        <div style={{ gridColumn: "1 / -1", display: "flex", justifyContent: "space-between", fontSize: 10, color: cssVar("text-muted") }}>
-          <span>← Low reach</span>
-          <span style={{ fontWeight: 700 }}>Reach / influence →</span>
-          <span>High reach →</span>
-        </div>
-        {VALUE_REACH_CELLS.filter((c) => c.reach === "low" && c.value === "hv").map((c) => (
-          <ValueReachQuad key={c.id} cell={c} />
-        ))}
-        {VALUE_REACH_CELLS.filter((c) => c.reach === "high" && c.value === "hv").map((c) => (
-          <ValueReachQuad key={c.id} cell={c} />
-        ))}
-        {VALUE_REACH_CELLS.filter((c) => c.reach === "low" && c.value === "lv").map((c) => (
-          <ValueReachQuad key={c.id} cell={c} />
-        ))}
-        {VALUE_REACH_CELLS.filter((c) => c.reach === "high" && c.value === "lv").map((c) => (
-          <ValueReachQuad key={c.id} cell={c} />
-        ))}
-      </div>
-
-      <div
-        style={{
           borderRadius: radius.md,
           background: cssVar("surface-raised"),
           borderTop: `1px solid ${intentColor}30`,
@@ -338,9 +227,6 @@ export function CustomerHappinessHvLvIntentPanel({
           <span style={{ fontSize: 9, fontWeight: 700, color: cssVar("text-muted"), textAlign: "right", letterSpacing: 0.6, textTransform: "uppercase" }}>
             Happiness
           </span>
-        </div>
-        <div style={{ padding: "6px 14px 0", fontSize: 10, color: cssVar("text-muted") }}>
-          Detail lens defaults to high-value. Low-value remains available — automate vs watch, never dropped from the base-wide headline.
         </div>
         <div>
           {intentRows.map((row, index) => (

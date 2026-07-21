@@ -67,26 +67,193 @@ export const VALUE_REACH_CELLS: ValueReachCell[] = [
   },
 ];
 
-/** Segment knowledge table — ranked by GMV at risk so HV rises on its own. */
+/** Segment knowledge table — ranked by GMV at risk so high-value rises on its own. */
+export type HappinessSegmentKey =
+  | "active"
+  | "occasional"
+  | "loyal"
+  | "seasonal"
+  | "reactivated"
+  | "dormant"
+  | "frequent";
+
 export type HappinessSegmentRow = {
-  key: "hvhf" | "hvlf" | "lvhf" | "lvlf";
+  key: HappinessSegmentKey;
   label: string;
   valueLens: ValueLens;
   interactions: number;
   wowDelta: number;
   sentiment: number;
+  /** Average order value (₹). */
+  aov: number;
+  /** Contacts per unit (units, not orders). */
   cpu: number;
+  /** Average transaction value (₹). */
+  atv: number;
+  /** Lifetime value score (0–100) — defines customer lifetime value. */
+  ltv: number;
   resolutionRate: number;
   /** Ranking metric — ₹ Cr GMV exposed. */
   gmvAtRiskCr: number;
   color: string;
+  /** Sentiment mix % — must sum to 100. */
+  happy: number;
+  neutral: number;
+  unhappy: number;
+  /** Segment-specific AI insight shown when the row is selected. */
+  aiInsight: string;
+  /** AI insight confidence score (0–100). */
+  aiConfidence: number;
 };
 
 export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
-  { key: "hvhf", label: "HVHF", valueLens: "hv", interactions: 9550, wowDelta: 2.1, sentiment: 0.08, cpu: 0.8, resolutionRate: 58, gmvAtRiskCr: 42.0, color: "#A855F7" },
-  { key: "hvlf", label: "HVLF", valueLens: "hv", interactions: 6360, wowDelta: -0.8, sentiment: 0.03, cpu: 1.2, resolutionRate: 42, gmvAtRiskCr: 31.2, color: "#06B6D4" },
-  { key: "lvhf", label: "LVHF", valueLens: "lv", interactions: 22700, wowDelta: 3.4, sentiment: 0.16, cpu: 2.1, resolutionRate: 29, gmvAtRiskCr: 18.6, color: "#6366F1" },
-  { key: "lvlf", label: "LVLF", valueLens: "lv", interactions: 15130, wowDelta: -1.5, sentiment: 0.26, cpu: 2.8, resolutionRate: 15, gmvAtRiskCr: 9.4, color: "#94A3B8" },
+  {
+    key: "active",
+    label: "Active customer",
+    valueLens: "lv",
+    interactions: 22_571,
+    wowDelta: 3.4,
+    sentiment: 0.16,
+    aov: 1_180,
+    cpu: 2.1,
+    atv: 1_040,
+    ltv: 64,
+    resolutionRate: 45,
+    gmvAtRiskCr: 22.4,
+    color: "#159B94",
+    happy: 34,
+    neutral: 36,
+    unhappy: 30,
+    aiInsight:
+      "Active buyers drive 44% of contacts with rising volume (+3.4%). CPU at 2.1 signals friction — tighten first-pass resolve on delivery ETA before peak sale load.",
+    aiConfidence: 86,
+  },
+  {
+    key: "occasional",
+    label: "Occasional buyer",
+    valueLens: "hv",
+    interactions: 11_285,
+    wowDelta: -0.6,
+    sentiment: 0.03,
+    aov: 1_640,
+    cpu: 1.4,
+    atv: 1_480,
+    ltv: 58,
+    resolutionRate: 38,
+    gmvAtRiskCr: 18.2,
+    color: "#3B82C4",
+    happy: 28,
+    neutral: 34,
+    unhappy: 38,
+    aiInsight:
+      "Occasional buyers are cooling (−0.6%) while AOV stays healthy at ₹1,640. Resolution at 38% is the leak — route refund/return cases to priority queue to protect the next order.",
+    aiConfidence: 81,
+  },
+  {
+    key: "loyal",
+    label: "Loyal customer",
+    valueLens: "hv",
+    interactions: 9_673,
+    wowDelta: 2.1,
+    sentiment: 0.08,
+    aov: 2_850,
+    cpu: 0.8,
+    atv: 2_620,
+    ltv: 88,
+    resolutionRate: 58,
+    gmvAtRiskCr: 42.0,
+    color: "#5B4BE0",
+    happy: 48,
+    neutral: 30,
+    unhappy: 22,
+    aiInsight:
+      "Loyal customers hold ₹42 Cr GMV exposed with best AOV (₹2,850) and lowest CPU (0.8). Guard refund SLA — a single miss here moves high-value advocates into silence.",
+    aiConfidence: 92,
+  },
+  {
+    key: "seasonal",
+    label: "Seasonal buyer",
+    valueLens: "lv",
+    interactions: 4_837,
+    wowDelta: 0.8,
+    sentiment: 0.05,
+    aov: 1_420,
+    cpu: 1.6,
+    atv: 1_290,
+    ltv: 52,
+    resolutionRate: 34,
+    gmvAtRiskCr: 12.1,
+    color: "#7A8BD0",
+    happy: 30,
+    neutral: 32,
+    unhappy: 38,
+    aiInsight:
+      "Seasonal buyers spike into contact around festival windows (+0.8%). Prep capacity and scripted refund paths before the next sale — ATV ₹1,290 means volume, not margin, is the risk.",
+    aiConfidence: 78,
+  },
+  {
+    key: "reactivated",
+    label: "Reactivated customer",
+    valueLens: "hv",
+    interactions: 2_687,
+    wowDelta: 4.2,
+    sentiment: 0.11,
+    aov: 1_980,
+    cpu: 1.1,
+    atv: 1_760,
+    ltv: 72,
+    resolutionRate: 51,
+    gmvAtRiskCr: 14.8,
+    color: "#3AA97A",
+    happy: 40,
+    neutral: 33,
+    unhappy: 27,
+    aiInsight:
+      "Reactivated shoppers are the fastest-growing cohort (+4.2%). Lock the win with post-purchase nurture — ATV ₹1,760 is strong; don't let first-week friction push them dormant again.",
+    aiConfidence: 84,
+  },
+  {
+    key: "dormant",
+    label: "Dormant customer",
+    valueLens: "lv",
+    interactions: 3_210,
+    wowDelta: -0.3,
+    sentiment: -0.12,
+    aov: 980,
+    cpu: 0.4,
+    atv: 860,
+    ltv: 34,
+    resolutionRate: 29,
+    gmvAtRiskCr: 6.4,
+    color: "#94A0B2",
+    happy: 18,
+    neutral: 28,
+    unhappy: 54,
+    aiInsight:
+      "Dormant customers are quiet on contacts but 54% unhappy when they do engage. Light-touch win-back only — don't burn CX capacity while Can't-Lose and At Risk are open.",
+    aiConfidence: 74,
+  },
+  {
+    key: "frequent",
+    label: "Frequent buyer",
+    valueLens: "lv",
+    interactions: 7_840,
+    wowDelta: 1.6,
+    sentiment: 0.09,
+    aov: 1_520,
+    cpu: 1.3,
+    atv: 1_380,
+    ltv: 68,
+    resolutionRate: 47,
+    gmvAtRiskCr: 16.5,
+    color: "#0D9488",
+    happy: 36,
+    neutral: 34,
+    unhappy: 30,
+    aiInsight:
+      "Frequent buyers keep cadence but effort spikes on delivery ETA. Protect reorder path — a friction hit here turns habit into Occasional.",
+    aiConfidence: 83,
+  },
 ];
 
 export function segmentsRankedByGmvAtRisk(

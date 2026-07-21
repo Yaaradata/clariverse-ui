@@ -1,16 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import type { AnxietyPeriodKey } from "../../lib/cxHeadRetailV3AnxietyData";
+import type { TrustRangeKey } from "../../lib/cxHeadRetailV3TrustBreakdownData";
+import { useNavigation } from "../../lib/NavigationContext";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
-import {
-  AnxietyPeriodControls,
-  ServiceDeliveryAnxietyDashboard,
-} from "../hub/ServiceDeliveryAnxietyDashboard";
+import { ServiceDeliveryAnxietyDashboard } from "../hub/ServiceDeliveryAnxietyDashboard";
 import { layout } from "../../theme/tokens";
 
+function anxietyPeriodFromTrustRange(range: TrustRangeKey): AnxietyPeriodKey {
+  switch (range) {
+    case "24H":
+      return "today";
+    case "7D":
+      return "7d";
+    case "30D":
+      return "30d";
+    default: {
+      const _exhaustive: never = range;
+      return _exhaustive;
+    }
+  }
+}
+
 export function HubServiceDeliveryScreen(): React.ReactElement {
-  const [period, setPeriod] = useState<AnxietyPeriodKey>("today");
+  const { trustRange } = useNavigation();
+  const period = anxietyPeriodFromTrustRange(trustRange);
 
   return (
     <div
@@ -24,10 +39,7 @@ export function HubServiceDeliveryScreen(): React.ReactElement {
         gap: 14,
       }}
     >
-      <HubFluidHeadline
-        variant="service-delivery"
-        trailing={<AnxietyPeriodControls period={period} onPeriodChange={setPeriod} />}
-      />
+      <HubFluidHeadline variant="service-delivery" />
 
       <ServiceDeliveryAnxietyDashboard period={period} />
     </div>

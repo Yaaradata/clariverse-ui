@@ -7,6 +7,7 @@ import {
   RadialBarChart,
   ResponsiveContainer,
 } from "recharts";
+import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 import { cssVar } from "../../theme/tokens";
 import { RetailTrendAreaChart } from "./RetailTrendAreaChart";
 
@@ -90,6 +91,15 @@ export function SpikySparkline({
 }
 
 /** Half radial dial — AP-014 dial + sparkline pairing on executive tiles. */
+function splitDisplayValue(raw: string | undefined): { target: number; decimals: number; suffix: string } | null {
+  if (!raw) return null;
+  const match = /^(\d+(?:\.\d+)?)(.*)$/.exec(raw.trim());
+  if (!match) return null;
+  const numStr = match[1] ?? "0";
+  const decimals = numStr.includes(".") ? (numStr.split(".")[1]?.length ?? 0) : 0;
+  return { target: Number(numStr), decimals, suffix: match[2] ?? "" };
+}
+
 export function MiniGauge({
   value,
   label,
@@ -97,6 +107,8 @@ export function MiniGauge({
   bottomLabel,
   color,
   suffix = "",
+  displayValue,
+  showMeter = true,
   compact = false,
 }: {
   value: number;
@@ -105,15 +117,116 @@ export function MiniGauge({
   bottomLabel?: string;
   color: string;
   suffix?: string;
+  displayValue?: string;
+  showMeter?: boolean;
   compact?: boolean;
 }): React.ReactElement {
-  const clamped = Math.max(0, Math.min(100, value));
+  const parsedDisplay = splitDisplayValue(displayValue);
+  const animatedMeter = useAnimatedNumber(value, { duration: 700, delay: 40 });
+  const animatedDisplay = useAnimatedNumber(parsedDisplay?.target ?? value, {
+    duration: 700,
+    delay: 40,
+    decimals: parsedDisplay?.decimals ?? 0,
+  });
+
+  const clamped = Math.max(0, Math.min(100, animatedMeter));
   const gaugeData = [{ name: label, value: clamped, fill: color }];
   const chartHeight = compact ? 48 : 54;
   const innerRadius = compact ? 22 : 32;
   const outerRadius = compact ? 34 : 46;
   const topSlotHeight = 14;
   const bottomSlotHeight = 22;
+  const centerText = parsedDisplay
+    ? `${animatedDisplay}${parsedDisplay.suffix}`
+    : `${Math.round(clamped)}${suffix}`;
+
+  const labelStyle: React.CSSProperties = {
+    height: topSlotHeight,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: 10,
+    color: cssVar("text-muted"),
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+    textAlign: "center",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    width: "100%",
+  };
+
+  const bottomStyle: React.CSSProperties = {
+    height: bottomSlotHeight,
+    display: "flex",
+    alignItems: "flex-start",
+    justifyContent: "center",
+    fontSize: 9,
+    color: cssVar("text-muted"),
+    textTransform: "uppercase",
+    letterSpacing: 0.28,
+    textAlign: "center",
+    lineHeight: 1.15,
+    width: "100%",
+  };
+
+  if (!showMeter) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: compact ? 1 : 2,
+          minWidth: 0,
+          width: "100%",
+        }}
+      >
+        {/* Spacer matches Happy top label slot so PER HOUR still lines up with RATE */}
+        <div style={{ height: topSlotHeight, width: "100%", flexShrink: 0 }} aria-hidden />
+        <div
+          style={{
+            position: "relative",
+            width: "100%",
+            height: chartHeight,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            gap: 2,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 10,
+              color: cssVar("text-muted"),
+              textTransform: "uppercase",
+              letterSpacing: 0.4,
+              textAlign: "center",
+              whiteSpace: "nowrap",
+              lineHeight: 1,
+            }}
+          >
+            {topLabel ?? label}
+          </div>
+          <div
+            className="lisn-num"
+            style={{
+              fontSize: compact ? 12 : 14,
+              fontWeight: 800,
+              color,
+              whiteSpace: "nowrap",
+              lineHeight: 1,
+              paddingBottom: compact ? 0 : 2,
+            }}
+          >
+            {centerText}
+          </div>
+        </div>
+        {bottomLabel ? <div style={bottomStyle}>{bottomLabel}</div> : null}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -126,25 +239,7 @@ export function MiniGauge({
         width: "100%",
       }}
     >
-      <div
-        style={{
-          height: topSlotHeight,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: 10,
-          color: cssVar("text-muted"),
-          textTransform: "uppercase",
-          letterSpacing: 0.4,
-          textAlign: "center",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          width: "100%",
-        }}
-      >
-        {topLabel ?? label}
-      </div>
+      <div style={labelStyle}>{topLabel ?? label}</div>
       <div style={{ position: "relative", width: "100%", height: chartHeight }}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
@@ -157,7 +252,12 @@ export function MiniGauge({
             cy="100%"
           >
             <PolarAngleAxis type="number" domain={[0, 100]} tick={false} axisLine={false} />
-            <RadialBar dataKey="value" cornerRadius={compact ? 3 : 4} background={{ fill: `${cssVar("border")}` }} />
+            <RadialBar
+              dataKey="value"
+              cornerRadius={compact ? 3 : 4}
+              background={{ fill: `${cssVar("border")}` }}
+              isAnimationActive={false}
+            />
           </RadialBarChart>
         </ResponsiveContainer>
         <div
@@ -175,29 +275,10 @@ export function MiniGauge({
             lineHeight: 1,
           }}
         >
-          {clamped}
-          {suffix}
+          {centerText}
         </div>
       </div>
-      {bottomLabel ? (
-        <div
-          style={{
-            height: bottomSlotHeight,
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "center",
-            fontSize: 9,
-            color: cssVar("text-muted"),
-            textTransform: "uppercase",
-            letterSpacing: 0.28,
-            textAlign: "center",
-            lineHeight: 1.15,
-            width: "100%",
-          }}
-        >
-          {bottomLabel}
-        </div>
-      ) : null}
+      {bottomLabel ? <div style={bottomStyle}>{bottomLabel}</div> : null}
     </div>
   );
 }

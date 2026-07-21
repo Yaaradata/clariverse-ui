@@ -68,13 +68,15 @@ export function DetailSection({
   fill = false,
   trailing,
 }: {
-  title: string;
+  title?: string;
   subtitle?: string;
   children: React.ReactNode;
   premium?: boolean;
   fill?: boolean;
   trailing?: React.ReactNode;
 }): React.ReactElement {
+  const showHeader = Boolean(title) || Boolean(trailing);
+
   return (
     <section
       style={{
@@ -88,36 +90,40 @@ export function DetailSection({
         ...(fill ? { height: "100%", display: "flex", flexDirection: "column" } : {}),
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 12,
-          marginBottom: premium ? 16 : 12,
-        }}
-      >
-        <div style={{ minWidth: 0 }}>
-          <h3
-            style={{
-              margin: 0,
-              fontSize: premium ? 14 : 13,
-              fontWeight: 700,
-              color: cssVar("text-primary"),
-              letterSpacing: premium ? 0.15 : 0.2,
-              lineHeight: 1.3,
-            }}
-          >
-            {title}
-          </h3>
-          {subtitle ? (
-            <p style={{ margin: premium ? "6px 0 0" : "4px 0 0", fontSize: 13, color: cssVar("text-secondary"), lineHeight: 1.45 }}>
-              {subtitle}
-            </p>
-          ) : null}
+      {showHeader ? (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            gap: 12,
+            marginBottom: premium ? 16 : 12,
+          }}
+        >
+          <div style={{ minWidth: 0 }}>
+            {title ? (
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: premium ? 14 : 13,
+                  fontWeight: 700,
+                  color: cssVar("text-primary"),
+                  letterSpacing: premium ? 0.15 : 0.2,
+                  lineHeight: 1.3,
+                }}
+              >
+                {title}
+              </h3>
+            ) : null}
+            {subtitle ? (
+              <p style={{ margin: premium ? "6px 0 0" : "4px 0 0", fontSize: 13, color: cssVar("text-secondary"), lineHeight: 1.45 }}>
+                {subtitle}
+              </p>
+            ) : null}
+          </div>
+          {trailing ? <div style={{ flexShrink: 0 }}>{trailing}</div> : null}
         </div>
-        {trailing ? <div style={{ flexShrink: 0 }}>{trailing}</div> : null}
-      </div>
+      ) : null}
       {fill ? <div style={{ flex: 1, display: "flex", flexDirection: "column", minHeight: 0 }}>{children}</div> : children}
     </section>
   );

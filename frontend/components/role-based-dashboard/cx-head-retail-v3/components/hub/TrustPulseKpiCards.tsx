@@ -1168,7 +1168,6 @@ export function TrustPulseKpiCards({ range }: { range: TrustRangeKey }): React.R
 
   return (
     <div
-      key={range}
       style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit, minmax(228px, 1fr))",
