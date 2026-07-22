@@ -584,7 +584,7 @@ const EXEC_PULSE = [
   },
   {
     label: "3. 🟢 What's stable / on-track",
-    text: "62% of today's decline spike is curable; Cashback Plus growth remains healthy.",
+    text: "62% of today's decline spike is curable; Platinum RuPay growth remains healthy.",
   },
 ];
 
@@ -854,7 +854,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     variant: "critical",
     feed: "Offer + spend",
     fields: [
-      ["Cohort", "Cashback Plus"],
+      ["Cohort", "Platinum RuPay"],
       ["Time", "Day 6"],
     ],
     stats: [
@@ -927,7 +927,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     variant: "default",
     feed: "Settlement feed",
     fields: [
-      ["Cohort", "Fuel Co-brand"],
+      ["Cohort", "Jio-bp"],
       ["Time", "This week"],
     ],
     stats: [
@@ -1487,7 +1487,7 @@ const D1_BRANDS: {
 }[] = [
   {
     k: "travel",
-    name: "Premium Travel",
+    name: "Avios",
     spend: "₹312 Cr MTD",
     wow: "−6.2%",
     up: false,
@@ -1497,7 +1497,7 @@ const D1_BRANDS: {
   },
   {
     k: "cashback",
-    name: "Cashback Plus",
+    name: "Platinum RuPay",
     spend: "₹468 Cr MTD",
     wow: "+8.4%",
     up: true,
@@ -1507,7 +1507,7 @@ const D1_BRANDS: {
   },
   {
     k: "fuel",
-    name: "Fuel Co-brand",
+    name: "Jio-bp",
     spend: "₹214 Cr MTD",
     wow: "+3.2%",
     up: true,
@@ -1597,7 +1597,7 @@ const D1_AI: AiRow[] = [
     level: "WARNING",
     tag: "Spend quality",
     title: "Profitable spend drifting on premium",
-    body: "Gross GMV is flat but profitable retained spend on Premium Travel is down 6.4% — top-of-wallet is slipping.",
+    body: "Gross GMV is flat but profitable retained spend on Avios is down 6.4% — top-of-wallet is slipping.",
     metric: "−6.4% vs flat GMV",
     delta: "premiumisation drift",
     icon: Zap,
@@ -2827,7 +2827,7 @@ type BrandDeepRow = {
 const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "travel",
-    name: "Premium Travel",
+    name: "Avios",
     spend: "₹312 Cr MTD",
     wow: "−6.2%",
     wowUp: false,
@@ -2846,7 +2846,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   },
   {
     k: "cashback",
-    name: "Cashback Plus",
+    name: "Platinum RuPay",
     spend: "₹468 Cr MTD",
     wow: "+8.4%",
     wowUp: true,
@@ -2864,7 +2864,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   },
   {
     k: "fuel",
-    name: "Fuel Co-brand",
+    name: "Jio-bp",
     spend: "₹214 Cr MTD",
     wow: "+3.2%",
     wowUp: true,
@@ -2883,7 +2883,7 @@ const BRAND_DEEP: BrandDeepRow[] = [
   },
   {
     k: "biz",
-    name: "Business Card",
+    name: "Pioneer",
     spend: "₹290 Cr MTD",
     wow: "+1.1%",
     wowUp: true,
@@ -3080,7 +3080,7 @@ function BrandCoBrandDeepPerformanceMatrix() {
   return (
     <SectionCard
       title="Brand / Co-brand deep performance"
-      subtitle="Which brand is growing, flat, or unhealthy — and what cost problem is attached"
+      subtitle="Which brand is growing, flat, or margin-negative — and what cost problem is attached"
       accent={T.cyan}
       aiPill
     >
@@ -3159,8 +3159,8 @@ function BrandCoBrandDeepPerformanceMatrix() {
         ))}
       </div>
       <AIInsightStrip>
-        Premium Travel is not a volume problem; it is a profitable-spend
-        problem. Fuel Co-brand is growing, but reward cost is eating the growth.
+        Avios is not a volume problem; it is a profitable-spend
+        problem. Jio-bp is growing, but reward cost is eating the growth.
       </AIInsightStrip>
     </SectionCard>
   );
@@ -3518,12 +3518,12 @@ function Frag({ children }: { children: ReactNode }) {
 /* ═══════════════════ DRILL 2 — BLOCKERS & PROBLEMS ═══════════════════ */
 const DECLINE_HEAT_COLS = [
   "Premium CNP",
-  "Cashback Plus",
+  "Platinum RuPay",
   "3+ yr customers",
   "Batch #4471",
   "Sourcing Q2",
-  "Fuel Co-brand",
-  "Business Card",
+  "Jio-bp",
+  "Pioneer",
 ];
 const DECLINE_HEAT_ROWS: { label: string; cells: number[] }[] = [
   { label: "Tokenised CNP", cells: [91, 48, 38, 55, 42, 34, 28] },
@@ -3973,7 +3973,7 @@ function TroubleTicketBoard() {
   const groups: { title: string; items: string[] }[] = [
     { title: "Open incident now", items: ["Tokenised CNP approval gap", "Fraud Rule R-77"] },
     { title: "Route to owner", items: ["Switch / processor attribution", "Settlement mismatch cluster"] },
-    { title: "Watch closely", items: ["Utilisation migration surge", "Roll Q2-24 inflection"] },
+    { title: "Advisory · monitor", items: ["Utilisation migration surge", "Roll Q2-24 inflection"] },
     { title: "Obligation clock", items: ["Activation 30+7 clock"] },
   ];
   return (
