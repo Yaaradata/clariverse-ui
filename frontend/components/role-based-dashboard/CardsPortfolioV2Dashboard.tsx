@@ -39,6 +39,8 @@ import {
 import type { CSSProperties, ReactNode } from "react";
 import { useState } from "react";
 import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
@@ -1233,74 +1235,234 @@ const VOICE_BARS: { name: string; v: number; c: string }[] = [
   { name: "EMI gap", v: 34, c: T.amber },
 ];
 
+type OvGauge = { topLabel: string; value: number; label: string; color: string };
+type OvStat = { label: string; value: string; sub: string; color: string };
+type OvBar = { name: string; v: number; color: string };
+
+const ovHexA = (hex: string, a: number) => {
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
+};
+
+function OvHalfGauge({ topLabel, value, label, color }: OvGauge) {
+  const v = Math.max(0, Math.min(100, value));
+  return (
+    <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
+      <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: T.muted }}>{topLabel}</div>
+      <div style={{ position: "relative", width: "100%", height: 46 }}>
+        <ResponsiveContainer width="100%" height="100%">
+          <RadialBarChart data={[{ value: v, fill: color }]} startAngle={180} endAngle={0} innerRadius={26} outerRadius={42} cx="50%" cy="100%">
+            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} axisLine={false} />
+            <RadialBar dataKey="value" cornerRadius={4} background={{ fill: "#2a2a2a90" }} />
+          </RadialBarChart>
+        </ResponsiveContainer>
+        <div style={{ position: "absolute", left: "50%", bottom: 1, transform: "translateX(-50%)", fontFamily: MONO, fontSize: 15, fontWeight: 800, color }}>{v}%</div>
+      </div>
+      <div style={{ fontSize: 9, color: T.muted, textTransform: "uppercase", letterSpacing: 0.3, textAlign: "center", lineHeight: 1.15, minHeight: 22 }}>{label}</div>
+    </div>
+  );
+}
+
+function OvBars({ bars }: { bars: OvBar[] }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 8, justifyContent: "center", minHeight: 70 }}>
+      {bars.map((b) => (
+        <div key={b.name} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 9.5, color: T.muted, width: 74, flexShrink: 0 }}>{b.name}</span>
+          <div style={{ flex: 1, height: 7, borderRadius: 4, background: T.track }}>
+            <div style={{ height: "100%", width: `${b.v}%`, background: b.color, borderRadius: 4 }} />
+          </div>
+          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 700, color: b.color, width: 20, textAlign: "right" }}>{b.v}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OvKeyStat({ label, value, sub, color, align }: OvStat & { align: "start" | "end" }) {
+  return (
+    <div style={{ textAlign: align === "end" ? "right" : "left" }}>
+      <div style={{ fontSize: 9, color: T.muted, textTransform: "uppercase", letterSpacing: 0.4 }}>{label}</div>
+      <div style={{ fontFamily: MONO, fontSize: 14, fontWeight: 800, color, marginTop: 4, lineHeight: 1.2 }}>{value}</div>
+      <div style={{ fontSize: 8, color: "#6b7280", textTransform: "uppercase", marginTop: 3 }}>{sub}</div>
+    </div>
+  );
+}
+
+function OverviewExecTile({
+  accent, icon, title, micro, score, delta, spark, leftGauge, rightGauge, bars, bottomLeft, bottomRight, ai, cta, onClick,
+}: {
+  accent: string;
+  icon: ReactNode;
+  title: string;
+  micro: string;
+  score: string;
+  delta: string;
+  spark: number[];
+  leftGauge?: OvGauge;
+  rightGauge?: OvGauge;
+  bars?: OvBar[];
+  bottomLeft: OvStat;
+  bottomRight: OvStat;
+  ai: string;
+  cta: string;
+  onClick: () => void;
+}) {
+  const trend = spark.map((v, i) => ({ w: i, v }));
+  const base = `0 8px 32px ${ovHexA(accent, 0.082)}`;
+  const hover = `0 0 0 2px ${accent}, 0 8px 28px ${ovHexA(accent, 0.133)}`;
+  const down = delta.trim().startsWith("−") || delta.trim().startsWith("-");
+  const gid = `ovsp-${accent.slice(1)}`;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      style={{
+        textAlign: "left",
+        font: "inherit",
+        color: "inherit",
+        cursor: "pointer",
+        background: "#0f0f10",
+        border: `1px solid ${ovHexA(accent, 0.25)}`,
+        borderRadius: 16,
+        padding: "20px 20px 16px",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        minHeight: 400,
+        boxShadow: base,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-2px)";
+        e.currentTarget.style.boxShadow = hover;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = base;
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, minWidth: 0, flex: 1 }}>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: ovHexA(accent, 0.082), display: "grid", placeItems: "center", flexShrink: 0, color: accent }}>
+            {icon}
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: 15.5, fontWeight: 700, color: T.text, lineHeight: 1.15, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{title}</div>
+            <div style={{ fontSize: 11, color: "rgba(255,255,255,0.38)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: 1.35 }}>{micro}</div>
+          </div>
+        </div>
+        <ChevronRight size={22} color="#b9b9ba" strokeWidth={1.75} style={{ flexShrink: 0, marginTop: 2, opacity: 0.5 }} />
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "minmax(0,1.05fr) minmax(0,1fr)", gap: 14, flex: 1, minHeight: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+            <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 800, color: T.text, lineHeight: 1 }}>{score}</span>
+            <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: down ? T.red : T.green }}>{delta}</span>
+          </div>
+          <div style={{ flex: 1, minHeight: 92, marginTop: 8 }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={T.red} stopOpacity={0.4} />
+                    <stop offset="55%" stopColor={T.red} stopOpacity={0.14} />
+                    <stop offset="100%" stopColor={T.red} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <YAxis hide domain={["dataMin - 5", "dataMax + 4"]} />
+                <Area type="monotone" dataKey="v" stroke={T.red} strokeWidth={2.4} fill={`url(#${gid})`} dot={false} isAnimationActive={false} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {bars ? (
+            <OvBars bars={bars} />
+          ) : (
+            <div style={{ display: "flex", gap: 10 }}>
+              {leftGauge ? <OvHalfGauge {...leftGauge} /> : null}
+              {rightGauge ? <OvHalfGauge {...rightGauge} /> : null}
+            </div>
+          )}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 12px", paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+            <OvKeyStat {...bottomLeft} align="start" />
+            <OvKeyStat {...bottomRight} align="end" />
+          </div>
+        </div>
+      </div>
+
+      <div style={{ background: ovHexA(accent, 0.055), border: `1px solid ${ovHexA(accent, 0.22)}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "12px 14px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 7 }}>
+          <Sparkles size={13} color={accent} />
+          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>Conversation AI</span>
+        </div>
+        <div style={{ fontSize: 12.5, color: T.sub, lineHeight: 1.5 }}>{ai}</div>
+      </div>
+      <div style={{ fontSize: 11, fontWeight: 700, color: accent }}>{cta}</div>
+    </button>
+  );
+}
+
 function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boolean }) {
   return (
     <div className="fade">
       <TopBar />
       <ExecutivePulse />
       <div className={showVoiceJoin ? "overview-cards overview-cards--3" : "overview-cards"}>
-        <ExecutiveQuestionCard
-          accent="cyan"
-          iTone="cyan"
+        <OverviewExecTile
+          accent={T.cyan}
           icon={<CreditCard size={18} />}
           title="How are my transactions & offers doing?"
-          subtitle="Spend · offers · yield & reward economics"
+          micro="Spend · offers · yield & reward economics"
           score="64"
           delta="−8 pts"
-          trend={TREND.g}
-          trendColor={T.cyan}
-          visualType="gauges"
-          gauges={[
-            { label: "Incremental", value: 58, color: T.green },
-            { label: "spend", topLabel: "Profitable", value: 55, color: T.amber },
-          ]}
-          miniMetrics={[
-            ["Yield leak", "₹1.2 Cr MTD", "red"],
-            ["Offers to kill", "2", "amber"],
-          ]}
-          aiText="Offer incrementality vs matched control flags two net-negative offers. ₹1.3 Cr MTD reallocatable; RuPay-on-UPI mix is compressing interchange yield by ~₹1.2 Cr MTD."
+          spark={[70, 66, 68, 63, 61, 64, 60, 62, 64]}
+          leftGauge={{ topLabel: "Incremental", value: 58, label: "vs matched control", color: T.green }}
+          rightGauge={{ topLabel: "Profitable", value: 55, label: "offer margin", color: T.amber }}
+          bottomLeft={{ label: "Yield leak", value: "₹1.2 Cr", sub: "MTD · interchange", color: T.red }}
+          bottomRight={{ label: "Offers to kill", value: "2", sub: "net-negative", color: T.amber }}
+          ai="Two net-negative offers vs matched control — ₹1.3 Cr MTD reallocatable. RuPay-on-UPI mix is compressing interchange yield ~₹1.2 Cr MTD."
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
-        <ExecutiveQuestionCard
-          accent="amber"
-          iTone="amber"
+        <OverviewExecTile
+          accent={T.amber}
           icon={<Zap size={18} />}
           title="Where are my blockers & problems today?"
-          subtitle="Declines · token gaps · fraud-rule · activation · roll/util"
+          micro="Declines · token gaps · fraud-rule · activation · roll/util"
           score="58"
           delta="−10 pts"
-          trend={TREND.r}
-          trendColor={T.amber}
-          visualType="bars"
-          bars={BLOCKER_BARS}
-          miniMetrics={[
-            ["Curable", "62%", "green"],
-            ["At risk", "₹2.4 Cr / day (at-risk run-rate)", "red"],
+          spark={[72, 68, 65, 66, 61, 59, 60, 57, 58]}
+          bars={[
+            { name: "Token break", v: 82, color: T.red },
+            { name: "Fraud-rule", v: 68, color: T.red },
+            { name: "Activation", v: 58, color: T.amber },
+            { name: "Roll / util", v: 52, color: T.amber },
+            { name: "Limit", v: 49, color: T.amber },
           ]}
-          aiText="Decline taxonomy splits today's spike as a token break: ₹2.4 Cr / day (at-risk run-rate), 62% curable. Fraud-rule R-77 stepped approval down 13 pts; Batch #4471 risks ₹93 L (CAC, one-time) against the 30+7 closure clock."
+          bottomLeft={{ label: "At-risk", value: "₹2.4 Cr", sub: "/ day run-rate", color: T.red }}
+          bottomRight={{ label: "Top blocker", value: "Token break", sub: "root cause", color: T.red }}
+          ai="Today's spike is a token break: ₹2.4 Cr/day at-risk, 62% curable. R-77 stepped approval −13 pts; Batch #4471 risks ₹93 L against the 30+7 clock."
           cta="Open blocker command center →"
           onClick={() => go("d2")}
         />
         {showVoiceJoin && (
-          <ExecutiveQuestionCard
-            accent="violet"
-            iTone="violet"
+          <OverviewExecTile
+            accent={T.violet}
             icon={<Sparkles size={18} />}
-            title="What are my customers saying?"
-            subtitle="Voice × transaction join · reviews · app store · Trustpilot · X · complaints"
+            title="What are my customers experiencing?"
+            micro="Voice × transaction · top issue: Reward value erosion"
             score="58"
             delta="−15 pts"
-            trend={TREND.r}
-            trendColor={T.violet}
-            visualType="bars"
-            bars={VOICE_BARS}
-            miniMetrics={[
-              ["Live voice channels", "6 sources", "violet"],
-              ["Est. book at risk", "₹1.4 Cr MTD*", "red"],
-            ]}
-            aiText="Real public voice on IndusInd cards is dominated by reward devaluation (Legend, EazyDiner from 15 Dec) and INDIE app-access failures, across app stores, TechnoFino and Trustpilot. Joined to the book these point at top-of-wallet loss and self-service payment drop; mis-selling complaints add conduct exposure. Book figures illustrative until wired to your tenant."
-            cta="Open customer-voice joins →"
+            spark={[74, 70, 68, 64, 60, 62, 58, 56, 58]}
+            leftGauge={{ topLabel: "Top issue", value: 92, label: "reward value", color: T.red }}
+            rightGauge={{ topLabel: "Curable", value: 78, label: "fixable share", color: T.green }}
+            bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · illustrative", color: T.red }}
+            bottomRight={{ label: "Top channel", value: "App store", sub: "×214 similar", color: T.violet }}
+            ai="Public voice is dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling adds conduct exposure."
+            cta="Open customer experience →"
             onClick={() => go("voice")}
           />
         )}
