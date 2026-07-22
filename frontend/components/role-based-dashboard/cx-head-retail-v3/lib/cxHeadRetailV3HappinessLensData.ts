@@ -125,7 +125,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 36,
     unhappy: 30,
     aiInsight:
-      "Active buyers drive 44% of contacts with rising volume (+3.4%). CPU at 2.1 signals friction — tighten first-pass resolve on delivery ETA before peak sale load.",
+      "Active buyers drive 44% of contacts this window with volume still rising (+3.4%) — they are the operating centre of CX load. CPU at 2.1 flags first-pass friction on delivery ETA; each miss forces a repeat contact and softens sentiment. Tighten first-pass resolve on delivery ETA before peak sale load, or Active will flood the queue and drag the index.",
     aiConfidence: 86,
   },
   {
@@ -146,7 +146,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 34,
     unhappy: 38,
     aiInsight:
-      "Occasional buyers are cooling (−0.6%) while AOV stays healthy at ₹1,640. Resolution at 38% is the leak — route refund/return cases to priority queue to protect the next order.",
+      "Occasional buyers are cooling (−0.6%) even while AOV stays healthy at ₹1,640 — value is intact, intent is not. Resolution at 38% is the leak: refund and return cases stall and kill the next-order window. Route Occasional refund/return cases to the priority queue now to protect the next purchase before they go quiet.",
     aiConfidence: 81,
   },
   {
@@ -167,7 +167,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 30,
     unhappy: 22,
     aiInsight:
-      "Loyal customers hold ₹42 Cr GMV exposed with best AOV (₹2,850) and lowest CPU (0.8). Guard refund SLA — a single miss here moves high-value advocates into silence.",
+      "Loyal customers hold ₹42 Cr GMV exposed with the best AOV (₹2,850) and lowest CPU (0.8) in the base. A single refund SLA miss here turns high-value advocates into silence faster than any other segment. Guard refund SLA for Loyal with white-glove handling this week — no exceptions on delayed credit or pickup.",
     aiConfidence: 92,
   },
   {
@@ -188,7 +188,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 32,
     unhappy: 38,
     aiInsight:
-      "Seasonal buyers spike into contact around festival windows (+0.8%). Prep capacity and scripted refund paths before the next sale — ATV ₹1,290 means volume, not margin, is the risk.",
+      "Seasonal buyers spike into contact around festival windows (+0.8%) and will do so again on the next sale. ATV at ₹1,290 means the risk is volume and queue load, not margin — unprepared capacity will break FCR. Prep capacity and scripted refund paths before the next sale so Seasonal contacts resolve on first touch.",
     aiConfidence: 78,
   },
   {
@@ -209,7 +209,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 33,
     unhappy: 27,
     aiInsight:
-      "Reactivated shoppers are the fastest-growing cohort (+4.2%). Lock the win with post-purchase nurture — ATV ₹1,760 is strong; don't let first-week friction push them dormant again.",
+      "Reactivated shoppers are the fastest-growing cohort (+4.2%) with a strong ATV of ₹1,760 — the win is real. First-week friction after return is what pushes them dormant again and wastes the reactivation spend. Lock the win with post-purchase nurture within 7 days of return — before first-week friction undoes it.",
     aiConfidence: 84,
   },
   {
@@ -230,7 +230,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 28,
     unhappy: 54,
     aiInsight:
-      "Dormant customers are quiet on contacts but 54% unhappy when they do engage. Light-touch win-back only — don't burn CX capacity while Can't-Lose and At Risk are open.",
+      "Dormant customers stay quiet on contacts but land 54% unhappy when they do engage — sentiment is toxic on contact. GMV exposure is low versus Priority and Risk, so burning CX capacity here has a poor return. Use light-touch win-back only; keep voice and chat capacity on Priority and Risk until those queues clear.",
     aiConfidence: 74,
   },
   {
@@ -251,7 +251,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     neutral: 34,
     unhappy: 30,
     aiInsight:
-      "Frequent buyers keep cadence but effort spikes on delivery ETA. Protect reorder path — a friction hit here turns habit into Occasional.",
+      "Frequent buyers still keep order cadence, but effort spikes hard whenever delivery ETA slips on the reorder path. One friction hit on ETA or refund status is enough to turn habit into Occasional and cut lifetime frequency. Protect the reorder path now — ETA promises must stick, or Frequent volume will migrate to Occasional.",
     aiConfidence: 83,
   },
 ];

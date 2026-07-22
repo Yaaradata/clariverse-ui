@@ -84,6 +84,8 @@ export type ExecBand = { shifting: string; magnitude: string; affected: string; 
 
 export type PeriodSlice = {
   interactions: string;
+  /** Numeric contact volume for animated count-up. */
+  interactionsN: number;
   headline: {
     score: number;
     delta: number;
@@ -99,6 +101,12 @@ export type PeriodSlice = {
     churnD: number;
     repeatPurchase: number;
     repeatD: number;
+    /** First-contact resolution %. */
+    fcr: number;
+    fcrD: number;
+    /** Customer retention %. */
+    retention: number;
+    retentionD: number;
   };
   spark: number[];
   composite: CompositeDriver[];
@@ -110,6 +118,7 @@ export type PeriodSlice = {
 export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
   "24H": {
     interactions: "134K",
+    interactionsN: 134_000,
     headline: {
       score: 66,
       delta: -1.2,
@@ -125,6 +134,10 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
       churnD: 0.3,
       repeatPurchase: 36,
       repeatD: -0.8,
+      fcr: 61,
+      fcrD: -1.8,
+      retention: 88,
+      retentionD: -0.4,
     },
     spark: [68, 67, 66, 65, 66, 64, 65, 66],
     composite: [
@@ -149,6 +162,7 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
   },
   "7D": {
     interactions: "842K",
+    interactionsN: 842_000,
     headline: {
       score: 68,
       delta: 2,
@@ -164,6 +178,10 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
       churnD: -0.4,
       repeatPurchase: 38,
       repeatD: 1.2,
+      fcr: 64,
+      fcrD: 1.1,
+      retention: 91,
+      retentionD: 0.6,
     },
     spark: [63, 64, 63, 65, 66, 65, 67, 68],
     composite: [
@@ -188,6 +206,7 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
   },
   "30D": {
     interactions: "3.1M",
+    interactionsN: 3_100_000,
     headline: {
       score: 67,
       delta: 1.1,
@@ -203,6 +222,10 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
       churnD: -0.2,
       repeatPurchase: 37,
       repeatD: 0.6,
+      fcr: 63,
+      fcrD: 0.5,
+      retention: 90,
+      retentionD: 0.3,
     },
     spark: [64, 65, 66, 65, 67, 66, 68, 67],
     composite: [
@@ -230,26 +253,39 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
 /** Segment ACTIVE / volume overlays on top of 7D baseline rows. */
 const SEGMENT_RANGE_OVERLAY: Record<
   HappinessPeriodKey,
-  Partial<Record<HappinessSegmentKey, { deltaAdj: number; resAdj: number; unhappyAdj: number }>>
+  Partial<
+    Record<
+      HappinessSegmentKey,
+      {
+        deltaAdj: number;
+        resAdj: number;
+        unhappyAdj: number;
+        aovAdj?: number;
+        atvAdj?: number;
+        cpuAdj?: number;
+        ltvAdj?: number;
+      }
+    >
+  >
 > = {
   "24H": {
-    active: { deltaAdj: -1.8, resAdj: -3, unhappyAdj: 4 },
-    occasional: { deltaAdj: -0.9, resAdj: -2, unhappyAdj: 3 },
-    loyal: { deltaAdj: -0.4, resAdj: -1, unhappyAdj: 2 },
-    seasonal: { deltaAdj: 0.6, resAdj: -2, unhappyAdj: 2 },
-    reactivated: { deltaAdj: 1.2, resAdj: -1, unhappyAdj: 1 },
-    dormant: { deltaAdj: -0.2, resAdj: -2, unhappyAdj: 3 },
-    frequent: { deltaAdj: -0.5, resAdj: -2, unhappyAdj: 2 },
+    active: { deltaAdj: -1.8, resAdj: -3, unhappyAdj: 4, aovAdj: -40, atvAdj: -30, cpuAdj: 0.2, ltvAdj: -2 },
+    occasional: { deltaAdj: -0.9, resAdj: -2, unhappyAdj: 3, aovAdj: -60, atvAdj: -50, cpuAdj: 0.1, ltvAdj: -3 },
+    loyal: { deltaAdj: -0.4, resAdj: -1, unhappyAdj: 2, aovAdj: -80, atvAdj: -70, cpuAdj: 0.1, ltvAdj: -1 },
+    seasonal: { deltaAdj: 0.6, resAdj: -2, unhappyAdj: 2, aovAdj: 30, atvAdj: 20, cpuAdj: 0.1, ltvAdj: -2 },
+    reactivated: { deltaAdj: 1.2, resAdj: -1, unhappyAdj: 1, aovAdj: 40, atvAdj: 30, cpuAdj: -0.1, ltvAdj: 1 },
+    dormant: { deltaAdj: -0.2, resAdj: -2, unhappyAdj: 3, aovAdj: -20, atvAdj: -15, cpuAdj: 0.1, ltvAdj: -2 },
+    frequent: { deltaAdj: -0.5, resAdj: -2, unhappyAdj: 2, aovAdj: -30, atvAdj: -25, cpuAdj: 0.2, ltvAdj: -2 },
   },
   "7D": {},
   "30D": {
-    active: { deltaAdj: -0.4, resAdj: 1, unhappyAdj: -1 },
-    occasional: { deltaAdj: 0.3, resAdj: 1, unhappyAdj: -1 },
-    loyal: { deltaAdj: 0.2, resAdj: 2, unhappyAdj: -2 },
-    seasonal: { deltaAdj: -0.3, resAdj: 0, unhappyAdj: 1 },
-    reactivated: { deltaAdj: -0.8, resAdj: 1, unhappyAdj: 0 },
-    dormant: { deltaAdj: 0.1, resAdj: 0, unhappyAdj: 1 },
-    frequent: { deltaAdj: 0.2, resAdj: 1, unhappyAdj: -1 },
+    active: { deltaAdj: -0.4, resAdj: 1, unhappyAdj: -1, aovAdj: 50, atvAdj: 40, cpuAdj: -0.1, ltvAdj: 1 },
+    occasional: { deltaAdj: 0.3, resAdj: 1, unhappyAdj: -1, aovAdj: 40, atvAdj: 35, cpuAdj: -0.1, ltvAdj: 2 },
+    loyal: { deltaAdj: 0.2, resAdj: 2, unhappyAdj: -2, aovAdj: 90, atvAdj: 80, cpuAdj: -0.05, ltvAdj: 1 },
+    seasonal: { deltaAdj: -0.3, resAdj: 0, unhappyAdj: 1, aovAdj: -20, atvAdj: -15, cpuAdj: 0, ltvAdj: 0 },
+    reactivated: { deltaAdj: -0.8, resAdj: 1, unhappyAdj: 0, aovAdj: 60, atvAdj: 50, cpuAdj: -0.05, ltvAdj: 2 },
+    dormant: { deltaAdj: 0.1, resAdj: 0, unhappyAdj: 1, aovAdj: 10, atvAdj: 10, cpuAdj: 0, ltvAdj: 1 },
+    frequent: { deltaAdj: 0.2, resAdj: 1, unhappyAdj: -1, aovAdj: 35, atvAdj: 30, cpuAdj: -0.1, ltvAdj: 1 },
   },
 };
 
@@ -270,6 +306,10 @@ export function getHappinessSegmentRows(range: HappinessPeriodKey = "7D"): Happi
       ...row,
       interactions,
       wowDelta,
+      aov: Math.max(100, Math.round(row.aov + (o?.aovAdj ?? 0))),
+      atv: Math.max(100, Math.round(row.atv + (o?.atvAdj ?? 0))),
+      cpu: Math.round(Math.max(0.1, row.cpu + (o?.cpuAdj ?? 0)) * 10) / 10,
+      ltv: Math.max(5, Math.min(99, Math.round(row.ltv + (o?.ltvAdj ?? 0)))),
       resolutionRate,
       gmvAtRiskCr: scaleHappinessCr(row.gmvAtRiskCr, range),
       happy,

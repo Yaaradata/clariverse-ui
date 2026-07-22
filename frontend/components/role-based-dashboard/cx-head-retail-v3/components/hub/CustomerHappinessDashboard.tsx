@@ -19,6 +19,7 @@ import {
   RFM_ZONES,
   type HappinessPeriodKey,
   type RfmId,
+  type RfmSegment,
 } from "../../lib/cxHeadRetailV3CustomerHappinessData";
 import {
   segmentsRankedByGmvAtRisk,
@@ -28,6 +29,7 @@ import {
 import { useTheme } from "../../theme/DashboardThemeProvider";
 import { cssVar, radius } from "../../theme/tokens";
 import { ConfidenceChip } from "../common/ConfidenceBand";
+import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 
 function failCustomerSegments(rows: HappinessSegmentRow[]) {
   return rows.map((row) => ({
@@ -40,6 +42,16 @@ function failCustomerSegments(rows: HappinessSegmentRow[]) {
 const nf = new Intl.NumberFormat("en-IN");
 function formatInt(n: number): string {
   return nf.format(Math.round(n));
+}
+
+/** Compact K / M label used in the page headline. */
+export function formatCompactInteractions(n: number): string {
+  if (n >= 1_000_000) {
+    const m = n / 1_000_000;
+    return `${m >= 10 ? Math.round(m) : (Math.round(m * 10) / 10).toFixed(1).replace(/\.0$/, "")}M`;
+  }
+  if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
+  return formatInt(n);
 }
 
 function band(v: number): string {
@@ -77,15 +89,13 @@ function scoreValueColor(label: string, value: number): string {
       return ragLower(value, 5, 8);
     case "Repeat Purchase Rate":
       return ragHigher(value, 40, 30);
+    case "First Contact Resolution":
+      return ragHigher(value, 70, 55);
+    case "Customer Retention Rate":
+      return ragHigher(value, 90, 85);
     default:
       return cssVar("text-primary");
   }
-}
-
-function fmtDelta(d: number): string {
-  if (d > 0) return `+${d}`;
-  if (d < 0) return `${d}`;
-  return "0";
 }
 
 function Delta({
@@ -93,15 +103,25 @@ function Delta({
   invert = false,
   suffix = "",
   size = 12.5,
+  decimals,
 }: {
   value: number;
   invert?: boolean;
   suffix?: string;
   size?: number;
+  decimals?: number;
 }): React.ReactElement {
+  const resolvedDecimals = decimals ?? (Math.abs(value) % 1 !== 0 ? 1 : 0);
+  const animatedAbs = useAnimatedNumber(Math.abs(value), {
+    decimals: resolvedDecimals,
+    delay: 60,
+    duration: 850,
+  });
   const good = value > 0 ? !invert : value < 0 ? invert : null;
   const color = value === 0 ? cssVar("text-muted") : good ? cssVar("positive") : cssVar("severity-high");
   const Icon = value > 0 ? ArrowUpRight : value < 0 ? ArrowDownRight : Minus;
+  const shown =
+    resolvedDecimals > 0 ? animatedAbs.toFixed(resolvedDecimals) : String(animatedAbs);
   return (
     <span
       style={{
@@ -116,7 +136,7 @@ function Delta({
       }}
     >
       <Icon size={size + 1.5} strokeWidth={2.4} />
-      {fmtDelta(value).replace(/[+-]/, "")}
+      {shown}
       {suffix}
     </span>
   );
@@ -253,6 +273,70 @@ function SectionHeader({
 
 type RfmHeatMode = "monetary" | "revenue";
 
+function RfmHeatCell({
+  seg,
+  on,
+  intensity,
+  heatMode,
+  onSelect,
+}: {
+  seg: RfmSegment;
+  on: boolean;
+  intensity: number;
+  heatMode: RfmHeatMode;
+  onSelect: (id: RfmId) => void;
+}): React.ReactElement {
+  const animatedRev = useAnimatedNumber(seg.rev, { duration: 900, delay: 40 });
+  const animatedM = useAnimatedNumber(seg.M, { duration: 800, delay: 40 });
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(seg.id)}
+      title={`${seg.name} · R${seg.R} F${seg.F} M${seg.M} · ${seg.rev}% rev`}
+      style={{
+        minHeight: 58,
+        borderRadius: 10,
+        border: on ? `2px solid ${seg.color}` : `1px solid ${seg.color}55`,
+        background: hexToRgba(seg.color, on ? 0.42 : 0.14 + intensity * 0.38),
+        boxShadow: on ? `0 0 0 1px ${seg.color}66` : "none",
+        cursor: "pointer",
+        padding: "8px 8px",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        textAlign: "left",
+        fontFamily: "inherit",
+        color: "inherit",
+        transition: "transform 120ms ease, box-shadow 120ms ease",
+        transform: on ? "scale(1.02)" : "none",
+      }}
+    >
+      <span
+        style={{
+          fontSize: 11,
+          fontWeight: 800,
+          color: on ? cssVar("text-primary") : seg.color,
+          lineHeight: 1.15,
+        }}
+      >
+        {seg.name}
+      </span>
+      <span
+        style={{
+          fontSize: 14,
+          fontWeight: 800,
+          fontFamily: cssVar("font-numeric"),
+          fontVariantNumeric: "tabular-nums",
+          color: cssVar("text-primary"),
+          lineHeight: 1,
+        }}
+      >
+        {heatMode === "monetary" ? `M${animatedM}` : `${animatedRev}%`}
+      </span>
+    </button>
+  );
+}
+
 function hexToRgba(hex: string, alpha: number): string {
   const h = hex.replace("#", "");
   const full = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
@@ -359,52 +443,14 @@ function RfmHeatMatrix({
                 const intensity =
                   heatMode === "monetary" ? seg.M / 5 : Math.max(0.22, seg.rev / maxRev);
                 return (
-                  <button
+                  <RfmHeatCell
                     key={seg.id}
-                    type="button"
-                    onClick={() => onSelect(seg.id)}
-                    title={`${seg.name} · R${seg.R} F${seg.F} M${seg.M} · ${seg.rev}% rev`}
-                    style={{
-                      minHeight: 58,
-                      borderRadius: 10,
-                      border: on ? `2px solid ${seg.color}` : `1px solid ${seg.color}55`,
-                      background: hexToRgba(seg.color, on ? 0.42 : 0.14 + intensity * 0.38),
-                      boxShadow: on ? `0 0 0 1px ${seg.color}66` : "none",
-                      cursor: "pointer",
-                      padding: "8px 8px",
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "space-between",
-                      textAlign: "left",
-                      fontFamily: "inherit",
-                      color: "inherit",
-                      transition: "transform 120ms ease, box-shadow 120ms ease",
-                      transform: on ? "scale(1.02)" : "none",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 800,
-                        color: on ? cssVar("text-primary") : seg.color,
-                        lineHeight: 1.15,
-                      }}
-                    >
-                      {seg.name}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 800,
-                        fontFamily: cssVar("font-numeric"),
-                        fontVariantNumeric: "tabular-nums",
-                        color: cssVar("text-primary"),
-                        lineHeight: 1,
-                      }}
-                    >
-                      {heatMode === "monetary" ? `M${seg.M}` : `${seg.rev}%`}
-                    </span>
-                  </button>
+                    seg={seg}
+                    on={on}
+                    intensity={intensity}
+                    heatMode={heatMode}
+                    onSelect={onSelect}
+                  />
                 );
               })}
             </React.Fragment>
@@ -429,6 +475,11 @@ function RfmHeatMatrix({
   );
 }
 
+function parseClvNumber(clv: string): number {
+  const match = /([\d.]+)/.exec(clv);
+  return match ? Number(match[1]) : 0;
+}
+
 function RfmBreakdownKpis({
   selected,
   period,
@@ -439,12 +490,26 @@ function RfmBreakdownKpis({
   const rfmSegments = getRfmSegmentsForRange(period);
   const s = rfmSegments.find((seg) => seg.id === selected) ?? rfmSegments[0];
   const zone = RFM_ZONES[s.zone];
+  const animatedR = useAnimatedNumber(s.R, { duration: 850, delay: 40 });
+  const animatedF = useAnimatedNumber(s.F, { duration: 850, delay: 60 });
+  const animatedM = useAnimatedNumber(s.M, { duration: 850, delay: 80 });
+  const clvN = parseClvNumber(s.clv);
+  const animatedClv = useAnimatedNumber(clvN, {
+    duration: 900,
+    delay: 100,
+    decimals: clvN % 1 !== 0 ? 1 : 0,
+  });
+  const clvSuffix = /k/i.test(s.clv) ? "k" : "";
 
-  const cards: Array<{ label: string; value: string; sub?: string; accent?: string }> = [
-    { label: "Recency", value: `${s.R}/5`, sub: "How recent", accent: s.color },
-    { label: "Frequency", value: `${s.F}/5`, sub: "How often", accent: s.color },
-    { label: "Monetary", value: `${s.M}/5`, sub: "Spend depth", accent: s.color },
-    { label: "Avg CLV", value: s.clv, sub: "Lifetime value" },
+  const cards: Array<{ label: string; value: React.ReactNode; sub?: string; accent?: string }> = [
+    { label: "Recency", value: `${animatedR}/5`, sub: "How recent", accent: s.color },
+    { label: "Frequency", value: `${animatedF}/5`, sub: "How often", accent: s.color },
+    { label: "Monetary", value: `${animatedM}/5`, sub: "Spend depth", accent: s.color },
+    {
+      label: "Avg CLV",
+      value: `₹${clvN % 1 !== 0 ? animatedClv.toFixed(1) : animatedClv}${clvSuffix}`,
+      sub: "Lifetime value",
+    },
   ];
 
   return (
@@ -635,6 +700,132 @@ function allocateSharePct(
   return Object.fromEntries(floored.map((r) => [r.key, r.value])) as Record<HappinessSegmentKey, number>;
 }
 
+function SentimentSegmentRow({
+  seg,
+  idx,
+  linked,
+  sharePct,
+  rfmRevPct,
+  rfmColor,
+  onSelect,
+}: {
+  seg: HappinessSegmentRow;
+  idx: number;
+  linked: boolean;
+  sharePct: number;
+  rfmRevPct: number;
+  rfmColor: string;
+  onSelect: () => void;
+}): React.ReactElement {
+  const animatedShare = useAnimatedNumber(sharePct, { duration: 900, delay: 40 + idx * 25 });
+  const happy = useAnimatedNumber(seg.happy, { duration: 900, delay: 60 + idx * 25 });
+  const neutral = useAnimatedNumber(seg.neutral, { duration: 900, delay: 70 + idx * 25 });
+  const unhappy = useAnimatedNumber(seg.unhappy, { duration: 900, delay: 80 + idx * 25 });
+  const bands = [
+    [happy, cssVar("positive"), "#04140a"] as const,
+    [neutral, cssVar("severity-med"), "#1a1205"] as const,
+    [unhappy, cssVar("severity-high"), "#fff"] as const,
+  ];
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      style={{
+        display: "grid",
+        gridTemplateColumns: "minmax(110px, 0.85fr) 48px minmax(0, 1.5fr)",
+        columnGap: 10,
+        alignItems: "center",
+        width: "100%",
+        boxSizing: "border-box",
+        padding: "12px 16px",
+        border: "none",
+        borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
+        borderLeft: linked ? `3px solid ${seg.color}` : "3px solid transparent",
+        background: linked ? `${seg.color}16` : "transparent",
+        cursor: "pointer",
+        fontFamily: "inherit",
+        color: "inherit",
+        textAlign: "left",
+        flex: 1,
+        minHeight: 72,
+      }}
+      title={`${seg.label} · ${sharePct}% of ${rfmRevPct}% RFM share · ${seg.happy}% happy · ₹${seg.gmvAtRiskCr} Cr GMV`}
+    >
+      <div style={{ minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+          <span style={{ width: 8, height: 8, borderRadius: 3, background: seg.color, flexShrink: 0 }} />
+          <span
+            style={{
+              fontSize: 12.5,
+              fontWeight: 700,
+              color: cssVar("text-primary"),
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+            }}
+          >
+            {seg.label}
+          </span>
+        </div>
+      </div>
+
+      <span
+        style={{
+          fontSize: 12.5,
+          fontWeight: 800,
+          fontFamily: cssVar("font-numeric"),
+          fontVariantNumeric: "tabular-nums",
+          color: linked ? rfmColor : cssVar("text-primary"),
+          textAlign: "right",
+        }}
+      >
+        {animatedShare}%
+      </span>
+
+      <div style={{ minWidth: 0 }}>
+        <div
+          style={{
+            display: "flex",
+            height: 22,
+            borderRadius: 7,
+            overflow: "hidden",
+            background: cssVar("border"),
+          }}
+        >
+          {bands.map(([pct, color, ink]) => (
+            <div
+              key={color}
+              style={{
+                width: `${pct}%`,
+                background: color,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: pct >= 14 ? undefined : 0,
+                transition: "width 200ms ease",
+              }}
+            >
+              {pct >= 14 ? (
+                <span
+                  style={{
+                    fontSize: 10,
+                    fontWeight: 800,
+                    fontFamily: cssVar("font-numeric"),
+                    color: ink,
+                  }}
+                >
+                  {pct}%
+                </span>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    </button>
+  );
+}
+
 function SentimentBySegmentPanel({
   selectedRfmId,
   rfmRevPct,
@@ -694,113 +885,18 @@ function SentimentBySegmentPanel({
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-        {rows.map((seg, idx) => {
-          const linked = seg.key === linkedSegmentKey;
-          const sharePct = shareBySegment[seg.key] ?? 0;
-          return (
-            <button
-              key={seg.key}
-              type="button"
-              onClick={() => onSelectSegment(seg.key)}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "minmax(110px, 0.85fr) 48px minmax(0, 1.5fr)",
-                columnGap: 10,
-                alignItems: "center",
-                width: "100%",
-                boxSizing: "border-box",
-                padding: "12px 16px",
-                border: "none",
-                borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
-                borderLeft: linked ? `3px solid ${seg.color}` : "3px solid transparent",
-                background: linked ? `${seg.color}16` : "transparent",
-                cursor: "pointer",
-                fontFamily: "inherit",
-                color: "inherit",
-                textAlign: "left",
-                flex: 1,
-                minHeight: 72,
-              }}
-              title={`${seg.label} · ${sharePct}% of ${rfmRevPct}% RFM share · ${seg.happy}% happy · ₹${seg.gmvAtRiskCr} Cr GMV`}
-            >
-              <div style={{ minWidth: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
-                  <span style={{ width: 8, height: 8, borderRadius: 3, background: seg.color, flexShrink: 0 }} />
-                  <span
-                    style={{
-                      fontSize: 12.5,
-                      fontWeight: 700,
-                      color: cssVar("text-primary"),
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {seg.label}
-                  </span>
-                </div>
-              </div>
-
-              <span
-                style={{
-                  fontSize: 12.5,
-                  fontWeight: 800,
-                  fontFamily: cssVar("font-numeric"),
-                  fontVariantNumeric: "tabular-nums",
-                  color: linked ? rfmColor : cssVar("text-primary"),
-                  textAlign: "right",
-                }}
-              >
-                {sharePct}%
-              </span>
-
-              <div style={{ minWidth: 0 }}>
-                <div
-                  style={{
-                    display: "flex",
-                    height: 22,
-                    borderRadius: 7,
-                    overflow: "hidden",
-                    background: cssVar("border"),
-                  }}
-                >
-                  {(
-                    [
-                      [seg.happy, cssVar("positive"), "#04140a"],
-                      [seg.neutral, cssVar("severity-med"), "#1a1205"],
-                      [seg.unhappy, cssVar("severity-high"), "#fff"],
-                    ] as const
-                  ).map(([pct, color, ink]) => (
-                    <div
-                      key={color}
-                      style={{
-                        width: `${pct}%`,
-                        background: color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: pct >= 14 ? undefined : 0,
-                      }}
-                    >
-                      {pct >= 14 ? (
-                        <span
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 800,
-                            fontFamily: cssVar("font-numeric"),
-                            color: ink,
-                          }}
-                        >
-                          {pct}%
-                        </span>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </button>
-          );
-        })}
+        {rows.map((seg, idx) => (
+          <SentimentSegmentRow
+            key={seg.key}
+            seg={seg}
+            idx={idx}
+            linked={seg.key === linkedSegmentKey}
+            sharePct={shareBySegment[seg.key] ?? 0}
+            rfmRevPct={rfmRevPct}
+            rfmColor={rfmColor}
+            onSelect={() => onSelectSegment(seg.key)}
+          />
+        ))}
       </div>
     </Card>
   );
@@ -851,6 +947,7 @@ function AiInsightFooter({
   insight,
   confidence,
   pinBottom = true,
+  fill = false,
 }: {
   label?: string;
   labelColor?: string;
@@ -858,6 +955,8 @@ function AiInsightFooter({
   /** Model confidence score (0–100). Shown instead of a segment/score label when provided. */
   confidence?: number;
   pinBottom?: boolean;
+  /** Grow to fill leftover column height (keeps accent background flush to card bottom). */
+  fill?: boolean;
 }): React.ReactElement {
   return (
     <div
@@ -865,14 +964,16 @@ function AiInsightFooter({
         display: "flex",
         gap: 8,
         alignItems: "flex-start",
-        flexShrink: 0,
-        height: AI_INSIGHT_FOOTER_HEIGHT,
+        flexShrink: fill ? 1 : 0,
+        flexGrow: fill ? 1 : 0,
+        height: fill ? undefined : AI_INSIGHT_FOOTER_HEIGHT,
+        minHeight: AI_INSIGHT_FOOTER_HEIGHT,
         boxSizing: "border-box",
         marginTop: pinBottom ? "auto" : 0,
         padding: "12px 16px",
         background: cssVar("accent-soft"),
         borderTop: `1px solid ${cssVar("border")}`,
-        borderBottom: pinBottom ? undefined : `1px solid ${cssVar("border")}`,
+        borderBottom: pinBottom || fill ? undefined : `1px solid ${cssVar("border")}`,
         borderRadius: 0,
       }}
     >
@@ -929,6 +1030,7 @@ function AiInsightFooter({
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
             textAlign: "justify",
+            textAlignLast: "left",
           }}
         >
           {insight}
@@ -938,19 +1040,162 @@ function AiInsightFooter({
   );
 }
 
+function SegmentTableRow({
+  row,
+  idx,
+  totalVolume,
+  selectedKey,
+  tableCols,
+  rowHeight,
+  onSelect,
+}: {
+  row: HappinessSegmentRow;
+  idx: number;
+  totalVolume: number;
+  selectedKey: HappinessSegmentKey;
+  tableCols: string;
+  rowHeight: number;
+  onSelect: (key: HappinessSegmentKey) => void;
+}): React.ReactElement {
+  const shareTarget = totalVolume > 0 ? Math.round((row.interactions / totalVolume) * 1000) / 10 : 0;
+  const interactions = useAnimatedNumber(row.interactions, { duration: 950, delay: 40 + idx * 30 });
+  const share = useAnimatedNumber(shareTarget, { duration: 900, delay: 60 + idx * 30, decimals: 1 });
+  const wowAbs = useAnimatedNumber(Math.abs(row.wowDelta), { duration: 850, delay: 70 + idx * 30, decimals: 1 });
+  const aov = useAnimatedNumber(row.aov, { duration: 900, delay: 80 + idx * 30 });
+  const cpu = useAnimatedNumber(row.cpu, { duration: 900, delay: 90 + idx * 30, decimals: 1 });
+  const atv = useAnimatedNumber(row.atv, { duration: 900, delay: 100 + idx * 30 });
+  const ltv = useAnimatedNumber(row.ltv, { duration: 900, delay: 110 + idx * 30 });
+  const res = useAnimatedNumber(row.resolutionRate, { duration: 900, delay: 120 + idx * 30 });
+  const gmv = useAnimatedNumber(row.gmvAtRiskCr, {
+    duration: 950,
+    delay: 130 + idx * 30,
+    decimals: row.gmvAtRiskCr % 1 !== 0 ? 1 : 0,
+  });
+
+  const isFlat = Math.abs(row.wowDelta) < 0.05;
+  const isUp = row.wowDelta > 0;
+  const deltaColor = isFlat ? cssVar("text-muted") : isUp ? cssVar("positive") : cssVar("severity-high");
+  const arrow = isFlat ? "●" : isUp ? "▲" : "▼";
+  const isSelected = row.key === selectedKey;
+  const aovColor = ragHigher(row.aov, 2000, 1400);
+  const cpuColor = ragLower(row.cpu, 1.2, 2.0);
+  const atvColor = ragHigher(row.atv, 1800, 1200);
+  const ltvColor = band(row.ltv);
+  const resColor = ragHigher(row.resolutionRate, 50, 35);
+  const gmvColor = ragHigher(row.gmvAtRiskCr, 25, 15);
+  const metricStyle: React.CSSProperties = {
+    fontSize: 12.5,
+    fontWeight: 700,
+    fontVariantNumeric: "tabular-nums",
+    fontFamily: cssVar("font-numeric"),
+    whiteSpace: "nowrap",
+  };
+  const gmvShown = row.gmvAtRiskCr % 1 !== 0 ? gmv.toFixed(1) : String(gmv);
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(row.key)}
+      style={{
+        display: "grid",
+        gridTemplateColumns: tableCols,
+        columnGap: 10,
+        alignItems: "center",
+        width: "100%",
+        boxSizing: "border-box",
+        padding: "10px 16px",
+        border: "none",
+        borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
+        borderLeft: isSelected ? `3px solid ${row.color}` : "3px solid transparent",
+        background: isSelected ? `${row.color}14` : "transparent",
+        cursor: "pointer",
+        textAlign: "left",
+        fontFamily: "inherit",
+        color: "inherit",
+        height: rowHeight,
+        minHeight: rowHeight,
+        flexShrink: 0,
+      }}
+      title={`${row.label} · LTV score ${row.ltv} · AOV ₹${formatInt(row.aov)} · CPU ${row.cpu}`}
+    >
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          fontSize: 12,
+          fontWeight: 700,
+          padding: "3px 9px",
+          borderRadius: radius.pill,
+          background: `${row.color}18`,
+          color: row.color,
+          border: `1px solid ${row.color}40`,
+          width: "fit-content",
+          maxWidth: "100%",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {row.label}
+      </span>
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "baseline",
+          gap: 5,
+          fontVariantNumeric: "tabular-nums",
+          fontFamily: cssVar("font-numeric"),
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>
+          {formatInt(interactions)}
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 600, color: cssVar("text-muted") }}>
+          ({share.toFixed(1)}%)
+        </span>
+      </span>
+      <span
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 4,
+          fontSize: 11,
+          fontWeight: 600,
+          fontVariantNumeric: "tabular-nums",
+          color: deltaColor,
+          whiteSpace: "nowrap",
+        }}
+      >
+        <span style={{ fontSize: 9 }}>{arrow}</span>
+        {wowAbs.toFixed(1)}%
+      </span>
+      <span style={{ ...metricStyle, color: aovColor }}>₹{formatInt(aov)}</span>
+      <span style={{ ...metricStyle, color: cpuColor }} title="Contacts per unit (units, not orders)">
+        {cpu.toFixed(1)}
+      </span>
+      <span style={{ ...metricStyle, color: atvColor }}>₹{formatInt(atv)}</span>
+      <span style={{ ...metricStyle, color: ltvColor }} title="Lifetime value score — defines customer lifetime value">
+        {ltv}
+      </span>
+      <span style={{ ...metricStyle, color: resColor }}>{res}%</span>
+      <span style={{ ...metricStyle, color: gmvColor, fontWeight: 800 }}>₹{gmvShown}</span>
+    </button>
+  );
+}
+
 function TotalInteractionsPanel({
   period,
 }: {
   period: HappinessPeriodKey;
 }): React.ReactElement {
   const deltaLabel = HAPPINESS_PERIODS[period].delta;
-  const rows = segmentsRankedByGmvAtRisk(getHappinessSegmentRows(period)).filter(
-    (r) => r.key !== "dormant" && r.key !== "frequent",
-  );
+  const rows = segmentsRankedByGmvAtRisk(getHappinessSegmentRows(period));
   const [selectedKey, setSelectedKey] = useState<HappinessSegmentKey>(rows[0]?.key ?? "loyal");
   const selected = rows.find((r) => r.key === selectedKey) ?? rows[0];
   const totalVolume = rows.reduce((sum, r) => sum + r.interactions, 0);
   const tableCols = "1.45fr 1.15fr 0.65fr 0.75fr 0.5fr 0.75fr 0.7fr 0.55fr 0.65fr";
+  /** Viewport shows 5 segments; remaining (Frequent, Dormant, …) scroll into view. */
+  const SEGMENT_ROW_H = 56;
+  const VISIBLE_SEGMENT_ROWS = 5;
 
   const headerCell = (label: string, title?: string): React.ReactElement => (
     <span
@@ -993,6 +1238,7 @@ function TotalInteractionsPanel({
             padding: "12px 16px",
             background: cssVar("surface-raised"),
             borderBottom: `1px solid ${cssVar("border")}`,
+            flexShrink: 0,
           }}
         >
           {headerCell("SEGMENT")}
@@ -1000,128 +1246,124 @@ function TotalInteractionsPanel({
           {headerCell("ACTIVE", `Active change ${deltaLabel}`)}
           {headerCell("AOV", "Average order value")}
           {headerCell("CPU", "Contacts per unit (units, not orders)")}
-          {headerCell("ATV", "Average transaction value")}
+          {headerCell("ATV (cr)", "Average transaction value (₹ Cr)")}
           {headerCell("LTV", "Lifetime value score (0–100) — defines customer lifetime value")}
           {headerCell("RES.", "Resolution rate")}
           {headerCell("GMV", "GMV exposed (₹ Cr)")}
         </div>
 
-        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>
-          {rows.map((row, idx) => {
-            const share = Math.round((row.interactions / totalVolume) * 1000) / 10;
-            const isFlat = Math.abs(row.wowDelta) < 0.05;
-            const isUp = row.wowDelta > 0;
-            const deltaColor = isFlat ? cssVar("text-muted") : isUp ? cssVar("positive") : cssVar("severity-high");
-            const arrow = isFlat ? "●" : isUp ? "▲" : "▼";
-            const isSelected = row.key === selectedKey;
-            const aovColor = ragHigher(row.aov, 2000, 1400);
-            const cpuColor = ragLower(row.cpu, 1.2, 2.0);
-            const atvColor = ragHigher(row.atv, 1800, 1200);
-            const ltvColor = band(row.ltv);
-            const resColor = ragHigher(row.resolutionRate, 50, 35);
-            const gmvColor = ragHigher(row.gmvAtRiskCr, 25, 15);
-            const metricStyle: React.CSSProperties = {
-              fontSize: 12.5,
-              fontWeight: 700,
-              fontVariantNumeric: "tabular-nums",
-              fontFamily: cssVar("font-numeric"),
-              whiteSpace: "nowrap",
-            };
-
-            return (
-              <button
-                key={row.key}
-                type="button"
-                onClick={() => setSelectedKey(row.key)}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: tableCols,
-                  columnGap: 10,
-                  alignItems: "center",
-                  width: "100%",
-                  boxSizing: "border-box",
-                  padding: "14px 16px",
-                  border: "none",
-                  borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
-                  borderLeft: isSelected ? `3px solid ${row.color}` : "3px solid transparent",
-                  background: isSelected ? `${row.color}14` : "transparent",
-                  cursor: "pointer",
-                  textAlign: "left",
-                  fontFamily: "inherit",
-                  color: "inherit",
-                  flex: 1,
-                  minHeight: 52,
-                }}
-                title={`${row.label} · LTV score ${row.ltv} · AOV ₹${formatInt(row.aov)} · CPU ${row.cpu}`}
-              >
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    padding: "3px 9px",
-                    borderRadius: radius.pill,
-                    background: `${row.color}18`,
-                    color: row.color,
-                    border: `1px solid ${row.color}40`,
-                    width: "fit-content",
-                    maxWidth: "100%",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {row.label}
-                </span>
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "baseline",
-                    gap: 5,
-                    fontVariantNumeric: "tabular-nums",
-                    fontFamily: cssVar("font-numeric"),
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>
-                    {formatInt(row.interactions)}
-                  </span>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: cssVar("text-muted") }}>({share}%)</span>
-                </span>
-                <span
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 4,
-                    fontSize: 11,
-                    fontWeight: 600,
-                    fontVariantNumeric: "tabular-nums",
-                    color: deltaColor,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <span style={{ fontSize: 9 }}>{arrow}</span>
-                  {Math.abs(row.wowDelta).toFixed(1)}%
-                </span>
-                <span style={{ ...metricStyle, color: aovColor }}>₹{formatInt(row.aov)}</span>
-                <span style={{ ...metricStyle, color: cpuColor }} title="Contacts per unit (units, not orders)">
-                  {row.cpu.toFixed(1)}
-                </span>
-                <span style={{ ...metricStyle, color: atvColor }}>₹{formatInt(row.atv)}</span>
-                <span style={{ ...metricStyle, color: ltvColor }} title="Lifetime value score — defines customer lifetime value">
-                  {row.ltv}
-                </span>
-                <span style={{ ...metricStyle, color: resColor }}>{row.resolutionRate}%</span>
-                <span style={{ ...metricStyle, color: gmvColor, fontWeight: 800 }}>₹{row.gmvAtRiskCr}</span>
-              </button>
-            );
-          })}
+        <div
+          style={{
+            flex: 1,
+            minHeight: SEGMENT_ROW_H * VISIBLE_SEGMENT_ROWS,
+            overflowY: "auto",
+            overscrollBehavior: "contain",
+            background: cssVar("surface"),
+          }}
+        >
+          {rows.map((row, idx) => (
+            <SegmentTableRow
+              key={row.key}
+              row={row}
+              idx={idx}
+              totalVolume={totalVolume}
+              selectedKey={selectedKey}
+              tableCols={tableCols}
+              rowHeight={SEGMENT_ROW_H}
+              onSelect={setSelectedKey}
+            />
+          ))}
         </div>
 
         {selected ? (
-          <AiInsightFooter insight={selected.aiInsight} confidence={selected.aiConfidence} />
+          <AiInsightFooter
+            insight={selected.aiInsight}
+            confidence={selected.aiConfidence}
+            pinBottom={false}
+          />
         ) : null}
       </div>
     </Card>
+  );
+}
+
+function MetricScoreRow({
+  label,
+  value,
+  delta,
+  suffix,
+  invertDelta,
+  isSelected,
+  showBorder,
+  decimals,
+  onSelect,
+}: {
+  label: string;
+  value: number;
+  delta: number;
+  suffix?: string;
+  invertDelta?: boolean;
+  isSelected: boolean;
+  showBorder: boolean;
+  decimals?: number;
+  onSelect: () => void;
+}): React.ReactElement {
+  const animated = useAnimatedNumber(value, {
+    duration: 950,
+    delay: 40,
+    decimals: decimals ?? 0,
+  });
+  const shown =
+    (decimals ?? 0) > 0 ? animated.toFixed(decimals) : String(animated);
+
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "100%",
+        boxSizing: "border-box",
+        padding: "8px 8px",
+        margin: 0,
+        border: "none",
+        borderLeft: isSelected ? `3px solid ${cssVar("accent")}` : "3px solid transparent",
+        borderBottom: showBorder ? `1px solid ${cssVar("border")}` : "none",
+        background: isSelected ? cssVar("accent-soft") : "transparent",
+        borderRadius: isSelected ? radius.sm : 0,
+        cursor: "pointer",
+        textAlign: "left",
+        fontFamily: "inherit",
+        color: "inherit",
+      }}
+      title={`Select ${label} for AI insight`}
+    >
+      <span
+        style={{
+          fontSize: 12,
+          color: isSelected ? cssVar("text-primary") : cssVar("text-muted"),
+          fontWeight: isSelected ? 600 : 500,
+        }}
+      >
+        {label}
+      </span>
+      <span style={{ display: "inline-flex", alignItems: "baseline", gap: 7 }}>
+        <b
+          style={{
+            fontSize: 17,
+            fontFamily: cssVar("font-numeric"),
+            fontVariantNumeric: "tabular-nums",
+            color: scoreValueColor(label, value),
+          }}
+        >
+          {shown}
+          {suffix ?? ""}
+        </b>
+        <Delta value={delta} invert={invertDelta} />
+      </span>
+    </button>
   );
 }
 
@@ -1179,10 +1421,11 @@ export function CustomerHappinessDashboard({
 
   const metricRows: Array<{
     label: string;
-    value: number | string;
+    value: number;
     delta: number;
     suffix?: string;
     invertDelta?: boolean;
+    decimals?: number;
     aiInsight: string;
   }> = [
     {
@@ -1190,49 +1433,65 @@ export function CustomerHappinessDashboard({
       value: d.headline.score,
       delta: d.headline.delta,
       suffix: "/100",
-      aiInsight: `Happiness Index is ${d.headline.delta >= 0 ? "up" : "down"} ${Math.abs(d.headline.delta)} pts ${meta.delta}, but refund turnaround is the drag (${d.exec.magnitude}). Lapsing buyers (score ${lapsingScore}) concentrate the pain — act on refund SLA before loyalty softens.`,
+      aiInsight: `Happiness Index at ${d.headline.score}/100 is ${d.headline.delta >= 0 ? "up" : "down"} ${Math.abs(d.headline.delta)} pts ${meta.delta}. Refund turnaround is the main drag — lapsing buyers (score ${lapsingScore}) concentrate the pain. Prioritise refund SLA recovery this window before loyalty softens and high-GMV cohorts start to exit.`,
     },
     {
       label: "Net Promoter Score",
       value: d.headline.nps,
       delta: d.headline.npsD,
-      aiInsight: `NPS at ${d.headline.nps} (${d.headline.npsD > 0 ? "+" : ""}${d.headline.npsD} ${meta.delta}) — promoters rise on Plus delivery wins, but detractors cluster on refund lag. Fix post-pickup refund SLA to convert passive buyers into promoters.`,
+      aiInsight: `NPS sits at ${d.headline.nps} (${d.headline.npsD > 0 ? "+" : ""}${d.headline.npsD} ${meta.delta}). Promoters rise on Plus delivery wins while detractors still cluster on refund lag after pickup. Fix post-pickup refund SLA this week to convert passive buyers into promoters before the score stalls.`,
     },
     {
       label: "Customer Satisfaction",
       value: d.headline.csat,
       delta: d.headline.csatD,
       suffix: "%",
-      aiInsight: `CSAT at ${d.headline.csat}% is soft${d.headline.csatD < 0 ? ` (${d.headline.csatD} pt ${meta.delta})` : ""} with dissatisfaction concentrated in returns and refunds (driver score ${refundDriver}). Prioritise refund confirmation within 24h of pickup scan.`,
+      aiInsight: `CSAT is ${d.headline.csat}% (${d.headline.csatD > 0 ? "+" : ""}${d.headline.csatD} ${meta.delta}) — soft for a marketplace that sells on promise reliability. Dissatisfaction concentrates in returns and refunds (driver score ${refundDriver}), not in browse or checkout. Confirm every refund within 24 hours of pickup scan to stop the soft CSAT leak.`,
     },
     {
       label: "Customer Effort Score",
       value: d.headline.ease,
       delta: d.headline.easeD,
       suffix: "/5",
-      aiInsight: `Effort score ${d.headline.ease}/5 (${d.headline.easeD > 0 ? "+" : ""}${d.headline.easeD} ${meta.delta}) — customers still work too hard on refund status and delivery ETA. Self-serve refund tracking and proactive ETA pushes will cut repeat contacts fastest.`,
+      decimals: 1,
+      aiInsight: `Effort is ${d.headline.ease}/5 (${d.headline.easeD > 0 ? "+" : ""}${d.headline.easeD} ${meta.delta}) — shoppers still work too hard after the order is placed. Friction peaks on refund status checks and delivery ETA changes that force repeat contacts. Ship self-serve refund tracking and proactive ETA pushes to cut those repeats this window.`,
     },
     {
       label: "Customer Loyalty Index",
       value: d.headline.loyalty,
       delta: d.headline.loyaltyD,
       suffix: "/100",
-      aiInsight: `Loyalty Index at ${d.headline.loyalty} (${d.headline.loyaltyD > 0 ? "+" : ""}${d.headline.loyaltyD} ${meta.delta}) holds on Top and Strong, but Priority and Risk cells are slipping on recency. Protect high-GMV cohorts before churn rate reverses.`,
+      aiInsight: `Loyalty Index at ${d.headline.loyalty}/100 (${d.headline.loyaltyD > 0 ? "+" : ""}${d.headline.loyaltyD} ${meta.delta}) still holds on Top and Strong. Priority and Risk RFM cells are slipping on recency — the silent leak under a stable headline. Protect high-GMV cohorts with white-glove recovery before churn reverses the loyalty gain.`,
     },
     {
       label: "Customer Churn Rate",
       value: d.headline.churn,
       delta: d.headline.churnD,
       suffix: "%",
+      decimals: 1,
       invertDelta: true,
-      aiInsight: `Churn at ${d.headline.churn}% (${d.headline.churnD > 0 ? "+" : ""}${d.headline.churnD} pts ${meta.delta}) — improvement is fragile. Lapsing buyers and refund-pain cohorts drive exits. Trigger retention outreach on the 2nd refund complaint within 14 days.`,
+      aiInsight: `Churn is ${d.headline.churn}% (${d.headline.churnD > 0 ? "+" : ""}${d.headline.churnD} pts ${meta.delta}) — any improvement here is still fragile. Exits concentrate in lapsing buyers and refund-pain cohorts, not in healthy Active or Loyal segments. Trigger retention outreach on the second refund complaint within 14 days before they leave for good.`,
     },
     {
       label: "Repeat Purchase Rate",
       value: d.headline.repeatPurchase,
       delta: d.headline.repeatD,
       suffix: "%",
-      aiInsight: `Repeat purchase at ${d.headline.repeatPurchase}% (${d.headline.repeatD > 0 ? "+" : ""}${d.headline.repeatD} ${meta.delta}) — Active and Seasonal segments lift frequency, but Occasional buyers stall after a bad delivery. Win-back offers should target post-incident recovery within 7 days.`,
+      aiInsight: `Repeat purchase is ${d.headline.repeatPurchase}% (${d.headline.repeatD > 0 ? "+" : ""}${d.headline.repeatD} ${meta.delta}) — frequency is the growth lever this window. Active and Seasonal lift cadence while Occasional buyers stall after a single bad delivery. Deploy win-back within 7 days of the incident to recover the next order before habit breaks.`,
+    },
+    {
+      label: "First Contact Resolution",
+      value: d.headline.fcr,
+      delta: d.headline.fcrD,
+      suffix: "%",
+      aiInsight: `FCR is ${d.headline.fcr}% (${d.headline.fcrD > 0 ? "+" : ""}${d.headline.fcrD} ${meta.delta}) — too many cases still need a second contact. Repeat contacts cluster on refund status silence and delivery ETA changes after first touch. Script first-touch refund confirmation and proactive ETA this window to lift resolve-on-contact.`,
+    },
+    {
+      label: "Customer Retention Rate",
+      value: d.headline.retention,
+      delta: d.headline.retentionD,
+      suffix: "%",
+      aiInsight: `Retention holds at ${d.headline.retention}% (${d.headline.retentionD > 0 ? "+" : ""}${d.headline.retentionD} ${meta.delta}) — the base is stable but the edge is soft. Top and Strong look fine; Priority and Risk RFM cells are where retention leaks first. Pair win-back offers with refund-SLA recovery for high-GMV cohorts before they go quiet.`,
     },
   ];
 
@@ -1258,59 +1517,20 @@ export function CustomerHappinessDashboard({
               How happy are they right now?
             </CardQ>
             <div>
-              {metricRows.map((row, i) => {
-                const isSelected = row.label === selectedScore;
-                return (
-                  <button
-                    key={row.label}
-                    type="button"
-                    onClick={() => setSelectedScore(row.label)}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      width: "100%",
-                      boxSizing: "border-box",
-                      padding: "8px 8px",
-                      margin: 0,
-                      border: "none",
-                      borderLeft: isSelected ? `3px solid ${cssVar("accent")}` : "3px solid transparent",
-                      borderBottom: i < metricRows.length - 1 ? `1px solid ${cssVar("border")}` : "none",
-                      background: isSelected ? cssVar("accent-soft") : "transparent",
-                      borderRadius: isSelected ? radius.sm : 0,
-                      cursor: "pointer",
-                      textAlign: "left",
-                      fontFamily: "inherit",
-                      color: "inherit",
-                    }}
-                    title={`Select ${row.label} for AI insight`}
-                  >
-                    <span
-                      style={{
-                        fontSize: 12,
-                        color: isSelected ? cssVar("text-primary") : cssVar("text-muted"),
-                        fontWeight: isSelected ? 600 : 500,
-                      }}
-                    >
-                      {row.label}
-                    </span>
-                    <span style={{ display: "inline-flex", alignItems: "baseline", gap: 7 }}>
-                      <b
-                        style={{
-                          fontSize: 17,
-                          fontFamily: cssVar("font-numeric"),
-                          fontVariantNumeric: "tabular-nums",
-                          color: scoreValueColor(row.label, Number(row.value)),
-                        }}
-                      >
-                        {row.value}
-                        {row.suffix ?? ""}
-                      </b>
-                      <Delta value={row.delta} invert={row.invertDelta} />
-                    </span>
-                  </button>
-                );
-              })}
+              {metricRows.map((row, i) => (
+                <MetricScoreRow
+                  key={row.label}
+                  label={row.label}
+                  value={row.value}
+                  delta={row.delta}
+                  suffix={row.suffix}
+                  invertDelta={row.invertDelta}
+                  decimals={row.decimals}
+                  isSelected={row.label === selectedScore}
+                  showBorder={i < metricRows.length - 1}
+                  onSelect={() => setSelectedScore(row.label)}
+                />
+              ))}
             </div>
           </div>
 
