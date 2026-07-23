@@ -438,9 +438,6 @@ function TopBar() {
     <div style={{ marginBottom: 14 }}>
       <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
         Cards Portfolio Manager{" "}
-        <span style={{ color: T.dim, fontWeight: 600, fontSize: 14 }}>
-          · Suvarna Bank
-        </span>
       </div>
       <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
         Transactions first · blocker intelligence second
