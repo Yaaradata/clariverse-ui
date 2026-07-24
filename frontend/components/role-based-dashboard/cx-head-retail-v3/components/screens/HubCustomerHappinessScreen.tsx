@@ -6,7 +6,9 @@ import {
   formatCompactInteractions,
 } from "../hub/CustomerHappinessDashboard";
 import { HubFluidHeadline } from "../common/HubFluidHeadline";
-import { HAPPINESS_DATA } from "../../lib/cxHeadRetailV3CustomerHappinessData";
+import {
+  getHappinessInteractionsN,
+} from "../../lib/cxHeadRetailV3CustomerHappinessData";
 import { useNavigation } from "../../lib/NavigationContext";
 import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 import { cssVar, layout } from "../../theme/tokens";
@@ -18,7 +20,7 @@ function AnimatedInteractions({ target }: { target: number }): React.ReactElemen
 
 export function HubCustomerHappinessScreen(): React.ReactElement {
   const { trustRange } = useNavigation();
-  const interactionsN = HAPPINESS_DATA[trustRange].interactionsN;
+  const interactionsN = getHappinessInteractionsN(trustRange);
 
   return (
     <div

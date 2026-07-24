@@ -109,6 +109,12 @@ export type PeriodSlice = {
     retentionD: number;
   };
   spark: number[];
+  /** NPS trend for headline KPI sparkline. */
+  npsSpark: number[];
+  /** Repeat-purchase % trend for headline KPI sparkline. */
+  repeatSpark: number[];
+  /** Loyalty index trend for headline KPI sparkline. */
+  loyaltySpark: number[];
   composite: CompositeDriver[];
   cohorts: CohortRow[];
   exec: ExecBand;
@@ -117,29 +123,32 @@ export type PeriodSlice = {
 /** Distinct operating reads per header timeframe — not a simple rescale of one slice. */
 export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
   "24H": {
-    interactions: "134K",
-    interactionsN: 134_000,
+    interactions: "9.9K",
+    interactionsN: 9_937,
     headline: {
       score: 66,
       delta: -1.2,
       nps: 44,
       npsD: -2,
-      csat: 80,
+      csat: 77,
       csatD: -1.4,
       ease: 3.1,
       easeD: -0.1,
       loyalty: 69,
       loyaltyD: -0.6,
-      churn: 7.1,
+      churn: 7.6,
       churnD: 0.3,
       repeatPurchase: 36,
       repeatD: -0.8,
-      fcr: 61,
+      fcr: 56,
       fcrD: -1.8,
-      retention: 88,
+      retention: 84,
       retentionD: -0.4,
     },
     spark: [68, 67, 66, 65, 66, 64, 65, 66],
+    npsSpark: [47, 46, 45, 44, 45, 43, 44, 44],
+    repeatSpark: [38, 37, 37, 36, 37, 35, 36, 36],
+    loyaltySpark: [70, 70, 69, 69, 70, 68, 69, 69],
     composite: [
       { k: "Product satisfaction", w: 18, s: 78 },
       { k: "Support resolution", w: 20, s: 70 },
@@ -161,29 +170,32 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
     },
   },
   "7D": {
-    interactions: "842K",
-    interactionsN: 842_000,
+    interactions: "62.1K",
+    interactionsN: 62_103,
     headline: {
       score: 68,
       delta: 2,
       nps: 46,
       npsD: 3,
-      csat: 82,
+      csat: 79,
       csatD: -1,
       ease: 3.2,
       easeD: 0.1,
       loyalty: 71,
       loyaltyD: 1.4,
-      churn: 6.8,
+      churn: 7.3,
       churnD: -0.4,
       repeatPurchase: 38,
       repeatD: 1.2,
-      fcr: 64,
+      fcr: 58,
       fcrD: 1.1,
-      retention: 91,
+      retention: 85,
       retentionD: 0.6,
     },
     spark: [63, 64, 63, 65, 66, 65, 67, 68],
+    npsSpark: [42, 43, 42, 44, 45, 44, 45, 46],
+    repeatSpark: [35, 36, 35, 36, 37, 37, 38, 38],
+    loyaltySpark: [68, 69, 68, 70, 70, 70, 71, 71],
     composite: [
       { k: "Product satisfaction", w: 18, s: 80 },
       { k: "Support resolution", w: 20, s: 72 },
@@ -205,29 +217,32 @@ export const HAPPINESS_DATA: Record<HappinessPeriodKey, PeriodSlice> = {
     },
   },
   "30D": {
-    interactions: "3.1M",
-    interactionsN: 3_100_000,
+    interactions: "230K",
+    interactionsN: 229_782,
     headline: {
       score: 67,
       delta: 1.1,
       nps: 45,
       npsD: 1.5,
-      csat: 81,
+      csat: 80,
       csatD: 0.4,
       ease: 3.15,
       easeD: 0.05,
       loyalty: 70,
       loyaltyD: 0.8,
-      churn: 7.0,
+      churn: 7.1,
       churnD: -0.2,
       repeatPurchase: 37,
       repeatD: 0.6,
-      fcr: 63,
+      fcr: 59,
       fcrD: 0.5,
-      retention: 90,
+      retention: 86,
       retentionD: 0.3,
     },
     spark: [64, 65, 66, 65, 67, 66, 68, 67],
+    npsSpark: [43, 44, 44, 43, 45, 44, 46, 45],
+    repeatSpark: [35, 36, 36, 35, 37, 36, 38, 37],
+    loyaltySpark: [68, 69, 69, 68, 70, 69, 71, 70],
     composite: [
       { k: "Product satisfaction", w: 18, s: 79 },
       { k: "Support resolution", w: 20, s: 71 },
@@ -299,9 +314,17 @@ export function getHappinessSegmentRows(range: HappinessPeriodKey = "7D"): Happi
       5,
       Math.min(95, Math.round(row.resolutionRate + (o?.resAdj ?? 0))),
     );
-    const unhappy = Math.max(5, Math.min(80, row.unhappy + (o?.unhappyAdj ?? 0)));
-    const happy = Math.max(5, Math.min(80, row.happy - Math.round((o?.unhappyAdj ?? 0) / 2)));
-    const neutral = Math.max(5, 100 - happy - unhappy);
+    const unhappyAdj = o?.unhappyAdj ?? 0;
+    let unhappy = Math.max(5, Math.min(80, row.unhappy + unhappyAdj));
+    let happy = Math.max(5, Math.min(80, row.happy - Math.round(unhappyAdj / 2)));
+    let neutral = 100 - happy - unhappy;
+    if (neutral < 5) {
+      const deficit = 5 - neutral;
+      neutral = 5;
+      if (happy >= unhappy) happy = Math.max(5, happy - deficit);
+      else unhappy = Math.max(5, unhappy - deficit);
+      neutral = 100 - happy - unhappy;
+    }
     return {
       ...row,
       interactions,
@@ -321,6 +344,11 @@ export function getHappinessSegmentRows(range: HappinessPeriodKey = "7D"): Happi
       ),
     };
   });
+}
+
+/** Headline interaction volume — same universe as the segment table for the period. */
+export function getHappinessInteractionsN(range: HappinessPeriodKey = "7D"): number {
+  return getHappinessSegmentRows(range).reduce((sum, row) => sum + row.interactions, 0);
 }
 
 export const HAPPINESS_VOC = {
@@ -406,15 +434,15 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 5,
     F: 5,
     M: 5,
-    share: 9,
-    rev: 26,
+    share: 11,
+    rev: 27,
     clv: "₹41k",
     color: "#5B4BE0",
     zone: "protect",
     valueTier: "hvhf",
     note: "Recent, frequent, top spenders — your advocates. Reward & ask for referrals.",
     aiInsight:
-      "Top is 9% of base but 26% of revenue. Happiness holds; protect refund SLA — one bad post-purchase loop here costs ~₹41k CLV.",
+      "Top is 11% of base but 27% of revenue. Happiness holds; protect refund SLA — one bad post-purchase loop here costs ~₹41k CLV.",
     action: "Trigger referral ask + priority refund lane for Top this week.",
     dimensionInsights: {
       Recency: "Recency 5/5 — still shopping this week. Keep ETA promises tight; delay is the only fast way to lose them.",
@@ -428,7 +456,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 4,
     F: 5,
     M: 4,
-    share: 13,
+    share: 15,
     rev: 21,
     clv: "₹19k",
     color: "#159B94",
@@ -436,7 +464,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     valueTier: "hvhf",
     note: "Consistent repeat buyers just below Top. Upsell adjacent categories.",
     aiInsight:
-      "Strong + Top = 22% of base and 47% of revenue. Strong is one missed delight away from Risk — watch return friction.",
+      "Strong + Top = 26% of base and 48% of revenue. Strong is one missed delight away from Risk — watch return friction.",
     action: "Push category adjacency offers to Strong; audit return pickup SLA in their top 3 cities.",
     dimensionInsights: {
       Recency: "Recency 4/5 — slight cool-off vs Top. A timely win-back coupon in 7 days lifts reorder odds.",
@@ -450,7 +478,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 5,
     F: 3,
     M: 3,
-    share: 15,
+    share: 16,
     rev: 13,
     clv: "₹8.5k",
     color: "#3B82C4",
@@ -472,7 +500,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 5,
     F: 1,
     M: 2,
-    share: 16,
+    share: 18,
     rev: 6,
     clv: "₹2.1k",
     color: "#4CA6E8",
@@ -480,7 +508,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     valueTier: "lvlf",
     note: "First order just placed. Onboard hard toward a second purchase.",
     aiInsight:
-      "Starter is 16% of base but only 6% of revenue. First-delivery anxiety and refund confusion drive early churn — onboard before day 7.",
+      "Starter is 18% of base but only 6% of revenue. First-delivery anxiety and refund confusion drive early churn — onboard before day 7.",
     action: "Send delivery confidence + easy-return guide within 24h of first order.",
     dimensionInsights: {
       Recency: "Recency 5/5 — brand-new. First impression is delivery + packaging + support tone.",
@@ -494,7 +522,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 3,
     F: 3,
     M: 3,
-    share: 11,
+    share: 12,
     rev: 9,
     clv: "₹6.2k",
     color: "#B0894A",
@@ -516,7 +544,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 2,
     F: 4,
     M: 4,
-    share: 9,
+    share: 10,
     rev: 11,
     clv: "₹12k",
     color: "#D98A3D",
@@ -538,7 +566,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 1,
     F: 5,
     M: 5,
-    share: 4,
+    share: 5,
     rev: 9,
     clv: "₹22k",
     color: "#C24D6E",
@@ -546,7 +574,7 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     valueTier: "hvlf",
     note: "Best buyers gone quiet. Highest win-back priority — call them.",
     aiInsight:
-      "Priority is only 4% of base but 9% of revenue with Recency 1. Highest win-back priority — treat as a retention war-room queue.",
+      "Priority is only 5% of base but 9% of revenue with Recency 1. Highest win-back priority — treat as a retention war-room queue.",
     action: "Assign human callback today; waive return friction; track 14-day reactivation.",
     dimensionInsights: {
       Recency: "Recency 1/5 — cold. Every day without contact raises permanent churn odds.",
@@ -560,8 +588,8 @@ export const RFM_SEGMENTS: RfmSegment[] = [
     R: 2,
     F: 1,
     M: 1,
-    share: 8,
-    rev: 3,
+    share: 13,
+    rev: 4,
     clv: "₹1.4k",
     color: "#94A0B2",
     zone: "monitor",
@@ -592,14 +620,14 @@ const RFM_REV_OVERLAY: Record<HappinessPeriodKey, Partial<Record<RfmId, number>>
   },
   "7D": {},
   "30D": {
-    champions: 24,
+    champions: 25,
     loyal: 22,
     potential: 14,
     new: 5,
     attention: 10,
     atrisk: 10,
     cantlose: 8,
-    hibernating: 4,
+    hibernating: 6,
   },
 };
 

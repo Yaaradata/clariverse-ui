@@ -3,7 +3,7 @@ import type { ConfidenceBand } from "./cxHeadRetailData";
 /** Base-wide happy rate — all shoppers. Never recompute on HV-only. */
 export const HAPPINESS_BASE_WIDE = {
   happyRate: 63,
-  contactsScored: "53.7K",
+  contactsScored: "62.1K",
   measuredSharePct: 72,
   inferredSharePct: 28,
   confidence: "Med-High" as ConfidenceBand,
@@ -67,7 +67,7 @@ export const VALUE_REACH_CELLS: ValueReachCell[] = [
   },
 ];
 
-/** Segment knowledge table — ranked by GMV at risk so high-value rises on its own. */
+/** Segment knowledge table — ranked by revenue at risk (GMV Cr × churn %) in the hub table. */
 export type HappinessSegmentKey =
   | "active"
   | "occasional"
@@ -96,6 +96,13 @@ export type HappinessSegmentRow = {
   /** Ranking metric — ₹ Cr GMV exposed. */
   gmvAtRiskCr: number;
   color: string;
+  /** Supporting CX scores (moved from the left score list into the segment table). */
+  csat: number;
+  /** Customer effort /5 — lower is better. */
+  ease: number;
+  churn: number;
+  fcr: number;
+  retention: number;
   /** Sentiment mix % — must sum to 100. */
   happy: number;
   neutral: number;
@@ -121,11 +128,16 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 45,
     gmvAtRiskCr: 22.4,
     color: "#159B94",
+    csat: 79,
+    ease: 3.4,
+    churn: 7.6,
+    fcr: 58,
+    retention: 86,
     happy: 34,
     neutral: 36,
     unhappy: 30,
     aiInsight:
-      "Active buyers drive 44% of contacts this window with volume still rising (+3.4%) — they are the operating centre of CX load. CPU at 2.1 flags first-pass friction on delivery ETA; each miss forces a repeat contact and softens sentiment. Tighten first-pass resolve on delivery ETA before peak sale load, or Active will flood the queue and drag the index.",
+      "Active buyers drive ~36% of contacts this window with volume still rising — they are the operating centre of CX load. CPU flags first-pass friction on delivery ETA; each miss forces a repeat contact and softens sentiment. Tighten first-pass resolve on delivery ETA before peak sale load, or Active will flood the queue and drag the index.",
     aiConfidence: 86,
   },
   {
@@ -142,6 +154,11 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 38,
     gmvAtRiskCr: 18.2,
     color: "#3B82C4",
+    csat: 76,
+    ease: 3.5,
+    churn: 8.2,
+    fcr: 52,
+    retention: 81,
     happy: 28,
     neutral: 34,
     unhappy: 38,
@@ -163,6 +180,11 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 58,
     gmvAtRiskCr: 42.0,
     color: "#5B4BE0",
+    csat: 88,
+    ease: 2.6,
+    churn: 3.8,
+    fcr: 72,
+    retention: 96,
     happy: 48,
     neutral: 30,
     unhappy: 22,
@@ -184,6 +206,11 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 34,
     gmvAtRiskCr: 12.1,
     color: "#7A8BD0",
+    csat: 74,
+    ease: 3.6,
+    churn: 9.1,
+    fcr: 48,
+    retention: 78,
     happy: 30,
     neutral: 32,
     unhappy: 38,
@@ -205,6 +232,11 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 51,
     gmvAtRiskCr: 14.8,
     color: "#3AA97A",
+    csat: 84,
+    ease: 2.9,
+    churn: 5.4,
+    fcr: 66,
+    retention: 90,
     happy: 40,
     neutral: 33,
     unhappy: 27,
@@ -226,11 +258,16 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 29,
     gmvAtRiskCr: 6.4,
     color: "#94A0B2",
+    csat: 61,
+    ease: 4.1,
+    churn: 14.2,
+    fcr: 36,
+    retention: 62,
     happy: 18,
     neutral: 28,
     unhappy: 54,
     aiInsight:
-      "Dormant customers stay quiet on contacts but land 54% unhappy when they do engage — sentiment is toxic on contact. GMV exposure is low versus Priority and Risk, so burning CX capacity here has a poor return. Use light-touch win-back only; keep voice and chat capacity on Priority and Risk until those queues clear.",
+      "Dormant customers stay quiet on contacts but land 54% unhappy when they do engage — sentiment is toxic on contact. GMV exposure is low versus Active and Occasional, so burning CX capacity here has a poor return. Use light-touch win-back only; keep voice and chat capacity on Active and Occasional until those queues clear.",
     aiConfidence: 74,
   },
   {
@@ -247,6 +284,11 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     resolutionRate: 47,
     gmvAtRiskCr: 16.5,
     color: "#0D9488",
+    csat: 81,
+    ease: 3.1,
+    churn: 6.2,
+    fcr: 61,
+    retention: 89,
     happy: 36,
     neutral: 34,
     unhappy: 30,
@@ -260,4 +302,27 @@ export function segmentsRankedByGmvAtRisk(
   rows: readonly HappinessSegmentRow[] = HAPPINESS_SEGMENT_ROWS,
 ): HappinessSegmentRow[] {
   return [...rows].sort((a, b) => b.gmvAtRiskCr - a.gmvAtRiskCr);
+}
+
+/**
+ * Revenue at risk (₹ Cr) = GMV exposed (₹ Cr) × churn %.
+ * Same commercial unit as GMV — ranks by money at risk, not raw churn rate.
+ */
+export function segmentRevenueAtRiskCr(
+  row: Pick<HappinessSegmentRow, "churn" | "gmvAtRiskCr">,
+): number {
+  return Math.round(row.gmvAtRiskCr * (row.churn / 100) * 100) / 100;
+}
+
+/** @deprecated Use segmentRevenueAtRiskCr — kept for call-site migration. */
+export function segmentRevenueAtRiskInr(
+  row: Pick<HappinessSegmentRow, "churn" | "gmvAtRiskCr" | "ltv" | "interactions">,
+): number {
+  return segmentRevenueAtRiskCr(row);
+}
+
+export function segmentsRankedByRevenueAtRisk(
+  rows: readonly HappinessSegmentRow[] = HAPPINESS_SEGMENT_ROWS,
+): HappinessSegmentRow[] {
+  return [...rows].sort((a, b) => segmentRevenueAtRiskCr(b) - segmentRevenueAtRiskCr(a));
 }

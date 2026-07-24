@@ -44,11 +44,14 @@ export function SpikySparkline({
   color,
   height = 32,
   strokeWidth = 2.25,
+  viewBox,
 }: {
   data: number[];
   color: string;
   height?: number;
   strokeWidth?: number;
+  /** Override SVG viewBox (default `0 0 120 {height}`). */
+  viewBox?: string;
 }): React.ReactElement {
   const width = 120;
   const padX = 4;
@@ -69,7 +72,7 @@ export function SpikySparkline({
 
   return (
     <svg
-      viewBox={`0 0 ${width} ${height}`}
+      viewBox={viewBox ?? `0 0 ${width} ${height}`}
       width="100%"
       height={height}
       preserveAspectRatio="none"
