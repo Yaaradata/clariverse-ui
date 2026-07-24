@@ -241,22 +241,6 @@ const LIFECYCLE = [
   { stage: "Attrition", score: 64, delta: "+13% intent", issue: "Consent / unresolved service", linkedIssue: "conduct", tone: T.red },
 ];
 
-const BENEFIT_RISK = [
-  { name: "EazyDiner", concern: 88, repeatSpend: 39, fill: T.red },
-  { name: "Legend", concern: 82, repeatSpend: 46, fill: T.red },
-  { name: "Pinnacle", concern: 61, repeatSpend: 57, fill: T.amber },
-  { name: "Tiger", concern: 52, repeatSpend: 64, fill: T.yellow },
-  { name: "INDIE app", concern: 37, repeatSpend: 71, fill: T.green },
-];
-
-const RECOVERY = [
-  { week: "W-4", unresolved: 41, spendRecovery: 52 },
-  { week: "W-3", unresolved: 44, spendRecovery: 50 },
-  { week: "W-2", unresolved: 57, spendRecovery: 43 },
-  { week: "W-1", unresolved: 52, spendRecovery: 46 },
-  { week: "Now", unresolved: 69, spendRecovery: 36 },
-];
-
 const HIGH_VALUE_BUBBLES: { id: IssueId; x: number; y: number; size: number; label: string; value: string }[] = [
   { id: "rewards", x: 72, y: 82, size: 74, label: "Reward value", value: "₹1.4 Cr" },
   { id: "app", x: 61, y: 69, size: 58, label: "INDIE access", value: "6.8k HV" },
@@ -472,18 +456,8 @@ function DrillHeader({ onBack }: { onBack: () => void }) {
             <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-.3px", lineHeight: 1.15 }}>
               What are my cardholders experiencing across the cards portfolio?
             </div>
-            <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}>
-              <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 800, color: T.text }}>58</span>
-              <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: T.red }}>−15 pts</span>
-            </span>
           </div>
-          <div style={{ color: T.sub, fontSize: 15, lineHeight: 1.5, marginTop: 5 }}>
-            Prioritise cardholder friction by affected card product, lifecycle stage, spend behaviour,
-            retention exposure and conduct sensitivity.
-          </div>
-          <div style={{ color: T.dim, fontSize: 11, marginTop: 6 }}>
-            As of 07:10 today · IST · baseline = typical Friday, latter-half of month, festive-adjusted
-          </div>
+
         </div>
       </div>
     </>
@@ -524,10 +498,11 @@ function PressureRadar({ issue }: { issue: Issue }) {
       subtitle="The issue with the highest combined customer, portfolio and intervention priority"
       accent={T.violet}
       right={<Pill toneName={issue.severity >= 85 ? "red" : "amber"}>{issue.baseline}</Pill>}
+      style={{ padding: 11 }}
     >
       <div className="icpd-pressure-body">
         <div style={{ minWidth: 0 }}>
-          <div style={{ height: 150, position: "relative" }}>
+          <div style={{ height: 112, position: "relative" }}>
             <ResponsiveContainer width="100%" height="100%">
               <RadialBarChart
                 cx="50%"
@@ -554,12 +529,15 @@ function PressureRadar({ issue }: { issue: Issue }) {
                 pointerEvents: "none",
               }}
             >
-              <Mono size={30}>{issue.severity}</Mono>
-              <Eyebrow>Priority index</Eyebrow>
+              <Mono size={24}>{issue.severity}</Mono>
             </div>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: 8 }}>
+          <div style={{ textAlign: "center", marginTop: 4 }}>
+            <Eyebrow>Priority index</Eyebrow>
+          </div>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: 5, marginTop: 6 }}>
             {contributors.map((c) => (
               <div key={c.label} style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <span style={{ fontSize: 9.5, color: T.muted, width: 106, flexShrink: 0 }}>{c.label}</span>
@@ -571,18 +549,18 @@ function PressureRadar({ issue }: { issue: Issue }) {
             ))}
           </div>
 
-          <div style={{ fontSize: 9, color: T.dim, marginTop: 7, lineHeight: 1.4 }}>
+          <div style={{ fontSize: 9, color: T.dim, marginTop: 6, lineHeight: 1.35 }}>
             Priority index is a weighted blend of these three drivers — not a raw mention count.
           </div>
         </div>
 
         <div style={{ minWidth: 0 }}>
           <Eyebrow color={T.violet}>Highest priority</Eyebrow>
-          <div style={{ color: T.text, fontSize: 17, fontWeight: 900, marginTop: 3 }}>{issue.title}</div>
-          <div style={{ color: T.sub, fontSize: 12, lineHeight: 1.5, marginTop: 6 }}>
+          <div style={{ color: T.text, fontSize: 15, fontWeight: 900, marginTop: 2 }}>{issue.title}</div>
+          <div style={{ color: T.sub, fontSize: 11, lineHeight: 1.45, marginTop: 5 }}>
             {issue.customerSignal}
           </div>
-          <div className="icpd-mini-grid" style={{ marginTop: 10 }}>
+          <div className="icpd-mini-grid" style={{ marginTop: 8 }}>
             <Metric label="Affected" value={issue.affected} />
             <Metric label="Portfolio movement" value={issue.portfolioMovement} danger />
             <Metric label="Exposure" value={issue.exposure} danger />
@@ -606,7 +584,7 @@ function MatrixRow({ row, columns }: { row: ProductRow; columns: { id: IssueId; 
             key={`${row.product}-${column.id}`}
             title={`${row.product} · ${column.label}: ${value}`}
             style={{
-              height: 35,
+              height: 27,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -635,6 +613,7 @@ function ProductIssueMatrix() {
       subtitle="How each friction type concentrates across the card products"
       accent={T.cyan}
       right={<Pill toneName="cyan">vs own baseline</Pill>}
+      style={{ padding: 11 }}
     >
       <div className="icpd-matrix-scroll">
         <div className="icpd-matrix" style={{ gridTemplateColumns: `104px repeat(${columns.length}, minmax(58px, 1fr))` }}>
@@ -672,13 +651,14 @@ function ExecutiveAI({ issue }: { issue: Issue }) {
   const conductTone = issue.conduct === "High" ? "red" : issue.conduct === "Medium" ? "amber" : "green";
   return (
     <SectionCard
-      title="Portfolio brief"
+      title="AI Portfolio brief"
       subtitle="Highest-priority issue across the cards portfolio right now — with the customer signal, evidence and owner action behind it"
       accent={T.gold}
       ai
       className="icpd-ai-card"
+      style={{ height: "100%", display: "flex", flexDirection: "column" }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 12, justifyContent: "space-between" }}>
         <div>
           <Eyebrow color={T.gold}>What changed</Eyebrow>
           <div style={{ color: T.text, fontSize: 15, fontWeight: 900, lineHeight: 1.3, marginTop: 4 }}>
@@ -796,35 +776,6 @@ function LifecycleMap() {
   );
 }
 
-function BenefitRisk() {
-  return (
-    <SectionCard
-      title="Benefit promise under pressure"
-      subtitle="Customer concern intensity compared with retained repeat-spend health"
-      accent={T.red}
-      right={<Pill toneName="red">Premium focus</Pill>}
-    >
-      <div style={{ height: 218 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={BENEFIT_RISK} layout="vertical" margin={{ top: 4, right: 10, left: 5, bottom: 0 }}>
-            <CartesianGrid stroke={T.inner} horizontal={false} />
-            <XAxis type="number" domain={[0, 100]} tick={{ fill: T.dim, fontSize: 9 }} axisLine={false} tickLine={false} />
-            <YAxis dataKey="name" type="category" width={72} tick={{ fill: T.sub, fontSize: 10 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={{ background: T.row, border: `1px solid ${T.btn}`, borderRadius: 8, fontSize: 11 }} />
-            <Bar dataKey="concern" name="Concern index" radius={[0, 5, 5, 0]} barSize={8}>
-              {BENEFIT_RISK.map((item) => <Cell key={item.name} fill={item.fill} />)}
-            </Bar>
-            <Bar dataKey="repeatSpend" name="Repeat-spend health" fill={T.cyan} radius={[0, 5, 5, 0]} barSize={8} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-      <AIInsightStrip toneName="red">
-        EazyDiner and Legend show the widest gap between customer-perceived value and repeat-spend health.
-      </AIInsightStrip>
-    </SectionCard>
-  );
-}
-
 function HighValueExposure() {
   return (
     <SectionCard
@@ -909,33 +860,6 @@ function IssueConfidence() {
           </div>
         ))}
       </div>
-    </SectionCard>
-  );
-}
-
-function ResolutionRecovery() {
-  return (
-    <SectionCard
-      title="Resolution effectiveness"
-      subtitle="Unresolved issue pressure compared with spend recovery among recently resolved cardholders"
-      accent={T.violet}
-      ai
-    >
-      <div style={{ height: 205 }}>
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={RECOVERY} margin={{ top: 8, right: 12, left: -18, bottom: 0 }}>
-            <CartesianGrid stroke={T.inner} vertical={false} />
-            <XAxis dataKey="week" tick={{ fill: T.dim, fontSize: 9 }} axisLine={false} tickLine={false} />
-            <YAxis domain={[20, 80]} tick={{ fill: T.dim, fontSize: 9 }} axisLine={false} tickLine={false} />
-            <Tooltip contentStyle={{ background: T.row, border: `1px solid ${T.btn}`, borderRadius: 8, fontSize: 11 }} />
-            <Line type="monotone" dataKey="unresolved" name="Unresolved pressure" stroke={T.red} strokeWidth={2.4} dot={{ r: 3 }} />
-            <Line type="monotone" dataKey="spendRecovery" name="Spend recovery" stroke={T.green} strokeWidth={2.4} dot={{ r: 3 }} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-      <AIInsightStrip toneName="violet">
-        Resolution pressure is rising while post-resolution spend recovery is weakening; repeat-contact cases should be prioritised before broad campaigns.
-      </AIInsightStrip>
     </SectionCard>
   );
 }
@@ -1131,7 +1055,9 @@ function ActionCentre({ issue }: { issue: Issue }) {
       subtitle="Draft response for the selected portfolio issue"
       accent={T.green}
       right={<Pill toneName={issue.ownerTone}>{issue.owner}</Pill>}
+      style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column" }}
     >
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingRight: 4 }}>
       <div style={{ borderRadius: 9, border: `1px solid ${T.inner}`, background: T.inset, padding: 11 }}>
         <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
           <div>
@@ -1277,6 +1203,7 @@ function ActionCentre({ issue }: { issue: Issue }) {
           </div>
         </div>
       ) : null}
+      </div>
     </SectionCard>
   );
 }
@@ -1309,7 +1236,7 @@ export function IndusIndCardsCustomerPortfolioDrill({ go, onBack }: { go?: Navig
         .icpd-pressure-body{display:grid;grid-template-columns:minmax(180px,.78fr) minmax(0,1.22fr);gap:8px;align-items:center}
         .icpd-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
         .icpd-matrix-scroll{overflow-x:auto;padding-bottom:4px}
-        .icpd-matrix{display:grid;gap:6px;align-items:center;min-width:470px}
+        .icpd-matrix{display:grid;gap:4px;align-items:center;min-width:470px}
         .icpd-matrix-header{border:none;background:transparent;padding:2px;color:${T.muted};font-size:8.5px;font-weight:800;line-height:1.2;text-align:center;cursor:pointer}
         .icpd-lifecycle{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
         .icpd-bubble-chart{position:relative;height:232px;border-left:1px solid ${T.inner};border-bottom:1px solid ${T.inner};margin:6px 8px 16px 24px;background-image:linear-gradient(${T.inner}55 1px,transparent 1px),linear-gradient(90deg,${T.inner}55 1px,transparent 1px);background-size:25% 25%}
@@ -1331,27 +1258,31 @@ export function IndusIndCardsCustomerPortfolioDrill({ go, onBack }: { go?: Navig
 
       <DrillHeader onBack={handleBack} />
 
-      <div className="icpd-top-grid">
-        <PressureRadar issue={topIssue} />
-        <ProductIssueMatrix />
+      <div className="icpd-top-grid" style={{ gridTemplateColumns: "minmax(0,1.15fr) minmax(280px,.85fr)" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, minWidth: 0 }}>
+          <PressureRadar issue={topIssue} />
+          <ProductIssueMatrix />
+        </div>
         <ExecutiveAI issue={topIssue} />
       </div>
 
-      <div className="icpd-row-3">
+      <div className="icpd-row-3" style={{ gridTemplateColumns: "repeat(2,minmax(0,1fr))" }}>
         <LifecycleMap />
-        <BenefitRisk />
         <HighValueExposure />
       </div>
 
-      <div className="icpd-row-3">
+      <div className="icpd-row-3" style={{ gridTemplateColumns: "repeat(2,minmax(0,1fr))" }}>
         <IssueConfidence />
-        <ResolutionRecovery />
         <EmergingPatterns />
       </div>
 
-      <div className="icpd-final-grid">
+      <div className="icpd-final-grid" style={{ alignItems: "stretch" }}>
         <PriorityBoard activeIssue={activeIssueId} onSelect={setActiveIssueId} />
-        <ActionCentre issue={activeIssue} />
+        <div style={{ position: "relative", minWidth: 0, minHeight: 0 }}>
+          <div style={{ position: "absolute", inset: 0, display: "flex" }}>
+            <ActionCentre issue={activeIssue} />
+          </div>
+        </div>
       </div>
 
       <div style={{ height: 28 }} />

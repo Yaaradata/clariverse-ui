@@ -103,9 +103,14 @@ const TONE_MAP: Record<string, string> = {
 const tone = (k: string): string => TONE_MAP[k] || T.gold;
 const BRAND: Record<string, string> = {
   travel: T.violet,
-  cashback: T.green,
+  dining: "#f472b6",
   fuel: T.amber,
-  biz: T.cyan,
+  fintech: "#2dd4bf",
+  entry: "#a3e635",
+  cashback: T.green,
+  premium: T.blue,
+  mass: T.cyan,
+  govt: "#94a3b8",
 };
 const ROUTE: Record<string, { l: string; c: string }> = {
   ops: { l: "Ops / Risk", c: T.cyan },
@@ -484,7 +489,7 @@ function DrillHeader({
   asOf,
 }: {
   title: ReactNode;
-  sub: ReactNode;
+  sub?: ReactNode;
   chips?: ReactNode;
   onBack: () => void;
   score?: string;
@@ -544,17 +549,19 @@ function DrillHeader({
               </span>
             ) : null}
           </div>
-          <div
-            style={{
-              color: T.sub,
-              fontSize: 15,
-              marginTop: 4,
-              maxWidth: 880,
-              lineHeight: 1.5,
-            }}
-          >
-            {sub}
-          </div>
+          {sub ? (
+            <div
+              style={{
+                color: T.sub,
+                fontSize: 15,
+                marginTop: 4,
+                maxWidth: 880,
+                lineHeight: 1.5,
+              }}
+            >
+              {sub}
+            </div>
+          ) : null}
           {asOf ? (
             <div style={{ color: T.dim, fontSize: 11, marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
               <Clock size={11} /> {asOf}
@@ -635,12 +642,12 @@ const EXEC_PULSE = [
   },
 ];
 
-function MiniSpark({ data, c, h = 52 }: { data: TrendPoint[]; c: string; h?: number }) {
+function MiniSpark({ data, c, h = 52 }: { data: TrendPoint[]; c: string; h?: number | string }) {
   return (
     <div style={{ height: h, minWidth: 0 }}>
       <ResponsiveContainer>
         <LineChart data={data} margin={{ top: 4, right: 2, left: 2, bottom: 0 }}>
-          <Line type="monotone" dataKey="v" stroke={c} strokeWidth={2.4} dot={false} isAnimationActive={false} />
+          <Line type="natural" dataKey="v" stroke={c} strokeWidth={2.4} dot={false} isAnimationActive={false} />
           <YAxis hide domain={["dataMin", "dataMax"]} />
         </LineChart>
       </ResponsiveContainer>
@@ -886,7 +893,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Token + auth feed",
     fields: [
       ["Cohort", "Premium · CNP"],
-      ["Time", "Since 06:20"],
+      ["Time", "Since 06:20 IST · 24 Jul"],
     ],
     stats: [
       ["Approval Gap", "14 pts"],
@@ -905,7 +912,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Interaction corpus + spend",
     fields: [
       ["Cohort", "EazyDiner · Legend"],
-      ["Time", "Since 15 Jul"],
+      ["Time", "Since 15 Jul · 09:05 IST"],
     ],
     stats: [
       ["Cardholders", "~3.2k"],
@@ -925,12 +932,12 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Offer + spend",
     fields: [
       ["Cohort", "High-frequency MCC"],
-      ["Time", "Day 6 of wave 2"],
+      ["Time", "Day 6 of wave 2 · as of 09:40 IST"],
     ],
     stats: [
       ["Redemption", "82% triggered"],
       ["True Lift", "18%"],
-      ["Leakage", "₹78 L since launch"],
+      ["Leakage", "₹78 L MTD"],
       ["Route", "Marketing"],
     ],
     ai: "Matched-control spend is nearly identical — the reward subsidises spend that would have happened anyway. Pause wave 2 or narrow eligibility.",
@@ -945,7 +952,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     needsExtraFeed: true,
     fields: [
       ["Cohort", "3+ yr cardholders"],
-      ["Time", "Within 2h"],
+      ["Time", "Within 2h · 12:15 IST"],
     ],
     stats: [
       ["Approval Rate", "94% → 81%"],
@@ -964,7 +971,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Issue + first txn",
     fields: [
       ["Cohort", "Batch #4471"],
-      ["Time", "D27 of 30+7"],
+      ["Time", "D27 of 30+7 · as of 09:40 IST"],
     ],
     stats: [
       ["Cards at risk", "6.2k"],
@@ -983,7 +990,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Settlement feed",
     fields: [
       ["Cohort", "Jio-bp"],
-      ["Time", "This week"],
+      ["Time", "This week · as of 09:40 IST"],
     ],
     stats: [
       ["Concentration", "↑ 2.1×"],
@@ -1002,7 +1009,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Balance + limit",
     fields: [
       ["Cohort", "Sourcing Q2"],
-      ["Time", "This week"],
+      ["Time", "This week · as of 09:40 IST"],
     ],
     stats: [
       ["80%+ crossing", "1.8×"],
@@ -1021,7 +1028,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Decline feed",
     fields: [
       ["Cohort", "Fuel MCC"],
-      ["Time", "This morning"],
+      ["Time", "This morning · 08:20 IST"],
     ],
     stats: [
       ["Checked", "4 adjacent causes"],
@@ -1109,7 +1116,7 @@ function TodayTransactionSignalMonitor() {
 
               <div style={{ marginTop: 12, background: a.aiPurple ? "#21163a" : "#2d2414", border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`, borderRadius: 9, padding: "11px 13px", fontSize: 12, lineHeight: 1.45, color: "#fff", fontWeight: 700, height: 92, boxSizing: "border-box", overflow: "hidden", flexShrink: 0 }}>
                 <span style={{ display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                  {a.ai}
+                  ✨ {a.ai}
                 </span>
               </div>
             </div>
@@ -1353,7 +1360,7 @@ function BookHeadline() {
   );
 }
 
-const BRAND_STRIP = ["Avios", "Platinum RuPay", "Jio-bp", "Pioneer", "Legend", "EazyDiner", "Tiger", "Pinnacle", "Celesta"];
+const BRAND_STRIP = ["Avios", "Platinum RuPay", "Jio-bp Mobility+", "Pioneer Heritage", "Legend", "EazyDiner", "Tiger", "Pinnacle", "CRED RuPay"];
 
 function BrandStrip({ go }: { go: NavigateFn }) {
   return (
@@ -1482,21 +1489,10 @@ const D1_BRANDS: {
   sc: string;
 }[] = [
   {
-    k: "travel",
-    name: "Avios",
-    spend: "₹620 Cr MTD",
-    cards: "2.4 L",
-    wow: "−6.2%",
-    up: false,
-    prof: 38,
-    status: "Watch",
-    sc: T.amber,
-  },
-  {
     k: "cashback",
     name: "Platinum RuPay",
-    spend: "₹1,520 Cr MTD",
-    cards: "16.5 L",
+    spend: "₹1,180 Cr",
+    cards: "13.4 L",
     wow: "+8.4%",
     up: true,
     prof: 71,
@@ -1504,26 +1500,37 @@ const D1_BRANDS: {
     sc: T.green,
   },
   {
-    k: "fuel",
-    name: "Jio-bp",
-    spend: "₹720 Cr MTD",
-    cards: "5.5 L",
-    wow: "+3.2%",
-    up: true,
-    prof: 52,
-    status: "Retarget",
-    sc: T.yellow,
-  },
-  {
-    k: "biz",
-    name: "Pioneer",
-    spend: "₹980 Cr MTD",
-    cards: "6.8 L",
-    wow: "+1.1%",
+    k: "premium",
+    name: "Pinnacle",
+    spend: "₹520 Cr",
+    cards: "2.6 L",
+    wow: "+1.9%",
     up: true,
     prof: 64,
+    status: "Monitor",
+    sc: T.amber,
+  },
+  {
+    k: "travel",
+    name: "Avios Visa Infinite",
+    spend: "₹430 Cr",
+    cards: "1.6 L",
+    wow: "−6.2%",
+    up: false,
+    prof: 38,
     status: "Watch",
     sc: T.amber,
+  },
+  {
+    k: "mass",
+    name: "Legend",
+    spend: "₹410 Cr",
+    cards: "3.4 L",
+    wow: "+2.6%",
+    up: true,
+    prof: 58,
+    status: "Monitor",
+    sc: T.yellow,
   },
 ];
 const D1_TIERS: [string, string, number, number, number][] = [
@@ -1597,7 +1604,7 @@ const D1_AI: AiRow[] = [
     level: "WARNING",
     tag: "Spend quality",
     title: "Profitable spend drifting on premium (Avios)",
-    body: "Spends are flat but profitable retained spend on Avios (2.4 L cards) is down 6.4% — top-of-wallet is slipping. Draft: benefit / engagement review, routed to the Premium desk.",
+    body: "Spends are flat but profitable retained spend on Avios Visa Infinite (1.6 L cards) is down 6.4% — top-of-wallet is slipping. Draft: benefit / engagement review, routed to the Premium desk.",
     metric: "−6.4% · ≈₹18 L/mo contribution at risk",
     delta: "premiumisation drift · draft ready",
     icon: Zap,
@@ -1726,7 +1733,7 @@ const OFFER_C: Record<string, string> = {
 };
 
 function AISummaryWall({ rows }: { rows: AiRow[] }) {
-  const [open, setOpen] = useState<string | null>(rows[0].id);
+  const [open, setOpen] = useState<string | null>(null);
   const counts = rows.reduce<Record<string, number>>((m, r) => {
     m[r.level] = (m[r.level] || 0) + 1;
     return m;
@@ -2027,6 +2034,9 @@ function CommandCenter() {
         background: T.card,
         position: "relative",
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
       }}
     >
       {accent && (
@@ -2041,7 +2051,7 @@ function CommandCenter() {
           }}
         />
       )}
-      <div style={{ marginLeft: accent ? 6 : 0 }}>
+      <div style={{ marginLeft: accent ? 6 : 0, display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
         <div
           style={{
             display: "flex",
@@ -2058,7 +2068,7 @@ function CommandCenter() {
             {sub}
           </div>
         )}
-        {children}
+        <div style={{ flex: 1, display: "flex", flexDirection: "column" }}>{children}</div>
       </div>
     </div>
   );
@@ -2083,48 +2093,41 @@ function CommandCenter() {
       }}
     >
       {/* total spend + brand table */}
-      <W
-        accent={T.blue}
-        title="Total spend"
-        right={<span style={{ fontSize: 10, color: T.muted }}>WoW</span>}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: 8,
-            marginBottom: 10,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 30,
-              fontWeight: 800,
-              fontFamily: MONO,
-              background: "linear-gradient(135deg,#5332ff,#7c3aed)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
-            title={RUPEE_METHOD.mtd}
-          >
-            ₹3,840 Cr MTD
-          </span>
-          <span
-            style={{
-              fontSize: 10.5,
-              fontWeight: 700,
-              color: T.green,
-              background: `${T.green}1c`,
-              border: `1px solid ${T.green}40`,
-              borderRadius: 999,
-              padding: "2px 8px",
-            }}
-          >
-            ▲ +3.8%
-          </span>
-          <span style={{ fontSize: 10.5, fontWeight: 700, color: T.red }}>
+      <W accent={T.blue} title="Total spend" right={null}>
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+            <span
+              style={{
+                fontSize: 24,
+                fontWeight: 800,
+                fontFamily: MONO,
+                whiteSpace: "nowrap",
+                background: "linear-gradient(135deg,#5332ff,#7c3aed)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+              title={RUPEE_METHOD.mtd}
+            >
+              ₹3,840 Cr MTD
+            </span>
+            <span
+              style={{
+                fontSize: 10.5,
+                fontWeight: 700,
+                color: T.green,
+                background: `${T.green}1c`,
+                border: `1px solid ${T.green}40`,
+                borderRadius: 999,
+                padding: "2px 8px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              ▲ +3.8% WoW
+            </span>
+          </div>
+          <div style={{ fontSize: 10.5, fontWeight: 700, color: T.red, marginTop: 4 }}>
             contribution (after interchange & reward) −6.4%
-          </span>
+          </div>
         </div>
         <div
           style={{
@@ -2136,13 +2139,13 @@ function CommandCenter() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1.3fr .85fr .7fr .75fr .95fr",
+              gridTemplateColumns: "1.15fr .9fr .55fr .8fr .9fr",
               gap: 8,
               padding: "7px 10px",
               background: T.row,
             }}
           >
-            {["BRAND", "SPEND", "CARDS", "WoW", "PROFIT%"].map((h) => (
+            {["BRAND", "SPEND · MTD", "CARDS", "WoW", "PROFIT%"].map((h) => (
               <Eyebrow key={h}>{h}</Eyebrow>
             ))}
           </div>
@@ -2151,7 +2154,7 @@ function CommandCenter() {
               key={b.k}
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.3fr .85fr .7fr .75fr .95fr",
+                gridTemplateColumns: "1.15fr .9fr .55fr .8fr .9fr",
                 gap: 8,
                 padding: "7px 10px",
                 borderTop: i ? `1px solid ${T.border}` : "none",
@@ -2194,8 +2197,59 @@ function CommandCenter() {
           ))}
         </div>
         <div style={{ fontSize: 9.5, color: T.dim, marginTop: 8, lineHeight: 1.45 }}>
-          4 card products = 100% of spends (₹3,840 Cr MTD) &amp; 31.2 L cards. Legend · Pinnacle · Tiger are premium
-          variants and EazyDiner · Celesta co-brands — nested within these products, not separate lines.
+          Top 4 of 12 actively-issued consumer cards. Co-brand ₹1,160 Cr MTD · 7.9 L cards
+          (Avios · EazyDiner Signature &amp; Platinum · Jio-bp Mobility+ · Tiger · CRED RuPay);
+          own-brand ₹2,680 Cr MTD · 23.3 L cards. Together ₹3,840 Cr MTD · 31.2 L cards.
+        </div>
+      </W>
+      {/* gmv vs contribution monitor */}
+      <W
+        accent={T.cyan}
+        title="Gross vs contribution monitor"
+        sub="7-week · gross holds, contribution falls"
+      >
+        <div style={{ flex: 1, minHeight: 132 }}>
+          <ResponsiveContainer>
+            <LineChart
+              data={D1_GMV}
+              margin={{ top: 8, right: 8, left: 2, bottom: 18 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke={T.border} />
+              <XAxis
+                dataKey="w"
+                tick={{ fill: T.dim, fontSize: 9 }}
+                tickLine={false}
+                label={{ value: "Week (relative)", position: "insideBottom", offset: -8, fill: T.dim, fontSize: 9 }}
+              />
+              <YAxis
+                domain={[90, 106]}
+                tick={{ fill: T.dim, fontSize: 9 }}
+                width={40}
+                tickLine={false}
+                axisLine={false}
+                label={{ value: "Index · 100 = base", angle: -90, position: "insideLeft", offset: 12, style: { textAnchor: "middle", fill: T.dim, fontSize: 9 } }}
+              />
+              <Tooltip contentStyle={TIP} />
+              <Line
+                type="monotone"
+                dataKey="g"
+                name="Gross"
+                stroke={T.green}
+                strokeWidth={2.4}
+                dot={false}
+                isAnimationActive={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="p"
+                name="Contribution"
+                stroke={T.red}
+                strokeWidth={2.4}
+                dot={false}
+                isAnimationActive={false}
+              />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </W>
       {/* spend quality by tier */}
@@ -2302,54 +2356,6 @@ function CommandCenter() {
           </span>
         </div>
       </W>
-      {/* gmv vs contribution monitor */}
-      <W
-        accent={T.cyan}
-        title="Gross vs contribution monitor"
-        sub="7-week · gross holds, contribution falls"
-      >
-        <div style={{ height: 132 }}>
-          <ResponsiveContainer>
-            <LineChart
-              data={D1_GMV}
-              margin={{ top: 8, right: 8, left: -22, bottom: 0 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke={T.border} />
-              <XAxis
-                dataKey="w"
-                tick={{ fill: T.dim, fontSize: 9 }}
-                tickLine={false}
-              />
-              <YAxis
-                domain={[90, 106]}
-                tick={{ fill: T.dim, fontSize: 9 }}
-                width={26}
-                tickLine={false}
-                axisLine={false}
-              />
-              <Tooltip contentStyle={TIP} />
-              <Line
-                type="monotone"
-                dataKey="g"
-                name="Gross"
-                stroke={T.green}
-                strokeWidth={2.4}
-                dot={false}
-                isAnimationActive={false}
-              />
-              <Line
-                type="monotone"
-                dataKey="p"
-                name="Contribution"
-                stroke={T.red}
-                strokeWidth={2.4}
-                dot={false}
-                isAnimationActive={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-      </W>
       {/* reward-leakage watchlist */}
       <W
         accent={T.amber}
@@ -2359,9 +2365,10 @@ function CommandCenter() {
           <div
             key={n}
             style={{
-              display: "flex",
-              justifyContent: "space-between",
+              display: "grid",
+              gridTemplateColumns: "1fr 84px 58px",
               alignItems: "center",
+              gap: 8,
               marginBottom: 6,
               padding: "6px 8px",
               borderRadius: 6,
@@ -2369,14 +2376,15 @@ function CommandCenter() {
               border: `1px solid ${c}30`,
             }}
           >
-            <span style={{ fontSize: 11.5, fontWeight: 600, color: T.text }}>
-              {n}{" "}
+            <span style={{ fontSize: 11.5, fontWeight: 600, color: T.text, minWidth: 0 }}>{n}</span>
+            <span style={{ textAlign: "center" }}>
               <Mono c={c} s={11}>
                 {amt}
               </Mono>
             </span>
             <span
               style={{
+                justifySelf: "end",
                 fontSize: 9,
                 fontWeight: 800,
                 color: c,
@@ -2398,6 +2406,7 @@ function CommandCenter() {
         sub="net-negative cells by MCC × brand"
         right={null}
       >
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 8 }}>
         <div
           style={{
             border: `1px solid ${T.inner}`,
@@ -2451,7 +2460,7 @@ function CommandCenter() {
                 fontSize: 8.5,
                 fontWeight: 700,
                 color: T.red,
-                textAlign: "right",
+                textAlign: "center",
               }}
             >
               TOTAL
@@ -2485,11 +2494,14 @@ function CommandCenter() {
               >
                 {r[3]}
               </span>
-              <Mono c={T.red} s={11}>
-                {r[4]}
-              </Mono>
+              <span style={{ textAlign: "center" }}>
+                <Mono c={T.red} s={11}>
+                  {r[4]}
+                </Mono>
+              </span>
             </div>
           ))}
+        </div>
         </div>
       </W>
       {/* offer mix */}
@@ -2498,6 +2510,7 @@ function CommandCenter() {
         title="Live offer mix"
         sub="20 active offers · keep / retarget / kill / wait"
       >
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 8 }}>
         <div
           style={{
             display: "flex",
@@ -2551,6 +2564,7 @@ function CommandCenter() {
               </Mono>
             </span>
           ))}
+        </div>
         </div>
       </W>
     </div>
@@ -2788,6 +2802,7 @@ type BrandDeepRow = {
   k: string;
   name: string;
   spend: string;
+  cards: string;
   wow: string;
   wowUp: boolean;
   txn: string;
@@ -2801,186 +2816,25 @@ type BrandDeepRow = {
   profitableUp: boolean;
   status: string;
   statusAi?: boolean;
-  owner: string;
 };
 
-const BRAND_DEEP: BrandDeepRow[] = [
-  {
-    k: "travel",
-    name: "Avios",
-    spend: "₹620 Cr MTD",
-    wow: "−6.2%",
-    wowUp: false,
-    txn: "0.31M",
-    active: "−3.1%",
-    activeUp: false,
-    repeat: "−4.8%",
-    repeatUp: false,
-    roi: "Weak",
-    rewardCost: "High",
-    profitable: "−6.4%",
-    profitableUp: false,
-    status: "Watch",
-    statusAi: true,
-    owner: "Product",
-  },
-  {
-    k: "cashback",
-    name: "Platinum RuPay",
-    spend: "₹1,520 Cr MTD",
-    wow: "+8.4%",
-    wowUp: true,
-    txn: "17.5M",
-    active: "+4.7%",
-    activeUp: true,
-    repeat: "+6.2%",
-    repeatUp: true,
-    roi: "Strong",
-    rewardCost: "Normal",
-    profitable: "+2.1%",
-    profitableUp: true,
-    status: "Healthy",
-    owner: "Marketing",
-  },
-  {
-    k: "fuel",
-    name: "Jio-bp",
-    spend: "₹720 Cr MTD",
-    wow: "+3.2%",
-    wowUp: true,
-    txn: "5.7M",
-    active: "+1.1%",
-    activeUp: true,
-    repeat: "−1.9%",
-    repeatUp: false,
-    roi: "Weak",
-    rewardCost: "High",
-    profitable: "−3.8%",
-    profitableUp: false,
-    status: "Retarget",
-    statusAi: true,
-    owner: "Partner PM",
-  },
-  {
-    k: "biz",
-    name: "Pioneer",
-    spend: "₹980 Cr MTD",
-    wow: "+1.1%",
-    wowUp: true,
-    txn: "4.0M",
-    active: "+0.8%",
-    activeUp: true,
-    repeat: "+1.3%",
-    repeatUp: true,
-    roi: "Neutral",
-    rewardCost: "Stable",
-    profitable: "+0.5%",
-    profitableUp: true,
-    status: "Monitor",
-    owner: "Portfolio PM",
-  },
+const BRAND_DEEP: (BrandDeepRow & { kind: "own" | "cobrand" })[] = [
+  // ── Co-brand · ₹1,160 Cr MTD · 7.9 L cards
+  { kind: "cobrand", k: "travel", name: "Avios Visa Infinite", spend: "₹430 Cr MTD", cards: "1.6 L", wow: "−6.2%", wowUp: false, txn: "0.21M", active: "−3.1%", activeUp: false, repeat: "−4.8%", repeatUp: false, roi: "Weak", rewardCost: "High", profitable: "−6.4%", profitableUp: false, status: "Watch", statusAi: true },
+  { kind: "cobrand", k: "dining", name: "EazyDiner Signature", spend: "₹190 Cr MTD", cards: "0.9 L", wow: "−4.1%", wowUp: false, txn: "0.34M", active: "−2.6%", activeUp: false, repeat: "−5.9%", repeatUp: false, roi: "Weak", rewardCost: "High", profitable: "−4.7%", profitableUp: false, status: "Watch", statusAi: true },
+  { kind: "cobrand", k: "dining", name: "EazyDiner Platinum", spend: "₹90 Cr MTD", cards: "1.0 L", wow: "+1.4%", wowUp: true, txn: "0.62M", active: "+0.9%", activeUp: true, repeat: "+0.4%", repeatUp: true, roi: "Neutral", rewardCost: "Normal", profitable: "+0.3%", profitableUp: true, status: "Monitor" },
+  { kind: "cobrand", k: "fuel", name: "Jio-bp Mobility+", spend: "₹290 Cr MTD", cards: "3.0 L", wow: "+3.2%", wowUp: true, txn: "2.3M", active: "+1.1%", activeUp: true, repeat: "−1.9%", repeatUp: false, roi: "Weak", rewardCost: "High", profitable: "−3.8%", profitableUp: false, status: "Retarget", statusAi: true },
+  { kind: "cobrand", k: "entry", name: "Tiger", spend: "₹95 Cr MTD", cards: "0.9 L", wow: "+2.1%", wowUp: true, txn: "0.71M", active: "+2.4%", activeUp: true, repeat: "+1.1%", repeatUp: true, roi: "Neutral", rewardCost: "Normal", profitable: "+0.8%", profitableUp: true, status: "Monitor" },
+  { kind: "cobrand", k: "fintech", name: "CRED RuPay", spend: "₹65 Cr MTD", cards: "0.5 L", wow: "+6.8%", wowUp: true, txn: "1.1M", active: "+5.2%", activeUp: true, repeat: "+3.4%", repeatUp: true, roi: "Strong", rewardCost: "Normal", profitable: "+1.6%", profitableUp: true, status: "Healthy" },
+
+  // ── Own-brand · ₹2,680 Cr MTD · 23.3 L cards
+  { kind: "own", k: "cashback", name: "Platinum RuPay", spend: "₹1,180 Cr MTD", cards: "13.4 L", wow: "+8.4%", wowUp: true, txn: "13.6M", active: "+4.7%", activeUp: true, repeat: "+6.2%", repeatUp: true, roi: "Strong", rewardCost: "Normal", profitable: "+2.1%", profitableUp: true, status: "Healthy" },
+  { kind: "own", k: "premium", name: "Pinnacle", spend: "₹520 Cr MTD", cards: "2.6 L", wow: "+1.9%", wowUp: true, txn: "0.94M", active: "+1.2%", activeUp: true, repeat: "+1.8%", repeatUp: true, roi: "Neutral", rewardCost: "Stable", profitable: "+1.4%", profitableUp: true, status: "Monitor" },
+  { kind: "own", k: "mass", name: "Legend", spend: "₹410 Cr MTD", cards: "3.4 L", wow: "+2.6%", wowUp: true, txn: "2.9M", active: "+1.8%", activeUp: true, repeat: "−2.2%", repeatUp: false, roi: "Neutral", rewardCost: "Normal", profitable: "+0.6%", profitableUp: true, status: "Monitor" },
+  { kind: "own", k: "premium", name: "Pioneer Heritage", spend: "₹290 Cr MTD", cards: "1.0 L", wow: "+0.7%", wowUp: true, txn: "0.28M", active: "+0.4%", activeUp: true, repeat: "+0.9%", repeatUp: true, roi: "Neutral", rewardCost: "Stable", profitable: "+2.8%", profitableUp: true, status: "Healthy" },
+  { kind: "own", k: "mass", name: "Nexxt", spend: "₹150 Cr MTD", cards: "1.6 L", wow: "+1.1%", wowUp: true, txn: "1.4M", active: "+0.6%", activeUp: true, repeat: "+0.5%", repeatUp: true, roi: "Neutral", rewardCost: "Normal", profitable: "+0.4%", profitableUp: true, status: "Monitor" },
+  { kind: "own", k: "govt", name: "Samman RuPay", spend: "₹130 Cr MTD", cards: "1.3 L", wow: "+4.3%", wowUp: true, txn: "2.1M", active: "+3.1%", activeUp: true, repeat: "+2.7%", repeatUp: true, roi: "Strong", rewardCost: "Normal", profitable: "+1.1%", profitableUp: true, status: "Healthy" },
 ];
-
-type OfferBoardCard = {
-  name: string;
-  leak: string;
-  lift: string;
-  conf: string;
-  owner: string;
-  decision: string;
-  note?: string;
-};
-
-const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
-  keep: [
-    {
-      name: "Travel 5X",
-      leak: "₹2 L MTD",
-      lift: "74%",
-      conf: "High",
-      owner: "Marketing",
-      decision: "Keep",
-    },
-    {
-      name: "EazyDiner 3X",
-      leak: "₹6 L MTD",
-      lift: "58%",
-      conf: "High",
-      owner: "Partner PM",
-      decision: "Keep",
-      note: "Richer cap unlocked by prior-month ₹40k non-dining spend · settled txns only · tier-capped",
-    },
-    {
-      name: "Dining 3X",
-      leak: "₹4 L MTD",
-      lift: "67%",
-      conf: "High",
-      owner: "Marketing",
-      decision: "Keep",
-    },
-  ],
-  retarget: [
-    {
-      name: "Fuel Friday",
-      leak: "₹21 L MTD",
-      lift: "46%",
-      conf: "High",
-      owner: "Partner PM",
-      decision: "Retarget",
-    },
-    {
-      name: "Grocery 2%",
-      leak: "₹19 L MTD",
-      lift: "31%",
-      conf: "Medium",
-      owner: "Marketing",
-      decision: "Monitor",
-    },
-  ],
-  kill: [
-    {
-      name: "O-142 Cashback",
-      leak: "₹78 L MTD",
-      lift: "18%",
-      conf: "Medium",
-      owner: "Marketing",
-      decision: "Kill / Narrow",
-    },
-    {
-      name: "Wallet-load booster",
-      leak: "₹42 L MTD",
-      lift: "12%",
-      conf: "Medium",
-      owner: "Marketing",
-      decision: "Kill",
-    },
-  ],
-  wait: [
-    {
-      name: "Co-brand Launch",
-      leak: "tbd",
-      lift: "?",
-      conf: "Low",
-      owner: "Marketing",
-      decision: "Wait 24h",
-    },
-    {
-      name: "Festival EMI",
-      leak: "tbd",
-      lift: "?",
-      conf: "Low",
-      owner: "Marketing",
-      decision: "Wait",
-    },
-  ],
-};
-
-const BOARD_COL_META: Record<string, { l: string; c: string; total: number }> = {
-  keep: { l: "Keep", c: T.green, total: 9 },
-  retarget: { l: "Retarget", c: T.amber, total: 6 },
-  kill: { l: "Kill", c: T.red, total: 2 },
-  wait: { l: "Wait", c: T.dim, total: 3 },
-};
 
 const YIELD_ROWS: [
   string,
@@ -3068,236 +2922,85 @@ const COHORT_ROWS: [string, string, string, string, string, string, string, bool
   ];
 
 function BrandCoBrandDeepPerformanceMatrix() {
-  const cols = "minmax(100px,1.1fr) repeat(9,minmax(68px,.9fr))";
+  const [view, setView] = useState<"cobrand" | "own">("cobrand");
+  const rows = BRAND_DEEP.filter((b) => b.kind === view);
+  const cols = "minmax(120px,1.3fr) minmax(52px,.7fr) repeat(9,minmax(62px,.85fr))";
+
+  const Toggle = ({ id, label }: { id: "cobrand" | "own"; label: string }) => {
+    const on = view === id;
+    return (
+      <button
+        type="button"
+        onClick={() => setView(id)}
+        style={{
+          font: "inherit",
+          cursor: "pointer",
+          fontSize: 11,
+          fontWeight: 800,
+          letterSpacing: ".03em",
+          padding: "6px 12px",
+          borderRadius: 999,
+          color: on ? T.text : T.muted,
+          background: on ? `${T.cyan}1e` : T.inset,
+          border: `1px solid ${on ? `${T.cyan}66` : T.inner}`,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {label}
+      </button>
+    );
+  };
+
   return (
     <SectionCard
       title="Brand / Co-brand deep performance"
       subtitle="Which brand is growing, flat, or margin-negative — and what cost problem is attached"
       accent={T.cyan}
       aiPill
+      right={
+        <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+          <Toggle id="cobrand" label="Co-brand" />
+          <Toggle id="own" label="Own-brand" />
+        </div>
+      }
     >
-      <div
-        style={{
-          border: `1px solid ${T.border}`,
-          borderRadius: 8,
-          overflowX: "auto",
-        }}
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: cols,
-            gap: 8,
-            padding: "8px 10px",
-            background: T.row,
-            minWidth: 960,
-          }}
-        >
-          {[
-            "Brand",
-            "Spend",
-            "WoW",
-            "Txn",
-            "Active",
-            "Repeat",
-            "Offer ROI",
-            "Reward",
-            "Profit",
-            "Status",
-            "Owner",
-          ].map((h) => (
+      <div style={{ border: `1px solid ${T.border}`, borderRadius: 8, overflowX: "auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: cols, gap: 8, padding: "8px 10px", background: T.row, minWidth: 980 }}>
+          {["Brand", "Cards", "Spend", "WoW", "Txn", "Active", "Repeat", "Offer ROI", "Reward", "Profit", "Status"].map((h) => (
             <Eyebrow key={h}>{h}</Eyebrow>
           ))}
         </div>
-        {BRAND_DEEP.map((b, i) => (
-          <div
-            key={b.k}
-            style={{
-              display: "grid",
-              gridTemplateColumns: cols,
-              gap: 8,
-              padding: "8px 10px",
-              borderTop: i ? `1px solid ${T.border}` : "none",
-              alignItems: "center",
-              minWidth: 960,
-              fontSize: 11,
-            }}
-          >
+        {rows.map((b, i) => (
+          <div key={b.name} style={{ display: "grid", gridTemplateColumns: cols, gap: 8, padding: "9px 10px", borderTop: i ? `1px solid ${T.border}` : "none", alignItems: "center", minWidth: 980, fontSize: 11 }}>
             <BrandPill k={b.k}>{b.name}</BrandPill>
+            <Mono s={10.5}>{b.cards}</Mono>
             <Mono s={10.5}>{b.spend}</Mono>
-            <Mono c={b.wowUp ? T.green : T.red} s={10}>
-              {b.wow}
-            </Mono>
+            <Mono c={b.wowUp ? T.green : T.red} s={10}>{b.wow}</Mono>
             <Mono s={10.5}>{b.txn}</Mono>
-            <Mono c={b.activeUp ? T.green : T.red} s={10}>
-              {b.active}
-            </Mono>
-            <Mono c={b.repeatUp ? T.green : T.red} s={10}>
-              {b.repeat}
-            </Mono>
+            <Mono c={b.activeUp ? T.green : T.red} s={10}>{b.active}</Mono>
+            <Mono c={b.repeatUp ? T.green : T.red} s={10}>{b.repeat}</Mono>
             <span>{b.roi}</span>
             <span>{b.rewardCost}</span>
-            <Mono c={b.profitableUp ? T.green : T.red} s={10}>
-              {b.profitable}
-            </Mono>
-            <span
-              style={{ fontWeight: 700, color: b.statusAi ? T.amber : T.green }}
-            >
-              {b.status}
-            </span>
-            <span style={{ color: T.muted }}>{b.owner}</span>
+            <Mono c={b.profitableUp ? T.green : T.red} s={10}>{b.profitable}</Mono>
+            <span style={{ fontWeight: 700, color: b.statusAi ? T.amber : T.green }}>{b.status}</span>
           </div>
         ))}
       </div>
-      <AIInsightStrip>
-        Avios is not a volume problem; it is a profitable-spend
-        problem — its ~₹20,000 average ticket is travel-weighted and ticket-heavy (few, large
-        premium-travel transactions), the mirror image of RuPay. Jio-bp is growing, but reward cost
-        is eating the growth. Platinum RuPay&apos;s ~₹870 average ticket reflects its UPI-credit mix —
-        ~72% of transactions are UPI-rail, sub-₹500 — so high volume does not mean high value.
-      </AIInsightStrip>
-      <div style={{ fontSize: 9.5, color: T.dim, marginTop: 8, lineHeight: 1.45 }}>
-        Partner-data boundary: Jio-bp and EazyDiner partners do not receive raw card-transaction data.
-        This is a bank-side summary, suitable for partner review · consent- and purpose-limited.
-      </div>
-      <button
-        type="button"
-        style={{
-          font: "inherit",
-          cursor: "pointer",
-          marginTop: 10,
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 8,
-          fontSize: 11.5,
-          fontWeight: 800,
-          color: T.gold,
-          background: `${T.gold}14`,
-          border: `1px solid ${T.gold}44`,
-          borderRadius: 9,
-          padding: "8px 13px",
-        }}
-      >
-        Draft partner pack for review <ArrowRight size={13} />
-      </button>
-      <div style={{ fontSize: 9, color: T.dim, marginTop: 5 }}>
-        Bank-side co-brand summary for the QBR — assembled from this view, human-reviewed before it leaves the bank.
-      </div>
-    </SectionCard>
-  );
-}
 
-function OfferPortfolioDecisionBoard() {
-  return (
-    <SectionCard
-      title="Offer portfolio decision board"
-      subtitle="Executive action view — keep, retarget, kill, or wait"
-      accent={T.gold}
-      aiPill
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,minmax(0,1fr))",
-          gap: 12,
-          alignItems: "start",
-        }}
-      >
-        {(["keep", "retarget", "kill", "wait"] as const).map((bucket) => {
-          const m = BOARD_COL_META[bucket];
-          const items = OFFER_BOARD[bucket];
-          return (
-            <div key={bucket}>
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                  paddingBottom: 6,
-                  borderBottom: `2px solid ${m.c}66`,
-                  marginBottom: 8,
-                }}
-              >
-                <Dot c={m.c} sq />
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    letterSpacing: ".06em",
-                  }}
-                >
-                  {m.l}
-                </span>
-                <span
-                  style={{ fontSize: 10, fontFamily: MONO, color: T.muted }}
-                >
-                  showing {items.length} of {m.total}
-                </span>
-              </div>
-              {items.map((x) => (
-                <div
-                  key={x.name}
-                  style={{
-                    background: T.inset,
-                    border: `1px solid ${m.c}40`,
-                    borderLeft: `3px solid ${m.c}`,
-                    borderRadius: 9,
-                    padding: "10px 11px",
-                    marginBottom: 8,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12.5,
-                      fontWeight: 700,
-                      color: T.text,
-                      marginBottom: 6,
-                    }}
-                  >
-                    {x.name}
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: 6,
-                      marginBottom: 6,
-                    }}
-                  >
-                    <Mono c={m.c} s={10}>
-                      {x.leak}
-                    </Mono>
-                    <span style={{ fontSize: 10, color: T.muted }}>
-                      lift {x.lift}
-                    </span>
-                  </div>
-                  <div style={{ fontSize: 10, color: T.dim, marginBottom: 4 }}>
-                    {x.owner} · {x.conf} conf
-                  </div>
-                  {x.note ? (
-                    <div style={{ fontSize: 9.5, color: T.muted, lineHeight: 1.35, marginBottom: 6 }}>
-                      {x.note}
-                    </div>
-                  ) : null}
-                  <Pill
-                    t={
-                      bucket === "keep"
-                        ? "green"
-                        : bucket === "kill"
-                          ? "red"
-                          : bucket === "retarget"
-                            ? "amber"
-                            : "muted"
-                    }
-                  >
-                    {x.decision}
-                  </Pill>
-                </div>
-              ))}
-            </div>
-          );
-        })}
+      <div style={{ marginTop: 10 }}>
+        {view === "cobrand" ? (
+          <AIInsightStrip>
+            High-earn co-brands are the bleeders — Avios Visa Infinite (~₹20,500 ticket), EazyDiner Signature and
+            Jio-bp Mobility+ are all margin-negative this month. CRED RuPay, Tiger and EazyDiner Platinum are healthy.
+            The pattern is reward-cost pressure on the high-earn partners, not co-brands as a class.
+          </AIInsightStrip>
+        ) : (
+          <AIInsightStrip>
+            Platinum RuPay&apos;s ~₹870 average ticket reflects its UPI-credit mix — ~72% of transactions are UPI-rail,
+            sub-₹500 — so high volume does not mean high value. Pioneer Heritage stays healthy on profitable spend;
+            Legend is the only own-brand with soft repeat.
+          </AIInsightStrip>
+        )}
       </div>
     </SectionCard>
   );
@@ -3493,23 +3196,13 @@ function Drill1({ go }: { go: NavigateFn }) {
       <DrillHeader
         onBack={() => go("overview")}
         title="How are my transactions & offers doing?"
-        score="64"
-        scoreDelta="−8 pts"
-        asOf="As of 07:10 today · IST · Friday, latter-half of month (post-salary-cycle)"
-        sub="Portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
-        chips={
-          <>
-            <Chip t="cyan">Transaction + offer / reward / settlement</Chip>
-            <Chip t="gold">Brand + Marketing lens</Chip>
-          </>
-        }
       />
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "minmax(0,2fr) minmax(320px,1fr)",
+          gridTemplateColumns: "minmax(0,2.2fr) minmax(300px,1fr)",
           gap: 12,
-          alignItems: "start",
+          alignItems: "stretch",
         }}
       >
         <CommandCenter />
@@ -3523,14 +3216,10 @@ function Drill1({ go }: { go: NavigateFn }) {
           gap: 14,
         }}
       >
-        {/* concentration */}
         <BrandCoBrandDeepPerformanceMatrix />
-        <CohortGrowthQualityMatrix />
-        {/* rupees */}
         <LeakPanel />
+        <CohortGrowthQualityMatrix />
         <RewardYieldUnitEconomicsPanel />
-        {/* decision */}
-        <OfferPortfolioDecisionBoard />
       </div>
       <div style={{ height: 44 }} />
     </div>
@@ -3710,51 +3399,62 @@ const D2_BLOCKER_ACTION_ROWS: {
 ];
 
 const D2_SPLIT_BARS = [
-  { name: "Token break", v: 82, c: T.red },
-  { name: "Fraud-rule", v: 68, c: T.red },
-  { name: "Activation", v: 58, c: T.amber },
-  { name: "Roll risk", v: 52, c: T.amber },
-  { name: "Limit/util", v: 49, c: T.amber },
+  { name: "Token break", vol: "4.2k", gmv: "9.0 L", c: T.red },
+  { name: "Fraud-rule", vol: "3.1k", gmv: "6.0 L", c: T.red },
+  { name: "Activation", vol: "6.2k", gmv: "4.3 L", c: T.amber },
+  { name: "Roll risk", vol: "1.8k", gmv: "3.5 L", c: T.amber },
+  { name: "Limit/util", vol: "2.4k", gmv: "2.6 L", c: T.amber },
 ];
 
 const D2_PRIORITY_ALERTS: { n: number; text: string; owner: string; c: string }[] = [
   { n: 1, text: "Tokenised CNP gap · ₹9 L / day (at-risk run-rate)", owner: "payments", c: T.red },
   { n: 2, text: "Fraud Rule R-77 · −13 pts", owner: "fraud", c: T.amber },
   { n: 3, text: "Activation clock · 6.2K cards", owner: "conduct", c: T.violet },
+  { n: 4, text: "Offer O-142 cannibalisation · ₹78 L MTD", owner: "mktg", c: T.red },
+];
+
+const D2_APPROVAL_TREND: TrendPoint[] = [
+  { v: 93.4 },
+  { v: 93.8 },
+  { v: 92.6 },
+  { v: 93.1 },
+  { v: 91.8 },
+  { v: 92.4 },
+  { v: 91.2 },
+  { v: 90.6 },
 ];
 
 function ApprovalHealthCard() {
   return (
-    <SectionCard title="Approval health" subtitle="Live approval & decline posture" accent={T.red} aiPill style={{ marginBottom: 0 }}>
-      <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ marginBottom: 8 }}>
-            <Eyebrow>Approval rate · portfolio</Eyebrow>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <Mono s={22}>90.6%</Mono>
-              <Mono c={T.red} s={11}>−2.0 pts</Mono>
-            </div>
-            <div style={{ fontSize: 10.5, color: T.muted, marginTop: 3 }}>
-              R-77 cohort (3+ yr) only: 94% → 81%
-            </div>
+    <SectionCard title="Approval health" accent={T.red} aiPill style={{ marginBottom: 0 }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 8 }}>
+        <div>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+            <Mono s={22}>90.6%</Mono>
+            <Mono c={T.red} s={11}>−2.0 pts</Mono>
           </div>
-          <div style={{ marginBottom: 8 }}>
-            <Eyebrow>Decline spike</Eyebrow>
-            <div style={{ fontSize: 12, color: T.sub }}>
-              <Mono c={T.amber} s={12}>+38%</Mono> since 06:20
-            </div>
-          </div>
-          <div>
-            <Eyebrow>Curable · at-risk run-rate</Eyebrow>
-            <Mono c={T.green} s={12}>
-              <span title={rupeeMethodForLabel("₹9 L / day (at-risk run-rate)")}>
-                62% · Tokenised CNP ₹9 L of ₹25.4 L/day total at risk
-              </span>
-            </Mono>
+          <div style={{ fontSize: 10.5, color: T.muted, marginTop: 3 }}>
+            R-77 cohort (3+ yr) only: 94% → 81%
           </div>
         </div>
-        <div style={{ width: 88, flexShrink: 0 }}>
-          <MiniSpark data={TREND.r} c={T.amber} h={72} />
+
+        <div style={{ flex: 1, minHeight: 56 }}>
+          <MiniSpark data={D2_APPROVAL_TREND} c={T.amber} h="100%" />
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+          <div>
+            <Eyebrow>Decline spike</Eyebrow>
+            <div><Mono c={T.amber} s={14}>+38%</Mono></div>
+            <div style={{ fontSize: 9.5, color: T.dim, marginTop: 2 }}>since 06:20 IST</div>
+          </div>
+          <div>
+            <Eyebrow>Curable share</Eyebrow>
+            <div><Mono c={T.green} s={14}>62%</Mono></div>
+            <div style={{ fontSize: 9.5, color: T.dim, marginTop: 2, lineHeight: 1.35 }}>
+              Tokenised CNP ₹9 L of ₹25.4 L/day flagged
+            </div>
+          </div>
         </div>
       </div>
     </SectionCard>
@@ -3764,11 +3464,24 @@ function ApprovalHealthCard() {
 function BlockerSplitCard() {
   return (
     <SectionCard title="Blocker split" subtitle="Decline taxonomy pressure" accent={T.amber} aiPill style={{ marginBottom: 0 }}>
-      <MiniBars bars={D2_SPLIT_BARS} />
-      <div style={{ marginTop: 8 }}>
-        <AIInsightStrip tone="amber">
-          Today's spike is split into separate blocker types instead of one decline alert.
-        </AIInsightStrip>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          <div style={{ display: "flex", alignItems: "center", fontSize: 8.5, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted, paddingBottom: 4, borderBottom: `1px solid ${T.inner}` }}>
+            <span style={{ flex: 1 }}>Blocker</span>
+            <span style={{ width: 52, textAlign: "right" }}>Volume</span>
+            <span style={{ width: 76, textAlign: "right" }}>Risk · L/day</span>
+          </div>
+          {D2_SPLIT_BARS.map((b) => (
+            <div key={b.name} style={{ display: "flex", alignItems: "center" }}>
+              <span style={{ flex: 1, display: "flex", alignItems: "center", gap: 6, fontSize: 11, color: T.sub, minWidth: 0 }}>
+                <span style={{ width: 6, height: 6, borderRadius: 2, background: b.c, flexShrink: 0 }} />
+                {b.name}
+              </span>
+              <span style={{ width: 52, textAlign: "right" }}><Mono s={11}>{b.vol}</Mono></span>
+              <span style={{ width: 76, textAlign: "right" }}><Mono c={b.c} s={11}>₹{b.gmv}</Mono></span>
+            </div>
+          ))}
+        </div>
       </div>
     </SectionCard>
   );
@@ -3776,7 +3489,7 @@ function BlockerSplitCard() {
 
 function CompactBlockerPriorityStack() {
   return (
-    <SectionCard title="Priority stack" subtitle="Top 3 routed blockers" accent={T.gold} aiPill style={{ marginBottom: 0 }}>
+    <SectionCard title="Priority stack" subtitle="Top 4 routed blockers" accent={T.gold} aiPill style={{ marginBottom: 0 }}>
       {D2_PRIORITY_ALERTS.map((a) => (
         <div
           key={a.n}
@@ -3831,54 +3544,6 @@ function DeclineInvestigationGrid({
   );
 }
 
-function OwnerIssueCard({
-  title,
-  accent,
-  lines,
-  owner,
-}: {
-  title: string;
-  accent: string;
-  lines: string[];
-  owner: string;
-}) {
-  return (
-    <SectionCard title={title} accent={accent} style={{ marginBottom: 0 }}>
-      {lines.map((l) => (
-        <div key={l} style={{ fontSize: 11.5, color: T.sub, padding: "3px 0", lineHeight: 1.35 }}>{l}</div>
-      ))}
-      <div style={{ marginTop: 8 }}>
-        <RouteChip r={owner} />
-      </div>
-    </SectionCard>
-  );
-}
-
-function OwnerSplitGrid() {
-  return (
-    <div className="d2-owner-grid">
-      <OwnerIssueCard
-        title="Token / Auth"
-        accent={T.red}
-        owner="payments"
-        lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 06:20"]}
-      />
-      <OwnerIssueCard
-        title="Fraud rule"
-        accent={T.amber}
-        owner="fraud"
-        lines={["Fraud Rule R-77", "Approval 94% → 81%", "Good blocks +210%"]}
-      />
-      <OwnerIssueCard
-        title="Activation clock"
-        accent={T.violet}
-        owner="conduct"
-        lines={["Batch #4471", "D27", "6.2K cards", "₹93 L (CAC, one-time) at risk"]}
-      />
-    </div>
-  );
-}
-
 function BlockerExecutionGrid() {
   return (
     <div className="d2-execution-grid">
@@ -3899,7 +3564,8 @@ function DeclineTaxonomyHeatmap({
 }) {
   return (
     <SectionCard title="Decline taxonomy heatmap" subtitle="Reason × cohort · abnormal vs each cohort's own baseline" accent={T.red} aiPill style={{ marginBottom: 0 }}>
-      <div style={{ display: "grid", gridTemplateColumns: `minmax(130px,1.1fr) repeat(${DECLINE_HEAT_COLS.length},1fr) minmax(64px,0.85fr)`, gap: 5, overflowX: "auto" }}>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%", gap: 10 }}>
+      <div style={{ display: "grid", gridTemplateColumns: `minmax(130px,1.1fr) repeat(${DECLINE_HEAT_COLS.length},1fr) minmax(64px,0.85fr)`, gridAutoRows: "minmax(28px,1fr)", gap: 5, overflowX: "auto", flex: 1 }}>
         <div />
         {DECLINE_HEAT_COLS.map((c) => (
           <div key={c} style={{ fontSize: 8, color: T.muted, textAlign: "center" }}>{c}</div>
@@ -3919,7 +3585,6 @@ function DeclineTaxonomyHeatmap({
                   onClick={() => onSelect(r.label, ch)}
                   style={{
                     cursor: "pointer",
-                    minHeight: 28,
                     borderRadius: 6,
                     background: `${c}d9`,
                     border: active ? "2px solid #fff" : `1px solid ${c}`,
@@ -3937,13 +3602,12 @@ function DeclineTaxonomyHeatmap({
           </Frag>
         ))}
       </div>
-      <div style={{ marginTop: 10 }}>
-        <AIInsightStrip tone="red">
-          This heatmap is not showing raw declines. It shows where decline behaviour is abnormal versus each cohort&apos;s own
-          baseline (typical Friday, latter-half of month, festive-adjusted). Cohorts overlap — product tier, card, tenure,
-          batch and vintage — so the ₹/day-at-risk is shown per reason-row and is indicative, not additive. Today&apos;s
-          tokenised-CNP row is ₹9 L/day of ~₹25.4 L/day flagged across all reasons.
-        </AIInsightStrip>
+      <AIInsightStrip tone="red">
+        This heatmap is not showing raw declines. It shows where decline behaviour is abnormal versus each cohort&apos;s own
+        baseline (typical Friday, latter-half of month, festive-adjusted). Cohorts overlap — product tier, card, tenure,
+        batch and vintage — so the ₹/day-at-risk is shown per reason-row and is indicative, not additive. Today&apos;s
+        tokenised-CNP row is ₹9 L/day of ~₹25.4 L/day flagged across all reasons.
+      </AIInsightStrip>
       </div>
     </SectionCard>
   );
@@ -4086,19 +3750,25 @@ function TroubleTicketBoard() {
 function RollUtilisationEarlyWarningPanel() {
   return (
     <SectionCard title="Roll & utilisation" subtitle="Advisory only" accent={T.violet} aiPill style={{ marginBottom: 0 }}>
-      <div style={{ marginBottom: 8 }}>
-        <Eyebrow>Utilisation migration</Eyebrow>
-        <div style={{ fontSize: 12, color: T.sub }}>80%+ band: <Mono c={T.amber} s={12}>1.8×</Mono></div>
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <div>
+          <div style={{ marginBottom: 8 }}>
+            <Eyebrow>Utilisation migration</Eyebrow>
+            <div style={{ fontSize: 12, color: T.sub }}>80%+ band: <Mono c={T.amber} s={12}>1.8×</Mono></div>
+          </div>
+          <div style={{ marginBottom: 8 }}>
+            <Eyebrow>Projected roll impact</Eyebrow>
+            <Mono c={T.red} s={14}>+9 bps</Mono>
+          </div>
+          <div style={{ marginBottom: 8 }}>
+            <Eyebrow>Cohort</Eyebrow>
+            <span style={{ fontSize: 12, color: T.text }}>Sourcing Q2</span>
+          </div>
+        </div>
+        <div style={{ marginTop: "auto" }}>
+          <AIInsightStrip tone="violet">Advisory only — route to EWS / model-risk review.</AIInsightStrip>
+        </div>
       </div>
-      <div style={{ marginBottom: 8 }}>
-        <Eyebrow>Projected roll impact</Eyebrow>
-        <Mono c={T.red} s={14}>+9 bps</Mono>
-      </div>
-      <div style={{ marginBottom: 8 }}>
-        <Eyebrow>Cohort</Eyebrow>
-        <span style={{ fontSize: 12, color: T.text }}>Sourcing Q2</span>
-      </div>
-      <AIInsightStrip tone="violet">Advisory only — route to EWS / model-risk review.</AIInsightStrip>
     </SectionCard>
   );
 }
@@ -4140,10 +3810,7 @@ function Drill2({ go }: { go: NavigateFn }) {
       <DrillHeader
         onBack={() => go("overview")}
         title="Where are my blockers & problems today?"
-        score="58"
-        scoreDelta="−10 pts"
         asOf="As of 07:10 today · IST · baseline = typical Friday, latter-half of month, festive-adjusted"
-        sub="Approval drops, decline spikes, token gaps, fraud-rule misfires, activation clocks, utilisation migration and early roll-risk — with the customer-experience join alongside."
       />
       <BlockerTopGrid />
       <DeclineInvestigationGrid
@@ -4155,7 +3822,6 @@ function Drill2({ go }: { go: NavigateFn }) {
           setCol(c);
         }}
       />
-      <OwnerSplitGrid />
       <BlockerExecutionGrid />
       <BlockerActionQueue />
       <div style={{ height: 24 }} />
@@ -4202,7 +3868,7 @@ export function CardsPortfolioV2Dashboard({
         @media (max-width:1100px){.lcp .overview-cards--3{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media (max-width:720px){.lcp .overview-cards,.lcp .overview-cards--3{grid-template-columns:1fr}}
         .lcp .d2-top-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
-        .lcp .d2-investigation-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);gap:12px;margin-bottom:12px;align-items:start}
+        .lcp .d2-investigation-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr);gap:12px;margin-bottom:12px;align-items:stretch}
         .lcp .d2-owner-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px}
         .lcp .d2-execution-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(260px,.6fr);gap:12px;margin-bottom:12px;align-items:start}
         @media (max-width:1100px){.lcp .d2-top-grid,.lcp .d2-owner-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
