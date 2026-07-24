@@ -89,6 +89,7 @@ interface Issue {
   ownerTone: string;
   nextAction: string;
   cause?: string;
+  listeningPosts?: string;
   evidence: string[];
   channelCount: number;
   productCount: number;
@@ -115,7 +116,8 @@ const ISSUE_CATALOGUE: Issue[] = [
     ownerTone: "violet",
     nextAction: "Review benefit design and prepare a targeted retention proposition for affected high-value cardholders.",
     cause: "Follows the EazyDiner Prime discontinuation (on Celesta) and the Legend fee/threshold revision effective 15 Jul — the erosion on EazyDiner Signature and Legend trails our own benefit change.",
-    evidence: ["App stores", "TechnoFino", "Complaints", "Spend events"],
+    listeningPosts: "Service chat + app store · ~214 similar contacts caught ahead of MIS",
+    evidence: ["Service chat", "App stores", "TechnoFino", "Complaints"],
     channelCount: 4,
     productCount: 2,
     trend: [42, 47, 53, 61, 76, 88, 92],
@@ -684,6 +686,7 @@ function ExecutiveAI({ issue }: { issue: Issue }) {
           </div>
         </div>
         <BriefLine label="Concentrated in" value={issue.product} />
+        {issue.listeningPosts ? <BriefLine label="Heard on" value={issue.listeningPosts} /> : null}
         {issue.cause ? <BriefLine label="Likely cause" value={issue.cause} /> : null}
         <BriefLine label="Portfolio implication" value={issue.portfolioMovement} danger />
         <BriefLine label="Lifecycle" value={issue.lifecycle} />

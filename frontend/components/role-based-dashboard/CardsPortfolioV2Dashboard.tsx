@@ -16,6 +16,7 @@ import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
   ArrowRight,
+  CheckCircle2,
   ChevronDown,
   ChevronRight,
   CircleAlert,
@@ -1307,7 +1308,10 @@ function OvHalfGauge({ topLabel, value, label, color, suffix = "%" }: OvGauge) {
             <RadialBar dataKey="value" cornerRadius={4} background={{ fill: "#2a2a2a90" }} />
           </RadialBarChart>
         </ResponsiveContainer>
-        <div style={{ position: "absolute", left: "50%", bottom: 1, transform: "translateX(-50%)", fontFamily: MONO, fontSize: 15, fontWeight: 800, color }}>{v}{suffix}</div>
+        <div style={{ position: "absolute", left: "50%", bottom: 2, transform: "translateX(-50%)", fontFamily: MONO, fontWeight: 800, color, display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: 15 }}>{v}</span>
+          {suffix ? <span style={{ fontSize: 8.5, fontWeight: 700, color: T.muted }}>{suffix}</span> : null}
+        </div>
       </div>
       <div style={{ fontSize: 9, color: T.muted, textTransform: "uppercase", letterSpacing: 0.3, textAlign: "center", lineHeight: 1.15, minHeight: 22 }}>{label}</div>
     </div>
@@ -1341,21 +1345,25 @@ function OvKeyStat({ label, value, sub, color, align }: OvStat & { align: "start
 }
 
 function OverviewExecTile({
-  accent, icon, title, micro, score, delta, spark, leftGauge, rightGauge, bars, bottomLeft, bottomRight, ai, cta, onClick,
+  accent, icon, title, micro, score, scoreLabel, delta, spark, sparkLabel, leftGauge, rightGauge, bars, bottomLeft, bottomRight, ai, owner, ownerAction, cta, onClick,
 }: {
   accent: string;
   icon: ReactNode;
   title: string;
   micro: string;
   score: string;
+  scoreLabel?: string;
   delta: string;
   spark: number[];
+  sparkLabel?: string;
   leftGauge?: OvGauge;
   rightGauge?: OvGauge;
   bars?: OvBar[];
   bottomLeft: OvStat;
   bottomRight: OvStat;
   ai: string;
+  owner: string;
+  ownerAction: string;
   cta: string;
   onClick: () => void;
 }) {
@@ -1411,6 +1419,9 @@ function OverviewExecTile({
             <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 800, color: T.text, lineHeight: 1 }}>{score}</span>
             <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: down ? T.red : T.green }}>{delta}</span>
           </div>
+          {scoreLabel ? (
+            <div style={{ fontSize: 10, fontWeight: 700, color: T.sub, textTransform: "uppercase", letterSpacing: ".04em", marginTop: 3 }}>{scoreLabel}</div>
+          ) : null}
           <div style={{ flex: 1, minHeight: 92, marginTop: 8 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
@@ -1426,6 +1437,9 @@ function OverviewExecTile({
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          {sparkLabel ? (
+            <div style={{ fontSize: 8.5, color: T.muted, textTransform: "uppercase", letterSpacing: ".05em", marginTop: 2 }}>{sparkLabel}</div>
+          ) : null}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -1450,6 +1464,12 @@ function OverviewExecTile({
           <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>What changed</span>
         </div>
         <div style={{ fontSize: 12.5, color: T.sub, lineHeight: 1.5 }}>{ai}</div>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 10 }}>
+        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".03em", color: accent, background: ovHexA(accent, 0.1), border: `1px solid ${ovHexA(accent, 0.35)}`, borderRadius: 999, padding: "3px 9px" }}>
+          {owner}
+        </span>
+        <span style={{ fontSize: 11, fontWeight: 700, color: T.sub }}>{ownerAction}</span>
       </div>
       <div style={{ fontSize: 11, fontWeight: 700, color: accent }}>{cta}</div>
     </button>
@@ -1530,13 +1550,17 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           title="How are my transactions & offers doing?"
           micro="Spend · offers · yield & reward economics"
           score="64"
-          delta="−8 pts"
-          spark={[70, 66, 68, 63, 61, 64, 60, 62, 64]}
-          leftGauge={{ topLabel: "Incremental", value: 58, label: "vs matched control", color: T.green }}
-          rightGauge={{ topLabel: "Profitability", value: 55, label: "offer margin", color: T.amber }}
-          bottomLeft={{ label: "Interchange compression", value: "₹0.9 Cr", sub: "MTD · net", color: T.red }}
+          scoreLabel="offer & yield health · out of 100"
+          delta="−8 pts vs 4-wk"
+          spark={[70, 66, 68, 63, 61, 64, 60, 59, 58]}
+          sparkLabel="contribution · 7 weeks"
+          leftGauge={{ topLabel: "Incremental", value: 58, label: "was 66% · matched control", color: T.green }}
+          rightGauge={{ topLabel: "Profitability", value: 55, label: "was 61% · offer margin", color: T.amber }}
+          bottomLeft={{ label: "Wallet-load net strain", value: "₹0.9 Cr", sub: "MTD", color: T.red }}
           bottomRight={{ label: "Offers to kill", value: "2", sub: "net-negative", color: T.amber }}
-          ai="Two net-negative offers vs matched control — ₹1.2 Cr MTD reallocatable. RuPay-on-UPI mix is compressing interchange yield ~₹0.9 Cr MTD."
+          ai="Since the earn-rate change, two offers turned net-negative against matched control — ₹1.2 Cr MTD reallocatable. Separately, Platinum RuPay's UPI-rail mix is diluting interchange yield."
+          owner="Head of Cards — Marketing"
+          ownerAction="pause O-142 wave 2 — draft ready · needs approval →"
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
@@ -1546,8 +1570,10 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           title="Where are my blockers & problems today?"
           micro="Declines · token gaps · fraud-rule · activation · roll/util"
           score="58"
-          delta="−10 pts"
+          scoreLabel="blocker pressure · out of 100"
+          delta="−10 pts vs 4-wk"
           spark={[72, 68, 65, 66, 61, 59, 60, 57, 58]}
+          sparkLabel="approval rate · 8 weeks"
           bars={[
             { name: "Token break", v: 82, color: T.red },
             { name: "Fraud-rule", v: 68, color: T.red },
@@ -1555,9 +1581,11 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
             { name: "Roll / util", v: 52, color: T.amber },
             { name: "Limit", v: 49, color: T.amber },
           ]}
-          bottomLeft={{ label: "At-risk", value: "₹9 L", sub: "/ day run-rate", color: T.red }}
-          bottomRight={{ label: "Top blocker", value: "Token break", sub: "root cause", color: T.red }}
+          bottomLeft={{ label: "At-risk", value: "₹9 L / day", sub: "≈ ₹2.7 Cr a month if it runs", color: T.red }}
+          bottomRight={{ label: "Top blocker", value: "Tokenised CNP", sub: "symptom · cause unconfirmed", color: T.red }}
           ai="Today's spike is a token break: ₹9 L/day at-risk, 62% curable. R-77 stepped approval −13 pts inside its rule cohort; Batch #4471 risks ₹93 L against the 30+7 clock."
+          owner="Payments & Authorisation"
+          ownerAction="incident draft ready →"
           cta="Open blockers →"
           onClick={() => go("d2")}
         />
@@ -1568,77 +1596,32 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
             title="What are my cardholders experiencing?"
             micro="Voice × transaction · top issue: Reward value erosion"
             score="58"
-            delta="−15 pts"
+            scoreLabel="cardholder friction · out of 100"
+            delta="−15 pts vs 4-wk"
             spark={[74, 70, 68, 64, 60, 62, 58, 56, 58]}
-            leftGauge={{ topLabel: "Top issue", value: 92, label: "priority index", color: T.red, suffix: "" }}
-            rightGauge={{ topLabel: "Curable", value: 78, label: "curability / 100", color: T.green, suffix: "" }}
-            bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · illustrative", color: T.red }}
-            bottomRight={{ label: "Top brand", value: "EazyDiner", sub: "reward-value erosion", color: T.violet }}
-            ai="Public voice is dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling adds conduct exposure."
+            sparkLabel="issue pressure · 8 weeks"
+            leftGauge={{ topLabel: "Top issue", value: 92, label: "reward value", color: T.red, suffix: "/100" }}
+            rightGauge={{ topLabel: "Curable", value: 78, label: "curable", color: T.green, suffix: "/100" }}
+            bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · EST", color: T.red }}
+            bottomRight={{ label: "Top channel", value: "Service chat", sub: "+ app store · 214 similar", color: T.violet }}
+            ai="Complaints and reviews are dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling claims add conduct exposure."
+            owner="Rewards & Portfolio"
+            ownerAction="retention draft ready →"
             cta="Open customer experience →"
             onClick={() => go("voice")}
           />
         )}
       </div>
 
-      <AskYourBook go={go} />
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: 11, color: T.muted }}>
+        <CheckCircle2 size={13} color={T.green} />
+        <span>
+          <span style={{ color: T.green, fontWeight: 800 }}>Checked and cleared:</span> Friday spend dip is calendar mix, no action.
+        </span>
+      </div>
+
       <div style={{ height: 44 }} />
     </div>
-  );
-}
-
-const ASK_CHIPS: { label: string; screen: string }[] = [
-  { label: "Avios vs last festive", screen: "d1" },
-  { label: "Decline cost this month", screen: "d2" },
-  { label: "How is O-142 performing?", screen: "d1" },
-  { label: "Sourcing Q2 activation", screen: "d2" },
-];
-
-function AskYourBook({ go }: { go: NavigateFn }) {
-  return (
-    <section style={{ background: T.row, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", marginTop: 14 }}>
-      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted, marginBottom: 8 }}>
-        Ask about your book
-      </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 8,
-          background: T.inset,
-          border: `1px solid ${T.inner}`,
-          borderRadius: 10,
-          padding: "9px 12px",
-          color: T.dim,
-          fontSize: 12.5,
-          marginBottom: 10,
-        }}
-      >
-        Type a question in your words — or pick one below
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-        {ASK_CHIPS.map((c) => (
-          <button
-            type="button"
-            key={c.label}
-            onClick={() => go(c.screen)}
-            style={{
-              font: "inherit",
-              cursor: "pointer",
-              fontSize: 11.5,
-              fontWeight: 700,
-              color: T.sub,
-              background: T.inset,
-              border: `1px solid ${T.inner}`,
-              borderRadius: 999,
-              padding: "6px 12px",
-            }}
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -1710,8 +1693,8 @@ const D1_GMV = [
   { w: "W-4", g: 100.6, p: 98.2 },
   { w: "W-3", g: 103.5, p: 95.7 },
   { w: "W-2", g: 101.8, p: 95.9 },
-  { w: "W-1", g: 104.6, p: 93.8 },
-  { w: "Now", g: 103.4, p: 94.1 },
+  { w: "W-1", g: 104.6, p: 94.2 },
+  { w: "Now", g: 103.4, p: 93.6 },
 ];
 const D1_LEAK_WATCH: [string, string, string, string][] = [
   ["O-142 Cashback", "₹78 L MTD", "High", T.red],
