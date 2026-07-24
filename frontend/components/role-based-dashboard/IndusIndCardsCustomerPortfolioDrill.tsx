@@ -88,6 +88,8 @@ interface Issue {
   owner: string;
   ownerTone: string;
   nextAction: string;
+  cause?: string;
+  listeningPosts?: string;
   evidence: string[];
   channelCount: number;
   productCount: number;
@@ -106,14 +108,16 @@ const ISSUE_CATALOGUE: Issue[] = [
     customerSignal: "Benefit-value complaints are concentrated among premium, high-spend cardholders.",
     portfolioMovement: "Repeat spend −8.6% · redemption abandonment +17%",
     exposure: "₹1.4 Cr MTD EST",
-    affected: "18.4k customers",
+    affected: "~3.2k cardholders",
     repeatContact: "38% repeat contact",
     conduct: "Medium",
     curability: 78,
     owner: "Rewards & Portfolio",
     ownerTone: "violet",
-    nextAction: "Review benefit design and prepare a targeted retention proposition for affected high-value customers.",
-    evidence: ["App stores", "TechnoFino", "Complaints", "Spend events"],
+    nextAction: "Review benefit design and prepare a targeted retention proposition for affected high-value cardholders.",
+    cause: "Follows the EazyDiner Prime discontinuation (on Celesta) and the Legend fee/threshold revision effective 15 Jul — the erosion on EazyDiner Signature and Legend trails our own benefit change.",
+    listeningPosts: "Service chat + app store · ~214 similar contacts caught ahead of MIS",
+    evidence: ["Service chat", "App stores", "TechnoFino", "Complaints"],
     channelCount: 4,
     productCount: 2,
     trend: [42, 47, 53, 61, 76, 88, 92],
@@ -122,14 +126,14 @@ const ISSUE_CATALOGUE: Issue[] = [
     id: "app",
     short: "INDIE access",
     title: "INDIE servicing access friction",
-    product: "INDIE · credit-card-only users",
+    product: "INDIE · credit-card-only cardholders",
     lifecycle: "Usage",
     severity: 86,
     baseline: "2.7× above normal",
     customerSignal: "Login, OTP, UCIC and card-visibility failures are preventing self-service servicing and payment.",
     portfolioMovement: "Self-service payments −9% · assisted contacts +24%",
-    exposure: "11.2k accounts EST",
-    affected: "6.8k high-value users",
+    exposure: "₹40 L MTD EST",
+    affected: "6.8k high-value cardholders",
     repeatContact: "41% repeat contact",
     conduct: "Low",
     curability: 84,
@@ -137,7 +141,7 @@ const ISSUE_CATALOGUE: Issue[] = [
     ownerTone: "cyan",
     nextAction: "Create an alternate payment path and isolate UCIC/card-visibility failures for correction.",
     evidence: ["Google Play", "Calls", "Complaints", "Payment events"],
-    channelCount: 4,
+    channelCount: 5,
     productCount: 3,
     trend: [35, 39, 48, 59, 73, 81, 86],
   },
@@ -149,18 +153,18 @@ const ISSUE_CATALOGUE: Issue[] = [
     lifecycle: "Usage",
     severity: 76,
     baseline: "2.2× above normal",
-    customerSignal: "Customers report payment debited but card balance not updated within the expected window.",
+    customerSignal: "Cardholders report payment debited but card balance not updated within the expected window.",
     portfolioMovement: "Payment retries +16% · disputes +11%",
     exposure: "₹62 L pending EST",
-    affected: "9.6k customers",
+    affected: "9.6k cardholders",
     repeatContact: "34% repeat contact",
     conduct: "Medium",
     curability: 72,
     owner: "Payments & Authorisation",
     ownerTone: "amber",
-    nextAction: "Prioritise reconciliation exceptions and send resolution updates to customers with ageing pending payments.",
+    nextAction: "Prioritise reconciliation exceptions and send resolution updates to cardholders with ageing pending payments.",
     evidence: ["App reviews", "Calls", "Complaints", "Reconciliation"],
-    channelCount: 4,
+    channelCount: 3,
     productCount: 5,
     trend: [41, 46, 52, 60, 65, 72, 76],
   },
@@ -174,8 +178,8 @@ const ISSUE_CATALOGUE: Issue[] = [
     baseline: "1.9× above normal",
     customerSignal: "Upgrade and benefit-expectation complaints include fee disputes and consent concerns.",
     portfolioMovement: "Fee reversals ₹18 L EST · closure intent +13%",
-    exposure: "High conduct sensitivity",
-    affected: "1.7k accounts EST",
+    exposure: "₹18 L EST",
+    affected: "1.7k cardholders EST",
     repeatContact: "46% repeat contact",
     conduct: "High",
     curability: 66,
@@ -195,7 +199,7 @@ const ISSUE_CATALOGUE: Issue[] = [
     lifecycle: "Repeat spend",
     severity: 63,
     baseline: "1.6× above normal",
-    customerSignal: "Eligible customers report that EMI conversion is missing or unavailable after high-ticket purchases.",
+    customerSignal: "Eligible cardholders report that EMI conversion is missing or unavailable after high-ticket purchases.",
     portfolioMovement: "Eligible conversion −7% · service contacts +12%",
     exposure: "₹31 L NII EST",
     affected: "3.1k transactions",
@@ -206,7 +210,7 @@ const ISSUE_CATALOGUE: Issue[] = [
     ownerTone: "green",
     nextAction: "Check eligibility-rule gaps and trigger a human-approved EMI reminder for eligible unconverted spend.",
     evidence: ["Complaints", "Emails", "Calls", "Eligible spend"],
-    channelCount: 4,
+    channelCount: 3,
     productCount: 3,
     trend: [30, 34, 38, 44, 51, 59, 63],
   },
@@ -224,7 +228,7 @@ interface ProductRow {
 const PRODUCT_MATRIX: ProductRow[] = [
   { product: "EazyDiner", rewards: 92, app: 38, payments: 44, conduct: 23, emi: 31 },
   { product: "Legend", rewards: 86, app: 35, payments: 48, conduct: 32, emi: 42 },
-  { product: "INDIE", rewards: 29, app: 94, payments: 73, conduct: 18, emi: 26 },
+  { product: "INDIE app access", rewards: 29, app: 94, payments: 73, conduct: 18, emi: 26 },
   { product: "Pinnacle", rewards: 54, app: 41, payments: 39, conduct: 88, emi: 52 },
   { product: "Tiger", rewards: 63, app: 33, payments: 46, conduct: 27, emi: 37 },
 ];
@@ -242,14 +246,14 @@ const BENEFIT_RISK = [
   { name: "Legend", concern: 82, repeatSpend: 46, fill: T.red },
   { name: "Pinnacle", concern: 61, repeatSpend: 57, fill: T.amber },
   { name: "Tiger", concern: 52, repeatSpend: 64, fill: T.yellow },
-  { name: "INDIE", concern: 37, repeatSpend: 71, fill: T.green },
+  { name: "INDIE app", concern: 37, repeatSpend: 71, fill: T.green },
 ];
 
 const RECOVERY = [
   { week: "W-4", unresolved: 41, spendRecovery: 52 },
-  { week: "W-3", unresolved: 47, spendRecovery: 49 },
-  { week: "W-2", unresolved: 55, spendRecovery: 45 },
-  { week: "W-1", unresolved: 63, spendRecovery: 40 },
+  { week: "W-3", unresolved: 44, spendRecovery: 50 },
+  { week: "W-2", unresolved: 57, spendRecovery: 43 },
+  { week: "W-1", unresolved: 52, spendRecovery: 46 },
   { week: "Now", unresolved: 69, spendRecovery: 36 },
 ];
 
@@ -390,7 +394,7 @@ function SectionCard({
         <div style={{ minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, fontWeight: 800, color: T.text }}>{title}</span>
-            {ai ? <Pill toneName="gold">✨ AI</Pill> : null}
+            {ai ? <Pill toneName="gold">Distilled</Pill> : null}
           </div>
           {subtitle ? (
             <div style={{ color: T.muted, fontSize: 10.5, lineHeight: 1.45, marginTop: 3 }}>
@@ -464,12 +468,21 @@ function DrillHeader({ onBack }: { onBack: () => void }) {
         }}
       >
         <div style={{ minWidth: 280, maxWidth: 900 }}>
-          <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-.3px", lineHeight: 1.15 }}>
-            What are my customers experiencing across the cards portfolio?
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 28, fontWeight: 900, letterSpacing: "-.3px", lineHeight: 1.15 }}>
+              What are my cardholders experiencing across the cards portfolio?
+            </div>
+            <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}>
+              <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 800, color: T.text }}>58</span>
+              <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: T.red }}>−15 pts</span>
+            </span>
           </div>
           <div style={{ color: T.sub, fontSize: 15, lineHeight: 1.5, marginTop: 5 }}>
-            Prioritise customer friction by affected card product, lifecycle stage, spend behaviour,
+            Prioritise cardholder friction by affected card product, lifecycle stage, spend behaviour,
             retention exposure and conduct sensitivity.
+          </div>
+          <div style={{ color: T.dim, fontSize: 11, marginTop: 6 }}>
+            As of 07:10 today · IST · baseline = typical Friday, latter-half of month, festive-adjusted
           </div>
         </div>
       </div>
@@ -500,7 +513,7 @@ function Metric({ label, value, danger, positive }: { label: ReactNode; value: R
 function PressureRadar({ issue }: { issue: Issue }) {
   const exposureScore = Math.max(42, issue.severity - 12);
   const contributors = [
-    { label: "Customer pressure", value: issue.severity, color: T.violet },
+    { label: "Cardholder pressure", value: issue.severity, color: T.violet },
     { label: "Portfolio exposure", value: exposureScore, color: T.red },
     { label: "Curability", value: issue.curability, color: T.green },
   ];
@@ -621,7 +634,7 @@ function ProductIssueMatrix() {
       title="Product × friction concentration"
       subtitle="How each friction type concentrates across the card products"
       accent={T.cyan}
-      right={<Pill toneName="cyan">Abnormality index</Pill>}
+      right={<Pill toneName="cyan">vs own baseline</Pill>}
     >
       <div className="icpd-matrix-scroll">
         <div className="icpd-matrix" style={{ gridTemplateColumns: `104px repeat(${columns.length}, minmax(58px, 1fr))` }}>
@@ -659,8 +672,8 @@ function ExecutiveAI({ issue }: { issue: Issue }) {
   const conductTone = issue.conduct === "High" ? "red" : issue.conduct === "Medium" ? "amber" : "green";
   return (
     <SectionCard
-      title="AI portfolio brief"
-      subtitle="Highest-priority situation for Head of Cards attention"
+      title="Portfolio brief"
+      subtitle="Highest-priority issue across the cards portfolio right now — with the customer signal, evidence and owner action behind it"
       accent={T.gold}
       ai
       className="icpd-ai-card"
@@ -673,6 +686,8 @@ function ExecutiveAI({ issue }: { issue: Issue }) {
           </div>
         </div>
         <BriefLine label="Concentrated in" value={issue.product} />
+        {issue.listeningPosts ? <BriefLine label="Heard on" value={issue.listeningPosts} /> : null}
+        {issue.cause ? <BriefLine label="Likely cause" value={issue.cause} /> : null}
         <BriefLine label="Portfolio implication" value={issue.portfolioMovement} danger />
         <BriefLine label="Lifecycle" value={issue.lifecycle} />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -700,7 +715,7 @@ function LifecycleMap() {
 
   return (
     <SectionCard
-      title="Customer lifecycle impact"
+      title="Cardholder lifecycle impact"
       subtitle="Journey health across the lifecycle — where friction is weakening each stage"
       accent={T.amber}
     >
@@ -813,13 +828,13 @@ function BenefitRisk() {
 function HighValueExposure() {
   return (
     <SectionCard
-      title="High-value customer exposure"
-      subtitle="Issues placed by customer value, intervention urgency and affected population"
+      title="High-value cardholder exposure"
+      subtitle="Issues placed by cardholder value, intervention urgency and affected population"
       accent={T.green}
       right={<Pill toneName="green">Bubble size = reach</Pill>}
     >
       <div className="icpd-bubble-chart">
-        <div className="icpd-axis-y">Customer value</div>
+        <div className="icpd-axis-y">Cardholder value</div>
         <div className="icpd-axis-x">Intervention urgency →</div>
         <div className="icpd-quadrant-label" style={{ top: 8, right: 10, color: T.red }}>Act now</div>
         <div className="icpd-quadrant-label" style={{ bottom: 26, left: 30, color: T.muted }}>Monitor</div>
@@ -865,7 +880,7 @@ function IssueConfidence() {
   return (
     <SectionCard
       title="Issue confidence and reach"
-      subtitle="Patterns become more actionable when they repeat across channels, products, accounts and contacts"
+      subtitle="Patterns become more actionable when they repeat across channels, products, cardholders and contacts"
       accent={T.cyan}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -902,7 +917,7 @@ function ResolutionRecovery() {
   return (
     <SectionCard
       title="Resolution effectiveness"
-      subtitle="Unresolved issue pressure compared with spend recovery among recently resolved customers"
+      subtitle="Unresolved issue pressure compared with spend recovery among recently resolved cardholders"
       accent={T.violet}
       ai
     >
@@ -994,10 +1009,11 @@ function PriorityBoard({ activeIssue, onSelect }: { activeIssue: IssueId; onSele
     >
       <div className="icpd-priority-table">
         <div className="icpd-priority-head">
-          <span>Priority</span><span>Issue / product</span><span>Exposure</span><span>Curability</span><span>Owner</span>
+          <span>Priority</span><span>Issue / product</span><span>Exposure ₹</span><span>Population</span><span>Conduct</span><span>Curability</span><span>Owner</span>
         </div>
         {ISSUE_CATALOGUE.map((issue, index) => {
           const selected = issue.id === activeIssue;
+          const conductTone = issue.conduct === "High" ? T.red : issue.conduct === "Medium" ? T.amber : T.green;
           return (
             <button
               type="button"
@@ -1012,6 +1028,8 @@ function PriorityBoard({ activeIssue, onSelect }: { activeIssue: IssueId; onSele
                 <small>{issue.product}</small>
               </span>
               <span style={{ color: T.red, fontFamily: MONO, fontWeight: 800 }}>{issue.exposure}</span>
+              <span style={{ color: T.sub, fontFamily: MONO, fontWeight: 700 }}>{issue.affected}</span>
+              <span style={{ color: conductTone, fontWeight: 700 }}>{issue.conduct}</span>
               <span style={{ color: issue.curability >= 80 ? T.green : T.amber, fontFamily: MONO, fontWeight: 800 }}>
                 {issue.curability}/100
               </span>
@@ -1041,12 +1059,41 @@ function StatusTile({ icon: Icon, label, value, color }: { icon: LucideIcon; lab
   );
 }
 
+const DRAFT_META: Record<IssueId, { channel: string; metric: string }> = {
+  rewards: { channel: "Push · WhatsApp (service)", metric: "Repeat-spend recovery within 30d" },
+  app: { channel: "In-app · SMS fallback", metric: "Self-service payment recovery" },
+  payments: { channel: "SMS · email", metric: "Pending-payment resolution SLA" },
+  conduct: { channel: "Assisted call · email", metric: "Consent-valid closure rate" },
+  emi: { channel: "In-app · push", metric: "Eligible-spend EMI conversion" },
+};
+
+function DraftField({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div style={{ minWidth: 0 }}>
+      <Eyebrow>{label}</Eyebrow>
+      <div style={{ color: T.sub, fontSize: 10.5, fontWeight: 800, marginTop: 3, lineHeight: 1.35 }}>{value}</div>
+    </div>
+  );
+}
+
+const APPROVER: Record<IssueId, string> = {
+  rewards: "A. Menon · Rewards & Portfolio",
+  app: "R. Iyer · Digital Cards",
+  payments: "S. Nair · Payments & Authorisation",
+  conduct: "K. Rao · Conduct & Compliance",
+  emi: "D. Shah · Cards Product",
+};
+
 function ActionCentre({ issue }: { issue: Issue }) {
+  const draft = DRAFT_META[issue.id];
+  const [gateByIssue, setGateByIssue] = useState<Record<string, "draft" | "approved" | "live">>({});
+  const stage = gateByIssue[issue.id] ?? "draft";
+  const setStage = (s: "draft" | "approved" | "live") => setGateByIssue((m) => ({ ...m, [issue.id]: s }));
   const actions = useMemo(() => {
     if (issue.id === "rewards") {
       return [
         "Validate impacted premium cohorts and benefit-usage behaviour",
-        "Prepare targeted retention proposition for high-value customers",
+        "Prepare targeted retention proposition for high-value cardholders",
         "Review earn, redemption fee and benefit communication before next campaign",
       ];
     }
@@ -1067,7 +1114,7 @@ function ActionCentre({ issue }: { issue: Issue }) {
     if (issue.id === "payments") {
       return [
         "Reconcile aged pending-payment exceptions",
-        "Prioritise accounts with repeat contact or dispute intent",
+        "Prioritise cardholders with repeat contact or dispute intent",
         "Send resolution updates after Payments owner approval",
       ];
     }
@@ -1093,6 +1140,36 @@ function ActionCentre({ issue }: { issue: Issue }) {
             <div style={{ color: T.muted, fontSize: 10.5, marginTop: 3 }}>{issue.product}</div>
           </div>
           <Pill toneName="amber">Draft ready</Pill>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "9px 12px",
+            marginTop: 11,
+            paddingTop: 11,
+            borderTop: `1px solid ${T.inner}`,
+          }}
+        >
+          <DraftField label="Cohort" value={`${issue.product} · ${issue.affected}`} />
+          <DraftField label="Signal" value={issue.portfolioMovement} />
+          <DraftField label="Channel" value={draft.channel} />
+          <DraftField label="Est. reach" value={issue.affected} />
+          <DraftField
+            label="Guardrails"
+            value={
+              <span style={{ display: "flex", flexWrap: "wrap", gap: 5, fontFamily: MONO }}>
+                <span style={{ background: `${T.green}14`, border: `1px solid ${T.green}40`, borderRadius: 999, padding: "2px 7px", fontSize: 9 }}>no_send_after_2200</span>
+                <span style={{ background: `${T.green}14`, border: `1px solid ${T.green}40`, borderRadius: 999, padding: "2px 7px", fontSize: 9 }}>max_1_per_72h</span>
+              </span>
+            }
+          />
+          <DraftField label="Success metric" value={draft.metric} />
+        </div>
+
+        <div style={{ marginTop: 10, paddingTop: 10, borderTop: `1px solid ${T.inner}`, fontSize: 9.5, color: T.dim, lineHeight: 1.4 }}>
+          Privacy: cohort-level view · identity-level access gated and logged · consent- and purpose-limited (DPDP).
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>
@@ -1129,27 +1206,77 @@ function ActionCentre({ issue }: { issue: Issue }) {
         <StatusTile icon={Zap} label="Automation" value="Never auto-fires" color={T.red} />
       </div>
 
-      <button
-        type="button"
-        style={{
-          width: "100%",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 8,
-          marginTop: 10,
-          borderRadius: 9,
-          border: `1px solid ${T.green}66`,
-          background: `${T.green}18`,
-          color: T.green,
-          padding: "9px 12px",
-          fontWeight: 900,
-          fontSize: 11.5,
-          cursor: "pointer",
-        }}
-      >
-        Open draft intervention pack <ArrowUpRight size={14} />
-      </button>
+      {stage === "draft" ? (
+        <button
+          type="button"
+          onClick={() => setStage("approved")}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            marginTop: 10,
+            borderRadius: 9,
+            border: `1px solid ${T.green}66`,
+            background: `${T.green}18`,
+            color: T.green,
+            padding: "9px 12px",
+            fontWeight: 900,
+            fontSize: 11.5,
+            cursor: "pointer",
+          }}
+        >
+          Approve draft — Gate 1 (owner) <CheckCircle2 size={14} />
+        </button>
+      ) : (
+        <div style={{ marginTop: 10, borderRadius: 9, border: `1px solid ${T.green}55`, background: `${T.green}10`, padding: "9px 11px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <CheckCircle2 size={13} color={T.green} />
+            <span style={{ color: T.green, fontSize: 10.5, fontWeight: 900 }}>Gate 1 · Approved</span>
+          </div>
+          <div style={{ color: T.sub, fontSize: 10, fontFamily: MONO, marginTop: 5, lineHeight: 1.4 }}>
+            approved by {APPROVER[issue.id]} · 24 Jul 07:14 IST · evidence v3 · routed to {issue.owner}
+          </div>
+        </div>
+      )}
+
+      {stage === "approved" ? (
+        <button
+          type="button"
+          onClick={() => setStage("live")}
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            marginTop: 8,
+            borderRadius: 9,
+            border: `1px solid ${T.cyan}66`,
+            background: `${T.cyan}18`,
+            color: T.cyan,
+            padding: "9px 12px",
+            fontWeight: 900,
+            fontSize: 11.5,
+            cursor: "pointer",
+          }}
+        >
+          Engineering configured &amp; tested — confirm go-live (Gate 2) <ArrowUpRight size={14} />
+        </button>
+      ) : null}
+
+      {stage === "live" ? (
+        <div style={{ marginTop: 8, borderRadius: 9, border: `1px solid ${T.cyan}55`, background: `${T.cyan}10`, padding: "9px 11px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <CheckCircle2 size={13} color={T.cyan} />
+            <span style={{ color: T.cyan, fontSize: 10.5, fontWeight: 900 }}>Gate 2 · Live</span>
+          </div>
+          <div style={{ color: T.sub, fontSize: 10, fontFamily: MONO, marginTop: 5, lineHeight: 1.4 }}>
+            configured &amp; tested by Engineering · go-live confirmed by {issue.owner} manager · 24 Jul 09:02 IST
+          </div>
+        </div>
+      ) : null}
     </SectionCard>
   );
 }
@@ -1190,7 +1317,7 @@ export function IndusIndCardsCustomerPortfolioDrill({ go, onBack }: { go?: Navig
         .icpd-axis-x{position:absolute;right:0;bottom:-18px;color:${T.dim};font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
         .icpd-quadrant-label{position:absolute;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.05em}
         .icpd-priority-table{display:flex;flex-direction:column;gap:6px;overflow-x:auto}
-        .icpd-priority-head,.icpd-priority-row{display:grid;grid-template-columns:58px minmax(190px,1.4fr) minmax(100px,.7fr) 76px minmax(120px,.8fr);gap:9px;align-items:center;min-width:720px}
+        .icpd-priority-head,.icpd-priority-row{display:grid;grid-template-columns:52px minmax(170px,1.3fr) minmax(96px,.7fr) minmax(96px,.7fr) 62px 70px minmax(116px,.8fr);gap:9px;align-items:center;min-width:860px}
         .icpd-priority-head{padding:0 9px 4px;color:${T.dim};font-size:8.5px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
         .icpd-priority-row{border:1px solid ${T.inner};border-radius:9px;padding:9px;background:${T.inset};color:${T.sub};cursor:pointer;text-align:left;font-size:10.5px}
         .icpd-priority-row span:nth-child(2){display:flex;flex-direction:column;gap:2px}

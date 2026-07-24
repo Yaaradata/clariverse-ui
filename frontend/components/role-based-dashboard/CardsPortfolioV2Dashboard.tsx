@@ -4,7 +4,7 @@
  * LiSN — Cards Portfolio Manager (v2).
  *
  * Modelled on CreditCardsV3DrillDownScreens grammar: each drill has its OWN signature body
- * (no repeated "baseline signals" block). Shared primitives only: SectionCard (✨ AI pill),
+ * (no repeated "baseline signals" block). Shared primitives only: SectionCard ("Distilled" pill),
  * AIInsightStrip, Mono, route/brand pills. JH near-black palette.
  *
  *   Overview        → Executive Pulse + 3 question cards (2 drilldown routes)
@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleAlert,
+  Clock,
   CreditCard,
   Info,
   RefreshCw,
@@ -115,6 +116,7 @@ const ROUTE: Record<string, { l: string; c: string }> = {
   conduct: { l: "Conduct", c: T.violet },
   fin: { l: "Finance", c: T.blue },
   fraud: { l: "Fraud", c: T.red },
+  portfolio: { l: "Portfolio", c: T.green },
 };
 const LEVEL: Record<string, string> = {
   CRITICAL: T.red,
@@ -177,8 +179,8 @@ const RUPEE_METHOD: Record<RupeeHorizonKind, string> = {
   cac: "acquisition cost per sourcing cohort, one-time",
 };
 function rupeeMethodForLabel(label: string): string | undefined {
-  if (label.includes("(CAC, one-time)")) return RUPEE_METHOD.cac;
-  if (label.includes("/ day (at-risk run-rate)")) return RUPEE_METHOD["at-risk"];
+  if (label.includes("CAC")) return RUPEE_METHOD.cac;
+  if (label.includes("/ day")) return RUPEE_METHOD["at-risk"];
   if (label.includes(" MTD")) return RUPEE_METHOD.mtd;
   return undefined;
 }
@@ -218,7 +220,6 @@ function SectionCard({
   title,
   subtitle,
   accent,
-  aiPill,
   right,
   children,
   style,
@@ -259,21 +260,6 @@ function SectionCard({
             <span style={{ fontSize: 13, fontWeight: 700, color: T.text }}>
               {title}
             </span>
-            {aiPill && (
-              <span
-                style={{
-                  background: `${T.gold}20`,
-                  color: T.gold,
-                  fontSize: 8.5,
-                  fontWeight: 800,
-                  letterSpacing: ".5px",
-                  padding: "1px 6px",
-                  borderRadius: 4,
-                }}
-              >
-                ✨ AI
-              </span>
-            )}
           </div>
           {subtitle && (
             <div
@@ -372,7 +358,7 @@ function Chip({ children, t = "muted" }: { children: ReactNode; t?: string }) {
     </span>
   );
 }
-function ConsentChip() {
+function GuardChip({ children }: { children: ReactNode }) {
   return (
     <span
       style={{
@@ -380,18 +366,45 @@ function ConsentChip() {
         fontSize: 9,
         fontWeight: 800,
         letterSpacing: ".04em",
-        textTransform: "uppercase",
+        textTransform: "none",
+        fontFamily: MONO,
         padding: "3px 8px",
         borderRadius: 999,
-        color: T.muted,
-        background: T.inset,
-        border: `1px solid ${T.inner}`,
+        color: T.sub,
+        background: `${T.green}12`,
+        border: `1px solid ${T.green}40`,
         whiteSpace: "nowrap",
         marginLeft: 6,
       }}
     >
-      Consent: service-comms · human approves
+      {children}
     </span>
+  );
+}
+function ConsentChip() {
+  return (
+    <>
+      <span
+        style={{
+          display: "inline-flex",
+          fontSize: 9,
+          fontWeight: 800,
+          letterSpacing: ".04em",
+          textTransform: "uppercase",
+          padding: "3px 8px",
+          borderRadius: 999,
+          color: T.muted,
+          background: T.inset,
+          border: `1px solid ${T.inner}`,
+          whiteSpace: "nowrap",
+          marginLeft: 6,
+        }}
+      >
+        Consent: service-comms · human approves
+      </span>
+      <GuardChip>no_send_after_2200</GuardChip>
+      <GuardChip>max_1_per_72h</GuardChip>
+    </>
   );
 }
 function RouteChip({ r }: { r: string }) {
@@ -435,15 +448,28 @@ function BrandPill({ k, children }: { k: string; children: ReactNode }) {
 /* ───────────── shared chrome ───────────── */
 function TopBar() {
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
-        Cards Portfolio Manager{" "}
-        <span style={{ color: T.dim, fontWeight: 600, fontSize: 14 }}>
-          · Suvarna Bank
-        </span>
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+      <div>
+        <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
+          Cards — Business Head view
+        </div>
+        <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
+          Your book at a glance · team detail one level down
+        </div>
       </div>
-      <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
-        Transactions first · blocker intelligence second
+      <div
+        style={{
+          fontSize: 11,
+          fontWeight: 700,
+          color: T.sub,
+          background: T.inset,
+          border: `1px solid ${T.inner}`,
+          borderRadius: 999,
+          padding: "5px 11px",
+          whiteSpace: "nowrap",
+        }}
+      >
+        As of 07:10 today · IST
       </div>
     </div>
   );
@@ -453,11 +479,17 @@ function DrillHeader({
   sub,
   chips,
   onBack,
+  score,
+  scoreDelta,
+  asOf,
 }: {
   title: ReactNode;
   sub: ReactNode;
   chips?: ReactNode;
   onBack: () => void;
+  score?: string;
+  scoreDelta?: string;
+  asOf?: string;
 }) {
   return (
     <>
@@ -492,15 +524,25 @@ function DrillHeader({
         }}
       >
         <div style={{ minWidth: 260 }}>
-          <div
-            style={{
-              fontSize: 28,
-              fontWeight: 800,
-              letterSpacing: "-.3px",
-              lineHeight: 1.2,
-            }}
-          >
-            {title}
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            <div
+              style={{
+                fontSize: 28,
+                fontWeight: 800,
+                letterSpacing: "-.3px",
+                lineHeight: 1.2,
+              }}
+            >
+              {title}
+            </div>
+            {score ? (
+              <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}>
+                <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 800, color: T.text }}>{score}</span>
+                {scoreDelta ? (
+                  <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: T.red }}>{scoreDelta}</span>
+                ) : null}
+              </span>
+            ) : null}
           </div>
           <div
             style={{
@@ -513,6 +555,11 @@ function DrillHeader({
           >
             {sub}
           </div>
+          {asOf ? (
+            <div style={{ color: T.dim, fontSize: 11, marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
+              <Clock size={11} /> {asOf}
+            </div>
+          ) : null}
         </div>
         {chips ? (
           <div
@@ -576,11 +623,11 @@ const TREND: { g: TrendPoint[]; r: TrendPoint[]; v: TrendPoint[] } = {
 const EXEC_PULSE = [
   {
     label: "1. 🔴 What's critical",
-    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr / day (at-risk run-rate). Route fix to Payments & Authorisation.",
+    text: "Tokenised CNP approval gap widened since 06:20 — ₹9 L / day (at-risk run-rate). Route fix to Payments & Authorisation.",
   },
   {
     label: "2. 🎯 Where's your focus",
-    text: "Offer O-142 is leaking ₹78 L MTD; fraud-rule R-77 stepped approval down 13 pts.",
+    text: "Offer O-142 is leaking ₹78 L MTD; fraud-rule R-77 stepped approval down 13 pts inside its rule cohort (3+ yr).",
   },
   {
     label: "3. 🟢 What's stable / on-track",
@@ -656,6 +703,7 @@ function MiniBars({ bars }: { bars: { name: string; v: number; c: string }[] }) 
           <div style={{ flex: 1, height: 6, borderRadius: 3, background: T.track }}>
             <div style={{ height: "100%", width: `${b.v}%`, background: b.c, borderRadius: 3 }} />
           </div>
+          <Mono c={b.c} s={9.5}>{b.v}</Mono>
         </div>
       ))}
     </div>
@@ -664,7 +712,7 @@ function MiniBars({ bars }: { bars: { name: string; v: number; c: string }[] }) 
 
 function ExecutivePulse() {
   return (
-    <section style={{ background: T.row, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
+    <section style={{ padding: 0, marginBottom: 14 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
         <Sparkles size={13} color={T.gold} />
         <span style={{ fontSize: 11, fontWeight: 800, color: T.gold, letterSpacing: ".08em", textTransform: "uppercase" }}>
@@ -798,7 +846,7 @@ function ExecutiveQuestionCard({
 type MonitorAlert = {
   id: string;
   title: string;
-  sev: "critical" | "high" | "later";
+  sev: "critical" | "high" | "later" | "cleared";
   sevLabel: string;
   variant: "critical" | "default" | "voice";
   feed: string;
@@ -810,12 +858,13 @@ type MonitorAlert = {
 };
 
 const SEV_STYLE: Record<
-  "critical" | "high" | "later",
+  "critical" | "high" | "later" | "cleared",
   { color: string; bg: string; border: string }
 > = {
   critical: { color: "#ff5050", bg: "#5a1f1f", border: "#9d3030" },
   high: { color: T.gold, bg: "#3a2e0b", border: "#765c12" },
   later: { color: "#b79cff", bg: "#2d1d55", border: "#6845c7" },
+  cleared: { color: T.green, bg: "#12301c", border: "#2f6b3f" },
 };
 
 const MONITOR_STAT_SLOTS = 4;
@@ -837,14 +886,35 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Token + auth feed",
     fields: [
       ["Cohort", "Premium · CNP"],
-      ["Time", "Since 11:00"],
+      ["Time", "Since 06:20"],
     ],
     stats: [
       ["Approval Gap", "14 pts"],
-      ["Spend at Risk", "₹2.4 Cr / day"],
+      ["Spend at Risk", "₹9 L / day"],
       ["Route", "Payments & Authorisation"],
+      ["Status", "Draft ready"],
     ],
-    ai: "Tokenised path degraded after route change — open ACS/token incident, not a behaviour issue.",
+    ai: "Symptom isolated to the tokenised path — non-tokenised CNP is within baseline. Service contacts on the declined-online theme are ~3× normal in the same cohort. Cause unconfirmed; open ACS/token incident.",
+  },
+  {
+    id: "voice-reward",
+    title: "Reward Value Erosion",
+    sev: "critical",
+    sevLabel: "Critical",
+    variant: "voice",
+    feed: "Interaction corpus + spend",
+    fields: [
+      ["Cohort", "EazyDiner · Legend"],
+      ["Time", "Since 15 Jul"],
+    ],
+    stats: [
+      ["Cardholders", "~3.2k"],
+      ["Exposure", "₹1.4 Cr MTD"],
+      ["Route", "Rewards & Portfolio"],
+      ["Status", "Needs approval"],
+    ],
+    ai: "Complaint theme trails our own benefit change — repeat spend −8.6%, redemption abandonment +17%. Retention draft held at the gate.",
+    aiPurple: true,
   },
   {
     id: "o142",
@@ -854,15 +924,16 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     variant: "critical",
     feed: "Offer + spend",
     fields: [
-      ["Cohort", "Platinum RuPay"],
-      ["Time", "Day 6"],
+      ["Cohort", "High-frequency MCC"],
+      ["Time", "Day 6 of wave 2"],
     ],
     stats: [
-      ["Redemption", "High"],
-      ["True Lift", "Low"],
-      ["Leakage", "₹78 L MTD"],
+      ["Redemption", "82% triggered"],
+      ["True Lift", "18%"],
+      ["Leakage", "₹78 L since launch"],
+      ["Route", "Marketing"],
     ],
-    ai: "Matched-control baseline: spend would have happened anyway. Pause or retarget.",
+    ai: "Matched-control spend is nearly identical — the reward subsidises spend that would have happened anyway. Pause wave 2 or narrow eligibility.",
   },
   {
     id: "r77",
@@ -873,15 +944,16 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Rule change feed",
     needsExtraFeed: true,
     fields: [
-      ["Cohort", "3+ yr customers"],
+      ["Cohort", "3+ yr cardholders"],
       ["Time", "Within 2h"],
     ],
     stats: [
       ["Approval Rate", "94% → 81%"],
-      ["Good Blocks", "+210%"],
+      ["Good cardholders blocked", "+210%"],
+      ["Route", "Fraud"],
       ["Feed", "Needs rule log"],
     ],
-    ai: "Approval step-change tied to a rule edit — confidence needs the fraud-rule event feed.",
+    ai: "Approval step-change tied to a rule edit. Rupee sizing withheld until the fraud-rule event feed is wired — we show the gap, not a guess.",
   },
   {
     id: "activation",
@@ -891,37 +963,20 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     variant: "default",
     feed: "Issue + first txn",
     fields: [
-      ["Cohort", "Batch 4471"],
-      ["Time", "D27"],
+      ["Cohort", "Batch #4471"],
+      ["Time", "D27 of 30+7"],
     ],
     stats: [
-      ["Below baseline", "13 pts"],
       ["Cards at risk", "6.2k"],
-      ["Route", "PM + Conduct"],
+      ["CAC at risk", "₹93 L CAC"],
+      ["Route", "Conduct"],
+      ["Status", "Human approves"],
     ],
-    ai: "Treat as obligation, not opportunity — surface the closure countdown now.",
-  },
-  {
-    id: "util",
-    title: "Utilisation Migration Surge",
-    sev: "high",
-    sevLabel: "Advisory",
-    variant: "default",
-    feed: "Balance + limit",
-    fields: [
-      ["Cohort", "Sourcing Q2"],
-      ["Time", "This week"],
-    ],
-    stats: [
-      ["80%+ crossing", "1.8×"],
-      ["Projected roll", "9 bps"],
-      ["Route", "Risk"],
-    ],
-    ai: "Advisory only — route to EWS / model-risk review. No auto treatment.",
+    ai: "Treat as obligation, not opportunity. Rescue contact is drafted with quiet-hours and frequency caps attached — nothing sends without approval.",
   },
   {
     id: "settlement",
-    title: "Settlement / merchant concentration anomaly",
+    title: "Merchant Concentration · Jio-bp",
     sev: "high",
     sevLabel: "Watch",
     variant: "default",
@@ -933,276 +988,128 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     stats: [
       ["Concentration", "↑ 2.1×"],
       ["Merchants", "47"],
-      ["Spend at Risk", "₹52 L / day"],
+      ["Spend at Risk", "₹1.1 L / day"],
       ["Route", "Finance / Ops"],
     ],
-    ai: "Fuel MCC concentration spike — review settlement lag before it drives declines.",
+    ai: "Concentration building in the partner merchant network — review settlement lag before it starts driving declines.",
+  },
+  {
+    id: "util",
+    title: "Utilisation Migration Surge",
+    sev: "later",
+    sevLabel: "Advisory",
+    variant: "default",
+    feed: "Balance + limit",
+    fields: [
+      ["Cohort", "Sourcing Q2"],
+      ["Time", "This week"],
+    ],
+    stats: [
+      ["80%+ crossing", "1.8×"],
+      ["Projected roll", "+9 bps"],
+      ["Route", "Risk"],
+      ["Status", "Observation only"],
+    ],
+    ai: "Advisory only — routed to EWS / model-risk review as an observation. No treatment, no auto-action.",
+  },
+  {
+    id: "cleared-fuel",
+    title: "Fuel-MCC Decline Dip",
+    sev: "cleared",
+    sevLabel: "Cleared",
+    variant: "default",
+    feed: "Decline feed",
+    fields: [
+      ["Cohort", "Fuel MCC"],
+      ["Time", "This morning"],
+    ],
+    stats: [
+      ["Checked", "4 adjacent causes"],
+      ["Ruled out", "3"],
+      ["Verdict", "Calendar mix"],
+      ["Status", "No action needed"],
+    ],
+    ai: "Checked the usual suspects — within normal Friday range for the latter half of the month. Closed without routing.",
   },
 ];
 
 function TodayTransactionSignalMonitor() {
+  const clearedCount = MONITOR_ALERTS.filter((a) => a.sev === "cleared").length;
+  const routedCount = MONITOR_ALERTS.filter(
+    (a) => a.sev !== "cleared" && a.stats.some(([k]) => k === "Route"),
+  ).length;
   return (
     <div style={{ marginTop: 28 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 12,
-        }}
-      >
-        <div
-          style={{
-            color: T.gold,
-            fontSize: 13,
-            letterSpacing: ".08em",
-            textTransform: "uppercase",
-            fontWeight: 900,
-          }}
-        >
-          ✨ Today's Transaction Signal Monitor
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+        <div style={{ color: T.gold, fontSize: 13, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 900 }}>
+          Today&apos;s signal monitor
         </div>
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 900,
-            letterSpacing: ".08em",
-            textTransform: "uppercase",
-            border: "1px solid #7e1f1f",
-            background: "#301818",
-            color: "#ff4444",
-            borderRadius: 999,
-            padding: "6px 12px",
-          }}
-        >
-          Portfolio Alerts
+        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", border: `1px solid ${T.inner}`, background: T.inset, color: T.muted, borderRadius: 999, padding: "6px 12px" }}>
+          {MONITOR_ALERTS.length} signals · {routedCount} routed · {clearedCount} cleared
         </span>
+        <span style={{ fontSize: 10, color: T.dim, letterSpacing: ".04em" }}>scroll for all →</span>
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 14,
-          overflowX: "auto",
-          paddingBottom: 14,
-          alignItems: "stretch",
-        }}
-      >
+
+      <div className="signal-rail" style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 14, alignItems: "stretch" }}>
         {MONITOR_ALERTS.map((a) => {
           const sv = SEV_STYLE[a.sev];
           const border =
-            a.variant === "critical"
-              ? "#8a2b2b"
-              : a.variant === "voice"
-                ? "#6d44d4"
-                : "#66420a";
-          const bg =
-            a.variant === "voice"
-              ? "linear-gradient(180deg,#171127,#111)"
-              : "#121212";
+            a.sev === "cleared" ? "#2f6b3f"
+            : a.variant === "critical" ? "#8a2b2b"
+            : a.variant === "voice" ? "#6d44d4"
+            : "#66420a";
+          const bg = a.variant === "voice" ? "linear-gradient(180deg,#171127,#111)" : "#121212";
           return (
             <div
               key={a.id}
               style={{
-                flex: "0 0 260px",
-                width: 260,
-                height: 420,
-                background: bg,
-                border: `1px solid ${border}`,
-                borderRadius: 14,
-                padding: "14px 14px 12px",
-                display: "flex",
-                flexDirection: "column",
-                boxSizing: "border-box",
+                flex: "0 0 340px", width: 340, height: 452,
+                background: bg, border: `1px solid ${border}`, borderRadius: 14,
+                padding: "16px 16px 14px",
+                display: "flex", flexDirection: "column", boxSizing: "border-box",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: 8,
-                  marginBottom: 10,
-                  height: 44,
-                  flexShrink: 0,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 15,
-                    lineHeight: 1.2,
-                    fontWeight: 900,
-                    color: T.text,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, marginBottom: 10, minHeight: 40, flexShrink: 0 }}>
+                <div style={{ fontSize: 15.5, lineHeight: 1.25, fontWeight: 900, color: T.text, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                   {a.title}
                 </div>
-                <span
-                  style={{
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    fontWeight: 900,
-                    borderRadius: 999,
-                    padding: "5px 9px",
-                    whiteSpace: "nowrap",
-                    color: sv.color,
-                    background: sv.bg,
-                    border: `1px solid ${sv.border}`,
-                    flexShrink: 0,
-                  }}
-                >
+                <span style={{ fontSize: 10, textTransform: "uppercase", fontWeight: 900, borderRadius: 999, padding: "5px 10px", whiteSpace: "nowrap", color: sv.color, background: sv.bg, border: `1px solid ${sv.border}`, flexShrink: 0 }}>
                   {a.sevLabel}
                 </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 6,
-                  marginBottom: 8,
-                  alignItems: "center",
-                  height: 28,
-                  flexShrink: 0,
-                  overflow: "hidden",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontWeight: 800,
-                    letterSpacing: ".04em",
-                    textTransform: "uppercase",
-                    padding: "3px 8px",
-                    borderRadius: 999,
-                    color: T.muted,
-                    background: T.inset,
-                    border: `1px solid ${T.inner}`,
-                  }}
-                >
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10, alignItems: "center", minHeight: 24, flexShrink: 0 }}>
+                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 999, color: T.muted, background: T.inset, border: `1px solid ${T.inner}` }}>
                   {a.feed}
                 </span>
                 {a.needsExtraFeed ? (
-                  <span
-                    style={{
-                      fontSize: 9,
-                      fontWeight: 800,
-                      letterSpacing: ".04em",
-                      textTransform: "uppercase",
-                      padding: "3px 8px",
-                      borderRadius: 999,
-                      color: T.amber,
-                      background: `${T.amber}14`,
-                      border: `1px solid ${T.amber}40`,
-                    }}
-                  >
+                  <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 999, color: T.amber, background: `${T.amber}14`, border: `1px solid ${T.amber}40` }}>
                     needs extra feed
                   </span>
                 ) : null}
               </div>
-              <div style={{ height: 52, flexShrink: 0, marginBottom: 4 }}>
+
+              <div style={{ flexShrink: 0, marginBottom: 10 }}>
                 {a.fields.map(([k, v]) => (
-                  <div
-                    key={k}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "105px 1fr",
-                      gap: 8,
-                      marginBottom: 6,
-                      fontSize: 12,
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: "#8c8c95",
-                        textTransform: "uppercase",
-                        letterSpacing: ".06em",
-                        fontWeight: 900,
-                      }}
-                    >
-                      {k}
-                    </span>
-                    <span
-                      style={{
-                        textAlign: "right",
-                        fontWeight: 800,
-                        color: "#fff",
-                      }}
-                      title={rupeeMethodForLabel(v)}
-                    >
-                      {v}
-                    </span>
+                  <div key={k} style={{ display: "grid", gridTemplateColumns: "76px 1fr", gap: 10, marginBottom: 6, fontSize: 12, alignItems: "baseline" }}>
+                    <span style={{ color: "#8c8c95", textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 900, fontSize: 10 }}>{k}</span>
+                    <span style={{ textAlign: "right", fontWeight: 800, color: "#fff" }} title={rupeeMethodForLabel(v)}>{v}</span>
                   </div>
                 ))}
               </div>
-              <div
-                style={{
-                  background: "#191919",
-                  border: "1px solid #333",
-                  borderRadius: 10,
-                  padding: 12,
-                  marginTop: 4,
-                  boxSizing: "border-box",
-                  height: 118,
-                  flexShrink: 0,
-                }}
-              >
-                {monitorStatRows(a.stats).map(([k, v], i, rows) => (
-                  <div
-                    key={k || `slot-${i}`}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.15fr 1fr",
-                      gap: 8,
-                      marginBottom: i === rows.length - 1 ? 0 : 8,
-                      fontSize: 12,
-                      color: "#bfbfc6",
-                      minHeight: 18,
-                      visibility: k ? "visible" : "hidden",
-                    }}
-                  >
-                    <span>{k}</span>
-                    <b
-                      style={{
-                        textAlign: "right",
-                        color: "#fff",
-                        fontFamily: MONO,
-                      }}
-                      title={rupeeMethodForLabel(v)}
-                    >
-                      {v}
-                    </b>
+
+              <div style={{ background: "#191919", border: "1px solid #333", borderRadius: 10, padding: "12px 14px", boxSizing: "border-box", flex: 1, minHeight: 124, display: "flex", flexDirection: "column", justifyContent: "center", gap: 9 }}>
+                {monitorStatRows(a.stats).map(([k, v], i) => (
+                  <div key={k || `slot-${i}`} style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr", gap: 10, fontSize: 12, color: "#bfbfc6", alignItems: "baseline", visibility: k ? "visible" : "hidden" }}>
+                    <span style={{ lineHeight: 1.3 }}>{k}</span>
+                    <b style={{ textAlign: "right", color: "#fff", fontFamily: MONO, lineHeight: 1.3 }} title={rupeeMethodForLabel(v)}>{v}</b>
                   </div>
                 ))}
               </div>
-              <div
-                style={{
-                  marginTop: "auto",
-                  background: a.aiPurple ? "#21163a" : "#2d2414",
-                  border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`,
-                  borderRadius: 9,
-                  padding: "10px 12px",
-                  fontSize: 12,
-                  lineHeight: 1.4,
-                  color: "#fff",
-                  fontWeight: 700,
-                  height: 88,
-                  boxSizing: "border-box",
-                  overflow: "hidden",
-                  flexShrink: 0,
-                }}
-              >
-                <span
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
-                  ✨ {a.ai}
+
+              <div style={{ marginTop: 12, background: a.aiPurple ? "#21163a" : "#2d2414", border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`, borderRadius: 9, padding: "11px 13px", fontSize: 12, lineHeight: 1.45, color: "#fff", fontWeight: 700, height: 92, boxSizing: "border-box", overflow: "hidden", flexShrink: 0 }}>
+                <span style={{ display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                  {a.ai}
                 </span>
               </div>
             </div>
@@ -1212,14 +1119,6 @@ function TodayTransactionSignalMonitor() {
     </div>
   );
 }
-
-const BLOCKER_BARS = [
-  { name: "Token break", v: 82, c: T.red },
-  { name: "Fraud-rule", v: 68, c: T.red },
-  { name: "Limit / util", v: 49, c: T.amber },
-  { name: "Activation", v: 58, c: T.amber },
-  { name: "Roll Q2-24", v: 52, c: T.amber },
-];
 
 type NavigateFn = (screen: string) => void;
 
@@ -1235,7 +1134,7 @@ const VOICE_BARS: { name: string; v: number; c: string }[] = [
   { name: "EMI gap", v: 34, c: T.amber },
 ];
 
-type OvGauge = { topLabel: string; value: number; label: string; color: string };
+type OvGauge = { topLabel: string; value: number; label: ReactNode; color: string; suffix?: string };
 type OvStat = { label: string; value: string; sub: string; color: string };
 type OvBar = { name: string; v: number; color: string };
 
@@ -1244,7 +1143,7 @@ const ovHexA = (hex: string, a: number) => {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 };
 
-function OvHalfGauge({ topLabel, value, label, color }: OvGauge) {
+function OvHalfGauge({ topLabel, value, label, color, suffix = "%" }: OvGauge) {
   const v = Math.max(0, Math.min(100, value));
   return (
     <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
@@ -1256,7 +1155,10 @@ function OvHalfGauge({ topLabel, value, label, color }: OvGauge) {
             <RadialBar dataKey="value" cornerRadius={4} background={{ fill: "#2a2a2a90" }} />
           </RadialBarChart>
         </ResponsiveContainer>
-        <div style={{ position: "absolute", left: "50%", bottom: 1, transform: "translateX(-50%)", fontFamily: MONO, fontSize: 15, fontWeight: 800, color }}>{v}%</div>
+        <div style={{ position: "absolute", left: "50%", bottom: -4, transform: "translateX(-50%)", fontFamily: MONO, fontWeight: 800, color, display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap" }}>
+          <span style={{ fontSize: 15 }}>{v}</span>
+          {suffix ? <span style={{ fontSize: 8.5, fontWeight: 700, color: T.muted }}>{suffix}</span> : null}
+        </div>
       </div>
       <div style={{ fontSize: 9, color: T.muted, textTransform: "uppercase", letterSpacing: 0.3, textAlign: "center", lineHeight: 1.15, minHeight: 22 }}>{label}</div>
     </div>
@@ -1290,21 +1192,27 @@ function OvKeyStat({ label, value, sub, color, align }: OvStat & { align: "start
 }
 
 function OverviewExecTile({
-  accent, icon, title, micro, score, delta, spark, leftGauge, rightGauge, bars, bottomLeft, bottomRight, ai, cta, onClick,
+  accent, icon, title, micro, score, scoreLabel, delta, spark, sparkLabel, leftBlock, leftGauge, rightBlock, rightGauge, bars, bottomLeft, bottomRight, ai, owner, ownerAction, cta, onClick,
 }: {
   accent: string;
   icon: ReactNode;
   title: string;
   micro: string;
   score: string;
+  scoreLabel?: string;
   delta: string;
   spark: number[];
+  sparkLabel?: string;
+  leftBlock?: ReactNode;
   leftGauge?: OvGauge;
+  rightBlock?: ReactNode;
   rightGauge?: OvGauge;
   bars?: OvBar[];
   bottomLeft: OvStat;
   bottomRight: OvStat;
   ai: string;
+  owner?: string;
+  ownerAction?: string;
   cta: string;
   onClick: () => void;
 }) {
@@ -1360,6 +1268,9 @@ function OverviewExecTile({
             <span style={{ fontFamily: MONO, fontSize: 34, fontWeight: 800, color: T.text, lineHeight: 1 }}>{score}</span>
             <span style={{ fontFamily: MONO, fontSize: 13, fontWeight: 700, color: down ? T.red : T.green }}>{delta}</span>
           </div>
+          {scoreLabel ? (
+            <div style={{ fontSize: 10, fontWeight: 700, color: T.sub, textTransform: "uppercase", letterSpacing: ".04em", marginTop: 3 }}>{scoreLabel}</div>
+          ) : null}
           <div style={{ flex: 1, minHeight: 92, marginTop: 8 }}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trend} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
@@ -1375,6 +1286,9 @@ function OverviewExecTile({
               </AreaChart>
             </ResponsiveContainer>
           </div>
+          {sparkLabel ? (
+            <div style={{ fontSize: 8.5, color: T.muted, textTransform: "uppercase", letterSpacing: ".05em", marginTop: 2 }}>{sparkLabel}</div>
+          ) : null}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -1382,8 +1296,8 @@ function OverviewExecTile({
             <OvBars bars={bars} />
           ) : (
             <div style={{ display: "flex", gap: 10 }}>
-              {leftGauge ? <OvHalfGauge {...leftGauge} /> : null}
-              {rightGauge ? <OvHalfGauge {...rightGauge} /> : null}
+              {leftBlock ? leftBlock : leftGauge ? <OvHalfGauge {...leftGauge} /> : null}
+              {rightBlock ? rightBlock : rightGauge ? <OvHalfGauge {...rightGauge} /> : null}
             </div>
           )}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 12px", paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
@@ -1396,12 +1310,78 @@ function OverviewExecTile({
       <div style={{ background: ovHexA(accent, 0.055), border: `1px solid ${ovHexA(accent, 0.22)}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "12px 14px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 7 }}>
           <Sparkles size={13} color={accent} />
-          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>Conversation AI</span>
+          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>What changed</span>
         </div>
         <div style={{ fontSize: 12.5, color: T.sub, lineHeight: 1.5 }}>{ai}</div>
       </div>
+      {owner ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", color: T.text, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, padding: "3px 7px" }}>{owner}</span>
+          {ownerAction ? <span style={{ fontSize: 11, color: T.sub, fontWeight: 600 }}>{ownerAction}</span> : null}
+        </div>
+      ) : null}
       <div style={{ fontSize: 11, fontWeight: 700, color: accent }}>{cta}</div>
     </button>
+  );
+}
+
+const BOOK_HEADLINE: { label: string; value: string; sub: string; color: string }[] = [
+  { label: "Cards in force", value: "31.2 L", sub: "active base", color: T.text },
+  { label: "Monthly spends", value: "~₹5,010 Cr", sub: "run-rate · ₹3,840 Cr MTD", color: T.cyan },
+  { label: "Receivables", value: "₹9,760 Cr", sub: "book outstanding", color: T.violet },
+  { label: "Net credit cost", value: "6.0%", sub: "annualised · stable · within range", color: T.green },
+];
+
+function BookHeadline() {
+  return (
+    <section
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gap: 10,
+        marginBottom: 14,
+      }}
+    >
+      {BOOK_HEADLINE.map((k) => (
+        <div key={k.label} style={{ background: T.row, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px" }}>
+          <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted }}>{k.label}</div>
+          <div style={{ fontFamily: MONO, fontSize: 22, fontWeight: 800, color: k.color, marginTop: 4, lineHeight: 1.1 }}>{k.value}</div>
+          <div style={{ fontSize: 10, color: T.dim, marginTop: 3 }}>{k.sub}</div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+const BRAND_STRIP = ["Avios", "Platinum RuPay", "Jio-bp", "Pioneer", "Legend", "EazyDiner", "Tiger", "Pinnacle", "Celesta"];
+
+function BrandStrip({ go }: { go: NavigateFn }) {
+  return (
+    <section style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+      <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted, marginRight: 2 }}>
+        Brands
+      </span>
+      {BRAND_STRIP.map((b) => (
+        <button
+          type="button"
+          key={b}
+          onClick={() => go("d1")}
+          style={{
+            font: "inherit",
+            cursor: "pointer",
+            fontSize: 11,
+            fontWeight: 700,
+            color: T.sub,
+            background: T.inset,
+            border: `1px solid ${T.inner}`,
+            borderRadius: 999,
+            padding: "5px 11px",
+          }}
+        >
+          {b}
+        </button>
+      ))}
+    </section>
   );
 }
 
@@ -1409,6 +1389,8 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
   return (
     <div className="fade">
       <TopBar />
+      <BookHeadline />
+      <BrandStrip go={go} />
       <ExecutivePulse />
       <div className={showVoiceJoin ? "overview-cards overview-cards--3" : "overview-cards"}>
         <OverviewExecTile
@@ -1417,13 +1399,15 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           title="How are my transactions & offers doing?"
           micro="Spend · offers · yield & reward economics"
           score="64"
-          delta="−8 pts"
-          spark={[70, 66, 68, 63, 61, 64, 60, 62, 64]}
-          leftGauge={{ topLabel: "Incremental", value: 58, label: "vs matched control", color: T.green }}
-          rightGauge={{ topLabel: "Profitable", value: 55, label: "offer margin", color: T.amber }}
-          bottomLeft={{ label: "Yield leak", value: "₹1.2 Cr", sub: "MTD · interchange", color: T.red }}
+          scoreLabel="offer & yield health"
+          delta="−8 MoM"
+          spark={[70, 66, 68, 63, 61, 64, 60, 59, 58]}
+          sparkLabel="contribution · 3 months"
+          leftGauge={{ topLabel: "Incremental", value: 58, label: <span style={{ color: T.red, fontWeight: 800 }}>−8%</span>, color: T.green }}
+          rightGauge={{ topLabel: "Profitability", value: 55, label: <span style={{ color: T.red, fontWeight: 800 }}>−6%</span>, color: T.amber }}
+          bottomLeft={{ label: "Wallet-load strain", value: "₹0.9 Cr MTD", sub: "", color: T.red }}
           bottomRight={{ label: "Offers to kill", value: "2", sub: "net-negative", color: T.amber }}
-          ai="Two net-negative offers vs matched control — ₹1.3 Cr MTD reallocatable. RuPay-on-UPI mix is compressing interchange yield ~₹1.2 Cr MTD."
+          ai="Since the earn-rate change, two offers turned net-negative against matched control — ₹1.2 Cr MTD reallocatable. Separately, Platinum RuPay's UPI-rail mix is diluting interchange yield."
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
@@ -1433,35 +1417,45 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           title="Where are my blockers & problems today?"
           micro="Declines · token gaps · fraud-rule · activation · roll/util"
           score="58"
-          delta="−10 pts"
+          scoreLabel="blocker pressure"
+          delta="−10 MoM"
           spark={[72, 68, 65, 66, 61, 59, 60, 57, 58]}
-          bars={[
-            { name: "Token break", v: 82, color: T.red },
-            { name: "Fraud-rule", v: 68, color: T.red },
-            { name: "Activation", v: 58, color: T.amber },
-            { name: "Roll / util", v: 52, color: T.amber },
-            { name: "Limit", v: 49, color: T.amber },
-          ]}
-          bottomLeft={{ label: "At-risk", value: "₹2.4 Cr", sub: "/ day run-rate", color: T.red }}
-          bottomRight={{ label: "Top blocker", value: "Token break", sub: "root cause", color: T.red }}
-          ai="Today's spike is a token break: ₹2.4 Cr/day at-risk, 62% curable. R-77 stepped approval −13 pts; Batch #4471 risks ₹93 L against the 30+7 clock."
-          cta="Open blocker command center →"
+          sparkLabel="approval rate · 3 months"
+          leftGauge={{ topLabel: "Approval", value: 90.6, label: <span style={{ color: T.red, fontWeight: 800 }}>−2.0 pts</span>, color: T.green }}
+          rightBlock={
+            <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3, textAlign: "center" }}>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: T.muted }}>Decline spike</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: T.red, lineHeight: 1 }}>+38%</div>
+              <div style={{ fontSize: 8, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.3 }}>since 06:20</div>
+            </div>
+          }
+          bottomLeft={{ label: "At-risk", value: "₹9 L / day", sub: "≈ ₹2.7 Cr a month if it runs", color: T.red }}
+          bottomRight={{ label: "Top blocker", value: "Tokenised CNP", sub: "symptom · cause unconfirmed", color: T.red }}
+          ai="Approval on the tokenised card-not-present path broke from 06:20 — ₹9 L a day at risk, 62% of it curable. Two more blockers behind it, both routed."
+          cta="Open blockers →"
           onClick={() => go("d2")}
         />
         {showVoiceJoin && (
           <OverviewExecTile
             accent={T.violet}
             icon={<Sparkles size={18} />}
-            title="What are my customers experiencing?"
+            title="What are my cardholders experiencing?"
             micro="Voice × transaction · top issue: Reward value erosion"
             score="58"
-            delta="−15 pts"
+            scoreLabel="cardholder friction"
+            delta="−15 MoM"
             spark={[74, 70, 68, 64, 60, 62, 58, 56, 58]}
-            leftGauge={{ topLabel: "Top issue", value: 92, label: "reward value", color: T.red }}
-            rightGauge={{ topLabel: "Curable", value: 78, label: "fixable share", color: T.green }}
-            bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · illustrative", color: T.red }}
-            bottomRight={{ label: "Top channel", value: "App store", sub: "×214 similar", color: T.violet }}
-            ai="Public voice is dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling adds conduct exposure."
+            sparkLabel="issue pressure · 3 months"
+            leftBlock={
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, textAlign: "center" }}>
+                <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: T.muted }}>Top issue</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: T.red, lineHeight: 1.2 }}>Reward value erosion</div>
+              </div>
+            }
+            rightGauge={{ topLabel: "Curable", value: 78, label: "", color: T.green, suffix: "" }}
+            bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · EST", color: T.red }}
+            bottomRight={{ label: "Top channel", value: "Service chat", sub: "", color: T.violet }}
+            ai="Complaints and reviews are dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling claims add conduct exposure."
             cta="Open customer experience →"
             onClick={() => go("voice")}
           />
@@ -1469,6 +1463,7 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
       </div>
 
       <TodayTransactionSignalMonitor />
+
       <div style={{ height: 44 }} />
     </div>
   );
@@ -1479,6 +1474,7 @@ const D1_BRANDS: {
   k: string;
   name: string;
   spend: string;
+  cards: string;
   wow: string;
   up: boolean;
   prof: number;
@@ -1488,7 +1484,8 @@ const D1_BRANDS: {
   {
     k: "travel",
     name: "Avios",
-    spend: "₹312 Cr MTD",
+    spend: "₹620 Cr MTD",
+    cards: "2.4 L",
     wow: "−6.2%",
     up: false,
     prof: 38,
@@ -1498,7 +1495,8 @@ const D1_BRANDS: {
   {
     k: "cashback",
     name: "Platinum RuPay",
-    spend: "₹468 Cr MTD",
+    spend: "₹1,520 Cr MTD",
+    cards: "16.5 L",
     wow: "+8.4%",
     up: true,
     prof: 71,
@@ -1508,7 +1506,8 @@ const D1_BRANDS: {
   {
     k: "fuel",
     name: "Jio-bp",
-    spend: "₹214 Cr MTD",
+    spend: "₹720 Cr MTD",
+    cards: "5.5 L",
     wow: "+3.2%",
     up: true,
     prof: 52,
@@ -1517,8 +1516,9 @@ const D1_BRANDS: {
   },
   {
     k: "biz",
-    name: "Business",
-    spend: "₹290 Cr MTD",
+    name: "Pioneer",
+    spend: "₹980 Cr MTD",
+    cards: "6.8 L",
     wow: "+1.1%",
     up: true,
     prof: 64,
@@ -1527,18 +1527,18 @@ const D1_BRANDS: {
   },
 ];
 const D1_TIERS: [string, string, number, number, number][] = [
-  ["H1 · ₹1L+ spend", "₹420 Cr MTD", 44, 30, 26],
-  ["H2 · ₹50k–1L", "₹312 Cr MTD", 51, 27, 22],
-  ["H3 · ₹25–50k", "₹256 Cr MTD", 58, 22, 20],
+  ["H1 · ₹1L+ spend", "₹1,240 Cr MTD", 44, 30, 26],
+  ["H2 · ₹50k–1L", "₹980 Cr MTD", 51, 27, 22],
+  ["H3 · ₹25–50k", "₹760 Cr MTD", 58, 22, 20],
 ];
 const D1_GMV = [
   { w: "W-6", g: 100, p: 100 },
-  { w: "W-5", g: 101, p: 99 },
-  { w: "W-4", g: 102, p: 97.5 },
-  { w: "W-3", g: 103, p: 96 },
-  { w: "W-2", g: 103.6, p: 95 },
-  { w: "W-1", g: 104, p: 94.2 },
-  { w: "Now", g: 104, p: 93.6 },
+  { w: "W-5", g: 102.4, p: 98.9 },
+  { w: "W-4", g: 100.6, p: 98.2 },
+  { w: "W-3", g: 103.5, p: 95.7 },
+  { w: "W-2", g: 101.8, p: 95.9 },
+  { w: "W-1", g: 104.6, p: 94.2 },
+  { w: "Now", g: 103.4, p: 93.6 },
 ];
 const D1_LEAK_WATCH: [string, string, string, string][] = [
   ["O-142 Cashback", "₹78 L MTD", "High", T.red],
@@ -1560,7 +1560,7 @@ const D1_AI: AiRow[] = [
     title: "Offer O-142 is cannibalising spend",
     body: "High redemption, near-zero incremental lift vs a matched control. Reward budget is subsidising spend that would have happened anyway.",
     metric: "₹78 L MTD leakage",
-    delta: "redemption 82% · lift 18%",
+    delta: "redemption 82% of triggered · lift 18%",
     icon: CircleAlert,
     root: "Eligibility is too broad — high-frequency customers who already spend in these MCCs are claiming the reward.",
     areas: ["Marketing", "Rewards engine", "Premium desk"],
@@ -1579,7 +1579,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹2.5 Cr MTD net strain",
+    metric: "₹1.4 Cr MTD net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -1596,10 +1596,10 @@ const D1_AI: AiRow[] = [
     id: "a3",
     level: "WARNING",
     tag: "Spend quality",
-    title: "Profitable spend drifting on premium",
-    body: "Gross GMV is flat but profitable retained spend on Avios is down 6.4% — top-of-wallet is slipping.",
-    metric: "−6.4% vs flat GMV",
-    delta: "premiumisation drift",
+    title: "Profitable spend drifting on premium (Avios)",
+    body: "Spends are flat but profitable retained spend on Avios (2.4 L cards) is down 6.4% — top-of-wallet is slipping. Draft: benefit / engagement review, routed to the Premium desk.",
+    metric: "−6.4% · ≈₹18 L/mo contribution at risk",
+    delta: "premiumisation drift · draft ready",
     icon: Zap,
     root: "Reward-heavy mix shift plus benefit fatigue in the premium cohort; engagement cadence decaying.",
     areas: ["Head of Cards", "Premium desk", "Benefits"],
@@ -1608,7 +1608,7 @@ const D1_AI: AiRow[] = [
       "Targeted top-of-wallet nudge",
       "Watch dormancy onset",
     ],
-    owner: "Head of Cards",
+    owner: "Head of Cards — Premium desk",
     priority: "Medium",
   },
   {
@@ -1733,7 +1733,7 @@ function AISummaryWall({ rows }: { rows: AiRow[] }) {
   }, {});
   return (
     <SectionCard
-      title="AI Summary Wall"
+      title="What changed — and why"
       subtitle="Ranked · click to expand root cause & actions"
       accent={T.gold}
       aiPill
@@ -2107,7 +2107,7 @@ function CommandCenter() {
             }}
             title={RUPEE_METHOD.mtd}
           >
-            ₹1,284 Cr MTD
+            ₹3,840 Cr MTD
           </span>
           <span
             style={{
@@ -2136,13 +2136,13 @@ function CommandCenter() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1.4fr .9fr .8fr 1fr",
+              gridTemplateColumns: "1.3fr .85fr .7fr .75fr .95fr",
               gap: 8,
               padding: "7px 10px",
               background: T.row,
             }}
           >
-            {["BRAND", "SPEND", "WoW", "PROFIT%"].map((h) => (
+            {["BRAND", "SPEND", "CARDS", "WoW", "PROFIT%"].map((h) => (
               <Eyebrow key={h}>{h}</Eyebrow>
             ))}
           </div>
@@ -2151,7 +2151,7 @@ function CommandCenter() {
               key={b.k}
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.4fr .9fr .8fr 1fr",
+                gridTemplateColumns: "1.3fr .85fr .7fr .75fr .95fr",
                 gap: 8,
                 padding: "7px 10px",
                 borderTop: i ? `1px solid ${T.border}` : "none",
@@ -2161,6 +2161,9 @@ function CommandCenter() {
               <BrandPill k={b.k}>{b.name}</BrandPill>
               <Mono c={T.text} s={11.5}>
                 {b.spend}
+              </Mono>
+              <Mono c={T.sub} s={11}>
+                {b.cards}
               </Mono>
               <Mono c={b.up ? T.green : T.red} s={11}>
                 {b.up ? "▲" : "▼"} {b.wow}
@@ -2190,12 +2193,16 @@ function CommandCenter() {
             </div>
           ))}
         </div>
+        <div style={{ fontSize: 9.5, color: T.dim, marginTop: 8, lineHeight: 1.45 }}>
+          4 card products = 100% of spends (₹3,840 Cr MTD) &amp; 31.2 L cards. Legend · Pinnacle · Tiger are premium
+          variants and EazyDiner · Celesta co-brands — nested within these products, not separate lines.
+        </div>
       </W>
       {/* spend quality by tier */}
       <W
         accent={T.violet}
         title="Spend quality by value tier"
-        sub="profitable / neutral / leaking"
+        sub="top 3 value tiers · profitable / neutral / leaking · <₹25k tail not shown"
       >
         {D1_TIERS.map(([l, sub, h, n, u]) => (
           <div key={l} style={{ marginBottom: 9 }}>
@@ -2347,21 +2354,6 @@ function CommandCenter() {
       <W
         accent={T.amber}
         title="Reward-leakage watchlist"
-        right={
-          <span
-            style={{
-              fontSize: 9,
-              fontWeight: 800,
-              color: T.gold,
-              background: `${T.gold}14`,
-              border: `1px solid ${T.gold}30`,
-              borderRadius: 999,
-              padding: "2px 6px",
-            }}
-          >
-            ✨
-          </span>
-        }
       >
         {D1_LEAK_WATCH.map(([n, amt, lvl, c]) => (
           <div
@@ -2432,7 +2424,7 @@ function CommandCenter() {
                 textAlign: "center",
               }}
             >
-              TRVL
+              Avios
             </span>
             <span
               style={{
@@ -2442,7 +2434,7 @@ function CommandCenter() {
                 textAlign: "center",
               }}
             >
-              CASH
+              RuPay
             </span>
             <span
               style={{
@@ -2452,7 +2444,7 @@ function CommandCenter() {
                 textAlign: "center",
               }}
             >
-              FUEL
+              Jio-bp
             </span>
             <span
               style={{
@@ -2588,18 +2580,6 @@ function LeakPanel() {
         <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>
           Where is reward spend leaking?
         </h3>
-        <span
-          style={{
-            background: `${T.gold}20`,
-            color: T.gold,
-            fontSize: 8.5,
-            fontWeight: 800,
-            padding: "1px 6px",
-            borderRadius: 4,
-          }}
-        >
-          ✨ AI
-        </span>
         <span style={{ fontSize: 11, color: T.muted, marginLeft: 4 }}>
           tap an offer — leakage = reward spent on non-incremental spend
         </span>
@@ -2722,7 +2702,7 @@ function LeakPanel() {
           >
             {(
               [
-                ["Redemption", o.redemption],
+                ["Redemption (of triggered)", o.redemption],
                 ["True lift", o.lift],
                 ["Reward cost", o.cost],
               ] as [string, string][]
@@ -2744,7 +2724,7 @@ function LeakPanel() {
               marginBottom: 9,
             }}
           >
-            <Eyebrow c={T.amber}>✨ AI insight</Eyebrow>
+            <Eyebrow c={T.amber}>What changed</Eyebrow>
             <div
               style={{
                 fontSize: 12.5,
@@ -2828,10 +2808,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "travel",
     name: "Avios",
-    spend: "₹312 Cr MTD",
+    spend: "₹620 Cr MTD",
     wow: "−6.2%",
     wowUp: false,
-    txn: "2.1M",
+    txn: "0.31M",
     active: "−3.1%",
     activeUp: false,
     repeat: "−4.8%",
@@ -2847,10 +2827,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "cashback",
     name: "Platinum RuPay",
-    spend: "₹468 Cr MTD",
+    spend: "₹1,520 Cr MTD",
     wow: "+8.4%",
     wowUp: true,
-    txn: "5.4M",
+    txn: "17.5M",
     active: "+4.7%",
     activeUp: true,
     repeat: "+6.2%",
@@ -2865,10 +2845,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "fuel",
     name: "Jio-bp",
-    spend: "₹214 Cr MTD",
+    spend: "₹720 Cr MTD",
     wow: "+3.2%",
     wowUp: true,
-    txn: "1.7M",
+    txn: "5.7M",
     active: "+1.1%",
     activeUp: true,
     repeat: "−1.9%",
@@ -2884,10 +2864,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "biz",
     name: "Pioneer",
-    spend: "₹290 Cr MTD",
+    spend: "₹980 Cr MTD",
     wow: "+1.1%",
     wowUp: true,
-    txn: "1.2M",
+    txn: "4.0M",
     active: "+0.8%",
     activeUp: true,
     repeat: "+1.3%",
@@ -2908,6 +2888,7 @@ type OfferBoardCard = {
   conf: string;
   owner: string;
   decision: string;
+  note?: string;
 };
 
 const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
@@ -2919,6 +2900,15 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
       conf: "High",
       owner: "Marketing",
       decision: "Keep",
+    },
+    {
+      name: "EazyDiner 3X",
+      leak: "₹6 L MTD",
+      lift: "58%",
+      conf: "High",
+      owner: "Partner PM",
+      decision: "Keep",
+      note: "Richer cap unlocked by prior-month ₹40k non-dining spend · settled txns only · tier-capped",
     },
     {
       name: "Dining 3X",
@@ -2985,11 +2975,11 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   ],
 };
 
-const BOARD_COL_META: Record<string, { l: string; c: string }> = {
-  keep: { l: "Keep", c: T.green },
-  retarget: { l: "Retarget", c: T.amber },
-  kill: { l: "Kill", c: T.red },
-  wait: { l: "Wait", c: T.dim },
+const BOARD_COL_META: Record<string, { l: string; c: string; total: number }> = {
+  keep: { l: "Keep", c: T.green, total: 9 },
+  retarget: { l: "Retarget", c: T.amber, total: 6 },
+  kill: { l: "Kill", c: T.red, total: 2 },
+  wait: { l: "Wait", c: T.dim, total: 3 },
 };
 
 const YIELD_ROWS: [
@@ -3006,54 +2996,55 @@ const YIELD_ROWS: [
   [
     "Wallet Load",
     "₹86 Cr MTD",
-    "₹3.0 Cr MTD",
+    "₹1.2 Cr MTD",
     "Low",
-    "₹4.2 Cr MTD",
-    "₹0.6 Cr MTD",
-    "−₹1.8 Cr MTD",
+    "₹1.9 Cr MTD",
+    "₹0.2 Cr MTD",
+    "−₹0.9 Cr MTD",
     true,
     "Exclude / cap",
   ],
   [
     "Fuel-adjacent",
     "₹61 Cr MTD",
-    "₹1.7 Cr MTD",
+    "₹0.8 Cr MTD",
     "Low",
-    "₹2.1 Cr MTD",
-    "₹0.3 Cr MTD",
-    "−₹0.7 Cr MTD",
+    "₹1.2 Cr MTD",
+    "₹0.1 Cr MTD",
+    "−₹0.5 Cr MTD",
     true,
     "Retier reward",
   ],
   [
     "Online Travel",
     "₹142 Cr MTD",
-    "₹6.7 Cr MTD",
+    "₹2.6 Cr MTD",
     "Good",
     "₹1.7 Cr MTD",
     "₹0.2 Cr MTD",
-    "+₹4.8 Cr MTD",
+    "+₹0.7 Cr MTD",
     false,
     "Keep",
   ],
   [
     "Grocery",
     "₹94 Cr MTD",
-    "₹2.1 Cr MTD",
+    "₹1.2 Cr MTD",
     "Medium",
-    "₹1.1 Cr MTD",
+    "₹1.0 Cr MTD",
     "₹0.1 Cr MTD",
-    "+₹0.9 Cr MTD",
+    "+₹0.1 Cr MTD",
     false,
     "Monitor",
   ],
 ];
 
-const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
+const COHORT_ROWS: [string, string, string, string, string, string, string, boolean][] =
   [
-    ["New-to-card", "+4.2%", "+3.1%", "Building", "Low", "Healthy", false],
+    ["New-to-card", "1.8 L", "+4.2%", "+3.1%", "Building", "Low", "Healthy", false],
     [
       "Activated 0–30 days",
+      "2.4 L",
       "+2.8%",
       "+1.4%",
       "Rising",
@@ -3061,9 +3052,10 @@ const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
       "Healthy",
       false,
     ],
-    ["Repeat spenders", "+1.9%", "+0.8%", "Stable", "Low", "Healthy", false],
+    ["Repeat spenders", "14.6 L", "+1.9%", "+0.8%", "Stable", "Low", "Healthy", false],
     [
       "High-frequency high-spend",
+      "6.1 L",
       "+2.1%",
       "+0.8%",
       "Stable",
@@ -3071,8 +3063,8 @@ const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
       "Healthy",
       false,
     ],
-    ["Low-frequency premium", "−4.8%", "−6.1%", "Weak", "Med", "Falling", true],
-    ["Dormancy-risk", "−9.2%", "−11%", "Weak", "High", "Poor", true],
+    ["Low-frequency premium", "4.2 L", "−4.8%", "−6.1%", "Weak", "Med", "Falling", true],
+    ["Dormancy-risk", "2.1 L", "−9.2%", "−11%", "Weak", "High", "Poor", true],
   ];
 
 function BrandCoBrandDeepPerformanceMatrix() {
@@ -3151,7 +3143,6 @@ function BrandCoBrandDeepPerformanceMatrix() {
             <span
               style={{ fontWeight: 700, color: b.statusAi ? T.amber : T.green }}
             >
-              {b.statusAi ? "✨ " : ""}
               {b.status}
             </span>
             <span style={{ color: T.muted }}>{b.owner}</span>
@@ -3160,8 +3151,38 @@ function BrandCoBrandDeepPerformanceMatrix() {
       </div>
       <AIInsightStrip>
         Avios is not a volume problem; it is a profitable-spend
-        problem. Jio-bp is growing, but reward cost is eating the growth.
+        problem — its ~₹20,000 average ticket is travel-weighted and ticket-heavy (few, large
+        premium-travel transactions), the mirror image of RuPay. Jio-bp is growing, but reward cost
+        is eating the growth. Platinum RuPay&apos;s ~₹870 average ticket reflects its UPI-credit mix —
+        ~72% of transactions are UPI-rail, sub-₹500 — so high volume does not mean high value.
       </AIInsightStrip>
+      <div style={{ fontSize: 9.5, color: T.dim, marginTop: 8, lineHeight: 1.45 }}>
+        Partner-data boundary: Jio-bp and EazyDiner partners do not receive raw card-transaction data.
+        This is a bank-side summary, suitable for partner review · consent- and purpose-limited.
+      </div>
+      <button
+        type="button"
+        style={{
+          font: "inherit",
+          cursor: "pointer",
+          marginTop: 10,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 11.5,
+          fontWeight: 800,
+          color: T.gold,
+          background: `${T.gold}14`,
+          border: `1px solid ${T.gold}44`,
+          borderRadius: 9,
+          padding: "8px 13px",
+        }}
+      >
+        Draft partner pack for review <ArrowRight size={13} />
+      </button>
+      <div style={{ fontSize: 9, color: T.dim, marginTop: 5 }}>
+        Bank-side co-brand summary for the QBR — assembled from this view, human-reviewed before it leaves the bank.
+      </div>
     </SectionCard>
   );
 }
@@ -3211,7 +3232,7 @@ function OfferPortfolioDecisionBoard() {
                 <span
                   style={{ fontSize: 10, fontFamily: MONO, color: T.muted }}
                 >
-                  {items.length}
+                  showing {items.length} of {m.total}
                 </span>
               </div>
               {items.map((x) => (
@@ -3254,6 +3275,11 @@ function OfferPortfolioDecisionBoard() {
                   <div style={{ fontSize: 10, color: T.dim, marginBottom: 4 }}>
                     {x.owner} · {x.conf} conf
                   </div>
+                  {x.note ? (
+                    <div style={{ fontSize: 9.5, color: T.muted, lineHeight: 1.35, marginBottom: 6 }}>
+                      {x.note}
+                    </div>
+                  ) : null}
                   <Pill
                     t={
                       bucket === "keep"
@@ -3347,7 +3373,7 @@ function RewardYieldUnitEconomicsPanel() {
                 }}
               >
                 {neg
-                  ? "✨ Negative"
+                  ? "Negative"
                   : action === "Monitor"
                     ? "Watch"
                     : "Healthy"}
@@ -3361,16 +3387,17 @@ function RewardYieldUnitEconomicsPanel() {
         * Fraud leg requires the dispute / fraud-loss extract (not in a transaction dump).
       </div>
       <AIInsightStrip tone="red">
-        Wallet-load interchange is ₹3.0 Cr MTD on ₹86 Cr MTD spend (~3.5%) but reward
-        runs 4.9% — net −₹1.8 Cr MTD. Combined with fuel-adjacent, ₹2.5 Cr MTD net
-        strain across two MCC bands. Cap accelerated rewards on both.
+        Wallet-load interchange is ₹1.2 Cr MTD on ₹86 Cr MTD spend (~1.4%) but reward
+        runs ~2.2% (₹1.9 Cr) — net −₹0.9 Cr MTD. Combined with fuel-adjacent (−₹0.5 Cr), ₹1.4 Cr MTD net
+        strain across two MCC bands. Blended reward cost runs ~95 bps of spends; these two bands
+        run ~2× that (221 / 197 bps). Cap accelerated rewards on both.
       </AIInsightStrip>
     </SectionCard>
   );
 }
 
 function CohortGrowthQualityMatrix() {
-  const cols = "minmax(140px,1.2fr) repeat(6,minmax(72px,.9fr))";
+  const cols = "minmax(140px,1.1fr) minmax(60px,.65fr) repeat(6,minmax(68px,.85fr))";
   return (
     <SectionCard
       title="Cohort growth quality"
@@ -3392,23 +3419,24 @@ function CohortGrowthQualityMatrix() {
             gap: 8,
             padding: "8px 10px",
             background: T.row,
-            minWidth: 820,
+            minWidth: 900,
           }}
         >
           {[
             "Cohort",
+            "Cards",
             "Spend Δ",
             "Txn Freq Δ",
             "Repeat",
             "Offer Dep.",
             "Profitability",
-            "AI Status",
+            "Status",
           ].map((h) => (
             <Eyebrow key={h}>{h}</Eyebrow>
           ))}
         </div>
         {COHORT_ROWS.map(
-          ([cohort, spend, freq, repeat, dep, prof, watch], i) => (
+          ([cohort, size, spend, freq, repeat, dep, prof, watch], i) => (
             <div
               key={cohort}
               style={{
@@ -3418,11 +3446,14 @@ function CohortGrowthQualityMatrix() {
                 padding: "8px 10px",
                 borderTop: i ? `1px solid ${T.border}` : "none",
                 alignItems: "center",
-                minWidth: 820,
+                minWidth: 900,
                 fontSize: 11,
               }}
             >
               <span style={{ fontWeight: 600, color: T.text }}>{cohort}</span>
+              <Mono c={T.sub} s={10.5}>
+                {size}
+              </Mono>
               <Mono c={spend.startsWith("−") ? T.red : T.green} s={10.5}>
                 {spend}
               </Mono>
@@ -3442,7 +3473,7 @@ function CohortGrowthQualityMatrix() {
               <span
                 style={{ fontWeight: 700, color: watch ? T.amber : T.green }}
               >
-                {watch ? "✨ Watch" : "Keep growing"}
+                {watch ? "Watch" : "Keep growing"}
               </span>
             </div>
           ),
@@ -3462,7 +3493,10 @@ function Drill1({ go }: { go: NavigateFn }) {
       <DrillHeader
         onBack={() => go("overview")}
         title="How are my transactions & offers doing?"
-        sub="Transaction-only view of portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
+        score="64"
+        scoreDelta="−8 pts"
+        asOf="As of 07:10 today · IST · Friday, latter-half of month (post-salary-cycle)"
+        sub="Portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
         chips={
           <>
             <Chip t="cyan">Transaction + offer / reward / settlement</Chip>
@@ -3481,9 +3515,6 @@ function Drill1({ go }: { go: NavigateFn }) {
         <CommandCenter />
         <AISummaryWall rows={D1_AI} />
       </div>
-      <div style={{ marginTop: 14 }}>
-        <LeakPanel />
-      </div>
       <div
         style={{
           marginTop: 14,
@@ -3492,19 +3523,14 @@ function Drill1({ go }: { go: NavigateFn }) {
           gap: 14,
         }}
       >
+        {/* concentration */}
         <BrandCoBrandDeepPerformanceMatrix />
+        <CohortGrowthQualityMatrix />
+        {/* rupees */}
+        <LeakPanel />
+        <RewardYieldUnitEconomicsPanel />
+        {/* decision */}
         <OfferPortfolioDecisionBoard />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2,minmax(0,1fr))",
-            gap: 12,
-            alignItems: "stretch",
-          }}
-        >
-          <RewardYieldUnitEconomicsPanel />
-          <CohortGrowthQualityMatrix />
-        </div>
       </div>
       <div style={{ height: 44 }} />
     </div>
@@ -3519,21 +3545,21 @@ function Frag({ children }: { children: ReactNode }) {
 const DECLINE_HEAT_COLS = [
   "Premium CNP",
   "Platinum RuPay",
-  "3+ yr customers",
+  "3+ yr cardholders",
   "Batch #4471",
   "Sourcing Q2",
   "Jio-bp",
   "Pioneer",
 ];
-const DECLINE_HEAT_ROWS: { label: string; cells: number[] }[] = [
-  { label: "Tokenised CNP", cells: [91, 48, 38, 55, 42, 34, 28] },
-  { label: "Non-token CNP", cells: [44, 36, 32, 28, 24, 22, 18] },
-  { label: "3DS / OTP failure", cells: [52, 41, 38, 67, 35, 29, 24] },
-  { label: "Fraud-rule block", cells: [48, 42, 84, 38, 36, 31, 45] },
-  { label: "Limit exhausted", cells: [38, 35, 42, 28, 66, 24, 32] },
-  { label: "Activation / first-use failed", cells: [41, 38, 36, 79, 34, 28, 22] },
-  { label: "Switch / processor issue", cells: [57, 48, 30, 44, 38, 74, 26] },
-  { label: "Settlement mismatch", cells: [36, 32, 28, 24, 42, 38, 30] },
+const DECLINE_HEAT_ROWS: { label: string; cells: number[]; risk: string }[] = [
+  { label: "Tokenised CNP", cells: [91, 48, 38, 55, 42, 34, 28], risk: "₹9.0 L" },
+  { label: "Non-token CNP", cells: [44, 36, 32, 28, 24, 22, 18], risk: "₹1.2 L" },
+  { label: "3DS / OTP failure", cells: [52, 41, 38, 67, 35, 29, 24], risk: "₹3.4 L" },
+  { label: "Fraud-rule block", cells: [48, 42, 84, 38, 36, 31, 45], risk: "₹2.8 L" },
+  { label: "Limit exhausted", cells: [38, 35, 42, 28, 66, 24, 32], risk: "₹1.6 L" },
+  { label: "Activation / first-use failed", cells: [41, 38, 36, 79, 34, 28, 22], risk: "₹2.1 L" },
+  { label: "Switch / processor issue", cells: [57, 48, 30, 44, 38, 74, 26], risk: "₹4.2 L" },
+  { label: "Settlement mismatch", cells: [36, 32, 28, 24, 42, 38, 30], risk: "₹1.1 L" },
 ];
 const declineHeatTone = (v: number): string =>
   v >= 70 ? T.red : v >= 45 ? T.amber : v >= 30 ? "#caa23a" : T.green;
@@ -3542,6 +3568,7 @@ type BlockerEvidence = {
   strength: string;
   approvalGap: string;
   atRisk: string;
+  rupeeMath?: string;
   curable: string;
   started: string;
   owner: string;
@@ -3556,9 +3583,10 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
   "Tokenised CNP|Premium CNP": {
     strength: "4.2× baseline",
     approvalGap: "14 pts",
-    atRisk: "₹2.4 Cr / day (at-risk run-rate)",
+    atRisk: "₹9 L / day (at-risk run-rate)",
+    rupeeMath: "~1,000 declined attempts/day × ~₹9,000 avg ticket ≈ ₹9 L / day",
     curable: "62%",
-    started: "11:00",
+    started: "06:20",
     owner: "payments",
     source: "token + auth feed",
     confidence: "High",
@@ -3577,10 +3605,10 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
     verdict:
       "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
   },
-  "Fraud-rule block|3+ yr customers": {
+  "Fraud-rule block|3+ yr cardholders": {
     strength: "3.6× baseline",
     approvalGap: "13 pts",
-    atRisk: "GMV at risk",
+    atRisk: "Not sized — needs rule-event feed",
     curable: "—",
     started: "Within 2h",
     owner: "fraud",
@@ -3588,7 +3616,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
     confidence: "High",
     evidence: [
       "Approval 94% → 81% after R-77 edit",
-      "Good-customer blocks +210%",
+      "Good-cardholder blocks +210%",
       "Tenured segment disproportionately hit",
     ],
     actions: [
@@ -3599,20 +3627,23 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
   },
 };
 
-const defaultBlockerEvidence = (): BlockerEvidence => ({
-  strength: "2.4× baseline",
-  approvalGap: "—",
-  atRisk: "₹68 L / day (at-risk run-rate)",
-  curable: "48%",
-  started: "Today",
-  owner: "ops",
-  source: "decline feed",
-  confidence: "Med",
-  evidence: ["Cohort-specific decline above seasonal baseline", "Repeat pattern in same time window"],
-  actions: ["Open incident pack", "Route to owner with evidence"],
-  verdict:
-    "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
-});
+const defaultBlockerEvidence = (row?: string): BlockerEvidence => {
+  const risk = DECLINE_HEAT_ROWS.find((r) => r.label === row)?.risk;
+  return {
+    strength: "2.4× baseline",
+    approvalGap: "—",
+    atRisk: risk ? `${risk} / day (at-risk run-rate)` : "within daily at-risk range",
+    curable: "48%",
+    started: "Today",
+    owner: "ops",
+    source: "decline feed",
+    confidence: "Med",
+    evidence: ["Cohort-specific decline above this cohort's own baseline", "Repeat pattern in same time window"],
+    actions: ["Open incident pack", "Route to owner with evidence"],
+    verdict:
+      "Above this cohort's own baseline on transaction data; owner review to confirm the cause.",
+  };
+};
 
 const D2_BLOCKER_ACTION_ROWS: {
   signal: string;
@@ -3627,7 +3658,7 @@ const D2_BLOCKER_ACTION_ROWS: {
 }[] = [
   {
     signal: "Tokenised CNP approval gap",
-    evidence: "14 pts · ₹2.4 Cr / day (at-risk run-rate)",
+    evidence: "14 pts · ₹9 L / day (at-risk run-rate)",
     impact: "Payment blocker",
     owner: "payments",
     action: "Open ACS/token incident",
@@ -3637,8 +3668,8 @@ const D2_BLOCKER_ACTION_ROWS: {
   },
   {
     signal: "Fraud Rule R-77 misfire",
-    evidence: "Approval 94% → 81%",
-    impact: "Good customers blocked",
+    evidence: "R-77 cohort: 94% → 81%",
+    impact: "Good cardholders blocked",
     owner: "fraud",
     action: "Review / rollback rule",
     risk: "Fraud ops",
@@ -3666,6 +3697,16 @@ const D2_BLOCKER_ACTION_ROWS: {
     riskT: "violet",
     status: "Review",
   },
+  {
+    signal: "Fuel-MCC decline dip",
+    evidence: "Checked the usual suspects — calendar mix, not a break",
+    impact: "No action needed",
+    owner: "portfolio",
+    action: "No action — within normal Friday range",
+    risk: "Cleared",
+    riskT: "green",
+    status: "Cleared — calendar mix",
+  },
 ];
 
 const D2_SPLIT_BARS = [
@@ -3677,7 +3718,7 @@ const D2_SPLIT_BARS = [
 ];
 
 const D2_PRIORITY_ALERTS: { n: number; text: string; owner: string; c: string }[] = [
-  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr / day (at-risk run-rate)", owner: "payments", c: T.red },
+  { n: 1, text: "Tokenised CNP gap · ₹9 L / day (at-risk run-rate)", owner: "payments", c: T.red },
   { n: 2, text: "Fraud Rule R-77 · −13 pts", owner: "fraud", c: T.amber },
   { n: 3, text: "Activation clock · 6.2K cards", owner: "conduct", c: T.violet },
 ];
@@ -3688,23 +3729,26 @@ function ApprovalHealthCard() {
       <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
         <div style={{ flex: 1 }}>
           <div style={{ marginBottom: 8 }}>
-            <Eyebrow>Approval rate</Eyebrow>
+            <Eyebrow>Approval rate · portfolio</Eyebrow>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <Mono s={22}>81%</Mono>
-              <Mono c={T.red} s={11}>−13 pts</Mono>
+              <Mono s={22}>90.6%</Mono>
+              <Mono c={T.red} s={11}>−2.0 pts</Mono>
+            </div>
+            <div style={{ fontSize: 10.5, color: T.muted, marginTop: 3 }}>
+              R-77 cohort (3+ yr) only: 94% → 81%
             </div>
           </div>
           <div style={{ marginBottom: 8 }}>
             <Eyebrow>Decline spike</Eyebrow>
             <div style={{ fontSize: 12, color: T.sub }}>
-              <Mono c={T.amber} s={12}>+38%</Mono> since 11:00
+              <Mono c={T.amber} s={12}>+38%</Mono> since 06:20
             </div>
           </div>
           <div>
-            <Eyebrow>Curable</Eyebrow>
+            <Eyebrow>Curable · at-risk run-rate</Eyebrow>
             <Mono c={T.green} s={12}>
-              <span title={rupeeMethodForLabel("₹2.4 Cr / day (at-risk run-rate)")}>
-                62% · ₹2.4 Cr / day (at-risk run-rate)
+              <span title={rupeeMethodForLabel("₹9 L / day (at-risk run-rate)")}>
+                62% · Tokenised CNP ₹9 L of ₹25.4 L/day total at risk
               </span>
             </Mono>
           </div>
@@ -3723,7 +3767,7 @@ function BlockerSplitCard() {
       <MiniBars bars={D2_SPLIT_BARS} />
       <div style={{ marginTop: 8 }}>
         <AIInsightStrip tone="amber">
-          LiSN splits today's spike into separate blocker types instead of one decline alert.
+          Today's spike is split into separate blocker types instead of one decline alert.
         </AIInsightStrip>
       </div>
     </SectionCard>
@@ -3732,7 +3776,7 @@ function BlockerSplitCard() {
 
 function CompactBlockerPriorityStack() {
   return (
-    <SectionCard title="AI priority stack" subtitle="Top 3 routed blockers" accent={T.gold} aiPill style={{ marginBottom: 0 }}>
+    <SectionCard title="Priority stack" subtitle="Top 3 routed blockers" accent={T.gold} aiPill style={{ marginBottom: 0 }}>
       {D2_PRIORITY_ALERTS.map((a) => (
         <div
           key={a.n}
@@ -3772,15 +3816,17 @@ function DeclineInvestigationGrid({
   row,
   col,
   onSelect,
+  go,
 }: {
   row: string;
   col: string;
   onSelect: (r: string, c: string) => void;
+  go: NavigateFn;
 }) {
   return (
     <div className="d2-investigation-grid">
       <DeclineTaxonomyHeatmap row={row} col={col} onSelect={onSelect} />
-      <SelectedBlockerIncidentPack row={row} col={col} />
+      <SelectedBlockerIncidentPack row={row} col={col} go={go} />
     </div>
   );
 }
@@ -3815,7 +3861,7 @@ function OwnerSplitGrid() {
         title="Token / Auth"
         accent={T.red}
         owner="payments"
-        lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 11:00"]}
+        lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 06:20"]}
       />
       <OwnerIssueCard
         title="Fraud rule"
@@ -3852,12 +3898,13 @@ function DeclineTaxonomyHeatmap({
   onSelect: (r: string, c: string) => void;
 }) {
   return (
-    <SectionCard title="Decline taxonomy heatmap" subtitle="Reason × cohort · anomaly index" accent={T.red} aiPill style={{ marginBottom: 0 }}>
-      <div style={{ display: "grid", gridTemplateColumns: `minmax(130px,1.1fr) repeat(${DECLINE_HEAT_COLS.length},1fr)`, gap: 5, overflowX: "auto" }}>
+    <SectionCard title="Decline taxonomy heatmap" subtitle="Reason × cohort · abnormal vs each cohort's own baseline" accent={T.red} aiPill style={{ marginBottom: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: `minmax(130px,1.1fr) repeat(${DECLINE_HEAT_COLS.length},1fr) minmax(64px,0.85fr)`, gap: 5, overflowX: "auto" }}>
         <div />
         {DECLINE_HEAT_COLS.map((c) => (
           <div key={c} style={{ fontSize: 8, color: T.muted, textAlign: "center" }}>{c}</div>
         ))}
+        <div style={{ fontSize: 8, color: T.muted, textAlign: "right", fontWeight: 800 }}>₹/day at risk</div>
         {DECLINE_HEAT_ROWS.map((r) => (
           <Frag key={r.label}>
             <div style={{ fontSize: 10, color: T.sub, alignSelf: "center" }}>{r.label}</div>
@@ -3886,20 +3933,25 @@ function DeclineTaxonomyHeatmap({
                 </button>
               );
             })}
+            <div style={{ alignSelf: "center", textAlign: "right", fontFamily: MONO, fontSize: 10.5, fontWeight: 800, color: T.sub }}>{r.risk}</div>
           </Frag>
         ))}
       </div>
       <div style={{ marginTop: 10 }}>
         <AIInsightStrip tone="red">
-          This heatmap is not showing raw declines. It shows where decline behaviour is abnormal versus each cohort's own baseline.
+          This heatmap is not showing raw declines. It shows where decline behaviour is abnormal versus each cohort&apos;s own
+          baseline (typical Friday, latter-half of month, festive-adjusted). Cohorts overlap — product tier, card, tenure,
+          batch and vintage — so the ₹/day-at-risk is shown per reason-row and is indicative, not additive. Today&apos;s
+          tokenised-CNP row is ₹9 L/day of ~₹25.4 L/day flagged across all reasons.
         </AIInsightStrip>
       </div>
     </SectionCard>
   );
 }
 
-function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string }) {
-  const ev = BLOCKER_EVIDENCE[`${row}|${col}`] ?? defaultBlockerEvidence();
+function SelectedBlockerIncidentPack({ row, col, go }: { row: string; col: string; go?: NavigateFn }) {
+  const showJoin = row === "Tokenised CNP";
+  const ev = BLOCKER_EVIDENCE[`${row}|${col}`] ?? defaultBlockerEvidence(row);
   return (
     <SectionCard title="Selected incident" subtitle={`${row} × ${col}`} accent={T.gold} aiPill style={{ marginBottom: 0 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 8 }}>
@@ -3930,6 +3982,11 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
           <div style={{ fontSize: 12, fontWeight: 800, color: T.text }}>{ev.started}</div>
         </div>
       </div>
+      {ev.rupeeMath ? (
+        <div style={{ fontSize: 10.5, color: T.muted, fontFamily: MONO, background: T.inset, border: `1px dashed ${T.inner}`, borderRadius: 7, padding: "6px 8px", marginBottom: 8, lineHeight: 1.4 }}>
+          {ev.rupeeMath}
+        </div>
+      ) : null}
       <Eyebrow>Evidence</Eyebrow>
       {ev.evidence.slice(0, 4).map((e) => (
         <div key={e} style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>
@@ -3937,6 +3994,38 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
           {e}
         </div>
       ))}
+      {showJoin ? (
+        <>
+          <div style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>
+            <span style={{ color: T.violet, marginRight: 5 }}>✓</span>
+            Interaction join: service contacts on the declined-online theme running ~3× normal in the same premium cohort
+            since the incident window — ahead of any MIS.
+          </div>
+          <div style={{ fontSize: 10.5, color: T.muted, fontStyle: "italic", padding: "2px 0 2px 16px", lineHeight: 1.35 }}>
+            &ldquo;Card keeps getting declined on online payments since this morning, works fine on swipe.&rdquo;
+          </div>
+        </>
+      ) : null}
+      {showJoin && go ? (
+        <button
+          type="button"
+          onClick={() => go("voice")}
+          style={{
+            font: "inherit",
+            cursor: "pointer",
+            marginTop: 6,
+            fontSize: 11,
+            fontWeight: 700,
+            color: T.violet,
+            background: `${T.violet}14`,
+            border: `1px solid ${T.violet}44`,
+            borderRadius: 999,
+            padding: "5px 11px",
+          }}
+        >
+          → Customer experience: see the joined voice evidence
+        </button>
+      ) : null}
       {ev.verdict ? (
         <>
           <Eyebrow>Verdict</Eyebrow>
@@ -4051,12 +4140,16 @@ function Drill2({ go }: { go: NavigateFn }) {
       <DrillHeader
         onBack={() => go("overview")}
         title="Where are my blockers & problems today?"
-        sub="Transaction-only detection of approval drops, decline spikes, token gaps, fraud-rule misfires, activation clocks, utilisation migration and early roll-risk."
+        score="58"
+        scoreDelta="−10 pts"
+        asOf="As of 07:10 today · IST · baseline = typical Friday, latter-half of month, festive-adjusted"
+        sub="Approval drops, decline spikes, token gaps, fraud-rule misfires, activation clocks, utilisation migration and early roll-risk — with the customer-experience join alongside."
       />
       <BlockerTopGrid />
       <DeclineInvestigationGrid
         row={row}
         col={col}
+        go={go}
         onSelect={(r, c) => {
           setRow(r);
           setCol(c);
@@ -4115,6 +4208,11 @@ export function CardsPortfolioV2Dashboard({
         @media (max-width:1100px){.lcp .d2-top-grid,.lcp .d2-owner-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media (max-width:1100px){.lcp .d2-investigation-grid,.lcp .d2-execution-grid{grid-template-columns:1fr}}
         @media (max-width:720px){.lcp .d2-top-grid,.lcp .d2-owner-grid,.lcp .d2-investigation-grid,.lcp .d2-execution-grid{grid-template-columns:1fr}}
+        .lcp .signal-rail{scrollbar-width:thin;scrollbar-color:#3a3a3a transparent}
+        .lcp .signal-rail::-webkit-scrollbar{height:8px}
+        .lcp .signal-rail::-webkit-scrollbar-track{background:#151515;border-radius:999px}
+        .lcp .signal-rail::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:999px}
+        .lcp .signal-rail::-webkit-scrollbar-thumb:hover{background:#4a4a4a}
       `}</style>
       <aside
         style={{
@@ -4187,7 +4285,7 @@ export function CardsPortfolioV2Dashboard({
             fontWeight: 800,
           }}
         >
-          PM
+          BH
         </div>
       </aside>
       <main
