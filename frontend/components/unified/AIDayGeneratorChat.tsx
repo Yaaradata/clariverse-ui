@@ -337,30 +337,36 @@ export function AIDayGeneratorChat({
         <div className="fixed z-50 bottom-6 right-6 flex flex-col" style={{ width: 420 }}>
           {/* Chat Popup */}
           <motion.div
-            className="w-full h-[600px] border border-white/10 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
+            className="w-full border border-white/10 flex flex-col rounded-2xl overflow-hidden shadow-2xl"
             onClick={(e) => e.stopPropagation()}
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.95 }}
             transition={{ type: 'spring', damping: 25, stiffness: 260 }}
-            style={{ backgroundColor: 'var(--sidebar)' }}
+            style={{
+              backgroundColor: 'var(--sidebar)',
+              height: 'min(600px, calc(100vh - 3rem))',
+              maxHeight: 'calc(100vh - 3rem)',
+            }}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-app-black/50">
-              <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-gradient-to-r from-[#b90abd] to-[#5332ff]">
+            {/* Header — always visible, including empty "Try asking" state */}
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-app-black/50 shrink-0">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="p-2 rounded-lg bg-gradient-to-r from-[#b90abd] to-[#5332ff] shrink-0">
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <h2 className="text-lg font-semibold text-white">AI Analyst</h2>
-                  <p className="text-xs text-gray-400">{chatSubtitle}</p>
+                  <p className="text-xs text-gray-400 truncate">{chatSubtitle}</p>
                 </div>
               </div>
               <Button
+                type="button"
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="text-gray-400 hover:text-white"
+                aria-label="Close AI Analyst"
+                className="shrink-0 text-white hover:text-white hover:bg-white/10"
               >
                 <X className="h-5 w-5" />
               </Button>
@@ -368,7 +374,7 @@ export function AIDayGeneratorChat({
 
             {/* Default Questions */}
             {messages.length === 0 && (
-              <div className="p-4 border-b border-white/10 bg-app-black/30">
+              <div className="p-4 border-b border-white/10 bg-app-black/30 flex-1 min-h-0 overflow-y-auto">
                 <p className="text-sm text-gray-400 mb-3">Try asking:</p>
                 <div className="flex flex-wrap gap-2">
                   {starterQuestions.map((question, index) => {
@@ -382,9 +388,10 @@ export function AIDayGeneratorChat({
                     return (
                       <button
                         key={index}
+                        type="button"
                         onClick={() => handleQuestionClick(question)}
                         style={{ background: c.bg, border: `1px solid ${c.border}`, color: c.base }}
-                        className="px-3 py-1.5 text-xs rounded-full transition-all duration-200"
+                        className="px-3 py-1.5 text-xs rounded-full transition-all duration-200 text-left"
                         onMouseEnter={e => (e.currentTarget.style.background = c.hover)}
                         onMouseLeave={e => (e.currentTarget.style.background = c.bg)}
                       >
@@ -397,7 +404,10 @@ export function AIDayGeneratorChat({
             )}
 
             {/* Messages */}
-            <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+            <div
+              ref={messagesContainerRef}
+              className={`overflow-y-auto p-4 space-y-4 min-h-0 ${messages.length === 0 ? 'hidden' : 'flex-1'}`}
+            >
               {messages.map((message) => (
                 <div
                   key={message.id}
@@ -449,7 +459,7 @@ export function AIDayGeneratorChat({
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-white/10 bg-app-black/50">
+            <div className="p-4 border-t border-white/10 bg-app-black/50 shrink-0">
               <div className="flex gap-2">
                 <input
                   ref={inputRef}
