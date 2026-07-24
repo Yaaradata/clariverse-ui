@@ -16,7 +16,6 @@ import type { LucideIcon } from "lucide-react";
 import {
   ArrowLeft,
   ArrowRight,
-  CheckCircle2,
   ChevronDown,
   ChevronRight,
   CircleAlert,
@@ -180,8 +179,8 @@ const RUPEE_METHOD: Record<RupeeHorizonKind, string> = {
   cac: "acquisition cost per sourcing cohort, one-time",
 };
 function rupeeMethodForLabel(label: string): string | undefined {
-  if (label.includes("(CAC, one-time)")) return RUPEE_METHOD.cac;
-  if (label.includes("/ day (at-risk run-rate)")) return RUPEE_METHOD["at-risk"];
+  if (label.includes("CAC")) return RUPEE_METHOD.cac;
+  if (label.includes("/ day")) return RUPEE_METHOD["at-risk"];
   if (label.includes(" MTD")) return RUPEE_METHOD.mtd;
   return undefined;
 }
@@ -457,9 +456,6 @@ function TopBar() {
         <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
           Your book at a glance · team detail one level down
         </div>
-        <div style={{ color: T.dim, fontSize: 11, marginTop: 4 }}>
-          Prepared 07:10 · 11 feeds · your team&apos;s usual first three hours, ready before you arrived
-        </div>
       </div>
       <div
         style={{
@@ -716,7 +712,7 @@ function MiniBars({ bars }: { bars: { name: string; v: number; c: string }[] }) 
 
 function ExecutivePulse() {
   return (
-    <section style={{ background: T.row, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
+    <section style={{ padding: 0, marginBottom: 14 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
         <Sparkles size={13} color={T.gold} />
         <span style={{ fontSize: 11, fontWeight: 800, color: T.gold, letterSpacing: ".08em", textTransform: "uppercase" }}>
@@ -850,7 +846,7 @@ function ExecutiveQuestionCard({
 type MonitorAlert = {
   id: string;
   title: string;
-  sev: "critical" | "high" | "later";
+  sev: "critical" | "high" | "later" | "cleared";
   sevLabel: string;
   variant: "critical" | "default" | "voice";
   feed: string;
@@ -862,12 +858,13 @@ type MonitorAlert = {
 };
 
 const SEV_STYLE: Record<
-  "critical" | "high" | "later",
+  "critical" | "high" | "later" | "cleared",
   { color: string; bg: string; border: string }
 > = {
   critical: { color: "#ff5050", bg: "#5a1f1f", border: "#9d3030" },
   high: { color: T.gold, bg: "#3a2e0b", border: "#765c12" },
   later: { color: "#b79cff", bg: "#2d1d55", border: "#6845c7" },
+  cleared: { color: T.green, bg: "#12301c", border: "#2f6b3f" },
 };
 
 const MONITOR_STAT_SLOTS = 4;
@@ -895,8 +892,29 @@ const MONITOR_ALERTS: MonitorAlert[] = [
       ["Approval Gap", "14 pts"],
       ["Spend at Risk", "₹9 L / day"],
       ["Route", "Payments & Authorisation"],
+      ["Status", "Draft ready"],
     ],
-    ai: "Tokenised path degraded after route change — open ACS/token incident, not a behaviour issue.",
+    ai: "Symptom isolated to the tokenised path — non-tokenised CNP is within baseline. Service contacts on the declined-online theme are ~3× normal in the same cohort. Cause unconfirmed; open ACS/token incident.",
+  },
+  {
+    id: "voice-reward",
+    title: "Reward Value Erosion",
+    sev: "critical",
+    sevLabel: "Critical",
+    variant: "voice",
+    feed: "Interaction corpus + spend",
+    fields: [
+      ["Cohort", "EazyDiner · Legend"],
+      ["Time", "Since 15 Jul"],
+    ],
+    stats: [
+      ["Cardholders", "~3.2k"],
+      ["Exposure", "₹1.4 Cr MTD"],
+      ["Route", "Rewards & Portfolio"],
+      ["Status", "Needs approval"],
+    ],
+    ai: "Complaint theme trails our own benefit change — repeat spend −8.6%, redemption abandonment +17%. Retention draft held at the gate.",
+    aiPurple: true,
   },
   {
     id: "o142",
@@ -906,15 +924,16 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     variant: "critical",
     feed: "Offer + spend",
     fields: [
-      ["Cohort", "Platinum RuPay"],
-      ["Time", "Day 6"],
+      ["Cohort", "High-frequency MCC"],
+      ["Time", "Day 6 of wave 2"],
     ],
     stats: [
-      ["Redemption", "High"],
-      ["True Lift", "Low"],
-      ["Leakage", "₹78 L MTD"],
+      ["Redemption", "82% triggered"],
+      ["True Lift", "18%"],
+      ["Leakage", "₹78 L since launch"],
+      ["Route", "Marketing"],
     ],
-    ai: "Matched-control baseline: spend would have happened anyway. Pause or retarget.",
+    ai: "Matched-control spend is nearly identical — the reward subsidises spend that would have happened anyway. Pause wave 2 or narrow eligibility.",
   },
   {
     id: "r77",
@@ -925,15 +944,16 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Rule change feed",
     needsExtraFeed: true,
     fields: [
-      ["Cohort", "3+ yr customers"],
+      ["Cohort", "3+ yr cardholders"],
       ["Time", "Within 2h"],
     ],
     stats: [
       ["Approval Rate", "94% → 81%"],
-      ["Good Blocks", "+210%"],
+      ["Good cardholders blocked", "+210%"],
+      ["Route", "Fraud"],
       ["Feed", "Needs rule log"],
     ],
-    ai: "Approval step-change tied to a rule edit — confidence needs the fraud-rule event feed.",
+    ai: "Approval step-change tied to a rule edit. Rupee sizing withheld until the fraud-rule event feed is wired — we show the gap, not a guess.",
   },
   {
     id: "activation",
@@ -943,37 +963,20 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     variant: "default",
     feed: "Issue + first txn",
     fields: [
-      ["Cohort", "Batch 4471"],
-      ["Time", "D27"],
+      ["Cohort", "Batch #4471"],
+      ["Time", "D27 of 30+7"],
     ],
     stats: [
-      ["Below baseline", "13 pts"],
       ["Cards at risk", "6.2k"],
-      ["Route", "PM + Conduct"],
+      ["CAC at risk", "₹93 L CAC"],
+      ["Route", "Conduct"],
+      ["Status", "Human approves"],
     ],
-    ai: "Treat as obligation, not opportunity — surface the closure countdown now.",
-  },
-  {
-    id: "util",
-    title: "Utilisation Migration Surge",
-    sev: "high",
-    sevLabel: "Advisory",
-    variant: "default",
-    feed: "Balance + limit",
-    fields: [
-      ["Cohort", "Sourcing Q2"],
-      ["Time", "This week"],
-    ],
-    stats: [
-      ["80%+ crossing", "1.8×"],
-      ["Projected roll", "9 bps"],
-      ["Route", "Risk"],
-    ],
-    ai: "Advisory only — route to EWS / model-risk review. No auto treatment.",
+    ai: "Treat as obligation, not opportunity. Rescue contact is drafted with quiet-hours and frequency caps attached — nothing sends without approval.",
   },
   {
     id: "settlement",
-    title: "Settlement / merchant concentration anomaly",
+    title: "Merchant Concentration · Jio-bp",
     sev: "high",
     sevLabel: "Watch",
     variant: "default",
@@ -985,275 +988,127 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     stats: [
       ["Concentration", "↑ 2.1×"],
       ["Merchants", "47"],
-      ["Spend at Risk", "₹52 L / day"],
+      ["Spend at Risk", "₹1.1 L / day"],
       ["Route", "Finance / Ops"],
     ],
-    ai: "Fuel MCC concentration spike — review settlement lag before it drives declines.",
+    ai: "Concentration building in the partner merchant network — review settlement lag before it starts driving declines.",
+  },
+  {
+    id: "util",
+    title: "Utilisation Migration Surge",
+    sev: "later",
+    sevLabel: "Advisory",
+    variant: "default",
+    feed: "Balance + limit",
+    fields: [
+      ["Cohort", "Sourcing Q2"],
+      ["Time", "This week"],
+    ],
+    stats: [
+      ["80%+ crossing", "1.8×"],
+      ["Projected roll", "+9 bps"],
+      ["Route", "Risk"],
+      ["Status", "Observation only"],
+    ],
+    ai: "Advisory only — routed to EWS / model-risk review as an observation. No treatment, no auto-action.",
+  },
+  {
+    id: "cleared-fuel",
+    title: "Fuel-MCC Decline Dip",
+    sev: "cleared",
+    sevLabel: "Cleared",
+    variant: "default",
+    feed: "Decline feed",
+    fields: [
+      ["Cohort", "Fuel MCC"],
+      ["Time", "This morning"],
+    ],
+    stats: [
+      ["Checked", "4 adjacent causes"],
+      ["Ruled out", "3"],
+      ["Verdict", "Calendar mix"],
+      ["Status", "No action needed"],
+    ],
+    ai: "Checked the usual suspects — within normal Friday range for the latter half of the month. Closed without routing.",
   },
 ];
 
 function TodayTransactionSignalMonitor() {
+  const clearedCount = MONITOR_ALERTS.filter((a) => a.sev === "cleared").length;
+  const routedCount = MONITOR_ALERTS.filter(
+    (a) => a.sev !== "cleared" && a.stats.some(([k]) => k === "Route"),
+  ).length;
   return (
     <div style={{ marginTop: 28 }}>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 12,
-          marginBottom: 12,
-        }}
-      >
-        <div
-          style={{
-            color: T.gold,
-            fontSize: 13,
-            letterSpacing: ".08em",
-            textTransform: "uppercase",
-            fontWeight: 900,
-          }}
-        >
-          Today's Transaction Signal Monitor
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+        <div style={{ color: T.gold, fontSize: 13, letterSpacing: ".08em", textTransform: "uppercase", fontWeight: 900 }}>
+          Today&apos;s signal monitor
         </div>
-        <span
-          style={{
-            fontSize: 10,
-            fontWeight: 900,
-            letterSpacing: ".08em",
-            textTransform: "uppercase",
-            border: "1px solid #7e1f1f",
-            background: "#301818",
-            color: "#ff4444",
-            borderRadius: 999,
-            padding: "6px 12px",
-          }}
-        >
-          Portfolio Alerts
+        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", border: `1px solid ${T.inner}`, background: T.inset, color: T.muted, borderRadius: 999, padding: "6px 12px" }}>
+          {MONITOR_ALERTS.length} signals · {routedCount} routed · {clearedCount} cleared
         </span>
+        <span style={{ fontSize: 10, color: T.dim, letterSpacing: ".04em" }}>scroll for all →</span>
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 14,
-          overflowX: "auto",
-          paddingBottom: 14,
-          alignItems: "stretch",
-        }}
-      >
+
+      <div className="signal-rail" style={{ display: "flex", gap: 14, overflowX: "auto", paddingBottom: 14, alignItems: "stretch" }}>
         {MONITOR_ALERTS.map((a) => {
           const sv = SEV_STYLE[a.sev];
           const border =
-            a.variant === "critical"
-              ? "#8a2b2b"
-              : a.variant === "voice"
-                ? "#6d44d4"
-                : "#66420a";
-          const bg =
-            a.variant === "voice"
-              ? "linear-gradient(180deg,#171127,#111)"
-              : "#121212";
+            a.sev === "cleared" ? "#2f6b3f"
+            : a.variant === "critical" ? "#8a2b2b"
+            : a.variant === "voice" ? "#6d44d4"
+            : "#66420a";
+          const bg = a.variant === "voice" ? "linear-gradient(180deg,#171127,#111)" : "#121212";
           return (
             <div
               key={a.id}
               style={{
-                flex: "0 0 260px",
-                width: 260,
-                height: 420,
-                background: bg,
-                border: `1px solid ${border}`,
-                borderRadius: 14,
-                padding: "14px 14px 12px",
-                display: "flex",
-                flexDirection: "column",
-                boxSizing: "border-box",
+                flex: "0 0 340px", width: 340, height: 452,
+                background: bg, border: `1px solid ${border}`, borderRadius: 14,
+                padding: "16px 16px 14px",
+                display: "flex", flexDirection: "column", boxSizing: "border-box",
               }}
             >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "flex-start",
-                  gap: 8,
-                  marginBottom: 10,
-                  height: 44,
-                  flexShrink: 0,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 15,
-                    lineHeight: 1.2,
-                    fontWeight: 900,
-                    color: T.text,
-                    display: "-webkit-box",
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 10, marginBottom: 10, minHeight: 40, flexShrink: 0 }}>
+                <div style={{ fontSize: 15.5, lineHeight: 1.25, fontWeight: 900, color: T.text, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                   {a.title}
                 </div>
-                <span
-                  style={{
-                    fontSize: 10,
-                    textTransform: "uppercase",
-                    fontWeight: 900,
-                    borderRadius: 999,
-                    padding: "5px 9px",
-                    whiteSpace: "nowrap",
-                    color: sv.color,
-                    background: sv.bg,
-                    border: `1px solid ${sv.border}`,
-                    flexShrink: 0,
-                  }}
-                >
+                <span style={{ fontSize: 10, textTransform: "uppercase", fontWeight: 900, borderRadius: 999, padding: "5px 10px", whiteSpace: "nowrap", color: sv.color, background: sv.bg, border: `1px solid ${sv.border}`, flexShrink: 0 }}>
                   {a.sevLabel}
                 </span>
               </div>
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 6,
-                  marginBottom: 8,
-                  alignItems: "center",
-                  height: 28,
-                  flexShrink: 0,
-                  overflow: "hidden",
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 9,
-                    fontWeight: 800,
-                    letterSpacing: ".04em",
-                    textTransform: "uppercase",
-                    padding: "3px 8px",
-                    borderRadius: 999,
-                    color: T.muted,
-                    background: T.inset,
-                    border: `1px solid ${T.inner}`,
-                  }}
-                >
+
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10, alignItems: "center", minHeight: 24, flexShrink: 0 }}>
+                <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 999, color: T.muted, background: T.inset, border: `1px solid ${T.inner}` }}>
                   {a.feed}
                 </span>
                 {a.needsExtraFeed ? (
-                  <span
-                    style={{
-                      fontSize: 9,
-                      fontWeight: 800,
-                      letterSpacing: ".04em",
-                      textTransform: "uppercase",
-                      padding: "3px 8px",
-                      borderRadius: 999,
-                      color: T.amber,
-                      background: `${T.amber}14`,
-                      border: `1px solid ${T.amber}40`,
-                    }}
-                  >
+                  <span style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 999, color: T.amber, background: `${T.amber}14`, border: `1px solid ${T.amber}40` }}>
                     needs extra feed
                   </span>
                 ) : null}
               </div>
-              <div style={{ height: 52, flexShrink: 0, marginBottom: 4 }}>
+
+              <div style={{ flexShrink: 0, marginBottom: 10 }}>
                 {a.fields.map(([k, v]) => (
-                  <div
-                    key={k}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "105px 1fr",
-                      gap: 8,
-                      marginBottom: 6,
-                      fontSize: 12,
-                    }}
-                  >
-                    <span
-                      style={{
-                        color: "#8c8c95",
-                        textTransform: "uppercase",
-                        letterSpacing: ".06em",
-                        fontWeight: 900,
-                      }}
-                    >
-                      {k}
-                    </span>
-                    <span
-                      style={{
-                        textAlign: "right",
-                        fontWeight: 800,
-                        color: "#fff",
-                      }}
-                      title={rupeeMethodForLabel(v)}
-                    >
-                      {v}
-                    </span>
+                  <div key={k} style={{ display: "grid", gridTemplateColumns: "76px 1fr", gap: 10, marginBottom: 6, fontSize: 12, alignItems: "baseline" }}>
+                    <span style={{ color: "#8c8c95", textTransform: "uppercase", letterSpacing: ".06em", fontWeight: 900, fontSize: 10 }}>{k}</span>
+                    <span style={{ textAlign: "right", fontWeight: 800, color: "#fff" }} title={rupeeMethodForLabel(v)}>{v}</span>
                   </div>
                 ))}
               </div>
-              <div
-                style={{
-                  background: "#191919",
-                  border: "1px solid #333",
-                  borderRadius: 10,
-                  padding: 12,
-                  marginTop: 4,
-                  boxSizing: "border-box",
-                  height: 118,
-                  flexShrink: 0,
-                }}
-              >
-                {monitorStatRows(a.stats).map(([k, v], i, rows) => (
-                  <div
-                    key={k || `slot-${i}`}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.15fr 1fr",
-                      gap: 8,
-                      marginBottom: i === rows.length - 1 ? 0 : 8,
-                      fontSize: 12,
-                      color: "#bfbfc6",
-                      minHeight: 18,
-                      visibility: k ? "visible" : "hidden",
-                    }}
-                  >
-                    <span>{k}</span>
-                    <b
-                      style={{
-                        textAlign: "right",
-                        color: "#fff",
-                        fontFamily: MONO,
-                      }}
-                      title={rupeeMethodForLabel(v)}
-                    >
-                      {v}
-                    </b>
+
+              <div style={{ background: "#191919", border: "1px solid #333", borderRadius: 10, padding: "12px 14px", boxSizing: "border-box", flex: 1, minHeight: 124, display: "flex", flexDirection: "column", justifyContent: "center", gap: 9 }}>
+                {monitorStatRows(a.stats).map(([k, v], i) => (
+                  <div key={k || `slot-${i}`} style={{ display: "grid", gridTemplateColumns: "1.25fr 1fr", gap: 10, fontSize: 12, color: "#bfbfc6", alignItems: "baseline", visibility: k ? "visible" : "hidden" }}>
+                    <span style={{ lineHeight: 1.3 }}>{k}</span>
+                    <b style={{ textAlign: "right", color: "#fff", fontFamily: MONO, lineHeight: 1.3 }} title={rupeeMethodForLabel(v)}>{v}</b>
                   </div>
                 ))}
               </div>
-              <div
-                style={{
-                  marginTop: "auto",
-                  background: a.aiPurple ? "#21163a" : "#2d2414",
-                  border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`,
-                  borderRadius: 9,
-                  padding: "10px 12px",
-                  fontSize: 12,
-                  lineHeight: 1.4,
-                  color: "#fff",
-                  fontWeight: 700,
-                  height: 88,
-                  boxSizing: "border-box",
-                  overflow: "hidden",
-                  flexShrink: 0,
-                }}
-              >
-                <span
-                  style={{
-                    display: "-webkit-box",
-                    WebkitLineClamp: 4,
-                    WebkitBoxOrient: "vertical",
-                    overflow: "hidden",
-                  }}
-                >
+
+              <div style={{ marginTop: 12, background: a.aiPurple ? "#21163a" : "#2d2414", border: `1px solid ${a.aiPurple ? "#5a3fb0" : "#5a4314"}`, borderRadius: 9, padding: "11px 13px", fontSize: 12, lineHeight: 1.45, color: "#fff", fontWeight: 700, height: 92, boxSizing: "border-box", overflow: "hidden", flexShrink: 0 }}>
+                <span style={{ display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                   {a.ai}
                 </span>
               </div>
@@ -1264,14 +1119,6 @@ function TodayTransactionSignalMonitor() {
     </div>
   );
 }
-
-const BLOCKER_BARS = [
-  { name: "Token break", v: 82, c: T.red },
-  { name: "Fraud-rule", v: 68, c: T.red },
-  { name: "Limit / util", v: 49, c: T.amber },
-  { name: "Activation", v: 58, c: T.amber },
-  { name: "Roll Q2-24", v: 52, c: T.amber },
-];
 
 type NavigateFn = (screen: string) => void;
 
@@ -1287,7 +1134,7 @@ const VOICE_BARS: { name: string; v: number; c: string }[] = [
   { name: "EMI gap", v: 34, c: T.amber },
 ];
 
-type OvGauge = { topLabel: string; value: number; label: string; color: string; suffix?: string };
+type OvGauge = { topLabel: string; value: number; label: ReactNode; color: string; suffix?: string };
 type OvStat = { label: string; value: string; sub: string; color: string };
 type OvBar = { name: string; v: number; color: string };
 
@@ -1308,7 +1155,7 @@ function OvHalfGauge({ topLabel, value, label, color, suffix = "%" }: OvGauge) {
             <RadialBar dataKey="value" cornerRadius={4} background={{ fill: "#2a2a2a90" }} />
           </RadialBarChart>
         </ResponsiveContainer>
-        <div style={{ position: "absolute", left: "50%", bottom: 2, transform: "translateX(-50%)", fontFamily: MONO, fontWeight: 800, color, display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap" }}>
+        <div style={{ position: "absolute", left: "50%", bottom: -4, transform: "translateX(-50%)", fontFamily: MONO, fontWeight: 800, color, display: "flex", alignItems: "baseline", gap: 1, whiteSpace: "nowrap" }}>
           <span style={{ fontSize: 15 }}>{v}</span>
           {suffix ? <span style={{ fontSize: 8.5, fontWeight: 700, color: T.muted }}>{suffix}</span> : null}
         </div>
@@ -1345,7 +1192,7 @@ function OvKeyStat({ label, value, sub, color, align }: OvStat & { align: "start
 }
 
 function OverviewExecTile({
-  accent, icon, title, micro, score, scoreLabel, delta, spark, sparkLabel, leftGauge, rightGauge, bars, bottomLeft, bottomRight, ai, owner, ownerAction, cta, onClick,
+  accent, icon, title, micro, score, scoreLabel, delta, spark, sparkLabel, leftBlock, leftGauge, rightBlock, rightGauge, bars, bottomLeft, bottomRight, ai, owner, ownerAction, cta, onClick,
 }: {
   accent: string;
   icon: ReactNode;
@@ -1356,14 +1203,16 @@ function OverviewExecTile({
   delta: string;
   spark: number[];
   sparkLabel?: string;
+  leftBlock?: ReactNode;
   leftGauge?: OvGauge;
+  rightBlock?: ReactNode;
   rightGauge?: OvGauge;
   bars?: OvBar[];
   bottomLeft: OvStat;
   bottomRight: OvStat;
   ai: string;
-  owner: string;
-  ownerAction: string;
+  owner?: string;
+  ownerAction?: string;
   cta: string;
   onClick: () => void;
 }) {
@@ -1447,8 +1296,8 @@ function OverviewExecTile({
             <OvBars bars={bars} />
           ) : (
             <div style={{ display: "flex", gap: 10 }}>
-              {leftGauge ? <OvHalfGauge {...leftGauge} /> : null}
-              {rightGauge ? <OvHalfGauge {...rightGauge} /> : null}
+              {leftBlock ? leftBlock : leftGauge ? <OvHalfGauge {...leftGauge} /> : null}
+              {rightBlock ? rightBlock : rightGauge ? <OvHalfGauge {...rightGauge} /> : null}
             </div>
           )}
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px 12px", paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
@@ -1465,12 +1314,12 @@ function OverviewExecTile({
         </div>
         <div style={{ fontSize: 12.5, color: T.sub, lineHeight: 1.5 }}>{ai}</div>
       </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 10 }}>
-        <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".03em", color: accent, background: ovHexA(accent, 0.1), border: `1px solid ${ovHexA(accent, 0.35)}`, borderRadius: 999, padding: "3px 9px" }}>
-          {owner}
-        </span>
-        <span style={{ fontSize: 11, fontWeight: 700, color: T.sub }}>{ownerAction}</span>
-      </div>
+      {owner ? (
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+          <span style={{ fontSize: 9.5, fontWeight: 800, letterSpacing: ".04em", textTransform: "uppercase", color: T.text, background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 6, padding: "3px 7px" }}>{owner}</span>
+          {ownerAction ? <span style={{ fontSize: 11, color: T.sub, fontWeight: 600 }}>{ownerAction}</span> : null}
+        </div>
+      ) : null}
       <div style={{ fontSize: 11, fontWeight: 700, color: accent }}>{cta}</div>
     </button>
   );
@@ -1550,17 +1399,15 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           title="How are my transactions & offers doing?"
           micro="Spend · offers · yield & reward economics"
           score="64"
-          scoreLabel="offer & yield health · out of 100"
-          delta="−8 pts vs 4-wk"
+          scoreLabel="offer & yield health"
+          delta="−8 MoM"
           spark={[70, 66, 68, 63, 61, 64, 60, 59, 58]}
-          sparkLabel="contribution · 7 weeks"
-          leftGauge={{ topLabel: "Incremental", value: 58, label: "was 66% · matched control", color: T.green }}
-          rightGauge={{ topLabel: "Profitability", value: 55, label: "was 61% · offer margin", color: T.amber }}
-          bottomLeft={{ label: "Wallet-load net strain", value: "₹0.9 Cr", sub: "MTD", color: T.red }}
+          sparkLabel="contribution · 3 months"
+          leftGauge={{ topLabel: "Incremental", value: 58, label: <span style={{ color: T.red, fontWeight: 800 }}>−8%</span>, color: T.green }}
+          rightGauge={{ topLabel: "Profitability", value: 55, label: <span style={{ color: T.red, fontWeight: 800 }}>−6%</span>, color: T.amber }}
+          bottomLeft={{ label: "Wallet-load strain", value: "₹0.9 Cr MTD", sub: "", color: T.red }}
           bottomRight={{ label: "Offers to kill", value: "2", sub: "net-negative", color: T.amber }}
           ai="Since the earn-rate change, two offers turned net-negative against matched control — ₹1.2 Cr MTD reallocatable. Separately, Platinum RuPay's UPI-rail mix is diluting interchange yield."
-          owner="Head of Cards — Marketing"
-          ownerAction="pause O-142 wave 2 — draft ready · needs approval →"
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
@@ -1570,22 +1417,21 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           title="Where are my blockers & problems today?"
           micro="Declines · token gaps · fraud-rule · activation · roll/util"
           score="58"
-          scoreLabel="blocker pressure · out of 100"
-          delta="−10 pts vs 4-wk"
+          scoreLabel="blocker pressure"
+          delta="−10 MoM"
           spark={[72, 68, 65, 66, 61, 59, 60, 57, 58]}
-          sparkLabel="approval rate · 8 weeks"
-          bars={[
-            { name: "Token break", v: 82, color: T.red },
-            { name: "Fraud-rule", v: 68, color: T.red },
-            { name: "Activation", v: 58, color: T.amber },
-            { name: "Roll / util", v: 52, color: T.amber },
-            { name: "Limit", v: 49, color: T.amber },
-          ]}
+          sparkLabel="approval rate · 3 months"
+          leftGauge={{ topLabel: "Approval", value: 90.6, label: <span style={{ color: T.red, fontWeight: 800 }}>−2.0 pts</span>, color: T.green }}
+          rightBlock={
+            <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 3, textAlign: "center" }}>
+              <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: T.muted }}>Decline spike</div>
+              <div style={{ fontSize: 20, fontWeight: 800, color: T.red, lineHeight: 1 }}>+38%</div>
+              <div style={{ fontSize: 8, color: "#6b7280", textTransform: "uppercase", letterSpacing: 0.3 }}>since 06:20</div>
+            </div>
+          }
           bottomLeft={{ label: "At-risk", value: "₹9 L / day", sub: "≈ ₹2.7 Cr a month if it runs", color: T.red }}
           bottomRight={{ label: "Top blocker", value: "Tokenised CNP", sub: "symptom · cause unconfirmed", color: T.red }}
-          ai="Today's spike is a token break: ₹9 L/day at-risk, 62% curable. R-77 stepped approval −13 pts inside its rule cohort; Batch #4471 risks ₹93 L against the 30+7 clock."
-          owner="Payments & Authorisation"
-          ownerAction="incident draft ready →"
+          ai="Approval on the tokenised card-not-present path broke from 06:20 — ₹9 L a day at risk, 62% of it curable. Two more blockers behind it, both routed."
           cta="Open blockers →"
           onClick={() => go("d2")}
         />
@@ -1596,29 +1442,27 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
             title="What are my cardholders experiencing?"
             micro="Voice × transaction · top issue: Reward value erosion"
             score="58"
-            scoreLabel="cardholder friction · out of 100"
-            delta="−15 pts vs 4-wk"
+            scoreLabel="cardholder friction"
+            delta="−15 MoM"
             spark={[74, 70, 68, 64, 60, 62, 58, 56, 58]}
-            sparkLabel="issue pressure · 8 weeks"
-            leftGauge={{ topLabel: "Top issue", value: 92, label: "reward value", color: T.red, suffix: "/100" }}
-            rightGauge={{ topLabel: "Curable", value: 78, label: "curable", color: T.green, suffix: "/100" }}
+            sparkLabel="issue pressure · 3 months"
+            leftBlock={
+              <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 4, textAlign: "center" }}>
+                <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", color: T.muted }}>Top issue</div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: T.red, lineHeight: 1.2 }}>Reward value erosion</div>
+              </div>
+            }
+            rightGauge={{ topLabel: "Curable", value: 78, label: "", color: T.green, suffix: "" }}
             bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · EST", color: T.red }}
-            bottomRight={{ label: "Top channel", value: "Service chat", sub: "+ app store · 214 similar", color: T.violet }}
+            bottomRight={{ label: "Top channel", value: "Service chat", sub: "", color: T.violet }}
             ai="Complaints and reviews are dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling claims add conduct exposure."
-            owner="Rewards & Portfolio"
-            ownerAction="retention draft ready →"
             cta="Open customer experience →"
             onClick={() => go("voice")}
           />
         )}
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: 11, color: T.muted }}>
-        <CheckCircle2 size={13} color={T.green} />
-        <span>
-          <span style={{ color: T.green, fontWeight: 800 }}>Checked and cleared:</span> Friday spend dip is calendar mix, no action.
-        </span>
-      </div>
+      <TodayTransactionSignalMonitor />
 
       <div style={{ height: 44 }} />
     </div>
@@ -1735,7 +1579,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹1.6 Cr MTD net strain",
+    metric: "₹1.4 Cr MTD net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -3544,7 +3388,7 @@ function RewardYieldUnitEconomicsPanel() {
       </div>
       <AIInsightStrip tone="red">
         Wallet-load interchange is ₹1.2 Cr MTD on ₹86 Cr MTD spend (~1.4%) but reward
-        runs ~2.2% (₹1.9 Cr) — net −₹0.9 Cr MTD. Combined with fuel-adjacent, ₹1.6 Cr MTD net
+        runs ~2.2% (₹1.9 Cr) — net −₹0.9 Cr MTD. Combined with fuel-adjacent (−₹0.5 Cr), ₹1.4 Cr MTD net
         strain across two MCC bands. Blended reward cost runs ~95 bps of spends; these two bands
         run ~2× that (221 / 197 bps). Cap accelerated rewards on both.
       </AIInsightStrip>
@@ -3701,7 +3545,7 @@ function Frag({ children }: { children: ReactNode }) {
 const DECLINE_HEAT_COLS = [
   "Premium CNP",
   "Platinum RuPay",
-  "3+ yr customers",
+  "3+ yr cardholders",
   "Batch #4471",
   "Sourcing Q2",
   "Jio-bp",
@@ -3761,10 +3605,10 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
     verdict:
       "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
   },
-  "Fraud-rule block|3+ yr customers": {
+  "Fraud-rule block|3+ yr cardholders": {
     strength: "3.6× baseline",
     approvalGap: "13 pts",
-    atRisk: "GMV at risk",
+    atRisk: "Not sized — needs rule-event feed",
     curable: "—",
     started: "Within 2h",
     owner: "fraud",
@@ -3772,7 +3616,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
     confidence: "High",
     evidence: [
       "Approval 94% → 81% after R-77 edit",
-      "Good-customer blocks +210%",
+      "Good-cardholder blocks +210%",
       "Tenured segment disproportionately hit",
     ],
     actions: [
@@ -3783,20 +3627,23 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
   },
 };
 
-const defaultBlockerEvidence = (): BlockerEvidence => ({
-  strength: "2.4× baseline",
-  approvalGap: "—",
-  atRisk: "₹68 L / day (at-risk run-rate)",
-  curable: "48%",
-  started: "Today",
-  owner: "ops",
-  source: "decline feed",
-  confidence: "Med",
-  evidence: ["Cohort-specific decline above seasonal baseline", "Repeat pattern in same time window"],
-  actions: ["Open incident pack", "Route to owner with evidence"],
-  verdict:
-    "Symptom isolated to the tokenised path from transaction data; confirm root cause via ACS / token-vault logs.",
-});
+const defaultBlockerEvidence = (row?: string): BlockerEvidence => {
+  const risk = DECLINE_HEAT_ROWS.find((r) => r.label === row)?.risk;
+  return {
+    strength: "2.4× baseline",
+    approvalGap: "—",
+    atRisk: risk ? `${risk} / day (at-risk run-rate)` : "within daily at-risk range",
+    curable: "48%",
+    started: "Today",
+    owner: "ops",
+    source: "decline feed",
+    confidence: "Med",
+    evidence: ["Cohort-specific decline above this cohort's own baseline", "Repeat pattern in same time window"],
+    actions: ["Open incident pack", "Route to owner with evidence"],
+    verdict:
+      "Above this cohort's own baseline on transaction data; owner review to confirm the cause.",
+  };
+};
 
 const D2_BLOCKER_ACTION_ROWS: {
   signal: string;
@@ -3822,7 +3669,7 @@ const D2_BLOCKER_ACTION_ROWS: {
   {
     signal: "Fraud Rule R-77 misfire",
     evidence: "R-77 cohort: 94% → 81%",
-    impact: "Good customers blocked",
+    impact: "Good cardholders blocked",
     owner: "fraud",
     action: "Review / rollback rule",
     risk: "Fraud ops",
@@ -4103,8 +3950,8 @@ function DeclineTaxonomyHeatmap({
 }
 
 function SelectedBlockerIncidentPack({ row, col, go }: { row: string; col: string; go?: NavigateFn }) {
-  const showJoin = /token|cnp|premium/i.test(`${row} ${col}`);
-  const ev = BLOCKER_EVIDENCE[`${row}|${col}`] ?? defaultBlockerEvidence();
+  const showJoin = row === "Tokenised CNP";
+  const ev = BLOCKER_EVIDENCE[`${row}|${col}`] ?? defaultBlockerEvidence(row);
   return (
     <SectionCard title="Selected incident" subtitle={`${row} × ${col}`} accent={T.gold} aiPill style={{ marginBottom: 0 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 8 }}>
@@ -4361,6 +4208,11 @@ export function CardsPortfolioV2Dashboard({
         @media (max-width:1100px){.lcp .d2-top-grid,.lcp .d2-owner-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media (max-width:1100px){.lcp .d2-investigation-grid,.lcp .d2-execution-grid{grid-template-columns:1fr}}
         @media (max-width:720px){.lcp .d2-top-grid,.lcp .d2-owner-grid,.lcp .d2-investigation-grid,.lcp .d2-execution-grid{grid-template-columns:1fr}}
+        .lcp .signal-rail{scrollbar-width:thin;scrollbar-color:#3a3a3a transparent}
+        .lcp .signal-rail::-webkit-scrollbar{height:8px}
+        .lcp .signal-rail::-webkit-scrollbar-track{background:#151515;border-radius:999px}
+        .lcp .signal-rail::-webkit-scrollbar-thumb{background:#3a3a3a;border-radius:999px}
+        .lcp .signal-rail::-webkit-scrollbar-thumb:hover{background:#4a4a4a}
       `}</style>
       <aside
         style={{
