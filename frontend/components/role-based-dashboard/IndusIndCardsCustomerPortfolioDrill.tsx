@@ -88,6 +88,7 @@ interface Issue {
   owner: string;
   ownerTone: string;
   nextAction: string;
+  cause?: string;
   evidence: string[];
   channelCount: number;
   productCount: number;
@@ -106,13 +107,14 @@ const ISSUE_CATALOGUE: Issue[] = [
     customerSignal: "Benefit-value complaints are concentrated among premium, high-spend cardholders.",
     portfolioMovement: "Repeat spend −8.6% · redemption abandonment +17%",
     exposure: "₹1.4 Cr MTD EST",
-    affected: "18.4k customers",
+    affected: "~3.2k cardholders",
     repeatContact: "38% repeat contact",
     conduct: "Medium",
     curability: 78,
     owner: "Rewards & Portfolio",
     ownerTone: "violet",
-    nextAction: "Review benefit design and prepare a targeted retention proposition for affected high-value customers.",
+    nextAction: "Review benefit design and prepare a targeted retention proposition for affected high-value cardholders.",
+    cause: "Follows the EazyDiner Prime discontinuation and Legend fee/threshold revision effective 15 Jul — the erosion trails our own benefit change.",
     evidence: ["App stores", "TechnoFino", "Complaints", "Spend events"],
     channelCount: 4,
     productCount: 2,
@@ -128,8 +130,8 @@ const ISSUE_CATALOGUE: Issue[] = [
     baseline: "2.7× above normal",
     customerSignal: "Login, OTP, UCIC and card-visibility failures are preventing self-service servicing and payment.",
     portfolioMovement: "Self-service payments −9% · assisted contacts +24%",
-    exposure: "11.2k accounts EST",
-    affected: "6.8k high-value users",
+    exposure: "~3.4k cardholders EST",
+    affected: "6.8k high-value cardholders",
     repeatContact: "41% repeat contact",
     conduct: "Low",
     curability: 84,
@@ -152,13 +154,13 @@ const ISSUE_CATALOGUE: Issue[] = [
     customerSignal: "Customers report payment debited but card balance not updated within the expected window.",
     portfolioMovement: "Payment retries +16% · disputes +11%",
     exposure: "₹62 L pending EST",
-    affected: "9.6k customers",
+    affected: "9.6k cardholders",
     repeatContact: "34% repeat contact",
     conduct: "Medium",
     curability: 72,
     owner: "Payments & Authorisation",
     ownerTone: "amber",
-    nextAction: "Prioritise reconciliation exceptions and send resolution updates to customers with ageing pending payments.",
+    nextAction: "Prioritise reconciliation exceptions and send resolution updates to cardholders with ageing pending payments.",
     evidence: ["App reviews", "Calls", "Complaints", "Reconciliation"],
     channelCount: 4,
     productCount: 5,
@@ -175,7 +177,7 @@ const ISSUE_CATALOGUE: Issue[] = [
     customerSignal: "Upgrade and benefit-expectation complaints include fee disputes and consent concerns.",
     portfolioMovement: "Fee reversals ₹18 L EST · closure intent +13%",
     exposure: "High conduct sensitivity",
-    affected: "1.7k accounts EST",
+    affected: "1.7k cardholders EST",
     repeatContact: "46% repeat contact",
     conduct: "High",
     curability: 66,
@@ -224,7 +226,7 @@ interface ProductRow {
 const PRODUCT_MATRIX: ProductRow[] = [
   { product: "EazyDiner", rewards: 92, app: 38, payments: 44, conduct: 23, emi: 31 },
   { product: "Legend", rewards: 86, app: 35, payments: 48, conduct: 32, emi: 42 },
-  { product: "INDIE", rewards: 29, app: 94, payments: 73, conduct: 18, emi: 26 },
+  { product: "INDIE app access", rewards: 29, app: 94, payments: 73, conduct: 18, emi: 26 },
   { product: "Pinnacle", rewards: 54, app: 41, payments: 39, conduct: 88, emi: 52 },
   { product: "Tiger", rewards: 63, app: 33, payments: 46, conduct: 27, emi: 37 },
 ];
@@ -242,7 +244,7 @@ const BENEFIT_RISK = [
   { name: "Legend", concern: 82, repeatSpend: 46, fill: T.red },
   { name: "Pinnacle", concern: 61, repeatSpend: 57, fill: T.amber },
   { name: "Tiger", concern: 52, repeatSpend: 64, fill: T.yellow },
-  { name: "INDIE", concern: 37, repeatSpend: 71, fill: T.green },
+  { name: "INDIE app", concern: 37, repeatSpend: 71, fill: T.green },
 ];
 
 const RECOVERY = [
@@ -390,7 +392,7 @@ function SectionCard({
         <div style={{ minWidth: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 7, flexWrap: "wrap" }}>
             <span style={{ fontSize: 13, fontWeight: 800, color: T.text }}>{title}</span>
-            {ai ? <Pill toneName="gold">✨ AI</Pill> : null}
+            {ai ? <Pill toneName="gold">Distilled</Pill> : null}
           </div>
           {subtitle ? (
             <div style={{ color: T.muted, fontSize: 10.5, lineHeight: 1.45, marginTop: 3 }}>
@@ -621,7 +623,7 @@ function ProductIssueMatrix() {
       title="Product × friction concentration"
       subtitle="How each friction type concentrates across the card products"
       accent={T.cyan}
-      right={<Pill toneName="cyan">Abnormality index</Pill>}
+      right={<Pill toneName="cyan">vs own baseline</Pill>}
     >
       <div className="icpd-matrix-scroll">
         <div className="icpd-matrix" style={{ gridTemplateColumns: `104px repeat(${columns.length}, minmax(58px, 1fr))` }}>
@@ -660,7 +662,7 @@ function ExecutiveAI({ issue }: { issue: Issue }) {
   return (
     <SectionCard
       title="AI portfolio brief"
-      subtitle="Highest-priority situation for Head of Cards attention"
+      subtitle="Team investigation surface · highest-priority portfolio issue, reached from a Business-Head signal"
       accent={T.gold}
       ai
       className="icpd-ai-card"
@@ -673,6 +675,7 @@ function ExecutiveAI({ issue }: { issue: Issue }) {
           </div>
         </div>
         <BriefLine label="Concentrated in" value={issue.product} />
+        {issue.cause ? <BriefLine label="Likely cause" value={issue.cause} /> : null}
         <BriefLine label="Portfolio implication" value={issue.portfolioMovement} danger />
         <BriefLine label="Lifecycle" value={issue.lifecycle} />
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -819,7 +822,7 @@ function HighValueExposure() {
       right={<Pill toneName="green">Bubble size = reach</Pill>}
     >
       <div className="icpd-bubble-chart">
-        <div className="icpd-axis-y">Customer value</div>
+        <div className="icpd-axis-y">Cardholder value</div>
         <div className="icpd-axis-x">Intervention urgency →</div>
         <div className="icpd-quadrant-label" style={{ top: 8, right: 10, color: T.red }}>Act now</div>
         <div className="icpd-quadrant-label" style={{ bottom: 26, left: 30, color: T.muted }}>Monitor</div>
@@ -865,7 +868,7 @@ function IssueConfidence() {
   return (
     <SectionCard
       title="Issue confidence and reach"
-      subtitle="Patterns become more actionable when they repeat across channels, products, accounts and contacts"
+      subtitle="Patterns become more actionable when they repeat across channels, products, cardholders and contacts"
       accent={T.cyan}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -902,7 +905,7 @@ function ResolutionRecovery() {
   return (
     <SectionCard
       title="Resolution effectiveness"
-      subtitle="Unresolved issue pressure compared with spend recovery among recently resolved customers"
+      subtitle="Unresolved issue pressure compared with spend recovery among recently resolved cardholders"
       accent={T.violet}
       ai
     >
@@ -1041,12 +1044,30 @@ function StatusTile({ icon: Icon, label, value, color }: { icon: LucideIcon; lab
   );
 }
 
+const DRAFT_META: Record<IssueId, { channel: string; metric: string }> = {
+  rewards: { channel: "Push · WhatsApp (service)", metric: "Repeat-spend recovery within 30d" },
+  app: { channel: "In-app · SMS fallback", metric: "Self-service payment recovery" },
+  payments: { channel: "SMS · email", metric: "Pending-payment resolution SLA" },
+  conduct: { channel: "Assisted call · email", metric: "Consent-valid closure rate" },
+  emi: { channel: "In-app · push", metric: "Eligible-spend EMI conversion" },
+};
+
+function DraftField({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div style={{ minWidth: 0 }}>
+      <Eyebrow>{label}</Eyebrow>
+      <div style={{ color: T.sub, fontSize: 10.5, fontWeight: 800, marginTop: 3, lineHeight: 1.35 }}>{value}</div>
+    </div>
+  );
+}
+
 function ActionCentre({ issue }: { issue: Issue }) {
+  const draft = DRAFT_META[issue.id];
   const actions = useMemo(() => {
     if (issue.id === "rewards") {
       return [
         "Validate impacted premium cohorts and benefit-usage behaviour",
-        "Prepare targeted retention proposition for high-value customers",
+        "Prepare targeted retention proposition for high-value cardholders",
         "Review earn, redemption fee and benefit communication before next campaign",
       ];
     }
@@ -1067,7 +1088,7 @@ function ActionCentre({ issue }: { issue: Issue }) {
     if (issue.id === "payments") {
       return [
         "Reconcile aged pending-payment exceptions",
-        "Prioritise accounts with repeat contact or dispute intent",
+        "Prioritise cardholders with repeat contact or dispute intent",
         "Send resolution updates after Payments owner approval",
       ];
     }
@@ -1093,6 +1114,32 @@ function ActionCentre({ issue }: { issue: Issue }) {
             <div style={{ color: T.muted, fontSize: 10.5, marginTop: 3 }}>{issue.product}</div>
           </div>
           <Pill toneName="amber">Draft ready</Pill>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: "9px 12px",
+            marginTop: 11,
+            paddingTop: 11,
+            borderTop: `1px solid ${T.inner}`,
+          }}
+        >
+          <DraftField label="Cohort" value={`${issue.product} · ${issue.affected}`} />
+          <DraftField label="Signal" value={issue.portfolioMovement} />
+          <DraftField label="Channel" value={draft.channel} />
+          <DraftField label="Est. reach" value={issue.affected} />
+          <DraftField
+            label="Guardrails"
+            value={
+              <span style={{ display: "flex", flexWrap: "wrap", gap: 5, fontFamily: MONO }}>
+                <span style={{ background: `${T.green}14`, border: `1px solid ${T.green}40`, borderRadius: 999, padding: "2px 7px", fontSize: 9 }}>no_send_after_2200</span>
+                <span style={{ background: `${T.green}14`, border: `1px solid ${T.green}40`, borderRadius: 999, padding: "2px 7px", fontSize: 9 }}>max_1_per_72h</span>
+              </span>
+            }
+          />
+          <DraftField label="Success metric" value={draft.metric} />
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 12 }}>

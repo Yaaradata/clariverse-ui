@@ -4,7 +4,7 @@
  * LiSN — Cards Portfolio Manager (v2).
  *
  * Modelled on CreditCardsV3DrillDownScreens grammar: each drill has its OWN signature body
- * (no repeated "baseline signals" block). Shared primitives only: SectionCard (✨ AI pill),
+ * (no repeated "baseline signals" block). Shared primitives only: SectionCard ("Distilled" pill),
  * AIInsightStrip, Mono, route/brand pills. JH near-black palette.
  *
  *   Overview        → Executive Pulse + 3 question cards (2 drilldown routes)
@@ -271,7 +271,7 @@ function SectionCard({
                   borderRadius: 4,
                 }}
               >
-                ✨ AI
+                Distilled
               </span>
             )}
           </div>
@@ -372,7 +372,7 @@ function Chip({ children, t = "muted" }: { children: ReactNode; t?: string }) {
     </span>
   );
 }
-function ConsentChip() {
+function GuardChip({ children }: { children: ReactNode }) {
   return (
     <span
       style={{
@@ -380,18 +380,45 @@ function ConsentChip() {
         fontSize: 9,
         fontWeight: 800,
         letterSpacing: ".04em",
-        textTransform: "uppercase",
+        textTransform: "none",
+        fontFamily: MONO,
         padding: "3px 8px",
         borderRadius: 999,
-        color: T.muted,
-        background: T.inset,
-        border: `1px solid ${T.inner}`,
+        color: T.sub,
+        background: `${T.green}12`,
+        border: `1px solid ${T.green}40`,
         whiteSpace: "nowrap",
         marginLeft: 6,
       }}
     >
-      Consent: service-comms · human approves
+      {children}
     </span>
+  );
+}
+function ConsentChip() {
+  return (
+    <>
+      <span
+        style={{
+          display: "inline-flex",
+          fontSize: 9,
+          fontWeight: 800,
+          letterSpacing: ".04em",
+          textTransform: "uppercase",
+          padding: "3px 8px",
+          borderRadius: 999,
+          color: T.muted,
+          background: T.inset,
+          border: `1px solid ${T.inner}`,
+          whiteSpace: "nowrap",
+          marginLeft: 6,
+        }}
+      >
+        Consent: service-comms · human approves
+      </span>
+      <GuardChip>no_send_after_2200</GuardChip>
+      <GuardChip>max_1_per_72h</GuardChip>
+    </>
   );
 }
 function RouteChip({ r }: { r: string }) {
@@ -435,12 +462,28 @@ function BrandPill({ k, children }: { k: string; children: ReactNode }) {
 /* ───────────── shared chrome ───────────── */
 function TopBar() {
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
-        Cards Portfolio Manager{" "}
+    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+      <div>
+        <div style={{ fontSize: 21, fontWeight: 900, letterSpacing: "-.02em" }}>
+          Cards — Business Head view
+        </div>
+        <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
+          Your book at a glance · team detail one level down
+        </div>
       </div>
-      <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
-        Transactions first · blocker intelligence second
+      <div
+        style={{
+          fontSize: 11,
+          fontWeight: 700,
+          color: T.sub,
+          background: T.inset,
+          border: `1px solid ${T.inner}`,
+          borderRadius: 999,
+          padding: "5px 11px",
+          whiteSpace: "nowrap",
+        }}
+      >
+        As of 07:10 today · IST
       </div>
     </div>
   );
@@ -573,11 +616,11 @@ const TREND: { g: TrendPoint[]; r: TrendPoint[]; v: TrendPoint[] } = {
 const EXEC_PULSE = [
   {
     label: "1. 🔴 What's critical",
-    text: "Tokenised CNP approval gap widened since 11:00 — ₹2.4 Cr / day (at-risk run-rate). Route fix to Payments & Authorisation.",
+    text: "Tokenised CNP approval gap widened since 11:00 — ₹9 L / day (at-risk run-rate). Route fix to Payments & Authorisation.",
   },
   {
     label: "2. 🎯 Where's your focus",
-    text: "Offer O-142 is leaking ₹78 L MTD; fraud-rule R-77 stepped approval down 13 pts.",
+    text: "Offer O-142 is leaking ₹78 L MTD; fraud-rule R-77 stepped approval down 13 pts inside its rule cohort (3+ yr).",
   },
   {
     label: "3. 🟢 What's stable / on-track",
@@ -838,7 +881,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     ],
     stats: [
       ["Approval Gap", "14 pts"],
-      ["Spend at Risk", "₹2.4 Cr / day"],
+      ["Spend at Risk", "₹9 L / day"],
       ["Route", "Payments & Authorisation"],
     ],
     ai: "Tokenised path degraded after route change — open ACS/token incident, not a behaviour issue.",
@@ -957,7 +1000,7 @@ function TodayTransactionSignalMonitor() {
             fontWeight: 900,
           }}
         >
-          ✨ Today's Transaction Signal Monitor
+          Today's Transaction Signal Monitor
         </div>
         <span
           style={{
@@ -1199,7 +1242,7 @@ function TodayTransactionSignalMonitor() {
                     overflow: "hidden",
                   }}
                 >
-                  ✨ {a.ai}
+                  {a.ai}
                 </span>
               </div>
             </div>
@@ -1393,7 +1436,7 @@ function OverviewExecTile({
       <div style={{ background: ovHexA(accent, 0.055), border: `1px solid ${ovHexA(accent, 0.22)}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "12px 14px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 7 }}>
           <Sparkles size={13} color={accent} />
-          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>Conversation AI</span>
+          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>Distilled read</span>
         </div>
         <div style={{ fontSize: 12.5, color: T.sub, lineHeight: 1.5 }}>{ai}</div>
       </div>
@@ -1402,10 +1445,72 @@ function OverviewExecTile({
   );
 }
 
+const BOOK_HEADLINE: { label: string; value: string; sub: string; color: string }[] = [
+  { label: "Cards in force", value: "31.2 L", sub: "active base", color: T.text },
+  { label: "Monthly spends", value: "~₹5,010 Cr", sub: "run-rate · ₹3,840 Cr MTD", color: T.cyan },
+  { label: "Receivables", value: "₹9,760 Cr", sub: "book outstanding", color: T.violet },
+  { label: "Net credit cost", value: "1.8%", sub: "annualised · stable", color: T.green },
+];
+
+function BookHeadline() {
+  return (
+    <section
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+        gap: 10,
+        marginBottom: 14,
+      }}
+    >
+      {BOOK_HEADLINE.map((k) => (
+        <div key={k.label} style={{ background: T.row, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px" }}>
+          <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted }}>{k.label}</div>
+          <div style={{ fontFamily: MONO, fontSize: 22, fontWeight: 800, color: k.color, marginTop: 4, lineHeight: 1.1 }}>{k.value}</div>
+          <div style={{ fontSize: 10, color: T.dim, marginTop: 3 }}>{k.sub}</div>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+const BRAND_STRIP = ["Avios", "Platinum RuPay", "Jio-bp", "Pioneer", "Legend", "EazyDiner", "Tiger", "Pinnacle", "Celesta"];
+
+function BrandStrip({ go }: { go: NavigateFn }) {
+  return (
+    <section style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
+      <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted, marginRight: 2 }}>
+        Brands
+      </span>
+      {BRAND_STRIP.map((b) => (
+        <button
+          type="button"
+          key={b}
+          onClick={() => go("d1")}
+          style={{
+            font: "inherit",
+            cursor: "pointer",
+            fontSize: 11,
+            fontWeight: 700,
+            color: T.sub,
+            background: T.inset,
+            border: `1px solid ${T.inner}`,
+            borderRadius: 999,
+            padding: "5px 11px",
+          }}
+        >
+          {b}
+        </button>
+      ))}
+    </section>
+  );
+}
+
 function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boolean }) {
   return (
     <div className="fade">
       <TopBar />
+      <BookHeadline />
+      <BrandStrip go={go} />
       <ExecutivePulse />
       <div className={showVoiceJoin ? "overview-cards overview-cards--3" : "overview-cards"}>
         <OverviewExecTile
@@ -1417,7 +1522,7 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           delta="−8 pts"
           spark={[70, 66, 68, 63, 61, 64, 60, 62, 64]}
           leftGauge={{ topLabel: "Incremental", value: 58, label: "vs matched control", color: T.green }}
-          rightGauge={{ topLabel: "Profitable", value: 55, label: "offer margin", color: T.amber }}
+          rightGauge={{ topLabel: "Profitability", value: 55, label: "offer margin", color: T.amber }}
           bottomLeft={{ label: "Yield leak", value: "₹1.2 Cr", sub: "MTD · interchange", color: T.red }}
           bottomRight={{ label: "Offers to kill", value: "2", sub: "net-negative", color: T.amber }}
           ai="Two net-negative offers vs matched control — ₹1.3 Cr MTD reallocatable. RuPay-on-UPI mix is compressing interchange yield ~₹1.2 Cr MTD."
@@ -1439,9 +1544,9 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
             { name: "Roll / util", v: 52, color: T.amber },
             { name: "Limit", v: 49, color: T.amber },
           ]}
-          bottomLeft={{ label: "At-risk", value: "₹2.4 Cr", sub: "/ day run-rate", color: T.red }}
+          bottomLeft={{ label: "At-risk", value: "₹9 L", sub: "/ day run-rate", color: T.red }}
           bottomRight={{ label: "Top blocker", value: "Token break", sub: "root cause", color: T.red }}
-          ai="Today's spike is a token break: ₹2.4 Cr/day at-risk, 62% curable. R-77 stepped approval −13 pts; Batch #4471 risks ₹93 L against the 30+7 clock."
+          ai="Today's spike is a token break: ₹9 L/day at-risk, 62% curable. R-77 stepped approval −13 pts inside its rule cohort; Batch #4471 risks ₹93 L against the 30+7 clock."
           cta="Open blocker command center →"
           onClick={() => go("d2")}
         />
@@ -1465,7 +1570,23 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
         )}
       </div>
 
-      <TodayTransactionSignalMonitor />
+      <details style={{ marginTop: 8 }}>
+        <summary
+          style={{
+            cursor: "pointer",
+            listStyle: "none",
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: ".06em",
+            textTransform: "uppercase",
+            color: T.muted,
+            padding: "8px 0",
+          }}
+        >
+          Signal monitor · tap to expand full transaction feed
+        </summary>
+        <TodayTransactionSignalMonitor />
+      </details>
       <div style={{ height: 44 }} />
     </div>
   );
@@ -1485,7 +1606,7 @@ const D1_BRANDS: {
   {
     k: "travel",
     name: "Avios",
-    spend: "₹312 Cr MTD",
+    spend: "₹620 Cr MTD",
     wow: "−6.2%",
     up: false,
     prof: 38,
@@ -1495,7 +1616,7 @@ const D1_BRANDS: {
   {
     k: "cashback",
     name: "Platinum RuPay",
-    spend: "₹468 Cr MTD",
+    spend: "₹1,520 Cr MTD",
     wow: "+8.4%",
     up: true,
     prof: 71,
@@ -1505,7 +1626,7 @@ const D1_BRANDS: {
   {
     k: "fuel",
     name: "Jio-bp",
-    spend: "₹214 Cr MTD",
+    spend: "₹720 Cr MTD",
     wow: "+3.2%",
     up: true,
     prof: 52,
@@ -1514,8 +1635,8 @@ const D1_BRANDS: {
   },
   {
     k: "biz",
-    name: "Business",
-    spend: "₹290 Cr MTD",
+    name: "Pioneer",
+    spend: "₹980 Cr MTD",
     wow: "+1.1%",
     up: true,
     prof: 64,
@@ -1524,9 +1645,9 @@ const D1_BRANDS: {
   },
 ];
 const D1_TIERS: [string, string, number, number, number][] = [
-  ["H1 · ₹1L+ spend", "₹420 Cr MTD", 44, 30, 26],
-  ["H2 · ₹50k–1L", "₹312 Cr MTD", 51, 27, 22],
-  ["H3 · ₹25–50k", "₹256 Cr MTD", 58, 22, 20],
+  ["H1 · ₹1L+ spend", "₹1,240 Cr MTD", 44, 30, 26],
+  ["H2 · ₹50k–1L", "₹980 Cr MTD", 51, 27, 22],
+  ["H3 · ₹25–50k", "₹760 Cr MTD", 58, 22, 20],
 ];
 const D1_GMV = [
   { w: "W-6", g: 100, p: 100 },
@@ -1557,7 +1678,7 @@ const D1_AI: AiRow[] = [
     title: "Offer O-142 is cannibalising spend",
     body: "High redemption, near-zero incremental lift vs a matched control. Reward budget is subsidising spend that would have happened anyway.",
     metric: "₹78 L MTD leakage",
-    delta: "redemption 82% · lift 18%",
+    delta: "redemption 82% of triggered · lift 18%",
     icon: CircleAlert,
     root: "Eligibility is too broad — high-frequency customers who already spend in these MCCs are claiming the reward.",
     areas: ["Marketing", "Rewards engine", "Premium desk"],
@@ -1576,7 +1697,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹2.5 Cr MTD net strain",
+    metric: "₹1.4 Cr MTD net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -1730,7 +1851,7 @@ function AISummaryWall({ rows }: { rows: AiRow[] }) {
   }, {});
   return (
     <SectionCard
-      title="AI Summary Wall"
+      title="What changed — and why"
       subtitle="Ranked · click to expand root cause & actions"
       accent={T.gold}
       aiPill
@@ -2104,7 +2225,7 @@ function CommandCenter() {
             }}
             title={RUPEE_METHOD.mtd}
           >
-            ₹1,284 Cr MTD
+            ₹3,840 Cr MTD
           </span>
           <span
             style={{
@@ -2192,7 +2313,7 @@ function CommandCenter() {
       <W
         accent={T.violet}
         title="Spend quality by value tier"
-        sub="profitable / neutral / leaking"
+        sub="top 3 value tiers · profitable / neutral / leaking · <₹25k tail not shown"
       >
         {D1_TIERS.map(([l, sub, h, n, u]) => (
           <div key={l} style={{ marginBottom: 9 }}>
@@ -2356,7 +2477,7 @@ function CommandCenter() {
               padding: "2px 6px",
             }}
           >
-            ✨
+            Distilled
           </span>
         }
       >
@@ -2595,7 +2716,7 @@ function LeakPanel() {
             borderRadius: 4,
           }}
         >
-          ✨ AI
+          Distilled
         </span>
         <span style={{ fontSize: 11, color: T.muted, marginLeft: 4 }}>
           tap an offer — leakage = reward spent on non-incremental spend
@@ -2719,7 +2840,7 @@ function LeakPanel() {
           >
             {(
               [
-                ["Redemption", o.redemption],
+                ["Redemption (of triggered)", o.redemption],
                 ["True lift", o.lift],
                 ["Reward cost", o.cost],
               ] as [string, string][]
@@ -2741,7 +2862,7 @@ function LeakPanel() {
               marginBottom: 9,
             }}
           >
-            <Eyebrow c={T.amber}>✨ AI insight</Eyebrow>
+            <Eyebrow c={T.amber}>Distilled read</Eyebrow>
             <div
               style={{
                 fontSize: 12.5,
@@ -2825,10 +2946,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "travel",
     name: "Avios",
-    spend: "₹312 Cr MTD",
+    spend: "₹620 Cr MTD",
     wow: "−6.2%",
     wowUp: false,
-    txn: "2.1M",
+    txn: "0.31M",
     active: "−3.1%",
     activeUp: false,
     repeat: "−4.8%",
@@ -2844,10 +2965,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "cashback",
     name: "Platinum RuPay",
-    spend: "₹468 Cr MTD",
+    spend: "₹1,520 Cr MTD",
     wow: "+8.4%",
     wowUp: true,
-    txn: "5.4M",
+    txn: "17.5M",
     active: "+4.7%",
     activeUp: true,
     repeat: "+6.2%",
@@ -2862,10 +2983,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "fuel",
     name: "Jio-bp",
-    spend: "₹214 Cr MTD",
+    spend: "₹720 Cr MTD",
     wow: "+3.2%",
     wowUp: true,
-    txn: "1.7M",
+    txn: "5.7M",
     active: "+1.1%",
     activeUp: true,
     repeat: "−1.9%",
@@ -2881,10 +3002,10 @@ const BRAND_DEEP: BrandDeepRow[] = [
   {
     k: "biz",
     name: "Pioneer",
-    spend: "₹290 Cr MTD",
+    spend: "₹980 Cr MTD",
     wow: "+1.1%",
     wowUp: true,
-    txn: "1.2M",
+    txn: "4.0M",
     active: "+0.8%",
     activeUp: true,
     repeat: "+1.3%",
@@ -2905,6 +3026,7 @@ type OfferBoardCard = {
   conf: string;
   owner: string;
   decision: string;
+  note?: string;
 };
 
 const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
@@ -2916,6 +3038,15 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
       conf: "High",
       owner: "Marketing",
       decision: "Keep",
+    },
+    {
+      name: "EazyDiner 3X",
+      leak: "₹6 L MTD",
+      lift: "58%",
+      conf: "High",
+      owner: "Partner PM",
+      decision: "Keep",
+      note: "Richer cap unlocked by prior-month ₹40k non-dining spend · settled txns only · tier-capped",
     },
     {
       name: "Dining 3X",
@@ -2982,11 +3113,11 @@ const OFFER_BOARD: Record<string, OfferBoardCard[]> = {
   ],
 };
 
-const BOARD_COL_META: Record<string, { l: string; c: string }> = {
-  keep: { l: "Keep", c: T.green },
-  retarget: { l: "Retarget", c: T.amber },
-  kill: { l: "Kill", c: T.red },
-  wait: { l: "Wait", c: T.dim },
+const BOARD_COL_META: Record<string, { l: string; c: string; total: number }> = {
+  keep: { l: "Keep", c: T.green, total: 9 },
+  retarget: { l: "Retarget", c: T.amber, total: 6 },
+  kill: { l: "Kill", c: T.red, total: 2 },
+  wait: { l: "Wait", c: T.dim, total: 3 },
 };
 
 const YIELD_ROWS: [
@@ -3003,44 +3134,44 @@ const YIELD_ROWS: [
   [
     "Wallet Load",
     "₹86 Cr MTD",
-    "₹3.0 Cr MTD",
+    "₹1.2 Cr MTD",
     "Low",
-    "₹4.2 Cr MTD",
-    "₹0.6 Cr MTD",
-    "−₹1.8 Cr MTD",
+    "₹1.9 Cr MTD",
+    "₹0.2 Cr MTD",
+    "−₹0.9 Cr MTD",
     true,
     "Exclude / cap",
   ],
   [
     "Fuel-adjacent",
     "₹61 Cr MTD",
-    "₹1.7 Cr MTD",
+    "₹0.8 Cr MTD",
     "Low",
-    "₹2.1 Cr MTD",
-    "₹0.3 Cr MTD",
-    "−₹0.7 Cr MTD",
+    "₹1.2 Cr MTD",
+    "₹0.1 Cr MTD",
+    "−₹0.5 Cr MTD",
     true,
     "Retier reward",
   ],
   [
     "Online Travel",
     "₹142 Cr MTD",
-    "₹6.7 Cr MTD",
+    "₹2.6 Cr MTD",
     "Good",
     "₹1.7 Cr MTD",
     "₹0.2 Cr MTD",
-    "+₹4.8 Cr MTD",
+    "+₹0.7 Cr MTD",
     false,
     "Keep",
   ],
   [
     "Grocery",
     "₹94 Cr MTD",
-    "₹2.1 Cr MTD",
+    "₹1.2 Cr MTD",
     "Medium",
-    "₹1.1 Cr MTD",
+    "₹1.0 Cr MTD",
     "₹0.1 Cr MTD",
-    "+₹0.9 Cr MTD",
+    "+₹0.1 Cr MTD",
     false,
     "Monitor",
   ],
@@ -3148,7 +3279,6 @@ function BrandCoBrandDeepPerformanceMatrix() {
             <span
               style={{ fontWeight: 700, color: b.statusAi ? T.amber : T.green }}
             >
-              {b.statusAi ? "✨ " : ""}
               {b.status}
             </span>
             <span style={{ color: T.muted }}>{b.owner}</span>
@@ -3158,6 +3288,8 @@ function BrandCoBrandDeepPerformanceMatrix() {
       <AIInsightStrip>
         Avios is not a volume problem; it is a profitable-spend
         problem. Jio-bp is growing, but reward cost is eating the growth.
+        Platinum RuPay&apos;s ~₹870 average ticket reflects its UPI-credit mix — ~72% of
+        transactions are UPI-rail, sub-₹500 — so high volume does not mean high value.
       </AIInsightStrip>
     </SectionCard>
   );
@@ -3208,7 +3340,7 @@ function OfferPortfolioDecisionBoard() {
                 <span
                   style={{ fontSize: 10, fontFamily: MONO, color: T.muted }}
                 >
-                  {items.length}
+                  showing {items.length} of {m.total}
                 </span>
               </div>
               {items.map((x) => (
@@ -3251,6 +3383,11 @@ function OfferPortfolioDecisionBoard() {
                   <div style={{ fontSize: 10, color: T.dim, marginBottom: 4 }}>
                     {x.owner} · {x.conf} conf
                   </div>
+                  {x.note ? (
+                    <div style={{ fontSize: 9.5, color: T.muted, lineHeight: 1.35, marginBottom: 6 }}>
+                      {x.note}
+                    </div>
+                  ) : null}
                   <Pill
                     t={
                       bucket === "keep"
@@ -3344,7 +3481,7 @@ function RewardYieldUnitEconomicsPanel() {
                 }}
               >
                 {neg
-                  ? "✨ Negative"
+                  ? "Negative"
                   : action === "Monitor"
                     ? "Watch"
                     : "Healthy"}
@@ -3358,8 +3495,8 @@ function RewardYieldUnitEconomicsPanel() {
         * Fraud leg requires the dispute / fraud-loss extract (not in a transaction dump).
       </div>
       <AIInsightStrip tone="red">
-        Wallet-load interchange is ₹3.0 Cr MTD on ₹86 Cr MTD spend (~3.5%) but reward
-        runs 4.9% — net −₹1.8 Cr MTD. Combined with fuel-adjacent, ₹2.5 Cr MTD net
+        Wallet-load interchange is ₹1.2 Cr MTD on ₹86 Cr MTD spend (~1.4%) but reward
+        runs ~2.2% (₹1.9 Cr) — net −₹0.9 Cr MTD. Combined with fuel-adjacent, ₹1.4 Cr MTD net
         strain across two MCC bands. Cap accelerated rewards on both.
       </AIInsightStrip>
     </SectionCard>
@@ -3439,7 +3576,7 @@ function CohortGrowthQualityMatrix() {
               <span
                 style={{ fontWeight: 700, color: watch ? T.amber : T.green }}
               >
-                {watch ? "✨ Watch" : "Keep growing"}
+                {watch ? "Watch" : "Keep growing"}
               </span>
             </div>
           ),
@@ -3522,15 +3659,15 @@ const DECLINE_HEAT_COLS = [
   "Jio-bp",
   "Pioneer",
 ];
-const DECLINE_HEAT_ROWS: { label: string; cells: number[] }[] = [
-  { label: "Tokenised CNP", cells: [91, 48, 38, 55, 42, 34, 28] },
-  { label: "Non-token CNP", cells: [44, 36, 32, 28, 24, 22, 18] },
-  { label: "3DS / OTP failure", cells: [52, 41, 38, 67, 35, 29, 24] },
-  { label: "Fraud-rule block", cells: [48, 42, 84, 38, 36, 31, 45] },
-  { label: "Limit exhausted", cells: [38, 35, 42, 28, 66, 24, 32] },
-  { label: "Activation / first-use failed", cells: [41, 38, 36, 79, 34, 28, 22] },
-  { label: "Switch / processor issue", cells: [57, 48, 30, 44, 38, 74, 26] },
-  { label: "Settlement mismatch", cells: [36, 32, 28, 24, 42, 38, 30] },
+const DECLINE_HEAT_ROWS: { label: string; cells: number[]; risk: string }[] = [
+  { label: "Tokenised CNP", cells: [91, 48, 38, 55, 42, 34, 28], risk: "₹9.0 L" },
+  { label: "Non-token CNP", cells: [44, 36, 32, 28, 24, 22, 18], risk: "₹1.2 L" },
+  { label: "3DS / OTP failure", cells: [52, 41, 38, 67, 35, 29, 24], risk: "₹3.4 L" },
+  { label: "Fraud-rule block", cells: [48, 42, 84, 38, 36, 31, 45], risk: "₹2.8 L" },
+  { label: "Limit exhausted", cells: [38, 35, 42, 28, 66, 24, 32], risk: "₹1.6 L" },
+  { label: "Activation / first-use failed", cells: [41, 38, 36, 79, 34, 28, 22], risk: "₹2.1 L" },
+  { label: "Switch / processor issue", cells: [57, 48, 30, 44, 38, 74, 26], risk: "₹4.2 L" },
+  { label: "Settlement mismatch", cells: [36, 32, 28, 24, 42, 38, 30], risk: "₹1.1 L" },
 ];
 const declineHeatTone = (v: number): string =>
   v >= 70 ? T.red : v >= 45 ? T.amber : v >= 30 ? "#caa23a" : T.green;
@@ -3539,6 +3676,7 @@ type BlockerEvidence = {
   strength: string;
   approvalGap: string;
   atRisk: string;
+  rupeeMath?: string;
   curable: string;
   started: string;
   owner: string;
@@ -3553,7 +3691,8 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
   "Tokenised CNP|Premium CNP": {
     strength: "4.2× baseline",
     approvalGap: "14 pts",
-    atRisk: "₹2.4 Cr / day (at-risk run-rate)",
+    atRisk: "₹9 L / day (at-risk run-rate)",
+    rupeeMath: "~1,000 declined attempts/day × ~₹9,000 avg ticket ≈ ₹9 L / day",
     curable: "62%",
     started: "11:00",
     owner: "payments",
@@ -3624,7 +3763,7 @@ const D2_BLOCKER_ACTION_ROWS: {
 }[] = [
   {
     signal: "Tokenised CNP approval gap",
-    evidence: "14 pts · ₹2.4 Cr / day (at-risk run-rate)",
+    evidence: "14 pts · ₹9 L / day (at-risk run-rate)",
     impact: "Payment blocker",
     owner: "payments",
     action: "Open ACS/token incident",
@@ -3634,7 +3773,7 @@ const D2_BLOCKER_ACTION_ROWS: {
   },
   {
     signal: "Fraud Rule R-77 misfire",
-    evidence: "Approval 94% → 81%",
+    evidence: "R-77 cohort: 94% → 81%",
     impact: "Good customers blocked",
     owner: "fraud",
     action: "Review / rollback rule",
@@ -3674,7 +3813,7 @@ const D2_SPLIT_BARS = [
 ];
 
 const D2_PRIORITY_ALERTS: { n: number; text: string; owner: string; c: string }[] = [
-  { n: 1, text: "Tokenised CNP gap · ₹2.4 Cr / day (at-risk run-rate)", owner: "payments", c: T.red },
+  { n: 1, text: "Tokenised CNP gap · ₹9 L / day (at-risk run-rate)", owner: "payments", c: T.red },
   { n: 2, text: "Fraud Rule R-77 · −13 pts", owner: "fraud", c: T.amber },
   { n: 3, text: "Activation clock · 6.2K cards", owner: "conduct", c: T.violet },
 ];
@@ -3685,10 +3824,13 @@ function ApprovalHealthCard() {
       <div style={{ display: "flex", gap: 10, alignItems: "stretch" }}>
         <div style={{ flex: 1 }}>
           <div style={{ marginBottom: 8 }}>
-            <Eyebrow>Approval rate</Eyebrow>
+            <Eyebrow>Approval rate · portfolio</Eyebrow>
             <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
-              <Mono s={22}>81%</Mono>
-              <Mono c={T.red} s={11}>−13 pts</Mono>
+              <Mono s={22}>90.6%</Mono>
+              <Mono c={T.red} s={11}>−2.0 pts</Mono>
+            </div>
+            <div style={{ fontSize: 10.5, color: T.muted, marginTop: 3 }}>
+              R-77 cohort (3+ yr) only: 94% → 81%
             </div>
           </div>
           <div style={{ marginBottom: 8 }}>
@@ -3700,8 +3842,8 @@ function ApprovalHealthCard() {
           <div>
             <Eyebrow>Curable</Eyebrow>
             <Mono c={T.green} s={12}>
-              <span title={rupeeMethodForLabel("₹2.4 Cr / day (at-risk run-rate)")}>
-                62% · ₹2.4 Cr / day (at-risk run-rate)
+              <span title={rupeeMethodForLabel("₹9 L / day (at-risk run-rate)")}>
+                62% · ₹9 L / day (at-risk run-rate)
               </span>
             </Mono>
           </div>
@@ -3720,7 +3862,7 @@ function BlockerSplitCard() {
       <MiniBars bars={D2_SPLIT_BARS} />
       <div style={{ marginTop: 8 }}>
         <AIInsightStrip tone="amber">
-          LiSN splits today's spike into separate blocker types instead of one decline alert.
+          Today's spike is split into separate blocker types instead of one decline alert.
         </AIInsightStrip>
       </div>
     </SectionCard>
@@ -3729,7 +3871,7 @@ function BlockerSplitCard() {
 
 function CompactBlockerPriorityStack() {
   return (
-    <SectionCard title="AI priority stack" subtitle="Top 3 routed blockers" accent={T.gold} aiPill style={{ marginBottom: 0 }}>
+    <SectionCard title="Priority stack" subtitle="Top 3 routed blockers" accent={T.gold} aiPill style={{ marginBottom: 0 }}>
       {D2_PRIORITY_ALERTS.map((a) => (
         <div
           key={a.n}
@@ -3849,12 +3991,13 @@ function DeclineTaxonomyHeatmap({
   onSelect: (r: string, c: string) => void;
 }) {
   return (
-    <SectionCard title="Decline taxonomy heatmap" subtitle="Reason × cohort · anomaly index" accent={T.red} aiPill style={{ marginBottom: 0 }}>
-      <div style={{ display: "grid", gridTemplateColumns: `minmax(130px,1.1fr) repeat(${DECLINE_HEAT_COLS.length},1fr)`, gap: 5, overflowX: "auto" }}>
+    <SectionCard title="Decline taxonomy heatmap" subtitle="Reason × cohort · abnormal vs each cohort's own baseline" accent={T.red} aiPill style={{ marginBottom: 0 }}>
+      <div style={{ display: "grid", gridTemplateColumns: `minmax(130px,1.1fr) repeat(${DECLINE_HEAT_COLS.length},1fr) minmax(64px,0.85fr)`, gap: 5, overflowX: "auto" }}>
         <div />
         {DECLINE_HEAT_COLS.map((c) => (
           <div key={c} style={{ fontSize: 8, color: T.muted, textAlign: "center" }}>{c}</div>
         ))}
+        <div style={{ fontSize: 8, color: T.muted, textAlign: "right", fontWeight: 800 }}>₹/day at risk</div>
         {DECLINE_HEAT_ROWS.map((r) => (
           <Frag key={r.label}>
             <div style={{ fontSize: 10, color: T.sub, alignSelf: "center" }}>{r.label}</div>
@@ -3883,6 +4026,7 @@ function DeclineTaxonomyHeatmap({
                 </button>
               );
             })}
+            <div style={{ alignSelf: "center", textAlign: "right", fontFamily: MONO, fontSize: 10.5, fontWeight: 800, color: T.sub }}>{r.risk}</div>
           </Frag>
         ))}
       </div>
@@ -3927,6 +4071,11 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
           <div style={{ fontSize: 12, fontWeight: 800, color: T.text }}>{ev.started}</div>
         </div>
       </div>
+      {ev.rupeeMath ? (
+        <div style={{ fontSize: 10.5, color: T.muted, fontFamily: MONO, background: T.inset, border: `1px dashed ${T.inner}`, borderRadius: 7, padding: "6px 8px", marginBottom: 8, lineHeight: 1.4 }}>
+          {ev.rupeeMath}
+        </div>
+      ) : null}
       <Eyebrow>Evidence</Eyebrow>
       {ev.evidence.slice(0, 4).map((e) => (
         <div key={e} style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>
@@ -4184,7 +4333,7 @@ export function CardsPortfolioV2Dashboard({
             fontWeight: 800,
           }}
         >
-          PM
+          BH
         </div>
       </aside>
       <main
