@@ -1,17 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  ArrowDownRight,
-  ArrowUpRight,
-  Info,
-  Minus,
-  Sparkles,
-  Star,
-} from "lucide-react";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
+import { AISummaryWall } from "@/components/FCI/AISummaryWall";
 import {
-  HAPPINESS_DATA,
   HAPPINESS_PERIODS,
   getFlipkartFciClustersForRange,
   getHappinessSegmentRows,
@@ -22,13 +14,16 @@ import {
   type RfmSegment,
 } from "../../lib/cxHeadRetailV3CustomerHappinessData";
 import {
+  segmentRevenueAtRiskCr,
   segmentsRankedByGmvAtRisk,
+  segmentsRankedByRevenueAtRisk,
   type HappinessSegmentKey,
   type HappinessSegmentRow,
 } from "../../lib/cxHeadRetailV3HappinessLensData";
+import { getHappinessSegmentInsights } from "../../lib/cxHeadRetailV3HappinessSegmentInsights";
 import { useTheme } from "../../theme/DashboardThemeProvider";
 import { cssVar, radius } from "../../theme/tokens";
-import { ConfidenceChip } from "../common/ConfidenceBand";
+import { HappinessHeadlineKpiCards } from "./HappinessHeadlineKpiCards";
 import { useAnimatedNumber } from "../../lib/useAnimatedNumber";
 
 function failCustomerSegments(rows: HappinessSegmentRow[]) {
@@ -44,6 +39,13 @@ function formatInt(n: number): string {
   return nf.format(Math.round(n));
 }
 
+/** Format ₹ Cr for GMV / revenue-at-risk columns. */
+function formatCr(n: number): string {
+  const v = Math.round(n * 100) / 100;
+  const shown = v % 1 !== 0 ? v.toFixed(1) : String(Math.round(v));
+  return `₹${shown}`;
+}
+
 /** Compact K / M label used in the page headline. */
 export function formatCompactInteractions(n: number): string {
   if (n >= 1_000_000) {
@@ -54,92 +56,18 @@ export function formatCompactInteractions(n: number): string {
   return formatInt(n);
 }
 
-function band(v: number): string {
-  if (v >= 70) return cssVar("positive");
-  if (v >= 55) return cssVar("severity-med");
-  return cssVar("severity-high");
-}
-
-/** Higher is better (NPS, CSAT %, AOV, ATV, resolution %, GMV). */
+/** Higher is better (NPS, CSAT %, AOV, ATV, resolution %). */
 function ragHigher(v: number, good: number, ok: number): string {
   if (v >= good) return cssVar("positive");
   if (v >= ok) return cssVar("severity-med");
   return cssVar("severity-high");
 }
 
-/** Lower is better (CES /5, CPU). */
+/** Lower is better (CES /5, CPU, revenue at risk). */
 function ragLower(v: number, good: number, ok: number): string {
   if (v <= good) return cssVar("positive");
   if (v <= ok) return cssVar("severity-med");
   return cssVar("severity-high");
-}
-
-function scoreValueColor(label: string, value: number): string {
-  switch (label) {
-    case "Happiness Index":
-    case "Customer Loyalty Index":
-      return band(value);
-    case "Net Promoter Score":
-      return ragHigher(value, 50, 30);
-    case "Customer Satisfaction":
-      return ragHigher(value, 80, 70);
-    case "Customer Effort Score":
-      return ragLower(value, 2.5, 3.5);
-    case "Customer Churn Rate":
-      return ragLower(value, 5, 8);
-    case "Repeat Purchase Rate":
-      return ragHigher(value, 40, 30);
-    case "First Contact Resolution":
-      return ragHigher(value, 70, 55);
-    case "Customer Retention Rate":
-      return ragHigher(value, 90, 85);
-    default:
-      return cssVar("text-primary");
-  }
-}
-
-function Delta({
-  value,
-  invert = false,
-  suffix = "",
-  size = 12.5,
-  decimals,
-}: {
-  value: number;
-  invert?: boolean;
-  suffix?: string;
-  size?: number;
-  decimals?: number;
-}): React.ReactElement {
-  const resolvedDecimals = decimals ?? (Math.abs(value) % 1 !== 0 ? 1 : 0);
-  const animatedAbs = useAnimatedNumber(Math.abs(value), {
-    decimals: resolvedDecimals,
-    delay: 60,
-    duration: 850,
-  });
-  const good = value > 0 ? !invert : value < 0 ? invert : null;
-  const color = value === 0 ? cssVar("text-muted") : good ? cssVar("positive") : cssVar("severity-high");
-  const Icon = value > 0 ? ArrowUpRight : value < 0 ? ArrowDownRight : Minus;
-  const shown =
-    resolvedDecimals > 0 ? animatedAbs.toFixed(resolvedDecimals) : String(animatedAbs);
-  return (
-    <span
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 2,
-        color,
-        fontSize: size,
-        fontWeight: 600,
-        fontVariantNumeric: "tabular-nums",
-        fontFamily: cssVar("font-numeric"),
-      }}
-    >
-      <Icon size={size + 1.5} strokeWidth={2.4} />
-      {shown}
-      {suffix}
-    </span>
-  );
 }
 
 function Card({
@@ -167,39 +95,6 @@ function Card({
       }}
     >
       {children}
-    </div>
-  );
-}
-
-function CardQ({
-  children,
-  hint,
-  star,
-}: {
-  children: React.ReactNode;
-  hint?: string;
-  star?: boolean;
-}): React.ReactElement {
-  return (
-    <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
-      <h3
-        style={{
-          margin: 0,
-          fontSize: 14.5,
-          fontWeight: 650,
-          color: cssVar("text-primary"),
-          letterSpacing: "-0.01em",
-        }}
-      >
-        {children}
-      </h3>
-      {star ? (
-        <Star size={13} fill={cssVar("severity-med")} color={cssVar("severity-med")} />
-      ) : hint ? (
-        <span title={hint} style={{ display: "inline-flex", color: cssVar("text-muted"), cursor: "help" }}>
-          <Info size={13.5} />
-        </span>
-      ) : null}
     </div>
   );
 }
@@ -704,18 +599,20 @@ function SentimentSegmentRow({
   seg,
   idx,
   linked,
+  holdsShare,
   sharePct,
   rfmRevPct,
   rfmColor,
-  onSelect,
 }: {
   seg: HappinessSegmentRow;
   idx: number;
+  /** Primary customer segment mapped from the selected RFM cell. */
   linked: boolean;
+  /** This row carries share % of the selected RFM cohort. */
+  holdsShare: boolean;
   sharePct: number;
   rfmRevPct: number;
   rfmColor: string;
-  onSelect: () => void;
 }): React.ReactElement {
   const animatedShare = useAnimatedNumber(sharePct, { duration: 900, delay: 40 + idx * 25 });
   const happy = useAnimatedNumber(seg.happy, { duration: 900, delay: 60 + idx * 25 });
@@ -726,11 +623,10 @@ function SentimentSegmentRow({
     [neutral, cssVar("severity-med"), "#1a1205"] as const,
     [unhappy, cssVar("severity-high"), "#fff"] as const,
   ];
+  const emphasized = linked || holdsShare;
 
   return (
-    <button
-      type="button"
-      onClick={onSelect}
+    <div
       style={{
         display: "grid",
         gridTemplateColumns: "minmax(110px, 0.85fr) 48px minmax(0, 1.5fr)",
@@ -739,16 +635,20 @@ function SentimentSegmentRow({
         width: "100%",
         boxSizing: "border-box",
         padding: "12px 16px",
-        border: "none",
         borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
-        borderLeft: linked ? `3px solid ${seg.color}` : "3px solid transparent",
-        background: linked ? `${seg.color}16` : "transparent",
-        cursor: "pointer",
+        borderLeft: linked
+          ? `3px solid ${rfmColor}`
+          : holdsShare
+            ? `3px solid ${rfmColor}66`
+            : "3px solid transparent",
+        background: linked ? `${rfmColor}18` : holdsShare ? `${rfmColor}0c` : "transparent",
+        opacity: emphasized ? 1 : 0.42,
         fontFamily: "inherit",
         color: "inherit",
         textAlign: "left",
         flex: 1,
         minHeight: 72,
+        transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
       }}
       title={`${seg.label} · ${sharePct}% of ${rfmRevPct}% RFM share · ${seg.happy}% happy · ₹${seg.gmvAtRiskCr} Cr GMV`}
     >
@@ -758,7 +658,7 @@ function SentimentSegmentRow({
           <span
             style={{
               fontSize: 12.5,
-              fontWeight: 700,
+              fontWeight: emphasized ? 700 : 600,
               color: cssVar("text-primary"),
               whiteSpace: "nowrap",
               overflow: "hidden",
@@ -776,8 +676,11 @@ function SentimentSegmentRow({
           fontWeight: 800,
           fontFamily: cssVar("font-numeric"),
           fontVariantNumeric: "tabular-nums",
-          color: linked ? rfmColor : cssVar("text-primary"),
+          color: emphasized ? rfmColor : cssVar("text-muted"),
           textAlign: "right",
+          padding: emphasized ? "2px 6px" : undefined,
+          borderRadius: emphasized ? radius.sm : undefined,
+          background: emphasized ? `${rfmColor}18` : undefined,
         }}
       >
         {animatedShare}%
@@ -822,7 +725,7 @@ function SentimentSegmentRow({
           ))}
         </div>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -831,7 +734,6 @@ function SentimentBySegmentPanel({
   rfmRevPct,
   linkedSegmentKey,
   rfmColor,
-  onSelectSegment,
   period,
 }: {
   selectedRfmId: RfmId;
@@ -839,7 +741,6 @@ function SentimentBySegmentPanel({
   rfmRevPct: number;
   linkedSegmentKey: HappinessSegmentKey;
   rfmColor: string;
-  onSelectSegment: (key: HappinessSegmentKey) => void;
   period: HappinessPeriodKey;
 }): React.ReactElement {
   const rows = segmentsRankedByGmvAtRisk(getHappinessSegmentRows(period));
@@ -885,18 +786,21 @@ function SentimentBySegmentPanel({
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-        {rows.map((seg, idx) => (
-          <SentimentSegmentRow
-            key={seg.key}
-            seg={seg}
-            idx={idx}
-            linked={seg.key === linkedSegmentKey}
-            sharePct={shareBySegment[seg.key] ?? 0}
-            rfmRevPct={rfmRevPct}
-            rfmColor={rfmColor}
-            onSelect={() => onSelectSegment(seg.key)}
-          />
-        ))}
+        {rows.map((seg, idx) => {
+          const sharePct = shareBySegment[seg.key] ?? 0;
+          return (
+            <SentimentSegmentRow
+              key={seg.key}
+              seg={seg}
+              idx={idx}
+              linked={seg.key === linkedSegmentKey}
+              holdsShare={sharePct > 0}
+              sharePct={sharePct}
+              rfmRevPct={rfmRevPct}
+              rfmColor={rfmColor}
+            />
+          );
+        })}
       </div>
     </Card>
   );
@@ -930,112 +834,7 @@ function RfmInteractiveBoard({
         linkedSegmentKey={linkedSegmentKey}
         rfmColor={rfm.color}
         period={period}
-        onSelectSegment={(key) => {
-          const match = rfmSegments.find((s) => RFM_TO_CUSTOMER_SEGMENT[s.id] === key);
-          if (match) onSelect(match.id);
-        }}
       />
-    </div>
-  );
-}
-
-const AI_INSIGHT_FOOTER_HEIGHT = 96;
-
-function AiInsightFooter({
-  label,
-  labelColor,
-  insight,
-  confidence,
-  pinBottom = true,
-  fill = false,
-}: {
-  label?: string;
-  labelColor?: string;
-  insight: string;
-  /** Model confidence score (0–100). Shown instead of a segment/score label when provided. */
-  confidence?: number;
-  pinBottom?: boolean;
-  /** Grow to fill leftover column height (keeps accent background flush to card bottom). */
-  fill?: boolean;
-}): React.ReactElement {
-  return (
-    <div
-      style={{
-        display: "flex",
-        gap: 8,
-        alignItems: "flex-start",
-        flexShrink: fill ? 1 : 0,
-        flexGrow: fill ? 1 : 0,
-        height: fill ? undefined : AI_INSIGHT_FOOTER_HEIGHT,
-        minHeight: AI_INSIGHT_FOOTER_HEIGHT,
-        boxSizing: "border-box",
-        marginTop: pinBottom ? "auto" : 0,
-        padding: "12px 16px",
-        background: cssVar("accent-soft"),
-        borderTop: `1px solid ${cssVar("border")}`,
-        borderBottom: pinBottom || fill ? undefined : `1px solid ${cssVar("border")}`,
-        borderRadius: 0,
-      }}
-    >
-      <Sparkles size={13} strokeWidth={2.4} color={cssVar("accent-2")} style={{ flexShrink: 0, marginTop: 2 }} />
-      <div style={{ minWidth: 0, flex: 1, height: "100%", display: "flex", flexDirection: "column" }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            flexWrap: "wrap",
-            marginBottom: 4,
-            flexShrink: 0,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 10,
-              fontWeight: 800,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              color: cssVar("accent-2"),
-              lineHeight: 1.2,
-            }}
-          >
-            AI Insight
-          </span>
-          {confidence != null ? <ConfidenceChip conf={confidence} /> : null}
-          {confidence == null && label && labelColor ? (
-            <span
-              style={{
-                fontSize: 10,
-                fontWeight: 700,
-                padding: "2px 8px",
-                borderRadius: radius.pill,
-                background: `${labelColor}18`,
-                color: labelColor,
-                border: `1px solid ${labelColor}40`,
-              }}
-            >
-              {label}
-            </span>
-          ) : null}
-        </div>
-        <span
-          style={{
-            flex: 1,
-            fontSize: 12,
-            color: cssVar("text-secondary"),
-            lineHeight: 1.4,
-            fontWeight: 500,
-            display: "-webkit-box",
-            WebkitLineClamp: 3,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textAlign: "justify",
-            textAlignLast: "left",
-          }}
-        >
-          {insight}
-        </span>
-      </div>
     </div>
   );
 }
@@ -1044,79 +843,88 @@ function SegmentTableRow({
   row,
   idx,
   totalVolume,
-  selectedKey,
   tableCols,
   rowHeight,
-  onSelect,
 }: {
   row: HappinessSegmentRow;
   idx: number;
   totalVolume: number;
-  selectedKey: HappinessSegmentKey;
   tableCols: string;
   rowHeight: number;
-  onSelect: (key: HappinessSegmentKey) => void;
 }): React.ReactElement {
-  const shareTarget = totalVolume > 0 ? Math.round((row.interactions / totalVolume) * 1000) / 10 : 0;
-  const interactions = useAnimatedNumber(row.interactions, { duration: 950, delay: 40 + idx * 30 });
+  const shareExact = totalVolume > 0 ? (row.interactions / totalVolume) * 100 : 0;
+  const shareTarget = Math.round(shareExact * 10) / 10;
   const share = useAnimatedNumber(shareTarget, { duration: 900, delay: 60 + idx * 30, decimals: 1 });
   const wowAbs = useAnimatedNumber(Math.abs(row.wowDelta), { duration: 850, delay: 70 + idx * 30, decimals: 1 });
-  const aov = useAnimatedNumber(row.aov, { duration: 900, delay: 80 + idx * 30 });
   const cpu = useAnimatedNumber(row.cpu, { duration: 900, delay: 90 + idx * 30, decimals: 1 });
-  const atv = useAnimatedNumber(row.atv, { duration: 900, delay: 100 + idx * 30 });
-  const ltv = useAnimatedNumber(row.ltv, { duration: 900, delay: 110 + idx * 30 });
-  const res = useAnimatedNumber(row.resolutionRate, { duration: 900, delay: 120 + idx * 30 });
+  const csat = useAnimatedNumber(row.csat, { duration: 900, delay: 95 + idx * 30 });
+  const fcr = useAnimatedNumber(row.fcr, { duration: 900, delay: 110 + idx * 30 });
+  const aov = useAnimatedNumber(row.aov, { duration: 900, delay: 115 + idx * 30 });
+  const atv = useAnimatedNumber(row.atv, { duration: 900, delay: 118 + idx * 30 });
+  const ltv = useAnimatedNumber(row.ltv, { duration: 900, delay: 120 + idx * 30 });
   const gmv = useAnimatedNumber(row.gmvAtRiskCr, {
     duration: 950,
-    delay: 130 + idx * 30,
+    delay: 122 + idx * 30,
     decimals: row.gmvAtRiskCr % 1 !== 0 ? 1 : 0,
+  });
+  const revAtRiskTarget = segmentRevenueAtRiskCr(row);
+  const revAtRisk = useAnimatedNumber(revAtRiskTarget, {
+    duration: 950,
+    delay: 124 + idx * 30,
+    decimals: revAtRiskTarget % 1 !== 0 ? 1 : 0,
   });
 
   const isFlat = Math.abs(row.wowDelta) < 0.05;
   const isUp = row.wowDelta > 0;
   const deltaColor = isFlat ? cssVar("text-muted") : isUp ? cssVar("positive") : cssVar("severity-high");
   const arrow = isFlat ? "●" : isUp ? "▲" : "▼";
-  const isSelected = row.key === selectedKey;
-  const aovColor = ragHigher(row.aov, 2000, 1400);
   const cpuColor = ragLower(row.cpu, 1.2, 2.0);
-  const atvColor = ragHigher(row.atv, 1800, 1200);
-  const ltvColor = band(row.ltv);
-  const resColor = ragHigher(row.resolutionRate, 50, 35);
-  const gmvColor = ragHigher(row.gmvAtRiskCr, 25, 15);
+  const csatColor = ragHigher(row.csat, 80, 70);
+  const fcrColor = ragHigher(row.fcr, 70, 55);
+  /** AOV / ATV shown as ₹ Cr (same ₹X.X pattern as GMV). */
+  const aovCr = row.aov / 1000;
+  const atvCr = row.atv / 1000;
+  const aovColor = ragHigher(aovCr, 2.0, 1.4);
+  const atvColor = ragHigher(atvCr, 1.8, 1.2);
+  const ltvColor = ragHigher(row.ltv, 75, 55);
+  /** Higher GMV / ₹ at risk is worse exposure. */
+  const gmvColor = ragLower(row.gmvAtRiskCr, 12, 22);
+  const revColor = ragLower(revAtRiskTarget, 0.8, 1.5);
   const metricStyle: React.CSSProperties = {
     fontSize: 12.5,
     fontWeight: 700,
     fontVariantNumeric: "tabular-nums",
     fontFamily: cssVar("font-numeric"),
     whiteSpace: "nowrap",
+    textAlign: "center",
+    display: "block",
+    width: "100%",
+    cursor: "help",
   };
+  const aovShown = (aov / 1000).toFixed(1);
+  const atvShown = (atv / 1000).toFixed(1);
   const gmvShown = row.gmvAtRiskCr % 1 !== 0 ? gmv.toFixed(1) : String(gmv);
+  const revShown = revAtRiskTarget % 1 !== 0 ? revAtRisk.toFixed(1) : String(Math.round(revAtRisk));
+  const wowSign = row.wowDelta > 0 ? "+" : row.wowDelta < 0 ? "−" : "";
 
   return (
-    <button
-      type="button"
-      onClick={() => onSelect(row.key)}
+    <div
       style={{
         display: "grid",
         gridTemplateColumns: tableCols,
         columnGap: 10,
         alignItems: "center",
+        justifyItems: "center",
         width: "100%",
         boxSizing: "border-box",
         padding: "10px 16px",
-        border: "none",
         borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
-        borderLeft: isSelected ? `3px solid ${row.color}` : "3px solid transparent",
-        background: isSelected ? `${row.color}14` : "transparent",
-        cursor: "pointer",
-        textAlign: "left",
-        fontFamily: "inherit",
-        color: "inherit",
+        borderLeft: "3px solid transparent",
+        background: "transparent",
         height: rowHeight,
         minHeight: rowHeight,
         flexShrink: 0,
       }}
-      title={`${row.label} · LTV score ${row.ltv} · AOV ₹${formatInt(row.aov)} · CPU ${row.cpu}`}
     >
       <span
         style={{
@@ -1132,7 +940,9 @@ function SegmentTableRow({
           width: "fit-content",
           maxWidth: "100%",
           whiteSpace: "nowrap",
+          justifySelf: "start",
         }}
+        title={row.label}
       >
         {row.label}
       </span>
@@ -1140,45 +950,69 @@ function SegmentTableRow({
         style={{
           display: "inline-flex",
           alignItems: "baseline",
-          gap: 5,
+          justifyContent: "center",
+          gap: 6,
           fontVariantNumeric: "tabular-nums",
           fontFamily: cssVar("font-numeric"),
           whiteSpace: "nowrap",
+          cursor: "help",
         }}
+        title={`Share ${shareExact}% · ${formatInt(row.interactions)} contacts · change ${wowSign}${Math.abs(row.wowDelta)}%`}
       >
         <span style={{ fontSize: 13, fontWeight: 600, color: cssVar("text-primary") }}>
-          {formatInt(interactions)}
+          {share.toFixed(1)}%
         </span>
-        <span style={{ fontSize: 11, fontWeight: 600, color: cssVar("text-muted") }}>
-          ({share.toFixed(1)}%)
+        <span
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 3,
+            fontSize: 11,
+            fontWeight: 600,
+            color: deltaColor,
+          }}
+        >
+          <span style={{ fontSize: 9 }}>{arrow}</span>
+          {wowAbs.toFixed(1)}%
         </span>
+      </span>
+      <span style={{ ...metricStyle, color: csatColor }} title={`CSAT ${row.csat}%`}>
+        {csat}%
+      </span>
+      <span style={{ ...metricStyle, color: fcrColor }} title={`FCR ${row.fcr}%`}>
+        {fcr}%
       </span>
       <span
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 4,
-          fontSize: 11,
-          fontWeight: 600,
-          fontVariantNumeric: "tabular-nums",
-          color: deltaColor,
-          whiteSpace: "nowrap",
-        }}
+        style={{ ...metricStyle, color: aovColor, fontWeight: 800 }}
+        title={`AOV ₹${aovCr} Cr (₹${formatInt(row.aov)})`}
       >
-        <span style={{ fontSize: 9 }}>{arrow}</span>
-        {wowAbs.toFixed(1)}%
+        {formatCr(Number(aovShown))}
       </span>
-      <span style={{ ...metricStyle, color: aovColor }}>₹{formatInt(aov)}</span>
-      <span style={{ ...metricStyle, color: cpuColor }} title="Contacts per unit (units, not orders)">
-        {cpu.toFixed(1)}
+      <span
+        style={{ ...metricStyle, color: atvColor, fontWeight: 800 }}
+        title={`ATV ₹${atvCr} Cr (₹${formatInt(row.atv)})`}
+      >
+        {formatCr(Number(atvShown))}
       </span>
-      <span style={{ ...metricStyle, color: atvColor }}>₹{formatInt(atv)}</span>
-      <span style={{ ...metricStyle, color: ltvColor }} title="Lifetime value score — defines customer lifetime value">
+      <span style={{ ...metricStyle, color: ltvColor }} title={`LTV score ${row.ltv}/100`}>
         {ltv}
       </span>
-      <span style={{ ...metricStyle, color: resColor }}>{res}%</span>
-      <span style={{ ...metricStyle, color: gmvColor, fontWeight: 800 }}>₹{gmvShown}</span>
-    </button>
+      <span style={{ ...metricStyle, color: cpuColor }} title={`CPU ${row.cpu}`}>
+        {cpu.toFixed(1)}
+      </span>
+      <span
+        style={{ ...metricStyle, color: gmvColor, fontWeight: 800 }}
+        title={`GMV ₹${row.gmvAtRiskCr} Cr`}
+      >
+        {formatCr(Number(gmvShown))}
+      </span>
+      <span
+        style={{ ...metricStyle, color: revColor, fontWeight: 800 }}
+        title={`Rev at risk ₹${revAtRiskTarget} Cr (GMV ₹${row.gmvAtRiskCr} Cr × churn ${row.churn}%)`}
+      >
+        {formatCr(Number(revShown))}
+      </span>
+    </div>
   );
 }
 
@@ -1187,17 +1021,20 @@ function TotalInteractionsPanel({
 }: {
   period: HappinessPeriodKey;
 }): React.ReactElement {
+  const { mode } = useTheme();
+  const isDark = mode === "dark";
   const deltaLabel = HAPPINESS_PERIODS[period].delta;
-  const rows = segmentsRankedByGmvAtRisk(getHappinessSegmentRows(period));
-  const [selectedKey, setSelectedKey] = useState<HappinessSegmentKey>(rows[0]?.key ?? "loyal");
-  const selected = rows.find((r) => r.key === selectedKey) ?? rows[0];
+  const rows = segmentsRankedByRevenueAtRisk(getHappinessSegmentRows(period));
   const totalVolume = rows.reduce((sum, r) => sum + r.interactions, 0);
-  const tableCols = "1.45fr 1.15fr 0.65fr 0.75fr 0.5fr 0.75fr 0.7fr 0.55fr 0.65fr";
-  /** Viewport shows 5 segments; remaining (Frequent, Dormant, …) scroll into view. */
+  const { insights, details } = getHappinessSegmentInsights(period);
+  const tableCols = "1.25fr 0.85fr 0.4fr 0.4fr 0.55fr 0.55fr 0.4fr 0.35fr 0.5fr 0.75fr";
   const SEGMENT_ROW_H = 56;
-  const VISIBLE_SEGMENT_ROWS = 5;
 
-  const headerCell = (label: string, title?: string): React.ReactElement => (
+  const headerCell = (
+    label: string,
+    title?: string,
+    align: "center" | "start" = "center",
+  ): React.ReactElement => (
     <span
       key={label}
       title={title}
@@ -1209,6 +1046,9 @@ function TotalInteractionsPanel({
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
+        textAlign: align,
+        width: "100%",
+        justifySelf: align,
         cursor: title ? "help" : undefined,
       }}
     >
@@ -1217,14 +1057,15 @@ function TotalInteractionsPanel({
   );
 
   return (
-    <Card style={{ display: "flex", flexDirection: "column", minHeight: 0, height: "100%", padding: 0, overflow: "hidden" }}>
-      <div
+    <div style={{ display: "flex", gap: 14, alignItems: "stretch" }}>
+      <Card
         style={{
+          flex: "1 1 0",
+          minWidth: 0,
           display: "flex",
           flexDirection: "column",
-          flex: 1,
-          width: "100%",
-          minHeight: 0,
+          padding: 0,
+          overflow: "visible",
         }}
       >
         <div
@@ -1233,6 +1074,7 @@ function TotalInteractionsPanel({
             gridTemplateColumns: tableCols,
             columnGap: 10,
             alignItems: "center",
+            justifyItems: "center",
             width: "100%",
             boxSizing: "border-box",
             padding: "12px 16px",
@@ -1241,129 +1083,57 @@ function TotalInteractionsPanel({
             flexShrink: 0,
           }}
         >
-          {headerCell("SEGMENT")}
-          {headerCell("INTERACTIONS", "Count and share of total contacts")}
-          {headerCell("ACTIVE", `Active change ${deltaLabel}`)}
-          {headerCell("AOV", "Average order value")}
+          {headerCell("SEGMENT", undefined, "start")}
+          {headerCell(
+            "INTERACTIONS",
+            `Share of total contacts and active change ${deltaLabel}`,
+          )}
+          {headerCell("CSAT", "Customer Satisfaction")}
+          {headerCell("FCR", "First Contact Resolution")}
+          {headerCell("AOV (₹ cr)", "Average order value (₹ Cr)")}
+          {headerCell("ATV (₹ cr)", "Average transaction value (₹ Cr)")}
+          {headerCell("LTV", "Lifetime value score (0–100) — not used in Rev at risk")}
           {headerCell("CPU", "Contacts per unit (units, not orders)")}
-          {headerCell("ATV (cr)", "Average transaction value (₹ Cr)")}
-          {headerCell("LTV", "Lifetime value score (0–100) — defines customer lifetime value")}
-          {headerCell("RES.", "Resolution rate")}
-          {headerCell("GMV", "GMV exposed (₹ Cr)")}
+          {headerCell("GMV (₹ cr)", "GMV exposed (₹ Cr)")}
+          {headerCell("REV AT RISK (₹ cr)", "Revenue at risk (₹ Cr) = GMV exposed × churn %")}
         </div>
 
-        <div
-          style={{
-            flex: 1,
-            minHeight: SEGMENT_ROW_H * VISIBLE_SEGMENT_ROWS,
-            overflowY: "auto",
-            overscrollBehavior: "contain",
-            background: cssVar("surface"),
-          }}
-        >
+        <div style={{ background: cssVar("surface") }}>
           {rows.map((row, idx) => (
             <SegmentTableRow
               key={row.key}
               row={row}
               idx={idx}
               totalVolume={totalVolume}
-              selectedKey={selectedKey}
               tableCols={tableCols}
               rowHeight={SEGMENT_ROW_H}
-              onSelect={setSelectedKey}
             />
           ))}
         </div>
+      </Card>
 
-        {selected ? (
-          <AiInsightFooter
-            insight={selected.aiInsight}
-            confidence={selected.aiConfidence}
-            pinBottom={false}
-          />
-        ) : null}
-      </div>
-    </Card>
-  );
-}
-
-function MetricScoreRow({
-  label,
-  value,
-  delta,
-  suffix,
-  invertDelta,
-  isSelected,
-  showBorder,
-  decimals,
-  onSelect,
-}: {
-  label: string;
-  value: number;
-  delta: number;
-  suffix?: string;
-  invertDelta?: boolean;
-  isSelected: boolean;
-  showBorder: boolean;
-  decimals?: number;
-  onSelect: () => void;
-}): React.ReactElement {
-  const animated = useAnimatedNumber(value, {
-    duration: 950,
-    delay: 40,
-    decimals: decimals ?? 0,
-  });
-  const shown =
-    (decimals ?? 0) > 0 ? animated.toFixed(decimals) : String(animated);
-
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        width: "100%",
-        boxSizing: "border-box",
-        padding: "8px 8px",
-        margin: 0,
-        border: "none",
-        borderLeft: isSelected ? `3px solid ${cssVar("accent")}` : "3px solid transparent",
-        borderBottom: showBorder ? `1px solid ${cssVar("border")}` : "none",
-        background: isSelected ? cssVar("accent-soft") : "transparent",
-        borderRadius: isSelected ? radius.sm : 0,
-        cursor: "pointer",
-        textAlign: "left",
-        fontFamily: "inherit",
-        color: "inherit",
-      }}
-      title={`Select ${label} for AI insight`}
-    >
-      <span
+      {/* AI Summary Wall — parallel to table; compact, no subtitle strip. */}
+      <div
         style={{
-          fontSize: 12,
-          color: isSelected ? cssVar("text-primary") : cssVar("text-muted"),
-          fontWeight: isSelected ? 600 : 500,
+          flex: "0 0 340px",
+          minWidth: 280,
+          maxWidth: 380,
+          position: "relative",
+          alignSelf: "stretch",
         }}
       >
-        {label}
-      </span>
-      <span style={{ display: "inline-flex", alignItems: "baseline", gap: 7 }}>
-        <b
-          style={{
-            fontSize: 17,
-            fontFamily: cssVar("font-numeric"),
-            fontVariantNumeric: "tabular-nums",
-            color: scoreValueColor(label, value),
-          }}
-        >
-          {shown}
-          {suffix ?? ""}
-        </b>
-        <Delta value={delta} invert={invertDelta} />
-      </span>
-    </button>
+        <div style={{ position: "absolute", inset: 0 }}>
+          <AISummaryWall
+            data={insights}
+            insightDetailsMap={details}
+            isDarkMode={isDark}
+            height="100%"
+            showSeveritySummary={false}
+            compact
+          />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -1374,7 +1144,6 @@ export function CustomerHappinessDashboard({
 }): React.ReactElement {
   const { mode } = useTheme();
   const [rfmSel, setRfmSel] = useState<RfmId>("champions");
-  const [selectedScore, setSelectedScore] = useState("Happiness Index");
   const [failViewMode, setFailViewMode] = useState<"channel" | "customerSegment">("channel");
   const isDark = mode === "dark";
 
@@ -1412,135 +1181,14 @@ export function CustomerHappinessDashboard({
     </div>
   );
 
-  const d = HAPPINESS_DATA[period];
-  const meta = HAPPINESS_PERIODS[period];
   const segmentRows = getHappinessSegmentRows(period);
   const fciClusters = getFlipkartFciClustersForRange(period);
-  const refundDriver = d.composite.find((c) => c.k === "Returns & refunds")?.s ?? 54;
-  const lapsingScore = d.cohorts.find((c) => c.id === "lapsing")?.score ?? 45;
-
-  const metricRows: Array<{
-    label: string;
-    value: number;
-    delta: number;
-    suffix?: string;
-    invertDelta?: boolean;
-    decimals?: number;
-    aiInsight: string;
-  }> = [
-    {
-      label: "Happiness Index",
-      value: d.headline.score,
-      delta: d.headline.delta,
-      suffix: "/100",
-      aiInsight: `Happiness Index at ${d.headline.score}/100 is ${d.headline.delta >= 0 ? "up" : "down"} ${Math.abs(d.headline.delta)} pts ${meta.delta}. Refund turnaround is the main drag — lapsing buyers (score ${lapsingScore}) concentrate the pain. Prioritise refund SLA recovery this window before loyalty softens and high-GMV cohorts start to exit.`,
-    },
-    {
-      label: "Net Promoter Score",
-      value: d.headline.nps,
-      delta: d.headline.npsD,
-      aiInsight: `NPS sits at ${d.headline.nps} (${d.headline.npsD > 0 ? "+" : ""}${d.headline.npsD} ${meta.delta}). Promoters rise on Plus delivery wins while detractors still cluster on refund lag after pickup. Fix post-pickup refund SLA this week to convert passive buyers into promoters before the score stalls.`,
-    },
-    {
-      label: "Customer Satisfaction",
-      value: d.headline.csat,
-      delta: d.headline.csatD,
-      suffix: "%",
-      aiInsight: `CSAT is ${d.headline.csat}% (${d.headline.csatD > 0 ? "+" : ""}${d.headline.csatD} ${meta.delta}) — soft for a marketplace that sells on promise reliability. Dissatisfaction concentrates in returns and refunds (driver score ${refundDriver}), not in browse or checkout. Confirm every refund within 24 hours of pickup scan to stop the soft CSAT leak.`,
-    },
-    {
-      label: "Customer Effort Score",
-      value: d.headline.ease,
-      delta: d.headline.easeD,
-      suffix: "/5",
-      decimals: 1,
-      aiInsight: `Effort is ${d.headline.ease}/5 (${d.headline.easeD > 0 ? "+" : ""}${d.headline.easeD} ${meta.delta}) — shoppers still work too hard after the order is placed. Friction peaks on refund status checks and delivery ETA changes that force repeat contacts. Ship self-serve refund tracking and proactive ETA pushes to cut those repeats this window.`,
-    },
-    {
-      label: "Customer Loyalty Index",
-      value: d.headline.loyalty,
-      delta: d.headline.loyaltyD,
-      suffix: "/100",
-      aiInsight: `Loyalty Index at ${d.headline.loyalty}/100 (${d.headline.loyaltyD > 0 ? "+" : ""}${d.headline.loyaltyD} ${meta.delta}) still holds on Top and Strong. Priority and Risk RFM cells are slipping on recency — the silent leak under a stable headline. Protect high-GMV cohorts with white-glove recovery before churn reverses the loyalty gain.`,
-    },
-    {
-      label: "Customer Churn Rate",
-      value: d.headline.churn,
-      delta: d.headline.churnD,
-      suffix: "%",
-      decimals: 1,
-      invertDelta: true,
-      aiInsight: `Churn is ${d.headline.churn}% (${d.headline.churnD > 0 ? "+" : ""}${d.headline.churnD} pts ${meta.delta}) — any improvement here is still fragile. Exits concentrate in lapsing buyers and refund-pain cohorts, not in healthy Active or Loyal segments. Trigger retention outreach on the second refund complaint within 14 days before they leave for good.`,
-    },
-    {
-      label: "Repeat Purchase Rate",
-      value: d.headline.repeatPurchase,
-      delta: d.headline.repeatD,
-      suffix: "%",
-      aiInsight: `Repeat purchase is ${d.headline.repeatPurchase}% (${d.headline.repeatD > 0 ? "+" : ""}${d.headline.repeatD} ${meta.delta}) — frequency is the growth lever this window. Active and Seasonal lift cadence while Occasional buyers stall after a single bad delivery. Deploy win-back within 7 days of the incident to recover the next order before habit breaks.`,
-    },
-    {
-      label: "First Contact Resolution",
-      value: d.headline.fcr,
-      delta: d.headline.fcrD,
-      suffix: "%",
-      aiInsight: `FCR is ${d.headline.fcr}% (${d.headline.fcrD > 0 ? "+" : ""}${d.headline.fcrD} ${meta.delta}) — too many cases still need a second contact. Repeat contacts cluster on refund status silence and delivery ETA changes after first touch. Script first-touch refund confirmation and proactive ETA this window to lift resolve-on-contact.`,
-    },
-    {
-      label: "Customer Retention Rate",
-      value: d.headline.retention,
-      delta: d.headline.retentionD,
-      suffix: "%",
-      aiInsight: `Retention holds at ${d.headline.retention}% (${d.headline.retentionD > 0 ? "+" : ""}${d.headline.retentionD} ${meta.delta}) — the base is stable but the edge is soft. Top and Strong look fine; Priority and Risk RFM cells are where retention leaks first. Pair win-back offers with refund-SLA recovery for high-GMV cohorts before they go quiet.`,
-    },
-  ];
-
-  const selectedScoreRow = metricRows.find((r) => r.label === selectedScore) ?? metricRows[0];
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 0, fontFamily: cssVar("font"), color: cssVar("text-primary") }}>
-      {/* Scores read — no section number (page headline covers the question) */}
-      <div style={{ display: "grid", gridTemplateColumns: "minmax(260px, 1fr) minmax(0, 2fr)", gap: 14, alignItems: "stretch" }}>
-        <Card
-          primary
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: 0,
-            height: "100%",
-            padding: 0,
-            overflow: "hidden",
-          }}
-        >
-          <div style={{ padding: "18px 18px 0", flex: 1, minHeight: 0 }}>
-            <CardQ hint={`Weighted average of delivery, returns, support, product & sentiment · ${meta.period}.`}>
-              How happy are they right now?
-            </CardQ>
-            <div>
-              {metricRows.map((row, i) => (
-                <MetricScoreRow
-                  key={row.label}
-                  label={row.label}
-                  value={row.value}
-                  delta={row.delta}
-                  suffix={row.suffix}
-                  invertDelta={row.invertDelta}
-                  decimals={row.decimals}
-                  isSelected={row.label === selectedScore}
-                  showBorder={i < metricRows.length - 1}
-                  onSelect={() => setSelectedScore(row.label)}
-                />
-              ))}
-            </div>
-          </div>
+      <HappinessHeadlineKpiCards period={period} />
 
-          <AiInsightFooter
-            label={selectedScoreRow.label}
-            labelColor={cssVar("accent-2")}
-            insight={selectedScoreRow.aiInsight}
-          />
-        </Card>
-
+      <div style={{ marginTop: 14 }}>
         <TotalInteractionsPanel period={period} />
       </div>
 

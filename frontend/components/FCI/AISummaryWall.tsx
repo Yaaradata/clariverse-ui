@@ -184,6 +184,13 @@ interface AISummaryWallProps {
   intelligenceSubtitle?: string;
   /** Ranked rows start collapsed (headline + severity + tag + metric only); expand on click */
   defaultCollapsed?: boolean;
+  /** Critical / Warnings / Improving count strip at bottom. Default true. */
+  showSeveritySummary?: boolean;
+  /**
+   * Tighter padding/gaps and no subtitle — for side-by-side panels next to tables.
+   * When true, subtitle is hidden unless you need details-mode status text.
+   */
+  compact?: boolean;
 }
 
 export function AISummaryWall({
@@ -194,6 +201,8 @@ export function AISummaryWall({
   title = 'AI Summary Wall',
   intelligenceSubtitle,
   defaultCollapsed = false,
+  showSeveritySummary = true,
+  compact = false,
 }: AISummaryWallProps) {
   const [isVisible, setIsVisible] = useState(false);
   const [activeInsight, setActiveInsight] = useState<string | null>(null);
@@ -266,12 +275,10 @@ export function AISummaryWall({
   const getCategoryLabel = (category: FCICategory) => {
     switch (category) {
       case 'system-issue': return 'System Issue';
-      case 'sla-breach': return 'SLA Breach';
-      case 'customer-experience': return 'Customer Experience';
-      case 'product-update': return 'Product Update';
-      case 'compliance': return 'Compliance';
-      case 'security': return 'Security';
-      case 'operational': return 'Operational';
+      case 'sla-breach': return 'SLA';
+      case 'customer-experience': return 'Cust. Exp';
+      case 'product-update': return 'Product';
+      case 'operational': return 'Ops';
       case 'franchise': return 'Franchise';
       default: return category;
     }
@@ -327,6 +334,18 @@ export function AISummaryWall({
 
   const resolvedDetailsMap = insightDetailsMap ?? fciInsightDetailsMap;
   const fillsParent = height === '100%';
+  const showSubtitle =
+    !compact ||
+    (defaultCollapsed && expandedId != null) ||
+    selectedInsight != null;
+  const subtitleText =
+    defaultCollapsed && expandedId
+      ? 'Viewing details'
+      : selectedInsight
+        ? 'Viewing details'
+        : intelligenceSubtitle === undefined
+          ? 'Real-time FCI intelligence'
+          : intelligenceSubtitle;
 
   // Get details for selected insight
   const selectedDetails = selectedInsight ? resolvedDetailsMap[selectedInsight.id] : null;
@@ -334,9 +353,9 @@ export function AISummaryWall({
 
   return (
     <div
-      className={`rounded-2xl p-6 transition-all duration-500 flex flex-col min-h-0 ${
-        fillsParent ? 'overflow-hidden' : ''
-      } ${
+      className={`rounded-2xl transition-all duration-500 flex flex-col min-h-0 ${
+        compact ? 'p-4' : 'p-6'
+      } ${fillsParent ? 'overflow-hidden' : ''} ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
       }`}
       style={{
@@ -349,30 +368,34 @@ export function AISummaryWall({
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between mb-5 flex-shrink-0 py-2 px-2">
-        <div className="flex items-center gap-3">
-          <span className="text-2xl">✨</span>
-          <div>
-            <h3 
-              className="text-lg font-bold"
+      <div
+        className={`flex items-center justify-between flex-shrink-0 gap-3 ${
+          compact ? 'mb-3' : 'mb-5'
+        }`}
+      >
+        <div className="flex items-center gap-2.5 min-w-0">
+          <span className="text-xl leading-none flex-shrink-0" aria-hidden>
+            ✨
+          </span>
+          <div className="min-w-0">
+            <h3
+              className={`font-bold leading-tight ${compact ? 'text-base' : 'text-lg'}`}
               style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
             >
               {title}
             </h3>
-            <p className="text-xs" style={{ color: '#939394' }}>
-              {defaultCollapsed && expandedId
-                ? 'Viewing details'
-                : selectedInsight
-                  ? 'Viewing details'
-                  : (intelligenceSubtitle ?? 'Real-time FCI intelligence')}
-            </p>
+            {showSubtitle && subtitleText ? (
+              <p className="text-xs mt-0.5" style={{ color: '#939394' }}>
+                {subtitleText}
+              </p>
+            ) : null}
           </div>
         </div>
-        <div 
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
-          style={{ 
+        <div
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium flex-shrink-0"
+          style={{
             backgroundColor: isDarkMode ? '#1a1a1a' : '#F5F5F5',
-            color: '#939394'
+            color: '#939394',
           }}
         >
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
@@ -380,13 +403,246 @@ export function AISummaryWall({
         </div>
       </div>
 
-      {/* Scrollable Content Area - includes both detail view and insights list */}
-      <div className="flex-1 overflow-y-auto py-2 pr-2 scrollbar-thin relative" style={{ 
-        scrollbarWidth: 'thin',
-        scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5',
-        minHeight: 0
-      }}>
-        {/* Insights List */}
+      {/* Scrollable Content Area */}
+      <div
+        className={`flex-1 overflow-y-auto relative min-h-0 ${compact ? 'pr-0.5' : 'pr-2'}`}
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: isDarkMode ? '#3a3a3a #1a1a1a' : '#d1d1d1 #f5f5f5',
+          ...(compact
+            ? {
+                display: 'flex',
+                flexDirection: 'column',
+                scrollSnapType: 'y mandatory',
+                overscrollBehaviorY: 'contain' as const,
+              }
+            : null),
+        }}
+      >
+        {compact ? (
+          sortedData.map((insight) => {
+            const config = getTypeConfig(insight.severity);
+            const Icon = config.icon;
+            const TrendIcon = getTrendIcon(insight.trend);
+            const CategoryIcon = getCategoryIcon(insight.category);
+            const details = resolvedDetailsMap[insight.id];
+            const action = details?.recommendedActions[0];
+            const areas = details?.affectedAreas?.slice(0, 3) ?? [];
+
+            return (
+              <div
+                key={insight.id}
+                style={{
+                  flex: '0 0 100%',
+                  minHeight: '100%',
+                  maxHeight: '100%',
+                  boxSizing: 'border-box',
+                  scrollSnapAlign: 'start',
+                  scrollSnapStop: 'always',
+                  display: 'flex',
+                }}
+              >
+                <div
+                  className="relative rounded-xl p-3.5 box-border overflow-hidden flex flex-col w-full gap-2.5"
+                  style={{
+                    background: config.bgGradient,
+                    border: `1px solid ${config.borderColor}`,
+                    minHeight: 0,
+                    height: '100%',
+                  }}
+                >
+                  {/* Header */}
+                  <div className="flex items-start gap-2.5 flex-shrink-0">
+                    <div
+                      className="p-1.5 rounded-lg flex-shrink-0"
+                      style={{ backgroundColor: `${config.color}20` }}
+                    >
+                      <Icon className="w-3.5 h-3.5" style={{ color: config.color }} />
+                    </div>
+                    <div className="flex-1 min-w-0 flex flex-col gap-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span
+                          className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded"
+                          style={{ backgroundColor: `${config.color}25`, color: config.color }}
+                        >
+                          {config.label}
+                        </span>
+                        <span
+                          className="text-[10px] px-1.5 py-0.5 rounded inline-flex items-center gap-1"
+                          style={{
+                            backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
+                            color: '#939394',
+                          }}
+                        >
+                          <CategoryIcon className="w-3 h-3" />
+                          {getCategoryLabel(insight.category)}
+                        </span>
+                      </div>
+                      <p
+                        className="text-[13px] font-semibold leading-snug m-0"
+                        style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                      >
+                        {insight.title}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Signal */}
+                  <p
+                    className="text-xs leading-snug m-0 flex-shrink-0"
+                    style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                  >
+                    {insight.message}
+                  </p>
+
+                  {/* Metrics strip */}
+                  <div
+                    className="flex items-center gap-x-3 gap-y-1 flex-wrap flex-shrink-0 py-2 px-2 rounded-lg"
+                    style={{
+                      backgroundColor: isDarkMode ? 'rgba(0,0,0,0.25)' : 'rgba(255,255,255,0.55)',
+                      border: `1px solid ${config.color}28`,
+                    }}
+                  >
+                    {insight.change !== undefined && TrendIcon ? (
+                      <span
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold"
+                        style={{ color: insight.trend === 'up' ? '#ef4444' : '#22c55e' }}
+                      >
+                        <TrendIcon className="w-3 h-3" />
+                        {insight.change > 0 ? '+' : ''}
+                        {insight.change}%
+                      </span>
+                    ) : null}
+                    {insight.metrics?.volume !== undefined ? (
+                      <span className="text-[11px] font-semibold" style={{ color: config.color }}>
+                        {insight.metrics.volume.toLocaleString('en-IN')} {insight.metrics.volumeLabel}
+                      </span>
+                    ) : null}
+                    {insight.metrics?.repeatRate != null ? (
+                      <span className="text-[11px]" style={{ color: '#939394' }}>
+                        {insight.metrics.repeatRate}% repeat
+                      </span>
+                    ) : null}
+                    {insight.metrics?.customerImpact ? (
+                      <span
+                        className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded"
+                        style={{ backgroundColor: `${config.color}20`, color: config.color }}
+                      >
+                        {insight.metrics.customerImpact}
+                      </span>
+                    ) : null}
+                  </div>
+
+                  {/* Why */}
+                  {details?.rootCause ? (
+                    <div className="flex-shrink-0">
+                      <p
+                        className="text-[10px] uppercase tracking-wide m-0 mb-1"
+                        style={{ color: config.color, fontWeight: 800 }}
+                      >
+                        Why it matters
+                      </p>
+                      <p
+                        className="text-xs leading-snug m-0"
+                        style={{
+                          color: isDarkMode ? '#D6D9D8' : '#4a4a4a',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {details.rootCause}
+                      </p>
+                    </div>
+                  ) : null}
+
+                  {/* Where */}
+                  {areas.length > 0 ? (
+                    <div className="flex-shrink-0">
+                      <p
+                        className="text-[10px] uppercase tracking-wide m-0 mb-1.5"
+                        style={{ color: config.color, fontWeight: 800 }}
+                      >
+                        Affected
+                      </p>
+                      <div className="flex flex-wrap gap-1.5">
+                        {areas.map((area) => (
+                          <span
+                            key={area}
+                            className="text-[10px] font-medium px-2 py-0.5 rounded-full"
+                            style={{
+                              backgroundColor: isDarkMode ? '#2a2a2a' : '#FFFFFF',
+                              color: isDarkMode ? '#D6D9D8' : '#4a4a4a',
+                              border: `1px solid ${config.color}40`,
+                            }}
+                          >
+                            {area}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  {/* Act + owner — pinned bottom */}
+                  <div
+                    className="mt-auto pt-2.5 flex-shrink-0 flex flex-col gap-2"
+                    style={{ borderTop: `1px solid ${config.color}30` }}
+                  >
+                    {action ? (
+                      <div>
+                        <p
+                          className="text-[10px] uppercase tracking-wide m-0 mb-1"
+                          style={{ color: config.color, fontWeight: 800 }}
+                        >
+                          Act now
+                        </p>
+                        <p
+                          className="text-xs leading-snug m-0 font-medium"
+                          style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
+                        >
+                          {action}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    <div className="flex items-center gap-2 flex-wrap">
+                      {details?.assignedTo ? (
+                        <span
+                          className="inline-flex items-center gap-1 text-[10px]"
+                          style={{ color: '#939394' }}
+                        >
+                          <Users className="w-3 h-3" />
+                          {details.assignedTo}
+                        </span>
+                      ) : null}
+                      {details?.timeToResolve ? (
+                        <span
+                          className="inline-flex items-center gap-1 text-[10px]"
+                          style={{ color: '#939394' }}
+                        >
+                          <Clock className="w-3 h-3" />
+                          {details.timeToResolve}
+                        </span>
+                      ) : null}
+                      {details?.priorityLabel ? (
+                        <span
+                          className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ml-auto"
+                          style={{
+                            backgroundColor: `${config.color}20`,
+                            color: config.color,
+                          }}
+                        >
+                          {details.priorityLabel}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        ) : (
         <div className="space-y-3">
           {sortedData.map((insight, index) => {
             const config = getTypeConfig(insight.severity);
@@ -401,32 +657,35 @@ export function AISummaryWall({
             return (
               <div
                 key={insight.id}
-                className={`relative rounded-xl p-4 cursor-pointer transition-all duration-300 ${
+                className={`relative rounded-xl p-4 cursor-pointer transition-all duration-300 box-border ${
                   isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'
                 } ${isActive ? 'scale-[1.02]' : 'hover:scale-[1.01]'}`}
-                style={{ 
+                style={{
                   transitionDelay: `${index * 80}ms`,
                   background: config.bgGradient,
-                  border: `1px solid ${isSelected ? config.color : (isActive ? config.color : config.borderColor)}`,
-                  boxShadow: isSelected ? `0 4px 20px ${config.color}40` : (isActive ? `0 4px 20px ${config.color}30` : 'none')
+                  border: `1px solid ${isSelected ? config.color : isActive ? config.color : config.borderColor}`,
+                  boxShadow: isSelected
+                    ? `0 4px 20px ${config.color}40`
+                    : isActive
+                      ? `0 4px 20px ${config.color}30`
+                      : 'none',
                 }}
                 onMouseEnter={() => setActiveInsight(insight.id)}
                 onMouseLeave={() => setActiveInsight(null)}
                 onClick={(e) => handleInsightClick(insight, e)}
               >
-                {/* Glow effect for critical items */}
                 {insight.severity === 'critical' && (
-                  <div 
+                  <div
                     className="absolute inset-0 rounded-xl animate-pulse"
-                    style={{ 
+                    style={{
                       background: `radial-gradient(circle at center, ${config.color}10 0%, transparent 70%)`,
-                      pointerEvents: 'none'
+                      pointerEvents: 'none',
                     }}
                   />
                 )}
 
                 <div className="relative flex items-start gap-3">
-                  <div 
+                  <div
                     className="p-2 rounded-lg flex-shrink-0"
                     style={{ backgroundColor: `${config.color}20` }}
                   >
@@ -434,21 +693,21 @@ export function AISummaryWall({
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span 
+                    <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                      <span
                         className="text-xs font-semibold uppercase px-1.5 py-0.5 rounded"
-                        style={{ 
+                        style={{
                           backgroundColor: `${config.color}25`,
-                          color: config.color
+                          color: config.color,
                         }}
                       >
                         {config.label}
                       </span>
-                      <span 
+                      <span
                         className="text-xs px-1.5 py-0.5 rounded flex items-center gap-1"
-                        style={{ 
+                        style={{
                           backgroundColor: isDarkMode ? '#2a2a2a' : '#E5E5E5',
-                          color: '#939394'
+                          color: '#939394',
                         }}
                       >
                         <CategoryIcon className="w-3 h-3" />
@@ -456,7 +715,7 @@ export function AISummaryWall({
                       </span>
                     </div>
 
-                    <p 
+                    <p
                       className="text-sm font-semibold mb-1"
                       style={{ color: isDarkMode ? '#FFFFFF' : '#010101' }}
                     >
@@ -465,70 +724,67 @@ export function AISummaryWall({
 
                     {isExpanded ? (
                       <>
-                    <p 
-                      className="text-xs leading-relaxed"
-                      style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
-                    >
-                      {insight.message}
-                    </p>
+                        <p
+                          className="text-xs leading-relaxed"
+                          style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a' }}
+                        >
+                          {insight.message}
+                        </p>
 
-                    {insight.change !== undefined && TrendIcon ? (
-                      <div 
-                        className="flex items-center gap-1.5 mt-2"
-                        style={{ color: insight.trend === 'up' ? '#ef4444' : '#22c55e' }}
-                      >
-                        <TrendIcon className="w-3.5 h-3.5" />
-                        <span className="text-xs font-semibold">
-                          {insight.change > 0 ? '+' : ''}{insight.change}% from last period
+                        {insight.change !== undefined && TrendIcon ? (
+                          <div
+                            className="flex items-center gap-1.5 mt-2"
+                            style={{ color: insight.trend === 'up' ? '#ef4444' : '#22c55e' }}
+                          >
+                            <TrendIcon className="w-3.5 h-3.5" />
+                            <span className="text-xs font-semibold">
+                              {insight.change > 0 ? '+' : ''}
+                              {insight.change}% from last period
+                            </span>
+                          </div>
+                        ) : null}
+
+                        {insight.metrics ? (
+                          <div className="flex items-center gap-3 mt-2 flex-wrap">
+                            {insight.metrics.volume !== undefined && (
+                              <span className="text-xs font-medium" style={{ color: config.color }}>
+                                {insight.metrics.volume.toLocaleString()} {insight.metrics.volumeLabel}
+                              </span>
+                            )}
+                            {insight.metrics.responseTime && (
+                              <span
+                                className="text-xs flex items-center gap-1"
+                                style={{ color: '#939394' }}
+                              >
+                                <Timer className="w-3 h-3" />
+                                {insight.metrics.responseTime}
+                              </span>
+                            )}
+                            {!insight.metrics.volume && insight.metrics.volumeLabel && (
+                              <span className="text-xs font-medium" style={{ color: config.color }}>
+                                {insight.metrics.volumeLabel}
+                              </span>
+                            )}
+                          </div>
+                        ) : null}
+                      </>
+                    ) : insight.metrics?.volume !== undefined ? (
+                      <div className="flex items-center gap-3 mt-2 flex-wrap">
+                        <span className="text-xs font-medium" style={{ color: config.color }}>
+                          {insight.metrics.volume.toLocaleString()} {insight.metrics.volumeLabel}
                         </span>
                       </div>
                     ) : null}
 
-                    {!defaultCollapsed ? (
-                    <div 
-                      className={`flex items-center gap-1 mt-2 text-[10px] transition-opacity duration-200 ${
-                        isActive && !isSelected ? 'opacity-100' : 'opacity-0'
-                      }`}
-                      style={{ color: config.color }}
-                    >
-                      <span>Click for details</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </div>
-                    ) : null}
-                      </>
-                    ) : null}
-
-                    {insight.metrics ? (
-                      <div className="flex items-center gap-3 mt-2 flex-wrap">
-                        {insight.metrics.volume !== undefined && (
-                          <span 
-                            className="text-xs font-medium"
-                            style={{ color: config.color }}
-                          >
-                            {insight.metrics.volume.toLocaleString()} {insight.metrics.volumeLabel}
-                          </span>
-                        )}
-                        {insight.metrics.responseTime && (
-                          <span 
-                            className="text-xs flex items-center gap-1"
-                            style={{ color: '#939394' }}
-                          >
-                            <Timer className="w-3 h-3" />
-                            {insight.metrics.responseTime}
-                          </span>
-                        )}
-                        {!insight.metrics.volume && insight.metrics.volumeLabel && (
-                          <span className="text-xs font-medium" style={{ color: config.color }}>
-                            {insight.metrics.volumeLabel}
-                          </span>
-                        )}
-                      </div>
-                    ) : null}
-
                     {inlineDetails ? (
-                      <div className="mt-3 pt-3 border-t text-xs space-y-2" style={{ borderColor: `${config.color}40` }}>
+                      <div
+                        className="mt-3 pt-3 border-t text-xs space-y-2"
+                        style={{ borderColor: `${config.color}40` }}
+                      >
                         <p style={{ color: isDarkMode ? '#D6D9D8' : '#4a4a4a', lineHeight: 1.5 }}>
-                          <span className="font-semibold" style={{ color: config.color }}>Root cause: </span>
+                          <span className="font-semibold" style={{ color: config.color }}>
+                            Root cause:{' '}
+                          </span>
                           {inlineDetails.rootCause}
                         </p>
                         <p style={{ color: isDarkMode ? '#939394' : '#666' }}>
@@ -539,17 +795,23 @@ export function AISummaryWall({
                     ) : null}
                   </div>
 
-                  <ChevronRight 
+                  <ChevronRight
                     className={`w-4 h-4 flex-shrink-0 transition-all duration-300 ${
-                      isActive || (defaultCollapsed && isExpanded) ? 'translate-x-1 opacity-100' : 'opacity-40'
+                      isActive || (defaultCollapsed && isExpanded)
+                        ? 'translate-x-1 opacity-100'
+                        : 'opacity-40'
                     }`}
-                    style={{ color: config.color, transform: defaultCollapsed && isExpanded ? 'rotate(90deg)' : undefined }}
+                    style={{
+                      color: config.color,
+                      transform: defaultCollapsed && isExpanded ? 'rotate(90deg)' : undefined,
+                    }}
                   />
                 </div>
               </div>
             );
           })}
         </div>
+        )}
 
         {/* Popup Detail View - positioned overlay (non-collapsed mode only) */}
         {!defaultCollapsed && selectedInsight && selectedDetails && selectedConfig && popupPosition && (
@@ -730,38 +992,40 @@ export function AISummaryWall({
       </div>
 
       {/* Summary Footer - Fixed at bottom */}
-      <div 
-        className="mt-5 pt-4 border-t grid grid-cols-3 gap-4 flex-shrink-0"
-        style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
-      >
-        <div className="text-center">
-          <p 
-            className="text-2xl font-bold"
-            style={{ color: '#ef4444' }}
-          >
-            {data.filter(i => i.severity === 'critical').length}
-          </p>
-          <p className="text-xs" style={{ color: '#939394' }}>Critical</p>
+      {showSeveritySummary ? (
+        <div 
+          className="mt-5 pt-4 border-t grid grid-cols-3 gap-4 flex-shrink-0"
+          style={{ borderColor: isDarkMode ? '#2a2a2a' : '#E5E5E5' }}
+        >
+          <div className="text-center">
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: '#ef4444' }}
+            >
+              {data.filter(i => i.severity === 'critical').length}
+            </p>
+            <p className="text-xs" style={{ color: '#939394' }}>Critical</p>
+          </div>
+          <div className="text-center">
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: '#f97316' }}
+            >
+              {data.filter(i => i.severity === 'alert' || i.severity === 'warning').length}
+            </p>
+            <p className="text-xs" style={{ color: '#939394' }}>Warnings</p>
+          </div>
+          <div className="text-center">
+            <p 
+              className="text-2xl font-bold"
+              style={{ color: '#22c55e' }}
+            >
+              {data.filter(i => i.trend === 'down' || i.severity === 'info').length}
+            </p>
+            <p className="text-xs" style={{ color: '#939394' }}>Improving</p>
+          </div>
         </div>
-        <div className="text-center">
-          <p 
-            className="text-2xl font-bold"
-            style={{ color: '#f97316' }}
-          >
-            {data.filter(i => i.severity === 'alert' || i.severity === 'warning').length}
-          </p>
-          <p className="text-xs" style={{ color: '#939394' }}>Warnings</p>
-        </div>
-        <div className="text-center">
-          <p 
-            className="text-2xl font-bold"
-            style={{ color: '#22c55e' }}
-          >
-            {data.filter(i => i.trend === 'down' || i.severity === 'info').length}
-          </p>
-          <p className="text-xs" style={{ color: '#939394' }}>Improving</p>
-        </div>
-      </div>
+      ) : null}
     </div>
   );
 }

@@ -12,48 +12,55 @@ export type OverviewPulseItem = {
   main: string;
 };
 
-/** Executive pulse copy — fully distinct per header timeframe. */
+/**
+ * Executive pulse — Head of CX · Marketplace.
+ * Each window answers a different decision horizon (not a rescale of the same line):
+ *   24H → same-day fire: live journey break + SLA bleed + what not to touch
+ *   7D  → weekly operating rhythm: ₹ at risk + repeat/FCR + index movement
+ *   30D → structural health: trust cliff + recovery backlog + MoM trajectory
+ * Spine on every card: signal → customer impact → owner / action.
+ */
 export const OVERVIEW_EXEC_PULSE_BY_RANGE: Record<TrustRangeKey, readonly OverviewPulseItem[]> = {
   "24H": [
     {
       q: "🔴 What's critical",
-      main: "UPI checkout timeouts in the last 4h — 2.9K shoppers blocked. Escalate Payments before evening peak.",
+      main: "UPI checkout timeouts last 4h — 2.9K shoppers blocked · Happiness −1.2 vs yesterday. Escalate Payments before evening peak.",
     },
     {
       q: "🎯 Where's your focus",
-      main: "68 refund callbacks slipped past 2h SLA · 22 Plus cancels opened since noon.",
+      main: "68 refund callbacks past 2h SLA · FCR 56% today · 22 Plus cancels since noon — open retention before they churn.",
     },
     {
       q: "🟢 What's stable/ on-track",
-      main: "Click & Collect same-day slots holding 94% — dark-store North on track for tonight's cut-off.",
+      main: "Delivery experience holding · Click & Collect same-day 94% — dark-store North on track for tonight's cut-off.",
     },
   ],
   "7D": [
     {
       q: "🔴 What's critical",
-      main: "Payment failures at checkout — 18.4K shoppers affected today. Route to Payments before evening peak.",
+      main: "Refund-linked complaints +18% WoW — Active + Occasional carry ₹3.2 Cr rev at risk. Open CX × Payments joint bridge.",
     },
     {
       q: "🎯 Where's your focus",
-      main: "412 refund callbacks overdue · 156 cases escalated to backend with no owner closure.",
+      main: "FCR 58% · 412 overdue refund callbacks · Lapsing happiness −4 pts — clear recovery queue before weekend BBD.",
     },
     {
       q: "🟢 What's stable/ on-track",
-      main: "Click & Collect holding 91% SLA — in-house care centre outperforming outsourced on refunds.",
+      main: "Happiness Index 68 (+2 WoW) · NPS 46 (+3) — Plus/Loyal holding; in-house care beating BPO on refund FCR.",
     },
   ],
   "30D": [
     {
       q: "🔴 What's critical",
-      main: "Month-to-date refund-not-credited cliff — 64K contacts, ₹11.2 Cr GMV exposure. Push CX + Payments joint bridge.",
+      main: "Refund-not-credited cliff — 64K contacts · ₹11.2 Cr GMV exposed MoM. Force CX + Payments refund-SLA program.",
     },
     {
       q: "🎯 Where's your focus",
-      main: "1.8K overdue refund callbacks across 30D · WH-East express miss rate still 2.4× network baseline.",
+      main: "1.8K overdue refund callbacks · Occasional + Risk RFM cells · WH-East express miss 2.4× baseline — close the recovery backlog.",
     },
     {
       q: "🟢 What's stable/ on-track",
-      main: "Owned-inventory fulfilment SLA recovered to 88% MoM — marketplace sellers remain the drag.",
+      main: "Happiness 67 (+1.1 MoM) · Loyalty 70 · owned-inventory fulfilment 88% — marketplace sellers remain the structural drag.",
     },
   ],
 };
