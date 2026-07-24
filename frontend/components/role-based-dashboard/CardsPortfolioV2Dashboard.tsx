@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ChevronRight,
   CircleAlert,
+  Clock,
   CreditCard,
   Info,
   RefreshCw,
@@ -115,6 +116,7 @@ const ROUTE: Record<string, { l: string; c: string }> = {
   conduct: { l: "Conduct", c: T.violet },
   fin: { l: "Finance", c: T.blue },
   fraud: { l: "Fraud", c: T.red },
+  portfolio: { l: "Portfolio", c: T.green },
 };
 const LEVEL: Record<string, string> = {
   CRITICAL: T.red,
@@ -218,7 +220,6 @@ function SectionCard({
   title,
   subtitle,
   accent,
-  aiPill,
   right,
   children,
   style,
@@ -259,21 +260,6 @@ function SectionCard({
             <span style={{ fontSize: 13, fontWeight: 700, color: T.text }}>
               {title}
             </span>
-            {aiPill && (
-              <span
-                style={{
-                  background: `${T.gold}20`,
-                  color: T.gold,
-                  fontSize: 8.5,
-                  fontWeight: 800,
-                  letterSpacing: ".5px",
-                  padding: "1px 6px",
-                  borderRadius: 4,
-                }}
-              >
-                Distilled
-              </span>
-            )}
           </div>
           {subtitle && (
             <div
@@ -470,6 +456,9 @@ function TopBar() {
         <div style={{ color: T.muted, fontSize: 12.5, marginTop: 2 }}>
           Your book at a glance · team detail one level down
         </div>
+        <div style={{ color: T.dim, fontSize: 11, marginTop: 4 }}>
+          Prepared 07:10 · 11 feeds · your team&apos;s usual first three hours, ready before you arrived
+        </div>
       </div>
       <div
         style={{
@@ -493,11 +482,17 @@ function DrillHeader({
   sub,
   chips,
   onBack,
+  score,
+  scoreDelta,
+  asOf,
 }: {
   title: ReactNode;
   sub: ReactNode;
   chips?: ReactNode;
   onBack: () => void;
+  score?: string;
+  scoreDelta?: string;
+  asOf?: string;
 }) {
   return (
     <>
@@ -532,15 +527,25 @@ function DrillHeader({
         }}
       >
         <div style={{ minWidth: 260 }}>
-          <div
-            style={{
-              fontSize: 28,
-              fontWeight: 800,
-              letterSpacing: "-.3px",
-              lineHeight: 1.2,
-            }}
-          >
-            {title}
+          <div style={{ display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+            <div
+              style={{
+                fontSize: 28,
+                fontWeight: 800,
+                letterSpacing: "-.3px",
+                lineHeight: 1.2,
+              }}
+            >
+              {title}
+            </div>
+            {score ? (
+              <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}>
+                <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 800, color: T.text }}>{score}</span>
+                {scoreDelta ? (
+                  <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: T.red }}>{scoreDelta}</span>
+                ) : null}
+              </span>
+            ) : null}
           </div>
           <div
             style={{
@@ -553,6 +558,11 @@ function DrillHeader({
           >
             {sub}
           </div>
+          {asOf ? (
+            <div style={{ color: T.dim, fontSize: 11, marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
+              <Clock size={11} /> {asOf}
+            </div>
+          ) : null}
         </div>
         {chips ? (
           <div
@@ -616,7 +626,7 @@ const TREND: { g: TrendPoint[]; r: TrendPoint[]; v: TrendPoint[] } = {
 const EXEC_PULSE = [
   {
     label: "1. 🔴 What's critical",
-    text: "Tokenised CNP approval gap widened since 11:00 — ₹9 L / day (at-risk run-rate). Route fix to Payments & Authorisation.",
+    text: "Tokenised CNP approval gap widened since 06:20 — ₹9 L / day (at-risk run-rate). Route fix to Payments & Authorisation.",
   },
   {
     label: "2. 🎯 Where's your focus",
@@ -696,6 +706,7 @@ function MiniBars({ bars }: { bars: { name: string; v: number; c: string }[] }) 
           <div style={{ flex: 1, height: 6, borderRadius: 3, background: T.track }}>
             <div style={{ height: "100%", width: `${b.v}%`, background: b.c, borderRadius: 3 }} />
           </div>
+          <Mono c={b.c} s={9.5}>{b.v}</Mono>
         </div>
       ))}
     </div>
@@ -877,7 +888,7 @@ const MONITOR_ALERTS: MonitorAlert[] = [
     feed: "Token + auth feed",
     fields: [
       ["Cohort", "Premium · CNP"],
-      ["Time", "Since 11:00"],
+      ["Time", "Since 06:20"],
     ],
     stats: [
       ["Approval Gap", "14 pts"],
@@ -1275,7 +1286,7 @@ const VOICE_BARS: { name: string; v: number; c: string }[] = [
   { name: "EMI gap", v: 34, c: T.amber },
 ];
 
-type OvGauge = { topLabel: string; value: number; label: string; color: string };
+type OvGauge = { topLabel: string; value: number; label: string; color: string; suffix?: string };
 type OvStat = { label: string; value: string; sub: string; color: string };
 type OvBar = { name: string; v: number; color: string };
 
@@ -1284,7 +1295,7 @@ const ovHexA = (hex: string, a: number) => {
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 };
 
-function OvHalfGauge({ topLabel, value, label, color }: OvGauge) {
+function OvHalfGauge({ topLabel, value, label, color, suffix = "%" }: OvGauge) {
   const v = Math.max(0, Math.min(100, value));
   return (
     <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
@@ -1296,7 +1307,7 @@ function OvHalfGauge({ topLabel, value, label, color }: OvGauge) {
             <RadialBar dataKey="value" cornerRadius={4} background={{ fill: "#2a2a2a90" }} />
           </RadialBarChart>
         </ResponsiveContainer>
-        <div style={{ position: "absolute", left: "50%", bottom: 1, transform: "translateX(-50%)", fontFamily: MONO, fontSize: 15, fontWeight: 800, color }}>{v}%</div>
+        <div style={{ position: "absolute", left: "50%", bottom: 1, transform: "translateX(-50%)", fontFamily: MONO, fontSize: 15, fontWeight: 800, color }}>{v}{suffix}</div>
       </div>
       <div style={{ fontSize: 9, color: T.muted, textTransform: "uppercase", letterSpacing: 0.3, textAlign: "center", lineHeight: 1.15, minHeight: 22 }}>{label}</div>
     </div>
@@ -1436,7 +1447,7 @@ function OverviewExecTile({
       <div style={{ background: ovHexA(accent, 0.055), border: `1px solid ${ovHexA(accent, 0.22)}`, borderLeft: `3px solid ${accent}`, borderRadius: 10, padding: "12px 14px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 7 }}>
           <Sparkles size={13} color={accent} />
-          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>Distilled read</span>
+          <span style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".1em", textTransform: "uppercase", color: accent }}>What changed</span>
         </div>
         <div style={{ fontSize: 12.5, color: T.sub, lineHeight: 1.5 }}>{ai}</div>
       </div>
@@ -1449,7 +1460,7 @@ const BOOK_HEADLINE: { label: string; value: string; sub: string; color: string 
   { label: "Cards in force", value: "31.2 L", sub: "active base", color: T.text },
   { label: "Monthly spends", value: "~₹5,010 Cr", sub: "run-rate · ₹3,840 Cr MTD", color: T.cyan },
   { label: "Receivables", value: "₹9,760 Cr", sub: "book outstanding", color: T.violet },
-  { label: "Net credit cost", value: "1.8%", sub: "annualised · stable", color: T.green },
+  { label: "Net credit cost", value: "6.0%", sub: "annualised · stable · within range", color: T.green },
 ];
 
 function BookHeadline() {
@@ -1523,9 +1534,9 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           spark={[70, 66, 68, 63, 61, 64, 60, 62, 64]}
           leftGauge={{ topLabel: "Incremental", value: 58, label: "vs matched control", color: T.green }}
           rightGauge={{ topLabel: "Profitability", value: 55, label: "offer margin", color: T.amber }}
-          bottomLeft={{ label: "Yield leak", value: "₹1.2 Cr", sub: "MTD · interchange", color: T.red }}
+          bottomLeft={{ label: "Interchange compression", value: "₹0.9 Cr", sub: "MTD · net", color: T.red }}
           bottomRight={{ label: "Offers to kill", value: "2", sub: "net-negative", color: T.amber }}
-          ai="Two net-negative offers vs matched control — ₹1.3 Cr MTD reallocatable. RuPay-on-UPI mix is compressing interchange yield ~₹1.2 Cr MTD."
+          ai="Two net-negative offers vs matched control — ₹1.2 Cr MTD reallocatable. RuPay-on-UPI mix is compressing interchange yield ~₹0.9 Cr MTD."
           cta="Open transactions & offers →"
           onClick={() => go("d1")}
         />
@@ -1547,22 +1558,22 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
           bottomLeft={{ label: "At-risk", value: "₹9 L", sub: "/ day run-rate", color: T.red }}
           bottomRight={{ label: "Top blocker", value: "Token break", sub: "root cause", color: T.red }}
           ai="Today's spike is a token break: ₹9 L/day at-risk, 62% curable. R-77 stepped approval −13 pts inside its rule cohort; Batch #4471 risks ₹93 L against the 30+7 clock."
-          cta="Open blocker command center →"
+          cta="Open blockers →"
           onClick={() => go("d2")}
         />
         {showVoiceJoin && (
           <OverviewExecTile
             accent={T.violet}
             icon={<Sparkles size={18} />}
-            title="What are my customers experiencing?"
+            title="What are my cardholders experiencing?"
             micro="Voice × transaction · top issue: Reward value erosion"
             score="58"
             delta="−15 pts"
             spark={[74, 70, 68, 64, 60, 62, 58, 56, 58]}
-            leftGauge={{ topLabel: "Top issue", value: 92, label: "reward value", color: T.red }}
-            rightGauge={{ topLabel: "Curable", value: 78, label: "fixable share", color: T.green }}
+            leftGauge={{ topLabel: "Top issue", value: 92, label: "priority index", color: T.red, suffix: "" }}
+            rightGauge={{ topLabel: "Curable", value: 78, label: "curability / 100", color: T.green, suffix: "" }}
             bottomLeft={{ label: "Exposure", value: "₹1.4 Cr", sub: "MTD · illustrative", color: T.red }}
-            bottomRight={{ label: "Top channel", value: "App store", sub: "×214 similar", color: T.violet }}
+            bottomRight={{ label: "Top brand", value: "EazyDiner", sub: "reward-value erosion", color: T.violet }}
             ai="Public voice is dominated by reward-value erosion (Legend, EazyDiner) and INDIE app-access failures. Joined to the book: top-of-wallet loss and self-service payment drop; mis-selling adds conduct exposure."
             cta="Open customer experience →"
             onClick={() => go("voice")}
@@ -1570,25 +1581,64 @@ function Overview({ go, showVoiceJoin }: { go: NavigateFn; showVoiceJoin?: boole
         )}
       </div>
 
-      <details style={{ marginTop: 8 }}>
-        <summary
-          style={{
-            cursor: "pointer",
-            listStyle: "none",
-            fontSize: 11,
-            fontWeight: 800,
-            letterSpacing: ".06em",
-            textTransform: "uppercase",
-            color: T.muted,
-            padding: "8px 0",
-          }}
-        >
-          Signal monitor · tap to expand full transaction feed
-        </summary>
-        <TodayTransactionSignalMonitor />
-      </details>
+      <AskYourBook go={go} />
       <div style={{ height: 44 }} />
     </div>
+  );
+}
+
+const ASK_CHIPS: { label: string; screen: string }[] = [
+  { label: "Avios vs last festive", screen: "d1" },
+  { label: "Decline cost this month", screen: "d2" },
+  { label: "How is O-142 performing?", screen: "d1" },
+  { label: "Sourcing Q2 activation", screen: "d2" },
+];
+
+function AskYourBook({ go }: { go: NavigateFn }) {
+  return (
+    <section style={{ background: T.row, border: `1px solid ${T.border}`, borderRadius: 12, padding: "12px 14px", marginTop: 14 }}>
+      <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: ".06em", textTransform: "uppercase", color: T.muted, marginBottom: 8 }}>
+        Ask about your book
+      </div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          background: T.inset,
+          border: `1px solid ${T.inner}`,
+          borderRadius: 10,
+          padding: "9px 12px",
+          color: T.dim,
+          fontSize: 12.5,
+          marginBottom: 10,
+        }}
+      >
+        Type a question in your words — or pick one below
+      </div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+        {ASK_CHIPS.map((c) => (
+          <button
+            type="button"
+            key={c.label}
+            onClick={() => go(c.screen)}
+            style={{
+              font: "inherit",
+              cursor: "pointer",
+              fontSize: 11.5,
+              fontWeight: 700,
+              color: T.sub,
+              background: T.inset,
+              border: `1px solid ${T.inner}`,
+              borderRadius: 999,
+              padding: "6px 12px",
+            }}
+          >
+            {c.label}
+          </button>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -1597,6 +1647,7 @@ const D1_BRANDS: {
   k: string;
   name: string;
   spend: string;
+  cards: string;
   wow: string;
   up: boolean;
   prof: number;
@@ -1607,6 +1658,7 @@ const D1_BRANDS: {
     k: "travel",
     name: "Avios",
     spend: "₹620 Cr MTD",
+    cards: "2.4 L",
     wow: "−6.2%",
     up: false,
     prof: 38,
@@ -1617,6 +1669,7 @@ const D1_BRANDS: {
     k: "cashback",
     name: "Platinum RuPay",
     spend: "₹1,520 Cr MTD",
+    cards: "16.5 L",
     wow: "+8.4%",
     up: true,
     prof: 71,
@@ -1627,6 +1680,7 @@ const D1_BRANDS: {
     k: "fuel",
     name: "Jio-bp",
     spend: "₹720 Cr MTD",
+    cards: "5.5 L",
     wow: "+3.2%",
     up: true,
     prof: 52,
@@ -1637,6 +1691,7 @@ const D1_BRANDS: {
     k: "biz",
     name: "Pioneer",
     spend: "₹980 Cr MTD",
+    cards: "6.8 L",
     wow: "+1.1%",
     up: true,
     prof: 64,
@@ -1651,12 +1706,12 @@ const D1_TIERS: [string, string, number, number, number][] = [
 ];
 const D1_GMV = [
   { w: "W-6", g: 100, p: 100 },
-  { w: "W-5", g: 101, p: 99 },
-  { w: "W-4", g: 102, p: 97.5 },
-  { w: "W-3", g: 103, p: 96 },
-  { w: "W-2", g: 103.6, p: 95 },
-  { w: "W-1", g: 104, p: 94.2 },
-  { w: "Now", g: 104, p: 93.6 },
+  { w: "W-5", g: 102.4, p: 98.9 },
+  { w: "W-4", g: 100.6, p: 98.2 },
+  { w: "W-3", g: 103.5, p: 95.7 },
+  { w: "W-2", g: 101.8, p: 95.9 },
+  { w: "W-1", g: 104.6, p: 93.8 },
+  { w: "Now", g: 103.4, p: 94.1 },
 ];
 const D1_LEAK_WATCH: [string, string, string, string][] = [
   ["O-142 Cashback", "₹78 L MTD", "High", T.red],
@@ -1697,7 +1752,7 @@ const D1_AI: AiRow[] = [
     tag: "Reward economics",
     title: "2 categories turned reward-negative",
     body: "Net economics (interchange − reward − fraud) crossed below zero on wallet-load and fuel-adjacent MCCs after the earn-rate change.",
-    metric: "₹1.4 Cr MTD net strain",
+    metric: "₹1.6 Cr MTD net strain",
     delta: "net < 0 · 2 MCCs",
     icon: TriangleAlert,
     root: "Accelerated earn applied to low-MDR categories where interchange can't cover the reward cost.",
@@ -1714,10 +1769,10 @@ const D1_AI: AiRow[] = [
     id: "a3",
     level: "WARNING",
     tag: "Spend quality",
-    title: "Profitable spend drifting on premium",
-    body: "Gross GMV is flat but profitable retained spend on Avios is down 6.4% — top-of-wallet is slipping.",
-    metric: "−6.4% vs flat GMV",
-    delta: "premiumisation drift",
+    title: "Profitable spend drifting on premium (Avios)",
+    body: "Spends are flat but profitable retained spend on Avios (2.4 L cards) is down 6.4% — top-of-wallet is slipping. Draft: benefit / engagement review, routed to the Premium desk.",
+    metric: "−6.4% · ≈₹18 L/mo contribution at risk",
+    delta: "premiumisation drift · draft ready",
     icon: Zap,
     root: "Reward-heavy mix shift plus benefit fatigue in the premium cohort; engagement cadence decaying.",
     areas: ["Head of Cards", "Premium desk", "Benefits"],
@@ -1726,7 +1781,7 @@ const D1_AI: AiRow[] = [
       "Targeted top-of-wallet nudge",
       "Watch dormancy onset",
     ],
-    owner: "Head of Cards",
+    owner: "Head of Cards — Premium desk",
     priority: "Medium",
   },
   {
@@ -2254,13 +2309,13 @@ function CommandCenter() {
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1.4fr .9fr .8fr 1fr",
+              gridTemplateColumns: "1.3fr .85fr .7fr .75fr .95fr",
               gap: 8,
               padding: "7px 10px",
               background: T.row,
             }}
           >
-            {["BRAND", "SPEND", "WoW", "PROFIT%"].map((h) => (
+            {["BRAND", "SPEND", "CARDS", "WoW", "PROFIT%"].map((h) => (
               <Eyebrow key={h}>{h}</Eyebrow>
             ))}
           </div>
@@ -2269,7 +2324,7 @@ function CommandCenter() {
               key={b.k}
               style={{
                 display: "grid",
-                gridTemplateColumns: "1.4fr .9fr .8fr 1fr",
+                gridTemplateColumns: "1.3fr .85fr .7fr .75fr .95fr",
                 gap: 8,
                 padding: "7px 10px",
                 borderTop: i ? `1px solid ${T.border}` : "none",
@@ -2279,6 +2334,9 @@ function CommandCenter() {
               <BrandPill k={b.k}>{b.name}</BrandPill>
               <Mono c={T.text} s={11.5}>
                 {b.spend}
+              </Mono>
+              <Mono c={T.sub} s={11}>
+                {b.cards}
               </Mono>
               <Mono c={b.up ? T.green : T.red} s={11}>
                 {b.up ? "▲" : "▼"} {b.wow}
@@ -2307,6 +2365,10 @@ function CommandCenter() {
               </span>
             </div>
           ))}
+        </div>
+        <div style={{ fontSize: 9.5, color: T.dim, marginTop: 8, lineHeight: 1.45 }}>
+          4 card products = 100% of spends (₹3,840 Cr MTD) &amp; 31.2 L cards. Legend · Pinnacle · Tiger are premium
+          variants and EazyDiner · Celesta co-brands — nested within these products, not separate lines.
         </div>
       </W>
       {/* spend quality by tier */}
@@ -2465,21 +2527,6 @@ function CommandCenter() {
       <W
         accent={T.amber}
         title="Reward-leakage watchlist"
-        right={
-          <span
-            style={{
-              fontSize: 9,
-              fontWeight: 800,
-              color: T.gold,
-              background: `${T.gold}14`,
-              border: `1px solid ${T.gold}30`,
-              borderRadius: 999,
-              padding: "2px 6px",
-            }}
-          >
-            Distilled
-          </span>
-        }
       >
         {D1_LEAK_WATCH.map(([n, amt, lvl, c]) => (
           <div
@@ -2550,7 +2597,7 @@ function CommandCenter() {
                 textAlign: "center",
               }}
             >
-              TRVL
+              Avios
             </span>
             <span
               style={{
@@ -2560,7 +2607,7 @@ function CommandCenter() {
                 textAlign: "center",
               }}
             >
-              CASH
+              RuPay
             </span>
             <span
               style={{
@@ -2570,7 +2617,7 @@ function CommandCenter() {
                 textAlign: "center",
               }}
             >
-              FUEL
+              Jio-bp
             </span>
             <span
               style={{
@@ -2706,18 +2753,6 @@ function LeakPanel() {
         <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0 }}>
           Where is reward spend leaking?
         </h3>
-        <span
-          style={{
-            background: `${T.gold}20`,
-            color: T.gold,
-            fontSize: 8.5,
-            fontWeight: 800,
-            padding: "1px 6px",
-            borderRadius: 4,
-          }}
-        >
-          Distilled
-        </span>
         <span style={{ fontSize: 11, color: T.muted, marginLeft: 4 }}>
           tap an offer — leakage = reward spent on non-incremental spend
         </span>
@@ -2862,7 +2897,7 @@ function LeakPanel() {
               marginBottom: 9,
             }}
           >
-            <Eyebrow c={T.amber}>Distilled read</Eyebrow>
+            <Eyebrow c={T.amber}>What changed</Eyebrow>
             <div
               style={{
                 fontSize: 12.5,
@@ -3177,11 +3212,12 @@ const YIELD_ROWS: [
   ],
 ];
 
-const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
+const COHORT_ROWS: [string, string, string, string, string, string, string, boolean][] =
   [
-    ["New-to-card", "+4.2%", "+3.1%", "Building", "Low", "Healthy", false],
+    ["New-to-card", "1.8 L", "+4.2%", "+3.1%", "Building", "Low", "Healthy", false],
     [
       "Activated 0–30 days",
+      "2.4 L",
       "+2.8%",
       "+1.4%",
       "Rising",
@@ -3189,9 +3225,10 @@ const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
       "Healthy",
       false,
     ],
-    ["Repeat spenders", "+1.9%", "+0.8%", "Stable", "Low", "Healthy", false],
+    ["Repeat spenders", "14.6 L", "+1.9%", "+0.8%", "Stable", "Low", "Healthy", false],
     [
       "High-frequency high-spend",
+      "6.1 L",
       "+2.1%",
       "+0.8%",
       "Stable",
@@ -3199,8 +3236,8 @@ const COHORT_ROWS: [string, string, string, string, string, string, boolean][] =
       "Healthy",
       false,
     ],
-    ["Low-frequency premium", "−4.8%", "−6.1%", "Weak", "Med", "Falling", true],
-    ["Dormancy-risk", "−9.2%", "−11%", "Weak", "High", "Poor", true],
+    ["Low-frequency premium", "4.2 L", "−4.8%", "−6.1%", "Weak", "Med", "Falling", true],
+    ["Dormancy-risk", "2.1 L", "−9.2%", "−11%", "Weak", "High", "Poor", true],
   ];
 
 function BrandCoBrandDeepPerformanceMatrix() {
@@ -3287,10 +3324,38 @@ function BrandCoBrandDeepPerformanceMatrix() {
       </div>
       <AIInsightStrip>
         Avios is not a volume problem; it is a profitable-spend
-        problem. Jio-bp is growing, but reward cost is eating the growth.
-        Platinum RuPay&apos;s ~₹870 average ticket reflects its UPI-credit mix — ~72% of
-        transactions are UPI-rail, sub-₹500 — so high volume does not mean high value.
+        problem — its ~₹20,000 average ticket is travel-weighted and ticket-heavy (few, large
+        premium-travel transactions), the mirror image of RuPay. Jio-bp is growing, but reward cost
+        is eating the growth. Platinum RuPay&apos;s ~₹870 average ticket reflects its UPI-credit mix —
+        ~72% of transactions are UPI-rail, sub-₹500 — so high volume does not mean high value.
       </AIInsightStrip>
+      <div style={{ fontSize: 9.5, color: T.dim, marginTop: 8, lineHeight: 1.45 }}>
+        Partner-data boundary: Jio-bp and EazyDiner partners do not receive raw card-transaction data.
+        This is a bank-side summary, suitable for partner review · consent- and purpose-limited.
+      </div>
+      <button
+        type="button"
+        style={{
+          font: "inherit",
+          cursor: "pointer",
+          marginTop: 10,
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          fontSize: 11.5,
+          fontWeight: 800,
+          color: T.gold,
+          background: `${T.gold}14`,
+          border: `1px solid ${T.gold}44`,
+          borderRadius: 9,
+          padding: "8px 13px",
+        }}
+      >
+        Draft partner pack for review <ArrowRight size={13} />
+      </button>
+      <div style={{ fontSize: 9, color: T.dim, marginTop: 5 }}>
+        Bank-side co-brand summary for the QBR — assembled from this view, human-reviewed before it leaves the bank.
+      </div>
     </SectionCard>
   );
 }
@@ -3496,15 +3561,16 @@ function RewardYieldUnitEconomicsPanel() {
       </div>
       <AIInsightStrip tone="red">
         Wallet-load interchange is ₹1.2 Cr MTD on ₹86 Cr MTD spend (~1.4%) but reward
-        runs ~2.2% (₹1.9 Cr) — net −₹0.9 Cr MTD. Combined with fuel-adjacent, ₹1.4 Cr MTD net
-        strain across two MCC bands. Cap accelerated rewards on both.
+        runs ~2.2% (₹1.9 Cr) — net −₹0.9 Cr MTD. Combined with fuel-adjacent, ₹1.6 Cr MTD net
+        strain across two MCC bands. Blended reward cost runs ~95 bps of spends; these two bands
+        run ~2× that (221 / 197 bps). Cap accelerated rewards on both.
       </AIInsightStrip>
     </SectionCard>
   );
 }
 
 function CohortGrowthQualityMatrix() {
-  const cols = "minmax(140px,1.2fr) repeat(6,minmax(72px,.9fr))";
+  const cols = "minmax(140px,1.1fr) minmax(60px,.65fr) repeat(6,minmax(68px,.85fr))";
   return (
     <SectionCard
       title="Cohort growth quality"
@@ -3526,23 +3592,24 @@ function CohortGrowthQualityMatrix() {
             gap: 8,
             padding: "8px 10px",
             background: T.row,
-            minWidth: 820,
+            minWidth: 900,
           }}
         >
           {[
             "Cohort",
+            "Cards",
             "Spend Δ",
             "Txn Freq Δ",
             "Repeat",
             "Offer Dep.",
             "Profitability",
-            "AI Status",
+            "Status",
           ].map((h) => (
             <Eyebrow key={h}>{h}</Eyebrow>
           ))}
         </div>
         {COHORT_ROWS.map(
-          ([cohort, spend, freq, repeat, dep, prof, watch], i) => (
+          ([cohort, size, spend, freq, repeat, dep, prof, watch], i) => (
             <div
               key={cohort}
               style={{
@@ -3552,11 +3619,14 @@ function CohortGrowthQualityMatrix() {
                 padding: "8px 10px",
                 borderTop: i ? `1px solid ${T.border}` : "none",
                 alignItems: "center",
-                minWidth: 820,
+                minWidth: 900,
                 fontSize: 11,
               }}
             >
               <span style={{ fontWeight: 600, color: T.text }}>{cohort}</span>
+              <Mono c={T.sub} s={10.5}>
+                {size}
+              </Mono>
               <Mono c={spend.startsWith("−") ? T.red : T.green} s={10.5}>
                 {spend}
               </Mono>
@@ -3596,7 +3666,10 @@ function Drill1({ go }: { go: NavigateFn }) {
       <DrillHeader
         onBack={() => go("overview")}
         title="How are my transactions & offers doing?"
-        sub="Transaction-only view of portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
+        score="64"
+        scoreDelta="−8 pts"
+        asOf="As of 07:10 today · IST · Friday, latter-half of month (post-salary-cycle)"
+        sub="Portfolio growth, brand/co-brand performance, offer keep/kill decisions, reward cost, and profitable spend drift."
         chips={
           <>
             <Chip t="cyan">Transaction + offer / reward / settlement</Chip>
@@ -3615,9 +3688,6 @@ function Drill1({ go }: { go: NavigateFn }) {
         <CommandCenter />
         <AISummaryWall rows={D1_AI} />
       </div>
-      <div style={{ marginTop: 14 }}>
-        <LeakPanel />
-      </div>
       <div
         style={{
           marginTop: 14,
@@ -3626,19 +3696,14 @@ function Drill1({ go }: { go: NavigateFn }) {
           gap: 14,
         }}
       >
+        {/* concentration */}
         <BrandCoBrandDeepPerformanceMatrix />
+        <CohortGrowthQualityMatrix />
+        {/* rupees */}
+        <LeakPanel />
+        <RewardYieldUnitEconomicsPanel />
+        {/* decision */}
         <OfferPortfolioDecisionBoard />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2,minmax(0,1fr))",
-            gap: 12,
-            alignItems: "stretch",
-          }}
-        >
-          <RewardYieldUnitEconomicsPanel />
-          <CohortGrowthQualityMatrix />
-        </div>
       </div>
       <div style={{ height: 44 }} />
     </div>
@@ -3694,7 +3759,7 @@ const BLOCKER_EVIDENCE: Record<string, BlockerEvidence> = {
     atRisk: "₹9 L / day (at-risk run-rate)",
     rupeeMath: "~1,000 declined attempts/day × ~₹9,000 avg ticket ≈ ₹9 L / day",
     curable: "62%",
-    started: "11:00",
+    started: "06:20",
     owner: "payments",
     source: "token + auth feed",
     confidence: "High",
@@ -3802,6 +3867,16 @@ const D2_BLOCKER_ACTION_ROWS: {
     riskT: "violet",
     status: "Review",
   },
+  {
+    signal: "Fuel-MCC decline dip",
+    evidence: "Checked the usual suspects — calendar mix, not a break",
+    impact: "No action needed",
+    owner: "portfolio",
+    action: "No action — within normal Friday range",
+    risk: "Cleared",
+    riskT: "green",
+    status: "Cleared — calendar mix",
+  },
 ];
 
 const D2_SPLIT_BARS = [
@@ -3836,14 +3911,14 @@ function ApprovalHealthCard() {
           <div style={{ marginBottom: 8 }}>
             <Eyebrow>Decline spike</Eyebrow>
             <div style={{ fontSize: 12, color: T.sub }}>
-              <Mono c={T.amber} s={12}>+38%</Mono> since 11:00
+              <Mono c={T.amber} s={12}>+38%</Mono> since 06:20
             </div>
           </div>
           <div>
-            <Eyebrow>Curable</Eyebrow>
+            <Eyebrow>Curable · at-risk run-rate</Eyebrow>
             <Mono c={T.green} s={12}>
               <span title={rupeeMethodForLabel("₹9 L / day (at-risk run-rate)")}>
-                62% · ₹9 L / day (at-risk run-rate)
+                62% · Tokenised CNP ₹9 L of ₹25.4 L/day total at risk
               </span>
             </Mono>
           </div>
@@ -3911,15 +3986,17 @@ function DeclineInvestigationGrid({
   row,
   col,
   onSelect,
+  go,
 }: {
   row: string;
   col: string;
   onSelect: (r: string, c: string) => void;
+  go: NavigateFn;
 }) {
   return (
     <div className="d2-investigation-grid">
       <DeclineTaxonomyHeatmap row={row} col={col} onSelect={onSelect} />
-      <SelectedBlockerIncidentPack row={row} col={col} />
+      <SelectedBlockerIncidentPack row={row} col={col} go={go} />
     </div>
   );
 }
@@ -3954,7 +4031,7 @@ function OwnerSplitGrid() {
         title="Token / Auth"
         accent={T.red}
         owner="payments"
-        lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 11:00"]}
+        lines={["Tokenised CNP approval gap", "14 pts", "Premium CNP", "Since 06:20"]}
       />
       <OwnerIssueCard
         title="Fraud rule"
@@ -4032,14 +4109,18 @@ function DeclineTaxonomyHeatmap({
       </div>
       <div style={{ marginTop: 10 }}>
         <AIInsightStrip tone="red">
-          This heatmap is not showing raw declines. It shows where decline behaviour is abnormal versus each cohort's own baseline.
+          This heatmap is not showing raw declines. It shows where decline behaviour is abnormal versus each cohort&apos;s own
+          baseline (typical Friday, latter-half of month, festive-adjusted). Cohorts overlap — product tier, card, tenure,
+          batch and vintage — so the ₹/day-at-risk is shown per reason-row and is indicative, not additive. Today&apos;s
+          tokenised-CNP row is ₹9 L/day of ~₹25.4 L/day flagged across all reasons.
         </AIInsightStrip>
       </div>
     </SectionCard>
   );
 }
 
-function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string }) {
+function SelectedBlockerIncidentPack({ row, col, go }: { row: string; col: string; go?: NavigateFn }) {
+  const showJoin = /token|cnp|premium/i.test(`${row} ${col}`);
   const ev = BLOCKER_EVIDENCE[`${row}|${col}`] ?? defaultBlockerEvidence();
   return (
     <SectionCard title="Selected incident" subtitle={`${row} × ${col}`} accent={T.gold} aiPill style={{ marginBottom: 0 }}>
@@ -4083,6 +4164,38 @@ function SelectedBlockerIncidentPack({ row, col }: { row: string; col: string })
           {e}
         </div>
       ))}
+      {showJoin ? (
+        <>
+          <div style={{ fontSize: 11, color: T.sub, padding: "2px 0", lineHeight: 1.35 }}>
+            <span style={{ color: T.violet, marginRight: 5 }}>✓</span>
+            Interaction join: service contacts on the declined-online theme running ~3× normal in the same premium cohort
+            since the incident window — ahead of any MIS.
+          </div>
+          <div style={{ fontSize: 10.5, color: T.muted, fontStyle: "italic", padding: "2px 0 2px 16px", lineHeight: 1.35 }}>
+            &ldquo;Card keeps getting declined on online payments since this morning, works fine on swipe.&rdquo;
+          </div>
+        </>
+      ) : null}
+      {showJoin && go ? (
+        <button
+          type="button"
+          onClick={() => go("voice")}
+          style={{
+            font: "inherit",
+            cursor: "pointer",
+            marginTop: 6,
+            fontSize: 11,
+            fontWeight: 700,
+            color: T.violet,
+            background: `${T.violet}14`,
+            border: `1px solid ${T.violet}44`,
+            borderRadius: 999,
+            padding: "5px 11px",
+          }}
+        >
+          → Customer experience: see the joined voice evidence
+        </button>
+      ) : null}
       {ev.verdict ? (
         <>
           <Eyebrow>Verdict</Eyebrow>
@@ -4197,12 +4310,16 @@ function Drill2({ go }: { go: NavigateFn }) {
       <DrillHeader
         onBack={() => go("overview")}
         title="Where are my blockers & problems today?"
-        sub="Transaction-only detection of approval drops, decline spikes, token gaps, fraud-rule misfires, activation clocks, utilisation migration and early roll-risk."
+        score="58"
+        scoreDelta="−10 pts"
+        asOf="As of 07:10 today · IST · baseline = typical Friday, latter-half of month, festive-adjusted"
+        sub="Approval drops, decline spikes, token gaps, fraud-rule misfires, activation clocks, utilisation migration and early roll-risk — with the customer-experience join alongside."
       />
       <BlockerTopGrid />
       <DeclineInvestigationGrid
         row={row}
         col={col}
+        go={go}
         onSelect={(r, c) => {
           setRow(r);
           setCol(c);
