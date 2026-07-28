@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { ArrowDown, ArrowUp, TrendingDown, TrendingUp } from "lucide-react";
+import { ArrowDown, ArrowUp } from "lucide-react";
 import {
   HAPPINESS_DATA,
   HAPPINESS_PERIODS,
@@ -13,7 +13,7 @@ import {
 } from "../../lib/cxHeadRetailV3HappinessLensData";
 import { useAnimatedNumber, usePrefersReducedMotion } from "../../lib/useAnimatedNumber";
 import { SpikySparkline } from "../common/MiniSparkline";
-import { cssVar, radius, space, type } from "../../theme/tokens";
+import { cssVar, radius, space } from "../../theme/tokens";
 
 type HeadlineKpiId = "happiness" | "nps" | "loyalty" | "repeat";
 
@@ -178,47 +178,6 @@ function resolveKpi(
   }
 }
 
-function PeriodDeltaBadge({
-  value,
-  periodLabel,
-}: {
-  value: number;
-  periodLabel: string;
-}): React.ReactElement {
-  const up = value > 0;
-  const flat = value === 0;
-  const good = up;
-  const color = flat ? cssVar("text-muted") : good ? cssVar("positive") : cssVar("severity-high");
-  const TrendIcon = up || flat ? TrendingUp : TrendingDown;
-  const decimals = Math.abs(value) % 1 !== 0 ? 1 : 0;
-  const shown = decimals > 0 ? Math.abs(value).toFixed(decimals) : String(Math.abs(value));
-
-  return (
-    <span
-      className="lisn-num"
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 5,
-        fontSize: 11,
-        fontWeight: type.weight.bold,
-        color,
-        padding: "4px 8px",
-        borderRadius: radius.pill,
-        background: `${color}14`,
-        border: `1px solid ${color}33`,
-        lineHeight: 1,
-        whiteSpace: "nowrap",
-        flexShrink: 0,
-      }}
-    >
-      <TrendIcon size={12} strokeWidth={2.5} style={{ opacity: flat ? 0.45 : 1 }} />
-      {flat ? "0" : `${up ? "+" : "−"}${shown}`}
-      <span style={{ color: cssVar("text-muted"), fontWeight: type.weight.semibold }}>{periodLabel}</span>
-    </span>
-  );
-}
-
 function TargetGapBadge({ gap }: { gap: TargetGapMeta }): React.ReactElement {
   const GapArrow = gap.direction === "up" ? ArrowUp : ArrowDown;
 
@@ -371,30 +330,19 @@ function HeadlineKpiCard({
         }}
       />
 
-      <header
-        style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: space["2"],
-          paddingLeft: 4,
-        }}
-      >
-        <div style={{ minWidth: 0 }}>
-          <div
-            style={{
-              fontSize: 11,
-              fontWeight: 800,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              color: cssVar("text-muted"),
-              lineHeight: 1.25,
-            }}
-          >
-            {def.title}
-          </div>
+      <header style={{ paddingLeft: 4 }}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            color: cssVar("text-muted"),
+            lineHeight: 1.25,
+          }}
+        >
+          {def.title}
         </div>
-        <PeriodDeltaBadge value={delta} periodLabel={meta.delta} />
       </header>
 
       <div

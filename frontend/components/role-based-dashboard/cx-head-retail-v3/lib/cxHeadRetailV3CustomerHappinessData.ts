@@ -606,15 +606,15 @@ export const RFM_SEGMENTS: RfmSegment[] = [
   },
 ];
 
-/** RFM revenue share soft-shifts by timeframe (same cells, different heat). */
+/** RFM revenue share by timeframe — each overlay sums to 100. */
 const RFM_REV_OVERLAY: Record<HappinessPeriodKey, Partial<Record<RfmId, number>>> = {
   "24H": {
-    champions: 28,
+    champions: 29,
     loyal: 20,
     potential: 12,
     new: 7,
     attention: 8,
-    atrisk: 12,
+    atrisk: 11,
     cantlose: 10,
     hibernating: 3,
   },

@@ -113,7 +113,7 @@ export const HUB_PAGE_PURPOSE: Record<HubCardId, string> = {
   trust:
     "Trust drivers, cliff vs slope signal, segment impact, evidence, and cross-functional actions — measured facts vs inferred signals.",
   "service-delivery":
-    "Anxiety command triad, containment queue, reliability × anxiety split, and escalation patterns — contact pressure before breach.",
+    "Reliability × anxiety command signals, delivery patterns, and escalation — contact pressure before breach.",
 };
 
 export type SentimentSplit = {

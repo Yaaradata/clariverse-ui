@@ -8,6 +8,7 @@ import {
   ANXIETY_QUAD_CELLS,
   getQuadDriversForPeriod,
 } from "../../lib/cxHeadRetailV3AnxietyData";
+import { getAnxietyPeriodMetrics, getWeakestCategory, getStrongestCategory } from "../../lib/cxHeadRetailV3AnxietyMetrics";
 import { cssVar, radius } from "../../theme/tokens";
 import type { CliffSlopeEventMode } from "./CliffSlopePieCharts";
 import {
@@ -53,137 +54,78 @@ const QUAD_ANXIETY_LABEL: Record<QuadCellId, string> = {
   mh: "High anxiety",
 };
 
-const QUAD_AI_INSIGHTS: Record<
-  QuadCellId,
-  readonly { title: string; body: string; tone: "danger" | "warning" | "info" | "success" }[]
-> = {
-  bh: [
-    {
-      title: "Contain trust break in East hubs now",
-      body: "Promise miss + high anxiety on stuck-at-hub — approve revised-ETA outreach before contact window closes.",
-      tone: "danger",
-    },
-    {
-      title: "Clear IPD miss + stuck-at-hub first",
-      body: "Half of Trust erosion — escalate no-reattempt to hub lead today; CX messaging alone won't hold.",
-      tone: "warning",
-    },
-  ],
-  bl: [
-    {
-      title: "Pre-empt before anxiety builds",
-      body: "Reliability slipping while customers are calm — send honest re-promise now, before this cohort tips into Trust erosion.",
-      tone: "info",
-    },
-    {
-      title: "Silent IPD slip is the lead signal",
-      body: "Over half of Pre-empt is silent promise drift — surface revised ETAs on app/SMS before customers contact.",
-      tone: "warning",
-    },
-  ],
-  mh: [
-    {
-      title: "Reassure — do not over-resolve",
-      body: "Promise still met but customers feel late — contain with progress updates; avoid unnecessary compensation.",
-      tone: "warning",
-    },
-    {
-      title: "Keep out of trust-break queues",
-      body: "In-transit anxiety is the main load and still inside SLA — separate reassure templates from breach apology flows.",
-      tone: "info",
-    },
-  ],
-  ml: [
-    {
-      title: "Hold — no outreach needed",
-      body: "Promise kept and anxiety low — protect on-time last-mile and prepaid in-SLA as the stabilizers.",
-      tone: "success",
-    },
-    {
-      title: "Do not pull capacity from here",
-      body: "Leave Healthy out of intervention queues so CX capacity stays on Pre-empt and Trust erosion.",
-      tone: "warning",
-    },
-  ],
-};
-
-const QUAD_DETAILS: Record<
+const QUAD_ROOT_CAUSE: Record<
   QuadCellId,
   {
-    rootCause: string;
+    title: string;
+    body: string;
+    tone: "danger" | "warning" | "info" | "success";
     affected: readonly string[];
-    actions: readonly string[];
-    owner: string;
-    timeToAct: string;
-    priority: string;
   }
 > = {
   bh: {
-    rootCause: "Delivery promise broken while anxiety is already high — stuck-at-hub and failed attempts without re-attempt.",
+    title: "Promise broken under high anxiety",
+    body: "Stuck-at-hub and failed attempts without re-attempt while customers are already anxious — East hubs carry the break. About half of Trust erosion is IPD miss paired with no re-attempt — a reliability failure, not a messaging gap.",
+    tone: "danger",
     affected: ["East hubs (Kolkata, Patna, Ranchi)", "Last-mile COD & prepaid", "Customers inside contact window"],
-    actions: [
-      "Approve revised-ETA outreach for Trust erosion clusters",
-      "Escalate no-reattempt cases to hub ops lead",
-      "Clear IPD miss + stuck-at-hub before other drivers",
-    ],
-    owner: "CX Ops · Last-mile",
-    timeToAct: "Immediate · before contact window",
-    priority: "P1",
   },
   bl: {
-    rootCause: "Silent reliability slip while customers are still calm — IPD drift not yet felt as anxiety.",
+    title: "Silent reliability slip while customers are calm",
+    body: "Promise is drifting (IPD) before anxiety shows up — Pre-empt is early reliability erosion, not contact load yet. Silent IPD slip and installation/return schedule lag form most of Pre-empt — customers have not contacted yet because they do not feel the miss.",
+    tone: "info",
     affected: ["Installation SLA drift cohorts", "Return schedule lag", "Silent IPD slip shipments"],
-    actions: [
-      "Send honest re-promise before anxiety builds",
-      "Push revised ETA on app/SMS for silent IPD slip",
-      "Hold installation/return SLAs inside service window",
-    ],
-    owner: "CX Ops · Promise desk",
-    timeToAct: "Same day · prevent Trust erosion",
-    priority: "P2",
   },
   mh: {
-    rootCause: "Promise still met, but customers want faster than committed — in-transit anxiety without breach.",
+    title: "Promise met, anxiety still high",
+    body: "Customers want faster than committed; in-transit anxiety sits inside SLA — a perception gap, not a breach. Main load is SLA-intact in-transit anxiety — this cohort is not Trust erosion apology territory.",
+    tone: "warning",
     affected: ["In-transit SLA-intact orders", "BBD hub load corridors", "Desired-faster-than-promised"],
-    actions: [
-      "Send progress / tracking reassure (no compensation)",
-      "Keep cohort out of Trust erosion apology flows",
-      "Separate reassure templates from breach templates",
-    ],
-    owner: "CX · Proactive messaging",
-    timeToAct: "Within service window",
-    priority: "P3",
   },
   ml: {
-    rootCause: "Promise kept and anxiety low — on-time last-mile and prepaid in-SLA patterns.",
+    title: "Promise kept and anxiety low",
+    body: "On-time last-mile and prepaid in-SLA patterns — the stabilizer cohort in the reliability × anxiety mix. Healthy is the reference group: low contact pressure and no reliability break to explain.",
+    tone: "success",
     affected: ["On-time last-mile", "Prepaid in-SLA", "Standard grocery"],
-    actions: [
-      "No outreach — hold as control benchmark",
-      "Do not pull CX capacity from this cohort",
-      "Compare other quadrants against Healthy mix",
-    ],
-    owner: "CX Head · Monitor only",
-    timeToAct: "No action required",
-    priority: "P4",
   },
 };
 
+const QUAD_DETAILS: Record<QuadCellId, { priority: string }> = {
+  bh: { priority: "P1" },
+  bl: { priority: "P2" },
+  mh: { priority: "P3" },
+  ml: { priority: "P4" },
+};
+
 const QUAD_GROUPS: readonly {
+  id: "breached" | "met";
   promiseLabel: string;
   promiseColor: string;
   cells: readonly [QuadCellId, QuadCellId];
 }[] = [
   {
+    id: "breached",
     promiseLabel: "Promise breached",
     promiseColor: cssVar("severity-high"),
     cells: ["bl", "bh"],
   },
   {
+    id: "met",
     promiseLabel: "Promise met",
     promiseColor: cssVar("positive"),
     cells: ["ml", "mh"],
   },
 ];
+
+function leadCellInGroup(
+  cells: readonly [QuadCellId, QuadCellId],
+  data: Record<QuadCellId, number>,
+): QuadCellId {
+  return data[cells[0]] >= data[cells[1]] ? cells[0] : cells[1];
+}
+
+function isBreachedCell(cell: QuadCellId): boolean {
+  return cell === "bl" || cell === "bh";
+}
 
 function insightToneStyles(tone: "danger" | "warning" | "info" | "success"): {
   border: string;
@@ -221,10 +163,12 @@ function QuadDriversAndAiPanel({
   cell,
   drivers,
   driverColor,
+  d,
 }: {
   cell: QuadCellId;
   drivers: readonly (readonly [string, number])[];
   driverColor: string;
+  d: AnxietyPeriodData;
 }): React.ReactElement {
   const [tab, setTab] = useState<"summary" | "details">("summary");
 
@@ -242,9 +186,13 @@ function QuadDriversAndAiPanel({
         border: `1px solid ${cssVar("border")}`,
         background: cssVar("surface"),
         overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
       }}
     >
-      <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: `1px solid ${cssVar("border")}` }}>
+      <div style={{ position: "relative", display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: `1px solid ${cssVar("border")}`, flexShrink: 0 }}>
         {tabs.map((item) => {
           const active = tab === item.id;
           return (
@@ -285,13 +233,150 @@ function QuadDriversAndAiPanel({
         />
       </div>
 
-      <div style={{ padding: "12px 14px", minHeight: 220 }}>
+      <div style={{ padding: "12px 14px", flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
         <QuadAiSummaryContent
           tab={tab}
           cell={cell}
           drivers={drivers}
           driverColor={driverColor}
+          d={d}
         />
+      </div>
+    </div>
+  );
+}
+
+function anxietyCompact(n: number): string {
+  if (Math.abs(n) >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(Math.round(n));
+}
+
+function CommandSignalDetailRows({
+  d,
+  cell,
+}: {
+  d: AnxietyPeriodData;
+  cell: QuadCellId;
+}): React.ReactElement {
+  const m = getAnxietyPeriodMetrics(d);
+  const worst = getWeakestCategory(d);
+  const best = getStrongestCategory(d);
+  const drivers = getQuadDriversForPeriod(cell, d);
+  const topDriver = drivers[0]?.[0] ?? worst.k;
+  const stateColor = ANXIETY_STATE_META[d.state].color;
+  const reachAccent = cssVar("accent");
+  const ipdColor =
+    Math.round(d.ipd) >= 91 ? cssVar("positive") : Math.round(d.ipd) >= 89 ? cssVar("severity-med") : cssVar("severity-high");
+
+  // Scale period volumes to the selected cell's share of the reliability × anxiety mix (timeframe-accurate).
+  const cellShare = d.negTotal > 0 ? d.quad[cell] / d.negTotal : 0;
+  const scale = (n: number): number => Math.max(0, Math.round(n * cellShare));
+  const breachedSide = isBreachedCell(cell);
+  const groupCount = breachedSide ? d.quad.bl + d.quad.bh : d.quad.ml + d.quad.mh;
+  const groupSharePct = d.negTotal > 0 ? Math.round((groupCount / d.negTotal) * 100) : 0;
+
+  const rows = [
+    {
+      title: "Promise reliability",
+      color: ipdColor,
+      items: [
+        {
+          k: "Promises kept",
+          v: breachedSide
+            ? `${m.promiseKeptPct}% · ${anxietyCompact(m.anxietyOnly)}`
+            : `${groupSharePct}% · ${anxietyCompact(groupCount)}`,
+        },
+        { k: "Kept, still unhappy", v: anxietyCompact(d.quad.mh) },
+        {
+          k: "Promises breached",
+          v: breachedSide
+            ? `${groupSharePct}% · ${anxietyCompact(groupCount)}`
+            : `${m.breachSharePct}% · ${anxietyCompact(m.breachSignals)}`,
+        },
+        { k: "Strongest", v: best.k },
+      ],
+    },
+    {
+      title: "Anxiety load",
+      color: stateColor,
+      items: [
+        { k: "Building anxiety", v: anxietyCompact(scale(d.high)) },
+        { k: "Silent, not contacted", v: anxietyCompact(scale(m.silentNotContacted)) },
+        { k: "Top Issue", v: topDriver },
+        { k: "Escalation likelihood", v: d.pContact.toFixed(2) },
+      ],
+    },
+    {
+      title: "Proactive outreach",
+      color: reachAccent,
+      items: [
+        { k: "Reached first", v: `${m.coverageRate}% · ${anxietyCompact(scale(d.funnelNotified))}` },
+        { k: "Contacts avoided", v: `${m.funnelRate}% · ${anxietyCompact(scale(d.funnelAvoided))}` },
+        {
+          k: "May contact",
+          v: `${m.customerMayContactPct}% · ${anxietyCompact(scale(m.mayContactCount))}`,
+        },
+        { k: "Top Contacted Cat.", v: worst.k },
+      ],
+    },
+  ] as const;
+
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, minHeight: 0 }}>
+      <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted"), flexShrink: 0 }}>
+        Command signals
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, flex: 1, minHeight: 0 }}>
+        {rows.map((row) => (
+          <div
+            key={row.title}
+            style={{
+              padding: "12px 14px",
+              borderRadius: radius.md,
+              border: `1px solid ${row.color}33`,
+              borderLeft: `3px solid ${row.color}`,
+              background: cssVar("surface-raised"),
+              minWidth: 0,
+              minHeight: 0,
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+            }}
+          >
+            <div style={{ fontSize: 13, fontWeight: 700, color: row.color, marginBottom: 10, flexShrink: 0 }}>{row.title}</div>
+            <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, gap: 8 }}>
+              {row.items.map((item) => (
+                <div key={item.k} style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 8, minWidth: 0 }}>
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: cssVar("text-muted"),
+                      lineHeight: 1.25,
+                      minWidth: 0,
+                      flex: "1 1 auto",
+                    }}
+                  >
+                    {item.k}
+                  </span>
+                  <span
+                    className="lisn-num"
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: cssVar("text-primary"),
+                      textAlign: "right",
+                      whiteSpace: "nowrap",
+                      flexShrink: 0,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {item.v}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -302,24 +387,27 @@ function QuadAiSummaryContent({
   cell,
   drivers,
   driverColor,
+  d,
 }: {
   tab: "summary" | "details";
   cell: QuadCellId;
   drivers: readonly (readonly [string, number])[];
   driverColor: string;
+  d: AnxietyPeriodData;
 }): React.ReactElement {
-  const insights = QUAD_AI_INSIGHTS[cell];
-  const details = QUAD_DETAILS[cell];
+  const rootCause = QUAD_ROOT_CAUSE[cell];
 
   if (tab === "summary") {
+    const tone = insightToneStyles(rootCause.tone);
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 10, height: "100%" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, minHeight: 0 }}>
         <div
           style={{
             display: "flex",
             flexWrap: "wrap",
             gap: 6,
             alignItems: "center",
+            flexShrink: 0,
           }}
         >
           <span
@@ -359,193 +447,71 @@ function QuadAiSummaryContent({
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
-          {insights.map((insight) => {
-            const tone = insightToneStyles(insight.tone);
-            return (
-              <div
-                key={insight.title}
+          <div
+            style={{
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: 0.3,
+              textTransform: "uppercase",
+              color: cssVar("text-muted"),
+            }}
+          >
+            Root cause
+          </div>
+          <div
+            style={{
+              borderRadius: radius.md,
+              border: `1px solid ${tone.border}`,
+              background: tone.background,
+              padding: "12px 14px",
+            }}
+          >
+            <div style={{ fontSize: 14, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.3, marginBottom: 5 }}>
+              {rootCause.title}
+            </div>
+            <div style={{ fontSize: 13, color: cssVar("text-secondary"), lineHeight: 1.45 }}>
+              {rootCause.body}
+            </div>
+          </div>
+
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8, marginTop: 2 }}>
+            <span
+              style={{
+                fontSize: 9,
+                fontWeight: 800,
+                letterSpacing: 0.35,
+                textTransform: "uppercase",
+                color: cssVar("severity-high"),
+                flexShrink: 0,
+              }}
+            >
+              Who&apos;s affected
+            </span>
+            {rootCause.affected.map((item) => (
+              <span
+                key={item}
                 style={{
-                  borderRadius: radius.md,
-                  border: `1px solid ${tone.border}`,
-                  background: tone.background,
-                  padding: "12px 14px",
-                  flex: 1,
+                  fontSize: 11,
+                  color: cssVar("text-secondary"),
+                  lineHeight: 1.3,
+                  padding: "5px 9px",
+                  borderRadius: radius.sm,
+                  border: `1px solid ${cssVar("border")}`,
+                  background: cssVar("surface-raised"),
                 }}
               >
-                <div style={{ fontSize: 14, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.3, marginBottom: 5 }}>
-                  {insight.title}
-                </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: cssVar("text-secondary"),
-                    lineHeight: 1.4,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}
-                  title={insight.body}
-                >
-                  {insight.body}
-                </div>
-              </div>
-            );
-          })}
+                {item}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10, maxHeight: 280, overflowY: "auto" }}>
-      <div
-        style={{
-          padding: "10px 12px",
-          borderRadius: radius.md,
-          background: `color-mix(in srgb, ${driverColor} 10%, ${cssVar("surface-raised")})`,
-          border: `1px solid ${driverColor}33`,
-          borderLeft: `3px solid ${driverColor}`,
-        }}
-      >
-        <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted"), marginBottom: 5 }}>
-          Root cause
-        </div>
-        <div style={{ fontSize: 12, fontWeight: 600, color: cssVar("text-primary"), lineHeight: 1.45 }}>{details.rootCause}</div>
-      </div>
-
-      <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8 }}>
-        <span
-          style={{
-            fontSize: 9,
-            fontWeight: 800,
-            letterSpacing: 0.35,
-            textTransform: "uppercase",
-            color: cssVar("severity-high"),
-            flexShrink: 0,
-          }}
-        >
-          Who's affected
-        </span>
-        {details.affected.map((item) => (
-          <span
-            key={item}
-            style={{
-              fontSize: 11,
-              color: cssVar("text-secondary"),
-              lineHeight: 1.3,
-              padding: "5px 9px",
-              borderRadius: radius.sm,
-              border: `1px solid ${cssVar("border")}`,
-              background: cssVar("surface-raised"),
-            }}
-          >
-            {item}
-          </span>
-        ))}
-      </div>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1.55fr) minmax(140px, 0.75fr)",
-          gridTemplateRows: "auto 1fr",
-          columnGap: 10,
-          rowGap: 6,
-          alignItems: "stretch",
-        }}
-      >
-        <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted") }}>
-          Recommended actions
-        </div>
-        <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted") }}>
-          Ownership
-        </div>
-
-        <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 6, height: "100%" }}>
-          {details.actions.map((action, idx) => (
-            <div
-              key={action}
-              style={{
-                flex: 1,
-                display: "grid",
-                gridTemplateColumns: "22px 1fr",
-                gap: 8,
-                alignItems: "center",
-                padding: "8px 10px",
-                borderRadius: radius.md,
-                border: `1px solid ${cssVar("border")}`,
-                background: cssVar("surface-raised"),
-                minHeight: 40,
-              }}
-            >
-              <span
-                className="lisn-num"
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: "50%",
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: 10,
-                  fontWeight: 800,
-                  color: driverColor,
-                  background: `color-mix(in srgb, ${driverColor} 16%, transparent)`,
-                  flexShrink: 0,
-                }}
-              >
-                {idx + 1}
-              </span>
-              <span style={{ fontSize: 11, color: cssVar("text-secondary"), lineHeight: 1.4 }}>{action}</span>
-            </div>
-          ))}
-        </div>
-
-        <div
-          style={{
-            minWidth: 0,
-            display: "grid",
-            gridTemplateRows: "1fr 1fr",
-            gap: 6,
-            height: "100%",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              padding: "10px 12px",
-              borderRadius: radius.md,
-              background: cssVar("surface-raised"),
-              border: `1px solid ${cssVar("border")}`,
-              minHeight: 0,
-            }}
-          >
-            <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted"), marginBottom: 4 }}>
-              Owner
-            </div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: cssVar("text-primary"), lineHeight: 1.35 }}>{details.owner}</div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              padding: "10px 12px",
-              borderRadius: radius.md,
-              background: cssVar("surface-raised"),
-              border: `1px solid ${cssVar("border")}`,
-              minHeight: 0,
-            }}
-          >
-            <div style={{ fontSize: 9, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted"), marginBottom: 4 }}>
-              Time to act
-            </div>
-            <div style={{ fontSize: 12, fontWeight: 700, color: driverColor, lineHeight: 1.35 }}>{details.timeToAct}</div>
-          </div>
-        </div>
-      </div>
+    <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1, minHeight: 0 }}>
+      <CommandSignalDetailRows d={d} cell={cell} />
     </div>
   );
 }
@@ -569,10 +535,12 @@ function QuadStackedBar({
         {QUAD_GROUPS.map((group) => {
           const groupShare = group.cells.reduce((sum, id) => sum + data[id], 0);
           const groupWidth = (groupShare / total) * 100;
+          const groupActive = group.cells.includes(active);
+          const lead = leadCellInGroup(group.cells, data);
 
           return (
             <div
-              key={group.promiseLabel}
+              key={group.id}
               style={{
                 flex: `0 0 ${Math.max(28, groupWidth)}%`,
                 minWidth: 0,
@@ -581,23 +549,33 @@ function QuadStackedBar({
                 gap: 8,
                 padding: "10px 10px 8px",
                 borderRadius: radius.lg,
-                border: `1px solid ${group.promiseColor}66`,
-                background: `color-mix(in srgb, ${group.promiseColor} 6%, ${cssVar("surface")})`,
+                border: groupActive ? `1.5px solid ${group.promiseColor}` : `1px solid ${group.promiseColor}66`,
+                background: `color-mix(in srgb, ${group.promiseColor} ${groupActive ? 12 : 6}%, ${cssVar("surface")})`,
                 boxSizing: "border-box",
+                boxShadow: groupActive ? `0 0 0 1px ${group.promiseColor}44` : undefined,
               }}
             >
-              <div
+              <button
+                type="button"
+                onClick={() => onSelect(lead)}
+                title={`Focus ${group.promiseLabel} · updates AI Summary & Details`}
                 style={{
+                  border: 0,
+                  background: "transparent",
+                  cursor: "pointer",
                   fontSize: 10,
                   fontWeight: 800,
                   letterSpacing: 0.3,
                   textTransform: "uppercase",
                   color: group.promiseColor,
                   textAlign: "center",
+                  padding: "2px 4px",
+                  borderRadius: radius.sm,
+                  outline: groupActive ? `1px solid ${group.promiseColor}66` : undefined,
                 }}
               >
                 {group.promiseLabel}
-              </div>
+              </button>
 
               <div
                 style={{
@@ -735,72 +713,72 @@ export function ReliabilityVsAnxietyPanel({
   const drivers = useMemo(() => getQuadDriversForPeriod(cell, d), [cell, d]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-      <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 12, alignItems: "start" }}>
-        <AnxietyCard pad={16}>
-          <QuadStackedBar data={d.quad} shares={quadShares} active={cell} onSelect={setCell} />
+    <div style={{ display: "grid", gridTemplateColumns: "1.35fr 1fr", gap: 12, alignItems: "stretch" }}>
+      <AnxietyCard pad={16} style={{ display: "flex", flexDirection: "column", minWidth: 0, minHeight: 0 }}>
+        <QuadStackedBar data={d.quad} shares={quadShares} active={cell} onSelect={setCell} />
 
-          <div
-            style={{
-              marginTop: 12,
-              padding: "10px 12px",
-              borderRadius: radius.md,
-              background: `color-mix(in srgb, ${toneMeta.color} 10%, transparent)`,
-              border: `1px solid ${toneMeta.color}44`,
-              fontSize: 12,
-              color: cssVar("text-secondary"),
-              lineHeight: 1.4,
-              display: "flex",
-              alignItems: "baseline",
-              justifyContent: "space-between",
-              gap: 10,
-            }}
-          >
-            <div>
-              <span style={{ fontWeight: 700, color: toneMeta.color }}>{QUAD_SHORT_LABEL[cell]}</span>
-              {" — "}
-              {meta.note}
-            </div>
-            <span className="lisn-num" style={{ fontWeight: 800, color: cssVar("text-primary"), flexShrink: 0 }}>
-              {anxietyFmt(d.quad[cell])}
-            </span>
+        <div
+          style={{
+            marginTop: 12,
+            padding: "10px 12px",
+            borderRadius: radius.md,
+            background: `color-mix(in srgb, ${toneMeta.color} 10%, transparent)`,
+            border: `1px solid ${toneMeta.color}44`,
+            fontSize: 12,
+            color: cssVar("text-secondary"),
+            lineHeight: 1.4,
+            display: "flex",
+            alignItems: "baseline",
+            justifyContent: "space-between",
+            gap: 10,
+            flexShrink: 0,
+          }}
+        >
+          <div>
+            <span style={{ fontWeight: 700, color: toneMeta.color }}>{QUAD_SHORT_LABEL[cell]}</span>
+            {" — "}
+            {meta.note}
           </div>
+          <span className="lisn-num" style={{ fontWeight: 800, color: cssVar("text-primary"), flexShrink: 0 }}>
+            {anxietyFmt(d.quad[cell])}
+          </span>
+        </div>
 
-          <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${cssVar("border")}` }}>
-            <QuadDriversAndAiPanel
-              cell={cell}
-              drivers={drivers}
-              driverColor={toneMeta.color}
-            />
-          </div>
-        </AnxietyCard>
+        <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${cssVar("border")}`, flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
+          <QuadDriversAndAiPanel
+            cell={cell}
+            drivers={drivers}
+            driverColor={toneMeta.color}
+            d={d}
+          />
+        </div>
+      </AnxietyCard>
 
-        <AnxietyCard pad={16} style={{ display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 8,
-              marginBottom: 6,
-              flexShrink: 0,
-            }}
-          >
-            <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted") }}>
-              Cliff vs slope events
-            </div>
-            <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
-              <SegButton active={cliffSlopeMode === "cliff"} onClick={() => setCliffSlopeMode("cliff")}>
-                Cliff
-              </SegButton>
-              <SegButton active={cliffSlopeMode === "slope"} onClick={() => setCliffSlopeMode("slope")}>
-                Slope
-              </SegButton>
-            </div>
+      <AnxietyCard pad={16} style={{ display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 8,
+            marginBottom: 6,
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: 0.35, textTransform: "uppercase", color: cssVar("text-muted") }}>
+            Cliff vs slope events
           </div>
-          <CliffSlopePieCharts mode={cliffSlopeMode} negTotal={d.negTotal} />
-        </AnxietyCard>
-      </div>
+          <div style={{ display: "flex", gap: 6, flexShrink: 0 }}>
+            <SegButton active={cliffSlopeMode === "cliff"} onClick={() => setCliffSlopeMode("cliff")}>
+              Cliff
+            </SegButton>
+            <SegButton active={cliffSlopeMode === "slope"} onClick={() => setCliffSlopeMode("slope")}>
+              Slope
+            </SegButton>
+          </div>
+        </div>
+        <CliffSlopePieCharts mode={cliffSlopeMode} negTotal={d.negTotal} />
+      </AnxietyCard>
     </div>
   );
 }

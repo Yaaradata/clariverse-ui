@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Cpu, Home, MapPin, Shirt, ShoppingBasket, type LucideIcon } from "lucide-react";
 import { FailureClusters } from "@/components/FCI/FailureClusters";
 import { AISummaryWall } from "@/components/FCI/AISummaryWall";
 import {
@@ -497,77 +498,85 @@ const RFM_TO_CUSTOMER_SEGMENT: Record<RfmId, HappinessSegmentKey> = {
 
 /** Weight mix for how an RFM cohort splits across customer segments (relative; scaled to RFM rev%). */
 const RFM_SHARE_WEIGHTS: Record<RfmId, Record<HappinessSegmentKey, number>> = {
+  // Top (R5F5) — recent, frequent, high spend → Loyal / Active / Frequent dominate
   champions: {
-    loyal: 42,
-    active: 18,
-    frequent: 16,
-    occasional: 8,
-    reactivated: 6,
-    seasonal: 6,
-    dormant: 4,
-  },
-  loyal: {
-    loyal: 48,
+    loyal: 44,
     active: 20,
-    frequent: 12,
+    frequent: 15,
+    reactivated: 8,
     occasional: 7,
+    seasonal: 4,
+    dormant: 2,
+  },
+  // Strong (R4F5) — consistent repeats just below Top
+  loyal: {
+    loyal: 46,
+    active: 22,
+    frequent: 14,
+    occasional: 6,
     reactivated: 5,
+    seasonal: 5,
+    dormant: 2,
+  },
+  // Growing (R5F3) — recent, building habit
+  potential: {
+    frequent: 34,
+    active: 24,
+    occasional: 16,
+    reactivated: 10,
+    loyal: 8,
     seasonal: 5,
     dormant: 3,
   },
-  potential: {
-    loyal: 10,
-    active: 22,
-    frequent: 36,
-    occasional: 14,
-    reactivated: 8,
-    seasonal: 6,
-    dormant: 4,
-  },
+  // Starter (R5F1) — first-order / trial
   new: {
+    occasional: 38,
+    active: 22,
+    seasonal: 12,
+    reactivated: 10,
+    frequent: 8,
+    dormant: 6,
     loyal: 4,
-    active: 18,
-    frequent: 10,
-    occasional: 40,
+  },
+  // Watch (R3F3) — mid value, recency slipping
+  attention: {
+    occasional: 30,
+    active: 22,
+    frequent: 16,
     reactivated: 12,
     seasonal: 10,
-    dormant: 6,
-  },
-  attention: {
-    loyal: 8,
-    active: 20,
-    frequent: 14,
-    occasional: 28,
-    reactivated: 14,
-    seasonal: 10,
-    dormant: 6,
-  },
-  atrisk: {
-    loyal: 10,
-    active: 14,
-    frequent: 10,
-    occasional: 12,
-    reactivated: 34,
-    seasonal: 12,
-    dormant: 8,
-  },
-  cantlose: {
-    loyal: 38,
-    active: 16,
-    frequent: 14,
-    occasional: 10,
-    reactivated: 10,
-    seasonal: 8,
+    loyal: 6,
     dormant: 4,
   },
+  // Risk (R2F4) — were valuable, now overdue
+  atrisk: {
+    reactivated: 36,
+    occasional: 16,
+    active: 14,
+    frequent: 12,
+    seasonal: 10,
+    loyal: 8,
+    dormant: 4,
+  },
+  // Priority (R1F5) — best buyers gone cold
+  cantlose: {
+    loyal: 40,
+    reactivated: 18,
+    frequent: 14,
+    active: 12,
+    occasional: 8,
+    seasonal: 5,
+    dormant: 3,
+  },
+  // Quiet (R2F1) — low recency & frequency
   hibernating: {
-    loyal: 4,
-    active: 8,
-    frequent: 6,
-    occasional: 12,
-    reactivated: 10,
-    seasonal: 12,
-    dormant: 48,
+    dormant: 50,
+    occasional: 16,
+    seasonal: 14,
+    reactivated: 8,
+    active: 6,
+    frequent: 4,
+    loyal: 2,
   },
 };
 
@@ -595,6 +604,156 @@ function allocateSharePct(
   return Object.fromEntries(floored.map((r) => [r.key, r.value])) as Record<HappinessSegmentKey, number>;
 }
 
+/**
+ * Proportional tracks — extra width is shared across columns so gaps stay even
+ * instead of dumping into the name column alone.
+ */
+const RFM_SEGMENT_COLS =
+  "minmax(100px, 1.35fr) minmax(52px, 0.55fr) minmax(48px, 0.5fr) minmax(96px, 0.95fr) minmax(108px, 1.1fr)";
+const RFM_SEGMENT_GAP = 10;
+const RFM_SEGMENT_PAD_X = 14;
+
+const TOP_CATEGORY_META: Record<string, { color: string; Icon: LucideIcon }> = {
+  Electronics: { color: "#8B7CF8", Icon: Cpu },
+  Fashion: { color: "#5B9FD4", Icon: Shirt },
+  Grocery: { color: "#3DBF9A", Icon: ShoppingBasket },
+  Home: { color: "#A78BFA", Icon: Home },
+};
+
+const TOP_SELLER_META: Record<
+  HappinessSegmentRow["topSeller"],
+  { color: string; ink: string }
+> = {
+  Flipkart: { color: "#2874F0", ink: "#ffffff" },
+  Marketplace: { color: "#F59E0B", ink: "#1a1205" },
+};
+
+function TopCategoryMark({ category }: { category: string }): React.ReactElement {
+  const meta = TOP_CATEGORY_META[category] ?? { color: cssVar("accent"), Icon: ShoppingBasket };
+  const { color, Icon } = meta;
+
+  return (
+    <span
+      title={`Top category · ${category}`}
+      aria-label={`Top category ${category}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 32,
+        height: 32,
+        borderRadius: 9,
+        flexShrink: 0,
+        background: `linear-gradient(145deg, ${color}40 0%, ${color}18 100%)`,
+        border: `1px solid ${color}66`,
+        boxShadow: `inset 0 1px 0 ${color}33`,
+      }}
+    >
+      <Icon size={18} strokeWidth={2.2} color={color} />
+    </span>
+  );
+}
+
+function TopSellingPlaceMark({
+  place,
+}: {
+  place: HappinessSegmentRow["topSellingPlace"];
+}): React.ReactElement {
+  return (
+    <span
+      title={`Top selling place · ${place.pinCode}, ${place.state}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        minWidth: 0,
+        width: "100%",
+      }}
+    >
+      <MapPin
+        size={13}
+        strokeWidth={2.4}
+        color={cssVar("severity-med")}
+        style={{ flexShrink: 0 }}
+        aria-hidden
+      />
+      <span style={{ display: "inline-flex", flexDirection: "column", gap: 1, minWidth: 0 }}>
+        <span
+          className="lisn-num"
+          style={{
+            fontSize: 12,
+            fontWeight: 800,
+            fontFamily: cssVar("font-numeric"),
+            fontVariantNumeric: "tabular-nums",
+            color: cssVar("text-primary"),
+            lineHeight: 1.15,
+            letterSpacing: "0.02em",
+          }}
+        >
+          {place.pinCode}
+        </span>
+        <span
+          style={{
+            fontSize: 10,
+            fontWeight: 600,
+            color: cssVar("text-muted"),
+            lineHeight: 1.15,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {place.state}
+        </span>
+      </span>
+    </span>
+  );
+}
+
+function TopSellerLabel({
+  seller,
+}: {
+  seller: HappinessSegmentRow["topSeller"];
+}): React.ReactElement {
+  const { color, ink } = TOP_SELLER_META[seller];
+
+  return (
+    <span
+      title={`Top seller · ${seller}`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 20,
+        padding: "0 9px",
+        borderRadius: radius.pill,
+        background: color,
+        color: ink,
+        fontSize: 10,
+        fontWeight: 800,
+        letterSpacing: "0.02em",
+        lineHeight: 1,
+        whiteSpace: "nowrap",
+        border: "none",
+        boxShadow: "none",
+        width: "fit-content",
+      }}
+    >
+      {seller}
+    </span>
+  );
+}
+
+function rfmSegmentCell(align: "start" | "center"): React.CSSProperties {
+  return {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: align === "center" ? "center" : "flex-start",
+    minWidth: 0,
+    width: "100%",
+  };
+}
+
 function SentimentSegmentRow({
   seg,
   idx,
@@ -615,26 +774,18 @@ function SentimentSegmentRow({
   rfmColor: string;
 }): React.ReactElement {
   const animatedShare = useAnimatedNumber(sharePct, { duration: 900, delay: 40 + idx * 25 });
-  const happy = useAnimatedNumber(seg.happy, { duration: 900, delay: 60 + idx * 25 });
-  const neutral = useAnimatedNumber(seg.neutral, { duration: 900, delay: 70 + idx * 25 });
-  const unhappy = useAnimatedNumber(seg.unhappy, { duration: 900, delay: 80 + idx * 25 });
-  const bands = [
-    [happy, cssVar("positive"), "#04140a"] as const,
-    [neutral, cssVar("severity-med"), "#1a1205"] as const,
-    [unhappy, cssVar("severity-high"), "#fff"] as const,
-  ];
   const emphasized = linked || holdsShare;
 
   return (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "minmax(110px, 0.85fr) 48px minmax(0, 1.5fr)",
-        columnGap: 10,
+        gridTemplateColumns: RFM_SEGMENT_COLS,
+        columnGap: RFM_SEGMENT_GAP,
         alignItems: "center",
         width: "100%",
         boxSizing: "border-box",
-        padding: "12px 16px",
+        padding: `12px ${RFM_SEGMENT_PAD_X}px`,
         borderTop: idx === 0 ? "none" : `1px solid ${cssVar("border")}`,
         borderLeft: linked
           ? `3px solid ${rfmColor}`
@@ -642,18 +793,18 @@ function SentimentSegmentRow({
             ? `3px solid ${rfmColor}66`
             : "3px solid transparent",
         background: linked ? `${rfmColor}18` : holdsShare ? `${rfmColor}0c` : "transparent",
-        opacity: emphasized ? 1 : 0.42,
+        opacity: emphasized ? 1 : 0.55,
         fontFamily: "inherit",
         color: "inherit",
         textAlign: "left",
         flex: 1,
-        minHeight: 72,
+        minHeight: 58,
         transition: "background 180ms ease, border-color 180ms ease, opacity 180ms ease",
       }}
-      title={`${seg.label} · ${sharePct}% of ${rfmRevPct}% RFM share · ${seg.happy}% happy · ₹${seg.gmvAtRiskCr} Cr GMV`}
+      title={`${seg.label} · ${sharePct}% of ${rfmRevPct}% RFM revenue · ${seg.topCategory} · ${seg.topSellingPlace.pinCode}, ${seg.topSellingPlace.state} · ${seg.topSeller}`}
     >
-      <div style={{ minWidth: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
+      <div style={rfmSegmentCell("start")}>
+        <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
           <span style={{ width: 8, height: 8, borderRadius: 3, background: seg.color, flexShrink: 0 }} />
           <span
             style={{
@@ -670,60 +821,32 @@ function SentimentSegmentRow({
         </div>
       </div>
 
-      <span
-        style={{
-          fontSize: 12.5,
-          fontWeight: 800,
-          fontFamily: cssVar("font-numeric"),
-          fontVariantNumeric: "tabular-nums",
-          color: emphasized ? rfmColor : cssVar("text-muted"),
-          textAlign: "right",
-          padding: emphasized ? "2px 6px" : undefined,
-          borderRadius: emphasized ? radius.sm : undefined,
-          background: emphasized ? `${rfmColor}18` : undefined,
-        }}
-      >
-        {animatedShare}%
-      </span>
-
-      <div style={{ minWidth: 0 }}>
-        <div
+      <div style={rfmSegmentCell("center")}>
+        <span
           style={{
-            display: "flex",
-            height: 22,
-            borderRadius: 7,
-            overflow: "hidden",
-            background: cssVar("border"),
+            fontSize: 13,
+            fontWeight: 800,
+            fontFamily: cssVar("font-numeric"),
+            fontVariantNumeric: "tabular-nums",
+            color: cssVar("text-primary"),
+            lineHeight: 1,
           }}
+          title="Share of selected RFM revenue"
         >
-          {bands.map(([pct, color, ink]) => (
-            <div
-              key={color}
-              style={{
-                width: `${pct}%`,
-                background: color,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minWidth: pct >= 14 ? undefined : 0,
-                transition: "width 200ms ease",
-              }}
-            >
-              {pct >= 14 ? (
-                <span
-                  style={{
-                    fontSize: 10,
-                    fontWeight: 800,
-                    fontFamily: cssVar("font-numeric"),
-                    color: ink,
-                  }}
-                >
-                  {pct}%
-                </span>
-              ) : null}
-            </div>
-          ))}
-        </div>
+          {animatedShare}%
+        </span>
+      </div>
+
+      <div style={rfmSegmentCell("center")}>
+        <TopCategoryMark category={seg.topCategory} />
+      </div>
+
+      <div style={rfmSegmentCell("start")}>
+        <TopSellerLabel seller={seg.topSeller} />
+      </div>
+
+      <div style={rfmSegmentCell("start")}>
+        <TopSellingPlaceMark place={seg.topSellingPlace} />
       </div>
     </div>
   );
@@ -749,44 +872,65 @@ function SentimentBySegmentPanel({
     rfmRevPct,
     rows.map((r) => r.key),
   );
+  const visibleRows = [...rows]
+    .filter((r) => (shareBySegment[r.key] ?? 0) > 0)
+    .sort((a, b) => (shareBySegment[b.key] ?? 0) - (shareBySegment[a.key] ?? 0));
+
+  const headerLabel = (align: "start" | "center"): React.CSSProperties => ({
+    ...rfmSegmentCell(align),
+    fontSize: 9.5,
+    fontWeight: 700,
+    letterSpacing: "0.03em",
+    textTransform: "uppercase",
+    color: cssVar("text-muted"),
+    whiteSpace: "nowrap",
+  });
 
   return (
     <Card style={{ borderLeft: `3px solid ${rfmColor}`, padding: 0, overflow: "hidden", height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ padding: "14px 16px 10px", borderBottom: `1px solid ${cssVar("border")}` }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
-          <h3 style={{ margin: 0, fontSize: 14.5, fontWeight: 700, color: cssVar("text-primary") }}>
-            Sentiment by Customer Segment
-          </h3>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "8px 12px", flexShrink: 0, justifyContent: "flex-end", alignItems: "center" }}>
-            <span
-              style={{
-                fontSize: 10.5,
-                fontWeight: 700,
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                color: cssVar("text-muted"),
-              }}
-            >
-              Share(%)
-            </span>
-            {(
-              [
-                ["Happy", cssVar("positive")],
-                ["Neutral", cssVar("severity-med")],
-                ["Unhappy", cssVar("severity-high")],
-              ] as const
-            ).map(([label, color]) => (
-              <span key={label} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 10.5, fontWeight: 600, color: cssVar("text-muted") }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: color }} />
-                {label}
-              </span>
-            ))}
-          </div>
-        </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: RFM_SEGMENT_COLS,
+          columnGap: RFM_SEGMENT_GAP,
+          alignItems: "center",
+          padding: `14px ${RFM_SEGMENT_PAD_X}px 12px`,
+          borderBottom: `1px solid ${cssVar("border")}`,
+          borderLeft: "3px solid transparent",
+          boxSizing: "border-box",
+          width: "100%",
+        }}
+      >
+        <h3
+          style={{
+            margin: 0,
+            fontSize: 13.5,
+            fontWeight: 700,
+            color: cssVar("text-primary"),
+            minWidth: 0,
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          Segments
+        </h3>
+        <span title="Share of selected RFM revenue" style={headerLabel("center")}>
+          Rev(%)
+        </span>
+        <span title="Dominant category driving RFM revenue" style={headerLabel("center")}>
+          Top Cat.
+        </span>
+        <span title="Dominant fulfilment source — Flipkart or Marketplace" style={headerLabel("start")}>
+          Top Seller
+        </span>
+        <span title="Highest-GMV selling pin code and state" style={headerLabel("start")}>
+          Top Selling
+        </span>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0 }}>
-        {rows.map((seg, idx) => {
+        {visibleRows.map((seg, idx) => {
           const sharePct = shareBySegment[seg.key] ?? 0;
           return (
             <SentimentSegmentRow

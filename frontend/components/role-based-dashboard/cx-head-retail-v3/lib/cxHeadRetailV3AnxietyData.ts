@@ -1,6 +1,6 @@
 export type AnxietyPeriodKey = "today" | "7d" | "30d";
 export type AnxietyFreshKey = "nrt" | "daily";
-export type AnxietyScreenId = 1 | 2 | 3 | 4;
+export type AnxietyScreenId = 1 | 3 | 4;
 export type AnxietyStateKey = "strong" | "shift" | "break" | "info";
 export type QuadCellId = "ml" | "mh" | "bl" | "bh";
 
@@ -39,32 +39,38 @@ export interface AnxietyPeriodData {
 }
 
 export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
+  /**
+   * 24H — acute East / Furniture break day.
+   * Invariants: notified ≤ high ≤ scored; avoided ≤ notified; contained ≤ high;
+   * quad sums to negTotal; cov = round(notified/high*100); breachUnits ≈ (bl+bh)/1.78.
+   */
   today: {
-    label: "Today",
+    label: "24H",
     freshDefault: "nrt",
     index: 84,
     conf: 84,
     state: "break",
     trend: [58, 61, 60, 66, 71, 74, 79, 84],
-    high: 12400,
-    scored: 47800,
-    contained: 3100,
+    scored: 48_000,
+    high: 12_400, // 25.8% of scored
+    contained: 3_100, // 25.0% of high
     deltaIndex: 9,
-    ipd: 91,
+    ipd: 91.0,
     ipdDelta: -1.4,
-    breachUnits: 4210,
-    cov: 75,
+    breachUnits: 4_213, // (bl+bh) / 1.78
+    cov: 75, // = notified / high
     ttc: 41,
-    ttContact: 68,
-    funnelNotified: 9300,
-    funnelAvoided: 6900,
+    ttContact: 68, // headroom +27 min
+    funnelNotified: 9_300, // 75% of high
+    funnelAvoided: 6_820, // 55% of high · 73% of notified
     optOut: 1.9,
     overComms: 0.4,
     driverPct: 62,
     driverConf: 79,
-    negTotal: 18600,
-    pContact: 0.71,
-    quad: { ml: 4200, mh: 6900, bl: 2300, bh: 5200 },
+    negTotal: 18_600,
+    pContact: 0.45, // = (high − avoided) / high · complements contacts-avoided 55%
+    // promise-kept signals 59.7% · breach signals 40.3%
+    quad: { ml: 4_200, mh: 6_900, bl: 2_300, bh: 5_200 },
     splitConf: 82,
     top10Shares: [24, 16, 11, 10, 8, 7, 7, 6, 6, 5],
     matrixAnxietyOffset: 0,
@@ -72,32 +78,37 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     contribShift: 0,
     clusterSlaScale: 1,
   },
+  /**
+   * 7D — weekly operating window (~6.56× 24H volume; quieter weekend days).
+   * Rates hold near 24H with slight IPD recovery and softer anxiety index.
+   */
   "7d": {
-    label: "7 days",
+    label: "7D",
     freshDefault: "nrt",
     index: 76,
     conf: 88,
     state: "shift",
     trend: [62, 70, 74, 69, 73, 77, 76],
-    high: 81400,
-    scored: 312000,
-    contained: 22600,
+    scored: 312_000,
+    high: 81_400, // 26.1% of scored · ~6.56× 24H
+    contained: 22_600, // 27.8% of high
     deltaIndex: -3,
-    ipd: 92,
+    ipd: 92.0,
     ipdDelta: 0.8,
-    breachUnits: 23100,
+    breachUnits: 27_753, // (bl+bh) / 1.78
     cov: 74,
     ttc: 44,
-    ttContact: 71,
-    funnelNotified: 60200,
-    funnelAvoided: 44900,
+    ttContact: 71, // headroom +27 min
+    funnelNotified: 60_236, // 74% of high
+    funnelAvoided: 44_770, // 55% of high · 74% of notified
     optOut: 2.1,
     overComms: 0.5,
     driverPct: 58,
     driverConf: 84,
-    negTotal: 121400,
-    pContact: 0.69,
-    quad: { ml: 28800, mh: 43200, bl: 15600, bh: 33800 },
+    negTotal: 121_400, // ~6.53× 24H
+    pContact: 0.45, // complements contacts-avoided 55% of high
+    // promise-kept 59.3% · breach 40.7%
+    quad: { ml: 28_800, mh: 43_200, bl: 15_600, bh: 33_800 },
     splitConf: 86,
     top10Shares: [20, 16, 12, 10, 9, 8, 7, 6, 6, 6],
     matrixAnxietyOffset: -2,
@@ -105,32 +116,36 @@ export const ANXIETY_PERIODS: Record<AnxietyPeriodKey, AnxietyPeriodData> = {
     contribShift: 1,
     clusterSlaScale: 1.12,
   },
+  /**
+   * 30D — structural window (~27.5× 24H). Index and IPD improve as acute days dilute.
+   */
   "30d": {
-    label: "30 days",
+    label: "30D",
     freshDefault: "daily",
     index: 71,
     conf: 90,
     state: "shift",
     trend: [66, 69, 73, 72, 70, 68, 71],
-    high: 341000,
-    scored: 1290000,
-    contained: 96500,
+    scored: 1_290_000,
+    high: 341_000, // 26.4% of scored · ~27.5× 24H
+    contained: 96_500, // 28.3% of high
     deltaIndex: -5,
-    ipd: 93,
+    ipd: 93.0,
     ipdDelta: 1.9,
-    breachUnits: 92800,
+    breachUnits: 117_416, // (bl+bh) / 1.78
     cov: 76,
     ttc: 47,
-    ttContact: 74,
-    funnelNotified: 259000,
-    funnelAvoided: 195000,
+    ttContact: 74, // headroom +27 min
+    funnelNotified: 259_160, // 76% of high
+    funnelAvoided: 194_370, // 57% of high · 75% of notified
     optOut: 2.0,
     overComms: 0.4,
     driverPct: 55,
     driverConf: 88,
-    negTotal: 512000,
-    pContact: 0.65,
-    quad: { ml: 122000, mh: 181000, bl: 66000, bh: 143000 },
+    negTotal: 512_000, // ~27.5× 24H
+    pContact: 0.43, // complements contacts-avoided 57% of high
+    // promise-kept 59.2% · breach 40.8%
+    quad: { ml: 122_000, mh: 181_000, bl: 66_000, bh: 143_000 },
     splitConf: 88,
     top10Shares: [18, 15, 13, 11, 10, 9, 8, 7, 5, 4],
     matrixAnxietyOffset: -4,
@@ -983,12 +998,10 @@ export const ANXIETY_SCREENS = [
   { id: 1 as const, name: "Anxiety Command", plane: "Hot" as const },
   { id: 3 as const, name: "Reliability vs Anxiety" },
   { id: 4 as const, name: "Escalation Patterns", plane: "Cold" as const },
-  { id: 2 as const, name: "Proactive Customer Intervention Queue" },
 ];
 
 export const ANXIETY_SCREEN_QUESTIONS: Record<AnxietyScreenId, string> = {
   1: "Are customers about to contact us? · Are we keeping our promise? · Are we containing in time?",
-  2: "",
   3: "",
   4: "",
 };

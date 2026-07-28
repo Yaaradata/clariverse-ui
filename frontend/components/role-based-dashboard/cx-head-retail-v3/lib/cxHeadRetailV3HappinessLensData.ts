@@ -95,6 +95,12 @@ export type HappinessSegmentRow = {
   resolutionRate: number;
   /** Ranking metric — ₹ Cr GMV exposed. */
   gmvAtRiskCr: number;
+  /** Dominant product category for this segment (RFM revenue driver). */
+  topCategory: string;
+  /** Highest-GMV selling location for this segment. */
+  topSellingPlace: { pinCode: string; state: string };
+  /** Dominant fulfilment source — Flipkart (1P) or Marketplace (3P). */
+  topSeller: "Flipkart" | "Marketplace";
   color: string;
   /** Supporting CX scores (moved from the left score list into the segment table). */
   csat: number;
@@ -116,7 +122,7 @@ export type HappinessSegmentRow = {
 export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   {
     key: "active",
-    label: "Active customer",
+    label: "Active",
     valueLens: "lv",
     interactions: 22_571,
     wowDelta: 3.4,
@@ -127,6 +133,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 64,
     resolutionRate: 45,
     gmvAtRiskCr: 22.4,
+    topCategory: "Electronics",
+    topSellingPlace: { pinCode: "560001", state: "Karnataka" },
+    topSeller: "Flipkart",
     color: "#159B94",
     csat: 79,
     ease: 3.4,
@@ -142,7 +151,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   },
   {
     key: "occasional",
-    label: "Occasional buyer",
+    label: "Occasional",
     valueLens: "hv",
     interactions: 11_285,
     wowDelta: -0.6,
@@ -153,6 +162,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 58,
     resolutionRate: 38,
     gmvAtRiskCr: 18.2,
+    topCategory: "Fashion",
+    topSellingPlace: { pinCode: "400001", state: "Maharashtra" },
+    topSeller: "Marketplace",
     color: "#3B82C4",
     csat: 76,
     ease: 3.5,
@@ -168,7 +180,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   },
   {
     key: "loyal",
-    label: "Loyal customer",
+    label: "Loyal",
     valueLens: "hv",
     interactions: 9_673,
     wowDelta: 2.1,
@@ -179,6 +191,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 88,
     resolutionRate: 58,
     gmvAtRiskCr: 42.0,
+    topCategory: "Electronics",
+    topSellingPlace: { pinCode: "110001", state: "Delhi" },
+    topSeller: "Flipkart",
     color: "#5B4BE0",
     csat: 88,
     ease: 2.6,
@@ -194,7 +209,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   },
   {
     key: "seasonal",
-    label: "Seasonal buyer",
+    label: "Seasonal",
     valueLens: "lv",
     interactions: 4_837,
     wowDelta: 0.8,
@@ -205,6 +220,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 52,
     resolutionRate: 34,
     gmvAtRiskCr: 12.1,
+    topCategory: "Home",
+    topSellingPlace: { pinCode: "600001", state: "Tamil Nadu" },
+    topSeller: "Marketplace",
     color: "#7A8BD0",
     csat: 74,
     ease: 3.6,
@@ -220,7 +238,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   },
   {
     key: "reactivated",
-    label: "Reactivated customer",
+    label: "Reactivated",
     valueLens: "hv",
     interactions: 2_687,
     wowDelta: 4.2,
@@ -231,6 +249,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 72,
     resolutionRate: 51,
     gmvAtRiskCr: 14.8,
+    topCategory: "Fashion",
+    topSellingPlace: { pinCode: "500001", state: "Telangana" },
+    topSeller: "Flipkart",
     color: "#3AA97A",
     csat: 84,
     ease: 2.9,
@@ -246,7 +267,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   },
   {
     key: "dormant",
-    label: "Dormant customer",
+    label: "Dormant",
     valueLens: "lv",
     interactions: 3_210,
     wowDelta: -0.3,
@@ -257,6 +278,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 34,
     resolutionRate: 29,
     gmvAtRiskCr: 6.4,
+    topCategory: "Grocery",
+    topSellingPlace: { pinCode: "700001", state: "West Bengal" },
+    topSeller: "Marketplace",
     color: "#94A0B2",
     csat: 61,
     ease: 4.1,
@@ -272,7 +296,7 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
   },
   {
     key: "frequent",
-    label: "Frequent buyer",
+    label: "Frequent",
     valueLens: "lv",
     interactions: 7_840,
     wowDelta: 1.6,
@@ -283,6 +307,9 @@ export const HAPPINESS_SEGMENT_ROWS: HappinessSegmentRow[] = [
     ltv: 68,
     resolutionRate: 47,
     gmvAtRiskCr: 16.5,
+    topCategory: "Grocery",
+    topSellingPlace: { pinCode: "380001", state: "Gujarat" },
+    topSeller: "Flipkart",
     color: "#0D9488",
     csat: 81,
     ease: 3.1,

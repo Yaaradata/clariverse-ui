@@ -100,8 +100,8 @@ export function HubFluidHeadline({
           fontSize: type.scale.small,
           color: cssVar("text-secondary"),
           lineHeight: 1.5,
-          maxWidth: variant === "trust" ? "none" : 720,
-          whiteSpace: variant === "trust" ? "nowrap" : "normal",
+          maxWidth: variant === "customer-happiness" ? 720 : "none",
+          whiteSpace: variant === "customer-happiness" ? "normal" : "nowrap",
         }}
       >
         {purpose ?? HUB_PAGE_PURPOSE[variant]}
