@@ -1895,6 +1895,70 @@ export function scaleTrustCrLabel(label: string, range: TrustRangeKey): string {
   return `₹${scaled.toFixed(digits)} Cr`;
 }
 
+export type SlopeTrajectory = "Steepening" | "Steady" | "Easing";
+
+export interface SlopeEventMetrics {
+  /** Weekly complaint-growth gradient, e.g. 3.1 */
+  gradientPctPerWeek: number;
+  /** Visual slope angle for the gradient callout */
+  gradientAngleDeg: number;
+  /** How long this slope has been building */
+  buildingDays: number;
+  trajectory: SlopeTrajectory;
+  /** Time-to-critical callout, e.g. "~3 weeks" */
+  reachesCritical: string;
+}
+
+/**
+ * Slope-event operating metrics — derived from incident rate / blast / WoW,
+ * then soft-shifted by timeframe so 24H / 7D / 30D stay coherent.
+ */
+export function getSlopeEventMetrics(d: TrustDriver, range: TrustRangeKey): SlopeEventMetrics {
+  const baseGradient = d.incidentRate;
+  const baseAngle = Math.round(10 + baseGradient * 9);
+  const baseBuildingDays = Math.round(14 + d.blastRadius * 0.5);
+  const wow = scaleTrustDelta(d.wow, range);
+  const trajectory: SlopeTrajectory = wow >= 10 ? "Steepening" : wow >= 0 ? "Steady" : "Easing";
+
+  switch (range) {
+    case "24H": {
+      const gradientPctPerWeek = Math.round(baseGradient * 1.35 * 10) / 10;
+      const buildingDays = Math.max(5, Math.round(baseBuildingDays * 0.5));
+      return {
+        gradientPctPerWeek,
+        gradientAngleDeg: Math.min(55, Math.round(baseAngle * 1.12)),
+        buildingDays,
+        trajectory: wow >= 4 ? "Steepening" : trajectory,
+        reachesCritical: buildingDays <= 10 ? "~1 week" : `~${Math.max(1, Math.round(buildingDays / 7))} weeks`,
+      };
+    }
+    case "30D": {
+      const gradientPctPerWeek = Math.round(baseGradient * 0.88 * 10) / 10;
+      const buildingDays = Math.round(baseBuildingDays * 1.45);
+      return {
+        gradientPctPerWeek,
+        gradientAngleDeg: Math.max(18, Math.round(baseAngle * 0.92)),
+        buildingDays,
+        trajectory: wow >= 12 ? "Steepening" : trajectory,
+        reachesCritical: `~${Math.max(2, Math.round(buildingDays / 14))} weeks`,
+      };
+    }
+    case "7D": {
+      return {
+        gradientPctPerWeek: baseGradient,
+        gradientAngleDeg: baseAngle,
+        buildingDays: baseBuildingDays,
+        trajectory,
+        reachesCritical: `~${Math.max(1, Math.round(baseBuildingDays / 14))} weeks`,
+      };
+    }
+    default: {
+      const _exhaustive: never = range;
+      return _exhaustive;
+    }
+  }
+}
+
 export function scaleTrustDriverCut(cut: TrustDriverCut, range: TrustRangeKey): TrustDriverCut {
   const sc = (n: number): number => scaleTrustCount(n, range);
   const sd = (n: number): number => Math.round(scaleTrustDelta(n, range));

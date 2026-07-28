@@ -27,6 +27,7 @@ import {
   scaleTrustCrLabel,
   scaleTrustDelta,
   scaleTrustDriverCut,
+  getSlopeEventMetrics,
   sortDriversBySeverity,
   type TrustCategoryCutRow,
   type TrustChannelCutRow,
@@ -1107,6 +1108,66 @@ function TrustDriverCard({
 }): React.ReactElement {
   const Icon = d.icon;
   const edge = laneAccent ?? (d.cliffOrSlope === "cliff" ? cssVar("severity-high") : cssVar("severity-med"));
+  const isSlope = d.cliffOrSlope === "slope";
+  const slope = isSlope ? getSlopeEventMetrics(d, range) : null;
+
+  const topMetrics = isSlope && slope
+    ? ([
+        {
+          label: "Rate of climb",
+          value: `+${slope.gradientPctPerWeek}%/week · ≈${slope.gradientAngleDeg}°`,
+          color: cssVar("severity-high"),
+        },
+        {
+          label: "Building for",
+          value: `${slope.buildingDays} days`,
+          color: cssVar("severity-med"),
+        },
+      ] as const)
+    : ([
+        {
+          label: "Blast rate",
+          value: String(d.blastRadius),
+          color: cssVar("severity-high"),
+        },
+        {
+          label: "Incident rate",
+          value: `${d.incidentRate}%`,
+          color: cssVar("severity-med"),
+        },
+      ] as const);
+
+  const bottomMetrics = isSlope && slope
+    ? ([
+        {
+          label: "Complaints",
+          value: fmt(scale(d.complaints)),
+          color: cssVar("text-primary"),
+          hint: "complaints in window",
+        },
+        {
+          label: "Trajectory",
+          value: slope.trajectory,
+          color:
+            slope.trajectory === "Steepening"
+              ? cssVar("severity-high")
+              : slope.trajectory === "Easing"
+                ? cssVar("positive")
+                : cssVar("severity-med"),
+        },
+        {
+          label: "Reaches critical",
+          value: slope.reachesCritical,
+          color: cssVar("severity-med"),
+        },
+        {
+          label: "GMV exposure",
+          value: scaleTrustCrLabel(d.pnlValue, range),
+          color: cssVar("severity-high"),
+          hint: d.pnlMetric,
+        },
+      ] as const)
+    : null;
 
   return (
     <div
@@ -1168,20 +1229,7 @@ function TrustDriverCard({
             width: "100%",
           }}
         >
-          {(
-            [
-              {
-                label: "Blast rate",
-                value: String(d.blastRadius),
-                color: cssVar("severity-high"),
-              },
-              {
-                label: "Incident rate",
-                value: `${d.incidentRate}%`,
-                color: cssVar("severity-med"),
-              },
-            ] as const
-          ).map((item) => (
+          {topMetrics.map((item) => (
             <div
               key={item.label}
               style={{
@@ -1213,10 +1261,10 @@ function TrustDriverCard({
               <span
                 className="lisn-num"
                 style={{
-                  fontSize: 13,
+                  fontSize: isSlope ? 11 : 13,
                   fontWeight: 800,
                   color: item.color,
-                  lineHeight: 1.15,
+                  lineHeight: 1.2,
                   textAlign: "center",
                 }}
               >
@@ -1281,34 +1329,55 @@ function TrustDriverCard({
           textAlign: "center",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Complaints</span>
-          <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("text-primary") }}>
-            {fmt(scale(d.complaints))}
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>{periodLabel}</span>
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <Delta value={Math.round(scaleTrustDelta(d.wow, range))} good="down" />
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Neg. sentiment</span>
-          <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("severity-high") }}>
-            {d.sentNeg}%
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
-          <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>GMV exposure</span>
-          <div
-            className="lisn-num"
-            style={{ fontSize: 15, fontWeight: 800, color: cssVar("severity-high") }}
-            title={d.pnlMetric}
-          >
-            {scaleTrustCrLabel(d.pnlValue, range)}
-          </div>
-        </div>
+        {bottomMetrics ? (
+          bottomMetrics.map((item) => (
+            <div key={item.label} style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>{item.label}</span>
+              <div
+                className="lisn-num"
+                title={"hint" in item ? item.hint : undefined}
+                style={{
+                  fontSize: 15,
+                  fontWeight: item.label === "GMV exposure" || item.label === "Complaints" ? 800 : 700,
+                  color: item.color,
+                }}
+              >
+                {item.value}
+              </div>
+            </div>
+          ))
+        ) : (
+          <>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Complaints</span>
+              <div className="lisn-num" style={{ fontSize: 15, fontWeight: 800, color: cssVar("text-primary") }}>
+                {fmt(scale(d.complaints))}
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>{periodLabel}</span>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Delta value={Math.round(scaleTrustDelta(d.wow, range))} good="down" />
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>Neg. sentiment</span>
+              <div className="lisn-num" style={{ fontSize: 15, fontWeight: 700, color: cssVar("severity-high") }}>
+                {d.sentNeg}%
+              </div>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+              <span style={{ fontSize: 10.5, color: cssVar("text-muted"), fontWeight: 600 }}>GMV exposure</span>
+              <div
+                className="lisn-num"
+                style={{ fontSize: 15, fontWeight: 800, color: cssVar("severity-high") }}
+                title={d.pnlMetric}
+              >
+                {scaleTrustCrLabel(d.pnlValue, range)}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <DriverAiHowToDeal points={d.dealPoints} />
