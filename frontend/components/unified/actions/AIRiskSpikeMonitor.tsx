@@ -712,6 +712,16 @@ function RiskSpikeCard({
         </span>
       </div>
 
+      {spike.topIntentContext ? (
+        <div
+          className={`mt-1 text-[9.5px] font-bold tracking-[0.08em] uppercase ${
+            isDarkMode ? "text-gray-500" : "text-gray-500"
+          }`}
+        >
+          {spike.topIntentContext}
+        </div>
+      ) : null}
+
       <div
         className={
           franchise

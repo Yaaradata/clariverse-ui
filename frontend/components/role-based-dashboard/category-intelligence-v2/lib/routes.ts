@@ -31,7 +31,7 @@ export const SCREENS: ScreenRoute[] = [
     id: "overview",
     label: "Category Command",
     shortLabel: "Home",
-    purpose: "What should I act on this week?",
+    purpose: "Where is share slipping — and what demand/CX leaks do I fix this week?",
     icon: Home,
   },
   {

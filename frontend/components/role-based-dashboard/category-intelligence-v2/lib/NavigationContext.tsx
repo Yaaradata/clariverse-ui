@@ -2,12 +2,15 @@
 
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
+import type { TimeRangeKey } from "../components/common/TimeRangeSelector";
 import type { DrillTarget, ScreenId } from "./routes";
 import { DEFAULT_SCREEN } from "./routes";
 
 interface NavigationValue {
   activeScreen: ScreenId;
   drill: DrillTarget | null;
+  timeRange: TimeRangeKey;
+  setTimeRange: (range: TimeRangeKey) => void;
   navigate: (screen: ScreenId) => void;
   openDrill: (target: DrillTarget) => void;
   closeDrill: () => void;
@@ -30,6 +33,7 @@ export function NavigationProvider({
 }): React.ReactElement {
   const [activeScreen, setActiveScreen] = useState<ScreenId>(DEFAULT_SCREEN);
   const [drill, setDrill] = useState<DrillTarget | null>(null);
+  const [timeRange, setTimeRange] = useState<TimeRangeKey>("7D");
 
   const navigate = useCallback((screen: ScreenId) => {
     setActiveScreen(screen);
@@ -43,8 +47,16 @@ export function NavigationProvider({
   const closeDrill = useCallback(() => setDrill(null), []);
 
   const value = useMemo<NavigationValue>(
-    () => ({ activeScreen, drill, navigate, openDrill, closeDrill }),
-    [activeScreen, drill, navigate, openDrill, closeDrill],
+    () => ({
+      activeScreen,
+      drill,
+      timeRange,
+      setTimeRange,
+      navigate,
+      openDrill,
+      closeDrill,
+    }),
+    [activeScreen, drill, timeRange, navigate, openDrill, closeDrill],
   );
 
   return <NavigationContext.Provider value={value}>{children}</NavigationContext.Provider>;

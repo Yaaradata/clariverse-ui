@@ -55,17 +55,36 @@ export function MiniGauge({
   label,
   color,
   compact = false,
+  topLabel,
+  showPercent = false,
 }: {
   value: number;
   label: string;
   color: string;
   compact?: boolean;
+  topLabel?: string;
+  showPercent?: boolean;
 }): React.ReactElement {
   const clamped = Math.max(0, Math.min(100, value));
   const data = [{ name: label, value: clamped, fill: color }];
-  const chartHeight = compact ? 48 : 52;
-  const innerRadius = 22;
-  const outerRadius = 34;
+  const chartHeight = compact ? 52 : 56;
+  const innerRadius = compact ? 20 : 22;
+  const outerRadius = compact ? 32 : 34;
+  const captionStyle: React.CSSProperties = {
+    fontSize: 10.5,
+    fontWeight: 600,
+    color: cssVar("text-muted"),
+    textTransform: "uppercase",
+    letterSpacing: 0.3,
+    textAlign: "center",
+    lineHeight: 1.2,
+    width: "100%",
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    wordBreak: "break-word",
+  };
 
   return (
     <div
@@ -73,13 +92,14 @@ export function MiniGauge({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: compact ? 1 : 2,
+        gap: 3,
         minWidth: compact ? 0 : 72,
         width: "100%",
-        height: compact ? 62 : undefined,
+        height: compact ? 74 : undefined,
         justifyContent: "flex-end",
       }}
     >
+      {topLabel ? <div style={captionStyle}>{topLabel}</div> : null}
       <div style={{ position: "relative", width: "100%", height: chartHeight }}>
         <ResponsiveContainer width="100%" height="100%">
           <RadialBarChart
@@ -100,35 +120,18 @@ export function MiniGauge({
           style={{
             position: "absolute",
             left: "50%",
-            bottom: 0,
+            bottom: 1,
             transform: "translateX(-50%)",
-            fontSize: compact ? 12 : 13,
+            fontSize: compact ? 14 : 15,
             fontWeight: 800,
             color,
             pointerEvents: "none",
           }}
         >
-          {clamped}
+          {showPercent ? `${clamped}%` : clamped}
         </div>
       </div>
-      <div
-        style={{
-          fontSize: 9,
-          color: cssVar("text-muted"),
-          textTransform: "uppercase",
-          letterSpacing: 0.28,
-          textAlign: "center",
-          lineHeight: 1.15,
-          width: "100%",
-          display: "-webkit-box",
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-          wordBreak: "break-word",
-        }}
-      >
-        {label}
-      </div>
+      <div style={captionStyle}>{label}</div>
     </div>
   );
 }

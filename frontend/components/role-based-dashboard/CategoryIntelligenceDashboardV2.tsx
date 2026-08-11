@@ -16,7 +16,7 @@ export type CategoryIntelligenceDashboardV2Props = {
   onExit: () => void;
 };
 
-/** V2 — Business Head category intelligence: overview hub + five drill screens. */
+/** Business Head category intelligence — overview hub + drill screens. */
 export default function CategoryIntelligenceDashboardV2({
   industryId,
   industryName,
@@ -33,7 +33,6 @@ export default function CategoryIntelligenceDashboardV2({
           roleName={roleName}
           industryColor={industryColor}
           onExit={onExit}
-          categoryVersion="v2"
         >
           <NavigationProvider>
             <AppShell />

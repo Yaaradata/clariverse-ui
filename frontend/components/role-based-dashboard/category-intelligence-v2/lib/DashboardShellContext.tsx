@@ -2,12 +2,10 @@
 
 import React, { createContext, useCallback, useContext, useMemo, useState } from "react";
 
-import type { CategoryVersion } from "@/components/role-based-dashboard/CategoryVersionToggle";
 import type { AuditEntry } from "../state/appState";
 
 export type DashboardShellContextValue = {
   industryId: string;
-  categoryVersion: CategoryVersion;
   industryName: string;
   roleName: string;
   industryColor: string;
@@ -28,7 +26,6 @@ export function useDashboardShell(): DashboardShellContextValue {
 
 export function DashboardShellProvider({
   industryId,
-  categoryVersion,
   industryName,
   roleName,
   industryColor,
@@ -36,7 +33,6 @@ export function DashboardShellProvider({
   children,
 }: {
   industryId: string;
-  categoryVersion: CategoryVersion;
   industryName: string;
   roleName: string;
   industryColor: string;
@@ -62,7 +58,6 @@ export function DashboardShellProvider({
   const value = useMemo(
     () => ({
       industryId,
-      categoryVersion,
       industryName,
       roleName,
       industryColor,
@@ -70,7 +65,7 @@ export function DashboardShellProvider({
       auditLog,
       approveDraft,
     }),
-    [industryId, categoryVersion, industryName, roleName, industryColor, onExit, auditLog, approveDraft],
+    [industryId, industryName, roleName, industryColor, onExit, auditLog, approveDraft],
   );
 
   return <DashboardShellContext.Provider value={value}>{children}</DashboardShellContext.Provider>;

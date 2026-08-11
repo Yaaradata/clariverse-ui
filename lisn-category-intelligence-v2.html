@@ -1,0 +1,429 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiSN · Category Intelligence · V2</title>
+<style>
+  :root{
+    --bg:#0a0a0c; --panel:#111116; --panel-2:#15151b; --raise:#1a1a21;
+    --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.11);
+    --text:#e8e8ec; --muted:#8b8b95; --faint:#63636d;
+    --violet:#8b5cf6; --violet-soft:rgba(139,92,246,.14);
+    --blue:#3fb6f2; --green:#34d399; --amber:#f5a623; --red:#f8556a; --pink:#f472b6;
+    --gd-track:rgba(255,255,255,.09);
+    --insight:#f5b83d; --insight-soft:rgba(245,166,35,.09);
+  }
+  [data-theme="light"]{
+    --bg:#f5f6f8; --panel:#ffffff; --panel-2:#ffffff; --raise:#fbfbfd;
+    --line:rgba(15,20,35,.10); --line-2:rgba(15,20,35,.16);
+    --text:#1a1c22; --muted:#5b606c; --faint:#8a8f9b;
+    --violet:#7c5cf0; --violet-soft:rgba(124,92,240,.10);
+    --blue:#1f8fd6; --green:#10a86f; --amber:#d98807; --red:#e23b53; --pink:#d84f9e;
+    --gd-track:rgba(15,20,35,.10);
+    --insight:#c47f0c; --insight-soft:rgba(217,136,7,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1600px; margin:0 auto; padding:20px 26px 60px; position:relative}
+  .num{font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px}
+  .brand{font-size:15px; letter-spacing:.2px; color:var(--muted)}
+  .brand b{color:var(--text); font-weight:600}
+  .controls{display:flex; align-items:center; gap:12px}
+  .ver{display:flex; background:var(--panel-2); border:1px solid var(--line); border-radius:9px; padding:3px}
+  .ver button{border:0; background:transparent; color:var(--faint); font:inherit; font-size:12px; font-weight:600;
+    padding:5px 13px; border-radius:6px; cursor:pointer}
+  .ver button.on{background:var(--violet); color:#fff}
+  .theme-btn{width:34px; height:32px; border-radius:9px; border:1px solid var(--line); background:var(--panel-2);
+    color:var(--muted); cursor:pointer; font-size:15px; line-height:1}
+
+  /* ---------- executive pulse ---------- */
+  .pulse{border:1px solid var(--line); border-left:3px solid var(--violet); border-radius:14px;
+    background:linear-gradient(180deg,var(--violet-soft),transparent 60%),var(--panel); padding:16px 18px 18px; margin-bottom:20px}
+  .pulse-label{font-size:11px; font-weight:700; letter-spacing:1.4px; color:var(--violet); margin-bottom:14px}
+  .pulse-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  .pulse-cell{background:var(--panel-2); border:1px solid var(--line); border-radius:11px; padding:13px 15px}
+  .pulse-head{display:flex; align-items:center; gap:8px; font-weight:600; font-size:13.5px; margin-bottom:7px}
+  .pulse-head .n{color:var(--faint); font-weight:700}
+  .pulse-cell p{margin:0; color:var(--muted); font-size:13px}
+  .dot{width:9px; height:9px; border-radius:50%; display:inline-block; flex:0 0 auto}
+  .dot.red{background:var(--red); box-shadow:0 0 8px var(--red)}
+  .dot.amber{background:var(--amber); box-shadow:0 0 8px var(--amber)}
+  .dot.green{background:var(--green); box-shadow:0 0 8px var(--green)}
+
+  /* ---------- hero triad ---------- */
+  .triad{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:34px}
+  .hero{position:relative; border:1px solid var(--line); border-radius:16px; background:var(--panel);
+    padding:18px 18px 16px; overflow:hidden}
+  .hero::before{content:""; position:absolute; left:0; top:14px; bottom:14px; width:3px; border-radius:3px}
+  .hero[data-accent="blue"]::before{background:var(--blue)}
+  .hero[data-accent="amber"]::before{background:var(--amber)}
+  .hero[data-accent="violet"]::before{background:var(--violet)}
+  .hero[data-accent="blue"]{box-shadow:inset 0 0 0 1px rgba(63,182,242,.14)}
+  .hero-top{display:flex; align-items:flex-start; gap:11px; margin:0 0 14px 8px}
+  .hero-icon{width:34px; height:34px; border-radius:9px; display:grid; place-items:center; font-size:16px;
+    background:var(--raise); border:1px solid var(--line); flex:0 0 auto}
+  .hero-q{margin:0; font-size:16px; font-weight:650; line-height:1.28; flex:1}
+  .chev{color:var(--faint); font-size:20px; line-height:1}
+
+  .hero-body{display:flex; gap:14px; margin:0 0 4px 8px}
+  .hero-left{flex:1; min-width:0}
+  .hero-metric{display:flex; align-items:baseline; gap:9px; flex-wrap:wrap}
+  .big{font-size:39px; font-weight:750; letter-spacing:-1px; line-height:1}
+  .big.neg{color:var(--red)}
+  .qual{font-size:12.5px; color:var(--red); font-weight:600}
+  .qual.mut{color:var(--muted); font-weight:500}
+  .spark{width:100%; height:62px; margin-top:14px; display:block}
+
+  .hero-right{width:210px; flex:0 0 auto}
+  .gauges{display:flex; gap:10px; justify-content:space-between}
+  .gauge{flex:1; text-align:center}
+  .gwrap{position:relative; width:70px; height:70px; margin:0 auto}
+  .gwrap svg{width:70px; height:70px; transform:rotate(135deg)}
+  .gnum{position:absolute; inset:0; display:grid; place-items:center; font-size:17px; font-weight:700}
+  .gcap{margin-top:2px; font-size:9.5px; letter-spacing:.7px; color:var(--faint); font-weight:600}
+  .stats{display:flex; gap:10px; margin-top:12px; border-top:1px solid var(--line); padding-top:11px}
+  .stat{flex:1; text-align:center}
+  .stat-label{font-size:9.5px; letter-spacing:.7px; color:var(--faint); font-weight:600}
+  .stat-val{font-size:14.5px; font-weight:700; margin-top:3px}
+  .stat-val.neg{color:var(--red)}
+  .stat-val.pos{color:var(--green)}
+
+  .insight{margin:15px 0 0; border-left:2px solid var(--insight); background:var(--insight-soft);
+    border-radius:0 10px 10px 0; padding:11px 14px 12px}
+  .insight-label{font-size:10.5px; font-weight:700; letter-spacing:1px; color:var(--insight); margin-bottom:7px}
+  .insight ul{margin:0; padding-left:16px}
+  .insight li{margin:5px 0; font-size:13px; color:var(--text)}
+  .insight li::marker{color:var(--insight)}
+
+  /* ---------- risk spike monitor ---------- */
+  .monitor-head{display:flex; align-items:center; gap:12px; font-size:19px; font-weight:700; margin-bottom:2px}
+  .monitor-head .spk{color:var(--violet)}
+  .badge-op{font-size:10.5px; font-weight:700; letter-spacing:.6px; color:var(--amber);
+    border:1px solid rgba(245,166,35,.4); background:rgba(245,166,35,.08); border-radius:20px; padding:4px 11px}
+  .monitor-sub{margin:8px 0 4px; color:var(--muted); font-size:13px}
+  .monitor-drivers{margin:0 0 16px; color:var(--faint); font-size:12.5px}
+  .monitor-drivers b{color:var(--muted); font-weight:600}
+
+  .alerts{display:flex; gap:14px; overflow-x:auto; padding-bottom:14px; scroll-snap-type:x proximity}
+  .alerts::-webkit-scrollbar{height:8px}
+  .alerts::-webkit-scrollbar-thumb{background:var(--line-2); border-radius:8px}
+  .alert{flex:0 0 300px; scroll-snap-align:start; border:1px solid var(--line); border-radius:14px;
+    background:var(--panel); padding:15px 16px; position:relative; overflow:hidden}
+  .alert.crit{border-top:2px solid var(--red); box-shadow:inset 0 22px 40px -30px var(--red)}
+  .alert.high{border-top:2px solid var(--amber); box-shadow:inset 0 22px 40px -30px var(--amber)}
+  .a-top{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px}
+  .a-title{font-size:15px; font-weight:650}
+  .sev{font-size:10px; font-weight:700; letter-spacing:.5px; padding:3px 9px; border-radius:20px; white-space:nowrap}
+  .sev.crit{color:var(--red); background:rgba(248,85,106,.12); border:1px solid rgba(248,85,106,.4)}
+  .sev.high{color:var(--amber); background:rgba(245,166,35,.12); border:1px solid rgba(245,166,35,.4)}
+  .a-parent{font-size:9.5px; font-weight:700; letter-spacing:1px; color:var(--faint); margin-bottom:12px}
+  .a-meta{display:flex; justify-content:space-between; gap:10px; font-size:12px; margin:5px 0}
+  .a-meta .k{color:var(--faint)}
+  .a-meta .v{color:var(--muted); font-weight:600; text-align:right}
+  .a-metrics{margin:12px 0; background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:11px 13px}
+  .a-row{display:flex; align-items:baseline; justify-content:space-between; gap:8px; padding:5px 0}
+  .a-row + .a-row{border-top:1px solid var(--line)}
+  .a-row .lab{font-size:12px; color:var(--muted)}
+  .a-row .val{text-align:right}
+  .a-row .num-main{font-size:14px; font-weight:700}
+  .a-row .delta{display:block; font-size:11px; font-weight:600; margin-top:1px}
+  .delta.bad{color:var(--red)} .delta.warn{color:var(--amber)} .delta.mut{color:var(--faint)}
+  .a-insight{border-left:2px solid var(--insight); background:var(--insight-soft); border-radius:0 9px 9px 0;
+    padding:9px 12px; font-size:12.5px; color:var(--text)}
+  .a-insight .s{color:var(--insight); font-weight:700; margin-right:3px}
+
+  .logo-n{position:fixed; left:16px; bottom:14px; width:30px; height:30px; border-radius:50%;
+    border:1px solid var(--line-2); color:var(--faint); display:grid; place-items:center;
+    font-weight:800; font-size:14px; background:var(--panel)}
+
+  @media (max-width:1080px){
+    .triad,.pulse-grid{grid-template-columns:1fr}
+    .hero-body{flex-direction:column}
+    .hero-right{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="app" data-theme="dark" id="app">
+
+  <header class="topbar">
+    <div class="brand"><b>LiSN</b> · Category Intelligence · V2</div>
+    <div class="controls">
+      <div class="ver"><button>V1</button><button class="on">V2</button></div>
+      <button class="theme-btn" onclick="var a=document.getElementById('app');a.dataset.theme=a.dataset.theme==='dark'?'light':'dark';this.textContent=a.dataset.theme==='dark'?'☀':'☾'">☀</button>
+    </div>
+  </header>
+
+  <!-- ============ EXECUTIVE PULSE ============ -->
+  <section class="pulse">
+    <div class="pulse-label">✦ EXECUTIVE PULSE</div>
+    <div class="pulse-grid">
+      <div class="pulse-cell">
+        <div class="pulse-head"><span class="dot red"></span><span class="n">1.</span>&nbsp;What's critical</div>
+        <p>Losing category share — GMV up 6.4% while the market runs 11.2%. Fashion + Grocery are the drag.</p>
+      </div>
+      <div class="pulse-cell">
+        <div class="pulse-head"><span class="dot amber"></span><span class="n">2.</span>&nbsp;Where's your focus</div>
+        <p>A-SKU stockouts and delivery-SLA churn — ₹128 Cr demand lost, ₹96 Cr forward LTV exposed.</p>
+      </div>
+      <div class="pulse-cell">
+        <div class="pulse-head"><span class="dot green"></span><span class="n">3.</span>&nbsp;What's stable / on-track</div>
+        <p>Repeat base holds 58% of GMV · Large Appliances &amp; BGMH ahead of plan.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HERO TRIAD ============ -->
+  <section class="triad">
+
+    <!-- CARD 1 — GROWTH & SHARE -->
+    <article class="hero" data-accent="blue">
+      <div class="hero-top">
+        <div class="hero-icon">📈</div>
+        <h2 class="hero-q">Where is my category growing — and where am I losing it?</h2>
+        <span class="chev">›</span>
+      </div>
+      <div class="hero-body">
+        <div class="hero-left">
+          <div class="hero-metric"><span class="big num">+6.4%</span><span class="qual">Market +11.2% · ceding share</span></div>
+          <svg class="spark" viewBox="0 0 240 62" preserveAspectRatio="none">
+            <defs><linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--pink)" stop-opacity=".35"/><stop offset="1" stop-color="var(--pink)" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,44 L0,38 40,30 80,25 120,24 160,27 200,33 240,38 L240,44 Z" fill="url(#g1)"/>
+            <polyline points="0,38 40,30 80,25 120,24 160,27 200,33 240,38" fill="none" stroke="var(--pink)" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="hero-right">
+          <div class="gauges">
+            <div class="gauge">
+              <div class="gwrap"><svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--gd-track)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.5 40.9"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--amber)" stroke-width="6" stroke-linecap="round" stroke-dasharray="51.5 111.9"/>
+              </svg><div class="gnum num">42</div></div>
+              <div class="gcap">NEW · GMV%</div>
+            </div>
+            <div class="gauge">
+              <div class="gwrap"><svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--gd-track)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.5 40.9"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--blue)" stroke-width="6" stroke-linecap="round" stroke-dasharray="71.1 92.3"/>
+              </svg><div class="gnum num">58</div></div>
+              <div class="gcap">REPEAT · GMV%</div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><div class="stat-label">GMV POOL</div><div class="stat-val num">₹1,058 Cr</div></div>
+            <div class="stat"><div class="stat-label">SHARE Δ</div><div class="stat-val neg num">−3.1 pts</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-label">✦ AI INSIGHT</div>
+        <ul>
+          <li>Growth is real but sub-market — you're adding GMV while share slips 3.1 pts.</li>
+          <li>Repeat buyers carry 58% of GMV; new-buyer acquisition is the soft spot.</li>
+          <li>Large Appliances &amp; BGMH lead; Fashion + Grocery trail plan by ₹90 Cr.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- CARD 2 — AVAILABILITY & ASSORTMENT -->
+    <article class="hero" data-accent="amber">
+      <div class="hero-top">
+        <div class="hero-icon">📦</div>
+        <h2 class="hero-q">How much demand am I losing to stockouts and gaps?</h2>
+        <span class="chev">›</span>
+      </div>
+      <div class="hero-body">
+        <div class="hero-left">
+          <div class="hero-metric"><span class="big num">₹128 Cr</span><span class="qual mut">lost demand · recoverable</span></div>
+          <svg class="spark" viewBox="0 0 240 62" preserveAspectRatio="none">
+            <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--red)" stop-opacity=".32"/><stop offset="1" stop-color="var(--red)" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,46 L0,46 40,44 80,40 120,34 160,27 200,20 240,15 L240,46 Z" fill="url(#g2)"/>
+            <polyline points="0,46 40,44 80,40 120,34 160,27 200,20 240,15" fill="none" stroke="var(--red)" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="hero-right">
+          <div class="gauges">
+            <div class="gauge">
+              <div class="gwrap"><svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--gd-track)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.5 40.9"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--amber)" stroke-width="6" stroke-linecap="round" stroke-dasharray="109.0 54.4"/>
+              </svg><div class="gnum num">89</div></div>
+              <div class="gcap">A-SKU FILL%</div>
+            </div>
+            <div class="gauge">
+              <div class="gwrap"><svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--gd-track)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.5 40.9"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round" stroke-dasharray="100.5 62.9"/>
+              </svg><div class="gnum num">82</div></div>
+              <div class="gcap">SEARCH HIT%</div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><div class="stat-label">TOP GAP</div><div class="stat-val num">Appliances</div></div>
+            <div class="stat"><div class="stat-label">PIN COVERAGE</div><div class="stat-val num">84%</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-label">✦ AI INSIGHT</div>
+        <ul>
+          <li>₹128 Cr in demand fell through — 60% (₹77 Cr) from A-SKU stockouts, not weak demand.</li>
+          <li>Nearly 1 in 5 searches returns nothing — mid-price assortment gaps.</li>
+          <li>84% pin-code coverage; tier-2 serviceability unlocks ~₹20 Cr.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- CARD 3 — RETENTION / CX CHURN -->
+    <article class="hero" data-accent="violet">
+      <div class="hero-top">
+        <div class="hero-icon">🧭</div>
+        <h2 class="hero-q">Which experiences are costing me repeat customers?</h2>
+        <span class="chev">›</span>
+      </div>
+      <div class="hero-body">
+        <div class="hero-left">
+          <div class="hero-metric"><span class="big num">₹96 Cr</span><span class="qual">forward LTV exposed</span></div>
+          <svg class="spark" viewBox="0 0 240 62" preserveAspectRatio="none">
+            <defs><linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--violet)" stop-opacity=".34"/><stop offset="1" stop-color="var(--violet)" stop-opacity="0"/></linearGradient></defs>
+            <path d="M0,46 L0,22 40,24 80,27 120,31 160,36 200,41 240,46 L240,46 Z" fill="url(#g3)"/>
+            <polyline points="0,22 40,24 80,27 120,31 160,36 200,41 240,46" fill="none" stroke="var(--violet)" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="hero-right">
+          <div class="gauges">
+            <div class="gauge">
+              <div class="gwrap"><svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--gd-track)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.5 40.9"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--red)" stroke-width="6" stroke-linecap="round" stroke-dasharray="41.7 121.7"/>
+              </svg><div class="gnum num">34</div></div>
+              <div class="gcap">REPEAT RATE%</div>
+            </div>
+            <div class="gauge">
+              <div class="gwrap"><svg viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--gd-track)" stroke-width="6" stroke-linecap="round" stroke-dasharray="122.5 40.9"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="var(--amber)" stroke-width="6" stroke-linecap="round" stroke-dasharray="89.4 74.0"/>
+              </svg><div class="gnum num">73</div></div>
+              <div class="gcap">RETENTION%</div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><div class="stat-label">REPEAT Δ</div><div class="stat-val neg num">−4 pts</div></div>
+            <div class="stat"><div class="stat-label">TOP THEME</div><div class="stat-val num">Delivery SLA</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="insight">
+        <div class="insight-label">✦ AI INSIGHT</div>
+        <ul>
+          <li>Repeat rate down 4 pts QoQ — first-delivery experience leads the churn signal.</li>
+          <li>Returns-experience friction is the #2 driver, ahead of price.</li>
+          <li>Fixing the top-2 CX themes protects ~₹96 Cr in forward LTV.</li>
+        </ul>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============ AI RISK SPIKE MONITOR ============ -->
+  <div class="monitor-head"><span class="spk">✦</span> AI Risk Spike Monitor <span class="badge-op">OPERATIONAL ALERTS</span></div>
+  <p class="monitor-sub">Live detection of sudden shifts in demand, availability, fulfilment, and retention across channels.</p>
+  <p class="monitor-drivers"><b>Drivers:</b> category share · new-buyer stall · A-SKU stockouts · search gaps · delivery SLA · repeat-rate dip</p>
+
+  <div class="alerts">
+
+    <!-- GROWTH -->
+    <article class="alert crit">
+      <div class="a-top"><span class="a-title">Share Slip — Fashion</span><span class="sev crit">🔥 CRITICAL</span></div>
+      <div class="a-parent">↑ TIES TO · GROWTH &amp; SHARE</div>
+      <div class="a-meta"><span class="k">CHANNEL</span><span class="v">Demand · GMV</span></div>
+      <div class="a-meta"><span class="k">TOP DRIVER</span><span class="v">Growth lagging market</span></div>
+      <div class="a-meta"><span class="k">TIME</span><span class="v">Last 30d</span></div>
+      <div class="a-metrics">
+        <div class="a-row"><span class="lab">GMV growth</span><span class="val"><span class="num-main num">9% → 4%</span><span class="delta bad num">↓ 5 pts</span></span></div>
+        <div class="a-row"><span class="lab">Market gap</span><span class="val"><span class="num-main num">+5 → +9 pts</span><span class="delta bad">↑ widening</span></span></div>
+      </div>
+      <div class="a-insight"><span class="s">✦</span>Fashion growth halved vs market — mid-band price + selection gap. Route to merchandising.</div>
+    </article>
+
+    <article class="alert high">
+      <div class="a-top"><span class="a-title">New-Buyer Stall</span><span class="sev high">⚠ HIGH</span></div>
+      <div class="a-parent">↑ TIES TO · GROWTH &amp; SHARE</div>
+      <div class="a-meta"><span class="k">CHANNEL</span><span class="v">Acquisition</span></div>
+      <div class="a-meta"><span class="k">TOP DRIVER</span><span class="v">New-GMV share falling</span></div>
+      <div class="a-meta"><span class="k">TIME</span><span class="v">Last 30d</span></div>
+      <div class="a-metrics">
+        <div class="a-row"><span class="lab">New-GMV share</span><span class="val"><span class="num-main num">46% → 42%</span><span class="delta warn num">↓ 4 pts</span></span></div>
+        <div class="a-row"><span class="lab">Acquisition mix</span><span class="val"><span class="num-main">Paid-heavy</span><span class="delta mut">↑ not demand</span></span></div>
+      </div>
+      <div class="a-insight"><span class="s">✦</span>New-buyer contribution slipping — acquisition mix, not category demand. Review paid + selection funnel.</div>
+    </article>
+
+    <!-- AVAILABILITY -->
+    <article class="alert crit">
+      <div class="a-top"><span class="a-title">Stockout Surge — Appliances</span><span class="sev crit">🔥 CRITICAL</span></div>
+      <div class="a-parent">↑ TIES TO · AVAILABILITY &amp; GAPS</div>
+      <div class="a-meta"><span class="k">CHANNEL</span><span class="v">Supply · Availability</span></div>
+      <div class="a-meta"><span class="k">TOP DRIVER</span><span class="v">A-SKU out-of-stock</span></div>
+      <div class="a-meta"><span class="k">TIME</span><span class="v">Last 7d</span></div>
+      <div class="a-metrics">
+        <div class="a-row"><span class="lab">A-SKU OOS rate</span><span class="val"><span class="num-main num">6% → 11%</span><span class="delta bad num">↑ 5 pts</span></span></div>
+        <div class="a-row"><span class="lab">Lost GMV</span><span class="val"><span class="num-main num">₹59 → ₹77 Cr</span><span class="delta bad num">↑ ₹18 Cr</span></span></div>
+      </div>
+      <div class="a-insight"><span class="s">✦</span>Top-SKU stockouts driving ₹77 Cr lost demand — replenishment lag, not demand drop. Escalate to supply.</div>
+    </article>
+
+    <article class="alert high">
+      <div class="a-top"><span class="a-title">Search-Gap Spike — Grocery</span><span class="sev high">⚠ HIGH</span></div>
+      <div class="a-parent">↑ TIES TO · AVAILABILITY &amp; GAPS</div>
+      <div class="a-meta"><span class="k">CHANNEL</span><span class="v">Demand · Search</span></div>
+      <div class="a-meta"><span class="k">TOP DRIVER</span><span class="v">Zero-result queries</span></div>
+      <div class="a-meta"><span class="k">TIME</span><span class="v">Last 7d</span></div>
+      <div class="a-metrics">
+        <div class="a-row"><span class="lab">No-result rate</span><span class="val"><span class="num-main num">13% → 18%</span><span class="delta warn num">↑ 5 pts</span></span></div>
+        <div class="a-row"><span class="lab">Concentration</span><span class="val"><span class="num-main">3 sub-cats</span><span class="delta mut">↑ mid-price</span></span></div>
+      </div>
+      <div class="a-insight"><span class="s">✦</span>Unserved searches cluster in mid-price staples — assortment gap, onboarding brief ready.</div>
+    </article>
+
+    <!-- RETENTION -->
+    <article class="alert crit">
+      <div class="a-top"><span class="a-title">Delivery-SLA Breach — NCR</span><span class="sev crit">🔥 CRITICAL</span></div>
+      <div class="a-parent">↑ TIES TO · RETENTION &amp; CX</div>
+      <div class="a-meta"><span class="k">CHANNEL</span><span class="v">Fulfilment · Care</span></div>
+      <div class="a-meta"><span class="k">TOP DRIVER</span><span class="v">Late delivery · churn signal</span></div>
+      <div class="a-meta"><span class="k">TIME</span><span class="v">Last 7d</span></div>
+      <div class="a-metrics">
+        <div class="a-row"><span class="lab">SLA breach</span><span class="val"><span class="num-main num">8% → 19%</span><span class="delta bad num">↑ 11 pts</span></span></div>
+        <div class="a-row"><span class="lab">LTV exposed</span><span class="val"><span class="num-main num">₹22 → ₹31 Cr</span><span class="delta bad num">↑ cohort</span></span></div>
+      </div>
+      <div class="a-insight"><span class="s">✦</span>NCR lane SLA slip is this week's top churn signal — ₹31 Cr forward LTV exposed. Route to ops.</div>
+    </article>
+
+    <article class="alert high">
+      <div class="a-top"><span class="a-title">Repeat-Rate Dip — New Cohort</span><span class="sev high">⚠ HIGH</span></div>
+      <div class="a-parent">↑ TIES TO · RETENTION &amp; CX</div>
+      <div class="a-meta"><span class="k">CHANNEL</span><span class="v">Retention · CX</span></div>
+      <div class="a-meta"><span class="k">TOP DRIVER</span><span class="v">Second-order drop-off</span></div>
+      <div class="a-meta"><span class="k">TIME</span><span class="v">Last 30d</span></div>
+      <div class="a-metrics">
+        <div class="a-row"><span class="lab">Repeat rate</span><span class="val"><span class="num-main num">38% → 34%</span><span class="delta warn num">↓ 4 pts</span></span></div>
+        <div class="a-row"><span class="lab">Churn theme</span><span class="val"><span class="num-main">Delivery</span><span class="delta mut">↑ not price</span></span></div>
+      </div>
+      <div class="a-insight"><span class="s">✦</span>New-buyer cohort not returning — first-delivery experience, not pricing. Fix onboarding CX.</div>
+    </article>
+
+  </div>
+
+  <div class="logo-n">N</div>
+</div>

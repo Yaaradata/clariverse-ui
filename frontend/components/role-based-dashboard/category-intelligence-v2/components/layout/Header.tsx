@@ -1,14 +1,22 @@
+"use client";
+
 import React from "react";
-import { Moon, Sun } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
 
-import { CategoryVersionToggle } from "@/components/role-based-dashboard/CategoryVersionToggle";
-import { useTheme } from "../../theme/DashboardThemeProvider";
 import { useDashboardShell } from "../../lib/DashboardShellContext";
-import { cssVar, layout, radius, type } from "../../theme/tokens";
+import { useNavigation } from "../../lib/NavigationContext";
+import { useTheme } from "../../theme/DashboardThemeProvider";
+import { cssVar, layout, radius } from "../../theme/tokens";
+import { ScreenBackBar } from "../common/ScreenBackBar";
+import { TimeRangeSelector } from "../common/TimeRangeSelector";
 
+/** Left: Back to Roles (overview) or Back to Overview · Right: timeframe + theme. */
 export function Header(): React.ReactElement {
   const { mode, toggle } = useTheme();
-  const { industryId, categoryVersion } = useDashboardShell();
+  const { onExit } = useDashboardShell();
+  const { activeScreen, timeRange, setTimeRange, navigate } = useNavigation();
+  const showBackToOverview = activeScreen !== "overview";
+  const showBackToRoles = activeScreen === "overview";
 
   return (
     <header
@@ -23,18 +31,36 @@ export function Header(): React.ReactElement {
         borderBottom: `1px solid ${cssVar("border")}`,
       }}
     >
-      <div>
-        <div style={{ fontSize: type.scale.small, color: cssVar("text-muted") }}>
-          LiSN · Category Intelligence · V2
-        </div>
+      <div style={{ minWidth: 0, flexShrink: 0 }}>
+        {showBackToRoles ? (
+          <button
+            type="button"
+            onClick={onExit}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              background: cssVar("accent-soft"),
+              border: `1px solid ${cssVar("accent")}`,
+              borderRadius: radius.md,
+              padding: "8px 14px",
+              cursor: "pointer",
+              color: cssVar("accent"),
+              fontSize: 13,
+              fontWeight: 600,
+              fontFamily: "inherit",
+              flexShrink: 0,
+            }}
+          >
+            <ArrowLeft size={14} />
+            Back to Roles
+          </button>
+        ) : null}
+        {showBackToOverview ? <ScreenBackBar onBack={() => navigate("overview")} /> : null}
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <CategoryVersionToggle
-          industryId={industryId}
-          activeVersion={categoryVersion}
-          isDarkMode={mode === "dark"}
-        />
+      <div style={{ display: "inline-flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+        <TimeRangeSelector range={timeRange} onChange={setTimeRange} />
         <button
           type="button"
           onClick={toggle}

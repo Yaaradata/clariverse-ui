@@ -1,95 +1,138 @@
 import type { RiskSpike } from "@/components/unified/actions/AIRiskSpikeMonitor";
+import type { TimeRangeKey } from "@/components/role-based-dashboard/category-intelligence-v2/components/common/TimeRangeSelector";
 
-/** Business Head V2 category signals — operational risk spikes on the overview front. */
+/** Business Head — growth, availability, and retention risk spikes (7D baseline). */
 export const BUSINESS_HEAD_V2_RISK_SPIKES: RiskSpike[] = [
   {
-    id: "bh-aura-returns",
+    id: "bh-fashion-share",
     timestamp: "Last 7d",
     spikeType: "Volume Surge",
-    magnitude: 31,
-    channel: "Returns, Reviews",
-    topIntent: "Sizing mismatch — category chart",
-    topIntentContext: "₹6.0L recoverable · High confidence",
+    magnitude: 9,
+    channel: "Demand · GMV",
+    topIntent: "Growth lagging market",
+    topIntentContext: "↑ Ties to · Growth & Share",
     aiAction: "",
     severity: "critical",
-    cardTitle: "Fashion Returns Spike",
+    cardTitle: "Share Slip — Fashion",
     customMetrics: [
-      { label: "Return rate", value: "22% → 31%", delta: "+9 pts", deltaIntent: "bad", trend: "up" },
-      { label: "Fixable units", value: "~600", delta: "36% recoverable", deltaIntent: "bad", trend: "up" },
+      { label: "GMV growth", value: "9% → 4%", delta: "5 pts", deltaIntent: "bad", trend: "down" },
+      { label: "Market gap", value: "+5 → +9 pts", delta: "widening", deltaIntent: "bad", trend: "up" },
     ],
     triggerInsight:
-      "Voice confirms chart mismatch, not buyer remorse — draft PIM sizing fix before next promo wave.",
+      "Fashion growth halved vs market — mid-band price + selection gap. Route to merchandising.",
   },
   {
-    id: "bh-ncr-rto",
+    id: "bh-new-buyer-stall",
+    timestamp: "Last 7d",
+    spikeType: "Volume Surge",
+    magnitude: 42,
+    channel: "Acquisition",
+    topIntent: "New-GMV share falling",
+    topIntentContext: "↑ Ties to · Growth & Share",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "New-Buyer Stall",
+    customMetrics: [
+      { label: "New-GMV share", value: "46% → 42%", delta: "4 pts", deltaIntent: "bad", trend: "down" },
+      { label: "Acquisition mix", value: "Paid-heavy", delta: "not demand", deltaIntent: "neutral", trend: "up" },
+    ],
+    triggerInsight:
+      "New-buyer contribution slipping — acquisition mix, not category demand. Review paid + selection funnel.",
+  },
+  {
+    id: "bh-appliance-stockout",
+    timestamp: "Last 7d",
+    spikeType: "Unresolved Surge",
+    magnitude: 11,
+    channel: "Supply · Availability",
+    topIntent: "A-SKU out-of-stock",
+    topIntentContext: "↑ Ties to · Availability & Gaps",
+    aiAction: "",
+    severity: "critical",
+    cardTitle: "Stockout Surge — Appliances",
+    customMetrics: [
+      { label: "A-SKU OOS rate", value: "6% → 11%", delta: "5 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Lost GMV", value: "₹59 → ₹77 Cr", delta: "₹18 Cr", deltaIntent: "bad", trend: "up" },
+    ],
+    triggerInsight:
+      "Top-SKU stockouts driving ₹77 Cr lost demand — replenishment lag, not demand drop. Escalate to supply.",
+  },
+  {
+    id: "bh-grocery-search-gap",
+    timestamp: "Last 7d",
+    spikeType: "Volume Surge",
+    magnitude: 18,
+    channel: "Demand · Search",
+    topIntent: "Zero-result queries",
+    topIntentContext: "↑ Ties to · Availability & Gaps",
+    aiAction: "",
+    severity: "moderate",
+    cardTitle: "Search-Gap Spike — Grocery",
+    customMetrics: [
+      { label: "No-result rate", value: "13% → 18%", delta: "5 pts", deltaIntent: "bad", trend: "up" },
+      { label: "Concentration", value: "3 sub-cats", delta: "mid-price", deltaIntent: "neutral", trend: "up" },
+    ],
+    triggerInsight:
+      "Unserved searches cluster in mid-price staples — assortment gap, onboarding brief ready.",
+  },
+  {
+    id: "bh-ncr-delivery-sla",
     timestamp: "Last 7d",
     spikeType: "SLA Spike",
-    magnitude: 33,
-    channel: "Delivery voice, RTO",
-    topIntent: "Delhi-NCR outbound lane",
-    topIntentContext: "₹4.2L contribution at risk",
+    magnitude: 19,
+    channel: "Fulfilment · Care",
+    topIntent: "Late delivery · churn signal",
+    topIntentContext: "↑ Ties to · Retention & CX",
     aiAction: "",
     severity: "critical",
-    cardTitle: "Lane RTO Breach",
+    cardTitle: "Delivery-SLA Breach — NCR",
     customMetrics: [
-      { label: "RTO rate", value: "21% → 33%", delta: "+12 pts", deltaIntent: "bad", trend: "up" },
-      { label: "Logistics voice", value: "70%", delta: "delivery theme", deltaIntent: "bad", trend: "up" },
+      { label: "SLA breach", value: "8% → 19%", delta: "11 pts", deltaIntent: "bad", trend: "up" },
+      { label: "LTV exposed", value: "₹22 → ₹31 Cr", delta: "cohort", deltaIntent: "bad", trend: "up" },
     ],
     triggerInsight:
-      "Rider non-attempt clusters dominate — route to Operations; seller penalty held pending voice split.",
+      "NCR lane SLA slip is this week's top churn signal — ₹31 Cr forward LTV exposed. Route to ops.",
   },
   {
-    id: "bh-seller-trust",
-    timestamp: "This week",
-    spikeType: "Unresolved Surge",
-    magnitude: 52,
-    channel: "Care, Seller desk",
-    topIntent: "Cancel-after-wait — QuickStyle",
-    topIntentContext: "₹52L GMV exposure · 3 sellers",
-    aiAction: "",
-    severity: "critical",
-    cardTitle: "Seller Trust Exposure",
-    customMetrics: [
-      { label: "At-risk GMV", value: "₹52L", delta: "3 sellers", deltaIntent: "bad", trend: "up" },
-      { label: "Concentration", value: "23%", delta: "within 25% cap", deltaIntent: "neutral", trend: "flat" },
-    ],
-    triggerInsight:
-      "Customer-backed GMV exposure ranks QuickStyle first — coaching draft ready for Seller-Brand.",
-  },
-  {
-    id: "bh-festival-payment",
-    timestamp: "Today",
-    spikeType: "Volume Surge",
-    magnitude: 180,
-    channel: "Checkout, Care",
-    topIntent: "Payment deducted, no order",
-    topIntentContext: "Sale window · verified failure",
-    aiAction: "",
-    severity: "moderate",
-    cardTitle: "Festival Payment Failure",
-    customMetrics: [
-      { label: "Order spike", value: "3× baseline", delta: "sale-scaled", deltaIntent: "bad", trend: "up" },
-      { label: "Failure voice", value: "Aligned", delta: "not demand", deltaIntent: "bad", trend: "up" },
-    ],
-    triggerInsight:
-      "Pulse earbuds spike is payment-gateway failure — prepare verified incident packet, not demand surge.",
-  },
-  {
-    id: "bh-qcom-defect",
-    timestamp: "Today 07:30",
+    id: "bh-repeat-rate-dip",
+    timestamp: "Last 7d",
     spikeType: "Sentiment Crash",
-    magnitude: 28,
-    channel: "Quick-commerce, Returns",
-    topIntent: "Perishable defect wave",
-    topIntentContext: "Early recall signal",
+    magnitude: 34,
+    channel: "Retention · CX",
+    topIntent: "Second-order drop-off",
+    topIntentContext: "↑ Ties to · Retention & CX",
     aiAction: "",
     severity: "moderate",
-    cardTitle: "Q-Com Defect Wave",
+    cardTitle: "Repeat-Rate Dip — New Cohort",
     customMetrics: [
-      { label: "Return initiations", value: "Spike", delta: "vs peer nodes", deltaIntent: "bad", trend: "up" },
-      { label: "Defect theme", value: "Care-aligned", delta: "co-moving", deltaIntent: "bad", trend: "up" },
+      { label: "Repeat rate", value: "38% → 34%", delta: "4 pts", deltaIntent: "bad", trend: "down" },
+      { label: "Churn theme", value: "Delivery", delta: "not price", deltaIntent: "neutral", trend: "up" },
     ],
     triggerInsight:
-      "Return initiation co-moving with care defect transcripts — ops dashboard has not moved yet.",
+      "New-buyer cohort not returning — first-delivery experience, not pricing. Fix onboarding CX.",
   },
 ];
+
+const RANGE_TIMESTAMP: Record<TimeRangeKey, string> = {
+  "24H": "Last 24h",
+  "7D": "Last 7d",
+  "30D": "Last 30d",
+};
+
+/** Spikes for the active header timeframe (timestamps + mild severity emphasis). */
+export function getBusinessHeadRiskSpikes(range: TimeRangeKey): RiskSpike[] {
+  const stamp = RANGE_TIMESTAMP[range];
+  return BUSINESS_HEAD_V2_RISK_SPIKES.map((spike) => {
+    if (range === "24H") {
+      const acute =
+        spike.id === "bh-ncr-delivery-sla" || spike.id === "bh-appliance-stockout"
+          ? ("critical" as const)
+          : spike.severity;
+      return { ...spike, timestamp: stamp, severity: acute };
+    }
+    if (range === "30D") {
+      return { ...spike, timestamp: stamp };
+    }
+    return { ...spike, timestamp: stamp };
+  });
+}

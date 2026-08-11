@@ -27,7 +27,9 @@ export default function RoleBasedRoleDashboardPage() {
       : industryId === "ecommerce" &&
           (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
         ? "head_cx_retail"
-        : roleId;
+        : industryId === "ecommerce" && roleId === "business_head_v2"
+          ? "business_head"
+          : roleId;
 
   useEffect(() => {
     if (industryId === "credit_cards" && roleId === "head_cards_v3") {
@@ -38,6 +40,9 @@ export default function RoleBasedRoleDashboardPage() {
       (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
     ) {
       router.replace(`/role-based/ecommerce/head_cx_retail`);
+    }
+    if (industryId === "ecommerce" && roleId === "business_head_v2") {
+      router.replace(`/role-based/ecommerce/business_head`);
     }
   }, [industryId, roleId, router]);
 

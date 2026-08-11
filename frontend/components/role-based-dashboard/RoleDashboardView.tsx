@@ -96,9 +96,9 @@ import {
   CardsTransactionsOffersDrill,
   CardsVoiceJoinDrill,
 } from "./CardsPortfolioDrillScreens";
-import { CategoryIntelligenceDashboard } from "./CategoryIntelligenceDashboard";
 import { CategoryIntelligenceDashboardV2 } from "./CategoryIntelligenceDashboardV2";
 import { CXVoCHeadDashboardV3 } from "./CXVoCHeadDashboardV3";
+import { CaseResolutionConsoleDashboard } from "./CaseResolutionConsoleDashboard";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
@@ -4224,17 +4224,6 @@ export function RoleDashboardView({
 
   if (industry.id === "ecommerce" && role.id === "business_head") {
     return (
-      <CategoryIntelligenceDashboard
-        industryName={industry.name}
-        roleName={roleDisplayName(role)}
-        industryColor={industry.color}
-        onExit={onExit}
-      />
-    );
-  }
-
-  if (industry.id === "ecommerce" && role.id === "business_head_v2") {
-    return (
       <CategoryIntelligenceDashboardV2
         industryId={industry.id}
         industryName={industry.name}
@@ -4255,6 +4244,10 @@ export function RoleDashboardView({
         onExit={onExit}
       />
     );
+  }
+
+  if (industry.id === "ecommerce" && role.id === "case_resolution_console") {
+    return <CaseResolutionConsoleDashboard onExit={onExit} />;
   }
 
   return (
