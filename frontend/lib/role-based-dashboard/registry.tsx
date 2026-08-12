@@ -202,12 +202,6 @@ export const INDUSTRIES = [
         sub: "Marketplace health, satisfaction, stability",
       },
       {
-        id: "business_head",
-        name: "Business Head",
-        icon: Briefcase,
-        sub: "Category share, demand gaps, retention LTV",
-      },
-      {
         id: "head_cx",
         name: "Head of CX",
         icon: Headphones,
@@ -232,6 +226,12 @@ export const INDUSTRIES = [
         name: "Case Resolution Console",
         icon: ClipboardList,
         sub: "Case queues, SLA breach, agent actions, resolution outcomes",
+      },
+      {
+        id: "network_health",
+        name: "Network Health",
+        icon: Radio,
+        sub: "Delivery promise, hotspots, cliff vs slope patterns",
       },
     ],
   },

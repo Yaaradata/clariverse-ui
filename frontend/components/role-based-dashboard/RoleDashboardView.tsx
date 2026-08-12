@@ -96,9 +96,9 @@ import {
   CardsTransactionsOffersDrill,
   CardsVoiceJoinDrill,
 } from "./CardsPortfolioDrillScreens";
-import { CategoryIntelligenceDashboardV2 } from "./CategoryIntelligenceDashboardV2";
 import { CXVoCHeadDashboardV3 } from "./CXVoCHeadDashboardV3";
 import { CaseResolutionConsoleDashboard } from "./CaseResolutionConsoleDashboard";
+import { NetworkHealthDashboard } from "./NetworkHealthDashboard";
 import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
@@ -4222,18 +4222,6 @@ export function RoleDashboardView({
     return <ClientExperienceDashboard onExit={onExit} />;
   }
 
-  if (industry.id === "ecommerce" && role.id === "business_head") {
-    return (
-      <CategoryIntelligenceDashboardV2
-        industryId={industry.id}
-        industryName={industry.name}
-        roleName={roleDisplayName(role)}
-        industryColor={industry.color}
-        onExit={onExit}
-      />
-    );
-  }
-
   if (industry.id === "ecommerce" && role.id === "head_cx_retail") {
     return (
       <CXVoCHeadDashboardV3
@@ -4248,6 +4236,10 @@ export function RoleDashboardView({
 
   if (industry.id === "ecommerce" && role.id === "case_resolution_console") {
     return <CaseResolutionConsoleDashboard onExit={onExit} />;
+  }
+
+  if (industry.id === "ecommerce" && role.id === "network_health") {
+    return <NetworkHealthDashboard onExit={onExit} />;
   }
 
   return (
