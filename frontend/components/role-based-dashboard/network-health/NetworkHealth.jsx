@@ -5,7 +5,7 @@ import {
   Sparkles, Layers,
   Radio, ArrowLeft,
   ArrowUpRight, ArrowDownRight,
-  ScanSearch, Stethoscope, ListChecks, Info,
+  ScanSearch, Stethoscope, ListChecks, Info, Clock,
 } from "lucide-react";
 import { buildNetworkHealth, normalizePeriod } from "./networkHealthPeriod";
 import { RunningValue } from "./RunningValue";
@@ -99,9 +99,23 @@ function LisnStepCard({ card, delay = 40 }) {
             <div style={{ fontSize: 13.5, fontWeight: 800, color: C.ink, letterSpacing: -0.2 }}>
               {card.title}
             </div>
+            {card.lastFetch && (
+              <span
+                title={card.lastFetchTitle || `Smart Assist last fetch · ${card.lastFetch}`}
+                style={{
+                  marginLeft: "auto", flexShrink: 0,
+                  display: "inline-flex", alignItems: "center", gap: 4,
+                  fontSize: 10.5, fontWeight: 700, color: C.ink3,
+                  fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap",
+                }}
+              >
+                <Clock size={11} strokeWidth={2.4} />
+                {card.lastFetch}
+              </span>
+            )}
             {card.badge && (
               <Pill style={{
-                marginLeft: "auto", flexShrink: 0,
+                marginLeft: card.lastFetch ? 0 : "auto", flexShrink: 0,
                 background: C.accentSoft, color: C.accent,
                 fontSize: 11, fontWeight: 800, gap: 4,
               }}>
@@ -128,6 +142,18 @@ function LisnStepCard({ card, delay = 40 }) {
             <Arrow size={13} strokeWidth={2.6} />
             <RunningValue value={card.delta} delay={delay + 40} duration={700} />
           </span>
+        )}
+        {card.valueAside && (
+          <Pill style={{
+            background: C.accentSoft, color: C.accent,
+            fontSize: 11, fontWeight: 800, gap: 4,
+            alignSelf: "center",
+          }}>
+            {card.valueAside.value != null && (
+              <RunningValue value={card.valueAside.value} delay={delay + 50} duration={650} />
+            )}
+            <span style={{ fontWeight: 700 }}>{card.valueAside.label}</span>
+          </Pill>
         )}
       </div>
       <div style={{ fontSize: 11.5, color: C.ink3, fontWeight: 600, marginBottom: hasSecondary ? 12 : 14, lineHeight: 1.35 }}>
