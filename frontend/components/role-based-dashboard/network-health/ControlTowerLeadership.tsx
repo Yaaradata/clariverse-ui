@@ -73,7 +73,7 @@ type ActionState = {
 const ACTION_STATES: ActionState[] = [
   { key: "toAction", label: "With the consultant", sub: "not yet actioned", Icon: Users },
   { key: "waiting", label: "With SCM / ER", sub: "PO upload · reship desk", Icon: Clock },
-  { key: "acted", label: "Actioned, unconfirmed", sub: "not yet solved on Sentinel", Icon: UserCheck },
+  { key: "acted", label: "Actioned, unconfirmed", sub: "not yet solved on Smart Assist", Icon: UserCheck },
   { key: "returned", label: "Repeat contact", sub: "after an update was issued", Icon: RotateCcw },
 ];
 
@@ -325,10 +325,10 @@ type ProvenanceSrc =
   | { kind: "computed"; asOf: string };
 
 const SOURCE = {
-  pendency: { kind: "data", system: "Sentinel", asOf: "14-Aug 09:10", lag: "live" } as const,
+  pendency: { kind: "data", system: "Smart Assist", asOf: "14-Aug 09:10", lag: "live" } as const,
   hotspots: { kind: "computed", asOf: "14-Aug 09:10" } as const,
   grid: { kind: "rule", version: "SOP v3", effective: "08-Aug" } as const,
-  loop: { kind: "data", system: "Sentinel", asOf: "14-Aug 09:10", lag: "live" } as const,
+  loop: { kind: "data", system: "Smart Assist", asOf: "14-Aug 09:10", lag: "live" } as const,
   patterns: { kind: "computed", asOf: "14-Aug 08:00" } as const,
   slices: { kind: "data", system: "Multi Track", asOf: "14-Aug 08:40", lag: "~hourly" } as const,
 };
@@ -842,7 +842,7 @@ function LoopClosure({ range }: { range: RangeKey }) {
       <div style={{ padding: "14px 18px 18px" }}>
         <SectionHead
           title="Case pendency by resolution state"
-          sub="Unresolved Sentinel cases · what each one is waiting on"
+          sub="Unresolved Smart Assist cases · what each one is waiting on"
           src={SOURCE.loop}
           right={
             <Pill style={{ background: STATE.warnBg, color: STATE.warn, border: `1px solid ${STATE.warnBd}` }}>

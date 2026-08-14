@@ -787,7 +787,7 @@ export default function CaseConsole({ onExit, metrics: metricsProp }) {
                     </span>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 11.5, color: C.ink3, fontWeight: 600 }}>
                       <FileText size={13} />
-                      Source · Sentinel
+                      Source · Smart Assist
                     </span>
                   </div>
                 </Stage>
