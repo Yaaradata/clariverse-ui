@@ -83,30 +83,24 @@ export default function RoleBasedIndustryRolesPage() {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
         {industry.roles.map((role) => {
           const Icon = role.icon;
-          return (
-            <Link
-              key={role.id}
-              href={`/role-based/${industry.id}/${role.id}`}
-              prefetch={prefetchFastagRole}
-              onMouseEnter={() => {
-                if (prefetchFastagRole) {
-                  void import("@/components/role-based-dashboard/FastagIntelligenceDashboard");
-                }
-              }}
-              style={{
-                background: cardBg,
-                border: `1px solid ${border}`,
-                borderRadius: 14,
-                padding: "20px 22px",
-                cursor: "pointer",
-                transition: "all 0.2s",
-                display: "flex",
-                gap: 16,
-                alignItems: "center",
-                textDecoration: "none",
-                color: "inherit",
-              }}
-            >
+          const roleHref = `/role-based/${industry.id}/${role.id}`;
+          const isNetworkHealth = industry.id === "ecommerce" && role.id === "network_health";
+          const cardStyle = {
+            background: cardBg,
+            border: `1px solid ${border}`,
+            borderRadius: 14,
+            padding: "20px 22px",
+            cursor: "pointer",
+            transition: "all 0.2s",
+            display: "flex",
+            gap: 16,
+            alignItems: "center",
+            textDecoration: "none",
+            color: "inherit",
+          } as const;
+
+          const cardBody = (
+            <>
               <div
                 style={{
                   width: 42,
@@ -126,6 +120,92 @@ export default function RoleBasedIndustryRolesPage() {
                 <div style={{ fontSize: 15, color: textSec, lineHeight: 1.55 }}>{role.sub}</div>
               </div>
               <ChevronRight size={18} color={textMut} />
+            </>
+          );
+
+          if (isNetworkHealth) {
+            const tabBase = {
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase" as const,
+              padding: "4px 10px",
+              borderRadius: 6,
+              textDecoration: "none",
+              lineHeight: 1,
+            };
+            return (
+              <div
+                key={role.id}
+                style={{
+                  background: cardBg,
+                  border: `1px solid ${border}`,
+                  borderRadius: 14,
+                  padding: "14px 14px 16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <Link
+                  href={roleHref}
+                  prefetch={prefetchFastagRole}
+                  style={{
+                    ...cardStyle,
+                    padding: "6px 8px",
+                    border: "none",
+                    background: "transparent",
+                  }}
+                >
+                  {cardBody}
+                </Link>
+                <div
+                  role="tablist"
+                  aria-label="Network Health version"
+                  style={{
+                    display: "flex",
+                    gap: 2,
+                    alignSelf: "flex-end",
+                    background: isDarkMode ? "#010101" : "#F5F5F5",
+                    border: `1px solid ${border}`,
+                    borderRadius: 8,
+                    padding: 3,
+                  }}
+                >
+                  <Link
+                    href={roleHref}
+                    role="tab"
+                    aria-selected="true"
+                    style={{ ...tabBase, background: accent, color: "#ffffff" }}
+                  >
+                    v1
+                  </Link>
+                  <Link
+                    href={`${roleHref}?v=2`}
+                    role="tab"
+                    aria-selected="false"
+                    style={{ ...tabBase, background: "transparent", color: textMut }}
+                  >
+                    v2
+                  </Link>
+                </div>
+              </div>
+            );
+          }
+
+          return (
+            <Link
+              key={role.id}
+              href={roleHref}
+              prefetch={prefetchFastagRole}
+              onMouseEnter={() => {
+                if (prefetchFastagRole) {
+                  void import("@/components/role-based-dashboard/FastagIntelligenceDashboard");
+                }
+              }}
+              style={cardStyle}
+            >
+              {cardBody}
             </Link>
           );
         })}
