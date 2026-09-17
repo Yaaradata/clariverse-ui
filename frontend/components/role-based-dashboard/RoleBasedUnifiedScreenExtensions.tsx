@@ -32,7 +32,9 @@ import {
   isSterlingHeadRetail,
   sterlingHeadContactRiskSpikeMonitorProps,
 } from "@/lib/role-based-dashboard/sterlingHeadContactScreen";
+import { isHdfcHeadOfCx } from "@/lib/role-based-dashboard/hdfcHeadOfCxScreen";
 import { STERLING_HEAD_CONTACT_OPERATIONAL_RISK_SPIKES } from "@/lib/role-based-dashboard/sterlingHeadContactIntentsData";
+import HdfcAiRiskSignalMonitor from "@/components/role-based-dashboard/hdfc/HdfcAiRiskSignalMonitor";
 import {
   STERLING_HEAD_RETAIL_AI_INSIGHT_DETAILS,
   STERLING_HEAD_RETAIL_AI_SUMMARY,
@@ -102,6 +104,7 @@ export function RoleBasedUnifiedScreen1Addon({
   const isRetail = rid === "head_retail";
   const isSterlingContact = isSterlingHeadContact(industryId ?? "", rid);
   const isSterlingHeadRetailRoute = isSterlingHeadRetail(industryId ?? "", rid);
+  const isHdfcCx = isHdfcHeadOfCx(industryId ?? "", rid);
   const isCardsPortfolio = rid === "cards_portfolio";
   return (
     <div className={sectionGap}>
@@ -116,15 +119,20 @@ export function RoleBasedUnifiedScreen1Addon({
           {...sterlingHeadContactRiskSpikeMonitorProps()}
           spikes={STERLING_HEAD_CONTACT_OPERATIONAL_RISK_SPIKES}
         />
+      ) : isHdfcCx ? (
+        <HdfcAiRiskSignalMonitor />
       ) : isRetail ? (
         <AIRiskSpikeMonitor
           spikes={headRetailRiskSpikes}
           driverContext="EMI resets · fee policy change · HNI churn signals · viral social complaint cluster · iOS app bug"
+          forceDarkMode
         />
       ) : isCardsPortfolio ? (
         <TransactionBaselineMonitor />
       ) : (
-        <AIRiskSpikeMonitor />
+        /* Role-based shell is always dark; forceDarkMode so Channel/Top Intent/Time
+           stay legible even when another Chrome profile has localStorage theme=light. */
+        <AIRiskSpikeMonitor forceDarkMode />
       )}
       {showCroRiskCockpit(rid) ? <CROScreen1Addon /> : null}
       {showExecTrendCharts(rid) ? (

@@ -3,10 +3,14 @@ import {
   type Industry,
   type Role,
 } from "@/lib/role-based-dashboard/registry";
+import { isContactCentreDashboardRole } from "@/lib/role-based-dashboard/hdfcHeadOfCxScreen";
 
-/** Head of Contact Centre lands on KPI Signals (staffing) instead of Executive. */
+/** Head of Contact Centre / HDFC Head of CX lands on KPI Signals (staffing) instead of Executive. */
 export function skipExecutiveScreen(industry: Industry, role: Role): boolean {
-  return usesRetailBankingDashboard(industry.id) && role.id === "head_contact";
+  return (
+    usesRetailBankingDashboard(industry.id) &&
+    isContactCentreDashboardRole(role.id)
+  );
 }
 
 export function initialKpiSignalFilter(roleId: string): string {
@@ -16,6 +20,7 @@ export function initialKpiSignalFilter(roleId: string): string {
     cro: "fraud",
     head_retail: "ops",
     head_contact: "staffing",
+    head_of_cx: "staffing",
     head_compliance: "all",
     head_cx: "training",
     head_cx_retail: "training",
@@ -41,7 +46,7 @@ export function showScreen2PressureWall(roleId: string): boolean {
 }
 
 export function showScreen3IntentCommandCenter(roleId: string): boolean {
-  return ["coo", "head_retail", "head_contact"].includes(roleId);
+  return ["coo", "head_retail", "head_contact", "head_of_cx"].includes(roleId);
 }
 
 export function showScreen3EmotionShockboard(roleId: string): boolean {
@@ -50,6 +55,7 @@ export function showScreen3EmotionShockboard(roleId: string): boolean {
     "head_cx_retail",
     "head_client_experience",
     "head_contact",
+    "head_of_cx",
   ].includes(roleId);
 }
 
@@ -67,7 +73,7 @@ export function showScreen3ComplianceInsights(roleId: string): boolean {
 }
 
 export function showScreen3FciKpis(roleId: string): boolean {
-  return ["coo", "head_contact"].includes(roleId);
+  return ["coo", "head_contact", "head_of_cx"].includes(roleId);
 }
 
 // ═══════════════════════════
@@ -105,17 +111,17 @@ export function showRetailIntentHeatmap(roleId: string): boolean {
 
 /** Screen 2: Show outsourced vs insourced agent health + cross-centre monitor */
 export function showContactAgentHealth(roleId: string): boolean {
-  return roleId === "head_contact";
+  return isContactCentreDashboardRole(roleId);
 }
 
 /** Screen 3: Show promise adherence + developing issues (intent spikes) */
 export function showContactPromiseAdherence(roleId: string): boolean {
-  return roleId === "head_contact";
+  return isContactCentreDashboardRole(roleId);
 }
 
 /** Screen 4: Show cluster summary (moved from retail to contact centre) */
 export function showContactClusterSummary(roleId: string): boolean {
-  return ["head_contact", "coo"].includes(roleId);
+  return isContactCentreDashboardRole(roleId) || roleId === "coo";
 }
 
 // ═══════════════════════════

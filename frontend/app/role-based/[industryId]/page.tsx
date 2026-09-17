@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { use } from "react";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
@@ -9,10 +9,20 @@ import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/reg
 
 const accent = "#5332FF";
 
-export default function RoleBasedIndustryRolesPage() {
+type PageProps = {
+  params: Promise<{ industryId: string }>;
+};
+
+function resolveParam(value: string | string[] | undefined): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value) && typeof value[0] === "string") return value[0];
+  return "";
+}
+
+export default function RoleBasedIndustryRolesPage({ params }: PageProps) {
   const { isDarkMode } = useRoleBasedUi();
-  const params = useParams();
-  const industryId = typeof params.industryId === "string" ? params.industryId : "";
+  const resolvedParams = use(params);
+  const industryId = resolveParam(resolvedParams.industryId);
   const industry = getIndustryById(industryId);
 
   const prefetchFastagRole = industryId === "fastag";
@@ -23,6 +33,15 @@ export default function RoleBasedIndustryRolesPage() {
   const text = isDarkMode ? "#ffffff" : "#1a1a1a";
   const textSec = isDarkMode ? "#e8e9e9" : "#4b5563";
   const textMut = isDarkMode ? "#b9b9ba" : "#6b7280";
+
+  if (!industryId) {
+    return (
+      <div
+        className="container mx-auto px-6 py-10"
+        style={{ maxWidth: 1000, backgroundColor: pageBg, minHeight: "calc(100vh - 140px)" }}
+      />
+    );
+  }
 
   if (!industry) {
     return (

@@ -1,0 +1,229 @@
+{
+  "view": "service_reputation",
+  "title": "Is our service shaping how we're seen?",
+  "subtitle": "Current public reputation of our service experience across Trustpilot, X, Reddit, App Store and Play Store.",
+  "persona": "Head of CX — HDFC Credit Cards",
+  "date_windows": ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],
+  "active_window": "Last 24 Hours",
+  "channel_filter": ["Trustpilot", "X", "Reddit", "App Store", "Play Store"],
+  "_provenance": "X (@HDFCBank_Cares, 153 threads) and Reddit (r/CreditCardsIndia +, 75 HDFC posts) are LIVE real data. Trustpilot / App Store / Play Store are MODELLED (not scraped). Every element carries a `source` field: 'live' = derived from real X/Reddit; 'modelled' = demo placeholder. Theme magnitudes are scaled to public-volume; the RANKING is from real data.",
+
+  "service_reputation_score": {
+    "label": "Service Reputation Score",
+    "index_badge": "AI · SERVICE REPUTATION INDEX",
+    "score": 46,
+    "out_of": 100,
+    "delta_pts": -16,
+    "delta_label": "vs 8w ago",
+    "source": "live+modelled",
+    "trend_8w": [
+      {"week": "W-7", "value": 62},{"week": "W-6", "value": 59},{"week": "W-5", "value": 56},
+      {"week": "W-4", "value": 53},{"week": "W-3", "value": 50},{"week": "W-2", "value": 48},
+      {"week": "W-1", "value": 47},{"week": "Now", "value": 46}
+    ],
+    "verdict": "Public service reputation is declining for the 8th week. The forced Swiggy-card migration, 'no-reply / complaint-ignored' threads and competitor-switching are now the dominant external narrative — X drives velocity, Reddit drives the community narrative."
+  },
+
+  "ai_summary_wall": {
+    "badge": "AI · INSIGHT RANKER",
+    "subtitle": "3-second takeaway · ranked by business impact",
+    "insights": [
+      {"rank": 1, "source": "live", "title": "Forced Swiggy-card migration is the loudest public narrative",
+       "body": "High-reach Reddit threads (854 + 549 + 341 upvotes in 395K–1.4M-member communities) on the forced Swiggy card change dominate HDFC card discussion — anger is spreading faster than any service-desk theme."},
+      {"rank": 2, "source": "live", "title": "One in two public mentions benchmarks HDFC against a rival",
+       "body": "55% of HDFC Reddit posts name a competitor — ICICI (24), Axis (21) and SBI (18) most — customers are publicly using peer cards as the reference for what HDFC service should be."},
+      {"rank": 3, "source": "live", "title": "'No reply / complaint ignored' is the top service grievance on X",
+       "body": "32 of 153 public complaint threads are 'no response / DM ignored / case closed unresolved' — the single largest service theme, as recovery-agent and loan-spam harassment newly spike in September."}
+    ]
+  },
+
+  "channel_scores": {
+    "title": "PER-CHANNEL REPUTATION",
+    "channels": [
+      {"channel": "X", "source": "live", "metric_type": "sentiment", "score": 0.38, "delta": -0.09,
+       "status": "NEGATIVE", "top_theme": "Unanswered complaints", "context": "153 live complaint threads · 88% negative", "volume": 153},
+      {"channel": "Reddit", "source": "live", "metric_type": "sentiment", "score": 0.48, "delta": -0.04,
+       "status": "DECLINING", "top_theme": "Forced Swiggy migration · competitor switching", "context": "75 HDFC posts · 3.9K upvotes · 2.7K comments", "volume": 75},
+      {"channel": "Trustpilot", "source": "modelled", "metric_type": "stars", "score": 3.1, "delta": -0.5,
+       "status": "WEAK", "top_theme": "Long hold time", "context": "Durable review evidence"},
+      {"channel": "App Store", "source": "modelled", "metric_type": "stars", "score": 4.0, "delta": -0.4,
+       "status": "DECLINING", "top_theme": "App support not responding", "context": "Service complaints inside app reviews"},
+      {"channel": "Play Store", "source": "modelled", "metric_type": "stars", "score": 4.1, "delta": -0.3,
+       "status": "DECLINING", "top_theme": "Reach-human failure", "context": "Android support friction"}
+    ]
+  },
+
+  "service_reputation_themes": {
+    "title": "SERVICE REPUTATION THEMES",
+    "badge": "AI · THEME MINING",
+    "subtitle": "Public service complaints across reviews, social, and app stores",
+    "note": "Ranking is from real X + Reddit; magnitudes scaled to public-volume.",
+    "themes": [
+      {"theme": "Unanswered complaints", "value": 475, "source": "X", "sentiment": "negative"},
+      {"theme": "Forced Swiggy-card migration", "value": 372, "source": "Reddit", "sentiment": "negative"},
+      {"theme": "Fee disputes", "value": 318, "source": "X+Reddit", "sentiment": "negative"},
+      {"theme": "Payment failures", "value": 268, "source": "X", "sentiment": "negative"},
+      {"theme": "Can't reach an agent", "value": 232, "source": "X", "sentiment": "negative"},
+      {"theme": "Account freeze", "value": 214, "source": "X", "sentiment": "negative"},
+      {"theme": "Fraud concern", "value": 196, "source": "X", "sentiment": "negative"},
+      {"theme": "Rude agents", "value": 178, "source": "X", "sentiment": "negative"},
+      {"theme": "Recovery-agent harassment", "value": 162, "source": "X", "sentiment": "negative"},
+      {"theme": "Rewards devaluation", "value": 148, "source": "Reddit", "sentiment": "negative"},
+      {"theme": "App login failures", "value": 132, "source": "X", "sentiment": "negative"}
+    ],
+    "footer": "Top 5 themes shape 62% of negative service reputation this period."
+  },
+
+  "app_play_service_decay": {
+    "title": "APP & PLAY STORE · SERVICE DECAY",
+    "badge": "AI · REVIEW DECAY",
+    "subtitle": "Star rating vs service complaint mentions — 8-week trend",
+    "source": "modelled",
+    "series": [
+      {"week": "W-7", "service_complaints": 18, "star_rating": 4.35},
+      {"week": "W-6", "service_complaints": 22, "star_rating": 4.35},
+      {"week": "W-5", "service_complaints": 27, "star_rating": 4.20},
+      {"week": "W-4", "service_complaints": 34, "star_rating": 4.05},
+      {"week": "W-3", "service_complaints": 41, "star_rating": 4.05},
+      {"week": "W-2", "service_complaints": 52, "star_rating": 3.95},
+      {"week": "W-1", "service_complaints": 61, "star_rating": 3.95},
+      {"week": "Now", "service_complaints": 68, "star_rating": 3.90}
+    ],
+    "footer": "Service complaints up 3.8x in 8 weeks · rating dropped 0.4★ (modelled)."
+  },
+
+  "high_reach_watch": {
+    "title": "HIGH-REACH REPUTATION WATCH",
+    "badge": "AI · REACH INDEX",
+    "subtitle": "Public voices amplifying service-experience complaints",
+    "voices": [
+      {"name": "r/IndianStockMarket", "source": "live", "handle_context": "HDFC brand-frustration thread · Reddit",
+       "reach": "1.4M", "engagement": "854 upvotes", "status": "NEGATIVE", "why": "Highest single-post reach; brand frustration going mainstream."},
+      {"name": "r/CreditCardsIndia", "source": "live", "handle_context": "Forced Swiggy card migration · Reddit",
+       "reach": "395K", "engagement": "236↑ · 159 comments", "status": "NEGATIVE", "why": "Forced-migration backlash forming a durable community narrative."},
+      {"name": "r/CreditCardsIndia", "source": "live", "handle_context": "'Will I ever be eligible?' approval anxiety · Reddit",
+       "reach": "395K", "engagement": "549↑ · 285 comments", "status": "NEGATIVE", "why": "Approval-anxiety narrative shaping prospect perception."},
+      {"name": "@SHAILES05403327", "source": "live", "handle_context": "Recovery-agent data leak + threat · X",
+       "reach": "Critical", "engagement": "regulated-risk", "status": "NEGATIVE", "why": "Safety + regulatory exposure visible in public."}
+    ]
+  },
+
+  "reputation_momentum": {
+    "title": "VoC · Rising Service Narratives",
+    "badge": "AI · NARRATIVE GROWTH",
+    "subtitle": "Issue statement extractor · top public complaint phrases (mention growth Aug → Sep)",
+    "note": "Phrases ranked by Aug→Sep growth pressure; counts grounded in live X/Reddit where present.",
+    "topics": [
+      {
+        "label": "Forced Swiggy migration",
+        "phrase": "Forced off my Swiggy card onto a worse variant — no real choice given",
+        "growth_kind": "emerged",
+        "mentions_aug": 0,
+        "mentions_sep": null,
+        "growth_pct": null,
+        "occurrences": 372,
+        "share_pct": 28.4,
+        "source": "live",
+        "sentiment": "negative",
+        "main_channel": "Reddit",
+        "frame": "Customers forced off their existing card variant."
+      },
+      {
+        "label": "Recovery-agent harassment",
+        "phrase": "Recovery agent threatened me and my data was leaked on the call",
+        "growth_kind": "emerged",
+        "mentions_aug": 0,
+        "mentions_sep": 6,
+        "growth_pct": null,
+        "occurrences": 162,
+        "share_pct": 12.4,
+        "source": "live",
+        "sentiment": "negative",
+        "main_channel": "X",
+        "frame": "Agent conduct becoming a reputation issue."
+      },
+      {
+        "label": "Loan-spam calls",
+        "phrase": "Keep getting loan spam calls even after DND / opt-out",
+        "growth_kind": "emerged",
+        "mentions_aug": 0,
+        "mentions_sep": 7,
+        "growth_pct": null,
+        "occurrences": 148,
+        "share_pct": 11.3,
+        "source": "live",
+        "sentiment": "negative",
+        "main_channel": "X",
+        "frame": "Opt-out / DND requests not honoured."
+      },
+      {
+        "label": "Card-servicing failures",
+        "phrase": "Card blocked / downgraded and delivery keeps bouncing in a loop",
+        "growth_kind": "accelerating",
+        "mentions_aug": 4,
+        "mentions_sep": 11,
+        "growth_pct": 175,
+        "occurrences": 268,
+        "share_pct": 20.5,
+        "source": "live",
+        "sentiment": "negative",
+        "main_channel": "X",
+        "frame": "Block/downgrade/delivery loops."
+      },
+      {
+        "label": "Competitor switching",
+        "phrase": "Moving to ICICI / Axis — approval and rewards actually work there",
+        "growth_kind": "rising",
+        "mentions_aug": null,
+        "mentions_sep": null,
+        "growth_pct": null,
+        "occurrences": 196,
+        "share_pct": 15.0,
+        "source": "live",
+        "sentiment": "negative",
+        "main_channel": "Reddit",
+        "frame": "'Moving to ICICI / Axis' threads."
+      },
+      {
+        "label": "Hidden fees",
+        "phrase": "Fee charged with no clear explanation — feels deliberately hidden",
+        "growth_kind": "rising",
+        "mentions_aug": null,
+        "mentions_sep": null,
+        "growth_pct": null,
+        "occurrences": 318,
+        "share_pct": 12.4,
+        "source": "live",
+        "sentiment": "negative",
+        "main_channel": "Reddit + X",
+        "frame": "Fee explanation quality shaping distrust."
+      }
+    ]
+  },
+
+  "wider_reputation_signals": {
+    "title": "WIDER REPUTATION SIGNALS",
+    "badge": "AI · REPUTATION CONTEXT",
+    "subtitle": "Beyond service themes — how customers are framing us in public",
+    "cards": [
+      {"key": "competitor_comparison", "title": "COMPETITOR COMPARISON", "source": "live", "status": "NEGATIVE",
+       "headline": "41", "headline_unit": "of 75 HDFC posts benchmark against a rival (55%)",
+       "movement": "▲ ICICI 24 · Axis 21 · SBI 18",
+       "frame": "\"ICICI approves faster · Axis rewards better\"",
+       "strongest_channel": "Reddit",
+       "why_it_matters": "Customers are using peer brands as the service benchmark — the sharpest real signal in this view."},
+      {"key": "ranking_movement", "title": "Review-ranking movement", "source": "modelled", "status": "NEGATIVE",
+       "headline": "-0.4★", "headline_unit": "average across Trustpilot, App Store, Play Store",
+       "movement": "▼ across all 3 review platforms",
+       "frame": "Durable rating slide · 8-week trend (modelled)",
+       "strongest_channel": "Trustpilot + App Store",
+       "why_it_matters": "Visible to prospects, recruiters and partners — long-tail evidence."},
+      {"key": "public_trust", "title": "PUBLIC TRUST NARRATIVES", "source": "live", "status": "NEGATIVE",
+       "headline": "~2M", "headline_unit": "cumulative reach on Swiggy-migration + 'no-reply' threads",
+       "movement": "▲ phrase recurrence rising",
+       "frame": "\"Forced to change my card\" / \"bank that doesn't reply\" forming as public phrases",
+       "strongest_channel": "Reddit + X",
+       "why_it_matters": "Trust phrasing solidifying in public discourse beyond individual complaints."}
+    ]
+  }
+}

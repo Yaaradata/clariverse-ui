@@ -8,6 +8,18 @@ export type RetailSLAOverviewVariant = "default" | "retail_h4";
 export type RetailSLAOverviewSection = "full" | "funnel" | "stages" | "channel";
 
 export type LeadingIntentRow = { intent: string; pct: number; vol: number };
+export type LaggingIntentRow = {
+  intent: string;
+  pct: number;
+  vol: number;
+  reason: string;
+};
+export type FcrChannelRow = {
+  ch: string;
+  actual: number;
+  last: number;
+  target: number;
+};
 
 const TOTAL_VOLUME = 8_429;
 const MEETING_SLA = 6_312;
@@ -41,6 +53,7 @@ const FCR_CHANNEL_COLORS: Record<string, string> = {
   Chat: "#EA580C",
   Email: "#0D9488",
   "Social/X": "#22c55e",
+  X: "#22c55e",
   "App SS": "#2563EB",
 };
 
@@ -115,12 +128,18 @@ export function RetailSLAPerformanceOverview({
   variant = "default",
   section = "full",
   leadingIntents,
+  laggingIntents,
+  fcrChannels,
 }: {
   variant?: RetailSLAOverviewVariant;
   /** Sterling H4 drill: render one column of the 3-col grid (`funnel` | `stages` | `channel`) */
   section?: RetailSLAOverviewSection;
-  /** Override leading-intent labels only (Sterling head_retail service delivery) */
+  /** Override leading-intent labels (Sterling / HDFC service delivery) */
   leadingIntents?: LeadingIntentRow[];
+  /** Override bottleneck-intent labels (HDFC service delivery) */
+  laggingIntents?: LaggingIntentRow[];
+  /** Override FCR Intelligence channel labels (HDFC: Social/X → X) */
+  fcrChannels?: FcrChannelRow[];
 }) {
   const [intentTab, setIntentTab] = useState<"leading" | "bottleneck">("leading");
   const isLeading = intentTab === "leading";
@@ -134,8 +153,10 @@ export function RetailSLAPerformanceOverview({
   const notMeetingPct = NOT_MEETING_PCT;
 
   const leadingItems = isH4 ? H4_LEADING_STAGES : (leadingIntents ?? LEADING_INTENTS);
-  const laggingItems = isH4 ? H4_LAGGING_STAGES : LAGGING_INTENTS;
-  const channelData = isH4 ? H4_CHANNEL_APPROVAL_DATA : FCR_CHANNEL_DATA;
+  const laggingItems = isH4 ? H4_LAGGING_STAGES : (laggingIntents ?? LAGGING_INTENTS);
+  const channelData = isH4
+    ? H4_CHANNEL_APPROVAL_DATA
+    : (fcrChannels ?? FCR_CHANNEL_DATA);
 
   const splitShellClass =
     "relative flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-md shadow-2xl";

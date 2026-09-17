@@ -1,3 +1,4 @@
+import { hdfcHeadOfCxUsesRetailParity, isHdfcHeadOfCx } from "./hdfcHeadOfCxScreen";
 import { STERLING_BANK_INDUSTRY_ID } from "./sterlingBankIndustry";
 
 /** Sterling Bank / head_retail — Raghu Narula franchise dashboard (main page + drill tiles). */
@@ -27,12 +28,19 @@ export function sterlingHeadContactUsesRetailParity(
   return isSterlingHeadContact(industryId, roleId);
 }
 
-/** Registry ROLE_DATA key — Sterling head_contact resolves to retail head_contact. */
+/**
+ * Registry ROLE_DATA key —
+ * Sterling head_contact / HDFC head_of_cx → retail head_contact;
+ * Sterling head_retail → sterling_head_retail.
+ */
 export function resolveRoleDataKey(industryId: string, roleId: string): string {
   if (isSterlingHeadRetail(industryId, roleId)) {
     return "sterling_head_retail";
   }
-  if (sterlingHeadContactUsesRetailParity(industryId, roleId)) {
+  if (
+    sterlingHeadContactUsesRetailParity(industryId, roleId) ||
+    hdfcHeadOfCxUsesRetailParity(industryId, roleId)
+  ) {
     return "head_contact";
   }
   if (
@@ -44,7 +52,7 @@ export function resolveRoleDataKey(industryId: string, roleId: string): string {
   return roleId;
 }
 
-/** Executive Brief hidden for Sterling head_retail and Sterling head_contact. */
+/** Executive Brief hidden for Sterling head_retail/head_contact and HDFC head_of_cx. */
 export function shouldShowExecutiveBrief(
   industryId: string,
   roleId: string,
@@ -52,6 +60,7 @@ export function shouldShowExecutiveBrief(
   if (roleId === "cards_portfolio") return false;
   if (isSterlingHeadRetail(industryId, roleId)) return false;
   if (isSterlingHeadContact(industryId, roleId)) return false;
+  if (isHdfcHeadOfCx(industryId, roleId)) return false;
   return true;
 }
 

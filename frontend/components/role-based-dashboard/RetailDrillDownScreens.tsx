@@ -30,6 +30,13 @@ import {
   STERLING_HEAD_RETAIL_LEADING_INTENTS,
   STERLING_HEAD_RETAIL_SLA_MATRIX,
 } from "@/lib/role-based-dashboard/sterlingHeadRetailServiceData";
+import {
+  HDFC_SERVICE_FCI_INTENTS,
+  HDFC_SERVICE_FCR_CHANNELS,
+  HDFC_SERVICE_LAGGING_INTENTS,
+  HDFC_SERVICE_LEADING_INTENTS,
+  HDFC_SERVICE_SLA_MATRIX,
+} from "@/lib/role-based-dashboard/hdfc/hdfcServiceDeliveryData";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Shared helpers — chart panels + optional AI Executive Insight blocks
@@ -2245,7 +2252,7 @@ const STERLING_H4_ONBOARDING_QUEUE: QueueRow[] = [
   { team: "Ready to approve",           slaDays: 3, "0-1d": 214, "1-3d": 42,  "3-7d": 12, ">7d": 4  },
 ];
 
-export type ServiceFulfilmentDrillVariant = "default" | "sterling-h4-acquisition";
+export type ServiceFulfilmentDrillVariant = "default" | "sterling-h4-acquisition" | "hdfc";
 
 // For a given SLA (days), return whether each aging bucket is within / breached /
 // critical. This lets us colour cells consistently and narrate the breach story.
@@ -2868,12 +2875,15 @@ export function ServiceFulfilmentDrillDown({
 }) {
   const T = useDashboardTheme();
   const isH4 = variant === "sterling-h4-acquisition";
-  const isSterlingHeadRetail = useSterlingHeadRetailCurrencyActive(sterlingCurrency) && !isH4;
+  const isHdfc = variant === "hdfc";
+  const isSterlingHeadRetail = useSterlingHeadRetailCurrencyActive(sterlingCurrency) && !isH4 && !isHdfc;
   const slaMatrix = isH4
     ? STERLING_H4_SLA_MATRIX
-    : isSterlingHeadRetail
-      ? STERLING_HEAD_RETAIL_SLA_MATRIX
-      : SLA_MATRIX;
+    : isHdfc
+      ? HDFC_SERVICE_SLA_MATRIX
+      : isSterlingHeadRetail
+        ? STERLING_HEAD_RETAIL_SLA_MATRIX
+        : SLA_MATRIX;
   const intentColWidth = isH4 ? 168 : isSterlingHeadRetail ? 200 : 120;
 
   return (
@@ -2922,11 +2932,21 @@ export function ServiceFulfilmentDrillDown({
       ) : (
         <RetailSLAPerformanceOverview
           variant="default"
-          leadingIntents={isSterlingHeadRetail ? STERLING_HEAD_RETAIL_LEADING_INTENTS : undefined}
+          leadingIntents={
+            isHdfc
+              ? HDFC_SERVICE_LEADING_INTENTS
+              : isSterlingHeadRetail
+                ? STERLING_HEAD_RETAIL_LEADING_INTENTS
+                : undefined
+          }
+          laggingIntents={isHdfc ? HDFC_SERVICE_LAGGING_INTENTS : undefined}
+          fcrChannels={isHdfc ? HDFC_SERVICE_FCR_CHANNELS : undefined}
         />
       )}
 
-      <RetailIntentPressureAlerts variant={isH4 ? "retail_h4" : "default"} />
+      <RetailIntentPressureAlerts
+        variant={isH4 ? "retail_h4" : isHdfc ? "hdfc" : "default"}
+      />
 
       <div style={{
         background: "rgba(10,10,10,0.85)",
@@ -2934,7 +2954,10 @@ export function ServiceFulfilmentDrillDown({
         borderRadius: 16,
         padding: 20,
       }}>
-        <IntentScoreHeatmap isDarkMode />
+        <IntentScoreHeatmap
+          isDarkMode
+          intentsOverride={isHdfc ? HDFC_SERVICE_FCI_INTENTS : undefined}
+        />
       </div>
 
       {!isH4 ? (

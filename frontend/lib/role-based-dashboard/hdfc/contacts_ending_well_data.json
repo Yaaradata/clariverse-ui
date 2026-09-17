@@ -1,0 +1,150 @@
+{
+  "view": "contacts_ending_well",
+  "title": "Is every contact ending well?",
+  "subtitle": "Per-contact resolution quality across voice, chat, email and ticket — sentiment exit, FCR, repeats, premature closure and tone drift.",
+  "persona": "Head of CX — HDFC Credit Cards",
+  "date_windows": ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],
+  "active_window": "Last 24 Hours",
+  "_note": "Topics/categories/intents are the REAL themes mined from HDFC X (@HDFCBank_Cares complaints) + Reddit (r/CreditCardsIndia). All metric VALUES are mock for the demo (no internal contact-center data). Numbers are one coherent snapshot for the active window; scale down for 24h / up for 30d.",
+
+  "contact_health_score": {
+    "label": "Contact Health Score",
+    "index_badge": "AI · CONTACT QUALITY INDEX",
+    "score": 64,
+    "out_of": 100,
+    "delta_pts": -12,
+    "delta_label": "vs 12w ago",
+    "composite_of": ["post-contact CSAT", "FCR", "repeat-contact", "tone drift"],
+    "trend_12w": [
+      {"week": "W-11", "value": 76},{"week": "W-10", "value": 75},{"week": "W-9", "value": 74},
+      {"week": "W-8", "value": 73},{"week": "W-7", "value": 72},{"week": "W-6", "value": 70},
+      {"week": "W-5", "value": 69},{"week": "W-4", "value": 68},{"week": "W-3", "value": 66},
+      {"week": "W-2", "value": 65},{"week": "W-1", "value": 65},{"week": "Now", "value": 64}
+    ],
+    "verdict": "Contact-quality eroding for the 11th week. Post-contact CSAT and Tone Drift are the lead drag."
+  },
+
+  "ai_summary_wall": {
+    "badge": "AI · INSIGHT RANKER",
+    "subtitle": "3-second takeaway · ranked by business impact",
+    "insights": [
+      {"rank": 1, "title": "Per-contact resolution is breaking on Ticket + Chat",
+       "body": "Ticket Repeat 27% / Premature 11% and Chat Tone-Drift 22% are the worst cells in the quality matrix. These two channels alone account for ~60% of poor-ending contacts."},
+      {"rank": 2, "title": "Fee disputes and card servicing drive half of all repeats",
+       "body": "412 fee-dispute + 248 card-servicing repeats this week — 49% of total. Neither has a standard waiver/servicing playbook; agents improvise, inflating AHT and repeat-contact rate."},
+      {"rank": 3, "title": "Tone drift concentrates on the evening shift",
+       "body": "18% of evening contacts show negative tone-drift mid-conversation — 2.4x the day-shift rate, worst on recovery-collections and fraud disputes. Coaching window opens after the 6pm shift handover."}
+    ]
+  },
+
+  "kpis": [
+    {"key": "post_contact_csat", "label": "POST-CONTACT CSAT", "value": 78, "unit": "%", "target": "> 85%", "delta": -4, "status": "red"},
+    {"key": "first_contact_resolution", "label": "FIRST CONTACT RESOLUTION", "value": 74, "unit": "%", "target": "> 80%", "delta": -3, "status": "red"},
+    {"key": "repeat_contact_rate", "label": "REPEAT CONTACT RATE", "value": 22, "unit": "%", "target": "< 15%", "delta": 4, "status": "red"},
+    {"key": "premature_closure", "label": "PREMATURE CLOSURE", "value": 7, "unit": "%", "target": "< 3%", "delta": 2, "status": "red"},
+    {"key": "tone_drift_flags", "label": "TONE DRIFT FLAGS", "value": 18, "unit": "%", "target": "< 8%", "delta": 5, "status": "red"}
+  ],
+
+  "quality_matrix": {
+    "title": "QUALITY MATRIX · PER-CHANNEL",
+    "subtitle": "Five quality signals x four contact channels — green: on target, amber: watch, red: breaching",
+    "signals": ["POST-CSAT", "FCR", "REPEAT", "PREMATURE", "TONE DRIFT"],
+    "targets": {"post_csat": "> 85%", "fcr": "> 80%", "repeat": "< 15%", "premature": "< 3%", "tone_drift": "< 8%"},
+    "rows": [
+      {"channel": "Voice", "icon": "phone",
+       "post_csat": {"v": 81, "status": "green"}, "fcr": {"v": 78, "status": "amber"}, "repeat": {"v": 19, "status": "amber"}, "premature": {"v": 6, "status": "green"}, "tone_drift": {"v": 14, "status": "amber"}},
+      {"channel": "Chat", "icon": "chat",
+       "post_csat": {"v": 76, "status": "amber"}, "fcr": {"v": 71, "status": "amber"}, "repeat": {"v": 24, "status": "red"}, "premature": {"v": 9, "status": "green"}, "tone_drift": {"v": 22, "status": "red"}},
+      {"channel": "Email", "icon": "mail",
+       "post_csat": {"v": 79, "status": "amber"}, "fcr": {"v": 70, "status": "amber"}, "repeat": {"v": 20, "status": "amber"}, "premature": {"v": 5, "status": "green"}, "tone_drift": {"v": 12, "status": "amber"}},
+      {"channel": "Ticket", "icon": "ticket",
+       "post_csat": {"v": 74, "status": "red"}, "fcr": {"v": 66, "status": "red"}, "repeat": {"v": 27, "status": "red"}, "premature": {"v": 11, "status": "amber"}, "tone_drift": {"v": 16, "status": "amber"}}
+    ],
+    "hotspot": "Ticket and Chat carry the worst Repeat + Premature Closure scores · Voice quality holds best."
+  },
+
+  "closure_diagnostics": {
+    "title": "WHERE CONTACTS FAIL TO END WELL",
+    "badge": "AI · CLOSURE DIAGNOSTICS",
+    "subtitle": "Stacked by channel · click a bar to see what's broken and how to fix it",
+    "channel_legend": ["Chat", "Email", "Ticket", "Voice"],
+    "categories": [
+      {"category": "Account Access & Security", "total": 2847,
+       "by_channel": {"Voice": 520, "Chat": 980, "Email": 560, "Ticket": 787},
+       "worst_channel": "Chat + Ticket", "repeat_pct": 28, "premature_pct": 9, "tone_drift_pct": 22,
+       "issue": "Re-KYC verification and account-freeze / SafePass lockout flows are creating unresolved closures.",
+       "recommended_fix": "Push re-KYC status + unblock request to self-service and add a closure-confirmation script before ending chat."},
+      {"category": "Transaction Disputes & Fraud", "total": 2610,
+       "by_channel": {"Voice": 610, "Chat": 720, "Email": 640, "Ticket": 640},
+       "worst_channel": "Chat + Email", "repeat_pct": 26, "premature_pct": 8, "tone_drift_pct": 20,
+       "issue": "Unauthorized-transaction and UPI-failure disputes reopen when evidence collection and reversal SLAs slip.",
+       "recommended_fix": "Auto-attach the dispute evidence checklist and commit a reversal-SLA date on the first contact."},
+      {"category": "Cards & Card Servicing", "total": 2240,
+       "by_channel": {"Voice": 500, "Chat": 700, "Email": 480, "Ticket": 560},
+       "worst_channel": "Chat + Ticket", "repeat_pct": 24, "premature_pct": 8, "tone_drift_pct": 17,
+       "issue": "Card block/activation, downgrade and delivery-status requests loop between app, RM and phone-banking.",
+       "recommended_fix": "Expose card block/unblock + downgrade in-app and close the RM/phone-banking handoff loop."},
+      {"category": "Fee Complaints & Waivers", "total": 1930,
+       "by_channel": {"Voice": 470, "Chat": 560, "Email": 470, "Ticket": 430},
+       "worst_channel": "Ticket", "repeat_pct": 31, "premature_pct": 7, "tone_drift_pct": 18,
+       "issue": "Late-fee, AMB and finance-charge waivers have no standard playbook; agents improvise responses.",
+       "recommended_fix": "Ship a fee-waiver decision playbook plus a plain-language charge-explanation article."},
+      {"category": "Recovery & Collections", "total": 1680,
+       "by_channel": {"Voice": 720, "Chat": 360, "Email": 300, "Ticket": 300},
+       "worst_channel": "Voice", "repeat_pct": 22, "premature_pct": 6, "tone_drift_pct": 21,
+       "issue": "Recovery-agent and unsolicited-loan-call complaints escalate when opt-out / DND requests aren't honoured.",
+       "recommended_fix": "Suppress from calling lists on first request and route harassment claims to a grievance queue with an SLA."},
+      {"category": "Branch & ATM Services", "total": 1120,
+       "by_channel": {"Voice": 360, "Chat": 260, "Email": 240, "Ticket": 260},
+       "worst_channel": "Voice + Ticket", "repeat_pct": 20, "premature_pct": 5, "tone_drift_pct": 15,
+       "issue": "CDM/ATM out-of-service and branch-service gaps push customers back to digital channels unresolved.",
+       "recommended_fix": "Surface real-time ATM/CDM status and fast-track branch issues to regional ops."}
+    ]
+  },
+
+  "repeat_contact_mining": {
+    "title": "WHERE DO CUSTOMERS COME BACK?",
+    "badge": "AI · REPEAT-CONTACT MINING",
+    "subtitle": "Repeat-contact volume by intent · top playbook gaps",
+    "intents": [
+      {"intent": "Fee Dispute", "repeats": 412, "color": "red"},
+      {"intent": "Card servicing", "repeats": 248, "color": "amber"},
+      {"intent": "Fraud disputes", "repeats": 168, "color": "amber"},
+      {"intent": "Re-KYC", "repeats": 142, "color": "green"},
+      {"intent": "Recovery calls", "repeats": 118, "color": "cyan"},
+      {"intent": "EMI servicing", "repeats": 96, "color": "purple"},
+      {"intent": "Account lockout", "repeats": 74, "color": "gray"},
+      {"intent": "Rewards queries", "repeats": 52, "color": "gray"},
+      {"intent": "Other", "repeats": 40, "color": "gray"}
+    ],
+    "top2_share_pct": 49,
+    "footer": "Top 2 intents = 49% of all repeats",
+    "flag": "Playbook gap detected"
+  },
+
+  "recovery_priority_matrix": {
+    "title": "CONTACT RECOVERY PRIORITY MATRIX",
+    "badge": "AI · RECOVERY PRIORITISER",
+    "subtitle": "Prioritise poor-ending contacts by urgency and customer impact",
+    "quadrants": [
+      {"key": "do_now", "label": "DO NOW", "axis": "IMPORTANT + URGENT", "count": 184,
+       "descriptor": "Repeat + negative exit",
+       "items": ["Fraud & unauthorized disputes", "Account freeze", "Recovery-call harassment"]},
+      {"key": "schedule", "label": "SCHEDULE", "axis": "IMPORTANT + NOT URGENT", "count": 426,
+       "descriptor": "Playbook gaps",
+       "items": ["Fee-waiver decision playbook", "Re-KYC self-service article", "Evening-shift tone coaching"]},
+      {"key": "delegate", "label": "DELEGATE", "axis": "URGENT + LOWER STRATEGIC IMPACT", "count": 312,
+       "descriptor": "Routine recovery tasks",
+       "items": ["Callback reminders", "Upload-link nudges", "Spam-call suppression"]},
+      {"key": "monitor", "label": "MONITOR", "axis": "LOW URGENCY + LOW IMPACT", "count": 690,
+       "descriptor": "Low-risk items",
+       "items": ["Duplicate informational calls", "Low sentiment pressure", "Closed duplicate tickets"]}
+    ],
+    "selected": {
+      "quadrant": "do_now",
+      "top_reason": "Customers repeated within 7 days and exited negative.",
+      "top_intents": ["Fee dispute", "Account lockout", "Recovery harassment"],
+      "recommended_action": "Create a same-day recovery queue for high-risk repeat contacts."
+    }
+  }
+}

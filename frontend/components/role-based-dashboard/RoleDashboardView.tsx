@@ -76,6 +76,11 @@ import {
   resolveRoleDataKey,
   shouldShowExecutiveBrief,
 } from "@/lib/role-based-dashboard/sterlingHeadContactScreen";
+import { isContactCentreDashboardRole, isHdfcHeadOfCx } from "@/lib/role-based-dashboard/hdfcHeadOfCxScreen";
+import {
+  applyHdfcHeadOfCxOverviewData,
+  HDFC_HEAD_OF_CX_EXECUTIVE_PULSE,
+} from "@/lib/role-based-dashboard/hdfcHeadOfCxOverview";
 import { renderHeadContactDrillCard } from "@/lib/role-based-dashboard/headContactDrill";
 import {
   swapUsdSymbolDeep,
@@ -272,7 +277,12 @@ const SCREENS: {
 ];
 
 /** Roles that use the click-into-tile drill-down model (no "Screen #" prefix). */
-const DRILL_ROLE_IDS = new Set(["head_retail", "head_contact", "cards_portfolio"]);
+const DRILL_ROLE_IDS = new Set([
+  "head_retail",
+  "head_contact",
+  "head_of_cx",
+  "cards_portfolio",
+]);
 function isDrillRoleId(roleId: string): boolean {
   return DRILL_ROLE_IDS.has(roleId);
 }
@@ -296,14 +306,14 @@ function visibleSidebarScreens(
   industryId: string,
   roleId: string,
 ): typeof SCREENS {
-  if (roleId === "head_contact") return SCREENS.filter((s) => s.id === 1);
+  if (isContactCentreDashboardRole(roleId)) return SCREENS.filter((s) => s.id === 1);
   if (isSterlingHeadRetail(industryId, roleId)) return SCREENS.filter((s) => s.id === 1);
   if (isDrillRoleId(roleId)) return SCREENS.filter((s) => s.id <= 2);
   return SCREENS;
 }
 
 function defaultScreenForRole(industry: Industry, role: Role): ScreenId {
-  if (role.id === "head_contact") return 1;
+  if (isContactCentreDashboardRole(role.id)) return 1;
   return skipExecutiveScreen(industry, role) ? 3 : 1;
 }
 
@@ -405,7 +415,32 @@ function sterlingRetailTileTrendMeta(
 function contactTileTrendMeta(
   tileIdx: number,
   T: DashboardThemeTokens,
+  hdfc = false,
 ): RetailTileTrend {
+  if (hdfc) {
+    if (tileIdx === 0) {
+      // Contact Health 64 · −12 pts (matches Contacts Ending Well drill)
+      return retailDailyTrendFromSeries(
+        [76, 72, 70, 68, 66, 64],
+        T.cyan,
+        T,
+        6,
+        4,
+      );
+    }
+    if (tileIdx === 1) {
+      // Service Reputation 46 · −16 pts
+      return retailDailyTrendFromSeries(
+        [62, 58, 54, 50, 48, 46],
+        T.amber,
+        T,
+        6,
+        4,
+      );
+    }
+    // Can the engine deliver? 68 · −14 pts (parity with retail service delivery)
+    return retailDailyTrendFromSeries([82, 70, 84, 66, 74, 68], T.red, T, 8, 5);
+  }
   if (tileIdx === 0) {
     // Customer Experience — post-contact outcome quality
     return retailDailyTrendFromSeries(
@@ -781,6 +816,272 @@ function contactTileInfo(
             }}
           >
             6.4%
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** HDFC Head of CX tile body — equal metric column height; content packed top. */
+function hdfcContactTileInfo(
+  tileIdx: number,
+  T: DashboardThemeTokens,
+): ReactElement {
+  const shell: CSSProperties = {
+    display: "flex",
+    flexDirection: "column",
+    minWidth: 0,
+    flex: 1,
+    height: "100%",
+    minHeight: 148,
+    justifyContent: "flex-start",
+    gap: 8,
+  };
+
+  if (tileIdx === 0) {
+    const rows = [
+      { label: "Post-CSAT", pct: 78 },
+      { label: "FCR", pct: 74 },
+    ].map((r) => ({ ...r, color: happinessPctColor(r.pct, T) }));
+    return (
+      <div style={shell}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: 8,
+            minWidth: 0,
+            alignItems: "end",
+          }}
+        >
+          {rows.map((r) => (
+            <MiniGauge
+              key={r.label}
+              label={r.label}
+              value={r.pct}
+              color={r.color}
+              suffix="%"
+              T={T}
+            />
+          ))}
+        </div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+            gap: "4px 14px",
+            alignItems: "end",
+            marginTop: 2,
+          }}
+        >
+          <div>
+            <div
+              style={{
+                fontSize: 11,
+                color: T.textMut,
+                textTransform: "uppercase",
+                letterSpacing: 0.4,
+              }}
+            >
+              Repeat
+            </div>
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: T.red,
+                fontFamily: "var(--mono)",
+              }}
+            >
+              22%
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: 11,
+                color: T.textMut,
+                textTransform: "uppercase",
+                letterSpacing: 0.4,
+              }}
+            >
+              Sentiment
+            </div>
+            <div
+              style={{
+                fontSize: 14,
+                fontWeight: 700,
+                color: T.amber,
+                fontFamily: "var(--mono)",
+              }}
+            >
+              68%
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (tileIdx === 1) {
+    const platforms = [
+      { name: "X / Twitter", display: "0.38", bar: 0.38 },
+      { name: "Reddit", display: "0.48", bar: 0.48 },
+      { name: "Trustpilot", display: "3.1★", bar: 3.1 / 5 },
+      { name: "App Store", display: "4.0★", bar: 4.0 / 5 },
+      { name: "Play Store", display: "4.1★", bar: 4.1 / 5 },
+    ];
+    return (
+      <div style={{ ...shell, gap: 7, justifyContent: "center" }}>
+        {platforms.map((p) => {
+          const barColor =
+            p.bar >= 0.65 ? T.green : p.bar >= 0.55 ? T.amber : T.red;
+          return (
+            <div
+              key={p.name}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              <span
+                style={{
+                  fontSize: 10,
+                  color: T.textMut,
+                  width: 64,
+                  flexShrink: 0,
+                }}
+              >
+                {p.name}
+              </span>
+              <div
+                style={{
+                  flex: 1,
+                  height: 6,
+                  borderRadius: 3,
+                  background: `${barColor}20`,
+                }}
+              >
+                <div
+                  style={{
+                    height: "100%",
+                    width: `${Math.min(100, p.bar * 100)}%`,
+                    background: barColor,
+                    borderRadius: 3,
+                  }}
+                />
+              </div>
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: barColor,
+                  width: 48,
+                  textAlign: "right",
+                  fontFamily: "var(--mono)",
+                  flexShrink: 0,
+                }}
+              >
+                {p.display}
+                <span style={{ color: T.red, marginLeft: 2 }}>▼</span>
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  const bars = [
+    {
+      label: "Best · Card Replacement",
+      topLabel: "Best",
+      bottomLabel: "Card Replacement",
+      pct: 91,
+      color: T.green,
+    },
+    {
+      label: "Worst · Fee Dispute",
+      topLabel: "Worst",
+      bottomLabel: "Fee Dispute",
+      pct: 64,
+      color: T.red,
+      offsetY: -0.5 as number | undefined,
+    },
+  ];
+  return (
+    <div style={shell}>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: 8,
+          minWidth: 0,
+          alignItems: "end",
+        }}
+      >
+        {bars.map((b) => (
+          <MiniGauge
+            key={b.label}
+            label={b.label}
+            topLabel={b.topLabel}
+            bottomLabel={b.bottomLabel}
+            offsetY={b.offsetY}
+            value={b.pct}
+            color={b.color}
+            suffix="%"
+            T={T}
+          />
+        ))}
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: "4px 10px",
+          alignItems: "start",
+          marginTop: 2,
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontSize: 11,
+              color: T.textMut,
+              textTransform: "uppercase",
+              letterSpacing: 0.4,
+            }}
+          >
+            Trend
+          </div>
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 700,
+              color: T.red,
+              fontFamily: "var(--mono)",
+            }}
+          >
+            ▼ −6%
+          </div>
+        </div>
+        <div>
+          <div
+            style={{
+              fontSize: 11,
+              color: T.textMut,
+              textTransform: "uppercase",
+              letterSpacing: 0.4,
+            }}
+          >
+            Bottleneck
+          </div>
+          <div
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: T.amber,
+              fontFamily: "var(--mono)",
+              lineHeight: 1.25,
+            }}
+          >
+            Re-KYC handoff
           </div>
         </div>
       </div>
@@ -1472,7 +1773,8 @@ function Screen1({
   const T = useDashboardTheme();
   const gC = (s: number) => (s >= 80 ? T.green : s >= 60 ? T.amber : T.red);
   const isRetail = role.id === "head_retail";
-  const isContact = role.id === "head_contact";
+  const isContact = isContactCentreDashboardRole(role.id);
+  const isHdfcCx = isHdfcHeadOfCx(industry.id, role.id);
   const isCardsPortfolio = role.id === "cards_portfolio";
   const isDrillRole = isRetail || isContact || isCardsPortfolio;
   const primaryIdx =
@@ -1486,7 +1788,7 @@ function Screen1({
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 20,
+        gap: isHdfcCx ? 14 : 20,
         minWidth: 0,
       }}
     >
@@ -1496,6 +1798,7 @@ function Screen1({
           gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
           gap: 16,
           minWidth: 0,
+          alignItems: "stretch",
         }}
       >
         {data.tiles.map((tile, i) => {
@@ -1508,14 +1811,16 @@ function Screen1({
           const drillTrend = isRetail
             ? retailTileTrendMeta(i, T)
             : isContact
-              ? contactTileTrendMeta(i, T)
+              ? contactTileTrendMeta(i, T, isHdfcCx)
               : isCardsPortfolio
                 ? cardsPortfolioTileTrendMeta(i, T)
                 : null;
           const drillInfo = isRetail
             ? retailTileInfo(i, T)
             : isContact
-              ? contactTileInfo(i, T)
+              ? isHdfcCx
+                ? hdfcContactTileInfo(i, T)
+                : contactTileInfo(i, T)
               : isCardsPortfolio
                 ? cardsPortfolioTileInfo(i, T)
                 : null;
@@ -1669,10 +1974,11 @@ function Screen1({
                   style={{
                     display: "grid",
                     gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)",
-                    gap: 16,
-                    alignItems: "stretch",
-                    marginBottom: 16,
+                    gap: isHdfcCx ? 12 : 16,
+                    alignItems: "start",
+                    marginBottom: isHdfcCx ? 0 : 16,
                     flex: 1,
+                    minHeight: isHdfcCx ? 148 : undefined,
                   }}
                 >
                   <div
@@ -1681,6 +1987,7 @@ function Screen1({
                       flexDirection: "column",
                       minWidth: 0,
                       position: "relative",
+                      height: isHdfcCx ? "100%" : undefined,
                     }}
                   >
                     <span
@@ -1713,8 +2020,10 @@ function Screen1({
                     <div
                       style={{
                         width: "100%",
-                        flex: 1,
-                        minHeight: 96,
+                        flex: isHdfcCx ? "none" : 1,
+                        height: isHdfcCx ? 96 : undefined,
+                        minHeight: isHdfcCx ? 96 : 96,
+                        marginTop: isHdfcCx ? "auto" : undefined,
                       }}
                     >
                       <ResponsiveContainer>
@@ -1794,6 +2103,7 @@ function Screen1({
                       display: "flex",
                       alignItems: "stretch",
                       minWidth: 0,
+                      height: isHdfcCx ? "100%" : undefined,
                     }}
                   >
                     {drillInfo}
@@ -1850,9 +2160,17 @@ function Screen1({
                   border: `1px solid ${T.gold}28`,
                   borderLeft: `4px solid ${T.gold}`,
                   borderRadius: 10,
-                  padding: "10px 14px",
+                  padding: isHdfcCx ? "10px 12px" : "10px 14px",
                   display: "flex",
                   flexDirection: "column",
+                  flexShrink: 0,
+                  /* HDFC: shared min height so strips align; grow with full insight text */
+                  ...(isHdfcCx
+                    ? {
+                        minHeight: 168,
+                        boxSizing: "border-box" as const,
+                      }
+                    : null),
                 }}
               >
                 <div
@@ -1860,7 +2178,8 @@ function Screen1({
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
-                    marginBottom: 4,
+                    marginBottom: 6,
+                    flexShrink: 0,
                   }}
                 >
                   <Bot size={11} color={T.gold} />
@@ -1878,10 +2197,9 @@ function Screen1({
                 </div>
                 <div
                   style={{
-                    fontSize: 15,
+                    fontSize: isHdfcCx ? 13 : 15,
                     color: T.textSec,
-                    lineHeight: 1.55,
-                    flex: 1,
+                    lineHeight: isHdfcCx ? 1.45 : 1.55,
                   }}
                 >
                   {tile.insight}
@@ -2331,8 +2649,8 @@ function Screen3({
       });
     }
   }
-  // Head of Contact Centre drill KPIs (Per-contact CX, Service Reputation, Service Operations)
-  if (role.id === "head_contact") {
+  // Head of Contact Centre / HDFC Head of CX drill KPIs (Per-contact CX, Service Reputation, Service Operations)
+  if (isContactCentreDashboardRole(role.id)) {
     const cx = LOB_DRILL_KPIS.contact_experience;
     if (cx)
       cx.forEach((g) => {
@@ -2394,8 +2712,8 @@ function Screen3({
       });
     }
   }
-  // Head of Contact Centre drill KPIs (Agent Health, Promise Adherence)
-  if (role.id === "head_contact") {
+  // Head of Contact Centre / HDFC Head of CX drill KPIs (Agent Health, Promise Adherence)
+  if (isContactCentreDashboardRole(role.id)) {
     const agData = LOB_DRILL_KPIS.contact_agent_health;
     if (agData) {
       agData.forEach((g) => {
@@ -3282,10 +3600,19 @@ function RoleDashboardShell({
   );
   const data = useMemo(() => {
     let next = rawData;
+    if (isHdfcHeadOfCx(industry.id, role.id)) {
+      next = applyHdfcHeadOfCxOverviewData(next);
+    }
     if (sterlingHeadContactCurrency) next = swapContactUsdDeep(next);
     else if (sterlingCurrency) next = swapUsdSymbolDeep(next);
     return next;
-  }, [rawData, sterlingCurrency, sterlingHeadContactCurrency]);
+  }, [
+    rawData,
+    sterlingCurrency,
+    sterlingHeadContactCurrency,
+    industry.id,
+    role.id,
+  ]);
 
   const IndIcon = industry.icon;
   const RoleIcon = role.icon;
@@ -3784,7 +4111,9 @@ function RoleDashboardShell({
               >
                 Export Report
               </button>
-              <RoleBasedComplianceTimePills />
+              {!isHdfcHeadOfCx(industry.id, role.id) ? (
+                <RoleBasedComplianceTimePills />
+              ) : null}
             </div>
           </div>
         ) : (
@@ -3869,7 +4198,11 @@ function RoleDashboardShell({
               }}
             >
               <div
-                style={{ display: "flex", flexDirection: "column", gap: 10 }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: isHdfcHeadOfCx(industry.id, role.id) ? 12 : 10,
+                }}
               >
                 {shouldShowExecutiveBrief(industry.id, role.id) ? (
                   <div
@@ -3913,7 +4246,7 @@ function RoleDashboardShell({
                         lineHeight: 1.4,
                       }}
                     >
-                      {role.id === "head_contact"
+                      {isContactCentreDashboardRole(role.id)
                         ? "↕ Per-contact CSAT −7pts, service-driven brand −8pts, service ops −12pts; BPO Beta is the top operational risk"
                         : "Satisfaction up +4pts — only score improving. Brand -6pts, service delivery -14pts"}
                     </div>
@@ -3963,9 +4296,12 @@ function RoleDashboardShell({
                       gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
                       gap: 8,
                       alignItems: "stretch",
+                      width: "100%",
                     }}
                   >
-                    {(role.id === "head_contact"
+                    {(isHdfcHeadOfCx(industry.id, role.id)
+                      ? [...HDFC_HEAD_OF_CX_EXECUTIVE_PULSE]
+                      : isContactCentreDashboardRole(role.id)
                       ? [
                           {
                             q: "🔴 What's critical",
@@ -4061,7 +4397,7 @@ function RoleDashboardShell({
             (() => {
               const onBack = () => setDrillCard(null);
               const drillContent =
-                role.id === "head_contact" ? (
+                isContactCentreDashboardRole(role.id) ? (
                   renderHeadContactDrillCard(
                     drillCard,
                     onBack,

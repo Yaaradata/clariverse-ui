@@ -2,11 +2,15 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { use, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 import { SWEDBANK_DASHBOARD_THEME } from "@/lib/role-based-dashboard/swedbank-compliance-theme";
-import { resolveIndustryAndRole } from "@/lib/role-based-dashboard/registry";
+import {
+  HDFC_BANK_INDUSTRY_ID,
+  HDFC_HEAD_OF_CX_ROLE_ID,
+  resolveIndustryAndRole,
+} from "@/lib/role-based-dashboard/registry";
 
 const RoleDashboardView = dynamic(
   () => import("@/components/role-based-dashboard/RoleDashboardView").then((mod) => mod.RoleDashboardView),
@@ -16,13 +20,29 @@ const RoleDashboardView = dynamic(
 const accent = "#5332FF";
 const textSec = "#e8e9e9";
 
-export default function RoleBasedRoleDashboardPage() {
+type PageProps = {
+  params: Promise<{ industryId: string; roleId: string }>;
+};
+
+function resolveParam(value: string | string[] | undefined): string {
+  if (typeof value === "string") return value;
+  if (Array.isArray(value) && typeof value[0] === "string") return value[0];
+  return "";
+}
+
+export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
   const router = useRouter();
-  const params = useParams();
-  const industryId = typeof params.industryId === "string" ? params.industryId : "";
-  const roleId = typeof params.roleId === "string" ? params.roleId : "";
-  const normalizedRoleId =
-    industryId === "credit_cards" && roleId === "head_cards_v3"
+  const resolvedParams = use(params);
+  const industryId = resolveParam(resolvedParams.industryId);
+  const roleId = resolveParam(resolvedParams.roleId);
+
+  // Legacy HDFC contact route → dedicated Head of CX role
+  const isLegacyHdfcContact =
+    industryId === HDFC_BANK_INDUSTRY_ID && roleId === "head_contact";
+
+  const normalizedRoleId = isLegacyHdfcContact
+    ? HDFC_HEAD_OF_CX_ROLE_ID
+    : industryId === "credit_cards" && roleId === "head_cards_v3"
       ? "head_cards"
       : industryId === "ecommerce" &&
           (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
@@ -30,6 +50,12 @@ export default function RoleBasedRoleDashboardPage() {
         : roleId;
 
   useEffect(() => {
+    if (industryId === HDFC_BANK_INDUSTRY_ID && roleId === "head_contact") {
+      router.replace(
+        `/role-based/${HDFC_BANK_INDUSTRY_ID}/${HDFC_HEAD_OF_CX_ROLE_ID}`,
+      );
+      return;
+    }
     if (industryId === "credit_cards" && roleId === "head_cards_v3") {
       router.replace(`/role-based/credit_cards/head_cards`);
     }
@@ -40,6 +66,12 @@ export default function RoleBasedRoleDashboardPage() {
       router.replace(`/role-based/ecommerce/head_cx_retail`);
     }
   }, [industryId, roleId, router]);
+
+  if (!industryId || !roleId) {
+    return (
+      <div style={{ padding: "60px 40px", maxWidth: 560, margin: "0 auto", minHeight: "100vh", backgroundColor: "#010101" }} />
+    );
+  }
 
   const resolved = resolveIndustryAndRole(industryId, normalizedRoleId);
 

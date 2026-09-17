@@ -18,10 +18,17 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { STERLING_BANK_INDUSTRY_ID } from "./sterlingBankIndustry";
+import { HDFC_BANK_INDUSTRY_ID } from "./hdfcBankIndustry";
+import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
+import { STERLING_BANK_INDUSTRY_ID } from "./sterlingBankIndustry";
 
-export { STERLING_BANK_INDUSTRY_ID, INDUSIND_BANK_INDUSTRY_ID };
+export {
+  STERLING_BANK_INDUSTRY_ID,
+  INDUSIND_BANK_INDUSTRY_ID,
+  HDFC_BANK_INDUSTRY_ID,
+  HDFC_HEAD_OF_CX_ROLE_ID,
+};
 
 export const NUVAMA_INDUSTRY_ID = "nuvama" as const;
 
@@ -137,6 +144,23 @@ export const INDUSTRIES = [
         id: "head_contact",
         name: "Head of Contact Centre",
         icon: Users,
+        sub: "Per-contact CX · service-driven brand · ops & workforce",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+    ],
+  },
+  {
+    id: HDFC_BANK_INDUSTRY_ID,
+    name: "HDFC",
+    icon: Landmark,
+    color: "#0d9488",
+    desc: "Retail banking CX — per-contact quality, brand & ops",
+    roles: [
+      {
+        id: HDFC_HEAD_OF_CX_ROLE_ID,
+        name: "Head of CX",
+        icon: Headphones,
         sub: "Per-contact CX · service-driven brand · ops & workforce",
         defaultLens: "ops",
         primaryTile: 0,
@@ -1232,7 +1256,7 @@ export const ROLE_DATA = {
     },
   },
   head_contact: {
-    // sterling_bank/head_contact resolves here via resolveRoleDataKey() — same as retail_banking/head_contact.
+    // sterling_bank/head_contact + hdfc/head_of_cx resolve here via resolveRoleDataKey().
     tiles: [
       {
         title: "Are contacts ending well?",
@@ -1820,9 +1844,13 @@ export type Role = Industry["roles"][number];
 export type RoleDashboardData = (typeof ROLE_DATA)["ceo"];
 export type LobDataEntry = (typeof LOB_DATA)["retail_banking"];
 
-/** Industries that reuse retail-banking role dashboards (Sterling fork — customize per industry later). */
+/** Industries that reuse retail-banking role dashboards (Sterling / HDFC forks). */
 export function usesRetailBankingDashboard(industryId: string): boolean {
-  return industryId === "retail_banking" || industryId === STERLING_BANK_INDUSTRY_ID;
+  return (
+    industryId === "retail_banking" ||
+    industryId === STERLING_BANK_INDUSTRY_ID ||
+    industryId === HDFC_BANK_INDUSTRY_ID
+  );
 }
 
 /** Display label: registry `name` when present, otherwise title-cased role id. */

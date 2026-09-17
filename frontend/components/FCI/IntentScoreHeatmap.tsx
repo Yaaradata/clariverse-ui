@@ -17,6 +17,8 @@ interface HeatmapCell {
 
 interface IntentScoreHeatmapProps {
   isDarkMode?: boolean;
+  /** Override column intent labels (ids must match heatmapData keys) */
+  intentsOverride?: Array<{ id: string; label: string; shortLabel: string }>;
 }
 
 const PILLARS = [
@@ -148,14 +150,15 @@ const SWEDBANK_CONTACT_CENTER_UNITS = [
   { value: 'newyork', label: 'USA (New York)' }
 ];
 
-export function IntentScoreHeatmap({ isDarkMode = false }: IntentScoreHeatmapProps) {
+export function IntentScoreHeatmap({ isDarkMode = false, intentsOverride }: IntentScoreHeatmapProps) {
   const pathname = usePathname();
   const isSterlingHeadRetail = useSterlingHeadRetailCurrencyRoute();
   const isSterlingHeadContact = useSterlingHeadContactCurrencyRoute();
   const intents =
-    isSterlingHeadRetail || isSterlingHeadContact
+    intentsOverride ??
+    (isSterlingHeadRetail || isSterlingHeadContact
       ? STERLING_HEAD_RETAIL_FCI_INTENTS
-      : INTENTS;
+      : INTENTS);
   const isSwedbankRoute = pathname?.startsWith('/swedbank');
   const isStandardCharteredRoute = pathname?.startsWith('/standard-chartered');
   const CONTACT_CENTER_UNITS = isSwedbankRoute 
