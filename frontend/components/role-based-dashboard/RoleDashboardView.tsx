@@ -3735,7 +3735,59 @@ function RoleDashboardShell({
             textAlign: sidebarHover ? "left" : "center",
           }}
         >
-          {sidebarHover ? (
+          {isHdfcHeadOfCx(industry.id, role.id) ? (
+            sidebarHover ? (
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <img
+                  src="/hdfc.png"
+                  alt="HDFC"
+                  width={36}
+                  height={36}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    objectFit: "contain",
+                    display: "block",
+                    flexShrink: 0,
+                    borderRadius: 6,
+                  }}
+                />
+                <div
+                  style={{
+                    fontSize: 15,
+                    fontWeight: 800,
+                    color: T.text,
+                    letterSpacing: 0.4,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  HDFC
+                </div>
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  margin: "0 auto",
+                  borderRadius: 8,
+                  overflow: "hidden",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                title="HDFC Bank"
+              >
+                <img
+                  src="/hdfc.png"
+                  alt="HDFC"
+                  width={36}
+                  height={36}
+                  style={{ width: 36, height: 36, objectFit: "contain", display: "block" }}
+                />
+              </div>
+            )
+          ) : sidebarHover ? (
             <>
               <div
                 style={{
@@ -3785,44 +3837,46 @@ function RoleDashboardShell({
             alignItems: sidebarHover ? "stretch" : "center",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              justifyContent: sidebarHover ? "flex-start" : "center",
-            }}
-          >
+          {!isHdfcHeadOfCx(industry.id, role.id) ? (
             <div
               style={{
-                width: 24,
-                height: 24,
-                borderRadius: 6,
-                background: `${industry.color}25`,
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
+                gap: 8,
+                justifyContent: sidebarHover ? "flex-start" : "center",
               }}
             >
-              <IndIcon size={12} color={industry.color} />
-            </div>
-            {sidebarHover ? (
-              <span
+              <div
                 style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: T.text,
-                  minWidth: 0,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: `${industry.color}25`,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
                 }}
               >
-                {industry.name}
-              </span>
-            ) : null}
-          </div>
+                <IndIcon size={12} color={industry.color} />
+              </div>
+              {sidebarHover ? (
+                <span
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: T.text,
+                    minWidth: 0,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {industry.name}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
           <div
             style={{
               display: "flex",
