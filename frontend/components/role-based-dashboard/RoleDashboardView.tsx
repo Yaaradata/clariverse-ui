@@ -422,7 +422,7 @@ function contactTileTrendMeta(
       // Contact Health 64 · −12 pts (matches Contacts Ending Well drill)
       return retailDailyTrendFromSeries(
         [76, 72, 70, 68, 66, 64],
-        T.cyan,
+        T.amber,
         T,
         6,
         4,
