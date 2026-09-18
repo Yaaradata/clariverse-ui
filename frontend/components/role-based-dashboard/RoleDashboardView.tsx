@@ -927,9 +927,9 @@ function hdfcContactTileInfo(
     const platforms = [
       { name: "X / Twitter", display: "0.38", bar: 0.38 },
       { name: "Reddit", display: "0.48", bar: 0.48 },
-      { name: "Trustpilot", display: "3.1★", bar: 3.1 / 5 },
-      { name: "App Store", display: "4.0★", bar: 4.0 / 5 },
-      { name: "Play Store", display: "4.1★", bar: 4.1 / 5 },
+      { name: "Trustpilot", display: "3.1", bar: 3.1 / 5 },
+      { name: "App Store", display: "4.0", bar: 4.0 / 5 },
+      { name: "Play Store", display: "4.1", bar: 4.1 / 5 },
     ];
     return (
       <div style={{ ...shell, gap: 7, justifyContent: "center" }}>
