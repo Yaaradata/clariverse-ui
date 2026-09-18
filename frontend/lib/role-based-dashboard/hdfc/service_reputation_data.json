@@ -1,6 +1,6 @@
 {
   "view": "service_reputation",
-  "title": "Is our service shaping how we're seen?",
+  "title": "Is service hurting our reputation?",
   "subtitle": "Current public reputation of our service experience across Trustpilot, X, Reddit, App Store and Play Store.",
   "persona": "Head of CX — HDFC Credit Cards",
   "date_windows": ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],

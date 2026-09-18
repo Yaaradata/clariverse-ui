@@ -1,6 +1,6 @@
 {
   "view": "contacts_ending_well",
-  "title": "Is every contact ending well?",
+  "title": "Are contacts ending well?",
   "subtitle": "Per-contact resolution quality across voice, chat, email and ticket — sentiment exit, FCR, repeats, premature closure and tone drift.",
   "persona": "Head of CX — HDFC Credit Cards",
   "date_windows": ["Last 24 Hours", "Last 7 Days", "Last 30 Days"],

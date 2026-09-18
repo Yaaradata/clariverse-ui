@@ -1,5 +1,5 @@
 /**
- * Typed loader for HDFC Head of CX — "Is every contact ending well?"
+ * Typed loader for HDFC Head of CX — "Are contacts ending well?"
  * Route: /role-based/hdfc/head_of_cx (drill 0 only).
  *
  * All UI reads from this module — no inline metric literals in components.
