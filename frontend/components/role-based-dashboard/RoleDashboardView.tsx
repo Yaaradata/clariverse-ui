@@ -4074,16 +4074,18 @@ function RoleDashboardShell({
                 ) : null}
                 {active?.label}
               </h1>
-              <div
-                style={{
-                  fontSize: 14,
-                  color: T.textSec,
-                  marginTop: 4,
-                  lineHeight: 1.45,
-                }}
-              >
-                {industry.name} · {roleDisplayName(role)} · {executiveSub}
-              </div>
+              {!isHdfcHeadOfCx(industry.id, role.id) ? (
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: T.textSec,
+                    marginTop: 4,
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {industry.name} · {roleDisplayName(role)} · {executiveSub}
+                </div>
+              ) : null}
             </div>
             <div
               style={{
@@ -4096,21 +4098,23 @@ function RoleDashboardShell({
                 marginLeft: "auto",
               }}
             >
-              <button
-                type="button"
-                style={{
-                  background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`,
-                  color: T.bg,
-                  border: "none",
-                  borderRadius: 8,
-                  padding: "7px 16px",
-                  fontSize: 13,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                Export Report
-              </button>
+              {!isHdfcHeadOfCx(industry.id, role.id) ? (
+                <button
+                  type="button"
+                  style={{
+                    background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`,
+                    color: T.bg,
+                    border: "none",
+                    borderRadius: 8,
+                    padding: "7px 16px",
+                    fontSize: 13,
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  Export Report
+                </button>
+              ) : null}
               {!isHdfcHeadOfCx(industry.id, role.id) ? (
                 <RoleBasedComplianceTimePills />
               ) : null}
@@ -4150,32 +4154,36 @@ function RoleDashboardShell({
                 ) : null}
                 {active?.label}
               </h1>
-              <div
+              {!isHdfcHeadOfCx(industry.id, role.id) ? (
+                <div
+                  style={{
+                    fontSize: 14,
+                    color: T.textSec,
+                    marginTop: 4,
+                    lineHeight: 1.45,
+                  }}
+                >
+                  {industry.name} · {roleDisplayName(role)} · {executiveSub}
+                </div>
+              ) : null}
+            </div>
+            {!isHdfcHeadOfCx(industry.id, role.id) ? (
+              <button
+                type="button"
                 style={{
-                  fontSize: 14,
-                  color: T.textSec,
-                  marginTop: 4,
-                  lineHeight: 1.45,
+                  background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`,
+                  color: T.bg,
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "7px 16px",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  cursor: "pointer",
                 }}
               >
-                {industry.name} · {roleDisplayName(role)} · {executiveSub}
-              </div>
-            </div>
-            <button
-              type="button"
-              style={{
-                background: `linear-gradient(135deg, ${T.cyan}, ${T.green})`,
-                color: T.bg,
-                border: "none",
-                borderRadius: 8,
-                padding: "7px 16px",
-                fontSize: 13,
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
-            >
-              Export Report
-            </button>
+                Export Report
+              </button>
+            ) : null}
           </div>
         )}
         <div

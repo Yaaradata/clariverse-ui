@@ -2167,6 +2167,7 @@ const STERLING_H4_SLA_MATRIX = [
   { intent: "Account activation",        Voice: 88, Chat: 90, Email: 86, "App SS": 94 },
 ];
 const SLA_CHANNELS = ["Voice", "Chat", "Email", "App SS"] as const;
+const HDFC_SLA_CHANNELS = ["Voice", "Chat", "Email", "Ticket"] as const;
 
 const INTENT_TOP = [
   { intent: "App Balance",         sla: 99, fcr: 97, wow: +2 },
@@ -2885,6 +2886,7 @@ export function ServiceFulfilmentDrillDown({
         ? STERLING_HEAD_RETAIL_SLA_MATRIX
         : SLA_MATRIX;
   const intentColWidth = isH4 ? 168 : isSterlingHeadRetail ? 200 : 120;
+  const slaChannels = isHdfc ? HDFC_SLA_CHANNELS : SLA_CHANNELS;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -2969,14 +2971,14 @@ export function ServiceFulfilmentDrillDown({
         <AIPanel title="SLA Heatmap" subtitle="Intent × channel · intensity = compliance gap" accentColor={T.red} fill>
           <div style={{ display: "grid", gridTemplateColumns: `${intentColWidth}px repeat(4, 1fr)`, gap: 4 }}>
             <div />
-            {SLA_CHANNELS.map((c) => (
+            {slaChannels.map((c) => (
               <div key={c} style={{ fontSize: 10, color: T.textMut, textAlign: "center", fontFamily: "var(--mono)" }}>{c}</div>
             ))}
             {slaMatrix.map((row) => (
               <Fragment key={row.intent}>
                 <div style={{ fontSize: 11, color: T.textSec, alignSelf: "center", lineHeight: 1.25 }}>{row.intent}</div>
-                {SLA_CHANNELS.map((c) => {
-                  const v = row[c];
+                {slaChannels.map((c) => {
+                  const v = (row as Record<string, number | string>)[c] as number;
                   const color = v >= 90 ? T.green : v >= 75 ? T.amber : T.red;
                   const intensity = v >= 90 ? "44" : v >= 80 ? "66" : v >= 70 ? "88" : "cc";
                   return (

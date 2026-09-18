@@ -162,9 +162,6 @@ export function getServiceReputationSnapshot(
   return windowsByKey[window] ?? { ...BASE, active_window: window };
 }
 
-export const HDFC_SERVICE_REPUTATION_PERSONA_LINE =
-  "HDFC · Head of CX · Promise · Stability · Risk";
-
 /** Normalize any source string to live | modelled for the shared pill. */
 export function resolveSourceKind(
   source: SourceKind | undefined,

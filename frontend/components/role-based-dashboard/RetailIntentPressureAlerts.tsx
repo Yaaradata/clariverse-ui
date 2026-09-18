@@ -123,18 +123,8 @@ const CARDS: PressureCard[] = [
   },
 ];
 
-/** HDFC Head of CX — same card slots; India / RBI copy only */
+/** HDFC Head of CX — same card slots; India / RBI copy; priority order for exec triage */
 const HDFC_CARDS: PressureCard[] = [
-  {
-    id: "pressure",
-    accent: "amber",
-    title: "Highest Pressure Cluster",
-    icon: Flame,
-    cluster: "Card & payment failures",
-    body: "Failed card authorisations, UPI failures and autopay retries drive 27% of same-day Voice volume; stress index 0.71 vs peer median 0.52.",
-    action:
-      "Mandate step-up authentication in App before the Voice queue; publish an exec SLA for payment-repair acknowledgement within 2h.",
-  },
   {
     id: "volatile",
     accent: "rose",
@@ -146,13 +136,23 @@ const HDFC_CARDS: PressureCard[] = [
       "Suppress from calling lists on first opt-out; route harassment claims to a grievance queue with an SLA; audit the collections agency's conduct.",
   },
   {
-    id: "conflict",
-    accent: "indigo",
-    title: "Multi-Channel Conflict",
-    icon: CircleX,
-    cluster: "Fee disputes · omnichannel",
-    body: "App shows fee reversed; branch diary still shows the charge; contact-centre scripts conflict — Banking Ombudsman exposure on cases where timelines disagree.",
-    action: "Freeze single-threaded case ID across App, branch CRM, and telephony; no channel closure without Ops controller sign-off.",
+    id: "escalation-resolved",
+    accent: "rose",
+    title: "Escalation after Resolved",
+    icon: ShieldAlert,
+    cluster: "12 cases · Critical · P1: 9, P2: 3",
+    body: "43% of escalations caused by agents closing tickets without checking other active channels. Agents close cases based on customer acknowledgment, not backend system verification.",
+    action: "Link channels in dispute workflow; enforce cross-channel status verification and backend confirmation before any closure sign-off.",
+  },
+  {
+    id: "pressure",
+    accent: "amber",
+    title: "Highest Pressure Cluster",
+    icon: Flame,
+    cluster: "Card & payment failures",
+    body: "Failed card authorisations, UPI failures and autopay retries drive 27% of same-day Voice volume; stress index 0.71 vs peer median 0.52.",
+    action:
+      "Mandate step-up authentication in App before the Voice queue; publish an exec SLA for payment-repair acknowledgement within 2h.",
   },
   {
     id: "backlog",
@@ -162,6 +162,15 @@ const HDFC_CARDS: PressureCard[] = [
     cluster: "Re-KYC backlog",
     body: "3-day SLA: 612 accounts past target; 38% linked to source-of-funds / re-KYC refresh; NetBanking cut during re-KYC is generating repeats; correlation +0.4 to overall public NPS drag.",
     action: "Reallocate BPO surge capacity from cards to KYC; approve risk-based tiering for low-risk salary accounts to clear the tail in 14 days.",
+  },
+  {
+    id: "conflict",
+    accent: "indigo",
+    title: "Multi-Channel Conflict",
+    icon: CircleX,
+    cluster: "Fee disputes · omnichannel",
+    body: "App shows fee reversed; branch diary still shows the charge; contact-centre scripts conflict — Banking Ombudsman exposure on cases where timelines disagree.",
+    action: "Freeze single-threaded case ID across App, branch CRM, and telephony; no channel closure without Ops controller sign-off.",
   },
   {
     id: "accountability",
@@ -174,6 +183,15 @@ const HDFC_CARDS: PressureCard[] = [
       "Assign named branch-digital ownership per case class; weekly Head-of-CX dashboard on ageing frozen/vulnerable-customer cases until green.",
   },
   {
+    id: "escalation-loops",
+    accent: "violet",
+    title: "Escalation Loops",
+    icon: Repeat2,
+    cluster: "9 cases · Critical · P1: 8, P2: 1",
+    body: "Agents transfer issues between channels instead of escalating to specialists, creating loops. Customer sentiment deteriorates from 2.3 to 4.8 with each bounce across channels.",
+    action: "Mandatory specialist queue after first dispute transfer; freeze channel bouncing with warm transfer checklist.",
+  },
+  {
     id: "loop",
     accent: "violet",
     title: "Cross-Channel Escalation Loop",
@@ -183,15 +201,6 @@ const HDFC_CARDS: PressureCard[] = [
     action: "Institute warm transfer protocol with RM presence on first escalation; cap loops at two touches with executive inbox for breaches.",
   },
   {
-    id: "escalation-resolved",
-    accent: "rose",
-    title: "Escalation after Resolved",
-    icon: ShieldAlert,
-    cluster: "12 cases · Critical · P1: 9, P2: 3",
-    body: "43% of escalations caused by agents closing tickets without checking other active channels. Agents close cases based on customer acknowledgment, not backend system verification.",
-    action: "Link channels in dispute workflow; enforce cross-channel status verification and backend confirmation before any closure sign-off.",
-  },
-  {
     id: "duplicate-interactions",
     accent: "amber",
     title: "Duplicate Interactions",
@@ -199,15 +208,6 @@ const HDFC_CARDS: PressureCard[] = [
     cluster: "3 cases · High · P2: 2, P3: 1",
     body: "Customers contact multiple channels simultaneously when response time exceeds 10 minutes. Multiple agents working same case without coordination provide conflicting information.",
     action: "Merge threads under one case ID and assign single specialist; publish queue-time SLA on digital entry points.",
-  },
-  {
-    id: "escalation-loops",
-    accent: "violet",
-    title: "Escalation Loops",
-    icon: Repeat2,
-    cluster: "9 cases · Critical · P1: 8, P2: 1",
-    body: "Agents transfer issues between channels instead of escalating to specialists, creating loops. Customer sentiment deteriorates from 2.3 to 4.8 with each bounce across channels.",
-    action: "Mandatory specialist queue after first dispute transfer; freeze channel bouncing with warm transfer checklist.",
   },
   {
     id: "unactioned-escalations",

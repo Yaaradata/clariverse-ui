@@ -32,7 +32,6 @@ import {
 import {
   getContactsEndingWellSnapshot,
   getDefaultContactsEndingWellWindow,
-  HDFC_HEAD_OF_CX_PERSONA_LINE,
   MATRIX_SIGNAL_KEYS,
   STATUS_COLOR,
   type ClosureCategory,
@@ -445,38 +444,7 @@ export default function ContactsEndingWellDashboard({ onBack }: Props) {
             <div style={{ fontSize: 13, color: T.textSec, marginTop: 3, maxWidth: 820 }}>
               {data.subtitle}
             </div>
-            <div
-              style={{
-                fontSize: 11,
-                color: T.textMut,
-                marginTop: 4,
-                fontWeight: 600,
-                letterSpacing: 0.3,
-              }}
-            >
-              {HDFC_HEAD_OF_CX_PERSONA_LINE}
-            </div>
           </div>
-        </div>
-
-        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            style={{
-              background: T.elevated,
-              ...boxBorder(T.borderLight),
-              borderRadius: 10,
-              padding: "8px 14px",
-              color: T.textSec,
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: "pointer",
-              fontFamily: "inherit",
-            }}
-          >
-            Export Report
-          </button>
         </div>
       </div>
 

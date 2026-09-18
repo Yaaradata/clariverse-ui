@@ -54,7 +54,9 @@ const FCR_CHANNEL_COLORS: Record<string, string> = {
   Email: "#0D9488",
   "Social/X": "#22c55e",
   X: "#22c55e",
+  Ticket: "#22c55e",
   "App SS": "#2563EB",
+  "Social Media": "#2563EB",
 };
 
 const LEADING_INTENTS: LeadingIntentRow[] = [
@@ -138,7 +140,7 @@ export function RetailSLAPerformanceOverview({
   leadingIntents?: LeadingIntentRow[];
   /** Override bottleneck-intent labels (HDFC service delivery) */
   laggingIntents?: LaggingIntentRow[];
-  /** Override FCR Intelligence channel labels (HDFC: Social/X → X) */
+  /** Override FCR Intelligence channel labels (HDFC: Ticket + Social Media) */
   fcrChannels?: FcrChannelRow[];
 }) {
   const [intentTab, setIntentTab] = useState<"leading" | "bottleneck">("leading");

@@ -22,7 +22,7 @@ export type HdfcSlaMatrixRow = {
   Voice: number;
   Chat: number;
   Email: number;
-  "App SS": number;
+  Ticket: number;
 };
 
 export type HdfcFciIntentColumn = {
@@ -69,23 +69,23 @@ export const HDFC_SERVICE_LAGGING_INTENTS: HdfcLaggingIntentRow[] = [
   },
 ];
 
-/** FCR Intelligence — channel labels (Social/X → X) */
+/** FCR Intelligence — channel labels (HDFC Head of CX only) */
 export const HDFC_SERVICE_FCR_CHANNELS: HdfcFcrChannelRow[] = [
   { ch: "Voice", actual: 74, last: 78, target: 80 },
   { ch: "Chat", actual: 62, last: 66, target: 75 },
   { ch: "Email", actual: 58, last: 61, target: 70 },
-  { ch: "X", actual: 41, last: 48, target: 60 },
-  { ch: "App SS", actual: 89, last: 86, target: 85 },
+  { ch: "Ticket", actual: 41, last: 48, target: 60 },
+  { ch: "Social Media", actual: 89, last: 86, target: 85 },
 ];
 
-/** SLA Heatmap (Intent × channel) */
+/** SLA Heatmap (Intent × channel) — App SS column labeled Ticket for HDFC */
 export const HDFC_SERVICE_SLA_MATRIX: HdfcSlaMatrixRow[] = [
-  { intent: "Card Replace", Voice: 92, Chat: 94, Email: 88, "App SS": 98 },
-  { intent: "Balance Query", Voice: 88, Chat: 90, Email: 82, "App SS": 99 },
-  { intent: "Fee Dispute", Voice: 64, Chat: 58, Email: 54, "App SS": 72 },
-  { intent: "EMI", Voice: 72, Chat: 68, Email: 65, "App SS": 80 },
-  { intent: "Onboarding KYC", Voice: 69, Chat: 72, Email: 70, "App SS": 76 },
-  { intent: "Acct Closure", Voice: 81, Chat: 76, Email: 74, "App SS": 83 },
+  { intent: "Card Replace", Voice: 92, Chat: 94, Email: 88, Ticket: 98 },
+  { intent: "Balance Query", Voice: 88, Chat: 90, Email: 82, Ticket: 99 },
+  { intent: "Fee Dispute", Voice: 64, Chat: 58, Email: 54, Ticket: 72 },
+  { intent: "EMI", Voice: 72, Chat: 68, Email: 65, Ticket: 80 },
+  { intent: "Onboarding KYC", Voice: 69, Chat: 72, Email: 70, Ticket: 76 },
+  { intent: "Acct Closure", Voice: 81, Chat: 76, Email: 74, Ticket: 83 },
 ];
 
 /** FCI heatmap — column labels only (ids unchanged for score lookup) */

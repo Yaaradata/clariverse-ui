@@ -148,10 +148,6 @@ export function getContactsEndingWellSnapshot(
   return windowsByKey[window] ?? { ...BASE, active_window: window };
 }
 
-/** Persona chrome line for HDFC Head of CX (spec override; not US-bank wording). */
-export const HDFC_HEAD_OF_CX_PERSONA_LINE =
-  "HDFC · Head of CX · Promise · Stability · Risk";
-
 export const CLOSURE_CHANNEL_COLORS: Record<string, string> = {
   Chat: "#22d3ee",
   Email: "#a78bfa",
