@@ -71,6 +71,7 @@ import {
   INDUSIND_BANK_INDUSTRY_ID,
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
+import { NEOGROUP_INDUSTRY_ID } from "@/lib/role-based-dashboard/neogroupIndustry";
 import {
   isSterlingHeadRetail,
   resolveRoleDataKey,
@@ -108,6 +109,7 @@ import { FastagIntelligenceDashboard } from "./FastagIntelligenceDashboard";
 import { HeadOfCreditCardsDashboard } from "./HeadOfCreditCardsDashboard";
 import { CardsPortfolioV2Dashboard } from "./CardsPortfolioV2Dashboard";
 import { ClientExperienceDashboard } from "./nuvamapage";
+import { NeoGroupClientExperienceDashboard } from "./neogroupClientExperienceDashboard";
 import { OpenbankInsightExecutiveDashboard } from "./OpenbankInsightExecutiveDashboard";
 import { RbiConductIntelligencePreview } from "./RbiConductIntelligencePreview";
 import {
@@ -4612,6 +4614,19 @@ export function RoleDashboardView({
         initialPersona={role.id === "head_cx" ? "coh" : "hob"}
         onExit={onExit}
         theme={theme}
+      />
+    );
+  }
+
+  // Neogroup must resolve before Nuvama — same role id, different industry fork.
+  if (
+    industry.id === NEOGROUP_INDUSTRY_ID &&
+    role.id === "head_client_experience"
+  ) {
+    return (
+      <NeoGroupClientExperienceDashboard
+        onExit={onExit}
+        firmName="Neogroup"
       />
     );
   }

@@ -11,10 +11,28 @@ import {
   HDFC_HEAD_OF_CX_ROLE_ID,
   resolveIndustryAndRole,
 } from "@/lib/role-based-dashboard/registry";
+import {
+  NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
+  NEOGROUP_INDUSTRY_ID,
+} from "@/lib/role-based-dashboard/neogroupIndustry";
 
 const RoleDashboardView = dynamic(
   () => import("@/components/role-based-dashboard/RoleDashboardView").then((mod) => mod.RoleDashboardView),
   { loading: () => null }
+);
+
+/** Client-only: avoids Turbopack SSR/HMR swapping Neo ↔ Nuvama pulse copy. */
+const NeoGroupClientExperienceDashboard = dynamic(
+  () =>
+    import("@/components/role-based-dashboard/neogroupClientExperienceDashboard").then(
+      (m) => m.NeoGroupClientExperienceDashboard
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{ minHeight: "100vh", backgroundColor: "#010101" }} />
+    ),
+  }
 );
 
 const accent = "#5332FF";
@@ -95,6 +113,19 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
 
   const { industry, role } = resolved;
   const onExit = () => router.push(`/role-based/${industry.id}`);
+
+  // Bypass RoleDashboardView so nuvamapage never enters this route's module graph.
+  if (
+    industry.id === NEOGROUP_INDUSTRY_ID &&
+    role.id === NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID
+  ) {
+    return (
+      <NeoGroupClientExperienceDashboard
+        onExit={onExit}
+        firmName="Neogroup"
+      />
+    );
+  }
 
   return (
     <RoleDashboardView

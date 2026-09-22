@@ -21,6 +21,10 @@ import {
 import { HDFC_BANK_INDUSTRY_ID } from "./hdfcBankIndustry";
 import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
+import {
+  NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
+  NEOGROUP_INDUSTRY_ID,
+} from "./neogroupIndustry";
 import { STERLING_BANK_INDUSTRY_ID } from "./sterlingBankIndustry";
 
 export {
@@ -28,6 +32,8 @@ export {
   INDUSIND_BANK_INDUSTRY_ID,
   HDFC_BANK_INDUSTRY_ID,
   HDFC_HEAD_OF_CX_ROLE_ID,
+  NEOGROUP_INDUSTRY_ID,
+  NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
 };
 
 export const NUVAMA_INDUSTRY_ID = "nuvama" as const;
@@ -162,6 +168,23 @@ export const INDUSTRIES = [
         name: "Head of CX",
         icon: Headphones,
         sub: "Per-contact CX · service-driven brand · ops & workforce",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+    ],
+  },
+  {
+    id: NEOGROUP_INDUSTRY_ID,
+    name: "Neogroup",
+    icon: Briefcase,
+    color: "#7c3aed",
+    desc: "Client sentiment · RM service quality · advisory journeys · retention",
+    roles: [
+      {
+        id: NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
+        name: "Head of Client Experience",
+        icon: Headphones,
+        sub: "Client sentiment · RM service quality · advisory journeys · escalation & retention",
         defaultLens: "ops",
         primaryTile: 0,
       },
