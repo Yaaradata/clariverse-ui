@@ -1,0 +1,1074 @@
+{
+  "scope": "hdfc_bank · on_topic · window",
+  "total_items": 4966,
+  "flags": {
+    "escalation_intent": {
+      "count": 186,
+      "share": 3.7,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 2
+        },
+        {
+          "week": "2026-08-03",
+          "count": 9
+        },
+        {
+          "week": "2026-08-10",
+          "count": 10
+        },
+        {
+          "week": "2026-08-17",
+          "count": 12
+        },
+        {
+          "week": "2026-08-24",
+          "count": 30
+        },
+        {
+          "week": "2026-08-31",
+          "count": 15
+        },
+        {
+          "week": "2026-09-07",
+          "count": 10
+        },
+        {
+          "week": "2026-09-14",
+          "count": 26
+        },
+        {
+          "week": "2026-09-21",
+          "count": 63
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 47,
+        "second_half": 130,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": 70.2,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "complaint_handling",
+          "label": "Complaints closed without resolution",
+          "count": 25
+        },
+        {
+          "id": "account_freeze",
+          "label": "Account debit freezes and blocks",
+          "count": 21
+        },
+        {
+          "id": "recovery_conduct",
+          "label": "Recovery and collection conduct",
+          "count": 17
+        },
+        {
+          "id": "care_unreachable",
+          "label": "Customer care unreachable or unhelpful",
+          "count": 12
+        },
+        {
+          "id": "card_fees_charges",
+          "label": "Card fees and charges",
+          "count": 9
+        }
+      ],
+      "exemplars": [
+        "reddit:1wnc5cx",
+        "x:2102338457762984419",
+        "x:2092180451398180872",
+        "reddit:1vy4kgv"
+      ]
+    },
+    "promise_break": {
+      "count": 393,
+      "share": 7.9,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 8
+        },
+        {
+          "week": "2026-08-03",
+          "count": 20
+        },
+        {
+          "week": "2026-08-10",
+          "count": 21
+        },
+        {
+          "week": "2026-08-17",
+          "count": 31
+        },
+        {
+          "week": "2026-08-24",
+          "count": 32
+        },
+        {
+          "week": "2026-08-31",
+          "count": 32
+        },
+        {
+          "week": "2026-09-07",
+          "count": 37
+        },
+        {
+          "week": "2026-09-14",
+          "count": 67
+        },
+        {
+          "week": "2026-09-21",
+          "count": 66
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 97,
+        "second_half": 217,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": 40.8,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "app_speed_crash",
+          "label": "App speed, loading and crashes",
+          "count": 53
+        },
+        {
+          "id": "complaint_handling",
+          "label": "Complaints closed without resolution",
+          "count": 40
+        },
+        {
+          "id": "account_freeze",
+          "label": "Account debit freezes and blocks",
+          "count": 31
+        },
+        {
+          "id": "failed_txn_reversal",
+          "label": "Failed transaction reversal",
+          "count": 28
+        },
+        {
+          "id": "login_mpin",
+          "label": "Login, MPIN and registration",
+          "count": 24
+        }
+      ],
+      "exemplars": [
+        "x:2085194811565596800",
+        "x:2084938740020228231",
+        "reddit:1vrb6jx",
+        "reddit:1vhv2d2"
+      ]
+    },
+    "status_seeking": {
+      "count": 106,
+      "share": 2.1,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 1
+        },
+        {
+          "week": "2026-08-03",
+          "count": 6
+        },
+        {
+          "week": "2026-08-10",
+          "count": 5
+        },
+        {
+          "week": "2026-08-17",
+          "count": 5
+        },
+        {
+          "week": "2026-08-24",
+          "count": 9
+        },
+        {
+          "week": "2026-08-31",
+          "count": 5
+        },
+        {
+          "week": "2026-09-07",
+          "count": 11
+        },
+        {
+          "week": "2026-09-14",
+          "count": 30
+        },
+        {
+          "week": "2026-09-21",
+          "count": 20
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 25,
+        "second_half": 67,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": 60.0,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "card_variant_migration",
+          "label": "Card variant migration and forced upgrade",
+          "count": 24
+        },
+        {
+          "id": "complaint_handling",
+          "label": "Complaints closed without resolution",
+          "count": 9
+        },
+        {
+          "id": "new_app_release",
+          "label": "New app and update experience",
+          "count": 7
+        },
+        {
+          "id": "card_application",
+          "label": "Card application, rejection and verification",
+          "count": 6
+        },
+        {
+          "id": "failed_txn_reversal",
+          "label": "Failed transaction reversal",
+          "count": 5
+        }
+      ],
+      "exemplars": [
+        "x:2102383306277052646",
+        "x:2102440701988663777",
+        "reddit:comment:p9vopio",
+        "technofino_1258632"
+      ]
+    },
+    "cure_watch": {
+      "count": 144,
+      "share": 2.9,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 1
+        },
+        {
+          "week": "2026-08-03",
+          "count": 8
+        },
+        {
+          "week": "2026-08-10",
+          "count": 9
+        },
+        {
+          "week": "2026-08-17",
+          "count": 8
+        },
+        {
+          "week": "2026-08-24",
+          "count": 18
+        },
+        {
+          "week": "2026-08-31",
+          "count": 5
+        },
+        {
+          "week": "2026-09-07",
+          "count": 7
+        },
+        {
+          "week": "2026-09-14",
+          "count": 28
+        },
+        {
+          "week": "2026-09-21",
+          "count": 26
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 37,
+        "second_half": 73,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": 21.6,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "account_freeze",
+          "label": "Account debit freezes and blocks",
+          "count": 66
+        },
+        {
+          "id": "failed_txn_reversal",
+          "label": "Failed transaction reversal",
+          "count": 15
+        },
+        {
+          "id": "upi_failures",
+          "label": "UPI payments failing or pending",
+          "count": 13
+        },
+        {
+          "id": "card_limit",
+          "label": "Credit limit",
+          "count": 9
+        },
+        {
+          "id": "app_speed_crash",
+          "label": "App speed, loading and crashes",
+          "count": 5
+        }
+      ],
+      "exemplars": [
+        "x:2085194811565596800",
+        "x:2084938740020228231",
+        "reddit:1w47ozv",
+        "reddit:1wmemqk"
+      ]
+    },
+    "closure_intent": {
+      "count": 92,
+      "share": 1.9,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 2
+        },
+        {
+          "week": "2026-08-03",
+          "count": 7
+        },
+        {
+          "week": "2026-08-10",
+          "count": 6
+        },
+        {
+          "week": "2026-08-17",
+          "count": 9
+        },
+        {
+          "week": "2026-08-24",
+          "count": 18
+        },
+        {
+          "week": "2026-08-31",
+          "count": 7
+        },
+        {
+          "week": "2026-09-07",
+          "count": 2
+        },
+        {
+          "week": "2026-09-14",
+          "count": 13
+        },
+        {
+          "week": "2026-09-21",
+          "count": 19
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 32,
+        "second_half": 51,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": -1.3,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "card_variant_migration",
+          "label": "Card variant migration and forced upgrade",
+          "count": 35
+        },
+        {
+          "id": "closure_requests",
+          "label": "Account and card closure requests",
+          "count": 12
+        },
+        {
+          "id": "card_eligibility_upgrade",
+          "label": "Card eligibility, upgrade and LTF requests",
+          "count": 9
+        },
+        {
+          "id": "card_fees_charges",
+          "label": "Card fees and charges",
+          "count": 6
+        },
+        {
+          "id": "card_limit",
+          "label": "Credit limit",
+          "count": 4
+        }
+      ],
+      "exemplars": [
+        "x:2100504763322564656",
+        "x:2102648337778520345",
+        "reddit:1w23zry",
+        "reddit:comment:pb74zm6"
+      ]
+    },
+    "repeat_contact": {
+      "count": 195,
+      "share": 3.9,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 4
+        },
+        {
+          "week": "2026-08-03",
+          "count": 15
+        },
+        {
+          "week": "2026-08-10",
+          "count": 7
+        },
+        {
+          "week": "2026-08-17",
+          "count": 12
+        },
+        {
+          "week": "2026-08-24",
+          "count": 16
+        },
+        {
+          "week": "2026-08-31",
+          "count": 12
+        },
+        {
+          "week": "2026-09-07",
+          "count": 14
+        },
+        {
+          "week": "2026-09-14",
+          "count": 25
+        },
+        {
+          "week": "2026-09-21",
+          "count": 34
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 44,
+        "second_half": 95,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": 33.4,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "app_speed_crash",
+          "label": "App speed, loading and crashes",
+          "count": 33
+        },
+        {
+          "id": "complaint_handling",
+          "label": "Complaints closed without resolution",
+          "count": 18
+        },
+        {
+          "id": "login_mpin",
+          "label": "Login, MPIN and registration",
+          "count": 17
+        },
+        {
+          "id": "card_application",
+          "label": "Card application, rejection and verification",
+          "count": 11
+        },
+        {
+          "id": "account_freeze",
+          "label": "Account debit freezes and blocks",
+          "count": 10
+        }
+      ],
+      "exemplars": [
+        "reddit:1wnc5cx",
+        "x:2093271746539638877",
+        "x:2087186126687920380",
+        "reddit:1w23zry"
+      ]
+    },
+    "feature_request": {
+      "count": 118,
+      "share": 2.4,
+      "weekly": [
+        {
+          "week": "2026-07-27",
+          "count": 3
+        },
+        {
+          "week": "2026-08-03",
+          "count": 3
+        },
+        {
+          "week": "2026-08-10",
+          "count": 1
+        },
+        {
+          "week": "2026-08-17",
+          "count": 12
+        },
+        {
+          "week": "2026-08-24",
+          "count": 5
+        },
+        {
+          "week": "2026-08-31",
+          "count": 8
+        },
+        {
+          "week": "2026-09-07",
+          "count": 10
+        },
+        {
+          "week": "2026-09-14",
+          "count": 21
+        },
+        {
+          "week": "2026-09-21",
+          "count": 12
+        }
+      ],
+      "trend": {
+        "mode": "trend_within_window",
+        "first_half": 22,
+        "second_half": 53,
+        "first_half_total": 1157,
+        "second_half_total": 1808,
+        "change_pct": 43.3,
+        "first_half_dates": "2026-08-01 to 2026-08-27",
+        "second_half_dates": "2026-08-28 to 2026-09-24"
+      },
+      "top_themes": [
+        {
+          "id": "app_usability",
+          "label": "App features and usability",
+          "count": 50
+        },
+        {
+          "id": "login_mpin",
+          "label": "Login, MPIN and registration",
+          "count": 9
+        },
+        {
+          "id": "app_speed_crash",
+          "label": "App speed, loading and crashes",
+          "count": 6
+        },
+        {
+          "id": "card_variant_migration",
+          "label": "Card variant migration and forced upgrade",
+          "count": 6
+        },
+        {
+          "id": "loan_servicing",
+          "label": "EMI and loan account servicing",
+          "count": 5
+        }
+      ],
+      "exemplars": [
+        "reddit:1wfuptr",
+        "x:2102355329514365104",
+        "x:2102610238537101399",
+        "reddit:comment:pazdrvc"
+      ]
+    },
+    "switching": {
+      "count": 13,
+      "to_other_bank": 13,
+      "from_other_bank": 0,
+      "note": "Counts only; other banks are not named on screen."
+    }
+  },
+  "promise_by_request_type": [
+    {
+      "request_type": "other",
+      "count": 281,
+      "status_seeking": 20,
+      "repeat_share": 13.5,
+      "median_days_elapsed": 21,
+      "owner": "digital",
+      "top_theme": "app_speed_crash",
+      "exemplars": [
+        "x:2084938740020228231",
+        "x:2092325917515288832",
+        "reddit:1vrb6jx"
+      ]
+    },
+    {
+      "request_type": "closure",
+      "count": 24,
+      "status_seeking": 3,
+      "repeat_share": 20.8,
+      "median_days_elapsed": 20,
+      "owner": "cards",
+      "top_theme": "card_eligibility_upgrade",
+      "exemplars": [
+        "reddit:1vhv2d2",
+        "x:2101277367931195690",
+        "x:2100914957114085758"
+      ]
+    },
+    {
+      "request_type": "kyc",
+      "count": 22,
+      "status_seeking": 3,
+      "repeat_share": 18.2,
+      "median_days_elapsed": 10,
+      "owner": "operations",
+      "top_theme": "account_freeze",
+      "exemplars": [
+        "x:2085194811565596800",
+        "x:2092621880800718918",
+        "technofino_1254864"
+      ]
+    },
+    {
+      "request_type": "reversal",
+      "count": 21,
+      "status_seeking": 2,
+      "repeat_share": 14.3,
+      "median_days_elapsed": 32.0,
+      "owner": "operations",
+      "top_theme": "failed_txn_reversal",
+      "exemplars": [
+        "x:2090712431760982232",
+        "x:2090830246971085157",
+        "reddit:comment:p4yopp9"
+      ]
+    },
+    {
+      "request_type": "loan_disbursal",
+      "count": 18,
+      "status_seeking": 4,
+      "repeat_share": 27.8,
+      "median_days_elapsed": 18,
+      "owner": "loans",
+      "top_theme": "loan_processing",
+      "exemplars": [
+        "reddit:1whyo4i",
+        "x:2100531618910003387",
+        "x:2102702938993180983"
+      ]
+    },
+    {
+      "request_type": "refund",
+      "count": 18,
+      "status_seeking": 2,
+      "repeat_share": 16.7,
+      "median_days_elapsed": 14.0,
+      "owner": "operations",
+      "top_theme": "failed_txn_reversal",
+      "exemplars": [
+        "x:2092293932243980500",
+        "x:2087882350348927328",
+        "reddit:1vrurz5"
+      ]
+    },
+    {
+      "request_type": "dispute",
+      "count": 4,
+      "status_seeking": 0,
+      "repeat_share": 25.0,
+      "median_days_elapsed": 57.5,
+      "owner": "operations",
+      "top_theme": "upi_failures",
+      "exemplars": [
+        "x:2087186126687920380",
+        "trustpilot_6ab3ac18069937d1ae6abf5d",
+        "playstore:com.hdfcbank.android.now:46f90495-e641-4e9b-bc17-45f797d2374f"
+      ]
+    },
+    {
+      "request_type": "card_delivery",
+      "count": 4,
+      "status_seeking": 0,
+      "repeat_share": 25.0,
+      "median_days_elapsed": 35.0,
+      "owner": "cx",
+      "top_theme": "card_dispatch",
+      "exemplars": [
+        "reddit:1w9ldpk",
+        "reddit:1vqpxa5",
+        "x:2102668205873672572"
+      ]
+    },
+    {
+      "request_type": "credit_report",
+      "count": 1,
+      "status_seeking": 0,
+      "repeat_share": 0.0,
+      "median_days_elapsed": 30,
+      "owner": "rm",
+      "top_theme": "card_limit",
+      "exemplars": [
+        "reddit:1w47ozv"
+      ]
+    }
+  ],
+  "transparency_gap": {
+    "count": 106,
+    "share": 2.1,
+    "by_request_type": [
+      {
+        "request_type": "other",
+        "count": 66
+      },
+      {
+        "request_type": "closure",
+        "count": 10
+      },
+      {
+        "request_type": "card_delivery",
+        "count": 8
+      },
+      {
+        "request_type": "refund",
+        "count": 7
+      },
+      {
+        "request_type": "loan_disbursal",
+        "count": 5
+      },
+      {
+        "request_type": "kyc",
+        "count": 5
+      },
+      {
+        "request_type": "reversal",
+        "count": 3
+      },
+      {
+        "request_type": "credit_report",
+        "count": 2
+      }
+    ],
+    "exemplars": [
+      "x:2102383306277052646",
+      "x:2102440701988663777",
+      "reddit:comment:p9vopio",
+      "technofino_1258632"
+    ]
+  },
+  "escalation_by_target": [
+    {
+      "target": "rbi",
+      "rung": "RBI Ombudsman",
+      "count": 109
+    },
+    {
+      "target": "rbi_ombudsman",
+      "rung": "RBI Ombudsman",
+      "count": 28
+    },
+    {
+      "target": "grievance",
+      "rung": "Grievance",
+      "count": 25
+    },
+    {
+      "target": "legal",
+      "rung": "RBI Ombudsman",
+      "count": 17
+    },
+    {
+      "target": "ministers",
+      "rung": "Public",
+      "count": 2
+    },
+    {
+      "target": "repeat",
+      "rung": "Repeat",
+      "count": 2
+    },
+    {
+      "target": "consumer_court",
+      "rung": "RBI Ombudsman",
+      "count": 2
+    },
+    {
+      "target": "md_office",
+      "rung": "MD's office",
+      "count": 1
+    }
+  ],
+  "ladder_public": {
+    "voice_negative": 2578,
+    "repeat": 195,
+    "escalation_language": 186,
+    "public_posts_with_escalation": 178,
+    "rbi_or_ombudsman_mentions": 137,
+    "climb_themes": [
+      {
+        "id": "complaint_handling",
+        "label": "Complaints closed without resolution",
+        "count": 25
+      },
+      {
+        "id": "account_freeze",
+        "label": "Account debit freezes and blocks",
+        "count": 21
+      },
+      {
+        "id": "recovery_conduct",
+        "label": "Recovery and collection conduct",
+        "count": 17
+      },
+      {
+        "id": "care_unreachable",
+        "label": "Customer care unreachable or unhelpful",
+        "count": 12
+      },
+      {
+        "id": "card_fees_charges",
+        "label": "Card fees and charges",
+        "count": 9
+      },
+      {
+        "id": "card_variant_migration",
+        "label": "Card variant migration and forced upgrade",
+        "count": 9
+      }
+    ]
+  },
+  "voices_with_reach": [
+    {
+      "id": "x:2084938740020228231",
+      "who": "X account, about 1.5 million followers",
+      "reach": 1471556,
+      "theme": "failed_txn_reversal",
+      "theme_label": "Failed transaction reversal",
+      "owner": "cards",
+      "escalation": false,
+      "created_at": "2026-08-05T15:15:06+05:30"
+    },
+    {
+      "id": "x:2092894433369055716",
+      "who": "X account, about 373k followers",
+      "reach": 372802,
+      "theme": "upi_failures",
+      "theme_label": "UPI payments failing or pending",
+      "owner": "operations",
+      "escalation": false,
+      "created_at": "2026-08-27T14:08:11+05:30"
+    },
+    {
+      "id": "x:2086518330148687989",
+      "who": "X account, about 287k followers",
+      "reach": 287091,
+      "theme": "offers_deals",
+      "theme_label": "Card offers and deals",
+      "owner": "cards",
+      "escalation": false,
+      "created_at": "2026-08-09T23:51:50+05:30"
+    },
+    {
+      "id": "x:2086320967878648006",
+      "who": "X account, about 158k followers",
+      "reach": 158427,
+      "theme": "reward_redemption",
+      "theme_label": "Reward redemption and vouchers",
+      "owner": "operations",
+      "escalation": false,
+      "created_at": "2026-08-09T10:47:35+05:30"
+    },
+    {
+      "id": "x:2086474481292529785",
+      "who": "X account, about 157k followers",
+      "reach": 156503,
+      "theme": "offers_deals",
+      "theme_label": "Card offers and deals",
+      "owner": "cards",
+      "escalation": false,
+      "created_at": "2026-08-09T20:57:35+05:30"
+    },
+    {
+      "id": "x:2086389751712784715",
+      "who": "X account, about 156k followers",
+      "reach": 155666,
+      "theme": "offers_deals",
+      "theme_label": "Card offers and deals",
+      "owner": "cards",
+      "escalation": false,
+      "created_at": "2026-08-09T15:20:54+05:30"
+    },
+    {
+      "id": "x:2092984647886291414",
+      "who": "X account, about 154k followers",
+      "reach": 154030,
+      "theme": "care_unreachable",
+      "theme_label": "Customer care unreachable or unhelpful",
+      "owner": "cx",
+      "escalation": false,
+      "created_at": "2026-08-27T20:06:40+05:30"
+    },
+    {
+      "id": "x:2086500265382076672",
+      "who": "X account, about 120k followers",
+      "reach": 119744,
+      "theme": "offers_deals",
+      "theme_label": "Card offers and deals",
+      "owner": "cards",
+      "escalation": false,
+      "created_at": "2026-08-09T22:40:03+05:30"
+    }
+  ],
+  "closure_intent": {
+    "count": 92,
+    "drivers": [
+      {
+        "id": "card_variant_migration",
+        "label": "Card variant migration and forced upgrade",
+        "count": 35
+      },
+      {
+        "id": "closure_requests",
+        "label": "Account and card closure requests",
+        "count": 12
+      },
+      {
+        "id": "card_eligibility_upgrade",
+        "label": "Card eligibility, upgrade and LTF requests",
+        "count": 9
+      },
+      {
+        "id": "card_fees_charges",
+        "label": "Card fees and charges",
+        "count": 6
+      },
+      {
+        "id": "card_limit",
+        "label": "Credit limit",
+        "count": 4
+      },
+      {
+        "id": "app_speed_crash",
+        "label": "App speed, loading and crashes",
+        "count": 3
+      }
+    ],
+    "exemplars": [
+      "x:2100504763322564656",
+      "x:2102648337778520345",
+      "reddit:1w23zry",
+      "reddit:comment:pb74zm6"
+    ]
+  },
+  "cure_watch": {
+    "count": 144,
+    "by_theme": [
+      {
+        "id": "account_freeze",
+        "label": "Account debit freezes and blocks",
+        "count": 66
+      },
+      {
+        "id": "failed_txn_reversal",
+        "label": "Failed transaction reversal",
+        "count": 15
+      },
+      {
+        "id": "upi_failures",
+        "label": "UPI payments failing or pending",
+        "count": 13
+      },
+      {
+        "id": "card_limit",
+        "label": "Credit limit",
+        "count": 9
+      },
+      {
+        "id": "app_speed_crash",
+        "label": "App speed, loading and crashes",
+        "count": 5
+      },
+      {
+        "id": "login_mpin",
+        "label": "Login, MPIN and registration",
+        "count": 3
+      }
+    ],
+    "exemplars": [
+      "x:2085194811565596800",
+      "x:2084938740020228231",
+      "reddit:1w47ozv",
+      "reddit:1wmemqk",
+      "technofino_1254963"
+    ]
+  },
+  "by_business": [
+    {
+      "business": "retail_banking",
+      "count": 1730,
+      "repeat": 83,
+      "escalation": 82,
+      "negative": 1129
+    },
+    {
+      "business": "cards",
+      "count": 1229,
+      "repeat": 50,
+      "escalation": 61,
+      "negative": 547
+    },
+    {
+      "business": "payments",
+      "count": 1211,
+      "repeat": 40,
+      "escalation": 8,
+      "negative": 579
+    },
+    {
+      "business": "wealth",
+      "count": 411,
+      "repeat": 2,
+      "escalation": 5,
+      "negative": 63
+    },
+    {
+      "business": "loans",
+      "count": 325,
+      "repeat": 19,
+      "escalation": 28,
+      "negative": 218
+    },
+    {
+      "business": "sme_merchant",
+      "count": 53,
+      "repeat": 1,
+      "escalation": 1,
+      "negative": 37
+    },
+    {
+      "business": "corporate",
+      "count": 7,
+      "repeat": 0,
+      "escalation": 1,
+      "negative": 5
+    }
+  ]
+}

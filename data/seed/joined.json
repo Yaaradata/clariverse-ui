@@ -1,0 +1,75 @@
+{
+  "provenance": "joined",
+  "label": "Joined · needs bank systems",
+  "note": "Illustrative until the dispute platform feeds are connected in discovery.",
+  "disputes": {
+    "beyond_sla_total": 430,
+    "drivers": [
+      {
+        "driver": "Merchant response pending",
+        "cases": 129
+      },
+      {
+        "driver": "Chargeback evidence incomplete",
+        "cases": 104
+      },
+      {
+        "driver": "Network timeline",
+        "cases": 77
+      },
+      {
+        "driver": "Manual re-work after reopen",
+        "cases": 66
+      },
+      {
+        "driver": "Customer not updated",
+        "cases": 54
+      }
+    ],
+    "aged_cases": [
+      {
+        "band": "31–45 days",
+        "cases": 197
+      },
+      {
+        "band": "46–60 days",
+        "cases": 116
+      },
+      {
+        "band": "61–90 days",
+        "cases": 78
+      },
+      {
+        "band": "Over 90 days",
+        "cases": 39
+      }
+    ],
+    "funnel": [
+      {
+        "stage": "Disputes raised",
+        "count": 5120
+      },
+      {
+        "stage": "Acknowledged",
+        "count": 4920
+      },
+      {
+        "stage": "Under investigation",
+        "count": 4330
+      },
+      {
+        "stage": "Resolved",
+        "count": 3200
+      },
+      {
+        "stage": "Resolved within TAT",
+        "count": 2590
+      },
+      {
+        "stage": "Customer credited",
+        "count": 1610
+      }
+    ],
+    "public_dispute_items": 24
+  }
+}

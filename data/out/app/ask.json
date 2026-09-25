@@ -1,0 +1,206 @@
+{
+  "prompts": [
+    {
+      "id": "md_desk",
+      "prompt": "What would reach the MD's desk this week if we did nothing?",
+      "keywords": [
+        "md",
+        "desk",
+        "nothing",
+        "reach",
+        "escalate",
+        "managing",
+        "director",
+        "mds"
+      ],
+      "answer": "The new HDFC Bank app: 680 negative reviews in the window, versions 11.x averaging 2.38★ against 4.39★ on the previous app. Owner: Digital.\nThemes rising with escalation language:\n• Card variant migration and forced upgrade: 256 items, up 106% in the second half of the window vs the first (trend within window); 9 mention the RBI, the ombudsman, a court or a complaint number. Highest rung heard: Voice. Owner: Cards.\n• Customer care unreachable or unhelpful: 175 items, up 138% in the second half of the window vs the first (trend within window); 19 mention the RBI, the ombudsman, a court or a complaint number. Highest rung heard: RBI Ombudsman. Owner: CX.\nEach is routed to its owner with evidence; the MD's office sees only what stays unresolved.",
+      "evidence": [
+        "playstore:com.hdfcbank.android.now:7e3f4801-d92a-4698-b66b-1a3ce0f15d14",
+        "reddit:1wjhzk6",
+        "x:2088473263752298591"
+      ],
+      "links": [
+        {
+          "label": "Open the release pulse",
+          "href": "/hdfc-v3/signal/release-pulse"
+        },
+        {
+          "label": "Open the service promise view",
+          "href": "/hdfc-v3/service-promise"
+        }
+      ]
+    },
+    {
+      "id": "io",
+      "prompt": "Which complaints are most likely to go to the Internal Ombudsman?",
+      "keywords": [
+        "internal",
+        "ombudsman",
+        "io",
+        "complaints",
+        "likely",
+        "climb",
+        "rbi",
+        "escalation"
+      ],
+      "answer": "Climb risk is highest where customers already use escalation language and repeat themselves:\n• Recovery and collection conduct: 44.2% of 43 items carry escalation language; 5 say they have raised it before.\n• Complaints closed without resolution: 26.4% of 246 items carry escalation language; 39 say they have raised it before.\n• Unauthorised transactions: 27.8% of 18 items carry escalation language; 1 say they have raised it before.\nPublic voice shows the language, not the case outcome; IO referrals are joined in discovery.",
+      "evidence": [
+        "reddit:1wnc5cx",
+        "x:2090712431760982232",
+        "x:2088290918256517572"
+      ],
+      "links": [
+        {
+          "label": "See the escalation ladder",
+          "href": "/hdfc-v3/service-promise#ladder"
+        }
+      ]
+    },
+    {
+      "id": "seasonal",
+      "prompt": "Is the card variant migration and forced upgrade spike seasonal or new?",
+      "keywords": [
+        "seasonal",
+        "spike",
+        "new",
+        "trend",
+        "baseline",
+        "card",
+        "variant",
+        "migration"
+      ],
+      "answer": "Card variant migration and forced upgrade: 256 items in the window, up 106% in the second half of the window vs the first (trend within window). First heard in this window on 2026-08-04. This source mix has no earlier history, so LisN shows the trend within the window and makes no baseline claim. Seasonal check: in discovery, using your history.",
+      "evidence": [
+        "reddit:1wjhzk6",
+        "x:2092538406412927003",
+        "reddit:1vrb6jx"
+      ],
+      "links": [
+        {
+          "label": "Open Card variant migration and forced upgrade",
+          "href": "/hdfc-v3/signal/card_variant_migration"
+        }
+      ]
+    },
+    {
+      "id": "tat",
+      "prompt": "Where did we break a TAT promise yesterday?",
+      "keywords": [
+        "tat",
+        "promise",
+        "break",
+        "yesterday",
+        "broke",
+        "turnaround",
+        "timeline",
+        "delay"
+      ],
+      "answer": "On 24 September, 13 public items described a broken timeline: other requests 8, failed-transaction reversal 2, refunds 2, loan disbursal 1. Across the window, the most frequent promise breaks are other requests (281), closure (24), KYC and profile updates (22). Stated TATs are checked against the bank's own commitments in discovery.",
+      "evidence": [
+        "x:2103041328288588260",
+        "x:2102970842456215564",
+        "technofino_1261956"
+      ],
+      "links": [
+        {
+          "label": "Open the promise ledger",
+          "href": "/hdfc-v3/service-promise#ledger"
+        }
+      ]
+    },
+    {
+      "id": "cure",
+      "prompt": "Where did a proactive cure not land?",
+      "keywords": [
+        "cure",
+        "proactive",
+        "land",
+        "declined",
+        "failed",
+        "decline",
+        "blocked"
+      ],
+      "answer": "144 items follow a decline, failed payment or block that a proactive message, auto-reversal or unblock could have handled, and the customer still had to chase it. Leading areas: Account debit freezes and blocks (66), Failed transaction reversal (15), UPI payments failing or pending (13).",
+      "evidence": [
+        "x:2085194811565596800",
+        "x:2084938740020228231",
+        "reddit:1w47ozv"
+      ],
+      "links": [
+        {
+          "label": "See cure watch",
+          "href": "/hdfc-v3/service-promise#cure"
+        }
+      ]
+    },
+    {
+      "id": "product",
+      "prompt": "What should Product hear this week?",
+      "keywords": [
+        "product",
+        "hear",
+        "week",
+        "digital",
+        "feature",
+        "app",
+        "should"
+      ],
+      "answer": "Product and Digital should hear:\n• App speed, loading and crashes: 803 items\n• App features and usability: 288 items\n• Login, MPIN and registration: 212 items\n• Investments, mutual funds and SmartWealth: 18 items\n• Trading and IPO (HDFC Securities): 3 items\nTop feature asks from app reviews: add demat account linking, remove new label from app icon, option to disable integrated keyboard, use native keyboard, enable screenshots, upi id edit and modify option.",
+      "evidence": [
+        "x:2092325917515288832",
+        "x:2102787765566116056",
+        "x:2093499929729659194"
+      ],
+      "links": [
+        {
+          "label": "Who should hear what",
+          "href": "/hdfc-v3/head-cx#routing"
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "prompt": "What are customers saying about the latest app release?",
+      "keywords": [
+        "app",
+        "release",
+        "latest",
+        "version",
+        "update",
+        "new",
+        "mobile",
+        "banking"
+      ],
+      "answer": "Release pulse for the HDFC Bank app: 37.7% of 1,146 window reviews are positive (4–5★). The fix list customers have written:\n• App speed, loading and crashes: 392 negative reviews, first seen in version 7.5.3\n• App features and usability: 87 negative reviews, first seen in version 10.1.7\n• New app and update experience: 82 negative reviews, first seen in version 10.1.7\n• Login, MPIN and registration: 81 negative reviews, first seen in version 10.1.7",
+      "evidence": [
+        "playstore:com.hdfcbank.android.now:7e3f4801-d92a-4698-b66b-1a3ce0f15d14",
+        "playstore:com.hdfcbank.android.now:9a9904a5-b098-415b-9fab-e10f32d94e72",
+        "playstore:com.hdfcbank.android.now:6f2b4e34-22a8-47a4-b5fe-116bdf42ba8c"
+      ],
+      "links": [
+        {
+          "label": "Open the app pulse",
+          "href": "/hdfc-v3/market#app-pulse"
+        }
+      ]
+    },
+    {
+      "id": "icici",
+      "prompt": "Where do customers compare us with ICICI, and where do we lead?",
+      "keywords": [
+        "icici",
+        "compare",
+        "competitor",
+        "lead",
+        "rival",
+        "comparison",
+        "better",
+        "competition"
+      ],
+      "answer": "The ICICI dataset is not loaded in this demo, so LisN does not compare. The competitor view is available on request, built from the same queries and the same taxonomy, with each bank normalised to its own volume.",
+      "evidence": [],
+      "links": []
+    }
+  ],
+  "fallback": "That needs your internal data. It's part of discovery."
+}
