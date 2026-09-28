@@ -100,7 +100,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]}>
-        <AnswerLine sub="Promise breaks and status-seeking are heard in public voice (live). Internal ageing, the internal ladder rungs and dispute feeds are illustrative until discovery.">
+        <AnswerLine sub="Missed timelines and status-seeking are heard in public voice (live). Internal ageing, the internal ladder rungs and dispute feeds are illustrative until discovery.">
           {promiseAnswer(b)}
         </AnswerLine>
       </Tile>
@@ -114,7 +114,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       >
         <Tile
           id="ledger"
-          title="Promise ledger"
+          title="Missed timelines heard in public"
           sub="Where committed timelines snapped, detected from what customers say, with the likely owner and next action."
           prov={["public", "internal"]}
         >
@@ -126,7 +126,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             }}
           >
             <Kpi
-              label="Promise breaks heard"
+              label="Missed timelines heard"
               value={fmt(pb.count)}
               sub={`${fmtSigned(pb.trend.change_pct)} 2nd half vs 1st`}
               href="#ledger-table"
@@ -158,7 +158,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
           <div id="ledger-table">
             <Table
               head={[
-                "Promise",
+                "Request type",
                 "Stated or regulatory TAT",
                 "Breaches heard",
                 "Asking status",

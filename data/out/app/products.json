@@ -104,6 +104,181 @@
      "count": 80,
      "negative": 31,
      "escalation": 4
+    },
+    {
+     "id": "reward_redemption",
+     "label": "Reward redemption and vouchers",
+     "count": 76,
+     "negative": 30,
+     "escalation": 3
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 24,
+     "negative": 21,
+     "escalation": 2
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 21,
+     "negative": 20,
+     "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 18,
+     "negative": 16,
+     "escalation": 1
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 17,
+     "negative": 14,
+     "escalation": 3
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 14,
+     "negative": 13,
+     "escalation": 2
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 12,
+     "negative": 12,
+     "escalation": 3
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 9,
+     "negative": 8,
+     "escalation": 2
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 8,
+     "negative": 8,
+     "escalation": 2
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 8,
+     "negative": 7,
+     "escalation": 0
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 7,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 8,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 4,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 5,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 9,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 3,
+     "negative": 3,
+     "escalation": 1
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 3,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 3,
+     "negative": 2,
+     "escalation": 1
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "merchant_pos",
+     "label": "Merchant QR, POS and sound box",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
     }
    ]
   },
@@ -198,6 +373,132 @@
      "count": 16,
      "negative": 14,
      "escalation": 4
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 14,
+     "negative": 13,
+     "escalation": 4
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 15,
+     "negative": 8,
+     "escalation": 0
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 7,
+     "negative": 7,
+     "escalation": 2
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 6,
+     "negative": 5,
+     "escalation": 1
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 5,
+     "negative": 5,
+     "escalation": 1
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 4,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 9,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "reward_redemption",
+     "label": "Reward redemption and vouchers",
+     "count": 8,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 4,
+     "negative": 3,
+     "escalation": 1
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 3,
+     "negative": 3,
+     "escalation": 1
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "card_limit",
+     "label": "Credit limit",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
     }
    ]
   },
@@ -292,6 +593,146 @@
      "count": 27,
      "negative": 22,
      "escalation": 3
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 21,
+     "negative": 21,
+     "escalation": 5
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 23,
+     "negative": 20,
+     "escalation": 2
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 19,
+     "negative": 15,
+     "escalation": 0
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 20,
+     "negative": 13,
+     "escalation": 2
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 16,
+     "negative": 12,
+     "escalation": 2
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 13,
+     "negative": 12,
+     "escalation": 3
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 13,
+     "negative": 11,
+     "escalation": 6
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 27,
+     "negative": 11,
+     "escalation": 0
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 7,
+     "negative": 6,
+     "escalation": 1
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 6,
+     "negative": 6,
+     "escalation": 2
+    },
+    {
+     "id": "nri_forex",
+     "label": "NRI and forex services",
+     "count": 7,
+     "negative": 6,
+     "escalation": 1
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 8,
+     "negative": 5,
+     "escalation": 1
+    },
+    {
+     "id": "reward_redemption",
+     "label": "Reward redemption and vouchers",
+     "count": 9,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "investments_wealth",
+     "label": "Investments, mutual funds and SmartWealth",
+     "count": 6,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 3,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 3,
+     "negative": 2,
+     "escalation": 1
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 3,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
     }
    ]
   },
@@ -385,6 +826,83 @@
      "label": "Loan closure, foreclosure and documents",
      "count": 6,
      "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 4,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 3,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 3,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 1,
+     "negative": 0,
      "escalation": 0
     }
    ]
@@ -480,6 +998,118 @@
      "count": 7,
      "negative": 7,
      "escalation": 2
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 7,
+     "negative": 5,
+     "escalation": 1
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 5,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 4,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 3,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "card_fees_charges",
+     "label": "Card fees and charges",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
     }
    ]
   },
@@ -573,6 +1203,13 @@
      "label": "Loan closure, foreclosure and documents",
      "count": 1,
      "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 1,
+     "negative": 0,
      "escalation": 0
     }
    ]

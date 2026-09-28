@@ -28,6 +28,10 @@ export function loadBundle(): Bundle {
     ask: read("out", "app", "ask.json"),
     internal: read("seed", "internal.json"),
     joined: read("seed", "joined.json"),
+    products: read("out", "app", "products.json"),
+    storeSeries: read("out", "app", "store_series.json"),
+    responses: read("out", "app", "responses.json"),
+    v3: read("seed", "internal_v3", "aggregates.json"),
   };
   return cache;
 }

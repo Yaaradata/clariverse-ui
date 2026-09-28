@@ -386,13 +386,13 @@ export function MarketView({ b }: { b: Bundle }) {
 
       <Tile
         id="promise-gap"
-        title="Brand promise gap"
-        sub="What HDFC Bank promises in public, against where customers say it breaks. Ordered by negative items."
+        title="What we say vs what customers hear"
+        sub="What HDFC Bank says in public, against where customers say it falls short. Ordered by negative items."
         prov="public"
       >
         <Table
           head={[
-            "Promise",
+            "What we say",
             "Negative items",
             "Where it breaks most",
             "Trend",
@@ -422,8 +422,8 @@ export function MarketView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          Promises paraphrase the bank&apos;s public trust pillars:
-          availability, experience, data intimacy and security.
+          These paraphrase the bank&apos;s public trust pillars: availability,
+          experience, data intimacy and security.
         </MutedNote>
       </Tile>
 

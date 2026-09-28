@@ -348,4 +348,280 @@ export type Bundle = {
   ask: AskFile;
   internal: Internal;
   joined: Internal;
+  products: ProductsFile;
+  storeSeries: StoreSeriesFile;
+  responses: ResponsesFile;
+  v3: InternalV3;
+};
+
+/* ---------------------------------------------------------------- V3 (B7) */
+
+export type ProductId =
+  | "cards"
+  | "payzapp"
+  | "accounts"
+  | "personal_loans"
+  | "home_loans"
+  | "auto_loans"
+  | "insurance"
+  | "digital";
+
+export type PublicProductRow = {
+  id: ProductId;
+  label: string;
+  owner: string;
+  module: string | null;
+  count: number;
+  negative: number;
+  escalation: number;
+  repeat: number;
+  promise_break_mentions: number;
+  share_negative: number | null;
+  trend_change_pct: number | null;
+  top_issue: { id: string; label: string; negative: number } | null;
+  issues: {
+    id: string;
+    label: string;
+    count: number;
+    negative: number;
+    escalation: number;
+  }[];
+};
+
+export type ProductsFile = {
+  note: string;
+  loan_split: Record<string, number>;
+  rows: PublicProductRow[];
+  excluded: Record<string, number>;
+  total_rows: number;
+  total_items: number;
+  reconciles: boolean;
+  trend_rule: string;
+};
+
+export type StoreSummary = {
+  n: number;
+  avg_rating: number | null;
+  share_negative: number | null;
+  share_positive: number | null;
+};
+
+export type StoreSeries = {
+  store: "appstore" | "playstore";
+  store_label: string;
+  records: number;
+  export_start: string;
+  export_end: string;
+  starts_mid_window: boolean;
+  window: StoreSummary;
+  halves: { first: StoreSummary; second: StoreSummary; comparable: boolean };
+  weekly: ({ week: string } & StoreSummary)[];
+  versions: ({ version: string } & StoreSummary)[];
+  by_major: Record<string, StoreSummary>;
+  replies: number;
+};
+
+export type StoreSeriesFile = {
+  rule: string;
+  apps: { app: string; stores: StoreSeries[] }[];
+};
+
+export type ResponsesFile = {
+  definition: string;
+  replies_available: boolean;
+  reviews_in_scope: number;
+  responded: number | null;
+  open_too_long: number | null;
+  pending_note: string;
+};
+
+export type Dial = {
+  total: number;
+  closed: number;
+  closed_or_responded: number;
+  open: number;
+  open_too_long: number;
+  closed_or_responded_pct: number | null;
+  open_pct: number | null;
+  open_too_long_pct_of_open: number | null;
+};
+
+export type DeliverableStats = {
+  measured: number;
+  met: number;
+  outside: number;
+  met_pct: number | null;
+  open_within: number;
+};
+
+export type InternalProductRow = Dial & {
+  id: ProductId;
+  label: string;
+  negative: number;
+  high_impact: number;
+  deliverables: DeliverableStats;
+  negative_weekly: Weekly[];
+  negative_change_pct: number | null;
+  top_issue: { id: string; label: string; negative: number } | null;
+  by_channel: Record<string, number>;
+};
+
+export type CohortRow = {
+  id: string;
+  label: string;
+  source: string;
+  customers: number;
+  interactions: number;
+  customers_with_open_issue: number;
+  open: number;
+  open_over_5h: number;
+  open_over_24h: number;
+  open_too_long: number;
+  negative: number;
+  negative_by_channel: Record<string, number>;
+  products_affected: Record<string, number>;
+  rm_should_know: number;
+  rm_notified_today: number;
+  added_this_week: number;
+  added_this_week_by_lisn: number;
+};
+
+export type TrailStep = {
+  at: string;
+  product: ProductId;
+  product_label: string;
+  team: string;
+  theme: string;
+  theme_label: string;
+  summary: string;
+  flag_set: boolean;
+  flag_follows: boolean;
+  event: boolean;
+  id: string | null;
+  channel: string;
+  channel_label: string;
+  sender: "customer" | "proxy" | null;
+  sentiment: string | null;
+  status: "open" | "closed" | null;
+  first_response_at?: string | null;
+  deliverable_due?: string;
+  breached?: boolean;
+  high_impact: string[];
+};
+
+export type Persona = {
+  masked_id: string;
+  persona: string;
+  descriptor: string;
+  segment: string;
+  cohorts: string[];
+  products: ProductId[];
+  rm_id: string | null;
+  proxy_contacts: number;
+  rm_notified: boolean;
+  story?: boolean;
+  cohort_added_at?: string;
+  cohort_added_by?: string;
+  latest: { at: string; channel: string; product: ProductId; summary: string };
+  open: number;
+  oldest_open_hours: number | null;
+  trail: TrailStep[];
+};
+
+export type LedgerRow = DeliverableStats & {
+  id: string;
+  label: string;
+  tat_label: string;
+  source: "rbi" | "bank";
+  source_note: string | null;
+  compensation: string;
+  total: number;
+  open_too_long: number;
+  themes: string[];
+  products: (DeliverableStats & {
+    product: ProductId;
+    label: string;
+    total: number;
+    open_too_long: number;
+  })[];
+};
+
+export type EscalationEmail = {
+  id: string;
+  received_at: string;
+  sender: "customer" | "proxy";
+  product: ProductId;
+  product_label: string;
+  theme: string;
+  theme_label: string;
+  language: string;
+  subject: string;
+  body: string;
+  backend_status: string;
+  bucket: string;
+  bucket_label: string;
+  draft_reply?: string;
+};
+
+export type InternalV3 = {
+  label: string;
+  note: string;
+  now: string;
+  window: { start: string; end: string };
+  sample: { customers: number; interactions: number; bot_calls: number };
+  dials: Dial;
+  products: InternalProductRow[];
+  channels: (Dial & { channel: string; label: string; negative: number })[];
+  cohorts: CohortRow[];
+  high_impact: {
+    total: number;
+    open: number;
+    open_too_long: number;
+    reasons: { id: string; label: string; count: number }[];
+    by_product: Record<string, number>;
+  };
+  customer_memory: {
+    customers_with_signals: number;
+    multi_product: number;
+    negative_in_two_or_more_products: number;
+    with_open_issue: number;
+    with_open_too_long: number;
+    priority_among_them: number;
+    pairs: { pair: string; customers: number }[];
+  };
+  deliverables: LedgerRow[];
+  cards_issues: {
+    theme: string;
+    label: string;
+    interactions: number;
+    negative: number;
+    open: number;
+    open_too_long: number;
+    deliverable: string;
+    deliv_met_pct: number | null;
+    public_mentions: number;
+    public_negative: number;
+  }[];
+  personas: Persona[];
+  bot_calls: {
+    total: number;
+    resolved: number;
+    unresolved: number;
+    follow_up_after_unresolved: number;
+    priority_unresolved: number;
+    by_reason: { reason: string; calls: number; resolved: number }[];
+  };
+  rm: { should_know: number; notified_today: number; rule: string };
+  triage: {
+    total: number;
+    buckets: { id: string; label: string; count: number }[];
+    manual_minutes_per_email: number;
+    assisted_minutes_per_email: number;
+    baseline_days_to_resolve: number;
+    projected_days_to_resolve: number;
+  };
+  emails: EscalationEmail[];
+  channel_labels: Record<string, string>;
+  high_impact_labels: Record<string, string>;
+  qa: { theme_mix_pass: boolean; reconcile_pass: boolean };
 };

@@ -9,7 +9,7 @@ export default function MarketPage() {
     <Shell
       {...shellProps(b)}
       title="What is the market saying about us?"
-      subtitle="Promise gap · Rising themes · Voices with reach · App pulse · Safety"
+      subtitle="What we say vs what customers hear · Rising themes · Voices with reach · App pulse · Safety"
       drill
     >
       <MarketView b={b} />

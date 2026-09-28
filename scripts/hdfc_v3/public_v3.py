@@ -185,7 +185,7 @@ def build_products() -> dict:
                     else None
                 ),
                 "issues": [
-                    {"id": k, "label": label[k], **v} for k, v in issues[:10]
+                    {"id": k, "label": label[k], **v} for k, v in issues
                 ],
             }
         )

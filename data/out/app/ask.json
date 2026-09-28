@@ -25,8 +25,8 @@
           "href": "/hdfc-v3/signal/release-pulse"
         },
         {
-          "label": "Open the service promise view",
-          "href": "/hdfc-v3/service-promise"
+          "label": "Open the deliverables view",
+          "href": "/hdfc-v3/deliverables"
         }
       ]
     },
@@ -52,7 +52,7 @@
       "links": [
         {
           "label": "See the escalation ladder",
-          "href": "/hdfc-v3/service-promise#ladder"
+          "href": "/hdfc-v3/deliverables#ladder"
         }
       ]
     },
@@ -84,7 +84,7 @@
     },
     {
       "id": "tat",
-      "prompt": "Where did we break a TAT promise yesterday?",
+      "prompt": "Where did we miss a TAT yesterday?",
       "keywords": [
         "tat",
         "promise",
@@ -95,7 +95,7 @@
         "timeline",
         "delay"
       ],
-      "answer": "On 24 September, 13 public items described a broken timeline: other requests 8, failed-transaction reversal 2, refunds 2, loan disbursal 1. Across the window, the most frequent promise breaks are other requests (281), closure (24), KYC and profile updates (22). Stated TATs are checked against the bank's own commitments in discovery.",
+      "answer": "On 24 September, 13 public items described a broken timeline: other requests 8, failed-transaction reversal 2, refunds 2, loan disbursal 1. Across the window, the most frequent missed timelines are other requests (281), closure (24), KYC and profile updates (22). Stated TATs are checked against the bank's own commitments in discovery.",
       "evidence": [
         "x:2103041328288588260",
         "x:2102970842456215564",
@@ -103,8 +103,8 @@
       ],
       "links": [
         {
-          "label": "Open the promise ledger",
-          "href": "/hdfc-v3/service-promise#ledger"
+          "label": "Open the deliverables ledger",
+          "href": "/hdfc-v3/deliverables#ledger"
         }
       ]
     },
@@ -129,7 +129,7 @@
       "links": [
         {
           "label": "See cure watch",
-          "href": "/hdfc-v3/service-promise#cure"
+          "href": "/hdfc-v3/deliverables#cure"
         }
       ]
     },

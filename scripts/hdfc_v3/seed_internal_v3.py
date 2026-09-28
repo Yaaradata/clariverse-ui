@@ -465,9 +465,10 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
         for r in neg:
             d = dt.date.fromisoformat(r["created_at"][:10])
             weeks[(d - dt.timedelta(days=d.weekday())).isoformat()] += 1
-        wk = sorted(weeks.items())
-        first4 = sum(v for w, v in wk if w < "2026-08-24")
-        last4 = sum(v for w, v in wk if w >= "2026-08-24")
+        # Full weeks only (Mon 3 Aug to Sun 20 Sep): partial first and last weeks would read as false dips.
+        wk = sorted((w, v) for w, v in weeks.items() if "2026-08-03" <= w <= "2026-09-14")
+        prev3 = sum(v for w, v in wk if "2026-08-10" <= w <= "2026-08-24")
+        last3 = sum(v for w, v in wk if "2026-08-31" <= w <= "2026-09-14")
         tcount = collections.Counter(r["theme"] for r in neg)
         product_rows.append(
             {
@@ -478,7 +479,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
                 "high_impact": sum(1 for r in rows if r["high_impact"]),
                 "deliverables": deliverable_stats(rows),
                 "negative_weekly": [{"week": w, "count": v} for w, v in wk],
-                "negative_change_pct": round(100 * (last4 - first4) / first4, 1) if first4 else None,
+                "negative_change_pct": round(100 * (last3 - prev3) / prev3, 1) if prev3 else None,
                 "top_issue": {"id": tcount.most_common(1)[0][0], "label": theme_label[tcount.most_common(1)[0][0]], "negative": tcount.most_common(1)[0][1]} if tcount else None,
                 "by_channel": dict(collections.Counter(r["channel"] for r in rows)),
             }
@@ -597,7 +598,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
     cards_inter = by_prod["cards"]
     pub_cards = next(r for r in products_pub["rows"] if r["id"] == "cards")
     pub_by_theme = {i["id"]: i for i in pub_cards["issues"]}
-    for th, n in collections.Counter(r["theme"] for r in cards_inter).most_common(12):
+    for th, n in collections.Counter(r["theme"] for r in cards_inter).most_common():
         rs = [r for r in cards_inter if r["theme"] == th]
         cards_rows.append(
             {

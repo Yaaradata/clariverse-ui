@@ -3,9 +3,13 @@
 import {
   Activity,
   ArrowLeft,
+  CreditCard,
+  Crown,
   Headphones,
+  Inbox,
   MessageSquareText,
   Shield,
+  Smartphone,
   Target,
   Timer,
   Users,
@@ -58,6 +62,31 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
     },
     { href: "/hdfc-v3/head-cx", label: "Head of CX", icon: Users, exec: true },
     {
+      href: withFrom("/hdfc-v3/priority", view),
+      label: "Priority relationships",
+      icon: Crown,
+    },
+    {
+      href: withFrom("/hdfc-v3/module/cards", view),
+      label: "Cards",
+      icon: CreditCard,
+    },
+    {
+      href: withFrom("/hdfc-v3/module/digital", view),
+      label: "Digital: HDFC Bank app",
+      icon: Smartphone,
+    },
+    {
+      href: withFrom("/hdfc-v3/deliverables", view),
+      label: "Are we meeting our deliverables?",
+      icon: Timer,
+    },
+    {
+      href: withFrom("/hdfc-v3/action-queue", view),
+      label: "Action queue: escalation emails",
+      icon: Inbox,
+    },
+    {
       href: withFrom("/hdfc-v3/satisfaction", view),
       label: "Are customers satisfied with their journey?",
       icon: Target,
@@ -66,11 +95,6 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
       href: withFrom("/hdfc-v3/market", view),
       label: "What is the market saying about us?",
       icon: Shield,
-    },
-    {
-      href: withFrom("/hdfc-v3/service-promise", view),
-      label: "Are we keeping our service promise?",
-      icon: Timer,
     },
   ];
   return (
@@ -405,7 +429,7 @@ function ShellInner({
               {meta.scope_note} Window {meta.window.start} to {meta.window.end}.
               Every action is a recommendation routed to its owner; LisN does
               not execute, authorise or decide. Runs inside the bank, on the
-              bank&apos;s approved models, complementary to GenBI.
+              bank&apos;s approved models.
             </footer>
           </main>
         </div>

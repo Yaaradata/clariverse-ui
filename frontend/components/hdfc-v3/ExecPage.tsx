@@ -5,16 +5,11 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { execAnswer, moodLine, whatChanged } from "@/lib/hdfc-v3/copy";
-import {
-  fmt,
-  fmtDateTime,
-  fmtNum,
-  fmtPct,
-  fmtSigned,
-} from "@/lib/hdfc-v3/format";
+import { fmt, fmtDateTime, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import {
   actions,
   improvingItems,
+  itemHref,
   needsYou,
   releasePulse,
   routedItems,
@@ -43,6 +38,13 @@ import {
   type Tone,
   tint,
 } from "./primitives";
+import {
+  CohortStrip,
+  CustomerMemory,
+  DialsRow,
+  ProductFilter,
+  ProductPulseTable,
+} from "./V3Blocks";
 
 type Internal = {
   md_mail: {
@@ -119,7 +121,7 @@ function PulseBox({
       {items.map((s) => (
         <Link
           key={s.id}
-          href={signalHref(s.id, from)}
+          href={itemHref(s, from)}
           style={{
             textDecoration: "none",
             color: "inherit",
@@ -144,6 +146,21 @@ function PulseBox({
                 lineHeight: 1.35,
               }}
             >
+              {s.group ? (
+                <span
+                  style={{
+                    display: "block",
+                    fontSize: 11.5,
+                    fontWeight: 700,
+                    color: C.textMut,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    marginBottom: 2,
+                  }}
+                >
+                  {s.group}
+                </span>
+              ) : null}
               {s.label}
             </span>
             <ChevronRight
@@ -415,7 +432,7 @@ function ActionCard({ s, from }: { s: SignalItem; from: View }) {
   const color = statusColor(s.status);
   return (
     <Link
-      href={signalHref(s.id, from)}
+      href={itemHref(s, from)}
       data-testid="action-card"
       style={{
         textDecoration: "none",
@@ -526,10 +543,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
   const pbCount = sig.flags.promise_break.count;
   const stCount = sig.flags.status_seeking.count;
   const escCount = sig.flags.escalation_intent.count;
-  const beyond = internal.promise_ledger_ageing.reduce(
-    (s, r) => s + r.beyond_tat,
-    0,
-  );
+  const beyond = b.v3.dials.open_too_long;
   const repeatInPromise = sig.promise_by_request_type.reduce(
     (s, p) => s + ((p.repeat_share ?? 0) * p.count) / 100,
     0,
@@ -539,8 +553,14 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
     0,
   );
 
+  const numbers = <DialsRow b={b} />;
+  const cohorts = <CohortStrip b={b} from={from} />;
+
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <ProductFilter b={b} from={from} />
+      {view === "mds-office" ? cohorts : numbers}
+      {view === "mds-office" ? numbers : cohorts}
       <Tile prov={["public", "internal"]} accent>
         <div
           style={{
@@ -650,6 +670,9 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         </div>
       </Tile>
 
+      <ProductPulseTable b={b} from={from} />
+      <CustomerMemory b={b} from={from} />
+
       <div
         style={{
           display: "grid",
@@ -665,9 +688,9 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           title="Are customers satisfied with their journey?"
           micro="Mood · Trust pillars · Top pain"
           answer={moodLine(b)}
-          headlineLabel="Mood index (7 days)"
-          headline={fmtNum(b.mood.value)}
-          caption={`${fmtSigned(b.mood.delta_pts, " pts")} vs window average (1 Aug–24 Sep); scale −100 to +100. No earlier baseline for social sources.`}
+          headlineLabel="Mood, last 7 days vs window average"
+          headline={fmtSigned(b.mood.delta_pts, " pts")}
+          caption="Change in net sentiment against the average for 1 Aug–24 Sep. Public voice skews negative, so read the change, not the level. No earlier baseline for social sources."
           gauges={[
             {
               label: "All voice",
@@ -693,7 +716,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               value: `${fmt(sig.closure_intent.count)} posts`,
               color: C.amber,
               sub: "customers saying they will close",
-              href: `/hdfc-v3/service-promise?from=${from}#closure`,
+              href: `/hdfc-v3/deliverables?from=${from}#closure`,
             },
           ]}
           saying={sayingFor(topPain?.exemplars ?? [])}
@@ -741,26 +764,26 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           prov={["public"]}
         />
         <QuestionCard
-          href={`/hdfc-v3/service-promise?from=${from}`}
+          href={`/hdfc-v3/deliverables?from=${from}`}
           accent={C.violet}
           icon={<Timer size={18} />}
-          title="Are we keeping our service promise?"
-          micro="Promise breaks · Status-seeking · Climb risk"
-          answer={`${fmt(pbCount)} public posts describe a broken timeline; ${fmt(stCount)} ask where something is; ${fmt(escCount)} use escalation language.`}
-          headlineLabel="Promise breaks heard"
+          title="Are we meeting our deliverables?"
+          micro="Missed timelines · Status-seeking · Climb risk"
+          answer={`${fmt(pbCount)} public posts describe a missed timeline; ${fmt(stCount)} ask where something is; ${fmt(escCount)} use escalation language.`}
+          headlineLabel="Missed timelines heard"
           headline={fmt(pbCount)}
           caption={`Trend within window: ${fmtSigned(sig.flags.promise_break.trend.change_pct)} second half vs first half (share of posts).`}
           gauges={[
             {
               label: "Repeat contact",
               value: pbCount ? (100 * repeatInPromise) / pbCount : 0,
-              sub: "of promise breaks",
+              sub: "of missed timelines",
               tone: "red",
             },
             {
               label: "Asking status",
               value: pbCount ? (100 * statusInPromise) / pbCount : 0,
-              sub: "of promise breaks",
+              sub: "of missed timelines",
               tone: "amber",
             },
           ]}
@@ -769,15 +792,15 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               label: "Escalation language",
               value: `${fmt(escCount)} posts`,
               sub: "RBI, ombudsman, court",
-              href: `/hdfc-v3/service-promise?from=${from}#ladder`,
+              href: `/hdfc-v3/deliverables?from=${from}#ladder`,
               color: C.red,
             },
             {
-              label: "Beyond TAT (internal)",
+              label: "Open too long (inside)",
               value: `${fmt(beyond)} cases`,
               color: C.violet,
               sub: "illustrative until discovery",
-              href: `/hdfc-v3/service-promise?from=${from}#ledger`,
+              href: `/hdfc-v3/deliverables?from=${from}#ledger`,
             },
           ]}
           saying={sayingFor(sig.promise_by_request_type[0]?.exemplars ?? [])}
