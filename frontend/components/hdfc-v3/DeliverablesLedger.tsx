@@ -158,10 +158,13 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          Met = closed within the TAT. Outside = closed late, or open and
-          already past the TAT. Working days skip Sundays. Public posts
-          describing a delay are matched to a deliverable by request type;
-          &ldquo;—&rdquo; where public voice has no matching type.
+          RBI rows use published RBI timelines. Where RBI sets none, the bank
+          sets its own TAT; the demo uses the working assumption shown until
+          HDFC&apos;s own SLAs are connected in discovery. Met = closed within
+          the TAT. Outside = closed late, or open and already past the TAT.
+          Working days skip Sundays. Public posts describing a delay are matched
+          to a deliverable by request type; &ldquo;—&rdquo; where public voice
+          has no matching type.
         </MutedNote>
       </Tile>
       <Tile
