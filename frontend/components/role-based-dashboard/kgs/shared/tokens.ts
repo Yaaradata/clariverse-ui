@@ -84,12 +84,3 @@ export function withAlpha(hex: string, a: number): string {
   const b = Number.parseInt(h.slice(4, 6), 16);
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
-
-/** Caps micro-label style (11px minimum, 03 §7). Never apply to text containing "LiSN". */
-export const capsLabel = {
-  fontSize: 11,
-  fontWeight: 700,
-  letterSpacing: "0.08em",
-  textTransform: "uppercase" as const,
-  color: K.textMut,
-};
