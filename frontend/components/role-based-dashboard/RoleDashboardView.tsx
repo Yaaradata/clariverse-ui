@@ -72,6 +72,7 @@ import {
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import { NEOGROUP_INDUSTRY_ID } from "@/lib/role-based-dashboard/neogroupIndustry";
+import { KIDDE_GLOBAL_INDUSTRY_ID } from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
 import {
   isSterlingHeadRetail,
   resolveRoleDataKey,
@@ -4615,6 +4616,48 @@ export function RoleDashboardView({
         onExit={onExit}
         theme={theme}
       />
+    );
+  }
+
+  // Kidde Global — routing shell only; no dashboard content yet.
+  if (industry.id === KIDDE_GLOBAL_INDUSTRY_ID) {
+    return (
+      <div
+        style={{
+          minHeight: "100vh",
+          background: "#010101",
+          color: "#e8e9e9",
+          padding: "40px 48px",
+          fontFamily: "inherit",
+        }}
+      >
+        <button
+          type="button"
+          onClick={onExit}
+          style={{
+            background: "transparent",
+            border: "1px solid #2a2a2a",
+            color: "#a1a1aa",
+            borderRadius: 8,
+            padding: "8px 14px",
+            cursor: onExit ? "pointer" : "default",
+            marginBottom: 28,
+            fontFamily: "inherit",
+            fontSize: 14,
+          }}
+        >
+          ← Back to roles
+        </button>
+        <div style={{ fontSize: 12, letterSpacing: "0.08em", textTransform: "uppercase", color: "#e11d48", fontWeight: 700, marginBottom: 8 }}>
+          Kidde Global
+        </div>
+        <h1 style={{ fontSize: 28, fontWeight: 800, margin: "0 0 10px", color: "#fafafa" }}>
+          {roleDisplayName(role)}
+        </h1>
+        <p style={{ color: "#71717a", fontSize: 15, lineHeight: 1.5, maxWidth: 480, margin: 0 }}>
+          Dashboard content is not wired yet. Routing is live for this industry and role.
+        </p>
+      </div>
     );
   }
 
