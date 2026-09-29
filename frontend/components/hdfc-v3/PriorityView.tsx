@@ -126,8 +126,8 @@ export function PriorityView({ b }: { b: Bundle }) {
         >
           {fmt(openCustomers)} customers on the bank&apos;s priority lists have
           an issue open this morning; {fmt(over24)} issues on list A have been
-          open for more than 24 hours. Their RMs know about {fmt(rmDid)} of{" "}
-          {fmt(rmShould)}.
+          open for more than 24 hours. RMs have been told about {fmt(rmDid)} of
+          the {fmt(rmShould)} customers with an RM alert due.
         </AnswerLine>
       </Tile>
 
@@ -172,7 +172,7 @@ export function PriorityView({ b }: { b: Bundle }) {
               />
             </div>
             <Table
-              head={["Negative mentions by channel", ""]}
+              head={["Negative contacts by channel, since 1 Jul", ""]}
               align={["left", "right"]}
               rows={CHANNEL_ORDER.filter((ch) => c.negative_by_channel[ch]).map(
                 (ch) => [labels[ch] ?? ch, fmt(c.negative_by_channel[ch])],
@@ -193,10 +193,16 @@ export function PriorityView({ b }: { b: Bundle }) {
               customers who should have an RM alert today.
             </div>
             <div style={{ fontSize: 13, color: C.textMut }}>
-              Added this week: {fmt(c.added_this_week)}
-              {c.added_this_week_by_lisn
-                ? ` (${fmt(c.added_this_week_by_lisn)} suggested by LisN, confirmed by the bank)`
-                : ""}
+              {c.id.startsWith("priority") ? (
+                <>
+                  Added to the list this week: {fmt(c.added_this_week)}
+                  {c.added_this_week_by_lisn
+                    ? ` (${fmt(c.added_this_week_by_lisn)} suggested by LisN, confirmed by the bank)`
+                    : ""}
+                </>
+              ) : (
+                "A relationship tier from core banking. LisN reads it; it never adds anyone to a tier."
+              )}
             </div>
           </Tile>
         ))}
@@ -205,7 +211,7 @@ export function PriorityView({ b }: { b: Bundle }) {
       <Tile
         id="customers"
         title="Priority customers this morning"
-        sub="Fictional personas with masked ids. Each row opens the customer's signal trail across products and channels."
+        sub="Twelve fictional example customers with masked ids, oldest open issue first. The tiles above count every cohort customer; this table shows examples, not the full list. Each row opens the customer's signal trail across products and channels."
         prov="internal"
         tone="violet"
       >
@@ -462,7 +468,9 @@ function StepRow({
       ? (age ?? 0) > 24
         ? C.red
         : C.amber
-      : C.green;
+      : s.outcome === "unresolved"
+        ? C.amber
+        : C.green;
   return (
     <li
       style={{
@@ -547,19 +555,21 @@ function StepRow({
             <span style={{ color }}>
               {open
                 ? `Open ${hoursLabel(age)}${s.first_response_at ? "" : " · no response yet"}`
-                : "Closed"}
+                : s.outcome === "unresolved"
+                  ? "Closed, unresolved"
+                  : "Closed"}
             </span>
           )}
           {s.flag_set ? (
             <span style={{ color: C.violet, fontWeight: 700 }}>
-              <Flag size={12} style={{ verticalAlign: "-1px" }} /> LisN sets the
-              sensitivity flag here
+              <Flag size={12} style={{ verticalAlign: "-1px" }} /> LisN attaches
+              the priority-list context here
             </span>
           ) : null}
           {s.flag_follows ? (
             <span style={{ color: C.violet, fontWeight: 700 }}>
-              <Flag size={12} style={{ verticalAlign: "-1px" }} /> Flag follows
-              the customer into {s.product_label}
+              <Flag size={12} style={{ verticalAlign: "-1px" }} /> The context
+              follows the customer into {s.product_label}
             </span>
           ) : null}
           {s.high_impact.map((h) => (
@@ -582,9 +592,14 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
   const flagged = flaggedAt(p);
   const openSteps = p.trail.filter((s) => s.status === "open");
   const oldest = openSteps[0];
-  const priority = p.cohorts.some(
-    (c) => c.startsWith("priority") || c === "uhni",
-  );
+  const events = p.trail.filter((s) => s.event).length;
+  const contactId = p.trail.find((s) => s.contact_id)?.contact_id;
+  // Callback owner: the product owner of the oldest open item (review finding #36).
+  const callbackOwner = oldest
+    ? (b.products.rows.find((r) => r.id === oldest.product)?.owner ?? "cx")
+    : "cx";
+  // D11: a working target for list customers with something open, labelled as such.
+  const onList = p.cohorts.some((c) => c.startsWith("priority"));
   const hasPublic = p.trail.some((s) => s.channel === "social_inbox");
   const hasProxy = p.trail.some((s) => s.sender === "proxy");
   const flagIndex = flagged ? flagged - 1 : -1;
@@ -597,8 +612,12 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             p.trail.length > 1 ? (
               <>
                 <strong style={{ color: C.red }}>Without LisN:</strong>{" "}
-                {p.trail.length} touchpoints, {teams.size}{" "}
-                {teams.size === 1 ? "team" : "teams"}, no one saw the pattern
+                {p.trail.length} touchpoints
+                {events
+                  ? ` (${events} system ${events === 1 ? "event" : "events"} and ${p.trail.length - events} contacts)`
+                  : ""}
+                , {teams.size} {teams.size === 1 ? "team" : "teams"}, no one saw
+                the pattern
                 {p.rm_alert_due && !p.rm_notified
                   ? "; the RM was not told."
                   : "."}{" "}
@@ -621,8 +640,8 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             ? `, the oldest open for ${hoursLabel(ageHours(oldest.at, now))}`
             : ""}
           .
-          {priority
-            ? " Priority target: first response in 5 hours, closure in 24."
+          {onList && openSteps.length
+            ? " Working priority target, to confirm with the bank: first response in 5 hours, closure in 24."
             : ""}
         </AnswerLine>
       </Tile>
@@ -655,7 +674,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           <div>
             Linked contacts:{" "}
             {p.proxy_contacts
-              ? "an assistant, through the bank's own contact records"
+              ? `an assistant${contactId ? ` (contact ${contactId})` : ""}, linked through the bank's own contact records`
               : "none"}
           </div>
         </div>
@@ -663,7 +682,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
 
       <Tile
         title="Signal trail: one customer, every channel"
-        sub="In time order, across products and teams. The sensitivity flag is set once and follows the customer."
+        sub="In time order, across products and teams. The priority-list context comes from the bank's own list; LisN attaches it once and it follows the customer into every product. It is never a new label on the person."
         prov="internal"
         tone="cyan"
       >
@@ -727,19 +746,17 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             icon={<PhoneCall size={16} />}
             title="Callback within the deliverable"
             body={
-              priority
-                ? "Priority target: call back within 5 hours of the first unresolved contact; close within 24 hours or tell the customer why not."
+              onList
+                ? "Working priority target (to confirm with the bank): call back within 5 hours of the first unresolved contact; close within 24 hours or tell the customer why not."
                 : "Call back within the bank TAT for this request; confirm the outcome in writing."
             }
-            owner={
-              p.trail[p.trail.length - 1].team === "Retail" ? "retail" : "cards"
-            }
+            owner={callbackOwner}
           />
           <ActionBox
             icon={<Route size={16} />}
             title="Route to the account owner"
-            body={`One owner for the customer across ${teams.size} ${teams.size === 1 ? "team" : "teams"}: the others see the history and hand off, rather than start again.`}
-            owner="cx"
+            body={`One owner for the customer across ${teams.size} ${teams.size === 1 ? "team" : "teams"}: the relationship manager holds it; the others see the history and hand off, rather than start again.`}
+            owner="rm"
           />
         </div>
         {p.rm_id ? (

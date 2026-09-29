@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hdfc_pipeline"))
 from common import PRODUCT_LABEL, PRODUCTS, dump  # noqa: E402
+import aggregate as A  # noqa: E402  (reply statistics, one definition)
 import method as M  # noqa: E402  (scripts/hdfc_pipeline/method.py: source-weighted trends)
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -106,6 +107,8 @@ def build_products(rows, basis) -> dict:
                 "top_issue": {"id": ranked[0][0], "label": labels[ranked[0][0]], "negative": ranked[0][1]["negative"]} if ranked else None,
                 "issues": [{"id": k, "label": labels[k], **v} for k, v in ranked],
                 "by_source": dict(collections.Counter(r["source"] for r in rs)),
+                # Bank replies on this product's Play Store reviews (review finding #16); None when it has none.
+                "replies": A.resp_stats(ps) if (ps := [r for r in rs if r["source"] == "playstore"]) else None,
             }
         )
     total_rows = sum(r["count"] for r in out)

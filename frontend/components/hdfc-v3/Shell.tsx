@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, Suspense, useState } from "react";
+import { rangeLabel } from "@/lib/hdfc-v3/format";
 import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-v3/types";
 import { AskLisN } from "./AskLisN";
 import { C } from "./primitives";
@@ -297,7 +298,14 @@ function ShellInner({
             flexDirection: "column",
           }}
         >
+          {/* On a phone the header scrolls away instead of holding a fifth of the screen (review finding #44). */}
+          <style>
+            {
+              "@media (max-width: 640px) { .lisn-header { position: static !important; } }"
+            }
+          </style>
           <header
+            className="lisn-header"
             style={{
               position: "sticky",
               top: 0,
@@ -430,10 +438,11 @@ function ShellInner({
                 lineHeight: 1.6,
               }}
             >
-              {meta.scope_note} Window {meta.window.start} to {meta.window.end}.
-              Every action is a recommendation routed to its owner; LisN does
-              not execute, authorise or decide. Runs inside the bank, on the
-              bank&apos;s approved models.
+              {meta.scope_note} Window{" "}
+              {rangeLabel(meta.window.start, meta.window.end)}. Every action is
+              a recommendation routed to its owner; LisN does not execute,
+              authorise or decide. Runs inside the bank, on the bank&apos;s
+              approved models.
             </footer>
           </main>
         </div>

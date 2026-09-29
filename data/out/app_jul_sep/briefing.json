@@ -320,6 +320,9 @@
   "old_app_n": 2947,
   "new_app_avg": 2.39,
   "new_app_n": 1891,
+  "new_app_negative": 1188,
+  "new_app_share_positive": 30.8,
+  "old_app_share_positive": 73.1,
   "fix_list": [
    {
     "issue": "App speed, loading and crashes",

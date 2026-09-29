@@ -110,9 +110,9 @@ export function signalFromRelease(rp: ReleasePulse): SignalItem {
     action: rp.action,
     status: "needs_you",
     count: rp.count,
-    why: `${fmt(rp.count)} negative reviews of the new HDFC Bank app in the window; ${Math.round(rp.share_positive ?? 0)}% of ${fmt(
-      rp.n_reviews,
-    )} reviews are positive.`,
+    why: `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release; ${Math.round(rp.new_app_share_positive ?? 0)}% of its ${fmt(
+      rp.new_app_n,
+    )} reviews are positive, against ${Math.round(rp.old_app_share_positive ?? 0)}% on earlier versions (Play Store and App Store).`,
     pillar: rp.pillar,
   };
 }
@@ -202,39 +202,71 @@ export function improvingItems(b: Bundle): SignalItem[] {
       href: "/hdfc-pulse/v2/business/payzapp",
     });
   }
-  const praise = themeMap(b).app_praise;
-  if (praise) {
-    const s = signalFromTheme(b, praise, "improving");
-    s.why = `${fmt(praise.sentiment.positive)} positive public items in the window.`;
-    out.push(s);
-  }
   return out.slice(0, 3);
 }
 
-const RUNG_WEIGHT: Record<string, number> = {
-  Voice: 0,
-  Repeat: 1,
-  Grievance: 2,
-  "MD's office": 3,
-  IO: 4,
-  "RBI Ombudsman": 5,
-  Public: 6,
-};
+/**
+ * "Where customers praise us" (B7 §4.3), shown beside the improving items but never counted as one: praise is a level,
+ * not a measured improvement (review finding #11).
+ */
+export function praiseItem(b: Bundle): SignalItem | null {
+  const praise = themeMap(b).app_praise;
+  if (!praise) return null;
+  const s = signalFromTheme(b, praise, "watching");
+  s.why = `${fmt(praise.sentiment.positive)} positive public items in the window. Shown for balance; not counted as improving.`;
+  s.action = "Monitor";
+  return s;
+}
 
 /** Actions to take: needs you first, then routed and this week. MD's office view weights reputation and regulatory rungs. */
+/**
+ * The priority-relationships action (review finding #10): issues open over 24 hours for customers on the bank's own
+ * lists, and how many RM alerts that are due have been sent. Internal, illustrative.
+ */
+export function priorityAction(b: Bundle): SignalItem | null {
+  const lists = b.v3.cohorts.filter(
+    (c) => c.id === "priority_a" || c.id === "priority_b",
+  );
+  if (!lists.length) return null;
+  const over24 = lists.reduce((s, c) => s + c.open_over_24h, 0);
+  const due = lists.reduce((s, c) => s + c.rm_should_know, 0);
+  const told = lists.reduce((s, c) => s + c.rm_notified_today, 0);
+  const a = lists.find((c) => c.id === "priority_a");
+  return {
+    id: "priority-relationships",
+    label: "Priority relationships: issues open over 24 hours",
+    group: "Priority relationships",
+    owner: "rm",
+    ownerLabel: "RM",
+    rung: "Voice",
+    action: "Alert the RM",
+    status: "needs_you",
+    count: over24,
+    why: `${fmt(over24)} issues for customers on the bank's priority lists have been open more than 24 hours${a ? ` (${fmt(a.open_over_24h)} on list A)` : ""}; RMs have been told about ${fmt(told)} of the ${fmt(due)} customers with an alert due.`,
+    pillar: "experience",
+    href: "/hdfc-pulse/v2/priority",
+  };
+}
+
+/**
+ * Actions to take (B7 §E1.7, §4.2). Complaints closed without resolution first, the app fix list second, the priority
+ * relationships third; the Head of CX view then adds the next two items.
+ */
 export function actions(
   b: Bundle,
   view: "mds-office" | "head-cx",
 ): SignalItem[] {
-  const list = [...needsYou(b), ...routedItems(b), ...thisWeekItems(b)];
-  if (view === "mds-office") {
-    const [first, ...rest] = list;
-    const sorted = rest.sort(
-      (a, c) => (RUNG_WEIGHT[c.rung] ?? 0) - (RUNG_WEIGHT[a.rung] ?? 0),
-    );
-    return [first, ...sorted].filter(Boolean).slice(0, 3);
-  }
-  return list.slice(0, 5);
+  const all = [...needsYou(b), ...routedItems(b), ...thisWeekItems(b)];
+  const lead = all.find((s) => s.id === LEAD_THEME);
+  const rp = releasePulse(b);
+  const release =
+    all.find((s) => s.id === "release-pulse") ??
+    (rp ? signalFromRelease(rp) : undefined);
+  const pinned = [lead, release, priorityAction(b) ?? undefined].filter(
+    (s): s is SignalItem => Boolean(s),
+  );
+  const rest = all.filter((s) => s !== lead && s !== release);
+  return [...pinned, ...rest].slice(0, view === "mds-office" ? 3 : 5);
 }
 
 export function publicTotal(b: Bundle): number {

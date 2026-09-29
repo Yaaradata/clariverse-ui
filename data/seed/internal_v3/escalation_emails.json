@@ -32,7 +32,7 @@
   "product": "accounts",
   "theme": "kyc_updates",
   "language": "English",
-  "subject": "On behalf of our director: account restriction after re-KYC",
+  "subject": "On behalf of the account holder: account restriction after re-KYC",
   "body": "Writing on behalf of the account holder. Re-KYC documents were submitted at the branch on 19 September. The account still shows as restricted. Please advise.",
   "backend_status": "Re-KYC verified 28 Sep; restriction lifted 28 Sep, 17:30.",
   "bucket": "reply_status",
@@ -73,8 +73,8 @@
   "language": "English",
   "subject": "Card closure request ignored",
   "body": "I asked for my credit card to be closed on 19 September. It is still active and I have been charged an annual fee.",
-  "backend_status": "Closure request open; day 7 of 7 working days today.",
-  "bucket": "call_today"
+  "backend_status": "Closure request open since 19 Sep; the 7-working-day TAT ended 28 Sep, so ₹500 a day now accrues.",
+  "bucket": "escalate"
  },
  {
   "id": "L2-07",
@@ -109,7 +109,7 @@
   "language": "Hinglish",
   "subject": "Account freeze kyun hua",
   "body": "Mera salary account achanak debit freeze ho gaya. Branch ne bola email karo. Rent aur EMI dono atke hain.",
-  "backend_status": "Freeze review opened 26 Sep; bank TAT 3 working days ends today.",
+  "backend_status": "Freeze review opened 26 Sep; the bank TAT of 3 working days ends 30 Sep (tomorrow).",
   "bucket": "call_today"
  },
  {

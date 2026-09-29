@@ -35,6 +35,7 @@
     "summary": "Automated call read out the decline reason. The customer asked for a limit change; the bot could not make it.",
     "sentiment": "negative",
     "status": "closed",
+    "outcome": "unresolved",
     "closed_at": "2026-09-27T19:47+05:30",
     "first_response_at": "2026-09-27T19:44+05:30",
     "flag_set": true

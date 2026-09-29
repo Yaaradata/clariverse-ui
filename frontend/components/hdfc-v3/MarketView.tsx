@@ -126,7 +126,9 @@ const ratingColor = (r: number) =>
   r >= 4 ? C.green : r >= 3 ? C.amber : C.red;
 
 function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
-  const w = a.window;
+  // Play Store where the app has it, so the cards compare apps within one store (review finding #13).
+  const store = a.by_store?.playstore ? "Play Store" : "App Store";
+  const w = a.by_store?.playstore ?? a.by_store?.appstore ?? null;
   if (!w) return null;
   const maxR = Math.max(...Object.values(w.ratings), 1);
   const rc = ratingColor(w.avg_rating);
@@ -154,7 +156,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
       >
         <span style={{ fontSize: 16, fontWeight: 700 }}>{a.app}</span>
         <span style={{ fontSize: 12.5, color: C.textMut }}>
-          {fmt(w.n)} reviews in window
+          {fmt(w.n)} {store} reviews in window
         </span>
       </div>
       <div
@@ -340,7 +342,8 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
       ) : null}
       {a.versions.length ? (
         <div style={{ fontSize: 12.5, color: C.textMut }}>
-          By version:{" "}
+          By version (Play Store and App Store together; the one-store
+          comparison is on the app module):{" "}
           {a.versions
             .slice(0, 4)
             .map(
@@ -542,7 +545,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="app-pulse"
         title="App pulse"
-        sub="Per app: rating distribution, share positive, top issues and, for the new HDFC Bank app and PayZapp, the fix list customers have written."
+        sub="Per app, one store at a time (Play Store where the app has it): rating distribution, share positive, top issues and, for the HDFC Bank app and PayZapp, the fix list customers have written."
         prov="public"
         right={
           <label

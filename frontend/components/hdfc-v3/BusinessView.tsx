@@ -8,6 +8,7 @@
 import Link from "next/link";
 
 import { fmt, fmtPct } from "@/lib/hdfc-v3/format";
+import { DELIVERABLE_REMIT } from "@/lib/hdfc-v3/products";
 import {
   itemHref,
   signalFromTheme,
@@ -49,14 +50,34 @@ export function BusinessView({
     .filter((i) => tm[i.id])
     .slice(0, 6)
     .map((i) => ({ i, t: tm[i.id] }));
-  const actions = issues
-    .slice(0, 3)
-    .map(({ t }) =>
-      signalFromTheme(b, t, t.status === "improving" ? "watching" : t.status),
+  // Actions cite this product's own issue counts, not the bank-wide theme counts (review finding #17).
+  const actions = issues.slice(0, 3).map(({ i, t }) => {
+    const s = signalFromTheme(
+      b,
+      t,
+      t.status === "improving" ? "watching" : t.status,
     );
-  const ledger = b.v3.deliverables
+    s.why = `${fmt(i.count)} public items on ${pub.label.toLowerCase()} (${fmt(i.negative)} negative); ${fmt(i.escalation)} with escalation language.`;
+    return s;
+  });
+  const rows = b.v3.deliverables
     .map((d) => ({ d, p: d.products.find((x) => x.product === product) }))
-    .filter((x) => x.p);
+    .filter((x) => x.p && x.p.total > 0);
+  const inRemit = rows.filter(({ d }) =>
+    (DELIVERABLE_REMIT[d.id] ?? []).includes(product),
+  );
+  const outside = rows.filter(
+    ({ d }) => !(DELIVERABLE_REMIT[d.id] ?? []).includes(product),
+  );
+  const other = outside.reduce(
+    (s, { p }) => ({
+      total: s.total + (p?.total ?? 0),
+      met: s.met + (p?.met ?? 0),
+      outside: s.outside + (p?.outside ?? 0),
+      open_too_long: s.open_too_long + (p?.open_too_long ?? 0),
+    }),
+    { total: 0, met: 0, outside: 0, open_too_long: 0 },
+  );
   const module = MODULES[product];
 
   return (
@@ -95,6 +116,17 @@ export function BusinessView({
         ) : null}
       </Tile>
 
+      {product === "auto_loans" || product === "insurance" ? (
+        <MutedNote>
+          The demo sample&apos;s theme mix for {pub.label.toLowerCase()} is set
+          by hand, not taken from public voice: only {fmt(pub.count)} public
+          items fall in this product, too few to copy.{" "}
+          {product === "auto_loans"
+            ? "It uses the combined mix of all loan products."
+            : "It uses a hand-set mix of bank-sold insurance complaints."}{" "}
+          Discovery replaces it with the bank&apos;s own data.
+        </MutedNote>
+      ) : null}
       <DialsRow b={b} product={product} />
       <CohortStrip b={b} from={from} product={product} />
 
@@ -174,25 +206,60 @@ export function BusinessView({
             "Compensation",
           ]}
           align={["left", "left", "right", "right", "right", "left"]}
-          rows={ledger.map(({ d, p }) => [
-            d.label,
-            <span
-              key="t"
-              style={{ color: d.source === "rbi" ? C.text : C.textMut }}
-            >
-              {d.tat_label}
-            </span>,
-            fmtPct(p?.met_pct),
-            fmt(p?.outside),
-            <span
-              key="o"
-              style={{ color: p?.open_too_long ? C.red : C.textSec }}
-            >
-              {fmt(p?.open_too_long)}
-            </span>,
-            d.compensation,
-          ])}
+          rows={[
+            ...inRemit.map(({ d, p }) => [
+              d.label,
+              <span
+                key="t"
+                style={{ color: d.source === "rbi" ? C.text : C.textMut }}
+              >
+                {d.tat_label}
+              </span>,
+              fmtPct(p?.met_pct),
+              fmt(p?.outside),
+              <span
+                key="o"
+                style={{ color: p?.open_too_long ? C.red : C.textSec }}
+              >
+                {fmt(p?.open_too_long)}
+              </span>,
+              d.compensation,
+            ]),
+            ...(outside.length
+              ? [
+                  [
+                    `Other deliverables (${outside.length} ${outside.length === 1 ? "type" : "types"})`,
+                    <span key="t" style={{ color: C.textMut }}>
+                      their own TATs
+                    </span>,
+                    fmtPct(
+                      other.met + other.outside
+                        ? (100 * other.met) / (other.met + other.outside)
+                        : null,
+                    ),
+                    fmt(other.outside),
+                    <span
+                      key="o"
+                      style={{
+                        color: other.open_too_long ? C.red : C.textSec,
+                      }}
+                    >
+                      {fmt(other.open_too_long)}
+                    </span>,
+                    "—",
+                  ],
+                ]
+              : []),
+          ]}
         />
+        {outside.length ? (
+          <MutedNote>
+            Other deliverables: {fmt(other.total)} contacts tagged to{" "}
+            {pub.label.toLowerCase()} by theme but measured against another
+            product&apos;s deliverable (
+            {outside.map(({ d }) => d.label.toLowerCase()).join("; ")}).
+          </MutedNote>
+        ) : null}
       </Tile>
 
       {!thin ? (

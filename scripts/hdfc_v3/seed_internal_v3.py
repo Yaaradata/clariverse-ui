@@ -274,6 +274,17 @@ def high_impact_reasons(theme_row: dict, channel: str, sender: str) -> list[str]
     return reasons
 
 
+def settled_at(rec):
+    """When the deliverable was met or missed: the first response for "First response to a query", else the closure."""
+    at = rec["first_response_at"] if rec["deliverable"] == "query_response" else rec["closed_at"]
+    return dt.datetime.fromisoformat(at) if at else None
+
+
+def is_breached(rec) -> bool:
+    end = settled_at(rec) or NOW_DT
+    return end > dt.datetime.fromisoformat(rec["deliverable_due"])
+
+
 def make_interaction(idx, cust, product, theme, created, channel, sender, themes, forced=None):
     t = themes.get(theme, {})
     deliv = THEME_DELIVERABLE.get(theme, "query_response")
@@ -312,9 +323,7 @@ def make_interaction(idx, cust, product, theme, created, channel, sender, themes
             rec["closed_at"] = None
         elif not rec["closed_at"]:
             rec["closed_at"] = iso(min(closed, NOW_DT))
-    due = dt.datetime.fromisoformat(rec["deliverable_due"])
-    end = dt.datetime.fromisoformat(rec["closed_at"]) if rec["closed_at"] else NOW_DT
-    rec["breached"] = end > due
+    rec["breached"] = is_breached(rec)
     return rec
 
 
@@ -440,7 +449,8 @@ def dial(rows):
 
 
 def deliverable_stats(rows):
-    measured = [r for r in rows if r["status"] == "closed" or r["breached"]]
+    # Measured: settled (answered, for a first-response deliverable; closed, for the rest) or already past due.
+    measured = [r for r in rows if settled_at(r) or r["breached"]]
     met = sum(1 for r in measured if not r["breached"])
     outside = sum(1 for r in measured if r["breached"])
     return {
@@ -738,7 +748,9 @@ def persona_trail(p, rs, theme_label):
             "at": step["at"],
             "product": step["product"],
             "product_label": PRODUCT_LABEL[step["product"]],
-            "team": OWNER_LABEL_TEAM[next(x["owner"] for x in PRODUCTS if x["id"] == step["product"])],
+            # The social inbox is worked by social care (CX), whatever the product.
+            "team": "Social care (CX)" if step.get("channel") == "social_inbox" else OWNER_LABEL_TEAM[next(x["owner"] for x in PRODUCTS if x["id"] == step["product"])],
+            "outcome": step.get("outcome"),
             "theme": step["theme"],
             "theme_label": theme_label.get(step["theme"], step["theme"]),
             "summary": step["summary"],
@@ -756,6 +768,7 @@ def persona_trail(p, rs, theme_label):
                 "channel": r["channel"],
                 "channel_label": CHANNEL_LABEL[r["channel"]],
                 "sender": r["sender"],
+                "contact_id": r.get("contact_id"),
                 "sentiment": r["sentiment"],
                 "status": r["status"],
                 "first_response_at": r["first_response_at"],
@@ -882,6 +895,20 @@ def enrich(inter):
                 if x < acc:
                     r["dispute_driver"] = name
                     break
+
+
+def link_proxies(customers, inter):
+    """Proxy senders are linked through the bank's own contact records (B7 §E3): each customer with a proxy has a masked
+    contact record, and every message a proxy sends carries that record's id. No randomness: ids come from masked ids."""
+    for c in customers:
+        c["contacts"] = (
+            [{"contact_id": f"PC-{c['masked_id'][-4:]}-1", "relation": "assistant", "linked_via": "bank contact record"}]
+            if c["proxy_contacts"]
+            else []
+        )
+    by = {c["masked_id"]: c for c in customers}
+    for r in inter:
+        r["contact_id"] = by[r["masked_id"]]["contacts"][0]["contact_id"] if r["sender"] == "proxy" else None
 
 
 def reached(r, rung: str) -> bool:
@@ -1077,6 +1104,7 @@ def main():
     inter = build_interactions(customers, mix, themes)
     inter.sort(key=lambda r: r["created_at"])
     enrich(inter)
+    link_proxies(customers, inter)
     bot_calls = build_bot_calls(customers)
     agg = aggregates(customers, inter, bot_calls, ESCALATION_EMAILS, themes, products_pub)
     agg.update(screen_blocks(customers, inter, themes))

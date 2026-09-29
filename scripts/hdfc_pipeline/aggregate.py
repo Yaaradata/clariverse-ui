@@ -109,6 +109,38 @@ def sent_counts(rows):
     return {"positive": c.get("positive", 0), "neutral": c.get("neutral", 0), "negative": c.get("negative", 0)}
 
 
+REPLY_NOW = dt.datetime(2026, 9, 28, 23, 59, tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)))
+
+
+def resp_stats(rs, now=REPLY_NOW):
+    """Bank replies on Play Store reviews: responded, open, open over 48 hours, median reply time, redirect-only."""
+    replied = [r for r in rs if r["reply"]]
+    mins = []
+    for r in replied:
+        if r["reply"]["at"]:
+            d = (dt.datetime.fromisoformat(r["reply"]["at"]) - dt.datetime.fromisoformat(r["created_at"])).total_seconds() / 60
+            if d >= 0:  # reviews edited after the reply have a later timestamp; they count as responded, not in the median
+                mins.append(d)
+    open_ = [r for r in rs if not r["reply"]]
+    otl = [r for r in open_ if (now - dt.datetime.fromisoformat(r["created_at"])).total_seconds() > 48 * 3600]
+    redirect = [r for r in replied if REDIRECT_RE.search(r["reply"]["text"] or "")]
+    return {
+        "reviews": len(rs),
+        "responded": len(replied),
+        "responded_pct": pct(len(replied), len(rs)),
+        "open": len(open_),
+        "open_pct": pct(len(open_), len(rs)),
+        "open_too_long": len(otl),
+        "open_too_long_pct_of_open": pct(len(otl), len(open_)),
+        "open_too_long_pct_of_reviews": pct(len(otl), len(rs)),
+        "median_reply_minutes": round(statistics.median(mins)) if mins else None,
+        "median_reply_hours": round(statistics.median(mins) / 60, 2) if mins else None,
+        "replied_within_48h": sum(1 for x in mins if x <= 48 * 60),
+        "redirect_only": len(redirect),
+        "redirect_only_pct_of_replied": pct(len(redirect), len(replied)),
+    }
+
+
 def clip(text: str, n: int) -> str:
     """Cut at a word boundary, so a handle or tag is never left half-cut."""
     if len(text) <= n:
@@ -439,6 +471,8 @@ def main():
                 "streams": app_streams,
                 "mode": "trend_within_window",
                 "window": rsum(rs),
+                # One store at a time (B7 §4.1): screens compare apps within a store, never across stores.
+                "by_store": {st: rsum([r for r in rs if r["source"] == st]) for st in ("playstore", "appstore") if any(r["source"] == st for r in rs)},
                 "baseline": None,
                 "trend": halves(rs, [r for r in reviews if stream_of(r) in basis], basis),
                 "weekly_avg_rating": [{"week": w, "n": len(v), "avg_rating": round(sum(v) / len(v), 2)} for w, v in sorted(wk.items())],
@@ -489,6 +523,10 @@ def main():
         "old_app_n": len(old_v),
         "new_app_avg": round(sum(r["rating"] for r in new_v) / len(new_v), 2) if new_v else None,
         "new_app_n": len(new_v),
+        # Version 11 (the new release) on its own, so "the new app" is never an all-version figure (review #12).
+        "new_app_negative": sum(1 for r in new_v if r["rating"] <= 2),
+        "new_app_share_positive": pct(sum(1 for r in new_v if r["rating"] >= 4), len(new_v)),
+        "old_app_share_positive": pct(sum(1 for r in old_v if r["rating"] >= 4), len(old_v)),
         "fix_list": bank_app["fix_list"],
         "versions": bank_app["versions"],
         "exemplars": rp_ex,
@@ -533,31 +571,6 @@ def main():
     now = dt.datetime(2026, 9, 28, 23, 59, tzinfo=IST)
     ps = [r for r in reviews if r["source"] == "playstore" and r["entity"] == "hdfc_bank"]
 
-    def resp_stats(rs):
-        replied = [r for r in rs if r["reply"]]
-        hrs = []
-        for r in replied:
-            if r["reply"]["at"]:
-                d = (dt.datetime.fromisoformat(r["reply"]["at"]) - dt.datetime.fromisoformat(r["created_at"])).total_seconds() / 3600
-                if d >= 0:
-                    hrs.append(d)
-        open_ = [r for r in rs if not r["reply"]]
-        otl = [r for r in open_ if (now - dt.datetime.fromisoformat(r["created_at"])).total_seconds() > 48 * 3600]
-        redirect = [r for r in replied if REDIRECT_RE.search(r["reply"]["text"] or "")]
-        return {
-            "reviews": len(rs),
-            "responded": len(replied),
-            "responded_pct": pct(len(replied), len(rs)),
-            "open": len(open_),
-            "open_pct": pct(len(open_), len(rs)),
-            "open_too_long": len(otl),
-            "open_too_long_pct_of_open": pct(len(otl), len(open_)),
-            "median_reply_hours": round(statistics.median(hrs), 1) if hrs else None,
-            "replied_within_48h": sum(1 for x in hrs if x <= 48),
-            "redirect_only": len(redirect),
-            "redirect_only_pct_of_replied": pct(len(redirect), len(replied)),
-        }
-
     by_app = {}
     for app in sorted({r["app_name"] for r in ps}):
         by_app[app] = resp_stats([r for r in ps if r["app_name"] == app])
@@ -599,7 +612,7 @@ def main():
         "trend_basis_streams": sorted(basis),
         "baseline_streams": [],
         "coverage_notes": [
-            "All sources cover 1 July to 28 September 2026; trends compare the two halves of the window (no earlier baseline).",
+            "Coverage differs by source: forums, X and most store exports cover 1 July to 28 September 2026; Reddit changed collector on 1 September and X's last weekly run was capped (no items on 20–22 September). Trends and mood are source-weighted and leave Reddit out; they compare the two halves of the window (no earlier baseline).",
             "Play Store HDFC Bank app reviews start on 25 July (the export holds the latest 5,000): counted in totals, left out of trends.",
             "X and Reddit are filtered to posts that mention HDFC Bank or its products; bank and brand handles are excluded.",
             "Bank replies are visible on Play Store reviews only.",

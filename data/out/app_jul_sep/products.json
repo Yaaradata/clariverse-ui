@@ -328,6 +328,21 @@
     "x": 458,
     "reddit": 1861,
     "forum": 1150
+   },
+   "replies": {
+    "reviews": 133,
+    "responded": 131,
+    "responded_pct": 98.5,
+    "open": 2,
+    "open_pct": 1.5,
+    "open_too_long": 2,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 1.5,
+    "median_reply_minutes": 24,
+    "median_reply_hours": 0.39,
+    "replied_within_48h": 120,
+    "redirect_only": 116,
+    "redirect_only_pct_of_replied": 88.5
    }
   },
   {
@@ -641,6 +656,21 @@
     "x": 117,
     "reddit": 56,
     "forum": 8
+   },
+   "replies": {
+    "reviews": 4762,
+    "responded": 4648,
+    "responded_pct": 97.6,
+    "open": 114,
+    "open_pct": 2.4,
+    "open_too_long": 114,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 2.4,
+    "median_reply_minutes": 18,
+    "median_reply_hours": 0.29,
+    "replied_within_48h": 4240,
+    "redirect_only": 2110,
+    "redirect_only_pct_of_replied": 45.4
    }
   },
   {
@@ -931,7 +961,8 @@
     "x": 959,
     "reddit": 574,
     "forum": 102
-   }
+   },
+   "replies": null
   },
   {
    "id": "personal_loans",
@@ -1195,6 +1226,21 @@
     "x": 160,
     "reddit": 97,
     "forum": 22
+   },
+   "replies": {
+    "reviews": 91,
+    "responded": 88,
+    "responded_pct": 96.7,
+    "open": 3,
+    "open_pct": 3.3,
+    "open_too_long": 3,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 3.3,
+    "median_reply_minutes": 26,
+    "median_reply_hours": 0.44,
+    "replied_within_48h": 84,
+    "redirect_only": 65,
+    "redirect_only_pct_of_replied": 73.9
    }
   },
   {
@@ -1410,6 +1456,21 @@
     "x": 26,
     "reddit": 155,
     "forum": 6
+   },
+   "replies": {
+    "reviews": 96,
+    "responded": 2,
+    "responded_pct": 2.1,
+    "open": 94,
+    "open_pct": 97.9,
+    "open_too_long": 94,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 97.9,
+    "median_reply_minutes": 9,
+    "median_reply_hours": 0.15,
+    "replied_within_48h": 2,
+    "redirect_only": 2,
+    "redirect_only_pct_of_replied": 100.0
    }
   },
   {
@@ -1490,6 +1551,21 @@
     "playstore": 1,
     "x": 2,
     "reddit": 9
+   },
+   "replies": {
+    "reviews": 1,
+    "responded": 1,
+    "responded_pct": 100.0,
+    "open": 0,
+    "open_pct": 0.0,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": 0.0,
+    "median_reply_minutes": 3,
+    "median_reply_hours": 0.05,
+    "replied_within_48h": 1,
+    "redirect_only": 1,
+    "redirect_only_pct_of_replied": 100.0
    }
   },
   {
@@ -1634,6 +1710,21 @@
     "appstore": 1,
     "x": 23,
     "reddit": 23
+   },
+   "replies": {
+    "reviews": 1,
+    "responded": 1,
+    "responded_pct": 100.0,
+    "open": 0,
+    "open_pct": 0.0,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": 0.0,
+    "median_reply_minutes": 4,
+    "median_reply_hours": 0.07,
+    "replied_within_48h": 1,
+    "redirect_only": 1,
+    "redirect_only_pct_of_replied": 100.0
    }
   },
   {
@@ -1884,6 +1975,21 @@
     "x": 67,
     "reddit": 39,
     "forum": 3
+   },
+   "replies": {
+    "reviews": 4763,
+    "responded": 4644,
+    "responded_pct": 97.5,
+    "open": 119,
+    "open_pct": 2.5,
+    "open_too_long": 119,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 2.5,
+    "median_reply_minutes": 5,
+    "median_reply_hours": 0.08,
+    "replied_within_48h": 4466,
+    "redirect_only": 1831,
+    "redirect_only_pct_of_replied": 39.4
    }
   }
  ],

@@ -24,6 +24,7 @@ import {
   improvingItems,
   itemHref,
   needsYou,
+  praiseItem,
   releasePulse,
   routedItems,
   type SignalItem,
@@ -491,6 +492,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
   const needs = needsYou(b);
   const focus = [...routedItems(b), ...thisWeekItems(b)].slice(0, 3);
   const improving = improvingItems(b);
+  const praise = praiseItem(b);
   const acts = actions(b, view);
 
   // Card 1: satisfaction
@@ -508,8 +510,13 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
 
   // Card 2: market
   const riser = fastestRiser(b);
-  const bankApp = b.pulse.apps.find((a) => a.app === "HDFC Bank app");
-  const payzapp = b.pulse.apps.find((a) => a.app === "PayZapp");
+  // One store at a time (B7 §4.1): both gauges are Play Store, with their counts.
+  const playOf = (app: string) =>
+    b.storeSeries.apps
+      .find((a) => a.app === app)
+      ?.stores.find((s) => s.store === "playstore")?.window;
+  const playBank = playOf("HDFC Bank app");
+  const playPayZapp = playOf("PayZapp");
 
   // Card 3: service promise
   const sig = b.signals;
@@ -635,7 +642,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           />
           <PulseBox
             title="3. What's improving or stable"
-            items={improving}
+            items={praise ? [...improving, praise] : improving}
             from={from}
             empty="Stable."
             color={C.green}
@@ -701,20 +708,20 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           icon={<Shield size={18} />}
           title="What is the market saying about us?"
           micro="Themes · Rising · App pulse"
-          answer={`${riser?.label ?? "—"} is rising fastest. The new HDFC Bank app has ${fmtPct(bankApp?.window?.share_positive)} positive reviews in the window.`}
+          answer={`${riser?.label ?? "—"} is rising fastest. Version 11 of the HDFC Bank app, the new release, has ${fmtPct(rp?.new_app_share_positive)} positive reviews, against ${fmtPct(rp?.old_app_share_positive)} on earlier versions.`}
           headlineLabel="Public posts and reviews"
           headline={fmt(b.themes.total_items)}
           caption={`HDFC Bank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}. X, Reddit, forums, Play Store, App Store.`}
           gauges={[
             {
               label: "HDFC Bank app",
-              value: bankApp?.window?.share_positive ?? 0,
-              sub: "4–5★ share",
+              value: playBank?.share_positive ?? 0,
+              sub: `4–5★ · Play Store · ${fmt(playBank?.n)} reviews from 25 Jul`,
             },
             {
               label: "PayZapp",
-              value: payzapp?.window?.share_positive ?? 0,
-              sub: "4–5★ share",
+              value: playPayZapp?.share_positive ?? 0,
+              sub: `4–5★ · Play Store · ${fmt(playPayZapp?.n)} reviews`,
             },
           ]}
           stats={[
@@ -727,9 +734,9 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
             },
             {
               label: "App pulse",
-              value: rp ? `${fmt(rp.count)} negative reviews` : "—",
+              value: rp ? `${fmt(rp.new_app_negative)} negative reviews` : "—",
               color: C.red,
-              sub: "new HDFC Bank app",
+              sub: `version 11 of the HDFC Bank app (${fmt(rp?.count)} across all versions)`,
               href: signalHref("release-pulse", from),
             },
           ]}
@@ -764,7 +771,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
             {
               label: "Escalation language",
               value: `${fmt(escCount)} posts`,
-              sub: "RBI, ombudsman, court",
+              sub: "escalation language",
               href: `/hdfc-pulse/v2/deliverables?from=${from}#ladder`,
               color: C.red,
             },
@@ -785,7 +792,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         title="Actions to take"
         sub={
           view === "mds-office"
-            ? "At most three. Reputation and regulatory rungs first."
+            ? "At most three: complaints closed without resolution, the app fix list, then priority relationships."
             : "At most five, each with its owner, rung and recommended action."
         }
         prov={["public", "internal"]}
@@ -838,7 +845,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         <Tile
           id="routing"
           title="Who should hear what"
-          sub="Each owner's top three themes from public voice. CX hears everything."
+          sub="Each owner's top three themes from public voice, with the relationship managers. Counts are theme mentions: a post can mention up to three themes."
           prov="public"
         >
           <div
@@ -861,9 +868,10 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
                   "compliance",
                   "fraud_cyber",
                   "operations",
+                  "rm",
                 ].includes(r.owner),
               )
-              .slice(0, 9)
+              .slice(0, 10)
               .map((r) => (
                 <div
                   key={r.owner}
@@ -891,7 +899,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
                       {r.owner_label}
                     </span>
                     <span style={{ fontSize: 12.5, color: C.textMut }}>
-                      {fmt(r.total)} items
+                      {fmt(r.total)} theme mentions
                     </span>
                   </div>
                   <ol

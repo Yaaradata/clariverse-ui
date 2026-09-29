@@ -27,7 +27,7 @@ export function whatChanged(b: Bundle): string {
   const parts: string[] = [];
   if (lead)
     parts.push(
-      `${lead.label} leads: ${fmt(lead.count)} public items, ${fmt(lead.escalation_count)} of them naming a regulator, court or ombudsman.`,
+      `${lead.label} leads: ${fmt(lead.count)} public items, ${fmt(lead.escalation_count)} of them with escalation language.`,
     );
   if (top && top.id !== lead?.id)
     parts.push(`${top.label} is the fastest riser: ${trendWords(top)}.`);

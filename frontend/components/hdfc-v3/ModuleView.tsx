@@ -77,21 +77,6 @@ function Section({
 }
 
 /** Feature asks must match the row: keep only asks whose words belong to the row's theme. */
-const ASK_MATCH: Record<string, RegExp> = {
-  app_speed_crash: /speed|slow|load|crash|lag|perform|fast|hang|freez/i,
-  app_usability:
-    /option|show|add|remove|feature|breakdown|label|view|menu|swip|icon/i,
-  new_app_release:
-    /keyboard|screenshot|old app|previous|revert|disable|update/i,
-  login_mpin: /login|mpin|pin|keyboard|password|otp|regist/i,
-  device_security_block: /screenshot|security|root|block|alert|developer/i,
-  upi_failures: /upi/i,
-};
-
-export function asksFor(theme: string, asks: string[]): string[] {
-  const re = ASK_MATCH[theme];
-  return re ? asks.filter((a) => re.test(a)) : [];
-}
 
 function StoreChart({ s }: { s: StoreSeries }) {
   return (
@@ -196,9 +181,10 @@ export function DigitalModule({ b }: { b: Bundle }) {
         <AnswerLine
           sub={`Compared within each store only. Play Store: v11 averages ${p11?.avg_rating?.toFixed(1)}★ over ${fmt(p11?.n)} reviews against ${p9?.avg_rating?.toFixed(1)}★ for v9 (${fmt(p9?.n)}). App Store: v11 averages ${i11?.avg_rating?.toFixed(1)}★ (${fmt(i11?.n)}) against ${i10?.avg_rating?.toFixed(1)}★ for v10 (${fmt(i10?.n)}).`}
         >
-          {RELEASE_LABEL}: {fmt(rp.count)} negative reviews of the new HDFC Bank
-          app in the window, led by speed and loading. The fix list below is
-          what customers have written.
+          {RELEASE_LABEL}: {fmt(rp.new_app_negative)} negative reviews of
+          version 11, the new release ({fmt(rp.count)} across all versions), led
+          by {(rp.fix_list[0]?.issue ?? "—").toLowerCase()}. The fix list below
+          is what customers have written.
         </AnswerLine>
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
           <Status value="needs_you" />
@@ -235,28 +221,20 @@ export function DigitalModule({ b }: { b: Bundle }) {
 
         <Section n={3} title="The fix list" id="fix-list">
           <Table
-            head={[
-              "Issue",
-              "Negative reviews",
-              "First seen",
-              "Latest version",
-              "Customers ask for",
-            ]}
-            align={["left", "right", "left", "left", "left"]}
-            rows={rp.fix_list.slice(0, 7).map((f) => {
-              const asks = asksFor(f.theme, f.feature_asks);
-              return [
+            head={["Issue", "Negative reviews", "First seen", "Latest version"]}
+            align={["left", "right", "left", "left"]}
+            rows={rp.fix_list
+              .slice(0, 7)
+              .map((f) => [
                 f.issue,
                 fmt(f.count),
                 f.first_seen_version ? `v${f.first_seen_version}` : "—",
                 f.latest_version_seen ? `v${f.latest_version_seen}` : "—",
-                asks.slice(0, 2).join("; ") || "—",
-              ];
-            })}
+              ])}
           />
           <MutedNote>
-            &ldquo;Customers ask for&rdquo; lists only feature requests that
-            belong to the row&apos;s issue; unrelated asks are left out.
+            Feature asks are not shown: the requests in the reviews could not be
+            tied to a single issue reliably.
           </MutedNote>
         </Section>
 

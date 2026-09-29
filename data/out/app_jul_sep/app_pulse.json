@@ -45,6 +45,34 @@
     "share_positive": 43.8,
     "share_negative": 50.0
    },
+   "by_store": {
+    "playstore": {
+     "n": 13,
+     "ratings": {
+      "1": 4,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 6
+     },
+     "avg_rating": 3.31,
+     "share_positive": 53.8,
+     "share_negative": 38.5
+    },
+    "appstore": {
+     "n": 3,
+     "ratings": {
+      "1": 3,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
+   },
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
@@ -202,6 +230,34 @@
     "avg_rating": 3.27,
     "share_positive": 55.0,
     "share_negative": 39.9
+   },
+   "by_store": {
+    "playstore": {
+     "n": 5000,
+     "ratings": {
+      "1": 1703,
+      "2": 268,
+      "3": 251,
+      "4": 418,
+      "5": 2360
+     },
+     "avg_rating": 3.29,
+     "share_positive": 55.6,
+     "share_negative": 39.4
+    },
+    "appstore": {
+     "n": 325,
+     "ratings": {
+      "1": 145,
+      "2": 10,
+      "3": 21,
+      "4": 21,
+      "5": 128
+     },
+     "avg_rating": 2.93,
+     "share_positive": 45.8,
+     "share_negative": 47.7
+    }
    },
    "baseline": null,
    "trend": {
@@ -638,6 +694,34 @@
     "share_positive": 49.6,
     "share_negative": 47.5
    },
+   "by_store": {
+    "playstore": {
+     "n": 281,
+     "ratings": {
+      "1": 125,
+      "2": 11,
+      "3": 8,
+      "4": 18,
+      "5": 119
+     },
+     "avg_rating": 2.98,
+     "share_positive": 48.8,
+     "share_negative": 48.4
+    },
+    "appstore": {
+     "n": 64,
+     "ratings": {
+      "1": 26,
+      "2": 2,
+      "3": 2,
+      "4": 1,
+      "5": 33
+     },
+     "avg_rating": 3.2,
+     "share_positive": 53.1,
+     "share_negative": 43.8
+    }
+   },
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
@@ -827,6 +911,34 @@
     "avg_rating": 3.58,
     "share_positive": 62.5,
     "share_negative": 31.7
+   },
+   "by_store": {
+    "playstore": {
+     "n": 438,
+     "ratings": {
+      "1": 101,
+      "2": 28,
+      "3": 24,
+      "4": 42,
+      "5": 243
+     },
+     "avg_rating": 3.68,
+     "share_positive": 65.1,
+     "share_negative": 29.5
+    },
+    "appstore": {
+     "n": 130,
+     "ratings": {
+      "1": 43,
+      "2": 8,
+      "3": 9,
+      "4": 15,
+      "5": 55
+     },
+     "avg_rating": 3.24,
+     "share_positive": 53.8,
+     "share_negative": 39.2
+    }
    },
    "baseline": null,
    "trend": {
@@ -1059,6 +1171,34 @@
     "avg_rating": 1.63,
     "share_positive": 12.7,
     "share_negative": 82.4
+   },
+   "by_store": {
+    "playstore": {
+     "n": 94,
+     "ratings": {
+      "1": 71,
+      "2": 5,
+      "3": 5,
+      "4": 3,
+      "5": 10
+     },
+     "avg_rating": 1.68,
+     "share_positive": 13.8,
+     "share_negative": 80.9
+    },
+    "appstore": {
+     "n": 8,
+     "ratings": {
+      "1": 8,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
    },
    "baseline": null,
    "trend": {
@@ -1374,6 +1514,34 @@
     "share_positive": 22.8,
     "share_negative": 72.2
    },
+   "by_store": {
+    "playstore": {
+     "n": 66,
+     "ratings": {
+      "1": 41,
+      "2": 4,
+      "3": 4,
+      "4": 1,
+      "5": 16
+     },
+     "avg_rating": 2.2,
+     "share_positive": 25.8,
+     "share_negative": 68.2
+    },
+    "appstore": {
+     "n": 13,
+     "ratings": {
+      "1": 11,
+      "2": 1,
+      "3": 0,
+      "4": 1,
+      "5": 0
+     },
+     "avg_rating": 1.31,
+     "share_positive": 7.7,
+     "share_negative": 92.3
+    }
+   },
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
@@ -1645,6 +1813,34 @@
     "avg_rating": 2.98,
     "share_positive": 48.3,
     "share_negative": 47.7
+   },
+   "by_store": {
+    "playstore": {
+     "n": 4687,
+     "ratings": {
+      "1": 2017,
+      "2": 190,
+      "3": 184,
+      "4": 343,
+      "5": 1953
+     },
+     "avg_rating": 3.01,
+     "share_positive": 49.0,
+     "share_negative": 47.1
+    },
+    "appstore": {
+     "n": 219,
+     "ratings": {
+      "1": 126,
+      "2": 8,
+      "3": 12,
+      "4": 5,
+      "5": 68
+     },
+     "avg_rating": 2.46,
+     "share_positive": 33.3,
+     "share_negative": 61.2
+    }
    },
    "baseline": null,
    "trend": {
@@ -2169,6 +2365,34 @@
     "share_positive": 32.9,
     "share_negative": 67.1
    },
+   "by_store": {
+    "playstore": {
+     "n": 62,
+     "ratings": {
+      "1": 33,
+      "2": 5,
+      "3": 0,
+      "4": 2,
+      "5": 22
+     },
+     "avg_rating": 2.6,
+     "share_positive": 38.7,
+     "share_negative": 61.3
+    },
+    "appstore": {
+     "n": 14,
+     "ratings": {
+      "1": 13,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 1.29,
+     "share_positive": 7.1,
+     "share_negative": 92.9
+    }
+   },
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
@@ -2478,6 +2702,34 @@
     "avg_rating": 4.41,
     "share_positive": 84.7,
     "share_negative": 12.8
+   },
+   "by_store": {
+    "playstore": {
+     "n": 695,
+     "ratings": {
+      "1": 70,
+      "2": 10,
+      "3": 18,
+      "4": 35,
+      "5": 562
+     },
+     "avg_rating": 4.45,
+     "share_positive": 85.9,
+     "share_negative": 11.5
+    },
+    "appstore": {
+     "n": 18,
+     "ratings": {
+      "1": 9,
+      "2": 2,
+      "3": 0,
+      "4": 1,
+      "5": 6
+     },
+     "avg_rating": 2.61,
+     "share_positive": 38.9,
+     "share_negative": 61.1
+    }
    },
    "baseline": null,
    "trend": {

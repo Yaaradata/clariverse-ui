@@ -60,7 +60,7 @@ def main():
         "keywords": ["md", "desk", "nothing", "reach", "escalate", "managing", "director", "mds"],
         "answer": "\n".join(
             [f"Complaints closed without resolution: {fmt(tm['complaint_handling']['count'])} public items, {fmt(tm['complaint_handling']['escalation_count'])} with escalation language. Owner: CX."]
-            + ([f"The new HDFC Bank app: {fmt(rp['count'])} negative reviews in the window. Owner: Digital."] if rp else [])
+            + ([f"The HDFC Bank app (all versions): {fmt(rp['count'])} negative reviews in the window. Owner: Digital."] if rp else [])
             + ["Themes rising fastest:"] + lines
         ),
         "evidence": cite(tm["complaint_handling"]["exemplars"][:2] + [e for t in needs for e in t["exemplars"][:1]], 4),
@@ -141,7 +141,7 @@ def main():
         "id": "replies",
         "prompt": "Are we answering customers in public?",
         "keywords": ["reply", "replies", "respond", "responded", "answer", "public", "review", "store"],
-        "answer": f"On the Play Store the bank replied to {a['responded_pct']}% of {fmt(a['reviews'])} reviews in the window, with a median reply time of {a['median_reply_hours']} hours. But {n['redirect_only_pct_of_replied']}% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. {fmt(a['open_too_long'])} reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
+        "answer": f"On the Play Store the bank replied to {a['responded_pct']}% of {fmt(a['reviews'])} reviews in the window, with a median reply time of {a['median_reply_minutes']} minutes. But {n['redirect_only_pct_of_replied']}% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. {fmt(a['open_too_long'])} reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
         "evidence": cite(rp["exemplars"] if rp else [], 2),
         "links": [{"label": "See the numbers", "href": f"{BASE}/mds-office#dials"}],
     })

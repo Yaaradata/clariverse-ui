@@ -17,10 +17,10 @@
   "closed": 30565,
   "closed_or_responded": 31976,
   "open": 1435,
-  "open_too_long": 357,
+  "open_too_long": 341,
   "closed_or_responded_pct": 99.9,
   "open_pct": 4.5,
-  "open_too_long_pct_of_open": 24.9
+  "open_too_long_pct_of_open": 23.8
  },
  "products": [
   {
@@ -30,18 +30,18 @@
    "closed": 9260,
    "closed_or_responded": 9560,
    "open": 307,
-   "open_too_long": 75,
+   "open_too_long": 71,
    "closed_or_responded_pct": 99.9,
    "open_pct": 3.2,
-   "open_too_long_pct_of_open": 24.4,
+   "open_too_long_pct_of_open": 23.1,
    "negative": 2849,
    "high_impact": 122,
    "deliverables": {
-    "measured": 9335,
-    "met": 7568,
-    "outside": 1767,
-    "met_pct": 81.1,
-    "open_within": 232
+    "measured": 9347,
+    "met": 8236,
+    "outside": 1111,
+    "met_pct": 88.1,
+    "open_within": 236
    },
    "negative_weekly": [
     {
@@ -117,18 +117,18 @@
    "closed": 2694,
    "closed_or_responded": 2756,
    "open": 64,
-   "open_too_long": 16,
+   "open_too_long": 15,
    "closed_or_responded_pct": 99.9,
    "open_pct": 2.3,
-   "open_too_long_pct_of_open": 25.0,
+   "open_too_long_pct_of_open": 23.4,
    "negative": 1410,
    "high_impact": 29,
    "deliverables": {
-    "measured": 2710,
-    "met": 2207,
-    "outside": 503,
-    "met_pct": 81.4,
-    "open_within": 48
+    "measured": 2718,
+    "met": 2600,
+    "outside": 118,
+    "met_pct": 95.7,
+    "open_within": 49
    },
    "negative_weekly": [
     {
@@ -204,18 +204,18 @@
    "closed": 9103,
    "closed_or_responded": 9875,
    "open": 779,
-   "open_too_long": 205,
+   "open_too_long": 202,
    "closed_or_responded_pct": 99.9,
    "open_pct": 7.9,
-   "open_too_long_pct_of_open": 26.3,
+   "open_too_long_pct_of_open": 25.9,
    "negative": 4293,
    "high_impact": 392,
    "deliverables": {
-    "measured": 9308,
-    "met": 7365,
-    "outside": 1943,
-    "met_pct": 79.1,
-    "open_within": 574
+    "measured": 9331,
+    "met": 8238,
+    "outside": 1093,
+    "met_pct": 88.3,
+    "open_within": 577
    },
    "negative_weekly": [
     {
@@ -291,18 +291,18 @@
    "closed": 1701,
    "closed_or_responded": 1784,
    "open": 84,
-   "open_too_long": 21,
+   "open_too_long": 20,
    "closed_or_responded_pct": 99.9,
    "open_pct": 4.7,
-   "open_too_long_pct_of_open": 25.0,
+   "open_too_long_pct_of_open": 23.8,
    "negative": 810,
    "high_impact": 70,
    "deliverables": {
-    "measured": 1722,
-    "met": 1391,
-    "outside": 331,
-    "met_pct": 80.8,
-    "open_within": 63
+    "measured": 1726,
+    "met": 1595,
+    "outside": 131,
+    "met_pct": 92.4,
+    "open_within": 64
    },
    "negative_weekly": [
     {
@@ -385,10 +385,10 @@
    "negative": 625,
    "high_impact": 36,
    "deliverables": {
-    "measured": 1407,
-    "met": 1183,
-    "outside": 224,
-    "met_pct": 84.1,
+    "measured": 1412,
+    "met": 1312,
+    "outside": 100,
+    "met_pct": 92.9,
     "open_within": 41
    },
    "negative_weekly": [
@@ -465,18 +465,18 @@
    "closed": 835,
    "closed_or_responded": 870,
    "open": 35,
-   "open_too_long": 10,
+   "open_too_long": 8,
    "closed_or_responded_pct": 100.0,
    "open_pct": 4.0,
-   "open_too_long_pct_of_open": 28.6,
+   "open_too_long_pct_of_open": 22.9,
    "negative": 406,
    "high_impact": 36,
    "deliverables": {
-    "measured": 845,
-    "met": 680,
-    "outside": 165,
-    "met_pct": 80.5,
-    "open_within": 25
+    "measured": 848,
+    "met": 786,
+    "outside": 62,
+    "met_pct": 92.7,
+    "open_within": 27
    },
    "negative_weekly": [
     {
@@ -552,18 +552,18 @@
    "closed": 854,
    "closed_or_responded": 919,
    "open": 67,
-   "open_too_long": 18,
+   "open_too_long": 16,
    "closed_or_responded_pct": 99.8,
    "open_pct": 7.3,
-   "open_too_long_pct_of_open": 26.9,
+   "open_too_long_pct_of_open": 23.9,
    "negative": 454,
    "high_impact": 39,
    "deliverables": {
-    "measured": 872,
-    "met": 690,
-    "outside": 182,
-    "met_pct": 79.1,
-    "open_within": 49
+    "measured": 877,
+    "met": 811,
+    "outside": 66,
+    "met_pct": 92.5,
+    "open_within": 51
    },
    "negative_weekly": [
     {
@@ -639,18 +639,18 @@
    "closed": 4717,
    "closed_or_responded": 4766,
    "open": 52,
-   "open_too_long": 6,
+   "open_too_long": 3,
    "closed_or_responded_pct": 99.9,
    "open_pct": 1.1,
-   "open_too_long_pct_of_open": 11.5,
+   "open_too_long_pct_of_open": 5.8,
    "negative": 2522,
    "high_impact": 48,
    "deliverables": {
-    "measured": 4723,
-    "met": 3938,
-    "outside": 785,
-    "met_pct": 83.4,
-    "open_within": 46
+    "measured": 4747,
+    "met": 4669,
+    "outside": 78,
+    "met_pct": 98.4,
+    "open_within": 49
    },
    "negative_weekly": [
     {
@@ -727,10 +727,10 @@
    "closed": 10943,
    "closed_or_responded": 11476,
    "open": 533,
-   "open_too_long": 139,
+   "open_too_long": 133,
    "closed_or_responded_pct": 100.0,
    "open_pct": 4.6,
-   "open_too_long_pct_of_open": 26.1,
+   "open_too_long_pct_of_open": 25.0,
    "negative": 4843
   },
   {
@@ -740,10 +740,10 @@
    "closed": 1897,
    "closed_or_responded": 1988,
    "open": 91,
-   "open_too_long": 24,
+   "open_too_long": 23,
    "closed_or_responded_pct": 100.0,
    "open_pct": 4.6,
-   "open_too_long_pct_of_open": 26.4,
+   "open_too_long_pct_of_open": 25.3,
    "negative": 794
   },
   {
@@ -753,10 +753,10 @@
    "closed": 6198,
    "closed_or_responded": 6436,
    "open": 238,
-   "open_too_long": 53,
+   "open_too_long": 50,
    "closed_or_responded_pct": 100.0,
    "open_pct": 3.7,
-   "open_too_long_pct_of_open": 22.3,
+   "open_too_long_pct_of_open": 21.0,
    "negative": 2713
   },
   {
@@ -766,10 +766,10 @@
    "closed": 4240,
    "closed_or_responded": 4450,
    "open": 223,
-   "open_too_long": 58,
+   "open_too_long": 54,
    "closed_or_responded_pct": 99.7,
    "open_pct": 5.0,
-   "open_too_long_pct_of_open": 26.0,
+   "open_too_long_pct_of_open": 24.2,
    "negative": 1860
   },
   {
@@ -792,10 +792,10 @@
    "closed": 2773,
    "closed_or_responded": 2882,
    "open": 109,
-   "open_too_long": 24,
+   "open_too_long": 23,
    "closed_or_responded_pct": 100.0,
    "open_pct": 3.8,
-   "open_too_long_pct_of_open": 22.0,
+   "open_too_long_pct_of_open": 21.1,
    "negative": 1208
   },
   {
@@ -818,10 +818,10 @@
    "closed": 1891,
    "closed_or_responded": 1960,
    "open": 77,
-   "open_too_long": 23,
+   "open_too_long": 22,
    "closed_or_responded_pct": 99.6,
    "open_pct": 3.9,
-   "open_too_long_pct_of_open": 29.9,
+   "open_too_long_pct_of_open": 28.6,
    "negative": 830
   }
  ],
@@ -836,7 +836,7 @@
    "open": 24,
    "open_over_5h": 24,
    "open_over_24h": 16,
-   "open_too_long": 1,
+   "open_too_long": 0,
    "negative": 200,
    "negative_by_channel": {
     "inbound_voice": 68,
@@ -870,7 +870,7 @@
    "open": 55,
    "open_over_5h": 53,
    "open_over_24h": 44,
-   "open_too_long": 14,
+   "open_too_long": 13,
    "negative": 547,
    "negative_by_channel": {
     "inbound_voice": 194,
@@ -907,7 +907,7 @@
    "open": 58,
    "open_over_5h": 57,
    "open_over_24h": 42,
-   "open_too_long": 10,
+   "open_too_long": 8,
    "negative": 703,
    "negative_by_channel": {
     "inbound_voice": 266,
@@ -944,7 +944,7 @@
    "open": 215,
    "open_over_5h": 209,
    "open_over_24h": 172,
-   "open_too_long": 47,
+   "open_too_long": 45,
    "negative": 2241,
    "negative_by_channel": {
     "inbound_voice": 822,
@@ -975,7 +975,7 @@
  "high_impact": {
   "total": 772,
   "open": 71,
-  "open_too_long": 21,
+  "open_too_long": 19,
   "reasons": [
    {
     "id": "regulator_named",
@@ -1019,7 +1019,7 @@
   "multi_product": 4538,
   "negative_in_two_or_more_products": 2917,
   "with_open_issue": 813,
-  "with_open_too_long": 235,
+  "with_open_too_long": 226,
   "priority_among_them": 586,
   "pairs": [
    {
@@ -1994,66 +1994,66 @@
    "source_note": null,
    "compensation": "—",
    "total": 18375,
-   "measured": 18280,
-   "met": 15060,
-   "outside": 3220,
-   "met_pct": 82.4,
-   "open_within": 95,
-   "open_too_long": 17,
+   "measured": 18364,
+   "met": 18285,
+   "outside": 79,
+   "met_pct": 99.6,
+   "open_within": 111,
+   "open_too_long": 1,
    "themes": [],
    "products": [
     {
      "product": "cards",
      "label": "Cards",
      "total": 3881,
-     "measured": 3869,
-     "met": 3199,
-     "outside": 670,
-     "met_pct": 82.7,
-     "open_within": 12,
-     "open_too_long": 4
+     "measured": 3881,
+     "met": 3867,
+     "outside": 14,
+     "met_pct": 99.6,
+     "open_within": 16,
+     "open_too_long": 0
     },
     {
      "product": "payzapp",
      "label": "PayZapp and UPI",
      "total": 2235,
-     "measured": 2226,
-     "met": 1829,
-     "outside": 397,
-     "met_pct": 82.2,
-     "open_within": 9,
-     "open_too_long": 1
+     "measured": 2234,
+     "met": 2222,
+     "outside": 12,
+     "met_pct": 99.5,
+     "open_within": 10,
+     "open_too_long": 0
     },
     {
      "product": "accounts",
      "label": "Accounts and deposits",
      "total": 4733,
-     "measured": 4706,
-     "met": 3837,
-     "outside": 869,
-     "met_pct": 81.5,
-     "open_within": 27,
-     "open_too_long": 3
+     "measured": 4729,
+     "met": 4710,
+     "outside": 19,
+     "met_pct": 99.6,
+     "open_within": 30,
+     "open_too_long": 0
     },
     {
      "product": "personal_loans",
      "label": "Personal loans",
      "total": 1104,
-     "measured": 1099,
-     "met": 895,
-     "outside": 204,
-     "met_pct": 81.4,
-     "open_within": 5,
-     "open_too_long": 1
+     "measured": 1103,
+     "met": 1099,
+     "outside": 4,
+     "met_pct": 99.6,
+     "open_within": 6,
+     "open_too_long": 0
     },
     {
      "product": "home_loans",
      "label": "Home loans",
      "total": 844,
-     "measured": 838,
-     "met": 710,
-     "outside": 128,
-     "met_pct": 84.7,
+     "measured": 843,
+     "met": 839,
+     "outside": 4,
+     "met_pct": 99.5,
      "open_within": 6,
      "open_too_long": 0
     },
@@ -2061,34 +2061,34 @@
      "product": "auto_loans",
      "label": "Auto and two-wheeler loans",
      "total": 530,
-     "measured": 527,
-     "met": 422,
-     "outside": 105,
-     "met_pct": 80.1,
-     "open_within": 3,
-     "open_too_long": 2
+     "measured": 530,
+     "met": 528,
+     "outside": 2,
+     "met_pct": 99.6,
+     "open_within": 5,
+     "open_too_long": 0
     },
     {
      "product": "insurance",
      "label": "Insurance (bank-sold)",
      "total": 589,
-     "measured": 583,
-     "met": 465,
-     "outside": 118,
-     "met_pct": 79.8,
-     "open_within": 6,
-     "open_too_long": 2
+     "measured": 588,
+     "met": 586,
+     "outside": 2,
+     "met_pct": 99.7,
+     "open_within": 8,
+     "open_too_long": 0
     },
     {
      "product": "digital",
      "label": "Digital (app and NetBanking)",
      "total": 4459,
-     "measured": 4432,
-     "met": 3703,
-     "outside": 729,
-     "met_pct": 83.6,
-     "open_within": 27,
-     "open_too_long": 4
+     "measured": 4456,
+     "met": 4434,
+     "outside": 22,
+     "met_pct": 99.5,
+     "open_within": 30,
+     "open_too_long": 1
     }
    ]
   }
@@ -2112,9 +2112,9 @@
    "interactions": 1463,
    "negative": 391,
    "open": 4,
-   "open_too_long": 1,
+   "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 81.9,
+   "deliv_met_pct": 99.5,
    "public_mentions": 644,
    "public_negative": 244
   },
@@ -2148,9 +2148,9 @@
    "interactions": 774,
    "negative": 229,
    "open": 4,
-   "open_too_long": 1,
+   "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 85.1,
+   "deliv_met_pct": 100.0,
    "public_mentions": 341,
    "public_negative": 163
   },
@@ -2172,9 +2172,9 @@
    "interactions": 375,
    "negative": 97,
    "open": 1,
-   "open_too_long": 1,
+   "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 81.9,
+   "deliv_met_pct": 100.0,
    "public_mentions": 165,
    "public_negative": 49
   },
@@ -2222,7 +2222,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 81.1,
+   "deliv_met_pct": 99.5,
    "public_mentions": 82,
    "public_negative": 49
   },
@@ -2246,7 +2246,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 82.6,
+   "deliv_met_pct": 100.0,
    "public_mentions": 76,
    "public_negative": 33
   },
@@ -2258,7 +2258,7 @@
    "open": 2,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 73.4,
+   "deliv_met_pct": 98.6,
    "public_mentions": 62,
    "public_negative": 48
   },
@@ -2282,7 +2282,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 81.6,
+   "deliv_met_pct": 98.0,
    "public_mentions": 43,
    "public_negative": 25
   },
@@ -2306,7 +2306,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 86.2,
+   "deliv_met_pct": 100.0,
    "public_mentions": 39,
    "public_negative": 24
   },
@@ -2318,7 +2318,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 91.7,
+   "deliv_met_pct": 98.8,
    "public_mentions": 37,
    "public_negative": 31
   },
@@ -2330,7 +2330,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 80.2,
+   "deliv_met_pct": 100.0,
    "public_mentions": 36,
    "public_negative": 33
   },
@@ -2366,7 +2366,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 79.2,
+   "deliv_met_pct": 100.0,
    "public_mentions": 32,
    "public_negative": 29
   },
@@ -2388,9 +2388,9 @@
    "interactions": 61,
    "negative": 30,
    "open": 1,
-   "open_too_long": 1,
+   "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 77.0,
+   "deliv_met_pct": 100.0,
    "public_mentions": 27,
    "public_negative": 22
   },
@@ -2426,7 +2426,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 78.9,
+   "deliv_met_pct": 100.0,
    "public_mentions": 25,
    "public_negative": 15
   },
@@ -2438,7 +2438,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 91.1,
+   "deliv_met_pct": 100.0,
    "public_mentions": 20,
    "public_negative": 19
   },
@@ -2462,7 +2462,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 85.4,
+   "deliv_met_pct": 100.0,
    "public_mentions": 18,
    "public_negative": 11
   },
@@ -2474,7 +2474,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 95.1,
+   "deliv_met_pct": 100.0,
    "public_mentions": 18,
    "public_negative": 16
   },
@@ -2498,7 +2498,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 87.2,
+   "deliv_met_pct": 100.0,
    "public_mentions": 17,
    "public_negative": 10
   },
@@ -2510,7 +2510,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 78.3,
+   "deliv_met_pct": 100.0,
    "public_mentions": 10,
    "public_negative": 9
   },
@@ -2522,7 +2522,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 87.0,
+   "deliv_met_pct": 100.0,
    "public_mentions": 10,
    "public_negative": 4
   },
@@ -2546,7 +2546,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 81.8,
+   "deliv_met_pct": 100.0,
    "public_mentions": 5,
    "public_negative": 3
   },
@@ -2634,6 +2634,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "card_limit",
      "theme_label": "Credit limit",
      "summary": "Card declined at a hotel abroad: international usage limit reached.",
@@ -2653,6 +2654,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": "unresolved",
      "theme": "card_limit",
      "theme_label": "Credit limit",
      "summary": "Automated call read out the decline reason. The customer asked for a limit change; the bot could not make it.",
@@ -2663,6 +2665,7 @@
      "channel": "ivr_bot",
      "channel_label": "IVR bot",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "closed",
      "first_response_at": "2026-09-27T19:44+05:30",
@@ -2675,6 +2678,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "card_limit",
      "theme_label": "Credit limit",
      "summary": "Email from the customer's assistant, on their behalf: the card was declined twice abroad; please raise the limit tonight. Linked through the bank's own contact records.",
@@ -2685,6 +2689,7 @@
      "channel": "email",
      "channel_label": "Email",
      "sender": "proxy",
+     "contact_id": "PC-4821-1",
      "sentiment": "negative",
      "status": "open",
      "first_response_at": null,
@@ -2697,6 +2702,7 @@
      "product": "accounts",
      "product_label": "Accounts and deposits",
      "team": "Retail",
+     "outcome": null,
      "theme": "care_unreachable",
      "theme_label": "Customer care unreachable or unhelpful",
      "summary": "Called the accounts helpline to move funds for the same payment; asked why no one had called back about the card.",
@@ -2707,6 +2713,7 @@
      "channel": "inbound_voice",
      "channel_label": "Inbound calls",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-28T10:12+05:30",
@@ -2718,7 +2725,8 @@
      "at": "2026-09-28T13:05+05:30",
      "product": "cards",
      "product_label": "Cards",
-     "team": "Cards",
+     "team": "Social care (CX)",
+     "outcome": null,
      "theme": "complaint_handling",
      "theme_label": "Complaints closed without resolution",
      "summary": "Public reply to the bank's care handle: two days, three contacts, still no answer. Linked through a verified contact the bank already holds.",
@@ -2729,6 +2737,7 @@
      "channel": "social_inbox",
      "channel_label": "Social inbox",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": null,
@@ -2743,6 +2752,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "card_limit",
      "theme_label": "Credit limit",
      "summary": "Repeat call: limit raised for 48 hours; the agent said someone would call back about the declines. No callback logged.",
@@ -2753,6 +2763,7 @@
      "channel": "inbound_voice",
      "channel_label": "Inbound calls",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-28T18:20+05:30",
@@ -2794,6 +2805,7 @@
      "product": "accounts",
      "product_label": "Accounts and deposits",
      "team": "Retail",
+     "outcome": null,
      "theme": "complaint_handling",
      "theme_label": "Complaints closed without resolution",
      "summary": "Complaint about a closed service request that was not resolved; names the RBI Ombudsman as the next step.",
@@ -2804,6 +2816,7 @@
      "channel": "email",
      "channel_label": "Email",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-26T16:40+05:30",
@@ -2818,6 +2831,7 @@
      "product": "accounts",
      "product_label": "Accounts and deposits",
      "team": "Retail",
+     "outcome": null,
      "theme": "complaint_handling",
      "theme_label": "Complaints closed without resolution",
      "summary": "RM called back and logged a fresh request; resolution committed within two working days.",
@@ -2828,6 +2842,7 @@
      "channel": "outbound_voice",
      "channel_label": "Outbound calls",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "neutral",
      "status": "open",
      "first_response_at": "2026-09-27T09:30+05:30",
@@ -2872,6 +2887,7 @@
      "product": "payzapp",
      "product_label": "PayZapp and UPI",
      "team": "Payments",
+     "outcome": null,
      "theme": "failed_txn_reversal",
      "theme_label": "Failed transaction reversal",
      "summary": "UPI payment debited but failed; reversal not received after the T+1 timeline.",
@@ -2882,6 +2898,7 @@
      "channel": "chat",
      "channel_label": "Chat",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-24T21:15+05:30",
@@ -2894,6 +2911,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "card_variant_migration",
      "theme_label": "Card variant migration and forced upgrade",
      "summary": "Asked why the card was moved to a new variant without consent; says fees now apply.",
@@ -2904,6 +2922,7 @@
      "channel": "inbound_voice",
      "channel_label": "Inbound calls",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-27T12:02+05:30",
@@ -2947,6 +2966,7 @@
      "product": "home_loans",
      "product_label": "Home loans",
      "team": "Loans",
+     "outcome": null,
      "theme": "loan_closure_documents",
      "theme_label": "Loan closure, foreclosure and documents",
      "summary": "Email from the customer's office: property documents not returned three weeks after the loan was closed.",
@@ -2957,6 +2977,7 @@
      "channel": "email",
      "channel_label": "Email",
      "sender": "proxy",
+     "contact_id": "PC-1576-1",
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-22T15:30+05:30",
@@ -2997,6 +3018,7 @@
      "product": "digital",
      "product_label": "Digital (app and NetBanking)",
      "team": "Digital",
+     "outcome": null,
      "theme": "device_security_block",
      "theme_label": "Device security blocks and false alerts",
      "summary": "App blocked on a new phone with a security alert; cannot approve a large transfer.",
@@ -3007,6 +3029,7 @@
      "channel": "chat",
      "channel_label": "Chat",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-28T22:49+05:30",
@@ -3049,6 +3072,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "dispute_chargeback",
      "theme_label": "Disputes and chargebacks",
      "summary": "Disputed a foreign merchant charge; no update since the dispute was raised.",
@@ -3059,6 +3083,7 @@
      "channel": "inbound_voice",
      "channel_label": "Inbound calls",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-23T16:20+05:30",
@@ -3071,6 +3096,7 @@
      "product": "auto_loans",
      "product_label": "Auto and two-wheeler loans",
      "team": "Loans",
+     "outcome": null,
      "theme": "loan_servicing",
      "theme_label": "EMI and loan account servicing",
      "summary": "Visited the branch about the car-loan EMI date; mentioned the open card dispute.",
@@ -3081,6 +3107,7 @@
      "channel": "branch",
      "channel_label": "Branch",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "neutral",
      "status": "closed",
      "first_response_at": "2026-09-28T09:40+05:30",
@@ -3122,6 +3149,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "closure_requests",
      "theme_label": "Account and card closure requests",
      "summary": "Asked to close a supplementary card; closure confirmation not received.",
@@ -3132,6 +3160,7 @@
      "channel": "email",
      "channel_label": "Email",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "closed",
      "first_response_at": "2026-09-20T17:10+05:30",
@@ -3173,6 +3202,7 @@
      "product": "personal_loans",
      "product_label": "Personal loans",
      "team": "Loans",
+     "outcome": null,
      "theme": "fees_charges_bank",
      "theme_label": "Bank charges and hidden fees",
      "summary": "Questioned a foreclosure charge on a personal loan that was not in the sanction letter.",
@@ -3183,6 +3213,7 @@
      "channel": "whatsapp",
      "channel_label": "WhatsApp",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": null,
@@ -3225,6 +3256,7 @@
      "product": "insurance",
      "product_label": "Insurance (bank-sold)",
      "team": "Insurance",
+     "outcome": null,
      "theme": "mis_selling",
      "theme_label": "Mis-selling and bundled products",
      "summary": "Email from the customer's assistant: an insurance policy was added to the account without a clear explanation.",
@@ -3235,11 +3267,12 @@
      "channel": "email",
      "channel_label": "Email",
      "sender": "proxy",
+     "contact_id": "PC-3815-1",
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-26T10:00+05:30",
      "deliverable_due": "2026-09-26T11:45+05:30",
-     "breached": true,
+     "breached": false,
      "high_impact": [
       "Legal or consumer-court language"
      ]
@@ -3278,6 +3311,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "rewards_value",
      "theme_label": "Rewards value, devaluation and caps",
      "summary": "Reward points on travel spends lower than expected after the cap change.",
@@ -3288,6 +3322,7 @@
      "channel": "chat",
      "channel_label": "Chat",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "closed",
      "first_response_at": "2026-09-27T08:56+05:30",
@@ -3329,6 +3364,7 @@
      "product": "cards",
      "product_label": "Cards",
      "team": "Cards",
+     "outcome": null,
      "theme": "unauthorised_txn",
      "theme_label": "Unauthorised transactions",
      "summary": "Reported two card transactions the customer did not make; card blocked, shadow credit pending.",
@@ -3339,6 +3375,7 @@
      "channel": "inbound_voice",
      "channel_label": "Inbound calls",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "open",
      "first_response_at": "2026-09-28T19:10+05:30",
@@ -3381,6 +3418,7 @@
      "product": "accounts",
      "product_label": "Accounts and deposits",
      "team": "Retail",
+     "outcome": null,
      "theme": "kyc_updates",
      "theme_label": "KYC, re-KYC and profile updates",
      "summary": "Re-KYC documents submitted twice; account still shows as restricted.",
@@ -3391,6 +3429,7 @@
      "channel": "email",
      "channel_label": "Email",
      "sender": "customer",
+     "contact_id": null,
      "sentiment": "negative",
      "status": "closed",
      "first_response_at": "2026-09-21T15:00+05:30",
@@ -3456,12 +3495,12 @@
    {
     "id": "call_today",
     "label": "Call today (deliverable breaking)",
-    "count": 4
+    "count": 3
    },
    {
     "id": "escalate",
     "label": "Escalate (no backend movement, deliverable broken)",
-    "count": 3
+    "count": 4
    },
    {
     "id": "proactive_status",
@@ -3524,7 +3563,7 @@
    "product": "accounts",
    "theme": "kyc_updates",
    "language": "English",
-   "subject": "On behalf of our director: account restriction after re-KYC",
+   "subject": "On behalf of the account holder: account restriction after re-KYC",
    "body": "Writing on behalf of the account holder. Re-KYC documents were submitted at the branch on 19 September. The account still shows as restricted. Please advise.",
    "backend_status": "Re-KYC verified 28 Sep; restriction lifted 28 Sep, 17:30.",
    "bucket": "reply_status",
@@ -3574,9 +3613,9 @@
    "language": "English",
    "subject": "Card closure request ignored",
    "body": "I asked for my credit card to be closed on 19 September. It is still active and I have been charged an annual fee.",
-   "backend_status": "Closure request open; day 7 of 7 working days today.",
-   "bucket": "call_today",
-   "bucket_label": "Call today (deliverable breaking)",
+   "backend_status": "Closure request open since 19 Sep; the 7-working-day TAT ended 28 Sep, so ₹500 a day now accrues.",
+   "bucket": "escalate",
+   "bucket_label": "Escalate (no backend movement, deliverable broken)",
    "product_label": "Cards",
    "theme_label": "Account and card closure requests"
   },
@@ -3619,7 +3658,7 @@
    "language": "Hinglish",
    "subject": "Account freeze kyun hua",
    "body": "Mera salary account achanak debit freeze ho gaya. Branch ne bola email karo. Rent aur EMI dono atke hain.",
-   "backend_status": "Freeze review opened 26 Sep; bank TAT 3 working days ends today.",
+   "backend_status": "Freeze review opened 26 Sep; the bank TAT of 3 working days ends 30 Sep (tomorrow).",
    "bucket": "call_today",
    "bucket_label": "Call today (deliverable breaking)",
    "product_label": "Accounts and deposits",
@@ -3865,52 +3904,52 @@
   }
  ],
  "md_mail": {
-  "total": 68,
-  "shown": 34,
+  "total": 61,
+  "shown": 38,
   "rows": [
-   {
-    "theme": "complaint_handling",
-    "label": "Complaints closed without resolution",
-    "owner": "cx",
-    "mails": 12,
-    "median_age_days": 35.8,
-    "resolved": 7,
-    "resolved_share": 58.3
-   },
    {
     "theme": "app_speed_crash",
     "label": "App speed, loading and crashes",
     "owner": "digital",
-    "mails": 8,
-    "median_age_days": 1.2,
-    "resolved": 8,
+    "mails": 14,
+    "median_age_days": 0.4,
+    "resolved": 14,
     "resolved_share": 100.0
    },
    {
-    "theme": "login_mpin",
-    "label": "Login, MPIN and registration",
-    "owner": "digital",
-    "mails": 5,
-    "median_age_days": 1.2,
-    "resolved": 5,
-    "resolved_share": 100.0
+    "theme": "complaint_handling",
+    "label": "Complaints closed without resolution",
+    "owner": "cx",
+    "mails": 14,
+    "median_age_days": 29.0,
+    "resolved": 10,
+    "resolved_share": 71.4
    },
    {
-    "theme": "unsolicited_calls",
-    "label": "Unsolicited sales calls and use of data",
-    "owner": "compliance",
-    "mails": 5,
-    "median_age_days": 1.2,
-    "resolved": 4,
-    "resolved_share": 80.0
-   },
-   {
-    "theme": "branch_service",
-    "label": "Branch service and staff behaviour",
-    "owner": "retail",
+    "theme": "account_freeze",
+    "label": "Account debit freezes and blocks",
+    "owner": "operations",
     "mails": 4,
-    "median_age_days": 1.4,
-    "resolved": 4,
+    "median_age_days": 4.6,
+    "resolved": 3,
+    "resolved_share": 75.0
+   },
+   {
+    "theme": "kyc_updates",
+    "label": "KYC, re-KYC and profile updates",
+    "owner": "operations",
+    "mails": 3,
+    "median_age_days": 5.0,
+    "resolved": 3,
+    "resolved_share": 100.0
+   },
+   {
+    "theme": "loan_processing",
+    "label": "Loan processing and disbursal",
+    "owner": "loans",
+    "mails": 3,
+    "median_age_days": 8.6,
+    "resolved": 3,
     "resolved_share": 100.0
    }
   ],
@@ -4040,8 +4079,8 @@
    {
     "request_type": "other",
     "open_cases": 1207,
-    "beyond_tat": 302,
-    "beyond_tat_share": 25.0
+    "beyond_tat": 286,
+    "beyond_tat_share": 23.7
    },
    {
     "request_type": "closure",
@@ -4103,27 +4142,27 @@
    },
    {
     "rung": "Grievance",
-    "count": 1296
+    "count": 892
    },
    {
     "rung": "MD's office",
-    "count": 68
+    "count": 61
    },
    {
     "rung": "IO",
-    "count": 24
+    "count": 18
    },
    {
     "rung": "RBI Ombudsman",
-    "count": 8
+    "count": 3
    }
   ],
   "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
   "closure": {
    "closure_requests": 698,
    "closed": 639,
-   "saved": 173,
-   "save_rate": 27.1
+   "saved": 201,
+   "save_rate": 31.5
   },
   "disputes": {
    "raised": 95,
@@ -4131,19 +4170,19 @@
    "drivers": [
     {
      "driver": "Merchant response pending",
-     "cases": 2
+     "cases": 5
     },
     {
      "driver": "Chargeback evidence incomplete",
-     "cases": 2
+     "cases": 1
     },
     {
      "driver": "Network timeline",
-     "cases": 3
+     "cases": 2
     },
     {
      "driver": "Manual re-work after reopen",
-     "cases": 3
+     "cases": 2
     },
     {
      "driver": "Customer not updated",
@@ -4179,11 +4218,11 @@
     },
     {
      "stage": "Customer credited",
-     "count": 49
+     "count": 48
     },
     {
      "stage": "Credited within TAT",
-     "count": 43
+     "count": 44
     }
    ]
   }

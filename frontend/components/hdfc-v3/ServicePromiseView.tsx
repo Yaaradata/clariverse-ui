@@ -135,7 +135,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Kpi
               label="Escalation language"
               value={fmt(esc.count)}
-              sub="posts naming a regulator, court, minister or grievance desk"
+              sub="posts with escalation language"
               href="#ladder"
               tone="red"
             />

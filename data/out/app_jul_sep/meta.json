@@ -374,7 +374,7 @@
  ],
  "baseline_streams": [],
  "coverage_notes": [
-  "All sources cover 1 July to 28 September 2026; trends compare the two halves of the window (no earlier baseline).",
+  "Coverage differs by source: forums, X and most store exports cover 1 July to 28 September 2026; Reddit changed collector on 1 September and X's last weekly run was capped (no items on 20–22 September). Trends and mood are source-weighted and leave Reddit out; they compare the two halves of the window (no earlier baseline).",
   "Play Store HDFC Bank app reviews start on 25 July (the export holds the latest 5,000): counted in totals, left out of trends.",
   "X and Reddit are filtered to posts that mention HDFC Bank or its products; bank and brand handles are excluded.",
   "Bank replies are visible on Play Store reviews only.",

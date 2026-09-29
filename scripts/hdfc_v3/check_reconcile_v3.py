@@ -84,7 +84,9 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     ok(not bad_status, f"open items have no closing time and closed items have one ({len(bad_status)} bad)")
     bad_breach = []
     for r in inter:
-        end = dt.datetime.fromisoformat(r["closed_at"]) if r["closed_at"] else NOW_DT
+        # "First response to a query" is met or missed on the first response; every other deliverable on closure.
+        at = r["first_response_at"] if r["deliverable"] == "query_response" else r["closed_at"]
+        end = dt.datetime.fromisoformat(at) if at else NOW_DT
         if r["breached"] != (end > dt.datetime.fromisoformat(r["deliverable_due"])):
             bad_breach.append(r["id"])
     ok(not bad_breach, f"breach recomputed from the deliverable due time ({len(bad_breach)} disagree{': ' + ', '.join(bad_breach[:5]) if bad_breach else ''})")
@@ -120,6 +122,9 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
 
     hi = sum(1 for r in inter if r["high_impact"])
     ok(hi == agg["high_impact"]["total"], f"high-impact complaints recomputed {hi}")
+    contacts = {m: {x["contact_id"] for x in c.get("contacts", [])} for m, c in customers.items()}
+    unlinked = [r["id"] for r in inter if r["sender"] == "proxy" and r.get("contact_id") not in contacts[r["masked_id"]]]
+    ok(not unlinked, f"every proxy message is linked to a contact record the bank holds ({len(unlinked)} unlinked)")
     flagged = [m for m, c in customers.items() if PERSON_FLAG_KEYS & set(c)]
     ok(not flagged, f"no person-level flag on any customer ({len(flagged)} flagged)")
 

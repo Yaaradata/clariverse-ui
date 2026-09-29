@@ -198,6 +198,8 @@ export type AppPulse = {
   }[];
   mode: "vs_baseline" | "trend_within_window";
   window: RatingSummary | null;
+  /** The same summary per store: apps are compared within one store only (B7 §4.1). */
+  by_store?: Partial<Record<"playstore" | "appstore", RatingSummary>>;
   baseline: RatingSummary | null;
   trend: Halves | null;
   weekly_avg_rating: { week: string; n: number; avg_rating: number }[];
@@ -287,6 +289,9 @@ export type ReleasePulse = {
   old_app_n: number;
   new_app_avg: number | null;
   new_app_n: number;
+  new_app_negative: number;
+  new_app_share_positive: number | null;
+  old_app_share_positive: number | null;
   fix_list: FixItem[];
   versions: ({ version: string } & RatingSummary)[];
   exemplars: string[];
@@ -396,6 +401,8 @@ export type PublicProductRow = {
   share_negative: number | null;
   trend_change_pct: number | null;
   top_issue: { id: string; label: string; negative: number } | null;
+  /** Bank replies on this product's Play Store reviews; null when it has none. */
+  replies: ReplyStats | null;
   issues: {
     id: string;
     label: string;
@@ -451,6 +458,8 @@ export type ReplyStats = {
   open_pct: number | null;
   open_too_long: number;
   open_too_long_pct_of_open: number | null;
+  open_too_long_pct_of_reviews: number | null;
+  median_reply_minutes: number | null;
   median_reply_hours: number | null;
   replied_within_48h: number;
   redirect_only: number;
@@ -531,6 +540,10 @@ export type TrailStep = {
   summary: string;
   flag_set: boolean;
   flag_follows: boolean;
+  /** "unresolved" when a contact closed without solving the problem (e.g. a bot call). */
+  outcome?: string | null;
+  /** The bank's own contact record a proxy sender is linked through. */
+  contact_id?: string | null;
   event: boolean;
   id: string | null;
   channel: string;
