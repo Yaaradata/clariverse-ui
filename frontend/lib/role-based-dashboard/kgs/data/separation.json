@@ -1,6 +1,6 @@
 {
   "title": "Is the separation costing us?",
-  "subtitle": "What distributors experience after each entity, portal, ERP and EDI cutover — against a control region not yet cut over.",
+  "subtitle": "Where the entity cutover breaks, and what it costs in cash and effort.",
   "kpis": [
     {
       "label": "SIGNALS ABOVE THRESHOLD",
@@ -1059,6 +1059,356 @@
     },
     "S-J": {
       "title": "LiSN evidence summary"
+    }
+  },
+  "v2": {
+    "cutoverFailures": {
+      "title": "Cutover Failures",
+      "sub": "Entity, portal and EDI breaks vs a control region not yet cut over.",
+      "kpis": [
+        {
+          "label": "Remit-to contacts",
+          "value": "2.7×",
+          "sub": "vs control 1.1×",
+          "status": "Critical"
+        },
+        {
+          "label": "Portal login issues",
+          "value": "3.4×",
+          "sub": "vs pre-cutover",
+          "status": "Critical"
+        },
+        {
+          "label": "Distributors affected",
+          "value": "14 of 180",
+          "sub": "{{region:US}} entity cutover",
+          "status": "High"
+        },
+        {
+          "label": "Cutovers clean",
+          "value": "3 of 4",
+          "sub": "vs control",
+          "status": "High"
+        }
+      ],
+      "tableTitle": "Where the cutover breaks",
+      "rows": [
+        {
+          "system": "Invoice entity / PO mismatch",
+          "impact": "Critical",
+          "contacts": 81,
+          "vsControl": "2.7×",
+          "channels": "Email 48% · Voice 32% · Portal 20%",
+          "owner": "CIO · AP"
+        },
+        {
+          "system": "Remit-to bank details",
+          "impact": "Critical",
+          "contacts": 74,
+          "vsControl": "2.7×",
+          "channels": "Email 55% · Voice 30% · Portal 15%",
+          "owner": "CFO · Treasury"
+        },
+        {
+          "system": "EDI mapping",
+          "impact": "High",
+          "contacts": 42,
+          "vsControl": "1.8×",
+          "channels": "Portal 40% · Email 35% · EDI 25%",
+          "owner": "CIO · Integration"
+        },
+        {
+          "system": "Portal login & licences",
+          "impact": "Critical",
+          "contacts": 68,
+          "vsControl": "3.4×",
+          "channels": "Portal 60% · Voice 25% · Email 15%",
+          "owner": "CIO · Identity"
+        },
+        {
+          "system": "Tax / VAT ID",
+          "impact": "High",
+          "contacts": 29,
+          "vsControl": "1.6×",
+          "channels": "Email 50% · Portal 30% · Voice 20%",
+          "owner": "Tax · Regional GM"
+        }
+      ]
+    },
+    "cashImpact": {
+      "title": "Cash Impact",
+      "sub": "Dispute cash and DSO movement on the cutover cohort — USD only.",
+      "kpis": [
+        {
+          "label": "In dispute",
+          "value": "$1.4m",
+          "sub": "illustrative · USD",
+          "status": "Critical",
+          "money": true
+        },
+        {
+          "label": "Invoices in dispute",
+          "value": "212",
+          "sub": "open cases",
+          "status": "High"
+        },
+        {
+          "label": "DSO top-10",
+          "value": "+6 days",
+          "sub": "{{region:US}}",
+          "status": "High"
+        },
+        {
+          "label": "Credit holds",
+          "value": "17",
+          "sub": "new since 1 Sep",
+          "status": "Watch"
+        }
+      ],
+      "tableTitle": "Distributors most affected",
+      "rows": [
+        {
+          "distributor": "{{partner:DIST-US-004}}",
+          "region": "{{region:US}}",
+          "invoices": 48,
+          "amount": "$0.42m",
+          "dsoChange": "+9 days",
+          "mainIssue": "Remit-to / entity mismatch"
+        },
+        {
+          "distributor": "{{partner:DIST-US-012}}",
+          "region": "{{region:US}}",
+          "invoices": 36,
+          "amount": "$0.31m",
+          "dsoChange": "+7 days",
+          "mainIssue": "PO entity mismatch"
+        },
+        {
+          "distributor": "{{partner:DIST-US-007}}",
+          "region": "{{region:US-SE}}",
+          "invoices": 29,
+          "amount": "$0.24m",
+          "dsoChange": "+6 days",
+          "mainIssue": "Portal login & licences"
+        },
+        {
+          "distributor": "{{partner:DIST-US-019}}",
+          "region": "{{region:US-SW}}",
+          "invoices": 22,
+          "amount": "$0.18m",
+          "dsoChange": "+5 days",
+          "mainIssue": "EDI mapping"
+        },
+        {
+          "distributor": "{{partner:DIST-US-031}}",
+          "region": "{{region:US-NE}}",
+          "invoices": 19,
+          "amount": "$0.15m",
+          "dsoChange": "+4 days",
+          "mainIssue": "Tax / VAT ID"
+        }
+      ]
+    },
+    "whyStuck": {
+      "title": "Why invoices get stuck",
+      "sub": "Dispute-stage visibility after the {{region:US}} entity cutover — since 1 Sep.",
+      "metrics": [
+        {
+          "label": "Raised",
+          "value": "212",
+          "delta": "since 1 Sep"
+        },
+        {
+          "label": "Fixed",
+          "value": "64",
+          "delta": "30%"
+        },
+        {
+          "label": "Pending",
+          "value": "97",
+          "delta": "46%"
+        },
+        {
+          "label": "Beyond 30 days",
+          "value": "38",
+          "delta": "18%"
+        },
+        {
+          "label": "Re-invoiced",
+          "value": "41",
+          "delta": "19%"
+        },
+        {
+          "label": "Reopened",
+          "value": "23",
+          "delta": "11%"
+        }
+      ],
+      "causes": [
+        {
+          "cause": "PO entity mismatch",
+          "count": 74,
+          "share": "35%",
+          "avgDelay": "18 days",
+          "severity": "Critical"
+        },
+        {
+          "cause": "Old remit-to details",
+          "count": 61,
+          "share": "29%",
+          "avgDelay": "16 days",
+          "severity": "Critical"
+        },
+        {
+          "cause": "EDI field mapping",
+          "count": 34,
+          "share": "16%",
+          "avgDelay": "12 days",
+          "severity": "High"
+        },
+        {
+          "cause": "Portal access",
+          "count": 27,
+          "share": "13%",
+          "avgDelay": "9 days",
+          "severity": "High"
+        },
+        {
+          "cause": "Tax ID mismatch",
+          "count": 16,
+          "share": "8%",
+          "avgDelay": "11 days",
+          "severity": "Watch"
+        }
+      ],
+      "watchlist": [
+        {
+          "severity": "Critical",
+          "theme": "Remit-to rejected at bank",
+          "stage": "Entity corrected — awaiting re-invoice",
+          "blocker": "Treasury confirm on new remit-to",
+          "distributor": "{{partner:DIST-US-004}}",
+          "region": "{{region:US}}",
+          "daysOpen": 34
+        },
+        {
+          "severity": "Critical",
+          "theme": "PO still on legacy entity",
+          "stage": "Validated",
+          "blocker": "Distributor AP to re-raise PO",
+          "distributor": "{{partner:DIST-US-012}}",
+          "region": "{{region:US}}",
+          "daysOpen": 29
+        },
+        {
+          "severity": "High",
+          "theme": "Portal licence expired mid-order",
+          "stage": "Pending identity fix",
+          "blocker": "CIO identity queue",
+          "distributor": "{{partner:DIST-US-007}}",
+          "region": "{{region:US-SE}}",
+          "daysOpen": 21
+        },
+        {
+          "severity": "Watch",
+          "theme": "EDI 855 acknowledgement missing",
+          "stage": "Raised",
+          "blocker": "Integration map for new company code",
+          "distributor": "{{partner:DIST-US-019}}",
+          "region": "{{region:US-SW}}",
+          "daysOpen": 14
+        }
+      ],
+      "diagnosis": {
+        "main": "Most cash is stuck on entity and remit-to mismatches after the {{region:US}} cutover — not on pricing disputes.",
+        "changed": "Since 1 Sep, remit-to contacts run 2.7× control and portal login 3.4×; 212 invoices / $1.4m now in dispute.",
+        "decideFirst": "CIO triage on the separation defect ticket, plus Regional GM {{region:US}} approval of the corrected remit-to notice — before DSO moves again."
+      }
+    },
+    "topIssues": [
+      {
+        "label": "Invoice entity / PO mismatch",
+        "contacts": 81,
+        "recontact": "41%",
+        "tone": -0.48,
+        "channel": "Email",
+        "severity": "Critical"
+      },
+      {
+        "label": "Remit-to bank details",
+        "contacts": 74,
+        "recontact": "38%",
+        "tone": -0.46,
+        "channel": "Email",
+        "severity": "Critical"
+      },
+      {
+        "label": "Portal login & licences",
+        "contacts": 68,
+        "recontact": "33%",
+        "tone": -0.41,
+        "channel": "Portal",
+        "severity": "Critical"
+      },
+      {
+        "label": "EDI mapping",
+        "contacts": 42,
+        "recontact": "27%",
+        "tone": -0.34,
+        "channel": "Portal",
+        "severity": "High"
+      },
+      {
+        "label": "Tax / VAT ID",
+        "contacts": 29,
+        "recontact": "22%",
+        "tone": -0.29,
+        "channel": "Email",
+        "severity": "High"
+      }
+    ],
+    "funnel": {
+      "title": "Invoice Dispute Funnel",
+      "sub": "Path from raised dispute to paid — USD cohort since 1 Sep.",
+      "stages": [
+        {
+          "label": "Raised",
+          "volume": 212,
+          "avgDays": 0,
+          "status": "Healthy"
+        },
+        {
+          "label": "Validated",
+          "volume": 168,
+          "avgDays": 3,
+          "status": "Healthy"
+        },
+        {
+          "label": "Entity corrected",
+          "volume": 97,
+          "avgDays": 11,
+          "status": "Bottleneck"
+        },
+        {
+          "label": "Re-invoiced",
+          "volume": 64,
+          "avgDays": 16,
+          "status": "Watch"
+        },
+        {
+          "label": "Paid",
+          "volume": 41,
+          "avgDays": 24,
+          "status": "Watch"
+        },
+        {
+          "label": "Escalated",
+          "volume": 23,
+          "avgDays": 31,
+          "status": "Critical"
+        }
+      ],
+      "footer": "Bottleneck sits at entity corrected — remit-to and PO fixes wait on owner approval before cash moves."
     }
   }
 }

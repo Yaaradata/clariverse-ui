@@ -1,6 +1,6 @@
 {
   "title": "Are we holding our channel?",
-  "subtitle": "Strategic Partner and distributor friction against each partner's own baseline — joined to sell-in, backlog and certification.",
+  "subtitle": "What partners, installers and the market say across every channel.",
   "kpis": [
     {
       "label": "SIGNALS ABOVE THRESHOLD",
@@ -1169,6 +1169,464 @@
     },
     "C-J": {
       "title": "LiSN evidence summary"
+    }
+  },
+  "v2": {
+    "channelMix": [
+      {
+        "id": "voice",
+        "label": "Voice",
+        "icon": "phone",
+        "interactions": 3428,
+        "wow": 6,
+        "negativeShare": 31,
+        "topTopic": "Order status"
+      },
+      {
+        "id": "email",
+        "label": "Email",
+        "icon": "mail",
+        "interactions": 2255,
+        "wow": 3,
+        "negativeShare": 28,
+        "topTopic": "Quote turnaround"
+      },
+      {
+        "id": "chat",
+        "label": "Chat",
+        "icon": "chat",
+        "interactions": 1984,
+        "wow": -2,
+        "negativeShare": 22,
+        "topTopic": "Portal login"
+      },
+      {
+        "id": "portal",
+        "label": "Portal",
+        "icon": "portal",
+        "interactions": 451,
+        "wow": 9,
+        "negativeShare": 35,
+        "topTopic": "Licence access"
+      },
+      {
+        "id": "social",
+        "label": "Social & forums",
+        "icon": "social",
+        "interactions": 902,
+        "wow": 18,
+        "negativeShare": 44,
+        "topTopic": "Competitor switch"
+      }
+    ],
+    "promiseGap": {
+      "sub": "Promise made vs where partners say it breaks — by partner tier.",
+      "lenses": [
+        {
+          "id": "all",
+          "label": "All",
+          "count": 6
+        },
+        {
+          "id": "strategic",
+          "label": "Strategic partners",
+          "count": 4
+        },
+        {
+          "id": "distributors",
+          "label": "Distributors",
+          "count": 5
+        },
+        {
+          "id": "integrators",
+          "label": "Integrators",
+          "count": 3
+        }
+      ],
+      "rows": [
+        {
+          "id": "lead-time",
+          "lens": [
+            "all",
+            "strategic",
+            "distributors"
+          ],
+          "promise": "Order lead-time commitment",
+          "category": "Supply",
+          "whereItBreaks": "Promised ship dates slip once Notification family N-3 hits backorder.",
+          "evidence": "Voice and portal · partners citing revised vs original promise",
+          "partners": [
+            "{{partner:ESD-SE-07}}",
+            "{{partner:DLR-NE-118}}",
+            "{{partner:DIST-US-031}}"
+          ],
+          "volume": 412,
+          "channelsLine": "Voice 38% · Email 30% · Chat 12% · Portal 10% · Social 10%",
+          "tone": -0.44,
+          "importance": "CRITICAL"
+        },
+        {
+          "id": "tech-support",
+          "lens": [
+            "all",
+            "strategic",
+            "integrators"
+          ],
+          "promise": "Tech-support response time",
+          "category": "Service",
+          "whereItBreaks": "L3 seats unavailable; partners escalate the same mapping fault twice.",
+          "evidence": "Cases from {{partner:ESD-SE-07}} · recontact 14% → 38%",
+          "partners": [
+            "{{partner:ESD-SE-07}}",
+            "{{partner:ESD-SW-12}}"
+          ],
+          "volume": 286,
+          "channelsLine": "Voice 42% · Email 28% · Chat 18% · Portal 8% · Social 4%",
+          "tone": -0.39,
+          "importance": "HIGH"
+        },
+        {
+          "id": "cert",
+          "lens": [
+            "all",
+            "strategic",
+            "integrators"
+          ],
+          "promise": "Certification & training seats",
+          "category": "Capability",
+          "whereItBreaks": "186 certifications lapsing ≤30 days; class seats full for June EST4.",
+          "evidence": "LMS + partner portal · seat-request tickets",
+          "partners": [
+            "{{partner:ESD-SE-07}}",
+            "{{partner:ESD-CA-06}}",
+            "{{partner:DLR-W-044}}"
+          ],
+          "volume": 198,
+          "channelsLine": "Voice 22% · Email 40% · Chat 10% · Portal 24% · Social 4%",
+          "tone": -0.31,
+          "importance": "HIGH"
+        },
+        {
+          "id": "quote",
+          "lens": [
+            "all",
+            "distributors",
+            "integrators"
+          ],
+          "promise": "Quote turnaround",
+          "category": "Commercial",
+          "whereItBreaks": "Quotes stall while credit holds and part-number mapping are checked.",
+          "evidence": "Email threads · distributors naming Competitor A on delay",
+          "partners": [
+            "{{partner:DIST-US-031}}",
+            "{{partner:DIST-US-019}}"
+          ],
+          "volume": 164,
+          "channelsLine": "Voice 20% · Email 48% · Chat 14% · Portal 12% · Social 6%",
+          "tone": -0.28,
+          "importance": "MEDIUM"
+        },
+        {
+          "id": "portal",
+          "lens": [
+            "all",
+            "strategic",
+            "distributors"
+          ],
+          "promise": "Portal & licence access",
+          "category": "Digital",
+          "whereItBreaks": "Licence renewals bounce; partners lose programming access mid-job.",
+          "evidence": "Portal tickets · MyEddie / {{term:partner-portal}}",
+          "partners": [
+            "{{partner:ESD-SE-07}}",
+            "{{partner:DLR-SW-201}}"
+          ],
+          "volume": 141,
+          "channelsLine": "Voice 15% · Email 25% · Chat 20% · Portal 35% · Social 5%",
+          "tone": -0.26,
+          "importance": "MEDIUM"
+        },
+        {
+          "id": "spares",
+          "lens": [
+            "all",
+            "strategic",
+            "distributors"
+          ],
+          "promise": "Spare-part availability for legacy panels",
+          "category": "Supply",
+          "whereItBreaks": "Legacy {{platform:EST3}} spares quote long; sites stay on temporary workarounds.",
+          "evidence": "Field notes · ESD shop talk",
+          "partners": [
+            "{{partner:ESD-MW-05}}",
+            "{{partner:DLR-NE-118}}"
+          ],
+          "volume": 97,
+          "channelsLine": "Voice 30% · Email 35% · Chat 10% · Portal 15% · Social 10%",
+          "tone": -0.22,
+          "importance": "MEDIUM"
+        }
+      ]
+    },
+    "trendingTopics": [
+      {
+        "topic": "Backorder delays",
+        "tone": "NEGATIVE",
+        "growthPct": 48,
+        "mentions": 312,
+        "why": "N-3 lines drive 71% on-time vs original promise. Partners push for allocation lists."
+      },
+      {
+        "topic": "Competitor switch talk",
+        "tone": "NEGATIVE",
+        "growthPct": 36,
+        "mentions": 94,
+        "why": "{{place:Houston}} metro names Competitor A when lead times slip past two weeks."
+      },
+      {
+        "topic": "Certification lapsing",
+        "tone": "NEGATIVE",
+        "growthPct": 29,
+        "mentions": 186,
+        "why": "Seat scarcity shows up as higher contacts per job at partners with 2 of 5 techs certified."
+      },
+      {
+        "topic": "Firmware rollback",
+        "tone": "NEGATIVE",
+        "growthPct": 41,
+        "mentions": 67,
+        "why": "Installers undoing fw {{fw:EST4@4.1}} after loop-mapping faults — counted under Quality."
+      },
+      {
+        "topic": "Quote delays",
+        "tone": "NEUTRAL",
+        "growthPct": 12,
+        "mentions": 118,
+        "why": "Distributors wait on credit and mapping; tone softens when a revised date is confirmed."
+      },
+      {
+        "topic": "New platform praise",
+        "tone": "POSITIVE",
+        "growthPct": 22,
+        "mentions": 76,
+        "why": "{{platform:Edge}} training release draws how-to questions, not fault language."
+      }
+    ],
+    "marketSay": {
+      "tabs": [
+        {
+          "id": "all",
+          "label": "All"
+        },
+        {
+          "id": "linkedin",
+          "label": "LinkedIn"
+        },
+        {
+          "id": "forums",
+          "label": "Installer forums"
+        },
+        {
+          "id": "youtube",
+          "label": "YouTube"
+        },
+        {
+          "id": "press",
+          "label": "Trade press"
+        }
+      ],
+      "cards": [
+        {
+          "id": "f1",
+          "source": "forums",
+          "sourceLabel": "Installer forum — fire alarm technicians",
+          "theme": "N-3 backorder workarounds circulating",
+          "summary": "Technicians share temporary panel configurations while waiting on Notification family stock. Tone leans negative when jobs miss handover.",
+          "members": "12.4k members",
+          "postsThisWeek": 38,
+          "tone": "NEGATIVE",
+          "pills": [
+            "N-3",
+            "{{partner:ESD-SE-07}}"
+          ],
+          "action": "Watch closely"
+        },
+        {
+          "id": "l1",
+          "source": "linkedin",
+          "sourceLabel": "LinkedIn — fire-safety integrators group",
+          "theme": "Strategic Partner drift named in comments",
+          "summary": "Integrators note recontact rising at one NA ESD while peers stay in band. Several ask whether L3 coverage was cut.",
+          "members": "8.1k members",
+          "postsThisWeek": 14,
+          "tone": "NEGATIVE",
+          "pills": [
+            "{{partner:ESD-SE-07}}",
+            "Region 1"
+          ],
+          "action": "Respond via owner"
+        },
+        {
+          "id": "y1",
+          "source": "youtube",
+          "sourceLabel": "YouTube — panel programming tutorials",
+          "theme": "{{platform:Edge}} setup after training",
+          "summary": "Tutorial comments are how-to, not fault. Mentions spike after the training release; LiSN keeps the cluster suppressed from the signal set.",
+          "members": "96k views (30d)",
+          "postsThisWeek": 9,
+          "tone": "NEUTRAL",
+          "pills": [
+            "{{platform:Edge}}"
+          ],
+          "action": "Watch closely"
+        },
+        {
+          "id": "p1",
+          "source": "press",
+          "sourceLabel": "Trade press — industry newsletter",
+          "theme": "Lead-time pressure across NA fire channel",
+          "summary": "Newsletter cites allocation tension on notification devices without naming KGS. Useful backdrop for the $2.3m backlog-at-risk figure.",
+          "members": "41k readers",
+          "postsThisWeek": 2,
+          "tone": "NEUTRAL",
+          "pills": [
+            "Backlog"
+          ],
+          "action": "Watch closely"
+        }
+      ]
+    },
+    "standings": {
+      "sub": "Partner movement against own baseline, sell-in and competitor language.",
+      "lenses": [
+        {
+          "id": "all",
+          "label": "All",
+          "count": 6
+        },
+        {
+          "id": "na",
+          "label": "NA",
+          "count": 5
+        },
+        {
+          "id": "r7",
+          "label": "Region 7",
+          "count": 2
+        },
+        {
+          "id": "other",
+          "label": "Other",
+          "count": 1
+        }
+      ],
+      "rows": [
+        {
+          "id": "p07",
+          "lens": [
+            "all",
+            "na",
+            "r7"
+          ],
+          "partner": "{{partner:ESD-SE-07}}",
+          "region": "{{region:US-SE}}",
+          "tier": "Strategic Partner",
+          "sellIn": "−22%",
+          "recontact": "14% → 38%",
+          "competitorMentions": 4,
+          "whyMoved": "Friction 3.1× own baseline; L3 coverage and N-3 allocation.",
+          "echoCount": 11,
+          "echoQuote": "“Same mapping call twice this week — no L3.”",
+          "risk": "HIGH"
+        },
+        {
+          "id": "d031",
+          "lens": [
+            "all",
+            "na",
+            "r7"
+          ],
+          "partner": "{{partner:DIST-US-031}}",
+          "region": "{{region:US}}",
+          "tier": "Distributor",
+          "sellIn": "−9%",
+          "recontact": "19%",
+          "competitorMentions": 2,
+          "whyMoved": "Quote delays + Competitor A named on notification lines.",
+          "echoCount": 5,
+          "echoQuote": "“Need a firm date or we dual-source.”",
+          "risk": "MEDIUM"
+        },
+        {
+          "id": "d118",
+          "lens": [
+            "all",
+            "na"
+          ],
+          "partner": "{{partner:DLR-NE-118}}",
+          "region": "{{region:US-NE}}",
+          "tier": "Dealer",
+          "sellIn": "+1%",
+          "recontact": "15%",
+          "competitorMentions": 1,
+          "whyMoved": "Backorder chatter only; still inside baseline.",
+          "echoCount": 3,
+          "echoQuote": "“Waiting on N-3 — not switching yet.”",
+          "risk": "WATCH"
+        },
+        {
+          "id": "p12",
+          "lens": [
+            "all",
+            "na"
+          ],
+          "partner": "{{partner:ESD-SW-12}}",
+          "region": "{{region:US-SW}}",
+          "tier": "Strategic Partner",
+          "sellIn": "−3%",
+          "recontact": "16%",
+          "competitorMentions": 0,
+          "whyMoved": "Within band; certification seats requested early.",
+          "echoCount": 2,
+          "echoQuote": "“Booked the June class — good.”",
+          "risk": "LOW"
+        },
+        {
+          "id": "d044",
+          "lens": [
+            "all",
+            "na"
+          ],
+          "partner": "{{partner:DLR-W-044}}",
+          "region": "{{region:US-W}}",
+          "tier": "Dealer",
+          "sellIn": "+4%",
+          "recontact": "12%",
+          "competitorMentions": 0,
+          "whyMoved": "Peer sell-in +4%; no competitor language.",
+          "echoCount": 1,
+          "echoQuote": "“Stock held — no drama.”",
+          "risk": "LOW"
+        },
+        {
+          "id": "apac",
+          "lens": [
+            "all",
+            "other"
+          ],
+          "partner": "{{partner:DIST-US-019}}",
+          "region": "{{region:APAC}}",
+          "tier": "Distributor",
+          "sellIn": "+2%",
+          "recontact": "11%",
+          "competitorMentions": 0,
+          "whyMoved": "Outside the NA drift pattern; quiet week.",
+          "echoCount": 0,
+          "echoQuote": "—",
+          "risk": "LOW"
+        }
+      ],
+      "lisnNote": "419 of 420 NA strategic partners stay inside their own baseline; the channel story this week is one ESD at 3.1× plus N-3 backlog pressure — not a broad collapse."
     }
   }
 }

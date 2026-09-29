@@ -1144,7 +1144,79 @@ export interface InstalledBaseFile extends InstalledBasePage {
 /** channel.json */
 export interface ChannelFile extends ChannelPage {
   panelCopy: Record<string, PanelCopy>;
+  v2: ChannelV2;
 }
+
+export interface ChannelV2 {
+  channelMix: {
+    id: string;
+    label: TokenString;
+    icon: string;
+    interactions: number;
+    wow: number;
+    negativeShare: number;
+    topTopic: TokenString;
+  }[];
+  promiseGap: {
+    sub: TokenString;
+    lenses: { id: string; label: TokenString; count?: number }[];
+    rows: {
+      id: string;
+      lens: string[];
+      promise: TokenString;
+      category: TokenString;
+      whereItBreaks: TokenString;
+      evidence: TokenString;
+      partners: TokenString[];
+      volume: number;
+      channelsLine: string;
+      tone: number;
+      importance: string;
+    }[];
+  };
+  trendingTopics: {
+    topic: TokenString;
+    tone: string;
+    growthPct: number;
+    mentions: number;
+    why: TokenString;
+  }[];
+  marketSay: {
+    tabs: { id: string; label: TokenString }[];
+    cards: {
+      id: string;
+      source: string;
+      sourceLabel: TokenString;
+      theme: TokenString;
+      summary: TokenString;
+      members: TokenString;
+      postsThisWeek: number;
+      tone: string;
+      pills: TokenString[];
+      action: TokenString;
+    }[];
+  };
+  standings: {
+    sub: TokenString;
+    lenses: { id: string; label: TokenString; count?: number }[];
+    rows: {
+      id: string;
+      lens: string[];
+      partner: TokenString;
+      region: TokenString;
+      tier: TokenString;
+      sellIn: string;
+      recontact: string;
+      competitorMentions: number;
+      whyMoved: TokenString;
+      echoCount: number;
+      echoQuote: TokenString;
+      risk: string;
+    }[];
+    lisnNote: TokenString;
+  };
+}
+
 export interface TopicTotal {
   key: string;
   label: string;
@@ -1162,5 +1234,94 @@ export interface SeparationFile extends SeparationPage {
     cumulativeUsdK: number[];
     dsoDeltaDays: number[];
     currency: "USD";
+  };
+  v2: SeparationV2;
+}
+
+export interface SeparationV2 {
+  cutoverFailures: {
+    title: TokenString;
+    sub: TokenString;
+    kpis: {
+      label: TokenString;
+      value: TokenString;
+      sub?: TokenString;
+      status: string;
+      money?: boolean;
+    }[];
+    tableTitle: TokenString;
+    rows: {
+      system: TokenString;
+      impact: string;
+      contacts: number;
+      vsControl: string;
+      channels: string;
+      owner: TokenString;
+    }[];
+  };
+  cashImpact: {
+    title: TokenString;
+    sub: TokenString;
+    kpis: {
+      label: TokenString;
+      value: TokenString;
+      sub?: TokenString;
+      status: string;
+      money?: boolean;
+    }[];
+    tableTitle: TokenString;
+    rows: {
+      distributor: TokenString;
+      region: TokenString;
+      invoices: number;
+      amount: string;
+      dsoChange: string;
+      mainIssue: TokenString;
+    }[];
+  };
+  whyStuck: {
+    title: TokenString;
+    sub: TokenString;
+    metrics: { label: TokenString; value: string; delta: TokenString }[];
+    causes: {
+      cause: TokenString;
+      count: number;
+      share: string;
+      avgDelay: string;
+      severity: string;
+    }[];
+    watchlist: {
+      severity: string;
+      theme: TokenString;
+      stage: TokenString;
+      blocker: TokenString;
+      distributor: TokenString;
+      region: TokenString;
+      daysOpen: number;
+    }[];
+    diagnosis: {
+      main: TokenString;
+      changed: TokenString;
+      decideFirst: TokenString;
+    };
+  };
+  topIssues: {
+    label: TokenString;
+    contacts: number;
+    recontact: string;
+    tone: number;
+    channel: TokenString;
+    severity: string;
+  }[];
+  funnel: {
+    title: TokenString;
+    sub: TokenString;
+    stages: {
+      label: TokenString;
+      volume: number;
+      avgDays: number;
+      status: string;
+    }[];
+    footer: TokenString;
   };
 }
