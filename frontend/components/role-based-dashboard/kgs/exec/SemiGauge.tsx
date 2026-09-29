@@ -46,7 +46,11 @@ export function SemiGauge({
       }}
     >
       <div style={{ position: "relative", width: "100%", height: 58 }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 1, height: 1 }}
+        >
           <RadialBarChart
             data={data}
             startAngle={180}

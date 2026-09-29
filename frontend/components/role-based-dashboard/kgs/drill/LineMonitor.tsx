@@ -138,7 +138,11 @@ export function LineMonitor({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       <div role="img" aria-label={ariaLabel} style={{ height }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 1, height: 1 }}
+        >
           <LineChart
             data={rows}
             margin={{ top: 44, right: 12, bottom: 4, left: 0 }}

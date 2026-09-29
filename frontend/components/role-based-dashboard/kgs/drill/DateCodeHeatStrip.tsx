@@ -214,7 +214,11 @@ export function DateCodeHeatStrip() {
 
         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <div role="img" aria-label={L(P.right ?? "")} style={{ height: 110 }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer
+              width="100%"
+              height="100%"
+              initialDimension={{ width: 1, height: 1 }}
+            >
               <LineChart
                 data={pRows}
                 margin={{ top: 14, right: 12, bottom: 4, left: 0 }}

@@ -130,7 +130,11 @@ export function StackedBarWithDetailPanel({
       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {controls}
         <div role="img" aria-label={ariaLabel} style={{ height: 320 }}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            initialDimension={{ width: 1, height: 1 }}
+          >
             <BarChart
               data={rows}
               margin={{ top: 8, right: 8, bottom: 4, left: 0 }}

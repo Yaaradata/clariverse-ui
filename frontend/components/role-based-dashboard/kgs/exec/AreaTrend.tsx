@@ -56,7 +56,11 @@ export function AreaTrend({
 
   return (
     <div style={{ width: "100%", height }}>
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer
+        width="100%"
+        height="100%"
+        initialDimension={{ width: 1, height: 1 }}
+      >
         <ComposedChart
           data={data}
           margin={{ top: 6, right: 2, left: 2, bottom: 0 }}

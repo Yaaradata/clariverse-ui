@@ -256,7 +256,11 @@ export function FirmwareLineageChart() {
       </div>
 
       <div style={{ width: "100%", height: 300 }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 1, height: 1 }}
+        >
           <ComposedChart data={ROWS} syncId="kgs-lineage" margin={PLOT_MARGIN}>
             <defs>
               <linearGradient id="kgs-lineage-41" x1="0" y1="0" x2="0" y2="1">
@@ -470,7 +474,11 @@ export function FirmwareLineageChart() {
           {lineage.denominatorLabel}
         </span>
         <div style={{ flex: 1, minWidth: 0, height: 40 }}>
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer
+            width="100%"
+            height="100%"
+            initialDimension={{ width: 1, height: 1 }}
+          >
             <BarChart
               data={ROWS}
               syncId="kgs-lineage"

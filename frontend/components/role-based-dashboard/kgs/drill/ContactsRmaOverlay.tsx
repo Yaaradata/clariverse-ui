@@ -128,7 +128,11 @@ export function ContactsRmaOverlay() {
   return (
     <Panel title={L(P.title)} sub={L(P.unit ?? "")}>
       <div role="img" aria-label={L(P.title)} style={{ height: 250 }}>
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          initialDimension={{ width: 1, height: 1 }}
+        >
           <ComposedChart
             data={rows}
             margin={{ top: 30, right: 4, bottom: 4, left: 0 }}
