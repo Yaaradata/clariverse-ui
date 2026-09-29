@@ -44,7 +44,9 @@ export function FieldSignalMonitor() {
         {cards.length ? (
           cards.map((c) => <SignalMonitorCard key={c.signalId} card={c} />)
         ) : (
-          <div style={{ flex: "1 1 0", minWidth: 240, scrollSnapAlign: "start" }}>
+          <div
+            style={{ flex: "0 0 280px", minWidth: 280, scrollSnapAlign: "start" }}
+          >
             <EmptyScope />
           </div>
         )}

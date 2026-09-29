@@ -9,9 +9,9 @@ export function SuppressedEndCard() {
   return (
     <article
       style={{
-        minWidth: 240,
+        minWidth: 280,
         minHeight: 240,
-        flex: "1 1 0",
+        flex: "0 0 280px",
         scrollSnapAlign: "start",
         borderRadius: 16,
         border: `1px solid ${K.borderLight}`,
@@ -26,7 +26,9 @@ export function SuppressedEndCard() {
       <h3 style={{ margin: 0, fontSize: 14, fontWeight: 700, color: K.text }}>
         {c.title}
       </h3>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}>
+      <div
+        style={{ display: "flex", flexDirection: "column", gap: 8, flex: 1 }}
+      >
         {c.rows.map((r) => (
           <div
             key={r.label}

@@ -5,8 +5,8 @@ import type { MonitorCard as MonitorCardData } from "@kgs/types";
 import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { GateChip } from "../shared/GateChip";
-import { MONEY } from "../shared/MoneyText";
 import { IllustrativeChip } from "../shared/IllustrativeChip";
+import { MONEY } from "../shared/MoneyText";
 import { PnLDestinationTag } from "../shared/PnLDestinationTag";
 import { Popover } from "../shared/Popover";
 import { SeverityChip } from "../shared/SeverityChip";
@@ -82,9 +82,9 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
     <article
       className="kgs-lift"
       style={{
-        minWidth: 240,
+        minWidth: 280,
         minHeight: 240,
-        flex: "1 1 0",
+        flex: "0 0 280px",
         scrollSnapAlign: "start",
         borderRadius: 16,
         border: `1px solid ${withAlpha(tone, 0.53)}`,
@@ -171,7 +171,9 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
             >
               {r.label}
             </span>
-            <span style={{ color: K.text, textAlign: "right" }}>{L(r.value)}</span>
+            <span style={{ color: K.text, textAlign: "right" }}>
+              {L(r.value)}
+            </span>
           </div>
         ))}
       </div>
@@ -198,13 +200,23 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
           gap: 6,
         }}
       >
-        <GateChip text={ownerGate} status={approved ? "approved" : "awaiting"} />
+        <GateChip
+          text={ownerGate}
+          status={approved ? "approved" : "awaiting"}
+        />
         <ConfidenceMarker
           confidence={signal?.confidence}
           short={card.confidenceCompact ?? card.confidenceShort}
           compact
         />
-        <span style={{ ...chipStyle, display: "inline-flex", gap: 4, alignItems: "center" }}>
+        <span
+          style={{
+            ...chipStyle,
+            display: "inline-flex",
+            gap: 4,
+            alignItems: "center",
+          }}
+        >
           {meta.ui.pnl}
           <PnLDestinationTag text={card.pnlShort} />
           {MONEY.test(card.blastRadius) ? <IllustrativeChip /> : null}
@@ -214,7 +226,9 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
             label="Joined on"
             width={280}
             trigger={
-              <span style={{ ...chipStyle, color: K.violet400, fontWeight: 700 }}>
+              <span
+                style={{ ...chipStyle, color: K.violet400, fontWeight: 700 }}
+              >
                 Joined on ({joinTags.length})
               </span>
             }
