@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { promiseAnswer } from "@/lib/hdfc-v3/copy";
-import { fmt, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import { signalHref, themeMap } from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
@@ -419,7 +419,9 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 }}
               >
                 {e.summary}{" "}
-                <span style={{ color: C.textMut }}>({e.source_label})</span>
+                <span style={{ color: C.textMut }}>
+                  ({e.place} · {fmtDate(e.created_at)})
+                </span>
               </Link>
             ))}
         </Tile>

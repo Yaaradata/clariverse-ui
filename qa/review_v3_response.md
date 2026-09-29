@@ -97,3 +97,9 @@
 | V1 (`/hdfc-pulse/v1`) still ships its whole evidence set | **Deferred** | V1 is kept as first shown and is no longer linked from any header. Its three official handles are now role tags and it carries no names. Slicing V1's bundle needs changes in V1 code; say if you want it. |
 | Source links on signal pages open the original, unredacted posts | **Disagree, disclosed** | Kept for provenance, and the footer says the link opens the original public post. Remove them if the bank prefers no outbound links. |
 | Public figures in the model-labelling batches | **Fixed** | The committed batch files are redacted in place; all 11,741 accepted labels are unchanged. |
+
+## Follow-up fixes
+
+| # | Item | Status | What was done, or why not |
+|---|---|---|---|
+| F1 | Source links on V2 signal and evidence surfaces | **Fixed** | No link to an original post on any V2 screen. Each quote reads as a plain label: place, app and version, rating, date (e.g. "Play Store review · HDFC Bank v11.2 · 1★ · 14 Sep", "Reddit · r/CreditCardsIndia · 3 Sep", "Forum · TechnoFino · 2 Sep"). The pipeline writes `place`. `load.ts` drops `url` before any page sees it, so URLs stay only in `evidence.json` on the server, for audit. The footer now says quotes are labelled by source and date and not linked. `check_pii.py` has a source-link rule (store review links, X/Twitter status URLs, `reddit.com/r/*/comments`, the five forum domains) over the V2 UI code and the built V2 payloads and client chunks. `test_check_pii.py` seeds 10 links that must trip it, plus a clean payload. Grep of `frontend/.next` outside `hdfc-pulse/v1`: 0 hits. Replaces the "Disagree, disclosed" row on source links above. |

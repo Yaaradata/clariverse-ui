@@ -8,7 +8,7 @@ import type { Bundle, Evidence } from "./types";
 
 /**
  * Server-side slicing (review finding #1). A page passes its client component only the evidence it renders, never the
- * whole bundle: every other page gets an empty evidence map. Full quote text, source link and title go only to the
+ * whole bundle: every other page gets an empty evidence map. Full quote text and title go only to the
  * signal page, the one screen that shows them; elsewhere a quote is its summary alone.
  */
 export type Slice =
@@ -80,7 +80,7 @@ function idsFor(b: Bundle, s: Slice): { ids: string[]; full: boolean } {
 }
 
 function summaryOnly(e: Evidence): Evidence {
-  return { ...e, redacted_text: "", url: "", title: null };
+  return { ...e, redacted_text: "", title: null };
 }
 
 /** The bundle a page hands to its client component. */

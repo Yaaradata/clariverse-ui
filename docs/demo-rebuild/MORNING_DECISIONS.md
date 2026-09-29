@@ -159,3 +159,12 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Basis:** trends compare 1 Jul–14 Aug with 15 Aug–28 Sep, as a share of trend-basis items.
 - **Excluded stream:** the Play Store HDFC Bank app export holds the latest 5,000 reviews (from 25 July), so it counts in totals but not in trends.
 - **No baseline claims:** no export has history before July.
+
+---
+
+# Follow-up fixes (fix/review-v3)
+
+## D16 · No links to original posts
+- **Shipped:** quotes carry a plain place label and date; V2 never links to the post. URLs stay in `evidence.json` on the server for audit.
+- **Judgement call:** the source-link rule scans the built V2 pages, so `check_pii` fails on a stale build made before this change. Run `next build` before the checks, or accept the failure until the next build. V1 is excluded (kept as first shown).
+- **Judgement call:** Reddit community names (e.g. r/CreditCardsIndia) and forum names (e.g. TechnoFino) are shown. They are public community names, not people, and the brief's example label uses them.

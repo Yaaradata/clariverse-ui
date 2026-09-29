@@ -32,6 +32,29 @@ SINCE_830 = "2026-09-28T08:30:00+05:30"
 IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction", "trading_securities", "insurance_group"}
 SOURCE_LABEL = {"playstore": "Play Store", "appstore": "App Store", "x": "X", "reddit": "Reddit", "forum": "Forums"}
+# Plain place labels for evidence. Screens never link to the original post (the URL stays in evidence.json, server-side,
+# for audit only), so each quote says where it came from in words.
+FORUM_NAME = {
+    "technofino": "TechnoFino", "trustpilot": "Trustpilot", "consumercomplaints": "Consumer Complaints",
+    "mouthshut": "MouthShut", "complaintsboard": "ComplaintsBoard",
+}
+
+
+def place_label(r) -> str:
+    src = r["source"]
+    if src == "playstore":
+        return "Play Store review"
+    if src == "appstore":
+        return "App Store review"
+    if src == "x":
+        return "X post"
+    if src == "reddit":
+        return f"Reddit · r/{r['subreddit']}" if r.get("subreddit") else "Reddit"
+    if src == "forum":
+        return f"Forum · {FORUM_NAME.get(r.get('subreddit'), 'consumer forum')}"
+    return SOURCE_LABEL.get(src, src)
+
+
 OWNER_LABEL = {
     "cx": "CX", "digital": "Digital", "cards": "Cards", "retail": "Retail", "loans": "Loans", "payments": "Payments",
     "compliance": "Compliance", "fraud_cyber": "Fraud and Cyber", "operations": "Operations", "rm": "RM", "product": "Product",
@@ -631,7 +654,8 @@ def main():
         if not r:
             continue
         evidence[eid] = {
-            "id": eid, "source": r["source"], "source_label": SOURCE_LABEL[r["source"]], "created_at": r["created_at"],
+            "id": eid, "source": r["source"], "source_label": SOURCE_LABEL[r["source"]],
+            "place": place_label(r), "created_at": r["created_at"],
             "url": r["url"], "summary": r["summary"], "redacted_text": clip(r["text"] or "", 700), "title": r.get("title"),
             "app_name": r.get("app_name"), "app_version": r.get("app_version"), "rating": r.get("rating"),
             "themes": r["themes"], "sentiment": r["sentiment"], "owner": r["owner"], "entity": r["entity"],

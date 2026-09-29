@@ -255,8 +255,9 @@ export type Evidence = {
   id: string;
   source: string;
   source_label: string;
+  /** Where the quote came from, in words, e.g. "Reddit · r/CreditCardsIndia". Screens never link to the post. */
+  place: string;
   created_at: string;
-  url: string;
   summary: string;
   redacted_text: string;
   title: string | null;

@@ -27,7 +27,7 @@ export type ShellProps = {
   ask: AskFile;
   askEvidence: Record<
     string,
-    Pick<Evidence, "id" | "summary" | "source_label" | "created_at" | "themes">
+    Pick<Evidence, "id" | "summary" | "place" | "created_at" | "themes">
   >;
   title: string;
   subtitle?: string;

@@ -448,7 +448,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                   {e?.summary}
                 </div>
                 <div style={{ fontSize: 12.5, color: C.textMut }}>
-                  {fmt(t.count)} items · {e?.source_label}
+                  {fmt(t.count)} items · {e?.place}
+                  {e ? ` · ${fmtDate(e.created_at)}` : ""}
                 </div>
               </Link>
             );
@@ -496,7 +497,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               }}
             >
               {e.summary}{" "}
-              <span style={{ color: C.textMut }}>({e.source_label})</span>
+              <span style={{ color: C.textMut }}>
+                ({e.place} · {fmtDate(e.created_at)})
+              </span>
             </Link>
           ))}
         </Tile>

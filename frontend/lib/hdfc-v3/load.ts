@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import type { Bundle } from "./types";
+import type { Bundle, Evidence } from "./types";
 
 /**
  * Server-side loader. The pipeline writes to the repo root (data/out/app, data/seed); the frontend reads those files at
@@ -15,6 +15,16 @@ function read<T>(...parts: string[]): T {
   return JSON.parse(fs.readFileSync(path.join(ROOT, ...parts), "utf-8")) as T;
 }
 
+/**
+ * Post URLs stay in evidence.json on the server, for audit only. They are dropped here, so no page payload can carry a
+ * link to the original post (follow-up fix 1); each quote carries a plain place label instead.
+ */
+function withoutLinks(raw: Record<string, Evidence & { url?: string }>) {
+  const out: Record<string, Evidence> = {};
+  for (const [id, { url: _url, ...e }] of Object.entries(raw)) out[id] = e;
+  return out;
+}
+
 let cache: Bundle | null = null;
 
 export function loadBundle(): Bundle {
@@ -26,7 +36,7 @@ export function loadBundle(): Bundle {
     mood: read("out", PUBLIC, "mood.json"),
     briefing: read("out", PUBLIC, "briefing.json"),
     meta: read("out", PUBLIC, "meta.json"),
-    evidence: read("out", PUBLIC, "evidence.json"),
+    evidence: withoutLinks(read("out", PUBLIC, "evidence.json")),
     ask: read("out", PUBLIC, "ask.json"),
     products: read("out", PUBLIC, "products.json"),
     storeSeries: read("out", PUBLIC, "store_series.json"),

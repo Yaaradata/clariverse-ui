@@ -13,7 +13,7 @@ export function shellProps(
         askEvidence[id] = {
           id: e.id,
           summary: e.summary,
-          source_label: e.source_label,
+          place: e.place,
           created_at: e.created_at,
           themes: e.themes,
         };

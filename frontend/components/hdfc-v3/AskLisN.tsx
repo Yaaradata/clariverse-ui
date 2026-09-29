@@ -8,10 +8,7 @@ import { fmtDate } from "@/lib/hdfc-v3/format";
 import type { AskEntry, AskFile, Evidence, View } from "@/lib/hdfc-v3/types";
 import { C, ProvenanceTag } from "./primitives";
 
-type Ev = Pick<
-  Evidence,
-  "id" | "summary" | "source_label" | "created_at" | "themes"
->;
+type Ev = Pick<Evidence, "id" | "summary" | "place" | "created_at" | "themes">;
 
 const STOP = new Set([
   "the",
@@ -298,7 +295,7 @@ export function AskLisN({
                               background: C.cardAlt,
                             }}
                           >
-                            {ev.source_label} · {fmtDate(ev.created_at)}
+                            {ev.place} · {fmtDate(ev.created_at)}
                           </Link>
                         );
                       })}

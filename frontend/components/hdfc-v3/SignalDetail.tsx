@@ -1,6 +1,5 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
 
 import {
@@ -147,24 +146,11 @@ export function EvidenceList({ items }: { items: Evidence[] }) {
             }}
           >
             <span>
-              {e.source_label}
+              {e.place}
               {e.app_name ? ` · ${e.app_name}` : ""}
               {e.app_version ? ` v${e.app_version}` : ""}
               {e.rating ? ` · ${e.rating}★` : ""} · {fmtDate(e.created_at)}
             </span>
-            <a
-              href={e.url}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: "#b7a6ff",
-                display: "inline-flex",
-                gap: 4,
-                alignItems: "center",
-              }}
-            >
-              Source <ExternalLink size={12} />
-            </a>
           </div>
           <div
             style={{
@@ -186,7 +172,8 @@ export function EvidenceList({ items }: { items: Evidence[] }) {
         Anonymised: people's names and personal handles are replaced with a
         role, such as [staff member]; numbers and IDs are redacted. Quotes that
         make an allegation against a named person are not shown. Summaries are
-        paraphrased. The source link opens the original public post.
+        paraphrased. Quotes are labelled by source and date; the demo does not
+        link to the original posts.
       </MutedNote>
     </div>
   );
