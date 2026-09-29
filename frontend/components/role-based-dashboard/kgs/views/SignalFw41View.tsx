@@ -9,6 +9,7 @@ import { SeverityStrip } from "../shared/SeverityStrip";
 import { K } from "../shared/tokens";
 import { CohortMiniTable } from "../signal/CohortMiniTable";
 import { CounterEvidence } from "../signal/CounterEvidence";
+import { DecisionPanel } from "../signal/DecisionPanel";
 import { FirmwareLineageChart } from "../signal/FirmwareLineageChart";
 import { fill } from "../signal/format";
 import { PnLDetail } from "../signal/PnLDetail";
@@ -114,7 +115,10 @@ export function SignalFw41View() {
             ) : null}
             <RecommendedAction />
           </Block>
-          <section id="decision" />
+          <DecisionPanel
+            onViewDraft={() => undefined}
+            onOpenEvidence={() => undefined}
+          />
         </div>
       </div>
     </div>

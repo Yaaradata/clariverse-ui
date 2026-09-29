@@ -64,6 +64,12 @@ const GLOBAL_CSS = `
 @keyframes kgs-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes kgs-ping-ring { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
 .kgs-root .kgs-ping { transform-box: fill-box; transform-origin: center; opacity: 0; animation: kgs-ping-ring 1.2s ease-out 1.1s 2; }
+@keyframes kgs-spin { to { transform: rotate(360deg); } }
+.kgs-root .kgs-spin { animation: kgs-spin 800ms linear infinite; }
+@keyframes kgs-slide { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.kgs-root .kgs-slide { animation: kgs-slide 200ms ease-out both; }
+@keyframes kgs-draw { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
+.kgs-root .kgs-check path { stroke-dasharray: 40; animation: kgs-draw 250ms ease-out both; }
 @media (prefers-reduced-motion: reduce) {
   .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
 }
