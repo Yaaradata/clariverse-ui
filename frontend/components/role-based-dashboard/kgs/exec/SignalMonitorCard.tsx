@@ -6,6 +6,7 @@ import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { GateChip } from "../shared/GateChip";
 import { JoinTagRow } from "../shared/JoinTagRow";
+import { MoneyText } from "../shared/MoneyText";
 import { PnLDestinationTag } from "../shared/PnLDestinationTag";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
 import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
@@ -131,7 +132,7 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
           {SEV[card.chips.class].glyph}
         </span>
         <span>
-          {L(card.blastRadius)}
+          <MoneyText text={card.blastRadius} />
           {incident ? ` · ${incident}` : ""}
         </span>
       </div>

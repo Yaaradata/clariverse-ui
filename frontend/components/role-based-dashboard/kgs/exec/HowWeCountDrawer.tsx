@@ -3,6 +3,7 @@
 import { exec } from "@kgs/lib/data";
 import { valueRegister, valueStatements } from "@kgs/lib/values";
 import { useEffect } from "react";
+import { MoneyText } from "../shared/MoneyText";
 import { Drawer } from "../shared/Overlay";
 import { K, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
@@ -90,7 +91,9 @@ export function HowWeCountDrawer({
                 <span style={{ fontFamily: K.mono, color: K.textMut }}>
                   {v.id}
                 </span>
-                <span>{L(v.figure)}</span>
+                <span>
+                  <MoneyText text={v.figure} />
+                </span>
               </div>
               <div
                 style={{

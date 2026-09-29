@@ -1,6 +1,7 @@
 "use client";
 
 import type { WatchlistCard } from "@kgs/types";
+import { MoneyText } from "../shared/MoneyText";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { DrillChip } from "./Chips";
@@ -71,8 +72,12 @@ export function AgedCaseWatchlist({
             >
               {L(w.title)}
             </h4>
-            <div style={{ fontSize: 13, color: K.body }}>{L(w.stage)}</div>
-            <div style={{ fontSize: 13, color: K.amber2 }}>{L(w.blocker)}</div>
+            <div style={{ fontSize: 13, color: K.body }}>
+              <MoneyText text={w.stage} />
+            </div>
+            <div style={{ fontSize: 13, color: K.amber2 }}>
+              <MoneyText text={w.blocker} />
+            </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {w.tags.map((t) => (
                 <span
@@ -86,7 +91,7 @@ export function AgedCaseWatchlist({
                     color: K.body,
                   }}
                 >
-                  {L(t)}
+                  <MoneyText text={t} />
                 </span>
               ))}
             </div>

@@ -11,6 +11,7 @@ import { Sparkles } from "lucide-react";
 import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { EmptyScope } from "../shared/EmptyScope";
+import { MoneyText } from "../shared/MoneyText";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
 import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
@@ -106,7 +107,7 @@ function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
           fontVariantNumeric: "tabular-nums",
         }}
       >
-        {L(card.metric)}
+        <MoneyText text={card.metric} />
       </div>
       <div style={{ fontSize: 13, fontWeight: 700, color: K.textSec }}>
         {L(card.trend)}
@@ -117,7 +118,7 @@ function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
             <span aria-hidden style={{ color: tone }}>
               {SEV[linked.chips.class].glyph}{" "}
             </span>
-            {L(linked.blastRadius)}
+            <MoneyText text={linked.blastRadius} />
             {incident ? ` · ${incident}` : ""}
           </div>
           <SignalSurface

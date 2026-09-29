@@ -3,6 +3,7 @@
 import type { KpiTile as KpiTileData } from "@kgs/types";
 import { CountUp } from "../shared/CountUp";
 import { IllustrativeChip } from "../shared/IllustrativeChip";
+import { MoneyText } from "../shared/MoneyText";
 import { K, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 
@@ -50,7 +51,9 @@ export function KpiTile({ tile }: { tile: KpiTileData }) {
         {tile.money ? <IllustrativeChip /> : null}
       </div>
       {tile.sub ? (
-        <div style={{ fontSize: 13, color: K.textMut }}>{L(tile.sub)}</div>
+        <div style={{ fontSize: 13, color: K.textMut }}>
+          <MoneyText text={tile.sub} />
+        </div>
       ) : null}
     </div>
   );

@@ -3,12 +3,14 @@
 import { exec } from "@kgs/lib/data";
 import { Sparkles } from "lucide-react";
 import { useKgsNav } from "../nav";
+import { MoneyText } from "../shared/MoneyText";
 import { K, withAlpha } from "../shared/tokens";
 import { useDemo, useLabel } from "../shell/DemoProvider";
 
 const HERO_ID = "fw-4-1";
 
 function Chip({ text, tone }: { text: string; tone?: string }) {
+  const L = useLabel();
   return (
     <span
       style={{
@@ -22,7 +24,7 @@ function Chip({ text, tone }: { text: string; tone?: string }) {
         whiteSpace: "nowrap",
       }}
     >
-      {text}
+      {L(text)}
     </span>
   );
 }
@@ -66,7 +68,7 @@ export function PulseStrip() {
             letterSpacing: "0.1em",
           }}
         >
-          {exec.pulseLabel}
+          {L(exec.pulseLabel)}
         </h2>
       </div>
       <div
@@ -127,7 +129,7 @@ export function PulseStrip() {
                     background: K.textMut,
                   }}
                 />
-                {item.n}. {item.title}
+                {item.n}. {L(item.title)}
               </div>
               <div
                 style={{
@@ -137,7 +139,7 @@ export function PulseStrip() {
                   fontWeight: 500,
                 }}
               >
-                {L(item.text)}
+                <MoneyText text={item.text} />
               </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                 <Chip text={item.chips[0]} />
