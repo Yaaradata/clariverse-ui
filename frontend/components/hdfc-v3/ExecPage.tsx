@@ -708,7 +708,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           icon={<Shield size={18} />}
           title="What is the market saying about us?"
           micro="Themes · Rising · App pulse"
-          answer={`${riser?.label ?? "—"} is rising fastest. Version 11 of the HDFC Bank app, the new release, has ${fmtPct(rp?.new_app_share_positive)} positive reviews, against ${fmtPct(rp?.old_app_share_positive)} on earlier versions.`}
+          answer={`${riser?.label ?? "—"} is rising fastest. On the Play Store, version 11 of the HDFC Bank app, the new release, has ${fmtPct(rp?.by_store.playstore?.new_app_share_positive)} positive reviews, against ${fmtPct(rp?.by_store.playstore?.old_app_share_positive)} on earlier versions.`}
           headlineLabel="Public posts and reviews"
           headline={fmt(b.themes.total_items)}
           caption={`HDFC Bank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}. X, Reddit, forums, Play Store, App Store.`}

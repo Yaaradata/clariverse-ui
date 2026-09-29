@@ -98,6 +98,12 @@ FIXTURES = [
      lambda s, o: _rw_json(s / "aggregates.json", lambda a: a["deliverables_detail"]["ageing"][0].update(open_cases=a["deliverables_detail"]["ageing"][0]["open_cases"] + 1))),
     ("satisfaction tiers", "satisfaction: tiers",
      lambda s, o: _rw_json(s / "aggregates.json", lambda a: a["satisfaction"]["tiers"][0].update(interactions=a["satisfaction"]["tiers"][0]["interactions"] + 1))),
+    ("pooled store rating", "store ratings and shares sit within one store",
+     lambda s, o: _rw_json(o / "app_pulse.json", lambda p: p["apps"][0]["window"].update(avg_rating=3.2, share_positive=50.0))),
+    ("pooled release share", "store ratings and shares sit within one store",
+     lambda s, o: _rw_json(o / "briefing.json", lambda b: b["release_pulse"].update(new_app_share_positive=30.0))),
+    ("per-store counts", "per-store review counts add",
+     lambda s, o: _rw_json(o / "app_pulse.json", lambda p: p["apps"][0]["window"].update(n=p["apps"][0]["window"]["n"] + 1))),
     ("public product rows", "public product rows + excluded",
      lambda s, o: _rw_json(o / "products.json", lambda p: p["rows"][0].update(count=p["rows"][0]["count"] + 1))),
 ]
@@ -121,7 +127,7 @@ def main() -> int:
         clean_seed, clean_out = base / "seed", base / "out"
         shutil.copytree(SEED, clean_seed)
         clean_out.mkdir()
-        for f in ("themes.json", "signals.json", "products.json"):
+        for f in ("themes.json", "signals.json", "products.json", "app_pulse.json", "briefing.json", "store_series.json"):
             shutil.copy(OUT / f, clean_out / f)
         baseline = rec.run(clean_seed, clean_out, quiet=True)
         if baseline:

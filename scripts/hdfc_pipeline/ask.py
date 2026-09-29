@@ -130,7 +130,7 @@ def main():
             "id": "release",
             "prompt": "What are customers saying about the latest app release?",
             "keywords": ["app", "release", "latest", "version", "update", "new", "mobile", "banking"],
-            "answer": f"Release pulse for the HDFC Bank app: {rp['share_positive']}% of {fmt(rp['n_reviews'])} window reviews are positive (4–5★). The fix list customers have written:\n"
+            "answer": f"Release pulse for the HDFC Bank app, one store at a time: on the Play Store {rp['by_store']['playstore']['share_positive']}% of {fmt(rp['by_store']['playstore']['n_reviews'])} window reviews are positive (4–5★); on the App Store {rp['by_store']['appstore']['share_positive']}% of {fmt(rp['by_store']['appstore']['n_reviews'])}. The fix list customers have written:\n"
             + "\n".join(f"• {f['issue']}: {fmt(f['count'])} negative reviews" for f in rp["fix_list"][:4]),
             "evidence": cite(rp["exemplars"]),
             "links": [{"label": "Open the app module", "href": f"{BASE}/module/digital"}],

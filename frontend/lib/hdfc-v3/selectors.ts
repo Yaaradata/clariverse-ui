@@ -110,11 +110,17 @@ export function signalFromRelease(rp: ReleasePulse): SignalItem {
     action: rp.action,
     status: "needs_you",
     count: rp.count,
-    why: `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release; ${Math.round(rp.new_app_share_positive ?? 0)}% of its ${fmt(
-      rp.new_app_n,
-    )} reviews are positive, against ${Math.round(rp.old_app_share_positive ?? 0)}% on earlier versions (Play Store and App Store).`,
+    why: releaseWhy(rp),
     pillar: rp.pillar,
   };
+}
+
+/** Version 11 against earlier versions, within the Play Store only (one store per comparison, follow-up fix 2). */
+export function releaseWhy(rp: ReleasePulse): string {
+  const p = rp.by_store.playstore;
+  if (!p)
+    return `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release.`;
+  return `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release, across both stores. On the Play Store, ${Math.round(p.new_app_share_positive ?? 0)}% of its ${fmt(p.new_app_n)} reviews are positive, against ${Math.round(p.old_app_share_positive ?? 0)}% of ${fmt(p.old_app_n)} on earlier versions.`;
 }
 
 export function needsYou(b: Bundle): SignalItem[] {

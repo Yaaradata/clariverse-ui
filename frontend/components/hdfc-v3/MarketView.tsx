@@ -8,7 +8,6 @@ import {
   fmt,
   fmtDate,
   fmtPct,
-  fmtSigned,
   halfLabel,
   rangeLong,
 } from "@/lib/hdfc-v3/format";
@@ -125,6 +124,12 @@ const STAR_COLOR: Record<number, string> = {
 const ratingColor = (r: number) =>
   r >= 4 ? C.green : r >= 3 ? C.amber : C.red;
 
+// Version ratings are shown one store at a time, never pooled (follow-up fix 2).
+const STORES = [
+  ["playstore", "Play Store"],
+  ["appstore", "App Store"],
+] as const;
+
 function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
   // Play Store where the app has it, so the cards compare apps within one store (review finding #13).
   const store = a.by_store?.playstore ? "Play Store" : "App Store";
@@ -226,12 +231,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
         </div>
       </div>
       <BaselineCaption>
-        {a.mode === "vs_baseline" && a.baseline
-          ? `vs baseline (${fmt(a.baseline.n)} reviews, Feb–Jul): ${a.baseline.avg_rating.toFixed(1)}★, ${fmtPct(a.baseline.share_positive)} positive; change ${fmtSigned(
-              (w.share_positive ?? 0) - (a.baseline.share_positive ?? 0),
-              " pts",
-            )}.`
-          : `Trend within window (${a.streams.map((s) => `${s.stream.split(":")[0] === "playstore" ? "Play Store" : "App Store"} from ${fmtDate(s.window_first ?? s.earliest)}`).join("; ")}). No baseline claim.`}
+        {`Trend within window (${a.streams.map((s) => `${s.stream.split(":")[0] === "playstore" ? "Play Store" : "App Store"} from ${fmtDate(s.window_first ?? s.earliest)}`).join("; ")}). No baseline claim.`}
       </BaselineCaption>
       <div>
         <div
@@ -340,18 +340,22 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
           </div>
         </div>
       ) : null}
-      {a.versions.length ? (
-        <div style={{ fontSize: 12.5, color: C.textMut }}>
-          By version (Play Store and App Store together; the one-store
-          comparison is on the app module):{" "}
-          {a.versions
-            .slice(0, 4)
-            .map(
-              (v) => `v${v.version} ${v.avg_rating.toFixed(1)}★ (${fmt(v.n)})`,
-            )
-            .join(" · ")}
-        </div>
-      ) : null}
+      {STORES.map(([st, label]) => {
+        const vs = a.versions_by_store?.[st] ?? [];
+        if (!vs.length) return null;
+        return (
+          <div key={st} style={{ fontSize: 12.5, color: C.textMut }}>
+            {label} by version:{" "}
+            {vs
+              .slice(0, 4)
+              .map(
+                (v) =>
+                  `v${v.version} ${v.avg_rating.toFixed(1)}★ (${fmt(v.n)} reviews)`,
+              )
+              .join(" · ")}
+          </div>
+        );
+      })}
     </div>
   );
 }

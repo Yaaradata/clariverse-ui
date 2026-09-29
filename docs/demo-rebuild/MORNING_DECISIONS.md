@@ -168,3 +168,7 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Shipped:** quotes carry a plain place label and date; V2 never links to the post. URLs stay in `evidence.json` on the server for audit.
 - **Judgement call:** the source-link rule scans the built V2 pages, so `check_pii` fails on a stale build made before this change. Run `next build` before the checks, or accept the failure until the next build. V1 is excluded (kept as first shown).
 - **Judgement call:** Reddit community names (e.g. r/CreditCardsIndia) and forum names (e.g. TechnoFino) are shown. They are public community names, not people, and the brief's example label uses them.
+
+## D17 · One store per comparison
+- **Shipped:** every store rating or share is per store; counts may add across stores.
+- **Judgement call:** the "new app" comparison (version 11 vs earlier versions) now uses the Play Store only (1,781 v11 and 2,732 earlier-version reviews), not both stores. The App Store figures stay in the data (`by_store.appstore`) and on the app module's per-store tables. The negative-review count for version 11 is still the two stores added together, and is labelled "across both stores".

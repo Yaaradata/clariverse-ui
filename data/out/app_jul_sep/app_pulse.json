@@ -33,17 +33,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 16,
-    "ratings": {
-     "1": 7,
-     "2": 1,
-     "3": 1,
-     "4": 1,
-     "5": 6
-    },
-    "avg_rating": 2.88,
-    "share_positive": 43.8,
-    "share_negative": 50.0
+    "n": 16
    },
    "by_store": {
     "playstore": {
@@ -85,58 +75,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 3,
-     "avg_rating": 1.33
-    },
-    {
-     "week": "2026-07-06",
-     "n": 2,
-     "avg_rating": 2.5
-    },
-    {
-     "week": "2026-07-13",
-     "n": 1,
-     "avg_rating": 5.0
-    },
-    {
-     "week": "2026-08-10",
-     "n": 1,
-     "avg_rating": 5.0
-    },
-    {
-     "week": "2026-08-17",
-     "n": 1,
-     "avg_rating": 1.0
-    },
-    {
-     "week": "2026-08-24",
-     "n": 3,
-     "avg_rating": 2.33
-    },
-    {
-     "week": "2026-08-31",
-     "n": 1,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-09-07",
-     "n": 2,
-     "avg_rating": 5.0
-    },
-    {
-     "week": "2026-09-14",
-     "n": 1,
-     "avg_rating": 1.0
-    },
-    {
-     "week": "2026-09-21",
-     "n": 1,
-     "avg_rating": 5.0
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -155,7 +93,10 @@
      ]
     }
    ],
-   "versions": [],
+   "versions_by_store": {
+    "playstore": [],
+    "appstore": []
+   },
    "praise_exemplars": [
     "playstore:com.hdfc.cbx:282984cd-e83b-466d-a9d7-7f3e43652b34"
    ],
@@ -219,17 +160,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 5325,
-    "ratings": {
-     "1": 1848,
-     "2": 278,
-     "3": 272,
-     "4": 439,
-     "5": 2488
-    },
-    "avg_rating": 3.27,
-    "share_positive": 55.0,
-    "share_negative": 39.9
+    "n": 5325
    },
    "by_store": {
     "playstore": {
@@ -271,73 +202,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 48,
-     "avg_rating": 3.85
-    },
-    {
-     "week": "2026-07-06",
-     "n": 46,
-     "avg_rating": 3.7
-    },
-    {
-     "week": "2026-07-13",
-     "n": 25,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-07-20",
-     "n": 225,
-     "avg_rating": 3.99
-    },
-    {
-     "week": "2026-07-27",
-     "n": 872,
-     "avg_rating": 3.95
-    },
-    {
-     "week": "2026-08-03",
-     "n": 751,
-     "avg_rating": 3.65
-    },
-    {
-     "week": "2026-08-10",
-     "n": 506,
-     "avg_rating": 3.64
-    },
-    {
-     "week": "2026-08-17",
-     "n": 458,
-     "avg_rating": 3.17
-    },
-    {
-     "week": "2026-08-24",
-     "n": 432,
-     "avg_rating": 2.96
-    },
-    {
-     "week": "2026-08-31",
-     "n": 629,
-     "avg_rating": 2.79
-    },
-    {
-     "week": "2026-09-07",
-     "n": 507,
-     "avg_rating": 2.76
-    },
-    {
-     "week": "2026-09-14",
-     "n": 399,
-     "avg_rating": 2.65
-    },
-    {
-     "week": "2026-09-21",
-     "n": 427,
-     "avg_rating": 2.61
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -390,134 +254,194 @@
      ]
     }
    ],
-   "versions": [
-    {
-     "version": "11.1.0",
-     "n": 467,
-     "ratings": {
-      "1": 271,
-      "2": 36,
-      "3": 28,
-      "4": 17,
-      "5": 115
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "11.1.0",
+      "n": 430,
+      "ratings": {
+       "1": 250,
+       "2": 32,
+       "3": 25,
+       "4": 16,
+       "5": 107
+      },
+      "avg_rating": 2.3,
+      "share_positive": 28.6,
+      "share_negative": 65.6
      },
-     "avg_rating": 2.29,
-     "share_positive": 28.3,
-     "share_negative": 65.7
-    },
-    {
-     "version": "11.0.1",
-     "n": 1424,
-     "ratings": {
-      "1": 764,
-      "2": 117,
-      "3": 92,
-      "4": 71,
-      "5": 380
+     {
+      "version": "11.0.1",
+      "n": 1351,
+      "ratings": {
+       "1": 720,
+       "2": 113,
+       "3": 84,
+       "4": 65,
+       "5": 369
+      },
+      "avg_rating": 2.44,
+      "share_positive": 32.1,
+      "share_negative": 61.7
      },
-     "avg_rating": 2.43,
-     "share_positive": 31.7,
-     "share_negative": 61.9
-    },
-    {
-     "version": "10.1.7",
-     "n": 83,
-     "ratings": {
-      "1": 39,
-      "2": 1,
-      "3": 3,
-      "4": 4,
-      "5": 36
+     {
+      "version": "10.1.6",
+      "n": 802,
+      "ratings": {
+       "1": 360,
+       "2": 53,
+       "3": 23,
+       "4": 37,
+       "5": 329
+      },
+      "avg_rating": 2.9,
+      "share_positive": 45.6,
+      "share_negative": 51.5
      },
-     "avg_rating": 2.96,
-     "share_positive": 48.2,
-     "share_negative": 48.2
-    },
-    {
-     "version": "10.1.6",
-     "n": 843,
-     "ratings": {
-      "1": 375,
-      "2": 53,
-      "3": 26,
-      "4": 38,
-      "5": 351
+     {
+      "version": "10.0.2",
+      "n": 98,
+      "ratings": {
+       "1": 5,
+       "2": 2,
+       "3": 5,
+       "4": 16,
+       "5": 70
+      },
+      "avg_rating": 4.47,
+      "share_positive": 87.8,
+      "share_negative": 7.1
      },
-     "avg_rating": 2.93,
-     "share_positive": 46.1,
-     "share_negative": 50.8
-    },
-    {
-     "version": "10.0.2",
-     "n": 179,
-     "ratings": {
-      "1": 23,
-      "2": 3,
-      "3": 9,
-      "4": 24,
-      "5": 120
+     {
+      "version": "9.0.4",
+      "n": 1772,
+      "ratings": {
+       "1": 104,
+       "2": 35,
+       "3": 89,
+       "4": 252,
+       "5": 1292
+      },
+      "avg_rating": 4.46,
+      "share_positive": 87.1,
+      "share_negative": 7.8
      },
-     "avg_rating": 4.2,
-     "share_positive": 80.4,
-     "share_negative": 14.5
-    },
-    {
-     "version": "9.0.4",
-     "n": 1772,
-     "ratings": {
-      "1": 104,
-      "2": 35,
-      "3": 89,
-      "4": 252,
-      "5": 1292
+     {
+      "version": "8.1.2",
+      "n": 20,
+      "ratings": {
+       "1": 1,
+       "2": 1,
+       "3": 0,
+       "4": 3,
+       "5": 15
+      },
+      "avg_rating": 4.5,
+      "share_positive": 90.0,
+      "share_negative": 10.0
      },
-     "avg_rating": 4.46,
-     "share_positive": 87.1,
-     "share_negative": 7.8
-    },
-    {
-     "version": "8.1.2",
-     "n": 20,
-     "ratings": {
-      "1": 1,
-      "2": 1,
-      "3": 0,
-      "4": 3,
-      "5": 15
+     {
+      "version": "7.5.3",
+      "n": 12,
+      "ratings": {
+       "1": 7,
+       "2": 0,
+       "3": 1,
+       "4": 0,
+       "5": 4
+      },
+      "avg_rating": 2.5,
+      "share_positive": 33.3,
+      "share_negative": 58.3
      },
-     "avg_rating": 4.5,
-     "share_positive": 90.0,
-     "share_negative": 10.0
-    },
-    {
-     "version": "7.5.3",
-     "n": 12,
-     "ratings": {
-      "1": 7,
-      "2": 0,
-      "3": 1,
-      "4": 0,
-      "5": 4
+     {
+      "version": "7.1.6",
+      "n": 11,
+      "ratings": {
+       "1": 8,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 3
+      },
+      "avg_rating": 2.09,
+      "share_positive": 27.3,
+      "share_negative": 72.7
+     }
+    ],
+    "appstore": [
+     {
+      "version": "11.1.0",
+      "n": 37,
+      "ratings": {
+       "1": 21,
+       "2": 4,
+       "3": 3,
+       "4": 1,
+       "5": 8
+      },
+      "avg_rating": 2.22,
+      "share_positive": 24.3,
+      "share_negative": 67.6
      },
-     "avg_rating": 2.5,
-     "share_positive": 33.3,
-     "share_negative": 58.3
-    },
-    {
-     "version": "7.1.6",
-     "n": 11,
-     "ratings": {
-      "1": 8,
-      "2": 0,
-      "3": 0,
-      "4": 0,
-      "5": 3
+     {
+      "version": "11.0.1",
+      "n": 73,
+      "ratings": {
+       "1": 44,
+       "2": 4,
+       "3": 8,
+       "4": 6,
+       "5": 11
+      },
+      "avg_rating": 2.12,
+      "share_positive": 23.3,
+      "share_negative": 65.8
      },
-     "avg_rating": 2.09,
-     "share_positive": 27.3,
-     "share_negative": 72.7
-    }
-   ],
+     {
+      "version": "10.1.7",
+      "n": 83,
+      "ratings": {
+       "1": 39,
+       "2": 1,
+       "3": 3,
+       "4": 4,
+       "5": 36
+      },
+      "avg_rating": 2.96,
+      "share_positive": 48.2,
+      "share_negative": 48.2
+     },
+     {
+      "version": "10.1.6",
+      "n": 41,
+      "ratings": {
+       "1": 15,
+       "2": 0,
+       "3": 3,
+       "4": 1,
+       "5": 22
+      },
+      "avg_rating": 3.37,
+      "share_positive": 56.1,
+      "share_negative": 36.6
+     },
+     {
+      "version": "10.0.2",
+      "n": 81,
+      "ratings": {
+       "1": 18,
+       "2": 1,
+       "3": 4,
+       "4": 8,
+       "5": 50
+      },
+      "avg_rating": 3.88,
+      "share_positive": 71.6,
+      "share_negative": 23.5
+     }
+    ]
+   },
    "praise_exemplars": [
     "playstore:com.hdfcbank.android.now:4dbeee15-cfb5-4460-9805-315cdea089e8",
     "playstore:com.hdfcbank.android.now:afc04f3e-2282-4192-88c1-2b12b310d178",
@@ -682,17 +606,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 345,
-    "ratings": {
-     "1": 151,
-     "2": 13,
-     "3": 10,
-     "4": 19,
-     "5": 152
-    },
-    "avg_rating": 3.02,
-    "share_positive": 49.6,
-    "share_negative": 47.5
+    "n": 345
    },
    "by_store": {
     "playstore": {
@@ -734,132 +648,111 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 19,
-     "avg_rating": 1.95
-    },
-    {
-     "week": "2026-07-06",
-     "n": 21,
-     "avg_rating": 2.0
-    },
-    {
-     "week": "2026-07-13",
-     "n": 13,
-     "avg_rating": 2.85
-    },
-    {
-     "week": "2026-07-20",
-     "n": 12,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-07-27",
-     "n": 19,
-     "avg_rating": 2.95
-    },
-    {
-     "week": "2026-08-03",
-     "n": 37,
-     "avg_rating": 3.22
-    },
-    {
-     "week": "2026-08-10",
-     "n": 30,
-     "avg_rating": 2.9
-    },
-    {
-     "week": "2026-08-17",
-     "n": 46,
-     "avg_rating": 3.24
-    },
-    {
-     "week": "2026-08-24",
-     "n": 35,
-     "avg_rating": 3.74
-    },
-    {
-     "week": "2026-08-31",
-     "n": 33,
-     "avg_rating": 2.76
-    },
-    {
-     "week": "2026-09-07",
-     "n": 24,
-     "avg_rating": 2.96
-    },
-    {
-     "week": "2026-09-14",
-     "n": 32,
-     "avg_rating": 3.53
-    },
-    {
-     "week": "2026-09-21",
-     "n": 24,
-     "avg_rating": 3.08
-    }
-   ],
    "top_issues": [],
-   "versions": [
-    {
-     "version": "8.8",
-     "n": 79,
-     "ratings": {
-      "1": 33,
-      "2": 3,
-      "3": 2,
-      "4": 3,
-      "5": 38
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "8.8",
+      "n": 62,
+      "ratings": {
+       "1": 26,
+       "2": 3,
+       "3": 2,
+       "4": 3,
+       "5": 28
+      },
+      "avg_rating": 3.06,
+      "share_positive": 50.0,
+      "share_negative": 46.8
      },
-     "avg_rating": 3.13,
-     "share_positive": 51.9,
-     "share_negative": 45.6
-    },
-    {
-     "version": "8.7",
-     "n": 162,
-     "ratings": {
-      "1": 58,
-      "2": 6,
-      "3": 8,
-      "4": 14,
-      "5": 76
+     {
+      "version": "8.7",
+      "n": 142,
+      "ratings": {
+       "1": 54,
+       "2": 5,
+       "3": 6,
+       "4": 14,
+       "5": 63
+      },
+      "avg_rating": 3.19,
+      "share_positive": 54.2,
+      "share_negative": 41.5
      },
-     "avg_rating": 3.27,
-     "share_positive": 55.6,
-     "share_negative": 39.5
-    },
-    {
-     "version": "8.6",
-     "n": 40,
-     "ratings": {
-      "1": 22,
-      "2": 1,
-      "3": 0,
-      "4": 0,
-      "5": 17
+     {
+      "version": "8.6",
+      "n": 25,
+      "ratings": {
+       "1": 14,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 10
+      },
+      "avg_rating": 2.64,
+      "share_positive": 40.0,
+      "share_negative": 60.0
      },
-     "avg_rating": 2.73,
-     "share_positive": 42.5,
-     "share_negative": 57.5
-    },
-    {
-     "version": "8.5",
-     "n": 27,
-     "ratings": {
-      "1": 16,
-      "2": 1,
-      "3": 0,
-      "4": 2,
-      "5": 8
+     {
+      "version": "8.5",
+      "n": 20,
+      "ratings": {
+       "1": 13,
+       "2": 1,
+       "3": 0,
+       "4": 1,
+       "5": 5
+      },
+      "avg_rating": 2.2,
+      "share_positive": 30.0,
+      "share_negative": 70.0
+     }
+    ],
+    "appstore": [
+     {
+      "version": "8.8",
+      "n": 17,
+      "ratings": {
+       "1": 7,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 10
+      },
+      "avg_rating": 3.35,
+      "share_positive": 58.8,
+      "share_negative": 41.2
      },
-     "avg_rating": 2.44,
-     "share_positive": 37.0,
-     "share_negative": 63.0
-    }
-   ],
+     {
+      "version": "8.7",
+      "n": 20,
+      "ratings": {
+       "1": 4,
+       "2": 1,
+       "3": 2,
+       "4": 0,
+       "5": 13
+      },
+      "avg_rating": 3.85,
+      "share_positive": 65.0,
+      "share_negative": 25.0
+     },
+     {
+      "version": "8.6",
+      "n": 15,
+      "ratings": {
+       "1": 8,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 7
+      },
+      "avg_rating": 2.87,
+      "share_positive": 46.7,
+      "share_negative": 53.3
+     }
+    ]
+   },
    "praise_exemplars": [
     "playstore:com.hdfcclife.activities:8f788a39-598b-402d-a776-b0398b39dd56",
     "playstore:com.hdfcclife.activities:5286db4e-271e-476c-8fef-67e40ea01bd7",
@@ -900,17 +793,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 568,
-    "ratings": {
-     "1": 144,
-     "2": 36,
-     "3": 33,
-     "4": 57,
-     "5": 298
-    },
-    "avg_rating": 3.58,
-    "share_positive": 62.5,
-    "share_negative": 31.7
+    "n": 568
    },
    "by_store": {
     "playstore": {
@@ -952,174 +835,125 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 39,
-     "avg_rating": 3.95
-    },
-    {
-     "week": "2026-07-06",
-     "n": 66,
-     "avg_rating": 3.86
-    },
-    {
-     "week": "2026-07-13",
-     "n": 78,
-     "avg_rating": 3.63
-    },
-    {
-     "week": "2026-07-20",
-     "n": 68,
-     "avg_rating": 3.49
-    },
-    {
-     "week": "2026-07-27",
-     "n": 75,
-     "avg_rating": 3.76
-    },
-    {
-     "week": "2026-08-03",
-     "n": 52,
-     "avg_rating": 3.63
-    },
-    {
-     "week": "2026-08-10",
-     "n": 26,
-     "avg_rating": 3.27
-    },
-    {
-     "week": "2026-08-17",
-     "n": 14,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-08-24",
-     "n": 20,
-     "avg_rating": 2.85
-    },
-    {
-     "week": "2026-08-31",
-     "n": 37,
-     "avg_rating": 3.97
-    },
-    {
-     "week": "2026-09-07",
-     "n": 22,
-     "avg_rating": 2.91
-    },
-    {
-     "week": "2026-09-14",
-     "n": 37,
-     "avg_rating": 3.05
-    },
-    {
-     "week": "2026-09-21",
-     "n": 34,
-     "avg_rating": 3.68
-    }
-   ],
    "top_issues": [],
-   "versions": [
-    {
-     "version": "5.2.2",
-     "n": 21,
-     "ratings": {
-      "1": 7,
-      "2": 1,
-      "3": 2,
-      "4": 3,
-      "5": 8
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "5.2.2",
+      "n": 15,
+      "ratings": {
+       "1": 5,
+       "2": 1,
+       "3": 1,
+       "4": 1,
+       "5": 7
+      },
+      "avg_rating": 3.27,
+      "share_positive": 53.3,
+      "share_negative": 40.0
      },
-     "avg_rating": 3.19,
-     "share_positive": 52.4,
-     "share_negative": 38.1
-    },
-    {
-     "version": "5.2.1",
-     "n": 33,
-     "ratings": {
-      "1": 12,
-      "2": 2,
-      "3": 5,
-      "4": 0,
-      "5": 14
+     {
+      "version": "5.2.1",
+      "n": 23,
+      "ratings": {
+       "1": 4,
+       "2": 2,
+       "3": 4,
+       "4": 0,
+       "5": 13
+      },
+      "avg_rating": 3.7,
+      "share_positive": 56.5,
+      "share_negative": 26.1
      },
-     "avg_rating": 3.06,
-     "share_positive": 42.4,
-     "share_negative": 42.4
-    },
-    {
-     "version": "5.2.0",
-     "n": 52,
-     "ratings": {
-      "1": 11,
-      "2": 5,
-      "3": 5,
-      "4": 3,
-      "5": 28
+     {
+      "version": "5.2.0",
+      "n": 52,
+      "ratings": {
+       "1": 11,
+       "2": 5,
+       "3": 5,
+       "4": 3,
+       "5": 28
+      },
+      "avg_rating": 3.62,
+      "share_positive": 59.6,
+      "share_negative": 30.8
      },
-     "avg_rating": 3.62,
-     "share_positive": 59.6,
-     "share_negative": 30.8
-    },
-    {
-     "version": "5.1.1",
-     "n": 26,
-     "ratings": {
-      "1": 11,
-      "2": 2,
-      "3": 0,
-      "4": 3,
-      "5": 10
+     {
+      "version": "5.1.1",
+      "n": 18,
+      "ratings": {
+       "1": 6,
+       "2": 2,
+       "3": 0,
+       "4": 3,
+       "5": 7
+      },
+      "avg_rating": 3.17,
+      "share_positive": 55.6,
+      "share_negative": 44.4
      },
-     "avg_rating": 2.96,
-     "share_positive": 50.0,
-     "share_negative": 50.0
-    },
-    {
-     "version": "5.1.0",
-     "n": 11,
-     "ratings": {
-      "1": 6,
-      "2": 1,
-      "3": 0,
-      "4": 3,
-      "5": 1
+     {
+      "version": "4.8.5",
+      "n": 85,
+      "ratings": {
+       "1": 22,
+       "2": 3,
+       "3": 2,
+       "4": 8,
+       "5": 50
+      },
+      "avg_rating": 3.72,
+      "share_positive": 68.2,
+      "share_negative": 29.4
      },
-     "avg_rating": 2.27,
-     "share_positive": 36.4,
-     "share_negative": 63.6
-    },
-    {
-     "version": "4.8.5",
-     "n": 93,
-     "ratings": {
-      "1": 25,
-      "2": 3,
-      "3": 4,
-      "4": 9,
-      "5": 52
+     {
+      "version": "4.8.4",
+      "n": 164,
+      "ratings": {
+       "1": 30,
+       "2": 8,
+       "3": 10,
+       "4": 17,
+       "5": 99
+      },
+      "avg_rating": 3.9,
+      "share_positive": 70.7,
+      "share_negative": 23.2
+     }
+    ],
+    "appstore": [
+     {
+      "version": "5.2.1",
+      "n": 10,
+      "ratings": {
+       "1": 8,
+       "2": 0,
+       "3": 1,
+       "4": 0,
+       "5": 1
+      },
+      "avg_rating": 1.6,
+      "share_positive": 10.0,
+      "share_negative": 80.0
      },
-     "avg_rating": 3.65,
-     "share_positive": 65.6,
-     "share_negative": 30.1
-    },
-    {
-     "version": "4.8.4",
-     "n": 260,
-     "ratings": {
-      "1": 55,
-      "2": 16,
-      "3": 15,
-      "4": 28,
-      "5": 146
-     },
-     "avg_rating": 3.75,
-     "share_positive": 66.9,
-     "share_negative": 27.3
-    }
-   ],
+     {
+      "version": "4.8.4",
+      "n": 96,
+      "ratings": {
+       "1": 25,
+       "2": 8,
+       "3": 5,
+       "4": 11,
+       "5": 47
+      },
+      "avg_rating": 3.49,
+      "share_positive": 60.4,
+      "share_negative": 34.4
+     }
+    ]
+   },
    "praise_exemplars": [
     "playstore:com.hsl.investright:013587a6-6b60-4f54-98ae-16c08a90a56b",
     "playstore:com.hsl.investright:8af4db7c-8f7a-4757-8842-b5294281ae43",
@@ -1160,17 +994,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 102,
-    "ratings": {
-     "1": 79,
-     "2": 5,
-     "3": 5,
-     "4": 3,
-     "5": 10
-    },
-    "avg_rating": 1.63,
-    "share_positive": 12.7,
-    "share_negative": 82.4
+    "n": 102
    },
    "by_store": {
     "playstore": {
@@ -1212,73 +1036,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 4,
-     "avg_rating": 1.0
-    },
-    {
-     "week": "2026-07-06",
-     "n": 9,
-     "avg_rating": 2.78
-    },
-    {
-     "week": "2026-07-13",
-     "n": 7,
-     "avg_rating": 1.86
-    },
-    {
-     "week": "2026-07-20",
-     "n": 3,
-     "avg_rating": 1.33
-    },
-    {
-     "week": "2026-07-27",
-     "n": 6,
-     "avg_rating": 2.17
-    },
-    {
-     "week": "2026-08-03",
-     "n": 7,
-     "avg_rating": 1.29
-    },
-    {
-     "week": "2026-08-10",
-     "n": 7,
-     "avg_rating": 1.57
-    },
-    {
-     "week": "2026-08-17",
-     "n": 8,
-     "avg_rating": 1.25
-    },
-    {
-     "week": "2026-08-24",
-     "n": 9,
-     "avg_rating": 1.0
-    },
-    {
-     "week": "2026-08-31",
-     "n": 19,
-     "avg_rating": 1.53
-    },
-    {
-     "week": "2026-09-07",
-     "n": 7,
-     "avg_rating": 1.71
-    },
-    {
-     "week": "2026-09-14",
-     "n": 9,
-     "avg_rating": 1.78
-    },
-    {
-     "week": "2026-09-21",
-     "n": 7,
-     "avg_rating": 1.57
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -1330,36 +1087,39 @@
      ]
     }
    ],
-   "versions": [
-    {
-     "version": "5.51",
-     "n": 30,
-     "ratings": {
-      "1": 24,
-      "2": 3,
-      "3": 1,
-      "4": 2,
-      "5": 0
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "5.51",
+      "n": 30,
+      "ratings": {
+       "1": 24,
+       "2": 3,
+       "3": 1,
+       "4": 2,
+       "5": 0
+      },
+      "avg_rating": 1.37,
+      "share_positive": 6.7,
+      "share_negative": 90.0
      },
-     "avg_rating": 1.37,
-     "share_positive": 6.7,
-     "share_negative": 90.0
-    },
-    {
-     "version": "5.5",
-     "n": 30,
-     "ratings": {
-      "1": 24,
-      "2": 1,
-      "3": 3,
-      "4": 1,
-      "5": 1
-     },
-     "avg_rating": 1.47,
-     "share_positive": 6.7,
-     "share_negative": 83.3
-    }
-   ],
+     {
+      "version": "5.5",
+      "n": 30,
+      "ratings": {
+       "1": 24,
+       "2": 1,
+       "3": 3,
+       "4": 1,
+       "5": 1
+      },
+      "avg_rating": 1.47,
+      "share_positive": 6.7,
+      "share_negative": 83.3
+     }
+    ],
+    "appstore": []
+   },
    "praise_exemplars": [],
    "fix_list": [
     {
@@ -1502,17 +1262,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 79,
-    "ratings": {
-     "1": 52,
-     "2": 5,
-     "3": 4,
-     "4": 2,
-     "5": 16
-    },
-    "avg_rating": 2.05,
-    "share_positive": 22.8,
-    "share_negative": 72.2
+    "n": 79
    },
    "by_store": {
     "playstore": {
@@ -1554,73 +1304,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 8,
-     "avg_rating": 1.75
-    },
-    {
-     "week": "2026-07-06",
-     "n": 7,
-     "avg_rating": 1.71
-    },
-    {
-     "week": "2026-07-13",
-     "n": 5,
-     "avg_rating": 3.2
-    },
-    {
-     "week": "2026-07-20",
-     "n": 3,
-     "avg_rating": 1.0
-    },
-    {
-     "week": "2026-07-27",
-     "n": 3,
-     "avg_rating": 2.33
-    },
-    {
-     "week": "2026-08-03",
-     "n": 11,
-     "avg_rating": 2.09
-    },
-    {
-     "week": "2026-08-10",
-     "n": 11,
-     "avg_rating": 1.36
-    },
-    {
-     "week": "2026-08-17",
-     "n": 5,
-     "avg_rating": 2.8
-    },
-    {
-     "week": "2026-08-24",
-     "n": 6,
-     "avg_rating": 2.33
-    },
-    {
-     "week": "2026-08-31",
-     "n": 4,
-     "avg_rating": 1.5
-    },
-    {
-     "week": "2026-09-07",
-     "n": 9,
-     "avg_rating": 2.44
-    },
-    {
-     "week": "2026-09-14",
-     "n": 2,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-09-21",
-     "n": 5,
-     "avg_rating": 2.0
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -1669,36 +1352,40 @@
      ]
     }
    ],
-   "versions": [
-    {
-     "version": "5.16",
-     "n": 36,
-     "ratings": {
-      "1": 22,
-      "2": 1,
-      "3": 2,
-      "4": 1,
-      "5": 10
-     },
-     "avg_rating": 2.33,
-     "share_positive": 30.6,
-     "share_negative": 63.9
-    },
-    {
-     "version": "5.2",
-     "n": 11,
-     "ratings": {
-      "1": 9,
-      "2": 1,
-      "3": 0,
-      "4": 1,
-      "5": 0
-     },
-     "avg_rating": 1.36,
-     "share_positive": 9.1,
-     "share_negative": 90.9
-    }
-   ],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "5.16",
+      "n": 36,
+      "ratings": {
+       "1": 22,
+       "2": 1,
+       "3": 2,
+       "4": 1,
+       "5": 10
+      },
+      "avg_rating": 2.33,
+      "share_positive": 30.6,
+      "share_negative": 63.9
+     }
+    ],
+    "appstore": [
+     {
+      "version": "5.2",
+      "n": 11,
+      "ratings": {
+       "1": 9,
+       "2": 1,
+       "3": 0,
+       "4": 1,
+       "5": 0
+      },
+      "avg_rating": 1.36,
+      "share_positive": 9.1,
+      "share_negative": 90.9
+     }
+    ]
+   },
    "praise_exemplars": [],
    "fix_list": [
     {
@@ -1802,17 +1489,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 4906,
-    "ratings": {
-     "1": 2143,
-     "2": 198,
-     "3": 196,
-     "4": 348,
-     "5": 2021
-    },
-    "avg_rating": 2.98,
-    "share_positive": 48.3,
-    "share_negative": 47.7
+    "n": 4906
    },
    "by_store": {
     "playstore": {
@@ -1854,73 +1531,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 407,
-     "avg_rating": 2.83
-    },
-    {
-     "week": "2026-07-06",
-     "n": 383,
-     "avg_rating": 2.96
-    },
-    {
-     "week": "2026-07-13",
-     "n": 385,
-     "avg_rating": 3.02
-    },
-    {
-     "week": "2026-07-20",
-     "n": 336,
-     "avg_rating": 2.95
-    },
-    {
-     "week": "2026-07-27",
-     "n": 406,
-     "avg_rating": 3.12
-    },
-    {
-     "week": "2026-08-03",
-     "n": 731,
-     "avg_rating": 2.55
-    },
-    {
-     "week": "2026-08-10",
-     "n": 343,
-     "avg_rating": 3.08
-    },
-    {
-     "week": "2026-08-17",
-     "n": 364,
-     "avg_rating": 3.07
-    },
-    {
-     "week": "2026-08-24",
-     "n": 308,
-     "avg_rating": 2.93
-    },
-    {
-     "week": "2026-08-31",
-     "n": 404,
-     "avg_rating": 3.17
-    },
-    {
-     "week": "2026-09-07",
-     "n": 328,
-     "avg_rating": 3.12
-    },
-    {
-     "week": "2026-09-14",
-     "n": 249,
-     "avg_rating": 3.37
-    },
-    {
-     "week": "2026-09-21",
-     "n": 262,
-     "avg_rating": 3.18
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -1972,218 +1582,250 @@
      ]
     }
    ],
-   "versions": [
-    {
-     "version": "2.61.6",
-     "n": 35,
-     "ratings": {
-      "1": 16,
-      "2": 1,
-      "3": 2,
-      "4": 3,
-      "5": 13
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "2.61.6",
+      "n": 35,
+      "ratings": {
+       "1": 16,
+       "2": 1,
+       "3": 2,
+       "4": 3,
+       "5": 13
+      },
+      "avg_rating": 2.89,
+      "share_positive": 45.7,
+      "share_negative": 48.6
      },
-     "avg_rating": 2.89,
-     "share_positive": 45.7,
-     "share_negative": 48.6
-    },
-    {
-     "version": "2.61.4",
-     "n": 302,
-     "ratings": {
-      "1": 103,
-      "2": 23,
-      "3": 8,
-      "4": 23,
-      "5": 145
+     {
+      "version": "2.61.4",
+      "n": 302,
+      "ratings": {
+       "1": 103,
+       "2": 23,
+       "3": 8,
+       "4": 23,
+       "5": 145
+      },
+      "avg_rating": 3.28,
+      "share_positive": 55.6,
+      "share_negative": 41.7
      },
-     "avg_rating": 3.28,
-     "share_positive": 55.6,
-     "share_negative": 41.7
-    },
-    {
-     "version": "2.60.4",
-     "n": 48,
-     "ratings": {
-      "1": 14,
-      "2": 1,
-      "3": 3,
-      "4": 6,
-      "5": 24
+     {
+      "version": "2.60.4",
+      "n": 48,
+      "ratings": {
+       "1": 14,
+       "2": 1,
+       "3": 3,
+       "4": 6,
+       "5": 24
+      },
+      "avg_rating": 3.52,
+      "share_positive": 62.5,
+      "share_negative": 31.2
      },
-     "avg_rating": 3.52,
-     "share_positive": 62.5,
-     "share_negative": 31.2
-    },
-    {
-     "version": "2.60.2",
-     "n": 27,
-     "ratings": {
-      "1": 14,
-      "2": 0,
-      "3": 1,
-      "4": 1,
-      "5": 11
+     {
+      "version": "2.60.2",
+      "n": 27,
+      "ratings": {
+       "1": 14,
+       "2": 0,
+       "3": 1,
+       "4": 1,
+       "5": 11
+      },
+      "avg_rating": 2.81,
+      "share_positive": 44.4,
+      "share_negative": 51.9
      },
-     "avg_rating": 2.81,
-     "share_positive": 44.4,
-     "share_negative": 51.9
-    },
-    {
-     "version": "2.59.8",
-     "n": 10,
-     "ratings": {
-      "1": 6,
-      "2": 0,
-      "3": 1,
-      "4": 1,
-      "5": 2
+     {
+      "version": "2.59.3",
+      "n": 1115,
+      "ratings": {
+       "1": 419,
+       "2": 39,
+       "3": 43,
+       "4": 75,
+       "5": 539
+      },
+      "avg_rating": 3.25,
+      "share_positive": 55.1,
+      "share_negative": 41.1
      },
-     "avg_rating": 2.3,
-     "share_positive": 30.0,
-     "share_negative": 60.0
-    },
-    {
-     "version": "2.59.6",
-     "n": 41,
-     "ratings": {
-      "1": 19,
-      "2": 3,
-      "3": 2,
-      "4": 1,
-      "5": 16
+     {
+      "version": "2.56.11",
+      "n": 753,
+      "ratings": {
+       "1": 330,
+       "2": 23,
+       "3": 28,
+       "4": 60,
+       "5": 312
+      },
+      "avg_rating": 3.0,
+      "share_positive": 49.4,
+      "share_negative": 46.9
      },
-     "avg_rating": 2.8,
-     "share_positive": 41.5,
-     "share_negative": 53.7
-    },
-    {
-     "version": "2.59.3",
-     "n": 1136,
-     "ratings": {
-      "1": 427,
-      "2": 41,
-      "3": 45,
-      "4": 77,
-      "5": 546
+     {
+      "version": "2.56.10",
+      "n": 266,
+      "ratings": {
+       "1": 115,
+       "2": 11,
+       "3": 20,
+       "4": 19,
+       "5": 101
+      },
+      "avg_rating": 2.92,
+      "share_positive": 45.1,
+      "share_negative": 47.4
      },
-     "avg_rating": 3.24,
-     "share_positive": 54.8,
-     "share_negative": 41.2
-    },
-    {
-     "version": "2.59.1",
-     "n": 28,
-     "ratings": {
-      "1": 24,
-      "2": 1,
-      "3": 1,
-      "4": 0,
-      "5": 2
+     {
+      "version": "2.56.8",
+      "n": 463,
+      "ratings": {
+       "1": 204,
+       "2": 19,
+       "3": 16,
+       "4": 39,
+       "5": 185
+      },
+      "avg_rating": 2.96,
+      "share_positive": 48.4,
+      "share_negative": 48.2
      },
-     "avg_rating": 1.39,
-     "share_positive": 7.1,
-     "share_negative": 89.3
-    },
-    {
-     "version": "2.56.11",
-     "n": 753,
-     "ratings": {
-      "1": 330,
-      "2": 23,
-      "3": 28,
-      "4": 60,
-      "5": 312
+     {
+      "version": "2.53.14",
+      "n": 1005,
+      "ratings": {
+       "1": 347,
+       "2": 31,
+       "3": 41,
+       "4": 86,
+       "5": 500
+      },
+      "avg_rating": 3.36,
+      "share_positive": 58.3,
+      "share_negative": 37.6
      },
-     "avg_rating": 3.0,
-     "share_positive": 49.4,
-     "share_negative": 46.9
-    },
-    {
-     "version": "2.56.10",
-     "n": 266,
-     "ratings": {
-      "1": 115,
-      "2": 11,
-      "3": 20,
-      "4": 19,
-      "5": 101
+     {
+      "version": "2.53.12",
+      "n": 12,
+      "ratings": {
+       "1": 7,
+       "2": 0,
+       "3": 1,
+       "4": 0,
+       "5": 4
+      },
+      "avg_rating": 2.5,
+      "share_positive": 33.3,
+      "share_negative": 58.3
      },
-     "avg_rating": 2.92,
-     "share_positive": 45.1,
-     "share_negative": 47.4
-    },
-    {
-     "version": "2.56.8",
-     "n": 547,
-     "ratings": {
-      "1": 254,
-      "2": 21,
-      "3": 21,
-      "4": 39,
-      "5": 212
+     {
+      "version": "2.31.6",
+      "n": 10,
+      "ratings": {
+       "1": 6,
+       "2": 1,
+       "3": 0,
+       "4": 1,
+       "5": 2
+      },
+      "avg_rating": 2.2,
+      "share_positive": 30.0,
+      "share_negative": 70.0
+     }
+    ],
+    "appstore": [
+     {
+      "version": "2.59.8",
+      "n": 10,
+      "ratings": {
+       "1": 6,
+       "2": 0,
+       "3": 1,
+       "4": 1,
+       "5": 2
+      },
+      "avg_rating": 2.3,
+      "share_positive": 30.0,
+      "share_negative": 60.0
      },
-     "avg_rating": 2.88,
-     "share_positive": 45.9,
-     "share_negative": 50.3
-    },
-    {
-     "version": "2.53.15",
-     "n": 35,
-     "ratings": {
-      "1": 19,
-      "2": 0,
-      "3": 1,
-      "4": 1,
-      "5": 14
+     {
+      "version": "2.59.6",
+      "n": 41,
+      "ratings": {
+       "1": 19,
+       "2": 3,
+       "3": 2,
+       "4": 1,
+       "5": 16
+      },
+      "avg_rating": 2.8,
+      "share_positive": 41.5,
+      "share_negative": 53.7
      },
-     "avg_rating": 2.74,
-     "share_positive": 42.9,
-     "share_negative": 54.3
-    },
-    {
-     "version": "2.53.14",
-     "n": 1005,
-     "ratings": {
-      "1": 347,
-      "2": 31,
-      "3": 41,
-      "4": 86,
-      "5": 500
+     {
+      "version": "2.59.3",
+      "n": 21,
+      "ratings": {
+       "1": 8,
+       "2": 2,
+       "3": 2,
+       "4": 2,
+       "5": 7
+      },
+      "avg_rating": 2.9,
+      "share_positive": 42.9,
+      "share_negative": 47.6
      },
-     "avg_rating": 3.36,
-     "share_positive": 58.3,
-     "share_negative": 37.6
-    },
-    {
-     "version": "2.53.12",
-     "n": 12,
-     "ratings": {
-      "1": 7,
-      "2": 0,
-      "3": 1,
-      "4": 0,
-      "5": 4
+     {
+      "version": "2.59.1",
+      "n": 28,
+      "ratings": {
+       "1": 24,
+       "2": 1,
+       "3": 1,
+       "4": 0,
+       "5": 2
+      },
+      "avg_rating": 1.39,
+      "share_positive": 7.1,
+      "share_negative": 89.3
      },
-     "avg_rating": 2.5,
-     "share_positive": 33.3,
-     "share_negative": 58.3
-    },
-    {
-     "version": "2.31.6",
-     "n": 10,
-     "ratings": {
-      "1": 6,
-      "2": 1,
-      "3": 0,
-      "4": 1,
-      "5": 2
+     {
+      "version": "2.56.8",
+      "n": 84,
+      "ratings": {
+       "1": 50,
+       "2": 2,
+       "3": 5,
+       "4": 0,
+       "5": 27
+      },
+      "avg_rating": 2.43,
+      "share_positive": 32.1,
+      "share_negative": 61.9
      },
-     "avg_rating": 2.2,
-     "share_positive": 30.0,
-     "share_negative": 70.0
-    }
-   ],
+     {
+      "version": "2.53.15",
+      "n": 35,
+      "ratings": {
+       "1": 19,
+       "2": 0,
+       "3": 1,
+       "4": 1,
+       "5": 14
+      },
+      "avg_rating": 2.74,
+      "share_positive": 42.9,
+      "share_negative": 54.3
+     }
+    ]
+   },
    "praise_exemplars": [
     "playstore:com.hdfcbank.payzapp:c9af7b53-8a61-4767-bd71-a8bad43a0383",
     "playstore:com.hdfcbank.payzapp:9d107387-fd76-4175-93cb-ad4fdfde025b",
@@ -2353,17 +1995,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 76,
-    "ratings": {
-     "1": 46,
-     "2": 5,
-     "3": 0,
-     "4": 2,
-     "5": 23
-    },
-    "avg_rating": 2.36,
-    "share_positive": 32.9,
-    "share_negative": 67.1
+    "n": 76
    },
    "by_store": {
     "playstore": {
@@ -2405,73 +2037,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 7,
-     "avg_rating": 1.14
-    },
-    {
-     "week": "2026-07-06",
-     "n": 3,
-     "avg_rating": 5.0
-    },
-    {
-     "week": "2026-07-13",
-     "n": 4,
-     "avg_rating": 2.25
-    },
-    {
-     "week": "2026-07-20",
-     "n": 8,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-07-27",
-     "n": 4,
-     "avg_rating": 1.25
-    },
-    {
-     "week": "2026-08-03",
-     "n": 9,
-     "avg_rating": 3.11
-    },
-    {
-     "week": "2026-08-10",
-     "n": 6,
-     "avg_rating": 2.33
-    },
-    {
-     "week": "2026-08-17",
-     "n": 3,
-     "avg_rating": 1.0
-    },
-    {
-     "week": "2026-08-24",
-     "n": 7,
-     "avg_rating": 1.57
-    },
-    {
-     "week": "2026-08-31",
-     "n": 4,
-     "avg_rating": 3.0
-    },
-    {
-     "week": "2026-09-07",
-     "n": 9,
-     "avg_rating": 2.44
-    },
-    {
-     "week": "2026-09-14",
-     "n": 4,
-     "avg_rating": 2.0
-    },
-    {
-     "week": "2026-09-21",
-     "n": 8,
-     "avg_rating": 2.5
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -2520,36 +2085,54 @@
      ]
     }
    ],
-   "versions": [
-    {
-     "version": "7.3.2",
-     "n": 28,
-     "ratings": {
-      "1": 16,
-      "2": 1,
-      "3": 0,
-      "4": 1,
-      "5": 10
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "7.3.2",
+      "n": 28,
+      "ratings": {
+       "1": 16,
+       "2": 1,
+       "3": 0,
+       "4": 1,
+       "5": 10
+      },
+      "avg_rating": 2.57,
+      "share_positive": 39.3,
+      "share_negative": 60.7
      },
-     "avg_rating": 2.57,
-     "share_positive": 39.3,
-     "share_negative": 60.7
-    },
-    {
-     "version": "7.3.1",
-     "n": 30,
-     "ratings": {
-      "1": 20,
-      "2": 3,
-      "3": 0,
-      "4": 1,
-      "5": 6
-     },
-     "avg_rating": 2.0,
-     "share_positive": 23.3,
-     "share_negative": 76.7
-    }
-   ],
+     {
+      "version": "7.3.1",
+      "n": 16,
+      "ratings": {
+       "1": 7,
+       "2": 3,
+       "3": 0,
+       "4": 1,
+       "5": 5
+      },
+      "avg_rating": 2.62,
+      "share_positive": 37.5,
+      "share_negative": 62.5
+     }
+    ],
+    "appstore": [
+     {
+      "version": "7.3.1",
+      "n": 14,
+      "ratings": {
+       "1": 13,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 1
+      },
+      "avg_rating": 1.29,
+      "share_positive": 7.1,
+      "share_negative": 92.9
+     }
+    ]
+   },
    "praise_exemplars": [
     "playstore:com.hdfc.smarthub:a1331bf5-c3a7-4f05-8c5c-0bcfa43f9ee7"
    ],
@@ -2691,17 +2274,7 @@
    ],
    "mode": "trend_within_window",
    "window": {
-    "n": 713,
-    "ratings": {
-     "1": 79,
-     "2": 12,
-     "3": 18,
-     "4": 36,
-     "5": 568
-    },
-    "avg_rating": 4.41,
-    "share_positive": 84.7,
-    "share_negative": 12.8
+    "n": 713
    },
    "by_store": {
     "playstore": {
@@ -2743,73 +2316,6 @@
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
-   "weekly_avg_rating": [
-    {
-     "week": "2026-06-29",
-     "n": 62,
-     "avg_rating": 4.48
-    },
-    {
-     "week": "2026-07-06",
-     "n": 64,
-     "avg_rating": 4.48
-    },
-    {
-     "week": "2026-07-13",
-     "n": 67,
-     "avg_rating": 4.64
-    },
-    {
-     "week": "2026-07-20",
-     "n": 56,
-     "avg_rating": 4.32
-    },
-    {
-     "week": "2026-07-27",
-     "n": 61,
-     "avg_rating": 4.87
-    },
-    {
-     "week": "2026-08-03",
-     "n": 91,
-     "avg_rating": 4.03
-    },
-    {
-     "week": "2026-08-10",
-     "n": 48,
-     "avg_rating": 4.56
-    },
-    {
-     "week": "2026-08-17",
-     "n": 45,
-     "avg_rating": 4.58
-    },
-    {
-     "week": "2026-08-24",
-     "n": 35,
-     "avg_rating": 4.37
-    },
-    {
-     "week": "2026-08-31",
-     "n": 69,
-     "avg_rating": 4.36
-    },
-    {
-     "week": "2026-09-07",
-     "n": 50,
-     "avg_rating": 4.2
-    },
-    {
-     "week": "2026-09-14",
-     "n": 32,
-     "avg_rating": 4.28
-    },
-    {
-     "week": "2026-09-21",
-     "n": 33,
-     "avg_rating": 4.03
-    }
-   ],
    "top_issues": [
     {
      "id": "app_speed_crash",
@@ -2857,78 +2363,81 @@
      ]
     }
    ],
-   "versions": [
-    {
-     "version": "2.4.2",
-     "n": 62,
-     "ratings": {
-      "1": 12,
-      "2": 0,
-      "3": 0,
-      "4": 1,
-      "5": 49
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "2.4.2",
+      "n": 60,
+      "ratings": {
+       "1": 10,
+       "2": 0,
+       "3": 0,
+       "4": 1,
+       "5": 49
+      },
+      "avg_rating": 4.32,
+      "share_positive": 83.3,
+      "share_negative": 16.7
      },
-     "avg_rating": 4.21,
-     "share_positive": 80.6,
-     "share_negative": 19.4
-    },
-    {
-     "version": "2.4.1",
-     "n": 107,
-     "ratings": {
-      "1": 14,
-      "2": 3,
-      "3": 3,
-      "4": 7,
-      "5": 80
+     {
+      "version": "2.4.1",
+      "n": 102,
+      "ratings": {
+       "1": 10,
+       "2": 3,
+       "3": 3,
+       "4": 7,
+       "5": 79
+      },
+      "avg_rating": 4.39,
+      "share_positive": 84.3,
+      "share_negative": 12.7
      },
-     "avg_rating": 4.27,
-     "share_positive": 81.3,
-     "share_negative": 15.9
-    },
-    {
-     "version": "2.4.0",
-     "n": 80,
-     "ratings": {
-      "1": 2,
-      "2": 2,
-      "3": 2,
-      "4": 4,
-      "5": 70
+     {
+      "version": "2.4.0",
+      "n": 78,
+      "ratings": {
+       "1": 2,
+       "2": 1,
+       "3": 2,
+       "4": 4,
+       "5": 69
+      },
+      "avg_rating": 4.76,
+      "share_positive": 93.6,
+      "share_negative": 3.8
      },
-     "avg_rating": 4.72,
-     "share_positive": 92.5,
-     "share_negative": 5.0
-    },
-    {
-     "version": "2.3.5",
-     "n": 229,
-     "ratings": {
-      "1": 22,
-      "2": 3,
-      "3": 9,
-      "4": 13,
-      "5": 182
+     {
+      "version": "2.3.5",
+      "n": 224,
+      "ratings": {
+       "1": 20,
+       "2": 2,
+       "3": 9,
+       "4": 13,
+       "5": 180
+      },
+      "avg_rating": 4.48,
+      "share_positive": 86.2,
+      "share_negative": 9.8
      },
-     "avg_rating": 4.44,
-     "share_positive": 85.2,
-     "share_negative": 10.9
-    },
-    {
-     "version": "2.3.4",
-     "n": 185,
-     "ratings": {
-      "1": 18,
-      "2": 4,
-      "3": 3,
-      "4": 11,
-      "5": 149
-     },
-     "avg_rating": 4.45,
-     "share_positive": 86.5,
-     "share_negative": 11.9
-    }
-   ],
+     {
+      "version": "2.3.4",
+      "n": 181,
+      "ratings": {
+       "1": 17,
+       "2": 4,
+       "3": 3,
+       "4": 10,
+       "5": 147
+      },
+      "avg_rating": 4.47,
+      "share_positive": 86.7,
+      "share_negative": 11.6
+     }
+    ],
+    "appstore": []
+   },
    "praise_exemplars": [
     "playstore:com.hdfcbank.smartwealthapp:506511f8-cf50-400c-9a4d-7c45749dde8e",
     "playstore:com.hdfcbank.smartwealthapp:1b5fbb89-42ef-46e5-8b0d-51f4daf659a2",

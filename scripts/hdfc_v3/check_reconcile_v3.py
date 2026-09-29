@@ -25,6 +25,24 @@ PERSON_FLAG_KEYS = {"high_impact", "sensitive", "sensitivity", "vip", "official"
 # Targets are the public mix per product, except where public voice is too thin and the generator uses a disclosed
 # substitute (auto loans: the combined loans mix; insurance: a hand-set mix). Those are reported, not hidden.
 THIN_PUBLIC = {"auto_loans", "insurance"}
+# One store per comparison (B7 §4.1, follow-up fix 2): a store rating or share may only sit inside a per-store scope.
+RATING_KEYS = {"avg_rating", "ratings", "share_positive", "new_app_avg", "old_app_avg", "new_app_share_positive", "old_app_share_positive"}
+STORE_SCOPES = {"by_store", "versions_by_store"}
+
+
+def pooled_ratings(obj, path=(), in_store=False) -> list[str]:
+    """Paths of rating or share fields that are not inside a single store's scope."""
+    out = []
+    if isinstance(obj, dict):
+        scoped = in_store or "store" in obj
+        for k, v in obj.items():
+            if k in RATING_KEYS and not scoped:
+                out.append("/".join(map(str, path + (k,))))
+            out += pooled_ratings(v, path + (k,), scoped or k in STORE_SCOPES)
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            out += pooled_ratings(v, path + (i,), in_store)
+    return out
 
 
 def _theme_targets(products: dict) -> tuple[dict, dict]:
@@ -73,6 +91,15 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
         a = sum(r[f] for r in products["rows"]) + (sum(products["excluded"].values()) if f == "count" else sum(b[f] for b in signals["by_business"] if b["business"] in products["excluded"]))
         e = sum(b[f] for b in signals["by_business"])
         ok(a == e, f"public product {f} reconciles to signals.by_business ({a} = {e})")
+
+    # Store ratings: never pooled across the Play Store and the App Store (follow-up fix 2).
+    pulse = load(out_dir / "app_pulse.json")
+    release = load(out_dir / "briefing.json").get("release_pulse") or {}
+    series = load(out_dir / "store_series.json")
+    pooled = pooled_ratings(pulse["apps"], ("app_pulse",)) + pooled_ratings(release, ("release_pulse",)) + pooled_ratings(series["apps"], ("store_series",))
+    ok(not pooled, f"store ratings and shares sit within one store ({len(pooled)} pooled: {pooled[:3]})")
+    mism = [a["app"] for a in pulse["apps"] if a["window"] and a["window"]["n"] != sum(x["n"] for x in (a.get("by_store") or {}).values())]
+    ok(not mism, f"per-store review counts add to each app's total ({mism[:3]})")
 
     agg = load(seed_dir / "aggregates.json")
     inter = [json.loads(line) for line in open(seed_dir / "interactions.jsonl", encoding="utf-8")]

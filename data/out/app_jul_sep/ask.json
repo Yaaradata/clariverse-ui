@@ -173,7 +173,7 @@
     "mobile",
     "banking"
    ],
-   "answer": "Release pulse for the HDFC Bank app: 55.0% of 5,325 window reviews are positive (4–5★). The fix list customers have written:\n• App speed, loading and crashes: 716 negative reviews\n• Login, MPIN and registration: 301 negative reviews\n• New app and update experience: 179 negative reviews\n• Customer care unreachable or unhelpful: 19 negative reviews",
+   "answer": "Release pulse for the HDFC Bank app, one store at a time: on the Play Store 55.6% of 5,000 window reviews are positive (4–5★); on the App Store 45.8% of 325. The fix list customers have written:\n• App speed, loading and crashes: 716 negative reviews\n• Login, MPIN and registration: 301 negative reviews\n• New app and update experience: 179 negative reviews\n• Customer care unreachable or unhelpful: 19 negative reviews",
    "evidence": [
     "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
     "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",

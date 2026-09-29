@@ -493,18 +493,26 @@ def main():
                 "business": rs[0]["business_hint"],
                 "streams": app_streams,
                 "mode": "trend_within_window",
-                "window": rsum(rs),
+                # Count only: ratings and shares are never pooled across stores (B7 §4.1, follow-up fix 2).
+                "window": {"n": len(rs)},
                 # One store at a time (B7 §4.1): screens compare apps within a store, never across stores.
                 "by_store": {st: rsum([r for r in rs if r["source"] == st]) for st in ("playstore", "appstore") if any(r["source"] == st for r in rs)},
                 "baseline": None,
                 "trend": halves(rs, [r for r in reviews if stream_of(r) in basis], basis),
-                "weekly_avg_rating": [{"week": w, "n": len(v), "avg_rating": round(sum(v) / len(v), 2)} for w, v in sorted(wk.items())],
                 "top_issues": top_issues,
-                "versions": sorted(
-                    [{"version": v, **rsum(x)} for v, x in vers.items() if len(x) >= 10],
-                    key=lambda v: [int(p) if p.isdigit() else 0 for p in v["version"].split(".")],
-                    reverse=True,
-                ),
+                "versions_by_store": {
+                    st: sorted(
+                        [
+                            {"version": v, **rsum(y)}
+                            for v, x in vers.items()
+                            if len(y := [r for r in x if r["source"] == st]) >= 10
+                        ],
+                        key=lambda v: [int(p) if p.isdigit() else 0 for p in v["version"].split(".")],
+                        reverse=True,
+                    )
+                    for st in ("playstore", "appstore")
+                    if any(r["source"] == st for r in rs)
+                },
                 "praise_exemplars": praise,
                 "fix_list": fix,
             }
@@ -528,7 +536,22 @@ def main():
     app_neg = [r for r in app_rs if r["rating"] <= 2]
     bank_app = next(a for a in apps if a["app"] == "HDFC Bank app")
     new_v = [r for r in app_rs if (r["app_version"] or "").startswith("11")]
-    old_v = [r for r in app_rs if r["app_version"] and not r["app_version"].startswith("11")]
+
+    def release_store(st):
+        """Release figures within one store (follow-up fix 2): version 11 against earlier versions."""
+        x = [r for r in app_rs if r["source"] == st]
+        nv = [r for r in x if (r["app_version"] or "").startswith("11")]
+        ov = [r for r in x if r["app_version"] and not r["app_version"].startswith("11")]
+        avg = lambda v: round(sum(r["rating"] for r in v) / len(v), 2) if v else None  # noqa: E731
+        pos = lambda v: pct(sum(1 for r in v if r["rating"] >= 4), len(v))  # noqa: E731
+        return {
+            "store": st, "store_label": SOURCE_LABEL[st], "n_reviews": len(x),
+            "share_positive": pos(x), "avg_rating": avg(x),
+            "new_app_n": len(nv), "new_app_avg": avg(nv), "new_app_share_positive": pos(nv),
+            "new_app_negative": sum(1 for r in nv if r["rating"] <= 2),
+            "old_app_n": len(ov), "old_app_avg": avg(ov), "old_app_share_positive": pos(ov),
+        }
+
     largest_other = max((t["count"] for t in theme_rows if t["id"] not in NON_ISSUE), default=0)
     rp_ex = pick_exemplars(app_neg, 5)
     evidence_ids.update(rp_ex)
@@ -538,20 +561,15 @@ def main():
         "app": "HDFC Bank app", "owner": "digital", "owner_label": "Digital", "pillar": "availability", "rung": "Voice",
         "action": "Route with evidence", "status": "needs_you",
         "count": len(app_neg), "n_reviews": len(app_rs),
-        "share_positive": pct(sum(1 for r in app_rs if r["rating"] >= 4), len(app_rs)),
-        "avg_rating": round(sum(r["rating"] for r in app_rs) / len(app_rs), 2),
         "ranks_top": len(app_neg) >= largest_other,
         "largest_other_theme": largest_other,
-        "old_app_avg": round(sum(r["rating"] for r in old_v) / len(old_v), 2) if old_v else None,
-        "old_app_n": len(old_v),
-        "new_app_avg": round(sum(r["rating"] for r in new_v) / len(new_v), 2) if new_v else None,
-        "new_app_n": len(new_v),
         # Version 11 (the new release) on its own, so "the new app" is never an all-version figure (review #12).
+        # Counts add across stores; ratings and shares are per store only (follow-up fix 2).
+        "new_app_n": len(new_v),
         "new_app_negative": sum(1 for r in new_v if r["rating"] <= 2),
-        "new_app_share_positive": pct(sum(1 for r in new_v if r["rating"] >= 4), len(new_v)),
-        "old_app_share_positive": pct(sum(1 for r in old_v if r["rating"] >= 4), len(old_v)),
+        "by_store": {st: release_store(st) for st in ("playstore", "appstore")},
         "fix_list": bank_app["fix_list"],
-        "versions": bank_app["versions"],
+        "versions_by_store": bank_app["versions_by_store"],
         "exemplars": rp_ex,
         "praise_exemplars": bank_app["praise_exemplars"],
         "daily_negative": [{"date": d, "count": c} for d, c in sorted(collections.Counter(r["created_at"][:10] for r in app_neg).items())],
@@ -672,7 +690,7 @@ def main():
     print("needs_you", briefing["needs_you"], "this_week", briefing["this_week"])
     print("mood", mood["value"], mood["window_average"], mood["delta_pts"])
     print("responses", json.dumps(responses["all"]), json.dumps(responses["negative"]))
-    print("release", release["count"], release["n_reviews"], release["ranks_top"], release["new_app_avg"], release["old_app_avg"])
+    print("release", release["count"], release["n_reviews"], release["ranks_top"], release["by_store"]["playstore"]["new_app_avg"], release["by_store"]["playstore"]["old_app_avg"])
 
 
 if __name__ == "__main__":

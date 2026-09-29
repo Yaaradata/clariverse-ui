@@ -197,21 +197,42 @@ export type AppPulse = {
     window_first: string | null;
   }[];
   mode: "vs_baseline" | "trend_within_window";
-  window: RatingSummary | null;
-  /** The same summary per store: apps are compared within one store only (B7 §4.1). */
+  /** Review count across both stores. Ratings and shares are never pooled across stores (B7 §4.1). */
+  window: { n: number } | null;
+  /** Rating summary per store: apps are compared within one store only (B7 §4.1). */
   by_store?: Partial<Record<"playstore" | "appstore", RatingSummary>>;
-  baseline: RatingSummary | null;
+  baseline: null;
   trend: Halves | null;
-  weekly_avg_rating: { week: string; n: number; avg_rating: number }[];
   top_issues: {
     id: string;
     label: string;
     count: number;
     exemplars: string[];
   }[];
-  versions: ({ version: string } & RatingSummary)[];
+  versions_by_store: StoreVersions;
   praise_exemplars: string[];
   fix_list: FixItem[];
+};
+
+/** Rating by app version, one store at a time. */
+export type StoreVersions = Partial<
+  Record<"playstore" | "appstore", ({ version: string } & RatingSummary)[]>
+>;
+
+/** Release figures within one store: version 11 against earlier versions. */
+export type ReleaseStore = {
+  store: "playstore" | "appstore";
+  store_label: string;
+  n_reviews: number;
+  share_positive: number | null;
+  avg_rating: number | null;
+  new_app_n: number;
+  new_app_avg: number | null;
+  new_app_share_positive: number | null;
+  new_app_negative: number;
+  old_app_n: number;
+  old_app_avg: number | null;
+  old_app_share_positive: number | null;
 };
 
 export type AppPulseFile = { apps: AppPulse[]; note: string };
@@ -282,19 +303,14 @@ export type ReleasePulse = {
   status: StatusValue;
   count: number;
   n_reviews: number;
-  share_positive: number | null;
-  avg_rating: number;
   ranks_top: boolean;
   largest_other_theme: number;
-  old_app_avg: number | null;
-  old_app_n: number;
-  new_app_avg: number | null;
+  /** Counts add across stores; ratings and shares live in by_store only. */
   new_app_n: number;
   new_app_negative: number;
-  new_app_share_positive: number | null;
-  old_app_share_positive: number | null;
+  by_store: Partial<Record<"playstore" | "appstore", ReleaseStore>>;
   fix_list: FixItem[];
-  versions: ({ version: string } & RatingSummary)[];
+  versions_by_store: StoreVersions;
   exemplars: string[];
   praise_exemplars: string[];
   daily_negative: { date: string; count: number }[];
