@@ -96,8 +96,8 @@ NOT_SHOWN_KEYS = {"keywords"}
 # The synthetic internal layer is our own writing, so its summaries and texts are copy and are linted.
 SYNTHETIC = str(Path("data") / "seed")
 # Code identifiers (snake_case, camelCase, PascalCase with an inner capital, kebab-case paths) are not copy. No word is
-# whitelisted: a banned word in rendered text is always a hit.
-IDENTIFIER = re.compile(r"\b\w+_\w+\b|\b[a-z]+[A-Z]\w*\b|\b[A-Z][a-z]+[A-Z]\w*\b|(?<![\w ])/[\w/-]+|\b\w+(?:-\w+)+\.(?:tsx?|json)\b|Promise<")
+# whitelisted: a banned word in rendered text is always a hit. CSS names (color-mix, color-scheme) are code too.
+IDENTIFIER = re.compile(r"\b\w+_\w+\b|\b[a-z]+[A-Z]\w*\b|\b[A-Z][a-z]+[A-Z]\w*\b|(?<![\w ])/[\w/-]+|\b\w+(?:-\w+)+\.(?:tsx?|json)\b|Promise<|\bcolor-(?:mix|scheme)\b")
 
 STRING = re.compile(r'"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`')
 JSX_TEXT = re.compile(r">\s*([^<>{}\n;=()][^<>{}=;]*?)\s*<")

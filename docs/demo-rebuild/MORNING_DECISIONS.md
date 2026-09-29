@@ -185,3 +185,8 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Judgement call:** terms match whole tokens, case-sensitively, so route paths (`/hdfc-pulse/v2`), app versions (`v2.61`) and "Priority list A" do not trip them. "Internal" on its own is not a candidate, because the provenance tag "Internal · illustrative until discovery" is meant to be on screen.
 - **Judgement call:** customer quotes and their summaries are skipped in payloads, as the existing lint does: they are the customer's words.
 - **Result:** no on-screen hits. Every candidate token in the V2 code is in a comment.
+
+## D20 · Light and dark theme (V2)
+- **Shipped:** a Light / Dark toggle in the V2 header. Dark stays the default and is unchanged; the choice is remembered per browser. V1 is not affected. QA: `qa/theme_qa_v2.md`.
+- **Judgement call:** in light, amber, green, cyan and violet use darker shades (e.g. amber #b45309, not #f59e0b), so that numbers and labels stay readable on white. The meaning of each colour is unchanged.
+- **Open:** one existing dark-mode legend label ("Wealth" on the satisfaction chart) is 2.7:1. It was left as is because dark was to stay unchanged.

@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 
 import { fmtDate } from "@/lib/hdfc-v3/format";
 import type { AskEntry, AskFile, Evidence, View } from "@/lib/hdfc-v3/types";
-import { C, ProvenanceTag } from "./primitives";
+import { C, ProvenanceTag, tint } from "./primitives";
 
 type Ev = Pick<Evidence, "id" | "summary" | "place" | "created_at" | "themes">;
 
@@ -232,7 +232,7 @@ export function AskLisN({
                 style={{
                   alignSelf: "flex-end",
                   background: C.brandSoft,
-                  border: `1px solid ${C.brand}44`,
+                  border: `1px solid ${tint(C.brand, 0.27)}`,
                   borderRadius: 10,
                   padding: "8px 12px",
                   fontSize: 14,
@@ -314,7 +314,7 @@ export function AskLisN({
                             key={l.href}
                             href={`${l.href}${l.href.includes("?") ? "&" : "?"}from=${from}`}
                             onClick={onClose}
-                            style={{ fontSize: 13, color: "#b7a6ff" }}
+                            style={{ fontSize: 13, color: C.brandInk }}
                           >
                             {l.label}
                           </Link>

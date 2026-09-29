@@ -1,0 +1,62 @@
+[
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/mds-office",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/priority",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/deliverables",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/market",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/module/digital",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/mds-office",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/priority",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/deliverables",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/market",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/module/digital",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "issues": []
+ }
+]

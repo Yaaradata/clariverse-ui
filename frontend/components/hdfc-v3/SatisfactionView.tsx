@@ -327,7 +327,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                     cursor: "pointer",
                     background: pillar === p.id ? C.brandSoft : "transparent",
                     color: pillar === p.id ? C.text : C.textSec,
-                    border: `1px solid ${pillar === p.id ? `${C.brand}66` : C.border}`,
+                    border: `1px solid ${pillar === p.id ? tint(C.brand, 0.4) : C.border}`,
                   }}
                 >
                   {p.label}
@@ -592,7 +592,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#0c0c0e",
+                    background: C.tooltip,
+                    color: C.text,
                     border: `1px solid ${C.borderLight}`,
                     fontSize: 12.5,
                   }}

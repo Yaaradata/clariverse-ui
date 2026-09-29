@@ -678,7 +678,7 @@ export function ProductFilter({
         fontSize: 13.5,
         color: on ? C.text : C.textSec,
         background: on ? C.brandSoft : "transparent",
-        border: `1px solid ${on ? `${C.brand}66` : C.border}`,
+        border: `1px solid ${on ? tint(C.brand, 0.4) : C.border}`,
         fontWeight: on ? 700 : 500,
         whiteSpace: "nowrap",
       }}

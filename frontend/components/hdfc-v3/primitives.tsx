@@ -25,32 +25,41 @@ import {
 } from "recharts";
 
 import { fmt, weekLabel } from "@/lib/hdfc-v3/format";
+import { v } from "@/lib/hdfc-v3/theme";
 import type { Prov, StatusValue, Weekly } from "@/lib/hdfc-v3/types";
 
+// Every colour is a theme variable (lib/hdfc-v3/theme.ts): one attribute on <html> switches light and dark.
 export const C = {
-  bg: "#0d0d0d",
-  surface: "#111112",
-  card: "#0f0f10",
-  cardAlt: "#151515",
-  border: "#1f1f1f",
-  borderLight: "#2f2f33",
-  text: "#ffffff",
-  textSec: "#d6d9d8",
-  textMut: "#939394",
-  textDim: "#7e7f80",
-  track: "#1f1f1f",
-  inner: "#2a2a2a",
-  accent: "#f59e0b",
-  accentSoft: "rgba(245,158,11,0.12)",
-  green: "#22c55e",
-  greenSoft: "rgba(34,197,94,0.12)",
-  red: "#ef4444",
-  redSoft: "rgba(239,68,68,0.12)",
-  amber: "#f59e0b",
-  cyan: "#38bdf8",
-  violet: "#8b5cf6",
-  brand: "#5332FF",
-  brandSoft: "rgba(83,50,255,0.16)",
+  bg: v("bg"),
+  surface: v("surface"),
+  card: v("card"),
+  cardAlt: v("card-alt"),
+  border: v("border"),
+  borderLight: v("border-light"),
+  text: v("text"),
+  textSec: v("text-sec"),
+  textMut: v("text-mut"),
+  textDim: v("text-dim"),
+  track: v("track"),
+  inner: v("inner"),
+  accent: v("accent"),
+  accentSoft: mix(v("accent"), 0.12),
+  green: v("green"),
+  greenSoft: mix(v("green"), 0.12),
+  red: v("red"),
+  redSoft: mix(v("red"), 0.12),
+  amber: v("amber"),
+  cyan: v("cyan"),
+  violet: v("violet"),
+  brand: v("brand"),
+  brandSoft: mix(v("brand"), 0.16),
+  /** Brand colour for icons and links: lavender on dark, deep violet on light. */
+  brandInk: v("brand-ink"),
+  /** Neutral (neither good nor bad) segments, e.g. neutral sentiment. */
+  neutral: v("neutral"),
+  header: v("header"),
+  tooltip: v("tooltip"),
+  hover: v("hover"),
 } as const;
 
 export type Tone = "red" | "amber" | "green" | "cyan" | "violet";
@@ -64,14 +73,7 @@ export const TONE: Record<Tone, string> = {
 };
 
 /** Categories with no good/bad meaning (e.g. businesses in a stacked chart): shades of the neutral data colours only. */
-export const SERIES = [
-  "#7dd3fc",
-  "#38bdf8",
-  "#0284c7",
-  "#c4b5fd",
-  "#8b5cf6",
-  "#6d28d9",
-];
+export const SERIES = [1, 2, 3, 4, 5, 6].map((i) => v(`series-${i}`));
 
 /** Higher share of negative voice reads hotter. */
 export function negColor(share: number | null | undefined) {
@@ -79,7 +81,13 @@ export function negColor(share: number | null | undefined) {
   return s >= 70 ? C.red : s >= 40 ? C.amber : C.green;
 }
 
+function mix(color: string, a: number) {
+  return `color-mix(in srgb, ${color} ${Math.round(a * 100)}%, transparent)`;
+}
+
+/** A colour at opacity `a`. Works on theme variables (via color-mix) and on plain hex. */
 export function tint(hex: string, a: number) {
+  if (!hex.startsWith("#")) return mix(hex, a);
   const n = Number.parseInt(hex.slice(1), 16);
   return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;
 }
@@ -571,7 +579,7 @@ export function NumLink({
 }
 
 const tooltipStyle = {
-  background: "rgba(12,12,14,0.96)",
+  background: C.tooltip,
   border: `1px solid ${C.borderLight}`,
   borderRadius: 8,
   fontSize: 12.5,
@@ -639,7 +647,7 @@ export function WeeklyBars({
           />
           <Tooltip
             contentStyle={tooltipStyle}
-            cursor={{ fill: "rgba(255,255,255,0.04)" }}
+            cursor={{ fill: C.hover }}
             formatter={(v) =>
               share
                 ? [`${Number(v).toFixed(1)}%`, "Share of voice"]
@@ -794,7 +802,7 @@ export function SentimentBar({
         }}
       >
         <div style={{ width: seg(pos), background: C.green }} />
-        <div style={{ width: seg(neu), background: "#4b5563" }} />
+        <div style={{ width: seg(neu), background: C.neutral }} />
         <div style={{ width: seg(neg), background: C.red }} />
       </div>
       <div
