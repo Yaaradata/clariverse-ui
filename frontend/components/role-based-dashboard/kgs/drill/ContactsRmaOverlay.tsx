@@ -164,7 +164,7 @@ export function ContactsRmaOverlay() {
                 angle: -90,
                 position: "insideLeft",
                 fill: K.textMut,
-                fontSize: 10,
+                fontSize: 11,
                 dy: 60,
               }}
             />
@@ -181,7 +181,7 @@ export function ContactsRmaOverlay() {
                 angle: 90,
                 position: "insideRight",
                 fill: K.textMut,
-                fontSize: 10,
+                fontSize: 11,
                 dy: -70,
               }}
             />

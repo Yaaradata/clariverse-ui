@@ -185,7 +185,7 @@ export function DateCodeHeatStrip() {
                   style={{
                     width: CELL_W,
                     flexShrink: 0,
-                    fontSize: 10,
+                    fontSize: 11,
                     fontFamily: K.mono,
                     color: c.inWindow ? K.text : K.textMut,
                     textAlign: "center",
@@ -232,7 +232,7 @@ export function DateCodeHeatStrip() {
                   stroke={K.textMut}
                   strokeDasharray="4 4"
                   label={{
-                    value: DC.limitLabel,
+                    value: L(DC.limitLabel),
                     position: "insideTopRight",
                     fill: K.textMut,
                     fontSize: 11,
