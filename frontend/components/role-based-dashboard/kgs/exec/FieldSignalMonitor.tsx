@@ -26,6 +26,7 @@ export function FieldSignalMonitor() {
       <SectionHeader
         title={s.title}
         chip={s.chip}
+        chipPulse
         subtitle={s.subtitle}
         italic={L(s.suppressedLine)}
       />

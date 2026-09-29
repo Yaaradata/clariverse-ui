@@ -6,6 +6,8 @@ import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 
 const ICONS: Record<string, LucideIcon> = { Sparkles, Repeat, Scale };
+/** 04 §6 pulses the "New phrasing" chip once on mount (P1). */
+const PULSE_CHIP = "New phrasing";
 
 /** Product ↔ practice attribution bar; the dot sits at `pos` from the product end. */
 function AttributionBar({ pos }: { pos: number }) {
@@ -58,6 +60,9 @@ export function SignalChips() {
         return (
           <span
             key={c.text}
+            className={
+              c.text.startsWith(PULSE_CHIP) ? "kgs-chip-pulse" : undefined
+            }
             style={{
               display: "inline-flex",
               flexWrap: "wrap",

@@ -14,9 +14,12 @@ export function SectionHeader({
   subtitle,
   italic,
   right,
+  chipPulse = false,
 }: {
   title: string;
   chip?: string;
+  /** Pulse the chip once on mount (04 §6, P1). */
+  chipPulse?: boolean;
   subtitle?: string;
   italic?: string;
   right?: ReactNode;
@@ -40,6 +43,7 @@ export function SectionHeader({
         </h2>
         {chip ? (
           <span
+            className={chipPulse ? "kgs-chip-pulse" : undefined}
             style={{
               fontSize: 11,
               padding: "4px 8px",

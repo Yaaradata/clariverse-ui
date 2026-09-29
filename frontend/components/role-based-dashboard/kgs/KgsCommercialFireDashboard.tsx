@@ -63,6 +63,14 @@ const VIEW_TITLE: Record<KgsView, string> = {
 };
 
 const EXIT_MS = 150;
+const STAGGER_STEP_MS = 40;
+const STAGGER_MAX = 8;
+const CHIP_PULSE_DELAY_MS = 240;
+const STAGGER_DELAYS = Array.from({ length: STAGGER_MAX - 1 }, (_, i) => {
+  const n = i + 2;
+  const nth = n === STAGGER_MAX ? `n+${n}` : `${n}`;
+  return `.kgs-root .kgs-stagger > * > :nth-child(${nth}) { animation-delay: ${(n - 1) * STAGGER_STEP_MS}ms; }`;
+}).join("\n");
 
 /**
  * Focus ring, anchor scroll margin and motion (03 §4, 04 §6, 06 §2). Scoped to the root.
@@ -79,6 +87,11 @@ const GLOBAL_CSS = `
 @keyframes kgs-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @keyframes kgs-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .kgs-root .kgs-enter { animation: kgs-enter 220ms cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes kgs-rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.kgs-root .kgs-stagger > * > * { animation: kgs-rise 220ms cubic-bezier(.2, .8, .2, 1) both; }
+${STAGGER_DELAYS}
+@keyframes kgs-chip-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+.kgs-root .kgs-chip-pulse { animation: kgs-chip-pulse 400ms ease-in-out ${CHIP_PULSE_DELAY_MS}ms 1 both; }
 .kgs-root .kgs-exit { animation: kgs-out ${EXIT_MS}ms ease-in both; }
 .kgs-root .kgs-lift { transition: transform 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out; }
 .kgs-root .kgs-lift:hover { transform: translateY(-2px); border-color: var(--kgs-accent) !important; box-shadow: var(--kgs-glow) !important; }
@@ -105,9 +118,9 @@ const GLOBAL_CSS = `
 @media (prefers-reduced-motion: reduce) {
   .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-property: opacity, color, background-color, border-color, box-shadow !important; }
   .kgs-root .kgs-lift:hover { transform: none; }
-  .kgs-root .kgs-enter, .kgs-root .kgs-slide, .kgs-root .kgs-pop-in, .kgs-root .kgs-drawer-in, .kgs-root .kgs-grow { animation-name: kgs-fade; }
+  .kgs-root .kgs-enter, .kgs-root .kgs-stagger > * > *, .kgs-root .kgs-slide, .kgs-root .kgs-pop-in, .kgs-root .kgs-drawer-in, .kgs-root .kgs-grow { animation-name: kgs-fade; }
   .kgs-root .kgs-drawer-out { animation-name: kgs-out; }
-  .kgs-root .kgs-ping, .kgs-root .kgs-spin, .kgs-root .kgs-pulse { animation: none; }
+  .kgs-root .kgs-ping, .kgs-root .kgs-spin, .kgs-root .kgs-pulse, .kgs-root .kgs-chip-pulse { animation: none; }
   .kgs-root .kgs-check path { animation: none; stroke-dashoffset: 0; }
 }
 `;
@@ -222,11 +235,16 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
         scroller.scrollTo({ top: 0 });
         return;
       }
-      // The view is mid kgs-enter (translateY 8px → 0); land where the anchor will settle.
-      const wrap = el.closest(".kgs-enter");
-      const shift = wrap
-        ? new DOMMatrix(getComputedStyle(wrap).transform).m42
-        : 0;
+      // The view and its panels are mid enter/stagger (translateY → 0); land where the anchor settles.
+      let shift = 0;
+      for (
+        let n: Element | null = el;
+        n && n !== scroller;
+        n = n.parentElement
+      ) {
+        const t = getComputedStyle(n).transform;
+        if (t !== "none") shift += new DOMMatrix(t).m42;
+      }
       const margin = Number.parseFloat(getComputedStyle(el).scrollMarginTop);
       scroller.scrollTo({
         top:
@@ -287,7 +305,10 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
             ref={mainRef}
             style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}
           >
-            <div key={view} className={leaving ? "kgs-exit" : "kgs-enter"}>
+            <div
+              key={view}
+              className={`${leaving ? "kgs-exit" : "kgs-enter"} kgs-stagger`}
+            >
               <ViewBody view={view} />
             </div>
           </main>
