@@ -10,13 +10,7 @@ import {
 } from "@kgs/lib/data";
 import { anonFromUrl, introSkippedByUrl } from "@kgs/lib/demoState";
 import { fmt } from "@kgs/lib/label";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type KgsNav, KgsNavContext, type KgsView, parseLink } from "./nav";
 import { prefersReducedMotion } from "./shared/motion";
 import { K } from "./shared/tokens";
@@ -108,7 +102,12 @@ ${STAGGER_DELAYS}
 .kgs-root .kgs-fade-in { animation: kgs-fade 240ms ease-out both; }
 .kgs-root .kgs-xfade { animation: kgs-fade 150ms ease-out both; }
 .kgs-root .kgs-fade-out { animation: kgs-out 180ms ease-in both; }
-.kgs-root .kgs-watermark { animation: kgs-fade 200ms ease-out both; }
+.kgs-root .kgs-watermark { display: none; }
+@media print {
+  .kgs-root .kgs-watermark { display: grid !important; animation: none; }
+  .kgs-root .kgs-anon-chip { display: inline-flex !important; }
+}
+.kgs-root .kgs-anon-chip { display: none; }
 @keyframes kgs-ping-ring { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
 .kgs-root .kgs-ping { transform-box: fill-box; transform-origin: center; opacity: 0; animation: kgs-ping-ring 1.2s ease-out 1.1s 2; }
 @keyframes kgs-spin { to { transform: rotate(360deg); } }
@@ -144,12 +143,12 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   const [intro, setIntro] = useState(() => !introSkippedByUrl());
   const endIntro = useCallback(() => setIntro(false), []);
 
-  // ?anon=1 read once after mount (never during render → no hydration mismatch).
+  // ?anon=0 / ?anon=1 read once after mount (never during render → no hydration mismatch).
   const urlApplied = useRef(false);
   useEffect(() => {
     if (urlApplied.current) return;
     urlApplied.current = true;
-    if (anonFromUrl()) setAnonymise(true);
+    setAnonymise(anonFromUrl());
     if (process.env.NODE_ENV !== "production") runKgsChecks();
   }, [setAnonymise]);
 

@@ -4,6 +4,7 @@ import type { ChartMarker } from "@kgs/types";
 import { useMemo, useState } from "react";
 import {
   Area,
+  CartesianGrid,
   ComposedChart,
   Line,
   LineChart,
@@ -13,7 +14,6 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
 } from "recharts";
 import { useReducedMotion } from "../shared/motion";
 import { K, withAlpha } from "../shared/tokens";
@@ -39,6 +39,8 @@ export type LineMonitorFocusCopy = {
   legendBand: string;
   bandLabel: string;
   releaseLabel: string;
+  /** End-point callout; falls back to the raw last value. */
+  endLabel?: string;
   chips: { text: string; tone: "accent" | "muted" }[];
 };
 
@@ -393,7 +395,9 @@ function FocusMonitor({
                 fill="transparent"
                 stroke="none"
                 label={{
-                  value: String(lastRow.focus),
+                  value: focusCopy.endLabel
+                    ? L(focusCopy.endLabel)
+                    : String(lastRow.focus),
                   position: "right",
                   fill: K.orange,
                   fontSize: 12,
@@ -502,9 +506,7 @@ function FocusMonitor({
               padding: "3px 8px",
               borderRadius: K.radius.pill,
               border: `1px solid ${
-                c.tone === "accent"
-                  ? withAlpha(K.orange, 0.45)
-                  : K.borderLight
+                c.tone === "accent" ? withAlpha(K.orange, 0.45) : K.borderLight
               }`,
               background:
                 c.tone === "accent"

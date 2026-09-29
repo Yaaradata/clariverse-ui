@@ -5,8 +5,8 @@
  * string through fmt() so the Anonymise toggle swaps names everywhere: DOM text,
  * chart labels, tooltips, breadcrumbs and <title>.
  *
- *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)', false) -> 'EST4 · fw 4.1 (synthetic)'
- *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)', true)  -> 'Panel platform A · fw A.4.1 (synthetic)'
+ *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}}', false) -> 'EST4 · fw 4.1'
+ *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}}', true)  -> 'Panel platform A · fw 4.1'
  *
  * React components normally use useLabel() from ./demoState, which reads the
  * current anonymise flag for you.

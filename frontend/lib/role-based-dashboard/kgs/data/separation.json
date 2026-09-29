@@ -252,7 +252,7 @@
     }
   ],
   "topicStack": {
-    "title": "Separation contacts by topic — {{region:US}}, since 1 Sep",
+    "title": "Invoice topics dominate contacts",
     "stacks": [
       "{{region:US-SE}}",
       "{{region:US-SW}}",
@@ -1013,7 +1013,8 @@
       "title": "Key figures"
     },
     "S-B": {
-      "title": "Friction by cutover — affected region vs control",
+      "title": "Cutover friction beats every control",
+      "sub": "Affected region vs control",
       "unit": "contacts / week"
     },
     "S-C": {
@@ -1030,11 +1031,12 @@
       ]
     },
     "S-D": {
-      "title": "Separation contacts by topic — {{region:US}}, since 1 Sep",
+      "title": "Invoice topics dominate contacts",
+      "sub": "{{region:US}} · since 1 Sep",
       "unit": "contacts since 1 Sep"
     },
     "S-E": {
-      "title": "Defect vs communicated change",
+      "title": "Defects outnumber expected changes",
       "columns": [
         "Expected, communicated change (FAQ-able)",
         "Defect (wrong entity, lost acknowledgement)"

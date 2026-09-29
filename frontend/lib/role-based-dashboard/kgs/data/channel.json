@@ -377,7 +377,7 @@
     "gate": "Partner-recovery brief — awaiting Regional GM approval · no outreach sent"
   },
   "backorder": {
-    "title": "Backlog at risk by SKU family",
+    "title": "Backlog risk sits in three families",
     "stacks": [
       "NA",
       "{{region:US}}",
@@ -945,7 +945,7 @@
           "level": "ALERT",
           "tag": "Channel",
           "title": "{{partner:ESD-SE-07}} partner drift rising",
-          "body": "{{partner:ESD-SE-07}} (synthetic) friction 3.1× its own baseline for six weeks; competitor named in 4 calls. Sell-in −22% vs peers +4%.",
+          "body": "{{partner:ESD-SE-07}} friction 3.1× its own baseline for six weeks; competitor named in 4 calls. Sell-in −22% vs peers +4%.",
           "metric": "3.1× own baseline",
           "trend": "↗ above threshold since 11 Sep",
           "priority": "This month",
@@ -963,8 +963,7 @@
             "Track interactions weekly vs own baseline"
           ],
           "timeline": "Decide before the 15 Oct QBR",
-          "owner": "Regional GM NA",
-          "synthetic": true
+          "owner": "Regional GM NA"
         }
       },
       {
@@ -1110,7 +1109,8 @@
       "title": "Key figures"
     },
     "C-B": {
-      "title": "Partner league vs own baseline",
+      "title": "One partner is drifting hardest",
+      "sub": "Friction vs each partner's own baseline",
       "anchor": "esd-se-07",
       "columns": [
         "PARTNER",
@@ -1125,19 +1125,19 @@
       ]
     },
     "C-C": {
-      "title": "{{partner:ESD-SE-07}} — friction vs sell-in",
+      "title": "Partner friction climbs as sell-in falls",
       "sub": "Stream = weekly interactions vs baseline band; line = {{platform:EST4}} sell-in vs last year (dashed).",
       "unit": "interactions / week · sell-in $k / week (USD)"
     },
     "C-D": {
-      "title": "Backlog at risk by SKU family",
+      "title": "Backlog risk sits in three families",
       "sub": "vs revised promise / vs original promise",
       "right": "OTD 94% | OTD 71%",
       "anchor": "backorder",
       "unit": "$m (USD)"
     },
     "C-E": {
-      "title": "Certification gap vs support load",
+      "title": "Certification gaps drive support load",
       "columns": [
         "PARTNER",
         "CERTIFIED TECHS",
@@ -1147,7 +1147,8 @@
       ]
     },
     "C-F": {
-      "title": "Switching language — competitor names redacted",
+      "title": "Competitors named in one metro",
+      "sub": "Competitor names redacted",
       "columns": [
         "AREA",
         "COMPETITOR",

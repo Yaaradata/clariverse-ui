@@ -544,6 +544,14 @@ export interface TableRow {
   tone?: (string | null)[];
   linkTo?: string;
 }
+
+/** Installed-base P-E rows: plain-English LiSN verdict beside the legacy status cell. */
+export type VerdictTone = "red" | "orange" | "amber" | "grey";
+export interface EmergingPhrasingRow extends TableRow {
+  verdictName: TokenString;
+  verdictStatus: TokenString;
+  verdictTone: VerdictTone;
+}
 export type WallLevel = "CRITICAL" | "ALERT" | "WARNING";
 export type WallPriority = "Immediate" | "This month" | "Monitor";
 
@@ -678,6 +686,7 @@ export interface InstalledBasePage {
     focusLegendBand?: string;
     focusBandLabel?: string;
     focusReleaseLabel?: TokenString;
+    focusEndLabel?: TokenString;
     focusChips?: { text: TokenString; tone: "accent" | "muted" }[];
     weeks: WeekIndex[];
     series: {
@@ -703,7 +712,7 @@ export interface InstalledBasePage {
     leadLine: string;
     caption: string;
   };
-  emergingPhrasing: TableRow[];
+  emergingPhrasing: EmergingPhrasingRow[];
   contactsVsRma: {
     trouble: number[];
     fw41: number[];
@@ -1058,6 +1067,7 @@ export interface AggregateLine {
 /** signal_fw41.json › lineage (05a §5.2). */
 export interface HeroLineage {
   title: string;
+  sub?: string;
   series: [FirmwareSeries, FirmwareSeries]; // [0] = 4.0 (prior), [1] = 4.1
   aggregate: AggregateLine;
   markers: ChartMarker[];

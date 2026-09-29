@@ -43,10 +43,16 @@ type Action =
   | { type: "drawerOpened"; ts: string }
   | { type: "reset"; anonymise: boolean };
 
-/** ?anon=1 forces anonymised mode on load and after reset (04 §7.1). */
+/**
+ * Anonymise ON by default. `?anon=0` turns it off; `?anon=1` forces it on.
+ * SSR returns true so server and client match until the URL is applied.
+ */
 export function anonFromUrl(): boolean {
-  if (typeof window === "undefined") return false;
-  return new URLSearchParams(window.location.search).get("anon") === "1";
+  if (typeof window === "undefined") return true;
+  const v = new URLSearchParams(window.location.search).get("anon");
+  if (v === "0") return false;
+  if (v === "1") return true;
+  return true;
 }
 
 /** `?intro=0` skips the intro (04 §1.1). */
@@ -105,7 +111,7 @@ export interface DemoApi {
   requestDecision: (signalId: string) => string;
   /** Call when the evidence drawer first opens ("President · just now" audit line). */
   drawerOpened: () => void;
-  /** Clears approvals and requests, Viewing as → President, anonymise → OFF (unless ?anon=1). */
+  /** Clears approvals and requests, Viewing as → President, anonymise → URL/default. */
   reset: () => void;
   isApproved: (signalId: string) => boolean;
 }
@@ -116,9 +122,8 @@ export function DemoProvider(props: {
   children?: ReactNode;
   initialAnonymise?: boolean;
 }) {
-  // Repo copy: start OFF on both server and client (no hydration mismatch). The dashboard
-  // applies ?anon=1 once in a useEffect via setAnonymise(anonFromUrl()).
-  const startAnon = props.initialAnonymise ?? false;
+  // Start ON by default (neutral names). Dashboard syncs ?anon=0 / ?anon=1 after mount.
+  const startAnon = props.initialAnonymise ?? true;
   const [state, dispatch] = useReducer(reducer, initialState(startAnon));
 
   const approve = useCallback(

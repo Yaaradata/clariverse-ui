@@ -255,7 +255,8 @@
     }
   },
   "lineage": {
-    "title": "Contacts per 1,000 panel-weeks — fw {{fw:EST4@4.1}} vs {{fw:EST4@4.0}}",
+    "title": "Firmware 4.1 fault rate has left prior behind",
+    "sub": "Contacts per 1,000 panel-weeks · fw {{fw:EST4@4.1}} vs {{fw:EST4@4.0}}",
     "series": [
       {
         "label": "{{fw:EST4@4.0}} (prior)",

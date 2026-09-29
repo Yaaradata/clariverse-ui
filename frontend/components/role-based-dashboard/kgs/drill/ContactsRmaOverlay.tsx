@@ -127,7 +127,7 @@ export function ContactsRmaOverlay() {
   ];
 
   return (
-    <Panel title={L(P.title)} sub={L(P.unit ?? "")}>
+    <Panel title={L(P.title)} sub={L(P.sub ?? P.unit ?? "")}>
       <div role="img" aria-label={L(P.title)} style={{ height: 250 }}>
         <ResponsiveContainer
           width="100%"

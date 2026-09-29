@@ -39,7 +39,10 @@ function CutoverTimeline() {
   }));
   const last = weeks.length;
   return (
-    <Panel title={L(P["S-B"].title)} sub={L(P["S-B"].unit ?? "")}>
+    <Panel
+      title={L(P["S-B"].title)}
+      sub={L(P["S-B"].sub ?? P["S-B"].unit ?? "")}
+    >
       <LineMonitor
         weeks={weeks}
         series={series}

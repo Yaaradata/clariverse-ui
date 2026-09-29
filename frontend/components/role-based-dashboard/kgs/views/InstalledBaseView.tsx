@@ -44,10 +44,10 @@ function CohortMonitor() {
   });
   // Focus copy only — never fall back to the long 12-week title.
   const title =
-    lm.focusTitle ?? "{{fw:EST4@4.1}} fault calls vs every other release";
+    lm.focusTitle ?? "Only firmware 4.1 is getting more fault calls";
   const sub =
     lm.focusSub ??
-    "45 of 46 releases normal · calls per 1,000 panels a week";
+    "Fault calls per 1,000 panels a week · the other 45 releases stay in the normal range";
   return (
     <Panel title={L(title)} sub={L(sub)}>
       <LineMonitor
@@ -59,19 +59,15 @@ function CohortMonitor() {
         height={260}
         variant="focus"
         focusCopy={{
-          legendFocus:
-            lm.focusLegendFocus ?? "{{fw:EST4@4.1}} (synthetic)",
-          legendBand: lm.focusLegendBand ?? "Other releases",
+          legendFocus: lm.focusLegendFocus ?? "Firmware 4.1",
+          legendBand: lm.focusLegendBand ?? "Other releases (normal range)",
           bandLabel: lm.focusBandLabel ?? "Normal range",
-          releaseLabel:
-            lm.focusReleaseLabel ?? "{{fw:EST4@4.1}} released",
+          releaseLabel: lm.focusReleaseLabel ?? "{{fw:EST4@4.1}} released",
+          endLabel: lm.focusEndLabel ?? "6.5 — about 3× normal",
           chips: lm.focusChips ?? [
             { text: "3.1× normal", tone: "accent" },
-            { text: "RMA rate: still in control", tone: "muted" },
-            {
-              text: "1,240 panels on {{fw:EST4@4.1}}",
-              tone: "muted",
-            },
+            { text: "Returns (RMA) rate: still normal", tone: "muted" },
+            { text: "1,240 panels on 4.1", tone: "muted" },
           ],
         }}
       />

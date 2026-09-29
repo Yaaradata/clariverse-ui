@@ -4,13 +4,13 @@ import { monitor } from "@kgs/lib/data";
 import type {
   MonitorCard,
   SignalWall as SignalWallData,
-  WallCard as WallCardData,
   WallCardCompact,
+  WallCard as WallCardData,
   WallLevel,
 } from "@kgs/types";
 import {
-  CircleAlert,
   ChevronRight,
+  CircleAlert,
   Sparkles,
   Timer,
   TrendingUp,
@@ -32,10 +32,7 @@ import { useScope } from "../shell/Scope";
 const RANK = /^#(\d+) of \d+$/;
 const MONEY = /[$£]/;
 
-const LEVEL: Record<
-  WallLevel,
-  { color: string; Icon: typeof CircleAlert }
-> = {
+const LEVEL: Record<WallLevel, { color: string; Icon: typeof CircleAlert }> = {
   CRITICAL: { color: "#ef4444", Icon: CircleAlert },
   ALERT: { color: "#f97316", Icon: TriangleAlert },
   WARNING: { color: "#eab308", Icon: Zap },
@@ -268,21 +265,6 @@ function DetailPanel({
         boxShadow: `0 8px 32px ${color}40, 0 4px 16px rgba(0,0,0,0.3)`,
       }}
     >
-      {c.synthetic ? (
-        <div
-          style={{
-            fontSize: 10,
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: K.textMut,
-            marginBottom: 8,
-          }}
-        >
-          Synthetic
-        </div>
-      ) : null}
-
       <div
         style={{
           display: "flex",
@@ -462,9 +444,7 @@ function DetailPanel({
             >
               {idx + 1}
             </span>
-            <span
-              style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}
-            >
+            <span style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}>
               {L(a)}
             </span>
           </div>
@@ -516,7 +496,9 @@ function DetailPanel({
             {L(c.owner)}
           </span>
         </div>
-        <span style={{ fontSize: 11, fontWeight: 700, color }}>{c.priority}</span>
+        <span style={{ fontSize: 11, fontWeight: 700, color }}>
+          {c.priority}
+        </span>
       </div>
     </div>
   );

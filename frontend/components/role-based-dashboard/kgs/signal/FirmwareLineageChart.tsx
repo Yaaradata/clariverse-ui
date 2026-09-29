@@ -248,6 +248,18 @@ export function FirmwareLineageChart() {
         <h2 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: K.text }}>
           {L(lineage.title)}
         </h2>
+        {lineage.sub ? (
+          <div
+            style={{
+              width: "100%",
+              fontSize: 12,
+              color: K.textMut,
+              marginTop: -2,
+            }}
+          >
+            {L(lineage.sub)}
+          </div>
+        ) : null}
         <div
           style={{
             display: "flex",

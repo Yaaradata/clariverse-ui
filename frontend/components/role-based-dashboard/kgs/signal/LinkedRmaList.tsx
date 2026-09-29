@@ -5,11 +5,11 @@ import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { dayLabel } from "./format";
 
-/** Linked RMAs tab (04 §4.10): ID mono · NFF chip · date · partner · serial (synthetic), then the note. */
+/** Linked RMAs tab (04 §4.10): ID mono · NFF chip · date · partner · serial, then the note. */
 export function LinkedRmaList() {
   const L = useLabel();
   const { rmas, rmaNote } = signalFw41;
-  const { rmaSerial, synthetic } = meta.ui.hero;
+  const { rmaSerial } = meta.ui.hero;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {rmas.map((r) => (
@@ -47,8 +47,7 @@ export function LinkedRmaList() {
           <span>{L(r.partnerId)}</span>
           <span aria-hidden>·</span>
           <span>
-            {rmaSerial} <span style={{ fontFamily: K.mono }}>{r.serial}</span>{" "}
-            {synthetic}
+            {rmaSerial} <span style={{ fontFamily: K.mono }}>{r.serial}</span>
           </span>
         </div>
       ))}
