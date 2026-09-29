@@ -118,8 +118,23 @@ LINT_MUST_FLAG = [
     "LisN V1 (first demo)",
     "Save $1.2M",
     "Great news!",
+    # Internal names from scripts/lint_terms_candidates.txt (follow-up fix 4); none is caught by an older rule.
+    "See screen E2 for the list",
+    "Owner: T5",
+    "V3 build",
+    "Kannan asked for this view",
+    "IndusInd comparison",
+    "Confidential: do not share",
 ]
-LINT_MUST_PASS = ["Set a new date", "Deliverables met within the TAT", "Customers asking where something is"]
+LINT_MUST_PASS = [
+    "Set a new date",
+    "Deliverables met within the TAT",
+    "Customers asking where something is",
+    "Priority list A: 45 customers",
+    "Version 11 of the HDFC Bank app",
+    "Internal · illustrative until discovery",
+    "PayZapp v2.61 on the Play Store",
+]
 
 
 def main() -> int:
@@ -165,9 +180,47 @@ def main() -> int:
     print(("PASS " if h else "FAIL ") + "lint honours the local programme-name list")
     if not h:
         fails.append("lint ignored a term from the local programme-name list")
+    # The built-page scan flags an internal name in an RSC payload and in a page's client chunk, and passes clean copy.
+    build_checks = 0
+    with tempfile.TemporaryDirectory() as d:
+        nx = Path(d) / ".next"
+        pages = nx / "server" / "app" / "hdfc-pulse" / "v2"
+        pages.mkdir(parents=True)
+        (nx / "static" / "chunks").mkdir(parents=True)
+        (pages / "clean.rsc").write_text('1:["$","div",null,{"children":"Priority list A: 45 customers"}]\n', encoding="utf-8")
+        h = []
+        lint_terms.scan_build(h, pages, nx)
+        build_checks += 1
+        print(("FAIL " if h else "PASS ") + "build scan passes a clean payload")
+        if h:
+            fails.append(f"build scan flagged a clean payload: {h[:2]}")
+        (pages / "bad.rsc").write_text('1:["$","div",null,{"children":"V2 · priority view"}]\n', encoding="utf-8")
+        (pages / "bad.html").write_text('<script src="/_next/static/chunks/abc.js"></script>', encoding="utf-8")
+        (nx / "static" / "chunks" / "abc.js").write_text('x={children:"Screen E3 for Kannan"}', encoding="utf-8")
+        h = []
+        lint_terms.scan_build(h, pages, nx)
+        for want in ("V2", "E3", "Kannan"):
+            build_checks += 1
+            hit = any(f"'{want}'" in x for x in h)
+            print(("PASS " if hit else "FAIL ") + f"build scan flags {want!r}")
+            if not hit:
+                fails.append(f"build scan missed {want!r}")
+        # The candidate and local lists may never name the product or the bank.
+        bad = Path(d) / "cands.txt"
+        bad.write_text("E2\nHDFC Bank\n", encoding="utf-8")
+        build_checks += 1
+        try:
+            lint_terms._terms(bad)
+            print("FAIL lint refuses a list that names the bank")
+            fails.append("candidate list naming the bank was accepted")
+        except SystemExit:
+            print("PASS lint refuses a list that names the bank")
     for f in fails:
         print("FAIL", f)
-    print(f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + 1} lint fixtures, {len(fails)} failure(s)")
+    print(
+        f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + len(LINT_MUST_PASS) + 1 + build_checks} "
+        f"lint fixtures, {len(fails)} failure(s)"
+    )
     return 1 if fails else 0
 
 

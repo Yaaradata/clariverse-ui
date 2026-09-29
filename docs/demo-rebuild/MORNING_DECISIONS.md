@@ -178,3 +178,10 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Judgement call:** the six RBI rows keep their numbers. They are RBI timelines, not bank TATs, so "Bank TAT: confirm in discovery" would be wrong for them. None is verified against D-11, though, and five have no in-repo source beyond the code. **Options:** (a) keep, and check against D-11 before the sponsor review; (b) show "RBI TAT: to verify" on all six until checked.
 - **Judgement call:** met / outside / open-too-long on bank rows still come from the illustrative sample, measured against a placeholder that is not shown. The footnote says so. The alternative would be to blank those cells until discovery.
 - **Judgement call:** L2-09 stays in "Call today". The reason is now the customer's blocked rent and EMI, not a bank TAT ending tomorrow.
+
+## D19 · Internal-names lint
+- **Shipped:** `scripts/lint_terms_candidates.txt` (committed) and `scripts/lint_terms_local.txt` (gitignored) are both read by `lint_terms.py`. The lint covers V2 UI strings, the generated payloads and the built V2 pages.
+- **Judgement call:** added source-track IDs S1–S8 and the B1 KNOW-only items (IndusInd, Vishal Jha), beyond the IDs named in the instruction. They are internal labels of the same kind.
+- **Judgement call:** terms match whole tokens, case-sensitively, so route paths (`/hdfc-pulse/v2`), app versions (`v2.61`) and "Priority list A" do not trip them. "Internal" on its own is not a candidate, because the provenance tag "Internal · illustrative until discovery" is meant to be on screen.
+- **Judgement call:** customer quotes and their summaries are skipped in payloads, as the existing lint does: they are the customer's words.
+- **Result:** no on-screen hits. Every candidate token in the V2 code is in a comment.

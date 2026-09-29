@@ -3,7 +3,12 @@
 Scans UI copy in frontend/{app,components,lib}/hdfc-v3 (string literals and JSX text) and the generated data the
 screens render. Customer quotes (evidence text) are exempt: they are the customer's words, redacted.
 
-Internal programme names are never committed: add them one per line to scripts/lint_terms_local.txt (gitignored).
+Internal names (follow-up fix 4) come from two files, both read here:
+- scripts/lint_terms_candidates.txt (committed, auto-seeded): brief, track and screen IDs, version labels, people named
+  in the internal docs, anything the briefs mark internal or confidential;
+- scripts/lint_terms_local.txt (gitignored): internal programme names, never committed.
+They are checked in V2 UI strings, the generated payloads and, when a build exists, the built V2 pages (RSC payloads
+and the client chunks those pages load). Neither file may list the product name or the bank's name.
 Exit code 1 on any hit.
 """
 
@@ -35,6 +40,32 @@ LOCAL_TERMS = (
     else []
 )
 BANNED += LOCAL_TERMS
+
+CANDIDATES_FILE = ROOT / "scripts" / "lint_terms_candidates.txt"
+NEVER_LISTED = re.compile(r"lisn|hdfc", re.I)  # the product and the bank are named on screen by design
+
+
+def _terms(path: Path) -> list[str]:
+    if not path.exists():
+        return []
+    out = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        t = line.strip()
+        if not t or t.startswith("#"):
+            continue
+        if NEVER_LISTED.search(t):
+            raise SystemExit(f"lint_terms: {path.name} lists the product or bank name ({t!r}); remove it")
+        out.append(t)
+    return out
+
+
+def _pattern(t: str) -> re.Pattern:
+    if t.startswith("re:"):
+        return re.compile(t[3:])
+    return re.compile(rf"(?<![A-Za-z0-9]){re.escape(t)}(?![A-Za-z0-9])")
+
+
+CANDIDATES = [(t, _pattern(t)) for t in _terms(CANDIDATES_FILE) + _terms(LOCAL)]
 
 # V2. V1 is kept exactly as first shown and is not linted.
 UI_DIRS = [
@@ -85,6 +116,7 @@ def copy_strings(text: str):
 
 def check(s: str, where: str, hits: list[str]):
     s = re.sub(r"\$\{[^}]*\}", "", s)  # template expressions are code, not copy
+    raw = s
     s = IDENTIFIER.sub("", s)
     for t in BANNED:
         # "promise" in every form (promise, promises, promised, promising, re-promise), any case.
@@ -96,6 +128,9 @@ def check(s: str, where: str, hits: list[str]):
             hits.append(f"{where}: person's name '{t}' in: {s[:80]}")
     if INTERNAL_REF.search(s):
         hits.append(f"{where}: internal reference '{INTERNAL_REF.search(s).group(0)}' in: {s[:80]}")
+    # Candidates are whole tokens, so they cannot match inside an identifier; run them before identifiers are stripped
+    # so a CamelCase name (e.g. a bank name) is still caught.
+    internal_names(raw, where, hits)
     for t in US_SPELLINGS:
         if re.search(rf"\b{t}", s, re.I):
             hits.append(f"{where}: US spelling '{t}' in: {s[:80]}")
@@ -105,17 +140,76 @@ def check(s: str, where: str, hits: list[str]):
         hits.append(f"{where}: '!' in copy: {s[:80]}")
 
 
-def walk_json(o, path: str, hits: list[str]):
+def internal_names(s: str, where: str, hits: list[str]):
+    """Candidate and local internal names (follow-up fix 4), matched as whole tokens."""
+    for t, p in CANDIDATES:
+        m = p.search(s)
+        if m:
+            hits.append(f"{where}: internal name '{m.group(0)}' ({t}) in: {s[:80]}")
+
+
+# Built V2 pages: the RSC payloads carry every prop a page renders; the client chunks carry the component copy.
+NEXT = ROOT / "frontend" / ".next"
+BUILD_PAGES = NEXT / "server" / "app" / "hdfc-pulse" / "v2"
+CHUNK_REF = re.compile(r"/_next/(static/chunks/[\w./-]+\.js)")
+
+
+def _rsc_json(text: str):
+    """Each RSC line is `id:payload`; yield the payloads that parse as JSON."""
+    for line in text.splitlines():
+        head, _, body = line.partition(":")
+        if not body or not re.fullmatch(r"[0-9a-f]+", head):
+            continue
+        try:
+            yield json.loads(body)
+        except json.JSONDecodeError:
+            continue
+
+
+def _rel(f: Path) -> str:
+    return str(f.relative_to(ROOT)) if f.is_relative_to(ROOT) else str(f)
+
+
+def scan_build(hits: list[str], pages: Path = BUILD_PAGES, next_dir: Path = NEXT) -> int:
+    """Internal names in the built V2 pages. Returns the number of files scanned (0 when there is no build).
+    Customer-voice keys in the payloads are skipped, as in the data files."""
+    if not pages.is_dir():
+        return 0
+    n, chunks = 0, set()
+    for f in sorted(pages.rglob("*")):
+        if f.suffix == ".rsc":
+            n += 1
+            for o in _rsc_json(f.read_text(encoding="utf-8", errors="replace")):
+                walk_json(o, _rel(f), hits, names_only=True)
+        elif f.suffix == ".html":
+            chunks.update(CHUNK_REF.findall(f.read_text(encoding="utf-8", errors="replace")))
+    for c in sorted(chunks):
+        f = next_dir / c
+        if not f.exists():
+            continue
+        n += 1
+        text = f.read_text(encoding="utf-8", errors="replace")
+        for s in copy_strings(text):
+            if re.search(r"[A-Za-z]{3}", s):
+                internal_names(re.sub(r"\$\{[^}]*\}", "", s), _rel(f), hits)
+    return n
+
+
+def walk_json(o, path: str, hits: list[str], names_only: bool = False):
     if isinstance(o, dict):
         for k, v in o.items():
             if (k in CUSTOMER_VOICE_KEYS and not path.startswith(SYNTHETIC)) or k in NOT_SHOWN_KEYS:
                 continue
-            walk_json(v, f"{path}.{k}", hits)
+            walk_json(v, f"{path}.{k}", hits, names_only)
     elif isinstance(o, list):
         for i, v in enumerate(o):
-            walk_json(v, f"{path}[{i}]", hits)
+            walk_json(v, f"{path}[{i}]", hits, names_only)
     elif isinstance(o, str) and re.search(r"[A-Za-z]{3}", o):
-        check(o, path, hits)
+        if names_only:
+            if not o.startswith(("$", "/", "http")):
+                internal_names(o, path, hits)
+        else:
+            check(o, path, hits)
 
 
 def main() -> int:
@@ -145,9 +239,12 @@ def main() -> int:
                 hits.append(f"{f.relative_to(ROOT)}: internal reference in: {s[:80]}")
     for f in DATA_FILES:
         walk_json(json.loads(f.read_text(encoding="utf-8")), str(f.relative_to(ROOT)), hits)
+    built = scan_build(hits)
+    if not built:
+        print("lint_terms: NOTE no V2 build in frontend/.next; built pages not checked")
     for h in hits:
         print(h)
-    print(f"lint_terms: {len(hits)} hit(s)")
+    print(f"lint_terms: {len(hits)} hit(s) ({len(CANDIDATES)} internal-name terms; {built} built files)")
     return 1 if hits else 0
 
 
