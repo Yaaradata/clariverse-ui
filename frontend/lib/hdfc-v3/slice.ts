@@ -68,12 +68,19 @@ function idsFor(b: Bundle, s: Slice): { ids: string[]; full: boolean } {
       return {
         ids: [
           ...first(b.signals.closure_intent.exemplars, 2),
-          ...sayingThemes(b).flatMap((t) => first(t.exemplars)),
+          // Three per theme, so the page can skip a quote already shown under another theme.
+          ...sayingThemes(b).flatMap((t) => first(t.exemplars, 3)),
         ],
         full: false,
       };
     case "deliverables":
-      return { ids: first(b.signals.cure_watch.exemplars, 2), full: false };
+      return {
+        ids: [
+          ...first(b.signals.cure_watch.exemplars, 2),
+          ...first(b.signals.closure_intent.exemplars),
+        ],
+        full: false,
+      };
     default:
       return { ids: [], full: false };
   }

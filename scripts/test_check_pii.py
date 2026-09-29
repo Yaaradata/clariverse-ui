@@ -21,6 +21,7 @@ SEEDED = [
     "Manager Suyash Asthana clearly confirmed",  # role word
     "cc @nsitharamanoffc @CardsHdfc60342 /u/Jatins31",  # personal handles
     "#HDFCBank #SashidharJagdishan",  # hashtag of a public figure
+    "HDFC BANK Baghajatin Branch clerk Suman De non co-operate",  # role word "clerk" (found on the market page)
 ]
 CLEAN = [
     "Regalia Gold card from Tata Neu Infinia. Parag Parikh Flexi Cap. Dear Sir, thank you. @HDFC_Bank @RBI",

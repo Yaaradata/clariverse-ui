@@ -1426,6 +1426,26 @@
   "owner": "digital",
   "entity": "hdfc_bank"
  },
+ "playstore:com.hdfcbank.android.now:0fc8dfeb-87c6-4ebe-ba49-c67b5012b3e6": {
+  "id": "playstore:com.hdfcbank.android.now:0fc8dfeb-87c6-4ebe-ba49-c67b5012b3e6",
+  "source": "playstore",
+  "source_label": "Play Store",
+  "place": "Play Store review",
+  "created_at": "2026-09-17T00:12:20+05:30",
+  "url": "https://play.google.com/store/apps/details?id=com.hdfcbank.android.now&reviewId=0fc8dfeb-87c6-4ebe-ba49-c67b5012b3e6",
+  "summary": "This is worst experience of my entire life my account was blocked without any reason and bank staff is not…",
+  "redacted_text": "this is worst experience of my entire life my account was blocked without any reason and bank staff is not taking action unseriously behaviour i hate this bank",
+  "title": null,
+  "app_name": "HDFC Bank app",
+  "app_version": "11.0.1",
+  "rating": 1,
+  "themes": [
+   "branch_service"
+  ],
+  "sentiment": "negative",
+  "owner": "retail",
+  "entity": "hdfc_bank"
+ },
  "playstore:com.hdfcbank.android.now:139abea0-f5fa-415b-8370-1b40a4a39e7a": {
   "id": "playstore:com.hdfcbank.android.now:139abea0-f5fa-415b-8370-1b40a4a39e7a",
   "source": "playstore",
@@ -1463,26 +1483,6 @@
    "account_opening",
    "fees_charges_bank",
    "loan_servicing"
-  ],
-  "sentiment": "negative",
-  "owner": "retail",
-  "entity": "hdfc_bank"
- },
- "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375": {
-  "id": "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375",
-  "source": "playstore",
-  "source_label": "Play Store",
-  "place": "Play Store review",
-  "created_at": "2026-09-25T14:51:22+05:30",
-  "url": "https://play.google.com/store/apps/details?id=com.hdfcbank.android.now&reviewId=1c956f89-539e-41d5-ba84-b96f2cacc375",
-  "summary": "HDFC BANK Baghajatin Branch clerk Suman De non co-operate even misbehave with me.",
-  "redacted_text": "HDFC BANK Baghajatin Branch clerk Suman De non co-operate even misbehave with me. Hence, I can not get service from that branch today. Pl. Transfer him today immediately otherwise as I am an Composite Insurance and Investment Consultant must file a case against him of non co-operation and misbehave nature. Customers are suffering from his misbehave character and unsatisfied.",
-  "title": null,
-  "app_name": "HDFC Bank app",
-  "app_version": "11.1.0",
-  "rating": 1,
-  "themes": [
-   "branch_service"
   ],
   "sentiment": "negative",
   "owner": "retail",

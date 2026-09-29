@@ -84,7 +84,8 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
   const topFailures = b.themes.themes
     .filter((t) => SERVICE_GROUPS.has(t.group) && t.sentiment.negative > 0)
     .sort((a, c) => c.sentiment.negative - a.sentiment.negative)
-    .slice(0, 6);
+    // Five, to match the five-stage dispute funnel beside it (no padded tile).
+    .slice(0, 5);
   const funnel = disputes.funnel;
   const ladderPublic = sig.ladder_public;
   const cure = sig.cure_watch;
@@ -270,21 +271,28 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Table
               head={["Target", "Rung", "Posts"]}
               align={["left", "left", "right"]}
-              rows={sig.escalation_by_target.map((e) => [
-                {
-                  rbi: "RBI (named or tagged)",
-                  rbi_ombudsman: "RBI Ombudsman",
-                  grievance: "Grievance or nodal officer",
-                  legal: "Legal action",
-                  consumer_court: "Consumer court or helpline",
-                  ministers: "Ministers tagged",
-                  repeat: "Complaint number or third time",
-                  md_office: "MD or CEO",
-                  internal_ombudsman: "Internal Ombudsman",
-                }[e.target] ?? e.target,
-                e.rung,
-                fmt(e.count),
-              ])}
+              rows={[...sig.escalation_by_target]
+                // Posts with escalation language but no named target read as such, last.
+                .sort((x, y) => Number(!x.target) - Number(!y.target))
+                .map((e) => [
+                  e.target
+                    ? ((
+                        {
+                          rbi: "RBI (named or tagged)",
+                          rbi_ombudsman: "RBI Ombudsman",
+                          grievance: "Grievance or nodal officer",
+                          legal: "Legal action",
+                          consumer_court: "Consumer court or helpline",
+                          ministers: "Ministers tagged",
+                          repeat: "Complaint number or third time",
+                          md_office: "MD or CEO",
+                          internal_ombudsman: "Internal Ombudsman",
+                        } as Record<string, string>
+                      )[e.target] ?? e.target)
+                    : "Target not named",
+                  e.rung,
+                  fmt(e.count),
+                ])}
             />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -376,6 +384,28 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 href={signalHref(d.id, from)}
                 color={C.red}
               />
+            ))}
+          {sig.closure_intent.exemplars
+            .map((id) => b.evidence[id])
+            .filter(Boolean)
+            .slice(0, 1)
+            .map((e) => (
+              <Link
+                key={e.id}
+                href={`${signalHref(e.themes[0], from)}#ev-${encodeURIComponent(e.id)}`}
+                style={{
+                  fontSize: 13.5,
+                  color: C.textSec,
+                  borderLeft: `2px solid ${C.red}`,
+                  paddingLeft: 10,
+                  textDecoration: "none",
+                }}
+              >
+                {e.summary}{" "}
+                <span style={{ color: C.textMut }}>
+                  ({e.place} · {fmtDate(e.created_at)})
+                </span>
+              </Link>
             ))}
         </Tile>
 

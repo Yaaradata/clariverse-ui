@@ -119,7 +119,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
   ];
   const repeatChart = repeatThemes.map((t) => {
     const row: Record<string, string | number> = {
-      theme: t.label.length > 30 ? `${t.label.slice(0, 29)}…` : t.label,
+      theme: t.label.length > 34 ? `${t.label.slice(0, 33)}…` : t.label,
       id: t.id,
     };
     const tot = Object.values(t.by_business).reduce((s, v) => s + v, 0) || 1;
@@ -129,6 +129,14 @@ export function SatisfactionView({ b }: { b: Bundle }) {
   });
   const netColor = (v: number | null) =>
     v === null ? C.text : v >= 0 ? C.green : v > -30 ? C.amber : C.red;
+
+  // A post can carry up to three themes; never show the same quote under two of them.
+  const usedQuotes = new Set<string>();
+  const sayingEvidence = saying.map((t) => {
+    const id = t.exemplars.find((x) => b.evidence[x] && !usedQuotes.has(x));
+    if (id) usedQuotes.add(id);
+    return id ? b.evidence[id] : undefined;
+  });
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -166,142 +174,131 @@ export function SatisfactionView({ b }: { b: Bundle }) {
         <MutedNote>{b.meta.coverage_notes.slice(0, 2).join(" ")}</MutedNote>
       </Tile>
 
-      <div style={PAIRS}>
-        <Tile
-          title="Interactions by relationship tier"
-          sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Jul to this morning`}
-          prov="internal"
-          id="tiers"
-        >
-          <Table
-            head={[
-              "Tier",
-              "Interactions",
-              "Positive",
-              "Negative",
-              "Customers affected",
-            ]}
-            align={["left", "right", "right", "right", "right"]}
-            rows={internal.tiers.map((t) => [
-              t.tier,
-              fmt(t.interactions),
-              <span key="p" style={{ color: C.green, fontWeight: 700 }}>
-                {fmtPct(t.share_positive)}
-              </span>,
-              <span key="n" style={{ color: C.red, fontWeight: 700 }}>
-                {fmtPct(t.share_negative)}
-              </span>,
-              fmt(t.customers_affected),
-            ])}
-          />
-          <MutedNote>
-            Tier names to be verified with the bank. Figures are illustrative,
-            not HDFC Bank figures.
-          </MutedNote>
-        </Tile>
+      <Tile
+        title="Interactions and sentiment by relationship tier"
+        sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Jul to this morning`}
+        prov="internal"
+        id="tiers"
+      >
+        <Table
+          head={[
+            "Tier",
+            "Interactions",
+            "Positive",
+            "Negative",
+            "Customers affected",
+            "Positive · neutral · negative",
+          ]}
+          align={["left", "right", "right", "right", "right", "left"]}
+          rows={internal.tiers.map((t) => [
+            t.tier,
+            fmt(t.interactions),
+            <span key="p" style={{ color: C.green, fontWeight: 700 }}>
+              {fmtPct(t.share_positive)}
+            </span>,
+            <span key="n" style={{ color: C.red, fontWeight: 700 }}>
+              {fmtPct(t.share_negative)}
+            </span>,
+            fmt(t.customers_affected),
+            <div key="bar" style={{ minWidth: 220 }}>
+              <SentimentBar
+                pos={t.positive}
+                neu={t.neutral}
+                neg={t.negative}
+                legend={false}
+              />
+            </div>,
+          ])}
+        />
+        <MutedNote>
+          Tier names to be verified with the bank. Figures are illustrative, not
+          HDFC Bank figures.
+        </MutedNote>
+      </Tile>
 
-        <Tile
-          title="Sentiment by relationship tier"
-          sub="Positive, neutral and negative share of interactions; customers affected"
-          prov="internal"
-        >
-          {internal.tiers.map((t) => (
-            <div key={t.tier}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: 14,
-                  marginBottom: 4,
-                }}
-              >
-                <span style={{ fontWeight: 650 }}>{t.tier}</span>
-                <span style={{ color: C.textMut }}>
-                  {fmt(t.customers_affected)} customers affected
-                </span>
-              </div>
-              <SentimentBar pos={t.positive} neu={t.neutral} neg={t.negative} />
-            </div>
-          ))}
-        </Tile>
+      <Tile
+        title="Sentiment trend (conversation-inferred)"
+        sub="Weekly net sentiment of public HDFC Bank voice, full-window sources, source-weighted"
+        prov="public"
+        id="trend"
+      >
+        <div style={SPLIT}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <TrendLine
+              data={weekly}
+              height={214}
+              xKey="week"
+              yKey="net"
+              reference={b.mood.window_average}
+              referenceLabel="Window average"
+              yLabel="Net sentiment"
+              xLabel="Week starting"
+              domain={[-100, 100]}
+            />
+            <BaselineCaption>
+              Net sentiment = (positive − negative) ÷ items × 100, per source,
+              then weighted by each source&apos;s share of the window. Dashed
+              line: window average. No earlier baseline for social sources.
+            </BaselineCaption>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <Table
+              head={[
+                "Source",
+                "Share of window",
+                "Share of last 7 days",
+                "Window net",
+                "Last 7 days net",
+              ]}
+              align={["left", "right", "right", "right", "right"]}
+              rows={b.mood.by_source.map((x) => [
+                SOURCE_NAME[x.source] ?? x.source,
+                fmtPct(x.weight_pct),
+                fmtPct(x.last7_share_pct),
+                fmtSigned(x.window_net),
+                x.last7_net === null ? "—" : fmtSigned(x.last7_net),
+              ])}
+            />
+            <MutedNote>
+              Mood by source. Unweighted, the last 7 days would read{" "}
+              {fmtSigned(b.mood.unweighted.delta_pts, " pts")} against the
+              window average, because one source&apos;s share jumped;
+              source-weighted, the change is{" "}
+              {fmtSigned(b.mood.delta_pts, " pts")}. Reddit is left out: its
+              collector changed on 1 Sep.
+            </MutedNote>
+          </div>
+        </div>
+      </Tile>
 
-        <Tile
-          title="Sentiment trend (conversation-inferred)"
-          sub="Weekly net sentiment of public HDFC Bank voice, full-window sources, source-weighted"
-          prov="public"
-          id="trend"
-        >
-          <TrendLine
-            data={weekly}
-            height={214}
-            xKey="week"
-            yKey="net"
-            reference={b.mood.window_average}
-            referenceLabel="Window average"
-            yLabel="Net sentiment"
-            xLabel="Week starting"
-            domain={[-100, 100]}
-          />
-          <BaselineCaption>
-            Net sentiment = (positive − negative) ÷ items × 100, per source,
-            then weighted by each source&apos;s share of the window. Dashed
-            line: window average. No earlier baseline for social sources.
-          </BaselineCaption>
-          <Table
-            head={[
-              "Source",
-              "Share of window",
-              "Share of last 7 days",
-              "Window net",
-              "Last 7 days net",
-            ]}
-            align={["left", "right", "right", "right", "right"]}
-            rows={b.mood.by_source.map((x) => [
-              SOURCE_NAME[x.source] ?? x.source,
-              fmtPct(x.weight_pct),
-              fmtPct(x.last7_share_pct),
-              fmtSigned(x.window_net),
-              x.last7_net === null ? "—" : fmtSigned(x.last7_net),
-            ])}
-          />
-          <MutedNote>
-            Mood by source. Unweighted, the last 7 days would read{" "}
-            {fmtSigned(b.mood.unweighted.delta_pts, " pts")} against the window
-            average, because one source&apos;s share jumped; source-weighted,
-            the change is {fmtSigned(b.mood.delta_pts, " pts")}. Reddit is left
-            out: its collector changed on 1 Sep.
-          </MutedNote>
-        </Tile>
-
-        <Tile
-          title="Strain and friction by business"
-          sub="Repeat contact and escalation language in public voice"
-          prov="public"
-          id="strain"
-        >
-          <Table
-            head={[
-              "Business",
-              "Items",
-              "Repeat contact",
-              "Escalation language",
-              "Negative",
-            ]}
-            align={["left", "right", "right", "right", "right"]}
-            rows={byBiz.map((x) => [
-              BUSINESS_LABEL[x.business] ?? x.business,
-              fmt(x.count),
-              <span key="r" style={{ color: C.amber }}>
-                {fmt(x.repeat)}
-              </span>,
-              <span key="e" style={{ color: C.red }}>
-                {fmt(x.escalation)}
-              </span>,
-              fmtPct((100 * x.negative) / x.count),
-            ])}
-          />
-        </Tile>
-      </div>
+      <Tile
+        title="Strain and friction by business"
+        sub="Repeat contact and escalation language in public voice"
+        prov="public"
+        id="strain"
+      >
+        <Table
+          head={[
+            "Business",
+            "Items",
+            "Repeat contact",
+            "Escalation language",
+            "Negative",
+          ]}
+          align={["left", "right", "right", "right", "right"]}
+          rows={byBiz.map((x) => [
+            BUSINESS_LABEL[x.business] ?? x.business,
+            fmt(x.count),
+            <span key="r" style={{ color: C.amber }}>
+              {fmt(x.repeat)}
+            </span>,
+            <span key="e" style={{ color: C.red }}>
+              {fmt(x.escalation)}
+            </span>,
+            fmtPct((100 * x.negative) / x.count),
+          ])}
+        />
+      </Tile>
 
       <Tile
         title="Top themes by trust pillar"
@@ -408,8 +405,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           sub="The three largest themes this window, in customers' words (paraphrased)"
           prov="public"
         >
-          {saying.map((t) => {
-            const e = t.exemplars.map((id) => b.evidence[id]).find(Boolean);
+          {saying.map((t, i) => {
+            const e = sayingEvidence[i];
             const sc = statusColor(t.status);
             return (
               <Link
@@ -560,11 +557,12 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
         <Tile
           title="Repeat contact by theme and business"
-          sub="Public items where customers say they have raised it before. Tap a bar to open the signal."
+          sub="Public items where customers say they have raised it before, by business. Tap a bar to open the theme."
           prov="public"
           id="repeat"
         >
-          <div style={{ width: "100%", height: 250 }}>
+          {/* One row per theme, every theme labelled (the axis used to skip alternate labels). */}
+          <div style={{ width: "100%", height: 90 + repeatChart.length * 38 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={repeatChart}
@@ -587,7 +585,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                 <YAxis
                   type="category"
                   dataKey="theme"
-                  width={200}
+                  width={210}
+                  interval={0}
                   tick={{ fill: C.textSec, fontSize: 12 }}
                 />
                 <Tooltip
@@ -623,17 +622,6 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                 ))}
               </BarChart>
             </ResponsiveContainer>
-          </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {repeatThemes.map((t) => (
-              <Link
-                key={t.id}
-                href={signalHref(t.id, from)}
-                style={{ fontSize: 13, color: C.textSec }}
-              >
-                {t.label} ({fmt(t.repeat_count)})
-              </Link>
-            ))}
           </div>
         </Tile>
       </div>

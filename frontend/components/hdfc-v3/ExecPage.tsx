@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 import {
   execAnswer,
   moodLine,
-  moodNote,
+  moodNoteShort,
   whatChanged,
 } from "@/lib/hdfc-v3/copy";
 import {
@@ -230,9 +230,13 @@ function QuestionCard({
         border: `1px solid ${tint(accent, 0.25)}`,
         borderRadius: 16,
         padding: "18px 18px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
+        // Subgrid: the six sections (title, answer, headline, stats, quote, tags) line up across the cards in a row,
+        // so a longer section in one card never leaves a blank block at the bottom of another.
+        display: "grid",
+        gridRow: "span 6",
+        gridTemplateRows: "subgrid",
+        rowGap: 12,
+        alignContent: "start",
         minWidth: 0,
         boxShadow: `0 8px 32px ${tint(accent, 0.08)}`,
       }}
@@ -412,7 +416,14 @@ function QuestionCard({
           {saying}
         </p>
       </div>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 6,
+          flexWrap: "wrap",
+          alignSelf: "end",
+        }}
+      >
         {prov.map((p) => (
           <ProvenanceTag key={p} kind={p} />
         ))}
@@ -624,6 +635,8 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
             gridTemplateColumns:
               "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
             gap: 10,
+            // Three lists of different lengths: each column ends with its content instead of padding out.
+            alignItems: "start",
           }}
         >
           <PulseBox
@@ -670,7 +683,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={moodLine(b)}
           headlineLabel="Mood, last 7 days vs window average"
           headline={fmtSigned(b.mood.delta_pts, " pts")}
-          caption={moodNote(b)}
+          caption={moodNoteShort(b)}
           gauges={[
             {
               label: "All voice",

@@ -148,18 +148,20 @@ export function PriorityView({ b }: { b: Bundle }) {
             prov="internal"
             tone={c.id.startsWith("priority") ? "red" : "violet"}
           >
+            <div style={{ fontSize: 14, color: C.textSec }}>
+              <strong style={{ color: C.text, fontFamily: MONO }}>
+                {fmt(c.customers_with_open_issue)}
+              </strong>{" "}
+              customers with an open issue
+            </div>
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
                 gap: 6,
               }}
             >
-              <Stat
-                label="With open issue"
-                value={fmt(c.customers_with_open_issue)}
-              />
-              <Stat label="Open" value={fmt(c.open)} color={C.amber} />
+              <Stat label="Open issues" value={fmt(c.open)} color={C.amber} />
               <Stat
                 label="Over 5 h"
                 value={fmt(c.open_over_5h)}
@@ -301,15 +303,11 @@ export function PriorityView({ b }: { b: Bundle }) {
         />
       </Tile>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
-          gap: 14,
-        }}
-      >
+      {/* 5 : 2 widths: the table keeps its height when widened and the text tile grows when narrowed, so the two
+          tiles end level instead of one padding out. Wraps to one column on a phone. */}
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 14 }}>
         <Tile
+          style={{ flex: "5 1 420px" }}
           id="high-impact"
           title="High-impact complaints"
           sub="A property of the complaint, never a flag on the person. Any customer's complaint can be high impact."
@@ -343,6 +341,7 @@ export function PriorityView({ b }: { b: Bundle }) {
           </MutedNote>
         </Tile>
         <Tile
+          style={{ flex: "2 1 300px" }}
           id="how-lists-work"
           title="How a customer gets on a list"
           sub="The cohort is appendable: the bank adds to it, and LisN suggests additions as signals arrive."
@@ -396,6 +395,26 @@ export function PriorityView({ b }: { b: Bundle }) {
   );
 }
 
+/** A labelled fact in the customer strip: small heading, value below, so the five fields line up. */
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div style={{ minWidth: 0 }}>
+      <div
+        style={{
+          fontSize: 11.5,
+          color: C.textMut,
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+          marginBottom: 4,
+        }}
+      >
+        {label}
+      </div>
+      <div style={{ lineHeight: 1.45 }}>{children}</div>
+    </div>
+  );
+}
+
 function Stat({
   label,
   value,
@@ -413,6 +432,11 @@ function Stat({
         borderRadius: 8,
         padding: "6px 8px",
         minWidth: 0,
+        // Value pinned to the bottom, so numbers line up across boxes even if a label wraps.
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        gap: 2,
       }}
     >
       <div
@@ -657,26 +681,29 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             color: C.textSec,
           }}
         >
-          <div>
-            <UserRound size={14} style={{ verticalAlign: "-2px" }} />{" "}
-            {p.descriptor} (fictional)
-          </div>
-          <div>
-            Cohort: <CohortChips cohorts={p.cohorts} />
-          </div>
-          <div>
-            Products: {p.products.map((x) => PRODUCT_LABEL[x] ?? x).join(", ")}
-          </div>
-          <div>
-            RM: <span style={{ fontFamily: MONO }}>{p.rm_id}</span> ·{" "}
+          <Field label="Relationship">
+            <span
+              style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
+            >
+              <UserRound size={14} style={{ flexShrink: 0 }} />
+              {p.descriptor} (fictional)
+            </span>
+          </Field>
+          <Field label="Cohort">
+            <CohortChips cohorts={p.cohorts} />
+          </Field>
+          <Field label="Products">
+            {p.products.map((x) => PRODUCT_LABEL[x] ?? x).join(", ")}
+          </Field>
+          <Field label="RM">
+            <span style={{ fontFamily: MONO }}>{p.rm_id}</span> ·{" "}
             <span style={{ color: rmColor(p) }}>{rmStatus(p)}</span>
-          </div>
-          <div>
-            Linked contacts:{" "}
+          </Field>
+          <Field label="Linked contacts">
             {p.proxy_contacts
-              ? `an assistant${contactId ? ` (contact ${contactId})` : ""}, linked through the bank's own contact records`
-              : "none"}
-          </div>
+              ? `An assistant${contactId ? ` (contact ${contactId})` : ""}, linked through the bank's own contact records`
+              : "None"}
+          </Field>
         </div>
       </Tile>
 

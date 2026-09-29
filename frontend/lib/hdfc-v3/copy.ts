@@ -121,3 +121,8 @@ export function moodNote(b: Bundle): string {
     : "";
   return `Source-weighted: each source counts by its share of the window, so a burst in one source cannot move the figure. Unweighted it would read ${fmtSigned(m.unweighted.delta_pts, " pts")}.${xLine} Reddit is left out: its collector changed on 1 Sep.`;
 }
+
+/** The same point in one line, for the exec question card (the satisfaction page carries the full note). */
+export function moodNoteShort(b: Bundle): string {
+  return `Source-weighted; unweighted it would read ${fmtSigned(b.mood.unweighted.delta_pts, " pts")} (a burst in X). Reddit left out.`;
+}

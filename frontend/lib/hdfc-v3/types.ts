@@ -125,7 +125,11 @@ export type SignalsFile = {
     by_request_type: { request_type: string; count: number }[];
     exemplars: string[];
   };
-  escalation_by_target: { target: string; rung: string; count: number }[];
+  escalation_by_target: {
+    target: string | null;
+    rung: string;
+    count: number;
+  }[];
   ladder_public: {
     voice_negative: number;
     repeat: number;

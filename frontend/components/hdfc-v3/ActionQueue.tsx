@@ -58,7 +58,10 @@ function EmailCard({ e }: { e: EscalationEmail }) {
       <div style={{ fontSize: 15, fontWeight: 650, color: C.text }}>
         {e.subject}
       </div>
-      <div style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.5 }}>
+      {/* The body takes the spare height, so backend status and the draft button line up across a row of cards. */}
+      <div
+        style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.5, flex: 1 }}
+      >
         {e.body}
       </div>
       <div

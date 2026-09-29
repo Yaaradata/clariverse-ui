@@ -783,10 +783,13 @@ export function SentimentBar({
   pos,
   neu,
   neg,
+  legend = true,
 }: {
   pos: number;
   neu: number;
   neg: number;
+  /** Off where the shares are already shown beside the bar (e.g. in a table row). */
+  legend?: boolean;
 }) {
   const total = pos + neu + neg || 1;
   const seg = (n: number) => `${(100 * n) / total}%`;
@@ -805,24 +808,26 @@ export function SentimentBar({
         <div style={{ width: seg(neu), background: C.neutral }} />
         <div style={{ width: seg(neg), background: C.red }} />
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 12,
-          fontSize: 12,
-          color: C.textMut,
-          marginTop: 4,
-          flexWrap: "wrap",
-        }}
-      >
-        <span style={{ color: C.green }}>
-          Positive {Math.round((100 * pos) / total)}%
-        </span>
-        <span>Neutral {Math.round((100 * neu) / total)}%</span>
-        <span style={{ color: C.red }}>
-          Negative {Math.round((100 * neg) / total)}%
-        </span>
-      </div>
+      {legend ? (
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            fontSize: 12,
+            color: C.textMut,
+            marginTop: 4,
+            flexWrap: "wrap",
+          }}
+        >
+          <span style={{ color: C.green }}>
+            Positive {Math.round((100 * pos) / total)}%
+          </span>
+          <span>Neutral {Math.round((100 * neu) / total)}%</span>
+          <span style={{ color: C.red }}>
+            Negative {Math.round((100 * neg) / total)}%
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

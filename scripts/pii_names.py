@@ -152,7 +152,7 @@ _ORG_RE = re.compile(r"\b(" + "|".join(re.escape(o) for o in ORG_PHRASES) + r")\
 
 ROLE_STAFF = re.compile(
     r"\b(manager|employee|executive|staff|agent|rm|relationship manager|officer|official|teller|cashier|"
-    r"representative|associate|advisor|adviser|dsa|sales ?(?:person|guy|man)|branch head|cluster head)\b",
+    r"representative|associate|advisor|adviser|dsa|sales ?(?:person|guy|man)|branch head|cluster head|clerk|supervisor)\b",
     re.I,
 )
 ROLE_EXEC = re.compile(r"\b(ceo|chairman|chairperson|founder|director|md|chief|president|head of)\b", re.I)
@@ -180,7 +180,7 @@ _FIGURE_TAG_RE = re.compile(
 _HONORIFIC_RE = re.compile(rf"\b{HONORIFIC}\s+({CAP}(?:\s+{CAP}){{0,2}})")
 _CAP_TOKEN_RE = re.compile(rf"\b{CAP}\b")
 _ROLE_NAME_RE = re.compile(
-    rf"\b(?:[Mm]anager|[Ee]mployee|[Ee]xecutive|[Aa]gent|RM|[Oo]fficer|[Rr]epresentative|[Aa]dvisor)\s+({CAP}(?:\s+{CAP}){{0,2}})"
+    rf"\b(?:[Mm]anager|[Ee]mployee|[Ee]xecutive|[Aa]gent|RM|[Oo]fficer|[Rr]epresentative|[Aa]dvisor|[Cc]lerk|[Cc]ashier|[Tt]eller)\s+({CAP}(?:\s+{CAP}){{0,2}})"
 )
 _SINGLE_RE = re.compile(rf"\b({CAP})\b")
 _EXEC_NAME_RE = re.compile(rf"\b(?:[Cc]hairman|CEO|[Ff]ounder|[Gg]overnor|[Mm]inister|MD)\s+({CAP})\b")

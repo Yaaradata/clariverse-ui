@@ -190,3 +190,10 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Shipped:** a Light / Dark toggle in the V2 header. Dark stays the default and is unchanged; the choice is remembered per browser. V1 is not affected. QA: `qa/theme_qa_v2.md`.
 - **Judgement call:** in light, amber, green, cyan and violet use darker shades (e.g. amber #b45309, not #f59e0b), so that numbers and labels stay readable on white. The meaning of each colour is unchanged.
 - **Open:** one existing dark-mode legend label ("Wealth" on the satisfaction chart) is 2.7:1. It was left as is because dark was to stay unchanged.
+
+## D21 · Layout pass at the Windows laptop size
+- **Shipped:** screenshots now match a 1920×1080 display at 125% scaling, with real fonts and the sidebar closed, one screen at a time. Tiles that stretched to a taller neighbour have been rebalanced (`qa/layout_qa_v2.md`).
+- **Judgement call:** the executive pulse columns now end with their content, rather than all stretching to the longest list.
+- **Judgement call:** tiles that repeated the same numbers were merged, e.g. the relationship-tier table and bars on the satisfaction page.
+- **Judgement call:** "Top service failures" shows 5 themes, not 6, to match the funnel beside it.
+- **Found in review and fixed:** a staff member's name in a Play Store review shown on the market page, now redacted by the pipeline.

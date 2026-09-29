@@ -45,14 +45,12 @@
 | Go to another V2 page | Still light |
 | Toggle back | Dark again (`rgb(13,13,13)`) |
 | Open V1 with light saved | V1 unchanged (dark); the V2 theme cannot reach it |
-| Sidebar expanded, Ask LisN drawer, chart tooltip, header, in light | All light; see `states/` |
+| Ask LisN drawer, chart tooltip, header, in light | All light; see `states/` |
 
 ## Screenshots
 
-`qa/screens_theme_v2/`:
-- `light/` and `dark/`: full-page JPEGs of every screen template at 1440 px (21 pages: the 17 main screens including all 8 business views, 3 signal pages and Persona 1) and of the six key pages at 390 px.
-- `states/`: the interactive states above.
-- `qa-1440.json`, `qa-390.json`: the raw per-route results.
+- **Superseded:** the full-page screenshots first published here have been replaced by screen-by-screen captures at a Windows laptop size, in both themes: `qa/screens_win_v2/`. The method is in `qa/layout_qa_v2.md`.
+- **Kept:** `states/` (toggle, Ask LisN drawer, chart tooltip, V1 unchanged) and the colour-check results `qa-1440.json` and `qa-390.json`.
 
 ## Rerun
 
