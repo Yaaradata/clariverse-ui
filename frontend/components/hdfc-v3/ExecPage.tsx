@@ -13,6 +13,7 @@ import {
   rangeLabel,
 } from "@/lib/hdfc-v3/format";
 import {
+  ackStatus,
   actions,
   fastestRiser,
   improvingItems,
@@ -54,27 +55,6 @@ import {
   ProductPulseTable,
 } from "./V3Blocks";
 
-type Internal = {
-  md_mail: {
-    total: number;
-    rows: {
-      theme: string;
-      label: string;
-      owner: string;
-      mails: number;
-      median_age_days: number;
-      resolved_before_md: number;
-      resolved_share: number;
-    }[];
-  };
-  since_830_ack: { theme: string; status: string }[];
-  promise_ledger_ageing: {
-    request_type: string;
-    open_cases: number;
-    beyond_tat: number;
-    beyond_tat_share: number;
-  }[];
-};
 
 function PulseBox({
   title,
@@ -502,16 +482,12 @@ function ActionCard({ s, from }: { s: SignalItem; from: View }) {
 
 export function ExecPage({ b, view }: { b: Bundle; view: View }) {
   const tm = themeMap(b);
-  const internal = b.internal as unknown as Internal;
   const from = view;
   const rp = releasePulse(b);
   const needs = needsYou(b);
   const focus = [...routedItems(b), ...thisWeekItems(b)].slice(0, 3);
   const improving = improvingItems(b);
   const acts = actions(b, view);
-  const ackBy = Object.fromEntries(
-    internal.since_830_ack.map((a) => [a.theme, a.status]),
-  );
 
   // Card 1: satisfaction
   const pillars = b.themes.pillars;
@@ -622,7 +598,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               >
                 <OwnerChip owner={s.owner} />
                 <span style={{ fontSize: 12.5, color: C.textMut }}>
-                  {ackBy[s.theme] ?? "Awaiting owner"}
+                  {ackStatus(b, s.theme) ?? "Not routed yet"}
                 </span>
               </div>
             </Link>
@@ -833,7 +809,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         <Tile
           id="md-mail"
           title="MD-marked mail"
-          sub={`${fmt(internal.md_mail.total)} customer mails marked to the MD's office this window, sieved into themes and routed to owners.`}
+          sub={`${fmt(b.v3.md_mail.total)} written complaints reached the MD's office in the demo sample (1 Jul to this morning), sieved into themes and routed to owners. Top five themes shown: ${fmt(b.v3.md_mail.shown)} of ${fmt(b.v3.md_mail.total)}.`}
           prov="internal"
         >
           <Table
@@ -842,10 +818,10 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               "Owner",
               "Mails",
               "Median age",
-              "Resolved before reaching the MD",
+              "Resolved",
             ]}
             align={["left", "left", "right", "right", "right"]}
-            rows={internal.md_mail.rows.map((r) => [
+            rows={b.v3.md_mail.rows.map((r) => [
               <Link
                 key={r.theme}
                 href={signalHref(r.theme, from)}
@@ -856,7 +832,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               OWNER_LABEL[r.owner] ?? r.owner,
               fmt(r.mails),
               `${r.median_age_days.toFixed(1)} days`,
-              `${fmt(r.resolved_before_md)} (${r.resolved_share.toFixed(0)}%)`,
+              `${fmt(r.resolved)} (${r.resolved_share.toFixed(0)}%)`,
             ])}
           />
         </Tile>

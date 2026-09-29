@@ -52,38 +52,6 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-type Tier = {
-  tier: string;
-  interactions: number;
-  positive: number;
-  neutral: number;
-  negative: number;
-  share_positive: number;
-  share_negative: number;
-  customers_affected: number;
-};
-type Stage = {
-  stage: string;
-  interactions: number;
-  negative_share: number;
-  repeat_contact_share: number;
-  closure_intent: number;
-};
-type Internal = {
-  interactions_total: number;
-  tiers: Tier[];
-  journey_stages: { total: number; rows: Stage[] };
-  retention_watchlist: {
-    total: number;
-    rows: {
-      tier: string;
-      customers_with_closure_intent: number;
-      top_driver: string;
-      owner: string;
-      action: string;
-    }[];
-  };
-};
 
 const SOURCE_LABEL: Record<string, string> = {
   x: "X",
@@ -107,7 +75,7 @@ const EXCLUDE = new Set(["other", "market_news", "offers_deals"]);
 export function SatisfactionView({ b }: { b: Bundle }) {
   const from: View = useFrom();
   const tm = themeMap(b);
-  const internal = b.internal as unknown as Internal;
+  const internal = b.v3.satisfaction;
   const [pillar, setPillar] = useState<string | null>(null);
 
   const pillars = b.themes.pillars;
@@ -208,7 +176,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       <div style={PAIRS}>
         <Tile
           title="Interactions by relationship tier"
-          sub={`${fmt(internal.interactions_total)} interactions across all channels`}
+          sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Jul to this morning`}
           prov="internal"
           id="tiers"
         >
@@ -519,7 +487,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       <div style={PAIRS}>
         <Tile
           title="Where is the struggle? Journey stages"
-          sub={`${fmt(internal.journey_stages.total)} interactions mapped to journey stages`}
+          sub={`${fmt(internal.journey_stages.total)} interactions mapped to journey stages (the same demo sample)`}
           prov="internal"
           id="journey"
         >
@@ -563,7 +531,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <OwnerChip owner="cx" />
             <span style={{ fontSize: 12.5, color: C.textMut }}>
-              Stage mapping and figures confirmed in discovery.
+              Stage mapping and figures confirmed in discovery.{" "}
+              {internal.journey_stages.rule}
             </span>
           </div>
         </Tile>

@@ -28,8 +28,6 @@ export function loadBundle(): Bundle {
     meta: read("out", PUBLIC, "meta.json"),
     evidence: read("out", PUBLIC, "evidence.json"),
     ask: read("out", PUBLIC, "ask.json"),
-    internal: read("seed", "internal.json"),
-    joined: read("seed", "joined.json"),
     products: read("out", PUBLIC, "products.json"),
     storeSeries: read("out", PUBLIC, "store_series.json"),
     responses: read("out", PUBLIC, "responses.json"),

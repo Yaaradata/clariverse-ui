@@ -22,6 +22,11 @@ import math
 import random
 
 from common import (
+    JOURNEY_ORDER,
+    JOURNEY_STAGE,
+    OWNER_LABEL,
+    ROUTING,
+    THEME_REQUEST_TYPE,
     DELIVERABLES,
     NOW,
     OUT_APP,
@@ -805,6 +810,243 @@ def qa(inter, mix, products_pub):
     }
 
 
+# ------------------------------------------------------------------ screen blocks (review step 4: one internal dataset)
+# Everything the deliverables, satisfaction and MD-mail blocks show comes from these same records. The extra fields are
+# drawn from a second random stream so every existing field keeps its value.
+rng2 = random.Random(SEED + 7)
+ESCALATION_RUNG = {"grievance": 2, "md_office": 3, "io": 4, "rbi_ombudsman": 5}
+DISPUTE_DRIVERS = [
+    ("Merchant response pending", 0.30),
+    ("Chargeback evidence incomplete", 0.24),
+    ("Network timeline", 0.18),
+    ("Manual re-work after reopen", 0.16),
+    ("Customer not updated", 0.12),
+]
+SEGMENT_LABEL = {"Private": "Private Banking", "Imperia": "Imperia", "Preferred": "Preferred", "Classic": "Classic"}
+AGE_BANDS = [(30, "Up to 30 days"), (45, "31–45 days"), (60, "46–60 days"), (90, "61–90 days"), (10**6, "Over 90 days")]
+
+
+def age_days(r) -> float:
+    end = dt.datetime.fromisoformat(r["closed_at"]) if r.get("closed_at") and r["status"] == "closed" else NOW_DT
+    return (end - dt.datetime.fromisoformat(r["created_at"])).total_seconds() / 86400
+
+
+def enrich(inter):
+    """Record-level fields for the screen blocks. Rules, in order:
+    repeat: the same customer raised the same theme in the previous 30 days.
+    escalation: a negative issue contact that is breached, repeated or high-impact may go to the grievance desk (30%);
+      written complaints (email) can climb further: MD's office (35% of those), internal ombudsman (35% of those),
+      RBI Ombudsman (30% of those). Each rung counts every contact that reached at least that rung.
+    retained: a closed card-closure request where the customer stayed (27%).
+    credited / dispute_driver: a closed dispute credited to the customer (60%); a breached dispute's main driver."""
+    last: dict[tuple, dt.datetime] = {}
+    for r in inter:
+        created = dt.datetime.fromisoformat(r["created_at"])
+        key = (r["masked_id"], r["theme"])
+        prev = last.get(key)
+        r["repeat"] = bool(prev and (created - prev).days < 30)
+        last[key] = created
+    for r in inter:
+        esc = None
+        if r["sentiment"] == "negative" and r["deliverable"] and (r["breached"] or r["repeat"] or r["high_impact"]):
+            if rng2.random() < 0.30:
+                esc = "grievance"
+                if r["channel"] == "email" and rng2.random() < 0.35:
+                    esc = "md_office"
+                    if rng2.random() < 0.35:
+                        esc = "io"
+                        if rng2.random() < 0.30:
+                            esc = "rbi_ombudsman"
+        r["escalation"] = esc
+        r["retained"] = r["theme"] == "closure_requests" and r["status"] == "closed" and rng2.random() < 0.27
+        r["credited"] = r["deliverable"] == "dispute" and r["status"] == "closed" and rng2.random() < 0.60
+        r["dispute_driver"] = None
+        if r["deliverable"] == "dispute" and r["breached"]:
+            x, acc = rng2.random(), 0.0
+            r["dispute_driver"] = DISPUTE_DRIVERS[-1][0]
+            for name, w in DISPUTE_DRIVERS:
+                acc += w
+                if x < acc:
+                    r["dispute_driver"] = name
+                    break
+
+
+def reached(r, rung: str) -> bool:
+    return bool(r["escalation"]) and ESCALATION_RUNG[r["escalation"]] >= ESCALATION_RUNG[rung]
+
+
+def theme_label(themes, t):
+    return themes[t]["label"] if t in themes else t.replace("_", " ").capitalize()
+
+
+def screen_blocks(customers, inter, themes):
+    seg = {c["masked_id"]: c["segment"] for c in customers}
+    neg = [r for r in inter if r["sentiment"] == "negative"]
+
+    # Routing and acknowledgements (one list).
+    routing = [
+        {
+            **x,
+            "owner_label": OWNER_LABEL.get(x["owner"], x["owner"]),
+            "label": theme_label(themes, x["theme"]),
+            "status": f"Acknowledged {x['acknowledged_at']}" if x["acknowledged_at"] else "Awaiting owner",
+        }
+        for x in ROUTING
+    ]
+
+    # MD-marked mail: written complaints that reached the MD's office.
+    md = [r for r in inter if reached(r, "md_office")]
+    by_theme = collections.defaultdict(list)
+    for r in md:
+        by_theme[r["theme"]].append(r)
+    md_rows = []
+    for t, rs in sorted(by_theme.items(), key=lambda kv: (-len(kv[1]), kv[0]))[:5]:
+        resolved = sum(1 for r in rs if r["status"] == "closed")
+        ages = sorted(age_days(r) for r in rs)
+        md_rows.append({
+            "theme": t,
+            "label": theme_label(themes, t),
+            "owner": themes.get(t, {}).get("owner", "cx"),
+            "mails": len(rs),
+            "median_age_days": round(ages[len(ages) // 2], 1),
+            "resolved": resolved,
+            "resolved_share": round(100 * resolved / len(rs), 1),
+        })
+    md_mail = {
+        "total": len(md),
+        "shown": sum(r["mails"] for r in md_rows),
+        "rows": md_rows,
+        "rule": "Written complaints (email) escalated to the MD's office, from the same interaction sample.",
+    }
+
+    # Satisfaction: tiers, journey stages, retention watchlist.
+    tiers = []
+    for sg in ("Private", "Imperia", "Preferred", "Classic"):
+        rs = [r for r in inter if seg[r["masked_id"]] == sg]
+        c = collections.Counter(r["sentiment"] for r in rs)
+        n = len(rs)
+        tiers.append({
+            "tier": SEGMENT_LABEL[sg],
+            "interactions": n,
+            "positive": c["positive"],
+            "neutral": c["neutral"],
+            "negative": c["negative"],
+            "share_positive": round(100 * c["positive"] / n, 1) if n else 0,
+            "share_negative": round(100 * c["negative"] / n, 1) if n else 0,
+            "customers_affected": len({r["masked_id"] for r in rs if r["sentiment"] == "negative"}),
+        })
+    closure_reqs = [r for r in inter if r["theme"] == "closure_requests"]
+    # Closure intent by stage: the stage of the customer's last negative contact before the closure request.
+    history: dict[str, list] = collections.defaultdict(list)
+    for r in inter:
+        history[r["masked_id"]].append(r)
+    closure_stage = collections.Counter()
+    for c in closure_reqs:
+        before = [
+            r for r in history[c["masked_id"]]
+            if r["created_at"] < c["created_at"] and r["sentiment"] == "negative"
+            and JOURNEY_STAGE.get(r["theme"], "Everyday use") != "Close"
+        ]
+        closure_stage[JOURNEY_STAGE.get(before[-1]["theme"], "Everyday use") if before else "Close"] += 1
+    stages = []
+    for st in JOURNEY_ORDER:
+        rs = [r for r in inter if JOURNEY_STAGE.get(r["theme"], "Everyday use") == st]
+        n = len(rs)
+        stages.append({
+            "stage": st,
+            "interactions": n,
+            "negative_share": round(100 * sum(1 for r in rs if r["sentiment"] == "negative") / n, 1) if n else 0,
+            "repeat_contact_share": round(100 * sum(1 for r in rs if r["repeat"]) / n, 1) if n else 0,
+            "closure_intent": closure_stage[st],
+        })
+    watch = []
+    for sg in ("Private", "Imperia", "Preferred"):
+        ids = {r["masked_id"] for r in closure_reqs if seg[r["masked_id"]] == sg}
+        drivers = collections.Counter(
+            r["theme"] for r in neg if r["masked_id"] in ids and r["theme"] != "closure_requests"
+        )
+        top = sorted(drivers.items(), key=lambda kv: (-kv[1], kv[0]))[0][0] if drivers else None
+        watch.append({
+            "tier": SEGMENT_LABEL[sg],
+            "customers_with_closure_intent": len(ids),
+            "top_driver": theme_label(themes, top) if top else "—",
+            "owner": "rm",
+            "action": "Route with evidence",
+        })
+    satisfaction = {
+        "interactions_total": len(inter),
+        "tiers": tiers,
+        "journey_stages": {
+            "total": sum(x["interactions"] for x in stages),
+            "rows": stages,
+            "rule": "Closure intent: closure requests, placed at the stage of the customer's last negative contact before the request.",
+        },
+        "retention_watchlist": {"total": sum(x["customers_with_closure_intent"] for x in watch), "rows": watch},
+    }
+
+    # Deliverables detail: ageing by request type, escalation ladder, closure saves, disputes.
+    ageing = collections.defaultdict(lambda: {"open_cases": 0, "beyond_tat": 0})
+    for r in inter:
+        if r["status"] == "open":
+            a = ageing[THEME_REQUEST_TYPE.get(r["theme"], "other")]
+            a["open_cases"] += 1
+            a["beyond_tat"] += 1 if r["breached"] else 0
+    ageing_rows = [
+        {
+            "request_type": k,
+            **v,
+            "beyond_tat_share": round(100 * v["beyond_tat"] / v["open_cases"], 1) if v["open_cases"] else 0,
+        }
+        for k, v in sorted(ageing.items(), key=lambda kv: (-kv[1]["open_cases"], kv[0]))
+    ]
+    ladder = [
+        {"rung": "Voice", "count": len(inter)},
+        {"rung": "Repeat", "count": sum(1 for r in inter if r["repeat"])},
+    ]
+    for rung_id, rung in (("grievance", "Grievance"), ("md_office", "MD's office"), ("io", "IO"), ("rbi_ombudsman", "RBI Ombudsman")):
+        ladder.append({"rung": rung, "count": sum(1 for r in inter if reached(r, rung_id))})
+    closed_closure = [r for r in closure_reqs if r["status"] == "closed"]
+    saved = sum(1 for r in closure_reqs if r["retained"])
+    closure = {
+        "closure_requests": len(closure_reqs),
+        "closed": len(closed_closure),
+        "saved": saved,
+        "save_rate": round(100 * saved / len(closed_closure), 1) if closed_closure else 0,
+    }
+    disputes = [r for r in inter if r["deliverable"] == "dispute"]
+    beyond = [r for r in disputes if r["breached"]]
+    drivers = collections.Counter(r["dispute_driver"] for r in beyond)
+    bands = collections.Counter()
+    for r in beyond:
+        d = age_days(r)
+        bands[next(b for lim, b in AGE_BANDS if d <= lim)] += 1
+    dispute_block = {
+        "raised": len(disputes),
+        "beyond_sla_total": len(beyond),
+        "drivers": [{"driver": d, "cases": drivers[d]} for d, _ in DISPUTE_DRIVERS if drivers[d]],
+        "aged_cases": [{"band": b, "cases": bands[b]} for _, b in AGE_BANDS if bands[b]],
+        "funnel": [
+            {"stage": "Disputes raised", "count": len(disputes)},
+            {"stage": "First response given", "count": sum(1 for r in disputes if r["first_response_at"])},
+            {"stage": "Closed", "count": sum(1 for r in disputes if r["status"] == "closed")},
+            {"stage": "Customer credited", "count": sum(1 for r in disputes if r["credited"])},
+            {"stage": "Credited within TAT", "count": sum(1 for r in disputes if r["credited"] and not r["breached"])},
+        ],
+    }
+    return {
+        "routing": routing,
+        "md_mail": md_mail,
+        "satisfaction": satisfaction,
+        "deliverables_detail": {
+            "ageing": ageing_rows,
+            "ladder": ladder,
+            "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
+            "closure": closure,
+            "disputes": dispute_block,
+        },
+    }
+
+
 def main():
     mix, themes, products_pub = public_mix()
     customers = build_customers()
@@ -821,8 +1063,10 @@ def main():
         c["cohort_added_by"] = p.get("cohort_added_by", "bank")
     inter = build_interactions(customers, mix, themes)
     inter.sort(key=lambda r: r["created_at"])
+    enrich(inter)
     bot_calls = build_bot_calls(customers)
     agg = aggregates(customers, inter, bot_calls, ESCALATION_EMAILS, themes, products_pub)
+    agg.update(screen_blocks(customers, inter, themes))
     agg["qa"] = qa(inter, mix, products_pub)
     # Reconcile: product dials sum to the overall dial; cohort and channel counts come from the same records.
     for f in ("total", "open", "open_too_long", "closed_or_responded"):

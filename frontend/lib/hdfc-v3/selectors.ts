@@ -2,7 +2,13 @@
  * One source of truth: every figure shown in more than one place comes from a selector here, reading the one bundle.
  */
 import { fmt } from "./format";
-import type { Bundle, ReleasePulse, StatusValue, Theme } from "./types";
+import type {
+  Bundle,
+  ReleasePulse,
+  RoutingRow,
+  StatusValue,
+  Theme,
+} from "./types";
 
 export type { ReleasePulse };
 
@@ -44,15 +50,14 @@ export function releasePulse(b: Bundle): ReleasePulse | null {
   return b.briefing.release_pulse ?? null;
 }
 
-type Routed = {
-  theme: string;
-  owner: string;
-  acknowledged_at: string;
-  system: string;
-};
+/** Overnight routing (internal, illustrative): one list feeds every "Acknowledged" / "Awaiting owner" on screen. */
+export function routedList(b: Bundle): RoutingRow[] {
+  return b.v3.routing;
+}
 
-export function routedList(b: Bundle): Routed[] {
-  return ((b.internal as { routed?: Routed[] }).routed ?? []) as Routed[];
+/** Acknowledgement status of a theme, or undefined when it was not routed. */
+export function ackStatus(b: Bundle, theme: string): string | undefined {
+  return routedList(b).find((r) => r.theme === theme)?.status;
 }
 
 export function trendWords(t: Theme): string {
@@ -89,7 +94,7 @@ export function signalFromTheme(
     count: t.count,
     why: `${fmt(t.count)} public items, ${trendWords(t)}${esc}.`,
     pillar: t.pillar,
-    ackAt: routed?.acknowledged_at,
+    ackAt: routed?.acknowledged_at ?? undefined,
     ackSystem: routed?.system,
   };
 }

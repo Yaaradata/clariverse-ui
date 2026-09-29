@@ -346,8 +346,6 @@ export type Bundle = {
   meta: Meta;
   evidence: Record<string, Evidence>;
   ask: AskFile;
-  internal: Internal;
-  joined: Internal;
   products: ProductsFile;
   storeSeries: StoreSeriesFile;
   responses: ResponsesFile;
@@ -642,4 +640,89 @@ export type InternalV3 = {
   channel_labels: Record<string, string>;
   high_impact_labels: Record<string, string>;
   qa: { theme_mix_pass: boolean; reconcile_pass: boolean };
+  /** Review step 4: every internal block on every screen comes from this one sample. */
+  routing: RoutingRow[];
+  md_mail: {
+    total: number;
+    shown: number;
+    rule: string;
+    rows: {
+      theme: string;
+      label: string;
+      owner: string;
+      mails: number;
+      median_age_days: number;
+      resolved: number;
+      resolved_share: number;
+    }[];
+  };
+  satisfaction: {
+    interactions_total: number;
+    tiers: TierRow[];
+    journey_stages: {
+      total: number;
+      rule: string;
+      rows: {
+        stage: string;
+        interactions: number;
+        negative_share: number;
+        repeat_contact_share: number;
+        closure_intent: number;
+      }[];
+    };
+    retention_watchlist: {
+      total: number;
+      rows: {
+        tier: string;
+        customers_with_closure_intent: number;
+        top_driver: string;
+        owner: string;
+        action: string;
+      }[];
+    };
+  };
+  deliverables_detail: {
+    ageing: {
+      request_type: string;
+      open_cases: number;
+      beyond_tat: number;
+      beyond_tat_share: number;
+    }[];
+    ladder: { rung: string; count: number }[];
+    ladder_rule: string;
+    closure: {
+      closure_requests: number;
+      closed: number;
+      saved: number;
+      save_rate: number;
+    };
+    disputes: {
+      raised: number;
+      beyond_sla_total: number;
+      drivers: { driver: string; cases: number }[];
+      aged_cases: { band: string; cases: number }[];
+      funnel: { stage: string; count: number }[];
+    };
+  };
+};
+
+export type RoutingRow = {
+  theme: string;
+  label: string;
+  owner: string;
+  owner_label: string;
+  system: string;
+  acknowledged_at: string | null;
+  status: string;
+};
+
+export type TierRow = {
+  tier: string;
+  interactions: number;
+  positive: number;
+  neutral: number;
+  negative: number;
+  share_positive: number;
+  share_negative: number;
+  customers_affected: number;
 };

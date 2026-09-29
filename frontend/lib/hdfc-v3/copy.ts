@@ -44,9 +44,7 @@ export function satisfactionAnswer(b: Bundle): string {
   const worst = [...ps].sort(
     (a, c) => (a.net_sentiment ?? 0) - (c.net_sentiment ?? 0),
   )[0];
-  const tiers =
-    (b.internal as { tiers?: { tier: string; share_negative: number }[] })
-      .tiers ?? [];
+  const tiers = b.v3.satisfaction.tiers;
   const sharpest = [...tiers].sort(
     (a, c) => c.share_negative - a.share_negative,
   )[0];

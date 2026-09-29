@@ -3796,6 +3796,386 @@
   "official_domain": "Sent from an official or regulator domain",
   "third_contact": "Third contact on the same issue"
  },
+ "routing": [
+  {
+   "theme": "complaint_handling",
+   "owner": "cx",
+   "system": "CRM case queue",
+   "acknowledged_at": "23:45",
+   "owner_label": "CX",
+   "label": "Complaints closed without resolution",
+   "status": "Acknowledged 23:45"
+  },
+  {
+   "theme": "card_application",
+   "owner": "cards",
+   "system": "Cards service queue",
+   "acknowledged_at": "22:10",
+   "owner_label": "Cards",
+   "label": "Card application, rejection and verification",
+   "status": "Acknowledged 22:10"
+  },
+  {
+   "theme": "refund_delay",
+   "owner": "operations",
+   "system": "Operations work queue",
+   "acknowledged_at": "06:55",
+   "owner_label": "Operations",
+   "label": "Refunds not credited",
+   "status": "Acknowledged 06:55"
+  },
+  {
+   "theme": "card_variant_migration",
+   "owner": "cards",
+   "system": "Cards service queue",
+   "acknowledged_at": "22:10",
+   "owner_label": "Cards",
+   "label": "Card variant migration and forced upgrade",
+   "status": "Acknowledged 22:10"
+  },
+  {
+   "theme": "care_unreachable",
+   "owner": "cx",
+   "system": "CRM case queue",
+   "acknowledged_at": "06:55",
+   "owner_label": "CX",
+   "label": "Customer care unreachable or unhelpful",
+   "status": "Acknowledged 06:55"
+  },
+  {
+   "theme": "failed_txn_reversal",
+   "owner": "payments",
+   "system": "Payments work queue",
+   "acknowledged_at": null,
+   "owner_label": "Payments",
+   "label": "Failed transaction reversal",
+   "status": "Awaiting owner"
+  }
+ ],
+ "md_mail": {
+  "total": 68,
+  "shown": 34,
+  "rows": [
+   {
+    "theme": "complaint_handling",
+    "label": "Complaints closed without resolution",
+    "owner": "cx",
+    "mails": 12,
+    "median_age_days": 35.8,
+    "resolved": 7,
+    "resolved_share": 58.3
+   },
+   {
+    "theme": "app_speed_crash",
+    "label": "App speed, loading and crashes",
+    "owner": "digital",
+    "mails": 8,
+    "median_age_days": 1.2,
+    "resolved": 8,
+    "resolved_share": 100.0
+   },
+   {
+    "theme": "login_mpin",
+    "label": "Login, MPIN and registration",
+    "owner": "digital",
+    "mails": 5,
+    "median_age_days": 1.2,
+    "resolved": 5,
+    "resolved_share": 100.0
+   },
+   {
+    "theme": "unsolicited_calls",
+    "label": "Unsolicited sales calls and use of data",
+    "owner": "compliance",
+    "mails": 5,
+    "median_age_days": 1.2,
+    "resolved": 4,
+    "resolved_share": 80.0
+   },
+   {
+    "theme": "branch_service",
+    "label": "Branch service and staff behaviour",
+    "owner": "retail",
+    "mails": 4,
+    "median_age_days": 1.4,
+    "resolved": 4,
+    "resolved_share": 100.0
+   }
+  ],
+  "rule": "Written complaints (email) escalated to the MD's office, from the same interaction sample."
+ },
+ "satisfaction": {
+  "interactions_total": 32000,
+  "tiers": [
+   {
+    "tier": "Private Banking",
+    "interactions": 2079,
+    "positive": 219,
+    "neutral": 996,
+    "negative": 864,
+    "share_positive": 10.5,
+    "share_negative": 41.6,
+    "customers_affected": 193
+   },
+   {
+    "tier": "Imperia",
+    "interactions": 5744,
+    "positive": 625,
+    "neutral": 2739,
+    "negative": 2380,
+    "share_positive": 10.9,
+    "share_negative": 41.4,
+    "customers_affected": 673
+   },
+   {
+    "tier": "Preferred",
+    "interactions": 8046,
+    "positive": 813,
+    "neutral": 3919,
+    "negative": 3314,
+    "share_positive": 10.1,
+    "share_negative": 41.2,
+    "customers_affected": 1227
+   },
+   {
+    "tier": "Classic",
+    "interactions": 16131,
+    "positive": 1673,
+    "neutral": 7647,
+    "negative": 6811,
+    "share_positive": 10.4,
+    "share_negative": 42.2,
+    "customers_affected": 2508
+   }
+  ],
+  "journey_stages": {
+   "total": 32000,
+   "rows": [
+    {
+     "stage": "Open",
+     "interactions": 3768,
+     "negative_share": 30.8,
+     "repeat_contact_share": 10.7,
+     "closure_intent": 22
+    },
+    {
+     "stage": "Activate",
+     "interactions": 1902,
+     "negative_share": 54.8,
+     "repeat_contact_share": 10.1,
+     "closure_intent": 33
+    },
+    {
+     "stage": "Everyday use",
+     "interactions": 11212,
+     "negative_share": 41.1,
+     "repeat_contact_share": 12.2,
+     "closure_intent": 154
+    },
+    {
+     "stage": "Service requests",
+     "interactions": 12958,
+     "negative_share": 43.3,
+     "repeat_contact_share": 10.5,
+     "closure_intent": 226
+    },
+    {
+     "stage": "Disputes and fraud",
+     "interactions": 1326,
+     "negative_share": 47.2,
+     "repeat_contact_share": 2.4,
+     "closure_intent": 22
+    },
+    {
+     "stage": "Close",
+     "interactions": 834,
+     "negative_share": 38.4,
+     "repeat_contact_share": 4.8,
+     "closure_intent": 241
+    }
+   ],
+   "rule": "Closure intent: closure requests, placed at the stage of the customer's last negative contact before the request."
+  },
+  "retention_watchlist": {
+   "total": 299,
+   "rows": [
+    {
+     "tier": "Private Banking",
+     "customers_with_closure_intent": 40,
+     "top_driver": "App speed, loading and crashes",
+     "owner": "rm",
+     "action": "Route with evidence"
+    },
+    {
+     "tier": "Imperia",
+     "customers_with_closure_intent": 114,
+     "top_driver": "App speed, loading and crashes",
+     "owner": "rm",
+     "action": "Route with evidence"
+    },
+    {
+     "tier": "Preferred",
+     "customers_with_closure_intent": 145,
+     "top_driver": "App speed, loading and crashes",
+     "owner": "rm",
+     "action": "Route with evidence"
+    }
+   ]
+  }
+ },
+ "deliverables_detail": {
+  "ageing": [
+   {
+    "request_type": "other",
+    "open_cases": 1207,
+    "beyond_tat": 301,
+    "beyond_tat_share": 24.9
+   },
+   {
+    "request_type": "closure",
+    "open_cases": 59,
+    "beyond_tat": 14,
+    "beyond_tat_share": 23.7
+   },
+   {
+    "request_type": "loan_disbursal",
+    "open_cases": 42,
+    "beyond_tat": 12,
+    "beyond_tat_share": 28.6
+   },
+   {
+    "request_type": "credit_report",
+    "open_cases": 41,
+    "beyond_tat": 3,
+    "beyond_tat_share": 7.3
+   },
+   {
+    "request_type": "refund",
+    "open_cases": 21,
+    "beyond_tat": 10,
+    "beyond_tat_share": 47.6
+   },
+   {
+    "request_type": "kyc",
+    "open_cases": 20,
+    "beyond_tat": 5,
+    "beyond_tat_share": 25.0
+   },
+   {
+    "request_type": "card_delivery",
+    "open_cases": 17,
+    "beyond_tat": 7,
+    "beyond_tat_share": 41.2
+   },
+   {
+    "request_type": "dispute",
+    "open_cases": 16,
+    "beyond_tat": 1,
+    "beyond_tat_share": 6.2
+   },
+   {
+    "request_type": "reversal",
+    "open_cases": 12,
+    "beyond_tat": 2,
+    "beyond_tat_share": 16.7
+   }
+  ],
+  "ladder": [
+   {
+    "rung": "Voice",
+    "count": 32000
+   },
+   {
+    "rung": "Repeat",
+    "count": 3399
+   },
+   {
+    "rung": "Grievance",
+    "count": 1296
+   },
+   {
+    "rung": "MD's office",
+    "count": 68
+   },
+   {
+    "rung": "IO",
+    "count": 24
+   },
+   {
+    "rung": "RBI Ombudsman",
+    "count": 8
+   }
+  ],
+  "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
+  "closure": {
+   "closure_requests": 698,
+   "closed": 639,
+   "saved": 174,
+   "save_rate": 27.2
+  },
+  "disputes": {
+   "raised": 95,
+   "beyond_sla_total": 12,
+   "drivers": [
+    {
+     "driver": "Merchant response pending",
+     "cases": 2
+    },
+    {
+     "driver": "Chargeback evidence incomplete",
+     "cases": 2
+    },
+    {
+     "driver": "Network timeline",
+     "cases": 3
+    },
+    {
+     "driver": "Manual re-work after reopen",
+     "cases": 3
+    },
+    {
+     "driver": "Customer not updated",
+     "cases": 2
+    }
+   ],
+   "aged_cases": [
+    {
+     "band": "31–45 days",
+     "cases": 9
+    },
+    {
+     "band": "46–60 days",
+     "cases": 2
+    },
+    {
+     "band": "61–90 days",
+     "cases": 1
+    }
+   ],
+   "funnel": [
+    {
+     "stage": "Disputes raised",
+     "count": 95
+    },
+    {
+     "stage": "First response given",
+     "count": 95
+    },
+    {
+     "stage": "Closed",
+     "count": 79
+    },
+    {
+     "stage": "Customer credited",
+     "count": 49
+    },
+    {
+     "stage": "Credited within TAT",
+     "count": 43
+    }
+   ]
+  }
+ },
  "qa": {
   "theme_mix": [
    {

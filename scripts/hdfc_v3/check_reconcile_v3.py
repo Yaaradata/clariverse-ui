@@ -61,6 +61,38 @@ def main() -> int:
     ok(all("high_impact" not in c for c in customers.values()), "no person-level high-impact flag on any customer")
     ok(sum(b["count"] for b in agg["triage"]["buckets"]) == agg["triage"]["total"] == 20, "20 escalation emails, each in one bucket")
     ok(agg["qa"]["theme_mix_pass"], "internal theme shares within ±20% of public mix (themes ≥ 5% share)")
+    # One internal dataset (review step 4): the MD mail, satisfaction and deliverables-detail blocks reconcile to the
+    # same records and to each other.
+    rung = {"grievance": 2, "md_office": 3, "io": 4, "rbi_ombudsman": 5}
+    at_least = lambda r, x: bool(r["escalation"]) and rung[r["escalation"]] >= rung[x]  # noqa: E731
+    ladder = {x["rung"]: x["count"] for x in agg["deliverables_detail"]["ladder"]}
+    md = agg["md_mail"]
+    ok(md["total"] == sum(1 for r in inter if at_least(r, "md_office")) == ladder["MD's office"],
+       f"MD-marked mail = records at the MD's office rung = ladder rung ({md['total']})")
+    ok(sum(r["mails"] for r in md["rows"]) == md["shown"] <= md["total"], "MD mail rows sum to the shown count")
+    ok(ladder["Voice"] == len(inter) and ladder["Repeat"] == sum(1 for r in inter if r["repeat"]), "ladder Voice and Repeat recomputed")
+    counts = [x["count"] for x in agg["deliverables_detail"]["ladder"][1:]]
+    ok(all(a >= b for a, b in zip(counts, counts[1:])), "ladder rungs from Repeat down never increase")
+    sat = agg["satisfaction"]
+    ok(sat["interactions_total"] == len(inter) == sum(t["interactions"] for t in sat["tiers"]) == sat["journey_stages"]["total"],
+       "satisfaction: tiers and journey stages sum to the interaction sample")
+    ok(sum(t["negative"] for t in sat["tiers"]) == sum(1 for r in inter if r["sentiment"] == "negative"), "tier negatives recomputed")
+    ageing = agg["deliverables_detail"]["ageing"]
+    ok(sum(a["open_cases"] for a in ageing) == agg["dials"]["open"], "deliverables ageing: open cases = open dial")
+    ok(sum(a["beyond_tat"] for a in ageing) == agg["dials"]["open_too_long"], "deliverables ageing: beyond TAT = open-too-long dial")
+    cl = agg["deliverables_detail"]["closure"]
+    ok(cl["closure_requests"] == sum(1 for r in inter if r["theme"] == "closure_requests") and cl["saved"] <= cl["closed"],
+       "closure requests recomputed; saved within closed")
+    dp = agg["deliverables_detail"]["disputes"]
+    disputes = [r for r in inter if r["deliverable"] == "dispute"]
+    ledger_row = next(d for d in agg["deliverables"] if d["id"] == "dispute")
+    ok(dp["raised"] == len(disputes) == ledger_row["total"], "disputes raised = records = ledger row")
+    ok(dp["beyond_sla_total"] == sum(d["cases"] for d in dp["drivers"]) == sum(a["cases"] for a in dp["aged_cases"]),
+       "disputes beyond SLA = drivers = age bands")
+    f = [x["count"] for x in dp["funnel"]]
+    ok(all(a >= b for a, b in zip(f, f[1:])), "dispute funnel: each stage within the one before")
+    ok(all(x["status"] == (f"Acknowledged {x['acknowledged_at']}" if x["acknowledged_at"] else "Awaiting owner") for x in agg["routing"]),
+       "routing: one acknowledgement status per theme")
     # No value reused across unrelated headline metrics on the exec page.
     head = [agg["dials"]["open"], agg["dials"]["open_too_long"], agg["high_impact"]["total"], agg["customer_memory"]["with_open_issue"], agg["rm"]["should_know"]]
     ok(len(set(head)) == len(head), f"exec headline values are distinct {head}")
