@@ -20,9 +20,9 @@ export function RecommendationBox({
         borderRadius: 12,
         border: `1px solid ${withAlpha(K.amber, 0.4)}`,
         background: withAlpha(K.amber, 0.08),
-        padding: 12,
+        padding: "8px 10px",
         fontSize: 12.5,
-        lineHeight: 1.6,
+        lineHeight: 1.5,
         color: K.textSec,
       }}
     >

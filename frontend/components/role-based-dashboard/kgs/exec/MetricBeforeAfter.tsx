@@ -18,10 +18,10 @@ export function MetricBeforeAfter({
         borderRadius: 12,
         border: `1px solid ${K.borderLight}`,
         background: "rgba(0,0,0,0.25)",
-        padding: 10,
+        padding: "8px 10px",
         display: "flex",
         flexDirection: "column",
-        gap: 8,
+        gap: 6,
       }}
     >
       {rows.map((m) => (

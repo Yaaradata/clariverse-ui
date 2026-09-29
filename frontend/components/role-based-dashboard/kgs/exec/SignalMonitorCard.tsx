@@ -8,7 +8,6 @@ import { GateChip } from "../shared/GateChip";
 import { JoinTagRow } from "../shared/JoinTagRow";
 import { PnLDestinationTag } from "../shared/PnLDestinationTag";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
-import { SeverityStrip } from "../shared/SeverityStrip";
 import { K, SEV, withAlpha } from "../shared/tokens";
 import { useDemo, useLabel } from "../shell/DemoProvider";
 import { DateCodeMicroStrip } from "./DateCodeMicroStrip";
@@ -28,6 +27,8 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
   const { isApproved } = useDemo();
   const signal = signalById[card.signalId];
   const tone = SEV[card.chips.class].color;
+  // Incident flag text = last segment of the data's compact severity ("… · Incident off").
+  const incident = signal?.severity.compact.split(" · ").pop() ?? "";
   const approved = Boolean(
     card.gateChipAfterApprove && isApproved(card.signalId),
   );
@@ -35,19 +36,19 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
   return (
     <article
       style={{
-        minWidth: 300,
-        maxWidth: 320,
-        flex: "0 0 300px",
+        minWidth: 360,
+        maxWidth: 360,
+        flex: "0 0 360px",
         scrollSnapAlign: "start",
         borderRadius: K.radius.card,
         border: `1px solid ${withAlpha(tone, 0.5)}`,
         background: withAlpha(tone, 0.05),
         boxShadow: `0 10px 24px ${withAlpha(tone, 0.12)}`,
         color: K.textSec,
-        padding: "14px 14px 12px",
+        padding: "12px 14px 10px",
         display: "flex",
         flexDirection: "column",
-        gap: 10,
+        gap: 8,
       }}
     >
       <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
@@ -83,8 +84,8 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
         style={{
           margin: 0,
           display: "grid",
-          gridTemplateColumns: "auto 1fr",
-          gap: "4px 10px",
+          gridTemplateColumns: "72px 1fr",
+          gap: "3px 10px",
           fontSize: 12,
         }}
       >
@@ -101,9 +102,7 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
             >
               {r.label}
             </dt>
-            <dd style={{ margin: 0, color: K.text, textAlign: "right" }}>
-              {L(r.value)}
-            </dd>
+            <dd style={{ margin: 0, color: K.text }}>{L(r.value)}</dd>
           </div>
         ))}
       </dl>
@@ -113,36 +112,60 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
       />
       {card.microStrip ? <DateCodeMicroStrip /> : null}
 
-      <div style={{ fontSize: 12, color: K.body }}>{L(card.blastRadius)}</div>
-      {signal ? <SeverityStrip severity={signal.severity} compact /> : null}
-      <ConfidenceMarker
-        confidence={signal?.confidence}
-        short={card.confidenceShort}
-        compact
-      />
+      {/* Compact severity line: class + type + blast radius + incident flag (04 §2.7). */}
+      <div
+        style={{
+          fontSize: 12,
+          color: K.body,
+          display: "flex",
+          gap: 6,
+          alignItems: "baseline",
+        }}
+      >
+        <span aria-hidden style={{ color: tone }}>
+          {SEV[card.chips.class].glyph}
+        </span>
+        <span>
+          {L(card.blastRadius)}
+          {incident ? ` · ${incident}` : ""}
+        </span>
+      </div>
       <div
         style={{
           display: "flex",
+          flexWrap: "wrap",
           alignItems: "center",
-          gap: 6,
-          fontSize: 12,
-          color: K.textMut,
+          justifyContent: "space-between",
+          gap: "4px 10px",
         }}
       >
-        <span>{meta.ui.pnl}</span>
-        <PnLDestinationTag text={card.pnlShort} />
+        <ConfidenceMarker
+          confidence={signal?.confidence}
+          short={card.confidenceShort}
+          compact
+        />
+        <span
+          style={{
+            display: "inline-flex",
+            gap: 6,
+            fontSize: 12,
+            color: K.textMut,
+          }}
+        >
+          {meta.ui.pnl}
+          <PnLDestinationTag text={card.pnlShort} />
+        </span>
       </div>
       {signal ? <JoinTagRow tags={signal.joinTags} max={3} /> : null}
-      <div>
-        <GateChip
-          text={
-            approved && card.gateChipAfterApprove
-              ? card.gateChipAfterApprove
-              : L(card.ownerGate)
-          }
-          status={approved ? "approved" : "awaiting"}
-        />
-      </div>
+      <GateChip
+        wrap
+        text={
+          approved && card.gateChipAfterApprove
+            ? card.gateChipAfterApprove
+            : L(card.ownerGate)
+        }
+        status={approved ? "approved" : "awaiting"}
+      />
 
       <RecommendationBox
         label={meta.labels.recommendationLabel}

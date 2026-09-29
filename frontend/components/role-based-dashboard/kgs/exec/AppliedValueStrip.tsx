@@ -169,7 +169,12 @@ export function AppliedValueStrip() {
             {(t.lines ?? []).map((l) => (
               <div
                 key={l}
-                style={{ ...valueStyle, fontSize: 14, fontWeight: 700 }}
+                style={{
+                  ...valueStyle,
+                  fontFamily: K.font,
+                  fontSize: 13,
+                  fontWeight: 700,
+                }}
               >
                 {L(l)}
               </div>

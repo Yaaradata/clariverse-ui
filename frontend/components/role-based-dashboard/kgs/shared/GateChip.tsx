@@ -15,9 +15,12 @@ const TONE: Record<GateStatus, string> = {
 export function GateChip({
   text,
   status,
+  wrap = false,
 }: {
   text: string;
   status: GateStatus;
+  /** Allow long owner·gate strings to wrap inside narrow cards. */
+  wrap?: boolean;
 }) {
   const c = TONE[status];
   const color =
@@ -34,11 +37,13 @@ export function GateChip({
         fontSize: 12,
         fontWeight: 700,
         padding: "3px 8px",
-        borderRadius: K.radius.pill,
+        borderRadius: wrap ? K.radius.chip : K.radius.pill,
         border: `1px solid ${withAlpha(c, 0.5)}`,
         background: withAlpha(c, 0.12),
         color,
-        whiteSpace: "nowrap",
+        whiteSpace: wrap ? "normal" : "nowrap",
+        alignSelf: "flex-start",
+        lineHeight: 1.35,
       }}
     >
       {text}
