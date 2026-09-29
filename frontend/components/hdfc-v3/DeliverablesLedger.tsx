@@ -163,17 +163,16 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
         <MutedNote>
           RBI rows use published RBI timelines. Where RBI sets none, the TAT is
           the bank&apos;s own and is not shown until it is confirmed in
-          discovery; on those rows, met, outside and open too long come from
-          the illustrative sample, measured against a placeholder that is not
-          a bank figure. Met = closed within
-          the TAT (for the first-response row: answered within it). Outside =
-          settled late, or open and already past the TAT. Working days skip
-          Sundays; bank holidays are not modelled yet. Public posts describing a
-          delay are matched to a deliverable by request type; &ldquo;—&rdquo;
-          where public voice has no matching type. Action: set a new date when a
-          quarter or more of the open items are past the TAT; route with
-          evidence when under 80% is met; update and close when a few items are
-          past the TAT; otherwise monitor.
+          discovery; on those rows, met, outside and open too long come from the
+          illustrative sample, measured against a placeholder that is not a bank
+          figure. Met = closed within the TAT (for the first-response row:
+          answered within it). Outside = settled late, or open and already past
+          the TAT. Working days skip Sundays; bank holidays are not modelled
+          yet. Public posts describing a delay are matched to a deliverable by
+          request type; &ldquo;—&rdquo; where public voice has no matching type.
+          Action: set a new date when a quarter or more of the open items are
+          past the TAT; route with evidence when under 80% is met; update and
+          close when a few items are past the TAT; otherwise monitor.
         </MutedNote>
       </Tile>
       <Tile
