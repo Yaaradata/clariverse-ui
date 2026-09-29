@@ -9,9 +9,8 @@ import { SignalMonitorCard } from "./SignalMonitorCard";
 import { SuppressedEndCard } from "./SuppressedEndCard";
 
 /**
- * Field Signal Monitor (04 §2.7): SectionHeader + 5 cards in rank order + the suppressed end
- * card, in a horizontally scrolling, scroll-snapped strip with a right-edge fade. Cards outside
- * the Brand / Region scope drop out; the section counts stay as they are.
+ * Field Signal Monitor (04 §2.7): SectionHeader + ranked cards + suppressed end card
+ * in a horizontally scrolling strip (bank AI Risk Spike Monitor layout).
  */
 export function FieldSignalMonitor() {
   const L = useLabel();
@@ -27,25 +26,25 @@ export function FieldSignalMonitor() {
         title={s.title}
         chip={s.chip}
         chipPulse
-        subtitle={s.subtitle}
+        subtitle={s.subtitleShort ?? s.subtitle}
         italic={L(s.suppressedLine)}
       />
       <div
         style={{
           display: "flex",
+          width: "100%",
+          minWidth: 0,
           gap: 12,
           overflowX: "auto",
           paddingBottom: 8,
           alignItems: "stretch",
           scrollSnapType: "x mandatory",
-          maskImage:
-            "linear-gradient(to right, black calc(100% - 32px), transparent)",
         }}
       >
         {cards.length ? (
           cards.map((c) => <SignalMonitorCard key={c.signalId} card={c} />)
         ) : (
-          <div style={{ flex: "0 0 320px", scrollSnapAlign: "start" }}>
+          <div style={{ flex: "1 1 0", minWidth: 240, scrollSnapAlign: "start" }}>
             <EmptyScope />
           </div>
         )}

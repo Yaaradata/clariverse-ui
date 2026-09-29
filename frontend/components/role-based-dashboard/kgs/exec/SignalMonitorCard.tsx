@@ -1,189 +1,241 @@
 "use client";
 
 import { meta, monitor, signalById } from "@kgs/lib/data";
-import type { MonitorCard } from "@kgs/types";
+import type { MonitorCard as MonitorCardData } from "@kgs/types";
 import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { GateChip } from "../shared/GateChip";
-import { JoinTagRow } from "../shared/JoinTagRow";
-import { MoneyText } from "../shared/MoneyText";
+import { MONEY } from "../shared/MoneyText";
+import { IllustrativeChip } from "../shared/IllustrativeChip";
 import { PnLDestinationTag } from "../shared/PnLDestinationTag";
-import { DomainChip, SeverityChip } from "../shared/SeverityChip";
+import { Popover } from "../shared/Popover";
+import { SeverityChip } from "../shared/SeverityChip";
 import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
 import { useDemo, useLabel } from "../shell/DemoProvider";
-import { DateCodeMicroStrip } from "./DateCodeMicroStrip";
 import { MetricBeforeAfter } from "./MetricBeforeAfter";
 import { RecommendationBox } from "./RecommendationBox";
 
+const chipStyle = {
+  fontSize: 11,
+  padding: "2px 7px",
+  borderRadius: 6,
+  border: `1px solid ${K.chipBorder}`,
+  background: K.surface,
+  color: K.body,
+  whiteSpace: "nowrap" as const,
+  fontFamily: "inherit",
+};
+
 /**
- * Fork of the bank spike card (HeadOfCreditCardsDashboard.tsx:626-735), "RiskSpikeCard" in 03.
- * KGS changes: rank + SeverityChip (full word) + domain chip; SOURCES / COHORT / WINDOW /
- * OWNER rows; metrics vs own baseline; compact severity, K/I confidence, P&L, join tags and
- * gate chip (the full signal contract, 06 §2 #3); "LiSN suggests · owner decides";
- * "Open signal →". Tint follows severity. No action button.
+ * Compact Field Signal Monitor card — bank AI Risk Spike anatomy with the KGS signal
+ * contract in a one-line footer (severity tooltip, owner·gate, confidence, P&L, joined-on).
  */
-export function SignalMonitorCard({ card }: { card: MonitorCard }) {
+export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
   const L = useLabel();
   const { go } = useKgsNav();
   const { isApproved } = useDemo();
   const signal = signalById[card.signalId];
   const tone = SEV[card.chips.class].color;
-  // Incident flag text = last segment of the data's compact severity ("… · Incident off").
   const incident = signal?.severity.compact.split(" · ").pop() ?? "";
   const approved = Boolean(
     card.gateChipAfterApprove && isApproved(card.signalId),
   );
+  const title = L(card.titleShort ?? card.title);
+  const metrics = card.metricsCompact ?? card.metrics;
+  const suggestion = L(card.suggestionShort ?? card.suggestion);
+  const ownerGate =
+    approved && card.gateChipAfterApprove
+      ? card.gateChipAfterApprove
+      : L(card.ownerGateShort ?? card.ownerGate);
+
+  const infoRows = (
+    [
+      {
+        label: "SOURCES",
+        value:
+          card.sourcesShort ??
+          card.rows.find((r) => r.label === "SOURCES")?.value ??
+          "",
+      },
+      {
+        label: "COHORT",
+        value: card.rows.find((r) => r.label === "COHORT")?.value ?? "",
+      },
+      {
+        label: "WINDOW",
+        value: card.rows.find((r) => r.label === "WINDOW")?.value ?? "",
+      },
+    ] as const
+  ).filter((r) => r.value);
+
+  const joinTags = signal?.joinTags.slice(0, 3) ?? [];
+  const sevTooltip = [
+    L(card.blastRadius),
+    MONEY.test(card.blastRadius) ? "ILLUSTRATIVE" : null,
+    incident,
+    signal?.severity.incident.note,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <article
       className="kgs-lift"
       style={{
-        minWidth: 360,
-        maxWidth: 360,
-        flex: "0 0 360px",
+        minWidth: 240,
+        minHeight: 240,
+        flex: "1 1 0",
         scrollSnapAlign: "start",
-        borderRadius: K.radius.card,
-        border: `1px solid ${withAlpha(tone, 0.5)}`,
+        borderRadius: 16,
+        border: `1px solid ${withAlpha(tone, 0.53)}`,
         background: withAlpha(tone, 0.05),
-        boxShadow: `0 10px 24px ${withAlpha(tone, 0.12)}`,
+        boxShadow: `0 10px 24px ${withAlpha(tone, 0.2)}`,
         ...liftVars(
           withAlpha(tone, 0.6),
           `0 10px 36px ${withAlpha(tone, 0.18)}`,
         ),
         color: K.textSec,
-        padding: "12px 14px 10px",
+        padding: "14px 14px 16px",
+        fontSize: 12,
         display: "flex",
         flexDirection: "column",
-        gap: 8,
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-        <span
-          style={{
-            fontFamily: K.mono,
-            fontSize: 12,
-            fontWeight: 800,
-            color: K.textMut,
-            paddingTop: 2,
-          }}
-        >
-          #{card.rank}
-        </span>
-        <h3
-          style={{
-            margin: 0,
-            fontSize: 15,
-            fontWeight: 700,
-            color: K.text,
-            lineHeight: 1.3,
-          }}
-        >
-          {L(card.title)}
-        </h3>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-        <SeverityChip cls={card.chips.class} word={card.chips.word} />
-        <DomainChip domain={card.chips.domain} extra={card.chips.type} />
-      </div>
-
-      <dl
+      <div
         style={{
-          margin: 0,
-          display: "grid",
-          gridTemplateColumns: "72px 1fr",
-          gap: "3px 10px",
-          fontSize: 12,
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 8,
         }}
       >
-        {card.rows.map((r) => (
-          <div key={r.label} style={{ display: "contents" }}>
-            <dt
+        <div
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: 6,
+            minWidth: 0,
+            flex: 1,
+          }}
+        >
+          <span
+            style={{
+              fontFamily: K.mono,
+              fontSize: 12,
+              fontWeight: 800,
+              color: K.textMut,
+              paddingTop: 2,
+              flexShrink: 0,
+            }}
+          >
+            #{card.rank}
+          </span>
+          <h3
+            style={{
+              margin: 0,
+              fontSize: 14,
+              fontWeight: 700,
+              color: K.text,
+              lineHeight: 1.3,
+            }}
+          >
+            {title}
+          </h3>
+        </div>
+        <span title={sevTooltip} style={{ flexShrink: 0 }}>
+          <SeverityChip cls={card.chips.class} word={card.chips.word} />
+        </span>
+      </div>
+
+      <div
+        style={{
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+          gap: 5,
+          fontSize: 12,
+          color: K.textMut,
+        }}
+      >
+        {infoRows.map((r) => (
+          <div
+            key={r.label}
+            style={{ display: "flex", justifyContent: "space-between", gap: 8 }}
+          >
+            <span
               style={{
-                color: K.textMut,
-                letterSpacing: "0.06em",
-                fontSize: 11,
-                fontWeight: 600,
-                paddingTop: 1,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                flexShrink: 0,
               }}
             >
               {r.label}
-            </dt>
-            <dd style={{ margin: 0, color: K.text }}>{L(r.value)}</dd>
+            </span>
+            <span style={{ color: K.text, textAlign: "right" }}>{L(r.value)}</span>
           </div>
         ))}
-      </dl>
-
-      <MetricBeforeAfter
-        rows={card.metrics.map((m) => ({ ...m, label: L(m.label) }))}
-      />
-      {card.microStrip ? <DateCodeMicroStrip /> : null}
-
-      {/* Compact severity line: class + type + blast radius + incident flag (04 §2.7). */}
-      <div
-        style={{
-          fontSize: 12,
-          color: K.body,
-          display: "flex",
-          gap: 6,
-          alignItems: "baseline",
-        }}
-      >
-        <span aria-hidden style={{ color: tone }}>
-          {SEV[card.chips.class].glyph}
-        </span>
-        <span>
-          <MoneyText text={card.blastRadius} />
-          {incident ? ` · ${incident}` : ""}
-        </span>
       </div>
+
+      <div style={{ marginTop: 14, flex: 1, display: "flex", minHeight: 108 }}>
+        <div style={{ width: "100%" }}>
+          <MetricBeforeAfter rows={[...metrics]} />
+        </div>
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <RecommendationBox
+          label={meta.labels.recommendationLabel}
+          text={suggestion}
+        />
+      </div>
+
       <div
         style={{
+          marginTop: 10,
           display: "flex",
           flexWrap: "wrap",
           alignItems: "center",
-          justifyContent: "space-between",
-          gap: "4px 10px",
+          gap: 6,
         }}
       >
+        <GateChip text={ownerGate} status={approved ? "approved" : "awaiting"} />
         <ConfidenceMarker
           confidence={signal?.confidence}
-          short={card.confidenceShort}
+          short={card.confidenceCompact ?? card.confidenceShort}
           compact
         />
-        <span
-          style={{
-            display: "inline-flex",
-            gap: 6,
-            fontSize: 12,
-            color: K.textMut,
-          }}
-        >
+        <span style={{ ...chipStyle, display: "inline-flex", gap: 4, alignItems: "center" }}>
           {meta.ui.pnl}
           <PnLDestinationTag text={card.pnlShort} />
+          {MONEY.test(card.blastRadius) ? <IllustrativeChip /> : null}
         </span>
+        {joinTags.length ? (
+          <Popover
+            label="Joined on"
+            width={280}
+            trigger={
+              <span style={{ ...chipStyle, color: K.violet400, fontWeight: 700 }}>
+                Joined on ({joinTags.length})
+              </span>
+            }
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {joinTags.map((t) => (
+                <div key={`${t.key}-${t.value}`}>
+                  <span style={{ color: K.textMut }}>{t.key}</span> {L(t.value)}
+                </div>
+              ))}
+            </div>
+          </Popover>
+        ) : null}
       </div>
-      {signal ? <JoinTagRow tags={signal.joinTags} max={3} /> : null}
-      <GateChip
-        wrap
-        text={
-          approved && card.gateChipAfterApprove
-            ? card.gateChipAfterApprove
-            : L(card.ownerGate)
-        }
-        status={approved ? "approved" : "awaiting"}
-      />
-
-      <RecommendationBox
-        label={meta.labels.recommendationLabel}
-        text={L(card.suggestion)}
-      />
 
       <button
         type="button"
         onClick={() => go(card.linkTo)}
         className="kgs-focus"
         style={{
-          marginTop: "auto",
+          marginTop: 10,
           alignSelf: "flex-start",
           background: "transparent",
           border: "none",

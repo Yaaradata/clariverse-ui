@@ -22,10 +22,17 @@ export function ConfidenceMarker({
   const k = confidence?.known.count;
   const i = confidence?.inferred.count;
   const hasSplit = typeof k === "number" && typeof i === "number" && k + i > 0;
+  const splitTooltip = hasSplit
+    ? `K ${k} · ${confidence?.known.label} · I ${i} · ${confidence?.inferred.label}`
+    : null;
+  const tooltip =
+    (compact && splitTooltip
+      ? `${splitTooltip}. ${meta.labels.confidenceTooltip}`
+      : meta.labels.confidenceTooltip) ?? meta.labels.confidenceTooltip;
 
   return (
     <div
-      title={meta.labels.confidenceTooltip}
+      title={tooltip}
       style={{ display: "flex", flexDirection: "column", gap: 4 }}
     >
       <div

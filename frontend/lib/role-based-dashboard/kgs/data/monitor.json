@@ -3,6 +3,7 @@
     "title": "Field Signal Monitor",
     "chip": "5 ABOVE THRESHOLD",
     "subtitle": "Signals above threshold, ranked by severity, population and consequence. Each is routed to one owner.",
+    "subtitleShort": "Above threshold, ranked by severity and consequence.",
     "suppressedLine": "Suppressed: quarter-end order status · {{platform:Edge}} how-to after training · planned tests · credit hold (routed to AR)",
     "cardFooterLink": "Open signal →"
   },
@@ -11,7 +12,12 @@
       "id": "fw-4-1",
       "displayId": "SIG-2609-001",
       "question": "installed-base",
-      "ucIds": ["UC-Q-1", "UC-Q-14", "UC-Q-15", "UC-Q-10"],
+      "ucIds": [
+        "UC-Q-1",
+        "UC-Q-14",
+        "UC-Q-15",
+        "UC-Q-10"
+      ],
       "rank": 1,
       "rankOf": 5,
       "rankScore": 0.84,
@@ -54,7 +60,7 @@
       "metric": {
         "display": "6.2 vs 2.0",
         "value": 6.2,
-        "baseline": 2.0,
+        "baseline": 2,
         "ratio": 3.1,
         "unit": "contacts per 1,000 panel-weeks",
         "line": "6.2 contacts per 1,000 panel-weeks on {{fw:EST4@4.1}} vs 2.0 on {{fw:EST4@4.0}} · same 3 weeks · event-time aligned to each panel's upgrade · Poisson exact p<0.001"
@@ -177,8 +183,13 @@
       },
       "routing": {
         "owner": "VP Engineering",
-        "cc": ["VP Service & Tech Support"],
-        "informed": ["Quality", "President"],
+        "cc": [
+          "VP Service & Tech Support"
+        ],
+        "informed": [
+          "Quality",
+          "President"
+        ],
         "presidentReason": "President sees this because S2 and blast radius exceed the agreed threshold."
       },
       "recommendedAction": "Owner to decide: engineering reproduction on the candidate configuration, and whether to pause the staged rollout and download of {{fw:EST4@4.1}}.",
@@ -191,7 +202,9 @@
           "chip": "Awaiting approval",
           "auditLine": "Drafted by LiSN 16 Sep 06:10 UTC · routed 06:10 · IB-2609-004 (synthetic)",
           "owner": "VP Engineering",
-          "approveEnabledFor": ["VP Engineering"],
+          "approveEnabledFor": [
+            "VP Engineering"
+          ],
           "approveLabel": "Approve investigation",
           "disabledTooltip": "Approval sits with VP Engineering",
           "onApprove": {
@@ -227,7 +240,9 @@
           "title": "Draft known-issue note for tech-support agents — not sent",
           "chip": "Not sent",
           "owner": "VP Service & Tech Support",
-          "approveEnabledFor": ["VP Service & Tech Support"],
+          "approveEnabledFor": [
+            "VP Service & Tech Support"
+          ],
           "disabledTooltip": "Approval sits with VP Service & Tech Support"
         }
       ],
@@ -243,7 +258,9 @@
       "id": "dc-d2-2611",
       "displayId": "SIG-2609-002",
       "question": "installed-base",
-      "ucIds": ["UC-Q-2"],
+      "ucIds": [
+        "UC-Q-2"
+      ],
       "rank": 2,
       "rankOf": 5,
       "rankScore": 0.71,
@@ -362,8 +379,12 @@
       },
       "routing": {
         "owner": "Director Product Quality",
-        "cc": ["VP Engineering"],
-        "informed": ["Quality"]
+        "cc": [
+          "VP Engineering"
+        ],
+        "informed": [
+          "Quality"
+        ]
       },
       "recommendedAction": "Sample return and teardown. Quality to decide on quarantine of units still in distributor stock.",
       "gates": [
@@ -375,7 +396,10 @@
           "chip": "Awaiting approval",
           "auditLine": "Drafted by LiSN 18 Sep 07:30 UTC · routed 07:30",
           "owner": "Director Product Quality",
-          "approveEnabledFor": ["Director Product Quality", "Quality"],
+          "approveEnabledFor": [
+            "Director Product Quality",
+            "Quality"
+          ],
           "approveLabel": "Approve containment memo",
           "disabledTooltip": "Approval sits with Director Product Quality"
         }
@@ -392,7 +416,9 @@
       "id": "esd-se-07",
       "displayId": "SIG-2609-003",
       "question": "channel",
-      "ucIds": ["UC-C-1"],
+      "ucIds": [
+        "UC-C-1"
+      ],
       "rank": 3,
       "rankOf": 5,
       "rankScore": 0.66,
@@ -521,8 +547,12 @@
       },
       "routing": {
         "owner": "Regional GM NA",
-        "cc": ["VP Service & Tech Support"],
-        "informed": ["Learning Center manager"]
+        "cc": [
+          "VP Service & Tech Support"
+        ],
+        "informed": [
+          "Learning Center manager"
+        ]
       },
       "recommendedAction": "Regional GM visit with a named L3 engineer and two priority {{platform:EST4}} class seats.",
       "gates": [
@@ -533,7 +563,9 @@
           "title": "Partner-recovery brief — awaiting Regional GM approval · no outreach sent",
           "chip": "Awaiting approval",
           "owner": "Regional GM NA",
-          "approveEnabledFor": ["Regional GM NA"],
+          "approveEnabledFor": [
+            "Regional GM NA"
+          ],
           "approveLabel": "Approve recovery brief",
           "disabledTooltip": "Approval sits with Regional GM NA"
         }
@@ -550,7 +582,9 @@
       "id": "n3-backorder",
       "displayId": "SIG-2609-004",
       "question": "channel",
-      "ucIds": ["UC-C-6"],
+      "ucIds": [
+        "UC-C-6"
+      ],
       "rank": 4,
       "rankOf": 5,
       "rankScore": 0.58,
@@ -593,7 +627,7 @@
       "metric": {
         "display": "3.2×",
         "value": 3.2,
-        "baseline": 1.0,
+        "baseline": 1,
         "ratio": 3.2,
         "unit": "consequence language vs own baseline",
         "line": "Cancel / substitute language 3.2× its own baseline in week 26 · 312 lines pushed ≥3 weeks · 4 projects with inspections within 30 days"
@@ -663,7 +697,9 @@
       },
       "routing": {
         "owner": "VP Supply Chain",
-        "cc": ["VP Sales"]
+        "cc": [
+          "VP Sales"
+        ]
       },
       "recommendedAction": "Review allocation with the 4 inspection-critical projects first.",
       "gates": [
@@ -674,7 +710,9 @@
           "title": "Allocation priority list — awaiting Supply Chain approval · no partner messages sent",
           "chip": "Awaiting approval",
           "owner": "VP Supply Chain",
-          "approveEnabledFor": ["VP Supply Chain"],
+          "approveEnabledFor": [
+            "VP Supply Chain"
+          ],
           "approveLabel": "Approve allocation list",
           "disabledTooltip": "Approval sits with VP Supply Chain"
         }
@@ -691,7 +729,9 @@
       "id": "ukeu-entity-cutover",
       "displayId": "SIG-2609-005",
       "question": "separation",
-      "ucIds": ["UC-C-3"],
+      "ucIds": [
+        "UC-C-3"
+      ],
       "rank": 5,
       "rankOf": 5,
       "rankScore": 0.52,
@@ -807,7 +847,10 @@
       },
       "routing": {
         "owner": "CIO / separation PMO",
-        "cc": ["CFO", "Regional GM UK-EU"]
+        "cc": [
+          "CFO",
+          "Regional GM UK-EU"
+        ]
       },
       "recommendedAction": "Candidate: PO-entity mapping in the EDI layer — engineering to confirm. CFO to decide on a dunning pause.",
       "gates": [
@@ -819,7 +862,9 @@
           "chip": "Awaiting triage",
           "auditLine": "Drafted by LiSN 10 Sep 09:00 UTC · routed 09:00",
           "owner": "CIO / separation PMO",
-          "approveEnabledFor": ["CIO / separation PMO"],
+          "approveEnabledFor": [
+            "CIO / separation PMO"
+          ],
           "approveLabel": "Accept for triage",
           "disabledTooltip": "Triage sits with CIO / separation PMO"
         },
@@ -830,7 +875,9 @@
           "title": "Distributor notice (corrected remit-to) — awaiting Regional GM {{region:UK-EU}} approval · not sent",
           "chip": "Not sent",
           "owner": "Regional GM UK-EU",
-          "approveEnabledFor": ["Regional GM UK-EU"],
+          "approveEnabledFor": [
+            "Regional GM UK-EU"
+          ],
           "approveLabel": "Approve notice",
           "disabledTooltip": "Approval sits with Regional GM {{region:UK-EU}}"
         },
@@ -841,7 +888,9 @@
           "title": "Dunning pause on disputed invoices — CFO decision",
           "chip": "CFO decision",
           "owner": "CFO",
-          "approveEnabledFor": ["CFO"],
+          "approveEnabledFor": [
+            "CFO"
+          ],
           "approveLabel": "Approve dunning pause",
           "disabledTooltip": "Decision sits with CFO"
         }
@@ -858,7 +907,9 @@
       "id": "evidence-readiness",
       "displayId": "SIG-2609-E01",
       "question": "installed-base",
-      "ucIds": ["UC-Q-17"],
+      "ucIds": [
+        "UC-Q-17"
+      ],
       "aboveThreshold": false,
       "title": "Evidence readiness",
       "headline": "Firmware recorded on 38% of {{platform:EST4}} trouble cases; recoverable from text for 61% of the rest; serial/date code on 44% of RMAs; end-site on 57%.",
@@ -912,7 +963,10 @@
       },
       "routing": {
         "owner": "Quality",
-        "cc": ["VP Service & Tech Support", "CIO / separation PMO"]
+        "cc": [
+          "VP Service & Tech Support",
+          "CIO / separation PMO"
+        ]
       },
       "recommendedAction": "Discovery measures this first — on your data.",
       "gates": [],
@@ -961,7 +1015,28 @@
       "pnlShort": "Warranty & field",
       "suggestion": "Reproduce on configurations with more than two signalling loops. Owner to decide whether to pause the staged {{fw:EST4@4.1}} rollout.",
       "linkTo": "/installed-base/signal/fw-4-1",
-      "gateChipAfterApprove": "✓ Investigation approved"
+      "gateChipAfterApprove": "✓ Investigation approved",
+      "titleShort": "{{platform:EST4}} fw {{fw:EST4@4.1}} — devices not found",
+      "sourcesShort": "Calls · Cases · RMA · +2",
+      "metricsCompact": [
+        {
+          "label": "Contacts / 1,000 panel-weeks",
+          "value": "2.0 → 6.2",
+          "change": "3.1×"
+        },
+        {
+          "label": "Panels on version",
+          "value": "1,240",
+          "change": "+5,560 eligible"
+        },
+        {
+          "label": "Partners · regions",
+          "value": "9 · 3"
+        }
+      ],
+      "confidenceCompact": "M 0.70",
+      "ownerGateShort": "VP Engineering · Awaiting approval",
+      "suggestionShort": "Reproduce on multi-loop configs. Owner decides whether to pause the {{fw:EST4@4.1}} rollout."
     },
     {
       "signalId": "dc-d2-2611",
@@ -1007,7 +1082,29 @@
       "pnlShort": "Warranty & containment",
       "suggestion": "Sample return and teardown. Quality to decide on quarantine of units still in distributor stock.",
       "linkTo": "/installed-base#date-code",
-      "microStrip": true
+      "microStrip": true,
+      "titleShort": "D-2 early-life failures · date codes 2611–2614",
+      "sourcesShort": "Calls · Cases · RMA",
+      "metricsCompact": [
+        {
+          "label": "Early-life contacts / 10k units",
+          "value": "1.1 → 4.6",
+          "change": "4.2×"
+        },
+        {
+          "label": "Units in window",
+          "value": "4,800",
+          "change": "1,900 in stock"
+        },
+        {
+          "label": "SKU return rate",
+          "value": "0.21%",
+          "change": "limit 0.30%"
+        }
+      ],
+      "confidenceCompact": "M 0.65",
+      "ownerGateShort": "Director Product Quality · Awaiting approval",
+      "suggestionShort": "Sample return and teardown. Quality decides on quarantine of distributor stock."
     },
     {
       "signalId": "esd-se-07",
@@ -1053,7 +1150,28 @@
       "ownerGate": "Regional GM NA · Recovery brief awaiting approval · no outreach sent",
       "pnlShort": "Partner revenue",
       "suggestion": "Regional GM visit with a named L3 engineer and two priority {{platform:EST4}} class seats.",
-      "linkTo": "/channel#esd-se-07"
+      "linkTo": "/channel#esd-se-07",
+      "titleShort": "{{partner:ESD-SE-07}} — Strategic Partner drift",
+      "sourcesShort": "Calls · Cases · Email · +1",
+      "metricsCompact": [
+        {
+          "label": "Interactions, 6 wks",
+          "value": "13 → 40",
+          "change": "3.1×"
+        },
+        {
+          "label": "Recontact",
+          "value": "14% → 38%"
+        },
+        {
+          "label": "{{platform:EST4}} sell-in vs LY",
+          "value": "−22%",
+          "change": "peers +4%"
+        }
+      ],
+      "confidenceCompact": "H 0.80",
+      "ownerGateShort": "Regional GM NA · Awaiting approval",
+      "suggestionShort": "Regional GM visit with an L3 engineer and two priority {{platform:EST4}} class seats."
     },
     {
       "signalId": "n3-backorder",
@@ -1098,7 +1216,28 @@
       "ownerGate": "VP Supply Chain · Allocation list awaiting approval",
       "pnlShort": "Backlog conversion",
       "suggestion": "Review allocation with the 4 inspection-critical projects first.",
-      "linkTo": "/channel#backorder"
+      "linkTo": "/channel#backorder",
+      "titleShort": "Notification family N-3 — backorder consequence",
+      "sourcesShort": "Email · Order desk · Calls",
+      "metricsCompact": [
+        {
+          "label": "Cancel / substitute language",
+          "value": "1.0 → 3.2",
+          "change": "3.2×"
+        },
+        {
+          "label": "OTD vs promise",
+          "value": "94% revised",
+          "change": "71% original"
+        },
+        {
+          "label": "Lines · partners",
+          "value": "312 · 11"
+        }
+      ],
+      "confidenceCompact": "H 0.75",
+      "ownerGateShort": "VP Supply Chain · Awaiting approval",
+      "suggestionShort": "Review allocation with the 4 inspection-critical projects first."
     },
     {
       "signalId": "ukeu-entity-cutover",
@@ -1143,7 +1282,27 @@
       "ownerGate": "CIO / separation PMO · Defect ticket awaiting triage",
       "pnlShort": "DSO",
       "suggestion": "Candidate: PO-entity mapping in the EDI layer — engineering to confirm. CFO to decide on a dunning pause.",
-      "linkTo": "/separation"
+      "linkTo": "/separation",
+      "titleShort": "{{region:UK-EU}} entity cutover — remit-to friction",
+      "sourcesShort": "Email · Cases · Portal",
+      "metricsCompact": [
+        {
+          "label": "Remit-to contacts / wk",
+          "value": "30 → 81",
+          "change": "2.7×"
+        },
+        {
+          "label": "Control regions",
+          "value": "1.1×"
+        },
+        {
+          "label": "Portal login",
+          "value": "3.4×"
+        }
+      ],
+      "confidenceCompact": "H 0.80",
+      "ownerGateShort": "CIO / separation PMO · Awaiting triage",
+      "suggestionShort": "Confirm PO-entity mapping in EDI. CFO decides on a dunning pause."
     }
   ],
   "suppressedCard": {

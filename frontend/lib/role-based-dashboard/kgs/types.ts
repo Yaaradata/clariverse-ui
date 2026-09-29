@@ -390,17 +390,33 @@ export interface MonitorCard {
   signalId: string;
   rank: number;
   title: TokenString;
+  /** Compact card title (≤ 2 lines). Long `title` kept for drawers. */
+  titleShort?: TokenString;
   chips: { class: SeverityClass; word: string; domain: Domain; type: string };
   rows: {
     label: "SOURCES" | "COHORT" | "WINDOW" | "OWNER";
     value: TokenString;
   }[];
+  /** SOURCES row for the compact card (max 3 items, then "+n"). */
+  sourcesShort?: TokenString;
   metrics: { label: TokenString; value: string; change?: string }[];
+  /** Exactly 3 metric rows for the compact card anatomy. */
+  metricsCompact?: [
+    { label: TokenString; value: string; change?: string },
+    { label: TokenString; value: string; change?: string },
+    { label: TokenString; value: string; change?: string },
+  ];
   blastRadius: TokenString;
   confidenceShort: string;
+  /** Compact confidence label for the footer chip (e.g. "M 0.70"). */
+  confidenceCompact?: string;
   ownerGate: string;
+  /** Compact owner · gate chip (e.g. "VP Engineering · Awaiting approval"). */
+  ownerGateShort?: string;
   pnlShort: string;
   suggestion: TokenString;
+  /** Callout ≤ 2 lines (~25 words). Long `suggestion` kept for drawers. */
+  suggestionShort?: TokenString;
   linkTo: string;
   gateChipAfterApprove?: string;
   microStrip?: boolean;
@@ -909,6 +925,8 @@ export interface MonitorFile {
     title: string;
     chip: string;
     subtitle: string;
+    /** Compact section description (≤ 12 words). */
+    subtitleShort?: string;
     suppressedLine: string;
     cardFooterLink: string;
   };
