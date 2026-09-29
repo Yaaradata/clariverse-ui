@@ -81,7 +81,8 @@ export function CountUp({
     const t0 = performance.now();
     let raf = 0;
     const tick = (now: number) => {
-      const t = Math.min(1, (now - t0) / DURATION_MS);
+      // rAF timestamps can precede t0; a negative t would render "-0".
+      const t = Math.min(1, Math.max(0, (now - t0) / DURATION_MS));
       if (t >= 1) {
         setShown(null);
         return;
