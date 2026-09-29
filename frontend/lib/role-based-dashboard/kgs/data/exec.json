@@ -132,7 +132,34 @@
       ],
       "insightLabel": "LiSN INSIGHT",
       "insight": "Panels on fw {{fw:EST4@4.1}} report 'devices not found after upgrade' at 6.2 per 1,000 panel-weeks vs 2.0 on {{fw:EST4@4.0}} — 23 contacts from 9 unrelated partners since 4 Sep. Five installers have rolled back to {{fw:EST4@4.0}}. The {{platform:EST4}} RMA rate is still inside its control limit.",
-      "insightShort": "Nine partners report 'devices not found after upgrade' on fw {{fw:EST4@4.1}} (synthetic); five installers rolled back to {{fw:EST4@4.0}}."
+      "insightShort": "Nine partners report 'devices not found after upgrade' on fw {{fw:EST4@4.1}} (synthetic); five installers rolled back to {{fw:EST4@4.0}}.",
+      "compact": {
+        "subtitle": "Firmware · RMA · field failures",
+        "caption": "signals above threshold",
+        "gauges": [
+          {
+            "pct": 98,
+            "label": "Cohorts in control"
+          },
+          {
+            "pct": 80,
+            "label": "RMA vs limit"
+          }
+        ],
+        "stats": [
+          {
+            "label": "TOP SIGNAL",
+            "value": "fw {{fw:EST4@4.1}} · 3.1×",
+            "tag": "synthetic"
+          },
+          {
+            "label": "PANELS EXPOSED",
+            "value": "1,240",
+            "tag": "+5,560 eligible"
+          }
+        ],
+        "insight": "9 partners report devices lost after the fw {{fw:EST4@4.1}} upgrade (synthetic); 5 installers rolled back."
+      }
     },
     {
       "id": "channel",
@@ -194,7 +221,34 @@
       ],
       "insightLabel": "LiSN INSIGHT",
       "insight": "{{partner:ESD-SE-07}} friction has run 3.1× its own baseline for six weeks; recontact 38% vs 14%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%.",
-      "insightShort": "Competitor named in 4 {{partner:ESD-SE-07}} calls; {{platform:EST4}} sell-in −22% while territory peers are +4%."
+      "insightShort": "Competitor named in 4 {{partner:ESD-SE-07}} calls; {{platform:EST4}} sell-in −22% while territory peers are +4%.",
+      "compact": {
+        "subtitle": "Partners · backorders · competitors",
+        "caption": "signals above threshold",
+        "gauges": [
+          {
+            "pct": 99.8,
+            "label": "Partners in baseline"
+          },
+          {
+            "pct": 71,
+            "label": "On-time vs promise"
+          }
+        ],
+        "stats": [
+          {
+            "label": "DRIFTING PARTNER",
+            "value": "{{partner:ESD-SE-07}} · 3.1×",
+            "tag": "synthetic"
+          },
+          {
+            "label": "BACKLOG AT RISK",
+            "value": "$2.3m",
+            "tag": "illustrative"
+          }
+        ],
+        "insight": "Competitor named in 4 {{partner:ESD-SE-07}} calls; {{platform:EST4}} sell-in −22% vs peers +4%."
+      }
     },
     {
       "id": "separation",
@@ -252,7 +306,33 @@
       ],
       "insightLabel": "LiSN INSIGHT",
       "insight": "Since {{region:UK-EU}} invoicing moved to the new KGS entity on 1 Sep, remit-to and entity contacts are 2.7× pre-cutover against 1.1× in the control regions. Top cluster: 'invoice entity doesn't match our PO entity'.",
-      "insightShort": "Top cluster since 1 Sep: 'invoice entity doesn't match our PO entity' vs clean control cutovers."
+      "insightShort": "Top cluster since 1 Sep: 'invoice entity doesn't match our PO entity' vs clean control cutovers.",
+      "compact": {
+        "subtitle": "Entity · portal · EDI cutovers",
+        "caption": "signals above threshold",
+        "gauges": [
+          {
+            "pct": 75,
+            "label": "Clean cutovers"
+          },
+          {
+            "pct": 8,
+            "label": "{{region:UK-EU}} distributors hit"
+          }
+        ],
+        "stats": [
+          {
+            "label": "IN DISPUTE",
+            "value": "£1.1m",
+            "tag": "illustrative"
+          },
+          {
+            "label": "DSO, TOP-10 {{region:UK-EU}}",
+            "value": "+6 days"
+          }
+        ],
+        "insight": "Since 1 Sep: 'invoice entity doesn't match our PO' — not seen in control regions."
+      }
     }
   ],
   "whatsCountedTitle": "What's counted",

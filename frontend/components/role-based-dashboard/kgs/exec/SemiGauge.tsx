@@ -14,25 +14,22 @@ import { K } from "../shared/tokens";
 const GROW_DELAY_MS = 100;
 
 /**
- * Fork of the bank MiniHalfGauge (HeadOfCreditCardsDashboard.tsx:109).
- * KGS changes: % text comes from data (never recomputed), label + sub-line in sentence
- * case at ≥11px, tabular numerals.
+ * Bank MiniHalfGauge (HeadOfCreditCardsDashboard.tsx:109) — % + one label, no sub-row.
  */
 export function SemiGauge({
   pct,
   label,
-  sub,
   color,
 }: {
   pct: number;
   label: string;
-  sub: string;
+  /** Optional; ignored on the overview tile (no sub-row). */
+  sub?: string;
   color: string;
 }) {
   const reduced = useReducedMotion();
-  const [data] = useState(() => [
-    { value: Math.max(0, Math.min(100, pct)), fill: color },
-  ]);
+  const clamped = Math.max(0, Math.min(100, pct));
+  const [data] = useState(() => [{ value: clamped, fill: color }]);
 
   return (
     <div
@@ -42,7 +39,7 @@ export function SemiGauge({
         alignItems: "center",
         flex: 1,
         minWidth: 0,
-        gap: 4,
+        gap: 6,
       }}
     >
       <div style={{ position: "relative", width: "100%", height: 58 }}>
@@ -98,24 +95,22 @@ export function SemiGauge({
       <div
         style={{
           fontSize: 11,
-          color: K.body,
+          color: "rgb(185, 185, 186)",
+          textTransform: "uppercase",
+          letterSpacing: 0.4,
           textAlign: "center",
-          lineHeight: 1.25,
-          minHeight: 28,
+          whiteSpace: "normal",
+          overflow: "visible",
+          lineHeight: 1.2,
+          minHeight: 30,
+          paddingTop: 2,
+          width: "100%",
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "center",
         }}
       >
         {label}
-      </div>
-      <div
-        style={{
-          fontSize: 11,
-          color: K.textMut,
-          textAlign: "center",
-          fontFamily: K.mono,
-          fontVariantNumeric: "tabular-nums",
-        }}
-      >
-        {sub}
       </div>
     </div>
   );

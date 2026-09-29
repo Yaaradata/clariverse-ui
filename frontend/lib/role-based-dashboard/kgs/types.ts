@@ -352,6 +352,20 @@ export interface CountedRow {
   signalId: string;
   text: TokenString;
 }
+/** Overview face matching bank ExecutiveTile (head_cards). Long fields kept for drawers. */
+export interface QuestionCardCompact {
+  subtitle: TokenString;
+  caption: string;
+  gauges: [
+    { pct: number; label: TokenString },
+    { pct: number; label: TokenString },
+  ];
+  stats: [
+    { label: string; value: TokenString; tag?: TokenString },
+    { label: string; value: TokenString; tag?: TokenString },
+  ];
+  insight: TokenString;
+}
 /** Big number = count of signals above threshold (never a score or index). */
 export interface QuestionCardData {
   id: QuestionId;
@@ -380,6 +394,8 @@ export interface QuestionCardData {
   insight: TokenString;
   /** Compact insight ≤ 2 lines (~25 words). Long `insight` kept for drawers. */
   insightShort?: TokenString;
+  /** Bank ExecutiveTile face for the overview. */
+  compact?: QuestionCardCompact;
 }
 export interface PulseItem {
   n: 1 | 2 | 3;

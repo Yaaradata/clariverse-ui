@@ -3,7 +3,7 @@
 import { Sparkles } from "lucide-react";
 
 /**
- * LiSN insight callout — Conversation AI density (left accent bar, compact body)
+ * LiSN insight — ConversationAICallout density (HeadOfCreditCardsDashboard.tsx:173)
  * with the literal "LiSN INSIGHT" label (no CSS uppercase on LiSN).
  */
 export function InsightBox({
@@ -20,7 +20,7 @@ export function InsightBox({
       style={{
         background: "rgba(0,0,0,0.35)",
         borderRadius: 10,
-        padding: "12px 14px",
+        padding: "14px 16px",
         borderLeft: `3px solid ${accent}`,
       }}
     >
@@ -29,13 +29,13 @@ export function InsightBox({
           display: "flex",
           alignItems: "center",
           gap: 6,
-          marginBottom: 6,
+          marginBottom: 8,
         }}
       >
         <Sparkles size={12} color={accent} aria-hidden />
         <span
           style={{
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: 700,
             color: accent,
             letterSpacing: "0.1em",
@@ -46,9 +46,9 @@ export function InsightBox({
       </div>
       <p
         style={{
-          fontSize: 13,
-          color: "rgba(255,255,255,0.82)",
-          lineHeight: 1.45,
+          fontSize: 12.5,
+          color: "rgba(255,255,255,0.78)",
+          lineHeight: 1.55,
           margin: 0,
         }}
       >
