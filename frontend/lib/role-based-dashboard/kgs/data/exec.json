@@ -1,0 +1,594 @@
+{
+  "funnel": {
+    "interactions": 233900,
+    "weekApprox": "~9,000",
+    "candidateClusters": 1640,
+    "suppressed": 212,
+    "aboveThreshold": 5,
+    "governed": 2,
+    "suppressedReasons": [
+      {
+        "label": "Quarter-end / seasonal",
+        "count": 74
+      },
+      {
+        "label": "How-to after launch (adoption, not fault)",
+        "count": 58
+      },
+      {
+        "label": "Planned test or drill language",
+        "count": 41
+      },
+      {
+        "label": "Same-site recontacts and duplicates",
+        "count": 27
+      },
+      {
+        "label": "Credit hold, routed to AR",
+        "count": 12
+      }
+    ],
+    "suppressedFooter": "Suppression reasons are shown, never hidden."
+  },
+  "briefLabel": "EXECUTIVE BRIEF",
+  "brief": "Five signals above threshold — installed base 2, channel 2, separation 1. All five are with named owners; none has been actioned without approval.",
+  "pulseLabel": "EXECUTIVE PULSE",
+  "pulse": [
+    {
+      "n": 1,
+      "title": "What's critical",
+      "text": "{{platform:EST4}} fw {{fw:EST4@4.1}} (synthetic): 'devices not found after upgrade' at 3.1× panels still on {{fw:EST4@4.0}} — 9 partners, 3 regions, 1,240 panels. Draft brief awaiting VP Engineering.",
+      "chips": ["S2 · Quality", "VP Engineering", "Awaiting approval"],
+      "chipAfterApprove": "Investigation approved",
+      "linkTo": "/installed-base/signal/fw-4-1"
+    },
+    {
+      "n": 2,
+      "title": "Where's your focus",
+      "text": "{{region:UK-EU}} remit-to and invoice contacts 2.7× since the 1 Sep entity cutover (control 1.1×): £1.1m in dispute, DSO +6 days at top-10 distributors.",
+      "chips": ["S2 · Separation", "CIO / separation PMO", "Awaiting triage"],
+      "linkTo": "/separation"
+    },
+    {
+      "n": 3,
+      "title": "What's stable",
+      "text": "3 of 4 cutovers clean against control. Nuisance-alarm contacts within own baseline for every detector family. 212 look-alikes suppressed.",
+      "chips": ["—", "—", "No action needed"],
+      "linkTo": "/separation"
+    }
+  ],
+  "questionCards": [
+    {
+      "id": "installed-base",
+      "route": "/installed-base",
+      "icon": "Cpu",
+      "accent": "orange",
+      "highlighted": true,
+      "title": "Is our installed base healthy?",
+      "caption": "Firmware releases · Date-code windows · RMA · Field failures",
+      "count": 2,
+      "countLabel": "signals above threshold",
+      "lastWeekCount": 2,
+      "deltaLabel": "0 vs last week",
+      "fourWeekLabel": "+2 in 4 weeks",
+      "severityMix": "S2 cliff · S2 cliff",
+      "counted": [
+        {
+          "signalId": "fw-4-1",
+          "text": "#1 · fw {{fw:EST4@4.1}} cohort (synthetic) · S2 · Quality · Cliff · above threshold since 16 Sep · VP Engineering"
+        },
+        {
+          "signalId": "dc-d2-2611",
+          "text": "#2 · D-2 date codes 2611–2614 (synthetic) · S2 · Quality · Cliff · since 18 Sep · Director Product Quality"
+        }
+      ],
+      "notCounted": "Not counted: governed S1 watch items (restricted) · 45 firmware cohorts within own baseline · Evidence readiness (enabler)",
+      "countedFooter": "Counted = above its own-baseline threshold at 25 Sep 18:00 UTC. Last week = digest of 18 Sep 18:00 UTC. A count, not a score.",
+      "gauges": [
+        {
+          "pct": 98,
+          "label": "Firmware cohorts in control",
+          "sub": "45 of 46",
+          "tone": "green"
+        },
+        {
+          "pct": 80,
+          "label": "{{platform:EST4}} RMA rate vs control limit",
+          "sub": "0.28% of 0.35% · in control",
+          "tone": "green"
+        }
+      ],
+      "trend": {
+        "kind": "fw-lineage",
+        "ref": "signal_fw41.json#lineage"
+      },
+      "miniKpis": [
+        {
+          "label": "TOP SIGNAL",
+          "value": "fw {{fw:EST4@4.1}} (synthetic) · 3.1×"
+        },
+        {
+          "label": "PANELS EXPOSED",
+          "value": "1,240",
+          "caption": "+5,560 eligible"
+        }
+      ],
+      "insightLabel": "LiSN INSIGHT",
+      "insight": "Panels on fw {{fw:EST4@4.1}} report 'devices not found after upgrade' at 6.2 per 1,000 panel-weeks vs 2.0 on {{fw:EST4@4.0}} — 23 contacts from 9 unrelated partners since 4 Sep. Five installers have rolled back to {{fw:EST4@4.0}}. The {{platform:EST4}} RMA rate is still inside its control limit."
+    },
+    {
+      "id": "channel",
+      "route": "/channel",
+      "icon": "Handshake",
+      "accent": "teal",
+      "highlighted": false,
+      "title": "Are we holding our channel?",
+      "caption": "Strategic Partners · Backorder consequence · Certification · Competitor language",
+      "count": 2,
+      "countLabel": "signals above threshold",
+      "lastWeekCount": 1,
+      "deltaLabel": "+1 vs last week",
+      "fourWeekLabel": "+2 in 4 weeks",
+      "severityMix": "S2 slope · S2 slope",
+      "counted": [
+        {
+          "signalId": "esd-se-07",
+          "text": "#3 · {{partner:ESD-SE-07}} partner drift (synthetic) · S2 · Channel · Slope · since 11 Sep · Regional GM NA"
+        },
+        {
+          "signalId": "n3-backorder",
+          "text": "#4 · N-3 backorder consequence (synthetic) · S2 · Supply · Slope · since 22 Sep · VP Supply Chain"
+        }
+      ],
+      "notCounted": "Not counted: 419 NA Strategic Partners within own baseline · 1 order dip during a credit hold (routed to AR)",
+      "countedFooter": "Counted = above its own-baseline threshold at 25 Sep 18:00 UTC. Last week = digest of 18 Sep 18:00 UTC. A count, not a score.",
+      "gauges": [
+        {
+          "pct": 99.8,
+          "label": "NA Strategic Partners within own baseline",
+          "sub": "419 of 420",
+          "tone": "green"
+        },
+        {
+          "pct": 71,
+          "label": "N-3 OTD vs original promise",
+          "sub": "94% vs revised",
+          "tone": "amber"
+        }
+      ],
+      "trend": {
+        "kind": "partner-dual",
+        "ref": "channel.json#partnerTimeline"
+      },
+      "miniKpis": [
+        {
+          "label": "DRIFTING PARTNER",
+          "value": "{{partner:ESD-SE-07}} · 3.1×"
+        },
+        {
+          "label": "BACKLOG AT RISK",
+          "value": "$2.3m",
+          "caption": "312 lines",
+          "money": true
+        }
+      ],
+      "insightLabel": "LiSN INSIGHT",
+      "insight": "{{partner:ESD-SE-07}} friction has run 3.1× its own baseline for six weeks; recontact 38% vs 14%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%."
+    },
+    {
+      "id": "separation",
+      "route": "/separation",
+      "icon": "Split",
+      "accent": "sky",
+      "highlighted": false,
+      "title": "Is the separation costing us?",
+      "caption": "Entity · Portal · ERP · EDI cutovers against a control region",
+      "count": 1,
+      "countLabel": "signal above threshold",
+      "lastWeekCount": 1,
+      "deltaLabel": "0 vs last week",
+      "fourWeekLabel": "+1 in 4 weeks",
+      "severityMix": "S2 cliff",
+      "counted": [
+        {
+          "signalId": "ukeu-entity-cutover",
+          "text": "#5 · {{region:UK-EU}} entity cutover · S2 · Separation · Cliff · since 10 Sep · CIO / separation PMO"
+        }
+      ],
+      "notCounted": "Not counted: NA portal, {{region:APAC}} order management and EDI mapping cutovers — clean vs control",
+      "countedFooter": "Counted = above its own-baseline threshold at 25 Sep 18:00 UTC. Last week = digest of 18 Sep 18:00 UTC. A count, not a score.",
+      "gauges": [
+        {
+          "pct": 75,
+          "label": "Cutovers clean vs control",
+          "sub": "3 of 4",
+          "tone": "amber"
+        },
+        {
+          "pct": 8,
+          "label": "{{region:UK-EU}} distributors affected",
+          "sub": "14 of 180",
+          "tone": "amber"
+        }
+      ],
+      "trend": {
+        "kind": "cutover-vs-control",
+        "ref": "separation.json#cutoverTimeline"
+      },
+      "miniKpis": [
+        {
+          "label": "IN DISPUTE",
+          "value": "£1.1m",
+          "caption": "212 invoices",
+          "money": true
+        },
+        {
+          "label": "DSO, TOP-10 {{region:UK-EU}}",
+          "value": "+6 days"
+        }
+      ],
+      "insightLabel": "LiSN INSIGHT",
+      "insight": "Since {{region:UK-EU}} invoicing moved to the new KGS entity on 1 Sep, remit-to and entity contacts are 2.7× pre-cutover against 1.1× in the control regions. Top cluster: 'invoice entity doesn't match our PO entity'."
+    }
+  ],
+  "whatsCountedTitle": "What's counted",
+  "appliedValue": {
+    "header": "Applied value · this week",
+    "chip": "Synthetic scenario",
+    "link": "How we count",
+    "footnote": "Lead time is measured against the review calendar, not against when your teams would otherwise have known. Discovery tests that blind.",
+    "tiles": [
+      {
+        "id": "AV-1",
+        "label": "Ahead of the review cycle",
+        "value": "21 days",
+        "sub": "median lead vs next scheduled review · 5 signals",
+        "methodIds": ["V-11"]
+      },
+      {
+        "id": "AV-2",
+        "label": "Signals routed",
+        "value": "5 → 5 owners",
+        "sub": "+ 2 governed watch items (restricted)",
+        "methodIds": ["count"]
+      },
+      {
+        "id": "AV-3",
+        "label": "Decisions pending",
+        "value": "5 awaiting owners",
+        "sub": "7 drafts · 0 sent · 0 automatic actions",
+        "methodIds": ["count"],
+        "onApprove": {
+          "value": "4 awaiting owners",
+          "sub": "7 drafts · 1 approved · 0 sent · 0 automatic actions"
+        }
+      },
+      {
+        "id": "AV-4",
+        "label": "Exposure in view",
+        "money": true,
+        "lines": [
+          "Warranty & field ≤ $0.5m",
+          "Backlog at risk $2.3m",
+          "Invoices in dispute £1.1m"
+        ],
+        "sub": "exposure, not savings · not summed",
+        "methodIds": ["V-02", "V-05", "V-07", "V-08"]
+      },
+      {
+        "id": "AV-5",
+        "label": "Contacts avoidable",
+        "money": true,
+        "value": "~430",
+        "sub": "$11k–26k handling cost · if owners approve",
+        "methodIds": ["V-10"]
+      },
+      {
+        "id": "AV-6",
+        "label": "Look-alikes suppressed",
+        "value": "212",
+        "sub": "seasonal · how-to after launch · planned tests · credit holds",
+        "methodIds": ["V-12"]
+      }
+    ],
+    "leadList": [
+      {
+        "signalId": "fw-4-1",
+        "crossed": "16 Sep",
+        "review": "7 Oct · monthly RMA review",
+        "lead": 21
+      },
+      {
+        "signalId": "dc-d2-2611",
+        "crossed": "18 Sep",
+        "review": "7 Oct · monthly RMA review",
+        "lead": 19
+      },
+      {
+        "signalId": "esd-se-07",
+        "crossed": "11 Sep",
+        "review": "15 Oct · QBR",
+        "lead": 34
+      },
+      {
+        "signalId": "n3-backorder",
+        "crossed": "22 Sep",
+        "review": "5 Oct · OTIF report",
+        "lead": 13
+      },
+      {
+        "signalId": "ukeu-entity-cutover",
+        "crossed": "10 Sep",
+        "review": "5 Oct · DSO report",
+        "lead": 25
+      }
+    ]
+  },
+  "valueRegister": [
+    {
+      "id": "V-01",
+      "figure": "Hero exposure to date ≈ $12k",
+      "method": "Excess contacts = observed 23 − expected on the {{fw:EST4@4.0}} rate (2.0 × 1.24k panels × 3 wks = 7.4) ≈ 16 × $750 fully loaded field cost.",
+      "money": true
+    },
+    {
+      "id": "V-02",
+      "figure": "Hero projected ≈ $0.15m over 12 weeks if the rollout continues unchanged",
+      "method": "Panel-weeks at risk = 1,240 × 12 + 5,560 eligible × 6 (uniform upgrade over 12 wks) = 48,240 × excess rate 4.2 per 1,000 = ~203 excess contacts × $750.",
+      "money": true
+    },
+    {
+      "id": "V-03",
+      "figure": "Hero contacts avoidable ~140 (≈ $0.1m field cost) if the owner pauses the rollout at week 3",
+      "method": "The 5,560 not-yet-upgraded panels' share of V-02: 33,360 panel-weeks × 4.2 per 1,000 ≈ 140 × $750. Decision sits with VP Engineering.",
+      "money": true
+    },
+    {
+      "id": "V-04",
+      "figure": "Hero lead 21 days",
+      "method": "Next scheduled monthly RMA review (7 Oct) − threshold crossing (16 Sep).",
+      "money": false
+    },
+    {
+      "id": "V-05",
+      "figure": "Date-code field exposure up to $0.35m; 1,900 units containable",
+      "method": "Installed units in window = 4,800 − 1,900 in distributor stock = 2,900 × $120. Containable = units still in stock at 11 distributors.",
+      "money": true
+    },
+    {
+      "id": "V-06",
+      "figure": "Partner sell-in in view $6.4m; sell-in gap ≈ $1.4m / yr if −22% persists; backlog $0.9m",
+      "method": "Trailing-12-month sell-in of {{partner:ESD-SE-07}} × 22% decline vs the same weeks last year.",
+      "money": true
+    },
+    {
+      "id": "V-07",
+      "figure": "Backlog at risk $2.3m (2.4% of ~$95m open backlog); 4 projects with inspections ≤30 days",
+      "method": "Sum of open value on the 312 N-3 lines pushed ≥3 weeks ÷ total open backlog.",
+      "money": true
+    },
+    {
+      "id": "V-08",
+      "figure": "Invoices in dispute £1.1m / 212; DSO +6 days ≈ £1.0m cash tied up",
+      "method": "6 ÷ 365 × £60m annual sell-in of the top-10 {{region:UK-EU}} distributors.",
+      "money": true
+    },
+    {
+      "id": "V-09",
+      "figure": "Cutover excess contacts ~48 / week (≈ $1.2k–2.9k handling per week); ~290 avoidable over 6 weeks if fixed",
+      "method": "Pre-cutover baseline 30/wk × (2.7 − 1.1 control change) = 48/wk × 6 wks.",
+      "money": true
+    },
+    {
+      "id": "V-10",
+      "figure": "Contacts avoidable, total ~430 ($11k–26k handling cost)",
+      "method": "V-03 (140) + V-09 (290) × $25–60. Handling cost only. Field cost is shown separately.",
+      "money": true
+    },
+    {
+      "id": "V-11",
+      "figure": "Median lead vs scheduled review 21 days (5 signals)",
+      "method": "Per signal, next scheduled review for the owner's metric − threshold-crossing date: hero 16 Sep→7 Oct (21) · date code 18 Sep→7 Oct (19) · partner 11 Sep→15 Oct QBR (34) · backorder 22 Sep→5 Oct OTIF report (13) · cutover 10 Sep→5 Oct DSO report (25). Median = 21.",
+      "money": false
+    },
+    {
+      "id": "V-12",
+      "figure": "Look-alikes suppressed 212",
+      "method": "Quarter-end / seasonal 74 · how-to after launch (adoption, not fault) 58 · planned test or drill language 41 · same-site recontacts and duplicates 27 · credit hold, routed to AR 12.",
+      "money": false
+    },
+    {
+      "id": "V-13",
+      "figure": "Governed watch time to owner: W-2 7 min; W-1 chronology moved 19 weeks earlier",
+      "method": "W-2: first mention 09:14 UTC → routed 09:21 UTC, 25 Sep. W-1: back-search on 23 Sep found an email coded \"commissioning\" 19 weeks before the 6 Sep mention. Quality decides its significance.",
+      "money": false
+    },
+    {
+      "id": "V-14",
+      "figure": "Scale anchors (\"How we count\" drawer)",
+      "method": "~1,800 interactions / working day · ~9,000 this week · 233,900 in 26 weeks · 18,500 {{platform:EST4}} panels (hero cohort = 6.7%) · ~9,100 RMAs in 26 weeks · ~$95m open backlog · ~3,500 partner accounts.",
+      "money": false
+    }
+  ],
+  "unitCosts": {
+    "tier1ContactUsd": [25, 60],
+    "excessFaultContactUsd": 750,
+    "breakdown": [
+      {
+        "label": "Truck roll",
+        "usd": 450
+      },
+      {
+        "label": "Tier-3 escalation",
+        "usd": 150
+      },
+      {
+        "label": "NFF return share",
+        "usd": 150
+      }
+    ],
+    "detectorReplacementUsd": 120
+  },
+  "valueStatements": [
+    "Each platform, release, date code and partner measured against its own baseline — special cause, not volume.",
+    "Every signal joined to firmware, batch, RMA and orders, and routed to the executive who owns it.",
+    "Every number opens to the calls, cases and RMAs behind it.",
+    "LiSN drafts; your owners approve. Read-only, in your cloud."
+  ],
+  "neverOnScreen": "Never on screen: revenue, savings, ROI or payback.",
+  "howWeCount": {
+    "title": "How we count",
+    "unitCostLines": [
+      "tier-1 contact $25–60",
+      "fully loaded field cost per excess fault contact $750 (truck roll $450 · Tier-3 escalation $150 · NFF return share $150)",
+      "detector field replacement $120 per unit"
+    ],
+    "footer": "Never on screen: revenue, savings, ROI or payback."
+  },
+  "money": {
+    "heroToDate": {
+      "amount": 12000,
+      "currency": "USD",
+      "display": "≈ $12k",
+      "illustrative": true,
+      "valueId": "V-01",
+      "label": "Hero exposure to date"
+    },
+    "heroProjected": {
+      "amount": 150000,
+      "currency": "USD",
+      "display": "≈ $0.15m",
+      "illustrative": true,
+      "valueId": "V-02",
+      "label": "Hero projected over 12 weeks"
+    },
+    "heroAvoidableField": {
+      "amount": 100000,
+      "currency": "USD",
+      "display": "≈ $0.1m",
+      "illustrative": true,
+      "valueId": "V-03",
+      "label": "Hero field cost avoidable if paused"
+    },
+    "dateCodeExposure": {
+      "amount": 350000,
+      "currency": "USD",
+      "display": "up to $0.35m",
+      "illustrative": true,
+      "valueId": "V-05",
+      "label": "Date-code field exposure"
+    },
+    "warrantyAndField": {
+      "amount": 500000,
+      "currency": "USD",
+      "display": "≤ $0.5m",
+      "illustrative": true,
+      "valueId": "V-02,V-05",
+      "label": "Warranty & field (hero projected + date code; both USD)"
+    },
+    "partnerSellIn": {
+      "amount": 6400000,
+      "currency": "USD",
+      "display": "$6.4m",
+      "illustrative": true,
+      "valueId": "V-06",
+      "label": "Partner sell-in in view"
+    },
+    "partnerGap": {
+      "amount": 1400000,
+      "currency": "USD",
+      "display": "≈ $1.4m / yr",
+      "illustrative": true,
+      "valueId": "V-06",
+      "label": "Sell-in gap if −22% persists"
+    },
+    "partnerBacklog": {
+      "amount": 900000,
+      "currency": "USD",
+      "display": "$0.9m",
+      "illustrative": true,
+      "valueId": "V-06",
+      "label": "Partner backlog"
+    },
+    "backlogAtRisk": {
+      "amount": 2300000,
+      "currency": "USD",
+      "display": "$2.3m",
+      "illustrative": true,
+      "valueId": "V-07",
+      "label": "Backlog at risk"
+    },
+    "openBacklog": {
+      "amount": 95000000,
+      "currency": "USD",
+      "display": "~$95m",
+      "illustrative": true,
+      "valueId": "V-07",
+      "label": "Open backlog"
+    },
+    "invoicesInDispute": {
+      "amount": 1100000,
+      "currency": "GBP",
+      "display": "£1.1m",
+      "illustrative": true,
+      "valueId": "V-08",
+      "label": "Invoices in dispute"
+    },
+    "dsoCash": {
+      "amount": 1000000,
+      "currency": "GBP",
+      "display": "≈ £1.0m",
+      "illustrative": true,
+      "valueId": "V-08",
+      "label": "DSO +6 days, cash tied up"
+    }
+  },
+  "governedWatch": {
+    "title": "Governed safety & cyber watch",
+    "band": "RESTRICTED",
+    "headline": "2 open watch items (restricted)",
+    "pnl": "P&L: Restricted",
+    "items": [
+      {
+        "id": "W-1",
+        "row": "Safety · S1 watch · single source → awaiting corroboration · routed to Quality + CLO · 6 Sep 14:38 UTC · status: under Quality review · confidence L–M 0.35",
+        "secondLine": "Back-search found an earlier related email (19 weeks before), coded 'commissioning' — chronology updated 23 Sep 10:02. Quality decides significance.",
+        "firstMentionAt": "2026-09-06T14:31:00Z",
+        "routedAt": "2026-09-06T14:38:00Z",
+        "chronologyUpdatedAt": "2026-09-23T10:02:00Z",
+        "confidence": {
+          "level": "L–M",
+          "p": 0.35
+        }
+      },
+      {
+        "id": "W-2",
+        "row": "Cyber · S1 candidate · 4 unrelated sites · candidate first mention 25 Sep 09:14 UTC · not in PSIRT queue at detection · routed to PSIRT + CLO 09:21 UTC · confidence L 0.30",
+        "firstMentionAt": "2026-09-25T09:14:00Z",
+        "routedAt": "2026-09-25T09:21:00Z",
+        "confidence": {
+          "level": "L",
+          "p": 0.3
+        },
+        "clock": {
+          "startUtc": "2026-09-25T09:14:00Z",
+          "elapsedLabel": "8h 46m",
+          "refsHours": [24, 72],
+          "caption": "8h 46m since candidate first mention · 24h / 72h ticks are reference only — PSIRT determines whether awareness has begun."
+        }
+      }
+    ],
+    "footer": "LiSN does not determine reportability.",
+    "modal": "Access limited to Quality, PSIRT and Legal roles. Routed to Quality / PSIRT — human decision. LiSN does not determine reportability."
+  },
+  "evidenceReadiness": {
+    "title": "Evidence readiness",
+    "chip": "S4 · Efficiency",
+    "extraChip": "ENABLER",
+    "body": "Firmware recorded on 38% of {{platform:EST4}} trouble cases; recoverable from text for 61% of the rest; serial/date code on 44% of RMAs; end-site on 57%.",
+    "label": "Discovery measures this first — on your data.",
+    "confidenceShort": "H 0.90 · K blank-field counts / I recoverable share",
+    "owners": "Quality · VP Service & Tech Support · CIO",
+    "linkTo": "/installed-base#why-late"
+  }
+}

@@ -1,0 +1,795 @@
+{
+  "title": "Is the separation costing us?",
+  "subtitle": "What distributors experience after each entity, portal, ERP and EDI cutover — against a control region not yet cut over.",
+  "kpis": [
+    {
+      "label": "SIGNALS ABOVE THRESHOLD",
+      "value": "1"
+    },
+    {
+      "label": "CUTOVERS CLEAN vs CONTROL",
+      "value": "3 of 4"
+    },
+    {
+      "label": "INVOICES IN DISPUTE",
+      "value": "£1.1m / 212",
+      "money": true
+    },
+    {
+      "label": "DSO TOP-10 {{region:UK-EU}}",
+      "value": "+6 days",
+      "sub": "≈ £1.0m cash tied up",
+      "money": true
+    },
+    {
+      "label": "PORTAL-LOGIN CONTACTS",
+      "value": "3.4×"
+    },
+    {
+      "label": "EXCESS CONTACTS",
+      "value": "~48 / week"
+    }
+  ],
+  "cutoverTimeline": {
+    "series": [
+      {
+        "name": "{{region:UK-EU}} remit-to & entity contacts",
+        "values": [
+          32, 31, 30, 30, 33, 31, 31, 29, 32, 32, 31, 32, 32, 26, 28, 30, 29,
+          28, 26, 30, 30, 27, 55, 80, 82, 81
+        ],
+        "colour": "#f97316"
+      },
+      {
+        "name": "{{region:UK-EU}} portal login",
+        "values": [
+          21, 24, 25, 21, 21, 23, 22, 23, 21, 24, 20, 22, 25, 22, 24, 20, 20,
+          20, 22, 19, 21, 24, 51, 74, 76, 75
+        ],
+        "colour": "#f59e0b"
+      },
+      {
+        "name": "Control regions — remit-to & entity",
+        "values": [
+          42, 40, 41, 40, 40, 43, 42, 39, 39, 40, 38, 42, 40, 42, 38, 40, 42,
+          37, 39, 38, 40, 38, 42, 43, 44, 45
+        ],
+        "dashed": true,
+        "colour": "#a3a3a3"
+      }
+    ],
+    "markers": [
+      {
+        "week": 16,
+        "date": "2026-07-14",
+        "label": "14 Jul · NA portal",
+        "style": "cutover"
+      },
+      {
+        "week": 19,
+        "date": "2026-08-04",
+        "label": "4 Aug · {{region:APAC}} order management",
+        "style": "cutover"
+      },
+      {
+        "week": 20,
+        "date": "2026-08-12",
+        "label": "12 Aug · EDI mapping",
+        "style": "cutover"
+      },
+      {
+        "week": 23,
+        "date": "2026-09-01",
+        "label": "1 Sep · {{region:UK-EU}} entity",
+        "style": "cutover"
+      },
+      {
+        "week": 24.3,
+        "date": "2026-09-10",
+        "label": "10 Sep · above threshold",
+        "style": "threshold"
+      }
+    ],
+    "caption": "2.7× since 1 Sep (30 → 81 a week); control 1.1×. Above threshold since 10 Sep."
+  },
+  "scorecard": [
+    {
+      "id": "co-na-portal",
+      "cells": [
+        "NA portal",
+        "14 Jul",
+        "420 ESDs",
+        "1.0×",
+        "1.0×",
+        "Clean vs control",
+        "CIO / PMO"
+      ],
+      "tone": [null, null, null, null, null, "green", null]
+    },
+    {
+      "id": "co-apac-om",
+      "cells": [
+        "{{region:APAC}} order management",
+        "4 Aug",
+        "96 distributors",
+        "1.0×",
+        "1.0×",
+        "Clean vs control",
+        "CIO / PMO"
+      ],
+      "tone": [null, null, null, null, null, "green", null]
+    },
+    {
+      "id": "co-edi",
+      "cells": [
+        "EDI mapping",
+        "12 Aug",
+        "6 EDI distributors",
+        "1.1×",
+        "1.0×",
+        "Clean vs control",
+        "Order-management lead"
+      ],
+      "tone": [null, null, null, null, null, "green", null]
+    },
+    {
+      "id": "co-ukeu-entity",
+      "cells": [
+        "{{region:UK-EU}} entity",
+        "1 Sep",
+        "14 distributors",
+        "2.7×",
+        "1.1×",
+        "S2",
+        "CIO / CFO / Regional GM {{region:UK-EU}}"
+      ],
+      "tone": [null, null, null, "orange", null, "amber", null],
+      "linkTo": "/separation"
+    }
+  ],
+  "topicStack": {
+    "title": "Separation contacts by topic — {{region:UK-EU}}, since 1 Sep",
+    "stacks": [
+      "{{region:UK}}",
+      "{{region:DE}}",
+      "{{region:NL}}",
+      "{{region:FR}}",
+      "Other EU"
+    ],
+    "bars": [
+      {
+        "key": "entity-mismatch",
+        "label": "Invoice entity mismatch",
+        "values": [79, 29, 16, 11, 7],
+        "overlay": 2.7
+      },
+      {
+        "key": "remit-to",
+        "label": "Remit-to / bank details",
+        "values": [56, 21, 12, 8, 5],
+        "overlay": 2.8
+      },
+      {
+        "key": "vat",
+        "label": "VAT number",
+        "values": [29, 11, 7, 4, 3],
+        "overlay": 2.5
+      },
+      {
+        "key": "portal-login",
+        "label": "Portal login",
+        "values": [156, 52, 33, 22, 13],
+        "overlay": 3.4
+      },
+      {
+        "key": "part-number",
+        "label": "Part-number mapping",
+        "values": [28, 11, 7, 4, 3],
+        "overlay": 1.8
+      },
+      {
+        "key": "missing-ack",
+        "label": "Missing acknowledgement",
+        "values": [13, 5, 3, 2, 1],
+        "overlay": 1.2
+      },
+      {
+        "key": "legacy-address",
+        "label": "Legacy address bounced",
+        "values": [11, 4, 2, 2, 1],
+        "overlay": 1.7
+      }
+    ],
+    "details": [
+      {
+        "key": "entity-mismatch",
+        "title": "Invoice entity mismatch",
+        "chip": "S2",
+        "big": "142",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "Distributors",
+            "value": "14"
+          },
+          {
+            "label": "Invoices linked",
+            "value": "87"
+          },
+          {
+            "label": "Value",
+            "value": "£0.46m"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "41%"
+          },
+          {
+            "label": "Avg age",
+            "value": "12.4 d"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Most contacts quote an invoice entity that does not match the entity on the distributor's PO. The pattern starts on 1 Sep and is absent in the control regions.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting CIO triage",
+        "action": "Separation defect ticket — candidate: PO-entity mapping in the EDI layer (engineering to confirm).",
+        "phrasings": [
+          "invoice entity doesn't match our PO",
+          "new bank details",
+          "which entity do we pay",
+          "credit note",
+          "re-issue"
+        ],
+        "linkTo": "/separation"
+      },
+      {
+        "key": "remit-to",
+        "title": "Remit-to / bank details",
+        "chip": "S2",
+        "big": "102",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "This week",
+            "value": "28"
+          },
+          {
+            "label": "Pre-cutover / wk",
+            "value": "10"
+          },
+          {
+            "label": "vs pre-cutover",
+            "value": "2.8×"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Remit-to / bank details contacts are 2.8× their pre-cutover rate since 1 Sep; the control regions are at 1.1×.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting CIO triage",
+        "action": "Included in the draft separation defect ticket.",
+        "phrasings": [
+          "new bank details",
+          "remit-to not recognised",
+          "which account do we pay"
+        ]
+      },
+      {
+        "key": "vat",
+        "title": "VAT number",
+        "chip": "S2",
+        "big": "54",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "This week",
+            "value": "15"
+          },
+          {
+            "label": "Pre-cutover / wk",
+            "value": "6"
+          },
+          {
+            "label": "vs pre-cutover",
+            "value": "2.5×"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "VAT number contacts are 2.5× their pre-cutover rate since 1 Sep; the control regions are at 1.1×.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting CIO triage",
+        "action": "Included in the draft separation defect ticket.",
+        "phrasings": [
+          "VAT number changed",
+          "VAT mismatch on invoice",
+          "reverse charge query"
+        ]
+      },
+      {
+        "key": "portal-login",
+        "title": "Portal login",
+        "chip": "S2",
+        "big": "276",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "This week",
+            "value": "75"
+          },
+          {
+            "label": "Pre-cutover / wk",
+            "value": "22"
+          },
+          {
+            "label": "vs pre-cutover",
+            "value": "3.4×"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Portal login contacts are 3.4× their pre-cutover rate since 1 Sep; the control regions are at 1.1×.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting Regional GM {{region:UK-EU}}",
+        "action": "Knowledge fix: login guidance for the new portal — draft, not sent.",
+        "phrasings": [
+          "can't log in to the new portal",
+          "password reset",
+          "account not migrated"
+        ]
+      },
+      {
+        "key": "part-number",
+        "title": "Part-number mapping",
+        "chip": "S3",
+        "big": "53",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "This week",
+            "value": "14"
+          },
+          {
+            "label": "Pre-cutover / wk",
+            "value": "8"
+          },
+          {
+            "label": "vs pre-cutover",
+            "value": "1.8×"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Part-number mapping contacts are 1.8× their pre-cutover rate since 1 Sep; the control regions are at 1.1×.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting CIO triage",
+        "action": "Included in the draft separation defect ticket.",
+        "phrasings": [
+          "part number re-keyed",
+          "price mismatch",
+          "old part number rejected"
+        ]
+      },
+      {
+        "key": "missing-ack",
+        "title": "Missing acknowledgement",
+        "chip": "Within band",
+        "big": "24",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "This week",
+            "value": "6"
+          },
+          {
+            "label": "Pre-cutover / wk",
+            "value": "5"
+          },
+          {
+            "label": "vs pre-cutover",
+            "value": "1.2×"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Missing acknowledgement contacts are 1.2× their pre-cutover rate since 1 Sep; the control regions are at 1.1×.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": [
+          "no order acknowledgement",
+          "ack missing",
+          "order not confirmed"
+        ]
+      },
+      {
+        "key": "legacy-address",
+        "title": "Legacy address bounced",
+        "chip": "S3",
+        "big": "20",
+        "bigLabel": "contacts since 1 Sep",
+        "grid": [
+          {
+            "label": "This week",
+            "value": "5"
+          },
+          {
+            "label": "Pre-cutover / wk",
+            "value": "3"
+          },
+          {
+            "label": "vs pre-cutover",
+            "value": "1.7×"
+          },
+          {
+            "label": "Control",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Legacy address bounced contacts are 1.7× their pre-cutover rate since 1 Sep; the control regions are at 1.1×.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting CIO triage",
+        "action": "Included in the draft separation defect ticket.",
+        "phrasings": ["email bounced", "old address", "mailbox not found"]
+      }
+    ],
+    "defaultOpen": "entity-mismatch"
+  },
+  "topicTotals": [
+    {
+      "key": "entity-mismatch",
+      "label": "Invoice entity mismatch",
+      "total": 142,
+      "perWeekW26": 38,
+      "preCutoverPerWeek": 14,
+      "ratio": 2.7
+    },
+    {
+      "key": "remit-to",
+      "label": "Remit-to / bank details",
+      "total": 102,
+      "perWeekW26": 28,
+      "preCutoverPerWeek": 10,
+      "ratio": 2.8
+    },
+    {
+      "key": "vat",
+      "label": "VAT number",
+      "total": 54,
+      "perWeekW26": 15,
+      "preCutoverPerWeek": 6,
+      "ratio": 2.5
+    },
+    {
+      "key": "portal-login",
+      "label": "Portal login",
+      "total": 276,
+      "perWeekW26": 75,
+      "preCutoverPerWeek": 22,
+      "ratio": 3.4
+    },
+    {
+      "key": "part-number",
+      "label": "Part-number mapping",
+      "total": 53,
+      "perWeekW26": 14,
+      "preCutoverPerWeek": 8,
+      "ratio": 1.8
+    },
+    {
+      "key": "missing-ack",
+      "label": "Missing acknowledgement",
+      "total": 24,
+      "perWeekW26": 6,
+      "preCutoverPerWeek": 5,
+      "ratio": 1.2
+    },
+    {
+      "key": "legacy-address",
+      "label": "Legacy address bounced",
+      "total": 20,
+      "perWeekW26": 5,
+      "preCutoverPerWeek": 3,
+      "ratio": 1.7
+    }
+  ],
+  "defectSplit": {
+    "faqable": 118,
+    "defect": 180,
+    "caption": "FAQ-able contacts go to knowledge fixes; defects go to IT. ~290 contacts avoidable over 6 weeks if fixed."
+  },
+  "gates": [
+    {
+      "id": "gate-ukeu-defect",
+      "artefactType": "defect-ticket",
+      "status": "awaiting",
+      "title": "Separation defect ticket — awaiting CIO triage",
+      "chip": "Awaiting triage",
+      "auditLine": "Drafted by LiSN 10 Sep 09:00 UTC · routed 09:00",
+      "owner": "CIO / separation PMO",
+      "approveEnabledFor": ["CIO / separation PMO"],
+      "approveLabel": "Accept for triage",
+      "disabledTooltip": "Triage sits with CIO / separation PMO"
+    },
+    {
+      "id": "gate-ukeu-notice",
+      "artefactType": "distributor-notice",
+      "status": "not_sent",
+      "title": "Distributor notice (corrected remit-to) — awaiting Regional GM {{region:UK-EU}} approval · not sent",
+      "chip": "Not sent",
+      "owner": "Regional GM UK-EU",
+      "approveEnabledFor": ["Regional GM UK-EU"],
+      "approveLabel": "Approve notice",
+      "disabledTooltip": "Approval sits with Regional GM {{region:UK-EU}}"
+    },
+    {
+      "id": "gate-ukeu-dunning",
+      "artefactType": "dunning-pause",
+      "status": "awaiting",
+      "title": "Dunning pause on disputed invoices — CFO decision",
+      "chip": "CFO decision",
+      "owner": "CFO",
+      "approveEnabledFor": ["CFO"],
+      "approveLabel": "Approve dunning pause",
+      "disabledTooltip": "Decision sits with CFO"
+    }
+  ],
+  "enhanced": {
+    "title": "✨ Why invoices go into dispute",
+    "badge": "Joined with AR & invoice data",
+    "violetLine": "Uses read-only extracts of AR disputes and invoice headers for the 14 affected distributors.",
+    "right": ["Data as of 25 Sep 18:00 UTC", "212 invoices in dispute"],
+    "joinTags": [
+      {
+        "key": "AR",
+        "value": "disputes (read-only)"
+      },
+      {
+        "key": "INVOICES",
+        "value": "headers and entities"
+      },
+      {
+        "key": "REGION",
+        "value": "{{region:UK-EU}}"
+      }
+    ],
+    "stats": [
+      {
+        "label": "Disputed invoices",
+        "value": "212"
+      },
+      {
+        "label": "Value",
+        "value": "£1.1m",
+        "money": true
+      },
+      {
+        "label": "Closed since cutover",
+        "value": "64"
+      },
+      {
+        "label": "Avg age",
+        "value": "11.2 d"
+      },
+      {
+        "label": "Beyond terms",
+        "value": "38"
+      },
+      {
+        "label": "DSO top-10",
+        "value": "+6 d"
+      }
+    ],
+    "driversTitle": "Why invoices go into dispute",
+    "drivers": [
+      {
+        "label": "Invoice entity ≠ PO entity",
+        "meta": "41% · 87 invoices",
+        "value": 87,
+        "max": 100,
+        "chip": "High"
+      },
+      {
+        "label": "Remit-to bank details not recognised",
+        "meta": "24% · 51 invoices",
+        "value": 51,
+        "max": 100,
+        "chip": "High"
+      },
+      {
+        "label": "Part number re-keyed — price mismatch",
+        "meta": "15% · 32 invoices",
+        "value": 32,
+        "max": 100,
+        "chip": "Medium"
+      },
+      {
+        "label": "Duplicate after re-issue",
+        "meta": "11% · 23 invoices",
+        "value": 23,
+        "max": 100,
+        "chip": "Medium"
+      },
+      {
+        "label": "VAT number mismatch",
+        "meta": "9% · 19 invoices",
+        "value": 19,
+        "max": 100,
+        "chip": "Watch"
+      }
+    ],
+    "watchlistTitle": "Aged disputes",
+    "watchlist": [
+      {
+        "chip": "S2",
+        "title": "{{partner:DIST-UK-004}}",
+        "age": "19 d",
+        "stage": "£148k · 23 invoices",
+        "blocker": "Blocker: entity mismatch — awaiting credit note",
+        "tags": ["{{region:UK}}"]
+      },
+      {
+        "chip": "S2",
+        "title": "{{partner:DIST-DE-012}}",
+        "age": "16 d",
+        "stage": "£96k · 14 invoices",
+        "blocker": "Blocker: remit-to not recognised",
+        "tags": ["{{region:DE}}"]
+      },
+      {
+        "chip": "S3",
+        "title": "{{partner:DIST-NL-007}}",
+        "age": "14 d",
+        "stage": "£71k · 9 invoices",
+        "blocker": "Blocker: part number re-keyed",
+        "tags": ["{{region:NL}}"]
+      },
+      {
+        "chip": "S3",
+        "title": "{{partner:DIST-UK-019}}",
+        "age": "12 d",
+        "stage": "£55k · 7 invoices",
+        "blocker": "Blocker: duplicate after re-issue",
+        "tags": ["{{region:UK}}"]
+      }
+    ]
+  },
+  "legacy": {
+    "rows": [
+      {
+        "text": "31% of {{region:Canada}} partners' training enquiries still use the legacy address · forwarding ends in 45 days",
+        "chip": "S3"
+      },
+      {
+        "text": "Repository retiring 31 Dec holds 1,840 interactions linked to 12 active signals",
+        "chip": "S3"
+      }
+    ],
+    "gate": "Evidence-preservation request — awaiting Legal"
+  },
+  "signalWall": {
+    "title": "LiSN Signal Wall",
+    "subtitle": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC",
+    "pill": "Data as of 25 Sep",
+    "cards": [
+      {
+        "id": "wall-ukeu",
+        "chips": ["#5 of 5", "S2 · Separation"],
+        "title": "{{region:UK-EU}} entity cutover — remit-to and invoice friction",
+        "body": "Since {{region:UK-EU}} invoicing moved to the new KGS entity on 1 Sep, remit-to and entity contacts are 2.7× pre-cutover against 1.1× in the control regions. Top cluster: 'invoice entity doesn't match our PO entity'.",
+        "metric": "2.7× (control 1.1×)",
+        "trend": "▲ Rising · above threshold since 10 Sep",
+        "linkLabel": "Open signal →",
+        "linkTo": "/separation#scorecard",
+        "confidenceShort": "H on timing (K) · M on cause (I)",
+        "owner": "CIO / separation PMO",
+        "spark": [30, 27, 55, 80, 82, 81]
+      },
+      {
+        "id": "wall-legacy",
+        "chips": ["S3 · Operational"],
+        "title": "Legacy address residue",
+        "body": "31% of {{region:Canada}} partners' training enquiries still use the legacy address; forwarding ends in 45 days.",
+        "metric": "31% on the legacy address",
+        "trend": "Stable · watch"
+      },
+      {
+        "id": "wall-clean",
+        "chips": ["Clean vs control"],
+        "title": "NA portal, {{region:APAC}} order management and EDI mapping",
+        "body": "Three cutovers show no distributor friction against the control regions (1.0×–1.1×).",
+        "metric": "3 of 4 cutovers clean",
+        "trend": "Stable"
+      }
+    ],
+    "footer": [
+      {
+        "value": 0,
+        "label": "S1 · Life-safety"
+      },
+      {
+        "value": 1,
+        "label": "S2 · Material impact"
+      },
+      {
+        "value": 1,
+        "label": "S3 · Operational"
+      },
+      {
+        "value": 3,
+        "label": "Clean"
+      }
+    ]
+  },
+  "diagnosis": {
+    "title": "LiSN evidence summary",
+    "confidenceShort": "H on timing (K) · M on cause (I)",
+    "main": "One cutover, not the programme: friction is concentrated in the 14 distributors on the new {{region:UK-EU}} entity.",
+    "changed": "Since 1 Sep, remit-to and entity contacts 2.7× (control 1.1×) and portal logins 3.4×; 212 invoices, £1.1m, in dispute; top cluster 'invoice entity doesn't match our PO entity'.",
+    "decideFirst": "CIO to triage the draft separation defect ticket (candidate: PO-entity mapping in the EDI layer — engineering to confirm). CFO to decide on a dunning pause for the 212 disputed invoices."
+  },
+  "disputeTrend": {
+    "weeks": [22, 23, 24, 25, 26],
+    "cumulativeGbpK": [95, 240, 520, 810, 1100],
+    "dsoDeltaDays": [0, 1, 3, 5, 6],
+    "currency": "GBP"
+  },
+  "panelCopy": {
+    "S-0": {
+      "title": "Key figures"
+    },
+    "S-B": {
+      "title": "Friction by cutover — affected region vs control",
+      "unit": "contacts / week"
+    },
+    "S-C": {
+      "title": "Cutover scorecard",
+      "anchor": "scorecard",
+      "columns": [
+        "CUTOVER",
+        "DATE",
+        "AFFECTED",
+        "FRICTION vs PRE",
+        "CONTROL",
+        "STATUS",
+        "OWNER"
+      ]
+    },
+    "S-D": {
+      "title": "Separation contacts by topic — {{region:UK-EU}}, since 1 Sep",
+      "unit": "contacts since 1 Sep"
+    },
+    "S-E": {
+      "title": "Defect vs communicated change",
+      "columns": [
+        "Expected, communicated change (FAQ-able)",
+        "Defect (wrong entity, lost acknowledgement)"
+      ]
+    },
+    "S-F": {
+      "title": "Decisions",
+      "footer": "Send buttons stay disabled; the owner is named on each."
+    },
+    "S-G": {
+      "title": "✨ Why invoices go into dispute",
+      "unit": "£ (GBP, illustrative)"
+    },
+    "S-H": {
+      "title": "Legacy residue"
+    },
+    "S-I": {
+      "title": "LiSN Signal Wall",
+      "sub": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC"
+    },
+    "S-J": {
+      "title": "LiSN evidence summary"
+    }
+  }
+}

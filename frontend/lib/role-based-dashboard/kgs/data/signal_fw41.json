@@ -1,0 +1,1159 @@
+{
+  "signal": {
+    "id": "fw-4-1",
+    "displayId": "SIG-2609-001",
+    "question": "installed-base",
+    "ucIds": ["UC-Q-1", "UC-Q-14", "UC-Q-15", "UC-Q-10"],
+    "rank": 1,
+    "rankOf": 5,
+    "rankScore": 0.84,
+    "rankFactors": [
+      {
+        "label": "Severity",
+        "value": "S2",
+        "weight": 0.3,
+        "score": 0.8
+      },
+      {
+        "label": "Rate ratio",
+        "value": "3.1×",
+        "weight": 0.2,
+        "score": 0.9
+      },
+      {
+        "label": "Panels on version",
+        "value": "1,240 (+5,560 eligible)",
+        "weight": 0.2,
+        "score": 0.85
+      },
+      {
+        "label": "Source independence",
+        "value": "0.78",
+        "weight": 0.15,
+        "score": 0.78
+      },
+      {
+        "label": "Est. field cost",
+        "value": "≈ $0.15m projected",
+        "weight": 0.15,
+        "score": 0.86
+      }
+    ],
+    "aboveThreshold": true,
+    "aboveSince": "2026-09-16T06:10:00Z",
+    "title": "{{platform:EST4}} fw {{fw:EST4@4.1}} — devices not found after upgrade",
+    "headline": "{{platform:EST4}} · firmware {{fw:EST4@4.1}} (synthetic) — 'devices not found after upgrade' contacts 3.1× panels still on {{fw:EST4@4.0}}; 9 partners, 3 regions; 1,240 panels on version",
+    "metric": {
+      "display": "6.2 vs 2.0",
+      "value": 6.2,
+      "baseline": 2.0,
+      "ratio": 3.1,
+      "unit": "contacts per 1,000 panel-weeks",
+      "line": "6.2 contacts per 1,000 panel-weeks on {{fw:EST4@4.1}} vs 2.0 on {{fw:EST4@4.0}} · same 3 weeks · event-time aligned to each panel's upgrade · Poisson exact p<0.001"
+    },
+    "severity": {
+      "class": "S2",
+      "word": "Material impact",
+      "domain": "Quality",
+      "type": "cliff",
+      "typeNote": "Cliff (step at release)",
+      "blastRadius": {
+        "headline": "Blast radius 1,240 panels · ~610 sites · 9 partners · 3 regions ({{region:US-SE}}, {{region:US-SW}}, {{region:Canada}})",
+        "note": "5,560 eligible panels not yet upgraded"
+      },
+      "incident": {
+        "flag": false,
+        "note": "Incident flag: Off — no fire event, injury or dispatch mentioned"
+      },
+      "escalationRule": "Any S1 phrase in this cohort routes to Quality immediately.",
+      "compact": "S2 ▲ · Cliff · 1,240 panels · Incident off"
+    },
+    "confidence": {
+      "level": "M",
+      "p": 0.7,
+      "short": "M 0.70 · K 15 / I 8",
+      "known": {
+        "count": 15,
+        "label": "cases with firmware in record"
+      },
+      "inferred": {
+        "count": 8,
+        "label": "imputed from ship date and download logs"
+      },
+      "sourceIndependence": {
+        "score": 0.78,
+        "scoreDisplay": "0.78",
+        "partners": 9,
+        "channels": 4,
+        "note": "after-hours counted with voice"
+      }
+    },
+    "chips": [
+      {
+        "icon": "Sparkles",
+        "text": "New phrasing — first seen 4 Sep",
+        "ucId": "UC-Q-14"
+      },
+      {
+        "icon": "Repeat",
+        "text": "Workaround spreading: 'rolled back to {{fw:EST4@4.0}}' in 5 cases",
+        "ucId": "UC-Q-15"
+      },
+      {
+        "icon": "Scale",
+        "text": "Effect persists across certified and uncertified installers — product-leaning (indeterminate below N=15)",
+        "ucId": "UC-Q-10",
+        "attributionPos": 0.3
+      }
+    ],
+    "counterEvidence": "412 panels on {{fw:EST4@4.1}} at 180 sites show no symptom; symptom concentrates in configurations with more than two signalling loops — a candidate, not a cause",
+    "joinTags": [
+      {
+        "key": "BRAND",
+        "value": "{{brand:Edwards}}"
+      },
+      {
+        "key": "PLATFORM",
+        "value": "{{platform:EST4}}"
+      },
+      {
+        "key": "FW",
+        "value": "{{fw:EST4@4.1}} (synthetic)"
+      },
+      {
+        "key": "REGION",
+        "value": "{{region:US-SE}} · {{region:US-SW}} · {{region:Canada}}"
+      },
+      {
+        "key": "PARTNERS",
+        "value": "9 ESDs"
+      },
+      {
+        "key": "SITE",
+        "value": "commercial office · education"
+      },
+      {
+        "key": "CHANNELS",
+        "value": "calls · cases · email · RMA · after-hours"
+      },
+      {
+        "key": "TIME",
+        "value": "weeks 1–3 post-release"
+      }
+    ],
+    "pnl": {
+      "primary": "Warranty & field cost",
+      "secondary": "tech-support cost-to-serve",
+      "compact": "P&L → Warranty & field cost · ≈ $0.15m proj.",
+      "exposure": {
+        "lines": [
+          {
+            "text": "P&L: Warranty & field cost · secondary: tech-support cost-to-serve"
+          },
+          {
+            "text": "To date ≈ $12k · projected ≈ $0.15m over 12 weeks if the rollout continues unchanged",
+            "valueId": "V-01,V-02"
+          }
+        ],
+        "caption": "Small because it is week three.",
+        "subTiles": [
+          {
+            "text": "~140 excess contacts avoidable if the rollout is paused at week 3 — decision sits with VP Engineering",
+            "valueId": "V-03"
+          },
+          {
+            "text": "21 days ahead of the scheduled monthly RMA review",
+            "valueId": "V-04"
+          }
+        ]
+      }
+    },
+    "routing": {
+      "owner": "VP Engineering",
+      "cc": ["VP Service & Tech Support"],
+      "informed": ["Quality", "President"],
+      "presidentReason": "President sees this because S2 and blast radius exceed the agreed threshold."
+    },
+    "recommendedAction": "Owner to decide: engineering reproduction on the candidate configuration, and whether to pause the staged rollout and download of {{fw:EST4@4.1}}.",
+    "gates": [
+      {
+        "id": "gate-fw41-brief",
+        "artefactType": "investigation-brief",
+        "status": "awaiting",
+        "title": "Draft investigation brief — awaiting VP Engineering approval",
+        "chip": "Awaiting approval",
+        "auditLine": "Drafted by LiSN 16 Sep 06:10 UTC · routed 06:10 · IB-2609-004 (synthetic)",
+        "owner": "VP Engineering",
+        "approveEnabledFor": ["VP Engineering"],
+        "approveLabel": "Approve investigation",
+        "disabledTooltip": "Approval sits with VP Engineering",
+        "onApprove": {
+          "title": "Investigation approved by VP Engineering · reproduction on candidate configuration",
+          "auditLine": "Approved · investigation opened · audit logged {ts}",
+          "openLines": [
+            "Rollout decision: pending — VP Engineering",
+            "LiSN keeps watching: the {{fw:EST4@4.1}} rate is re-measured daily against {{fw:EST4@4.0}}."
+          ],
+          "chip": "Investigation approved",
+          "toast": {
+            "title": "Investigation opened",
+            "body": "Approved by VP Engineering · audit logged {ts} · nothing sent outside LiSN"
+          },
+          "auditEntry": "{ts} · VP Engineering approved investigation · INV-2609-031 (synthetic)",
+          "investigationId": "INV-2609-031"
+        },
+        "onApproveSecondary": {
+          "gateId": "gate-fw41-kin",
+          "title": "Awaiting VP Service & Tech Support approval — not sent"
+        },
+        "decisionRequest": {
+          "buttonLabel": "Ask VP Engineering for a decision",
+          "doneLabel": "Decision requested",
+          "chip": "Decision requested by President",
+          "auditEntry": "{ts} · President requested a decision from VP Engineering"
+        }
+      },
+      {
+        "id": "gate-fw41-kin",
+        "artefactType": "known-issue-note",
+        "status": "not_sent",
+        "title": "Draft known-issue note for tech-support agents — not sent",
+        "chip": "Not sent",
+        "owner": "VP Service & Tech Support",
+        "approveEnabledFor": ["VP Service & Tech Support"],
+        "disabledTooltip": "Approval sits with VP Service & Tech Support"
+      }
+    ],
+    "evidenceCount": 23,
+    "nextReview": {
+      "date": "2026-10-07",
+      "label": "7 Oct · next monthly RMA review",
+      "leadDays": 21
+    },
+    "drillRoute": "/installed-base/signal/fw-4-1",
+    "headerTitle": "Signal #1 of 5 — firmware {{fw:EST4@4.1}} cohort",
+    "subline": "First seen 4 Sep · above threshold since 16 Sep · routed to VP Engineering 16 Sep 06:10 UTC · SIG-2609-001 (synthetic)",
+    "gateFooter": "LiSN aids resolution. Nothing is sent until the owner approves.",
+    "whyRanked": {
+      "title": "#1 of 5 · Why ranked here?",
+      "line": "Rank score 0.84 · next: D-2 date-code window 0.71",
+      "footnote": "Ranking = severity × rate ratio × panels on version × source independence × est. field cost. The score orders signals; it is not a probability."
+    }
+  },
+  "lineage": {
+    "title": "Contacts per 1,000 panel-weeks — fw {{fw:EST4@4.1}} vs {{fw:EST4@4.0}} (synthetic)",
+    "series": [
+      {
+        "label": "{{fw:EST4@4.0}} (prior)",
+        "versionRaw": "4.0",
+        "colour": "#d4d4d4",
+        "points": [
+          {
+            "week": 1,
+            "weekStart": "2026-03-30",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 2,
+            "weekStart": "2026-04-06",
+            "contacts": 13,
+            "panels": 6800,
+            "rate": 1.9,
+            "rateLow": 1.0,
+            "rateHigh": 2.9
+          },
+          {
+            "week": 3,
+            "weekStart": "2026-04-13",
+            "contacts": 13,
+            "panels": 6800,
+            "rate": 1.9,
+            "rateLow": 1.0,
+            "rateHigh": 2.9
+          },
+          {
+            "week": 4,
+            "weekStart": "2026-04-20",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 5,
+            "weekStart": "2026-04-27",
+            "contacts": 12,
+            "panels": 6800,
+            "rate": 1.8,
+            "rateLow": 0.9,
+            "rateHigh": 2.7
+          },
+          {
+            "week": 6,
+            "weekStart": "2026-05-04",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 7,
+            "weekStart": "2026-05-11",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 8,
+            "weekStart": "2026-05-18",
+            "contacts": 12,
+            "panels": 6800,
+            "rate": 1.8,
+            "rateLow": 0.9,
+            "rateHigh": 2.7
+          },
+          {
+            "week": 9,
+            "weekStart": "2026-05-25",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 10,
+            "weekStart": "2026-06-01",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 11,
+            "weekStart": "2026-06-08",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 12,
+            "weekStart": "2026-06-15",
+            "contacts": 15,
+            "panels": 6800,
+            "rate": 2.2,
+            "rateLow": 1.3,
+            "rateHigh": 3.3
+          },
+          {
+            "week": 13,
+            "weekStart": "2026-06-22",
+            "contacts": 15,
+            "panels": 6800,
+            "rate": 2.2,
+            "rateLow": 1.3,
+            "rateHigh": 3.3
+          },
+          {
+            "week": 14,
+            "weekStart": "2026-06-29",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 15,
+            "weekStart": "2026-07-06",
+            "contacts": 15,
+            "panels": 6800,
+            "rate": 2.2,
+            "rateLow": 1.3,
+            "rateHigh": 3.3
+          },
+          {
+            "week": 16,
+            "weekStart": "2026-07-13",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 17,
+            "weekStart": "2026-07-20",
+            "contacts": 15,
+            "panels": 6800,
+            "rate": 2.2,
+            "rateLow": 1.3,
+            "rateHigh": 3.3
+          },
+          {
+            "week": 18,
+            "weekStart": "2026-07-27",
+            "contacts": 12,
+            "panels": 6800,
+            "rate": 1.8,
+            "rateLow": 0.9,
+            "rateHigh": 2.7
+          },
+          {
+            "week": 19,
+            "weekStart": "2026-08-03",
+            "contacts": 15,
+            "panels": 6800,
+            "rate": 2.2,
+            "rateLow": 1.3,
+            "rateHigh": 3.3
+          },
+          {
+            "week": 20,
+            "weekStart": "2026-08-10",
+            "contacts": 13,
+            "panels": 6800,
+            "rate": 1.9,
+            "rateLow": 1.0,
+            "rateHigh": 2.9
+          },
+          {
+            "week": 21,
+            "weekStart": "2026-08-17",
+            "contacts": 12,
+            "panels": 6800,
+            "rate": 1.8,
+            "rateLow": 0.9,
+            "rateHigh": 2.7
+          },
+          {
+            "week": 22,
+            "weekStart": "2026-08-24",
+            "contacts": 14,
+            "panels": 6800,
+            "rate": 2.1,
+            "rateLow": 1.2,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 23,
+            "weekStart": "2026-08-31",
+            "contacts": 13,
+            "panels": 6020,
+            "rate": 2.2,
+            "rateLow": 1.2,
+            "rateHigh": 3.3
+          },
+          {
+            "week": 24,
+            "weekStart": "2026-09-07",
+            "contacts": 11,
+            "panels": 5650,
+            "rate": 1.9,
+            "rateLow": 1.0,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 25,
+            "weekStart": "2026-09-14",
+            "contacts": 11,
+            "panels": 5580,
+            "rate": 2.0,
+            "rateLow": 1.0,
+            "rateHigh": 3.1
+          },
+          {
+            "week": 26,
+            "weekStart": "2026-09-21",
+            "contacts": 11,
+            "panels": 5560,
+            "rate": 2.0,
+            "rateLow": 1.0,
+            "rateHigh": 3.1
+          }
+        ]
+      },
+      {
+        "label": "fw {{fw:EST4@4.1}} (synthetic)",
+        "versionRaw": "4.1",
+        "colour": "#f97316",
+        "points": [
+          {
+            "week": 23,
+            "weekStart": "2026-08-31",
+            "contacts": 1,
+            "panels": 780,
+            "rate": 1.3,
+            "rateLow": 0.0,
+            "rateHigh": 4.7
+          },
+          {
+            "week": 24,
+            "weekStart": "2026-09-07",
+            "contacts": 5,
+            "panels": 1150,
+            "rate": 4.3,
+            "rateLow": 1.1,
+            "rateHigh": 8.4
+          },
+          {
+            "week": 25,
+            "weekStart": "2026-09-14",
+            "contacts": 9,
+            "panels": 1220,
+            "rate": 7.4,
+            "rateLow": 3.3,
+            "rateHigh": 12.2
+          },
+          {
+            "week": 26,
+            "weekStart": "2026-09-21",
+            "contacts": 8,
+            "panels": 1240,
+            "rate": 6.5,
+            "rateLow": 2.7,
+            "rateHigh": 11.0
+          }
+        ]
+      }
+    ],
+    "aggregate": {
+      "label": "{{platform:EST4}} RMA rate — in control",
+      "unit": "% (4-week rolling)",
+      "values": [
+        0.26, 0.3, 0.27, 0.28, 0.26, 0.26, 0.26, 0.28, 0.28, 0.3, 0.3, 0.28,
+        0.3, 0.27, 0.3, 0.27, 0.3, 0.27, 0.28, 0.28, 0.26, 0.26, 0.28, 0.29,
+        0.26, 0.28
+      ],
+      "limit": 0.35,
+      "current": 0.28
+    },
+    "markers": [
+      {
+        "week": 23.4,
+        "date": "2026-09-02",
+        "label": "2 Sep · fw {{fw:EST4@4.1}} released (synthetic)",
+        "style": "release"
+      },
+      {
+        "week": 25.4,
+        "date": "2026-09-16",
+        "label": "16 Sep · threshold crossed — third independent partner",
+        "style": "threshold",
+        "pulse": true
+      },
+      {
+        "week": 28.3,
+        "date": "2026-10-07",
+        "label": "7 Oct · next monthly RMA review",
+        "style": "review"
+      }
+    ],
+    "annotation": {
+      "text": "21 days earlier",
+      "fromWeek": 25.4,
+      "toWeek": 28.3
+    },
+    "futureWeeks": [27, 28],
+    "denominatorLabel": "Panels on version",
+    "tooltipTemplate": "Week of {weekStart} · {{fw:EST4@4.1}}: {rate41} per 1,000 panel-weeks ({contacts41} contacts / {panels41} panels) · {{fw:EST4@4.0}}: {rate40} ({contacts40} / {panels40}) · {{platform:EST4}} RMA rate {rmaRate}%",
+    "headlineCheck": {
+      "contacts": 23,
+      "panels": 1240,
+      "weeks": 3,
+      "rate": 6.2,
+      "baselineRate": 2.0
+    }
+  },
+  "cohort": {
+    "signalId": "fw-4-1",
+    "panels": 1240,
+    "sites": 610,
+    "partners": 9,
+    "serialRange": "E4-S-2403xxxx to E4-S-2611xxxx",
+    "eligibleNotUpgraded": 5560,
+    "regions": [
+      {
+        "region": "{{region:US-SE}}",
+        "panels": 540,
+        "sites": 262,
+        "partners": 4,
+        "contacts": 11
+      },
+      {
+        "region": "{{region:US-SW}}",
+        "panels": 430,
+        "sites": 214,
+        "partners": 3,
+        "contacts": 8
+      },
+      {
+        "region": "{{region:Canada}}",
+        "panels": 270,
+        "sites": 134,
+        "partners": 2,
+        "contacts": 4
+      }
+    ],
+    "siteTypes": [
+      {
+        "type": "Commercial office",
+        "share": 0.58
+      },
+      {
+        "type": "Education",
+        "share": 0.31
+      },
+      {
+        "type": "Other",
+        "share": 0.11
+      }
+    ],
+    "noSymptom": {
+      "panels": 412,
+      "sites": 180
+    },
+    "exportEnabled": false,
+    "exportTooltip": "Export disabled in demo"
+  },
+  "evidence": [
+    {
+      "id": "EV-2609-0001",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-SE-07}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Florida}}",
+      "localDateLabel": "4 Sep",
+      "timestampUtc": "2026-09-04T16:40:00Z",
+      "text": "Customer site upgraded to {{fw:EST4@4.1}} this morning; loop 2 now shows devices not found. Re-mapped twice, same result.",
+      "highlight": "devices not found",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0002",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SW-03}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Texas}}",
+      "localDateLabel": "8 Sep",
+      "timestampUtc": "2026-09-08T14:05:00Z",
+      "text": "Panel went to the new firmware and now half the loop is missing on the map.",
+      "highlight": "half the loop is missing",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "imputedFrom": "ship date",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0003",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SE-07}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Florida}}",
+      "localDateLabel": "9 Sep",
+      "timestampUtc": "2026-09-09T15:20:00Z",
+      "text": "After we pushed {{fw:EST4@4.1}} the loop comes back with half the devices missing. Rolled one panel back to {{fw:EST4@4.0}} and it mapped fine.",
+      "highlight": "half the devices missing",
+      "featured": true,
+      "featuredOrder": 1,
+      "firmwareSource": "record",
+      "mentionsRollback": true
+    },
+    {
+      "id": "EV-2609-0004",
+      "signalId": "fw-4-1",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:ESD-SW-03}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Texas}}",
+      "localDateLabel": "10 Sep",
+      "timestampUtc": "2026-09-10T13:48:00Z",
+      "text": "Following up — same site, still not mapping after the upgrade. We need this sorted before the occupancy walk-through.",
+      "highlight": "still not mapping after the upgrade",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0005",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-SW-03}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Texas}}",
+      "localDateLabel": "11 Sep",
+      "timestampUtc": "2026-09-11T16:02:00Z",
+      "text": "Devices not found after upgrade on loops 2 and 3; mapping stops around 60%. Power-cycled; no change.",
+      "highlight": "Devices not found after upgrade",
+      "featured": true,
+      "featuredOrder": 2,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0006",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SW-03}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Texas}}",
+      "localDateLabel": "11 Sep",
+      "timestampUtc": "2026-09-11T20:31:00Z",
+      "text": "Second panel this week on {{fw:EST4@4.1}} — loop 3 comes back empty.",
+      "highlight": "loop 3 comes back empty",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "imputedFrom": "download log",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0007",
+      "signalId": "fw-4-1",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:ESD-CA-04}}",
+      "region": "{{region:Canada}}",
+      "place": "{{place:Ontario}}",
+      "localDateLabel": "15 Sep",
+      "timestampUtc": "2026-09-16T03:12:00Z",
+      "text": "Third site this month with the same thing after the firmware update — is there a known issue?",
+      "highlight": "same thing after the firmware update",
+      "featured": true,
+      "featuredOrder": 3,
+      "firmwareSource": "imputed",
+      "imputedFrom": "ship date",
+      "mentionsRollback": false,
+      "note": "Received 15 Sep 23:12 ET = 16 Sep 03:12 UTC · third independent partner"
+    },
+    {
+      "id": "EV-2609-0008",
+      "signalId": "fw-4-1",
+      "channel": "rma",
+      "channelLabel": "RMA narrative",
+      "partnerId": "{{partner:ESD-SE-11}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Georgia}}",
+      "localDateLabel": "16 Sep",
+      "timestampUtc": "2026-09-16T12:40:00Z",
+      "text": "Module returned as suspected failure following panel upgrade. Bench: no fault found.",
+      "highlight": "no fault found",
+      "featured": true,
+      "featuredOrder": 4,
+      "firmwareSource": "record",
+      "mentionsRollback": false,
+      "linkedRmaId": "RMA-S-2609-0142"
+    },
+    {
+      "id": "EV-2609-0009",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SE-11}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Georgia}}",
+      "localDateLabel": "16 Sep",
+      "timestampUtc": "2026-09-16T17:15:00Z",
+      "text": "Upgraded two panels at the school; one maps, the other stops partway. Rolled it back to {{fw:EST4@4.0}} for now.",
+      "highlight": "the other stops partway",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": true
+    },
+    {
+      "id": "EV-2609-0010",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-SW-09}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Arizona}}",
+      "localDateLabel": "17 Sep",
+      "timestampUtc": "2026-09-17T15:30:00Z",
+      "text": "Devices not found after upgrade. Loop 1 fine, loops 2 and 3 partial.",
+      "highlight": "Devices not found after upgrade",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0011",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SE-14}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Alabama}}",
+      "localDateLabel": "17 Sep",
+      "timestampUtc": "2026-09-17T18:05:00Z",
+      "text": "Is there a known issue with the latest {{platform:EST4}} firmware and mapping? Seeing it on a three-loop job.",
+      "highlight": "known issue",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "imputedFrom": "ship date",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0012",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-CA-04}}",
+      "region": "{{region:Canada}}",
+      "place": "{{place:Ontario}}",
+      "localDateLabel": "17 Sep",
+      "timestampUtc": "2026-09-17T19:44:00Z",
+      "text": "Rolled back to {{fw:EST4@4.0}} and mapping completed. Holding further upgrades at this site.",
+      "highlight": "Rolled back to",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": true
+    },
+    {
+      "id": "EV-2609-0013",
+      "signalId": "fw-4-1",
+      "channel": "afterHours",
+      "channelLabel": "After-hours line",
+      "partnerId": "{{partner:ESD-SE-02}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Florida}}",
+      "localDateLabel": "18 Sep",
+      "timestampUtc": "2026-09-18T02:10:00Z",
+      "text": "Acceptance test with the AHJ tomorrow and the loop won't map since the update.",
+      "highlight": "the loop won't map since the update",
+      "featured": true,
+      "featuredOrder": 5,
+      "firmwareSource": "imputed",
+      "imputedFrom": "download log",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0014",
+      "signalId": "fw-4-1",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:ESD-SE-02}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Florida}}",
+      "localDateLabel": "18 Sep",
+      "timestampUtc": "2026-09-18T14:26:00Z",
+      "text": "Can you confirm whether {{fw:EST4@4.1}} changes how panels with more than two loops are mapped? Two jobs affected.",
+      "highlight": "more than two loops",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0015",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-SE-14}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Alabama}}",
+      "localDateLabel": "18 Sep",
+      "timestampUtc": "2026-09-18T16:50:00Z",
+      "text": "Mapping stalls around 60% on loop 2 after the update. Rolled back; fine on {{fw:EST4@4.0}}.",
+      "highlight": "Mapping stalls around 60%",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": true
+    },
+    {
+      "id": "EV-2609-0016",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SW-12}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Texas}}",
+      "localDateLabel": "21 Sep",
+      "timestampUtc": "2026-09-21T14:12:00Z",
+      "text": "New install went straight to {{fw:EST4@4.1}} — loop won't fully map. Is {{fw:EST4@4.0}} still available to download?",
+      "highlight": "loop won't fully map",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0017",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-CA-06}}",
+      "region": "{{region:Canada}}",
+      "place": "{{place:Ontario}}",
+      "localDateLabel": "21 Sep",
+      "timestampUtc": "2026-09-21T15:38:00Z",
+      "text": "Devices not found on loop 3 after the update. Same symptom a colleague reported last week.",
+      "highlight": "Devices not found on loop 3",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "imputedFrom": "ship date",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0018",
+      "signalId": "fw-4-1",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:ESD-SE-11}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Georgia}}",
+      "localDateLabel": "22 Sep",
+      "timestampUtc": "2026-09-22T13:05:00Z",
+      "text": "Third job with the loop mapping issue after {{fw:EST4@4.1}}; rolled this one back to {{fw:EST4@4.0}} as well. Please advise before we upgrade the rest.",
+      "highlight": "loop mapping issue",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": true
+    },
+    {
+      "id": "EV-2609-0019",
+      "signalId": "fw-4-1",
+      "channel": "rma",
+      "channelLabel": "RMA narrative",
+      "partnerId": "{{partner:ESD-SW-09}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Arizona}}",
+      "localDateLabel": "22 Sep",
+      "timestampUtc": "2026-09-22T16:47:00Z",
+      "text": "Loop module returned after mapping failure post-upgrade. Bench: no fault found.",
+      "highlight": "no fault found",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false,
+      "linkedRmaId": "RMA-S-2609-0177"
+    },
+    {
+      "id": "EV-2609-0020",
+      "signalId": "fw-4-1",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:ESD-SE-14}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Alabama}}",
+      "localDateLabel": "23 Sep",
+      "timestampUtc": "2026-09-23T15:20:00Z",
+      "text": "Acceptance test postponed — loop mapping incomplete since the firmware update.",
+      "highlight": "loop mapping incomplete",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "imputedFrom": "download log",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0021",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-SW-12}}",
+      "region": "{{region:US-SW}}",
+      "place": "{{place:Texas}}",
+      "localDateLabel": "23 Sep",
+      "timestampUtc": "2026-09-23T18:33:00Z",
+      "text": "Building owner asking whether to hold the remaining panels on {{fw:EST4@4.0}} until there is guidance.",
+      "highlight": "hold the remaining panels",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0022",
+      "signalId": "fw-4-1",
+      "channel": "afterHours",
+      "channelLabel": "After-hours line",
+      "partnerId": "{{partner:ESD-CA-06}}",
+      "region": "{{region:Canada}}",
+      "place": "{{place:Ontario}}",
+      "localDateLabel": "23 Sep",
+      "timestampUtc": "2026-09-24T03:55:00Z",
+      "text": "Loop won't map after the update and the inspector is booked. What can we do tonight?",
+      "highlight": "Loop won't map after the update",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "imputedFrom": "ship date",
+      "mentionsRollback": false
+    },
+    {
+      "id": "EV-2609-0023",
+      "signalId": "fw-4-1",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:ESD-SE-02}}",
+      "region": "{{region:US-SE}}",
+      "place": "{{place:Florida}}",
+      "localDateLabel": "25 Sep",
+      "timestampUtc": "2026-09-25T14:08:00Z",
+      "text": "Devices not found after upgrade on a four-loop panel. Two loops fine, two partial.",
+      "highlight": "Devices not found after upgrade",
+      "featured": false,
+      "firmwareSource": "record",
+      "mentionsRollback": false
+    }
+  ],
+  "rmas": [
+    {
+      "id": "RMA-S-2609-0142",
+      "signalId": "fw-4-1",
+      "serial": "E4-S-25184417",
+      "partnerId": "{{partner:ESD-SE-11}}",
+      "returnedDate": "2026-09-16",
+      "disposition": "NFF",
+      "label": "NFF — no fault found",
+      "linkedEvidenceId": "EV-2609-0008"
+    },
+    {
+      "id": "RMA-S-2609-0177",
+      "signalId": "fw-4-1",
+      "serial": "E4-S-26030962",
+      "partnerId": "{{partner:ESD-SW-09}}",
+      "returnedDate": "2026-09-22",
+      "disposition": "NFF",
+      "label": "NFF — no fault found",
+      "linkedEvidenceId": "EV-2609-0019"
+    }
+  ],
+  "rmaNote": "Two NFF returns in three weeks. Without the join, each closes as 'no fault found' on its own.",
+  "method": [
+    {
+      "k": "Detector",
+      "v": "Difference-in-differences, event-time aligned; Poisson exact test."
+    },
+    {
+      "k": "Trigger",
+      "v": "≥2.5× and ≥3 independent partners."
+    },
+    {
+      "k": "Baseline window",
+      "v": "26 weeks, prior version, event-time aligned."
+    },
+    {
+      "k": "Knowledge vs inference",
+      "v": "K 15 in record · I 8 imputed (5 ship date, 3 download logs)."
+    },
+    {
+      "k": "Source independence",
+      "v": "0.78 · voice incl. after-hours, case, email, RMA."
+    },
+    {
+      "k": "Suppressed",
+      "v": "4 how-to questions about new {{fw:EST4@4.1}} features; 2 same-site recontacts."
+    },
+    {
+      "k": "Exposure to date (V-01)",
+      "v": "Excess contacts = observed 23 − expected on the {{fw:EST4@4.0}} rate (2.0 × 1.24k panels × 3 wks = 7.4) ≈ 16 × $750 fully loaded field cost."
+    },
+    {
+      "k": "Exposure projected (V-02)",
+      "v": "Panel-weeks at risk = 1,240 × 12 + 5,560 eligible × 6 (uniform upgrade over 12 wks) = 48,240 × excess rate 4.2 per 1,000 = ~203 excess contacts × $750."
+    },
+    {
+      "k": "Clock",
+      "v": "UTC."
+    }
+  ],
+  "audit": [
+    {
+      "ts": "2026-09-25T07:55:00Z",
+      "label": "25 Sep 07:55 · Viewed by President (weekly digest)"
+    },
+    {
+      "ts": "2026-09-22T11:30:00Z",
+      "label": "22 Sep 11:30 · Evidence updated · RMA-S-2609-0177 linked"
+    },
+    {
+      "ts": "2026-09-17T14:22:00Z",
+      "label": "17 Sep 14:22 · Viewed by VP Service & Tech Support"
+    },
+    {
+      "ts": "2026-09-16T06:10:00Z",
+      "label": "16 Sep 06:10 · Threshold crossed · routed to VP Engineering (owner), cc VP Service & Tech Support · draft investigation brief generated"
+    },
+    {
+      "ts": "2026-09-04T16:40:00Z",
+      "label": "4 Sep 16:40 · New phrasing cluster opened"
+    }
+  ],
+  "auditRuntime": {
+    "drawerOpen": "President · just now"
+  },
+  "drawer": {
+    "title": "Evidence · 23",
+    "tabs": ["Snippets 23", "Linked RMAs 2", "Cohort", "Method & audit"],
+    "footer": "Every claim links to the interactions behind it. No customer-facing action taken. Synthetic scenario — not KGS data.",
+    "sourceLinkTooltip": "Disabled in demo",
+    "featuredHeading": "Featured",
+    "allHeading": "All 23"
+  },
+  "draftBrief": {
+    "id": "IB-2609-004",
+    "title": "Engineering investigation brief — {{platform:EST4}} firmware {{fw:EST4@4.1}} (synthetic)",
+    "meta": "IB-2609-004 (synthetic) · Drafted by LiSN 16 Sep 2026 06:10 UTC · refreshed 25 Sep 18:00 UTC",
+    "chipPending": "DRAFT — not sent",
+    "chipApproved": "APPROVED · {ts}",
+    "sections": [
+      {
+        "h": "1. Summary",
+        "body": "Panels on {{fw:EST4@4.1}} report 'devices not found after upgrade' at 6.2 contacts per 1,000 panel-weeks over their first three weeks, against 2.0 on panels still on {{fw:EST4@4.0}} over the same weeks (3.1×; Poisson exact p<0.001). Severity S2 · cliff at release (2 Sep) · incident flag off. Confidence M 0.70 (K 15 / I 8)."
+      },
+      {
+        "h": "2. Excerpts",
+        "body": "23 interactions from 9 partners across calls, cases, email, RMA narratives and the after-hours line. Two linked RMAs returned no fault found (RMA-S-2609-0142, RMA-S-2609-0177). Five installers report rolling back to {{fw:EST4@4.0}}. New phrasing first seen 4 Sep; above threshold since 16 Sep at the third independent partner.",
+        "attachFeatured": true
+      },
+      {
+        "h": "3. Cohort",
+        "body": "1,240 panels on {{fw:EST4@4.1}} at ~610 sites; {{region:US-SE}} 540, {{region:US-SW}} 430, {{region:Canada}} 270. Serial range E4-S-2403xxxx to E4-S-2611xxxx (synthetic). 5,560 eligible panels not yet upgraded."
+      },
+      {
+        "h": "4. Configurations & counter-evidence",
+        "body": "Symptom concentrates in configurations with more than two signalling loops. 412 panels on {{fw:EST4@4.1}} at 180 sites show no symptom. Effect persists across certified and uncertified installers (indeterminate below N=15)."
+      },
+      {
+        "h": "5. Candidate causes (ranked) — candidate, not cause",
+        "items": [
+          "H1 · Loop mapping under {{fw:EST4@4.1}} fails to complete on configurations with more than two signalling loops. For: symptom concentrates in >2-loop configurations; mapping stops around 60%. Against: none yet. Test: bench reproduction on a 3-loop configuration.",
+          "H2 · Device database entries on loops 2–3 not carried through the upgrade. For: loops 2 or 3 named in 6 cases; rollback restores mapping. Against: 412 panels on {{fw:EST4@4.1}} show no symptom. Test: compare pre- and post-upgrade device tables.",
+          "H3 · Installation practice — upgrade without a re-mapping step. For: none specific. Against: persists across certified and uncertified installers. Test: confirm procedure in 5 cases."
+        ],
+        "footer": "LiSN does not determine cause. Engineering decides."
+      },
+      {
+        "h": "6. Requested decision",
+        "ordered": [
+          "Approve an engineering reproduction on the candidate configuration.",
+          "Decide whether to pause the staged rollout and download of {{fw:EST4@4.1}}.",
+          "Decide whether VP Service & Tech Support may release the draft known-issue note."
+        ],
+        "footer": "Regulatory is consulted if a listed configuration is involved."
+      },
+      {
+        "h": "7. Approver",
+        "body": "VP Engineering · cc VP Service & Tech Support · informed: Quality, President"
+      }
+    ],
+    "footer": "Draft generated by LiSN from the evidence above. Nothing has been sent. Synthetic scenario — not KGS data."
+  }
+}
