@@ -1,0 +1,1081 @@
+{
+  "title": "Are we holding our channel?",
+  "subtitle": "Strategic Partner and distributor friction against each partner's own baseline — joined to sell-in, backlog and certification.",
+  "kpis": [
+    {
+      "label": "SIGNALS ABOVE THRESHOLD",
+      "value": "2"
+    },
+    {
+      "label": "NA STRATEGIC PARTNERS WITHIN OWN BASELINE",
+      "value": "419 / 420"
+    },
+    {
+      "label": "N-3 OTD vs ORIGINAL",
+      "value": "71%",
+      "sub": "94% vs revised"
+    },
+    {
+      "label": "CERTIFIED-TECHNICIAN LAPSES, DRIFTING PARTNER",
+      "value": "2 of 5"
+    },
+    {
+      "label": "BACKLOG AT RISK",
+      "value": "$2.3m",
+      "sub": "2.4% of ~$95m open backlog",
+      "money": true
+    },
+    {
+      "label": "CERTIFICATIONS LAPSING ≤30 DAYS",
+      "value": "186",
+      "sub": "all partners"
+    }
+  ],
+  "league": [
+    {
+      "id": "esd-se-07",
+      "cells": [
+        "{{partner:ESD-SE-07}}",
+        "{{region:US-SE}}",
+        "ESD / Strategic Partner",
+        "3.1×",
+        "38% (14%)",
+        "−22%",
+        "3 of 5",
+        "4 calls",
+        "S2 · above threshold"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "amber"
+      ],
+      "linkTo": "/channel#esd-se-07"
+    },
+    {
+      "id": "esd-sw-12",
+      "cells": [
+        "{{partner:ESD-SW-12}}",
+        "{{region:US-SW}}",
+        "ESD / Strategic Partner",
+        "1.2×",
+        "16% (15%)",
+        "−3%",
+        "6 of 7",
+        "—",
+        "Within band"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        "amber",
+        null,
+        null,
+        null,
+        null,
+        "green"
+      ]
+    },
+    {
+      "id": "esd-mw-05",
+      "cells": [
+        "{{partner:ESD-MW-05}}",
+        "{{region:US-MW}}",
+        "ESD / Strategic Partner",
+        "1.1×",
+        "14% (13%)",
+        "+1%",
+        "5 of 6",
+        "—",
+        "Within band"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "green"
+      ]
+    },
+    {
+      "id": "esd-ca-06",
+      "cells": [
+        "{{partner:ESD-CA-06}}",
+        "{{region:Canada}}",
+        "ESD / Strategic Partner",
+        "1.2×",
+        "14% (12%)",
+        "+2%",
+        "4 of 5",
+        "—",
+        "Within band (in Signal #1 cohort)"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        "amber",
+        null,
+        null,
+        null,
+        null,
+        "green"
+      ],
+      "linkTo": "/installed-base/signal/fw-4-1"
+    },
+    {
+      "id": "dlr-ne-118",
+      "cells": [
+        "{{partner:DLR-NE-118}}",
+        "{{region:US-NE}}",
+        "Dealer",
+        "1.8×",
+        "21% (12%)",
+        "−6%",
+        "2 of 2",
+        "2 calls",
+        "S3 · watch"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "slate"
+      ]
+    },
+    {
+      "id": "dlr-w-044",
+      "cells": [
+        "{{partner:DLR-W-044}}",
+        "{{region:US-W}}",
+        "Dealer",
+        "1.5×",
+        "17% (13%)",
+        "−5%",
+        "1 of 2",
+        "1 call",
+        "S3 · watch"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "slate"
+      ]
+    },
+    {
+      "id": "dist-uk-031",
+      "cells": [
+        "{{partner:DIST-UK-031}}",
+        "{{region:UK}}",
+        "Distributor",
+        "1.6×",
+        "27% (16%)",
+        "−3%",
+        "4 of 4",
+        "—",
+        "S3 · watch (→ Separation)"
+      ],
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "slate"
+      ],
+      "linkTo": "/separation"
+    }
+  ],
+  "partnerTimeline": {
+    "partnerId": "{{partner:ESD-SE-07}}",
+    "friction": [
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      3,
+      3,
+      5,
+      5,
+      7,
+      7,
+      8,
+      8
+    ],
+    "baseline": [
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2
+    ],
+    "sellIn": [
+      246,
+      234,
+      266,
+      246,
+      245,
+      227,
+      216,
+      216,
+      229,
+      269,
+      263,
+      226,
+      213,
+      232,
+      265,
+      230,
+      247,
+      219,
+      260,
+      241,
+      205,
+      198,
+      190,
+      186,
+      182,
+      176
+    ],
+    "sellInLY": [
+      246,
+      284,
+      251,
+      234,
+      263,
+      282,
+      259,
+      280,
+      254,
+      236,
+      260,
+      220,
+      284,
+      250,
+      217,
+      236,
+      259,
+      275,
+      279,
+      241,
+      278,
+      251,
+      255,
+      276,
+      265,
+      255
+    ],
+    "markers": [
+      {
+        "week": 16,
+        "date": "2026-07-13",
+        "label": "W16 · friction above own baseline",
+        "style": "event"
+      },
+      {
+        "week": 22,
+        "date": "2026-08-24",
+        "label": "W22 · 2 certifications lapsed",
+        "style": "event"
+      },
+      {
+        "week": 24.4,
+        "date": "2026-09-11",
+        "label": "11 Sep · above threshold",
+        "style": "threshold"
+      }
+    ],
+    "pins": [
+      {
+        "week": 21,
+        "text": "Second escalation on the same job this month — still waiting on L3."
+      },
+      {
+        "week": 22,
+        "text": "Two of our certified techs have lapsed and the next class is October."
+      },
+      {
+        "week": 23,
+        "text": "[competitor] has quoted us on the next two projects."
+      },
+      {
+        "week": 24,
+        "text": "Third call about the same site — we need someone who knows the panel."
+      },
+      {
+        "week": 25,
+        "text": "We are pricing the school job with [competitor] as well."
+      },
+      {
+        "week": 26,
+        "text": "No one has come back on last week's L3 escalation."
+      }
+    ],
+    "caption": "Friction led sell-in by ~5 weeks. Two backorder cases excluded from the friction score and linked to N-3. 2 of its cases sit in the fw {{fw:EST4@4.1}} cohort.",
+    "valueLine": "$6.4m sell-in in view · ≈ $1.4m / yr gap if −22% persists · $0.9m backlog · 34 days ahead of the 15 Oct QBR",
+    "confidenceShort": "H on orders and certifications (K) · M on friction→orders (I)",
+    "gate": "Partner-recovery brief — awaiting Regional GM approval · no outreach sent"
+  },
+  "backorder": {
+    "title": "Backlog at risk by SKU family",
+    "stacks": [
+      "NA",
+      "{{region:UK-EU}}",
+      "Other"
+    ],
+    "bars": [
+      {
+        "key": "N-3",
+        "label": "Notification N-3 (synthetic)",
+        "values": [
+          2.1,
+          0.1,
+          0.1
+        ],
+        "overlay": 3.2
+      },
+      {
+        "key": "D-5",
+        "label": "Detectors D-5 (synthetic)",
+        "values": [
+          0.5,
+          0.2,
+          0.1
+        ],
+        "overlay": 1.2
+      },
+      {
+        "key": "P-2",
+        "label": "Power supplies P-2 (synthetic)",
+        "values": [
+          0.4,
+          0.1,
+          0.1
+        ],
+        "overlay": 1.4
+      },
+      {
+        "key": "M-4",
+        "label": "Modules M-4 (synthetic)",
+        "values": [
+          0.3,
+          0.1,
+          0.1
+        ],
+        "overlay": 1.1
+      },
+      {
+        "key": "A-1",
+        "label": "Aspirating A-1 (synthetic)",
+        "values": [
+          0.2,
+          0.1,
+          0.1
+        ],
+        "overlay": 1.0
+      },
+      {
+        "key": "C-2",
+        "label": "Cabinets C-2 (synthetic)",
+        "values": [
+          0.2,
+          0.05,
+          0.05
+        ],
+        "overlay": 0.9
+      }
+    ],
+    "details": [
+      {
+        "key": "N-3",
+        "title": "Notification family N-3 (synthetic)",
+        "chip": "S2 · Supply",
+        "big": "$2.3m",
+        "bigLabel": "backlog at risk",
+        "money": true,
+        "grid": [
+          {
+            "label": "Lines pushed ≥3 wks",
+            "value": "312"
+          },
+          {
+            "label": "Partners",
+            "value": "11"
+          },
+          {
+            "label": "Projects with inspection ≤30 days",
+            "value": "4"
+          },
+          {
+            "label": "OTD vs revised",
+            "value": "94%"
+          },
+          {
+            "label": "OTD vs original",
+            "value": "71%"
+          },
+          {
+            "label": "Consequence language",
+            "value": "3.2×"
+          }
+        ],
+        "insight": "Cancel and substitute language started rising in week 21, before OTD against revised promise dates moved at all.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting VP Supply Chain",
+        "action": "Allocation priority list — awaiting Supply Chain approval · no partner messages sent.",
+        "phrasings": [
+          "cancel",
+          "substitute",
+          "project delay",
+          "inspection date",
+          "liquidated damages"
+        ],
+        "linkTo": "/channel#backorder"
+      },
+      {
+        "key": "D-5",
+        "title": "Detectors D-5 (synthetic)",
+        "chip": "Within band",
+        "big": "$0.8m",
+        "bigLabel": "backlog at risk",
+        "money": true,
+        "grid": [
+          {
+            "label": "Lines pushed ≥3 wks",
+            "value": "87"
+          },
+          {
+            "label": "Consequence language",
+            "value": "1.2×"
+          },
+          {
+            "label": "Partners",
+            "value": "8"
+          }
+        ],
+        "insight": "Consequence language 1.2× its own baseline — within band. Backlog here is converting on its revised dates.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": []
+      },
+      {
+        "key": "P-2",
+        "title": "Power supplies P-2 (synthetic)",
+        "chip": "Within band",
+        "big": "$0.6m",
+        "bigLabel": "backlog at risk",
+        "money": true,
+        "grid": [
+          {
+            "label": "Lines pushed ≥3 wks",
+            "value": "71"
+          },
+          {
+            "label": "Consequence language",
+            "value": "1.4×"
+          },
+          {
+            "label": "Partners",
+            "value": "6"
+          }
+        ],
+        "insight": "Consequence language 1.4× its own baseline — within band. Backlog here is converting on its revised dates.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": []
+      },
+      {
+        "key": "M-4",
+        "title": "Modules M-4 (synthetic)",
+        "chip": "Within band",
+        "big": "$0.5m",
+        "bigLabel": "backlog at risk",
+        "money": true,
+        "grid": [
+          {
+            "label": "Lines pushed ≥3 wks",
+            "value": "53"
+          },
+          {
+            "label": "Consequence language",
+            "value": "1.1×"
+          },
+          {
+            "label": "Partners",
+            "value": "4"
+          }
+        ],
+        "insight": "Consequence language 1.1× its own baseline — within band. Backlog here is converting on its revised dates.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": []
+      },
+      {
+        "key": "A-1",
+        "title": "Aspirating A-1 (synthetic)",
+        "chip": "Within band",
+        "big": "$0.4m",
+        "bigLabel": "backlog at risk",
+        "money": true,
+        "grid": [
+          {
+            "label": "Lines pushed ≥3 wks",
+            "value": "46"
+          },
+          {
+            "label": "Consequence language",
+            "value": "1.0×"
+          },
+          {
+            "label": "Partners",
+            "value": "5"
+          }
+        ],
+        "insight": "Consequence language 1.0× its own baseline — within band. Backlog here is converting on its revised dates.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": []
+      },
+      {
+        "key": "C-2",
+        "title": "Cabinets C-2 (synthetic)",
+        "chip": "Within band",
+        "big": "$0.3m",
+        "bigLabel": "backlog at risk",
+        "money": true,
+        "grid": [
+          {
+            "label": "Lines pushed ≥3 wks",
+            "value": "37"
+          },
+          {
+            "label": "Consequence language",
+            "value": "0.9×"
+          },
+          {
+            "label": "Partners",
+            "value": "6"
+          }
+        ],
+        "insight": "Consequence language 0.9× its own baseline — within band. Backlog here is converting on its revised dates.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": []
+      }
+    ],
+    "defaultOpen": "N-3",
+    "otd": {
+      "revised": 94,
+      "original": 71
+    },
+    "consequenceRatio": [
+      1.0,
+      1.1,
+      0.9,
+      1.0,
+      1.1,
+      1.0,
+      1.6,
+      2.1,
+      2.4,
+      2.8,
+      3.0,
+      3.2
+    ],
+    "leadLine": "13 days ahead of the 5 Oct OTIF report"
+  },
+  "certification": {
+    "rows": [
+      {
+        "id": "cert-esd-se-07",
+        "cells": [
+          "{{partner:ESD-SE-07}}",
+          "3 of 5 (2 lapsed W22)",
+          "1",
+          "2.4×",
+          "2"
+        ]
+      },
+      {
+        "id": "cert-esd-sw-12",
+        "cells": [
+          "{{partner:ESD-SW-12}}",
+          "6 of 7",
+          "2",
+          "2.1×",
+          "3"
+        ]
+      },
+      {
+        "id": "cert-dlr-ne-118",
+        "cells": [
+          "{{partner:DLR-NE-118}}",
+          "2 of 2",
+          "1",
+          "2.3×",
+          "2"
+        ]
+      },
+      {
+        "id": "cert-esd-mw-05",
+        "cells": [
+          "{{partner:ESD-MW-05}}",
+          "5 of 6",
+          "1",
+          "1.9×",
+          "3"
+        ]
+      },
+      {
+        "id": "cert-dlr-w-044",
+        "cells": [
+          "{{partner:DLR-W-044}}",
+          "1 of 2",
+          "1",
+          "2.2×",
+          "2"
+        ]
+      },
+      {
+        "id": "cert-esd-se-14",
+        "cells": [
+          "{{partner:ESD-SE-14}}",
+          "4 of 4",
+          "1",
+          "1.8×",
+          "3"
+        ]
+      },
+      {
+        "id": "cert-dlr-sw-201",
+        "cells": [
+          "{{partner:DLR-SW-201}}",
+          "2 of 3",
+          "1",
+          "2.0×",
+          "3"
+        ]
+      }
+    ],
+    "caption": "Assigning 18 seats in the October {{platform:EST4}} class to 7 high-load partners would cut ~210 contacts a quarter."
+  },
+  "switching": [
+    {
+      "id": "sw-houston",
+      "cells": [
+        "{{place:Houston}} metro",
+        "[competitor]",
+        "11 vs 3 (3.7×)",
+        "top reason: N-3 lead time",
+        "S3 WATCH"
+      ],
+      "tone": [
+        null,
+        null,
+        "orange",
+        null,
+        "yellow"
+      ]
+    },
+    {
+      "id": "sw-georgia",
+      "cells": [
+        "{{place:Georgia}}",
+        "[competitor]",
+        "7 vs 5 (1.4×)",
+        "top reason: lead time",
+        "Below threshold"
+      ],
+      "tone": [
+        null,
+        null,
+        "amber",
+        null,
+        "neutral"
+      ]
+    },
+    {
+      "id": "sw-texas",
+      "cells": [
+        "{{place:Texas}}",
+        "[competitor]",
+        "6 vs 5 (1.2×)",
+        "top reason: price",
+        "Below threshold"
+      ],
+      "tone": [
+        null,
+        null,
+        "amber",
+        null,
+        "neutral"
+      ]
+    }
+  ],
+  "enhanced": {
+    "title": "✨ Why partners drift",
+    "badge": "Joined with ERP orders, LMS & backlog",
+    "violetLine": "Uses read-only extracts of ERP orders, the LMS certification log and the open backlog.",
+    "right": [
+      "Data as of 25 Sep 18:00 UTC",
+      "1 partner above threshold"
+    ],
+    "joinTags": [
+      {
+        "key": "ERP",
+        "value": "orders and sell-in"
+      },
+      {
+        "key": "LMS",
+        "value": "certifications"
+      },
+      {
+        "key": "BACKLOG",
+        "value": "open order lines"
+      }
+    ],
+    "stats": [
+      {
+        "label": "Signals above threshold",
+        "value": "2"
+      },
+      {
+        "label": "Sell-in in view",
+        "value": "$6.4m",
+        "money": true
+      },
+      {
+        "label": "Backlog at risk",
+        "value": "$2.3m",
+        "money": true
+      },
+      {
+        "label": "Recontact (drifting partner)",
+        "value": "38%"
+      },
+      {
+        "label": "Certified lapses",
+        "value": "2 of 5"
+      },
+      {
+        "label": "Look-alike routed to AR",
+        "value": "1"
+      }
+    ],
+    "driversTitle": "Why partners drift",
+    "drivers": [
+      {
+        "label": "Open technical escalations",
+        "meta": "34% of drifting-partner friction · 2 open L3",
+        "value": 34,
+        "max": 40,
+        "chip": "High"
+      },
+      {
+        "label": "Backorder without a revised date",
+        "meta": "26% · linked to N-3",
+        "value": 26,
+        "max": 40,
+        "chip": "High"
+      },
+      {
+        "label": "Certified technicians lapsed",
+        "meta": "17% · 2 of 5 lapsed in week 22",
+        "value": 17,
+        "max": 40,
+        "chip": "Medium"
+      },
+      {
+        "label": "Competitor quote named",
+        "meta": "13% · [competitor] in 4 calls",
+        "value": 13,
+        "max": 40,
+        "chip": "Medium"
+      },
+      {
+        "label": "Invoice / portal friction after cutover",
+        "meta": "10% · → Separation",
+        "value": 10,
+        "max": 40,
+        "chip": "Watch"
+      }
+    ],
+    "watchlistTitle": "Partners on watch",
+    "watchlist": [
+      {
+        "chip": "S2",
+        "title": "{{partner:ESD-SE-07}}",
+        "age": "6 wks",
+        "stage": "Stage: executive intervention",
+        "blocker": "Blocker: 2 open L3 escalations",
+        "tags": [
+          "3 of 5 certified",
+          "$6.4m sell-in"
+        ]
+      },
+      {
+        "chip": "S3",
+        "title": "{{partner:DLR-NE-118}}",
+        "age": "2 wks",
+        "stage": "Stage: competitive",
+        "blocker": "[competitor] named in 2 calls",
+        "tags": [
+          "Dealer"
+        ]
+      },
+      {
+        "chip": "S3",
+        "title": "{{partner:DLR-W-044}}",
+        "age": "3 wks",
+        "stage": "Stage: certification",
+        "blocker": "1 of 2 technicians certified",
+        "tags": [
+          "Dealer"
+        ]
+      },
+      {
+        "chip": "S3",
+        "title": "{{partner:DIST-UK-031}}",
+        "age": "4 wks",
+        "stage": "Stage: invoicing",
+        "blocker": "Invoice entity mismatch → Separation",
+        "tags": [
+          "{{region:UK}}"
+        ]
+      }
+    ]
+  },
+  "stable": {
+    "rows": [
+      {
+        "text": "419 / 420 NA Strategic Partners within own baseline"
+      },
+      {
+        "text": "One partner's order dip coincides with a credit hold — routed to AR, not scored as drift."
+      }
+    ]
+  },
+  "signalWall": {
+    "title": "LiSN Signal Wall",
+    "subtitle": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC",
+    "pill": "Data as of 25 Sep",
+    "cards": [
+      {
+        "id": "wall-esd07",
+        "chips": [
+          "#3 of 5",
+          "S2 · Channel"
+        ],
+        "title": "{{partner:ESD-SE-07}} drifting against its own baseline (synthetic)",
+        "body": "{{partner:ESD-SE-07}} friction has run 3.1× its own baseline for six weeks; recontact 38% vs 14%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%.",
+        "metric": "3.1× own baseline",
+        "trend": "▲ Rising · above threshold since 11 Sep",
+        "linkLabel": "Open signal →",
+        "linkTo": "/channel#esd-se-07",
+        "confidenceShort": "H on orders (K) · M on friction→orders (I)",
+        "owner": "Regional GM NA",
+        "spark": [
+          5,
+          5,
+          7,
+          7,
+          8,
+          8
+        ]
+      },
+      {
+        "id": "wall-n3",
+        "chips": [
+          "#4 of 5",
+          "S2 · Supply"
+        ],
+        "title": "Notification family N-3 — backorder consequence (synthetic)",
+        "body": "Notification family N-3: OTD is 94% against revised promise dates but 71% against the original. Cancel/substitute language 3.2× across 11 NA partners; 4 projects face inspections within 30 days.",
+        "metric": "$2.3m backlog at risk",
+        "trend": "▲ Rising · above threshold since 22 Sep",
+        "linkLabel": "Open signal →",
+        "linkTo": "/channel#backorder",
+        "confidenceShort": "H on dates (K) · M on cancellation (I)",
+        "owner": "VP Supply Chain",
+        "spark": [
+          1.6,
+          2.1,
+          2.4,
+          2.8,
+          3.0,
+          3.2
+        ]
+      },
+      {
+        "id": "wall-switching",
+        "chips": [
+          "S3 · Operational",
+          "WATCH"
+        ],
+        "title": "Switching language in {{place:Houston}} metro",
+        "body": "[competitor] named in 11 interactions vs 3 on its own baseline (3.7×); top reason: N-3 lead time. Below the signal threshold; watched.",
+        "metric": "11 vs 3 (3.7×)",
+        "trend": "▲ Rising · watch"
+      },
+      {
+        "id": "wall-credit-hold",
+        "chips": [
+          "Suppressed"
+        ],
+        "title": "Order dip during a credit hold",
+        "body": "One partner's order dip coincides with a credit hold — routed to AR, not scored as drift.",
+        "metric": "1 look-alike routed to AR",
+        "trend": "Routed to AR"
+      }
+    ],
+    "footer": [
+      {
+        "value": 0,
+        "label": "S1 · Life-safety"
+      },
+      {
+        "value": 2,
+        "label": "S2 · Material impact"
+      },
+      {
+        "value": 1,
+        "label": "S3 · Operational"
+      },
+      {
+        "value": 1,
+        "label": "Suppressed"
+      }
+    ]
+  },
+  "diagnosis": {
+    "title": "LiSN evidence summary",
+    "confidenceShort": "H on orders (K) · M on friction→orders (I)",
+    "main": "One Strategic Partner, not the channel: {{partner:ESD-SE-07}} is drifting against its own baseline while territory peers grow.",
+    "changed": "Friction above own baseline from week 16 and 3.1× for six weeks; recontacts 38% vs 14%; two of five certified technicians lapsed in week 22; a competitor named in four calls; {{platform:EST4}} sell-in −22% vs last year.",
+    "decideFirst": "Regional GM NA to decide on the draft partner-recovery brief — GM visit, named L3 engineer, two priority class seats. No outreach has been sent."
+  },
+  "panelCopy": {
+    "C-0": {
+      "title": "Key figures"
+    },
+    "C-B": {
+      "title": "Partner league vs own baseline",
+      "anchor": "esd-se-07",
+      "columns": [
+        "PARTNER",
+        "TERRITORY",
+        "TIER",
+        "FRICTION vs OWN",
+        "RECONTACT",
+        "SELL-IN vs LY",
+        "CERTIFIED",
+        "COMPETITOR NAMED",
+        "STATUS"
+      ]
+    },
+    "C-C": {
+      "title": "{{partner:ESD-SE-07}} — friction vs sell-in (synthetic)",
+      "sub": "Stream = weekly interactions vs baseline band; line = {{platform:EST4}} sell-in vs last year (dashed).",
+      "unit": "interactions / week · sell-in $k / week (USD, illustrative)"
+    },
+    "C-D": {
+      "title": "Backlog at risk by SKU family",
+      "sub": "vs revised promise / vs original promise",
+      "right": "OTD 94% | OTD 71%",
+      "anchor": "backorder",
+      "unit": "$m (USD, illustrative)"
+    },
+    "C-E": {
+      "title": "Certification gap vs support load",
+      "columns": [
+        "PARTNER",
+        "CERTIFIED TECHS",
+        "LAPSING ≤30D",
+        "CONTACTS PER JOB vs PEERS",
+        "SEATS REQUESTED"
+      ]
+    },
+    "C-F": {
+      "title": "Switching language — competitor names redacted",
+      "columns": [
+        "AREA",
+        "COMPETITOR",
+        "MENTIONS vs OWN BASELINE",
+        "TOP REASON",
+        "STATUS"
+      ]
+    },
+    "C-G": {
+      "title": "✨ Why partners drift"
+    },
+    "C-H": {
+      "title": "What's stable / suppressed"
+    },
+    "C-I": {
+      "title": "LiSN Signal Wall",
+      "sub": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC"
+    },
+    "C-J": {
+      "title": "LiSN evidence summary"
+    }
+  }
+}

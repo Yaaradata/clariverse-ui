@@ -1,0 +1,272 @@
+{
+  "brand": {
+    "Edwards": {
+      "named": "Edwards",
+      "anon": "Brand A"
+    },
+    "Kidde Commercial": {
+      "named": "Kidde Commercial",
+      "anon": "Brand B"
+    },
+    "Aritech": {
+      "named": "Aritech",
+      "anon": "Brand C"
+    },
+    "EMS": {
+      "named": "EMS",
+      "anon": "Brand D"
+    },
+    "GST": {
+      "named": "GST",
+      "anon": "Brand E"
+    },
+    "AirSense": {
+      "named": "AirSense",
+      "anon": "Brand F"
+    }
+  },
+  "platform": {
+    "EST4": {
+      "named": "EST4",
+      "anon": "Panel platform A"
+    },
+    "EST3/EST3X": {
+      "named": "EST3/EST3X",
+      "anon": "Panel platform B"
+    },
+    "Edge": {
+      "named": "Edge",
+      "anon": "Panel platform C"
+    },
+    "iO": {
+      "named": "iO",
+      "anon": "Panel platform D"
+    },
+    "Evolve": {
+      "named": "Evolve",
+      "anon": "Panel platform E"
+    },
+    "VM/VS": {
+      "named": "VM/VS",
+      "anon": "Panel platform F"
+    },
+    "2X": {
+      "named": "2X",
+      "anon": "Panel platform G"
+    },
+    "FireCell": {
+      "named": "FireCell",
+      "anon": "Wireless platform H"
+    },
+    "SmartCell": {
+      "named": "SmartCell",
+      "anon": "Wireless platform J"
+    },
+    "GST panel family": {
+      "named": "GST panel family",
+      "anon": "Panel platform K"
+    },
+    "AirSense aspirating": {
+      "named": "AirSense aspirating",
+      "anon": "Aspirating platform L"
+    },
+    "ModuLaser": {
+      "named": "ModuLaser",
+      "anon": "Aspirating platform M"
+    }
+  },
+  "fw": {
+    "EST4@4.0": {
+      "named": "4.0",
+      "anon": "A.4.0"
+    },
+    "EST4@4.1": {
+      "named": "4.1",
+      "anon": "A.4.1"
+    },
+    "Edge@3.2": {
+      "named": "3.2",
+      "anon": "C.3.2"
+    },
+    "2X@7.4": {
+      "named": "7.4",
+      "anon": "G.7.4"
+    },
+    "VM/VS@5.1": {
+      "named": "5.1",
+      "anon": "F.5.1"
+    },
+    "GST panel family@G-7": {
+      "named": "G-7",
+      "anon": "K.7"
+    }
+  },
+  "partner": {
+    "ESD-SE-02": {
+      "named": "ESD-SE-02",
+      "anon": "Partner P-02"
+    },
+    "ESD-SE-07": {
+      "named": "ESD-SE-07",
+      "anon": "Partner P-07"
+    },
+    "ESD-SE-11": {
+      "named": "ESD-SE-11",
+      "anon": "Partner P-11"
+    },
+    "ESD-SE-14": {
+      "named": "ESD-SE-14",
+      "anon": "Partner P-14"
+    },
+    "ESD-SW-03": {
+      "named": "ESD-SW-03",
+      "anon": "Partner P-23"
+    },
+    "ESD-SW-09": {
+      "named": "ESD-SW-09",
+      "anon": "Partner P-29"
+    },
+    "ESD-SW-12": {
+      "named": "ESD-SW-12",
+      "anon": "Partner P-32"
+    },
+    "ESD-CA-04": {
+      "named": "ESD-CA-04",
+      "anon": "Partner P-44"
+    },
+    "ESD-CA-06": {
+      "named": "ESD-CA-06",
+      "anon": "Partner P-46"
+    },
+    "ESD-MW-05": {
+      "named": "ESD-MW-05",
+      "anon": "Partner P-55"
+    },
+    "DLR-NE-118": {
+      "named": "DLR-NE-118",
+      "anon": "Partner P-118"
+    },
+    "DLR-W-044": {
+      "named": "DLR-W-044",
+      "anon": "Partner P-144"
+    },
+    "DLR-SW-201": {
+      "named": "DLR-SW-201",
+      "anon": "Partner P-201"
+    },
+    "DIST-UK-004": {
+      "named": "DIST-UK-004",
+      "anon": "Distributor D-04"
+    },
+    "DIST-UK-019": {
+      "named": "DIST-UK-019",
+      "anon": "Distributor D-19"
+    },
+    "DIST-UK-031": {
+      "named": "DIST-UK-031",
+      "anon": "Distributor D-31"
+    },
+    "DIST-DE-012": {
+      "named": "DIST-DE-012",
+      "anon": "Distributor D-12"
+    },
+    "DIST-NL-007": {
+      "named": "DIST-NL-007",
+      "anon": "Distributor D-07"
+    }
+  },
+  "region": {
+    "US-SE": {
+      "named": "US-SE",
+      "anon": "Region NA-1"
+    },
+    "US-SW": {
+      "named": "US-SW",
+      "anon": "Region NA-2"
+    },
+    "Canada": {
+      "named": "Canada",
+      "anon": "Region NA-3"
+    },
+    "US-NE": {
+      "named": "US-NE",
+      "anon": "Region NA-4"
+    },
+    "US-MW": {
+      "named": "US-MW",
+      "anon": "Region NA-5"
+    },
+    "US-W": {
+      "named": "US-W",
+      "anon": "Region NA-6"
+    },
+    "UK-EU": {
+      "named": "UK-EU",
+      "anon": "Region EU-1"
+    },
+    "UK": {
+      "named": "UK",
+      "anon": "Country EU-a"
+    },
+    "DE": {
+      "named": "DE",
+      "anon": "Country EU-b"
+    },
+    "NL": {
+      "named": "NL",
+      "anon": "Country EU-c"
+    },
+    "FR": {
+      "named": "FR",
+      "anon": "Country EU-d"
+    },
+    "APAC": {
+      "named": "APAC",
+      "anon": "Region AP-1"
+    }
+  },
+  "place": {
+    "Florida": {
+      "named": "Florida",
+      "anon": "State 1"
+    },
+    "Texas": {
+      "named": "Texas",
+      "anon": "State 2"
+    },
+    "Ontario": {
+      "named": "Ontario",
+      "anon": "Province 1"
+    },
+    "Georgia": {
+      "named": "Georgia",
+      "anon": "State 3"
+    },
+    "Arizona": {
+      "named": "Arizona",
+      "anon": "State 4"
+    },
+    "Alabama": {
+      "named": "Alabama",
+      "anon": "State 5"
+    },
+    "Houston": {
+      "named": "Houston",
+      "anon": "Metro 1"
+    }
+  },
+  "term": {
+    "partner-portal": {
+      "named": "Kidde FX",
+      "anon": "partner portal"
+    },
+    "mobile-app": {
+      "named": "KESMobile",
+      "anon": "mobile app"
+    },
+    "connected": {
+      "named": "ConnectedSafety+",
+      "anon": "connected service"
+    }
+  }
+}
