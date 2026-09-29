@@ -1,0 +1,43 @@
+[
+  {
+    "q": "Why is fw {{fw:EST4@4.1}} ranked above the D-2 date-code window?",
+    "a": "Both are S2 cliffs. fw {{fw:EST4@4.1}} scores higher on source independence (0.78 across 9 partners) and its exposure grows with every upgrade; D-2 is partly containable in distributor stock. Rank score 0.84 vs 0.71 — an ordering, not a probability.",
+    "cites": [
+      {
+        "label": "Why ranked here?",
+        "route": "/installed-base/signal/fw-4-1"
+      },
+      {
+        "label": "Date-code window",
+        "route": "/installed-base#date-code"
+      }
+    ]
+  },
+  {
+    "q": "What would raise the confidence on fw {{fw:EST4@4.1}}?",
+    "a": "Firmware in the case record for the 8 imputed cases, and configuration data on the 412 panels without the symptom. Either moves K up and I down. Engineering reproduction would test H1 directly.",
+    "cites": [
+      {
+        "label": "Method & audit"
+      },
+      {
+        "label": "EV-2609-0007",
+        "evidenceId": "EV-2609-0007"
+      }
+    ]
+  },
+  {
+    "q": "Which partners appear in more than one place?",
+    "a": "{{partner:ESD-SE-07}} (partner drift; 2 cases in the fw {{fw:EST4@4.1}} cohort), {{partner:ESD-CA-06}} (fw {{fw:EST4@4.1}} cohort; within band on the partner league) and {{partner:DIST-UK-031}} (channel watch; {{region:UK-EU}} invoicing).",
+    "cites": [
+      {
+        "label": "EV-2609-0003",
+        "evidenceId": "EV-2609-0003"
+      },
+      {
+        "label": "Partner league",
+        "route": "/channel#esd-se-07"
+      }
+    ]
+  }
+]
