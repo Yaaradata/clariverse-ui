@@ -3,7 +3,7 @@
 import { X } from "lucide-react";
 import { SyntheticBadge } from "../shell/SyntheticBadge";
 import { useLabel } from "../shell/DemoProvider";
-import { VALUES, unitCosts, valueStatements, neverOnScreen } from "@kgs/lib/values";
+import { valueRegister, unitCosts, valueStatements, neverOnScreen } from "@kgs/lib/values";
 
 type HowWeCountDrawerProps = {
   isOpen: boolean;
@@ -116,19 +116,43 @@ export function HowWeCountDrawer({ isOpen, onClose }: HowWeCountDrawerProps) {
               Unit Cost Assumptions
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {unitCosts.map((cost, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    fontSize: 14,
-                    color: "#d4d4d8",
-                    lineHeight: 1.6,
-                    fontFamily: "var(--mono, monospace)",
-                  }}
-                >
-                  {L(cost)}
-                </div>
-              ))}
+              <div
+                style={{
+                  fontSize: 14,
+                  color: "#d4d4d8",
+                  lineHeight: 1.6,
+                  fontFamily: "var(--mono, monospace)",
+                }}
+              >
+                Tier-1 contact ${unitCosts.tier1ContactUsd[0]}–${unitCosts.tier1ContactUsd[1]}
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  color: "#d4d4d8",
+                  lineHeight: 1.6,
+                  fontFamily: "var(--mono, monospace)",
+                }}
+              >
+                Fully loaded field cost per excess fault contact ${unitCosts.excessFaultContactUsd} (
+                {unitCosts.breakdown.map((item, idx) => (
+                  <span key={idx}>
+                    {item.label} ${item.usd}
+                    {idx < unitCosts.breakdown.length - 1 ? " · " : ""}
+                  </span>
+                ))}
+                )
+              </div>
+              <div
+                style={{
+                  fontSize: 14,
+                  color: "#d4d4d8",
+                  lineHeight: 1.6,
+                  fontFamily: "var(--mono, monospace)",
+                }}
+              >
+                Detector field replacement ${unitCosts.detectorReplacementUsd} per unit
+              </div>
             </div>
           </div>
 
@@ -138,7 +162,7 @@ export function HowWeCountDrawer({ isOpen, onClose }: HowWeCountDrawerProps) {
               Value Register
             </h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {VALUES.map((value) => (
+              {valueRegister.map((value) => (
                 <div
                   key={value.id}
                   style={{

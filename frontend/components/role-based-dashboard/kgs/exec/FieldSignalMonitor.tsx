@@ -19,7 +19,7 @@ type MonitorCard = {
   severityCompact: string;
   confidenceShort: string;
   pnlShort: string;
-  joinTags: Array<{ key: string; value: string }>;
+  joinTags: string[];
   gateChip: any;
   suggestion: string;
   linkTo: string;
