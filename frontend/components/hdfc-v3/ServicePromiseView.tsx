@@ -62,11 +62,11 @@ export const REQUEST_LABEL: Record<string, string> = {
 const ACTION_FOR: Record<string, string> = {
   card_delivery: "Notify proactively",
   refund: "Notify proactively",
-  reversal: "Re-promise",
+  reversal: "Set a new date",
   dispute: "Update and close",
-  closure: "Re-promise",
+  closure: "Set a new date",
   loan_disbursal: "Notify proactively",
-  credit_report: "Re-promise",
+  credit_report: "Set a new date",
   kyc: "Update and close",
   other: "Route with evidence",
 };
@@ -577,33 +577,6 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
         </Tile>
       </div>
 
-      <Tile
-        id="triage"
-        title="Action triage"
-        sub={`${fmt(it.action_triage.total)} routed items this window, by recommended action`}
-        prov="internal"
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-            gap: 8,
-          }}
-        >
-          {it.action_triage.rows.map((r) => (
-            <Kpi
-              key={r.action}
-              label={r.action}
-              value={fmt(r.count)}
-              sub={`${fmtPct((100 * r.count) / it.action_triage.total)} of routed items`}
-            />
-          ))}
-        </div>
-        <MutedNote>
-          Recommendations are routed into the owner&apos;s system (CRM, work
-          queues). LisN never executes them.
-        </MutedNote>
-      </Tile>
     </div>
   );
 }

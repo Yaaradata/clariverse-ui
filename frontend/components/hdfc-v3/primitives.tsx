@@ -295,14 +295,11 @@ export function RungChip({ rung }: { rung: string }) {
   );
 }
 
-/** B7: "promise" becomes "deliverables" in the UI, so the re-promise action reads as setting a new date. */
-const ACTION_LABEL: Record<string, string> = { "Re-promise": "Set a new date" };
-
 export function ActionChip({ action }: { action: string }) {
   return (
     <Chip
       label="Action"
-      value={ACTION_LABEL[action] ?? action}
+      value={action}
       color={C.cyan}
       title="A recommendation, routed to the owner's system"
     />

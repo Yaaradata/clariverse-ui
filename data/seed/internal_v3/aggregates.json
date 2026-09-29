@@ -2623,7 +2623,7 @@
     "at": "2026-09-28T18:20+05:30",
     "channel": "inbound_voice",
     "product": "cards",
-    "summary": "Repeat call: limit raised for 48 hours; the agent promised a callback on the declines. No callback logged."
+    "summary": "Repeat call: limit raised for 48 hours; the agent said someone would call back about the declines. No callback logged."
    },
    "open": 4,
    "oldest_open_hours": 35.2,
@@ -2744,7 +2744,7 @@
      "team": "Cards",
      "theme": "card_limit",
      "theme_label": "Credit limit",
-     "summary": "Repeat call: limit raised for 48 hours; the agent promised a callback on the declines. No callback logged.",
+     "summary": "Repeat call: limit raised for 48 hours; the agent said someone would call back about the declines. No callback logged.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,
@@ -2782,7 +2782,7 @@
     "at": "2026-09-27T09:30+05:30",
     "channel": "outbound_voice",
     "product": "accounts",
-    "summary": "RM called back and logged a fresh request; resolution promised within two working days."
+    "summary": "RM called back and logged a fresh request; resolution committed within two working days."
    },
    "open": 2,
    "oldest_open_hours": 68.7,
@@ -2818,7 +2818,7 @@
      "team": "Retail",
      "theme": "complaint_handling",
      "theme_label": "Complaints closed without resolution",
-     "summary": "RM called back and logged a fresh request; resolution promised within two working days.",
+     "summary": "RM called back and logged a fresh request; resolution committed within two working days.",
      "flag_set": false,
      "flag_follows": false,
      "event": false,

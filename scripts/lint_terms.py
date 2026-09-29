@@ -46,12 +46,21 @@ DATA_FILES = [
     ROOT / "data" / "out" / "app_jul_sep" / "store_series.json",
     ROOT / "data" / "out" / "app_jul_sep" / "briefing.json",
     ROOT / "data" / "out" / "app_jul_sep" / "ask.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "themes.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "signals.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "meta.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "mood.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "app_pulse.json",
 ]
-# Code identifiers that legitimately contain a banned word (not rendered).
-ALLOW = re.compile(
-    r"promise_break|promise_by_request_type|promise_ledger|promiseAnswer|ServicePromise|Re-promise|Promise<|"
-    r"repeatInPromise|statusInPromise|service-promise|promise_break_mentions|service promise view"
-)
+# Customer voice (quotes, their paraphrased summaries, review titles, asks) is the customer's words, not our copy.
+CUSTOMER_VOICE_KEYS = {"redacted_text", "summary", "title", "text", "feature_asks", "asks"}
+# Search keywords match what a person types into Ask LisN; they are never shown.
+NOT_SHOWN_KEYS = {"keywords"}
+# The synthetic internal layer is our own writing, so its summaries and texts are copy and are linted.
+SYNTHETIC = str(Path("data") / "seed")
+# Code identifiers (snake_case, camelCase, PascalCase with an inner capital, kebab-case paths) are not copy. No word is
+# whitelisted: a banned word in rendered text is always a hit.
+IDENTIFIER = re.compile(r"\b\w+_\w+\b|\b[a-z]+[A-Z]\w*\b|\b[A-Z][a-z]+[A-Z]\w*\b|(?<![\w ])/[\w/-]+|\b\w+(?:-\w+)+\.(?:tsx?|json)\b|Promise<")
 
 STRING = re.compile(r'"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`')
 JSX_TEXT = re.compile(r">\s*([^<>{}\n;=()][^<>{}=;]*?)\s*<")
@@ -70,10 +79,11 @@ def copy_strings(text: str):
 
 def check(s: str, where: str, hits: list[str]):
     s = re.sub(r"\$\{[^}]*\}", "", s)  # template expressions are code, not copy
-    if ALLOW.search(s):
-        s = ALLOW.sub("", s)
+    s = IDENTIFIER.sub("", s)
     for t in BANNED:
-        if re.search(rf"(?<![A-Za-z]){re.escape(t)}(?![A-Za-z])", s, re.I if t in ("promise",) else 0):
+        # "promise" in every form (promise, promises, promised, promising, re-promise), any case.
+        pat = r"(?<![A-Za-z])promis\w*" if t == "promise" else rf"(?<![A-Za-z]){re.escape(t)}(?![A-Za-z])"
+        if re.search(pat, s, re.I if t == "promise" else 0):
             hits.append(f"{where}: banned term '{t}' in: {s[:80]}")
     for t in PEOPLE:
         if re.search(rf"(?<![A-Za-z]){t}(?![A-Za-z])", s):
@@ -92,11 +102,13 @@ def check(s: str, where: str, hits: list[str]):
 def walk_json(o, path: str, hits: list[str]):
     if isinstance(o, dict):
         for k, v in o.items():
+            if (k in CUSTOMER_VOICE_KEYS and not path.startswith(SYNTHETIC)) or k in NOT_SHOWN_KEYS:
+                continue
             walk_json(v, f"{path}.{k}", hits)
     elif isinstance(o, list):
         for i, v in enumerate(o):
             walk_json(v, f"{path}[{i}]", hits)
-    elif isinstance(o, str) and " " in o:
+    elif isinstance(o, str) and re.search(r"[A-Za-z]{3}", o):
         check(o, path, hits)
 
 

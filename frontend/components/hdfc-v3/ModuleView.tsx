@@ -412,7 +412,7 @@ export function CardsModule({ b }: { b: Bundle }) {
           <Status value="needs_you" />
           <OwnerChip owner="cards" />
           <RungChip rung="Grievance" />
-          <ActionChip action="Re-promise" />
+          <ActionChip action="Set a new date" />
         </div>
 
         <Section n={1} title="What">

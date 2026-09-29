@@ -149,7 +149,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
               key="a"
               action={
                 r.open_too_long
-                  ? "Re-promise"
+                  ? "Set a new date"
                   : (r.met_pct ?? 100) < 80
                     ? "Route with evidence"
                     : "Monitor"
