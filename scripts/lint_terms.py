@@ -26,9 +26,15 @@ PEOPLE = ["Vidya", "Ranjith", "Soumya", "Somya", "Anjani", "Pradeep", "Kartik"]
 # Internal brief references, build labels and version names never appear in UI copy.
 INTERNAL_REF = re.compile(r"\b(?:B[1-7][ab]?|D-?\d{1,2})\s*§|\bB7\b|MORNING_DECISIONS|first demo|after (?:the )?\w+ call", re.I)
 US_SPELLINGS = ["color", "favor", "analyze", "center", "organization"]
+# Internal programme names: one per line in scripts/lint_terms_local.txt (gitignored, so the names are never committed;
+# copy scripts/lint_terms_local.example.txt). Lines starting with # are comments.
 LOCAL = ROOT / "scripts" / "lint_terms_local.txt"
-if LOCAL.exists():
-    BANNED += [l.strip() for l in LOCAL.read_text(encoding="utf-8").splitlines() if l.strip()]
+LOCAL_TERMS = (
+    [l.strip() for l in LOCAL.read_text(encoding="utf-8").splitlines() if l.strip() and not l.strip().startswith("#")]
+    if LOCAL.exists()
+    else []
+)
+BANNED += LOCAL_TERMS
 
 # V2. V1 is kept exactly as first shown and is not linted.
 UI_DIRS = [
@@ -113,6 +119,11 @@ def walk_json(o, path: str, hits: list[str]):
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if not LOCAL_TERMS:
+        # Not a failure, but never a silent pass: without the list, programme names are not checked.
+        print("lint_terms: NOTE internal programme-name list is empty (scripts/lint_terms_local.txt); those names are not checked")
     hits: list[str] = []
     for d in UI_DIRS:
         for f in sorted(d.rglob("*.ts*")):

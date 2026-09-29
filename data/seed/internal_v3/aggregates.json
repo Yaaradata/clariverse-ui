@@ -17,10 +17,10 @@
   "closed": 30565,
   "closed_or_responded": 31976,
   "open": 1435,
-  "open_too_long": 355,
+  "open_too_long": 357,
   "closed_or_responded_pct": 99.9,
   "open_pct": 4.5,
-  "open_too_long_pct_of_open": 24.7
+  "open_too_long_pct_of_open": 24.9
  },
  "products": [
   {
@@ -117,18 +117,18 @@
    "closed": 2694,
    "closed_or_responded": 2756,
    "open": 64,
-   "open_too_long": 15,
+   "open_too_long": 16,
    "closed_or_responded_pct": 99.9,
    "open_pct": 2.3,
-   "open_too_long_pct_of_open": 23.4,
+   "open_too_long_pct_of_open": 25.0,
    "negative": 1410,
    "high_impact": 29,
    "deliverables": {
-    "measured": 2709,
+    "measured": 2710,
     "met": 2207,
-    "outside": 502,
-    "met_pct": 81.5,
-    "open_within": 49
+    "outside": 503,
+    "met_pct": 81.4,
+    "open_within": 48
    },
    "negative_weekly": [
     {
@@ -552,18 +552,18 @@
    "closed": 854,
    "closed_or_responded": 919,
    "open": 67,
-   "open_too_long": 17,
+   "open_too_long": 18,
    "closed_or_responded_pct": 99.8,
    "open_pct": 7.3,
-   "open_too_long_pct_of_open": 25.4,
+   "open_too_long_pct_of_open": 26.9,
    "negative": 454,
    "high_impact": 39,
    "deliverables": {
-    "measured": 871,
+    "measured": 872,
     "met": 690,
-    "outside": 181,
-    "met_pct": 79.2,
-    "open_within": 50
+    "outside": 182,
+    "met_pct": 79.1,
+    "open_within": 49
    },
    "negative_weekly": [
     {
@@ -753,10 +753,10 @@
    "closed": 6198,
    "closed_or_responded": 6436,
    "open": 238,
-   "open_too_long": 52,
+   "open_too_long": 53,
    "closed_or_responded_pct": 100.0,
    "open_pct": 3.7,
-   "open_too_long_pct_of_open": 21.8,
+   "open_too_long_pct_of_open": 22.3,
    "negative": 2713
   },
   {
@@ -766,10 +766,10 @@
    "closed": 4240,
    "closed_or_responded": 4450,
    "open": 223,
-   "open_too_long": 57,
+   "open_too_long": 58,
    "closed_or_responded_pct": 99.7,
    "open_pct": 5.0,
-   "open_too_long_pct_of_open": 25.6,
+   "open_too_long_pct_of_open": 26.0,
    "negative": 1860
   },
   {
@@ -855,7 +855,7 @@
     "payzapp": 2,
     "insurance": 1
    },
-   "rm_should_know": 17,
+   "rm_should_know": 18,
    "rm_notified_today": 4,
    "added_this_week": 3,
    "added_this_week_by_lisn": 0
@@ -870,7 +870,7 @@
    "open": 55,
    "open_over_5h": 53,
    "open_over_24h": 44,
-   "open_too_long": 12,
+   "open_too_long": 14,
    "negative": 547,
    "negative_by_channel": {
     "inbound_voice": 194,
@@ -907,7 +907,7 @@
    "open": 58,
    "open_over_5h": 57,
    "open_over_24h": 42,
-   "open_too_long": 9,
+   "open_too_long": 10,
    "negative": 703,
    "negative_by_channel": {
     "inbound_voice": 266,
@@ -929,8 +929,8 @@
     "insurance": 2,
     "digital": 1
    },
-   "rm_should_know": 48,
-   "rm_notified_today": 14,
+   "rm_should_know": 49,
+   "rm_notified_today": 13,
    "added_this_week": 8,
    "added_this_week_by_lisn": 2
   },
@@ -944,7 +944,7 @@
    "open": 215,
    "open_over_5h": 209,
    "open_over_24h": 172,
-   "open_too_long": 46,
+   "open_too_long": 47,
    "negative": 2241,
    "negative_by_channel": {
     "inbound_voice": 822,
@@ -966,7 +966,7 @@
     "digital": 5,
     "home_loans": 8
    },
-   "rm_should_know": 178,
+   "rm_should_know": 180,
    "rm_notified_today": 34,
    "added_this_week": 8,
    "added_this_week_by_lisn": 3
@@ -975,7 +975,7 @@
  "high_impact": {
   "total": 772,
   "open": 71,
-  "open_too_long": 20,
+  "open_too_long": 21,
   "reasons": [
    {
     "id": "regulator_named",
@@ -1019,7 +1019,7 @@
   "multi_product": 4538,
   "negative_in_two_or_more_products": 2917,
   "with_open_issue": 813,
-  "with_open_too_long": 234,
+  "with_open_too_long": 235,
   "priority_among_them": 586,
   "pairs": [
    {
@@ -1053,12 +1053,12 @@
    "source_note": "RBI, harmonised TAT for failed transactions (20 Sep 2019)",
    "compensation": "₹100 per day of delay",
    "total": 287,
-   "measured": 284,
+   "measured": 285,
    "met": 227,
-   "outside": 57,
-   "met_pct": 79.9,
-   "open_within": 3,
-   "open_too_long": 1,
+   "outside": 58,
+   "met_pct": 79.6,
+   "open_within": 2,
+   "open_too_long": 2,
    "themes": [
     "failed_txn_reversal",
     "upi_failures"
@@ -1079,12 +1079,12 @@
      "product": "payzapp",
      "label": "PayZapp and UPI",
      "total": 156,
-     "measured": 154,
+     "measured": 155,
      "met": 128,
-     "outside": 26,
-     "met_pct": 83.1,
-     "open_within": 2,
-     "open_too_long": 0
+     "outside": 27,
+     "met_pct": 82.6,
+     "open_within": 1,
+     "open_too_long": 1
     },
     {
      "product": "accounts",
@@ -1994,12 +1994,12 @@
    "source_note": null,
    "compensation": "—",
    "total": 18375,
-   "measured": 18279,
+   "measured": 18280,
    "met": 15060,
-   "outside": 3219,
+   "outside": 3220,
    "met_pct": 82.4,
-   "open_within": 96,
-   "open_too_long": 16,
+   "open_within": 95,
+   "open_too_long": 17,
    "themes": [],
    "products": [
     {
@@ -2072,12 +2072,12 @@
      "product": "insurance",
      "label": "Insurance (bank-sold)",
      "total": 589,
-     "measured": 582,
+     "measured": 583,
      "met": 465,
-     "outside": 117,
-     "met_pct": 79.9,
-     "open_within": 7,
-     "open_too_long": 1
+     "outside": 118,
+     "met_pct": 79.8,
+     "open_within": 6,
+     "open_too_long": 2
     },
     {
      "product": "digital",
@@ -2627,6 +2627,7 @@
    },
    "open": 4,
    "oldest_open_hours": 35.2,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-27T19:42+05:30",
@@ -2786,6 +2787,7 @@
    },
    "open": 2,
    "oldest_open_hours": 68.7,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-26T11:05+05:30",
@@ -2863,6 +2865,7 @@
    },
    "open": 2,
    "oldest_open_hours": 106.5,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-24T21:14+05:30",
@@ -2883,7 +2886,7 @@
      "status": "open",
      "first_response_at": "2026-09-24T21:15+05:30",
      "deliverable_due": "2026-09-25T21:14+05:30",
-     "breached": false,
+     "breached": true,
      "high_impact": []
     },
     {
@@ -2937,6 +2940,7 @@
    },
    "open": 1,
    "oldest_open_hours": 165.8,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-22T10:00+05:30",
@@ -2986,6 +2990,7 @@
    },
    "open": 1,
    "oldest_open_hours": 8.9,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-28T22:48+05:30",
@@ -3037,6 +3042,7 @@
    },
    "open": 1,
    "oldest_open_hours": 135.4,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-23T16:20+05:30",
@@ -3100,7 +3106,7 @@
    ],
    "rm_id": "RM-025",
    "proxy_contacts": 1,
-   "rm_notified": true,
+   "rm_notified": false,
    "latest": {
     "at": "2026-09-20T12:15+05:30",
     "channel": "email",
@@ -3109,6 +3115,7 @@
    },
    "open": 0,
    "oldest_open_hours": null,
+   "rm_alert_due": false,
    "trail": [
     {
      "at": "2026-09-20T12:15+05:30",
@@ -3159,6 +3166,7 @@
    },
    "open": 1,
    "oldest_open_hours": 17.2,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-28T14:30+05:30",
@@ -3210,6 +3218,7 @@
    },
    "open": 1,
    "oldest_open_hours": 92.0,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-25T11:45+05:30",
@@ -3230,7 +3239,7 @@
      "status": "open",
      "first_response_at": "2026-09-26T10:00+05:30",
      "deliverable_due": "2026-09-26T11:45+05:30",
-     "breached": false,
+     "breached": true,
      "high_impact": [
       "Legal or consumer-court language"
      ]
@@ -3262,6 +3271,7 @@
    },
    "open": 0,
    "oldest_open_hours": null,
+   "rm_alert_due": false,
    "trail": [
     {
      "at": "2026-09-27T08:55+05:30",
@@ -3312,6 +3322,7 @@
    },
    "open": 1,
    "oldest_open_hours": 12.6,
+   "rm_alert_due": true,
    "trail": [
     {
      "at": "2026-09-28T19:10+05:30",
@@ -3354,7 +3365,7 @@
    ],
    "rm_id": "RM-060",
    "proxy_contacts": 0,
-   "rm_notified": true,
+   "rm_notified": false,
    "latest": {
     "at": "2026-09-21T10:25+05:30",
     "channel": "email",
@@ -3363,6 +3374,7 @@
    },
    "open": 0,
    "oldest_open_hours": null,
+   "rm_alert_due": false,
    "trail": [
     {
      "at": "2026-09-21T10:25+05:30",
@@ -3430,7 +3442,7 @@
  },
  "rm": {
   "should_know": 229,
-  "notified_today": 48,
+  "notified_today": 47,
   "rule": "An RM alert is due when a customer on a priority list or in the ultra-HNI or HNI tier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call."
  },
  "triage": {
@@ -4028,8 +4040,8 @@
    {
     "request_type": "other",
     "open_cases": 1207,
-    "beyond_tat": 301,
-    "beyond_tat_share": 24.9
+    "beyond_tat": 302,
+    "beyond_tat_share": 25.0
    },
    {
     "request_type": "closure",
@@ -4076,8 +4088,8 @@
    {
     "request_type": "reversal",
     "open_cases": 12,
-    "beyond_tat": 2,
-    "beyond_tat_share": 16.7
+    "beyond_tat": 3,
+    "beyond_tat_share": 25.0
    }
   ],
   "ladder": [
@@ -4110,8 +4122,8 @@
   "closure": {
    "closure_requests": 698,
    "closed": 639,
-   "saved": 174,
-   "save_rate": 27.2
+   "saved": 173,
+   "save_rate": 27.1
   },
   "disputes": {
    "raised": 95,

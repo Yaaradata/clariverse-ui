@@ -20,3 +20,4 @@ cd ../..
 "$PY" scripts/lint_terms.py
 "$PY" scripts/check_pii.py
 "$PY" scripts/test_check_pii.py
+"$PY" scripts/test_checks.py

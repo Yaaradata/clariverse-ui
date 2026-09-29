@@ -276,7 +276,13 @@ export function fastestRiser(b: Bundle): Theme | undefined {
 
 /** Satisfaction, "What customers are saying": the three largest themes that are not news, offers or catch-alls. */
 export function sayingThemes(b: Bundle): Theme[] {
-  const skip = ["other", "market_news", "offers_deals", "general_dissatisfaction", "product_advice"];
+  const skip = [
+    "other",
+    "market_news",
+    "offers_deals",
+    "general_dissatisfaction",
+    "product_advice",
+  ];
   return b.themes.themes
     .filter((t) => !skip.includes(t.id))
     .sort((a, c) => c.count - a.count)

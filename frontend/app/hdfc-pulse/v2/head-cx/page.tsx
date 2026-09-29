@@ -1,8 +1,8 @@
 import { ExecPage } from "@/components/hdfc-v3/ExecPage";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
-import { sliceBundle } from "@/lib/hdfc-v3/slice";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 
 export default function HeadCxPage() {
   const b = loadBundle();

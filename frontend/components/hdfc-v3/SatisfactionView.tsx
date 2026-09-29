@@ -52,7 +52,6 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-
 const SOURCE_LABEL: Record<string, string> = {
   x: "X",
   reddit: "Reddit",

@@ -29,6 +29,8 @@ CLEAN = [
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     fails = []
     with tempfile.TemporaryDirectory() as d:
         for i, s in enumerate(SEEDED):

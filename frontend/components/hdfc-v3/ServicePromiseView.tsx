@@ -27,7 +27,6 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-
 export const REQUEST_LABEL: Record<string, string> = {
   card_delivery: "Card dispatch and delivery",
   refund: "Refunds",
@@ -74,9 +73,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
     b.v3.deliverables.find((d) => d.id === REQUEST_DELIVERABLE[requestType])
       ?.tat_label;
   const sig = b.signals;
-  const ageing = Object.fromEntries(
-    it.ageing.map((r) => [r.request_type, r]),
-  );
+  const ageing = Object.fromEntries(it.ageing.map((r) => [r.request_type, r]));
   const ledger = [...sig.promise_by_request_type].sort(
     (a, c) =>
       Number(a.request_type === "other") - Number(c.request_type === "other"),
@@ -144,9 +141,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             />
             <Kpi
               label="Beyond TAT (internal)"
-              value={fmt(
-                it.ageing.reduce((s, r) => s + r.beyond_tat, 0),
-              )}
+              value={fmt(it.ageing.reduce((s, r) => s + r.beyond_tat, 0))}
               sub="open past the deliverable · illustrative"
               tone="violet"
             />
@@ -207,10 +202,10 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
           </div>
           <MutedNote>
             TATs as in the deliverables ledger above: RBI where published,
-            otherwise a working assumption for the bank to confirm in
-            discovery. Breaches, status-seeking and repeat are public voice;
-            open cases and beyond-TAT are illustrative, from the same demo
-            sample as the ledger.
+            otherwise a working assumption for the bank to confirm in discovery.
+            Breaches, status-seeking and repeat are public voice; open cases and
+            beyond-TAT are illustrative, from the same demo sample as the
+            ledger.
           </MutedNote>
         </Tile>
       </div>
@@ -573,7 +568,6 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
           ))}
         </Tile>
       </div>
-
     </div>
   );
 }

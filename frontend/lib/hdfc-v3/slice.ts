@@ -39,20 +39,27 @@ function idsFor(b: Bundle, s: Slice): { ids: string[]; full: boolean } {
         };
       }
       return {
-        ids: ["card_variant_migration", "card_fees_charges", "rewards_value"].flatMap(
-          (t) => first(b.themes.themes.find((x) => x.id === t)?.exemplars),
+        ids: [
+          "card_variant_migration",
+          "card_fees_charges",
+          "rewards_value",
+        ].flatMap((t) =>
+          first(b.themes.themes.find((x) => x.id === t)?.exemplars),
         ),
         full: false,
       };
     case "signal": {
-      if (s.id === "release-pulse") return idsFor(b, { view: "module", id: "digital" });
+      if (s.id === "release-pulse")
+        return idsFor(b, { view: "module", id: "digital" });
       const t = b.themes.themes.find((x) => x.id === s.id);
       return { ids: first(t?.exemplars, 5), full: true };
     }
     case "market":
       return {
         ids: [
-          ...b.pulse.apps.flatMap((a) => a.fix_list.slice(0, 5).flatMap((f) => first(f.example_ids))),
+          ...b.pulse.apps.flatMap((a) =>
+            a.fix_list.slice(0, 5).flatMap((f) => first(f.example_ids)),
+          ),
           ...b.signals.voices_with_reach.slice(0, 5).map((v) => v.id),
         ],
         full: false,

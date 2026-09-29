@@ -87,6 +87,16 @@ function CohortChips({ cohorts }: { cohorts: string[] }) {
 
 /* ================================================================= E2 */
 
+/** RM status from the RM rule: no alert due, alert sent, or alert due but not sent. */
+function rmStatus(p: { rm_alert_due: boolean; rm_notified: boolean }): string {
+  if (!p.rm_alert_due) return "no alert due";
+  return p.rm_notified ? "notified" : "not notified";
+}
+function rmColor(p: { rm_alert_due: boolean; rm_notified: boolean }): string {
+  if (!p.rm_alert_due) return C.textMut;
+  return p.rm_notified ? C.green : C.red;
+}
+
 export function PriorityView({ b }: { b: Bundle }) {
   const from = useFrom();
   const v = b.v3;
@@ -273,13 +283,8 @@ export function PriorityView({ b }: { b: Bundle }) {
                 latestStep.team,
                 <span key="rm">
                   {p.rm_id}
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: p.rm_notified ? C.green : C.red,
-                    }}
-                  >
-                    {p.rm_notified ? "notified" : "not notified"}
+                  <div style={{ fontSize: 12, color: rmColor(p) }}>
+                    {rmStatus(p)}
                   </div>
                 </span>,
                 <Link key="go" href={href} aria-label={`Open ${p.persona}`}>
@@ -594,7 +599,9 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
                 <strong style={{ color: C.red }}>Without LisN:</strong>{" "}
                 {p.trail.length} touchpoints, {teams.size}{" "}
                 {teams.size === 1 ? "team" : "teams"}, no one saw the pattern
-                {p.rm_notified ? "." : "; the RM was not told."}{" "}
+                {p.rm_alert_due && !p.rm_notified
+                  ? "; the RM was not told."
+                  : "."}{" "}
                 <strong style={{ color: C.green }}>With LisN:</strong> flagged
                 at touchpoint {flagged}, the RM alerted, and every later contact
                 opens with the history.
@@ -643,9 +650,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           </div>
           <div>
             RM: <span style={{ fontFamily: MONO }}>{p.rm_id}</span> ·{" "}
-            <span style={{ color: p.rm_notified ? C.green : C.red }}>
-              {p.rm_notified ? "notified" : "not notified"}
-            </span>
+            <span style={{ color: rmColor(p) }}>{rmStatus(p)}</span>
           </div>
           <div>
             Linked contacts:{" "}

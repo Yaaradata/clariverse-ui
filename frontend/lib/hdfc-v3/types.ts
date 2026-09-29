@@ -553,6 +553,8 @@ export type Persona = {
   products: ProductId[];
   rm_id: string | null;
   proxy_contacts: number;
+  /** An RM alert is due under the RM rule (same set as rm_notifications.json). */
+  rm_alert_due: boolean;
   rm_notified: boolean;
   story?: boolean;
   cohort_added_at?: string;

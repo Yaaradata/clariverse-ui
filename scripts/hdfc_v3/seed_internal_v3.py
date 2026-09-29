@@ -307,6 +307,11 @@ def make_interaction(idx, cust, product, theme, created, channel, sender, themes
         rec["high_impact"] = high_impact_reasons(t, channel, sender)
     if forced:
         rec.update(forced)
+        # A scripted status wins over the drawn one: an open item has no closing time, a closed one always has one.
+        if rec["status"] == "open":
+            rec["closed_at"] = None
+        elif not rec["closed_at"]:
+            rec["closed_at"] = iso(min(closed, NOW_DT))
     due = dt.datetime.fromisoformat(rec["deliverable_due"])
     end = dt.datetime.fromisoformat(rec["closed_at"]) if rec["closed_at"] else NOW_DT
     rec["breached"] = end > due
@@ -514,7 +519,9 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
         o24 = [r for r in open_rows if hours_between(r["created_at"], NOW_DT) > 24]
         neg = [r for r in rows if r["sentiment"] == "negative"]
         affected = {r["masked_id"] for r in open_rows}
-        rm_should = {m for m in affected if m in notified["should"]}
+        # Every member with an RM alert due (open issue, high impact, over 5 h, or an unresolved bot call), not only those
+        # with an open item: the same set rm_notifications.json lists.
+        rm_should = {c["masked_id"] for c in members if c["masked_id"] in notified["should"]}
         rm_did = {m for m in rm_should if m in notified["today"]}
         cohort_rows.append(
             {
@@ -648,7 +655,10 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
                 "latest": {"at": latest["created_at"], "channel": latest["channel"], "product": latest["product"], "summary": latest.get("summary") or theme_label.get(latest["theme"])},
                 "open": len(open_rs),
                 "oldest_open_hours": round(hours_between(oldest_open["created_at"], NOW_DT), 1) if oldest_open else None,
-                "rm_notified": p.get("rm_notified", False),
+                # From the RM rule, like every other customer (review finding #19); the persona's script decides only
+                # whether its due alert was sent.
+                "rm_alert_due": c["masked_id"] in notified["should"],
+                "rm_notified": c["masked_id"] in notified["today"],
                 "trail": persona_trail(p, rs, theme_label),
             }
         )
@@ -782,9 +792,12 @@ def rm_rules(customers, inter, bot_calls):
         if c["rm_id"] and not b["resolved"] and any(k in c["cohorts"] for k in ("priority_a", "priority_b", "uhni", "hni")):
             if hours_between(b["created_at"], NOW_DT) < 72:
                 should.add(b["masked_id"])
-    # Today, RMs hear about roughly one in five of these (manual, illustrative).
+    # Today, RMs hear about roughly one in five of these (manual, illustrative). A hand-written persona's story decides
+    # its own case, so its trail and its RM status always agree.
     ordered = sorted(should)
     today = {m for i, m in enumerate(ordered) if (i * 37) % 100 < 21}
+    scripted = {p["masked_id"]: p.get("rm_notified", False) for p in PERSONAS}
+    today = {m for m in today if m not in scripted} | {m for m, told in scripted.items() if told and m in should}
     return {"should": should, "today": today}
 
 

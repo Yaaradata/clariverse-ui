@@ -364,7 +364,7 @@ export function CardsModule({ b }: { b: Bundle }) {
       if (pubIssue[t]) return s + pubIssue[t].negative;
       const th = tm[t];
       // Not in the product's issue list: estimate from the theme's negative share on its cards items.
-      return th && th.count
+      return th?.count
         ? s +
             Math.round(
               (th.sentiment.negative * (th.by_business.cards ?? 0)) / th.count,
@@ -468,8 +468,9 @@ export function CardsModule({ b }: { b: Bundle }) {
             Public trend is the source-weighted share of trend-basis items,
             second half vs first half of the window: each source counts by its
             share of the window, so the capped late-September X run cannot swing
-            it. Reddit (collector changed 1 Sep) and the store exports that start
-            mid-window are left out. Internal weeks are from the demo sample.
+            it. Reddit (collector changed 1 Sep) and the store exports that
+            start mid-window are left out. Internal weeks are from the demo
+            sample.
           </BaselineCaption>
         </Section>
 

@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { SignalDetail } from "@/components/hdfc-v3/SignalDetail";
 import { loadBundle } from "@/lib/hdfc-v3/load";
-import { sliceBundle } from "@/lib/hdfc-v3/slice";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 
 export const dynamicParams = false;
 

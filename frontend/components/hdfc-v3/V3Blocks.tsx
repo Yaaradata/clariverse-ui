@@ -650,9 +650,9 @@ export function ProductPulseTable({ b, from }: { b: Bundle; from: View }) {
         {fmt(Object.values(b.products.excluded).reduce((s, n) => s + n, 0))}{" "}
         wealth, SME and corporate items sit outside the table). Loans are split
         by the loan apps and by keyword, so the split is approximate.{" "}
-        {b.products.trend_rule} Deliverables are measured on
-        closed items and on open items already past their TAT ({ledger.length}{" "}
-        deliverable types). Group-company apps are excluded.
+        {b.products.trend_rule} Deliverables are measured on closed items and on
+        open items already past their TAT ({ledger.length} deliverable types).
+        Group-company apps are excluded.
       </MutedNote>
     </Tile>
   );

@@ -1,0 +1,24 @@
+# Line endings: LF in the repository and in every checkout, whatever core.autocrlf says, so the formatter (Biome,
+# lineEnding lf) sees the same bytes on Windows and on Linux.
+* text=auto eol=lf
+
+# Binary files: never touched.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.xlsx binary
+*.xls binary
+*.docx binary
+*.pptx binary
+*.zip binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.pyc binary
+
+# Raw source data stays byte-for-byte as collected.
+data/raw/** -text

@@ -86,6 +86,8 @@ def scan(paths) -> list[str]:
 
 
 def main() -> int:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     hits = scan(FILES)
     for h in hits[:50]:
         print(h)

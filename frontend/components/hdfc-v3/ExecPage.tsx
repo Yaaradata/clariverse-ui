@@ -60,7 +60,6 @@ import {
   ProductPulseTable,
 } from "./V3Blocks";
 
-
 function PulseBox({
   title,
   items,
@@ -818,13 +817,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           prov="internal"
         >
           <Table
-            head={[
-              "Theme",
-              "Owner",
-              "Mails",
-              "Median age",
-              "Resolved",
-            ]}
+            head={["Theme", "Owner", "Mails", "Median age", "Resolved"]}
             align={["left", "left", "right", "right", "right"]}
             rows={b.v3.md_mail.rows.map((r) => [
               <Link
