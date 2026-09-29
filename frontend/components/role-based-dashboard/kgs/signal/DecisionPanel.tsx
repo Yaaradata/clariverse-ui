@@ -36,6 +36,7 @@ const outline = {
 
 /** Local "Viewing as: President | VP Engineering" segmented control (02 HS-9). */
 function ViewingAsSwitch() {
+  const L = useLabel();
   const { state, setViewingAs } = useDemo();
   const { viewingAs, viewingAsOptions } = meta.ui.hero;
   return (
@@ -59,7 +60,7 @@ function ViewingAsSwitch() {
           color: K.textMut,
         }}
       >
-        {viewingAs}
+        {L(viewingAs)}
       </legend>
       <div
         style={{
@@ -180,7 +181,7 @@ export function DecisionPanel({
           id="kgs-decision-title"
           style={{ margin: 0, fontSize: 17, fontWeight: 800, color: K.text }}
         >
-          {hero.decision}
+          {L(hero.decision)}
         </h2>
         <ViewingAsSwitch />
       </div>
@@ -190,13 +191,13 @@ export function DecisionPanel({
         title={L(approved ? onApprove.title : BRIEF.title)}
         auditLine={
           approved && approval
-            ? withTs(onApprove.auditLine, approval.ts)
-            : BRIEF.auditLine
+            ? L(withTs(onApprove.auditLine, approval.ts))
+            : L(BRIEF.auditLine ?? "")
         }
       >
         {request && BRIEF.decisionRequest ? (
           <>
-            <GateChip text={BRIEF.decisionRequest.chip} status="awaiting" />
+            <GateChip text={L(BRIEF.decisionRequest.chip)} status="awaiting" />
             <div
               style={{
                 fontSize: 13,
@@ -205,7 +206,7 @@ export function DecisionPanel({
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {withTs(BRIEF.decisionRequest.auditEntry, request.ts)}
+              {L(withTs(BRIEF.decisionRequest.auditEntry, request.ts))}
             </div>
           </>
         ) : null}
@@ -227,7 +228,7 @@ export function DecisionPanel({
           status="not_sent"
           title={
             approved && BRIEF.onApproveSecondary
-              ? BRIEF.onApproveSecondary.title
+              ? L(BRIEF.onApproveSecondary.title)
               : L(NOTE.title)
           }
         />
@@ -236,10 +237,10 @@ export function DecisionPanel({
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
         <ApproveButton
           state={buttonState}
-          label={BRIEF.approveLabel ?? ""}
-          pendingLabel={hero.approving}
-          doneLabel={hero.approved}
-          lockedTooltip={BRIEF.disabledTooltip ?? ""}
+          label={L(BRIEF.approveLabel ?? "")}
+          pendingLabel={L(hero.approving)}
+          doneLabel={L(hero.approved)}
+          lockedTooltip={L(BRIEF.disabledTooltip ?? "")}
           onApprove={handleApprove}
         />
         <button
@@ -248,7 +249,7 @@ export function DecisionPanel({
           className="kgs-focus"
           style={outline}
         >
-          {hero.viewDraft}
+          {L(hero.viewDraft)}
         </button>
         <button
           type="button"
@@ -256,7 +257,7 @@ export function DecisionPanel({
           className="kgs-focus"
           style={outline}
         >
-          {drawer.title}
+          {L(drawer.title)}
         </button>
       </div>
 
@@ -275,8 +276,8 @@ export function DecisionPanel({
           }}
         >
           {request
-            ? BRIEF.decisionRequest.doneLabel
-            : BRIEF.decisionRequest.buttonLabel}
+            ? L(BRIEF.decisionRequest.doneLabel)
+            : L(BRIEF.decisionRequest.buttonLabel)}
         </button>
       ) : null}
 
@@ -288,7 +289,7 @@ export function DecisionPanel({
           borderTop: `1px solid ${K.borderLight}`,
         }}
       >
-        {signal.gateFooter}
+        {L(signal.gateFooter)}
       </div>
     </section>
   );

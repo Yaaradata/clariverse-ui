@@ -39,7 +39,7 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
   const top: RailItem[] = [
     {
       key: "overview",
-      label: ui.overview,
+      label: L(ui.overview),
       icon: Activity,
       onClick: () => go("/"),
       active: view === "/",
@@ -68,15 +68,15 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
   ];
   const watch: RailItem = {
     key: "watch",
-    label: ui.watch,
+    label: L(ui.watch),
     icon: Lock,
     onClick: () => go("/#governed-watch"),
   };
   const bottom: RailItem[] = [
-    { key: "back", label: ui.back, icon: ArrowLeft, onClick: exit },
+    { key: "back", label: L(ui.back), icon: ArrowLeft, onClick: exit },
     {
       key: "demo",
-      label: ui.demoControls,
+      label: L(ui.demoControls),
       icon: SlidersHorizontal,
       onClick: onOpenDemoMenu,
     },
@@ -173,8 +173,8 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
         <button
           type="button"
           onClick={() => go("/")}
-          title={ui.logo}
-          aria-label={ui.logo}
+          title={L(ui.logo)}
+          aria-label={L(ui.logo)}
           className="kgs-focus"
           style={{
             width: 36,
@@ -192,11 +192,11 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
             marginLeft: hover ? 6 : 0,
           }}
         >
-          {ui.monogram}
+          {L(ui.monogram)}
         </button>
       </div>
       <nav
-        aria-label={meta.title}
+        aria-label={L(meta.title)}
         style={{ padding: "10px 8px", flex: 1, overflowY: "auto" }}
       >
         {top.map(renderItem)}

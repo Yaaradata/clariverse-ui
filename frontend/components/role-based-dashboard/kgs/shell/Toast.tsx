@@ -11,6 +11,7 @@ import {
   useState,
 } from "react";
 import { K, withAlpha } from "../shared/tokens";
+import { useLabel } from "./DemoProvider";
 
 type ToastMsg = { id: number; title: string; body?: string };
 
@@ -26,6 +27,7 @@ export function useToast() {
 
 /** DecisionToast (04 §1.6): top-right under the ContextBar, 4 s, dismissible. */
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const L = useLabel();
   const [toast, setToast] = useState<ToastMsg | null>(null);
 
   const show = useCallback((title: string, body?: string) => {
@@ -66,7 +68,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
           }}
         >
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 14, fontWeight: 700 }}>{toast.title}</div>
+            <div style={{ fontSize: 14, fontWeight: 700 }}>
+              {L(toast.title)}
+            </div>
             {toast.body ? (
               <div
                 style={{
@@ -76,7 +80,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   lineHeight: 1.45,
                 }}
               >
-                {toast.body}
+                {L(toast.body)}
               </div>
             ) : null}
           </div>

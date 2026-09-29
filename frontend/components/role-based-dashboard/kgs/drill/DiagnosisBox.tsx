@@ -18,7 +18,7 @@ export function DiagnosisBox({ diagnosis }: { diagnosis: Diagnosis }) {
   ];
   return (
     <section
-      aria-label={diagnosis.title}
+      aria-label={L(diagnosis.title)}
       style={{
         background: withAlpha(K.brand, 0.08),
         border: `1px solid ${withAlpha(K.violet400, 0.35)}`,
@@ -50,7 +50,7 @@ export function DiagnosisBox({ diagnosis }: { diagnosis: Diagnosis }) {
           }}
         >
           <Sparkles size={18} color={K.violet400} aria-hidden />
-          {diagnosis.title}
+          {L(diagnosis.title)}
         </h2>
         {diagnosis.confidenceShort ? (
           <ConfidenceMarker short={diagnosis.confidenceShort} compact />
@@ -68,7 +68,7 @@ export function DiagnosisBox({ diagnosis }: { diagnosis: Diagnosis }) {
             key={r.label}
             style={{ margin: 0, fontSize: 14, lineHeight: 1.55, color: K.body }}
           >
-            <strong style={{ color: K.text }}>{r.label}:</strong> {L(r.text)}
+            <strong style={{ color: K.text }}>{L(r.label)}:</strong> {L(r.text)}
           </p>
         ))}
       </div>

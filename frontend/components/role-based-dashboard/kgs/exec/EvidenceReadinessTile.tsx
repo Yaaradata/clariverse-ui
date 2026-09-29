@@ -37,7 +37,7 @@ export function EvidenceReadinessTile() {
       }}
     >
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        <SeverityChip cls={cls as SeverityClass} word={word} />
+        <SeverityChip cls={cls as SeverityClass} word={L(word)} />
         <span
           style={{
             fontSize: 11,
@@ -49,15 +49,15 @@ export function EvidenceReadinessTile() {
             color: K.textMut,
           }}
         >
-          {e.extraChip}
+          {L(e.extraChip)}
         </span>
       </div>
       <h3 style={{ margin: 0, fontSize: 16, fontWeight: 700, color: K.text }}>
-        {e.title}
+        {L(e.title)}
       </h3>
       <p style={{ margin: 0, fontSize: 14, lineHeight: 1.55 }}>{L(e.body)}</p>
       <div style={{ fontSize: 14, fontWeight: 700, color: K.violet300 }}>
-        {e.label}
+        {L(e.label)}
       </div>
       <div
         style={{
@@ -69,8 +69,8 @@ export function EvidenceReadinessTile() {
           gap: 3,
         }}
       >
-        <span style={{ fontFamily: K.mono }}>{e.confidenceShort}</span>
-        <span>{e.owners}</span>
+        <span style={{ fontFamily: K.mono }}>{L(e.confidenceShort)}</span>
+        <span>{L(e.owners)}</span>
       </div>
     </button>
   );

@@ -54,17 +54,17 @@ export function SeverityStrip({
     >
       <SeverityChip cls={severity.class} word={severity.word} />
       <DomainChip domain={severity.domain} />
-      <span>{severity.typeNote}</span>
+      <span>{L(severity.typeNote)}</span>
       <span style={{ fontVariantNumeric: "tabular-nums" }}>
         {L(severity.blastRadius.headline)}
       </span>
       {severity.blastRadius.note ? (
         <span style={{ color: K.textMut }}>{L(severity.blastRadius.note)}</span>
       ) : null}
-      <span>{severity.incident.note}</span>
+      <span>{L(severity.incident.note)}</span>
       {severity.escalationRule ? (
         <span style={{ color: K.textMut, fontStyle: "italic" }}>
-          {severity.escalationRule}
+          {L(severity.escalationRule)}
         </span>
       ) : null}
     </div>

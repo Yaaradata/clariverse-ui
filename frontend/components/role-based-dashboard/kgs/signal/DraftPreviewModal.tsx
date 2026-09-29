@@ -26,8 +26,9 @@ const bodyText = {
 } as const;
 
 function Hypothesis({ text }: { text: string }) {
+  const L = useLabel();
   const m = HYPOTHESIS.exec(text);
-  if (!m) return <p style={bodyText}>{text}</p>;
+  if (!m) return <p style={bodyText}>{L(text)}</p>;
   const [, lead, ...rest] = m;
   const pairs = [0, 2, 4].map((i) => [rest[i], rest[i + 1]] as const);
   return (
@@ -49,11 +50,11 @@ function Hypothesis({ text }: { text: string }) {
           lineHeight: 1.5,
         }}
       >
-        {lead}
+        {L(lead)}
       </div>
       {pairs.map(([label, value]) => (
         <div key={label} style={{ ...bodyText, fontSize: 14 }}>
-          <strong style={{ color: K.textSec }}>{label}</strong> {value}
+          <strong style={{ color: K.textSec }}>{L(label)}</strong> {L(value)}
         </div>
       ))}
     </div>
@@ -65,7 +66,7 @@ function Section({ s }: { s: DraftBriefSection }) {
   return (
     <section style={{ display: "flex", flexDirection: "column", gap: 8 }}>
       <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: K.text }}>
-        {s.h}
+        {L(s.h)}
       </h3>
       {s.body ? <p style={bodyText}>{L(s.body)}</p> : null}
       {s.attachFeatured ? (
@@ -91,7 +92,9 @@ function Section({ s }: { s: DraftBriefSection }) {
                 {`\u201c${L(e.text)}\u201d`}
               </div>
               <div style={{ fontSize: 12, color: K.textMut }}>
-                {[e.channelLabel, L(e.partnerId), e.localDateLabel].join(" · ")}
+                {[L(e.channelLabel), L(e.partnerId), L(e.localDateLabel)].join(
+                  " · ",
+                )}
               </div>
             </li>
           ))}
@@ -106,7 +109,7 @@ function Section({ s }: { s: DraftBriefSection }) {
                 fontFamily: K.mono,
               }}
             >
-              {r.id} · {r.disposition}
+              {L(r.id)} · {L(r.disposition)}
             </li>
           ))}
         </ul>
@@ -130,7 +133,7 @@ function Section({ s }: { s: DraftBriefSection }) {
             fontStyle: "italic",
           }}
         >
-          {s.footer}
+          {L(s.footer)}
         </p>
       ) : null}
     </section>
@@ -162,10 +165,10 @@ export function DraftPreviewModal({
         approval ? (
           <GateChip
             status="approved"
-            text={withTs(draftBrief.chipApproved, approval.ts)}
+            text={L(withTs(draftBrief.chipApproved, approval.ts))}
           />
         ) : (
-          <GateChip status="awaiting" text={draftBrief.chipPending} />
+          <GateChip status="awaiting" text={L(draftBrief.chipPending)} />
         )
       }
       footer={
@@ -178,7 +181,7 @@ export function DraftPreviewModal({
           }}
         >
           <span style={{ fontSize: 12, color: K.textMut }}>
-            {draftBrief.footer}
+            {L(draftBrief.footer)}
           </span>
           <button
             type="button"
@@ -197,7 +200,7 @@ export function DraftPreviewModal({
               cursor: "pointer",
             }}
           >
-            {meta.ui.close}
+            {L(meta.ui.close)}
           </button>
         </div>
       }
@@ -211,7 +214,7 @@ export function DraftPreviewModal({
             fontVariantNumeric: "tabular-nums",
           }}
         >
-          {draftBrief.meta}
+          {L(draftBrief.meta)}
         </div>
         {draftBrief.sections.map((s) => (
           <Section key={s.h} s={s} />

@@ -6,6 +6,7 @@ import { Lock } from "lucide-react";
 import { useState } from "react";
 import { Modal } from "../shared/Overlay";
 import { K, withAlpha } from "../shared/tokens";
+import { useLabel } from "../shell/DemoProvider";
 
 /**
  * ClockRing (03 §6.12): elapsed time from the candidate first mention to the fixed
@@ -16,6 +17,7 @@ export function ClockRing({
 }: {
   clock: NonNullable<WatchItem["clock"]>;
 }) {
+  const L = useLabel();
   const [, max] = clock.refsHours;
   const hours =
     (Date.parse(meta.dataAsOf.iso) - Date.parse(clock.startUtc)) / 3_600_000;
@@ -64,7 +66,7 @@ export function ClockRing({
         fill={K.text}
         fontFamily="var(--mono)"
       >
-        {clock.elapsedLabel}
+        {L(clock.elapsedLabel)}
       </text>
     </svg>
   );
@@ -94,6 +96,7 @@ function RedactionBars() {
  * restriction modal. No hover lift.
  */
 export function GovernedWatchTile() {
+  const L = useLabel();
   const g = exec.governedWatch;
   const [open, setOpen] = useState(false);
 
@@ -136,10 +139,10 @@ export function GovernedWatchTile() {
               color: K.red400,
             }}
           >
-            {g.band}
+            {L(g.band)}
           </span>
           <span style={{ fontSize: 14, fontWeight: 700, color: K.text }}>
-            {g.title}
+            {L(g.title)}
           </span>
         </div>
         <div
@@ -152,9 +155,9 @@ export function GovernedWatchTile() {
         >
           <div style={{ display: "flex", alignItems: "baseline", gap: 12 }}>
             <span style={{ fontSize: 16, fontWeight: 700, color: K.text }}>
-              {g.headline}
+              {L(g.headline)}
             </span>
-            <span style={{ fontSize: 12, color: K.textMut }}>{g.pnl}</span>
+            <span style={{ fontSize: 12, color: K.textMut }}>{L(g.pnl)}</span>
           </div>
           {g.items.map((w) => (
             <div
@@ -176,10 +179,10 @@ export function GovernedWatchTile() {
                   paddingTop: 2,
                 }}
               >
-                {w.id}
+                {L(w.id)}
               </span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: 13, lineHeight: 1.5 }}>{w.row}</div>
+                <div style={{ fontSize: 13, lineHeight: 1.5 }}>{L(w.row)}</div>
                 {w.secondLine ? (
                   <div
                     style={{
@@ -189,13 +192,13 @@ export function GovernedWatchTile() {
                       lineHeight: 1.5,
                     }}
                   >
-                    {w.secondLine}
+                    {L(w.secondLine)}
                   </div>
                 ) : null}
                 <RedactionBars />
                 {w.clock ? (
                   <div style={{ fontSize: 12, color: K.textMut, marginTop: 6 }}>
-                    {w.clock.caption}
+                    {L(w.clock.caption)}
                   </div>
                 ) : null}
               </div>
@@ -203,18 +206,18 @@ export function GovernedWatchTile() {
             </div>
           ))}
           <div style={{ fontSize: 13, fontWeight: 800, color: K.text }}>
-            {g.footer}
+            {L(g.footer)}
           </div>
         </div>
       </button>
       <Modal
         open={open}
-        title={g.title}
+        title={L(g.title)}
         onClose={() => setOpen(false)}
         width={520}
       >
         <p style={{ margin: "0 0 16px", fontSize: 14, lineHeight: 1.6 }}>
-          {g.modal}
+          {L(g.modal)}
         </p>
         <button
           type="button"
@@ -231,7 +234,7 @@ export function GovernedWatchTile() {
             fontSize: 14,
           }}
         >
-          {meta.ui.close}
+          {L(meta.ui.close)}
         </button>
       </Modal>
     </>

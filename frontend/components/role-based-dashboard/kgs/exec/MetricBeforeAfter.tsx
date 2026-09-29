@@ -1,6 +1,7 @@
 "use client";
 
 import { K } from "../shared/tokens";
+import { useLabel } from "../shell/DemoProvider";
 
 /**
  * Fork of the bank spike-card metrics box (HeadOfCreditCardsDashboard.tsx:690-717).
@@ -12,6 +13,7 @@ export function MetricBeforeAfter({
 }: {
   rows: { label: string; value: string; change?: string }[];
 }) {
+  const L = useLabel();
   return (
     <div
       style={{
@@ -34,7 +36,7 @@ export function MetricBeforeAfter({
             fontSize: 12,
           }}
         >
-          <span style={{ color: K.textMut }}>{m.label}</span>
+          <span style={{ color: K.textMut }}>{L(m.label)}</span>
           <div style={{ textAlign: "right" }}>
             <div
               style={{
@@ -44,7 +46,7 @@ export function MetricBeforeAfter({
                 fontVariantNumeric: "tabular-nums",
               }}
             >
-              {m.value}
+              {L(m.value)}
             </div>
             {m.change ? (
               <div
@@ -55,7 +57,7 @@ export function MetricBeforeAfter({
                   fontFamily: K.mono,
                 }}
               >
-                {m.change}
+                {L(m.change)}
               </div>
             ) : null}
           </div>

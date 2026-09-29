@@ -25,10 +25,10 @@ export function MethodAuditTab() {
 
   const runtime: string[] = [];
   if (approval && BRIEF?.onApprove)
-    runtime.push(withTs(BRIEF.onApprove.auditEntry, approval.ts));
+    runtime.push(L(withTs(BRIEF.onApprove.auditEntry, approval.ts)));
   if (request && BRIEF?.decisionRequest)
-    runtime.push(withTs(BRIEF.decisionRequest.auditEntry, request.ts));
-  if (state.drawerOpenedAt) runtime.push(auditRuntime.drawerOpen);
+    runtime.push(L(withTs(BRIEF.decisionRequest.auditEntry, request.ts)));
+  if (state.drawerOpenedAt) runtime.push(L(auditRuntime.drawerOpen));
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -43,7 +43,7 @@ export function MethodAuditTab() {
       >
         {method.map((m) => (
           <div key={m.k} style={{ display: "contents" }}>
-            <dt style={{ color: K.textMut, fontSize: 13 }}>{m.k}</dt>
+            <dt style={{ color: K.textMut, fontSize: 13 }}>{L(m.k)}</dt>
             <dd
               style={{
                 margin: 0,
@@ -67,7 +67,7 @@ export function MethodAuditTab() {
             color: K.text,
           }}
         >
-          {meta.ui.hero.auditLog}
+          {L(meta.ui.hero.auditLog)}
         </h3>
         <ol
           style={{
@@ -107,7 +107,7 @@ export function MethodAuditTab() {
                 borderLeft: `2px solid ${K.borderLight}`,
               }}
             >
-              {a.label}
+              {L(a.label)}
             </li>
           ))}
         </ol>

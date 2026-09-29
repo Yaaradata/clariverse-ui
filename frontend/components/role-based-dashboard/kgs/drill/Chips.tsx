@@ -4,6 +4,7 @@ import { meta } from "@kgs/lib/data";
 import type { Domain, SeverityClass } from "@kgs/types";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
 import { K, withAlpha } from "../shared/tokens";
+import { useLabel } from "../shell/DemoProvider";
 
 const DOMAINS: readonly Domain[] = [
   "Quality",
@@ -37,6 +38,7 @@ function Pill({
   color: string;
   wrap?: boolean;
 }) {
+  const L = useLabel();
   return (
     <span
       style={{
@@ -53,7 +55,7 @@ function Pill({
         lineHeight: 1.3,
       }}
     >
-      {text}
+      {L(text)}
     </span>
   );
 }

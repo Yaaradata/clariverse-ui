@@ -35,7 +35,12 @@ export function HowWeCountDrawer({
   }, [open, focusIds]);
 
   return (
-    <Drawer open={open} title={h.title} onClose={onClose} footer={h.footer}>
+    <Drawer
+      open={open}
+      title={L(h.title)}
+      onClose={onClose}
+      footer={L(h.footer)}
+    >
       <ul
         style={{
           margin: "0 0 16px",
@@ -46,7 +51,7 @@ export function HowWeCountDrawer({
         }}
       >
         {valueStatements.map((s) => (
-          <li key={s}>{s}</li>
+          <li key={s}>{L(s)}</li>
         ))}
       </ul>
       <div
@@ -62,7 +67,7 @@ export function HowWeCountDrawer({
         }}
       >
         {h.unitCostLines.map((l) => (
-          <div key={l}>{l}</div>
+          <div key={l}>{L(l)}</div>
         ))}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>

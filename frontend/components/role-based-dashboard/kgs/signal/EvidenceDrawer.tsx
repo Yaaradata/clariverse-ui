@@ -3,6 +3,7 @@
 import { signalFw41 } from "@kgs/lib/data";
 import { Drawer } from "../shared/Overlay";
 import { K } from "../shared/tokens";
+import { useLabel } from "../shell/DemoProvider";
 import { CohortTab } from "./CohortTab";
 import { LinkedRmaList } from "./LinkedRmaList";
 import { MethodAuditTab } from "./MethodAuditTab";
@@ -36,13 +37,14 @@ function Heading({ children }: { children: string }) {
 }
 
 function Snippets() {
+  const L = useLabel();
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <Heading>{drawer.featuredHeading}</Heading>
+      <Heading>{L(drawer.featuredHeading)}</Heading>
       {FEATURED.map((e) => (
         <SnippetCard key={`f-${e.id}`} snippet={e} />
       ))}
-      <Heading>{drawer.allHeading}</Heading>
+      <Heading>{L(drawer.allHeading)}</Heading>
       {CHRONOLOGICAL.map((e) => (
         <SnippetCard key={e.id} snippet={e} />
       ))}
@@ -81,17 +83,18 @@ export function EvidenceDrawer({
   onTab: (tab: EvidenceTab) => void;
   onClose: () => void;
 }) {
+  const L = useLabel();
   const active = tab ?? "snippets";
   return (
     <Drawer
       open={tab !== null}
-      title={drawer.title}
+      title={L(drawer.title)}
       onClose={onClose}
-      footer={drawer.footer}
+      footer={L(drawer.footer)}
     >
       <div
         role="tablist"
-        aria-label={drawer.title}
+        aria-label={L(drawer.title)}
         style={{
           position: "sticky",
           top: -16,
@@ -129,7 +132,7 @@ export function EvidenceDrawer({
                 whiteSpace: "nowrap",
               }}
             >
-              {drawer.tabs[i]}
+              {L(drawer.tabs[i])}
             </button>
           );
         })}

@@ -415,7 +415,7 @@ export function FirmwareLineageChart() {
                     fontSize={12}
                     fontWeight={700}
                   >
-                    {lineage.annotation.text}
+                    {L(lineage.annotation.text)}
                   </text>
                 </g>
               )}
@@ -479,7 +479,7 @@ export function FirmwareLineageChart() {
             flexShrink: 0,
           }}
         >
-          {lineage.denominatorLabel}
+          {L(lineage.denominatorLabel)}
         </span>
         <div style={{ flex: 1, minWidth: 0, height: 40 }}>
           <ResponsiveContainer

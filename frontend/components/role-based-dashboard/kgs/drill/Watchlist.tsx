@@ -78,7 +78,7 @@ export function Watchlist({
       </ul>
       {children}
       {footer ? (
-        <div style={{ fontSize: 13, color: K.textMut }}>{footer}</div>
+        <div style={{ fontSize: 13, color: K.textMut }}>{L(footer)}</div>
       ) : null}
     </Panel>
   );

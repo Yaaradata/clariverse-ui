@@ -119,7 +119,7 @@ function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
               {SEV[linked.chips.class].glyph}{" "}
             </span>
             <MoneyText text={linked.blastRadius} />
-            {incident ? ` · ${incident}` : ""}
+            {incident ? ` · ${L(incident)}` : ""}
           </div>
           <SignalSurface
             card={linked}
@@ -148,7 +148,7 @@ function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
             fontFamily: "inherit",
           }}
         >
-          {card.linkLabel}
+          {L(card.linkLabel)}
         </button>
       ) : null}
     </article>
@@ -260,7 +260,7 @@ export function SignalWall({
                 color: K.text,
               }}
             >
-              {wall.title}
+              {L(wall.title)}
             </h2>
             <div style={{ fontSize: 13, color: K.textMut, marginTop: 3 }}>
               {L(wall.subtitle)}
@@ -278,7 +278,7 @@ export function SignalWall({
             whiteSpace: "nowrap",
           }}
         >
-          {wall.pill}
+          {L(wall.pill)}
         </span>
       </header>
       <div
