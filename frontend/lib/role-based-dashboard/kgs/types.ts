@@ -594,6 +594,8 @@ export interface InstalledBasePage {
     rmaRate: number[];
     limit: number;
     lineLabel: string;
+    /** 04 §3.8 ghost zone end ("to 9 Oct"; repo copy addition). */
+    ghostUntil: ISODate;
     markers: ChartMarker[];
     caption: TokenString;
   };
@@ -793,6 +795,7 @@ export interface DrillCopy {
   week: string;
   dateCodeTooltip: string;
   fw41Segment: TokenString;
+  rmaAxes: [string, string];
   partnerLegend: [string, string, TokenString, string];
 }
 

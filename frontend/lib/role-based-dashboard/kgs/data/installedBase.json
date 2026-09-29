@@ -541,6 +541,7 @@
     ],
     "limit": 0.35,
     "lineLabel": "{{platform:EST4}} RMA rate — in control",
+    "ghostUntil": "2026-10-09",
     "markers": [
       {
         "week": 28.3,

@@ -28,7 +28,15 @@ export const TONE_COLOR: Record<string, string> = {
 const SEVERITY = /^(S[1-4])\b\s*(?:·\s*)?(.*)$/;
 const RANK = /^#\d+ of \d+$/;
 
-function Pill({ text, color }: { text: string; color: string }) {
+function Pill({
+  text,
+  color,
+  wrap = false,
+}: {
+  text: string;
+  color: string;
+  wrap?: boolean;
+}) {
   return (
     <span
       style={{
@@ -41,7 +49,8 @@ function Pill({ text, color }: { text: string; color: string }) {
         border: `1px solid ${withAlpha(color, 0.5)}`,
         background: withAlpha(color, 0.12),
         color,
-        whiteSpace: "nowrap",
+        whiteSpace: wrap ? "normal" : "nowrap",
+        lineHeight: 1.3,
       }}
     >
       {text}
@@ -57,9 +66,12 @@ function Pill({ text, color }: { text: string; color: string }) {
 export function DrillChip({
   text,
   tone,
+  wrap = false,
 }: {
   text: string;
   tone?: string | null;
+  /** Let a long status wrap (table cells). */
+  wrap?: boolean;
 }) {
   if (RANK.test(text)) {
     return <Pill text={text} color={K.violet400} />;
@@ -76,7 +88,11 @@ export function DrillChip({
           (DOMAINS as readonly string[]).includes(rest) ? (
             <DomainChip domain={rest as Domain} />
           ) : (
-            <Pill text={rest} color={TONE_COLOR[tone ?? ""] ?? K.textSec} />
+            <Pill
+              text={rest}
+              color={TONE_COLOR[tone ?? ""] ?? K.textSec}
+              wrap={wrap}
+            />
           )
         ) : null}
       </span>
@@ -86,6 +102,7 @@ export function DrillChip({
     <Pill
       text={text}
       color={TONE_COLOR[tone ?? ""] ?? (isStable(text) ? K.green : K.textSec)}
+      wrap={wrap}
     />
   );
 }

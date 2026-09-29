@@ -15,6 +15,7 @@ export function SegmentTable({
   rows,
   chipColumn,
   monoFrom = 1,
+  figures,
   onRow,
   selectedId,
   caption,
@@ -24,11 +25,15 @@ export function SegmentTable({
   chipColumn?: number;
   /** Columns from this index on are figures (mono, tabular). */
   monoFrom?: number;
+  /** Explicit figure columns; overrides `monoFrom`. */
+  figures?: number[];
   onRow?: (row: TableRow) => void;
   selectedId?: string;
   caption?: string;
 }) {
   const L = useLabel();
+  const isFigure = (i: number) =>
+    i !== chipColumn && (figures ? figures.includes(i) : i >= monoFrom);
   return (
     <div
       style={{
@@ -66,19 +71,14 @@ export function SegmentTable({
                 key={c}
                 scope="col"
                 style={{
-                  textAlign:
-                    i === 0
-                      ? "left"
-                      : i >= monoFrom && i !== chipColumn
-                        ? "right"
-                        : "left",
+                  textAlign: i > 0 && isFigure(i) ? "right" : "left",
                   padding: "10px 12px",
                   fontSize: 12,
                   fontWeight: 600,
                   letterSpacing: "0.06em",
                   color: K.textMut,
                   borderBottom: `1px solid ${K.border}`,
-                  whiteSpace: "nowrap",
+                  verticalAlign: "bottom",
                 }}
               >
                 {L(c)}
@@ -119,7 +119,7 @@ export function SegmentTable({
               >
                 {row.cells.map((cell, ci) => {
                   const tone = row.tone?.[ci] ?? null;
-                  const figure = ci >= monoFrom && ci !== chipColumn;
+                  const figure = ci > 0 && isFigure(ci);
                   return (
                     <td
                       key={columns[ci] ?? ci}
@@ -144,7 +144,7 @@ export function SegmentTable({
                       }}
                     >
                       {ci === chipColumn ? (
-                        <DrillChip text={L(cell)} tone={tone} />
+                        <DrillChip text={L(cell)} tone={tone} wrap />
                       ) : (
                         L(cell)
                       )}

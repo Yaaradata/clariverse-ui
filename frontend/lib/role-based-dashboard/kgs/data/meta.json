@@ -921,6 +921,7 @@
       "week": "W{n}",
       "dateCodeTooltip": "{code} · {units} units · {rate} {unit} · {ratio}×",
       "fw41Segment": "fw {{fw:EST4@4.1}}",
+      "rmaAxes": ["trouble contacts / week", "RMA rate % (4-week rolling)"],
       "partnerLegend": [
         "Weekly interactions",
         "Own baseline",

@@ -1,6 +1,6 @@
 "use client";
 
-import { meta, monitor, signalById } from "@kgs/lib/data";
+import { monitor, signalById } from "@kgs/lib/data";
 import type {
   MonitorCard,
   Role,
@@ -10,16 +10,17 @@ import type {
 import { Sparkles } from "lucide-react";
 import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
-import { GateChip } from "../shared/GateChip";
-import { JoinTagRow } from "../shared/JoinTagRow";
-import { PnLDestinationTag } from "../shared/PnLDestinationTag";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
 import { K, SEV, withAlpha } from "../shared/tokens";
-import { useDemo, useLabel } from "../shell/DemoProvider";
+import { useLabel } from "../shell/DemoProvider";
 import { DrillChip, isStable } from "./Chips";
+import { SignalSurface } from "./SignalSurface";
 
 const RANK = /^#(\d+) of \d+$/;
+/** Sticky offsets: clear the sticky ContextBar above and the sticky footer below. */
+const WALL_TOP = 68;
+const WALL_BOTTOM = 56;
 
 /** The monitor card behind a wall card, found by its "#n of 5" rank chip. */
 export function monitorCardForWall(
@@ -44,13 +45,9 @@ function tintFor(card: WallCardData, linked?: MonitorCard): string {
 function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
   const L = useLabel();
   const { go } = useKgsNav();
-  const { isApproved } = useDemo();
   const linked = monitorCardForWall(card);
   const signal = linked ? signalById[linked.signalId] : undefined;
   const tone = tintFor(card, linked);
-  const approved = Boolean(
-    linked?.gateChipAfterApprove && isApproved(linked.signalId),
-  );
   const incident = signal?.severity.compact.split(" · ").pop();
 
   return (
@@ -117,41 +114,10 @@ function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
             {L(linked.blastRadius)}
             {incident ? ` · ${incident}` : ""}
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: "4px 10px",
-            }}
-          >
-            <ConfidenceMarker
-              confidence={signal.confidence}
-              short={card.confidenceShort}
-              compact
-            />
-            <span
-              style={{
-                display: "inline-flex",
-                gap: 6,
-                fontSize: 12,
-                color: K.textMut,
-              }}
-            >
-              {meta.ui.pnl}
-              <PnLDestinationTag text={linked.pnlShort} />
-            </span>
-          </div>
-          <JoinTagRow tags={signal.joinTags} max={3} />
-          <GateChip
-            wrap
-            text={
-              approved && linked.gateChipAfterApprove
-                ? linked.gateChipAfterApprove
-                : L(linked.ownerGate)
-            }
-            status={approved ? "approved" : "awaiting"}
+          <SignalSurface
+            card={linked}
+            signal={signal}
+            confidenceShort={card.confidenceShort}
           />
         </>
       ) : card.confidenceShort ? (
@@ -236,11 +202,9 @@ function WallFooterCounts({ items }: { items: SignalWallData["footer"] }) {
 export function SignalWall({
   wall,
   pulseClass,
-  maxHeight = 980,
 }: {
   wall: SignalWallData;
   pulseClass?: string | null;
-  maxHeight?: number;
 }) {
   const L = useLabel();
   return (
@@ -254,7 +218,9 @@ export function SignalWall({
         flexDirection: "column",
         gap: 12,
         minWidth: 0,
-        height: "100%",
+        position: "sticky",
+        top: WALL_TOP,
+        maxHeight: `calc(100vh - ${WALL_TOP + WALL_BOTTOM}px)`,
       }}
     >
       <header
@@ -307,7 +273,6 @@ export function SignalWall({
         style={{
           flex: 1,
           minHeight: 0,
-          maxHeight,
           overflowY: "auto",
           display: "flex",
           flexDirection: "column",

@@ -4,11 +4,17 @@ import { installedBase, LEGACY_ROUTES, meta } from "@kgs/lib/data";
 import type { SeverityClass } from "@kgs/types";
 import { useEffect, useRef, useState } from "react";
 import { BackToOverviewHeader } from "../drill/BackToOverviewHeader";
+import { ContactsRmaOverlay } from "../drill/ContactsRmaOverlay";
+import { DateCodeHeatStrip } from "../drill/DateCodeHeatStrip";
+import { DiagnosisBox } from "../drill/DiagnosisBox";
+import { EmergingPhrasingTable } from "../drill/EmergingPhrasingTable";
+import { EnhancedPanel } from "../drill/EnhancedPanel";
 import { BigKpiTile, KpiRow } from "../drill/KpiTile";
 import { LineMonitor, type MonitorSeries } from "../drill/LineMonitor";
 import { Panel } from "../drill/Panel";
 import { SegmentTable } from "../drill/SegmentTable";
 import { SignalWall } from "../drill/SignalWall";
+import { StackedBarWithDetailPanel } from "../drill/StackedBarWithDetailPanel";
 import { StackedRatioBar } from "../drill/StackedRatioBar";
 import { Watchlist } from "../drill/Watchlist";
 import { useKgsNav } from "../nav";
@@ -138,6 +144,7 @@ export function InstalledBaseView() {
             />
           </Panel>
           <CohortMonitor />
+          <ContactsRmaOverlay />
         </div>
 
         <div style={{ minWidth: 0, alignSelf: "stretch" }}>
@@ -145,8 +152,18 @@ export function InstalledBaseView() {
         </div>
       </div>
 
-      <div id={P["P-D"].anchor} />
-      <div id={P["P-H"].anchor} />
+      <EmergingPhrasingTable />
+      <Panel title={L(IB.symptomStack.title)}>
+        <StackedBarWithDetailPanel
+          data={IB.symptomStack}
+          unit={P["P-J"].unit}
+          ariaLabel={L(IB.symptomStack.title)}
+        />
+      </Panel>
+      <DateCodeHeatStrip />
+      <EnhancedPanel data={IB.enhanced} id={P["P-H"].anchor}>
+        <DiagnosisBox diagnosis={IB.diagnosis} />
+      </EnhancedPanel>
     </div>
   );
 }
