@@ -1,16 +1,15 @@
 {
  "needs_you": [
   "release-pulse",
-  "complaint_handling",
-  "card_fees_charges"
+  "card_fees_charges",
+  "kyc_updates"
  ],
  "this_week": [
-  "kyc_updates",
-  "account_freeze",
-  "care_unreachable",
-  "fraud_scam",
+  "complaint_handling",
+  "credit_report",
+  "dispute_chargeback",
   "refund_delay",
-  "card_dispatch"
+  "merchant_pos"
  ],
  "improving": [
   "app_praise",
@@ -53,7 +52,7 @@
  ],
  "since_830_total": 200,
  "since_830_from": "2026-09-28T08:30:00+05:30",
- "top_riser": "complaint_handling",
+ "top_riser": "card_fees_charges",
  "routing": [
   {
    "owner": "digital",
@@ -113,13 +112,13 @@
      "id": "complaint_handling",
      "label": "Complaints closed without resolution",
      "count": 633,
-     "status": "needs_you"
+     "status": "this_week"
     },
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
      "count": 355,
-     "status": "this_week"
+     "status": "watching"
     }
    ],
    "total": 988
@@ -132,7 +131,7 @@
      "id": "account_freeze",
      "label": "Account debit freezes and blocks",
      "count": 239,
-     "status": "this_week"
+     "status": "watching"
     },
     {
      "id": "atm_debit_card",
@@ -169,7 +168,7 @@
      "id": "merchant_pos",
      "label": "Merchant QR, POS and sound box",
      "count": 25,
-     "status": "watching"
+     "status": "this_week"
     }
    ],
    "total": 194
@@ -257,7 +256,7 @@
      "id": "fraud_scam",
      "label": "Fraud and scam calls",
      "count": 127,
-     "status": "this_week"
+     "status": "watching"
     },
     {
      "id": "unauthorised_txn",

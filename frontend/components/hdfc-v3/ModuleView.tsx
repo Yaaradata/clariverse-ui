@@ -404,7 +404,7 @@ export function CardsModule({ b }: { b: Bundle }) {
           Cards: {fmt(pub.negative)} negative public items out of{" "}
           {fmt(pub.count)}
           {trend !== null
-            ? `, share of voice ${fmtSigned(trend)} in the second half of the window`
+            ? `, share of voice ${fmtSigned(trend)} in the second half of the window (source-weighted)`
             : ""}
           . {top.ci.label} leads.
         </AnswerLine>
@@ -440,7 +440,7 @@ export function CardsModule({ b }: { b: Bundle }) {
             <Kpi
               label="Share of voice"
               value={trend === null ? "—" : fmtSigned(trend)}
-              sub="second half vs first half"
+              sub="second half vs first half · source-weighted"
               tone="amber"
             />
             <Kpi
@@ -465,9 +465,11 @@ export function CardsModule({ b }: { b: Bundle }) {
             yLabel="Negative card interactions (inside, illustrative)"
           />
           <BaselineCaption>
-            Public trend is the share of trend-basis items, second half vs first
-            half of the window; the store exports that start mid-window are left
-            out of it. Internal weeks are from the demo sample.
+            Public trend is the source-weighted share of trend-basis items,
+            second half vs first half of the window: each source counts by its
+            share of the window, so the capped late-September X run cannot swing
+            it. Reddit (collector changed 1 Sep) and the store exports that start
+            mid-window are left out. Internal weeks are from the demo sample.
           </BaselineCaption>
         </Section>
 

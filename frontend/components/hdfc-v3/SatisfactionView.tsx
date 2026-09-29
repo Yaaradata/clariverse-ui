@@ -85,23 +85,17 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       .sort((a, c) => c.count - a.count);
   const topThemes = themesIn(pillar).slice(0, 8);
 
-  // weekly net sentiment from the daily mood series
-  const weeks = new Map<string, { pos: number; neg: number; n: number }>();
-  for (const d of b.mood.daily) {
-    const dt = new Date(`${d.date}T00:00:00Z`);
-    const wd = (dt.getUTCDay() + 6) % 7;
-    dt.setUTCDate(dt.getUTCDate() - wd);
-    const k = dt.toISOString().slice(0, 10);
-    const w = weeks.get(k) ?? { pos: 0, neg: 0, n: 0 };
-    w.pos += d.positive;
-    w.neg += d.negative;
-    w.n += d.n;
-    weeks.set(k, w);
-  }
-  const weekly = [...weeks.entries()].map(([k, w]) => ({
-    week: fmtDate(k),
-    net: Math.round((100 * (w.pos - w.neg)) / w.n),
-  }));
+  // Weekly net sentiment, source-weighted (review step 5): full weeks only, each source by its share of the window.
+  const weekly = b.mood.weekly
+    .filter((w) => w.net !== null)
+    .map((w) => ({ week: fmtDate(w.week), net: Math.round(w.net ?? 0) }));
+  const SOURCE_NAME: Record<string, string> = {
+    playstore: "Play Store",
+    appstore: "App Store",
+    x: "X",
+    forum: "Forums",
+    reddit: "Reddit",
+  };
 
   const saying = sayingThemes(b);
 
@@ -234,7 +228,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
         <Tile
           title="Sentiment trend (conversation-inferred)"
-          sub="Weekly net sentiment of public HDFC Bank voice, full-window sources"
+          sub="Weekly net sentiment of public HDFC Bank voice, full-window sources, source-weighted"
           prov="public"
           id="trend"
         >
@@ -250,9 +244,34 @@ export function SatisfactionView({ b }: { b: Bundle }) {
             domain={[-100, 100]}
           />
           <BaselineCaption>
-            Net sentiment = (positive − negative) ÷ items × 100. Dashed line:
-            window average. No earlier baseline for social sources.
+            Net sentiment = (positive − negative) ÷ items × 100, per source,
+            then weighted by each source&apos;s share of the window. Dashed
+            line: window average. No earlier baseline for social sources.
           </BaselineCaption>
+          <Table
+            head={[
+              "Source",
+              "Share of window",
+              "Share of last 7 days",
+              "Window net",
+              "Last 7 days net",
+            ]}
+            align={["left", "right", "right", "right", "right"]}
+            rows={b.mood.by_source.map((x) => [
+              SOURCE_NAME[x.source] ?? x.source,
+              fmtPct(x.weight_pct),
+              fmtPct(x.last7_share_pct),
+              fmtSigned(x.window_net),
+              x.last7_net === null ? "—" : fmtSigned(x.last7_net),
+            ])}
+          />
+          <MutedNote>
+            Mood by source. Unweighted, the last 7 days would read{" "}
+            {fmtSigned(b.mood.unweighted.delta_pts, " pts")} against the window
+            average, because one source&apos;s share jumped; source-weighted,
+            the change is {fmtSigned(b.mood.delta_pts, " pts")}. Reddit is left
+            out: its collector changed on 1 Sep.
+          </MutedNote>
         </Tile>
 
         <Tile

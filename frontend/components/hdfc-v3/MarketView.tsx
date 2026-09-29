@@ -639,8 +639,8 @@ export function MarketView({ b }: { b: Bundle }) {
 
       <Tile
         id="top10"
-        title="Top ten themes and their weekly volume"
-        sub="Items per week from full-window sources (X, Reddit, forums, store exports with full coverage)"
+        title="Top six themes: weekly share of voice"
+        sub="Bars: each theme's share of trend-basis voice per full week, source-weighted. Figure: all items in the window."
         prov="public"
       >
         <div style={cols(3, 300, 12)}>
@@ -676,8 +676,11 @@ export function MarketView({ b }: { b: Bundle }) {
           ))}
         </div>
         <BaselineCaption>
-          Dashed line: weekly average in the window. Trend within window; no
-          earlier baseline for social sources.
+          Dashed line: the theme&apos;s average weekly share. Shares, not
+          counts, so a source whose collection starts, stops or bursts
+          mid-window cannot draw a spike; Reddit (collector changed 1 Sep) and
+          store exports that start mid-window are left out. No earlier baseline
+          for social sources.
         </BaselineCaption>
       </Tile>
 

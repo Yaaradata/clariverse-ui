@@ -50,6 +50,7 @@
    "latest": "2026-08-25",
    "window_first": "2026-07-03",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -61,6 +62,7 @@
    "latest": "2026-09-27",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -72,6 +74,7 @@
    "latest": "2026-09-26",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -83,6 +86,7 @@
    "latest": "2026-09-25",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -94,6 +98,7 @@
    "latest": "2026-09-09",
    "window_first": "2026-07-05",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -105,6 +110,7 @@
    "latest": "2026-09-18",
    "window_first": "2026-07-21",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -116,6 +122,7 @@
    "latest": "2026-09-26",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -127,6 +134,7 @@
    "latest": "2026-09-23",
    "window_first": "2026-07-03",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -138,6 +146,7 @@
    "latest": "2026-09-24",
    "window_first": "2026-07-02",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -149,6 +158,7 @@
    "latest": "2026-08-29",
    "window_first": "2026-07-05",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -160,6 +170,7 @@
    "latest": "2026-09-16",
    "window_first": "2026-07-06",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -171,6 +182,7 @@
    "latest": "2026-09-21",
    "window_first": "2026-07-04",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -182,6 +194,7 @@
    "latest": "2026-09-27",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -193,6 +206,7 @@
    "latest": "2026-09-23",
    "window_first": "2026-07-02",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -204,6 +218,7 @@
    "latest": "2026-09-23",
    "window_first": "2026-07-03",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -215,6 +230,7 @@
    "latest": "2026-09-27",
    "window_first": "2026-07-25",
    "full_window": false,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -226,6 +242,7 @@
    "latest": "2026-09-26",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -237,6 +254,7 @@
    "latest": "2026-09-27",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -248,6 +266,7 @@
    "latest": "2026-09-26",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -259,6 +278,7 @@
    "latest": "2026-09-26",
    "window_first": "2026-07-02",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -270,6 +290,7 @@
    "latest": "2026-09-27",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -281,6 +302,7 @@
    "latest": "2026-09-26",
    "window_first": "2026-07-03",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -292,17 +314,31 @@
    "latest": "2026-09-27",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
   },
   {
-   "stream": "reddit",
-   "records": 2960,
+   "stream": "reddit:jul_aug_collector",
+   "records": 1594,
    "earliest": "2026-07-01",
-   "latest": "2026-09-28",
+   "latest": "2026-09-25",
    "window_first": "2026-07-01",
-   "full_window": true,
+   "full_window": false,
+   "partial_reason": "Reddit collector replaced on 1 Sep (a few late items trickle in)",
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "reddit:sep_collector",
+   "records": 1366,
+   "earliest": "2026-09-01",
+   "latest": "2026-09-28",
+   "window_first": "2026-09-01",
+   "full_window": false,
+   "partial_reason": "Reddit's new collector starts on 1 Sep",
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -314,6 +350,7 @@
    "latest": "2026-09-28",
    "window_first": "2026-07-01",
    "full_window": true,
+   "partial_reason": null,
    "mode": "trend_within_window",
    "baseline_items": 0,
    "baseline_weeks": 0.0
@@ -333,7 +370,6 @@
   "playstore:PayZapp",
   "playstore:SmartHub Vyapar",
   "playstore:SmartWealth",
-  "reddit",
   "x"
  ],
  "baseline_streams": [],

@@ -579,10 +579,14 @@ const tooltipStyle = {
 };
 
 /** Weekly counts with labelled axes and a dashed average line (the within-window reference). */
+/**
+ * Weekly bars. A series that carries a source-weighted share is plotted as that share (% of voice), never as raw
+ * counts, so a source whose collection starts, stops or bursts mid-window cannot draw a false spike (review step 5).
+ */
 export function WeeklyBars({
   data,
   height = 150,
-  yLabel = "Items per week",
+  yLabel,
   highlightLast = false,
 }: {
   data: Weekly[];
@@ -590,10 +594,13 @@ export function WeeklyBars({
   yLabel?: string;
   highlightLast?: boolean;
 }) {
+  const share = data.some((d) => d.share !== undefined && d.share !== null);
+  const val = (d: Weekly) => (share ? (d.share ?? 0) : d.count);
   const avg = data.length
-    ? data.reduce((s, d) => s + d.count, 0) / data.length
+    ? data.reduce((s, d) => s + val(d), 0) / data.length
     : 0;
-  const rows = data.map((d) => ({ w: weekLabel(d.week), v: d.count }));
+  const rows = data.map((d) => ({ w: weekLabel(d.week), v: val(d) }));
+  const label = yLabel ?? (share ? "% of voice" : "Items per week");
   return (
     <div style={{ width: "100%", height }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -620,9 +627,9 @@ export function WeeklyBars({
             axisLine={false}
             tickLine={false}
             width={44}
-            allowDecimals={false}
+            allowDecimals={share}
             label={{
-              value: yLabel,
+              value: label,
               angle: -90,
               position: "insideLeft",
               fill: C.textDim,
@@ -633,7 +640,11 @@ export function WeeklyBars({
           <Tooltip
             contentStyle={tooltipStyle}
             cursor={{ fill: "rgba(255,255,255,0.04)" }}
-            formatter={(v) => [fmt(Number(v)), "Items"]}
+            formatter={(v) =>
+              share
+                ? [`${Number(v).toFixed(1)}%`, "Share of voice"]
+                : [fmt(Number(v)), "Items"]
+            }
           />
           <ReferenceLine y={avg} stroke={C.textDim} strokeDasharray="4 4" />
           <Bar

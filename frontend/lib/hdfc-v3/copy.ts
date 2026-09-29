@@ -1,7 +1,7 @@
 /**
  * Answer-line templates (B4 §6). Filled from data only. British spelling, no exclamation marks.
  */
-import { fmt, fmtDate, fmtNum } from "./format";
+import { fmt, fmtDate, fmtNum, fmtSigned } from "./format";
 import {
   improvingItems,
   needsYou,
@@ -104,6 +104,20 @@ export function promiseAnswer(b: Bundle): string {
 /** B7 §4.4: mood as the change against the window average. Public voice skews negative, so no raw index. */
 export function moodLine(b: Bundle): string {
   const m = b.mood;
-  const dir = (m.delta_pts ?? 0) < 0 ? "below" : "above";
-  return `The last 7 days sit ${fmtNum(Math.abs(m.delta_pts ?? 0))} points ${dir} the window average. Public voice skews negative, so the change matters more than the level.`;
+  const d = m.delta_pts ?? 0;
+  const dir = d < 0 ? "below" : "above";
+  const level = `Public voice skews negative (window average ${fmtNum(Math.round(m.window_average))}), so the change matters more than the level.`;
+  if (Math.abs(d) < 5)
+    return `Mood is steady: the last 7 days sit within ${fmtNum(Math.ceil(Math.abs(d)))} points of the window average, source-weighted. ${level}`;
+  return `The last 7 days sit ${fmtNum(Math.abs(Math.round(d)))} points ${dir} the window average, source-weighted. ${level}`;
+}
+
+/** Review step 5: the one-line method note under the mood figure, with the unweighted figure it replaces. */
+export function moodNote(b: Bundle): string {
+  const m = b.mood;
+  const x = m.by_source.find((s) => s.source === "x");
+  const xLine = x
+    ? ` X is ${Math.round(x.last7_share_pct)}% of the last 7 days (a capped collection run) against ${Math.round(x.weight_pct)}% of the window.`
+    : "";
+  return `Source-weighted: each source counts by its share of the window, so a burst in one source cannot move the figure. Unweighted it would read ${fmtSigned(m.unweighted.delta_pts, " pts")}.${xLine} Reddit is left out: its collector changed on 1 Sep.`;
 }

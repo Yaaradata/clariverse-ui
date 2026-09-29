@@ -64,7 +64,7 @@ export function trendWords(t: Theme): string {
   const r = t.rise_pct;
   if (r === null || r === undefined)
     return t.trend_mode === "insufficient"
-      ? "no trend claimed (mostly from store exports that start mid-window)"
+      ? "no trend claimed (mostly from sources that start or change collection mid-window)"
       : "no earlier period to compare";
   const dir = r >= 0 ? "up" : "down";
   if (t.trend_mode === "vs_baseline")
@@ -168,12 +168,15 @@ export function improvingItems(b: Bundle): SignalItem[] {
         t.trend.first_half >= MIN_PER_HALF &&
         t.trend.second_half >= MIN_PER_HALF &&
         (t.trend.change_pct ?? 0) <= -20 &&
+        // Real improvement only: the raw count falls too, so a jump in one source's collected volume cannot make a
+        // flat theme look like it is improving (review step 5).
+        t.trend.second_half <= 0.8 * t.trend.first_half &&
         !["general_dissatisfaction", "offers_deals", "other"].includes(t.id),
     )
     .sort((a, c) => (a.trend.change_pct ?? 0) - (c.trend.change_pct ?? 0));
   for (const t of falling.slice(0, 1)) {
     const s = signalFromTheme(b, t, "improving");
-    s.why = `Share of public voice down ${Math.abs(Math.round(t.trend.change_pct ?? 0))}% in the second half of the window (${fmt(t.trend.first_half)} then ${fmt(t.trend.second_half)} items).`;
+    s.why = `Share of public voice down ${Math.abs(Math.round(t.trend.change_pct ?? 0))}% in the second half of the window, source-weighted; items fell from ${fmt(t.trend.first_half)} to ${fmt(t.trend.second_half)}.`;
     out.push(s);
   }
   const pz = b.storeSeries.apps

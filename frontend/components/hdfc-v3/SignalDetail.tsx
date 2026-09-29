@@ -268,8 +268,8 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
             {t.trend_mode === "vs_baseline" && t.vs_baseline
               ? `vs baseline: ${t.vs_baseline.window_share}% of store reviews in the window against ${t.vs_baseline.baseline_share}% in the 26 weeks before the window.`
               : t.trend_mode === "insufficient"
-                ? "Most items come from store exports that begin after the window starts, so no trend is claimed."
-                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a share of all posts in each half.`}{" "}
+                ? "Most items come from sources that start or change collection mid-window (store exports from late July, Reddit from 1 Sep), so no trend is claimed."
+                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a source-weighted share of trend-basis posts in each half (each source by its share of the window; Reddit, whose collector changed on 1 Sep, is left out).`}{" "}
             Seasonal check: in discovery, using your history.
           </BaselineCaption>
           <MutedNote>

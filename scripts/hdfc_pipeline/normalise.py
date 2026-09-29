@@ -126,7 +126,7 @@ def base(**kw):
         "parent_id": None, "thread_id": None, "lang": None, "author_hash": None, "author_followers": None,
         "author_verified": None, "engagement": {}, "rating": None, "app_name": None, "app_id": None,
         "app_version": None, "entity": "hdfc_bank", "business_hint": None, "subreddit": None, "record_type": None,
-        "reply": None, "relevant": "on_topic", "collected_at": None,
+        "reply": None, "relevant": "on_topic", "collected_at": None, "collector": None,
     }
     rec.update(kw)
     return rec
@@ -191,6 +191,7 @@ def x_posts():
                 author_verified=a.get("verified"), parent_id=r.get("parent_id"), thread_id=r.get("thread_id"),
                 engagement={k: eng.get(k) for k in ("likes", "replies", "reposts", "views")},
                 record_type=r.get("record_type"), relevant=rel, collected_at=r.get("collected_at"),
+                collector=r.get("actor_run_id"),
             )
         )
     return out
@@ -229,6 +230,7 @@ def reddit():
                 author_hash=h((r.get("author") or {}).get("username")), parent_id=r.get("parent_id"),
                 thread_id=r.get("thread_id"), engagement={"upvotes": eng.get("score") or eng.get("likes"), "replies": eng.get("replies")},
                 subreddit=sub, record_type=r["record_type"], relevant=rel, collected_at=r.get("collected_at"),
+                collector=r.get("actor_run_id"),  # None before 1 Sep; the September collector sets it
             )
         )
     return out

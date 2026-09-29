@@ -3,10 +3,10 @@
 Writes to data/out/app_jul_sep/: themes.json, signals.json, app_pulse.json, mood.json, briefing.json, meta.json,
 evidence.json, responses.json. Every count is reproducible from work/classified.jsonl.
 
-Window: 1 July – 28 September 2026 (as of 28 September). Trend: share of trend-basis items, second half
-(15 Aug – 28 Sep) vs first half (1 Jul – 14 Aug). A stream is trend basis only if it covers the whole window; the
-Play Store HDFC Bank app export starts on 25 July, so it counts in totals but not in trends. No baseline: the exports
-hold no history before July.
+Window: 1 July – 28 September 2026 (as of 28 September). Trend: source-weighted share of trend-basis items, second
+half (15 Aug – 28 Sep) vs first half (1 Jul – 14 Aug); see method.py. A stream is trend basis only if it covers the
+whole window: the Play Store HDFC Bank app export starts on 25 July and Reddit changed collector on 1 September, so
+they count in totals but not in trends. No baseline: the exports hold no history before July.
 """
 
 from __future__ import annotations
@@ -17,7 +17,9 @@ import json
 import re
 import statistics
 
+import method as M
 from classify import OWNER_BY_RT
+from method import stream_of
 from normalise import OUT, WORK
 from taxonomy import THEMES
 
@@ -44,28 +46,12 @@ REDIRECT_RE = re.compile(
 )
 
 
-def monday(d: str) -> str:
-    x = dt.date.fromisoformat(d[:10])
-    return (x - dt.timedelta(days=x.weekday())).isoformat()
-
-
-WEEKS = []
-_w = dt.date.fromisoformat(monday(W_START))
-while _w.isoformat() <= W_END:
-    WEEKS.append(_w.isoformat())
-    _w += dt.timedelta(days=7)
+monday = M.monday
+WEEKS = M.full_weeks()  # full weeks only: a one-day last week reads as a collapse
 
 
 def in_window(r) -> bool:
     return W_START <= r["created_at"][:10] <= W_END
-
-
-def stream_of(r) -> str:
-    if r["source"] in ("playstore", "appstore"):
-        return f"{r['source']}:{r['app_name']}"
-    if r["source"] == "forum":
-        return f"forum:{r['subreddit']}"
-    return r["source"]
 
 
 def weekly(rows) -> list[dict]:
@@ -97,7 +83,8 @@ def streams_info(rows):
                 "earliest": earliest,
                 "latest": latest,
                 "window_first": min(win) if win else None,
-                "full_window": earliest <= "2026-07-03" and latest >= "2026-09-24",
+                "full_window": earliest <= "2026-07-03" and latest >= "2026-09-24" and s not in M.PARTIAL_BY_DESIGN,
+                "partial_reason": M.PARTIAL_BY_DESIGN.get(s),
                 "mode": "trend_within_window",
                 "baseline_items": 0,
                 "baseline_weeks": 0.0,
@@ -106,26 +93,15 @@ def streams_info(rows):
     return info
 
 
-def halves(rows, basis_rows_all, basis):
-    """Share of trend-basis items in each half of the window."""
-    b = [r for r in rows if stream_of(r) in basis]
-    f = sum(1 for r in b if r["created_at"][:10] <= H1_END)
-    s = len(b) - f
-    ft = sum(1 for r in basis_rows_all if r["created_at"][:10] <= H1_END)
-    st = len(basis_rows_all) - ft
-    change = None
-    if f and ft and st:
-        change = round(100 * ((s / st) - (f / ft)) / (f / ft), 1)
-    return {
-        "mode": "trend_within_window",
-        "first_half": f,
-        "second_half": s,
-        "first_half_total": ft,
-        "second_half_total": st,
-        "change_pct": change,
-        "first_half_dates": f"{W_START} to {H1_END}",
-        "second_half_dates": f"2026-08-15 to {W_END}",
-    }
+_WEIGHTS: dict[int, tuple] = {}
+
+
+def halves(rows, basis_rows_all, basis, min_per_half: int = 0):
+    """Second half vs first half, as source-weighted shares of basis_rows_all (method.py)."""
+    key = id(basis_rows_all)
+    if key not in _WEIGHTS:
+        _WEIGHTS[key] = (basis_rows_all, M.weights(basis_rows_all))  # keep the list alive so its id is not reused
+    return M.halves(rows, basis_rows_all, _WEIGHTS[key][1], min_per_half)
 
 
 def sent_counts(rows):
@@ -185,6 +161,7 @@ def main():
     sinfo = streams_info([r for r in rows if r["relevant"] == "on_topic"])
     basis = {s["stream"] for s in sinfo if s["full_window"]}
     basis_bank = [r for r in bank if stream_of(r) in basis]
+    W = M.weights(basis_bank)
     evidence_ids: set[str] = set()
 
     # ------------------------------------------------------------ themes
@@ -227,7 +204,7 @@ def main():
                 "status_seeking_count": sum(1 for r in rs if r["status_seeking"]),
                 "promise_break_count": sum(1 for r in rs if r["promise_break"]),
                 "closure_intent_count": sum(1 for r in rs if r["closure_intent"]),
-                "weekly": weekly([r for r in rs if stream_of(r) in basis]),
+                "weekly": M.weekly_share(rs, basis_bank, W),
                 "weekly_all": weekly(rs),
                 "trend": tr,
                 "vs_baseline": None,
@@ -266,13 +243,17 @@ def main():
         def net(x):
             return round(100 * (sum(1 for r in x if r["sentiment"] == "positive") - sum(1 for r in x if r["sentiment"] == "negative")) / len(x), 1) if x else None
 
+        # Level and halves on the same basis (trend-basis streams, source-weighted), so the level sits between them.
         b = [r for r in rs if stream_of(r) in basis]
-        n1 = net([r for r in b if r["created_at"][:10] <= H1_END])
-        n2 = net([r for r in b if r["created_at"][:10] > H1_END])
+        lvl = M.strat_net(b, W)
+        n1 = M.strat_net([r for r in b if r["created_at"][:10] <= H1_END], W)
+        n2 = M.strat_net([r for r in b if r["created_at"][:10] > H1_END], W)
+        n1 = round(n1, 1) if n1 is not None else None
+        n2 = round(n2, 1) if n2 is not None else None
         tops = collections.Counter(r["themes"][0] for r in rs).most_common(3)
         pillars.append(
             {
-                "id": pid, "label": plabel, "count": len(rs), "sentiment": sc, "net_sentiment": net(rs),
+                "id": pid, "label": plabel, "count": len(rs), "sentiment": sc, "net_sentiment": round(lvl, 1) if lvl is not None else None,
                 "net_first_half": n1, "net_second_half": n2,
                 "net_change_pts": round(n2 - n1, 1) if n1 is not None and n2 is not None else None,
                 "top_themes": [{"id": k, "label": T[k]["label"], "count": v} for k, v in tops],
@@ -297,7 +278,7 @@ def main():
         return {
             "count": len(rs),
             "share": pct(len(rs), len(bank)),
-            "weekly": weekly(rs),
+            "weekly": M.weekly_share(rs, basis_bank, W),
             "trend": halves(rs, basis_bank, basis),
             "top_themes": [{"id": k, "label": T[k]["label"], "count": v} for k, v in tops],
             "exemplars": ex,
@@ -474,28 +455,15 @@ def main():
     pulse = {"apps": apps, "note": "Ratings are counted in the window (1 July – 28 September). No baseline: the exports hold no history before July."}
 
     # ------------------------------------------------------------ mood
-    mood_rows = [r for r in basis_bank]
-    daily = []
-    by_day = collections.defaultdict(list)
-    for r in mood_rows:
-        by_day[r["created_at"][:10]].append(r)
-    days_sorted = sorted(d for d in by_day if W_START <= d <= W_END)
-    for i, d in enumerate(days_sorted):
-        rs = by_day[d]
-        p = sum(1 for r in rs if r["sentiment"] == "positive")
-        n = sum(1 for r in rs if r["sentiment"] == "negative")
-        last7 = [r for dd in days_sorted[max(0, i - 6): i + 1] for r in by_day[dd]]
-        n7 = round(100 * (sum(1 for r in last7 if r["sentiment"] == "positive") - sum(1 for r in last7 if r["sentiment"] == "negative")) / len(last7), 1)
-        daily.append({"date": d, "n": len(rs), "positive": p, "negative": n, "net": round(100 * (p - n) / len(rs), 1), "net_7d": n7})
-    avg = round(100 * (sum(1 for r in mood_rows if r["sentiment"] == "positive") - sum(1 for r in mood_rows if r["sentiment"] == "negative")) / len(mood_rows), 1)
     mood = {
-        "definition": "Mood index: net sentiment, (positive − negative) ÷ on-topic items, × 100, over the last 7 days of public HDFC Bank voice from sources that cover the whole window. Compared with the average across the window (1 July to 28 September 2026). Range −100 to +100.",
-        "value": daily[-1]["net_7d"],
-        "window_average": avg,
-        "delta_pts": round(daily[-1]["net_7d"] - avg, 1),
+        "definition": (
+            "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public HDFC "
+            "Bank voice, compared with the window average (1 July to 28 September 2026). Source-weighted: each source's "
+            "net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's "
+            "collection cannot move it. Range −100 to +100."
+        ),
+        **M.mood(basis_bank, W),
         "baseline_label": "vs window average (1 Jul–28 Sep); no earlier baseline",
-        "n_items": len(mood_rows),
-        "daily": daily,
     }
 
     # ------------------------------------------------------------ release pulse (HDFC Bank app)

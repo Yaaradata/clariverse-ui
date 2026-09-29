@@ -456,7 +456,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             ))}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <WeeklyBars data={st.weekly} height={300} yLabel="Posts per week" />
+            <WeeklyBars data={st.weekly} height={300} />
             <BaselineCaption>
               Trend within window: {fmtSigned(st.trend.change_pct)} second half
               vs first half, as a share of posts.

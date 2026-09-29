@@ -9,7 +9,8 @@ export type StatusValue =
   | "improving";
 export type View = "mds-office" | "head-cx";
 
-export type Weekly = { week: string; count: number };
+/** A weekly series: raw trend-basis count, and (for theme and flag series) the source-weighted share of voice (%). */
+export type Weekly = { week: string; count: number; share?: number | null };
 export type Halves = {
   mode: "trend_within_window";
   first_half: number;
@@ -215,9 +216,26 @@ export type AppPulseFile = { apps: AppPulse[]; note: string };
 
 export type MoodFile = {
   definition: string;
+  method: "source_weighted";
   value: number | null;
   window_average: number;
   delta_pts: number | null;
+  unweighted: { value: number; window_average: number; delta_pts: number };
+  by_source: {
+    source: string;
+    weight_pct: number;
+    window_net: number;
+    last7_net: number | null;
+    last7_items: number;
+    last7_share_pct: number;
+    change_pts: number | null;
+  }[];
+  weekly: {
+    week: string;
+    n: number;
+    net: number | null;
+    net_unweighted: number | null;
+  }[];
   baseline_label: string;
   n_items: number;
   daily: {
@@ -227,6 +245,7 @@ export type MoodFile = {
     negative: number;
     net: number;
     net_7d: number | null;
+    net_7d_unweighted: number | null;
   }[];
 };
 

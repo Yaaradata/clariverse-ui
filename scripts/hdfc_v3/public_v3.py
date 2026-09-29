@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hdfc_pipeline"))
 from common import PRODUCT_LABEL, PRODUCTS, dump  # noqa: E402
+import method as M  # noqa: E402  (scripts/hdfc_pipeline/method.py: source-weighted trends)
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "out" / "app_jul_sep"
@@ -72,15 +73,12 @@ def build_products(rows, basis) -> dict:
         else:
             excluded[r["business"]] += 1
     basis_all = [r for r in rows if r["_stream"] in basis]
-    ft = sum(1 for r in basis_all if r["created_at"][:10] <= H1_END)
-    st = len(basis_all) - ft
+    weights = M.weights(basis_all)
     out = []
     for p in PRODUCTS:
         rs = by.get(p["id"], [])
-        b = [r for r in rs if r["_stream"] in basis]
-        f = sum(1 for r in b if r["created_at"][:10] <= H1_END)
-        s = len(b) - f
-        change = round(100 * ((s / st) - (f / ft)) / (f / ft), 1) if f >= 15 and s >= 15 else None
+        tr = M.halves(rs, basis_all, weights, min_per_half=15)
+        f, s, change = tr["first_half"], tr["second_half"], tr["change_pct"]
         issues = collections.defaultdict(lambda: {"count": 0, "negative": 0, "escalation": 0})
         for r in rs:
             for t in r["themes"]:
@@ -104,7 +102,7 @@ def build_products(rows, basis) -> dict:
                 "promise_break_mentions": sum(1 for r in rs if r["promise_break"]),
                 "share_negative": round(100 * neg / len(rs), 1) if rs else None,
                 "trend_change_pct": change,
-                "trend_basis": {"first_half": f, "second_half": s},
+                "trend_basis": {"first_half": f, "second_half": s, "first_share": tr["first_share"], "second_share": tr["second_share"]},
                 "top_issue": {"id": ranked[0][0], "label": labels[ranked[0][0]], "negative": ranked[0][1]["negative"]} if ranked else None,
                 "issues": [{"id": k, "label": labels[k], **v} for k, v in ranked],
                 "by_source": dict(collections.Counter(r["source"] for r in rs)),
@@ -124,7 +122,11 @@ def build_products(rows, basis) -> dict:
         "total_rows": total_rows,
         "total_items": meta["records"]["bank_on_topic_window"],
         "reconciles": total_rows + sum(excluded.values()) == meta["records"]["bank_on_topic_window"],
-        "trend_rule": f"Share of trend-basis items, second half ({'15 Aug'}–28 Sep) vs first half (1 Jul–14 Aug). Shown only when both halves have at least 15 items.",
+        "trend_rule": (
+            "Source-weighted share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug): each "
+            "source's share counts in proportion to its share of the window. Reddit (collector changed 1 Sep) and the "
+            "Play Store HDFC Bank app export (from 25 Jul) are left out. Shown only when both halves have at least 15 items."
+        ),
         "labels": PRODUCT_LABEL,
     }
 
@@ -194,12 +196,7 @@ def build_store_series() -> dict:
     }
 
 
-def stream_of(r) -> str:
-    if r["source"] in ("playstore", "appstore"):
-        return f"{r['source']}:{r['app_name']}"
-    if r["source"] == "forum":
-        return f"forum:{r['subreddit']}"
-    return r["source"]
+stream_of = M.stream_of
 
 
 def main():

@@ -13,6 +13,7 @@
      "latest": "2026-08-25",
      "window_first": "2026-07-03",
      "full_window": false,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -24,6 +25,7 @@
      "latest": "2026-09-23",
      "window_first": "2026-07-03",
      "full_window": false,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -46,10 +48,11 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 0,
     "second_half": 0,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
+    "first_share": 0.0,
+    "second_share": 0.0,
     "change_pct": null,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
@@ -168,6 +171,7 @@
      "latest": "2026-09-27",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -179,6 +183,7 @@
      "latest": "2026-09-27",
      "window_first": "2026-07-25",
      "full_window": false,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -201,11 +206,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 222,
     "second_half": 103,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": -31.7,
+    "first_share": 4.59,
+    "second_share": 4.59,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -600,6 +606,7 @@
      "latest": "2026-09-26",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -611,6 +618,7 @@
      "latest": "2026-09-26",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -633,11 +641,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 144,
     "second_half": 201,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": 105.5,
+    "first_share": 4.87,
+    "second_share": 4.87,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -787,6 +796,7 @@
      "latest": "2026-09-25",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -798,6 +808,7 @@
      "latest": "2026-09-27",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -820,11 +831,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 403,
     "second_half": 165,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": -39.7,
+    "first_share": 8.02,
+    "second_share": 8.02,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -1016,6 +1028,7 @@
      "latest": "2026-09-09",
      "window_first": "2026-07-05",
      "full_window": false,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -1027,6 +1040,7 @@
      "latest": "2026-09-26",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -1049,11 +1063,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 38,
     "second_half": 56,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": 117.0,
+    "first_share": 1.33,
+    "second_share": 1.33,
+    "change_pct": -0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -1327,6 +1342,7 @@
      "latest": "2026-09-18",
      "window_first": "2026-07-21",
      "full_window": false,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -1338,6 +1354,7 @@
      "latest": "2026-09-26",
      "window_first": "2026-07-02",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -1360,11 +1377,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 34,
     "second_half": 32,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": 38.6,
+    "first_share": 0.93,
+    "second_share": 0.93,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -1596,6 +1614,7 @@
      "latest": "2026-09-26",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -1607,6 +1626,7 @@
      "latest": "2026-09-27",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -1629,11 +1649,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 2898,
     "second_half": 2008,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": 2.0,
+    "first_share": 69.3,
+    "second_share": 69.3,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -2116,6 +2137,7 @@
      "latest": "2026-09-23",
      "window_first": "2026-07-03",
      "full_window": false,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -2127,6 +2149,7 @@
      "latest": "2026-09-26",
      "window_first": "2026-07-03",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -2149,11 +2172,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 32,
     "second_half": 30,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": 38.1,
+    "first_share": 0.88,
+    "second_share": 0.88,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
@@ -2423,6 +2447,7 @@
      "latest": "2026-09-24",
      "window_first": "2026-07-02",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -2434,6 +2459,7 @@
      "latest": "2026-09-27",
      "window_first": "2026-07-01",
      "full_window": true,
+     "partial_reason": null,
      "mode": "trend_within_window",
      "baseline_items": 0,
      "baseline_weeks": 0.0
@@ -2456,11 +2482,12 @@
    "baseline": null,
    "trend": {
     "mode": "trend_within_window",
+    "method": "source_weighted",
     "first_half": 445,
     "second_half": 268,
-    "first_half_total": 4216,
-    "second_half_total": 2863,
-    "change_pct": -11.3,
+    "first_share": 10.07,
+    "second_share": 10.07,
+    "change_pct": 0.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },

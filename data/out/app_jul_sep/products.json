@@ -14,10 +14,12 @@
    "repeat": 147,
    "promise_break_mentions": 124,
    "share_negative": 36.2,
-   "trend_change_pct": 18.2,
+   "trend_change_pct": 2.2,
    "trend_basis": {
-    "first_half": 1600,
-    "second_half": 1874
+    "first_half": 697,
+    "second_half": 916,
+    "first_share": 17.17,
+    "second_share": 17.54
    },
    "top_issue": {
     "id": "rewards_value",
@@ -339,10 +341,12 @@
    "repeat": 262,
    "promise_break_mentions": 190,
    "share_negative": 48.9,
-   "trend_change_pct": -26.8,
+   "trend_change_pct": 1.1,
    "trend_basis": {
-    "first_half": 2958,
-    "second_half": 2144
+    "first_half": 2933,
+    "second_half": 2113,
+    "first_share": 54.53,
+    "second_share": 55.14
    },
    "top_issue": {
     "id": "app_speed_crash",
@@ -650,10 +654,12 @@
    "repeat": 187,
    "promise_break_mentions": 134,
    "share_negative": 60.1,
-   "trend_change_pct": 157.4,
+   "trend_change_pct": 1.4,
    "trend_basis": {
-    "first_half": 446,
-    "second_half": 1137
+    "first_half": 284,
+    "second_half": 725,
+    "first_share": 11.0,
+    "second_share": 11.15
    },
    "top_issue": {
     "id": "complaint_handling",
@@ -938,10 +944,12 @@
    "repeat": 55,
    "promise_break_mentions": 29,
    "share_negative": 76.2,
-   "trend_change_pct": 75.2,
+   "trend_change_pct": -19.7,
    "trend_basis": {
-    "first_half": 121,
-    "second_half": 210
+    "first_half": 94,
+    "second_half": 140,
+    "first_share": 2.94,
+    "second_share": 2.36
    },
    "top_issue": {
     "id": "recovery_conduct",
@@ -1200,10 +1208,12 @@
    "repeat": 10,
    "promise_break_mentions": 16,
    "share_negative": 59.1,
-   "trend_change_pct": -32.7,
+   "trend_change_pct": -10.8,
    "trend_basis": {
-    "first_half": 165,
-    "second_half": 110
+    "first_half": 48,
+    "second_half": 72,
+    "first_share": 1.41,
+    "second_share": 1.26
    },
    "top_issue": {
     "id": "loan_processing",
@@ -1415,8 +1425,10 @@
    "share_negative": 50.0,
    "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 8,
-    "second_half": 4
+    "first_half": 1,
+    "second_half": 2,
+    "first_share": 0.02,
+    "second_share": 0.03
    },
    "top_issue": {
     "id": "loan_servicing",
@@ -1491,10 +1503,12 @@
    "repeat": 1,
    "promise_break_mentions": 0,
    "share_negative": 72.9,
-   "trend_change_pct": 25.0,
+   "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 21,
-    "second_half": 26
+    "first_half": 9,
+    "second_half": 15,
+    "first_share": 0.33,
+    "second_share": 0.23
    },
    "top_issue": {
     "id": "mis_selling",
@@ -1633,10 +1647,12 @@
    "repeat": 103,
    "promise_break_mentions": 51,
    "share_negative": 38.4,
-   "trend_change_pct": -29.0,
+   "trend_change_pct": -7.6,
    "trend_basis": {
-    "first_half": 226,
-    "second_half": 159
+    "first_half": 215,
+    "second_half": 131,
+    "first_share": 3.82,
+    "second_share": 3.53
    },
    "top_issue": {
     "id": "app_speed_crash",
@@ -1879,7 +1895,7 @@
  "total_rows": 16329,
  "total_items": 17193,
  "reconciles": true,
- "trend_rule": "Share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug). Shown only when both halves have at least 15 items.",
+ "trend_rule": "Source-weighted share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug): each source's share counts in proportion to its share of the window. Reddit (collector changed 1 Sep) and the Play Store HDFC Bank app export (from 25 Jul) are left out. Shown only when both halves have at least 15 items.",
  "labels": {
   "cards": "Cards",
   "payzapp": "PayZapp and UPI",

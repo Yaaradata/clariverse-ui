@@ -4,7 +4,12 @@ import { Activity, ChevronRight, Shield, Sparkles, Timer } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { execAnswer, moodLine, whatChanged } from "@/lib/hdfc-v3/copy";
+import {
+  execAnswer,
+  moodLine,
+  moodNote,
+  whatChanged,
+} from "@/lib/hdfc-v3/copy";
 import {
   fmt,
   fmtDateTime,
@@ -659,7 +664,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={moodLine(b)}
           headlineLabel="Mood, last 7 days vs window average"
           headline={fmtSigned(b.mood.delta_pts, " pts")}
-          caption={`Change in net sentiment against the average for ${rangeLabel(b.meta.window.start, b.meta.window.end)}. Public voice skews negative, so read the change, not the level. No earlier baseline for social sources.`}
+          caption={moodNote(b)}
           gauges={[
             {
               label: "All voice",
@@ -741,7 +746,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={`${fmt(pbCount)} public posts describe a missed timeline; ${fmt(stCount)} ask where something is; ${fmt(escCount)} use escalation language.`}
           headlineLabel="Missed timelines heard"
           headline={fmt(pbCount)}
-          caption={`Trend within window: ${fmtSigned(sig.flags.promise_break.trend.change_pct)} second half vs first half (share of posts).`}
+          caption={`Trend within window: ${fmtSigned(sig.flags.promise_break.trend.change_pct)} second half vs first half (source-weighted share of posts).`}
           gauges={[
             {
               label: "Repeat contact",
