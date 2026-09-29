@@ -1,0 +1,288 @@
+LiSN × KGS demo — mock-data check report
+generated 2026-09-28 09:34 UTC · data/ from generate_mock.py (seed 20260925)
+C1–C10 = 05a §6 generator checks · E1–E9 = extra checks requested for this build
+
+[PASS] C1   Volumes
+         ok   Σ weeklyInteractions = 233,900 (233,900)
+         ok   W26 = 9,020
+         ok   26 weekly points
+         ok   Q1 interactions table Σ = 5,480 = total 5,480
+         ok   lifecycle Σ = 5,480 (5,480)
+         ok   symptom stack Σ = 1,610 (1,610)
+         ok   each symptom row sums to its 05a total
+
+[PASS] C2   Funnel and value
+         ok   funnel = 233,900 / 1,640 / 212 / 5 / 2
+         ok   suppressed reasons [74, 58, 41, 27, 12] Σ 212
+         ok   suppressedCard rows = funnel reasons
+         ok   intro line quotes 233,900
+         ok   valueRegister V-01…V-14 in order
+         ok   unitCosts 750 = 450 + 150 + 150
+         ok   AV-1 ↔ V-11
+         ok   AV-4 line 2 ↔ V-07
+         ok   AV-4 line 3 ↔ V-08
+         ok   AV-4 line 1 '$0.5m' = V-02 $0.15m + V-05 $0.35m (both USD)
+         ok   AV-5 ↔ V-10
+         ok   AV-6 ↔ V-12
+         ok   AV-6 212 = V-12
+         ok   hero P&L to date/projected ↔ V-01,V-02
+         ok   hero sub-tile 1 ↔ V-03
+         ok   hero sub-tile 2 ↔ V-04
+         ok   date-code stat 1 ↔ V-05
+         ok   date-code stat 2 ↔ V-05
+         ok   date-code 1,900 containable = V-05
+         ok   channel value line ↔ V-06,V-11
+         ok   separation KPI invoices ↔ V-08
+         ok   '£1.1m / 212' verbatim in V-08
+         ok   separation KPI DSO ↔ V-08
+         ok   separation KPI excess ↔ V-09
+         ok   Q2 mini KPI ↔ V-07
+         ok   Q3 mini KPI ↔ V-08
+         ok   Pulse 2 ↔ V-08
+         ok   FSM card 3 blast radius ↔ V-06
+         ok   FSM card 4 blast radius ↔ V-07
+         ok   FSM card 5 blast radius ↔ V-08
+         ok   channel KPI backlog ↔ V-07
+         ok   fw-4-1 exposure ↔ V-01,V-02
+         ok   dc-d2-2611 exposure ↔ V-05
+         ok   dc-d2-2611 exposure ↔ V-05
+         ok   esd-se-07 exposure ↔ V-06
+         ok   n3-backorder exposure ↔ V-07
+         ok   ukeu-entity-cutover exposure ↔ V-08
+         ok   ukeu-entity-cutover exposure ↔ V-09
+         ok   money.heroToDate ↔ V-01
+         ok   money.heroProjected ↔ V-02
+         ok   money.heroAvoidableField ↔ V-03
+         ok   money.dateCodeExposure ↔ V-05
+         ok   money.partnerSellIn ↔ V-06
+         ok   money.partnerGap ↔ V-06
+         ok   money.partnerBacklog ↔ V-06
+         ok   money.backlogAtRisk ↔ V-07
+         ok   money.openBacklog ↔ V-07
+         ok   money.invoicesInDispute ↔ V-08
+         ok   money.dsoCash ↔ V-08
+
+[PASS] C3   Hero evidence
+         ok   23 records = evidenceCount
+         ok   ids EV-2609-0001…0023
+         ok   9 partners (9)
+         ok   regional split {'US-SE': 11, 'US-SW': 8, 'Canada': 4}
+         ok   K 15 / I 8 (5 ship date / 3 download log)
+         ok   confidence K/I counts match evidence
+         ok   rollback in 5 records across 4 partners
+         ok   'loop 2/3' named in 6 records (6)
+         ok   before 16 Sep UTC only ['ESD-SE-07', 'ESD-SW-03']
+         ok   EV-2609-0007 (ESD-CA-04) is the third independent partner on 16 Sep UTC
+         ok   weekly counts W23–W26 [1, 5, 9, 8]
+         ok   channels {'call': 7, 'case': 8, 'email': 4, 'rma': 2, 'afterHours': 2}
+         ok   featuredOrder 1–5
+         ok   all signalId = fw-4-1
+         ok   RMA ↔ evidence links agree (2 NFF)
+         ok   highlights are substrings of the rendered text in both modes
+         ok   cohort 1,240 panels / 610 sites / 9 partners
+         ok   cohort region rows sum to 1,240 / 610 / 23
+         ok   6,800 − 1,240 = 5,560 eligible
+         ok   partners per region match evidence (4 / 3 / 2)
+         ok   4.1 series contacts = evidence weekly counts
+         ok   headline 23 ÷ 1,240 ÷ 3 × 1,000 = 6.2
+
+[PASS] C4   Question-card counts
+         ok   installed-base: count 2 = 2 signals
+         ok   installed-base: lastWeekCount 2 (aboveSince ≤ digest)
+         ok   installed-base: deltaLabel '0 vs last week'
+         ok   installed-base: countLabel
+         ok   installed-base: counted[] = its signals
+         ok   installed-base: severityMix 'S2 cliff · S2 cliff'
+         ok   channel: count 2 = 2 signals
+         ok   channel: lastWeekCount 1 (aboveSince ≤ digest)
+         ok   channel: deltaLabel '+1 vs last week'
+         ok   channel: countLabel
+         ok   channel: counted[] = its signals
+         ok   channel: severityMix 'S2 slope · S2 slope'
+         ok   separation: count 1 = 1 signals
+         ok   separation: lastWeekCount 1 (aboveSince ≤ digest)
+         ok   separation: deltaLabel '0 vs last week'
+         ok   separation: countLabel
+         ok   separation: counted[] = its signals
+         ok   separation: severityMix 'S2 cliff'
+         ok   Σ counts = 5 = funnel above-threshold
+         ok   no field named 'index'; 'score' only where 05a §2 defines it (RankFactor, sourceIndependence)
+         ok   installed-base: no score/index on the card
+         ok   channel: no score/index on the card
+         ok   separation: no score/index on the card
+
+[PASS] C5   Gauges
+         ok   Q1 98 = 45/46
+         ok   Q1 80 = 0.28/0.35
+         ok   Q2 99.8 = 419/420
+         ok   Q3 75 = 3/4
+         ok   Q3 8 ≈ 14/180
+         ok   EST4 RMA rate W26 0.28, max 0.3 < 0.35
+         ok   contactsVsRma.rmaRate = hero aggregate
+         ok   SKU p-chart current 0.21 < 0.30 limit
+         ok   gauge tones [('green', 'green'), ('green', 'amber'), ('amber', 'amber')]
+
+[PASS] C6   Channel
+         ok   ESD-SE-07 friction W21–W26 40 vs baseline 13 (3.08 → 3.1×)
+         ok   W16–W20 friction mean 3.2 (3.2, 1.6× own baseline)
+         ok   sell-in Σ W19–W26 1,638 / 2,100 − 1 = -22%
+         ok   exactly 1 ESD / Strategic Partner row outside band
+         ok   certification seats Σ 18 (18)
+         ok   backlog $2.3m = 2.4% of $95m
+         ok   backorder bars sum to 05a totals
+         ok   N-3 overlay 3.2 = consequenceRatio W26
+         ok   consequenceRatio W15–W26 (12 points)
+         ok   channel drivers 34+26+17+13+10 = 100
+         ok   evidence pins W21–W26
+         ok   competitor never named in pins
+
+[PASS] C7   Separation
+         ok   dispute drivers Σ 212
+         ok   driver shares [41, 24, 15, 11, 9]
+         ok   remit-to W26 81 vs baseline 30.0 (2.7×)
+         ok   control W26 45 vs 40.0 (1.1×)
+         ok   portal login W26 75 vs 22.0 (3.4×)
+         ok   first three topics 298 = Σ W23–W26 remit-to 298
+         ok   portal-login total 276 = Σ W23–W26 portal series
+         ok   remit-to & entity topics W26 81/wk vs 30/wk
+         ok   scorecard: 3 'Clean vs control' of 4
+         ok   defect split 118 + 180 = 298
+         ok   excess 30 × (2.7 − 1.1) = 48 / week (V-09)
+         ok   topic stack bars sum to topic totals
+         ok   dispute trend ends £1,100k / +6 days
+
+[PASS] C8   Tokens
+         ok   raw brand/platform/partner/region/place names outside tokens: 0
+         note meta.filters.region keeps 'NA'/'UK-EU' as option values (05a check 8 exception)
+         note Role-typed fields hold Role literals (Regional GM UK-EU); UI renders them with roleLabel()
+
+[PASS] C9   Banned strings and $ + £
+         ok   banned strings: 0 hits
+         ok   ROI / savings only inside the 'Never on screen' line
+         ok   no string mixes $ and £ (0)
+
+[PASS] C10  Governed watch and runtime
+         ok   W-1 routed 6 Sep 14:38 UTC; chronology updated 23 Sep 10:02 UTC
+         ok   W-2 routed 7 minutes after first mention
+         ok   W-2 clock 8h 46m to data-as-of
+         ok   watch items carry no tokens, platform, firmware or country
+         ok   no approval / decision timestamp stored (runtime only)
+         ok   no string carries the demo-day date (28 Sep)
+         ok   5 runtime strings carry the {ts} placeholder
+         ok   President cannot approve the hero gate
+
+[PASS] E1   JSON matches the TypeScript interfaces
+         ok   required keys present / no unknown keys on 561 objects across 94 paths
+         ok   anonymise.json matches AnonymiseMap
+         ok   partner anon labels unique
+         ok   tsc --strict: 9 JSON files assigned to their interfaces + lib/*.ts compile
+
+[PASS] E2   House style
+         ok   British spelling spot-check (colour, signalling, recognised …)
+         ok   no 'LiSN' casing in keys
+         ok   caps labels write 'LiSN INSIGHT' literally (no LISN)
+         ok   wall link label is 'Open signal →'
+         ok   no 'sent' / 'notified' wording for LiSN actions
+
+[PASS] E3   Every money value has a currency
+         ok   amounts with k/m magnitude carry $ or £ (0 without)
+         ok   every object flagged money:true shows $ or £ (0 without)
+         ok   money.heroToDate: ≈ $12k = USD 12,000
+         ok   money.heroProjected: ≈ $0.15m = USD 150,000
+         ok   money.heroAvoidableField: ≈ $0.1m = USD 100,000
+         ok   money.dateCodeExposure: up to $0.35m = USD 350,000
+         ok   money.warrantyAndField: ≤ $0.5m = USD 500,000
+         ok   money.partnerSellIn: $6.4m = USD 6,400,000
+         ok   money.partnerGap: ≈ $1.4m / yr = USD 1,400,000
+         ok   money.partnerBacklog: $0.9m = USD 900,000
+         ok   money.backlogAtRisk: $2.3m = USD 2,300,000
+         ok   money.openBacklog: ~$95m = USD 95,000,000
+         ok   money.invoicesInDispute: £1.1m = GBP 1,100,000
+         ok   money.dsoCash: ≈ £1.0m = GBP 1,000,000
+         ok   numeric money arrays declare their currency (backorder $m, sell-in $k, disputes £k)
+
+[PASS] E4   No USD + GBP sums
+         ok   AV-4 has three lines and no total value
+         ok   money.warrantyAndField combines ['V-02', 'V-05'] in one currency only ({'USD'})
+         ok   no single string mixes $ and £
+         ok   no V-figure mixes currencies (USD ['V-01', 'V-02', 'V-03', 'V-05', 'V-06', 'V-07', 'V-09', 'V-10'] · GBP ['V-08'])
+
+[PASS] E5   Synthetic IDs only
+         ok   37 distinct IDs, all in the synthetic patterns of 05a §1.1
+         ok   18 partner IDs follow ESD-/DIST-/DLR- synthetic patterns
+         ok   RMA serials E4-S-YYWWNNNN
+         ok   date codes YYWW (2601–2626)
+         ok   signal display IDs SIG-2609-NNN
+         ok   hero headline marks firmware '(synthetic)'
+
+[PASS] E6   Tokens resolve; Anonymise ON leaves no real name
+         ok   368 tokens, all resolvable by anonymise.json
+         ok   anonymised render leaks: 0
+         note meta.filters.region option values stay raw by contract; render them with label('region', v, anon) when a key exists
+         ok   sample: Panel platform A · firmware A.4.1 (synthetic) — 'devices not…
+         ok   named render reproduces 02 HS-3 headline exactly
+
+[PASS] E7   GEN constraints and series consistency
+         ok   weeks W1 30 Mar … W26 21 Sep, Mondays 7 days apart
+         ok   every weekStart is a Monday
+         ok   130 working days; each week sums to weeklyInteractions
+         ok   per-day range 1,136–2,504 (1,100–2,900)
+         ok   mean 1,799.2 per working day (~1,800)
+         ok   quarter-end peak in W13
+         ok   working days only
+         ok   channel mix sums to 100%
+         ok   UK-EU remit-to & entity contacts: W1–W22 in 26–34, mean 30; W23–W26 [55, 80, 82, 81]
+         ok   UK-EU remit-to & entity contacts: no bump after W16 / W19 / W20 (clean cutovers)
+         ok   UK-EU portal login: W1–W22 in 19–25, mean 22; W23–W26 [51, 74, 76, 75]
+         ok   UK-EU portal login: no bump after W16 / W19 / W20 (clean cutovers)
+         ok   Control regions — remit-to & entity: W1–W22 in 36–44, mean 40; W23–W26 [42, 43, 44, 45]
+         ok   Control regions — remit-to & entity: no bump after W16 / W19 / W20 (clean cutovers)
+         ok   date-code window 2611–2614, units Σ 4,800 (4,800)
+         ok   date-code units ~1,200 per week (1,100–1,300)
+         ok   relativeRisk = rate ÷ 1.1
+         ok   window mean 4.6 ÷ 1.1 = 4.18 → 4.2×
+         ok   lineage bands follow the 05a formula and contain the rate
+         ok   4.0 series W1–W26, 4.1 series W23–W26
+         ok   panels on 4.0 + 4.1 ≤ 6,800 eligible
+         ok   Q1 lineage monitor 4.0 = hero W15–W26
+         ok   Q1 lineage monitor 4.1 = hero W23–W26
+         ok   contactsVsRma fw41 = hero contacts and ≤ trouble
+         ok   every chart marker's week matches its date
+         ok   fw-4-1: Σ weight × score = 0.84 (rankScore 0.84)
+         ok   dc-d2-2611: Σ weight × score = 0.71 (rankScore 0.71)
+         ok   esd-se-07: Σ weight × score = 0.66 (rankScore 0.66)
+         ok   n3-backorder: Σ weight × score = 0.58 (rankScore 0.58)
+         ok   ukeu-entity-cutover: Σ weight × score = 0.52 (rankScore 0.52)
+         ok   rank order fw 4.1 · D-2 · ESD-SE-07 · N-3 · UK-EU
+         ok   monitor cards follow rank order
+         ok   rank scores 0.84 / 0.71 / 0.66 / 0.58 / 0.52
+         ok   fw-4-1: lead 21 days = review − aboveSince
+         ok   dc-d2-2611: lead 19 days = review − aboveSince
+         ok   esd-se-07: lead 34 days = review − aboveSince
+         ok   n3-backorder: lead 13 days = review − aboveSince
+         ok   ukeu-entity-cutover: lead 25 days = review − aboveSince
+         ok   AV-1 lead list = signal leads
+         ok   median lead 21 days (V-11: 21)
+         ok   AV-3: 5 awaiting owners · 7 drafts (dunning pause is a decision, not a draft)
+         ok   every signal has exactly one owner
+         ok   monitor.signals[fw-4-1] = signal_fw41.signal (same record)
+         ok   fw-4-1: severity + type + blast radius + incident, K/I, owner, gate, P&L, join tags present
+         ok   dc-d2-2611: severity + type + blast radius + incident, K/I, owner, gate, P&L, join tags present
+         ok   esd-se-07: severity + type + blast radius + incident, K/I, owner, gate, P&L, join tags present
+         ok   n3-backorder: severity + type + blast radius + incident, K/I, owner, gate, P&L, join tags present
+         ok   ukeu-entity-cutover: severity + type + blast radius + incident, K/I, owner, gate, P&L, join tags present
+
+[PASS] E8   Exec and value copy verbatim from 02
+         ok   parsed 14 V-rows from 02 §2
+         ok   valueRegister figure + method = 02 §2 verbatim
+         ok   87 of 87 exec / hero strings found verbatim in 02
+
+[PASS] E9   Arithmetic behind copy
+         ok   every 4.0 weekly rate = contacts ÷ panels × 1,000 (1 dp)
+         ok   headline 2.0 on 4.0, W24–W26 = 1.97
+         ok   P-F caption share 23 ÷ 1,151 = 2.0% → 'about 2%'
+         ok   every 'a vs b (r×)' in copy rounds correctly (e.g. Houston 11 vs 3 = 3.7×)
+         ok   ESD-SE-07 card and signal read 13 → 40 (3.1×)
+         ok   certifications lapsing ≤30 days = 186 (212 kept only for look-alikes and invoices)
+
+SUMMARY: 19 / 19 checks passed
