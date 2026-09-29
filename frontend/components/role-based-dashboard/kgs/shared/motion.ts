@@ -10,6 +10,11 @@ function subscribe(onChange: () => void): () => void {
   return () => mq.removeEventListener("change", onChange);
 }
 
+/** Event-time read of the reduced-motion preference (scroll behaviour on click). */
+export function prefersReducedMotion(): boolean {
+  return window.matchMedia(QUERY).matches;
+}
+
 /** True when the OS asks for reduced motion (03 §4: opacity only, no transforms). */
 export function useReducedMotion(): boolean {
   return useSyncExternalStore(

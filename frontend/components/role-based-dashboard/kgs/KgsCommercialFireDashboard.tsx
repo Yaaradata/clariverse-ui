@@ -12,6 +12,7 @@ import { anonFromUrl } from "@kgs/lib/demoState";
 import { fmt } from "@kgs/lib/label";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type KgsNav, KgsNavContext, type KgsView, parseLink } from "./nav";
+import { prefersReducedMotion } from "./shared/motion";
 import { K } from "./shared/tokens";
 import { ContextBar } from "./shell/ContextBar";
 import { DemoMenu } from "./shell/DemoMenu";
@@ -22,6 +23,7 @@ import { FloatingAIButton } from "./shell/FloatingAIButton";
 import { LeftRail } from "./shell/LeftRail";
 import { ToastProvider, useToast } from "./shell/Toast";
 import { Watermark } from "./shell/Watermark";
+import { ChannelView } from "./views/ChannelView";
 import { InstalledBaseView } from "./views/InstalledBaseView";
 import { OverviewView } from "./views/OverviewView";
 import { SignalFw41View } from "./views/SignalFw41View";
@@ -104,10 +106,6 @@ const GLOBAL_CSS = `
   .kgs-root .kgs-check path { animation: none; stroke-dashoffset: 0; }
 }
 `;
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   const { state, setAnonymise, reset } = useDemo();
@@ -211,8 +209,27 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
     if (!pendingAnchor) return;
     const id = pendingAnchor;
     requestAnimationFrame(() => {
-      if (id === "__top__") scrollRef.current?.scrollTo({ top: 0 });
-      else document.getElementById(id)?.scrollIntoView({ block: "start" });
+      const scroller = scrollRef.current;
+      const el = id === "__top__" ? null : document.getElementById(id);
+      if (!scroller) return;
+      if (!el) {
+        scroller.scrollTo({ top: 0 });
+        return;
+      }
+      // The view is mid kgs-enter (translateY 8px → 0); land where the anchor will settle.
+      const wrap = el.closest(".kgs-enter");
+      const shift = wrap
+        ? new DOMMatrix(getComputedStyle(wrap).transform).m42
+        : 0;
+      const margin = Number.parseFloat(getComputedStyle(el).scrollMarginTop);
+      scroller.scrollTo({
+        top:
+          scroller.scrollTop +
+          el.getBoundingClientRect().top -
+          scroller.getBoundingClientRect().top -
+          shift -
+          (margin || 0),
+      });
     });
     setPendingAnchor(null);
   }, [pendingAnchor]);
@@ -264,15 +281,7 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
             style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}
           >
             <div key={view} className={leaving ? "kgs-exit" : "kgs-enter"}>
-              {view === "/" ? (
-                <OverviewView />
-              ) : view === "/installed-base" ? (
-                <InstalledBaseView />
-              ) : view === "/installed-base/signal/fw-4-1" ? (
-                <SignalFw41View />
-              ) : (
-                <PendingView view={view} />
-              )}
+              <ViewBody view={view} />
             </div>
           </main>
           <FixedFooter />
@@ -289,16 +298,29 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   );
 }
 
-/** Drill-downs and the hero are built in Pass 4 / 5; until then show the page subtitle. */
-function PendingView({ view }: { view: KgsView }) {
+function ViewBody({ view }: { view: KgsView }) {
+  switch (view) {
+    case "/":
+      return <OverviewView />;
+    case "/installed-base":
+      return <InstalledBaseView />;
+    case "/installed-base/signal/fw-4-1":
+      return <SignalFw41View />;
+    case "/channel":
+      return <ChannelView />;
+    case "/separation":
+      return <PendingView />;
+    default: {
+      const unhandled: never = view;
+      return unhandled;
+    }
+  }
+}
+
+/** Q3 is built in step 18; until then show its subtitle. */
+function PendingView() {
   const L = useLabel();
-  const sub =
-    view === "/installed-base"
-      ? installedBase.subtitle
-      : view === "/channel"
-        ? channel.subtitle
-        : view === "/separation"
-          ? separation.subtitle
-          : signalFw41.signal.subline;
-  return <p style={{ color: K.textMut, fontSize: 15 }}>{L(sub)}</p>;
+  return (
+    <p style={{ color: K.textMut, fontSize: 15 }}>{L(separation.subtitle)}</p>
+  );
 }

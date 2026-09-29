@@ -3,7 +3,7 @@
  * The full generator check suite (19 / 19) lives with the pack's check_mock.py.
  * Called once from KgsCommercialFireDashboard when NODE_ENV !== 'production'.
  */
-import { exec, meta, monitor } from "./lib/data";
+import { channel, exec, installedBase, meta, monitor } from "./lib/data";
 
 let ran = false;
 
@@ -111,4 +111,38 @@ export function runKgsChecks(): void {
   const [w1, w2] = exec.governedWatch.items;
   assert(w1.routedAt === "2026-09-06T14:38:00Z", "W-1 routed time");
   assert(w2.clock?.elapsedLabel === "8h 46m", "W-2 clock label");
+
+  // 00 §7 fixed figures: display text must agree with the series behind it
+  const pt = channel.partnerTimeline;
+  const friction = pt.friction.slice(20, 26).reduce((a, b) => a + b, 0);
+  const baseline = pt.baseline.slice(20, 26).reduce((a, b) => a + b, 0);
+  assert(
+    friction === 40 && baseline === 13,
+    `ESD-SE-07 W21–W26 friction ${friction} vs baseline ${baseline} ≠ 40 vs 13`,
+  );
+  assert(
+    (friction / baseline).toFixed(1) === "3.1" &&
+      channel.league[0].cells[3] === "3.1×",
+    "ESD-SE-07 friction ratio ≠ 3.1×",
+  );
+  const houston = channel.switching.find((r) => r.id === "sw-houston");
+  assert(
+    houston?.cells[2] === "11 vs 3 (3.7×)" && (11 / 3).toFixed(1) === "3.7",
+    "Houston switching ≠ 11 vs 3 (3.7×)",
+  );
+  const cr = installedBase.contactsVsRma;
+  const fw41 = cr.fw41.reduce((a, b) => a + b, 0);
+  const trouble = cr.trouble
+    .filter((_, i) => cr.fw41[i] > 0)
+    .reduce((a, b) => a + b, 0);
+  assert(
+    fw41 === 23 &&
+      Math.round((fw41 / trouble) * 100) === 2 &&
+      cr.caption.includes("about 2%"),
+    `P-F: ${fw41} of ${trouble} ≠ "about 2%"`,
+  );
+  const lapsing = channel.kpis.find((k) =>
+    k.label.startsWith("CERTIFICATIONS LAPSING"),
+  );
+  assert(lapsing?.value === "186", "Q2 certifications lapsing ≠ 186");
 }

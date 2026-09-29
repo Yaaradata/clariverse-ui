@@ -17,7 +17,7 @@ import {
 import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
-import { fill } from "../signal/format";
+import { axisWords, fill } from "../signal/format";
 import { Panel } from "./Panel";
 
 const CR = installedBase.contactsVsRma;
@@ -53,7 +53,7 @@ function OverlayTooltip({
   const L = useLabel();
   const row = payload?.[0]?.payload;
   if (!active || !row || label === undefined) return null;
-  const [contactsLabel, rateLabel] = meta.ui.drill.rmaAxes;
+  const [contactsLabel, rateLabel] = axisWords(L(P.unit ?? ""));
   return (
     <div
       style={{
@@ -109,7 +109,7 @@ export function ContactsRmaOverlay() {
   const ghostEnd = weekOf(CR.ghostUntil);
   const limitText =
     installedBase.kpis.find((k) => k.sub?.startsWith("limit"))?.sub ?? "";
-  const [contactsLabel, rateLabel] = meta.ui.drill.rmaAxes;
+  const [contactsLabel, rateLabel] = axisWords(L(P.unit ?? ""));
   const ticks = rows
     .map((r) => r.week)
     .filter((w) => w === 1 || w % TICK_EVERY === 0 || w === lastWeek);

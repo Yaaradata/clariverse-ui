@@ -795,7 +795,6 @@ export interface DrillCopy {
   week: string;
   dateCodeTooltip: string;
   fw41Segment: TokenString;
-  rmaAxes: [string, string];
   partnerLegend: [string, string, TokenString, string];
 }
 

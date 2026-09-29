@@ -32,6 +32,12 @@ export function int(n: number): string {
   return n.toLocaleString("en-GB");
 }
 
+/** A dual-axis panel `unit` ("contacts / week · RMA rate % …") → [left axis, right axis] words. */
+export function axisWords(unit: string): [string, string] {
+  const [left = "", right = ""] = unit.split(" · ");
+  return [left, right];
+}
+
 /** "2026-09-16" → "16 Sep", from UTC getters (a fixed data date, never "now"). */
 export function dayLabel(iso: string): string {
   const d = new Date(`${iso.slice(0, 10)}T00:00:00Z`);
