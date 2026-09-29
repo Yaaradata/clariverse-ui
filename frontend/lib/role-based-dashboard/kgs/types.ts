@@ -774,6 +774,7 @@ export interface ShellCopy {
   };
   emptyScope: string;
   close: string;
+  pnl: string;
 }
 
 /** meta.json */

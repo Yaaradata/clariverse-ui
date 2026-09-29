@@ -875,6 +875,7 @@
       "footer": "Demo controls — not part of the product."
     },
     "emptyScope": "No signal above threshold in this scope",
-    "close": "Close"
+    "close": "Close",
+    "pnl": "P&L"
   }
 }
