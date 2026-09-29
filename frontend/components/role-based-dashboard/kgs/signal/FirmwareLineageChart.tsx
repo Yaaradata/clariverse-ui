@@ -376,7 +376,7 @@ export function FirmwareLineageChart() {
                 x={REVIEW.week}
                 stroke={NEUTRAL_500}
                 strokeWidth={2}
-                strokeDasharray="2 4"
+                strokeDasharray="4 4"
                 label={markerLabel(L(REVIEW.label), 2, K.textMut)}
               />
             ) : null}

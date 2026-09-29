@@ -12,7 +12,7 @@ function look(state: ApproveState) {
       return {
         background: K.elevated,
         border: `1px solid ${K.chipBorder}`,
-        color: "#737373",
+        color: K.textMut,
         cursor: "not-allowed",
       };
     case "ready":

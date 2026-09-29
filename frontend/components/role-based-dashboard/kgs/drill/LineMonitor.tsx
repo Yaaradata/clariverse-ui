@@ -36,7 +36,7 @@ const MARKER_STROKE: Record<
 > = {
   release: { stroke: K.violet400, dash: "4 4" },
   threshold: { stroke: K.amber, dash: "4 4" },
-  review: { stroke: K.textMut, dash: "2 4" },
+  review: { stroke: K.textMut, dash: "4 4" },
   cutover: { stroke: K.textMut, dash: "4 4" },
   event: { stroke: K.slate, dash: "4 4" },
 };

@@ -199,7 +199,8 @@ export function ContactsRmaOverlay() {
                 yAxisId="contacts"
                 x={m.week}
                 stroke={K.textMut}
-                strokeDasharray="2 4"
+                strokeWidth={1.5}
+                strokeDasharray="4 4"
                 label={{
                   value: L(m.label),
                   position: "insideTopRight",
@@ -213,6 +214,7 @@ export function ContactsRmaOverlay() {
               yAxisId="rate"
               y={CR.limit}
               stroke={K.textMut}
+              strokeWidth={1.5}
               strokeDasharray="4 4"
             />
             <Tooltip

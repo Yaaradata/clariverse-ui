@@ -230,6 +230,7 @@ export function DateCodeHeatStrip() {
                 <ReferenceLine
                   y={DC.limit}
                   stroke={K.textMut}
+                  strokeWidth={1.5}
                   strokeDasharray="4 4"
                   label={{
                     value: L(DC.limitLabel),

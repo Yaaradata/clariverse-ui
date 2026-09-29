@@ -146,7 +146,7 @@ export function SnippetCard({ snippet }: { snippet: EvidenceSnippet }) {
           border: "none",
           padding: 0,
           fontSize: 13,
-          color: "#737373",
+          color: K.textMut,
           fontFamily: "inherit",
           cursor: "not-allowed",
           textDecoration: "underline",

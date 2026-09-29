@@ -49,7 +49,7 @@ export function CohortTab() {
           borderRadius: K.radius.chip,
           background: K.elevated,
           border: `1px solid ${K.chipBorder}`,
-          color: "#737373",
+          color: K.textMut,
           fontSize: 13,
           fontWeight: 600,
           fontFamily: "inherit",
