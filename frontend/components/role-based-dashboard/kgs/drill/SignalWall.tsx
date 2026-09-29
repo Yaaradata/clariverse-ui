@@ -10,10 +10,12 @@ import type {
 import { Sparkles } from "lucide-react";
 import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
+import { EmptyScope } from "../shared/EmptyScope";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
 import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
+import { useScope } from "../shell/Scope";
 import { DrillChip, isStable } from "./Chips";
 import { SignalSurface } from "./SignalSurface";
 
@@ -201,7 +203,8 @@ function WallFooterCounts({ items }: { items: SignalWallData["footer"] }) {
 /**
  * SignalWall (03 §3C AISummaryWall → "LiSN Signal Wall"): sparkle header, subtitle, static
  * "Data as of" pill (no live dot), scrolling card stack, footer counts outside the scroller.
- * `pulseClass` briefly pulses the cards of that severity (P-B click).
+ * `pulseClass` briefly pulses the cards of that severity (P-B click). Under a Brand / Region
+ * scope only ranked cards whose signal is in scope stay; unranked cards carry no join tags.
  */
 export function SignalWall({
   wall,
@@ -211,6 +214,11 @@ export function SignalWall({
   pulseClass?: string | null;
 }) {
   const L = useLabel();
+  const { active, inScope } = useScope();
+  const cards = wall.cards.filter((c) => {
+    const linked = monitorCardForWall(c);
+    return linked ? inScope(linked.signalId) : !active;
+  });
   return (
     <section
       style={{
@@ -284,17 +292,21 @@ export function SignalWall({
           paddingRight: 4,
         }}
       >
-        {wall.cards.map((c) => (
-          <WallCard
-            key={c.id}
-            card={c}
-            pulse={Boolean(
-              pulseClass &&
-                (monitorCardForWall(c)?.chips.class === pulseClass ||
-                  c.chips.some((x) => x.startsWith(pulseClass))),
-            )}
-          />
-        ))}
+        {cards.length ? (
+          cards.map((c) => (
+            <WallCard
+              key={c.id}
+              card={c}
+              pulse={Boolean(
+                pulseClass &&
+                  (monitorCardForWall(c)?.chips.class === pulseClass ||
+                    c.chips.some((x) => x.startsWith(pulseClass))),
+              )}
+            />
+          ))
+        ) : (
+          <EmptyScope />
+        )}
       </div>
       <WallFooterCounts items={wall.footer} />
     </section>

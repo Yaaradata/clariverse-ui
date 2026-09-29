@@ -2,10 +2,11 @@
 
 import { anonymise, meta } from "@kgs/lib/data";
 import { roleLabel } from "@kgs/lib/label";
-import { type ReactNode, useState } from "react";
+import type { ReactNode } from "react";
 import { K, withAlpha } from "../shared/tokens";
 import { AnonymiseToggle } from "./AnonymiseToggle";
 import { useDemo, useLabel } from "./DemoProvider";
+import { useScope } from "./Scope";
 import { SyntheticBadge } from "./SyntheticBadge";
 
 const selectStyle = {
@@ -49,7 +50,7 @@ function Field({
 }
 
 /**
- * ContextBar (04 §1.4): sticky 56px. Brand/Region render in P0 (scoping is P1), Period is
+ * ContextBar (04 §1.4): sticky 56px. Brand/Region scope the monitor and walls (P1), Period is
  * static, Role shows the current "Viewing as" (global switch is P2), Data as of, Anonymise
  * toggle (default OFF) and the SyntheticBadge, always visible above drawers and modals.
  */
@@ -57,8 +58,7 @@ export function ContextBar() {
   const L = useLabel();
   const { state } = useDemo();
   const ui = meta.ui.contextBar;
-  const [brand, setBrand] = useState(meta.filters.brand[0]);
-  const [region, setRegion] = useState(meta.filters.region[0]);
+  const { brand, region, setBrand, setRegion } = useScope();
   const regionText = (v: string) =>
     v
       .split("/")

@@ -230,12 +230,17 @@ export function StackedBarWithDetailPanel({
         </ul>
       </div>
       {detail ? (
-        <DetailPanel
+        <div
           key={detail.key}
-          detail={detail}
-          footer={detailFooter}
-          onClose={interactive ? () => setSelected(null) : undefined}
-        />
+          className={interactive ? "kgs-xfade" : undefined}
+          style={{ minWidth: 0 }}
+        >
+          <DetailPanel
+            detail={detail}
+            footer={detailFooter}
+            onClose={interactive ? () => setSelected(null) : undefined}
+          />
+        </div>
       ) : null}
     </div>
   );

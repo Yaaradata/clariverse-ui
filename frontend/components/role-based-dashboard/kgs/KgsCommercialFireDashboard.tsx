@@ -21,6 +21,7 @@ import { DrillHeader } from "./shell/DrillHeader";
 import { FixedFooter } from "./shell/FixedFooter";
 import { FloatingAIButton } from "./shell/FloatingAIButton";
 import { LeftRail } from "./shell/LeftRail";
+import { ScopeProvider, useScope } from "./shell/Scope";
 import { ToastProvider, useToast } from "./shell/Toast";
 import { Watermark } from "./shell/Watermark";
 import { ChannelView } from "./views/ChannelView";
@@ -44,7 +45,9 @@ export function KgsCommercialFireDashboard({
   return (
     <DemoProvider>
       <ToastProvider>
-        <KgsDashboardInner onExit={onExit} />
+        <ScopeProvider>
+          <KgsDashboardInner onExit={onExit} />
+        </ScopeProvider>
       </ToastProvider>
     </DemoProvider>
   );
@@ -84,6 +87,7 @@ const GLOBAL_CSS = `
 .kgs-root .kgs-drawer-in { animation: kgs-drawer 240ms cubic-bezier(.32, .72, 0, 1) both; }
 .kgs-root .kgs-drawer-out { animation: kgs-drawer-out 180ms cubic-bezier(.32, .72, 0, 1) both; }
 .kgs-root .kgs-fade-in { animation: kgs-fade 240ms ease-out both; }
+.kgs-root .kgs-xfade { animation: kgs-fade 150ms ease-out both; }
 .kgs-root .kgs-fade-out { animation: kgs-out 180ms ease-in both; }
 .kgs-root .kgs-watermark { animation: kgs-fade 200ms ease-out both; }
 @keyframes kgs-ping-ring { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
@@ -110,6 +114,7 @@ const GLOBAL_CSS = `
 
 function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   const { state, setAnonymise, reset } = useDemo();
+  const { reset: resetScope } = useScope();
   const { show } = useToast();
   const [view, setView] = useState<KgsView>("/");
   const [pendingAnchor, setPendingAnchor] = useState<string | null>(null);
@@ -237,10 +242,11 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
 
   const onReset = useCallback(() => {
     reset();
+    resetScope();
     setMenuOpen(false);
     go("/");
     show(meta.demo.resetToast);
-  }, [reset, go, show]);
+  }, [reset, resetScope, go, show]);
 
   const nav = useMemo<KgsNav>(
     () => ({ view, go, scrollTo, exit: onExit }),

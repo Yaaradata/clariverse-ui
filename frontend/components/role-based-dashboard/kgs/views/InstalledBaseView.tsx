@@ -158,12 +158,20 @@ export function InstalledBaseView() {
           data={IB.symptomStack}
           unit={P["P-J"].unit}
           ariaLabel={L(IB.symptomStack.title)}
+          interactive
         />
       </Panel>
       <DateCodeHeatStrip />
       <EnhancedPanel data={IB.enhanced} id={P["P-H"].anchor}>
         <DiagnosisBox diagnosis={IB.diagnosis} />
       </EnhancedPanel>
+      <Panel title={L(P["P-L"].title)}>
+        <SegmentTable
+          columns={P["P-L"].columns ?? []}
+          rows={IB.lifecycle}
+          caption={L(P["P-L"].title)}
+        />
+      </Panel>
     </div>
   );
 }
