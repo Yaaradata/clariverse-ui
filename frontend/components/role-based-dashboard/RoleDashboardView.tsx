@@ -72,7 +72,8 @@ import {
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import { NEOGROUP_INDUSTRY_ID } from "@/lib/role-based-dashboard/neogroupIndustry";
-import { KIDDE_GLOBAL_INDUSTRY_ID } from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
+import { KIDDE_GLOBAL_INDUSTRY_ID, KIDDE_GLOBAL_PRESIDENT_ROLE_ID } from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
+import { KgsCommercialFireDashboard } from "./kgs/KgsCommercialFireDashboard";
 import {
   isSterlingHeadRetail,
   resolveRoleDataKey,
@@ -4617,6 +4618,11 @@ export function RoleDashboardView({
         theme={theme}
       />
     );
+  }
+
+  // KGS Commercial Fire President — dedicated dashboard
+  if (industry.id === KIDDE_GLOBAL_INDUSTRY_ID && role.id === KIDDE_GLOBAL_PRESIDENT_ROLE_ID) {
+    return <KgsCommercialFireDashboard onExit={onExit} />;
   }
 
   // Kidde Global — routing shell only; no dashboard content yet.

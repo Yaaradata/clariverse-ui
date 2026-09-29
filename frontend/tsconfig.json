@@ -26,6 +26,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@kgs/*": [
+        "./lib/role-based-dashboard/kgs/*"
       ]
     }
   },
