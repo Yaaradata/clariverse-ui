@@ -194,6 +194,9 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     ageing = agg["deliverables_detail"]["ageing"]
     ok(sum(a["open_cases"] for a in ageing) == agg["dials"]["open"], "deliverables ageing: open cases = open dial")
     ok(sum(a["beyond_tat"] for a in ageing) == agg["dials"]["open_too_long"], "deliverables ageing: beyond TAT = open-too-long dial")
+    # D-11 is not available (qa/tat_check.md): no bank-set TAT is shown as a number (follow-up fix 3).
+    numbered = [d["id"] for d in agg["deliverables"] if d["source"] != "rbi" and d["tat_label"] != "Bank TAT: confirm in discovery"]
+    ok(not numbered, f"bank TATs read 'Bank TAT: confirm in discovery' ({numbered[:3]})")
     cl = agg["deliverables_detail"]["closure"]
     ok(cl["closure_requests"] == sum(1 for r in inter if r["theme"] == "closure_requests") and cl["saved"] <= cl["closed"],
        "closure requests recomputed; saved within closed")

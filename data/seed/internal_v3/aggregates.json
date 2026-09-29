@@ -1510,7 +1510,7 @@
   {
    "id": "card_dispatch",
    "label": "Card dispatch and delivery",
-   "tat_label": "7 working days (working assumption)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -1552,7 +1552,7 @@
   {
    "id": "dispute",
    "label": "Card dispute and chargeback",
-   "tat_label": "30 calendar days (working assumption; network timelines apply)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -1605,7 +1605,7 @@
   {
    "id": "refund",
    "label": "Merchant refund credited",
-   "tat_label": "7 working days (working assumption)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -1702,7 +1702,7 @@
   {
    "id": "service_request",
    "label": "Service request (KYC, account changes, card requests)",
-   "tat_label": "3 working days (working assumption)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -1817,7 +1817,7 @@
   {
    "id": "account_unfreeze",
    "label": "Debit freeze review",
-   "tat_label": "3 working days (working assumption)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -1914,7 +1914,7 @@
   {
    "id": "loan_disbursal",
    "label": "Loan sanction and disbursal",
-   "tat_label": "5 working days (working assumption)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -1989,7 +1989,7 @@
   {
    "id": "query_response",
    "label": "First response to a query or complaint",
-   "tat_label": "1 day (working assumption)",
+   "tat_label": "Bank TAT: confirm in discovery",
    "source": "bank",
    "source_note": null,
    "compensation": "—",
@@ -3658,7 +3658,7 @@
    "language": "Hinglish",
    "subject": "Account freeze kyun hua",
    "body": "Mera salary account achanak debit freeze ho gaya. Branch ne bola email karo. Rent aur EMI dono atke hain.",
-   "backend_status": "Freeze review opened 26 Sep; the bank TAT of 3 working days ends 30 Sep (tomorrow).",
+   "backend_status": "Freeze review opened 26 Sep; no decision yet. Bank TAT: confirm in discovery.",
    "bucket": "call_today",
    "bucket_label": "Call today (deliverable breaking)",
    "product_label": "Accounts and deposits",

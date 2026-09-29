@@ -172,3 +172,9 @@ Confirm with Vidya that she is comfortable with it on screen.
 ## D17 · One store per comparison
 - **Shipped:** every store rating or share is per store; counts may add across stores.
 - **Judgement call:** the "new app" comparison (version 11 vs earlier versions) now uses the Play Store only (1,781 v11 and 2,732 earlier-version reviews), not both stores. The App Store figures stay in the data (`by_store.appstore`) and on the app module's per-store tables. The negative-review count for version 11 is still the two stores added together, and is labelled "across both stores".
+
+## D18 · TATs without D-11
+- **Shipped:** bank-set TATs read "Bank TAT: confirm in discovery", with no number (this replaces the working assumptions shown earlier). See `qa/tat_check.md`.
+- **Judgement call:** the six RBI rows keep their numbers. They are RBI timelines, not bank TATs, so "Bank TAT: confirm in discovery" would be wrong for them. None is verified against D-11, though, and five have no in-repo source beyond the code. **Options:** (a) keep, and check against D-11 before the sponsor review; (b) show "RBI TAT: to verify" on all six until checked.
+- **Judgement call:** met / outside / open-too-long on bank rows still come from the illustrative sample, measured against a placeholder that is not shown. The footnote says so. The alternative would be to blank those cells until discovery.
+- **Judgement call:** L2-09 stays in "Call today". The reason is now the customer's blocked rent and EMI, not a bank TAT ending tomorrow.

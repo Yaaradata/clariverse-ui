@@ -46,6 +46,10 @@ OWNER_LABEL = {
 
 # Deliverables (B7 D1). TATs marked "rbi" are published RBI timelines; everything else is a bank TAT to confirm in
 # discovery. Days are working days (Sundays skipped) unless `calendar` is set. Hours are used for sub-day items.
+# D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank TAT is shown as a number: bank rows
+# read "Bank TAT: confirm in discovery". Their `tat_days` is a parameter of the illustrative sample generator only and
+# never reaches a screen (follow-up fix 3).
+BANK_TAT_LABEL = "Bank TAT: confirm in discovery"
 DELIVERABLES = {
     "failed_reversal": {
         "label": "Failed transaction reversal",
@@ -101,7 +105,7 @@ DELIVERABLES = {
     "card_dispatch": {
         "label": "Card dispatch and delivery",
         "tat_days": 7,
-        "tat_label": "7 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
@@ -109,42 +113,42 @@ DELIVERABLES = {
         "label": "Card dispute and chargeback",
         "tat_days": 30,
         "calendar": True,
-        "tat_label": "30 calendar days (working assumption; network timelines apply)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "refund": {
         "label": "Merchant refund credited",
         "tat_days": 7,
-        "tat_label": "7 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "service_request": {
         "label": "Service request (KYC, account changes, card requests)",
         "tat_days": 3,
-        "tat_label": "3 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "account_unfreeze": {
         "label": "Debit freeze review",
         "tat_days": 3,
-        "tat_label": "3 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "loan_disbursal": {
         "label": "Loan sanction and disbursal",
         "tat_days": 5,
-        "tat_label": "5 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "query_response": {
         "label": "First response to a query or complaint",
         "tat_days": 1,
-        "tat_label": "1 day (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },

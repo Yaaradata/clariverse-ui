@@ -125,19 +125,18 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
             <span key="l" style={{ color: C.text, fontWeight: 600 }}>
               {r.label}
             </span>,
-            <span key="t">
-              {r.tat_label}
-              <div
-                style={{
-                  fontSize: 12,
-                  color: r.source === "rbi" ? C.cyan : C.textMut,
-                }}
-              >
-                {r.source === "rbi"
-                  ? r.source_note
-                  : "Bank TAT: confirm in discovery"}
-              </div>
-            </span>,
+            r.source === "rbi" ? (
+              <span key="t">
+                {r.tat_label}
+                <div style={{ fontSize: 12, color: C.cyan }}>
+                  {r.source_note}
+                </div>
+              </span>
+            ) : (
+              <span key="t" style={{ color: C.textMut }}>
+                {r.tat_label}
+              </span>
+            ),
             r.compensation,
             <span key="m" style={{ fontFamily: MONO }}>
               {fmtPct(r.met_pct)}
@@ -162,9 +161,11 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          RBI rows use published RBI timelines. Where RBI sets none, the bank
-          sets its own TAT; the demo uses the working assumption shown until
-          HDFC&apos;s own SLAs are connected in discovery. Met = closed within
+          RBI rows use published RBI timelines. Where RBI sets none, the TAT is
+          the bank&apos;s own and is not shown until it is confirmed in
+          discovery; on those rows, met, outside and open too long come from
+          the illustrative sample, measured against a placeholder that is not
+          a bank figure. Met = closed within
           the TAT (for the first-response row: answered within it). Outside =
           settled late, or open and already past the TAT. Working days skip
           Sundays; bank holidays are not modelled yet. Public posts describing a

@@ -201,8 +201,9 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             />
           </div>
           <MutedNote>
-            TATs as in the deliverables ledger above: RBI where published,
-            otherwise a working assumption for the bank to confirm in discovery.
+            TATs as in the deliverables ledger above: RBI where published;
+            otherwise the bank&apos;s own TAT, not shown until it is confirmed
+            in discovery.
             Breaches, status-seeking and repeat are public voice; open cases and
             beyond-TAT are illustrative, from the same demo sample as the
             ledger.
