@@ -876,6 +876,34 @@
     },
     "emptyScope": "No signal above threshold in this scope",
     "close": "Close",
-    "pnl": "P&L"
+    "pnl": "P&L",
+    "hero": {
+      "source": "Verbatim from 04 §4.1–§4.11 and 06 Steps 9–12 (added in repo copy; not in pack mock)",
+      "back": "Back to installed base",
+      "attribution": ["Product", "Practice"],
+      "counterEvidence": "Counter-evidence",
+      "sourceIndependence": "Source independence {score} ({partners} partners, {channels} channels)",
+      "cohortColumns": ["Region", "Panels", "Sites", "Partners", "Contacts"],
+      "cohortTotal": "Total",
+      "method": "Method",
+      "routedTo": "Routed to",
+      "ownerSuffix": "(owner)",
+      "recommendedPending": "RECOMMENDED ACTION — awaiting VP Engineering",
+      "recommendedApproved": "RECOMMENDED ACTION — approved by VP Engineering",
+      "decision": "Decision",
+      "viewingAs": "Viewing as",
+      "viewingAsOptions": ["President", "VP Engineering"],
+      "viewDraft": "View draft",
+      "approving": "Approving…",
+      "approved": "Approved",
+      "sourceLink": "Open source interaction",
+      "inferredTooltip": "Inferred — firmware imputed from {imputedFrom}",
+      "rmaSerial": "serial",
+      "synthetic": "(synthetic)",
+      "cohortHeadline": "{panels} panels on fw {{fw:EST4@4.1}} · serial range {serialRange} (synthetic)",
+      "eligible": "Eligible not yet upgraded: {n}",
+      "exportList": "Export list",
+      "auditLog": "Audit log"
+    }
   }
 }

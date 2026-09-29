@@ -6,7 +6,17 @@ import { useDemo } from "../shell/DemoProvider";
 import { K, withAlpha } from "./tokens";
 
 /** RoutedOwner (03 §6.5): roles only, never names; initials tile from the role words. */
-export function RoutedOwner({ role, cc }: { role: Role; cc?: Role[] }) {
+export function RoutedOwner({
+  role,
+  cc,
+  prefix,
+  suffix,
+}: {
+  role: Role;
+  cc?: Role[];
+  prefix?: string;
+  suffix?: string;
+}) {
   const { state } = useDemo();
   const text = roleLabel(role, state.anonymise);
   const initials = text
@@ -35,7 +45,9 @@ export function RoutedOwner({ role, cc }: { role: Role; cc?: Role[] }) {
         {initials}
       </span>
       <span style={{ fontSize: 13, color: K.textSec }}>
-        {text}
+        {prefix ? `${prefix} ` : null}
+        {prefix ? <strong style={{ color: K.text }}>{text}</strong> : text}
+        {suffix ? ` ${suffix}` : null}
         {cc?.length ? (
           <span style={{ color: K.textMut }}>
             {" · cc "}

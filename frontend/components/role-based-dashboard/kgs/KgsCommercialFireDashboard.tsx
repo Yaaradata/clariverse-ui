@@ -23,6 +23,7 @@ import { LeftRail } from "./shell/LeftRail";
 import { ToastProvider, useToast } from "./shell/Toast";
 import { Watermark } from "./shell/Watermark";
 import { OverviewView } from "./views/OverviewView";
+import { SignalFw41View } from "./views/SignalFw41View";
 
 export type KgsCommercialFireDashboardProps = {
   /** Back to the role list (role-based route). */
@@ -60,6 +61,9 @@ const GLOBAL_CSS = `
 .kgs-root [id] { scroll-margin-top: 72px; }
 @keyframes kgs-drawer { from { transform: translateX(100%); } to { transform: translateX(0); } }
 @keyframes kgs-pop { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
+@keyframes kgs-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes kgs-ping-ring { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
+.kgs-root .kgs-ping { transform-box: fill-box; transform-origin: center; opacity: 0; animation: kgs-ping-ring 1.2s ease-out 1.1s 2; }
 @media (prefers-reduced-motion: reduce) {
   .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
 }
@@ -181,7 +185,13 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
           <DrillHeader view={view} title={VIEW_TITLE[view]} />
           <ContextBar />
           <main style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}>
-            {view === "/" ? <OverviewView /> : <PendingView view={view} />}
+            {view === "/" ? (
+              <OverviewView />
+            ) : view === "/installed-base/signal/fw-4-1" ? (
+              <SignalFw41View />
+            ) : (
+              <PendingView view={view} />
+            )}
           </main>
           <FixedFooter />
         </div>

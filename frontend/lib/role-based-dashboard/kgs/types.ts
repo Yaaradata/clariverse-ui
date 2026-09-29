@@ -775,6 +775,37 @@ export interface ShellCopy {
   emptyScope: string;
   close: string;
   pnl: string;
+  hero: HeroCopy;
+}
+
+/** Fixed hero labels (04 §4, 06 Steps 9–12). `{x}` placeholders are filled from data numbers. */
+export interface HeroCopy {
+  source: string;
+  back: string;
+  attribution: [string, string];
+  counterEvidence: string;
+  sourceIndependence: string;
+  cohortColumns: [string, string, string, string, string];
+  cohortTotal: string;
+  method: string;
+  routedTo: string;
+  ownerSuffix: string;
+  recommendedPending: string;
+  recommendedApproved: string;
+  decision: string;
+  viewingAs: string;
+  viewingAsOptions: DemoState["viewingAs"][];
+  viewDraft: string;
+  approving: string;
+  approved: string;
+  sourceLink: string;
+  inferredTooltip: string;
+  rmaSerial: string;
+  synthetic: string;
+  cohortHeadline: string;
+  eligible: string;
+  exportList: string;
+  auditLog: string;
 }
 
 /** meta.json */
