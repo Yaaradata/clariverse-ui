@@ -742,6 +742,7 @@ export interface DailyInteractions {
 export interface ShellCopy {
   source: string;
   rail: {
+    monogram: string;
     logo: string;
     overview: string;
     watch: string;

@@ -841,6 +841,7 @@
   "ui": {
     "source": "Verbatim from 04 §1.2, §1.4, §2.2, §2.6, §2.8, §7.3 (added in repo copy; not in pack mock)",
     "rail": {
+      "monogram": "Li",
       "logo": "LiSN",
       "overview": "Signals this week",
       "watch": "Governed safety & cyber watch (restricted)",
