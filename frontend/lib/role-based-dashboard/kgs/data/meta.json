@@ -8,7 +8,6 @@
     "label": "Data as of 25 Sep 2026 18:00 UTC"
   },
   "lastWeekDigest": "2026-09-18T18:00:00Z",
-  "badgeTooltip": "Every figure, firmware version, serial, date code and partner ID on this screen is illustrative. Nothing here is a finding about any KGS product.",
   "breadcrumbs": {
     "/": "Installed-base early warning · Hear it at the third call, not the monthly review.",
     "/installed-base": "Global Commercial Fire · {role} · Installed base · Firmware · Date codes · RMA",
@@ -853,7 +852,7 @@
       "What changed",
       "Decide first"
     ],
-    "askButtonTooltip": "Ask LiSN (P2 — canned answers)",
+    "askButtonTooltip": "Ask LiSN — canned answers from this week's signals",
     "illustrativeChip": "ILLUSTRATIVE",
     "confidenceTooltip": "K = joined, verified records. I = text-extracted or imputed. Kept separate on every signal.",
     "joinTagPrefix": "JOINED ON"

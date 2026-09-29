@@ -806,8 +806,8 @@ export interface Meta {
   promise: string;
   dataAsOf: { iso: ISODateTime; label: string };
   lastWeekDigest: ISODateTime;
-  badge: string;
-  badgeTooltip: string;
+  badge?: string;
+  badgeTooltip?: string;
   breadcrumbs: Record<string, TokenString>; // "{role}" is a runtime placeholder
   filters: {
     brand: TokenString[];

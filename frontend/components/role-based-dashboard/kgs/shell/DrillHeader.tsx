@@ -10,7 +10,6 @@ import { useDemo, useLabel } from "./DemoProvider";
  * Fork of the bank drill header (HeadOfCreditCardsDashboard.tsx:1203-1220): title + one
  * breadcrumb line. KGS changes: breadcrumb from meta.breadcrumbs with the {role}
  * placeholder = current "Viewing as"; shown on the overview too (04 §1.3).
- * Top-right badge is the on-screen scenario disclaimer.
  */
 export function DrillHeader({ view, title }: { view: KgsView; title: string }) {
   const L = useLabel();
@@ -27,43 +26,17 @@ export function DrillHeader({ view, title }: { view: KgsView; title: string }) {
         background: K.elevated,
       }}
     >
-      <div
+      <h1
         style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          gap: 16,
+          fontSize: 20,
+          fontWeight: 700,
+          color: K.text,
+          margin: 0,
+          letterSpacing: "-0.01em",
         }}
       >
-        <h1
-          style={{
-            fontSize: 20,
-            fontWeight: 700,
-            color: K.text,
-            margin: 0,
-            letterSpacing: "-0.01em",
-          }}
-        >
-          {L(title)}
-        </h1>
-        <span
-          title={meta.badgeTooltip}
-          style={{
-            flexShrink: 0,
-            fontSize: 11,
-            fontWeight: 600,
-            color: K.textMut,
-            border: `1px solid ${K.borderLight}`,
-            borderRadius: 6,
-            padding: "4px 10px",
-            lineHeight: 1.35,
-            maxWidth: 280,
-            textAlign: "right",
-          }}
-        >
-          {meta.badge}
-        </span>
-      </div>
+        {L(title)}
+      </h1>
       <div
         style={{
           fontSize: 14,

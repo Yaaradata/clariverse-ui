@@ -29,8 +29,8 @@ export type TrendMarker = { x: number; label: string; color: string };
 export const QUESTION_CHART_H = 150;
 
 /**
- * Bank ExecutiveTile area chart — monotone curve, accent gradient, end-dot + value,
- * "12 wks" footer. No markers, baselines, ticks or grid.
+ * Bank ExecutiveTile area chart — monotone curve, accent gradient, end-dot,
+ * "12 wks" footer. No end-value label, markers, baselines, ticks or grid.
  */
 export function AreaTrend({
   id,
@@ -38,7 +38,6 @@ export function AreaTrend({
   series,
   height = QUESTION_CHART_H,
   strokeColor,
-  endLabel,
   footerLabel = "12 wks",
 }: {
   id: string;
@@ -49,7 +48,7 @@ export function AreaTrend({
   height?: number;
   /** Stroke/fill colour (card accent). */
   strokeColor?: string;
-  /** Override end-point label; defaults to last numeric value. */
+  /** Kept for call-site compatibility; end-value labels are not rendered. */
   endLabel?: string;
   footerLabel?: string;
 }) {
@@ -69,14 +68,6 @@ export function AreaTrend({
     .map((d) => d[primary.key])
     .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
   const maxY = ys.length ? Math.max(...ys) : 1;
-  const lastVal = ys.length ? ys[ys.length - 1] : null;
-  const labelText =
-    endLabel ??
-    (lastVal == null
-      ? ""
-      : Number.isInteger(lastVal)
-        ? String(lastVal)
-        : String(lastVal));
 
   return (
     <div
@@ -91,7 +82,7 @@ export function AreaTrend({
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={data}
-          margin={{ top: 10, right: 36, left: 0, bottom: 4 }}
+          margin={{ top: 10, right: 8, left: 0, bottom: 4 }}
         >
           <defs>
             <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
@@ -126,24 +117,18 @@ export function AreaTrend({
             activeDot={{ r: 3.5, fill: color, stroke: color }}
             dot={(props: { cx?: number; cy?: number; index?: number }) => {
               const { cx, cy, index } = props;
-              if (index !== lastIdx || cx == null || cy == null || !labelText) {
+              if (index !== lastIdx || cx == null || cy == null) {
                 return <g key={`dot-${index ?? 0}`} />;
               }
               return (
-                <g key="end-dot">
-                  <circle cx={cx} cy={cy} r={3.5} fill={color} stroke={color} />
-                  <text
-                    x={cx + 7}
-                    y={cy + 4}
-                    fill={color}
-                    fontSize={11}
-                    fontWeight={700}
-                    fontFamily={K.mono}
-                    style={{ fontVariantNumeric: "tabular-nums" }}
-                  >
-                    {labelText}
-                  </text>
-                </g>
+                <circle
+                  key="end-dot"
+                  cx={cx}
+                  cy={cy}
+                  r={3.5}
+                  fill={color}
+                  stroke={color}
+                />
               );
             }}
           />

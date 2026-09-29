@@ -36,7 +36,77 @@
       },
       {
         "label": "Partner league",
-        "route": "/channel#esd-se-07"
+        "route": "/channel"
+      }
+    ]
+  },
+  {
+    "q": "Why is {{partner:ESD-SE-07}} drifting while peers stay in band?",
+    "a": "Friction has run 3.1× its own baseline for six weeks; recontact 14% → 38%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%. The channel story this week is one ESD — not a broad collapse.",
+    "cites": [
+      {
+        "label": "Are we holding our channel?",
+        "route": "/channel"
+      },
+      {
+        "label": "Partner standings",
+        "route": "/channel"
+      }
+    ]
+  },
+  {
+    "q": "What's behind the $1.4m in dispute after the {{region:US}} cutover?",
+    "a": "Since 1 Sep, remit-to contacts run 2.7× control and portal login 3.4×. Most cash is stuck on entity and remit-to mismatches — not pricing. 212 invoices / $1.4m in dispute; DSO on the top-10 cohort +6 days. Three of four cutovers stay clean vs control.",
+    "cites": [
+      {
+        "label": "Is the separation costing us?",
+        "route": "/separation"
+      },
+      {
+        "label": "Cash impact",
+        "route": "/separation"
+      }
+    ]
+  },
+  {
+    "q": "Where is N-3 backlog pressure showing up?",
+    "a": "Notification family N-3 is the lead-time break: promised ship dates slip once lines hit backorder. Partners push for allocation lists; competitor language rises when lead times slip past two weeks. Backlog at risk sits at $2.3m on the channel card.",
+    "cites": [
+      {
+        "label": "Promise gap",
+        "route": "/channel"
+      },
+      {
+        "label": "Trending topics",
+        "route": "/channel"
+      }
+    ]
+  },
+  {
+    "q": "What should I decide first on installed base?",
+    "a": "Nine partners report devices lost after the fw {{fw:EST4@4.1}} upgrade; five installers rolled back. The cohort is awaiting VP Engineering. Rank and evidence live on the signal deep-dive — LiSN drafts the brief; Engineering owns the call.",
+    "cites": [
+      {
+        "label": "Installed base",
+        "route": "/installed-base"
+      },
+      {
+        "label": "fw {{fw:EST4@4.1}} signal",
+        "route": "/installed-base/signal/fw-4-1"
+      }
+    ]
+  },
+  {
+    "q": "Which cutover failures are critical vs watch?",
+    "a": "Critical: invoice entity / PO mismatch (81 contacts, 2.7× control), remit-to bank details (74, 2.7×), and portal login & licences (68, 3.4×). High: EDI mapping and Tax / VAT ID. Bottleneck stage is entity corrected — cash waits on owner approval before re-invoice.",
+    "cites": [
+      {
+        "label": "Cutover failures",
+        "route": "/separation"
+      },
+      {
+        "label": "Why invoices get stuck",
+        "route": "/separation"
       }
     ]
   }
