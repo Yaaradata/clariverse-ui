@@ -738,11 +738,49 @@ export interface DailyInteractions {
   count: number;
 }
 
+/** Shell copy added in the repo copy of meta.json, verbatim from 04 (not in the pack mock). */
+export interface ShellCopy {
+  source: string;
+  rail: {
+    logo: string;
+    overview: string;
+    watch: string;
+    back: string;
+    demoControls: string;
+  };
+  contextBar: {
+    brand: string;
+    region: string;
+    period: string;
+    role: string;
+    anonymise: string;
+  };
+  funnel: {
+    interactions: string;
+    weekNote: string;
+    clusters: string;
+    suppressed: string;
+    above: string;
+    governed: string;
+    popoverTitle: string;
+  };
+  appliedValue: Record<string, string>;
+  demoMenu: {
+    reset: string;
+    replayIntro: string;
+    anonymise: string;
+    footer: string;
+  };
+  emptyScope: string;
+  close: string;
+}
+
 /** meta.json */
 export interface MetaFile extends Meta {
   descriptor: string;
   labels: UiLabels;
   dailyInteractions: DailyInteractions[];
+  ui: ShellCopy;
 }
 
 /** One row of the AV-1 popover (lead vs next scheduled review, V-11). */

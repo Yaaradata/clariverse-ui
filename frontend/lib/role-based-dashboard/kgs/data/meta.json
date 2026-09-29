@@ -837,5 +837,43 @@
     "resetToast": "Demo reset",
     "watermark": "Synthetic scenario — not KGS data",
     "anonymisedChip": "ANONYMISED"
+  },
+  "ui": {
+    "source": "Verbatim from 04 §1.2, §1.4, §2.2, §2.6, §2.8, §7.3 (added in repo copy; not in pack mock)",
+    "rail": {
+      "logo": "LiSN",
+      "overview": "Signals this week",
+      "watch": "Governed safety & cyber watch (restricted)",
+      "back": "Back",
+      "demoControls": "Demo controls"
+    },
+    "contextBar": {
+      "brand": "Brand",
+      "region": "Region",
+      "period": "Period",
+      "role": "Role",
+      "anonymise": "Anonymise names"
+    },
+    "funnel": {
+      "interactions": "interactions read",
+      "weekNote": "(26 weeks; ~9,000 this week)",
+      "clusters": "candidate clusters",
+      "suppressed": "suppressed",
+      "above": "signals above threshold",
+      "governed": "governed watch items",
+      "popoverTitle": "Suppressed this window — not signals"
+    },
+    "appliedValue": {
+      "AV-2": "Count of signals above threshold, each with exactly one owner",
+      "AV-3": "Gate-state count"
+    },
+    "demoMenu": {
+      "reset": "Reset demo",
+      "replayIntro": "Replay intro",
+      "anonymise": "Anonymise names",
+      "footer": "Demo controls — not part of the product."
+    },
+    "emptyScope": "No signal above threshold in this scope",
+    "close": "Close"
   }
 }
