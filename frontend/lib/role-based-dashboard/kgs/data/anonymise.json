@@ -73,6 +73,10 @@
     "ModuLaser": {
       "named": "ModuLaser",
       "anon": "Aspirating platform M"
+    },
+    "EST3": {
+      "named": "EST3",
+      "anon": "Panel platform B"
     }
   },
   "fw": {
@@ -154,24 +158,24 @@
       "named": "DLR-SW-201",
       "anon": "Partner P-201"
     },
-    "DIST-UK-004": {
-      "named": "DIST-UK-004",
+    "DIST-US-004": {
+      "named": "DIST-US-004",
       "anon": "Distributor D-04"
     },
-    "DIST-UK-019": {
-      "named": "DIST-UK-019",
+    "DIST-US-019": {
+      "named": "DIST-US-019",
       "anon": "Distributor D-19"
     },
-    "DIST-UK-031": {
-      "named": "DIST-UK-031",
+    "DIST-US-031": {
+      "named": "DIST-US-031",
       "anon": "Distributor D-31"
     },
-    "DIST-DE-012": {
-      "named": "DIST-DE-012",
+    "DIST-US-012": {
+      "named": "DIST-US-012",
       "anon": "Distributor D-12"
     },
-    "DIST-NL-007": {
-      "named": "DIST-NL-007",
+    "DIST-US-007": {
+      "named": "DIST-US-007",
       "anon": "Distributor D-07"
     }
   },
@@ -182,7 +186,7 @@
     },
     "US-SW": {
       "named": "US-SW",
-      "anon": "Region NA-2"
+      "anon": "Region NA-7"
     },
     "Canada": {
       "named": "Canada",
@@ -200,25 +204,9 @@
       "named": "US-W",
       "anon": "Region NA-6"
     },
-    "UK-EU": {
-      "named": "UK-EU",
-      "anon": "Region EU-1"
-    },
-    "UK": {
-      "named": "UK",
-      "anon": "Country EU-a"
-    },
-    "DE": {
-      "named": "DE",
-      "anon": "Country EU-b"
-    },
-    "NL": {
-      "named": "NL",
-      "anon": "Country EU-c"
-    },
-    "FR": {
-      "named": "FR",
-      "anon": "Country EU-d"
+    "US": {
+      "named": "US",
+      "anon": "Region NA-2"
     },
     "APAC": {
       "named": "APAC",

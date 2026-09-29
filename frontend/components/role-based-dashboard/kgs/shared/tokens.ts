@@ -54,6 +54,61 @@ export const SEV: Record<SeverityClass, { color: string; glyph: string }> = {
   S4: { color: K.textMut, glyph: "―" },
 };
 
+/**
+ * Field Signal Monitor urgency chrome — matches Head-of-Cards AI Risk Spike
+ * CRITICAL (red) / HIGH (amber) tones (`registry` red #ef4444, amber #f59e0b).
+ */
+export const URGENCY = {
+  critical: {
+    color: K.red,
+    glyph: "◆",
+    word: "CRITICAL",
+    showSeverityClass: true,
+    glow: true,
+    borderA: 0.53,
+    bgA: 0.047,
+    glowA: 0.2,
+    pillBorderA: 0.4,
+    pillBgA: 0.13,
+    calloutBorderA: 0.4,
+    calloutBgA: 0.1,
+    calloutText: "#ffe4e6",
+    delta: "#fda4af",
+  },
+  high: {
+    color: K.amber,
+    glyph: "▲",
+    word: "HIGH",
+    showSeverityClass: true,
+    glow: true,
+    borderA: 0.53,
+    bgA: 0.047,
+    glowA: 0.2,
+    pillBorderA: 0.4,
+    pillBgA: 0.13,
+    calloutBorderA: 0.4,
+    calloutBgA: 0.1,
+    calloutText: "#fef3c7",
+    delta: "#fda4af",
+  },
+  watch: {
+    color: K.amber,
+    glyph: "●",
+    word: "WATCH",
+    showSeverityClass: false,
+    glow: false,
+    borderA: 0.28,
+    bgA: 0.03,
+    glowA: 0,
+    pillBorderA: 0.28,
+    pillBgA: 0.08,
+    calloutBorderA: 0.28,
+    calloutBgA: 0.08,
+    calloutText: "#fef3c7",
+    delta: "#fda4af",
+  },
+} as const;
+
 /** Domain dot colours (03 §6.1). */
 export const DOMAIN_COLOR: Record<Domain, string> = {
   Quality: K.orange,

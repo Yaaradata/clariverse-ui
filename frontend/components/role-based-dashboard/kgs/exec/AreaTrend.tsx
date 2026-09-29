@@ -25,25 +25,33 @@ export type TrendSeries = {
 
 export type TrendMarker = { x: number; label: string; color: string };
 
+/** Matches head_cards ExecutiveTile chart fill under the left column. */
+export const QUESTION_CHART_H = 150;
+
 /**
- * Bank ExecutiveTile area chart (HeadOfCreditCardsDashboard.tsx:377-419):
- * one monotone curve + gradient fill. No markers, baselines, ticks or grid.
+ * Bank ExecutiveTile area chart — monotone curve, accent gradient, end-dot + value,
+ * "12 wks" footer. No markers, baselines, ticks or grid.
  */
 export function AreaTrend({
   id,
   data: dataProp,
   series,
-  height = 88,
+  height = QUESTION_CHART_H,
   strokeColor,
+  endLabel,
+  footerLabel = "12 wks",
 }: {
   id: string;
   data: Array<Record<string, number | null>>;
   series: TrendSeries[];
-  /** Kept for call-site compatibility; ignored (clean chart has no markers). */
+  /** Kept for call-site compatibility; ignored. */
   markers?: TrendMarker[];
   height?: number;
   /** Stroke/fill colour (card accent). */
   strokeColor?: string;
+  /** Override end-point label; defaults to last numeric value. */
+  endLabel?: string;
+  footerLabel?: string;
 }) {
   const reduced = useReducedMotion();
   const [data] = useState(() => dataProp);
@@ -56,36 +64,43 @@ export function AreaTrend({
     };
   const color = strokeColor ?? primary.color;
   const gradId = `kgs-grad-${id}-${primary.key}`;
+  const lastIdx = data.length - 1;
   const ys = data
     .map((d) => d[primary.key])
-    .filter((v): v is number => typeof v === "number");
-  const minY = ys.length ? Math.min(...ys) : 0;
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
   const maxY = ys.length ? Math.max(...ys) : 1;
-  const pad = Math.max(0.15 * (maxY - minY), 0.5);
+  const lastVal = ys.length ? ys[ys.length - 1] : null;
+  const labelText =
+    endLabel ??
+    (lastVal == null
+      ? ""
+      : Number.isInteger(lastVal)
+        ? String(lastVal)
+        : String(lastVal));
 
   return (
-    <div style={{ width: "100%", height }}>
-      <ResponsiveContainer
-        width="100%"
-        height="100%"
-        initialDimension={{ width: 1, height: 1 }}
-      >
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height,
+        minHeight: height,
+        flexShrink: 0,
+      }}
+    >
+      <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={data}
-          margin={{ top: 4, right: 0, left: 0, bottom: 0 }}
+          margin={{ top: 10, right: 36, left: 0, bottom: 4 }}
         >
           <defs>
             <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.42} />
-              <stop offset="55%" stopColor={color} stopOpacity={0.16} />
+              <stop offset="0%" stopColor={color} stopOpacity={0.35} />
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
           <XAxis dataKey="x" hide />
-          <YAxis
-            hide
-            domain={[() => Math.max(0, minY - pad), () => maxY + pad]}
-          />
+          <YAxis hide domain={[0, maxY * 1.1]} />
           <Tooltip
             cursor={false}
             labelFormatter={() => ""}
@@ -102,17 +117,51 @@ export function AreaTrend({
             dataKey={primary.key}
             name={primary.label}
             stroke={color}
-            strokeWidth={3}
+            strokeWidth={2.5}
             fill={`url(#${gradId})`}
             fillOpacity={1}
-            dot={false}
-            activeDot={{ r: 3.5, fill: color, stroke: color }}
-            connectNulls={false}
+            connectNulls
             isAnimationActive={!reduced}
             animationDuration={900}
+            activeDot={{ r: 3.5, fill: color, stroke: color }}
+            dot={(props: { cx?: number; cy?: number; index?: number }) => {
+              const { cx, cy, index } = props;
+              if (index !== lastIdx || cx == null || cy == null || !labelText) {
+                return <g key={`dot-${index ?? 0}`} />;
+              }
+              return (
+                <g key="end-dot">
+                  <circle cx={cx} cy={cy} r={3.5} fill={color} stroke={color} />
+                  <text
+                    x={cx + 7}
+                    y={cy + 4}
+                    fill={color}
+                    fontSize={11}
+                    fontWeight={700}
+                    fontFamily={K.mono}
+                    style={{ fontVariantNumeric: "tabular-nums" }}
+                  >
+                    {labelText}
+                  </text>
+                </g>
+              );
+            }}
           />
         </AreaChart>
       </ResponsiveContainer>
+      <span
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          fontSize: 11,
+          color: K.textMut,
+          lineHeight: 1,
+          pointerEvents: "none",
+        }}
+      >
+        {footerLabel}
+      </span>
     </div>
   );
 }

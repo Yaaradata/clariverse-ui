@@ -5,10 +5,7 @@ import type { SeverityClass } from "@kgs/types";
 import { useEffect, useRef, useState } from "react";
 import { BackToOverviewHeader } from "../drill/BackToOverviewHeader";
 import { ContactsRmaOverlay } from "../drill/ContactsRmaOverlay";
-import { DateCodeHeatStrip } from "../drill/DateCodeHeatStrip";
-import { DiagnosisBox } from "../drill/DiagnosisBox";
 import { EmergingPhrasingTable } from "../drill/EmergingPhrasingTable";
-import { EnhancedPanel } from "../drill/EnhancedPanel";
 import { BigKpiTile, KpiRow } from "../drill/KpiTile";
 import { LineMonitor, type MonitorSeries } from "../drill/LineMonitor";
 import { Panel } from "../drill/Panel";
@@ -27,31 +24,56 @@ const P = IB.panelCopy;
 const HERO_ROUTE = LEGACY_ROUTES["/signals/A1"];
 const PULSE_MS = 1200;
 
-/** P-C: each release against its own baseline; the fw 4.1 line (and legend item) opens the hero. */
+/** P-C: fw 4.1 vs normal range (focus variant); legend opens the hero. */
 function CohortMonitor() {
   const L = useLabel();
   const { go } = useKgsNav();
   const { lineageMonitor: lm } = IB;
-  const series: MonitorSeries[] = lm.series.map((s, i) => ({
-    key: `s${i}`,
-    label: L(s.label),
-    colour: s.colour,
-    values: s.values,
-    dashed: s.dashed,
-    secondary: s.dashed,
-    emphasis: s.label.includes("@4.1}}"),
-    onClick: s.label.includes("@4.1}}") ? () => go(HERO_ROUTE) : undefined,
-  }));
+  const series: MonitorSeries[] = lm.series.map((s, i) => {
+    const isFw41 = /@4\.1\}\}/.test(s.label) || /fw:EST4@4\.1/.test(s.label);
+    return {
+      key: `s${i}`,
+      label: L(s.label),
+      colour: s.colour,
+      values: s.values,
+      dashed: s.dashed,
+      secondary: Boolean(s.dashed),
+      emphasis: isFw41,
+      onClick: isFw41 ? () => go(HERO_ROUTE) : undefined,
+    };
+  });
+  // Focus copy only — never fall back to the long 12-week title.
+  const title =
+    lm.focusTitle ?? "{{fw:EST4@4.1}} fault calls vs every other release";
+  const sub =
+    lm.focusSub ??
+    "45 of 46 releases normal · calls per 1,000 panels a week";
   return (
-    <Panel title={L(P["P-C"].title)} sub={L(P["P-C"].sub ?? "")}>
+    <Panel title={L(title)} sub={L(sub)}>
       <LineMonitor
         weeks={lm.weeks}
         series={series}
         markers={lm.markers}
         tick={(w) => fill(meta.ui.drill.week, { n: w })}
-        secondaryDomain={[0, 0.7]}
-        ariaLabel={L(P["P-C"].title)}
+        ariaLabel={L(title)}
         height={260}
+        variant="focus"
+        focusCopy={{
+          legendFocus:
+            lm.focusLegendFocus ?? "{{fw:EST4@4.1}} (synthetic)",
+          legendBand: lm.focusLegendBand ?? "Other releases",
+          bandLabel: lm.focusBandLabel ?? "Normal range",
+          releaseLabel:
+            lm.focusReleaseLabel ?? "{{fw:EST4@4.1}} released",
+          chips: lm.focusChips ?? [
+            { text: "3.1× normal", tone: "accent" },
+            { text: "RMA rate: still in control", tone: "muted" },
+            {
+              text: "1,240 panels on {{fw:EST4@4.1}}",
+              tone: "muted",
+            },
+          ],
+        }}
       />
     </Panel>
   );
@@ -159,17 +181,6 @@ export function InstalledBaseView() {
           unit={P["P-J"].unit}
           ariaLabel={L(IB.symptomStack.title)}
           interactive
-        />
-      </Panel>
-      <DateCodeHeatStrip />
-      <EnhancedPanel data={IB.enhanced} id={P["P-H"].anchor}>
-        <DiagnosisBox diagnosis={IB.diagnosis} />
-      </EnhancedPanel>
-      <Panel title={L(P["P-L"].title)}>
-        <SegmentTable
-          columns={P["P-L"].columns ?? []}
-          rows={IB.lifecycle}
-          caption={L(P["P-L"].title)}
         />
       </Panel>
     </div>

@@ -41,11 +41,11 @@ export function fmt(str: string, anon: boolean): string {
 
 /**
  * Role-typed fields (routing.owner / cc / informed, gate.owner / approveEnabledFor) hold the
- * literal Role value, e.g. 'Regional GM UK-EU'. Render them through roleLabel() so a role
- * that names a region anonymises like the rest of the copy ('Regional GM Region EU-1').
+ * literal Role value, e.g. 'Regional GM US'. Render them through roleLabel() so a role
+ * that names a region anonymises like the rest of the copy ('Regional GM Region NA-2').
  */
 export function roleLabel(role: Role, anon: boolean): string {
-  return fmt(role.replace(/\bUK-EU\b/, "{{region:UK-EU}}"), anon);
+  return fmt(role.replace(/\bUS\b/, "{{region:US}}"), anon);
 }
 
 /** Replace the runtime {role} placeholder used in breadcrumbs (05a §3.1). */

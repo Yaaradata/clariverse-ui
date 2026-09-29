@@ -4,16 +4,13 @@ import { monitor } from "@kgs/lib/data";
 import { Activity } from "lucide-react";
 import { EmptyScope } from "../shared/EmptyScope";
 import { K, withAlpha } from "../shared/tokens";
-import { useLabel } from "../shell/DemoProvider";
 import { useScope } from "../shell/Scope";
 import { SignalMonitorCard } from "./SignalMonitorCard";
 
 /**
  * Field Signal Monitor — bank AI Risk Spike Monitor layout (header + scroll row).
- * Suppressed end card is not rendered; the italic header line carries suppression.
  */
 export function FieldSignalMonitor() {
-  const L = useLabel();
   const { inScope } = useScope();
   const s = monitor.section;
   const cards = monitor.cards.filter((c) => inScope(c.signalId));
@@ -57,16 +54,6 @@ export function FieldSignalMonitor() {
       <p style={{ margin: 0, fontSize: 11, color: K.textMut }}>
         {s.headerLine ?? s.subtitleShort ?? s.subtitle}
       </p>
-      <p
-        style={{
-          margin: 0,
-          fontSize: 11,
-          color: K.textMut,
-          fontStyle: "italic",
-        }}
-      >
-        {L(s.headerItalic ?? s.suppressedLine)}
-      </p>
 
       <div
         style={{
@@ -82,7 +69,7 @@ export function FieldSignalMonitor() {
         {cards.length ? (
           cards.map((c) => <SignalMonitorCard key={c.signalId} card={c} />)
         ) : (
-          <div style={{ flex: "1 1 0", minWidth: 240 }}>
+          <div style={{ flex: "0 0 252px", minWidth: 252 }}>
             <EmptyScope />
           </div>
         )}

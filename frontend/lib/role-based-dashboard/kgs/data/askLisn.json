@@ -28,7 +28,7 @@
   },
   {
     "q": "Which partners appear in more than one place?",
-    "a": "{{partner:ESD-SE-07}} (partner drift; 2 cases in the fw {{fw:EST4@4.1}} cohort), {{partner:ESD-CA-06}} (fw {{fw:EST4@4.1}} cohort; within band on the partner league) and {{partner:DIST-UK-031}} (channel watch; {{region:UK-EU}} invoicing).",
+    "a": "{{partner:ESD-SE-07}} (partner drift; 2 cases in the fw {{fw:EST4@4.1}} cohort), {{partner:ESD-CA-06}} (fw {{fw:EST4@4.1}} cohort; within band on the partner league) and {{partner:DIST-US-031}} (channel watch; {{region:US}} invoicing).",
     "cites": [
       {
         "label": "EV-2609-0003",

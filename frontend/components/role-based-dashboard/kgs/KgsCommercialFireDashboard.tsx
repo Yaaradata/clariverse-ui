@@ -13,7 +13,6 @@ import { fmt } from "@kgs/lib/label";
 import {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -141,12 +140,9 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Intro once per page load; ?intro=0 removes it before the first client paint.
-  const [intro, setIntro] = useState(true);
+  // Intro once per page load; ?intro=0 skips before first paint (client-only mount).
+  const [intro, setIntro] = useState(() => !introSkippedByUrl());
   const endIntro = useCallback(() => setIntro(false), []);
-  useLayoutEffect(() => {
-    if (introSkippedByUrl()) setIntro(false);
-  }, []);
 
   // ?anon=1 read once after mount (never during render → no hydration mismatch).
   const urlApplied = useRef(false);

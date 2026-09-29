@@ -1,31 +1,38 @@
 "use client";
 
 import type { MonitorCard as MonitorCardData } from "@kgs/types";
-import { K, SEV, withAlpha } from "../shared/tokens";
+import { K, URGENCY, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 
 /**
- * Field Signal Monitor card — 1:1 bank AI Risk Spike anatomy.
+ * Field Signal Monitor card — bank AI Risk Spike anatomy with urgency chrome.
  * Display only: no drill-down, no owner/gate/confidence/P&L footer.
  */
 export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
   const L = useLabel();
   const c = card.compact;
-  const tone = SEV[card.chips.class].color;
-  const glyph = SEV[card.chips.class].glyph;
+  const u = URGENCY[card.urgency];
+  const tone = u.color;
+  const pillLabel = u.showSeverityClass
+    ? `${u.word} · ${card.chips.class}`
+    : u.word;
 
   if (!c) return null;
 
   return (
     <article
       style={{
-        minWidth: 240,
-        minHeight: 240,
-        flex: "1 1 0",
+        width: 252,
+        minWidth: 252,
+        maxWidth: 252,
+        minHeight: 280,
+        flex: "0 0 252px",
         borderRadius: 16,
-        border: `1px solid ${withAlpha(tone, 0.53)}`,
-        background: withAlpha(tone, 0.05),
-        boxShadow: `0 10px 24px ${withAlpha(tone, 0.2)}`,
+        border: `1px solid ${withAlpha(tone, u.borderA)}`,
+        background: withAlpha(tone, u.bgA),
+        boxShadow: u.glow
+          ? `0 10px 24px ${withAlpha(tone, u.glowA)}`
+          : "none",
         color: K.textSec,
         padding: "14px 14px 16px",
         fontSize: 12,
@@ -63,17 +70,15 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
             textTransform: "uppercase",
             padding: "3px 8px",
             borderRadius: 999,
-            border: `1px solid ${withAlpha(tone, 0.4)}`,
-            background: withAlpha(tone, 0.13),
+            border: `1px solid ${withAlpha(tone, u.pillBorderA)}`,
+            background: withAlpha(tone, u.pillBgA),
             color: `${tone}dd`,
             flexShrink: 0,
             whiteSpace: "nowrap",
           }}
         >
-          <span aria-hidden>{glyph}</span>
-          <span>
-            {card.chips.class} · {c.severityWord}
-          </span>
+          <span aria-hidden>{u.glyph}</span>
+          <span>{pillLabel}</span>
         </span>
       </div>
 
@@ -116,7 +121,7 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
           <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
             Time
           </span>
-          <span style={{ color: K.text }}>{L(c.time)}</span>
+          <span style={{ color: K.text, textAlign: "right" }}>{L(c.time)}</span>
         </div>
       </div>
 
@@ -136,64 +141,68 @@ export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
           flex: 1,
         }}
       >
-        {c.metrics.map((m) => (
-          <div
-            key={m.label}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              gap: 8,
-            }}
-          >
-            <span style={{ color: K.textMut }}>{L(m.label)}</span>
-            <div style={{ textAlign: "right" }}>
-              <div
-                style={{
-                  color: K.text,
-                  fontWeight: 700,
-                  fontVariantNumeric: "tabular-nums",
-                }}
-              >
-                {L(m.value)}
-              </div>
-              {m.delta ? (
+        {c.metrics.map((m) => {
+          const deltaColor =
+            m.deltaTone === "opportunity" ? K.green : u.delta;
+          return (
+            <div
+              key={m.label}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <span style={{ color: K.textMut }}>{L(m.label)}</span>
+              <div style={{ textAlign: "right" }}>
                 <div
                   style={{
-                    fontSize: 11,
-                    color: "#fda4af",
+                    color: K.text,
                     fontWeight: 700,
                     fontVariantNumeric: "tabular-nums",
                   }}
                 >
-                  {L(m.delta)}
+                  {L(m.value)}
                 </div>
-              ) : null}
-              {m.sub ? (
-                <div
-                  style={{
-                    fontSize: 10,
-                    color: K.textMut,
-                    fontVariantNumeric: "tabular-nums",
-                  }}
-                >
-                  {L(m.sub)}
-                </div>
-              ) : null}
+                {m.delta ? (
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: deltaColor,
+                      fontWeight: 700,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {L(m.delta)}
+                  </div>
+                ) : null}
+                {m.sub ? (
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: K.textMut,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {L(m.sub)}
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div
         style={{
           marginTop: 20,
           borderRadius: 12,
-          border: `1px solid ${withAlpha(K.red, 0.4)}`,
-          background: withAlpha(K.red, 0.1),
+          border: `1px solid ${withAlpha(tone, u.calloutBorderA)}`,
+          background: withAlpha(tone, u.calloutBgA),
           padding: 16,
           fontSize: 12,
           lineHeight: 1.75,
-          color: "#ffe4e6",
+          color: u.calloutText,
         }}
       >
         ✨ {L(c.callout)}

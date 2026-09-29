@@ -1,29 +1,45 @@
 "use client";
 
-import { monitor, signalById } from "@kgs/lib/data";
+import { monitor } from "@kgs/lib/data";
 import type {
   MonitorCard,
-  Role,
   SignalWall as SignalWallData,
   WallCard as WallCardData,
+  WallCardCompact,
+  WallLevel,
 } from "@kgs/types";
-import { Sparkles } from "lucide-react";
-import { useKgsNav } from "../nav";
-import { ConfidenceMarker } from "../shared/ConfidenceMarker";
+import {
+  CircleAlert,
+  ChevronRight,
+  Sparkles,
+  Timer,
+  TrendingUp,
+  TriangleAlert,
+  User,
+  Zap,
+} from "lucide-react";
+import {
+  type MouseEvent as ReactMouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { EmptyScope } from "../shared/EmptyScope";
-import { MoneyText } from "../shared/MoneyText";
-import { RoutedOwner } from "../shared/RoutedOwner";
-import { DomainChip, SeverityChip } from "../shared/SeverityChip";
-import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
+import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { useScope } from "../shell/Scope";
-import { DrillChip, isStable } from "./Chips";
-import { SignalSurface } from "./SignalSurface";
 
 const RANK = /^#(\d+) of \d+$/;
-/** Sticky offsets: clear scroll padding above and the sticky footer below. */
-const WALL_TOP = 16;
-const WALL_BOTTOM = 56;
+const MONEY = /[$£]/;
+
+const LEVEL: Record<
+  WallLevel,
+  { color: string; Icon: typeof CircleAlert }
+> = {
+  CRITICAL: { color: "#ef4444", Icon: CircleAlert },
+  ALERT: { color: "#f97316", Icon: TriangleAlert },
+  WARNING: { color: "#eab308", Icon: Zap },
+};
 
 /** The monitor card behind a wall card, found by its "#n of 5" rank chip. */
 export function monitorCardForWall(
@@ -33,179 +49,527 @@ export function monitorCardForWall(
   return rank ? monitor.cards.find((c) => c.rank === Number(rank)) : undefined;
 }
 
-function tintFor(card: WallCardData, linked?: MonitorCard): string {
-  if (linked) return SEV[linked.chips.class].color;
-  const sev = card.chips.find((c) => /^S[1-4]/.test(c));
-  if (sev) return SEV[sev.slice(0, 2) as keyof typeof SEV].color;
-  return card.chips.some(isStable) ? K.green : K.textMut;
+function compactOf(card: WallCardData): WallCardCompact | null {
+  return card.compact ?? null;
 }
 
-/**
- * WallCard (03 §3C fork): severity-tinted card with chips, title, body, metric, trend and
- * "Open signal →". A ranked card is a signal surface (06 §2 #3), so it also carries the linked
- * signal's compact severity, K/I confidence, first 3 join tags, P&L tag and gate state.
- */
-function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
+function WallCardRow({
+  card,
+  selected,
+  pulse,
+  onOpen,
+}: {
+  card: WallCardData;
+  selected: boolean;
+  pulse: boolean;
+  onOpen: (card: WallCardData, e: ReactMouseEvent<HTMLDivElement>) => void;
+}) {
   const L = useLabel();
-  const { go } = useKgsNav();
-  const linked = monitorCardForWall(card);
-  const signal = linked ? signalById[linked.signalId] : undefined;
-  const tone = tintFor(card, linked);
-  const incident = signal?.severity.compact.split(" · ").pop();
+  const c = compactOf(card);
+  if (!c) return null;
+  const meta = LEVEL[c.level];
+  const Icon = meta.Icon;
+  const color = meta.color;
 
   return (
-    <article
-      className={`kgs-lift${pulse ? " kgs-pulse" : ""}`}
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={(e) => onOpen(card, e)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onOpen(card, e as unknown as ReactMouseEvent<HTMLDivElement>);
+        }
+      }}
       style={{
-        borderRadius: K.radius.card,
-        border: `1px solid ${withAlpha(tone, 0.45)}`,
-        background: withAlpha(tone, 0.06),
-        ...liftVars(
-          withAlpha(tone, 0.6),
-          `0 8px 28px ${withAlpha(tone, 0.15)}`,
-        ),
-        padding: 14,
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
+        position: "relative",
+        borderRadius: 12,
+        padding: 16,
+        cursor: "pointer",
+        background: `linear-gradient(135deg, ${color}26 0%, ${color}0d 100%)`,
+        border: `1px solid ${color}50`,
+        boxShadow: selected ? `0 0 0 1px ${color}80 inset` : "none",
       }}
     >
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-        {linked ? (
-          <>
-            <DrillChip text={card.chips[0]} />
-            <SeverityChip cls={linked.chips.class} word={linked.chips.word} />
-            <DomainChip
-              domain={linked.chips.domain}
-              extra={linked.chips.type}
-            />
-          </>
-        ) : (
-          card.chips.map((c) => <DrillChip key={c} text={L(c)} />)
-        )}
-      </div>
-      <h3
-        style={{
-          margin: 0,
-          fontSize: 16,
-          fontWeight: 800,
-          color: K.text,
-          lineHeight: 1.3,
-        }}
-      >
-        {L(card.title)}
-      </h3>
-      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: K.body }}>
-        {L(card.body)}
-      </p>
+      {pulse ? (
+        <div
+          aria-hidden
+          className="kgs-pulse"
+          style={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: 12,
+            background: `radial-gradient(circle, ${color}18 0%, transparent 70%)`,
+            pointerEvents: "none",
+          }}
+        />
+      ) : null}
       <div
         style={{
-          fontSize: 14,
-          fontWeight: 700,
-          color: tone,
-          fontFamily: K.mono,
-          fontVariantNumeric: "tabular-nums",
+          position: "relative",
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 12,
         }}
       >
-        <MoneyText text={card.metric} />
-      </div>
-      <div style={{ fontSize: 13, fontWeight: 700, color: K.textSec }}>
-        {L(card.trend)}
-      </div>
-      {linked && signal ? (
-        <>
-          <div style={{ fontSize: 12, color: K.body }}>
-            <span aria-hidden style={{ color: tone }}>
-              {SEV[linked.chips.class].glyph}{" "}
-            </span>
-            <MoneyText text={linked.blastRadius} />
-            {incident ? ` · ${L(incident)}` : ""}
-          </div>
-          <SignalSurface
-            card={linked}
-            signal={signal}
-            confidenceShort={card.confidenceShort}
-          />
-        </>
-      ) : card.confidenceShort ? (
-        <ConfidenceMarker short={card.confidenceShort} compact />
-      ) : null}
-      {card.owner && !linked ? <RoutedOwner role={card.owner as Role} /> : null}
-      {card.linkTo && card.linkLabel ? (
-        <button
-          type="button"
-          onClick={() => card.linkTo && go(card.linkTo)}
-          className="kgs-focus"
+        <div
           style={{
-            alignSelf: "flex-start",
-            background: "transparent",
-            border: "none",
-            padding: "2px 0",
-            color: K.violet400,
-            fontSize: 14,
-            fontWeight: 700,
-            cursor: "pointer",
-            fontFamily: "inherit",
+            padding: 8,
+            borderRadius: 8,
+            background: `${color}20`,
+            flexShrink: 0,
           }}
         >
-          {L(card.linkLabel)}
-        </button>
-      ) : null}
-    </article>
+          <Icon size={16} color={color} />
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 4,
+              flexWrap: "wrap",
+            }}
+          >
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                padding: "2px 6px",
+                borderRadius: 4,
+                background: `${color}25`,
+                color,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+              }}
+            >
+              <Icon size={11} color={color} />
+              {c.level}
+            </span>
+            <span
+              style={{
+                fontSize: 11,
+                padding: "2px 6px",
+                borderRadius: 4,
+                background: "#2a2a2a",
+                color: "#939394",
+              }}
+            >
+              {L(c.tag)}
+            </span>
+          </div>
+          <p
+            style={{
+              margin: "0 0 4px",
+              fontSize: 14,
+              fontWeight: 700,
+              color: "#fff",
+              lineHeight: 1.35,
+            }}
+          >
+            {L(c.title)}
+          </p>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 12,
+              lineHeight: 1.55,
+              color: "#d6d9d8",
+            }}
+          >
+            {L(c.body)}
+          </p>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+              marginTop: 8,
+            }}
+          >
+            <span style={{ fontSize: 12, fontWeight: 500, color }}>
+              {L(c.metric)}
+            </span>
+            {c.money || MONEY.test(c.metric) ? (
+              <span
+                style={{
+                  fontSize: 10,
+                  fontWeight: 700,
+                  letterSpacing: "0.04em",
+                  color: K.textMut,
+                  border: `1px dashed ${K.borderLight}`,
+                  borderRadius: 4,
+                  padding: "1px 5px",
+                }}
+              >
+                illustrative
+              </span>
+            ) : null}
+          </div>
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+              marginTop: 8,
+              color,
+            }}
+          >
+            <TrendingUp size={14} aria-hidden />
+            <span style={{ fontSize: 12, fontWeight: 700 }}>{L(c.trend)}</span>
+          </div>
+        </div>
+        <ChevronRight
+          size={16}
+          color={color}
+          style={{ flexShrink: 0, opacity: selected ? 1 : 0.4, marginTop: 2 }}
+          aria-hidden
+        />
+      </div>
+    </div>
   );
 }
 
-/** Footer counts in words (04 §3.9): big numeral + class label, outside the scroller. */
+function DetailPanel({
+  card,
+  top,
+  onClose,
+}: {
+  card: WallCardData;
+  top: number;
+  onClose: () => void;
+}) {
+  const L = useLabel();
+  const c = compactOf(card);
+  if (!c) return null;
+  const meta = LEVEL[c.level];
+  const Icon = meta.Icon;
+  const color = meta.color;
+
+  return (
+    <div
+      role="dialog"
+      aria-label={L(c.title)}
+      style={{
+        position: "absolute",
+        left: 8,
+        right: 8,
+        top,
+        zIndex: 30,
+        background: "#1a1a1a",
+        border: `2px solid ${color}`,
+        borderRadius: 12,
+        padding: 12,
+        boxShadow: `0 8px 32px ${color}40, 0 4px 16px rgba(0,0,0,0.3)`,
+      }}
+    >
+      {c.synthetic ? (
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            color: K.textMut,
+            marginBottom: 8,
+          }}
+        >
+          Synthetic
+        </div>
+      ) : null}
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: 8,
+          gap: 8,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            minWidth: 0,
+          }}
+        >
+          <div
+            style={{
+              padding: 6,
+              borderRadius: 8,
+              background: `${color}20`,
+              flexShrink: 0,
+            }}
+          >
+            <Icon size={14} color={color} />
+          </div>
+          <div
+            style={{
+              fontSize: 13,
+              fontWeight: 700,
+              color: "#fff",
+              lineHeight: 1.35,
+            }}
+          >
+            {L(c.title)}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Close"
+          style={{
+            border: "none",
+            background: "transparent",
+            color: "#939394",
+            fontSize: 18,
+            cursor: "pointer",
+            lineHeight: 1,
+            padding: 4,
+          }}
+        >
+          ×
+        </button>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          marginBottom: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            padding: "2px 8px",
+            borderRadius: 999,
+            background: `${color}20`,
+            color,
+          }}
+        >
+          {c.priority}
+        </span>
+        <span
+          style={{
+            fontSize: 11,
+            padding: "2px 8px",
+            borderRadius: 999,
+            background: "#2a2a2a",
+            color: "#939394",
+          }}
+        >
+          {L(c.tag)}
+        </span>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: "#939394",
+            textTransform: "uppercase",
+            marginBottom: 4,
+            letterSpacing: "0.04em",
+          }}
+        >
+          Likely cause (candidate)
+        </div>
+        <div style={{ fontSize: 12, color: "#e0e0e0", lineHeight: 1.5 }}>
+          {L(c.cause)}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: "#939394",
+            textTransform: "uppercase",
+            marginBottom: 4,
+            letterSpacing: "0.04em",
+          }}
+        >
+          Affected areas
+        </div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+          {c.areas.map((a) => (
+            <span
+              key={a}
+              style={{
+                fontSize: 11,
+                padding: "2px 8px",
+                borderRadius: 6,
+                background: "#2a2a2a",
+                color: "#d6d9d8",
+              }}
+            >
+              {L(a)}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 10 }}>
+        <div
+          style={{
+            fontSize: 10,
+            fontWeight: 700,
+            color: "#939394",
+            textTransform: "uppercase",
+            marginBottom: 4,
+            letterSpacing: "0.04em",
+          }}
+        >
+          LiSN suggests · owner decides
+        </div>
+        {c.actions.map((a, idx) => (
+          <div
+            key={a}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: 8,
+              marginBottom: 4,
+            }}
+          >
+            <span
+              style={{
+                width: 16,
+                height: 16,
+                borderRadius: 999,
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: 10,
+                fontWeight: 700,
+                background: `${color}20`,
+                color,
+                flexShrink: 0,
+              }}
+            >
+              {idx + 1}
+            </span>
+            <span
+              style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}
+            >
+              {L(a)}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      <div
+        style={{
+          marginTop: 8,
+          borderTop: "1px solid #2a2a2a",
+          paddingTop: 8,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 8,
+          flexWrap: "wrap",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            flexWrap: "wrap",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 11,
+              color: "#939394",
+            }}
+          >
+            <Timer size={11} aria-hidden />
+            {L(c.timeline)}
+          </span>
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 4,
+              fontSize: 11,
+              color: "#939394",
+            }}
+          >
+            <User size={11} aria-hidden />
+            {L(c.owner)}
+          </span>
+        </div>
+        <span style={{ fontSize: 11, fontWeight: 700, color }}>{c.priority}</span>
+      </div>
+    </div>
+  );
+}
+
 function WallFooterCounts({ items }: { items: SignalWallData["footer"] }) {
   const L = useLabel();
+  const tone = (label: string, value: number) => {
+    if (value <= 0) return K.textMut;
+    if (/S1|Critical/i.test(label)) return "#ef4444";
+    if (/S2|ALERT|Material/i.test(label)) return "#f97316";
+    if (/S3|WARNING|Operational/i.test(label)) return "#eab308";
+    if (/Easing|Clean|Suppressed/i.test(label)) return "#22c55e";
+    return K.textMut;
+  };
   return (
     <div
       style={{
+        marginTop: 16,
+        paddingTop: 16,
+        borderTop: "1px solid #2a2a2a",
         display: "grid",
         gridTemplateColumns: `repeat(${items.length}, minmax(0, 1fr))`,
-        gap: 8,
-        paddingTop: 12,
-        borderTop: `1px solid ${K.borderLight}`,
+        gap: 12,
+        flexShrink: 0,
       }}
     >
-      {items.map((f) => {
-        const cls = /^S[1-4]/.exec(f.label)?.[0] as
-          | keyof typeof SEV
-          | undefined;
-        const colour = cls
-          ? SEV[cls].color
-          : isStable(f.label)
-            ? K.green
-            : K.textMut;
-        return (
-          <div key={f.label} style={{ textAlign: "center" }}>
-            <div
-              style={{
-                fontSize: 36,
-                fontWeight: 800,
-                color: f.value > 0 ? colour : K.textMut,
-                fontFamily: K.mono,
-                fontVariantNumeric: "tabular-nums",
-                lineHeight: 1.1,
-              }}
-            >
-              {f.value}
-            </div>
-            <div style={{ fontSize: 12, color: K.textMut, lineHeight: 1.35 }}>
-              {L(f.label)}
-            </div>
-          </div>
-        );
-      })}
+      {items.map((f) => (
+        <div key={f.label} style={{ textAlign: "center" }}>
+          <p
+            style={{
+              margin: 0,
+              fontSize: 28,
+              fontWeight: 700,
+              color: tone(f.label, f.value),
+              fontVariantNumeric: "tabular-nums",
+              lineHeight: 1.1,
+            }}
+          >
+            {f.value}
+          </p>
+          <p style={{ margin: 0, fontSize: 11, color: "#939394" }}>
+            {L(f.label)}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
 
 /**
- * SignalWall (03 §3C AISummaryWall → "LiSN Signal Wall"): sparkle header, subtitle, static
- * "Data as of" pill (no live dot), scrolling card stack, footer counts outside the scroller.
- * `pulseClass` briefly pulses the cards of that severity (P-B click). Under a Brand / Region
- * scope only ranked cards whose signal is in scope stay; unranked cards carry no join tags.
+ * LiSN Signal Wall — bank AI Summary Wall anatomy: fixed-height dark panel, scrollable
+ * cards, in-place detail overlay. No page navigation on click.
  */
 export function SignalWall({
   wall,
@@ -216,99 +580,170 @@ export function SignalWall({
 }) {
   const L = useLabel();
   const { active, inScope } = useScope();
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [detailTop, setDetailTop] = useState<number | null>(null);
+
   const cards = wall.cards.filter((c) => {
+    if (!c.compact) return false;
     const linked = monitorCardForWall(c);
     return linked ? inScope(linked.signalId) : !active;
   });
+  const selected = cards.find((c) => c.id === selectedId) ?? null;
+
+  const closeDetail = () => {
+    setSelectedId(null);
+    setDetailTop(null);
+  };
+
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeDetail();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selected]);
+
+  const openCard = (
+    card: WallCardData,
+    event: ReactMouseEvent<HTMLDivElement>,
+  ) => {
+    const scrollEl = scrollRef.current;
+    if (scrollEl) {
+      const rowRect = event.currentTarget.getBoundingClientRect();
+      const scrollRect = scrollEl.getBoundingClientRect();
+      setDetailTop(rowRect.top - scrollRect.top + scrollEl.scrollTop);
+    } else {
+      setDetailTop(0);
+    }
+    setSelectedId(card.id);
+  };
+
   return (
     <section
       style={{
-        background: K.bg,
-        border: `1px solid ${K.border}`,
-        borderRadius: K.radius.card,
-        padding: 18,
+        borderRadius: 16,
+        padding: 24,
+        background: "#0d0d0d",
+        border: "1px solid #2a2a2a",
+        boxShadow:
+          "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
         display: "flex",
         flexDirection: "column",
-        gap: 12,
-        minWidth: 0,
-        position: "sticky",
-        top: WALL_TOP,
-        maxHeight: `calc(100vh - ${WALL_TOP + WALL_BOTTOM}px)`,
+        height: 780,
+        maxHeight: 840,
+        minHeight: 0,
       }}
     >
-      <header
+      <div
         style={{
           display: "flex",
-          alignItems: "flex-start",
+          alignItems: "center",
           justifyContent: "space-between",
-          gap: 10,
+          marginBottom: 20,
+          flexShrink: 0,
+          padding: "8px 8px",
+          gap: 12,
         }}
       >
-        <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-          <Sparkles
-            size={22}
-            color={K.violet400}
-            aria-hidden
-            style={{ marginTop: 2 }}
-          />
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <Sparkles size={22} color={K.violet400} aria-hidden />
           <div>
-            <h2
+            <h3
               style={{
                 margin: 0,
-                fontSize: 20,
-                fontWeight: 800,
-                color: K.text,
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#fff",
               }}
             >
               {L(wall.title)}
-            </h2>
-            <div style={{ fontSize: 13, color: K.textMut, marginTop: 3 }}>
+            </h3>
+            <p style={{ margin: 0, fontSize: 12, color: "#939394" }}>
               {L(wall.subtitle)}
-            </div>
+            </p>
           </div>
         </div>
-        <span
+        <div
           style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            padding: "4px 10px",
+            borderRadius: 999,
             fontSize: 12,
-            fontWeight: 700,
-            padding: "3px 9px",
-            borderRadius: K.radius.pill,
-            border: `1px solid ${K.borderLight}`,
-            color: K.textSec,
+            fontWeight: 500,
+            background: "#1a1a1a",
+            color: "#939394",
             whiteSpace: "nowrap",
           }}
         >
+          <span
+            aria-hidden
+            style={{
+              width: 8,
+              height: 8,
+              borderRadius: 999,
+              background: "#22c55e",
+            }}
+          />
           {L(wall.pill)}
-        </span>
-      </header>
+        </div>
+      </div>
+
       <div
-        className="kgs-wall-scroll"
+        ref={scrollRef}
         style={{
           flex: 1,
-          minHeight: 0,
           overflowY: "auto",
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-          paddingRight: 4,
+          padding: "8px 8px 8px 0",
+          minHeight: 0,
+          position: "relative",
         }}
       >
-        {cards.length ? (
-          cards.map((c) => (
-            <WallCard
-              key={c.id}
-              card={c}
-              pulse={Boolean(
-                pulseClass &&
-                  (monitorCardForWall(c)?.chips.class === pulseClass ||
-                    c.chips.some((x) => x.startsWith(pulseClass))),
-              )}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {cards.length ? (
+            cards.map((c) => (
+              <WallCardRow
+                key={c.id}
+                card={c}
+                selected={selectedId === c.id}
+                pulse={Boolean(
+                  c.compact?.pulse ||
+                    (pulseClass &&
+                      (monitorCardForWall(c)?.chips.class === pulseClass ||
+                        c.chips.some((x) => x.startsWith(pulseClass)))),
+                )}
+                onOpen={openCard}
+              />
+            ))
+          ) : (
+            <EmptyScope />
+          )}
+        </div>
+
+        {selected && detailTop !== null ? (
+          <>
+            <div
+              onClick={closeDetail}
+              aria-hidden
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: "rgba(0,0,0,0.35)",
+                zIndex: 20,
+              }}
             />
-          ))
-        ) : (
-          <EmptyScope />
-        )}
+            <DetailPanel
+              card={selected}
+              top={detailTop}
+              onClose={closeDetail}
+            />
+          </>
+        ) : null}
       </div>
+
       <WallFooterCounts items={wall.footer} />
     </section>
   );

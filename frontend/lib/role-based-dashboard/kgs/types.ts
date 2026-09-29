@@ -43,7 +43,7 @@ export type Role =
   | "Director Product Quality"
   | "Quality"
   | "Regional GM NA"
-  | "Regional GM UK-EU"
+  | "Regional GM US"
   | "VP Sales"
   | "VP Supply Chain"
   | "CIO / separation PMO"
@@ -378,8 +378,9 @@ export interface QuestionCardData {
   count: number;
   countLabel: string; // "signals above threshold" | "signal above threshold"
   lastWeekCount: number;
-  deltaLabel: string; // "+1 vs last week" | "0 vs last week"
-  fourWeekLabel: string; // "+2 in 4 weeks"
+  deltaLabel: string; // weekly hover: "+1 vs last week" | "0 vs last week"
+  /** Overview face delta (plain text top-right of the count), e.g. "+2 in 4 wks". */
+  fourWeekLabel: string;
   severityMix: string; // "S2 cliff · S2 cliff"
   counted: CountedRow[];
   notCounted: string;
@@ -408,6 +409,9 @@ export interface PulseItem {
   chipAfterApprove?: string;
 }
 /** Spike-style compact face for Field Signal Monitor (bank AI Risk Spike anatomy). */
+/** Field Signal Monitor urgency tier (bank CRITICAL / HIGH / soft WATCH). */
+export type MonitorUrgency = "critical" | "high" | "watch";
+
 export interface MonitorCardCompact {
   title: TokenString;
   channel: TokenString;
@@ -417,9 +421,28 @@ export interface MonitorCardCompact {
   /** Severity word in the pill after class, e.g. "MATERIAL". */
   severityWord: string;
   metrics: [
-    { label: TokenString; value: string; delta?: string; sub?: string },
-    { label: TokenString; value: string; delta?: string; sub?: string },
-    { label: TokenString; value: string; delta?: string; sub?: string },
+    {
+      label: TokenString;
+      value: string;
+      delta?: string;
+      sub?: string;
+      /** Green delta for opportunity metrics; default risk (red/amber). */
+      deltaTone?: "risk" | "opportunity";
+    },
+    {
+      label: TokenString;
+      value: string;
+      delta?: string;
+      sub?: string;
+      deltaTone?: "risk" | "opportunity";
+    },
+    {
+      label: TokenString;
+      value: string;
+      delta?: string;
+      sub?: string;
+      deltaTone?: "risk" | "opportunity";
+    },
   ];
   callout: TokenString;
 }
@@ -427,6 +450,10 @@ export interface MonitorCardCompact {
 export interface MonitorCard {
   signalId: string;
   rank: number;
+  /** Urgency drives card chrome (red critical / amber high / soft amber watch). */
+  urgency: MonitorUrgency;
+  /** Synthetic illustrative card — not counted in above-threshold / Q-card totals. */
+  illustrativeOnly?: boolean;
   title: TokenString;
   /** Compact card title (≤ 2 lines). Long `title` kept for drawers. */
   titleShort?: TokenString;
@@ -517,6 +544,27 @@ export interface TableRow {
   tone?: (string | null)[];
   linkTo?: string;
 }
+export type WallLevel = "CRITICAL" | "ALERT" | "WARNING";
+export type WallPriority = "Immediate" | "This month" | "Monitor";
+
+/** Bank AI Summary Wall face (overview card + in-place detail). */
+export interface WallCardCompact {
+  level: WallLevel;
+  tag: TokenString;
+  title: TokenString;
+  body: TokenString;
+  metric: TokenString;
+  trend: TokenString;
+  priority: WallPriority;
+  cause: TokenString;
+  areas: TokenString[];
+  actions: TokenString[];
+  timeline: TokenString;
+  owner: string;
+  pulse?: boolean;
+  synthetic?: boolean;
+  money?: boolean;
+}
 export interface WallCard {
   id: string;
   chips: string[];
@@ -529,6 +577,8 @@ export interface WallCard {
   confidenceShort?: string;
   owner?: string;
   spark?: number[];
+  /** AI Summary Wall anatomy — preferred when present. */
+  compact?: WallCardCompact;
 }
 export interface SignalWall {
   title: string;
@@ -620,6 +670,15 @@ export interface InstalledBasePage {
   lineageMonitor: {
     title: string;
     sub: string;
+    /** Focus-variant panel title (Installed Base). */
+    focusTitle?: TokenString;
+    /** Focus-variant panel subtitle. */
+    focusSub?: TokenString;
+    focusLegendFocus?: TokenString;
+    focusLegendBand?: string;
+    focusBandLabel?: string;
+    focusReleaseLabel?: TokenString;
+    focusChips?: { text: TokenString; tone: "accent" | "muted" }[];
     weeks: WeekIndex[];
     series: {
       label: TokenString;
@@ -1090,8 +1149,8 @@ export interface SeparationFile extends SeparationPage {
   topicTotals: TopicTotal[];
   disputeTrend: {
     weeks: WeekIndex[];
-    cumulativeGbpK: number[];
+    cumulativeUsdK: number[];
     dsoDeltaDays: number[];
-    currency: "GBP";
+    currency: "USD";
   };
 }

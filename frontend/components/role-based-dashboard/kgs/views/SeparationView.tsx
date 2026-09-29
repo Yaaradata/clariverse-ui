@@ -191,9 +191,9 @@ function DefectSplit() {
 }
 
 /**
- * Q3 drill-down /separation (04 §5.2): one cutover, not the programme — the UK-EU entity against
+ * Q3 drill-down /separation (04 §5.2): one cutover, not the programme — the US entity against
  * its control, the scorecard showing the other three clean, and the three decisions it needs.
- * GBP only on this page.
+ * USD only on this page.
  */
 export function SeparationView() {
   const L = useLabel();

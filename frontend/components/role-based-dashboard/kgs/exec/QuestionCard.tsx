@@ -7,12 +7,21 @@ import { useKgsNav } from "../nav";
 import { CountUp } from "../shared/CountUp";
 import { ACCENT, GAUGE_TONE, K, liftVars, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
-import { AreaTrend } from "./AreaTrend";
+import { AreaTrend, QUESTION_CHART_H } from "./AreaTrend";
 import { InsightBox } from "./InsightBox";
 import { SemiGauge } from "./SemiGauge";
 import { trendFor } from "./trends";
 
 const ICONS = { Cpu, Handshake, Split } as const;
+
+/** More signals = worse: "+" red (head_cards −pts red), "0" muted, "−" green. */
+function fourWeekDeltaColor(label: string): string {
+  const t = label.trim();
+  if (/^0\b/.test(t)) return K.textMut;
+  if (/^[-−–]/.test(t)) return K.green;
+  if (/^\+/.test(t)) return K.red;
+  return K.textMut;
+}
 
 /**
  * Bank ExecutiveTile anatomy (HeadOfCreditCardsDashboard.tsx:214) with KGS count,
@@ -23,7 +32,6 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
   const { go } = useKgsNav();
   const accent = ACCENT[card.accent];
   const Icon = ICONS[card.icon];
-  const up = card.count > card.lastWeekCount;
   const trend = trendFor(card, L);
   const c = card.compact;
   const subtitle = c?.subtitle ?? card.caption;
@@ -161,26 +169,24 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
           }}
         >
           <span
+            title={card.deltaLabel}
             style={{
               position: "absolute",
               top: 0,
               right: 0,
-              fontSize: 12,
+              fontSize: 13,
               fontWeight: 700,
               fontFamily: K.mono,
               fontVariantNumeric: "tabular-nums",
-              padding: "2px 7px",
-              borderRadius: 6,
               whiteSpace: "nowrap",
-              color: up ? K.amber2 : K.textSec,
-              background: up ? withAlpha(K.amber, 0.14) : K.surface,
-              border: `1px solid ${up ? withAlpha(K.amber, 0.45) : K.chipBorder}`,
+              color: fourWeekDeltaColor(card.fourWeekLabel),
               zIndex: 2,
+              pointerEvents: "auto",
             }}
           >
-            {card.deltaLabel}
+            {card.fourWeekLabel}
           </span>
-          <div style={{ marginBottom: 6, paddingRight: 96 }}>
+          <div style={{ marginBottom: 6, paddingRight: 88 }}>
             <div
               style={{
                 fontSize: 34,
@@ -197,12 +203,20 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
               {caption}
             </div>
           </div>
-          <div style={{ width: "100%", flex: 1, minHeight: 88 }}>
+          <div
+            style={{
+              width: "100%",
+              marginTop: "auto",
+              height: QUESTION_CHART_H,
+              minHeight: QUESTION_CHART_H,
+              flexShrink: 0,
+            }}
+          >
             <AreaTrend
               id={card.id}
               data={trend.data}
               series={trend.series.filter((s) => s.area)}
-              height={88}
+              height={QUESTION_CHART_H}
               strokeColor={accent}
             />
           </div>

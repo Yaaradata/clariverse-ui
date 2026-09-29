@@ -2,8 +2,7 @@
 
 import { meta } from "@kgs/lib/data";
 import type { InstalledBasePage, SeverityClass } from "@kgs/types";
-import { Lock } from "lucide-react";
-import { K, SEV, withAlpha } from "../shared/tokens";
+import { K, SEV } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 
 type Row = InstalledBasePage["clustersBySeverity"][number];
@@ -18,9 +17,9 @@ const TYPE_COLOR: Record<(typeof TYPES)[number], string> = {
 const total = (r: Row) => TYPES.reduce((n, t) => n + r[t], 0);
 
 /**
- * StackedRatioBar (03 §3C, reuse of the bank stacked bar without sentiment): above-baseline
- * clusters per severity split by type, widths against the largest row. The governed S1 row is
- * hatched with a lock and no split. Rows are buttons; `onSelect` receives the severity class.
+ * StackedRatioBar (03 §3C): above-baseline clusters per severity split by type,
+ * widths against the largest row. Rows are buttons; `onSelect` receives the severity class.
+ * President view: all severities including S1 render their type split (no lock/hatch).
  */
 export function StackedRatioBar({
   rows,
@@ -30,7 +29,7 @@ export function StackedRatioBar({
   onSelect?: (cls: SeverityClass) => void;
 }) {
   const L = useLabel();
-  const max = Math.max(...rows.map(total));
+  const max = Math.max(...rows.map(total), 1);
   const labels = meta.ui.drill.clusterTypes;
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -85,37 +84,24 @@ export function StackedRatioBar({
                 border: `1px solid ${K.borderLight}`,
               }}
             >
-              {r.restricted ? (
+              {TYPES.filter((t) => r[t] > 0).map((t) => (
                 <span
+                  key={t}
+                  title={`${labels[TYPES.indexOf(t)]} ${r[t]}`}
                   style={{
-                    flex: 1,
+                    flex: r[t],
+                    background: TYPE_COLOR[t],
+                    color: "#0d0d0d",
+                    fontSize: 12,
+                    fontWeight: 800,
+                    fontFamily: K.mono,
                     display: "grid",
                     placeItems: "center",
-                    background: `repeating-linear-gradient(45deg, ${withAlpha(K.red400, 0.35)} 0 4px, transparent 4px 8px)`,
                   }}
                 >
-                  <Lock size={14} color={K.red400} aria-label={L(r.caption)} />
+                  {r[t]}
                 </span>
-              ) : (
-                TYPES.filter((t) => r[t] > 0).map((t) => (
-                  <span
-                    key={t}
-                    title={`${labels[TYPES.indexOf(t)]} ${r[t]}`}
-                    style={{
-                      flex: r[t],
-                      background: TYPE_COLOR[t],
-                      color: "#0d0d0d",
-                      fontSize: 12,
-                      fontWeight: 800,
-                      fontFamily: K.mono,
-                      display: "grid",
-                      placeItems: "center",
-                    }}
-                  >
-                    {r[t]}
-                  </span>
-                ))
-              )}
+              ))}
             </span>
           </button>
         );

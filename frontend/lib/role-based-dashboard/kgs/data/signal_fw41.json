@@ -3,7 +3,12 @@
     "id": "fw-4-1",
     "displayId": "SIG-2609-001",
     "question": "installed-base",
-    "ucIds": ["UC-Q-1", "UC-Q-14", "UC-Q-15", "UC-Q-10"],
+    "ucIds": [
+      "UC-Q-1",
+      "UC-Q-14",
+      "UC-Q-15",
+      "UC-Q-10"
+    ],
     "rank": 1,
     "rankOf": 5,
     "rankScore": 0.84,
@@ -22,7 +27,7 @@
       },
       {
         "label": "Panels on version",
-        "value": "1,240 (+5,560 eligible)",
+        "value": "1,240",
         "weight": 0.2,
         "score": 0.85
       },
@@ -42,11 +47,11 @@
     "aboveThreshold": true,
     "aboveSince": "2026-09-16T06:10:00Z",
     "title": "{{platform:EST4}} fw {{fw:EST4@4.1}} — devices not found after upgrade",
-    "headline": "{{platform:EST4}} · firmware {{fw:EST4@4.1}} (synthetic) — 'devices not found after upgrade' contacts 3.1× panels still on {{fw:EST4@4.0}}; 9 partners, 3 regions; 1,240 panels on version",
+    "headline": "{{platform:EST4}} · firmware {{fw:EST4@4.1}} — 'devices not found after upgrade' contacts 3.1× panels still on {{fw:EST4@4.0}}; 9 partners, 3 regions; 1,240 panels on version",
     "metric": {
       "display": "6.2 vs 2.0",
       "value": 6.2,
-      "baseline": 2.0,
+      "baseline": 2,
       "ratio": 3.1,
       "unit": "contacts per 1,000 panel-weeks",
       "line": "6.2 contacts per 1,000 panel-weeks on {{fw:EST4@4.1}} vs 2.0 on {{fw:EST4@4.0}} · same 3 weeks · event-time aligned to each panel's upgrade · Poisson exact p<0.001"
@@ -59,7 +64,7 @@
       "typeNote": "Cliff (step at release)",
       "blastRadius": {
         "headline": "Blast radius 1,240 panels · ~610 sites · 9 partners · 3 regions ({{region:US-SE}}, {{region:US-SW}}, {{region:Canada}})",
-        "note": "5,560 eligible panels not yet upgraded"
+        "note": "panels not yet upgraded"
       },
       "incident": {
         "flag": false,
@@ -118,7 +123,7 @@
       },
       {
         "key": "FW",
-        "value": "{{fw:EST4@4.1}} (synthetic)"
+        "value": "{{fw:EST4@4.1}}"
       },
       {
         "key": "REGION",
@@ -170,8 +175,13 @@
     },
     "routing": {
       "owner": "VP Engineering",
-      "cc": ["VP Service & Tech Support"],
-      "informed": ["Quality", "President"],
+      "cc": [
+        "VP Service & Tech Support"
+      ],
+      "informed": [
+        "Quality",
+        "President"
+      ],
       "presidentReason": "President sees this because S2 and blast radius exceed the agreed threshold."
     },
     "recommendedAction": "Owner to decide: engineering reproduction on the candidate configuration, and whether to pause the staged rollout and download of {{fw:EST4@4.1}}.",
@@ -182,9 +192,11 @@
         "status": "awaiting",
         "title": "Draft investigation brief — awaiting VP Engineering approval",
         "chip": "Awaiting approval",
-        "auditLine": "Drafted by LiSN 16 Sep 06:10 UTC · routed 06:10 · IB-2609-004 (synthetic)",
+        "auditLine": "Drafted by LiSN 16 Sep 06:10 UTC · routed 06:10 · IB-2609-004",
         "owner": "VP Engineering",
-        "approveEnabledFor": ["VP Engineering"],
+        "approveEnabledFor": [
+          "VP Engineering"
+        ],
         "approveLabel": "Approve investigation",
         "disabledTooltip": "Approval sits with VP Engineering",
         "onApprove": {
@@ -199,7 +211,7 @@
             "title": "Investigation opened",
             "body": "Approved by VP Engineering · audit logged {ts} · nothing sent outside LiSN"
           },
-          "auditEntry": "{ts} · VP Engineering approved investigation · INV-2609-031 (synthetic)",
+          "auditEntry": "{ts} · VP Engineering approved investigation · INV-2609-031",
           "investigationId": "INV-2609-031"
         },
         "onApproveSecondary": {
@@ -220,7 +232,9 @@
         "title": "Draft known-issue note for tech-support agents — not sent",
         "chip": "Not sent",
         "owner": "VP Service & Tech Support",
-        "approveEnabledFor": ["VP Service & Tech Support"],
+        "approveEnabledFor": [
+          "VP Service & Tech Support"
+        ],
         "disabledTooltip": "Approval sits with VP Service & Tech Support"
       }
     ],
@@ -232,7 +246,7 @@
     },
     "drillRoute": "/installed-base/signal/fw-4-1",
     "headerTitle": "Signal #1 of 5 — firmware {{fw:EST4@4.1}} cohort",
-    "subline": "First seen 4 Sep · above threshold since 16 Sep · routed to VP Engineering 16 Sep 06:10 UTC · SIG-2609-001 (synthetic)",
+    "subline": "First seen 4 Sep · above threshold since 16 Sep · routed to VP Engineering 16 Sep 06:10 UTC · SIG-2609-001",
     "gateFooter": "LiSN aids resolution. Nothing is sent until the owner approves.",
     "whyRanked": {
       "title": "#1 of 5 · Why ranked here?",
@@ -241,7 +255,7 @@
     }
   },
   "lineage": {
-    "title": "Contacts per 1,000 panel-weeks — fw {{fw:EST4@4.1}} vs {{fw:EST4@4.0}} (synthetic)",
+    "title": "Contacts per 1,000 panel-weeks — fw {{fw:EST4@4.1}} vs {{fw:EST4@4.0}}",
     "series": [
       {
         "label": "{{fw:EST4@4.0}} (prior)",
@@ -263,7 +277,7 @@
             "contacts": 13,
             "panels": 6800,
             "rate": 1.9,
-            "rateLow": 1.0,
+            "rateLow": 1,
             "rateHigh": 2.9
           },
           {
@@ -272,7 +286,7 @@
             "contacts": 13,
             "panels": 6800,
             "rate": 1.9,
-            "rateLow": 1.0,
+            "rateLow": 1,
             "rateHigh": 2.9
           },
           {
@@ -425,7 +439,7 @@
             "contacts": 13,
             "panels": 6800,
             "rate": 1.9,
-            "rateLow": 1.0,
+            "rateLow": 1,
             "rateHigh": 2.9
           },
           {
@@ -461,7 +475,7 @@
             "contacts": 11,
             "panels": 5650,
             "rate": 1.9,
-            "rateLow": 1.0,
+            "rateLow": 1,
             "rateHigh": 3.1
           },
           {
@@ -469,8 +483,8 @@
             "weekStart": "2026-09-14",
             "contacts": 11,
             "panels": 5580,
-            "rate": 2.0,
-            "rateLow": 1.0,
+            "rate": 2,
+            "rateLow": 1,
             "rateHigh": 3.1
           },
           {
@@ -478,14 +492,14 @@
             "weekStart": "2026-09-21",
             "contacts": 11,
             "panels": 5560,
-            "rate": 2.0,
-            "rateLow": 1.0,
+            "rate": 2,
+            "rateLow": 1,
             "rateHigh": 3.1
           }
         ]
       },
       {
-        "label": "fw {{fw:EST4@4.1}} (synthetic)",
+        "label": "fw {{fw:EST4@4.1}}",
         "versionRaw": "4.1",
         "colour": "#f97316",
         "points": [
@@ -495,7 +509,7 @@
             "contacts": 1,
             "panels": 780,
             "rate": 1.3,
-            "rateLow": 0.0,
+            "rateLow": 0,
             "rateHigh": 4.7
           },
           {
@@ -523,7 +537,7 @@
             "panels": 1240,
             "rate": 6.5,
             "rateLow": 2.7,
-            "rateHigh": 11.0
+            "rateHigh": 11
           }
         ]
       }
@@ -532,9 +546,32 @@
       "label": "{{platform:EST4}} RMA rate — in control",
       "unit": "% (4-week rolling)",
       "values": [
-        0.26, 0.3, 0.27, 0.28, 0.26, 0.26, 0.26, 0.28, 0.28, 0.3, 0.3, 0.28,
-        0.3, 0.27, 0.3, 0.27, 0.3, 0.27, 0.28, 0.28, 0.26, 0.26, 0.28, 0.29,
-        0.26, 0.28
+        0.26,
+        0.3,
+        0.27,
+        0.28,
+        0.26,
+        0.26,
+        0.26,
+        0.28,
+        0.28,
+        0.3,
+        0.3,
+        0.28,
+        0.3,
+        0.27,
+        0.3,
+        0.27,
+        0.3,
+        0.27,
+        0.28,
+        0.28,
+        0.26,
+        0.26,
+        0.28,
+        0.29,
+        0.26,
+        0.28
       ],
       "limit": 0.35,
       "current": 0.28
@@ -543,7 +580,7 @@
       {
         "week": 23.4,
         "date": "2026-09-02",
-        "label": "2 Sep · fw {{fw:EST4@4.1}} released (synthetic)",
+        "label": "2 Sep · fw {{fw:EST4@4.1}} released",
         "style": "release"
       },
       {
@@ -565,7 +602,10 @@
       "fromWeek": 25.4,
       "toWeek": 28.3
     },
-    "futureWeeks": [27, 28],
+    "futureWeeks": [
+      27,
+      28
+    ],
     "denominatorLabel": "Panels on version",
     "tooltipTemplate": "Week of {weekStart} · {{fw:EST4@4.1}}: {rate41} per 1,000 panel-weeks ({contacts41} contacts / {panels41} panels) · {{fw:EST4@4.0}}: {rate40} ({contacts40} / {panels40}) · {{platform:EST4}} RMA rate {rmaRate}%",
     "headlineCheck": {
@@ -573,7 +613,7 @@
       "panels": 1240,
       "weeks": 3,
       "rate": 6.2,
-      "baselineRate": 2.0
+      "baselineRate": 2
     }
   },
   "cohort": {
@@ -1067,7 +1107,7 @@
     },
     {
       "k": "Exposure projected (V-02)",
-      "v": "Panel-weeks at risk = 1,240 × 12 + 5,560 eligible × 6 (uniform upgrade over 12 wks) = 48,240 × excess rate 4.2 per 1,000 = ~203 excess contacts × $750."
+      "v": "Panel-weeks at risk = 1,240 × 12 × 6 (uniform upgrade over 12 wks) = 48,240 × excess rate 4.2 per 1,000 = ~203 excess contacts × $750."
     },
     {
       "k": "Clock",
@@ -1101,16 +1141,21 @@
   },
   "drawer": {
     "title": "Evidence · 23",
-    "tabs": ["Snippets 23", "Linked RMAs 2", "Cohort", "Method & audit"],
-    "footer": "Every claim links to the interactions behind it. No customer-facing action taken. Synthetic scenario — not KGS data.",
+    "tabs": [
+      "Snippets 23",
+      "Linked RMAs 2",
+      "Cohort",
+      "Method & audit"
+    ],
+    "footer": "Every claim links to the interactions behind it. No customer-facing action taken. scenario — not KGS data.",
     "sourceLinkTooltip": "Disabled in demo",
     "featuredHeading": "Featured",
     "allHeading": "All 23"
   },
   "draftBrief": {
     "id": "IB-2609-004",
-    "title": "Engineering investigation brief — {{platform:EST4}} firmware {{fw:EST4@4.1}} (synthetic)",
-    "meta": "IB-2609-004 (synthetic) · Drafted by LiSN 16 Sep 2026 06:10 UTC · refreshed 25 Sep 18:00 UTC",
+    "title": "Engineering investigation brief — {{platform:EST4}} firmware {{fw:EST4@4.1}}",
+    "meta": "IB-2609-004 · Drafted by LiSN 16 Sep 2026 06:10 UTC · refreshed 25 Sep 18:00 UTC",
     "chipPending": "DRAFT — not sent",
     "chipApproved": "APPROVED · {ts}",
     "sections": [
@@ -1125,7 +1170,7 @@
       },
       {
         "h": "3. Cohort",
-        "body": "1,240 panels on {{fw:EST4@4.1}} at ~610 sites; {{region:US-SE}} 540, {{region:US-SW}} 430, {{region:Canada}} 270. Serial range E4-S-2403xxxx to E4-S-2611xxxx (synthetic). 5,560 eligible panels not yet upgraded."
+        "body": "1,240 panels on {{fw:EST4@4.1}} at ~610 sites; {{region:US-SE}} 540, {{region:US-SW}} 430, {{region:Canada}} 270. Serial range E4-S-2403xxxx to E4-S-2611xxxx. panels not yet upgraded."
       },
       {
         "h": "4. Configurations & counter-evidence",
@@ -1154,6 +1199,6 @@
         "body": "VP Engineering · cc VP Service & Tech Support · informed: Quality, President"
       }
     ],
-    "footer": "Draft generated by LiSN from the evidence above. Nothing has been sent. Synthetic scenario — not KGS data."
+    "footer": "Draft generated by LiSN from the evidence above. Nothing has been sent. scenario — not KGS data."
   }
 }
