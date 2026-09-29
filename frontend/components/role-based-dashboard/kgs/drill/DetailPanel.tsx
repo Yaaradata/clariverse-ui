@@ -13,6 +13,9 @@ import { DrillChip } from "./Chips";
 import { PanelLabel } from "./Panel";
 import { linkedSignal, SignalSurface } from "./SignalSurface";
 
+/** Grid values carry no money flag in the mock; a currency glyph marks them. */
+const MONEY = /[$£]/;
+
 /**
  * DetailPanel (03 §3C): title + chip, big figure, KPI grid, LiSN INSIGHT with compact K/I,
  * recommended action (amber until the linked signal is approved, then green), phrasings and
@@ -158,6 +161,7 @@ export function DetailPanel({
               }}
             >
               {L(g.value)}
+              {MONEY.test(g.value) ? <IllustrativeChip /> : null}
             </dd>
           </div>
         ))}

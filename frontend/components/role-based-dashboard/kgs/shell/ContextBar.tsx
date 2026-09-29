@@ -60,7 +60,10 @@ export function ContextBar() {
   const [brand, setBrand] = useState(meta.filters.brand[0]);
   const [region, setRegion] = useState(meta.filters.region[0]);
   const regionText = (v: string) =>
-    anonymise.region[v] ? L.one("region", v) : v;
+    v
+      .split("/")
+      .map((part) => (anonymise.region[part] ? L.one("region", part) : part))
+      .join("/");
 
   return (
     <div

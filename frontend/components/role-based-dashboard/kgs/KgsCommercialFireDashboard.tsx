@@ -16,7 +16,7 @@ import { prefersReducedMotion } from "./shared/motion";
 import { K } from "./shared/tokens";
 import { ContextBar } from "./shell/ContextBar";
 import { DemoMenu } from "./shell/DemoMenu";
-import { DemoProvider, useDemo, useLabel } from "./shell/DemoProvider";
+import { DemoProvider, useDemo } from "./shell/DemoProvider";
 import { DrillHeader } from "./shell/DrillHeader";
 import { FixedFooter } from "./shell/FixedFooter";
 import { FloatingAIButton } from "./shell/FloatingAIButton";
@@ -26,6 +26,7 @@ import { Watermark } from "./shell/Watermark";
 import { ChannelView } from "./views/ChannelView";
 import { InstalledBaseView } from "./views/InstalledBaseView";
 import { OverviewView } from "./views/OverviewView";
+import { SeparationView } from "./views/SeparationView";
 import { SignalFw41View } from "./views/SignalFw41View";
 
 export type KgsCommercialFireDashboardProps = {
@@ -309,18 +310,10 @@ function ViewBody({ view }: { view: KgsView }) {
     case "/channel":
       return <ChannelView />;
     case "/separation":
-      return <PendingView />;
+      return <SeparationView />;
     default: {
       const unhandled: never = view;
       return unhandled;
     }
   }
-}
-
-/** Q3 is built in step 18; until then show its subtitle. */
-function PendingView() {
-  const L = useLabel();
-  return (
-    <p style={{ color: K.textMut, fontSize: 15 }}>{L(separation.subtitle)}</p>
-  );
 }
