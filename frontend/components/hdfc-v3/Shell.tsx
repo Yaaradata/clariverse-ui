@@ -17,7 +17,6 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, Suspense, useState } from "react";
-import { VersionSwitch } from "@/components/hdfc-pulse-shared/VersionSwitch";
 import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-v3/types";
 import { AskLisN } from "./AskLisN";
 import { C } from "./primitives";
@@ -325,17 +324,6 @@ function ShellInner({
               <strong style={{ color: C.text }}>HDFC Bank</strong> · Customer
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
-            <VersionSwitch
-              current="v2"
-              colors={{
-                text: C.text,
-                textSec: C.textSec,
-                textMut: C.textMut,
-                border: C.border,
-                on: C.brandSoft,
-                onBorder: `${C.brand}66`,
-              }}
-            />
             <fieldset
               aria-label="View"
               style={{

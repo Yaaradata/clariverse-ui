@@ -211,7 +211,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
           </div>
           <MutedNote>
             TATs are shown only after verification against the current RBI
-            instrument and the bank&apos;s own commitments (B2 §7). Breaches,
+            instrument and the bank&apos;s own commitments. Breaches,
             status-seeking and repeat are public voice; open cases and
             beyond-TAT are illustrative.
           </MutedNote>

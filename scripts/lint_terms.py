@@ -21,18 +21,24 @@ BANNED = [
     "#RewardScam", "#BankAppCrash", "CRITICAL", "takedown", "Vendor Beta", "CompetitorY", "Merchant XYZ",
     "GenBI", "promise",
 ]
+# People's names (bank officers, our team) never appear in UI copy (review finding #3).
+PEOPLE = ["Vidya", "Ranjith", "Soumya", "Somya", "Anjani", "Pradeep", "Kartik"]
+# Internal brief references, build labels and version names never appear in UI copy.
+INTERNAL_REF = re.compile(r"\b(?:B[1-7][ab]?|D-?\d{1,2})\s*§|\bB7\b|MORNING_DECISIONS|first demo|after (?:the )?\w+ call", re.I)
 US_SPELLINGS = ["color", "favor", "analyze", "center", "organization"]
 LOCAL = ROOT / "scripts" / "lint_terms_local.txt"
 if LOCAL.exists():
     BANNED += [l.strip() for l in LOCAL.read_text(encoding="utf-8").splitlines() if l.strip()]
 
-# V2 (after the Vidya call). V1 is kept exactly as first shown and is not linted.
+# V2. V1 is kept exactly as first shown and is not linted.
 UI_DIRS = [
     ROOT / "frontend" / "app" / "hdfc-pulse" / "v2",
     ROOT / "frontend" / "components" / "hdfc-v3",
-    ROOT / "frontend" / "components" / "hdfc-pulse-shared",
     ROOT / "frontend" / "lib" / "hdfc-v3",
 ]
+# Files shared with other demos: checked only for people's names and internal references (the role-based menu lists
+# the HDFC roles beside other banks' roles, whose copy follows their own rules).
+NAMES_ONLY_FILES = [ROOT / "frontend" / "lib" / "role-based-dashboard" / "registry.tsx"]
 DATA_FILES = [
     ROOT / "data" / "seed" / "internal_v3" / "aggregates.json",
     ROOT / "data" / "out" / "app_jul_sep" / "products.json",
@@ -69,6 +75,11 @@ def check(s: str, where: str, hits: list[str]):
     for t in BANNED:
         if re.search(rf"(?<![A-Za-z]){re.escape(t)}(?![A-Za-z])", s, re.I if t in ("promise",) else 0):
             hits.append(f"{where}: banned term '{t}' in: {s[:80]}")
+    for t in PEOPLE:
+        if re.search(rf"(?<![A-Za-z]){t}(?![A-Za-z])", s):
+            hits.append(f"{where}: person's name '{t}' in: {s[:80]}")
+    if INTERNAL_REF.search(s):
+        hits.append(f"{where}: internal reference '{INTERNAL_REF.search(s).group(0)}' in: {s[:80]}")
     for t in US_SPELLINGS:
         if re.search(rf"\b{t}", s, re.I):
             hits.append(f"{where}: US spelling '{t}' in: {s[:80]}")
@@ -101,6 +112,14 @@ def main() -> int:
                 if re.fullmatch(r"[\w\s./:#?&=,-]+", s) and "/" in s:
                     continue  # paths and hrefs
                 check(s, str(f.relative_to(ROOT)), hits)
+    for f in NAMES_ONLY_FILES:
+        text = re.sub(r"(?m)^\s*//.*$", "", re.sub(r"/\*[\s\S]*?\*/", "", f.read_text(encoding="utf-8")))
+        for s in copy_strings(text):
+            for t in PEOPLE:
+                if re.search(rf"(?<![A-Za-z]){t}(?![A-Za-z])", s):
+                    hits.append(f"{f.relative_to(ROOT)}: person's name '{t}' in: {s[:80]}")
+            if INTERNAL_REF.search(s):
+                hits.append(f"{f.relative_to(ROOT)}: internal reference in: {s[:80]}")
     for f in DATA_FILES:
         walk_json(json.loads(f.read_text(encoding="utf-8")), str(f.relative_to(ROOT)), hits)
     for h in hits:
