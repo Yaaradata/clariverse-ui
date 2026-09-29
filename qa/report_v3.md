@@ -59,3 +59,26 @@ Method fixes on M1:
 
 - Public responded and open-too-long need the S1 re-crawl with developer replies (MORNING_DECISIONS D2).
 - Stretch items not built: M3 PayZapp (PayZapp has a business view), the full A1 set of 1,500 emails, S2 and S6.
+
+## Update 29 Sep: V2 on the Jul–Sep dataset
+
+Rebuild: `bash scripts/hdfc_pipeline/run_all.sh`.
+
+- **Checks:** reconcile 0 failures · lint 0 hits · PII 0 hits · `next build` passes.
+- **Playwright:** all V2 routes and V1 pass at 1440 and 390 px (answer line, provenance tags, no horizontal scroll).
+
+**Classification**
+- **Social posts (11,741):** all labelled by model batches. Every label passed the quality gate after the rejected batches were re-labelled.
+- **Store reviews (12,427):** rules.
+- **My spot check:** 40 random model labels, 36 agree with my own reading (90%).
+- **The four misses:**
+  - a bank-care reply counted as customer voice;
+  - a negative post marked neutral;
+  - two borderline relevance calls.
+
+**Bank-wide scope:** 17,193 on-topic items in the window. 12,041 of them are trend basis (the Play Store HDFC Bank app export starts on 25 July, so it is left out of trends).
+
+**Public replies (Play Store):**
+- The bank replied to 96.4% of 10,617 reviews, with a median reply time of 12 minutes.
+- 87.6% of replies to negative reviews only redirect the customer to email, phone, chat or a branch.
+- 377 reviews had no reply after 48 hours.

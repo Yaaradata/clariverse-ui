@@ -28,19 +28,19 @@
    "forum:technofino": 1452
   },
   "window": 27990,
-  "bank_on_topic_window": 22127,
-  "group_on_topic_window": 1140,
+  "bank_on_topic_window": 17193,
+  "group_on_topic_window": 1082,
   "classified_by": {
-   "rules": 27865,
-   "in_session_batch": 640
+   "rules": 16764,
+   "in_session_batch": 11741
   }
  },
  "bank_by_source": {
   "playstore": 10617,
   "appstore": 600,
-  "x": 3173,
-  "reddit": 6241,
-  "forum": 1496
+  "x": 1844,
+  "reddit": 2839,
+  "forum": 1293
  },
  "streams": [
   {
@@ -177,7 +177,7 @@
   },
   {
    "stream": "forum:technofino",
-   "records": 1422,
+   "records": 1215,
    "earliest": "2026-06-28",
    "latest": "2026-09-27",
    "window_first": "2026-07-01",
@@ -188,7 +188,7 @@
   },
   {
    "stream": "forum:trustpilot",
-   "records": 88,
+   "records": 87,
    "earliest": "2026-06-28",
    "latest": "2026-09-23",
    "window_first": "2026-07-02",
@@ -298,7 +298,7 @@
   },
   {
    "stream": "reddit",
-   "records": 6389,
+   "records": 2960,
    "earliest": "2026-07-01",
    "latest": "2026-09-28",
    "window_first": "2026-07-01",
@@ -309,7 +309,7 @@
   },
   {
    "stream": "x",
-   "records": 3416,
+   "records": 1950,
    "earliest": "2026-06-28",
    "latest": "2026-09-28",
    "window_first": "2026-07-01",

@@ -1,16 +1,16 @@
 {
  "needs_you": [
   "release-pulse",
-  "card_variant_migration",
-  "dispute_chargeback"
+  "complaint_handling",
+  "card_fees_charges"
  ],
  "this_week": [
-  "refund_delay",
-  "branch_service",
-  "care_unreachable",
+  "kyc_updates",
   "account_freeze",
-  "netbanking",
-  "kyc_updates"
+  "care_unreachable",
+  "fraud_scam",
+  "refund_delay",
+  "card_dispatch"
  ],
  "improving": [
   "app_praise",
@@ -18,42 +18,42 @@
  ],
  "since_830": [
   {
-   "theme": "rewards_value",
-   "label": "Rewards value, devaluation and caps",
-   "count": 13,
-   "owner": "cards",
-   "owner_label": "Cards",
+   "theme": "complaint_handling",
+   "label": "Complaints closed without resolution",
+   "count": 14,
+   "owner": "cx",
+   "owner_label": "CX",
    "exemplars": [
-    "reddit:1ws6n2g",
-    "reddit:comment:pcj1810"
+    "x:2104409799819763971",
+    "x:2104472370606117099"
    ]
   },
   {
    "theme": "card_eligibility_upgrade",
    "label": "Card eligibility, upgrade and LTF requests",
-   "count": 13,
+   "count": 8,
    "owner": "cards",
    "owner_label": "Cards",
    "exemplars": [
     "reddit:1ws7os5",
-    "reddit:comment:pcjhdrg"
+    "reddit:comment:pcji0ul"
    ]
   },
   {
-   "theme": "complaint_handling",
-   "label": "Complaints closed without resolution",
-   "count": 10,
-   "owner": "cx",
-   "owner_label": "CX",
+   "theme": "account_opening",
+   "label": "Account opening and product conversion",
+   "count": 7,
+   "owner": "retail",
+   "owner_label": "Retail",
    "exemplars": [
-    "reddit:1ws69iw",
-    "x:2104484398523658562"
+    "x:2104507251113492859",
+    "x:2104464200969892172"
    ]
   }
  ],
- "since_830_total": 259,
+ "since_830_total": 200,
  "since_830_from": "2026-09-28T08:30:00+05:30",
- "top_riser": "dispute_chargeback",
+ "top_riser": "complaint_handling",
  "routing": [
   {
    "owner": "digital",
@@ -62,23 +62,23 @@
     {
      "id": "app_speed_crash",
      "label": "App speed, loading and crashes",
-     "count": 2076,
+     "count": 2020,
      "status": "watching"
     },
     {
      "id": "login_mpin",
      "label": "Login, MPIN and registration",
-     "count": 1111,
+     "count": 876,
      "status": "watching"
     },
     {
      "id": "new_app_release",
      "label": "New app and update experience",
-     "count": 325,
+     "count": 318,
      "status": "watching"
     }
    ],
-   "total": 3841
+   "total": 3603
   },
   {
    "owner": "cards",
@@ -87,23 +87,23 @@
     {
      "id": "card_eligibility_upgrade",
      "label": "Card eligibility, upgrade and LTF requests",
-     "count": 1458,
+     "count": 714,
      "status": "watching"
     },
     {
      "id": "rewards_value",
      "label": "Rewards value, devaluation and caps",
-     "count": 1179,
+     "count": 679,
      "status": "watching"
     },
     {
-     "id": "reward_redemption",
-     "label": "Reward redemption and vouchers",
-     "count": 790,
+     "id": "card_variant_migration",
+     "label": "Card variant migration and forced upgrade",
+     "count": 405,
      "status": "watching"
     }
    ],
-   "total": 4823
+   "total": 3054
   },
   {
    "owner": "cx",
@@ -112,92 +112,92 @@
     {
      "id": "complaint_handling",
      "label": "Complaints closed without resolution",
-     "count": 426,
-     "status": "watching"
+     "count": 633,
+     "status": "needs_you"
     },
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
-     "count": 411,
+     "count": 355,
      "status": "this_week"
     }
    ],
-   "total": 837
+   "total": 988
   },
   {
    "owner": "operations",
    "owner_label": "Operations",
    "themes": [
     {
-     "id": "closure_requests",
-     "label": "Account and card closure requests",
-     "count": 417,
-     "status": "watching"
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 239,
+     "status": "this_week"
     },
     {
      "id": "atm_debit_card",
      "label": "Debit card and ATM",
-     "count": 396,
+     "count": 228,
      "status": "watching"
     },
     {
-     "id": "statements_documents",
-     "label": "Statements, certificates and documents",
-     "count": 279,
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 186,
      "status": "watching"
     }
    ],
-   "total": 1623
+   "total": 1078
   },
   {
    "owner": "payments",
    "owner_label": "Payments",
    "themes": [
     {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 96,
+     "status": "watching"
+    },
+    {
      "id": "upi_failures",
      "label": "UPI payments failing or pending",
-     "count": 127,
+     "count": 73,
      "status": "watching"
     },
     {
      "id": "merchant_pos",
      "label": "Merchant QR, POS and sound box",
-     "count": 122,
-     "status": "watching"
-    },
-    {
-     "id": "failed_txn_reversal",
-     "label": "Failed transaction reversal",
-     "count": 69,
+     "count": 25,
      "status": "watching"
     }
    ],
-   "total": 318
+   "total": 194
   },
   {
    "owner": "loans",
    "owner_label": "Loans",
    "themes": [
     {
-     "id": "loan_servicing",
-     "label": "EMI and loan account servicing",
-     "count": 271,
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 196,
      "status": "watching"
     },
     {
-     "id": "loan_processing",
-     "label": "Loan processing and disbursal",
-     "count": 135,
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 148,
      "status": "watching"
     },
     {
      "id": "loan_closure_documents",
      "label": "Loan closure, foreclosure and documents",
-     "count": 37,
+     "count": 26,
      "status": "watching"
     }
    ],
-   "total": 443
+   "total": 370
   },
   {
    "owner": "retail",
@@ -206,48 +206,48 @@
     {
      "id": "branch_service",
      "label": "Branch service and staff behaviour",
-     "count": 531,
-     "status": "this_week"
+     "count": 289,
+     "status": "watching"
     },
     {
      "id": "account_opening",
      "label": "Account opening and product conversion",
-     "count": 394,
+     "count": 282,
      "status": "watching"
     },
     {
-     "id": "deposits_rates",
-     "label": "Deposits and interest rates",
-     "count": 239,
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 224,
      "status": "watching"
     }
    ],
-   "total": 1534
+   "total": 940
   },
   {
    "owner": "compliance",
    "owner_label": "Compliance",
    "themes": [
     {
-     "id": "recovery_conduct",
-     "label": "Recovery and collection conduct",
-     "count": 152,
-     "status": "watching"
-    },
-    {
-     "id": "credit_report",
-     "label": "CIBIL and credit-report correction",
-     "count": 73,
-     "status": "watching"
-    },
-    {
      "id": "mis_selling",
      "label": "Mis-selling and bundled products",
-     "count": 52,
+     "count": 161,
+     "status": "watching"
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 137,
+     "status": "watching"
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 115,
      "status": "watching"
     }
    ],
-   "total": 323
+   "total": 468
   },
   {
    "owner": "fraud_cyber",
@@ -256,23 +256,23 @@
     {
      "id": "fraud_scam",
      "label": "Fraud and scam calls",
-     "count": 88,
-     "status": "watching"
+     "count": 127,
+     "status": "this_week"
     },
     {
      "id": "unauthorised_txn",
      "label": "Unauthorised transactions",
-     "count": 37,
+     "count": 45,
      "status": "watching"
     },
     {
      "id": "phishing",
      "label": "Phishing messages and fake links",
-     "count": 15,
+     "count": 29,
      "status": "watching"
     }
    ],
-   "total": 140
+   "total": 201
   },
   {
    "owner": "rm",
@@ -281,11 +281,11 @@
     {
      "id": "rm_service",
      "label": "Relationship manager service",
-     "count": 266,
+     "count": 186,
      "status": "watching"
     }
    ],
-   "total": 266
+   "total": 186
   },
   {
    "owner": "product",
@@ -294,11 +294,11 @@
     {
      "id": "investments_wealth",
      "label": "Investments, mutual funds and SmartWealth",
-     "count": 518,
+     "count": 18,
      "status": "watching"
     }
    ],
-   "total": 518
+   "total": 18
   }
  ],
  "release_pulse": {
@@ -316,7 +316,7 @@
   "share_positive": 55.0,
   "avg_rating": 3.27,
   "ranks_top": true,
-  "largest_other_theme": 2076,
+  "largest_other_theme": 2020,
   "old_app_avg": 3.93,
   "old_app_n": 2947,
   "new_app_avg": 2.39,
