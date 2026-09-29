@@ -13,7 +13,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 type LeftRailProps = {
-  onExit: () => void;
+  onExit?: () => void;
   onOpenDemoMenu: () => void;
 };
 
