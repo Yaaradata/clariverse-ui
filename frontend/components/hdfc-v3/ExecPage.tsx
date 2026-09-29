@@ -10,6 +10,7 @@ import {
   fmtDateTime,
   fmtPct,
   fmtSigned,
+  rangeLabel,
 } from "@/lib/hdfc-v3/format";
 import {
   actions,
@@ -695,7 +696,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={moodLine(b)}
           headlineLabel="Mood, last 7 days vs window average"
           headline={fmtSigned(b.mood.delta_pts, " pts")}
-          caption="Change in net sentiment against the average for 1 Aug–24 Sep. Public voice skews negative, so read the change, not the level. No earlier baseline for social sources."
+          caption={`Change in net sentiment against the average for ${rangeLabel(b.meta.window.start, b.meta.window.end)}. Public voice skews negative, so read the change, not the level. No earlier baseline for social sources.`}
           gauges={[
             {
               label: "All voice",
@@ -736,7 +737,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={`${riser?.label ?? "—"} is rising fastest. The new HDFC Bank app has ${fmtPct(bankApp?.window?.share_positive)} positive reviews in the window.`}
           headlineLabel="Public posts and reviews"
           headline={fmt(b.themes.total_items)}
-          caption="HDFC Bank, on-topic, 1 Aug–24 Sep. X, Reddit, forums, Play Store, App Store."
+          caption={`HDFC Bank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}. X, Reddit, forums, Play Store, App Store.`}
           gauges={[
             {
               label: "HDFC Bank app",

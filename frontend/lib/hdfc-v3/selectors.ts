@@ -59,7 +59,7 @@ export function trendWords(t: Theme): string {
   const r = t.rise_pct;
   if (r === null || r === undefined)
     return t.trend_mode === "insufficient"
-      ? "no trend claimed (mostly September-only app exports)"
+      ? "no trend claimed (mostly from store exports that start mid-window)"
       : "no earlier period to compare";
   const dir = r >= 0 ? "up" : "down";
   if (t.trend_mode === "vs_baseline")

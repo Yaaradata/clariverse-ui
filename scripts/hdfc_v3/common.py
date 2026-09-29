@@ -8,13 +8,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data"
 RAW = DATA / "raw" / "hdfc"
-OUT_APP = DATA / "out" / "app"
+OUT_APP = DATA / "out" / "app_jul_sep"
 SEED_V3 = DATA / "seed" / "internal_v3"
 
 SEED = 20260928
-# The brief is written for the 25 September morning review: every age is measured from this moment.
-NOW = "2026-09-25T07:45:00+05:30"
-WINDOW = ("2026-08-01", "2026-09-24")
+# The brief is written for the 29 September morning review: every age is measured from this moment.
+NOW = "2026-09-29T07:45:00+05:30"
+WINDOW = ("2026-07-01", "2026-09-28")
 
 # Rows of the "pulse by product" table (B7 §1 E1.6). Group-company apps stay excluded.
 PRODUCTS = [

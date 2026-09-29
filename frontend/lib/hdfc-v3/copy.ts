@@ -1,7 +1,7 @@
 /**
  * Answer-line templates (B4 §6). Filled from data only. British spelling, no exclamation marks.
  */
-import { fmt, fmtNum } from "./format";
+import { fmt, fmtDate, fmtNum } from "./format";
 import {
   improvingItems,
   needsYou,
@@ -75,7 +75,7 @@ export function marketAnswer(b: Bundle): string {
     .filter((t) => t.score > 0)
     .sort((a, c) => c.score - a.score)[0];
   const praise = b.themes.themes.find((t) => t.id === "app_praise");
-  return `Across ${fmt(b.themes.total_items)} public posts and reviews since 1 August, ${top?.label.toLowerCase()} leads; ${riser?.label.toLowerCase()} is rising fastest; ${
+  return `Across ${fmt(b.themes.total_items)} public posts and reviews since ${fmtDate(b.meta.window.start)}, ${top?.label.toLowerCase()} leads; ${riser?.label.toLowerCase()} is rising fastest; ${
     praise
       ? "quick, easy app journeys are where HDFC is praised most"
       : "praise is thin"

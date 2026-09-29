@@ -13,9 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = [
     *sorted((ROOT / "data" / "seed" / "internal_v3").glob("*.json")),
     ROOT / "data" / "seed" / "internal_v3" / "interactions.jsonl",
-    ROOT / "data" / "out" / "app" / "products.json",
-    ROOT / "data" / "out" / "app" / "store_series.json",
-    ROOT / "data" / "out" / "app" / "responses.json",
+    *sorted((ROOT / "data" / "out" / "app_jul_sep").glob("*.json")),
 ]
 PATTERNS = {
     "email": r"[\w.+-]+@[\w-]+\.[\w.-]+",
@@ -31,6 +29,9 @@ def main() -> int:
     hits = []
     for f in FILES:
         text = f.read_text(encoding="utf-8")
+        # Record ids and source links are identifiers of public posts, not personal data.
+        text = re.sub(r'"(?:appstore|playstore|x|reddit|technofino|trustpilot|mouthshut|consumercomplaints|complaintsboard)[:_][^"]*"', '""', text)
+        text = re.sub(r"https?://[^\s\"]+", "", text)
         for name, p in PATTERNS.items():
             for m in re.finditer(p, text):
                 hits.append(f"{f.relative_to(ROOT)}: {name}: {m.group(0)}")

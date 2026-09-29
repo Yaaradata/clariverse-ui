@@ -1,0 +1,2764 @@
+{
+ "apps": [
+  {
+   "app": "Corp Mobile Banking",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "corporate",
+   "streams": [
+    {
+     "stream": "appstore:Corp Mobile Banking",
+     "records": 3,
+     "earliest": "2026-07-03",
+     "latest": "2026-08-25",
+     "window_first": "2026-07-03",
+     "full_window": false,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:Corp Mobile Banking",
+     "records": 13,
+     "earliest": "2026-07-03",
+     "latest": "2026-09-23",
+     "window_first": "2026-07-03",
+     "full_window": false,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 16,
+    "ratings": {
+     "1": 7,
+     "2": 1,
+     "3": 1,
+     "4": 1,
+     "5": 6
+    },
+    "avg_rating": 2.88,
+    "share_positive": 43.8,
+    "share_negative": 50.0
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 0,
+    "second_half": 0,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 3,
+     "avg_rating": 1.33
+    },
+    {
+     "week": "2026-07-06",
+     "n": 2,
+     "avg_rating": 2.5
+    },
+    {
+     "week": "2026-07-13",
+     "n": 1,
+     "avg_rating": 5.0
+    },
+    {
+     "week": "2026-08-10",
+     "n": 1,
+     "avg_rating": 5.0
+    },
+    {
+     "week": "2026-08-17",
+     "n": 1,
+     "avg_rating": 1.0
+    },
+    {
+     "week": "2026-08-24",
+     "n": 3,
+     "avg_rating": 2.33
+    },
+    {
+     "week": "2026-08-31",
+     "n": 1,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-09-07",
+     "n": 2,
+     "avg_rating": 5.0
+    },
+    {
+     "week": "2026-09-14",
+     "n": 1,
+     "avg_rating": 1.0
+    },
+    {
+     "week": "2026-09-21",
+     "n": 1,
+     "avg_rating": 5.0
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1,
+     "exemplars": [
+      "playstore:com.hdfc.cbx:5a15436e-ec3f-42b3-a128-af92bced3ad8"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 1,
+     "exemplars": [
+      "appstore:1525538467:14469355822"
+     ]
+    }
+   ],
+   "versions": [],
+   "praise_exemplars": [
+    "playstore:com.hdfc.cbx:282984cd-e83b-466d-a9d7-7f3e43652b34"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": null,
+     "latest_version_seen": null,
+     "example_ids": [
+      "playstore:com.hdfc.cbx:5a15436e-ec3f-42b3-a128-af92bced3ad8"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "4.4",
+     "latest_version_seen": "4.4",
+     "example_ids": [
+      "appstore:1525538467:14469355822"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "HDFC Bank app",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "retail_banking",
+   "streams": [
+    {
+     "stream": "appstore:HDFC Bank app",
+     "records": 344,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-27",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:HDFC Bank app",
+     "records": 5000,
+     "earliest": "2026-07-25",
+     "latest": "2026-09-27",
+     "window_first": "2026-07-25",
+     "full_window": false,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 5325,
+    "ratings": {
+     "1": 1848,
+     "2": 278,
+     "3": 272,
+     "4": 439,
+     "5": 2488
+    },
+    "avg_rating": 3.27,
+    "share_positive": 55.0,
+    "share_negative": 39.9
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 222,
+    "second_half": 103,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": -31.7,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 48,
+     "avg_rating": 3.85
+    },
+    {
+     "week": "2026-07-06",
+     "n": 46,
+     "avg_rating": 3.7
+    },
+    {
+     "week": "2026-07-13",
+     "n": 25,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-07-20",
+     "n": 225,
+     "avg_rating": 3.99
+    },
+    {
+     "week": "2026-07-27",
+     "n": 872,
+     "avg_rating": 3.95
+    },
+    {
+     "week": "2026-08-03",
+     "n": 751,
+     "avg_rating": 3.65
+    },
+    {
+     "week": "2026-08-10",
+     "n": 506,
+     "avg_rating": 3.64
+    },
+    {
+     "week": "2026-08-17",
+     "n": 458,
+     "avg_rating": 3.17
+    },
+    {
+     "week": "2026-08-24",
+     "n": 432,
+     "avg_rating": 2.96
+    },
+    {
+     "week": "2026-08-31",
+     "n": 629,
+     "avg_rating": 2.79
+    },
+    {
+     "week": "2026-09-07",
+     "n": 507,
+     "avg_rating": 2.76
+    },
+    {
+     "week": "2026-09-14",
+     "n": 399,
+     "avg_rating": 2.65
+    },
+    {
+     "week": "2026-09-21",
+     "n": 427,
+     "avg_rating": 2.61
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 716,
+     "exemplars": [
+      "playstore:com.hdfcbank.android.now:b6c4f2e0-fa10-4833-b75b-890a9357d013",
+      "playstore:com.hdfcbank.android.now:86883f09-dc2d-4503-b0be-3d2950215d60",
+      "appstore:6504402552:14561352664"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 301,
+     "exemplars": [
+      "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
+      "playstore:com.hdfcbank.android.now:a67e013e-db6a-4d7c-82d2-19ebfc086a50",
+      "appstore:6504402552:14579089231"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 179,
+     "exemplars": [
+      "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
+      "playstore:com.hdfcbank.android.now:06265411-118f-4f0e-b0b2-ba43616c5882",
+      "appstore:6504402552:14590649108"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 19,
+     "exemplars": [
+      "playstore:com.hdfcbank.android.now:63ecc0a8-5c82-45a8-a11f-d5457e722998",
+      "playstore:com.hdfcbank.android.now:fa290b21-9a10-4586-9878-d32f5242d718",
+      "appstore:6504402552:14248412835"
+     ]
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 16,
+     "exemplars": [
+      "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375",
+      "playstore:com.hdfcbank.android.now:9f488747-8fd1-48f2-9605-17d719fce82d",
+      "appstore:6504402552:14410177535"
+     ]
+    }
+   ],
+   "versions": [
+    {
+     "version": "11.1.0",
+     "n": 467,
+     "ratings": {
+      "1": 271,
+      "2": 36,
+      "3": 28,
+      "4": 17,
+      "5": 115
+     },
+     "avg_rating": 2.29,
+     "share_positive": 28.3,
+     "share_negative": 65.7
+    },
+    {
+     "version": "11.0.1",
+     "n": 1424,
+     "ratings": {
+      "1": 764,
+      "2": 117,
+      "3": 92,
+      "4": 71,
+      "5": 380
+     },
+     "avg_rating": 2.43,
+     "share_positive": 31.7,
+     "share_negative": 61.9
+    },
+    {
+     "version": "10.1.7",
+     "n": 83,
+     "ratings": {
+      "1": 39,
+      "2": 1,
+      "3": 3,
+      "4": 4,
+      "5": 36
+     },
+     "avg_rating": 2.96,
+     "share_positive": 48.2,
+     "share_negative": 48.2
+    },
+    {
+     "version": "10.1.6",
+     "n": 843,
+     "ratings": {
+      "1": 375,
+      "2": 53,
+      "3": 26,
+      "4": 38,
+      "5": 351
+     },
+     "avg_rating": 2.93,
+     "share_positive": 46.1,
+     "share_negative": 50.8
+    },
+    {
+     "version": "10.0.2",
+     "n": 179,
+     "ratings": {
+      "1": 23,
+      "2": 3,
+      "3": 9,
+      "4": 24,
+      "5": 120
+     },
+     "avg_rating": 4.2,
+     "share_positive": 80.4,
+     "share_negative": 14.5
+    },
+    {
+     "version": "9.0.4",
+     "n": 1772,
+     "ratings": {
+      "1": 104,
+      "2": 35,
+      "3": 89,
+      "4": 252,
+      "5": 1292
+     },
+     "avg_rating": 4.46,
+     "share_positive": 87.1,
+     "share_negative": 7.8
+    },
+    {
+     "version": "8.1.2",
+     "n": 20,
+     "ratings": {
+      "1": 1,
+      "2": 1,
+      "3": 0,
+      "4": 3,
+      "5": 15
+     },
+     "avg_rating": 4.5,
+     "share_positive": 90.0,
+     "share_negative": 10.0
+    },
+    {
+     "version": "7.5.3",
+     "n": 12,
+     "ratings": {
+      "1": 7,
+      "2": 0,
+      "3": 1,
+      "4": 0,
+      "5": 4
+     },
+     "avg_rating": 2.5,
+     "share_positive": 33.3,
+     "share_negative": 58.3
+    },
+    {
+     "version": "7.1.6",
+     "n": 11,
+     "ratings": {
+      "1": 8,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 3
+     },
+     "avg_rating": 2.09,
+     "share_positive": 27.3,
+     "share_negative": 72.7
+    }
+   ],
+   "praise_exemplars": [
+    "playstore:com.hdfcbank.android.now:4dbeee15-cfb5-4460-9805-315cdea089e8",
+    "playstore:com.hdfcbank.android.now:afc04f3e-2282-4192-88c1-2b12b310d178",
+    "appstore:6504402552:14575509819"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 716,
+     "owner": "digital",
+     "first_seen_version": "6.2.7",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:b6c4f2e0-fa10-4833-b75b-890a9357d013",
+      "playstore:com.hdfcbank.android.now:86883f09-dc2d-4503-b0be-3d2950215d60",
+      "appstore:6504402552:14561352664"
+     ],
+     "feature_asks": [
+      "the compulsory swipe option"
+     ]
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 301,
+     "owner": "digital",
+     "first_seen_version": "7.1.6",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
+      "playstore:com.hdfcbank.android.now:a67e013e-db6a-4d7c-82d2-19ebfc086a50",
+      "appstore:6504402552:14579089231"
+     ],
+     "feature_asks": [
+      "choose sim while setting up upi"
+     ]
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 179,
+     "owner": "digital",
+     "first_seen_version": "6.2.1",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
+      "playstore:com.hdfcbank.android.now:06265411-118f-4f0e-b0b2-ba43616c5882",
+      "appstore:6504402552:14590649108"
+     ],
+     "feature_asks": [
+      "old version new version is useless",
+      "the option to view"
+     ]
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 19,
+     "owner": "cx",
+     "first_seen_version": "9.0.4",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:63ecc0a8-5c82-45a8-a11f-d5457e722998",
+      "playstore:com.hdfcbank.android.now:fa290b21-9a10-4586-9878-d32f5242d718",
+      "appstore:6504402552:14248412835"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Branch service and staff behaviour",
+     "theme": "branch_service",
+     "count": 16,
+     "owner": "retail",
+     "first_seen_version": "9.0.4",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375",
+      "playstore:com.hdfcbank.android.now:9f488747-8fd1-48f2-9605-17d719fce82d",
+      "appstore:6504402552:14410177535"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Device security blocks and false alerts",
+     "theme": "device_security_block",
+     "count": 13,
+     "owner": "digital",
+     "first_seen_version": "10.1.6",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:2647b146-f7b2-4d13-b3b1-cb37add79d9b",
+      "playstore:com.hdfcbank.android.now:5fcfc342-de6f-4172-a83f-822797adbcdc"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Account and card closure requests",
+     "theme": "closure_requests",
+     "count": 10,
+     "owner": "operations",
+     "first_seen_version": "9.0.4",
+     "latest_version_seen": "11.1.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:139abea0-f5fa-415b-8370-1b40a4a39e7a",
+      "playstore:com.hdfcbank.android.now:f4146be3-daf1-49a5-b3dd-d741ace33e42",
+      "appstore:6504402552:14311070641"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Statements, certificates and documents",
+     "theme": "statements_documents",
+     "count": 10,
+     "owner": "operations",
+     "first_seen_version": "10.1.6",
+     "latest_version_seen": "11.0.1",
+     "example_ids": [
+      "playstore:com.hdfcbank.android.now:fb13a3d6-977c-4a5c-bf16-997c4a063d01",
+      "playstore:com.hdfcbank.android.now:f086687e-a6ee-491c-bbd3-484a7bde9490",
+      "appstore:6504402552:14480259780"
+     ],
+     "feature_asks": [
+      "that feature",
+      "beneficiary previous statement details o",
+      "share an individual transaction as a",
+      "select fy for upto 10 years"
+     ]
+    }
+   ]
+  },
+  {
+   "app": "HDFC Life",
+   "entity": "hdfc_life",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:HDFC Life",
+     "records": 66,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:HDFC Life",
+     "records": 287,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 345,
+    "ratings": {
+     "1": 151,
+     "2": 13,
+     "3": 10,
+     "4": 19,
+     "5": 152
+    },
+    "avg_rating": 3.02,
+    "share_positive": 49.6,
+    "share_negative": 47.5
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 144,
+    "second_half": 201,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": 105.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 19,
+     "avg_rating": 1.95
+    },
+    {
+     "week": "2026-07-06",
+     "n": 21,
+     "avg_rating": 2.0
+    },
+    {
+     "week": "2026-07-13",
+     "n": 13,
+     "avg_rating": 2.85
+    },
+    {
+     "week": "2026-07-20",
+     "n": 12,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-07-27",
+     "n": 19,
+     "avg_rating": 2.95
+    },
+    {
+     "week": "2026-08-03",
+     "n": 37,
+     "avg_rating": 3.22
+    },
+    {
+     "week": "2026-08-10",
+     "n": 30,
+     "avg_rating": 2.9
+    },
+    {
+     "week": "2026-08-17",
+     "n": 46,
+     "avg_rating": 3.24
+    },
+    {
+     "week": "2026-08-24",
+     "n": 35,
+     "avg_rating": 3.74
+    },
+    {
+     "week": "2026-08-31",
+     "n": 33,
+     "avg_rating": 2.76
+    },
+    {
+     "week": "2026-09-07",
+     "n": 24,
+     "avg_rating": 2.96
+    },
+    {
+     "week": "2026-09-14",
+     "n": 32,
+     "avg_rating": 3.53
+    },
+    {
+     "week": "2026-09-21",
+     "n": 24,
+     "avg_rating": 3.08
+    }
+   ],
+   "top_issues": [],
+   "versions": [
+    {
+     "version": "8.8",
+     "n": 79,
+     "ratings": {
+      "1": 33,
+      "2": 3,
+      "3": 2,
+      "4": 3,
+      "5": 38
+     },
+     "avg_rating": 3.13,
+     "share_positive": 51.9,
+     "share_negative": 45.6
+    },
+    {
+     "version": "8.7",
+     "n": 162,
+     "ratings": {
+      "1": 58,
+      "2": 6,
+      "3": 8,
+      "4": 14,
+      "5": 76
+     },
+     "avg_rating": 3.27,
+     "share_positive": 55.6,
+     "share_negative": 39.5
+    },
+    {
+     "version": "8.6",
+     "n": 40,
+     "ratings": {
+      "1": 22,
+      "2": 1,
+      "3": 0,
+      "4": 0,
+      "5": 17
+     },
+     "avg_rating": 2.73,
+     "share_positive": 42.5,
+     "share_negative": 57.5
+    },
+    {
+     "version": "8.5",
+     "n": 27,
+     "ratings": {
+      "1": 16,
+      "2": 1,
+      "3": 0,
+      "4": 2,
+      "5": 8
+     },
+     "avg_rating": 2.44,
+     "share_positive": 37.0,
+     "share_negative": 63.0
+    }
+   ],
+   "praise_exemplars": [
+    "playstore:com.hdfcclife.activities:8f788a39-598b-402d-a776-b0398b39dd56",
+    "playstore:com.hdfcclife.activities:5286db4e-271e-476c-8fef-67e40ea01bd7",
+    "appstore:900441427:14414194183"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "HDFC Securities InvestRight",
+   "entity": "hdfc_securities",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:HDFC Securities InvestRight",
+     "records": 136,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-25",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:HDFC Securities InvestRight",
+     "records": 453,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-27",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 568,
+    "ratings": {
+     "1": 144,
+     "2": 36,
+     "3": 33,
+     "4": 57,
+     "5": 298
+    },
+    "avg_rating": 3.58,
+    "share_positive": 62.5,
+    "share_negative": 31.7
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 403,
+    "second_half": 165,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": -39.7,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 39,
+     "avg_rating": 3.95
+    },
+    {
+     "week": "2026-07-06",
+     "n": 66,
+     "avg_rating": 3.86
+    },
+    {
+     "week": "2026-07-13",
+     "n": 78,
+     "avg_rating": 3.63
+    },
+    {
+     "week": "2026-07-20",
+     "n": 68,
+     "avg_rating": 3.49
+    },
+    {
+     "week": "2026-07-27",
+     "n": 75,
+     "avg_rating": 3.76
+    },
+    {
+     "week": "2026-08-03",
+     "n": 52,
+     "avg_rating": 3.63
+    },
+    {
+     "week": "2026-08-10",
+     "n": 26,
+     "avg_rating": 3.27
+    },
+    {
+     "week": "2026-08-17",
+     "n": 14,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-08-24",
+     "n": 20,
+     "avg_rating": 2.85
+    },
+    {
+     "week": "2026-08-31",
+     "n": 37,
+     "avg_rating": 3.97
+    },
+    {
+     "week": "2026-09-07",
+     "n": 22,
+     "avg_rating": 2.91
+    },
+    {
+     "week": "2026-09-14",
+     "n": 37,
+     "avg_rating": 3.05
+    },
+    {
+     "week": "2026-09-21",
+     "n": 34,
+     "avg_rating": 3.68
+    }
+   ],
+   "top_issues": [],
+   "versions": [
+    {
+     "version": "5.2.2",
+     "n": 21,
+     "ratings": {
+      "1": 7,
+      "2": 1,
+      "3": 2,
+      "4": 3,
+      "5": 8
+     },
+     "avg_rating": 3.19,
+     "share_positive": 52.4,
+     "share_negative": 38.1
+    },
+    {
+     "version": "5.2.1",
+     "n": 33,
+     "ratings": {
+      "1": 12,
+      "2": 2,
+      "3": 5,
+      "4": 0,
+      "5": 14
+     },
+     "avg_rating": 3.06,
+     "share_positive": 42.4,
+     "share_negative": 42.4
+    },
+    {
+     "version": "5.2.0",
+     "n": 52,
+     "ratings": {
+      "1": 11,
+      "2": 5,
+      "3": 5,
+      "4": 3,
+      "5": 28
+     },
+     "avg_rating": 3.62,
+     "share_positive": 59.6,
+     "share_negative": 30.8
+    },
+    {
+     "version": "5.1.1",
+     "n": 26,
+     "ratings": {
+      "1": 11,
+      "2": 2,
+      "3": 0,
+      "4": 3,
+      "5": 10
+     },
+     "avg_rating": 2.96,
+     "share_positive": 50.0,
+     "share_negative": 50.0
+    },
+    {
+     "version": "5.1.0",
+     "n": 11,
+     "ratings": {
+      "1": 6,
+      "2": 1,
+      "3": 0,
+      "4": 3,
+      "5": 1
+     },
+     "avg_rating": 2.27,
+     "share_positive": 36.4,
+     "share_negative": 63.6
+    },
+    {
+     "version": "4.8.5",
+     "n": 93,
+     "ratings": {
+      "1": 25,
+      "2": 3,
+      "3": 4,
+      "4": 9,
+      "5": 52
+     },
+     "avg_rating": 3.65,
+     "share_positive": 65.6,
+     "share_negative": 30.1
+    },
+    {
+     "version": "4.8.4",
+     "n": 260,
+     "ratings": {
+      "1": 55,
+      "2": 16,
+      "3": 15,
+      "4": 28,
+      "5": 146
+     },
+     "avg_rating": 3.75,
+     "share_positive": 66.9,
+     "share_negative": 27.3
+    }
+   ],
+   "praise_exemplars": [
+    "playstore:com.hsl.investright:013587a6-6b60-4f54-98ae-16c08a90a56b",
+    "playstore:com.hsl.investright:8af4db7c-8f7a-4757-8842-b5294281ae43",
+    "appstore:1666228571:14564188761"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "Home Loans",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "loans",
+   "streams": [
+    {
+     "stream": "appstore:Home Loans",
+     "records": 8,
+     "earliest": "2026-07-05",
+     "latest": "2026-09-09",
+     "window_first": "2026-07-05",
+     "full_window": false,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:Home Loans",
+     "records": 99,
+     "earliest": "2026-06-29",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 102,
+    "ratings": {
+     "1": 79,
+     "2": 5,
+     "3": 5,
+     "4": 3,
+     "5": 10
+    },
+    "avg_rating": 1.63,
+    "share_positive": 12.7,
+    "share_negative": 82.4
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 38,
+    "second_half": 56,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": 117.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 4,
+     "avg_rating": 1.0
+    },
+    {
+     "week": "2026-07-06",
+     "n": 9,
+     "avg_rating": 2.78
+    },
+    {
+     "week": "2026-07-13",
+     "n": 7,
+     "avg_rating": 1.86
+    },
+    {
+     "week": "2026-07-20",
+     "n": 3,
+     "avg_rating": 1.33
+    },
+    {
+     "week": "2026-07-27",
+     "n": 6,
+     "avg_rating": 2.17
+    },
+    {
+     "week": "2026-08-03",
+     "n": 7,
+     "avg_rating": 1.29
+    },
+    {
+     "week": "2026-08-10",
+     "n": 7,
+     "avg_rating": 1.57
+    },
+    {
+     "week": "2026-08-17",
+     "n": 8,
+     "avg_rating": 1.25
+    },
+    {
+     "week": "2026-08-24",
+     "n": 9,
+     "avg_rating": 1.0
+    },
+    {
+     "week": "2026-08-31",
+     "n": 19,
+     "avg_rating": 1.53
+    },
+    {
+     "week": "2026-09-07",
+     "n": 7,
+     "avg_rating": 1.71
+    },
+    {
+     "week": "2026-09-14",
+     "n": 9,
+     "avg_rating": 1.78
+    },
+    {
+     "week": "2026-09-21",
+     "n": 7,
+     "avg_rating": 1.57
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 23,
+     "exemplars": [
+      "playstore:com.app.hdfc:2fc2de0d-165d-4faf-8ede-4f9be8c56210",
+      "playstore:com.app.hdfc:66611c5b-6b35-4e78-9727-ac9d9ca504ca",
+      "appstore:938604601:14528199706"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 12,
+     "exemplars": [
+      "playstore:com.app.hdfc:ecaf38dc-9ae7-4d1f-8787-0d4425fc2ff6",
+      "playstore:com.app.hdfc:4a7c8d61-7f70-44cc-8d89-c24b9263beda",
+      "appstore:938604601:14391886673"
+     ]
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 4,
+     "exemplars": [
+      "playstore:com.app.hdfc:1d7f91e5-1eca-4155-8480-46f374337ba2",
+      "playstore:com.app.hdfc:0ddd8446-b6c4-4b3a-8036-f67adcbd51c0",
+      "playstore:com.app.hdfc:f76b5ae0-1299-4465-85b4-aa458e97efcf"
+     ]
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 3,
+     "exemplars": [
+      "appstore:938604601:14438613167",
+      "playstore:com.app.hdfc:4d7f0dde-06a5-41a0-a568-a906e59bade2",
+      "playstore:com.app.hdfc:f4768416-a50e-4767-ada2-44e83b6709a6"
+     ]
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 2,
+     "exemplars": [
+      "playstore:com.app.hdfc:95504f13-c54c-4ff5-92d7-0639fcd41958",
+      "playstore:com.app.hdfc:0d776ea6-14be-4791-98c7-9ea108047a3c"
+     ]
+    }
+   ],
+   "versions": [
+    {
+     "version": "5.51",
+     "n": 30,
+     "ratings": {
+      "1": 24,
+      "2": 3,
+      "3": 1,
+      "4": 2,
+      "5": 0
+     },
+     "avg_rating": 1.37,
+     "share_positive": 6.7,
+     "share_negative": 90.0
+    },
+    {
+     "version": "5.5",
+     "n": 30,
+     "ratings": {
+      "1": 24,
+      "2": 1,
+      "3": 3,
+      "4": 1,
+      "5": 1
+     },
+     "avg_rating": 1.47,
+     "share_positive": 6.7,
+     "share_negative": 83.3
+    }
+   ],
+   "praise_exemplars": [],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 23,
+     "owner": "digital",
+     "first_seen_version": "2.27",
+     "latest_version_seen": "5.51",
+     "example_ids": [
+      "playstore:com.app.hdfc:2fc2de0d-165d-4faf-8ede-4f9be8c56210",
+      "playstore:com.app.hdfc:66611c5b-6b35-4e78-9727-ac9d9ca504ca",
+      "appstore:938604601:14528199706"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 12,
+     "owner": "digital",
+     "first_seen_version": "5.5",
+     "latest_version_seen": "5.52",
+     "example_ids": [
+      "playstore:com.app.hdfc:ecaf38dc-9ae7-4d1f-8787-0d4425fc2ff6",
+      "playstore:com.app.hdfc:4a7c8d61-7f70-44cc-8d89-c24b9263beda",
+      "appstore:938604601:14391886673"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "EMI and loan account servicing",
+     "theme": "loan_servicing",
+     "count": 4,
+     "owner": "loans",
+     "first_seen_version": "5.5",
+     "latest_version_seen": "5.44",
+     "example_ids": [
+      "playstore:com.app.hdfc:1d7f91e5-1eca-4155-8480-46f374337ba2",
+      "playstore:com.app.hdfc:0ddd8446-b6c4-4b3a-8036-f67adcbd51c0",
+      "playstore:com.app.hdfc:f76b5ae0-1299-4465-85b4-aa458e97efcf"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Branch service and staff behaviour",
+     "theme": "branch_service",
+     "count": 3,
+     "owner": "retail",
+     "first_seen_version": "5.5",
+     "latest_version_seen": "5.45",
+     "example_ids": [
+      "appstore:938604601:14438613167",
+      "playstore:com.app.hdfc:4d7f0dde-06a5-41a0-a568-a906e59bade2",
+      "playstore:com.app.hdfc:f4768416-a50e-4767-ada2-44e83b6709a6"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Statements, certificates and documents",
+     "theme": "statements_documents",
+     "count": 2,
+     "owner": "operations",
+     "first_seen_version": "5.51",
+     "latest_version_seen": "5.52",
+     "example_ids": [
+      "playstore:com.app.hdfc:95504f13-c54c-4ff5-92d7-0639fcd41958",
+      "playstore:com.app.hdfc:0d776ea6-14be-4791-98c7-9ea108047a3c"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "5.52",
+     "latest_version_seen": "5.52",
+     "example_ids": [
+      "playstore:com.app.hdfc:2a4e47e0-cb26-4986-812e-9b0349ef4b63"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "NetBanking",
+     "theme": "netbanking",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": null,
+     "latest_version_seen": null,
+     "example_ids": [
+      "playstore:com.app.hdfc:b20b8907-c6d8-47fe-8318-ca68def544c8"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Loan processing and disbursal",
+     "theme": "loan_processing",
+     "count": 1,
+     "owner": "loans",
+     "first_seen_version": "5.51",
+     "latest_version_seen": "5.51",
+     "example_ids": [
+      "playstore:com.app.hdfc:38139045-30a4-4f54-bd87-b8b516d95cab"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "Loan Assist",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "loans",
+   "streams": [
+    {
+     "stream": "appstore:Loan Assist",
+     "records": 13,
+     "earliest": "2026-07-21",
+     "latest": "2026-09-18",
+     "window_first": "2026-07-21",
+     "full_window": false,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:Loan Assist",
+     "records": 70,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-02",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 79,
+    "ratings": {
+     "1": 52,
+     "2": 5,
+     "3": 4,
+     "4": 2,
+     "5": 16
+    },
+    "avg_rating": 2.05,
+    "share_positive": 22.8,
+    "share_negative": 72.2
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 34,
+    "second_half": 32,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": 38.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 8,
+     "avg_rating": 1.75
+    },
+    {
+     "week": "2026-07-06",
+     "n": 7,
+     "avg_rating": 1.71
+    },
+    {
+     "week": "2026-07-13",
+     "n": 5,
+     "avg_rating": 3.2
+    },
+    {
+     "week": "2026-07-20",
+     "n": 3,
+     "avg_rating": 1.0
+    },
+    {
+     "week": "2026-07-27",
+     "n": 3,
+     "avg_rating": 2.33
+    },
+    {
+     "week": "2026-08-03",
+     "n": 11,
+     "avg_rating": 2.09
+    },
+    {
+     "week": "2026-08-10",
+     "n": 11,
+     "avg_rating": 1.36
+    },
+    {
+     "week": "2026-08-17",
+     "n": 5,
+     "avg_rating": 2.8
+    },
+    {
+     "week": "2026-08-24",
+     "n": 6,
+     "avg_rating": 2.33
+    },
+    {
+     "week": "2026-08-31",
+     "n": 4,
+     "avg_rating": 1.5
+    },
+    {
+     "week": "2026-09-07",
+     "n": 9,
+     "avg_rating": 2.44
+    },
+    {
+     "week": "2026-09-14",
+     "n": 2,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-09-21",
+     "n": 5,
+     "avg_rating": 2.0
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 19,
+     "exemplars": [
+      "appstore:1190804856:14563044772",
+      "playstore:com.indigo.hdfcloans:59c3cb4d-c5fd-468b-b390-f322b45d4975",
+      "appstore:1190804856:14485134896"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 4,
+     "exemplars": [
+      "appstore:1190804856:14421290812",
+      "appstore:1190804856:14420985694",
+      "appstore:1190804856:14401707753"
+     ]
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 3,
+     "exemplars": [
+      "playstore:com.indigo.hdfcloans:5ff62c9e-fac2-474c-a1bc-b11e1611d778",
+      "playstore:com.indigo.hdfcloans:6d7ecb4d-af05-4fe3-81a8-42187a10ae8e",
+      "appstore:1190804856:14397275611"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 1,
+     "exemplars": [
+      "playstore:com.indigo.hdfcloans:1fbcd347-1330-4a26-8102-cb64700722e0"
+     ]
+    },
+    {
+     "id": "loan_closure_documents",
+     "label": "Loan closure, foreclosure and documents",
+     "count": 1,
+     "exemplars": [
+      "playstore:com.indigo.hdfcloans:6d9c3f80-5247-40d2-b84d-7c599d8d79cc"
+     ]
+    }
+   ],
+   "versions": [
+    {
+     "version": "5.16",
+     "n": 36,
+     "ratings": {
+      "1": 22,
+      "2": 1,
+      "3": 2,
+      "4": 1,
+      "5": 10
+     },
+     "avg_rating": 2.33,
+     "share_positive": 30.6,
+     "share_negative": 63.9
+    },
+    {
+     "version": "5.2",
+     "n": 11,
+     "ratings": {
+      "1": 9,
+      "2": 1,
+      "3": 0,
+      "4": 1,
+      "5": 0
+     },
+     "avg_rating": 1.36,
+     "share_positive": 9.1,
+     "share_negative": 90.9
+    }
+   ],
+   "praise_exemplars": [],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 19,
+     "owner": "digital",
+     "first_seen_version": "5.2",
+     "latest_version_seen": "5.17",
+     "example_ids": [
+      "appstore:1190804856:14563044772",
+      "playstore:com.indigo.hdfcloans:59c3cb4d-c5fd-468b-b390-f322b45d4975",
+      "appstore:1190804856:14485134896"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 4,
+     "owner": "digital",
+     "first_seen_version": "5.2",
+     "latest_version_seen": "5.2",
+     "example_ids": [
+      "appstore:1190804856:14421290812",
+      "appstore:1190804856:14420985694",
+      "appstore:1190804856:14401707753"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "EMI and loan account servicing",
+     "theme": "loan_servicing",
+     "count": 3,
+     "owner": "loans",
+     "first_seen_version": "5.2",
+     "latest_version_seen": "5.16",
+     "example_ids": [
+      "playstore:com.indigo.hdfcloans:5ff62c9e-fac2-474c-a1bc-b11e1611d778",
+      "playstore:com.indigo.hdfcloans:6d7ecb4d-af05-4fe3-81a8-42187a10ae8e",
+      "appstore:1190804856:14397275611"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": null,
+     "latest_version_seen": null,
+     "example_ids": [
+      "playstore:com.indigo.hdfcloans:1fbcd347-1330-4a26-8102-cb64700722e0"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Loan closure, foreclosure and documents",
+     "theme": "loan_closure_documents",
+     "count": 1,
+     "owner": "loans",
+     "first_seen_version": null,
+     "latest_version_seen": null,
+     "example_ids": [
+      "playstore:com.indigo.hdfcloans:6d9c3f80-5247-40d2-b84d-7c599d8d79cc"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "PayZapp",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "payments",
+   "streams": [
+    {
+     "stream": "appstore:PayZapp",
+     "records": 223,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:PayZapp",
+     "records": 4904,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-27",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 4906,
+    "ratings": {
+     "1": 2143,
+     "2": 198,
+     "3": 196,
+     "4": 348,
+     "5": 2021
+    },
+    "avg_rating": 2.98,
+    "share_positive": 48.3,
+    "share_negative": 47.7
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 2898,
+    "second_half": 2008,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": 2.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 407,
+     "avg_rating": 2.83
+    },
+    {
+     "week": "2026-07-06",
+     "n": 383,
+     "avg_rating": 2.96
+    },
+    {
+     "week": "2026-07-13",
+     "n": 385,
+     "avg_rating": 3.02
+    },
+    {
+     "week": "2026-07-20",
+     "n": 336,
+     "avg_rating": 2.95
+    },
+    {
+     "week": "2026-07-27",
+     "n": 406,
+     "avg_rating": 3.12
+    },
+    {
+     "week": "2026-08-03",
+     "n": 731,
+     "avg_rating": 2.55
+    },
+    {
+     "week": "2026-08-10",
+     "n": 343,
+     "avg_rating": 3.08
+    },
+    {
+     "week": "2026-08-17",
+     "n": 364,
+     "avg_rating": 3.07
+    },
+    {
+     "week": "2026-08-24",
+     "n": 308,
+     "avg_rating": 2.93
+    },
+    {
+     "week": "2026-08-31",
+     "n": 404,
+     "avg_rating": 3.17
+    },
+    {
+     "week": "2026-09-07",
+     "n": 328,
+     "avg_rating": 3.12
+    },
+    {
+     "week": "2026-09-14",
+     "n": 249,
+     "avg_rating": 3.37
+    },
+    {
+     "week": "2026-09-21",
+     "n": 262,
+     "avg_rating": 3.18
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 571,
+     "exemplars": [
+      "playstore:com.hdfcbank.payzapp:95c02758-c039-4655-83c1-efaad8c48b19",
+      "playstore:com.hdfcbank.payzapp:8af1fb58-f3b9-4b45-a20a-4f68b30b11d1",
+      "appstore:6443480917:14594432538"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 359,
+     "exemplars": [
+      "playstore:com.hdfcbank.payzapp:1057d603-1abf-42b4-9f1e-d66521b40885",
+      "playstore:com.hdfcbank.payzapp:35ceb613-7979-473c-8c15-6386bdbd4812",
+      "appstore:6443480917:14587865950"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 83,
+     "exemplars": [
+      "playstore:com.hdfcbank.payzapp:7ca48c6e-5788-402f-a602-bf66d7a27a6d",
+      "playstore:com.hdfcbank.payzapp:67185e73-9032-412b-9e5c-27c925225610",
+      "appstore:6443480917:14307699753"
+     ]
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 66,
+     "exemplars": [
+      "playstore:com.hdfcbank.payzapp:2efdab31-cc54-4720-bd8e-36ac42827e53",
+      "playstore:com.hdfcbank.payzapp:40c4eb4f-3499-41bb-8bbf-fd3819399cdb"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 32,
+     "exemplars": [
+      "playstore:com.hdfcbank.payzapp:4b87b155-a70f-45b0-91d3-2d462ef2f933",
+      "playstore:com.hdfcbank.payzapp:2891ae4f-c35f-478f-b6b6-5b059bcd10a4",
+      "appstore:6443480917:14524466306"
+     ]
+    }
+   ],
+   "versions": [
+    {
+     "version": "2.61.6",
+     "n": 35,
+     "ratings": {
+      "1": 16,
+      "2": 1,
+      "3": 2,
+      "4": 3,
+      "5": 13
+     },
+     "avg_rating": 2.89,
+     "share_positive": 45.7,
+     "share_negative": 48.6
+    },
+    {
+     "version": "2.61.4",
+     "n": 302,
+     "ratings": {
+      "1": 103,
+      "2": 23,
+      "3": 8,
+      "4": 23,
+      "5": 145
+     },
+     "avg_rating": 3.28,
+     "share_positive": 55.6,
+     "share_negative": 41.7
+    },
+    {
+     "version": "2.60.4",
+     "n": 48,
+     "ratings": {
+      "1": 14,
+      "2": 1,
+      "3": 3,
+      "4": 6,
+      "5": 24
+     },
+     "avg_rating": 3.52,
+     "share_positive": 62.5,
+     "share_negative": 31.2
+    },
+    {
+     "version": "2.60.2",
+     "n": 27,
+     "ratings": {
+      "1": 14,
+      "2": 0,
+      "3": 1,
+      "4": 1,
+      "5": 11
+     },
+     "avg_rating": 2.81,
+     "share_positive": 44.4,
+     "share_negative": 51.9
+    },
+    {
+     "version": "2.59.8",
+     "n": 10,
+     "ratings": {
+      "1": 6,
+      "2": 0,
+      "3": 1,
+      "4": 1,
+      "5": 2
+     },
+     "avg_rating": 2.3,
+     "share_positive": 30.0,
+     "share_negative": 60.0
+    },
+    {
+     "version": "2.59.6",
+     "n": 41,
+     "ratings": {
+      "1": 19,
+      "2": 3,
+      "3": 2,
+      "4": 1,
+      "5": 16
+     },
+     "avg_rating": 2.8,
+     "share_positive": 41.5,
+     "share_negative": 53.7
+    },
+    {
+     "version": "2.59.3",
+     "n": 1136,
+     "ratings": {
+      "1": 427,
+      "2": 41,
+      "3": 45,
+      "4": 77,
+      "5": 546
+     },
+     "avg_rating": 3.24,
+     "share_positive": 54.8,
+     "share_negative": 41.2
+    },
+    {
+     "version": "2.59.1",
+     "n": 28,
+     "ratings": {
+      "1": 24,
+      "2": 1,
+      "3": 1,
+      "4": 0,
+      "5": 2
+     },
+     "avg_rating": 1.39,
+     "share_positive": 7.1,
+     "share_negative": 89.3
+    },
+    {
+     "version": "2.56.11",
+     "n": 753,
+     "ratings": {
+      "1": 330,
+      "2": 23,
+      "3": 28,
+      "4": 60,
+      "5": 312
+     },
+     "avg_rating": 3.0,
+     "share_positive": 49.4,
+     "share_negative": 46.9
+    },
+    {
+     "version": "2.56.10",
+     "n": 266,
+     "ratings": {
+      "1": 115,
+      "2": 11,
+      "3": 20,
+      "4": 19,
+      "5": 101
+     },
+     "avg_rating": 2.92,
+     "share_positive": 45.1,
+     "share_negative": 47.4
+    },
+    {
+     "version": "2.56.8",
+     "n": 547,
+     "ratings": {
+      "1": 254,
+      "2": 21,
+      "3": 21,
+      "4": 39,
+      "5": 212
+     },
+     "avg_rating": 2.88,
+     "share_positive": 45.9,
+     "share_negative": 50.3
+    },
+    {
+     "version": "2.53.15",
+     "n": 35,
+     "ratings": {
+      "1": 19,
+      "2": 0,
+      "3": 1,
+      "4": 1,
+      "5": 14
+     },
+     "avg_rating": 2.74,
+     "share_positive": 42.9,
+     "share_negative": 54.3
+    },
+    {
+     "version": "2.53.14",
+     "n": 1005,
+     "ratings": {
+      "1": 347,
+      "2": 31,
+      "3": 41,
+      "4": 86,
+      "5": 500
+     },
+     "avg_rating": 3.36,
+     "share_positive": 58.3,
+     "share_negative": 37.6
+    },
+    {
+     "version": "2.53.12",
+     "n": 12,
+     "ratings": {
+      "1": 7,
+      "2": 0,
+      "3": 1,
+      "4": 0,
+      "5": 4
+     },
+     "avg_rating": 2.5,
+     "share_positive": 33.3,
+     "share_negative": 58.3
+    },
+    {
+     "version": "2.31.6",
+     "n": 10,
+     "ratings": {
+      "1": 6,
+      "2": 1,
+      "3": 0,
+      "4": 1,
+      "5": 2
+     },
+     "avg_rating": 2.2,
+     "share_positive": 30.0,
+     "share_negative": 70.0
+    }
+   ],
+   "praise_exemplars": [
+    "playstore:com.hdfcbank.payzapp:c9af7b53-8a61-4767-bd71-a8bad43a0383",
+    "playstore:com.hdfcbank.payzapp:9d107387-fd76-4175-93cb-ad4fdfde025b",
+    "appstore:6443480917:14496602728"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 571,
+     "owner": "digital",
+     "first_seen_version": "1.0.0.230926-144-03",
+     "latest_version_seen": "2.61.6",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:95c02758-c039-4655-83c1-efaad8c48b19",
+      "playstore:com.hdfcbank.payzapp:8af1fb58-f3b9-4b45-a20a-4f68b30b11d1",
+      "appstore:6443480917:14594432538"
+     ],
+     "feature_asks": [
+      "the option to remove the old"
+     ]
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 359,
+     "owner": "digital",
+     "first_seen_version": "1.0.0.230711-94-07",
+     "latest_version_seen": "2.61.7",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:1057d603-1abf-42b4-9f1e-d66521b40885",
+      "playstore:com.hdfcbank.payzapp:35ceb613-7979-473c-8c15-6386bdbd4812",
+      "appstore:6443480917:14587865950"
+     ],
+     "feature_asks": [
+      "service or decommission the app",
+      "third-party keyboard",
+      "me to install the app",
+      "my account"
+     ]
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 83,
+     "owner": "digital",
+     "first_seen_version": "2.20.5",
+     "latest_version_seen": "2.61.6",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:7ca48c6e-5788-402f-a602-bf66d7a27a6d",
+      "playstore:com.hdfcbank.payzapp:67185e73-9032-412b-9e5c-27c925225610",
+      "appstore:6443480917:14307699753"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Device security blocks and false alerts",
+     "theme": "device_security_block",
+     "count": 66,
+     "owner": "digital",
+     "first_seen_version": "2.7.11",
+     "latest_version_seen": "2.61.4",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:2efdab31-cc54-4720-bd8e-36ac42827e53",
+      "playstore:com.hdfcbank.payzapp:40c4eb4f-3499-41bb-8bbf-fd3819399cdb"
+     ],
+     "feature_asks": [
+      "proceed with owner"
+     ]
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 32,
+     "owner": "cx",
+     "first_seen_version": "1.0.0.230605-74.07",
+     "latest_version_seen": "2.60.4",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:4b87b155-a70f-45b0-91d3-2d462ef2f933",
+      "playstore:com.hdfcbank.payzapp:2891ae4f-c35f-478f-b6b6-5b059bcd10a4",
+      "appstore:6443480917:14524466306"
+     ],
+     "feature_asks": [
+      "service or decommission the app",
+      "me to install the app"
+     ]
+    },
+    {
+     "issue": "Complaints closed without resolution",
+     "theme": "complaint_handling",
+     "count": 18,
+     "owner": "cx",
+     "first_seen_version": "2.23.6",
+     "latest_version_seen": "2.59.6",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:9f2c3083-3d7d-4a87-809e-22b9a642502f",
+      "playstore:com.hdfcbank.payzapp:c5446098-4c6e-4a2a-8b2f-35676eae3b52",
+      "appstore:6443480917:14580786806"
+     ],
+     "feature_asks": [
+      "the restriction"
+     ]
+    },
+    {
+     "issue": "NetBanking",
+     "theme": "netbanking",
+     "count": 15,
+     "owner": "digital",
+     "first_seen_version": "2.53.14",
+     "latest_version_seen": "2.59.3",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:a3a1de38-52dc-4dc4-94f3-6005cdf97280",
+      "playstore:com.hdfcbank.payzapp:1cc0ceab-8f1e-479a-ad62-416509b02fbf",
+      "appstore:6443480917:14357435935"
+     ],
+     "feature_asks": [
+      "old procudure to dues thru other"
+     ]
+    },
+    {
+     "issue": "NRI and forex services",
+     "theme": "nri_forex",
+     "count": 13,
+     "owner": "retail",
+     "first_seen_version": "2.10.11",
+     "latest_version_seen": "2.56.11",
+     "example_ids": [
+      "playstore:com.hdfcbank.payzapp:f180ff1f-b713-44e0-aad0-ae9445b8d53c",
+      "playstore:com.hdfcbank.payzapp:241fcfcd-cc04-40d9-99de-6cc937f4defa"
+     ],
+     "feature_asks": [
+      "this unnecessary limitation immediately"
+     ]
+    }
+   ]
+  },
+  {
+   "app": "SmartHub Vyapar",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "sme_merchant",
+   "streams": [
+    {
+     "stream": "appstore:SmartHub Vyapar",
+     "records": 14,
+     "earliest": "2026-07-03",
+     "latest": "2026-09-23",
+     "window_first": "2026-07-03",
+     "full_window": false,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:SmartHub Vyapar",
+     "records": 64,
+     "earliest": "2026-06-30",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-03",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 76,
+    "ratings": {
+     "1": 46,
+     "2": 5,
+     "3": 0,
+     "4": 2,
+     "5": 23
+    },
+    "avg_rating": 2.36,
+    "share_positive": 32.9,
+    "share_negative": 67.1
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 32,
+    "second_half": 30,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": 38.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 7,
+     "avg_rating": 1.14
+    },
+    {
+     "week": "2026-07-06",
+     "n": 3,
+     "avg_rating": 5.0
+    },
+    {
+     "week": "2026-07-13",
+     "n": 4,
+     "avg_rating": 2.25
+    },
+    {
+     "week": "2026-07-20",
+     "n": 8,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-07-27",
+     "n": 4,
+     "avg_rating": 1.25
+    },
+    {
+     "week": "2026-08-03",
+     "n": 9,
+     "avg_rating": 3.11
+    },
+    {
+     "week": "2026-08-10",
+     "n": 6,
+     "avg_rating": 2.33
+    },
+    {
+     "week": "2026-08-17",
+     "n": 3,
+     "avg_rating": 1.0
+    },
+    {
+     "week": "2026-08-24",
+     "n": 7,
+     "avg_rating": 1.57
+    },
+    {
+     "week": "2026-08-31",
+     "n": 4,
+     "avg_rating": 3.0
+    },
+    {
+     "week": "2026-09-07",
+     "n": 9,
+     "avg_rating": 2.44
+    },
+    {
+     "week": "2026-09-14",
+     "n": 4,
+     "avg_rating": 2.0
+    },
+    {
+     "week": "2026-09-21",
+     "n": 8,
+     "avg_rating": 2.5
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 17,
+     "exemplars": [
+      "playstore:com.hdfc.smarthub:28c4e672-80de-47eb-97c1-4fa18ceaad8b",
+      "playstore:com.hdfc.smarthub:aa0a68bb-2892-4657-9b5b-76319226623b",
+      "appstore:1626886089:14492510791"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 10,
+     "exemplars": [
+      "playstore:com.hdfc.smarthub:0674618d-076a-4401-a74f-2fe3b2cb71f0",
+      "appstore:1626886089:14583245469",
+      "appstore:1626886089:14575784846"
+     ]
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 2,
+     "exemplars": [
+      "playstore:com.hdfc.smarthub:98b0ed55-1776-4064-b043-b0ad0cedac84",
+      "playstore:com.hdfc.smarthub:da93dc72-a139-4d13-aa04-208c08e2397c"
+     ]
+    },
+    {
+     "id": "merchant_pos",
+     "label": "Merchant QR, POS and sound box",
+     "count": 2,
+     "exemplars": [
+      "playstore:com.hdfc.smarthub:cd414321-c472-47b4-b825-daeafcc88d88",
+      "playstore:com.hdfc.smarthub:e8bc6795-3ecf-48f6-a673-4551611e6f1c"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 1,
+     "exemplars": [
+      "playstore:com.hdfc.smarthub:0440a26a-604a-4c56-9ca8-b329b7937670"
+     ]
+    }
+   ],
+   "versions": [
+    {
+     "version": "7.3.2",
+     "n": 28,
+     "ratings": {
+      "1": 16,
+      "2": 1,
+      "3": 0,
+      "4": 1,
+      "5": 10
+     },
+     "avg_rating": 2.57,
+     "share_positive": 39.3,
+     "share_negative": 60.7
+    },
+    {
+     "version": "7.3.1",
+     "n": 30,
+     "ratings": {
+      "1": 20,
+      "2": 3,
+      "3": 0,
+      "4": 1,
+      "5": 6
+     },
+     "avg_rating": 2.0,
+     "share_positive": 23.3,
+     "share_negative": 76.7
+    }
+   ],
+   "praise_exemplars": [
+    "playstore:com.hdfc.smarthub:a1331bf5-c3a7-4f05-8c5c-0bcfa43f9ee7"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 17,
+     "owner": "digital",
+     "first_seen_version": "7.3.1",
+     "latest_version_seen": "7.3.2",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:28c4e672-80de-47eb-97c1-4fa18ceaad8b",
+      "playstore:com.hdfc.smarthub:aa0a68bb-2892-4657-9b5b-76319226623b",
+      "appstore:1626886089:14492510791"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 10,
+     "owner": "digital",
+     "first_seen_version": "7.3.0",
+     "latest_version_seen": "7.3.1",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:0674618d-076a-4401-a74f-2fe3b2cb71f0",
+      "appstore:1626886089:14583245469",
+      "appstore:1626886089:14575784846"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Bank charges and hidden fees",
+     "theme": "fees_charges_bank",
+     "count": 2,
+     "owner": "retail",
+     "first_seen_version": null,
+     "latest_version_seen": null,
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:98b0ed55-1776-4064-b043-b0ad0cedac84",
+      "playstore:com.hdfc.smarthub:da93dc72-a139-4d13-aa04-208c08e2397c"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Merchant QR, POS and sound box",
+     "theme": "merchant_pos",
+     "count": 2,
+     "owner": "payments",
+     "first_seen_version": "7.3.1",
+     "latest_version_seen": "7.3.1",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:cd414321-c472-47b4-b825-daeafcc88d88",
+      "playstore:com.hdfc.smarthub:e8bc6795-3ecf-48f6-a673-4551611e6f1c"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 1,
+     "owner": "cx",
+     "first_seen_version": "7.3.2",
+     "latest_version_seen": "7.3.2",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:0440a26a-604a-4c56-9ca8-b329b7937670"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Account and card closure requests",
+     "theme": "closure_requests",
+     "count": 1,
+     "owner": "operations",
+     "first_seen_version": "7.3.2",
+     "latest_version_seen": "7.3.2",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:7bc87d96-318e-45dd-9471-2e91d6693c4f"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Complaints closed without resolution",
+     "theme": "complaint_handling",
+     "count": 1,
+     "owner": "cx",
+     "first_seen_version": "7.3.1",
+     "latest_version_seen": "7.3.1",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:767d9ef5-0b25-4e45-bf66-28ed43db3af8"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Branch service and staff behaviour",
+     "theme": "branch_service",
+     "count": 1,
+     "owner": "retail",
+     "first_seen_version": "7.3.2",
+     "latest_version_seen": "7.3.2",
+     "example_ids": [
+      "playstore:com.hdfc.smarthub:08dd9587-7ca0-422d-8ded-299c8dcade17"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "SmartWealth",
+   "entity": "hdfc_bank",
+   "group_company": false,
+   "business": "wealth",
+   "streams": [
+    {
+     "stream": "appstore:SmartWealth",
+     "records": 19,
+     "earliest": "2026-06-30",
+     "latest": "2026-09-24",
+     "window_first": "2026-07-02",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:SmartWealth",
+     "records": 711,
+     "earliest": "2026-06-28",
+     "latest": "2026-09-27",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 713,
+    "ratings": {
+     "1": 79,
+     "2": 12,
+     "3": 18,
+     "4": 36,
+     "5": 568
+    },
+    "avg_rating": 4.41,
+    "share_positive": 84.7,
+    "share_negative": 12.8
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 445,
+    "second_half": 268,
+    "first_half_total": 4216,
+    "second_half_total": 2863,
+    "change_pct": -11.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "weekly_avg_rating": [
+    {
+     "week": "2026-06-29",
+     "n": 62,
+     "avg_rating": 4.48
+    },
+    {
+     "week": "2026-07-06",
+     "n": 64,
+     "avg_rating": 4.48
+    },
+    {
+     "week": "2026-07-13",
+     "n": 67,
+     "avg_rating": 4.64
+    },
+    {
+     "week": "2026-07-20",
+     "n": 56,
+     "avg_rating": 4.32
+    },
+    {
+     "week": "2026-07-27",
+     "n": 61,
+     "avg_rating": 4.87
+    },
+    {
+     "week": "2026-08-03",
+     "n": 91,
+     "avg_rating": 4.03
+    },
+    {
+     "week": "2026-08-10",
+     "n": 48,
+     "avg_rating": 4.56
+    },
+    {
+     "week": "2026-08-17",
+     "n": 45,
+     "avg_rating": 4.58
+    },
+    {
+     "week": "2026-08-24",
+     "n": 35,
+     "avg_rating": 4.37
+    },
+    {
+     "week": "2026-08-31",
+     "n": 69,
+     "avg_rating": 4.36
+    },
+    {
+     "week": "2026-09-07",
+     "n": 50,
+     "avg_rating": 4.2
+    },
+    {
+     "week": "2026-09-14",
+     "n": 32,
+     "avg_rating": 4.28
+    },
+    {
+     "week": "2026-09-21",
+     "n": 33,
+     "avg_rating": 4.03
+    }
+   ],
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 27,
+     "exemplars": [
+      "playstore:com.hdfcbank.smartwealthapp:3e37a738-e2b9-4a3a-aca2-145982079c3e",
+      "playstore:com.hdfcbank.smartwealthapp:ff2592a9-58e5-483e-bce3-314ef4c4bb51",
+      "appstore:6456843178:14570865404"
+     ]
+    },
+    {
+     "id": "investments_wealth",
+     "label": "Investments, mutual funds and SmartWealth",
+     "count": 3,
+     "exemplars": [
+      "playstore:com.hdfcbank.smartwealthapp:103901a5-eb4a-472a-ad78-2a99b8f3e453",
+      "playstore:com.hdfcbank.smartwealthapp:eed73ffa-1217-44a5-84e9-545b4f73107f",
+      "appstore:6456843178:14457099472"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 2,
+     "exemplars": [
+      "playstore:com.hdfcbank.smartwealthapp:e63815d0-d42e-4efc-ade9-03aa5ce8b90f",
+      "playstore:com.hdfcbank.smartwealthapp:b1acdda7-d2aa-457e-9882-0e59be3c9b76"
+     ]
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 1,
+     "exemplars": [
+      "playstore:com.hdfcbank.smartwealthapp:b6a7e7b7-8b06-4807-8a4b-9bbf2b449375"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 1,
+     "exemplars": [
+      "playstore:com.hdfcbank.smartwealthapp:0535d97a-4ccc-4c11-b179-18018e9ac433"
+     ]
+    }
+   ],
+   "versions": [
+    {
+     "version": "2.4.2",
+     "n": 62,
+     "ratings": {
+      "1": 12,
+      "2": 0,
+      "3": 0,
+      "4": 1,
+      "5": 49
+     },
+     "avg_rating": 4.21,
+     "share_positive": 80.6,
+     "share_negative": 19.4
+    },
+    {
+     "version": "2.4.1",
+     "n": 107,
+     "ratings": {
+      "1": 14,
+      "2": 3,
+      "3": 3,
+      "4": 7,
+      "5": 80
+     },
+     "avg_rating": 4.27,
+     "share_positive": 81.3,
+     "share_negative": 15.9
+    },
+    {
+     "version": "2.4.0",
+     "n": 80,
+     "ratings": {
+      "1": 2,
+      "2": 2,
+      "3": 2,
+      "4": 4,
+      "5": 70
+     },
+     "avg_rating": 4.72,
+     "share_positive": 92.5,
+     "share_negative": 5.0
+    },
+    {
+     "version": "2.3.5",
+     "n": 229,
+     "ratings": {
+      "1": 22,
+      "2": 3,
+      "3": 9,
+      "4": 13,
+      "5": 182
+     },
+     "avg_rating": 4.44,
+     "share_positive": 85.2,
+     "share_negative": 10.9
+    },
+    {
+     "version": "2.3.4",
+     "n": 185,
+     "ratings": {
+      "1": 18,
+      "2": 4,
+      "3": 3,
+      "4": 11,
+      "5": 149
+     },
+     "avg_rating": 4.45,
+     "share_positive": 86.5,
+     "share_negative": 11.9
+    }
+   ],
+   "praise_exemplars": [
+    "playstore:com.hdfcbank.smartwealthapp:506511f8-cf50-400c-9a4d-7c45749dde8e",
+    "playstore:com.hdfcbank.smartwealthapp:1b5fbb89-42ef-46e5-8b0d-51f4daf659a2",
+    "appstore:6456843178:14284595841"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 27,
+     "owner": "digital",
+     "first_seen_version": "2.3.4",
+     "latest_version_seen": "2.4.2",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:3e37a738-e2b9-4a3a-aca2-145982079c3e",
+      "playstore:com.hdfcbank.smartwealthapp:ff2592a9-58e5-483e-bce3-314ef4c4bb51",
+      "appstore:6456843178:14570865404"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Investments, mutual funds and SmartWealth",
+     "theme": "investments_wealth",
+     "count": 3,
+     "owner": "product",
+     "first_seen_version": "2.3.4",
+     "latest_version_seen": "2.4.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:103901a5-eb4a-472a-ad78-2a99b8f3e453",
+      "playstore:com.hdfcbank.smartwealthapp:eed73ffa-1217-44a5-84e9-545b4f73107f",
+      "appstore:6456843178:14457099472"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 2,
+     "owner": "digital",
+     "first_seen_version": "2.3.5",
+     "latest_version_seen": "2.4.2",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:e63815d0-d42e-4efc-ade9-03aa5ce8b90f",
+      "playstore:com.hdfcbank.smartwealthapp:b1acdda7-d2aa-457e-9882-0e59be3c9b76"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Account and card closure requests",
+     "theme": "closure_requests",
+     "count": 1,
+     "owner": "operations",
+     "first_seen_version": "2.4.2",
+     "latest_version_seen": "2.4.2",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:b6a7e7b7-8b06-4807-8a4b-9bbf2b449375"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "2.4.1",
+     "latest_version_seen": "2.4.1",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:0535d97a-4ccc-4c11-b179-18018e9ac433"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "KYC, re-KYC and profile updates",
+     "theme": "kyc_updates",
+     "count": 1,
+     "owner": "operations",
+     "first_seen_version": "2.4.1",
+     "latest_version_seen": "2.4.1",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:f96f0949-e595-42f4-8601-f95b02534b3b"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "NetBanking",
+     "theme": "netbanking",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "2.4.0",
+     "latest_version_seen": "2.4.0",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:d428f771-7484-48dc-ba36-ed70cf771ac6"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Reward redemption and vouchers",
+     "theme": "reward_redemption",
+     "count": 1,
+     "owner": "cards",
+     "first_seen_version": "2.3.4",
+     "latest_version_seen": "2.3.4",
+     "example_ids": [
+      "playstore:com.hdfcbank.smartwealthapp:d863e029-0ec2-4bed-aa04-81a35c6dfdf1"
+     ],
+     "feature_asks": []
+    }
+   ]
+  }
+ ],
+ "note": "Ratings are counted in the window (1 July – 28 September). No baseline: the exports hold no history before July."
+}

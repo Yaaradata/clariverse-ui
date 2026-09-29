@@ -3,14 +3,15 @@
 import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { fmt, fmtDate, fmtPct } from "@/lib/hdfc-v3/format";
+import {
+  fmt,
+  fmtDate,
+  fmtPct,
+  halfLabel,
+  rangeLong,
+} from "@/lib/hdfc-v3/format";
 import { routedList, trendWords } from "@/lib/hdfc-v3/selectors";
-import type {
-  Bundle,
-  Evidence,
-  StatusValue,
-  Theme,
-} from "@/lib/hdfc-v3/types";
+import type { Bundle, Evidence, StatusValue, Theme } from "@/lib/hdfc-v3/types";
 import { DigitalModule } from "./ModuleView";
 import {
   ActionChip,
@@ -263,10 +264,10 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
           <WeeklyBars data={t.weekly} height={170} />
           <BaselineCaption>
             {t.trend_mode === "vs_baseline" && t.vs_baseline
-              ? `vs baseline: ${t.vs_baseline.window_share}% of store reviews in the window against ${t.vs_baseline.baseline_share}% in the 26 weeks before 1 August.`
+              ? `vs baseline: ${t.vs_baseline.window_share}% of store reviews in the window against ${t.vs_baseline.baseline_share}% in the 26 weeks before the window.`
               : t.trend_mode === "insufficient"
-                ? "Most items come from store exports that begin in September, so no trend is claimed."
-                : `Trend within window: ${t.trend.second_half} items (28 Aug–24 Sep) vs ${t.trend.first_half} (1–27 Aug), compared as a share of all posts in each half.`}{" "}
+                ? "Most items come from store exports that begin after the window starts, so no trend is claimed."
+                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a share of all posts in each half.`}{" "}
             Seasonal check: in discovery, using your history.
           </BaselineCaption>
           <MutedNote>
@@ -333,8 +334,9 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         <Section n={7} title="Provenance">
           <MutedNote>
             Public voice from X, Reddit, consumer forums, Play Store and App
-            Store, 1 August to 24 September 2026, HDFC Bank only. Classified by
-            LisN; counts reproduce from the classified data.
+            Store, {rangeLong(b.meta.window.start, b.meta.window.end)}, HDFC
+            Bank only. Classified by LisN; counts reproduce from the classified
+            data.
           </MutedNote>
         </Section>
       </Tile>

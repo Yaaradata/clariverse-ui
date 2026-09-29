@@ -1,0 +1,348 @@
+{
+ "generated_by": "scripts/hdfc_pipeline/aggregate.py",
+ "as_of": "2026-09-28",
+ "brief_date": "2026-09-29",
+ "brief_label": "Tuesday 29 September 2026",
+ "brief_time": "07:45",
+ "window": {
+  "start": "2026-07-01",
+  "end": "2026-09-28"
+ },
+ "provenance": {
+  "public": "Public · live",
+  "internal": "Internal · illustrative until discovery",
+  "joined": "Joined · needs bank systems"
+ },
+ "scope_note": "Bank-wide figures: HDFC Bank only, on-topic items in the window. HDFC Life, HDFC Securities and other group companies are kept in the data and excluded from bank-wide figures.",
+ "records": {
+  "total": 28505,
+  "by_source": {
+   "playstore": 11601,
+   "appstore": 826,
+   "x": 3682,
+   "reddit": 10826,
+   "forum:complaintsboard": 8,
+   "forum:trustpilot": 88,
+   "forum:mouthshut": 9,
+   "forum:consumercomplaints": 13,
+   "forum:technofino": 1452
+  },
+  "window": 27990,
+  "bank_on_topic_window": 22127,
+  "group_on_topic_window": 1140,
+  "classified_by": {
+   "rules": 27865,
+   "in_session_batch": 640
+  }
+ },
+ "bank_by_source": {
+  "playstore": 10617,
+  "appstore": 600,
+  "x": 3173,
+  "reddit": 6241,
+  "forum": 1496
+ },
+ "streams": [
+  {
+   "stream": "appstore:Corp Mobile Banking",
+   "records": 3,
+   "earliest": "2026-07-03",
+   "latest": "2026-08-25",
+   "window_first": "2026-07-03",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:HDFC Bank app",
+   "records": 344,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:HDFC Life",
+   "records": 66,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:HDFC Securities InvestRight",
+   "records": 136,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-25",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:Home Loans",
+   "records": 8,
+   "earliest": "2026-07-05",
+   "latest": "2026-09-09",
+   "window_first": "2026-07-05",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:Loan Assist",
+   "records": 13,
+   "earliest": "2026-07-21",
+   "latest": "2026-09-18",
+   "window_first": "2026-07-21",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:PayZapp",
+   "records": 223,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:SmartHub Vyapar",
+   "records": 14,
+   "earliest": "2026-07-03",
+   "latest": "2026-09-23",
+   "window_first": "2026-07-03",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:SmartWealth",
+   "records": 19,
+   "earliest": "2026-06-30",
+   "latest": "2026-09-24",
+   "window_first": "2026-07-02",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:complaintsboard",
+   "records": 4,
+   "earliest": "2026-07-05",
+   "latest": "2026-08-29",
+   "window_first": "2026-07-05",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:consumercomplaints",
+   "records": 11,
+   "earliest": "2026-07-06",
+   "latest": "2026-09-16",
+   "window_first": "2026-07-06",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:mouthshut",
+   "records": 9,
+   "earliest": "2026-07-04",
+   "latest": "2026-09-21",
+   "window_first": "2026-07-04",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:technofino",
+   "records": 1422,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:trustpilot",
+   "records": 88,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-23",
+   "window_first": "2026-07-02",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:Corp Mobile Banking",
+   "records": 13,
+   "earliest": "2026-07-03",
+   "latest": "2026-09-23",
+   "window_first": "2026-07-03",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:HDFC Bank app",
+   "records": 5000,
+   "earliest": "2026-07-25",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-25",
+   "full_window": false,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:HDFC Life",
+   "records": 287,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:HDFC Securities InvestRight",
+   "records": 453,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:Home Loans",
+   "records": 99,
+   "earliest": "2026-06-29",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:Loan Assist",
+   "records": 70,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-02",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:PayZapp",
+   "records": 4904,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:SmartHub Vyapar",
+   "records": 64,
+   "earliest": "2026-06-30",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-03",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:SmartWealth",
+   "records": 711,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "reddit",
+   "records": 6389,
+   "earliest": "2026-07-01",
+   "latest": "2026-09-28",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "x",
+   "records": 3416,
+   "earliest": "2026-06-28",
+   "latest": "2026-09-28",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  }
+ ],
+ "trend_basis_streams": [
+  "appstore:HDFC Bank app",
+  "appstore:HDFC Life",
+  "appstore:HDFC Securities InvestRight",
+  "appstore:PayZapp",
+  "appstore:SmartWealth",
+  "forum:technofino",
+  "playstore:HDFC Life",
+  "playstore:HDFC Securities InvestRight",
+  "playstore:Home Loans",
+  "playstore:Loan Assist",
+  "playstore:PayZapp",
+  "playstore:SmartHub Vyapar",
+  "playstore:SmartWealth",
+  "reddit",
+  "x"
+ ],
+ "baseline_streams": [],
+ "coverage_notes": [
+  "All sources cover 1 July to 28 September 2026; trends compare the two halves of the window (no earlier baseline).",
+  "Play Store HDFC Bank app reviews start on 25 July (the export holds the latest 5,000): counted in totals, left out of trends.",
+  "X and Reddit are filtered to posts that mention HDFC Bank or its products; bank and brand handles are excluded.",
+  "Bank replies are visible on Play Store reviews only.",
+  "No competitor data delivered: the competitor strip is hidden."
+ ],
+ "icici_available": false
+}

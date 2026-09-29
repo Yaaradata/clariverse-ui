@@ -35,9 +35,11 @@ UI_DIRS = [
 ]
 DATA_FILES = [
     ROOT / "data" / "seed" / "internal_v3" / "aggregates.json",
-    ROOT / "data" / "out" / "app" / "products.json",
-    ROOT / "data" / "out" / "app" / "responses.json",
-    ROOT / "data" / "out" / "app" / "store_series.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "products.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "responses.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "store_series.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "briefing.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "ask.json",
 ]
 # Code identifiers that legitimately contain a banned word (not rendered).
 ALLOW = re.compile(

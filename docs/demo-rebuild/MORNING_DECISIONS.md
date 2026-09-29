@@ -95,3 +95,38 @@ Replace them with Pradeep's email-team numbers when we have them.
 
 E3 states "first response in 5 hours, closure in 24" for priority customers (Vidya's words on the call), not a bank TAT.
 Confirm with Vidya that she is comfortable with it on screen.
+
+---
+
+# Update 29 Sep: V2 moved to the Jul–Sep dataset
+
+## D12 · V2 now reads the three-month public dataset
+- **Raw data:** `data/raw/hdfc_jul_sep/`, from the "2ndDemoData" folder.
+- **Sources:** Play Store 11,601 reviews, App Store 826, Reddit 10,826, X 3,682, consumer forums 1,570.
+- **Window:** 1 July to 28 September. The brief date is Tuesday 29 September, 07:45.
+- **V1 is unchanged:** it keeps its original data (`data/out/app`).
+- **Pipeline:** `scripts/hdfc_pipeline/`. `run_all.sh` rebuilds everything and runs the checks.
+
+## D13 · Public "responded" dials use the bank's Play Store replies
+- **The numbers:** the bank replied to 96% of Play Store reviews, with a median reply time of about 12 minutes.
+- **The catch:** 88% of its replies to negative reviews only redirect the customer to email, phone, chat or a branch, rather than answering.
+- **On screen:** shown as "Responded is not resolved".
+- **Coverage:** App Store exports carry no reply field, and bank-authored X posts were not collected, so X and App Store replies are out of scope. The screen says so.
+- **Options:**
+  - (a) keep as shipped;
+  - (b) lead with the redirect figure rather than the 96%;
+  - (c) collect `@HDFCBank_Cares` replies on X through a permitted route (S2) to add X.
+
+## D14 · How social posts were classified
+- **Store reviews (12,427):** classified by rules. Sentiment comes from the star rating, and the app themes are reliable.
+- **X, Reddit and forums:** these needed reading. On the new data, rules alone reached only about 40–55% precision on the headline themes (e.g. "fraud" matched people calling the bank a fraud). So every social post in the window was labelled by a model, in parallel in-session batches, against the same taxonomy (`work/llm_batches/INSTRUCTIONS.md`).
+- **Quality gate** (`llm_gate.py`):
+  - Batches produced by a script rather than by reading are rejected chunk by chunk. The signs are copied summaries or the same summary reused across different posts.
+  - Several batches were rejected and re-labelled.
+  - Any post without an accepted label falls back to the rules.
+- **Relevance:** posts that only mention HDFC in passing (stock chatter, lists of banks) are marked `mention_only` or `off_topic`. They are kept in the data but left out of bank-wide counts.
+
+## D15 · Trend basis
+- **Basis:** trends compare 1 Jul–14 Aug with 15 Aug–28 Sep, as a share of trend-basis items.
+- **Excluded stream:** the Play Store HDFC Bank app export holds the latest 5,000 reviews (from 25 July), so it counts in totals but not in trends.
+- **No baseline claims:** no export has history before July.

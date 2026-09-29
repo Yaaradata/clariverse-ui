@@ -426,10 +426,28 @@ export type StoreSeriesFile = {
   apps: { app: string; stores: StoreSeries[] }[];
 };
 
+export type ReplyStats = {
+  reviews: number;
+  responded: number;
+  responded_pct: number | null;
+  open: number;
+  open_pct: number | null;
+  open_too_long: number;
+  open_too_long_pct_of_open: number | null;
+  median_reply_hours: number | null;
+  replied_within_48h: number;
+  redirect_only: number;
+  redirect_only_pct_of_replied: number | null;
+};
+
 export type ResponsesFile = {
   definition: string;
+  scope_note: string;
   replies_available: boolean;
   reviews_in_scope: number;
+  all: ReplyStats;
+  negative: ReplyStats;
+  by_app: Record<string, ReplyStats>;
   responded: number | null;
   open_too_long: number | null;
   pending_note: string;

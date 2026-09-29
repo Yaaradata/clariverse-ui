@@ -5,12 +5,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { fmtDate } from "@/lib/hdfc-v3/format";
-import type {
-  AskEntry,
-  AskFile,
-  Evidence,
-  View,
-} from "@/lib/hdfc-v3/types";
+import type { AskEntry, AskFile, Evidence, View } from "@/lib/hdfc-v3/types";
 import { C, ProvenanceTag } from "./primitives";
 
 type Ev = Pick<

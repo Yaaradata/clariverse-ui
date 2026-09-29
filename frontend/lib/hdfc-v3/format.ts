@@ -61,6 +61,40 @@ export function fmtDateTime(iso: string | null | undefined): string {
   return `${fmtDate(iso)}, ${iso.slice(11, 16)}`;
 }
 
+/** "1 Jul–28 Sep" from two ISO dates. */
+export function rangeLabel(start: string, end: string): string {
+  return `${fmtDate(start)}–${fmtDate(end)}`;
+}
+
+/** "1 July to 28 September 2026" from two ISO dates. */
+export function rangeLong(start: string, end: string): string {
+  const LONG = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const f = (iso: string) => {
+    const d = iso.slice(0, 10).split("-").map(Number);
+    return `${d[2]} ${LONG[d[1] - 1]}`;
+  };
+  return `${f(start)} to ${f(end)} ${end.slice(0, 4)}`;
+}
+
+/** Trend halves as labels, from the "YYYY-MM-DD to YYYY-MM-DD" strings in the data. */
+export function halfLabel(dates: string): string {
+  const [a, z] = dates.split(" to ");
+  return rangeLabel(a, z);
+}
+
 export function weekLabel(week: string): string {
   return fmtDate(week);
 }

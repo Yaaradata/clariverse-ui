@@ -9,7 +9,7 @@ import { ChevronRight, Users } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { fmt, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import { MODULES, PRODUCT_ORDER } from "@/lib/hdfc-v3/products";
 import type {
   Bundle,
@@ -45,6 +45,19 @@ export function hoursLabel(h: number | null | undefined): string {
 }
 
 /* ---------------------------------------------------------------- dials */
+
+const PRODUCT_APP: Partial<Record<ProductId, string>> = {
+  digital: "HDFC Bank app",
+  payzapp: "PayZapp",
+  home_loans: "Home Loans",
+  personal_loans: "Loan Assist",
+};
+
+function replyTime(h: number | null | undefined): string {
+  if (h === null || h === undefined) return "—";
+  if (h < 1) return `${Math.max(1, Math.round(h * 60))} min`;
+  return `${h.toFixed(1)} h`;
+}
 
 function Ring({
   value,
@@ -166,6 +179,10 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
     : undefined;
   const r = b.responses;
   if (!inside) return null;
+  // Replies are visible on Play Store reviews only: bank-wide, or for the product's own app.
+  const app = product ? PRODUCT_APP[product] : undefined;
+  const rs = product ? (app ? r.by_app[app] : undefined) : r.all;
+  const rn = product ? undefined : r.negative;
   const outsideTotal = pub ? pub.count : b.themes.total_items;
   const outsideNeg = pub
     ? pub.negative
@@ -174,7 +191,7 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
     <Tile
       id="dials"
       title="The numbers first"
-      sub={`Inside the bank: ${fmt(inside.total)} interactions in the demo sample, 1 August to this morning. Outside: public posts and reviews in the same window.`}
+      sub={`Inside the bank: ${fmt(inside.total)} interactions in the demo sample, ${fmtDate(b.v3.window.start)} to this morning. Outside: public posts and reviews in the same window.`}
       prov={["internal", "public"]}
       tone="violet"
     >
@@ -247,31 +264,68 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
           big={fmt(outsideTotal)}
           sub={`public posts and reviews · ${fmt(outsideNeg)} negative`}
         />
-        <Ring
-          value={null}
-          pending={!r.replies_available}
-          color={C.green}
-          label="Responded"
-          big={r.replies_available ? fmt(r.responded) : "Needs reply data"}
-          sub="bank reply on the review or post"
-        />
-        <Ring
-          value={null}
-          pending={!r.replies_available}
-          color={C.amber}
-          label="Open"
-          big={r.replies_available ? "—" : "Needs reply data"}
-          sub="no bank reply yet"
-        />
-        <Ring
-          value={null}
-          pending={!r.replies_available}
-          color={C.red}
-          label="Open too long"
-          big={r.replies_available ? "—" : "Needs reply data"}
-          sub="no bank reply within 48 hours"
-        />
+        {rs ? (
+          <>
+            <Ring
+              value={rs.responded_pct}
+              color={C.green}
+              label="Responded"
+              big={fmt(rs.responded)}
+              sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Play Store reviews · median reply ${replyTime(rs.median_reply_hours)}`}
+            />
+            <Ring
+              value={rs.open_pct}
+              color={C.amber}
+              label="Open"
+              big={fmt(rs.open)}
+              sub="no bank reply on the review"
+            />
+            <Ring
+              value={rs.open_too_long_pct_of_open}
+              color={C.red}
+              label="Open too long"
+              big={fmt(rs.open_too_long)}
+              sub="no bank reply within 48 hours"
+            />
+          </>
+        ) : (
+          <div
+            style={{
+              gridColumn: "span 3",
+              fontSize: 13.5,
+              color: C.textMut,
+              alignSelf: "center",
+              lineHeight: 1.5,
+            }}
+          >
+            No bank replies are visible in public for this product: its voice is
+            on X, Reddit and forums, where replies were not collected.
+          </div>
+        )}
       </div>
+      {rs && rn ? (
+        <div
+          data-testid="redirect-line"
+          style={{
+            background: tint(C.amber, 0.06),
+            border: `1px solid ${tint(C.amber, 0.3)}`,
+            borderLeft: `3px solid ${C.amber}`,
+            borderRadius: 10,
+            padding: "10px 12px",
+            fontSize: 14.5,
+            color: C.textSec,
+            lineHeight: 1.5,
+          }}
+        >
+          <strong style={{ color: C.text }}>Responded is not resolved.</strong>{" "}
+          Of {fmt(rn.responded)} replies to negative reviews,{" "}
+          <strong style={{ color: C.amber }}>
+            {fmt(rn.redirect_only)} ({fmtPct(rn.redirect_only_pct_of_replied)})
+          </strong>{" "}
+          only redirect the customer to email, phone, chat or a branch rather
+          than answering.
+        </div>
+      ) : null}
       <Table
         head={["", "Total", "Closed or responded", "Open", "Open too long"]}
         align={["left", "right", "right", "right", "right"]}
@@ -284,18 +338,18 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
             `${fmt(inside.open_too_long)} (${fmtPct(inside.open_too_long_pct_of_open)} of open)`,
           ],
           [
-            "Outside (public)",
-            fmt(outsideTotal),
-            r.replies_available ? fmt(r.responded) : "pending",
-            "pending",
-            "pending",
+            rs ? "Outside (Play Store replies)" : "Outside (public)",
+            rs ? fmt(rs.reviews) : fmt(outsideTotal),
+            rs ? `${fmt(rs.responded)} (${fmtPct(rs.responded_pct)})` : "—",
+            rs ? `${fmt(rs.open)} (${fmtPct(rs.open_pct)})` : "—",
+            rs ? fmt(rs.open_too_long) : "—",
           ],
         ]}
       />
       <MutedNote>
-        {r.definition} {r.replies_available ? "" : r.pending_note} Open too long
-        inside the bank means open past the deliverable (RBI TAT where
-        published, otherwise the bank TAT to confirm in discovery).
+        {r.definition} {r.scope_note} Open too long inside the bank means open
+        past the deliverable (RBI TAT where published, otherwise the bank TAT to
+        confirm in discovery).
       </MutedNote>
     </Tile>
   );

@@ -21,26 +21,26 @@
   "trail": [
    {
     "event": true,
-    "at": "2026-09-23T19:42+05:30",
+    "at": "2026-09-27T19:42+05:30",
     "channel": "system",
     "product": "cards",
     "theme": "card_limit",
     "summary": "Card declined at a hotel abroad: international usage limit reached."
    },
    {
-    "at": "2026-09-23T19:44+05:30",
+    "at": "2026-09-27T19:44+05:30",
     "channel": "ivr_bot",
     "product": "cards",
     "theme": "card_limit",
     "summary": "Automated call read out the decline reason. The customer asked for a limit change; the bot could not make it.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-09-23T19:47+05:30",
-    "first_response_at": "2026-09-23T19:44+05:30",
+    "closed_at": "2026-09-27T19:47+05:30",
+    "first_response_at": "2026-09-27T19:44+05:30",
     "flag_set": true
    },
    {
-    "at": "2026-09-23T20:31+05:30",
+    "at": "2026-09-27T20:31+05:30",
     "channel": "email",
     "sender": "proxy",
     "product": "cards",
@@ -51,18 +51,18 @@
     "first_response_at": null
    },
    {
-    "at": "2026-09-24T10:12+05:30",
+    "at": "2026-09-28T10:12+05:30",
     "channel": "inbound_voice",
     "product": "accounts",
     "theme": "care_unreachable",
     "summary": "Called the accounts helpline to move funds for the same payment; asked why no one had called back about the card.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-24T10:12+05:30",
+    "first_response_at": "2026-09-28T10:12+05:30",
     "flag_follows": true
    },
    {
-    "at": "2026-09-24T13:05+05:30",
+    "at": "2026-09-28T13:05+05:30",
     "channel": "social_inbox",
     "product": "cards",
     "theme": "complaint_handling",
@@ -75,14 +75,14 @@
     ]
    },
    {
-    "at": "2026-09-24T18:20+05:30",
+    "at": "2026-09-28T18:20+05:30",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "card_limit",
     "summary": "Repeat call: limit raised for 48 hours; the agent promised a callback on the declines. No callback logged.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-24T18:20+05:30"
+    "first_response_at": "2026-09-28T18:20+05:30"
    }
   ]
  },
@@ -105,27 +105,27 @@
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-09-22T11:05+05:30",
+    "at": "2026-09-26T11:05+05:30",
     "channel": "email",
     "product": "accounts",
     "theme": "complaint_handling",
     "summary": "Complaint about a closed service request that was not resolved; names the RBI Ombudsman as the next step.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-22T16:40+05:30",
+    "first_response_at": "2026-09-26T16:40+05:30",
     "high_impact": [
      "regulator_named"
     ]
    },
    {
-    "at": "2026-09-23T09:30+05:30",
+    "at": "2026-09-27T09:30+05:30",
     "channel": "outbound_voice",
     "product": "accounts",
     "theme": "complaint_handling",
     "summary": "RM called back and logged a fresh request; resolution promised within two working days.",
     "sentiment": "neutral",
     "status": "open",
-    "first_response_at": "2026-09-23T09:30+05:30"
+    "first_response_at": "2026-09-27T09:30+05:30"
    }
   ]
  },
@@ -147,28 +147,28 @@
   "rm_id": "RM-066",
   "proxy_contacts": 0,
   "rm_notified": false,
-  "cohort_added_at": "2026-09-21T15:10+05:30",
+  "cohort_added_at": "2026-09-25T15:10+05:30",
   "cohort_added_by": "lisn_suggested_bank_confirmed",
   "trail": [
    {
-    "at": "2026-09-20T21:14+05:30",
+    "at": "2026-09-24T21:14+05:30",
     "channel": "chat",
     "product": "payzapp",
     "theme": "failed_txn_reversal",
     "summary": "UPI payment debited but failed; reversal not received after the T+1 timeline.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-20T21:15+05:30"
+    "first_response_at": "2026-09-24T21:15+05:30"
    },
    {
-    "at": "2026-09-23T12:02+05:30",
+    "at": "2026-09-27T12:02+05:30",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "card_variant_migration",
     "summary": "Asked why the card was moved to a new variant without consent; says fees now apply.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-23T12:02+05:30"
+    "first_response_at": "2026-09-27T12:02+05:30"
    }
   ]
  },
@@ -193,7 +193,7 @@
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-09-18T10:00+05:30",
+    "at": "2026-09-22T10:00+05:30",
     "channel": "email",
     "sender": "proxy",
     "product": "home_loans",
@@ -201,7 +201,7 @@
     "summary": "Email from the customer's office: property documents not returned three weeks after the loan was closed.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-18T15:30+05:30"
+    "first_response_at": "2026-09-22T15:30+05:30"
    }
   ]
  },
@@ -223,14 +223,14 @@
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-09-24T22:48+05:30",
+    "at": "2026-09-28T22:48+05:30",
     "channel": "chat",
     "product": "digital",
     "theme": "device_security_block",
     "summary": "App blocked on a new phone with a security alert; cannot approve a large transfer.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-24T22:49+05:30"
+    "first_response_at": "2026-09-28T22:49+05:30"
    }
   ]
  },
@@ -254,25 +254,25 @@
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-09-19T16:20+05:30",
+    "at": "2026-09-23T16:20+05:30",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "dispute_chargeback",
     "summary": "Disputed a foreign merchant charge; no update since the dispute was raised.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-19T16:20+05:30"
+    "first_response_at": "2026-09-23T16:20+05:30"
    },
    {
-    "at": "2026-09-24T09:40+05:30",
+    "at": "2026-09-28T09:40+05:30",
     "channel": "branch",
     "product": "auto_loans",
     "theme": "loan_servicing",
     "summary": "Visited the branch about the car-loan EMI date; mentioned the open card dispute.",
     "sentiment": "neutral",
     "status": "closed",
-    "closed_at": "2026-09-24T10:05+05:30",
-    "first_response_at": "2026-09-24T09:40+05:30"
+    "closed_at": "2026-09-28T10:05+05:30",
+    "first_response_at": "2026-09-28T09:40+05:30"
    }
   ]
  },
@@ -295,15 +295,15 @@
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-09-16T12:15+05:30",
+    "at": "2026-09-20T12:15+05:30",
     "channel": "email",
     "product": "cards",
     "theme": "closure_requests",
     "summary": "Asked to close a supplementary card; closure confirmation not received.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-09-22T14:00+05:30",
-    "first_response_at": "2026-09-16T17:10+05:30"
+    "closed_at": "2026-09-26T14:00+05:30",
+    "first_response_at": "2026-09-20T17:10+05:30"
    }
   ]
  },
@@ -326,7 +326,7 @@
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-09-24T14:30+05:30",
+    "at": "2026-09-28T14:30+05:30",
     "channel": "whatsapp",
     "product": "personal_loans",
     "theme": "fees_charges_bank",
@@ -357,7 +357,7 @@
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-09-21T11:45+05:30",
+    "at": "2026-09-25T11:45+05:30",
     "channel": "email",
     "sender": "proxy",
     "product": "insurance",
@@ -365,7 +365,7 @@
     "summary": "Email from the customer's assistant: an insurance policy was added to the account without a clear explanation.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-22T10:00+05:30",
+    "first_response_at": "2026-09-26T10:00+05:30",
     "high_impact": [
      "legal_language"
     ]
@@ -391,15 +391,15 @@
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-09-23T08:55+05:30",
+    "at": "2026-09-27T08:55+05:30",
     "channel": "chat",
     "product": "cards",
     "theme": "rewards_value",
     "summary": "Reward points on travel spends lower than expected after the cap change.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-09-23T11:30+05:30",
-    "first_response_at": "2026-09-23T08:56+05:30"
+    "closed_at": "2026-09-27T11:30+05:30",
+    "first_response_at": "2026-09-27T08:56+05:30"
    }
   ]
  },
@@ -422,14 +422,14 @@
   "rm_notified": false,
   "trail": [
    {
-    "at": "2026-09-24T19:10+05:30",
+    "at": "2026-09-28T19:10+05:30",
     "channel": "inbound_voice",
     "product": "cards",
     "theme": "unauthorised_txn",
     "summary": "Reported two card transactions the customer did not make; card blocked, shadow credit pending.",
     "sentiment": "negative",
     "status": "open",
-    "first_response_at": "2026-09-24T19:10+05:30"
+    "first_response_at": "2026-09-28T19:10+05:30"
    }
   ]
  },
@@ -453,15 +453,15 @@
   "rm_notified": true,
   "trail": [
    {
-    "at": "2026-09-17T10:25+05:30",
+    "at": "2026-09-21T10:25+05:30",
     "channel": "email",
     "product": "accounts",
     "theme": "kyc_updates",
     "summary": "Re-KYC documents submitted twice; account still shows as restricted.",
     "sentiment": "negative",
     "status": "closed",
-    "closed_at": "2026-09-24T12:00+05:30",
-    "first_response_at": "2026-09-17T15:00+05:30"
+    "closed_at": "2026-09-28T12:00+05:30",
+    "first_response_at": "2026-09-21T15:00+05:30"
    }
   ]
  }
