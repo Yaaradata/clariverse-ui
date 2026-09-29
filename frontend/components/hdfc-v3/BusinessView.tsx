@@ -87,7 +87,7 @@ export function BusinessView({
         </AnswerLine>
         {module ? (
           <Link
-            href={`/hdfc-v3/module/${module}?from=${from}`}
+            href={`/hdfc-pulse/v2/module/${module}?from=${from}`}
             style={{ fontSize: 14, color: C.textSec }}
           >
             Open the {pub.label} module for the full issue list and evidence

@@ -3,13 +3,9 @@
 import {
   Activity,
   ArrowLeft,
-  CreditCard,
-  Crown,
   Headphones,
-  Inbox,
   MessageSquareText,
   Shield,
-  Smartphone,
   Target,
   Timer,
   Users,
@@ -17,8 +13,9 @@ import {
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, Suspense, useState } from "react";
+
+import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-pulse-v1/types";
 import { VersionSwitch } from "@/components/hdfc-pulse-shared/VersionSwitch";
-import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-v3/types";
 import { AskLisN } from "./AskLisN";
 import { C } from "./primitives";
 
@@ -55,51 +52,26 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
   const pathname = usePathname() ?? "";
   const items = [
     {
-      href: "/hdfc-pulse/v2/mds-office",
+      href: "/hdfc-pulse/v1/mds-office",
       label: "MD's office",
       icon: Activity,
       exec: true,
     },
+    { href: "/hdfc-pulse/v1/head-cx", label: "Head of CX", icon: Users, exec: true },
     {
-      href: "/hdfc-pulse/v2/head-cx",
-      label: "Head of CX",
-      icon: Users,
-      exec: true,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/priority", view),
-      label: "Priority relationships",
-      icon: Crown,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/module/cards", view),
-      label: "Cards",
-      icon: CreditCard,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/module/digital", view),
-      label: "Digital: HDFC Bank app",
-      icon: Smartphone,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/deliverables", view),
-      label: "Are we meeting our deliverables?",
-      icon: Timer,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/action-queue", view),
-      label: "Action queue: escalation emails",
-      icon: Inbox,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/satisfaction", view),
+      href: withFrom("/hdfc-pulse/v1/satisfaction", view),
       label: "Are customers satisfied with their journey?",
       icon: Target,
     },
     {
-      href: withFrom("/hdfc-pulse/v2/market", view),
+      href: withFrom("/hdfc-pulse/v1/market", view),
       label: "What is the market saying about us?",
       icon: Shield,
+    },
+    {
+      href: withFrom("/hdfc-pulse/v1/service-promise", view),
+      label: "Are we keeping our service promise?",
+      icon: Timer,
     },
   ];
   return (
@@ -155,7 +127,7 @@ function BackButton({ from }: { from: View }) {
       onClick={() => {
         if (typeof window !== "undefined" && window.history.length > 1)
           router.back();
-        else router.push(`/hdfc-pulse/v2/${from}`);
+        else router.push(`/hdfc-pulse/v1/${from}`);
       }}
       style={{
         display: "inline-flex",
@@ -326,7 +298,7 @@ function ShellInner({
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
             <VersionSwitch
-              current="v2"
+              current="v1"
               colors={{
                 text: C.text,
                 textSec: C.textSec,
@@ -354,7 +326,7 @@ function ShellInner({
                 return (
                   <Link
                     key={v}
-                    href={`/hdfc-pulse/v2/${v}`}
+                    href={`/hdfc-pulse/v1/${v}`}
                     aria-current={on && !drill ? "page" : undefined}
                     style={{
                       padding: "4px 10px",
@@ -445,7 +417,7 @@ function ShellInner({
               {meta.scope_note} Window {meta.window.start} to {meta.window.end}.
               Every action is a recommendation routed to its owner; LisN does
               not execute, authorise or decide. Runs inside the bank, on the
-              bank&apos;s approved models.
+              bank&apos;s approved models, complementary to GenBI.
             </footer>
           </main>
         </div>

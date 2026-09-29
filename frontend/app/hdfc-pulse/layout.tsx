@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   icons: { icon: HEADPHONES_ICON },
 };
 
-/** Reuses the role-based chrome (dark canvas, Outfit / JetBrains Mono) so /hdfc-v3 matches the existing dashboards. */
+/** Reuses the role-based chrome (dark canvas, Outfit / JetBrains Mono) so /hdfc-pulse/v1 and /v2 match the existing dashboards. */
 export default function HdfcV3Layout({ children }: { children: ReactNode }) {
   return <RoleBasedChrome>{children}</RoleBasedChrome>;
 }

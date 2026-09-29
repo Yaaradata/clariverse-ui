@@ -34,8 +34,8 @@ export { MODULES, PRODUCT_ORDER };
 export function productHref(id: ProductId, from: string): string {
   const m = MODULES[id];
   return m
-    ? `/hdfc-v3/module/${m}?from=${from}`
-    : `/hdfc-v3/business/${id}?from=${from}`;
+    ? `/hdfc-pulse/v2/module/${m}?from=${from}`
+    : `/hdfc-pulse/v2/business/${id}?from=${from}`;
 }
 
 export function hoursLabel(h: number | null | undefined): string {
@@ -326,7 +326,7 @@ export function CohortStrip({
       tone="red"
       right={
         <Link
-          href={`/hdfc-v3/priority?from=${from}`}
+          href={`/hdfc-pulse/v2/priority?from=${from}`}
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -365,7 +365,7 @@ export function CohortStrip({
           return (
             <Link
               key={c.id}
-              href={`/hdfc-v3/priority?from=${from}#${c.id}`}
+              href={`/hdfc-pulse/v2/priority?from=${from}#${c.id}`}
               style={{
                 textDecoration: "none",
                 color: "inherit",
@@ -649,10 +649,10 @@ export function ProductFilter({
       <span style={{ fontSize: 13.5, color: C.textMut, marginRight: 2 }}>
         Product:
       </span>
-      {chip(`/hdfc-v3/${from}`, "All products", !current)}
+      {chip(`/hdfc-pulse/v2/${from}`, "All products", !current)}
       {PRODUCT_ORDER.map((id) =>
         chip(
-          `/hdfc-v3/business/${id}?from=${from}`,
+          `/hdfc-pulse/v2/business/${id}?from=${from}`,
           label[id] as string,
           current === id,
         ),
@@ -715,7 +715,7 @@ export function CustomerMemory({ b, from }: { b: Bundle; from: View }) {
       </div>
       {story ? (
         <Link
-          href={`/hdfc-v3/customer/${story.masked_id}?from=${from}`}
+          href={`/hdfc-pulse/v2/customer/${story.masked_id}?from=${from}`}
           style={{
             textDecoration: "none",
             color: "inherit",

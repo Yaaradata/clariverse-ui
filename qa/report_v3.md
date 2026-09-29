@@ -10,6 +10,19 @@ python3 scripts/check_pii.py                    # 0 hits
 cd frontend && npx biome check components/hdfc-v3 lib/hdfc-v3 app/hdfc-v3 && npx next build   # passes
 ```
 
+## Versions
+
+| Version | Route | What it is |
+|---|---|---|
+| V1 · first demo | `/hdfc-pulse/v1/*` | The demo as first shown, restored unchanged from commit e04e7c0 (reads `data/out/app/ask_v1.json`) |
+| V2 · after Vidya call | `/hdfc-pulse/v2/*` | This build (B7) |
+
+- A version switch sits in the header of both versions.
+- `/hdfc-pulse` and the old `/hdfc-v3/*` links redirect to V2.
+- In role-based, the HDFC industry lists both versions as roles next to the existing Head of CX: "LisN V1 (first demo)" and "LisN V2 (after Vidya call)".
+
+In the tables below, `/hdfc-v3/…` routes now live at `/hdfc-pulse/v2/…`.
+
 ## Structural checks (Playwright, 1440×900 and 390×844)
 
 All 16 routes pass at both widths: there is an `answer` line, there are `prov` tags, and nothing scrolls horizontally.

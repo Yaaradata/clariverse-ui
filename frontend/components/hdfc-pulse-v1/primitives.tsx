@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * LisN · HDFC demo — global components (B4 §2), built once and used on every /hdfc-pulse/v2 screen.
+ * LisN · HDFC demo — global components (B4 §2), built once and used on every /hdfc-pulse/v1 screen.
  * Visual language follows the Cards Portfolio v2 dashboard (dark canvas, inline styles, Outfit / JetBrains Mono)
  * Five colours, one meaning each, on every screen:
  *   red    critical / negative        amber  needs attention / rising
@@ -24,8 +24,8 @@ import {
   YAxis,
 } from "recharts";
 
-import { fmt, weekLabel } from "@/lib/hdfc-v3/format";
-import type { Prov, StatusValue, Weekly } from "@/lib/hdfc-v3/types";
+import { fmt, weekLabel } from "@/lib/hdfc-pulse-v1/format";
+import type { Prov, StatusValue, Weekly } from "@/lib/hdfc-pulse-v1/types";
 
 export const C = {
   bg: "#0d0d0d",
@@ -144,7 +144,7 @@ export function ProvenanceTag({
         borderRadius: 999,
         padding: "2px 10px",
         background: tint(tone, 0.08),
-        maxWidth: "100%",
+        whiteSpace: "nowrap",
         ...style,
       }}
     >
@@ -295,14 +295,11 @@ export function RungChip({ rung }: { rung: string }) {
   );
 }
 
-/** B7: "promise" becomes "deliverables" in the UI, so the re-promise action reads as setting a new date. */
-const ACTION_LABEL: Record<string, string> = { "Re-promise": "Set a new date" };
-
 export function ActionChip({ action }: { action: string }) {
   return (
     <Chip
       label="Action"
-      value={ACTION_LABEL[action] ?? action}
+      value={action}
       color={C.cyan}
       title="A recommendation, routed to the owner's system"
     />

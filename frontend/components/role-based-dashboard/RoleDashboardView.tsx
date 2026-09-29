@@ -4640,7 +4640,7 @@ export function RoleDashboardView({
             color: "#a1a1aa",
             borderRadius: 8,
             padding: "8px 14px",
-            cursor: onExit ? "pointer" : "default",
+            cursor: "pointer",
             marginBottom: 28,
             fontFamily: "inherit",
             fontSize: 14,

@@ -13,14 +13,10 @@ import {
   YAxis,
 } from "recharts";
 
-import { satisfactionAnswer } from "@/lib/hdfc-v3/copy";
-import { fmt, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
-import {
-  signalHref,
-  themeMap,
-  trendWords,
-} from "@/lib/hdfc-v3/selectors";
-import type { Bundle, View } from "@/lib/hdfc-v3/types";
+import { satisfactionAnswer } from "@/lib/hdfc-pulse-v1/copy";
+import { fmt, fmtPct, fmtSigned } from "@/lib/hdfc-pulse-v1/format";
+import { signalHref, themeMap, trendWords } from "@/lib/hdfc-pulse-v1/selectors";
+import type { Bundle, View } from "@/lib/hdfc-pulse-v1/types";
 import {
   AnswerLine,
   BarRow,
@@ -193,7 +189,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           <Kpi
             label="All public items"
             value={fmt(b.themes.total_items)}
-            href={`/hdfc-pulse/v2/market?from=${from}#themes`}
+            href={`/hdfc-pulse/v1/market?from=${from}#themes`}
             tone="cyan"
           />
           {Object.entries(b.meta.bank_by_source)

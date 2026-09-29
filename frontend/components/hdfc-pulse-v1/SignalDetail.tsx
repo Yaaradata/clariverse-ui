@@ -3,21 +3,21 @@
 import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
 
-import { fmt, fmtDate, fmtPct } from "@/lib/hdfc-v3/format";
-import { routedList, trendWords } from "@/lib/hdfc-v3/selectors";
-import type {
-  Bundle,
-  Evidence,
-  StatusValue,
-  Theme,
-} from "@/lib/hdfc-v3/types";
-import { DigitalModule } from "./ModuleView";
+import { fmt, fmtDate, fmtPct } from "@/lib/hdfc-pulse-v1/format";
+import {
+  type ReleasePulse,
+  releasePulse,
+  routedList,
+  trendWords,
+} from "@/lib/hdfc-pulse-v1/selectors";
+import type { Bundle, Evidence, StatusValue, Theme } from "@/lib/hdfc-pulse-v1/types";
 import {
   ActionChip,
   AnswerLine,
   BaselineCaption,
   C,
   Kpi,
+  MONO,
   MutedNote,
   OwnerChip,
   ProvenanceTag,
@@ -26,6 +26,7 @@ import {
   Status,
   Table,
   Tile,
+  TrendLine,
   tint,
   WeeklyBars,
 } from "./primitives";
@@ -109,7 +110,7 @@ function Section({
   );
 }
 
-export function EvidenceList({ items }: { items: Evidence[] }) {
+function EvidenceList({ items }: { items: Evidence[] }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {items.map((e) => (
@@ -342,8 +343,161 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
   );
 }
 
+function ReleaseSignal({ b, rp }: { b: Bundle; rp: ReleasePulse }) {
+  const ev = rp.exemplars.map((id) => b.evidence[id]).filter(Boolean);
+  const praise = rp.praise_exemplars
+    .map((id) => b.evidence[id])
+    .filter(Boolean)
+    .slice(0, 2);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <Tile prov="public" accent tone="red">
+        <AnswerLine sub="Framed as a release pulse: the specific, fixable issues customers have written about the new app, with the praise alongside.">
+          New HDFC Bank app: {fmt(rp.count)} negative reviews in the window;
+          versions 11.x average {rp.new_app_avg?.toFixed(1)}★ against{" "}
+          {rp.old_app_avg?.toFixed(1)}★ on the previous app.{" "}
+          {Math.round(rp.share_positive ?? 0)}% of reviews are positive.
+        </AnswerLine>
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          <Status value="needs_you" />
+          <OwnerChip owner={rp.owner} />
+          <RungChip rung={rp.rung} />
+          <ActionChip action={rp.action} />
+        </div>
+        <Section n={1} title="What">
+          <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
+            The fix list customers have written for the HDFC Bank app, from{" "}
+            {fmt(rp.n_reviews)} Play Store and App Store reviews in the window.
+          </div>
+          <Table
+            head={[
+              "Issue",
+              "Negative reviews",
+              "First seen",
+              "Latest version",
+              "Customers ask for",
+            ]}
+            align={["left", "right", "left", "left", "left"]}
+            rows={rp.fix_list
+              .slice(0, 7)
+              .map((f) => [
+                f.issue,
+                fmt(f.count),
+                f.first_seen_version ? `v${f.first_seen_version}` : "—",
+                f.latest_version_seen ? `v${f.latest_version_seen}` : "—",
+                f.feature_asks.slice(0, 2).join("; ") || "—",
+              ])}
+          />
+        </Section>
+        <Section n={2} title="Is it real">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+              gap: 8,
+            }}
+          >
+            <Kpi
+              label="Versions 11.x"
+              value={`${rp.new_app_avg?.toFixed(1)}★`}
+              sub={`${fmt(rp.new_app_n)} reviews`}
+              tone="red"
+            />
+            <Kpi
+              label="Previous app (v9)"
+              value={`${rp.old_app_avg?.toFixed(1)}★`}
+              sub={`${fmt(rp.old_app_n)} reviews`}
+              tone="green"
+            />
+            <Kpi
+              label="Positive reviews"
+              value={fmtPct(rp.share_positive)}
+              sub="4–5★, all versions"
+              tone="green"
+            />
+          </div>
+          <TrendLine
+            data={rp.daily_negative.map((d) => ({
+              day: fmtDate(d.date),
+              n: d.count,
+            }))}
+            xKey="day"
+            yKey="n"
+            yLabel="Negative reviews"
+            xLabel="Day"
+            height={170}
+          />
+          <BaselineCaption>
+            {rp.trend_label}. No baseline claim.
+          </BaselineCaption>
+          <Table
+            head={["Version", "Reviews", "Average", "Positive", "Negative"]}
+            align={["left", "right", "right", "right", "right"]}
+            rows={rp.versions.map((v) => [
+              `v${v.version}`,
+              fmt(v.n),
+              `${v.avg_rating.toFixed(1)}★`,
+              fmtPct(v.share_positive),
+              fmtPct(v.share_negative),
+            ])}
+          />
+        </Section>
+        <Section n={3} title="Where">
+          <div style={{ fontSize: 15, color: C.textSec }}>
+            Pillar: Availability · Business: Retail banking · Sources:{" "}
+            {rp.coverage.join("; ")}
+          </div>
+        </Section>
+        <Section n={4} title="How high">
+          <div style={{ fontSize: 15, color: C.textSec }}>
+            Rung: Voice. Store reviews are public and visible to every
+            prospective customer on the store page.
+          </div>
+        </Section>
+        <Section n={5} title="Who and what next">
+          <div style={{ fontSize: 15, color: C.textSec }}>
+            Owner: <strong>Digital</strong>. Recommended action:{" "}
+            <strong>Route with evidence</strong>: the fix list, versions and
+            example reviews go to the app backlog. Track the rating by version
+            after each release.
+          </div>
+        </Section>
+        <Section n={6} title="Evidence" id="evidence">
+          <EvidenceList items={ev} />
+          {praise.length ? (
+            <>
+              <div
+                style={{
+                  fontSize: 13,
+                  color: C.textMut,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.05em",
+                  marginTop: 6,
+                }}
+              >
+                Praise alongside
+              </div>
+              <EvidenceList items={praise} />
+            </>
+          ) : null}
+        </Section>
+        <Section n={7} title="Provenance">
+          <MutedNote>
+            Play Store export 7–23 September; App Store export 10 June–23
+            September. Public · live.
+          </MutedNote>
+        </Section>
+      </Tile>
+      <div style={{ fontFamily: MONO, display: "none" }} />
+    </div>
+  );
+}
+
 export function SignalDetail({ b, id }: { b: Bundle; id: string }) {
-  if (id === "release-pulse") return <DigitalModule b={b} />;
+  if (id === "release-pulse") {
+    const rp = releasePulse(b);
+    if (rp) return <ReleaseSignal b={b} rp={rp} />;
+  }
   const t = b.themes.themes.find((x) => x.id === id);
   if (!t) return <MutedNote>Signal not found.</MutedNote>;
   return <ThemeSignal b={b} t={t} />;

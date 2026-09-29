@@ -4,13 +4,8 @@ import { Send, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-import { fmtDate } from "@/lib/hdfc-v3/format";
-import type {
-  AskEntry,
-  AskFile,
-  Evidence,
-  View,
-} from "@/lib/hdfc-v3/types";
+import { fmtDate } from "@/lib/hdfc-pulse-v1/format";
+import type { AskEntry, AskFile, Evidence, View } from "@/lib/hdfc-pulse-v1/types";
 import { C, ProvenanceTag } from "./primitives";
 
 type Ev = Pick<
@@ -290,7 +285,7 @@ export function AskLisN({
                           <Link
                             key={id}
                             data-testid="evidence-chip"
-                            href={`/hdfc-pulse/v2/signal/${ev.themes[0]}?from=${from}#ev-${encodeURIComponent(id)}`}
+                            href={`/hdfc-pulse/v1/signal/${ev.themes[0]}?from=${from}#ev-${encodeURIComponent(id)}`}
                             onClick={onClose}
                             title={ev.summary}
                             style={{

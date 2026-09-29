@@ -3,14 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { marketAnswer } from "@/lib/hdfc-v3/copy";
-import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
-import {
-  signalHref,
-  themeMap,
-  trendWords,
-} from "@/lib/hdfc-v3/selectors";
-import type { AppPulse, Bundle, Theme, View } from "@/lib/hdfc-v3/types";
+import { marketAnswer } from "@/lib/hdfc-pulse-v1/copy";
+import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-pulse-v1/format";
+import { signalHref, themeMap, trendWords } from "@/lib/hdfc-pulse-v1/selectors";
+import type { AppPulse, Bundle, Theme, View } from "@/lib/hdfc-pulse-v1/types";
 import {
   AnswerLine,
   BarRow,
@@ -390,13 +386,13 @@ export function MarketView({ b }: { b: Bundle }) {
 
       <Tile
         id="promise-gap"
-        title="What we say vs what customers hear"
-        sub="What HDFC Bank says in public, against where customers say it falls short. Ordered by negative items."
+        title="Brand promise gap"
+        sub="What HDFC Bank promises in public, against where customers say it breaks. Ordered by negative items."
         prov="public"
       >
         <Table
           head={[
-            "What we say",
+            "Promise",
             "Negative items",
             "Where it breaks most",
             "Trend",
@@ -426,8 +422,8 @@ export function MarketView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          These paraphrase the bank&apos;s public trust pillars: availability,
-          experience, data intimacy and security.
+          Promises paraphrase the bank&apos;s public trust pillars:
+          availability, experience, data intimacy and security.
         </MutedNote>
       </Tile>
 

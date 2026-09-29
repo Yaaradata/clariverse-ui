@@ -227,7 +227,7 @@ export function PriorityView({ b }: { b: Bundle }) {
             )
             .map((p) => {
               const latestStep = p.trail[p.trail.length - 1];
-              const href = `/hdfc-v3/customer/${p.masked_id}?from=${from}`;
+              const href = `/hdfc-pulse/v2/customer/${p.masked_id}?from=${from}`;
               return [
                 <Link
                   key="c"
@@ -779,7 +779,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
         ) : null}
       </Tile>
       <Link
-        href={`/hdfc-v3/priority?from=${from}#customers`}
+        href={`/hdfc-pulse/v2/priority?from=${from}#customers`}
         style={{ fontSize: 14, color: C.textSec }}
       >
         All priority customers

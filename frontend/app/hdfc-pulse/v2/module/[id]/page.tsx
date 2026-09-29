@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 
-import { CardsModule, DigitalModule } from "@/components/hdfc-v3/ModuleView";
+import {
+  CardsModule,
+  DigitalModule,
+} from "@/components/hdfc-v3/ModuleView";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";

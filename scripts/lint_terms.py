@@ -26,7 +26,13 @@ LOCAL = ROOT / "scripts" / "lint_terms_local.txt"
 if LOCAL.exists():
     BANNED += [l.strip() for l in LOCAL.read_text(encoding="utf-8").splitlines() if l.strip()]
 
-UI_DIRS = [ROOT / "frontend" / d / "hdfc-v3" for d in ("app", "components", "lib")]
+# V2 (after the Vidya call). V1 is kept exactly as first shown and is not linted.
+UI_DIRS = [
+    ROOT / "frontend" / "app" / "hdfc-pulse" / "v2",
+    ROOT / "frontend" / "components" / "hdfc-v3",
+    ROOT / "frontend" / "components" / "hdfc-pulse-shared",
+    ROOT / "frontend" / "lib" / "hdfc-v3",
+]
 DATA_FILES = [
     ROOT / "data" / "seed" / "internal_v3" / "aggregates.json",
     ROOT / "data" / "out" / "app" / "products.json",
