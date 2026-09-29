@@ -1,54 +1,80 @@
 "use client";
 
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Cpu, Handshake, Split } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { AreaTrend } from "./AreaTrend";
+import { SemiGauge } from "./SemiGauge";
+import { MiniKPI } from "./MiniKPI";
+import { InsightBox } from "./InsightBox";
+import { WhatsCountedPopover } from "./WhatsCountedPopover";
+import { useLabel } from "../shell/DemoProvider";
 
-type QuestionCardProps = {
-  icon: ReactNode;
+type QuestionCardData = {
+  id: string;
+  route: string;
+  icon: "Cpu" | "Handshake" | "Split";
+  accent: string;
+  highlighted: boolean;
   title: string;
   caption: string;
-  count: string;
+  count: number;
   countLabel: string;
-  delta: string;
+  lastWeekCount: number;
   deltaLabel: string;
   fourWeekLabel: string;
   severityMix: string;
-  linkTo: string;
-  borderColor: string;
-  glowColor: string;
-  children: ReactNode;
+  counted: Array<{ signalId: string; text: string }>;
+  notCounted: string;
+  countedFooter: string;
+  gauges: Array<{ pct: number; label: string; sub: string; tone: "green" | "amber" | "red" }>;
+  trend: { kind: string; ref: string };
+  miniKpis: Array<{ label: string; value: string; caption?: string; money?: boolean }>;
+  insightLabel: string;
+  insight: string;
 };
 
-export function QuestionCard({
-  icon,
-  title,
-  caption,
-  count,
-  countLabel,
-  delta,
-  deltaLabel,
-  fourWeekLabel,
-  severityMix,
-  linkTo,
-  borderColor,
-  glowColor,
-  children,
-}: QuestionCardProps) {
-  const isAmber = deltaLabel.startsWith("+");
+type QuestionCardProps = {
+  card: QuestionCardData;
+  trendData: Array<{ week: string; value: number | null }>;
+};
+
+const ICONS = {
+  Cpu,
+  Handshake,
+  Split,
+};
+
+export function QuestionCard({ card, trendData }: QuestionCardProps) {
+  const L = useLabel();
+  const Icon = ICONS[card.icon];
+
+  const delta = card.count - card.lastWeekCount;
+  const deltaStr = delta > 0 ? `+${delta}` : delta === 0 ? "0" : `${delta}`;
+  const isAmber = delta > 0;
+
+  const borderColor = card.accent === "orange" ? "#f97316" : card.accent === "teal" ? "#14b8a6" : "#0ea5e9";
+  const glowColor = card.highlighted
+    ? `0 0 0 2px ${borderColor}, 0 8px 32px ${borderColor}22`
+    : `0 8px 24px ${borderColor}14`;
 
   return (
     <Link
-      href={linkTo}
+      href={card.route}
       style={{
         textDecoration: "none",
         display: "block",
         background: "#0d0d0d",
-        border: `2px solid ${borderColor}`,
+        border: card.highlighted ? `2px solid ${borderColor}` : `1px solid ${borderColor}50`,
         borderRadius: 16,
         padding: "20px 22px",
         boxShadow: glowColor,
-        transition: "transform 0.15s",
+        transition: "transform 0.15s, box-shadow 0.15s",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-2px)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
       }}
     >
       {/* Header */}
@@ -66,7 +92,7 @@ export function QuestionCard({
               flexShrink: 0,
             }}
           >
-            {icon}
+            <Icon size={20} color={borderColor} />
           </div>
           <div style={{ minWidth: 0, flex: 1 }}>
             <div
@@ -78,9 +104,9 @@ export function QuestionCard({
                 marginBottom: 4,
               }}
             >
-              {title}
+              {card.title}
             </div>
-            <div style={{ fontSize: 12, color: "#939394" }}>{caption}</div>
+            <div style={{ fontSize: 12, color: "#939394" }}>{L(card.caption)}</div>
           </div>
         </div>
         <ChevronRight size={20} color="#939394" style={{ flexShrink: 0, marginTop: 8 }} />
@@ -88,42 +114,68 @@ export function QuestionCard({
 
       {/* Score Delta */}
       <div style={{ marginBottom: 16 }}>
-        <div
-          style={{
-            fontSize: 40,
-            fontWeight: 700,
-            color: "#ffffff",
-            fontFamily: "var(--mono, monospace)",
-            fontVariantNumeric: "tabular-nums",
-            lineHeight: 1,
-            marginBottom: 4,
-          }}
-        >
-          {count}
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 6 }}>
+          <div
+            style={{
+              fontSize: 40,
+              fontWeight: 700,
+              color: "#ffffff",
+              fontFamily: "var(--mono, monospace)",
+              fontVariantNumeric: "tabular-nums",
+              lineHeight: 1,
+            }}
+          >
+            {card.count}
+          </div>
+          <WhatsCountedPopover
+            counted={card.counted}
+            notCounted={card.notCounted}
+            countedFooter={card.countedFooter}
+          />
         </div>
-        <div style={{ fontSize: 13, color: "#a3a3a3", marginBottom: 6 }}>{countLabel}</div>
+        <div style={{ fontSize: 13, color: "#a3a3a3", marginBottom: 6 }}>{card.countLabel}</div>
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
           <span
             style={{
               fontSize: 13,
               fontWeight: 700,
               fontFamily: "var(--mono, monospace)",
-              color: isAmber ? "#f59e0b" : "#a3a3a3",
+              color: isAmber ? "#fbbf24" : "#a3a3a3",
               padding: "2px 8px",
               borderRadius: 6,
-              background: isAmber ? "#f59e0b20" : "#2a2a2a",
+              background: isAmber ? "rgba(245, 158, 11, 0.15)" : "#2a2a2a",
+              border: `1px solid ${isAmber ? "rgba(245, 158, 11, 0.3)" : "#2a2a2a"}`,
             }}
           >
-            {delta}
+            {deltaStr}
           </span>
-          <span style={{ fontSize: 13, color: "#939394" }}>{deltaLabel}</span>
+          <span style={{ fontSize: 13, color: "#939394" }}>{card.deltaLabel}</span>
         </div>
-        <div style={{ fontSize: 11, color: "#737373" }}>{fourWeekLabel}</div>
-        <div style={{ fontSize: 12, color: "#a3a3a3", marginTop: 6 }}>{severityMix}</div>
+        <div style={{ fontSize: 11, color: "#737373" }}>{card.fourWeekLabel}</div>
+        <div style={{ fontSize: 12, color: "#a3a3a3", marginTop: 6 }}>{card.severityMix}</div>
       </div>
 
-      {/* Content slot (chart + gauges + insight) */}
-      {children}
+      {/* Trend Chart */}
+      <div style={{ marginBottom: 16 }}>
+        <AreaTrend data={trendData} color={borderColor} />
+      </div>
+
+      {/* Gauges */}
+      <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+        {card.gauges.map((gauge, idx) => (
+          <SemiGauge key={idx} {...gauge} label={L(gauge.label)} sub={L(gauge.sub)} />
+        ))}
+      </div>
+
+      {/* Mini KPIs */}
+      <div style={{ display: "flex", gap: 16, marginBottom: 16 }}>
+        {card.miniKpis.map((kpi, idx) => (
+          <MiniKPI key={idx} {...kpi} label={L(kpi.label)} />
+        ))}
+      </div>
+
+      {/* Insight */}
+      <InsightBox label={card.insightLabel} text={card.insight} accent={borderColor} />
     </Link>
   );
 }
