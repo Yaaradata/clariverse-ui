@@ -58,6 +58,7 @@ const VIEW_TITLE: Record<KgsView, string> = {
 const GLOBAL_CSS = `
 .kgs-root .kgs-focus:focus-visible { outline: none; box-shadow: ${K.focus}; }
 .kgs-root [id] { scroll-margin-top: 72px; }
+@keyframes kgs-pop { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
 @media (prefers-reduced-motion: reduce) {
   .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
 }
