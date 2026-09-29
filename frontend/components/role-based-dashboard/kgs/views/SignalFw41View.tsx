@@ -7,7 +7,7 @@ import { JoinTagRow } from "../shared/JoinTagRow";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { SeverityStrip } from "../shared/SeverityStrip";
 import { K } from "../shared/tokens";
-import { useDemo } from "../shell/DemoProvider";
+import { useDemo, useLabel } from "../shell/DemoProvider";
 import { CohortMiniTable } from "../signal/CohortMiniTable";
 import { CounterEvidence } from "../signal/CounterEvidence";
 import { DecisionPanel } from "../signal/DecisionPanel";
@@ -43,6 +43,7 @@ function Block({ children }: { children: ReactNode }) {
  * P&L, owner, recommended action and the decision on the right.
  */
 export function SignalFw41View() {
+  const L = useLabel();
   const { signal } = signalFw41;
   const si = signal.confidence.sourceIndependence;
   const { drawerOpened } = useDemo();
@@ -97,7 +98,7 @@ export function SignalFw41View() {
                 }}
               >
                 {fill(meta.ui.hero.sourceIndependence, {
-                  score: si.score.toFixed(2),
+                  score: si.scoreDisplay,
                   partners: si.partners,
                   channels: si.channels,
                 })}
@@ -120,7 +121,7 @@ export function SignalFw41View() {
             />
             {signal.routing.presidentReason ? (
               <div style={{ fontSize: 12, color: K.textMut }}>
-                {signal.routing.presidentReason}
+                {L(signal.routing.presidentReason)}
               </div>
             ) : null}
             <RecommendedAction />

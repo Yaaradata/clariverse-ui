@@ -91,6 +91,8 @@ export interface Confidence {
   inferred: { count?: number; label: string };
   sourceIndependence?: {
     score: number;
+    /** Display text for score — never recompute with toFixed at render. */
+    scoreDisplay: string;
     partners: number;
     channels: number;
     note?: string;

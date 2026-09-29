@@ -82,6 +82,7 @@
       },
       "sourceIndependence": {
         "score": 0.78,
+        "scoreDisplay": "0.78",
         "partners": 9,
         "channels": 4,
         "note": "after-hours counted with voice"

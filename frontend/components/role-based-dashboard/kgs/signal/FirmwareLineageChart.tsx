@@ -35,11 +35,16 @@ type Row = {
   c41?: number;
   p41?: number;
   rma?: number;
+  /** Tooltip display text — bound once from the numeric series (05a has no rate display field). */
+  rate40Text?: string;
+  rate41Text?: string;
+  rmaText?: string;
 };
 
 const ROWS: Row[] = [
   ...S40.points.map((p, i) => {
     const q = S41.points.find((x) => x.week === p.week);
+    const rma = lineage.aggregate.values[i];
     return {
       week: p.week,
       weekStart: p.weekStart,
@@ -50,7 +55,10 @@ const ROWS: Row[] = [
       r41: q?.rate,
       c41: q?.contacts,
       p41: q?.panels,
-      rma: lineage.aggregate.values[i],
+      rma,
+      rate40Text: p.rate.toFixed(1),
+      rate41Text: q !== undefined ? q.rate.toFixed(1) : undefined,
+      rmaText: rma !== undefined ? rma.toFixed(2) : undefined,
     };
   }),
   ...lineage.futureWeeks.map((week) => ({ week })),
@@ -153,13 +161,13 @@ function LineageTooltip({
     .filter((s) => row.r41 !== undefined || !s.includes("{rate41}"));
   const text = fill(segments.join(" · "), {
     weekStart: dayLabel(row.weekStart),
-    rate41: row.r41?.toFixed(1) ?? "",
+    rate41: row.rate41Text ?? "",
     contacts41: row.c41 ?? "",
     panels41: row.p41 !== undefined ? int(row.p41) : "",
-    rate40: row.r40?.toFixed(1) ?? "",
+    rate40: row.rate40Text ?? "",
     contacts40: row.c40 ?? "",
     panels40: row.p40 !== undefined ? int(row.p40) : "",
-    rmaRate: row.rma?.toFixed(2) ?? "",
+    rmaRate: row.rmaText ?? "",
   });
   return (
     <div

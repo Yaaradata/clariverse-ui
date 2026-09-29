@@ -107,8 +107,9 @@ export function ContactsRmaOverlay() {
   );
   const lastWeek = rows.length;
   const ghostEnd = weekOf(CR.ghostUntil);
-  const limitText =
-    installedBase.kpis.find((k) => k.sub?.startsWith("limit"))?.sub ?? "";
+  const limitText = L(
+    installedBase.kpis.find((k) => k.sub?.startsWith("limit"))?.sub ?? "",
+  );
   const [contactsLabel, rateLabel] = axisWords(L(P.unit ?? ""));
   const ticks = rows
     .map((r) => r.week)
