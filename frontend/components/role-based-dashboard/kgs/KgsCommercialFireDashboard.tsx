@@ -8,9 +8,16 @@ import {
   separation,
   signalFw41,
 } from "@kgs/lib/data";
-import { anonFromUrl } from "@kgs/lib/demoState";
+import { anonFromUrl, introSkippedByUrl } from "@kgs/lib/demoState";
 import { fmt } from "@kgs/lib/label";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { type KgsNav, KgsNavContext, type KgsView, parseLink } from "./nav";
 import { prefersReducedMotion } from "./shared/motion";
 import { K } from "./shared/tokens";
@@ -20,6 +27,7 @@ import { DemoProvider, useDemo } from "./shell/DemoProvider";
 import { DrillHeader } from "./shell/DrillHeader";
 import { FixedFooter } from "./shell/FixedFooter";
 import { FloatingAIButton } from "./shell/FloatingAIButton";
+import { Intro } from "./shell/Intro";
 import { LeftRail } from "./shell/LeftRail";
 import { ScopeProvider, useScope } from "./shell/Scope";
 import { ToastProvider, useToast } from "./shell/Toast";
@@ -133,6 +141,13 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   const [pendingAnchor, setPendingAnchor] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Intro once per page load; ?intro=0 removes it before the first client paint.
+  const [intro, setIntro] = useState(true);
+  const endIntro = useCallback(() => setIntro(false), []);
+  useLayoutEffect(() => {
+    if (introSkippedByUrl()) setIntro(false);
+  }, []);
 
   // ?anon=1 read once after mount (never during render → no hydration mismatch).
   const urlApplied = useRef(false);
@@ -321,6 +336,7 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
           onReset={onReset}
         />
         <Watermark />
+        {intro ? <Intro onDone={endIntro} /> : null}
       </div>
     </KgsNavContext.Provider>
   );

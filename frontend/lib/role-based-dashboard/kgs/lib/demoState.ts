@@ -49,6 +49,12 @@ export function anonFromUrl(): boolean {
   return new URLSearchParams(window.location.search).get("anon") === "1";
 }
 
+/** `?intro=0` skips the intro (04 §1.1). */
+export function introSkippedByUrl(): boolean {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("intro") === "0";
+}
+
 function initialState(anonymise: boolean): DemoState {
   return {
     anonymise,
