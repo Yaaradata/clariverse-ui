@@ -178,6 +178,7 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
         <LeftRail onOpenDemoMenu={() => setMenuOpen((o) => !o)} />
         <div
           ref={scrollRef}
+          data-kgs-scroll
           style={{
             flex: 1,
             minWidth: 0,

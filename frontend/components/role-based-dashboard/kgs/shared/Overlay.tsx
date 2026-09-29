@@ -49,6 +49,20 @@ function useDialogFocus(open: boolean, onClose: () => void) {
   return ref;
 }
 
+/** The dashboard scrolls inside its own container, not the body; lock that while a dialog is open. */
+function useScrollLock(open: boolean) {
+  useEffect(() => {
+    if (!open) return;
+    const el = document.querySelector<HTMLElement>("[data-kgs-scroll]");
+    if (!el) return;
+    const prev = el.style.overflowY;
+    el.style.overflowY = "hidden";
+    return () => {
+      el.style.overflowY = prev;
+    };
+  }, [open]);
+}
+
 /**
  * Backdrop sits at z 60, under the sticky ContextBar (z 70), so the SyntheticBadge stays
  * visible above every drawer and modal backdrop (04 §1.4). The panel itself (z 75) repeats
@@ -127,6 +141,7 @@ export function Drawer({
   footer?: ReactNode;
 }) {
   const ref = useDialogFocus(open, onClose);
+  useScrollLock(open);
   if (!open) return null;
   return (
     <>
@@ -188,6 +203,7 @@ export function Modal({
   width?: number;
 }) {
   const ref = useDialogFocus(open, onClose);
+  useScrollLock(open);
   if (!open) return null;
   return (
     <>

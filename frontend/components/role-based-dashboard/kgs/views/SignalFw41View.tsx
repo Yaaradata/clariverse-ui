@@ -1,15 +1,17 @@
 "use client";
 
 import { meta, signalFw41 } from "@kgs/lib/data";
-import type { ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { JoinTagRow } from "../shared/JoinTagRow";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { SeverityStrip } from "../shared/SeverityStrip";
 import { K } from "../shared/tokens";
+import { useDemo } from "../shell/DemoProvider";
 import { CohortMiniTable } from "../signal/CohortMiniTable";
 import { CounterEvidence } from "../signal/CounterEvidence";
 import { DecisionPanel } from "../signal/DecisionPanel";
+import { EvidenceDrawer, type EvidenceTab } from "../signal/EvidenceDrawer";
 import { FirmwareLineageChart } from "../signal/FirmwareLineageChart";
 import { fill } from "../signal/format";
 import { PnLDetail } from "../signal/PnLDetail";
@@ -42,6 +44,12 @@ function Block({ children }: { children: ReactNode }) {
 export function SignalFw41View() {
   const { signal } = signalFw41;
   const si = signal.confidence.sourceIndependence;
+  const { drawerOpened } = useDemo();
+  const [drawerTab, setDrawerTab] = useState<EvidenceTab | null>(null);
+  const openDrawer = (tab: EvidenceTab) => {
+    drawerOpened();
+    setDrawerTab(tab);
+  };
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <SignalHeader />
@@ -99,7 +107,7 @@ export function SignalFw41View() {
             <CohortMiniTable />
           </Block>
           <Block>
-            <PnLDetail onMethod={() => undefined} />
+            <PnLDetail onMethod={() => openDrawer("method")} />
           </Block>
           <Block>
             <RoutedOwner
@@ -117,10 +125,15 @@ export function SignalFw41View() {
           </Block>
           <DecisionPanel
             onViewDraft={() => undefined}
-            onOpenEvidence={() => undefined}
+            onOpenEvidence={() => openDrawer("snippets")}
           />
         </div>
       </div>
+      <EvidenceDrawer
+        tab={drawerTab}
+        onTab={setDrawerTab}
+        onClose={() => setDrawerTab(null)}
+      />
     </div>
   );
 }
