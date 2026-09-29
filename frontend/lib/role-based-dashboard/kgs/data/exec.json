@@ -38,23 +38,38 @@
       "n": 1,
       "title": "What's critical",
       "text": "{{platform:EST4}} fw {{fw:EST4@4.1}} (synthetic): 'devices not found after upgrade' at 3.1× panels still on {{fw:EST4@4.0}} — 9 partners, 3 regions, 1,240 panels. Draft brief awaiting VP Engineering.",
-      "chips": ["S2 · Quality", "VP Engineering", "Awaiting approval"],
+      "chips": [
+        "S2 · Quality",
+        "VP Engineering",
+        "Awaiting approval"
+      ],
       "chipAfterApprove": "Investigation approved",
-      "linkTo": "/installed-base/signal/fw-4-1"
+      "linkTo": "/installed-base/signal/fw-4-1",
+      "textShort": "{{platform:EST4}} fw {{fw:EST4@4.1}} (synthetic): fault calls 3.1× · 1,240 panels · awaiting VP Engineering."
     },
     {
       "n": 2,
       "title": "Where's your focus",
       "text": "{{region:UK-EU}} remit-to and invoice contacts 2.7× since the 1 Sep entity cutover (control 1.1×): £1.1m in dispute, DSO +6 days at top-10 distributors.",
-      "chips": ["S2 · Separation", "CIO / separation PMO", "Awaiting triage"],
-      "linkTo": "/separation"
+      "chips": [
+        "S2 · Separation",
+        "CIO / separation PMO",
+        "Awaiting triage"
+      ],
+      "linkTo": "/separation",
+      "textShort": "{{region:UK-EU}} remit-to contacts 2.7× since 1 Sep cutover · £1.1m in dispute · DSO +6 days."
     },
     {
       "n": 3,
       "title": "What's stable",
       "text": "3 of 4 cutovers clean against control. Nuisance-alarm contacts within own baseline for every detector family. 212 look-alikes suppressed.",
-      "chips": ["—", "—", "No action needed"],
-      "linkTo": "/separation"
+      "chips": [
+        "—",
+        "—",
+        "No action needed"
+      ],
+      "linkTo": "/separation",
+      "textShort": "3 of 4 cutovers clean vs control. Nuisance alarms within baseline. 212 look-alikes suppressed."
     }
   ],
   "questionCards": [
@@ -89,13 +104,15 @@
           "pct": 98,
           "label": "Firmware cohorts in control",
           "sub": "45 of 46",
-          "tone": "green"
+          "tone": "green",
+          "subShort": "45 of 46"
         },
         {
           "pct": 80,
           "label": "{{platform:EST4}} RMA rate vs control limit",
           "sub": "0.28% of 0.35% · in control",
-          "tone": "green"
+          "tone": "green",
+          "subShort": "0.28% · in control"
         }
       ],
       "trend": {
@@ -114,7 +131,8 @@
         }
       ],
       "insightLabel": "LiSN INSIGHT",
-      "insight": "Panels on fw {{fw:EST4@4.1}} report 'devices not found after upgrade' at 6.2 per 1,000 panel-weeks vs 2.0 on {{fw:EST4@4.0}} — 23 contacts from 9 unrelated partners since 4 Sep. Five installers have rolled back to {{fw:EST4@4.0}}. The {{platform:EST4}} RMA rate is still inside its control limit."
+      "insight": "Panels on fw {{fw:EST4@4.1}} report 'devices not found after upgrade' at 6.2 per 1,000 panel-weeks vs 2.0 on {{fw:EST4@4.0}} — 23 contacts from 9 unrelated partners since 4 Sep. Five installers have rolled back to {{fw:EST4@4.0}}. The {{platform:EST4}} RMA rate is still inside its control limit.",
+      "insightShort": "Nine partners report 'devices not found after upgrade' on fw {{fw:EST4@4.1}} (synthetic); five installers rolled back to {{fw:EST4@4.0}}."
     },
     {
       "id": "channel",
@@ -147,13 +165,15 @@
           "pct": 99.8,
           "label": "NA Strategic Partners within own baseline",
           "sub": "419 of 420",
-          "tone": "green"
+          "tone": "green",
+          "subShort": "419 of 420"
         },
         {
           "pct": 71,
           "label": "N-3 OTD vs original promise",
           "sub": "94% vs revised",
-          "tone": "amber"
+          "tone": "amber",
+          "subShort": "94% vs revised"
         }
       ],
       "trend": {
@@ -173,7 +193,8 @@
         }
       ],
       "insightLabel": "LiSN INSIGHT",
-      "insight": "{{partner:ESD-SE-07}} friction has run 3.1× its own baseline for six weeks; recontact 38% vs 14%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%."
+      "insight": "{{partner:ESD-SE-07}} friction has run 3.1× its own baseline for six weeks; recontact 38% vs 14%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%.",
+      "insightShort": "Competitor named in 4 {{partner:ESD-SE-07}} calls; {{platform:EST4}} sell-in −22% while territory peers are +4%."
     },
     {
       "id": "separation",
@@ -202,13 +223,15 @@
           "pct": 75,
           "label": "Cutovers clean vs control",
           "sub": "3 of 4",
-          "tone": "amber"
+          "tone": "amber",
+          "subShort": "3 of 4"
         },
         {
           "pct": 8,
           "label": "{{region:UK-EU}} distributors affected",
           "sub": "14 of 180",
-          "tone": "amber"
+          "tone": "amber",
+          "subShort": "14 of 180"
         }
       ],
       "trend": {
@@ -228,7 +251,8 @@
         }
       ],
       "insightLabel": "LiSN INSIGHT",
-      "insight": "Since {{region:UK-EU}} invoicing moved to the new KGS entity on 1 Sep, remit-to and entity contacts are 2.7× pre-cutover against 1.1× in the control regions. Top cluster: 'invoice entity doesn't match our PO entity'."
+      "insight": "Since {{region:UK-EU}} invoicing moved to the new KGS entity on 1 Sep, remit-to and entity contacts are 2.7× pre-cutover against 1.1× in the control regions. Top cluster: 'invoice entity doesn't match our PO entity'.",
+      "insightShort": "Top cluster since 1 Sep: 'invoice entity doesn't match our PO entity' vs clean control cutovers."
     }
   ],
   "whatsCountedTitle": "What's counted",
@@ -243,21 +267,27 @@
         "label": "Ahead of the review cycle",
         "value": "21 days",
         "sub": "median lead vs next scheduled review · 5 signals",
-        "methodIds": ["V-11"]
+        "methodIds": [
+          "V-11"
+        ]
       },
       {
         "id": "AV-2",
         "label": "Signals routed",
         "value": "5 → 5 owners",
         "sub": "+ 2 governed watch items (restricted)",
-        "methodIds": ["count"]
+        "methodIds": [
+          "count"
+        ]
       },
       {
         "id": "AV-3",
         "label": "Decisions pending",
         "value": "5 awaiting owners",
         "sub": "7 drafts · 0 sent · 0 automatic actions",
-        "methodIds": ["count"],
+        "methodIds": [
+          "count"
+        ],
         "onApprove": {
           "value": "4 awaiting owners",
           "sub": "7 drafts · 1 approved · 0 sent · 0 automatic actions"
@@ -273,7 +303,12 @@
           "Invoices in dispute £1.1m"
         ],
         "sub": "exposure, not savings · not summed",
-        "methodIds": ["V-02", "V-05", "V-07", "V-08"]
+        "methodIds": [
+          "V-02",
+          "V-05",
+          "V-07",
+          "V-08"
+        ]
       },
       {
         "id": "AV-5",
@@ -281,14 +316,18 @@
         "money": true,
         "value": "~430",
         "sub": "$11k–26k handling cost · if owners approve",
-        "methodIds": ["V-10"]
+        "methodIds": [
+          "V-10"
+        ]
       },
       {
         "id": "AV-6",
         "label": "Look-alikes suppressed",
         "value": "212",
         "sub": "seasonal · how-to after launch · planned tests · credit holds",
-        "methodIds": ["V-12"]
+        "methodIds": [
+          "V-12"
+        ]
       }
     ],
     "leadList": [
@@ -411,7 +450,10 @@
     }
   ],
   "unitCosts": {
-    "tier1ContactUsd": [25, 60],
+    "tier1ContactUsd": [
+      25,
+      60
+    ],
     "excessFaultContactUsd": 750,
     "breakdown": [
       {
@@ -573,7 +615,10 @@
         "clock": {
           "startUtc": "2026-09-25T09:14:00Z",
           "elapsedLabel": "8h 46m",
-          "refsHours": [24, 72],
+          "refsHours": [
+            24,
+            72
+          ],
           "caption": "8h 46m since candidate first mention · 24h / 72h ticks are reference only — PSIRT determines whether awareness has begun."
         }
       }
@@ -590,5 +635,6 @@
     "confidenceShort": "H 0.90 · K blank-field counts / I recoverable share",
     "owners": "Quality · VP Service & Tech Support · CIO",
     "linkTo": "/installed-base#why-late"
-  }
+  },
+  "briefShort": "Five signals above threshold with named owners; none actioned without approval."
 }

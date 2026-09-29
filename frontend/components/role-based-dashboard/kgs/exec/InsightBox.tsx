@@ -3,9 +3,8 @@
 import { Sparkles } from "lucide-react";
 
 /**
- * Fork of the bank ConversationAICallout (HeadOfCreditCardsDashboard.tsx:173).
- * KGS changes: label is the literal "LiSN INSIGHT" from data (no CSS uppercase on LiSN),
- * body text ≥13px.
+ * LiSN insight callout — Conversation AI density (left accent bar, compact body)
+ * with the literal "LiSN INSIGHT" label (no CSS uppercase on LiSN).
  */
 export function InsightBox({
   label,
@@ -49,7 +48,7 @@ export function InsightBox({
         style={{
           fontSize: 13,
           color: "rgba(255,255,255,0.82)",
-          lineHeight: 1.55,
+          lineHeight: 1.45,
           margin: 0,
         }}
       >

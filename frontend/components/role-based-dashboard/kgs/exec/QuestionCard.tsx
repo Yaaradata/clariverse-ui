@@ -277,7 +277,7 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
                 key={g.label}
                 pct={g.pct}
                 label={L(g.label)}
-                sub={L(g.sub)}
+                sub={L(g.subShort ?? g.sub)}
                 color={GAUGE_TONE[g.tone]}
               />
             ))}
@@ -308,7 +308,7 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
 
       <InsightBox
         label={card.insightLabel}
-        text={L(card.insight)}
+        text={L(card.insightShort ?? card.insight)}
         accent={accent}
       />
     </article>

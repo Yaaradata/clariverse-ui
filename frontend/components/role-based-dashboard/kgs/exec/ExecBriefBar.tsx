@@ -44,7 +44,7 @@ export function ExecBriefBar() {
           lineHeight: 1.45,
         }}
       >
-        {L(exec.brief)}
+        {L(exec.briefShort ?? exec.brief)}
       </p>
     </section>
   );

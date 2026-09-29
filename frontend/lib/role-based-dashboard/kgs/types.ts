@@ -338,6 +338,8 @@ export interface Gauge {
   pct: number;
   label: string;
   sub: string;
+  /** Compact gauge sub-label (≤ 4 words). */
+  subShort?: string;
   tone: "green" | "amber" | "red";
 }
 export interface MiniKpi {
@@ -376,11 +378,15 @@ export interface QuestionCardData {
   miniKpis: [MiniKpi, MiniKpi];
   insightLabel: "LiSN INSIGHT";
   insight: TokenString;
+  /** Compact insight ≤ 2 lines (~25 words). Long `insight` kept for drawers. */
+  insightShort?: TokenString;
 }
 export interface PulseItem {
   n: 1 | 2 | 3;
   title: string;
   text: TokenString;
+  /** Compact pulse body ≤ 2 lines (~20 words). */
+  textShort?: TokenString;
   chips: [string, string, string];
   linkTo: string;
   chipAfterApprove?: string;
@@ -903,6 +909,8 @@ export interface HowWeCount {
 export interface ExecFile {
   funnel: FunnelData;
   brief: TokenString;
+  /** Compact executive brief (≤ 20 words). */
+  briefShort?: TokenString;
   briefLabel: string;
   pulseLabel: string;
   pulse: [PulseItem, PulseItem, PulseItem];
