@@ -5,7 +5,9 @@
     "subtitle": "Signals above threshold, ranked by severity, population and consequence. Each is routed to one owner.",
     "subtitleShort": "Above threshold, ranked by severity and consequence.",
     "suppressedLine": "Suppressed: quarter-end order status · {{platform:Edge}} how-to after training · planned tests · credit hold (routed to AR)",
-    "cardFooterLink": "Open signal →"
+    "cardFooterLink": "Open signal →",
+    "headerLine": "Early warnings from installer, partner and distributor contacts.",
+    "headerItalic": "Suppressed: quarter-end order status · how-to after training · planned tests · credit hold"
   },
   "signals": [
     {
@@ -1036,7 +1038,33 @@
       ],
       "confidenceCompact": "M 0.70",
       "ownerGateShort": "VP Engineering · Awaiting approval",
-      "suggestionShort": "Reproduce on multi-loop configs. Owner decides whether to pause the {{fw:EST4@4.1}} rollout."
+      "suggestionShort": "Reproduce on multi-loop configs. Owner decides whether to pause the {{fw:EST4@4.1}} rollout.",
+      "compact": {
+        "title": "{{platform:EST4}} fw {{fw:EST4@4.1}} — Devices Not Found",
+        "channel": "Calls, Cases",
+        "topIssue": "Devices lost after upgrade",
+        "topIssueSub": "Material impact · Warranty & field",
+        "time": "Weeks 1–3 post-release",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Fault contacts / 1k panel-wks",
+            "value": "2.0 → 6.2",
+            "delta": "↑ 3.1×"
+          },
+          {
+            "label": "Panels on fw {{fw:EST4@4.1}} (synthetic)",
+            "value": "1,240",
+            "sub": "+5,560 eligible"
+          },
+          {
+            "label": "Partners reporting",
+            "value": "9",
+            "sub": "3 regions"
+          }
+        ],
+        "callout": "Faults cluster on multi-loop panels after the {{fw:EST4@4.1}} upgrade. VP Engineering to decide whether to pause the staged rollout."
+      }
     },
     {
       "signalId": "dc-d2-2611",
@@ -1104,7 +1132,33 @@
       ],
       "confidenceCompact": "M 0.65",
       "ownerGateShort": "Director Product Quality · Awaiting approval",
-      "suggestionShort": "Sample return and teardown. Quality decides on quarantine of distributor stock."
+      "suggestionShort": "Sample return and teardown. Quality decides on quarantine of distributor stock.",
+      "compact": {
+        "title": "D-2 Early-Life Failures",
+        "channel": "Calls, RMA",
+        "topIssue": "Early-life failures",
+        "topIssueSub": "Date codes 2611–2614 (synthetic)",
+        "time": "Last 6 weeks",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Early-life contacts / 10k units",
+            "value": "1.1 → 4.6",
+            "delta": "↑ 4.2×"
+          },
+          {
+            "label": "Units in window",
+            "value": "4,800",
+            "sub": "1,900 in stock"
+          },
+          {
+            "label": "SKU return rate",
+            "value": "0.21%",
+            "sub": "limit 0.30%"
+          }
+        ],
+        "callout": "Failures concentrate in four date codes. Director Product Quality to decide on sample teardown and quarantine."
+      }
     },
     {
       "signalId": "esd-se-07",
@@ -1171,7 +1225,33 @@
       ],
       "confidenceCompact": "H 0.80",
       "ownerGateShort": "Regional GM NA · Awaiting approval",
-      "suggestionShort": "Regional GM visit with an L3 engineer and two priority {{platform:EST4}} class seats."
+      "suggestionShort": "Regional GM visit with an L3 engineer and two priority {{platform:EST4}} class seats.",
+      "compact": {
+        "title": "{{partner:ESD-SE-07}} Partner Drift",
+        "channel": "Calls, Email",
+        "topIssue": "Partner friction rising",
+        "topIssueSub": "Competitor named in 4 calls",
+        "time": "Last 6 weeks",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Interactions",
+            "value": "13 → 40",
+            "delta": "↑ 3.1×"
+          },
+          {
+            "label": "Recontact rate",
+            "value": "14% → 38%",
+            "delta": "↑ 24 pts"
+          },
+          {
+            "label": "{{platform:EST4}} sell-in vs LY",
+            "value": "−22%",
+            "sub": "peers +4%"
+          }
+        ],
+        "callout": "A strategic partner is drifting and naming a competitor. Regional GM NA to decide on a recovery visit."
+      }
     },
     {
       "signalId": "n3-backorder",
@@ -1237,7 +1317,33 @@
       ],
       "confidenceCompact": "H 0.75",
       "ownerGateShort": "VP Supply Chain · Awaiting approval",
-      "suggestionShort": "Review allocation with the 4 inspection-critical projects first."
+      "suggestionShort": "Review allocation with the 4 inspection-critical projects first.",
+      "compact": {
+        "title": "N-3 Backorder Risk",
+        "channel": "Email, Order desk",
+        "topIssue": "Cancel / substitute language",
+        "topIssueSub": "11 NA partners",
+        "time": "Weeks 21–26",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Cancel / substitute mentions",
+            "value": "1.0 → 3.2",
+            "delta": "↑ 3.2×"
+          },
+          {
+            "label": "On-time vs promise",
+            "value": "94% → 71%",
+            "sub": "revised → original"
+          },
+          {
+            "label": "Backorder lines",
+            "value": "312",
+            "sub": "11 partners"
+          }
+        ],
+        "callout": "Partners are threatening to switch on late orders. VP Supply Chain to decide allocation, inspection-critical projects first."
+      }
     },
     {
       "signalId": "ukeu-entity-cutover",
@@ -1302,7 +1408,33 @@
       ],
       "confidenceCompact": "H 0.80",
       "ownerGateShort": "CIO / separation PMO · Awaiting triage",
-      "suggestionShort": "Confirm PO-entity mapping in EDI. CFO decides on a dunning pause."
+      "suggestionShort": "Confirm PO-entity mapping in EDI. CFO decides on a dunning pause.",
+      "compact": {
+        "title": "{{region:UK-EU}} Cutover Friction",
+        "channel": "Email, Portal",
+        "topIssue": "Invoice entity mismatch",
+        "topIssueSub": "14 distributors",
+        "time": "Since 1 Sep",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Remit-to contacts",
+            "value": "30 → 81",
+            "delta": "↑ 2.7×",
+            "sub": "control 1.1×"
+          },
+          {
+            "label": "Portal login issues",
+            "value": "3.4×",
+            "delta": "↑ 3.4×"
+          },
+          {
+            "label": "Distributors affected",
+            "value": "14"
+          }
+        ],
+        "callout": "Invoicing breaks since the entity cutover, not in control regions. CIO / separation PMO to confirm the EDI mapping."
+      }
     }
   ],
   "suppressedCard": {

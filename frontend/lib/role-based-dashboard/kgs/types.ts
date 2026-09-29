@@ -391,6 +391,22 @@ export interface PulseItem {
   linkTo: string;
   chipAfterApprove?: string;
 }
+/** Spike-style compact face for Field Signal Monitor (bank AI Risk Spike anatomy). */
+export interface MonitorCardCompact {
+  title: TokenString;
+  channel: TokenString;
+  topIssue: TokenString;
+  topIssueSub: TokenString;
+  time: TokenString;
+  /** Severity word in the pill after class, e.g. "MATERIAL". */
+  severityWord: string;
+  metrics: [
+    { label: TokenString; value: string; delta?: string; sub?: string },
+    { label: TokenString; value: string; delta?: string; sub?: string },
+    { label: TokenString; value: string; delta?: string; sub?: string },
+  ];
+  callout: TokenString;
+}
 /** Field Signal Monitor card (bank "RiskSpikeCard" shell). No enabled action button. */
 export interface MonitorCard {
   signalId: string;
@@ -412,6 +428,8 @@ export interface MonitorCard {
     { label: TokenString; value: string; change?: string },
     { label: TokenString; value: string; change?: string },
   ];
+  /** Bank spike-monitor face (overview only). Long fields kept for hero/drawers. */
+  compact?: MonitorCardCompact;
   blastRadius: TokenString;
   confidenceShort: string;
   /** Compact confidence label for the footer chip (e.g. "M 0.70"). */
@@ -935,6 +953,10 @@ export interface MonitorFile {
     subtitle: string;
     /** Compact section description (≤ 12 words). */
     subtitleShort?: string;
+    /** Spike-monitor grey line (11px). */
+    headerLine?: string;
+    /** Spike-monitor italic drivers/suppressed line (11px). */
+    headerItalic?: string;
     suppressedLine: string;
     cardFooterLink: string;
   };
