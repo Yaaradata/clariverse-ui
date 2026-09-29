@@ -77,6 +77,14 @@ export const GAUGE_TONE: Record<"green" | "amber" | "red", string> = {
   red: K.red,
 };
 
+/** Hover target for `.kgs-lift` (04 §6 card hover): border → accent/60, glow +50%. */
+export function liftVars(
+  border: string,
+  glow: string,
+): Record<"--kgs-accent" | "--kgs-glow", string> {
+  return { "--kgs-accent": border, "--kgs-glow": glow };
+}
+
 export function withAlpha(hex: string, a: number): string {
   const h = hex.replace("#", "");
   const r = Number.parseInt(h.slice(0, 2), 16);

@@ -56,13 +56,33 @@ const VIEW_TITLE: Record<KgsView, string> = {
   "/separation": separation.title,
 };
 
-/** Focus ring, anchor scroll margin, reduced motion (03 §4, 06 §2). Scoped to the root. */
+const EXIT_MS = 150;
+
+/**
+ * Focus ring, anchor scroll margin and motion (03 §4, 04 §6, 06 §2). Scoped to the root.
+ * Reduced motion keeps opacity only: transforms are swapped for fades or dropped.
+ */
 const GLOBAL_CSS = `
 .kgs-root .kgs-focus:focus-visible { outline: none; box-shadow: ${K.focus}; }
 .kgs-root [id] { scroll-margin-top: 72px; }
 @keyframes kgs-drawer { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes kgs-drawer-out { from { transform: translateX(0); } to { transform: translateX(100%); } }
 @keyframes kgs-pop { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
 @keyframes kgs-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes kgs-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes kgs-enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes kgs-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.kgs-root .kgs-enter { animation: kgs-enter 220ms cubic-bezier(.2, .8, .2, 1) both; }
+.kgs-root .kgs-exit { animation: kgs-out ${EXIT_MS}ms ease-in both; }
+.kgs-root .kgs-lift { transition: transform 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out; }
+.kgs-root .kgs-lift:hover { transform: translateY(-2px); border-color: var(--kgs-accent) !important; box-shadow: var(--kgs-glow) !important; }
+.kgs-root .kgs-grow { transform-origin: left center; animation: kgs-grow 600ms ease-out 100ms both; }
+.kgs-root .kgs-pop-in { animation: kgs-pop 150ms ease-out both; }
+.kgs-root .kgs-drawer-in { animation: kgs-drawer 240ms cubic-bezier(.32, .72, 0, 1) both; }
+.kgs-root .kgs-drawer-out { animation: kgs-drawer-out 180ms cubic-bezier(.32, .72, 0, 1) both; }
+.kgs-root .kgs-fade-in { animation: kgs-fade 240ms ease-out both; }
+.kgs-root .kgs-fade-out { animation: kgs-out 180ms ease-in both; }
+.kgs-root .kgs-watermark { animation: kgs-fade 200ms ease-out both; }
 @keyframes kgs-ping-ring { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3); opacity: 0; } }
 .kgs-root .kgs-ping { transform-box: fill-box; transform-origin: center; opacity: 0; animation: kgs-ping-ring 1.2s ease-out 1.1s 2; }
 @keyframes kgs-spin { to { transform: rotate(360deg); } }
@@ -76,9 +96,18 @@ const GLOBAL_CSS = `
 .kgs-root .kgs-row:hover { background: rgba(255, 255, 255, 0.03); }
 .kgs-root .kgs-wall-scroll { scrollbar-width: thin; scrollbar-color: #5b4bb7 transparent; }
 @media (prefers-reduced-motion: reduce) {
-  .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
+  .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-property: opacity, color, background-color, border-color, box-shadow !important; }
+  .kgs-root .kgs-lift:hover { transform: none; }
+  .kgs-root .kgs-enter, .kgs-root .kgs-slide, .kgs-root .kgs-pop-in, .kgs-root .kgs-drawer-in, .kgs-root .kgs-grow { animation-name: kgs-fade; }
+  .kgs-root .kgs-drawer-out { animation-name: kgs-out; }
+  .kgs-root .kgs-ping, .kgs-root .kgs-spin, .kgs-root .kgs-pulse { animation: none; }
+  .kgs-root .kgs-check path { animation: none; stroke-dashoffset: 0; }
 }
 `;
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
 
 function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   const { state, setAnonymise, reset } = useDemo();
@@ -132,16 +161,50 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
   }, []);
 
   const scrollTo = useCallback((anchor: string) => {
-    document
-      .getElementById(anchor)
-      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById(anchor)?.scrollIntoView({
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+      block: "start",
+    });
   }, []);
 
+  // Route change (04 §6): the current view fades out for EXIT_MS, then the next one enters.
+  const viewRef = useRef(view);
+  viewRef.current = view;
+  const exitTimer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (exitTimer.current) window.clearTimeout(exitTimer.current);
+    },
+    [],
+  );
+  const [leaving, setLeaving] = useState(false);
   const go = useCallback((linkTo: string) => {
     const { view: next, anchor } = parseLink(linkTo);
-    setView(next);
-    setPendingAnchor(anchor ?? "__top__");
+    const land = () => {
+      setLeaving(false);
+      setView(next);
+      setPendingAnchor(anchor ?? "__top__");
+    };
+    if (exitTimer.current) window.clearTimeout(exitTimer.current);
+    if (next === viewRef.current) {
+      land();
+      return;
+    }
+    setLeaving(true);
+    exitTimer.current = window.setTimeout(land, EXIT_MS);
   }, []);
+
+  // Anonymise (04 §6): a 150ms crossfade on the swapped labels; the first render is skipped.
+  const mainRef = useRef<HTMLElement>(null);
+  const anonSeen = useRef(state.anonymise);
+  useEffect(() => {
+    if (anonSeen.current === state.anonymise) return;
+    anonSeen.current = state.anonymise;
+    mainRef.current?.animate([{ opacity: 0.35 }, { opacity: 1 }], {
+      duration: 150,
+      easing: "ease-out",
+    });
+  }, [state.anonymise]);
 
   // After a view switch, scroll to the requested anchor, or to the top.
   useEffect(() => {
@@ -196,16 +259,21 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
         >
           <DrillHeader view={view} title={VIEW_TITLE[view]} />
           <ContextBar />
-          <main style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}>
-            {view === "/" ? (
-              <OverviewView />
-            ) : view === "/installed-base" ? (
-              <InstalledBaseView />
-            ) : view === "/installed-base/signal/fw-4-1" ? (
-              <SignalFw41View />
-            ) : (
-              <PendingView view={view} />
-            )}
+          <main
+            ref={mainRef}
+            style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}
+          >
+            <div key={view} className={leaving ? "kgs-exit" : "kgs-enter"}>
+              {view === "/" ? (
+                <OverviewView />
+              ) : view === "/installed-base" ? (
+                <InstalledBaseView />
+              ) : view === "/installed-base/signal/fw-4-1" ? (
+                <SignalFw41View />
+              ) : (
+                <PendingView view={view} />
+              )}
+            </div>
           </main>
           <FixedFooter />
         </div>

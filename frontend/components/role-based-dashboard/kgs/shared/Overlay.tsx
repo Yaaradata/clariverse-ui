@@ -4,7 +4,11 @@ import { meta } from "@kgs/lib/data";
 import { X } from "lucide-react";
 import { type ReactNode, useEffect, useRef } from "react";
 import { SyntheticBadge } from "../shell/SyntheticBadge";
+import { usePresence } from "./motion";
 import { K } from "./tokens";
+
+/** Drawer close (04 §6): 180ms; the open slide is 240ms (GLOBAL_CSS `kgs-drawer-in`). */
+const DRAWER_EXIT_MS = 180;
 
 const FOCUSABLE =
   'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -68,13 +72,20 @@ function useScrollLock(open: boolean) {
  * visible above every drawer and modal backdrop (04 §1.4). The panel itself (z 75) repeats
  * the badge in its header (04 §7.2).
  */
-function Backdrop({ onClose }: { onClose: () => void }) {
+function Backdrop({
+  onClose,
+  closing = false,
+}: {
+  onClose: () => void;
+  closing?: boolean;
+}) {
   return (
     <button
       type="button"
       aria-label={meta.ui.close}
       tabIndex={-1}
       onClick={onClose}
+      className={closing ? "kgs-fade-out" : "kgs-fade-in"}
       style={{
         position: "fixed",
         inset: 0,
@@ -160,15 +171,17 @@ export function Drawer({
 }) {
   const ref = useDialogFocus(open, onClose);
   useScrollLock(open);
-  if (!open) return null;
+  const { mounted, closing } = usePresence(open, DRAWER_EXIT_MS);
+  if (!mounted) return null;
   return (
     <>
-      <Backdrop onClose={onClose} />
+      <Backdrop onClose={onClose} closing={closing} />
       <div
         ref={ref}
         role="dialog"
         aria-modal="true"
         aria-label={title}
+        className={closing ? "kgs-drawer-out" : "kgs-drawer-in"}
         style={{
           position: "fixed",
           top: 0,
@@ -182,7 +195,6 @@ export function Drawer({
           boxShadow: "-24px 0 48px rgba(0,0,0,0.5)",
           display: "flex",
           flexDirection: "column",
-          animation: "kgs-drawer 240ms cubic-bezier(.32,.72,0,1)",
         }}
       >
         <Header title={title} onClose={onClose} />

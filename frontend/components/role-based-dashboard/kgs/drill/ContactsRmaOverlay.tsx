@@ -14,6 +14,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { fill } from "../signal/format";
@@ -94,6 +95,7 @@ function OverlayTooltip({
  */
 export function ContactsRmaOverlay() {
   const L = useLabel();
+  const reduced = useReducedMotion();
   const [rows] = useState<Row[]>(() =>
     CR.trouble.map((t, i) => ({
       week: i + 1,
@@ -221,6 +223,7 @@ export function ContactsRmaOverlay() {
               fill="#737373"
               fillOpacity={0.55}
               barSize={7}
+              isAnimationActive={!reduced}
               animationDuration={900}
             />
             <Bar
@@ -229,6 +232,7 @@ export function ContactsRmaOverlay() {
               stackId="c"
               fill={K.orange}
               barSize={7}
+              isAnimationActive={!reduced}
               animationDuration={900}
             />
             <Line
@@ -238,6 +242,7 @@ export function ContactsRmaOverlay() {
               stroke={K.green}
               strokeWidth={2}
               dot={false}
+              isAnimationActive={!reduced}
               animationDuration={900}
             />
           </ComposedChart>

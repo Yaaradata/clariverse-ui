@@ -8,7 +8,7 @@ import { GateChip } from "../shared/GateChip";
 import { JoinTagRow } from "../shared/JoinTagRow";
 import { PnLDestinationTag } from "../shared/PnLDestinationTag";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
-import { K, SEV, withAlpha } from "../shared/tokens";
+import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
 import { useDemo, useLabel } from "../shell/DemoProvider";
 import { DateCodeMicroStrip } from "./DateCodeMicroStrip";
 import { MetricBeforeAfter } from "./MetricBeforeAfter";
@@ -35,6 +35,7 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
 
   return (
     <article
+      className="kgs-lift"
       style={{
         minWidth: 360,
         maxWidth: 360,
@@ -44,6 +45,10 @@ export function SignalMonitorCard({ card }: { card: MonitorCard }) {
         border: `1px solid ${withAlpha(tone, 0.5)}`,
         background: withAlpha(tone, 0.05),
         boxShadow: `0 10px 24px ${withAlpha(tone, 0.12)}`,
+        ...liftVars(
+          withAlpha(tone, 0.6),
+          `0 10px 36px ${withAlpha(tone, 0.18)}`,
+        ),
         color: K.textSec,
         padding: "12px 14px 10px",
         display: "flex",

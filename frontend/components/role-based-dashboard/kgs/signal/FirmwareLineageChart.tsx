@@ -16,6 +16,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { dayLabel, fill, int } from "./format";
@@ -211,6 +212,7 @@ function LegendSwatch({
  */
 export function FirmwareLineageChart() {
   const L = useLabel();
+  const reduced = useReducedMotion();
   const rmaLabel = L(lineage.aggregate.label);
   const [rmaHead, rmaTail] = rmaLabel.split(" — ");
 
@@ -304,7 +306,7 @@ export function FirmwareLineageChart() {
               stroke="none"
               fill={NEUTRAL_300}
               fillOpacity={0.2}
-              isAnimationActive
+              isAnimationActive={!reduced}
               animationDuration={900}
               activeDot={false}
             />
@@ -316,7 +318,7 @@ export function FirmwareLineageChart() {
               stroke={NEUTRAL_300}
               strokeWidth={2}
               dot={false}
-              isAnimationActive
+              isAnimationActive={!reduced}
               animationDuration={900}
             />
             <Area
@@ -330,7 +332,7 @@ export function FirmwareLineageChart() {
               fillOpacity={1}
               dot={false}
               connectNulls={false}
-              isAnimationActive
+              isAnimationActive={!reduced}
               animationDuration={900}
             />
             <Line
@@ -342,7 +344,7 @@ export function FirmwareLineageChart() {
               strokeWidth={1.5}
               strokeDasharray="4 4"
               dot={false}
-              isAnimationActive
+              isAnimationActive={!reduced}
               animationDuration={900}
             />
 

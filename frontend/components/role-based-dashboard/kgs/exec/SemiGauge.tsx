@@ -1,12 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import {
   PolarAngleAxis,
   RadialBar,
   RadialBarChart,
   ResponsiveContainer,
 } from "recharts";
+import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
+
+/** Gauges grow 100ms after the count-ups start (04 §6). */
+const GROW_DELAY_MS = 100;
 
 /**
  * Fork of the bank MiniHalfGauge (HeadOfCreditCardsDashboard.tsx:109).
@@ -24,8 +29,10 @@ export function SemiGauge({
   sub: string;
   color: string;
 }) {
-  const clamped = Math.max(0, Math.min(100, pct));
-  const data = [{ name: label, value: clamped, fill: color }];
+  const reduced = useReducedMotion();
+  const [data] = useState(() => [
+    { value: Math.max(0, Math.min(100, pct)), fill: color },
+  ]);
 
   return (
     <div
@@ -59,7 +66,8 @@ export function SemiGauge({
               dataKey="value"
               cornerRadius={4}
               background={{ fill: "#39393990" }}
-              isAnimationActive
+              isAnimationActive={!reduced}
+              animationBegin={GROW_DELAY_MS}
               animationDuration={600}
             />
           </RadialBarChart>

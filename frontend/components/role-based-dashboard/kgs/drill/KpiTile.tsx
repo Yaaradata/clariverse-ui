@@ -1,6 +1,7 @@
 "use client";
 
 import type { KpiTile as KpiTileData } from "@kgs/types";
+import { CountUp } from "../shared/CountUp";
 import { IllustrativeChip } from "../shared/IllustrativeChip";
 import { K, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
@@ -45,7 +46,7 @@ export function KpiTile({ tile }: { tile: KpiTileData }) {
           flexWrap: "wrap",
         }}
       >
-        {L(tile.value)}
+        <CountUp text={L(tile.value)} />
         {tile.money ? <IllustrativeChip /> : null}
       </div>
       {tile.sub ? (
@@ -115,7 +116,7 @@ export function BigKpiTile({
             color: "transparent",
           }}
         >
-          {value}
+          <CountUp text={value} />
         </span>
         <span
           style={{

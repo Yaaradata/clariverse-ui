@@ -47,6 +47,7 @@ export function WhyRankedPopover() {
               }}
             >
               <span
+                className="kgs-grow"
                 style={{
                   display: "block",
                   height: "100%",

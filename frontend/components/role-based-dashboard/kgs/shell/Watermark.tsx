@@ -10,6 +10,7 @@ export function Watermark() {
   return (
     <div
       aria-hidden
+      className="kgs-watermark"
       style={{
         position: "fixed",
         inset: 0,

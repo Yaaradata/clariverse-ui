@@ -3,9 +3,11 @@
 import { exec, monitor } from "@kgs/lib/data";
 import type { QuestionCardData } from "@kgs/types";
 import { ChevronRight, Cpu, Handshake, Info, Split } from "lucide-react";
+import type { CSSProperties } from "react";
 import { useKgsNav } from "../nav";
+import { CountUp } from "../shared/CountUp";
 import { Popover } from "../shared/Popover";
-import { ACCENT, GAUGE_TONE, K, withAlpha } from "../shared/tokens";
+import { ACCENT, GAUGE_TONE, K, liftVars, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { AreaTrend } from "./AreaTrend";
 import { InsightBox } from "./InsightBox";
@@ -94,25 +96,27 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
 
   return (
     <article
-      style={{
-        position: "relative",
-        background: K.elevated,
-        border,
-        borderRadius: K.radius.card,
-        padding: "18px 18px 16px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        minWidth: 0,
-        boxShadow: glow,
-        transition: "transform 150ms, box-shadow 150ms",
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = "translateY(-2px)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = "translateY(0)";
-      }}
+      className="kgs-lift"
+      style={
+        {
+          position: "relative",
+          background: K.elevated,
+          border,
+          borderRadius: K.radius.card,
+          padding: "18px 18px 16px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          minWidth: 0,
+          boxShadow: glow,
+          ...liftVars(
+            card.highlighted ? accent : withAlpha(accent, 0.6),
+            card.highlighted
+              ? `0 0 48px ${withAlpha(accent, 0.33)}`
+              : `0 8px 48px ${withAlpha(accent, 0.12)}`,
+          ),
+        } as CSSProperties
+      }
     >
       {/* Stretched card link: the whole card opens the drill view. */}
       <button
@@ -204,7 +208,7 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
                   lineHeight: 1,
                 }}
               >
-                {card.count}
+                <CountUp text={card.count} />
               </div>
               <div style={{ fontSize: 12, color: K.body, marginTop: 4 }}>
                 {card.countLabel}

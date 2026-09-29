@@ -5,6 +5,7 @@ import type { StackedBarDetail } from "@kgs/types";
 import { X } from "lucide-react";
 import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
+import { CountUp } from "../shared/CountUp";
 import { IllustrativeChip } from "../shared/IllustrativeChip";
 import { K, withAlpha } from "../shared/tokens";
 import { useDemo, useLabel } from "../shell/DemoProvider";
@@ -107,7 +108,7 @@ export function DetailPanel({
             lineHeight: 1,
           }}
         >
-          {L(detail.big)}
+          <CountUp text={L(detail.big)} />
         </span>
         {detail.money ? <IllustrativeChip /> : null}
         <span style={{ fontSize: 14, color: K.textMut }}>

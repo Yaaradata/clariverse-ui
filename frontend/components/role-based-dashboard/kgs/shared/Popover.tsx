@@ -94,8 +94,8 @@ export function Popover({
             lineHeight: 1.5,
             textAlign: "left",
             cursor: "default",
-            animation: "kgs-pop 150ms ease-out",
           }}
+          className="kgs-pop-in"
         >
           {children}
         </div>

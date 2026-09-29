@@ -12,7 +12,7 @@ import { useKgsNav } from "../nav";
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { DomainChip, SeverityChip } from "../shared/SeverityChip";
-import { K, SEV, withAlpha } from "../shared/tokens";
+import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { DrillChip, isStable } from "./Chips";
 import { SignalSurface } from "./SignalSurface";
@@ -57,6 +57,10 @@ function WallCard({ card, pulse }: { card: WallCardData; pulse: boolean }) {
         borderRadius: K.radius.card,
         border: `1px solid ${withAlpha(tone, 0.45)}`,
         background: withAlpha(tone, 0.06),
+        ...liftVars(
+          withAlpha(tone, 0.6),
+          `0 8px 28px ${withAlpha(tone, 0.15)}`,
+        ),
         padding: 14,
         display: "flex",
         flexDirection: "column",

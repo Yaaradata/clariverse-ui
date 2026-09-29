@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { DetailPanel } from "./DetailPanel";
@@ -98,6 +99,7 @@ export function StackedBarWithDetailPanel({
   interactive?: boolean;
 }) {
   const L = useLabel();
+  const reduced = useReducedMotion();
   const [selected, setSelected] = useState<string | null>(data.defaultOpen);
   const [rows] = useState<Row[]>(() =>
     data.bars.map((b) => {
@@ -176,6 +178,7 @@ export function StackedBarWithDetailPanel({
                   stackId="a"
                   fill={STACK_COLOURS[i % STACK_COLOURS.length]}
                   fillOpacity={i === 0 ? 1 : 0.7}
+                  isAnimationActive={!reduced}
                   animationDuration={900}
                   onClick={(_, index) => select(index)}
                   style={interactive ? { cursor: "pointer" } : undefined}

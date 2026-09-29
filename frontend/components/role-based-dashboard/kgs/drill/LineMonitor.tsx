@@ -12,6 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 
@@ -120,6 +121,7 @@ export function LineMonitor({
   ariaLabel: string;
 }) {
   const L = useLabel();
+  const reduced = useReducedMotion();
   const [rows] = useState<Row[]>(() =>
     weeks.map((w, i) => {
       const r: Row = { week: w };
@@ -218,6 +220,7 @@ export function LineMonitor({
                 }
                 activeDot={{ r: 5 }}
                 connectNulls={false}
+                isAnimationActive={!reduced}
                 animationDuration={900}
                 style={s.onClick ? { cursor: "pointer" } : undefined}
                 onClick={s.onClick}

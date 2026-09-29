@@ -2,14 +2,14 @@
 
 import { exec, meta } from "@kgs/lib/data";
 import { Info } from "lucide-react";
-import type { ReactNode } from "react";
 import { useKgsNav } from "../nav";
+import { CountUp } from "../shared/CountUp";
 import { Popover } from "../shared/Popover";
 import { K } from "../shared/tokens";
 
 const num = (n: number) => n.toLocaleString("en-GB");
 
-function Big({ children }: { children: ReactNode }) {
+function Big({ value }: { value: number }) {
   return (
     <strong
       style={{
@@ -21,7 +21,7 @@ function Big({ children }: { children: ReactNode }) {
         marginRight: 5,
       }}
     >
-      {children}
+      <CountUp text={num(value)} />
     </strong>
   );
 }
@@ -101,12 +101,12 @@ export function FunnelStrip() {
       }}
     >
       <span>
-        <Big>{num(f.interactions)}</Big>
+        <Big value={f.interactions} />
         {ui.interactions} {ui.weekNote}
       </span>
       {sep}
       <span>
-        <Big>{num(f.candidateClusters)}</Big>
+        <Big value={f.candidateClusters} />
         {ui.clusters}
       </span>
       {sep}
@@ -117,7 +117,7 @@ export function FunnelStrip() {
           <span
             style={{ display: "inline-flex", alignItems: "center", gap: 4 }}
           >
-            <Big>{num(f.suppressed)}</Big>
+            <Big value={f.suppressed} />
             {ui.suppressed}
             <Info size={13} color={K.textMut} aria-hidden />
           </span>
@@ -132,7 +132,7 @@ export function FunnelStrip() {
         style={linkStyle}
         onClick={() => scrollTo("field-signal-monitor")}
       >
-        <Big>{num(f.aboveThreshold)}</Big>
+        <Big value={f.aboveThreshold} />
         {ui.above}
       </button>
       {sep}
@@ -142,7 +142,7 @@ export function FunnelStrip() {
         style={linkStyle}
         onClick={() => scrollTo("governed-watch")}
       >
-        <Big>{num(f.governed)}</Big>
+        <Big value={f.governed} />
         {ui.governed}
       </button>
     </section>

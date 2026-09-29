@@ -14,6 +14,7 @@ import {
 import { ConfidenceMarker } from "../shared/ConfidenceMarker";
 import { GateChip } from "../shared/GateChip";
 import { IllustrativeChip } from "../shared/IllustrativeChip";
+import { useReducedMotion } from "../shared/motion";
 import { RoutedOwner } from "../shared/RoutedOwner";
 import { K, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
@@ -83,6 +84,7 @@ function Cell({
  */
 export function DateCodeHeatStrip() {
   const L = useLabel();
+  const reduced = useReducedMotion();
   const [hover, setHover] = useState<DateCodeCell | null>(null);
   const [pRows] = useState(() => DC.pChart.map((v, i) => ({ i, v })));
   const linked = linkedSignal(`/installed-base#${P.anchor}`);
@@ -238,6 +240,7 @@ export function DateCodeHeatStrip() {
                   stroke={K.green}
                   strokeWidth={2}
                   dot={false}
+                  isAnimationActive={!reduced}
                   animationDuration={900}
                 />
                 <ReferenceDot

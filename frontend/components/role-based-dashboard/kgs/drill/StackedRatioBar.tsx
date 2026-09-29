@@ -74,6 +74,7 @@ export function StackedRatioBar({
               </span>
             </span>
             <span
+              className="kgs-grow"
               style={{
                 display: "flex",
                 height: 28,

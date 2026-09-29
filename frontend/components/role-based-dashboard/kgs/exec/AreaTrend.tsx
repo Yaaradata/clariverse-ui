@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   Area,
   ComposedChart,
@@ -10,6 +11,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useReducedMotion } from "../shared/motion";
 import { K } from "../shared/tokens";
 
 export type TrendSeries = {
@@ -32,7 +34,7 @@ export type TrendMarker = { x: number; label: string; color: string };
  */
 export function AreaTrend({
   id,
-  data,
+  data: dataProp,
   series,
   markers = [],
   height = 96,
@@ -43,6 +45,8 @@ export function AreaTrend({
   markers?: TrendMarker[];
   height?: number;
 }) {
+  const reduced = useReducedMotion();
+  const [data] = useState(() => dataProp);
   const hasRight = series.some((s) => s.axis === "right");
   const xs = data.map((d) => d.x ?? 0);
   const domain: [number, number] = [
@@ -121,7 +125,7 @@ export function AreaTrend({
                 fillOpacity={1}
                 dot={false}
                 connectNulls={false}
-                isAnimationActive
+                isAnimationActive={!reduced}
                 animationDuration={900}
               />
             ) : (
@@ -136,7 +140,7 @@ export function AreaTrend({
                 strokeDasharray={s.dashed ? "4 4" : undefined}
                 dot={false}
                 connectNulls={false}
-                isAnimationActive
+                isAnimationActive={!reduced}
                 animationDuration={900}
               />
             ),
