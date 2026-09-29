@@ -576,6 +576,8 @@ export interface InstalledBasePage {
     bracket: string;
     pChart: number[];
     limit: number;
+    /** 03 §6.9 control-limit label (repo copy addition). */
+    limitLabel: string;
     current: number;
     stats: KpiTile[];
     confidence: Confidence;
@@ -776,6 +778,22 @@ export interface ShellCopy {
   close: string;
   pnl: string;
   hero: HeroCopy;
+  drill: DrillCopy;
+}
+
+/** Fixed drill-down labels (04 §0.1, §3, §5; 03 §3C). `{x}` placeholders are filled from data. */
+export interface DrillCopy {
+  source: string;
+  back: string;
+  severityWords: Record<SeverityClass, Severity["word"]>;
+  clusterTypes: [string, string, string, string];
+  stable: string;
+  phrasings: string;
+  openSignal: string;
+  week: string;
+  dateCodeTooltip: string;
+  fw41Segment: TokenString;
+  partnerLegend: [string, string, TokenString, string];
 }
 
 /** Fixed hero labels (04 §4, 06 Steps 9–12). `{x}` placeholders are filled from data numbers. */

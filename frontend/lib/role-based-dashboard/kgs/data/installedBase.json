@@ -410,6 +410,7 @@
       0.2, 0.21
     ],
     "limit": 0.3,
+    "limitLabel": "0.30% limit",
     "current": 0.21,
     "stats": [
       {

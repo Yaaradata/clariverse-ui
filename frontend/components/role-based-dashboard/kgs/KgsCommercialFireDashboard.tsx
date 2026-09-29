@@ -22,6 +22,7 @@ import { FloatingAIButton } from "./shell/FloatingAIButton";
 import { LeftRail } from "./shell/LeftRail";
 import { ToastProvider, useToast } from "./shell/Toast";
 import { Watermark } from "./shell/Watermark";
+import { InstalledBaseView } from "./views/InstalledBaseView";
 import { OverviewView } from "./views/OverviewView";
 import { SignalFw41View } from "./views/SignalFw41View";
 
@@ -70,6 +71,10 @@ const GLOBAL_CSS = `
 .kgs-root .kgs-slide { animation: kgs-slide 200ms ease-out both; }
 @keyframes kgs-draw { from { stroke-dashoffset: 40; } to { stroke-dashoffset: 0; } }
 .kgs-root .kgs-check path { stroke-dasharray: 40; animation: kgs-draw 250ms ease-out both; }
+@keyframes kgs-pulse-ring { 0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0); } 50% { box-shadow: 0 0 0 3px rgba(167, 139, 250, .7); } }
+.kgs-root .kgs-pulse { animation: kgs-pulse-ring 600ms ease-in-out 2; }
+.kgs-root .kgs-row:hover { background: rgba(255, 255, 255, 0.03); }
+.kgs-root .kgs-wall-scroll { scrollbar-width: thin; scrollbar-color: #5b4bb7 transparent; }
 @media (prefers-reduced-motion: reduce) {
   .kgs-root *, .kgs-root *::before, .kgs-root *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
 }
@@ -194,6 +199,8 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
           <main style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}>
             {view === "/" ? (
               <OverviewView />
+            ) : view === "/installed-base" ? (
+              <InstalledBaseView />
             ) : view === "/installed-base/signal/fw-4-1" ? (
               <SignalFw41View />
             ) : (

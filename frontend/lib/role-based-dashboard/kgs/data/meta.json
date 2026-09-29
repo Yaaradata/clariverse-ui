@@ -904,6 +904,29 @@
       "eligible": "Eligible not yet upgraded: {n}",
       "exportList": "Export list",
       "auditLog": "Audit log"
+    },
+    "drill": {
+      "source": "Verbatim from 04 §0.1–§0.2, §3, §5 and 03 §3C, §6.9 (added in repo copy; not in pack mock)",
+      "back": "Back to Overview",
+      "severityWords": {
+        "S1": "Life-safety / regulatory",
+        "S2": "Material impact",
+        "S3": "Operational",
+        "S4": "Efficiency"
+      },
+      "clusterTypes": ["Cliff", "Slope", "Spread", "Novel"],
+      "stable": "Stable",
+      "phrasings": "PHRASINGS",
+      "openSignal": "Open signal →",
+      "week": "W{n}",
+      "dateCodeTooltip": "{code} · {units} units · {rate} {unit} · {ratio}×",
+      "fw41Segment": "fw {{fw:EST4@4.1}}",
+      "partnerLegend": [
+        "Weekly interactions",
+        "Own baseline",
+        "{{platform:EST4}} sell-in",
+        "Sell-in last year"
+      ]
     }
   }
 }
