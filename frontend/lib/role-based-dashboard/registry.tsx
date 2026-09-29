@@ -22,10 +22,6 @@ import { HDFC_BANK_INDUSTRY_ID } from "./hdfcBankIndustry";
 import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
 import {
-  KIDDE_GLOBAL_HEAD_OF_CX_ROLE_ID,
-  KIDDE_GLOBAL_INDUSTRY_ID,
-} from "./kiddeGlobalIndustry";
-import {
   NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
   NEOGROUP_INDUSTRY_ID,
 } from "./neogroupIndustry";
@@ -36,8 +32,6 @@ export {
   INDUSIND_BANK_INDUSTRY_ID,
   HDFC_BANK_INDUSTRY_ID,
   HDFC_HEAD_OF_CX_ROLE_ID,
-  KIDDE_GLOBAL_INDUSTRY_ID,
-  KIDDE_GLOBAL_HEAD_OF_CX_ROLE_ID,
   NEOGROUP_INDUSTRY_ID,
   NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
 };
@@ -171,23 +165,6 @@ export const INDUSTRIES = [
     roles: [
       {
         id: HDFC_HEAD_OF_CX_ROLE_ID,
-        name: "Head of CX",
-        icon: Headphones,
-        sub: "Per-contact CX · service-driven brand · ops & workforce",
-        defaultLens: "ops",
-        primaryTile: 0,
-      },
-    ],
-  },
-  {
-    id: KIDDE_GLOBAL_INDUSTRY_ID,
-    name: "Kidde Global",
-    icon: Globe,
-    color: "#e11d48",
-    desc: "Global CX — per-contact quality, brand & ops",
-    roles: [
-      {
-        id: KIDDE_GLOBAL_HEAD_OF_CX_ROLE_ID,
         name: "Head of CX",
         icon: Headphones,
         sub: "Per-contact CX · service-driven brand · ops & workforce",

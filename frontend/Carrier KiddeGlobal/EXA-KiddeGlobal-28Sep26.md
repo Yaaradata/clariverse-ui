@@ -1,0 +1,173 @@
+Sourced global KGS Global Commercial Fire prospect dossier with contact universe, data/solution maps, regulatory pressure and ranked interaction-intelligence white space.
+
+**Prospect dossier:** # Engine: Exa research agent
+
+**Panel convention.** This is the consensus of an AI architect, former building-technology OEM service/support VP, PE carve-out operating partner, and fire-code/product-compliance/product-cybersecurity adviser. Every finding has a geography tag. *Fact* means directly evidenced; *inference* is explicitly identified; *proxy* is not KGS-specific. The panel’s disagreements appear within the relevant finding, rather than being averaged.
+
+## 0 — Prospect dossier
+
+### 0.1 Kartik Kumar
+- **[Global/China | fact]** Kartik Kumar is publicly identified as President, KGS Global Commercial Fire. In June 2025 he said KGS would invest for “ambitious growth” in China, prioritising energy storage, petrochemicals, rail, electronics manufacturing and data centres, and said Edwards would be localised there. [Xinhua](https://english.news.cn/20250602/622bdbe6fe614755b779f74192bd0ed4/c.html)
+- **[Global | fact]** His public launch post described the Carrier-to-Lone-Star transaction as the Global Commercial Fire business’s next chapter, while KGS’s announcement says it formed from Carrier’s Commercial and Residential Fire business. This is therefore the **same operating business before and after the carve-out, not two separate companies**; the legal owner/platform changed on 2 December 2024. [KGS](https://www.kidde.com/newsroom/press-release/kgs-acquired-by-affiliate-of-lone-star-funds)
+- **[China | inference]** Operating style detectable from the only substantive recent public statement is growth-through-localisation and vertical-market focus, not a disclosed service-transformation agenda. The former service VP would test this against partner certification, technical escalation and fill-rate data before inferring customer intimacy. **Disagreement:** the PE partner sees China localisation as a margin/working-capital risk until local supply, receivables and warranty loops are visible; the architect sees it as an ideal early-warning use case because product, firmware, batch and partner signals are likely to be fragmented.
+
+### 0.2 KGS corporate
+- **[Global | fact]** Carrier agreed the sale in August 2024 and completed it on 2 December 2024. Enterprise value was **$3bn**; Carrier’s 2024 filing reports **$2.9bn cash proceeds**, subject to working-capital and other purchase-agreement adjustments. Lone Star’s affiliate owns the standalone KGS platform. [KGS announcement](https://www.kidde.com/newsroom/press-release/kgs-acquired-by-affiliate-of-lone-star-funds) [Carrier 2024 10-K](https://www.sec.gov/Archives/edgar/data/1783180/000178318025000008/carr-20241231.htm)
+- **[North America HQ/global | fact]** KGS is headquartered in Palm Beach Gardens, Florida; Dan Thompson was named President and CEO at close. Publicly named brands are Kidde, Kidde Commercial, Edwards, GST, Badger, Gloria and Aritech. The public release does **not** disclose KGS revenue, statutory headcount, segment revenue, standalone legal entities, factory count, R&D sites or TSA dates. [KGS](https://www.kidde.com/newsroom/press-release/kgs-acquired-by-affiliate-of-lone-star-funds)
+- **[Global | proxy]** Carrier’s pre-sale 2024 group mix was 75% product and 25% parts/service, but this is **not a KGS revenue mix** and must not be used as one. Carrier described digitalisation as expanding aftermarket offers. [Carrier 10-K](https://www.sec.gov/Archives/edgar/data/1783180/000178318025000008/carr-20241231.htm)
+- **[China/Europe/MEA | fact]** GST’s Qinhuangdao facility reportedly has a 3,200m² smart workshop producing a smoke detector every three seconds; GST products reach 80+ countries/regions including Europe, Middle East and Africa. [Xinhua](https://english.news.cn/20250602/622bdbe6fe614755b779f74192bd0ed4/c.html)
+- **[India/global | single]** A 2025 job advertisement says KGS’s India digital hub was architecting Salesforce and other CRM solutions across Sales, Service, Marketing and Data Clouds, and mentions MS Dynamics and Sage; another listing mentions Kinaxis, JDE or Oracle ERP. These are job-ad claims, **not proof of production deployment nor segment-wide standardisation**. [CRM role](https://www.mncjobsindia.com/jobs/crm-architect-ts-5065071) [ERP role](https://talents.vaia.com/companies/kidde-global-solutions/senior-change-leader-supply-chain-erp-159312832/)
+- **[Global | fact]** KGS has a PSIRT, requests product/version/firmware, reproduction steps and contact details, promises acknowledgement within 48 hours, and says supported-product advisories will be published where possible. [KGS Product Security](https://www.kiddeglobalsolutions.com/product-security)
+
+### 0.3 Global Commercial Fire segment
+- **[North America/Europe/MEA/APAC | fact]** The commercial portfolio evidenced publicly includes addressable and conventional systems, wireless detection, aspirating smoke detection, software/tools, and fire-alarm/life-safety communications; KGS’s listed brands include Edwards, Kidde Commercial, GST and Aritech. [KGS](https://www.kiddeglobalsolutions.com/) [Kidde ESD](https://www.kidde-esfire.com/Home/DealerProgram)
+- **[North America | fact]** Kidde’s US support route explicitly offers technical support, after-hours emergency support, training, customer service and separate order/change-order e-mail addresses; its dealer programme offers local/national sales, application/marketing support, training and a closed dealer network. [Kidde support](https://www.kidde-esfire.com/Home/Support) [Dealer programme](https://www.kidde-esfire.com/Home/DealerProgram)
+- **[China/Europe/MEA | fact]** GST exports; China is a stated growth focus. **[Global | unknown]** KGS has not publicly disclosed Commercial Fire revenue by region, channel or product, so no defensible split exists. Any requested split should be an operating-partner diligence item, not estimated from brand presence.
+
+## A — Markets & stakeholder map
+
+- **[Global | proxy]** A market-research estimate puts 2025 global fire-safety equipment at **$60.48bn**, detection at **65.5%**, commercial at over **40%**, North America at **36.5%**, APAC fastest growing and Europe a material market. This is directional market context, not KGS market size/share. [Grand View Research](https://www.grandviewresearch.com/industry-analysis/fire-safety-equipment-market)
+- **[Global | proxy]** Named competitors include Honeywell/Notifier, Johnson Controls/Simplex, Siemens, Hochiki, Mircom, Gentex, Halma and Fike; public credible shares for KGS by region are not found. [QY Research](https://www.qyresearch.com/reports/2336954/fire-alarm-and-detection)
+- **[North America/Europe/MEA/APAC | fact/proxy]** The normal chain is manufacturer → distributor/engineered-systems distributor → integrator/installer/service contractor → owner/facilities/life-safety manager → occupants, with consulting engineer/specifier, AHJ/fire marshal, monitoring station, insurer/risk engineer and certification body as gatekeepers. Peer JCI sells/services through direct and third-party channels across Americas, EMEA/LATAM and APAC; NFPA-style system records require owner, installer, supplier, service organisation, monitoring organisation and approving agency information. [JCI 10-K](https://app.edgar.tools/filing/833444/0000833444-24-000064) [system record form](https://www.dgs.dc.gov/sites/default/files/dc/sites/dgs/publication/attachments/Attachment%20J%2010%20-%20Fire%20Alarm%20Completion%20Reports.pdf)
+
+| Stakeholder | Wants from KGS; power held |
+|---|---|
+| Owner/facility, EHS and life-safety manager **[all regions]** | Compliant, available system; few nuisance alarms; evidence and predictable lifecycle cost. Holds acceptance, renewal, installed-base data and reference power. |
+| Distributor/ESD, integrator, installer and service contractor **[all regions]** | Stock, margin, quotes, training, design and fast L3 support. Holds the customer relationship, specification influence, commissioning quality and most first-line voice. |
+| Consulting engineer/specifier/GC **[all regions]** | Listed compatible design, BIM/submittals and reliable lead times. Holds spec inclusion before purchase. |
+| AHJ/fire marshal, inspector and standards/listing body **[jurisdictional]** | Listing, test evidence, documentation and qualified people. Holds acceptance/occupancy and enforcement power. |
+| Monitoring station/security/BMS OEM **[all regions]** | Correct interfaces, alarm routing, cyber-safe updates. Holds incident response and interoperability outcomes. |
+| Insurer/risk engineer **[industrial/data centre/energy]** | Resilience beyond minimum code. Can require upgrades or influence premiums. |
+| Occupant/resident/consumer **[mainly residential adjacency]** | Working alarm, clear recall/CO/fire guidance and low nuisance alarm burden. Creates safety/reputational signal. |
+
+**Regional pattern.** **[North America]** listing/AHJ/NFPA, dealer certification and retrofit are dominant. **[UK/Europe]** EN/CE/CPR, Building Safety information and multi-country partner documentation dominate. **[Middle East]** consultant/specifier and approved-partner/AHJ route is likely central; KGS’s regional public posts show partner/customer/consultant engagement but are marketing-grade. [KGS Middle East](https://linkedin.com/company/kgsmiddleeast) **[China]** localised Edwards plus GST manufacturing and high-growth verticals are explicit. **[India/Australia]** local code, tender and certified-channel requirements are high; India’s NBC is a model code adopted through authorities. [BIS NBC](https://www.bis.gov.in/standards/national-building-code/?lang=en)
+
+## B — Mandate & KPIs
+
+| KPI / cadence | Why it makes a President/GM act | PE direction, 12–36 months |
+|---|---|---|
+| Orders, book-to-bill, backlog ageing, quote conversion, spec wins; weekly/monthly | Growth and channel share; delays lose a specified job. | **Rising**: cash/working capital plus growth. |
+| Gross margin, EBITDA, cost-to-serve/contact, price leakage; weekly/monthly | An avoidable L2/L3 call, repeat visit or expedite has direct margin impact. | **Sharply rising** post-separation. |
+| OTIF, fill rate, lead-time promise accuracy, inventory/obsolete stock, DSO; weekly | Partner trust and cash conversion. | **Sharply rising**; separation can disrupt master data and supply planning. |
+| Warranty/RMA rate and cost, DOA, repeat failure, field-action/recall exposure; weekly/monthly | Product safety and quality can stop sales and create regulatory liability. | **Sharply rising**. |
+| First response, abandonment, repeat contact, first-time fix, escalation age, partner CSAT; daily/weekly | Service VP view: these are leading indicators only when segmented by product/site/partner. | Rising. |
+| Service attach/renewal, training/certification, connected-base activation; monthly/quarterly | Protects recurring revenue and channel competence. | Rising; values undisclosed for KGS. |
+| Nuisance alarms, defect closure, AHJ rework, cyber patch exposure; event/monthly | Safety, acceptance and brand risk rather than “CX noise”. | Rising, especially connected products. |
+| TSA exit, app/data migration %, cyber incidents, stranded costs; weekly executive | A carve-out can fail even while sales grow. | Temporary but existential until exit. |
+
+**[Global | inference, panel consensus]** The President acts when a signal ties to revenue, cash, safety, acceptance or a partner’s ability to sell/service—not merely sentiment. **Disagreement:** the architect prioritises novel weak signals; the former VP requires a reproducible product/partner/region cohort and a concrete owner before executive escalation. The PE partner agrees with the former VP except where a safety duty makes early escalation mandatory.
+
+## C — Contact universe (the core section)
+
+**Scope/method.** KGS does not publish contact volumes. “Share” below is a **[estimate — method: operational allocation, not observed KGS data]**: high = likely recurring operational contact; medium = project/lifecycle; low = exception/safety event. The channels are evidenced by KGS support/portal/training resources and peer fire-service practice. [Kidde support](https://www.kidde-esfire.com/Home/Support) [Kidde technical ticket](https://kiddefx.kidde.com/Home/TechnicalSupport) [Edwards training](https://priority.edwardsfiresafety.com/Training/Home) [NFPA-72 training extract](https://www.bfaam.org/_files/ugd/3c5721_0e779a2fd01b4e079d8c8b5e5f429f4d.pdf)
+
+| Stakeholder | Direction | Contact type / intent | Channel | Trigger/seasonality | Approx. volume/share (method) | Cost/risk if handled badly |
+|---|---|---|---|---|---|---|
+| Installer/integrator **[all]** | In | Panel programming/commissioning/configuration | phone, ticket, portal, e-mail | install/acceptance; project peaks | High [estimate] | missed commissioning, truck roll, failed acceptance |
+| Installer/integrator **[all]** | In | Fault code, wiring/device compatibility, troubleshooting | phone/after-hours, ticket | live fault/outage | High [estimate] | unsafe impairment, downtime, repeat visits |
+| Installer/integrator **[all]** | In | Firmware/software/version and licence help | portal, ticket, e-mail | upgrade/new feature | Medium [estimate] | incompatible system/cyber exposure |
+| KGS → installer **[all]** | Out | Case resolution, known issue/firmware guidance | e-mail, portal, call | recurring cohort | Medium [estimate] | unresolved defect propagates |
+| Distributor/partner **[all]** | In | Order status, backorder, ETA, allocation/change order | e-mail, phone, ERP/portal | project ship date; supply shock | High [estimate] | lost job/spec, expedite cost, cash delay |
+| KGS → distributor **[all]** | Out | Availability, price/quote expiry, allocation, discontinuance | CRM/e-mail/portal | backlog/EOL | High [estimate] | channel distrust, inventory write-off |
+| Distributor/engineer **[all]** | In | Quote, configuration, submittal, lead time | e-mail, portal, sales call | tender/design | High [estimate] | conversion/spec loss |
+| Installer/owner **[all]** | In | DOA, field failure, warranty, RMA/return | call, ticket, RMA form, photos | install/early life | Medium [estimate] | repeat failure, warranty leakage/safety escalation |
+| KGS → partner/owner **[all]** | Out | RMA authorisation, replacement/shipping/credit, root-cause update | e-mail, ERP, call | approved claim | Medium [estimate] | downtime and working-capital dispute |
+| Owner/service contractor **[all]** | In | Spares, legacy-panel EOL/migration, substitution | phone, e-mail, distributor | service/retrofit | Medium-high [estimate] | unprotected site, lost installed base |
+| KGS → installed base **[all]** | Out | EOL roadmap, compatible migration/training | e-mail, partner campaign | component obsolescence | Medium [estimate] | customer lock-in loss/obsolete inventory |
+| Installer/partner **[all]** | In | Certification/training/recertification | learning portal, e-mail, phone | onboarding, product launch | Medium [estimate] | poor installs and loss of channel capacity |
+| KGS → installer **[all]** | Out | Course, accreditation, release note, competency reminder | LMS, portal, e-mail | launch/annual | Medium [estimate] | unqualified work/AHJ rework |
+| Engineer/AHJ **[NA/EU/UK/India/Australia]** | In | Datasheet, listing, DoP/CE, test evidence, approval document | web, e-mail, portal | tender/acceptance | Medium [estimate] | rejected submittal/occupancy delay |
+| KGS → AHJ/partner | Out | Listing change, application constraint, corrected documentation | bulletin, portal, e-mail | standard/product change | Low-medium [estimate] | non-compliant install or field action |
+| Security researcher/integrator **[global]** | In | Vulnerability report/firmware exposure | PSIRT e-mail | discovery | Low [fact: dedicated route] | exploit, CRA reporting breach, reputational damage |
+| KGS → affected users | Out | Advisory, patch/mitigation, supported-life status | security site, e-mail, partner | confirmed vulnerability | Low [estimate] | unsafe unpatched products |
+| Owner/consumer/channel **[global]** | In | Recall/safety notice, smoke/CO/nuisance alarm complaint | web, call, review/social | incident/notice | Low-medium [estimate] | injury, CPSC/recall/reputation |
+| KGS → consumer/channel | Out | Recall/safety notice/remedy | web, e-mail, retailer/channel | identified hazard | Low event/high consequence | delayed corrective action |
+| Owner/facilities **[all]** | In | false/nuisance alarms, inspections, testing, deficiency closure | contractor call, service note, e-mail | testing/occupancy changes | Medium [estimate] | business interruption, fines/insurance |
+| KGS/partner → owner/AHJ/monitoring/occupants | Out | planned test/impairment/restoration notice | phone, e-mail, work order | scheduled ITM | Medium [fact: required coordination] | unwanted dispatch, unsafe test, failed record |
+| Owner/partner **[connected]** | In | service contract, remote monitoring, telemetry/portal access | sales/service desk, portal | renewal/onboarding | Medium [estimate] | churn/data-access breach |
+| Account manager → distributor/integrator | Out | QBR, forecast, MDF, pricing, inventory and training | CRM, call, field visit | monthly/quarterly | Medium [estimate] | share erosion/forecast miss |
+| Consumer **[residential adjacency]** | In/out | alarm setup, interconnect behaviour, replacement, returns/safety notices | call, web, retailer/social | seasonal moves/incident/recall | High count but separate from Commercial Fire [estimate] | high brand/reputational risk |
+
+**Why KGS must initiate contact.** KGS’s own product-security page creates an explicit acknowledgement/advisory loop; its safety-notice page shows listing/product-change communications; NFPA-style service practice requires notifications before/after testing and retention of records. [PSIRT](https://www.kiddeglobalsolutions.com/product-security) [Kidde notices](https://www.kidde.com/product-safety-notices) [NFPA extract](https://www.bfaam.org/_files/ugd/3c5721_0e779a2fd01b4e079d8c8b5e5f429f4d.pdf)
+
+## D — Pain points & needs by stakeholder
+
+- **[Installers/integrators, all | fact]** Need rapid product-specific programming, diagnostic and compatibility help. KGS advertises technical ticketing and after-hours emergency support; Edwards courses cover configuration, mapping, database reconciliation, upgrades/replacements and troubleshooting. [Kidde FX](https://kiddefx.kidde.com/Home/TechnicalSupport) [Edwards learning](https://priority.edwardsfiresafety.com/Training/Home)
+- **[Owners/AHJs, North America | fact]** Need qualified service, co-ordinated tests, documented defects and lasting records. NFPA-72 material says owner responsibility can be delegated in writing, requires pre/post-test notifications and requires acceptance records for life of system. [NFPA extract](https://www.bfaam.org/_files/ugd/3c5721_0e779a2fd01b4e079d8c8b5e5f429f4d.pdf)
+- **[Mission-critical owners, global | fact]** Need early detection with low false-alarm/unplanned-shutdown risk: Kidde markets ASD specifically for data centres, laboratories and advanced manufacturing and claims intelligent filtering. This is a vendor claim, so performance must be verified at site level. [Kidde ASD](https://www.kidde-esfire.com/Home/AspiratingSmokeDetection)
+- **[Channel, all | proxy]** Need design/application engineering, price, reliable supply and partner enablement. Honeywell’s partner model ties partner tiers to revenue/growth/payment/inventory/POS data and offers training, discounts and warranties—useful peer evidence, not KGS proof. [Honeywell partner brochure](https://hbtmkto.honeywell.com/rs/127-UCB-316/images/2023%20Farenhyt%20Series%20Catalyst%20Partner%20Program%20brochure.pdf)
+- **[UK/Europe | fact]** Responsible Persons need complete recorded fire-risk and fire-safety information and handover to successors; this increases demand for accurate manufacturer documents and traceable service interactions. [UK Home Office](https://assets.publishing.service.gov.uk/media/6538e73fd10f3500139a68d0/Fire+safety+responsibilities+under+Section+156+of+the+Building+Safety+Act+2022.pdf)
+- **[Global | inference]** There is no retrieved KGS installer-forum/review corpus sufficient to claim a KGS-specific “voice of customer”. Treat broad claims about lead times, firmware quality, partner pain or NPS as hypotheses. The former VP’s view: repeat contacts on the same site/device/version and post-visit notes are stronger VoC than a star rating.
+
+## E — Data fragmentation map
+
+| Interaction/question | Likely physical source | Hard/usually missing join | Detectable signal if joined |
+|---|---|---|---|
+| Technical case, call/chat/e-mail | telephony recordings, CRM case, shared inbox, knowledge base | case/caller ↔ panel/device serial ↔ firmware/configuration ↔ site/installer | abnormal fault-code or compatibility cohort |
+| Order/quote/backorder | ERP, CPQ, distributor EDI, CRM | promise date/SKU ↔ lost quote ↔ partner/site ↔ expedites | lead-time contact spike before cancelled orders |
+| Warranty/RMA/DOA | RMA/warranty app, ERP credit, photos, repair notes | failure narrative ↔ lot/batch/supplier ↔ manufacturing date ↔ repeat install | batch/region/partner early-life anomaly |
+| Field service/ITM | FSM work orders, technician notes, inspection PDFs | free-text deficiency ↔ installed-base configuration ↔ AHJ outcome | recurring deficiency/false-alarm cluster |
+| Connected panel | telemetry/event logs, cloud identity/access logs | telemetry alarm ↔ customer contacts ↔ firmware/patch ↔ service dispatch | silent degradation or poor incident communication |
+| Training/channel | LMS, certification file, partner CRM | technician credential ↔ commissioning faults/RMAs ↔ partner performance | untrained/cohort-driven repeat calls |
+| Listing/safety/cyber | PLM/QMS, document control, PSIRT, regulator correspondence | product change ↔ affected serials/contacts ↔ jurisdiction | incomplete notification/remedy reach |
+| External voice | reviews, forums, social, distributor tickets | identity/site/product resolution is often absent | weak early signal; must be corroborated |
+
+**[Global | fact/inference]** The KGS job advert implies multiple CRM products and planned integration; Carrier described its own platform approach as drawing data from disparate systems/sensors. Thus a standalone master customer, partner, site, asset/serial, SKU, firmware and batch identity layer is a credible carve-out requirement, but KGS’s actual architecture remains unverified. [KGS CRM role](https://www.mncjobsindia.com/jobs/crm-architect-ts-5065071) [Carrier 10-K](https://www.sec.gov/Archives/edgar/data/1783180/000178318025000008/carr-20241231.htm)
+
+## F — Solution landscape
+
+### F1 incumbent service/CX platforms
+- **[KGS/global | single]** Salesforce Sales/Service/Marketing/Data Cloud, MS Dynamics and Sage are mentioned in a KGS CRM architect advertisement; production usage, contact-centre vendor, knowledge base and recording coverage are unverified. [job listing](https://www.mncjobsindia.com/jobs/crm-architect-ts-5065071)
+- **[KGS/US residential adjacency | single]** A current manager profile claims a phone-system upgrade integrated into Salesforce, an outsourced second support centre, and a 28%→5% abandonment reduction and 80% in 30 seconds. This is self-reported profile evidence, not audited company data, and should not be assumed to cover Commercial Fire. [profile](https://www.linkedin.com/in/kevin-brown41672)
+
+### F2 CX/VoC and conversation analytics
+- **[Global | fact]** No retrieved primary source establishes KGS use of Medallia, Qualtrics, Sprinklr, CallMiner, NICE, Verint or Observe.AI. These tools generally analyse selected contact-centre/digital interaction data; the cited CallMiner integration page illustrates linkage to Medallia/Qualtrics/NICE but is vendor marketing, not deployment evidence. [CallMiner](https://callminer.com/products/integrations/integration-listings)
+- **[Panel assessment]** Their strengths are transcription, QA, agent coaching and solicited feedback; their common gap for commercial-fire use is absence of reliable joins to asset/firmware/batch/RMA/order and partner hierarchy, and poor capture of e-mail, portal, field notes and external voice in one evidence chain. That is an architecture assessment, not a claim about every vendor.
+
+### F3 peers’ connected/digital offers
+- **[North America | fact]** Honeywell CLSS says it can generate NFPA 72/25/10 and other compliance reports and its gateway reads panel inventory/events to support remote monitoring/management. [Honeywell CLSS](https://buildings.honeywell.com/us/en/solutions/fire/clss/compliance-manager)
+- **[North America | fact]** JCI Connected Fire Panels offer real-time panel events, one portal, remote service and claims lower false-alarm costs/faster recovery. [JCI](https://www.johnsoncontrols.com/services-and-support/fire-maintenance-and-support/connected-fire-panels)
+- **[Global | fact]** Siemens offers cloud-connected event logging, eLogbook/test reports, remote diagnosis, remote monitoring and detector-soiling/danger alerts. [Siemens](https://www.siemens.com/en-us/products/building-services/fire-safety-services/)
+
+### F4 architecture pattern and gap
+**[Global | panel consensus]** Pattern: edge/panel/telephony/e-mail/portal/FSM/RMA/ERP → immutable interaction/event store → entity resolution/semantic layer → cohort-baseline anomaly engine → evidence-linked human workflow in CRM/QMS/PSIRT. It does not replace the system of record or autonomously message customers. CRM reports answer known fields; generic LLMs summarise supplied text. Neither, by itself, reliably observes 100% of multimodal interactions, establishes each entity’s own baseline, nor joins an emerging language pattern to batch/firmware/order/site before routing it to the accountable executive.
+
+## G — Regulatory, standards & safety pressure
+
+| Instrument, geography and current status | Decision/metric constrained; interaction-intelligence relevance |
+|---|---|
+| NFPA 72/70/10/25 **[North America]** | NFPA 72 edition varies by AHJ; current public NFPA material requires qualified service, notifications, test plans and records. It constrains training, documentation, deficiencies and audit readiness. Full-coverage evidence can find repeated defects/late closure—not replace inspections. [NFPA extract](https://www.bfaam.org/_files/ugd/3c5721_0e779a2fd01b4e079d8c8b5e5f429f4d.pdf) [NFPA 10 2026](https://link.nfpa.org/all-publications/10/2026) |
+| UL 864/268/217 **[North America]** | Listing/compatibility and product change constrain approval and replacement. UL says newer UL 217 editions add modern-fire and cooking-nuisance tests; KGS has disclosed a strobe notice related to UL 1971/UL 1638. Monitor contacts that mention model/date/jurisdiction. [UL](https://www.ul.com/thecodeauthority/knowledge/ul-217-standard-smoke-alarms-published-new-technical-requirements) [Kidde notice](https://www.kidde.com/product-safety-notices) |
+| EN 54 / EU Construction Products Regulation 2024/3110 **[EU]** | CPR 2024/3110 is in force and governs harmonised marketing/CE marking, declaration of performance/conformity. It constrains document control, change notification and channel/AHJ evidence. [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2024/3110) |
+| EU Cyber Resilience Act **[EU]** | From **11 September 2026**, manufacturers must report actively exploited vulnerabilities/severe incidents; early warning is within 24h, full notification within 72h. That makes routed, time-stamped product/version evidence in contacts materially valuable. [European Commission](https://digital-strategy.ec.europa.eu/en/policies/cra-reporting) |
+| UK Building Safety Act / Fire Safety Order amendments **[England]** | Responsible Persons must record full risk assessment/safety arrangements and transfer relevant information; higher-risk buildings need a “golden thread”. This creates traceability demand, but does not compel KGS to monitor all contacts. [Home Office](https://assets.publishing.service.gov.uk/media/6538e73fd10f3500139a68d0/Fire+safety+responsibilities+under+Section+156+of+the+Building+Safety+Act+2022.pdf) |
+| CPSC CPSA §15 **[US/residential adjacency]** | Manufacturers/importers/distributors/retailers must immediately report certain hazards/non-compliance; CPSC says within 24h of reportable information. Contact clustering can speed triage, never substitute legal assessment. [CPSC](https://www.cpsc.gov/Business--Manufacturing/Recall-Guidance/Duty-to-Report-to-the-CPSC-Your-Rights-and-Responsibilities) |
+| India NBC/BIS **[India]** | NBC has Part 4 Fire and Life Safety and is a model code for adoption by relevant agencies. It drives local documentation/approval questions. [BIS](https://www.bis.gov.in/standards/national-building-code/?lang=en) |
+| IEC 62443-4-1 **[global connected products]** | Secure development lifecycle covers security requirements, design, verification, defect/patch management and EOL—directly relevant to firmware and PSIRT interactions. [IEC preview](https://webstore.ansi.org/preview-pages/IEC/preview_iec62443-4-1%7Bed1.0%7Den.pdf) |
+| EU PFAS firefighting foam restriction **[EU, relevant to suppression/extinguishers]** | Reuters reports the restriction entered force late October 2025, with transition periods; portable extinguishers containing PFAS after six months, training/testing/municipal uses after 18 months and some high-risk industrial sites 10 years. This should trigger SKU/chemical/region/channel communications and substitution demand. [Reuters](https://www.reuters.com/sustainability/boards-policy-regulation/eu-restricts-use-forever-chemicals-firefighting-foams-2025-10-03/) |
+
+**[Conflict]** The compliance adviser treats CRA/CPSC timing as a safety/legal escalation even on a thin signal. The former VP warns that contact frequency alone is not a defect finding; evidence must preserve original interaction, product identity, severity and investigation status.
+
+## H — White space & fit
+
+| Unmet need / rank | Executive owner | Earliest interaction signal | Why dashboard/generic LLM misses it | Value at stake |
+|---|---|---|---|---|
+| **1. Safety/quality early warning: join technical language to serial/firmware/batch/RMA/site** **[global]** | GCF President + Quality/Engineering + PSIRT | rising fault phrase, DOA/RMA narrative, workaround, nuisance alarm in one cohort | CRM codes are sparse; dashboard needs prebuilt metric; generic LLM lacks joined denominator/baseline | recall/field action, warranty, avoided truck rolls, CRA/CPSC response; quantify only after cohort denominators obtained |
+| **2. Partner technical friction and cost-to-serve** **[all]** | Commercial/Channel leader + Service VP | repeat contacts/escalation age/after-hours calls by partner, product/version and job stage | AHT/NPS averages hide a small strategic partner’s repeat install failures | conversion, spec retention, support cost, first-time fix and partner share |
+| **3. Promise-to-delivery/legacy migration risk** **[all; highest in retrofit]** | Supply-chain/GM + Product management | co-occurrence of ETA, substitute, EOL, compatibility and cancelled quote language | ERP sees shipment, not technical reason a customer cannot substitute | backlog conversion, inventory/DSO, installed-base retention |
+| **4. Compliance-document/AHJ rework** **[NA/UK/EU/India/Australia]** | Regulatory/Product + regional GM | clustered “listing/DoP/AHJ/revision” requests or rejected submittals | document downloads do not show misunderstanding/rework | faster acceptance, lower engineer time, avoided occupancy delay |
+| **5. Connected-product patch/advisory reach** **[EU/global]** | CISO/PSIRT + Service | affected version observed in calls/portal/telemetry with no acknowledgement | asset inventory alone misses human inability to patch/operate | CRA timeliness, cyber/safety exposure |
+
+**Value of joins.** **[Global | inference]** Product/firmware/batch × contact pattern separates “a bad week in support” from a contained engineering cohort; region × AHJ/standard separates code/document confusion from defect; channel-partner × order/RMA separates service-quality failure from stock/credit friction. The PE partner would fund this first where it reduces warranty, expedites and contact/field cost while creating a durable standalone data asset. The architect cautions that poor identity resolution can create false cohorts; retain confidence and evidence links.
+
+**Post-carve-out fit.** **[Global | proxy]** Peer carve-outs show the TSA-exit necessity: a fire/security separation case used a greenfield cloud estate, data bridges and 17-country migration; a separate HVAC carve-out reported avoiding over $750k/month stranded costs. These are analogues, not KGS facts. [Deloitte/APi–Chubb](https://www.deloitte.com/global/en/services/consulting/case-studies/defining-success-in-m-and-a-separation.html) [Resultant HVAC case](https://resultant.com/insights/client-stories/hvac-provider-carveout/)
+
+## One-page synthesis
+
+1. **Three highest-impact, least-served needs.** (i) Product safety/quality signal detection tied to batch, firmware, RMA and site; (ii) partner technical-friction detection tied to certification, commissioning and repeat contacts; (iii) delivery/EOL/compatibility friction tied to order, quote and installed base. **[Global | inference]** These are high impact because each reaches safety, margin/cash or channel retention; none is publicly evidenced as a unified KGS capability.
+
+2. **Sentence for Kartik Kumar:** “Show me the handful of product–firmware–partner cohorts where repeat technical friction is silently converting into failed commissioning, RMA cost, missed China/critical-infrastructure growth and a preventable safety or compliance escalation.”
+
+3. **Where the layer wins:** It observes every interaction, baselines each entity, resolves it to asset/order/RMA/partner context and routes the original evidence to a human owner—where a CRM report sees coded cases and a generic LLM sees only the text it is handed.
+
+4. **Three facts least certain of.** (a) KGS Commercial Fire revenue/headcount/region/channel split—no public disclosure found; (b) actual production deployment and coverage of Salesforce/CRM/ERP/contact-centre stack—the job/profile signals are single-source; (c) exact current KGS manufacturing/R&D footprint and TSA milestones—public sources establish China GST activity but not a complete footprint.
