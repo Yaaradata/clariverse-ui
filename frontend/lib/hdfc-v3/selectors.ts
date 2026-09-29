@@ -19,7 +19,20 @@ export type SignalItem = {
   pillar: string;
   ackAt?: string;
   ackSystem?: string;
+  group?: string;
+  href?: string;
 };
+
+/** B7 §4.3: display names for themes on exec pages. */
+const LABEL_OVERRIDE: Record<string, string> = {
+  app_praise: "Where customers praise us: quick, easy app journeys",
+};
+
+/** B7 §4.2: the exec pages lead with complaints closed without resolution; the app fix list is second. */
+export const LEAD_THEME = "complaint_handling";
+export const RELEASE_LABEL = "New mobile app release: fix list";
+/** B7 §4.3: an item is "improving" only with at least 15 items in each half of the window. */
+export const MIN_PER_HALF = 15;
 
 export function themeMap(b: Bundle): Record<string, Theme> {
   const m: Record<string, Theme> = {};
@@ -46,7 +59,7 @@ export function trendWords(t: Theme): string {
   const r = t.rise_pct;
   if (r === null || r === undefined)
     return t.trend_mode === "insufficient"
-      ? "no trend claimed (mostly September-only app exports)"
+      ? "no trend claimed (mostly from store exports that start mid-window)"
       : "no earlier period to compare";
   const dir = r >= 0 ? "up" : "down";
   if (t.trend_mode === "vs_baseline")
@@ -66,7 +79,8 @@ export function signalFromTheme(
     : "";
   return {
     id: t.id,
-    label: t.label,
+    label: LABEL_OVERRIDE[t.id] ?? t.label,
+    group: t.group,
     owner: t.owner,
     ownerLabel: t.owner_label,
     rung: t.rung,
@@ -83,7 +97,8 @@ export function signalFromTheme(
 export function signalFromRelease(rp: ReleasePulse): SignalItem {
   return {
     id: rp.id,
-    label: rp.label,
+    label: RELEASE_LABEL,
+    group: "App and digital",
     owner: rp.owner,
     ownerLabel: rp.owner_label,
     rung: rp.rung,
@@ -100,7 +115,11 @@ export function signalFromRelease(rp: ReleasePulse): SignalItem {
 export function needsYou(b: Bundle): SignalItem[] {
   const tm = themeMap(b);
   const rp = releasePulse(b);
-  return b.briefing.needs_you
+  const ids = [
+    LEAD_THEME,
+    ...b.briefing.needs_you.filter((id) => id !== LEAD_THEME),
+  ];
+  return ids
     .map((id) =>
       id === "release-pulse" && rp
         ? signalFromRelease(rp)
@@ -115,6 +134,7 @@ export function needsYou(b: Bundle): SignalItem[] {
 export function routedItems(b: Bundle): SignalItem[] {
   const tm = themeMap(b);
   return routedList(b)
+    .filter((r) => r.theme !== LEAD_THEME)
     .map((r) =>
       tm[r.theme] ? signalFromTheme(b, tm[r.theme], "routed") : null,
     )
@@ -126,23 +146,61 @@ export function thisWeekItems(b: Bundle): SignalItem[] {
   const tm = themeMap(b);
   const routed = new Set(routedList(b).map((r) => r.theme));
   return b.briefing.this_week
-    .filter((id) => !routed.has(id) && tm[id])
+    .filter((id) => id !== LEAD_THEME && !routed.has(id) && tm[id])
     .map((id) => signalFromTheme(b, tm[id], "this_week"));
 }
 
+/**
+ * Improving (B7 §4.3): only real improvements, each with at least 15 items in both halves of the window. Themes whose
+ * share of voice fell, then PayZapp on the App Store when its positive share rose, then where customers praise us.
+ */
 export function improvingItems(b: Bundle): SignalItem[] {
-  const tm = themeMap(b);
-  return b.briefing.improving
-    .filter((id) => tm[id])
-    .map((id) => {
-      const t = tm[id];
-      const s = signalFromTheme(b, t, "improving");
-      if (id === "app_praise" || id === "service_praise") {
-        s.why = `${fmt(t.sentiment.positive)} positive public items in the window.`;
-      }
-      return s;
-    })
-    .slice(0, 2);
+  const out: SignalItem[] = [];
+  const falling = b.themes.themes
+    .filter(
+      (t) =>
+        t.trend_mode === "trend_within_window" &&
+        t.trend.first_half >= MIN_PER_HALF &&
+        t.trend.second_half >= MIN_PER_HALF &&
+        (t.trend.change_pct ?? 0) <= -20 &&
+        !["general_dissatisfaction", "offers_deals", "other"].includes(t.id),
+    )
+    .sort((a, c) => (a.trend.change_pct ?? 0) - (c.trend.change_pct ?? 0));
+  for (const t of falling.slice(0, 1)) {
+    const s = signalFromTheme(b, t, "improving");
+    s.why = `Share of public voice down ${Math.abs(Math.round(t.trend.change_pct ?? 0))}% in the second half of the window (${fmt(t.trend.first_half)} then ${fmt(t.trend.second_half)} items).`;
+    out.push(s);
+  }
+  const pz = b.storeSeries.apps
+    .find((a) => a.app === "PayZapp")
+    ?.stores.find((s) => s.store === "appstore");
+  if (
+    pz?.halves.comparable &&
+    (pz.halves.second.share_positive ?? 0) >
+      (pz.halves.first.share_positive ?? 0)
+  ) {
+    out.push({
+      id: "payzapp-appstore",
+      label: "PayZapp reviews on the App Store",
+      group: "Payments",
+      owner: "payments",
+      ownerLabel: "Payments",
+      rung: "Voice",
+      action: "Monitor",
+      status: "improving",
+      count: pz.window.n,
+      why: `Positive reviews rose from ${Math.round(pz.halves.first.share_positive ?? 0)}% to ${Math.round(pz.halves.second.share_positive ?? 0)}% between the two halves of the window (${fmt(pz.halves.first.n)} and ${fmt(pz.halves.second.n)} reviews, App Store only).`,
+      pillar: "experience",
+      href: "/hdfc-pulse/v2/business/payzapp",
+    });
+  }
+  const praise = themeMap(b).app_praise;
+  if (praise) {
+    const s = signalFromTheme(b, praise, "improving");
+    s.why = `${fmt(praise.sentiment.positive)} positive public items in the window.`;
+    out.push(s);
+  }
+  return out.slice(0, 3);
 }
 
 const RUNG_WEIGHT: Record<string, number> = {
@@ -176,5 +234,9 @@ export function publicTotal(b: Bundle): number {
 }
 
 export function signalHref(id: string, from: string): string {
-  return `/hdfc-v3/signal/${id}?from=${from}`;
+  return `/hdfc-pulse/v2/signal/${id}?from=${from}`;
+}
+
+export function itemHref(s: SignalItem, from: string): string {
+  return s.href ? `${s.href}?from=${from}` : signalHref(s.id, from);
 }

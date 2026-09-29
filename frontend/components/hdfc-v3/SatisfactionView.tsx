@@ -14,7 +14,14 @@ import {
 } from "recharts";
 
 import { satisfactionAnswer } from "@/lib/hdfc-v3/copy";
-import { fmt, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import {
+  fmt,
+  fmtDate,
+  fmtPct,
+  fmtSigned,
+  halfLabel,
+  rangeLabel,
+} from "@/lib/hdfc-v3/format";
 import { signalHref, themeMap, trendWords } from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
@@ -119,7 +126,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
     weeks.set(k, w);
   }
   const weekly = [...weeks.entries()].map(([k, w]) => ({
-    week: `${k.slice(8, 10)} ${["Jul", "Aug", "Sep"][Number(k.slice(5, 7)) - 7]}`,
+    week: fmtDate(k),
     net: Math.round((100 * (w.pos - w.neg)) / w.n),
   }));
 
@@ -175,7 +182,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Public items this window, by source"
-        sub="HDFC Bank, on-topic, 1 Aug–24 Sep"
+        sub={`HDFC Bank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
         prov="public"
         id="sources"
       >
@@ -189,7 +196,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           <Kpi
             label="All public items"
             value={fmt(b.themes.total_items)}
-            href={`/hdfc-v3/market?from=${from}#themes`}
+            href={`/hdfc-pulse/v2/market?from=${from}#themes`}
             tone="cyan"
           />
           {Object.entries(b.meta.bank_by_source)
@@ -198,10 +205,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               <Kpi key={k} label={SOURCE_LABEL[k] ?? k} value={fmt(v)} />
             ))}
         </div>
-        <MutedNote>
-          X, Reddit and forums: 1 Aug–24 Sep. Play Store exports for the HDFC
-          Bank app and PayZapp start in September.
-        </MutedNote>
+        <MutedNote>{b.meta.coverage_notes.slice(0, 2).join(" ")}</MutedNote>
       </Tile>
 
       <div style={PAIRS}>
@@ -407,8 +411,10 @@ export function SatisfactionView({ b }: { b: Bundle }) {
             ))}
           </div>
           <BaselineCaption>
-            Trend within window: second half (28 Aug–24 Sep) vs first half (1–27
-            Aug), as a share of posts.
+            Trend within window: second half (
+            {halfLabel(b.themes.themes[0].trend.second_half_dates)}) vs first
+            half ({halfLabel(b.themes.themes[0].trend.first_half_dates)}), as a
+            share of posts.
           </BaselineCaption>
         </div>
       </Tile>

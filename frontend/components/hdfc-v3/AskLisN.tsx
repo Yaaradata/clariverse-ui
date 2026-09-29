@@ -285,7 +285,7 @@ export function AskLisN({
                           <Link
                             key={id}
                             data-testid="evidence-chip"
-                            href={`/hdfc-v3/signal/${ev.themes[0]}?from=${from}#ev-${encodeURIComponent(id)}`}
+                            href={`/hdfc-pulse/v2/signal/${ev.themes[0]}?from=${from}#ev-${encodeURIComponent(id)}`}
                             onClick={onClose}
                             title={ev.summary}
                             style={{

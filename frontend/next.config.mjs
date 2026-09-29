@@ -14,6 +14,9 @@ const nextConfig = {
       { source: '/industry-dashboard/:path*', destination: '/role-based/:path*', permanent: true },
       { source: '/role_based', destination: '/role-based', permanent: false },
       { source: '/role_based/:path*', destination: '/role-based/:path*', permanent: false },
+      // LisN HDFC demo: /hdfc-v3 was the working name; versions now live at /hdfc-pulse/v1 and /hdfc-pulse/v2.
+      { source: '/hdfc-v3', destination: '/hdfc-pulse/v2/mds-office', permanent: false },
+      { source: '/hdfc-v3/:path*', destination: '/hdfc-pulse/v2/:path*', permanent: false },
     ];
   },
   experimental: {

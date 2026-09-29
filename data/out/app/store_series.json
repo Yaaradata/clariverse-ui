@@ -1,0 +1,586 @@
+{
+ "provenance": "public",
+ "rule": "Ratings are compared within one store only. Each weekly series starts at that store's first exported review; weeks before it are not plotted. Negative = 1–2★, positive = 4–5★.",
+ "apps": [
+  {
+   "app": "HDFC Bank app",
+   "stores": [
+    {
+     "store": "appstore",
+     "store_label": "App Store",
+     "records": 500,
+     "export_start": "2026-06-09",
+     "export_end": "2026-09-23",
+     "starts_mid_window": false,
+     "window": {
+      "n": 145,
+      "avg_rating": 2.1,
+      "share_negative": 67.6,
+      "share_positive": 23.4
+     },
+     "halves": {
+      "first": {
+       "n": 76,
+       "avg_rating": 2.28,
+       "share_negative": 64.5,
+       "share_positive": 28.9
+      },
+      "second": {
+       "n": 69,
+       "avg_rating": 1.91,
+       "share_negative": 71.0,
+       "share_positive": 17.4
+      },
+      "comparable": true
+     },
+     "weekly": [
+      {
+       "week": "2026-06-08",
+       "n": 39,
+       "avg_rating": 3.46,
+       "share_negative": 35.9,
+       "share_positive": 61.5
+      },
+      {
+       "week": "2026-06-15",
+       "n": 50,
+       "avg_rating": 3.28,
+       "share_negative": 38.0,
+       "share_positive": 54.0
+      },
+      {
+       "week": "2026-06-22",
+       "n": 57,
+       "avg_rating": 3.58,
+       "share_negative": 33.3,
+       "share_positive": 64.9
+      },
+      {
+       "week": "2026-06-29",
+       "n": 68,
+       "avg_rating": 3.63,
+       "share_negative": 29.4,
+       "share_positive": 66.2
+      },
+      {
+       "week": "2026-07-06",
+       "n": 51,
+       "avg_rating": 3.59,
+       "share_negative": 31.4,
+       "share_positive": 62.7
+      },
+      {
+       "week": "2026-07-13",
+       "n": 28,
+       "avg_rating": 3.07,
+       "share_negative": 46.4,
+       "share_positive": 50.0
+      },
+      {
+       "week": "2026-07-20",
+       "n": 35,
+       "avg_rating": 3.94,
+       "share_negative": 22.9,
+       "share_positive": 71.4
+      },
+      {
+       "week": "2026-07-27",
+       "n": 34,
+       "avg_rating": 2.68,
+       "share_negative": 50.0,
+       "share_positive": 38.2
+      },
+      {
+       "week": "2026-08-03",
+       "n": 25,
+       "avg_rating": 2.0,
+       "share_negative": 76.0,
+       "share_positive": 24.0
+      },
+      {
+       "week": "2026-08-10",
+       "n": 16,
+       "avg_rating": 2.38,
+       "share_negative": 62.5,
+       "share_positive": 31.2
+      },
+      {
+       "week": "2026-08-17",
+       "n": 16,
+       "avg_rating": 2.12,
+       "share_negative": 68.8,
+       "share_positive": 25.0
+      },
+      {
+       "week": "2026-08-24",
+       "n": 21,
+       "avg_rating": 2.1,
+       "share_negative": 61.9,
+       "share_positive": 19.0
+      },
+      {
+       "week": "2026-08-31",
+       "n": 17,
+       "avg_rating": 1.65,
+       "share_negative": 76.5,
+       "share_positive": 11.8
+      },
+      {
+       "week": "2026-09-07",
+       "n": 16,
+       "avg_rating": 1.88,
+       "share_negative": 75.0,
+       "share_positive": 18.8
+      },
+      {
+       "week": "2026-09-14",
+       "n": 17,
+       "avg_rating": 2.0,
+       "share_negative": 70.6,
+       "share_positive": 17.6
+      },
+      {
+       "week": "2026-09-21",
+       "n": 10,
+       "avg_rating": 2.4,
+       "share_negative": 60.0,
+       "share_positive": 30.0
+      }
+     ],
+     "versions": [
+      {
+       "version": "11.1.0",
+       "n": 32,
+       "avg_rating": 2.09,
+       "share_negative": 68.8,
+       "share_positive": 21.9
+      },
+      {
+       "version": "11.0.1",
+       "n": 76,
+       "avg_rating": 2.11,
+       "share_negative": 65.8,
+       "share_positive": 22.4
+      },
+      {
+       "version": "10.1.7",
+       "n": 35,
+       "avg_rating": 2.17,
+       "share_negative": 68.6,
+       "share_positive": 28.6
+      }
+     ],
+     "by_major": {
+      "10": {
+       "n": 365,
+       "avg_rating": 3.44,
+       "share_negative": 35.3,
+       "share_positive": 59.7
+      },
+      "11": {
+       "n": 108,
+       "avg_rating": 2.1,
+       "share_negative": 66.7,
+       "share_positive": 22.2
+      },
+      "8": {
+       "n": 27,
+       "avg_rating": 1.74,
+       "share_negative": 77.8,
+       "share_positive": 18.5
+      }
+     },
+     "replies": 0
+    },
+    {
+     "store": "playstore",
+     "store_label": "Play Store",
+     "records": 1000,
+     "export_start": "2026-09-07",
+     "export_end": "2026-09-23",
+     "starts_mid_window": true,
+     "window": {
+      "n": 1000,
+      "avg_rating": 2.73,
+      "share_negative": 54.1,
+      "share_positive": 39.9
+     },
+     "halves": {
+      "first": {
+       "n": 0,
+       "avg_rating": null,
+       "share_negative": null,
+       "share_positive": null
+      },
+      "second": {
+       "n": 1000,
+       "avg_rating": 2.73,
+       "share_negative": 54.1,
+       "share_positive": 39.9
+      },
+      "comparable": false
+     },
+     "weekly": [
+      {
+       "week": "2026-09-07",
+       "n": 428,
+       "avg_rating": 2.8,
+       "share_negative": 52.1,
+       "share_positive": 41.8
+      },
+      {
+       "week": "2026-09-14",
+       "n": 388,
+       "avg_rating": 2.69,
+       "share_negative": 54.6,
+       "share_positive": 38.9
+      },
+      {
+       "week": "2026-09-21",
+       "n": 184,
+       "avg_rating": 2.64,
+       "share_negative": 57.6,
+       "share_positive": 37.5
+      }
+     ],
+     "versions": [
+      {
+       "version": "11.1.0",
+       "n": 271,
+       "avg_rating": 2.34,
+       "share_negative": 64.6,
+       "share_positive": 28.8
+      },
+      {
+       "version": "11.0.1",
+       "n": 444,
+       "avg_rating": 2.49,
+       "share_negative": 60.6,
+       "share_positive": 33.6
+      },
+      {
+       "version": "9.0.4",
+       "n": 139,
+       "avg_rating": 4.39,
+       "share_negative": 9.4,
+       "share_positive": 84.9
+      }
+     ],
+     "by_major": {
+      "10": {
+       "n": 12,
+       "avg_rating": 3.67,
+       "share_negative": 33.3,
+       "share_positive": 66.7
+      },
+      "11": {
+       "n": 715,
+       "avg_rating": 2.43,
+       "share_negative": 62.1,
+       "share_positive": 31.7
+      },
+      "9": {
+       "n": 139,
+       "avg_rating": 4.39,
+       "share_negative": 9.4,
+       "share_positive": 84.9
+      }
+     },
+     "replies": 0
+    }
+   ]
+  },
+  {
+   "app": "PayZapp",
+   "stores": [
+    {
+     "store": "appstore",
+     "store_label": "App Store",
+     "records": 331,
+     "export_start": "2025-01-09",
+     "export_end": "2026-09-23",
+     "starts_mid_window": false,
+     "window": {
+      "n": 183,
+      "avg_rating": 2.14,
+      "share_negative": 68.9,
+      "share_positive": 24.0
+     },
+     "halves": {
+      "first": {
+       "n": 108,
+       "avg_rating": 1.72,
+       "share_negative": 79.6,
+       "share_positive": 13.9
+      },
+      "second": {
+       "n": 75,
+       "avg_rating": 2.73,
+       "share_negative": 53.3,
+       "share_positive": 38.7
+      },
+      "comparable": true
+     },
+     "weekly": [
+      {
+       "week": "2026-06-08",
+       "n": 10,
+       "avg_rating": 3.0,
+       "share_negative": 50.0,
+       "share_positive": 50.0
+      },
+      {
+       "week": "2026-06-15",
+       "n": 12,
+       "avg_rating": 2.5,
+       "share_negative": 58.3,
+       "share_positive": 33.3
+      },
+      {
+       "week": "2026-06-22",
+       "n": 10,
+       "avg_rating": 2.3,
+       "share_negative": 70.0,
+       "share_positive": 30.0
+      },
+      {
+       "week": "2026-06-29",
+       "n": 23,
+       "avg_rating": 3.09,
+       "share_negative": 39.1,
+       "share_positive": 47.8
+      },
+      {
+       "week": "2026-07-06",
+       "n": 18,
+       "avg_rating": 2.78,
+       "share_negative": 55.6,
+       "share_positive": 44.4
+      },
+      {
+       "week": "2026-07-13",
+       "n": 11,
+       "avg_rating": 2.45,
+       "share_negative": 63.6,
+       "share_positive": 36.4
+      },
+      {
+       "week": "2026-07-20",
+       "n": 19,
+       "avg_rating": 3.05,
+       "share_negative": 47.4,
+       "share_positive": 47.4
+      },
+      {
+       "week": "2026-07-27",
+       "n": 21,
+       "avg_rating": 2.57,
+       "share_negative": 61.9,
+       "share_positive": 38.1
+      },
+      {
+       "week": "2026-08-03",
+       "n": 44,
+       "avg_rating": 1.95,
+       "share_negative": 70.5,
+       "share_positive": 18.2
+      },
+      {
+       "week": "2026-08-10",
+       "n": 27,
+       "avg_rating": 1.85,
+       "share_negative": 77.8,
+       "share_positive": 18.5
+      },
+      {
+       "week": "2026-08-17",
+       "n": 22,
+       "avg_rating": 1.59,
+       "share_negative": 86.4,
+       "share_positive": 9.1
+      },
+      {
+       "week": "2026-08-24",
+       "n": 25,
+       "avg_rating": 1.76,
+       "share_negative": 80.0,
+       "share_positive": 16.0
+      },
+      {
+       "week": "2026-08-31",
+       "n": 21,
+       "avg_rating": 2.81,
+       "share_negative": 47.6,
+       "share_positive": 42.9
+      },
+      {
+       "week": "2026-09-07",
+       "n": 20,
+       "avg_rating": 3.1,
+       "share_negative": 45.0,
+       "share_positive": 50.0
+      },
+      {
+       "week": "2026-09-14",
+       "n": 16,
+       "avg_rating": 2.5,
+       "share_negative": 62.5,
+       "share_positive": 31.2
+      },
+      {
+       "week": "2026-09-21",
+       "n": 6,
+       "avg_rating": 2.17,
+       "share_negative": 66.7,
+       "share_positive": 16.7
+      }
+     ],
+     "versions": [
+      {
+       "version": "2.59.6",
+       "n": 42,
+       "avg_rating": 2.86,
+       "share_negative": 52.4,
+       "share_positive": 42.9
+      },
+      {
+       "version": "2.59.3",
+       "n": 22,
+       "avg_rating": 2.82,
+       "share_negative": 50.0,
+       "share_positive": 40.9
+      },
+      {
+       "version": "2.59.1",
+       "n": 57,
+       "avg_rating": 1.58,
+       "share_negative": 84.2,
+       "share_positive": 10.5
+      },
+      {
+       "version": "2.56.8",
+       "n": 59,
+       "avg_rating": 1.93,
+       "share_negative": 72.9,
+       "share_positive": 18.6
+      }
+     ],
+     "by_major": {
+      "2": {
+       "n": 331,
+       "avg_rating": 2.4,
+       "share_negative": 62.8,
+       "share_positive": 31.7
+      }
+     },
+     "replies": 0
+    },
+    {
+     "store": "playstore",
+     "store_label": "Play Store",
+     "records": 1000,
+     "export_start": "2026-08-31",
+     "export_end": "2026-09-23",
+     "starts_mid_window": true,
+     "window": {
+      "n": 1000,
+      "avg_rating": 3.21,
+      "share_negative": 42.6,
+      "share_positive": 54.1
+     },
+     "halves": {
+      "first": {
+       "n": 0,
+       "avg_rating": null,
+       "share_negative": null,
+       "share_positive": null
+      },
+      "second": {
+       "n": 1000,
+       "avg_rating": 3.21,
+       "share_negative": 42.6,
+       "share_positive": 54.1
+      },
+      "comparable": false
+     },
+     "weekly": [
+      {
+       "week": "2026-08-31",
+       "n": 348,
+       "avg_rating": 3.17,
+       "share_negative": 43.1,
+       "share_positive": 53.4
+      },
+      {
+       "week": "2026-09-07",
+       "n": 312,
+       "avg_rating": 3.11,
+       "share_negative": 44.6,
+       "share_positive": 50.6
+      },
+      {
+       "week": "2026-09-14",
+       "n": 231,
+       "avg_rating": 3.42,
+       "share_negative": 38.5,
+       "share_positive": 59.7
+      },
+      {
+       "week": "2026-09-21",
+       "n": 109,
+       "avg_rating": 3.16,
+       "share_negative": 44.0,
+       "share_positive": 54.1
+      }
+     ],
+     "versions": [
+      {
+       "version": "2.61.6",
+       "n": 17,
+       "avg_rating": 2.35,
+       "share_negative": 64.7,
+       "share_positive": 35.3
+      },
+      {
+       "version": "2.61.4",
+       "n": 221,
+       "avg_rating": 3.2,
+       "share_negative": 44.3,
+       "share_positive": 53.8
+      },
+      {
+       "version": "2.60.4",
+       "n": 48,
+       "avg_rating": 3.52,
+       "share_negative": 31.2,
+       "share_positive": 62.5
+      },
+      {
+       "version": "2.59.3",
+       "n": 567,
+       "avg_rating": 3.39,
+       "share_negative": 37.7,
+       "share_positive": 59.1
+      },
+      {
+       "version": "2.56.11",
+       "n": 28,
+       "avg_rating": 4.25,
+       "share_negative": 10.7,
+       "share_positive": 82.1
+      }
+     ],
+     "by_major": {
+      "2": {
+       "n": 916,
+       "avg_rating": 3.3,
+       "share_negative": 40.3,
+       "share_positive": 56.8
+      }
+     },
+     "replies": 0
+    }
+   ]
+  }
+ ]
+}

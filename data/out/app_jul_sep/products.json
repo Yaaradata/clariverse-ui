@@ -1,0 +1,1893 @@
+{
+ "provenance": "public",
+ "scope": "hdfc_bank · on_topic · window",
+ "note": "Each public item is tagged to one product from its business and theme. Loans are split into home, auto and personal by app and keyword. Row totals count each item once; issue lists count theme tags (an item can carry up to three). Wealth, SME and merchant, and corporate items are outside the product table.",
+ "rows": [
+  {
+   "id": "cards",
+   "label": "Cards",
+   "owner": "cards",
+   "module": "cards",
+   "count": 3626,
+   "negative": 1312,
+   "escalation": 130,
+   "repeat": 147,
+   "promise_break_mentions": 124,
+   "share_negative": 36.2,
+   "trend_change_pct": 18.2,
+   "trend_basis": {
+    "first_half": 1600,
+    "second_half": 1874
+   },
+   "top_issue": {
+    "id": "rewards_value",
+    "label": "Rewards value, devaluation and caps",
+    "negative": 244
+   },
+   "issues": [
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 644,
+     "negative": 244,
+     "escalation": 7
+    },
+    {
+     "id": "card_fees_charges",
+     "label": "Card fees and charges",
+     "count": 341,
+     "negative": 163,
+     "escalation": 29
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 672,
+     "negative": 156,
+     "escalation": 15
+    },
+    {
+     "id": "card_variant_migration",
+     "label": "Card variant migration and forced upgrade",
+     "count": 401,
+     "negative": 156,
+     "escalation": 9
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 358,
+     "negative": 137,
+     "escalation": 22
+    },
+    {
+     "id": "reward_redemption",
+     "label": "Reward redemption and vouchers",
+     "count": 308,
+     "negative": 114,
+     "escalation": 6
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 138,
+     "negative": 106,
+     "escalation": 51
+    },
+    {
+     "id": "card_limit",
+     "label": "Credit limit",
+     "count": 161,
+     "negative": 61,
+     "escalation": 1
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 165,
+     "negative": 49,
+     "escalation": 5
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 82,
+     "negative": 49,
+     "escalation": 2
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 62,
+     "negative": 48,
+     "escalation": 6
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 76,
+     "negative": 37,
+     "escalation": 3
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 76,
+     "negative": 33,
+     "escalation": 0
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 36,
+     "negative": 33,
+     "escalation": 0
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 55,
+     "negative": 32,
+     "escalation": 3
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 37,
+     "negative": 31,
+     "escalation": 5
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 33,
+     "negative": 30,
+     "escalation": 11
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 32,
+     "negative": 29,
+     "escalation": 2
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 40,
+     "negative": 28,
+     "escalation": 2
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 32,
+     "negative": 26,
+     "escalation": 5
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 43,
+     "negative": 25,
+     "escalation": 2
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 39,
+     "negative": 24,
+     "escalation": 2
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 30,
+     "negative": 22,
+     "escalation": 1
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 27,
+     "negative": 22,
+     "escalation": 0
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 20,
+     "negative": 19,
+     "escalation": 4
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 19,
+     "negative": 17,
+     "escalation": 1
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 18,
+     "negative": 16,
+     "escalation": 6
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 26,
+     "negative": 15,
+     "escalation": 0
+    },
+    {
+     "id": "nri_forex",
+     "label": "NRI and forex services",
+     "count": 25,
+     "negative": 15,
+     "escalation": 2
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 25,
+     "negative": 15,
+     "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 18,
+     "negative": 13,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 95,
+     "negative": 12,
+     "escalation": 1
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 18,
+     "negative": 11,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 17,
+     "negative": 10,
+     "escalation": 0
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 10,
+     "negative": 9,
+     "escalation": 0
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 8,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 10,
+     "negative": 4,
+     "escalation": 3
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 5,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 5,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "merchant_pos",
+     "label": "Merchant QR, POS and sound box",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "loan_closure_documents",
+     "label": "Loan closure, foreclosure and documents",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "investments_wealth",
+     "label": "Investments, mutual funds and SmartWealth",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    }
+   ],
+   "by_source": {
+    "playstore": 133,
+    "appstore": 24,
+    "x": 458,
+    "reddit": 1861,
+    "forum": 1150
+   }
+  },
+  {
+   "id": "payzapp",
+   "label": "PayZapp and UPI",
+   "owner": "payments",
+   "module": null,
+   "count": 5175,
+   "negative": 2528,
+   "escalation": 31,
+   "repeat": 260,
+   "promise_break_mentions": 189,
+   "share_negative": 48.9,
+   "trend_change_pct": -26.9,
+   "trend_basis": {
+    "first_half": 2957,
+    "second_half": 2141
+   },
+   "top_issue": {
+    "id": "app_speed_crash",
+    "label": "App speed, loading and crashes",
+    "negative": 769
+   },
+   "issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 839,
+     "negative": 769,
+     "escalation": 2
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 436,
+     "negative": 408,
+     "escalation": 3
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 110,
+     "negative": 102,
+     "escalation": 11
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 109,
+     "negative": 99,
+     "escalation": 0
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 101,
+     "negative": 95,
+     "escalation": 5
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 73,
+     "negative": 68,
+     "escalation": 0
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 62,
+     "negative": 51,
+     "escalation": 2
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 59,
+     "negative": 40,
+     "escalation": 12
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 35,
+     "negative": 29,
+     "escalation": 10
+    },
+    {
+     "id": "nri_forex",
+     "label": "NRI and forex services",
+     "count": 30,
+     "negative": 27,
+     "escalation": 0
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 28,
+     "negative": 25,
+     "escalation": 1
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 29,
+     "negative": 24,
+     "escalation": 0
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 24,
+     "negative": 23,
+     "escalation": 0
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 18,
+     "negative": 18,
+     "escalation": 1
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 25,
+     "negative": 17,
+     "escalation": 0
+    },
+    {
+     "id": "card_fees_charges",
+     "label": "Card fees and charges",
+     "count": 15,
+     "negative": 14,
+     "escalation": 0
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 14,
+     "negative": 12,
+     "escalation": 0
+    },
+    {
+     "id": "reward_redemption",
+     "label": "Reward redemption and vouchers",
+     "count": 15,
+     "negative": 11,
+     "escalation": 0
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 13,
+     "negative": 11,
+     "escalation": 0
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 12,
+     "negative": 11,
+     "escalation": 0
+    },
+    {
+     "id": "merchant_pos",
+     "label": "Merchant QR, POS and sound box",
+     "count": 11,
+     "negative": 10,
+     "escalation": 1
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 12,
+     "negative": 9,
+     "escalation": 1
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 9,
+     "negative": 9,
+     "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 13,
+     "negative": 8,
+     "escalation": 0
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 11,
+     "negative": 7,
+     "escalation": 0
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 9,
+     "negative": 7,
+     "escalation": 0
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 9,
+     "negative": 7,
+     "escalation": 0
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 9,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 8,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 4,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 4,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 5,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "card_limit",
+     "label": "Credit limit",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "card_variant_migration",
+     "label": "Card variant migration and forced upgrade",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 9,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 4762,
+    "appstore": 236,
+    "x": 113,
+    "reddit": 56,
+    "forum": 8
+   }
+  },
+  {
+   "id": "accounts",
+   "label": "Accounts and deposits",
+   "owner": "retail",
+   "module": null,
+   "count": 1637,
+   "negative": 985,
+   "escalation": 222,
+   "repeat": 189,
+   "promise_break_mentions": 135,
+   "share_negative": 60.2,
+   "trend_change_pct": 157.8,
+   "trend_basis": {
+    "first_half": 446,
+    "second_half": 1139
+   },
+   "top_issue": {
+    "id": "complaint_handling",
+    "label": "Complaints closed without resolution",
+    "negative": 225
+   },
+   "issues": [
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 300,
+     "negative": 225,
+     "escalation": 104
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 169,
+     "negative": 139,
+     "escalation": 29
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 171,
+     "negative": 118,
+     "escalation": 30
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 111,
+     "negative": 94,
+     "escalation": 9
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 123,
+     "negative": 83,
+     "escalation": 17
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 84,
+     "negative": 69,
+     "escalation": 39
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 69,
+     "negative": 68,
+     "escalation": 10
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 65,
+     "negative": 58,
+     "escalation": 3
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 150,
+     "negative": 54,
+     "escalation": 5
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 84,
+     "negative": 53,
+     "escalation": 5
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 60,
+     "negative": 32,
+     "escalation": 3
+    },
+    {
+     "id": "nri_forex",
+     "label": "NRI and forex services",
+     "count": 41,
+     "negative": 20,
+     "escalation": 5
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 19,
+     "negative": 18,
+     "escalation": 2
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 31,
+     "negative": 14,
+     "escalation": 3
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 14,
+     "negative": 10,
+     "escalation": 1
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 9,
+     "negative": 9,
+     "escalation": 2
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 7,
+     "negative": 7,
+     "escalation": 2
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 13,
+     "negative": 6,
+     "escalation": 4
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 7,
+     "negative": 6,
+     "escalation": 3
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 7,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 12,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 10,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 8,
+     "negative": 4,
+     "escalation": 2
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 6,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 6,
+     "negative": 3,
+     "escalation": 3
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 3,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 10,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 4,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 3,
+     "negative": 2,
+     "escalation": 1
+    },
+    {
+     "id": "card_fees_charges",
+     "label": "Card fees and charges",
+     "count": 11,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 4,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 3,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "reward_redemption",
+     "label": "Reward redemption and vouchers",
+     "count": 2,
+     "negative": 0,
+     "escalation": 0
+    },
+    {
+     "id": "card_limit",
+     "label": "Credit limit",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "x": 961,
+    "reddit": 574,
+    "forum": 102
+   }
+  },
+  {
+   "id": "personal_loans",
+   "label": "Personal loans",
+   "owner": "loans",
+   "module": null,
+   "count": 387,
+   "negative": 295,
+   "escalation": 58,
+   "repeat": 55,
+   "promise_break_mentions": 29,
+   "share_negative": 76.2,
+   "trend_change_pct": 75.2,
+   "trend_basis": {
+    "first_half": 121,
+    "second_half": 210
+   },
+   "top_issue": {
+    "id": "recovery_conduct",
+    "label": "Recovery and collection conduct",
+    "negative": 70
+   },
+   "issues": [
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 72,
+     "negative": 70,
+     "escalation": 27
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 84,
+     "negative": 59,
+     "escalation": 16
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 35,
+     "negative": 34,
+     "escalation": 15
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 50,
+     "negative": 33,
+     "escalation": 2
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 27,
+     "negative": 26,
+     "escalation": 0
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 27,
+     "negative": 25,
+     "escalation": 2
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 19,
+     "negative": 17,
+     "escalation": 1
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 15,
+     "negative": 15,
+     "escalation": 10
+    },
+    {
+     "id": "loan_closure_documents",
+     "label": "Loan closure, foreclosure and documents",
+     "count": 16,
+     "negative": 13,
+     "escalation": 3
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 16,
+     "negative": 13,
+     "escalation": 0
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 18,
+     "negative": 11,
+     "escalation": 2
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 12,
+     "negative": 11,
+     "escalation": 3
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 9,
+     "negative": 9,
+     "escalation": 1
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 7,
+     "negative": 6,
+     "escalation": 0
+    },
+    {
+     "id": "card_fees_charges",
+     "label": "Card fees and charges",
+     "count": 11,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 5,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 5,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 5,
+     "negative": 5,
+     "escalation": 1
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 4,
+     "negative": 4,
+     "escalation": 0
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 4,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 3,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 3,
+     "negative": 2,
+     "escalation": 2
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 3,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "card_limit",
+     "label": "Credit limit",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "dispute_chargeback",
+     "label": "Disputes and chargebacks",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "card_dispatch",
+     "label": "Card dispatch and delivery",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 91,
+    "appstore": 17,
+    "x": 160,
+    "reddit": 97,
+    "forum": 22
+   }
+  },
+  {
+   "id": "home_loans",
+   "label": "Home loans",
+   "owner": "loans",
+   "module": null,
+   "count": 291,
+   "negative": 172,
+   "escalation": 14,
+   "repeat": 10,
+   "promise_break_mentions": 16,
+   "share_negative": 59.1,
+   "trend_change_pct": -32.7,
+   "trend_basis": {
+    "first_half": 165,
+    "second_half": 110
+   },
+   "top_issue": {
+    "id": "loan_processing",
+    "label": "Loan processing and disbursal",
+    "negative": 48
+   },
+   "issues": [
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 95,
+     "negative": 48,
+     "escalation": 9
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 60,
+     "negative": 26,
+     "escalation": 2
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 28,
+     "negative": 26,
+     "escalation": 0
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 37,
+     "negative": 20,
+     "escalation": 4
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 15,
+     "negative": 15,
+     "escalation": 0
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 10,
+     "negative": 9,
+     "escalation": 4
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 8,
+     "negative": 8,
+     "escalation": 2
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 8,
+     "negative": 6,
+     "escalation": 2
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 5,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "loan_closure_documents",
+     "label": "Loan closure, foreclosure and documents",
+     "count": 9,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 3,
+     "negative": 3,
+     "escalation": 1
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 3,
+     "negative": 3,
+     "escalation": 2
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 2,
+     "negative": 2,
+     "escalation": 1
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 96,
+    "appstore": 8,
+    "x": 26,
+    "reddit": 155,
+    "forum": 6
+   }
+  },
+  {
+   "id": "auto_loans",
+   "label": "Auto and two-wheeler loans",
+   "owner": "loans",
+   "module": null,
+   "count": 12,
+   "negative": 6,
+   "escalation": 1,
+   "repeat": 1,
+   "promise_break_mentions": 1,
+   "share_negative": 50.0,
+   "trend_change_pct": null,
+   "trend_basis": {
+    "first_half": 8,
+    "second_half": 4
+   },
+   "top_issue": {
+    "id": "loan_servicing",
+    "label": "EMI and loan account servicing",
+    "negative": 3
+   },
+   "issues": [
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 8,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 1,
+    "x": 2,
+    "reddit": 9
+   }
+  },
+  {
+   "id": "insurance",
+   "label": "Insurance (bank-sold)",
+   "owner": "product",
+   "module": null,
+   "count": 48,
+   "negative": 35,
+   "escalation": 8,
+   "repeat": 1,
+   "promise_break_mentions": 0,
+   "share_negative": 72.9,
+   "trend_change_pct": 25.0,
+   "trend_basis": {
+    "first_half": 21,
+    "second_half": 26
+   },
+   "top_issue": {
+    "id": "mis_selling",
+    "label": "Mis-selling and bundled products",
+    "negative": 30
+   },
+   "issues": [
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 40,
+     "negative": 30,
+     "escalation": 7
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 7,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "nri_forex",
+     "label": "NRI and forex services",
+     "count": 5,
+     "negative": 2,
+     "escalation": 1
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 3,
+     "negative": 1,
+     "escalation": 2
+    },
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 2,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 1,
+     "negative": 1,
+     "escalation": 1
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 1,
+    "appstore": 1,
+    "x": 23,
+    "reddit": 23
+   }
+  },
+  {
+   "id": "digital",
+   "label": "Digital (app and NetBanking)",
+   "owner": "digital",
+   "module": "digital",
+   "count": 5153,
+   "negative": 1982,
+   "escalation": 6,
+   "repeat": 103,
+   "promise_break_mentions": 51,
+   "share_negative": 38.5,
+   "trend_change_pct": -28.8,
+   "trend_basis": {
+    "first_half": 227,
+    "second_half": 160
+   },
+   "top_issue": {
+    "id": "app_speed_crash",
+    "label": "App speed, loading and crashes",
+    "negative": 891
+   },
+   "issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1041,
+     "negative": 891,
+     "escalation": 1
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 365,
+     "negative": 317,
+     "escalation": 1
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 193,
+     "negative": 163,
+     "escalation": 0
+    },
+    {
+     "id": "netbanking",
+     "label": "NetBanking",
+     "count": 81,
+     "negative": 55,
+     "escalation": 3
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 61,
+     "negative": 44,
+     "escalation": 1
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 56,
+     "negative": 43,
+     "escalation": 0
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 44,
+     "negative": 30,
+     "escalation": 0
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 40,
+     "negative": 29,
+     "escalation": 1
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 26,
+     "negative": 20,
+     "escalation": 0
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 18,
+     "negative": 13,
+     "escalation": 0
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 17,
+     "negative": 12,
+     "escalation": 0
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 13,
+     "negative": 12,
+     "escalation": 0
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 12,
+     "negative": 12,
+     "escalation": 0
+    },
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 14,
+     "negative": 9,
+     "escalation": 0
+    },
+    {
+     "id": "deposits_rates",
+     "label": "Deposits and interest rates",
+     "count": 12,
+     "negative": 9,
+     "escalation": 1
+    },
+    {
+     "id": "nri_forex",
+     "label": "NRI and forex services",
+     "count": 11,
+     "negative": 8,
+     "escalation": 1
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 7,
+     "negative": 7,
+     "escalation": 1
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 6,
+     "negative": 6,
+     "escalation": 0
+    },
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 5,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 5,
+     "negative": 5,
+     "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 4,
+     "negative": 4,
+     "escalation": 1
+    },
+    {
+     "id": "merchant_pos",
+     "label": "Merchant QR, POS and sound box",
+     "count": 3,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 3,
+     "negative": 3,
+     "escalation": 0
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "refund_delay",
+     "label": "Refunds not credited",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 2,
+     "negative": 2,
+     "escalation": 0
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 2,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "investments_wealth",
+     "label": "Investments, mutual funds and SmartWealth",
+     "count": 1,
+     "negative": 1,
+     "escalation": 0
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 1,
+     "negative": 0,
+     "escalation": 0
+    }
+   ],
+   "by_source": {
+    "playstore": 4763,
+    "appstore": 279,
+    "x": 69,
+    "reddit": 39,
+    "forum": 3
+   }
+  }
+ ],
+ "excluded": {
+  "corporate": 26,
+  "sme_merchant": 105,
+  "wealth": 733
+ },
+ "total_rows": 16329,
+ "total_items": 17193,
+ "reconciles": true,
+ "trend_rule": "Share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug). Shown only when both halves have at least 15 items.",
+ "labels": {
+  "cards": "Cards",
+  "payzapp": "PayZapp and UPI",
+  "accounts": "Accounts and deposits",
+  "personal_loans": "Personal loans",
+  "home_loans": "Home loans",
+  "auto_loans": "Auto and two-wheeler loans",
+  "insurance": "Insurance (bank-sold)",
+  "digital": "Digital (app and NetBanking)"
+ }
+}

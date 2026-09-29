@@ -4,7 +4,14 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { marketAnswer } from "@/lib/hdfc-v3/copy";
-import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import {
+  fmt,
+  fmtDate,
+  fmtPct,
+  fmtSigned,
+  halfLabel,
+  rangeLong,
+} from "@/lib/hdfc-v3/format";
 import { signalHref, themeMap, trendWords } from "@/lib/hdfc-v3/selectors";
 import type { AppPulse, Bundle, Theme, View } from "@/lib/hdfc-v3/types";
 import {
@@ -379,20 +386,22 @@ export function MarketView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="public">
-        <AnswerLine sub="Public voice only: X, Reddit, consumer forums, Play Store and App Store, 1 August to 24 September 2026. HDFC Bank only; group companies shown separately.">
+        <AnswerLine
+          sub={`Public voice only: X, Reddit, consumer forums, Play Store and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. HDFC Bank only; group companies shown separately.`}
+        >
           {marketAnswer(b)}
         </AnswerLine>
       </Tile>
 
       <Tile
         id="promise-gap"
-        title="Brand promise gap"
-        sub="What HDFC Bank promises in public, against where customers say it breaks. Ordered by negative items."
+        title="What we say vs what customers hear"
+        sub="What HDFC Bank says in public, against where customers say it falls short. Ordered by negative items."
         prov="public"
       >
         <Table
           head={[
-            "Promise",
+            "What we say",
             "Negative items",
             "Where it breaks most",
             "Trend",
@@ -422,8 +431,8 @@ export function MarketView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          Promises paraphrase the bank&apos;s public trust pillars:
-          availability, experience, data intimacy and security.
+          These paraphrase the bank&apos;s public trust pillars: availability,
+          experience, data intimacy and security.
         </MutedNote>
       </Tile>
 
@@ -481,8 +490,10 @@ export function MarketView({ b }: { b: Bundle }) {
             </Link>
           ))}
           <BaselineCaption>
-            Trend within window: share of posts, 28 Aug–24 Sep vs 1–27 Aug.
-            Seasonal check: in discovery, using your history.
+            Trend within window: share of posts,{" "}
+            {halfLabel(b.themes.themes[0].trend.second_half_dates)} vs{" "}
+            {halfLabel(b.themes.themes[0].trend.first_half_dates)}. Seasonal
+            check: in discovery, using your history.
           </BaselineCaption>
         </Tile>
 

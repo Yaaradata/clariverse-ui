@@ -6,6 +6,7 @@ import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { SWEDBANK_DASHBOARD_THEME } from "@/lib/role-based-dashboard/swedbank-compliance-theme";
+import { HDFC_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/hdfcBankIndustry";
 import {
   HDFC_BANK_INDUSTRY_ID,
   HDFC_HEAD_OF_CX_ROLE_ID,
@@ -67,7 +68,14 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
         ? "head_cx_retail"
         : roleId;
 
+  const pulseHref =
+    industryId === HDFC_BANK_INDUSTRY_ID ? HDFC_PULSE_ROLE_HREF[roleId] : undefined;
+
   useEffect(() => {
+    if (pulseHref) {
+      router.replace(pulseHref);
+      return;
+    }
     if (industryId === HDFC_BANK_INDUSTRY_ID && roleId === "head_contact") {
       router.replace(
         `/role-based/${HDFC_BANK_INDUSTRY_ID}/${HDFC_HEAD_OF_CX_ROLE_ID}`,
@@ -83,9 +91,9 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
     ) {
       router.replace(`/role-based/ecommerce/head_cx_retail`);
     }
-  }, [industryId, roleId, router]);
+  }, [industryId, roleId, router, pulseHref]);
 
-  if (!industryId || !roleId) {
+  if (!industryId || !roleId || pulseHref) {
     return (
       <div style={{ padding: "60px 40px", maxWidth: 560, margin: "0 auto", minHeight: "100vh", backgroundColor: "#010101" }} />
     );

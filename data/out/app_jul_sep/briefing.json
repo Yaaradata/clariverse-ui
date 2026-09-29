@@ -1,0 +1,937 @@
+{
+ "needs_you": [
+  "release-pulse",
+  "complaint_handling",
+  "card_fees_charges"
+ ],
+ "this_week": [
+  "kyc_updates",
+  "account_freeze",
+  "care_unreachable",
+  "fraud_scam",
+  "refund_delay",
+  "card_dispatch"
+ ],
+ "improving": [
+  "app_praise",
+  "service_praise"
+ ],
+ "since_830": [
+  {
+   "theme": "complaint_handling",
+   "label": "Complaints closed without resolution",
+   "count": 14,
+   "owner": "cx",
+   "owner_label": "CX",
+   "exemplars": [
+    "x:2104409799819763971",
+    "x:2104472370606117099"
+   ]
+  },
+  {
+   "theme": "card_eligibility_upgrade",
+   "label": "Card eligibility, upgrade and LTF requests",
+   "count": 8,
+   "owner": "cards",
+   "owner_label": "Cards",
+   "exemplars": [
+    "reddit:1ws7os5",
+    "reddit:comment:pcji0ul"
+   ]
+  },
+  {
+   "theme": "account_opening",
+   "label": "Account opening and product conversion",
+   "count": 7,
+   "owner": "retail",
+   "owner_label": "Retail",
+   "exemplars": [
+    "x:2104507251113492859",
+    "x:2104464200969892172"
+   ]
+  }
+ ],
+ "since_830_total": 200,
+ "since_830_from": "2026-09-28T08:30:00+05:30",
+ "top_riser": "complaint_handling",
+ "routing": [
+  {
+   "owner": "digital",
+   "owner_label": "Digital",
+   "themes": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 2020,
+     "status": "watching"
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 876,
+     "status": "watching"
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 318,
+     "status": "watching"
+    }
+   ],
+   "total": 3603
+  },
+  {
+   "owner": "cards",
+   "owner_label": "Cards",
+   "themes": [
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 714,
+     "status": "watching"
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 679,
+     "status": "watching"
+    },
+    {
+     "id": "card_variant_migration",
+     "label": "Card variant migration and forced upgrade",
+     "count": 405,
+     "status": "watching"
+    }
+   ],
+   "total": 3054
+  },
+  {
+   "owner": "cx",
+   "owner_label": "CX",
+   "themes": [
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 633,
+     "status": "needs_you"
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 355,
+     "status": "this_week"
+    }
+   ],
+   "total": 988
+  },
+  {
+   "owner": "operations",
+   "owner_label": "Operations",
+   "themes": [
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 239,
+     "status": "this_week"
+    },
+    {
+     "id": "atm_debit_card",
+     "label": "Debit card and ATM",
+     "count": 228,
+     "status": "watching"
+    },
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 186,
+     "status": "watching"
+    }
+   ],
+   "total": 1078
+  },
+  {
+   "owner": "payments",
+   "owner_label": "Payments",
+   "themes": [
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 96,
+     "status": "watching"
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 73,
+     "status": "watching"
+    },
+    {
+     "id": "merchant_pos",
+     "label": "Merchant QR, POS and sound box",
+     "count": 25,
+     "status": "watching"
+    }
+   ],
+   "total": 194
+  },
+  {
+   "owner": "loans",
+   "owner_label": "Loans",
+   "themes": [
+    {
+     "id": "loan_processing",
+     "label": "Loan processing and disbursal",
+     "count": 196,
+     "status": "watching"
+    },
+    {
+     "id": "loan_servicing",
+     "label": "EMI and loan account servicing",
+     "count": 148,
+     "status": "watching"
+    },
+    {
+     "id": "loan_closure_documents",
+     "label": "Loan closure, foreclosure and documents",
+     "count": 26,
+     "status": "watching"
+    }
+   ],
+   "total": 370
+  },
+  {
+   "owner": "retail",
+   "owner_label": "Retail",
+   "themes": [
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 289,
+     "status": "watching"
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 282,
+     "status": "watching"
+    },
+    {
+     "id": "fees_charges_bank",
+     "label": "Bank charges and hidden fees",
+     "count": 224,
+     "status": "watching"
+    }
+   ],
+   "total": 940
+  },
+  {
+   "owner": "compliance",
+   "owner_label": "Compliance",
+   "themes": [
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 161,
+     "status": "watching"
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 137,
+     "status": "watching"
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 115,
+     "status": "watching"
+    }
+   ],
+   "total": 468
+  },
+  {
+   "owner": "fraud_cyber",
+   "owner_label": "Fraud and Cyber",
+   "themes": [
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 127,
+     "status": "this_week"
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 45,
+     "status": "watching"
+    },
+    {
+     "id": "phishing",
+     "label": "Phishing messages and fake links",
+     "count": 29,
+     "status": "watching"
+    }
+   ],
+   "total": 201
+  },
+  {
+   "owner": "rm",
+   "owner_label": "RM",
+   "themes": [
+    {
+     "id": "rm_service",
+     "label": "Relationship manager service",
+     "count": 186,
+     "status": "watching"
+    }
+   ],
+   "total": 186
+  },
+  {
+   "owner": "product",
+   "owner_label": "Product",
+   "themes": [
+    {
+     "id": "investments_wealth",
+     "label": "Investments, mutual funds and SmartWealth",
+     "count": 18,
+     "status": "watching"
+    }
+   ],
+   "total": 18
+  }
+ ],
+ "release_pulse": {
+  "id": "release-pulse",
+  "label": "Release pulse: the fix list customers have written",
+  "app": "HDFC Bank app",
+  "owner": "digital",
+  "owner_label": "Digital",
+  "pillar": "availability",
+  "rung": "Voice",
+  "action": "Route with evidence",
+  "status": "needs_you",
+  "count": 2126,
+  "n_reviews": 5325,
+  "share_positive": 55.0,
+  "avg_rating": 3.27,
+  "ranks_top": true,
+  "largest_other_theme": 2020,
+  "old_app_avg": 3.93,
+  "old_app_n": 2947,
+  "new_app_avg": 2.39,
+  "new_app_n": 1891,
+  "fix_list": [
+   {
+    "issue": "App speed, loading and crashes",
+    "theme": "app_speed_crash",
+    "count": 716,
+    "owner": "digital",
+    "first_seen_version": "6.2.7",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:b6c4f2e0-fa10-4833-b75b-890a9357d013",
+     "playstore:com.hdfcbank.android.now:86883f09-dc2d-4503-b0be-3d2950215d60",
+     "appstore:6504402552:14561352664"
+    ],
+    "feature_asks": [
+     "the compulsory swipe option"
+    ]
+   },
+   {
+    "issue": "Login, MPIN and registration",
+    "theme": "login_mpin",
+    "count": 301,
+    "owner": "digital",
+    "first_seen_version": "7.1.6",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
+     "playstore:com.hdfcbank.android.now:a67e013e-db6a-4d7c-82d2-19ebfc086a50",
+     "appstore:6504402552:14579089231"
+    ],
+    "feature_asks": [
+     "choose sim while setting up upi"
+    ]
+   },
+   {
+    "issue": "New app and update experience",
+    "theme": "new_app_release",
+    "count": 179,
+    "owner": "digital",
+    "first_seen_version": "6.2.1",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
+     "playstore:com.hdfcbank.android.now:06265411-118f-4f0e-b0b2-ba43616c5882",
+     "appstore:6504402552:14590649108"
+    ],
+    "feature_asks": [
+     "old version new version is useless",
+     "the option to view"
+    ]
+   },
+   {
+    "issue": "Customer care unreachable or unhelpful",
+    "theme": "care_unreachable",
+    "count": 19,
+    "owner": "cx",
+    "first_seen_version": "9.0.4",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:63ecc0a8-5c82-45a8-a11f-d5457e722998",
+     "playstore:com.hdfcbank.android.now:fa290b21-9a10-4586-9878-d32f5242d718",
+     "appstore:6504402552:14248412835"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Branch service and staff behaviour",
+    "theme": "branch_service",
+    "count": 16,
+    "owner": "retail",
+    "first_seen_version": "9.0.4",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375",
+     "playstore:com.hdfcbank.android.now:9f488747-8fd1-48f2-9605-17d719fce82d",
+     "appstore:6504402552:14410177535"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Device security blocks and false alerts",
+    "theme": "device_security_block",
+    "count": 13,
+    "owner": "digital",
+    "first_seen_version": "10.1.6",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:2647b146-f7b2-4d13-b3b1-cb37add79d9b",
+     "playstore:com.hdfcbank.android.now:5fcfc342-de6f-4172-a83f-822797adbcdc"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Account and card closure requests",
+    "theme": "closure_requests",
+    "count": 10,
+    "owner": "operations",
+    "first_seen_version": "9.0.4",
+    "latest_version_seen": "11.1.0",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:139abea0-f5fa-415b-8370-1b40a4a39e7a",
+     "playstore:com.hdfcbank.android.now:f4146be3-daf1-49a5-b3dd-d741ace33e42",
+     "appstore:6504402552:14311070641"
+    ],
+    "feature_asks": []
+   },
+   {
+    "issue": "Statements, certificates and documents",
+    "theme": "statements_documents",
+    "count": 10,
+    "owner": "operations",
+    "first_seen_version": "10.1.6",
+    "latest_version_seen": "11.0.1",
+    "example_ids": [
+     "playstore:com.hdfcbank.android.now:fb13a3d6-977c-4a5c-bf16-997c4a063d01",
+     "playstore:com.hdfcbank.android.now:f086687e-a6ee-491c-bbd3-484a7bde9490",
+     "appstore:6504402552:14480259780"
+    ],
+    "feature_asks": [
+     "that feature",
+     "beneficiary previous statement details o",
+     "share an individual transaction as a",
+     "select fy for upto 10 years"
+    ]
+   }
+  ],
+  "versions": [
+   {
+    "version": "11.1.0",
+    "n": 467,
+    "ratings": {
+     "1": 271,
+     "2": 36,
+     "3": 28,
+     "4": 17,
+     "5": 115
+    },
+    "avg_rating": 2.29,
+    "share_positive": 28.3,
+    "share_negative": 65.7
+   },
+   {
+    "version": "11.0.1",
+    "n": 1424,
+    "ratings": {
+     "1": 764,
+     "2": 117,
+     "3": 92,
+     "4": 71,
+     "5": 380
+    },
+    "avg_rating": 2.43,
+    "share_positive": 31.7,
+    "share_negative": 61.9
+   },
+   {
+    "version": "10.1.7",
+    "n": 83,
+    "ratings": {
+     "1": 39,
+     "2": 1,
+     "3": 3,
+     "4": 4,
+     "5": 36
+    },
+    "avg_rating": 2.96,
+    "share_positive": 48.2,
+    "share_negative": 48.2
+   },
+   {
+    "version": "10.1.6",
+    "n": 843,
+    "ratings": {
+     "1": 375,
+     "2": 53,
+     "3": 26,
+     "4": 38,
+     "5": 351
+    },
+    "avg_rating": 2.93,
+    "share_positive": 46.1,
+    "share_negative": 50.8
+   },
+   {
+    "version": "10.0.2",
+    "n": 179,
+    "ratings": {
+     "1": 23,
+     "2": 3,
+     "3": 9,
+     "4": 24,
+     "5": 120
+    },
+    "avg_rating": 4.2,
+    "share_positive": 80.4,
+    "share_negative": 14.5
+   },
+   {
+    "version": "9.0.4",
+    "n": 1772,
+    "ratings": {
+     "1": 104,
+     "2": 35,
+     "3": 89,
+     "4": 252,
+     "5": 1292
+    },
+    "avg_rating": 4.46,
+    "share_positive": 87.1,
+    "share_negative": 7.8
+   },
+   {
+    "version": "8.1.2",
+    "n": 20,
+    "ratings": {
+     "1": 1,
+     "2": 1,
+     "3": 0,
+     "4": 3,
+     "5": 15
+    },
+    "avg_rating": 4.5,
+    "share_positive": 90.0,
+    "share_negative": 10.0
+   },
+   {
+    "version": "7.5.3",
+    "n": 12,
+    "ratings": {
+     "1": 7,
+     "2": 0,
+     "3": 1,
+     "4": 0,
+     "5": 4
+    },
+    "avg_rating": 2.5,
+    "share_positive": 33.3,
+    "share_negative": 58.3
+   },
+   {
+    "version": "7.1.6",
+    "n": 11,
+    "ratings": {
+     "1": 8,
+     "2": 0,
+     "3": 0,
+     "4": 0,
+     "5": 3
+    },
+    "avg_rating": 2.09,
+    "share_positive": 27.3,
+    "share_negative": 72.7
+   }
+  ],
+  "exemplars": [
+   "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
+   "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
+   "appstore:6504402552:14596659417",
+   "appstore:6504402552:14590649108"
+  ],
+  "praise_exemplars": [
+   "playstore:com.hdfcbank.android.now:4dbeee15-cfb5-4460-9805-315cdea089e8",
+   "playstore:com.hdfcbank.android.now:afc04f3e-2282-4192-88c1-2b12b310d178",
+   "appstore:6504402552:14575509819"
+  ],
+  "daily_negative": [
+   {
+    "date": "2026-07-01",
+    "count": 3
+   },
+   {
+    "date": "2026-07-02",
+    "count": 3
+   },
+   {
+    "date": "2026-07-04",
+    "count": 2
+   },
+   {
+    "date": "2026-07-05",
+    "count": 3
+   },
+   {
+    "date": "2026-07-07",
+    "count": 1
+   },
+   {
+    "date": "2026-07-08",
+    "count": 4
+   },
+   {
+    "date": "2026-07-10",
+    "count": 6
+   },
+   {
+    "date": "2026-07-11",
+    "count": 2
+   },
+   {
+    "date": "2026-07-13",
+    "count": 1
+   },
+   {
+    "date": "2026-07-14",
+    "count": 1
+   },
+   {
+    "date": "2026-07-15",
+    "count": 3
+   },
+   {
+    "date": "2026-07-16",
+    "count": 2
+   },
+   {
+    "date": "2026-07-17",
+    "count": 1
+   },
+   {
+    "date": "2026-07-18",
+    "count": 2
+   },
+   {
+    "date": "2026-07-19",
+    "count": 2
+   },
+   {
+    "date": "2026-07-20",
+    "count": 1
+   },
+   {
+    "date": "2026-07-21",
+    "count": 1
+   },
+   {
+    "date": "2026-07-22",
+    "count": 2
+   },
+   {
+    "date": "2026-07-23",
+    "count": 2
+   },
+   {
+    "date": "2026-07-24",
+    "count": 1
+   },
+   {
+    "date": "2026-07-25",
+    "count": 20
+   },
+   {
+    "date": "2026-07-26",
+    "count": 20
+   },
+   {
+    "date": "2026-07-27",
+    "count": 27
+   },
+   {
+    "date": "2026-07-28",
+    "count": 23
+   },
+   {
+    "date": "2026-07-29",
+    "count": 29
+   },
+   {
+    "date": "2026-07-30",
+    "count": 22
+   },
+   {
+    "date": "2026-07-31",
+    "count": 38
+   },
+   {
+    "date": "2026-08-01",
+    "count": 31
+   },
+   {
+    "date": "2026-08-02",
+    "count": 22
+   },
+   {
+    "date": "2026-08-03",
+    "count": 34
+   },
+   {
+    "date": "2026-08-04",
+    "count": 45
+   },
+   {
+    "date": "2026-08-05",
+    "count": 41
+   },
+   {
+    "date": "2026-08-06",
+    "count": 38
+   },
+   {
+    "date": "2026-08-07",
+    "count": 24
+   },
+   {
+    "date": "2026-08-08",
+    "count": 26
+   },
+   {
+    "date": "2026-08-09",
+    "count": 22
+   },
+   {
+    "date": "2026-08-10",
+    "count": 28
+   },
+   {
+    "date": "2026-08-11",
+    "count": 25
+   },
+   {
+    "date": "2026-08-12",
+    "count": 26
+   },
+   {
+    "date": "2026-08-13",
+    "count": 22
+   },
+   {
+    "date": "2026-08-14",
+    "count": 31
+   },
+   {
+    "date": "2026-08-15",
+    "count": 11
+   },
+   {
+    "date": "2026-08-16",
+    "count": 13
+   },
+   {
+    "date": "2026-08-17",
+    "count": 21
+   },
+   {
+    "date": "2026-08-18",
+    "count": 26
+   },
+   {
+    "date": "2026-08-19",
+    "count": 25
+   },
+   {
+    "date": "2026-08-20",
+    "count": 37
+   },
+   {
+    "date": "2026-08-21",
+    "count": 27
+   },
+   {
+    "date": "2026-08-22",
+    "count": 28
+   },
+   {
+    "date": "2026-08-23",
+    "count": 27
+   },
+   {
+    "date": "2026-08-24",
+    "count": 26
+   },
+   {
+    "date": "2026-08-25",
+    "count": 32
+   },
+   {
+    "date": "2026-08-26",
+    "count": 26
+   },
+   {
+    "date": "2026-08-27",
+    "count": 28
+   },
+   {
+    "date": "2026-08-28",
+    "count": 34
+   },
+   {
+    "date": "2026-08-29",
+    "count": 35
+   },
+   {
+    "date": "2026-08-30",
+    "count": 28
+   },
+   {
+    "date": "2026-08-31",
+    "count": 56
+   },
+   {
+    "date": "2026-09-01",
+    "count": 54
+   },
+   {
+    "date": "2026-09-02",
+    "count": 51
+   },
+   {
+    "date": "2026-09-03",
+    "count": 46
+   },
+   {
+    "date": "2026-09-04",
+    "count": 46
+   },
+   {
+    "date": "2026-09-05",
+    "count": 39
+   },
+   {
+    "date": "2026-09-06",
+    "count": 36
+   },
+   {
+    "date": "2026-09-07",
+    "count": 48
+   },
+   {
+    "date": "2026-09-08",
+    "count": 38
+   },
+   {
+    "date": "2026-09-09",
+    "count": 34
+   },
+   {
+    "date": "2026-09-10",
+    "count": 33
+   },
+   {
+    "date": "2026-09-11",
+    "count": 57
+   },
+   {
+    "date": "2026-09-12",
+    "count": 28
+   },
+   {
+    "date": "2026-09-13",
+    "count": 29
+   },
+   {
+    "date": "2026-09-14",
+    "count": 30
+   },
+   {
+    "date": "2026-09-15",
+    "count": 26
+   },
+   {
+    "date": "2026-09-16",
+    "count": 35
+   },
+   {
+    "date": "2026-09-17",
+    "count": 26
+   },
+   {
+    "date": "2026-09-18",
+    "count": 30
+   },
+   {
+    "date": "2026-09-19",
+    "count": 38
+   },
+   {
+    "date": "2026-09-20",
+    "count": 37
+   },
+   {
+    "date": "2026-09-21",
+    "count": 39
+   },
+   {
+    "date": "2026-09-22",
+    "count": 32
+   },
+   {
+    "date": "2026-09-23",
+    "count": 39
+   },
+   {
+    "date": "2026-09-24",
+    "count": 39
+   },
+   {
+    "date": "2026-09-25",
+    "count": 40
+   },
+   {
+    "date": "2026-09-26",
+    "count": 38
+   },
+   {
+    "date": "2026-09-27",
+    "count": 21
+   }
+  ],
+  "coverage": [
+   "App Store 2026-06-28 to 2026-09-27",
+   "Play Store 2026-07-25 to 2026-09-27"
+  ],
+  "trend_label": "trend within window (Play Store export starts 25 July)"
+ },
+ "ranking_rule": "score = rise in share (second half vs first half) × volume × (1 + escalation share); issue themes with at least 8 items and at least 40% negative."
+}

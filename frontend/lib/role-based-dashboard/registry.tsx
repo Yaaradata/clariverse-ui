@@ -19,7 +19,11 @@ import {
   Target,
   Users,
 } from "lucide-react";
-import { HDFC_BANK_INDUSTRY_ID } from "./hdfcBankIndustry";
+import {
+  HDFC_BANK_INDUSTRY_ID,
+  HDFC_PULSE_V1_ROLE_ID,
+  HDFC_PULSE_V2_ROLE_ID,
+} from "./hdfcBankIndustry";
 import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
 import {
@@ -175,6 +179,22 @@ export const INDUSTRIES = [
         name: "Head of CX",
         icon: Headphones,
         sub: "Per-contact CX · service-driven brand · ops & workforce",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        id: HDFC_PULSE_V1_ROLE_ID,
+        name: "MD's office & Head of CX · LisN V1 (first demo)",
+        icon: Activity,
+        sub: "Customer Pulse as first shown: executive pulse, public voice themes, service promise, app release pulse",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        id: HDFC_PULSE_V2_ROLE_ID,
+        name: "MD's office & Head of CX · LisN V2 (after Vidya call)",
+        icon: Crown,
+        sub: "Numbers first · pulse by product · priority relationships · customer trail · deliverables · email triage",
         defaultLens: "ops",
         primaryTile: 0,
       },

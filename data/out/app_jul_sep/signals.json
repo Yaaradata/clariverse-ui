@@ -1,0 +1,1199 @@
+{
+ "scope": "hdfc_bank · on_topic · window",
+ "total_items": 17193,
+ "flags": {
+  "escalation_intent": {
+   "count": 478,
+   "share": 2.8,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 22
+    },
+    {
+     "week": "2026-07-06",
+     "count": 30
+    },
+    {
+     "week": "2026-07-13",
+     "count": 15
+    },
+    {
+     "week": "2026-07-20",
+     "count": 19
+    },
+    {
+     "week": "2026-07-27",
+     "count": 33
+    },
+    {
+     "week": "2026-08-03",
+     "count": 34
+    },
+    {
+     "week": "2026-08-10",
+     "count": 32
+    },
+    {
+     "week": "2026-08-17",
+     "count": 37
+    },
+    {
+     "week": "2026-08-24",
+     "count": 28
+    },
+    {
+     "week": "2026-08-31",
+     "count": 20
+    },
+    {
+     "week": "2026-09-07",
+     "count": 33
+    },
+    {
+     "week": "2026-09-14",
+     "count": 14
+    },
+    {
+     "week": "2026-09-21",
+     "count": 151
+    },
+    {
+     "week": "2026-09-28",
+     "count": 10
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 172,
+    "second_half": 290,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 70.2,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 80
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 47
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 35
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 31
+    },
+    {
+     "id": "card_fees_charges",
+     "label": "Card fees and charges",
+     "count": 25
+    }
+   ],
+   "exemplars": [
+    "x:2092887484351054147",
+    "reddit:comment:owas2mf",
+    "x:2087225332311212094",
+    "reddit:comment:owax9kr"
+   ]
+  },
+  "promise_break": {
+   "count": 564,
+   "share": 3.3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 45
+    },
+    {
+     "week": "2026-07-06",
+     "count": 34
+    },
+    {
+     "week": "2026-07-13",
+     "count": 19
+    },
+    {
+     "week": "2026-07-20",
+     "count": 20
+    },
+    {
+     "week": "2026-07-27",
+     "count": 32
+    },
+    {
+     "week": "2026-08-03",
+     "count": 45
+    },
+    {
+     "week": "2026-08-10",
+     "count": 30
+    },
+    {
+     "week": "2026-08-17",
+     "count": 36
+    },
+    {
+     "week": "2026-08-24",
+     "count": 37
+    },
+    {
+     "week": "2026-08-31",
+     "count": 38
+    },
+    {
+     "week": "2026-09-07",
+     "count": 43
+    },
+    {
+     "week": "2026-09-14",
+     "count": 33
+    },
+    {
+     "week": "2026-09-21",
+     "count": 136
+    },
+    {
+     "week": "2026-09-28",
+     "count": 16
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 185,
+    "second_half": 302,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 64.8,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 75
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 55
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 48
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 45
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 36
+    }
+   ],
+   "exemplars": [
+    "x:2085194811565596800",
+    "reddit:1ve6mba",
+    "x:2100507449379991951",
+    "reddit:1vw0gjh"
+   ]
+  },
+  "status_seeking": {
+   "count": 1180,
+   "share": 6.9,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 110
+    },
+    {
+     "week": "2026-07-06",
+     "count": 52
+    },
+    {
+     "week": "2026-07-13",
+     "count": 46
+    },
+    {
+     "week": "2026-07-20",
+     "count": 37
+    },
+    {
+     "week": "2026-07-27",
+     "count": 46
+    },
+    {
+     "week": "2026-08-03",
+     "count": 75
+    },
+    {
+     "week": "2026-08-10",
+     "count": 41
+    },
+    {
+     "week": "2026-08-17",
+     "count": 41
+    },
+    {
+     "week": "2026-08-24",
+     "count": 67
+    },
+    {
+     "week": "2026-08-31",
+     "count": 54
+    },
+    {
+     "week": "2026-09-07",
+     "count": 72
+    },
+    {
+     "week": "2026-09-14",
+     "count": 127
+    },
+    {
+     "week": "2026-09-21",
+     "count": 337
+    },
+    {
+     "week": "2026-09-28",
+     "count": 75
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 390,
+    "second_half": 750,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 94.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "product_advice",
+     "label": "Product questions and advice-seeking",
+     "count": 104
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 80
+    },
+    {
+     "id": "card_application",
+     "label": "Card application, rejection and verification",
+     "count": 79
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 67
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 64
+    }
+   ],
+   "exemplars": [
+    "x:2074391302129782827",
+    "x:2092887484351054147",
+    "reddit:1ve6mba",
+    "reddit:1wpxf75"
+   ]
+  },
+  "cure_watch": {
+   "count": 230,
+   "share": 1.3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 19
+    },
+    {
+     "week": "2026-07-06",
+     "count": 16
+    },
+    {
+     "week": "2026-07-13",
+     "count": 12
+    },
+    {
+     "week": "2026-07-20",
+     "count": 15
+    },
+    {
+     "week": "2026-07-27",
+     "count": 15
+    },
+    {
+     "week": "2026-08-03",
+     "count": 19
+    },
+    {
+     "week": "2026-08-10",
+     "count": 10
+    },
+    {
+     "week": "2026-08-17",
+     "count": 13
+    },
+    {
+     "week": "2026-08-24",
+     "count": 19
+    },
+    {
+     "week": "2026-08-31",
+     "count": 22
+    },
+    {
+     "week": "2026-09-07",
+     "count": 16
+    },
+    {
+     "week": "2026-09-14",
+     "count": 18
+    },
+    {
+     "week": "2026-09-21",
+     "count": 33
+    },
+    {
+     "week": "2026-09-28",
+     "count": 3
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 93,
+    "second_half": 109,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 18.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 48
+    },
+    {
+     "id": "account_freeze",
+     "label": "Account debit freezes and blocks",
+     "count": 37
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 25
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 15
+    },
+    {
+     "id": "upi_failures",
+     "label": "UPI payments failing or pending",
+     "count": 13
+    }
+   ],
+   "exemplars": [
+    "x:2092887484351054147",
+    "x:2092894433369055716",
+    "reddit:1wafopr",
+    "reddit:1wlluqx"
+   ]
+  },
+  "closure_intent": {
+   "count": 274,
+   "share": 1.6,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 27
+    },
+    {
+     "week": "2026-07-06",
+     "count": 15
+    },
+    {
+     "week": "2026-07-13",
+     "count": 16
+    },
+    {
+     "week": "2026-07-20",
+     "count": 8
+    },
+    {
+     "week": "2026-07-27",
+     "count": 19
+    },
+    {
+     "week": "2026-08-03",
+     "count": 25
+    },
+    {
+     "week": "2026-08-10",
+     "count": 14
+    },
+    {
+     "week": "2026-08-17",
+     "count": 18
+    },
+    {
+     "week": "2026-08-24",
+     "count": 16
+    },
+    {
+     "week": "2026-08-31",
+     "count": 27
+    },
+    {
+     "week": "2026-09-07",
+     "count": 13
+    },
+    {
+     "week": "2026-09-14",
+     "count": 18
+    },
+    {
+     "week": "2026-09-21",
+     "count": 53
+    },
+    {
+     "week": "2026-09-28",
+     "count": 5
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 117,
+    "second_half": 136,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 17.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 52
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 36
+    },
+    {
+     "id": "card_variant_migration",
+     "label": "Card variant migration and forced upgrade",
+     "count": 27
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 18
+    },
+    {
+     "id": "rewards_value",
+     "label": "Rewards value, devaluation and caps",
+     "count": 16
+    }
+   ],
+   "exemplars": [
+    "x:2087116156645802139",
+    "x:2085194811565596800",
+    "reddit:1vfpyto",
+    "reddit:comment:p1ekryh"
+   ]
+  },
+  "repeat_contact": {
+   "count": 779,
+   "share": 4.5,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 40
+    },
+    {
+     "week": "2026-07-06",
+     "count": 46
+    },
+    {
+     "week": "2026-07-13",
+     "count": 38
+    },
+    {
+     "week": "2026-07-20",
+     "count": 44
+    },
+    {
+     "week": "2026-07-27",
+     "count": 55
+    },
+    {
+     "week": "2026-08-03",
+     "count": 71
+    },
+    {
+     "week": "2026-08-10",
+     "count": 41
+    },
+    {
+     "week": "2026-08-17",
+     "count": 52
+    },
+    {
+     "week": "2026-08-24",
+     "count": 48
+    },
+    {
+     "week": "2026-08-31",
+     "count": 66
+    },
+    {
+     "week": "2026-09-07",
+     "count": 52
+    },
+    {
+     "week": "2026-09-14",
+     "count": 47
+    },
+    {
+     "week": "2026-09-21",
+     "count": 157
+    },
+    {
+     "week": "2026-09-28",
+     "count": 22
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 281,
+    "second_half": 373,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 34.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 99
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 88
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 87
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 83
+    },
+    {
+     "id": "unsolicited_calls",
+     "label": "Unsolicited sales calls and use of data",
+     "count": 46
+    }
+   ],
+   "exemplars": [
+    "x:2077682772077097427",
+    "x:2072884095181582607",
+    "reddit:1vfpyto",
+    "playstore:com.hdfcbank.payzapp:f180ff1f-b713-44e0-aad0-ae9445b8d53c"
+   ]
+  },
+  "feature_request": {
+   "count": 60,
+   "share": 0.3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 5
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 4
+    },
+    {
+     "week": "2026-07-27",
+     "count": 7
+    },
+    {
+     "week": "2026-08-03",
+     "count": 4
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 6
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 8
+    },
+    {
+     "week": "2026-09-28",
+     "count": 1
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "first_half": 19,
+    "second_half": 21,
+    "first_half_total": 6049,
+    "second_half_total": 5992,
+    "change_pct": 11.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 9
+    },
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 8
+    },
+    {
+     "id": "app_praise",
+     "label": "Where customers praise us: quick, easy app journeys",
+     "count": 7
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 7
+    },
+    {
+     "id": "statements_documents",
+     "label": "Statements, certificates and documents",
+     "count": 4
+    }
+   ],
+   "exemplars": [
+    "x:2093703831960109514",
+    "x:2084579795585917304",
+    "playstore:com.hdfcbank.payzapp:5a8a5c72-bf55-4754-8741-fdcee72bbe1b",
+    "playstore:com.hdfcbank.payzapp:dd8a9cfc-a427-4b0b-a2ba-f195106d3bd4"
+   ]
+  },
+  "switching": {
+   "count": 16,
+   "to_other_bank": 14,
+   "from_other_bank": 2,
+   "note": "Posts naming a move between HDFC Bank and another bank. Counted as mentions, never as confirmed moves."
+  }
+ },
+ "promise_by_request_type": [
+  {
+   "request_type": "other",
+   "count": 404,
+   "status_seeking": 142,
+   "repeat_share": 29.2,
+   "median_days_elapsed": 14,
+   "owner": "cx",
+   "top_theme": "app_speed_crash",
+   "exemplars": [
+    "reddit:1ve6mba",
+    "x:2097646252716625978",
+    "reddit:1vw0gjh"
+   ]
+  },
+  {
+   "request_type": "kyc",
+   "count": 35,
+   "status_seeking": 12,
+   "repeat_share": 40.0,
+   "median_days_elapsed": 14,
+   "owner": "operations",
+   "top_theme": "kyc_updates",
+   "exemplars": [
+    "x:2085194811565596800",
+    "x:2094966426931200282",
+    "playstore:com.hdfcbank.payzapp:e06c82b5-9ab9-4eed-8a8e-5c43205a2420"
+   ]
+  },
+  {
+   "request_type": "refund",
+   "count": 31,
+   "status_seeking": 15,
+   "repeat_share": 29.0,
+   "median_days_elapsed": 20,
+   "owner": "operations",
+   "top_theme": "refund_delay",
+   "exemplars": [
+    "x:2101280013282906404",
+    "x:2092293932243980500",
+    "technofino_1238725"
+   ]
+  },
+  {
+   "request_type": "card_delivery",
+   "count": 24,
+   "status_seeking": 8,
+   "repeat_share": 20.8,
+   "median_days_elapsed": 7,
+   "owner": "operations",
+   "top_theme": "card_dispatch",
+   "exemplars": [
+    "reddit:1uljtvc",
+    "x:2089274777248891010",
+    "x:2079373804430864846"
+   ]
+  },
+  {
+   "request_type": "closure",
+   "count": 20,
+   "status_seeking": 8,
+   "repeat_share": 30.0,
+   "median_days_elapsed": 20,
+   "owner": "cards",
+   "top_theme": "closure_requests",
+   "exemplars": [
+    "x:2100507449379991951",
+    "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
+    "x:2101160080058290547"
+   ]
+  },
+  {
+   "request_type": "loan_disbursal",
+   "count": 19,
+   "status_seeking": 7,
+   "repeat_share": 21.1,
+   "median_days_elapsed": 35,
+   "owner": "loans",
+   "top_theme": "loan_processing",
+   "exemplars": [
+    "x:2090052503073341951",
+    "x:2076714808674803963",
+    "reddit:1v596wr"
+   ]
+  },
+  {
+   "request_type": "reversal",
+   "count": 18,
+   "status_seeking": 10,
+   "repeat_share": 38.9,
+   "median_days_elapsed": 6,
+   "owner": "payments",
+   "top_theme": "failed_txn_reversal",
+   "exemplars": [
+    "x:2103380182128021660",
+    "x:2082052712229924914",
+    "playstore:com.hdfcbank.payzapp:fa3865dd-5455-46ca-8aed-207ad7f1725b"
+   ]
+  },
+  {
+   "request_type": "dispute",
+   "count": 7,
+   "status_seeking": 3,
+   "repeat_share": 71.4,
+   "median_days_elapsed": 45,
+   "owner": "operations",
+   "top_theme": "dispute_chargeback",
+   "exemplars": [
+    "x:2097681578017321398",
+    "x:2099777474708324525",
+    "playstore:com.hdfcbank.android.now:46f90495-e641-4e9b-bc17-45f797d2374f"
+   ]
+  },
+  {
+   "request_type": "credit_report",
+   "count": 6,
+   "status_seeking": 0,
+   "repeat_share": 66.7,
+   "median_days_elapsed": 30,
+   "owner": "compliance",
+   "top_theme": "credit_report",
+   "exemplars": [
+    "x:2103560220043841748",
+    "x:2103559577971441734",
+    "x:2103559898290422117"
+   ]
+  }
+ ],
+ "transparency_gap": {
+  "count": 1180,
+  "share": 6.9,
+  "by_request_type": [
+   {
+    "request_type": "other",
+    "count": 1117
+   },
+   {
+    "request_type": "refund",
+    "count": 15
+   },
+   {
+    "request_type": "kyc",
+    "count": 12
+   },
+   {
+    "request_type": "reversal",
+    "count": 10
+   },
+   {
+    "request_type": "closure",
+    "count": 8
+   },
+   {
+    "request_type": "card_delivery",
+    "count": 8
+   },
+   {
+    "request_type": "loan_disbursal",
+    "count": 7
+   },
+   {
+    "request_type": "dispute",
+    "count": 3
+   }
+  ],
+  "exemplars": [
+   "x:2074391302129782827",
+   "x:2092887484351054147",
+   "reddit:1ve6mba"
+  ]
+ },
+ "escalation_by_target": [
+  {
+   "target": "rbi",
+   "rung": "RBI Ombudsman",
+   "count": 235
+  },
+  {
+   "target": "grievance",
+   "rung": "Grievance",
+   "count": 82
+  },
+  {
+   "target": "rbi_ombudsman",
+   "rung": "RBI Ombudsman",
+   "count": 61
+  },
+  {
+   "target": "legal",
+   "rung": "RBI Ombudsman",
+   "count": 48
+  },
+  {
+   "target": "ministers",
+   "rung": "Public",
+   "count": 33
+  },
+  {
+   "target": null,
+   "rung": "Grievance",
+   "count": 11
+  },
+  {
+   "target": "consumer_court",
+   "rung": "RBI Ombudsman",
+   "count": 8
+  }
+ ],
+ "ladder_public": {
+  "voice_negative": 7510,
+  "repeat": 779,
+  "escalation_language": 478,
+  "public_posts_with_escalation": 467,
+  "rbi_or_ombudsman_mentions": 296,
+  "climb_themes": [
+   {
+    "id": "complaint_handling",
+    "label": "Complaints closed without resolution",
+    "count": 80
+   },
+   {
+    "id": "fraud_scam",
+    "label": "Fraud and scam calls",
+    "count": 47
+   },
+   {
+    "id": "account_freeze",
+    "label": "Account debit freezes and blocks",
+    "count": 35
+   },
+   {
+    "id": "recovery_conduct",
+    "label": "Recovery and collection conduct",
+    "count": 31
+   },
+   {
+    "id": "card_fees_charges",
+    "label": "Card fees and charges",
+    "count": 25
+   },
+   {
+    "id": "branch_service",
+    "label": "Branch service and staff behaviour",
+    "count": 21
+   }
+  ]
+ },
+ "voices_with_reach": [
+  {
+   "id": "x:2084994246793396637",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "rewards_value",
+   "theme_label": "Rewards value, devaluation and caps",
+   "owner": "cards",
+   "escalation": false,
+   "created_at": "2026-08-05T18:55:40+05:30"
+  },
+  {
+   "id": "x:2084971805786435726",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "rm_service",
+   "theme_label": "Relationship manager service",
+   "owner": "rm",
+   "escalation": false,
+   "created_at": "2026-08-05T17:26:30+05:30"
+  },
+  {
+   "id": "x:2084959610851766444",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "other",
+   "theme_label": "Other",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-05T16:38:02+05:30"
+  },
+  {
+   "id": "x:2084957268613947437",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-05T16:28:44+05:30"
+  },
+  {
+   "id": "x:2084956732527423861",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "care_unreachable",
+   "theme_label": "Customer care unreachable or unhelpful",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-05T16:26:36+05:30"
+  },
+  {
+   "id": "x:2084955110451597539",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "care_unreachable",
+   "theme_label": "Customer care unreachable or unhelpful",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-05T16:20:09+05:30"
+  },
+  {
+   "id": "x:2084947176564916555",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-05T15:48:37+05:30"
+  },
+  {
+   "id": "x:2084938740020228231",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1471488,
+   "theme": "reward_redemption",
+   "theme_label": "Reward redemption and vouchers",
+   "owner": "cards",
+   "escalation": false,
+   "created_at": "2026-08-05T15:15:06+05:30"
+  }
+ ],
+ "closure_intent": {
+  "count": 274,
+  "drivers": [
+   {
+    "id": "closure_requests",
+    "label": "Account and card closure requests",
+    "count": 52
+   },
+   {
+    "id": "general_dissatisfaction",
+    "label": "General dissatisfaction",
+    "count": 36
+   },
+   {
+    "id": "card_variant_migration",
+    "label": "Card variant migration and forced upgrade",
+    "count": 27
+   },
+   {
+    "id": "card_eligibility_upgrade",
+    "label": "Card eligibility, upgrade and LTF requests",
+    "count": 18
+   },
+   {
+    "id": "rewards_value",
+    "label": "Rewards value, devaluation and caps",
+    "count": 16
+   }
+  ],
+  "exemplars": [
+   "x:2087116156645802139",
+   "x:2085194811565596800",
+   "reddit:1vfpyto",
+   "reddit:comment:p1ekryh"
+  ]
+ },
+ "cure_watch": {
+  "count": 230,
+  "by_theme": [
+   {
+    "id": "login_mpin",
+    "label": "Login, MPIN and registration",
+    "count": 48
+   },
+   {
+    "id": "account_freeze",
+    "label": "Account debit freezes and blocks",
+    "count": 37
+   },
+   {
+    "id": "general_dissatisfaction",
+    "label": "General dissatisfaction",
+    "count": 25
+   },
+   {
+    "id": "app_speed_crash",
+    "label": "App speed, loading and crashes",
+    "count": 15
+   },
+   {
+    "id": "upi_failures",
+    "label": "UPI payments failing or pending",
+    "count": 13
+   }
+  ],
+  "exemplars": [
+   "x:2092887484351054147",
+   "x:2092894433369055716",
+   "reddit:1wafopr",
+   "reddit:1wlluqx"
+  ]
+ },
+ "by_business": [
+  {
+   "business": "retail_banking",
+   "count": 6838,
+   "repeat": 293,
+   "escalation": 236,
+   "negative": 3002
+  },
+  {
+   "business": "payments",
+   "count": 5175,
+   "repeat": 260,
+   "escalation": 31,
+   "negative": 2528
+  },
+  {
+   "business": "cards",
+   "count": 3626,
+   "repeat": 147,
+   "escalation": 130,
+   "negative": 1312
+  },
+  {
+   "business": "wealth",
+   "count": 733,
+   "repeat": 6,
+   "escalation": 1,
+   "negative": 103
+  },
+  {
+   "business": "loans",
+   "count": 690,
+   "repeat": 66,
+   "escalation": 73,
+   "negative": 473
+  },
+  {
+   "business": "sme_merchant",
+   "count": 105,
+   "repeat": 7,
+   "escalation": 5,
+   "negative": 75
+  },
+  {
+   "business": "corporate",
+   "count": 26,
+   "repeat": 0,
+   "escalation": 2,
+   "negative": 17
+  }
+ ]
+}

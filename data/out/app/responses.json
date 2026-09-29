@@ -1,0 +1,9 @@
+{
+ "provenance": "public",
+ "definition": "A public review or post is open too long when it has no bank reply within 48 hours.",
+ "replies_available": false,
+ "reviews_in_scope": 2328,
+ "responded": null,
+ "open_too_long": null,
+ "pending_note": "Needs the store re-crawl with developer replies (source S1). The current exports carry no reply field, and bank-authored X posts were excluded at collection."
+}

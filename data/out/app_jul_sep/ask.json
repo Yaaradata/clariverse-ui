@@ -1,0 +1,216 @@
+{
+ "prompts": [
+  {
+   "id": "md_desk",
+   "prompt": "What would reach the MD's desk this week if we did nothing?",
+   "keywords": [
+    "md",
+    "desk",
+    "nothing",
+    "reach",
+    "escalate",
+    "managing",
+    "director",
+    "mds"
+   ],
+   "answer": "Complaints closed without resolution: 633 public items, 190 with escalation language. Owner: CX.\nThe new HDFC Bank app: 2,126 negative reviews in the window. Owner: Digital.\nThemes rising fastest:\n• Complaints closed without resolution: 633 items, up 87% in the second half of the window vs the first; 190 name a regulator, court or ombudsman. Owner: CX.\n• Card fees and charges: 378 items, up 123% in the second half of the window vs the first; 30 name a regulator, court or ombudsman. Owner: Cards.",
+   "evidence": [
+    "x:2072884095181582607",
+    "reddit:comment:owas2mf",
+    "x:2072884095181582607",
+    "x:2089738829033046492"
+   ],
+   "links": [
+    {
+     "label": "Open the release pulse",
+     "href": "/hdfc-pulse/v2/signal/release-pulse"
+    },
+    {
+     "label": "Open the deliverables view",
+     "href": "/hdfc-pulse/v2/deliverables"
+    }
+   ]
+  },
+  {
+   "id": "io",
+   "prompt": "Which complaints are most likely to go to the Internal Ombudsman?",
+   "keywords": [
+    "internal",
+    "ombudsman",
+    "io",
+    "complaints",
+    "likely",
+    "climb",
+    "rbi",
+    "escalation"
+   ],
+   "answer": "Climb risk is highest where customers already use escalation language and repeat themselves:\n• Fraud and scam calls: 44.1% of 127 items carry escalation language; 33 say they have raised it before.\n• Unauthorised transactions: 33.3% of 45 items carry escalation language; 5 say they have raised it before.\n• Complaints closed without resolution: 30.0% of 633 items carry escalation language; 190 say they have raised it before.",
+   "evidence": [
+    "x:2074391302129782827",
+    "x:2082485955957866512",
+    "x:2072884095181582607"
+   ],
+   "links": [
+    {
+     "label": "See the escalation ladder",
+     "href": "/hdfc-pulse/v2/deliverables#ladder"
+    }
+   ]
+  },
+  {
+   "id": "seasonal",
+   "prompt": "Is the complaints closed without resolution spike seasonal or new?",
+   "keywords": [
+    "seasonal",
+    "spike",
+    "new",
+    "trend",
+    "baseline",
+    "complaints",
+    "closed",
+    "without"
+   ],
+   "answer": "Complaints closed without resolution: 633 items in the window, up 87% in the second half of the window vs the first. First heard in this window on 2026-07-01. The exports hold no history before July, so LisN shows the trend within the window and makes no baseline claim. Seasonal check: in discovery, using your history.",
+   "evidence": [
+    "x:2072884095181582607",
+    "reddit:comment:owas2mf",
+    "x:2089775530757550581"
+   ],
+   "links": [
+    {
+     "label": "Open Complaints closed without resolution",
+     "href": "/hdfc-pulse/v2/signal/complaint_handling"
+    }
+   ]
+  },
+  {
+   "id": "tat",
+   "prompt": "Where did we miss a TAT this week?",
+   "keywords": [
+    "tat",
+    "promise",
+    "break",
+    "yesterday",
+    "broke",
+    "turnaround",
+    "timeline",
+    "delay",
+    "week"
+   ],
+   "answer": "564 public items in the window describe a missed timeline. Most frequent: other requests (404), KYC and profile updates (35), refunds (31), card delivery (24). Stated TATs are checked against the bank's own commitments in discovery.",
+   "evidence": [
+    "reddit:1ve6mba",
+    "x:2085194811565596800",
+    "x:2101280013282906404"
+   ],
+   "links": [
+    {
+     "label": "Open the deliverables ledger",
+     "href": "/hdfc-pulse/v2/deliverables#ledger"
+    }
+   ]
+  },
+  {
+   "id": "cure",
+   "prompt": "Where did a proactive cure not land?",
+   "keywords": [
+    "cure",
+    "proactive",
+    "land",
+    "declined",
+    "failed",
+    "decline",
+    "blocked"
+   ],
+   "answer": "230 items follow a decline, failed payment or block that a proactive message, auto-reversal or unblock could have handled, and the customer still had to chase it. Leading areas: Login, MPIN and registration (48), Account debit freezes and blocks (37), General dissatisfaction (25).",
+   "evidence": [
+    "x:2092887484351054147",
+    "x:2092894433369055716",
+    "reddit:1wafopr"
+   ],
+   "links": [
+    {
+     "label": "See cure watch",
+     "href": "/hdfc-pulse/v2/deliverables#cure"
+    }
+   ]
+  },
+  {
+   "id": "product",
+   "prompt": "What should Product hear this week?",
+   "keywords": [
+    "product",
+    "hear",
+    "week",
+    "digital",
+    "feature",
+    "app",
+    "should"
+   ],
+   "answer": "Product and Digital should hear:\n• App speed, loading and crashes: 2,020 items\n• Login, MPIN and registration: 876 items\n• New app and update experience: 318 items\n• Investments, mutual funds and SmartWealth: 18 items\nTop feature asks from app reviews: the compulsory swipe option, choose sim while setting up upi, old version new version is useless, the option to view.",
+   "evidence": [
+    "x:2076346280796901876",
+    "x:2076346280796901876",
+    "playstore:com.hdfcbank.payzapp:7ca48c6e-5788-402f-a602-bf66d7a27a6d"
+   ],
+   "links": [
+    {
+     "label": "Who should hear what",
+     "href": "/hdfc-pulse/v2/head-cx#routing"
+    }
+   ]
+  },
+  {
+   "id": "release",
+   "prompt": "What are customers saying about the latest app release?",
+   "keywords": [
+    "app",
+    "release",
+    "latest",
+    "version",
+    "update",
+    "new",
+    "mobile",
+    "banking"
+   ],
+   "answer": "Release pulse for the HDFC Bank app: 55.0% of 5,325 window reviews are positive (4–5★). The fix list customers have written:\n• App speed, loading and crashes: 716 negative reviews\n• Login, MPIN and registration: 301 negative reviews\n• New app and update experience: 179 negative reviews\n• Customer care unreachable or unhelpful: 19 negative reviews",
+   "evidence": [
+    "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
+    "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
+    "appstore:6504402552:14596659417"
+   ],
+   "links": [
+    {
+     "label": "Open the app module",
+     "href": "/hdfc-pulse/v2/module/digital"
+    }
+   ]
+  },
+  {
+   "id": "replies",
+   "prompt": "Are we answering customers in public?",
+   "keywords": [
+    "reply",
+    "replies",
+    "respond",
+    "responded",
+    "answer",
+    "public",
+    "review",
+    "store"
+   ],
+   "answer": "On the Play Store the bank replied to 96.4% of 10,617 reviews in the window, with a median reply time of 0.2 hours. But 87.6% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. 377 reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
+   "evidence": [
+    "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
+    "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda"
+   ],
+   "links": [
+    {
+     "label": "See the numbers",
+     "href": "/hdfc-pulse/v2/mds-office#dials"
+    }
+   ]
+  }
+ ],
+ "fallback": "That needs your internal data. It's part of discovery."
+}
