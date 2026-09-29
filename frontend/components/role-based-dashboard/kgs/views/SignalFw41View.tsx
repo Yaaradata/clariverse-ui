@@ -11,6 +11,7 @@ import { useDemo } from "../shell/DemoProvider";
 import { CohortMiniTable } from "../signal/CohortMiniTable";
 import { CounterEvidence } from "../signal/CounterEvidence";
 import { DecisionPanel } from "../signal/DecisionPanel";
+import { DraftPreviewModal } from "../signal/DraftPreviewModal";
 import { EvidenceDrawer, type EvidenceTab } from "../signal/EvidenceDrawer";
 import { FirmwareLineageChart } from "../signal/FirmwareLineageChart";
 import { fill } from "../signal/format";
@@ -46,6 +47,7 @@ export function SignalFw41View() {
   const si = signal.confidence.sourceIndependence;
   const { drawerOpened } = useDemo();
   const [drawerTab, setDrawerTab] = useState<EvidenceTab | null>(null);
+  const [draftOpen, setDraftOpen] = useState(false);
   const openDrawer = (tab: EvidenceTab) => {
     drawerOpened();
     setDrawerTab(tab);
@@ -124,7 +126,7 @@ export function SignalFw41View() {
             <RecommendedAction />
           </Block>
           <DecisionPanel
-            onViewDraft={() => undefined}
+            onViewDraft={() => setDraftOpen(true)}
             onOpenEvidence={() => openDrawer("snippets")}
           />
         </div>
@@ -134,6 +136,7 @@ export function SignalFw41View() {
         onTab={setDrawerTab}
         onClose={() => setDrawerTab(null)}
       />
+      <DraftPreviewModal open={draftOpen} onClose={() => setDraftOpen(false)} />
     </div>
   );
 }

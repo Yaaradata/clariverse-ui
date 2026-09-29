@@ -87,7 +87,15 @@ function Backdrop({ onClose }: { onClose: () => void }) {
   );
 }
 
-function Header({ title, onClose }: { title: string; onClose: () => void }) {
+function Header({
+  title,
+  onClose,
+  chip,
+}: {
+  title: string;
+  onClose: () => void;
+  chip?: ReactNode;
+}) {
   return (
     <div
       style={{
@@ -104,7 +112,17 @@ function Header({ title, onClose }: { title: string; onClose: () => void }) {
         <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: K.text }}>
           {title}
         </h2>
-        <SyntheticBadge compact />
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          {chip}
+          <SyntheticBadge compact />
+        </div>
       </div>
       <button
         type="button"
@@ -195,12 +213,17 @@ export function Modal({
   onClose,
   children,
   width = 560,
+  chip,
+  footer,
 }: {
   open: boolean;
   title: string;
   onClose: () => void;
   children: ReactNode;
   width?: number;
+  /** Status chip shown beside the badge in the header. */
+  chip?: ReactNode;
+  footer?: ReactNode;
 }) {
   const ref = useDialogFocus(open, onClose);
   useScrollLock(open);
@@ -220,7 +243,7 @@ export function Modal({
           transform: "translate(-50%, -50%)",
           width,
           maxWidth: "92vw",
-          maxHeight: "88vh",
+          maxHeight: "85vh",
           zIndex: 75,
           background: K.elevated,
           border: `1px solid ${K.borderLight}`,
@@ -231,8 +254,18 @@ export function Modal({
           overflow: "hidden",
         }}
       >
-        <Header title={title} onClose={onClose} />
+        <Header title={title} onClose={onClose} chip={chip} />
         <div style={{ overflowY: "auto", padding: 16 }}>{children}</div>
+        {footer ? (
+          <div
+            style={{
+              padding: "12px 16px",
+              borderTop: `1px solid ${K.borderLight}`,
+            }}
+          >
+            {footer}
+          </div>
+        ) : null}
       </div>
     </>
   );
