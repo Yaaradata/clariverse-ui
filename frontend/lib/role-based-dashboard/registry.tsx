@@ -6,6 +6,7 @@ import {
   ClipboardList,
   CreditCard,
   Crown,
+  Flame,
   Globe,
   Headphones,
   Landmark,
@@ -22,6 +23,10 @@ import { HDFC_BANK_INDUSTRY_ID } from "./hdfcBankIndustry";
 import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
 import {
+  KIDDE_GLOBAL_INDUSTRY_ID,
+  KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
+} from "./kiddeGlobalIndustry";
+import {
   NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
   NEOGROUP_INDUSTRY_ID,
 } from "./neogroupIndustry";
@@ -32,6 +37,8 @@ export {
   INDUSIND_BANK_INDUSTRY_ID,
   HDFC_BANK_INDUSTRY_ID,
   HDFC_HEAD_OF_CX_ROLE_ID,
+  KIDDE_GLOBAL_INDUSTRY_ID,
+  KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
   NEOGROUP_INDUSTRY_ID,
   NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
 };
@@ -170,6 +177,23 @@ export const INDUSTRIES = [
         sub: "Per-contact CX · service-driven brand · ops & workforce",
         defaultLens: "ops",
         primaryTile: 0,
+      },
+    ],
+  },
+  {
+    id: KIDDE_GLOBAL_INDUSTRY_ID,
+    name: "Kidde Global",
+    icon: Flame,
+    color: "#f97316",
+    desc: "Global Commercial Fire — field signals, installed base & channel",
+    roles: [
+      {
+        id: KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
+        name: "President",
+        icon: Crown,
+        sub: "Global Commercial Fire · field signals · installed base · channel",
+        defaultLens: "ops",
+        primaryTile: null,
       },
     ],
   },

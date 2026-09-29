@@ -26,6 +26,9 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@kgs/*": [
+        "./lib/role-based-dashboard/kgs/*"
       ]
     }
   },
@@ -37,6 +40,7 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "Carrier KiddeGlobal"
   ]
 }

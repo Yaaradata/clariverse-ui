@@ -72,6 +72,8 @@ import {
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import { NEOGROUP_INDUSTRY_ID } from "@/lib/role-based-dashboard/neogroupIndustry";
+import { isKiddeGlobalPresident } from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
+import { KgsCommercialFireDashboard } from "./kgs/KgsCommercialFireDashboard";
 import {
   isSterlingHeadRetail,
   resolveRoleDataKey,
@@ -4553,6 +4555,11 @@ export function RoleDashboardView({
         : eisenhowerThreadsRaw,
     [eisenhowerThreadsRaw, sterlingHeadRetailRoute],
   );
+
+  // Kidde Global · President, Global Commercial Fire — LiSN field-signal demo (own shell).
+  if (isKiddeGlobalPresident(industry.id, role.id)) {
+    return <KgsCommercialFireDashboard onExit={onExit} />;
+  }
 
   if (industry.id === INDUSIND_BANK_INDUSTRY_ID && role.id === "head_cards") {
     return <CardsPortfolioV2Dashboard onExit={onExit} showVoiceJoin />;

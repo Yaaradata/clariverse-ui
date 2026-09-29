@@ -1,0 +1,1196 @@
+{
+  "title": "Is our installed base healthy?",
+  "subtitle": "Interaction-derived view of the installed base, joined to firmware, date-code and RMA data.",
+  "kpis": [
+    {
+      "label": "SIGNALS ABOVE THRESHOLD",
+      "value": "2"
+    },
+    {
+      "label": "FIRMWARE COHORTS IN CONTROL",
+      "value": "45 / 46"
+    },
+    {
+      "label": "{{platform:EST4}} RMA RATE",
+      "value": "0.28% · in control",
+      "sub": "limit 0.35%"
+    },
+    {
+      "label": "FIRMWARE RECORDED ON {{platform:EST4}} TROUBLE CASES",
+      "value": "38%"
+    }
+  ],
+  "interactionsTable": {
+    "total": 5480,
+    "delta": "▲ +312 vs last week",
+    "rows": [
+      {
+        "id": "ib-1",
+        "cells": [
+          "{{brand:Edwards}} · {{platform:EST4}}",
+          "1,960",
+          "▲ 6.8%",
+          "1.3×"
+        ],
+        "tone": [null, null, null, "amber"]
+      },
+      {
+        "id": "ib-2",
+        "cells": [
+          "{{brand:Edwards}} · {{platform:EST3/EST3X}}",
+          "720",
+          "▼ 1.2%",
+          "1.0×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-3",
+        "cells": [
+          "{{brand:Edwards}} · {{platform:Edge}}",
+          "540",
+          "▲ 2.1%",
+          "1.1×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-4",
+        "cells": [
+          "{{brand:Kidde Commercial}} · {{platform:VM/VS}}",
+          "610",
+          "▼ 0.8%",
+          "1.0×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-5",
+        "cells": [
+          "{{brand:Aritech}} · {{platform:2X}}",
+          "470",
+          "▲ 0.9%",
+          "1.0×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-6",
+        "cells": [
+          "{{brand:EMS}} · {{platform:FireCell}} / {{platform:SmartCell}}",
+          "420",
+          "▲ 1.5%",
+          "1.0×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-7",
+        "cells": [
+          "{{brand:GST}} · {{platform:GST panel family}}",
+          "380",
+          "▼ 2.4%",
+          "0.9×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-8",
+        "cells": [
+          "{{brand:AirSense}} · {{platform:AirSense aspirating}}",
+          "190",
+          "▲ 0.4%",
+          "1.0×"
+        ],
+        "tone": [null, null, null, null]
+      },
+      {
+        "id": "ib-9",
+        "cells": [
+          "Detection devices · D-series (synthetic)",
+          "190",
+          "▲ 14.0%",
+          "1.4×"
+        ],
+        "tone": [null, null, null, "amber"]
+      }
+    ],
+    "footnote": "The {{platform:EST4}} row is only 1.3× — the fw {{fw:EST4@4.1}} cohort is 23 contacts inside 1,960. The platform average hides it; the version denominator does not."
+  },
+  "clustersBySeverity": [
+    {
+      "label": "S1 · Life-safety (governed)",
+      "caption": "1 cluster · contents restricted",
+      "cliff": 0,
+      "slope": 0,
+      "spread": 0,
+      "novel": 1,
+      "restricted": true
+    },
+    {
+      "label": "S2 · Material impact",
+      "caption": "2 clusters · 6,040 units",
+      "cliff": 2,
+      "slope": 0,
+      "spread": 0,
+      "novel": 0
+    },
+    {
+      "label": "S3 · Operational",
+      "caption": "7 clusters",
+      "cliff": 1,
+      "slope": 3,
+      "spread": 1,
+      "novel": 2
+    },
+    {
+      "label": "S4 · Efficiency",
+      "caption": "11 clusters",
+      "cliff": 0,
+      "slope": 8,
+      "spread": 2,
+      "novel": 1
+    }
+  ],
+  "lineageMonitor": {
+    "title": "12-week cohort monitor — contacts per 1,000 panel-weeks",
+    "sub": "Each release against its own baseline · 45 of 46 cohorts in control",
+    "weeks": [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26],
+    "series": [
+      {
+        "label": "{{platform:EST4}} {{fw:EST4@4.1}} (syn.)",
+        "values": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1.3,
+          4.3,
+          7.4,
+          6.5
+        ],
+        "colour": "#f97316"
+      },
+      {
+        "label": "{{platform:EST4}} {{fw:EST4@4.0}} (syn.)",
+        "values": [2.2, 2.1, 2.2, 1.8, 2.2, 1.9, 1.8, 2.1, 2.2, 1.9, 2.0, 2.0],
+        "colour": "#d4d4d4"
+      },
+      {
+        "label": "{{platform:Edge}} {{fw:Edge@3.2}} (syn.)",
+        "values": [1.7, 1.5, 1.5, 1.7, 1.5, 1.7, 1.8, 1.6, 1.6, 1.4, 1.5, 1.8],
+        "colour": "#38bdf8"
+      },
+      {
+        "label": "{{platform:2X}} {{fw:2X@7.4}} (syn.)",
+        "values": [2.2, 2.2, 2.4, 2.3, 2.4, 2.3, 2.3, 2.3, 2.5, 2.5, 2.2, 2.5],
+        "colour": "#8b5cf6"
+      },
+      {
+        "label": "{{platform:VM/VS}} {{fw:VM/VS@5.1}} (syn.)",
+        "values": [1.9, 1.8, 1.6, 1.6, 2.0, 1.6, 1.6, 1.6, 2.0, 2.0, 1.9, 2.0],
+        "colour": "#14b8a6"
+      },
+      {
+        "label": "{{platform:GST panel family}} {{fw:GST panel family@G-7}} (syn.)",
+        "values": [2.3, 2.0, 2.2, 2.3, 2.3, 2.3, 2.3, 2.0, 2.2, 2.4, 2.3, 2.1],
+        "colour": "#eab308"
+      },
+      {
+        "label": "{{platform:EST4}} RMA rate — in control (%)",
+        "values": [
+          0.3, 0.27, 0.3, 0.27, 0.28, 0.28, 0.26, 0.26, 0.28, 0.29, 0.26, 0.28
+        ],
+        "colour": "#737373",
+        "dashed": true
+      }
+    ],
+    "markers": [
+      {
+        "week": 23.4,
+        "date": "2026-09-02",
+        "label": "2 Sep · fw {{fw:EST4@4.1}} released (synthetic)",
+        "style": "release"
+      }
+    ]
+  },
+  "dateCode": {
+    "cells": [
+      {
+        "dateCode": "2601",
+        "units": 1273,
+        "ratePer10k": 1.2,
+        "relativeRisk": 1.1,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2602",
+        "units": 1146,
+        "ratePer10k": 1.1,
+        "relativeRisk": 1.0,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2603",
+        "units": 1251,
+        "ratePer10k": 1.0,
+        "relativeRisk": 0.9,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2604",
+        "units": 1127,
+        "ratePer10k": 0.9,
+        "relativeRisk": 0.8,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2605",
+        "units": 1121,
+        "ratePer10k": 1.4,
+        "relativeRisk": 1.3,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2606",
+        "units": 1271,
+        "ratePer10k": 1.1,
+        "relativeRisk": 1.0,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2607",
+        "units": 1244,
+        "ratePer10k": 1.0,
+        "relativeRisk": 0.9,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2608",
+        "units": 1172,
+        "ratePer10k": 0.9,
+        "relativeRisk": 0.8,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2609",
+        "units": 1252,
+        "ratePer10k": 1.2,
+        "relativeRisk": 1.1,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2610",
+        "units": 1133,
+        "ratePer10k": 1.4,
+        "relativeRisk": 1.3,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2611",
+        "units": 1174,
+        "ratePer10k": 4.4,
+        "relativeRisk": 4.0,
+        "inWindow": true
+      },
+      {
+        "dateCode": "2612",
+        "units": 1177,
+        "ratePer10k": 4.9,
+        "relativeRisk": 4.5,
+        "inWindow": true
+      },
+      {
+        "dateCode": "2613",
+        "units": 1213,
+        "ratePer10k": 4.7,
+        "relativeRisk": 4.3,
+        "inWindow": true
+      },
+      {
+        "dateCode": "2614",
+        "units": 1236,
+        "ratePer10k": 4.4,
+        "relativeRisk": 4.0,
+        "inWindow": true
+      },
+      {
+        "dateCode": "2615",
+        "units": 1248,
+        "ratePer10k": 1.2,
+        "relativeRisk": 1.1,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2616",
+        "units": 1203,
+        "ratePer10k": 1.2,
+        "relativeRisk": 1.1,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2617",
+        "units": 1229,
+        "ratePer10k": 1.4,
+        "relativeRisk": 1.3,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2618",
+        "units": 1221,
+        "ratePer10k": 0.8,
+        "relativeRisk": 0.7,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2619",
+        "units": 1172,
+        "ratePer10k": 0.9,
+        "relativeRisk": 0.8,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2620",
+        "units": 1142,
+        "ratePer10k": 0.9,
+        "relativeRisk": 0.8,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2621",
+        "units": 1282,
+        "ratePer10k": 0.8,
+        "relativeRisk": 0.7,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2622",
+        "units": 1129,
+        "ratePer10k": 1.0,
+        "relativeRisk": 0.9,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2623",
+        "units": 1203,
+        "ratePer10k": 1.1,
+        "relativeRisk": 1.0,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2624",
+        "units": 1113,
+        "ratePer10k": 0.9,
+        "relativeRisk": 0.8,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2625",
+        "units": 1251,
+        "ratePer10k": 1.1,
+        "relativeRisk": 1.0,
+        "inWindow": false
+      },
+      {
+        "dateCode": "2626",
+        "units": 1156,
+        "ratePer10k": 0.8,
+        "relativeRisk": 0.7,
+        "inWindow": false
+      }
+    ],
+    "bracket": "4.2× adjacent weeks · 4,800 units · 1,900 in stock at 11 distributors (containable)",
+    "pChart": [
+      0.22, 0.21, 0.18, 0.19, 0.21, 0.19, 0.21, 0.18, 0.2, 0.21, 0.2, 0.21,
+      0.22, 0.22, 0.18, 0.2, 0.18, 0.21, 0.19, 0.19, 0.18, 0.18, 0.19, 0.19,
+      0.2, 0.21
+    ],
+    "limit": 0.3,
+    "current": 0.21,
+    "stats": [
+      {
+        "label": "FIELD REPLACEMENT EXPOSURE",
+        "value": "Field replacement exposure up to $0.35m",
+        "money": true
+      },
+      {
+        "label": "CONTAINABLE",
+        "value": "1,900 units (40%) containable"
+      },
+      {
+        "label": "COMPONENT LOT",
+        "value": "14 share one component lot"
+      }
+    ],
+    "confidence": {
+      "level": "M",
+      "p": 0.65,
+      "short": "M 0.65 · K 22 / I 9",
+      "known": {
+        "count": 22,
+        "label": "serial-verified"
+      },
+      "inferred": {
+        "count": 9,
+        "label": "date codes read from photos"
+      }
+    },
+    "owner": "Director Product Quality (owner) · cc VP Engineering",
+    "gate": "Draft containment memo (8D D1–D3 pre-filled) — awaiting Quality approval",
+    "leadLine": "19 days ahead of the scheduled review",
+    "caption": "The aggregate is green by construction. The window is not."
+  },
+  "emergingPhrasing": [
+    {
+      "id": "phr-1",
+      "cells": [
+        "'devices not found after upgrade' · 'loop comes back half-empty' · 'mapping stops around 60%'",
+        "4 Sep",
+        "9",
+        "4",
+        "Programming – general",
+        "SIGNAL #1"
+      ],
+      "tone": [null, null, null, null, null, "amber"],
+      "linkTo": "/installed-base/signal/fw-4-1"
+    },
+    {
+      "id": "phr-2",
+      "cells": [
+        "'rolled back to {{fw:EST4@4.0}}'",
+        "9 Sep",
+        "4",
+        "2",
+        "Closed – customer fixed",
+        "WORKAROUND · on #1"
+      ],
+      "tone": [null, null, null, null, null, "amber"],
+      "linkTo": "/installed-base/signal/fw-4-1"
+    },
+    {
+      "id": "phr-3",
+      "cells": [
+        "'device not responding' (first 90 days)",
+        "12 Aug",
+        "8",
+        "3",
+        "Device – DOA",
+        "SIGNAL #2"
+      ],
+      "tone": [null, null, null, null, null, "amber"],
+      "linkTo": "/installed-base#date-code"
+    },
+    {
+      "id": "phr-4",
+      "cells": [
+        "'NAC goes into trouble after drill reset'",
+        "7 Sep",
+        "7",
+        "3",
+        "Programming – general",
+        "WATCH · unsized"
+      ],
+      "tone": [null, null, null, null, null, "yellow"]
+    },
+    {
+      "id": "phr-5",
+      "cells": [
+        "'aspirating flow fault after filter change'",
+        "28 Aug",
+        "3",
+        "2",
+        "Maintenance",
+        "WATCH · practice-leaning"
+      ],
+      "tone": [null, null, null, null, null, "yellow"]
+    },
+    {
+      "id": "phr-6",
+      "cells": [
+        "'how do I set up …' ({{platform:Edge}}, after training release)",
+        "18 Aug",
+        "14",
+        "3",
+        "How-to",
+        "SUPPRESSED · adoption, not fault"
+      ],
+      "tone": [null, null, null, null, null, "neutral"]
+    }
+  ],
+  "contactsVsRma": {
+    "trouble": [
+      284, 302, 311, 271, 291, 272, 302, 309, 299, 293, 269, 272, 313, 271, 273,
+      310, 283, 307, 301, 302, 308, 298, 286, 294, 294, 277
+    ],
+    "fw41": [
+      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 9,
+      8
+    ],
+    "rmas": [
+      23, 26, 26, 28, 26, 27, 25, 26, 27, 23, 23, 25, 24, 25, 23, 24, 23, 26,
+      23, 23, 27, 25, 23, 28, 25, 28
+    ],
+    "rmaRate": [
+      0.26, 0.3, 0.27, 0.28, 0.26, 0.26, 0.26, 0.28, 0.28, 0.3, 0.3, 0.28, 0.3,
+      0.27, 0.3, 0.27, 0.3, 0.27, 0.28, 0.28, 0.26, 0.26, 0.28, 0.29, 0.26, 0.28
+    ],
+    "limit": 0.35,
+    "lineLabel": "{{platform:EST4}} RMA rate — in control",
+    "markers": [
+      {
+        "week": 28.3,
+        "date": "2026-10-07",
+        "label": "7 Oct · next monthly RMA review",
+        "style": "review"
+      }
+    ],
+    "caption": "The 23 fw {{fw:EST4@4.1}} contacts are about 2% of {{platform:EST4}} trouble traffic in those weeks. The RMA line has not moved and will not be reviewed until 7 Oct."
+  },
+  "signalWall": {
+    "title": "LiSN Signal Wall",
+    "subtitle": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC",
+    "pill": "Data as of 25 Sep",
+    "cards": [
+      {
+        "id": "wall-fw41",
+        "chips": ["#1 of 5", "S2 · Quality"],
+        "title": "fw {{fw:EST4@4.1}} (synthetic) drifting from {{fw:EST4@4.0}} on {{platform:EST4}}",
+        "body": "Panels on {{fw:EST4@4.1}} report 'devices not found after upgrade' at 6.2 per 1,000 panel-weeks vs 2.0 on {{fw:EST4@4.0}} over the same three weeks. 9 partners, 3 regions; the {{platform:EST4}} RMA rate is inside its limit.",
+        "metric": "3.1× own baseline",
+        "trend": "▲ Rising · above threshold since 16 Sep — third independent partner",
+        "linkLabel": "Open signal →",
+        "linkTo": "/installed-base/signal/fw-4-1",
+        "confidenceShort": "M 0.70 · K 15 / I 8",
+        "owner": "VP Engineering",
+        "spark": [1.3, 4.3, 7.4, 6.5]
+      },
+      {
+        "id": "wall-d2",
+        "chips": ["#2 of 5", "S2 · Quality"],
+        "title": "Detector D-2, date codes 2611–2614 (synthetic)",
+        "body": "Early-life 'device not responding' at 4.2× adjacent production weeks; 14 of 22 cases share one component lot. SKU return rate 0.21% vs 0.30% limit.",
+        "metric": "1,900 units still in distributor stock",
+        "trend": "▲ Rising · containable",
+        "linkLabel": "Open signal →",
+        "linkTo": "/installed-base#date-code",
+        "confidenceShort": "M 0.65 · K 22 / I 9",
+        "owner": "Director Product Quality",
+        "spark": [1.2, 1.4, 4.4, 4.9, 4.7, 4.4, 1.2, 1.2]
+      },
+      {
+        "id": "wall-rollback",
+        "chips": ["S3 · Operational", "Workaround"],
+        "title": "'Rolled back to {{fw:EST4@4.0}}' in 5 cases",
+        "body": "Installers at 4 partners are rolling panels back to {{fw:EST4@4.0}} to restore mapping. No bulletin advises it. Often the earliest trace of a release regression.",
+        "metric": "5 cases · 4 partners",
+        "trend": "Linked to Signal #1",
+        "linkLabel": "Open signal →",
+        "linkTo": "/installed-base/signal/fw-4-1",
+        "owner": "VP Engineering"
+      },
+      {
+        "id": "wall-edge-howto",
+        "chips": ["Easing", "Suppressed"],
+        "title": "{{platform:Edge}} how-to cluster after training release",
+        "body": "Tagged adoption, not fault. Kept out of signals; contacts back to baseline in week 26.",
+        "metric": "58 how-to clusters suppressed (all domains)",
+        "trend": "▼ Easing"
+      }
+    ],
+    "footer": [
+      {
+        "value": 0,
+        "label": "S1 · Life-safety"
+      },
+      {
+        "value": 2,
+        "label": "S2 · Material impact"
+      },
+      {
+        "value": 1,
+        "label": "S3 · Operational"
+      },
+      {
+        "value": 1,
+        "label": "Easing"
+      }
+    ]
+  },
+  "enhanced": {
+    "title": "✨ Why field issues surface late",
+    "badge": "Joined with RMA & firmware data",
+    "violetLine": "Uses read-only extracts of RMA records, the firmware release log and the panel registry.",
+    "right": ["Data as of 25 Sep 18:00 UTC", "2 cohorts above threshold"],
+    "joinTags": [
+      {
+        "key": "RMA",
+        "value": "RMA records (read-only)"
+      },
+      {
+        "key": "FW",
+        "value": "firmware release log"
+      },
+      {
+        "key": "REGISTRY",
+        "value": "panel registry"
+      }
+    ],
+    "stats": [
+      {
+        "label": "Trouble cases this week",
+        "value": "1,610"
+      },
+      {
+        "label": "Firmware in record",
+        "value": "38%"
+      },
+      {
+        "label": "Recoverable from text",
+        "value": "61% of the rest"
+      },
+      {
+        "label": "RMAs with serial / date code",
+        "value": "44%"
+      },
+      {
+        "label": "NFF share",
+        "value": "18%"
+      },
+      {
+        "label": "First mention → RMA coded",
+        "value": "19 days (median)"
+      }
+    ],
+    "driversTitle": "Why signals arrive late",
+    "drivers": [
+      {
+        "label": "Firmware not captured on the case",
+        "meta": "62% of {{platform:EST4}} trouble cases · version inferred from text or ship date",
+        "value": 62,
+        "max": 100,
+        "chip": "High"
+      },
+      {
+        "label": "Symptom coded to a generic reason",
+        "meta": "27% of loop-mapping contacts coded 'Programming – general'",
+        "value": 27,
+        "max": 100,
+        "chip": "High"
+      },
+      {
+        "label": "NFF return with no link back to the calls",
+        "meta": "18% of RMAs · 2 in Signal #1",
+        "value": 18,
+        "max": 100,
+        "chip": "Medium"
+      },
+      {
+        "label": "Same fault, different words across partners",
+        "meta": "9 phrasings merged into 1 on Signal #1",
+        "value": 9,
+        "max": 10,
+        "chip": "Medium"
+      },
+      {
+        "label": "Fixed locally by rollback — no RMA raised",
+        "meta": "5 cases in Signal #1",
+        "value": 5,
+        "max": 10,
+        "chip": "Watch"
+      }
+    ],
+    "watchlistTitle": "Cohorts on watch",
+    "watchlist": [
+      {
+        "chip": "S2",
+        "title": "fw {{fw:EST4@4.1}} cohort (synthetic)",
+        "age": "wk 3",
+        "stage": "Stage: owner decision",
+        "blocker": "Blocker: awaiting VP Engineering",
+        "tags": ["{{platform:EST4}}", "1,240 panels"]
+      },
+      {
+        "chip": "S2",
+        "title": "D-2 · 2611–2614 (synthetic)",
+        "age": "wk 6",
+        "stage": "Stage: containment decision",
+        "blocker": "Blocker: awaiting Quality",
+        "tags": ["1,900 in stock"]
+      },
+      {
+        "chip": "S3",
+        "title": "'NAC trouble after drill reset'",
+        "age": "wk 3",
+        "stage": "Stage: taxonomy decision",
+        "blocker": "Unsized until joined",
+        "tags": ["7 partners"]
+      },
+      {
+        "chip": "S3",
+        "title": "Aspirating flow after filter change",
+        "age": "wk 4",
+        "stage": "Stage: attribution",
+        "blocker": "Practice-leaning — with Training",
+        "tags": ["3 partners"]
+      }
+    ]
+  },
+  "diagnosis": {
+    "title": "LiSN evidence summary",
+    "confidenceShort": "M 0.70",
+    "main": "A firmware cohort, not a platform problem: {{platform:EST4}} panels on {{fw:EST4@4.1}} (synthetic) report loop-mapping failures at 3.1× panels still on {{fw:EST4@4.0}}, across 9 unrelated partners in 3 regions.",
+    "changed": "Release on 2 Sep; new phrasing first seen 4 Sep; above threshold since 16 Sep at the third independent partner; installers have started rolling back to {{fw:EST4@4.0}}.",
+    "decideFirst": "VP Engineering to decide: reproduction on configurations with more than two signalling loops, and whether to pause the {{fw:EST4@4.1}} download — before the 7 Oct RMA review."
+  },
+  "symptomStack": {
+    "title": "Trouble conditions by platform",
+    "stacks": [
+      "{{platform:EST4}}",
+      "{{platform:EST3/EST3X}}",
+      "{{platform:Edge}}",
+      "{{platform:2X}}",
+      "{{platform:VM/VS}}",
+      "Other"
+    ],
+    "bars": [
+      {
+        "key": "loop-mapping",
+        "label": "Loop mapping",
+        "values": [148, 62, 71, 54, 43, 34]
+      },
+      {
+        "key": "node-offline",
+        "label": "Node offline",
+        "values": [70, 48, 45, 38, 35, 32]
+      },
+      {
+        "key": "ground-fault",
+        "label": "Ground fault",
+        "values": [52, 44, 30, 36, 33, 36]
+      },
+      {
+        "key": "audio-nca",
+        "label": "Audio / NCA",
+        "values": [61, 38, 22, 27, 25, 25]
+      },
+      {
+        "key": "upload-download",
+        "label": "Upload / download",
+        "values": [49, 27, 36, 22, 20, 22]
+      },
+      {
+        "key": "not-responding",
+        "label": "Device not responding",
+        "values": [28, 20, 18, 16, 14, 46]
+      },
+      {
+        "key": "network-redundancy",
+        "label": "Network redundancy",
+        "values": [38, 16, 14, 12, 12, 12]
+      },
+      {
+        "key": "battery-power",
+        "label": "Battery / power",
+        "values": [14, 12, 10, 9, 8, 26]
+      }
+    ],
+    "details": [
+      {
+        "key": "loop-mapping",
+        "title": "Loop mapping",
+        "chip": "S2",
+        "big": "412",
+        "bigLabel": "contacts",
+        "delta": "+14% WoW",
+        "grid": [
+          {
+            "label": "Panels on version",
+            "value": "1,240 (fw {{fw:EST4@4.1}})"
+          },
+          {
+            "label": "Partners",
+            "value": "118"
+          },
+          {
+            "label": "Regions",
+            "value": "3 (fw {{fw:EST4@4.1}} cohort)"
+          },
+          {
+            "label": "NFF RMAs",
+            "value": "2"
+          },
+          {
+            "label": "Rolled back",
+            "value": "5"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "22%"
+          }
+        ],
+        "insight": "Loop-mapping contacts are up 14% overall, but the rise sits almost entirely in {{platform:EST4}} panels on {{fw:EST4@4.1}}. On every other platform and version the family is at baseline.",
+        "actionLabel": "RECOMMENDED ACTION — awaiting VP Engineering",
+        "action": "Open Signal #1 — the cohort, evidence and a draft investigation brief are ready for the owner.",
+        "phrasings": [
+          "devices not found",
+          "loop won't map",
+          "rolled back to {{fw:EST4@4.0}}",
+          "mapping stops ~60%"
+        ],
+        "linkTo": "/installed-base/signal/fw-4-1"
+      },
+      {
+        "key": "node-offline",
+        "title": "Node offline",
+        "chip": "Stable",
+        "big": "268",
+        "bigLabel": "contacts",
+        "delta": "+1.8% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "78"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "15%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "1.0×"
+          }
+        ],
+        "insight": "Node offline contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": [
+          "node offline",
+          "network node dropped",
+          "panel lost a node"
+        ]
+      },
+      {
+        "key": "ground-fault",
+        "title": "Ground fault",
+        "chip": "Stable",
+        "big": "231",
+        "bigLabel": "contacts",
+        "delta": "−2.2% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "80"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "14%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Ground fault contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": [
+          "ground fault",
+          "earth fault on loop",
+          "intermittent ground"
+        ]
+      },
+      {
+        "key": "audio-nca",
+        "title": "Audio / NCA",
+        "chip": "Stable",
+        "big": "198",
+        "bigLabel": "contacts",
+        "delta": "+0.4% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "59"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "15%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "0.9×"
+          }
+        ],
+        "insight": "Audio / NCA contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": ["no audio on zone", "NCA trouble", "amplifier trouble"]
+      },
+      {
+        "key": "upload-download",
+        "title": "Upload / download",
+        "chip": "Stable",
+        "big": "176",
+        "bigLabel": "contacts",
+        "delta": "+0.4% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "57"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "14%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "1.0×"
+          }
+        ],
+        "insight": "Upload / download contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": [
+          "upload failed",
+          "download stuck",
+          "config won't transfer"
+        ]
+      },
+      {
+        "key": "not-responding",
+        "title": "Device not responding",
+        "chip": "Stable",
+        "big": "142",
+        "bigLabel": "contacts",
+        "delta": "+2.5% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "46"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "18%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "0.9×"
+          }
+        ],
+        "insight": "Device not responding contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": [
+          "device not responding",
+          "detector missing",
+          "no reply from device"
+        ]
+      },
+      {
+        "key": "network-redundancy",
+        "title": "Network redundancy",
+        "chip": "Stable",
+        "big": "104",
+        "bigLabel": "contacts",
+        "delta": "+1.1% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "31"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "12%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "1.0×"
+          }
+        ],
+        "insight": "Network redundancy contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": [
+          "redundant path trouble",
+          "network class A fault",
+          "ring break"
+        ]
+      },
+      {
+        "key": "battery-power",
+        "title": "Battery / power",
+        "chip": "Stable",
+        "big": "79",
+        "bigLabel": "contacts",
+        "delta": "+2.5% WoW",
+        "grid": [
+          {
+            "label": "Platforms at baseline",
+            "value": "6 of 6"
+          },
+          {
+            "label": "Partners",
+            "value": "27"
+          },
+          {
+            "label": "Repeat contact",
+            "value": "14%"
+          },
+          {
+            "label": "vs own baseline",
+            "value": "1.1×"
+          }
+        ],
+        "insight": "Battery / power contacts sit within their own baseline on every platform and version this week. Nothing to escalate.",
+        "actionLabel": "RECOMMENDED ACTION",
+        "action": "No action — within own baseline.",
+        "phrasings": ["battery trouble", "AC fail", "low battery"]
+      }
+    ],
+    "defaultOpen": "loop-mapping"
+  },
+  "stable": {
+    "rows": [
+      {
+        "text": "45 / 46 firmware cohorts in control"
+      },
+      {
+        "text": "Nuisance-alarm contacts within own baseline for every detector family"
+      },
+      {
+        "text": "{{platform:Edge}} how-to cluster after training release — adoption, not fault (suppressed)"
+      }
+    ],
+    "footer": "Shown so you can see what LiSN did not escalate."
+  },
+  "lifecycle": [
+    {
+      "id": "lc-1",
+      "cells": ["Ship & receive", "610", "12%", "—", "0"],
+      "tone": [null, null, null, null, null]
+    },
+    {
+      "id": "lc-2",
+      "cells": ["Install & commission", "1,720", "24%", "—", "1 ▲"],
+      "tone": [null, null, null, null, "amber"]
+    },
+    {
+      "id": "lc-3",
+      "cells": ["Upgrade", "540", "31%", "—", "1 ▲"],
+      "tone": [null, null, null, null, "amber"]
+    },
+    {
+      "id": "lc-4",
+      "cells": ["ITM / inspection", "1,980", "18%", "—", "0"],
+      "tone": [null, null, null, null, null]
+    },
+    {
+      "id": "lc-5",
+      "cells": ["RMA & warranty", "630", "22%", "18%", "0"],
+      "tone": [null, null, null, null, null]
+    }
+  ],
+  "panelCopy": {
+    "P-0": {
+      "title": "Key figures"
+    },
+    "P-A": {
+      "title": "Interactions read by brand × platform",
+      "sub": "QUALITY INTERACTIONS · THIS WEEK",
+      "columns": [
+        "BRAND · PLATFORM",
+        "INTERACTIONS",
+        "WoW",
+        "RATE vs OWN BASELINE"
+      ]
+    },
+    "P-B": {
+      "title": "Above-baseline clusters by severity",
+      "sub": "This week · quality domain · split by type (cliff / slope / spread / novel)"
+    },
+    "P-C": {
+      "title": "12-week cohort monitor — contacts per 1,000 panel-weeks",
+      "sub": "Each release against its own baseline · 45 of 46 cohorts in control"
+    },
+    "P-D": {
+      "title": "Date-code window under a green aggregate",
+      "sub": "Cliff on the serial axis",
+      "right": "SKU return rate 0.21% — inside limit",
+      "anchor": "date-code",
+      "unit": "early-life contacts per 10,000 units"
+    },
+    "P-E": {
+      "title": "New phrasing & emerging failures",
+      "right": "9 phrasings merged into 3 signals",
+      "sub": "One fault phrased many ways, counted once. What agents code today is shown beside it.",
+      "columns": [
+        "PHRASING CLUSTER",
+        "FIRST SEEN",
+        "PARTNERS",
+        "CHANNELS",
+        "CODED TODAY AS",
+        "STATUS"
+      ]
+    },
+    "P-F": {
+      "title": "Contacts lead, RMAs lag — {{platform:EST4}}",
+      "unit": "trouble contacts / week · RMA rate % (4-week rolling)"
+    },
+    "P-G": {
+      "title": "LiSN Signal Wall",
+      "sub": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC"
+    },
+    "P-H": {
+      "title": "✨ Why field issues surface late",
+      "anchor": "why-late"
+    },
+    "P-I": {
+      "title": "LiSN evidence summary"
+    },
+    "P-J": {
+      "title": "Trouble conditions by platform",
+      "unit": "contacts this week"
+    },
+    "P-K": {
+      "title": "What's stable",
+      "footer": "Shown so you can see what LiSN did not escalate."
+    },
+    "P-L": {
+      "title": "WHERE DOES IT SURFACE? — SIGNAL CONCENTRATION BY LIFECYCLE STAGE",
+      "columns": [
+        "STAGE",
+        "INTERACTIONS (THIS WEEK)",
+        "REPEAT CONTACT",
+        "NFF SHARE",
+        "SIGNALS ABOVE THRESHOLD"
+      ]
+    }
+  }
+}

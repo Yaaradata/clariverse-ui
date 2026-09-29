@@ -1,0 +1,841 @@
+{
+  "title": "Global Commercial Fire — Signals this week",
+  "category": "Installed-base early warning",
+  "promise": "Hear it at the third call, not the monthly review.",
+  "descriptor": "The early-warning layer that joins what installers, partners and distributors say to firmware, batch, RMA and order data.",
+  "dataAsOf": {
+    "iso": "2026-09-25T18:00:00Z",
+    "label": "Data as of 25 Sep 2026 18:00 UTC"
+  },
+  "lastWeekDigest": "2026-09-18T18:00:00Z",
+  "badge": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
+  "badgeTooltip": "Every figure, firmware version, serial, date code and partner ID on this screen is synthetic. Nothing here is a finding about any KGS product.",
+  "footer": "Synthetic scenario for illustration; no inference about any KGS product. LiSN aids resolution; every action is human-approved.",
+  "breadcrumbs": {
+    "/": "Installed-base early warning · Hear it at the third call, not the monthly review.",
+    "/installed-base": "Global Commercial Fire · {role} · Installed base · Firmware · Date codes · RMA",
+    "/installed-base/signal/fw-4-1": "Global Commercial Fire · {role} · Installed base · {{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)",
+    "/channel": "Global Commercial Fire · {role} · Channel · Strategic Partners / ESDs · Backlog",
+    "/separation": "Global Commercial Fire · {role} · Separation · Entity · Portal · ERP / EDI · DSO"
+  },
+  "filters": {
+    "brand": [
+      "All",
+      "{{brand:Edwards}}",
+      "{{brand:Kidde Commercial}}",
+      "{{brand:Aritech}}",
+      "{{brand:EMS}}",
+      "{{brand:GST}}",
+      "{{brand:AirSense}}"
+    ],
+    "region": [
+      "All",
+      "NA",
+      "UK-EU",
+      "MEA",
+      "India",
+      "China",
+      "APAC/AUS",
+      "LatAm"
+    ],
+    "period": {
+      "value": "26 weeks to 25 Sep 2026",
+      "disabled": ["13 weeks", "52 weeks — Discovery"]
+    }
+  },
+  "weeks": [
+    {
+      "week": 1,
+      "weekStart": "2026-03-30"
+    },
+    {
+      "week": 2,
+      "weekStart": "2026-04-06"
+    },
+    {
+      "week": 3,
+      "weekStart": "2026-04-13"
+    },
+    {
+      "week": 4,
+      "weekStart": "2026-04-20"
+    },
+    {
+      "week": 5,
+      "weekStart": "2026-04-27"
+    },
+    {
+      "week": 6,
+      "weekStart": "2026-05-04"
+    },
+    {
+      "week": 7,
+      "weekStart": "2026-05-11"
+    },
+    {
+      "week": 8,
+      "weekStart": "2026-05-18"
+    },
+    {
+      "week": 9,
+      "weekStart": "2026-05-25"
+    },
+    {
+      "week": 10,
+      "weekStart": "2026-06-01"
+    },
+    {
+      "week": 11,
+      "weekStart": "2026-06-08"
+    },
+    {
+      "week": 12,
+      "weekStart": "2026-06-15"
+    },
+    {
+      "week": 13,
+      "weekStart": "2026-06-22"
+    },
+    {
+      "week": 14,
+      "weekStart": "2026-06-29"
+    },
+    {
+      "week": 15,
+      "weekStart": "2026-07-06"
+    },
+    {
+      "week": 16,
+      "weekStart": "2026-07-13"
+    },
+    {
+      "week": 17,
+      "weekStart": "2026-07-20"
+    },
+    {
+      "week": 18,
+      "weekStart": "2026-07-27"
+    },
+    {
+      "week": 19,
+      "weekStart": "2026-08-03"
+    },
+    {
+      "week": 20,
+      "weekStart": "2026-08-10"
+    },
+    {
+      "week": 21,
+      "weekStart": "2026-08-17"
+    },
+    {
+      "week": 22,
+      "weekStart": "2026-08-24"
+    },
+    {
+      "week": 23,
+      "weekStart": "2026-08-31"
+    },
+    {
+      "week": 24,
+      "weekStart": "2026-09-07"
+    },
+    {
+      "week": 25,
+      "weekStart": "2026-09-14"
+    },
+    {
+      "week": 26,
+      "weekStart": "2026-09-21"
+    }
+  ],
+  "weeklyInteractions": [
+    8666, 8866, 8766, 8966, 8566, 9066, 9166, 8966, 7600, 9266, 9466, 9866,
+    11400, 8300, 8966, 9266, 9066, 8866, 8965, 9165, 9065, 8765, 8665, 7900,
+    9265, 9020
+  ],
+  "dailyInteractions": [
+    {
+      "date": "2026-03-30",
+      "week": 1,
+      "count": 1925
+    },
+    {
+      "date": "2026-03-31",
+      "week": 1,
+      "count": 1824
+    },
+    {
+      "date": "2026-04-01",
+      "week": 1,
+      "count": 1808
+    },
+    {
+      "date": "2026-04-02",
+      "week": 1,
+      "count": 1761
+    },
+    {
+      "date": "2026-04-03",
+      "week": 1,
+      "count": 1348
+    },
+    {
+      "date": "2026-04-06",
+      "week": 2,
+      "count": 1935
+    },
+    {
+      "date": "2026-04-07",
+      "week": 2,
+      "count": 1837
+    },
+    {
+      "date": "2026-04-08",
+      "week": 2,
+      "count": 1760
+    },
+    {
+      "date": "2026-04-09",
+      "week": 2,
+      "count": 1701
+    },
+    {
+      "date": "2026-04-10",
+      "week": 2,
+      "count": 1633
+    },
+    {
+      "date": "2026-04-13",
+      "week": 3,
+      "count": 1872
+    },
+    {
+      "date": "2026-04-14",
+      "week": 3,
+      "count": 1765
+    },
+    {
+      "date": "2026-04-15",
+      "week": 3,
+      "count": 1815
+    },
+    {
+      "date": "2026-04-16",
+      "week": 3,
+      "count": 1710
+    },
+    {
+      "date": "2026-04-17",
+      "week": 3,
+      "count": 1604
+    },
+    {
+      "date": "2026-04-20",
+      "week": 4,
+      "count": 1969
+    },
+    {
+      "date": "2026-04-21",
+      "week": 4,
+      "count": 1829
+    },
+    {
+      "date": "2026-04-22",
+      "week": 4,
+      "count": 1810
+    },
+    {
+      "date": "2026-04-23",
+      "week": 4,
+      "count": 1692
+    },
+    {
+      "date": "2026-04-24",
+      "week": 4,
+      "count": 1666
+    },
+    {
+      "date": "2026-04-27",
+      "week": 5,
+      "count": 1861
+    },
+    {
+      "date": "2026-04-28",
+      "week": 5,
+      "count": 1829
+    },
+    {
+      "date": "2026-04-29",
+      "week": 5,
+      "count": 1711
+    },
+    {
+      "date": "2026-04-30",
+      "week": 5,
+      "count": 1648
+    },
+    {
+      "date": "2026-05-01",
+      "week": 5,
+      "count": 1517
+    },
+    {
+      "date": "2026-05-04",
+      "week": 6,
+      "count": 1998
+    },
+    {
+      "date": "2026-05-05",
+      "week": 6,
+      "count": 1883
+    },
+    {
+      "date": "2026-05-06",
+      "week": 6,
+      "count": 1772
+    },
+    {
+      "date": "2026-05-07",
+      "week": 6,
+      "count": 1747
+    },
+    {
+      "date": "2026-05-08",
+      "week": 6,
+      "count": 1666
+    },
+    {
+      "date": "2026-05-11",
+      "week": 7,
+      "count": 1906
+    },
+    {
+      "date": "2026-05-12",
+      "week": 7,
+      "count": 1970
+    },
+    {
+      "date": "2026-05-13",
+      "week": 7,
+      "count": 1876
+    },
+    {
+      "date": "2026-05-14",
+      "week": 7,
+      "count": 1792
+    },
+    {
+      "date": "2026-05-15",
+      "week": 7,
+      "count": 1622
+    },
+    {
+      "date": "2026-05-18",
+      "week": 8,
+      "count": 1953
+    },
+    {
+      "date": "2026-05-19",
+      "week": 8,
+      "count": 1850
+    },
+    {
+      "date": "2026-05-20",
+      "week": 8,
+      "count": 1765
+    },
+    {
+      "date": "2026-05-21",
+      "week": 8,
+      "count": 1800
+    },
+    {
+      "date": "2026-05-22",
+      "week": 8,
+      "count": 1598
+    },
+    {
+      "date": "2026-05-25",
+      "week": 9,
+      "count": 1334
+    },
+    {
+      "date": "2026-05-26",
+      "week": 9,
+      "count": 1657
+    },
+    {
+      "date": "2026-05-27",
+      "week": 9,
+      "count": 1588
+    },
+    {
+      "date": "2026-05-28",
+      "week": 9,
+      "count": 1572
+    },
+    {
+      "date": "2026-05-29",
+      "week": 9,
+      "count": 1449
+    },
+    {
+      "date": "2026-06-01",
+      "week": 10,
+      "count": 1945
+    },
+    {
+      "date": "2026-06-02",
+      "week": 10,
+      "count": 1872
+    },
+    {
+      "date": "2026-06-03",
+      "week": 10,
+      "count": 1884
+    },
+    {
+      "date": "2026-06-04",
+      "week": 10,
+      "count": 1834
+    },
+    {
+      "date": "2026-06-05",
+      "week": 10,
+      "count": 1731
+    },
+    {
+      "date": "2026-06-08",
+      "week": 11,
+      "count": 2092
+    },
+    {
+      "date": "2026-06-09",
+      "week": 11,
+      "count": 1931
+    },
+    {
+      "date": "2026-06-10",
+      "week": 11,
+      "count": 1868
+    },
+    {
+      "date": "2026-06-11",
+      "week": 11,
+      "count": 1867
+    },
+    {
+      "date": "2026-06-12",
+      "week": 11,
+      "count": 1708
+    },
+    {
+      "date": "2026-06-15",
+      "week": 12,
+      "count": 2161
+    },
+    {
+      "date": "2026-06-16",
+      "week": 12,
+      "count": 2077
+    },
+    {
+      "date": "2026-06-17",
+      "week": 12,
+      "count": 1969
+    },
+    {
+      "date": "2026-06-18",
+      "week": 12,
+      "count": 1896
+    },
+    {
+      "date": "2026-06-19",
+      "week": 12,
+      "count": 1763
+    },
+    {
+      "date": "2026-06-22",
+      "week": 13,
+      "count": 2504
+    },
+    {
+      "date": "2026-06-23",
+      "week": 13,
+      "count": 2406
+    },
+    {
+      "date": "2026-06-24",
+      "week": 13,
+      "count": 2188
+    },
+    {
+      "date": "2026-06-25",
+      "week": 13,
+      "count": 2217
+    },
+    {
+      "date": "2026-06-26",
+      "week": 13,
+      "count": 2085
+    },
+    {
+      "date": "2026-06-29",
+      "week": 14,
+      "count": 1872
+    },
+    {
+      "date": "2026-06-30",
+      "week": 14,
+      "count": 1794
+    },
+    {
+      "date": "2026-07-01",
+      "week": 14,
+      "count": 1759
+    },
+    {
+      "date": "2026-07-02",
+      "week": 14,
+      "count": 1739
+    },
+    {
+      "date": "2026-07-03",
+      "week": 14,
+      "count": 1136
+    },
+    {
+      "date": "2026-07-06",
+      "week": 15,
+      "count": 1983
+    },
+    {
+      "date": "2026-07-07",
+      "week": 15,
+      "count": 1885
+    },
+    {
+      "date": "2026-07-08",
+      "week": 15,
+      "count": 1837
+    },
+    {
+      "date": "2026-07-09",
+      "week": 15,
+      "count": 1679
+    },
+    {
+      "date": "2026-07-10",
+      "week": 15,
+      "count": 1582
+    },
+    {
+      "date": "2026-07-13",
+      "week": 16,
+      "count": 2025
+    },
+    {
+      "date": "2026-07-14",
+      "week": 16,
+      "count": 1907
+    },
+    {
+      "date": "2026-07-15",
+      "week": 16,
+      "count": 1878
+    },
+    {
+      "date": "2026-07-16",
+      "week": 16,
+      "count": 1768
+    },
+    {
+      "date": "2026-07-17",
+      "week": 16,
+      "count": 1688
+    },
+    {
+      "date": "2026-07-20",
+      "week": 17,
+      "count": 1975
+    },
+    {
+      "date": "2026-07-21",
+      "week": 17,
+      "count": 1829
+    },
+    {
+      "date": "2026-07-22",
+      "week": 17,
+      "count": 1804
+    },
+    {
+      "date": "2026-07-23",
+      "week": 17,
+      "count": 1823
+    },
+    {
+      "date": "2026-07-24",
+      "week": 17,
+      "count": 1635
+    },
+    {
+      "date": "2026-07-27",
+      "week": 18,
+      "count": 1904
+    },
+    {
+      "date": "2026-07-28",
+      "week": 18,
+      "count": 1887
+    },
+    {
+      "date": "2026-07-29",
+      "week": 18,
+      "count": 1786
+    },
+    {
+      "date": "2026-07-30",
+      "week": 18,
+      "count": 1672
+    },
+    {
+      "date": "2026-07-31",
+      "week": 18,
+      "count": 1617
+    },
+    {
+      "date": "2026-08-03",
+      "week": 19,
+      "count": 1880
+    },
+    {
+      "date": "2026-08-04",
+      "week": 19,
+      "count": 1867
+    },
+    {
+      "date": "2026-08-05",
+      "week": 19,
+      "count": 1828
+    },
+    {
+      "date": "2026-08-06",
+      "week": 19,
+      "count": 1746
+    },
+    {
+      "date": "2026-08-07",
+      "week": 19,
+      "count": 1644
+    },
+    {
+      "date": "2026-08-10",
+      "week": 20,
+      "count": 1924
+    },
+    {
+      "date": "2026-08-11",
+      "week": 20,
+      "count": 1922
+    },
+    {
+      "date": "2026-08-12",
+      "week": 20,
+      "count": 1851
+    },
+    {
+      "date": "2026-08-13",
+      "week": 20,
+      "count": 1777
+    },
+    {
+      "date": "2026-08-14",
+      "week": 20,
+      "count": 1691
+    },
+    {
+      "date": "2026-08-17",
+      "week": 21,
+      "count": 1933
+    },
+    {
+      "date": "2026-08-18",
+      "week": 21,
+      "count": 1967
+    },
+    {
+      "date": "2026-08-19",
+      "week": 21,
+      "count": 1780
+    },
+    {
+      "date": "2026-08-20",
+      "week": 21,
+      "count": 1793
+    },
+    {
+      "date": "2026-08-21",
+      "week": 21,
+      "count": 1592
+    },
+    {
+      "date": "2026-08-24",
+      "week": 22,
+      "count": 1961
+    },
+    {
+      "date": "2026-08-25",
+      "week": 22,
+      "count": 1759
+    },
+    {
+      "date": "2026-08-26",
+      "week": 22,
+      "count": 1770
+    },
+    {
+      "date": "2026-08-27",
+      "week": 22,
+      "count": 1711
+    },
+    {
+      "date": "2026-08-28",
+      "week": 22,
+      "count": 1564
+    },
+    {
+      "date": "2026-08-31",
+      "week": 23,
+      "count": 1834
+    },
+    {
+      "date": "2026-09-01",
+      "week": 23,
+      "count": 1857
+    },
+    {
+      "date": "2026-09-02",
+      "week": 23,
+      "count": 1703
+    },
+    {
+      "date": "2026-09-03",
+      "week": 23,
+      "count": 1658
+    },
+    {
+      "date": "2026-09-04",
+      "week": 23,
+      "count": 1613
+    },
+    {
+      "date": "2026-09-07",
+      "week": 24,
+      "count": 1399
+    },
+    {
+      "date": "2026-09-08",
+      "week": 24,
+      "count": 1724
+    },
+    {
+      "date": "2026-09-09",
+      "week": 24,
+      "count": 1615
+    },
+    {
+      "date": "2026-09-10",
+      "week": 24,
+      "count": 1668
+    },
+    {
+      "date": "2026-09-11",
+      "week": 24,
+      "count": 1494
+    },
+    {
+      "date": "2026-09-14",
+      "week": 25,
+      "count": 2032
+    },
+    {
+      "date": "2026-09-15",
+      "week": 25,
+      "count": 1938
+    },
+    {
+      "date": "2026-09-16",
+      "week": 25,
+      "count": 1796
+    },
+    {
+      "date": "2026-09-17",
+      "week": 25,
+      "count": 1832
+    },
+    {
+      "date": "2026-09-18",
+      "week": 25,
+      "count": 1667
+    },
+    {
+      "date": "2026-09-21",
+      "week": 26,
+      "count": 1945
+    },
+    {
+      "date": "2026-09-22",
+      "week": 26,
+      "count": 1878
+    },
+    {
+      "date": "2026-09-23",
+      "week": 26,
+      "count": 1766
+    },
+    {
+      "date": "2026-09-24",
+      "week": 26,
+      "count": 1765
+    },
+    {
+      "date": "2026-09-25",
+      "week": 26,
+      "count": 1666
+    }
+  ],
+  "channelMix": {
+    "call": 0.36,
+    "case": 0.22,
+    "email": 0.25,
+    "rma": 0.06,
+    "portal": 0.05,
+    "afterHours": 0.02,
+    "fieldNote": 0.02,
+    "training": 0.01,
+    "other": 0.01
+  },
+  "labels": {
+    "insightLabel": "LiSN INSIGHT",
+    "monitorTitle": "Field Signal Monitor",
+    "monitorSubtitle": "Signals above threshold, ranked by severity, population and consequence. Each is routed to one owner.",
+    "recommendationLabel": "LiSN suggests · owner decides",
+    "wallLabel": "LiSN Signal Wall",
+    "diagnosisLabel": "LiSN evidence summary",
+    "diagnosisRows": ["Main signal", "What changed", "Decide first"],
+    "askButtonTooltip": "Ask LiSN (P2 — canned answers)",
+    "illustrativeChip": "ILLUSTRATIVE",
+    "confidenceTooltip": "K = joined, verified records. I = text-extracted or imputed. Kept separate on every signal.",
+    "joinTagPrefix": "JOINED ON"
+  },
+  "demo": {
+    "introLine": "LiSN is reading 233,900 interactions…",
+    "introLine2": "1,640 candidate clusters · 212 suppressed · 5 above threshold",
+    "tagline": "Hear it at the third call, not the monthly review.",
+    "resetToast": "Demo reset",
+    "watermark": "Synthetic scenario — not KGS data",
+    "anonymisedChip": "ANONYMISED"
+  }
+}
