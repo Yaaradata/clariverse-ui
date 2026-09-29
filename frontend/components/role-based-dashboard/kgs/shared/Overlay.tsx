@@ -3,7 +3,6 @@
 import { meta } from "@kgs/lib/data";
 import { X } from "lucide-react";
 import { type ReactNode, useEffect, useRef } from "react";
-import { SyntheticBadge } from "../shell/SyntheticBadge";
 import { usePresence } from "./motion";
 import { K } from "./tokens";
 
@@ -68,9 +67,7 @@ function useScrollLock(open: boolean) {
 }
 
 /**
- * Backdrop sits at z 60, under the sticky ContextBar (z 70), so the SyntheticBadge stays
- * visible above every drawer and modal backdrop (04 §1.4). The panel itself (z 75) repeats
- * the badge in its header (04 §7.2).
+ * Backdrop sits at z 60, under the sticky ContextBar (z 70). Drawer/modal panels sit at z 75.
  */
 function Backdrop({
   onClose,
@@ -123,17 +120,18 @@ function Header({
         <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: K.text }}>
           {title}
         </h2>
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          {chip}
-          <SyntheticBadge compact />
-        </div>
+        {chip ? (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            {chip}
+          </div>
+        ) : null}
       </div>
       <button
         type="button"

@@ -21,7 +21,6 @@ import {
 import { type KgsNav, KgsNavContext, type KgsView, parseLink } from "./nav";
 import { prefersReducedMotion } from "./shared/motion";
 import { K } from "./shared/tokens";
-import { ContextBar } from "./shell/ContextBar";
 import { DemoMenu } from "./shell/DemoMenu";
 import { DemoProvider, useDemo } from "./shell/DemoProvider";
 import { DrillHeader } from "./shell/DrillHeader";
@@ -86,7 +85,7 @@ const STAGGER_DELAYS = Array.from({ length: STAGGER_MAX - 1 }, (_, i) => {
  */
 const GLOBAL_CSS = `
 .kgs-root .kgs-focus:focus-visible { outline: none; box-shadow: ${K.focus}; }
-.kgs-root [id] { scroll-margin-top: 72px; }
+.kgs-root [id] { scroll-margin-top: 16px; }
 @keyframes kgs-drawer { from { transform: translateX(100%); } to { transform: translateX(0); } }
 @keyframes kgs-drawer-out { from { transform: translateX(0); } to { transform: translateX(100%); } }
 @keyframes kgs-pop { from { opacity: 0; transform: scale(.98); } to { opacity: 1; transform: scale(1); } }
@@ -315,7 +314,6 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
           }}
         >
           <DrillHeader view={view} title={VIEW_TITLE[view]} />
-          <ContextBar />
           <main
             ref={mainRef}
             style={{ flex: 1, padding: "16px 24px 24px", minWidth: 0 }}

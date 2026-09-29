@@ -21,8 +21,8 @@ import { DrillChip, isStable } from "./Chips";
 import { SignalSurface } from "./SignalSurface";
 
 const RANK = /^#(\d+) of \d+$/;
-/** Sticky offsets: clear the sticky ContextBar above and the sticky footer below. */
-const WALL_TOP = 68;
+/** Sticky offsets: clear scroll padding above and the sticky footer below. */
+const WALL_TOP = 16;
 const WALL_BOTTOM = 56;
 
 /** The monitor card behind a wall card, found by its "#n of 5" rank chip. */

@@ -6,10 +6,9 @@ import { useKgsNav } from "../nav";
 import { CountUp } from "../shared/CountUp";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
-import { SyntheticBadge } from "../shell/SyntheticBadge";
 import { RankChip } from "./RankChip";
 
-/** Hero header block (04 §4.1–§4.2): back, rank chip, badge, H1, metric line, sub-line. */
+/** Hero header block (04 §4.1–§4.2): back, rank chip, H1, metric line, sub-line. */
 export function SignalHeader() {
   const L = useLabel();
   const { go } = useKgsNav();
@@ -46,9 +45,6 @@ export function SignalHeader() {
           {meta.ui.hero.back}
         </button>
         <RankChip />
-        <span style={{ marginLeft: "auto" }}>
-          <SyntheticBadge />
-        </span>
       </div>
       <h1
         style={{

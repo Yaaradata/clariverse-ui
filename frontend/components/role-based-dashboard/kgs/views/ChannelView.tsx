@@ -177,7 +177,7 @@ export function ChannelView() {
             minWidth: 0,
           }}
         >
-          <div ref={timelineRef} style={{ scrollMarginTop: 72 }}>
+          <div ref={timelineRef} style={{ scrollMarginTop: 16 }}>
             <PartnerTimeline />
           </div>
           <Panel title={L(P["C-E"].title)}>
