@@ -1206,6 +1206,22 @@
           "amount": "$0.15m",
           "dsoChange": "+4 days",
           "mainIssue": "Tax / VAT ID"
+        },
+        {
+          "distributor": "{{partner:DIST-US-015}}",
+          "region": "{{region:US-W}}",
+          "invoices": 16,
+          "amount": "$0.12m",
+          "dsoChange": "+4 days",
+          "mainIssue": "Remit-to / entity mismatch"
+        },
+        {
+          "distributor": "{{partner:DIST-US-022}}",
+          "region": "{{region:US-SW}}",
+          "invoices": 14,
+          "amount": "$0.11m",
+          "dsoChange": "+3 days",
+          "mainIssue": "Portal login & licences"
         }
       ]
     },
@@ -1318,12 +1334,7 @@
           "region": "{{region:US-SW}}",
           "daysOpen": 14
         }
-      ],
-      "diagnosis": {
-        "main": "Most cash is stuck on entity and remit-to mismatches after the {{region:US}} cutover — not on pricing disputes.",
-        "changed": "Since 1 Sep, remit-to contacts run 2.7× control and portal login 3.4×; 212 invoices / $1.4m now in dispute.",
-        "decideFirst": "CIO triage on the separation defect ticket, plus Regional GM {{region:US}} approval of the corrected remit-to notice — before DSO moves again."
-      }
+      ]
     },
     "topIssues": [
       {
@@ -1407,8 +1418,7 @@
           "avgDays": 31,
           "status": "Critical"
         }
-      ],
-      "footer": "Bottleneck sits at entity corrected — remit-to and PO fixes wait on owner approval before cash moves."
+      ]
     }
   }
 }

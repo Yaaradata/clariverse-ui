@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { K, withAlpha } from "../../shared/tokens";
 import { useLabel } from "../../shell/DemoProvider";
 
@@ -79,6 +79,8 @@ export function DrBadge({
         textTransform: "uppercase",
         letterSpacing: "0.05em",
         lineHeight: 1.2,
+        whiteSpace: "nowrap",
+        flexShrink: 0,
       }}
     >
       {children}
@@ -98,9 +100,9 @@ export function DrTag({
       style={{
         display: "inline-flex",
         alignItems: "center",
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: 700,
-        padding: "2px 7px",
+        padding: "3px 8px",
         borderRadius: 3,
         background: withAlpha(color, 0.18),
         color,
@@ -115,9 +117,11 @@ export function DrTag({
 export function DrCard({
   children,
   accent,
+  style,
 }: {
   children: ReactNode;
   accent?: string;
+  style?: CSSProperties;
 }) {
   return (
     <section
@@ -128,6 +132,8 @@ export function DrCard({
         borderRadius: 16,
         padding: 14,
         minWidth: 0,
+        minHeight: 0,
+        ...style,
       }}
     >
       {children}
@@ -159,7 +165,7 @@ export function DrHead({
           style={{
             margin: 0,
             color: DR.text,
-            fontSize: 16,
+            fontSize: 17,
             fontWeight: 800,
             letterSpacing: "-0.01em",
           }}
@@ -171,8 +177,8 @@ export function DrHead({
       {sub ? (
         <p
           style={{
-            margin: "5px 0 0",
-            fontSize: 12,
+            margin: "6px 0 0",
+            fontSize: 14,
             color: DR.muted,
             lineHeight: 1.45,
           }}
@@ -246,9 +252,9 @@ export function DrPill({
     <span
       style={{
         display: "inline-flex",
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: 600,
-        padding: "2px 7px",
+        padding: "3px 8px",
         borderRadius: 999,
         border: `1px solid ${withAlpha(color, 0.35)}`,
         background: withAlpha(color, 0.1),

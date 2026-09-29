@@ -11,8 +11,6 @@ import {
   DrHead,
   DrMono,
   DrPill,
-  DrTd,
-  DrTh,
   severityColor,
 } from "../ui/DrillChrome";
 
@@ -34,6 +32,7 @@ function MetricTiles({
         display: "grid",
         gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
         gap: 8,
+        flexShrink: 0,
       }}
     >
       {items.map((m) => (
@@ -42,8 +41,9 @@ function MetricTiles({
           style={{
             border: `1px solid ${DR.border}`,
             borderRadius: 10,
-            padding: "8px 10px",
+            padding: "10px 12px",
             background: "rgba(255,255,255,0.02)",
+            minHeight: 78,
           }}
         >
           <div
@@ -54,24 +54,25 @@ function MetricTiles({
               alignItems: "center",
             }}
           >
-            <span style={{ fontSize: 10, color: DR.muted, fontWeight: 700 }}>
+            <span style={{ fontSize: 12, color: DR.muted, fontWeight: 700 }}>
               {L(m.label)}
             </span>
             <DrBadge color={severityColor(m.status)}>{m.status}</DrBadge>
           </div>
           <div
             style={{
-              marginTop: 4,
+              marginTop: 6,
               display: "flex",
               alignItems: "baseline",
-              gap: 4,
+              gap: 6,
+              flexWrap: "wrap",
             }}
           >
-            <DrMono size={20}>{L(m.value)}</DrMono>
+            <DrMono size={22}>{L(m.value)}</DrMono>
             {m.money ? <IllustrativeChip /> : null}
           </div>
           {m.sub ? (
-            <div style={{ marginTop: 2, fontSize: 10, color: DR.dim }}>
+            <div style={{ marginTop: 4, fontSize: 12, color: DR.dim }}>
               {L(m.sub)}
             </div>
           ) : null}
@@ -88,61 +89,84 @@ export function CutoverFailuresPanel({
 }) {
   const L = useLabel();
   return (
-    <DrCard>
+    <DrCard
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
       <DrHead sub={data.sub}>{L(data.title)}</DrHead>
       <MetricTiles items={data.kpis} />
       <div
         style={{
-          marginTop: 10,
-          marginBottom: 6,
-          fontSize: 12,
+          marginTop: 12,
+          marginBottom: 8,
+          fontSize: 14,
           fontWeight: 800,
           color: DR.text,
+          flexShrink: 0,
         }}
       >
         {L(data.tableTitle)}
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <table
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "grid",
+          gridTemplateRows: `auto repeat(${data.rows.length}, minmax(0, 1fr))`,
+          border: `1px solid ${DR.border}`,
+          borderRadius: 10,
+          overflow: "hidden",
+        }}
+      >
+        <div
           style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            minWidth: 640,
+            display: "grid",
+            gridTemplateColumns: "1.4fr 88px 64px 64px 1.3fr 0.9fr",
+            gap: 8,
+            padding: "8px 10px",
+            borderBottom: `1px solid ${DR.border}`,
+            background: "rgba(255,255,255,0.02)",
+            fontSize: 11,
+            fontWeight: 700,
+            color: DR.dim,
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
           }}
         >
-          <thead>
-            <tr>
-              <DrTh>System</DrTh>
-              <DrTh>Impact</DrTh>
-              <DrTh>Contacts</DrTh>
-              <DrTh>vs Control</DrTh>
-              <DrTh>Channels</DrTh>
-              <DrTh>Owner</DrTh>
-            </tr>
-          </thead>
-          <tbody>
-            {data.rows.map((r) => (
-              <tr key={r.system}>
-                <DrTd>
-                  <span style={{ fontWeight: 700, color: DR.text }}>
-                    {L(r.system)}
-                  </span>
-                </DrTd>
-                <DrTd>
-                  <DrBadge color={severityColor(r.impact)}>{r.impact}</DrBadge>
-                </DrTd>
-                <DrTd>
-                  <DrMono size={12}>{r.contacts}</DrMono>
-                </DrTd>
-                <DrTd>{r.vsControl}</DrTd>
-                <DrTd>
-                  <span style={{ fontSize: 11 }}>{r.channels}</span>
-                </DrTd>
-                <DrTd>{L(r.owner)}</DrTd>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <span>System</span>
+          <span>Impact</span>
+          <span>Contacts</span>
+          <span>vs Control</span>
+          <span>Channels</span>
+          <span>Owner</span>
+        </div>
+        {data.rows.map((r) => (
+          <div
+            key={r.system}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.4fr 88px 64px 64px 1.3fr 0.9fr",
+              gap: 8,
+              padding: "0 10px",
+              alignItems: "center",
+              borderBottom: `1px solid ${DR.border}`,
+              minHeight: 0,
+            }}
+          >
+            <span style={{ fontWeight: 700, color: DR.text, fontSize: 13 }}>
+              {L(r.system)}
+            </span>
+            <DrBadge color={severityColor(r.impact)}>{r.impact}</DrBadge>
+            <DrMono size={13}>{r.contacts}</DrMono>
+            <span style={{ fontSize: 13, color: DR.sub }}>{r.vsControl}</span>
+            <span style={{ fontSize: 12, color: DR.muted }}>{r.channels}</span>
+            <span style={{ fontSize: 12, color: DR.sub }}>{L(r.owner)}</span>
+          </div>
+        ))}
       </div>
     </DrCard>
   );
@@ -155,64 +179,91 @@ export function CashImpactPanel({
 }) {
   const L = useLabel();
   return (
-    <DrCard>
+    <DrCard
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
       <DrHead sub={data.sub}>{L(data.title)}</DrHead>
       <MetricTiles items={data.kpis} />
       <div
         style={{
-          marginTop: 10,
-          marginBottom: 6,
-          fontSize: 12,
-          fontWeight: 800,
-          color: DR.text,
+          marginTop: 12,
+          marginBottom: 8,
+          display: "flex",
+          alignItems: "baseline",
+          gap: 8,
+          flexShrink: 0,
         }}
       >
-        {L(data.tableTitle)}
+        <span style={{ fontSize: 14, fontWeight: 800, color: DR.text }}>
+          {L(data.tableTitle)}
+        </span>
+        <span style={{ fontSize: 12, color: DR.muted }}>
+          Amounts USD · illustrative
+        </span>
       </div>
-      <div style={{ overflowX: "auto" }}>
-        <table
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          display: "grid",
+          gridTemplateRows: `auto repeat(${data.rows.length}, minmax(0, 1fr))`,
+          border: `1px solid ${DR.border}`,
+          borderRadius: 10,
+          overflow: "hidden",
+        }}
+      >
+        <div
           style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            minWidth: 640,
+            display: "grid",
+            gridTemplateColumns: "1.1fr 0.7fr 0.7fr 0.7fr 0.7fr 1.2fr",
+            gap: 8,
+            padding: "8px 10px",
+            borderBottom: `1px solid ${DR.border}`,
+            background: "rgba(255,255,255,0.02)",
+            fontSize: 11,
+            fontWeight: 700,
+            color: DR.dim,
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
           }}
         >
-          <thead>
-            <tr>
-              <DrTh>Distributor</DrTh>
-              <DrTh>Region</DrTh>
-              <DrTh>Invoices in dispute</DrTh>
-              <DrTh>Amount</DrTh>
-              <DrTh>DSO change</DrTh>
-              <DrTh>Main issue</DrTh>
-            </tr>
-          </thead>
-          <tbody>
-            {data.rows.map((r) => (
-              <tr key={r.distributor}>
-                <DrTd>
-                  <span style={{ fontWeight: 700, color: DR.text }}>
-                    {L(r.distributor)}
-                  </span>
-                </DrTd>
-                <DrTd>{L(r.region)}</DrTd>
-                <DrTd>
-                  <DrMono size={12}>{r.invoices}</DrMono>
-                </DrTd>
-                <DrTd>
-                  <span
-                    style={{ display: "inline-flex", alignItems: "center" }}
-                  >
-                    <DrMono size={12}>{r.amount}</DrMono>
-                    <IllustrativeChip />
-                  </span>
-                </DrTd>
-                <DrTd>{r.dsoChange}</DrTd>
-                <DrTd>{L(r.mainIssue)}</DrTd>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <span>Distributor</span>
+          <span>Region</span>
+          <span>Invoices</span>
+          <span>Amount</span>
+          <span>DSO</span>
+          <span>Main issue</span>
+        </div>
+        {data.rows.map((r) => (
+          <div
+            key={r.distributor}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1.1fr 0.7fr 0.7fr 0.7fr 0.7fr 1.2fr",
+              gap: 8,
+              padding: "0 10px",
+              alignItems: "center",
+              borderBottom: `1px solid ${DR.border}`,
+              minHeight: 0,
+            }}
+          >
+            <span style={{ fontWeight: 700, color: DR.text, fontSize: 13 }}>
+              {L(r.distributor)}
+            </span>
+            <span style={{ fontSize: 13, color: DR.sub }}>{L(r.region)}</span>
+            <DrMono size={13}>{r.invoices}</DrMono>
+            <DrMono size={13}>{r.amount}</DrMono>
+            <span style={{ fontSize: 13, color: DR.sub }}>{r.dsoChange}</span>
+            <span style={{ fontSize: 12, color: DR.muted }}>
+              {L(r.mainIssue)}
+            </span>
+          </div>
+        ))}
       </div>
     </DrCard>
   );
@@ -223,9 +274,7 @@ export function WhyInvoicesStuck({ data }: { data: SeparationV2["whyStuck"] }) {
   const max = Math.max(...data.causes.map((c) => c.count));
   return (
     <DrCard accent={DR.purple}>
-      <DrHead sub={data.sub} badge="LiSN">
-        {L(data.title)}
-      </DrHead>
+      <DrHead sub={data.sub}>{L(data.title)}</DrHead>
       <div
         style={{
           display: "grid",
@@ -240,18 +289,18 @@ export function WhyInvoicesStuck({ data }: { data: SeparationV2["whyStuck"] }) {
           <div
             key={m.label}
             style={{
-              padding: "9px 10px",
+              padding: "12px 12px",
               borderRight:
                 i === data.metrics.length - 1
                   ? "none"
                   : `1px solid ${DR.border}`,
             }}
           >
-            <div style={{ fontSize: 10, color: DR.dim, fontWeight: 700 }}>
+            <div style={{ fontSize: 12, color: DR.dim, fontWeight: 700 }}>
               {L(m.label)}
             </div>
-            <DrMono size={18}>{m.value}</DrMono>
-            <div style={{ marginTop: 3, fontSize: 10, color: DR.muted }}>
+            <DrMono size={22}>{m.value}</DrMono>
+            <div style={{ marginTop: 4, fontSize: 12, color: DR.muted }}>
               {L(m.delta)}
             </div>
           </div>
@@ -261,34 +310,55 @@ export function WhyInvoicesStuck({ data }: { data: SeparationV2["whyStuck"] }) {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.5fr 1fr",
-          gap: 12,
-          marginTop: 12,
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: 16,
+          marginTop: 14,
+          alignItems: "stretch",
         }}
       >
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: DR.text }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0,
+          }}
+        >
+          <div style={{ fontSize: 16, fontWeight: 800, color: DR.text }}>
             Why invoices are stuck
           </div>
-          <div style={{ fontSize: 11, color: DR.muted, margin: "2px 0 8px" }}>
+          <div style={{ fontSize: 14, color: DR.muted, margin: "4px 0 12px" }}>
             Top drivers of open disputes
           </div>
-          <div style={{ display: "grid", gap: 8 }}>
+          <div style={{ display: "grid", gap: 12, flex: 1 }}>
             {data.causes.map((r) => {
-              const width = Math.round((r.count / max) * 100);
+              const width = Math.max(12, Math.round((r.count / max) * 100));
               const col = severityColor(r.severity);
               return (
-                <div key={r.cause}>
+                <div
+                  key={r.cause}
+                  style={{
+                    border: `1px solid ${DR.border}`,
+                    borderRadius: 10,
+                    padding: "12px 14px",
+                    background: "rgba(255,255,255,0.02)",
+                  }}
+                >
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      gap: 8,
+                      gap: 10,
                       alignItems: "center",
                     }}
                   >
                     <div
-                      style={{ fontSize: 11, color: DR.text, fontWeight: 700 }}
+                      style={{
+                        fontSize: 15,
+                        color: DR.text,
+                        fontWeight: 700,
+                        lineHeight: 1.3,
+                        minWidth: 0,
+                      }}
                     >
                       {L(r.cause)}
                     </div>
@@ -296,26 +366,33 @@ export function WhyInvoicesStuck({ data }: { data: SeparationV2["whyStuck"] }) {
                   </div>
                   <div
                     style={{
-                      marginTop: 2,
+                      marginTop: 8,
                       display: "flex",
-                      gap: 8,
+                      gap: 14,
                       flexWrap: "wrap",
-                      fontSize: 10,
+                      fontSize: 14,
                       color: DR.muted,
+                      lineHeight: 1.35,
                     }}
                   >
-                    <span>{r.count} cases</span>
+                    <span>
+                      <DrMono size={14} color={DR.sub}>
+                        {r.count}
+                      </DrMono>{" "}
+                      cases
+                    </span>
                     <span>{r.share} of open</span>
                     <span>{r.avgDelay} avg delay</span>
                   </div>
                   <div
                     style={{
-                      marginTop: 5,
-                      height: 6,
+                      marginTop: 10,
+                      height: 8,
                       borderRadius: 4,
                       background: "rgba(255,255,255,0.06)",
                       overflow: "hidden",
                     }}
+                    aria-hidden
                   >
                     <div
                       style={{
@@ -332,65 +409,93 @@ export function WhyInvoicesStuck({ data }: { data: SeparationV2["whyStuck"] }) {
           </div>
         </div>
 
-        <div>
-          <div style={{ fontSize: 12, fontWeight: 800, color: DR.text }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            minWidth: 0,
+          }}
+        >
+          <div style={{ fontSize: 16, fontWeight: 800, color: DR.text }}>
             Aged Dispute Watchlist
           </div>
-          <div style={{ fontSize: 11, color: DR.muted, margin: "2px 0 8px" }}>
+          <div style={{ fontSize: 14, color: DR.muted, margin: "4px 0 12px" }}>
             Closest to cash impact
           </div>
-          <div style={{ display: "grid", gap: 7 }}>
+          <div
+            style={{
+              display: "grid",
+              gap: 10,
+              flex: 1,
+              gridTemplateRows: `repeat(${data.watchlist.length}, minmax(0, 1fr))`,
+            }}
+          >
             {data.watchlist.map((r) => (
               <div
                 key={`${r.theme}-${r.distributor}`}
                 style={{
                   border: `1px solid ${DR.border}`,
                   borderLeft: `3px solid ${severityColor(r.severity)}`,
-                  borderRadius: 8,
-                  padding: "7px 8px",
-                  background: "rgba(255,255,255,0.015)",
+                  borderRadius: 10,
+                  padding: "12px 14px",
+                  background: "rgba(255,255,255,0.02)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  minHeight: 0,
                 }}
               >
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
-                    gap: 8,
+                    gap: 10,
                     alignItems: "center",
                   }}
                 >
                   <div
-                    style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      minWidth: 0,
+                    }}
                   >
                     <DrBadge color={severityColor(r.severity)}>
                       {r.severity}
                     </DrBadge>
                     <div
-                      style={{ fontSize: 11, color: DR.text, fontWeight: 700 }}
+                      style={{
+                        fontSize: 14,
+                        color: DR.text,
+                        fontWeight: 700,
+                        lineHeight: 1.3,
+                      }}
                     >
                       {L(r.theme)}
                     </div>
                   </div>
                   <span
                     style={{
-                      fontSize: 12,
+                      fontSize: 15,
                       color: severityColor(r.severity),
                       fontWeight: 800,
+                      flexShrink: 0,
                     }}
                   >
                     {r.daysOpen}d
                   </span>
                 </div>
-                <div style={{ marginTop: 2, fontSize: 10, color: DR.muted }}>
+                <div style={{ marginTop: 8, fontSize: 13, color: DR.muted }}>
                   Stage: <strong style={{ color: DR.sub }}>{L(r.stage)}</strong>
                 </div>
-                <div style={{ marginTop: 2, fontSize: 10, color: DR.muted }}>
+                <div style={{ marginTop: 4, fontSize: 13, color: DR.muted }}>
                   Blocker:{" "}
                   <strong style={{ color: DR.sub }}>{L(r.blocker)}</strong>
                 </div>
                 <div
                   style={{
-                    marginTop: 4,
+                    marginTop: 8,
                     display: "flex",
                     gap: 6,
                     flexWrap: "wrap",
@@ -401,50 +506,6 @@ export function WhyInvoicesStuck({ data }: { data: SeparationV2["whyStuck"] }) {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-      </div>
-
-      <div
-        style={{
-          marginTop: 12,
-          padding: "8px 10px",
-          borderRadius: 10,
-          background: withAlpha(DR.purple, 0.08),
-          border: `1px solid ${withAlpha(DR.purple, 0.28)}`,
-        }}
-      >
-        <div
-          style={{
-            fontSize: 11,
-            color: DR.text,
-            fontWeight: 800,
-            marginBottom: 6,
-          }}
-        >
-          LiSN diagnosis
-        </div>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 1.2fr",
-            gap: 10,
-            fontSize: 11,
-            color: DR.sub,
-            lineHeight: 1.4,
-          }}
-        >
-          <div>
-            <strong style={{ color: DR.text }}>Main reason: </strong>
-            {L(data.diagnosis.main)}
-          </div>
-          <div>
-            <strong style={{ color: DR.text }}>What changed: </strong>
-            {L(data.diagnosis.changed)}
-          </div>
-          <div>
-            <strong style={{ color: DR.text }}>Decide first: </strong>
-            {L(data.diagnosis.decideFirst)}
           </div>
         </div>
       </div>
@@ -460,11 +521,26 @@ export function TopCutoverIssues({
   const L = useLabel();
   const max = Math.max(...rows.map((r) => r.contacts));
   return (
-    <DrCard>
+    <DrCard
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
       <DrHead sub="Ranked by contacts, recontact and tone.">
         Top Cutover Issues
       </DrHead>
-      <div style={{ display: "grid", gap: 8 }}>
+      <div
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateRows: `repeat(${rows.length}, minmax(0, 1fr))`,
+          gap: 8,
+          minHeight: 0,
+        }}
+      >
         {rows.map((r, idx) => {
           const sev = severityColor(r.severity);
           const width = Math.round((r.contacts / max) * 100);
@@ -474,17 +550,21 @@ export function TopCutoverIssues({
               key={r.label}
               style={{
                 border: `1px solid ${hot ? withAlpha(DR.red, 0.35) : DR.border}`,
-                borderRadius: 8,
-                padding: "8px 10px",
+                borderRadius: 10,
+                padding: "10px 12px",
                 background: hot
                   ? withAlpha(DR.red, 0.06)
                   : "rgba(255,255,255,0.02)",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                minHeight: 0,
               }}
             >
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "28px 1fr 64px 52px 52px",
+                  gridTemplateColumns: "28px minmax(0, 1fr) 68px 56px 52px",
                   alignItems: "center",
                   gap: 8,
                 }}
@@ -493,43 +573,43 @@ export function TopCutoverIssues({
                   style={{
                     color: hot ? DR.red : DR.muted,
                     fontWeight: 800,
-                    fontSize: 12,
+                    fontSize: 13,
                   }}
                 >
                   #{idx + 1}
                 </span>
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <div
-                    style={{ color: DR.text, fontWeight: 700, fontSize: 12 }}
+                    style={{ color: DR.text, fontWeight: 700, fontSize: 13 }}
                   >
                     {L(r.label)}
                   </div>
-                  <div style={{ color: DR.muted, fontSize: 10, marginTop: 2 }}>
+                  <div style={{ color: DR.muted, fontSize: 12, marginTop: 2 }}>
                     Most-affected channel: {L(r.channel)}
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <DrMono size={12}>{r.contacts}</DrMono>
-                  <div style={{ color: DR.muted, fontSize: 9 }}>contacts</div>
+                  <DrMono size={13}>{r.contacts}</DrMono>
+                  <div style={{ color: DR.muted, fontSize: 11 }}>contacts</div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <DrMono size={12} color={sev}>
+                  <DrMono size={13} color={sev}>
                     {r.recontact}
                   </DrMono>
-                  <div style={{ color: DR.muted, fontSize: 9 }}>recontact</div>
+                  <div style={{ color: DR.muted, fontSize: 11 }}>recontact</div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <DrMono size={12} color={DR.orange}>
+                  <DrMono size={13} color={DR.orange}>
                     {r.tone.toFixed(2)}
                   </DrMono>
-                  <div style={{ color: DR.muted, fontSize: 9 }}>tone</div>
+                  <div style={{ color: DR.muted, fontSize: 11 }}>tone</div>
                 </div>
               </div>
               <div
                 style={{
-                  marginTop: 6,
-                  height: 6,
-                  borderRadius: 4,
+                  marginTop: 8,
+                  height: 4,
+                  borderRadius: 3,
                   background: "rgba(255,255,255,0.06)",
                   overflow: "hidden",
                 }}
@@ -539,7 +619,7 @@ export function TopCutoverIssues({
                     width: `${width}%`,
                     height: "100%",
                     background: hot ? DR.red : sev,
-                    borderRadius: 4,
+                    borderRadius: 3,
                   }}
                 />
               </div>
@@ -559,56 +639,81 @@ export function InvoiceDisputeFunnel({
   const L = useLabel();
   const max = data.stages[0]?.volume ?? 1;
   return (
-    <DrCard>
+    <DrCard
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+      }}
+    >
       <DrHead sub={data.sub}>{L(data.title)}</DrHead>
-      <div style={{ display: "grid", gap: 8 }}>
+      <div
+        style={{
+          flex: 1,
+          display: "grid",
+          gridTemplateRows: `repeat(${data.stages.length}, minmax(0, 1fr))`,
+          gap: 8,
+          minHeight: 0,
+        }}
+      >
         {data.stages.map((s) => {
-          const width = Math.max(28, Math.round((s.volume / max) * 100));
+          const width = Math.max(18, Math.round((s.volume / max) * 100));
+          const col = severityColor(s.status);
           return (
-            <div key={s.label} style={{ minWidth: 0 }}>
+            <div
+              key={s.label}
+              style={{
+                border: `1px solid ${DR.border}`,
+                borderRadius: 10,
+                padding: "10px 12px",
+                background: "rgba(255,255,255,0.02)",
+                display: "grid",
+                gridTemplateColumns: "minmax(0, 1.1fr) minmax(90px, 1fr) auto",
+                gap: 12,
+                alignItems: "center",
+                minHeight: 0,
+              }}
+            >
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: DR.text }}>
+                  {L(s.label)}
+                </div>
+                <div style={{ marginTop: 4, fontSize: 12, color: DR.muted }}>
+                  avg {s.avgDays} days
+                </div>
+              </div>
               <div
                 style={{
+                  height: 28,
+                  borderRadius: 6,
+                  background: "rgba(255,255,255,0.06)",
+                  overflow: "hidden",
                   display: "flex",
-                  justifyContent: "space-between",
-                  gap: 8,
-                  marginBottom: 4,
                   alignItems: "center",
                 }}
               >
-                <span style={{ fontSize: 12, fontWeight: 700, color: DR.text }}>
-                  {L(s.label)}
-                </span>
-                <DrBadge color={severityColor(s.status)}>{s.status}</DrBadge>
+                <div
+                  style={{
+                    width: `${width}%`,
+                    height: "100%",
+                    borderRadius: 6,
+                    background: withAlpha(col, 0.28),
+                    borderRight: `2px solid ${col}`,
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: 8,
+                    minWidth: 44,
+                  }}
+                >
+                  <DrMono size={14}>{s.volume}</DrMono>
+                </div>
               </div>
-              <div
-                style={{
-                  width: `${width}%`,
-                  margin: "0 auto 0 0",
-                  borderRadius: 8,
-                  padding: "8px 10px",
-                  background: withAlpha(severityColor(s.status), 0.12),
-                  border: `1px solid ${withAlpha(severityColor(s.status), 0.35)}`,
-                }}
-              >
-                <DrMono size={16}>{s.volume}</DrMono>
-                <span style={{ marginLeft: 10, fontSize: 11, color: DR.muted }}>
-                  avg {s.avgDays} days
-                </span>
-              </div>
+              <DrBadge color={col}>{s.status}</DrBadge>
             </div>
           );
         })}
       </div>
-      <p
-        style={{
-          margin: "12px 0 0",
-          fontSize: 12,
-          color: DR.sub,
-          lineHeight: 1.45,
-        }}
-      >
-        {L(data.footer)}
-      </p>
     </DrCard>
   );
 }

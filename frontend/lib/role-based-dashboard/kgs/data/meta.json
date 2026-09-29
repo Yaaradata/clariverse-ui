@@ -8,9 +8,7 @@
     "label": "Data as of 25 Sep 2026 18:00 UTC"
   },
   "lastWeekDigest": "2026-09-18T18:00:00Z",
-  "badge": "Illustrative scenario — not KGS data",
   "badgeTooltip": "Every figure, firmware version, serial, date code and partner ID on this screen is illustrative. Nothing here is a finding about any KGS product.",
-  "footer": "Illustrative scenario for demonstration; no inference about any KGS product. LiSN aids resolution; every action is human-approved.",
   "breadcrumbs": {
     "/": "Installed-base early warning · Hear it at the third call, not the monthly review.",
     "/installed-base": "Global Commercial Fire · {role} · Installed base · Firmware · Date codes · RMA",

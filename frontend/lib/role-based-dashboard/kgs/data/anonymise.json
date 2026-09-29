@@ -177,6 +177,14 @@
     "DIST-US-007": {
       "named": "DIST-US-007",
       "anon": "Distributor D-07"
+    },
+    "DIST-US-015": {
+      "named": "DIST-US-015",
+      "anon": "Distributor D-15"
+    },
+    "DIST-US-022": {
+      "named": "DIST-US-022",
+      "anon": "Distributor D-22"
     }
   },
   "region": {

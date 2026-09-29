@@ -10,7 +10,7 @@ import { useDemo, useLabel } from "./DemoProvider";
  * Fork of the bank drill header (HeadOfCreditCardsDashboard.tsx:1203-1220): title + one
  * breadcrumb line. KGS changes: breadcrumb from meta.breadcrumbs with the {role}
  * placeholder = current "Viewing as"; shown on the overview too (04 §1.3).
- * Top-right badge is the only on-screen scenario disclaimer besides the footer.
+ * Top-right badge is the on-screen scenario disclaimer.
  */
 export function DrillHeader({ view, title }: { view: KgsView; title: string }) {
   const L = useLabel();

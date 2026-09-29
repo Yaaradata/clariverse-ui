@@ -808,7 +808,6 @@ export interface Meta {
   lastWeekDigest: ISODateTime;
   badge: string;
   badgeTooltip: string;
-  footer: string;
   breadcrumbs: Record<string, TokenString>; // "{role}" is a runtime placeholder
   filters: {
     brand: TokenString[];
@@ -1179,14 +1178,16 @@ export interface ChannelV2 {
     tone: string;
     growthPct: number;
     mentions: number;
+    /** Optional qualifier shown after the mention count, e.g. "(all partners)". */
+    mentionsNote?: string;
     why: TokenString;
   }[];
   marketSay: {
-    tabs: { id: string; label: TokenString }[];
+    tabs?: { id: string; label: TokenString }[];
     cards: {
       id: string;
-      source: string;
-      sourceLabel: TokenString;
+      source?: string;
+      sourceLabel?: TokenString;
       theme: TokenString;
       summary: TokenString;
       members: TokenString;
@@ -1213,7 +1214,6 @@ export interface ChannelV2 {
       echoQuote: TokenString;
       risk: string;
     }[];
-    lisnNote: TokenString;
   };
 }
 
@@ -1299,11 +1299,6 @@ export interface SeparationV2 {
       region: TokenString;
       daysOpen: number;
     }[];
-    diagnosis: {
-      main: TokenString;
-      changed: TokenString;
-      decideFirst: TokenString;
-    };
   };
   topIssues: {
     label: TokenString;
@@ -1322,6 +1317,5 @@ export interface SeparationV2 {
       avgDays: number;
       status: string;
     }[];
-    footer: TokenString;
   };
 }

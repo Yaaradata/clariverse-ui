@@ -613,9 +613,10 @@ export function SignalWall({
           "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
         display: "flex",
         flexDirection: "column",
-        height: 780,
+        height: "100%",
+        minHeight: 520,
         maxHeight: 840,
-        minHeight: 0,
+        minWidth: 0,
       }}
     >
       <div

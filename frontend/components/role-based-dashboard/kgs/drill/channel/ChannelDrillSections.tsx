@@ -41,7 +41,7 @@ export function ChannelMixStrip({ mix }: { mix: ChannelV2["channelMix"] }) {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fit, minmax(148px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(168px, 1fr))",
         gap: 10,
       }}
     >
@@ -55,8 +55,11 @@ export function ChannelMixStrip({ mix }: { mix: ChannelV2["channelMix"] }) {
               background: DR.card,
               border: `1px solid ${DR.border}`,
               borderRadius: 14,
-              padding: "12px 12px 10px",
+              padding: "12px 14px",
               minWidth: 0,
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
             }}
           >
             <div
@@ -64,7 +67,6 @@ export function ChannelMixStrip({ mix }: { mix: ChannelV2["channelMix"] }) {
                 display: "flex",
                 alignItems: "center",
                 gap: 8,
-                marginBottom: 8,
               }}
             >
               <span
@@ -74,43 +76,73 @@ export function ChannelMixStrip({ mix }: { mix: ChannelV2["channelMix"] }) {
                   borderRadius: 8,
                   display: "grid",
                   placeItems: "center",
+                  flexShrink: 0,
                   background: withAlpha(K.violet400, 0.12),
                   color: K.violet300,
                 }}
               >
                 <Icon size={14} />
               </span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: DR.sub }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: DR.sub }}>
                 {L(t.label)}
               </span>
             </div>
-            <DrMono size={22}>{t.interactions.toLocaleString()}</DrMono>
             <div
               style={{
-                marginTop: 4,
-                fontSize: 12,
-                fontWeight: 700,
-                color: up ? DR.green : DR.red,
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "space-between",
+                gap: 12,
+                minWidth: 0,
               }}
             >
-              {up ? "▲" : "▼"}
-              {Math.abs(t.wow)}%
-            </div>
-            <div style={{ marginTop: 8, fontSize: 11, color: DR.muted }}>
-              {t.negativeShare}% negative
-            </div>
-            <div
-              style={{
-                marginTop: 4,
-                fontSize: 11,
-                color: DR.text,
-                lineHeight: 1.35,
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-              }}
-            >
-              {L(t.topTopic)}
+              <DrMono size={24}>{t.interactions.toLocaleString()}</DrMono>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-end",
+                  gap: 4,
+                  minWidth: 0,
+                  textAlign: "right",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 13,
+                    fontWeight: 700,
+                    color: up ? DR.green : DR.red,
+                    lineHeight: 1.2,
+                  }}
+                >
+                  {up ? "▲" : "▼"}
+                  {Math.abs(t.wow)}%
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: DR.muted,
+                    lineHeight: 1.2,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {t.negativeShare}% negative
+                </div>
+                <div
+                  style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: DR.text,
+                    lineHeight: 1.25,
+                    maxWidth: "100%",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {L(t.topTopic)}
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -128,9 +160,7 @@ export function PartnerPromiseGap({ data }: { data: ChannelV2["promiseGap"] }) {
   );
   return (
     <DrCard accent={DR.orange}>
-      <DrHead sub={data.sub} badge="LiSN">
-        Partner Promise Gap
-      </DrHead>
+      <DrHead sub={data.sub}>Partner Promise Gap</DrHead>
       <DrFilterBar options={data.lenses} value={lens} onChange={setLens} />
       <div style={{ overflowX: "auto", maxHeight: 520 }}>
         <table
@@ -235,7 +265,7 @@ export function TrendingPartnerTopics({
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 8,
+          gap: 10,
         }}
       >
         {topics.map((t) => (
@@ -244,7 +274,7 @@ export function TrendingPartnerTopics({
             style={{
               border: `1px solid ${DR.border}`,
               borderRadius: 10,
-              padding: "10px 10px 8px",
+              padding: "14px 14px 12px",
               background: "rgba(255,255,255,0.02)",
             }}
           >
@@ -256,26 +286,27 @@ export function TrendingPartnerTopics({
                 alignItems: "center",
               }}
             >
-              <div style={{ fontWeight: 700, color: DR.text, fontSize: 12 }}>
+              <div style={{ fontWeight: 700, color: DR.text, fontSize: 15 }}>
                 {L(t.topic)}
               </div>
               <DrTag color={severityColor(t.tone)}>{t.tone}</DrTag>
             </div>
-            <div style={{ marginTop: 6 }}>
-              <DrMono size={22} color={t.growthPct >= 0 ? DR.orange : DR.green}>
+            <div style={{ marginTop: 10 }}>
+              <DrMono size={26} color={t.growthPct >= 0 ? DR.orange : DR.green}>
                 {t.growthPct >= 0 ? "+" : ""}
                 {t.growthPct}%
               </DrMono>
-              <span style={{ marginLeft: 8, fontSize: 11, color: DR.muted }}>
+              <span style={{ marginLeft: 8, fontSize: 14, color: DR.muted }}>
                 {t.mentions} mentions
+                {t.mentionsNote ? ` ${t.mentionsNote}` : ""}
               </span>
             </div>
             <p
               style={{
-                margin: "6px 0 0",
-                fontSize: 11,
+                margin: "10px 0 0",
+                fontSize: 14,
                 color: DR.muted,
-                lineHeight: 1.4,
+                lineHeight: 1.5,
               }}
             >
               {L(t.why)}
@@ -289,52 +320,62 @@ export function TrendingPartnerTopics({
 
 export function MarketSaying({ data }: { data: ChannelV2["marketSay"] }) {
   const L = useLabel();
-  const [tab, setTab] = useState("all");
-  const cards = useMemo(
-    () => data.cards.filter((c) => tab === "all" || c.source === tab),
-    [data.cards, tab],
-  );
   return (
-    <DrCard>
-      <DrHead sub="External posts and forum threads that echo partner friction.">
+    <DrCard
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: 0,
+        overflow: "hidden",
+      }}
+    >
+      <DrHead sub="External posts and threads that echo partner friction.">
         What the market is saying
       </DrHead>
-      <DrFilterBar options={data.tabs} value={tab} onChange={setTab} />
-      <div style={{ display: "grid", gap: 8 }}>
-        {cards.map((c) => (
+      <div
+        style={{
+          flex: 1,
+          minHeight: 0,
+          overflowY: "auto",
+          overflowX: "hidden",
+          display: "grid",
+          gap: 10,
+          paddingRight: 6,
+          alignContent: "start",
+        }}
+      >
+        {data.cards.map((c) => (
           <div
             key={c.id}
             style={{
               border: `1px solid ${DR.border}`,
               borderRadius: 10,
-              padding: 10,
+              padding: 14,
               background: "rgba(255,255,255,0.02)",
             }}
           >
-            <div style={{ fontSize: 10, color: DR.muted, marginBottom: 4 }}>
-              {L(c.sourceLabel)}
-            </div>
-            <div style={{ fontWeight: 800, color: DR.text, fontSize: 13 }}>
+            <div style={{ fontWeight: 800, color: DR.text, fontSize: 15 }}>
               {L(c.theme)}
             </div>
             <p
               style={{
-                margin: "6px 0 0",
-                fontSize: 11,
+                margin: "8px 0 0",
+                fontSize: 14,
                 color: DR.sub,
-                lineHeight: 1.45,
+                lineHeight: 1.55,
               }}
             >
               {L(c.summary)}
             </p>
             <div
               style={{
-                marginTop: 8,
+                marginTop: 10,
                 display: "flex",
                 flexWrap: "wrap",
                 gap: 8,
                 alignItems: "center",
-                fontSize: 11,
+                fontSize: 14,
                 color: DR.muted,
               }}
             >
@@ -345,7 +386,7 @@ export function MarketSaying({ data }: { data: ChannelV2["marketSay"] }) {
             </div>
             <div
               style={{
-                marginTop: 8,
+                marginTop: 10,
                 display: "flex",
                 flexWrap: "wrap",
                 gap: 6,
@@ -356,7 +397,7 @@ export function MarketSaying({ data }: { data: ChannelV2["marketSay"] }) {
                 <DrPill key={p}>{L(p)}</DrPill>
               ))}
               <span
-                style={{ marginLeft: "auto", fontSize: 11, color: DR.cyan }}
+                style={{ marginLeft: "auto", fontSize: 14, color: DR.cyan }}
               >
                 {L(c.action)}
               </span>
@@ -377,9 +418,7 @@ export function PartnerStandings({ data }: { data: ChannelV2["standings"] }) {
   );
   return (
     <DrCard>
-      <DrHead sub={data.sub} badge="LiSN">
-        Partner Standings
-      </DrHead>
+      <DrHead sub={data.sub}>Partner Standings</DrHead>
       <DrFilterBar options={data.lenses} value={lens} onChange={setLens} />
       <div style={{ overflowX: "auto", maxHeight: 420 }}>
         <table
@@ -449,21 +488,6 @@ export function PartnerStandings({ data }: { data: ChannelV2["standings"] }) {
             ))}
           </tbody>
         </table>
-      </div>
-      <div
-        style={{
-          marginTop: 12,
-          padding: "8px 10px",
-          borderRadius: 10,
-          background: withAlpha(K.violet400, 0.08),
-          border: `1px solid ${withAlpha(K.violet400, 0.28)}`,
-          fontSize: 12,
-          color: DR.sub,
-          lineHeight: 1.45,
-        }}
-      >
-        <strong style={{ color: DR.text }}>LiSN note · </strong>
-        {L(data.lisnNote)}
       </div>
     </DrCard>
   );

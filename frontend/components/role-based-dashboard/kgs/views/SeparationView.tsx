@@ -26,7 +26,7 @@ export function SeparationView() {
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
           gap: 12,
-          alignItems: "start",
+          alignItems: "stretch",
         }}
       >
         <CutoverFailuresPanel data={v2.cutoverFailures} />
@@ -38,7 +38,7 @@ export function SeparationView() {
           display: "grid",
           gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
           gap: 12,
-          alignItems: "start",
+          alignItems: "stretch",
         }}
       >
         <TopCutoverIssues rows={v2.topIssues} />

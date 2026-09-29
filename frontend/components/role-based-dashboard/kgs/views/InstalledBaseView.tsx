@@ -4,7 +4,6 @@ import { installedBase, LEGACY_ROUTES, meta } from "@kgs/lib/data";
 import type { SeverityClass } from "@kgs/types";
 import { useEffect, useRef, useState } from "react";
 import { BackToOverviewHeader } from "../drill/BackToOverviewHeader";
-import { ContactsRmaOverlay } from "../drill/ContactsRmaOverlay";
 import { EmergingPhrasingTable } from "../drill/EmergingPhrasingTable";
 import { BigKpiTile, KpiRow } from "../drill/KpiTile";
 import { LineMonitor, type MonitorSeries } from "../drill/LineMonitor";
@@ -13,9 +12,7 @@ import { SegmentTable } from "../drill/SegmentTable";
 import { SignalWall } from "../drill/SignalWall";
 import { StackedBarWithDetailPanel } from "../drill/StackedBarWithDetailPanel";
 import { StackedRatioBar } from "../drill/StackedRatioBar";
-import { Watchlist } from "../drill/Watchlist";
 import { useKgsNav } from "../nav";
-import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 import { fill, int } from "../signal/format";
 
@@ -49,7 +46,7 @@ function CohortMonitor() {
     lm.focusSub ??
     "Fault calls per 1,000 panels a week · the other 45 releases stay in the normal range";
   return (
-    <Panel title={L(title)} sub={L(sub)}>
+    <Panel title={L(title)} sub={L(sub)} style={{ height: "100%" }}>
       <LineMonitor
         weeks={lm.weeks}
         series={series}
@@ -107,44 +104,48 @@ export function InstalledBaseView() {
           display: "grid",
           gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
           gap: 12,
-          alignItems: "start",
+          alignItems: "stretch",
         }}
       >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: 12,
             minWidth: 0,
+            minHeight: 0,
           }}
         >
-          <Panel title={L(P["P-A"].title)}>
+          <Panel
+            title={L(P["P-A"].title)}
+            style={{
+              flex: 1,
+              minHeight: 0,
+              height: "100%",
+              overflow: "hidden",
+            }}
+          >
             <BigKpiTile
               label={L(P["P-A"].sub ?? "")}
               value={int(t.total)}
               delta={t.delta}
             />
-            <SegmentTable
-              columns={P["P-A"].columns ?? []}
-              rows={t.rows}
-              caption={L(P["P-A"].title)}
-            />
-            <p
+            <div
               style={{
-                margin: 0,
-                fontSize: 13,
-                lineHeight: 1.5,
-                color: K.textMut,
+                flex: 1,
+                minHeight: 0,
+                overflowY: "auto",
+                overflowX: "auto",
+                marginTop: 4,
+                paddingRight: 2,
               }}
             >
-              {L(t.footnote)}
-            </p>
+              <SegmentTable
+                columns={P["P-A"].columns ?? []}
+                rows={t.rows}
+                caption={L(P["P-A"].title)}
+              />
+            </div>
           </Panel>
-          <Watchlist
-            title={P["P-K"].title}
-            rows={IB.stable.rows}
-            footer={IB.stable.footer}
-          />
         </div>
 
         <div
@@ -161,12 +162,22 @@ export function InstalledBaseView() {
               onSelect={pulseWall}
             />
           </Panel>
-          <CohortMonitor />
-          <ContactsRmaOverlay />
+          <div style={{ flex: 1, minHeight: 0 }}>
+            <CohortMonitor />
+          </div>
         </div>
 
-        <div style={{ minWidth: 0, alignSelf: "stretch" }}>
-          <SignalWall wall={IB.signalWall} pulseClass={pulse} />
+        <div
+          style={{
+            minWidth: 0,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <div style={{ flex: 1, minHeight: 0 }}>
+            <SignalWall wall={IB.signalWall} pulseClass={pulse} />
+          </div>
         </div>
       </div>
 

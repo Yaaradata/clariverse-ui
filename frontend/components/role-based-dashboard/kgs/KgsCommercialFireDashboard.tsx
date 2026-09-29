@@ -17,7 +17,6 @@ import { K } from "./shared/tokens";
 import { DemoMenu } from "./shell/DemoMenu";
 import { DemoProvider, useDemo } from "./shell/DemoProvider";
 import { DrillHeader } from "./shell/DrillHeader";
-import { FixedFooter } from "./shell/FixedFooter";
 import { FloatingAIButton } from "./shell/FloatingAIButton";
 import { Intro } from "./shell/Intro";
 import { LeftRail } from "./shell/LeftRail";
@@ -320,7 +319,6 @@ function KgsDashboardInner({ onExit }: { onExit: () => void }) {
               <ViewBody view={view} />
             </div>
           </main>
-          <FixedFooter />
         </div>
         <FloatingAIButton />
         <DemoMenu
