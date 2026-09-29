@@ -1,10 +1,10 @@
 /**
- * Question-card AreaTrend series (04 §2.5), selected from the files each card's
- * `trend.ref` points at. No values are computed — rows are the JSON series by week.
+ * Question-card AreaTrend series. Overview uses compact.trend (12 weeks) when present;
+ * legacy multi-series sources remain for drawers / non-overview callers.
  */
 import { channel, separation, signalFw41 } from "@kgs/lib/data";
 import type { QuestionCardData } from "@kgs/types";
-import { K } from "../shared/tokens";
+import { ACCENT, K } from "../shared/tokens";
 import type { TrendMarker, TrendSeries } from "./AreaTrend";
 
 export type TrendSpec = {
@@ -13,10 +13,34 @@ export type TrendSpec = {
   markers: TrendMarker[];
 };
 
+type CompactWithTrend = { trend?: number[] };
+
+const COMPACT_LABEL: Record<QuestionCardData["id"], string> = {
+  "installed-base": "Fault contacts / 1k panel-weeks",
+  channel: "{{partner:ESD-SE-07}} interactions / wk",
+  separation: "{{region:US}} remit-to contacts / wk",
+};
+
 export function trendFor(
   card: QuestionCardData,
   L: (s: string) => string,
 ): TrendSpec {
+  const compactTrend = (card.compact as CompactWithTrend | undefined)?.trend;
+  if (compactTrend?.length) {
+    return {
+      data: compactTrend.map((v, i) => ({ x: i + 1, v })),
+      series: [
+        {
+          key: "v",
+          label: L(COMPACT_LABEL[card.id]),
+          color: ACCENT[card.accent],
+          area: true,
+        },
+      ],
+      markers: [],
+    };
+  }
+
   if (card.trend.kind === "fw-lineage") {
     const [prior, next] = signalFw41.lineage.series;
     const byWeek = new Map(next.points.map((p) => [p.week, p.rate]));

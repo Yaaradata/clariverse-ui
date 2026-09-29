@@ -1,202 +1,212 @@
 "use client";
 
-import { meta, monitor, signalById } from "@kgs/lib/data";
-import type { MonitorCard } from "@kgs/types";
-import { useKgsNav } from "../nav";
-import { ConfidenceMarker } from "../shared/ConfidenceMarker";
-import { GateChip } from "../shared/GateChip";
-import { JoinTagRow } from "../shared/JoinTagRow";
-import { MoneyText } from "../shared/MoneyText";
-import { PnLDestinationTag } from "../shared/PnLDestinationTag";
-import { DomainChip, SeverityChip } from "../shared/SeverityChip";
-import { K, liftVars, SEV, withAlpha } from "../shared/tokens";
-import { useDemo, useLabel } from "../shell/DemoProvider";
-import { DateCodeMicroStrip } from "./DateCodeMicroStrip";
-import { MetricBeforeAfter } from "./MetricBeforeAfter";
-import { RecommendationBox } from "./RecommendationBox";
+import type { MonitorCard as MonitorCardData } from "@kgs/types";
+import { K, URGENCY, withAlpha } from "../shared/tokens";
+import { useLabel } from "../shell/DemoProvider";
 
 /**
- * Fork of the bank spike card (HeadOfCreditCardsDashboard.tsx:626-735), "RiskSpikeCard" in 03.
- * KGS changes: rank + SeverityChip (full word) + domain chip; SOURCES / COHORT / WINDOW /
- * OWNER rows; metrics vs own baseline; compact severity, K/I confidence, P&L, join tags and
- * gate chip (the full signal contract, 06 §2 #3); "LiSN suggests · owner decides";
- * "Open signal →". Tint follows severity. No action button.
+ * Field Signal Monitor card — bank AI Risk Spike anatomy with urgency chrome.
+ * Display only: no drill-down, no owner/gate/confidence/P&L footer.
  */
-export function SignalMonitorCard({ card }: { card: MonitorCard }) {
+export function SignalMonitorCard({ card }: { card: MonitorCardData }) {
   const L = useLabel();
-  const { go } = useKgsNav();
-  const { isApproved } = useDemo();
-  const signal = signalById[card.signalId];
-  const tone = SEV[card.chips.class].color;
-  // Incident flag text = last segment of the data's compact severity ("… · Incident off").
-  const incident = signal?.severity.compact.split(" · ").pop() ?? "";
-  const approved = Boolean(
-    card.gateChipAfterApprove && isApproved(card.signalId),
-  );
+  const c = card.compact;
+  const u = URGENCY[card.urgency];
+  const tone = u.color;
+  const pillLabel = u.showSeverityClass
+    ? `${u.word} · ${card.chips.class}`
+    : u.word;
+
+  if (!c) return null;
 
   return (
     <article
-      className="kgs-lift"
       style={{
-        minWidth: 360,
-        maxWidth: 360,
-        flex: "0 0 360px",
-        scrollSnapAlign: "start",
-        borderRadius: K.radius.card,
-        border: `1px solid ${withAlpha(tone, 0.5)}`,
-        background: withAlpha(tone, 0.05),
-        boxShadow: `0 10px 24px ${withAlpha(tone, 0.12)}`,
-        ...liftVars(
-          withAlpha(tone, 0.6),
-          `0 10px 36px ${withAlpha(tone, 0.18)}`,
-        ),
+        width: 252,
+        minWidth: 252,
+        maxWidth: 252,
+        minHeight: 280,
+        flex: "0 0 252px",
+        borderRadius: 16,
+        border: `1px solid ${withAlpha(tone, u.borderA)}`,
+        background: withAlpha(tone, u.bgA),
+        boxShadow: u.glow
+          ? `0 10px 24px ${withAlpha(tone, u.glowA)}`
+          : "none",
         color: K.textSec,
-        padding: "12px 14px 10px",
+        padding: "14px 14px 16px",
+        fontSize: 12,
         display: "flex",
         flexDirection: "column",
-        gap: 8,
       }}
     >
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-        <span
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 8,
+        }}
+      >
+        <div
           style={{
-            fontFamily: K.mono,
-            fontSize: 12,
-            fontWeight: 800,
-            color: K.textMut,
-            paddingTop: 2,
-          }}
-        >
-          #{card.rank}
-        </span>
-        <h3
-          style={{
-            margin: 0,
-            fontSize: 15,
+            fontSize: 14,
             fontWeight: 700,
             color: K.text,
             lineHeight: 1.3,
+            minWidth: 0,
           }}
         >
-          {L(card.title)}
-        </h3>
-      </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-        <SeverityChip cls={card.chips.class} word={card.chips.word} />
-        <DomainChip domain={card.chips.domain} extra={card.chips.type} />
-      </div>
-
-      <dl
-        style={{
-          margin: 0,
-          display: "grid",
-          gridTemplateColumns: "72px 1fr",
-          gap: "3px 10px",
-          fontSize: 12,
-        }}
-      >
-        {card.rows.map((r) => (
-          <div key={r.label} style={{ display: "contents" }}>
-            <dt
-              style={{
-                color: K.textMut,
-                letterSpacing: "0.06em",
-                fontSize: 11,
-                fontWeight: 600,
-                paddingTop: 1,
-              }}
-            >
-              {r.label}
-            </dt>
-            <dd style={{ margin: 0, color: K.text }}>{L(r.value)}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <MetricBeforeAfter
-        rows={card.metrics.map((m) => ({ ...m, label: L(m.label) }))}
-      />
-      {card.microStrip ? <DateCodeMicroStrip /> : null}
-
-      {/* Compact severity line: class + type + blast radius + incident flag (04 §2.7). */}
-      <div
-        style={{
-          fontSize: 12,
-          color: K.body,
-          display: "flex",
-          gap: 6,
-          alignItems: "baseline",
-        }}
-      >
-        <span aria-hidden style={{ color: tone }}>
-          {SEV[card.chips.class].glyph}
-        </span>
-        <span>
-          <MoneyText text={card.blastRadius} />
-          {incident ? ` · ${incident}` : ""}
-        </span>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: "4px 10px",
-        }}
-      >
-        <ConfidenceMarker
-          confidence={signal?.confidence}
-          short={card.confidenceShort}
-          compact
-        />
+          {L(c.title)}
+        </div>
         <span
           style={{
-            display: "inline-flex",
-            gap: 6,
-            fontSize: 12,
-            color: K.textMut,
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+            fontSize: 10,
+            fontWeight: 700,
+            letterSpacing: 0.5,
+            textTransform: "uppercase",
+            padding: "3px 8px",
+            borderRadius: 999,
+            border: `1px solid ${withAlpha(tone, u.pillBorderA)}`,
+            background: withAlpha(tone, u.pillBgA),
+            color: `${tone}dd`,
+            flexShrink: 0,
+            whiteSpace: "nowrap",
           }}
         >
-          {meta.ui.pnl}
-          <PnLDestinationTag text={card.pnlShort} />
+          <span aria-hidden>{u.glyph}</span>
+          <span>{pillLabel}</span>
         </span>
       </div>
-      {signal ? <JoinTagRow tags={signal.joinTags} max={3} /> : null}
-      <GateChip
-        wrap
-        text={
-          approved && card.gateChipAfterApprove
-            ? card.gateChipAfterApprove
-            : L(card.ownerGate)
-        }
-        status={approved ? "approved" : "awaiting"}
-      />
 
-      <RecommendationBox
-        label={meta.labels.recommendationLabel}
-        text={L(card.suggestion)}
-      />
-
-      <button
-        type="button"
-        onClick={() => go(card.linkTo)}
-        className="kgs-focus"
+      <div
         style={{
-          marginTop: "auto",
-          alignSelf: "flex-start",
-          background: "transparent",
-          border: "none",
-          padding: "4px 0",
-          color: K.violet400,
-          fontSize: 13,
-          fontWeight: 700,
-          cursor: "pointer",
-          fontFamily: "inherit",
+          marginTop: 10,
+          display: "flex",
+          flexDirection: "column",
+          gap: 5,
+          fontSize: 11,
+          color: K.textMut,
         }}
       >
-        {monitor.section.cardFooterLink}
-      </button>
+        <div
+          style={{ display: "flex", justifyContent: "space-between", gap: 8 }}
+        >
+          <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
+            Channel
+          </span>
+          <span style={{ color: K.text, textAlign: "right" }}>
+            {L(c.channel)}
+          </span>
+        </div>
+        <div
+          style={{ display: "flex", justifyContent: "space-between", gap: 8 }}
+        >
+          <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
+            Top Issue
+          </span>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ color: K.text }}>{L(c.topIssue)}</div>
+            <div style={{ fontSize: 10, color: K.textMut }}>
+              {L(c.topIssueSub)}
+            </div>
+          </div>
+        </div>
+        <div
+          style={{ display: "flex", justifyContent: "space-between", gap: 8 }}
+        >
+          <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
+            Time
+          </span>
+          <span style={{ color: K.text, textAlign: "right" }}>{L(c.time)}</span>
+        </div>
+      </div>
+
+      <div
+        style={{
+          marginTop: 14,
+          minHeight: 108,
+          borderRadius: 12,
+          border: `1px solid ${K.borderLight}`,
+          background: "rgba(0,0,0,0.25)",
+          padding: 10,
+          fontSize: 11,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 8,
+          flex: 1,
+        }}
+      >
+        {c.metrics.map((m) => {
+          const deltaColor =
+            m.deltaTone === "opportunity" ? K.green : u.delta;
+          return (
+            <div
+              key={m.label}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <span style={{ color: K.textMut }}>{L(m.label)}</span>
+              <div style={{ textAlign: "right" }}>
+                <div
+                  style={{
+                    color: K.text,
+                    fontWeight: 700,
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {L(m.value)}
+                </div>
+                {m.delta ? (
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: deltaColor,
+                      fontWeight: 700,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {L(m.delta)}
+                  </div>
+                ) : null}
+                {m.sub ? (
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: K.textMut,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {L(m.sub)}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div
+        style={{
+          marginTop: 20,
+          borderRadius: 12,
+          border: `1px solid ${withAlpha(tone, u.calloutBorderA)}`,
+          background: withAlpha(tone, u.calloutBgA),
+          padding: 16,
+          fontSize: 12,
+          lineHeight: 1.75,
+          color: u.calloutText,
+        }}
+      >
+        ✨ {L(c.callout)}
+      </div>
     </article>
   );
 }

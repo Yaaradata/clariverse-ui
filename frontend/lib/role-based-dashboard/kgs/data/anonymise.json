@@ -36,7 +36,7 @@
     },
     "Edge": {
       "named": "Edge",
-      "anon": "Panel platform C"
+      "anon": "Platform C"
     },
     "iO": {
       "named": "iO",
@@ -73,32 +73,36 @@
     "ModuLaser": {
       "named": "ModuLaser",
       "anon": "Aspirating platform M"
+    },
+    "EST3": {
+      "named": "EST3",
+      "anon": "Panel platform B"
     }
   },
   "fw": {
     "EST4@4.0": {
       "named": "4.0",
-      "anon": "A.4.0"
+      "anon": "4.0"
     },
     "EST4@4.1": {
       "named": "4.1",
-      "anon": "A.4.1"
+      "anon": "4.1"
     },
     "Edge@3.2": {
       "named": "3.2",
-      "anon": "C.3.2"
+      "anon": "3.2"
     },
     "2X@7.4": {
       "named": "7.4",
-      "anon": "G.7.4"
+      "anon": "7.4"
     },
     "VM/VS@5.1": {
       "named": "5.1",
-      "anon": "F.5.1"
+      "anon": "5.1"
     },
     "GST panel family@G-7": {
       "named": "G-7",
-      "anon": "K.7"
+      "anon": "G-7"
     }
   },
   "partner": {
@@ -154,75 +158,59 @@
       "named": "DLR-SW-201",
       "anon": "Partner P-201"
     },
-    "DIST-UK-004": {
-      "named": "DIST-UK-004",
+    "DIST-US-004": {
+      "named": "DIST-US-004",
       "anon": "Distributor D-04"
     },
-    "DIST-UK-019": {
-      "named": "DIST-UK-019",
+    "DIST-US-019": {
+      "named": "DIST-US-019",
       "anon": "Distributor D-19"
     },
-    "DIST-UK-031": {
-      "named": "DIST-UK-031",
+    "DIST-US-031": {
+      "named": "DIST-US-031",
       "anon": "Distributor D-31"
     },
-    "DIST-DE-012": {
-      "named": "DIST-DE-012",
+    "DIST-US-012": {
+      "named": "DIST-US-012",
       "anon": "Distributor D-12"
     },
-    "DIST-NL-007": {
-      "named": "DIST-NL-007",
+    "DIST-US-007": {
+      "named": "DIST-US-007",
       "anon": "Distributor D-07"
     }
   },
   "region": {
     "US-SE": {
       "named": "US-SE",
-      "anon": "Region NA-1"
+      "anon": "Region 1"
     },
     "US-SW": {
       "named": "US-SW",
-      "anon": "Region NA-2"
+      "anon": "Region 2"
     },
     "Canada": {
       "named": "Canada",
-      "anon": "Region NA-3"
+      "anon": "Region 3"
     },
     "US-NE": {
       "named": "US-NE",
-      "anon": "Region NA-4"
+      "anon": "Region 4"
     },
     "US-MW": {
       "named": "US-MW",
-      "anon": "Region NA-5"
+      "anon": "Region 5"
     },
     "US-W": {
       "named": "US-W",
-      "anon": "Region NA-6"
+      "anon": "Region 6"
     },
-    "UK-EU": {
-      "named": "UK-EU",
-      "anon": "Region EU-1"
-    },
-    "UK": {
-      "named": "UK",
-      "anon": "Country EU-a"
-    },
-    "DE": {
-      "named": "DE",
-      "anon": "Country EU-b"
-    },
-    "NL": {
-      "named": "NL",
-      "anon": "Country EU-c"
-    },
-    "FR": {
-      "named": "FR",
-      "anon": "Country EU-d"
+    "US": {
+      "named": "US",
+      "anon": "Region 7"
     },
     "APAC": {
       "named": "APAC",
-      "anon": "Region AP-1"
+      "anon": "Region 8"
     }
   },
   "place": {

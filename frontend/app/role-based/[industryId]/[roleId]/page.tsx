@@ -13,6 +13,10 @@ import {
   resolveIndustryAndRole,
 } from "@/lib/role-based-dashboard/registry";
 import {
+  KIDDE_GLOBAL_INDUSTRY_ID,
+  KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
+} from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
+import {
   NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
   NEOGROUP_INDUSTRY_ID,
 } from "@/lib/role-based-dashboard/neogroupIndustry";
@@ -27,6 +31,20 @@ const NeoGroupClientExperienceDashboard = dynamic(
   () =>
     import("@/components/role-based-dashboard/neogroupClientExperienceDashboard").then(
       (m) => m.NeoGroupClientExperienceDashboard
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{ minHeight: "100vh", backgroundColor: "#010101" }} />
+    ),
+  }
+);
+
+/** Client-only: recharts + URL demo flags mismatch SSR HTML otherwise. */
+const KgsCommercialFireDashboard = dynamic(
+  () =>
+    import("@/components/role-based-dashboard/kgs/KgsCommercialFireDashboard").then(
+      (m) => m.KgsCommercialFireDashboard
     ),
   {
     ssr: false,
@@ -133,6 +151,14 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
         firmName="Neogroup"
       />
     );
+  }
+
+  // Client-only KGS shell — same pattern as Neo; avoids recharts SSR hydration mismatch.
+  if (
+    industry.id === KIDDE_GLOBAL_INDUSTRY_ID &&
+    role.id === KIDDE_GLOBAL_PRESIDENT_ROLE_ID
+  ) {
+    return <KgsCommercialFireDashboard onExit={onExit} />;
   }
 
   return (

@@ -1,12 +1,12 @@
 "use client";
 
 import { meta } from "@kgs/lib/data";
-import { useDemo } from "./DemoProvider";
 
-/** Diagonal watermark (03 §6.10, 04 §7.1): 6% white, −30°, only when anonymised. */
+/**
+ * Diagonal watermark (03 §6.10, 04 §7.1): screen-hidden; visible only when printing/exporting.
+ * Print also forces anonymise ON (see KgsCommercialFireDashboard beforeprint).
+ */
 export function Watermark() {
-  const { state } = useDemo();
-  if (!state.anonymise) return null;
   return (
     <div
       aria-hidden
@@ -16,7 +16,6 @@ export function Watermark() {
         inset: 0,
         pointerEvents: "none",
         zIndex: 90,
-        display: "grid",
         placeItems: "center",
         overflow: "hidden",
       }}
@@ -33,6 +32,24 @@ export function Watermark() {
       >
         {meta.demo.watermark}
       </div>
+      <span
+        className="kgs-anon-chip"
+        style={{
+          position: "fixed",
+          top: 12,
+          right: 24,
+          fontSize: 10,
+          fontWeight: 700,
+          letterSpacing: "0.08em",
+          textTransform: "uppercase",
+          color: "rgba(255,255,255,0.45)",
+          border: "1px solid rgba(255,255,255,0.2)",
+          borderRadius: 4,
+          padding: "2px 8px",
+        }}
+      >
+        {meta.demo.anonymisedChip}
+      </span>
     </div>
   );
 }

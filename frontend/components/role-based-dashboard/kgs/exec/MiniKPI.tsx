@@ -23,7 +23,7 @@ export function MiniKPI({
   accent: string;
   align?: "start" | "end";
 }) {
-  // Numbers in mono, words in sans (03 §3B): "1,240" / "$2.3m" vs "fw 4.1 (synthetic) · 3.1×".
+  // Numbers in mono, words in sans (03 §3B): "1,240" / "$2.3m" vs "fw 4.1 · 3.1×".
   const numeric = /^[-+~≈≤$£]?[\d.,]+\S*$/.test(value.trim());
   return (
     <div style={{ textAlign: align === "end" ? "right" : "left", minWidth: 0 }}>

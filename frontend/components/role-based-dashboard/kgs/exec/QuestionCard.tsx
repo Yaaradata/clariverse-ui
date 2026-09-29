@@ -1,98 +1,48 @@
 "use client";
 
-import { exec, monitor } from "@kgs/lib/data";
 import type { QuestionCardData } from "@kgs/types";
-import { ChevronRight, Cpu, Handshake, Info, Split } from "lucide-react";
+import { ChevronRight, Cpu, Handshake, Split } from "lucide-react";
 import type { CSSProperties } from "react";
 import { useKgsNav } from "../nav";
 import { CountUp } from "../shared/CountUp";
-import { Popover } from "../shared/Popover";
 import { ACCENT, GAUGE_TONE, K, liftVars, withAlpha } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
-import { AreaTrend } from "./AreaTrend";
+import { AreaTrend, QUESTION_CHART_H } from "./AreaTrend";
 import { InsightBox } from "./InsightBox";
-import { MiniKPI } from "./MiniKPI";
 import { SemiGauge } from "./SemiGauge";
 import { trendFor } from "./trends";
 
 const ICONS = { Cpu, Handshake, Split } as const;
 
-/** WhatsCountedPopover (04 §2.5, NEW): the signals behind the count, each linking to it. */
-function WhatsCounted({ card }: { card: QuestionCardData }) {
-  const L = useLabel();
-  const { go } = useKgsNav();
-  return (
-    <div>
-      <div style={{ fontWeight: 700, color: K.text, marginBottom: 8 }}>
-        {exec.whatsCountedTitle}
-      </div>
-      {card.counted.map((row) => {
-        const target =
-          monitor.cards.find((c) => c.signalId === row.signalId)?.linkTo ??
-          card.route;
-        return (
-          <button
-            key={row.signalId}
-            type="button"
-            onClick={() => go(target)}
-            className="kgs-focus"
-            style={{
-              display: "block",
-              width: "100%",
-              textAlign: "left",
-              background: K.surface,
-              border: `1px solid ${K.chipBorder}`,
-              borderRadius: 8,
-              padding: "7px 9px",
-              marginBottom: 6,
-              color: K.textSec,
-              font: "inherit",
-              fontSize: 13,
-              cursor: "pointer",
-            }}
-          >
-            {L(row.text)}
-          </button>
-        );
-      })}
-      <div style={{ fontSize: 12, color: K.textMut, marginTop: 4 }}>
-        {L(card.notCounted)}
-      </div>
-      <div
-        style={{
-          fontSize: 12,
-          color: K.textMut,
-          marginTop: 8,
-          paddingTop: 8,
-          borderTop: `1px solid ${K.borderLight}`,
-        }}
-      >
-        {card.countedFooter}
-      </div>
-    </div>
-  );
+/** More signals = worse: "+" red (head_cards −pts red), "0" muted, "−" green. */
+function fourWeekDeltaColor(label: string): string {
+  const t = label.trim();
+  if (/^0\b/.test(t)) return K.textMut;
+  if (/^[-−–]/.test(t)) return K.green;
+  if (/^\+/.test(t)) return K.red;
+  return K.textMut;
 }
 
 /**
- * Fork of the bank ExecutiveTile (HeadOfCreditCardsDashboard.tsx:214-501).
- * KGS changes: the big number is the count of signals above threshold with a week-on-week
- * delta chip (amber when up, neutral otherwise) — no score, index or "pts"; "What's counted"
- * popover; Q1 orange 2px highlighted, Q2 teal, Q3 sky-400; titles wrap (no ellipsis);
- * "LiSN INSIGHT". Whole card opens the drill view; the ⓘ sits above the card link.
+ * Bank ExecutiveTile anatomy (HeadOfCreditCardsDashboard.tsx:214) with KGS count,
+ * accent borders and LiSN insight. Compact fields drive the overview face.
  */
 export function QuestionCard({ card }: { card: QuestionCardData }) {
   const L = useLabel();
   const { go } = useKgsNav();
   const accent = ACCENT[card.accent];
   const Icon = ICONS[card.icon];
-  const up = card.count > card.lastWeekCount;
   const trend = trendFor(card, L);
+  const c = card.compact;
+  const subtitle = c?.subtitle ?? card.caption;
+  const caption = c?.caption ?? card.countLabel;
+  const gauges =
+    c?.gauges ?? card.gauges.map((g) => ({ pct: g.pct, label: g.label }));
+  const insight = c?.insight ?? card.insightShort ?? card.insight;
   const border = card.highlighted
     ? `2px solid ${accent}`
-    : `1px solid ${withAlpha(accent, 0.3)}`;
-  const glow = card.highlighted
-    ? `0 0 32px ${withAlpha(accent, 0.22)}`
-    : `0 8px 32px ${withAlpha(accent, 0.08)}`;
+    : `1px solid ${withAlpha(accent, 0.25)}`;
+  const glow = `0 8px 32px ${withAlpha(accent, 0.082)}`;
 
   return (
     <article
@@ -102,23 +52,21 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
           position: "relative",
           background: K.elevated,
           border,
-          borderRadius: K.radius.card,
-          padding: "18px 18px 16px",
+          borderRadius: 16,
+          padding: "20px 20px 16px",
           display: "flex",
           flexDirection: "column",
           gap: 10,
+          height: "100%",
           minWidth: 0,
           boxShadow: glow,
           ...liftVars(
             card.highlighted ? accent : withAlpha(accent, 0.6),
-            card.highlighted
-              ? `0 0 48px ${withAlpha(accent, 0.33)}`
-              : `0 8px 48px ${withAlpha(accent, 0.12)}`,
+            `0 0 0 2px ${accent}, 0 8px 28px ${withAlpha(accent, 0.133)}`,
           ),
         } as CSSProperties
       }
     >
-      {/* Stretched card link: the whole card opens the drill view. */}
       <button
         type="button"
         aria-label={L(card.title)}
@@ -127,7 +75,7 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
         style={{
           position: "absolute",
           inset: 0,
-          borderRadius: K.radius.card,
+          borderRadius: 16,
           background: "transparent",
           border: "none",
           cursor: "pointer",
@@ -135,47 +83,68 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
         }}
       />
 
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 10,
+        }}
+      >
         <div
           style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            background: withAlpha(accent, 0.1),
-            display: "grid",
-            placeItems: "center",
-            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            minWidth: 0,
+            flex: 1,
           }}
         >
-          <Icon size={18} color={accent} />
-        </div>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <h3
-            style={{
-              margin: 0,
-              fontSize: 16,
-              fontWeight: 700,
-              color: K.text,
-              lineHeight: 1.25,
-            }}
-          >
-            {L(card.title)}
-          </h3>
           <div
             style={{
-              fontSize: 12,
-              color: K.textMut,
-              marginTop: 3,
-              lineHeight: 1.35,
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              background: withAlpha(accent, 0.082),
+              display: "grid",
+              placeItems: "center",
+              flexShrink: 0,
             }}
           >
-            {L(card.caption)}
+            <Icon size={18} color={accent} />
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <h3
+              style={{
+                margin: 0,
+                fontSize: 15.5,
+                fontWeight: 700,
+                color: "#ffffff",
+                lineHeight: 1.1,
+              }}
+            >
+              {L(card.title)}
+            </h3>
+            <div
+              style={{
+                fontSize: 11,
+                color: "rgba(255, 255, 255, 0.38)",
+                marginTop: 2,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                lineHeight: 1.35,
+              }}
+            >
+              {L(subtitle)}
+            </div>
           </div>
         </div>
         <ChevronRight
-          size={20}
+          size={22}
           color="#b9b9ba"
-          style={{ flexShrink: 0, opacity: 0.6 }}
+          strokeWidth={1.75}
+          style={{ flexShrink: 0, marginTop: 2, opacity: 0.5 }}
           aria-hidden
         />
       </div>
@@ -185,132 +154,174 @@ export function QuestionCard({ card }: { card: QuestionCardData }) {
           display: "grid",
           gridTemplateColumns: "minmax(0, 1.05fr) minmax(0, 1fr)",
           gap: 12,
+          flex: 1,
+          minHeight: 0,
           alignItems: "stretch",
         }}
       >
-        <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
-          <div
+        <div
+          style={{
+            minWidth: 0,
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            flex: 1,
+          }}
+        >
+          <span
+            title={card.deltaLabel}
             style={{
-              display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              gap: 8,
+              position: "absolute",
+              top: 0,
+              right: 0,
+              fontSize: 13,
+              fontWeight: 700,
+              fontFamily: K.mono,
+              fontVariantNumeric: "tabular-nums",
+              whiteSpace: "nowrap",
+              color: fourWeekDeltaColor(card.fourWeekLabel),
+              zIndex: 2,
+              pointerEvents: "auto",
             }}
           >
-            <div>
-              <div
-                style={{
-                  fontSize: 40,
-                  fontWeight: 700,
-                  color: K.text,
-                  fontFamily: K.mono,
-                  fontVariantNumeric: "tabular-nums",
-                  lineHeight: 1,
-                }}
-              >
-                <CountUp text={card.count} />
-              </div>
-              <div style={{ fontSize: 12, color: K.body, marginTop: 4 }}>
-                {card.countLabel}
-              </div>
-            </div>
-            <span
+            {card.fourWeekLabel}
+          </span>
+          <div style={{ marginBottom: 6, paddingRight: 88 }}>
+            <div
               style={{
-                fontSize: 12,
-                fontWeight: 700,
+                fontSize: 34,
+                fontWeight: 800,
+                color: "#ffffff",
                 fontFamily: K.mono,
-                padding: "2px 7px",
-                borderRadius: 6,
-                whiteSpace: "nowrap",
-                color: up ? K.amber2 : K.textSec,
-                background: up ? withAlpha(K.amber, 0.14) : K.surface,
-                border: `1px solid ${up ? withAlpha(K.amber, 0.45) : K.chipBorder}`,
+                fontVariantNumeric: "tabular-nums",
+                lineHeight: 1,
               }}
             >
-              {card.deltaLabel}
-            </span>
+              <CountUp text={card.count} />
+            </div>
+            <div style={{ fontSize: 11, color: K.body, marginTop: 4 }}>
+              {caption}
+            </div>
           </div>
           <div
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              marginTop: 6,
-              fontSize: 12,
-              color: K.textMut,
-              position: "relative",
-              zIndex: 2,
+              width: "100%",
+              marginTop: "auto",
+              height: QUESTION_CHART_H,
+              minHeight: QUESTION_CHART_H,
+              flexShrink: 0,
             }}
           >
-            <span style={{ fontFamily: K.mono }}>{card.fourWeekLabel}</span>
-            <span>·</span>
-            <span>{card.severityMix}</span>
-            <Popover
-              label={exec.whatsCountedTitle}
-              trigger={<Info size={14} color={K.textMut} />}
-              width={400}
-            >
-              <WhatsCounted card={card} />
-            </Popover>
-          </div>
-          <div style={{ flex: 1, minHeight: 88, marginTop: 6 }}>
             <AreaTrend
               id={card.id}
               data={trend.data}
-              series={trend.series}
-              markers={trend.markers}
-              height={96}
+              series={trend.series.filter((s) => s.area)}
+              height={QUESTION_CHART_H}
+              strokeColor={accent}
             />
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            justifyContent: "flex-start",
+          }}
+        >
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-              gap: 10,
+              gap: 12,
+              minWidth: 0,
+              alignItems: "start",
             }}
           >
-            {card.gauges.map((g) => (
+            {gauges.map((g, i) => (
               <SemiGauge
                 key={g.label}
                 pct={g.pct}
                 label={L(g.label)}
-                sub={L(g.sub)}
-                color={GAUGE_TONE[g.tone]}
+                color={c ? accent : GAUGE_TONE[card.gauges[i]?.tone ?? "green"]}
               />
             ))}
           </div>
+
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: "10px 12px",
-              padding: "10px 2px 2px",
+              alignItems: "start",
+              padding: "12px 4px 4px",
               borderTop: "1px solid rgba(255, 255, 255, 0.06)",
             }}
           >
-            {card.miniKpis.map((m, i) => (
-              <MiniKPI
-                key={m.label}
-                label={L(m.label)}
-                value={L(m.value)}
-                caption={m.caption ? L(m.caption) : undefined}
-                money={m.money}
-                accent={accent}
-                align={i === 1 ? "end" : "start"}
-              />
-            ))}
+            {(
+              c?.stats ??
+              card.miniKpis.map((m) => ({
+                label: m.label,
+                value: m.value,
+                tag: m.caption,
+              }))
+            ).map((s, i) => {
+              const numeric = /^[-+~≈≤$£]?[\d.,]+\S*$/.test(L(s.value).trim());
+              return (
+                <div
+                  key={s.label}
+                  style={{ textAlign: i === 1 ? "right" : "left", minWidth: 0 }}
+                >
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "#b9b9ba",
+                      textTransform: "uppercase",
+                      letterSpacing: 0.4,
+                    }}
+                  >
+                    {L(s.label)}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: accent,
+                      fontWeight: 700,
+                      fontFamily: numeric ? K.mono : K.font,
+                      fontVariantNumeric: "tabular-nums",
+                      marginTop: 4,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {L(s.value)}
+                  </div>
+                  {s.tag ? (
+                    <div
+                      style={{
+                        display: "inline-block",
+                        fontSize: 8,
+                        color: "rgba(255, 255, 255, 0.45)",
+                        textTransform: "uppercase",
+                        marginTop: 6,
+                        letterSpacing: 0.05,
+                        fontWeight: 600,
+                        background: "rgba(255, 255, 255, 0.06)",
+                        padding: "3px 8px",
+                        borderRadius: 4,
+                      }}
+                    >
+                      {L(s.tag)}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      <InsightBox
-        label={card.insightLabel}
-        text={L(card.insight)}
-        accent={accent}
-      />
+      <InsightBox label={card.insightLabel} text={L(insight)} accent={accent} />
     </article>
   );
 }

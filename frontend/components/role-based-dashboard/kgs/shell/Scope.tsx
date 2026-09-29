@@ -14,7 +14,7 @@ import {
 const ALL_BRANDS = meta.filters.brand[0];
 const ALL_REGIONS = meta.filters.region[0];
 
-/** Join-tag region → Region filter option (01 §2: "NA (US regions + Canada)"; UK-EU countries). */
+/** Join-tag region → Region filter option (01 §2: "NA (US regions + Canada)"; US entity). */
 const REGION_GROUP: Record<string, string> = {
   NA: "NA",
   "US-SE": "NA",
@@ -23,11 +23,7 @@ const REGION_GROUP: Record<string, string> = {
   "US-MW": "NA",
   "US-W": "NA",
   Canada: "NA",
-  "UK-EU": "UK-EU",
-  UK: "UK-EU",
-  DE: "UK-EU",
-  NL: "UK-EU",
-  FR: "UK-EU",
+  US: "US",
   APAC: "APAC/AUS",
 };
 

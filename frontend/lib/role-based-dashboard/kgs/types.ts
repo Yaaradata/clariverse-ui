@@ -43,7 +43,7 @@ export type Role =
   | "Director Product Quality"
   | "Quality"
   | "Regional GM NA"
-  | "Regional GM UK-EU"
+  | "Regional GM US"
   | "VP Sales"
   | "VP Supply Chain"
   | "CIO / separation PMO"
@@ -338,6 +338,8 @@ export interface Gauge {
   pct: number;
   label: string;
   sub: string;
+  /** Compact gauge sub-label (≤ 4 words). */
+  subShort?: string;
   tone: "green" | "amber" | "red";
 }
 export interface MiniKpi {
@@ -349,6 +351,20 @@ export interface MiniKpi {
 export interface CountedRow {
   signalId: string;
   text: TokenString;
+}
+/** Overview face matching bank ExecutiveTile (head_cards). Long fields kept for drawers. */
+export interface QuestionCardCompact {
+  subtitle: TokenString;
+  caption: string;
+  gauges: [
+    { pct: number; label: TokenString },
+    { pct: number; label: TokenString },
+  ];
+  stats: [
+    { label: string; value: TokenString; tag?: TokenString },
+    { label: string; value: TokenString; tag?: TokenString },
+  ];
+  insight: TokenString;
 }
 /** Big number = count of signals above threshold (never a score or index). */
 export interface QuestionCardData {
@@ -362,8 +378,9 @@ export interface QuestionCardData {
   count: number;
   countLabel: string; // "signals above threshold" | "signal above threshold"
   lastWeekCount: number;
-  deltaLabel: string; // "+1 vs last week" | "0 vs last week"
-  fourWeekLabel: string; // "+2 in 4 weeks"
+  deltaLabel: string; // weekly hover: "+1 vs last week" | "0 vs last week"
+  /** Overview face delta (plain text top-right of the count), e.g. "+2 in 4 wks". */
+  fourWeekLabel: string;
   severityMix: string; // "S2 cliff · S2 cliff"
   counted: CountedRow[];
   notCounted: string;
@@ -376,31 +393,97 @@ export interface QuestionCardData {
   miniKpis: [MiniKpi, MiniKpi];
   insightLabel: "LiSN INSIGHT";
   insight: TokenString;
+  /** Compact insight ≤ 2 lines (~25 words). Long `insight` kept for drawers. */
+  insightShort?: TokenString;
+  /** Bank ExecutiveTile face for the overview. */
+  compact?: QuestionCardCompact;
 }
 export interface PulseItem {
   n: 1 | 2 | 3;
   title: string;
   text: TokenString;
+  /** Compact pulse body ≤ 2 lines (~20 words). */
+  textShort?: TokenString;
   chips: [string, string, string];
   linkTo: string;
   chipAfterApprove?: string;
+}
+/** Spike-style compact face for Field Signal Monitor (bank AI Risk Spike anatomy). */
+/** Field Signal Monitor urgency tier (bank CRITICAL / HIGH / soft WATCH). */
+export type MonitorUrgency = "critical" | "high" | "watch";
+
+export interface MonitorCardCompact {
+  title: TokenString;
+  channel: TokenString;
+  topIssue: TokenString;
+  topIssueSub: TokenString;
+  time: TokenString;
+  /** Severity word in the pill after class, e.g. "MATERIAL". */
+  severityWord: string;
+  metrics: [
+    {
+      label: TokenString;
+      value: string;
+      delta?: string;
+      sub?: string;
+      /** Green delta for opportunity metrics; default risk (red/amber). */
+      deltaTone?: "risk" | "opportunity";
+    },
+    {
+      label: TokenString;
+      value: string;
+      delta?: string;
+      sub?: string;
+      deltaTone?: "risk" | "opportunity";
+    },
+    {
+      label: TokenString;
+      value: string;
+      delta?: string;
+      sub?: string;
+      deltaTone?: "risk" | "opportunity";
+    },
+  ];
+  callout: TokenString;
 }
 /** Field Signal Monitor card (bank "RiskSpikeCard" shell). No enabled action button. */
 export interface MonitorCard {
   signalId: string;
   rank: number;
+  /** Urgency drives card chrome (red critical / amber high / soft amber watch). */
+  urgency: MonitorUrgency;
+  /** Synthetic illustrative card — not counted in above-threshold / Q-card totals. */
+  illustrativeOnly?: boolean;
   title: TokenString;
+  /** Compact card title (≤ 2 lines). Long `title` kept for drawers. */
+  titleShort?: TokenString;
   chips: { class: SeverityClass; word: string; domain: Domain; type: string };
   rows: {
     label: "SOURCES" | "COHORT" | "WINDOW" | "OWNER";
     value: TokenString;
   }[];
+  /** SOURCES row for the compact card (max 3 items, then "+n"). */
+  sourcesShort?: TokenString;
   metrics: { label: TokenString; value: string; change?: string }[];
+  /** Exactly 3 metric rows for the compact card anatomy. */
+  metricsCompact?: [
+    { label: TokenString; value: string; change?: string },
+    { label: TokenString; value: string; change?: string },
+    { label: TokenString; value: string; change?: string },
+  ];
+  /** Bank spike-monitor face (overview only). Long fields kept for hero/drawers. */
+  compact?: MonitorCardCompact;
   blastRadius: TokenString;
   confidenceShort: string;
+  /** Compact confidence label for the footer chip (e.g. "M 0.70"). */
+  confidenceCompact?: string;
   ownerGate: string;
+  /** Compact owner · gate chip (e.g. "VP Engineering · Awaiting approval"). */
+  ownerGateShort?: string;
   pnlShort: string;
   suggestion: TokenString;
+  /** Callout ≤ 2 lines (~25 words). Long `suggestion` kept for drawers. */
+  suggestionShort?: TokenString;
   linkTo: string;
   gateChipAfterApprove?: string;
   microStrip?: boolean;
@@ -461,6 +544,35 @@ export interface TableRow {
   tone?: (string | null)[];
   linkTo?: string;
 }
+
+/** Installed-base P-E rows: plain-English LiSN verdict beside the legacy status cell. */
+export type VerdictTone = "red" | "orange" | "amber" | "grey";
+export interface EmergingPhrasingRow extends TableRow {
+  verdictName: TokenString;
+  verdictStatus: TokenString;
+  verdictTone: VerdictTone;
+}
+export type WallLevel = "CRITICAL" | "ALERT" | "WARNING";
+export type WallPriority = "Immediate" | "This month" | "Monitor";
+
+/** Bank AI Summary Wall face (overview card + in-place detail). */
+export interface WallCardCompact {
+  level: WallLevel;
+  tag: TokenString;
+  title: TokenString;
+  body: TokenString;
+  metric: TokenString;
+  trend: TokenString;
+  priority: WallPriority;
+  cause: TokenString;
+  areas: TokenString[];
+  actions: TokenString[];
+  timeline: TokenString;
+  owner: string;
+  pulse?: boolean;
+  synthetic?: boolean;
+  money?: boolean;
+}
 export interface WallCard {
   id: string;
   chips: string[];
@@ -473,6 +585,8 @@ export interface WallCard {
   confidenceShort?: string;
   owner?: string;
   spark?: number[];
+  /** AI Summary Wall anatomy — preferred when present. */
+  compact?: WallCardCompact;
 }
 export interface SignalWall {
   title: string;
@@ -564,6 +678,16 @@ export interface InstalledBasePage {
   lineageMonitor: {
     title: string;
     sub: string;
+    /** Focus-variant panel title (Installed Base). */
+    focusTitle?: TokenString;
+    /** Focus-variant panel subtitle. */
+    focusSub?: TokenString;
+    focusLegendFocus?: TokenString;
+    focusLegendBand?: string;
+    focusBandLabel?: string;
+    focusReleaseLabel?: TokenString;
+    focusEndLabel?: TokenString;
+    focusChips?: { text: TokenString; tone: "accent" | "muted" }[];
     weeks: WeekIndex[];
     series: {
       label: TokenString;
@@ -588,7 +712,7 @@ export interface InstalledBasePage {
     leadLine: string;
     caption: string;
   };
-  emergingPhrasing: TableRow[];
+  emergingPhrasing: EmergingPhrasingRow[];
   contactsVsRma: {
     trouble: number[];
     fw41: number[];
@@ -887,6 +1011,8 @@ export interface HowWeCount {
 export interface ExecFile {
   funnel: FunnelData;
   brief: TokenString;
+  /** Compact executive brief (≤ 20 words). */
+  briefShort?: TokenString;
   briefLabel: string;
   pulseLabel: string;
   pulse: [PulseItem, PulseItem, PulseItem];
@@ -909,6 +1035,12 @@ export interface MonitorFile {
     title: string;
     chip: string;
     subtitle: string;
+    /** Compact section description (≤ 12 words). */
+    subtitleShort?: string;
+    /** Spike-monitor grey line (11px). */
+    headerLine?: string;
+    /** Spike-monitor italic drivers/suppressed line (11px). */
+    headerItalic?: string;
     suppressedLine: string;
     cardFooterLink: string;
   };
@@ -935,6 +1067,7 @@ export interface AggregateLine {
 /** signal_fw41.json › lineage (05a §5.2). */
 export interface HeroLineage {
   title: string;
+  sub?: string;
   series: [FirmwareSeries, FirmwareSeries]; // [0] = 4.0 (prior), [1] = 4.1
   aggregate: AggregateLine;
   markers: ChartMarker[];
@@ -1026,8 +1159,8 @@ export interface SeparationFile extends SeparationPage {
   topicTotals: TopicTotal[];
   disputeTrend: {
     weeks: WeekIndex[];
-    cumulativeGbpK: number[];
+    cumulativeUsdK: number[];
     dsoDeltaDays: number[];
-    currency: "GBP";
+    currency: "USD";
   };
 }

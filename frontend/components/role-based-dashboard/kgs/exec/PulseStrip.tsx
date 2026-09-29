@@ -2,6 +2,7 @@
 
 import { exec } from "@kgs/lib/data";
 import { Sparkles } from "lucide-react";
+import { MoneyText } from "../shared/MoneyText";
 import { K } from "../shared/tokens";
 import { useLabel } from "../shell/DemoProvider";
 
@@ -92,7 +93,7 @@ export function PulseStrip() {
                 fontWeight: 500,
               }}
             >
-              {L(item.text)}
+              <MoneyText text={item.textShort ?? item.text} />
             </div>
           </article>
         ))}

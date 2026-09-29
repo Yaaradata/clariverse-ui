@@ -29,6 +29,60 @@ const STACK_COLOURS = [
 
 type Row = Record<string, number | string>;
 
+/** Split long intent labels onto two centred lines so neighbouring ticks do not collide. */
+function wrapIntentLabel(raw: string): string[] {
+  const s = raw.trim();
+  if (s.length <= 11) return [s];
+  const slash = s.indexOf(" / ");
+  if (slash > 0) return [s.slice(0, slash), s.slice(slash + 3)];
+  const dash = s.indexOf(" – ");
+  if (dash > 0) return [s.slice(0, dash), s.slice(dash + 3)];
+  const words = s.split(/\s+/);
+  if (words.length < 2) return [s];
+  let best = 1;
+  let bestDelta = Number.POSITIVE_INFINITY;
+  for (let i = 1; i < words.length; i++) {
+    const a = words.slice(0, i).join(" ").length;
+    const b = words.slice(i).join(" ").length;
+    const d = Math.abs(a - b);
+    if (d < bestDelta) {
+      bestDelta = d;
+      best = i;
+    }
+  }
+  return [words.slice(0, best).join(" "), words.slice(best).join(" ")];
+}
+
+function IntentTick({
+  x = 0,
+  y = 0,
+  payload,
+}: {
+  x?: number;
+  y?: number;
+  payload?: { value?: string };
+}) {
+  const L = useLabel();
+  const lines = wrapIntentLabel(payload?.value ? L(String(payload.value)) : "");
+  return (
+    <g transform={`translate(${x},${y})`}>
+      {lines.map((line, i) => (
+        <text
+          key={line}
+          x={0}
+          y={12 + i * 13}
+          textAnchor="middle"
+          fill={K.textMut}
+          fontSize={11}
+          fontWeight={500}
+        >
+          {line}
+        </text>
+      ))}
+    </g>
+  );
+}
+
 function StackTooltip({
   active,
   payload,
@@ -121,15 +175,26 @@ export function StackedBarWithDetailPanel({
       style={{
         display: "grid",
         gridTemplateColumns: detail
-          ? "minmax(0, 1.5fr) minmax(300px, 1fr)"
+          ? "minmax(0, 1.65fr) minmax(280px, 0.9fr)"
           : "minmax(0, 1fr)",
-        gap: 16,
+        gap: 20,
         alignItems: "start",
+        justifyItems: "stretch",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 10,
+          minWidth: 0,
+          justifySelf: "center",
+          width: "100%",
+          maxWidth: detail ? undefined : 920,
+        }}
+      >
         {controls}
-        <div role="img" aria-label={ariaLabel} style={{ height: 320 }}>
+        <div role="img" aria-label={ariaLabel} style={{ height: 360 }}>
           <ResponsiveContainer
             width="100%"
             height="100%"
@@ -137,7 +202,9 @@ export function StackedBarWithDetailPanel({
           >
             <BarChart
               data={rows}
-              margin={{ top: 8, right: 8, bottom: 4, left: 0 }}
+              margin={{ top: 8, right: 12, bottom: 8, left: 4 }}
+              barCategoryGap="22%"
+              maxBarSize={52}
             >
               <CartesianGrid
                 stroke="#333"
@@ -147,13 +214,13 @@ export function StackedBarWithDetailPanel({
               <XAxis
                 dataKey="label"
                 interval={0}
-                tickFormatter={(v: string) => L(v)}
-                tick={{ fill: K.textMut, fontSize: 11 }}
+                height={48}
+                tick={<IntentTick />}
                 axisLine={{ stroke: K.borderLight }}
                 tickLine={false}
               />
               <YAxis
-                width={40}
+                width={44}
                 tick={{ fill: K.textMut, fontSize: 12, fontFamily: K.mono }}
                 axisLine={false}
                 tickLine={false}
@@ -211,6 +278,7 @@ export function StackedBarWithDetailPanel({
             color: K.body,
             border: `1px solid ${K.border}`,
             borderRadius: K.radius.chip,
+            justifyContent: "center",
           }}
         >
           {stacks.map((s, i) => (

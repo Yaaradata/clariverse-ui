@@ -8,13 +8,13 @@
     "label": "Data as of 25 Sep 2026 18:00 UTC"
   },
   "lastWeekDigest": "2026-09-18T18:00:00Z",
-  "badge": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
-  "badgeTooltip": "Every figure, firmware version, serial, date code and partner ID on this screen is synthetic. Nothing here is a finding about any KGS product.",
-  "footer": "Synthetic scenario for illustration; no inference about any KGS product. LiSN aids resolution; every action is human-approved.",
+  "badge": "Illustrative scenario — not KGS data",
+  "badgeTooltip": "Every figure, firmware version, serial, date code and partner ID on this screen is illustrative. Nothing here is a finding about any KGS product.",
+  "footer": "Illustrative scenario for demonstration; no inference about any KGS product. LiSN aids resolution; every action is human-approved.",
   "breadcrumbs": {
     "/": "Installed-base early warning · Hear it at the third call, not the monthly review.",
     "/installed-base": "Global Commercial Fire · {role} · Installed base · Firmware · Date codes · RMA",
-    "/installed-base/signal/fw-4-1": "Global Commercial Fire · {role} · Installed base · {{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)",
+    "/installed-base/signal/fw-4-1": "Global Commercial Fire · {role} · Installed base · {{platform:EST4}} · fw {{fw:EST4@4.1}}",
     "/channel": "Global Commercial Fire · {role} · Channel · Strategic Partners / ESDs · Backlog",
     "/separation": "Global Commercial Fire · {role} · Separation · Entity · Portal · ERP / EDI · DSO"
   },
@@ -31,7 +31,7 @@
     "region": [
       "All",
       "NA",
-      "UK-EU",
+      "US",
       "MEA",
       "India",
       "China",
@@ -40,7 +40,10 @@
     ],
     "period": {
       "value": "26 weeks to 25 Sep 2026",
-      "disabled": ["13 weeks", "52 weeks — Discovery"]
+      "disabled": [
+        "13 weeks",
+        "52 weeks — Discovery"
+      ]
     }
   },
   "weeks": [
@@ -150,9 +153,32 @@
     }
   ],
   "weeklyInteractions": [
-    8666, 8866, 8766, 8966, 8566, 9066, 9166, 8966, 7600, 9266, 9466, 9866,
-    11400, 8300, 8966, 9266, 9066, 8866, 8965, 9165, 9065, 8765, 8665, 7900,
-    9265, 9020
+    8666,
+    8866,
+    8766,
+    8966,
+    8566,
+    9066,
+    9166,
+    8966,
+    7600,
+    9266,
+    9466,
+    9866,
+    11400,
+    8300,
+    8966,
+    9266,
+    9066,
+    8866,
+    8965,
+    9165,
+    9065,
+    8765,
+    8665,
+    7900,
+    9265,
+    9020
   ],
   "dailyInteractions": [
     {
@@ -824,7 +850,11 @@
     "recommendationLabel": "LiSN suggests · owner decides",
     "wallLabel": "LiSN Signal Wall",
     "diagnosisLabel": "LiSN evidence summary",
-    "diagnosisRows": ["Main signal", "What changed", "Decide first"],
+    "diagnosisRows": [
+      "Main signal",
+      "What changed",
+      "Decide first"
+    ],
     "askButtonTooltip": "Ask LiSN (P2 — canned answers)",
     "illustrativeChip": "ILLUSTRATIVE",
     "confidenceTooltip": "K = joined, verified records. I = text-extracted or imputed. Kept separate on every signal.",
@@ -835,7 +865,7 @@
     "introLine2": "1,640 candidate clusters · 212 suppressed · 5 above threshold",
     "tagline": "Hear it at the third call, not the monthly review.",
     "resetToast": "Demo reset",
-    "watermark": "Synthetic scenario — not KGS data",
+    "watermark": "scenario — not KGS data",
     "anonymisedChip": "ANONYMISED"
   },
   "ui": {
@@ -880,10 +910,19 @@
     "hero": {
       "source": "Verbatim from 04 §4.1–§4.11 and 06 Steps 9–12 (added in repo copy; not in pack mock)",
       "back": "Back to installed base",
-      "attribution": ["Product", "Practice"],
+      "attribution": [
+        "Product",
+        "Practice"
+      ],
       "counterEvidence": "Counter-evidence",
       "sourceIndependence": "Source independence {score} ({partners} partners, {channels} channels)",
-      "cohortColumns": ["Region", "Panels", "Sites", "Partners", "Contacts"],
+      "cohortColumns": [
+        "Region",
+        "Panels",
+        "Sites",
+        "Partners",
+        "Contacts"
+      ],
       "cohortTotal": "Total",
       "method": "Method",
       "routedTo": "Routed to",
@@ -892,15 +931,18 @@
       "recommendedApproved": "RECOMMENDED ACTION — approved by VP Engineering",
       "decision": "Decision",
       "viewingAs": "Viewing as",
-      "viewingAsOptions": ["President", "VP Engineering"],
+      "viewingAsOptions": [
+        "President",
+        "VP Engineering"
+      ],
       "viewDraft": "View draft",
       "approving": "Approving…",
       "approved": "Approved",
       "sourceLink": "Open source interaction",
       "inferredTooltip": "Inferred — firmware imputed from {imputedFrom}",
       "rmaSerial": "serial",
-      "synthetic": "(synthetic)",
-      "cohortHeadline": "{panels} panels on fw {{fw:EST4@4.1}} · serial range {serialRange} (synthetic)",
+      "synthetic": "",
+      "cohortHeadline": "{panels} panels on fw {{fw:EST4@4.1}} · serial range {serialRange}",
       "eligible": "Eligible not yet upgraded: {n}",
       "exportList": "Export list",
       "auditLog": "Audit log"
@@ -914,7 +956,12 @@
         "S3": "Operational",
         "S4": "Efficiency"
       },
-      "clusterTypes": ["Cliff", "Slope", "Spread", "Novel"],
+      "clusterTypes": [
+        "Cliff",
+        "Slope",
+        "Spread",
+        "Novel"
+      ],
       "stable": "Stable",
       "phrasings": "PHRASINGS",
       "openSignal": "Open signal →",

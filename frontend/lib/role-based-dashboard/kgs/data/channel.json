@@ -45,7 +45,17 @@
         "4 calls",
         "S2 · above threshold"
       ],
-      "tone": [null, null, null, "orange", null, null, null, null, "amber"],
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "amber"
+      ],
       "linkTo": "/channel#esd-se-07"
     },
     {
@@ -61,7 +71,17 @@
         "—",
         "Within band"
       ],
-      "tone": [null, null, null, "amber", null, null, null, null, "green"]
+      "tone": [
+        null,
+        null,
+        null,
+        "amber",
+        null,
+        null,
+        null,
+        null,
+        "green"
+      ]
     },
     {
       "id": "esd-mw-05",
@@ -76,7 +96,17 @@
         "—",
         "Within band"
       ],
-      "tone": [null, null, null, null, null, null, null, null, "green"]
+      "tone": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        "green"
+      ]
     },
     {
       "id": "esd-ca-06",
@@ -91,7 +121,17 @@
         "—",
         "Within band (in Signal #1 cohort)"
       ],
-      "tone": [null, null, null, "amber", null, null, null, null, "green"],
+      "tone": [
+        null,
+        null,
+        null,
+        "amber",
+        null,
+        null,
+        null,
+        null,
+        "green"
+      ],
       "linkTo": "/installed-base/signal/fw-4-1"
     },
     {
@@ -107,7 +147,17 @@
         "2 calls",
         "S3 · watch"
       ],
-      "tone": [null, null, null, "orange", null, null, null, null, "slate"]
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "slate"
+      ]
     },
     {
       "id": "dlr-w-044",
@@ -122,13 +172,23 @@
         "1 call",
         "S3 · watch"
       ],
-      "tone": [null, null, null, "orange", null, null, null, null, "slate"]
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "slate"
+      ]
     },
     {
       "id": "dist-uk-031",
       "cells": [
-        "{{partner:DIST-UK-031}}",
-        "{{region:UK}}",
+        "{{partner:DIST-US-031}}",
+        "{{region:US}}",
         "Distributor",
         "1.6×",
         "27% (16%)",
@@ -137,27 +197,133 @@
         "—",
         "S3 · watch (→ Separation)"
       ],
-      "tone": [null, null, null, "orange", null, null, null, null, "slate"],
+      "tone": [
+        null,
+        null,
+        null,
+        "orange",
+        null,
+        null,
+        null,
+        null,
+        "slate"
+      ],
       "linkTo": "/separation"
     }
   ],
   "partnerTimeline": {
     "partnerId": "{{partner:ESD-SE-07}}",
     "friction": [
-      1, 2, 2, 2, 2, 2, 3, 2, 3, 2, 2, 2, 2, 2, 2, 3, 3, 4, 3, 3, 5, 5, 7, 7, 8,
+      1,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      2,
+      3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      3,
+      3,
+      5,
+      5,
+      7,
+      7,
+      8,
       8
     ],
     "baseline": [
-      2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
       2
     ],
     "sellIn": [
-      246, 234, 266, 246, 245, 227, 216, 216, 229, 269, 263, 226, 213, 232, 265,
-      230, 247, 219, 260, 241, 205, 198, 190, 186, 182, 176
+      246,
+      234,
+      266,
+      246,
+      245,
+      227,
+      216,
+      216,
+      229,
+      269,
+      263,
+      226,
+      213,
+      232,
+      265,
+      230,
+      247,
+      219,
+      260,
+      241,
+      205,
+      198,
+      190,
+      186,
+      182,
+      176
     ],
     "sellInLY": [
-      246, 284, 251, 234, 263, 282, 259, 280, 254, 236, 260, 220, 284, 250, 217,
-      236, 259, 275, 279, 241, 278, 251, 255, 276, 265, 255
+      246,
+      284,
+      251,
+      234,
+      263,
+      282,
+      259,
+      280,
+      254,
+      236,
+      260,
+      220,
+      284,
+      250,
+      217,
+      236,
+      259,
+      275,
+      279,
+      241,
+      278,
+      251,
+      255,
+      276,
+      265,
+      255
     ],
     "markers": [
       {
@@ -211,50 +377,78 @@
     "gate": "Partner-recovery brief — awaiting Regional GM approval · no outreach sent"
   },
   "backorder": {
-    "title": "Backlog at risk by SKU family",
-    "stacks": ["NA", "{{region:UK-EU}}", "Other"],
+    "title": "Backlog risk sits in three families",
+    "stacks": [
+      "NA",
+      "{{region:US}}",
+      "Other"
+    ],
     "bars": [
       {
         "key": "N-3",
-        "label": "Notification N-3 (synthetic)",
-        "values": [2.1, 0.1, 0.1],
+        "label": "Notification N-3",
+        "values": [
+          2.1,
+          0.1,
+          0.1
+        ],
         "overlay": 3.2
       },
       {
         "key": "D-5",
-        "label": "Detectors D-5 (synthetic)",
-        "values": [0.5, 0.2, 0.1],
+        "label": "Detectors D-5",
+        "values": [
+          0.5,
+          0.2,
+          0.1
+        ],
         "overlay": 1.2
       },
       {
         "key": "P-2",
-        "label": "Power supplies P-2 (synthetic)",
-        "values": [0.4, 0.1, 0.1],
+        "label": "Power supplies P-2",
+        "values": [
+          0.4,
+          0.1,
+          0.1
+        ],
         "overlay": 1.4
       },
       {
         "key": "M-4",
-        "label": "Modules M-4 (synthetic)",
-        "values": [0.3, 0.1, 0.1],
+        "label": "Modules M-4",
+        "values": [
+          0.3,
+          0.1,
+          0.1
+        ],
         "overlay": 1.1
       },
       {
         "key": "A-1",
-        "label": "Aspirating A-1 (synthetic)",
-        "values": [0.2, 0.1, 0.1],
-        "overlay": 1.0
+        "label": "Aspirating A-1",
+        "values": [
+          0.2,
+          0.1,
+          0.1
+        ],
+        "overlay": 1
       },
       {
         "key": "C-2",
-        "label": "Cabinets C-2 (synthetic)",
-        "values": [0.2, 0.05, 0.05],
+        "label": "Cabinets C-2",
+        "values": [
+          0.2,
+          0.05,
+          0.05
+        ],
         "overlay": 0.9
       }
     ],
     "details": [
       {
         "key": "N-3",
-        "title": "Notification family N-3 (synthetic)",
+        "title": "Notification family N-3",
         "chip": "S2 · Supply",
         "big": "$2.3m",
         "bigLabel": "backlog at risk",
@@ -299,7 +493,7 @@
       },
       {
         "key": "D-5",
-        "title": "Detectors D-5 (synthetic)",
+        "title": "Detectors D-5",
         "chip": "Within band",
         "big": "$0.8m",
         "bigLabel": "backlog at risk",
@@ -325,7 +519,7 @@
       },
       {
         "key": "P-2",
-        "title": "Power supplies P-2 (synthetic)",
+        "title": "Power supplies P-2",
         "chip": "Within band",
         "big": "$0.6m",
         "bigLabel": "backlog at risk",
@@ -351,7 +545,7 @@
       },
       {
         "key": "M-4",
-        "title": "Modules M-4 (synthetic)",
+        "title": "Modules M-4",
         "chip": "Within band",
         "big": "$0.5m",
         "bigLabel": "backlog at risk",
@@ -377,7 +571,7 @@
       },
       {
         "key": "A-1",
-        "title": "Aspirating A-1 (synthetic)",
+        "title": "Aspirating A-1",
         "chip": "Within band",
         "big": "$0.4m",
         "bigLabel": "backlog at risk",
@@ -403,7 +597,7 @@
       },
       {
         "key": "C-2",
-        "title": "Cabinets C-2 (synthetic)",
+        "title": "Cabinets C-2",
         "chip": "Within band",
         "big": "$0.3m",
         "bigLabel": "backlog at risk",
@@ -434,7 +628,18 @@
       "original": 71
     },
     "consequenceRatio": [
-      1.0, 1.1, 0.9, 1.0, 1.1, 1.0, 1.6, 2.1, 2.4, 2.8, 3.0, 3.2
+      1,
+      1.1,
+      0.9,
+      1,
+      1.1,
+      1,
+      1.6,
+      2.1,
+      2.4,
+      2.8,
+      3,
+      3.2
     ],
     "leadLine": "13 days ahead of the 5 Oct OTIF report"
   },
@@ -452,27 +657,63 @@
       },
       {
         "id": "cert-esd-sw-12",
-        "cells": ["{{partner:ESD-SW-12}}", "6 of 7", "2", "2.1×", "3"]
+        "cells": [
+          "{{partner:ESD-SW-12}}",
+          "6 of 7",
+          "2",
+          "2.1×",
+          "3"
+        ]
       },
       {
         "id": "cert-dlr-ne-118",
-        "cells": ["{{partner:DLR-NE-118}}", "2 of 2", "1", "2.3×", "2"]
+        "cells": [
+          "{{partner:DLR-NE-118}}",
+          "2 of 2",
+          "1",
+          "2.3×",
+          "2"
+        ]
       },
       {
         "id": "cert-esd-mw-05",
-        "cells": ["{{partner:ESD-MW-05}}", "5 of 6", "1", "1.9×", "3"]
+        "cells": [
+          "{{partner:ESD-MW-05}}",
+          "5 of 6",
+          "1",
+          "1.9×",
+          "3"
+        ]
       },
       {
         "id": "cert-dlr-w-044",
-        "cells": ["{{partner:DLR-W-044}}", "1 of 2", "1", "2.2×", "2"]
+        "cells": [
+          "{{partner:DLR-W-044}}",
+          "1 of 2",
+          "1",
+          "2.2×",
+          "2"
+        ]
       },
       {
         "id": "cert-esd-se-14",
-        "cells": ["{{partner:ESD-SE-14}}", "4 of 4", "1", "1.8×", "3"]
+        "cells": [
+          "{{partner:ESD-SE-14}}",
+          "4 of 4",
+          "1",
+          "1.8×",
+          "3"
+        ]
       },
       {
         "id": "cert-dlr-sw-201",
-        "cells": ["{{partner:DLR-SW-201}}", "2 of 3", "1", "2.0×", "3"]
+        "cells": [
+          "{{partner:DLR-SW-201}}",
+          "2 of 3",
+          "1",
+          "2.0×",
+          "3"
+        ]
       }
     ],
     "caption": "Assigning 18 seats in the October {{platform:EST4}} class to 7 high-load partners would cut ~210 contacts a quarter."
@@ -487,7 +728,13 @@
         "top reason: N-3 lead time",
         "S3 WATCH"
       ],
-      "tone": [null, null, "orange", null, "yellow"]
+      "tone": [
+        null,
+        null,
+        "orange",
+        null,
+        "yellow"
+      ]
     },
     {
       "id": "sw-georgia",
@@ -498,7 +745,13 @@
         "top reason: lead time",
         "Below threshold"
       ],
-      "tone": [null, null, "amber", null, "neutral"]
+      "tone": [
+        null,
+        null,
+        "amber",
+        null,
+        "neutral"
+      ]
     },
     {
       "id": "sw-texas",
@@ -509,14 +762,23 @@
         "top reason: price",
         "Below threshold"
       ],
-      "tone": [null, null, "amber", null, "neutral"]
+      "tone": [
+        null,
+        null,
+        "amber",
+        null,
+        "neutral"
+      ]
     }
   ],
   "enhanced": {
     "title": "✨ Why partners drift",
     "badge": "Joined with ERP orders, LMS & backlog",
     "violetLine": "Uses read-only extracts of ERP orders, the LMS certification log and the open backlog.",
-    "right": ["Data as of 25 Sep 18:00 UTC", "1 partner above threshold"],
+    "right": [
+      "Data as of 25 Sep 18:00 UTC",
+      "1 partner above threshold"
+    ],
     "joinTags": [
       {
         "key": "ERP",
@@ -605,7 +867,10 @@
         "age": "6 wks",
         "stage": "Stage: executive intervention",
         "blocker": "Blocker: 2 open L3 escalations",
-        "tags": ["3 of 5 certified", "$6.4m sell-in"]
+        "tags": [
+          "3 of 5 certified",
+          "$6.4m sell-in"
+        ]
       },
       {
         "chip": "S3",
@@ -613,7 +878,9 @@
         "age": "2 wks",
         "stage": "Stage: competitive",
         "blocker": "[competitor] named in 2 calls",
-        "tags": ["Dealer"]
+        "tags": [
+          "Dealer"
+        ]
       },
       {
         "chip": "S3",
@@ -621,15 +888,19 @@
         "age": "3 wks",
         "stage": "Stage: certification",
         "blocker": "1 of 2 technicians certified",
-        "tags": ["Dealer"]
+        "tags": [
+          "Dealer"
+        ]
       },
       {
         "chip": "S3",
-        "title": "{{partner:DIST-UK-031}}",
+        "title": "{{partner:DIST-US-031}}",
         "age": "4 wks",
         "stage": "Stage: invoicing",
         "blocker": "Invoice entity mismatch → Separation",
-        "tags": ["{{region:UK}}"]
+        "tags": [
+          "{{region:US}}"
+        ]
       }
     ]
   },
@@ -645,13 +916,16 @@
   },
   "signalWall": {
     "title": "LiSN Signal Wall",
-    "subtitle": "Signals vs own baseline · data as of 25 Sep 2026 18:00 UTC",
+    "subtitle": "Signals vs their own baseline",
     "pill": "Data as of 25 Sep",
     "cards": [
       {
         "id": "wall-esd07",
-        "chips": ["#3 of 5", "S2 · Channel"],
-        "title": "{{partner:ESD-SE-07}} drifting against its own baseline (synthetic)",
+        "chips": [
+          "#3 of 5",
+          "S2 · Channel"
+        ],
+        "title": "{{partner:ESD-SE-07}} drifting against its own baseline",
         "body": "{{partner:ESD-SE-07}} friction has run 3.1× its own baseline for six weeks; recontact 38% vs 14%; a competitor named in 4 calls. {{platform:EST4}} sell-in is −22% while territory peers are +4%.",
         "metric": "3.1× own baseline",
         "trend": "▲ Rising · above threshold since 11 Sep",
@@ -659,12 +933,46 @@
         "linkTo": "/channel#esd-se-07",
         "confidenceShort": "H on orders (K) · M on friction→orders (I)",
         "owner": "Regional GM NA",
-        "spark": [5, 5, 7, 7, 8, 8]
+        "spark": [
+          5,
+          5,
+          7,
+          7,
+          8,
+          8
+        ],
+        "compact": {
+          "level": "ALERT",
+          "tag": "Channel",
+          "title": "{{partner:ESD-SE-07}} partner drift rising",
+          "body": "{{partner:ESD-SE-07}} friction 3.1× its own baseline for six weeks; competitor named in 4 calls. Sell-in −22% vs peers +4%.",
+          "metric": "3.1× own baseline",
+          "trend": "↗ above threshold since 11 Sep",
+          "priority": "This month",
+          "cause": "Partner friction and competitor mentions rising with sell-in drop (candidate)",
+          "areas": [
+            "Channel",
+            "Sales",
+            "Tech support",
+            "Partners"
+          ],
+          "actions": [
+            "Decide on a recovery visit with a named L3 engineer",
+            "Hold two priority {{platform:EST4}} class seats",
+            "Review the draft partner-recovery brief",
+            "Track interactions weekly vs own baseline"
+          ],
+          "timeline": "Decide before the 15 Oct QBR",
+          "owner": "Regional GM NA"
+        }
       },
       {
         "id": "wall-n3",
-        "chips": ["#4 of 5", "S2 · Supply"],
-        "title": "Notification family N-3 — backorder consequence (synthetic)",
+        "chips": [
+          "#4 of 5",
+          "S2 · Supply"
+        ],
+        "title": "Notification family N-3 — backorder consequence",
         "body": "Notification family N-3: OTD is 94% against revised promise dates but 71% against the original. Cancel/substitute language 3.2× across 11 NA partners; 4 projects face inspections within 30 days.",
         "metric": "$2.3m backlog at risk",
         "trend": "▲ Rising · above threshold since 22 Sep",
@@ -672,23 +980,102 @@
         "linkTo": "/channel#backorder",
         "confidenceShort": "H on dates (K) · M on cancellation (I)",
         "owner": "VP Supply Chain",
-        "spark": [1.6, 2.1, 2.4, 2.8, 3.0, 3.2]
+        "spark": [
+          1.6,
+          2.1,
+          2.4,
+          2.8,
+          3,
+          3.2
+        ],
+        "compact": {
+          "level": "ALERT",
+          "tag": "Channel",
+          "title": "N-3 backorder risk across NA partners",
+          "body": "Cancel and substitute language 3.2× across 11 NA partners. OTD 71% against original promise; 4 projects face inspections within 30 days.",
+          "metric": "$2.3m backlog at risk",
+          "trend": "↗ above threshold since 22 Sep",
+          "priority": "This month",
+          "cause": "Promise-date slips driving cancel and substitute language (candidate)",
+          "areas": [
+            "Supply",
+            "Channel",
+            "Project delivery",
+            "Partners"
+          ],
+          "actions": [
+            "Confirm which lines sit on the original promise date",
+            "Prioritise the four inspection-bound projects",
+            "Brief NA partners on revised dates",
+            "Track cancel language weekly vs baseline"
+          ],
+          "timeline": "Decide before the 5 Oct OTIF report",
+          "owner": "VP Supply Chain",
+          "money": true
+        }
       },
       {
         "id": "wall-switching",
-        "chips": ["S3 · Operational", "WATCH"],
+        "chips": [
+          "S3 · Operational",
+          "WATCH"
+        ],
         "title": "Switching language in {{place:Houston}} metro",
         "body": "[competitor] named in 11 interactions vs 3 on its own baseline (3.7×); top reason: N-3 lead time. Below the signal threshold; watched.",
         "metric": "11 vs 3 (3.7×)",
-        "trend": "▲ Rising · watch"
+        "trend": "▲ Rising · watch",
+        "compact": {
+          "level": "WARNING",
+          "tag": "Channel",
+          "title": "Competitor named in {{place:Houston}} metro",
+          "body": "[competitor] named in 11 interactions vs 3 on its own baseline (3.7×); top reason: N-3 lead time. Below signal threshold.",
+          "metric": "11 vs 3 (3.7×)",
+          "trend": "↗ watch — below threshold",
+          "priority": "Monitor",
+          "cause": "Lead-time friction feeding competitor mentions in one metro (candidate)",
+          "areas": [
+            "Channel",
+            "Supply",
+            "Sales"
+          ],
+          "actions": [
+            "Keep the metro on the watch list",
+            "Tie mentions back to the N-3 backorder signal",
+            "Review at the next channel stand-up"
+          ],
+          "timeline": "Monitor through October",
+          "owner": "Regional GM NA"
+        }
       },
       {
         "id": "wall-credit-hold",
-        "chips": ["Suppressed"],
+        "chips": [
+          "Suppressed"
+        ],
         "title": "Order dip during a credit hold",
         "body": "One partner's order dip coincides with a credit hold — routed to AR, not scored as drift.",
         "metric": "1 look-alike routed to AR",
-        "trend": "Routed to AR"
+        "trend": "Routed to AR",
+        "compact": {
+          "level": "WARNING",
+          "tag": "Channel",
+          "title": "Order dip during a credit hold",
+          "body": "One partner's order dip coincides with a credit hold — routed to AR, not scored as drift.",
+          "metric": "1 look-alike routed to AR",
+          "trend": "↗ suppressed from drift scoring",
+          "priority": "Monitor",
+          "cause": "Credit hold, not partner drift (candidate)",
+          "areas": [
+            "AR",
+            "Channel"
+          ],
+          "actions": [
+            "Leave the case with AR",
+            "Confirm it stays out of the drift score"
+          ],
+          "timeline": "Monitor with AR",
+          "owner": "AR"
+        }
       }
     ],
     "footer": [
@@ -722,7 +1109,8 @@
       "title": "Key figures"
     },
     "C-B": {
-      "title": "Partner league vs own baseline",
+      "title": "One partner is drifting hardest",
+      "sub": "Friction vs each partner's own baseline",
       "anchor": "esd-se-07",
       "columns": [
         "PARTNER",
@@ -737,19 +1125,19 @@
       ]
     },
     "C-C": {
-      "title": "{{partner:ESD-SE-07}} — friction vs sell-in (synthetic)",
+      "title": "Partner friction climbs as sell-in falls",
       "sub": "Stream = weekly interactions vs baseline band; line = {{platform:EST4}} sell-in vs last year (dashed).",
-      "unit": "interactions / week · sell-in $k / week (USD, illustrative)"
+      "unit": "interactions / week · sell-in $k / week (USD)"
     },
     "C-D": {
-      "title": "Backlog at risk by SKU family",
+      "title": "Backlog risk sits in three families",
       "sub": "vs revised promise / vs original promise",
       "right": "OTD 94% | OTD 71%",
       "anchor": "backorder",
-      "unit": "$m (USD, illustrative)"
+      "unit": "$m (USD)"
     },
     "C-E": {
-      "title": "Certification gap vs support load",
+      "title": "Certification gaps drive support load",
       "columns": [
         "PARTNER",
         "CERTIFIED TECHS",
@@ -759,7 +1147,8 @@
       ]
     },
     "C-F": {
-      "title": "Switching language — competitor names redacted",
+      "title": "Competitors named in one metro",
+      "sub": "Competitor names redacted",
       "columns": [
         "AREA",
         "COMPETITOR",

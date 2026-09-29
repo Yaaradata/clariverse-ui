@@ -5,8 +5,8 @@
  * string through fmt() so the Anonymise toggle swaps names everywhere: DOM text,
  * chart labels, tooltips, breadcrumbs and <title>.
  *
- *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)', false) -> 'EST4 · fw 4.1 (synthetic)'
- *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)', true)  -> 'Panel platform A · fw A.4.1 (synthetic)'
+ *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}}', false) -> 'EST4 · fw 4.1'
+ *   fmt('{{platform:EST4}} · fw {{fw:EST4@4.1}}', true)  -> 'Panel platform A · fw 4.1'
  *
  * React components normally use useLabel() from ./demoState, which reads the
  * current anonymise flag for you.
@@ -41,11 +41,11 @@ export function fmt(str: string, anon: boolean): string {
 
 /**
  * Role-typed fields (routing.owner / cc / informed, gate.owner / approveEnabledFor) hold the
- * literal Role value, e.g. 'Regional GM UK-EU'. Render them through roleLabel() so a role
- * that names a region anonymises like the rest of the copy ('Regional GM Region EU-1').
+ * literal Role value, e.g. 'Regional GM US'. Render them through roleLabel() so a role
+ * that names a region anonymises like the rest of the copy ('Regional GM Region NA-2').
  */
 export function roleLabel(role: Role, anon: boolean): string {
-  return fmt(role.replace(/\bUK-EU\b/, "{{region:UK-EU}}"), anon);
+  return fmt(role.replace(/\bUS\b/, "{{region:US}}"), anon);
 }
 
 /** Replace the runtime {role} placeholder used in breadcrumbs (05a §3.1). */

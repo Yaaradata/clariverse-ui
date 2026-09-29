@@ -3,9 +3,7 @@
 import { useState } from "react";
 import {
   Area,
-  ComposedChart,
-  Line,
-  ReferenceLine,
+  AreaChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -27,72 +25,82 @@ export type TrendSeries = {
 
 export type TrendMarker = { x: number; label: string; color: string };
 
+/** Matches head_cards ExecutiveTile chart fill under the left column. */
+export const QUESTION_CHART_H = 150;
+
 /**
- * Fork of the bank ExecutiveTile area chart (HeadOfCreditCardsDashboard.tsx:377-419).
- * KGS changes: numeric week axis (fractional markers), optional dashed baseline /
- * control line and second axis, no "pts" tooltip. Values are passed through as data.
+ * Bank ExecutiveTile area chart — monotone curve, accent gradient, end-dot + value,
+ * "12 wks" footer. No markers, baselines, ticks or grid.
  */
 export function AreaTrend({
   id,
   data: dataProp,
   series,
-  markers = [],
-  height = 96,
+  height = QUESTION_CHART_H,
+  strokeColor,
+  endLabel,
+  footerLabel = "12 wks",
 }: {
   id: string;
   data: Array<Record<string, number | null>>;
   series: TrendSeries[];
+  /** Kept for call-site compatibility; ignored. */
   markers?: TrendMarker[];
   height?: number;
+  /** Stroke/fill colour (card accent). */
+  strokeColor?: string;
+  /** Override end-point label; defaults to last numeric value. */
+  endLabel?: string;
+  footerLabel?: string;
 }) {
   const reduced = useReducedMotion();
   const [data] = useState(() => dataProp);
-  const hasRight = series.some((s) => s.axis === "right");
-  const xs = data.map((d) => d.x ?? 0);
-  const domain: [number, number] = [
-    Math.min(...xs),
-    Math.max(...xs, ...markers.map((m) => m.x)),
-  ];
+  const primary = series.find((s) => s.area) ??
+    series[0] ?? {
+      key: "v",
+      label: "",
+      color: K.amber,
+      area: true,
+    };
+  const color = strokeColor ?? primary.color;
+  const gradId = `kgs-grad-${id}-${primary.key}`;
+  const lastIdx = data.length - 1;
+  const ys = data
+    .map((d) => d[primary.key])
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+  const maxY = ys.length ? Math.max(...ys) : 1;
+  const lastVal = ys.length ? ys[ys.length - 1] : null;
+  const labelText =
+    endLabel ??
+    (lastVal == null
+      ? ""
+      : Number.isInteger(lastVal)
+        ? String(lastVal)
+        : String(lastVal));
 
   return (
-    <div style={{ width: "100%", height }}>
-      <ResponsiveContainer
-        width="100%"
-        height="100%"
-        initialDimension={{ width: 1, height: 1 }}
-      >
-        <ComposedChart
+    <div
+      style={{
+        position: "relative",
+        width: "100%",
+        height,
+        minHeight: height,
+        flexShrink: 0,
+      }}
+    >
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart
           data={data}
-          margin={{ top: 6, right: 2, left: 2, bottom: 0 }}
+          margin={{ top: 10, right: 36, left: 0, bottom: 4 }}
         >
           <defs>
-            {series
-              .filter((s) => s.area)
-              .map((s) => (
-                <linearGradient
-                  key={s.key}
-                  id={`kgs-grad-${id}-${s.key}`}
-                  x1="0"
-                  y1="0"
-                  x2="0"
-                  y2="1"
-                >
-                  <stop offset="0%" stopColor={s.color} stopOpacity={0.42} />
-                  <stop offset="55%" stopColor={s.color} stopOpacity={0.16} />
-                  <stop offset="100%" stopColor={s.color} stopOpacity={0} />
-                </linearGradient>
-              ))}
+            <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity={0.35} />
+              <stop offset="100%" stopColor={color} stopOpacity={0} />
+            </linearGradient>
           </defs>
-          <XAxis dataKey="x" type="number" domain={domain} hide />
-          <YAxis yAxisId="left" hide domain={[0, "dataMax"]} />
-          {hasRight ? (
-            <YAxis
-              yAxisId="right"
-              orientation="right"
-              hide
-              domain={[0, "dataMax"]}
-            />
-          ) : null}
+          <XAxis dataKey="x" hide />
+          <YAxis hide domain={[0, maxY * 1.1]} />
           <Tooltip
             cursor={false}
             labelFormatter={() => ""}
@@ -100,57 +108,60 @@ export function AreaTrend({
               background: "rgba(10, 14, 22, 0.96)",
               border: `1px solid ${K.borderLight}`,
               borderRadius: 8,
-              fontSize: 12,
+              fontSize: 11,
               color: K.text,
             }}
           />
-          {markers.map((m) => (
-            <ReferenceLine
-              key={`${m.x}-${m.label}`}
-              yAxisId="left"
-              x={m.x}
-              stroke={m.color}
-              strokeDasharray="4 4"
-              strokeWidth={1.5}
-              ifOverflow="extendDomain"
-            />
-          ))}
-          {series.map((s) =>
-            s.area ? (
-              <Area
-                key={s.key}
-                yAxisId={s.axis ?? "left"}
-                type="monotone"
-                dataKey={s.key}
-                name={s.label}
-                stroke={s.color}
-                strokeWidth={3}
-                fill={`url(#kgs-grad-${id}-${s.key})`}
-                fillOpacity={1}
-                dot={false}
-                connectNulls={false}
-                isAnimationActive={!reduced}
-                animationDuration={900}
-              />
-            ) : (
-              <Line
-                key={s.key}
-                yAxisId={s.axis ?? "left"}
-                type="monotone"
-                dataKey={s.key}
-                name={s.label}
-                stroke={s.color}
-                strokeWidth={2}
-                strokeDasharray={s.dashed ? "4 4" : undefined}
-                dot={false}
-                connectNulls={false}
-                isAnimationActive={!reduced}
-                animationDuration={900}
-              />
-            ),
-          )}
-        </ComposedChart>
+          <Area
+            type="monotone"
+            dataKey={primary.key}
+            name={primary.label}
+            stroke={color}
+            strokeWidth={2.5}
+            fill={`url(#${gradId})`}
+            fillOpacity={1}
+            connectNulls
+            isAnimationActive={!reduced}
+            animationDuration={900}
+            activeDot={{ r: 3.5, fill: color, stroke: color }}
+            dot={(props: { cx?: number; cy?: number; index?: number }) => {
+              const { cx, cy, index } = props;
+              if (index !== lastIdx || cx == null || cy == null || !labelText) {
+                return <g key={`dot-${index ?? 0}`} />;
+              }
+              return (
+                <g key="end-dot">
+                  <circle cx={cx} cy={cy} r={3.5} fill={color} stroke={color} />
+                  <text
+                    x={cx + 7}
+                    y={cy + 4}
+                    fill={color}
+                    fontSize={11}
+                    fontWeight={700}
+                    fontFamily={K.mono}
+                    style={{ fontVariantNumeric: "tabular-nums" }}
+                  >
+                    {labelText}
+                  </text>
+                </g>
+              );
+            }}
+          />
+        </AreaChart>
       </ResponsiveContainer>
+      <span
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          fontSize: 11,
+          color: K.textMut,
+          lineHeight: 1,
+          pointerEvents: "none",
+        }}
+      >
+        {footerLabel}
+      </span>
     </div>
   );
 }

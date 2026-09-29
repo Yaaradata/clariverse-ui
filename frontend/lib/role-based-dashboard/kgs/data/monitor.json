@@ -1,17 +1,25 @@
 {
   "section": {
     "title": "Field Signal Monitor",
-    "chip": "5 ABOVE THRESHOLD",
+    "chip": "5 ABOVE THRESHOLD · 2 WATCH",
     "subtitle": "Signals above threshold, ranked by severity, population and consequence. Each is routed to one owner.",
+    "subtitleShort": "Above threshold, ranked by severity and consequence.",
     "suppressedLine": "Suppressed: quarter-end order status · {{platform:Edge}} how-to after training · planned tests · credit hold (routed to AR)",
-    "cardFooterLink": "Open signal →"
+    "cardFooterLink": "Open signal →",
+    "headerLine": "Early warnings from installer, partner and distributor contacts.",
+    "headerItalic": "Suppressed: quarter-end order status · how-to after training · planned tests · credit hold"
   },
   "signals": [
     {
       "id": "fw-4-1",
       "displayId": "SIG-2609-001",
       "question": "installed-base",
-      "ucIds": ["UC-Q-1", "UC-Q-14", "UC-Q-15", "UC-Q-10"],
+      "ucIds": [
+        "UC-Q-1",
+        "UC-Q-14",
+        "UC-Q-15",
+        "UC-Q-10"
+      ],
       "rank": 1,
       "rankOf": 5,
       "rankScore": 0.84,
@@ -30,7 +38,7 @@
         },
         {
           "label": "Panels on version",
-          "value": "1,240 (+5,560 eligible)",
+          "value": "1,240",
           "weight": 0.2,
           "score": 0.85
         },
@@ -50,11 +58,11 @@
       "aboveThreshold": true,
       "aboveSince": "2026-09-16T06:10:00Z",
       "title": "{{platform:EST4}} fw {{fw:EST4@4.1}} — devices not found after upgrade",
-      "headline": "{{platform:EST4}} · firmware {{fw:EST4@4.1}} (synthetic) — 'devices not found after upgrade' contacts 3.1× panels still on {{fw:EST4@4.0}}; 9 partners, 3 regions; 1,240 panels on version",
+      "headline": "{{platform:EST4}} · firmware {{fw:EST4@4.1}} — 'devices not found after upgrade' contacts 3.1× panels still on {{fw:EST4@4.0}}; 9 partners, 3 regions; 1,240 panels on version",
       "metric": {
         "display": "6.2 vs 2.0",
         "value": 6.2,
-        "baseline": 2.0,
+        "baseline": 2,
         "ratio": 3.1,
         "unit": "contacts per 1,000 panel-weeks",
         "line": "6.2 contacts per 1,000 panel-weeks on {{fw:EST4@4.1}} vs 2.0 on {{fw:EST4@4.0}} · same 3 weeks · event-time aligned to each panel's upgrade · Poisson exact p<0.001"
@@ -67,7 +75,7 @@
         "typeNote": "Cliff (step at release)",
         "blastRadius": {
           "headline": "Blast radius 1,240 panels · ~610 sites · 9 partners · 3 regions ({{region:US-SE}}, {{region:US-SW}}, {{region:Canada}})",
-          "note": "5,560 eligible panels not yet upgraded"
+          "note": "panels not yet upgraded"
         },
         "incident": {
           "flag": false,
@@ -125,7 +133,7 @@
         },
         {
           "key": "FW",
-          "value": "{{fw:EST4@4.1}} (synthetic)"
+          "value": "{{fw:EST4@4.1}}"
         },
         {
           "key": "REGION",
@@ -177,8 +185,13 @@
       },
       "routing": {
         "owner": "VP Engineering",
-        "cc": ["VP Service & Tech Support"],
-        "informed": ["Quality", "President"],
+        "cc": [
+          "VP Service & Tech Support"
+        ],
+        "informed": [
+          "Quality",
+          "President"
+        ],
         "presidentReason": "President sees this because S2 and blast radius exceed the agreed threshold."
       },
       "recommendedAction": "Owner to decide: engineering reproduction on the candidate configuration, and whether to pause the staged rollout and download of {{fw:EST4@4.1}}.",
@@ -189,9 +202,11 @@
           "status": "awaiting",
           "title": "Draft investigation brief — awaiting VP Engineering approval",
           "chip": "Awaiting approval",
-          "auditLine": "Drafted by LiSN 16 Sep 06:10 UTC · routed 06:10 · IB-2609-004 (synthetic)",
+          "auditLine": "Drafted by LiSN 16 Sep 06:10 UTC · routed 06:10 · IB-2609-004",
           "owner": "VP Engineering",
-          "approveEnabledFor": ["VP Engineering"],
+          "approveEnabledFor": [
+            "VP Engineering"
+          ],
           "approveLabel": "Approve investigation",
           "disabledTooltip": "Approval sits with VP Engineering",
           "onApprove": {
@@ -206,7 +221,7 @@
               "title": "Investigation opened",
               "body": "Approved by VP Engineering · audit logged {ts} · nothing sent outside LiSN"
             },
-            "auditEntry": "{ts} · VP Engineering approved investigation · INV-2609-031 (synthetic)",
+            "auditEntry": "{ts} · VP Engineering approved investigation · INV-2609-031",
             "investigationId": "INV-2609-031"
           },
           "onApproveSecondary": {
@@ -227,7 +242,9 @@
           "title": "Draft known-issue note for tech-support agents — not sent",
           "chip": "Not sent",
           "owner": "VP Service & Tech Support",
-          "approveEnabledFor": ["VP Service & Tech Support"],
+          "approveEnabledFor": [
+            "VP Service & Tech Support"
+          ],
           "disabledTooltip": "Approval sits with VP Service & Tech Support"
         }
       ],
@@ -243,7 +260,9 @@
       "id": "dc-d2-2611",
       "displayId": "SIG-2609-002",
       "question": "installed-base",
-      "ucIds": ["UC-Q-2"],
+      "ucIds": [
+        "UC-Q-2"
+      ],
       "rank": 2,
       "rankOf": 5,
       "rankScore": 0.71,
@@ -282,7 +301,7 @@
       "aboveThreshold": true,
       "aboveSince": "2026-09-18T07:30:00Z",
       "title": "Detector family D-2 — early-life failures, date codes 2611–2614",
-      "headline": "Detector family D-2, date codes 2611–2614 (synthetic) — early-life 'device not responding' contacts 4.2× adjacent production weeks; 4,800 units in window; SKU return rate 0.21% inside its 0.30% limit",
+      "headline": "Detector family D-2, date codes 2611–2614 — early-life 'device not responding' contacts 4.2× adjacent production weeks; 4,800 units in window; SKU return rate 0.21% inside its 0.30% limit",
       "metric": {
         "display": "4.2×",
         "value": 4.6,
@@ -325,7 +344,7 @@
       "joinTags": [
         {
           "key": "PRODUCT",
-          "value": "Detector family D-2 (synthetic)"
+          "value": "Detector family D-2"
         },
         {
           "key": "DATE CODES",
@@ -362,8 +381,12 @@
       },
       "routing": {
         "owner": "Director Product Quality",
-        "cc": ["VP Engineering"],
-        "informed": ["Quality"]
+        "cc": [
+          "VP Engineering"
+        ],
+        "informed": [
+          "Quality"
+        ]
       },
       "recommendedAction": "Sample return and teardown. Quality to decide on quarantine of units still in distributor stock.",
       "gates": [
@@ -375,7 +398,10 @@
           "chip": "Awaiting approval",
           "auditLine": "Drafted by LiSN 18 Sep 07:30 UTC · routed 07:30",
           "owner": "Director Product Quality",
-          "approveEnabledFor": ["Director Product Quality", "Quality"],
+          "approveEnabledFor": [
+            "Director Product Quality",
+            "Quality"
+          ],
           "approveLabel": "Approve containment memo",
           "disabledTooltip": "Approval sits with Director Product Quality"
         }
@@ -392,7 +418,9 @@
       "id": "esd-se-07",
       "displayId": "SIG-2609-003",
       "question": "channel",
-      "ucIds": ["UC-C-1"],
+      "ucIds": [
+        "UC-C-1"
+      ],
       "rank": 3,
       "rankOf": 5,
       "rankScore": 0.66,
@@ -431,7 +459,7 @@
       "aboveThreshold": true,
       "aboveSince": "2026-09-11T09:00:00Z",
       "title": "{{partner:ESD-SE-07}} — Strategic Partner drift",
-      "headline": "{{partner:ESD-SE-07}} (synthetic) — friction 3.1× its own baseline for six weeks; recontact 38% vs 14%; {{platform:EST4}} sell-in −22% vs the same weeks last year",
+      "headline": "{{partner:ESD-SE-07}} — friction 3.1× its own baseline for six weeks; recontact 38% vs 14%; {{platform:EST4}} sell-in −22% vs the same weeks last year",
       "metric": {
         "display": "13 → 40",
         "value": 40,
@@ -487,7 +515,7 @@
       "joinTags": [
         {
           "key": "PARTNER",
-          "value": "{{partner:ESD-SE-07}} (synthetic)"
+          "value": "{{partner:ESD-SE-07}}"
         },
         {
           "key": "REGION",
@@ -521,8 +549,12 @@
       },
       "routing": {
         "owner": "Regional GM NA",
-        "cc": ["VP Service & Tech Support"],
-        "informed": ["Learning Center manager"]
+        "cc": [
+          "VP Service & Tech Support"
+        ],
+        "informed": [
+          "Learning Center manager"
+        ]
       },
       "recommendedAction": "Regional GM visit with a named L3 engineer and two priority {{platform:EST4}} class seats.",
       "gates": [
@@ -533,7 +565,9 @@
           "title": "Partner-recovery brief — awaiting Regional GM approval · no outreach sent",
           "chip": "Awaiting approval",
           "owner": "Regional GM NA",
-          "approveEnabledFor": ["Regional GM NA"],
+          "approveEnabledFor": [
+            "Regional GM NA"
+          ],
           "approveLabel": "Approve recovery brief",
           "disabledTooltip": "Approval sits with Regional GM NA"
         }
@@ -550,7 +584,9 @@
       "id": "n3-backorder",
       "displayId": "SIG-2609-004",
       "question": "channel",
-      "ucIds": ["UC-C-6"],
+      "ucIds": [
+        "UC-C-6"
+      ],
       "rank": 4,
       "rankOf": 5,
       "rankScore": 0.58,
@@ -589,11 +625,11 @@
       "aboveThreshold": true,
       "aboveSince": "2026-09-22T09:00:00Z",
       "title": "Notification family N-3 — backorder consequence",
-      "headline": "Notification family N-3 (synthetic) — cancel and substitute language 3.2× across 11 NA partners; OTD 94% against revised promise dates, 71% against the original",
+      "headline": "Notification family N-3 — cancel and substitute language 3.2× across 11 NA partners; OTD 94% against revised promise dates, 71% against the original",
       "metric": {
         "display": "3.2×",
         "value": 3.2,
-        "baseline": 1.0,
+        "baseline": 1,
         "ratio": 3.2,
         "unit": "consequence language vs own baseline",
         "line": "Cancel / substitute language 3.2× its own baseline in week 26 · 312 lines pushed ≥3 weeks · 4 projects with inspections within 30 days"
@@ -629,7 +665,7 @@
       "joinTags": [
         {
           "key": "PRODUCT",
-          "value": "Notification family N-3 (synthetic)"
+          "value": "Notification family N-3"
         },
         {
           "key": "REGION",
@@ -663,7 +699,9 @@
       },
       "routing": {
         "owner": "VP Supply Chain",
-        "cc": ["VP Sales"]
+        "cc": [
+          "VP Sales"
+        ]
       },
       "recommendedAction": "Review allocation with the 4 inspection-critical projects first.",
       "gates": [
@@ -674,7 +712,9 @@
           "title": "Allocation priority list — awaiting Supply Chain approval · no partner messages sent",
           "chip": "Awaiting approval",
           "owner": "VP Supply Chain",
-          "approveEnabledFor": ["VP Supply Chain"],
+          "approveEnabledFor": [
+            "VP Supply Chain"
+          ],
           "approveLabel": "Approve allocation list",
           "disabledTooltip": "Approval sits with VP Supply Chain"
         }
@@ -691,7 +731,9 @@
       "id": "ukeu-entity-cutover",
       "displayId": "SIG-2609-005",
       "question": "separation",
-      "ucIds": ["UC-C-3"],
+      "ucIds": [
+        "UC-C-3"
+      ],
       "rank": 5,
       "rankOf": 5,
       "rankScore": 0.52,
@@ -722,22 +764,22 @@
         },
         {
           "label": "Est. exposure",
-          "value": "£1.1m in dispute",
+          "value": "$1.4m in dispute",
           "weight": 0.15,
           "score": 0.15
         }
       ],
       "aboveThreshold": true,
       "aboveSince": "2026-09-10T09:00:00Z",
-      "title": "{{region:UK-EU}} entity cutover — remit-to and invoice friction",
-      "headline": "{{region:UK-EU}} entity cutover (1 Sep) — remit-to and entity contacts 2.7× pre-cutover against 1.1× in the control regions; portal login 3.4×; 14 distributors",
+      "title": "{{region:US}} entity cutover — remit-to and invoice friction",
+      "headline": "{{region:US}} entity cutover (1 Sep) — remit-to and entity contacts 2.7× pre-cutover against 1.1× in Canada and other regions; portal login 3.4×; 14 distributors",
       "metric": {
         "display": "30 → 81 / wk",
         "value": 81,
         "baseline": 30,
         "ratio": 2.7,
         "unit": "remit-to & entity contacts per week",
-        "line": "81 remit-to and entity contacts in week 26 vs 30 a week before the cutover · control regions 1.1× · difference-in-differences"
+        "line": "81 remit-to and entity contacts in week 26 vs 30 a week before the cutover · Canada and other regions 1.1× · difference-in-differences"
       },
       "severity": {
         "class": "S2",
@@ -746,7 +788,7 @@
         "type": "cliff",
         "typeNote": "Cliff (step at cutover)",
         "blastRadius": {
-          "headline": "Blast radius 14 distributors · 212 invoices · £1.1m in dispute"
+          "headline": "Blast radius 14 distributors · 212 invoices · $1.4m in dispute"
         },
         "incident": {
           "flag": "n/a",
@@ -769,7 +811,7 @@
       "joinTags": [
         {
           "key": "REGION",
-          "value": "{{region:UK-EU}}"
+          "value": "{{region:US}}"
         },
         {
           "key": "DISTRIBUTORS",
@@ -791,11 +833,11 @@
       "pnl": {
         "primary": "DSO",
         "secondary": "cost-to-serve",
-        "compact": "P&L → DSO · £1.1m in dispute",
+        "compact": "P&L → DSO · $1.4m in dispute",
         "exposure": {
           "lines": [
             {
-              "text": "Invoices in dispute £1.1m / 212 · DSO +6 days ≈ £1.0m cash tied up",
+              "text": "Invoices in dispute $1.4m / 212 · DSO +6 days ≈ $1.0m cash tied up",
               "valueId": "V-08"
             },
             {
@@ -807,7 +849,10 @@
       },
       "routing": {
         "owner": "CIO / separation PMO",
-        "cc": ["CFO", "Regional GM UK-EU"]
+        "cc": [
+          "CFO",
+          "Regional GM US"
+        ]
       },
       "recommendedAction": "Candidate: PO-entity mapping in the EDI layer — engineering to confirm. CFO to decide on a dunning pause.",
       "gates": [
@@ -819,7 +864,9 @@
           "chip": "Awaiting triage",
           "auditLine": "Drafted by LiSN 10 Sep 09:00 UTC · routed 09:00",
           "owner": "CIO / separation PMO",
-          "approveEnabledFor": ["CIO / separation PMO"],
+          "approveEnabledFor": [
+            "CIO / separation PMO"
+          ],
           "approveLabel": "Accept for triage",
           "disabledTooltip": "Triage sits with CIO / separation PMO"
         },
@@ -827,12 +874,14 @@
           "id": "gate-ukeu-notice",
           "artefactType": "distributor-notice",
           "status": "not_sent",
-          "title": "Distributor notice (corrected remit-to) — awaiting Regional GM {{region:UK-EU}} approval · not sent",
+          "title": "Distributor notice (corrected remit-to) — awaiting Regional GM {{region:US}} approval · not sent",
           "chip": "Not sent",
-          "owner": "Regional GM UK-EU",
-          "approveEnabledFor": ["Regional GM UK-EU"],
+          "owner": "Regional GM US",
+          "approveEnabledFor": [
+            "Regional GM US"
+          ],
           "approveLabel": "Approve notice",
-          "disabledTooltip": "Approval sits with Regional GM {{region:UK-EU}}"
+          "disabledTooltip": "Approval sits with Regional GM {{region:US}}"
         },
         {
           "id": "gate-ukeu-dunning",
@@ -841,7 +890,9 @@
           "title": "Dunning pause on disputed invoices — CFO decision",
           "chip": "CFO decision",
           "owner": "CFO",
-          "approveEnabledFor": ["CFO"],
+          "approveEnabledFor": [
+            "CFO"
+          ],
           "approveLabel": "Approve dunning pause",
           "disabledTooltip": "Decision sits with CFO"
         }
@@ -858,7 +909,9 @@
       "id": "evidence-readiness",
       "displayId": "SIG-2609-E01",
       "question": "installed-base",
-      "ucIds": ["UC-Q-17"],
+      "ucIds": [
+        "UC-Q-17"
+      ],
       "aboveThreshold": false,
       "title": "Evidence readiness",
       "headline": "Firmware recorded on 38% of {{platform:EST4}} trouble cases; recoverable from text for 61% of the rest; serial/date code on 44% of RMAs; end-site on 57%.",
@@ -912,7 +965,10 @@
       },
       "routing": {
         "owner": "Quality",
-        "cc": ["VP Service & Tech Support", "CIO / separation PMO"]
+        "cc": [
+          "VP Service & Tech Support",
+          "CIO / separation PMO"
+        ]
       },
       "recommendedAction": "Discovery measures this first — on your data.",
       "gates": [],
@@ -937,7 +993,7 @@
         },
         {
           "label": "COHORT",
-          "value": "{{platform:EST4}} · fw {{fw:EST4@4.1}} (synthetic)"
+          "value": "{{platform:EST4}} · fw {{fw:EST4@4.1}}"
         },
         {
           "label": "WINDOW",
@@ -961,7 +1017,54 @@
       "pnlShort": "Warranty & field",
       "suggestion": "Reproduce on configurations with more than two signalling loops. Owner to decide whether to pause the staged {{fw:EST4@4.1}} rollout.",
       "linkTo": "/installed-base/signal/fw-4-1",
-      "gateChipAfterApprove": "✓ Investigation approved"
+      "gateChipAfterApprove": "✓ Investigation approved",
+      "titleShort": "{{platform:EST4}} fw {{fw:EST4@4.1}} — devices not found",
+      "sourcesShort": "Calls · Cases · RMA · +2",
+      "metricsCompact": [
+        {
+          "label": "Contacts / 1,000 panel-weeks",
+          "value": "2.0 → 6.2",
+          "change": "3.1×"
+        },
+        {
+          "label": "Panels on version",
+          "value": "1,240",
+          "change": ""
+        },
+        {
+          "label": "Partners · regions",
+          "value": "9 · 3"
+        }
+      ],
+      "confidenceCompact": "M 0.70",
+      "ownerGateShort": "VP Engineering · Awaiting approval",
+      "suggestionShort": "Reproduce on multi-loop configs. Owner decides whether to pause the {{fw:EST4@4.1}} rollout.",
+      "compact": {
+        "title": "{{platform:EST4}} fw {{fw:EST4@4.1}} — Devices Not Found",
+        "channel": "Calls, Cases",
+        "topIssue": "Devices lost after upgrade",
+        "topIssueSub": "Material impact · Warranty & field",
+        "time": "Decide before 7 Oct review",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Fault contacts / 1k panel-wks",
+            "value": "2.0 → 6.2",
+            "delta": "↑ 3.1×"
+          },
+          {
+            "label": "Panels on fw {{fw:EST4@4.1}}",
+            "value": "1,240"
+          },
+          {
+            "label": "Partners reporting",
+            "value": "9",
+            "sub": "3 regions"
+          }
+        ],
+        "callout": "Faults cluster on multi-loop panels after the {{fw:EST4@4.1}} upgrade. VP Engineering to decide whether to pause the staged rollout."
+      },
+      "urgency": "critical"
     },
     {
       "signalId": "dc-d2-2611",
@@ -980,7 +1083,7 @@
         },
         {
           "label": "COHORT",
-          "value": "Detector family D-2 · date codes 2611–2614 (synthetic)"
+          "value": "Detector family D-2 · date codes 2611–2614"
         },
         {
           "label": "WINDOW",
@@ -1007,11 +1110,152 @@
       "pnlShort": "Warranty & containment",
       "suggestion": "Sample return and teardown. Quality to decide on quarantine of units still in distributor stock.",
       "linkTo": "/installed-base#date-code",
-      "microStrip": true
+      "microStrip": true,
+      "titleShort": "D-2 early-life failures · date codes 2611–2614",
+      "sourcesShort": "Calls · Cases · RMA",
+      "metricsCompact": [
+        {
+          "label": "Early-life contacts / 10k units",
+          "value": "1.1 → 4.6",
+          "change": "4.2×"
+        },
+        {
+          "label": "Units in window",
+          "value": "4,800",
+          "change": "1,900 in stock"
+        },
+        {
+          "label": "SKU return rate",
+          "value": "0.21%",
+          "change": "limit 0.30%"
+        }
+      ],
+      "confidenceCompact": "M 0.65",
+      "ownerGateShort": "Director Product Quality · Awaiting approval",
+      "suggestionShort": "Sample return and teardown. Quality decides on quarantine of distributor stock.",
+      "compact": {
+        "title": "D-2 Early-Life Failures",
+        "channel": "Calls, RMA",
+        "topIssue": "Early-life failures",
+        "topIssueSub": "Date codes 2611–2614",
+        "time": "Last 6 weeks",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Early-life contacts / 10k units",
+            "value": "1.1 → 4.6",
+            "delta": "↑ 4.2×"
+          },
+          {
+            "label": "Units in window",
+            "value": "4,800",
+            "sub": "1,900 in stock"
+          },
+          {
+            "label": "SKU return rate",
+            "value": "0.21%",
+            "sub": "limit 0.30%"
+          }
+        ],
+        "callout": "Failures concentrate in four date codes. Director Product Quality to decide on sample teardown and quarantine."
+      },
+      "urgency": "critical"
+    },
+    {
+      "signalId": "ukeu-entity-cutover",
+      "rank": 3,
+      "title": "{{region:US}} entity cutover — remit-to and invoice friction",
+      "chips": {
+        "class": "S2",
+        "word": "Material impact",
+        "domain": "Separation",
+        "type": "Cliff"
+      },
+      "rows": [
+        {
+          "label": "SOURCES",
+          "value": "Email · Cases · Portal"
+        },
+        {
+          "label": "COHORT",
+          "value": "{{region:US}} · 14 distributors"
+        },
+        {
+          "label": "WINDOW",
+          "value": "Since 1 Sep"
+        },
+        {
+          "label": "OWNER",
+          "value": "CIO / separation PMO"
+        }
+      ],
+      "metrics": [
+        {
+          "label": "Remit-to contacts vs pre-cutover",
+          "value": "2.7× (control 1.1×)"
+        },
+        {
+          "label": "Portal login",
+          "value": "3.4×"
+        }
+      ],
+      "blastRadius": "14 distributors · $1.4m in dispute",
+      "confidenceShort": "H on timing (K) · M on cause (I)",
+      "ownerGate": "CIO / separation PMO · Defect ticket awaiting triage",
+      "pnlShort": "DSO",
+      "suggestion": "Candidate: PO-entity mapping in the EDI layer — engineering to confirm. CFO to decide on a dunning pause.",
+      "linkTo": "/separation",
+      "titleShort": "{{region:US}} entity cutover — remit-to friction",
+      "sourcesShort": "Email · Cases · Portal",
+      "metricsCompact": [
+        {
+          "label": "Remit-to contacts / wk",
+          "value": "30 → 81",
+          "change": "2.7×"
+        },
+        {
+          "label": "Control regions",
+          "value": "1.1×"
+        },
+        {
+          "label": "Portal login",
+          "value": "3.4×"
+        }
+      ],
+      "confidenceCompact": "H 0.80",
+      "ownerGateShort": "CIO / separation PMO · Awaiting triage",
+      "suggestionShort": "Confirm PO-entity mapping in EDI. CFO decides on a dunning pause.",
+      "compact": {
+        "title": "{{region:US}} Cutover Friction",
+        "channel": "Email, Portal",
+        "topIssue": "Invoice entity mismatch",
+        "topIssueSub": "14 distributors",
+        "time": "Since 1 Sep",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Remit-to contacts",
+            "value": "30 → 81",
+            "delta": "↑ 2.7×",
+            "sub": "control 1.1×"
+          },
+          {
+            "label": "Portal login issues",
+            "value": "3.4×",
+            "delta": "↑ 3.4×"
+          },
+          {
+            "label": "Distributors affected",
+            "value": "14"
+          }
+        ],
+        "callout": "Invoicing breaks since the entity cutover, not in Canada and other regions. CIO / separation PMO to confirm the EDI mapping."
+      },
+      "urgency": "critical"
     },
     {
       "signalId": "esd-se-07",
-      "rank": 3,
+      "rank": 4,
       "title": "{{partner:ESD-SE-07}} — Strategic Partner drift",
       "chips": {
         "class": "S2",
@@ -1026,7 +1270,7 @@
         },
         {
           "label": "COHORT",
-          "value": "{{partner:ESD-SE-07}} (synthetic) · {{region:US-SE}}"
+          "value": "{{partner:ESD-SE-07}} · {{region:US-SE}}"
         },
         {
           "label": "WINDOW",
@@ -1053,11 +1297,59 @@
       "ownerGate": "Regional GM NA · Recovery brief awaiting approval · no outreach sent",
       "pnlShort": "Partner revenue",
       "suggestion": "Regional GM visit with a named L3 engineer and two priority {{platform:EST4}} class seats.",
-      "linkTo": "/channel#esd-se-07"
+      "linkTo": "/channel#esd-se-07",
+      "titleShort": "{{partner:ESD-SE-07}} — Strategic Partner drift",
+      "sourcesShort": "Calls · Cases · Email · +1",
+      "metricsCompact": [
+        {
+          "label": "Interactions, 6 wks",
+          "value": "13 → 40",
+          "change": "3.1×"
+        },
+        {
+          "label": "Recontact",
+          "value": "14% → 38%"
+        },
+        {
+          "label": "{{platform:EST4}} sell-in vs LY",
+          "value": "−22%",
+          "change": "peers +4%"
+        }
+      ],
+      "confidenceCompact": "H 0.80",
+      "ownerGateShort": "Regional GM NA · Awaiting approval",
+      "suggestionShort": "Regional GM visit with an L3 engineer and two priority {{platform:EST4}} class seats.",
+      "compact": {
+        "title": "{{partner:ESD-SE-07}} Partner Drift",
+        "channel": "Calls, Email",
+        "topIssue": "Partner friction rising",
+        "topIssueSub": "Competitor named in 4 calls",
+        "time": "Last 6 weeks",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Interactions",
+            "value": "13 → 40",
+            "delta": "↑ 3.1×"
+          },
+          {
+            "label": "Recontact rate",
+            "value": "14% → 38%",
+            "delta": "↑ 24 pts"
+          },
+          {
+            "label": "{{platform:EST4}} sell-in vs LY",
+            "value": "−22%",
+            "sub": "peers +4%"
+          }
+        ],
+        "callout": "A strategic partner is drifting and naming a competitor. Regional GM NA to decide on a recovery visit."
+      },
+      "urgency": "high"
     },
     {
       "signalId": "n3-backorder",
-      "rank": 4,
+      "rank": 5,
       "title": "Notification family N-3 — backorder consequence",
       "chips": {
         "class": "S2",
@@ -1072,7 +1364,7 @@
         },
         {
           "label": "COHORT",
-          "value": "Notification family N-3 (synthetic) · 11 NA partners"
+          "value": "Notification family N-3 · 11 NA partners"
         },
         {
           "label": "WINDOW",
@@ -1098,52 +1390,250 @@
       "ownerGate": "VP Supply Chain · Allocation list awaiting approval",
       "pnlShort": "Backlog conversion",
       "suggestion": "Review allocation with the 4 inspection-critical projects first.",
-      "linkTo": "/channel#backorder"
+      "linkTo": "/channel#backorder",
+      "titleShort": "Notification family N-3 — backorder consequence",
+      "sourcesShort": "Email · Order desk · Calls",
+      "metricsCompact": [
+        {
+          "label": "Cancel / substitute language",
+          "value": "1.0 → 3.2",
+          "change": "3.2×"
+        },
+        {
+          "label": "OTD vs promise",
+          "value": "94% revised",
+          "change": "71% original"
+        },
+        {
+          "label": "Lines · partners",
+          "value": "312 · 11"
+        }
+      ],
+      "confidenceCompact": "H 0.75",
+      "ownerGateShort": "VP Supply Chain · Awaiting approval",
+      "suggestionShort": "Review allocation with the 4 inspection-critical projects first.",
+      "compact": {
+        "title": "N-3 Backorder Risk",
+        "channel": "Email, Order desk",
+        "topIssue": "Cancel / substitute language",
+        "topIssueSub": "11 NA partners",
+        "time": "Weeks 21–26",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Cancel / substitute mentions",
+            "value": "1.0 → 3.2",
+            "delta": "↑ 3.2×"
+          },
+          {
+            "label": "On-time vs promise",
+            "value": "94% → 71%",
+            "sub": "revised → original"
+          },
+          {
+            "label": "Backorder lines",
+            "value": "312",
+            "sub": "11 partners"
+          }
+        ],
+        "callout": "Partners are threatening to switch on late orders. VP Supply Chain to decide allocation, inspection-critical projects first."
+      },
+      "urgency": "high"
     },
     {
-      "signalId": "ukeu-entity-cutover",
-      "rank": 5,
-      "title": "{{region:UK-EU}} entity cutover — remit-to and invoice friction",
+      "signalId": "est3-est4-upgrade-interest",
+      "rank": 6,
+      "urgency": "watch",
+      "illustrativeOnly": true,
+      "title": "{{platform:EST3}} → {{platform:EST4}} Upgrade Interest",
+      "titleShort": "{{platform:EST3}} → {{platform:EST4}} Upgrade Interest",
       "chips": {
-        "class": "S2",
-        "word": "Material impact",
-        "domain": "Separation",
-        "type": "Cliff"
+        "class": "S3",
+        "word": "Watch",
+        "domain": "Channel",
+        "type": "Slope"
       },
       "rows": [
         {
           "label": "SOURCES",
-          "value": "Email · Cases · Portal"
+          "value": "Calls · Quotes"
         },
         {
           "label": "COHORT",
-          "value": "{{region:UK-EU}} · 14 distributors"
+          "value": "Legacy {{platform:EST3}} sites"
         },
         {
           "label": "WINDOW",
-          "value": "Since 1 Sep"
+          "value": "8 weeks"
         },
         {
           "label": "OWNER",
-          "value": "CIO / separation PMO"
+          "value": "VP Sales"
         }
       ],
+      "sourcesShort": "Calls · Quotes",
       "metrics": [
         {
-          "label": "Remit-to contacts vs pre-cutover",
-          "value": "2.7× (control 1.1×)"
+          "label": "Upgrade questions / wk",
+          "value": "22 → 41",
+          "change": "1.9×"
         },
         {
-          "label": "Portal login",
-          "value": "3.4×"
+          "label": "Sites asking",
+          "value": "240"
+        },
+        {
+          "label": "Quotes opened",
+          "value": "38"
         }
       ],
-      "blastRadius": "14 distributors · £1.1m in dispute",
-      "confidenceShort": "H on timing (K) · M on cause (I)",
-      "ownerGate": "CIO / separation PMO · Defect ticket awaiting triage",
-      "pnlShort": "DSO",
-      "suggestion": "Candidate: PO-entity mapping in the EDI layer — engineering to confirm. CFO to decide on a dunning pause.",
-      "linkTo": "/separation"
+      "metricsCompact": [
+        {
+          "label": "Upgrade questions / wk",
+          "value": "22 → 41",
+          "change": "1.9×"
+        },
+        {
+          "label": "Sites asking",
+          "value": "240"
+        },
+        {
+          "label": "Quotes opened",
+          "value": "38"
+        }
+      ],
+      "blastRadius": "Illustrative only",
+      "confidenceShort": "Illustrative",
+      "confidenceCompact": "Illustrative",
+      "ownerGate": "VP Sales · Migration offer not drafted",
+      "ownerGateShort": "VP Sales · Migration offer not drafted",
+      "pnlShort": "Illustrative",
+      "suggestion": "Legacy {{platform:EST3}} sites are asking about upgrades. VP Sales to decide on a targeted migration offer.",
+      "suggestionShort": "Legacy {{platform:EST3}} sites are asking about upgrades. VP Sales to decide on a targeted migration offer.",
+      "linkTo": "/",
+      "compact": {
+        "title": "{{platform:EST3}} → {{platform:EST4}} Upgrade Interest",
+        "channel": "Calls, Quotes",
+        "topIssue": "Upgrade questions from legacy sites",
+        "topIssueSub": "Aftermarket opportunity",
+        "time": "Last 8 weeks",
+        "severityWord": "WATCH",
+        "metrics": [
+          {
+            "label": "Upgrade questions / wk",
+            "value": "22 → 41",
+            "delta": "↑ 1.9×",
+            "deltaTone": "opportunity"
+          },
+          {
+            "label": "Sites asking",
+            "value": "240"
+          },
+          {
+            "label": "Quotes opened",
+            "value": "38",
+            "sub": "no follow-up on 15"
+          }
+        ],
+        "callout": "Legacy {{platform:EST3}} sites are asking about upgrades. VP Sales to decide on a targeted migration offer."
+      }
+    },
+    {
+      "signalId": "connected-services-setup",
+      "rank": 7,
+      "urgency": "watch",
+      "illustrativeOnly": true,
+      "title": "Connected Services Setup Friction",
+      "titleShort": "Connected Services Setup Friction",
+      "chips": {
+        "class": "S3",
+        "word": "Watch",
+        "domain": "Enabler",
+        "type": "Slope"
+      },
+      "rows": [
+        {
+          "label": "SOURCES",
+          "value": "Portal · Calls"
+        },
+        {
+          "label": "COHORT",
+          "value": "Connected services subscribers"
+        },
+        {
+          "label": "WINDOW",
+          "value": "4 weeks"
+        },
+        {
+          "label": "OWNER",
+          "value": "VP Service & Tech Support"
+        }
+      ],
+      "sourcesShort": "Portal · Calls",
+      "metrics": [
+        {
+          "label": "Setup contacts / wk",
+          "value": "15 → 27",
+          "change": "1.8×"
+        },
+        {
+          "label": "Subscriptions renewing",
+          "value": "320"
+        },
+        {
+          "label": "Alert-fatigue mentions",
+          "value": "↑ 1.4×"
+        }
+      ],
+      "metricsCompact": [
+        {
+          "label": "Setup contacts / wk",
+          "value": "15 → 27",
+          "change": "1.8×"
+        },
+        {
+          "label": "Subscriptions renewing",
+          "value": "320"
+        },
+        {
+          "label": "Alert-fatigue mentions",
+          "value": "↑ 1.4×"
+        }
+      ],
+      "blastRadius": "Illustrative only",
+      "confidenceShort": "Illustrative",
+      "confidenceCompact": "Illustrative",
+      "ownerGate": "Connected services owner · Onboarding not drafted",
+      "ownerGateShort": "Connected services owner · Onboarding not drafted",
+      "pnlShort": "Illustrative",
+      "suggestion": "Setup friction is rising ahead of renewals. Connected services owner to decide on proactive onboarding.",
+      "suggestionShort": "Setup friction is rising ahead of renewals. Connected services owner to decide on proactive onboarding.",
+      "linkTo": "/",
+      "compact": {
+        "title": "Connected Services Setup Friction",
+        "channel": "Portal, Calls",
+        "topIssue": "Login and alert-setup issues",
+        "topIssueSub": "Renewal wave in 90 days",
+        "time": "Last 4 weeks",
+        "severityWord": "WATCH",
+        "metrics": [
+          {
+            "label": "Setup contacts / wk",
+            "value": "15 → 27",
+            "delta": "↑ 1.8×"
+          },
+          {
+            "label": "Subscriptions renewing",
+            "value": "320",
+            "sub": "next 90 days"
+          },
+          {
+            "label": "Alert-fatigue mentions",
+            "value": "↑ 1.4×"
+          }
+        ],
+        "callout": "Setup friction is rising ahead of renewals. Connected services owner to decide on proactive onboarding."
+      }
     }
   ],
   "suppressedCard": {
