@@ -14,7 +14,11 @@ import hashlib
 import json
 import os
 import re
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from pii_names import ALLEGATION, redact_names  # noqa: E402  (shared with scripts/check_pii.py)
 
 ROOT = Path(__file__).resolve().parents[2]
 RAW = ROOT / "data" / "raw" / "hdfc_jul_sep"
@@ -65,7 +69,7 @@ CARE_VOICE_RE = re.compile(
     r"^(dear|hi|hello|hey)\b.{0,80}?(please (let us know|share|dm|connect|reach)|we (are|'re|would|'d) (truly |really )?(sorry|like|here|glad)|our team|kindly (connect|share|dm))",
     re.I,
 )
-LEADING_HANDLES_RE = re.compile(r"^(?:\s*(?:\[handle\]|@\w+))+\s*")
+LEADING_HANDLES_RE = re.compile(r"^(?:\s*(?:\[[a-z ]+\]|@\w+))+\s*")
 BRAND_HANDLE_RE = re.compile(r"(bank|care|cares|support|official|help|npci|rbi|_in$)", re.I)
 
 # ------------------------------------------------------------------ redaction (B3b stage 2)
@@ -78,9 +82,12 @@ REDACT = [
     (re.compile(r"(?:ending|last\s*4|xx+|\*{2,})\s*(\d{4})\b", re.I), r"ending \1"),
     (re.compile(r"\b(?:\d[ -]?){12,19}\b"), "[account]"),
     (re.compile(r"\b[A-Z]{1,4}\d{6,}\b"), "[reference]"),
+    # Ticket, case and complaint numbers, whatever punctuation follows them.
+    (re.compile(r"\b((?:ticket|case|complaint|reference|ref|sr|srn|request)\s*(?:no\.?|number|id)?\s*[:#.]?\s*)\d{6,}", re.I), r"\1[reference]"),
     (re.compile(r"(?<![\d.,₹])\d{6,}(?![\d.,])"), "[number]"),
 ]
-HANDLE_RE = re.compile(r"@(\w{2,30})")
+# Role tags that pii_names puts where a person was named (handles become [handle]).
+PERSON_TAG_RE = re.compile(r"\[(bank executive|public official|public figure|staff member|named third party|named person)\]")
 
 
 def redact(text: str | None) -> str:
@@ -89,8 +96,8 @@ def redact(text: str | None) -> str:
     s = text
     for rx, rep in REDACT:
         s = rx.sub(rep, s)
-    # Keep bank and public-institution handles; replace people's handles.
-    s = HANDLE_RE.sub(lambda m: m.group(0) if re.search(r"hdfc|rbi|npci|finmin|nsitharaman|pmo|sebi|irdai", m.group(1), re.I) else "[handle]", s)
+    # People's names and handles become role tags; only institutional handles on an exact allowlist survive.
+    s = redact_names(s)
     return s.strip()
 
 
@@ -256,6 +263,9 @@ def main():
             r["entity"] = "other_group"
         if not r["text"] and not r.get("title"):
             r["relevant"] = "off_topic"
+        # A quote that named a person is never used as evidence when it alleges something against them.
+        r["names_person"] = bool(PERSON_TAG_RE.search(full))
+        r["alleges_named"] = r["names_person"] and bool(ALLEGATION.search(full))
         out.append(r)
     with open(WORK / "normalised.jsonl", "w", encoding="utf-8") as f:
         for r in out:

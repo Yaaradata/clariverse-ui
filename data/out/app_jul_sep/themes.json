@@ -28,11 +28,11 @@
    "owner_label": "Digital",
    "business": "retail_banking",
    "definition": "Positive app reviews: easy, fast, useful, smooth.",
-   "count": 5742,
+   "count": 5741,
    "count_group_companies": 0,
-   "primary_count": 5739,
+   "primary_count": 5738,
    "by_source": {
-    "playstore": 5529,
+    "playstore": 5528,
     "appstore": 204,
     "x": 2,
     "reddit": 5,
@@ -45,10 +45,10 @@
     "loans": 32,
     "corporate": 7,
     "sme_merchant": 23,
-    "wealth": 584
+    "wealth": 583
    },
    "sentiment": {
-    "positive": 5742,
+    "positive": 5741,
     "neutral": 0,
     "negative": 0
    },
@@ -94,7 +94,7 @@
     },
     {
      "week": "2026-08-24",
-     "count": 170
+     "count": 169
     },
     {
      "week": "2026-08-31",
@@ -152,7 +152,7 @@
     },
     {
      "week": "2026-08-24",
-     "count": 351
+     "count": 350
     },
     {
      "week": "2026-08-31",
@@ -178,17 +178,17 @@
    "trend": {
     "mode": "trend_within_window",
     "first_half": 1793,
-    "second_half": 1280,
+    "second_half": 1279,
     "first_half_total": 6049,
     "second_half_total": 5992,
-    "change_pct": -27.9,
+    "change_pct": -28.0,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
    "vs_baseline": null,
    "trend_mode": "trend_within_window",
    "basis_share": 53.5,
-   "rise_pct": -27.9,
+   "rise_pct": -28.0,
    "first_seen": "2026-07-01T00:15:56+05:30",
    "latest": "2026-09-28T12:21:54+05:30",
    "rung": "Voice",
@@ -213,18 +213,18 @@
    "owner_label": "CX",
    "business": "retail_banking",
    "definition": "Negative without a specific issue: 'worst bank', 'pathetic service'.",
-   "count": 2350,
+   "count": 2349,
    "count_group_companies": 0,
-   "primary_count": 2213,
+   "primary_count": 2212,
    "by_source": {
     "playstore": 1866,
-    "appstore": 121,
+    "appstore": 120,
     "x": 207,
     "reddit": 91,
     "forum": 65
    },
    "by_business": {
-    "retail_banking": 936,
+    "retail_banking": 935,
     "cards": 132,
     "payments": 1105,
     "loans": 94,
@@ -235,7 +235,7 @@
    "sentiment": {
     "positive": 1,
     "neutral": 8,
-    "negative": 2341
+    "negative": 2340
    },
    "share_negative": 99.6,
    "escalation_count": 42,
@@ -295,7 +295,7 @@
     },
     {
      "week": "2026-09-21",
-     "count": 154
+     "count": 153
     },
     {
      "week": "2026-09-28",
@@ -353,7 +353,7 @@
     },
     {
      "week": "2026-09-21",
-     "count": 236
+     "count": 235
     },
     {
      "week": "2026-09-28",
@@ -363,17 +363,17 @@
    "trend": {
     "mode": "trend_within_window",
     "first_half": 883,
-    "second_half": 722,
+    "second_half": 721,
     "first_half_total": 6049,
     "second_half_total": 5992,
-    "change_pct": -17.5,
+    "change_pct": -17.6,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
    "vs_baseline": null,
    "trend_mode": "trend_within_window",
    "basis_share": 68.3,
-   "rise_pct": -17.5,
+   "rise_pct": -17.6,
    "first_seen": "2026-07-01T07:32:40+05:30",
    "latest": "2026-09-28T15:53:59+05:30",
    "rung": "Voice",
@@ -409,9 +409,9 @@
     "forum": 2
    },
    "by_business": {
-    "retail_banking": 1042,
+    "retail_banking": 1041,
     "cards": 27,
-    "payments": 839,
+    "payments": 840,
     "loans": 56,
     "corporate": 1,
     "sme_merchant": 21,
@@ -778,9 +778,9 @@
    },
    "by_business": {
     "cards": 36,
-    "retail_banking": 368,
+    "retail_banking": 367,
     "loans": 20,
-    "payments": 436,
+    "payments": 437,
     "sme_merchant": 11,
     "wealth": 4,
     "corporate": 1
@@ -2208,7 +2208,7 @@
    "rung": "RBI Ombudsman",
    "exemplars": [
     "x:2089738829033046492",
-    "x:2089762403869438008",
+    "x:2089760657738711093",
     "reddit:1uz1ove",
     "reddit:comment:ov4x0ib",
     "technofino_1237524"
@@ -2238,11 +2238,11 @@
     "forum": 41
    },
    "by_business": {
-    "retail_banking": 168,
+    "retail_banking": 166,
     "cards": 62,
     "loans": 21,
     "sme_merchant": 2,
-    "payments": 101,
+    "payments": 103,
     "wealth": 1
    },
    "sentiment": {
@@ -2776,32 +2776,32 @@
    "owner_label": "Retail",
    "business": "retail_banking",
    "definition": "Branch visits, staff behaviour, rudeness, being sent to the home branch.",
-   "count": 289,
+   "count": 292,
    "count_group_companies": 0,
-   "primary_count": 160,
+   "primary_count": 162,
    "by_source": {
-    "playstore": 56,
-    "appstore": 7,
+    "playstore": 58,
+    "appstore": 8,
     "x": 129,
     "reddit": 53,
     "forum": 44
    },
    "by_business": {
-    "retail_banking": 211,
+    "retail_banking": 213,
     "cards": 39,
     "loans": 17,
     "sme_merchant": 4,
-    "wealth": 9,
+    "wealth": 10,
     "payments": 9
    },
    "sentiment": {
-    "positive": 26,
+    "positive": 28,
     "neutral": 39,
-    "negative": 224
+    "negative": 225
    },
-   "share_negative": 77.5,
+   "share_negative": 77.1,
    "escalation_count": 35,
-   "share_escalation": 12.1,
+   "share_escalation": 12.0,
    "repeat_count": 30,
    "status_seeking_count": 35,
    "promise_break_count": 23,
@@ -2841,7 +2841,7 @@
     },
     {
      "week": "2026-08-24",
-     "count": 17
+     "count": 18
     },
     {
      "week": "2026-08-31",
@@ -2857,7 +2857,7 @@
     },
     {
      "week": "2026-09-21",
-     "count": 65
+     "count": 66
     },
     {
      "week": "2026-09-28",
@@ -2895,11 +2895,11 @@
     },
     {
      "week": "2026-08-17",
-     "count": 19
+     "count": 20
     },
     {
      "week": "2026-08-24",
-     "count": 24
+     "count": 25
     },
     {
      "week": "2026-08-31",
@@ -2915,7 +2915,7 @@
     },
     {
      "week": "2026-09-21",
-     "count": 69
+     "count": 70
     },
     {
      "week": "2026-09-28",
@@ -2925,29 +2925,29 @@
    "trend": {
     "mode": "trend_within_window",
     "first_half": 103,
-    "second_half": 125,
+    "second_half": 127,
     "first_half_total": 6049,
     "second_half_total": 5992,
-    "change_pct": 22.5,
+    "change_pct": 24.5,
     "first_half_dates": "2026-07-01 to 2026-08-14",
     "second_half_dates": "2026-08-15 to 2026-09-28"
    },
    "vs_baseline": null,
    "trend_mode": "trend_within_window",
-   "basis_share": 78.9,
-   "rise_pct": 22.5,
+   "basis_share": 78.8,
+   "rise_pct": 24.5,
    "first_seen": "2026-07-01T09:55:12+05:30",
    "latest": "2026-09-28T14:57:39+05:30",
    "rung": "Repeat",
    "exemplars": [
-    "x:2087116156645802139",
     "x:2103141620153782668",
     "reddit:comment:owas2mf",
+    "x:2103376090169532731",
     "reddit:comment:p2z56hd",
     "playstore:com.hdfc.smarthub:08dd9587-7ca0-422d-8ded-299c8dcade17"
    ],
    "last_day_count": 8,
-   "score": 72.89,
+   "score": 80.12,
    "status": "watching",
    "action": "Route with evidence"
   },
@@ -4592,8 +4592,8 @@
    "rung": "RBI Ombudsman",
    "exemplars": [
     "reddit:comment:ovpmckp",
-    "x:2091726609783115995",
-    "x:2091734455606300890",
+    "x:2079806316407832820",
+    "x:2089702545656840550",
     "reddit:1vdpstl",
     "technofino_1250814"
    ],
@@ -4621,8 +4621,8 @@
    },
    "by_business": {
     "cards": 76,
-    "retail_banking": 68,
-    "payments": 9,
+    "retail_banking": 67,
+    "payments": 10,
     "loans": 4,
     "wealth": 1
    },
@@ -6232,8 +6232,8 @@
    "rung": "Voice",
    "exemplars": [
     "reddit:1vhunk6",
-    "x:2091726609783115995",
-    "x:2091734455606300890",
+    "x:2097646252716625978",
+    "x:2089702545656840550",
     "reddit:comment:p287p2p",
     "playstore:com.hdfcbank.payzapp:f180ff1f-b713-44e0-aad0-ae9445b8d53c"
    ],
@@ -6261,8 +6261,8 @@
     "forum": 5
    },
    "by_business": {
-    "retail_banking": 13,
-    "payments": 59,
+    "retail_banking": 11,
+    "payments": 61,
     "sme_merchant": 3,
     "cards": 19,
     "loans": 1,
@@ -6806,8 +6806,8 @@
     "reddit": 2
    },
    "by_business": {
-    "retail_banking": 18,
-    "payments": 73,
+    "retail_banking": 17,
+    "payments": 74,
     "loans": 1
    },
    "sentiment": {
@@ -7320,8 +7320,8 @@
    "latest": "2026-09-28T12:39:17+05:30",
    "rung": "Voice",
    "exemplars": [
-    "x:2092887484351054147",
     "x:2092894433369055716",
+    "x:2079595090918707605",
     "reddit:1wr0rp1",
     "playstore:com.hdfcbank.payzapp:1052f234-709b-422c-9097-004df1bfab23",
     "playstore:com.hdfcbank.payzapp:6dae0556-931d-40c5-a51a-0548fe72523b"
@@ -7684,10 +7684,10 @@
    "rung": "Voice",
    "exemplars": [
     "reddit:1v8ud92",
-    "technofino_1261770",
     "x:2093047661985460423",
     "x:2077036489742172325",
-    "reddit:comment:p11t43e"
+    "reddit:comment:p11t43e",
+    "appstore:6504402552:14405696201"
    ],
    "last_day_count": 0,
    "score": 60.14,
@@ -8046,8 +8046,8 @@
    "latest": "2026-09-27T19:43:04+05:30",
    "rung": "RBI Ombudsman",
    "exemplars": [
-    "x:2089296882455687170",
     "x:2097681578017321398",
+    "x:2097771297812210156",
     "reddit:1wqq9bt",
     "playstore:com.hdfcbank.payzapp:31968f8a-b00e-425c-99bc-46aabcd37d83",
     "playstore:com.hdfcbank.android.now:46f90495-e641-4e9b-bc17-45f797d2374f"
@@ -8229,7 +8229,7 @@
    "rung": "Voice",
    "exemplars": [
     "x:2076595250110595370",
-    "x:2074774823272939755",
+    "x:2104446586201817534",
     "playstore:com.hdfcbank.android.now:2d2499be-695a-4ed8-9881-b991e8c71186",
     "playstore:com.hdfcbank.android.now:0c9cc062-4cfe-43d6-9c4d-9f452b1bcf41",
     "reddit:comment:p7s7t6j"
@@ -8771,9 +8771,9 @@
    "latest": "2026-09-28T12:06:40+05:30",
    "rung": "Repeat",
    "exemplars": [
-    "x:2082713526989439328",
     "x:2097287097845772308",
     "reddit:comment:p00xwve",
+    "x:2103357861996937510",
     "reddit:comment:pc44ij9",
     "playstore:com.hdfcbank.android.now:987b54a1-1f4d-417d-a5b0-f033927c571c"
    ],
@@ -8956,7 +8956,7 @@
     "playstore:com.hdfcbank.payzapp:1cf1e7ee-8783-4b30-b2d9-bad26e915f65",
     "x:2104088530507235390",
     "playstore:com.hdfcbank.android.now:06917dee-ffb3-4c11-9816-26db14b6e9b6",
-    "trustpilot_6a8438fa30653393e28b157b"
+    "appstore:6443480917:14271185449"
    ],
    "last_day_count": 0,
    "score": 6.32,
@@ -9522,12 +9522,12 @@
     {
      "id": "app_praise",
      "label": "Where customers praise us: quick, easy app journeys",
-     "count": 5739
+     "count": 5738
     },
     {
      "id": "general_dissatisfaction",
      "label": "General dissatisfaction",
-     "count": 2213
+     "count": 2212
     },
     {
      "id": "product_advice",

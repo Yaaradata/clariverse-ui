@@ -39,11 +39,11 @@ def trend(t) -> str:
 
 
 def main():
-    th = json.load(open(OUT / "themes.json"))
-    sig = json.load(open(OUT / "signals.json"))
-    br = json.load(open(OUT / "briefing.json"))
-    resp = json.load(open(OUT / "responses.json"))
-    ev = json.load(open(OUT / "evidence.json"))
+    th = json.load(open(OUT / "themes.json", encoding="utf-8"))
+    sig = json.load(open(OUT / "signals.json", encoding="utf-8"))
+    br = json.load(open(OUT / "briefing.json", encoding="utf-8"))
+    resp = json.load(open(OUT / "responses.json", encoding="utf-8"))
+    ev = json.load(open(OUT / "evidence.json", encoding="utf-8"))
     tm = {t["id"]: t for t in th["themes"]}
     rp = br["release_pulse"]
 
@@ -145,7 +145,7 @@ def main():
         "evidence": cite(rp["exemplars"] if rp else [], 2),
         "links": [{"label": "See the numbers", "href": f"{BASE}/mds-office#dials"}],
     })
-    json.dump({"prompts": prompts, "fallback": "That needs your internal data. It's part of discovery."}, open(OUT / "ask.json", "w"), ensure_ascii=False, indent=1)
+    json.dump({"prompts": prompts, "fallback": "That needs your internal data. It's part of discovery."}, open(OUT / "ask.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(len(prompts), "prompts")
 
 

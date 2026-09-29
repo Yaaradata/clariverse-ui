@@ -183,8 +183,10 @@ export function EvidenceList({ items }: { items: Evidence[] }) {
         </div>
       ))}
       <MutedNote>
-        Anonymised: names, handles, numbers and IDs are redacted. Summaries are
-        paraphrased.
+        Anonymised: people's names and personal handles are replaced with a
+        role, such as [staff member]; numbers and IDs are redacted. Quotes that
+        make an allegation against a named person are not shown. Summaries are
+        paraphrased. The source link opens the original public post.
       </MutedNote>
     </div>
   );

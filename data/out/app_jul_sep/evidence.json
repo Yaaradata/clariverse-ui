@@ -211,6 +211,27 @@
   "owner": "product",
   "entity": "hdfc_securities"
  },
+ "appstore:6443480917:14271185449": {
+  "id": "appstore:6443480917:14271185449",
+  "source": "appstore",
+  "source_label": "App Store",
+  "created_at": "2026-07-07T00:55:42+05:30",
+  "url": "https://apps.apple.com/in/app/payzapp-upi-pixel-credit-card/id6443480917",
+  "summary": "Absolutely pathetic customer support and dispute resolution.",
+  "redacted_text": "A PayZapp wallet transaction of ₹853 on 29 June 2026 (4:24 PM) is marked as failed, yet PayZapp claims the merchant received the money. The merchant has clearly denied receiving any payment because the transaction itself shows failed. Despite repeatedly sharing the transaction details, reference number, and explaining the issue, there has been no meaningful investigation or resolution.\n\nMy hard-earned money has been stuck, and every interaction with customer support results in the same generic responses instead of an actual solution. Customers should not have to spend days chasing their own money when the transaction status itself is in dispute.\n\nIf this issue is not resolved immediately, I…",
+  "title": "Absolutely pathetic customer support and dispute resolution.",
+  "app_name": "PayZapp",
+  "app_version": "2.53.15",
+  "rating": 1,
+  "themes": [
+   "dispute_chargeback",
+   "merchant_pos",
+   "care_unreachable"
+  ],
+  "sentiment": "negative",
+  "owner": "operations",
+  "entity": "hdfc_bank"
+ },
  "appstore:6443480917:14307699753": {
   "id": "appstore:6443480917:14307699753",
   "source": "appstore",
@@ -477,6 +498,26 @@
   ],
   "sentiment": "negative",
   "owner": "operations",
+  "entity": "hdfc_bank"
+ },
+ "appstore:6504402552:14405696201": {
+  "id": "appstore:6504402552:14405696201",
+  "source": "appstore",
+  "source_label": "App Store",
+  "created_at": "2026-08-09T12:59:21+05:30",
+  "url": "https://apps.apple.com/in/app/hdfc-bank-app-banking-cards/id6504402552",
+  "summary": "Credit Card",
+  "redacted_text": "I had a credit card and a loan against credit card. I received my NOC but they have not updated the status, payment Date and Due amount to CIBIL. Email sent to the nodel but still no help.",
+  "title": "Credit Card",
+  "app_name": "HDFC Bank app",
+  "app_version": "10.1.7",
+  "rating": 1,
+  "themes": [
+   "credit_report",
+   "statements_documents"
+  ],
+  "sentiment": "negative",
+  "owner": "compliance",
   "entity": "hdfc_bank"
  },
  "appstore:6504402552:14410177535": {
@@ -3225,7 +3266,7 @@
   "created_at": "2026-07-12T19:36:26+05:30",
   "url": "https://www.reddit.com/r/IndiaFinance/comments/1uugfs2/best_savings_account_for_online_services_rather/",
   "summary": "Recommends the bank as the best savings option for online service, listing account conversion, branch change and card applications.",
-  "redacted_text": "Out of all major PSU ( SBI, PNB, BOB ) and PSB ( HDFC, ICICI, KOTAK ). The Only Bank with optimal Branch network and Online infrastructure is HDFC Bank. \nHere is a day to day life experience FOR ONLINE INFRASTRUCTURE: \n1. Online Account opening- Allowed\n2. Online Account type downgrade( to Zero balance )- Allowed\n3. Online Home Branch change- Allowed\n4. UPI Scan for ATM withdrawal- Allowed\n5. Premium Debit Card/Credit Card Online application- Allowed\n6. Demat services with global investment( Hdfc Sky/ Securities/vested)- Available \n7. Insurance services ( Hdfc Ergo )- Available \n8. UPI APP & WALLET ( PAYZAPP )- AVAILABLE \n9. E-COMMERCE ( FLIGHT/TRAIN  BOOKING/ GIFT CARD PURCHASE )( THROUGH P",
+  "redacted_text": "Out of all major PSU ( SBI, PNB, BOB ) and PSB ( HDFC, ICICI, KOTAK ). The Only Bank with optimal Branch network and Online infrastructure is HDFC Bank. \nHere is a day to day life experience FOR ONLINE INFRASTRUCTURE: \n1. Online Account opening- Allowed\n2. Online Account type downgrade( to Zero balance )- Allowed\n3. Online Home Branch change- Allowed\n4. UPI Scan for ATM withdrawal- Allowed\n5. Premium Debit Card/Credit Card Online application- Allowed\n6. Demat services with global investment( Hdfc Sky/ Securities/vested)- Available \n7. Insurance services ( Hdfc Ergo )- Available \n8. UPI APP & WALLET ( PAYZAPP )- AVAILABLE \n9. E-COMMERCE ( FLIGHT/TRAIN  BOOKING/ GIFT CARD PURCHASE )( THROUGH…",
   "title": "Best savings account for online services rather than branch visits.",
   "app_name": null,
   "app_version": null,
@@ -3739,7 +3780,7 @@
   "created_at": "2026-08-28T23:44:50+05:30",
   "url": "https://www.reddit.com/r/IndiaFinance/comments/1w0y9qg/what_bank_is_right_for_me/",
   "summary": "Cross-post: card details compromised after online subscriptions; wants a separate low-balance card for web use.",
-  "redacted_text": "Hi guys,\n\nSo I’m an NRI and I have a bank account in HDFC. About a week ago my debit card details got stolen. Not sure how. Only use it for Netflix, Amazon, Steam. My card is with me. The phone my India sim was in has no internet and actually my phone had died so no I didn’t click on any suspicious links. I found out cuz I got email of the transactions.\n\nAnyway my point is in HDFC can I have two debit cards for one account? I don’t want to use a card online anymore connected to my savings account, I rather put some money in my card just for that transaction, so even if it gets hacked it won’t affect me nor would I have to block my main card. Or is it possible to have 2 separate bank accounts",
+  "redacted_text": "Hi guys,\n\nSo I’m an NRI and I have a bank account in HDFC. About a week ago my debit card details got stolen. Not sure how. Only use it for Netflix, Amazon, Steam. My card is with me. The phone my India sim was in has no internet and actually my phone had died so no I didn’t click on any suspicious links. I found out cuz I got email of the transactions.\n\nAnyway my point is in HDFC can I have two debit cards for one account? I don’t want to use a card online anymore connected to my savings account, I rather put some money in my card just for that transaction, so even if it gets hacked it won’t affect me nor would I have to block my main card. Or is it possible to have 2 separate bank…",
   "title": "What bank is right for me?",
   "app_name": null,
   "app_version": null,
@@ -3759,7 +3800,7 @@
   "created_at": "2026-09-01T23:48:34+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1w4k7pr/hdfc_bizblack_points_transfer_to_krisflyer/",
   "summary": "Business card points cannot be moved to an airline programme since the website update; the option is missing everywhere.",
-  "redacted_text": "Hello Bizblack users, please help me find a way to transfer Bizblack points to Krisflyer. After HDFC updated their website, i can't see the option on NetBanking. I cant register the card on NetBanking. Also on smartbuy, i can see miles transfer option for my DCB, but when i select bizblack, there is no option. Also on mycards, cant see the option to transfer. Please help. Thankyou submitted by /u/Jatins31 to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "Hello Bizblack users, please help me find a way to transfer Bizblack points to Krisflyer. After HDFC updated their website, i can't see the option on NetBanking. I cant register the card on NetBanking. Also on smartbuy, i can see miles transfer option for my DCB, but when i select bizblack, there is no option. Also on mycards, cant see the option to transfer. Please help. Thankyou submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "HDFC Bizblack points transfer to Krisflyer",
   "app_name": null,
   "app_version": null,
@@ -3779,7 +3820,7 @@
   "created_at": "2026-09-08T11:13:41+05:30",
   "url": "https://www.reddit.com/r/hdfcbank/comments/1wafopr/my_hdfc_account_has_been_blocked/",
   "summary": "Account blocked while the home branch is over a thousand kilometres away; asks what to do.",
-  "redacted_text": "Hiii my HDFC account has been blocked and my home branch is over 1200 kms+ from where I am now. What can I do in this case? submitted by /u/Kanchtheranch to r/hdfcbank [link] [comments]",
+  "redacted_text": "Hiii my HDFC account has been blocked and my home branch is over 1200 kms+ from where I am now. What can I do in this case? submitted by [handle] to r/hdfcbank [link] [comments]",
   "title": "My HDFC account has been blocked",
   "app_name": null,
   "app_version": null,
@@ -3799,7 +3840,7 @@
   "created_at": "2026-09-08T15:44:14+05:30",
   "url": "https://www.reddit.com/r/hdfcbank/comments/1wakbyt/why_doesnt_hdfc_bank_have_an_app_to_easily_prepay/",
   "summary": "Asks why the bank lacks an easy app to prepay a home loan unlike two rivals.",
-  "redacted_text": "A single app to manage all bank, loan, and credit card-related services? And easy pre-payments too. submitted by /u/own_thoughts7747 [link] [comments]",
+  "redacted_text": "A single app to manage all bank, loan, and credit card-related services? And easy pre-payments too. submitted by [handle] [link] [comments]",
   "title": "Why doesn't HDFC Bank have an app to easily prepay a home loan like SBI and ICICI? After being largest private lender.",
   "app_name": null,
   "app_version": null,
@@ -3819,7 +3860,7 @@
   "created_at": "2026-09-12T22:51:40+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1weifod/hdfc_card_jail/",
   "summary": "Top-tier card holder gets an error that an existing card blocks a business card application; the helpful manager has left.",
-  "redacted_text": "Currently holding only 1 HDFC Card (Infinia) since 2 years. Never had any other HDFC card before this. Card is in good standing, no defaults/late payments. Trying to apply for another HDFC card (Bizblack) since last week, but it keeps throwing an error that \"you already have an HDFC card\". Already on file with HDFC as self employed, ITR well above threshold. Any fixes without having to go to a branch? The RM who got me Infinia has since left the bank and the replacement is as useful as a sack of potatos. submitted by /u/QuirkyDay1819 to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "Currently holding only 1 HDFC Card (Infinia) since 2 years. Never had any other HDFC card before this. Card is in good standing, no defaults/late payments. Trying to apply for another HDFC card (Bizblack) since last week, but it keeps throwing an error that \"you already have an HDFC card\". Already on file with HDFC as self employed, ITR well above threshold. Any fixes without having to go to a branch? The RM who got me Infinia has since left the bank and the replacement is as useful as a sack of potatos. submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "HDFC card jail",
   "app_name": null,
   "app_version": null,
@@ -3839,7 +3880,7 @@
   "created_at": "2026-09-12T23:41:38+05:30",
   "url": "https://www.reddit.com/r/hdfcbank/comments/1wejqtp/hdfc_credit_card_video_kyc_expired_bank_asking_to/",
   "summary": "Video KYC link expired after banking hours and the bank now wants signed forms and proofs couriered to Chennai.",
-  "redacted_text": "Hi everyone, I recently applied for an HDFC Credit Card. I received the Video KYC link, but couldn't complete it as it was outside banking hours. The link expired after that. I emailed HDFC support requesting a new Video KYC link, but they replied stating that my application has incomplete details and asked me to send a signed 1-pager application form along with self-attested ID, address, and income proofs via post/courier to Chennai Has anyone else faced this after missing Video KYC? Email I got in comment submitted by /u/Guilty_Spell3194 [link] [comments]",
+  "redacted_text": "Hi everyone, I recently applied for an HDFC Credit Card. I received the Video KYC link, but couldn't complete it as it was outside banking hours. The link expired after that. I emailed HDFC support requesting a new Video KYC link, but they replied stating that my application has incomplete details and asked me to send a signed 1-pager application form along with self-attested ID, address, and income proofs via post/courier to Chennai Has anyone else faced this after missing Video KYC? Email I got in comment submitted by [handle] [link] [comments]",
   "title": "HDFC Credit Card Video KYC Expired -> Bank asking to mail/submit physical documents. Anyone experienced this?",
   "app_name": null,
   "app_version": null,
@@ -3859,7 +3900,7 @@
   "created_at": "2026-09-16T21:59:35+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1wi25f5/hdfc_third_rate_support/",
   "summary": "Priority number for the top-tier card reportedly discontinued; calls now loop through an IVR with no route to an agent.",
-  "redacted_text": "HDFC has apparently discontinued the 1800-266-3310 support number for Infinia, and now routes calls to the general [number]/[number] numbers, where for some inane reason there's no priority sorting after they make you put in the card number. Makes you go through the bullshit answering machine. The IVR is absolutely incompetent, there's no way to get to an agent as the IVR keeps circling back to itself. There's no way to talk to a f*cking agent, and the old method of 0, 9, or * just leads to the IVR cutting the call. Fuck you HDFC. submitted by /u/QuirkyDay1819 to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "HDFC has apparently discontinued the 1800-266-3310 support number for Infinia, and now routes calls to the general [number]/[number] numbers, where for some inane reason there's no priority sorting after they make you put in the card number. Makes you go through the bullshit answering machine. The IVR is absolutely incompetent, there's no way to get to an agent as the IVR keeps circling back to itself. There's no way to talk to a f*cking agent, and the old method of 0, 9, or * just leads to the IVR cutting the call. Fuck you HDFC. submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "HDFC third rate support",
   "app_name": null,
   "app_version": null,
@@ -3878,7 +3919,7 @@
   "created_at": "2026-09-17T22:22:18+05:30",
   "url": "https://www.reddit.com/r/hdfcbank/comments/1wizg6y/switch_to_rupay_debit_card/",
   "summary": "Customer unable to switch debit card online; branch visit required in unreachable city.",
-  "redacted_text": "Hi , I have salary account and want to get rupay debit card ,but option to change not available online and customer care says visit bank branch,which is not possible as my branch is in different city and the place where i live currently have no hdfc bank . Any other option ? Anyone else did this ? submitted by /u/gladiator_r [link] [comments]",
+  "redacted_text": "Hi , I have salary account and want to get rupay debit card ,but option to change not available online and customer care says visit bank branch,which is not possible as my branch is in different city and the place where i live currently have no hdfc bank . Any other option ? Anyone else did this ? submitted by [handle] [link] [comments]",
   "title": "Switch to rupay debit card",
   "app_name": null,
   "app_version": null,
@@ -3897,7 +3938,7 @@
   "created_at": "2026-09-20T22:08:42+05:30",
   "url": "https://www.reddit.com/r/hdfcbank/comments/1wlluqx/new_hdfc_ac_blocked/",
   "summary": "Customer's new HDFC account blocked after opening with substantial balance.",
-  "redacted_text": "My new hdfc account blocked what to do. Documents and all will i get my amount back i have 1.5 lakh there submitted by /u/The_man-_1 [link] [comments]",
+  "redacted_text": "My new hdfc account blocked what to do. Documents and all will i get my amount back i have 1.5 lakh there submitted by [handle] [link] [comments]",
   "title": "New HDFC A/c Blocked",
   "app_name": null,
   "app_version": null,
@@ -3916,7 +3957,7 @@
   "created_at": "2026-09-22T19:58:48+05:30",
   "url": "https://www.reddit.com/r/hdfcbank/comments/1wnb1t5/potential_data_breach_via_hdfc/",
   "summary": "Customer receiving scam calls after HDFC loan approval; suspects data breach.",
-  "redacted_text": "I had applied for a personal loan through HDFC bank. Now the moment its approved, I have suddenly started receiving so many Scam calls. I have been feeling terrified since because of all the OTPs that are being generated, attempts to link my phone number with some another number. Worst- I got a call from someone saying I am speaking from IT ministry and secratary sir wants to speak to the CEO of your company. Dude like wtf!! I generally dont receive such messages in such volume on regular basis and truly feel that there is lack of security on Hdfc end that led to all this! Can someone please help? submitted by /u/Ok_Gab-LEs-ru [link] [comments]",
+  "redacted_text": "I had applied for a personal loan through HDFC bank. Now the moment its approved, I have suddenly started receiving so many Scam calls. I have been feeling terrified since because of all the OTPs that are being generated, attempts to link my phone number with some another number. Worst- I got a call from someone saying I am speaking from IT ministry and secratary sir wants to speak to the CEO of your company. Dude like wtf!! I generally dont receive such messages in such volume on regular basis and truly feel that there is lack of security on Hdfc end that led to all this! Can someone please help? submitted by [handle] [link] [comments]",
   "title": "Potential Data Breach via HDFC",
   "app_name": null,
   "app_version": null,
@@ -3936,7 +3977,7 @@
   "created_at": "2026-09-23T09:50:49+05:30",
   "url": "https://www.reddit.com/r/IndianCreditCards/comments/1wnvucm/can_someone_suggest_good_cardsbanks_for_21lpm/",
   "summary": "Customer unhappy with current cards; seeking alternatives for salary account and credit cards.",
-  "redacted_text": "Hello, I'm earning about 2.1LPM. I have two credit cards, AU Ixigo and Sapphiro. Got both for LTF. None of the above are that useful. I'm trying to figure out if there's any other card that i can get that's useful. I went through older rankings and posts in this sub but all of the cards either got devalued or don't exist altogether. Funny. I also want suggestions for a good salary account. Have had bad experience with ICICI/HDFC. I think my HDFC RM is just a lazy ass. submitted by /u/InsensitiveByte [link] [comments]",
+  "redacted_text": "Hello, I'm earning about 2.1LPM. I have two credit cards, AU Ixigo and Sapphiro. Got both for LTF. None of the above are that useful. I'm trying to figure out if there's any other card that i can get that's useful. I went through older rankings and posts in this sub but all of the cards either got devalued or don't exist altogether. Funny. I also want suggestions for a good salary account. Have had bad experience with ICICI/HDFC. I think my HDFC RM is just a lazy ass. submitted by [handle] [link] [comments]",
   "title": "Can someone suggest good cards/banks for 2.1LPM take home salary?",
   "app_name": null,
   "app_version": null,
@@ -3955,7 +3996,7 @@
   "created_at": "2026-09-24T22:44:49+05:30",
   "url": "https://www.reddit.com/r/CreditCardIndia/comments/1wp7kfl/credit_card_payment_issue/",
   "summary": "Customer unable to pay HDFC credit card bill; payment declining for five days.",
-  "redacted_text": "Hey guys, I have hdfc bank’s credit card and I’m trying to pay my credit card bill from last 5 days but it is continuously declining the payment. I tried connecting with the customer care but nothing worked out. Have anyone ever faced this issue please do let me know what I can do. submitted by /u/Dear_Ingenuity_8737 [link] [comments]",
+  "redacted_text": "Hey guys, I have hdfc bank’s credit card and I’m trying to pay my credit card bill from last 5 days but it is continuously declining the payment. I tried connecting with the customer care but nothing worked out. Have anyone ever faced this issue please do let me know what I can do. submitted by [handle] [link] [comments]",
   "title": "Credit card payment issue",
   "app_name": null,
   "app_version": null,
@@ -3974,7 +4015,7 @@
   "created_at": "2026-09-25T19:42:33+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1wpxf75/infinia_yearly_fee_refund/",
   "summary": "Customer seeking refund of Infinia annual fee after bank closed card.",
-  "redacted_text": "https://preview.redd.it/2d77qs7qcorh1.png?width=450&format=png&auto=webp&s=4eb5651f919c4e758e3f3349c3eccf64f57ec85a My Infinia is due closure on 31st October. Since then I have moved on to Aurum and HSBC (2 metal ones so I don't depend on just 1 card that can get devalued). However, I had a question about Infinia yearly fee. The fee was charged for the whole year (12k), however, will HDFC bank refund the amount for remaining months as they are the ones closing the card and refusing to honor their agreement for the whole year? If not, would it be grounds for them to get into legal trouble? submitted by /u/Wenomm to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "https://preview.redd.it/2d77qs7qcorh1.png?width=450&format=png&auto=webp&s=4eb5651f919c4e758e3f3349c3eccf64f57ec85a My Infinia is due closure on 31st October. Since then I have moved on to Aurum and HSBC (2 metal ones so I don't depend on just 1 card that can get devalued). However, I had a question about Infinia yearly fee. The fee was charged for the whole year (12k), however, will HDFC bank refund the amount for remaining months as they are the ones closing the card and refusing to honor their agreement for the whole year? If not, would it be grounds for them to get into legal trouble? submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "Infinia yearly fee refund?",
   "app_name": null,
   "app_version": null,
@@ -3993,7 +4034,7 @@
   "created_at": "2026-09-26T18:44:01+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1wqq9bt/flipkart_refunded_amount_deducted_again_hdfc/",
   "summary": "Customer charged twice by Flipkart on HDFC Millennia; filed dispute.",
-  "redacted_text": "So i had purchased and refunded some things from flipkart, initially i got the refund of 370rs for the product, but when i checked my statement again it shows that flipkart has charged the same amount after some days of receiving the refund. after checking my messages on whatsapp i saw a message from hdfc showing refund initiated for the amount and to receive that refund i had to update my bank details, but now that link is not working. Can anyone help me if they have faced such issues, i have already reported it as dispute via the hdfc mobile app. submitted by /u/Height-Important to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "So i had purchased and refunded some things from flipkart, initially i got the refund of 370rs for the product, but when i checked my statement again it shows that flipkart has charged the same amount after some days of receiving the refund. after checking my messages on whatsapp i saw a message from hdfc showing refund initiated for the amount and to receive that refund i had to update my bank details, but now that link is not working. Can anyone help me if they have faced such issues, i have already reported it as dispute via the hdfc mobile app. submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "Flipkart refunded amount deducted again HDFC millenia card",
   "app_name": null,
   "app_version": null,
@@ -4012,7 +4053,7 @@
   "created_at": "2026-09-26T22:46:29+05:30",
   "url": "https://www.reddit.com/r/personalfinanceindia/comments/1wqvzzs/accidentally_did_neft_to_wrong_person/",
   "summary": "Customer accidentally transferred funds to wrong person; seeking reversal.",
-  "redacted_text": "So I added this persons ac in my bank but another person with same name was still there i modified the new one and forgot to delete the old one. Now I accidentally transferred to the old person. It was still showing processing so I tried contacting the bank but there ai agent and it's not understanding my issue and as it almost 10.30 pm the other cutomer care is not reachable either. My account is hdfc and the other persons account is sbi. Is there a way to get my money back? I'm scared. Please help. submitted by /u/Cherryonboard17 to r/personalfinanceindia [link] [comments]",
+  "redacted_text": "So I added this persons ac in my bank but another person with same name was still there i modified the new one and forgot to delete the old one. Now I accidentally transferred to the old person. It was still showing processing so I tried contacting the bank but there ai agent and it's not understanding my issue and as it almost 10.30 pm the other cutomer care is not reachable either. My account is hdfc and the other persons account is sbi. Is there a way to get my money back? I'm scared. Please help. submitted by [handle] to r/personalfinanceindia [link] [comments]",
   "title": "Accidentally did NEFT to wrong person.",
   "app_name": null,
   "app_version": null,
@@ -4031,7 +4072,7 @@
   "created_at": "2026-09-27T01:59:42+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1wr0rp1/hdfc_infinia_added_in_google_pay_for_tap_pay/",
   "summary": "Infinia Google Pay tap payment declined in USA; customer seeks guidance.",
-  "redacted_text": "Hi All, I have just recently started using my HDFC Infinia via Tap and Pay using Google Pay. I have been able to pay using the same in India. However, I have travelled to USA and tried to pay for the amount of 110 USD and it just said \"Transaction Declined\". I know in India, there is a limit of 5k for contactless. I have also updated the Contactless limit to 50k, however it still failed. Need expert guidance on the same. submitted by /u/Ordinary_Swim_2563 to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "Hi All, I have just recently started using my HDFC Infinia via Tap and Pay using Google Pay. I have been able to pay using the same in India. However, I have travelled to USA and tried to pay for the amount of 110 USD and it just said \"Transaction Declined\". I know in India, there is a limit of 5k for contactless. I have also updated the Contactless limit to 50k, however it still failed. Need expert guidance on the same. submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "HDFC Infinia added in Google Pay for Tap & Pay",
   "app_name": null,
   "app_version": null,
@@ -4050,7 +4091,7 @@
   "created_at": "2026-09-27T18:50:36+05:30",
   "url": "https://www.reddit.com/r/personalfinanceindia/comments/1wrk2sz/digital_legal_notice_from_incase360_in_behalf_of/",
   "summary": "Borrower behind on personal loan instalments received a digital legal notice and asks about likely consequences and legal action.",
-  "redacted_text": "I have a personal loan with HDFC, and I currently have 5 pending EMIs out of 17 EMIs ( ₹82,000 each) , totaling ₹4.1 lakh. I recently received a legal notice from Incase360 on behalf of HDFC regarding the overdue payments. I replied to them, explaining my situation and stating that I would pay 2 EMIs by the end of this month. I would like to understand what the further consequences could be. \\- What usually happens after receiving such a notice? \\- Can HDFC initiate legal proceedings if I pay 2 EMIs as promised? I spoke with HDFC personal loan representative but they are demanding to pay all pending EMIs immediately. submitted by /u/ConsistentSleep9191 to r/personalfinanceindia [link] [comme",
+  "redacted_text": "I have a personal loan with HDFC, and I currently have 5 pending EMIs out of 17 EMIs ( ₹82,000 each) , totaling ₹4.1 lakh. I recently received a legal notice from Incase360 on behalf of HDFC regarding the overdue payments. I replied to them, explaining my situation and stating that I would pay 2 EMIs by the end of this month. I would like to understand what the further consequences could be. \\- What usually happens after receiving such a notice? \\- Can HDFC initiate legal proceedings if I pay 2 EMIs as promised? I spoke with HDFC personal loan representative but they are demanding to pay all pending EMIs immediately. submitted by [handle] to r/personalfinanceindia [link] [comments]",
   "title": "Digital legal notice from incase360 in behalf of HDFC bank",
   "app_name": null,
   "app_version": null,
@@ -4070,7 +4111,7 @@
   "created_at": "2026-09-28T12:36:06+05:30",
   "url": "https://www.reddit.com/r/CreditCardsIndia/comments/1ws7os5/got_hdfc_bizgrow_ltf_at_19_but_want_millennia_any/",
   "summary": "Young cardholder given a business card instead of wanted Millennia asks about conversion routes and timing.",
-  "redacted_text": "I’m 19 and recently got HDFC BizGrow as LTF with a ₹25,000 limit. My profile: - Credit age: 9 months - Slice: ₹4K limit - SBM FD-backed: ₹2K limit - HDFC BizGrow: ₹25K limit, LTF I actually wanted HDFC Millennia, but got BizGrow instead. Is there any way to get a BizGrow → Millennia upgrade/conversion, or should I wait for an upgrade offer? Also, would requesting an upgrade this early affect my chances? Any suggestions from HDFC cardholders would be appreciated. submitted by /u/Abhi_0510 to r/CreditCardsIndia [link] [comments]",
+  "redacted_text": "I’m 19 and recently got HDFC BizGrow as LTF with a ₹25,000 limit. My profile: - Credit age: 9 months - Slice: ₹4K limit - SBM FD-backed: ₹2K limit - HDFC BizGrow: ₹25K limit, LTF I actually wanted HDFC Millennia, but got BizGrow instead. Is there any way to get a BizGrow → Millennia upgrade/conversion, or should I wait for an upgrade offer? Also, would requesting an upgrade this early affect my chances? Any suggestions from HDFC cardholders would be appreciated. submitted by [handle] to r/CreditCardsIndia [link] [comments]",
   "title": "Got HDFC BizGrow LTF at 19, but want Millennia — any way to get it?",
   "app_name": null,
   "app_version": null,
@@ -4830,27 +4871,6 @@
   "owner": "product",
   "entity": "hdfc_bank"
  },
- "technofino_1261770": {
-  "id": "technofino_1261770",
-  "source": "forum",
-  "source_label": "Forums",
-  "created_at": "2026-09-24T02:03:37+05:30",
-  "url": "https://technofino.in/community/threads/swiggy-hdfc-being-phased-out-for-new-variants.49150/post-1261770",
-  "summary": "Says no extra credit entry appears until activation, and wants the bank to bear card and courier costs as customers walk away.",
-  "redacted_text": "sunit123 said:\nwhy u want to add one more entry in CIBIL as new card will be new account...It will then show two closed accounts....Close it immediately after receiving the mail\nClick to expand...\nIt will not show another entry until unless you activate it or if you manually upgrade then you have 60 days to activate the new card. I just want them billed the cost of new card and shipping for every user they are loosing for all this drama. Having one more entry in my CIBIL will not do any bad but if we all do it they need to think twice next time.  Their attitude is more than Rahul Gandhi or trump to be honest.",
-  "title": "Swiggy HDFC Being Phased out for new variants",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_variant_migration",
-   "credit_report",
-   "general_dissatisfaction"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
-  "entity": "hdfc_bank"
- },
  "technofino_1261936": {
   "id": "technofino_1261936",
   "source": "forum",
@@ -4869,26 +4889,6 @@
   ],
   "sentiment": "negative",
   "owner": "cards",
-  "entity": "hdfc_bank"
- },
- "trustpilot_6a8438fa30653393e28b157b": {
-  "id": "trustpilot_6a8438fa30653393e28b157b",
-  "source": "forum",
-  "source_label": "Forums",
-  "created_at": "2026-08-18T18:20:34+05:30",
-  "url": "https://www.trustpilot.com/reviews/6a8438fa30653393e28b157b",
-  "summary": "Charity account opened smoothly but getting a payment QR code took days of referrals, late forms and chasing staff.",
-  "redacted_text": "I have my NGO account with the bank. Opening of account was done smoothly but service there after is pathetic. \nI need a QR code to be generated for my account. Before 15th August, I was given number of Abhishek Tyagi on contacting him he shared with me number of Shivaji Tonpe, when I told him it took him 2 days to arrange the forms for the same. After two days when I followed up he finally couriered the forms. Which took two days to reach me within Pune limits. After that form collection was done late again after me running behind to pick up the form. Last moment Shivaji is telling me ki mam more documents are needed. One more day delay those documents were printed by me stamped n kept read",
-  "title": "I have my NGO account with the bank",
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "merchant_pos",
-   "branch_service"
-  ],
-  "sentiment": "negative",
-  "owner": "payments",
   "entity": "hdfc_bank"
  },
  "trustpilot_6a992ee463f4da4f1771881a": {
@@ -4957,7 +4957,7 @@
   "created_at": "2026-07-02T18:59:00+05:30",
   "url": "https://x.com/i/status/2072673900648157673",
   "summary": "Says none of the bank's two apps work on their mid-range phones and screenshots are blocked so they cannot show proof.",
-  "redacted_text": "@HDFC_Bank @HDFCBank_Cares [handle] \nHi HDFC Team\nNone of your app is working\n\nYour apps are not allowing to take screenshot, otherwise I share the ss as well.\n\nFor your reference - i am talking about these 2 apps\n\nUsing [handle] A36 and A35 model. https://t.co/ip7WYUiGG1",
+  "redacted_text": "@HDFC_Bank @HDFCBank_Cares @payzapp \nHi HDFC Team\nNone of your app is working\n\nYour apps are not allowing to take screenshot, otherwise I share the ss as well.\n\nFor your reference - i am talking about these 2 apps\n\nUsing [handle] A36 and A35 model. https://t.co/ip7WYUiGG1",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -5028,27 +5028,6 @@
   ],
   "sentiment": "negative",
   "owner": "compliance",
-  "entity": "hdfc_bank"
- },
- "x:2074774823272939755": {
-  "id": "x:2074774823272939755",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-07-08T14:07:19+05:30",
-  "url": "https://x.com/i/status/2074774823272939755",
-  "summary": "Asks why a senior citizens savings scheme account cannot be viewed in online or app banking when other banks allow it.",
-  "redacted_text": "Why HDFC Bank is not allowing us to check out Senior Citizen Savings Scheme account online using NetBanking or Mobile app ? This is strange !! Even SBI allows &amp; all others allow. You are making it difficult for customers. We struggle to keep track\n@HDFCBank_Cares @nsitharamanoffc",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "app_usability",
-   "netbanking",
-   "deposits_rates"
-  ],
-  "sentiment": "negative",
-  "owner": "digital",
   "entity": "hdfc_bank"
  },
  "x:2075061799020560650": {
@@ -5219,7 +5198,7 @@
   "created_at": "2026-07-18T14:36:42+05:30",
   "url": "https://x.com/i/status/2078406093198459101",
   "summary": "Caller with the customer's personal details asked for card information to waive charges and hung up when questioned.",
-  "redacted_text": "⚠️I got a call from \"[phone]\" this pravate number, asking my Credit card details to wave off some bank charges. But the shocking part is he have all of my details!😳Scary!\nWhen i ask him about his authority, he disconnected the call.\n\nCc: [handle] [handle] @HDFCBank_Cares https://t.co/YmWt6WBkSs",
+  "redacted_text": "⚠️I got a call from \"[phone]\" this pravate number, asking my Credit card details to wave off some bank charges. But the shocking part is he have all of my details!😳Scary!\nWhen i ask him about his authority, he disconnected the call.\n\nCc: [handle] @Cyberdost @HDFCBank_Cares https://t.co/YmWt6WBkSs",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -5313,6 +5292,26 @@
   "owner": "compliance",
   "entity": "hdfc_bank"
  },
+ "x:2081747385290764750": {
+  "id": "x:2081747385290764750",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-07-27T19:53:48+05:30",
+  "url": "https://x.com/i/status/2081747385290764750",
+  "summary": "Fifteen-year customer's service-not-provided chargeback filed in May is stuck in copy-paste replies and demands with no call to clarify.",
+  "redacted_text": "@HDFCBank_Cares I have been your customer since 15 years . Raised a charge back on HDFC Tata Neu transaction under ‘ Charge back for service not provided’ within 60 days of transaction. Submitted all relieved documents including the letter from vendor refusing to return the money ( as asked by your team) Now I am being asked to verify that the merchant did not receive money.\nThe same copy - paste reply from your representative in last two mails. \nThe complaint was filed in May 26. \nThere is no attempt to clarify the issue on call\n@RBI",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "dispute_chargeback",
+   "complaint_handling"
+  ],
+  "sentiment": "negative",
+  "owner": "operations",
+  "entity": "hdfc_bank"
+ },
  "x:2082052712229924914": {
   "id": "x:2082052712229924914",
   "source": "x",
@@ -5320,7 +5319,7 @@
   "created_at": "2026-07-28T16:07:03+05:30",
   "url": "https://x.com/i/status/2082052712229924914",
   "summary": "Hindi post: cash withdrawal at another bank's machine debited a large amount without dispensing, not returned after a day, and staff are unhelpful.",
-  "redacted_text": "@HDFC_Bank @HDFCBankCares\nमेरे HDFC बैंक खाते से 27 जुलाई को दोपहर 3:28 बजे Central Bank के ATM से ₹10,000 निकाले थे, लेकिन कैश नहीं मिला। 24 घंटे बीत जाने के बावजूद राशि खाते में वापस नहीं आई है और बैंक स्टाफ भी सहयोग नहीं कर रहा है। कृपया इस मामले में तुरंत कार्रवाई करें।",
+  "redacted_text": "@HDFC_Bank [handle]\nमेरे HDFC बैंक खाते से 27 जुलाई को दोपहर 3:28 बजे Central Bank के ATM से ₹10,000 निकाले थे, लेकिन कैश नहीं मिला। 24 घंटे बीत जाने के बावजूद राशि खाते में वापस नहीं आई है और बैंक स्टाफ भी सहयोग नहीं कर रहा है। कृपया इस मामले में तुरंत कार्रवाई करें।",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -5372,27 +5371,6 @@
   ],
   "sentiment": "negative",
   "owner": "fraud_cyber",
-  "entity": "hdfc_bank"
- },
- "x:2082713526989439328": {
-  "id": "x:2082713526989439328",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-07-30T11:52:54+05:30",
-  "url": "https://x.com/i/status/2082713526989439328",
-  "summary": "Staff demanded stamp paper, loan and lawyer charges for a home loan no-objection certificate, though the branch manager confirmed no such rules exist.",
-  "redacted_text": "Severe grievance against @HDFCBank_Cares @HDFC_Bank @RBIsays  my Home Loan NOC!\nInitially, employee Kunal demanded charges: Stamp paper, 2.5% allotted loan charge, ₹7,500 lawyer fee. Sec-68 Mohali branch &amp; Manager Suyash Asthana clearly confirmed no such rules exist on my loan.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "loan_closure_documents",
-   "fees_charges_bank",
-   "branch_service"
-  ],
-  "sentiment": "negative",
-  "owner": "loans",
   "entity": "hdfc_bank"
  },
  "x:2082738279313793513": {
@@ -5749,25 +5727,6 @@
   "owner": "cards",
   "entity": "hdfc_bank"
  },
- "x:2087116156645802139": {
-  "id": "x:2087116156645802139",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-08-11T15:27:23+05:30",
-  "url": "https://x.com/i/status/2087116156645802139",
-  "summary": "Branch manager unable to speak regional language after twelve years tenure.",
-  "redacted_text": "12 ವರ್ಷದಿಂದ ಕನ್ನಡನಾಡಿನಲ್ಲಿದ್ದರೂ\nನಾನು ಕನ್ನಡ ಮಾತಾಡೋಲ್ಲ‚\nನೀನೇ ಹಿಂದಿಯಲ್ಲಿ ಮಾತಾಡು ಎಂದು\nಈ ವೈದ್ಯರ ತಾಯಿಗೆ ತಾಕೀತು ಮಾಡಿದ\nವೈಟ್ ಫೀಲ್ಡ್ @HDFC_Bank ಮ್ಯಾನೇಜರ್..!😡\n\nಈತನ ಹೆಸರು Debmalya Mukherjee\nಈತ ಕೂಡಲೇ ಕೆಲಸದಿಂದ ಹೊರ ಹೋಗಬೇಕು..!\n\nಜೊತೆಗೆ ಕನ್ನಡಿಗರ ಕ್ಷಮೆ ಕೇಳಲೇ ಬೇಕು.\n\nಕರ್ನಾಟಕದಲ್ಲಿ ಕನ್ನಡಿಗರೇ ಸಾರ್ವಭೌಮ. https://t.co/zO4Eeu2fkx",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "branch_service"
-  ],
-  "sentiment": "negative",
-  "owner": "retail",
-  "entity": "hdfc_bank"
- },
  "x:2087186126687920380": {
   "id": "x:2087186126687920380",
   "source": "x",
@@ -5883,26 +5842,6 @@
   "owner": "operations",
   "entity": "hdfc_bank"
  },
- "x:2089296882455687170": {
-  "id": "x:2089296882455687170",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-08-17T15:52:48+05:30",
-  "url": "https://x.com/i/status/2089296882455687170",
-  "summary": "Large card refund stuck because branch says only the central dispute team can act, and the bank has not responded.",
-  "redacted_text": "What’s going on  at @HDFC_Bank  ??\n\n[handle] had the courtesy to respond promptly despite the holiday weekend, but HDFC has not bothered to respond even though Monday working hours are almost over. \n\nWhen we go to the Mahim Branch we are told it’s out of their control, as the CREDIT CARD DISPUTE TEAM being the central team must initiate and authorise the refund of ₹2.46 LAKHS. \n\nMr. Rajiv Kumar please ensure your bank has the courtesy to resolve this issue at the earliest.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "dispute_chargeback",
-   "refund_delay"
-  ],
-  "sentiment": "negative",
-  "owner": "operations",
-  "entity": "hdfc_bank"
- },
  "x:2089449872709882083": {
   "id": "x:2089449872709882083",
   "source": "x",
@@ -5921,6 +5860,26 @@
   ],
   "sentiment": "negative",
   "owner": "loans",
+  "entity": "hdfc_bank"
+ },
+ "x:2089702545656840550": {
+  "id": "x:2089702545656840550",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-08-18T18:44:46+05:30",
+  "url": "https://x.com/i/status/2089702545656840550",
+  "summary": "Alleges the bank pushed a foreign fund to wealthy overseas customers for large commissions, then the fund collapsed.",
+  "redacted_text": "Between 2015-2020 @HDFC_Bank cross-sold one more  fund to its NRI-HNI customers based in Middle East a fund headquartered in Europe. \n\nBank earned USD 2000 per application n fund collapsed. That Europe based Fund Manager resigned n now absconding \n\nSame as Credit Suisse AT-1 Bond, another story unfolding",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "mis_selling",
+   "nri_forex"
+  ],
+  "sentiment": "negative",
+  "owner": "compliance",
   "entity": "hdfc_bank"
  },
  "x:2089738829033046492": {
@@ -5983,6 +5942,26 @@
   "owner": "cx",
   "entity": "hdfc_bank"
  },
+ "x:2089760657738711093": {
+  "id": "x:2089760657738711093",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-08-18T22:35:41+05:30",
+  "url": "https://x.com/i/status/2089760657738711093",
+  "summary": "Says the bank has worsened and they faced a similar issue with unnecessary finance charges running to thousands.",
+  "redacted_text": "[handle] @HDFC_Bank HDFC is worst these days.. I too faced similar issue.. they add unnecessary financial charges for such thing.. For me it’s around 9k.",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "card_fees_charges",
+   "general_dissatisfaction"
+  ],
+  "sentiment": "negative",
+  "owner": "cards",
+  "entity": "hdfc_bank"
+ },
  "x:2089762362241007675": {
   "id": "x:2089762362241007675",
   "source": "x",
@@ -6001,25 +5980,6 @@
   ],
   "sentiment": "negative",
   "owner": "cx",
-  "entity": "hdfc_bank"
- },
- "x:2089762403869438008": {
-  "id": "x:2089762403869438008",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-08-18T22:42:37+05:30",
-  "url": "https://x.com/i/status/2089762403869438008",
-  "summary": "Insists the issue is a disproportionate flat late charge for a trivial shortfall, and proposes carrying it forward or capping the fee.",
-  "redacted_text": "[handle] [handle] @HDFC_Bank @hdfcbank Shreyas, can you be more stupid?\n\nHe is not asking to waive off those 50 off paise. But Bank can't levy 1200 late charges for it. Add it in next bill or cap late charges for minute amounts to say 1Rs or 5Rs\n\nLate charges cant be 2500x !",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "card_fees_charges"
-  ],
-  "sentiment": "negative",
-  "owner": "cards",
   "entity": "hdfc_bank"
  },
  "x:2089775530757550581": {
@@ -6106,7 +6066,7 @@
   "created_at": "2026-08-19T17:55:22+05:30",
   "url": "https://x.com/i/status/2090052503073341951",
   "summary": "Home loan file sat for over a month with repeated document requests, while a rival sanctioned within days.",
-  "redacted_text": "[handle] @HDFC_Bank [handle] In a known circle.\n\nHDFC sat on a home loan file for 35 days, asked documents 3 times. Icici sanctioned in 6 days !\n\nHDFC has lost it’s mojo",
+  "redacted_text": "[handle] @HDFC_Bank @AxisBank In a known circle.\n\nHDFC sat on a home loan file for 35 days, asked documents 3 times. Icici sanctioned in 6 days !\n\nHDFC has lost it’s mojo",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -6125,7 +6085,7 @@
   "created_at": "2026-08-20T23:04:48+05:30",
   "url": "https://x.com/i/status/2090492763406287352",
   "summary": "Hindi complaint that a recovery agent hides identity and phones the borrower's contacts, urging regulator and ombudsman action.",
-  "redacted_text": "[handle] @HDFCBank_Cares @HDFC_Bank\n\nLoan Ending is #1688\nAgent Number [phone]\n\nरिकवरी के नाम पर contact list ko phone karke pratadit karna किस कानून में लिखा है\n\nनाम छिपाकर मानसिक उत्पीड़न कर रहे हैं। नाम छिपाने से आपकी यह अवैध करतूतें नहीं छुपेंगी।\n\n@RBI\n@RBI_India\n[handle] \n\nकृपया इस अवैध रिकवरी पर तुरंत संज्ञान लें और सख्त कार्रवाई करें!#BankingOmbudsman #Harassment #RBI 💡 सुझाव (Tip):ट्वीट करते समय अपनी राज्य/शहर की पुलिस या Cyber Cell (जैसे\n[handle]\n\n#RecoveryAgents #BankRecovery #CustomerRights #RBI #FakeCourtReader #FraudAlert #LegalAwareness #ConsumerRights #CyberFraud #FakePoliceCall #FakeAdvocate #LoanRecovery #CyberCrime #DigitalFraud #DelhiPolice #FinancialFraud #KKV\n\n@RBIsays\n[",
+  "redacted_text": "[handle] @HDFCBank_Cares @HDFC_Bank\n\nLoan Ending is #1688\nAgent Number [phone]\n\nरिकवरी के नाम पर contact list ko phone karke pratadit karna किस कानून में लिखा है\n\nनाम छिपाकर मानसिक उत्पीड़न कर रहे हैं। नाम छिपाने से आपकी यह अवैध करतूतें नहीं छुपेंगी।\n\n@RBI\n@RBI_India\n@Cyberdost \n\nकृपया इस अवैध रिकवरी पर तुरंत संज्ञान लें और सख्त कार्रवाई करें!#BankingOmbudsman #Harassment #RBI 💡 सुझाव (Tip):ट्वीट करते समय अपनी राज्य/शहर की पुलिस या Cyber Cell (जैसे\n@Cyberdost\n\n#RecoveryAgents #BankRecovery #CustomerRights #RBI #FakeCourtReader #FraudAlert #LegalAwareness #ConsumerRights #CyberFraud #FakePoliceCall #FakeAdvocate #LoanRecovery #CyberCrime #DigitalFraud #DelhiPolice #FinancialFraud…",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -6155,46 +6115,6 @@
   ],
   "sentiment": "negative",
   "owner": "cards",
-  "entity": "hdfc_bank"
- },
- "x:2091726609783115995": {
-  "id": "x:2091726609783115995",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-08-24T08:47:40+05:30",
-  "url": "https://x.com/i/status/2091726609783115995",
-  "summary": "Claims the bank sent investors a sympathetic confidential email to build an alibi before a whistleblower exposed a mis-sold fund.",
-  "redacted_text": "When @HDFC_Bank came to know that some whistleblower might scoop this deliberate mis-selling  of Carlisle Fund( same as Credit Suisse AT-1 bonds ) on 11th August they circulated this confidential email among investors showing sympathy and promising to have a joint fight against the Luxembourg based Fund house.\n\nSo sweet of you Sashi Jagdishan. cc @RBI @RBIsays \n\nThis was to create an alibi to save itself from any backlash from regulators in Dubai n India. cc [handle]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "mis_selling",
-   "nri_forex"
-  ],
-  "sentiment": "negative",
-  "owner": "compliance",
-  "entity": "hdfc_bank"
- },
- "x:2091734455606300890": {
-  "id": "x:2091734455606300890",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-08-24T09:18:51+05:30",
-  "url": "https://x.com/i/status/2091734455606300890",
-  "summary": "Alleges the wealth team sold a now-gated foreign fund to overseas customers without due diligence, quoting far below its offer price.",
-  "redacted_text": "Meet Jose Garcia CEO of Carlisle Fund, Luxembourg who had a chequered history of drug abuse, spending USD 200K company money on prostitutes and what not.\n\nHis fund was sold to NRI-HNI of UAE by the wealth management team of @HDFC_Bank 2017-2019 without any due diligence.\n\nFund now gated, quoting at 70% below of the offer price. cc @RBI @RBIsays \n\nSo the ex-Chairman Atanu Chakraborty IAS was so right on his apprehensions of deliberate corporate mis-governance n the board slept over it. What say [handle] cc [handle] @PMOIndia @nsitharaman @nsitharamanoffc @IndiaSebi",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "mis_selling",
-   "nri_forex"
-  ],
-  "sentiment": "negative",
-  "owner": "compliance",
   "entity": "hdfc_bank"
  },
  "x:2092293932243980500": {
@@ -6234,25 +6154,6 @@
   ],
   "sentiment": "negative",
   "owner": "cards",
-  "entity": "hdfc_bank"
- },
- "x:2092887484351054147": {
-  "id": "x:2092887484351054147",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-08-27T13:40:34+05:30",
-  "url": "https://x.com/i/status/2092887484351054147",
-  "summary": "Instant payments refused at a hospital counter for the bank's customers though its card works; asks why and tags government offices.",
-  "redacted_text": "Why has @HDFC_Bank stopped processing @UPI_NPCI and all digital transactions with [handle] ?\nI am at Indraprastha Apollo and the staff at payments counter said “any bank other than HDFC as they have blocked”.\nI tried to transact. HDFC refused.\nMost around me are stuck. Like me they have only one account and that’s with HDFC.\nStrangely HDFC credit card works.\nSo is this some attempt to undermine digital payments on UPI 10th anniversary? By Apollo? By HDFC? By both?\n@HDFCBank_Cares ? What gives?\n@PMOIndia [handle] @FinMinIndia @nsitharaman [handle] [handle] [handle]",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "upi_failures"
-  ],
-  "sentiment": "negative",
-  "owner": "payments",
   "entity": "hdfc_bank"
  },
  "x:2092894433369055716": {
@@ -6381,7 +6282,7 @@
   "created_at": "2026-09-02T16:13:43+05:30",
   "url": "https://x.com/i/status/2095100349577359773",
   "summary": "Bank plans to downgrade a premium card for low spend though spend was well above requirement; customer may switch to rivals.",
-  "redacted_text": "So, @HDFC_Bank @HDFCBank_Cares said that it will downgrade my Infinia card because I spent too little. My billing in the last 3 billing cycles on the Infinia card was 2.5x their requirement. The bank can't do basic math and is about to lose me to [handle] or [handle]",
+  "redacted_text": "So, @HDFC_Bank @HDFCBank_Cares said that it will downgrade my Infinia card because I spent too little. My billing in the last 3 billing cycles on the Infinia card was 2.5x their requirement. The bank can't do basic math and is about to lose me to [handle] or @AxisBank",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -6421,7 +6322,7 @@
   "created_at": "2026-09-06T20:30:02+05:30",
   "url": "https://x.com/i/status/2096614405819752501",
   "summary": "Refuses to pay last month's card bill without receiving the statement; manager, chat and site all fail; fears fines and credit score damage.",
-  "redacted_text": "@HDFC_Bank @CardsHdfc60342 I am not paying my last months bill without me getting my statement for the same.. RM, WhatsApp chat, my cards site nothing helps. and I would not want to be paying the fine nor bring down my civil score for the mistake of the bank\nThis is extremely bad",
+  "redacted_text": "@HDFC_Bank [handle] I am not paying my last months bill without me getting my statement for the same.. RM, WhatsApp chat, my cards site nothing helps. and I would not want to be paying the fine nor bring down my civil score for the mistake of the bank\nThis is extremely bad",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -6495,6 +6396,26 @@
   "owner": "fraud_cyber",
   "entity": "hdfc_bank"
  },
+ "x:2097771297812210156": {
+  "id": "x:2097771297812210156",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-09-10T01:07:06+05:30",
+  "url": "https://x.com/i/status/2097771297812210156",
+  "summary": "Sent a small amount to a wrong payment address and the recipient refuses to return it; asks bank and payments body for help.",
+  "redacted_text": "Hi @HDFC_Bank @NPCI_NPCI [handle] I accidentally transferred ₹5,000 to the wrong UPI ID/account. The recipient is refusing to return the amount.\nUPI Transaction ID: [account]\nRequesting urgent help and chargeback reversal to retrieve my money. Please assist. https://t.co/ZYoIy2e4Am",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "failed_txn_reversal",
+   "dispute_chargeback"
+  ],
+  "sentiment": "negative",
+  "owner": "payments",
+  "entity": "hdfc_bank"
+ },
  "x:2098698338338275577": {
   "id": "x:2098698338338275577",
   "source": "x",
@@ -6512,25 +6433,6 @@
   ],
   "sentiment": "negative",
   "owner": "operations",
-  "entity": "hdfc_bank"
- },
- "x:2099777474708324525": {
-  "id": "x:2099777474708324525",
-  "source": "x",
-  "source_label": "X",
-  "created_at": "2026-09-15T13:58:56+05:30",
-  "url": "https://x.com/i/status/2099777474708324525",
-  "summary": "Spent months resolving duplicate fuel charges despite merchant's quick support.",
-  "redacted_text": "Long-time HDFC customer here. @HDFCBank_Cares spent months defending two identical ₹3,148.32 fuel charges made 35 secs apart. Mr Raj Bahadur Singh at [handle] (merchant's bank) where I’m not even a customer understood and secured the refund. That contrast says everything.",
-  "title": null,
-  "app_name": null,
-  "app_version": null,
-  "rating": null,
-  "themes": [
-   "failed_txn_reversal"
-  ],
-  "sentiment": "negative",
-  "owner": "payments",
   "entity": "hdfc_bank"
  },
  "x:2099811108093825250": {
@@ -6688,6 +6590,26 @@
   "owner": "digital",
   "entity": "hdfc_bank"
  },
+ "x:2103357861996937510": {
+  "id": "x:2103357861996937510",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-09-25T11:06:07+05:30",
+  "url": "https://x.com/i/status/2103357861996937510",
+  "summary": "Cannot foreclose a loan online and two branches could not do it either, blaming staff and the technology team.",
+  "redacted_text": "@HDFC_Bank I have been trying to foreclose my loan but can't close it using online portal. And also visited two branches here in greater noida but still even don't have the facility to foreclose the loan. This is pathetic service by @HDFC_Bank employees and tech team.",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "loan_closure_documents",
+   "netbanking"
+  ],
+  "sentiment": "negative",
+  "owner": "loans",
+  "entity": "hdfc_bank"
+ },
  "x:2103376090169532731": {
   "id": "x:2103376090169532731",
   "source": "x",
@@ -6715,7 +6637,7 @@
   "created_at": "2026-09-25T12:34:48+05:30",
   "url": "https://x.com/i/status/2103380182128021660",
   "summary": "Hindi post: account debited for a withdrawal at another bank's ATM without cash dispensed, no refund after three days.",
-  "redacted_text": "@HDFCBank_Cares @HDFCBank [handle] [handle] @RBI @RBIsays\nICICI ATM से ₹10,000 निकालने पर HDFC खाते से पैसा कट गया, लेकिन कैश नहीं मिला। 72 घंटे बीत चुके हैं, अभी तक रिफंड नहीं मिला। कृपया तुरंत जांच कर ₹10,000 वापस करें।\n\nCase No.: #[account]https://t.co/enVDQz5D7q",
+  "redacted_text": "@HDFCBank_Cares @HDFCBank @ICICIBank [handle] @RBI @RBIsays\nICICI ATM से ₹10,000 निकालने पर HDFC खाते से पैसा कट गया, लेकिन कैश नहीं मिला। 72 घंटे बीत चुके हैं, अभी तक रिफंड नहीं मिला। कृपया तुरंत जांच कर ₹10,000 वापस करें।\n\nCase No.: #[account]https://t.co/enVDQz5D7q",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -6805,6 +6727,26 @@
   ],
   "sentiment": "negative",
   "owner": "compliance",
+  "entity": "hdfc_bank"
+ },
+ "x:2103675537587863978": {
+  "id": "x:2103675537587863978",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-09-26T08:08:27+05:30",
+  "url": "https://x.com/i/status/2103675537587863978",
+  "summary": "Distressed about a large loss from their account with no resolution eight days after complaining; resends case reference and tags the regulator.",
+  "redacted_text": "@HDFC_Bank @HDFCBank_Cares pls support me urgently. \nI am deeply disturbed for the loss of Rs 1 lakh from my account. Its been 8 days since my complaint. Please please its a humble request 🙏🙏😥😥\n\nSharing the complaint id raised with @HDFCBank_Cares @HDFC_Bank once again: \nCase Ref: [reference] dated 18 Sep 2026\n\nCc:\n[handle]  @RBI",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "unauthorised_txn",
+   "complaint_handling"
+  ],
+  "sentiment": "negative",
+  "owner": "fraud_cyber",
   "entity": "hdfc_bank"
  },
  "x:2103700577826074834": {
@@ -6934,7 +6876,7 @@
   "created_at": "2026-09-27T17:31:09+05:30",
   "url": "https://x.com/i/status/2104179532836290651",
   "summary": "Alleges card fraud and investor cheating after the merger, unanswered about two transactions registered in the same second.",
-  "redacted_text": "[handle] [handle] @HomeLoansByHDFC @HDFC_Bank @HDFCLIFE @HDFCBank_Cares @hdfcsec @HDFCBankNews @CarebyHDFC_HL @HDFCERGOGIC @hdfcmf [handle] [handle] [handle] [handle] [handle] @FinMinIndia @PMOIndia [handle] [handle] [handle] [handle] Looks like after getting merged, they started cheating customers &amp; investors. @HDFC_Bank has started Credit card frauds &amp; @hdfcmf is cheating investors. It’s so unprofessional &amp; unethical that they don't want to reply how one can register two transactions on same second?",
+  "redacted_text": "[handle] @jagograhakjago @HomeLoansByHDFC @HDFC_Bank @HDFCLIFE @HDFCBank_Cares @hdfcsec @HDFCBankNews @CarebyHDFC_HL @HDFCERGOGIC @hdfcmf [handle] [handle] [handle] [handle] [handle] [public office] [public office] [handle] [handle] [handle] [handle] Looks like after getting merged, they started cheating customers &amp; investors. @HDFC_Bank has started Credit card frauds &amp; @hdfcmf is cheating investors. It’s so unprofessional &amp; unethical that they don't want to reply how one can register two transactions on same second?",
   "title": null,
   "app_name": null,
   "app_version": null,
@@ -6964,6 +6906,26 @@
   ],
   "sentiment": "negative",
   "owner": "cx",
+  "entity": "hdfc_bank"
+ },
+ "x:2104446586201817534": {
+  "id": "x:2104446586201817534",
+  "source": "x",
+  "source_label": "X",
+  "created_at": "2026-09-28T11:12:19+05:30",
+  "url": "https://x.com/i/status/2104446586201817534",
+  "summary": "Fixed deposit held for an alleged court-ordered lien the branch cannot document; considers suing for harassment.",
+  "redacted_text": "@HDFC_Bank @HDFCBank_Cares  my fixed deposit is being held as the branch claim there is a lien on it due to a court order but they are unable to show me the court order. Should I not being filing a suit against you for harrasment #customerexpeience #mymoney @RBI #mightisright",
+  "title": null,
+  "app_name": null,
+  "app_version": null,
+  "rating": null,
+  "themes": [
+   "account_freeze",
+   "deposits_rates"
+  ],
+  "sentiment": "negative",
+  "owner": "operations",
   "entity": "hdfc_bank"
  },
  "x:2104464200969892172": {

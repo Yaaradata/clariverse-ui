@@ -240,3 +240,37 @@ export function signalHref(id: string, from: string): string {
 export function itemHref(s: SignalItem, from: string): string {
   return s.href ? `${s.href}?from=${from}` : signalHref(s.id, from);
 }
+
+/** Themes that are not a pain point (praise, advice, news, catch-alls). */
+const NOT_PAIN = [
+  "general_dissatisfaction",
+  "other",
+  "app_praise",
+  "service_praise",
+  "product_advice",
+  "offers_deals",
+  "market_news",
+];
+
+/** Exec page, satisfaction card: the theme with the most negative items. */
+export function topPainTheme(b: Bundle): Theme | undefined {
+  return b.themes.themes
+    .filter((t) => !NOT_PAIN.includes(t.id))
+    .sort((a, c) => c.sentiment.negative - a.sentiment.negative)[0];
+}
+
+/** Exec page, market card: the fastest-rising theme. */
+export function fastestRiser(b: Bundle): Theme | undefined {
+  return b.themes.themes
+    .filter((t) => t.score > 0)
+    .sort((a, c) => c.score - a.score)[0];
+}
+
+/** Satisfaction, "What customers are saying": the three largest themes that are not news, offers or catch-alls. */
+export function sayingThemes(b: Bundle): Theme[] {
+  const skip = ["other", "market_news", "offers_deals", "general_dissatisfaction", "product_advice"];
+  return b.themes.themes
+    .filter((t) => !skip.includes(t.id))
+    .sort((a, c) => c.count - a.count)
+    .slice(0, 3);
+}

@@ -101,9 +101,9 @@
     }
    ],
    "exemplars": [
-    "x:2092887484351054147",
     "reddit:comment:owas2mf",
     "x:2087225332311212094",
+    "x:2079806316407832820",
     "reddit:comment:owax9kr"
    ]
   },
@@ -312,7 +312,7 @@
    ],
    "exemplars": [
     "x:2074391302129782827",
-    "x:2092887484351054147",
+    "x:2072884095181582607",
     "reddit:1ve6mba",
     "reddit:1wpxf75"
    ]
@@ -416,8 +416,8 @@
     }
    ],
    "exemplars": [
-    "x:2092887484351054147",
     "x:2092894433369055716",
+    "x:2084938740020228231",
     "reddit:1wafopr",
     "reddit:1wlluqx"
    ]
@@ -521,8 +521,8 @@
     }
    ],
    "exemplars": [
-    "x:2087116156645802139",
     "x:2085194811565596800",
+    "x:2089756467566104669",
     "reddit:1vfpyto",
     "reddit:comment:p1ekryh"
    ]
@@ -853,8 +853,8 @@
    "top_theme": "dispute_chargeback",
    "exemplars": [
     "x:2097681578017321398",
-    "x:2099777474708324525",
-    "playstore:com.hdfcbank.android.now:46f90495-e641-4e9b-bc17-45f797d2374f"
+    "x:2081747385290764750",
+    "x:2103675537587863978"
    ]
   },
   {
@@ -911,7 +911,7 @@
   ],
   "exemplars": [
    "x:2074391302129782827",
-   "x:2092887484351054147",
+   "x:2072884095181582607",
    "reddit:1ve6mba"
   ]
  },
@@ -1103,8 +1103,8 @@
    }
   ],
   "exemplars": [
-   "x:2087116156645802139",
    "x:2085194811565596800",
+   "x:2089756467566104669",
    "reddit:1vfpyto",
    "reddit:comment:p1ekryh"
   ]
@@ -1139,8 +1139,8 @@
    }
   ],
   "exemplars": [
-   "x:2092887484351054147",
    "x:2092894433369055716",
+   "x:2084938740020228231",
    "reddit:1wafopr",
    "reddit:1wlluqx"
   ]
@@ -1148,17 +1148,17 @@
  "by_business": [
   {
    "business": "retail_banking",
-   "count": 6838,
-   "repeat": 293,
+   "count": 6834,
+   "repeat": 291,
    "escalation": 236,
-   "negative": 3002
+   "negative": 2998
   },
   {
    "business": "payments",
-   "count": 5175,
-   "repeat": 260,
+   "count": 5179,
+   "repeat": 262,
    "escalation": 31,
-   "negative": 2528
+   "negative": 2532
   },
   {
    "business": "cards",

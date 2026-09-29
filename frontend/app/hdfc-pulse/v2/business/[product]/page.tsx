@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BusinessView } from "@/components/hdfc-v3/BusinessView";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 import { PRODUCT_ORDER } from "@/lib/hdfc-v3/products";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
 import type { ProductId } from "@/lib/hdfc-v3/types";
@@ -29,7 +30,10 @@ export default async function BusinessPage({
       subtitle="The exec page, scoped to one product: numbers, priority relationships, issues, deliverables and actions."
       drill
     >
-      <BusinessView b={b} product={product as ProductId} />
+      <BusinessView
+        b={sliceBundle(b, { view: "business" })}
+        product={product as ProductId}
+      />
     </Shell>
   );
 }

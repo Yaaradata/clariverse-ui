@@ -1,6 +1,7 @@
 import { SatisfactionView } from "@/components/hdfc-v3/SatisfactionView";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
 
 export default function SatisfactionPage() {
@@ -12,7 +13,7 @@ export default function SatisfactionPage() {
       subtitle="Trust pillars · Relationship tiers · Journey stages"
       drill
     >
-      <SatisfactionView b={b} />
+      <SatisfactionView b={sliceBundle(b, { view: "satisfaction" })} />
     </Shell>
   );
 }

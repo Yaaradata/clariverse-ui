@@ -14,6 +14,7 @@ import {
 } from "@/lib/hdfc-v3/format";
 import {
   actions,
+  fastestRiser,
   improvingItems,
   itemHref,
   needsYou,
@@ -23,6 +24,7 @@ import {
   signalHref,
   themeMap,
   thisWeekItems,
+  topPainTheme,
 } from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
@@ -519,28 +521,13 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
     const p = pillars.find((x) => x.id === id);
     return p?.count ? (100 * p.sentiment.positive) / p.count : 0;
   };
-  const topPain = b.themes.themes
-    .filter(
-      (t) =>
-        ![
-          "general_dissatisfaction",
-          "other",
-          "app_praise",
-          "service_praise",
-          "product_advice",
-          "offers_deals",
-          "market_news",
-        ].includes(t.id),
-    )
-    .sort((a, c) => c.sentiment.negative - a.sentiment.negative)[0];
+  const topPain = topPainTheme(b);
   const ev = (id?: string) => (id ? b.evidence[id] : undefined);
   const sayingFor = (ids: string[]) =>
     ev(ids.find((i) => b.evidence[i]))?.summary ?? "";
 
   // Card 2: market
-  const riser = b.themes.themes
-    .filter((t) => t.score > 0)
-    .sort((a, c) => c.score - a.score)[0];
+  const riser = fastestRiser(b);
   const bankApp = b.pulse.apps.find((a) => a.app === "HDFC Bank app");
   const payzapp = b.pulse.apps.find((a) => a.app === "PayZapp");
 

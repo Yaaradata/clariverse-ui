@@ -320,7 +320,7 @@
     {
      "id": "branch_service",
      "label": "Branch service and staff behaviour",
-     "count": 16,
+     "count": 17,
      "exemplars": [
       "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375",
       "playstore:com.hdfcbank.android.now:9f488747-8fd1-48f2-9605-17d719fce82d",
@@ -528,7 +528,7 @@
     {
      "issue": "Branch service and staff behaviour",
      "theme": "branch_service",
-     "count": 16,
+     "count": 17,
      "owner": "retail",
      "first_seen_version": "9.0.4",
      "latest_version_seen": "11.1.0",

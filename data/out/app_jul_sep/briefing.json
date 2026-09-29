@@ -206,7 +206,7 @@
     {
      "id": "branch_service",
      "label": "Branch service and staff behaviour",
-     "count": 289,
+     "count": 292,
      "status": "watching"
     },
     {
@@ -222,7 +222,7 @@
      "status": "watching"
     }
    ],
-   "total": 940
+   "total": 943
   },
   {
    "owner": "compliance",
@@ -388,7 +388,7 @@
    {
     "issue": "Branch service and staff behaviour",
     "theme": "branch_service",
-    "count": 16,
+    "count": 17,
     "owner": "retail",
     "first_seen_version": "9.0.4",
     "latest_version_seen": "11.1.0",

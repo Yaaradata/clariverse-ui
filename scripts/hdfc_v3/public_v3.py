@@ -61,8 +61,8 @@ def product_of(r) -> str | None:
 
 
 def build_products(rows, basis) -> dict:
-    meta = json.load(open(OUT / "meta.json"))
-    labels = {t["id"]: t["label"] for t in json.load(open(OUT / "themes.json"))["themes"]}
+    meta = json.load(open(OUT / "meta.json", encoding="utf-8"))
+    labels = {t["id"]: t["label"] for t in json.load(open(OUT / "themes.json", encoding="utf-8"))["themes"]}
     by = collections.defaultdict(list)
     excluded = collections.Counter()
     for r in rows:
@@ -206,7 +206,7 @@ def main():
     rows = load()
     for r in rows:
         r["_stream"] = stream_of(r)
-    basis = set(json.load(open(OUT / "meta.json"))["trend_basis_streams"])
+    basis = set(json.load(open(OUT / "meta.json", encoding="utf-8"))["trend_basis_streams"])
     products = build_products(rows, basis)
     dump(products, OUT / "products.json")
     dump(build_store_series(), OUT / "store_series.json")

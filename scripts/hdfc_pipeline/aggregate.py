@@ -133,8 +133,23 @@ def sent_counts(rows):
     return {"positive": c.get("positive", 0), "neutral": c.get("neutral", 0), "negative": c.get("negative", 0)}
 
 
+def clip(text: str, n: int) -> str:
+    """Cut at a word boundary, so a handle or tag is never left half-cut."""
+    if len(text) <= n:
+        return text
+    cut = text[:n]
+    return (cut[: cut.rfind(" ")] if " " in cut else cut).rstrip() + "…"
+
+
+def quotable(r) -> bool:
+    """A quote that alleges something against a named person, or complains about one, is never used as evidence.
+    (Names are already redacted to role tags in normalise.py; the person may still be identifiable by role.)"""
+    return not (r.get("alleges_named") or (r.get("names_person") and r["sentiment"] == "negative"))
+
+
 def pick_exemplars(rows, n=5, prefer_negative=True):
     """Exemplars: substantive, negative first, spread across sources, most engaged first."""
+    rows = [r for r in rows if quotable(r)]
     def score(r):
         eng = r.get("engagement") or {}
         e = sum(v for v in (eng.get("likes"), eng.get("upvotes"), eng.get("helpful"), eng.get("replies")) if isinstance(v, (int, float)))
@@ -319,7 +334,7 @@ def main():
     esc = [r for r in bank if r["escalation_intent"]]
     public_src = ("x", "reddit", "forum")
     reach = sorted(
-        [r for r in bank if r["source"] == "x" and (r["author_followers"] or 0) >= 10000 and r["sentiment"] == "negative"],
+        [r for r in bank if r["source"] == "x" and (r["author_followers"] or 0) >= 10000 and r["sentiment"] == "negative" and quotable(r)],
         key=lambda r: -(r["author_followers"] or 0),
     )[:8]
     voices = []
@@ -636,7 +651,7 @@ def main():
             continue
         evidence[eid] = {
             "id": eid, "source": r["source"], "source_label": SOURCE_LABEL[r["source"]], "created_at": r["created_at"],
-            "url": r["url"], "summary": r["summary"], "redacted_text": (r["text"] or "")[:700], "title": r.get("title"),
+            "url": r["url"], "summary": r["summary"], "redacted_text": clip(r["text"] or "", 700), "title": r.get("title"),
             "app_name": r.get("app_name"), "app_version": r.get("app_version"), "rating": r.get("rating"),
             "themes": r["themes"], "sentiment": r["sentiment"], "owner": r["owner"], "entity": r["entity"],
         }

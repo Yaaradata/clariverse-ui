@@ -333,35 +333,35 @@
    "label": "PayZapp and UPI",
    "owner": "payments",
    "module": null,
-   "count": 5175,
-   "negative": 2528,
+   "count": 5179,
+   "negative": 2532,
    "escalation": 31,
-   "repeat": 260,
-   "promise_break_mentions": 189,
+   "repeat": 262,
+   "promise_break_mentions": 190,
    "share_negative": 48.9,
-   "trend_change_pct": -26.9,
+   "trend_change_pct": -26.8,
    "trend_basis": {
-    "first_half": 2957,
-    "second_half": 2141
+    "first_half": 2958,
+    "second_half": 2144
    },
    "top_issue": {
     "id": "app_speed_crash",
     "label": "App speed, loading and crashes",
-    "negative": 769
+    "negative": 770
    },
    "issues": [
     {
      "id": "app_speed_crash",
      "label": "App speed, loading and crashes",
-     "count": 839,
-     "negative": 769,
+     "count": 840,
+     "negative": 770,
      "escalation": 2
     },
     {
      "id": "login_mpin",
      "label": "Login, MPIN and registration",
-     "count": 436,
-     "negative": 408,
+     "count": 437,
+     "negative": 409,
      "escalation": 3
     },
     {
@@ -381,15 +381,15 @@
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
-     "count": 101,
-     "negative": 95,
+     "count": 103,
+     "negative": 97,
      "escalation": 5
     },
     {
      "id": "device_security_block",
      "label": "Device security blocks and false alerts",
-     "count": 73,
-     "negative": 68,
+     "count": 74,
+     "negative": 69,
      "escalation": 0
     },
     {
@@ -402,8 +402,8 @@
     {
      "id": "failed_txn_reversal",
      "label": "Failed transaction reversal",
-     "count": 59,
-     "negative": 40,
+     "count": 61,
+     "negative": 42,
      "escalation": 12
     },
     {
@@ -519,6 +519,13 @@
      "escalation": 0
     },
     {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 10,
+     "negative": 8,
+     "escalation": 1
+    },
+    {
      "id": "card_eligibility_upgrade",
      "label": "Card eligibility, upgrade and LTF requests",
      "count": 11,
@@ -538,13 +545,6 @@
      "count": 9,
      "negative": 7,
      "escalation": 0
-    },
-    {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 9,
-     "negative": 7,
-     "escalation": 1
     },
     {
      "id": "fraud_scam",
@@ -634,7 +634,7 @@
    "by_source": {
     "playstore": 4762,
     "appstore": 236,
-    "x": 113,
+    "x": 117,
     "reddit": 56,
     "forum": 8
    }
@@ -644,16 +644,16 @@
    "label": "Accounts and deposits",
    "owner": "retail",
    "module": null,
-   "count": 1637,
-   "negative": 985,
+   "count": 1635,
+   "negative": 983,
    "escalation": 222,
-   "repeat": 189,
-   "promise_break_mentions": 135,
-   "share_negative": 60.2,
-   "trend_change_pct": 157.8,
+   "repeat": 187,
+   "promise_break_mentions": 134,
+   "share_negative": 60.1,
+   "trend_change_pct": 157.4,
    "trend_basis": {
     "first_half": 446,
-    "second_half": 1139
+    "second_half": 1137
    },
    "top_issue": {
     "id": "complaint_handling",
@@ -685,8 +685,8 @@
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
-     "count": 111,
-     "negative": 94,
+     "count": 109,
+     "negative": 92,
      "escalation": 9
     },
     {
@@ -769,8 +769,8 @@
     {
      "id": "failed_txn_reversal",
      "label": "Failed transaction reversal",
-     "count": 9,
-     "negative": 9,
+     "count": 8,
+     "negative": 8,
      "escalation": 2
     },
     {
@@ -795,13 +795,6 @@
      "escalation": 3
     },
     {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 7,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
      "id": "statements_documents",
      "label": "Statements, certificates and documents",
      "count": 12,
@@ -821,6 +814,13 @@
      "count": 8,
      "negative": 4,
      "escalation": 2
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 6,
+     "negative": 4,
+     "escalation": 0
     },
     {
      "id": "rewards_value",
@@ -922,7 +922,7 @@
     }
    ],
    "by_source": {
-    "x": 961,
+    "x": 959,
     "reddit": 574,
     "forum": 102
    }
@@ -1627,35 +1627,35 @@
    "label": "Digital (app and NetBanking)",
    "owner": "digital",
    "module": "digital",
-   "count": 5153,
-   "negative": 1982,
+   "count": 5151,
+   "negative": 1980,
    "escalation": 6,
    "repeat": 103,
    "promise_break_mentions": 51,
-   "share_negative": 38.5,
-   "trend_change_pct": -28.8,
+   "share_negative": 38.4,
+   "trend_change_pct": -29.0,
    "trend_basis": {
-    "first_half": 227,
-    "second_half": 160
+    "first_half": 226,
+    "second_half": 159
    },
    "top_issue": {
     "id": "app_speed_crash",
     "label": "App speed, loading and crashes",
-    "negative": 891
+    "negative": 890
    },
    "issues": [
     {
      "id": "app_speed_crash",
      "label": "App speed, loading and crashes",
-     "count": 1041,
-     "negative": 891,
+     "count": 1040,
+     "negative": 890,
      "escalation": 1
     },
     {
      "id": "login_mpin",
      "label": "Login, MPIN and registration",
-     "count": 365,
-     "negative": 317,
+     "count": 364,
+     "negative": 316,
      "escalation": 1
     },
     {
@@ -1696,8 +1696,8 @@
     {
      "id": "branch_service",
      "label": "Branch service and staff behaviour",
-     "count": 40,
-     "negative": 29,
+     "count": 42,
+     "negative": 30,
      "escalation": 1
     },
     {
@@ -1710,8 +1710,8 @@
     {
      "id": "device_security_block",
      "label": "Device security blocks and false alerts",
-     "count": 18,
-     "negative": 13,
+     "count": 17,
+     "negative": 12,
      "escalation": 0
     },
     {
@@ -1785,13 +1785,6 @@
      "escalation": 0
     },
     {
-     "id": "failed_txn_reversal",
-     "label": "Failed transaction reversal",
-     "count": 4,
-     "negative": 4,
-     "escalation": 1
-    },
-    {
      "id": "merchant_pos",
      "label": "Merchant QR, POS and sound box",
      "count": 3,
@@ -1804,6 +1797,13 @@
      "count": 3,
      "negative": 3,
      "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 3,
+     "negative": 3,
+     "escalation": 1
     },
     {
      "id": "unsolicited_calls",
@@ -1865,7 +1865,7 @@
    "by_source": {
     "playstore": 4763,
     "appstore": 279,
-    "x": 69,
+    "x": 67,
     "reddit": 39,
     "forum": 3
    }

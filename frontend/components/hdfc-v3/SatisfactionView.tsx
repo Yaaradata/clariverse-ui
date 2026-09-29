@@ -22,7 +22,12 @@ import {
   halfLabel,
   rangeLabel,
 } from "@/lib/hdfc-v3/format";
-import { signalHref, themeMap, trendWords } from "@/lib/hdfc-v3/selectors";
+import {
+  sayingThemes,
+  signalHref,
+  themeMap,
+  trendWords,
+} from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
   AnswerLine,
@@ -130,15 +135,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
     net: Math.round((100 * (w.pos - w.neg)) / w.n),
   }));
 
-  const saying = b.themes.themes
-    .filter(
-      (t) =>
-        !EXCLUDE.has(t.id) &&
-        t.id !== "general_dissatisfaction" &&
-        t.id !== "product_advice",
-    )
-    .sort((a, c) => c.count - a.count)
-    .slice(0, 3);
+  const saying = sayingThemes(b);
 
   const closureEx = b.signals.closure_intent.exemplars
     .map((id) => b.evidence[id])
