@@ -1,179 +1,153 @@
-# LisN · HDFC Customer Pulse: walkthrough script (earlier version → current build)
+# LisN · HDFC Customer Pulse: walkthrough script (current build on main, 30 Sep review)
 
-For an internal walkthrough with a manager. About 15 minutes.
+For an internal walkthrough with a manager. About 12 minutes.
 **Do** = what to click. **Say** = what to say (in your own words).
-Before you start:
-- Open `http://localhost:3000/role-based/hdfc` and full-screen the browser (the layout is checked at 1920×1080, 125% Windows scaling).
-- Pick a theme with the **Light / Dark** button in the header. The choice sticks for the whole demo.
 
-Every figure below is what the screen shows for the brief of **Tuesday 29 September 2026, 07:45**. The window is 1 Jul–28 Sep.
+Before you start:
+- Open `http://localhost:3000/role-based/hdfc`, click **"MD's office & Head of CX · LisN"**, and full-screen the browser.
+- Pick a theme with the **Light / Dark** button in the header. The choice sticks for the whole demo.
+- In the top-right corner, click **Full window**. The screen opens on Last 7 days; every figure in this script is for **Full window, 1 Jul to 29 Sep 08:30** (public data ends 28 Sep), in the brief of **Tuesday 29 September 2026, 07:45**. Trends in this period compare the second half of the window with the first half.
+
+The build has three screens in the left menu: **MD's office / Head of CX**, **Cards: business view** and **Action queue: escalation emails**.
 
 ---
 
 ## 0. Open (1 min)
 
-**Do:** Stay on the role-based HDFC page. It lists three roles: Head of CX, **"MD's office & Head of CX · LisN (earlier version)"** and **"MD's office & Head of CX · LisN"**.
+**Do:** Land on the MD's office / Head of CX view. Don't scroll yet.
 
 **Say:**
-> "This is the HDFC demo after the second call with Vidya on 25 September. She told us four things. Show the numbers first. Go product by product, the way the bank runs its morning review. Remember a customer across products and channels. And put the bank's most important customers first. So we rebuilt the demo around those four asks.
-> We kept the first version as it was, so you can see the difference. It's listed here as 'earlier version'; the other one is the new build."
+> "This is the HDFC demo after the 30 September review. Three things changed. One: there is now a single view for the MD's office and the Head of CX, and it opens with the pulse, numbers first. Two: everything follows one period filter. Three: Cards has its own business-head view, with three drill-downs behind it. The other businesses follow the same layout once Cards is agreed."
 
 ---
 
-## 1. The earlier version in 30 seconds (1 min)
+## 1. The header: period, theme, Ask LisN (1 min)
 
-**Do:** Click **"LisN (earlier version)"**. Scroll once, top to bottom.
+**Do:** Point at the top-right of the header: **Morning brief · Last 7 days · Last 30 days · Full window**, then **Light / Dark**. Click **Last 7 days**, then back to **Full window**.
 
 **Say:**
-> "This is what we showed first. It opens with a written summary, then themes from public voice: X, Reddit, forums and the app stores. It's useful, but it's text-first and bank-wide. It doesn't show the numbers a bank reviews every morning, it doesn't go product by product, and it has no idea who the customer is. It also compared app ratings across two different stores, which we no longer do."
+> "The period filter sits in the top-right corner and drives every section on every screen. Morning brief is the last 24 hours up to this morning; then 7 days, 30 days and the full window from 1 July. I'll stay on the full window today. The period stays with you when you move between screens."
 
-**Do:** Press the browser's back button to return to the role page, then click **"LisN"**. There's no version switch in the header any more; the version label was taken off the bank's screens.
+**Do:** Point at the round **sparkle button in the bottom-right corner**. Click it, show the chat window, close it.
+
+**Say:**
+> "Ask LisN is a chat window, always one click away in the bottom-right corner. It answers from the same data as the screens."
 
 ---
 
-## 2. The exec page: numbers first (3 min)
+## 2. Customer pulse: the bank's most important customers (2 min)
 
-**Do:** Point at the **header**: the brief date, the MD's office / Head of CX view, Ask LisN and the Light / Dark button.
-
-**Say:**
-> "Same two views: MD's office and Head of CX. Vidya said these two don't need to differ much. The MD's view leads with priority customers; Head of CX leads with the numbers and adds 'Who should hear what'. Light or dark is just a preference; everything reads the same in both."
-
-**Do:** Point at the **product chips** under the title.
+**Do:** Point at the four list cards in **Customer pulse**.
 
 **Say:**
-> "The product filter. Pick Cards and the page scopes to cards, which becomes the business-head view. I'll show it in a minute."
+> "The most important customers come first. These four lists are the bank's own: Ultra sensitive, RBI & Government, Ultra HNI, and customers with multiple relationships. For each: contacts in the period, how many are open, and how many have had no reply in 48 hours.
+> Ultra sensitive: 45 customers, 438 contacts, up 14%; 24 are open and 3 have had no reply in 48 hours. RBI & Government: 124 customers, 1,204 contacts, 55 open, 3 without a reply. Ultra HNI: 151 customers, 1,551 contacts, 56 open, 7 without a reply. Multiple relationships: 763 customers, 6,304 contacts, 242 open, 31 without a reply."
 
-**Do:** Point at **Priority relationships** (first on the MD's view).
-
-**Say:**
-> "The most important customers come first. These cohorts come from the bank's own lists: priority list A, list B, ultra-HNI and HNI. For each: open issues, how many are over 5 hours and over 24 hours, and whether the RM knows. List A has 45 customers: 24 open issues, 16 of them over 24 hours, and RMs have been told about 4 of the 18 customers who should have an alert today. That's the gap Vidya described."
-
-**Do:** Point at **The numbers first** dials.
+**Do:** Click **By channel** on one card, then close it. Point at **High-priority mentions** and the **RM** line.
 
 **Say:**
-> "Then the numbers she asked for: total, closed or responded, open, and open too long, once inside the bank and once outside.
-> Inside is a simulated sample, tagged 'illustrative until discovery': 32,000 interactions, 1,435 open and 341 past their deliverable.
-> Outside is real public data from July to September: 17,193 posts and reviews about HDFC Bank. The strongest line is this one."
-
-**Do:** Point at the amber **"Responded is not resolved"** line.
-
-**Say:**
-> "HDFC replies to 96% of Play Store reviews, with a median reply of 10 minutes. That looks excellent. But of 4,287 replies to negative reviews, 3,755 (88%) only say 'email us' or 'call us'. They respond, but they don't resolve. That's the conversation we want to have with Anjani."
-
-**Do:** Scroll to **Executive summary** and **Executive pulse**.
-
-**Say:**
-> "Three signals need you today, three were routed overnight, one is improving. 'Complaints closed without resolution' leads: 633 public items, 190 with escalation language. Then the new app's fix list: 1,188 negative reviews of version 11; on the Play Store, 31% of its reviews are positive against 74% on earlier versions. Then card fees, up 137%. Every item carries its owner and whether that owner has acknowledged it."
-
-**Do:** Scroll to **Pulse by product**.
-
-**Say:**
-> "The morning review, product by product: cards, PayZapp, accounts, the three loan types, insurance and digital. Public negative items with their trend, open and overdue items inside the bank, deliverables met, and the top issue for each product. Every row clicks through. Where a product has too few public items, it says 'too few to trend' rather than invent one."
-
-**Do:** Scroll to **Customer pulse**.
-
-**Say:**
-> "This is Vidya's biggest point. 2,917 of the 4,989 customers with a signal complained in two or more products; 586 of them are priority customers. LisN remembers them across products. Here's one."
+> "Each list opens by channel. High-priority mentions are public posts by listed customers: 144 in the window, 142 responded. A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data. It is tagged 'Internal · illustrative'. And RMs have been alerted for 45 of the 219 customers who should have an alert this morning."
 
 ---
 
-## 3. One customer, every channel (3 min)
+## 3. CX pulse: all customer contact (2 min)
 
-**Do:** Click the **Persona 1 (XXXX4821)** strip.
-
-**Say:**
-> "Persona 1: a fictional private banking customer, masked id, no real name. Read the trail from the top.
-> At 19:42 their card is declined at a hotel abroad. Two minutes later an automated bot calls and reads out the reason, but can't raise the limit: closed, unresolved. Their assistant emails the bank that night. Next morning they call the accounts team about the same payment. At lunch they reply publicly to the bank's care handle. In the evening they call again, and a callback is promised but never logged.
-> Six touchpoints, one system event and five contacts, across three teams in 23 hours, and the RM was never told."
-
-**Do:** Point at the notes under touchpoints 2 and 4.
+**Do:** Point at the **Overall contact volume** bar, then the **Internal channels** dials and channel table.
 
 **Say:**
-> "With LisN, the priority-list context attaches at touchpoint 2, the unresolved bot call, and follows the customer into accounts, so the next agent sees the history. The assistant's email is linked only through contact details the bank already holds."
+> "Then all customer contact in one place: 46,311 since 1 July; 29,118 on the bank's own channels (63%) and 17,193 in public (37%).
+> Inside the bank: 27,792 resolved, 1,326 open, and 999 open too long, which means still open more than 48 hours after the contact came in. The table beside it splits the same numbers by channel and adds up to the dials. IVR bot calls are not counted."
 
-**Do:** Scroll to **Recommended actions** and the **mock CRM task**.
+**Do:** Point at **External channels**: Total signals and High-impact signals.
 
 **Say:**
-> "Then LisN recommends: alert the RM as a CRM task, call back within the working priority target (5 hours to respond, 24 to close, which Vidya mentioned and the bank still has to confirm), and give the customer one owner. LisN recommends; people act. The CRM task is a mock, not sent."
+> "Outside the bank: 6,332 positive against 7,510 negative, source-weighted so a burst in one source can't move the total. The bank replied to 10,240 of 10,617 Play Store reviews, the only source with reply data. High impact means a post with reach: 272 in the window, 157 of them negative."
 
 ---
 
-## 4. Priority relationships (1 min)
+## 4. Today's morning brief (2 min)
 
-**Do:** Click **Priority relationships** in the left menu (hover the menu to see the labels).
-
-**Say:**
-> "The full view: 64 customers on the bank's priority lists have an issue open this morning; 16 issues on list A are past 24 hours; RMs have been told about 9 of the 64 customers with an alert due. Each cohort shows negative contacts by channel, products affected, and RMs told.
-> Two points matter for compliance. Flags prioritise service; they never restrict or downgrade it. And 'high impact' is a property of the complaint, never of the person."
-
-**Do:** Point at **How a customer gets on a list** and **High-impact complaints**.
+**Do:** Scroll to **Today's morning brief**. Read across the three columns.
 
 **Say:**
-> "This answers 'how do we know who's an RBI official or a celebrity?' We don't work it out. LisN reads the lists the bank already keeps. Separately, a complaint is high impact if it names a regulator or ombudsman, uses legal language, or comes from an official or regulator email domain. Seven complaints in the sample came from such a domain. That labels the message, not the person."
+> "The brief, in three columns of three.
+> What needs you: Accounts and deposits, with 222 posts using escalation language and 599 internal cases open over 48 hours. Cards, rewards value, devaluation and caps: 130 posts and 183 cases. Personal loans, recovery and collection conduct: 58 posts and 65 cases.
+> Signals that are building: issues whose share of public voice rose 30% or more. Card variant migration and forced upgrade on Cards, 275 public items; product questions and KYC updates on Accounts.
+> What's improving or stable: Accounts, negative share down from 60% to 50%. PayZapp and UPI, down from 53% to 45%. Cards is steady at 68%. The rule for each column is printed under it."
+
+**Do:** Point at the **business cards** under the brief.
+
+**Say:**
+> "One card per business, with internal and external volume, the top issue and one anonymised quote. Cards: 12,319 contacts, 8,693 internal and 3,626 public; top issue, rewards value, devaluation and caps. Accounts and deposits: 10,605. Digital: 9,514. PayZapp and UPI: 7,690. Cards opens its business view; the others say 'Coming soon'."
+
+**Do:** Scroll to **Reputation pulse by product**, then **Actions to take**.
+
+**Say:**
+> "Reputation by product is the public side only: volume, positive and negative, and the trend, one row per product. Then the actions: recommendations routed to an owner. LisN recommends; people act."
 
 ---
 
-## 5. Product deep dives (2 min)
+## 5. Cards: business view (3 min)
 
-**Do:** Click **Cards** in the left menu.
-
-**Say:**
-> "Each product module has the same seven sections: what, is it real, the issue list, where, how high, owner and action, and evidence. Cards: 1,312 negative public items out of 3,626. Inside the bank, 307 open and 71 past their deliverable. The issue list runs from variant migration to closure, where the RBI rule is 7 working days and ₹500 a day."
-
-**Do:** Click **Digital: HDFC Bank app**.
+**Do:** Click the **Cards** business card (or **Cards: business view** in the left menu). Point at **Issue pulse: Cards**.
 
 **Say:**
-> "For the app, it's the fix list customers have written: speed, login, and new-app problems. Ratings are compared within one store only: on the Play Store version 11 averages 2.4 stars against 4.5 for version 9; on the App Store, 2.1 against 3.4. At the bottom is the evidence. Each quote is labelled by source and date, like 'Play Store review · 1★ · 1 Sep'. We don't link to the original post, and people's names are removed."
+> "This is the head of Cards' view. Same period, same numbers as the Cards card we just saw: 8,693 internal contacts, up 15%; 8,408 resolved, 285 open, 183 open over 48 hours. 2,592 were negative, 171 escalated to a grievance desk or beyond, and 4,597, that's 53%, carry a delivery timeline.
+> In public: 3,626 posts and reviews; 259 positive against 1,312 negative; 131 of 133 Play Store reviews got a reply."
 
-**Do:** Go back to the exec page and click the **Cards** product chip.
+**Do:** Scroll to **Issues by category**. Click **Upgrades, variants and eligibility** to open its subcategories, then close it.
 
 **Say:**
-> "And this is the business-head view: the same exec page scoped to cards, with its own priority customers, issues, deliverables and actions. Vidya will define the rest at the next review."
+> "Issues by category, largest first, internal and external side by side, each with its owner in the cards team. Upgrades, variants and eligibility leads: 2,228 contacts, 33 open over 48 hours, and 818 public items. Rewards and redemption is next: 1,963 contacts and 819 public items. Open a category for its subcategories. Each contact counts once, so the categories add up to the pulse above."
+
+**Do:** Scroll to the **three question cards**.
+
+**Say:**
+> "Then three questions, each with its answer on the card and a full page behind it.
+> Are my customers happy? Net sentiment of Cards public voice is −56, down 5 points between the two halves of the window.
+> What is the market saying about us? Card dispatch and delivery is the fastest-rising theme; 69 posts with reach, 46 of them negative.
+> Are we keeping our timelines? 124 public posts describe a missed timeline, 611 ask where something is, and 130 use escalation language."
+
+**Do:** Click **Are we keeping our timelines?** Scroll through it.
+
+**Say:**
+> "The drill-down. How contacts were handled. The escalation ladder: 8,693 contacts, 725 repeats, 171 at grievance, 9 at the MD's office, 3 at the Internal Ombudsman, none at the RBI Ombudsman. In public, 130 posts with escalation language, 51 of them naming RBI. Closure intent: 139 public posts and 157 closure requests. The dispute funnel: 57 raised, 57 with a first response, 50 closed, 33 credited. And the timelines customers say were missed, by request type. This is what was heard in public; it is not a TAT compliance figure."
+
+**Do:** Press back. Optionally open **Are my customers happy?** (contacts by stage and list, repeat contact, sentiment by source, what customers are saying) and **What is the market saying about us?** (all themes, rising themes, the stores). Return to the Cards view and scroll to **Volume by channel** and **Actions to take**.
+
+**Say:**
+> "The view closes with volume by channel and the three categories that most need action, each with its owner."
 
 ---
 
-## 6. Deliverables ledger (1.5 min)
+## 6. Action queue (1 min)
 
-**Do:** Click **Are we meeting our deliverables?**
+**Do:** Click **Action queue: escalation emails** in the left menu.
 
 **Say:**
-> "We renamed 'promise' to 'deliverables', which is Vidya's word. 91% of deliverables are met across 13 types; 341 items are open past their TAT this morning. The weakest is card dispatch, at 68%.
-> The first six rows are RBI timelines, with the RBI source under each TAT: failed transactions, card closure, unauthorised transactions, credit reports, property documents, and complaint resolution before the ombudsman.
-> The other seven read 'Bank TAT: confirm in discovery'. Those are timelines HDFC sets itself, and we don't have their SLAs, so we don't put a number on screen. The met and overdue figures on those rows come from the illustrative sample. Once we have the bank's SLAs, they drop straight in."
+> "This is the 'act' part. Twenty sample escalation emails, in English and Hinglish, each read against its backend status and sorted into buckets: 3 to call today, 4 to escalate, and 5 that can be answered now from the backend status. Open a draft reply: a person approves it before anything is sent."
 
 ---
 
-## 7. Action queue (1 min)
-
-**Do:** Click **Action queue: escalation emails**.
-
-**Say:**
-> "This is the 'act' part, from what Pradeep asked about the L2 email team. Twenty sample escalation emails from 25 to 28 September, in English and Hinglish. Each is read against its backend status and deliverable clock and sorted into six buckets: 3 to call today, 4 to escalate, and 5 that can be answered now from the backend status.
-> Open a draft reply: a person approves it before anything is sent. The 'time saved' figures are assumptions until we have the email team's real numbers."
-
----
-
-## 8. Where the data comes from (1.5 min)
+## 7. Where the data comes from (1 min)
 
 **Say:**
 > "Every tile says which kind of data it shows.
-> **Public · live** is real. It covers 1 July to 28 September: about 28,500 items collected from the Play Store, App Store, Reddit, X and consumer forums, of which 17,193 are about HDFC Bank itself. By source: Play Store 10,617, Reddit 2,839, X 1,844, forums 1,293, App Store 600. HDFC Life and HDFC Securities are kept out of bank-wide numbers.
-> **Internal · illustrative** is simulated: 5,000 fictional customers and 32,000 interactions over 13 weeks, across calls, chat, email, branch, WhatsApp and the IVR bot. It follows the same issue mix as public voice, and every total adds up.
-> On quality: keyword rules were only about 50% accurate on social posts, so an AI model read and labelled all 11,741 of them; I spot-checked a sample and agreed with 90%. Mood and trends are source-weighted, so a burst in one source can't move them: unweighted, mood would read −38 points; weighted, it's +3. Checks run on every build: totals reconcile, no personal data or names on screen, no links to original posts, no internal labels."
+> **Public · live** is real: 17,193 posts and reviews about HDFC Bank from the Play Store, App Store, Reddit, X and consumer forums, 1 July to 28 September.
+> **Internal · illustrative** is simulated until discovery: 29,118 contacts from fictional customers with masked ids, across calls, chat, email, branch, WhatsApp and social inbox.
+> Public shares and trends are source-weighted. Ratings are compared within one store only. No names, handles or links to original posts appear on screen, and checks run on every build: totals reconcile across screens, and no personal data or internal labels."
 
 ---
 
-## 9. Close (1 min)
+## 8. Close (1 min)
 
 **Say:**
-> "To sum up, the new build does what Vidya asked: numbers first, product by product, one memory per customer, and priority customers first, with RM alerts.
-> The strongest point for Anjani is that the bank responds but doesn't resolve.
-> There are four decisions for us:
-> 1. Do we lead with the 96% or the 88%?
-> 2. Are we comfortable with the 'bank's own lists' answer on RBI officials and celebrities?
-> 3. Can we get the D-11 reference, or the bank's SLAs, to verify the six RBI timelines and fill in the seven bank ones?
-> 4. What should go on the business-head view?
-> It's all merged to main."
+> "To sum up: one view for the MD's office and Head of CX that opens with the pulse; one period filter for everything; and a Cards business view with three drill-downs.
+> Decisions for us:
+> 1. Is the Cards layout the template for the other businesses?
+> 2. Are the four customer lists and their names right?
+> 3. Is 48 hours the right line for 'open too long'?
+> It's all on main."
 
 ---
 
@@ -182,12 +156,14 @@ Every figure below is what the screen shows for the brief of **Tuesday 29 Septem
 | Question | Answer |
 |---|---|
 | Is the inside data real? | No. It's simulated and labelled on every tile. It becomes real in discovery. |
-| Why only Play Store for replies? | The App Store export has no reply field, and the bank's X replies weren't collected. The screen says so. |
-| How do you know who's RBI or a celebrity? | We don't infer it. We read the bank's own lists, and flag the complaint, never the person. |
-| Why "Bank TAT: confirm in discovery"? | RBI doesn't set those timelines, and HDFC's own SLAs aren't in our reference yet (D-11 isn't available to us). We won't show a number we can't source. |
-| Why did mood change from the last run? | It's now source-weighted. A capped X collection run made X 66% of the last 7 days against 20% of the window; weighting by each source's normal share removes that artefact. |
-| Can I click through to the original post? | No, by design. Quotes are labelled by source and date, names are removed, and the original links stay server-side for audit. |
-| Light or dark? | Either. It's a button in the header. Every screen is checked in both. |
-| How current is the data? | 1 July to 28 September 2026. It rebuilds with one command (`scripts/hdfc_pipeline/run_all.sh`). |
-| How accurate is the classification? | Social posts were labelled by an AI model, with 90% agreement on a manual spot check. Store reviews use rules, with sentiment from the star rating. |
-| What's not done? | The PayZapp deep dive, the full 1,500-email action queue, X replies, and the bank's own TATs. |
+| Why do the numbers change when I change the period? | Every section is recomputed for the selected period. The Cards card on the MD's view always equals the Cards view for the same period. |
+| What are full-window trends compared with? | The second half of the window against the first half. |
+| Why is "open over 48 h" a dash in Morning brief? | The brief covers 24 hours, so nothing in it can be 48 hours old yet. The screen says "needs 48 hours". |
+| Why only Play Store for replies? | It is the only source with reply data. The screen says so. |
+| What does "watch" mean in the brief? | In shorter periods, fewer than three businesses may meet a column's rule, so the next-closest fill it and are marked. |
+| How do you know who is on a list? | We don't infer it. LisN reads the bank's own lists. |
+| Where is MD-marked mail? | Taken off the view after the review. |
+| Where are the other businesses? | "Coming soon". They follow the Cards layout once it is agreed. |
+| Is there TAT compliance? | Not on these screens. The Cards view counts contacts that carry a delivery timeline and what customers say was missed in public. |
+| Can I click through to the original post? | No, by design. Quotes are labelled by source and date, and names are removed. |
+| Light or dark? | Either. It's a button in the header. |
