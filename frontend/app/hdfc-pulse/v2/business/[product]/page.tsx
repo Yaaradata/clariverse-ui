@@ -28,6 +28,7 @@ export default async function BusinessPage({
     <Shell
       {...shellProps(b)}
       periods={cards ? sliced.periods : undefined}
+      context={cards ? "Cards · Business view" : undefined}
       title={`${row.label}: business view`}
       subtitle={
         cards

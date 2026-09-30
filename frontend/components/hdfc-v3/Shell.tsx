@@ -6,9 +6,9 @@ import {
   CreditCard,
   Headphones,
   Inbox,
+  LayoutDashboard,
   MessageSquareText,
   Moon,
-  Sparkles,
   Sun,
 } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ import { rangeLabel } from "@/lib/hdfc-v3/format";
 import type { PeriodsFile } from "@/lib/hdfc-v3/periods";
 import { THEME_KEY, type ThemeName } from "@/lib/hdfc-v3/theme";
 import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-v3/types";
-import { AskLisN } from "./AskLisN";
+import { AskBar } from "./AskBar";
 import { HeaderPeriodFilter } from "./Pulse";
 import { C, tint } from "./primitives";
 
@@ -35,6 +35,8 @@ export type ShellProps = {
   drill?: boolean;
   /** When set, the period filter sits in the header, top right. */
   periods?: PeriodsFile;
+  /** Where the user is, kept on screen in the sticky header while scrolling (e.g. "Cards · Business view"). */
+  context?: string;
   children: ReactNode;
 };
 
@@ -66,6 +68,11 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
       href: withFrom("/hdfc-pulse/v2/action-queue", view),
       label: "Action queue: escalation emails",
       icon: Inbox,
+    },
+    {
+      href: "/hdfc-pulse/v2/my-view",
+      label: "My view: pinned answers",
+      icon: LayoutDashboard,
     },
   ];
   return (
@@ -193,12 +200,12 @@ function BackButton({ from }: { from: View }) {
 function ShellInner({
   meta,
   ask,
-  askEvidence,
   title,
   subtitle,
   view,
   drill,
   periods,
+  context,
   children,
 }: ShellProps) {
   const from = useFrom(view ?? "mds-office");
@@ -345,6 +352,23 @@ function ShellInner({
                 minWidth: 0,
               }}
             >
+              {context ? (
+                <strong
+                  data-testid="context"
+                  style={{
+                    color: C.text,
+                    background: tint(C.brand, 0.14),
+                    border: `1px solid ${tint(C.brand, 0.4)}`,
+                    borderRadius: 8,
+                    padding: "3px 10px",
+                    marginRight: 10,
+                    fontSize: 14.5,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {context}
+                </strong>
+              ) : null}
               <strong style={{ color: C.text }}>HDFC Bank</strong> · Customer
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
@@ -354,7 +378,7 @@ function ShellInner({
 
           <main
             style={{
-              padding: "18px 20px 48px",
+              padding: "18px 20px 110px",
               maxWidth: 1480,
               width: "100%",
               margin: "0 auto",
@@ -412,40 +436,7 @@ function ShellInner({
           </main>
         </div>
       </div>
-      {askOpen ? null : (
-        <button
-          type="button"
-          onClick={() => setAskOpen(true)}
-          aria-label="Ask LisN"
-          title="Ask LisN"
-          data-testid="ask-lisn-fab"
-          style={{
-            position: "fixed",
-            right: 22,
-            bottom: 22,
-            zIndex: 50,
-            width: 54,
-            height: 54,
-            borderRadius: 999,
-            border: `1px solid ${tint(C.brand, 0.5)}`,
-            background: C.brand,
-            color: "#fff",
-            display: "grid",
-            placeItems: "center",
-            cursor: "pointer",
-            boxShadow: `0 10px 30px ${tint(C.brand, 0.35)}`,
-          }}
-        >
-          <Sparkles size={24} />
-        </button>
-      )}
-      <AskLisN
-        open={askOpen}
-        onClose={() => setAskOpen(false)}
-        ask={ask}
-        evidence={askEvidence}
-        from={current}
-      />
+      <AskBar ask={ask} periods={periods} open={askOpen} setOpen={setAskOpen} />
       <style>{`
         .lisn-sidebar { display: flex; }
         @media (max-width: 720px) {

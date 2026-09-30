@@ -23,5 +23,6 @@
  "/hdfc-pulse/v2/service-promise",
  "/hdfc-pulse/v2/signal/complaint_handling",
  "/hdfc-pulse/v2/signal/release-pulse",
- "/hdfc-pulse/v2/customer/XXXX4821"
+ "/hdfc-pulse/v2/customer/XXXX4821",
+ "/hdfc-pulse/v2/my-view"
 ]

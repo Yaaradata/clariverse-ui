@@ -471,9 +471,36 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
       >
         <strong style={{ fontSize: 15.5, lineHeight: 1.25 }}>{l.label}</strong>
         <span
-          style={{ fontSize: 12.5, color: C.textMut, whiteSpace: "nowrap" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            gap: 2,
+            fontSize: 12.5,
+            color: C.textMut,
+            whiteSpace: "nowrap",
+          }}
         >
           {fmt(l.members)} customers
+          <button
+            type="button"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: C.brandInk,
+              padding: 0,
+              fontSize: 12.5,
+              cursor: "pointer",
+              display: "inline-flex",
+              gap: 3,
+              alignItems: "center",
+            }}
+          >
+            {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />} By
+            channel
+          </button>
         </span>
       </div>
       <div
@@ -561,25 +588,6 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
             {fmt(l.waiting_on_customer)}
           </strong>
         </span>
-        <button
-          type="button"
-          onClick={() => setOpen(!open)}
-          aria-expanded={open}
-          style={{
-            background: "transparent",
-            border: "none",
-            color: C.brandInk,
-            padding: 0,
-            fontSize: 12.5,
-            cursor: "pointer",
-            display: "inline-flex",
-            gap: 3,
-            alignItems: "center",
-          }}
-        >
-          {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />} By
-          channel
-        </button>
       </div>
       {open ? (
         <Table

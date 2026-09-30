@@ -363,6 +363,7 @@ def redact_reply(text: str) -> str:
     t = " ".join(text.split())
     t = re.sub(r"^(Hi|Hello|Dear)\s+[^,]{1,40},", "Hi [customer],", t)
     t = re.sub(r"https?://\S+", "[official help centre link]", t)
+    t = t.replace("!", ".")  # screen copy carries no exclamation marks (lint_terms), quoted or not
     return t[:420]
 
 

@@ -3,7 +3,8 @@
 /**
  * The Cards business-head view (30 Sep review, changes_30sep.md C). It follows the same period filter as the MD's view
  * (the filter sits in the header). Top to bottom: the issue pulse (internal and external, side by side), the issue
- * categories as an accordion, then three question cards, one per drill-down, each opening its own page:
+ * categories as an accordion, then at most five panels (30 Sep review round 2, K4): two question cards, where contacts
+ * come from, repeat contacts by category, and top complaints and feature requests. The drill-down pages:
  *   1. Are my customers happy?             /business/cards/happy    (was the satisfaction page)
  *   2. What is the market saying about us? /business/cards/market   (was the market page)
  *   3. Are we keeping our timelines?       /business/cards/service  (was the deliverables page, without TAT compliance)
@@ -16,19 +17,16 @@ import {
   ChevronRight,
   Shield,
   Sparkles,
-  Timer,
 } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
 import type { DrillDownId } from "@/lib/hdfc-v3/drilldowns";
 import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
-import {
-  type Category,
-  type CategoryFigures,
-  CHANNEL_LABEL,
-  CHANNEL_ORDER,
-  type Period,
-  type Quote,
+import type {
+  Category,
+  CategoryFigures,
+  Period,
+  Quote,
 } from "@/lib/hdfc-v3/periods";
 import type { Bundle } from "@/lib/hdfc-v3/types";
 import {
@@ -102,7 +100,7 @@ function IssuePulse({ p }: { p: Period }) {
   const i = p.cards.internal;
   const e = p.cards.external;
   const hi = e.high_impact;
-  const na = i.open_too_long === null;
+  const na = i.not_responded_48h === null;
   const box = {
     background: C.cardAlt,
     border: `1px solid ${C.border}`,
@@ -147,20 +145,26 @@ function IssuePulse({ p }: { p: Period }) {
               label="Open"
             />
             <Dial
-              value={pct(i.open_too_long, i.volume)}
+              value={pct(i.not_responded_48h, i.volume)}
               color={C.red}
-              big={na ? "—" : fmt(i.open_too_long)}
-              label="Open over 48 h"
+              big={na ? "—" : fmt(i.not_responded_48h)}
+              label="Not responded to in 48h+"
               sub={na ? "needs 48 hours" : undefined}
             />
           </div>
           <div
             style={{
               ...box,
-              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
               padding: "10px 12px",
             }}
           >
+            <Kpi
+              label="Waiting on customer"
+              value={fmt(i.waiting_on_customer)}
+              sub="resolution sent; not open"
+              tone="cyan"
+            />
             <Kpi
               label="Negative"
               value={fmt(i.negative)}
@@ -242,8 +246,10 @@ function IssuePulse({ p }: { p: Period }) {
       </div>
       <MutedNote>
         Internal: emails, calls, chat, WhatsApp, social inbox and branch (IVR
-        bot not counted); open over 48 hours = still open more than 48 hours
-        after the contact came in. External: responded = a bank reply on a Play
+        bot not counted); open = with the bank; waiting on customer = the bank
+        has sent a resolution or proposed one, so the thread is not counted as
+        open or as not responded to; not responded to in 48h+ = waited more than
+        48 hours for a first reply. External: responded = a bank reply on a Play
         Store review (the only source with reply data); high impact = a post
         with reach, almost all on X and Reddit, which carry no reply data, so
         high impact shows escalation language (RBI or ombudsman, consumer court,
@@ -256,48 +262,60 @@ function IssuePulse({ p }: { p: Period }) {
 
 /* ---------------------------------------------------------------- C3 accordion */
 
+/** Internal and external column groups: each has its own tint, with a gap between them. */
+const IN = tint(C.violet, 0.07);
+const EX = tint(C.cyan, 0.07);
+
 function FigureCells({ f }: { f: CategoryFigures }) {
   const i = f.internal;
   const e = f.external;
-  const cell = {
+  const cell = (bg: string) => ({
     fontFamily: MONO,
     fontSize: 13.5,
     textAlign: "right" as const,
-  };
+    background: bg,
+    padding: "10px 8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  });
   return (
     <>
-      <span style={cell}>{fmt(i.volume)}</span>
-      <span style={cell}>{fmt(i.resolved)}</span>
-      <span style={cell}>{fmt(i.open)}</span>
-      <span style={cell}>
-        {i.open_too_long === null ? "—" : fmt(i.open_too_long)}
+      <span style={cell(IN)}>{fmt(i.volume)}</span>
+      <span style={cell(IN)}>{fmt(i.resolved)}</span>
+      <span style={cell(IN)}>{fmt(i.open)}</span>
+      <span style={cell(IN)}>{fmt(i.waiting_on_customer)}</span>
+      <span style={cell(IN)}>
+        {i.not_responded_48h === null ? "—" : fmt(i.not_responded_48h)}
       </span>
-      <span style={cell}>{fmt(e.volume)}</span>
-      <span style={cell}>
+      <span style={cell(IN)}>{fmt(i.escalations)}</span>
+      <span />
+      <span style={cell(EX)}>{fmt(e.volume)}</span>
+      <span style={cell(EX)}>
         {fmt(e.positive)} / {fmt(e.negative)}
       </span>
-      <span style={cell}>
+      <span style={cell(EX)}>
         {e.responded.reviews
           ? `${fmt(e.responded.responded)}/${fmt(e.responded.reviews)}`
           : "—"}
       </span>
-      <span style={cell}>{fmt(e.high_impact.volume)}</span>
-      <span style={{ ...cell, textAlign: "left" }}>
+      <span style={cell(EX)}>{fmt(e.high_impact.volume)}</span>
+      <span style={cell(EX)}>{fmt(e.escalation)}</span>
+      <span />
+      <span style={{ display: "flex", alignItems: "center" }}>
         <Sparkline
           values={f.trend.map((t) => t.internal + t.external)}
           color={C.violet}
           width={70}
         />
       </span>
-      <span style={cell}>
-        {fmt(e.escalation)} · {fmt(i.escalations)}
-      </span>
     </>
   );
 }
 
+// Category | six internal | gap | five external | gap | trend
 const GRID =
-  "minmax(180px, 2.2fr) repeat(8, minmax(52px, 0.8fr)) minmax(74px, 1fr) minmax(64px, 0.8fr)";
+  "minmax(190px, 2.2fr) repeat(6, minmax(62px, 0.8fr)) 14px repeat(5, minmax(62px, 0.8fr)) 10px minmax(74px, 0.9fr)";
 
 function CategoryRow({ c, p }: { c: Category; p: Period }) {
   const [open, setOpen] = useState(false);
@@ -311,18 +329,24 @@ function CategoryRow({ c, p }: { c: Category; p: Period }) {
         style={{
           display: "grid",
           gridTemplateColumns: GRID,
-          gap: 8,
-          alignItems: "center",
+          alignItems: "stretch",
           width: "100%",
           background: "transparent",
           border: "none",
           color: "inherit",
-          padding: "10px 4px",
+          padding: "0 4px",
           cursor: "pointer",
           textAlign: "left",
         }}
       >
-        <span style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <span
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            padding: "10px 8px 10px 0",
+          }}
+        >
           <span
             style={{
               fontWeight: 700,
@@ -349,13 +373,17 @@ function CategoryRow({ c, p }: { c: Category; p: Period }) {
               style={{
                 display: "grid",
                 gridTemplateColumns: GRID,
-                gap: 8,
-                alignItems: "center",
-                padding: "6px 4px 6px 26px",
-                background: tint(C.violet, 0.04),
+                alignItems: "stretch",
+                padding: "0 4px",
               }}
             >
-              <span style={{ fontSize: 13.5, color: C.textSec }}>
+              <span
+                style={{
+                  fontSize: 13.5,
+                  color: C.textSec,
+                  padding: "8px 8px 8px 22px",
+                }}
+              >
                 {s.label}
               </span>
               <FigureCells f={s} />
@@ -373,49 +401,62 @@ function CategoryRow({ c, p }: { c: Category; p: Period }) {
   );
 }
 
-const HEAD: [string, string][] = [
-  ["cat", "Category · owner"],
-  ["ivol", "Volume"],
-  ["ires", "Resolved"],
-  ["iopen", "Open"],
-  ["i48", "Open 48 h+"],
-  ["evol", "Volume"],
-  ["epn", "+ / −"],
-  ["eresp", "Responded"],
-  ["ehi", "High impact"],
-  ["trend", "Trend"],
-  ["esc", "Escalations"],
+const HEAD: [string, string, string][] = [
+  ["cat", "Category · owner", ""],
+  ["ivol", "Volume", IN],
+  ["ires", "Resolved", IN],
+  ["iopen", "Open", IN],
+  ["iwait", "Waiting on customer", IN],
+  ["i48", "Not responded to in 48h+", IN],
+  ["iesc", "Escalations", IN],
+  ["gap1", "", ""],
+  ["evol", "Volume", EX],
+  ["epn", "+ / −", EX],
+  ["eresp", "Responded", EX],
+  ["ehi", "High impact", EX],
+  ["eesc", "Escalations", EX],
+  ["gap2", "", ""],
+  ["trend", "Trend", ""],
 ];
 
 function Categories({ p }: { p: Period }) {
+  const group = (bg: string, color: string, span: number) => ({
+    gridColumn: `span ${span}`,
+    textAlign: "center" as const,
+    background: bg,
+    color,
+    fontWeight: 800,
+    padding: "6px 0",
+    borderRadius: "8px 8px 0 0",
+    borderTop: `3px solid ${color}`,
+  });
   return (
     <Tile
       id="categories"
       title={titled("Issues by category", p)}
-      sub="Largest first. Open a category for its subcategories."
+      sub="Largest first. Internal and external side by side. Open a category for its subcategories."
       prov={["internal", "public"]}
       style={{ minWidth: 0, maxWidth: "100%" }}
     >
       <div style={{ overflowX: "auto", maxWidth: "100%", minWidth: 0 }}>
-        <div style={{ minWidth: 980 }}>
+        <div style={{ minWidth: 1180 }}>
           <div
             style={{
               display: "grid",
               gridTemplateColumns: GRID,
-              gap: 8,
-              padding: "0 4px 6px",
-              fontSize: 11.5,
-              color: C.textMut,
+              padding: "0 4px",
+              fontSize: 12,
               textTransform: "uppercase",
-              letterSpacing: "0.04em",
+              letterSpacing: "0.06em",
             }}
           >
             <span />
-            <span style={{ gridColumn: "span 4", textAlign: "center" }}>
-              Internal
+            <span data-testid="group-internal" style={group(IN, C.violet, 6)}>
+              Internal channels
             </span>
-            <span style={{ gridColumn: "span 4", textAlign: "center" }}>
-              External
+            <span />
+            <span data-testid="group-external" style={group(EX, C.cyan, 5)}>
+              External channels
             </span>
             <span />
             <span />
@@ -424,18 +465,21 @@ function Categories({ p }: { p: Period }) {
             style={{
               display: "grid",
               gridTemplateColumns: GRID,
-              gap: 8,
-              padding: "0 4px 8px",
+              alignItems: "stretch",
+              padding: "0 4px",
               fontSize: 12,
               color: C.textMut,
               fontWeight: 700,
             }}
           >
-            {HEAD.map(([id, h]) => (
+            {HEAD.map(([id, h, bg]) => (
               <span
                 key={id}
                 style={{
                   textAlign: id === "cat" || id === "trend" ? "left" : "right",
+                  background: bg || undefined,
+                  padding: "6px 8px 8px",
+                  lineHeight: 1.3,
                 }}
               >
                 {h}
@@ -449,12 +493,16 @@ function Categories({ p }: { p: Period }) {
       </div>
       <MutedNote>
         Each contact and each public item counts once, under its main theme, so
-        the categories add up to the issue pulse. Trend: internal plus public
+        the categories add up to the issue pulse: resolved + open + waiting on
+        customer = volume. Waiting on customer: the bank has sent a resolution
+        or proposed one; not counted as open or as not responded to. Not
+        responded to in 48h+: waited more than 48 hours for a first reply.
+        Escalations: internal contacts escalated to a grievance desk or beyond;
+        external posts with escalation language. Trend: internal plus public
         volume over the last {p.cards.categories[0]?.trend.length ?? 0} periods
-        of the same length. Escalations: public posts with escalation language ·
-        internal contacts escalated to a grievance desk or beyond. TAT-related:
-        the category carries a delivery timeline; compliance is not shown here.
-        Owners are roles in the cards team.
+        of the same length. TAT-related: the category carries a delivery
+        timeline; compliance is not shown here. Owners are roles in the cards
+        team.
       </MutedNote>
     </Tile>
   );
@@ -711,15 +759,6 @@ function QuestionCards({ p }: { p: Period }) {
   const ios = c.stores.find((s) => s.store === "appstore");
   const riserQuote =
     h.saying.find((s) => riser && s.id === riser.id) ?? h.saying[0];
-  const repeatShare = pct(
-    c.friction.reduce((s, f) => s + f.escalation_internal, 0),
-    1,
-  ); // placeholder replaced below
-  void repeatShare;
-  const internalRepeat = h.repeat_by_category.reduce(
-    (s, r) => s + r.internal_repeat,
-    0,
-  );
   const href = (id: DrillDownId) => withPeriod(`${CARDS}/${id}`, p);
   return (
     <div
@@ -727,7 +766,7 @@ function QuestionCards({ p }: { p: Period }) {
       style={{
         display: "grid",
         gridTemplateColumns:
-          "repeat(auto-fit, minmax(min(100%, max(340px, calc((100% - 28px) / 3))), 1fr))",
+          "repeat(auto-fit, minmax(min(100%, max(340px, calc((100% - 14px) / 2))), 1fr))",
         gap: 14,
       }}
     >
@@ -816,53 +855,6 @@ function QuestionCards({ p }: { p: Period }) {
         }
         prov={["public"]}
       />
-      <QuestionCard
-        href={href("service")}
-        accent={C.amber}
-        icon={<Timer size={18} />}
-        title="Are we keeping our timelines?"
-        micro="Missed timelines · Status-seeking · Escalation"
-        answer={`${fmt(sv.missed_timelines.total)} public Cards posts describe a missed timeline; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
-        headlineLabel="Missed timelines heard"
-        headline={fmt(sv.missed_timelines.total)}
-        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${c.internal.open_too_long === null ? "open over 48 hours needs 48 hours" : `${fmt(c.internal.open_too_long)} Cards contacts open over 48 hours`}.`}
-        gauges={[
-          {
-            label: "Repeat contact",
-            value: pct(internalRepeat, c.internal.volume) ?? 0,
-            sub: "of the bank's Cards contacts",
-            tone: "red",
-          },
-          {
-            label: "Asking status",
-            value: sv.transparency.share ?? 0,
-            sub: "of Cards public posts",
-            tone: "amber",
-          },
-        ]}
-        stats={[
-          {
-            label: "Escalation language",
-            value: `${fmt(sv.public_escalation)} posts`,
-            sub: sv.targets[0]
-              ? `most name ${sv.targets[0].label.toLowerCase()}`
-              : "public voice",
-            color: C.red,
-          },
-          {
-            label: "TAT-related contacts",
-            value: fmt(sv.tat_related.contacts),
-            sub: `${fmtPct(sv.tat_related.share)} of Cards contacts · ${fmt(sv.tat_related.open)} open`,
-            color: C.amber,
-          },
-        ]}
-        saying={
-          sv.transparency.quote?.summary ??
-          sv.closure.quote?.summary ??
-          "No quotable public item in this period."
-        }
-        prov={["public", "internal"]}
-      />
     </div>
   );
 }
@@ -872,6 +864,136 @@ function QuestionCards({ p }: { p: Period }) {
 /** Keeps the repeat-contact list level with the two tables beside it; the rest scrolls. */
 const REPEAT_LIST_HEIGHT = 222;
 /** The weekly table beside the trend chart scrolls at the chart's height. */
+/* ---------------------------------------------------------------- panels shared by the Cards view and its drill-downs */
+
+export function JourneyPanel({ p }: { p: Period }) {
+  return (
+    <Tile
+      id="happy-journey"
+      title={titled("Where contacts come from", p)}
+      sub="The bank's own Cards contacts by journey stage."
+      prov="internal"
+    >
+      <Table
+        head={["Stage", "Contacts", "Negative", "Repeat"]}
+        align={["left", "right", "right", "right"]}
+        rows={p.cards.journey.map((j) => [
+          j.stage,
+          fmt(j.volume),
+          fmtPct(j.negative_share),
+          fmtPct(j.repeat_share),
+        ])}
+      />
+    </Tile>
+  );
+}
+
+export function RepeatPanel({ p }: { p: Period }) {
+  const h = p.cards.happy;
+  return (
+    <Tile
+      id="happy-repeat"
+      title={titled("Repeat contact by category", p)}
+      sub="Customers who came back on the same issue: the bank's own contacts (a repeat within 30 days) and public posts that say it is not the first time."
+      prov={["internal", "public"]}
+    >
+      <div
+        data-testid="repeat-scroll"
+        style={{
+          maxHeight: REPEAT_LIST_HEIGHT,
+          overflowY: "auto",
+          paddingRight: 6,
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
+        }}
+      >
+        {h.repeat_by_category.map((r) => (
+          <BarRow
+            key={r.id}
+            label={r.label}
+            value={r.internal_repeat + r.public_repeat}
+            max={Math.max(
+              1,
+              ...h.repeat_by_category.map(
+                (x) => x.internal_repeat + x.public_repeat,
+              ),
+            )}
+            color={C.amber}
+            sub={`${fmt(r.internal_repeat)} internal repeats of ${fmt(r.contacts)} contacts · ${fmt(r.public_repeat)} public`}
+          />
+        ))}
+      </div>
+    </Tile>
+  );
+}
+
+export function StoresPanel({ p }: { p: Period }) {
+  return (
+    <Tile
+      id="market-stores"
+      title={titled("Top complaints and feature requests", p)}
+      sub="Cards reviews, one store at a time: top complaints, feature requests and the existing features customers praise."
+      prov="public"
+    >
+      <div style={SPLIT}>
+        {p.cards.stores.map((st) => (
+          <div
+            key={st.store}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 6,
+              minWidth: 0,
+            }}
+          >
+            <strong>
+              {st.label}: {fmt(st.reviews)} Cards reviews
+              {st.avg_rating === null
+                ? ""
+                : ` · ${st.avg_rating.toFixed(1)}★ · ${fmtPct(st.share_positive)} 4–5★`}
+            </strong>
+            <Table
+              head={["", "Top three"]}
+              align={["left", "left"]}
+              rows={[
+                [
+                  "Complaints",
+                  st.complaints
+                    .map((c) => `${c.label} (${fmt(c.count)})`)
+                    .join(" · ") || "—",
+                ],
+                [
+                  "Feature requests",
+                  st.feature_requests
+                    .map((c) => `${c.label} (${fmt(c.count)})`)
+                    .join(" · ") || "none named",
+                ],
+                [
+                  "Existing features praised",
+                  st.praised
+                    .map((c) => `${c.label} (${fmt(c.count)})`)
+                    .join(" · ") || "—",
+                ],
+              ]}
+            />
+            {st.reviews < 5 ? (
+              <MutedNote>
+                Too few Cards reviews on this store in this period to read much
+                into.
+              </MutedNote>
+            ) : (
+              <MutedNote>
+                Reviews tagged to Cards on this store in the period.
+              </MutedNote>
+            )}
+          </div>
+        ))}
+      </div>
+    </Tile>
+  );
+}
+
 const TREND_HEIGHT = 260;
 
 export function Happy({ p }: { p: Period }) {
@@ -892,23 +1014,7 @@ export function Happy({ p }: { p: Period }) {
   return (
     <>
       <div style={cols(3, 320, 14)}>
-        <Tile
-          id="happy-journey"
-          title={titled("Where contacts come from", p)}
-          sub="The bank's own Cards contacts by journey stage."
-          prov="internal"
-        >
-          <Table
-            head={["Stage", "Contacts", "Negative", "Repeat"]}
-            align={["left", "right", "right", "right"]}
-            rows={p.cards.journey.map((j) => [
-              j.stage,
-              fmt(j.volume),
-              fmtPct(j.negative_share),
-              fmtPct(j.repeat_share),
-            ])}
-          />
-        </Tile>
+        <JourneyPanel p={p} />
         <Tile
           id="happy-tiers"
           title={titled("Contacts by customer list", p)}
@@ -933,40 +1039,7 @@ export function Happy({ p }: { p: Period }) {
           />
         </Tile>
 
-        <Tile
-          id="happy-repeat"
-          title={titled("Repeat contact by category", p)}
-          sub="Customers who came back on the same issue: the bank's own contacts (a repeat within 30 days) and public posts that say it is not the first time."
-          prov={["internal", "public"]}
-        >
-          <div
-            data-testid="repeat-scroll"
-            style={{
-              maxHeight: REPEAT_LIST_HEIGHT,
-              overflowY: "auto",
-              paddingRight: 6,
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-            }}
-          >
-            {h.repeat_by_category.map((r) => (
-              <BarRow
-                key={r.id}
-                label={r.label}
-                value={r.internal_repeat + r.public_repeat}
-                max={Math.max(
-                  1,
-                  ...h.repeat_by_category.map(
-                    (x) => x.internal_repeat + x.public_repeat,
-                  ),
-                )}
-                color={C.amber}
-                sub={`${fmt(r.internal_repeat)} internal repeats of ${fmt(r.contacts)} contacts · ${fmt(r.public_repeat)} public`}
-              />
-            ))}
-          </div>
-        </Tile>
+        <RepeatPanel p={p} />
       </div>
 
       <Tile
@@ -1386,67 +1459,7 @@ export function Market({ p }: { p: Period }) {
         </div>
       </Tile>
 
-      <Tile
-        id="market-stores"
-        title={titled("App pulse: Cards reviews by store", p)}
-        sub="One store at a time. Top complaints, feature requests and the existing features customers praise."
-        prov="public"
-      >
-        <div style={SPLIT}>
-          {p.cards.stores.map((st) => (
-            <div
-              key={st.store}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-                minWidth: 0,
-              }}
-            >
-              <strong>
-                {st.label}: {fmt(st.reviews)} Cards reviews
-                {st.avg_rating === null
-                  ? ""
-                  : ` · ${st.avg_rating.toFixed(1)}★ · ${fmtPct(st.share_positive)} 4–5★`}
-              </strong>
-              <Table
-                head={["", "Top three"]}
-                align={["left", "left"]}
-                rows={[
-                  [
-                    "Complaints",
-                    st.complaints
-                      .map((c) => `${c.label} (${fmt(c.count)})`)
-                      .join(" · ") || "—",
-                  ],
-                  [
-                    "Feature requests",
-                    st.feature_requests
-                      .map((c) => `${c.label} (${fmt(c.count)})`)
-                      .join(" · ") || "none named",
-                  ],
-                  [
-                    "Existing features praised",
-                    st.praised
-                      .map((c) => `${c.label} (${fmt(c.count)})`)
-                      .join(" · ") || "—",
-                  ],
-                ]}
-              />
-              {st.reviews < 5 ? (
-                <MutedNote>
-                  Too few Cards reviews on this store in this period to read
-                  much into.
-                </MutedNote>
-              ) : (
-                <MutedNote>
-                  Reviews tagged to Cards on this store in the period.
-                </MutedNote>
-              )}
-            </div>
-          ))}
-        </div>
-      </Tile>
+      <StoresPanel p={p} />
     </>
   );
 }
@@ -1724,102 +1737,6 @@ export function Service({ p }: { p: Period }) {
   );
 }
 
-/* ---------------------------------------------------------------- volume by channel */
-
-function Channels({ p }: { p: Period }) {
-  const ch = p.cards.channels;
-  return (
-    <Tile
-      id="channels"
-      title={titled("Volume by channel", p)}
-      sub="The bank's own Cards contacts by channel, and public Cards items by source."
-      prov={["internal", "public"]}
-    >
-      <div style={SPLIT}>
-        <Table
-          head={["Internal channel", "Contacts"]}
-          align={["left", "right"]}
-          rows={CHANNEL_ORDER.map((c) => [
-            CHANNEL_LABEL[c],
-            fmt(ch.internal[c] ?? 0),
-          ])}
-        />
-        <Table
-          head={["Public source", "Items"]}
-          align={["left", "right"]}
-          rows={Object.entries(ch.external).map(([k, v]) => [k, fmt(v)])}
-        />
-      </div>
-    </Tile>
-  );
-}
-
-/* ---------------------------------------------------------------- C5 actions */
-
-function CardsActions({ p }: { p: Period }) {
-  const ranked = [...p.cards.categories]
-    .filter((c) => c.id !== "other")
-    .map((c) => ({
-      c,
-      score:
-        (c.internal.open_too_long ?? c.internal.open) + c.external.escalation,
-    }))
-    .filter((x) => x.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
-  return (
-    <Tile
-      id="actions"
-      title={titled("Actions to take", p)}
-      sub="The three categories with the most cases open over 48 hours plus escalation language."
-      prov={["internal", "public"]}
-      tone="red"
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
-          gap: 10,
-        }}
-      >
-        {ranked.map(({ c }) => (
-          <div
-            key={c.id}
-            data-testid="action-card"
-            style={{
-              background: C.cardAlt,
-              border: `1px solid ${tint(C.red, 0.3)}`,
-              borderLeft: `3px solid ${C.red}`,
-              borderRadius: 12,
-              padding: "12px 14px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 6,
-            }}
-          >
-            <strong>{c.label}</strong>
-            <span style={{ fontSize: 13.5, color: C.textSec }}>
-              {c.internal.open_too_long === null
-                ? `${fmt(c.internal.open)} contacts still open`
-                : `${fmt(c.internal.open_too_long)} contacts open over 48 hours`}
-              ; {fmt(c.external.escalation)} public posts with escalation
-              language.
-            </span>
-            <span style={{ fontSize: 12.5, color: C.textMut }}>
-              Owner: {c.owner} · recommended: route with evidence
-            </span>
-          </div>
-        ))}
-      </div>
-      <MutedNote>
-        Recommendations, routed to the owner. LisN never executes, authorises or
-        decides.
-      </MutedNote>
-    </Tile>
-  );
-}
-
 /* ---------------------------------------------------------------- views */
 
 export function CardsView({ b }: { b: Bundle }) {
@@ -1829,8 +1746,16 @@ export function CardsView({ b }: { b: Bundle }) {
       <IssuePulse p={p} />
       <Categories p={p} />
       <QuestionCards p={p} />
-      <Channels p={p} />
-      <CardsActions p={p} />
+      <div style={{ ...PAIRS, alignItems: "start" }}>
+        <JourneyPanel p={p} />
+        <RepeatPanel p={p} />
+      </div>
+      <StoresPanel p={p} />
+      <MutedNote>
+        The other Cards panels (timelines, the escalation ladder, volume by
+        channel, actions, disputes and closure intent) are one question away:
+        use Ask LisN at the bottom of the screen.
+      </MutedNote>
     </div>
   );
 }

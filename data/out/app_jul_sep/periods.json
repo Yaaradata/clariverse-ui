@@ -6490,7 +6490,7 @@
      "engagement": {
       "helpful": 63
      },
-     "reply": "Hi [customer], this is not the experience we want you to have. Can you tell us more? Kindly raise a ticket by visiting the link [official help centre link] and include your reference ID [reference]. Our team will get back to you shortly!",
+     "reply": "Hi [customer], this is not the experience we want you to have. Can you tell us more? Kindly raise a ticket by visiting the link [official help centre link] and include your reference ID [reference]. Our team will get back to you shortly.",
      "in_period": true
     },
     "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
@@ -13394,7 +13394,7 @@
      "engagement": {
       "helpful": 63
      },
-     "reply": "Hi [customer], this is not the experience we want you to have. Can you tell us more? Kindly raise a ticket by visiting the link [official help centre link] and include your reference ID [reference]. Our team will get back to you shortly!",
+     "reply": "Hi [customer], this is not the experience we want you to have. Can you tell us more? Kindly raise a ticket by visiting the link [official help centre link] and include your reference ID [reference]. Our team will get back to you shortly.",
      "in_period": true
     },
     "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
