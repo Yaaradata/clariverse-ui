@@ -1,3 +1,4 @@
+import type { Period, PeriodId, PeriodsFile } from "./periods";
 import {
   fastestRiser,
   releasePulse,
@@ -90,6 +91,34 @@ function summaryOnly(e: Evidence): Evidence {
   return { ...e, redacted_text: "", title: null };
 }
 
+/**
+ * Period figures (30 Sep views) are large: the MD view gets every period without the Cards block, the Cards view gets
+ * the Cards block only, and every other page gets an empty shell.
+ */
+function slicePeriods(b: Bundle, s: Slice): PeriodsFile {
+  const file = b.periods;
+  const periods = {} as PeriodsFile["periods"];
+  for (const id of Object.keys(file.periods) as PeriodId[]) {
+    const p = file.periods[id];
+    if (s.view === "exec") {
+      periods[id] = { ...p, cards: {} as Period["cards"] };
+    } else if (s.view === "business") {
+      periods[id] = {
+        id: p.id,
+        label: p.label,
+        short: p.short,
+        start: p.start,
+        end: p.end,
+        public_start: p.public_start,
+        public_end: p.public_end,
+        compare: p.compare,
+        cards: p.cards,
+      } as Period;
+    }
+  }
+  return { ...file, periods };
+}
+
 /** The bundle a page hands to its client component. */
 export function sliceBundle(b: Bundle, s: Slice): Bundle {
   const { ids, full } = idsFor(b, s);
@@ -98,5 +127,5 @@ export function sliceBundle(b: Bundle, s: Slice): Bundle {
     const e = b.evidence[id];
     if (e) evidence[id] = full ? e : summaryOnly(e);
   }
-  return { ...b, evidence };
+  return { ...b, evidence, periods: slicePeriods(b, s) };
 }

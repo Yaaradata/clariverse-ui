@@ -59,3 +59,42 @@ FONTSOURCE_DIR=<that folder>/node_modules/@fontsource node scripts/qa_gaps_v2.mj
 ```
 
 Run `qa_gaps_v2.mjs` from the `scripts/` folder.
+
+## Run 2: the 30 Sep views (1 Oct)
+
+The two views from the 30 Sep review (`/mds-office` = `/head-cx`, and `/business/cards`) replaced the exec page and the
+product business views, so this pass re-applied the rules to their rows. Same capture settings; screens in
+`qa/screens_win_v2/{light,dark}` (108 per theme, 22 pages). Raw scans: `qa/layout_gaps_v2_before.json`,
+`qa/layout_gaps_v2_after.json`.
+
+| Page | Before | After | What changed |
+|---|---|---|---|
+| MD's office / Head of CX | 303 px | 0 (largest under 40) | CX pulse: the internal dials and their channel table share one full-width row (5:2 flex, rule A4) with the definitions note inside the dial box; the two external sets sit side by side. Morning brief columns end with their content (rule C). The six business cards use CSS subgrid (rule B), three per row, with the quote as the last row of every card. |
+| Cards business view | 216 px | 0 (largest under 40) | The three drill-downs were rebuilt for Cards (see below), and their rows were laid out to match: chart beside table (SPLIT) for the sentiment trend, escalation ladder, missed timelines and volume by channel; paired tiles with equal row counts (journey 6 vs lists 5, funnel 4 vs failures 4); the three service tiles (closure, cure, transparency) each end with a Kpi, a sentence and a two-line quote; quote cards and top-six theme cards use subgrid (rule B). |
+| Priority (unlinked) | 74 px | 74 px | "How a customer gets on a list" already 5:2 from run 1; the cohort cards no longer stretch (`alignItems: start`, the fifth list made the old 73 px). Left as is: the page is not in the navigation. |
+| Market (unlinked) | 57 px | 57 px | Known remainder from run 1 (app cards hold different amounts of real content). |
+| Deliverables (unlinked) | 40 px | 40 px | Known remainder from run 1 (dispute funnel beside top service failures). |
+| Every other page | ok | ok | Unchanged. |
+
+### Customer pulse restyle (no figures changed)
+
+- Each list card now leads with the volume as one large figure with its trend beside it, then two labelled rings
+  (Open with the closed count; No reply in 48 h with its trend line) side by side, then the channel expander.
+  The three stacked rings with wrapped captions are gone. Four lists across at laptop width.
+
+### The three drill-downs, on the Cards view
+
+Rebuilt for Cards only and for the selected period, each under its own header:
+
+1. **Are my customers happy?** Sentiment by source (table with a sentiment bar, source weights shown), sentiment trend
+   (chart beside its table), what customers are saying (one anonymised quote per top negative theme), themes by trust
+   pillar, where contacts come from, contacts by customer list (with sentiment), repeat contact by category.
+2. **What is the market saying about us?** All Cards themes in public voice (share of voice change), top six themes as
+   weekly share-of-voice bars, rising themes, safety and reputation watch, voices with reach (counts only, no
+   accounts), app pulse by store (one store at a time).
+3. **Service.** How contacts were handled, escalation ladder (internal rungs beside public targets), closure intent,
+   cure watch, transparency gap, dispute recovery funnel, top service failures, timelines customers say were missed.
+   No TAT compliance figures.
+
+Every figure comes from `data/out/app_jul_sep/periods.json`; the reconcile check ties the Cards view to the Cards card on
+the MD's view for every period (internal and external volume), and the categories and subcategories to the issue pulse.

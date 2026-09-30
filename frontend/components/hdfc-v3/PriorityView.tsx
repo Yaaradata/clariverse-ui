@@ -137,6 +137,7 @@ export function PriorityView({ b }: { b: Bundle }) {
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
           gap: 14,
+          alignItems: "start",
         }}
       >
         {all.map((c) => (

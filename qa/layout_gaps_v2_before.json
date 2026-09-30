@@ -1,0 +1,356 @@
+[
+ {
+  "route": "/hdfc-pulse/v2",
+  "gaps": [
+   {
+    "gap": 303,
+    "h": 563,
+    "cols": 2,
+    "y": 941,
+    "at": 260,
+    "title": "Internal channels"
+   },
+   {
+    "gap": 235,
+    "h": 335,
+    "cols": 3,
+    "y": 1647,
+    "at": 88,
+    "title": "What's improving or stable"
+   },
+   {
+    "gap": 53,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 343,
+    "title": "PayZapp and UPI"
+   },
+   {
+    "gap": 53,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 343,
+    "title": "Personal loans"
+   },
+   {
+    "gap": 50,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 327,
+    "title": "Cards"
+   },
+   {
+    "gap": 50,
+    "h": 382,
+    "cols": 2,
+    "y": 2410,
+    "at": 296,
+    "title": "Home loans"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards",
+  "gaps": [
+   {
+    "gap": 216,
+    "h": 431,
+    "cols": 2,
+    "y": 2202,
+    "at": 176,
+    "title": "ServiceLast 7 days · 22 Sep 08:30 to 29 Sep 08:30"
+   },
+   {
+    "gap": 208,
+    "h": 572,
+    "cols": 2,
+    "y": 4037,
+    "at": 325,
+    "title": "Volume by customer listLast 7 days · 22 Sep 08:30 to 29 Sep "
+   },
+   {
+    "gap": 190,
+    "h": 416,
+    "cols": 2,
+    "y": 1770,
+    "at": 186,
+    "title": "Are my customers happy?Last 7 days · 22 Sep 08:30 to 29 Sep "
+   },
+   {
+    "gap": 169,
+    "h": 218,
+    "cols": 2,
+    "y": 3750,
+    "at": 50,
+    "title": "App Store: 1 reviews · 1.0★"
+   },
+   {
+    "gap": 128,
+    "h": 339,
+    "cols": 2,
+    "y": 319,
+    "at": 211,
+    "title": "Internal channels"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx",
+  "gaps": [
+   {
+    "gap": 303,
+    "h": 563,
+    "cols": 2,
+    "y": 941,
+    "at": 260,
+    "title": "Internal channels"
+   },
+   {
+    "gap": 235,
+    "h": 335,
+    "cols": 3,
+    "y": 1647,
+    "at": 88,
+    "title": "What's improving or stable"
+   },
+   {
+    "gap": 53,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 343,
+    "title": "PayZapp and UPI"
+   },
+   {
+    "gap": 53,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 343,
+    "title": "Personal loans"
+   },
+   {
+    "gap": 50,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 327,
+    "title": "Cards"
+   },
+   {
+    "gap": 50,
+    "h": 382,
+    "cols": 2,
+    "y": 2410,
+    "at": 296,
+    "title": "Home loans"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/market",
+  "gaps": [
+   {
+    "gap": 57,
+    "h": 785,
+    "cols": 2,
+    "y": 2219,
+    "at": 716,
+    "title": "Loan Assist"
+   },
+   {
+    "gap": 50,
+    "h": 595,
+    "cols": 2,
+    "y": 756,
+    "at": 506,
+    "title": "Rising themes"
+   },
+   {
+    "gap": 49,
+    "h": 767,
+    "cols": 2,
+    "y": 3016,
+    "at": 706,
+    "title": "SmartWealth"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office",
+  "gaps": [
+   {
+    "gap": 303,
+    "h": 563,
+    "cols": 2,
+    "y": 941,
+    "at": 260,
+    "title": "Internal channels"
+   },
+   {
+    "gap": 235,
+    "h": 335,
+    "cols": 3,
+    "y": 1647,
+    "at": 88,
+    "title": "What's improving or stable"
+   },
+   {
+    "gap": 53,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 343,
+    "title": "PayZapp and UPI"
+   },
+   {
+    "gap": 53,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 343,
+    "title": "Personal loans"
+   },
+   {
+    "gap": 50,
+    "h": 408,
+    "cols": 4,
+    "y": 1992,
+    "at": 327,
+    "title": "Cards"
+   },
+   {
+    "gap": 50,
+    "h": 382,
+    "cols": 2,
+    "y": 2410,
+    "at": 296,
+    "title": "Home loans"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2515,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority",
+  "gaps": [
+   {
+    "gap": 74,
+    "h": 464,
+    "cols": 2,
+    "y": 3096,
+    "at": 162,
+    "title": "How a customer gets on a list"
+   },
+   {
+    "gap": 73,
+    "h": 786,
+    "cols": 4,
+    "y": 325,
+    "at": 674,
+    "title": "Ultra sensitive"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2515,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "gaps": []
+ }
+]

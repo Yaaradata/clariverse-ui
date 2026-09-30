@@ -104,7 +104,7 @@ def windows(p: dict) -> dict:
             w -= dt.timedelta(days=7)
         series = series[::-1]
     cur_for_trend = (START + (END - START) / 2, END) if not p["days"] else (start, END)
-    return {"start": start, "end": END, "prev": prev, "trend_cur": cur_for_trend, "compare": compare, "series": series}
+    return {"period_id": p["id"], "start": start, "end": END, "prev": prev, "trend_cur": cur_for_trend, "compare": compare, "series": series}
 
 
 # ------------------------------------------------------------------ internal
@@ -567,7 +567,193 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
     return {
         "internal": ib, "external": pbk, "categories": cats, "mood": mood, "market": market, "service": service,
         "friction": friction, "pillars": pillars, "journey": journey, "stores": stores, "channels": channels, "tiers": tiers,
+        **cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, irs),
     }
+
+
+# ------------------------------------------------------------------ Cards drill-downs (30 Sep review, changes_30sep.md C4)
+# The three MD drill-downs (satisfaction, market, service), rebuilt for Cards only and for the selected period.
+TARGET_LABEL = {
+    "rbi": "RBI (named or tagged)",
+    "rbi_ombudsman": "RBI Ombudsman",
+    "consumer_court": "Consumer court or helpline",
+    "legal": "Legal action",
+    "ministers": "Ministers tagged",
+    "grievance": "Grievance or nodal officer",
+}
+REQUEST_LABEL = {
+    "card_delivery": "Card delivery",
+    "refund": "Merchant refund",
+    "reversal": "Failed-transaction reversal",
+    "dispute": "Dispute or chargeback",
+    "closure": "Card closure",
+    "loan_disbursal": "Loan disbursal",
+    "credit_report": "Credit report correction",
+    "kyc": "KYC and profile updates",
+    "other": "Other request",
+}
+RUNG_LABEL = [("grievance", "Grievance"), ("md_office", "MD's office"), ("io", "Internal Ombudsman"), ("rbi_ombudsman", "RBI Ombudsman")]
+
+
+def quote_of(rs):
+    """One anonymised, non-alleging quote summary from rs, the most engaged first; None when there is none."""
+    cands = [
+        r for r in rs
+        if quotable(r) and r["summary"] and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")
+    ]
+    if not cands:
+        return None
+
+    def eng(r):
+        e = r.get("engagement") or {}
+        return sum(v for v in e.values() if isinstance(v, (int, float)))
+
+    r = sorted(cands, key=lambda r: (eng(r), r["created_at"]), reverse=True)[0]
+    return {"summary": r["summary"], "source_label": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10]}
+
+
+def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, irs) -> dict:
+    a, b = w["start"], w["end"]
+    ta, tb = w["trend_cur"]
+    pa, pbb = w["prev"]
+    rung = {"grievance": 1, "md_office": 2, "io": 3, "rbi_ombudsman": 4}
+
+    def net(xs):
+        if not xs:
+            return None
+        p = weighted_share(xs, lambda r: r["sentiment"] == "positive", W, 1) or 0
+        n = weighted_share(xs, lambda r: r["sentiment"] == "negative", W, 1) or 0
+        return round(p - n, 1)
+
+    def raw_net(xs):
+        return round(100 * (sum(1 for r in xs if r["sentiment"] == "positive") - sum(1 for r in xs if r["sentiment"] == "negative")) / len(xs), 1) if xs else None
+
+    # --- 1. Are my customers happy?
+    by_source = []
+    for src in ("playstore", "appstore", "x", "reddit", "forum"):
+        xs = [r for r in prs if r["source"] == src]
+        if not xs:
+            continue
+        by_source.append({
+            "source": src, "label": SOURCE_LABEL[src], "items": len(xs),
+            "positive": sum(1 for r in xs if r["sentiment"] == "positive"),
+            "neutral": sum(1 for r in xs if r["sentiment"] == "neutral"),
+            "negative": sum(1 for r in xs if r["sentiment"] == "negative"),
+            "net": raw_net(xs),
+            "weight_pct": round(100 * W.get(src, 0), 1),
+        })
+    weekly_net = []
+    for s, e in w["series"]:
+        xs = [r for r in prs_all if s <= r["_c"] < e]
+        weekly_net.append({"end": e.isoformat(), "items": len(xs), "net": net(xs)})
+    top_themes = [t for t, _ in collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative").most_common(4)]
+    seen = set()
+    saying = []
+    for th in top_themes:
+        xs = [r for r in prs if r["themes"][0] == th and r["sentiment"] == "negative" and r["id"] not in seen]
+        q = quote_of(xs)
+        if q:
+            seen.add(next(r["id"] for r in xs if r["summary"] == q["summary"]))
+            saying.append({"id": th, "label": labels.get(th, th), "count": len([r for r in prs if r["themes"][0] == th]), **q})
+    repeat_by_cat = []
+    for c in [*CARDS_CATEGORIES, CARDS_OTHER]:
+        ir = [r for r in ivol if cat_of(r["theme"])["id"] == c["id"]]
+        pr = [r for r in prs if cat_of(r["themes"][0])["id"] == c["id"]]
+        if ir or pr:
+            repeat_by_cat.append({"id": c["id"], "label": c["label"], "internal_repeat": sum(1 for r in ir if r.get("repeat")),
+                                  "public_repeat": sum(1 for r in pr if r["repeat_contact"]), "contacts": len(ir)})
+    repeat_by_cat.sort(key=lambda x: -(x["internal_repeat"] + x["public_repeat"]))
+    tiers_sent = []
+    for lid in PULSE_LISTS + ["none"]:
+        xs = [r for r in ivol if (lid == "none" and not any(k in customers[r["masked_id"]]["cohorts"] for k in PULSE_LISTS))
+              or (lid != "none" and lid in customers[r["masked_id"]]["cohorts"])]
+        tiers_sent.append({"id": lid, "label": LIST_LABEL.get(lid, "Not on a list"), "volume": len(xs),
+                           "positive": sum(1 for r in xs if r["sentiment"] == "positive"),
+                           "neutral": sum(1 for r in xs if r["sentiment"] == "neutral"),
+                           "negative": sum(1 for r in xs if r["sentiment"] == "negative"),
+                           "open": sum(1 for r in xs if open_at(r, b))})
+    happy = {"by_source": by_source, "weekly_net": weekly_net, "saying": saying, "repeat_by_category": repeat_by_cat, "tiers": tiers_sent}
+
+    # --- 2. What is the market saying about us?
+    cur_m = [r for r in prs_all if ta <= r["_c"] < tb]
+    prv_m = [r for r in prs_all if pa <= r["_c"] < pbb]
+    themes_all = []
+    for th, n in collections.Counter(r["themes"][0] for r in prs).most_common():
+        s_now = weighted_share(cur_m, lambda r, th=th: r["themes"][0] == th, W, 1) if cur_m else None
+        s_prev = weighted_share(prv_m, lambda r, th=th: r["themes"][0] == th, W, 1) if prv_m else None
+        xs = [r for r in prs if r["themes"][0] == th]
+        themes_all.append({
+            "id": th, "label": labels.get(th, th), "count": n,
+            "negative": sum(1 for r in xs if r["sentiment"] == "negative"),
+            "negative_share": weighted_share(xs, lambda r: r["sentiment"] == "negative", W, 1),
+            "escalation": sum(1 for r in xs if r["escalation_intent"]),
+            "share_change_pct": change(s_now, s_prev) if s_now is not None and s_prev else None,
+            "weekly": [{"end": e.isoformat(), "count": sum(1 for r in prs_all if r["themes"][0] == th and s <= r["_c"] < e),
+                        "share": weighted_share([r for r in prs_all if s <= r["_c"] < e], lambda r, th=th: r["themes"][0] == th, W, 1)}
+                       for s, e in w["series"]],
+        })
+    # Only the six themes the screen charts carry a series; the rest keep the payload small.
+    for t in themes_all[6:]:
+        t["weekly"] = []
+    min_n = {"brief": 3, "7d": 8, "30d": 20, "all": 30}[w["period_id"]]
+    rising = sorted([t for t in themes_all if t["share_change_pct"] is not None and t["count"] >= min_n and t["share_change_pct"] > 0],
+                    key=lambda t: -t["share_change_pct"])[:5]
+    hi = [r for r in prs if reach(r)]
+    reach_block = {
+        "volume": len(hi), "positive": sum(1 for r in hi if r["sentiment"] == "positive"),
+        "negative": sum(1 for r in hi if r["sentiment"] == "negative"),
+        "by_source": dict(collections.Counter(SOURCE_LABEL[r["source"]] for r in hi).most_common()),
+        "escalation": sum(1 for r in hi if r["escalation_intent"]),
+        "top_themes": [{"id": k, "label": labels.get(k, k), "count": v} for k, v in collections.Counter(r["themes"][0] for r in hi).most_common(3)],
+        "responded": replies(hi),
+    }
+    fraud_pub = [r for r in prs if cat_of(r["themes"][0])["id"] == "fraud"]
+    fraud_int = [r for r in ivol if cat_of(r["theme"])["id"] == "fraud"]
+    safety = {
+        "public": len(fraud_pub), "public_negative": sum(1 for r in fraud_pub if r["sentiment"] == "negative"),
+        "public_escalation": sum(1 for r in fraud_pub if r["escalation_intent"]), "high_impact": sum(1 for r in fraud_pub if reach(r)),
+        "internal": len(fraud_int), "internal_open": sum(1 for r in fraud_int if open_at(r, b)),
+        "internal_high_impact": sum(1 for r in fraud_int if r["high_impact"]),
+        "top": [{"id": k, "label": labels.get(k, k), "count": v} for k, v in collections.Counter(r["themes"][0] for r in fraud_pub).most_common(3)],
+    }
+    market_full = {"themes": themes_all, "rising": rising, "reach": reach_block, "safety": safety}
+
+    # --- 3. Service
+    ladder = [{"rung": "Contacts", "count": len(ivol)}, {"rung": "Repeat", "count": sum(1 for r in ivol if r.get("repeat"))}]
+    for rid, rl in RUNG_LABEL:
+        ladder.append({"rung": rl, "count": sum(1 for r in ivol if r.get("escalation") and rung[r["escalation"]] >= rung[rid])})
+    pub_esc = [r for r in prs if r["escalation_intent"]]
+    by_target = collections.Counter(r.get("escalation_target") or "unnamed" for r in pub_esc)
+    targets = [{"id": k, "label": TARGET_LABEL.get(k, "Target not named"), "count": v} for k, v in by_target.most_common()]
+    closure_int = [r for r in ivol if r["theme"] == "closure_requests"]
+    closure_pub = [r for r in prs if r["closure_intent"]]
+    cure = [r for r in prs if r["cure_watch"]]
+    status = [r for r in prs if r["status_seeking"]]
+    disp = [r for r in ivol if r["deliverable"] == "dispute"]
+    funnel = [
+        {"stage": "Disputes raised", "count": len(disp)},
+        {"stage": "First response given", "count": sum(1 for r in disp if r["_resp"] and r["_resp"] <= b)},
+        {"stage": "Closed", "count": sum(1 for r in disp if not open_at(r, b))},
+        {"stage": "Customer credited", "count": sum(1 for r in disp if r.get("credited") and not open_at(r, b))},
+    ]
+    missed = collections.Counter(r.get("request_type") or "other" for r in prs if r["promise_break"])
+    missed_rows = [{"id": k, "label": REQUEST_LABEL.get(k, k), "count": v} for k, v in missed.most_common()]
+    tat_int = [r for r in ivol if cat_of(r["theme"])["tat"]]
+    failures = sorted(themes_all, key=lambda t: -t["negative"])[:5]
+    service_full = {
+        "ladder": ladder, "public_escalation": len(pub_esc), "targets": targets,
+        "closure": {"internal_requests": len(closure_int), "internal_open": sum(1 for r in closure_int if open_at(r, b)),
+                    "public_intent": len(closure_pub), "quote": quote_of(closure_pub)},
+        "cure": {"count": len(cure), "top": [{"id": k, "label": labels.get(k, k), "count": v} for k, v in collections.Counter(r["themes"][0] for r in cure).most_common(3)],
+                 "quote": quote_of(cure)},
+        "transparency": {"count": len(status), "share": weighted_share(prs, lambda r: r["status_seeking"], W) if prs else None,
+                         "quote": quote_of(status)},
+        "disputes": funnel,
+        "missed_timelines": {"total": sum(missed.values()), "rows": missed_rows},
+        "tat_related": {"contacts": len(tat_int), "share": pct(len(tat_int), len(ivol)), "open": sum(1 for r in tat_int if open_at(r, b))},
+        "failures": [{"id": t["id"], "label": t["label"], "negative": t["negative"], "count": t["count"], "escalation": t["escalation"]} for t in failures],
+    }
+    return {"happy": happy, "market_full": market_full, "service_full": service_full}
 
 
 def md_mail(inter, w, labels) -> dict:
