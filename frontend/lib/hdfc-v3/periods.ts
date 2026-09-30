@@ -53,6 +53,7 @@ export type PublicFigures = {
     volume: number;
     positive: number;
     negative: number;
+    escalation: number;
     positive_share: number | null;
     negative_share: number | null;
     share_method: "source_weighted";

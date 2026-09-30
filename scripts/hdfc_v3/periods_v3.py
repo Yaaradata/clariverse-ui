@@ -309,6 +309,7 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
             "volume": len(hi),
             "positive": sum(1 for r in hi if r["sentiment"] == "positive"),
             "negative": sum(1 for r in hi if r["sentiment"] == "negative"),
+            "escalation": sum(1 for r in hi if r["escalation_intent"]),
             "positive_share": weighted_share(hi, lambda r: r["sentiment"] == "positive", W, 1),
             "negative_share": weighted_share(hi, lambda r: r["sentiment"] == "negative", W, 1),
             "share_method": "source_weighted",
