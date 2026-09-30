@@ -462,12 +462,16 @@ def deliverable_stats(rows):
     }
 
 
+# Names as set in the 30 Sep review (changes_30sep.md; overrides B7 §E2's neutral labels). Membership always comes from
+# the bank's own lists and tiers (synthetic here), never from public data.
 COHORTS = [
-    ("priority_a", "Priority list A", "The bank's own top priority list"),
-    ("priority_b", "Priority list B", "The bank's second priority list"),
-    ("uhni", "Ultra-HNI", "Relationship tier from core banking"),
+    ("priority_a", "Ultra sensitive", "The bank's own list"),
+    ("priority_b", "RBI & Government", "The bank's own list"),
+    ("uhni", "Ultra HNI", "Relationship tier from core banking"),
     ("hni", "HNI", "Relationship tier from core banking"),
+    ("multi", "Customers with multiple relationships", "Listed or HNI customers holding two or more products, from the bank's records"),
 ]
+LISTED = ("priority_a", "priority_b", "uhni", "hni")
 HI_LABEL = {
     "regulator_named": "Regulator or ombudsman named",
     "legal_language": "Legal or consumer-court language",
@@ -897,6 +901,28 @@ def enrich(inter):
                     break
 
 
+rng3 = random.Random(SEED + 11)
+WRITTEN = ("email", "whatsapp", "social_inbox")
+
+
+def written_delays(inter):
+    """Written contacts (email, WhatsApp, social) wait longer for a first reply than calls or chat, which are answered in
+    the contact: 8% of them wait 48 to 144 hours (never later than closure). Drawn from a third random stream, after
+    every other field, so nothing else changes; breach is recomputed for the records touched. Hand-written personas
+    keep their scripted times."""
+    for r in inter:
+        if r["channel"] not in WRITTEN or r.get("scripted"):
+            continue
+        if rng3.random() >= 0.08:
+            continue
+        created = dt.datetime.fromisoformat(r["created_at"])
+        first = created + dt.timedelta(hours=48 + 96 * rng3.random())
+        if r["closed_at"]:
+            first = min(first, dt.datetime.fromisoformat(r["closed_at"]))
+        r["first_response_at"] = iso(first) if first <= NOW_DT else None
+        r["breached"] = is_breached(r)
+
+
 def link_proxies(customers, inter):
     """Proxy senders are linked through the bank's own contact records (B7 §E3): each customer with a proxy has a masked
     contact record, and every message a proxy sends carries that record's id. No randomness: ids come from masked ids."""
@@ -1101,8 +1127,13 @@ def main():
         c["proxy_contacts"] = p.get("proxy_contacts", 0)
         c["cohort_added_at"] = p.get("cohort_added_at", "2026-04-01T00:00+05:30")
         c["cohort_added_by"] = p.get("cohort_added_by", "bank")
+    # Customers with multiple relationships: a bank-supplied list (synthetic), derived from the bank's own records only.
+    for c in customers:
+        if len(c["products"]) >= 2 and any(k in c["cohorts"] for k in LISTED) and "multi" not in c["cohorts"]:
+            c["cohorts"].append("multi")
     inter = build_interactions(customers, mix, themes)
     inter.sort(key=lambda r: r["created_at"])
+    written_delays(inter)
     enrich(inter)
     link_proxies(customers, inter)
     bot_calls = build_bot_calls(customers)

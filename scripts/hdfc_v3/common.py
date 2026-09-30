@@ -245,3 +245,70 @@ def dump(obj, path: Path, indent: int | None = 1):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(obj, f, ensure_ascii=False, indent=indent)
         f.write("\n")
+
+
+# ------------------------------------------------------------------ periods (30 Sep review, changes_30sep.md A1)
+# Every period ends at the last moment in the data (29 Sep 08:30), never at the real clock. The morning brief is
+# yesterday 08:30 to today 08:30 in data time.
+PERIOD_END = "2026-09-29T08:30:00+05:30"
+DATA_START = "2026-07-01T00:00:00+05:30"
+PERIODS = [
+    {"id": "brief", "label": "Morning brief", "days": 1, "short": True},
+    {"id": "7d", "label": "Last 7 days", "days": 7, "short": True},
+    {"id": "30d", "label": "Last 30 days", "days": 30, "short": False},
+    {"id": "all", "label": "Full window", "days": None, "short": False},
+]
+DEFAULT_PERIOD = "7d"
+# Share of a short period's public items one source may hold before shares and trends must be source-weighted.
+SOURCE_DOMINANCE_LIMIT = 0.60
+
+# Channels on the Customer pulse and CX pulse. IVR bot is not a customer contact channel here (30 Sep review);
+# inbound and outbound calls are one "Calls" channel.
+CHANNEL_GROUP = {
+    "email": "emails",
+    "inbound_voice": "calls",
+    "outbound_voice": "calls",
+    "chat": "chat",
+    "whatsapp": "whatsapp",
+    "social_inbox": "social",
+    "branch": "branch",
+}
+CHANNEL_GROUP_ORDER = ["emails", "calls", "chat", "whatsapp", "social", "branch"]
+CHANNEL_GROUP_LABEL = {
+    "emails": "Emails",
+    "calls": "Calls",
+    "chat": "Chat",
+    "whatsapp": "WhatsApp",
+    "social": "Social",
+    "branch": "Branch",
+}
+PULSE_LISTS = ["priority_a", "priority_b", "uhni", "multi"]
+
+# Businesses on the morning brief cards (3 + 3). Insurance is thin in public voice; auto loans thinner still.
+BRIEF_BUSINESSES = ["cards", "payzapp", "accounts", "personal_loans", "home_loans", "insurance"]
+
+# Cards issue categories (C3): each public item and interaction counts once, under its primary theme's category;
+# the themes are the subcategories. Owners are roles in the cards team, never names. "tat" marks categories that
+# carry a deliverable (the old Deliverables breakdown), shown without TAT compliance.
+CARDS_CATEGORIES = [
+    {"id": "rewards", "label": "Rewards and redemption", "owner": "Cards · Rewards lead", "tat": False,
+     "themes": ["rewards_value", "reward_redemption", "offers_deals"]},
+    {"id": "upgrades", "label": "Upgrades, variants and eligibility", "owner": "Cards · Product lead", "tat": True,
+     "themes": ["card_variant_migration", "card_eligibility_upgrade"]},
+    {"id": "applications", "label": "Applications and verification", "owner": "Cards · Acquisition lead", "tat": True,
+     "themes": ["card_application", "kyc_updates"]},
+    {"id": "fees", "label": "Fees and charges", "owner": "Cards · Pricing lead", "tat": False,
+     "themes": ["card_fees_charges", "fees_charges_bank"]},
+    {"id": "limits", "label": "Limits", "owner": "Cards · Credit policy lead", "tat": True, "themes": ["card_limit"]},
+    {"id": "disputes", "label": "Disputes, refunds and reversals", "owner": "Cards · Disputes lead", "tat": True,
+     "themes": ["dispute_chargeback", "refund_delay", "failed_txn_reversal", "unauthorised_txn", "merchant_pos"]},
+    {"id": "delivery", "label": "Card delivery", "owner": "Cards · Fulfilment lead", "tat": True, "themes": ["card_dispatch"]},
+    {"id": "closure", "label": "Closure", "owner": "Cards · Retention lead", "tat": True, "themes": ["closure_requests"]},
+    {"id": "service", "label": "Service and complaint handling", "owner": "Cards · Service lead", "tat": True,
+     "themes": ["complaint_handling", "care_unreachable", "branch_service", "rm_service", "unsolicited_calls"]},
+    {"id": "fraud", "label": "Fraud and security", "owner": "Cards · Fraud lead", "tat": False,
+     "themes": ["fraud_scam", "phishing", "device_security_block", "recovery_conduct"]},
+    {"id": "digital", "label": "App and online card servicing", "owner": "Cards · Digital lead", "tat": False,
+     "themes": ["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "netbanking", "statements_documents"]},
+]
+CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Cards · CX lead", "tat": False, "themes": []}

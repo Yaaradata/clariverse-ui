@@ -15,7 +15,7 @@
  "dials": {
   "total": 32000,
   "closed": 30565,
-  "closed_or_responded": 31976,
+  "closed_or_responded": 31969,
   "open": 1435,
   "open_too_long": 341,
   "closed_or_responded_pct": 99.9,
@@ -28,7 +28,7 @@
    "label": "Cards",
    "total": 9567,
    "closed": 9260,
-   "closed_or_responded": 9560,
+   "closed_or_responded": 9558,
    "open": 307,
    "open_too_long": 71,
    "closed_or_responded_pct": 99.9,
@@ -38,9 +38,9 @@
    "high_impact": 122,
    "deliverables": {
     "measured": 9347,
-    "met": 8236,
-    "outside": 1111,
-    "met_pct": 88.1,
+    "met": 8218,
+    "outside": 1129,
+    "met_pct": 87.9,
     "open_within": 236
    },
    "negative_weekly": [
@@ -115,7 +115,7 @@
    "label": "PayZapp and UPI",
    "total": 2758,
    "closed": 2694,
-   "closed_or_responded": 2756,
+   "closed_or_responded": 2755,
    "open": 64,
    "open_too_long": 15,
    "closed_or_responded_pct": 99.9,
@@ -125,9 +125,9 @@
    "high_impact": 29,
    "deliverables": {
     "measured": 2718,
-    "met": 2600,
-    "outside": 118,
-    "met_pct": 95.7,
+    "met": 2591,
+    "outside": 127,
+    "met_pct": 95.3,
     "open_within": 49
    },
    "negative_weekly": [
@@ -202,7 +202,7 @@
    "label": "Accounts and deposits",
    "total": 9882,
    "closed": 9103,
-   "closed_or_responded": 9875,
+   "closed_or_responded": 9873,
    "open": 779,
    "open_too_long": 202,
    "closed_or_responded_pct": 99.9,
@@ -212,9 +212,9 @@
    "high_impact": 392,
    "deliverables": {
     "measured": 9331,
-    "met": 8238,
-    "outside": 1093,
-    "met_pct": 88.3,
+    "met": 8221,
+    "outside": 1110,
+    "met_pct": 88.1,
     "open_within": 577
    },
    "negative_weekly": [
@@ -299,9 +299,9 @@
    "high_impact": 70,
    "deliverables": {
     "measured": 1726,
-    "met": 1595,
-    "outside": 131,
-    "met_pct": 92.4,
+    "met": 1592,
+    "outside": 134,
+    "met_pct": 92.2,
     "open_within": 64
    },
    "negative_weekly": [
@@ -386,9 +386,9 @@
    "high_impact": 36,
    "deliverables": {
     "measured": 1412,
-    "met": 1312,
-    "outside": 100,
-    "met_pct": 92.9,
+    "met": 1310,
+    "outside": 102,
+    "met_pct": 92.8,
     "open_within": 41
    },
    "negative_weekly": [
@@ -550,19 +550,19 @@
    "label": "Insurance (bank-sold)",
    "total": 921,
    "closed": 854,
-   "closed_or_responded": 919,
+   "closed_or_responded": 917,
    "open": 67,
    "open_too_long": 16,
-   "closed_or_responded_pct": 99.8,
+   "closed_or_responded_pct": 99.6,
    "open_pct": 7.3,
    "open_too_long_pct_of_open": 23.9,
    "negative": 454,
    "high_impact": 39,
    "deliverables": {
     "measured": 877,
-    "met": 811,
-    "outside": 66,
-    "met_pct": 92.5,
+    "met": 808,
+    "outside": 69,
+    "met_pct": 92.1,
     "open_within": 51
    },
    "negative_weekly": [
@@ -647,9 +647,9 @@
    "high_impact": 48,
    "deliverables": {
     "measured": 4747,
-    "met": 4669,
-    "outside": 78,
-    "met_pct": 98.4,
+    "met": 4648,
+    "outside": 99,
+    "met_pct": 97.9,
     "open_within": 49
    },
    "negative_weekly": [
@@ -764,10 +764,10 @@
    "label": "Email",
    "total": 4463,
    "closed": 4240,
-   "closed_or_responded": 4450,
+   "closed_or_responded": 4444,
    "open": 223,
    "open_too_long": 54,
-   "closed_or_responded_pct": 99.7,
+   "closed_or_responded_pct": 99.6,
    "open_pct": 5.0,
    "open_too_long_pct_of_open": 24.2,
    "negative": 1860
@@ -777,10 +777,10 @@
    "label": "Social inbox",
    "total": 634,
    "closed": 604,
-   "closed_or_responded": 631,
+   "closed_or_responded": 630,
    "open": 30,
    "open_too_long": 6,
-   "closed_or_responded_pct": 99.5,
+   "closed_or_responded_pct": 99.4,
    "open_pct": 4.7,
    "open_too_long_pct_of_open": 20.0,
    "negative": 264
@@ -828,8 +828,8 @@
  "cohorts": [
   {
    "id": "priority_a",
-   "label": "Priority list A",
-   "source": "The bank's own top priority list",
+   "label": "Ultra sensitive",
+   "source": "The bank's own list",
    "customers": 45,
    "interactions": 476,
    "customers_with_open_issue": 17,
@@ -862,8 +862,8 @@
   },
   {
    "id": "priority_b",
-   "label": "Priority list B",
-   "source": "The bank's second priority list",
+   "label": "RBI & Government",
+   "source": "The bank's own list",
    "customers": 124,
    "interactions": 1306,
    "customers_with_open_issue": 47,
@@ -899,7 +899,7 @@
   },
   {
    "id": "uhni",
-   "label": "Ultra-HNI",
+   "label": "Ultra HNI",
    "source": "Relationship tier from core banking",
    "customers": 151,
    "interactions": 1685,
@@ -970,6 +970,43 @@
    "rm_notified_today": 34,
    "added_this_week": 8,
    "added_this_week_by_lisn": 3
+  },
+  {
+   "id": "multi",
+   "label": "Customers with multiple relationships",
+   "source": "Listed or HNI customers holding two or more products, from the bank's records",
+   "customers": 763,
+   "interactions": 6884,
+   "customers_with_open_issue": 215,
+   "open": 256,
+   "open_over_5h": 249,
+   "open_over_24h": 199,
+   "open_too_long": 47,
+   "negative": 2846,
+   "negative_by_channel": {
+    "inbound_voice": 1050,
+    "outbound_voice": 166,
+    "chat": 585,
+    "email": 401,
+    "social_inbox": 59,
+    "ivr_bot": 217,
+    "branch": 175,
+    "whatsapp": 193
+   },
+   "products_affected": {
+    "accounts": 119,
+    "insurance": 13,
+    "cards": 69,
+    "personal_loans": 17,
+    "payzapp": 15,
+    "auto_loans": 7,
+    "digital": 6,
+    "home_loans": 10
+   },
+   "rm_should_know": 216,
+   "rm_notified_today": 44,
+   "added_this_week": 15,
+   "added_this_week_by_lisn": 5
   }
  ],
  "high_impact": {
@@ -1995,9 +2032,9 @@
    "compensation": "—",
    "total": 18375,
    "measured": 18364,
-   "met": 18285,
-   "outside": 79,
-   "met_pct": 99.6,
+   "met": 18212,
+   "outside": 152,
+   "met_pct": 99.2,
    "open_within": 111,
    "open_too_long": 1,
    "themes": [],
@@ -2007,9 +2044,9 @@
      "label": "Cards",
      "total": 3881,
      "measured": 3881,
-     "met": 3867,
-     "outside": 14,
-     "met_pct": 99.6,
+     "met": 3849,
+     "outside": 32,
+     "met_pct": 99.2,
      "open_within": 16,
      "open_too_long": 0
     },
@@ -2018,9 +2055,9 @@
      "label": "PayZapp and UPI",
      "total": 2235,
      "measured": 2234,
-     "met": 2222,
-     "outside": 12,
-     "met_pct": 99.5,
+     "met": 2213,
+     "outside": 21,
+     "met_pct": 99.1,
      "open_within": 10,
      "open_too_long": 0
     },
@@ -2029,9 +2066,9 @@
      "label": "Accounts and deposits",
      "total": 4733,
      "measured": 4729,
-     "met": 4710,
-     "outside": 19,
-     "met_pct": 99.6,
+     "met": 4693,
+     "outside": 36,
+     "met_pct": 99.2,
      "open_within": 30,
      "open_too_long": 0
     },
@@ -2040,9 +2077,9 @@
      "label": "Personal loans",
      "total": 1104,
      "measured": 1103,
-     "met": 1099,
-     "outside": 4,
-     "met_pct": 99.6,
+     "met": 1096,
+     "outside": 7,
+     "met_pct": 99.4,
      "open_within": 6,
      "open_too_long": 0
     },
@@ -2051,9 +2088,9 @@
      "label": "Home loans",
      "total": 844,
      "measured": 843,
-     "met": 839,
-     "outside": 4,
-     "met_pct": 99.5,
+     "met": 837,
+     "outside": 6,
+     "met_pct": 99.3,
      "open_within": 6,
      "open_too_long": 0
     },
@@ -2073,9 +2110,9 @@
      "label": "Insurance (bank-sold)",
      "total": 589,
      "measured": 588,
-     "met": 586,
-     "outside": 2,
-     "met_pct": 99.7,
+     "met": 583,
+     "outside": 5,
+     "met_pct": 99.1,
      "open_within": 8,
      "open_too_long": 0
     },
@@ -2084,9 +2121,9 @@
      "label": "Digital (app and NetBanking)",
      "total": 4459,
      "measured": 4456,
-     "met": 4434,
-     "outside": 22,
-     "met_pct": 99.5,
+     "met": 4413,
+     "outside": 43,
+     "met_pct": 99.0,
      "open_within": 30,
      "open_too_long": 1
     }
@@ -2114,7 +2151,7 @@
    "open": 4,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 99.5,
+   "deliv_met_pct": 99.0,
    "public_mentions": 644,
    "public_negative": 244
   },
@@ -2150,7 +2187,7 @@
    "open": 4,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
+   "deliv_met_pct": 99.6,
    "public_mentions": 341,
    "public_negative": 163
   },
@@ -2174,7 +2211,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
+   "deliv_met_pct": 99.2,
    "public_mentions": 165,
    "public_negative": 49
   },
@@ -2246,7 +2283,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
+   "deliv_met_pct": 99.4,
    "public_mentions": 76,
    "public_negative": 33
   },
@@ -2282,7 +2319,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 98.0,
+   "deliv_met_pct": 96.9,
    "public_mentions": 43,
    "public_negative": 25
   },
@@ -2318,7 +2355,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 98.8,
+   "deliv_met_pct": 97.6,
    "public_mentions": 37,
    "public_negative": 31
   },
@@ -2330,7 +2367,7 @@
    "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
+   "deliv_met_pct": 98.8,
    "public_mentions": 36,
    "public_negative": 33
   },
@@ -2426,7 +2463,7 @@
    "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
-   "deliv_met_pct": 100.0,
+   "deliv_met_pct": 96.5,
    "public_mentions": 25,
    "public_negative": 15
   },
@@ -2607,7 +2644,8 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -2780,7 +2818,8 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -2859,7 +2898,8 @@
    "segment": "Imperia",
    "cohorts": [
     "priority_b",
-    "hni"
+    "hni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -2939,7 +2979,8 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -2993,7 +3034,8 @@
    "descriptor": "Private Banking relationship, 4 years, Pune",
    "segment": "Private",
    "cohorts": [
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3046,7 +3088,8 @@
    "segment": "Imperia",
    "cohorts": [
     "priority_b",
-    "hni"
+    "hni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3124,7 +3167,8 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3176,7 +3220,8 @@
    "descriptor": "Imperia relationship, 8 years, Ahmedabad",
    "segment": "Imperia",
    "cohorts": [
-    "hni"
+    "hni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3230,7 +3275,8 @@
    "segment": "Private",
    "cohorts": [
     "priority_b",
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3285,7 +3331,8 @@
    "descriptor": "Imperia relationship, 3 years, Gurugram",
    "segment": "Imperia",
    "cohorts": [
-    "hni"
+    "hni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3339,7 +3386,8 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni"
+    "uhni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3392,7 +3440,8 @@
    "segment": "Imperia",
    "cohorts": [
     "priority_b",
-    "hni"
+    "hni",
+    "multi"
    ],
    "products": [
     "cards",
@@ -3904,52 +3953,52 @@
   }
  ],
  "md_mail": {
-  "total": 61,
-  "shown": 38,
+  "total": 47,
+  "shown": 24,
   "rows": [
    {
     "theme": "app_speed_crash",
     "label": "App speed, loading and crashes",
     "owner": "digital",
-    "mails": 14,
+    "mails": 9,
     "median_age_days": 0.4,
-    "resolved": 14,
+    "resolved": 9,
     "resolved_share": 100.0
    },
    {
     "theme": "complaint_handling",
     "label": "Complaints closed without resolution",
     "owner": "cx",
-    "mails": 14,
-    "median_age_days": 29.0,
-    "resolved": 10,
-    "resolved_share": 71.4
-   },
-   {
-    "theme": "account_freeze",
-    "label": "Account debit freezes and blocks",
-    "owner": "operations",
-    "mails": 4,
-    "median_age_days": 4.6,
-    "resolved": 3,
+    "mails": 8,
+    "median_age_days": 30.8,
+    "resolved": 6,
     "resolved_share": 75.0
-   },
-   {
-    "theme": "kyc_updates",
-    "label": "KYC, re-KYC and profile updates",
-    "owner": "operations",
-    "mails": 3,
-    "median_age_days": 5.0,
-    "resolved": 3,
-    "resolved_share": 100.0
    },
    {
     "theme": "loan_processing",
     "label": "Loan processing and disbursal",
     "owner": "loans",
     "mails": 3,
-    "median_age_days": 8.6,
+    "median_age_days": 4.6,
     "resolved": 3,
+    "resolved_share": 100.0
+   },
+   {
+    "theme": "account_freeze",
+    "label": "Account debit freezes and blocks",
+    "owner": "operations",
+    "mails": 2,
+    "median_age_days": 4.6,
+    "resolved": 2,
+    "resolved_share": 100.0
+   },
+   {
+    "theme": "card_fees_charges",
+    "label": "Card fees and charges",
+    "owner": "cards",
+    "mails": 2,
+    "median_age_days": 1.0,
+    "resolved": 2,
     "resolved_share": 100.0
    }
   ],
@@ -4142,47 +4191,43 @@
    },
    {
     "rung": "Grievance",
-    "count": 892
+    "count": 919
    },
    {
     "rung": "MD's office",
-    "count": 61
+    "count": 47
    },
    {
     "rung": "IO",
-    "count": 18
+    "count": 19
    },
    {
     "rung": "RBI Ombudsman",
-    "count": 3
+    "count": 6
    }
   ],
   "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
   "closure": {
    "closure_requests": 698,
    "closed": 639,
-   "saved": 201,
-   "save_rate": 31.5
+   "saved": 181,
+   "save_rate": 28.3
   },
   "disputes": {
    "raised": 95,
    "beyond_sla_total": 12,
    "drivers": [
     {
-     "driver": "Merchant response pending",
-     "cases": 5
-    },
-    {
      "driver": "Chargeback evidence incomplete",
-     "cases": 1
+     "cases": 4
     },
     {
      "driver": "Network timeline",
-     "cases": 2
+     "cases": 1
     },
     {
      "driver": "Manual re-work after reopen",
-     "cases": 2
+     "cases": 5
     },
     {
      "driver": "Customer not updated",
@@ -4218,11 +4263,11 @@
     },
     {
      "stage": "Customer credited",
-     "count": 48
+     "count": 50
     },
     {
      "stage": "Credited within TAT",
-     "count": 44
+     "count": 42
     }
    ]
   }

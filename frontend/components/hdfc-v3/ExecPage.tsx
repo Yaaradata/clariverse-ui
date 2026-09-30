@@ -544,14 +544,8 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
     0,
   );
 
-  const numbers = <DialsRow b={b} />;
-  const cohorts = <CohortStrip b={b} from={from} />;
-
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <ProductFilter b={b} from={from} />
-      {view === "mds-office" ? cohorts : numbers}
-      {view === "mds-office" ? numbers : cohorts}
       <Tile prov={["public", "internal"]} accent>
         <div
           style={{
@@ -664,7 +658,6 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
       </Tile>
 
       <ProductPulseTable b={b} from={from} />
-      <CustomerMemory b={b} from={from} />
 
       <div
         style={{

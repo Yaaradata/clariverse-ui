@@ -114,6 +114,24 @@ FIXTURES = [
          source="bank_confirmed", source_note="Bank SLA document, section 1"))),
     ("public product rows", "public product rows + excluded",
      lambda s, o: _rw_json(o / "products.json", lambda p: p["rows"][0].update(count=p["rows"][0]["count"] + 1))),
+    # 30 Sep views (periods.json)
+    ("list channel does not add up", "channels sum to the strip (volume)",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["customer_pulse"]["lists"][0]["by_channel"]["emails"].update(
+         volume=d["periods"]["7d"]["customer_pulse"]["lists"][0]["by_channel"]["emails"]["volume"] + 1))),
+    ("list figure not recomputable", "volume, open and 48-hour wait recomputed",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["customer_pulse"]["lists"][1].update(
+         open=d["periods"]["30d"]["customer_pulse"]["lists"][1]["open"] + 1))),
+    ("48-hour figure shown for the morning brief", "volume, open and 48-hour wait recomputed",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["brief"]["customer_pulse"]["lists"][0].update(not_responded_48h=0))),
+    ("unweighted share with a dominant source", "never leaves a share unweighted",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["brief"]["cx_pulse"]["external"].update(share_method="raw"))),
+    ("overall volume split", "overall contact volume = internal + external",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["cx_pulse"]["overall"].update(total=d["periods"]["7d"]["cx_pulse"]["overall"]["total"] + 1))),
+    ("cards card vs cards view", "Cards: business card = Cards view",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["cards"]["internal"].update(volume=d["periods"]["30d"]["cards"]["internal"]["volume"] + 1))),
+    ("cards categories", "Cards categories sum to the Cards external volume",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["all"]["cards"]["categories"][0]["external"].update(
+         volume=d["periods"]["all"]["cards"]["categories"][0]["external"]["volume"] + 1))),
 ]
 
 LINT_MUST_FLAG = [
@@ -150,7 +168,7 @@ def main() -> int:
         clean_seed, clean_out = base / "seed", base / "out"
         shutil.copytree(SEED, clean_seed)
         clean_out.mkdir()
-        for f in ("themes.json", "signals.json", "products.json", "app_pulse.json", "briefing.json", "store_series.json"):
+        for f in ("themes.json", "signals.json", "products.json", "app_pulse.json", "briefing.json", "store_series.json", "periods.json"):
             shutil.copy(OUT / f, clean_out / f)
         baseline = rec.run(clean_seed, clean_out, quiet=True)
         if baseline:

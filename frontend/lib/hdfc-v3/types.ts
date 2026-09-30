@@ -1,3 +1,5 @@
+import type { PeriodsFile } from "./periods";
+
 /** Shapes of data/out/app/*.json and data/seed/*.json (produced by scripts/aggregate.py, insights.py, seed_internal.py). */
 
 export type Prov = "public" | "internal" | "joined";
@@ -395,6 +397,8 @@ export type Bundle = {
   storeSeries: StoreSeriesFile;
   responses: ResponsesFile;
   v3: InternalV3;
+  /** Per-period figures for the two 30 Sep views (lib/hdfc-v3/periods.ts). */
+  periods: PeriodsFile;
 };
 
 /* ---------------------------------------------------------------- V3 (B7) */

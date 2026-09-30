@@ -88,6 +88,7 @@ DATA_FILES = [
     ROOT / "data" / "out" / "app_jul_sep" / "meta.json",
     ROOT / "data" / "out" / "app_jul_sep" / "mood.json",
     ROOT / "data" / "out" / "app_jul_sep" / "app_pulse.json",
+    ROOT / "data" / "out" / "app_jul_sep" / "periods.json",
 ]
 # Customer voice (quotes, their paraphrased summaries, review titles, asks) is the customer's words, not our copy.
 CUSTOMER_VOICE_KEYS = {"redacted_text", "summary", "title", "text", "feature_asks", "asks"}

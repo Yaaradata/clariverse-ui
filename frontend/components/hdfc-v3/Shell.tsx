@@ -59,14 +59,8 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
   const items = [
     {
       href: "/hdfc-pulse/v2/mds-office",
-      label: "MD's office",
+      label: "MD's office / Head of CX",
       icon: Activity,
-      exec: true,
-    },
-    {
-      href: "/hdfc-pulse/v2/head-cx",
-      label: "Head of CX",
-      icon: Users,
       exec: true,
     },
     {
@@ -384,41 +378,6 @@ function ShellInner({
               <strong style={{ color: C.text }}>HDFC Bank</strong> · Customer
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
-            <fieldset
-              aria-label="View"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 14,
-                border: "none",
-                margin: 0,
-                padding: 0,
-              }}
-            >
-              <span style={{ color: C.textMut }}>View:</span>
-              {(["mds-office", "head-cx"] as View[]).map((v) => {
-                const on = current === v;
-                return (
-                  <Link
-                    key={v}
-                    href={`/hdfc-pulse/v2/${v}`}
-                    aria-current={on && !drill ? "page" : undefined}
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 999,
-                      textDecoration: "none",
-                      color: on ? C.text : C.textSec,
-                      background: on ? C.brandSoft : "transparent",
-                      border: `1px solid ${on ? tint(C.brand, 0.4) : C.border}`,
-                      fontWeight: on ? 700 : 500,
-                    }}
-                  >
-                    {VIEW_LABEL[v]}
-                  </Link>
-                );
-              })}
-            </fieldset>
             <button
               type="button"
               onClick={() => setAskOpen(true)}

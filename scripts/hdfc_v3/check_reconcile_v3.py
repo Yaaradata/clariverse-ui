@@ -218,7 +218,75 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     # No value reused across unrelated headline metrics on the exec page.
     head = [agg["dials"]["open"], agg["dials"]["open_too_long"], agg["high_impact"]["total"], agg["customer_memory"]["with_open_issue"], agg["rm"]["should_know"]]
     ok(len(set(head)) == len(head), f"exec headline values are distinct {head}")
+    periods_checks(seed_dir, out_dir, inter, customers, ok)
     return fails
+
+
+CH = {"email": "emails", "inbound_voice": "calls", "outbound_voice": "calls", "chat": "chat", "whatsapp": "whatsapp",
+      "social_inbox": "social", "branch": "branch"}
+
+
+def periods_checks(seed_dir, out_dir, inter, customers, ok):
+    """30 Sep views (periods.json): recomputed from dated records for every period; channels sum to their strips;
+    short periods never show a public share unweighted when one source dominates."""
+    path = out_dir / "periods.json"
+    if not path.exists():
+        ok(False, "periods.json exists")
+        return
+    per = load(path)
+    end = dt.datetime.fromisoformat(per["end"])
+    h48 = dt.timedelta(hours=48)
+    rs_all = [r for r in inter if r["channel"] in CH]  # IVR bot is not counted on these views
+    for pid, p in per["periods"].items():
+        a, b = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
+        measurable = b - a > h48
+
+        def figs(rs):
+            vol = [r for r in rs if a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+            op = [r for r in vol if r["status"] == "open" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
+
+            def waited(r):
+                c = dt.datetime.fromisoformat(r["created_at"])
+                fr = dt.datetime.fromisoformat(r["first_response_at"]) if r["first_response_at"] else None
+                return (fr - c > h48) if fr and fr <= b else (b - c > h48)
+            return len(vol), len(op), (sum(1 for r in vol if waited(r)) if measurable else None)
+
+        for lst in p["customer_pulse"]["lists"]:
+            members = {m for m, c in customers.items() if lst["id"] in c["cohorts"]}
+            v, o, n = figs([r for r in rs_all if r["masked_id"] in members])
+            ok((v, o, n) == (lst["volume"], lst["open"], lst["not_responded_48h"]),
+               f"[{pid}] {lst['label']}: volume, open and 48-hour wait recomputed ({v}, {o}, {n})")
+            for k in ("volume", "open", "not_responded_48h"):
+                chans = [c[k] for c in lst["by_channel"].values()]
+                total = None if any(c is None for c in chans) else sum(chans)
+                ok(total == lst[k], f"[{pid}] {lst['label']}: channels sum to the strip ({k})")
+        internal = p["cx_pulse"]["internal"]
+        v, o, _ = figs(rs_all)
+        ok(v == internal["volume"] and o == internal["open"], f"[{pid}] CX pulse internal volume and open recomputed ({v}, {o})")
+        for k in ("volume", "open", "resolved"):
+            ok(sum(c[k] for c in internal["by_channel"].values()) == internal[k], f"[{pid}] CX pulse internal channels sum ({k})")
+        ok(internal["resolved"] + internal["open"] == internal["volume"], f"[{pid}] resolved + open = volume")
+        ov = p["cx_pulse"]["overall"]
+        ok(ov["total"] == ov["internal"] + ov["external"] == internal["volume"] + p["cx_pulse"]["external"]["volume"],
+           f"[{pid}] overall contact volume = internal + external")
+        biz = p["businesses"]
+        ok(sum(x["internal"]["volume"] for x in biz) == internal["volume"], f"[{pid}] business rows sum to internal volume")
+        cards_row = next(x for x in biz if x["id"] == "cards")
+        cv = p["cards"]
+        ok(cards_row["internal"]["volume"] == cv["internal"]["volume"] and cards_row["external"]["volume"] == cv["external"]["volume"],
+           f"[{pid}] Cards: business card = Cards view")
+        for side, keys in (("internal", ("volume", "open", "resolved")), ("external", ("volume", "negative", "positive"))):
+            for k in keys:
+                ok(sum(c[side][k] for c in cv["categories"]) == cv[side][k], f"[{pid}] Cards categories sum to the Cards {side} {k}")
+        # Short periods: when one source is more than the limit of public items, every public share must be weighted.
+        if p["short"]:
+            blocks = [p["cx_pulse"]["external"], p["cx_pulse"]["external"]["high_impact"], cv["external"]]
+            blocks += [x["external"] for x in biz]
+            dominant = max(p["cx_pulse"]["external"]["source_mix"].values(), default=0) > 100 * per["dominance_limit"]
+            unweighted = [blk for blk in blocks if blk.get("share_method") != "source_weighted"]
+            ok(not (dominant and unweighted), f"[{pid}] a dominant source (> {int(100 * per['dominance_limit'])}%) never leaves a share unweighted ({len(unweighted)} unweighted)")
+    ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
+    ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
 
 
 def main() -> int:

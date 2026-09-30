@@ -42,6 +42,7 @@ export function loadBundle(): Bundle {
     storeSeries: read("out", PUBLIC, "store_series.json"),
     responses: read("out", PUBLIC, "responses.json"),
     v3: read("seed", "internal_v3", "aggregates.json"),
+    periods: read("out", PUBLIC, "periods.json"),
   };
   return cache;
 }
