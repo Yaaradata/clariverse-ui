@@ -243,3 +243,77 @@ The 30 Sep spec wins over B7. Each override is below; the table in `changes_30se
   share unweighted.
 - **High-priority mentions** (listed customers tagging the bank) are synthetic and tagged "Internal · illustrative". The
   linking rule is on screen: only through the bank's verified handles or contact records.
+
+# Round 2, 30 Sep: the review with Karthik (changes_30sep.md, "Round 2")
+
+## D22 · Round 1 overridden by round 2
+
+| Round 1 | Round 2 | Resolution |
+|---|---|---|
+| A2.4: "High-priority mentions" (posts by listed customers) inside the Customer pulse | Customer pulse is internal only | Block removed from the section. Public voice now sits in its own Social pulse. |
+| One "RMs have been alerted about X of Y" line for the whole Customer pulse | "RMs alerted: X of Y" on every list card | Per-list line on each card; the section-level line is gone. |
+| Customer pulse: a sparkline under "No reply in 48 h" | Every figure compared with the previous period | Sparkline replaced by the change against the previous period. |
+| C3: Cards table column "Open 48 h+" (still open after 48 hours) | "Not responded to in 48h+" | Renamed, and the figure is now first-reply wait over 48 hours, so label and number agree. The Cards issue pulse dial follows. |
+| C3: one "Escalations" column showing "public · internal" | Split under Internal and External | Two columns, one in each group. |
+| Status: resolved + open = volume | New status "Waiting on customer" | resolved + open + waiting on customer = volume, everywhere. Open, open too long and not responded all exclude waiting threads. |
+| C4: three question cards on the Cards view, then Volume by channel and Actions | At most five panels | Third question card, Volume by channel and Actions moved out; reachable through Ask LisN. |
+| Ask LisN as a floating button, bottom right (request of 30 Sep, after round 1) | A pinned question bar on every screen | Button and chat window replaced by the bar. |
+| B: business card is one large link | A "Deep dive" button | Button on every card; the card is no longer a link. |
+
+## D23 · Decisions made while building round 2
+
+- **Transcript missing.** `review_karthik_30sep.md` was not in the repo. The build follows the change spec and its
+  timestamps; "Missed by spec" is open until the transcript is added.
+- **Waiting on customer is synthetic.** The internal data is illustrative, so the status is too: 40% of open contacts
+  that already had a first reply carry `resolution_sent_at` (set from the record id, so nothing else in the seed
+  changes). Scripted persona trails stay open. check_reconcile recomputes the status from the seed for every period.
+- **Comparisons are like for like.** Open and "no reply in 48 h" are compared with the previous window as it stood at
+  its own end. For the full window the comparison is second half against first half, as before.
+- **Social pulse response rate.** Reply data exists for Play Store reviews only. The headline is the share of Play Store
+  reviews with a bank reply, labelled informational; posts on X, Reddit and forums show "Replies not collected", never
+  "Not responded". High-impact counts use the existing reach rule, so the Social pulse equals the CX pulse external
+  figures (checked in reconcile).
+- **Trending posts** are ranked by likes + replies + reposts (upvotes and helpful votes on Reddit and the stores). Text
+  is the anonymised summary; posts that name a person or make an allegation are never shown.
+- **Good response** is a Play Store review whose reply gives a reference and routes to an official channel. In the
+  bank's reply the customer's name becomes "[customer]", the link becomes "[official help centre link]", and an
+  exclamation mark becomes a full stop (screen copy carries none). For the Morning brief, where there is none in the
+  window, the most recent earlier example is shown and dated.
+- **Ask LisN answers are precomputed.** No live model call is wired. Each suggested question is answered from the
+  page's own period figures (`frontend/lib/hdfc-v3/askAnswers.ts`), so answers change with the period and always match
+  the screen. Every answer is tagged "Precomputed from this view's data; no live model call." Typed questions go to the
+  closest suggested question, then to the older full-window prompts.
+- **Role-based access** is shown with one Cards question about Home loans, which is refused.
+- **My view** holds pinned answers in memory for the session only; a reload clears it.
+- **Other screens.** "Waiting on customer" applies to the two 30 Sep views (periods.json). The unlinked older pages keep
+  their own open counts.
+
+## D24 · Bank replies on sources where none were collected (follow-up 2)
+
+Replies are collected for Play Store reviews only. For the other sources a reply is simulated per post, from the post id
+(sha1, no random stream, so a rebuild gives the same figures). Assumptions, based on how Indian bank care handles
+typically behave:
+
+| Source | Negative posts answered | Other posts answered | Reasoning |
+|---|---|---|---|
+| X | 68% | 40% | The care handle is most active here and answers most complaints that tag or name the bank. |
+| App Store | 45% | 30% | Developer replies exist but are sparser than on the Play Store. |
+| Reddit | 14% | 6% | Banks rarely reply in threads; a few are picked up through official accounts. |
+| Forums | 8% | 3% | Consumer forums are seldom answered directly. |
+
+- Resulting full-window rates: X 62%, App Store 37%, Reddit 9%, forums 5%; Play Store 96% (collected). Combined 69%.
+- Every simulated figure is tagged "Illustrative" on screen (per source and per trending post).
+- The CX pulse and Cards "Responded" figures stay on the collected Play Store replies; reconcile checks that the Play
+  Store row of the breakdown equals them and that the sources sum to the combined figure.
+- High-priority mentions moved from the Customer pulse cards to the External channels block (round 2 had removed them
+  from the view). They remain synthetic and are tagged illustrative.
+
+## D25 · Waiting on customer everywhere (follow-up 5)
+
+- The status is now written by the seed (`status: "waiting_on_customer"`, with `resolution_sent_at`), not derived in the
+  period pipeline, so every screen that counts open items from the seed excludes it without its own rule.
+- RM alerts follow the open status, so lists now show fewer customers due an alert (for example Ultra sensitive 3 of 14,
+  was 4 of 18).
+- Reconcile: every contact is open, waiting on customer or closed; open + waiting + closed = total; the full-window
+  period figures equal the older screens' dials once the IVR bot (left out of the 30 Sep views) is set aside.
+- The Karthik transcript was still missing for this pass, so "Missed by spec" (follow-up 6) is open.

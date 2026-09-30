@@ -15,12 +15,13 @@
  "dials": {
   "total": 32000,
   "closed": 30565,
+  "waiting_on_customer": 540,
   "closed_or_responded": 31969,
-  "open": 1435,
-  "open_too_long": 341,
+  "open": 895,
+  "open_too_long": 220,
   "closed_or_responded_pct": 99.9,
-  "open_pct": 4.5,
-  "open_too_long_pct_of_open": 23.8
+  "open_pct": 2.8,
+  "open_too_long_pct_of_open": 24.6
  },
  "products": [
   {
@@ -28,12 +29,13 @@
    "label": "Cards",
    "total": 9567,
    "closed": 9260,
+   "waiting_on_customer": 113,
    "closed_or_responded": 9558,
-   "open": 307,
-   "open_too_long": 71,
+   "open": 194,
+   "open_too_long": 47,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 3.2,
-   "open_too_long_pct_of_open": 23.1,
+   "open_pct": 2.0,
+   "open_too_long_pct_of_open": 24.2,
    "negative": 2849,
    "high_impact": 122,
    "deliverables": {
@@ -41,7 +43,7 @@
     "met": 8218,
     "outside": 1129,
     "met_pct": 87.9,
-    "open_within": 236
+    "open_within": 147
    },
    "negative_weekly": [
     {
@@ -115,12 +117,13 @@
    "label": "PayZapp and UPI",
    "total": 2758,
    "closed": 2694,
+   "waiting_on_customer": 19,
    "closed_or_responded": 2755,
-   "open": 64,
-   "open_too_long": 15,
+   "open": 45,
+   "open_too_long": 12,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 2.3,
-   "open_too_long_pct_of_open": 23.4,
+   "open_pct": 1.6,
+   "open_too_long_pct_of_open": 26.7,
    "negative": 1410,
    "high_impact": 29,
    "deliverables": {
@@ -128,7 +131,7 @@
     "met": 2591,
     "outside": 127,
     "met_pct": 95.3,
-    "open_within": 49
+    "open_within": 33
    },
    "negative_weekly": [
     {
@@ -202,12 +205,13 @@
    "label": "Accounts and deposits",
    "total": 9882,
    "closed": 9103,
+   "waiting_on_customer": 294,
    "closed_or_responded": 9873,
-   "open": 779,
-   "open_too_long": 202,
+   "open": 485,
+   "open_too_long": 129,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 7.9,
-   "open_too_long_pct_of_open": 25.9,
+   "open_pct": 4.9,
+   "open_too_long_pct_of_open": 26.6,
    "negative": 4293,
    "high_impact": 392,
    "deliverables": {
@@ -215,7 +219,7 @@
     "met": 8221,
     "outside": 1110,
     "met_pct": 88.1,
-    "open_within": 577
+    "open_within": 356
    },
    "negative_weekly": [
     {
@@ -289,12 +293,13 @@
    "label": "Personal loans",
    "total": 1785,
    "closed": 1701,
+   "waiting_on_customer": 33,
    "closed_or_responded": 1784,
-   "open": 84,
-   "open_too_long": 20,
+   "open": 51,
+   "open_too_long": 13,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 4.7,
-   "open_too_long_pct_of_open": 23.8,
+   "open_pct": 2.9,
+   "open_too_long_pct_of_open": 25.5,
    "negative": 810,
    "high_impact": 70,
    "deliverables": {
@@ -302,7 +307,7 @@
     "met": 1592,
     "outside": 134,
     "met_pct": 92.2,
-    "open_within": 64
+    "open_within": 38
    },
    "negative_weekly": [
     {
@@ -376,12 +381,13 @@
    "label": "Home loans",
    "total": 1448,
    "closed": 1401,
+   "waiting_on_customer": 18,
    "closed_or_responded": 1446,
-   "open": 47,
-   "open_too_long": 6,
+   "open": 29,
+   "open_too_long": 4,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 3.2,
-   "open_too_long_pct_of_open": 12.8,
+   "open_pct": 2.0,
+   "open_too_long_pct_of_open": 13.8,
    "negative": 625,
    "high_impact": 36,
    "deliverables": {
@@ -389,7 +395,7 @@
     "met": 1310,
     "outside": 102,
     "met_pct": 92.8,
-    "open_within": 41
+    "open_within": 25
    },
    "negative_weekly": [
     {
@@ -463,12 +469,13 @@
    "label": "Auto and two-wheeler loans",
    "total": 870,
    "closed": 835,
+   "waiting_on_customer": 17,
    "closed_or_responded": 870,
-   "open": 35,
-   "open_too_long": 8,
+   "open": 18,
+   "open_too_long": 4,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 4.0,
-   "open_too_long_pct_of_open": 22.9,
+   "open_pct": 2.1,
+   "open_too_long_pct_of_open": 22.2,
    "negative": 406,
    "high_impact": 36,
    "deliverables": {
@@ -476,7 +483,7 @@
     "met": 786,
     "outside": 62,
     "met_pct": 92.7,
-    "open_within": 27
+    "open_within": 14
    },
    "negative_weekly": [
     {
@@ -550,12 +557,13 @@
    "label": "Insurance (bank-sold)",
    "total": 921,
    "closed": 854,
+   "waiting_on_customer": 25,
    "closed_or_responded": 917,
-   "open": 67,
-   "open_too_long": 16,
+   "open": 42,
+   "open_too_long": 10,
    "closed_or_responded_pct": 99.6,
-   "open_pct": 7.3,
-   "open_too_long_pct_of_open": 23.9,
+   "open_pct": 4.6,
+   "open_too_long_pct_of_open": 23.8,
    "negative": 454,
    "high_impact": 39,
    "deliverables": {
@@ -563,7 +571,7 @@
     "met": 808,
     "outside": 69,
     "met_pct": 92.1,
-    "open_within": 51
+    "open_within": 32
    },
    "negative_weekly": [
     {
@@ -637,12 +645,13 @@
    "label": "Digital (app and NetBanking)",
    "total": 4769,
    "closed": 4717,
+   "waiting_on_customer": 21,
    "closed_or_responded": 4766,
-   "open": 52,
-   "open_too_long": 3,
+   "open": 31,
+   "open_too_long": 1,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 1.1,
-   "open_too_long_pct_of_open": 5.8,
+   "open_pct": 0.7,
+   "open_too_long_pct_of_open": 3.2,
    "negative": 2522,
    "high_impact": 48,
    "deliverables": {
@@ -650,7 +659,7 @@
     "met": 4648,
     "outside": 99,
     "met_pct": 97.9,
-    "open_within": 49
+    "open_within": 30
    },
    "negative_weekly": [
     {
@@ -725,12 +734,13 @@
    "label": "Inbound calls",
    "total": 11476,
    "closed": 10943,
+   "waiting_on_customer": 207,
    "closed_or_responded": 11476,
-   "open": 533,
-   "open_too_long": 133,
+   "open": 326,
+   "open_too_long": 78,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 4.6,
-   "open_too_long_pct_of_open": 25.0,
+   "open_pct": 2.8,
+   "open_too_long_pct_of_open": 23.9,
    "negative": 4843
   },
   {
@@ -738,12 +748,13 @@
    "label": "Outbound calls",
    "total": 1988,
    "closed": 1897,
+   "waiting_on_customer": 35,
    "closed_or_responded": 1988,
-   "open": 91,
-   "open_too_long": 23,
+   "open": 56,
+   "open_too_long": 19,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 4.6,
-   "open_too_long_pct_of_open": 25.3,
+   "open_pct": 2.8,
+   "open_too_long_pct_of_open": 33.9,
    "negative": 794
   },
   {
@@ -751,12 +762,13 @@
    "label": "Chat",
    "total": 6436,
    "closed": 6198,
+   "waiting_on_customer": 83,
    "closed_or_responded": 6436,
-   "open": 238,
-   "open_too_long": 50,
+   "open": 155,
+   "open_too_long": 36,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 3.7,
-   "open_too_long_pct_of_open": 21.0,
+   "open_pct": 2.4,
+   "open_too_long_pct_of_open": 23.2,
    "negative": 2713
   },
   {
@@ -764,12 +776,13 @@
    "label": "Email",
    "total": 4463,
    "closed": 4240,
+   "waiting_on_customer": 81,
    "closed_or_responded": 4444,
-   "open": 223,
-   "open_too_long": 54,
+   "open": 142,
+   "open_too_long": 36,
    "closed_or_responded_pct": 99.6,
-   "open_pct": 5.0,
-   "open_too_long_pct_of_open": 24.2,
+   "open_pct": 3.2,
+   "open_too_long_pct_of_open": 25.4,
    "negative": 1860
   },
   {
@@ -777,12 +790,13 @@
    "label": "Social inbox",
    "total": 634,
    "closed": 604,
+   "waiting_on_customer": 11,
    "closed_or_responded": 630,
-   "open": 30,
-   "open_too_long": 6,
+   "open": 19,
+   "open_too_long": 3,
    "closed_or_responded_pct": 99.4,
-   "open_pct": 4.7,
-   "open_too_long_pct_of_open": 20.0,
+   "open_pct": 3.0,
+   "open_too_long_pct_of_open": 15.8,
    "negative": 264
   },
   {
@@ -790,12 +804,13 @@
    "label": "IVR bot",
    "total": 2882,
    "closed": 2773,
+   "waiting_on_customer": 40,
    "closed_or_responded": 2882,
-   "open": 109,
-   "open_too_long": 23,
+   "open": 69,
+   "open_too_long": 15,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 3.8,
-   "open_too_long_pct_of_open": 21.1,
+   "open_pct": 2.4,
+   "open_too_long_pct_of_open": 21.7,
    "negative": 1208
   },
   {
@@ -803,12 +818,13 @@
    "label": "Branch",
    "total": 2153,
    "closed": 2019,
+   "waiting_on_customer": 50,
    "closed_or_responded": 2153,
-   "open": 134,
-   "open_too_long": 30,
+   "open": 84,
+   "open_too_long": 19,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 6.2,
-   "open_too_long_pct_of_open": 22.4,
+   "open_pct": 3.9,
+   "open_too_long_pct_of_open": 22.6,
    "negative": 857
   },
   {
@@ -816,12 +832,13 @@
    "label": "WhatsApp",
    "total": 1968,
    "closed": 1891,
+   "waiting_on_customer": 33,
    "closed_or_responded": 1960,
-   "open": 77,
-   "open_too_long": 22,
+   "open": 44,
+   "open_too_long": 14,
    "closed_or_responded_pct": 99.6,
-   "open_pct": 3.9,
-   "open_too_long_pct_of_open": 28.6,
+   "open_pct": 2.2,
+   "open_too_long_pct_of_open": 31.8,
    "negative": 830
   }
  ],
@@ -832,10 +849,11 @@
    "source": "The bank's own list",
    "customers": 45,
    "interactions": 476,
-   "customers_with_open_issue": 17,
-   "open": 24,
-   "open_over_5h": 24,
-   "open_over_24h": 16,
+   "customers_with_open_issue": 13,
+   "open": 18,
+   "waiting_on_customer": 6,
+   "open_over_5h": 18,
+   "open_over_24h": 12,
    "open_too_long": 0,
    "negative": 200,
    "negative_by_channel": {
@@ -849,14 +867,14 @@
     "whatsapp": 15
    },
    "products_affected": {
-    "accounts": 13,
+    "accounts": 9,
     "home_loans": 1,
-    "cards": 7,
-    "payzapp": 2,
+    "cards": 6,
+    "payzapp": 1,
     "insurance": 1
    },
-   "rm_should_know": 18,
-   "rm_notified_today": 4,
+   "rm_should_know": 14,
+   "rm_notified_today": 3,
    "added_this_week": 3,
    "added_this_week_by_lisn": 0
   },
@@ -866,11 +884,12 @@
    "source": "The bank's own list",
    "customers": 124,
    "interactions": 1306,
-   "customers_with_open_issue": 47,
-   "open": 55,
-   "open_over_5h": 53,
-   "open_over_24h": 44,
-   "open_too_long": 13,
+   "customers_with_open_issue": 34,
+   "open": 40,
+   "waiting_on_customer": 15,
+   "open_over_5h": 38,
+   "open_over_24h": 34,
+   "open_too_long": 10,
    "negative": 547,
    "negative_by_channel": {
     "inbound_voice": 194,
@@ -884,15 +903,14 @@
    },
    "products_affected": {
     "insurance": 3,
-    "cards": 19,
-    "personal_loans": 3,
-    "accounts": 20,
+    "cards": 16,
+    "accounts": 15,
     "digital": 1,
-    "payzapp": 4,
-    "home_loans": 3,
-    "auto_loans": 2
+    "payzapp": 2,
+    "auto_loans": 2,
+    "home_loans": 1
    },
-   "rm_should_know": 46,
+   "rm_should_know": 33,
    "rm_notified_today": 5,
    "added_this_week": 13,
    "added_this_week_by_lisn": 5
@@ -903,11 +921,12 @@
    "source": "Relationship tier from core banking",
    "customers": 151,
    "interactions": 1685,
-   "customers_with_open_issue": 49,
-   "open": 58,
-   "open_over_5h": 57,
-   "open_over_24h": 42,
-   "open_too_long": 8,
+   "customers_with_open_issue": 35,
+   "open": 41,
+   "waiting_on_customer": 17,
+   "open_over_5h": 41,
+   "open_over_24h": 30,
+   "open_too_long": 5,
    "negative": 703,
    "negative_by_channel": {
     "inbound_voice": 266,
@@ -920,17 +939,17 @@
     "whatsapp": 54
    },
    "products_affected": {
-    "accounts": 31,
-    "personal_loans": 3,
-    "cards": 15,
-    "payzapp": 3,
-    "home_loans": 2,
+    "accounts": 20,
+    "personal_loans": 2,
+    "cards": 12,
+    "payzapp": 2,
+    "home_loans": 1,
     "auto_loans": 1,
     "insurance": 2,
     "digital": 1
    },
-   "rm_should_know": 49,
-   "rm_notified_today": 13,
+   "rm_should_know": 36,
+   "rm_notified_today": 7,
    "added_this_week": 8,
    "added_this_week_by_lisn": 2
   },
@@ -940,11 +959,12 @@
    "source": "Relationship tier from core banking",
    "customers": 640,
    "interactions": 5446,
-   "customers_with_open_issue": 179,
-   "open": 215,
-   "open_over_5h": 209,
-   "open_over_24h": 172,
-   "open_too_long": 45,
+   "customers_with_open_issue": 124,
+   "open": 140,
+   "waiting_on_customer": 75,
+   "open_over_5h": 138,
+   "open_over_24h": 119,
+   "open_too_long": 31,
    "negative": 2241,
    "negative_by_channel": {
     "inbound_voice": 822,
@@ -957,17 +977,17 @@
     "whatsapp": 145
    },
    "products_affected": {
-    "accounts": 105,
-    "insurance": 11,
-    "cards": 54,
-    "personal_loans": 14,
-    "payzapp": 12,
-    "auto_loans": 6,
-    "digital": 5,
-    "home_loans": 8
+    "accounts": 70,
+    "insurance": 6,
+    "cards": 36,
+    "payzapp": 10,
+    "personal_loans": 9,
+    "digital": 2,
+    "home_loans": 4,
+    "auto_loans": 3
    },
-   "rm_should_know": 180,
-   "rm_notified_today": 34,
+   "rm_should_know": 125,
+   "rm_notified_today": 27,
    "added_this_week": 8,
    "added_this_week_by_lisn": 3
   },
@@ -977,11 +997,12 @@
    "source": "Listed or HNI customers holding two or more products, from the bank's records",
    "customers": 763,
    "interactions": 6884,
-   "customers_with_open_issue": 215,
-   "open": 256,
-   "open_over_5h": 249,
-   "open_over_24h": 199,
-   "open_too_long": 47,
+   "customers_with_open_issue": 150,
+   "open": 169,
+   "waiting_on_customer": 87,
+   "open_over_5h": 167,
+   "open_over_24h": 139,
+   "open_too_long": 32,
    "negative": 2846,
    "negative_by_channel": {
     "inbound_voice": 1050,
@@ -994,25 +1015,26 @@
     "whatsapp": 193
    },
    "products_affected": {
-    "accounts": 119,
-    "insurance": 13,
-    "cards": 69,
-    "personal_loans": 17,
-    "payzapp": 15,
-    "auto_loans": 7,
-    "digital": 6,
-    "home_loans": 10
+    "accounts": 78,
+    "insurance": 8,
+    "cards": 48,
+    "payzapp": 12,
+    "personal_loans": 11,
+    "digital": 3,
+    "home_loans": 5,
+    "auto_loans": 4
    },
-   "rm_should_know": 216,
-   "rm_notified_today": 44,
+   "rm_should_know": 152,
+   "rm_notified_today": 32,
    "added_this_week": 15,
    "added_this_week_by_lisn": 5
   }
  ],
  "high_impact": {
   "total": 772,
-  "open": 71,
-  "open_too_long": 19,
+  "open": 45,
+  "waiting_on_customer": 26,
+  "open_too_long": 11,
   "reasons": [
    {
     "id": "regulator_named",
@@ -1055,8 +1077,8 @@
   "customers_with_signals": 4989,
   "multi_product": 4538,
   "negative_in_two_or_more_products": 2917,
-  "with_open_issue": 813,
-  "with_open_too_long": 226,
+  "with_open_issue": 540,
+  "with_open_too_long": 144,
   "priority_among_them": 586,
   "pairs": [
    {
@@ -1094,7 +1116,7 @@
    "met": 227,
    "outside": 58,
    "met_pct": 79.6,
-   "open_within": 2,
+   "open_within": 1,
    "open_too_long": 2,
    "themes": [
     "failed_txn_reversal",
@@ -1131,7 +1153,7 @@
      "met": 34,
      "outside": 20,
      "met_pct": 63.0,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 1
     },
     {
@@ -1170,8 +1192,8 @@
    "met": 549,
    "outside": 104,
    "met_pct": 84.1,
-   "open_within": 45,
-   "open_too_long": 14,
+   "open_within": 33,
+   "open_too_long": 6,
    "themes": [
     "closure_requests"
    ],
@@ -1184,7 +1206,7 @@
      "met": 144,
      "outside": 23,
      "met_pct": 86.2,
-     "open_within": 7,
+     "open_within": 6,
      "open_too_long": 1
     },
     {
@@ -1195,7 +1217,7 @@
      "met": 21,
      "outside": 6,
      "met_pct": 77.8,
-     "open_within": 3,
+     "open_within": 2,
      "open_too_long": 2
     },
     {
@@ -1206,8 +1228,8 @@
      "met": 284,
      "outside": 60,
      "met_pct": 82.6,
-     "open_within": 23,
-     "open_too_long": 9
+     "open_within": 15,
+     "open_too_long": 3
     },
     {
      "product": "personal_loans",
@@ -1239,8 +1261,8 @@
      "met": 55,
      "outside": 11,
      "met_pct": 83.3,
-     "open_within": 8,
-     "open_too_long": 2
+     "open_within": 6,
+     "open_too_long": 0
     },
     {
      "product": "digital",
@@ -1267,8 +1289,8 @@
    "met": 101,
    "outside": 12,
    "met_pct": 89.4,
-   "open_within": 7,
-   "open_too_long": 1,
+   "open_within": 4,
+   "open_too_long": 0,
    "themes": [
     "unauthorised_txn"
    ],
@@ -1281,8 +1303,8 @@
      "met": 68,
      "outside": 4,
      "met_pct": 94.4,
-     "open_within": 4,
-     "open_too_long": 1
+     "open_within": 2,
+     "open_too_long": 0
     },
     {
      "product": "payzapp",
@@ -1303,7 +1325,7 @@
      "met": 28,
      "outside": 7,
      "met_pct": 80.0,
-     "open_within": 2,
+     "open_within": 1,
      "open_too_long": 0
     }
    ]
@@ -1320,7 +1342,7 @@
    "met": 156,
    "outside": 20,
    "met_pct": 88.6,
-   "open_within": 38,
+   "open_within": 24,
    "open_too_long": 3,
    "themes": [
     "credit_report"
@@ -1334,7 +1356,7 @@
      "met": 45,
      "outside": 4,
      "met_pct": 91.8,
-     "open_within": 10,
+     "open_within": 6,
      "open_too_long": 1
     },
     {
@@ -1345,7 +1367,7 @@
      "met": 59,
      "outside": 10,
      "met_pct": 85.5,
-     "open_within": 17,
+     "open_within": 12,
      "open_too_long": 2
     },
     {
@@ -1356,7 +1378,7 @@
      "met": 34,
      "outside": 4,
      "met_pct": 89.5,
-     "open_within": 8,
+     "open_within": 3,
      "open_too_long": 0
     },
     {
@@ -1395,8 +1417,8 @@
    "met": 99,
    "outside": 14,
    "met_pct": 87.6,
-   "open_within": 23,
-   "open_too_long": 4,
+   "open_within": 14,
+   "open_too_long": 3,
    "themes": [
     "loan_closure_documents"
    ],
@@ -1409,7 +1431,7 @@
      "met": 45,
      "outside": 7,
      "met_pct": 86.5,
-     "open_within": 10,
+     "open_within": 7,
      "open_too_long": 2
     },
     {
@@ -1420,7 +1442,7 @@
      "met": 34,
      "outside": 2,
      "met_pct": 94.4,
-     "open_within": 8,
+     "open_within": 6,
      "open_too_long": 0
     },
     {
@@ -1431,8 +1453,8 @@
      "met": 18,
      "outside": 5,
      "met_pct": 78.3,
-     "open_within": 5,
-     "open_too_long": 2
+     "open_within": 1,
+     "open_too_long": 1
     }
    ]
   },
@@ -1448,8 +1470,8 @@
    "met": 1547,
    "outside": 579,
    "met_pct": 72.8,
-   "open_within": 622,
-   "open_too_long": 229,
+   "open_within": 385,
+   "open_too_long": 151,
    "themes": [
     "complaint_handling"
    ],
@@ -1462,8 +1484,8 @@
      "met": 183,
      "outside": 57,
      "met_pct": 76.2,
-     "open_within": 74,
-     "open_too_long": 22
+     "open_within": 45,
+     "open_too_long": 16
     },
     {
      "product": "payzapp",
@@ -1473,8 +1495,8 @@
      "met": 79,
      "outside": 35,
      "met_pct": 69.3,
-     "open_within": 25,
-     "open_too_long": 9
+     "open_within": 18,
+     "open_too_long": 7
     },
     {
      "product": "accounts",
@@ -1484,8 +1506,8 @@
      "met": 1006,
      "outside": 392,
      "met_pct": 72.0,
-     "open_within": 438,
-     "open_too_long": 168
+     "open_within": 270,
+     "open_too_long": 109
     },
     {
      "product": "personal_loans",
@@ -1495,8 +1517,8 @@
      "met": 79,
      "outside": 30,
      "met_pct": 72.5,
-     "open_within": 26,
-     "open_too_long": 9
+     "open_within": 18,
+     "open_too_long": 4
     },
     {
      "product": "home_loans",
@@ -1506,7 +1528,7 @@
      "met": 27,
      "outside": 11,
      "met_pct": 71.1,
-     "open_within": 10,
+     "open_within": 7,
      "open_too_long": 2
     },
     {
@@ -1517,8 +1539,8 @@
      "met": 33,
      "outside": 7,
      "met_pct": 82.5,
-     "open_within": 10,
-     "open_too_long": 3
+     "open_within": 5,
+     "open_too_long": 2
     },
     {
      "product": "insurance",
@@ -1528,8 +1550,8 @@
      "met": 100,
      "outside": 35,
      "met_pct": 74.1,
-     "open_within": 31,
-     "open_too_long": 14
+     "open_within": 17,
+     "open_too_long": 10
     },
     {
      "product": "digital",
@@ -1539,8 +1561,8 @@
      "met": 40,
      "outside": 12,
      "met_pct": 76.9,
-     "open_within": 8,
-     "open_too_long": 2
+     "open_within": 5,
+     "open_too_long": 1
     }
    ]
   },
@@ -1556,8 +1578,8 @@
    "met": 95,
    "outside": 44,
    "met_pct": 68.3,
-   "open_within": 10,
-   "open_too_long": 7,
+   "open_within": 8,
+   "open_too_long": 6,
    "themes": [
     "card_dispatch"
    ],
@@ -1570,8 +1592,8 @@
      "met": 79,
      "outside": 37,
      "met_pct": 68.1,
-     "open_within": 9,
-     "open_too_long": 6
+     "open_within": 8,
+     "open_too_long": 5
     },
     {
      "product": "accounts",
@@ -1581,7 +1603,7 @@
      "met": 12,
      "outside": 5,
      "met_pct": 70.6,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 1
     }
    ]
@@ -1598,7 +1620,7 @@
    "met": 68,
    "outside": 12,
    "met_pct": 85.0,
-   "open_within": 15,
+   "open_within": 9,
    "open_too_long": 1,
    "themes": [
     "dispute_chargeback"
@@ -1612,7 +1634,7 @@
      "met": 47,
      "outside": 12,
      "met_pct": 79.7,
-     "open_within": 10,
+     "open_within": 7,
      "open_too_long": 1
     },
     {
@@ -1623,7 +1645,7 @@
      "met": 12,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 3,
+     "open_within": 2,
      "open_too_long": 0
     },
     {
@@ -1634,7 +1656,7 @@
      "met": 5,
      "outside": 0,
      "met_pct": 100.0,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 0
     }
    ]
@@ -1651,8 +1673,8 @@
    "met": 119,
    "outside": 46,
    "met_pct": 72.1,
-   "open_within": 11,
-   "open_too_long": 10,
+   "open_within": 6,
+   "open_too_long": 8,
    "themes": [
     "refund_delay"
    ],
@@ -1665,7 +1687,7 @@
      "met": 42,
      "outside": 13,
      "met_pct": 76.4,
-     "open_within": 2,
+     "open_within": 1,
      "open_too_long": 3
     },
     {
@@ -1676,8 +1698,8 @@
      "met": 26,
      "outside": 14,
      "met_pct": 65.0,
-     "open_within": 4,
-     "open_too_long": 2
+     "open_within": 2,
+     "open_too_long": 1
     },
     {
      "product": "accounts",
@@ -1688,7 +1710,7 @@
      "outside": 8,
      "met_pct": 80.5,
      "open_within": 2,
-     "open_too_long": 3
+     "open_too_long": 2
     },
     {
      "product": "personal_loans",
@@ -1709,7 +1731,7 @@
      "met": 6,
      "outside": 3,
      "met_pct": 66.7,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 1
     },
     {
@@ -1731,7 +1753,7 @@
      "met": 3,
      "outside": 1,
      "met_pct": 75.0,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 0
     }
    ]
@@ -1748,8 +1770,8 @@
    "met": 5333,
    "outside": 1287,
    "met_pct": 80.6,
-   "open_within": 155,
-   "open_too_long": 44,
+   "open_within": 95,
+   "open_too_long": 26,
    "themes": [
     "kyc_updates",
     "card_variant_migration",
@@ -1769,8 +1791,8 @@
      "met": 3653,
      "outside": 910,
      "met_pct": 80.1,
-     "open_within": 102,
-     "open_too_long": 33
+     "open_within": 65,
+     "open_too_long": 18
     },
     {
      "product": "payzapp",
@@ -1791,8 +1813,8 @@
      "met": 1290,
      "outside": 277,
      "met_pct": 82.3,
-     "open_within": 40,
-     "open_too_long": 8
+     "open_within": 22,
+     "open_too_long": 5
     },
     {
      "product": "personal_loans",
@@ -1802,7 +1824,7 @@
      "met": 41,
      "outside": 15,
      "met_pct": 73.2,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 0
     },
     {
@@ -1813,7 +1835,7 @@
      "met": 20,
      "outside": 7,
      "met_pct": 74.1,
-     "open_within": 2,
+     "open_within": 1,
      "open_too_long": 1
     },
     {
@@ -1835,7 +1857,7 @@
      "met": 70,
      "outside": 18,
      "met_pct": 79.5,
-     "open_within": 4,
+     "open_within": 3,
      "open_too_long": 0
     },
     {
@@ -1846,7 +1868,7 @@
      "met": 148,
      "outside": 37,
      "met_pct": 80.0,
-     "open_within": 5,
+     "open_within": 3,
      "open_too_long": 0
     }
    ]
@@ -1863,8 +1885,8 @@
    "met": 823,
    "outside": 335,
    "met_pct": 71.1,
-   "open_within": 25,
-   "open_too_long": 13,
+   "open_within": 16,
+   "open_too_long": 8,
    "themes": [
     "account_freeze"
    ],
@@ -1878,7 +1900,7 @@
      "outside": 24,
      "met_pct": 66.2,
      "open_within": 2,
-     "open_too_long": 2
+     "open_too_long": 1
     },
     {
      "product": "payzapp",
@@ -1899,8 +1921,8 @@
      "met": 733,
      "outside": 290,
      "met_pct": 71.7,
-     "open_within": 22,
-     "open_too_long": 10
+     "open_within": 14,
+     "open_too_long": 6
     },
     {
      "product": "personal_loans",
@@ -1943,7 +1965,7 @@
      "met": 11,
      "outside": 4,
      "met_pct": 73.3,
-     "open_within": 1,
+     "open_within": 0,
      "open_too_long": 0
     }
    ]
@@ -1960,8 +1982,8 @@
    "met": 845,
    "outside": 169,
    "met_pct": 83.3,
-   "open_within": 30,
-   "open_too_long": 12,
+   "open_within": 14,
+   "open_too_long": 6,
    "themes": [
     "loan_processing"
    ],
@@ -1996,8 +2018,8 @@
      "met": 257,
      "outside": 55,
      "met_pct": 82.4,
-     "open_within": 12,
-     "open_too_long": 7
+     "open_within": 6,
+     "open_too_long": 5
     },
     {
      "product": "home_loans",
@@ -2007,8 +2029,8 @@
      "met": 372,
      "outside": 72,
      "met_pct": 83.8,
-     "open_within": 14,
-     "open_too_long": 2
+     "open_within": 7,
+     "open_too_long": 0
     },
     {
      "product": "auto_loans",
@@ -2018,8 +2040,8 @@
      "met": 164,
      "outside": 33,
      "met_pct": 83.2,
-     "open_within": 4,
-     "open_too_long": 2
+     "open_within": 1,
+     "open_too_long": 0
     }
    ]
   },
@@ -2035,8 +2057,8 @@
    "met": 18212,
    "outside": 152,
    "met_pct": 99.2,
-   "open_within": 111,
-   "open_too_long": 1,
+   "open_within": 66,
+   "open_too_long": 0,
    "themes": [],
    "products": [
     {
@@ -2047,7 +2069,7 @@
      "met": 3849,
      "outside": 32,
      "met_pct": 99.2,
-     "open_within": 16,
+     "open_within": 5,
      "open_too_long": 0
     },
     {
@@ -2058,7 +2080,7 @@
      "met": 2213,
      "outside": 21,
      "met_pct": 99.1,
-     "open_within": 10,
+     "open_within": 5,
      "open_too_long": 0
     },
     {
@@ -2069,7 +2091,7 @@
      "met": 4693,
      "outside": 36,
      "met_pct": 99.2,
-     "open_within": 30,
+     "open_within": 20,
      "open_too_long": 0
     },
     {
@@ -2080,7 +2102,7 @@
      "met": 1096,
      "outside": 7,
      "met_pct": 99.4,
-     "open_within": 6,
+     "open_within": 3,
      "open_too_long": 0
     },
     {
@@ -2091,7 +2113,7 @@
      "met": 837,
      "outside": 6,
      "met_pct": 99.3,
-     "open_within": 6,
+     "open_within": 4,
      "open_too_long": 0
     },
     {
@@ -2113,7 +2135,7 @@
      "met": 583,
      "outside": 5,
      "met_pct": 99.1,
-     "open_within": 8,
+     "open_within": 6,
      "open_too_long": 0
     },
     {
@@ -2124,8 +2146,8 @@
      "met": 4413,
      "outside": 43,
      "met_pct": 99.0,
-     "open_within": 30,
-     "open_too_long": 1
+     "open_within": 18,
+     "open_too_long": 0
     }
    ]
   }
@@ -2136,8 +2158,8 @@
    "label": "Card eligibility, upgrade and LTF requests",
    "interactions": 1526,
    "negative": 244,
-   "open": 40,
-   "open_too_long": 9,
+   "open": 22,
+   "open_too_long": 4,
    "deliverable": "service_request",
    "deliv_met_pct": 82.2,
    "public_mentions": 672,
@@ -2148,7 +2170,7 @@
    "label": "Rewards value, devaluation and caps",
    "interactions": 1463,
    "negative": 391,
-   "open": 4,
+   "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.0,
@@ -2160,8 +2182,8 @@
    "label": "Card variant migration and forced upgrade",
    "interactions": 911,
    "negative": 215,
-   "open": 36,
-   "open_too_long": 11,
+   "open": 23,
+   "open_too_long": 6,
    "deliverable": "service_request",
    "deliv_met_pct": 69.1,
    "public_mentions": 401,
@@ -2172,7 +2194,7 @@
    "label": "Card application, rejection and verification",
    "interactions": 813,
    "negative": 198,
-   "open": 26,
+   "open": 17,
    "open_too_long": 6,
    "deliverable": "service_request",
    "deliv_met_pct": 80.8,
@@ -2184,7 +2206,7 @@
    "label": "Card fees and charges",
    "interactions": 774,
    "negative": 229,
-   "open": 4,
+   "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.6,
@@ -2196,8 +2218,8 @@
    "label": "Reward redemption and vouchers",
    "interactions": 699,
    "negative": 180,
-   "open": 14,
-   "open_too_long": 2,
+   "open": 9,
+   "open_too_long": 0,
    "deliverable": "service_request",
    "deliv_met_pct": 84.3,
    "public_mentions": 308,
@@ -2208,7 +2230,7 @@
    "label": "Debit card and ATM",
    "interactions": 375,
    "negative": 97,
-   "open": 1,
+   "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.2,
@@ -2220,8 +2242,8 @@
    "label": "Credit limit",
    "interactions": 368,
    "negative": 97,
-   "open": 10,
-   "open_too_long": 3,
+   "open": 7,
+   "open_too_long": 2,
    "deliverable": "service_request",
    "deliv_met_pct": 86.1,
    "public_mentions": 161,
@@ -2232,8 +2254,8 @@
    "label": "Complaints closed without resolution",
    "interactions": 314,
    "negative": 165,
-   "open": 96,
-   "open_too_long": 22,
+   "open": 61,
+   "open_too_long": 16,
    "deliverable": "complaint_resolution",
    "deliv_met_pct": 76.2,
    "public_mentions": 138,
@@ -2244,8 +2266,8 @@
    "label": "Account opening and product conversion",
    "interactions": 216,
    "negative": 46,
-   "open": 6,
-   "open_too_long": 1,
+   "open": 3,
+   "open_too_long": 0,
    "deliverable": "service_request",
    "deliv_met_pct": 84.4,
    "public_mentions": 95,
@@ -2256,7 +2278,7 @@
    "label": "Relationship manager service",
    "interactions": 186,
    "negative": 84,
-   "open": 1,
+   "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.5,
@@ -2268,7 +2290,7 @@
    "label": "Account and card closure requests",
    "interactions": 174,
    "negative": 54,
-   "open": 8,
+   "open": 7,
    "open_too_long": 1,
    "deliverable": "card_closure",
    "deliv_met_pct": 86.2,
@@ -2292,7 +2314,7 @@
    "label": "Customer care unreachable or unhelpful",
    "interactions": 141,
    "negative": 82,
-   "open": 2,
+   "open": 1,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 98.6,
@@ -2304,8 +2326,8 @@
    "label": "Card dispatch and delivery",
    "interactions": 125,
    "negative": 44,
-   "open": 15,
-   "open_too_long": 6,
+   "open": 13,
+   "open_too_long": 5,
    "deliverable": "card_dispatch",
    "deliv_met_pct": 68.1,
    "public_mentions": 55,
@@ -2364,7 +2386,7 @@
    "label": "Login, MPIN and registration",
    "interactions": 82,
    "negative": 43,
-   "open": 1,
+   "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 98.8,
@@ -2376,8 +2398,8 @@
    "label": "Unauthorised transactions",
    "interactions": 76,
    "negative": 36,
-   "open": 5,
-   "open_too_long": 1,
+   "open": 2,
+   "open_too_long": 0,
    "deliverable": "unauthorised_reversal",
    "deliv_met_pct": 94.4,
    "public_mentions": 33,
@@ -2388,8 +2410,8 @@
    "label": "Account debit freezes and blocks",
    "interactions": 73,
    "negative": 37,
-   "open": 4,
-   "open_too_long": 2,
+   "open": 3,
+   "open_too_long": 1,
    "deliverable": "account_unfreeze",
    "deliv_met_pct": 66.2,
    "public_mentions": 32,
@@ -2412,7 +2434,7 @@
    "label": "Disputes and chargebacks",
    "interactions": 69,
    "negative": 35,
-   "open": 11,
+   "open": 8,
    "open_too_long": 1,
    "deliverable": "dispute",
    "deliv_met_pct": 79.7,
@@ -2424,7 +2446,7 @@
    "label": "App speed, loading and crashes",
    "interactions": 61,
    "negative": 30,
-   "open": 1,
+   "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 100.0,
@@ -2436,7 +2458,7 @@
    "label": "CIBIL and credit-report correction",
    "interactions": 59,
    "negative": 31,
-   "open": 11,
+   "open": 7,
    "open_too_long": 1,
    "deliverable": "credit_report",
    "deliv_met_pct": 91.8,
@@ -2448,7 +2470,7 @@
    "label": "Refunds not credited",
    "interactions": 57,
    "negative": 28,
-   "open": 5,
+   "open": 4,
    "open_too_long": 3,
    "deliverable": "refund",
    "deliv_met_pct": 76.4,
@@ -2520,8 +2542,8 @@
    "label": "Statements, certificates and documents",
    "interactions": 41,
    "negative": 23,
-   "open": 1,
-   "open_too_long": 1,
+   "open": 0,
+   "open_too_long": 0,
    "deliverable": "service_request",
    "deliv_met_pct": 78.0,
    "public_mentions": 18,
@@ -3529,8 +3551,8 @@
   ]
  },
  "rm": {
-  "should_know": 229,
-  "notified_today": 47,
+  "should_know": 161,
+  "notified_today": 34,
   "rule": "An RM alert is due when a customer on a priority list or in the ultra-HNI or HNI tier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call."
  },
  "triage": {
@@ -4127,57 +4149,57 @@
   "ageing": [
    {
     "request_type": "other",
-    "open_cases": 1207,
-    "beyond_tat": 286,
-    "beyond_tat_share": 23.7
+    "open_cases": 752,
+    "beyond_tat": 184,
+    "beyond_tat_share": 24.5
    },
    {
     "request_type": "closure",
-    "open_cases": 59,
-    "beyond_tat": 14,
-    "beyond_tat_share": 23.7
-   },
-   {
-    "request_type": "loan_disbursal",
-    "open_cases": 42,
-    "beyond_tat": 12,
-    "beyond_tat_share": 28.6
+    "open_cases": 39,
+    "beyond_tat": 6,
+    "beyond_tat_share": 15.4
    },
    {
     "request_type": "credit_report",
-    "open_cases": 41,
+    "open_cases": 27,
     "beyond_tat": 3,
-    "beyond_tat_share": 7.3
+    "beyond_tat_share": 11.1
    },
    {
-    "request_type": "refund",
-    "open_cases": 21,
-    "beyond_tat": 10,
-    "beyond_tat_share": 47.6
-   },
-   {
-    "request_type": "kyc",
+    "request_type": "loan_disbursal",
     "open_cases": 20,
-    "beyond_tat": 5,
-    "beyond_tat_share": 25.0
+    "beyond_tat": 6,
+    "beyond_tat_share": 30.0
    },
    {
     "request_type": "card_delivery",
-    "open_cases": 17,
-    "beyond_tat": 7,
-    "beyond_tat_share": 41.2
+    "open_cases": 14,
+    "beyond_tat": 6,
+    "beyond_tat_share": 42.9
+   },
+   {
+    "request_type": "refund",
+    "open_cases": 14,
+    "beyond_tat": 8,
+    "beyond_tat_share": 57.1
+   },
+   {
+    "request_type": "kyc",
+    "open_cases": 12,
+    "beyond_tat": 4,
+    "beyond_tat_share": 33.3
    },
    {
     "request_type": "dispute",
-    "open_cases": 16,
+    "open_cases": 10,
     "beyond_tat": 1,
-    "beyond_tat_share": 6.2
+    "beyond_tat_share": 10.0
    },
    {
     "request_type": "reversal",
-    "open_cases": 12,
-    "beyond_tat": 3,
-    "beyond_tat_share": 25.0
+    "open_cases": 7,
+    "beyond_tat": 2,
+    "beyond_tat_share": 28.6
    }
   ],
   "ladder": [

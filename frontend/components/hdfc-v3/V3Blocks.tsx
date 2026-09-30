@@ -215,14 +215,14 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
           color={C.green}
           label="Closed or responded"
           big={fmt(inside.closed_or_responded)}
-          sub={`${fmt(inside.closed)} closed (${fmtPct(inside.total ? (100 * inside.closed) / inside.total : null)}) · ${fmt(inside.closed_or_responded - inside.closed)} still open but already answered`}
+          sub={`${fmt(inside.closed)} closed (${fmtPct(inside.total ? (100 * inside.closed) / inside.total : null)}) · ${fmt(inside.closed_or_responded - inside.closed)} not closed but already answered`}
         />
         <Ring
           value={inside.open_pct}
           color={C.amber}
           label="Open"
           big={fmt(inside.open)}
-          sub={`${fmtPct(inside.open_pct, 1)} of total`}
+          sub={`${fmtPct(inside.open_pct, 1)} of total · ${fmt(inside.waiting_on_customer)} more waiting on customer (illustrative), not counted as open`}
         />
         <Ring
           value={inside.open_too_long_pct_of_open}

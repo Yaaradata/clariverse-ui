@@ -79,3 +79,74 @@
 - **Period boundaries:** every period ends at 29 Sep 08:30, the last date in the data, not the real clock. Public data ends 28 Sep 23:59, so for the Morning brief the external figures cover 28 Sep 08:30 to midnight, and the screen says so.
 - **"Open" vs "over 48 hours":** "Open" is the share of the period's volume still open at the period end. "Not responded to in over 48 hours" and internal "Open too long" are the backlog at the period end: items with no response, or still open, for more than 48 hours, whatever their start date. This is the only reading that works for the 24-hour Morning brief. Each is labelled.
 - **High-impact external signals:** public posts with reach, defined as an X post from an account with 10,000+ followers or with 50+ likes or 20+ reposts, a Reddit post with 50+ upvotes, or a store review 20+ people found helpful. Posts by listed customers are bank-linked internal records and are counted in the Customer pulse ("High-priority mentions"), not mixed into the public count.
+
+---
+
+# Round 2 (Karthik review, 30 Sep)
+
+Second review the same day, with Karthik (external advisor), Ranjith and Usha. This round builds on the table above;
+where the two conflict, this round wins (overrides are logged in MORNING_DECISIONS.md, "Round 2").
+
+**Transcript not in the repo.** `docs/demo-rebuild/review_karthik_30sep.md` was not present when this round was built,
+so the table is taken from the change spec and its timestamps. "Missed by spec" cannot be filled in until the transcript
+is added.
+
+| # | Screen | Change | Transcript timestamp | Status |
+|---|---|---|---|---|
+| K1.1 | MD view · Customer pulse | The four list cards show the bank's own channels only. The "High-priority mentions" block (posts by listed customers) is removed from the section. | 29:55–31:39 | Done |
+| K1.2 | MD view · Customer pulse | "RBI & Government" label kept. | 29:55–31:39 | Done (unchanged) |
+| K1.3 | MD view · Customer pulse | Every figure shows its change against the same previous period: volume (%), open and no reply in 48 h (count, with direction and colour). | 30:38 | Done |
+| K1.4 | MD view · Customer pulse | One line on every internal card: "RMs alerted: X of Y" (per list). Not on external cards. | 31:39–33:06 | Done |
+| K2.1 | MD view · Social pulse (new) | New section below the Customer pulse: total mentions, high-impact mentions (rule on screen), bank response as a %. | 24:23–24:37, 27:49 | Done |
+| K2.2 | MD view · Social pulse | Response rate labelled informational, with "Response here means acknowledged and routed to an official channel." | 33:47–34:29 | Done |
+| K2.3 | MD view · Social pulse | Top 5 trending posts by engagement: anonymised text, platform and date, engagement, responded / not responded. | 33:47–34:29 | Done. Reply data exists for Play Store only; other platforms show "Replies not collected" rather than "Not responded". |
+| K2.4 | MD view · Social pulse | One example marked "Good response", with the bank's reply, redacted. | 33:47–34:29 | Done |
+| K2.5 | MD view · Social pulse | No post links in payloads; framed as what LisN adds beyond the bank's own systems, not a KPI. | 33:26–33:43 | Done (reconcile fails on any link in the block) |
+| K3 | MD view · business cards | A coloured "Deep dive" button on each business card. | 37:49–38:16 | Done. The card itself is no longer one big link. |
+| K4.1 | Cards view | Sticky header "Cards · Business view" stays on screen while scrolling (also on the drill-down pages). | 45:06 | Done |
+| K4.2 | Cards view · issue table | Separator between the Internal and External column groups; each group has its own tint and heading. | 45:43–46:36 | Done |
+| K4.3 | Cards view · issue table | Escalations split: internal under Internal, external under External. | 45:43–46:36 | Done |
+| K4.4 | Cards view | "Open 48h+" renamed "Not responded to in 48h+" (table and issue pulse). | 46:36–47:20 | Done. The figure is now first-reply wait over 48 hours, to match the label. |
+| K4.5 | Data and both views | New status "Waiting on customer": the bank has sent a resolution or proposed one; not counted as open or as not responded. Every figure recomputed and reconciled. | 48:02–48:26 | Done |
+| K4.6 | Cards view | Internal and external stay side by side; no toggle. | 43:01 | Done (unchanged) |
+| K4.7 | Cards view | At most five panels below the issue pulse. | 50:21, 52:12 | Done (list of what was cut is below) |
+| K5.1 | Every screen | Ask LisN is a pinned question bar, "Ask LisN about your business", visible on every screen. | 52:12–56:41 | Done |
+| K5.2 | Every screen | On focus: ten suggested questions for the current view, and recent questions. | 52:12–56:41 | Done |
+| K5.3 | Every screen | A suggested question returns a short answer and a small table built from the page's period figures. Tagged as precomputed; no live model call. | 52:12–56:41 | Done |
+| K5.4 | My view (new) | "Pin to my view" adds an answer as a panel on a "My view" screen. Session memory only. | 55:36 | Done (stretch) |
+| K5.5 | Cards view | One suggested question asks about another business and is refused: "You're not authorised to see this. Answers follow your bank's role-based access." | 57:39 | Done |
+| K6 | All | Reconcile, lint_terms, check_pii, fixture tests, Biome and next build pass; every V2 route returns 200. | | Done |
+
+## Cards view: what stays and what was cut (K4.7)
+
+Below the issue pulse and the issue table, the page keeps five panels:
+
+1. Are my customers happy? (question card; opens its drill-down)
+2. What is the market saying about us? (question card; opens its drill-down)
+3. Where contacts come from (journey stage)
+4. Repeat contact by category
+5. Top complaints and feature requests (by store)
+
+Moved out of the page, and reachable through Ask LisN (each is a suggested question on the Cards view):
+
+- "Are we keeping our timelines?" question card. The drill-down page still exists at `/business/cards/service`; Ask LisN links to it.
+- Volume by channel.
+- Actions to take.
+- Escalation ladder, closure intent and the dispute funnel were already on the service drill-down only; they are now also Ask LisN questions.
+
+## Missed by spec (round 2)
+
+Not filled in: the Karthik transcript is not in the repo. Add `review_karthik_30sep.md` and this section can be completed.
+
+## Round 2 follow-ups
+
+| # | Screen | Change | Status |
+|---|---|---|---|
+| F1 | MD view · Customer pulse | The Social pulse moved into the Customer pulse as an "External channels" block after the four internal cards, behind a dashed divider and its own tint. The standalone section is gone. The block holds total mentions, high-impact mentions with the virality rule, bank response %, top 5 trending posts, the good response, and high-priority mentions. | Done |
+| F2 | MD view · External channels | Bank replies for every source. Play Store is collected; App Store, X, Reddit and forums are simulated from the post id and tagged "Illustrative". One combined % plus a per-source breakdown. No "Replies not collected" label remains. Sources sum to the combined figure (reconcile). | Done |
+| F3 | MD view, Cards view, Ask LisN | "Actions to take" removed from both views (the Cards tile went in round 2; the MD tile now). The Ask LisN question "What should the Cards team act on first?" is removed. | Done |
+| F4 | MD view · Customer pulse | "Not responded in 48h+" shows the change against the previous period and a small trend line. | Done |
+| F5 | Every V2 screen | "Waiting on customer" is now a status in the seed data, so every screen that counts open items excludes it: priority, customer, module, deliverables and the exec blocks as well as the two 30 Sep views. Priority and module screens show the count, marked illustrative. Reconcile checks the status record by record and compares the full-window period figures with the older screens' dials. | Done |
+| F6 | changes_30sep.md | Complete "Missed by spec" from the Karthik transcript. | **Not done: `review_karthik_30sep.md` is still not in the repo.** |
+| F7 | All V2 routes | Gap scan and full screenshot set at 1440 and 390 wide, Morning brief and Full window, in `qa/screens_30sep/` (104 screens, `report.json`). No horizontal overflow. Gaps fixed are listed in `qa/layout_qa_v2.md`. | Done |
+| F8 | WALKTHROUGH_V2.md | Rewritten for the current screens, Full window figures. | Done |

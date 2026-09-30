@@ -509,6 +509,8 @@ export type Dial = {
   closed: number;
   closed_or_responded: number;
   open: number;
+  /** The bank has sent a resolution; not counted as open (illustrative). */
+  waiting_on_customer: number;
   open_too_long: number;
   closed_or_responded_pct: number | null;
   open_pct: number | null;
@@ -543,6 +545,7 @@ export type CohortRow = {
   interactions: number;
   customers_with_open_issue: number;
   open: number;
+  waiting_on_customer: number;
   open_over_5h: number;
   open_over_24h: number;
   open_too_long: number;
@@ -575,7 +578,7 @@ export type TrailStep = {
   channel_label: string;
   sender: "customer" | "proxy" | null;
   sentiment: string | null;
-  status: "open" | "closed" | null;
+  status: "open" | "waiting_on_customer" | "closed" | null;
   first_response_at?: string | null;
   deliverable_due?: string;
   breached?: boolean;
@@ -651,6 +654,7 @@ export type InternalV3 = {
   high_impact: {
     total: number;
     open: number;
+    waiting_on_customer: number;
     open_too_long: number;
     reasons: { id: string; label: string; count: number }[];
     by_product: Record<string, number>;

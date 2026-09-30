@@ -107,7 +107,10 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     ok(len(inter) == agg["dials"]["total"] == agg["sample"]["interactions"], f"interactions total {len(inter)}")
 
     # Record integrity: status, closing time and breach agree (breach recomputed, never trusted).
-    bad_status = [r["id"] for r in inter if (r["status"] == "open") != (r["closed_at"] is None)]
+    bad_status = [r["id"] for r in inter if (r["status"] != "closed") != (r["closed_at"] is None)]
+    bad_wait = [r["id"] for r in inter if (r["status"] == "waiting_on_customer") != bool(r.get("resolution_sent_at"))]
+    ok(not bad_wait, f"waiting on customer = a resolution was sent and the thread is not closed ({len(bad_wait)} bad)")
+    ok({r["status"] for r in inter} <= {"open", "closed", "waiting_on_customer"}, "every contact is open, waiting on customer or closed")
     ok(not bad_status, f"open items have no closing time and closed items have one ({len(bad_status)} bad)")
     bad_breach = []
     for r in inter:
@@ -121,8 +124,11 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     n_open = sum(1 for r in inter if r["status"] == "open")
     n_otl = sum(1 for r in inter if r["status"] == "open" and r["breached"])
     ok(n_open == agg["dials"]["open"], f"open recomputed {n_open}")
+    n_wait = sum(1 for r in inter if r["status"] == "waiting_on_customer")
+    ok(n_wait == agg["dials"]["waiting_on_customer"], f"waiting on customer recomputed {n_wait}")
+    ok(agg["dials"]["open"] + n_wait + agg["dials"]["closed"] == agg["dials"]["total"], "open + waiting on customer + closed = total")
     ok(n_otl == agg["dials"]["open_too_long"], f"open too long recomputed {n_otl}")
-    for f in ("total", "open", "open_too_long", "closed", "closed_or_responded"):
+    for f in ("total", "open", "waiting_on_customer", "open_too_long", "closed", "closed_or_responded"):
         ok(sum(p[f] for p in agg["products"]) == agg["dials"][f], f"product dials sum to overall: {f}")
         ok(sum(c[f] for c in agg["channels"]) == agg["dials"][f], f"channel dials sum to overall: {f}")
     ok(sum(d["total"] for d in agg["deliverables"]) == len(inter), "deliverable rows cover every interaction once")
@@ -243,9 +249,15 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
 
         def figs(rs):
             vol = [r for r in rs if a <= dt.datetime.fromisoformat(r["created_at"]) < b]
-            op = [r for r in vol if r["status"] == "open" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
+            still = [r for r in vol if r["status"] != "closed" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
+            wait = [r for r in still if r.get("resolution_sent_at") and dt.datetime.fromisoformat(r["resolution_sent_at"]) <= b]
+            op = [r for r in still if r not in wait]  # waiting on the customer is not open with the bank
+            figs.waiting = len(wait)
+            wait_ids = {r["id"] for r in wait}
 
             def waited(r):
+                if r["id"] in wait_ids:
+                    return False
                 c = dt.datetime.fromisoformat(r["created_at"])
                 fr = dt.datetime.fromisoformat(r["first_response_at"]) if r["first_response_at"] else None
                 return (fr - c > h48) if fr and fr <= b else (b - c > h48)
@@ -256,16 +268,36 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
             v, o, n = figs([r for r in rs_all if r["masked_id"] in members])
             ok((v, o, n) == (lst["volume"], lst["open"], lst["not_responded_48h"]),
                f"[{pid}] {lst['label']}: volume, open and 48-hour wait recomputed ({v}, {o}, {n})")
-            for k in ("volume", "open", "not_responded_48h"):
+            ok(figs.waiting == lst["waiting_on_customer"], f"[{pid}] {lst['label']}: waiting on customer recomputed ({figs.waiting})")
+            ok(0 <= lst["rm"]["alerted"] <= lst["rm"]["of"] <= lst["members"], f"[{pid}] {lst['label']}: RMs alerted within customers due an alert")
+            for k in ("volume", "open", "waiting_on_customer", "not_responded_48h"):
                 chans = [c[k] for c in lst["by_channel"].values()]
                 total = None if any(c is None for c in chans) else sum(chans)
                 ok(total == lst[k], f"[{pid}] {lst['label']}: channels sum to the strip ({k})")
         internal = p["cx_pulse"]["internal"]
         v, o, _ = figs(rs_all)
         ok(v == internal["volume"] and o == internal["open"], f"[{pid}] CX pulse internal volume and open recomputed ({v}, {o})")
-        for k in ("volume", "open", "resolved"):
+        ok(figs.waiting == internal["waiting_on_customer"], f"[{pid}] CX pulse waiting on customer recomputed ({figs.waiting})")
+        for k in ("volume", "open", "waiting_on_customer", "resolved"):
             ok(sum(c[k] for c in internal["by_channel"].values()) == internal[k], f"[{pid}] CX pulse internal channels sum ({k})")
-        ok(internal["resolved"] + internal["open"] == internal["volume"], f"[{pid}] resolved + open = volume")
+        ok(internal["resolved"] + internal["open"] + internal["waiting_on_customer"] == internal["volume"],
+           f"[{pid}] resolved + open + waiting on customer = volume")
+        sp = p["social_pulse"]
+        ext_blk = p["cx_pulse"]["external"]
+        play = next((x for x in sp["by_source"] if x["source"] == "playstore"), {"mentions": 0, "responded": 0})
+        ok(sp["mentions"] == ext_blk["volume"] and sp["high_impact"] == ext_blk["high_impact"]["volume"],
+           f"[{pid}] External block = CX pulse external (mentions, high impact)")
+        ok(play["responded"] == ext_blk["responded"]["responded"] and play["mentions"] == ext_blk["responded"]["reviews"],
+           f"[{pid}] External block: Play Store responses = CX pulse responded (the live figure)")
+        ok(sum(x["mentions"] for x in sp["by_source"]) == sp["mentions"] and sum(x["responded"] for x in sp["by_source"]) == sp["responded"],
+           f"[{pid}] External block: sources sum to the combined response figure")
+        ok(sp["high_impact_responded"] <= sp["high_impact"] and all(x["illustrative"] == (x["source"] != "playstore") for x in sp["by_source"]),
+           f"[{pid}] External block: every simulated source is marked illustrative")
+        men = p["customer_pulse"]["mentions"]
+        ok(men["responded"] + men["not_responded"] == men["total"], f"[{pid}] High-priority mentions: responded + not responded = total")
+        ok(len(sp["posts"]) <= 5 and all(x["score"] >= y["score"] for x, y in zip(sp["posts"], sp["posts"][1:])),
+           f"[{pid}] Social pulse: at most five posts, ranked by engagement")
+        ok("http" not in json.dumps(sp), f"[{pid}] Social pulse carries no links")
         ov = p["cx_pulse"]["overall"]
         ok(ov["total"] == ov["internal"] + ov["external"] == internal["volume"] + p["cx_pulse"]["external"]["volume"],
            f"[{pid}] overall contact volume = internal + external")
@@ -275,12 +307,12 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         cv = p["cards"]
         ok(cards_row["internal"]["volume"] == cv["internal"]["volume"] and cards_row["external"]["volume"] == cv["external"]["volume"],
            f"[{pid}] Cards: business card = Cards view")
-        for side, keys in (("internal", ("volume", "open", "resolved")), ("external", ("volume", "negative", "positive"))):
+        for side, keys in (("internal", ("volume", "open", "waiting_on_customer", "resolved")), ("external", ("volume", "negative", "positive"))):
             for k in keys:
                 ok(sum(c[side][k] for c in cv["categories"]) == cv[side][k], f"[{pid}] Cards categories sum to the Cards {side} {k}")
         for c in cv["categories"]:
             if c["subcategories"]:
-                for side, k in (("internal", "volume"), ("internal", "open"), ("external", "volume"), ("external", "negative")):
+                for side, k in (("internal", "volume"), ("internal", "open"), ("internal", "waiting_on_customer"), ("external", "volume"), ("external", "negative")):
                     ok(sum(x[side][k] for x in c["subcategories"]) == c[side][k], f"[{pid}] Cards {c['label']}: subcategories sum ({side} {k})")
         ext = p["cx_pulse"]["external"]
         ok(sum(x["external"]["volume"] for x in biz) <= ext["volume"], f"[{pid}] product rows never exceed public voice (the rest is wealth, SME, corporate)")
@@ -295,6 +327,19 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
             dominant = max(p["cx_pulse"]["external"]["source_mix"].values(), default=0) > 100 * per["dominance_limit"]
             unweighted = [blk for blk in blocks if blk.get("share_method") != "source_weighted"]
             ok(not (dominant and unweighted), f"[{pid}] a dominant source (> {int(100 * per['dominance_limit'])}%) never leaves a share unweighted ({len(unweighted)} unweighted)")
+    # Across views (follow-up 5): the same status on every V2 screen. The older screens' dials count every channel; the
+    # 30 Sep views leave the IVR bot out, so compare on the contacts both count.
+    allp = per["periods"]["all"]["cx_pulse"]["internal"]
+    ok(allp["open"] == sum(1 for r in rs_all if r["status"] == "open")
+       and allp["waiting_on_customer"] == sum(1 for r in rs_all if r["status"] == "waiting_on_customer"),
+       "across views: full-window open and waiting on customer = the seed status the older screens count")
+    agg = load(seed_dir / "aggregates.json") if (seed_dir / "aggregates.json").exists() else None
+    if agg:
+        bot = [r for r in inter if r["channel"] not in CH]
+        ok(agg["dials"]["open"] - sum(1 for r in bot if r["status"] == "open") == allp["open"],
+           "across views: exec dial open (less IVR bot) = CX pulse open, full window")
+        ok(agg["dials"]["waiting_on_customer"] - sum(1 for r in bot if r["status"] == "waiting_on_customer") == allp["waiting_on_customer"],
+           "across views: exec dial waiting on customer (less IVR bot) = CX pulse, full window")
     ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
     ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
 
