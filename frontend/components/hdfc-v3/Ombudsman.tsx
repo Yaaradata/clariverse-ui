@@ -18,7 +18,7 @@ import type {
   Period,
 } from "@/lib/hdfc-v3/periods";
 import { Delta, Dial, titled, withPeriod } from "./Pulse";
-import { C, MONO, MutedNote, Table, Tile, tint } from "./primitives";
+import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
 
 const CARDS_VIEW = "/hdfc-pulse/v2/business/cards";
 
@@ -75,14 +75,7 @@ function Countdown({ o }: { o: OmbudsmanBlock }) {
           ) : null,
         )}
       </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-          gap: 6,
-          marginTop: 6,
-        }}
-      >
+      <div style={{ ...cols(4, 120, 6), marginTop: 6 }}>
         {BUCKETS.map((b) => (
           <div key={b.id} style={{ display: "flex", gap: 6, minWidth: 0 }}>
             <span
@@ -210,7 +203,14 @@ function Split({
             {x.href ? (
               <Link
                 href={x.href}
-                style={{ textDecoration: "none", minWidth: 0 }}
+                style={{
+                  textDecoration: "none",
+                  minWidth: 0,
+                  display: "block",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
               >
                 {label}
               </Link>
@@ -287,14 +287,7 @@ export function OmbudsmanWatch({
             gap: 14,
           }}
         >
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-              gap: 8,
-              alignItems: "start",
-            }}
-          >
+          <div style={{ ...cols(4, 130, 8), alignItems: "start" }}>
             <Dial
               value={pct(n.brink, n.open)}
               color={C.amber}
@@ -435,41 +428,80 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
       prov="internal"
       tone="red"
     >
-      <Table
-        head={["Complaint", "Category · issue", "Status", "Why", "Owner"]}
-        align={["left", "left", "left", "left", "left"]}
-        rows={o.save_list.map((r) => [
-          <span key="id" style={{ display: "flex", flexDirection: "column" }}>
-            <span style={{ fontFamily: MONO, fontSize: 13 }}>{r.id}</span>
-            <span style={{ fontSize: 12, color: C.textMut }}>
-              {r.customer}
-              {r.lists.length ? ` · ${r.lists.join(", ")}` : ""}
-            </span>
-          </span>,
-          <span key="c" style={{ display: "flex", flexDirection: "column" }}>
-            <span>{r.category}</span>
-            <span style={{ fontSize: 12, color: C.textMut }}>{r.issue}</span>
-          </span>,
-          <span
-            key="s"
-            style={{
-              fontWeight: 700,
-              whiteSpace: "nowrap",
-              color: r.state === "eligible" ? C.red : C.amber,
-            }}
-          >
-            {r.state === "eligible"
-              ? "Eligible"
-              : `${r.days_left} day${r.days_left === 1 ? "" : "s"} left`}
-          </span>,
-          <span key="w" style={{ fontSize: 13, lineHeight: 1.45 }}>
-            {r.reason}
-          </span>,
-          <span key="o" style={{ fontSize: 13 }}>
-            {r.owner}
-          </span>,
-        ])}
-      />
+      {/* Cards, not a table: each complaint's reason stays readable on a phone. */}
+      <ol
+        style={{
+          ...cols(2, 420, 10),
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        {o.save_list.map((r, i) => {
+          const color = r.state === "eligible" ? C.red : C.amber;
+          return (
+            <li
+              key={r.id}
+              data-testid="save-row"
+              style={{
+                background: C.cardAlt,
+                border: `1px solid ${C.border}`,
+                borderLeft: `3px solid ${color}`,
+                borderRadius: 10,
+                padding: "10px 12px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 5,
+                minWidth: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
+                }}
+              >
+                <span style={{ fontFamily: MONO, fontSize: 13 }}>
+                  {i + 1}. {r.id}{" "}
+                  <span style={{ color: C.textMut }}>· {r.customer}</span>
+                </span>
+                <strong style={{ color, whiteSpace: "nowrap", fontSize: 13.5 }}>
+                  {r.state === "eligible"
+                    ? "Eligible"
+                    : `${r.days_left} day${r.days_left === 1 ? "" : "s"} left`}
+                </strong>
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 650 }}>
+                {r.category}
+                <span style={{ fontWeight: 400, color: C.textMut }}>
+                  {" "}
+                  · {r.issue}
+                </span>
+              </div>
+              <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.45 }}>
+                {r.reason}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  fontSize: 12.5,
+                  color: C.textMut,
+                }}
+              >
+                <span>
+                  Owner: <strong style={{ color: C.text }}>{r.owner}</strong>
+                </span>
+                {r.lists.length ? <span>· {r.lists.join(", ")}</span> : null}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
       <MutedNote>
         Ordered by a points score from signals LisN already holds: days to the
         limit or eligibility, an unhappy reply, repeat contacts, channels used,

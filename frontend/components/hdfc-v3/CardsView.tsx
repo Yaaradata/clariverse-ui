@@ -369,11 +369,20 @@ function CategoryRow({
           >
             {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}{" "}
             {c.label}
-            <RiskPill r={risk} />
           </span>
-          <span style={{ fontSize: 12, color: C.textMut }}>
+          <span
+            style={{
+              fontSize: 12,
+              color: C.textMut,
+              display: "flex",
+              gap: 6,
+              alignItems: "center",
+              flexWrap: "wrap",
+            }}
+          >
             {c.owner}
             {c.tat_related ? " · TAT-related" : ""}
+            <RiskPill r={risk} />
           </span>
         </span>
         <FigureCells f={c} />
