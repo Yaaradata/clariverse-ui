@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import collections
 import datetime as dt
+import hashlib
 import json
 import math
 import random
@@ -324,6 +325,12 @@ def make_interaction(idx, cust, product, theme, created, channel, sender, themes
         elif not rec["closed_at"]:
             rec["closed_at"] = iso(min(closed, NOW_DT))
     rec["breached"] = is_breached(rec)
+    # Waiting on customer (30 Sep review, K4): the bank has sent a resolution or proposed one, and the thread is with
+    # the customer. Set from the record id, so it draws nothing from the random stream; scripted trails stay open.
+    rec["resolution_sent_at"] = None
+    if rec["status"] == "open" and rec["first_response_at"] and not rec.get("scripted"):
+        if int(hashlib.sha1(rec["id"].encode()).hexdigest(), 16) % 100 < 40:
+            rec["resolution_sent_at"] = rec["first_response_at"]
     return rec
 
 

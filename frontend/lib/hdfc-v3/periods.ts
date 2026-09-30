@@ -20,7 +20,13 @@ export type InternalFigures = {
   prev_volume: number;
   change_pct: number | null;
   resolved: number;
+  /** Open with the bank. A thread waiting on the customer is not open (30 Sep review, K4). */
   open: number;
+  /** The bank has sent a resolution or proposed one; the thread is with the customer. */
+  waiting_on_customer: number;
+  /** Change against the comparison window as it stood at its own end. */
+  open_delta: number;
+  not_responded_delta: number | null;
   /** Null for the Morning brief: nothing in a 24-hour window can be 48 hours old. */
   open_too_long: number | null;
   not_responded_48h: number | null;
@@ -31,6 +37,7 @@ export type InternalFigures = {
 export type ChannelFigures = {
   volume: number;
   open: number;
+  waiting_on_customer: number;
   not_responded_48h: number | null;
   open_too_long?: number | null;
   resolved?: number;
@@ -70,10 +77,49 @@ export type PulseList = {
   prev_volume: number;
   change_pct: number | null;
   open: number;
+  waiting_on_customer: number;
   not_responded_48h: number | null;
+  open_delta: number;
+  not_responded_delta: number | null;
+  /** RMs alerted this morning, of the list's customers due an alert. */
+  rm: { alerted: number; of: number };
   not_responded_series: { end: string; count: number }[];
   volume_series: { end: string; count: number }[];
   by_channel: Record<string, ChannelFigures>;
+};
+
+export type SocialPost = {
+  text: string;
+  platform: string;
+  date: string;
+  sentiment: "positive" | "neutral" | "negative";
+  engagement: Record<string, number>;
+  score: number;
+  /** Null: replies on that platform are not collected. */
+  responded: boolean | null;
+};
+
+/** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
+export type SocialPulse = {
+  mentions: number;
+  by_platform: Record<string, number>;
+  high_impact: number;
+  high_impact_tracked: number;
+  high_impact_responded: number;
+  high_impact_response_pct: number | null;
+  tracked: number;
+  responded: number;
+  response_pct: number | null;
+  posts: SocialPost[];
+  good_response: {
+    text: string;
+    platform: string;
+    date: string;
+    engagement: Record<string, number>;
+    reply: string;
+    in_period: boolean;
+  } | null;
+  rule: string;
 };
 
 export type Business = {
@@ -105,7 +151,9 @@ export type CategoryFigures = {
     | "volume"
     | "resolved"
     | "open"
+    | "waiting_on_customer"
     | "open_too_long"
+    | "not_responded_48h"
     | "escalations"
     | "change_pct"
   >;
@@ -318,6 +366,7 @@ export type Period = {
     };
     rm: { alerted: number; of: number; as_of: string };
   };
+  social_pulse: SocialPulse;
   cx_pulse: {
     overall: {
       total: number;

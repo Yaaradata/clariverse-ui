@@ -243,9 +243,15 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
 
         def figs(rs):
             vol = [r for r in rs if a <= dt.datetime.fromisoformat(r["created_at"]) < b]
-            op = [r for r in vol if r["status"] == "open" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
+            still = [r for r in vol if r["status"] == "open" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
+            wait = [r for r in still if r.get("resolution_sent_at") and dt.datetime.fromisoformat(r["resolution_sent_at"]) <= b]
+            op = [r for r in still if r not in wait]  # waiting on the customer is not open with the bank
+            figs.waiting = len(wait)
+            wait_ids = {r["id"] for r in wait}
 
             def waited(r):
+                if r["id"] in wait_ids:
+                    return False
                 c = dt.datetime.fromisoformat(r["created_at"])
                 fr = dt.datetime.fromisoformat(r["first_response_at"]) if r["first_response_at"] else None
                 return (fr - c > h48) if fr and fr <= b else (b - c > h48)
@@ -256,16 +262,27 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
             v, o, n = figs([r for r in rs_all if r["masked_id"] in members])
             ok((v, o, n) == (lst["volume"], lst["open"], lst["not_responded_48h"]),
                f"[{pid}] {lst['label']}: volume, open and 48-hour wait recomputed ({v}, {o}, {n})")
-            for k in ("volume", "open", "not_responded_48h"):
+            ok(figs.waiting == lst["waiting_on_customer"], f"[{pid}] {lst['label']}: waiting on customer recomputed ({figs.waiting})")
+            ok(0 <= lst["rm"]["alerted"] <= lst["rm"]["of"] <= lst["members"], f"[{pid}] {lst['label']}: RMs alerted within customers due an alert")
+            for k in ("volume", "open", "waiting_on_customer", "not_responded_48h"):
                 chans = [c[k] for c in lst["by_channel"].values()]
                 total = None if any(c is None for c in chans) else sum(chans)
                 ok(total == lst[k], f"[{pid}] {lst['label']}: channels sum to the strip ({k})")
         internal = p["cx_pulse"]["internal"]
         v, o, _ = figs(rs_all)
         ok(v == internal["volume"] and o == internal["open"], f"[{pid}] CX pulse internal volume and open recomputed ({v}, {o})")
-        for k in ("volume", "open", "resolved"):
+        ok(figs.waiting == internal["waiting_on_customer"], f"[{pid}] CX pulse waiting on customer recomputed ({figs.waiting})")
+        for k in ("volume", "open", "waiting_on_customer", "resolved"):
             ok(sum(c[k] for c in internal["by_channel"].values()) == internal[k], f"[{pid}] CX pulse internal channels sum ({k})")
-        ok(internal["resolved"] + internal["open"] == internal["volume"], f"[{pid}] resolved + open = volume")
+        ok(internal["resolved"] + internal["open"] + internal["waiting_on_customer"] == internal["volume"],
+           f"[{pid}] resolved + open + waiting on customer = volume")
+        sp = p["social_pulse"]
+        ext_blk = p["cx_pulse"]["external"]
+        ok(sp["mentions"] == ext_blk["volume"] and sp["high_impact"] == ext_blk["high_impact"]["volume"]
+           and sp["responded"] == ext_blk["responded"]["responded"], f"[{pid}] Social pulse = CX pulse external (mentions, high impact, responded)")
+        ok(len(sp["posts"]) <= 5 and all(x["score"] >= y["score"] for x, y in zip(sp["posts"], sp["posts"][1:])),
+           f"[{pid}] Social pulse: at most five posts, ranked by engagement")
+        ok("http" not in json.dumps(sp), f"[{pid}] Social pulse carries no links")
         ov = p["cx_pulse"]["overall"]
         ok(ov["total"] == ov["internal"] + ov["external"] == internal["volume"] + p["cx_pulse"]["external"]["volume"],
            f"[{pid}] overall contact volume = internal + external")
@@ -275,12 +292,12 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         cv = p["cards"]
         ok(cards_row["internal"]["volume"] == cv["internal"]["volume"] and cards_row["external"]["volume"] == cv["external"]["volume"],
            f"[{pid}] Cards: business card = Cards view")
-        for side, keys in (("internal", ("volume", "open", "resolved")), ("external", ("volume", "negative", "positive"))):
+        for side, keys in (("internal", ("volume", "open", "waiting_on_customer", "resolved")), ("external", ("volume", "negative", "positive"))):
             for k in keys:
                 ok(sum(c[side][k] for c in cv["categories"]) == cv[side][k], f"[{pid}] Cards categories sum to the Cards {side} {k}")
         for c in cv["categories"]:
             if c["subcategories"]:
-                for side, k in (("internal", "volume"), ("internal", "open"), ("external", "volume"), ("external", "negative")):
+                for side, k in (("internal", "volume"), ("internal", "open"), ("internal", "waiting_on_customer"), ("external", "volume"), ("external", "negative")):
                     ok(sum(x[side][k] for x in c["subcategories"]) == c[side][k], f"[{pid}] Cards {c['label']}: subcategories sum ({side} {k})")
         ext = p["cx_pulse"]["external"]
         ok(sum(x["external"]["volume"] for x in biz) <= ext["volume"], f"[{pid}] product rows never exceed public voice (the rest is wealth, SME, corporate)")
