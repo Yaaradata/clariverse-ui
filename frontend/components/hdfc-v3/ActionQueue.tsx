@@ -7,7 +7,7 @@
 
 import { useState } from "react";
 
-import { fmt, fmtDateTime } from "@/lib/hdfc-v3/format";
+import { fmt, fmtDate, fmtDateTime } from "@/lib/hdfc-v3/format";
 import type { Bundle, EscalationEmail } from "@/lib/hdfc-v3/types";
 import { AnswerLine, C, MONO, MutedNote, Tile, tint } from "./primitives";
 
@@ -58,7 +58,10 @@ function EmailCard({ e }: { e: EscalationEmail }) {
       <div style={{ fontSize: 15, fontWeight: 650, color: C.text }}>
         {e.subject}
       </div>
-      <div style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.5 }}>
+      {/* The body takes the spare height, so backend status and the draft button line up across a row of cards. */}
+      <div
+        style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.5, flex: 1 }}
+      >
         {e.body}
       </div>
       <div
@@ -103,8 +106,35 @@ function EmailCard({ e }: { e: EscalationEmail }) {
               }}
             >
               {e.draft_reply}
-              <div style={{ fontSize: 12, color: C.textMut, marginTop: 4 }}>
-                Draft only: an agent reviews, edits and sends.
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                  marginTop: 6,
+                }}
+              >
+                <button
+                  type="button"
+                  disabled
+                  title="Mock: in the bank's system an agent approves, edits and sends. LisN never sends."
+                  style={{
+                    background: "transparent",
+                    border: `1px solid ${C.border}`,
+                    color: C.textSec,
+                    borderRadius: 999,
+                    padding: "3px 10px",
+                    fontSize: 12.5,
+                    cursor: "not-allowed",
+                  }}
+                >
+                  Approve and send (agent)
+                </button>
+                <span style={{ fontSize: 12, color: C.textMut }}>
+                  Draft only: a person approves, edits and sends. LisN never
+                  sends.
+                </span>
               </div>
             </div>
           ) : null}
@@ -112,6 +142,15 @@ function EmailCard({ e }: { e: EscalationEmail }) {
       ) : null}
     </div>
   );
+}
+
+/** First and last received dates of the queue, e.g. "25 Sep to 28 Sep". */
+function receivedRange(emails: EscalationEmail[]): string {
+  const at = emails.map((e) => e.received_at).sort();
+  if (!at.length) return "—";
+  const a = fmtDate(at[0]);
+  const z = fmtDate(at[at.length - 1]);
+  return a === z ? a : `${a} to ${z}`;
 }
 
 export function ActionQueue({ b }: { b: Bundle }) {
@@ -123,7 +162,8 @@ export function ActionQueue({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="internal" accent tone="red">
         <AnswerLine sub="Each email is read against its backend status and the deliverable clock, then sorted into one of six buckets. LisN recommends; people send. It never executes.">
-          {fmt(t.total)} escalation emails this morning:{" "}
+          {fmt(t.total)} escalation emails in the L2 queue (received{" "}
+          {receivedRange(emails)}):{" "}
           {t.buckets
             .filter((x) => x.id === "call_today" || x.id === "escalate")
             .map(

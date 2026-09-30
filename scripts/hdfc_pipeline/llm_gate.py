@@ -7,13 +7,19 @@ from __future__ import annotations
 import json
 import re
 from collections import defaultdict
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 CHUNK = 40
 
 
 def _norm(s: str) -> str:
-    return re.sub(r"\s+", " ", s or "").strip().lower()
+    from normalise import redact as redact_names  # full redaction, as redact_batches.py applies
+
+    # Redact first so the check reads the same whether or not the batch files have been redacted (redact_batches.py).
+    return re.sub(r"\s+", " ", redact_names(s or "")).strip().lower()
 
 
 def good_prefix(src_path: Path, out_path: Path) -> tuple[list[dict], int]:

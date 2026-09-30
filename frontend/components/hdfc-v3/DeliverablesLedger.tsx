@@ -56,6 +56,19 @@ const SHORT: Record<string, string> = {
   digital: "Digital",
 };
 
+/** The recommended action for a ledger row, from its own figures (review finding #40). */
+function rowAction(r: {
+  open_too_long: number;
+  open_within: number;
+  met_pct: number | null;
+}): string {
+  const open = r.open_too_long + r.open_within;
+  if (open && r.open_too_long / open >= 0.25) return "Set a new date";
+  if ((r.met_pct ?? 100) < 80) return "Route with evidence";
+  if (r.open_too_long) return "Update and close";
+  return "Monitor";
+}
+
 export function DeliverablesLedger({ b }: { b: Bundle }) {
   const rows = b.v3.deliverables;
   const pubBy = Object.fromEntries(
@@ -112,19 +125,18 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
             <span key="l" style={{ color: C.text, fontWeight: 600 }}>
               {r.label}
             </span>,
-            <span key="t">
-              {r.tat_label}
-              <div
-                style={{
-                  fontSize: 12,
-                  color: r.source === "rbi" ? C.cyan : C.textMut,
-                }}
-              >
-                {r.source === "rbi"
-                  ? r.source_note
-                  : "Bank TAT: confirm in discovery"}
-              </div>
-            </span>,
+            r.source === "rbi" ? (
+              <span key="t">
+                {r.tat_label}
+                <div style={{ fontSize: 12, color: C.cyan }}>
+                  {r.source_note}
+                </div>
+              </span>
+            ) : (
+              <span key="t" style={{ color: C.textMut }}>
+                {r.tat_label}
+              </span>
+            ),
             r.compensation,
             <span key="m" style={{ fontFamily: MONO }}>
               {fmtPct(r.met_pct)}
@@ -145,32 +157,28 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
               {REQUEST_TYPE[r.id] ? fmt(pubBy[REQUEST_TYPE[r.id]] ?? 0) : "—"}
             </span>,
             <OwnerChip key="w" owner={OWNER[r.id] ?? "cx"} />,
-            <ActionChip
-              key="a"
-              action={
-                r.open_too_long
-                  ? "Re-promise"
-                  : (r.met_pct ?? 100) < 80
-                    ? "Route with evidence"
-                    : "Monitor"
-              }
-            />,
+            <ActionChip key="a" action={rowAction(r)} />,
           ])}
         />
         <MutedNote>
-          RBI rows use published RBI timelines. Where RBI sets none, the bank
-          sets its own TAT; the demo uses the working assumption shown until
-          HDFC&apos;s own SLAs are connected in discovery. Met = closed within
-          the TAT. Outside = closed late, or open and already past the TAT.
-          Working days skip Sundays. Public posts describing a delay are matched
-          to a deliverable by request type; &ldquo;—&rdquo; where public voice
-          has no matching type.
+          RBI rows use published RBI timelines. Where RBI sets none, the TAT is
+          the bank&apos;s own and is not shown until it is confirmed in
+          discovery; on those rows, met, outside and open too long come from the
+          illustrative sample, measured against a placeholder that is not a bank
+          figure. Met = closed within the TAT (for the first-response row:
+          answered within it). Outside = settled late, or open and already past
+          the TAT. Working days skip Sundays; bank holidays are not modelled
+          yet. Public posts describing a delay are matched to a deliverable by
+          request type; &ldquo;—&rdquo; where public voice has no matching type.
+          Action: set a new date when a quarter or more of the open items are
+          past the TAT; route with evidence when under 80% is met; update and
+          close when a few items are past the TAT; otherwise monitor.
         </MutedNote>
       </Tile>
       <Tile
         id="by-product"
         title="Deliverables met, by product"
-        sub="Share met for each deliverable within each product. Blank where a product has fewer than 5 items."
+        sub="Share met for each deliverable within each product. Amber: under 75% met. Blank where a product has fewer than 5 items."
         prov="internal"
         tone="violet"
       >
@@ -191,12 +199,8 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
                     key={p}
                     style={{
                       fontFamily: MONO,
-                      color:
-                        (x.met_pct ?? 100) < 75
-                          ? C.red
-                          : (x.met_pct ?? 100) < 85
-                            ? C.amber
-                            : C.textSec,
+                      // Red is for breaches only; a low share met is a warning (review finding #39).
+                      color: (x.met_pct ?? 100) < 75 ? C.amber : C.textSec,
                     }}
                   >
                     {fmtPct(x.met_pct)}

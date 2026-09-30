@@ -46,17 +46,10 @@ export function hoursLabel(h: number | null | undefined): string {
 
 /* ---------------------------------------------------------------- dials */
 
-const PRODUCT_APP: Partial<Record<ProductId, string>> = {
-  digital: "HDFC Bank app",
-  payzapp: "PayZapp",
-  home_loans: "Home Loans",
-  personal_loans: "Loan Assist",
-};
-
-function replyTime(h: number | null | undefined): string {
-  if (h === null || h === undefined) return "—";
-  if (h < 1) return `${Math.max(1, Math.round(h * 60))} min`;
-  return `${h.toFixed(1)} h`;
+function replyTime(min: number | null | undefined): string {
+  if (min === null || min === undefined) return "—";
+  if (min < 90) return `${Math.max(1, Math.round(min))} min`;
+  return `${(min / 60).toFixed(1)} h`;
 }
 
 function Ring({
@@ -179,9 +172,8 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
     : undefined;
   const r = b.responses;
   if (!inside) return null;
-  // Replies are visible on Play Store reviews only: bank-wide, or for the product's own app.
-  const app = product ? PRODUCT_APP[product] : undefined;
-  const rs = product ? (app ? r.by_app[app] : undefined) : r.all;
+  // Replies are visible on Play Store reviews only: bank-wide, or on the Play Store reviews tagged to the product.
+  const rs = product ? (pub?.replies ?? undefined) : r.all;
   const rn = product ? undefined : r.negative;
   const outsideTotal = pub ? pub.count : b.themes.total_items;
   const outsideNeg = pub
@@ -191,7 +183,7 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
     <Tile
       id="dials"
       title="The numbers first"
-      sub={`Inside the bank: ${fmt(inside.total)} interactions in the demo sample, ${fmtDate(b.v3.window.start)} to this morning. Outside: public posts and reviews in the same window.`}
+      sub={`Inside the bank: ${fmt(inside.total)} interactions from ${fmt(b.v3.sample.customers)} fictional customers in the demo sample, ${fmtDate(b.v3.window.start)} to this morning (13 weeks). Outside: public posts and reviews, ${fmtDate(b.meta.window.start)} to ${fmtDate(b.meta.window.end)}.`}
       prov={["internal", "public"]}
       tone="violet"
     >
@@ -216,14 +208,14 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
           color={C.violet}
           label="Total signals"
           big={fmt(inside.total)}
-          sub="calls, chats, emails, branch, bot, social inbox"
+          sub="calls, chats, emails, WhatsApp, branch, bot, social inbox"
         />
         <Ring
-          value={inside.total ? (100 * inside.closed) / inside.total : null}
+          value={inside.closed_or_responded_pct}
           color={C.green}
           label="Closed or responded"
           big={fmt(inside.closed_or_responded)}
-          sub={`${fmt(inside.closed)} closed (${fmtPct(inside.total ? (100 * inside.closed) / inside.total : null)}) · ${fmt(inside.closed_or_responded - inside.closed)} open with a reply`}
+          sub={`${fmt(inside.closed)} closed (${fmtPct(inside.total ? (100 * inside.closed) / inside.total : null)}) · ${fmt(inside.closed_or_responded - inside.closed)} still open but already answered`}
         />
         <Ring
           value={inside.open_pct}
@@ -271,21 +263,21 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
               color={C.green}
               label="Responded"
               big={fmt(rs.responded)}
-              sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Play Store reviews · median reply ${replyTime(rs.median_reply_hours)}`}
+              sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Play Store reviews · median reply ${replyTime(rs.median_reply_minutes)}`}
             />
             <Ring
               value={rs.open_pct}
               color={C.amber}
               label="Open"
               big={fmt(rs.open)}
-              sub="no bank reply on the review"
+              sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} Play Store reviews · no bank reply yet`}
             />
             <Ring
-              value={rs.open_too_long_pct_of_open}
+              value={rs.open_too_long_pct_of_reviews}
               color={C.red}
               label="Open too long"
               big={fmt(rs.open_too_long)}
-              sub="no bank reply within 48 hours"
+              sub={`${fmtPct(rs.open_too_long_pct_of_reviews, 1)} of ${fmt(rs.reviews)} reviews · no reply after 48 hours${rs.open_too_long === rs.open ? " (every unanswered review is older than 48 hours)" : ""}`}
             />
           </>
         ) : (
@@ -298,8 +290,9 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
               lineHeight: 1.5,
             }}
           >
-            No bank replies are visible in public for this product: its voice is
-            on X, Reddit and forums, where replies were not collected.
+            No Play Store reviews are tagged to this product, so no bank replies
+            are visible for it: its public voice is on X, Reddit and forums,
+            where bank replies were not collected.
           </div>
         )}
       </div>
@@ -342,7 +335,9 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
             rs ? fmt(rs.reviews) : fmt(outsideTotal),
             rs ? `${fmt(rs.responded)} (${fmtPct(rs.responded_pct)})` : "—",
             rs ? `${fmt(rs.open)} (${fmtPct(rs.open_pct)})` : "—",
-            rs ? fmt(rs.open_too_long) : "—",
+            rs
+              ? `${fmt(rs.open_too_long)} (${fmtPct(rs.open_too_long_pct_of_reviews, 1)})`
+              : "—",
           ],
         ]}
       />
@@ -472,7 +467,8 @@ export function CohortStrip({
               </div>
               <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.45 }}>
                 {fmt(c.customers_with_open_issue)} customers with an open issue
-                · {fmt(neg)} negative mentions across channels.{" "}
+                · {fmt(neg)} negative contacts in the bank&apos;s channels since
+                1 Jul.{" "}
                 <span style={{ color: C.red, fontWeight: 600 }}>
                   RM told today: {fmt(c.rm_notified_today)} of{" "}
                   {fmt(c.rm_should_know)}
@@ -649,10 +645,10 @@ export function ProductPulseTable({ b, from }: { b: Bundle; from: View }) {
         {fmt(b.products.total_rows)} items across these rows;{" "}
         {fmt(Object.values(b.products.excluded).reduce((s, n) => s + n, 0))}{" "}
         wealth, SME and corporate items sit outside the table). Loans are split
-        by the loan apps and by keyword, so the split is approximate. Trend:{" "}
-        {b.products.trend_rule.toLowerCase()} Deliverables are measured on
-        closed items and on open items already past their TAT ({ledger.length}{" "}
-        deliverable types). Group-company apps are excluded.
+        by the loan apps and by keyword, so the split is approximate.{" "}
+        {b.products.trend_rule} Deliverables are measured on closed items and on
+        open items already past their TAT ({ledger.length} deliverable types).
+        Group-company apps are excluded.
       </MutedNote>
     </Tile>
   );
@@ -682,7 +678,7 @@ export function ProductFilter({
         fontSize: 13.5,
         color: on ? C.text : C.textSec,
         background: on ? C.brandSoft : "transparent",
-        border: `1px solid ${on ? `${C.brand}66` : C.border}`,
+        border: `1px solid ${on ? tint(C.brand, 0.4) : C.border}`,
         fontWeight: on ? 700 : 500,
         whiteSpace: "nowrap",
       }}
@@ -795,7 +791,9 @@ export function CustomerMemory({ b, from }: { b: Bundle; from: View }) {
                 new Date(story.trail[0].at).getTime()) /
                 3.6e6,
             )}
-            . No one saw the pattern; the RM was not told.
+            {story.rm_alert_due && !story.rm_notified
+              ? ". No one saw the pattern; the RM was not told."
+              : ". No one saw the pattern."}
           </span>
           <ChevronRight size={16} color={C.textDim} style={{ flexShrink: 0 }} />
         </Link>

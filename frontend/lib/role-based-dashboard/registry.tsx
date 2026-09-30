@@ -184,15 +184,15 @@ export const INDUSTRIES = [
       },
       {
         id: HDFC_PULSE_V1_ROLE_ID,
-        name: "MD's office & Head of CX · LisN V1 (first demo)",
+        name: "MD's office & Head of CX · LisN (earlier version)",
         icon: Activity,
-        sub: "Customer Pulse as first shown: executive pulse, public voice themes, service promise, app release pulse",
+        sub: "Customer Pulse as first shown: executive pulse, public voice themes, service timelines, app release pulse",
         defaultLens: "ops",
         primaryTile: 0,
       },
       {
         id: HDFC_PULSE_V2_ROLE_ID,
-        name: "MD's office & Head of CX · LisN V2 (after Vidya call)",
+        name: "MD's office & Head of CX · LisN",
         icon: Crown,
         sub: "Numbers first · pulse by product · priority relationships · customer trail · deliverables · email triage",
         defaultLens: "ops",

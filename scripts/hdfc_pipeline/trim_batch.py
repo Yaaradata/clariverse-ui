@@ -9,8 +9,8 @@ from llm_gate import good_prefix
 D = Path(__file__).resolve().parents[2] / "data" / "out" / "app_jul_sep" / "work" / "llm_batches"
 name = sys.argv[1]
 rows, keep = good_prefix(D / f"{name}.jsonl", D / f"{name}.out.jsonl")
-total = sum(1 for line in open(D / f"{name}.out.jsonl") if line.strip())
-with open(D / f"{name}.out.jsonl", "w") as f:
+total = sum(1 for line in open(D / f"{name}.out.jsonl", encoding="utf-8") if line.strip())
+with open(D / f"{name}.out.jsonl", "w", encoding="utf-8") as f:
     for r in rows:
         f.write(json.dumps(r, ensure_ascii=False) + "\n")
 print(name, "kept", keep, "of", total)

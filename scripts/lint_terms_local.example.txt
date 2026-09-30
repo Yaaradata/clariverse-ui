@@ -1,0 +1,3 @@
+# Internal programme names that must never appear on any screen, one per line.
+# Filled in by the programme owner; never guessed, kept out of git: copy this file to scripts/lint_terms_local.txt, which is gitignored.
+# Lines starting with # are comments. scripts/lint_terms.py adds every other line to its banned list.

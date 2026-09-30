@@ -180,7 +180,7 @@ THEMES = [
         "business": "retail_banking",
         "definition": "Accounts frozen or debit-blocked (KYC, undelivered letters, law-enforcement holds, suspicious activity), liens and holds.",
         "rung": "RBI Ombudsman",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "card_fees_charges",
@@ -204,7 +204,7 @@ THEMES = [
         "business": "cards",
         "definition": "Redeeming points, vouchers not available or not received, milestone vouchers pending.",
         "rung": "RBI Ombudsman",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "loan_processing",
@@ -252,7 +252,7 @@ THEMES = [
         "business": "retail_banking",
         "definition": "Opening savings or current accounts, pending opening, account variant conversion, minimum balance programmes.",
         "rung": "Voice",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "closure_requests",
@@ -264,7 +264,7 @@ THEMES = [
         "business": "retail_banking",
         "definition": "Difficulty closing a card, account or loan; closure pending; charges after closure.",
         "rung": "RBI Ombudsman",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "failed_txn_reversal",
@@ -276,7 +276,7 @@ THEMES = [
         "business": "payments",
         "definition": "Money debited but not received or not reversed; ATM cash not dispensed; failed transaction refund.",
         "rung": "Public",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "unsolicited_calls",
@@ -312,7 +312,7 @@ THEMES = [
         "business": "retail_banking",
         "definition": "KYC and re-KYC, mobile number or address updates, nominee, PAN or Aadhaar linking.",
         "rung": "RBI Ombudsman",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "branch_service",
@@ -370,7 +370,7 @@ THEMES = [
         "owner": "compliance",
         "owner_label": "Compliance",
         "business": "retail_banking",
-        "definition": "Insurance or investments pushed with loans or accounts, misleading promises, ULIPs.",
+        "definition": "Insurance or investments pushed with loans or accounts, misleading claims, ULIPs.",
         "rung": "RBI Ombudsman",
         "action": "Route with evidence"
     },
@@ -444,7 +444,7 @@ THEMES = [
         "business": "cards",
         "definition": "Card or welcome kit not delivered, courier issues, activation after delivery.",
         "rung": "Repeat",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "dispute_chargeback",
@@ -456,7 +456,7 @@ THEMES = [
         "business": "cards",
         "definition": "Disputed transactions, chargebacks, dispute outcomes and delays.",
         "rung": "RBI Ombudsman",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "refund_delay",
@@ -552,7 +552,7 @@ THEMES = [
         "business": "retail_banking",
         "definition": "Statements, interest certificates, NOC or NDC, physical copies.",
         "rung": "Voice",
-        "action": "Re-promise"
+        "action": "Set a new date"
     },
     {
         "id": "nri_forex",

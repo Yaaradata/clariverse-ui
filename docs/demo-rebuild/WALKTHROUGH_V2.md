@@ -135,7 +135,7 @@ Before you start, open `http://localhost:3000/role-based/hdfc` and full-screen t
 **Say:**
 > "We renamed 'promise' to 'deliverables', which is Vidya's word. Each row is a deliverable with its timeline, the compensation due, and how many were met, missed and are still open past the deadline.
 > The blue rows are RBI timelines, with the source: failed transactions, card closure, property documents, and complaint resolution before the ombudsman.
-> The other rows are timelines the bank sets itself. We show a working assumption, for example 7 working days for card dispatch, marked 'confirm in discovery'. We don't claim to know HDFC's internal SLAs. Once we connect to their systems, these become their real numbers."
+> The other rows are timelines the bank sets itself. They read 'Bank TAT: confirm in discovery', with no number: we don't claim to know HDFC's internal SLAs. Once we connect to their systems, these become their real numbers."
 
 ---
 
@@ -180,7 +180,7 @@ Before you start, open `http://localhost:3000/role-based/hdfc` and full-screen t
 | Is the inside data real? | No. It's simulated and labelled on every tile. It becomes real in discovery. |
 | Why only Play Store for replies? | The App Store export has no reply field, and the bank's X replies weren't collected. The screen says so. |
 | How do you know who's RBI or a celebrity? | We don't infer it. We read the bank's own lists, and flag the complaint, never the person. |
-| Why "Bank TAT: confirm in discovery"? | RBI doesn't set those timelines, and HDFC's internal SLAs aren't public. We show a working assumption until we connect to their systems. |
+| Why "Bank TAT: confirm in discovery"? | RBI doesn't set those timelines, and HDFC's internal SLAs aren't public. We don't show a number until we connect to their systems and confirm it. |
 | How current is the data? | 1 July to 28 September 2026. It rebuilds with one command (`scripts/hdfc_pipeline/run_all.sh`). |
 | How accurate is the classification? | Social posts were labelled by an AI model, with 90% agreement on a manual spot check. Store reviews use rules, with sentiment from the star rating. |
 | What's not done? | The PayZapp deep dive, the full 1,500-email action queue, and X replies. |

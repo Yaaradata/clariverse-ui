@@ -15,6 +15,7 @@ from pathlib import Path
 from collections import Counter
 
 from normalise import WORK
+from pii_names import redact_names  # normalise puts scripts/ on sys.path
 from taxonomy import THEMES
 
 T = {t["id"]: t for t in THEMES}
@@ -291,7 +292,7 @@ def load_llm() -> dict[str, dict]:
     for out in sorted(LLM_DIR.glob("batch_*.out.jsonl")):
         src = Path(str(out).replace(".out", ""))
         rows, keep = good_prefix(src, out)
-        total = sum(1 for line in open(out) if line.strip())
+        total = sum(1 for line in open(out, encoding="utf-8") if line.strip())
         print("llm batch", out.name, "accepted", keep, "of", total)
         for r in rows:
             labels[r["id"]] = r
@@ -319,7 +320,8 @@ def apply_llm(rec: dict, lab: dict) -> dict:
     esc = bool(lab.get("esc")) and sent != "positive"
     mt = bool(lab.get("missed_timeline"))
     rt = lab.get("request_type") if lab.get("request_type") in VALID_RT else ("other" if mt else None)
-    summary = (lab.get("summary") or rec["summary"]).replace("!", ".").strip()
+    # Model summaries were written from the original post: redact names and handles here as well.
+    summary = redact_names((lab.get("summary") or rec["summary"]).replace("!", ".").strip())
     return {
         **rec,
         "relevant": rel,

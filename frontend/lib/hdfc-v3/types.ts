@@ -9,7 +9,8 @@ export type StatusValue =
   | "improving";
 export type View = "mds-office" | "head-cx";
 
-export type Weekly = { week: string; count: number };
+/** A weekly series: raw trend-basis count, and (for theme and flag series) the source-weighted share of voice (%). */
+export type Weekly = { week: string; count: number; share?: number | null };
 export type Halves = {
   mode: "trend_within_window";
   first_half: number;
@@ -124,7 +125,11 @@ export type SignalsFile = {
     by_request_type: { request_type: string; count: number }[];
     exemplars: string[];
   };
-  escalation_by_target: { target: string; rung: string; count: number }[];
+  escalation_by_target: {
+    target: string | null;
+    rung: string;
+    count: number;
+  }[];
   ladder_public: {
     voice_negative: number;
     repeat: number;
@@ -196,28 +201,68 @@ export type AppPulse = {
     window_first: string | null;
   }[];
   mode: "vs_baseline" | "trend_within_window";
-  window: RatingSummary | null;
-  baseline: RatingSummary | null;
+  /** Review count across both stores. Ratings and shares are never pooled across stores (B7 §4.1). */
+  window: { n: number } | null;
+  /** Rating summary per store: apps are compared within one store only (B7 §4.1). */
+  by_store?: Partial<Record<"playstore" | "appstore", RatingSummary>>;
+  baseline: null;
   trend: Halves | null;
-  weekly_avg_rating: { week: string; n: number; avg_rating: number }[];
   top_issues: {
     id: string;
     label: string;
     count: number;
     exemplars: string[];
   }[];
-  versions: ({ version: string } & RatingSummary)[];
+  versions_by_store: StoreVersions;
   praise_exemplars: string[];
   fix_list: FixItem[];
+};
+
+/** Rating by app version, one store at a time. */
+export type StoreVersions = Partial<
+  Record<"playstore" | "appstore", ({ version: string } & RatingSummary)[]>
+>;
+
+/** Release figures within one store: version 11 against earlier versions. */
+export type ReleaseStore = {
+  store: "playstore" | "appstore";
+  store_label: string;
+  n_reviews: number;
+  share_positive: number | null;
+  avg_rating: number | null;
+  new_app_n: number;
+  new_app_avg: number | null;
+  new_app_share_positive: number | null;
+  new_app_negative: number;
+  old_app_n: number;
+  old_app_avg: number | null;
+  old_app_share_positive: number | null;
 };
 
 export type AppPulseFile = { apps: AppPulse[]; note: string };
 
 export type MoodFile = {
   definition: string;
+  method: "source_weighted";
   value: number | null;
   window_average: number;
   delta_pts: number | null;
+  unweighted: { value: number; window_average: number; delta_pts: number };
+  by_source: {
+    source: string;
+    weight_pct: number;
+    window_net: number;
+    last7_net: number | null;
+    last7_items: number;
+    last7_share_pct: number;
+    change_pts: number | null;
+  }[];
+  weekly: {
+    week: string;
+    n: number;
+    net: number | null;
+    net_unweighted: number | null;
+  }[];
   baseline_label: string;
   n_items: number;
   daily: {
@@ -227,6 +272,7 @@ export type MoodFile = {
     negative: number;
     net: number;
     net_7d: number | null;
+    net_7d_unweighted: number | null;
   }[];
 };
 
@@ -234,8 +280,9 @@ export type Evidence = {
   id: string;
   source: string;
   source_label: string;
+  /** Where the quote came from, in words, e.g. "Reddit · r/CreditCardsIndia". Screens never link to the post. */
+  place: string;
   created_at: string;
-  url: string;
   summary: string;
   redacted_text: string;
   title: string | null;
@@ -260,16 +307,14 @@ export type ReleasePulse = {
   status: StatusValue;
   count: number;
   n_reviews: number;
-  share_positive: number | null;
-  avg_rating: number;
   ranks_top: boolean;
   largest_other_theme: number;
-  old_app_avg: number | null;
-  old_app_n: number;
-  new_app_avg: number | null;
+  /** Counts add across stores; ratings and shares live in by_store only. */
   new_app_n: number;
+  new_app_negative: number;
+  by_store: Partial<Record<"playstore" | "appstore", ReleaseStore>>;
   fix_list: FixItem[];
-  versions: ({ version: string } & RatingSummary)[];
+  versions_by_store: StoreVersions;
   exemplars: string[];
   praise_exemplars: string[];
   daily_negative: { date: string; count: number }[];
@@ -346,8 +391,6 @@ export type Bundle = {
   meta: Meta;
   evidence: Record<string, Evidence>;
   ask: AskFile;
-  internal: Internal;
-  joined: Internal;
   products: ProductsFile;
   storeSeries: StoreSeriesFile;
   responses: ResponsesFile;
@@ -379,6 +422,8 @@ export type PublicProductRow = {
   share_negative: number | null;
   trend_change_pct: number | null;
   top_issue: { id: string; label: string; negative: number } | null;
+  /** Bank replies on this product's Play Store reviews; null when it has none. */
+  replies: ReplyStats | null;
   issues: {
     id: string;
     label: string;
@@ -434,6 +479,8 @@ export type ReplyStats = {
   open_pct: number | null;
   open_too_long: number;
   open_too_long_pct_of_open: number | null;
+  open_too_long_pct_of_reviews: number | null;
+  median_reply_minutes: number | null;
   median_reply_hours: number | null;
   replied_within_48h: number;
   redirect_only: number;
@@ -514,6 +561,10 @@ export type TrailStep = {
   summary: string;
   flag_set: boolean;
   flag_follows: boolean;
+  /** "unresolved" when a contact closed without solving the problem (e.g. a bot call). */
+  outcome?: string | null;
+  /** The bank's own contact record a proxy sender is linked through. */
+  contact_id?: string | null;
   event: boolean;
   id: string | null;
   channel: string;
@@ -536,6 +587,8 @@ export type Persona = {
   products: ProductId[];
   rm_id: string | null;
   proxy_contacts: number;
+  /** An RM alert is due under the RM rule (same set as rm_notifications.json). */
+  rm_alert_due: boolean;
   rm_notified: boolean;
   story?: boolean;
   cohort_added_at?: string;
@@ -642,4 +695,89 @@ export type InternalV3 = {
   channel_labels: Record<string, string>;
   high_impact_labels: Record<string, string>;
   qa: { theme_mix_pass: boolean; reconcile_pass: boolean };
+  /** Review step 4: every internal block on every screen comes from this one sample. */
+  routing: RoutingRow[];
+  md_mail: {
+    total: number;
+    shown: number;
+    rule: string;
+    rows: {
+      theme: string;
+      label: string;
+      owner: string;
+      mails: number;
+      median_age_days: number;
+      resolved: number;
+      resolved_share: number;
+    }[];
+  };
+  satisfaction: {
+    interactions_total: number;
+    tiers: TierRow[];
+    journey_stages: {
+      total: number;
+      rule: string;
+      rows: {
+        stage: string;
+        interactions: number;
+        negative_share: number;
+        repeat_contact_share: number;
+        closure_intent: number;
+      }[];
+    };
+    retention_watchlist: {
+      total: number;
+      rows: {
+        tier: string;
+        customers_with_closure_intent: number;
+        top_driver: string;
+        owner: string;
+        action: string;
+      }[];
+    };
+  };
+  deliverables_detail: {
+    ageing: {
+      request_type: string;
+      open_cases: number;
+      beyond_tat: number;
+      beyond_tat_share: number;
+    }[];
+    ladder: { rung: string; count: number }[];
+    ladder_rule: string;
+    closure: {
+      closure_requests: number;
+      closed: number;
+      saved: number;
+      save_rate: number;
+    };
+    disputes: {
+      raised: number;
+      beyond_sla_total: number;
+      drivers: { driver: string; cases: number }[];
+      aged_cases: { band: string; cases: number }[];
+      funnel: { stage: string; count: number }[];
+    };
+  };
+};
+
+export type RoutingRow = {
+  theme: string;
+  label: string;
+  owner: string;
+  owner_label: string;
+  system: string;
+  acknowledged_at: string | null;
+  status: string;
+};
+
+export type TierRow = {
+  tier: string;
+  interactions: number;
+  positive: number;
+  neutral: number;
+  negative: number;
+  share_positive: number;
+  share_negative: number;
+  customers_affected: number;
 };

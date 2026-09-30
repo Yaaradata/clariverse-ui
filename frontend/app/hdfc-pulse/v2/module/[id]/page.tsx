@@ -1,12 +1,10 @@
 import { notFound } from "next/navigation";
 
-import {
-  CardsModule,
-  DigitalModule,
-} from "@/components/hdfc-v3/ModuleView";
+import { CardsModule, DigitalModule } from "@/components/hdfc-v3/ModuleView";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 
 export const dynamicParams = false;
 
@@ -38,7 +36,11 @@ export default async function ModulePage({
   const b = loadBundle();
   return (
     <Shell {...shellProps(b)} title={m.title} subtitle={m.subtitle} drill>
-      {id === "cards" ? <CardsModule b={b} /> : <DigitalModule b={b} />}
+      {id === "cards" ? (
+        <CardsModule b={sliceBundle(b, { view: "module", id: "cards" })} />
+      ) : (
+        <DigitalModule b={sliceBundle(b, { view: "module", id: "digital" })} />
+      )}
     </Shell>
   );
 }

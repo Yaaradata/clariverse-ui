@@ -4,6 +4,7 @@ import { Shell } from "@/components/hdfc-v3/Shell";
 import { SignalDetail } from "@/components/hdfc-v3/SignalDetail";
 import { loadBundle } from "@/lib/hdfc-v3/load";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 
 export const dynamicParams = false;
 
@@ -34,7 +35,7 @@ export default async function SignalPage({
       subtitle="Signal detail · What · Is it real · Where · How high · Who and what next · Evidence"
       drill
     >
-      <SignalDetail b={b} id={id} />
+      <SignalDetail b={sliceBundle(b, { view: "signal", id })} id={id} />
     </Shell>
   );
 }

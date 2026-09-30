@@ -1,16 +1,15 @@
 {
  "needs_you": [
   "release-pulse",
-  "complaint_handling",
-  "card_fees_charges"
+  "card_fees_charges",
+  "kyc_updates"
  ],
  "this_week": [
-  "kyc_updates",
-  "account_freeze",
-  "care_unreachable",
-  "fraud_scam",
+  "complaint_handling",
+  "credit_report",
+  "dispute_chargeback",
   "refund_delay",
-  "card_dispatch"
+  "merchant_pos"
  ],
  "improving": [
   "app_praise",
@@ -53,7 +52,7 @@
  ],
  "since_830_total": 200,
  "since_830_from": "2026-09-28T08:30:00+05:30",
- "top_riser": "complaint_handling",
+ "top_riser": "card_fees_charges",
  "routing": [
   {
    "owner": "digital",
@@ -113,13 +112,13 @@
      "id": "complaint_handling",
      "label": "Complaints closed without resolution",
      "count": 633,
-     "status": "needs_you"
+     "status": "this_week"
     },
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
      "count": 355,
-     "status": "this_week"
+     "status": "watching"
     }
    ],
    "total": 988
@@ -132,7 +131,7 @@
      "id": "account_freeze",
      "label": "Account debit freezes and blocks",
      "count": 239,
-     "status": "this_week"
+     "status": "watching"
     },
     {
      "id": "atm_debit_card",
@@ -169,7 +168,7 @@
      "id": "merchant_pos",
      "label": "Merchant QR, POS and sound box",
      "count": 25,
-     "status": "watching"
+     "status": "this_week"
     }
    ],
    "total": 194
@@ -206,7 +205,7 @@
     {
      "id": "branch_service",
      "label": "Branch service and staff behaviour",
-     "count": 289,
+     "count": 292,
      "status": "watching"
     },
     {
@@ -222,7 +221,7 @@
      "status": "watching"
     }
    ],
-   "total": 940
+   "total": 943
   },
   {
    "owner": "compliance",
@@ -257,7 +256,7 @@
      "id": "fraud_scam",
      "label": "Fraud and scam calls",
      "count": 127,
-     "status": "this_week"
+     "status": "watching"
     },
     {
      "id": "unauthorised_txn",
@@ -313,14 +312,40 @@
   "status": "needs_you",
   "count": 2126,
   "n_reviews": 5325,
-  "share_positive": 55.0,
-  "avg_rating": 3.27,
   "ranks_top": true,
   "largest_other_theme": 2020,
-  "old_app_avg": 3.93,
-  "old_app_n": 2947,
-  "new_app_avg": 2.39,
   "new_app_n": 1891,
+  "new_app_negative": 1188,
+  "by_store": {
+   "playstore": {
+    "store": "playstore",
+    "store_label": "Play Store",
+    "n_reviews": 5000,
+    "share_positive": 55.6,
+    "avg_rating": 3.29,
+    "new_app_n": 1781,
+    "new_app_avg": 2.41,
+    "new_app_share_positive": 31.3,
+    "new_app_negative": 1115,
+    "old_app_n": 2732,
+    "old_app_avg": 3.98,
+    "old_app_share_positive": 74.3
+   },
+   "appstore": {
+    "store": "appstore",
+    "store_label": "App Store",
+    "n_reviews": 325,
+    "share_positive": 45.8,
+    "avg_rating": 2.93,
+    "new_app_n": 110,
+    "new_app_avg": 2.15,
+    "new_app_share_positive": 23.6,
+    "new_app_negative": 73,
+    "old_app_n": 215,
+    "old_app_avg": 3.33,
+    "old_app_share_positive": 57.2
+   }
+  },
   "fix_list": [
    {
     "issue": "App speed, loading and crashes",
@@ -388,13 +413,13 @@
    {
     "issue": "Branch service and staff behaviour",
     "theme": "branch_service",
-    "count": 16,
+    "count": 17,
     "owner": "retail",
     "first_seen_version": "9.0.4",
     "latest_version_seen": "11.1.0",
     "example_ids": [
-     "playstore:com.hdfcbank.android.now:1c956f89-539e-41d5-ba84-b96f2cacc375",
      "playstore:com.hdfcbank.android.now:9f488747-8fd1-48f2-9605-17d719fce82d",
+     "playstore:com.hdfcbank.android.now:0fc8dfeb-87c6-4ebe-ba49-c67b5012b3e6",
      "appstore:6504402552:14410177535"
     ],
     "feature_asks": []
@@ -446,134 +471,194 @@
     ]
    }
   ],
-  "versions": [
-   {
-    "version": "11.1.0",
-    "n": 467,
-    "ratings": {
-     "1": 271,
-     "2": 36,
-     "3": 28,
-     "4": 17,
-     "5": 115
+  "versions_by_store": {
+   "playstore": [
+    {
+     "version": "11.1.0",
+     "n": 430,
+     "ratings": {
+      "1": 250,
+      "2": 32,
+      "3": 25,
+      "4": 16,
+      "5": 107
+     },
+     "avg_rating": 2.3,
+     "share_positive": 28.6,
+     "share_negative": 65.6
     },
-    "avg_rating": 2.29,
-    "share_positive": 28.3,
-    "share_negative": 65.7
-   },
-   {
-    "version": "11.0.1",
-    "n": 1424,
-    "ratings": {
-     "1": 764,
-     "2": 117,
-     "3": 92,
-     "4": 71,
-     "5": 380
+    {
+     "version": "11.0.1",
+     "n": 1351,
+     "ratings": {
+      "1": 720,
+      "2": 113,
+      "3": 84,
+      "4": 65,
+      "5": 369
+     },
+     "avg_rating": 2.44,
+     "share_positive": 32.1,
+     "share_negative": 61.7
     },
-    "avg_rating": 2.43,
-    "share_positive": 31.7,
-    "share_negative": 61.9
-   },
-   {
-    "version": "10.1.7",
-    "n": 83,
-    "ratings": {
-     "1": 39,
-     "2": 1,
-     "3": 3,
-     "4": 4,
-     "5": 36
+    {
+     "version": "10.1.6",
+     "n": 802,
+     "ratings": {
+      "1": 360,
+      "2": 53,
+      "3": 23,
+      "4": 37,
+      "5": 329
+     },
+     "avg_rating": 2.9,
+     "share_positive": 45.6,
+     "share_negative": 51.5
     },
-    "avg_rating": 2.96,
-    "share_positive": 48.2,
-    "share_negative": 48.2
-   },
-   {
-    "version": "10.1.6",
-    "n": 843,
-    "ratings": {
-     "1": 375,
-     "2": 53,
-     "3": 26,
-     "4": 38,
-     "5": 351
+    {
+     "version": "10.0.2",
+     "n": 98,
+     "ratings": {
+      "1": 5,
+      "2": 2,
+      "3": 5,
+      "4": 16,
+      "5": 70
+     },
+     "avg_rating": 4.47,
+     "share_positive": 87.8,
+     "share_negative": 7.1
     },
-    "avg_rating": 2.93,
-    "share_positive": 46.1,
-    "share_negative": 50.8
-   },
-   {
-    "version": "10.0.2",
-    "n": 179,
-    "ratings": {
-     "1": 23,
-     "2": 3,
-     "3": 9,
-     "4": 24,
-     "5": 120
+    {
+     "version": "9.0.4",
+     "n": 1772,
+     "ratings": {
+      "1": 104,
+      "2": 35,
+      "3": 89,
+      "4": 252,
+      "5": 1292
+     },
+     "avg_rating": 4.46,
+     "share_positive": 87.1,
+     "share_negative": 7.8
     },
-    "avg_rating": 4.2,
-    "share_positive": 80.4,
-    "share_negative": 14.5
-   },
-   {
-    "version": "9.0.4",
-    "n": 1772,
-    "ratings": {
-     "1": 104,
-     "2": 35,
-     "3": 89,
-     "4": 252,
-     "5": 1292
+    {
+     "version": "8.1.2",
+     "n": 20,
+     "ratings": {
+      "1": 1,
+      "2": 1,
+      "3": 0,
+      "4": 3,
+      "5": 15
+     },
+     "avg_rating": 4.5,
+     "share_positive": 90.0,
+     "share_negative": 10.0
     },
-    "avg_rating": 4.46,
-    "share_positive": 87.1,
-    "share_negative": 7.8
-   },
-   {
-    "version": "8.1.2",
-    "n": 20,
-    "ratings": {
-     "1": 1,
-     "2": 1,
-     "3": 0,
-     "4": 3,
-     "5": 15
+    {
+     "version": "7.5.3",
+     "n": 12,
+     "ratings": {
+      "1": 7,
+      "2": 0,
+      "3": 1,
+      "4": 0,
+      "5": 4
+     },
+     "avg_rating": 2.5,
+     "share_positive": 33.3,
+     "share_negative": 58.3
     },
-    "avg_rating": 4.5,
-    "share_positive": 90.0,
-    "share_negative": 10.0
-   },
-   {
-    "version": "7.5.3",
-    "n": 12,
-    "ratings": {
-     "1": 7,
-     "2": 0,
-     "3": 1,
-     "4": 0,
-     "5": 4
+    {
+     "version": "7.1.6",
+     "n": 11,
+     "ratings": {
+      "1": 8,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 3
+     },
+     "avg_rating": 2.09,
+     "share_positive": 27.3,
+     "share_negative": 72.7
+    }
+   ],
+   "appstore": [
+    {
+     "version": "11.1.0",
+     "n": 37,
+     "ratings": {
+      "1": 21,
+      "2": 4,
+      "3": 3,
+      "4": 1,
+      "5": 8
+     },
+     "avg_rating": 2.22,
+     "share_positive": 24.3,
+     "share_negative": 67.6
     },
-    "avg_rating": 2.5,
-    "share_positive": 33.3,
-    "share_negative": 58.3
-   },
-   {
-    "version": "7.1.6",
-    "n": 11,
-    "ratings": {
-     "1": 8,
-     "2": 0,
-     "3": 0,
-     "4": 0,
-     "5": 3
+    {
+     "version": "11.0.1",
+     "n": 73,
+     "ratings": {
+      "1": 44,
+      "2": 4,
+      "3": 8,
+      "4": 6,
+      "5": 11
+     },
+     "avg_rating": 2.12,
+     "share_positive": 23.3,
+     "share_negative": 65.8
     },
-    "avg_rating": 2.09,
-    "share_positive": 27.3,
-    "share_negative": 72.7
-   }
-  ],
+    {
+     "version": "10.1.7",
+     "n": 83,
+     "ratings": {
+      "1": 39,
+      "2": 1,
+      "3": 3,
+      "4": 4,
+      "5": 36
+     },
+     "avg_rating": 2.96,
+     "share_positive": 48.2,
+     "share_negative": 48.2
+    },
+    {
+     "version": "10.1.6",
+     "n": 41,
+     "ratings": {
+      "1": 15,
+      "2": 0,
+      "3": 3,
+      "4": 1,
+      "5": 22
+     },
+     "avg_rating": 3.37,
+     "share_positive": 56.1,
+     "share_negative": 36.6
+    },
+    {
+     "version": "10.0.2",
+     "n": 81,
+     "ratings": {
+      "1": 18,
+      "2": 1,
+      "3": 4,
+      "4": 8,
+      "5": 50
+     },
+     "avg_rating": 3.88,
+     "share_positive": 71.6,
+     "share_negative": 23.5
+    }
+   ]
+  },
   "exemplars": [
    "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
    "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",

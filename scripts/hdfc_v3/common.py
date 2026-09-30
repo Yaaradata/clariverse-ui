@@ -46,6 +46,10 @@ OWNER_LABEL = {
 
 # Deliverables (B7 D1). TATs marked "rbi" are published RBI timelines; everything else is a bank TAT to confirm in
 # discovery. Days are working days (Sundays skipped) unless `calendar` is set. Hours are used for sub-day items.
+# D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank TAT is shown as a number: bank rows
+# read "Bank TAT: confirm in discovery". Their `tat_days` is a parameter of the illustrative sample generator only and
+# never reaches a screen (follow-up fix 3).
+BANK_TAT_LABEL = "Bank TAT: confirm in discovery"
 DELIVERABLES = {
     "failed_reversal": {
         "label": "Failed transaction reversal",
@@ -101,7 +105,7 @@ DELIVERABLES = {
     "card_dispatch": {
         "label": "Card dispatch and delivery",
         "tat_days": 7,
-        "tat_label": "7 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
@@ -109,42 +113,42 @@ DELIVERABLES = {
         "label": "Card dispute and chargeback",
         "tat_days": 30,
         "calendar": True,
-        "tat_label": "30 calendar days (working assumption; network timelines apply)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "refund": {
         "label": "Merchant refund credited",
         "tat_days": 7,
-        "tat_label": "7 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "service_request": {
         "label": "Service request (KYC, account changes, card requests)",
         "tat_days": 3,
-        "tat_label": "3 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "account_unfreeze": {
         "label": "Debit freeze review",
         "tat_days": 3,
-        "tat_label": "3 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "loan_disbursal": {
         "label": "Loan sanction and disbursal",
         "tat_days": 5,
-        "tat_label": "5 working days (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
     "query_response": {
         "label": "First response to a query or complaint",
         "tat_days": 1,
-        "tat_label": "1 day (working assumption)",
+        "tat_label": BANK_TAT_LABEL,
         "source": "bank",
         "compensation": "—",
     },
@@ -173,6 +177,50 @@ THEME_DELIVERABLE = {
     "account_freeze": "account_unfreeze",
     "loan_processing": "loan_disbursal",
 }
+
+# Customer journey stage of each theme (satisfaction page, "Where in the journey"). Themes not listed are "Everyday use".
+JOURNEY_STAGE = {
+    **dict.fromkeys(["account_opening", "card_application", "kyc_updates", "loan_processing"], "Open"),
+    **dict.fromkeys(["card_dispatch", "login_mpin", "device_security_block"], "Activate"),
+    **dict.fromkeys(
+        [
+            "card_variant_migration", "card_eligibility_upgrade", "statements_documents", "branch_service",
+            "care_unreachable", "rm_service", "account_freeze", "loan_servicing", "credit_report", "unsolicited_calls",
+            "mis_selling", "recovery_conduct", "complaint_handling",
+        ],
+        "Service requests",
+    ),
+    **dict.fromkeys(
+        ["dispute_chargeback", "failed_txn_reversal", "refund_delay", "unauthorised_txn", "fraud_scam", "phishing"],
+        "Disputes and fraud",
+    ),
+    **dict.fromkeys(["closure_requests", "loan_closure_documents"], "Close"),
+}
+JOURNEY_ORDER = ["Open", "Activate", "Everyday use", "Service requests", "Disputes and fraud", "Close"]
+
+# Request types used by the public "missed timeline" signal, so the internal ageing joins the public rows.
+THEME_REQUEST_TYPE = {
+    **dict.fromkeys(["failed_txn_reversal", "upi_failures", "unauthorised_txn"], "reversal"),
+    "closure_requests": "closure",
+    "credit_report": "credit_report",
+    "card_dispatch": "card_delivery",
+    "dispute_chargeback": "dispute",
+    "refund_delay": "refund",
+    "kyc_updates": "kyc",
+    "loan_processing": "loan_disbursal",
+}
+
+# Overnight routing scenario (illustrative): what LisN routed to an owner's system and when the owner acknowledged it.
+# One list feeds every acknowledgement on screen, so a theme never reads "Acknowledged" in one place and "Awaiting
+# owner" in another. acknowledged_at None = routed, not yet acknowledged.
+ROUTING = [
+    {"theme": "complaint_handling", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "23:45"},
+    {"theme": "card_application", "owner": "cards", "system": "Cards service queue", "acknowledged_at": "22:10"},
+    {"theme": "refund_delay", "owner": "operations", "system": "Operations work queue", "acknowledged_at": "06:55"},
+    {"theme": "card_variant_migration", "owner": "cards", "system": "Cards service queue", "acknowledged_at": "22:10"},
+    {"theme": "care_unreachable", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "06:55"},
+    {"theme": "failed_txn_reversal", "owner": "payments", "system": "Payments work queue", "acknowledged_at": None},
+]
 
 # Themes that are not customer issues (no deliverable, never "open"): used only for public mood.
 NON_ISSUE_THEMES = {

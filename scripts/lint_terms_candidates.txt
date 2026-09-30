@@ -1,0 +1,76 @@
+# Internal-names lint: candidate terms (follow-up fix 4).
+# Candidates are auto-seeded from the internal docs (docs/demo-rebuild/*, qa/*); the local file
+# (scripts/lint_terms_local.txt, gitignored) is Ranjith's to extend with names that must never be committed.
+# scripts/lint_terms.py reads both files. A hit in any V2 UI string, generated payload or built V2 page fails the lint.
+#
+# Format: one term per line, matched case-sensitively as a whole token. A line starting with "re:" is a regular
+# expression. Lines starting with # are comments.
+# Never list the product name or the bank's name here: the lint refuses to run if either appears.
+
+# Brief IDs
+B1
+B2
+B3
+B3a
+B3b
+B4
+B5
+B6
+B7
+B8
+D-11
+# Track IDs
+T1
+T2
+T3
+T4
+T5
+T6
+T7
+# Source-track IDs (S1 re-crawl, S2 reply threads, ...)
+S1
+S2
+S3
+S4
+S5
+S6
+S7
+S8
+# Screen IDs, as on-screen text
+E1
+E2
+E3
+M1
+M2
+M3
+D1
+A1
+# Version labels and build milestones
+V1
+V2
+V3
+re:\bafter (?:the |our |a )?[\w'’-]+ call\b
+re:\b(?:first|second) demo\b
+re:\bcall[- ]2\b
+# People named in the internal docs (our team, bank officers, contacts)
+Vidya
+Ranjith
+Soumya
+Somya
+Anjani
+Rathor
+Kannan
+Ramaseshan
+Pradeep
+Kartik
+Vishal Jha
+Rajiv Kumar
+Sashi Jagdishan
+Sashidhar Jagdishan
+Atanu Chakraborty
+# Items the briefs mark internal, confidential or KNOW-only (B1 §licence)
+IndusInd
+re:\b[Cc]onfidential\b
+re:\bKNOW-only\b
+re:\b[Ii]nternal programme\b
+MORNING_DECISIONS

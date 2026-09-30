@@ -1,0 +1,829 @@
+[
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/action-queue",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/cards",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/digital",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX1318",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX1576",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX1942",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX2317",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX2688",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX2950",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX3390",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX3815",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX4077",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX5203",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/customer/XXXX5566",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/deliverables",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/head-cx",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/market",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/mds-office",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/module/cards",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/module/digital",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/priority",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/account_freeze",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/account_opening",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/app_praise",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/app_speed_crash",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/app_usability",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/atm_debit_card",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/branch_service",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/card_application",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/card_dispatch",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/card_eligibility_upgrade",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/card_fees_charges",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/card_limit",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/card_variant_migration",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/care_unreachable",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/closure_requests",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/credit_report",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/deposits_rates",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/device_security_block",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/dispute_chargeback",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/failed_txn_reversal",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/fees_charges_bank",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/fraud_scam",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/general_dissatisfaction",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/insurance_group",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/investments_wealth",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/kyc_updates",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/loan_closure_documents",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/loan_processing",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/loan_servicing",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/login_mpin",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/market_news",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/merchant_pos",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/mis_selling",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/netbanking",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/new_app_release",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/nri_forex",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/offers_deals",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/other",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/phishing",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/product_advice",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/recovery_conduct",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/refund_delay",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/reward_redemption",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/rewards_value",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/rm_service",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/service_praise",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/statements_documents",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/trading_securities",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/unauthorised_txn",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/unsolicited_calls",
+  "issues": []
+ },
+ {
+  "theme": "light",
+  "route": "/hdfc-pulse/v2/signal/upi_failures",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/action-queue",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/cards",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/digital",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX1318",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX1576",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX1942",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX2317",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX2688",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX2950",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX3390",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX3815",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX4077",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX5203",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/customer/XXXX5566",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/deliverables",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/head-cx",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/market",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/mds-office",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/module/cards",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/module/digital",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/priority",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "issues": [
+   {
+    "kind": "low-contrast",
+    "el": "span.recharts-legend-item-text \"Wealth\"",
+    "color": "rgb(109, 40, 217)",
+    "ratio": 2.7
+   }
+  ]
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/account_freeze",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/account_opening",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/app_praise",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/app_speed_crash",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/app_usability",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/atm_debit_card",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/branch_service",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/card_application",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/card_dispatch",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/card_eligibility_upgrade",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/card_fees_charges",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/card_limit",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/card_variant_migration",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/care_unreachable",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/closure_requests",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/credit_report",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/deposits_rates",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/device_security_block",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/dispute_chargeback",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/failed_txn_reversal",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/fees_charges_bank",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/fraud_scam",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/general_dissatisfaction",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/insurance_group",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/investments_wealth",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/kyc_updates",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/loan_closure_documents",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/loan_processing",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/loan_servicing",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/login_mpin",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/market_news",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/merchant_pos",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/mis_selling",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/netbanking",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/new_app_release",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/nri_forex",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/offers_deals",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/other",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/phishing",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/product_advice",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/recovery_conduct",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/refund_delay",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/reward_redemption",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/rewards_value",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/rm_service",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/service_praise",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/statements_documents",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/trading_securities",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/unauthorised_txn",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/unsolicited_calls",
+  "issues": []
+ },
+ {
+  "theme": "dark",
+  "route": "/hdfc-pulse/v2/signal/upi_failures",
+  "issues": []
+ }
+]

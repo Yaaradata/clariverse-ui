@@ -1,3 +1,7 @@
 scripts/lint_terms_local.txt
 data/out/app_jul_sep/work/normalised.jsonl
 data/out/app_jul_sep/work/classified.jsonl
+
+# Python bytecode
+__pycache__/
+*.pyc

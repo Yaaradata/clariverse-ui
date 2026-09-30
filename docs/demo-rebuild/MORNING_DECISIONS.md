@@ -27,12 +27,13 @@ can't see is where they are right now. LisN reads your list and listens everywhe
 
 ## D2 · Public "responded" and "open too long" dials
 
-The store exports carry no developer-reply field, and bank-authored X posts were excluded at collection. Play Store and
-App Store are blocked from this build environment, so S1 could not be re-crawled here.
-**Shipped:** the outside dials show the definition ("no bank reply within 48 hours") and "Needs reply data".
-`public_v3.py` reads `replyContent`/`repliedAt` (Play) and `developerResponse` (App Store) automatically once the dev's S1
-re-crawl lands. **Options:** (a) keep until S1 lands; (b) run the crawl through a paid scraping service (cost, and it
-needs your approval); (c) hide the outside row until then.
+**Updated 29 Sep (review fixes): retired, superseded by D13.** The original entry said the store exports carry no
+developer-reply field and the dials showed "Needs reply data". That is no longer true: the Jul–Sep Play Store export
+carries the bank's replies (`replyText`, `replyDate`), and "Needs reply data" is no longer on screen.
+- **Now shipped:** responded 10,240 of 10,617 Play Store reviews (96.4%); 377 with no reply after 48 hours; the 48-hour
+  definition is on screen. See D13 for "responded is not resolved".
+- **Still true:** App Store exports carry no reply field, and bank-authored X posts were not collected, so replies are
+  Play Store only, and the screen says so.
 
 ## D3 · MD view leads with complaints closed without resolution (B7 §4.2)
 
@@ -41,13 +42,17 @@ item is second, labelled **"New mobile app release: fix list"**. The 2.4★ vs 4
 
 ## D4 · "Improving" (B7 §4.3)
 
-Rule: at least 15 items in each half of the window. Shipped items:
-- **Loan processing and disbursal:** share of public voice down 28% (38 then 43 items).
-- **PayZapp on the App Store:** positive reviews rose from 14% to 39% (108 and 75 reviews). App Store only: the Play
-  Store export starts on 31 August.
-- **"Where customers praise us"** (renamed from "App praise").
-
-NetBanking was dropped (15 items in total).
+**Updated 29 Sep (review fixes).** The original list described the first-demo data (V1). On the Jul–Sep data none of
+its items holds, so the list changed.
+- **Rule now:** at least 15 items in each half; share of voice down at least 20%, source-weighted (see D6 and D15); and
+  the raw count down at least 20% too. The last condition is new. Without it, a theme whose count was flat (for example
+  unauthorised transactions, 16 then 15 items) showed as "down 61%", because X's collected volume grew in September.
+- **Shown now:** device security blocks and false alerts (48 then 26 items; share down 25%). Login and MPIN also
+  qualifies (308 then 177; down 21%), but the exec page shows one theme.
+- **Dropped:** loan processing, now rising (15 then 49 items), and PayZapp on the App Store, where positive reviews fell
+  from 35% to 31%. The "Play Store export starts on 31 August" note was V1; no V2 export starts then.
+- **"Where customers praise us"** (renamed from "App praise") is still on the exec page. Its status is decided with
+  finding #11 in qa/review_v3_response.md.
 
 ## D5 · "Re-promise" action chip
 
@@ -56,23 +61,47 @@ Because of "promise → deliverables", the chip now reads **"Set a new date"**. 
 
 ## D6 · Mood (B7 §4.4)
 
-The headline is now the change against the window average (−22 pts), with "public voice skews negative". The raw −54
-is not shown.
+**Updated 29 Sep (review fixes): the headline is now +3 pts, not −22.** The −22.6 was mostly collection, not mood:
+- **X:** collected in weekly capped runs. The 20–27 Sep run hit its 1,000-item cap, so X is 66% of the last 7 days
+  against 20% of the window, and X is the most negative source.
+- **Reddit:** changed collector on 1 Sep.
+
+The method is now source-weighted (scripts/hdfc_pipeline/method.py): net sentiment is computed per source, then
+weighted by each source's share of the window, and Reddit is left out.
+- **Shipped:** the last 7 days are at −10.5 against a window average of −13.6, a change of **+3.1 pts**. Unweighted on the
+  same basis it would read −37.5 pts. The E1 card shows the source-weighted figure with a one-line note giving the
+  unweighted one.
+- **Satisfaction page:** the source-weighted weekly net sentiment, plus a table by source.
+- **Unchanged:** "public voice skews negative" still holds (window average −14), and no raw index is shown as the
+  headline.
+- **Why this matters for Anjani:** the old −22 would have told the MD mood is falling; per source, it is flat.
 
 ## D7 · Product rows and the loan split
 
-Product rows use item-level counts (each public item once), so they reconcile to the 4,966 on-topic items. 471
-wealth, SME and corporate items sit outside the table. Loans are split into personal, home and auto by the loan apps and
-by keyword, and the screen says the split is approximate. Insurance has no bank-sold public items in the window, so its
-row and business view lean on the internal layer and say so.
+**Updated 29 Sep (review fixes): the method is unchanged; the figures are the Jul–Sep ones.** The original figures
+(4,966 items, 471 outside the table, "no bank-sold insurance items") were from the first-demo data.
+- **Now:** product rows count each public item once and reconcile to the **17,193** on-topic items: 16,329 in the eight
+  rows plus 864 outside the table (733 wealth, 105 SME and merchant, 26 corporate).
+- **Loans:** split into personal (387), home (291) and auto (12) by the loan apps and by keyword; the screen says the
+  split is approximate.
+- **Insurance:** now has 48 bank-sold public items. That is too few for a trend, so its business view still leans on the
+  internal layer and says so.
+- **Trends:** now source-weighted (D6, D15).
 
 ## D8 · Synthetic sample scale
 
-The internal layer is a **demo sample**: 5,000 customers and 20,000 interactions over 8 weeks. The screens label it
-"demo sample" and do not scale it up. For reference, the search surfaced 5,60,376 complaints received by the bank in
-FY2022-23, from its published complaints analysis. That is roughly 86,000 in any 8 weeks. **T5 should verify this figure
-before any screen or slide uses it.** Priority cohorts are over-sampled so the demo has enough to show: 45 customers on
-list A, 124 on list B, 151 ultra-HNI, 640 HNI.
+**Updated 29 Sep (review fixes): the sample is 5,000 customers and 32,000 interactions over 13 weeks** (1 July to
+29 September 07:45), not 20,000 over 8 weeks. It was widened to match the Jul–Sep public window.
+- **On screen:** it is labelled "demo sample" with its window, and it is not scaled up.
+- **One dataset:** since step 4 of the review fixes, every internal figure on every screen comes from this one sample.
+  The first-demo sample (18,42,000 interactions) no longer appears in V2.
+- **Cohorts** are over-sampled so the demo has enough to show: 45 customers on list A, 124 on list B, 151 ultra-HNI,
+  640 HNI.
+- **The FY2022-23 complaints figure** (5,60,376) remains unverified, and the "86,000 in any 8 weeks" comparison no
+  longer matches the window. It is withdrawn: **T5 verifies the figure before any screen or slide uses it**, and no
+  comparison to the sample is made until then.
+- **Open for you:** B7 §2 still says 20,000 over 8 weeks. Either update B7, or ask for the sample to be cut back to
+  8 weeks.
 
 ## D9 · Deliverable TATs
 
@@ -130,3 +159,41 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Basis:** trends compare 1 Jul–14 Aug with 15 Aug–28 Sep, as a share of trend-basis items.
 - **Excluded stream:** the Play Store HDFC Bank app export holds the latest 5,000 reviews (from 25 July), so it counts in totals but not in trends.
 - **No baseline claims:** no export has history before July.
+
+---
+
+# Follow-up fixes (fix/review-v3)
+
+## D16 · No links to original posts
+- **Shipped:** quotes carry a plain place label and date; V2 never links to the post. URLs stay in `evidence.json` on the server for audit.
+- **Judgement call:** the source-link rule scans the built V2 pages, so `check_pii` fails on a stale build made before this change. Run `next build` before the checks, or accept the failure until the next build. V1 is excluded (kept as first shown).
+- **Judgement call:** Reddit community names (e.g. r/CreditCardsIndia) and forum names (e.g. TechnoFino) are shown. They are public community names, not people, and the brief's example label uses them.
+
+## D17 · One store per comparison
+- **Shipped:** every store rating or share is per store; counts may add across stores.
+- **Judgement call:** the "new app" comparison (version 11 vs earlier versions) now uses the Play Store only (1,781 v11 and 2,732 earlier-version reviews), not both stores. The App Store figures stay in the data (`by_store.appstore`) and on the app module's per-store tables. The negative-review count for version 11 is still the two stores added together, and is labelled "across both stores".
+
+## D18 · TATs without D-11
+- **Shipped:** bank-set TATs read "Bank TAT: confirm in discovery", with no number (this replaces the working assumptions shown earlier). See `qa/tat_check.md`.
+- **Judgement call:** the six RBI rows keep their numbers. They are RBI timelines, not bank TATs, so "Bank TAT: confirm in discovery" would be wrong for them. None is verified against D-11, though, and five have no in-repo source beyond the code. **Options:** (a) keep, and check against D-11 before the sponsor review; (b) show "RBI TAT: to verify" on all six until checked.
+- **Judgement call:** met / outside / open-too-long on bank rows still come from the illustrative sample, measured against a placeholder that is not shown. The footnote says so. The alternative would be to blank those cells until discovery.
+- **Judgement call:** L2-09 stays in "Call today". The reason is now the customer's blocked rent and EMI, not a bank TAT ending tomorrow.
+
+## D19 · Internal-names lint
+- **Shipped:** `scripts/lint_terms_candidates.txt` (committed) and `scripts/lint_terms_local.txt` (gitignored) are both read by `lint_terms.py`. The lint covers V2 UI strings, the generated payloads and the built V2 pages.
+- **Judgement call:** added source-track IDs S1–S8 and the B1 KNOW-only items (IndusInd, Vishal Jha), beyond the IDs named in the instruction. They are internal labels of the same kind.
+- **Judgement call:** terms match whole tokens, case-sensitively, so route paths (`/hdfc-pulse/v2`), app versions (`v2.61`) and "Priority list A" do not trip them. "Internal" on its own is not a candidate, because the provenance tag "Internal · illustrative until discovery" is meant to be on screen.
+- **Judgement call:** customer quotes and their summaries are skipped in payloads, as the existing lint does: they are the customer's words.
+- **Result:** no on-screen hits. Every candidate token in the V2 code is in a comment.
+
+## D20 · Light and dark theme (V2)
+- **Shipped:** a Light / Dark toggle in the V2 header. Dark stays the default and is unchanged; the choice is remembered per browser. V1 is not affected. QA: `qa/theme_qa_v2.md`.
+- **Judgement call:** in light, amber, green, cyan and violet use darker shades (e.g. amber #b45309, not #f59e0b), so that numbers and labels stay readable on white. The meaning of each colour is unchanged.
+- **Open:** one existing dark-mode legend label ("Wealth" on the satisfaction chart) is 2.7:1. It was left as is because dark was to stay unchanged.
+
+## D21 · Layout pass at the Windows laptop size
+- **Shipped:** screenshots now match a 1920×1080 display at 125% scaling, with real fonts and the sidebar closed, one screen at a time. Tiles that stretched to a taller neighbour have been rebalanced (`qa/layout_qa_v2.md`).
+- **Judgement call:** the executive pulse columns now end with their content, rather than all stretching to the longest list.
+- **Judgement call:** tiles that repeated the same numbers were merged, e.g. the relationship-tier table and bars on the satisfaction page.
+- **Judgement call:** "Top service failures" shows 5 themes, not 6, to match the funnel beside it.
+- **Found in review and fixed:** a staff member's name in a Play Store review shown on the market page, now redacted by the pipeline.

@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { promiseAnswer } from "@/lib/hdfc-v3/copy";
-import { fmt, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import { signalHref, themeMap } from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
@@ -27,27 +27,6 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-type Internal = {
-  promise_ledger_ageing: {
-    request_type: string;
-    open_cases: number;
-    beyond_tat: number;
-    beyond_tat_share: number;
-  }[];
-  ladder: { rung: string; count: number }[];
-  action_triage: { total: number; rows: { action: string; count: number }[] };
-  closure: { closure_requests: number; saved: number; save_rate: number };
-};
-type Joined = {
-  disputes: {
-    beyond_sla_total: number;
-    drivers: { driver: string; cases: number }[];
-    aged_cases: { band: string; cases: number }[];
-    funnel: { stage: string; count: number }[];
-    public_dispute_items: number;
-  };
-};
-
 export const REQUEST_LABEL: Record<string, string> = {
   card_delivery: "Card dispatch and delivery",
   refund: "Refunds",
@@ -62,25 +41,39 @@ export const REQUEST_LABEL: Record<string, string> = {
 const ACTION_FOR: Record<string, string> = {
   card_delivery: "Notify proactively",
   refund: "Notify proactively",
-  reversal: "Re-promise",
+  reversal: "Set a new date",
   dispute: "Update and close",
-  closure: "Re-promise",
+  closure: "Set a new date",
   loan_disbursal: "Notify proactively",
-  credit_report: "Re-promise",
+  credit_report: "Set a new date",
   kyc: "Update and close",
   other: "Route with evidence",
+};
+/** Public request type → the internal deliverable whose TAT applies (same TATs as the ledger). */
+const REQUEST_DELIVERABLE: Record<string, string> = {
+  card_delivery: "card_dispatch",
+  refund: "refund",
+  reversal: "failed_reversal",
+  dispute: "dispute",
+  closure: "card_closure",
+  loan_disbursal: "loan_disbursal",
+  credit_report: "credit_report",
+  kyc: "service_request",
 };
 const SERVICE_GROUPS = new Set(["Service", "Payments", "Loans", "Cards"]);
 
 export function ServicePromiseView({ b }: { b: Bundle }) {
   const from: View = useFrom();
   const tm = themeMap(b);
-  const it = b.internal as unknown as Internal;
-  const jn = b.joined as unknown as Joined;
+  // One internal dataset (review step 4): every internal figure here comes from the same demo sample as the ledger.
+  const it = b.v3.deliverables_detail;
+  const disputes = it.disputes;
+  const publicDisputeItems = tm.dispute_chargeback?.count ?? 0;
+  const tatFor = (requestType: string) =>
+    b.v3.deliverables.find((d) => d.id === REQUEST_DELIVERABLE[requestType])
+      ?.tat_label;
   const sig = b.signals;
-  const ageing = Object.fromEntries(
-    it.promise_ledger_ageing.map((r) => [r.request_type, r]),
-  );
+  const ageing = Object.fromEntries(it.ageing.map((r) => [r.request_type, r]));
   const ledger = [...sig.promise_by_request_type].sort(
     (a, c) =>
       Number(a.request_type === "other") - Number(c.request_type === "other"),
@@ -91,8 +84,9 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
   const topFailures = b.themes.themes
     .filter((t) => SERVICE_GROUPS.has(t.group) && t.sentiment.negative > 0)
     .sort((a, c) => c.sentiment.negative - a.sentiment.negative)
-    .slice(0, 6);
-  const funnel = jn.disputes.funnel;
+    // Five, to match the five-stage dispute funnel beside it (no padded tile).
+    .slice(0, 5);
+  const funnel = disputes.funnel;
   const ladderPublic = sig.ladder_public;
   const cure = sig.cure_watch;
   const tg = sig.transparency_gap;
@@ -113,7 +107,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
         }}
       >
         <Tile
-          id="ledger"
+          id="public-timelines"
           title="Missed timelines heard in public"
           sub="Where committed timelines snapped, detected from what customers say, with the likely owner and next action."
           prov={["public", "internal"]}
@@ -142,16 +136,14 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Kpi
               label="Escalation language"
               value={fmt(esc.count)}
-              sub="RBI, ombudsman, court"
+              sub="posts with escalation language"
               href="#ladder"
               tone="red"
             />
             <Kpi
               label="Beyond TAT (internal)"
-              value={fmt(
-                it.promise_ledger_ageing.reduce((s, r) => s + r.beyond_tat, 0),
-              )}
-              sub="illustrative"
+              value={fmt(it.ageing.reduce((s, r) => s + r.beyond_tat, 0))}
+              sub="open past the deliverable · illustrative"
               tone="violet"
             />
           </div>
@@ -159,7 +151,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Table
               head={[
                 "Request type",
-                "Stated or regulatory TAT",
+                "TAT",
                 "Breaches heard",
                 "Asking status",
                 "Repeat",
@@ -193,7 +185,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                     (REQUEST_LABEL[p.request_type] ?? p.request_type)
                   ),
                   <span key="t" style={{ color: C.textMut }}>
-                    To verify
+                    {tatFor(p.request_type) ?? "—"}
                   </span>,
                   <span key="c" style={{ color: C.red, fontWeight: 700 }}>
                     {fmt(p.count)}
@@ -210,10 +202,11 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             />
           </div>
           <MutedNote>
-            TATs are shown only after verification against the current RBI
-            instrument and the bank&apos;s own commitments (B2 §7). Breaches,
-            status-seeking and repeat are public voice; open cases and
-            beyond-TAT are illustrative.
+            TATs as in the deliverables ledger above: RBI where published;
+            otherwise the bank&apos;s own TAT, not shown until it is confirmed
+            in discovery. Breaches, status-seeking and repeat are public voice;
+            open cases and beyond-TAT are illustrative, from the same demo
+            sample as the ledger.
           </MutedNote>
         </Tile>
       </div>
@@ -221,7 +214,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <Tile
         id="ladder"
         title="Escalation ladder"
-        sub="Hear it on the first rung. Voice → Repeat → Grievance → MD's office → IO → RBI Ombudsman → Public."
+        sub={`Hear it on the first rung. Voice → Repeat → Grievance → MD's office → IO → RBI Ombudsman → Public. ${it.ladder_rule}`}
         prov={["public", "internal"]}
         tone="red"
       >
@@ -278,21 +271,28 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Table
               head={["Target", "Rung", "Posts"]}
               align={["left", "left", "right"]}
-              rows={sig.escalation_by_target.map((e) => [
-                {
-                  rbi: "RBI (named or tagged)",
-                  rbi_ombudsman: "RBI Ombudsman",
-                  grievance: "Grievance or nodal officer",
-                  legal: "Legal action",
-                  consumer_court: "Consumer court or helpline",
-                  ministers: "Ministers tagged",
-                  repeat: "Complaint number or third time",
-                  md_office: "MD or CEO",
-                  internal_ombudsman: "Internal Ombudsman",
-                }[e.target] ?? e.target,
-                e.rung,
-                fmt(e.count),
-              ])}
+              rows={[...sig.escalation_by_target]
+                // Posts with escalation language but no named target read as such, last.
+                .sort((x, y) => Number(!x.target) - Number(!y.target))
+                .map((e) => [
+                  e.target
+                    ? ((
+                        {
+                          rbi: "RBI (named or tagged)",
+                          rbi_ombudsman: "RBI Ombudsman",
+                          grievance: "Grievance or nodal officer",
+                          legal: "Legal action",
+                          consumer_court: "Consumer court or helpline",
+                          ministers: "Ministers tagged",
+                          repeat: "Complaint number or third time",
+                          md_office: "MD or CEO",
+                          internal_ombudsman: "Internal Ombudsman",
+                        } as Record<string, string>
+                      )[e.target] ?? e.target)
+                    : "Target not named",
+                  e.rung,
+                  fmt(e.count),
+                ])}
             />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -358,7 +358,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Kpi
               label="Save rate (internal)"
               value={fmtPct(it.closure.save_rate)}
-              sub={`${fmt(it.closure.saved)} of ${fmt(it.closure.closure_requests)} requests · illustrative`}
+              sub={`${fmt(it.closure.saved)} of ${fmt(it.closure.closed)} closed requests · illustrative`}
               tone="green"
             />
           </div>
@@ -384,6 +384,28 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 href={signalHref(d.id, from)}
                 color={C.red}
               />
+            ))}
+          {sig.closure_intent.exemplars
+            .map((id) => b.evidence[id])
+            .filter(Boolean)
+            .slice(0, 1)
+            .map((e) => (
+              <Link
+                key={e.id}
+                href={`${signalHref(e.themes[0], from)}#ev-${encodeURIComponent(e.id)}`}
+                style={{
+                  fontSize: 13.5,
+                  color: C.textSec,
+                  borderLeft: `2px solid ${C.red}`,
+                  paddingLeft: 10,
+                  textDecoration: "none",
+                }}
+              >
+                {e.summary}{" "}
+                <span style={{ color: C.textMut }}>
+                  ({e.place} · {fmtDate(e.created_at)})
+                </span>
+              </Link>
             ))}
         </Tile>
 
@@ -427,7 +449,9 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                 }}
               >
                 {e.summary}{" "}
-                <span style={{ color: C.textMut }}>({e.source_label})</span>
+                <span style={{ color: C.textMut }}>
+                  ({e.place} · {fmtDate(e.created_at)})
+                </span>
               </Link>
             ))}
         </Tile>
@@ -459,7 +483,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             ))}
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            <WeeklyBars data={st.weekly} height={300} yLabel="Posts per week" />
+            <WeeklyBars data={st.weekly} height={300} />
             <BaselineCaption>
               Trend within window: {fmtSigned(st.trend.change_pct)} second half
               vs first half, as a share of posts.
@@ -477,8 +501,8 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <Tile
         id="disputes"
         title="Why disputes breach SLA"
-        sub={`${fmt(jn.disputes.beyond_sla_total)} disputes beyond SLA, by driver and by age. Public voice: ${fmt(jn.disputes.public_dispute_items)} posts about disputes this window.`}
-        prov="joined"
+        sub={`${fmt(disputes.beyond_sla_total)} of ${fmt(disputes.raised)} disputes in the demo sample went beyond SLA, by driver and by age. Public voice: ${fmt(publicDisputeItems)} posts about disputes this window.`}
+        prov="internal"
       >
         <div style={SPLIT}>
           <div>
@@ -493,19 +517,19 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             >
               Root cause
             </div>
-            {jn.disputes.drivers.map((d) => (
+            {disputes.drivers.map((d) => (
               <BarRow
                 key={d.driver}
                 label={d.driver}
                 value={d.cases}
-                max={jn.disputes.drivers[0].cases}
+                max={Math.max(1, ...disputes.drivers.map((x) => x.cases))}
                 color={C.amber}
               />
             ))}
             <div style={{ fontSize: 13, color: C.textSec, marginTop: 6 }}>
               Total beyond SLA:{" "}
               <strong style={{ fontFamily: MONO }}>
-                {fmt(jn.disputes.drivers.reduce((s, d) => s + d.cases, 0))}
+                {fmt(disputes.drivers.reduce((s, d) => s + d.cases, 0))}
               </strong>
             </div>
           </div>
@@ -524,7 +548,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Table
               head={["Age", "Cases"]}
               align={["left", "right"]}
-              rows={jn.disputes.aged_cases.map((a) => [a.band, fmt(a.cases)])}
+              rows={disputes.aged_cases.map((a) => [a.band, fmt(a.cases)])}
             />
           </div>
         </div>
@@ -576,34 +600,6 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
           ))}
         </Tile>
       </div>
-
-      <Tile
-        id="triage"
-        title="Action triage"
-        sub={`${fmt(it.action_triage.total)} routed items this window, by recommended action`}
-        prov="internal"
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-            gap: 8,
-          }}
-        >
-          {it.action_triage.rows.map((r) => (
-            <Kpi
-              key={r.action}
-              label={r.action}
-              value={fmt(r.count)}
-              sub={`${fmtPct((100 * r.count) / it.action_triage.total)} of routed items`}
-            />
-          ))}
-        </div>
-        <MutedNote>
-          Recommendations are routed into the owner&apos;s system (CRM, work
-          queues). LisN never executes them.
-        </MutedNote>
-      </Tile>
     </div>
   );
 }

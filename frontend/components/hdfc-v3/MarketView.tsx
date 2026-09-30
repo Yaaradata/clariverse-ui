@@ -8,7 +8,6 @@ import {
   fmt,
   fmtDate,
   fmtPct,
-  fmtSigned,
   halfLabel,
   rangeLong,
 } from "@/lib/hdfc-v3/format";
@@ -125,8 +124,16 @@ const STAR_COLOR: Record<number, string> = {
 const ratingColor = (r: number) =>
   r >= 4 ? C.green : r >= 3 ? C.amber : C.red;
 
+// Version ratings are shown one store at a time, never pooled (follow-up fix 2).
+const STORES = [
+  ["playstore", "Play Store"],
+  ["appstore", "App Store"],
+] as const;
+
 function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
-  const w = a.window;
+  // Play Store where the app has it, so the cards compare apps within one store (review finding #13).
+  const store = a.by_store?.playstore ? "Play Store" : "App Store";
+  const w = a.by_store?.playstore ?? a.by_store?.appstore ?? null;
   if (!w) return null;
   const maxR = Math.max(...Object.values(w.ratings), 1);
   const rc = ratingColor(w.avg_rating);
@@ -154,7 +161,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
       >
         <span style={{ fontSize: 16, fontWeight: 700 }}>{a.app}</span>
         <span style={{ fontSize: 12.5, color: C.textMut }}>
-          {fmt(w.n)} reviews in window
+          {fmt(w.n)} {store} reviews in window
         </span>
       </div>
       <div
@@ -224,12 +231,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
         </div>
       </div>
       <BaselineCaption>
-        {a.mode === "vs_baseline" && a.baseline
-          ? `vs baseline (${fmt(a.baseline.n)} reviews, Feb–Jul): ${a.baseline.avg_rating.toFixed(1)}★, ${fmtPct(a.baseline.share_positive)} positive; change ${fmtSigned(
-              (w.share_positive ?? 0) - (a.baseline.share_positive ?? 0),
-              " pts",
-            )}.`
-          : `Trend within window (${a.streams.map((s) => `${s.stream.split(":")[0] === "playstore" ? "Play Store" : "App Store"} from ${fmtDate(s.window_first ?? s.earliest)}`).join("; ")}). No baseline claim.`}
+        {`Trend within window (${a.streams.map((s) => `${s.stream.split(":")[0] === "playstore" ? "Play Store" : "App Store"} from ${fmtDate(s.window_first ?? s.earliest)}`).join("; ")}). No baseline claim.`}
       </BaselineCaption>
       <div>
         <div
@@ -338,17 +340,22 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
           </div>
         </div>
       ) : null}
-      {a.versions.length ? (
-        <div style={{ fontSize: 12.5, color: C.textMut }}>
-          By version:{" "}
-          {a.versions
-            .slice(0, 4)
-            .map(
-              (v) => `v${v.version} ${v.avg_rating.toFixed(1)}★ (${fmt(v.n)})`,
-            )
-            .join(" · ")}
-        </div>
-      ) : null}
+      {STORES.map(([st, label]) => {
+        const vs = a.versions_by_store?.[st] ?? [];
+        if (!vs.length) return null;
+        return (
+          <div key={st} style={{ fontSize: 12.5, color: C.textMut }}>
+            {label} by version:{" "}
+            {vs
+              .slice(0, 4)
+              .map(
+                (v) =>
+                  `v${v.version} ${v.avg_rating.toFixed(1)}★ (${fmt(v.n)} reviews)`,
+              )
+              .join(" · ")}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -542,7 +549,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="app-pulse"
         title="App pulse"
-        sub="Per app: rating distribution, share positive, top issues and, for the new HDFC Bank app and PayZapp, the fix list customers have written."
+        sub="Per app, one store at a time (Play Store where the app has it): rating distribution, share positive, top issues and, for the HDFC Bank app and PayZapp, the fix list customers have written."
         prov="public"
         right={
           <label
@@ -639,8 +646,8 @@ export function MarketView({ b }: { b: Bundle }) {
 
       <Tile
         id="top10"
-        title="Top ten themes and their weekly volume"
-        sub="Items per week from full-window sources (X, Reddit, forums, store exports with full coverage)"
+        title="Top six themes: weekly share of voice"
+        sub="Bars: each theme's share of trend-basis voice per full week, source-weighted. Figure: all items in the window."
         prov="public"
       >
         <div style={cols(3, 300, 12)}>
@@ -676,8 +683,11 @@ export function MarketView({ b }: { b: Bundle }) {
           ))}
         </div>
         <BaselineCaption>
-          Dashed line: weekly average in the window. Trend within window; no
-          earlier baseline for social sources.
+          Dashed line: the theme&apos;s average weekly share. Shares, not
+          counts, so a source whose collection starts, stops or bursts
+          mid-window cannot draw a spike; Reddit (collector changed 1 Sep) and
+          store exports that start mid-window are left out. No earlier baseline
+          for social sources.
         </BaselineCaption>
       </Tile>
 

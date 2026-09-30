@@ -8,26 +8,29 @@ import {
   Headphones,
   Inbox,
   MessageSquareText,
+  Moon,
   Shield,
   Smartphone,
+  Sun,
   Target,
   Timer,
   Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type ReactNode, Suspense, useState } from "react";
-import { VersionSwitch } from "@/components/hdfc-pulse-shared/VersionSwitch";
+import { type ReactNode, Suspense, useEffect, useState } from "react";
+import { rangeLabel } from "@/lib/hdfc-v3/format";
+import { THEME_KEY, type ThemeName } from "@/lib/hdfc-v3/theme";
 import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-v3/types";
 import { AskLisN } from "./AskLisN";
-import { C } from "./primitives";
+import { C, tint } from "./primitives";
 
 export type ShellProps = {
   meta: Meta;
   ask: AskFile;
   askEvidence: Record<
     string,
-    Pick<Evidence, "id" | "summary" | "source_label" | "created_at" | "themes">
+    Pick<Evidence, "id" | "summary" | "place" | "created_at" | "themes">
   >;
   title: string;
   subtitle?: string;
@@ -135,7 +138,7 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
           >
             <Icon
               size={16}
-              color={active ? "#b7a6ff" : C.textMut}
+              color={active ? C.brandInk : C.textMut}
               style={{ flexShrink: 0 }}
             />
             {collapsed ? null : <span>{it.label}</span>}
@@ -143,6 +146,55 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
         );
       })}
     </nav>
+  );
+}
+
+/** Light / dark switch. The theme lives on <html data-lisn-theme> (set before first paint by the V2 layout). */
+function ThemeToggle() {
+  const [theme, setTheme] = useState<ThemeName>("dark");
+  useEffect(() => {
+    setTheme(
+      document.documentElement.getAttribute("data-lisn-theme") === "light"
+        ? "light"
+        : "dark",
+    );
+  }, []);
+  const next: ThemeName = theme === "dark" ? "light" : "dark";
+  return (
+    <button
+      type="button"
+      data-testid="theme-toggle"
+      aria-label={`Switch to ${next} theme`}
+      title={`Switch to ${next} theme`}
+      onClick={() => {
+        document.documentElement.setAttribute("data-lisn-theme", next);
+        try {
+          localStorage.setItem(THEME_KEY, next);
+        } catch {
+          // private mode: the switch still applies for this visit
+        }
+        setTheme(next);
+      }}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        background: C.cardAlt,
+        border: `1px solid ${C.borderLight}`,
+        color: C.text,
+        borderRadius: 999,
+        padding: "5px 12px",
+        fontSize: 14,
+        cursor: "pointer",
+      }}
+    >
+      {theme === "dark" ? (
+        <Sun size={14} color={C.amber} />
+      ) : (
+        <Moon size={14} color={C.brandInk} />
+      )}
+      {theme === "dark" ? "Light" : "Dark"}
+    </button>
   );
 }
 
@@ -238,13 +290,13 @@ function ShellInner({
                 height: 36,
                 borderRadius: 10,
                 background: C.brandSoft,
-                border: `1px solid ${C.brand}55`,
+                border: `1px solid ${tint(C.brand, 0.33)}`,
                 display: "grid",
                 placeItems: "center",
                 flexShrink: 0,
               }}
             >
-              <Headphones size={17} color="#b7a6ff" />
+              <Headphones size={17} color={C.brandInk} />
             </div>
             {navHover ? (
               <div>
@@ -284,7 +336,7 @@ function ShellInner({
                 fontSize: 14,
               }}
             >
-              <MessageSquareText size={16} color="#b7a6ff" />
+              <MessageSquareText size={16} color={C.brandInk} />
               {navHover ? "Ask LisN" : null}
             </button>
           </div>
@@ -298,12 +350,19 @@ function ShellInner({
             flexDirection: "column",
           }}
         >
+          {/* On a phone the header scrolls away instead of holding a fifth of the screen (review finding #44). */}
+          <style>
+            {
+              "@media (max-width: 640px) { .lisn-header { position: static !important; } }"
+            }
+          </style>
           <header
+            className="lisn-header"
             style={{
               position: "sticky",
               top: 0,
               zIndex: 10,
-              background: "rgba(11,11,12,0.94)",
+              background: C.header,
               backdropFilter: "blur(6px)",
               borderBottom: `1px solid ${C.border}`,
               padding: "10px 20px",
@@ -325,17 +384,6 @@ function ShellInner({
               <strong style={{ color: C.text }}>HDFC Bank</strong> · Customer
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
-            <VersionSwitch
-              current="v2"
-              colors={{
-                text: C.text,
-                textSec: C.textSec,
-                textMut: C.textMut,
-                border: C.border,
-                on: C.brandSoft,
-                onBorder: `${C.brand}66`,
-              }}
-            />
             <fieldset
               aria-label="View"
               style={{
@@ -362,7 +410,7 @@ function ShellInner({
                       textDecoration: "none",
                       color: on ? C.text : C.textSec,
                       background: on ? C.brandSoft : "transparent",
-                      border: `1px solid ${on ? `${C.brand}66` : C.border}`,
+                      border: `1px solid ${on ? tint(C.brand, 0.4) : C.border}`,
                       fontWeight: on ? 700 : 500,
                     }}
                   >
@@ -387,8 +435,9 @@ function ShellInner({
                 cursor: "pointer",
               }}
             >
-              <MessageSquareText size={14} color="#b7a6ff" /> Ask LisN
+              <MessageSquareText size={14} color={C.brandInk} /> Ask LisN
             </button>
+            <ThemeToggle />
           </header>
 
           <main
@@ -442,10 +491,11 @@ function ShellInner({
                 lineHeight: 1.6,
               }}
             >
-              {meta.scope_note} Window {meta.window.start} to {meta.window.end}.
-              Every action is a recommendation routed to its owner; LisN does
-              not execute, authorise or decide. Runs inside the bank, on the
-              bank&apos;s approved models.
+              {meta.scope_note} Window{" "}
+              {rangeLabel(meta.window.start, meta.window.end)}. Every action is
+              a recommendation routed to its owner; LisN does not execute,
+              authorise or decide. Runs inside the bank, on the bank&apos;s
+              approved models.
             </footer>
           </main>
         </div>
@@ -469,10 +519,12 @@ function ShellInner({
 
 export function Shell(props: ShellProps) {
   return (
-    <Suspense
-      fallback={<div style={{ minHeight: "100vh", background: C.bg }} />}
-    >
-      <ShellInner {...props} />
-    </Suspense>
+    <div className="lisn-v2" style={{ background: C.bg, color: C.text }}>
+      <Suspense
+        fallback={<div style={{ minHeight: "100vh", background: C.bg }} />}
+      >
+        <ShellInner {...props} />
+      </Suspense>
+    </div>
   );
 }

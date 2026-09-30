@@ -1,6 +1,5 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
 import type { ReactNode } from "react";
 
 import {
@@ -147,24 +146,11 @@ export function EvidenceList({ items }: { items: Evidence[] }) {
             }}
           >
             <span>
-              {e.source_label}
+              {e.place}
               {e.app_name ? ` · ${e.app_name}` : ""}
               {e.app_version ? ` v${e.app_version}` : ""}
               {e.rating ? ` · ${e.rating}★` : ""} · {fmtDate(e.created_at)}
             </span>
-            <a
-              href={e.url}
-              target="_blank"
-              rel="noreferrer"
-              style={{
-                color: "#b7a6ff",
-                display: "inline-flex",
-                gap: 4,
-                alignItems: "center",
-              }}
-            >
-              Source <ExternalLink size={12} />
-            </a>
           </div>
           <div
             style={{
@@ -183,8 +169,11 @@ export function EvidenceList({ items }: { items: Evidence[] }) {
         </div>
       ))}
       <MutedNote>
-        Anonymised: names, handles, numbers and IDs are redacted. Summaries are
-        paraphrased.
+        Anonymised: people's names and personal handles are replaced with a
+        role, such as [staff member]; numbers and IDs are redacted. Quotes that
+        make an allegation against a named person are not shown. Summaries are
+        paraphrased. Quotes are labelled by source and date; the demo does not
+        link to the original posts.
       </MutedNote>
     </div>
   );
@@ -266,8 +255,8 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
             {t.trend_mode === "vs_baseline" && t.vs_baseline
               ? `vs baseline: ${t.vs_baseline.window_share}% of store reviews in the window against ${t.vs_baseline.baseline_share}% in the 26 weeks before the window.`
               : t.trend_mode === "insufficient"
-                ? "Most items come from store exports that begin after the window starts, so no trend is claimed."
-                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a share of all posts in each half.`}{" "}
+                ? "Most items come from sources that start or change collection mid-window (store exports from late July, Reddit from 1 Sep), so no trend is claimed."
+                : `Trend within window: ${t.trend.second_half} items (${halfLabel(t.trend.second_half_dates)}) vs ${t.trend.first_half} (${halfLabel(t.trend.first_half_dates)}), compared as a source-weighted share of trend-basis posts in each half (each source by its share of the window; Reddit, whose collector changed on 1 Sep, is left out).`}{" "}
             Seasonal check: in discovery, using your history.
           </BaselineCaption>
           <MutedNote>

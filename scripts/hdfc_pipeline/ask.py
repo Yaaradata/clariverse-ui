@@ -39,11 +39,11 @@ def trend(t) -> str:
 
 
 def main():
-    th = json.load(open(OUT / "themes.json"))
-    sig = json.load(open(OUT / "signals.json"))
-    br = json.load(open(OUT / "briefing.json"))
-    resp = json.load(open(OUT / "responses.json"))
-    ev = json.load(open(OUT / "evidence.json"))
+    th = json.load(open(OUT / "themes.json", encoding="utf-8"))
+    sig = json.load(open(OUT / "signals.json", encoding="utf-8"))
+    br = json.load(open(OUT / "briefing.json", encoding="utf-8"))
+    resp = json.load(open(OUT / "responses.json", encoding="utf-8"))
+    ev = json.load(open(OUT / "evidence.json", encoding="utf-8"))
     tm = {t["id"]: t for t in th["themes"]}
     rp = br["release_pulse"]
 
@@ -60,7 +60,7 @@ def main():
         "keywords": ["md", "desk", "nothing", "reach", "escalate", "managing", "director", "mds"],
         "answer": "\n".join(
             [f"Complaints closed without resolution: {fmt(tm['complaint_handling']['count'])} public items, {fmt(tm['complaint_handling']['escalation_count'])} with escalation language. Owner: CX."]
-            + ([f"The new HDFC Bank app: {fmt(rp['count'])} negative reviews in the window. Owner: Digital."] if rp else [])
+            + ([f"The HDFC Bank app (all versions): {fmt(rp['count'])} negative reviews in the window. Owner: Digital."] if rp else [])
             + ["Themes rising fastest:"] + lines
         ),
         "evidence": cite(tm["complaint_handling"]["exemplars"][:2] + [e for t in needs for e in t["exemplars"][:1]], 4),
@@ -130,7 +130,7 @@ def main():
             "id": "release",
             "prompt": "What are customers saying about the latest app release?",
             "keywords": ["app", "release", "latest", "version", "update", "new", "mobile", "banking"],
-            "answer": f"Release pulse for the HDFC Bank app: {rp['share_positive']}% of {fmt(rp['n_reviews'])} window reviews are positive (4–5★). The fix list customers have written:\n"
+            "answer": f"Release pulse for the HDFC Bank app, one store at a time: on the Play Store {rp['by_store']['playstore']['share_positive']}% of {fmt(rp['by_store']['playstore']['n_reviews'])} window reviews are positive (4–5★); on the App Store {rp['by_store']['appstore']['share_positive']}% of {fmt(rp['by_store']['appstore']['n_reviews'])}. The fix list customers have written:\n"
             + "\n".join(f"• {f['issue']}: {fmt(f['count'])} negative reviews" for f in rp["fix_list"][:4]),
             "evidence": cite(rp["exemplars"]),
             "links": [{"label": "Open the app module", "href": f"{BASE}/module/digital"}],
@@ -141,11 +141,11 @@ def main():
         "id": "replies",
         "prompt": "Are we answering customers in public?",
         "keywords": ["reply", "replies", "respond", "responded", "answer", "public", "review", "store"],
-        "answer": f"On the Play Store the bank replied to {a['responded_pct']}% of {fmt(a['reviews'])} reviews in the window, with a median reply time of {a['median_reply_hours']} hours. But {n['redirect_only_pct_of_replied']}% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. {fmt(a['open_too_long'])} reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
+        "answer": f"On the Play Store the bank replied to {a['responded_pct']}% of {fmt(a['reviews'])} reviews in the window, with a median reply time of {a['median_reply_minutes']} minutes. But {n['redirect_only_pct_of_replied']}% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. {fmt(a['open_too_long'])} reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
         "evidence": cite(rp["exemplars"] if rp else [], 2),
         "links": [{"label": "See the numbers", "href": f"{BASE}/mds-office#dials"}],
     })
-    json.dump({"prompts": prompts, "fallback": "That needs your internal data. It's part of discovery."}, open(OUT / "ask.json", "w"), ensure_ascii=False, indent=1)
+    json.dump({"prompts": prompts, "fallback": "That needs your internal data. It's part of discovery."}, open(OUT / "ask.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(len(prompts), "prompts")
 
 

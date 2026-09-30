@@ -4,7 +4,12 @@ import { Activity, ChevronRight, Shield, Sparkles, Timer } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { execAnswer, moodLine, whatChanged } from "@/lib/hdfc-v3/copy";
+import {
+  execAnswer,
+  moodLine,
+  moodNoteShort,
+  whatChanged,
+} from "@/lib/hdfc-v3/copy";
 import {
   fmt,
   fmtDateTime,
@@ -13,16 +18,20 @@ import {
   rangeLabel,
 } from "@/lib/hdfc-v3/format";
 import {
+  ackStatus,
   actions,
+  fastestRiser,
   improvingItems,
   itemHref,
   needsYou,
+  praiseItem,
   releasePulse,
   routedItems,
   type SignalItem,
   signalHref,
   themeMap,
   thisWeekItems,
+  topPainTheme,
 } from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
@@ -51,28 +60,6 @@ import {
   ProductFilter,
   ProductPulseTable,
 } from "./V3Blocks";
-
-type Internal = {
-  md_mail: {
-    total: number;
-    rows: {
-      theme: string;
-      label: string;
-      owner: string;
-      mails: number;
-      median_age_days: number;
-      resolved_before_md: number;
-      resolved_share: number;
-    }[];
-  };
-  since_830_ack: { theme: string; status: string }[];
-  promise_ledger_ageing: {
-    request_type: string;
-    open_cases: number;
-    beyond_tat: number;
-    beyond_tat_share: number;
-  }[];
-};
 
 function PulseBox({
   title,
@@ -243,9 +230,13 @@ function QuestionCard({
         border: `1px solid ${tint(accent, 0.25)}`,
         borderRadius: 16,
         padding: "18px 18px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 12,
+        // Subgrid: the six sections (title, answer, headline, stats, quote, tags) line up across the cards in a row,
+        // so a longer section in one card never leaves a blank block at the bottom of another.
+        display: "grid",
+        gridRow: "span 6",
+        gridTemplateRows: "subgrid",
+        rowGap: 12,
+        alignContent: "start",
         minWidth: 0,
         boxShadow: `0 8px 32px ${tint(accent, 0.08)}`,
       }}
@@ -425,7 +416,14 @@ function QuestionCard({
           {saying}
         </p>
       </div>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: 6,
+          flexWrap: "wrap",
+          alignSelf: "end",
+        }}
+      >
         {prov.map((p) => (
           <ProvenanceTag key={p} kind={p} />
         ))}
@@ -500,16 +498,13 @@ function ActionCard({ s, from }: { s: SignalItem; from: View }) {
 
 export function ExecPage({ b, view }: { b: Bundle; view: View }) {
   const tm = themeMap(b);
-  const internal = b.internal as unknown as Internal;
   const from = view;
   const rp = releasePulse(b);
   const needs = needsYou(b);
   const focus = [...routedItems(b), ...thisWeekItems(b)].slice(0, 3);
   const improving = improvingItems(b);
+  const praise = praiseItem(b);
   const acts = actions(b, view);
-  const ackBy = Object.fromEntries(
-    internal.since_830_ack.map((a) => [a.theme, a.status]),
-  );
 
   // Card 1: satisfaction
   const pillars = b.themes.pillars;
@@ -519,30 +514,20 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
     const p = pillars.find((x) => x.id === id);
     return p?.count ? (100 * p.sentiment.positive) / p.count : 0;
   };
-  const topPain = b.themes.themes
-    .filter(
-      (t) =>
-        ![
-          "general_dissatisfaction",
-          "other",
-          "app_praise",
-          "service_praise",
-          "product_advice",
-          "offers_deals",
-          "market_news",
-        ].includes(t.id),
-    )
-    .sort((a, c) => c.sentiment.negative - a.sentiment.negative)[0];
+  const topPain = topPainTheme(b);
   const ev = (id?: string) => (id ? b.evidence[id] : undefined);
   const sayingFor = (ids: string[]) =>
     ev(ids.find((i) => b.evidence[i]))?.summary ?? "";
 
   // Card 2: market
-  const riser = b.themes.themes
-    .filter((t) => t.score > 0)
-    .sort((a, c) => c.score - a.score)[0];
-  const bankApp = b.pulse.apps.find((a) => a.app === "HDFC Bank app");
-  const payzapp = b.pulse.apps.find((a) => a.app === "PayZapp");
+  const riser = fastestRiser(b);
+  // One store at a time (B7 §4.1): both gauges are Play Store, with their counts.
+  const playOf = (app: string) =>
+    b.storeSeries.apps
+      .find((a) => a.app === app)
+      ?.stores.find((s) => s.store === "playstore")?.window;
+  const playBank = playOf("HDFC Bank app");
+  const playPayZapp = playOf("PayZapp");
 
   // Card 3: service promise
   const sig = b.signals;
@@ -635,7 +620,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               >
                 <OwnerChip owner={s.owner} />
                 <span style={{ fontSize: 12.5, color: C.textMut }}>
-                  {ackBy[s.theme] ?? "Awaiting owner"}
+                  {ackStatus(b, s.theme) ?? "Not routed yet"}
                 </span>
               </div>
             </Link>
@@ -650,6 +635,8 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
             gridTemplateColumns:
               "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
             gap: 10,
+            // Three lists of different lengths: each column ends with its content instead of padding out.
+            alignItems: "start",
           }}
         >
           <PulseBox
@@ -668,7 +655,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           />
           <PulseBox
             title="3. What's improving or stable"
-            items={improving}
+            items={praise ? [...improving, praise] : improving}
             from={from}
             empty="Stable."
             color={C.green}
@@ -696,7 +683,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={moodLine(b)}
           headlineLabel="Mood, last 7 days vs window average"
           headline={fmtSigned(b.mood.delta_pts, " pts")}
-          caption={`Change in net sentiment against the average for ${rangeLabel(b.meta.window.start, b.meta.window.end)}. Public voice skews negative, so read the change, not the level. No earlier baseline for social sources.`}
+          caption={moodNoteShort(b)}
           gauges={[
             {
               label: "All voice",
@@ -734,20 +721,20 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           icon={<Shield size={18} />}
           title="What is the market saying about us?"
           micro="Themes · Rising · App pulse"
-          answer={`${riser?.label ?? "—"} is rising fastest. The new HDFC Bank app has ${fmtPct(bankApp?.window?.share_positive)} positive reviews in the window.`}
+          answer={`${riser?.label ?? "—"} is rising fastest. On the Play Store, version 11 of the HDFC Bank app, the new release, has ${fmtPct(rp?.by_store.playstore?.new_app_share_positive)} positive reviews, against ${fmtPct(rp?.by_store.playstore?.old_app_share_positive)} on earlier versions.`}
           headlineLabel="Public posts and reviews"
           headline={fmt(b.themes.total_items)}
           caption={`HDFC Bank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}. X, Reddit, forums, Play Store, App Store.`}
           gauges={[
             {
               label: "HDFC Bank app",
-              value: bankApp?.window?.share_positive ?? 0,
-              sub: "4–5★ share",
+              value: playBank?.share_positive ?? 0,
+              sub: `4–5★ · Play Store · ${fmt(playBank?.n)} reviews from 25 Jul`,
             },
             {
               label: "PayZapp",
-              value: payzapp?.window?.share_positive ?? 0,
-              sub: "4–5★ share",
+              value: playPayZapp?.share_positive ?? 0,
+              sub: `4–5★ · Play Store · ${fmt(playPayZapp?.n)} reviews`,
             },
           ]}
           stats={[
@@ -760,9 +747,9 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
             },
             {
               label: "App pulse",
-              value: rp ? `${fmt(rp.count)} negative reviews` : "—",
+              value: rp ? `${fmt(rp.new_app_negative)} negative reviews` : "—",
               color: C.red,
-              sub: "new HDFC Bank app",
+              sub: `version 11 of the HDFC Bank app (${fmt(rp?.count)} across all versions)`,
               href: signalHref("release-pulse", from),
             },
           ]}
@@ -778,7 +765,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
           answer={`${fmt(pbCount)} public posts describe a missed timeline; ${fmt(stCount)} ask where something is; ${fmt(escCount)} use escalation language.`}
           headlineLabel="Missed timelines heard"
           headline={fmt(pbCount)}
-          caption={`Trend within window: ${fmtSigned(sig.flags.promise_break.trend.change_pct)} second half vs first half (share of posts).`}
+          caption={`Trend within window: ${fmtSigned(sig.flags.promise_break.trend.change_pct)} second half vs first half (source-weighted share of posts).`}
           gauges={[
             {
               label: "Repeat contact",
@@ -797,7 +784,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
             {
               label: "Escalation language",
               value: `${fmt(escCount)} posts`,
-              sub: "RBI, ombudsman, court",
+              sub: "escalation language",
               href: `/hdfc-pulse/v2/deliverables?from=${from}#ladder`,
               color: C.red,
             },
@@ -818,7 +805,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         title="Actions to take"
         sub={
           view === "mds-office"
-            ? "At most three. Reputation and regulatory rungs first."
+            ? "At most three: complaints closed without resolution, the app fix list, then priority relationships."
             : "At most five, each with its owner, rung and recommended action."
         }
         prov={["public", "internal"]}
@@ -846,19 +833,13 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         <Tile
           id="md-mail"
           title="MD-marked mail"
-          sub={`${fmt(internal.md_mail.total)} customer mails marked to the MD's office this window, sieved into themes and routed to owners.`}
+          sub={`${fmt(b.v3.md_mail.total)} written complaints reached the MD's office in the demo sample (1 Jul to this morning), sieved into themes and routed to owners. Top five themes shown: ${fmt(b.v3.md_mail.shown)} of ${fmt(b.v3.md_mail.total)}.`}
           prov="internal"
         >
           <Table
-            head={[
-              "Theme",
-              "Owner",
-              "Mails",
-              "Median age",
-              "Resolved before reaching the MD",
-            ]}
+            head={["Theme", "Owner", "Mails", "Median age", "Resolved"]}
             align={["left", "left", "right", "right", "right"]}
-            rows={internal.md_mail.rows.map((r) => [
+            rows={b.v3.md_mail.rows.map((r) => [
               <Link
                 key={r.theme}
                 href={signalHref(r.theme, from)}
@@ -869,7 +850,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
               OWNER_LABEL[r.owner] ?? r.owner,
               fmt(r.mails),
               `${r.median_age_days.toFixed(1)} days`,
-              `${fmt(r.resolved_before_md)} (${r.resolved_share.toFixed(0)}%)`,
+              `${fmt(r.resolved)} (${r.resolved_share.toFixed(0)}%)`,
             ])}
           />
         </Tile>
@@ -877,7 +858,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
         <Tile
           id="routing"
           title="Who should hear what"
-          sub="Each owner's top three themes from public voice. CX hears everything."
+          sub="Each owner's top three themes from public voice, with the relationship managers. Counts are theme mentions: a post can mention up to three themes."
           prov="public"
         >
           <div
@@ -900,9 +881,10 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
                   "compliance",
                   "fraud_cyber",
                   "operations",
+                  "rm",
                 ].includes(r.owner),
               )
-              .slice(0, 9)
+              .slice(0, 10)
               .map((r) => (
                 <div
                   key={r.owner}
@@ -930,7 +912,7 @@ export function ExecPage({ b, view }: { b: Bundle; view: View }) {
                       {r.owner_label}
                     </span>
                     <span style={{ fontSize: 12.5, color: C.textMut }}>
-                      {fmt(r.total)} items
+                      {fmt(r.total)} theme mentions
                     </span>
                   </div>
                   <ol

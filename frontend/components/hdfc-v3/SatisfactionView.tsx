@@ -22,7 +22,12 @@ import {
   halfLabel,
   rangeLabel,
 } from "@/lib/hdfc-v3/format";
-import { signalHref, themeMap, trendWords } from "@/lib/hdfc-v3/selectors";
+import {
+  sayingThemes,
+  signalHref,
+  themeMap,
+  trendWords,
+} from "@/lib/hdfc-v3/selectors";
 import type { Bundle, View } from "@/lib/hdfc-v3/types";
 import {
   AnswerLine,
@@ -47,39 +52,6 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-type Tier = {
-  tier: string;
-  interactions: number;
-  positive: number;
-  neutral: number;
-  negative: number;
-  share_positive: number;
-  share_negative: number;
-  customers_affected: number;
-};
-type Stage = {
-  stage: string;
-  interactions: number;
-  negative_share: number;
-  repeat_contact_share: number;
-  closure_intent: number;
-};
-type Internal = {
-  interactions_total: number;
-  tiers: Tier[];
-  journey_stages: { total: number; rows: Stage[] };
-  retention_watchlist: {
-    total: number;
-    rows: {
-      tier: string;
-      customers_with_closure_intent: number;
-      top_driver: string;
-      owner: string;
-      action: string;
-    }[];
-  };
-};
-
 const SOURCE_LABEL: Record<string, string> = {
   x: "X",
   reddit: "Reddit",
@@ -102,7 +74,7 @@ const EXCLUDE = new Set(["other", "market_news", "offers_deals"]);
 export function SatisfactionView({ b }: { b: Bundle }) {
   const from: View = useFrom();
   const tm = themeMap(b);
-  const internal = b.internal as unknown as Internal;
+  const internal = b.v3.satisfaction;
   const [pillar, setPillar] = useState<string | null>(null);
 
   const pillars = b.themes.pillars;
@@ -112,33 +84,19 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       .sort((a, c) => c.count - a.count);
   const topThemes = themesIn(pillar).slice(0, 8);
 
-  // weekly net sentiment from the daily mood series
-  const weeks = new Map<string, { pos: number; neg: number; n: number }>();
-  for (const d of b.mood.daily) {
-    const dt = new Date(`${d.date}T00:00:00Z`);
-    const wd = (dt.getUTCDay() + 6) % 7;
-    dt.setUTCDate(dt.getUTCDate() - wd);
-    const k = dt.toISOString().slice(0, 10);
-    const w = weeks.get(k) ?? { pos: 0, neg: 0, n: 0 };
-    w.pos += d.positive;
-    w.neg += d.negative;
-    w.n += d.n;
-    weeks.set(k, w);
-  }
-  const weekly = [...weeks.entries()].map(([k, w]) => ({
-    week: fmtDate(k),
-    net: Math.round((100 * (w.pos - w.neg)) / w.n),
-  }));
+  // Weekly net sentiment, source-weighted (review step 5): full weeks only, each source by its share of the window.
+  const weekly = b.mood.weekly
+    .filter((w) => w.net !== null)
+    .map((w) => ({ week: fmtDate(w.week), net: Math.round(w.net ?? 0) }));
+  const SOURCE_NAME: Record<string, string> = {
+    playstore: "Play Store",
+    appstore: "App Store",
+    x: "X",
+    forum: "Forums",
+    reddit: "Reddit",
+  };
 
-  const saying = b.themes.themes
-    .filter(
-      (t) =>
-        !EXCLUDE.has(t.id) &&
-        t.id !== "general_dissatisfaction" &&
-        t.id !== "product_advice",
-    )
-    .sort((a, c) => c.count - a.count)
-    .slice(0, 3);
+  const saying = sayingThemes(b);
 
   const closureEx = b.signals.closure_intent.exemplars
     .map((id) => b.evidence[id])
@@ -161,7 +119,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
   ];
   const repeatChart = repeatThemes.map((t) => {
     const row: Record<string, string | number> = {
-      theme: t.label.length > 30 ? `${t.label.slice(0, 29)}…` : t.label,
+      theme: t.label.length > 34 ? `${t.label.slice(0, 33)}…` : t.label,
       id: t.id,
     };
     const tot = Object.values(t.by_business).reduce((s, v) => s + v, 0) || 1;
@@ -171,6 +129,14 @@ export function SatisfactionView({ b }: { b: Bundle }) {
   });
   const netColor = (v: number | null) =>
     v === null ? C.text : v >= 0 ? C.green : v > -30 ? C.amber : C.red;
+
+  // A post can carry up to three themes; never show the same quote under two of them.
+  const usedQuotes = new Set<string>();
+  const sayingEvidence = saying.map((t) => {
+    const id = t.exemplars.find((x) => b.evidence[x] && !usedQuotes.has(x));
+    if (id) usedQuotes.add(id);
+    return id ? b.evidence[id] : undefined;
+  });
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -208,117 +174,131 @@ export function SatisfactionView({ b }: { b: Bundle }) {
         <MutedNote>{b.meta.coverage_notes.slice(0, 2).join(" ")}</MutedNote>
       </Tile>
 
-      <div style={PAIRS}>
-        <Tile
-          title="Interactions by relationship tier"
-          sub={`${fmt(internal.interactions_total)} interactions across all channels`}
-          prov="internal"
-          id="tiers"
-        >
-          <Table
-            head={[
-              "Tier",
-              "Interactions",
-              "Positive",
-              "Negative",
-              "Customers affected",
-            ]}
-            align={["left", "right", "right", "right", "right"]}
-            rows={internal.tiers.map((t) => [
-              t.tier,
-              fmt(t.interactions),
-              <span key="p" style={{ color: C.green, fontWeight: 700 }}>
-                {fmtPct(t.share_positive)}
-              </span>,
-              <span key="n" style={{ color: C.red, fontWeight: 700 }}>
-                {fmtPct(t.share_negative)}
-              </span>,
-              fmt(t.customers_affected),
-            ])}
-          />
-          <MutedNote>
-            Tier names to be verified with the bank. Figures are illustrative,
-            not HDFC Bank figures.
-          </MutedNote>
-        </Tile>
+      <Tile
+        title="Interactions and sentiment by relationship tier"
+        sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Jul to this morning`}
+        prov="internal"
+        id="tiers"
+      >
+        <Table
+          head={[
+            "Tier",
+            "Interactions",
+            "Positive",
+            "Negative",
+            "Customers affected",
+            "Positive · neutral · negative",
+          ]}
+          align={["left", "right", "right", "right", "right", "left"]}
+          rows={internal.tiers.map((t) => [
+            t.tier,
+            fmt(t.interactions),
+            <span key="p" style={{ color: C.green, fontWeight: 700 }}>
+              {fmtPct(t.share_positive)}
+            </span>,
+            <span key="n" style={{ color: C.red, fontWeight: 700 }}>
+              {fmtPct(t.share_negative)}
+            </span>,
+            fmt(t.customers_affected),
+            <div key="bar" style={{ minWidth: 220 }}>
+              <SentimentBar
+                pos={t.positive}
+                neu={t.neutral}
+                neg={t.negative}
+                legend={false}
+              />
+            </div>,
+          ])}
+        />
+        <MutedNote>
+          Tier names to be verified with the bank. Figures are illustrative, not
+          HDFC Bank figures.
+        </MutedNote>
+      </Tile>
 
-        <Tile
-          title="Sentiment by relationship tier"
-          sub="Positive, neutral and negative share of interactions; customers affected"
-          prov="internal"
-        >
-          {internal.tiers.map((t) => (
-            <div key={t.tier}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  fontSize: 14,
-                  marginBottom: 4,
-                }}
-              >
-                <span style={{ fontWeight: 650 }}>{t.tier}</span>
-                <span style={{ color: C.textMut }}>
-                  {fmt(t.customers_affected)} customers affected
-                </span>
-              </div>
-              <SentimentBar pos={t.positive} neu={t.neutral} neg={t.negative} />
-            </div>
-          ))}
-        </Tile>
+      <Tile
+        title="Sentiment trend (conversation-inferred)"
+        sub="Weekly net sentiment of public HDFC Bank voice, full-window sources, source-weighted"
+        prov="public"
+        id="trend"
+      >
+        <div style={SPLIT}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <TrendLine
+              data={weekly}
+              height={214}
+              xKey="week"
+              yKey="net"
+              reference={b.mood.window_average}
+              referenceLabel="Window average"
+              yLabel="Net sentiment"
+              xLabel="Week starting"
+              domain={[-100, 100]}
+            />
+            <BaselineCaption>
+              Net sentiment = (positive − negative) ÷ items × 100, per source,
+              then weighted by each source&apos;s share of the window. Dashed
+              line: window average. No earlier baseline for social sources.
+            </BaselineCaption>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <Table
+              head={[
+                "Source",
+                "Share of window",
+                "Share of last 7 days",
+                "Window net",
+                "Last 7 days net",
+              ]}
+              align={["left", "right", "right", "right", "right"]}
+              rows={b.mood.by_source.map((x) => [
+                SOURCE_NAME[x.source] ?? x.source,
+                fmtPct(x.weight_pct),
+                fmtPct(x.last7_share_pct),
+                fmtSigned(x.window_net),
+                x.last7_net === null ? "—" : fmtSigned(x.last7_net),
+              ])}
+            />
+            <MutedNote>
+              Mood by source. Unweighted, the last 7 days would read{" "}
+              {fmtSigned(b.mood.unweighted.delta_pts, " pts")} against the
+              window average, because one source&apos;s share jumped;
+              source-weighted, the change is{" "}
+              {fmtSigned(b.mood.delta_pts, " pts")}. Reddit is left out: its
+              collector changed on 1 Sep.
+            </MutedNote>
+          </div>
+        </div>
+      </Tile>
 
-        <Tile
-          title="Sentiment trend (conversation-inferred)"
-          sub="Weekly net sentiment of public HDFC Bank voice, full-window sources"
-          prov="public"
-          id="trend"
-        >
-          <TrendLine
-            data={weekly}
-            height={214}
-            xKey="week"
-            yKey="net"
-            reference={b.mood.window_average}
-            referenceLabel="Window average"
-            yLabel="Net sentiment"
-            xLabel="Week starting"
-            domain={[-100, 100]}
-          />
-          <BaselineCaption>
-            Net sentiment = (positive − negative) ÷ items × 100. Dashed line:
-            window average. No earlier baseline for social sources.
-          </BaselineCaption>
-        </Tile>
-
-        <Tile
-          title="Strain and friction by business"
-          sub="Repeat contact and escalation language in public voice"
-          prov="public"
-          id="strain"
-        >
-          <Table
-            head={[
-              "Business",
-              "Items",
-              "Repeat contact",
-              "Escalation language",
-              "Negative",
-            ]}
-            align={["left", "right", "right", "right", "right"]}
-            rows={byBiz.map((x) => [
-              BUSINESS_LABEL[x.business] ?? x.business,
-              fmt(x.count),
-              <span key="r" style={{ color: C.amber }}>
-                {fmt(x.repeat)}
-              </span>,
-              <span key="e" style={{ color: C.red }}>
-                {fmt(x.escalation)}
-              </span>,
-              fmtPct((100 * x.negative) / x.count),
-            ])}
-          />
-        </Tile>
-      </div>
+      <Tile
+        title="Strain and friction by business"
+        sub="Repeat contact and escalation language in public voice"
+        prov="public"
+        id="strain"
+      >
+        <Table
+          head={[
+            "Business",
+            "Items",
+            "Repeat contact",
+            "Escalation language",
+            "Negative",
+          ]}
+          align={["left", "right", "right", "right", "right"]}
+          rows={byBiz.map((x) => [
+            BUSINESS_LABEL[x.business] ?? x.business,
+            fmt(x.count),
+            <span key="r" style={{ color: C.amber }}>
+              {fmt(x.repeat)}
+            </span>,
+            <span key="e" style={{ color: C.red }}>
+              {fmt(x.escalation)}
+            </span>,
+            fmtPct((100 * x.negative) / x.count),
+          ])}
+        />
+      </Tile>
 
       <Tile
         title="Top themes by trust pillar"
@@ -344,7 +324,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                     cursor: "pointer",
                     background: pillar === p.id ? C.brandSoft : "transparent",
                     color: pillar === p.id ? C.text : C.textSec,
-                    border: `1px solid ${pillar === p.id ? `${C.brand}66` : C.border}`,
+                    border: `1px solid ${pillar === p.id ? tint(C.brand, 0.4) : C.border}`,
                   }}
                 >
                   {p.label}
@@ -425,8 +405,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           sub="The three largest themes this window, in customers' words (paraphrased)"
           prov="public"
         >
-          {saying.map((t) => {
-            const e = t.exemplars.map((id) => b.evidence[id]).find(Boolean);
+          {saying.map((t, i) => {
+            const e = sayingEvidence[i];
             const sc = statusColor(t.status);
             return (
               <Link
@@ -465,7 +445,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                   {e?.summary}
                 </div>
                 <div style={{ fontSize: 12.5, color: C.textMut }}>
-                  {fmt(t.count)} items · {e?.source_label}
+                  {fmt(t.count)} items · {e?.place}
+                  {e ? ` · ${fmtDate(e.created_at)}` : ""}
                 </div>
               </Link>
             );
@@ -513,7 +494,9 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               }}
             >
               {e.summary}{" "}
-              <span style={{ color: C.textMut }}>({e.source_label})</span>
+              <span style={{ color: C.textMut }}>
+                ({e.place} · {fmtDate(e.created_at)})
+              </span>
             </Link>
           ))}
         </Tile>
@@ -522,7 +505,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       <div style={PAIRS}>
         <Tile
           title="Where is the struggle? Journey stages"
-          sub={`${fmt(internal.journey_stages.total)} interactions mapped to journey stages`}
+          sub={`${fmt(internal.journey_stages.total)} interactions mapped to journey stages (the same demo sample)`}
           prov="internal"
           id="journey"
         >
@@ -566,18 +549,20 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <OwnerChip owner="cx" />
             <span style={{ fontSize: 12.5, color: C.textMut }}>
-              Stage mapping and figures confirmed in discovery.
+              Stage mapping and figures confirmed in discovery.{" "}
+              {internal.journey_stages.rule}
             </span>
           </div>
         </Tile>
 
         <Tile
           title="Repeat contact by theme and business"
-          sub="Public items where customers say they have raised it before. Tap a bar to open the signal."
+          sub="Public items where customers say they have raised it before, by business. Tap a bar to open the theme."
           prov="public"
           id="repeat"
         >
-          <div style={{ width: "100%", height: 250 }}>
+          {/* One row per theme, every theme labelled (the axis used to skip alternate labels). */}
+          <div style={{ width: "100%", height: 90 + repeatChart.length * 38 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={repeatChart}
@@ -600,12 +585,14 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                 <YAxis
                   type="category"
                   dataKey="theme"
-                  width={200}
+                  width={210}
+                  interval={0}
                   tick={{ fill: C.textSec, fontSize: 12 }}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#0c0c0e",
+                    background: C.tooltip,
+                    color: C.text,
                     border: `1px solid ${C.borderLight}`,
                     fontSize: 12.5,
                   }}
@@ -635,17 +622,6 @@ export function SatisfactionView({ b }: { b: Bundle }) {
                 ))}
               </BarChart>
             </ResponsiveContainer>
-          </div>
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {repeatThemes.map((t) => (
-              <Link
-                key={t.id}
-                href={signalHref(t.id, from)}
-                style={{ fontSize: 13, color: C.textSec }}
-              >
-                {t.label} ({fmt(t.repeat_count)})
-              </Link>
-            ))}
           </div>
         </Tile>
       </div>

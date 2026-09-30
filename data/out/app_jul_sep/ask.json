@@ -13,12 +13,12 @@
     "director",
     "mds"
    ],
-   "answer": "Complaints closed without resolution: 633 public items, 190 with escalation language. Owner: CX.\nThe new HDFC Bank app: 2,126 negative reviews in the window. Owner: Digital.\nThemes rising fastest:\n• Complaints closed without resolution: 633 items, up 87% in the second half of the window vs the first; 190 name a regulator, court or ombudsman. Owner: CX.\n• Card fees and charges: 378 items, up 123% in the second half of the window vs the first; 30 name a regulator, court or ombudsman. Owner: Cards.",
+   "answer": "Complaints closed without resolution: 633 public items, 190 with escalation language. Owner: CX.\nThe HDFC Bank app (all versions): 2,126 negative reviews in the window. Owner: Digital.\nThemes rising fastest:\n• Card fees and charges: 378 items, up 137% in the second half of the window vs the first; 30 name a regulator, court or ombudsman. Owner: Cards.\n• KYC, re-KYC and profile updates: 151 items, up 69% in the second half of the window vs the first; 7 name a regulator, court or ombudsman. Owner: Operations.",
    "evidence": [
     "x:2072884095181582607",
     "reddit:comment:owas2mf",
-    "x:2072884095181582607",
-    "x:2089738829033046492"
+    "x:2089738829033046492",
+    "x:2085194811565596800"
    ],
    "links": [
     {
@@ -59,27 +59,27 @@
   },
   {
    "id": "seasonal",
-   "prompt": "Is the complaints closed without resolution spike seasonal or new?",
+   "prompt": "Is the card fees and charges spike seasonal or new?",
    "keywords": [
     "seasonal",
     "spike",
     "new",
     "trend",
     "baseline",
-    "complaints",
-    "closed",
-    "without"
+    "card",
+    "fees",
+    "and"
    ],
-   "answer": "Complaints closed without resolution: 633 items in the window, up 87% in the second half of the window vs the first. First heard in this window on 2026-07-01. The exports hold no history before July, so LisN shows the trend within the window and makes no baseline claim. Seasonal check: in discovery, using your history.",
+   "answer": "Card fees and charges: 378 items in the window, up 137% in the second half of the window vs the first. First heard in this window on 2026-07-01. The exports hold no history before July, so LisN shows the trend within the window and makes no baseline claim. Seasonal check: in discovery, using your history.",
    "evidence": [
-    "x:2072884095181582607",
-    "reddit:comment:owas2mf",
-    "x:2089775530757550581"
+    "x:2089738829033046492",
+    "x:2089760657738711093",
+    "reddit:1uz1ove"
    ],
    "links": [
     {
-     "label": "Open Complaints closed without resolution",
-     "href": "/hdfc-pulse/v2/signal/complaint_handling"
+     "label": "Open Card fees and charges",
+     "href": "/hdfc-pulse/v2/signal/card_fees_charges"
     }
    ]
   },
@@ -124,8 +124,8 @@
    ],
    "answer": "230 items follow a decline, failed payment or block that a proactive message, auto-reversal or unblock could have handled, and the customer still had to chase it. Leading areas: Login, MPIN and registration (48), Account debit freezes and blocks (37), General dissatisfaction (25).",
    "evidence": [
-    "x:2092887484351054147",
     "x:2092894433369055716",
+    "x:2084938740020228231",
     "reddit:1wafopr"
    ],
    "links": [
@@ -173,7 +173,7 @@
     "mobile",
     "banking"
    ],
-   "answer": "Release pulse for the HDFC Bank app: 55.0% of 5,325 window reviews are positive (4–5★). The fix list customers have written:\n• App speed, loading and crashes: 716 negative reviews\n• Login, MPIN and registration: 301 negative reviews\n• New app and update experience: 179 negative reviews\n• Customer care unreachable or unhelpful: 19 negative reviews",
+   "answer": "Release pulse for the HDFC Bank app, one store at a time: on the Play Store 55.6% of 5,000 window reviews are positive (4–5★); on the App Store 45.8% of 325. The fix list customers have written:\n• App speed, loading and crashes: 716 negative reviews\n• Login, MPIN and registration: 301 negative reviews\n• New app and update experience: 179 negative reviews\n• Customer care unreachable or unhelpful: 19 negative reviews",
    "evidence": [
     "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
     "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
@@ -199,7 +199,7 @@
     "review",
     "store"
    ],
-   "answer": "On the Play Store the bank replied to 96.4% of 10,617 reviews in the window, with a median reply time of 0.2 hours. But 87.6% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. 377 reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
+   "answer": "On the Play Store the bank replied to 96.4% of 10,617 reviews in the window, with a median reply time of 10 minutes. But 87.6% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. 377 reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
    "evidence": [
     "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
     "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda"

@@ -2,6 +2,7 @@ import { MarketView } from "@/components/hdfc-v3/MarketView";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
+import { sliceBundle } from "@/lib/hdfc-v3/slice";
 
 export default function MarketPage() {
   const b = loadBundle();
@@ -12,7 +13,7 @@ export default function MarketPage() {
       subtitle="What we say vs what customers hear · Rising themes · Voices with reach · App pulse · Safety"
       drill
     >
-      <MarketView b={b} />
+      <MarketView b={sliceBundle(b, { view: "market" })} />
     </Shell>
   );
 }

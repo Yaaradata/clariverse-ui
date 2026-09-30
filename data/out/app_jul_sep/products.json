@@ -14,10 +14,12 @@
    "repeat": 147,
    "promise_break_mentions": 124,
    "share_negative": 36.2,
-   "trend_change_pct": 18.2,
+   "trend_change_pct": 2.2,
    "trend_basis": {
-    "first_half": 1600,
-    "second_half": 1874
+    "first_half": 697,
+    "second_half": 916,
+    "first_share": 17.17,
+    "second_share": 17.54
    },
    "top_issue": {
     "id": "rewards_value",
@@ -326,6 +328,21 @@
     "x": 458,
     "reddit": 1861,
     "forum": 1150
+   },
+   "replies": {
+    "reviews": 133,
+    "responded": 131,
+    "responded_pct": 98.5,
+    "open": 2,
+    "open_pct": 1.5,
+    "open_too_long": 2,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 1.5,
+    "median_reply_minutes": 24,
+    "median_reply_hours": 0.39,
+    "replied_within_48h": 120,
+    "redirect_only": 116,
+    "redirect_only_pct_of_replied": 88.5
    }
   },
   {
@@ -333,35 +350,37 @@
    "label": "PayZapp and UPI",
    "owner": "payments",
    "module": null,
-   "count": 5175,
-   "negative": 2528,
+   "count": 5179,
+   "negative": 2532,
    "escalation": 31,
-   "repeat": 260,
-   "promise_break_mentions": 189,
+   "repeat": 262,
+   "promise_break_mentions": 190,
    "share_negative": 48.9,
-   "trend_change_pct": -26.9,
+   "trend_change_pct": 1.1,
    "trend_basis": {
-    "first_half": 2957,
-    "second_half": 2141
+    "first_half": 2933,
+    "second_half": 2113,
+    "first_share": 54.53,
+    "second_share": 55.14
    },
    "top_issue": {
     "id": "app_speed_crash",
     "label": "App speed, loading and crashes",
-    "negative": 769
+    "negative": 770
    },
    "issues": [
     {
      "id": "app_speed_crash",
      "label": "App speed, loading and crashes",
-     "count": 839,
-     "negative": 769,
+     "count": 840,
+     "negative": 770,
      "escalation": 2
     },
     {
      "id": "login_mpin",
      "label": "Login, MPIN and registration",
-     "count": 436,
-     "negative": 408,
+     "count": 437,
+     "negative": 409,
      "escalation": 3
     },
     {
@@ -381,15 +400,15 @@
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
-     "count": 101,
-     "negative": 95,
+     "count": 103,
+     "negative": 97,
      "escalation": 5
     },
     {
      "id": "device_security_block",
      "label": "Device security blocks and false alerts",
-     "count": 73,
-     "negative": 68,
+     "count": 74,
+     "negative": 69,
      "escalation": 0
     },
     {
@@ -402,8 +421,8 @@
     {
      "id": "failed_txn_reversal",
      "label": "Failed transaction reversal",
-     "count": 59,
-     "negative": 40,
+     "count": 61,
+     "negative": 42,
      "escalation": 12
     },
     {
@@ -519,6 +538,13 @@
      "escalation": 0
     },
     {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 10,
+     "negative": 8,
+     "escalation": 1
+    },
+    {
      "id": "card_eligibility_upgrade",
      "label": "Card eligibility, upgrade and LTF requests",
      "count": 11,
@@ -538,13 +564,6 @@
      "count": 9,
      "negative": 7,
      "escalation": 0
-    },
-    {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 9,
-     "negative": 7,
-     "escalation": 1
     },
     {
      "id": "fraud_scam",
@@ -634,9 +653,24 @@
    "by_source": {
     "playstore": 4762,
     "appstore": 236,
-    "x": 113,
+    "x": 117,
     "reddit": 56,
     "forum": 8
+   },
+   "replies": {
+    "reviews": 4762,
+    "responded": 4648,
+    "responded_pct": 97.6,
+    "open": 114,
+    "open_pct": 2.4,
+    "open_too_long": 114,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 2.4,
+    "median_reply_minutes": 18,
+    "median_reply_hours": 0.29,
+    "replied_within_48h": 4240,
+    "redirect_only": 2110,
+    "redirect_only_pct_of_replied": 45.4
    }
   },
   {
@@ -644,16 +678,18 @@
    "label": "Accounts and deposits",
    "owner": "retail",
    "module": null,
-   "count": 1637,
-   "negative": 985,
+   "count": 1635,
+   "negative": 983,
    "escalation": 222,
-   "repeat": 189,
-   "promise_break_mentions": 135,
-   "share_negative": 60.2,
-   "trend_change_pct": 157.8,
+   "repeat": 187,
+   "promise_break_mentions": 134,
+   "share_negative": 60.1,
+   "trend_change_pct": 1.4,
    "trend_basis": {
-    "first_half": 446,
-    "second_half": 1139
+    "first_half": 284,
+    "second_half": 725,
+    "first_share": 11.0,
+    "second_share": 11.15
    },
    "top_issue": {
     "id": "complaint_handling",
@@ -685,8 +721,8 @@
     {
      "id": "care_unreachable",
      "label": "Customer care unreachable or unhelpful",
-     "count": 111,
-     "negative": 94,
+     "count": 109,
+     "negative": 92,
      "escalation": 9
     },
     {
@@ -769,8 +805,8 @@
     {
      "id": "failed_txn_reversal",
      "label": "Failed transaction reversal",
-     "count": 9,
-     "negative": 9,
+     "count": 8,
+     "negative": 8,
      "escalation": 2
     },
     {
@@ -795,13 +831,6 @@
      "escalation": 3
     },
     {
-     "id": "app_usability",
-     "label": "App features and usability",
-     "count": 7,
-     "negative": 5,
-     "escalation": 0
-    },
-    {
      "id": "statements_documents",
      "label": "Statements, certificates and documents",
      "count": 12,
@@ -821,6 +850,13 @@
      "count": 8,
      "negative": 4,
      "escalation": 2
+    },
+    {
+     "id": "app_usability",
+     "label": "App features and usability",
+     "count": 6,
+     "negative": 4,
+     "escalation": 0
     },
     {
      "id": "rewards_value",
@@ -922,10 +958,11 @@
     }
    ],
    "by_source": {
-    "x": 961,
+    "x": 959,
     "reddit": 574,
     "forum": 102
-   }
+   },
+   "replies": null
   },
   {
    "id": "personal_loans",
@@ -938,10 +975,12 @@
    "repeat": 55,
    "promise_break_mentions": 29,
    "share_negative": 76.2,
-   "trend_change_pct": 75.2,
+   "trend_change_pct": -19.7,
    "trend_basis": {
-    "first_half": 121,
-    "second_half": 210
+    "first_half": 94,
+    "second_half": 140,
+    "first_share": 2.94,
+    "second_share": 2.36
    },
    "top_issue": {
     "id": "recovery_conduct",
@@ -1187,6 +1226,21 @@
     "x": 160,
     "reddit": 97,
     "forum": 22
+   },
+   "replies": {
+    "reviews": 91,
+    "responded": 88,
+    "responded_pct": 96.7,
+    "open": 3,
+    "open_pct": 3.3,
+    "open_too_long": 3,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 3.3,
+    "median_reply_minutes": 26,
+    "median_reply_hours": 0.44,
+    "replied_within_48h": 84,
+    "redirect_only": 65,
+    "redirect_only_pct_of_replied": 73.9
    }
   },
   {
@@ -1200,10 +1254,12 @@
    "repeat": 10,
    "promise_break_mentions": 16,
    "share_negative": 59.1,
-   "trend_change_pct": -32.7,
+   "trend_change_pct": -10.8,
    "trend_basis": {
-    "first_half": 165,
-    "second_half": 110
+    "first_half": 48,
+    "second_half": 72,
+    "first_share": 1.41,
+    "second_share": 1.26
    },
    "top_issue": {
     "id": "loan_processing",
@@ -1400,6 +1456,21 @@
     "x": 26,
     "reddit": 155,
     "forum": 6
+   },
+   "replies": {
+    "reviews": 96,
+    "responded": 2,
+    "responded_pct": 2.1,
+    "open": 94,
+    "open_pct": 97.9,
+    "open_too_long": 94,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 97.9,
+    "median_reply_minutes": 9,
+    "median_reply_hours": 0.15,
+    "replied_within_48h": 2,
+    "redirect_only": 2,
+    "redirect_only_pct_of_replied": 100.0
    }
   },
   {
@@ -1415,8 +1486,10 @@
    "share_negative": 50.0,
    "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 8,
-    "second_half": 4
+    "first_half": 1,
+    "second_half": 2,
+    "first_share": 0.02,
+    "second_share": 0.03
    },
    "top_issue": {
     "id": "loan_servicing",
@@ -1478,6 +1551,21 @@
     "playstore": 1,
     "x": 2,
     "reddit": 9
+   },
+   "replies": {
+    "reviews": 1,
+    "responded": 1,
+    "responded_pct": 100.0,
+    "open": 0,
+    "open_pct": 0.0,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": 0.0,
+    "median_reply_minutes": 3,
+    "median_reply_hours": 0.05,
+    "replied_within_48h": 1,
+    "redirect_only": 1,
+    "redirect_only_pct_of_replied": 100.0
    }
   },
   {
@@ -1491,10 +1579,12 @@
    "repeat": 1,
    "promise_break_mentions": 0,
    "share_negative": 72.9,
-   "trend_change_pct": 25.0,
+   "trend_change_pct": null,
    "trend_basis": {
-    "first_half": 21,
-    "second_half": 26
+    "first_half": 9,
+    "second_half": 15,
+    "first_share": 0.33,
+    "second_share": 0.23
    },
    "top_issue": {
     "id": "mis_selling",
@@ -1620,6 +1710,21 @@
     "appstore": 1,
     "x": 23,
     "reddit": 23
+   },
+   "replies": {
+    "reviews": 1,
+    "responded": 1,
+    "responded_pct": 100.0,
+    "open": 0,
+    "open_pct": 0.0,
+    "open_too_long": 0,
+    "open_too_long_pct_of_open": null,
+    "open_too_long_pct_of_reviews": 0.0,
+    "median_reply_minutes": 4,
+    "median_reply_hours": 0.07,
+    "replied_within_48h": 1,
+    "redirect_only": 1,
+    "redirect_only_pct_of_replied": 100.0
    }
   },
   {
@@ -1627,35 +1732,37 @@
    "label": "Digital (app and NetBanking)",
    "owner": "digital",
    "module": "digital",
-   "count": 5153,
-   "negative": 1982,
+   "count": 5151,
+   "negative": 1980,
    "escalation": 6,
    "repeat": 103,
    "promise_break_mentions": 51,
-   "share_negative": 38.5,
-   "trend_change_pct": -28.8,
+   "share_negative": 38.4,
+   "trend_change_pct": -7.6,
    "trend_basis": {
-    "first_half": 227,
-    "second_half": 160
+    "first_half": 215,
+    "second_half": 131,
+    "first_share": 3.82,
+    "second_share": 3.53
    },
    "top_issue": {
     "id": "app_speed_crash",
     "label": "App speed, loading and crashes",
-    "negative": 891
+    "negative": 890
    },
    "issues": [
     {
      "id": "app_speed_crash",
      "label": "App speed, loading and crashes",
-     "count": 1041,
-     "negative": 891,
+     "count": 1040,
+     "negative": 890,
      "escalation": 1
     },
     {
      "id": "login_mpin",
      "label": "Login, MPIN and registration",
-     "count": 365,
-     "negative": 317,
+     "count": 364,
+     "negative": 316,
      "escalation": 1
     },
     {
@@ -1696,8 +1803,8 @@
     {
      "id": "branch_service",
      "label": "Branch service and staff behaviour",
-     "count": 40,
-     "negative": 29,
+     "count": 42,
+     "negative": 30,
      "escalation": 1
     },
     {
@@ -1710,8 +1817,8 @@
     {
      "id": "device_security_block",
      "label": "Device security blocks and false alerts",
-     "count": 18,
-     "negative": 13,
+     "count": 17,
+     "negative": 12,
      "escalation": 0
     },
     {
@@ -1785,13 +1892,6 @@
      "escalation": 0
     },
     {
-     "id": "failed_txn_reversal",
-     "label": "Failed transaction reversal",
-     "count": 4,
-     "negative": 4,
-     "escalation": 1
-    },
-    {
      "id": "merchant_pos",
      "label": "Merchant QR, POS and sound box",
      "count": 3,
@@ -1804,6 +1904,13 @@
      "count": 3,
      "negative": 3,
      "escalation": 0
+    },
+    {
+     "id": "failed_txn_reversal",
+     "label": "Failed transaction reversal",
+     "count": 3,
+     "negative": 3,
+     "escalation": 1
     },
     {
      "id": "unsolicited_calls",
@@ -1865,9 +1972,24 @@
    "by_source": {
     "playstore": 4763,
     "appstore": 279,
-    "x": 69,
+    "x": 67,
     "reddit": 39,
     "forum": 3
+   },
+   "replies": {
+    "reviews": 4763,
+    "responded": 4644,
+    "responded_pct": 97.5,
+    "open": 119,
+    "open_pct": 2.5,
+    "open_too_long": 119,
+    "open_too_long_pct_of_open": 100.0,
+    "open_too_long_pct_of_reviews": 2.5,
+    "median_reply_minutes": 5,
+    "median_reply_hours": 0.08,
+    "replied_within_48h": 4466,
+    "redirect_only": 1831,
+    "redirect_only_pct_of_replied": 39.4
    }
   }
  ],
@@ -1879,7 +2001,7 @@
  "total_rows": 16329,
  "total_items": 17193,
  "reconciles": true,
- "trend_rule": "Share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug). Shown only when both halves have at least 15 items.",
+ "trend_rule": "Source-weighted share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug): each source's share counts in proportion to its share of the window. Reddit (collector changed 1 Sep) and the Play Store HDFC Bank app export (from 25 Jul) are left out. Shown only when both halves have at least 15 items.",
  "labels": {
   "cards": "Cards",
   "payzapp": "PayZapp and UPI",

@@ -3,10 +3,10 @@
 Writes to data/out/app_jul_sep/: themes.json, signals.json, app_pulse.json, mood.json, briefing.json, meta.json,
 evidence.json, responses.json. Every count is reproducible from work/classified.jsonl.
 
-Window: 1 July – 28 September 2026 (as of 28 September). Trend: share of trend-basis items, second half
-(15 Aug – 28 Sep) vs first half (1 Jul – 14 Aug). A stream is trend basis only if it covers the whole window; the
-Play Store HDFC Bank app export starts on 25 July, so it counts in totals but not in trends. No baseline: the exports
-hold no history before July.
+Window: 1 July – 28 September 2026 (as of 28 September). Trend: source-weighted share of trend-basis items, second
+half (15 Aug – 28 Sep) vs first half (1 Jul – 14 Aug); see method.py. A stream is trend basis only if it covers the
+whole window: the Play Store HDFC Bank app export starts on 25 July and Reddit changed collector on 1 September, so
+they count in totals but not in trends. No baseline: the exports hold no history before July.
 """
 
 from __future__ import annotations
@@ -17,7 +17,9 @@ import json
 import re
 import statistics
 
+import method as M
 from classify import OWNER_BY_RT
+from method import stream_of
 from normalise import OUT, WORK
 from taxonomy import THEMES
 
@@ -30,6 +32,29 @@ SINCE_830 = "2026-09-28T08:30:00+05:30"
 IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction", "trading_securities", "insurance_group"}
 SOURCE_LABEL = {"playstore": "Play Store", "appstore": "App Store", "x": "X", "reddit": "Reddit", "forum": "Forums"}
+# Plain place labels for evidence. Screens never link to the original post (the URL stays in evidence.json, server-side,
+# for audit only), so each quote says where it came from in words.
+FORUM_NAME = {
+    "technofino": "TechnoFino", "trustpilot": "Trustpilot", "consumercomplaints": "Consumer Complaints",
+    "mouthshut": "MouthShut", "complaintsboard": "ComplaintsBoard",
+}
+
+
+def place_label(r) -> str:
+    src = r["source"]
+    if src == "playstore":
+        return "Play Store review"
+    if src == "appstore":
+        return "App Store review"
+    if src == "x":
+        return "X post"
+    if src == "reddit":
+        return f"Reddit · r/{r['subreddit']}" if r.get("subreddit") else "Reddit"
+    if src == "forum":
+        return f"Forum · {FORUM_NAME.get(r.get('subreddit'), 'consumer forum')}"
+    return SOURCE_LABEL.get(src, src)
+
+
 OWNER_LABEL = {
     "cx": "CX", "digital": "Digital", "cards": "Cards", "retail": "Retail", "loans": "Loans", "payments": "Payments",
     "compliance": "Compliance", "fraud_cyber": "Fraud and Cyber", "operations": "Operations", "rm": "RM", "product": "Product",
@@ -44,28 +69,12 @@ REDIRECT_RE = re.compile(
 )
 
 
-def monday(d: str) -> str:
-    x = dt.date.fromisoformat(d[:10])
-    return (x - dt.timedelta(days=x.weekday())).isoformat()
-
-
-WEEKS = []
-_w = dt.date.fromisoformat(monday(W_START))
-while _w.isoformat() <= W_END:
-    WEEKS.append(_w.isoformat())
-    _w += dt.timedelta(days=7)
+monday = M.monday
+WEEKS = M.full_weeks()  # full weeks only: a one-day last week reads as a collapse
 
 
 def in_window(r) -> bool:
     return W_START <= r["created_at"][:10] <= W_END
-
-
-def stream_of(r) -> str:
-    if r["source"] in ("playstore", "appstore"):
-        return f"{r['source']}:{r['app_name']}"
-    if r["source"] == "forum":
-        return f"forum:{r['subreddit']}"
-    return r["source"]
 
 
 def weekly(rows) -> list[dict]:
@@ -97,7 +106,8 @@ def streams_info(rows):
                 "earliest": earliest,
                 "latest": latest,
                 "window_first": min(win) if win else None,
-                "full_window": earliest <= "2026-07-03" and latest >= "2026-09-24",
+                "full_window": earliest <= "2026-07-03" and latest >= "2026-09-24" and s not in M.PARTIAL_BY_DESIGN,
+                "partial_reason": M.PARTIAL_BY_DESIGN.get(s),
                 "mode": "trend_within_window",
                 "baseline_items": 0,
                 "baseline_weeks": 0.0,
@@ -106,26 +116,15 @@ def streams_info(rows):
     return info
 
 
-def halves(rows, basis_rows_all, basis):
-    """Share of trend-basis items in each half of the window."""
-    b = [r for r in rows if stream_of(r) in basis]
-    f = sum(1 for r in b if r["created_at"][:10] <= H1_END)
-    s = len(b) - f
-    ft = sum(1 for r in basis_rows_all if r["created_at"][:10] <= H1_END)
-    st = len(basis_rows_all) - ft
-    change = None
-    if f and ft and st:
-        change = round(100 * ((s / st) - (f / ft)) / (f / ft), 1)
-    return {
-        "mode": "trend_within_window",
-        "first_half": f,
-        "second_half": s,
-        "first_half_total": ft,
-        "second_half_total": st,
-        "change_pct": change,
-        "first_half_dates": f"{W_START} to {H1_END}",
-        "second_half_dates": f"2026-08-15 to {W_END}",
-    }
+_WEIGHTS: dict[int, tuple] = {}
+
+
+def halves(rows, basis_rows_all, basis, min_per_half: int = 0):
+    """Second half vs first half, as source-weighted shares of basis_rows_all (method.py)."""
+    key = id(basis_rows_all)
+    if key not in _WEIGHTS:
+        _WEIGHTS[key] = (basis_rows_all, M.weights(basis_rows_all))  # keep the list alive so its id is not reused
+    return M.halves(rows, basis_rows_all, _WEIGHTS[key][1], min_per_half)
 
 
 def sent_counts(rows):
@@ -133,8 +132,55 @@ def sent_counts(rows):
     return {"positive": c.get("positive", 0), "neutral": c.get("neutral", 0), "negative": c.get("negative", 0)}
 
 
+REPLY_NOW = dt.datetime(2026, 9, 28, 23, 59, tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)))
+
+
+def resp_stats(rs, now=REPLY_NOW):
+    """Bank replies on Play Store reviews: responded, open, open over 48 hours, median reply time, redirect-only."""
+    replied = [r for r in rs if r["reply"]]
+    mins = []
+    for r in replied:
+        if r["reply"]["at"]:
+            d = (dt.datetime.fromisoformat(r["reply"]["at"]) - dt.datetime.fromisoformat(r["created_at"])).total_seconds() / 60
+            if d >= 0:  # reviews edited after the reply have a later timestamp; they count as responded, not in the median
+                mins.append(d)
+    open_ = [r for r in rs if not r["reply"]]
+    otl = [r for r in open_ if (now - dt.datetime.fromisoformat(r["created_at"])).total_seconds() > 48 * 3600]
+    redirect = [r for r in replied if REDIRECT_RE.search(r["reply"]["text"] or "")]
+    return {
+        "reviews": len(rs),
+        "responded": len(replied),
+        "responded_pct": pct(len(replied), len(rs)),
+        "open": len(open_),
+        "open_pct": pct(len(open_), len(rs)),
+        "open_too_long": len(otl),
+        "open_too_long_pct_of_open": pct(len(otl), len(open_)),
+        "open_too_long_pct_of_reviews": pct(len(otl), len(rs)),
+        "median_reply_minutes": round(statistics.median(mins)) if mins else None,
+        "median_reply_hours": round(statistics.median(mins) / 60, 2) if mins else None,
+        "replied_within_48h": sum(1 for x in mins if x <= 48 * 60),
+        "redirect_only": len(redirect),
+        "redirect_only_pct_of_replied": pct(len(redirect), len(replied)),
+    }
+
+
+def clip(text: str, n: int) -> str:
+    """Cut at a word boundary, so a handle or tag is never left half-cut."""
+    if len(text) <= n:
+        return text
+    cut = text[:n]
+    return (cut[: cut.rfind(" ")] if " " in cut else cut).rstrip() + "…"
+
+
+def quotable(r) -> bool:
+    """A quote that alleges something against a named person, or complains about one, is never used as evidence.
+    (Names are already redacted to role tags in normalise.py; the person may still be identifiable by role.)"""
+    return not (r.get("alleges_named") or (r.get("names_person") and r["sentiment"] == "negative"))
+
+
 def pick_exemplars(rows, n=5, prefer_negative=True):
     """Exemplars: substantive, negative first, spread across sources, most engaged first."""
+    rows = [r for r in rows if quotable(r)]
     def score(r):
         eng = r.get("engagement") or {}
         e = sum(v for v in (eng.get("likes"), eng.get("upvotes"), eng.get("helpful"), eng.get("replies")) if isinstance(v, (int, float)))
@@ -170,6 +216,7 @@ def main():
     sinfo = streams_info([r for r in rows if r["relevant"] == "on_topic"])
     basis = {s["stream"] for s in sinfo if s["full_window"]}
     basis_bank = [r for r in bank if stream_of(r) in basis]
+    W = M.weights(basis_bank)
     evidence_ids: set[str] = set()
 
     # ------------------------------------------------------------ themes
@@ -212,7 +259,7 @@ def main():
                 "status_seeking_count": sum(1 for r in rs if r["status_seeking"]),
                 "promise_break_count": sum(1 for r in rs if r["promise_break"]),
                 "closure_intent_count": sum(1 for r in rs if r["closure_intent"]),
-                "weekly": weekly([r for r in rs if stream_of(r) in basis]),
+                "weekly": M.weekly_share(rs, basis_bank, W),
                 "weekly_all": weekly(rs),
                 "trend": tr,
                 "vs_baseline": None,
@@ -251,13 +298,17 @@ def main():
         def net(x):
             return round(100 * (sum(1 for r in x if r["sentiment"] == "positive") - sum(1 for r in x if r["sentiment"] == "negative")) / len(x), 1) if x else None
 
+        # Level and halves on the same basis (trend-basis streams, source-weighted), so the level sits between them.
         b = [r for r in rs if stream_of(r) in basis]
-        n1 = net([r for r in b if r["created_at"][:10] <= H1_END])
-        n2 = net([r for r in b if r["created_at"][:10] > H1_END])
+        lvl = M.strat_net(b, W)
+        n1 = M.strat_net([r for r in b if r["created_at"][:10] <= H1_END], W)
+        n2 = M.strat_net([r for r in b if r["created_at"][:10] > H1_END], W)
+        n1 = round(n1, 1) if n1 is not None else None
+        n2 = round(n2, 1) if n2 is not None else None
         tops = collections.Counter(r["themes"][0] for r in rs).most_common(3)
         pillars.append(
             {
-                "id": pid, "label": plabel, "count": len(rs), "sentiment": sc, "net_sentiment": net(rs),
+                "id": pid, "label": plabel, "count": len(rs), "sentiment": sc, "net_sentiment": round(lvl, 1) if lvl is not None else None,
                 "net_first_half": n1, "net_second_half": n2,
                 "net_change_pts": round(n2 - n1, 1) if n1 is not None and n2 is not None else None,
                 "top_themes": [{"id": k, "label": T[k]["label"], "count": v} for k, v in tops],
@@ -282,7 +333,7 @@ def main():
         return {
             "count": len(rs),
             "share": pct(len(rs), len(bank)),
-            "weekly": weekly(rs),
+            "weekly": M.weekly_share(rs, basis_bank, W),
             "trend": halves(rs, basis_bank, basis),
             "top_themes": [{"id": k, "label": T[k]["label"], "count": v} for k, v in tops],
             "exemplars": ex,
@@ -319,7 +370,7 @@ def main():
     esc = [r for r in bank if r["escalation_intent"]]
     public_src = ("x", "reddit", "forum")
     reach = sorted(
-        [r for r in bank if r["source"] == "x" and (r["author_followers"] or 0) >= 10000 and r["sentiment"] == "negative"],
+        [r for r in bank if r["source"] == "x" and (r["author_followers"] or 0) >= 10000 and r["sentiment"] == "negative" and quotable(r)],
         key=lambda r: -(r["author_followers"] or 0),
     )[:8]
     voices = []
@@ -442,16 +493,26 @@ def main():
                 "business": rs[0]["business_hint"],
                 "streams": app_streams,
                 "mode": "trend_within_window",
-                "window": rsum(rs),
+                # Count only: ratings and shares are never pooled across stores (B7 §4.1, follow-up fix 2).
+                "window": {"n": len(rs)},
+                # One store at a time (B7 §4.1): screens compare apps within a store, never across stores.
+                "by_store": {st: rsum([r for r in rs if r["source"] == st]) for st in ("playstore", "appstore") if any(r["source"] == st for r in rs)},
                 "baseline": None,
                 "trend": halves(rs, [r for r in reviews if stream_of(r) in basis], basis),
-                "weekly_avg_rating": [{"week": w, "n": len(v), "avg_rating": round(sum(v) / len(v), 2)} for w, v in sorted(wk.items())],
                 "top_issues": top_issues,
-                "versions": sorted(
-                    [{"version": v, **rsum(x)} for v, x in vers.items() if len(x) >= 10],
-                    key=lambda v: [int(p) if p.isdigit() else 0 for p in v["version"].split(".")],
-                    reverse=True,
-                ),
+                "versions_by_store": {
+                    st: sorted(
+                        [
+                            {"version": v, **rsum(y)}
+                            for v, x in vers.items()
+                            if len(y := [r for r in x if r["source"] == st]) >= 10
+                        ],
+                        key=lambda v: [int(p) if p.isdigit() else 0 for p in v["version"].split(".")],
+                        reverse=True,
+                    )
+                    for st in ("playstore", "appstore")
+                    if any(r["source"] == st for r in rs)
+                },
                 "praise_exemplars": praise,
                 "fix_list": fix,
             }
@@ -459,28 +520,15 @@ def main():
     pulse = {"apps": apps, "note": "Ratings are counted in the window (1 July – 28 September). No baseline: the exports hold no history before July."}
 
     # ------------------------------------------------------------ mood
-    mood_rows = [r for r in basis_bank]
-    daily = []
-    by_day = collections.defaultdict(list)
-    for r in mood_rows:
-        by_day[r["created_at"][:10]].append(r)
-    days_sorted = sorted(d for d in by_day if W_START <= d <= W_END)
-    for i, d in enumerate(days_sorted):
-        rs = by_day[d]
-        p = sum(1 for r in rs if r["sentiment"] == "positive")
-        n = sum(1 for r in rs if r["sentiment"] == "negative")
-        last7 = [r for dd in days_sorted[max(0, i - 6): i + 1] for r in by_day[dd]]
-        n7 = round(100 * (sum(1 for r in last7 if r["sentiment"] == "positive") - sum(1 for r in last7 if r["sentiment"] == "negative")) / len(last7), 1)
-        daily.append({"date": d, "n": len(rs), "positive": p, "negative": n, "net": round(100 * (p - n) / len(rs), 1), "net_7d": n7})
-    avg = round(100 * (sum(1 for r in mood_rows if r["sentiment"] == "positive") - sum(1 for r in mood_rows if r["sentiment"] == "negative")) / len(mood_rows), 1)
     mood = {
-        "definition": "Mood index: net sentiment, (positive − negative) ÷ on-topic items, × 100, over the last 7 days of public HDFC Bank voice from sources that cover the whole window. Compared with the average across the window (1 July to 28 September 2026). Range −100 to +100.",
-        "value": daily[-1]["net_7d"],
-        "window_average": avg,
-        "delta_pts": round(daily[-1]["net_7d"] - avg, 1),
+        "definition": (
+            "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public HDFC "
+            "Bank voice, compared with the window average (1 July to 28 September 2026). Source-weighted: each source's "
+            "net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's "
+            "collection cannot move it. Range −100 to +100."
+        ),
+        **M.mood(basis_bank, W),
         "baseline_label": "vs window average (1 Jul–28 Sep); no earlier baseline",
-        "n_items": len(mood_rows),
-        "daily": daily,
     }
 
     # ------------------------------------------------------------ release pulse (HDFC Bank app)
@@ -488,7 +536,22 @@ def main():
     app_neg = [r for r in app_rs if r["rating"] <= 2]
     bank_app = next(a for a in apps if a["app"] == "HDFC Bank app")
     new_v = [r for r in app_rs if (r["app_version"] or "").startswith("11")]
-    old_v = [r for r in app_rs if r["app_version"] and not r["app_version"].startswith("11")]
+
+    def release_store(st):
+        """Release figures within one store (follow-up fix 2): version 11 against earlier versions."""
+        x = [r for r in app_rs if r["source"] == st]
+        nv = [r for r in x if (r["app_version"] or "").startswith("11")]
+        ov = [r for r in x if r["app_version"] and not r["app_version"].startswith("11")]
+        avg = lambda v: round(sum(r["rating"] for r in v) / len(v), 2) if v else None  # noqa: E731
+        pos = lambda v: pct(sum(1 for r in v if r["rating"] >= 4), len(v))  # noqa: E731
+        return {
+            "store": st, "store_label": SOURCE_LABEL[st], "n_reviews": len(x),
+            "share_positive": pos(x), "avg_rating": avg(x),
+            "new_app_n": len(nv), "new_app_avg": avg(nv), "new_app_share_positive": pos(nv),
+            "new_app_negative": sum(1 for r in nv if r["rating"] <= 2),
+            "old_app_n": len(ov), "old_app_avg": avg(ov), "old_app_share_positive": pos(ov),
+        }
+
     largest_other = max((t["count"] for t in theme_rows if t["id"] not in NON_ISSUE), default=0)
     rp_ex = pick_exemplars(app_neg, 5)
     evidence_ids.update(rp_ex)
@@ -498,16 +561,15 @@ def main():
         "app": "HDFC Bank app", "owner": "digital", "owner_label": "Digital", "pillar": "availability", "rung": "Voice",
         "action": "Route with evidence", "status": "needs_you",
         "count": len(app_neg), "n_reviews": len(app_rs),
-        "share_positive": pct(sum(1 for r in app_rs if r["rating"] >= 4), len(app_rs)),
-        "avg_rating": round(sum(r["rating"] for r in app_rs) / len(app_rs), 2),
         "ranks_top": len(app_neg) >= largest_other,
         "largest_other_theme": largest_other,
-        "old_app_avg": round(sum(r["rating"] for r in old_v) / len(old_v), 2) if old_v else None,
-        "old_app_n": len(old_v),
-        "new_app_avg": round(sum(r["rating"] for r in new_v) / len(new_v), 2) if new_v else None,
+        # Version 11 (the new release) on its own, so "the new app" is never an all-version figure (review #12).
+        # Counts add across stores; ratings and shares are per store only (follow-up fix 2).
         "new_app_n": len(new_v),
+        "new_app_negative": sum(1 for r in new_v if r["rating"] <= 2),
+        "by_store": {st: release_store(st) for st in ("playstore", "appstore")},
         "fix_list": bank_app["fix_list"],
-        "versions": bank_app["versions"],
+        "versions_by_store": bank_app["versions_by_store"],
         "exemplars": rp_ex,
         "praise_exemplars": bank_app["praise_exemplars"],
         "daily_negative": [{"date": d, "count": c} for d, c in sorted(collections.Counter(r["created_at"][:10] for r in app_neg).items())],
@@ -550,31 +612,6 @@ def main():
     now = dt.datetime(2026, 9, 28, 23, 59, tzinfo=IST)
     ps = [r for r in reviews if r["source"] == "playstore" and r["entity"] == "hdfc_bank"]
 
-    def resp_stats(rs):
-        replied = [r for r in rs if r["reply"]]
-        hrs = []
-        for r in replied:
-            if r["reply"]["at"]:
-                d = (dt.datetime.fromisoformat(r["reply"]["at"]) - dt.datetime.fromisoformat(r["created_at"])).total_seconds() / 3600
-                if d >= 0:
-                    hrs.append(d)
-        open_ = [r for r in rs if not r["reply"]]
-        otl = [r for r in open_ if (now - dt.datetime.fromisoformat(r["created_at"])).total_seconds() > 48 * 3600]
-        redirect = [r for r in replied if REDIRECT_RE.search(r["reply"]["text"] or "")]
-        return {
-            "reviews": len(rs),
-            "responded": len(replied),
-            "responded_pct": pct(len(replied), len(rs)),
-            "open": len(open_),
-            "open_pct": pct(len(open_), len(rs)),
-            "open_too_long": len(otl),
-            "open_too_long_pct_of_open": pct(len(otl), len(open_)),
-            "median_reply_hours": round(statistics.median(hrs), 1) if hrs else None,
-            "replied_within_48h": sum(1 for x in hrs if x <= 48),
-            "redirect_only": len(redirect),
-            "redirect_only_pct_of_replied": pct(len(redirect), len(replied)),
-        }
-
     by_app = {}
     for app in sorted({r["app_name"] for r in ps}):
         by_app[app] = resp_stats([r for r in ps if r["app_name"] == app])
@@ -616,7 +653,7 @@ def main():
         "trend_basis_streams": sorted(basis),
         "baseline_streams": [],
         "coverage_notes": [
-            "All sources cover 1 July to 28 September 2026; trends compare the two halves of the window (no earlier baseline).",
+            "Coverage differs by source: forums, X and most store exports cover 1 July to 28 September 2026; Reddit changed collector on 1 September and X's last weekly run was capped (no items on 20–22 September). Trends and mood are source-weighted and leave Reddit out; they compare the two halves of the window (no earlier baseline).",
             "Play Store HDFC Bank app reviews start on 25 July (the export holds the latest 5,000): counted in totals, left out of trends.",
             "X and Reddit are filtered to posts that mention HDFC Bank or its products; bank and brand handles are excluded.",
             "Bank replies are visible on Play Store reviews only.",
@@ -635,8 +672,9 @@ def main():
         if not r:
             continue
         evidence[eid] = {
-            "id": eid, "source": r["source"], "source_label": SOURCE_LABEL[r["source"]], "created_at": r["created_at"],
-            "url": r["url"], "summary": r["summary"], "redacted_text": (r["text"] or "")[:700], "title": r.get("title"),
+            "id": eid, "source": r["source"], "source_label": SOURCE_LABEL[r["source"]],
+            "place": place_label(r), "created_at": r["created_at"],
+            "url": r["url"], "summary": r["summary"], "redacted_text": clip(r["text"] or "", 700), "title": r.get("title"),
             "app_name": r.get("app_name"), "app_version": r.get("app_version"), "rating": r.get("rating"),
             "themes": r["themes"], "sentiment": r["sentiment"], "owner": r["owner"], "entity": r["entity"],
         }
@@ -652,7 +690,7 @@ def main():
     print("needs_you", briefing["needs_you"], "this_week", briefing["this_week"])
     print("mood", mood["value"], mood["window_average"], mood["delta_pts"])
     print("responses", json.dumps(responses["all"]), json.dumps(responses["negative"]))
-    print("release", release["count"], release["n_reviews"], release["ranks_top"], release["new_app_avg"], release["old_app_avg"])
+    print("release", release["count"], release["n_reviews"], release["ranks_top"], release["by_store"]["playstore"]["new_app_avg"], release["by_store"]["playstore"]["old_app_avg"])
 
 
 if __name__ == "__main__":
