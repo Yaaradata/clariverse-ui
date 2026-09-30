@@ -151,16 +151,12 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <strong style={{ fontSize: 16 }}>{x.label}</strong>
-        <span style={{ fontSize: 12.5, color: href ? C.brandInk : C.textMut }}>
-          {href ? (
-            <>
-              Business view{" "}
-              <ChevronRight size={12} style={{ verticalAlign: "-2px" }} />
-            </>
-          ) : (
-            "Coming soon"
-          )}
-        </span>
+        {href ? (
+          <span style={{ fontSize: 12.5, color: C.brandInk }}>
+            Business view{" "}
+            <ChevronRight size={12} style={{ verticalAlign: "-2px" }} />
+          </span>
+        ) : null}
       </div>
       <div
         style={{
@@ -365,7 +361,7 @@ export function ReputationTable({ p }: { p: Period }) {
     <Tile
       id="reputation-pulse"
       title={titled("Reputation pulse by product", p)}
-      sub="Every product, internal and public. Cards opens its business view; the others are coming soon."
+      sub="Every product, internal and public. Cards opens its business view."
       prov={["internal", "public"]}
     >
       <Table
@@ -420,9 +416,7 @@ export function ReputationTable({ p }: { p: Period }) {
                 <ChevronRight size={16} color={C.textMut} />
               </Link>
             ) : (
-              <span key="soon" style={{ fontSize: 12, color: C.textMut }}>
-                coming soon
-              </span>
+              ""
             ),
           ];
         })}

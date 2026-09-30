@@ -154,62 +154,8 @@ export function HeaderPeriodFilter({ file }: { file: PeriodsFile }) {
   );
 }
 
-/** The selected period, its dates and the data horizon, shown under a page title. */
-export function PeriodLine({ file, p }: { file: PeriodsFile; p: Period }) {
-  return (
-    <div
-      data-testid="period-line"
-      style={{
-        fontSize: 13.5,
-        color: C.textSec,
-        display: "flex",
-        gap: 8,
-        flexWrap: "wrap",
-        alignItems: "center",
-      }}
-    >
-      <strong style={{ color: C.text }}>{p.label}</strong>
-      <span>·</span>
-      <span>{periodLabel(p).split(" · ")[1]}</span>
-      <span style={{ color: C.textMut }}>
-        · Data runs to {fmtDate(file.end)} {file.end.slice(11, 16)}. Change the
-        period in the top-right corner.
-      </span>
-    </div>
-  );
-}
-
-/** The period, shown next to every section title. */
-export function PeriodTag({ p }: { p: Period }) {
-  return (
-    <span
-      data-testid="period-tag"
-      style={{
-        fontSize: 12,
-        fontWeight: 600,
-        color: C.textSec,
-        border: `1px solid ${C.border}`,
-        borderRadius: 999,
-        padding: "1px 8px",
-        marginLeft: 8,
-        display: "inline-block",
-        maxWidth: "100%",
-        whiteSpace: "normal",
-        verticalAlign: "middle",
-      }}
-    >
-      {periodLabel(p)}
-    </span>
-  );
-}
-
-export function titled(title: string, p: Period): ReactNode {
-  return (
-    <>
-      {title}
-      <PeriodTag p={p} />
-    </>
-  );
+export function titled(title: string, _p: Period): ReactNode {
+  return title;
 }
 
 /* ---------------------------------------------------------------- visuals */

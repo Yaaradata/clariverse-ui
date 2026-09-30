@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
-import { DRILL_DOWNS, type DrillDownId } from "@/lib/hdfc-v3/drilldowns";
+import type { DrillDownId } from "@/lib/hdfc-v3/drilldowns";
 import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import {
   type Category,
@@ -28,13 +28,11 @@ import {
   CHANNEL_LABEL,
   CHANNEL_ORDER,
   type Period,
-  type PeriodsFile,
   type Quote,
 } from "@/lib/hdfc-v3/periods";
 import type { Bundle } from "@/lib/hdfc-v3/types";
 import {
   Dial,
-  PeriodLine,
   Sparkline,
   TrendChip,
   titled,
@@ -45,6 +43,7 @@ import {
   BarRow,
   BaselineCaption,
   C,
+  cols,
   HalfGauge,
   Kpi,
   MONO,
@@ -229,14 +228,14 @@ function IssuePulse({ p }: { p: Period }) {
               label="High impact + / −"
             />
             <Dial
-              value={pct(hi.responded.responded, hi.responded.reviews)}
-              color={C.violet}
+              value={pct(hi.escalation, hi.volume)}
+              color={C.red}
               big={
-                hi.responded.reviews
-                  ? `${fmt(hi.responded.responded)} of ${fmt(hi.responded.reviews)}`
-                  : "—"
+                hi.volume
+                  ? `${fmt(hi.escalation)} of ${fmt(hi.volume)}`
+                  : "No high-impact posts"
               }
-              label="High impact responded"
+              label="High impact with escalation language"
             />
           </div>
         </div>
@@ -246,8 +245,10 @@ function IssuePulse({ p }: { p: Period }) {
         bot not counted); open over 48 hours = still open more than 48 hours
         after the contact came in. External: responded = a bank reply on a Play
         Store review (the only source with reply data); high impact = a post
-        with reach; shares are source-weighted; trends use store reviews and
-        forums only.
+        with reach, almost all on X and Reddit, which carry no reply data, so
+        high impact shows escalation language (RBI or ombudsman, consumer court,
+        legal action, ministers or the grievance cell) instead; shares are
+        source-weighted; trends use store reviews and forums only.
       </MutedNote>
     </Tile>
   );
@@ -868,6 +869,11 @@ function QuestionCards({ p }: { p: Period }) {
 
 /* ---------------------------------------------------------------- drill-down 1: are my customers happy? */
 
+/** Keeps the repeat-contact list level with the two tables beside it; the rest scrolls. */
+const REPEAT_LIST_HEIGHT = 222;
+/** The weekly table beside the trend chart scrolls at the chart's height. */
+const TREND_HEIGHT = 260;
+
 export function Happy({ p }: { p: Period }) {
   const h = p.cards.happy;
   const m = p.cards.mood;
@@ -975,20 +981,22 @@ export function Happy({ p }: { p: Period }) {
             yKey="net"
             reference={Math.round(reference)}
             referenceLabel="Average"
-            height={230}
+            height={TREND_HEIGHT}
             yLabel="Net sentiment"
             xLabel="Period ending"
             domain={[-100, 100]}
           />
-          <Table
-            head={["Period ending", "Items", "Net"]}
-            align={["left", "right", "right"]}
-            rows={h.weekly_net.map((x) => [
-              fmtDate(x.end),
-              fmt(x.items),
-              fmtSigned(x.net, "", 0),
-            ])}
-          />
+          <div style={{ maxHeight: TREND_HEIGHT, overflowY: "auto" }}>
+            <Table
+              head={["Period ending", "Items", "Net"]}
+              align={["left", "right", "right"]}
+              rows={h.weekly_net.map((x) => [
+                fmtDate(x.end),
+                fmt(x.items),
+                fmtSigned(x.net, "", 0),
+              ])}
+            />
+          </div>
         </div>
       </Tile>
 
@@ -1067,7 +1075,7 @@ export function Happy({ p }: { p: Period }) {
         />
       </Tile>
 
-      <div style={{ ...PAIRS, alignItems: "start" }}>
+      <div style={cols(3, 320, 14)}>
         <Tile
           id="happy-journey"
           title={titled("Where contacts come from", p)}
@@ -1108,30 +1116,42 @@ export function Happy({ p }: { p: Period }) {
             ])}
           />
         </Tile>
-      </div>
 
-      <Tile
-        id="happy-repeat"
-        title={titled("Repeat contact by category", p)}
-        sub="Customers who came back on the same issue: the bank's own contacts (a repeat within 30 days) and public posts that say it is not the first time."
-        prov={["internal", "public"]}
-      >
-        {h.repeat_by_category.map((r) => (
-          <BarRow
-            key={r.id}
-            label={r.label}
-            value={r.internal_repeat + r.public_repeat}
-            max={Math.max(
-              1,
-              ...h.repeat_by_category.map(
-                (x) => x.internal_repeat + x.public_repeat,
-              ),
-            )}
-            color={C.amber}
-            sub={`${fmt(r.internal_repeat)} internal repeats of ${fmt(r.contacts)} contacts · ${fmt(r.public_repeat)} public`}
-          />
-        ))}
-      </Tile>
+        <Tile
+          id="happy-repeat"
+          title={titled("Repeat contact by category", p)}
+          sub="Customers who came back on the same issue: the bank's own contacts (a repeat within 30 days) and public posts that say it is not the first time."
+          prov={["internal", "public"]}
+        >
+          <div
+            data-testid="repeat-scroll"
+            style={{
+              maxHeight: REPEAT_LIST_HEIGHT,
+              overflowY: "auto",
+              paddingRight: 6,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
+            {h.repeat_by_category.map((r) => (
+              <BarRow
+                key={r.id}
+                label={r.label}
+                value={r.internal_repeat + r.public_repeat}
+                max={Math.max(
+                  1,
+                  ...h.repeat_by_category.map(
+                    (x) => x.internal_repeat + x.public_repeat,
+                  ),
+                )}
+                color={C.amber}
+                sub={`${fmt(r.internal_repeat)} internal repeats of ${fmt(r.contacts)} contacts · ${fmt(r.public_repeat)} public`}
+              />
+            ))}
+          </div>
+        </Tile>
+      </div>
     </>
   );
 }
@@ -1806,7 +1826,6 @@ export function CardsView({ b }: { b: Bundle }) {
   const p = usePeriod(b.periods);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <PeriodLine file={b.periods} p={p} />
       <IssuePulse p={p} />
       <Categories p={p} />
       <QuestionCards p={p} />
@@ -1816,55 +1835,12 @@ export function CardsView({ b }: { b: Bundle }) {
   );
 }
 
-/** A drill-down page: the period line, a way back, then the section. */
+/** A drill-down page: the section only; the period is set in the header. */
 export function CardsDrillDown({ b, id }: { b: Bundle; id: DrillDownId }) {
   const p = usePeriod(b.periods);
   const Body = id === "happy" ? Happy : id === "market" ? Market : Service;
-  const others = DRILL_DOWNS.filter((d) => d.id !== id);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: 10,
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <PeriodLine file={b.periods as PeriodsFile} p={p} />
-        <div
-          style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}
-        >
-          <Link
-            href={withPeriod(CARDS, p)}
-            style={{
-              color: C.brandInk,
-              textDecoration: "none",
-              border: `1px solid ${C.border}`,
-              borderRadius: 999,
-              padding: "2px 10px",
-            }}
-          >
-            ← Cards business view
-          </Link>
-          {others.map((d) => (
-            <Link
-              key={d.id}
-              href={withPeriod(`${CARDS}/${d.id}`, p)}
-              style={{
-                color: C.textSec,
-                textDecoration: "none",
-                border: `1px solid ${C.border}`,
-                borderRadius: 999,
-                padding: "2px 10px",
-              }}
-            >
-              {d.title}
-            </Link>
-          ))}
-        </div>
-      </div>
       <Body p={p} />
     </div>
   );
