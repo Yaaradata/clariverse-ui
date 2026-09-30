@@ -318,7 +318,9 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         ok(sum(x["external"]["volume"] for x in biz) <= ext["volume"], f"[{pid}] product rows never exceed public voice (the rest is wealth, SME, corporate)")
         ids = {x["id"] for x in biz}
         items = p["brief"]["needs_you"] + p["brief"]["building"] + p["brief"]["improving"]
-        ok(all(it["business"] in ids for it in items), f"[{pid}] every brief item names a business on the cards")
+        # The one exception is the bank-wide Ombudsman watch item, which names no single business.
+        ok(all(it["business"] in ids or (it["business"] == "bank" and it.get("kind") == "ombudsman") for it in items),
+           f"[{pid}] every brief item names a business on the cards")
         ok(sum(r["mails"] for r in p["md_mail"]["rows"]) <= p["md_mail"]["total"], f"[{pid}] MD-marked mail rows within the total")
         # Short periods: when one source is more than the limit of public items, every public share must be weighted.
         if p["short"]:
@@ -342,6 +344,90 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
            "across views: exec dial waiting on customer (less IVR bot) = CX pulse, full window")
     ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
     ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
+    ombudsman_checks(seed_dir, per, inter, ok)
+
+
+# ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md)
+# Recomputed here from the complaint register with its own code (not ombudsman_v3), so the two must agree.
+
+def _omb_state(c, T):
+    t = lambda k: dt.datetime.fromisoformat(c[k]) if c[k] else None  # noqa: E731
+    rec, reply = t("received_at"), t("final_reply_at")
+    if rec > T:
+        return None
+    d30, d90 = dt.timedelta(days=30), dt.timedelta(days=90)
+    if reply is None or reply > T:
+        age = T - rec
+        left = None if age >= d30 else int((rec + d30 - T) / dt.timedelta(days=1))
+        dec, io = t("decision_at"), t("io_reviewed_at")
+        st = {"open": True, "eligible": d30 <= age < d30 + d90, "brink": left is not None and left <= 10, "unhappy": False,
+              "awaiting_io": bool(dec and dec <= T and (io is None or io > T)), "left": left}
+    else:
+        after = [x for x in c["contacts"] if reply < dt.datetime.fromisoformat(x["at"]) <= T and (x["same_issue"] or x["escalation"])]
+        re_ = t("reopened_at")
+        unhappy = T < reply + d90 and (bool(after) or bool(re_ and reply < re_ <= T))
+        st = {"open": unhappy, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
+    st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
+    return st
+
+
+def ombudsman_checks(seed_dir, per, inter, ok):
+    path = seed_dir / "complaints.jsonl"
+    if not path.exists():
+        ok(False, "complaints.jsonl exists")
+        return
+    cs = [json.loads(line) for line in open(path, encoding="utf-8")]
+    src = {r["id"]: r for r in inter if r["deliverable"] == "complaint_resolution" and r["channel"] != "ivr_bot"}
+    ok(len(cs) == len(src) and {c["source_id"] for c in cs} == set(src),
+       f"Ombudsman: one complaint per formal complaint contact (IVR bot excluded) ({len(cs)} = {len(src)})")
+    bad = []
+    for c in cs:
+        r = src.get(c["source_id"])
+        if not r:
+            continue
+        want = r["closed_at"] if r["status"] == "closed" else r["resolution_sent_at"] if r["status"] == "waiting_on_customer" else None
+        if c["received_at"] != r["created_at"] or (c["final_reply_at"] or None) != (want and dt.datetime.fromisoformat(want).isoformat(timespec="minutes")):
+            bad.append(c["id"])
+        # IO before a rejecting reply: decision < IO review <= final reply; a resolved complaint has no decision.
+        if c["final_reply_at"] and c["outcome"] in ("partly_rejected", "rejected"):
+            if not (c["decision_at"] and c["io_reviewed_at"] and c["decision_at"] < c["io_reviewed_at"] <= c["final_reply_at"]):
+                bad.append(c["id"])
+        if c["outcome"] == "resolved" and c["decision_at"]:
+            bad.append(c["id"])
+    ok(not bad, f"Ombudsman: register matches the contacts and the IO order holds ({bad[:3]})")
+    keys = ("brink", "eligible", "unhappy", "awaiting_io", "at_risk", "open")
+    for pid, p in per["periods"].items():
+        o = p.get("ombudsman")
+        co = (p.get("cards") or {}).get("ombudsman")
+        if not o or not co:
+            ok(False, f"[{pid}] Ombudsman blocks present")
+            continue
+        for label, blk, scope in (("bank", o, cs), ("Cards", co, [c for c in cs if c["product"] == "cards"])):
+            for when, at in (("now", blk["as_of"]), ("prev", blk["prev_as_of"])):
+                T = dt.datetime.fromisoformat(at)
+                sts = [s for c in scope if (s := _omb_state(c, T))]
+                got = {k: sum(1 for s in sts if s[k]) for k in keys}
+                ok(all(got[k] == blk[when][k] for k in keys), f"[{pid}] Ombudsman {label} {when} recomputed {got}")
+                ok(all(s["open"] for s in sts if s["at_risk"]) and got["at_risk"] <= got["open"],
+                   f"[{pid}] Ombudsman {label} {when}: at risk is a subset of open complaints")
+                ok(all(s["open"] for s in sts if s["awaiting_io"]), f"[{pid}] Ombudsman {label} {when}: awaiting IO review are open")
+            ok(sum(blk["now"]["buckets"].values()) == blk["now"]["brink"], f"[{pid}] Ombudsman {label}: countdown buckets = on the brink")
+            ok(all(blk["delta"][k] == blk["now"][k] - blk["prev"][k] for k in keys), f"[{pid}] Ombudsman {label}: changes = now - previous")
+        ok(all(sum(x[k] for x in o["by_business"]) == o["now"][k] for k in keys), f"[{pid}] Ombudsman: businesses sum to the bank total")
+        cards_row = next(x for x in o["by_business"] if x["id"] == "cards")
+        ok(all(cards_row[k] == co["now"][k] for k in keys), f"[{pid}] Ombudsman: Cards view = the Cards row of the bank split")
+        ok(all(sum(x[k] for x in co["categories"]) == co["now"][k] for k in ("at_risk", "brink", "eligible", "unhappy", "awaiting_io"))
+           and all(sum(y["at_risk"] for y in x["subcategories"]) == x["at_risk"] for x in co["categories"]),
+           f"[{pid}] Ombudsman: Cards categories and subcategories sum to the Cards totals")
+        T = dt.datetime.fromisoformat(co["as_of"])
+        risky = {c["id"] for c in cs if c["product"] == "cards" and (s := _omb_state(c, T)) and s["at_risk"]}
+        sl = co["save_list"]
+        ok(len(sl) <= 10 and {x["id"] for x in sl} <= risky and [x["score"] for x in sl] == sorted((x["score"] for x in sl), reverse=True),
+           f"[{pid}] Ombudsman: save list is at most 10 at-risk Cards complaints, highest score first")
+        material = o["now"]["buckets"]["0-3"] > 0 or o["delta"]["eligible"] > 0
+        first = p["brief"]["needs_you"][0] if p["brief"]["needs_you"] else {}
+        ok(material == (first.get("kind") == "ombudsman") and len(p["brief"]["needs_you"]) <= 3,
+           f"[{pid}] Ombudsman: the brief item leads What needs you exactly when the risk is material")
 
 
 def main() -> int:

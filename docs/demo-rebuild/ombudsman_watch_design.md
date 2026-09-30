@@ -133,6 +133,6 @@ Four suggested questions per view, answered from the same precomputed figures.
 - **Complaint register:** `data/seed/internal_v3/complaints.jsonl`, built by `scripts/hdfc_v3/seed_complaints_v3.py`. It is deterministic, using the fixed seed and a per-complaint hash.
   - **Base:** the formal complaints already in the sample. Their received date and channel come from the contact itself.
   - **Final reply:** the date the thread was closed or a resolution was sent.
-  - **Outcome, decision and IO review dates:** synthetic, from the assumptions logged in MORNING_DECISIONS (D22).
+  - **Outcome, decision and IO review dates:** synthetic, from the assumptions logged in MORNING_DECISIONS (D26).
   - **Reaction after the reply:** real repeat contacts and escalation-language contacts from the same customer, plus synthetic reopenings.
 - **Period figures:** the per-period figures, both snapshots and the Cards detail, are written by `periods_v3.py` into `periods.json`. Nothing is computed in the browser.

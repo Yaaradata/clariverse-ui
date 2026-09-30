@@ -15,6 +15,7 @@ export PYTHONIOENCODING=utf-8
 cd ../hdfc_v3
 "$PY" public_v3.py
 "$PY" seed_internal_v3.py
+"$PY" seed_complaints_v3.py
 "$PY" periods_v3.py
 "$PY" check_reconcile_v3.py
 cd ../..

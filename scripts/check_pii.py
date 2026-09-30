@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = [
     *sorted((ROOT / "data" / "seed" / "internal_v3").glob("*.json")),
     ROOT / "data" / "seed" / "internal_v3" / "interactions.jsonl",
+    ROOT / "data" / "seed" / "internal_v3" / "complaints.jsonl",
     *sorted((ROOT / "data" / "out" / "app_jul_sep").glob("*.json")),
     *sorted((ROOT / "data" / "out" / "app_jul_sep" / "work" / "llm_batches").glob("batch_*.jsonl")),
     # V1 (first demo) is still served at /hdfc-pulse/v1.
