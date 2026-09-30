@@ -145,8 +145,10 @@ export type Business = {
 };
 
 export type BriefItem = {
+  /** A business id, or "bank" for the bank-wide Ombudsman watch item. */
   business: string;
   business_label: string;
+  kind?: "ombudsman";
   issue?: string;
   status?: "improving" | "stable" | "watch";
   text: string;
@@ -280,7 +282,73 @@ export type CardsService = {
   }[];
 };
 
+/* ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md) */
+
+export type OmbudsmanCounts = {
+  /** No reply yet, 10 days or fewer to the 30-day reply limit. */
+  brink: number;
+  /** Past day 30 with no reply, within the 90 days to file. */
+  eligible: number;
+  /** Replied, then reopened, contacted again on the issue, or escalation language; within 90 days of the reply. */
+  unhappy: number;
+  /** A partly or fully rejecting decision waiting for Internal Ombudsman review. */
+  awaiting_io: number;
+  /** On the brink, eligible or unhappy, each complaint once. A subset of open complaints. */
+  at_risk: number;
+  open: number;
+};
+export type CountdownBucket = "8-10" | "4-7" | "0-3";
+export type OmbudsmanSnapshot = OmbudsmanCounts & {
+  buckets: Record<CountdownBucket, number>;
+  received: number;
+};
+export type OmbudsmanBlock = {
+  provenance: "internal";
+  as_of: string;
+  prev_as_of: string;
+  now: OmbudsmanSnapshot;
+  prev: OmbudsmanSnapshot;
+  delta: OmbudsmanCounts;
+  became_eligible: number;
+  on_lists: {
+    at_risk: number;
+    by_list: Record<string, number>;
+    labels: Record<string, string>;
+  };
+  by_business: ({
+    id: string;
+    label: string;
+    received: number;
+  } & OmbudsmanCounts)[];
+  rules: string;
+};
+export type OmbudsmanRisk = Pick<
+  OmbudsmanCounts,
+  "at_risk" | "brink" | "eligible" | "unhappy" | "awaiting_io"
+>;
+export type SaveRow = {
+  id: string;
+  customer: string;
+  category: string;
+  issue: string;
+  state: "brink" | "eligible";
+  days_left: number | null;
+  score: number;
+  reason: string;
+  owner: string;
+  lists: string[];
+};
+export type CardsOmbudsman = OmbudsmanBlock & {
+  categories: ({
+    id: string;
+    label: string;
+    subcategories: ({ id: string; label: string } & OmbudsmanRisk)[];
+  } & OmbudsmanRisk)[];
+  save_list: SaveRow[];
+};
+
 export type CardsPeriod = {
+  ombudsman: CardsOmbudsman;
   happy: CardsHappy;
   market_full: CardsMarket;
   service_full: CardsService;
@@ -392,6 +460,7 @@ export type Period = {
     improving: BriefItem[];
     rules: string;
   };
+  ombudsman: OmbudsmanBlock;
   md_mail: {
     total: number;
     rows: { theme: string; label: string; mails: number; resolved: number }[];

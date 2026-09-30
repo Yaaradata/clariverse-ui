@@ -4,8 +4,13 @@
  * One Cards question asks about another business and is refused, to show role-based access.
  */
 
-import { fmt, fmtDate, fmtPct, fmtSigned } from "./format";
-import { CHANNEL_LABEL, CHANNEL_ORDER, type Period } from "./periods";
+import { fmt, fmtDate, fmtDateTime, fmtPct, fmtSigned } from "./format";
+import {
+  CHANNEL_LABEL,
+  CHANNEL_ORDER,
+  type OmbudsmanBlock,
+  type Period,
+} from "./periods";
 
 export type AskQA = {
   id: string;
@@ -24,7 +29,172 @@ const dash = (n: number | null | undefined) =>
   n === null || n === undefined ? "—" : fmt(n);
 const withPeriod = (href: string, p: Period) => `${href}?period=${p.id}`;
 
+/* ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md) */
+
+const signed = (n: number) =>
+  n > 0 ? `up ${fmt(n)}` : n < 0 ? `down ${fmt(-n)}` : "no change";
+const IO_NOTE = "IO timeline: confirm with the bank.";
+
+function brinkQA(
+  id: string,
+  q: string,
+  o: OmbudsmanBlock,
+  scope: string,
+): AskQA {
+  const n = o.now;
+  return {
+    id,
+    q,
+    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have no reply and 10 days or fewer to the 30-day limit (${fmt(n.buckets["0-3"])} with 3 days or fewer). ${fmt(n.eligible)} are already eligible to approach the RBI Ombudsman with no reply, and ${fmt(n.unhappy)} more because the customer is unhappy with the reply. That is ${fmt(n.at_risk)} at risk of ${fmt(n.open)} open complaints, ${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}. Eligibility only; LisN does not predict who will file.`,
+    table: {
+      head: ["Measure", "Now", "Change"],
+      rows: [
+        ["0–3 days left", fmt(n.buckets["0-3"]), "—"],
+        ["4–7 days left", fmt(n.buckets["4-7"]), "—"],
+        ["8–10 days left", fmt(n.buckets["8-10"]), "—"],
+        [
+          "On the brink (10 days or fewer)",
+          fmt(n.brink),
+          signed(o.delta.brink),
+        ],
+        [
+          "Eligible: past day 30, no reply",
+          fmt(n.eligible),
+          signed(o.delta.eligible),
+        ],
+        [
+          "Eligible: unhappy with the reply",
+          fmt(n.unhappy),
+          signed(o.delta.unhappy),
+        ],
+        [
+          "Awaiting Internal Ombudsman review",
+          fmt(n.awaiting_io),
+          signed(o.delta.awaiting_io),
+        ],
+      ],
+    },
+  };
+}
+
+function ioQA(id: string, o: OmbudsmanBlock, scope: string): AskQA {
+  return {
+    id,
+    q: `How many ${scope}complaints are waiting for Internal Ombudsman review?`,
+    answer: `${fmt(o.now.awaiting_io)} complaints the bank has decided to partly or fully reject are waiting for Internal Ombudsman review, so their final reply cannot go out yet (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). A slow review can take them past day 30. ${IO_NOTE}`,
+  };
+}
+
+function ombudsmanMd(p: Period): AskQA[] {
+  const o = p.ombudsman;
+  const biz = [...o.by_business].sort((a, b) => b.at_risk - a.at_risk);
+  return [
+    brinkQA(
+      "md-ombudsman",
+      "How many complaints are on the brink of going to the Ombudsman?",
+      o,
+      "internal",
+    ),
+    {
+      id: "md-ombudsman-business",
+      q: "Which business has the most Ombudsman risk?",
+      answer: `${biz[0].label}: ${fmt(biz[0].at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints (${fmt(biz[0].brink)} on the brink, ${fmt(biz[0].eligible)} eligible with no reply, ${fmt(biz[0].unhappy)} unhappy with the reply).`,
+      table: {
+        head: [
+          "Business",
+          "At risk",
+          "On the brink",
+          "Eligible, no reply",
+          "Unhappy with reply",
+        ],
+        rows: biz.map((x) => [
+          x.label,
+          fmt(x.at_risk),
+          fmt(x.brink),
+          fmt(x.eligible),
+          fmt(x.unhappy),
+        ]),
+      },
+      link: {
+        label: "Open the Cards business view",
+        href: withPeriod(CARDS, p),
+      },
+    },
+    {
+      id: "md-ombudsman-lists",
+      q: "Are customers on our lists at risk of going to the Ombudsman?",
+      answer: `${fmt(o.on_lists.at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints come from customers on the bank's lists. The RM should hear first.`,
+      table: {
+        head: ["List", "At-risk complaints"],
+        rows: Object.entries(o.on_lists.by_list).map(([k, v]) => [
+          o.on_lists.labels[k],
+          fmt(v),
+        ]),
+      },
+    },
+    ioQA("md-ombudsman-io", o, ""),
+  ];
+}
+
+function ombudsmanCards(p: Period): AskQA[] {
+  const o = p.cards.ombudsman;
+  const cats = [...o.categories]
+    .filter((c) => c.at_risk)
+    .sort((a, b) => b.at_risk - a.at_risk);
+  return [
+    brinkQA(
+      "cards-ombudsman",
+      "How many Cards complaints are close to the Ombudsman?",
+      o,
+      "Cards",
+    ),
+    {
+      id: "cards-ombudsman-save",
+      q: "Which Cards complaints should we call today?",
+      answer: o.save_list[0]
+        ? `${o.save_list.length} complaints, highest risk first. The first: ${o.save_list[0].id}, ${o.save_list[0].issue} (${o.save_list[0].state === "eligible" ? "eligible" : `${o.save_list[0].days_left} days left`}). ${o.save_list[0].reason} Owner: ${o.save_list[0].owner}.`
+        : "No Cards complaint is at risk.",
+      table: {
+        head: ["Complaint", "Status", "Owner"],
+        rows: o.save_list.map((r) => [
+          `${r.id} · ${r.issue}`,
+          r.state === "eligible" ? "Eligible" : `${r.days_left} days left`,
+          r.owner,
+        ]),
+      },
+    },
+    {
+      id: "cards-ombudsman-categories",
+      q: "Which Cards categories feed Ombudsman risk?",
+      answer: cats[0]
+        ? `${cats[0].label} has the most: ${fmt(cats[0].at_risk)} of ${fmt(o.now.at_risk)} at-risk Cards complaints.`
+        : "No Cards category has an at-risk complaint.",
+      table: {
+        head: [
+          "Category",
+          "At risk",
+          "On the brink",
+          "Eligible, no reply",
+          "Unhappy with reply",
+        ],
+        rows: cats.map((c) => [
+          c.label,
+          fmt(c.at_risk),
+          fmt(c.brink),
+          fmt(c.eligible),
+          fmt(c.unhappy),
+        ]),
+      },
+    },
+    ioQA("cards-ombudsman-io", o, "Cards "),
+  ];
+}
+
 export function mdQuestions(p: Period): AskQA[] {
+  return [...ombudsmanMd(p), ...mdBase(p)];
+}
+
+function mdBase(p: Period): AskQA[] {
   const cp = p.customer_pulse;
   const i = p.cx_pulse.internal;
   const sp = p.social_pulse;
@@ -196,6 +366,10 @@ export function mdQuestions(p: Period): AskQA[] {
 }
 
 export function cardsQuestions(p: Period): AskQA[] {
+  return [...ombudsmanCards(p), ...cardsBase(p)];
+}
+
+function cardsBase(p: Period): AskQA[] {
   const c = p.cards;
   const sv = c.service_full;
   const mk = c.market_full;

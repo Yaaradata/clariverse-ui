@@ -25,10 +25,12 @@ import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import type {
   Category,
   CategoryFigures,
+  OmbudsmanRisk,
   Period,
   Quote,
 } from "@/lib/hdfc-v3/periods";
 import type { Bundle } from "@/lib/hdfc-v3/types";
+import { OmbudsmanWatch, RiskPill, SaveList } from "./Ombudsman";
 import {
   Dial,
   Sparkline,
@@ -318,7 +320,15 @@ const GROUP_GAP = 14;
 const GRID =
   "minmax(190px, 2.2fr) repeat(3, minmax(62px, 0.8fr)) minmax(88px, 1fr) minmax(108px, 1.2fr) minmax(74px, 0.85fr) minmax(76px, 0.95fr) repeat(2, minmax(62px, 0.8fr)) repeat(2, minmax(74px, 0.85fr)) minmax(84px, 1fr)";
 
-function CategoryRow({ c, p }: { c: Category; p: Period }) {
+function CategoryRow({
+  c,
+  p,
+  risk,
+}: {
+  c: Category;
+  p: Period;
+  risk?: OmbudsmanRisk & { subcategories: ({ id: string } & OmbudsmanRisk)[] };
+}) {
   const [open, setOpen] = useState(false);
   return (
     <div style={{ borderTop: `1px solid ${C.border}` }}>
@@ -359,6 +369,7 @@ function CategoryRow({ c, p }: { c: Category; p: Period }) {
           >
             {open ? <ChevronDown size={14} /> : <ChevronRight size={14} />}{" "}
             {c.label}
+            <RiskPill r={risk} />
           </span>
           <span style={{ fontSize: 12, color: C.textMut }}>
             {c.owner}
@@ -383,9 +394,14 @@ function CategoryRow({ c, p }: { c: Category; p: Period }) {
                   fontSize: 13.5,
                   color: C.textSec,
                   padding: "8px 8px 8px 22px",
+                  display: "flex",
+                  gap: 6,
+                  alignItems: "center",
+                  flexWrap: "wrap",
                 }}
               >
                 {s.label}
+                <RiskPill r={risk?.subcategories.find((x) => x.id === s.id)} />
               </span>
               <FigureCells f={s} />
             </div>
@@ -489,7 +505,12 @@ function Categories({ p }: { p: Period }) {
             ))}
           </div>
           {p.cards.categories.map((c) => (
-            <CategoryRow key={c.id} c={c} p={p} />
+            <CategoryRow
+              key={c.id}
+              c={c}
+              p={p}
+              risk={p.cards.ombudsman.categories.find((x) => x.id === c.id)}
+            />
           ))}
         </div>
       </div>
@@ -504,7 +525,8 @@ function Categories({ p }: { p: Period }) {
         volume over the last {p.cards.categories[0]?.trend.length ?? 0} periods
         of the same length. TAT-related: the category carries a delivery
         timeline; compliance is not shown here. Owners are roles in the cards
-        team.
+        team. The at-risk pill counts complaints on the Ombudsman watch
+        (internal, illustrative).
       </MutedNote>
     </Tile>
   );
@@ -1747,6 +1769,8 @@ export function CardsView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <IssuePulse p={p} />
+      <OmbudsmanWatch o={p.cards.ombudsman} p={p} scope="cards" />
+      <SaveList o={p.cards.ombudsman} p={p} />
       <Categories p={p} />
       <QuestionCards p={p} />
       <div style={{ ...PAIRS, alignItems: "start" }}>

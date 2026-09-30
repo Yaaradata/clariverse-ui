@@ -6417,7 +6417,7 @@
        "state": "eligible",
        "days_left": null,
        "score": 60,
-       "reason": "Unhappy with the reply (escalation language); escalation language; on the bank's list.",
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
        "owner": "Cards · Pricing lead",
        "lists": [
         "Ultra sensitive",
@@ -6425,52 +6425,18 @@
        ]
       },
       {
-       "id": "CMP-10415",
-       "customer": "XXXX3119",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
-       "state": "eligible",
-       "days_left": null,
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
        "score": 60,
-       "reason": "No reply for 77 days: eligible; escalation language; awaiting io review.",
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
        "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-03429",
-       "customer": "XXXX2090",
-       "category": "Applications and verification",
-       "issue": "Card application, rejection and verification",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 56 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-10119",
-       "customer": "XXXX1725",
-       "category": "Limits",
-       "issue": "Credit limit",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 49 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-04567",
-       "customer": "XXXX4277",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 46 days: eligible; escalation language.",
-       "owner": "Cards · Pricing lead",
-       "lists": []
+       "lists": [
+        "RBI & Government"
+       ]
       },
       {
        "id": "CMP-07923",
@@ -6487,41 +6453,75 @@
        ]
       },
       {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
        "id": "CMP-03843",
        "customer": "XXXX1919",
        "category": "Applications and verification",
        "issue": "Card application, rejection and verification",
        "state": "eligible",
        "days_left": null,
-       "score": 58,
+       "score": 53,
        "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
        "owner": "Cards · Acquisition lead",
        "lists": []
       },
       {
-       "id": "CMP-09189",
-       "customer": "XXXX3406",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
        "state": "eligible",
        "days_left": null,
-       "score": 55,
-       "reason": "No reply for 64 days: eligible; on the bank's list.",
-       "owner": "Cards · Rewards lead",
-       "lists": [
-        "RBI & Government"
-       ]
-      },
-      {
-       "id": "CMP-05625",
-       "customer": "XXXX3997",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 53,
-       "reason": "No reply for 44 days: eligible; 1 repeat contact.",
-       "owner": "Cards · Pricing lead",
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
        "lists": []
       }
      ]
@@ -14306,7 +14306,7 @@
        "state": "eligible",
        "days_left": null,
        "score": 60,
-       "reason": "Unhappy with the reply (escalation language); escalation language; on the bank's list.",
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
        "owner": "Cards · Pricing lead",
        "lists": [
         "Ultra sensitive",
@@ -14314,52 +14314,18 @@
        ]
       },
       {
-       "id": "CMP-10415",
-       "customer": "XXXX3119",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
-       "state": "eligible",
-       "days_left": null,
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
        "score": 60,
-       "reason": "No reply for 77 days: eligible; escalation language; awaiting io review.",
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
        "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-03429",
-       "customer": "XXXX2090",
-       "category": "Applications and verification",
-       "issue": "Card application, rejection and verification",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 56 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-10119",
-       "customer": "XXXX1725",
-       "category": "Limits",
-       "issue": "Credit limit",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 49 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-04567",
-       "customer": "XXXX4277",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 46 days: eligible; escalation language.",
-       "owner": "Cards · Pricing lead",
-       "lists": []
+       "lists": [
+        "RBI & Government"
+       ]
       },
       {
        "id": "CMP-07923",
@@ -14376,41 +14342,75 @@
        ]
       },
       {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
        "id": "CMP-03843",
        "customer": "XXXX1919",
        "category": "Applications and verification",
        "issue": "Card application, rejection and verification",
        "state": "eligible",
        "days_left": null,
-       "score": 58,
+       "score": 53,
        "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
        "owner": "Cards · Acquisition lead",
        "lists": []
       },
       {
-       "id": "CMP-09189",
-       "customer": "XXXX3406",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
        "state": "eligible",
        "days_left": null,
-       "score": 55,
-       "reason": "No reply for 64 days: eligible; on the bank's list.",
-       "owner": "Cards · Rewards lead",
-       "lists": [
-        "RBI & Government"
-       ]
-      },
-      {
-       "id": "CMP-05625",
-       "customer": "XXXX3997",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 53,
-       "reason": "No reply for 44 days: eligible; 1 repeat contact.",
-       "owner": "Cards · Pricing lead",
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
        "lists": []
       }
      ]
@@ -20935,7 +20935,7 @@
        "state": "eligible",
        "days_left": null,
        "score": 60,
-       "reason": "Unhappy with the reply (escalation language); escalation language; on the bank's list.",
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
        "owner": "Cards · Pricing lead",
        "lists": [
         "Ultra sensitive",
@@ -20943,52 +20943,18 @@
        ]
       },
       {
-       "id": "CMP-10415",
-       "customer": "XXXX3119",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
-       "state": "eligible",
-       "days_left": null,
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
        "score": 60,
-       "reason": "No reply for 77 days: eligible; escalation language; awaiting io review.",
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
        "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-03429",
-       "customer": "XXXX2090",
-       "category": "Applications and verification",
-       "issue": "Card application, rejection and verification",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 56 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-10119",
-       "customer": "XXXX1725",
-       "category": "Limits",
-       "issue": "Credit limit",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 49 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-04567",
-       "customer": "XXXX4277",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 46 days: eligible; escalation language.",
-       "owner": "Cards · Pricing lead",
-       "lists": []
+       "lists": [
+        "RBI & Government"
+       ]
       },
       {
        "id": "CMP-07923",
@@ -21005,41 +20971,75 @@
        ]
       },
       {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
        "id": "CMP-03843",
        "customer": "XXXX1919",
        "category": "Applications and verification",
        "issue": "Card application, rejection and verification",
        "state": "eligible",
        "days_left": null,
-       "score": 58,
+       "score": 53,
        "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
        "owner": "Cards · Acquisition lead",
        "lists": []
       },
       {
-       "id": "CMP-09189",
-       "customer": "XXXX3406",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
        "state": "eligible",
        "days_left": null,
-       "score": 55,
-       "reason": "No reply for 64 days: eligible; on the bank's list.",
-       "owner": "Cards · Rewards lead",
-       "lists": [
-        "RBI & Government"
-       ]
-      },
-      {
-       "id": "CMP-05625",
-       "customer": "XXXX3997",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 53,
-       "reason": "No reply for 44 days: eligible; 1 repeat contact.",
-       "owner": "Cards · Pricing lead",
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
        "lists": []
       }
      ]
@@ -30196,7 +30196,7 @@
        "state": "eligible",
        "days_left": null,
        "score": 60,
-       "reason": "Unhappy with the reply (escalation language); escalation language; on the bank's list.",
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
        "owner": "Cards · Pricing lead",
        "lists": [
         "Ultra sensitive",
@@ -30204,52 +30204,18 @@
        ]
       },
       {
-       "id": "CMP-10415",
-       "customer": "XXXX3119",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
-       "state": "eligible",
-       "days_left": null,
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
        "score": 60,
-       "reason": "No reply for 77 days: eligible; escalation language; awaiting io review.",
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
        "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-03429",
-       "customer": "XXXX2090",
-       "category": "Applications and verification",
-       "issue": "Card application, rejection and verification",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 56 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-10119",
-       "customer": "XXXX1725",
-       "category": "Limits",
-       "issue": "Credit limit",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 49 days: eligible; escalation language; awaiting io review.",
-       "owner": "Internal Ombudsman office",
-       "lists": []
-      },
-      {
-       "id": "CMP-04567",
-       "customer": "XXXX4277",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 60,
-       "reason": "No reply for 46 days: eligible; escalation language.",
-       "owner": "Cards · Pricing lead",
-       "lists": []
+       "lists": [
+        "RBI & Government"
+       ]
       },
       {
        "id": "CMP-07923",
@@ -30266,41 +30232,75 @@
        ]
       },
       {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
        "id": "CMP-03843",
        "customer": "XXXX1919",
        "category": "Applications and verification",
        "issue": "Card application, rejection and verification",
        "state": "eligible",
        "days_left": null,
-       "score": 58,
+       "score": 53,
        "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
        "owner": "Cards · Acquisition lead",
        "lists": []
       },
       {
-       "id": "CMP-09189",
-       "customer": "XXXX3406",
-       "category": "Rewards and redemption",
-       "issue": "Reward redemption and vouchers",
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
        "state": "eligible",
        "days_left": null,
-       "score": 55,
-       "reason": "No reply for 64 days: eligible; on the bank's list.",
-       "owner": "Cards · Rewards lead",
-       "lists": [
-        "RBI & Government"
-       ]
-      },
-      {
-       "id": "CMP-05625",
-       "customer": "XXXX3997",
-       "category": "Fees and charges",
-       "issue": "Card fees and charges",
-       "state": "eligible",
-       "days_left": null,
-       "score": 53,
-       "reason": "No reply for 44 days: eligible; 1 repeat contact.",
-       "owner": "Cards · Pricing lead",
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
        "lists": []
       }
      ]

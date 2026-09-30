@@ -49,7 +49,7 @@
 
 ### 4. Escalation-risk score
 - **What it shows:** a per-complaint score for ordering the work, never shown as a probability. It adds up these signals:
-  - days left: past 30 days scores 45; 0–3 days, 40; 4–7 days, 30; 8–10 days, 20;
+  - days left: 0–3 days scores 50 (a reply today still prevents eligibility); past day 30, 40; 4–7 days, 35; 8–10 days, 20;
   - unhappy with the reply: 35;
   - repeat contacts on the issue: 8 each, up to 3;
   - channel hops: 5 for each extra channel, up to 15;

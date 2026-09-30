@@ -93,13 +93,15 @@ def status(c: dict, T: dt.datetime) -> dict | None:
 def score(c: dict, st: dict, T: dt.datetime) -> tuple[int, list[str]]:
     """Order for the save list (design concept 4). Points, never a probability; the reasons are shown instead."""
     pts, why = 0, []
+    # 0-3 days left scores highest: a reply today still keeps the complaint from becoming eligible.
     if st["eligible"]:
         days = int((T - c["_received_at"]) / DAY)
-        pts += 45
+        pts += 40
         why.append(f"no reply for {days} days: eligible")
     elif st["brink"]:
-        pts += {"0-3": 40, "4-7": 30, "8-10": 20}[st["bucket"]]
-        why.append(f"no reply, {st['days_left']} days to day 30")
+        pts += {"0-3": 50, "4-7": 35, "8-10": 20}[st["bucket"]]
+        dl = st["days_left"]
+        why.append(f"no reply, {dl} day{'' if dl == 1 else 's'} to day 30")
     if st["unhappy"]:
         pts += 35
         why.append("unhappy with the reply (" + ", ".join(st["unhappy_how"]) + ")")
@@ -114,7 +116,8 @@ def score(c: dict, st: dict, T: dt.datetime) -> tuple[int, list[str]]:
         why.append(f"{len(channels)} channels")
     if c["escalation"] or any(x["escalation"] for x in seen):
         pts += 15
-        why.append("escalation language")
+        if "escalation language" not in st["unhappy_how"]:
+            why.append("escalation language")
     if c["lists"]:
         pts += 10
         why.append("on the bank's list")
@@ -199,7 +202,7 @@ def cards_extra(cs: list[dict], w: dict, labels: dict) -> dict:
         ranked.append((-pts, c["received_at"], {
             "id": c["id"], "customer": c["masked_id"], "category": k["label"], "issue": labels.get(c["theme"], c["theme"]),
             "state": "eligible" if s["eligible"] or s["unhappy"] else "brink",
-            "days_left": s["days_left"], "score": pts, "reason": "; ".join(why).capitalize() + ".",
+            "days_left": s["days_left"], "score": pts, "reason": (lambda t: t[:1].upper() + t[1:])("; ".join(why)) + ".",
             "owner": IO_OWNER if s["awaiting_io"] else k["owner"], "lists": [LIST_LABEL[x] for x in c["lists"]],
         }))
     save = [r for *_, r in sorted(ranked, key=lambda z: (z[0], z[1]))[:10]]

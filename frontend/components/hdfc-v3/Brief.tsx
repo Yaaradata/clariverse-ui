@@ -24,8 +24,10 @@ const BRIEF_ORDER = [
   "insurance",
 ];
 
-/** Every business has a deep-dive page; Cards is built, the others say "coming soon" there. */
+/** Every business has a deep-dive page; Cards is built, the others say "coming soon" there. The bank-wide Ombudsman
+ * item opens the Ombudsman watch on the same page. */
 function businessHref(id: string, p: Period): string {
+  if (id === "bank") return "#ombudsman-watch";
   return withPeriod(
     id === "cards" ? CARDS_VIEW : `/hdfc-pulse/v2/business/${id}`,
     p,

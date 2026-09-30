@@ -412,7 +412,7 @@ function RingStat({
 }
 
 /** A count's change against the comparison window: direction, amount and what it is compared with. */
-function Delta({
+export function Delta({
   n,
   label,
   goodDown,
