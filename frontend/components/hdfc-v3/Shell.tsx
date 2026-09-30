@@ -8,15 +8,18 @@ import {
   Inbox,
   MessageSquareText,
   Moon,
+  Sparkles,
   Sun,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type ReactNode, Suspense, useEffect, useState } from "react";
 import { rangeLabel } from "@/lib/hdfc-v3/format";
+import type { PeriodsFile } from "@/lib/hdfc-v3/periods";
 import { THEME_KEY, type ThemeName } from "@/lib/hdfc-v3/theme";
 import type { AskFile, Evidence, Meta, View } from "@/lib/hdfc-v3/types";
 import { AskLisN } from "./AskLisN";
+import { HeaderPeriodFilter } from "./Pulse";
 import { C, tint } from "./primitives";
 
 export type ShellProps = {
@@ -30,6 +33,8 @@ export type ShellProps = {
   subtitle?: string;
   view?: View;
   drill?: boolean;
+  /** When set, the period filter sits in the header, top right. */
+  periods?: PeriodsFile;
   children: ReactNode;
 };
 
@@ -193,6 +198,7 @@ function ShellInner({
   subtitle,
   view,
   drill,
+  periods,
   children,
 }: ShellProps) {
   const from = useFrom(view ?? "mds-office");
@@ -342,24 +348,7 @@ function ShellInner({
               <strong style={{ color: C.text }}>HDFC Bank</strong> · Customer
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
-            <button
-              type="button"
-              onClick={() => setAskOpen(true)}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                background: C.cardAlt,
-                border: `1px solid ${C.borderLight}`,
-                color: C.text,
-                borderRadius: 999,
-                padding: "5px 12px",
-                fontSize: 14,
-                cursor: "pointer",
-              }}
-            >
-              <MessageSquareText size={14} color={C.brandInk} /> Ask LisN
-            </button>
+            {periods ? <HeaderPeriodFilter file={periods} /> : null}
             <ThemeToggle />
           </header>
 
@@ -423,6 +412,33 @@ function ShellInner({
           </main>
         </div>
       </div>
+      {askOpen ? null : (
+        <button
+          type="button"
+          onClick={() => setAskOpen(true)}
+          aria-label="Ask LisN"
+          title="Ask LisN"
+          data-testid="ask-lisn-fab"
+          style={{
+            position: "fixed",
+            right: 22,
+            bottom: 22,
+            zIndex: 50,
+            width: 54,
+            height: 54,
+            borderRadius: 999,
+            border: `1px solid ${tint(C.brand, 0.5)}`,
+            background: C.brand,
+            color: "#fff",
+            display: "grid",
+            placeItems: "center",
+            cursor: "pointer",
+            boxShadow: `0 10px 30px ${tint(C.brand, 0.35)}`,
+          }}
+        >
+          <Sparkles size={24} />
+        </button>
+      )}
       <AskLisN
         open={askOpen}
         onClose={() => setAskOpen(false)}

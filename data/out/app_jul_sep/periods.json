@@ -1268,7 +1268,7 @@
       "text": "Negative share down from 70% to 54% vs the day before."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the day before (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the day before (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
    },
    "md_mail": {
     "total": 2,
@@ -4560,6 +4560,8 @@
       "label": "Play Store",
       "reviews": 0,
       "avg_rating": null,
+      "share_positive": null,
+      "share_negative": null,
       "complaints": [],
       "feature_requests": [],
       "praised": []
@@ -4569,6 +4571,8 @@
       "label": "App Store",
       "reviews": 0,
       "avg_rating": null,
+      "share_positive": null,
+      "share_negative": null,
       "complaints": [],
       "feature_requests": [],
       "praised": []
@@ -6852,9 +6856,21 @@
       "business_label": "Accounts and deposits",
       "status": "stable",
       "text": "Negative share steady at 52% (50% before)."
+     },
+     {
+      "business": "insurance",
+      "business_label": "Insurance (bank-sold)",
+      "status": "watch",
+      "text": "Negative share down from 100% to 100% vs the previous 7 days; outside the improving and stable bands."
+     },
+     {
+      "business": "cards",
+      "business_label": "Cards",
+      "status": "watch",
+      "text": "Negative share up from 66% to 77% vs the previous 7 days; outside the improving and stable bands."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 7 days (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 7 days (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
    },
    "md_mail": {
     "total": 5,
@@ -10983,6 +10999,8 @@
       "label": "Play Store",
       "reviews": 17,
       "avg_rating": 1.24,
+      "share_positive": 5.9,
+      "share_negative": 94.1,
       "complaints": [
        {
         "label": "General dissatisfaction",
@@ -11010,6 +11028,8 @@
       "label": "App Store",
       "reviews": 1,
       "avg_rating": 1.0,
+      "share_positive": 0.0,
+      "share_negative": 100.0,
       "complaints": [
        {
         "label": "General dissatisfaction",
@@ -13439,7 +13459,7 @@
       "text": "Negative share steady at 80% (78% before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 30 days (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 30 days (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
    },
    "md_mail": {
     "total": 14,
@@ -16505,6 +16525,8 @@
       "label": "Play Store",
       "reviews": 49,
       "avg_rating": 1.51,
+      "share_positive": 8.2,
+      "share_negative": 83.7,
       "complaints": [
        {
         "label": "General dissatisfaction",
@@ -16540,6 +16562,8 @@
       "label": "App Store",
       "reviews": 6,
       "avg_rating": 1.0,
+      "share_positive": 0.0,
+      "share_negative": 100.0,
       "complaints": [
        {
         "label": "General dissatisfaction",
@@ -19210,7 +19234,7 @@
       "text": "Negative share steady at 68% (66% before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more second half vs first half of the window (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more second half vs first half of the window (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
    },
    "md_mail": {
     "total": 47,
@@ -24211,6 +24235,8 @@
       "label": "Play Store",
       "reviews": 133,
       "avg_rating": 1.73,
+      "share_positive": 14.3,
+      "share_negative": 79.7,
       "complaints": [
        {
         "label": "General dissatisfaction",
@@ -24246,6 +24272,8 @@
       "label": "App Store",
       "reviews": 24,
       "avg_rating": 1.67,
+      "share_positive": 12.5,
+      "share_negative": 79.2,
       "complaints": [
        {
         "label": "General dissatisfaction",

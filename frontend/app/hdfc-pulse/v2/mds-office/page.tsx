@@ -13,6 +13,7 @@ export default function MdsOfficePage() {
       title="MD's office / Head of CX"
       subtitle="The pulse first, then today's morning brief, business by business."
       view="mds-office"
+      periods={sliceBundle(b, { view: "exec" }).periods}
     >
       <MdView b={sliceBundle(b, { view: "exec" })} />
     </Shell>

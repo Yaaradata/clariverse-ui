@@ -94,7 +94,7 @@ export type BriefItem = {
   business: string;
   business_label: string;
   issue?: string;
-  status?: "improving" | "stable";
+  status?: "improving" | "stable" | "watch";
   text: string;
 };
 
@@ -277,6 +277,8 @@ export type CardsPeriod = {
     label: string;
     reviews: number;
     avg_rating: number | null;
+    share_positive: number | null;
+    share_negative: number | null;
     complaints: { label: string; count: number }[];
     feature_requests: { label: string; count: number }[];
     praised: { label: string; count: number }[];

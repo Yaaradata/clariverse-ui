@@ -7,19 +7,18 @@
  */
 
 import type { Bundle } from "@/lib/hdfc-v3/types";
-import { Actions, MdMail, MorningBrief, ReputationTable } from "./Brief";
-import { CustomerPulse, CxPulse, PeriodFilter, usePeriod } from "./Pulse";
+import { Actions, MorningBrief, ReputationTable } from "./Brief";
+import { CustomerPulse, CxPulse, PeriodLine, usePeriod } from "./Pulse";
 
 export function MdView({ b }: { b: Bundle }) {
   const p = usePeriod(b.periods);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <PeriodFilter file={b.periods} current={p} />
+      <PeriodLine file={b.periods} p={p} />
       <CustomerPulse p={p} />
       <CxPulse p={p} />
       <MorningBrief p={p} />
       <ReputationTable p={p} />
-      <MdMail p={p} />
       <Actions b={b} />
     </div>
   );

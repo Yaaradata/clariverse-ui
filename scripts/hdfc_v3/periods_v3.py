@@ -431,6 +431,47 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
             improving.append((1, d, {"business": x["id"], "business_label": x["label"], "status": "stable",
                                      "text": f"Negative share steady at {n_now:.0f}% ({n_prev:.0f}% before)."}))
     improving = [v for *_, v in sorted(improving, key=lambda z: (z[0], z[1]))][:3]
+    # Pad each column to three with the next-closest businesses, labelled for what they are.
+    used_b = {(v["business"], v.get("issue")) for v in building}
+    if len(building) < 3:
+        extra = []
+        for x in cards:
+            pid = x["id"]
+            cur = [r for r in pub if ta <= r["_c"] < tb and r["_product"] == pid]
+            prv = [r for r in pub if pa <= r["_c"] < pb and r["_product"] == pid]
+            s_now = weighted_share([r for r in pub if ta <= r["_c"] < tb], lambda r, pid=pid: r["_product"] == pid, W, 1)
+            s_prev = weighted_share([r for r in pub if pa <= r["_c"] < pb], lambda r, pid=pid: r["_product"] == pid, W, 1)
+            if not cur or not s_prev or s_now is None or (pid, None) in used_b:
+                continue
+            extra.append((s_now / s_prev, {
+                "business": pid, "business_label": x["label"], "issue": None, "status": "watch",
+                "text": f"{len(cur)} public items; share of voice {'up' if s_now >= s_prev else 'down'} {abs(round(100 * (s_now - s_prev) / s_prev))}% {w['compare']}, below the 30% rule.",
+            }))
+        for _, v in sorted(extra, key=lambda z: -z[0]):
+            if len(building) >= 3:
+                break
+            building.append(v)
+    used_i = {v["business"] for v in improving}
+    if len(improving) < 3:
+        extra = []
+        for x in cards:
+            if x["id"] in used_i:
+                continue
+            cur = [r for r in pub if r["_product"] == x["id"] and ta <= r["_c"] < tb]
+            prv = [r for r in pub if r["_product"] == x["id"] and pa <= r["_c"] < pb]
+            n_now = weighted_share(cur, lambda r: r["sentiment"] == "negative", W, 1) if cur else None
+            n_prev = weighted_share(prv, lambda r: r["sentiment"] == "negative", W, 1) if prv else None
+            if n_now is None or not n_prev:
+                extra.append((9, {"business": x["id"], "business_label": x["label"], "status": "watch",
+                                  "text": f"Too few public items to compare ({len(cur)} now, {len(prv)} before); negative share {n_now:.0f}%." if n_now is not None else f"Too few public items to compare ({len(cur)} now, {len(prv)} before)."}))
+                continue
+            d = (n_now - n_prev) / n_prev
+            extra.append((abs(d), {"business": x["id"], "business_label": x["label"], "status": "watch",
+                                   "text": f"Negative share {'up' if d > 0 else 'down'} from {n_prev:.0f}% to {n_now:.0f}% {w['compare']}; outside the improving and stable bands."}))
+        for _, v in sorted(extra, key=lambda z: z[0]):
+            if len(improving) >= 3:
+                break
+            improving.append(v)
     return {
         "needs_you": needs,
         "building": building,
@@ -439,7 +480,8 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
             "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the "
             "Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose "
             f"by 30% or more {w['compare']} (at least {min_n} items). Improving or stable: businesses whose negative "
-            "share fell 15% or more, or held within 10%."
+            "share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the "
+            "next-closest businesses fill it, marked \"watch\"."
         ),
     }
 
@@ -550,6 +592,8 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
         feats = collections.Counter((r.get("feature_request") or "").strip() for r in xs if r.get("feature_request")).most_common(3)
         stores.append({"store": st, "label": SOURCE_LABEL[st], "reviews": len(xs),
                        "avg_rating": round(sum(r["rating"] for r in xs) / len(xs), 2) if xs else None,
+                       "share_positive": pct(sum(1 for r in xs if r["rating"] >= 4), len(xs)),
+                       "share_negative": pct(sum(1 for r in xs if r["rating"] <= 2), len(xs)),
                        "complaints": [{"label": labels.get(k, k), "count": v} for k, v in neg],
                        "feature_requests": [{"label": k, "count": v} for k, v in feats if k],
                        "praised": [{"label": labels.get(k, k), "count": v} for k, v in posf]})

@@ -1,6 +1,6 @@
 "use client";
 
-import { Send, X } from "lucide-react";
+import { Send, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
@@ -124,6 +124,8 @@ export function AskLisN({
         zIndex: 60,
         display: "flex",
         justifyContent: "flex-end",
+        alignItems: "flex-end",
+        padding: "0 22px 22px 0",
       }}
     >
       <button
@@ -133,17 +135,20 @@ export function AskLisN({
         style={{
           position: "absolute",
           inset: 0,
-          background: "rgba(0,0,0,0.5)",
+          background: "rgba(0,0,0,0.25)",
           border: "none",
         }}
       />
       <div
         style={{
           position: "relative",
-          width: "min(520px, 100vw)",
-          height: "100%",
+          width: "min(460px, calc(100vw - 44px))",
+          height: "min(720px, calc(100vh - 44px))",
           background: C.surface,
-          borderLeft: `1px solid ${C.borderLight}`,
+          border: `1px solid ${C.borderLight}`,
+          borderRadius: 16,
+          overflow: "hidden",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.35)",
           display: "flex",
           flexDirection: "column",
         }}
@@ -158,7 +163,17 @@ export function AskLisN({
           }}
         >
           <div>
-            <div style={{ fontSize: 17, fontWeight: 700 }}>Ask LisN</div>
+            <div
+              style={{
+                fontSize: 17,
+                fontWeight: 700,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <Sparkles size={16} color={C.brandInk} /> Ask LisN
+            </div>
             <div style={{ fontSize: 13, color: C.textMut }}>
               Answers come from this demo&apos;s public data, with the items
               cited.
