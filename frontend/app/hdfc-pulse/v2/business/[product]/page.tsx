@@ -1,12 +1,11 @@
 import { notFound } from "next/navigation";
 
-import { BusinessView } from "@/components/hdfc-v3/BusinessView";
+import { CardsView, ComingSoon } from "@/components/hdfc-v3/CardsView";
 import { Shell } from "@/components/hdfc-v3/Shell";
 import { loadBundle } from "@/lib/hdfc-v3/load";
 import { PRODUCT_ORDER } from "@/lib/hdfc-v3/products";
 import { shellProps } from "@/lib/hdfc-v3/shellProps";
 import { sliceBundle } from "@/lib/hdfc-v3/slice";
-import type { ProductId } from "@/lib/hdfc-v3/types";
 
 export const dynamicParams = false;
 
@@ -23,17 +22,22 @@ export default async function BusinessPage({
   const b = loadBundle();
   const row = b.products.rows.find((r) => r.id === product);
   if (!row) notFound();
+  const cards = product === "cards";
   return (
     <Shell
       {...shellProps(b)}
       title={`${row.label}: business view`}
-      subtitle="The exec page, scoped to one product: numbers, priority relationships, issues, deliverables and actions."
-      drill
+      subtitle={
+        cards
+          ? "For the head of Cards: the issue pulse, issues by category and what customers say, for the selected period."
+          : "Coming soon."
+      }
     >
-      <BusinessView
-        b={sliceBundle(b, { view: "business" })}
-        product={product as ProductId}
-      />
+      {cards ? (
+        <CardsView b={sliceBundle(b, { view: "business" })} />
+      ) : (
+        <ComingSoon label={row.label} />
+      )}
     </Shell>
   );
 }
