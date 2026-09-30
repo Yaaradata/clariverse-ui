@@ -243,3 +243,47 @@ The 30 Sep spec wins over B7. Each override is below; the table in `changes_30se
   share unweighted.
 - **High-priority mentions** (listed customers tagging the bank) are synthetic and tagged "Internal · illustrative". The
   linking rule is on screen: only through the bank's verified handles or contact records.
+
+# Round 2, 30 Sep: the review with Karthik (changes_30sep.md, "Round 2")
+
+## D22 · Round 1 overridden by round 2
+
+| Round 1 | Round 2 | Resolution |
+|---|---|---|
+| A2.4: "High-priority mentions" (posts by listed customers) inside the Customer pulse | Customer pulse is internal only | Block removed from the section. Public voice now sits in its own Social pulse. |
+| One "RMs have been alerted about X of Y" line for the whole Customer pulse | "RMs alerted: X of Y" on every list card | Per-list line on each card; the section-level line is gone. |
+| Customer pulse: a sparkline under "No reply in 48 h" | Every figure compared with the previous period | Sparkline replaced by the change against the previous period. |
+| C3: Cards table column "Open 48 h+" (still open after 48 hours) | "Not responded to in 48h+" | Renamed, and the figure is now first-reply wait over 48 hours, so label and number agree. The Cards issue pulse dial follows. |
+| C3: one "Escalations" column showing "public · internal" | Split under Internal and External | Two columns, one in each group. |
+| Status: resolved + open = volume | New status "Waiting on customer" | resolved + open + waiting on customer = volume, everywhere. Open, open too long and not responded all exclude waiting threads. |
+| C4: three question cards on the Cards view, then Volume by channel and Actions | At most five panels | Third question card, Volume by channel and Actions moved out; reachable through Ask LisN. |
+| Ask LisN as a floating button, bottom right (request of 30 Sep, after round 1) | A pinned question bar on every screen | Button and chat window replaced by the bar. |
+| B: business card is one large link | A "Deep dive" button | Button on every card; the card is no longer a link. |
+
+## D23 · Decisions made while building round 2
+
+- **Transcript missing.** `review_karthik_30sep.md` was not in the repo. The build follows the change spec and its
+  timestamps; "Missed by spec" is open until the transcript is added.
+- **Waiting on customer is synthetic.** The internal data is illustrative, so the status is too: 40% of open contacts
+  that already had a first reply carry `resolution_sent_at` (set from the record id, so nothing else in the seed
+  changes). Scripted persona trails stay open. check_reconcile recomputes the status from the seed for every period.
+- **Comparisons are like for like.** Open and "no reply in 48 h" are compared with the previous window as it stood at
+  its own end. For the full window the comparison is second half against first half, as before.
+- **Social pulse response rate.** Reply data exists for Play Store reviews only. The headline is the share of Play Store
+  reviews with a bank reply, labelled informational; posts on X, Reddit and forums show "Replies not collected", never
+  "Not responded". High-impact counts use the existing reach rule, so the Social pulse equals the CX pulse external
+  figures (checked in reconcile).
+- **Trending posts** are ranked by likes + replies + reposts (upvotes and helpful votes on Reddit and the stores). Text
+  is the anonymised summary; posts that name a person or make an allegation are never shown.
+- **Good response** is a Play Store review whose reply gives a reference and routes to an official channel. In the
+  bank's reply the customer's name becomes "[customer]", the link becomes "[official help centre link]", and an
+  exclamation mark becomes a full stop (screen copy carries none). For the Morning brief, where there is none in the
+  window, the most recent earlier example is shown and dated.
+- **Ask LisN answers are precomputed.** No live model call is wired. Each suggested question is answered from the
+  page's own period figures (`frontend/lib/hdfc-v3/askAnswers.ts`), so answers change with the period and always match
+  the screen. Every answer is tagged "Precomputed from this view's data; no live model call." Typed questions go to the
+  closest suggested question, then to the older full-window prompts.
+- **Role-based access** is shown with one Cards question about Home loans, which is refused.
+- **My view** holds pinned answers in memory for the session only; a reload clears it.
+- **Other screens.** "Waiting on customer" applies to the two 30 Sep views (periods.json). The unlinked older pages keep
+  their own open counts.
