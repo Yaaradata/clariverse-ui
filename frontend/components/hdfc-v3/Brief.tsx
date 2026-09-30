@@ -39,8 +39,12 @@ const BRIEF_ORDER = [
   "insurance",
 ];
 
-function businessHref(id: string, p: Period): string | null {
-  return id === "cards" ? withPeriod(CARDS_VIEW, p) : null;
+/** Every business has a deep-dive page; Cards is built, the others say "coming soon" there. */
+function businessHref(id: string, p: Period): string {
+  return withPeriod(
+    id === "cards" ? CARDS_VIEW : `/hdfc-pulse/v2/business/${id}`,
+    p,
+  );
 }
 
 /* ---------------------------------------------------------------- morning brief */
@@ -139,7 +143,6 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
   const i = x.internal;
   const e = x.external;
   const r = e.responded;
-  const na = i.open_too_long === null;
   const body = (
     <>
       <div
@@ -151,12 +154,26 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <strong style={{ fontSize: 16 }}>{x.label}</strong>
-        {href ? (
-          <span style={{ fontSize: 12.5, color: C.brandInk }}>
-            Business view{" "}
-            <ChevronRight size={12} style={{ verticalAlign: "-2px" }} />
-          </span>
-        ) : null}
+        <Link
+          href={href}
+          data-testid="deep-dive"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 3,
+            background: C.brand,
+            color: "#fff",
+            border: `1px solid ${C.brand}`,
+            borderRadius: 8,
+            padding: "5px 12px",
+            fontSize: 13,
+            fontWeight: 700,
+            textDecoration: "none",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Deep dive <ChevronRight size={14} />
+        </Link>
       </div>
       <div
         style={{
@@ -209,9 +226,9 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <span>
-          Open / too long:{" "}
+          Open / waiting on customer:{" "}
           <strong style={{ color: C.text }}>
-            {fmt(i.open)} / {na ? "—" : fmt(i.open_too_long)}
+            {fmt(i.open)} / {fmt(i.waiting_on_customer)}
           </strong>
         </span>
         <span>
@@ -271,7 +288,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
   );
   const style = {
     background: C.cardAlt,
-    border: `1px solid ${href ? tint(C.brand, 0.35) : C.border}`,
+    border: `1px solid ${x.id === "cards" ? tint(C.brand, 0.35) : C.border}`,
     borderRadius: 12,
     padding: "12px 14px",
     // Rule B: six sections, one per subgrid row, so cards in a row line up section by section.
@@ -283,11 +300,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
     textDecoration: "none",
     color: "inherit",
   };
-  return href ? (
-    <Link data-testid="business-card" href={href} style={style}>
-      {body}
-    </Link>
-  ) : (
+  return (
     <div data-testid="business-card" style={style}>
       {body}
     </div>
