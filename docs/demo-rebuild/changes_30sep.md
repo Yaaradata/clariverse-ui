@@ -137,3 +137,16 @@ Moved out of the page, and reachable through Ask LisN (each is a suggested quest
 ## Missed by spec (round 2)
 
 Not filled in: the Karthik transcript is not in the repo. Add `review_karthik_30sep.md` and this section can be completed.
+
+## Round 2 follow-ups
+
+| # | Screen | Change | Status |
+|---|---|---|---|
+| F1 | MD view · Customer pulse | The Social pulse moved into the Customer pulse as an "External channels" block after the four internal cards, behind a dashed divider and its own tint. The standalone section is gone. The block holds total mentions, high-impact mentions with the virality rule, bank response %, top 5 trending posts, the good response, and high-priority mentions. | Done |
+| F2 | MD view · External channels | Bank replies for every source. Play Store is collected; App Store, X, Reddit and forums are simulated from the post id and tagged "Illustrative". One combined % plus a per-source breakdown. No "Replies not collected" label remains. Sources sum to the combined figure (reconcile). | Done |
+| F3 | MD view, Cards view, Ask LisN | "Actions to take" removed from both views (the Cards tile went in round 2; the MD tile now). The Ask LisN question "What should the Cards team act on first?" is removed. | Done |
+| F4 | MD view · Customer pulse | "Not responded in 48h+" shows the change against the previous period and a small trend line. | Done |
+| F5 | Every V2 screen | "Waiting on customer" is now a status in the seed data, so every screen that counts open items excludes it: priority, customer, module, deliverables and the exec blocks as well as the two 30 Sep views. Priority and module screens show the count, marked illustrative. Reconcile checks the status record by record and compares the full-window period figures with the older screens' dials. | Done |
+| F6 | changes_30sep.md | Complete "Missed by spec" from the Karthik transcript. | **Not done: `review_karthik_30sep.md` is still not in the repo.** |
+| F7 | All V2 routes | Gap scan and full screenshot set at 1440 and 390 wide, Morning brief and Full window, in `qa/screens_30sep/` (104 screens, `report.json`). No horizontal overflow. Gaps fixed are listed in `qa/layout_qa_v2.md`. | Done |
+| F8 | WALKTHROUGH_V2.md | Rewritten for the current screens, Full window figures. | Done |

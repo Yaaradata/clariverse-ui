@@ -98,3 +98,29 @@ Rebuilt for Cards only and for the selected period, each under its own header:
 
 Every figure comes from `data/out/app_jul_sep/periods.json`; the reconcile check ties the Cards view to the Cards card on
 the MD's view for every period (internal and external volume), and the categories and subcategories to the issue pulse.
+
+## Run 3 (30 Sep, round 2 follow-ups)
+
+Screens: `node scripts/qa_screens_30sep.mjs scripts/routes.json qa/screens_30sep` — every V2 route (26) at 1440 and 390
+wide, for the Morning brief and the Full window: 104 full-page screens and `qa/screens_30sep/report.json`.
+Result: every route 200, no horizontal overflow at either width.
+
+Gap scan: `node scripts/qa_gaps_v2.mjs qa/routes_30sep.json 40 qa/layout_gaps_30sep.json` (1536 x 730, both periods).
+
+| Where | Before | After | Fix |
+|---|---|---|---|
+| MD view · trending posts | 46-67 px beside each rank number | none | rows align to the top |
+| MD view · good response | 69 px | none | reply text measured; box keeps its own height |
+| MD view · CX pulse dials | 49 px under four of five dials | none | dials keep their own height |
+| Cards view · issue pulse dials | 49 px | none | same |
+| Cards view · category table | empty spacer cells, 62 px each | none | the gap between the groups is a margin, not a cell |
+| Cards view · category header | 47 px above short labels | under 20 px | wider columns for the two long labels |
+| Priority · cohort stats | 68 px (new fourth stat wrapped) | none | waiting on customer shown as a line under the stats |
+| Cards market drill-down · voices with reach | 81 px | none | tiles keep their own height |
+
+Left as they are:
+- MD view, Full window: 50 px in three business cards. The cards share rows so sections line up (rule B); the quote row
+  is three lines in one card and shorter in others.
+- Cards category table: the scanner reports each number cell (a number centred in a 62 px row). Not a blank area.
+- Unlinked older pages, unchanged this round: priority 74 px, market 57 px, module and release-pulse 72 px,
+  deliverables 40 px, Cards happy drill-down 45 px.

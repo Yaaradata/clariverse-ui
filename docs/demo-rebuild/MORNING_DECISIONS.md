@@ -287,3 +287,33 @@ The 30 Sep spec wins over B7. Each override is below; the table in `changes_30se
 - **My view** holds pinned answers in memory for the session only; a reload clears it.
 - **Other screens.** "Waiting on customer" applies to the two 30 Sep views (periods.json). The unlinked older pages keep
   their own open counts.
+
+## D24 · Bank replies on sources where none were collected (follow-up 2)
+
+Replies are collected for Play Store reviews only. For the other sources a reply is simulated per post, from the post id
+(sha1, no random stream, so a rebuild gives the same figures). Assumptions, based on how Indian bank care handles
+typically behave:
+
+| Source | Negative posts answered | Other posts answered | Reasoning |
+|---|---|---|---|
+| X | 68% | 40% | The care handle is most active here and answers most complaints that tag or name the bank. |
+| App Store | 45% | 30% | Developer replies exist but are sparser than on the Play Store. |
+| Reddit | 14% | 6% | Banks rarely reply in threads; a few are picked up through official accounts. |
+| Forums | 8% | 3% | Consumer forums are seldom answered directly. |
+
+- Resulting full-window rates: X 62%, App Store 37%, Reddit 9%, forums 5%; Play Store 96% (collected). Combined 69%.
+- Every simulated figure is tagged "Illustrative" on screen (per source and per trending post).
+- The CX pulse and Cards "Responded" figures stay on the collected Play Store replies; reconcile checks that the Play
+  Store row of the breakdown equals them and that the sources sum to the combined figure.
+- High-priority mentions moved from the Customer pulse cards to the External channels block (round 2 had removed them
+  from the view). They remain synthetic and are tagged illustrative.
+
+## D25 · Waiting on customer everywhere (follow-up 5)
+
+- The status is now written by the seed (`status: "waiting_on_customer"`, with `resolution_sent_at`), not derived in the
+  period pipeline, so every screen that counts open items from the seed excludes it without its own rule.
+- RM alerts follow the open status, so lists now show fewer customers due an alert (for example Ultra sensitive 3 of 14,
+  was 4 of 18).
+- Reconcile: every contact is open, waiting on customer or closed; open + waiting + closed = total; the full-window
+  period figures equal the older screens' dials once the IVR bot (left out of the 30 Sep views) is set aside.
+- The Karthik transcript was still missing for this pass, so "Missed by spec" (follow-up 6) is open.

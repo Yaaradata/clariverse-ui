@@ -1416,6 +1416,7 @@ export function Market({ p }: { p: Period }) {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
             gap: 8,
+            alignItems: "start",
           }}
         >
           <Kpi

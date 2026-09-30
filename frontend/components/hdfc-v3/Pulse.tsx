@@ -867,7 +867,7 @@ function ExternalBlock({ p }: { p: Period }) {
             sub={`${fmt(sp.responded)} of ${fmt(sp.mentions)} mentions, all sources`}
           />
           <Kpi
-            label="High-priority mentions"
+            label="High-priority mentions · illustrative"
             value={fmt(m.total)}
             sub={`listed customers who tagged the bank: ${fmt(m.responded)} responded, ${fmt(m.not_responded)} not responded`}
             tone="violet"
