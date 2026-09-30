@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * D1 · Deliverables ledger (B7 §1): each deliverable with its TAT (RBI where published, otherwise the bank's TAT to
- * confirm in discovery), compensation, met, outside, open too long, public posts describing a delay, owner and action.
- * A second table splits "met" by product.
+ * D1 · Deliverables ledger (B7 §1): each deliverable with its TAT, compensation, met, outside, open too long, public
+ * posts describing a delay, owner and action. A TAT is an RBI published timeline, a bank-confirmed SLA (both with their
+ * source under the TAT), or, while unconfirmed, "Bank TAT: confirm in discovery". A second table splits "met" by product.
  */
 
 import { fmt, fmtPct } from "@/lib/hdfc-v3/format";
@@ -69,6 +69,34 @@ function rowAction(r: {
   return "Monitor";
 }
 
+type LedgerRow = Bundle["v3"]["deliverables"][number];
+
+function TatCell({ row }: { row: LedgerRow }) {
+  switch (row.source) {
+    case "rbi":
+    case "bank_confirmed":
+      return (
+        <span>
+          {row.tat_label}
+          <div
+            style={{
+              fontSize: 12,
+              color: row.source === "rbi" ? C.cyan : C.textMut,
+            }}
+          >
+            {row.source_note}
+          </div>
+        </span>
+      );
+    case "bank":
+      return <span style={{ color: C.textMut }}>{row.tat_label}</span>;
+    default: {
+      const unreachable: never = row.source;
+      return unreachable;
+    }
+  }
+}
+
 export function DeliverablesLedger({ b }: { b: Bundle }) {
   const rows = b.v3.deliverables;
   const pubBy = Object.fromEntries(
@@ -84,7 +112,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
     <>
       <Tile prov={["internal", "public"]} accent tone="violet">
         <AnswerLine
-          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. TATs marked RBI are published timelines; the rest are the bank's own, to confirm in discovery.`}
+          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. TATs marked RBI are published timelines; the rest are the bank's own SLAs, shown once the bank confirms them.`}
         >
           {fmtPct((100 * met) / measured)} of deliverables met across{" "}
           {rows.length} deliverable types; {fmt(otl)} items are open past their
@@ -125,18 +153,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
             <span key="l" style={{ color: C.text, fontWeight: 600 }}>
               {r.label}
             </span>,
-            r.source === "rbi" ? (
-              <span key="t">
-                {r.tat_label}
-                <div style={{ fontSize: 12, color: C.cyan }}>
-                  {r.source_note}
-                </div>
-              </span>
-            ) : (
-              <span key="t" style={{ color: C.textMut }}>
-                {r.tat_label}
-              </span>
-            ),
+            <TatCell key="t" row={r} />,
             r.compensation,
             <span key="m" style={{ fontFamily: MONO }}>
               {fmtPct(r.met_pct)}
@@ -162,10 +179,11 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
         />
         <MutedNote>
           RBI rows use published RBI timelines. Where RBI sets none, the TAT is
-          the bank&apos;s own and is not shown until it is confirmed in
-          discovery; on those rows, met, outside and open too long come from the
-          illustrative sample, measured against a placeholder that is not a bank
-          figure. Met = closed within the TAT (for the first-response row:
+          the bank&apos;s confirmed SLA, with its source document under the TAT.
+          Any row still reading &ldquo;Bank TAT: confirm in discovery&rdquo; is
+          unconfirmed; on those rows, met, outside and open too long come from
+          the illustrative sample, measured against a placeholder that is not a
+          bank figure. Met = closed within the TAT (for the first-response row:
           answered within it). Outside = settled late, or open and already past
           the TAT. Working days skip Sundays; bank holidays are not modelled
           yet. Public posts describing a delay are matched to a deliverable by

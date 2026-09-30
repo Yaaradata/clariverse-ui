@@ -16,7 +16,7 @@ import json
 import sys
 from pathlib import Path
 
-from common import NOW, OUT_APP, SEED_V3, load
+from common import BANK_TAT_LABEL, NOW, OUT_APP, SEED_V3, load
 
 NOW_DT = dt.datetime.fromisoformat(NOW)
 # Person-level flags are never allowed on a customer: impact belongs to a complaint (B7 §E2).
@@ -194,9 +194,14 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     ageing = agg["deliverables_detail"]["ageing"]
     ok(sum(a["open_cases"] for a in ageing) == agg["dials"]["open"], "deliverables ageing: open cases = open dial")
     ok(sum(a["beyond_tat"] for a in ageing) == agg["dials"]["open_too_long"], "deliverables ageing: beyond TAT = open-too-long dial")
-    # D-11 is not available (qa/tat_check.md): no bank-set TAT is shown as a number (follow-up fix 3).
-    numbered = [d["id"] for d in agg["deliverables"] if d["source"] != "rbi" and d["tat_label"] != "Bank TAT: confirm in discovery"]
-    ok(not numbered, f"bank TATs read 'Bank TAT: confirm in discovery' ({numbered[:3]})")
+    # A bank TAT is shown as a number only once the bank has confirmed it, with the document cited (qa/tat_check.md).
+    bad_tat = [
+        d["id"]
+        for d in agg["deliverables"]
+        if d["source"] not in ("rbi", "bank_confirmed") and d["tat_label"] != BANK_TAT_LABEL
+        or d["source"] == "bank_confirmed" and (not d.get("source_note") or d["tat_label"] == BANK_TAT_LABEL)
+    ]
+    ok(not bad_tat, f"bank TATs: unconfirmed read '{BANK_TAT_LABEL}'; confirmed cite a source ({bad_tat[:3]})")
     cl = agg["deliverables_detail"]["closure"]
     ok(cl["closure_requests"] == sum(1 for r in inter if r["theme"] == "closure_requests") and cl["saved"] <= cl["closed"],
        "closure requests recomputed; saved within closed")
