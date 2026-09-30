@@ -14,9 +14,10 @@
 | S1 | Both | Build exactly two views: one combined MD's office / Head of CX view, and one business-head view for Cards | 42:56, 43:28, 43:36 | Planned |
 | A1 | MD / Head of CX | Global period filter: Morning brief (yesterday 08:30 to today 08:30), 7 days, 30 days, full window. Every section title shows the period, and every figure is recomputed from dated records | 10:57, 11:03, 32:11, 35:04 | Planned |
 | A2.1 | MD / Head of CX | "Customer pulse" at the top, replacing "Priority relationships". Lists: Ultra sensitive (was list A), RBI & Government (was list B), Ultra HNI, Customers with multiple relationships (replaces HNI) | 09:41, 16:06, 36:33 | Planned |
+| A2.1b | MD / Head of CX | List order: Ultra sensitive, RBI & Government, Ultra HNI, Customers with multiple relationships. The last **replaces** HNI (10:29). At 36:42 Ranjith says "on top of the HNI you'll put one more list… multi-relationship sensitive customers". That is read as the same list, not a fifth one. **Ambiguous:** confirm with Ranjith | 10:29, 36:42 | Planned |
 | A2.2 | MD / Head of CX | Collapsed strip per list: volume with trend vs previous period; open; not responded to in over 48 hours with a trend line. Shown as rings with the figure underneath. The 5 h / 24 h thresholds are removed | 01:38, 02:51, 05:42, 06:04, 07:28, 07:58 | Planned |
 | A2.3 | MD / Head of CX | Expanded view per list: the same three figures by channel (Emails, Calls, Chat, WhatsApp, Social, Branch). IVR bot removed; inbound and outbound calls merged; channels must sum to the strip, with a reconcile check | 08:05, 08:15, 08:33, 09:06 | Planned |
-| A2.4 | MD / Head of CX | "High-priority mentions": public posts where a listed customer tagged the bank; count, responded and not responded | 03:50 | Planned |
+| A2.4 | MD / Head of CX | "High-priority mentions": public posts where a listed customer tagged the bank; count, responded and not responded. Linking a public post to a listed customer needs the bank's contact data, so these are synthetic, tagged "Internal · illustrative". The linking rule is stated on screen: only via the bank's verified handles or contact records | 03:50 | Planned |
 | A2.5 | MD / Head of CX | Copy: "RMs have been alerted about X of Y." No mechanism on screen | 04:23, 05:12 | Planned |
 | A2.6 | MD / Head of CX | Remove the separate "one customer across products" section (the multi-relationship list covers it) | 36:06, 36:33, 36:57 | Planned |
 | A3.1 | MD / Head of CX | "CX pulse" below the Customer pulse: overall contact volume, internal vs external, with the % of each | 16:20, 35:32, 35:51 | Planned |
@@ -26,7 +27,7 @@
 | A3.5 | MD / Head of CX | Remove "Responded is not resolved" and the inside / outside · illustrative strip; keep a small provenance tag per internal tile | 14:46, 15:01 | Planned |
 | B1 | MD / Head of CX | Remove the one-line executive summary | 16:27, 16:43 | Planned |
 | B2 | MD / Head of CX | "Today's morning brief": merges "Since yesterday 8:30" and "Executive pulse". Columns: What needs you, Signals that are building, What's improving or stable. Bank-wide; each item names its business; derived from the business cards; follows the period filter | 16:49, 17:08, 17:54, 18:36, 20:25, 21:01, 21:50 | Planned |
-| B3 | MD / Head of CX | Six business cards (3 + 3): Cards, PayZapp and UPI, Accounts and deposits, Personal loans, Home loans, Insurance. Each shows volume with trend, negative share, open / open too long (internal), responded (external), top issue and one short redacted anecdote. Cards links to the Cards view | 21:01, 21:50, 22:30 | Planned |
+| B3 | MD / Head of CX | Six business cards (3 + 3), each with a small ring visual ("as dials", 21:01): Cards, PayZapp and UPI, Accounts and deposits, Personal loans, Home loans, Insurance. Each shows volume with trend, negative share, open / open too long (internal), responded (external), top issue and one short redacted anecdote. Cards links to the Cards view | 21:01, 21:50, 22:30 | Planned |
 | B4 | MD / Head of CX | "Reputation pulse by product" follows the period. Columns: overall volume, negative internal, negative public, trend, open / open too long, top issue, escalation language in public. Deliverables and "public posts describing a delay" removed. Cards row opens the Cards view; others go to a "coming soon" page | 31:34, 32:11, 33:22, 34:02, 34:24, 35:04 | Planned |
 | B5 | MD / Head of CX | Remove Deliverables, the three drill-downs and the retention watch from the view; Deliverables leaves the navigation (route kept, unlinked) | 29:27, 29:58, 32:08, 37:42, 39:51 | Planned |
 | B6 | MD / Head of CX | "Actions to take" left as is | 30:43 | Planned |
@@ -36,6 +37,8 @@
 | C4 | Cards | Moved in, scoped to Cards: mood, the market view, service, friction drivers, themes by trust pillar, journey stage ("where contacts come from"), top complaints / feature requests / feedback on existing features per store, volume by channel, volume by customer list | 37:42, 38:09, 38:44, 39:07, 39:51, 40:46, 41:26, 41:48 | Planned |
 | C5 | Cards | No Deliverables or retention watch; keep "Actions to take" | 29:58, 39:51 | Planned |
 | D1 | All | Everything reconciles for the selected period; check_reconcile covers the new structure, per period | 08:15, 08:33 | Planned |
+| D1b | All | Morning brief is anchored to the last date in the data (28 Sep 08:30 to 29 Sep 08:30), not the real clock, and the dates are shown on screen | 16:49 | Planned |
+| D1c | All | Short periods (Morning brief, 7 days) use the source-weighting fix: the capped X run dominates the last week. A check fails if one source is more than 60% of a short period's public items and a share or trend is shown unweighted | — (earlier review) | Planned |
 | D2 | All | Earlier guarantees kept: no names or post URLs in payloads, one store per rating comparison, no internal labels; lint, PII and fixture tests pass | — | Planned |
 
 ## Missed by spec (in the transcript, not in the spec)
@@ -73,6 +76,6 @@
 ## Decisions made while building (not in the spec)
 
 - **Default period:** 7 days, the period Ranjith used when describing the strip (05:42–07:58). The choice is in the page URL (`?period=`), so links keep it.
-- **Period boundaries:** every period ends at today 08:30 (29 Sep). Public data ends 28 Sep 23:59, so for the Morning brief the external figures cover 28 Sep 08:30 to midnight, and the screen says so.
+- **Period boundaries:** every period ends at 29 Sep 08:30, the last date in the data, not the real clock. Public data ends 28 Sep 23:59, so for the Morning brief the external figures cover 28 Sep 08:30 to midnight, and the screen says so.
 - **"Open" vs "over 48 hours":** "Open" is the share of the period's volume still open at the period end. "Not responded to in over 48 hours" and internal "Open too long" are the backlog at the period end: items with no response, or still open, for more than 48 hours, whatever their start date. This is the only reading that works for the 24-hour Morning brief. Each is labelled.
 - **High-impact external signals:** public posts with reach, defined as an X post from an account with 10,000+ followers or with 50+ likes or 20+ reposts, a Reddit post with 50+ upvotes, or a store review 20+ people found helpful. Posts by listed customers are bank-linked internal records and are counted in the Customer pulse ("High-priority mentions"), not mixed into the public count.
