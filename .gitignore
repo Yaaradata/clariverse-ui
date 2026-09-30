@@ -5,3 +5,6 @@ data/out/app_jul_sep/work/classified.jsonl
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Node packages anywhere (frontend/, scripts/ scratch link)
+node_modules/

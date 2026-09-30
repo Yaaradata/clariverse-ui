@@ -1,0 +1,259 @@
+[
+ {
+  "route": "/hdfc-pulse/v2",
+  "gaps": [
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 427,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx",
+  "gaps": [
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 427,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/market",
+  "gaps": [
+   {
+    "gap": 57,
+    "h": 785,
+    "cols": 2,
+    "y": 2219,
+    "at": 716,
+    "title": "Loan Assist"
+   },
+   {
+    "gap": 50,
+    "h": 595,
+    "cols": 2,
+    "y": 756,
+    "at": 506,
+    "title": "Rising themes"
+   },
+   {
+    "gap": 49,
+    "h": 767,
+    "cols": 2,
+    "y": 3016,
+    "at": 706,
+    "title": "SmartWealth"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office",
+  "gaps": [
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 408,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 54,
+    "h": 54,
+    "cols": 2,
+    "y": 427,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2515,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority",
+  "gaps": [
+   {
+    "gap": 74,
+    "h": 464,
+    "cols": 2,
+    "y": 3096,
+    "at": 162,
+    "title": "How a customer gets on a list"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2515,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "gaps": []
+ }
+]

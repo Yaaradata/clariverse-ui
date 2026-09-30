@@ -4624,7 +4624,964 @@
       "open": 56,
       "negative": 22
      }
-    ]
+    ],
+    "happy": {
+     "by_source": [
+      {
+       "source": "x",
+       "label": "X",
+       "items": 5,
+       "positive": 0,
+       "neutral": 1,
+       "negative": 4,
+       "net": -80.0,
+       "weight_pct": 10.7
+      },
+      {
+       "source": "reddit",
+       "label": "Reddit",
+       "items": 83,
+       "positive": 23,
+       "neutral": 49,
+       "negative": 11,
+       "net": 14.5,
+       "weight_pct": 16.5
+      }
+     ],
+     "weekly_net": [
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "items": 23,
+       "net": -82.4
+      },
+      {
+       "end": "2026-09-23T08:30:00+05:30",
+       "items": 66,
+       "net": -84.4
+      },
+      {
+       "end": "2026-09-24T08:30:00+05:30",
+       "items": 75,
+       "net": -85.1
+      },
+      {
+       "end": "2026-09-25T08:30:00+05:30",
+       "items": 115,
+       "net": -78.3
+      },
+      {
+       "end": "2026-09-26T08:30:00+05:30",
+       "items": 56,
+       "net": -39.0
+      },
+      {
+       "end": "2026-09-27T08:30:00+05:30",
+       "items": 125,
+       "net": -44.1
+      },
+      {
+       "end": "2026-09-28T08:30:00+05:30",
+       "items": 143,
+       "net": -75.7
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "items": 88,
+       "net": -22.7
+      }
+     ],
+     "saying": [
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 3,
+       "summary": "Debit card still undelivered as the courier refused to come and cancelled delivery, asking them to travel several kilometres.",
+       "source_label": "X",
+       "date": "2026-09-28"
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 7,
+       "summary": "Online transactions not eligible for tap and pay offer.",
+       "source_label": "Reddit",
+       "date": "2026-09-28"
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 2,
+       "summary": "All Mastercard credit cards considered inferior to Visa.",
+       "source_label": "Reddit",
+       "date": "2026-09-28"
+      },
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "count": 41,
+       "summary": "Card cannot be upgraded to core so closing impacts credit history.",
+       "source_label": "Reddit",
+       "date": "2026-09-28"
+      }
+     ],
+     "repeat_by_category": [
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "internal_repeat": 6,
+       "public_repeat": 0,
+       "contacts": 32
+      },
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "internal_repeat": 2,
+       "public_repeat": 0,
+       "contacts": 26
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "internal_repeat": 0,
+       "public_repeat": 2,
+       "contacts": 5
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "internal_repeat": 1,
+       "public_repeat": 0,
+       "contacts": 10
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "internal_repeat": 1,
+       "public_repeat": 0,
+       "contacts": 7
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "internal_repeat": 1,
+       "public_repeat": 0,
+       "contacts": 14
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 11
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 3
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 2
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 2
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 3
+      }
+     ],
+     "tiers": [
+      {
+       "id": "priority_a",
+       "label": "Ultra sensitive",
+       "volume": 3,
+       "positive": 0,
+       "neutral": 0,
+       "negative": 3,
+       "open": 3
+      },
+      {
+       "id": "priority_b",
+       "label": "RBI & Government",
+       "volume": 8,
+       "positive": 0,
+       "neutral": 4,
+       "negative": 4,
+       "open": 5
+      },
+      {
+       "id": "uhni",
+       "label": "Ultra HNI",
+       "volume": 10,
+       "positive": 0,
+       "neutral": 4,
+       "negative": 6,
+       "open": 8
+      },
+      {
+       "id": "multi",
+       "label": "Customers with multiple relationships",
+       "volume": 29,
+       "positive": 2,
+       "neutral": 14,
+       "negative": 13,
+       "open": 20
+      },
+      {
+       "id": "none",
+       "label": "Not on a list",
+       "volume": 86,
+       "positive": 11,
+       "neutral": 53,
+       "negative": 22,
+       "open": 56
+      }
+     ]
+    },
+    "market_full": {
+     "themes": [
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "count": 41,
+       "negative": 2,
+       "negative_share": 4.9,
+       "escalation": 0,
+       "share_change_pct": 453.7,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 3,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 3,
+         "share": 1.4
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 6,
+         "share": 2.5
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 5,
+         "share": 2.1
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 7,
+         "share": 14.0
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 6,
+         "share": 2.4
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 25,
+         "share": 5.4
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 41,
+         "share": 29.9
+        }
+       ]
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 7,
+       "negative": 3,
+       "negative_share": 42.9,
+       "escalation": 0,
+       "share_change_pct": -28.2,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 2,
+         "share": 2.7
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 2,
+         "share": 0.8
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 3,
+         "share": 1.4
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 4,
+         "share": 1.8
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 1,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 8,
+         "share": 5.2
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 21,
+         "share": 7.1
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 7,
+         "share": 5.1
+        }
+       ]
+      },
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "count": 7,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 2.0,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 1,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 4,
+         "share": 1.5
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 3,
+         "share": 0.8
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 15,
+         "share": 6.9
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 3,
+         "share": 8.4
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 14,
+         "share": 3.2
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 26,
+         "share": 5.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 7,
+         "share": 5.1
+        }
+       ]
+      },
+      {
+       "id": "reward_redemption",
+       "label": "Reward redemption and vouchers",
+       "count": 6,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 388.9,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 1,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 2,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 7,
+         "share": 2.5
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 3,
+         "share": 8.1
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 4,
+         "share": 1.0
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 6,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 6,
+         "share": 4.4
+        }
+       ]
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "count": 4,
+       "negative": 1,
+       "negative_share": 25.0,
+       "escalation": 0,
+       "share_change_pct": 383.3,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 1,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 1,
+         "share": 0.4
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 6,
+         "share": 1.6
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 1,
+         "share": 0.2
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 3,
+         "share": 2.8
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 9,
+         "share": 2.7
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 4,
+         "share": 0.6
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 4,
+         "share": 2.9
+        }
+       ]
+      },
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 3271.4,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 1,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 1,
+         "share": 0.4
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 6,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 5,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 1,
+         "share": 0.7
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 3,
+         "share": 23.6
+        }
+       ]
+      },
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 3,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 933.3,
+       "weekly": []
+      },
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 3,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": -35.3,
+       "weekly": []
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "count": 3,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 1000.0,
+       "weekly": []
+      },
+      {
+       "id": "offers_deals",
+       "label": "Card offers and deals",
+       "count": 3,
+       "negative": 1,
+       "negative_share": 33.3,
+       "escalation": 0,
+       "share_change_pct": 175.0,
+       "weekly": []
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 2,
+       "negative": 2,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": -96.5,
+       "weekly": []
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "count": 2,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": -16.7,
+       "weekly": []
+      },
+      {
+       "id": "nri_forex",
+       "label": "NRI and forex services",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "complaint_handling",
+       "label": "Complaints closed without resolution",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "app_praise",
+       "label": "Where customers praise us: quick, easy app journeys",
+       "count": 1,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "unsolicited_calls",
+       "label": "Unsolicited sales calls and use of data",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 250.0,
+       "weekly": []
+      }
+     ],
+     "rising": [
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 3271.4,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 1,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 1,
+         "share": 0.4
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 6,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 5,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 1,
+         "share": 0.7
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 3,
+         "share": 23.6
+        }
+       ]
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "count": 3,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 1000.0,
+       "weekly": []
+      },
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 3,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 933.3,
+       "weekly": []
+      },
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "count": 41,
+       "negative": 2,
+       "negative_share": 4.9,
+       "escalation": 0,
+       "share_change_pct": 453.7,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 3,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 3,
+         "share": 1.4
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 6,
+         "share": 2.5
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 5,
+         "share": 2.1
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 7,
+         "share": 14.0
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 6,
+         "share": 2.4
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 25,
+         "share": 5.4
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 41,
+         "share": 29.9
+        }
+       ]
+      },
+      {
+       "id": "reward_redemption",
+       "label": "Reward redemption and vouchers",
+       "count": 6,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 388.9,
+       "weekly": [
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 1,
+         "share": 1.3
+        },
+        {
+         "end": "2026-09-23T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-24T08:30:00+05:30",
+         "count": 2,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-25T08:30:00+05:30",
+         "count": 7,
+         "share": 2.5
+        },
+        {
+         "end": "2026-09-26T08:30:00+05:30",
+         "count": 3,
+         "share": 8.1
+        },
+        {
+         "end": "2026-09-27T08:30:00+05:30",
+         "count": 4,
+         "share": 1.0
+        },
+        {
+         "end": "2026-09-28T08:30:00+05:30",
+         "count": 6,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 6,
+         "share": 4.4
+        }
+       ]
+      }
+     ],
+     "reach": {
+      "volume": 0,
+      "positive": 0,
+      "negative": 0,
+      "by_source": {},
+      "escalation": 0,
+      "top_themes": [],
+      "responded": {
+       "reviews": 0,
+       "responded": 0,
+       "positive_reviews": 0,
+       "positive_responded": 0,
+       "negative_reviews": 0,
+       "negative_responded": 0
+      }
+     },
+     "safety": {
+      "public": 0,
+      "public_negative": 0,
+      "public_escalation": 0,
+      "high_impact": 0,
+      "internal": 2,
+      "internal_open": 0,
+      "internal_high_impact": 0,
+      "top": []
+     }
+    },
+    "service_full": {
+     "ladder": [
+      {
+       "rung": "Contacts",
+       "count": 115
+      },
+      {
+       "rung": "Repeat",
+       "count": 11
+      },
+      {
+       "rung": "Grievance",
+       "count": 5
+      },
+      {
+       "rung": "MD's office",
+       "count": 0
+      },
+      {
+       "rung": "Internal Ombudsman",
+       "count": 0
+      },
+      {
+       "rung": "RBI Ombudsman",
+       "count": 0
+      }
+     ],
+     "public_escalation": 0,
+     "targets": [],
+     "closure": {
+      "internal_requests": 0,
+      "internal_open": 0,
+      "public_intent": 0,
+      "quote": null
+     },
+     "cure": {
+      "count": 0,
+      "top": [],
+      "quote": null
+     },
+     "transparency": {
+      "count": 18,
+      "share": 20.3,
+      "quote": {
+       "summary": "Premium credit card is worn from regular use; asks for a free replacement without a replacement fee.",
+       "source_label": "X",
+       "date": "2026-09-28"
+      }
+     },
+     "disputes": [
+      {
+       "stage": "Disputes raised",
+       "count": 1
+      },
+      {
+       "stage": "First response given",
+       "count": 1
+      },
+      {
+       "stage": "Closed",
+       "count": 0
+      },
+      {
+       "stage": "Customer credited",
+       "count": 0
+      }
+     ],
+     "missed_timelines": {
+      "total": 1,
+      "rows": [
+       {
+        "id": "card_delivery",
+        "label": "Card delivery",
+        "count": 1
+       }
+      ]
+     },
+     "tat_related": {
+      "contacts": 69,
+      "share": 60.0,
+      "open": 59
+     },
+     "failures": [
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "negative": 3,
+       "count": 7,
+       "escalation": 0
+      },
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "negative": 3,
+       "count": 3,
+       "escalation": 0
+      },
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "negative": 2,
+       "count": 41,
+       "escalation": 0
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "negative": 2,
+       "count": 2,
+       "escalation": 0
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "negative": 1,
+       "count": 4,
+       "escalation": 0
+      }
+     ]
+    }
    }
   },
   "7d": {
@@ -10116,7 +11073,1244 @@
       "open": 142,
       "negative": 172
      }
-    ]
+    ],
+    "happy": {
+     "by_source": [
+      {
+       "source": "playstore",
+       "label": "Play Store",
+       "items": 17,
+       "positive": 1,
+       "neutral": 0,
+       "negative": 16,
+       "net": -88.2,
+       "weight_pct": 61.8
+      },
+      {
+       "source": "appstore",
+       "label": "App Store",
+       "items": 1,
+       "positive": 0,
+       "neutral": 0,
+       "negative": 1,
+       "net": -100.0,
+       "weight_pct": 3.5
+      },
+      {
+       "source": "x",
+       "label": "X",
+       "items": 148,
+       "positive": 1,
+       "neutral": 28,
+       "negative": 119,
+       "net": -79.7,
+       "weight_pct": 10.7
+      },
+      {
+       "source": "reddit",
+       "label": "Reddit",
+       "items": 408,
+       "positive": 64,
+       "neutral": 235,
+       "negative": 109,
+       "net": -11.0,
+       "weight_pct": 16.5
+      },
+      {
+       "source": "forum",
+       "label": "Forums",
+       "items": 94,
+       "positive": 4,
+       "neutral": 60,
+       "negative": 30,
+       "net": -27.7,
+       "weight_pct": 7.5
+      }
+     ],
+     "weekly_net": [
+      {
+       "end": "2026-08-11T08:30:00+05:30",
+       "items": 194,
+       "net": -73.5
+      },
+      {
+       "end": "2026-08-18T08:30:00+05:30",
+       "items": 129,
+       "net": -82.4
+      },
+      {
+       "end": "2026-08-25T08:30:00+05:30",
+       "items": 224,
+       "net": -49.5
+      },
+      {
+       "end": "2026-09-01T08:30:00+05:30",
+       "items": 148,
+       "net": -48.3
+      },
+      {
+       "end": "2026-09-08T08:30:00+05:30",
+       "items": 262,
+       "net": -63.1
+      },
+      {
+       "end": "2026-09-15T08:30:00+05:30",
+       "items": 237,
+       "net": -53.2
+      },
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "items": 382,
+       "net": -56.8
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "items": 668,
+       "net": -70.4
+      }
+     ],
+     "saying": [
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 100,
+       "summary": "Asked for a basic lifetime-free card after being told to move from a co-brand card; request declined, so they closed it.",
+       "source_label": "X",
+       "date": "2026-09-25"
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 45,
+       "summary": "Fourth copy of the complaint that a card application was declined for address verification, regulator tagged again.",
+       "source_label": "X",
+       "date": "2026-09-25"
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 46,
+       "summary": "Airport lounge vouchers are refused at several major airports; wants coverage fixed or the misleading benefit withdrawn.",
+       "source_label": "X",
+       "date": "2026-09-27"
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "count": 46,
+       "summary": "Paid the card as per the emailed statement but has received no payment confirmation, and is exasperated.",
+       "source_label": "X",
+       "date": "2026-09-25"
+      }
+     ],
+     "repeat_by_category": [
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "internal_repeat": 36,
+       "public_repeat": 3,
+       "contacts": 193
+      },
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "internal_repeat": 17,
+       "public_repeat": 1,
+       "contacts": 149
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "internal_repeat": 4,
+       "public_repeat": 8,
+       "contacts": 72
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "internal_repeat": 6,
+       "public_repeat": 6,
+       "contacts": 57
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "internal_repeat": 7,
+       "public_repeat": 3,
+       "contacts": 65
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "internal_repeat": 4,
+       "public_repeat": 5,
+       "contacts": 56
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "internal_repeat": 3,
+       "public_repeat": 4,
+       "contacts": 29
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "internal_repeat": 4,
+       "public_repeat": 0,
+       "contacts": 33
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "internal_repeat": 0,
+       "public_repeat": 3,
+       "contacts": 16
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "internal_repeat": 1,
+       "public_repeat": 2,
+       "contacts": 11
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "internal_repeat": 0,
+       "public_repeat": 1,
+       "contacts": 12
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 15
+      }
+     ],
+     "tiers": [
+      {
+       "id": "priority_a",
+       "label": "Ultra sensitive",
+       "volume": 19,
+       "positive": 2,
+       "neutral": 11,
+       "negative": 6,
+       "open": 7
+      },
+      {
+       "id": "priority_b",
+       "label": "RBI & Government",
+       "volume": 29,
+       "positive": 1,
+       "neutral": 17,
+       "negative": 11,
+       "open": 11
+      },
+      {
+       "id": "uhni",
+       "label": "Ultra HNI",
+       "volume": 50,
+       "positive": 3,
+       "neutral": 29,
+       "negative": 18,
+       "open": 14
+      },
+      {
+       "id": "multi",
+       "label": "Customers with multiple relationships",
+       "volume": 167,
+       "positive": 14,
+       "neutral": 93,
+       "negative": 60,
+       "open": 38
+      },
+      {
+       "id": "none",
+       "label": "Not on a list",
+       "volume": 541,
+       "positive": 54,
+       "neutral": 315,
+       "negative": 172,
+       "open": 142
+      }
+     ]
+    },
+    "market_full": {
+     "themes": [
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 100,
+       "negative": 46,
+       "negative_share": 56.4,
+       "escalation": 2,
+       "share_change_pct": -21.1,
+       "weekly": [
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 9,
+         "share": 4.7
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 8,
+         "share": 1.4
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 51,
+         "share": 11.2
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 31,
+         "share": 2.7
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 30,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 60,
+         "share": 7.6
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 100,
+         "share": 6.0
+        }
+       ]
+      },
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "count": 93,
+       "negative": 4,
+       "negative_share": 5.3,
+       "escalation": 0,
+       "share_change_pct": 50.0,
+       "weekly": [
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 16,
+         "share": 2.9
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 13,
+         "share": 3.9
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 34,
+         "share": 7.6
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 9,
+         "share": 5.8
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 25,
+         "share": 3.5
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 37,
+         "share": 4.1
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 41,
+         "share": 2.8
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 93,
+         "share": 4.2
+        }
+       ]
+      },
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "count": 72,
+       "negative": 11,
+       "negative_share": 26.0,
+       "escalation": 1,
+       "share_change_pct": -36.5,
+       "weekly": [
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 37,
+         "share": 6.7
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 30,
+         "share": 14.6
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 18,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 11,
+         "share": 2.2
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 28,
+         "share": 6.0
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 21,
+         "share": 2.9
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 51,
+         "share": 5.2
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 72,
+         "share": 3.3
+        }
+       ]
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 46,
+       "negative": 18,
+       "negative_share": 54.6,
+       "escalation": 0,
+       "share_change_pct": -17.2,
+       "weekly": [
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 11,
+         "share": 2.1
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 2,
+         "share": 0.8
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 7,
+         "share": 0.8
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 6,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 28,
+         "share": 2.3
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 37,
+         "share": 11.7
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 36,
+         "share": 2.9
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 46,
+         "share": 2.4
+        }
+       ]
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "count": 46,
+       "negative": 18,
+       "negative_share": 36.1,
+       "escalation": 9,
+       "share_change_pct": -10.0,
+       "weekly": [
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 11,
+         "share": 8.3
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 1,
+         "share": 0.5
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 62,
+         "share": 9.3
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 7,
+         "share": 0.6
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 19,
+         "share": 2.2
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 2,
+         "share": 0.2
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 27,
+         "share": 3.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 46,
+         "share": 2.7
+        }
+       ]
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 45,
+       "negative": 24,
+       "negative_share": 60.8,
+       "escalation": 5,
+       "share_change_pct": -78.2,
+       "weekly": [
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 14,
+         "share": 3.6
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 3,
+         "share": 6.1
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 8,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 6,
+         "share": 6.6
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 40,
+         "share": 10.9
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 26,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 28,
+         "share": 10.1
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 45,
+         "share": 2.2
+        }
+       ]
+      },
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 35,
+       "negative": 3,
+       "negative_share": 5.5,
+       "escalation": 0,
+       "share_change_pct": 1633.3,
+       "weekly": []
+      },
+      {
+       "id": "reward_redemption",
+       "label": "Reward redemption and vouchers",
+       "count": 28,
+       "negative": 9,
+       "negative_share": 38.4,
+       "escalation": 1,
+       "share_change_pct": -30.0,
+       "weekly": []
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "count": 28,
+       "negative": 15,
+       "negative_share": 49.7,
+       "escalation": 0,
+       "share_change_pct": 5.9,
+       "weekly": []
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 17,
+       "negative": 17,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 91.9,
+       "weekly": []
+      },
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 16,
+       "negative": 16,
+       "negative_share": 100.0,
+       "escalation": 1,
+       "share_change_pct": 57.1,
+       "weekly": []
+      },
+      {
+       "id": "offers_deals",
+       "label": "Card offers and deals",
+       "count": 13,
+       "negative": 5,
+       "negative_share": 43.0,
+       "escalation": 0,
+       "share_change_pct": -41.7,
+       "weekly": []
+      },
+      {
+       "id": "complaint_handling",
+       "label": "Complaints closed without resolution",
+       "count": 9,
+       "negative": 8,
+       "negative_share": 94.6,
+       "escalation": 1,
+       "share_change_pct": 600.0,
+       "weekly": []
+      },
+      {
+       "id": "account_freeze",
+       "label": "Account debit freezes and blocks",
+       "count": 9,
+       "negative": 6,
+       "negative_share": 64.8,
+       "escalation": 4,
+       "share_change_pct": 33.3,
+       "weekly": []
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "count": 9,
+       "negative": 1,
+       "negative_share": 8.6,
+       "escalation": 0,
+       "share_change_pct": -73.3,
+       "weekly": []
+      },
+      {
+       "id": "dispute_chargeback",
+       "label": "Disputes and chargebacks",
+       "count": 8,
+       "negative": 8,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 400.0,
+       "weekly": []
+      },
+      {
+       "id": "unsolicited_calls",
+       "label": "Unsolicited sales calls and use of data",
+       "count": 8,
+       "negative": 8,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "service_praise",
+       "label": "Praise for service",
+       "count": 8,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "kyc_updates",
+       "label": "KYC, re-KYC and profile updates",
+       "count": 7,
+       "negative": 3,
+       "negative_share": 41.4,
+       "escalation": 1,
+       "share_change_pct": 300.0,
+       "weekly": []
+      },
+      {
+       "id": "unauthorised_txn",
+       "label": "Unauthorised transactions",
+       "count": 6,
+       "negative": 5,
+       "negative_share": 83.3,
+       "escalation": 4,
+       "share_change_pct": 300.0,
+       "weekly": []
+      },
+      {
+       "id": "closure_requests",
+       "label": "Account and card closure requests",
+       "count": 6,
+       "negative": 3,
+       "negative_share": 39.4,
+       "escalation": 1,
+       "share_change_pct": 200.0,
+       "weekly": []
+      },
+      {
+       "id": "app_speed_crash",
+       "label": "App speed, loading and crashes",
+       "count": 5,
+       "negative": 5,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": -19.7,
+       "weekly": []
+      },
+      {
+       "id": "refund_delay",
+       "label": "Refunds not credited",
+       "count": 5,
+       "negative": 5,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "care_unreachable",
+       "label": "Customer care unreachable or unhelpful",
+       "count": 5,
+       "negative": 5,
+       "negative_share": 100.0,
+       "escalation": 1,
+       "share_change_pct": 50.0,
+       "weekly": []
+      },
+      {
+       "id": "login_mpin",
+       "label": "Login, MPIN and registration",
+       "count": 4,
+       "negative": 3,
+       "negative_share": 81.4,
+       "escalation": 0,
+       "share_change_pct": -57.0,
+       "weekly": []
+      },
+      {
+       "id": "fraud_scam",
+       "label": "Fraud and scam calls",
+       "count": 4,
+       "negative": 4,
+       "negative_share": 100.0,
+       "escalation": 2,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "branch_service",
+       "label": "Branch service and staff behaviour",
+       "count": 4,
+       "negative": 4,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "netbanking",
+       "label": "NetBanking",
+       "count": 4,
+       "negative": 3,
+       "negative_share": 75.0,
+       "escalation": 0,
+       "share_change_pct": 100.0,
+       "weekly": []
+      },
+      {
+       "id": "account_opening",
+       "label": "Account opening and product conversion",
+       "count": 4,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": -25.0,
+       "weekly": []
+      },
+      {
+       "id": "recovery_conduct",
+       "label": "Recovery and collection conduct",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "nri_forex",
+       "label": "NRI and forex services",
+       "count": 3,
+       "negative": 2,
+       "negative_share": 39.4,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "failed_txn_reversal",
+       "label": "Failed transaction reversal",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 1,
+       "share_change_pct": 100.0,
+       "weekly": []
+      },
+      {
+       "id": "loan_servicing",
+       "label": "EMI and loan account servicing",
+       "count": 2,
+       "negative": 1,
+       "negative_share": 39.4,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "rm_service",
+       "label": "Relationship manager service",
+       "count": 2,
+       "negative": 1,
+       "negative_share": 50.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "mis_selling",
+       "label": "Mis-selling and bundled products",
+       "count": 2,
+       "negative": 1,
+       "negative_share": 50.0,
+       "escalation": 1,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "upi_failures",
+       "label": "UPI payments failing or pending",
+       "count": 2,
+       "negative": 2,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "new_app_release",
+       "label": "New app and update experience",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "credit_report",
+       "label": "CIBIL and credit-report correction",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "loan_closure_documents",
+       "label": "Loan closure, foreclosure and documents",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "loan_processing",
+       "label": "Loan processing and disbursal",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "phishing",
+       "label": "Phishing messages and fake links",
+       "count": 1,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "app_usability",
+       "label": "App features and usability",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": -100.0,
+       "weekly": []
+      },
+      {
+       "id": "app_praise",
+       "label": "Where customers praise us: quick, easy app journeys",
+       "count": 1,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      }
+     ],
+     "rising": [
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 35,
+       "negative": 3,
+       "negative_share": 5.5,
+       "escalation": 0,
+       "share_change_pct": 1633.3,
+       "weekly": []
+      },
+      {
+       "id": "complaint_handling",
+       "label": "Complaints closed without resolution",
+       "count": 9,
+       "negative": 8,
+       "negative_share": 94.6,
+       "escalation": 1,
+       "share_change_pct": 600.0,
+       "weekly": []
+      },
+      {
+       "id": "dispute_chargeback",
+       "label": "Disputes and chargebacks",
+       "count": 8,
+       "negative": 8,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 400.0,
+       "weekly": []
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 17,
+       "negative": 17,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 91.9,
+       "weekly": []
+      },
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 16,
+       "negative": 16,
+       "negative_share": 100.0,
+       "escalation": 1,
+       "share_change_pct": 57.1,
+       "weekly": []
+      }
+     ],
+     "reach": {
+      "volume": 0,
+      "positive": 0,
+      "negative": 0,
+      "by_source": {},
+      "escalation": 0,
+      "top_themes": [],
+      "responded": {
+       "reviews": 0,
+       "responded": 0,
+       "positive_reviews": 0,
+       "positive_responded": 0,
+       "negative_reviews": 0,
+       "negative_responded": 0
+      }
+     },
+     "safety": {
+      "public": 8,
+      "public_negative": 7,
+      "public_escalation": 2,
+      "high_impact": 0,
+      "internal": 11,
+      "internal_open": 0,
+      "internal_high_impact": 1,
+      "top": [
+       {
+        "id": "fraud_scam",
+        "label": "Fraud and scam calls",
+        "count": 4
+       },
+       {
+        "id": "recovery_conduct",
+        "label": "Recovery and collection conduct",
+        "count": 3
+       },
+       {
+        "id": "phishing",
+        "label": "Phishing messages and fake links",
+        "count": 1
+       }
+      ]
+     }
+    },
+    "service_full": {
+     "ladder": [
+      {
+       "rung": "Contacts",
+       "count": 708
+      },
+      {
+       "rung": "Repeat",
+       "count": 82
+      },
+      {
+       "rung": "Grievance",
+       "count": 17
+      },
+      {
+       "rung": "MD's office",
+       "count": 0
+      },
+      {
+       "rung": "Internal Ombudsman",
+       "count": 0
+      },
+      {
+       "rung": "RBI Ombudsman",
+       "count": 0
+      }
+     ],
+     "public_escalation": 35,
+     "targets": [
+      {
+       "id": "rbi",
+       "label": "RBI (named or tagged)",
+       "count": 22
+      },
+      {
+       "id": "grievance",
+       "label": "Grievance or nodal officer",
+       "count": 5
+      },
+      {
+       "id": "legal",
+       "label": "Legal action",
+       "count": 5
+      },
+      {
+       "id": "rbi_ombudsman",
+       "label": "RBI Ombudsman",
+       "count": 2
+      },
+      {
+       "id": "ministers",
+       "label": "Ministers tagged",
+       "count": 1
+      }
+     ],
+     "closure": {
+      "internal_requests": 15,
+      "internal_open": 5,
+      "public_intent": 20,
+      "quote": {
+       "summary": "Limit increase refused because of little use, yet refused too when asked for an upgrade so the card is used; will cut cards.",
+       "source_label": "X",
+       "date": "2026-09-25"
+      }
+     },
+     "cure": {
+      "count": 9,
+      "top": [
+       {
+        "id": "account_freeze",
+        "label": "Account debit freezes and blocks",
+        "count": 2
+       },
+       {
+        "id": "app_speed_crash",
+        "label": "App speed, loading and crashes",
+        "count": 1
+       },
+       {
+        "id": "card_dispatch",
+        "label": "Card dispatch and delivery",
+        "count": 1
+       }
+      ],
+      "quote": {
+       "summary": "Went to collect a debit card as per the bank's message on a Sunday but staff would not issue it.",
+       "source_label": "X",
+       "date": "2026-09-27"
+      }
+     },
+     "transparency": {
+      "count": 137,
+      "share": 8.3,
+      "quote": {
+       "summary": "Missed the deadline for a card change offer and the link no longer opens; asks whether it can still be obtained.",
+       "source_label": "X",
+       "date": "2026-09-26"
+      }
+     },
+     "disputes": [
+      {
+       "stage": "Disputes raised",
+       "count": 3
+      },
+      {
+       "stage": "First response given",
+       "count": 3
+      },
+      {
+       "stage": "Closed",
+       "count": 0
+      },
+      {
+       "stage": "Customer credited",
+       "count": 0
+      }
+     ],
+     "missed_timelines": {
+      "total": 41,
+      "rows": [
+       {
+        "id": "other",
+        "label": "Other request",
+        "count": 23
+       },
+       {
+        "id": "card_delivery",
+        "label": "Card delivery",
+        "count": 8
+       },
+       {
+        "id": "closure",
+        "label": "Card closure",
+        "count": 3
+       },
+       {
+        "id": "refund",
+        "label": "Merchant refund",
+        "count": 3
+       },
+       {
+        "id": "kyc",
+        "label": "KYC and profile updates",
+        "count": 2
+       },
+       {
+        "id": "dispute",
+        "label": "Dispute or chargeback",
+        "count": 1
+       },
+       {
+        "id": "reversal",
+        "label": "Failed-transaction reversal",
+        "count": 1
+       }
+      ]
+     },
+     "tat_related": {
+      "contacts": 394,
+      "share": 55.6,
+      "open": 145
+     },
+     "failures": [
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "negative": 46,
+       "count": 100,
+       "escalation": 2
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "negative": 24,
+       "count": 45,
+       "escalation": 5
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "negative": 18,
+       "count": 46,
+       "escalation": 0
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "negative": 18,
+       "count": 46,
+       "escalation": 9
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "negative": 17,
+       "count": 17,
+       "escalation": 0
+      }
+     ]
+    }
    }
   },
   "30d": {
@@ -14417,7 +16611,1186 @@
       "open": 203,
       "negative": 730
      }
-    ]
+    ],
+    "happy": {
+     "by_source": [
+      {
+       "source": "playstore",
+       "label": "Play Store",
+       "items": 49,
+       "positive": 4,
+       "neutral": 4,
+       "negative": 41,
+       "net": -75.5,
+       "weight_pct": 61.8
+      },
+      {
+       "source": "appstore",
+       "label": "App Store",
+       "items": 6,
+       "positive": 0,
+       "neutral": 0,
+       "negative": 6,
+       "net": -100.0,
+       "weight_pct": 3.5
+      },
+      {
+       "source": "x",
+       "label": "X",
+       "items": 196,
+       "positive": 2,
+       "neutral": 33,
+       "negative": 161,
+       "net": -81.1,
+       "weight_pct": 10.7
+      },
+      {
+       "source": "reddit",
+       "label": "Reddit",
+       "items": 905,
+       "positive": 123,
+       "neutral": 550,
+       "negative": 232,
+       "net": -12.0,
+       "weight_pct": 16.5
+      },
+      {
+       "source": "forum",
+       "label": "Forums",
+       "items": 431,
+       "positive": 24,
+       "neutral": 294,
+       "negative": 113,
+       "net": -20.6,
+       "weight_pct": 7.5
+      }
+     ],
+     "weekly_net": [
+      {
+       "end": "2026-07-31T08:30:00+05:30",
+       "items": 1063,
+       "net": -28.7
+      },
+      {
+       "end": "2026-08-30T08:30:00+05:30",
+       "items": 958,
+       "net": -55.4
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "items": 1587,
+       "net": -62.4
+      }
+     ],
+     "saying": [
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 226,
+       "summary": "Asked for a basic lifetime-free card after being told to move from a co-brand card; request declined, so they closed it.",
+       "source_label": "X",
+       "date": "2026-09-25"
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 141,
+       "summary": "Several electronic verification attempts failed and a signed form was emailed as instructed, yet the credit card remains blocked.",
+       "source_label": "X",
+       "date": "2026-09-01"
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 153,
+       "summary": "Denied promised cashback on an electronics purchase despite proofs; multiple complaints and escalation to the nodal officer brought no written resolution.",
+       "source_label": "X",
+       "date": "2026-08-31"
+      },
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "count": 178,
+       "summary": "Credit card upgrade requires physical form instead of digital.",
+       "source_label": "X",
+       "date": "2026-09-19"
+      }
+     ],
+     "repeat_by_category": [
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "internal_repeat": 138,
+       "public_repeat": 11,
+       "contacts": 794
+      },
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "internal_repeat": 101,
+       "public_repeat": 2,
+       "contacts": 736
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "internal_repeat": 28,
+       "public_repeat": 17,
+       "contacts": 311
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "internal_repeat": 22,
+       "public_repeat": 14,
+       "contacts": 248
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "internal_repeat": 23,
+       "public_repeat": 4,
+       "contacts": 294
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "internal_repeat": 11,
+       "public_repeat": 7,
+       "contacts": 124
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "internal_repeat": 9,
+       "public_repeat": 8,
+       "contacts": 287
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "internal_repeat": 9,
+       "public_repeat": 3,
+       "contacts": 146
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "internal_repeat": 0,
+       "public_repeat": 4,
+       "contacts": 81
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "internal_repeat": 1,
+       "public_repeat": 2,
+       "contacts": 35
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "internal_repeat": 0,
+       "public_repeat": 2,
+       "contacts": 48
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "internal_repeat": 0,
+       "public_repeat": 0,
+       "contacts": 56
+      }
+     ],
+     "tiers": [
+      {
+       "id": "priority_a",
+       "label": "Ultra sensitive",
+       "volume": 59,
+       "positive": 6,
+       "neutral": 29,
+       "negative": 24,
+       "open": 7
+      },
+      {
+       "id": "priority_b",
+       "label": "RBI & Government",
+       "volume": 147,
+       "positive": 16,
+       "neutral": 77,
+       "negative": 54,
+       "open": 18
+      },
+      {
+       "id": "uhni",
+       "label": "Ultra HNI",
+       "volume": 185,
+       "positive": 19,
+       "neutral": 98,
+       "negative": 68,
+       "open": 15
+      },
+      {
+       "id": "multi",
+       "label": "Customers with multiple relationships",
+       "volume": 756,
+       "positive": 90,
+       "neutral": 428,
+       "negative": 238,
+       "open": 60
+      },
+      {
+       "id": "none",
+       "label": "Not on a list",
+       "volume": 2404,
+       "positive": 289,
+       "neutral": 1385,
+       "negative": 730,
+       "open": 203
+      }
+     ]
+    },
+    "market_full": {
+     "themes": [
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 226,
+       "negative": 88,
+       "negative_share": 60.9,
+       "escalation": 5,
+       "share_change_pct": 22.5,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 6,
+         "share": 0.1
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 76,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 226,
+         "share": 4.9
+        }
+       ]
+      },
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "count": 198,
+       "negative": 9,
+       "negative_share": 3.4,
+       "escalation": 0,
+       "share_change_pct": -17.4,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 121,
+         "share": 9.3
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 115,
+         "share": 4.6
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 198,
+         "share": 3.8
+        }
+       ]
+      },
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "count": 178,
+       "negative": 37,
+       "negative_share": 35.5,
+       "escalation": 3,
+       "share_change_pct": -43.1,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 175,
+         "share": 4.9
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 156,
+         "share": 6.5
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 178,
+         "share": 3.7
+        }
+       ]
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 153,
+       "negative": 41,
+       "negative_share": 17.1,
+       "escalation": 1,
+       "share_change_pct": 38.7,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 245,
+         "share": 8.5
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 58,
+         "share": 3.1
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 153,
+         "share": 4.3
+        }
+       ]
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 141,
+       "negative": 60,
+       "negative_share": 82.4,
+       "escalation": 9,
+       "share_change_pct": 42.5,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 126,
+         "share": 4.5
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 41,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 141,
+         "share": 5.7
+        }
+       ]
+      },
+      {
+       "id": "reward_redemption",
+       "label": "Reward redemption and vouchers",
+       "count": 100,
+       "negative": 17,
+       "negative_share": 77.8,
+       "escalation": 3,
+       "share_change_pct": -13.2,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 63,
+         "share": 2.0
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 84,
+         "share": 3.8
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 100,
+         "share": 3.3
+        }
+       ]
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "count": 97,
+       "negative": 35,
+       "negative_share": 44.1,
+       "escalation": 12,
+       "share_change_pct": -67.0,
+       "weekly": []
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "count": 65,
+       "negative": 28,
+       "negative_share": 47.2,
+       "escalation": 0,
+       "share_change_pct": 45.5,
+       "weekly": []
+      },
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 46,
+       "negative": 6,
+       "negative_share": 37.8,
+       "escalation": 0,
+       "share_change_pct": 2.9,
+       "weekly": []
+      },
+      {
+       "id": "offers_deals",
+       "label": "Card offers and deals",
+       "count": 43,
+       "negative": 7,
+       "negative_share": 30.3,
+       "escalation": 0,
+       "share_change_pct": -18.2,
+       "weekly": []
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 32,
+       "negative": 32,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 64.7,
+       "weekly": []
+      },
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 31,
+       "negative": 20,
+       "negative_share": 59.8,
+       "escalation": 2,
+       "share_change_pct": -33.3,
+       "weekly": []
+      },
+      {
+       "id": "account_opening",
+       "label": "Account opening and product conversion",
+       "count": 25,
+       "negative": 3,
+       "negative_share": 76.3,
+       "escalation": 0,
+       "share_change_pct": -10.5,
+       "weekly": []
+      },
+      {
+       "id": "complaint_handling",
+       "label": "Complaints closed without resolution",
+       "count": 17,
+       "negative": 15,
+       "negative_share": 86.9,
+       "escalation": 3,
+       "share_change_pct": 66.7,
+       "weekly": []
+      },
+      {
+       "id": "account_freeze",
+       "label": "Account debit freezes and blocks",
+       "count": 17,
+       "negative": 13,
+       "negative_share": 78.2,
+       "escalation": 4,
+       "share_change_pct": 33.3,
+       "weekly": []
+      },
+      {
+       "id": "closure_requests",
+       "label": "Account and card closure requests",
+       "count": 15,
+       "negative": 5,
+       "negative_share": 32.6,
+       "escalation": 1,
+       "share_change_pct": -71.4,
+       "weekly": []
+      },
+      {
+       "id": "login_mpin",
+       "label": "Login, MPIN and registration",
+       "count": 14,
+       "negative": 11,
+       "negative_share": 70.0,
+       "escalation": 0,
+       "share_change_pct": 38.1,
+       "weekly": []
+      },
+      {
+       "id": "kyc_updates",
+       "label": "KYC, re-KYC and profile updates",
+       "count": 14,
+       "negative": 6,
+       "negative_share": 47.2,
+       "escalation": 1,
+       "share_change_pct": -76.5,
+       "weekly": []
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "count": 12,
+       "negative": 4,
+       "negative_share": 36.8,
+       "escalation": 0,
+       "share_change_pct": -84.2,
+       "weekly": []
+      },
+      {
+       "id": "refund_delay",
+       "label": "Refunds not credited",
+       "count": 12,
+       "negative": 6,
+       "negative_share": 48.0,
+       "escalation": 0,
+       "share_change_pct": 300.0,
+       "weekly": []
+      },
+      {
+       "id": "service_praise",
+       "label": "Praise for service",
+       "count": 12,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 200.0,
+       "weekly": []
+      },
+      {
+       "id": "unsolicited_calls",
+       "label": "Unsolicited sales calls and use of data",
+       "count": 11,
+       "negative": 11,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 325.0,
+       "weekly": []
+      },
+      {
+       "id": "dispute_chargeback",
+       "label": "Disputes and chargebacks",
+       "count": 11,
+       "negative": 9,
+       "negative_share": 69.7,
+       "escalation": 0,
+       "share_change_pct": 25.0,
+       "weekly": []
+      },
+      {
+       "id": "fees_charges_bank",
+       "label": "Bank charges and hidden fees",
+       "count": 11,
+       "negative": 7,
+       "negative_share": 87.5,
+       "escalation": 1,
+       "share_change_pct": -71.4,
+       "weekly": []
+      },
+      {
+       "id": "rm_service",
+       "label": "Relationship manager service",
+       "count": 11,
+       "negative": 9,
+       "negative_share": 81.8,
+       "escalation": 1,
+       "share_change_pct": -50.0,
+       "weekly": []
+      },
+      {
+       "id": "care_unreachable",
+       "label": "Customer care unreachable or unhelpful",
+       "count": 10,
+       "negative": 7,
+       "negative_share": 59.4,
+       "escalation": 1,
+       "share_change_pct": 50.0,
+       "weekly": []
+      },
+      {
+       "id": "unauthorised_txn",
+       "label": "Unauthorised transactions",
+       "count": 10,
+       "negative": 9,
+       "negative_share": 95.1,
+       "escalation": 7,
+       "share_change_pct": -66.7,
+       "weekly": []
+      },
+      {
+       "id": "app_speed_crash",
+       "label": "App speed, loading and crashes",
+       "count": 8,
+       "negative": 7,
+       "negative_share": 86.6,
+       "escalation": 0,
+       "share_change_pct": 18.6,
+       "weekly": []
+      },
+      {
+       "id": "netbanking",
+       "label": "NetBanking",
+       "count": 8,
+       "negative": 5,
+       "negative_share": 15.1,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "mis_selling",
+       "label": "Mis-selling and bundled products",
+       "count": 7,
+       "negative": 6,
+       "negative_share": 84.8,
+       "escalation": 1,
+       "share_change_pct": -60.0,
+       "weekly": []
+      },
+      {
+       "id": "recovery_conduct",
+       "label": "Recovery and collection conduct",
+       "count": 7,
+       "negative": 6,
+       "negative_share": 93.4,
+       "escalation": 0,
+       "share_change_pct": -25.0,
+       "weekly": []
+      },
+      {
+       "id": "app_usability",
+       "label": "App features and usability",
+       "count": 6,
+       "negative": 4,
+       "negative_share": 55.0,
+       "escalation": 0,
+       "share_change_pct": -80.0,
+       "weekly": []
+      },
+      {
+       "id": "failed_txn_reversal",
+       "label": "Failed transaction reversal",
+       "count": 5,
+       "negative": 5,
+       "negative_share": 100.0,
+       "escalation": 1,
+       "share_change_pct": 100.0,
+       "weekly": []
+      },
+      {
+       "id": "fraud_scam",
+       "label": "Fraud and scam calls",
+       "count": 5,
+       "negative": 4,
+       "negative_share": 39.4,
+       "escalation": 2,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "branch_service",
+       "label": "Branch service and staff behaviour",
+       "count": 5,
+       "negative": 4,
+       "negative_share": 76.2,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "app_praise",
+       "label": "Where customers praise us: quick, easy app journeys",
+       "count": 4,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": -43.5,
+       "weekly": []
+      },
+      {
+       "id": "new_app_release",
+       "label": "New app and update experience",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 31.0,
+       "weekly": []
+      },
+      {
+       "id": "nri_forex",
+       "label": "NRI and forex services",
+       "count": 3,
+       "negative": 2,
+       "negative_share": 39.4,
+       "escalation": 0,
+       "share_change_pct": -66.7,
+       "weekly": []
+      },
+      {
+       "id": "loan_servicing",
+       "label": "EMI and loan account servicing",
+       "count": 3,
+       "negative": 2,
+       "negative_share": 69.7,
+       "escalation": 0,
+       "share_change_pct": -96.7,
+       "weekly": []
+      },
+      {
+       "id": "upi_failures",
+       "label": "UPI payments failing or pending",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "credit_report",
+       "label": "CIBIL and credit-report correction",
+       "count": 2,
+       "negative": 2,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": -83.3,
+       "weekly": []
+      },
+      {
+       "id": "deposits_rates",
+       "label": "Deposits and interest rates",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": -23.5,
+       "weekly": []
+      },
+      {
+       "id": "statements_documents",
+       "label": "Statements, certificates and documents",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 44.4,
+       "weekly": []
+      },
+      {
+       "id": "loan_closure_documents",
+       "label": "Loan closure, foreclosure and documents",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "loan_processing",
+       "label": "Loan processing and disbursal",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "phishing",
+       "label": "Phishing messages and fake links",
+       "count": 1,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "market_news",
+       "label": "Share price, results and corporate news",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      }
+     ],
+     "rising": [
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 32,
+       "negative": 32,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": 64.7,
+       "weekly": []
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "count": 65,
+       "negative": 28,
+       "negative_share": 47.2,
+       "escalation": 0,
+       "share_change_pct": 45.5,
+       "weekly": []
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 141,
+       "negative": 60,
+       "negative_share": 82.4,
+       "escalation": 9,
+       "share_change_pct": 42.5,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 126,
+         "share": 4.5
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 41,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 141,
+         "share": 5.7
+        }
+       ]
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 153,
+       "negative": 41,
+       "negative_share": 17.1,
+       "escalation": 1,
+       "share_change_pct": 38.7,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 245,
+         "share": 8.5
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 58,
+         "share": 3.1
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 153,
+         "share": 4.3
+        }
+       ]
+      },
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 226,
+       "negative": 88,
+       "negative_share": 60.9,
+       "escalation": 5,
+       "share_change_pct": 22.5,
+       "weekly": [
+        {
+         "end": "2026-07-31T08:30:00+05:30",
+         "count": 6,
+         "share": 0.1
+        },
+        {
+         "end": "2026-08-30T08:30:00+05:30",
+         "count": 76,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 226,
+         "share": 4.9
+        }
+       ]
+      }
+     ],
+     "reach": {
+      "volume": 5,
+      "positive": 0,
+      "negative": 4,
+      "by_source": {
+       "X": 4,
+       "Reddit": 1
+      },
+      "escalation": 0,
+      "top_themes": [
+       {
+        "id": "unsolicited_calls",
+        "label": "Unsolicited sales calls and use of data",
+        "count": 2
+       },
+       {
+        "id": "product_advice",
+        "label": "Product questions and advice-seeking",
+        "count": 1
+       },
+       {
+        "id": "unauthorised_txn",
+        "label": "Unauthorised transactions",
+        "count": 1
+       }
+      ],
+      "responded": {
+       "reviews": 0,
+       "responded": 0,
+       "positive_reviews": 0,
+       "positive_responded": 0,
+       "negative_reviews": 0,
+       "negative_responded": 0
+      }
+     },
+     "safety": {
+      "public": 13,
+      "public_negative": 10,
+      "public_escalation": 2,
+      "high_impact": 1,
+      "internal": 35,
+      "internal_open": 0,
+      "internal_high_impact": 1,
+      "top": [
+       {
+        "id": "recovery_conduct",
+        "label": "Recovery and collection conduct",
+        "count": 7
+       },
+       {
+        "id": "fraud_scam",
+        "label": "Fraud and scam calls",
+        "count": 5
+       },
+       {
+        "id": "phishing",
+        "label": "Phishing messages and fake links",
+        "count": 1
+       }
+      ]
+     }
+    },
+    "service_full": {
+     "ladder": [
+      {
+       "rung": "Contacts",
+       "count": 3160
+      },
+      {
+       "rung": "Repeat",
+       "count": 342
+      },
+      {
+       "rung": "Grievance",
+       "count": 65
+      },
+      {
+       "rung": "MD's office",
+       "count": 2
+      },
+      {
+       "rung": "Internal Ombudsman",
+       "count": 1
+      },
+      {
+       "rung": "RBI Ombudsman",
+       "count": 0
+      }
+     ],
+     "public_escalation": 58,
+     "targets": [
+      {
+       "id": "rbi",
+       "label": "RBI (named or tagged)",
+       "count": 29
+      },
+      {
+       "id": "grievance",
+       "label": "Grievance or nodal officer",
+       "count": 18
+      },
+      {
+       "id": "legal",
+       "label": "Legal action",
+       "count": 7
+      },
+      {
+       "id": "rbi_ombudsman",
+       "label": "RBI Ombudsman",
+       "count": 2
+      },
+      {
+       "id": "ministers",
+       "label": "Ministers tagged",
+       "count": 1
+      },
+      {
+       "id": "consumer_court",
+       "label": "Consumer court or helpline",
+       "count": 1
+      }
+     ],
+     "closure": {
+      "internal_requests": 56,
+      "internal_open": 7,
+      "public_intent": 58,
+      "quote": {
+       "summary": "Limit increase refused because of little use, yet refused too when asked for an upgrade so the card is used; will cut cards.",
+       "source_label": "X",
+       "date": "2026-09-25"
+      }
+     },
+     "cure": {
+      "count": 21,
+      "top": [
+       {
+        "id": "account_freeze",
+        "label": "Account debit freezes and blocks",
+        "count": 6
+       },
+       {
+        "id": "card_application",
+        "label": "Card application, rejection and verification",
+        "count": 3
+       },
+       {
+        "id": "new_app_release",
+        "label": "New app and update experience",
+        "count": 1
+       }
+      ],
+      "quote": {
+       "summary": "Several electronic verification attempts failed and a signed form was emailed as instructed, yet the credit card remains blocked.",
+       "source_label": "X",
+       "date": "2026-09-01"
+      }
+     },
+     "transparency": {
+      "count": 295,
+      "share": 8.0,
+      "quote": {
+       "summary": "Seeks approval for HDFC Marriott card application.",
+       "source_label": "X",
+       "date": "2026-09-19"
+      }
+     },
+     "disputes": [
+      {
+       "stage": "Disputes raised",
+       "count": 16
+      },
+      {
+       "stage": "First response given",
+       "count": 16
+      },
+      {
+       "stage": "Closed",
+       "count": 9
+      },
+      {
+       "stage": "Customer credited",
+       "count": 7
+      }
+     ],
+     "missed_timelines": {
+      "total": 61,
+      "rows": [
+       {
+        "id": "other",
+        "label": "Other request",
+        "count": 36
+       },
+       {
+        "id": "card_delivery",
+        "label": "Card delivery",
+        "count": 11
+       },
+       {
+        "id": "kyc",
+        "label": "KYC and profile updates",
+        "count": 4
+       },
+       {
+        "id": "closure",
+        "label": "Card closure",
+        "count": 3
+       },
+       {
+        "id": "refund",
+        "label": "Merchant refund",
+        "count": 3
+       },
+       {
+        "id": "dispute",
+        "label": "Dispute or chargeback",
+        "count": 2
+       },
+       {
+        "id": "reversal",
+        "label": "Failed-transaction reversal",
+        "count": 1
+       },
+       {
+        "id": "credit_report",
+        "label": "Credit report correction",
+        "count": 1
+       }
+      ]
+     },
+     "tat_related": {
+      "contacts": 1662,
+      "share": 52.6,
+      "open": 216
+     },
+     "failures": [
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "negative": 88,
+       "count": 226,
+       "escalation": 5
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "negative": 60,
+       "count": 141,
+       "escalation": 9
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "negative": 41,
+       "count": 153,
+       "escalation": 1
+      },
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "negative": 37,
+       "count": 178,
+       "escalation": 3
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "negative": 35,
+       "count": 97,
+       "escalation": 12
+      }
+     ]
+    }
    }
   },
   "all": {
@@ -20953,7 +24326,1580 @@
       "open": 220,
       "negative": 1967
      }
-    ]
+    ],
+    "happy": {
+     "by_source": [
+      {
+       "source": "playstore",
+       "label": "Play Store",
+       "items": 133,
+       "positive": 19,
+       "neutral": 8,
+       "negative": 106,
+       "net": -65.4,
+       "weight_pct": 61.8
+      },
+      {
+       "source": "appstore",
+       "label": "App Store",
+       "items": 24,
+       "positive": 3,
+       "neutral": 2,
+       "negative": 19,
+       "net": -66.7,
+       "weight_pct": 3.5
+      },
+      {
+       "source": "x",
+       "label": "X",
+       "items": 458,
+       "positive": 7,
+       "neutral": 83,
+       "negative": 368,
+       "net": -78.8,
+       "weight_pct": 10.7
+      },
+      {
+       "source": "reddit",
+       "label": "Reddit",
+       "items": 1861,
+       "positive": 187,
+       "neutral": 1165,
+       "negative": 509,
+       "net": -17.3,
+       "weight_pct": 16.5
+      },
+      {
+       "source": "forum",
+       "label": "Forums",
+       "items": 1150,
+       "positive": 43,
+       "neutral": 797,
+       "negative": 310,
+       "net": -23.2,
+       "weight_pct": 7.5
+      }
+     ],
+     "weekly_net": [
+      {
+       "end": "2026-07-14T08:30:00+05:30",
+       "items": 241,
+       "net": -40.8
+      },
+      {
+       "end": "2026-07-21T08:30:00+05:30",
+       "items": 151,
+       "net": -47.5
+      },
+      {
+       "end": "2026-07-28T08:30:00+05:30",
+       "items": 130,
+       "net": -24.0
+      },
+      {
+       "end": "2026-08-04T08:30:00+05:30",
+       "items": 368,
+       "net": -26.4
+      },
+      {
+       "end": "2026-08-11T08:30:00+05:30",
+       "items": 194,
+       "net": -73.5
+      },
+      {
+       "end": "2026-08-18T08:30:00+05:30",
+       "items": 129,
+       "net": -82.4
+      },
+      {
+       "end": "2026-08-25T08:30:00+05:30",
+       "items": 224,
+       "net": -49.5
+      },
+      {
+       "end": "2026-09-01T08:30:00+05:30",
+       "items": 148,
+       "net": -48.3
+      },
+      {
+       "end": "2026-09-08T08:30:00+05:30",
+       "items": 262,
+       "net": -63.1
+      },
+      {
+       "end": "2026-09-15T08:30:00+05:30",
+       "items": 237,
+       "net": -53.2
+      },
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "items": 382,
+       "net": -56.8
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "items": 668,
+       "net": -70.4
+      }
+     ],
+     "saying": [
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 469,
+       "summary": "Update: RM confirmed a large spend but part was instalments and excluded from the milestone, which was never communicated; decision pending.",
+       "source_label": "X",
+       "date": "2026-07-29"
+      },
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 308,
+       "summary": "Argues the bank cannot downgrade existing lifetime-free co-brand cardholders and should migrate them to the new premium variant.",
+       "source_label": "X",
+       "date": "2026-08-26"
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 308,
+       "summary": "Prefers another lender's card since this bank and a state lender set strict rules for their payments-app credit cards.",
+       "source_label": "X",
+       "date": "2026-08-04"
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "count": 238,
+       "summary": "Says the bank has worsened and they faced a similar issue with unnecessary finance charges running to thousands.",
+       "source_label": "X",
+       "date": "2026-08-18"
+      }
+     ],
+     "repeat_by_category": [
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "internal_repeat": 278,
+       "public_repeat": 17,
+       "contacts": 2228
+      },
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "internal_repeat": 208,
+       "public_repeat": 12,
+       "contacts": 1963
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "internal_repeat": 53,
+       "public_repeat": 31,
+       "contacts": 828
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "internal_repeat": 55,
+       "public_repeat": 23,
+       "contacts": 739
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "internal_repeat": 54,
+       "public_repeat": 10,
+       "contacts": 798
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "internal_repeat": 28,
+       "public_repeat": 22,
+       "contacts": 862
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "internal_repeat": 22,
+       "public_repeat": 5,
+       "contacts": 380
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "internal_repeat": 16,
+       "public_repeat": 9,
+       "contacts": 319
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "internal_repeat": 3,
+       "public_repeat": 9,
+       "contacts": 217
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "internal_repeat": 3,
+       "public_repeat": 4,
+       "contacts": 93
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "internal_repeat": 1,
+       "public_repeat": 4,
+       "contacts": 109
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "internal_repeat": 4,
+       "public_repeat": 1,
+       "contacts": 157
+      }
+     ],
+     "tiers": [
+      {
+       "id": "priority_a",
+       "label": "Ultra sensitive",
+       "volume": 161,
+       "positive": 23,
+       "neutral": 82,
+       "negative": 56,
+       "open": 7
+      },
+      {
+       "id": "priority_b",
+       "label": "RBI & Government",
+       "volume": 362,
+       "positive": 54,
+       "neutral": 191,
+       "negative": 117,
+       "open": 19
+      },
+      {
+       "id": "uhni",
+       "label": "Ultra HNI",
+       "volume": 500,
+       "positive": 67,
+       "neutral": 262,
+       "negative": 171,
+       "open": 15
+      },
+      {
+       "id": "multi",
+       "label": "Customers with multiple relationships",
+       "volume": 2026,
+       "positive": 271,
+       "neutral": 1130,
+       "negative": 625,
+       "open": 65
+      },
+      {
+       "id": "none",
+       "label": "Not on a list",
+       "volume": 6667,
+       "positive": 807,
+       "neutral": 3893,
+       "negative": 1967,
+       "open": 220
+      }
+     ]
+    },
+    "market_full": {
+     "themes": [
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "count": 510,
+       "negative": 92,
+       "negative_share": 76.1,
+       "escalation": 13,
+       "share_change_pct": -45.5,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 54,
+         "share": 16.1
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 36,
+         "share": 7.7
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 31,
+         "share": 7.6
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 74,
+         "share": 5.3
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 37,
+         "share": 6.7
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 30,
+         "share": 14.6
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 18,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 11,
+         "share": 2.2
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 28,
+         "share": 6.0
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 21,
+         "share": 2.9
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 51,
+         "share": 5.2
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 72,
+         "share": 3.3
+        }
+       ]
+      },
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "count": 469,
+       "negative": 187,
+       "negative_share": 18.8,
+       "escalation": 5,
+       "share_change_pct": -55.1,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 17,
+         "share": 9.3
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 22,
+         "share": 3.9
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 22,
+         "share": 3.0
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 42,
+         "share": 8.6
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 11,
+         "share": 2.1
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 2,
+         "share": 0.8
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 7,
+         "share": 0.8
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 6,
+         "share": 0.9
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 28,
+         "share": 2.3
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 37,
+         "share": 11.7
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 36,
+         "share": 2.9
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 46,
+         "share": 2.4
+        }
+       ]
+      },
+      {
+       "id": "product_advice",
+       "label": "Product questions and advice-seeking",
+       "count": 436,
+       "negative": 11,
+       "negative_share": 0.7,
+       "escalation": 0,
+       "share_change_pct": -4.4,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 17,
+         "share": 4.5
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 22,
+         "share": 10.5
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 17,
+         "share": 4.5
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 53,
+         "share": 6.7
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 16,
+         "share": 2.9
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 13,
+         "share": 3.9
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 34,
+         "share": 7.6
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 9,
+         "share": 5.8
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 25,
+         "share": 3.5
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 37,
+         "share": 4.1
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 41,
+         "share": 2.8
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 93,
+         "share": 4.2
+        }
+       ]
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 308,
+       "negative": 116,
+       "negative_share": 66.3,
+       "escalation": 20,
+       "share_change_pct": 16.7,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 39,
+         "share": 13.6
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 13,
+         "share": 10.5
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 13,
+         "share": 7.2
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 19,
+         "share": 2.0
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 14,
+         "share": 3.6
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 3,
+         "share": 6.1
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 8,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 6,
+         "share": 6.6
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 40,
+         "share": 10.9
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 26,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 28,
+         "share": 10.1
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 45,
+         "share": 2.2
+        }
+       ]
+      },
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 308,
+       "negative": 129,
+       "negative_share": 85.8,
+       "escalation": 8,
+       "share_change_pct": 178.9,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 2,
+         "share": 0.4
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 14,
+         "share": 1.2
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 9,
+         "share": 4.7
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 8,
+         "share": 1.4
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 51,
+         "share": 11.2
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 31,
+         "share": 2.7
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 30,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 60,
+         "share": 7.6
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 100,
+         "share": 6.0
+        }
+       ]
+      },
+      {
+       "id": "reward_redemption",
+       "label": "Reward redemption and vouchers",
+       "count": 247,
+       "negative": 77,
+       "negative_share": 80.1,
+       "escalation": 4,
+       "share_change_pct": -30.8,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 23,
+         "share": 12.9
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 8,
+         "share": 1.4
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 8,
+         "share": 2.0
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 45,
+         "share": 3.2
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 20,
+         "share": 6.6
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 4,
+         "share": 0.8
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 14,
+         "share": 2.2
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 7,
+         "share": 1.2
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 24,
+         "share": 1.7
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 13,
+         "share": 9.1
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 31,
+         "share": 2.0
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 28,
+         "share": 1.4
+        }
+       ]
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "count": 238,
+       "negative": 116,
+       "negative_share": 58.2,
+       "escalation": 25,
+       "share_change_pct": -52.0,
+       "weekly": []
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "count": 137,
+       "negative": 55,
+       "negative_share": 50.4,
+       "escalation": 0,
+       "share_change_pct": 23.1,
+       "weekly": []
+      },
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 116,
+       "negative": 21,
+       "negative_share": 48.6,
+       "escalation": 1,
+       "share_change_pct": 300.0,
+       "weekly": []
+      },
+      {
+       "id": "offers_deals",
+       "label": "Card offers and deals",
+       "count": 103,
+       "negative": 13,
+       "negative_share": 26.9,
+       "escalation": 0,
+       "share_change_pct": -20.0,
+       "weekly": []
+      },
+      {
+       "id": "general_dissatisfaction",
+       "label": "General dissatisfaction",
+       "count": 73,
+       "negative": 73,
+       "negative_share": 100.0,
+       "escalation": 2,
+       "share_change_pct": 8.3,
+       "weekly": []
+      },
+      {
+       "id": "account_opening",
+       "label": "Account opening and product conversion",
+       "count": 59,
+       "negative": 8,
+       "negative_share": 77.0,
+       "escalation": 1,
+       "share_change_pct": -60.7,
+       "weekly": []
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "count": 56,
+       "negative": 21,
+       "negative_share": 14.2,
+       "escalation": 0,
+       "share_change_pct": -64.7,
+       "weekly": []
+      },
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 42,
+       "negative": 29,
+       "negative_share": 57.7,
+       "escalation": 3,
+       "share_change_pct": 1050.0,
+       "weekly": []
+      },
+      {
+       "id": "closure_requests",
+       "label": "Account and card closure requests",
+       "count": 36,
+       "negative": 14,
+       "negative_share": 78.7,
+       "escalation": 2,
+       "share_change_pct": -77.8,
+       "weekly": []
+      },
+      {
+       "id": "app_usability",
+       "label": "App features and usability",
+       "count": 34,
+       "negative": 12,
+       "negative_share": 61.4,
+       "escalation": 0,
+       "share_change_pct": -60.0,
+       "weekly": []
+      },
+      {
+       "id": "login_mpin",
+       "label": "Login, MPIN and registration",
+       "count": 29,
+       "negative": 26,
+       "negative_share": 76.6,
+       "escalation": 0,
+       "share_change_pct": 147.5,
+       "weekly": []
+      },
+      {
+       "id": "account_freeze",
+       "label": "Account debit freezes and blocks",
+       "count": 28,
+       "negative": 22,
+       "negative_share": 82.8,
+       "escalation": 5,
+       "share_change_pct": 100.0,
+       "weekly": []
+      },
+      {
+       "id": "unauthorised_txn",
+       "label": "Unauthorised transactions",
+       "count": 27,
+       "negative": 26,
+       "negative_share": 99.5,
+       "escalation": 9,
+       "share_change_pct": -88.0,
+       "weekly": []
+      },
+      {
+       "id": "complaint_handling",
+       "label": "Complaints closed without resolution",
+       "count": 27,
+       "negative": 24,
+       "negative_share": 89.3,
+       "escalation": 9,
+       "share_change_pct": 33.3,
+       "weekly": []
+      },
+      {
+       "id": "unsolicited_calls",
+       "label": "Unsolicited sales calls and use of data",
+       "count": 24,
+       "negative": 23,
+       "negative_share": 96.9,
+       "escalation": 0,
+       "share_change_pct": 83.3,
+       "weekly": []
+      },
+      {
+       "id": "fees_charges_bank",
+       "label": "Bank charges and hidden fees",
+       "count": 23,
+       "negative": 16,
+       "negative_share": 73.7,
+       "escalation": 1,
+       "share_change_pct": 150.0,
+       "weekly": []
+      },
+      {
+       "id": "dispute_chargeback",
+       "label": "Disputes and chargebacks",
+       "count": 22,
+       "negative": 16,
+       "negative_share": 68.3,
+       "escalation": 1,
+       "share_change_pct": 33.3,
+       "weekly": []
+      },
+      {
+       "id": "rm_service",
+       "label": "Relationship manager service",
+       "count": 22,
+       "negative": 15,
+       "negative_share": 50.0,
+       "escalation": 1,
+       "share_change_pct": 200.0,
+       "weekly": []
+      },
+      {
+       "id": "app_speed_crash",
+       "label": "App speed, loading and crashes",
+       "count": 20,
+       "negative": 16,
+       "negative_share": 82.7,
+       "escalation": 0,
+       "share_change_pct": -25.0,
+       "weekly": []
+      },
+      {
+       "id": "kyc_updates",
+       "label": "KYC, re-KYC and profile updates",
+       "count": 20,
+       "negative": 12,
+       "negative_share": 84.5,
+       "escalation": 1,
+       "share_change_pct": 800.0,
+       "weekly": []
+      },
+      {
+       "id": "mis_selling",
+       "label": "Mis-selling and bundled products",
+       "count": 20,
+       "negative": 18,
+       "negative_share": 89.4,
+       "escalation": 3,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "recovery_conduct",
+       "label": "Recovery and collection conduct",
+       "count": 18,
+       "negative": 17,
+       "negative_share": 97.7,
+       "escalation": 4,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "service_praise",
+       "label": "Praise for service",
+       "count": 18,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": 50.0,
+       "weekly": []
+      },
+      {
+       "id": "care_unreachable",
+       "label": "Customer care unreachable or unhelpful",
+       "count": 17,
+       "negative": 14,
+       "negative_share": 77.0,
+       "escalation": 2,
+       "share_change_pct": 200.0,
+       "weekly": []
+      },
+      {
+       "id": "refund_delay",
+       "label": "Refunds not credited",
+       "count": 16,
+       "negative": 9,
+       "negative_share": 58.4,
+       "escalation": 0,
+       "share_change_pct": 50.0,
+       "weekly": []
+      },
+      {
+       "id": "app_praise",
+       "label": "Where customers praise us: quick, easy app journeys",
+       "count": 14,
+       "negative": 0,
+       "negative_share": 0.0,
+       "escalation": 0,
+       "share_change_pct": -9.5,
+       "weekly": []
+      },
+      {
+       "id": "credit_report",
+       "label": "CIBIL and credit-report correction",
+       "count": 13,
+       "negative": 11,
+       "negative_share": 84.0,
+       "escalation": 0,
+       "share_change_pct": -75.0,
+       "weekly": []
+      },
+      {
+       "id": "failed_txn_reversal",
+       "label": "Failed transaction reversal",
+       "count": 13,
+       "negative": 12,
+       "negative_share": 92.8,
+       "escalation": 1,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "nri_forex",
+       "label": "NRI and forex services",
+       "count": 12,
+       "negative": 5,
+       "negative_share": 45.8,
+       "escalation": 1,
+       "share_change_pct": -50.0,
+       "weekly": []
+      },
+      {
+       "id": "loan_servicing",
+       "label": "EMI and loan account servicing",
+       "count": 11,
+       "negative": 6,
+       "negative_share": 63.5,
+       "escalation": 0,
+       "share_change_pct": -55.6,
+       "weekly": []
+      },
+      {
+       "id": "netbanking",
+       "label": "NetBanking",
+       "count": 10,
+       "negative": 6,
+       "negative_share": 14.1,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "branch_service",
+       "label": "Branch service and staff behaviour",
+       "count": 10,
+       "negative": 9,
+       "negative_share": 91.4,
+       "escalation": 1,
+       "share_change_pct": -66.7,
+       "weekly": []
+      },
+      {
+       "id": "fraud_scam",
+       "label": "Fraud and scam calls",
+       "count": 10,
+       "negative": 9,
+       "negative_share": 52.5,
+       "escalation": 3,
+       "share_change_pct": 0.0,
+       "weekly": []
+      },
+      {
+       "id": "new_app_release",
+       "label": "New app and update experience",
+       "count": 9,
+       "negative": 8,
+       "negative_share": 98.2,
+       "escalation": 0,
+       "share_change_pct": -36.6,
+       "weekly": []
+      },
+      {
+       "id": "statements_documents",
+       "label": "Statements, certificates and documents",
+       "count": 4,
+       "negative": 3,
+       "negative_share": 89.5,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "phishing",
+       "label": "Phishing messages and fake links",
+       "count": 4,
+       "negative": 3,
+       "negative_share": 80.3,
+       "escalation": 3,
+       "share_change_pct": -100.0,
+       "weekly": []
+      },
+      {
+       "id": "upi_failures",
+       "label": "UPI payments failing or pending",
+       "count": 4,
+       "negative": 4,
+       "negative_share": 100.0,
+       "escalation": 1,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "deposits_rates",
+       "label": "Deposits and interest rates",
+       "count": 3,
+       "negative": 2,
+       "negative_share": 66.7,
+       "escalation": 0,
+       "share_change_pct": 25.0,
+       "weekly": []
+      },
+      {
+       "id": "market_news",
+       "label": "Share price, results and corporate news",
+       "count": 3,
+       "negative": 3,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "loan_processing",
+       "label": "Loan processing and disbursal",
+       "count": 2,
+       "negative": 2,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      },
+      {
+       "id": "loan_closure_documents",
+       "label": "Loan closure, foreclosure and documents",
+       "count": 1,
+       "negative": 1,
+       "negative_share": 100.0,
+       "escalation": 0,
+       "share_change_pct": null,
+       "weekly": []
+      }
+     ],
+     "rising": [
+      {
+       "id": "card_dispatch",
+       "label": "Card dispatch and delivery",
+       "count": 42,
+       "negative": 29,
+       "negative_share": 57.7,
+       "escalation": 3,
+       "share_change_pct": 1050.0,
+       "weekly": []
+      },
+      {
+       "id": "atm_debit_card",
+       "label": "Debit card and ATM",
+       "count": 116,
+       "negative": 21,
+       "negative_share": 48.6,
+       "escalation": 1,
+       "share_change_pct": 300.0,
+       "weekly": []
+      },
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "count": 308,
+       "negative": 129,
+       "negative_share": 85.8,
+       "escalation": 8,
+       "share_change_pct": 178.9,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 2,
+         "share": 0.4
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 14,
+         "share": 1.2
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 9,
+         "share": 4.7
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 8,
+         "share": 1.4
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 0,
+         "share": 0.0
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 51,
+         "share": 11.2
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 31,
+         "share": 2.7
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 30,
+         "share": 4.0
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 60,
+         "share": 7.6
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 100,
+         "share": 6.0
+        }
+       ]
+      },
+      {
+       "id": "card_limit",
+       "label": "Credit limit",
+       "count": 137,
+       "negative": 55,
+       "negative_share": 50.4,
+       "escalation": 0,
+       "share_change_pct": 23.1,
+       "weekly": []
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "count": 308,
+       "negative": 116,
+       "negative_share": 66.3,
+       "escalation": 20,
+       "share_change_pct": 16.7,
+       "weekly": [
+        {
+         "end": "2026-07-14T08:30:00+05:30",
+         "count": 39,
+         "share": 13.6
+        },
+        {
+         "end": "2026-07-21T08:30:00+05:30",
+         "count": 13,
+         "share": 10.5
+        },
+        {
+         "end": "2026-07-28T08:30:00+05:30",
+         "count": 13,
+         "share": 7.2
+        },
+        {
+         "end": "2026-08-04T08:30:00+05:30",
+         "count": 19,
+         "share": 2.0
+        },
+        {
+         "end": "2026-08-11T08:30:00+05:30",
+         "count": 14,
+         "share": 3.6
+        },
+        {
+         "end": "2026-08-18T08:30:00+05:30",
+         "count": 3,
+         "share": 6.1
+        },
+        {
+         "end": "2026-08-25T08:30:00+05:30",
+         "count": 8,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-01T08:30:00+05:30",
+         "count": 6,
+         "share": 6.6
+        },
+        {
+         "end": "2026-09-08T08:30:00+05:30",
+         "count": 40,
+         "share": 10.9
+        },
+        {
+         "end": "2026-09-15T08:30:00+05:30",
+         "count": 26,
+         "share": 4.7
+        },
+        {
+         "end": "2026-09-22T08:30:00+05:30",
+         "count": 28,
+         "share": 10.1
+        },
+        {
+         "end": "2026-09-29T08:30:00+05:30",
+         "count": 45,
+         "share": 2.2
+        }
+       ]
+      }
+     ],
+     "reach": {
+      "volume": 69,
+      "positive": 3,
+      "negative": 46,
+      "by_source": {
+       "X": 45,
+       "Reddit": 24
+      },
+      "escalation": 4,
+      "top_themes": [
+       {
+        "id": "rewards_value",
+        "label": "Rewards value, devaluation and caps",
+        "count": 13
+       },
+       {
+        "id": "card_fees_charges",
+        "label": "Card fees and charges",
+        "count": 8
+       },
+       {
+        "id": "product_advice",
+        "label": "Product questions and advice-seeking",
+        "count": 5
+       }
+      ],
+      "responded": {
+       "reviews": 0,
+       "responded": 0,
+       "positive_reviews": 0,
+       "positive_responded": 0,
+       "negative_reviews": 0,
+       "negative_responded": 0
+      }
+     },
+     "safety": {
+      "public": 32,
+      "public_negative": 29,
+      "public_escalation": 10,
+      "high_impact": 1,
+      "internal": 93,
+      "internal_open": 0,
+      "internal_high_impact": 7,
+      "top": [
+       {
+        "id": "recovery_conduct",
+        "label": "Recovery and collection conduct",
+        "count": 18
+       },
+       {
+        "id": "fraud_scam",
+        "label": "Fraud and scam calls",
+        "count": 10
+       },
+       {
+        "id": "phishing",
+        "label": "Phishing messages and fake links",
+        "count": 4
+       }
+      ]
+     }
+    },
+    "service_full": {
+     "ladder": [
+      {
+       "rung": "Contacts",
+       "count": 8693
+      },
+      {
+       "rung": "Repeat",
+       "count": 725
+      },
+      {
+       "rung": "Grievance",
+       "count": 171
+      },
+      {
+       "rung": "MD's office",
+       "count": 9
+      },
+      {
+       "rung": "Internal Ombudsman",
+       "count": 3
+      },
+      {
+       "rung": "RBI Ombudsman",
+       "count": 0
+      }
+     ],
+     "public_escalation": 130,
+     "targets": [
+      {
+       "id": "rbi",
+       "label": "RBI (named or tagged)",
+       "count": 51
+      },
+      {
+       "id": "grievance",
+       "label": "Grievance or nodal officer",
+       "count": 45
+      },
+      {
+       "id": "legal",
+       "label": "Legal action",
+       "count": 14
+      },
+      {
+       "id": "rbi_ombudsman",
+       "label": "RBI Ombudsman",
+       "count": 11
+      },
+      {
+       "id": "consumer_court",
+       "label": "Consumer court or helpline",
+       "count": 4
+      },
+      {
+       "id": "ministers",
+       "label": "Ministers tagged",
+       "count": 3
+      },
+      {
+       "id": "unnamed",
+       "label": "Target not named",
+       "count": 2
+      }
+     ],
+     "closure": {
+      "internal_requests": 157,
+      "internal_open": 7,
+      "public_intent": 139,
+      "quote": {
+       "summary": "Gave up their credit card because of poor, patronising customer service staff; calls the bank the worst.",
+       "source_label": "X",
+       "date": "2026-08-18"
+      }
+     },
+     "cure": {
+      "count": 52,
+      "top": [
+       {
+        "id": "card_application",
+        "label": "Card application, rejection and verification",
+        "count": 10
+       },
+       {
+        "id": "account_freeze",
+        "label": "Account debit freezes and blocks",
+        "count": 10
+       },
+       {
+        "id": "atm_debit_card",
+        "label": "Debit card and ATM",
+        "count": 4
+       }
+      ],
+      "quote": {
+       "summary": "Almost two hours booking a flight with reward points, only for the system to fail, use the points and ask for full payment again.",
+       "source_label": "X",
+       "date": "2026-08-05"
+      }
+     },
+     "transparency": {
+      "count": 611,
+      "share": 7.7,
+      "quote": {
+       "summary": "Card bill generated but every payment app says nothing is due, so they cannot pay it.",
+       "source_label": "X",
+       "date": "2026-07-14"
+      }
+     },
+     "disputes": [
+      {
+       "stage": "Disputes raised",
+       "count": 57
+      },
+      {
+       "stage": "First response given",
+       "count": 57
+      },
+      {
+       "stage": "Closed",
+       "count": 50
+      },
+      {
+       "stage": "Customer credited",
+       "count": 33
+      }
+     ],
+     "missed_timelines": {
+      "total": 124,
+      "rows": [
+       {
+        "id": "other",
+        "label": "Other request",
+        "count": 78
+       },
+       {
+        "id": "card_delivery",
+        "label": "Card delivery",
+        "count": 22
+       },
+       {
+        "id": "refund",
+        "label": "Merchant refund",
+        "count": 8
+       },
+       {
+        "id": "kyc",
+        "label": "KYC and profile updates",
+        "count": 5
+       },
+       {
+        "id": "closure",
+        "label": "Card closure",
+        "count": 5
+       },
+       {
+        "id": "dispute",
+        "label": "Dispute or chargeback",
+        "count": 4
+       },
+       {
+        "id": "reversal",
+        "label": "Failed-transaction reversal",
+        "count": 1
+       },
+       {
+        "id": "credit_report",
+        "label": "Credit report correction",
+        "count": 1
+       }
+      ]
+     },
+     "tat_related": {
+      "contacts": 4597,
+      "share": 52.9,
+      "open": 237
+     },
+     "failures": [
+      {
+       "id": "rewards_value",
+       "label": "Rewards value, devaluation and caps",
+       "negative": 187,
+       "count": 469,
+       "escalation": 5
+      },
+      {
+       "id": "card_variant_migration",
+       "label": "Card variant migration and forced upgrade",
+       "negative": 129,
+       "count": 308,
+       "escalation": 8
+      },
+      {
+       "id": "card_application",
+       "label": "Card application, rejection and verification",
+       "negative": 116,
+       "count": 308,
+       "escalation": 20
+      },
+      {
+       "id": "card_fees_charges",
+       "label": "Card fees and charges",
+       "negative": 116,
+       "count": 238,
+       "escalation": 25
+      },
+      {
+       "id": "card_eligibility_upgrade",
+       "label": "Card eligibility, upgrade and LTF requests",
+       "negative": 92,
+       "count": 510,
+       "escalation": 13
+      }
+     ]
+    }
    }
   }
  }

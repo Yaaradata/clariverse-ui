@@ -130,7 +130,104 @@ export type Category = CategoryFigures & {
   subcategories: (CategoryFigures & { id: string; label: string })[];
 };
 
+export type Quote = { summary: string; source_label: string; date: string };
+export type ThemeRow = {
+  id: string;
+  label: string;
+  count: number;
+  negative: number;
+  negative_share: number | null;
+  escalation: number;
+  share_change_pct: number | null;
+  weekly: { end: string; count: number; share: number | null }[];
+};
+export type TopTheme = { id: string; label: string; count: number };
+
+/** The three MD drill-downs, rebuilt for Cards and the period (changes_30sep.md C4). */
+export type CardsHappy = {
+  by_source: {
+    source: string;
+    label: string;
+    items: number;
+    positive: number;
+    neutral: number;
+    negative: number;
+    net: number | null;
+    weight_pct: number;
+  }[];
+  weekly_net: { end: string; items: number; net: number | null }[];
+  saying: (Quote & { id: string; label: string; count: number })[];
+  repeat_by_category: {
+    id: string;
+    label: string;
+    internal_repeat: number;
+    public_repeat: number;
+    contacts: number;
+  }[];
+  tiers: {
+    id: string;
+    label: string;
+    volume: number;
+    positive: number;
+    neutral: number;
+    negative: number;
+    open: number;
+  }[];
+};
+export type CardsMarket = {
+  themes: ThemeRow[];
+  rising: ThemeRow[];
+  reach: {
+    volume: number;
+    positive: number;
+    negative: number;
+    by_source: Record<string, number>;
+    escalation: number;
+    top_themes: TopTheme[];
+    responded: Replies;
+  };
+  safety: {
+    public: number;
+    public_negative: number;
+    public_escalation: number;
+    high_impact: number;
+    internal: number;
+    internal_open: number;
+    internal_high_impact: number;
+    top: TopTheme[];
+  };
+};
+export type CardsService = {
+  ladder: { rung: string; count: number }[];
+  public_escalation: number;
+  targets: { id: string; label: string; count: number }[];
+  closure: {
+    internal_requests: number;
+    internal_open: number;
+    public_intent: number;
+    quote: Quote | null;
+  };
+  cure: { count: number; top: TopTheme[]; quote: Quote | null };
+  transparency: { count: number; share: number | null; quote: Quote | null };
+  disputes: { stage: string; count: number }[];
+  missed_timelines: {
+    total: number;
+    rows: { id: string; label: string; count: number }[];
+  };
+  tat_related: { contacts: number; share: number | null; open: number };
+  failures: {
+    id: string;
+    label: string;
+    negative: number;
+    count: number;
+    escalation: number;
+  }[];
+};
+
 export type CardsPeriod = {
+  happy: CardsHappy;
+  market_full: CardsMarket;
+  service_full: CardsService;
   internal: InternalFigures;
   external: PublicFigures;
   categories: Category[];

@@ -333,6 +333,65 @@ function share(a: number | null, b: number): number | null {
 const WAIT_NA =
   "Can't be measured in a 24-hour window: nothing in it is 48 hours old yet.";
 
+function RingStat({
+  value,
+  color,
+  big,
+  label,
+  sub,
+}: {
+  value: number | null;
+  color: string;
+  big: string;
+  label: string;
+  sub?: ReactNode;
+}) {
+  return (
+    <div
+      data-testid="dial"
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        minWidth: 0,
+        background: C.card,
+        border: `1px solid ${C.border}`,
+        borderRadius: 10,
+        padding: "8px 10px",
+      }}
+    >
+      <SmallRing value={value} color={color} size={54} />
+      <div style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: 20,
+            fontWeight: 750,
+            lineHeight: 1.1,
+          }}
+        >
+          {big}
+        </span>
+        <span
+          style={{
+            fontSize: 11.5,
+            color: C.textMut,
+            textTransform: "uppercase",
+            letterSpacing: "0.04em",
+          }}
+        >
+          {label}
+        </span>
+        {sub ? (
+          <span style={{ fontSize: 12, color: C.textSec, lineHeight: 1.3 }}>
+            {sub}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 function ListCard({ l, p }: { l: PulseList; p: Period }) {
   const [open, setOpen] = useState(false);
   const series = l.not_responded_series.map((x) => x.count);
@@ -345,6 +404,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
       c.not_responded_48h === null ? "—" : fmt(c.not_responded_48h),
     ];
   });
+  const late = l.not_responded_48h;
   return (
     <div
       data-testid="pulse-list"
@@ -367,37 +427,71 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           alignItems: "baseline",
         }}
       >
-        <strong style={{ fontSize: 15.5 }}>{l.label}</strong>
-        <span style={{ fontSize: 12.5, color: C.textMut }}>
+        <strong style={{ fontSize: 15.5, lineHeight: 1.25 }}>{l.label}</strong>
+        <span
+          style={{ fontSize: 12.5, color: C.textMut, whiteSpace: "nowrap" }}
+        >
           {fmt(l.members)} customers
         </span>
       </div>
-      <div style={DIALS(3)}>
-        <Dial
-          value={100}
-          color={C.violet}
-          centre={fmt(l.volume)}
-          big={fmt(l.volume)}
-          label="Volume"
-          sub={<TrendChip pct={l.change_pct} label={p.compare} />}
-        />
-        <Dial
+      <div
+        style={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          gap: 10,
+          flexWrap: "wrap",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <span
+            style={{
+              fontFamily: MONO,
+              fontSize: 30,
+              fontWeight: 750,
+              lineHeight: 1,
+            }}
+          >
+            {fmt(l.volume)}
+          </span>
+          <span
+            style={{
+              fontSize: 11.5,
+              color: C.textMut,
+              textTransform: "uppercase",
+              letterSpacing: "0.04em",
+              marginTop: 4,
+            }}
+          >
+            Volume
+          </span>
+        </div>
+        <TrendChip pct={l.change_pct} label={p.compare} />
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+          gap: 8,
+        }}
+      >
+        <RingStat
           value={share(l.open, l.volume)}
           color={C.amber}
           big={fmt(l.open)}
           label="Open"
           sub={`${fmt(l.volume - l.open)} closed`}
         />
-        <Dial
-          value={share(l.not_responded_48h, l.volume)}
+        <RingStat
+          value={share(late, l.volume)}
           color={C.red}
-          big={l.not_responded_48h === null ? "—" : fmt(l.not_responded_48h)}
+          big={late === null ? "—" : fmt(late)}
           label="No reply in 48 h"
           sub={
-            l.not_responded_48h === null ? (
+            late === null ? (
               <span style={{ color: C.textMut }}>needs 48 hours</span>
             ) : (
-              <Sparkline values={series} color={C.red} />
+              <Sparkline values={series} color={C.red} width={70} height={22} />
             )
           }
         />
@@ -432,9 +526,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
               <strong key="t">Total</strong>,
               <strong key="v">{fmt(l.volume)}</strong>,
               <strong key="o">{fmt(l.open)}</strong>,
-              <strong key="n">
-                {l.not_responded_48h === null ? "—" : fmt(l.not_responded_48h)}
-              </strong>,
+              <strong key="n">{late === null ? "—" : fmt(late)}</strong>,
             ],
           ]}
         />
@@ -458,8 +550,9 @@ export function CustomerPulse({ p }: { p: Period }) {
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 250px), 1fr))",
+            "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
           gap: 10,
+          alignItems: "start",
         }}
       >
         {cp.lists.map((l) => (
@@ -581,6 +674,24 @@ export function CxPulse({ p }: { p: Period }) {
   const e = cx.external;
   const na = i.open_too_long === null;
   const mix = Object.entries(e.source_mix).sort((a, b) => b[1] - a[1])[0];
+  const head = (
+    label: string,
+    kind: "internal" | "public",
+    extra?: ReactNode,
+  ) => (
+    <div
+      style={{
+        display: "flex",
+        gap: 8,
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
+      <strong style={{ fontSize: 15 }}>{label}</strong>
+      <ProvenanceTag kind={kind} />
+      {extra}
+    </div>
+  );
   return (
     <Tile
       id="cx-pulse"
@@ -636,35 +747,30 @@ export function CxPulse({ p }: { p: Period }) {
         </div>
       </div>
 
+      {head("Internal channels", "internal")}
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
+          display: "flex",
           gap: 12,
+          flexWrap: "wrap",
+          alignItems: "stretch",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <strong style={{ fontSize: 15 }}>Internal channels</strong>
-            <ProvenanceTag kind="internal" />
-          </div>
-          <div
-            style={{
-              ...DIALS(4),
-              background: C.cardAlt,
-              border: `1px solid ${C.border}`,
-              borderRadius: 12,
-              padding: "12px 10px",
-            }}
-          >
+        <div
+          style={{
+            flex: "5 1 520px",
+            minWidth: 0,
+            background: C.cardAlt,
+            border: `1px solid ${C.border}`,
+            borderRadius: 12,
+            padding: "12px 10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            gap: 10,
+          }}
+        >
+          <div style={DIALS(4)}>
             <Dial
               value={100}
               color={C.violet}
@@ -693,49 +799,67 @@ export function CxPulse({ p }: { p: Period }) {
               sub={na ? "needs 48 hours" : "over 48 hours"}
             />
           </div>
-          <MutedNote>
+          <div style={{ fontSize: 12.5, color: C.textMut, lineHeight: 1.5 }}>
             Emails, calls, chat, WhatsApp, social inbox and branch; IVR bot
-            calls are not counted. Open too long: still open more than 48 hours
-            after the contact came in.{na ? ` ${WAIT_NA}` : ""}
-          </MutedNote>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              flexWrap: "wrap",
-            }}
-          >
-            <strong style={{ fontSize: 15 }}>External channels</strong>
-            <ProvenanceTag kind="public" />
-            <TrendChip
-              pct={e.change_pct}
-              label={`${p.compare}, stores and forums`}
-            />
+            calls are not counted. Resolved: closed by the period end. Open too
+            long: still open more than 48 hours after the contact came in.
+            {na ? ` ${WAIT_NA}` : ""} The channels on the right add up to these
+            dials.
           </div>
-          <ExternalSet title="Total signals" f={e} />
-          <ExternalSet title="High-impact signals" f={e.high_impact} hi />
-          <MutedNote>
-            Public posts and reviews
-            {p.id === "brief"
-              ? `, ${fmtDate(p.public_start)} ${p.public_start.slice(11, 16)} to ${fmtDate(p.public_end)} ${p.public_end.slice(11, 16)} (public data ends there)`
-              : ""}
-            . Responded: a bank reply on a Play Store review, the only source
-            with reply data. High impact: a post with reach (an X account with
-            10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with
-            50+ upvotes; a store review 20+ people found helpful). Listed
-            customers&apos; posts are in the Customer pulse. Shares are
-            source-weighted
-            {mix
-              ? ` (${mix[0] === "x" ? "X" : mix[0]} is ${fmtPct(mix[1])} of this period)`
-              : ""}
-            ; trends use store reviews and forums only.
-          </MutedNote>
+        </div>
+        <div style={{ flex: "3 1 340px", minWidth: 0 }}>
+          <Table
+            head={["Channel", "Volume", "Resolved", "Open", "Too long"]}
+            align={["left", "right", "right", "right", "right"]}
+            rows={CHANNEL_ORDER.map((ch) => {
+              const c = i.by_channel[ch];
+              return [
+                CHANNEL_LABEL[ch],
+                fmt(c.volume),
+                fmt(c.resolved),
+                fmt(c.open),
+                c.open_too_long === null || c.open_too_long === undefined
+                  ? "—"
+                  : fmt(c.open_too_long),
+              ];
+            })}
+          />
         </div>
       </div>
+      {head(
+        "External channels",
+        "public",
+        <TrendChip
+          pct={e.change_pct}
+          label={`${p.compare}, stores and forums`}
+        />,
+      )}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit, minmax(min(100%, 420px), 1fr))",
+          gap: 12,
+        }}
+      >
+        <ExternalSet title="Total signals" f={e} />
+        <ExternalSet title="High-impact signals" f={e.high_impact} hi />
+      </div>
+      <MutedNote>
+        Public posts and reviews
+        {p.id === "brief"
+          ? `, ${fmtDate(p.public_start)} ${p.public_start.slice(11, 16)} to ${fmtDate(p.public_end)} ${p.public_end.slice(11, 16)} (public data ends there)`
+          : ""}
+        . Responded: a bank reply on a Play Store review, the only source with
+        reply data. High impact: a post with reach (an X account with 10,000+
+        followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes;
+        a store review 20+ people found helpful). Listed customers&apos; posts
+        are in the Customer pulse. Shares are source-weighted
+        {mix
+          ? ` (${mix[0] === "x" ? "X" : mix[0]} is ${fmtPct(mix[1])} of this period)`
+          : ""}
+        ; trends use store reviews and forums only.
+      </MutedNote>
     </Tile>
   );
 }

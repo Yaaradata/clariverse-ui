@@ -158,7 +158,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
               <ChevronRight size={12} style={{ verticalAlign: "-2px" }} />
             </>
           ) : (
-            "Business view: coming soon"
+            "Coming soon"
           )}
         </span>
       </div>
@@ -245,23 +245,32 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
           </span>
         ) : null}
       </div>
-      {x.anecdote ? (
-        <div
-          style={{
-            fontSize: 13,
-            color: C.textSec,
-            borderLeft: `2px solid ${C.border}`,
-            paddingLeft: 8,
-            lineHeight: 1.45,
-          }}
-        >
-          &ldquo;{x.anecdote.summary}&rdquo;
-          <span style={{ color: C.textMut }}>
-            {" "}
-            · {x.anecdote.source_label}, {fmtDate(x.anecdote.date)}
-          </span>
-        </div>
-      ) : null}
+      <div
+        style={{
+          fontSize: 13,
+          color: x.anecdote ? C.textSec : C.textMut,
+          borderLeft: `2px solid ${C.border}`,
+          paddingLeft: 8,
+          lineHeight: 1.45,
+          alignSelf: "end",
+          display: "-webkit-box",
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: "vertical",
+          overflow: "hidden",
+        }}
+      >
+        {x.anecdote ? (
+          <>
+            &ldquo;{x.anecdote.summary}&rdquo;
+            <span style={{ color: C.textMut }}>
+              {" "}
+              · {x.anecdote.source_label}, {fmtDate(x.anecdote.date)}
+            </span>
+          </>
+        ) : (
+          "No quotable public post in this period."
+        )}
+      </div>
     </>
   );
   const style = {
@@ -269,9 +278,11 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
     border: `1px solid ${href ? tint(C.brand, 0.35) : C.border}`,
     borderRadius: 12,
     padding: "12px 14px",
-    display: "flex",
-    flexDirection: "column" as const,
-    gap: 10,
+    // Rule B: six sections, one per subgrid row, so cards in a row line up section by section.
+    display: "grid",
+    gridRow: "span 6",
+    gridTemplateRows: "subgrid",
+    rowGap: 10,
     minWidth: 0,
     textDecoration: "none",
     color: "inherit",
@@ -304,6 +315,7 @@ export function MorningBrief({ p }: { p: Period }) {
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
           gap: 10,
+          alignItems: "start",
         }}
       >
         <BriefColumn
@@ -329,7 +341,7 @@ export function MorningBrief({ p }: { p: Period }) {
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 320px), 1fr))",
+            "repeat(auto-fit, minmax(min(100%, 400px), 1fr))",
           gap: 10,
         }}
       >
