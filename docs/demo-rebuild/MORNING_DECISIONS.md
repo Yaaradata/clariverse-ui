@@ -197,3 +197,49 @@ Confirm with Vidya that she is comfortable with it on screen.
 - **Judgement call:** tiles that repeated the same numbers were merged, e.g. the relationship-tier table and bars on the satisfaction page.
 - **Judgement call:** "Top service failures" shows 5 themes, not 6, to match the funnel beside it.
 - **Found in review and fixed:** a staff member's name in a Play Store review shown on the market page, now redacted by the pipeline.
+
+---
+
+# Update 30 Sep: the review with Ranjith (changes_30sep.md)
+
+## D16 · B7 overridden by the 30 Sep spec
+
+The 30 Sep spec wins over B7. Each override is below; the table in `changes_30sep.md` has the transcript timestamps.
+- **One view instead of two.** MD's office and Head of CX are one page. The toggle is gone and `/head-cx` shows the same
+  page. Actions stay the MD's three.
+- **List names.** "Ultra sensitive" (was list A), "RBI & Government" (was list B), "Ultra HNI", and a new bank-supplied
+  list, "Customers with multiple relationships", which replaces HNI on screen.
+  - **Risk for Ranjith and Vidya:** "RBI & Government" is an occupation-type label, the thing B7 §E2 and D1 ruled out.
+    Membership still comes only from the bank's own list, never from public data, and the purpose line stays.
+  - Confirm the bank's own term before Anjani sees it.
+- **Thresholds.** "Over 5 hours / over 24 hours" is gone. The Customer pulse shows volume, open, and contacts that waited
+  more than 48 hours for a first reply. Internal "open too long" is also a 48-hour rule now, not the deliverable TAT.
+  48 hours is a working threshold until the bank gives its TATs (Ranjith, 25:51: "just choosing 48 hours as an
+  example").
+- **External channels.** Open and open too long are dropped, because they can't be measured in public. The page shows
+  total and high-impact signals, each with positive / negative and responded. "Responded is not resolved" is removed.
+- **Removed from the MD view:**
+  - the one-line summary;
+  - "where to focus", now "Signals that are building";
+  - the deliverables ledger and the deliverables columns (route kept, unlinked);
+  - customer memory, mood, market and the retention watch.
+  Mood and market move to the Cards view.
+- **The morning brief is by business,** derived from six business cards, not by theme.
+- **Business-head view: Cards only,** with its own layout. The other products say "coming soon".
+- **IVR bot calls** are not counted on either view.
+
+## D17 · Periods and the 48-hour figures
+
+- **Periods.** Every period ends at 29 Sep 08:30, the last moment in the data, not the real clock. The Morning brief is
+  28 Sep 08:30 to 29 Sep 08:30. Public data ends 28 Sep 23:59, and the screen says so.
+- **Default.** 7 days, the period Ranjith used for the strip.
+- **"Waited over 48 hours" and "open too long"** are counted within the period's own contacts, as of 29 Sep 08:30, which
+  matches Ranjith's "in that last one week's volume…". A 24-hour window can't hold anything 48 hours old, so the
+  Morning brief shows "—" and says why.
+- **The synthetic data had almost no slow replies** (63 of 31,976). Written contacts (email, WhatsApp, social) now get a
+  realistic tail: 8% wait 48–144 hours, from a third fixed-seed stream, so nothing else changes.
+- **Short periods are source-weighted.** The capped late-September X run is a third of the last 7 days, and Reddit is
+  two-thirds of the Morning brief. check_reconcile fails if a dominant source (over 60%) leaves any short-period public
+  share unweighted.
+- **High-priority mentions** (listed customers tagging the bank) are synthetic and tagged "Internal · illustrative". The
+  linking rule is on screen: only through the bank's verified handles or contact records.

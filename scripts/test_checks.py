@@ -129,6 +129,11 @@ FIXTURES = [
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["cx_pulse"]["overall"].update(total=d["periods"]["7d"]["cx_pulse"]["overall"]["total"] + 1))),
     ("cards card vs cards view", "Cards: business card = Cards view",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["cards"]["internal"].update(volume=d["periods"]["30d"]["cards"]["internal"]["volume"] + 1))),
+    ("cards subcategories", "subcategories sum (internal volume)",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["cards"]["categories"][0]["subcategories"][0]["internal"].update(
+         volume=d["periods"]["30d"]["cards"]["categories"][0]["subcategories"][0]["internal"]["volume"] + 1))),
+    ("brief item without a business", "every brief item names a business",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["brief"]["needs_you"].append({"business": "wealth", "business_label": "Wealth", "text": "x"}))),
     ("cards categories", "Cards categories sum to the Cards external volume",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["all"]["cards"]["categories"][0]["external"].update(
          volume=d["periods"]["all"]["cards"]["categories"][0]["external"]["volume"] + 1))),

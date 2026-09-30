@@ -278,6 +278,16 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         for side, keys in (("internal", ("volume", "open", "resolved")), ("external", ("volume", "negative", "positive"))):
             for k in keys:
                 ok(sum(c[side][k] for c in cv["categories"]) == cv[side][k], f"[{pid}] Cards categories sum to the Cards {side} {k}")
+        for c in cv["categories"]:
+            if c["subcategories"]:
+                for side, k in (("internal", "volume"), ("internal", "open"), ("external", "volume"), ("external", "negative")):
+                    ok(sum(x[side][k] for x in c["subcategories"]) == c[side][k], f"[{pid}] Cards {c['label']}: subcategories sum ({side} {k})")
+        ext = p["cx_pulse"]["external"]
+        ok(sum(x["external"]["volume"] for x in biz) <= ext["volume"], f"[{pid}] product rows never exceed public voice (the rest is wealth, SME, corporate)")
+        ids = {x["id"] for x in biz}
+        items = p["brief"]["needs_you"] + p["brief"]["building"] + p["brief"]["improving"]
+        ok(all(it["business"] in ids for it in items), f"[{pid}] every brief item names a business on the cards")
+        ok(sum(r["mails"] for r in p["md_mail"]["rows"]) <= p["md_mail"]["total"], f"[{pid}] MD-marked mail rows within the total")
         # Short periods: when one source is more than the limit of public items, every public share must be weighted.
         if p["short"]:
             blocks = [p["cx_pulse"]["external"], p["cx_pulse"]["external"]["high_impact"], cv["external"]]
