@@ -35,8 +35,8 @@
       "open_delta": 0,
       "not_responded_delta": null,
       "rm": {
-       "alerted": 4,
-       "of": 18
+       "alerted": 3,
+       "of": 14
       },
       "not_responded_series": [
        {
@@ -159,7 +159,7 @@
       "not_responded_delta": null,
       "rm": {
        "alerted": 5,
-       "of": 46
+       "of": 33
       },
       "not_responded_series": [
        {
@@ -281,8 +281,8 @@
       "open_delta": 1,
       "not_responded_delta": null,
       "rm": {
-       "alerted": 13,
-       "of": 49
+       "alerted": 7,
+       "of": 36
       },
       "not_responded_series": [
        {
@@ -404,8 +404,8 @@
       "open_delta": 0,
       "not_responded_delta": null,
       "rm": {
-       "alerted": 44,
-       "of": 216
+       "alerted": 32,
+       "of": 152
       },
       "not_responded_series": [
        {
@@ -541,24 +541,36 @@
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
     },
     "rm": {
-     "alerted": 45,
-     "of": 219,
+     "alerted": 32,
+     "of": 154,
      "as_of": "2026-09-29T08:30:00+05:30"
     }
    },
    "social_pulse": {
     "mentions": 200,
-    "by_platform": {
-     "Reddit": 133,
-     "X": 67
-    },
+    "by_source": [
+     {
+      "source": "x",
+      "label": "X",
+      "mentions": 67,
+      "responded": 42,
+      "pct": 63.0,
+      "illustrative": true
+     },
+     {
+      "source": "reddit",
+      "label": "Reddit",
+      "mentions": 133,
+      "responded": 9,
+      "pct": 7.0,
+      "illustrative": true
+     }
+    ],
+    "responded": 51,
+    "response_pct": 26.0,
     "high_impact": 1,
-    "high_impact_tracked": 0,
-    "high_impact_responded": 0,
-    "high_impact_response_pct": null,
-    "tracked": 0,
-    "responded": 0,
-    "response_pct": null,
+    "high_impact_responded": 1,
+    "high_impact_response_pct": 100.0,
     "posts": [
      {
       "text": "Customer asking if blocking debit card will waive HDFC annual card fee.",
@@ -569,7 +581,8 @@
        "replies": 41
       },
       "score": 41,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      },
      {
       "text": "Customer asking if blocking debit card will waive HDFC annual card fee.",
@@ -580,7 +593,8 @@
        "replies": 32
       },
       "score": 32,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      },
      {
       "text": "Family banked here for decades out of convenience; investing is fast but servicing is poor, with a weak manager and relationship manager pairing at one branch.",
@@ -592,7 +606,8 @@
        "replies": 2
       },
       "score": 12,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Young cardholder given a business card instead of wanted Millennia asks about conversion routes and timing.",
@@ -603,7 +618,8 @@
        "replies": 9
       },
       "score": 9,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Title-only query about a convenience fee on paying an electricity bill with a Regalia Gold card.",
@@ -614,7 +630,8 @@
        "replies": 8
       },
       "score": 8,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      }
     ],
     "good_response": {
@@ -625,7 +642,7 @@
      "reply": "Hi [customer], please reach out to us at [email] with your full concern along with your registered contact details, and mention the reference ID [reference] in the subject for further assistance.",
      "in_period": false
     },
-    "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
+    "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
    },
    "cx_pulse": {
     "overall": {
@@ -5893,8 +5910,8 @@
       "open_delta": 8,
       "not_responded_delta": 1,
       "rm": {
-       "alerted": 4,
-       "of": 18
+       "alerted": 3,
+       "of": 14
       },
       "not_responded_series": [
        {
@@ -6017,7 +6034,7 @@
       "not_responded_delta": 0,
       "rm": {
        "alerted": 5,
-       "of": 46
+       "of": 33
       },
       "not_responded_series": [
        {
@@ -6139,8 +6156,8 @@
       "open_delta": 3,
       "not_responded_delta": 1,
       "rm": {
-       "alerted": 13,
-       "of": 49
+       "alerted": 7,
+       "of": 36
       },
       "not_responded_series": [
        {
@@ -6262,8 +6279,8 @@
       "open_delta": -51,
       "not_responded_delta": 0,
       "rm": {
-       "alerted": 44,
-       "of": 216
+       "alerted": 32,
+       "of": 152
       },
       "not_responded_series": [
        {
@@ -6399,27 +6416,60 @@
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
     },
     "rm": {
-     "alerted": 45,
-     "of": 219,
+     "alerted": 32,
+     "of": 154,
      "as_of": "2026-09-29T08:30:00+05:30"
     }
    },
    "social_pulse": {
     "mentions": 2056,
-    "by_platform": {
-     "X": 747,
-     "Play Store": 598,
-     "Reddit": 581,
-     "Forums": 101,
-     "App Store": 29
-    },
+    "by_source": [
+     {
+      "source": "playstore",
+      "label": "Play Store",
+      "mentions": 598,
+      "responded": 578,
+      "pct": 97.0,
+      "illustrative": false
+     },
+     {
+      "source": "appstore",
+      "label": "App Store",
+      "mentions": 29,
+      "responded": 10,
+      "pct": 34.0,
+      "illustrative": true
+     },
+     {
+      "source": "x",
+      "label": "X",
+      "mentions": 747,
+      "responded": 478,
+      "pct": 64.0,
+      "illustrative": true
+     },
+     {
+      "source": "reddit",
+      "label": "Reddit",
+      "mentions": 581,
+      "responded": 45,
+      "pct": 8.0,
+      "illustrative": true
+     },
+     {
+      "source": "forum",
+      "label": "Forums",
+      "mentions": 101,
+      "responded": 9,
+      "pct": 9.0,
+      "illustrative": true
+     }
+    ],
+    "responded": 1120,
+    "response_pct": 54.0,
     "high_impact": 19,
-    "high_impact_tracked": 1,
-    "high_impact_responded": 1,
-    "high_impact_response_pct": 100.0,
-    "tracked": 598,
-    "responded": 578,
-    "response_pct": 97.0,
+    "high_impact_responded": 12,
+    "high_impact_response_pct": 63.0,
     "posts": [
      {
       "text": "Hindi jibe during the strike that public sector customers will not switch because the bank lacks passbook printing.",
@@ -6432,7 +6482,8 @@
        "reposts": 64
       },
       "score": 294,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      },
      {
       "text": "Customer and shareholder welcomes the bank staying open on Sunday and through the strike days as a good sign.",
@@ -6445,7 +6496,8 @@
        "reposts": 9
       },
       "score": 146,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Ironically notes work-life balance claims while the bank tries to draw footfall during the public sector strike.",
@@ -6458,7 +6510,8 @@
        "reposts": 4
       },
       "score": 89,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Is it a social media App,as after the current update version 2.61.2 it has occupied 628 mb of Storage even…",
@@ -6469,7 +6522,8 @@
        "helpful": 63
       },
       "score": 63,
-      "responded": true
+      "responded": true,
+      "illustrative": false
      },
      {
       "text": "Title-only post suggesting a recent bank move is deliberately provocative; no details given.",
@@ -6480,7 +6534,8 @@
        "replies": 46
       },
       "score": 46,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      }
     ],
     "good_response": {
@@ -6493,7 +6548,7 @@
      "reply": "Hi [customer], this is not the experience we want you to have. Can you tell us more? Kindly raise a ticket by visiting the link [official help centre link] and include your reference ID [reference]. Our team will get back to you shortly.",
      "in_period": true
     },
-    "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
+    "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
    },
    "cx_pulse": {
     "overall": {
@@ -12956,8 +13011,8 @@
       "open_delta": 8,
       "not_responded_delta": -1,
       "rm": {
-       "alerted": 4,
-       "of": 18
+       "alerted": 3,
+       "of": 14
       },
       "not_responded_series": [
        {
@@ -13040,7 +13095,7 @@
       "not_responded_delta": -1,
       "rm": {
        "alerted": 5,
-       "of": 46
+       "of": 33
       },
       "not_responded_series": [
        {
@@ -13122,8 +13177,8 @@
       "open_delta": -2,
       "not_responded_delta": -3,
       "rm": {
-       "alerted": 13,
-       "of": 49
+       "alerted": 7,
+       "of": 36
       },
       "not_responded_series": [
        {
@@ -13205,8 +13260,8 @@
       "open_delta": -33,
       "not_responded_delta": -5,
       "rm": {
-       "alerted": 44,
-       "of": 216
+       "alerted": 32,
+       "of": 152
       },
       "not_responded_series": [
        {
@@ -13302,27 +13357,60 @@
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
     },
     "rm": {
-     "alerted": 45,
-     "of": 219,
+     "alerted": 32,
+     "of": 154,
      "as_of": "2026-09-29T08:30:00+05:30"
     }
    },
    "social_pulse": {
     "mentions": 6391,
-    "by_platform": {
-     "Play Store": 3419,
-     "Reddit": 1380,
-     "X": 955,
-     "Forums": 481,
-     "App Store": 156
-    },
+    "by_source": [
+     {
+      "source": "playstore",
+      "label": "Play Store",
+      "mentions": 3419,
+      "responded": 3299,
+      "pct": 96.0,
+      "illustrative": false
+     },
+     {
+      "source": "appstore",
+      "label": "App Store",
+      "mentions": 156,
+      "responded": 59,
+      "pct": 38.0,
+      "illustrative": true
+     },
+     {
+      "source": "x",
+      "label": "X",
+      "mentions": 955,
+      "responded": 609,
+      "pct": 64.0,
+      "illustrative": true
+     },
+     {
+      "source": "reddit",
+      "label": "Reddit",
+      "mentions": 1380,
+      "responded": 126,
+      "pct": 9.0,
+      "illustrative": true
+     },
+     {
+      "source": "forum",
+      "label": "Forums",
+      "mentions": 481,
+      "responded": 23,
+      "pct": 5.0,
+      "illustrative": true
+     }
+    ],
+    "responded": 4116,
+    "response_pct": 64.0,
     "high_impact": 59,
-    "high_impact_tracked": 3,
-    "high_impact_responded": 3,
-    "high_impact_response_pct": 100.0,
-    "tracked": 3419,
-    "responded": 3299,
-    "response_pct": 96.0,
+    "high_impact_responded": 32,
+    "high_impact_response_pct": 54.0,
     "posts": [
      {
       "text": "Account number input clears when switching windows in NetBanking.",
@@ -13335,7 +13423,8 @@
        "reposts": 61
       },
       "score": 730,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      },
      {
       "text": "Hindi jibe during the strike that public sector customers will not switch because the bank lacks passbook printing.",
@@ -13348,7 +13437,8 @@
        "reposts": 64
       },
       "score": 294,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      },
      {
       "text": "Customer and shareholder welcomes the bank staying open on Sunday and through the strike days as a good sign.",
@@ -13361,7 +13451,8 @@
        "reposts": 9
       },
       "score": 146,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Couple plans an emergency fund and a locker here, noting the manager asks for investments before granting a locker.",
@@ -13373,7 +13464,8 @@
        "upvotes": 53
       },
       "score": 99,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      },
      {
       "text": "Manager encouraged an upgrade application that was rejected within a day, so the holder closed the card.",
@@ -13384,7 +13476,8 @@
        "replies": 96
       },
       "score": 96,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      }
     ],
     "good_response": {
@@ -13397,7 +13490,7 @@
      "reply": "Hi [customer], this is not the experience we want you to have. Can you tell us more? Kindly raise a ticket by visiting the link [official help centre link] and include your reference ID [reference]. Our team will get back to you shortly.",
      "in_period": true
     },
-    "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
+    "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
    },
    "cx_pulse": {
     "overall": {
@@ -18759,8 +18852,8 @@
       "open_delta": 3,
       "not_responded_delta": 3,
       "rm": {
-       "alerted": 4,
-       "of": 18
+       "alerted": 3,
+       "of": 14
       },
       "not_responded_series": [
        {
@@ -18915,7 +19008,7 @@
       "not_responded_delta": -1,
       "rm": {
        "alerted": 5,
-       "of": 46
+       "of": 33
       },
       "not_responded_series": [
        {
@@ -19069,8 +19162,8 @@
       "open_delta": -11,
       "not_responded_delta": 3,
       "rm": {
-       "alerted": 13,
-       "of": 49
+       "alerted": 7,
+       "of": 36
       },
       "not_responded_series": [
        {
@@ -19224,8 +19317,8 @@
       "open_delta": -61,
       "not_responded_delta": -3,
       "rm": {
-       "alerted": 44,
-       "of": 216
+       "alerted": 32,
+       "of": 152
       },
       "not_responded_series": [
        {
@@ -19393,27 +19486,60 @@
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
     },
     "rm": {
-     "alerted": 45,
-     "of": 219,
+     "alerted": 32,
+     "of": 154,
      "as_of": "2026-09-29T08:30:00+05:30"
     }
    },
    "social_pulse": {
     "mentions": 17193,
-    "by_platform": {
-     "Play Store": 10617,
-     "Reddit": 2839,
-     "X": 1844,
-     "Forums": 1293,
-     "App Store": 600
-    },
+    "by_source": [
+     {
+      "source": "playstore",
+      "label": "Play Store",
+      "mentions": 10617,
+      "responded": 10240,
+      "pct": 96.0,
+      "illustrative": false
+     },
+     {
+      "source": "appstore",
+      "label": "App Store",
+      "mentions": 600,
+      "responded": 224,
+      "pct": 37.0,
+      "illustrative": true
+     },
+     {
+      "source": "x",
+      "label": "X",
+      "mentions": 1844,
+      "responded": 1138,
+      "pct": 62.0,
+      "illustrative": true
+     },
+     {
+      "source": "reddit",
+      "label": "Reddit",
+      "mentions": 2839,
+      "responded": 251,
+      "pct": 9.0,
+      "illustrative": true
+     },
+     {
+      "source": "forum",
+      "label": "Forums",
+      "mentions": 1293,
+      "responded": 65,
+      "pct": 5.0,
+      "illustrative": true
+     }
+    ],
+    "responded": 11918,
+    "response_pct": 69.0,
     "high_impact": 272,
-    "high_impact_tracked": 15,
-    "high_impact_responded": 15,
-    "high_impact_response_pct": 100.0,
-    "tracked": 10617,
-    "responded": 10240,
-    "response_pct": 96.0,
+    "high_impact_responded": 138,
+    "high_impact_response_pct": 51.0,
     "posts": [
      {
       "text": "Telugu complaint about a pro-rata debit card charge deducted though the card was never used.",
@@ -19426,7 +19552,8 @@
        "reposts": 49
       },
       "score": 1627,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Suggests paying a slightly rounded-up card amount because excess credit is carried to the next bill, saving hassle.",
@@ -19439,7 +19566,8 @@
        "reposts": 14
       },
       "score": 1128,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Cites a regulatory circular saying fractions under half a rupee round down, so the bill was really a whole-rupee sum.",
@@ -19452,7 +19580,8 @@
        "reposts": 112
       },
       "score": 1111,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Congratulates the bank with thumbs-up emojis and an attached image.",
@@ -19465,7 +19594,8 @@
        "reposts": 151
       },
       "score": 1062,
-      "responded": null
+      "responded": true,
+      "illustrative": true
      },
      {
       "text": "Account number input clears when switching windows in NetBanking.",
@@ -19478,7 +19608,8 @@
        "reposts": 61
       },
       "score": 730,
-      "responded": null
+      "responded": false,
+      "illustrative": true
      }
     ],
     "good_response": {
@@ -19491,7 +19622,7 @@
      "reply": "Hi [customer], we sincerely regret this. We'll ensure this is taken up promptly. Please visit [official help centre link] to submit the complete concern. Kindly mention reference number [reference] for us to promptly respond to you via e-mail.",
      "in_period": true
     },
-    "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
+    "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores)."
    },
    "cx_pulse": {
     "overall": {

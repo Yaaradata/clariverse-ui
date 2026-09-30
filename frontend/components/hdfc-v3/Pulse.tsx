@@ -436,6 +436,7 @@ function Delta({
 
 function ListCard({ l, p }: { l: PulseList; p: Period }) {
   const [open, setOpen] = useState(false);
+  const series = l.not_responded_series.map((x) => x.count);
   const rows = CHANNEL_ORDER.map((ch) => {
     const c = l.by_channel[ch];
     return [
@@ -555,13 +556,29 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           value={share(late, l.volume)}
           color={C.red}
           big={late === null ? "—" : fmt(late)}
-          label="No reply in 48 h"
+          label="Not responded in 48h+"
           sub={
-            <Delta
-              n={l.not_responded_delta}
-              label={late === null ? "needs 48 hours" : p.compare}
-              goodDown
-            />
+            <>
+              <Delta
+                n={l.not_responded_delta}
+                label={late === null ? "needs 48 hours" : p.compare}
+                goodDown
+              />
+              {late === null ? null : (
+                <span
+                  data-testid="late-trend"
+                  title="Not responded to in 48h+, over the last periods of the same length"
+                  style={{ display: "block", marginTop: 2 }}
+                >
+                  <Sparkline
+                    values={series}
+                    color={C.red}
+                    width={84}
+                    height={20}
+                  />
+                </span>
+              )}
+            </>
           }
         />
       </div>
@@ -586,7 +603,8 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           Waiting on customer:{" "}
           <strong style={{ color: C.text }}>
             {fmt(l.waiting_on_customer)}
-          </strong>
+          </strong>{" "}
+          <Illustrative />
         </span>
       </div>
       {open ? (
@@ -615,10 +633,21 @@ export function CustomerPulse({ p }: { p: Period }) {
     <Tile
       id="customer-pulse"
       title={titled("Customer pulse", p)}
-      sub={`Customers on the bank's own lists, on the bank's own channels only. Every figure is compared ${p.compare}.`}
-      prov="internal"
+      sub={`Internal channels first: customers on the bank's own lists, every figure compared ${p.compare}. External channels follow in their own block; the two are never added together.`}
+      prov={["internal", "public"]}
       tone="violet"
     >
+      <div
+        style={{
+          display: "flex",
+          gap: 8,
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
+        <strong style={{ fontSize: 15 }}>Internal channels</strong>
+        <ProvenanceTag kind="internal" />
+      </div>
       <div
         style={{
           display: "grid",
@@ -634,21 +663,46 @@ export function CustomerPulse({ p }: { p: Period }) {
       </div>
       <MutedNote>
         Internal channels only: emails, calls, chat, WhatsApp, social inbox and
-        branch; IVR bot calls are not counted. Public posts are in the Social
-        pulse below. Open: with the bank at the period end. Waiting on customer:
-        the bank has sent a resolution or proposed one, so the thread is not
-        counted as open or as unanswered. No reply in 48 h: waited more than 48
-        hours for a first reply. RMs alerted: as of {fmtDate(cp.rm.as_of)}{" "}
-        {cp.rm.as_of.slice(11, 16)}, of the list&apos;s customers due an alert.
-        Lists come only from the bank&apos;s own records; a customer can be on
-        more than one list, so the lists are not added up. Flags prioritise
-        service; they never restrict it.
+        branch; IVR bot calls are not counted. Open: with the bank at the period
+        end. Waiting on customer: the bank has sent a resolution or proposed
+        one, so the thread is not counted as open or as unanswered. Not
+        responded in 48h+: waited more than 48 hours for a first reply; the
+        small line is its trend over the last periods of the same length. RMs
+        alerted: as of {fmtDate(cp.rm.as_of)} {cp.rm.as_of.slice(11, 16)}, of
+        the list&apos;s customers due an alert. Lists come only from the
+        bank&apos;s own records; a customer can be on more than one list, so the
+        lists are not added up. Flags prioritise service; they never restrict
+        it.
       </MutedNote>
+      <ExternalBlock p={p} />
     </Tile>
   );
 }
 
-/* ---------------------------------------------------------------- Social pulse (30 Sep review, K2) */
+/* ---------------------------------------------------------------- external block of the Customer pulse */
+
+/** Marks a simulated figure, like the internal-layer tiles. */
+export function Illustrative() {
+  return (
+    <span
+      data-testid="illustrative"
+      style={{
+        fontSize: 10.5,
+        fontWeight: 700,
+        color: C.violet,
+        border: `1px solid ${tint(C.violet, 0.4)}`,
+        background: tint(C.violet, 0.08),
+        borderRadius: 999,
+        padding: "0 6px",
+        whiteSpace: "nowrap",
+        textTransform: "none",
+        letterSpacing: 0,
+      }}
+    >
+      Illustrative
+    </span>
+  );
+}
 
 const ENGAGEMENT_LABEL: Record<string, string> = {
   likes: "likes",
@@ -665,13 +719,10 @@ function engagementLine(e: Record<string, number>) {
   return parts.length ? parts.join(" · ") : "no engagement recorded";
 }
 
-function ResponseChip({ responded }: { responded: boolean | null }) {
-  const [label, color] =
-    responded === null
-      ? ["Replies not collected", C.textMut]
-      : responded
-        ? ["Responded", C.green]
-        : ["Not responded", C.red];
+function ResponseChip({ responded }: { responded: boolean }) {
+  const [label, color] = responded
+    ? ["Responded", C.green]
+    : ["Not responded", C.red];
   return (
     <span
       style={{
@@ -697,6 +748,7 @@ function SocialPostRow({ post, rank }: { post: SocialPost; rank: number }) {
       style={{
         display: "grid",
         gridTemplateColumns: "26px minmax(0, 1fr)",
+        alignItems: "start",
         gap: 10,
         padding: "9px 0",
         borderTop: rank > 1 ? `1px solid ${C.border}` : "none",
@@ -733,163 +785,234 @@ function SocialPostRow({ post, rank }: { post: SocialPost; rank: number }) {
             {engagementLine(post.engagement)}
           </span>
           <ResponseChip responded={post.responded} />
+          {post.illustrative ? <Illustrative /> : null}
         </div>
       </div>
     </div>
   );
 }
 
-export function SocialPulse({ p }: { p: Period }) {
+function ExternalBlock({ p }: { p: Period }) {
   const sp = p.social_pulse;
+  const m = p.customer_pulse.mentions;
   const g = sp.good_response;
-  const platforms = Object.entries(sp.by_platform)
-    .map(([k, v]) => `${k} ${fmt(v)}`)
-    .join(" · ");
   const box = {
-    background: C.cardAlt,
+    background: C.card,
     border: `1px solid ${C.border}`,
     borderRadius: 12,
     padding: "12px 14px",
     minWidth: 0,
   };
   return (
-    <Tile
-      id="social-pulse"
-      title={titled("Social pulse", p)}
-      sub="What LisN adds beyond your own systems: what is being said in public, what is travelling, and whether it was picked up. For awareness, not a service target."
-      prov="public"
-      tone="cyan"
+    <div
+      data-testid="external-block"
+      style={{
+        marginTop: 6,
+        borderTop: `2px dashed ${tint(C.cyan, 0.6)}`,
+        paddingTop: 14,
+      }}
     >
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 230px), 1fr))",
-          gap: 8,
-        }}
-      >
-        <Kpi
-          label="Total mentions"
-          value={fmt(sp.mentions)}
-          sub={platforms || "no public items in this period"}
-        />
-        <Kpi
-          label="High-impact mentions"
-          value={fmt(sp.high_impact)}
-          sub="posts with reach: high likes, replies and reposts"
-          tone="amber"
-        />
-        <Kpi
-          label="Bank response · informational"
-          value={sp.response_pct === null ? "—" : `${sp.response_pct}%`}
-          sub={
-            sp.tracked
-              ? `${fmt(sp.responded)} of ${fmt(sp.tracked)} Play Store reviews; high impact ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact_tracked)}`
-              : "no Play Store reviews in this period"
-          }
-        />
-      </div>
-      <div style={{ fontSize: 13.5, color: C.textSec }}>
-        Response here means acknowledged and routed to an official channel. It
-        is shown for information, not as a target.
-      </div>
-      <div
-        style={{
+          background: tint(C.cyan, 0.07),
+          border: `1px solid ${tint(C.cyan, 0.35)}`,
+          borderRadius: 14,
+          padding: "14px 14px",
           display: "flex",
+          flexDirection: "column",
           gap: 12,
-          flexWrap: "wrap",
-          alignItems: "flex-start",
         }}
       >
-        <div style={{ ...box, flex: "3 1 460px" }}>
-          <strong style={{ fontSize: 14.5 }}>
-            Top {sp.posts.length || ""} trending posts, by engagement
-          </strong>
-          {sp.posts.length ? (
-            sp.posts.map((post, i) => (
-              <SocialPostRow
-                key={`${post.platform}-${post.date}-${post.score}`}
-                post={post}
-                rank={i + 1}
-              />
-            ))
-          ) : (
-            <MutedNote>No posts with engagement in this period.</MutedNote>
-          )}
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "center",
+            flexWrap: "wrap",
+          }}
+        >
+          <strong style={{ fontSize: 15 }}>External channels</strong>
+          <ProvenanceTag kind="public" />
+          <span style={{ fontSize: 13, color: C.textSec }}>
+            What LisN adds beyond your own systems. Counted separately from the
+            internal cards above; for awareness, not a service target.
+          </span>
         </div>
-        {g ? (
-          <div
-            data-testid="good-response"
-            style={{
-              ...box,
-              flex: "2 1 320px",
-              border: `1px solid ${tint(C.green, 0.45)}`,
-              background: tint(C.green, 0.05),
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-            }}
-          >
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 230px), 1fr))",
+            gap: 8,
+          }}
+        >
+          <Kpi
+            label="Total mentions"
+            value={fmt(sp.mentions)}
+            sub={
+              sp.by_source
+                .map((x) => `${x.label} ${fmt(x.mentions)}`)
+                .join(" · ") || "no public items in this period"
+            }
+          />
+          <Kpi
+            label="High-impact mentions"
+            value={fmt(sp.high_impact)}
+            sub={`posts with reach (virality rule below); ${fmt(sp.high_impact_responded)} responded`}
+            tone="amber"
+          />
+          <Kpi
+            label="Bank response · informational"
+            value={sp.response_pct === null ? "—" : `${sp.response_pct}%`}
+            sub={`${fmt(sp.responded)} of ${fmt(sp.mentions)} mentions, all sources`}
+          />
+          <Kpi
+            label="High-priority mentions"
+            value={fmt(m.total)}
+            sub={`listed customers who tagged the bank: ${fmt(m.responded)} responded, ${fmt(m.not_responded)} not responded`}
+            tone="violet"
+          />
+        </div>
+        <div
+          data-testid="response-by-source"
+          style={{
+            display: "flex",
+            gap: 8,
+            flexWrap: "wrap",
+            alignItems: "center",
+            fontSize: 13,
+            color: C.textSec,
+          }}
+        >
+          <strong style={{ color: C.text }}>Response by source:</strong>
+          {sp.by_source.map((x) => (
             <span
+              key={x.source}
               style={{
-                alignSelf: "flex-start",
-                fontSize: 12,
-                fontWeight: 800,
-                color: C.green,
-                textTransform: "uppercase",
-                letterSpacing: "0.06em",
+                ...box,
+                padding: "3px 10px",
+                borderRadius: 999,
+                display: "inline-flex",
+                gap: 6,
+                alignItems: "center",
               }}
             >
-              Good response
-            </span>
-            <span style={{ fontSize: 14, lineHeight: 1.45 }}>
-              &ldquo;{g.text}&rdquo;
-            </span>
-            <span style={{ fontSize: 12.5, color: C.textSec }}>
-              <strong>
-                {g.platform} · {fmtDate(g.date)}
-              </strong>{" "}
+              {x.label}{" "}
+              <strong style={{ color: C.text, fontFamily: MONO }}>
+                {x.pct === null ? "—" : `${x.pct}%`}
+              </strong>
               <span style={{ color: C.textMut }}>
-                {engagementLine(g.engagement)}
-                {g.in_period
-                  ? ""
-                  : " · most recent example, before this period"}
+                {fmt(x.responded)} of {fmt(x.mentions)}
               </span>
+              {x.illustrative ? <Illustrative /> : null}
             </span>
+          ))}
+        </div>
+        <div style={{ fontSize: 13.5, color: C.textSec }}>
+          Response here means acknowledged and routed to an official channel. It
+          is shown for information, not as a target.
+        </div>
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+            alignItems: "flex-start",
+          }}
+        >
+          <div style={{ ...box, flex: "3 1 460px" }}>
+            <strong style={{ fontSize: 14.5 }}>
+              Top {sp.posts.length || ""} trending posts, by engagement
+            </strong>
+            {sp.posts.length ? (
+              sp.posts.map((post, i) => (
+                <SocialPostRow
+                  key={`${post.platform}-${post.date}-${post.score}`}
+                  post={post}
+                  rank={i + 1}
+                />
+              ))
+            ) : (
+              <MutedNote>No posts with engagement in this period.</MutedNote>
+            )}
+          </div>
+          {g ? (
             <div
+              data-testid="good-response"
               style={{
-                borderLeft: `3px solid ${C.green}`,
-                paddingLeft: 10,
-                fontSize: 13.5,
-                color: C.textSec,
-                lineHeight: 1.5,
+                ...box,
+                flex: "2 1 320px",
+                border: `1px solid ${tint(C.green, 0.45)}`,
+                background: tint(C.green, 0.05),
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
               }}
             >
-              <div
+              <span
                 style={{
-                  fontSize: 11.5,
-                  color: C.textMut,
+                  alignSelf: "flex-start",
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: C.green,
                   textTransform: "uppercase",
-                  letterSpacing: "0.04em",
+                  letterSpacing: "0.06em",
                 }}
               >
-                The bank&apos;s reply
+                Good response
+              </span>
+              <span style={{ fontSize: 14, lineHeight: 1.45 }}>
+                &ldquo;{g.text}&rdquo;
+              </span>
+              <span style={{ fontSize: 12.5, color: C.textSec }}>
+                <strong>
+                  {g.platform} · {fmtDate(g.date)}
+                </strong>{" "}
+                <span style={{ color: C.textMut }}>
+                  {engagementLine(g.engagement)}
+                  {g.in_period
+                    ? ""
+                    : " · most recent example, before this period"}
+                </span>
+              </span>
+              <div
+                style={{
+                  borderLeft: `3px solid ${C.green}`,
+                  paddingLeft: 10,
+                  fontSize: 13.5,
+                  color: C.textSec,
+                  lineHeight: 1.5,
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: 11.5,
+                    color: C.textMut,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.04em",
+                  }}
+                >
+                  The bank&apos;s reply
+                </div>
+                <span>{g.reply}</span>
               </div>
-              {g.reply}
+              <span style={{ fontSize: 12.5, color: C.textMut }}>
+                Acknowledged, given a reference and routed to an official
+                channel. Names and links are removed.
+              </span>
             </div>
-            <span style={{ fontSize: 12.5, color: C.textMut }}>
-              Acknowledged, given a reference and routed to an official channel.
-              Names and links are removed.
-            </span>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
+        <MutedNote>
+          {sp.rule} Play Store replies are collected. Replies on the App Store,
+          X, Reddit and forums are simulated at typical care-handle rates and
+          marked Illustrative, as are high-priority mentions (a post counts only
+          when the bank&apos;s own verified handles or contact records link it
+          to a listed customer; LisN never matches people from public data).
+          Text is an anonymised summary: no names, handles or links.
+        </MutedNote>
       </div>
-      <MutedNote>
-        {sp.rule} Reply data exists for Play Store reviews only; replies on X,
-        Reddit and forums are not collected, and the screen says so on each
-        post. Text is an anonymised summary: no names, handles or links.
-      </MutedNote>
-    </Tile>
+    </div>
   );
 }
 
@@ -1080,7 +1203,7 @@ export function CxPulse({ p }: { p: Period }) {
             gap: 10,
           }}
         >
-          <div style={DIALS(5)}>
+          <div style={{ ...DIALS(5), alignItems: "start" }}>
             <Dial
               value={100}
               color={C.violet}

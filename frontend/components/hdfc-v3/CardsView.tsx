@@ -108,6 +108,7 @@ function IssuePulse({ p }: { p: Period }) {
     padding: "12px 12px",
     display: "grid",
     gap: 8,
+    alignItems: "start",
     minWidth: 0,
   };
   return (
@@ -269,7 +270,8 @@ const EX = tint(C.cyan, 0.07);
 function FigureCells({ f }: { f: CategoryFigures }) {
   const i = f.internal;
   const e = f.external;
-  const cell = (bg: string) => ({
+  const cell = (bg: string, marginLeft = 0) => ({
+    marginLeft,
     fontFamily: MONO,
     fontSize: 13.5,
     textAlign: "right" as const,
@@ -289,8 +291,7 @@ function FigureCells({ f }: { f: CategoryFigures }) {
         {i.not_responded_48h === null ? "—" : fmt(i.not_responded_48h)}
       </span>
       <span style={cell(IN)}>{fmt(i.escalations)}</span>
-      <span />
-      <span style={cell(EX)}>{fmt(e.volume)}</span>
+      <span style={cell(EX, GROUP_GAP)}>{fmt(e.volume)}</span>
       <span style={cell(EX)}>
         {fmt(e.positive)} / {fmt(e.negative)}
       </span>
@@ -301,8 +302,7 @@ function FigureCells({ f }: { f: CategoryFigures }) {
       </span>
       <span style={cell(EX)}>{fmt(e.high_impact.volume)}</span>
       <span style={cell(EX)}>{fmt(e.escalation)}</span>
-      <span />
-      <span style={{ display: "flex", alignItems: "center" }}>
+      <span style={{ display: "flex", alignItems: "center", marginLeft: 10 }}>
         <Sparkline
           values={f.trend.map((t) => t.internal + t.external)}
           color={C.violet}
@@ -313,9 +313,10 @@ function FigureCells({ f }: { f: CategoryFigures }) {
   );
 }
 
-// Category | six internal | gap | five external | gap | trend
+// Category | six internal | five external (the first carries the gap between the groups) | trend
+const GROUP_GAP = 14;
 const GRID =
-  "minmax(190px, 2.2fr) repeat(6, minmax(62px, 0.8fr)) 14px repeat(5, minmax(62px, 0.8fr)) 10px minmax(74px, 0.9fr)";
+  "minmax(190px, 2.2fr) repeat(3, minmax(62px, 0.8fr)) minmax(88px, 1fr) minmax(108px, 1.2fr) minmax(74px, 0.85fr) minmax(76px, 0.95fr) repeat(2, minmax(62px, 0.8fr)) repeat(2, minmax(74px, 0.85fr)) minmax(84px, 1fr)";
 
 function CategoryRow({ c, p }: { c: Category; p: Period }) {
   const [open, setOpen] = useState(false);
@@ -409,13 +410,11 @@ const HEAD: [string, string, string][] = [
   ["iwait", "Waiting on customer", IN],
   ["i48", "Not responded to in 48h+", IN],
   ["iesc", "Escalations", IN],
-  ["gap1", "", ""],
   ["evol", "Volume", EX],
   ["epn", "+ / −", EX],
   ["eresp", "Responded", EX],
   ["ehi", "High impact", EX],
   ["eesc", "Escalations", EX],
-  ["gap2", "", ""],
   ["trend", "Trend", ""],
 ];
 
@@ -439,7 +438,7 @@ function Categories({ p }: { p: Period }) {
       style={{ minWidth: 0, maxWidth: "100%" }}
     >
       <div style={{ overflowX: "auto", maxWidth: "100%", minWidth: 0 }}>
-        <div style={{ minWidth: 1180 }}>
+        <div style={{ minWidth: 1240 }}>
           <div
             style={{
               display: "grid",
@@ -454,11 +453,12 @@ function Categories({ p }: { p: Period }) {
             <span data-testid="group-internal" style={group(IN, C.violet, 6)}>
               Internal channels
             </span>
-            <span />
-            <span data-testid="group-external" style={group(EX, C.cyan, 5)}>
+            <span
+              data-testid="group-external"
+              style={{ ...group(EX, C.cyan, 5), marginLeft: GROUP_GAP }}
+            >
               External channels
             </span>
-            <span />
             <span />
           </div>
           <div
@@ -478,6 +478,8 @@ function Categories({ p }: { p: Period }) {
                 style={{
                   textAlign: id === "cat" || id === "trend" ? "left" : "right",
                   background: bg || undefined,
+                  marginLeft:
+                    id === "evol" ? GROUP_GAP : id === "trend" ? 10 : 0,
                   padding: "6px 8px 8px",
                   lineHeight: 1.3,
                 }}
@@ -1412,7 +1414,7 @@ export function Market({ p }: { p: Period }) {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
             gap: 8,
           }}
         >

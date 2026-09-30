@@ -174,6 +174,16 @@ export function PriorityView({ b }: { b: Bundle }) {
                 color={C.red}
               />
             </div>
+            <div
+              data-testid="waiting"
+              style={{ fontSize: 13, color: C.textSec }}
+            >
+              Waiting on customer:{" "}
+              <strong style={{ color: C.text }}>
+                {fmt(c.waiting_on_customer)}
+              </strong>{" "}
+              (illustrative; a resolution was sent, so not counted as open)
+            </div>
             <Table
               head={["Negative contacts by channel, since 1 Jul", ""]}
               align={["left", "right"]}

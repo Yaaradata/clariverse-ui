@@ -1,0 +1,2806 @@
+[
+ {
+  "route": "/hdfc-pulse/v2?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards?period=brief",
+  "gaps": [
+   {
+    "gap": 48,
+    "h": 168,
+    "cols": 3,
+    "y": 448,
+    "at": 120,
+    "title": "0"
+   },
+   {
+    "gap": 48,
+    "h": 168,
+    "cols": 3,
+    "y": 448,
+    "at": 120,
+    "title": "—"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Category · owner"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Volume"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Resolved"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Open"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Waiting on customer"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Not responded to in 48h+"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Escalations"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Volume"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "+ / −"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Responded"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "High impact"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Escalations"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 874,
+    "at": 6,
+    "title": "Trend"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "51"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "15 / 5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 935,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "26"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "15"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "8"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "16"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "1 / 4"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 998,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "32"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "14"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "13"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "10"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "4 / 0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1061,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "14"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "4"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "0 / 2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1124,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "10"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1186,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "11"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "6"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1249,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "4"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "4"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "3 / 1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1312,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "0 / 3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1375,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1437,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1500,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1563,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 41,
+    "h": 477,
+    "cols": 2,
+    "y": 1762,
+    "at": 229,
+    "title": "What is the market saying about us?"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards?period=all",
+  "gaps": [
+   {
+    "gap": 49,
+    "h": 169,
+    "cols": 4,
+    "y": 262,
+    "at": 120,
+    "title": "97%"
+   },
+   {
+    "gap": 49,
+    "h": 169,
+    "cols": 4,
+    "y": 262,
+    "at": 120,
+    "title": "2%"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Category · owner"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Volume"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Resolved"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Open"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Waiting on customer"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Not responded to in 48h+"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Escalations"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Volume"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "+ / −"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Responded"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "High impact"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Escalations"
+   },
+   {
+    "gap": 47,
+    "h": 61,
+    "cols": 13,
+    "y": 855,
+    "at": 6,
+    "title": "Trend"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "2,228"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "2,159"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "40"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "29"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "23"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "54"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "818"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "43 / 221"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "3/3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "6"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 916,
+    "at": 10,
+    "title": "21"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "1,963"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "1,945"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "10"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "8"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "11"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "30"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "819"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "59 / 277"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "4/4"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "18"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 979,
+    "at": 10,
+    "title": "9"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "862"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "839"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "14"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "9"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "8"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "869"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "107 / 208"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "59/60"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "17"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1042,
+    "at": 10,
+    "title": "14"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "828"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "802"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "18"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "8"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "16"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "328"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "21 / 128"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "7/7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1105,
+    "at": 10,
+    "title": "21"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "798"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "794"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "10"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "261"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "10 / 132"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "7/8"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "8"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1167,
+    "at": 10,
+    "title": "26"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "739"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "645"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "59"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "35"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "22"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "100"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "3 / 85"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "1/1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "6"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1230,
+    "at": 10,
+    "title": "13"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "380"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "377"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "6"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "106"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "2 / 71"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "46/46"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1293,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "319"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "309"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "7"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "137"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "12 / 55"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1356,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "217"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "201"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "11"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "13"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "78"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "0 / 63"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "1/1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1418,
+    "at": 10,
+    "title": "11"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "157"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "150"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "6"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "36"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "0 / 14"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "1/1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1481,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "109"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "94"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "13"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "5"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "42"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "2 / 29"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "2/2"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1544,
+    "at": 10,
+    "title": "3"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "93"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "93"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "4"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "32"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "0 / 29"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "1"
+   },
+   {
+    "gap": 42,
+    "h": 62,
+    "cols": 13,
+    "y": 1607,
+    "at": 10,
+    "title": "10"
+   },
+   {
+    "gap": 41,
+    "h": 477,
+    "cols": 2,
+    "y": 1806,
+    "at": 229,
+    "title": "What is the market saying about us?"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/service?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/service?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/market?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/market?period=all",
+  "gaps": [
+   {
+    "gap": 81,
+    "h": 182,
+    "cols": 5,
+    "y": 1873,
+    "at": 89,
+    "title": "POSTS WITH REACH"
+   },
+   {
+    "gap": 81,
+    "h": 182,
+    "cols": 5,
+    "y": 1873,
+    "at": 89,
+    "title": "POSITIVE / NEGATIVE"
+   },
+   {
+    "gap": 81,
+    "h": 182,
+    "cols": 5,
+    "y": 1873,
+    "at": 89,
+    "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 81,
+    "h": 182,
+    "cols": 5,
+    "y": 1873,
+    "at": 89,
+    "title": "RESPONDED"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/happy?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/happy?period=all",
+  "gaps": [
+   {
+    "gap": 45,
+    "h": 87,
+    "cols": 3,
+    "y": 1503,
+    "at": 32,
+    "title": "Rewards value, devaluation and caps"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables?period=brief",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables?period=all",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx?period=all",
+  "gaps": [
+   {
+    "gap": 50,
+    "h": 384,
+    "cols": 3,
+    "y": 2747,
+    "at": 303,
+    "title": "Cards"
+   },
+   {
+    "gap": 50,
+    "h": 384,
+    "cols": 3,
+    "y": 2747,
+    "at": 303,
+    "title": "Accounts and deposits"
+   },
+   {
+    "gap": 50,
+    "h": 384,
+    "cols": 3,
+    "y": 3141,
+    "at": 303,
+    "title": "Home loans"
+   },
+   {
+    "gap": 44,
+    "h": 384,
+    "cols": 3,
+    "y": 3141,
+    "at": 45,
+    "title": "Insurance (bank-sold)"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/market?period=brief",
+  "gaps": [
+   {
+    "gap": 57,
+    "h": 785,
+    "cols": 2,
+    "y": 2219,
+    "at": 716,
+    "title": "Loan Assist"
+   },
+   {
+    "gap": 50,
+    "h": 595,
+    "cols": 2,
+    "y": 756,
+    "at": 506,
+    "title": "Rising themes"
+   },
+   {
+    "gap": 49,
+    "h": 767,
+    "cols": 2,
+    "y": 3016,
+    "at": 706,
+    "title": "SmartWealth"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/market?period=all",
+  "gaps": [
+   {
+    "gap": 57,
+    "h": 785,
+    "cols": 2,
+    "y": 2219,
+    "at": 716,
+    "title": "Loan Assist"
+   },
+   {
+    "gap": 50,
+    "h": 595,
+    "cols": 2,
+    "y": 756,
+    "at": 506,
+    "title": "Rising themes"
+   },
+   {
+    "gap": 49,
+    "h": 767,
+    "cols": 2,
+    "y": 3016,
+    "at": 706,
+    "title": "SmartWealth"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office?period=all",
+  "gaps": [
+   {
+    "gap": 50,
+    "h": 384,
+    "cols": 3,
+    "y": 2747,
+    "at": 303,
+    "title": "Cards"
+   },
+   {
+    "gap": 50,
+    "h": 384,
+    "cols": 3,
+    "y": 2747,
+    "at": 303,
+    "title": "Accounts and deposits"
+   },
+   {
+    "gap": 50,
+    "h": 384,
+    "cols": 3,
+    "y": 3141,
+    "at": 303,
+    "title": "Home loans"
+   },
+   {
+    "gap": 44,
+    "h": 384,
+    "cols": 3,
+    "y": 3141,
+    "at": 45,
+    "title": "Insurance (bank-sold)"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards?period=brief",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 1895,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2071,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards?period=all",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 1895,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2071,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital?period=brief",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2358,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2534,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital?period=all",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2358,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2534,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority?period=brief",
+  "gaps": [
+   {
+    "gap": 74,
+    "h": 464,
+    "cols": 2,
+    "y": 3194,
+    "at": 162,
+    "title": "How a customer gets on a list"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority?period=all",
+  "gaps": [
+   {
+    "gap": 74,
+    "h": 464,
+    "cols": 2,
+    "y": 3194,
+    "at": 162,
+    "title": "How a customer gets on a list"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise?period=brief",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise?period=all",
+  "gaps": [
+   {
+    "gap": 40,
+    "h": 487,
+    "cols": 2,
+    "y": 4853,
+    "at": 408,
+    "title": "Dispute recovery funnel"
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse?period=brief",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2358,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2534,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse?period=all",
+  "gaps": [
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2358,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 2534,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821?period=all",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/my-view?period=brief",
+  "gaps": []
+ },
+ {
+  "route": "/hdfc-pulse/v2/my-view?period=all",
+  "gaps": []
+ }
+]

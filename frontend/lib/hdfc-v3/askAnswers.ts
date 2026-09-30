@@ -181,12 +181,15 @@ export function mdQuestions(p: Period): AskQA[] {
     {
       id: "md-response",
       q: "Did the bank respond to public posts?",
-      answer: sp.tracked
-        ? `The bank replied to ${fmt(sp.responded)} of ${fmt(sp.tracked)} Play Store reviews (${sp.response_pct}%), the only source with reply data; ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact_tracked)} high-impact reviews. Response means acknowledged and routed to an official channel. Informational, not a target.`
-        : "No Play Store reviews in this period, and replies on other platforms are not collected.",
+      answer: `The bank responded to ${fmt(sp.responded)} of ${fmt(sp.mentions)} public mentions (${sp.response_pct ?? "—"}%), and to ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact)} high-impact ones. Response means acknowledged and routed to an official channel. Informational, not a target. Play Store replies are collected; the other sources are illustrative.`,
       table: {
-        head: ["Platform", "Mentions"],
-        rows: Object.entries(sp.by_platform).map(([k, v]) => [k, fmt(v)]),
+        head: ["Source", "Mentions", "Responded", "Response"],
+        rows: sp.by_source.map((x) => [
+          `${x.label}${x.illustrative ? " (illustrative)" : ""}`,
+          fmt(x.mentions),
+          fmt(x.responded),
+          x.pct === null ? "—" : `${x.pct}%`,
+        ]),
       },
     },
   ];
@@ -201,16 +204,6 @@ export function cardsQuestions(p: Period): AskQA[] {
     (x, y) =>
       (y.internal.not_responded_48h ?? 0) - (x.internal.not_responded_48h ?? 0),
   );
-  const act = [...cats]
-    .map((x) => ({
-      x,
-      score:
-        (x.internal.not_responded_48h ?? x.internal.open) +
-        x.external.escalation,
-    }))
-    .filter((r) => r.score > 0)
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3);
   const chans = CHANNEL_ORDER.map((ch) => [
     CHANNEL_LABEL[ch],
     fmt(c.channels.internal[ch] ?? 0),
@@ -255,22 +248,6 @@ export function cardsQuestions(p: Period): AskQA[] {
             fmt(x.internal.open),
             fmt(x.internal.waiting_on_customer),
           ]),
-      },
-    },
-    {
-      id: "cards-act",
-      q: "What should the Cards team act on first?",
-      answer: act[0]
-        ? `${act[0].x.label} (${act[0].x.owner}): the most late replies plus public escalation language. Recommended: route with evidence. LisN recommends; people act.`
-        : "No category stands out in this period.",
-      table: {
-        head: ["Category", "Owner", "Late replies", "Public escalation"],
-        rows: act.map(({ x }) => [
-          x.label,
-          x.owner,
-          dash(x.internal.not_responded_48h),
-          fmt(x.external.escalation),
-        ]),
       },
     },
     {

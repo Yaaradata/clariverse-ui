@@ -95,21 +95,28 @@ export type SocialPost = {
   sentiment: "positive" | "neutral" | "negative";
   engagement: Record<string, number>;
   score: number;
-  /** Null: replies on that platform are not collected. */
-  responded: boolean | null;
+  responded: boolean;
+  /** True when the reply is simulated (every source but the Play Store). */
+  illustrative: boolean;
 };
 
 /** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
 export type SocialPulse = {
   mentions: number;
-  by_platform: Record<string, number>;
-  high_impact: number;
-  high_impact_tracked: number;
-  high_impact_responded: number;
-  high_impact_response_pct: number | null;
-  tracked: number;
+  /** Bank replies by source. Play Store is collected (live); the rest are simulated and marked illustrative. */
+  by_source: {
+    source: string;
+    label: string;
+    mentions: number;
+    responded: number;
+    pct: number | null;
+    illustrative: boolean;
+  }[];
   responded: number;
   response_pct: number | null;
+  high_impact: number;
+  high_impact_responded: number;
+  high_impact_response_pct: number | null;
   posts: SocialPost[];
   good_response: {
     text: string;

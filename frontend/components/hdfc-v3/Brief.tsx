@@ -11,23 +11,8 @@ import Link from "next/link";
 
 import { fmt, fmtDate, fmtPct } from "@/lib/hdfc-v3/format";
 import type { BriefItem, Business, Period } from "@/lib/hdfc-v3/periods";
-import { actions, itemHref, type SignalItem } from "@/lib/hdfc-v3/selectors";
-import type { Bundle } from "@/lib/hdfc-v3/types";
 import { SmallRing, TrendChip, titled, withPeriod } from "./Pulse";
-import {
-  ActionChip,
-  C,
-  MONO,
-  MutedNote,
-  OWNER_LABEL,
-  OwnerChip,
-  RungChip,
-  Status,
-  statusColor,
-  Table,
-  Tile,
-  tint,
-} from "./primitives";
+import { C, MONO, MutedNote, Table, Tile, tint } from "./primitives";
 
 const CARDS_VIEW = "/hdfc-pulse/v2/business/cards";
 const BRIEF_ORDER = [
@@ -226,7 +211,7 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <span>
-          Open / waiting on customer:{" "}
+          Open / waiting:{" "}
           <strong style={{ color: C.text }}>
             {fmt(i.open)} / {fmt(i.waiting_on_customer)}
           </strong>
@@ -441,126 +426,6 @@ export function ReputationTable({ p }: { p: Period }) {
         open more than 48 hours after the contact came in
         {p.id === "brief" ? " (can't be measured in a 24-hour window)" : ""}.
         Wealth, SME and corporate items sit outside the table.
-      </MutedNote>
-    </Tile>
-  );
-}
-
-/* ---------------------------------------------------------------- MD-marked mail */
-
-export function MdMail({ p }: { p: Period }) {
-  const m = p.md_mail;
-  return (
-    <Tile
-      id="md-mail"
-      title={titled("MD-marked mail", p)}
-      sub={`${fmt(m.total)} written complaints reached the MD's office in this period, sieved into themes and routed to owners.`}
-      prov="internal"
-    >
-      {m.rows.length ? (
-        <Table
-          head={["Theme", "Mails", "Resolved"]}
-          align={["left", "right", "right"]}
-          rows={m.rows.map((r) => [
-            r.label,
-            fmt(r.mails),
-            `${fmt(r.resolved)} of ${fmt(r.mails)}`,
-          ])}
-        />
-      ) : (
-        <MutedNote>
-          No written complaints reached the MD&apos;s office in this period.
-        </MutedNote>
-      )}
-    </Tile>
-  );
-}
-
-/* ---------------------------------------------------------------- actions (left as is, 30 Sep review B6) */
-
-function ActionCard({ s }: { s: SignalItem }) {
-  const color = statusColor(s.status);
-  return (
-    <Link
-      href={itemHref(s, "mds-office")}
-      data-testid="action-card"
-      style={{
-        textDecoration: "none",
-        color: "inherit",
-        background: `linear-gradient(180deg, ${tint(color, 0.07)}, ${C.card} 70%)`,
-        border: `1px solid ${tint(color, 0.28)}`,
-        borderLeft: `3px solid ${color}`,
-        borderRadius: 12,
-        padding: "14px 16px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 8,
-        minWidth: 0,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 6,
-          alignItems: "flex-start",
-        }}
-      >
-        <span
-          style={{
-            fontSize: 15.5,
-            fontWeight: 700,
-            color: C.text,
-            lineHeight: 1.35,
-          }}
-        >
-          {s.label}
-        </span>
-        <Status value={s.status} />
-      </div>
-      <div style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.5 }}>
-        {s.why}
-      </div>
-      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        <OwnerChip owner={s.owner} />
-        <RungChip rung={s.rung} />
-        <ActionChip action={s.action} />
-      </div>
-      {s.ackAt ? (
-        <div style={{ fontSize: 12.5, color: C.textMut }}>
-          Routed to {OWNER_LABEL[s.owner] ?? s.owner} · {s.ackSystem} ·
-          acknowledged {s.ackAt}
-        </div>
-      ) : null}
-    </Link>
-  );
-}
-
-export function Actions({ b }: { b: Bundle }) {
-  const acts = actions(b, "mds-office");
-  return (
-    <Tile
-      id="actions"
-      title={titled("Actions to take", b.periods.periods.all)}
-      sub="At most three: complaints closed without resolution, the app fix list, then priority relationships. Built on the full window."
-      prov={["public", "internal"]}
-      tone="red"
-    >
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 340px), 1fr))",
-          gap: 10,
-        }}
-      >
-        {acts.map((s) => (
-          <ActionCard key={s.id} s={s} />
-        ))}
-      </div>
-      <MutedNote>
-        Every action is a recommendation routed to the owner&apos;s system. LisN
-        never executes, authorises or decides.
       </MutedNote>
     </Tile>
   );

@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import collections
 import datetime as dt
+import hashlib
 import json
 import re
 import sys
@@ -298,6 +299,32 @@ def weighted_share(rs, pred, W, min_items: int = 3):
     return round(100 * num / den, 1)
 
 
+# Bank replies on public posts. Play Store replies are collected (live). For the other sources the collection holds no
+# replies, so a reply is simulated per post from its id (fixed, no random stream), at rates typical of an Indian bank's
+# care handle: most active on X, present on the App Store, rare on Reddit and consumer forums. Negative posts are
+# answered more often than the rest. Illustrative, and tagged so on screen. (MORNING_DECISIONS.md D24.)
+SYNTHETIC_RESPONSE = {"x": (0.68, 0.40), "appstore": (0.45, 0.30), "reddit": (0.14, 0.06), "forum": (0.08, 0.03)}
+
+
+def responded(r) -> bool:
+    if r["source"] == "playstore":
+        return bool(r.get("reply"))
+    neg, other = SYNTHETIC_RESPONSE[r["source"]]
+    h = int(hashlib.sha1(f"reply:{r['id']}".encode()).hexdigest(), 16) % 10000
+    return h < 10000 * (neg if r["sentiment"] == "negative" else other)
+
+
+def response_by_source(rs) -> list[dict]:
+    out = []
+    for src in ("playstore", "appstore", "x", "reddit", "forum"):
+        xs = [r for r in rs if r["source"] == src]
+        if xs:
+            n = sum(1 for r in xs if responded(r))
+            out.append({"source": src, "label": SOURCE_LABEL[src], "mentions": len(xs), "responded": n,
+                        "pct": pct(n, len(xs), 0), "illustrative": src != "playstore"})
+    return out
+
+
 def replies(rs) -> dict:
     ps = [r for r in rs if r["source"] == "playstore"]
     pos = [r for r in ps if r["sentiment"] == "positive"]
@@ -368,20 +395,22 @@ def redact_reply(text: str) -> str:
 
 
 def social_pulse(pub, w, W) -> dict:
-    """Social pulse (30 Sep review, K2): public mentions, the ones with reach, how many got a bank reply, and the five
-    posts with the most engagement. Text is the anonymised summary; no names, handles or links."""
+    """External block of the Customer pulse (30 Sep review, K2 and follow-ups 1-2): public mentions, the ones with
+    reach, how many got a bank reply (by source), and the five posts with the most engagement. Text is the anonymised
+    summary; no names, handles or links."""
     a, b = w["start"], w["end"]
     rs = [r for r in pub if a <= r["_c"] < b]
     hi = [r for r in rs if reach(r)]
-    rep_all, rep_hi = replies(rs), replies(hi)
+    by_source = response_by_source(rs)
+    n_resp = sum(x["responded"] for x in by_source)
+    hi_resp = sum(1 for r in hi if responded(r))
     score = lambda r: sum(engagement_of(r).values())  # noqa: E731
     safe = lambda r: quotable(r) and r["summary"] and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")  # noqa: E731
     top = sorted([r for r in rs if safe(r) and score(r) > 0], key=lambda r: (score(r), r["created_at"]), reverse=True)[:5]
     posts = [{
         "text": r["summary"], "platform": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
         "sentiment": r["sentiment"], "engagement": engagement_of(r), "score": score(r),
-        # Reply data exists for Play Store reviews only: None means replies on that platform are not collected.
-        "responded": bool(r.get("reply")) if r["source"] == "playstore" else None,
+        "responded": responded(r), "illustrative": r["source"] != "playstore",
     } for r in top]
     good_pool = lambda xs: [r for r in xs if r["source"] == "playstore" and r.get("reply") and r["sentiment"] == "negative"  # noqa: E731
                             and safe(r) and ROUTED.search(r["reply"]["text"])]
@@ -395,17 +424,15 @@ def social_pulse(pub, w, W) -> dict:
                 "engagement": engagement_of(g), "reply": redact_reply(g["reply"]["text"]), "in_period": in_period}
     return {
         "mentions": len(rs),
-        "by_platform": dict(collections.Counter(SOURCE_LABEL[r["source"]] for r in rs).most_common()),
+        "by_source": by_source,
+        "responded": n_resp,
+        "response_pct": pct(n_resp, len(rs), 0),
         "high_impact": len(hi),
-        "high_impact_tracked": rep_hi["reviews"],
-        "high_impact_responded": rep_hi["responded"],
-        "high_impact_response_pct": pct(rep_hi["responded"], rep_hi["reviews"], 0),
-        "tracked": rep_all["reviews"],
-        "responded": rep_all["responded"],
-        "response_pct": pct(rep_all["responded"], rep_all["reviews"], 0),
+        "high_impact_responded": hi_resp,
+        "high_impact_response_pct": pct(hi_resp, len(hi), 0),
         "posts": posts,
         "good_response": good,
-        "rule": "High impact: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores).",
+        "rule": "High impact (virality rule): an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Trending posts are ranked by likes, replies and reposts (upvotes and helpful votes on Reddit and the stores).",
     }
 
 

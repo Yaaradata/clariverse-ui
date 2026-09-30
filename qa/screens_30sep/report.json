@@ -1,0 +1,730 @@
+[
+ {
+  "route": "/hdfc-pulse/v2",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/service",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/service",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/market",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/market",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/happy",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/happy",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/market",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/market",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/my-view",
+  "period": "brief",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/my-view",
+  "period": "all",
+  "width": 1440,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/action-queue",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/accounts",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/auto_loans",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/service",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/service",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/market",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/market",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/happy",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/cards/happy",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/digital",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/home_loans",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/insurance",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/payzapp",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/business/personal_loans",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/deliverables",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/head-cx",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/market",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/market",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/mds-office",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/cards",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/module/digital",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/priority",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/satisfaction",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/service-promise",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/complaint_handling",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/signal/release-pulse",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/customer/XXXX4821",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/my-view",
+  "period": "brief",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ },
+ {
+  "route": "/hdfc-pulse/v2/my-view",
+  "period": "all",
+  "width": 390,
+  "status": 200,
+  "overflow_px": 0
+ }
+]

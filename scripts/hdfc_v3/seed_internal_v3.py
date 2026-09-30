@@ -331,6 +331,7 @@ def make_interaction(idx, cust, product, theme, created, channel, sender, themes
     if rec["status"] == "open" and rec["first_response_at"] and not rec.get("scripted"):
         if int(hashlib.sha1(rec["id"].encode()).hexdigest(), 16) % 100 < 40:
             rec["resolution_sent_at"] = rec["first_response_at"]
+            rec["status"] = "waiting_on_customer"  # not open with the bank, on every screen
     return rec
 
 
@@ -446,6 +447,7 @@ def dial(rows):
     return {
         "total": total,
         "closed": closed,
+        "waiting_on_customer": sum(1 for r in rows if r["status"] == "waiting_on_customer"),
         "closed_or_responded": closed_or_resp,
         "open": open_,
         "open_too_long": otl,
@@ -553,6 +555,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
                 "interactions": len(rows),
                 "customers_with_open_issue": len(affected),
                 "open": len(open_rows),
+                "waiting_on_customer": sum(1 for r in rows if r["status"] == "waiting_on_customer"),
                 "open_over_5h": len(o5),
                 "open_over_24h": len(o24),
                 "open_too_long": sum(1 for r in open_rows if r["breached"]),
@@ -576,6 +579,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
     high_impact = {
         "total": len(hi),
         "open": sum(1 for r in hi if r["status"] == "open"),
+        "waiting_on_customer": sum(1 for r in hi if r["status"] == "waiting_on_customer"),
         "open_too_long": sum(1 for r in hi if r["status"] == "open" and r["breached"]),
         "reasons": [{"id": k, "label": HI_LABEL[k], "count": v} for k, v in hi_reason.most_common()],
         "by_product": dict(collections.Counter(r["product"] for r in hi)),

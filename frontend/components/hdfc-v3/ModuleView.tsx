@@ -377,7 +377,7 @@ export function CardsModule({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]} accent tone="red">
         <AnswerLine
-          sub={`Inside the bank (illustrative): ${fmt(inn.total)} card interactions in the sample, ${fmt(inn.open)} open, ${fmt(inn.open_too_long)} past their deliverable.`}
+          sub={`Inside the bank (illustrative): ${fmt(inn.total)} card interactions in the sample, ${fmt(inn.open)} open, ${fmt(inn.waiting_on_customer)} waiting on customer, ${fmt(inn.open_too_long)} past their deliverable.`}
         >
           Cards: {fmt(pub.negative)} negative public items out of{" "}
           {fmt(pub.count)}
