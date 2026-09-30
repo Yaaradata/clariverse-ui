@@ -739,6 +739,21 @@ function ExternalSet({
   );
 }
 
+function LegendDot({ color }: { color: string }) {
+  return (
+    <span
+      aria-hidden
+      style={{
+        width: 9,
+        height: 9,
+        borderRadius: 999,
+        background: color,
+        flexShrink: 0,
+      }}
+    />
+  );
+}
+
 export function CxPulse({ p }: { p: Period }) {
   const cx = p.cx_pulse;
   const i = cx.internal;
@@ -787,10 +802,20 @@ export function CxPulse({ p }: { p: Period }) {
               {fmt(cx.overall.total)}
             </strong>
           </span>
-          <span style={{ color: C.textSec }}>
+          <span
+            style={{
+              color: C.textSec,
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 6,
+            }}
+          >
+            <LegendDot color={C.violet} />
             Internal {fmt(cx.overall.internal)} (
-            {fmtPct(cx.overall.internal_pct)}) · External{" "}
-            {fmt(cx.overall.external)} ({fmtPct(cx.overall.external_pct)})
+            {fmtPct(cx.overall.internal_pct)}) ·
+            <LegendDot color={C.cyan} />
+            External {fmt(cx.overall.external)} (
+            {fmtPct(cx.overall.external_pct)})
           </span>
         </div>
         <div
