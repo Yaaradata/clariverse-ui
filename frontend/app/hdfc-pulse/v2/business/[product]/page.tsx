@@ -23,9 +23,11 @@ export default async function BusinessPage({
   const row = b.products.rows.find((r) => r.id === product);
   if (!row) notFound();
   const cards = product === "cards";
+  const sliced = sliceBundle(b, { view: "business" });
   return (
     <Shell
       {...shellProps(b)}
+      periods={cards ? sliced.periods : undefined}
       title={`${row.label}: business view`}
       subtitle={
         cards
@@ -33,11 +35,7 @@ export default async function BusinessPage({
           : "Coming soon."
       }
     >
-      {cards ? (
-        <CardsView b={sliceBundle(b, { view: "business" })} />
-      ) : (
-        <ComingSoon label={row.label} />
-      )}
+      {cards ? <CardsView b={sliced} /> : <ComingSoon label={row.label} />}
     </Shell>
   );
 }

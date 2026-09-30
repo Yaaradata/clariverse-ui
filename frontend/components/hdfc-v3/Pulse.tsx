@@ -108,6 +108,77 @@ export function PeriodFilter({
   );
 }
 
+/** Compact period filter for the Shell header (buttons only; the range shows under the page title). */
+export function HeaderPeriodFilter({ file }: { file: PeriodsFile }) {
+  const current = usePeriod(file);
+  const router = useRouter();
+  const pathname = usePathname() ?? "";
+  return (
+    <div
+      data-testid="period-filter"
+      style={{
+        display: "flex",
+        gap: 4,
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
+      {PERIOD_IDS.map((id) => {
+        const on = id === current.id;
+        return (
+          <button
+            key={id}
+            type="button"
+            aria-pressed={on}
+            title={periodLabel(file.periods[id])}
+            onClick={() =>
+              router.replace(`${pathname}?period=${id}`, { scroll: false })
+            }
+            style={{
+              padding: "4px 11px",
+              borderRadius: 999,
+              fontSize: 13,
+              cursor: "pointer",
+              color: on ? C.text : C.textSec,
+              background: on ? C.brandSoft : "transparent",
+              border: `1px solid ${on ? C.brand : C.border}`,
+              fontWeight: on ? 700 : 500,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {file.periods[id].label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/** The selected period, its dates and the data horizon, shown under a page title. */
+export function PeriodLine({ file, p }: { file: PeriodsFile; p: Period }) {
+  return (
+    <div
+      data-testid="period-line"
+      style={{
+        fontSize: 13.5,
+        color: C.textSec,
+        display: "flex",
+        gap: 8,
+        flexWrap: "wrap",
+        alignItems: "center",
+      }}
+    >
+      <strong style={{ color: C.text }}>{p.label}</strong>
+      <span>·</span>
+      <span>{periodLabel(p).split(" · ")[1]}</span>
+      <span style={{ color: C.textMut }}>
+        · Data runs to {fmtDate(file.end)} {file.end.slice(11, 16)}. Change the
+        period in the top-right corner.
+      </span>
+    </div>
+  );
+}
+
 /** The period, shown next to every section title. */
 export function PeriodTag({ p }: { p: Period }) {
   return (
@@ -550,7 +621,7 @@ export function CustomerPulse({ p }: { p: Period }) {
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
+            "repeat(auto-fit, minmax(min(100%, max(280px, calc((100% - 30px) / 4))), 1fr))",
           gap: 10,
           alignItems: "start",
         }}

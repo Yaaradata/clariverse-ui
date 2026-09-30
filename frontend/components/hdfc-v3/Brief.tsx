@@ -341,7 +341,7 @@ export function MorningBrief({ p }: { p: Period }) {
         style={{
           display: "grid",
           gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, 400px), 1fr))",
+            "repeat(auto-fit, minmax(min(100%, max(360px, calc((100% - 20px) / 3))), 1fr))",
           gap: 10,
         }}
       >

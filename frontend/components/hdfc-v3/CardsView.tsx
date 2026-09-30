@@ -1,19 +1,26 @@
 "use client";
 
 /**
- * The Cards business-head view (30 Sep review, changes_30sep.md C). It follows the same period filter as the MD's view.
- * Top to bottom: the issue pulse (internal and external, side by side), the issue categories as an accordion, then the
- * three drill-downs that moved here from the MD's view, rebuilt for Cards only:
- *   1. Are my customers happy?      (was the satisfaction page)
- *   2. What is the market saying?   (was the market page)
- *   3. Service                      (was the deliverables page, without TAT compliance)
+ * The Cards business-head view (30 Sep review, changes_30sep.md C). It follows the same period filter as the MD's view
+ * (the filter sits in the header). Top to bottom: the issue pulse (internal and external, side by side), the issue
+ * categories as an accordion, then three question cards, one per drill-down, each opening its own page:
+ *   1. Are my customers happy?             /business/cards/happy    (was the satisfaction page)
+ *   2. What is the market saying about us? /business/cards/market   (was the market page)
+ *   3. Are we keeping our timelines?       /business/cards/service  (was the deliverables page, without TAT compliance)
  * No deliverables ledger, no retention watch. Every figure comes from periods.json for the selected period.
  */
 
-import { ChevronDown, ChevronRight } from "lucide-react";
+import {
+  Activity,
+  ChevronDown,
+  ChevronRight,
+  Shield,
+  Sparkles,
+  Timer,
+} from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
-
+import { DRILL_DOWNS, type DrillDownId } from "@/lib/hdfc-v3/drilldowns";
 import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import {
   type Category,
@@ -21,12 +28,13 @@ import {
   CHANNEL_LABEL,
   CHANNEL_ORDER,
   type Period,
+  type PeriodsFile,
   type Quote,
 } from "@/lib/hdfc-v3/periods";
 import type { Bundle } from "@/lib/hdfc-v3/types";
 import {
   Dial,
-  PeriodFilter,
+  PeriodLine,
   Sparkline,
   TrendChip,
   titled,
@@ -35,15 +43,19 @@ import {
 } from "./Pulse";
 import {
   BarRow,
+  BaselineCaption,
   C,
+  HalfGauge,
   Kpi,
   MONO,
   MutedNote,
   PAIRS,
+  ProvenanceTag,
   SentimentBar,
   SPLIT,
   Table,
   Tile,
+  type Tone,
   TrendLine,
   tint,
   WeeklyBars,
@@ -51,6 +63,8 @@ import {
 
 const pct = (a: number | null | undefined, b: number) =>
   a === null || a === undefined || !b ? null : (100 * a) / b;
+
+const CARDS = "/hdfc-pulse/v2/business/cards";
 
 /** A short quote, or a matching-height placeholder so tiles in a row end at the same line. */
 function QuoteLine({ q }: { q: Quote | null }) {
@@ -79,38 +93,6 @@ function QuoteLine({ q }: { q: Quote | null }) {
       ) : (
         "No quote in this period."
       )}
-    </div>
-  );
-}
-
-/** Section header for each drill-down. */
-function Section({ n, title, sub }: { n: number; title: string; sub: string }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "baseline",
-        gap: 10,
-        flexWrap: "wrap",
-        paddingTop: 6,
-        borderTop: `1px solid ${C.border}`,
-      }}
-    >
-      <span
-        style={{
-          fontFamily: MONO,
-          fontSize: 12.5,
-          fontWeight: 700,
-          color: C.brandInk,
-          border: `1px solid ${tint(C.brand, 0.4)}`,
-          borderRadius: 999,
-          padding: "1px 9px",
-        }}
-      >
-        Drill-down {n}
-      </span>
-      <h2 style={{ fontSize: 19, fontWeight: 750, margin: 0 }}>{title}</h2>
-      <span style={{ fontSize: 13.5, color: C.textMut }}>{sub}</span>
     </div>
   );
 }
@@ -477,9 +459,416 @@ function Categories({ p }: { p: Period }) {
   );
 }
 
+/* ---------------------------------------------------------------- question cards (the drill-down entries) */
+
+function QuestionCard({
+  href,
+  icon,
+  title,
+  micro,
+  answer,
+  headline,
+  headlineLabel,
+  caption,
+  gauges,
+  stats,
+  saying,
+  prov,
+  accent,
+}: {
+  href: string;
+  icon: ReactNode;
+  title: string;
+  micro: string;
+  answer: string;
+  headline: string;
+  headlineLabel: string;
+  caption: string;
+  gauges: { label: string; value: number; sub: string; tone?: Tone }[];
+  stats: { label: string; value: string; sub: string; color?: string }[];
+  saying: string;
+  prov: ("public" | "internal")[];
+  accent: string;
+}) {
+  return (
+    <section
+      data-testid="tile"
+      style={{
+        background: C.card,
+        border: `1px solid ${tint(accent, 0.25)}`,
+        borderRadius: 16,
+        padding: "18px 18px 14px",
+        // Subgrid: title, answer, headline, stats, quote and tags line up across the three cards (layout rule B).
+        display: "grid",
+        gridRow: "span 6",
+        gridTemplateRows: "subgrid",
+        rowGap: 12,
+        alignContent: "start",
+        minWidth: 0,
+        boxShadow: `0 8px 32px ${tint(accent, 0.08)}`,
+      }}
+    >
+      <Link
+        href={href}
+        style={{
+          textDecoration: "none",
+          color: "inherit",
+          display: "flex",
+          alignItems: "flex-start",
+          gap: 10,
+        }}
+      >
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            background: tint(accent, 0.12),
+            color: accent,
+            display: "grid",
+            placeItems: "center",
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </div>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div
+            style={{
+              fontSize: 16.5,
+              fontWeight: 700,
+              color: C.text,
+              lineHeight: 1.3,
+            }}
+          >
+            {title}
+          </div>
+          <div style={{ fontSize: 12.5, color: C.textMut, marginTop: 2 }}>
+            {micro}
+          </div>
+        </div>
+        <ChevronRight size={20} color={C.textDim} />
+      </Link>
+      <p
+        style={{ margin: 0, fontSize: 14.5, color: C.textSec, lineHeight: 1.5 }}
+      >
+        {answer}
+      </p>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: 12,
+          alignItems: "start",
+        }}
+      >
+        <Link href={href} style={{ textDecoration: "none", color: "inherit" }}>
+          <div
+            style={{
+              fontSize: 12.5,
+              color: C.textMut,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+            }}
+          >
+            {headlineLabel}
+          </div>
+          <div
+            style={{
+              fontSize: 34,
+              fontWeight: 800,
+              fontFamily: MONO,
+              color: C.text,
+              lineHeight: 1.1,
+              marginTop: 2,
+            }}
+          >
+            {headline}
+          </div>
+          <BaselineCaption>{caption}</BaselineCaption>
+        </Link>
+        <div
+          style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}
+        >
+          {gauges.map((g) => (
+            <HalfGauge
+              key={g.label}
+              label={g.label}
+              value={g.value}
+              sub={g.sub}
+              tone={g.tone}
+            />
+          ))}
+        </div>
+      </div>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 10,
+          borderTop: `1px solid ${C.border}`,
+          paddingTop: 10,
+        }}
+      >
+        {stats.map((s, i) => (
+          <Link
+            key={s.label}
+            href={href}
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              textAlign: i === 1 ? "right" : "left",
+            }}
+          >
+            <div
+              style={{
+                fontSize: 12,
+                color: C.textMut,
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+              }}
+            >
+              {s.label}
+            </div>
+            <div
+              style={{
+                fontSize: 15,
+                fontWeight: 700,
+                color: s.color ?? C.text,
+                marginTop: 3,
+                lineHeight: 1.3,
+              }}
+            >
+              {s.value}
+            </div>
+            <div style={{ fontSize: 12, color: C.textMut, marginTop: 2 }}>
+              {s.sub}
+            </div>
+          </Link>
+        ))}
+      </div>
+      <div
+        style={{
+          background: tint(accent, 0.055),
+          border: `1px solid ${tint(accent, 0.22)}`,
+          borderLeft: `3px solid ${accent}`,
+          borderRadius: 10,
+          padding: "10px 12px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: 11.5,
+            fontWeight: 800,
+            color: accent,
+            textTransform: "uppercase",
+            letterSpacing: "0.1em",
+            marginBottom: 4,
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+          }}
+        >
+          <Sparkles size={13} color={accent} />
+          What customers are saying
+        </div>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 13.5,
+            color: C.textSec,
+            lineHeight: 1.5,
+          }}
+        >
+          {saying}
+        </p>
+      </div>
+      <div
+        style={{ display: "flex", gap: 6, flexWrap: "wrap", alignSelf: "end" }}
+      >
+        {prov.map((x) => (
+          <ProvenanceTag key={x} kind={x} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function QuestionCards({ p }: { p: Period }) {
+  const c = p.cards;
+  const m = c.mood;
+  const h = c.happy;
+  const mk = c.market_full;
+  const sv = c.service_full;
+  const change =
+    m.net_trend_current === null || m.net_trend_previous === null
+      ? null
+      : m.net_trend_current - m.net_trend_previous;
+  const topPain = mk.themes.slice().sort((a, b) => b.negative - a.negative)[0];
+  const riser = mk.rising[0];
+  const play = c.stores.find((s) => s.store === "playstore");
+  const ios = c.stores.find((s) => s.store === "appstore");
+  const riserQuote =
+    h.saying.find((s) => riser && s.id === riser.id) ?? h.saying[0];
+  const repeatShare = pct(
+    c.friction.reduce((s, f) => s + f.escalation_internal, 0),
+    1,
+  ); // placeholder replaced below
+  void repeatShare;
+  const internalRepeat = h.repeat_by_category.reduce(
+    (s, r) => s + r.internal_repeat,
+    0,
+  );
+  const href = (id: DrillDownId) => withPeriod(`${CARDS}/${id}`, p);
+  return (
+    <div
+      data-testid="question-cards"
+      style={{
+        display: "grid",
+        gridTemplateColumns:
+          "repeat(auto-fit, minmax(min(100%, max(340px, calc((100% - 28px) / 3))), 1fr))",
+        gap: 14,
+      }}
+    >
+      <QuestionCard
+        href={href("happy")}
+        accent={C.violet}
+        icon={<Activity size={18} />}
+        title="Are my customers happy?"
+        micro="Sentiment · Trust pillars · Top pain"
+        answer={`Net sentiment of Cards public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`}
+        headlineLabel="Net sentiment"
+        headline={fmtSigned(m.net, "", 0)}
+        caption={`${fmt(m.items)} public items about Cards in the period. Positive share minus negative share, each source weighted by its share of the window.`}
+        gauges={[
+          {
+            label: "Positive share",
+            value: c.external.positive_share ?? 0,
+            sub: "of Cards public voice",
+            tone: "green",
+          },
+          {
+            label: "Resolved",
+            value: pct(c.internal.resolved, c.internal.volume) ?? 0,
+            sub: "of the bank's Cards contacts",
+            tone: "green",
+          },
+        ]}
+        stats={[
+          {
+            label: "Top pain",
+            value: topPain?.label ?? "—",
+            sub: `${fmt(topPain?.negative)} negative items`,
+            color: C.red,
+          },
+          {
+            label: "Closure intent",
+            value: `${fmt(sv.closure.public_intent)} posts`,
+            sub: "customers saying they will close or leave",
+          },
+        ]}
+        saying={
+          h.saying[0]?.summary ?? "No quotable public item in this period."
+        }
+        prov={["public", "internal"]}
+      />
+      <QuestionCard
+        href={href("market")}
+        accent={C.cyan}
+        icon={<Shield size={18} />}
+        title="What is the market saying about us?"
+        micro="Themes · Rising · App pulse"
+        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No Cards theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
+        headlineLabel="Public posts and reviews"
+        headline={fmt(c.external.volume)}
+        caption={`About Cards, in the period: X, Reddit, forums, Play Store, App Store. ${fmt(c.external.escalation)} use escalation language.`}
+        gauges={[
+          {
+            label: "Play Store",
+            value: play?.share_positive ?? 0,
+            sub: `4–5★ share · ${fmt(play?.reviews)} reviews`,
+            tone: "amber",
+          },
+          {
+            label: "App Store",
+            value: ios?.share_positive ?? 0,
+            sub: `4–5★ share · ${fmt(ios?.reviews)} reviews`,
+            tone: "amber",
+          },
+        ]}
+        stats={[
+          {
+            label: "Rising theme",
+            value: riser?.label ?? "—",
+            sub: riser ? `${fmt(riser.count)} items` : "none by the rule",
+            color: C.amber,
+          },
+          {
+            label: "High impact",
+            value: `${fmt(mk.reach.volume)} posts`,
+            sub: `${fmt(mk.reach.negative)} negative · ${fmt(mk.reach.escalation)} escalation language`,
+            color: C.red,
+          },
+        ]}
+        saying={
+          riserQuote?.summary ?? "No quotable public item in this period."
+        }
+        prov={["public"]}
+      />
+      <QuestionCard
+        href={href("service")}
+        accent={C.amber}
+        icon={<Timer size={18} />}
+        title="Are we keeping our timelines?"
+        micro="Missed timelines · Status-seeking · Escalation"
+        answer={`${fmt(sv.missed_timelines.total)} public Cards posts describe a missed timeline; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
+        headlineLabel="Missed timelines heard"
+        headline={fmt(sv.missed_timelines.total)}
+        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${c.internal.open_too_long === null ? "open over 48 hours needs 48 hours" : `${fmt(c.internal.open_too_long)} Cards contacts open over 48 hours`}.`}
+        gauges={[
+          {
+            label: "Repeat contact",
+            value: pct(internalRepeat, c.internal.volume) ?? 0,
+            sub: "of the bank's Cards contacts",
+            tone: "red",
+          },
+          {
+            label: "Asking status",
+            value: sv.transparency.share ?? 0,
+            sub: "of Cards public posts",
+            tone: "amber",
+          },
+        ]}
+        stats={[
+          {
+            label: "Escalation language",
+            value: `${fmt(sv.public_escalation)} posts`,
+            sub: sv.targets[0]
+              ? `most name ${sv.targets[0].label.toLowerCase()}`
+              : "public voice",
+            color: C.red,
+          },
+          {
+            label: "TAT-related contacts",
+            value: fmt(sv.tat_related.contacts),
+            sub: `${fmtPct(sv.tat_related.share)} of Cards contacts · ${fmt(sv.tat_related.open)} open`,
+            color: C.amber,
+          },
+        ]}
+        saying={
+          sv.transparency.quote?.summary ??
+          sv.closure.quote?.summary ??
+          "No quotable public item in this period."
+        }
+        prov={["public", "internal"]}
+      />
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- drill-down 1: are my customers happy? */
 
-function Happy({ p }: { p: Period }) {
+export function Happy({ p }: { p: Period }) {
   const h = p.cards.happy;
   const m = p.cards.mood;
   const change =
@@ -496,11 +885,6 @@ function Happy({ p }: { p: Period }) {
     : 0;
   return (
     <>
-      <Section
-        n={1}
-        title="Are my customers happy?"
-        sub="Public voice about Cards, source-weighted; the bank's own Cards contacts by list and stage."
-      />
       <Tile
         id="happy-sources"
         title={titled("Sentiment by source", p)}
@@ -618,11 +1002,11 @@ function Happy({ p }: { p: Period }) {
           style={{
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(100%, 440px), 1fr))",
+              "repeat(auto-fit, minmax(min(100%, max(360px, calc((100% - 20px) / 3))), 1fr))",
             gap: 10,
           }}
         >
-          {h.saying.map((s) => (
+          {h.saying.slice(0, 3).map((s) => (
             <div
               key={s.id}
               style={{
@@ -754,18 +1138,13 @@ function Happy({ p }: { p: Period }) {
 
 /* ---------------------------------------------------------------- drill-down 2: what is the market saying? */
 
-function Market({ p }: { p: Period }) {
+export function Market({ p }: { p: Period }) {
   const mk = p.cards.market_full;
   const r = mk.reach;
   const s = mk.safety;
   const topSix = mk.themes.slice(0, 6);
   return (
     <>
-      <Section
-        n={2}
-        title="What is the market saying about us?"
-        sub="Every public Cards theme in the period, what is rising, who has reach, and the stores."
-      />
       <Tile
         id="market-themes"
         title={titled("All Cards themes in public voice", p)}
@@ -810,7 +1189,7 @@ function Market({ p }: { p: Period }) {
           style={{
             display: "grid",
             gridTemplateColumns:
-              "repeat(auto-fit, minmax(min(100%, 400px), 1fr))",
+              "repeat(auto-fit, minmax(min(100%, max(360px, calc((100% - 20px) / 3))), 1fr))",
             gap: 10,
           }}
         >
@@ -1008,7 +1387,7 @@ function Market({ p }: { p: Period }) {
                 {st.label}: {fmt(st.reviews)} Cards reviews
                 {st.avg_rating === null
                   ? ""
-                  : ` · ${st.avg_rating.toFixed(1)}★`}
+                  : ` · ${st.avg_rating.toFixed(1)}★ · ${fmtPct(st.share_positive)} 4–5★`}
               </strong>
               <Table
                 head={["", "Top three"]}
@@ -1054,18 +1433,13 @@ function Market({ p }: { p: Period }) {
 
 /* ---------------------------------------------------------------- drill-down 3: service */
 
-function Service({ p }: { p: Period }) {
+export function Service({ p }: { p: Period }) {
   const sv = p.cards.service_full;
   const sr = p.cards.service;
   const ladderMax = Math.max(1, sv.ladder[0]?.count ?? 1);
   const three = { display: "flex", flexDirection: "column" as const, gap: 10 };
   return (
     <>
-      <Section
-        n={3}
-        title="Service"
-        sub="How Cards contacts are handled, where they escalate, and which timelines customers say were missed. No TAT compliance figures."
-      />
       <Tile
         id="service-handling"
         title={titled("How Cards contacts were handled", p)}
@@ -1426,43 +1800,29 @@ function CardsActions({ p }: { p: Period }) {
   );
 }
 
-/* ---------------------------------------------------------------- view */
-
-function Contents(): ReactNode {
-  const items: [string, string][] = [
-    ["#issue-pulse", "Issue pulse"],
-    ["#categories", "By category"],
-    ["#happy-sources", "1 · Are my customers happy?"],
-    ["#market-themes", "2 · What is the market saying?"],
-    ["#service-handling", "3 · Service"],
-    ["#actions", "Actions"],
-  ];
-  return (
-    <div style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}>
-      {items.map(([href, label]) => (
-        <a
-          key={href}
-          href={href}
-          style={{
-            color: C.textSec,
-            border: `1px solid ${C.border}`,
-            borderRadius: 999,
-            padding: "2px 10px",
-            textDecoration: "none",
-          }}
-        >
-          {label}
-        </a>
-      ))}
-    </div>
-  );
-}
+/* ---------------------------------------------------------------- views */
 
 export function CardsView({ b }: { b: Bundle }) {
   const p = usePeriod(b.periods);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-      <PeriodFilter file={b.periods} current={p} />
+      <PeriodLine file={b.periods} p={p} />
+      <IssuePulse p={p} />
+      <Categories p={p} />
+      <QuestionCards p={p} />
+      <Channels p={p} />
+      <CardsActions p={p} />
+    </div>
+  );
+}
+
+/** A drill-down page: the period line, a way back, then the section. */
+export function CardsDrillDown({ b, id }: { b: Bundle; id: DrillDownId }) {
+  const p = usePeriod(b.periods);
+  const Body = id === "happy" ? Happy : id === "market" ? Market : Service;
+  const others = DRILL_DOWNS.filter((d) => d.id !== id);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <div
         style={{
           display: "flex",
@@ -1472,21 +1832,40 @@ export function CardsView({ b }: { b: Bundle }) {
           alignItems: "center",
         }}
       >
-        <Link
-          href={withPeriod("/hdfc-pulse/v2/mds-office", p)}
-          style={{ color: C.brandInk, fontSize: 13.5 }}
+        <PeriodLine file={b.periods as PeriodsFile} p={p} />
+        <div
+          style={{ display: "flex", gap: 6, flexWrap: "wrap", fontSize: 13 }}
         >
-          ← MD&apos;s office / Head of CX
-        </Link>
-        <Contents />
+          <Link
+            href={withPeriod(CARDS, p)}
+            style={{
+              color: C.brandInk,
+              textDecoration: "none",
+              border: `1px solid ${C.border}`,
+              borderRadius: 999,
+              padding: "2px 10px",
+            }}
+          >
+            ← Cards business view
+          </Link>
+          {others.map((d) => (
+            <Link
+              key={d.id}
+              href={withPeriod(`${CARDS}/${d.id}`, p)}
+              style={{
+                color: C.textSec,
+                textDecoration: "none",
+                border: `1px solid ${C.border}`,
+                borderRadius: 999,
+                padding: "2px 10px",
+              }}
+            >
+              {d.title}
+            </Link>
+          ))}
+        </div>
       </div>
-      <IssuePulse p={p} />
-      <Categories p={p} />
-      <Happy p={p} />
-      <Market p={p} />
-      <Service p={p} />
-      <Channels p={p} />
-      <CardsActions p={p} />
+      <Body p={p} />
     </div>
   );
 }
@@ -1499,10 +1878,7 @@ export function ComingSoon({ label }: { label: string }) {
         Coming soon. The Cards business view is the first; the others follow the
         same layout once it is agreed.
       </MutedNote>
-      <Link
-        href="/hdfc-pulse/v2/business/cards"
-        style={{ color: C.brandInk, fontSize: 14 }}
-      >
+      <Link href={CARDS} style={{ color: C.brandInk, fontSize: 14 }}>
         Open the Cards business view
       </Link>
     </Tile>
