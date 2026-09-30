@@ -211,7 +211,7 @@ export function BusinessView({
               d.label,
               <span
                 key="t"
-                style={{ color: d.source === "rbi" ? C.text : C.textMut }}
+                style={{ color: d.source === "bank" ? C.textMut : C.text }}
               >
                 {d.tat_label}
               </span>,

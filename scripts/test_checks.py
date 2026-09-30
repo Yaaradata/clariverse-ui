@@ -104,8 +104,14 @@ FIXTURES = [
      lambda s, o: _rw_json(o / "briefing.json", lambda b: b["release_pulse"].update(new_app_share_positive=30.0))),
     ("per-store counts", "per-store review counts add",
      lambda s, o: _rw_json(o / "app_pulse.json", lambda p: p["apps"][0]["window"].update(n=p["apps"][0]["window"]["n"] + 1))),
-    ("bank TAT as a number", "bank TATs read 'Bank TAT: confirm in discovery'",
+    ("bank TAT as a number", "bank TATs: unconfirmed read 'Bank TAT: confirm in discovery'",
      lambda s, o: _rw_json(s / "aggregates.json", lambda a: next(d for d in a["deliverables"] if d["source"] == "bank").update(tat_label="7 working days"))),
+    ("confirmed bank TAT without a source", "bank TATs: unconfirmed read 'Bank TAT: confirm in discovery'",
+     lambda s, o: _rw_json(s / "aggregates.json", lambda a: next(d for d in a["deliverables"] if d["source"] == "bank").update(
+         tat_label="7 working days", source="bank_confirmed", source_note=None))),
+    ("confirmed bank TAT still a placeholder", "bank TATs: unconfirmed read 'Bank TAT: confirm in discovery'",
+     lambda s, o: _rw_json(s / "aggregates.json", lambda a: next(d for d in a["deliverables"] if d["source"] == "bank").update(
+         source="bank_confirmed", source_note="Bank SLA document, section 1"))),
     ("public product rows", "public product rows + excluded",
      lambda s, o: _rw_json(o / "products.json", lambda p: p["rows"][0].update(count=p["rows"][0]["count"] + 1))),
 ]

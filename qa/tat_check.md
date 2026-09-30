@@ -22,7 +22,17 @@ Source of every TAT shown on D1 (deliverables ledger) and the Cards view: `scrip
 
 The Cards module's closure row also carries a fixed note, `frontend/components/hdfc-v3/ModuleView.tsx:321` "7 working days (RBI); ₹500 per day of delay". It matches `common.py:65` and has the same status.
 
-## Bank rows (now "Bank TAT: confirm in discovery")
+## Bank rows (confirmed)
+
+A bank row moves here once the bank confirms its TAT. In `common.py` it then gets `"tat_days"` (with `"calendar": True` only for calendar days), `"tat_label"` such as "7 working days", `"source": "bank_confirmed"` and a `"source_note"` naming the document and section. D1 shows the note under the TAT.
+
+| Deliverable | Shown | Source (document, section) | Source line |
+|---|---|---|---|
+| none yet | | | |
+
+None is confirmed yet: the confirmation request of 30 Sep carried no values or source (placeholders only), and D-11 is still not in the repo. No TAT was invented or web-searched.
+
+## Bank rows (unconfirmed: "Bank TAT: confirm in discovery")
 
 Before this fix each row showed a working assumption as a number. The numbers remain only as sample-generator parameters (`tat_days`) and are never displayed.
 
@@ -50,4 +60,4 @@ None found between screens: every screen reads the same `tat_label`. The action-
 - **"First response in 5 hours, closure in 24"** (E2/E3, `PriorityView.tsx:644, 750`). Vidya's stated target for priority customers, shown as "Working priority target, to confirm with the bank" (MORNING_DECISIONS D11).
 - **Cohort columns "open over 5 hours / over 24 hours"**. Age bands, not TATs.
 
-A reconcile check (`bank TATs read 'Bank TAT: confirm in discovery'`) fails if any non-RBI row carries anything else. Its fixture is "bank TAT as a number" in `scripts/test_checks.py`.
+A reconcile check (`bank TATs: unconfirmed read 'Bank TAT: confirm in discovery'; confirmed cite a source`) fails if an unconfirmed bank row (`source: "bank"`) carries anything but that label, or if a `bank_confirmed` row has no `source_note` or still shows the placeholder. Its fixtures in `scripts/test_checks.py`: "bank TAT as a number" (a number with source "bank" and no note), "confirmed bank TAT without a source" and "confirmed bank TAT still a placeholder".

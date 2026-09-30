@@ -44,11 +44,11 @@ OWNER_LABEL = {
     "product": "Product",
 }
 
-# Deliverables (B7 D1). TATs marked "rbi" are published RBI timelines; everything else is a bank TAT to confirm in
-# discovery. Days are working days (Sundays skipped) unless `calendar` is set. Hours are used for sub-day items.
-# D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank TAT is shown as a number: bank rows
-# read "Bank TAT: confirm in discovery". Their `tat_days` is a parameter of the illustrative sample generator only and
-# never reaches a screen (follow-up fix 3).
+# Deliverables (B7 D1). TATs marked "rbi" are published RBI timelines. "bank_confirmed" rows carry a TAT the bank has
+# confirmed: `tat_label` shows it (e.g. "7 working days") and `source_note` names the document and section. "bank" rows
+# are unconfirmed and read BANK_TAT_LABEL; their `tat_days` is a parameter of the illustrative sample generator only and
+# never reaches a screen (follow-up fix 3). Days are working days (Sundays skipped) unless `calendar` is set.
+# D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank row is confirmed yet.
 BANK_TAT_LABEL = "Bank TAT: confirm in discovery"
 DELIVERABLES = {
     "failed_reversal": {
