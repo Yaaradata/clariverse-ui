@@ -306,8 +306,9 @@ function Categories({ p }: { p: Period }) {
       title={titled("Issues by category", p)}
       sub="Largest first. Open a category for its subcategories."
       prov={["internal", "public"]}
+      style={{ minWidth: 0, maxWidth: "100%" }}
     >
-      <div style={{ overflowX: "auto" }}>
+      <div style={{ overflowX: "auto", maxWidth: "100%", minWidth: 0 }}>
         <div style={{ minWidth: 980 }}>
           <div
             style={{
