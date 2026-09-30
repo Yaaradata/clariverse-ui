@@ -418,8 +418,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           alignItems: "center",
         }}
       >
-        {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />} By
-        channel
+        {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />} By channel
       </button>
       {open ? (
         <Table
@@ -432,9 +431,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
               <strong key="v">{fmt(l.volume)}</strong>,
               <strong key="o">{fmt(l.open)}</strong>,
               <strong key="n">
-                {l.not_responded_48h === null
-                  ? "—"
-                  : fmt(l.not_responded_48h)}
+                {l.not_responded_48h === null ? "—" : fmt(l.not_responded_48h)}
               </strong>,
             ],
           ]}
@@ -712,7 +709,10 @@ export function CxPulse({ p }: { p: Period }) {
           >
             <strong style={{ fontSize: 15 }}>External channels</strong>
             <ProvenanceTag kind="public" />
-            <TrendChip pct={e.change_pct} label={`${p.compare}, stores and forums`} />
+            <TrendChip
+              pct={e.change_pct}
+              label={`${p.compare}, stores and forums`}
+            />
           </div>
           <ExternalSet title="Total signals" f={e} />
           <ExternalSet title="High-impact signals" f={e.high_impact} hi />
@@ -727,7 +727,9 @@ export function CxPulse({ p }: { p: Period }) {
             50+ upvotes; a store review 20+ people found helpful). Listed
             customers&apos; posts are in the Customer pulse. Shares are
             source-weighted
-            {mix ? ` (${mix[0] === "x" ? "X" : mix[0]} is ${fmtPct(mix[1])} of this period)` : ""}
+            {mix
+              ? ` (${mix[0] === "x" ? "X" : mix[0]} is ${fmtPct(mix[1])} of this period)`
+              : ""}
             ; trends use store reviews and forums only.
           </MutedNote>
         </div>

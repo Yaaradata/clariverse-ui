@@ -101,7 +101,12 @@ export type BriefItem = {
 export type CategoryFigures = {
   internal: Pick<
     InternalFigures,
-    "volume" | "resolved" | "open" | "open_too_long" | "escalations" | "change_pct"
+    | "volume"
+    | "resolved"
+    | "open"
+    | "open_too_long"
+    | "escalations"
+    | "change_pct"
   >;
   external: Pick<
     PublicFigures,
@@ -179,7 +184,10 @@ export type CardsPeriod = {
     feature_requests: { label: string; count: number }[];
     praised: { label: string; count: number }[];
   }[];
-  channels: { internal: Record<string, number>; external: Record<string, number> };
+  channels: {
+    internal: Record<string, number>;
+    external: Record<string, number>;
+  };
   tiers: {
     id: string;
     label: string;

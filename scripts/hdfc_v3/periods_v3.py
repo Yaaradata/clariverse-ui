@@ -53,6 +53,7 @@ from common import (
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hdfc_pipeline"))
 from aggregate import quotable  # noqa: E402  (a quote naming a person is never used)
+from pii_names import ALLEGATION  # noqa: E402  (nor, as an anecdote, one that makes an allegation)
 from public_v3 import PRODUCTS as PUB_PRODUCTS  # noqa: E402
 from public_v3 import product_of  # noqa: E402
 
@@ -318,7 +319,13 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
 
 
 def anecdote(rs, theme):
-    cands = [r for r in rs if quotable(r) and r["summary"] and r["sentiment"] == "negative"]
+    # A card's anecdote is the business's voice in one line: never a quote naming a person, and never an allegation
+    # (fraud, corruption, lying…) even against an unnamed role, which on an exec screen reads as the bank's view.
+    cands = [
+        r for r in rs
+        if quotable(r) and r["summary"] and r["sentiment"] == "negative"
+        and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")
+    ]
     pick = [r for r in cands if theme in r["themes"]] or cands
     if not pick:
         return None

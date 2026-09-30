@@ -4,17 +4,11 @@ import {
   Activity,
   ArrowLeft,
   CreditCard,
-  Crown,
   Headphones,
   Inbox,
   MessageSquareText,
   Moon,
-  Shield,
-  Smartphone,
   Sun,
-  Target,
-  Timer,
-  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -39,11 +33,6 @@ export type ShellProps = {
   children: ReactNode;
 };
 
-const VIEW_LABEL: Record<View, string> = {
-  "mds-office": "MD's office",
-  "head-cx": "Head of CX",
-};
-
 export function withFrom(href: string, from: View): string {
   return `${href}${href.includes("?") ? "&" : "?"}from=${from}`;
 }
@@ -64,39 +53,14 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
       exec: true,
     },
     {
-      href: withFrom("/hdfc-pulse/v2/priority", view),
-      label: "Priority relationships",
-      icon: Crown,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/module/cards", view),
-      label: "Cards",
+      href: "/hdfc-pulse/v2/business/cards",
+      label: "Cards: business view",
       icon: CreditCard,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/module/digital", view),
-      label: "Digital: HDFC Bank app",
-      icon: Smartphone,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/deliverables", view),
-      label: "Are we meeting our deliverables?",
-      icon: Timer,
     },
     {
       href: withFrom("/hdfc-pulse/v2/action-queue", view),
       label: "Action queue: escalation emails",
       icon: Inbox,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/satisfaction", view),
-      label: "Are customers satisfied with their journey?",
-      icon: Target,
-    },
-    {
-      href: withFrom("/hdfc-pulse/v2/market", view),
-      label: "What is the market saying about us?",
-      icon: Shield,
     },
   ];
   return (
