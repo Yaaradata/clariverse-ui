@@ -121,7 +121,9 @@ export function PeriodTag({ p }: { p: Period }) {
         borderRadius: 999,
         padding: "1px 8px",
         marginLeft: 8,
-        whiteSpace: "nowrap",
+        display: "inline-block",
+        maxWidth: "100%",
+        whiteSpace: "normal",
         verticalAlign: "middle",
       }}
     >
