@@ -891,6 +891,84 @@ export function Happy({ p }: { p: Period }) {
     : 0;
   return (
     <>
+      <div style={cols(3, 320, 14)}>
+        <Tile
+          id="happy-journey"
+          title={titled("Where contacts come from", p)}
+          sub="The bank's own Cards contacts by journey stage."
+          prov="internal"
+        >
+          <Table
+            head={["Stage", "Contacts", "Negative", "Repeat"]}
+            align={["left", "right", "right", "right"]}
+            rows={p.cards.journey.map((j) => [
+              j.stage,
+              fmt(j.volume),
+              fmtPct(j.negative_share),
+              fmtPct(j.repeat_share),
+            ])}
+          />
+        </Tile>
+        <Tile
+          id="happy-tiers"
+          title={titled("Contacts by customer list", p)}
+          sub="The bank's own Cards contacts by the Customer pulse lists, with their sentiment."
+          prov="internal"
+        >
+          <Table
+            head={["List", "Contacts", "Open", "Split"]}
+            align={["left", "right", "right", "left"]}
+            rows={h.tiers.map((t) => [
+              t.label,
+              fmt(t.volume),
+              fmt(t.open),
+              <SentimentBar
+                key="b"
+                pos={t.positive}
+                neu={t.neutral}
+                neg={t.negative}
+                legend={false}
+              />,
+            ])}
+          />
+        </Tile>
+
+        <Tile
+          id="happy-repeat"
+          title={titled("Repeat contact by category", p)}
+          sub="Customers who came back on the same issue: the bank's own contacts (a repeat within 30 days) and public posts that say it is not the first time."
+          prov={["internal", "public"]}
+        >
+          <div
+            data-testid="repeat-scroll"
+            style={{
+              maxHeight: REPEAT_LIST_HEIGHT,
+              overflowY: "auto",
+              paddingRight: 6,
+              display: "flex",
+              flexDirection: "column",
+              gap: 4,
+            }}
+          >
+            {h.repeat_by_category.map((r) => (
+              <BarRow
+                key={r.id}
+                label={r.label}
+                value={r.internal_repeat + r.public_repeat}
+                max={Math.max(
+                  1,
+                  ...h.repeat_by_category.map(
+                    (x) => x.internal_repeat + x.public_repeat,
+                  ),
+                )}
+                color={C.amber}
+                sub={`${fmt(r.internal_repeat)} internal repeats of ${fmt(r.contacts)} contacts · ${fmt(r.public_repeat)} public`}
+              />
+            ))}
+          </div>
+        </Tile>
+      </div>
+
       <Tile
         id="happy-sources"
         title={titled("Sentiment by source", p)}
@@ -1074,84 +1152,6 @@ export function Happy({ p }: { p: Period }) {
           ])}
         />
       </Tile>
-
-      <div style={cols(3, 320, 14)}>
-        <Tile
-          id="happy-journey"
-          title={titled("Where contacts come from", p)}
-          sub="The bank's own Cards contacts by journey stage."
-          prov="internal"
-        >
-          <Table
-            head={["Stage", "Contacts", "Negative", "Repeat"]}
-            align={["left", "right", "right", "right"]}
-            rows={p.cards.journey.map((j) => [
-              j.stage,
-              fmt(j.volume),
-              fmtPct(j.negative_share),
-              fmtPct(j.repeat_share),
-            ])}
-          />
-        </Tile>
-        <Tile
-          id="happy-tiers"
-          title={titled("Contacts by customer list", p)}
-          sub="The bank's own Cards contacts by the Customer pulse lists, with their sentiment."
-          prov="internal"
-        >
-          <Table
-            head={["List", "Contacts", "Open", "Split"]}
-            align={["left", "right", "right", "left"]}
-            rows={h.tiers.map((t) => [
-              t.label,
-              fmt(t.volume),
-              fmt(t.open),
-              <SentimentBar
-                key="b"
-                pos={t.positive}
-                neu={t.neutral}
-                neg={t.negative}
-                legend={false}
-              />,
-            ])}
-          />
-        </Tile>
-
-        <Tile
-          id="happy-repeat"
-          title={titled("Repeat contact by category", p)}
-          sub="Customers who came back on the same issue: the bank's own contacts (a repeat within 30 days) and public posts that say it is not the first time."
-          prov={["internal", "public"]}
-        >
-          <div
-            data-testid="repeat-scroll"
-            style={{
-              maxHeight: REPEAT_LIST_HEIGHT,
-              overflowY: "auto",
-              paddingRight: 6,
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-            }}
-          >
-            {h.repeat_by_category.map((r) => (
-              <BarRow
-                key={r.id}
-                label={r.label}
-                value={r.internal_repeat + r.public_repeat}
-                max={Math.max(
-                  1,
-                  ...h.repeat_by_category.map(
-                    (x) => x.internal_repeat + x.public_repeat,
-                  ),
-                )}
-                color={C.amber}
-                sub={`${fmt(r.internal_repeat)} internal repeats of ${fmt(r.contacts)} contacts · ${fmt(r.public_repeat)} public`}
-              />
-            ))}
-          </div>
-        </Tile>
-      </div>
     </>
   );
 }
