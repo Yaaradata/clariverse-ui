@@ -7,7 +7,7 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { type ReactNode, useState } from "react";
+import { type PointerEvent, type ReactNode, useState } from "react";
 
 import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
 import {
@@ -226,6 +226,8 @@ export function Sparkline({
   width = 90,
   height = 26,
   area,
+  points,
+  title,
 }: {
   values: number[];
   color: string;
@@ -233,7 +235,11 @@ export function Sparkline({
   height?: number;
   /** A small chart rather than a bare line: filled under the line, on a baseline, with a dot on the latest value. */
   area?: boolean;
+  /** With these, each point shows its window and figure on hover, focus or touch. */
+  points?: TrendPoints;
+  title?: string;
 }) {
+  const hover = useTrendHover(values.length);
   if (values.length < 2) return null;
   const max = Math.max(...values, 1);
   const xy = values.map(
@@ -245,7 +251,7 @@ export function Sparkline({
   );
   const pts = xy.map(([x, y]) => `${x},${y}`).join(" ");
   const last = xy[xy.length - 1];
-  return (
+  const svg = (
     <svg
       width={width}
       height={height}
@@ -278,6 +284,39 @@ export function Sparkline({
       />
       {area ? <circle cx={last[0]} cy={last[1]} r="2" fill={color} /> : null}
     </svg>
+  );
+  if (!points) return svg;
+  const at = hover.at;
+  return (
+    <span
+      data-testid="trend"
+      {...hover.wrap}
+      style={{
+        position: "relative",
+        display: "inline-block",
+        lineHeight: 0,
+        borderRadius: 4,
+        outline: hover.focused ? `2px solid ${C.brandInk}` : "none",
+        outlineOffset: 2,
+      }}
+    >
+      {svg}
+      <TrendScrub
+        hover={hover}
+        count={values.length}
+        label={title ?? "Trend"}
+        text={at === null ? "" : pointText(points, values, at)}
+      />
+      {at === null ? null : (
+        <TrendTip
+          x={(100 * xy[at][0]) / width}
+          y={(100 * xy[at][1]) / height}
+          color={color}
+          when={`${points.span} ${fmtDate(points.ends[at])}`}
+          what={pointFigure(points, values[at])}
+        />
+      )}
+    </span>
   );
 }
 
@@ -410,20 +449,25 @@ export function Delta({
 }
 
 /**
- * One colour rule for every trend chart: green when the measure got better, red when it got worse, amber in between
- * (within 10% either way, or no earlier period). "Better" is fewer contacts, mentions and late replies, and a higher
- * response rate.
+ * Colour rule (1 Oct): red, amber and green only where a direction is good or bad: no reply in 48h+, open counts and
+ * negative share. Green when it got better (fell), red when it got worse (rose), amber within 10% either way or with
+ * no earlier period. Volumes (contacts, mentions) and the informational response rate are always neutral.
  */
 const TREND_BAND = 10;
+const NEUTRAL = C.textSec;
 
-function trendColor(change: number | null, upIsGood = false): string {
+function trendColor(change: number | null): string {
   if (change === null) return C.amber;
-  const better = upIsGood ? change : -change;
-  return better >= TREND_BAND
+  return change <= -TREND_BAND
     ? C.green
-    : better <= -TREND_BAND
+    : change >= TREND_BAND
       ? C.red
       : C.amber;
+}
+
+/** The same rule for a count's change (any rise is worse, any fall is better). */
+function deltaColor(delta: number | null): string {
+  return trendColor(delta === null ? null : Math.sign(delta) * 100);
 }
 
 /** A series' change in %, on the period's own comparison: the two halves for the full window, else the last two points. */
@@ -440,7 +484,7 @@ function seriesChange(values: number[], whole: boolean): number | null {
 }
 
 /** What one point of a trend covers, for its hover label: "Week to 21 Sep", "7 days to 21 Sep". */
-function spanOf(p: Period): string {
+export function spanOf(p: Period): string {
   return p.id === "all"
     ? "Week to"
     : p.id === "30d"
@@ -450,17 +494,160 @@ function spanOf(p: Period): string {
         : "24 hours to";
 }
 
-type TrendPoints = {
+export type TrendPoints = {
   /** The end of each point's window (ISO), in step with the values. */
   ends: string[];
   span: string;
-  /** What the figure counts: "contacts", "mentions", or "%" for a rate. */
+  /** What the figure counts: "contacts", "mentions"; or starting with "%" for a rate ("%", "% negative"). */
   unit: string;
 };
 
+function pointFigure(points: TrendPoints, v: number): string {
+  return points.unit.startsWith("%")
+    ? `${fmt(v)}${points.unit}`
+    : `${fmt(v)} ${points.unit}`;
+}
+
+function pointText(points: TrendPoints, values: number[], at: number) {
+  return `${points.span} ${fmtDate(points.ends[at])}: ${pointFigure(points, values[at])}`;
+}
+
 /**
- * A smooth filled trend, stretched to its box: the shape of a series, with no axis. Hovering a point shows its window
- * and its figure.
+ * Which point of a trend is being read. Works with a mouse (hover), a keyboard (focus, then the arrow keys) and touch
+ * (tap or drag): the keyboard and touch go through an invisible range input laid over the chart.
+ */
+function useTrendHover(count: number) {
+  const [at, setAt] = useState<number | null>(null);
+  const [focused, setFocused] = useState(false);
+  const last = Math.max(count - 1, 0);
+  const clamp = (i: number) => Math.max(0, Math.min(last, i));
+  return {
+    at: at === null ? null : clamp(at),
+    focused,
+    setAt: (i: number | null) => setAt(i === null ? null : clamp(i)),
+    setFocused,
+    wrap: {
+      onPointerMove: (ev: PointerEvent<HTMLElement>) => {
+        const box = ev.currentTarget.getBoundingClientRect();
+        const f = (ev.clientX - box.left) / Math.max(box.width, 1);
+        setAt(clamp(Math.round(f * last)));
+      },
+      onPointerLeave: (ev: PointerEvent<HTMLElement>) => {
+        // A finger lifting keeps the label up until focus moves on; a mouse leaving clears it.
+        if (ev.pointerType === "mouse" && !focused) setAt(null);
+      },
+    },
+  };
+}
+
+/** The invisible range input over a chart: focusable, moved with the arrow keys or a finger, announced as text. */
+function TrendScrub({
+  hover,
+  count,
+  label,
+  text,
+}: {
+  hover: ReturnType<typeof useTrendHover>;
+  count: number;
+  label: string;
+  text: string;
+}) {
+  return (
+    <input
+      type="range"
+      data-testid="trend-scrub"
+      aria-label={label}
+      aria-valuetext={text}
+      min={0}
+      max={Math.max(count - 1, 0)}
+      step={1}
+      value={hover.at ?? Math.max(count - 1, 0)}
+      onChange={(ev) => hover.setAt(Number(ev.target.value))}
+      onFocus={() => {
+        hover.setFocused(true);
+        hover.setAt(hover.at ?? count - 1);
+      }}
+      onBlur={() => {
+        hover.setFocused(false);
+        hover.setAt(null);
+      }}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        opacity: 0,
+        cursor: "crosshair",
+        touchAction: "pan-y",
+      }}
+    />
+  );
+}
+
+/** The highlighted dot and the label for the point being read. x and y are % of the chart box. */
+function TrendTip({
+  x,
+  y,
+  color,
+  when,
+  what,
+}: {
+  x: number;
+  y: number;
+  color: string;
+  when: string;
+  what: string;
+}) {
+  return (
+    <>
+      <span
+        aria-hidden
+        style={{
+          position: "absolute",
+          left: `${x}%`,
+          top: `${y}%`,
+          width: 9,
+          height: 9,
+          borderRadius: 999,
+          background: color,
+          border: `2px solid ${C.card}`,
+          transform: "translate(-50%, -50%)",
+          pointerEvents: "none",
+        }}
+      />
+      <span
+        data-testid="trend-tip"
+        style={{
+          position: "absolute",
+          left: `${x}%`,
+          top: `${y}%`,
+          transform: `translate(${x > 60 ? "-100%" : x < 40 ? "0" : "-50%"}, calc(-100% - 10px))`,
+          zIndex: 20,
+          pointerEvents: "none",
+          background: C.surface,
+          border: `1px solid ${C.borderLight}`,
+          borderRadius: 8,
+          padding: "5px 9px",
+          boxShadow: "0 6px 18px rgba(0,0,0,0.28)",
+          whiteSpace: "nowrap",
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          textAlign: "left",
+          lineHeight: 1.3,
+        }}
+      >
+        <span style={{ fontSize: 11.5, color: C.textMut }}>{when}</span>
+        <strong style={{ fontSize: 13, color: C.text }}>{what}</strong>
+      </span>
+    </>
+  );
+}
+
+/**
+ * A smooth filled trend, stretched to its box: the shape of a series, with no axis. Each point shows its window and
+ * figure on hover, focus or touch.
  */
 function AreaChart({
   id,
@@ -478,9 +665,9 @@ function AreaChart({
   height: number | string;
   title: string;
   testid?: string;
-  points?: TrendPoints;
+  points: TrendPoints;
 }) {
-  const [at, setAt] = useState<number | null>(null);
+  const hover = useTrendHover(values.length);
   const W = 200;
   const H = 100;
   const max = Math.max(...values, 1);
@@ -493,26 +680,25 @@ function AreaChart({
     const mx = (pts[i - 1][0] + pts[i][0]) / 2;
     line += ` C ${mx},${pts[i - 1][1]} ${mx},${pts[i][1]} ${pts[i][0]},${pts[i][1]}`;
   }
-  const hover = at !== null && points && pts[at] ? at : null;
-  const x = hover === null ? 0 : (100 * pts[hover][0]) / W;
-  const y = hover === null ? 0 : (100 * pts[hover][1]) / H;
+  const at = hover.at !== null && pts[hover.at] ? hover.at : null;
   return (
     <div
-      data-testid={testid}
-      role="img"
-      aria-label={title}
-      onMouseMove={(ev) => {
-        const box = ev.currentTarget.getBoundingClientRect();
-        const f = (ev.clientX - box.left) / Math.max(box.width, 1);
-        setAt(Math.max(0, Math.min(values.length - 1, Math.round(f * n))));
-      }}
-      onMouseLeave={() => setAt(null)}
+      data-testid={testid ?? "trend"}
+      {...hover.wrap}
       // A chart told to fill its box is taken out of flow, so its own shape never sets the card's height.
-      style={
-        height === "100%"
-          ? { position: "absolute", inset: 0 }
-          : { position: "relative", width: "100%", height, minWidth: 0 }
-      }
+      style={{
+        ...(height === "100%"
+          ? { position: "absolute" as const, inset: 0 }
+          : {
+              position: "relative" as const,
+              width: "100%",
+              height,
+              minWidth: 0,
+            }),
+        borderRadius: 6,
+        outline: hover.focused ? `2px solid ${C.brandInk}` : "none",
+        outlineOffset: 2,
+      }}
     >
       <svg
         viewBox={`0 0 ${W} ${H}`}
@@ -540,55 +726,21 @@ function AreaChart({
           </>
         ) : null}
       </svg>
-      {hover !== null && points ? (
-        <>
-          <span
-            aria-hidden
-            style={{
-              position: "absolute",
-              left: `${x}%`,
-              top: `${y}%`,
-              width: 9,
-              height: 9,
-              borderRadius: 999,
-              background: color,
-              border: `2px solid ${C.card}`,
-              transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }}
-          />
-          <span
-            data-testid="trend-tip"
-            style={{
-              position: "absolute",
-              left: `${x}%`,
-              top: `${y}%`,
-              transform: `translate(${x > 60 ? "-100%" : x < 40 ? "0" : "-50%"}, calc(-100% - 10px))`,
-              zIndex: 20,
-              pointerEvents: "none",
-              background: C.surface,
-              border: `1px solid ${C.borderLight}`,
-              borderRadius: 8,
-              padding: "5px 9px",
-              boxShadow: "0 6px 18px rgba(0,0,0,0.28)",
-              whiteSpace: "nowrap",
-              display: "flex",
-              flexDirection: "column",
-              gap: 1,
-              textAlign: "left",
-            }}
-          >
-            <span style={{ fontSize: 11.5, color: C.textMut }}>
-              {points.span} {fmtDate(points.ends[hover])}
-            </span>
-            <strong style={{ fontSize: 13, color }}>
-              {points.unit === "%"
-                ? `${fmt(values[hover])}%`
-                : `${fmt(values[hover])} ${points.unit}`}
-            </strong>
-          </span>
-        </>
-      ) : null}
+      <TrendScrub
+        hover={hover}
+        count={values.length}
+        label={title}
+        text={at === null ? "" : pointText(points, values, at)}
+      />
+      {at === null ? null : (
+        <TrendTip
+          x={(100 * pts[at][0]) / W}
+          y={(100 * pts[at][1]) / H}
+          color={color}
+          when={`${points.span} ${fmtDate(points.ends[at])}`}
+          what={pointFigure(points, values[at])}
+        />
+      )}
     </div>
   );
 }
@@ -695,15 +847,19 @@ const STAT_LABEL = {
   whiteSpace: "nowrap" as const,
 };
 
-/** One customer list: the big figure and its change, the volume trend as a filled chart, two gauges, two small stats. */
+/**
+ * One customer list. Volume is a figure with its change (neutral: volume is not good or bad). The one chart is the
+ * trend that matters, no reply in 48h+, coloured by the rule. Gauges for open and no reply; RMs alerted underneath.
+ */
 function ListCard({ l, p }: { l: PulseList; p: Period }) {
   const late = l.not_responded_48h;
+  const lateColor = deltaColor(l.not_responded_delta);
   return (
     <div
       data-testid="pulse-list"
       style={{
         background: C.cardAlt,
-        border: `1px solid ${tint(C.violet, 0.3)}`,
+        border: `1px solid ${C.border}`,
         borderRadius: 14,
         padding: "14px 14px 12px",
         display: "grid",
@@ -722,8 +878,6 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
       >
         {l.label}
       </strong>
-      {/* Two columns from the top: the figure sits over its trend, the gauges start level with it. The chart is
-          short and wide, so the card stays compact. */}
       <div
         style={{
           display: "grid",
@@ -759,30 +913,47 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
             >
               {fmt(l.volume)}
             </span>
-            <TrendChip pct={l.change_pct} label={p.compare} compact />
+            <TrendChip pct={l.change_pct} label={p.compare_detail} compact />
           </span>
           <span
             style={{ fontSize: 12, color: C.textMut, whiteSpace: "nowrap" }}
           >
             {fmt(l.members)} customers
           </span>
-          <div style={{ flex: 1, minHeight: 52, position: "relative" }}>
-            <AreaChart
-              id={`trend-volume-${l.id}`}
-              testid="volume-trend"
-              values={l.volume_series.map((x) => x.count)}
-              color={trendColor(l.change_pct)}
-              height="100%"
-              title="Volume, over the last periods of the same length"
-              points={{
-                ends: l.volume_series.map((x) => x.end),
-                span: spanOf(p),
-                unit: "contacts",
-              }}
-            />
+          <span style={{ ...STAT_LABEL, marginTop: 4 }}>
+            No reply 48h+ · trend
+          </span>
+          <div style={{ flex: 1, minHeight: 46, position: "relative" }}>
+            {late === null ? (
+              <span style={{ fontSize: 12, color: C.textMut }}>
+                Needs 48 hours of data
+              </span>
+            ) : (
+              <AreaChart
+                id={`trend-late-${l.id}`}
+                testid="late-trend"
+                values={l.not_responded_series.map((x) => x.count)}
+                color={lateColor}
+                height="100%"
+                title={`${l.label}: no reply in 48h+, trend`}
+                points={{
+                  ends: l.not_responded_series.map((x) => x.end),
+                  span: spanOf(p),
+                  unit: "without a reply in 48h+",
+                }}
+              />
+            )}
           </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            gap: 8,
+            minWidth: 0,
+          }}
+        >
           <div
             style={{
               display: "grid",
@@ -792,15 +963,20 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           >
             <ArcGauge
               value={share(l.open, l.volume)}
-              color={C.amber}
+              color={deltaColor(l.open_delta)}
               centre={fmt(l.open)}
               label="Open"
             >
-              <Delta n={l.open_delta} label={p.compare} goodDown compact />
+              <Delta
+                n={l.open_delta}
+                label={p.compare_detail}
+                goodDown
+                compact
+              />
             </ArcGauge>
             <ArcGauge
               value={share(late, l.volume)}
-              color={C.red}
+              color={late === null ? C.textMut : lateColor}
               centre={late === null ? "—" : fmt(late)}
               label="No reply 48h+"
             >
@@ -809,7 +985,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
               ) : (
                 <Delta
                   n={l.not_responded_delta}
-                  label={p.compare}
+                  label={p.compare_detail}
                   goodDown
                   compact
                 />
@@ -817,55 +993,28 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
             </ArcGauge>
           </div>
           <div
+            data-testid="rm-line"
+            title="RMs alerted this morning, of the customers on this list due an alert"
             style={{
-              display: "grid",
-              gridTemplateColumns: "auto minmax(0, 1fr)",
-              gap: "clamp(6px, 0.7vw, 12px)",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "baseline",
+              gap: 8,
               borderTop: `1px solid ${C.border}`,
               paddingTop: 8,
             }}
           >
-            <div
-              data-testid="rm-line"
-              title="RMs alerted this morning, of the customers on this list due an alert"
-              style={{ display: "flex", flexDirection: "column", gap: 3 }}
+            <span style={STAT_LABEL}>RMs alerted</span>
+            <strong
+              style={{
+                fontFamily: MONO,
+                fontSize: 13.5,
+                color: C.text,
+                whiteSpace: "nowrap",
+              }}
             >
-              <span style={STAT_LABEL}>RMs alerted</span>
-              <strong
-                style={{
-                  fontFamily: MONO,
-                  fontSize: 13.5,
-                  color: C.violet,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {fmt(l.rm.alerted)} of {fmt(l.rm.of)}
-              </strong>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <span style={STAT_LABEL}>48h+ trend</span>
-              {late === null ? (
-                <span style={{ fontSize: 12, color: C.textMut }}>—</span>
-              ) : (
-                <AreaChart
-                  id={`trend-late-${l.id}`}
-                  testid="late-trend"
-                  values={l.not_responded_series.map((x) => x.count)}
-                  color={trendColor(
-                    l.not_responded_delta === null
-                      ? null
-                      : Math.sign(l.not_responded_delta) * 100,
-                  )}
-                  height={20}
-                  title="Not responded to in 48h+, over the last periods of the same length"
-                  points={{
-                    ends: l.not_responded_series.map((x) => x.end),
-                    span: spanOf(p),
-                    unit: "without a reply in 48h+",
-                  }}
-                />
-              )}
-            </div>
+              {fmt(l.rm.alerted)} of {fmt(l.rm.of)}
+            </strong>
           </div>
         </div>
       </div>
@@ -894,8 +1043,11 @@ export function CustomerPulse({ p }: { p: Period }) {
         <strong style={{ fontSize: 15 }}>Internal channels</strong>
         <ProvenanceTag kind="internal" />
         <span style={{ fontSize: 12.5, color: C.textMut }}>
-          Changes: {p.compare}. Trend colour: green better, amber within{" "}
-          {TREND_BAND}%, red worse.
+          <span title={p.compare_detail}>Changes: {p.compare}</span>
+          {p.id === "all" ? " (full window: second half vs first half)" : ""}.
+          Colour: red, amber and green only where direction matters (no reply
+          48h+, open, negative share): green better, amber within {TREND_BAND}%,
+          red worse. Volumes stay neutral.
         </span>
       </div>
       <div
@@ -1012,7 +1164,6 @@ function ExternalCard({
   chip,
   caption,
   chart,
-  color,
   children,
 }: {
   title: string;
@@ -1020,8 +1171,16 @@ function ExternalCard({
   big: string;
   chip?: ReactNode;
   caption: string;
-  chart?: { id: string; values: number[]; title: string; points: TrendPoints };
-  color: string;
+  /** The one chart on the card: the metric that matters, in the rule's colour (or neutral for a volume). */
+  chart: {
+    id: string;
+    values: number[];
+    title: string;
+    points: TrendPoints;
+    color: string;
+    /** Shown over the chart when it is not the card's headline figure. */
+    label?: string;
+  };
   children: ReactNode;
 }) {
   return (
@@ -1088,18 +1247,19 @@ function ExternalCard({
           <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.35 }}>
             {caption}
           </span>
-          {chart ? (
-            <div style={{ flex: 1, minHeight: 40, position: "relative" }}>
-              <AreaChart
-                id={chart.id}
-                values={chart.values}
-                color={color}
-                height="100%"
-                title={chart.title}
-                points={chart.points}
-              />
-            </div>
+          {chart.label ? (
+            <span style={{ ...STAT_LABEL, marginTop: 4 }}>{chart.label}</span>
           ) : null}
+          <div style={{ flex: 1, minHeight: 40, position: "relative" }}>
+            <AreaChart
+              id={chart.id}
+              values={chart.values}
+              color={chart.color}
+              height="100%"
+              title={chart.title}
+              points={chart.points}
+            />
+          </div>
         </div>
         {/* Gauges at the top, the footer on the floor of the card, level with the foot of the chart. */}
         <div
@@ -1199,8 +1359,8 @@ function ExternalBlock({ p }: { p: Period }) {
   };
   const trend = "over the last periods of the same length";
   const whole = p.id === "all";
-  const of = (xs: number[], upIsGood = false) =>
-    trendColor(seriesChange(xs, whole), upIsGood);
+  const negShare = sp.negative_share_series.map((x) => x.pct ?? 0);
+  const unanswered = m.unanswered_series.map((x) => x.count);
   return (
     <div
       data-testid="external-block"
@@ -1250,22 +1410,23 @@ function ExternalBlock({ p }: { p: Period }) {
             chip={
               <TrendChip
                 pct={ext.change_pct}
-                label={`${p.compare}, stores and forums`}
+                label={`${p.compare_detail}, stores and forums`}
                 compact
               />
             }
             caption="public posts and reviews"
             chart={{
-              id: "trend-ext-mentions",
-              values: sp.mentions_series.map((x) => x.count),
-              title: `Mentions, ${trend}`,
+              id: "trend-ext-negative-share",
+              values: negShare,
+              title: `Negative share of mentions, ${trend}`,
+              label: "Negative share · trend",
+              color: trendColor(seriesChange(negShare, whole)),
               points: {
-                ends: sp.mentions_series.map((x) => x.end),
+                ends: sp.negative_share_series.map((x) => x.end),
                 span: spanOf(p),
-                unit: "mentions",
+                unit: "% negative",
               },
             }}
-            color={trendColor(ext.change_pct)}
           >
             <div style={GAUGE_PAIR}>
               <ArcGauge
@@ -1329,13 +1490,13 @@ function ExternalBlock({ p }: { p: Period }) {
               id: "trend-ext-high-impact",
               values: sp.high_impact_series.map((x) => x.count),
               title: `High-impact mentions, ${trend}`,
+              color: NEUTRAL,
               points: {
                 ends: sp.high_impact_series.map((x) => x.end),
                 span: spanOf(p),
                 unit: "high-impact mentions",
               },
             }}
-            color={of(sp.high_impact_series.map((x) => x.count))}
           >
             <div style={GAUGE_PAIR}>
               <ArcGauge
@@ -1355,7 +1516,7 @@ function ExternalBlock({ p }: { p: Period }) {
               label="Escalation language"
               figure={fmt(ext.high_impact.escalation)}
               value={share(ext.high_impact.escalation, sp.high_impact)}
-              color={C.amber}
+              color={NEUTRAL}
             />
           </ExternalCard>
 
@@ -1368,16 +1529,13 @@ function ExternalBlock({ p }: { p: Period }) {
               id: "trend-ext-response",
               values: sp.response_series.map((x) => x.pct ?? 0),
               title: `Bank response rate, ${trend}`,
+              color: NEUTRAL,
               points: {
                 ends: sp.response_series.map((x) => x.end),
                 span: spanOf(p),
                 unit: "%",
               },
             }}
-            color={of(
-              sp.response_series.map((x) => x.pct ?? 0),
-              true,
-            )}
           >
             <div
               data-testid="response-by-source"
@@ -1442,16 +1600,17 @@ function ExternalBlock({ p }: { p: Period }) {
             big={fmt(m.total)}
             caption="listed customers who tagged the bank"
             chart={{
-              id: "trend-ext-high-priority",
-              values: m.series.map((x) => x.count),
-              title: `High-priority mentions, ${trend}`,
+              id: "trend-ext-unanswered",
+              values: unanswered,
+              title: `High-priority mentions without a reply, ${trend}`,
+              label: "Unanswered · trend",
+              color: trendColor(seriesChange(unanswered, whole)),
               points: {
-                ends: m.series.map((x) => x.end),
+                ends: m.unanswered_series.map((x) => x.end),
                 span: spanOf(p),
-                unit: "mentions",
+                unit: "unanswered",
               },
             }}
-            color={of(m.series.map((x) => x.count))}
           >
             <div style={GAUGE_PAIR}>
               <ArcGauge
@@ -1471,7 +1630,7 @@ function ExternalBlock({ p }: { p: Period }) {
               label="Response rate"
               figure={fmtPct(share(m.responded, m.total))}
               value={share(m.responded, m.total)}
-              color={C.violet}
+              color={NEUTRAL}
             />
           </ExternalCard>
         </div>
