@@ -776,6 +776,26 @@
     "response_pct": 26.0,
     "high_impact": 1,
     "high_impact_responded": 1,
+    "high_impact_change_pct": 0.0,
+    "high_impact_peak": {
+     "date": "2026-09-28",
+     "count": 1,
+     "posts": [
+      {
+       "text": "Family banked here for decades out of convenience; investing is fast but servicing is poor, with a weak manager and relationship manager pairing at one branch.",
+       "platform": "X",
+       "date": "2026-09-28",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 10,
+        "replies": 2
+       },
+       "score": 12,
+       "responded": true,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 100.0,
     "posts": [
      {
@@ -7669,6 +7689,77 @@
     "response_pct": 54.0,
     "high_impact": 19,
     "high_impact_responded": 12,
+    "high_impact_change_pct": 35.7,
+    "high_impact_peak": {
+     "date": "2026-09-26",
+     "count": 7,
+     "posts": [
+      {
+       "text": "Customer and shareholder welcomes the bank staying open on Sunday and through the strike days as a good sign.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "positive",
+       "engagement": {
+        "likes": 95,
+        "replies": 42,
+        "reposts": 9
+       },
+       "score": 146,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "A list of harsh adjectives condemning the bank with no specific issue.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Rejects the bank's generic reply asking for details by email and repeats that the system is shameless.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Single-word remark calling something dangerous.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 1
+       },
+       "score": 1,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Hindi reply saying the IPO blocking feature is still disabled.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1
+       },
+       "score": 1,
+       "responded": true,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 63.0,
     "posts": [
      {
@@ -15484,6 +15575,77 @@
     "response_pct": 64.0,
     "high_impact": 59,
     "high_impact_responded": 32,
+    "high_impact_change_pct": -50.8,
+    "high_impact_peak": {
+     "date": "2026-09-26",
+     "count": 7,
+     "posts": [
+      {
+       "text": "Customer and shareholder welcomes the bank staying open on Sunday and through the strike days as a good sign.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "positive",
+       "engagement": {
+        "likes": 95,
+        "replies": 42,
+        "reposts": 9
+       },
+       "score": 146,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "A list of harsh adjectives condemning the bank with no specific issue.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Rejects the bank's generic reply asking for details by email and repeats that the system is shameless.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Single-word remark calling something dangerous.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 1
+       },
+       "score": 1,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Hindi reply saying the IPO blocking feature is still disabled.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1
+       },
+       "score": 1,
+       "responded": true,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 54.0,
     "posts": [
      {
@@ -22703,6 +22865,82 @@
     "response_pct": 69.0,
     "high_impact": 272,
     "high_impact_responded": 138,
+    "high_impact_change_pct": -11.1,
+    "high_impact_peak": {
+     "date": "2026-08-18",
+     "count": 25,
+     "posts": [
+      {
+       "text": "Suggests paying a slightly rounded-up card amount because excess credit is carried to the next bill, saving hassle.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "neutral",
+       "engagement": {
+        "likes": 1094,
+        "replies": 20,
+        "reposts": 14
+       },
+       "score": 1128,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Cites a regulatory circular saying fractions under half a rupee round down, so the bill was really a whole-rupee sum.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "neutral",
+       "engagement": {
+        "likes": 979,
+        "replies": 20,
+        "reposts": 112
+       },
+       "score": 1111,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Urges another customer to file under the banking ombudsman scheme and show no leniency.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 647,
+        "replies": 5,
+        "reposts": 5
+       },
+       "score": 657,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Calls the bank's service appalling and demands immediate reversal of a late payment fee.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 261,
+        "reposts": 6
+       },
+       "score": 267,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Jokes that the bank's shareholder meeting would never entertain a question about a tiny shortfall.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "neutral",
+       "engagement": {
+        "likes": 261,
+        "replies": 3,
+        "reposts": 1
+       },
+       "score": 265,
+       "responded": false,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 51.0,
     "posts": [
      {

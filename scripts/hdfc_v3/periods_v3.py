@@ -416,11 +416,22 @@ def social_pulse(pub, w, W) -> dict:
     score = lambda r: sum(engagement_of(r).values())  # noqa: E731
     safe = lambda r: quotable(r) and r["summary"] and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")  # noqa: E731
     top = sorted([r for r in rs if safe(r) and score(r) > 0], key=lambda r: (score(r), r["created_at"]), reverse=True)[:5]
-    posts = [{
+    as_post = lambda r: {  # noqa: E731
         "text": r["summary"], "platform": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
         "sentiment": r["sentiment"], "engagement": engagement_of(r), "score": score(r),
         "responded": responded(r), "illustrative": r["source"] != "playstore",
-    } for r in top]
+    }
+    posts = [as_post(r) for r in top]
+    # High impact: the busiest day in the period, the posts of that day, and the change against the comparison window.
+    by_day = collections.Counter(r["created_at"][:10] for r in hi)
+    peak = None
+    if by_day:
+        day, n_day = max(by_day.items(), key=lambda kv: (kv[1], kv[0]))
+        day_posts = sorted([r for r in hi if r["created_at"][:10] == day and safe(r)], key=score, reverse=True)[:5]
+        peak = {"date": day, "count": n_day, "posts": [as_post(r) for r in day_posts]}
+    (ta, tb), (pa, pb) = w["trend_cur"], w["prev"]
+    hi_cur = sum(1 for r in pub if ta <= r["_c"] < tb and reach(r))
+    hi_prev = sum(1 for r in pub if pa <= r["_c"] < pb and reach(r))
     good_pool = lambda xs: [r for r in xs if r["source"] == "playstore" and r.get("reply") and r["sentiment"] == "negative"  # noqa: E731
                             and safe(r) and ROUTED.search(r["reply"]["text"])]
     pool, in_period = good_pool(rs), True
@@ -449,6 +460,8 @@ def social_pulse(pub, w, W) -> dict:
         "response_pct": pct(n_resp, len(rs), 0),
         "high_impact": len(hi),
         "high_impact_responded": hi_resp,
+        "high_impact_change_pct": change(hi_cur, hi_prev),
+        "high_impact_peak": peak,
         "high_impact_response_pct": pct(hi_resp, len(hi), 0),
         "posts": posts,
         "good_response": good,

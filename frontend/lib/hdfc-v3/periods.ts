@@ -122,6 +122,10 @@ export type SocialPulse = {
   response_pct: number | null;
   high_impact: number;
   high_impact_responded: number;
+  /** Against the comparison window; null when there is nothing to compare with. */
+  high_impact_change_pct: number | null;
+  /** The busiest day for high-impact posts in the period, with that day's posts (up to five, by engagement). */
+  high_impact_peak: { date: string; count: number; posts: SocialPost[] } | null;
   high_impact_response_pct: number | null;
   posts: SocialPost[];
   good_response: {
