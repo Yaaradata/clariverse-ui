@@ -17,16 +17,29 @@ import hashlib
 
 # ---------------------------------------------------------------- targets (full window)
 TOTAL_CONTACTS = 2_400_000  # K3: 16-33 lakh; mid-range. IVR bot calls are outside this, as on the views.
-CHANNEL_MIX = {  # K4, on the views' channel groups
-    "calls": 0.56, "chat": 0.13, "whatsapp": 0.07, "emails": 0.13, "branch": 0.09, "social": 0.02,
+CHANNEL_MIX = {  # K4, on the views' channel groups. Social inbox at the low end (1%): see D31.
+    "calls": 0.56, "chat": 0.135, "whatsapp": 0.075, "emails": 0.13, "branch": 0.09, "social": 0.01,
 }
 COMPLAINTS = 110_000  # C5: about 1,210 a day (C3) x 91 days
 COMPLAINT_MIX = {  # K5: loans and cards lead (O4: loans 29.25%, credit cards second), then accounts, UPI, insurance
     "personal_loans": 0.14, "home_loans": 0.11, "auto_loans": 0.06,  # loans 31%
     "cards": 0.26, "accounts": 0.20, "payzapp": 0.11, "digital": 0.06, "insurance": 0.06,
 }
+# Share of each product's contacts that is negative: 12% overall, cards and loans higher (our assumption, D31).
+# Complaints are mostly negative; queries and requests mostly are not.
+NEGATIVE_SHARE = {
+    "cards": 0.15, "personal_loans": 0.16, "home_loans": 0.15, "auto_loans": 0.15,
+    "payzapp": 0.11, "insurance": 0.11, "accounts": 0.095, "digital": 0.09,
+}
+NEGATIVE_OF_COMPLAINTS = 0.85
+# Product mix of all contacts: the sample's own mix, held fixed so the negative share can be set product by product.
+PRODUCT_MIX = {
+    "cards": 0.318, "accounts": 0.270, "digital": 0.154, "payzapp": 0.092,
+    "personal_loans": 0.064, "home_loans": 0.049, "auto_loans": 0.028, "insurance": 0.025,
+}
 # O7/O8: 7,000-12,000 maintainable Ombudsman complaints a year = 135-230 a week = 1,755-2,990 in 13 weeks.
-ESCALATION = {"rbi_ombudsman": 2_400, "io": 3_900, "md_office": 7_000}  # io and md_office: our assumption
+# The Internal Ombudsman rung is not set here: it follows the complaint register (complaint_rules.py).
+ESCALATION = {"rbi_ombudsman": 2_400, "md_office": 7_000}  # md_office: our assumption
 # Priority lists. Sizes: P1 (Ultra HNI, sponsor anchor), P3 (low thousands). Share in contact: P2 for Ultra HNI
 # (15-30%); our assumption for the two small lists. Contacts per contacting customer: our assumption.
 LISTS = {
@@ -60,6 +73,21 @@ def is_complaint(r: dict) -> bool:
     return r["deliverable"] == "complaint_resolution" and r["channel"] != "ivr_bot"
 
 
+def _kind_targets() -> dict:
+    out = {}
+    for p, share in PRODUCT_MIX.items():
+        total = share * TOTAL_CONTACTS / sum(PRODUCT_MIX.values())
+        cmp = COMPLAINT_MIX[p] * COMPLAINTS
+        neg = NEGATIVE_SHARE[p] * total
+        cmp_neg = NEGATIVE_OF_COMPLAINTS * cmp
+        out[(p, True, True)] = cmp_neg
+        out[(p, True, False)] = cmp - cmp_neg
+        out[(p, False, True)] = neg - cmp_neg
+        out[(p, False, False)] = total - cmp - (neg - cmp_neg)
+    assert all(v > 0 for v in out.values()), out
+    return out
+
+
 def apply(customers: list[dict], inter: list[dict]) -> dict:
     """Sets r["w"] on every contact and c["cw"] on every customer; returns the scale block (targets and what was hit)."""
     cust = {c["masked_id"]: c for c in customers}
@@ -78,13 +106,26 @@ def apply(customers: list[dict], inter: list[dict]) -> dict:
     t_strat["uhni"] = t_list["uhni"] - overlap
     t_strat["other"] = TOTAL_CONTACTS - sum(t_strat.values())
 
+    # Escalation margin. RBI Ombudsman complaints follow the complaint mix by product (loans lead, then cards: O4),
+    # over the products that have such a row in the sample.
+    group = lambda r: "loans" if r["product"].endswith("_loans") else r["product"]  # noqa: E731
+    esc_key = lambda r: (("rbi", group(r)) if r.get("escalation") == "rbi_ombudsman"  # noqa: E731
+                         else r["escalation"] if r.get("escalation") in ESCALATION else "none")
+    mix = collections.Counter()
+    for k, v in COMPLAINT_MIX.items():
+        mix["loans" if k.endswith("_loans") else k] += v
+    present = {group(r) for r in rows if r.get("escalation") == "rbi_ombudsman"}
+    share = sum(mix[g] for g in present) or 1
+    esc_targets = {("rbi", g): ESCALATION["rbi_ombudsman"] * mix[g] / share for g in present}
+    esc_targets["md_office"] = ESCALATION["md_office"]
+    esc_targets["none"] = TOTAL_CONTACTS - sum(esc_targets.values())
     dims = {
         "stratum": (lambda r: strat[r["id"]], t_strat),
         "channel": (lambda r: CHANNEL_GROUP[r["channel"]], {k: v * TOTAL_CONTACTS for k, v in CHANNEL_MIX.items()}),
-        "complaint": (lambda r: r["product"] if is_complaint(r) else "none",
-                      {**{k: v * COMPLAINTS for k, v in COMPLAINT_MIX.items()}, "none": TOTAL_CONTACTS - COMPLAINTS}),
-        "escalation": (lambda r: r["escalation"] if r.get("escalation") in ESCALATION else "none",
-                       {**ESCALATION, "none": TOTAL_CONTACTS - sum(ESCALATION.values())}),
+        # One margin for product x complaint x negative, so each product keeps its share of contacts, its complaints
+        # and its negative share at once.
+        "kind": (lambda r: (r["product"], is_complaint(r), r["sentiment"] == "negative"), _kind_targets()),
+        "escalation": (esc_key, esc_targets),
     }
     keyed = [([key(r) for r in rows], targets) for key, targets in dims.values()]
     # Start each row between 0.6 and 1.4 times the average (by a hash of its id). The fitting below keeps that spread
@@ -138,6 +179,7 @@ def apply(customers: list[dict], inter: list[dict]) -> dict:
         "sample": {"rows": len(inter), "customers": len(customers)},
         "targets": {
             "total_contacts": TOTAL_CONTACTS, "channel_mix": CHANNEL_MIX, "complaints": COMPLAINTS,
+            "product_mix": PRODUCT_MIX, "negative_share": NEGATIVE_SHARE, "negative_of_complaints": NEGATIVE_OF_COMPLAINTS,
             "complaint_mix": COMPLAINT_MIX, "escalation": ESCALATION, "lists": LISTS,
             "contacts_per_contacting_customer": CONTACTS_PER_CONTACTING, "contacting_customers": CONTACTING_CUSTOMERS,
         },
