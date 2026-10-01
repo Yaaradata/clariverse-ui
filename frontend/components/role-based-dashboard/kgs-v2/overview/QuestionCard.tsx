@@ -4,10 +4,6 @@ import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import { ChevronRight, Handshake, RefreshCw, Wrench } from "lucide-react";
 import type { CSSProperties } from "react";
-import {
-  AreaTrend,
-  QUESTION_CHART_H,
-} from "@/components/role-based-dashboard/kgs/exec/AreaTrend";
 import { InsightBox } from "@/components/role-based-dashboard/kgs/exec/InsightBox";
 import { SemiGauge } from "@/components/role-based-dashboard/kgs/exec/SemiGauge";
 import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
@@ -17,12 +13,17 @@ import {
   liftVars,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  AreaTrend2,
+  QUESTION_CHART_H2,
+} from "../shared/AreaTrend2";
 
 export type OverviewQuestionCard = {
   id: "promise" | "recurring" | "install";
   title: string;
   count: number;
-  countLabel: string;
+  /** One-line caption under the big number. */
+  caption: string;
   delta: number;
   deltaLabel: string;
   border: "orange" | "teal" | "sky";
@@ -49,11 +50,17 @@ const ROUTES: Record<OverviewQuestionCard["id"], V2View> = {
   install: "install",
 };
 
-/** Short 1–2 word gauge labels (SPEC §4 / Pass 3). */
-const GAUGE_SHORT: Record<string, [string, string]> = {
-  promise: ["Promise kept", "Same-day reply"],
-  recurring: ["Fix on record", "Repeat rate"],
-  install: ["Friction share", "Partner voice"],
+/** Short ≤2-word gauge labels (R2). */
+const GAUGE_SHORT: Record<OverviewQuestionCard["id"], [string, string]> = {
+  promise: ["Kept on time", "Same-day reply"],
+  recurring: ["Fix on record", "Repeat contacts"],
+  install: ["Friction share", "Partner feedback captured"],
+};
+
+const END_SUFFIX: Record<OverviewQuestionCard["id"], string> = {
+  promise: "%",
+  recurring: "",
+  install: "",
 };
 
 function deltaColor(label: string): string {
@@ -66,11 +73,11 @@ function deltaColor(label: string): string {
 
 function gaugePct(
   g: OverviewQuestionCard["gauges"][number],
-  cardId: string,
+  cardId: OverviewQuestionCard["id"],
   index: number,
 ): number {
   if (typeof g.value === "number") return g.value;
-  if (cardId === "install" && index === 0) return 61; // friction share of 61:39
+  if (cardId === "install" && index === 0) return 61;
   return 0;
 }
 
@@ -79,15 +86,13 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
   const { setView } = useDemo2();
   const accent = ACCENT[card.border];
   const Icon = ICONS[card.id];
-  const short = GAUGE_SHORT[card.id] ?? [
-    card.gauges[0]?.label ?? "",
-    card.gauges[1]?.label ?? "",
-  ];
+  const short = GAUGE_SHORT[card.id];
   const highlighted = card.border === "orange";
   const border = highlighted
     ? `2px solid ${accent}`
     : `1px solid ${withAlpha(accent, 0.25)}`;
-  const trendData = card.trend13.map((v, i) => ({ w: i + 1, v }));
+  // AreaTrend expects dataKey "x" (v1 bug was using "w" → empty chart).
+  const trendData = card.trend13.map((v, i) => ({ x: i + 1, v }));
 
   return (
     <article
@@ -228,19 +233,19 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
               <CountUp text={String(card.count)} />
             </div>
             <div style={{ fontSize: 11, color: K.body, marginTop: 4 }}>
-              {L(card.countLabel)}
+              {L(card.caption)}
             </div>
           </div>
           <div
             style={{
               width: "100%",
               marginTop: "auto",
-              height: QUESTION_CHART_H,
-              minHeight: QUESTION_CHART_H,
+              height: QUESTION_CHART_H2,
+              minHeight: QUESTION_CHART_H2,
               flexShrink: 0,
             }}
           >
-            <AreaTrend
+            <AreaTrend2
               id={`v2-${card.id}`}
               data={trendData}
               series={[
@@ -251,9 +256,10 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
                   area: true,
                 },
               ]}
-              height={QUESTION_CHART_H}
+              height={QUESTION_CHART_H2}
               strokeColor={accent}
               footerLabel="13 wks"
+              endSuffix={END_SUFFIX[card.id]}
             />
           </div>
         </div>
@@ -295,34 +301,39 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
               borderTop: "1px solid rgba(255, 255, 255, 0.06)",
             }}
           >
-            {card.miniKpis.map((s, i) => (
-              <div
-                key={s.label}
-                style={{ textAlign: i === 1 ? "right" : "left", minWidth: 0 }}
-              >
+            {card.miniKpis.map((s, i) => {
+              const numeric = /^[-+~≈≤$£]?[\d.,]+\S*$/.test(L(s.value).trim());
+              return (
                 <div
-                  style={{
-                    fontSize: 11,
-                    color: "#b9b9ba",
-                    textTransform: "uppercase",
-                    letterSpacing: 0.4,
-                  }}
+                  key={s.label}
+                  style={{ textAlign: i === 1 ? "right" : "left", minWidth: 0 }}
                 >
-                  {L(s.label)}
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: "#b9b9ba",
+                      textTransform: "uppercase",
+                      letterSpacing: 0.4,
+                    }}
+                  >
+                    {L(s.label)}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: accent,
+                      fontWeight: 700,
+                      fontFamily: numeric ? K.mono : K.font,
+                      fontVariantNumeric: "tabular-nums",
+                      marginTop: 4,
+                      lineHeight: 1.25,
+                    }}
+                  >
+                    {L(s.value)}
+                  </div>
                 </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: accent,
-                    fontWeight: 700,
-                    marginTop: 4,
-                    lineHeight: 1.25,
-                  }}
-                >
-                  {L(s.value)}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

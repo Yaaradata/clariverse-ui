@@ -4,8 +4,29 @@ import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import {
   K,
+  URGENCY,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+
+export type SignalMetric = {
+  label: string;
+  value: string;
+  delta?: string;
+  sub?: string;
+  deltaTone?: "risk" | "opportunity";
+};
+
+/** Compact face matching v1 SignalMonitorCard / MonitorCardCompact. */
+export type OverviewSignalCompact = {
+  title: string;
+  channel: string;
+  topIssue: string;
+  topIssueSub?: string;
+  time: string;
+  severityWord: string;
+  metrics: [SignalMetric, SignalMetric, SignalMetric];
+  callout: string;
+};
 
 export type OverviewSignal = {
   id: string;
@@ -21,13 +42,7 @@ export type OverviewSignal = {
   timeWindow: string;
   beforeAfter: { before: string; after: string };
   recommendation: string;
-};
-
-const SEVERITY_STYLE: Record<string, { color: string; word: string }> = {
-  S2: { color: K.red, word: "S2 · Material" },
-  S3: { color: K.amber, word: "S3 · Operational" },
-  S4: { color: "#fbbf24", word: "S4 · Watch" },
-  improving: { color: K.green, word: "Improving" },
+  compact: OverviewSignalCompact;
 };
 
 const SIGNAL_ROUTE: Record<string, V2View> = {
@@ -38,28 +53,28 @@ const SIGNAL_ROUTE: Record<string, V2View> = {
   "IN-01": "install",
 };
 
-const CHANNEL_LABEL: Record<string, string> = {
-  email: "email",
-  help_desk: "help desk",
-  service_calls: "service calls",
-  salesforce: "Salesforce",
-  partner_portal: "portal",
-};
-
-function channelLine(mix: Record<string, number>): string {
-  return Object.entries(mix)
-    .sort((a, b) => b[1] - a[1])
-    .map(([k]) => CHANNEL_LABEL[k] ?? k)
-    .join(" · ");
+function urgencyFor(severity: string): keyof typeof URGENCY {
+  if (severity === "S2") return "critical";
+  if (severity === "S4" || severity === "improving") return "watch";
+  return "high";
 }
 
+/**
+ * This week's signals card — v1 SignalMonitorCard anatomy.
+ */
 export function SignalCard({ signal }: { signal: OverviewSignal }) {
   const L = useLabel2();
   const { state, setView } = useDemo2();
-  const sev = SEVERITY_STYLE[signal.severity] ?? SEVERITY_STYLE.S3;
-  const tone = sev.color;
+  const c = signal.compact;
+  const urgency = urgencyFor(signal.severity);
+  const u = URGENCY[urgency];
+  const tone = u.color;
   const approvedTs = state.approvals[signal.id]?.ts;
   const route = SIGNAL_ROUTE[signal.id] ?? "overview";
+  const pillLabel = u.showSeverityClass
+    ? `${u.word} · ${signal.severity}`
+    : u.word;
+  const confTip = `Confidence ${signal.confidence}`;
 
   return (
     <button
@@ -73,8 +88,11 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
         minHeight: 280,
         flex: "0 0 252px",
         borderRadius: 16,
-        border: `1px solid ${withAlpha(tone, 0.45)}`,
-        background: withAlpha(tone, 0.05),
+        border: `1px solid ${withAlpha(tone, u.borderA)}`,
+        background: withAlpha(tone, u.bgA),
+        boxShadow: u.glow
+          ? `0 10px 24px ${withAlpha(tone, u.glowA)}`
+          : "none",
         color: K.textSec,
         padding: "14px 14px 16px",
         fontSize: 12,
@@ -102,24 +120,30 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
             minWidth: 0,
           }}
         >
-          {L(signal.title)}
+          {L(c.title)}
         </div>
         <span
+          title={confTip}
+          aria-label={confTip}
           style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
             fontSize: 10,
             fontWeight: 700,
-            letterSpacing: 0.4,
+            letterSpacing: 0.5,
             textTransform: "uppercase",
             padding: "3px 8px",
             borderRadius: 999,
-            border: `1px solid ${withAlpha(tone, 0.4)}`,
-            background: withAlpha(tone, 0.13),
+            border: `1px solid ${withAlpha(tone, u.pillBorderA)}`,
+            background: withAlpha(tone, u.pillBgA),
             color: `${tone}dd`,
             flexShrink: 0,
             whiteSpace: "nowrap",
           }}
         >
-          {sev.word}
+          <span aria-hidden>{u.glyph}</span>
+          <span>{pillLabel}</span>
         </span>
       </div>
 
@@ -146,9 +170,23 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
           color: K.textMut,
         }}
       >
-        <Row label="Channel" value={channelLine(signal.channelMix)} />
-        <Row label="Top issue" value={L(signal.topIntent)} />
-        <Row label="Time" value={L(signal.timeWindow)} />
+        <Row label="Channel" value={L(c.channel)} />
+        <div
+          style={{ display: "flex", justifyContent: "space-between", gap: 8 }}
+        >
+          <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
+            Top Issue
+          </span>
+          <div style={{ textAlign: "right" }}>
+            <div style={{ color: K.text }}>{L(c.topIssue)}</div>
+            {c.topIssueSub ? (
+              <div style={{ fontSize: 10, color: K.textMut }}>
+                {L(c.topIssueSub)}
+              </div>
+            ) : null}
+          </div>
+        </div>
+        <Row label="Time" value={L(c.time)} />
       </div>
 
       <div
@@ -167,24 +205,71 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
           flex: 1,
         }}
       >
-        <Metric label="Before" value={L(signal.beforeAfter.before)} />
-        <Metric label="After" value={L(signal.beforeAfter.after)} tone={tone} />
-        <Metric label="Confidence" value={signal.confidence} />
+        {c.metrics.map((m) => {
+          const deltaColor =
+            m.deltaTone === "opportunity" ? K.green : u.delta;
+          return (
+            <div
+              key={m.label}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 8,
+              }}
+            >
+              <span style={{ color: K.textMut }}>{L(m.label)}</span>
+              <div style={{ textAlign: "right" }}>
+                <div
+                  style={{
+                    color: K.text,
+                    fontWeight: 700,
+                    fontVariantNumeric: "tabular-nums",
+                  }}
+                >
+                  {L(m.value)}
+                </div>
+                {m.delta ? (
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: deltaColor,
+                      fontWeight: 700,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {L(m.delta)}
+                  </div>
+                ) : null}
+                {m.sub ? (
+                  <div
+                    style={{
+                      fontSize: 10,
+                      color: K.textMut,
+                      fontVariantNumeric: "tabular-nums",
+                    }}
+                  >
+                    {L(m.sub)}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div
         style={{
-          marginTop: 16,
+          marginTop: 20,
           borderRadius: 12,
-          border: `1px solid ${withAlpha(tone, 0.35)}`,
-          background: withAlpha(tone, 0.1),
-          padding: 12,
+          border: `1px solid ${withAlpha(tone, u.calloutBorderA)}`,
+          background: withAlpha(tone, u.calloutBgA),
+          padding: 16,
           fontSize: 12,
-          lineHeight: 1.45,
-          color: K.textSec,
+          lineHeight: 1.75,
+          color: u.calloutText,
         }}
       >
-        {signal.owner}: {L(signal.recommendation)}
+        ✨ {L(c.callout)}
       </div>
     </button>
   );
@@ -197,32 +282,6 @@ function Row({ label, value }: { label: string; value: string }) {
         {label}
       </span>
       <span style={{ color: K.text, textAlign: "right" }}>{value}</span>
-    </div>
-  );
-}
-
-function Metric({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string;
-  tone?: string;
-}) {
-  return (
-    <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-      <span style={{ color: K.textMut }}>{label}</span>
-      <span
-        style={{
-          color: tone ?? K.text,
-          fontWeight: 700,
-          fontVariantNumeric: "tabular-nums",
-          textAlign: "right",
-        }}
-      >
-        {value}
-      </span>
     </div>
   );
 }

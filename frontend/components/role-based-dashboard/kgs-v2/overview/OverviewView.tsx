@@ -124,9 +124,11 @@ export function OverviewView() {
           gap: 12,
         }}
       >
-        {(overview.questionCards as OverviewQuestionCard[]).map((c) => (
-          <QuestionCard key={c.id} card={c} />
-        ))}
+        {(overview.questionCards as unknown as OverviewQuestionCard[]).map(
+          (c) => (
+            <QuestionCard key={c.id} card={c} />
+          ),
+        )}
       </section>
 
       {/* E. This week's signals */}
@@ -158,10 +160,31 @@ export function OverviewView() {
             alignItems: "stretch",
           }}
         >
-          {(overview.signals as OverviewSignal[]).map((s) => (
-            <SignalCard key={s.id} signal={s} />
+          {overview.signals.map((s) => (
+            <SignalCard key={s.id} signal={s as unknown as OverviewSignal} />
           ))}
         </div>
+
+        <p
+          style={{
+            margin: 0,
+            fontSize: 12,
+            color: K.textMut,
+            lineHeight: 1.4,
+          }}
+        >
+          {L(overview.sources.line)}
+        </p>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 12,
+            color: K.textMut,
+            lineHeight: 1.4,
+          }}
+        >
+          Loop closure · {L(overview.loopClosureStrip)}
+        </p>
       </section>
     </div>
   );

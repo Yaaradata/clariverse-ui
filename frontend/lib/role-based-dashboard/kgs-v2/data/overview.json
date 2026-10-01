@@ -23,70 +23,55 @@
       "id": "promise",
       "title": "Are we keeping our promises?",
       "count": 2,
-      "countLabel": "2 signals",
+      "caption": "signals need attention",
       "delta": 1,
       "deltaLabel": "+1 vs last week",
       "border": "orange",
       "gauges": [
-        { "label": "Promise kept vs original date", "value": 82, "unit": "%" },
-        {
-          "label": "Delivery complaints answered same day",
-          "value": 64,
-          "unit": "%"
-        }
+        { "label": "Kept on time", "value": 82, "unit": "%" },
+        { "label": "Same-day reply", "value": 64, "unit": "%" }
       ],
       "miniKpis": [
-        {
-          "label": "Biggest gap",
-          "value": "{{region:North}} · 3 distributors"
-        },
-        { "label": "Last-mile share of misses", "value": "~24% (candidate)" }
+        { "label": "Biggest gap", "value": "North" },
+        { "label": "Last-mile share", "value": "24%" }
       ],
       "insight": "Most {{region:North}} misses trace to one allocation queue, not supply. Other regions ship the same product family on time.",
-      "trend13": [88, 87, 86, 85, 84, 84, 83, 83, 82, 81, 80, 79, 82]
+      "trend13": [86, 86, 85, 85, 84, 84, 84, 83, 83, 83, 82, 82, 82]
     },
     {
       "id": "recurring",
       "title": "What keeps coming back?",
       "count": 3,
-      "countLabel": "3 themes back after a fix",
+      "caption": "fixes didn't hold",
       "delta": 1,
       "deltaLabel": "+1 vs last week",
       "border": "teal",
       "gauges": [
-        { "label": "Themes with a fix on record", "value": 58, "unit": "%" },
-        {
-          "label": "Repeat contacts",
-          "value": 22,
-          "unit": "% of help-desk volume"
-        }
+        { "label": "Fix on record", "value": 58, "unit": "%" },
+        { "label": "Repeat contacts", "value": 22, "unit": "%" }
       ],
       "miniKpis": [
-        { "label": "Top returning theme", "value": "Licence re-activation" },
-        { "label": "Days since its last fix", "value": "105" }
+        { "label": "Top returning", "value": "Licence re-activation" },
+        { "label": "Since last fix", "value": "105 days" }
       ],
       "insight": "Three fixes did not hold. Each is linked to what was done last time.",
-      "trend13": [18, 19, 20, 17, 16, 15, 14, 18, 22, 24, 26, 28, 31]
+      "trend13": [3, 4, 8, 9, 2, 2, 2, 2, 3, 5, 7, 9, 11]
     },
     {
       "id": "install",
       "title": "What do installers experience?",
       "count": 2,
-      "countLabel": "2 signals",
+      "caption": "signals need attention",
       "delta": 0,
       "deltaLabel": "0 vs last week",
       "border": "sky",
       "gauges": [
-        { "label": "Friction : praise mentions", "valueLabel": "61 : 39" },
-        {
-          "label": "Feedback captured from partners",
-          "value": 18,
-          "unit": "% (help desk only)"
-        }
+        { "label": "Friction share", "value": 61, "unit": "%" },
+        { "label": "Partner feedback captured", "value": 18, "unit": "%" }
       ],
       "miniKpis": [
-        { "label": "Top friction step", "value": "Network configuration" },
-        { "label": "Top praise", "value": "Ease of programming" }
+        { "label": "Slowest step", "value": "Network set-up" },
+        { "label": "Most praised", "value": "Programming" }
       ],
       "insight": "Installers describe about 25 extra minutes on network set-up. Most first-line feedback sits with partners and is not connected yet.",
       "trend13": [4, 5, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 21]
@@ -111,7 +96,25 @@
       "topIntent": "Delivery date moved after confirmation",
       "timeWindow": "Weeks 36–39",
       "beforeAfter": { "before": "88% kept", "after": "71% kept" },
-      "recommendation": "Re-prioritise allocation for the 2 inspection-bound projects; send each distributor one confirmed date."
+      "recommendation": "Re-prioritise allocation for the 2 inspection-bound projects; send each distributor one confirmed date.",
+      "compact": {
+        "title": "North promises slipping",
+        "channel": "email · service calls +2",
+        "topIssue": "Date moved after confirm",
+        "topIssueSub": "On-time delivery",
+        "time": "W36–39",
+        "severityWord": "MATERIAL",
+        "metrics": [
+          {
+            "label": "Promise kept",
+            "value": "88% → 71%",
+            "delta": "▼17 pts"
+          },
+          { "label": "Order lines affected", "value": "46" },
+          { "label": "Projects at inspection risk", "value": "2" }
+        ],
+        "callout": "Operations lead: re-prioritise allocation for the 2 inspection-bound projects; one confirmed date per distributor."
+      }
     },
     {
       "id": "PR-02",
@@ -129,7 +132,25 @@
         "before": "2.1 days last mile",
         "after": "5.0 days last mile"
       },
-      "recommendation": "Open a last-mile review for the {{place:Gurugram hub}}."
+      "recommendation": "Open a last-mile review for the {{place:Gurugram hub}}.",
+      "compact": {
+        "title": "Gurugram last-mile delays",
+        "channel": "email · service calls +1",
+        "topIssue": "Lag after hub arrival",
+        "topIssueSub": "On-time delivery",
+        "time": "Last 3 weeks",
+        "severityWord": "OPERATIONAL",
+        "metrics": [
+          {
+            "label": "Hub-to-site days",
+            "value": "2.1 → 5.0",
+            "delta": "▲2.4×"
+          },
+          { "label": "Distributors", "value": "1" },
+          { "label": "Lines", "value": "11" }
+        ],
+        "callout": "Operations lead: open a last-mile review for the {{place:Gurugram hub}}."
+      }
     },
     {
       "id": "RC-01",
@@ -147,7 +168,25 @@
         "before": "2 contacts / week after June fix",
         "after": "11 contacts this week"
       },
-      "recommendation": "Update the knowledge article and confirm the portal change with the US product team."
+      "recommendation": "Update the knowledge article and confirm the portal change with the US product team.",
+      "compact": {
+        "title": "Licence re-activation is back",
+        "channel": "help desk · email +1",
+        "topIssue": "Re-activation after laptop change",
+        "topIssueSub": "Cost-to-serve",
+        "time": "This week",
+        "severityWord": "OPERATIONAL",
+        "metrics": [
+          {
+            "label": "Contacts / week",
+            "value": "2 → 11",
+            "delta": "▲5.5×"
+          },
+          { "label": "Partners", "value": "7" },
+          { "label": "Days since fix", "value": "105" }
+        ],
+        "callout": "Technical support lead: update the knowledge article and confirm the portal change with the US product team."
+      }
     },
     {
       "id": "RC-03",
@@ -165,7 +204,25 @@
         "before": "auto-reply live (Jul)",
         "after": "contacts rising again"
       },
-      "recommendation": "Refresh the auto-reply with a clearer order-desk path."
+      "recommendation": "Refresh the auto-reply with a clearer order-desk path.",
+      "compact": {
+        "title": "Order status on the wrong desk",
+        "channel": "help desk · email",
+        "topIssue": "Where is my order?",
+        "topIssueSub": "Cost-to-serve",
+        "time": "Last 4 weeks",
+        "severityWord": "WATCH",
+        "metrics": [
+          {
+            "label": "Help-desk order queries / wk",
+            "value": "3 → 9",
+            "delta": "▲3×"
+          },
+          { "label": "Partners", "value": "9" },
+          { "label": "Since auto-reply", "value": "3 Jul" }
+        ],
+        "callout": "Technical support lead: refresh the auto-reply with a clearer order-desk path."
+      }
     },
     {
       "id": "IN-01",
@@ -183,7 +240,21 @@
         "before": "occasional mention",
         "after": "~25 min extra stated"
       },
-      "recommendation": "Share a one-page set-up guide with partners; send a feedback note to the US product team."
+      "recommendation": "Share a one-page set-up guide with partners; send a feedback note to the US product team.",
+      "compact": {
+        "title": "Network set-up takes longer",
+        "channel": "service calls · help desk +1",
+        "topIssue": "Network set-up takes longer",
+        "topIssueSub": "Partner experience",
+        "time": "13 weeks",
+        "severityWord": "OPERATIONAL",
+        "metrics": [
+          { "label": "Mentions / quarter", "value": "33" },
+          { "label": "Stated extra time", "value": "~25 min" },
+          { "label": "Partners", "value": "5" }
+        ],
+        "callout": "Product liaison: share a one-page set-up guide with partners; send a feedback note to the US product team."
+      }
     }
   ],
   "sources": {
@@ -210,7 +281,8 @@
         "connected": false
       }
     ],
-    "footnote": "Richer installer voice sits with partners. See Partner view."
+    "footnote": "Richer installer voice sits with partners. See Partner view.",
+    "line": "Sources: 5 KGS-connected · 2 partner not connected · Richer installer voice sits with partners. See Partner view."
   },
   "loopClosureStrip": "This quarter: 11 issues closed with a confirmed fix · 3 came back after a fix · promise kept (all regions) up 6 points since August, {{region:North}} the exception · same-day replies to partners 52% → 64%.",
   "pipelineNotes": {
