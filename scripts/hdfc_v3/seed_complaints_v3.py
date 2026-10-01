@@ -14,11 +14,13 @@ What is taken from the existing sample (interactions.jsonl), unchanged:
   contacts          the customer's later contacts: on the same product, or with escalation language on any product;
                     "same_issue" marks a negative contact on the same issue (the complaint's issue, or complaint handling)
 What is synthetic (assumptions in MORNING_DECISIONS D26):
-  outcome           resolved / partly rejected / rejected, for complaints with a final reply
+  outcome           resolved / partly rejected / rejected, for complaints with a final reply (about 10% rejected)
   decision_at       when the bank decided to partly or fully reject, which must be reviewed by the Internal Ombudsman
                     before the final reply (RBI directions, 16 Jan 2026)
   io_reviewed_at    when that review finished; for an open complaint with a decision it may still be pending
-  reopened_at       the customer reopening the complaint after the reply
+  unhappy_at / how  the customer coming back after the reply: reopening the complaint, or contacting again on the issue
+                    (30% of rejected or partly rejected complaints, 2.2% of resolved ones)
+All four come from complaint_rules.decide, which the seed also uses to mark the IO rung on the contact.
 """
 
 from __future__ import annotations
@@ -29,19 +31,13 @@ import json
 import random
 
 from common import PERIOD_END, SEED, SEED_V3, load
+from complaint_rules import decide
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 LISTS = ("priority_a", "priority_b", "uhni")  # the bank's own lists (the derived "multi" cohort is not a list)
 # Escalation language on a contact: an RBI or Ombudsman named, or legal / consumer-court language.
 ESC_IMPACT = {"regulator_named": "RBI or Ombudsman named", "legal_language": "Consumer court or legal notice"}
 ESC_RUNG = {"rbi_ombudsman": "RBI or Ombudsman named", "io": "RBI or Ombudsman named"}
-
-# Assumed outcome mix for replied complaints (MORNING_DECISIONS D26). Negative contacts lean to rejection.
-OUTCOME_MIX = {"base": (0.70, 0.18, 0.12), "negative": (0.62, 0.22, 0.16)}
-# Share of open complaints on which the bank has already decided to partly or fully reject (awaiting IO review).
-OPEN_DECISION = {"base": 0.24, "negative": 0.30}
-# Chance the customer reopens the complaint after the reply, by outcome.
-REOPEN = {"resolved": 0.02, "partly_rejected": 0.12, "rejected": 0.18}
 
 
 def ts(s):
@@ -86,33 +82,9 @@ def main():
             themes, weights = zip(*sorted(mix[r["product"]].items()))
             issue = rng.choices(themes, weights=weights)[0]
 
-        if r["status"] == "closed":
-            reply = ts(r["closed_at"])
-        elif r["status"] == "waiting_on_customer":
-            reply = ts(r["resolution_sent_at"])
-        else:
-            reply = None
-        neg = "negative" if r["sentiment"] == "negative" else "base"
-        outcome = decision = io_done = reopened = None
-        if reply:
-            outcome = rng.choices(["resolved", "partly_rejected", "rejected"], weights=OUTCOME_MIX[neg])[0]
-            # A rejection goes through Internal Ombudsman review first, so it cannot come back within two days:
-            # a reply that fast is a resolution.
-            if reply - received < dt.timedelta(days=2):
-                outcome = "resolved"
-            if outcome != "resolved":
-                span = reply - received
-                decision = received + span * rng.uniform(0.55, 0.80)
-                io_done = decision + (reply - decision) * rng.uniform(0.5, 0.9)
-            if rng.random() < REOPEN[outcome]:
-                t = reply + dt.timedelta(days=rng.uniform(1, 15))
-                reopened = t if t <= END else None
-        else:
-            age = END - received
-            if age >= dt.timedelta(days=2) and rng.random() < OPEN_DECISION[neg]:
-                outcome = rng.choices(["partly_rejected", "rejected"], weights=(0.6, 0.4))[0]
-                decision = received + age * rng.uniform(0.35, 0.80)
-                # The review is pending at the snapshot; it was never done before the brief.
+        d = decide(r)  # outcome, IO review and whether the customer came back: one set of rules (complaint_rules.py)
+        reply, outcome, decision, io_done = d["reply"], d["outcome"], d["decision_at"], d["io_reviewed_at"]
+        unhappy_at, unhappy_how = d["unhappy_at"], d["unhappy_how"]
         contacts = []
         for x in by_cust[r["masked_id"]]:
             if x["id"] == r["id"] or x["created_at"] <= r["created_at"]:
@@ -142,7 +114,10 @@ def main():
             "outcome": outcome,
             "decision_at": iso(decision),
             "io_reviewed_at": iso(io_done),
-            "reopened_at": iso(reopened),
+            # Unhappy with the reply: the customer reopened the complaint or contacted the bank again on the issue.
+            "unhappy_at": iso(unhappy_at),
+            "unhappy_how": unhappy_how,
+            "reopened_at": iso(unhappy_at) if unhappy_how == "reopened" else None,
             "escalation": escalation_terms(r),
             "lists": [c for c in cust.get("cohorts", []) if c in LISTS],
             "contacts": contacts,
@@ -154,7 +129,7 @@ def main():
     print("complaints", len(out), "replied", len(replied),
           "outcomes", dict(collections.Counter(c["outcome"] for c in replied)),
           "open with a decision", sum(1 for c in out if not c["final_reply_at"] and c["decision_at"]),
-          "reopened", sum(1 for c in out if c["reopened_at"]))
+          "unhappy", sum(1 for c in out if c["unhappy_at"]))
 
 
 if __name__ == "__main__":

@@ -222,7 +222,36 @@ def by_channel(rs, w, keys=("volume", "open", "waiting_on_customer", "not_respon
     return out
 
 
+H5 = dt.timedelta(hours=5)
+
+
+def in_contact(rs, customers, w) -> int:
+    """Customers with a contact in the period, at bank scale: a sample customer stands for cw customers, but never for
+    more customers than the contacts it carries in the period."""
+    seen = collections.Counter()
+    for r in rs:
+        if in_win(r, w["start"], w["end"]):
+            seen[r["masked_id"]] += r["w"]
+    return sum(min(customers[m]["cw"], v) for m, v in seen.items())
+
+
+def rm_alerts(rs, customers, told, w) -> dict:
+    """RMs alerted X of Y for the period, at bank scale. Y: listed customers with an alert due, that is with a contact
+    from the period still open with the bank that is negative, high impact or more than 5 hours old (the RM rule).
+    A sample customer stands for cw customers, but never for more customers than the due contacts it carries, so Y
+    can never exceed the open contacts beside it. X: those of them whose RM has been alerted."""
+    a, b = w["start"], w["end"]
+    due = collections.Counter()
+    for r in rs:
+        if in_win(r, a, b) and is_open(r, b) and customers[r["masked_id"]]["rm_id"] and (
+                r["sentiment"] == "negative" or r["high_impact"] or b - r["_c"] > H5):
+            due[r["masked_id"]] += r["w"]
+    each = {m: min(customers[m]["cw"], n) for m, n in due.items()}
+    return {"alerted": sum(v for m, v in each.items() if m in told), "of": sum(each.values())}
+
+
 def customer_pulse(inter, customers, notes, w) -> dict:
+    told_all = {x["masked_id"] for x in notes if x["notified_today"]}
     lists = []
     for lid in PULSE_LISTS:
         members = {m for m, c in customers.items() if lid in c["cohorts"]}
@@ -233,7 +262,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "label": LIST_LABEL[lid],
             # The list's size at the bank (declared; scale.json), and how many of its customers made a contact.
             "members": SCALE["list_sizes"][lid],
-            "in_contact": ncust({r["masked_id"] for r in rs if in_win(r, w["start"], w["end"])}, customers),
+            "in_contact": in_contact(rs, customers, w),
             "volume": blk["volume"],
             "prev_volume": blk["prev_volume"],
             "change_pct": blk["change_pct"],
@@ -242,10 +271,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "not_responded_48h": blk["not_responded_48h"],
             "open_delta": blk["open_delta"],
             "not_responded_delta": blk["not_responded_delta"],
-            "rm": {
-                "alerted": ncust({x["masked_id"] for x in notes if x["masked_id"] in members and x["notified_today"]}, customers),
-                "of": ncust({x["masked_id"] for x in notes if x["masked_id"] in members}, customers),
-            },
+            "rm": rm_alerts(rs, customers, told_all, w),
             # Trend line: the same measure for each earlier window of the period's length, all as of 29 Sep 08:30.
             "not_responded_series": [
                 {"end": e.isoformat(), "count": sum(r["w"] for r in rs if in_win(r, s, e) and no_resp_48(r))} for s, e in w["series"]
@@ -265,8 +291,6 @@ def customer_pulse(inter, customers, notes, w) -> dict:
         ms = [r for r in ment if lid in customers[r["masked_id"]]["cohorts"]]
         by_list[lid] = {"total": wn(ms), "responded": sum(r["w"] for r in ms if replied(r))}
     all_ment = [r for r in inter if r["_ch"] == "social" and r["masked_id"] in listed]
-    due = {x["masked_id"] for x in notes if any(k in customers[x["masked_id"]]["cohorts"] for k in PULSE_LISTS)}
-    told = {x["masked_id"] for x in notes if x["notified_today"] and x["masked_id"] in due}
     return {
         "lists": lists,
         "mentions": {
@@ -281,7 +305,7 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "by_list": by_list,
             "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data.",
         },
-        "rm": {"alerted": ncust(told, customers), "of": ncust(due, customers), "as_of": PERIOD_END},
+        "rm": {**rm_alerts([r for r in inter if r["masked_id"] in listed], customers, told_all, w), "as_of": PERIOD_END},
     }
 
 

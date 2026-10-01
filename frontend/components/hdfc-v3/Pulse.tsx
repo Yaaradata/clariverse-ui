@@ -5,7 +5,7 @@
  * Customer pulse and the CX pulse. Every figure comes from periods.json for the selected period.
  */
 
-import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp, Info } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type PointerEvent, type ReactNode, useState } from "react";
 
@@ -1384,6 +1384,15 @@ function ExternalBlock({ p }: { p: Period }) {
         >
           <strong style={{ fontSize: 15 }}>External channels</strong>
           <ProvenanceTag kind="public" />
+          <span
+            data-testid="external-info"
+            role="img"
+            aria-label="Public figures are the collected sample."
+            title="Public figures are the collected sample."
+            style={{ display: "inline-flex", color: C.textMut, cursor: "help" }}
+          >
+            <Info size={14} />
+          </span>
         </div>
         <div
           style={{

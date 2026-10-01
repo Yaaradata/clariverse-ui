@@ -302,7 +302,7 @@ export type OmbudsmanCounts = {
   brink: number;
   /** Past day 30 with no reply, within the 90 days to file. */
   eligible: number;
-  /** Replied, then reopened, contacted again on the issue, or escalation language; within 90 days of the reply. */
+  /** Replied, then reopened or contacted again on the issue; within 90 days of the reply. */
   unhappy: number;
   /** A partly or fully rejecting decision waiting for Internal Ombudsman review. */
   awaiting_io: number;
@@ -316,6 +316,10 @@ export type OmbudsmanSnapshot = OmbudsmanCounts & {
   received: number;
 };
 export type OmbudsmanBlock = {
+  /** Complaints received and still waiting for a reply. On the brink and already eligible are both inside it. */
+  pending: number;
+  /** Internal Ombudsman, from the one complaint register: sent for review, and reviewed. */
+  io: { decided: number; reviewed: number };
   provenance: "internal";
   as_of: string;
   prev_as_of: string;
