@@ -431,3 +431,37 @@ can sit well away from the full-window rate.
 **Validation.** `qa/volume_validation.md` is rewritten by `scripts/hdfc_v3/volume_validation.py` on every run: 49 rows,
 each against its anchor. It fails the run if a row is more than 2x off without a stated reason.
 
+## D30 · Granularity, the Ombudsman share of pending, and RMs alerted (1 Oct, follow-up to D29)
+
+**What was wrong.** With one weight per kind of row, small figures moved in steps: an Ultra HNI row stood for about 160
+contacts, so "no reply in 48h+" read 3, 3, then 318 across periods, and "RMs alerted" was always a multiple of 16.
+
+**Fix: more kept rows where the figures are small.**
+- The seed now draws listed customers more often for the kept sample (Ultra sensitive 4.2x, RBI & Government 2.6x,
+  Ultra HNI 9x). The sample is still 32,000 rows; the two small lists now hold about as many rows as they have
+  contacts, so their rows carry a weight of about 1, and an Ultra HNI row about 29 instead of 160.
+- Every row starts between 0.6 and 1.4 times the average before the fitting, and every customer between 0.5 and 1.5
+  times its stratum's average, so rows of one kind no longer share one weight.
+- The calibration was re-run: the totals still hit the anchors (24,00,418 contacts, 1,10,192 complaints, the channel
+  and product mixes, 2 lakh Ultra HNI with 22% in contact). `qa/volume_validation.md`: 48 of 49 rows OK.
+- New reconcile check: of the internal figures under 500 on the MD and Cards views, across all four periods, no more
+  than 30% may share a common factor above 5. Today the worst is 21% (divisible by 7), across 191 figures.
+- This redraws the sample, so every internal figure moved a little from D29 (pending 20,254, was 21,094; multiple
+  relationships 85,000, was 85,900).
+
+**Ombudsman watch against pending.** "On the brink" (2,707) and "already eligible" (6,621) are both complaints still
+waiting for a reply, so together (9,328) they are a subset of pending (20,254): 46%. That is plausible for a 30-day
+rule: about a third of pending is past day 30, and an eighth is within 10 days of it. Reconcile now checks the subset
+for the bank and for Cards in every period, and that the bank share stays between 15% and 75%. "Unhappy with the reply"
+is outside pending by definition: those complaints were answered.
+
+**RMs alerted, at bank scale.** Y is the listed customers with an alert due in the selected period: a contact from the
+period still open with the bank that is negative, high impact or more than 5 hours old (the same RM rule as before),
+for customers who have an RM. A sample customer stands for its customer weight, but never for more customers than the
+due contacts it carries, so Y never exceeds the open contacts beside it (reconcile checks this). X is those whose RM has
+been alerted. Full window: Ultra sensitive 7 of 49, RBI & Government 16 of 79, Ultra HNI 381 of 1,880, multiple
+relationships 242 of 1,055. "Customers in contact" uses the same cap.
+
+**High-priority mentions.** The public reply is now spread evenly through time at bank scale (about 62% answered), so
+the rate is steady across periods: 63% full window, 64% for 30 days, 72% for 7 days.
+
