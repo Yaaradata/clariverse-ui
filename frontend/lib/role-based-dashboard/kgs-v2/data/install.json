@@ -1,124 +1,205 @@
 {
   "title": "What do installers experience?",
-  "captureGapBanner": "Source: KGS help desk and service calls only. Partner first-line support is not connected, so most installer feedback is not here yet. See Partner view.",
+  "subtitle": "Friction and praise at each commissioning step.",
+  "captureGapNote": "Source: KGS help desk and service calls only · partner first-line support not connected yet · See Partner view",
   "steps": [
     {
       "step": "Design & device selection",
+      "shortLabel": "Design & selection",
       "friction": 6,
-      "praise": 4
+      "praise": 4,
+      "topPhrase": "Which detector for this ceiling height?"
     },
     {
       "step": "Wiring & device addressing",
+      "shortLabel": "Wiring & addressing",
       "friction": 14,
-      "praise": 5
+      "praise": 5,
+      "topPhrase": "Addressing after a panel swap is fiddly"
     },
     {
       "step": "Panel programming",
+      "shortLabel": "Panel programming",
       "friction": 9,
-      "praise": 22
+      "praise": 22,
+      "topPhrase": "Easiest panel we've programmed this year"
     },
     {
       "step": "Network configuration",
+      "shortLabel": "Network set-up",
       "friction": 21,
-      "praise": 3
+      "praise": 3,
+      "topPhrase": "Takes about half an hour more to set up"
     },
     {
       "step": "Testing & handover (fire NOC inspection)",
+      "shortLabel": "Testing & handover",
       "friction": 11,
-      "praise": 5
+      "praise": 5,
+      "topPhrase": "Fire NOC paperwork slows handover"
     }
   ],
   "frictionTotal": 61,
   "praiseTotal": 39,
-  "statedTimeTable": [
+  "topics": [
     {
-      "step": "Network configuration",
-      "phrase": "takes about half an hour more to set up the network",
-      "statedExtraTime": "~25 min (median stated)",
-      "statedMinutesMedian": 25,
-      "mentions": 9,
-      "partners": 5
+      "topic": "Network set-up time",
+      "tone": "FRICTION",
+      "growthPct": 40,
+      "mentions": 21,
+      "why": "Installers say network set-up adds about 25 minutes versus last year's module."
+    },
+    {
+      "topic": "Device addressing after swap",
+      "tone": "FRICTION",
+      "growthPct": 18,
+      "mentions": 14,
+      "why": "Panel swaps still trigger addressing questions on the help desk."
+    },
+    {
+      "topic": "Ease of programming",
+      "tone": "PRAISE",
+      "growthPct": 12,
+      "mentions": 22,
+      "why": "Programming stays the most praised step — worth feeding to Marketing."
+    },
+    {
+      "topic": "Handover paperwork for fire NOC",
+      "tone": "FRICTION",
+      "growthPct": 8,
+      "mentions": 11,
+      "why": "Inspection packs and handover forms keep coming back as friction."
+    },
+    {
+      "topic": "Design & device selection",
+      "tone": "FRICTION",
+      "growthPct": 5,
+      "mentions": 6,
+      "why": "Occasional questions on which detector fits the site layout."
+    },
+    {
+      "topic": "Wiring clarity",
+      "tone": "PRAISE",
+      "growthPct": 3,
+      "mentions": 5,
+      "why": "A few partners call out clear wiring guides as helpful."
     }
   ],
-  "praiseWorthUsing": {
-    "owner": "Marketing / partner training",
-    "quotes": [
-      {
-        "text": "Easiest panel we've programmed this year.",
-        "step": "Panel programming",
-        "source": "installer, via {{partner:D-S-02}}, 9 Sep"
-      }
-    ]
-  },
-  "heatGrid": {
-    "families": ["A", "B", "C", "D"],
-    "regions": ["North", "South", "East", "West", "SEA"],
-    "values": [
-      [3, 2, 1, 2, 1],
-      [4, 3, 2, 2, 1],
-      [2, 1, 1, 1, 0],
-      [5, 4, 3, 3, 2]
-    ]
-  },
+  "quotes": [
+    {
+      "text": "Takes about half an hour more to set up the network",
+      "step": "Network set-up",
+      "partner": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "date": "12 Sep",
+      "tone": "FRICTION",
+      "note": "~25 min stated · 9 mentions"
+    },
+    {
+      "text": "Easiest panel we've programmed this year.",
+      "step": "Panel programming",
+      "partner": "{{partner:D-S-02}}",
+      "region": "{{region:South}}",
+      "date": "9 Sep",
+      "tone": "PRAISE",
+      "note": null
+    },
+    {
+      "text": "After the panel swap the addressing took longer than the swap itself.",
+      "step": "Wiring & addressing",
+      "partner": "{{partner:D-E-03}}",
+      "region": "{{region:East}}",
+      "date": "5 Sep",
+      "tone": "FRICTION",
+      "note": null
+    },
+    {
+      "text": "Fire NOC checklist keeps bouncing between site and office.",
+      "step": "Testing & handover",
+      "partner": "{{partner:D-W-08}}",
+      "region": "{{region:West}}",
+      "date": "2 Sep",
+      "tone": "FRICTION",
+      "note": null
+    }
+  ],
+  "byPartner": [
+    {
+      "partner": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "friction": 12,
+      "praise": 3,
+      "topStep": "Network set-up",
+      "trend": "up"
+    },
+    {
+      "partner": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "friction": 9,
+      "praise": 2,
+      "topStep": "Wiring & addressing",
+      "trend": "up"
+    },
+    {
+      "partner": "{{partner:D-S-02}}",
+      "region": "{{region:South}}",
+      "friction": 4,
+      "praise": 11,
+      "topStep": "Panel programming",
+      "trend": "down"
+    },
+    {
+      "partner": "{{partner:D-E-03}}",
+      "region": "{{region:East}}",
+      "friction": 8,
+      "praise": 4,
+      "topStep": "Wiring & addressing",
+      "trend": "flat"
+    },
+    {
+      "partner": "{{partner:D-W-08}}",
+      "region": "{{region:West}}",
+      "friction": 7,
+      "praise": 5,
+      "topStep": "Testing & handover",
+      "trend": "flat"
+    },
+    {
+      "partner": "{{partner:D-SEA-10}}",
+      "region": "{{region:SEA}}",
+      "friction": 5,
+      "praise": 6,
+      "topStep": "Panel programming",
+      "trend": "down"
+    }
+  ],
   "signalWall": [
     {
       "id": "IN-01",
-      "title": "Network configuration adds set-up time",
+      "title": "Network set-up takes longer",
       "severity": "S3",
+      "level": "alert",
       "type": "slope",
-      "owner": "Product liaison"
+      "owner": "Product liaison",
+      "body": "Installers state about 25 extra minutes on network configuration.",
+      "metric": "~25 min extra",
+      "trend": "▲ 13 weeks"
     },
     {
       "id": "IN-02",
-      "title": "Praise for ease of programming holding",
+      "title": "Ease of programming holding",
       "severity": "improving",
+      "level": "improving",
       "type": "improving",
-      "owner": "Product liaison"
+      "owner": "Product liaison",
+      "body": "Programming stays the most praised commissioning step.",
+      "metric": "22 praise mentions",
+      "trend": "▲ holding"
     }
   ],
   "evidenceSummary": {
     "mainSignal": "Network configuration is the step installers most often call slow.",
     "whatChanged": "Mentions rose after the September partner training on the new network module (candidate).",
     "decideFirst": "Share a one-page set-up guide with partners, and send a feedback note to the US product team."
-  },
-  "drafts": [
-    {
-      "id": "draft-product-note",
-      "title": "Feedback note to the US product team",
-      "status": "Not sent",
-      "awaiting": "Product liaison",
-      "artefactType": "product-feedback-note"
-    },
-    {
-      "id": "draft-tip-sheet",
-      "title": "Partner training tip sheet",
-      "status": "Not sent",
-      "awaiting": "Product liaison",
-      "artefactType": "training-tip"
-    },
-    {
-      "id": "draft-praise-marketing",
-      "title": "Praise routed to Marketing",
-      "status": "Not sent",
-      "awaiting": "Product liaison",
-      "artefactType": "product-feedback-note"
-    }
-  ],
-  "feedbackSamples": [
-    {
-      "step": "Network configuration",
-      "polarity": "friction",
-      "text": "takes about half an hour more to set up the network",
-      "statedMinutes": 25,
-      "partner": "{{partner:D-N-04}}",
-      "date": "2026-09-12"
-    },
-    {
-      "step": "Panel programming",
-      "polarity": "praise",
-      "text": "Easiest panel we've programmed this year.",
-      "partner": "{{partner:D-S-02}}",
-      "date": "2026-09-09"
-    }
-  ]
+  }
 }
