@@ -9,6 +9,7 @@ import {
   K,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { DrillHeader2 } from "../shared/DrillHeader2";
 import { LoopTracker } from "../shared/LoopTracker";
 import { HeroPromiseChart } from "./HeroPromiseChart";
 import { PromiseDecisionPanel } from "./PromiseDecisionPanel";
@@ -94,7 +95,7 @@ function WhyRankedPopover({ open }: { open: boolean }) {
  */
 export function PromiseHeroView() {
   const L = useLabel2();
-  const { state, setView, isApproved } = useDemo2();
+  const { state, isApproved } = useDemo2();
   const [whyOpen, setWhyOpen] = useState(false);
   const [drawerTab, setDrawerTab] = useState<PromiseEvidenceTab | null>(null);
   const [draftsOpen, setDraftsOpen] = useState(false);
@@ -127,67 +128,40 @@ export function PromiseHeroView() {
         padding: "16px 24px 24px",
       }}
     >
-      <button
-        type="button"
-        className="kgs2-focus"
-        onClick={() => setView("promise")}
-        style={{
-          alignSelf: "flex-start",
-          background: "transparent",
-          border: `1px solid ${K.borderLight}`,
-          borderRadius: 10,
-          color: K.textSec,
-          fontSize: 14,
-          fontWeight: 600,
-          padding: "8px 14px",
-          cursor: "pointer",
-          fontFamily: "inherit",
-        }}
-      >
-        ← Back to Promise
-      </button>
+      <DrillHeader2
+        title="North region: promises slipping"
+        subtitle={signal.headline}
+        parentView="promise"
+        backLabel="Back to Promises"
+      />
 
-      {/* Rank + headline */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <div style={{ position: "relative", alignSelf: "flex-start" }}>
-          <button
-            type="button"
-            className="kgs2-focus"
-            aria-expanded={whyOpen}
-            onClick={() => setWhyOpen((v) => !v)}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 12,
-              fontWeight: 700,
-              padding: "4px 10px",
-              borderRadius: K.radius.pill,
-              background: K.brandTint,
-              color: K.violet300,
-              border: "none",
-              cursor: "pointer",
-              fontFamily: "inherit",
-              fontVariantNumeric: "tabular-nums",
-            }}
-          >
-            {signal.rank.chip} · Why ranked here?
-            <Info size={13} aria-hidden />
-          </button>
-          <WhyRankedPopover open={whyOpen} />
-        </div>
-        <h1
+      {/* Rank */}
+      <div style={{ position: "relative", alignSelf: "flex-start" }}>
+        <button
+          type="button"
+          className="kgs2-focus"
+          aria-expanded={whyOpen}
+          onClick={() => setWhyOpen((v) => !v)}
           style={{
-            margin: 0,
-            fontSize: 22,
-            fontWeight: 800,
-            color: K.text,
-            lineHeight: 1.3,
-            maxWidth: 920,
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 12,
+            fontWeight: 700,
+            padding: "4px 10px",
+            borderRadius: K.radius.pill,
+            background: K.brandTint,
+            color: K.violet300,
+            border: "none",
+            cursor: "pointer",
+            fontFamily: "inherit",
+            fontVariantNumeric: "tabular-nums",
           }}
         >
-          {L(signal.headline)}
-        </h1>
+          {signal.rank.chip} · Why ranked here?
+          <Info size={13} aria-hidden />
+        </button>
+        <WhyRankedPopover open={whyOpen} />
       </div>
 
       {/* Severity strip */}

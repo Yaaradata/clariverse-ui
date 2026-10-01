@@ -1,15 +1,23 @@
 "use client";
 
+import overview from "@kgs2/data/overview.json";
 import recurring from "@kgs2/data/recurring.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import type { V2View } from "@kgs2/types";
 import { Sparkles } from "lucide-react";
 import type { CSSProperties } from "react";
 import { Panel } from "@/components/role-based-dashboard/kgs/drill/Panel";
-import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
 import {
   K,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { DrillHeader2 } from "../shared/DrillHeader2";
+import { KpiRow2 } from "../shared/KpiRow2";
+import {
+  type SignalWall2Data,
+  type WallLevel2,
+  SignalWall2,
+} from "../shared/SignalWall2";
 import { ThemeChannelBar } from "./ThemeChannelBar";
 import { ThemeTimelineChart } from "./ThemeTimelineChart";
 
@@ -48,6 +56,55 @@ function fmtDate(iso: string): string {
     month: "short",
     year: "numeric",
   });
+}
+
+
+function buildRecurringWall(
+  beforeNowById: Record<string, { before: number; now: number }>,
+): SignalWall2Data {
+  const byId = Object.fromEntries(
+    overview.signals.map((s) => [s.id, s] as const),
+  );
+  const openFor: Record<string, V2View | undefined> = {
+    "rc-01": "recurringTheme",
+  };
+  return {
+    title: "Fixed before, back again",
+    sub: "Returning themes after a recorded fix",
+    pill: "Live",
+    cards: recurring.backAfterFixWall.map((card) => {
+      const sigKey = card.id.toUpperCase().replace("RC-", "RC-");
+      const sig = byId[sigKey] ?? byId[card.id.toUpperCase()];
+      const bn = beforeNowById[card.id];
+      return {
+        id: card.id,
+        level: "alert" as WallLevel2,
+        tag: "Back after fix",
+        title: card.title,
+        body: `Fix ${card.fixDate} · Return ${card.returnDate}`,
+        metric: bn
+          ? `${bn.before} → ${bn.now}/wk`
+          : card.weeklyDelta,
+        trend: card.weeklyDelta,
+        detail: {
+          cause: sig?.topIntent ?? card.title,
+          areas: sig ? [sig.pnlTag, sig.timeWindow] : ["Help desk"],
+          actions: sig
+            ? [sig.recommendation]
+            : [card.cta ?? "Review theme"],
+          timeline: `Fix ${card.fixDate} · Return ${card.returnDate}`,
+          owner: sig?.owner ?? "Technical support lead",
+          priority: "Needs action",
+        },
+        openView: openFor[card.id],
+      };
+    }),
+    footer: [
+      { label: "Critical", value: 0 },
+      { label: "Needs action", value: recurring.backAfterFixWall.length },
+      { label: "Improving", value: 0 },
+    ],
+  };
 }
 
 /**
@@ -90,76 +147,19 @@ export function RecurringView() {
         padding: "16px 24px 24px",
       }}
     >
-      <h1
-        style={{
-          margin: 0,
-          fontSize: 28,
-          fontWeight: 800,
-          color: K.text,
-          lineHeight: 1.2,
-        }}
-      >
-        {L(recurring.title)}
-      </h1>
+      <DrillHeader2
+        title={recurring.title}
+        subtitle="Themes that return after a fix · ranked by impact"
+      />
 
-      {/* 1. KPIs */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${recurring.kpis.length}, minmax(0, 1fr))`,
-          gap: 12,
-        }}
-      >
-        {recurring.kpis.map((tile) => (
-          <div
-            key={tile.key}
-            style={{
-              background: "#131313",
-              border: `1px solid ${K.border}`,
-              borderRadius: K.radius.tile,
-              padding: 16,
-              display: "flex",
-              flexDirection: "column",
-              gap: 6,
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
-                color: K.textMut,
-                lineHeight: 1.35,
-              }}
-            >
-              {L(tile.label)}
-            </div>
-            <div
-              style={{
-                fontSize: 28,
-                fontWeight: 800,
-                color: K.text,
-                fontFamily: K.mono,
-                fontVariantNumeric: "tabular-nums",
-                lineHeight: 1.1,
-              }}
-            >
-              <CountUp text={formatKpi(tile.value, tile.unit)} />
-              {tile.unit &&
-              tile.unit !== "%" &&
-              !tile.unit.startsWith("% of") ? (
-                <span style={{ fontSize: 13, fontWeight: 600, marginLeft: 4 }}>
-                  {tile.unit}
-                </span>
-              ) : null}
-            </div>
-            {tile.unit?.startsWith("% of") ? (
-              <div style={{ fontSize: 12, color: K.textMut }}>{tile.unit}</div>
-            ) : null}
-          </div>
-        ))}
-      </div>
+      <KpiRow2
+        tiles={recurring.kpis.map((tile) => ({
+          key: tile.key,
+          label: tile.label,
+          value: formatKpi(tile.value, tile.unit),
+          sub: tile.unit?.startsWith("% of") ? tile.unit : undefined,
+        }))}
+      />
 
       {/* 2. Theme register */}
       <Panel
@@ -264,98 +264,7 @@ export function RecurringView() {
       </Panel>
 
       {/* 3. Fixed before, back again wall */}
-      <Panel
-        title="Fixed before, back again"
-        sub="Returning themes after a recorded fix"
-      >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 12,
-          }}
-        >
-          {recurring.backAfterFixWall.map((card) => {
-            const bn = beforeNowById[card.id];
-            const openable =
-              card.id === "rc-01" || card.id === "rc-03" || card.id === "rc-05";
-            return (
-              <button
-                key={card.id}
-                type="button"
-                className={openable ? "kgs2-focus" : undefined}
-                disabled={!openable}
-                onClick={() => {
-                  if (card.id === "rc-01") setView("recurringTheme");
-                  else if (openable) setView("recurring");
-                }}
-                style={{
-                  textAlign: "left",
-                  background:
-                    card.id === "rc-01" ? withAlpha(K.orange, 0.08) : K.surface,
-                  border: `1px solid ${
-                    card.id === "rc-01"
-                      ? withAlpha(K.orange, 0.45)
-                      : K.borderLight
-                  }`,
-                  borderRadius: 12,
-                  padding: "14px 16px",
-                  cursor: openable ? "pointer" : "default",
-                  color: K.text,
-                  fontFamily: "inherit",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  minHeight: 140,
-                  opacity: openable ? 1 : 0.92,
-                }}
-              >
-                <span
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 700,
-                    fontFamily: K.mono,
-                    color: K.violet300,
-                  }}
-                >
-                  {card.id.toUpperCase()}
-                </span>
-                <div
-                  style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}
-                >
-                  {card.title}
-                </div>
-                <div
-                  style={{ fontSize: 12, color: K.textMut, lineHeight: 1.45 }}
-                >
-                  Fix {fmtDate(card.fixDate)} · Return{" "}
-                  {fmtDate(card.returnDate)}
-                </div>
-                <div
-                  style={{ fontSize: 13, fontFamily: K.mono, color: K.body }}
-                >
-                  {bn ? (
-                    <>
-                      Weekly contacts {bn.before} → {bn.now}
-                    </>
-                  ) : (
-                    card.weeklyDelta
-                  )}
-                </div>
-                <div
-                  style={{
-                    fontSize: 13,
-                    color: openable ? K.violet300 : K.textMut,
-                    marginTop: "auto",
-                  }}
-                >
-                  {card.cta}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </Panel>
+      <SignalWall2 wall={buildRecurringWall(beforeNowById)} />
 
       {/* 4. Theme timeline */}
       <Panel title="Theme timeline" sub="Top 3 themes · ◆ fix · ▲ return">

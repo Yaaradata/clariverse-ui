@@ -16,6 +16,7 @@ import {
   K,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { DrillHeader2 } from "../shared/DrillHeader2";
 
 type TabId = "workspace" | "kgs";
 
@@ -63,55 +64,24 @@ export function PartnerView() {
         padding: "16px 24px 24px",
       }}
     >
-      {/* Title + Concept pill */}
-      <header style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <div
+      <DrillHeader2 title={partner.title} subtitle={partner.subtitle} />
+      <div style={{ marginTop: -6 }}>
+        <span
           style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            flexWrap: "wrap",
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: "0.06em",
+            textTransform: "uppercase",
+            padding: "4px 10px",
+            borderRadius: K.radius.pill,
+            background: withAlpha(K.violet400, 0.15),
+            color: K.violet300,
+            border: `1px solid ${withAlpha(K.violet400, 0.4)}`,
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              fontSize: 28,
-              fontWeight: 800,
-              color: K.text,
-              lineHeight: 1.2,
-            }}
-          >
-            {L(partner.title)}
-          </h1>
-          <span
-            style={{
-              fontSize: 11,
-              fontWeight: 700,
-              letterSpacing: "0.06em",
-              textTransform: "uppercase",
-              padding: "4px 10px",
-              borderRadius: K.radius.pill,
-              background: withAlpha(K.violet400, 0.15),
-              color: K.violet300,
-              border: `1px solid ${withAlpha(K.violet400, 0.4)}`,
-            }}
-          >
-            {partner.conceptLabel}
-          </span>
-        </div>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 15,
-            color: K.textSec,
-            lineHeight: 1.45,
-            maxWidth: 720,
-          }}
-        >
-          {partner.subtitle}
-        </p>
-      </header>
+          {partner.conceptLabel}
+        </span>
+      </div>
 
       {/* Consent boundary */}
       <section

@@ -1,15 +1,23 @@
 "use client";
 
+import overview from "@kgs2/data/overview.json";
 import promise from "@kgs2/data/promise.json";
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import { useLabel2 } from "@kgs2/lib/demoState";
+import type { V2View } from "@kgs2/types";
 import { Sparkles } from "lucide-react";
 import type { CSSProperties } from "react";
 import { Panel } from "@/components/role-based-dashboard/kgs/drill/Panel";
-import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
 import {
   K,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { DrillHeader2 } from "../shared/DrillHeader2";
+import { KpiRow2 } from "../shared/KpiRow2";
+import {
+  type SignalWall2Data,
+  type WallLevel2,
+  SignalWall2,
+} from "../shared/SignalWall2";
 import { CauseStackedBar } from "./CauseStackedBar";
 import { PromiseRegionChart } from "./PromiseRegionChart";
 
@@ -21,8 +29,63 @@ function trendCell(trend: string): string {
 
 function formatKpiValue(value: number, unit?: string): string {
   if (unit === "%") return `${value}%`;
-  if (unit === "days") return `${value}`;
+  if (unit === "days") return `${value} days`;
   return value.toLocaleString("en-GB");
+}
+
+function severityLevel(sev: string): WallLevel2 {
+  if (sev === "improving") return "improving";
+  if (sev === "S2") return "critical";
+  if (sev === "S3") return "alert";
+  return "warning";
+}
+
+function buildPromiseWall(): SignalWall2Data {
+  const byId = Object.fromEntries(
+    overview.signals.map((s) => [s.id, s] as const),
+  );
+  const openFor: Record<string, V2View | undefined> = {
+    "PR-01": "promiseHero",
+    "PR-02": "promise",
+  };
+  return {
+    title: "Signal Wall",
+    sub: "AI Summary · open the hero for PR-01",
+    pill: "Live",
+    cards: promise.signalWall.map((card) => {
+      const sig = byId[card.id];
+      const level = severityLevel(card.severity);
+      return {
+        id: card.id,
+        level,
+        tag: card.severity === "improving" ? "Improving" : card.severity,
+        title: card.title,
+        body: sig?.topIntent ?? card.title,
+        metric: sig
+          ? `${sig.beforeAfter.after}`
+          : level === "improving"
+            ? "Holding"
+            : "—",
+        trend: sig
+          ? `${sig.beforeAfter.before} → ${sig.beforeAfter.after}`
+          : "SEA trend up",
+        detail: {
+          cause: sig?.topIntent ?? card.title,
+          areas: sig ? [sig.pnlTag, sig.timeWindow] : ["SEA"],
+          actions: sig ? [sig.recommendation] : ["Hold · no action needed"],
+          timeline: sig?.timeWindow ?? "This week",
+          owner: sig?.owner ?? "Operations lead",
+          priority: card.severity === "improving" ? "Watching" : "Needs action",
+        },
+        openView: openFor[card.id],
+      };
+    }),
+    footer: [
+      { label: "Critical", value: promise.signalWallFooter.critical },
+      { label: "Needs action", value: promise.signalWallFooter.needsAction },
+      { label: "Improving", value: promise.signalWallFooter.improving },
+    ],
+  };
 }
 
 /**
@@ -30,7 +93,6 @@ function formatKpiValue(value: number, unit?: string): string {
  */
 export function PromiseView() {
   const L = useLabel2();
-  const { state, setView, isApproved } = useDemo2();
   const north = promise.weeklyByRegion.series.find(
     (s) => s.regionId === "North",
   );
@@ -49,71 +111,18 @@ export function PromiseView() {
         padding: "16px 24px 24px",
       }}
     >
-      <h1
-        style={{
-          margin: 0,
-          fontSize: 28,
-          fontWeight: 800,
-          color: K.text,
-          lineHeight: 1.2,
-        }}
-      >
-        {L(promise.title)}
-      </h1>
+      <DrillHeader2
+        title={promise.title}
+        subtitle="Promise kept vs original date · by region and distributor"
+      />
 
-      {/* 1. KPI tiles */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${promise.kpis.length}, minmax(0, 1fr))`,
-          gap: 12,
-        }}
-      >
-        {promise.kpis.map((tile) => (
-          <div
-            key={tile.key}
-            style={{
-              background: "#131313",
-              border: `1px solid ${K.border}`,
-              borderRadius: K.radius.tile,
-              padding: 16,
-              display: "flex",
-              flexDirection: "column",
-              gap: 6,
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: "0.06em",
-                color: K.textMut,
-                lineHeight: 1.35,
-              }}
-            >
-              {L(tile.label)}
-            </div>
-            <div
-              style={{
-                fontSize: 28,
-                fontWeight: 800,
-                color: K.text,
-                fontFamily: K.mono,
-                fontVariantNumeric: "tabular-nums",
-                lineHeight: 1.1,
-              }}
-            >
-              <CountUp text={formatKpiValue(tile.value, tile.unit)} />
-              {tile.unit === "days" ? (
-                <span style={{ fontSize: 14, fontWeight: 600, marginLeft: 4 }}>
-                  days
-                </span>
-              ) : null}
-            </div>
-          </div>
-        ))}
-      </div>
+      <KpiRow2
+        tiles={promise.kpis.map((tile) => ({
+          key: tile.key,
+          label: tile.label,
+          value: formatKpiValue(tile.value, tile.unit),
+        }))}
+      />
 
       {/* 2. Promise kept by region */}
       <Panel
@@ -323,133 +332,7 @@ export function PromiseView() {
       </Panel>
 
       {/* 6. Signal Wall */}
-      <Panel title="Signal Wall" sub="AI Summary · open the hero for PR-01">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 12,
-          }}
-        >
-          {promise.signalWall.map((card) => {
-            const approved = card.id === "PR-01" && isApproved("PR-01");
-            const route =
-              card.id === "PR-01"
-                ? ("promiseHero" as const)
-                : card.id === "PR-02"
-                  ? ("promise" as const)
-                  : null;
-            const clickable = route != null;
-            const improving = card.severity === "improving";
-            return (
-              <button
-                key={card.id}
-                type="button"
-                disabled={!clickable}
-                onClick={() => clickable && route && setView(route)}
-                className={clickable ? "kgs2-focus" : undefined}
-                style={{
-                  textAlign: "left",
-                  background: card.hero ? withAlpha(K.orange, 0.08) : K.surface,
-                  border: `1px solid ${
-                    card.hero ? withAlpha(K.orange, 0.45) : K.borderLight
-                  }`,
-                  borderRadius: 12,
-                  padding: "14px 16px",
-                  cursor: clickable ? "pointer" : "default",
-                  color: K.text,
-                  fontFamily: "inherit",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  minHeight: 120,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 8,
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      fontFamily: K.mono,
-                      color: improving ? K.green : K.violet300,
-                    }}
-                  >
-                    {card.id}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "2px 8px",
-                      borderRadius: K.radius.pill,
-                      background: improving
-                        ? withAlpha(K.green, 0.15)
-                        : withAlpha(K.orange, 0.15),
-                      color: improving ? K.green : K.orange,
-                    }}
-                  >
-                    {improving ? "Improving" : card.severity}
-                  </span>
-                </div>
-                <div
-                  style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}
-                >
-                  {L(card.title)}
-                </div>
-                {approved ? (
-                  <div
-                    style={{ fontSize: 12, color: K.green, fontWeight: 600 }}
-                  >
-                    Action approved
-                  </div>
-                ) : card.cta ? (
-                  <div
-                    style={{
-                      fontSize: 13,
-                      color: K.violet300,
-                      marginTop: "auto",
-                    }}
-                  >
-                    {card.cta}
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: K.textMut,
-                      marginTop: "auto",
-                    }}
-                  >
-                    Holding · no action needed
-                  </div>
-                )}
-              </button>
-            );
-          })}
-        </div>
-        <div
-          style={{
-            marginTop: 12,
-            fontSize: 12,
-            color: K.textMut,
-            fontFamily: K.mono,
-          }}
-        >
-          Critical {promise.signalWallFooter.critical} · Needs action{" "}
-          {promise.signalWallFooter.needsAction} · Improving{" "}
-          {promise.signalWallFooter.improving}
-          {state.role === "Operations lead"
-            ? " · Viewing as Operations lead"
-            : ""}
-        </div>
-      </Panel>
+      <SignalWall2 wall={buildPromiseWall()} />
 
       {/* 7. LiSN evidence summary */}
       <section

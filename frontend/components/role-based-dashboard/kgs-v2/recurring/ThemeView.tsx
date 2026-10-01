@@ -18,6 +18,7 @@ import {
   K,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { DrillHeader2 } from "../shared/DrillHeader2";
 import { LoopTracker } from "../shared/LoopTracker";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
 import { useToast2 } from "../shell/Toast";
@@ -231,7 +232,7 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
  */
 export function ThemeView() {
   const L = useLabel2();
-  const { state, setView, isApproved } = useDemo2();
+  const { state, isApproved } = useDemo2();
   const [draftOpen, setDraftOpen] = useState(false);
   const draft = theme.drafts[0];
 
@@ -266,38 +267,12 @@ export function ThemeView() {
         padding: "16px 24px 24px",
       }}
     >
-      <button
-        type="button"
-        className="kgs2-focus"
-        onClick={() => setView("recurring")}
-        style={{
-          alignSelf: "flex-start",
-          background: "transparent",
-          border: `1px solid ${K.borderLight}`,
-          borderRadius: 10,
-          color: K.textSec,
-          fontSize: 14,
-          fontWeight: 600,
-          padding: "8px 14px",
-          cursor: "pointer",
-          fontFamily: "inherit",
-        }}
-      >
-        ← Back to Recurring
-      </button>
-
-      <h1
-        style={{
-          margin: 0,
-          fontSize: 22,
-          fontWeight: 800,
-          color: K.text,
-          lineHeight: 1.3,
-          maxWidth: 920,
-        }}
-      >
-        {L(theme.headline)}
-      </h1>
+      <DrillHeader2
+        title={theme.title}
+        subtitle={theme.headline}
+        parentView="recurring"
+        backLabel="Back to Recurring"
+      />
 
       {/* Severity */}
       <div

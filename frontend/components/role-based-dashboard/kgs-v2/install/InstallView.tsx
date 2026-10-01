@@ -1,6 +1,7 @@
 "use client";
 
 import install from "@kgs2/data/install.json";
+import overview from "@kgs2/data/overview.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import { Sparkles } from "lucide-react";
 import { type CSSProperties, useMemo, useState } from "react";
@@ -20,6 +21,12 @@ import {
   K,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { DrillHeader2 } from "../shared/DrillHeader2";
+import {
+  type SignalWall2Data,
+  type WallLevel2,
+  SignalWall2,
+} from "../shared/SignalWall2";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
 
 const FAMILY_LABEL: Record<string, string> = {
@@ -33,6 +40,66 @@ function heatColour(n: number, max: number): string {
   if (n <= 0) return K.surface;
   const t = Math.min(1, n / Math.max(max, 1));
   return withAlpha(K.amber, 0.12 + t * 0.55);
+}
+
+
+function buildInstallWall(): SignalWall2Data {
+  const byId = Object.fromEntries(
+    overview.signals.map((s) => [s.id, s] as const),
+  );
+  return {
+    title: "Signal Wall",
+    sub: "Installer experience signals",
+    pill: "Live",
+    cards: install.signalWall.map((card) => {
+      const improving = card.severity === "improving";
+      const sig = byId[card.id];
+      const level: WallLevel2 = improving
+        ? "improving"
+        : card.severity === "S2"
+          ? "critical"
+          : card.severity === "S3"
+            ? "alert"
+            : "warning";
+      return {
+        id: card.id,
+        level,
+        tag: improving ? "Improving" : `${card.severity} · ${card.type}`,
+        title: card.title,
+        body: sig?.topIntent ?? card.title,
+        metric: sig
+          ? sig.beforeAfter.after
+          : improving
+            ? "Holding"
+            : "—",
+        trend: sig
+          ? `${sig.beforeAfter.before} → ${sig.beforeAfter.after}`
+          : "Stable praise",
+        detail: {
+          cause: sig?.topIntent ?? card.title,
+          areas: sig ? [sig.pnlTag, sig.timeWindow] : ["Install experience"],
+          actions: sig
+            ? [sig.recommendation]
+            : ["Route praise to Marketing"],
+          timeline: sig?.timeWindow ?? "13 weeks",
+          owner: card.owner,
+          priority: improving ? "Watching" : "Needs action",
+        },
+        openView: undefined,
+      };
+    }),
+    footer: [
+      { label: "Critical", value: 0 },
+      {
+        label: "Needs action",
+        value: install.signalWall.filter((c) => c.severity !== "improving").length,
+      },
+      {
+        label: "Improving",
+        value: install.signalWall.filter((c) => c.severity === "improving").length,
+      },
+    ],
+  };
 }
 
 /**
@@ -75,17 +142,10 @@ export function InstallView() {
         padding: "16px 24px 24px",
       }}
     >
-      <h1
-        style={{
-          margin: 0,
-          fontSize: 28,
-          fontWeight: 800,
-          color: K.text,
-          lineHeight: 1.2,
-        }}
-      >
-        {L(install.title)}
-      </h1>
+      <DrillHeader2
+        title={install.title}
+        subtitle="Friction and praise by install step · experience only"
+      />
 
       {/* 1. Capture-gap banner */}
       <aside
@@ -373,82 +433,7 @@ export function InstallView() {
       </Panel>
 
       {/* 6. Signal Wall */}
-      <Panel title="Signal Wall" sub="Installer experience signals">
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-            gap: 12,
-          }}
-        >
-          {install.signalWall.map((card) => {
-            const improving = card.severity === "improving";
-            return (
-              <div
-                key={card.id}
-                style={{
-                  background: improving ? withAlpha(K.green, 0.08) : K.surface,
-                  border: `1px solid ${
-                    improving ? withAlpha(K.green, 0.4) : K.borderLight
-                  }`,
-                  borderRadius: 12,
-                  padding: "14px 16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 8,
-                  minHeight: 110,
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 8,
-                    alignItems: "center",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      fontFamily: K.mono,
-                      color: K.violet300,
-                    }}
-                  >
-                    {card.id}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      fontWeight: 700,
-                      padding: "2px 8px",
-                      borderRadius: K.radius.pill,
-                      background: improving
-                        ? withAlpha(K.green, 0.15)
-                        : withAlpha(K.amber, 0.15),
-                      color: improving ? K.green : K.amber,
-                    }}
-                  >
-                    {improving
-                      ? "Improving"
-                      : `${card.severity} · ${card.type}`}
-                  </span>
-                </div>
-                <div
-                  style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}
-                >
-                  {L(card.title)}
-                </div>
-                <div
-                  style={{ fontSize: 12, color: K.textMut, marginTop: "auto" }}
-                >
-                  Owner: {card.owner}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </Panel>
+      <SignalWall2 wall={buildInstallWall()} />
 
       {/* 7. Evidence summary */}
       <section
