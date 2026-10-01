@@ -134,6 +134,25 @@ FIXTURES = [
          volume=d["periods"]["30d"]["cards"]["categories"][0]["subcategories"][0]["internal"]["volume"] + 1))),
     ("brief item without a business", "every brief item names a business",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["brief"]["needs_you"].append({"business": "wealth", "business_label": "Wealth", "text": "x"}))),
+    # Ombudsman watch (ombudsman_watch_design.md)
+    ("ombudsman dial", "Ombudsman bank now recomputed",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["ombudsman"]["now"].update(
+         brink=d["periods"]["7d"]["ombudsman"]["now"]["brink"] + 1))),
+    ("ombudsman business split", "Ombudsman: businesses sum to the bank total",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["ombudsman"]["by_business"][0].update(
+         at_risk=d["periods"]["30d"]["ombudsman"]["by_business"][0]["at_risk"] + 1))),
+    ("ombudsman cards category", "Ombudsman: Cards categories and subcategories sum",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["all"]["cards"]["ombudsman"]["categories"][0].update(
+         at_risk=d["periods"]["all"]["cards"]["ombudsman"]["categories"][0]["at_risk"] + 1))),
+    ("ombudsman save list", "Ombudsman: save list is at most 10",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["cards"]["ombudsman"]["save_list"].append(
+         {"id": "CMP-NOT-AT-RISK", "score": 0}))),
+    ("ombudsman brief item", "the brief item leads What needs you exactly when",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["brief"].update(
+         needs_you=[x for x in d["periods"]["7d"]["brief"]["needs_you"] if x.get("kind") != "ombudsman"]))),
+    ("ombudsman IO order", "Ombudsman: register matches the contacts and the IO order holds",
+     lambda s, o: _rw_jsonl(s / "complaints.jsonl", lambda rows: _first(
+         rows, lambda r: r["outcome"] == "rejected" and r["final_reply_at"]).update(io_reviewed_at=None))),
     ("cards categories", "Cards categories sum to the Cards external volume",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["all"]["cards"]["categories"][0]["external"].update(
          volume=d["periods"]["all"]["cards"]["categories"][0]["external"]["volume"] + 1))),

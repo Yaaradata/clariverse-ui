@@ -317,3 +317,27 @@ typically behave:
 - Reconcile: every contact is open, waiting on customer or closed; open + waiting + closed = total; the full-window
   period figures equal the older screens' dials once the IVR bot (left out of the 30 Sep views) is set aside.
 - The Karthik transcript was still missing for this pass, so "Missed by spec" (follow-up 6) is open.
+
+## D26 · Ombudsman watch: the complaint register and its assumptions
+Design and definitions: `ombudsman_watch_design.md`. Only the RBI rules listed there are used; no HDFC TAT and no acknowledgement rule.
+
+- **Which complaints:** the formal complaints already in the sample, i.e. every contact measured against the 30-day complaint-resolution rule, less IVR bot calls. That is 2,517 complaints from 5,000 sample customers in 13 weeks. No new population is invented.
+  - **Scale:** we don't scale to HDFC's real size. Figures are "Internal · illustrative" and relative, as with the rest of the sample.
+- **Taken from the sample, unchanged:** received date, channel, product, and final reply (the thread closed, or a resolution sent).
+- **The issue:**
+  - **How it's set:** the customer's most recent earlier contact on the same product. Without one, a draw from that product's own issue mix. All Cards complaints were tagged "complaint handling", so without this the category view would show a single row.
+- **Assumed:**
+  - **Outcome of a reply:**
+    - resolved 70%, partly rejected 18%, rejected 12%;
+    - resolved 62%, partly rejected 22%, rejected 16% where the contact was negative.
+    - A reply within two days is always a resolution, because a rejection first goes through Internal Ombudsman review.
+  - **Rejections:** the decision falls 55–80% of the way to the reply, and the Internal Ombudsman review before the reply.
+  - **Open complaints:** 24% already carry a decision to reject (30% where negative), with the Internal Ombudsman review pending.
+  - **Reopening after the reply:** 2% of resolved, 12% of partly rejected and 18% of rejected complaints.
+- **"Unhappy with the reply":**
+  - **Signals:** a reopening; a later *negative* contact on the same issue; or escalation language on any later contact.
+  - **Tuning:** counting any later contact made the figure 28% of replies, which reads as noise. Requiring the contact to be negative, and using the lower reopening rates above, brings it to about 17%.
+- **Exposure:** we don't show one. The ₹30 lakh + ₹3 lakh caps are per complaint and are stated as a rule. A summed "maximum exposure" would read as a forecast.
+- **What needs you:** a material Ombudsman risk takes the first slot, and the business items keep the other two. **Material:** any complaint with 3 days or fewer to go, or more already eligible than at the previous period end.
+- **The bank's lists:** Ultra sensitive, RBI & Government and Ultra HNI. The derived "multiple relationships" cohort is not a list the bank keeps, so it isn't counted.
+- **Confirm with the bank:** the Internal Ombudsman timeline, and HDFC's product TATs. Neither is used in any figure.

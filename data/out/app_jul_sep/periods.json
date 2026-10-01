@@ -1402,6 +1402,13 @@
    "brief": {
     "needs_you": [
      {
+      "business": "bank",
+      "business_label": "All businesses",
+      "issue": "Ombudsman watch",
+      "kind": "ombudsman",
+      "text": "21 complaints have 3 days or fewer to the 30-day reply limit; 141 are already eligible to approach the RBI Ombudsman (up 6 on the previous period end)."
+     },
+     {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Complaints closed without resolution",
@@ -1412,12 +1419,6 @@
       "business_label": "Cards",
       "issue": "Card dispatch and delivery",
       "text": "0 posts with escalation language; 45 internal cases still open."
-     },
-     {
-      "business": "payzapp",
-      "business_label": "PayZapp and UPI",
-      "issue": "Refunds not credited",
-      "text": "0 posts with escalation language; 8 internal cases still open."
      }
     ],
     "building": [
@@ -1460,7 +1461,7 @@
       "text": "Negative share down from 70% to 54% vs the day before."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the day before (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the day before (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 2,
@@ -5883,7 +5884,794 @@
        "escalation": 0
       }
      ]
+    },
+    "ombudsman": {
+     "provenance": "internal",
+     "as_of": "2026-09-29T08:30:00+05:30",
+     "prev_as_of": "2026-09-28T08:30:00+05:30",
+     "now": {
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "buckets": {
+       "8-10": 1,
+       "4-7": 3,
+       "0-3": 3
+      },
+      "received": 287
+     },
+     "prev": {
+      "brink": 9,
+      "eligible": 11,
+      "unhappy": 22,
+      "awaiting_io": 13,
+      "at_risk": 42,
+      "open": 75,
+      "buckets": {
+       "8-10": 0,
+       "4-7": 4,
+       "0-3": 5
+      },
+      "received": 281
+     },
+     "delta": {
+      "brink": -2,
+      "eligible": 3,
+      "unhappy": 0,
+      "awaiting_io": 2,
+      "at_risk": 1,
+      "open": 3
+     },
+     "became_eligible": 3,
+     "on_lists": {
+      "at_risk": 5,
+      "by_list": {
+       "priority_a": 2,
+       "priority_b": 3,
+       "uhni": 2
+      },
+      "labels": {
+       "priority_a": "Ultra sensitive",
+       "priority_b": "RBI & Government",
+       "uhni": "Ultra HNI"
+      }
+     },
+     "by_business": [
+      {
+       "id": "cards",
+       "label": "Cards",
+       "brink": 7,
+       "eligible": 14,
+       "unhappy": 22,
+       "awaiting_io": 15,
+       "at_risk": 43,
+       "open": 78,
+       "received": 287
+      }
+     ],
+     "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file.",
+     "categories": [
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "brink": 2,
+       "eligible": 4,
+       "unhappy": 9,
+       "awaiting_io": 2,
+       "at_risk": 15,
+       "subcategories": [
+        {
+         "id": "rewards_value",
+         "label": "Rewards value, devaluation and caps",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 8,
+         "awaiting_io": 0,
+         "at_risk": 11
+        },
+        {
+         "id": "reward_redemption",
+         "label": "Reward redemption and vouchers",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "brink": 2,
+       "eligible": 2,
+       "unhappy": 4,
+       "awaiting_io": 4,
+       "at_risk": 8,
+       "subcategories": [
+        {
+         "id": "card_variant_migration",
+         "label": "Card variant migration and forced upgrade",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 4
+        },
+        {
+         "id": "card_eligibility_upgrade",
+         "label": "Card eligibility, upgrade and LTF requests",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 3,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_application",
+         "label": "Card application, rejection and verification",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        },
+        {
+         "id": "kyc_updates",
+         "label": "KYC, re-KYC and profile updates",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "brink": 1,
+       "eligible": 2,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 5,
+       "subcategories": [
+        {
+         "id": "card_fees_charges",
+         "label": "Card fees and charges",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 5
+        },
+        {
+         "id": "fees_charges_bank",
+         "label": "Bank charges and hidden fees",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_limit",
+         "label": "Credit limit",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        }
+       ]
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "brink": 1,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "refund_delay",
+         "label": "Refunds not credited",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "failed_txn_reversal",
+         "label": "Failed transaction reversal",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "dispute_chargeback",
+         "label": "Disputes and chargebacks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "merchant_pos",
+         "label": "Merchant QR, POS and sound box",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unauthorised_txn",
+         "label": "Unauthorised transactions",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "card_dispatch",
+         "label": "Card dispatch and delivery",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "closure_requests",
+         "label": "Account and card closure requests",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 1
+        }
+       ]
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 0,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "rm_service",
+         "label": "Relationship manager service",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "care_unreachable",
+         "label": "Customer care unreachable or unhelpful",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "branch_service",
+         "label": "Branch service and staff behaviour",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unsolicited_calls",
+         "label": "Unsolicited sales calls and use of data",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "fraud_scam",
+         "label": "Fraud and scam calls",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "phishing",
+         "label": "Phishing messages and fake links",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "brink": 0,
+       "eligible": 1,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 2,
+       "subcategories": [
+        {
+         "id": "login_mpin",
+         "label": "Login, MPIN and registration",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "app_usability",
+         "label": "App features and usability",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "app_speed_crash",
+         "label": "App speed, loading and crashes",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "brink": 1,
+       "eligible": 1,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 4,
+       "subcategories": [
+        {
+         "id": "account_freeze",
+         "label": "Account debit freezes and blocks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "account_opening",
+         "label": "Account opening and product conversion",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "loan_servicing",
+         "label": "EMI and loan account servicing",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "atm_debit_card",
+         "label": "Debit card and ATM",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 1
+        },
+        {
+         "id": "nri_forex",
+         "label": "NRI and forex services",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "upi_failures",
+         "label": "UPI payments failing or pending",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "mis_selling",
+         "label": "Mis-selling and bundled products",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "credit_report",
+         "label": "CIBIL and credit-report correction",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "investments_wealth",
+         "label": "Investments, mutual funds and SmartWealth",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      }
+     ],
+     "save_list": [
+      {
+       "id": "CMP-03615",
+       "customer": "XXXX2666",
+       "category": "Rewards and redemption",
+       "issue": "Rewards value, devaluation and caps",
+       "state": "eligible",
+       "days_left": null,
+       "score": 71,
+       "reason": "Unhappy with the reply (contacted again); 2 repeat contacts; 3 channels; on the bank's list.",
+       "owner": "Cards · Rewards lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-07772",
+       "customer": "XXXX5715",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 60,
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
+       "owner": "Cards · Pricing lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
+       "score": 60,
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-07923",
+       "customer": "XXXX4672",
+       "category": "Upgrades, variants and eligibility",
+       "issue": "Card eligibility, upgrade and LTF requests",
+       "state": "eligible",
+       "days_left": null,
+       "score": 58,
+       "reason": "Unhappy with the reply (contacted again); 1 repeat contact; 2 channels; on the bank's list.",
+       "owner": "Cards · Product lead",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-03843",
+       "customer": "XXXX1919",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 53,
+       "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
+       "owner": "Cards · Acquisition lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
+       "state": "eligible",
+       "days_left": null,
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
+       "lists": []
+      }
+     ]
     }
+   },
+   "ombudsman": {
+    "provenance": "internal",
+    "as_of": "2026-09-29T08:30:00+05:30",
+    "prev_as_of": "2026-09-28T08:30:00+05:30",
+    "now": {
+     "brink": 75,
+     "eligible": 141,
+     "unhappy": 328,
+     "awaiting_io": 143,
+     "at_risk": 544,
+     "open": 823,
+     "buckets": {
+      "8-10": 30,
+      "4-7": 24,
+      "0-3": 21
+     },
+     "received": 2517
+    },
+    "prev": {
+     "brink": 80,
+     "eligible": 135,
+     "unhappy": 319,
+     "awaiting_io": 142,
+     "at_risk": 534,
+     "open": 821,
+     "buckets": {
+      "8-10": 29,
+      "4-7": 27,
+      "0-3": 24
+     },
+     "received": 2491
+    },
+    "delta": {
+     "brink": -5,
+     "eligible": 6,
+     "unhappy": 9,
+     "awaiting_io": 1,
+     "at_risk": 10,
+     "open": 2
+    },
+    "became_eligible": 13,
+    "on_lists": {
+     "at_risk": 46,
+     "by_list": {
+      "priority_a": 9,
+      "priority_b": 30,
+      "uhni": 26
+     },
+     "labels": {
+      "priority_a": "Ultra sensitive",
+      "priority_b": "RBI & Government",
+      "uhni": "Ultra HNI"
+     }
+    },
+    "by_business": [
+     {
+      "id": "cards",
+      "label": "Cards",
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "received": 287
+     },
+     {
+      "id": "payzapp",
+      "label": "PayZapp and UPI",
+      "brink": 4,
+      "eligible": 6,
+      "unhappy": 20,
+      "awaiting_io": 6,
+      "at_risk": 30,
+      "open": 43,
+      "received": 127
+     },
+     {
+      "id": "accounts",
+      "label": "Accounts and deposits",
+      "brink": 49,
+      "eligible": 102,
+      "unhappy": 224,
+      "awaiting_io": 105,
+      "at_risk": 375,
+      "open": 572,
+      "received": 1681
+     },
+     {
+      "id": "personal_loans",
+      "label": "Personal loans",
+      "brink": 2,
+      "eligible": 4,
+      "unhappy": 13,
+      "awaiting_io": 6,
+      "at_risk": 19,
+      "open": 33,
+      "received": 120
+     },
+     {
+      "id": "home_loans",
+      "label": "Home loans",
+      "brink": 4,
+      "eligible": 2,
+      "unhappy": 10,
+      "awaiting_io": 3,
+      "at_risk": 16,
+      "open": 19,
+      "received": 43
+     },
+     {
+      "id": "auto_loans",
+      "label": "Auto and two-wheeler loans",
+      "brink": 1,
+      "eligible": 2,
+      "unhappy": 5,
+      "awaiting_io": 0,
+      "at_risk": 8,
+      "open": 12,
+      "received": 45
+     },
+     {
+      "id": "insurance",
+      "label": "Insurance (bank-sold)",
+      "brink": 7,
+      "eligible": 10,
+      "unhappy": 27,
+      "awaiting_io": 6,
+      "at_risk": 44,
+      "open": 53,
+      "received": 156
+     },
+     {
+      "id": "digital",
+      "label": "Digital (app and NetBanking)",
+      "brink": 1,
+      "eligible": 1,
+      "unhappy": 7,
+      "awaiting_io": 2,
+      "at_risk": 9,
+      "open": 13,
+      "received": 58
+     }
+    ],
+    "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file."
    }
   },
   "7d": {
@@ -7333,6 +8121,13 @@
    "brief": {
     "needs_you": [
      {
+      "business": "bank",
+      "business_label": "All businesses",
+      "issue": "Ombudsman watch",
+      "kind": "ombudsman",
+      "text": "21 complaints have 3 days or fewer to the 30-day reply limit; 141 are already eligible to approach the RBI Ombudsman (down 20 on the previous period end)."
+     },
+     {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Complaints closed without resolution",
@@ -7343,12 +8138,6 @@
       "business_label": "Cards",
       "issue": "Card variant migration and forced upgrade",
       "text": "35 posts with escalation language; 49 internal cases open over 48 hours."
-     },
-     {
-      "business": "personal_loans",
-      "business_label": "Personal loans",
-      "issue": "Loan processing and disbursal",
-      "text": "26 posts with escalation language; 19 internal cases open over 48 hours."
      }
     ],
     "building": [
@@ -7391,7 +8180,7 @@
       "text": "Negative share up from 66% to 77% vs the previous 7 days; outside the improving and stable bands."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 7 days (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 7 days (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 5,
@@ -12984,7 +13773,794 @@
        "escalation": 0
       }
      ]
+    },
+    "ombudsman": {
+     "provenance": "internal",
+     "as_of": "2026-09-29T08:30:00+05:30",
+     "prev_as_of": "2026-09-22T08:30:00+05:30",
+     "now": {
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "buckets": {
+       "8-10": 1,
+       "4-7": 3,
+       "0-3": 3
+      },
+      "received": 287
+     },
+     "prev": {
+      "brink": 12,
+      "eligible": 14,
+      "unhappy": 20,
+      "awaiting_io": 10,
+      "at_risk": 46,
+      "open": 85,
+      "buckets": {
+       "8-10": 5,
+       "4-7": 7,
+       "0-3": 0
+      },
+      "received": 261
+     },
+     "delta": {
+      "brink": -5,
+      "eligible": 0,
+      "unhappy": 2,
+      "awaiting_io": 5,
+      "at_risk": -3,
+      "open": -7
+     },
+     "became_eligible": 5,
+     "on_lists": {
+      "at_risk": 5,
+      "by_list": {
+       "priority_a": 2,
+       "priority_b": 3,
+       "uhni": 2
+      },
+      "labels": {
+       "priority_a": "Ultra sensitive",
+       "priority_b": "RBI & Government",
+       "uhni": "Ultra HNI"
+      }
+     },
+     "by_business": [
+      {
+       "id": "cards",
+       "label": "Cards",
+       "brink": 7,
+       "eligible": 14,
+       "unhappy": 22,
+       "awaiting_io": 15,
+       "at_risk": 43,
+       "open": 78,
+       "received": 287
+      }
+     ],
+     "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file.",
+     "categories": [
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "brink": 2,
+       "eligible": 4,
+       "unhappy": 9,
+       "awaiting_io": 2,
+       "at_risk": 15,
+       "subcategories": [
+        {
+         "id": "rewards_value",
+         "label": "Rewards value, devaluation and caps",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 8,
+         "awaiting_io": 0,
+         "at_risk": 11
+        },
+        {
+         "id": "reward_redemption",
+         "label": "Reward redemption and vouchers",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "brink": 2,
+       "eligible": 2,
+       "unhappy": 4,
+       "awaiting_io": 4,
+       "at_risk": 8,
+       "subcategories": [
+        {
+         "id": "card_variant_migration",
+         "label": "Card variant migration and forced upgrade",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 4
+        },
+        {
+         "id": "card_eligibility_upgrade",
+         "label": "Card eligibility, upgrade and LTF requests",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 3,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_application",
+         "label": "Card application, rejection and verification",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        },
+        {
+         "id": "kyc_updates",
+         "label": "KYC, re-KYC and profile updates",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "brink": 1,
+       "eligible": 2,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 5,
+       "subcategories": [
+        {
+         "id": "card_fees_charges",
+         "label": "Card fees and charges",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 5
+        },
+        {
+         "id": "fees_charges_bank",
+         "label": "Bank charges and hidden fees",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_limit",
+         "label": "Credit limit",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        }
+       ]
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "brink": 1,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "refund_delay",
+         "label": "Refunds not credited",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "failed_txn_reversal",
+         "label": "Failed transaction reversal",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "dispute_chargeback",
+         "label": "Disputes and chargebacks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "merchant_pos",
+         "label": "Merchant QR, POS and sound box",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unauthorised_txn",
+         "label": "Unauthorised transactions",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "card_dispatch",
+         "label": "Card dispatch and delivery",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "closure_requests",
+         "label": "Account and card closure requests",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 1
+        }
+       ]
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 0,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "rm_service",
+         "label": "Relationship manager service",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "care_unreachable",
+         "label": "Customer care unreachable or unhelpful",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "branch_service",
+         "label": "Branch service and staff behaviour",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unsolicited_calls",
+         "label": "Unsolicited sales calls and use of data",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "fraud_scam",
+         "label": "Fraud and scam calls",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "phishing",
+         "label": "Phishing messages and fake links",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "brink": 0,
+       "eligible": 1,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 2,
+       "subcategories": [
+        {
+         "id": "login_mpin",
+         "label": "Login, MPIN and registration",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "app_usability",
+         "label": "App features and usability",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "app_speed_crash",
+         "label": "App speed, loading and crashes",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "brink": 1,
+       "eligible": 1,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 4,
+       "subcategories": [
+        {
+         "id": "account_freeze",
+         "label": "Account debit freezes and blocks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "account_opening",
+         "label": "Account opening and product conversion",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "loan_servicing",
+         "label": "EMI and loan account servicing",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "atm_debit_card",
+         "label": "Debit card and ATM",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 1
+        },
+        {
+         "id": "nri_forex",
+         "label": "NRI and forex services",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "upi_failures",
+         "label": "UPI payments failing or pending",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "mis_selling",
+         "label": "Mis-selling and bundled products",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "credit_report",
+         "label": "CIBIL and credit-report correction",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "investments_wealth",
+         "label": "Investments, mutual funds and SmartWealth",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      }
+     ],
+     "save_list": [
+      {
+       "id": "CMP-03615",
+       "customer": "XXXX2666",
+       "category": "Rewards and redemption",
+       "issue": "Rewards value, devaluation and caps",
+       "state": "eligible",
+       "days_left": null,
+       "score": 71,
+       "reason": "Unhappy with the reply (contacted again); 2 repeat contacts; 3 channels; on the bank's list.",
+       "owner": "Cards · Rewards lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-07772",
+       "customer": "XXXX5715",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 60,
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
+       "owner": "Cards · Pricing lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
+       "score": 60,
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-07923",
+       "customer": "XXXX4672",
+       "category": "Upgrades, variants and eligibility",
+       "issue": "Card eligibility, upgrade and LTF requests",
+       "state": "eligible",
+       "days_left": null,
+       "score": 58,
+       "reason": "Unhappy with the reply (contacted again); 1 repeat contact; 2 channels; on the bank's list.",
+       "owner": "Cards · Product lead",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-03843",
+       "customer": "XXXX1919",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 53,
+       "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
+       "owner": "Cards · Acquisition lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
+       "state": "eligible",
+       "days_left": null,
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
+       "lists": []
+      }
+     ]
     }
+   },
+   "ombudsman": {
+    "provenance": "internal",
+    "as_of": "2026-09-29T08:30:00+05:30",
+    "prev_as_of": "2026-09-22T08:30:00+05:30",
+    "now": {
+     "brink": 75,
+     "eligible": 141,
+     "unhappy": 328,
+     "awaiting_io": 143,
+     "at_risk": 544,
+     "open": 823,
+     "buckets": {
+      "8-10": 30,
+      "4-7": 24,
+      "0-3": 21
+     },
+     "received": 2517
+    },
+    "prev": {
+     "brink": 79,
+     "eligible": 161,
+     "unhappy": 267,
+     "awaiting_io": 101,
+     "at_risk": 507,
+     "open": 809,
+     "buckets": {
+      "8-10": 28,
+      "4-7": 29,
+      "0-3": 22
+     },
+     "received": 2294
+    },
+    "delta": {
+     "brink": -4,
+     "eligible": -20,
+     "unhappy": 61,
+     "awaiting_io": 42,
+     "at_risk": 37,
+     "open": 14
+    },
+    "became_eligible": 82,
+    "on_lists": {
+     "at_risk": 46,
+     "by_list": {
+      "priority_a": 9,
+      "priority_b": 30,
+      "uhni": 26
+     },
+     "labels": {
+      "priority_a": "Ultra sensitive",
+      "priority_b": "RBI & Government",
+      "uhni": "Ultra HNI"
+     }
+    },
+    "by_business": [
+     {
+      "id": "cards",
+      "label": "Cards",
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "received": 287
+     },
+     {
+      "id": "payzapp",
+      "label": "PayZapp and UPI",
+      "brink": 4,
+      "eligible": 6,
+      "unhappy": 20,
+      "awaiting_io": 6,
+      "at_risk": 30,
+      "open": 43,
+      "received": 127
+     },
+     {
+      "id": "accounts",
+      "label": "Accounts and deposits",
+      "brink": 49,
+      "eligible": 102,
+      "unhappy": 224,
+      "awaiting_io": 105,
+      "at_risk": 375,
+      "open": 572,
+      "received": 1681
+     },
+     {
+      "id": "personal_loans",
+      "label": "Personal loans",
+      "brink": 2,
+      "eligible": 4,
+      "unhappy": 13,
+      "awaiting_io": 6,
+      "at_risk": 19,
+      "open": 33,
+      "received": 120
+     },
+     {
+      "id": "home_loans",
+      "label": "Home loans",
+      "brink": 4,
+      "eligible": 2,
+      "unhappy": 10,
+      "awaiting_io": 3,
+      "at_risk": 16,
+      "open": 19,
+      "received": 43
+     },
+     {
+      "id": "auto_loans",
+      "label": "Auto and two-wheeler loans",
+      "brink": 1,
+      "eligible": 2,
+      "unhappy": 5,
+      "awaiting_io": 0,
+      "at_risk": 8,
+      "open": 12,
+      "received": 45
+     },
+     {
+      "id": "insurance",
+      "label": "Insurance (bank-sold)",
+      "brink": 7,
+      "eligible": 10,
+      "unhappy": 27,
+      "awaiting_io": 6,
+      "at_risk": 44,
+      "open": 53,
+      "received": 156
+     },
+     {
+      "id": "digital",
+      "label": "Digital (app and NetBanking)",
+      "brink": 1,
+      "eligible": 1,
+      "unhappy": 7,
+      "awaiting_io": 2,
+      "at_risk": 9,
+      "open": 13,
+      "received": 58
+     }
+    ],
+    "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file."
    }
   },
   "30d": {
@@ -14279,6 +15855,13 @@
    "brief": {
     "needs_you": [
      {
+      "business": "bank",
+      "business_label": "All businesses",
+      "issue": "Ombudsman watch",
+      "kind": "ombudsman",
+      "text": "21 complaints have 3 days or fewer to the 30-day reply limit; 141 are already eligible to approach the RBI Ombudsman (up 10 on the previous period end)."
+     },
+     {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Complaints closed without resolution",
@@ -14289,12 +15872,6 @@
       "business_label": "Cards",
       "issue": "Card variant migration and forced upgrade",
       "text": "58 posts with escalation language; 102 internal cases open over 48 hours."
-     },
-     {
-      "business": "personal_loans",
-      "business_label": "Personal loans",
-      "issue": "Loan processing and disbursal",
-      "text": "33 posts with escalation language; 37 internal cases open over 48 hours."
      }
     ],
     "building": [
@@ -14337,7 +15914,7 @@
       "text": "Negative share steady at 80% (78% before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 30 days (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 30 days (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 14,
@@ -18825,7 +20402,794 @@
        "escalation": 12
       }
      ]
+    },
+    "ombudsman": {
+     "provenance": "internal",
+     "as_of": "2026-09-29T08:30:00+05:30",
+     "prev_as_of": "2026-08-30T08:30:00+05:30",
+     "now": {
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "buckets": {
+       "8-10": 1,
+       "4-7": 3,
+       "0-3": 3
+      },
+      "received": 287
+     },
+     "prev": {
+      "brink": 12,
+      "eligible": 14,
+      "unhappy": 11,
+      "awaiting_io": 8,
+      "at_risk": 37,
+      "open": 75,
+      "buckets": {
+       "8-10": 8,
+       "4-7": 1,
+       "0-3": 3
+      },
+      "received": 181
+     },
+     "delta": {
+      "brink": -5,
+      "eligible": 0,
+      "unhappy": 11,
+      "awaiting_io": 7,
+      "at_risk": 6,
+      "open": 3
+     },
+     "became_eligible": 31,
+     "on_lists": {
+      "at_risk": 5,
+      "by_list": {
+       "priority_a": 2,
+       "priority_b": 3,
+       "uhni": 2
+      },
+      "labels": {
+       "priority_a": "Ultra sensitive",
+       "priority_b": "RBI & Government",
+       "uhni": "Ultra HNI"
+      }
+     },
+     "by_business": [
+      {
+       "id": "cards",
+       "label": "Cards",
+       "brink": 7,
+       "eligible": 14,
+       "unhappy": 22,
+       "awaiting_io": 15,
+       "at_risk": 43,
+       "open": 78,
+       "received": 287
+      }
+     ],
+     "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file.",
+     "categories": [
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "brink": 2,
+       "eligible": 4,
+       "unhappy": 9,
+       "awaiting_io": 2,
+       "at_risk": 15,
+       "subcategories": [
+        {
+         "id": "rewards_value",
+         "label": "Rewards value, devaluation and caps",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 8,
+         "awaiting_io": 0,
+         "at_risk": 11
+        },
+        {
+         "id": "reward_redemption",
+         "label": "Reward redemption and vouchers",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "brink": 2,
+       "eligible": 2,
+       "unhappy": 4,
+       "awaiting_io": 4,
+       "at_risk": 8,
+       "subcategories": [
+        {
+         "id": "card_variant_migration",
+         "label": "Card variant migration and forced upgrade",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 4
+        },
+        {
+         "id": "card_eligibility_upgrade",
+         "label": "Card eligibility, upgrade and LTF requests",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 3,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_application",
+         "label": "Card application, rejection and verification",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        },
+        {
+         "id": "kyc_updates",
+         "label": "KYC, re-KYC and profile updates",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "brink": 1,
+       "eligible": 2,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 5,
+       "subcategories": [
+        {
+         "id": "card_fees_charges",
+         "label": "Card fees and charges",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 5
+        },
+        {
+         "id": "fees_charges_bank",
+         "label": "Bank charges and hidden fees",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_limit",
+         "label": "Credit limit",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        }
+       ]
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "brink": 1,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "refund_delay",
+         "label": "Refunds not credited",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "failed_txn_reversal",
+         "label": "Failed transaction reversal",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "dispute_chargeback",
+         "label": "Disputes and chargebacks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "merchant_pos",
+         "label": "Merchant QR, POS and sound box",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unauthorised_txn",
+         "label": "Unauthorised transactions",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "card_dispatch",
+         "label": "Card dispatch and delivery",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "closure_requests",
+         "label": "Account and card closure requests",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 1
+        }
+       ]
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 0,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "rm_service",
+         "label": "Relationship manager service",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "care_unreachable",
+         "label": "Customer care unreachable or unhelpful",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "branch_service",
+         "label": "Branch service and staff behaviour",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unsolicited_calls",
+         "label": "Unsolicited sales calls and use of data",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "fraud_scam",
+         "label": "Fraud and scam calls",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "phishing",
+         "label": "Phishing messages and fake links",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "brink": 0,
+       "eligible": 1,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 2,
+       "subcategories": [
+        {
+         "id": "login_mpin",
+         "label": "Login, MPIN and registration",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "app_usability",
+         "label": "App features and usability",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "app_speed_crash",
+         "label": "App speed, loading and crashes",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "brink": 1,
+       "eligible": 1,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 4,
+       "subcategories": [
+        {
+         "id": "account_freeze",
+         "label": "Account debit freezes and blocks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "account_opening",
+         "label": "Account opening and product conversion",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "loan_servicing",
+         "label": "EMI and loan account servicing",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "atm_debit_card",
+         "label": "Debit card and ATM",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 1
+        },
+        {
+         "id": "nri_forex",
+         "label": "NRI and forex services",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "upi_failures",
+         "label": "UPI payments failing or pending",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "mis_selling",
+         "label": "Mis-selling and bundled products",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "credit_report",
+         "label": "CIBIL and credit-report correction",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "investments_wealth",
+         "label": "Investments, mutual funds and SmartWealth",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      }
+     ],
+     "save_list": [
+      {
+       "id": "CMP-03615",
+       "customer": "XXXX2666",
+       "category": "Rewards and redemption",
+       "issue": "Rewards value, devaluation and caps",
+       "state": "eligible",
+       "days_left": null,
+       "score": 71,
+       "reason": "Unhappy with the reply (contacted again); 2 repeat contacts; 3 channels; on the bank's list.",
+       "owner": "Cards · Rewards lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-07772",
+       "customer": "XXXX5715",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 60,
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
+       "owner": "Cards · Pricing lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
+       "score": 60,
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-07923",
+       "customer": "XXXX4672",
+       "category": "Upgrades, variants and eligibility",
+       "issue": "Card eligibility, upgrade and LTF requests",
+       "state": "eligible",
+       "days_left": null,
+       "score": 58,
+       "reason": "Unhappy with the reply (contacted again); 1 repeat contact; 2 channels; on the bank's list.",
+       "owner": "Cards · Product lead",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-03843",
+       "customer": "XXXX1919",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 53,
+       "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
+       "owner": "Cards · Acquisition lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
+       "state": "eligible",
+       "days_left": null,
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
+       "lists": []
+      }
+     ]
     }
+   },
+   "ombudsman": {
+    "provenance": "internal",
+    "as_of": "2026-09-29T08:30:00+05:30",
+    "prev_as_of": "2026-08-30T08:30:00+05:30",
+    "now": {
+     "brink": 75,
+     "eligible": 141,
+     "unhappy": 328,
+     "awaiting_io": 143,
+     "at_risk": 544,
+     "open": 823,
+     "buckets": {
+      "8-10": 30,
+      "4-7": 24,
+      "0-3": 21
+     },
+     "received": 2517
+    },
+    "prev": {
+     "brink": 125,
+     "eligible": 131,
+     "unhappy": 126,
+     "awaiting_io": 55,
+     "at_risk": 382,
+     "open": 758,
+     "buckets": {
+      "8-10": 47,
+      "4-7": 42,
+      "0-3": 36
+     },
+     "received": 1652
+    },
+    "delta": {
+     "brink": -50,
+     "eligible": 10,
+     "unhappy": 202,
+     "awaiting_io": 88,
+     "at_risk": 162,
+     "open": 65
+    },
+    "became_eligible": 399,
+    "on_lists": {
+     "at_risk": 46,
+     "by_list": {
+      "priority_a": 9,
+      "priority_b": 30,
+      "uhni": 26
+     },
+     "labels": {
+      "priority_a": "Ultra sensitive",
+      "priority_b": "RBI & Government",
+      "uhni": "Ultra HNI"
+     }
+    },
+    "by_business": [
+     {
+      "id": "cards",
+      "label": "Cards",
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "received": 287
+     },
+     {
+      "id": "payzapp",
+      "label": "PayZapp and UPI",
+      "brink": 4,
+      "eligible": 6,
+      "unhappy": 20,
+      "awaiting_io": 6,
+      "at_risk": 30,
+      "open": 43,
+      "received": 127
+     },
+     {
+      "id": "accounts",
+      "label": "Accounts and deposits",
+      "brink": 49,
+      "eligible": 102,
+      "unhappy": 224,
+      "awaiting_io": 105,
+      "at_risk": 375,
+      "open": 572,
+      "received": 1681
+     },
+     {
+      "id": "personal_loans",
+      "label": "Personal loans",
+      "brink": 2,
+      "eligible": 4,
+      "unhappy": 13,
+      "awaiting_io": 6,
+      "at_risk": 19,
+      "open": 33,
+      "received": 120
+     },
+     {
+      "id": "home_loans",
+      "label": "Home loans",
+      "brink": 4,
+      "eligible": 2,
+      "unhappy": 10,
+      "awaiting_io": 3,
+      "at_risk": 16,
+      "open": 19,
+      "received": 43
+     },
+     {
+      "id": "auto_loans",
+      "label": "Auto and two-wheeler loans",
+      "brink": 1,
+      "eligible": 2,
+      "unhappy": 5,
+      "awaiting_io": 0,
+      "at_risk": 8,
+      "open": 12,
+      "received": 45
+     },
+     {
+      "id": "insurance",
+      "label": "Insurance (bank-sold)",
+      "brink": 7,
+      "eligible": 10,
+      "unhappy": 27,
+      "awaiting_io": 6,
+      "at_risk": 44,
+      "open": 53,
+      "received": 156
+     },
+     {
+      "id": "digital",
+      "label": "Digital (app and NetBanking)",
+      "brink": 1,
+      "eligible": 1,
+      "unhappy": 7,
+      "awaiting_io": 2,
+      "at_risk": 9,
+      "open": 13,
+      "received": 58
+     }
+    ],
+    "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file."
    }
   },
   "all": {
@@ -20414,6 +22778,13 @@
    "brief": {
     "needs_you": [
      {
+      "business": "bank",
+      "business_label": "All businesses",
+      "issue": "Ombudsman watch",
+      "kind": "ombudsman",
+      "text": "21 complaints have 3 days or fewer to the 30-day reply limit; 141 are already eligible to approach the RBI Ombudsman (up 65 on the previous period end)."
+     },
+     {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "General dissatisfaction",
@@ -20424,12 +22795,6 @@
       "business_label": "Cards",
       "issue": "Rewards value, devaluation and caps",
       "text": "130 posts with escalation language; 118 internal cases open over 48 hours."
-     },
-     {
-      "business": "personal_loans",
-      "business_label": "Personal loans",
-      "issue": "Recovery and collection conduct",
-      "text": "58 posts with escalation language; 44 internal cases open over 48 hours."
      }
     ],
     "building": [
@@ -20472,7 +22837,7 @@
       "text": "Negative share steady at 68% (66% before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more second half vs first half of the window (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\"."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more second half vs first half of the window (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 47,
@@ -27298,7 +29663,794 @@
        "escalation": 13
       }
      ]
+    },
+    "ombudsman": {
+     "provenance": "internal",
+     "as_of": "2026-09-29T08:30:00+05:30",
+     "prev_as_of": "2026-08-15T04:15:00+05:30",
+     "now": {
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "buckets": {
+       "8-10": 1,
+       "4-7": 3,
+       "0-3": 3
+      },
+      "received": 287
+     },
+     "prev": {
+      "brink": 13,
+      "eligible": 7,
+      "unhappy": 8,
+      "awaiting_io": 6,
+      "at_risk": 28,
+      "open": 66,
+      "buckets": {
+       "8-10": 4,
+       "4-7": 4,
+       "0-3": 5
+      },
+      "received": 136
+     },
+     "delta": {
+      "brink": -6,
+      "eligible": 7,
+      "unhappy": 14,
+      "awaiting_io": 9,
+      "at_risk": 15,
+      "open": 12
+     },
+     "became_eligible": 64,
+     "on_lists": {
+      "at_risk": 5,
+      "by_list": {
+       "priority_a": 2,
+       "priority_b": 3,
+       "uhni": 2
+      },
+      "labels": {
+       "priority_a": "Ultra sensitive",
+       "priority_b": "RBI & Government",
+       "uhni": "Ultra HNI"
+      }
+     },
+     "by_business": [
+      {
+       "id": "cards",
+       "label": "Cards",
+       "brink": 7,
+       "eligible": 14,
+       "unhappy": 22,
+       "awaiting_io": 15,
+       "at_risk": 43,
+       "open": 78,
+       "received": 287
+      }
+     ],
+     "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file.",
+     "categories": [
+      {
+       "id": "rewards",
+       "label": "Rewards and redemption",
+       "brink": 2,
+       "eligible": 4,
+       "unhappy": 9,
+       "awaiting_io": 2,
+       "at_risk": 15,
+       "subcategories": [
+        {
+         "id": "rewards_value",
+         "label": "Rewards value, devaluation and caps",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 8,
+         "awaiting_io": 0,
+         "at_risk": 11
+        },
+        {
+         "id": "reward_redemption",
+         "label": "Reward redemption and vouchers",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "upgrades",
+       "label": "Upgrades, variants and eligibility",
+       "brink": 2,
+       "eligible": 2,
+       "unhappy": 4,
+       "awaiting_io": 4,
+       "at_risk": 8,
+       "subcategories": [
+        {
+         "id": "card_variant_migration",
+         "label": "Card variant migration and forced upgrade",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 4
+        },
+        {
+         "id": "card_eligibility_upgrade",
+         "label": "Card eligibility, upgrade and LTF requests",
+         "brink": 1,
+         "eligible": 1,
+         "unhappy": 2,
+         "awaiting_io": 3,
+         "at_risk": 4
+        }
+       ]
+      },
+      {
+       "id": "applications",
+       "label": "Applications and verification",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_application",
+         "label": "Card application, rejection and verification",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        },
+        {
+         "id": "kyc_updates",
+         "label": "KYC, re-KYC and profile updates",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fees",
+       "label": "Fees and charges",
+       "brink": 1,
+       "eligible": 2,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 5,
+       "subcategories": [
+        {
+         "id": "card_fees_charges",
+         "label": "Card fees and charges",
+         "brink": 1,
+         "eligible": 2,
+         "unhappy": 2,
+         "awaiting_io": 1,
+         "at_risk": 5
+        },
+        {
+         "id": "fees_charges_bank",
+         "label": "Bank charges and hidden fees",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "limits",
+       "label": "Limits",
+       "brink": 0,
+       "eligible": 2,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 3,
+       "subcategories": [
+        {
+         "id": "card_limit",
+         "label": "Credit limit",
+         "brink": 0,
+         "eligible": 2,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 3
+        }
+       ]
+      },
+      {
+       "id": "disputes",
+       "label": "Disputes, refunds and reversals",
+       "brink": 1,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "refund_delay",
+         "label": "Refunds not credited",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "failed_txn_reversal",
+         "label": "Failed transaction reversal",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "dispute_chargeback",
+         "label": "Disputes and chargebacks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "merchant_pos",
+         "label": "Merchant QR, POS and sound box",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unauthorised_txn",
+         "label": "Unauthorised transactions",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "delivery",
+       "label": "Card delivery",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "card_dispatch",
+         "label": "Card dispatch and delivery",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "closure",
+       "label": "Closure",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "closure_requests",
+         "label": "Account and card closure requests",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 1,
+         "at_risk": 1
+        }
+       ]
+      },
+      {
+       "id": "service",
+       "label": "Service and complaint handling",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 1,
+       "awaiting_io": 0,
+       "at_risk": 1,
+       "subcategories": [
+        {
+         "id": "rm_service",
+         "label": "Relationship manager service",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "care_unreachable",
+         "label": "Customer care unreachable or unhelpful",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "branch_service",
+         "label": "Branch service and staff behaviour",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "unsolicited_calls",
+         "label": "Unsolicited sales calls and use of data",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "fraud",
+       "label": "Fraud and security",
+       "brink": 0,
+       "eligible": 0,
+       "unhappy": 0,
+       "awaiting_io": 0,
+       "at_risk": 0,
+       "subcategories": [
+        {
+         "id": "fraud_scam",
+         "label": "Fraud and scam calls",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "phishing",
+         "label": "Phishing messages and fake links",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "digital",
+       "label": "App and online card servicing",
+       "brink": 0,
+       "eligible": 1,
+       "unhappy": 1,
+       "awaiting_io": 1,
+       "at_risk": 2,
+       "subcategories": [
+        {
+         "id": "login_mpin",
+         "label": "Login, MPIN and registration",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "app_usability",
+         "label": "App features and usability",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 1,
+         "at_risk": 1
+        },
+        {
+         "id": "app_speed_crash",
+         "label": "App speed, loading and crashes",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      },
+      {
+       "id": "other",
+       "label": "Other",
+       "brink": 1,
+       "eligible": 1,
+       "unhappy": 2,
+       "awaiting_io": 2,
+       "at_risk": 4,
+       "subcategories": [
+        {
+         "id": "account_freeze",
+         "label": "Account debit freezes and blocks",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "account_opening",
+         "label": "Account opening and product conversion",
+         "brink": 1,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "loan_servicing",
+         "label": "EMI and loan account servicing",
+         "brink": 0,
+         "eligible": 1,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 1
+        },
+        {
+         "id": "atm_debit_card",
+         "label": "Debit card and ATM",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 1,
+         "awaiting_io": 2,
+         "at_risk": 1
+        },
+        {
+         "id": "nri_forex",
+         "label": "NRI and forex services",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "upi_failures",
+         "label": "UPI payments failing or pending",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "mis_selling",
+         "label": "Mis-selling and bundled products",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "credit_report",
+         "label": "CIBIL and credit-report correction",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        },
+        {
+         "id": "investments_wealth",
+         "label": "Investments, mutual funds and SmartWealth",
+         "brink": 0,
+         "eligible": 0,
+         "unhappy": 0,
+         "awaiting_io": 0,
+         "at_risk": 0
+        }
+       ]
+      }
+     ],
+     "save_list": [
+      {
+       "id": "CMP-03615",
+       "customer": "XXXX2666",
+       "category": "Rewards and redemption",
+       "issue": "Rewards value, devaluation and caps",
+       "state": "eligible",
+       "days_left": null,
+       "score": 71,
+       "reason": "Unhappy with the reply (contacted again); 2 repeat contacts; 3 channels; on the bank's list.",
+       "owner": "Cards · Rewards lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-07772",
+       "customer": "XXXX5715",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 60,
+       "reason": "Unhappy with the reply (escalation language); on the bank's list.",
+       "owner": "Cards · Pricing lead",
+       "lists": [
+        "Ultra sensitive",
+        "Ultra HNI"
+       ]
+      },
+      {
+       "id": "CMP-06388",
+       "customer": "XXXX4840",
+       "category": "Disputes, refunds and reversals",
+       "issue": "Refunds not credited",
+       "state": "brink",
+       "days_left": 1,
+       "score": 60,
+       "reason": "No reply, 1 day to day 30; on the bank's list; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-07923",
+       "customer": "XXXX4672",
+       "category": "Upgrades, variants and eligibility",
+       "issue": "Card eligibility, upgrade and LTF requests",
+       "state": "eligible",
+       "days_left": null,
+       "score": 58,
+       "reason": "Unhappy with the reply (contacted again); 1 repeat contact; 2 channels; on the bank's list.",
+       "owner": "Cards · Product lead",
+       "lists": [
+        "RBI & Government"
+       ]
+      },
+      {
+       "id": "CMP-10415",
+       "customer": "XXXX3119",
+       "category": "Rewards and redemption",
+       "issue": "Reward redemption and vouchers",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 77 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-03429",
+       "customer": "XXXX2090",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 56 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-10119",
+       "customer": "XXXX1725",
+       "category": "Limits",
+       "issue": "Credit limit",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 49 days: eligible; escalation language; awaiting IO review.",
+       "owner": "Internal Ombudsman office",
+       "lists": []
+      },
+      {
+       "id": "CMP-04567",
+       "customer": "XXXX4277",
+       "category": "Fees and charges",
+       "issue": "Card fees and charges",
+       "state": "eligible",
+       "days_left": null,
+       "score": 55,
+       "reason": "No reply for 46 days: eligible; escalation language.",
+       "owner": "Cards · Pricing lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-03843",
+       "customer": "XXXX1919",
+       "category": "Applications and verification",
+       "issue": "Card application, rejection and verification",
+       "state": "eligible",
+       "days_left": null,
+       "score": 53,
+       "reason": "No reply for 50 days: eligible; 1 repeat contact; 2 channels.",
+       "owner": "Cards · Acquisition lead",
+       "lists": []
+      },
+      {
+       "id": "CMP-10764",
+       "customer": "XXXX3167",
+       "category": "App and online card servicing",
+       "issue": "Login, MPIN and registration",
+       "state": "eligible",
+       "days_left": null,
+       "score": 50,
+       "reason": "Unhappy with the reply (escalation language, reopened).",
+       "owner": "Cards · Digital lead",
+       "lists": []
+      }
+     ]
     }
+   },
+   "ombudsman": {
+    "provenance": "internal",
+    "as_of": "2026-09-29T08:30:00+05:30",
+    "prev_as_of": "2026-08-15T04:15:00+05:30",
+    "now": {
+     "brink": 75,
+     "eligible": 141,
+     "unhappy": 328,
+     "awaiting_io": 143,
+     "at_risk": 544,
+     "open": 823,
+     "buckets": {
+      "8-10": 30,
+      "4-7": 24,
+      "0-3": 21
+     },
+     "received": 2517
+    },
+    "prev": {
+     "brink": 114,
+     "eligible": 76,
+     "unhappy": 73,
+     "awaiting_io": 27,
+     "at_risk": 263,
+     "open": 654,
+     "buckets": {
+      "8-10": 35,
+      "4-7": 49,
+      "0-3": 30
+     },
+     "received": 1241
+    },
+    "delta": {
+     "brink": -39,
+     "eligible": 65,
+     "unhappy": 255,
+     "awaiting_io": 116,
+     "at_risk": 281,
+     "open": 169
+    },
+    "became_eligible": 761,
+    "on_lists": {
+     "at_risk": 46,
+     "by_list": {
+      "priority_a": 9,
+      "priority_b": 30,
+      "uhni": 26
+     },
+     "labels": {
+      "priority_a": "Ultra sensitive",
+      "priority_b": "RBI & Government",
+      "uhni": "Ultra HNI"
+     }
+    },
+    "by_business": [
+     {
+      "id": "cards",
+      "label": "Cards",
+      "brink": 7,
+      "eligible": 14,
+      "unhappy": 22,
+      "awaiting_io": 15,
+      "at_risk": 43,
+      "open": 78,
+      "received": 287
+     },
+     {
+      "id": "payzapp",
+      "label": "PayZapp and UPI",
+      "brink": 4,
+      "eligible": 6,
+      "unhappy": 20,
+      "awaiting_io": 6,
+      "at_risk": 30,
+      "open": 43,
+      "received": 127
+     },
+     {
+      "id": "accounts",
+      "label": "Accounts and deposits",
+      "brink": 49,
+      "eligible": 102,
+      "unhappy": 224,
+      "awaiting_io": 105,
+      "at_risk": 375,
+      "open": 572,
+      "received": 1681
+     },
+     {
+      "id": "personal_loans",
+      "label": "Personal loans",
+      "brink": 2,
+      "eligible": 4,
+      "unhappy": 13,
+      "awaiting_io": 6,
+      "at_risk": 19,
+      "open": 33,
+      "received": 120
+     },
+     {
+      "id": "home_loans",
+      "label": "Home loans",
+      "brink": 4,
+      "eligible": 2,
+      "unhappy": 10,
+      "awaiting_io": 3,
+      "at_risk": 16,
+      "open": 19,
+      "received": 43
+     },
+     {
+      "id": "auto_loans",
+      "label": "Auto and two-wheeler loans",
+      "brink": 1,
+      "eligible": 2,
+      "unhappy": 5,
+      "awaiting_io": 0,
+      "at_risk": 8,
+      "open": 12,
+      "received": 45
+     },
+     {
+      "id": "insurance",
+      "label": "Insurance (bank-sold)",
+      "brink": 7,
+      "eligible": 10,
+      "unhappy": 27,
+      "awaiting_io": 6,
+      "at_risk": 44,
+      "open": 53,
+      "received": 156
+     },
+     {
+      "id": "digital",
+      "label": "Digital (app and NetBanking)",
+      "brink": 1,
+      "eligible": 1,
+      "unhappy": 7,
+      "awaiting_io": 2,
+      "at_risk": 9,
+      "open": 13,
+      "received": 58
+     }
+    ],
+    "rules": "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. Eligibility and risk only: LisN never predicts that a customer will file."
    }
   }
  }

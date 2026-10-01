@@ -1,0 +1,160 @@
+"""Complaint register for the Ombudsman watch (docs/demo-rebuild/ombudsman_watch_design.md). Internal · illustrative.
+
+Writes data/seed/internal_v3/complaints.jsonl: one record per formal complaint. It is deterministic: every random draw
+comes from a per-complaint generator seeded with SEED and the complaint's id.
+
+What is taken from the existing sample (interactions.jsonl), unchanged:
+  the complaint     every contact the bank measured against the 30-day complaint-resolution rule
+                    (deliverable "complaint_resolution"), except IVR bot calls
+  received_at       the contact's created_at
+  final_reply_at    the date the thread was closed, or the date a resolution was sent (waiting on the customer);
+                    none while the thread is open
+  issue             the customer's most recent earlier contact on the same product (the issue being escalated), or,
+                    when there is none, a draw from that product's own issue mix
+  contacts          the customer's later contacts: on the same product, or with escalation language on any product;
+                    "same_issue" marks a negative contact on the same issue (the complaint's issue, or complaint handling)
+What is synthetic (assumptions in MORNING_DECISIONS D26):
+  outcome           resolved / partly rejected / rejected, for complaints with a final reply
+  decision_at       when the bank decided to partly or fully reject, which must be reviewed by the Internal Ombudsman
+                    before the final reply (RBI directions, 16 Jan 2026)
+  io_reviewed_at    when that review finished; for an open complaint with a decision it may still be pending
+  reopened_at       the customer reopening the complaint after the reply
+"""
+
+from __future__ import annotations
+
+import collections
+import datetime as dt
+import json
+import random
+
+from common import PERIOD_END, SEED, SEED_V3, load
+
+END = dt.datetime.fromisoformat(PERIOD_END)
+LISTS = ("priority_a", "priority_b", "uhni")  # the bank's own lists (the derived "multi" cohort is not a list)
+# Escalation language on a contact: an RBI or Ombudsman named, or legal / consumer-court language.
+ESC_IMPACT = {"regulator_named": "RBI or Ombudsman named", "legal_language": "Consumer court or legal notice"}
+ESC_RUNG = {"rbi_ombudsman": "RBI or Ombudsman named", "io": "RBI or Ombudsman named"}
+
+# Assumed outcome mix for replied complaints (MORNING_DECISIONS D26). Negative contacts lean to rejection.
+OUTCOME_MIX = {"base": (0.70, 0.18, 0.12), "negative": (0.62, 0.22, 0.16)}
+# Share of open complaints on which the bank has already decided to partly or fully reject (awaiting IO review).
+OPEN_DECISION = {"base": 0.24, "negative": 0.30}
+# Chance the customer reopens the complaint after the reply, by outcome.
+REOPEN = {"resolved": 0.02, "partly_rejected": 0.12, "rejected": 0.18}
+
+
+def ts(s):
+    return dt.datetime.fromisoformat(s) if s else None
+
+
+def iso(t):
+    return t.isoformat(timespec="minutes") if t else None
+
+
+def escalation_terms(r) -> list[str]:
+    terms = {ESC_IMPACT[h] for h in r["high_impact"] if h in ESC_IMPACT}
+    if r.get("escalation") in ESC_RUNG:
+        terms.add(ESC_RUNG[r["escalation"]])
+    return sorted(terms)
+
+
+def main():
+    inter = [json.loads(line) for line in open(SEED_V3 / "interactions.jsonl", encoding="utf-8")]
+    inter.sort(key=lambda r: (r["created_at"], r["id"]))
+    customers = {c["masked_id"]: c for c in load(SEED_V3 / "customers.json")}
+    by_cust = collections.defaultdict(list)
+    for r in inter:
+        by_cust[r["masked_id"]].append(r)
+    # Each product's own issue mix, from negative contacts that are not the complaint itself.
+    mix = collections.defaultdict(collections.Counter)
+    for r in inter:
+        if r["theme"] != "complaint_handling" and r["sentiment"] == "negative":
+            mix[r["product"]][r["theme"]] += 1
+
+    out = []
+    for r in inter:
+        if r["deliverable"] != "complaint_resolution" or r["channel"] == "ivr_bot":
+            continue
+        rng = random.Random(f"{SEED}:complaint:{r['id']}")
+        received = ts(r["created_at"])
+        earlier = [x for x in by_cust[r["masked_id"]]
+                   if x["product"] == r["product"] and x["created_at"] < r["created_at"] and x["theme"] != "complaint_handling"]
+        if earlier:
+            issue = earlier[-1]["theme"]
+        else:
+            themes, weights = zip(*sorted(mix[r["product"]].items()))
+            issue = rng.choices(themes, weights=weights)[0]
+
+        if r["status"] == "closed":
+            reply = ts(r["closed_at"])
+        elif r["status"] == "waiting_on_customer":
+            reply = ts(r["resolution_sent_at"])
+        else:
+            reply = None
+        neg = "negative" if r["sentiment"] == "negative" else "base"
+        outcome = decision = io_done = reopened = None
+        if reply:
+            outcome = rng.choices(["resolved", "partly_rejected", "rejected"], weights=OUTCOME_MIX[neg])[0]
+            # A rejection goes through Internal Ombudsman review first, so it cannot come back within two days:
+            # a reply that fast is a resolution.
+            if reply - received < dt.timedelta(days=2):
+                outcome = "resolved"
+            if outcome != "resolved":
+                span = reply - received
+                decision = received + span * rng.uniform(0.55, 0.80)
+                io_done = decision + (reply - decision) * rng.uniform(0.5, 0.9)
+            if rng.random() < REOPEN[outcome]:
+                t = reply + dt.timedelta(days=rng.uniform(1, 15))
+                reopened = t if t <= END else None
+        else:
+            age = END - received
+            if age >= dt.timedelta(days=2) and rng.random() < OPEN_DECISION[neg]:
+                outcome = rng.choices(["partly_rejected", "rejected"], weights=(0.6, 0.4))[0]
+                decision = received + age * rng.uniform(0.35, 0.80)
+                # The review is pending at the snapshot; it was never done before the brief.
+        contacts = []
+        for x in by_cust[r["masked_id"]]:
+            if x["id"] == r["id"] or x["created_at"] <= r["created_at"]:
+                continue
+            terms = escalation_terms(x)
+            same_product = x["product"] == r["product"]
+            if not same_product and not terms:
+                continue
+            contacts.append({
+                "at": x["created_at"],
+                "channel": x["channel"],
+                # A later contact on the same issue counts as a sign the customer is unhappy only when it is negative.
+                "same_issue": same_product and x["theme"] in (issue, "complaint_handling") and x["sentiment"] == "negative",
+                "escalation": terms,
+            })
+        cust = customers.get(r["masked_id"], {})
+        out.append({
+            "id": "CMP-" + r["id"].split("-", 1)[1],
+            "source_id": r["id"],
+            "masked_id": r["masked_id"],
+            "product": r["product"],
+            "theme": issue,
+            "channel": r["channel"],
+            "received_at": r["created_at"],
+            "final_reply_at": iso(reply),
+            "outcome": outcome,
+            "decision_at": iso(decision),
+            "io_reviewed_at": iso(io_done),
+            "reopened_at": iso(reopened),
+            "escalation": escalation_terms(r),
+            "lists": [c for c in cust.get("cohorts", []) if c in LISTS],
+            "contacts": contacts,
+        })
+    with open(SEED_V3 / "complaints.jsonl", "w", encoding="utf-8") as f:
+        for c in out:
+            f.write(json.dumps(c, ensure_ascii=False) + "\n")
+    replied = [c for c in out if c["final_reply_at"]]
+    print("complaints", len(out), "replied", len(replied),
+          "outcomes", dict(collections.Counter(c["outcome"] for c in replied)),
+          "open with a decision", sum(1 for c in out if not c["final_reply_at"] and c["decision_at"]),
+          "reopened", sum(1 for c in out if c["reopened_at"]))
+
+
+if __name__ == "__main__":
+    main()

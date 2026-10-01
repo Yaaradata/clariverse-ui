@@ -58,6 +58,7 @@ from aggregate import quotable  # noqa: E402  (a quote naming a person is never 
 from pii_names import ALLEGATION  # noqa: E402  (nor, as an anecdote, one that makes an allegation)
 from public_v3 import PRODUCTS as PUB_PRODUCTS  # noqa: E402
 from public_v3 import product_of  # noqa: E402
+import ombudsman_v3 as omb  # noqa: E402  (Ombudsman watch: snapshots of the complaint register)
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
@@ -934,6 +935,9 @@ def main():
     pub = load_public()
     W = source_weights(pub)
     labels = theme_labels()
+    complaints = omb.load_complaints()
+    cards_complaints = [c for c in complaints if c["product"] == "cards"]
+    products = [(pid, PRODUCT_LABEL[pid]) for pid in PRODUCT_ORDER]
     out = {"end": PERIOD_END, "public_end": PUBLIC_END.isoformat(), "default": DEFAULT_PERIOD,
            "dominance_limit": SOURCE_DOMINANCE_LIMIT, "source_weights": {s: round(v, 4) for s, v in W.items()}, "periods": {}}
     for p in PERIODS:
@@ -960,8 +964,19 @@ def main():
             "brief": brief(biz, pub, w, W, labels, p),
             "md_mail": md_mail(inter, w, labels),
             "cards": cards_view(inter, customers, pub, w, W, labels),
+            "ombudsman": omb.block(complaints, w, products),
         }
         cp = out["periods"][p["id"]]
+        # Ombudsman watch (design: ombudsman_watch_design.md). Cards: the same block scoped to Cards, plus the risk by
+        # category and the save list. A material risk leads the brief's "What needs you" (at most three items).
+        cp["cards"]["ombudsman"] = {**omb.block(cards_complaints, w, [("cards", PRODUCT_LABEL["cards"])]),
+                                    **omb.cards_extra(complaints, w, labels)}
+        item = omb.brief_item(cp["ombudsman"])
+        if item:
+            cp["brief"]["needs_you"] = [item, *cp["brief"]["needs_you"]][:3]
+        cp["brief"]["rules"] += (
+            " An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply "
+            "limit, or more complaints are already eligible than at the previous period end.")
         print(p["id"], "internal", internal["volume"], "external", external["volume"], "lists",
               [(x["id"], x["volume"], x["open"], x["not_responded_48h"]) for x in cp["customer_pulse"]["lists"]],
               "mix", external["source_mix"])
