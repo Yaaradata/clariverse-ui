@@ -312,3 +312,16 @@ CARDS_CATEGORIES = [
      "themes": ["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "netbanking", "statements_documents"]},
 ]
 CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Cards · CX lead", "tat": False, "themes": []}
+
+
+def inr(n: int) -> str:
+    """A count with Indian digit grouping (1,10,047), for sentences written by the pipeline."""
+    s = str(abs(int(n)))
+    if len(s) > 3:
+        head, tail = s[:-3], s[-3:]
+        parts = []
+        while len(head) > 2:
+            parts.insert(0, head[-2:])
+            head = head[:-2]
+        s = ",".join([p for p in [head, *parts, tail] if p])
+    return ("-" if n < 0 else "") + s

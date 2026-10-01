@@ -243,6 +243,13 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     end = dt.datetime.fromisoformat(per["end"])
     h48 = dt.timedelta(hours=48)
     rs_all = [r for r in inter if r["channel"] in CH]  # IVR bot is not counted on these views
+    # Bank scale (scale_v3.py): every internal figure is a weighted sum of the kept sample rows.
+    W = lambda rs: sum(r["w"] for r in rs)  # noqa: E731
+    CW = lambda ids: sum(customers[m]["cw"] for m in ids)  # noqa: E731
+    scale = load(seed_dir / "scale.json")
+    ok(all(isinstance(r.get("w"), int) and r["w"] >= 1 for r in inter) and all(isinstance(c.get("cw"), int) and c["cw"] >= 1 for c in customers.values()),
+       "bank scale: every kept row and customer carries a whole-number weight")
+    notes = {x["masked_id"]: x for x in load(seed_dir / "rm_notifications.json")}
     for pid, p in per["periods"].items():
         a, b = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
         measurable = b - a > h48
@@ -252,7 +259,7 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
             still = [r for r in vol if r["status"] != "closed" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
             wait = [r for r in still if r.get("resolution_sent_at") and dt.datetime.fromisoformat(r["resolution_sent_at"]) <= b]
             op = [r for r in still if r not in wait]  # waiting on the customer is not open with the bank
-            figs.waiting = len(wait)
+            figs.waiting = W(wait)
             wait_ids = {r["id"] for r in wait}
 
             def waited(r):
@@ -261,7 +268,8 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
                 c = dt.datetime.fromisoformat(r["created_at"])
                 fr = dt.datetime.fromisoformat(r["first_response_at"]) if r["first_response_at"] else None
                 return (fr - c > h48) if fr and fr <= b else (b - c > h48)
-            return len(vol), len(op), (sum(1 for r in vol if waited(r)) if measurable else None)
+            figs.customers = CW({r["masked_id"] for r in vol})
+            return W(vol), W(op), (sum(r["w"] for r in vol if waited(r)) if measurable else None)
 
         for lst in p["customer_pulse"]["lists"]:
             members = {m for m, c in customers.items() if lst["id"] in c["cohorts"]}
@@ -270,6 +278,11 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
                f"[{pid}] {lst['label']}: volume, open and 48-hour wait recomputed ({v}, {o}, {n})")
             ok(figs.waiting == lst["waiting_on_customer"], f"[{pid}] {lst['label']}: waiting on customer recomputed ({figs.waiting})")
             ok(0 <= lst["rm"]["alerted"] <= lst["rm"]["of"] <= lst["members"], f"[{pid}] {lst['label']}: RMs alerted within customers due an alert")
+            ok(lst["members"] == scale["list_sizes"][lst["id"]] and figs.customers == lst["in_contact"] <= lst["members"],
+               f"[{pid}] {lst['label']}: list size from scale.json; customers in contact recomputed ({figs.customers}) and within the list")
+            due = {m for m in members if m in notes}
+            ok((CW({m for m in due if notes[m]["notified_today"]}), CW(due)) == (lst["rm"]["alerted"], lst["rm"]["of"]),
+               f"[{pid}] {lst['label']}: RMs alerted recomputed")
             for k in ("volume", "open", "waiting_on_customer", "not_responded_48h"):
                 chans = [c[k] for c in lst["by_channel"].values()]
                 total = None if any(c is None for c in chans) else sum(chans)
@@ -301,8 +314,8 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
         listed = {m for m, c in customers.items() if any(lst["id"] in c["cohorts"] for lst in p["customer_pulse"]["lists"])}
         ment = [r for r in rs_all if r["channel"] == "social_inbox" and r["masked_id"] in listed
                 and a <= dt.datetime.fromisoformat(r["created_at"]) < b]
-        ok(men["total"] == len(ment) and men["responded"] == sum(1 for r in ment if r.get("mention_replied")),
-           f"[{pid}] High-priority mentions recomputed from the seed ({len(ment)}, replied {men['responded']})")
+        ok(men["total"] == W(ment) and men["responded"] == sum(r["w"] for r in ment if r.get("mention_replied")),
+           f"[{pid}] High-priority mentions recomputed from the seed ({W(ment)}, replied {men['responded']})")
         if pid == "all":
             ok(55 <= 100 * men["responded"] / max(men["total"], 1) <= 70, "High-priority mentions: full-window response rate within 55-70%")
         ok(men["responded"] + men["not_responded"] == men["total"], f"[{pid}] High-priority mentions: responded + not responded = total")
@@ -343,16 +356,18 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     # Across views (follow-up 5): the same status on every V2 screen. The older screens' dials count every channel; the
     # 30 Sep views leave the IVR bot out, so compare on the contacts both count.
     allp = per["periods"]["all"]["cx_pulse"]["internal"]
-    ok(allp["open"] == sum(1 for r in rs_all if r["status"] == "open")
-       and allp["waiting_on_customer"] == sum(1 for r in rs_all if r["status"] == "waiting_on_customer"),
-       "across views: full-window open and waiting on customer = the seed status the older screens count")
+    ok(allp["open"] == sum(r["w"] for r in rs_all if r["status"] == "open")
+       and allp["waiting_on_customer"] == sum(r["w"] for r in rs_all if r["status"] == "waiting_on_customer"),
+       "across views: full-window open and waiting on customer = the weighted seed status")
+    # The drill-down and customer pages (aggregates.json) count the kept sample rows themselves, and say "sample rows".
+    # Same rows, same status: their dials equal the unweighted count of the rows the bank-scale views weight.
     agg = load(seed_dir / "aggregates.json") if (seed_dir / "aggregates.json").exists() else None
     if agg:
-        bot = [r for r in inter if r["channel"] not in CH]
-        ok(agg["dials"]["open"] - sum(1 for r in bot if r["status"] == "open") == allp["open"],
-           "across views: exec dial open (less IVR bot) = CX pulse open, full window")
-        ok(agg["dials"]["waiting_on_customer"] - sum(1 for r in bot if r["status"] == "waiting_on_customer") == allp["waiting_on_customer"],
-           "across views: exec dial waiting on customer (less IVR bot) = CX pulse, full window")
+        ok(agg["dials"]["open"] == sum(1 for r in inter if r["status"] == "open")
+           and agg["dials"]["waiting_on_customer"] == sum(1 for r in inter if r["status"] == "waiting_on_customer"),
+           "across views: sample pages count the same rows, by the same status, that the bank-scale views weight")
+    ok(per["scale"]["sample_rows"] == len(inter) and per["scale"]["list_sizes"] == scale["list_sizes"],
+       "bank scale: periods.json names the sample it is weighted from")
     ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
     ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
     ombudsman_checks(seed_dir, per, inter, ok)
@@ -391,6 +406,7 @@ def ombudsman_checks(seed_dir, per, inter, ok):
     src = {r["id"]: r for r in inter if r["deliverable"] == "complaint_resolution" and r["channel"] != "ivr_bot"}
     ok(len(cs) == len(src) and {c["source_id"] for c in cs} == set(src),
        f"Ombudsman: one complaint per formal complaint contact (IVR bot excluded) ({len(cs)} = {len(src)})")
+    ok(all(c.get("w") == src[c["source_id"]]["w"] for c in cs if c["source_id"] in src), "Ombudsman: each complaint carries its contact's bank-scale weight")
     bad = []
     for c in cs:
         r = src.get(c["source_id"])
@@ -416,8 +432,9 @@ def ombudsman_checks(seed_dir, per, inter, ok):
         for label, blk, scope in (("bank", o, cs), ("Cards", co, [c for c in cs if c["product"] == "cards"])):
             for when, at in (("now", blk["as_of"]), ("prev", blk["prev_as_of"])):
                 T = dt.datetime.fromisoformat(at)
-                sts = [s for c in scope if (s := _omb_state(c, T))]
-                got = {k: sum(1 for s in sts if s[k]) for k in keys}
+                pairs = [(c, s) for c in scope if (s := _omb_state(c, T))]
+                sts = [s for _, s in pairs]
+                got = {k: sum(c["w"] for c, s in pairs if s[k]) for k in keys}
                 ok(all(got[k] == blk[when][k] for k in keys), f"[{pid}] Ombudsman {label} {when} recomputed {got}")
                 ok(all(s["open"] for s in sts if s["at_risk"]) and got["at_risk"] <= got["open"],
                    f"[{pid}] Ombudsman {label} {when}: at risk is a subset of open complaints")

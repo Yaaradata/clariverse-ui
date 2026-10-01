@@ -7,8 +7,6 @@
  */
 
 import { Info, Scale } from "lucide-react";
-import Link from "next/link";
-
 import { fmt, fmtDateTime } from "@/lib/hdfc-v3/format";
 import type {
   CardsOmbudsman,
@@ -16,10 +14,8 @@ import type {
   OmbudsmanRisk,
   Period,
 } from "@/lib/hdfc-v3/periods";
-import { Delta, Dial, titled, withPeriod } from "./Pulse";
+import { Delta, Dial, titled } from "./Pulse";
 import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
-
-const CARDS_VIEW = "/hdfc-pulse/v2/business/cards";
 
 const pct = (a: number, b: number) => (b ? (100 * a) / b : null);
 
@@ -78,7 +74,7 @@ function Split({
 }: {
   title: string;
   info: string;
-  rows: { id: string; label: string; href?: string; r: OmbudsmanRisk }[];
+  rows: { id: string; label: string; r: OmbudsmanRisk }[];
 }) {
   const max = Math.max(...rows.map((x) => x.r.at_risk), 1);
   return (
@@ -111,12 +107,21 @@ function Split({
         </span>
       </div>
       <RiskLegend />
-      {rows.map((x) => {
-        const label = (
+      {rows.map((x) => (
+        <div
+          key={x.id}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr) 42px",
+            gap: 10,
+            alignItems: "center",
+          }}
+        >
           <span
             style={{
               fontSize: 13.5,
-              color: x.href ? C.brandInk : C.textSec,
+              color: C.textSec,
+              minWidth: 0,
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -124,48 +129,19 @@ function Split({
           >
             {x.label}
           </span>
-        );
-        return (
-          <div
-            key={x.id}
+          <RiskBar r={x.r} max={max} />
+          <span
             style={{
-              display: "grid",
-              gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr) 42px",
-              gap: 10,
-              alignItems: "center",
+              fontFamily: MONO,
+              fontSize: 13.5,
+              fontWeight: 700,
+              textAlign: "right",
             }}
           >
-            {x.href ? (
-              <Link
-                href={x.href}
-                style={{
-                  textDecoration: "none",
-                  minWidth: 0,
-                  display: "block",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {label}
-              </Link>
-            ) : (
-              label
-            )}
-            <RiskBar r={x.r} max={max} />
-            <span
-              style={{
-                fontFamily: MONO,
-                fontSize: 13.5,
-                fontWeight: 700,
-                textAlign: "right",
-              }}
-            >
-              {fmt(x.r.at_risk)}
-            </span>
-          </div>
-        );
-      })}
+            {fmt(x.r.at_risk)}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
@@ -183,15 +159,7 @@ export function OmbudsmanWatch({
   const since = `since ${fmtDateTime(o.prev_as_of)}`;
   const split =
     scope === "bank"
-      ? o.by_business.map((x) => ({
-          id: x.id,
-          label: x.label,
-          href: withPeriod(
-            x.id === "cards" ? CARDS_VIEW : `/hdfc-pulse/v2/business/${x.id}`,
-            p,
-          ),
-          r: x,
-        }))
+      ? o.by_business.map((x) => ({ id: x.id, label: x.label, r: x }))
       : [...(o as CardsOmbudsman).categories]
           .filter((c) => c.at_risk)
           .sort((a, b) => b.at_risk - a.at_risk)
@@ -311,7 +279,7 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
     <Tile
       id="save-list"
       title={titled("Save list: call today", p)}
-      sub={`The ${o.save_list.length} Cards complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. LisN recommends; people call.`}
+      sub={`The ${o.save_list.length} Cards complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
       prov="internal"
       tone="red"
     >

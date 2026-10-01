@@ -9,7 +9,13 @@ import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type PointerEvent, type ReactNode, useState } from "react";
 
-import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import {
+  fmt,
+  fmtCompact,
+  fmtDate,
+  fmtPct,
+  fmtSigned,
+} from "@/lib/hdfc-v3/format";
 import {
   CHANNEL_LABEL,
   CHANNEL_ORDER,
@@ -384,7 +390,22 @@ export function Dial({
       }}
     >
       <SmallRing value={value} color={color} centre={centre} />
-      <div style={{ fontFamily: MONO, fontSize: 20, fontWeight: 750 }}>
+      <div
+        style={{
+          fontFamily: MONO,
+          // Bank-scale figures run to seven digits: a long figure steps down so it stays inside its column.
+          fontSize:
+            big.length > 9
+              ? 12.5
+              : big.length > 7
+                ? 13.5
+                : big.length > 6
+                  ? 16.5
+                  : 20,
+          fontWeight: 750,
+          whiteSpace: "nowrap",
+        }}
+      >
         {big}
       </div>
       <div
@@ -812,10 +833,10 @@ function ArcGauge({
       </svg>
       <span
         style={{
-          fontSize: "clamp(9px, 0.7vw, 10.5px)",
+          fontSize: "clamp(8.5px, 0.62vw, 10.5px)",
           color: C.textMut,
           textTransform: "uppercase",
-          letterSpacing: "0.03em",
+          letterSpacing: "0.01em",
           whiteSpace: "nowrap",
         }}
       >
@@ -906,7 +927,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
               title="Volume: contacts on the bank's own channels in the period"
               style={{
                 fontFamily: MONO,
-                fontSize: 30,
+                fontSize: l.volume >= 100000 ? 23 : l.volume >= 10000 ? 26 : 30,
                 fontWeight: 750,
                 lineHeight: 1,
               }}
@@ -964,7 +985,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
             <ArcGauge
               value={share(l.open, l.volume)}
               color={deltaColor(l.open_delta)}
-              centre={fmt(l.open)}
+              centre={fmtCompact(l.open)}
               label="Open"
             >
               <Delta
@@ -999,7 +1020,8 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "baseline",
-              gap: 8,
+              flexWrap: "wrap",
+              gap: "2px 8px",
               borderTop: `1px solid ${C.border}`,
               paddingTop: 8,
             }}
@@ -1850,7 +1872,7 @@ function ExternalSet({
         <Dial
           value={100}
           color={hi ? C.amber : C.cyan}
-          centre={fmt(f.volume)}
+          centre={fmtCompact(f.volume)}
           big={fmt(f.volume)}
           label={hi ? "High impact" : "Signals"}
         />
@@ -2003,7 +2025,7 @@ export function CxPulse({ p }: { p: Period }) {
             <Dial
               value={100}
               color={C.violet}
-              centre={fmt(i.volume)}
+              centre={fmtCompact(i.volume)}
               big={fmt(i.volume)}
               label="Volume"
               sub={<TrendChip pct={i.change_pct} label={p.compare} />}

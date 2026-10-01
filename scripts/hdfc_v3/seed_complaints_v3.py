@@ -132,6 +132,7 @@ def main():
         out.append({
             "id": "CMP-" + r["id"].split("-", 1)[1],
             "source_id": r["id"],
+            "w": r["w"],  # the bank-scale complaints this sample complaint stands for (scale_v3.py)
             "masked_id": r["masked_id"],
             "product": r["product"],
             "theme": issue,

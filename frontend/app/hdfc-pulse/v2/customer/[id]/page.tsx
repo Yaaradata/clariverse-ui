@@ -24,6 +24,7 @@ export default async function CustomerPage({
   return (
     <Shell
       {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
       title={`Customer signal trail: ${p.persona}`}
       subtitle="One customer, every product and channel · Fictional persona, masked id"
       drill

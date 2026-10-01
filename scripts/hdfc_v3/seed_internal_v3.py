@@ -40,6 +40,7 @@ from common import (
     dump,
     load,
 )
+import scale_v3
 from personas import BUCKETS, ESCALATION_EMAILS, PERSONAS
 
 rng = random.Random(SEED)
@@ -484,7 +485,7 @@ COHORTS = [
     ("priority_b", "RBI & Government", "The bank's own list"),
     ("uhni", "Ultra HNI", "Relationship tier from core banking"),
     ("hni", "HNI", "Relationship tier from core banking"),
-    ("multi", "Customers with multiple relationships", "Listed or HNI customers holding two or more products, from the bank's records"),
+    ("multi", "Customers with multiple relationships", "Customers on the bank's lists holding four or more products, from the bank's records"),
 ]
 LISTED = ("priority_a", "priority_b", "uhni", "hni")
 HI_LABEL = {
@@ -1145,8 +1146,11 @@ def main():
         c["cohort_added_at"] = p.get("cohort_added_at", "2026-04-01T00:00+05:30")
         c["cohort_added_by"] = p.get("cohort_added_by", "bank")
     # Customers with multiple relationships: a bank-supplied list (synthetic), derived from the bank's own records only.
+    # Bank scale (1 Oct): the list is the bank's deepest listed relationships, four or more products, so that it sits
+    # between the two small lists and the Ultra HNI list in size (public_anchors_volumes.md; MORNING_DECISIONS D29).
     for c in customers:
-        if len(c["products"]) >= 2 and any(k in c["cohorts"] for k in LISTED) and "multi" not in c["cohorts"]:
+        deep = len(c["products"]) >= 4 and any(k in c["cohorts"] for k in ("priority_a", "priority_b", "uhni"))
+        if deep and "multi" not in c["cohorts"]:
             c["cohorts"].append("multi")
     inter = build_interactions(customers, mix, themes)
     inter.sort(key=lambda r: r["created_at"])
@@ -1166,7 +1170,12 @@ def main():
     assert sum(d["total"] for d in agg["deliverables"]) == agg["dials"]["total"]
     agg["qa"]["reconcile_pass"] = True
 
+    # Bank scale: a weight on every kept row and customer (scale_v3.py). The aggregates above stay sample counts: they
+    # feed the drill-down and customer pages, which are labelled "sample rows".
+    scale = scale_v3.apply(customers, inter)
+
     SEED_V3.mkdir(parents=True, exist_ok=True)
+    dump(scale, SEED_V3 / "scale.json")
     dump(customers, SEED_V3 / "customers.json", indent=None)
     with open(SEED_V3 / "interactions.jsonl", "w", encoding="utf-8") as f:
         for r in inter:

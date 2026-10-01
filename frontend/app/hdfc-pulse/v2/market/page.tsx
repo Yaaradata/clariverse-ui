@@ -9,6 +9,7 @@ export default function MarketPage() {
   return (
     <Shell
       {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
       title="What is the market saying about us?"
       subtitle="What we say vs what customers hear · Rising themes · Voices with reach · App pulse · Safety"
       drill

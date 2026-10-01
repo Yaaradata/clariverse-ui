@@ -37,6 +37,11 @@ export type ShellProps = {
   periods?: PeriodsFile;
   /** Where the user is, kept on screen in the sticky header while scrolling (e.g. "Cards · Business view"). */
   context?: string;
+  /**
+   * Drill-down and customer pages show the kept sample rows themselves, not bank-scale totals: they say so with a
+   * small label. The number is how many rows the sample holds.
+   */
+  sampleRows?: number;
   children: ReactNode;
 };
 
@@ -206,6 +211,7 @@ function ShellInner({
   drill,
   periods,
   context,
+  sampleRows,
   children,
 }: ShellProps) {
   const from = useFrom(view ?? "mds-office");
@@ -408,6 +414,25 @@ function ShellInner({
                 >
                   {title}
                 </h1>
+                {sampleRows ? (
+                  <span
+                    data-testid="sample-rows"
+                    title="This page lists the rows kept for drill-down. Its counts are of those rows, not bank-scale totals; the MD and Cards views show the bank-scale figures."
+                    style={{
+                      display: "inline-block",
+                      marginTop: 6,
+                      fontSize: 12,
+                      fontWeight: 700,
+                      color: C.textSec,
+                      border: `1px dashed ${C.borderLight}`,
+                      borderRadius: 999,
+                      padding: "1px 10px",
+                    }}
+                  >
+                    Sample rows · {sampleRows.toLocaleString("en-IN")} kept for
+                    drill-down
+                  </span>
+                ) : null}
                 {subtitle ? (
                   <div
                     style={{ fontSize: 14.5, color: C.textMut, marginTop: 4 }}

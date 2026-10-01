@@ -35,7 +35,13 @@ export default async function ModulePage({
   const m = MODULES[id as keyof typeof MODULES];
   const b = loadBundle();
   return (
-    <Shell {...shellProps(b)} title={m.title} subtitle={m.subtitle} drill>
+    <Shell
+      {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
+      title={m.title}
+      subtitle={m.subtitle}
+      drill
+    >
       {id === "cards" ? (
         <CardsModule b={sliceBundle(b, { view: "module", id: "cards" })} />
       ) : (
