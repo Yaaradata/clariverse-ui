@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import ConditionalSidebar from '@/components/layout/ConditionalSidebar';
 import ConsoleFilter from '@/components/ConsoleFilter';
+import { UnregisterServiceWorkers } from '@/components/UnregisterServiceWorkers';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -45,6 +46,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.className} bg-background text-foreground`} suppressHydrationWarning>
+        <UnregisterServiceWorkers />
         <ConsoleFilter />
         <ConditionalSidebar>
           {children}

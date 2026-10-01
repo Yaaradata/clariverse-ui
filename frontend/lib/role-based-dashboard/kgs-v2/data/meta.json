@@ -1,0 +1,79 @@
+{
+  "title": "India & Southeast Asia — this week",
+  "breadcrumbRoot": "Global Commercial Fire · India & SEA",
+  "badge": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
+  "footer": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
+  "dataAsOf": {
+    "iso": "2026-09-25T12:30:00Z",
+    "label": "25 Sep 2026 18:00 IST"
+  },
+  "period": {
+    "label": "13 weeks to 25 Sep 2026",
+    "weeks": 13,
+    "endDate": "2026-09-25"
+  },
+  "regions": [
+    { "id": "all", "label": "India & SEA" },
+    { "id": "North", "label": "{{region:North}}" },
+    { "id": "South", "label": "{{region:South}}" },
+    { "id": "East", "label": "{{region:East}}" },
+    { "id": "West", "label": "{{region:West}}" },
+    { "id": "SEA", "label": "{{region:SEA}}" }
+  ],
+  "roles": [
+    "Regional GM",
+    "Operations lead",
+    "Technical support lead",
+    "Partner manager",
+    "Product liaison",
+    "Sales ops",
+    "Partner service manager"
+  ],
+  "rail": [
+    { "id": "overview", "label": "Overview" },
+    { "id": "promise", "label": "Promises" },
+    { "id": "recurring", "label": "Recurring" },
+    { "id": "install", "label": "Install" },
+    { "id": "partner", "label": "Partners" }
+  ],
+  "weeklyInteractions": [
+    360, 370, 365, 375, 380, 385, 378, 390, 392, 388, 371, 400, 386
+  ],
+  "thisWeekInteractions": 386,
+  "totalInteractions13w": 4940,
+  "perWorkingDayAbout": 77,
+  "perWorkingDayRange": [55, 105],
+  "channelMixPct": {
+    "email": 38,
+    "help_desk": 22,
+    "service_calls": 20,
+    "salesforce": 15,
+    "partner_portal": 5
+  },
+  "productFamilies": [
+    { "id": "A", "label": "A detection" },
+    { "id": "B", "label": "B panels" },
+    { "id": "C", "label": "C notification" },
+    { "id": "D", "label": "D software/licence" }
+  ],
+  "distributors": [
+    "D-N-02",
+    "D-N-04",
+    "D-N-07",
+    "D-N-11",
+    "D-S-01",
+    "D-S-02",
+    "D-S-05",
+    "D-E-03",
+    "D-E-06",
+    "D-W-08",
+    "D-W-09",
+    "D-SEA-10"
+  ],
+  "strategicPartners": ["SP-01", "SP-02", "SP-03", "SP-04"],
+  "demo": {
+    "watermark": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
+    "resetToast": "Demo reset · role back to Regional GM · approvals and loop states cleared",
+    "anonymisedChip": "Names anonymised"
+  }
+}

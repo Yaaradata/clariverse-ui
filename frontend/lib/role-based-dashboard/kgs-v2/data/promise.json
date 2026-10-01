@@ -1,0 +1,331 @@
+{
+  "title": "Are we keeping our promises?",
+  "kpis": [
+    {
+      "key": "orders_due",
+      "label": "Orders due this quarter",
+      "value": 1180
+    },
+    {
+      "key": "kept_original",
+      "label": "Promise kept vs original date",
+      "value": 82,
+      "unit": "%"
+    },
+    {
+      "key": "kept_revised",
+      "label": "Promise kept vs revised date",
+      "value": 93,
+      "unit": "%"
+    },
+    {
+      "key": "avg_slip",
+      "label": "Average slip",
+      "value": 4.1,
+      "unit": "days"
+    },
+    {
+      "key": "complaints_week",
+      "label": "Delivery complaints this week",
+      "value": 38
+    }
+  ],
+  "weeklyByRegion": {
+    "weeks": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6",
+      "W7",
+      "W8",
+      "W9",
+      "W10",
+      "W11",
+      "W12",
+      "W13"
+    ],
+    "targetPct": 90,
+    "series": [
+      {
+        "region": "{{region:North}}",
+        "regionId": "North",
+        "values": [90, 89, 88, 88, 87, 88, 88, 87, 86, 82, 78, 74, 71]
+      },
+      {
+        "region": "{{region:South}}",
+        "regionId": "South",
+        "values": [91, 90, 92, 91, 90, 91, 92, 91, 90, 91, 92, 91, 91]
+      },
+      {
+        "region": "{{region:East}}",
+        "regionId": "East",
+        "values": [89, 88, 90, 89, 88, 89, 90, 88, 89, 90, 89, 88, 89]
+      },
+      {
+        "region": "{{region:West}}",
+        "regionId": "West",
+        "values": [90, 91, 90, 92, 91, 90, 91, 92, 91, 90, 91, 92, 91]
+      },
+      {
+        "region": "{{region:SEA}}",
+        "regionId": "SEA",
+        "values": [86, 87, 88, 87, 88, 89, 88, 89, 90, 90, 91, 91, 92]
+      }
+    ]
+  },
+  "distributors": [
+    {
+      "distributor": "{{partner:D-N-04}}",
+      "distributorId": "D-N-04",
+      "region": "{{region:North}}",
+      "regionId": "North",
+      "ordersDue": 42,
+      "keptVsOriginalPct": 62,
+      "averageSlipDays": 7.2,
+      "complaints4w": 11,
+      "trend": "down",
+      "topCandidateCause": "allocation queue N-2"
+    },
+    {
+      "distributor": "{{partner:D-N-07}}",
+      "distributorId": "D-N-07",
+      "region": "{{region:North}}",
+      "regionId": "North",
+      "ordersDue": 38,
+      "keptVsOriginalPct": 66,
+      "averageSlipDays": 6.4,
+      "complaints4w": 9,
+      "trend": "down",
+      "topCandidateCause": "allocation queue N-2"
+    },
+    {
+      "distributor": "{{partner:D-N-11}}",
+      "distributorId": "D-N-11",
+      "region": "{{region:North}}",
+      "regionId": "North",
+      "ordersDue": 35,
+      "keptVsOriginalPct": 69,
+      "averageSlipDays": 5.8,
+      "complaints4w": 8,
+      "trend": "down",
+      "topCandidateCause": "last-mile {{place:Gurugram hub}}"
+    },
+    {
+      "distributor": "{{partner:D-N-02}}",
+      "distributorId": "D-N-02",
+      "region": "{{region:North}}",
+      "regionId": "North",
+      "ordersDue": 28,
+      "keptVsOriginalPct": 78,
+      "averageSlipDays": 3.1,
+      "complaints4w": 3,
+      "trend": "flat",
+      "topCandidateCause": "order change"
+    },
+    {
+      "distributor": "{{partner:D-E-03}}",
+      "distributorId": "D-E-03",
+      "region": "{{region:East}}",
+      "regionId": "East",
+      "ordersDue": 31,
+      "keptVsOriginalPct": 84,
+      "averageSlipDays": 2.4,
+      "complaints4w": 2,
+      "trend": "flat",
+      "topCandidateCause": "backorder"
+    },
+    {
+      "distributor": "{{partner:D-E-06}}",
+      "distributorId": "D-E-06",
+      "region": "{{region:East}}",
+      "regionId": "East",
+      "ordersDue": 27,
+      "keptVsOriginalPct": 86,
+      "averageSlipDays": 2.1,
+      "complaints4w": 2,
+      "trend": "flat",
+      "topCandidateCause": "allocation"
+    },
+    {
+      "distributor": "{{partner:D-S-01}}",
+      "distributorId": "D-S-01",
+      "region": "{{region:South}}",
+      "regionId": "South",
+      "ordersDue": 44,
+      "keptVsOriginalPct": 90,
+      "averageSlipDays": 1.6,
+      "complaints4w": 1,
+      "trend": "flat",
+      "topCandidateCause": "on target"
+    },
+    {
+      "distributor": "{{partner:D-S-05}}",
+      "distributorId": "D-S-05",
+      "region": "{{region:South}}",
+      "regionId": "South",
+      "ordersDue": 36,
+      "keptVsOriginalPct": 91,
+      "averageSlipDays": 1.4,
+      "complaints4w": 1,
+      "trend": "up",
+      "topCandidateCause": "on target"
+    },
+    {
+      "distributor": "{{partner:D-S-02}}",
+      "distributorId": "D-S-02",
+      "region": "{{region:South}}",
+      "regionId": "South",
+      "ordersDue": 40,
+      "keptVsOriginalPct": 92,
+      "averageSlipDays": 1.2,
+      "complaints4w": 1,
+      "trend": "up",
+      "topCandidateCause": "on target"
+    },
+    {
+      "distributor": "{{partner:D-W-08}}",
+      "distributorId": "D-W-08",
+      "region": "{{region:West}}",
+      "regionId": "West",
+      "ordersDue": 33,
+      "keptVsOriginalPct": 91,
+      "averageSlipDays": 1.5,
+      "complaints4w": 1,
+      "trend": "up",
+      "topCandidateCause": "on target"
+    },
+    {
+      "distributor": "{{partner:D-W-09}}",
+      "distributorId": "D-W-09",
+      "region": "{{region:West}}",
+      "regionId": "West",
+      "ordersDue": 29,
+      "keptVsOriginalPct": 93,
+      "averageSlipDays": 1.1,
+      "complaints4w": 0,
+      "trend": "up",
+      "topCandidateCause": "on target"
+    },
+    {
+      "distributor": "{{partner:D-SEA-10}}",
+      "distributorId": "D-SEA-10",
+      "region": "{{region:SEA}}",
+      "regionId": "SEA",
+      "ordersDue": 26,
+      "keptVsOriginalPct": 94,
+      "averageSlipDays": 0.9,
+      "complaints4w": 0,
+      "trend": "up",
+      "topCandidateCause": "improving"
+    }
+  ],
+  "saidVsShows": [
+    {
+      "phrase": "You confirmed Monday, now it shows the 22nd",
+      "partner": "{{partner:D-N-04}}",
+      "orderFacts": "original 15 Sep, revised 22 Sep, allocation queue N-2"
+    },
+    {
+      "phrase": "Third order this month where the date moved after confirmation",
+      "partner": "{{partner:D-N-07}}",
+      "orderFacts": "original 10 Sep, revised 18 Sep, allocation queue N-2"
+    },
+    {
+      "phrase": "Material reached the hub on time, but local delivery took five days",
+      "partner": "{{partner:D-N-11}}",
+      "orderFacts": "hub arrival on time · last-mile 5 days · {{place:Gurugram hub}}"
+    },
+    {
+      "phrase": "Sales and support are giving us different dates. Which one is right?",
+      "partner": "{{partner:D-N-04}}",
+      "orderFacts": "ERP original 20 Sep · help desk quoted 25 Sep"
+    }
+  ],
+  "causeSplitByRegion": [
+    {
+      "regionId": "North",
+      "region": "{{region:North}}",
+      "kgs": {
+        "allocation": 28,
+        "backorder": 0,
+        "orderChange": 7
+      },
+      "lastMile": 11
+    },
+    {
+      "regionId": "South",
+      "region": "{{region:South}}",
+      "kgs": {
+        "allocation": 4,
+        "backorder": 2,
+        "orderChange": 1
+      },
+      "lastMile": 3
+    },
+    {
+      "regionId": "East",
+      "region": "{{region:East}}",
+      "kgs": {
+        "allocation": 5,
+        "backorder": 3,
+        "orderChange": 2
+      },
+      "lastMile": 2
+    },
+    {
+      "regionId": "West",
+      "region": "{{region:West}}",
+      "kgs": {
+        "allocation": 3,
+        "backorder": 1,
+        "orderChange": 1
+      },
+      "lastMile": 2
+    },
+    {
+      "regionId": "SEA",
+      "region": "{{region:SEA}}",
+      "kgs": {
+        "allocation": 2,
+        "backorder": 1,
+        "orderChange": 0
+      },
+      "lastMile": 1
+    }
+  ],
+  "signalWall": [
+    {
+      "id": "PR-01",
+      "title": "North promises slipping",
+      "severity": "S2",
+      "hero": true,
+      "cta": "Open signal →"
+    },
+    {
+      "id": "PR-02",
+      "title": "Last-mile delays, {{place:Gurugram hub}}",
+      "severity": "S3",
+      "hero": false,
+      "cta": "Open signal →"
+    },
+    {
+      "id": "SEA-IMPROVING",
+      "title": "SEA improving",
+      "severity": "improving",
+      "hero": false,
+      "cta": null
+    }
+  ],
+  "signalWallFooter": {
+    "critical": 0,
+    "needsAction": 2,
+    "improving": 1
+  },
+  "evidenceSummary": {
+    "mainSignal": "{{region:North}} promise kept 71% vs its own 88%.",
+    "whatChanged": "Allocation queue N-2 re-sequenced in week 35 (candidate).",
+    "decideFirst": "Confirm dates for the 2 projects with fire NOC inspections."
+  }
+}

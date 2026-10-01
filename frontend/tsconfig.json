@@ -29,6 +29,9 @@
       ],
       "@kgs/*": [
         "./lib/role-based-dashboard/kgs/*"
+      ],
+      "@kgs2/*": [
+        "./lib/role-based-dashboard/kgs-v2/*"
       ]
     }
   },

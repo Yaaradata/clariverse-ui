@@ -72,8 +72,12 @@ import {
   usesRetailBankingDashboard,
 } from "@/lib/role-based-dashboard/registry";
 import { NEOGROUP_INDUSTRY_ID } from "@/lib/role-based-dashboard/neogroupIndustry";
-import { isKiddeGlobalPresident } from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
+import {
+  isKiddeGlobalPresident,
+  isKiddeGlobalRegionalGm,
+} from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
 import { KgsCommercialFireDashboard } from "./kgs/KgsCommercialFireDashboard";
+import { KgsAsiaRegionalDashboard } from "./kgs-v2/KgsAsiaRegionalDashboard";
 import {
   isSterlingHeadRetail,
   resolveRoleDataKey,
@@ -4559,6 +4563,11 @@ export function RoleDashboardView({
   // Kidde Global · President, Global Commercial Fire — LiSN field-signal demo (own shell).
   if (isKiddeGlobalPresident(industry.id, role.id)) {
     return <KgsCommercialFireDashboard onExit={onExit} />;
+  }
+
+  // Kidde Global · Regional GM, Asia ex China — v2 demo (own shell).
+  if (isKiddeGlobalRegionalGm(industry.id, role.id)) {
+    return <KgsAsiaRegionalDashboard onExit={onExit} />;
   }
 
   if (industry.id === INDUSIND_BANK_INDUSTRY_ID && role.id === "head_cards") {
