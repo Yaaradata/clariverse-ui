@@ -1,14 +1,12 @@
 "use client";
 
 import signal from "@kgs2/data/signal_pr01.json";
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K } from "@kgs2/lib/demoState";
+import { seriesForRange } from "@kgs2/lib/periodData";
 import type { LoopStatus } from "@kgs2/types";
 import { Info } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { DrillHeader2 } from "../shared/DrillHeader2";
 import { LoopTracker } from "../shared/LoopTracker";
 import { HeroPromiseChart } from "./HeroPromiseChart";
@@ -20,10 +18,12 @@ import {
 } from "./PromiseEvidenceDrawer";
 
 function Block({ children }: { children: ReactNode }) {
+  const K = useV2K();
   return (
     <div
       style={{
-        background: K.card,
+        background: K.block,
+        border: `1px solid ${K.mode === "light" ? K.border : "transparent"}`,
         borderRadius: K.radius.card,
         padding: 14,
         display: "flex",
@@ -37,6 +37,7 @@ function Block({ children }: { children: ReactNode }) {
 }
 
 function WhyRankedPopover({ open }: { open: boolean }) {
+  const K = useV2K();
   if (!open) return null;
   return (
     <div
@@ -94,6 +95,7 @@ function WhyRankedPopover({ open }: { open: boolean }) {
  * PR-01 hero deep dive (SPEC §5b).
  */
 export function PromiseHeroView() {
+  const K = useV2K();
   const L = useLabel2();
   const { state, isApproved } = useDemo2();
   const [whyOpen, setWhyOpen] = useState(false);
@@ -119,23 +121,37 @@ export function PromiseHeroView() {
   const cs = signal.causeSplit;
   const conf = signal.confidence;
 
+  const heroChart = useMemo(() => {
+    const weeks = signal.chart.weeks;
+    const values = seriesForRange(signal.chart.values, state.dateRange);
+    const n = values.length;
+    const slicedWeeks = weeks.slice(-n);
+    const offset = weeks.length - n;
+    return {
+      weeks: slicedWeeks,
+      values,
+      markers: signal.chart.markers
+        .map((m) => ({ ...m, weekIndex: m.weekIndex - offset }))
+        .filter((m) => m.weekIndex >= 0 && m.weekIndex < n),
+    };
+  }, [state.dateRange]);
+
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         gap: 14,
-        padding: "16px 24px 24px",
       }}
     >
       <DrillHeader2
         title="North region: promises slipping"
-        subtitle="Promise kept fell vs its own baseline · 3 distributors · 2 projects at inspection risk"
+        subtitle={signal.headline}
         parentView="promise"
         backLabel="Back to Promises"
       />
 
-      {/* Rank */}
+      {/* Rank chip + Why ranked popover */}
       <div style={{ position: "relative", alignSelf: "flex-start" }}>
         <button
           type="button"
@@ -164,7 +180,7 @@ export function PromiseHeroView() {
         <WhyRankedPopover open={whyOpen} />
       </div>
 
-      {/* Severity strip */}
+      {/* Severity strip — SPEC §5b */}
       <div
         style={{
           display: "flex",
@@ -174,7 +190,7 @@ export function PromiseHeroView() {
           padding: "10px 12px",
           borderRadius: K.radius.tile,
           border: `1px solid ${K.borderLight}`,
-          background: K.surface,
+          background: K.inset,
           fontSize: 13,
           color: K.body,
         }}
@@ -188,11 +204,13 @@ export function PromiseHeroView() {
         >
           {signal.severity.class}
         </span>
-        <span>{signal.severity.word}</span>
+        <span>Promise</span>
         <span style={{ color: K.textMut }}>·</span>
-        <span>{signal.severity.domain}</span>
+        <span>{signal.severity.typeNote}</span>
         <span style={{ color: K.textMut }}>·</span>
         <span>{signal.severity.blastRadius.headline}</span>
+        <span style={{ color: K.textMut }}>·</span>
+        <span>{signal.severity.incident.note}</span>
       </div>
 
       <div
@@ -214,12 +232,12 @@ export function PromiseHeroView() {
         >
           <Block>
             <HeroPromiseChart
-              weeks={signal.chart.weeks}
-              values={signal.chart.values}
+              weeks={heroChart.weeks}
+              values={heroChart.values}
               baselineLow={signal.chart.baselineBand.low}
               baselineHigh={signal.chart.baselineBand.high}
               targetPct={signal.chart.targetPct}
-              markers={signal.chart.markers}
+              markers={heroChart.markers}
               ariaLabel="North weekly promise kept with baseline band"
             />
           </Block>
@@ -299,7 +317,10 @@ export function PromiseHeroView() {
             </p>
           </Block>
 
-          <LoopTracker status={loop} />
+          <LoopTracker
+            status={loop}
+            watchingNote={`next check 2 Oct: promise kept ${L("{{region:North}}")}`}
+          />
         </div>
 
         <div
@@ -383,7 +404,7 @@ export function PromiseHeroView() {
                     fontSize: 11,
                     padding: "4px 8px",
                     borderRadius: K.radius.pill,
-                    background: K.surface,
+                    background: K.inset,
                     border: `1px solid ${K.borderLight}`,
                     color: K.body,
                   }}
@@ -429,7 +450,7 @@ export function PromiseHeroView() {
               <span style={{ color: K.textMut }}>(owner)</span>
             </div>
             <div style={{ fontSize: 12, color: K.textMut }}>
-              cc {signal.routing.cc.join(", ")}
+              cc {signal.routing.cc.map((c) => L(c)).join(", ")}
             </div>
             <div
               style={{

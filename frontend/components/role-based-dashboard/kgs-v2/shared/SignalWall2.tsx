@@ -1,6 +1,6 @@
 "use client";
 
-import { useLabel2 } from "@kgs2/lib/demoState";
+import { useLabel2, useV2K } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import {
   ChevronRight,
@@ -18,8 +18,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useKgs2Nav } from "../nav";
+import type { V2Tokens } from "./themeTokens";
 
 export type WallLevel2 = "critical" | "alert" | "warning" | "improving";
 
@@ -51,29 +51,51 @@ export type SignalWall2Data = {
   footer: Array<{ label: string; value: number }>;
 };
 
-const LEVEL: Record<
-  WallLevel2,
-  { color: string; label: string; Icon: typeof CircleAlert }
-> = {
-  critical: { color: "#ef4444", label: "CRITICAL", Icon: CircleAlert },
-  alert: { color: "#f97316", label: "ALERT", Icon: TriangleAlert },
-  warning: { color: "#eab308", label: "WARNING", Icon: Zap },
-  improving: { color: "#22c55e", label: "IMPROVING", Icon: TrendingUp },
-};
+/** Footer counts for the cards on the wall right now. */
+export function wallFooter(
+  cards: Array<{ level: WallLevel2 }>,
+): SignalWall2Data["footer"] {
+  const count = (levels: WallLevel2[]) =>
+    cards.filter((c) => levels.includes(c.level)).length;
+  return [
+    { label: "Critical", value: count(["critical"]) },
+    { label: "Needs action", value: count(["alert", "warning"]) },
+    { label: "Improving", value: count(["improving"]) },
+  ];
+}
+
+const LEVEL: Record<WallLevel2, { label: string; Icon: typeof CircleAlert }> =
+  {
+    critical: { label: "CRITICAL", Icon: CircleAlert },
+    alert: { label: "ALERT", Icon: TriangleAlert },
+    warning: { label: "WARNING", Icon: Zap },
+    improving: { label: "IMPROVING", Icon: TrendingUp },
+  };
+
+function levelColor(K: V2Tokens, level: WallLevel2): string {
+  if (level === "critical") return K.red;
+  if (level === "alert") return K.orange;
+  if (level === "warning") return K.warn;
+  return K.green;
+}
 
 function WallCardRow({
   card,
   selected,
   onOpen,
+  compact,
 }: {
   card: SignalWall2Card;
   selected: boolean;
   onOpen: (card: SignalWall2Card, e: ReactMouseEvent<HTMLElement>) => void;
+  compact?: boolean;
 }) {
   const L = useLabel2();
+  const K = useV2K();
   const meta = LEVEL[card.level];
   const Icon = meta.Icon;
-  const color = meta.color;
+  const color = levelColor(K, card.level);
+  const pad = compact ? 12 : 16;
 
   return (
     <button
@@ -82,7 +104,7 @@ function WallCardRow({
       style={{
         position: "relative",
         borderRadius: 12,
-        padding: 16,
+        padding: pad,
         cursor: "pointer",
         background: `linear-gradient(135deg, ${color}26 0%, ${color}0d 100%)`,
         border: `1px solid ${color}50`,
@@ -98,32 +120,32 @@ function WallCardRow({
           position: "relative",
           display: "flex",
           alignItems: "flex-start",
-          gap: 12,
+          gap: compact ? 10 : 12,
         }}
       >
         <div
           style={{
-            padding: 8,
+            padding: compact ? 6 : 8,
             borderRadius: 8,
             background: `${color}20`,
             flexShrink: 0,
           }}
         >
-          <Icon size={16} color={color} />
+          <Icon size={compact ? 14 : 16} color={color} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 8,
+              gap: 6,
               marginBottom: 4,
               flexWrap: "wrap",
             }}
           >
             <span
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: 700,
                 textTransform: "uppercase",
                 padding: "2px 6px",
@@ -135,16 +157,16 @@ function WallCardRow({
                 gap: 4,
               }}
             >
-              <Icon size={11} color={color} />
+              <Icon size={10} color={color} />
               {meta.label}
             </span>
             <span
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 padding: "2px 6px",
                 borderRadius: 4,
-                background: "#2a2a2a",
-                color: "#939394",
+                background: K.chip,
+                color: K.textMut,
               }}
             >
               {L(card.tag)}
@@ -152,11 +174,11 @@ function WallCardRow({
           </div>
           <p
             style={{
-              margin: "0 0 4px",
-              fontSize: 14,
+              margin: "0 0 2px",
+              fontSize: compact ? 13 : 14,
               fontWeight: 700,
-              color: "#fff",
-              lineHeight: 1.35,
+              color: K.text,
+              lineHeight: 1.3,
             }}
           >
             {L(card.title)}
@@ -165,8 +187,12 @@ function WallCardRow({
             style={{
               margin: 0,
               fontSize: 12,
-              lineHeight: 1.55,
-              color: "#d6d9d8",
+              lineHeight: 1.4,
+              color: K.body,
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
             }}
           >
             {L(card.body)}
@@ -175,6 +201,7 @@ function WallCardRow({
             style={{
               display: "flex",
               alignItems: "center",
+              justifyContent: "space-between",
               gap: 8,
               flexWrap: "wrap",
               marginTop: 8,
@@ -183,25 +210,25 @@ function WallCardRow({
             <span
               style={{
                 fontSize: 12,
-                fontWeight: 500,
+                fontWeight: 700,
                 color,
                 fontFamily: K.mono,
+                fontVariantNumeric: "tabular-nums",
               }}
             >
               {L(card.metric)}
             </span>
-          </div>
-          <div
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              marginTop: 8,
-              color,
-            }}
-          >
-            <TrendingUp size={14} aria-hidden />
-            <span style={{ fontSize: 12, fontWeight: 700 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 4,
+                fontSize: 11,
+                fontWeight: 700,
+                color,
+              }}
+            >
+              <TrendingUp size={12} aria-hidden />
               {L(card.trend)}
             </span>
           </div>
@@ -228,9 +255,10 @@ function DetailPanel({
 }) {
   const L = useLabel2();
   const { go } = useKgs2Nav();
+  const K = useV2K();
   const meta = LEVEL[card.level];
   const Icon = meta.Icon;
-  const color = meta.color;
+  const color = levelColor(K, card.level);
   const d = card.detail;
 
   return (
@@ -243,11 +271,11 @@ function DetailPanel({
         right: 8,
         top,
         zIndex: 30,
-        background: "#1a1a1a",
+        background: K.elevated,
         border: `2px solid ${color}`,
         borderRadius: 12,
         padding: 12,
-        boxShadow: `0 8px 32px ${color}40, 0 4px 16px rgba(0,0,0,0.3)`,
+        boxShadow: `0 8px 32px ${color}40, 0 4px 16px ${K.scrim}`,
       }}
     >
       <div
@@ -281,7 +309,7 @@ function DetailPanel({
             style={{
               fontSize: 13,
               fontWeight: 700,
-              color: "#fff",
+              color: K.text,
               lineHeight: 1.35,
             }}
           >
@@ -296,7 +324,7 @@ function DetailPanel({
           style={{
             border: "none",
             background: "transparent",
-            color: "#939394",
+            color: K.textMut,
             fontSize: 18,
             cursor: "pointer",
             lineHeight: 1,
@@ -333,8 +361,8 @@ function DetailPanel({
             fontSize: 11,
             padding: "2px 8px",
             borderRadius: 999,
-            background: "#2a2a2a",
-            color: "#939394",
+            background: K.chip,
+            color: K.textMut,
           }}
         >
           {L(card.tag)}
@@ -346,7 +374,7 @@ function DetailPanel({
           style={{
             fontSize: 10,
             fontWeight: 700,
-            color: "#939394",
+            color: K.textMut,
             textTransform: "uppercase",
             marginBottom: 4,
             letterSpacing: "0.04em",
@@ -354,7 +382,7 @@ function DetailPanel({
         >
           Likely cause (candidate)
         </div>
-        <div style={{ fontSize: 12, color: "#e0e0e0", lineHeight: 1.5 }}>
+        <div style={{ fontSize: 12, color: K.textSec, lineHeight: 1.5 }}>
           {L(d.cause)}
         </div>
       </div>
@@ -365,7 +393,7 @@ function DetailPanel({
             style={{
               fontSize: 10,
               fontWeight: 700,
-              color: "#939394",
+              color: K.textMut,
               textTransform: "uppercase",
               marginBottom: 4,
               letterSpacing: "0.04em",
@@ -381,8 +409,8 @@ function DetailPanel({
                   fontSize: 11,
                   padding: "2px 8px",
                   borderRadius: 6,
-                  background: "#2a2a2a",
-                  color: "#d6d9d8",
+                  background: K.chip,
+                  color: K.body,
                 }}
               >
                 {L(a)}
@@ -398,7 +426,7 @@ function DetailPanel({
             style={{
               fontSize: 10,
               fontWeight: 700,
-              color: "#939394",
+              color: K.textMut,
               textTransform: "uppercase",
               marginBottom: 4,
               letterSpacing: "0.04em",
@@ -434,7 +462,7 @@ function DetailPanel({
                 {idx + 1}
               </span>
               <span
-                style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}
+                style={{ fontSize: 11, color: K.body, lineHeight: 1.45 }}
               >
                 {L(a)}
               </span>
@@ -446,7 +474,7 @@ function DetailPanel({
       <div
         style={{
           marginTop: 8,
-          borderTop: "1px solid #2a2a2a",
+          borderTop: `1px solid ${K.borderLight}`,
           paddingTop: 8,
           display: "flex",
           alignItems: "center",
@@ -469,7 +497,7 @@ function DetailPanel({
               alignItems: "center",
               gap: 4,
               fontSize: 11,
-              color: "#939394",
+              color: K.textMut,
             }}
           >
             <Timer size={11} aria-hidden />
@@ -481,7 +509,7 @@ function DetailPanel({
               alignItems: "center",
               gap: 4,
               fontSize: 11,
-              color: "#939394",
+              color: K.textMut,
             }}
           >
             <User size={11} aria-hidden />
@@ -523,9 +551,20 @@ function DetailPanel({
 
 /**
  * v2 Signal Wall — v1 AI Summary Wall look: fixed height, scroll, in-place detail.
+ * `compact` fits the Promise drill column beside the weekly chart (no tall empty panel).
  */
-export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
+export function SignalWall2({
+  wall,
+  compact = false,
+  fill = false,
+}: {
+  wall: SignalWall2Data;
+  compact?: boolean;
+  /** Slightly taller cap than compact; extra cards scroll inside the wall. */
+  fill?: boolean;
+}) {
   const L = useLabel2();
+  const K = useV2K();
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detailTop, setDetailTop] = useState<number | null>(null);
@@ -568,16 +607,15 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
     <section
       style={{
         borderRadius: 16,
-        padding: 24,
-        background: "#0d0d0d",
-        border: "1px solid #2a2a2a",
-        boxShadow:
-          "0 4px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05)",
+        padding: compact ? 14 : 24,
+        background: K.panel,
+        border: `1px solid ${K.chipBorder}`,
+        boxShadow: K.shadow,
         display: "flex",
         flexDirection: "column",
         height: "100%",
-        minHeight: 520,
-        maxHeight: 840,
+        minHeight: compact ? 340 : 520,
+        maxHeight: fill ? 460 : compact ? 420 : 840,
         minWidth: 0,
       }}
     >
@@ -586,26 +624,26 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          marginBottom: 20,
+          marginBottom: compact ? 10 : 20,
           flexShrink: 0,
-          padding: "8px 8px",
+          padding: compact ? "2px 4px" : "8px 8px",
           gap: 12,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Sparkles size={22} color={K.violet400} aria-hidden />
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Sparkles size={compact ? 18 : 22} color={K.violet400} aria-hidden />
           <div>
             <h3
               style={{
                 margin: 0,
-                fontSize: 18,
+                fontSize: compact ? 16 : 18,
                 fontWeight: 700,
-                color: "#fff",
+                color: K.text,
               }}
             >
               {L(wall.title)}
             </h3>
-            <p style={{ margin: 0, fontSize: 12, color: "#939394" }}>
+            <p style={{ margin: 0, fontSize: 12, color: K.textMut }}>
               {L(wall.sub)}
             </p>
           </div>
@@ -620,8 +658,8 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
               borderRadius: 999,
               fontSize: 12,
               fontWeight: 500,
-              background: "#1a1a1a",
-              color: "#939394",
+              background: K.chip,
+              color: K.textMut,
               whiteSpace: "nowrap",
             }}
           >
@@ -631,7 +669,7 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
                 width: 8,
                 height: 8,
                 borderRadius: 999,
-                background: "#22c55e",
+                background: K.green,
               }}
             />
             {L(wall.pill)}
@@ -644,18 +682,25 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
         style={{
           flex: 1,
           overflowY: "auto",
-          padding: "8px 8px 8px 0",
+          padding: "4px 4px 4px 0",
           minHeight: 0,
           position: "relative",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: compact ? 8 : 12,
+          }}
+        >
           {wall.cards.map((c) => (
             <WallCardRow
               key={c.id}
               card={c}
               selected={selectedId === c.id}
               onOpen={openCard}
+              compact={compact}
             />
           ))}
         </div>
@@ -669,7 +714,7 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
               style={{
                 position: "absolute",
                 inset: 0,
-                background: "rgba(0,0,0,0.35)",
+                background: K.scrim,
                 zIndex: 20,
                 border: "none",
                 cursor: "pointer",
@@ -687,12 +732,12 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
 
       <div
         style={{
-          marginTop: 16,
-          paddingTop: 16,
-          borderTop: "1px solid #2a2a2a",
+          marginTop: compact ? 10 : 16,
+          paddingTop: compact ? 10 : 16,
+          borderTop: `1px solid ${K.borderLight}`,
           display: "grid",
           gridTemplateColumns: `repeat(${wall.footer.length}, minmax(0, 1fr))`,
-          gap: 12,
+          gap: 8,
           flexShrink: 0,
         }}
       >
@@ -701,17 +746,17 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
             <p
               style={{
                 margin: 0,
-                fontSize: 28,
+                fontSize: compact ? 22 : 28,
                 fontWeight: 700,
                 color:
                   f.value <= 0
                     ? K.textMut
                     : /Critical/i.test(f.label)
-                      ? "#ef4444"
+                      ? K.red
                       : /Needs|action|Alert/i.test(f.label)
-                        ? "#f97316"
+                        ? K.orange
                         : /Improving/i.test(f.label)
-                          ? "#22c55e"
+                          ? K.green
                           : K.textMut,
                 fontFamily: K.mono,
                 fontVariantNumeric: "tabular-nums",
@@ -720,7 +765,7 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
             >
               {f.value}
             </p>
-            <p style={{ margin: 0, fontSize: 11, color: "#939394" }}>
+            <p style={{ margin: 0, fontSize: 11, color: K.textMut }}>
               {L(f.label)}
             </p>
           </div>

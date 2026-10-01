@@ -1,9 +1,8 @@
 "use client";
 
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
-import type { V2View } from "@kgs2/types";
+import { useDemo2, useLabel2, useV2K } from "@kgs2/lib/demoState";
 import {
-  K,
+  K as Accent,
   URGENCY,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
@@ -16,71 +15,74 @@ export type SignalMetric = {
   deltaTone?: "risk" | "opportunity";
 };
 
-/** Compact face matching v1 SignalMonitorCard / MonitorCardCompact. */
-export type OverviewSignalCompact = {
+export type OverviewSignal = {
+  id: string;
   title: string;
+  severity: "S2" | "S3" | "S4" | "improving" | string;
+  shape: "slope" | "cliff" | null;
   channel: string;
   topIssue: string;
   topIssueSub?: string;
   time: string;
-  severityWord: string;
+  confidence: string;
   metrics: [SignalMetric, SignalMetric, SignalMetric];
-  callout: string;
-};
-
-export type OverviewSignal = {
-  id: string;
-  title: string;
-  severity: string;
-  severityType: string;
+  recommendation: string;
   owner: string;
   pnlTag: string;
-  confidence: string;
+  route?: string;
   hero?: boolean;
-  channelMix: Record<string, number>;
-  topIntent: string;
-  timeWindow: string;
-  beforeAfter: { before: string; after: string };
-  recommendation: string;
-  compact: OverviewSignalCompact;
 };
 
-const SIGNAL_ROUTE: Record<string, V2View> = {
-  "PR-01": "promiseHero",
-  "PR-02": "promise",
-  "RC-01": "recurringTheme",
-  "RC-03": "recurring",
-  "IN-01": "install",
-};
+type UrgencyKey = keyof typeof URGENCY;
 
-function urgencyFor(severity: string): keyof typeof URGENCY {
+function urgencyKey(severity: string): UrgencyKey {
   if (severity === "S2") return "critical";
   if (severity === "S4" || severity === "improving") return "watch";
   return "high";
 }
 
+function chromeFor(severity: string) {
+  const key = urgencyKey(severity);
+  const base = URGENCY[key];
+  if (severity === "improving") {
+    return {
+      ...base,
+      color: Accent.green,
+      glyph: "●",
+      word: "IMPROVING",
+      showSeverityClass: false,
+      glow: false,
+      calloutText: "#dcfce7",
+      delta: Accent.green,
+    };
+  }
+  return base;
+}
+
 /**
- * This week's signals card — v1 SignalMonitorCard anatomy.
+ * This week's signals — Field Signal Monitor / SignalMonitorCard anatomy.
  */
 export function SignalCard({ signal }: { signal: OverviewSignal }) {
   const L = useLabel2();
-  const { state, setView } = useDemo2();
-  const c = signal.compact;
-  const urgency = urgencyFor(signal.severity);
-  const u = URGENCY[urgency];
+  const K = useV2K();
+  const { state } = useDemo2();
+  const u = chromeFor(signal.severity);
   const tone = u.color;
+  const light = state.theme === "light";
   const approvedTs = state.approvals[signal.id]?.ts;
-  const route = SIGNAL_ROUTE[signal.id] ?? "overview";
+  const cardTip = `Owner: ${signal.owner} · P&L: ${L(signal.pnlTag)}`;
   const pillLabel = u.showSeverityClass
     ? `${u.word} · ${signal.severity}`
     : u.word;
-  const confTip = `Confidence ${signal.confidence}`;
+  const metricBg = light ? K.cardInner : "rgba(0,0,0,0.25)";
+  const calloutBg = light
+    ? withAlpha(tone, 0.12)
+    : withAlpha(tone, u.calloutBgA);
+  const calloutFg = light ? K.textSec : u.calloutText;
 
   return (
-    <button
-      type="button"
-      onClick={() => setView(route)}
-      className="kgs2-focus"
+    <article
+      title={cardTip}
       style={{
         width: 252,
         minWidth: 252,
@@ -97,7 +99,6 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
         display: "flex",
         flexDirection: "column",
         textAlign: "left",
-        cursor: "pointer",
         fontFamily: "inherit",
       }}
     >
@@ -118,10 +119,10 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
             minWidth: 0,
           }}
         >
-          {L(c.title)}
+          {L(signal.title)}
         </div>
         <span
-          title={confTip}
+          title={`Confidence ${signal.confidence}`}
           style={{
             display: "flex",
             alignItems: "center",
@@ -167,23 +168,18 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
           color: K.textMut,
         }}
       >
-        <Row label="Channel" value={L(c.channel)} />
+        <Row label="Channel" value={L(signal.channel)} textColor={K.text} />
         <div
           style={{ display: "flex", justifyContent: "space-between", gap: 8 }}
         >
           <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
             Top Issue
           </span>
-          <div style={{ textAlign: "right" }}>
-            <div style={{ color: K.text }}>{L(c.topIssue)}</div>
-            {c.topIssueSub ? (
-              <div style={{ fontSize: 10, color: K.textMut }}>
-                {L(c.topIssueSub)}
-              </div>
-            ) : null}
-          </div>
+          <span style={{ color: K.text, textAlign: "right" }}>
+            {L(signal.topIssue)}
+          </span>
         </div>
-        <Row label="Time" value={L(c.time)} />
+        <Row label="Time" value={L(signal.time)} textColor={K.text} />
       </div>
 
       <div
@@ -192,7 +188,7 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
           minHeight: 108,
           borderRadius: 12,
           border: `1px solid ${K.borderLight}`,
-          background: "rgba(0,0,0,0.25)",
+          background: metricBg,
           padding: 10,
           fontSize: 11,
           display: "flex",
@@ -202,7 +198,7 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
           flex: 1,
         }}
       >
-        {c.metrics.map((m) => {
+        {signal.metrics.map((m) => {
           const deltaColor = m.deltaTone === "opportunity" ? K.green : u.delta;
           return (
             <div
@@ -257,27 +253,36 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
         style={{
           marginTop: 20,
           borderRadius: 12,
-          border: `1px solid ${withAlpha(tone, u.calloutBorderA)}`,
-          background: withAlpha(tone, u.calloutBgA),
+          border: `1px solid ${withAlpha(tone, light ? 0.45 : u.calloutBorderA)}`,
+          background: calloutBg,
           padding: 16,
           fontSize: 12,
           lineHeight: 1.75,
-          color: u.calloutText,
+          color: calloutFg,
+          fontWeight: light ? 500 : 400,
         }}
       >
-        ✨ {L(c.callout)}
+        ✨ {L(signal.recommendation)}
       </div>
-    </button>
+    </article>
   );
 }
 
-function Row({ label, value }: { label: string; value: string }) {
+function Row({
+  label,
+  value,
+  textColor,
+}: {
+  label: string;
+  value: string;
+  textColor: string;
+}) {
   return (
     <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
       <span style={{ textTransform: "uppercase", letterSpacing: 0.5 }}>
         {label}
       </span>
-      <span style={{ color: K.text, textAlign: "right" }}>{value}</span>
+      <span style={{ color: textColor, textAlign: "right" }}>{value}</span>
     </div>
   );
 }

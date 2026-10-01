@@ -89,7 +89,7 @@ export function ContextBar({
         >
           {meta.regions.map((r) => (
             <option key={r.id} value={r.id}>
-              {r.id === "all" ? "All" : L(r.label)}
+              {L(r.label)}
             </option>
           ))}
         </select>
@@ -123,24 +123,26 @@ export function ContextBar({
         </select>
       </Field>
 
-      <button
-        type="button"
-        onClick={() => setView(landing)}
-        className="kgs2-focus"
-        style={{
-          background: "none",
-          border: "none",
-          color: K.violet300,
-          fontSize: 12,
-          fontWeight: 600,
-          cursor: "pointer",
-          fontFamily: "inherit",
-          padding: 0,
-          textDecoration: "underline",
-        }}
-      >
-        Go to my view
-      </button>
+      {state.roleChanged ? (
+        <button
+          type="button"
+          onClick={() => setView(landing)}
+          className="kgs2-focus"
+          style={{
+            background: "none",
+            border: "none",
+            color: K.violet300,
+            fontSize: 12,
+            fontWeight: 600,
+            cursor: "pointer",
+            fontFamily: "inherit",
+            padding: 0,
+            textDecoration: "underline",
+          }}
+        >
+          Go to my view
+        </button>
+      ) : null}
 
       <span
         style={{

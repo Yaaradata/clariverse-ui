@@ -1,8 +1,7 @@
 "use client";
 
-import { useLabel2 } from "@kgs2/lib/demoState";
+import { useLabel2, useV2K } from "@kgs2/lib/demoState";
 import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 export type KpiTile2Data = {
   key?: string;
@@ -13,10 +12,11 @@ export type KpiTile2Data = {
 
 function KpiTile2({ tile }: { tile: KpiTile2Data }) {
   const L = useLabel2();
+  const K = useV2K();
   return (
     <div
       style={{
-        background: "#131313",
+        background: K.tile,
         border: `1px solid ${K.border}`,
         borderRadius: K.radius.tile,
         padding: 16,

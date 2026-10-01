@@ -1,32 +1,13 @@
 "use client";
 
 import signal from "@kgs2/data/signal_pr01.json";
-import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K, withTs } from "@kgs2/lib/demoState";
 import { useEffect, useRef, useState } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useToast2 } from "../shell/Toast";
 
 const APPROVING_MS = 500;
 const SIGNAL_ID = "PR-01";
-
-const outlineBtn = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 6,
-  padding: "8px 12px",
-  borderRadius: K.radius.chip,
-  background: "transparent",
-  border: `1px solid ${K.borderLight}`,
-  color: K.textSec,
-  fontSize: 14,
-  fontWeight: 600,
-  fontFamily: "inherit",
-  cursor: "pointer",
-  whiteSpace: "nowrap" as const,
-};
 
 /**
  * Human gate for PR-01: Regional GM can ask for a decision;
@@ -39,6 +20,22 @@ export function PromiseDecisionPanel({
   onViewDrafts: () => void;
   onOpenEvidence: () => void;
 }) {
+  const K = useV2K();
+  const outlineBtn = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "8px 12px",
+    borderRadius: K.radius.chip,
+    background: "transparent",
+    border: `1px solid ${K.borderLight}`,
+    color: K.textSec,
+    fontSize: 14,
+    fontWeight: 600,
+    fontFamily: "inherit",
+    cursor: "pointer",
+    whiteSpace: "nowrap" as const,
+  };
   const L = useLabel2();
   const { state, approve, askForDecision, isApproved } = useDemo2();
   const { show } = useToast2();
@@ -59,9 +56,9 @@ export function PromiseDecisionPanel({
 
   const banner =
     approved && ts
-      ? withTs(gate.onApprove.title, ts)
+      ? L(withTs(gate.onApprove.title, ts))
       : asked
-        ? gate.decisionRequest.chip
+        ? L(gate.decisionRequest.chip)
         : L(gate.title);
 
   const onApprove = () => {
@@ -72,7 +69,7 @@ export function PromiseDecisionPanel({
       setApproving(false);
       show(
         gate.onApprove.toast.title,
-        withTs(gate.onApprove.toast.body, stamp),
+        L(withTs(gate.onApprove.toast.body, stamp)),
       );
     }, APPROVING_MS);
   };
@@ -206,7 +203,7 @@ export function PromiseDecisionPanel({
       ) : null}
       {approved && ts ? (
         <div style={{ fontSize: 12, color: K.textMut, fontFamily: K.mono }}>
-          {withTs(gate.onApprove.auditEntry, ts)}
+          {L(withTs(gate.onApprove.auditEntry, ts))}
         </div>
       ) : null}
     </section>

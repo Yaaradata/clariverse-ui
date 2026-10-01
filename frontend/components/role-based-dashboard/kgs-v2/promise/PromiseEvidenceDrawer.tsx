@@ -1,13 +1,10 @@
 "use client";
 
 import signal from "@kgs2/data/signal_pr01.json";
-import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K, withTs } from "@kgs2/lib/demoState";
 import { X } from "lucide-react";
 import { type CSSProperties, useEffect, useMemo } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
 
 export type PromiseEvidenceTab =
@@ -25,6 +22,26 @@ export function PromiseEvidenceDrawer({
   onTab: (t: PromiseEvidenceTab) => void;
   onClose: () => void;
 }) {
+  const K = useV2K();
+  const cell: CSSProperties = {
+    padding: "6px 8px",
+    borderBottom: `1px solid ${K.borderLight}`,
+    color: K.body,
+    fontFamily: K.mono,
+    whiteSpace: "nowrap",
+  };
+  const h3: CSSProperties = {
+    margin: "0 0 8px",
+    fontSize: 13,
+    fontWeight: 700,
+    color: K.text,
+  };
+  const p: CSSProperties = {
+    margin: "0 0 8px",
+    fontSize: 13,
+    color: K.body,
+    lineHeight: 1.5,
+  };
   const L = useLabel2();
   const { state } = useDemo2();
   const open = tab != null;
@@ -199,7 +216,7 @@ export function PromiseEvidenceDrawer({
                     borderRadius: 10,
                     background: s.featured
                       ? withAlpha(K.violet400, 0.08)
-                      : K.surface,
+                      : K.inset,
                     border: `1px solid ${
                       s.featured ? withAlpha(K.violet400, 0.35) : K.borderLight
                     }`,
@@ -293,7 +310,7 @@ export function PromiseEvidenceDrawer({
                   style={{
                     padding: 12,
                     borderRadius: 10,
-                    background: K.surface,
+                    background: K.inset,
                     border: `1px solid ${K.borderLight}`,
                   }}
                 >
@@ -345,17 +362,21 @@ export function PromiseEvidenceDrawer({
                   <li>Seeded investigation · status Open</li>
                   {askTs ? (
                     <li>
-                      {withTs(
-                        signal.humanGate.decisionRequest.auditEntry,
-                        askTs,
+                      {L(
+                        withTs(
+                          signal.humanGate.decisionRequest.auditEntry,
+                          askTs,
+                        ),
                       )}
                     </li>
                   ) : null}
                   {approvalTs ? (
                     <li>
-                      {withTs(
-                        signal.humanGate.onApprove.auditEntry,
-                        approvalTs,
+                      {L(
+                        withTs(
+                          signal.humanGate.onApprove.auditEntry,
+                          approvalTs,
+                        ),
                       )}
                     </li>
                   ) : (
@@ -379,24 +400,3 @@ export function PromiseEvidenceDrawer({
   );
 }
 
-const cell: CSSProperties = {
-  padding: "6px 8px",
-  borderBottom: `1px solid ${K.borderLight}`,
-  color: K.body,
-  fontFamily: K.mono,
-  whiteSpace: "nowrap",
-};
-
-const h3: CSSProperties = {
-  margin: "0 0 8px",
-  fontSize: 13,
-  fontWeight: 700,
-  color: K.text,
-};
-
-const p: CSSProperties = {
-  margin: "0 0 8px",
-  fontSize: 13,
-  color: K.body,
-  lineHeight: 1.5,
-};

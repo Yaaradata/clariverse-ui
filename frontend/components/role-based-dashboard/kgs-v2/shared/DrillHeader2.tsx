@@ -1,9 +1,8 @@
 "use client";
 
-import { useLabel2 } from "@kgs2/lib/demoState";
+import { useLabel2, useV2K } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import { ArrowLeft } from "lucide-react";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useKgs2Nav } from "../nav";
 
 /**
@@ -23,6 +22,7 @@ export function DrillHeader2({
   backLabel?: string;
 }) {
   const L = useLabel2();
+  const K = useV2K();
   const { go } = useKgs2Nav();
   return (
     <header style={{ display: "flex", alignItems: "flex-start", gap: 20 }}>
@@ -62,7 +62,7 @@ export function DrillHeader2({
         >
           {L(title)}
         </h1>
-        <p style={{ margin: "6px 0 0", fontSize: 17, color: "#e5e5e5" }}>
+        <p style={{ margin: "6px 0 0", fontSize: 17, color: K.textSec }}>
           {L(subtitle)}
         </p>
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import partner from "@kgs2/data/partner.json";
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import { Lock } from "lucide-react";
 import {
@@ -12,11 +12,10 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { DrillHeader2 } from "../shared/DrillHeader2";
+import { SyntheticBadge } from "../shared/SyntheticBadge";
+import type { V2Tokens } from "../shared/themeTokens";
 
 type TabId = "workspace" | "kgs";
 
@@ -27,8 +26,8 @@ const SIGNAL_ROUTE: Record<string, V2View> = {
   "IN-01": "install",
 };
 
-function heatColour(n: number, max: number): string {
-  if (n <= 0) return K.surface;
+function heatColour(K: V2Tokens, n: number, max: number): string {
+  if (n <= 0) return K.inset;
   const t = Math.min(1, n / Math.max(max, 1));
   return withAlpha(K.orange, 0.12 + t * 0.55);
 }
@@ -38,6 +37,7 @@ function heatColour(n: number, max: number): string {
  * Only screen where a real competitor name may appear (subtitle).
  */
 export function PartnerView() {
+  const K = useV2K();
   const L = useLabel2();
   const { state, setView } = useDemo2();
   const isPartnerSm = state.role === "Partner service manager";
@@ -61,11 +61,18 @@ export function PartnerView() {
         display: "flex",
         flexDirection: "column",
         gap: 14,
-        padding: "16px 24px 24px",
       }}
     >
       <DrillHeader2 title={partner.title} subtitle={partner.subtitle} />
-      <div style={{ marginTop: -6 }}>
+      <div
+        style={{
+          marginTop: -6,
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          flexWrap: "wrap",
+        }}
+      >
         <span
           style={{
             fontSize: 11,
@@ -81,9 +88,10 @@ export function PartnerView() {
         >
           {partner.conceptLabel}
         </span>
+        <SyntheticBadge compact />
       </div>
 
-      {/* Consent boundary */}
+      {/* Consent boundary — partner keeps · aggregates → KGS · ← fixes back */}
       <section
         aria-label="Consent boundary"
         style={{
@@ -99,7 +107,7 @@ export function PartnerView() {
       >
         <div
           style={{
-            background: K.surface,
+            background: K.inset,
             border: `1px solid ${K.borderLight}`,
             borderRadius: 10,
             padding: "12px 14px",
@@ -136,13 +144,13 @@ export function PartnerView() {
             textAlign: "center",
           }}
         >
-          <div aria-hidden>aggregates →</div>
-          <div aria-hidden>← confirmed dates and fixes</div>
+          <div aria-hidden>{cb.crossesToKgs.join(", ")} →</div>
+          <div aria-hidden>← {cb.flowsBack.join(" · ")}</div>
         </div>
 
         <div
           style={{
-            background: K.surface,
+            background: K.inset,
             border: `1px solid ${K.borderLight}`,
             borderRadius: 10,
             padding: "12px 14px",
@@ -175,7 +183,7 @@ export function PartnerView() {
             display: "inline-flex",
             gap: 4,
             padding: 4,
-            background: K.surface,
+            background: K.inset,
             border: `1px solid ${K.borderLight}`,
             borderRadius: 10,
             alignSelf: "flex-start",
@@ -248,20 +256,6 @@ export function PartnerView() {
         />
       )}
 
-      <footer
-        style={{
-          marginTop: 4,
-          padding: "12px 14px",
-          borderRadius: 10,
-          border: `1px dashed ${withAlpha(K.violet400, 0.4)}`,
-          background: withAlpha(K.violet400, 0.06),
-          fontSize: 12,
-          color: K.textMut,
-          lineHeight: 1.5,
-        }}
-      >
-        {partner.conceptFooter}
-      </footer>
     </div>
   );
 }
@@ -277,6 +271,7 @@ function WorkspaceTab({
   setSharing: Dispatch<SetStateAction<typeof partner.workspace.sharing>>;
   onOpenSignal: (id: string) => void;
 }) {
+  const K = useV2K();
   const ws = partner.workspace;
   const mv = ws.managerView;
 
@@ -301,7 +296,7 @@ function WorkspaceTab({
             padding: "8px 14px",
             borderRadius: 10,
             border: `1px dashed ${K.borderLight}`,
-            background: K.surface,
+            background: K.inset,
             minWidth: 180,
             textAlign: "center",
           }}
@@ -342,7 +337,7 @@ function WorkspaceTab({
                   padding: "10px 12px",
                   borderRadius: 10,
                   border: `1px solid ${K.borderLight}`,
-                  background: K.surface,
+                  background: K.inset,
                   color: K.text,
                   fontFamily: "inherit",
                   cursor: item.linkedSignal ? "pointer" : "default",
@@ -400,7 +395,7 @@ function WorkspaceTab({
             <div
               key={m.label}
               style={{
-                background: K.surface,
+                background: K.inset,
                 borderRadius: 10,
                 padding: "10px 12px",
                 border: `1px solid ${K.borderLight}`,
@@ -444,7 +439,7 @@ function WorkspaceTab({
                 gridTemplateColumns: "1fr auto",
                 gap: 12,
                 padding: "10px 12px",
-                background: K.surface,
+                background: K.inset,
                 borderRadius: 10,
                 border: `1px solid ${K.borderLight}`,
                 fontSize: 13,
@@ -529,7 +524,7 @@ function WorkspaceTab({
                   justifyContent: "space-between",
                   gap: 12,
                   padding: "10px 12px",
-                  background: K.surface,
+                  background: K.inset,
                   borderRadius: 10,
                   border: `1px solid ${K.borderLight}`,
                   opacity: row.locked ? 0.85 : 1,
@@ -581,7 +576,7 @@ function WorkspaceTab({
                     cursor: row.locked ? "not-allowed" : "pointer",
                   }}
                 >
-                  {on ? "On" : "Off"}
+                  {row.locked ? "Off (locked)" : on ? "On" : "Off"}
                 </button>
               </div>
             );
@@ -605,6 +600,20 @@ function KgsSeesTab({
   canMarkReady: boolean;
   onMarkReady: (key: string) => void;
 }) {
+  const K = useV2K();
+  const th: CSSProperties = {
+    textAlign: "left",
+    padding: "8px 10px",
+    color: K.textMut,
+    fontWeight: 600,
+    borderBottom: `1px solid ${K.borderLight}`,
+    whiteSpace: "nowrap",
+  };
+  const td: CSSProperties = {
+    padding: "8px 10px",
+    borderBottom: `1px solid ${K.borderLight}`,
+    color: K.body,
+  };
   const kv = partner.kgsView;
   const grid = kv.themePartnerGrid;
   const pc = kv.partnersConnected;
@@ -625,7 +634,10 @@ function KgsSeesTab({
         }}
       >
         <span style={{ fontFamily: K.mono }}>{pc.connected}</span>
-        <span> of {pc.of} partners connected</span>
+        <span> of {pc.of} distributors connected</span>
+        <span style={{ fontWeight: 500, marginLeft: 6, opacity: 0.85 }}>
+          · honest coverage
+        </span>
       </div>
 
       {/* Heat grid */}
@@ -663,7 +675,7 @@ function KgsSeesTab({
                         textAlign: "center",
                         fontFamily: K.mono,
                         fontWeight: n > 0 ? 700 : 400,
-                        background: heatColour(n, maxHeat),
+                        background: heatColour(K, n, maxHeat),
                         color: n > 0 ? K.text : K.textMut,
                       }}
                     >
@@ -774,7 +786,7 @@ function KgsSeesTab({
               <div
                 key={key}
                 style={{
-                  background: K.surface,
+                  background: K.inset,
                   border: `1px solid ${K.borderLight}`,
                   borderRadius: 12,
                   padding: 14,
@@ -830,11 +842,12 @@ function KgsSeesTab({
                     disabled={!canMarkReady || ready}
                     title={
                       ready
-                        ? "Ready to send — Partner manager sends outside this demo"
+                        ? "Ready to send — nothing is sent from this demo"
                         : canMarkReady
-                          ? "Mark draft ready to send (nothing is sent)"
-                          : "Only Partner manager can mark ready to send"
+                          ? "Mark draft ready to send (never sends)"
+                          : "Marking ready to send sits with the Partner manager"
                     }
+                    aria-disabled={!canMarkReady || ready}
                     onClick={() => {
                       if (!canMarkReady || ready) return;
                       onMarkReady(key);
@@ -888,6 +901,7 @@ function Card({
   sub?: string;
   children: ReactNode;
 }) {
+  const K = useV2K();
   return (
     <section
       style={{
@@ -927,18 +941,3 @@ function Card({
     </section>
   );
 }
-
-const th: CSSProperties = {
-  textAlign: "left",
-  padding: "8px 10px",
-  color: K.textMut,
-  fontWeight: 600,
-  borderBottom: `1px solid ${K.borderLight}`,
-  whiteSpace: "nowrap",
-};
-
-const td: CSSProperties = {
-  padding: "8px 10px",
-  borderBottom: `1px solid ${K.borderLight}`,
-  color: K.body,
-};

@@ -1,40 +1,44 @@
 "use client";
 
 import promise from "@kgs2/data/promise.json";
-import { useLabel2 } from "@kgs2/lib/demoState";
-import type { V2View } from "@kgs2/types";
-import { Sparkles } from "lucide-react";
-import { type CSSProperties, useState } from "react";
-import { Panel } from "@/components/role-based-dashboard/kgs/drill/Panel";
+import { useDemo2, useLabel2, useV2K } from "@kgs2/lib/demoState";
 import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+  type PromiseWallCard,
+  promiseForPeriod,
+} from "@kgs2/lib/drillFromPeriod";
+import { seriesForRange } from "@kgs2/lib/periodData";
+import type { V2View } from "@kgs2/types";
+import { type CSSProperties, useMemo, useState } from "react";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { DrillHeader2 } from "../shared/DrillHeader2";
 import { KpiRow2 } from "../shared/KpiRow2";
+import { Panel } from "../shared/Panel2";
 import {
   SignalWall2,
   type SignalWall2Data,
   type WallLevel2,
+  wallFooter,
 } from "../shared/SignalWall2";
+import type { V2Tokens } from "../shared/themeTokens";
 import { CauseStackedBar } from "./CauseStackedBar";
-import { PromiseRegionChart } from "./PromiseRegionChart";
+import {
+  PromiseRegionChart,
+  REGION_ORDER,
+  regionStroke,
+} from "./PromiseRegionChart";
 
 const VISIBLE_DISTRIBUTORS = 6;
 
-function formatKpiValue(value: number, unit?: string): string {
-  if (unit === "%") return `${value}%`;
-  if (unit === "days") return `${value} days`;
-  return value.toLocaleString("en-GB");
-}
-
-function keptColour(pct: number): string {
+function keptColour(K: V2Tokens, pct: number): string {
   if (pct < 75) return K.red;
   if (pct < 85) return K.amber;
   return K.green;
 }
 
-function trendGlyph(trend: string): { text: string; color: string } {
+function trendGlyph(
+  K: V2Tokens,
+  trend: string,
+): { text: string; color: string } {
   if (trend === "down") return { text: "▼", color: K.red };
   if (trend === "up") return { text: "▲", color: K.green };
   return { text: "—", color: K.textMut };
@@ -55,15 +59,19 @@ function wallLevel(card: { level?: string; severity: string }): WallLevel2 {
   return "warning";
 }
 
-function buildPromiseWall(): SignalWall2Data {
+function buildPromiseWall(
+  signalWall: PromiseWallCard[],
+  periodLabel: string,
+): SignalWall2Data {
   const openFor: Record<string, V2View | undefined> = {
     "PR-01": "promiseHero",
   };
+  const cards = signalWall.map((card) => ({ ...card, level: wallLevel(card) }));
   return {
-    title: "Signal Wall",
-    sub: "Open North for the hero deep dive",
-    pill: "Live",
-    cards: promise.signalWall.map((card) => {
+    title: "LiSN Signal Wall",
+    sub: `Promise signals · ${periodLabel} · click for detail`,
+    footer: wallFooter(cards),
+    cards: signalWall.map((card) => {
       const level = wallLevel(card);
       return {
         id: card.id,
@@ -80,10 +88,17 @@ function buildPromiseWall(): SignalWall2Data {
               ? ["North", "Allocation queue N-2"]
               : card.id === "PR-02"
                 ? ["{{place:Gurugram hub}}", "Last mile"]
-                : ["SEA"],
-          actions: card.cta
-            ? [card.cta.replace(" →", "")]
-            : ["Hold · no action needed"],
+                : card.id === "SEA-IMPROVING"
+                  ? ["SEA"]
+                  : [],
+          actions:
+            card.id === "PR-01"
+              ? ["Open signal"]
+              : card.action
+                ? [card.action]
+                : card.cta
+                  ? [card.cta.replace(" →", "")]
+                  : ["Hold · no action needed"],
           timeline: card.trend,
           owner:
             card.id === "SEA-IMPROVING" ? "Regional GM" : "Operations lead",
@@ -92,32 +107,62 @@ function buildPromiseWall(): SignalWall2Data {
         openView: openFor[card.id],
       };
     }),
-    footer: [
-      { label: "Critical", value: promise.signalWallFooter.critical },
-      { label: "Needs action", value: promise.signalWallFooter.needsAction },
-      { label: "Improving", value: promise.signalWallFooter.improving },
-    ],
   };
 }
 
 /**
- * Promise view — InstalledBase-style three-column drill (SPEC §5a / R3).
+ * Promise view — SPEC §5a.
  */
 export function PromiseView() {
+  const K = useV2K();
+  const REGION_STROKE = regionStroke(K);
+  const th: CSSProperties = {
+    textAlign: "left",
+    padding: "8px 10px",
+    fontSize: 11,
+    fontWeight: 700,
+    color: K.textMut,
+    borderBottom: `1px solid ${K.borderLight}`,
+    whiteSpace: "nowrap",
+  };
+  const td: CSSProperties = {
+    padding: "8px 10px",
+    fontSize: 13,
+    color: K.body,
+    borderBottom: `1px solid ${K.borderLight}`,
+    whiteSpace: "nowrap",
+  };
   const L = useLabel2();
+  const { state } = useDemo2();
   const [showAllDistributors, setShowAllDistributors] = useState(false);
 
-  const north = promise.weeklyByRegion.series.find(
-    (s) => s.regionId === "North",
+  const drill = useMemo(
+    () => promiseForPeriod(state.dateRange),
+    [state.dateRange],
   );
-  const northLabel = L(north?.region ?? "{{region:North}}");
-
-  const distributors = [...promise.distributors].sort(
+  const distributors = [...drill.distributors].sort(
     (a, b) => a.keptVsOriginalPct - b.keptVsOriginalPct,
   );
   const visible = showAllDistributors
     ? distributors
     : distributors.slice(0, VISIBLE_DISTRIBUTORS);
+
+  const weekly = useMemo(() => {
+    const weeks = promise.weeklyByRegion.weeks;
+    const n = seriesForRange(
+      weeks.map((_, i) => i),
+      state.dateRange,
+    ).length;
+    const slicedWeeks = weeks.slice(-n);
+    return {
+      weeks: slicedWeeks,
+      series: promise.weeklyByRegion.series.map((s) => ({
+        ...s,
+        values: seriesForRange(s.values, state.dateRange),
+      })),
+      targetPct: promise.weeklyByRegion.targetPct,
+    };
+  }, [state.dateRange]);
 
   return (
     <div
@@ -125,7 +170,6 @@ export function PromiseView() {
         display: "flex",
         flexDirection: "column",
         gap: 16,
-        padding: "16px 24px 24px",
       }}
     >
       <DrillHeader2
@@ -134,330 +178,308 @@ export function PromiseView() {
       />
 
       <KpiRow2
-        tiles={promise.kpis.map((tile) => ({
-          key: tile.key,
-          label: tile.label,
-          value: formatKpiValue(tile.value, tile.unit),
-        }))}
+        tiles={drill.kpis}
       />
 
-      {/* Three-column row — v1 InstalledBase grid */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+          gridTemplateColumns: "minmax(0, 1.45fr) minmax(300px, 0.95fr)",
           gap: 12,
           alignItems: "stretch",
         }}
       >
-        {/* Left: distributors furthest behind */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            minWidth: 0,
-            minHeight: 0,
-          }}
+        <Panel
+          title="Promise kept by region, weekly"
+          sub={
+            state.dateRange === "7d"
+              ? "Recent weeks · North highlighted · 90% target"
+              : state.dateRange === "30d"
+                ? "Last ~10 weeks · North highlighted · 90% target"
+                : "13 weeks · North · South · East · West · SEA · 90% target"
+          }
+          style={{ height: "100%", display: "flex", flexDirection: "column" }}
         >
-          <Panel
-            title="Distributors furthest behind"
-            sub="Worst kept % first"
+          <PromiseRegionChart
+            weeks={weekly.weeks}
+            series={weekly.series}
+            targetPct={weekly.targetPct}
+            labelFn={L}
+            height={260}
+          />
+          <div
             style={{
-              flex: 1,
-              minHeight: 0,
-              height: "100%",
-              overflow: "hidden",
+              display: "flex",
+              columnGap: 14,
+              rowGap: 8,
+              marginTop: 10,
+              fontSize: 12,
+              flexWrap: "wrap",
+              alignItems: "center",
             }}
           >
-            <div
-              style={{
-                flex: 1,
-                minHeight: 0,
-                overflowY: "auto",
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-              }}
-            >
-              {visible.map((row) => {
-                const t = trendGlyph(row.trend);
-                const pctColor = keptColour(row.keptVsOriginalPct);
-                return (
-                  <div
-                    key={row.distributorId}
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr auto auto",
-                      gap: 8,
-                      alignItems: "center",
-                      padding: "8px 10px",
-                      background: K.surface,
-                      borderRadius: 8,
-                      border: `1px solid ${K.borderLight}`,
-                    }}
-                  >
-                    <div style={{ minWidth: 0 }}>
-                      <div
-                        style={{
-                          fontSize: 13,
-                          fontWeight: 700,
-                          color: K.text,
-                          lineHeight: 1.3,
-                          whiteSpace: "nowrap",
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                        }}
-                      >
-                        {L(row.distributor)}
-                      </div>
-                      <div style={{ fontSize: 11, color: K.textMut }}>
-                        {L(row.region)}
-                      </div>
-                    </div>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 800,
-                        fontFamily: K.mono,
-                        fontVariantNumeric: "tabular-nums",
-                        color: pctColor,
-                      }}
-                    >
-                      {row.keptVsOriginalPct}%
-                    </span>
-                    <span
-                      title={row.trend}
-                      style={{
-                        fontSize: 14,
-                        fontWeight: 700,
-                        color: t.color,
-                        width: 16,
-                        textAlign: "center",
-                      }}
-                    >
-                      {t.text}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-            {distributors.length > VISIBLE_DISTRIBUTORS ? (
-              <button
-                type="button"
-                className="kgs2-focus"
-                onClick={() => setShowAllDistributors((v) => !v)}
-                style={{
-                  marginTop: 10,
-                  alignSelf: "flex-start",
-                  background: "transparent",
-                  border: "none",
-                  color: K.violet300,
-                  fontSize: 12,
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  fontFamily: "inherit",
-                  padding: 0,
-                }}
-              >
-                {showAllDistributors
-                  ? "Show fewer"
-                  : `Show all ${distributors.length}`}
-              </button>
-            ) : null}
-          </Panel>
-        </div>
-
-        {/* Middle: North chart + causes */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 12,
-            minWidth: 0,
-          }}
-        >
-          <Panel
-            title={`${northLabel} fell from 88% to 71% in 4 weeks`}
-            sub="Other regions as grey range · 90% target"
-          >
-            <PromiseRegionChart
-              weeks={promise.weeklyByRegion.weeks}
-              series={promise.weeklyByRegion.series}
-              targetPct={promise.weeklyByRegion.targetPct}
-              northLabel={northLabel}
-              height={220}
-              endLabel="71%"
-            />
-            <div
-              style={{
-                display: "flex",
-                gap: 14,
-                marginTop: 6,
-                fontSize: 11,
-                color: K.textMut,
-                flexWrap: "wrap",
-              }}
-            >
-              <span>
-                <span style={{ color: K.orange }}>━</span> {northLabel}
-              </span>
-              <span>
+            {REGION_ORDER.map((id) => {
+              const stroke = REGION_STROKE[id];
+              const isNorth = id === "North";
+              return (
                 <span
+                  key={id}
                   style={{
-                    display: "inline-block",
-                    width: 12,
-                    height: 7,
-                    background: withAlpha(K.slate, 0.35),
-                    marginRight: 4,
-                    verticalAlign: "middle",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 7,
+                    fontWeight: isNorth ? 700 : 600,
+                    color: isNorth ? K.text : K.textSec,
                   }}
-                />
-                Other regions
-              </span>
-              <span>— — 90% target</span>
-            </div>
-          </Panel>
+                >
+                  <span
+                    aria-hidden
+                    style={{
+                      width: 18,
+                      height: 3,
+                      borderRadius: 2,
+                      background: stroke.color,
+                      flexShrink: 0,
+                      boxShadow: isNorth
+                        ? "none"
+                        : `0 0 0 1px ${withAlpha(K.text, 0.2)}`,
+                    }}
+                  />
+                  {L(`{{region:${id}}}`)}
+                </span>
+              );
+            })}
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 7,
+                fontWeight: 500,
+                color: K.textMut,
+              }}
+            >
+              <span
+                aria-hidden
+                style={{
+                  width: 18,
+                  borderTop: `2px dashed ${K.textMut}`,
+                  flexShrink: 0,
+                }}
+              />
+              90% target
+            </span>
+          </div>
+        </Panel>
 
-          <Panel
-            title="What's causing the misses"
-            sub="KGS allocation · backorder · order change · last mile"
-          >
-            <CauseStackedBar
-              rows={promise.causeSplitByRegion}
-              labelFn={L}
-              height={200}
-            />
-          </Panel>
-        </div>
-
-        {/* Right: Signal Wall */}
-        <div
-          style={{
-            minWidth: 0,
-            minHeight: 0,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ flex: 1, minHeight: 0 }}>
-            <SignalWall2 wall={buildPromiseWall()} />
+        <div style={{ minWidth: 0, minHeight: 0, display: "flex" }}>
+          <div style={{ flex: 1, minHeight: 0, width: "100%" }}>
+            <SignalWall2 wall={buildPromiseWall(drill.signalWall, drill.timeLabel)} compact />
           </div>
         </div>
       </div>
 
-      {/* Said vs shows */}
-      <Panel title="What partners said vs what the orders show">
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          {promise.saidVsShows.map((row) => (
-            <div
-              key={`${row.partner}-${row.phrase}`}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 12,
-                padding: "10px 12px",
-                background: K.surface,
-                borderRadius: 10,
-                border: `1px solid ${K.borderLight}`,
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: K.textMut,
-                    marginBottom: 4,
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  PARTNER SAID · {L(row.partner)}
-                </div>
-                <div style={{ fontSize: 14, color: K.text, lineHeight: 1.45 }}>
-                  “{L(row.phrase)}”
-                </div>
-              </div>
-              <div>
-                <div
-                  style={{
-                    fontSize: 11,
-                    color: K.textMut,
-                    marginBottom: 4,
-                    letterSpacing: "0.04em",
-                  }}
-                >
-                  ORDERS SHOW
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: K.body,
-                    lineHeight: 1.45,
-                    fontFamily: K.font,
-                  }}
-                >
-                  {L(row.orderFacts)}
-                </div>
-              </div>
-            </div>
-          ))}
+      {/* Distributor table — 8 columns, sorted by kept % ascending */}
+      <Panel
+        title="Distributors"
+        sub={`${drill.timeLabel} · sorted by kept vs original %, worst first`}
+      >
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 13,
+            }}
+          >
+            <thead>
+              <tr>
+                {[
+                  "Distributor",
+                  "Region",
+                  "Orders due",
+                  "Kept vs original %",
+                  "Avg slip days",
+                  "Complaints",
+                  "Trend",
+                  "Top candidate cause",
+                ].map((h) => (
+                  <th key={h} style={th}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {visible.map((row) => {
+                const t = trendGlyph(K, row.trend);
+                return (
+                  <tr key={row.distributorId}>
+                    <td style={{ ...td, color: K.text, fontWeight: 700 }}>
+                      {L(row.distributor)}
+                    </td>
+                    <td style={td}>{L(row.region)}</td>
+                    <td style={{ ...td, fontFamily: K.mono }}>
+                      {row.ordersDue}
+                    </td>
+                    <td
+                      style={{
+                        ...td,
+                        fontFamily: K.mono,
+                        fontWeight: 800,
+                        color: keptColour(K, row.keptVsOriginalPct),
+                      }}
+                    >
+                      {row.keptVsOriginalPct}%
+                    </td>
+                    <td style={{ ...td, fontFamily: K.mono }}>
+                      {row.averageSlipDays}
+                    </td>
+                    <td style={{ ...td, fontFamily: K.mono }}>
+                      {row.complaints}
+                    </td>
+                    <td
+                      style={{
+                        ...td,
+                        color: t.color,
+                        fontWeight: 700,
+                        textAlign: "center",
+                      }}
+                      title={row.trend}
+                    >
+                      {t.text}
+                    </td>
+                    <td style={{ ...td, whiteSpace: "normal", maxWidth: 220 }}>
+                      {L(row.topCandidateCause)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
+        {distributors.length > VISIBLE_DISTRIBUTORS ? (
+          <button
+            type="button"
+            className="kgs2-focus"
+            onClick={() => setShowAllDistributors((v) => !v)}
+            style={{
+              marginTop: 10,
+              alignSelf: "flex-start",
+              background: "transparent",
+              border: "none",
+              color: K.violet300,
+              fontSize: 12,
+              fontWeight: 700,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              padding: 0,
+            }}
+          >
+            {showAllDistributors
+              ? "Show fewer"
+              : `Show all ${distributors.length}`}
+          </button>
+        ) : null}
       </Panel>
 
-      {/* LiSN evidence summary */}
-      <section
-        aria-label="LiSN evidence summary"
+      <div
         style={{
-          background: withAlpha(K.brand, 0.08),
-          border: `1px solid ${withAlpha(K.violet400, 0.35)}`,
-          borderRadius: K.radius.card,
-          padding: 18,
-          display: "flex",
-          flexDirection: "column",
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1.2fr) minmax(0, 1fr)",
           gap: 12,
+          alignItems: "stretch",
         }}
       >
-        <h2
-          style={{
-            margin: 0,
-            fontSize: 18,
-            fontWeight: 800,
-            color: K.text,
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-          }}
+        <Panel
+          title="What partners said vs what the orders show"
+          sub={`${drill.timeLabel} · ${drill.saidVsShows.length} of ${drill.saidVsShowsTotal} partner contacts · ${drill.saidVsShowsRule}`}
+          right={
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                padding: "4px 10px",
+                borderRadius: K.radius.pill,
+                background: withAlpha(K.violet400, 0.15),
+                color: K.violet300,
+                border: `1px solid ${withAlpha(K.violet400, 0.4)}`,
+                whiteSpace: "nowrap",
+              }}
+            >
+              joined with order data
+            </span>
+          }
         >
-          <Sparkles size={18} color={K.violet400} aria-hidden />
-          LiSN evidence summary
-        </h2>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 16,
-          }}
+          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            {drill.saidVsShows.map((row) => (
+              <div
+                key={row.id}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: 12,
+                  padding: "10px 12px",
+                  background: K.inset,
+                  borderRadius: 10,
+                  border: `1px solid ${K.borderLight}`,
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: K.textMut,
+                      marginBottom: 4,
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    PARTNER SAID · {L(row.partner)} · {row.date}
+                  </div>
+                  <div
+                    style={{ fontSize: 14, color: K.text, lineHeight: 1.45 }}
+                  >
+                    “{L(row.phrase)}”
+                  </div>
+                </div>
+                <div>
+                  <div
+                    style={{
+                      fontSize: 11,
+                      color: K.textMut,
+                      marginBottom: 4,
+                      letterSpacing: "0.04em",
+                    }}
+                  >
+                    ORDERS SHOW
+                  </div>
+                  <div
+                    style={{
+                      fontSize: 14,
+                      color: K.body,
+                      lineHeight: 1.45,
+                    }}
+                  >
+                    {L(row.orderFacts)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Panel>
+
+        <Panel
+          title="Candidate causes by region"
+          sub={`${drill.timeLabel} · candidate causes — owner confirms`}
         >
-          <p style={summaryP}>
-            <strong style={{ color: K.text }}>Main signal:</strong>{" "}
-            {L(promise.evidenceSummary.mainSignal)}
-          </p>
-          <p style={summaryP}>
-            <strong style={{ color: K.text }}>What changed:</strong>{" "}
-            {L(promise.evidenceSummary.whatChanged)}
-          </p>
-          <p style={summaryP}>
-            <strong style={{ color: K.text }}>Decide first:</strong>{" "}
-            {L(promise.evidenceSummary.decideFirst)}
-          </p>
-        </div>
-      </section>
+          <CauseStackedBar
+            rows={drill.causeSplitByRegion}
+            labelFn={L}
+            height={220}
+          />
+        </Panel>
+      </div>
     </div>
   );
 }
-
-const summaryP: CSSProperties = {
-  margin: 0,
-  fontSize: 14,
-  lineHeight: 1.55,
-  color: K.body,
-};

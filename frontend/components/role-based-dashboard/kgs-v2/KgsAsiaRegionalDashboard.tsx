@@ -1,10 +1,8 @@
 "use client";
 
-import meta from "@kgs2/data/meta.json";
-import { DemoProvider, useDemo2 } from "@kgs2/lib/demoState";
+import { DemoProvider, useDemo2, useV2K } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import { type ReactNode, useCallback, useMemo, useState } from "react";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { InstallView } from "./install/InstallView";
 import { type Kgs2Nav, Kgs2NavContext } from "./nav";
 import { OverviewView } from "./overview/OverviewView";
@@ -40,6 +38,7 @@ export function KgsAsiaRegionalDashboard({
 
 function Kgs2DashboardInner({ onExit }: { onExit: () => void }) {
   const { state, setView, reset } = useDemo2();
+  const K = useV2K();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const go = useCallback((view: V2View) => setView(view), [setView]);
@@ -92,12 +91,14 @@ function Kgs2DashboardInner({ onExit }: { onExit: () => void }) {
     <Kgs2NavContext.Provider value={nav}>
       <div
         className="kgs2-root"
+        data-theme={state.theme}
         style={{
           display: "flex",
           minHeight: "100vh",
           background: K.page,
           color: K.text,
           fontFamily: K.font,
+          transition: "background 160ms ease, color 160ms ease",
         }}
       >
         <style>{`
@@ -114,24 +115,16 @@ function Kgs2DashboardInner({ onExit }: { onExit: () => void }) {
           }}
         >
           <DrillHeader view={state.view} />
-          <main style={{ flex: 1, overflow: "auto", paddingBottom: 48 }}>
-            {body}
-          </main>
-          <footer
+          <main
             style={{
-              position: "sticky",
-              bottom: 0,
-              padding: "8px 24px",
-              borderTop: `1px solid ${K.borderLight}`,
-              background: K.elevated,
-              fontSize: 11,
-              color: K.textMut,
-              letterSpacing: "0.02em",
-              zIndex: 60,
+              flex: 1,
+              overflow: "auto",
+              padding: "16px 24px 24px",
+              minWidth: 0,
             }}
           >
-            {meta.footer}
-          </footer>
+            {body}
+          </main>
         </div>
         <DemoMenu
           open={menuOpen}

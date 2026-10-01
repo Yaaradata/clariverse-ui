@@ -1,7 +1,6 @@
 {
   "title": "Partner view",
   "conceptLabel": "Concept",
-  "conceptFooter": "Concept: partner owns its data; KGS sees only what the partner shares. Legal and data-protection terms to be agreed.",
   "subtitle": "Help partners run their businesses better, so they choose KGS over Honeywell or anyone else.",
   "consentBoundary": {
     "partnerKeeps": ["customer identities", "pricing", "raw messages"],

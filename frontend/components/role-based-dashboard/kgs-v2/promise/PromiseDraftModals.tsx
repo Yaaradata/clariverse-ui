@@ -1,13 +1,10 @@
 "use client";
 
 import signal from "@kgs2/data/signal_pr01.json";
-import { useLabel2 } from "@kgs2/lib/demoState";
+import { useLabel2, useV2K } from "@kgs2/lib/demoState";
 import { X } from "lucide-react";
 import { useEffect } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
 
 const BODIES: Record<string, string> = {
@@ -30,6 +27,7 @@ export function PromiseDraftModals({
   onSelect: (id: string) => void;
   onClose: () => void;
 }) {
+  const K = useV2K();
   const L = useLabel2();
 
   useEffect(() => {
@@ -181,7 +179,7 @@ export function PromiseDraftModals({
 
         <article
           style={{
-            background: K.surface,
+            background: K.inset,
             border: `1px solid ${K.borderLight}`,
             borderRadius: 12,
             padding: 14,

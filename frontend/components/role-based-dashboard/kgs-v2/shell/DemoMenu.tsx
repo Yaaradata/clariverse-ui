@@ -1,11 +1,10 @@
 "use client";
 
 import meta from "@kgs2/data/meta.json";
-import { useDemo2 } from "@kgs2/lib/demoState";
+import { useDemo2, useV2K } from "@kgs2/lib/demoState";
 import type { Role } from "@kgs2/types";
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { ROLE_LANDING } from "../nav";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
 import { AnonymiseToggle } from "./AnonymiseToggle";
@@ -19,6 +18,7 @@ export function DemoMenu({
   onClose: () => void;
   onReset: () => void;
 }) {
+  const K = useV2K();
   const ref = useRef<HTMLDivElement>(null);
   const { state, setRole, setView } = useDemo2();
   const landing = ROLE_LANDING[state.role] ?? "overview";
@@ -56,7 +56,7 @@ export function DemoMenu({
         border: `1px solid ${K.borderLight}`,
         borderRadius: K.radius.tile,
         padding: 12,
-        boxShadow: "0 16px 40px rgba(0,0,0,0.55)",
+        boxShadow: `0 16px 40px ${K.scrim}`,
         display: "flex",
         flexDirection: "column",
         gap: 10,
@@ -74,7 +74,7 @@ export function DemoMenu({
         value={state.role}
         onChange={(e) => setRole(e.target.value as Role)}
         style={{
-          background: K.surface,
+          background: K.inset,
           color: K.textSec,
           border: `1px solid ${K.borderLight}`,
           borderRadius: 8,
@@ -120,7 +120,7 @@ export function DemoMenu({
           display: "flex",
           alignItems: "center",
           gap: 8,
-          background: K.surface,
+          background: K.inset,
           border: `1px solid ${K.borderLight}`,
           color: K.text,
           borderRadius: 8,

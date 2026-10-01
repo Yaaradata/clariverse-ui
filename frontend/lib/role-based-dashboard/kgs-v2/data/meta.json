@@ -1,6 +1,6 @@
 {
-  "title": "India & Southeast Asia — this week",
-  "breadcrumbRoot": "Global Commercial Fire · India & SEA",
+  "title": "{{region:India & Southeast Asia}} — this week",
+  "breadcrumbRoot": "Global Commercial Fire · {{region:India & Southeast Asia}}",
   "badge": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
   "footer": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
   "dataAsOf": {
@@ -13,7 +13,7 @@
     "endDate": "2026-09-25"
   },
   "regions": [
-    { "id": "all", "label": "India & SEA" },
+    { "id": "all", "label": "{{region:India & Southeast Asia}}" },
     { "id": "North", "label": "{{region:North}}" },
     { "id": "South", "label": "{{region:South}}" },
     { "id": "East", "label": "{{region:East}}" },

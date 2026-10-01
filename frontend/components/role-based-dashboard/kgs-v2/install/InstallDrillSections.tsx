@@ -1,6 +1,6 @@
 "use client";
 
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K } from "@kgs2/lib/demoState";
 import type { CSSProperties, ReactNode } from "react";
 import {
   Bar,
@@ -13,27 +13,31 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 /** Local drill chrome — ChannelView look, no v1 DemoProvider. */
-const DR = {
-  card: K.bg,
-  border: K.border,
-  text: K.text,
-  sub: K.textSec,
-  muted: K.textMut,
-  dim: K.textMut,
-  red: K.red,
-  orange: K.orange,
-  amber: K.amber,
-  green: K.green,
-  purple: K.violet400,
-} as const;
+function useDR() {
+  const K = useV2K();
+  return {
+    card: K.panel,
+    border: K.border,
+    text: K.text,
+    sub: K.textSec,
+    muted: K.textMut,
+    dim: K.textMut,
+    red: K.red,
+    orange: K.orange,
+    amber: K.amber,
+    green: K.green,
+    purple: K.violet400,
+    faint: withAlpha(K.text, 0.02),
+    mono: K.mono,
+  };
+}
 
-function severityColor(s: string): string {
+type Dr = ReturnType<typeof useDR>;
+
+function severityColor(DR: Dr, s: string): string {
   const k = s.toLowerCase();
   if (k.includes("friction") || k.includes("critical") || k.includes("high"))
     return DR.amber;
@@ -52,10 +56,11 @@ function DrMono({
   color?: string;
   size?: number;
 }) {
+  const DR = useDR();
   return (
     <span
       style={{
-        fontFamily: K.mono,
+        fontFamily: DR.mono,
         fontWeight: 700,
         color: color || DR.text,
         fontSize: size,
@@ -97,6 +102,7 @@ function DrCard({
   accent?: string;
   style?: CSSProperties;
 }) {
+  const DR = useDR();
   return (
     <section
       style={{
@@ -116,6 +122,7 @@ function DrCard({
 }
 
 function DrHead({ children, sub }: { children: ReactNode; sub?: string }) {
+  const DR = useDR();
   const L = useLabel2();
   return (
     <header style={{ marginBottom: 12 }}>
@@ -149,6 +156,7 @@ export type InstallStep = {
 
 /** Step strip — v1 ChannelMixStrip layout. */
 export function InstallStepStrip({ steps }: { steps: InstallStep[] }) {
+  const DR = useDR();
   const L = useLabel2();
   return (
     <div
@@ -212,29 +220,43 @@ export function InstallStepStrip({ steps }: { steps: InstallStep[] }) {
   );
 }
 
-/** Diverging friction / praise bars — symmetric axis, fixed ticks. */
+/** Diverging friction / praise bars — exact step names, axis to 25. */
 export function FrictionPraiseChart({
   steps,
   frictionTotal,
   praiseTotal,
+  periodLabel,
 }: {
   steps: InstallStep[];
   frictionTotal: number;
   praiseTotal: number;
+  periodLabel?: string;
 }) {
+  const DR = useDR();
+  const K = useV2K();
   const L = useLabel2();
   const data = steps.map((s) => ({
-    step: s.shortLabel,
+    step: s.step,
     friction: -s.friction,
     praise: s.praise,
   }));
+  // Axis fitted to the window: short windows have single-digit counts.
+  const peak = Math.max(0, ...steps.map((s) => Math.max(s.friction, s.praise)));
+  const bound = peak <= 4 ? 4 : peak <= 10 ? 10 : 25;
+  const ticks =
+    bound === 25
+      ? [-25, -20, -10, 0, 10, 20, 25]
+      : [-bound, -bound / 2, 0, bound / 2, bound];
 
   return (
-    <DrCard accent={DR.orange}>
+    <DrCard
+      accent={DR.orange}
+      style={{ height: "100%", display: "flex", flexDirection: "column" }}
+    >
       <DrHead
-        sub={`Experience only · friction ${frictionTotal} · praise ${praiseTotal}`}
+        sub={`${periodLabel ? `${periodLabel} · ` : ""}experience only · friction ${frictionTotal} · praise ${praiseTotal}`}
       >
-        {`Friction vs praise by step · ${frictionTotal} / ${praiseTotal}`}
+        {`Friction vs praise by commissioning step · ${frictionTotal} / ${praiseTotal}`}
       </DrHead>
       <div
         style={{
@@ -244,7 +266,7 @@ export function FrictionPraiseChart({
           fontSize: 12,
           fontWeight: 700,
           color: DR.muted,
-          padding: "0 8px 0 120px",
+          padding: "0 8px 0 248px",
         }}
       >
         <span style={{ color: DR.amber }}>Friction</span>
@@ -252,9 +274,10 @@ export function FrictionPraiseChart({
       </div>
       <div
         role="img"
-        aria-label="Friction versus praise by step"
-        style={{ height: 260 }}
+        aria-label="Friction versus praise by commissioning step"
+        style={{ flex: 1, minHeight: 310, position: "relative" }}
       >
+        <div style={{ position: "absolute", inset: 0 }}>
         <ResponsiveContainer
           width="100%"
           height="100%"
@@ -269,8 +292,8 @@ export function FrictionPraiseChart({
             <CartesianGrid stroke={K.borderLight} horizontal={false} />
             <XAxis
               type="number"
-              domain={[-20, 20]}
-              ticks={[-20, -10, 0, 10, 20]}
+              domain={[-bound, bound]}
+              ticks={ticks}
               tickFormatter={(v) => String(Math.abs(Number(v)))}
               tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
               axisLine={{ stroke: K.borderLight }}
@@ -279,7 +302,7 @@ export function FrictionPraiseChart({
             <YAxis
               type="category"
               dataKey="step"
-              width={118}
+              width={248}
               tick={{ fill: K.textSec, fontSize: 11 }}
               axisLine={false}
               tickLine={false}
@@ -292,7 +315,10 @@ export function FrictionPraiseChart({
                 border: `1px solid ${K.borderLight}`,
                 borderRadius: 8,
                 fontSize: 12,
+                color: K.text,
               }}
+              labelStyle={{ color: K.text, fontWeight: 700 }}
+              cursor={{ fill: withAlpha(K.text, 0.06) }}
               formatter={(value: number, name: string) => {
                 const n = Math.abs(Number(value));
                 return [n, name === "friction" ? "Friction" : "Praise"];
@@ -302,28 +328,29 @@ export function FrictionPraiseChart({
               dataKey="friction"
               name="friction"
               stackId="exp"
-              fill={K.amber}
+              fill={K.amberFill}
               isAnimationActive={false}
               radius={[4, 0, 0, 4]}
             >
               {data.map((d) => (
-                <Cell key={`f-${d.step}`} fill={K.amber} />
+                <Cell key={`f-${d.step}`} fill={K.amberFill} />
               ))}
             </Bar>
             <Bar
               dataKey="praise"
               name="praise"
               stackId="exp"
-              fill={K.green}
+              fill={K.greenFill}
               isAnimationActive={false}
               radius={[0, 4, 4, 0]}
             >
               {data.map((d) => (
-                <Cell key={`p-${d.step}`} fill={K.green} />
+                <Cell key={`p-${d.step}`} fill={K.greenFill} />
               ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+        </div>
       </div>
     </DrCard>
   );
@@ -339,6 +366,7 @@ export type InstallTopic = {
 
 /** Left — What installers mention most (v1 TrendingPartnerTopics). */
 export function InstallerTopics({ topics }: { topics: InstallTopic[] }) {
+  const DR = useDR();
   const L = useLabel2();
   return (
     <DrCard
@@ -360,7 +388,7 @@ export function InstallerTopics({ topics }: { topics: InstallTopic[] }) {
         }}
       >
         {topics.map((t) => {
-          const toneColor = severityColor(t.tone);
+          const toneColor = severityColor(DR, t.tone);
           const growthColor = t.tone === "PRAISE" ? DR.green : DR.orange;
           return (
             <div
@@ -369,7 +397,7 @@ export function InstallerTopics({ topics }: { topics: InstallTopic[] }) {
                 border: `1px solid ${DR.border}`,
                 borderRadius: 10,
                 padding: "14px 14px 12px",
-                background: "rgba(255,255,255,0.02)",
+                background: DR.faint,
               }}
             >
               <div
@@ -436,6 +464,7 @@ export type InstallQuote = {
 
 /** Right — In installers' words (v1 MarketSaying). */
 export function InstallerQuotes({ quotes }: { quotes: InstallQuote[] }) {
+  const DR = useDR();
   const L = useLabel2();
   return (
     <DrCard
@@ -468,7 +497,7 @@ export function InstallerQuotes({ quotes }: { quotes: InstallQuote[] }) {
               border: `1px solid ${DR.border}`,
               borderRadius: 10,
               padding: 14,
-              background: "rgba(255,255,255,0.02)",
+              background: DR.faint,
             }}
           >
             <p
@@ -505,7 +534,7 @@ export function InstallerQuotes({ quotes }: { quotes: InstallQuote[] }) {
                 color: DR.muted,
               }}
             >
-              <DrTag color={severityColor(c.tone)}>{c.tone}</DrTag>
+              <DrTag color={severityColor(DR, c.tone)}>{c.tone}</DrTag>
               <span>{L(c.step)}</span>
               <span>·</span>
               <span>{L(c.region)}</span>
@@ -530,6 +559,14 @@ export type PartnerRow = {
 
 /** By partner — v1 PartnerStandings (simplified, no drafts). */
 export function ByPartnerTable({ rows }: { rows: PartnerRow[] }) {
+  const DR = useDR();
+  const td: CSSProperties = {
+    padding: "10px 10px",
+    borderBottom: `1px solid ${DR.border}`,
+    color: DR.sub,
+    fontSize: 13,
+    verticalAlign: "middle",
+  };
   const L = useLabel2();
   return (
     <DrCard>
@@ -567,7 +604,7 @@ export function ByPartnerTable({ rows }: { rows: PartnerRow[] }) {
                     textTransform: "uppercase",
                     letterSpacing: "0.04em",
                     borderBottom: `1px solid ${DR.border}`,
-                    background: "rgba(255,255,255,0.02)",
+                    background: DR.faint,
                   }}
                 >
                   {h}
@@ -619,6 +656,7 @@ export function ByPartnerTable({ rows }: { rows: PartnerRow[] }) {
 
 /** Thin capture-gap note with Partner view link. */
 export function CaptureGapNote({ text }: { text: string }) {
+  const K = useV2K();
   const L = useLabel2();
   const { setView } = useDemo2();
   const trimmed = text.replace(/\s*·\s*See Partner view\.?\s*$/i, "");
@@ -654,10 +692,3 @@ export function CaptureGapNote({ text }: { text: string }) {
   );
 }
 
-const td: CSSProperties = {
-  padding: "10px 10px",
-  borderBottom: `1px solid ${DR.border}`,
-  color: DR.sub,
-  fontSize: 13,
-  verticalAlign: "middle",
-};

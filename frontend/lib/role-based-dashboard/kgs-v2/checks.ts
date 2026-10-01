@@ -197,7 +197,7 @@ export function checkOverviewMatchesPages(): Check {
     signalIds.includes("RC-01") &&
     signalIds.includes("RC-03") &&
     signalIds.includes("IN-01") &&
-    overview.signals.length === 5;
+    overview.signals.length === 11;
   return {
     name: "overview card counts match pages (2 / 3 / 2 signals)",
     ok,
@@ -351,10 +351,16 @@ export function checkAnonymiseLeavesNoIds(): Check {
       /\bD-[NSEW]{1,3}A?-\d{2}\b/.test(s) ||
       /\bGurugram\b/.test(s) ||
       /\bDelhi\b/.test(s) ||
-      /\bMumbai\b/.test(s),
+      /\bMumbai\b/.test(s) ||
+      /\bChennai\b/.test(s) ||
+      /\bKolkata\b/.test(s) ||
+      /\bBengaluru\b/.test(s) ||
+      /\bSingapore\b/.test(s) ||
+      // Bare region names that should have been tokenised (anon shows "Region n").
+      /(^|[^\w{])(North|South|East|West|SEA)([^\w}]|$)/.test(s),
   );
   return {
-    name: "anonymise ON leaves no distributor ID or city name",
+    name: "anonymise ON leaves no distributor ID, city or region name",
     ok: hard.length === 0,
     detail: hard[0]?.slice(0, 100),
   };
@@ -362,10 +368,172 @@ export function checkAnonymiseLeavesNoIds(): Check {
 
 export function checkReadStrip(): Check {
   const ok =
-    overview.readStrip.includes("386") &&
-    overview.readStrip.includes("77") &&
-    overview.readStrip.includes("4,940");
-  return { name: "read strip seeds 386 / ~77 / 4,940", ok };
+    overview.readStrip.includes("386") && overview.readStrip.includes("77");
+  return { name: "read strip seeds 386 / ~77", ok };
+}
+
+export function checkSeriesAnchors(): Check {
+  const series = load<{
+    interactions: number[];
+    northLinesAffected: number[];
+    installFriction: number[];
+    installPraise: number[];
+    licenceContacts: number[];
+    orderStatusContacts: number[];
+    deviceAddrContacts: number[];
+    legacyPanelContacts: number[];
+  }>("series.json");
+  const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
+  const returningW13 =
+    series.licenceContacts[12] +
+    series.orderStatusContacts[12] +
+    series.deviceAddrContacts[12];
+  const north4 = sum(series.northLinesAffected.slice(9));
+  const ok =
+    sum(series.interactions) === 4940 &&
+    series.interactions[12] === 386 &&
+    north4 === 46 &&
+    sum(series.installFriction) === 61 &&
+    sum(series.installPraise) === 39 &&
+    returningW13 === 26 &&
+    sum(series.licenceContacts) === 64 &&
+    sum(series.orderStatusContacts) === 58 &&
+    sum(series.deviceAddrContacts) === 41 &&
+    sum(series.legacyPanelContacts) === 37;
+  return {
+    name: "series.json anchors (4940 / 386 / 46 / 61:39 / returning 26 / themes)",
+    ok,
+    detail: `W13 returning=${returningW13} north4=${north4}`,
+  };
+}
+
+export function checkPeriodOverviewTables(): Check {
+  const series = load<{
+    interactions: number[];
+    promiseKeptAll: number[];
+    promiseKeptNorth: number[];
+    sameDayReply: number[];
+    installFriction: number[];
+    installPraise: number[];
+    northLinesAffected: number[];
+    gurugramHubToSiteDays: number[];
+    gurugramLines: number[];
+    licenceContacts: number[];
+    pipelineRiskOpps: number[];
+    promiseKeptSEA: number[];
+    programmingPraise: number[];
+    prev90: {
+      pipelineRiskOpps: number;
+      promiseKeptSEA: number;
+      programmingPraise: number;
+    };
+  }>("series.json");
+
+  const sum = (a: number[]) => a.reduce((x, y) => x + y, 0);
+  const avg = (a: number[]) => (a.length ? sum(a) / a.length : 0);
+  const round0 = (n: number) => Math.round(n);
+  const round1 = (n: number) => Math.round(n * 10) / 10;
+  const slice = (a: number[], start: number, end: number) =>
+    a.slice(start, end + 1);
+
+  const fails: string[] = [];
+
+  if (sum(slice(series.interactions, 12, 12)) !== 386)
+    fails.push("7d interactions");
+  if (sum(slice(series.interactions, 9, 12)) !== 1545)
+    fails.push("30d interactions");
+  if (sum(series.interactions) !== 4940) fails.push("90d interactions");
+
+  if (round0(avg(slice(series.promiseKeptAll, 12, 12))) !== 82)
+    fails.push("7d keptAll");
+  if (round0(avg(slice(series.promiseKeptAll, 9, 12))) !== 83)
+    fails.push("30d keptAll");
+  if (round0(avg(series.promiseKeptAll)) !== 79) fails.push("90d keptAll");
+  if (round0(avg(slice(series.sameDayReply, 12, 12))) !== 64)
+    fails.push("7d sameDay");
+  if (round0(avg(slice(series.sameDayReply, 9, 12))) !== 63)
+    fails.push("30d sameDay");
+  if (round0(avg(series.sameDayReply)) !== 58) fails.push("90d sameDay");
+
+  const frShare = (start: number, end: number) => {
+    const fr = sum(slice(series.installFriction, start, end));
+    const pr = sum(slice(series.installPraise, start, end));
+    return round0((fr / (fr + pr)) * 100);
+  };
+  if (frShare(12, 12) !== 70) fails.push("7d friction");
+  if (frShare(9, 12) !== 67) fails.push("30d friction");
+  if (frShare(0, 12) !== 61) fails.push("90d friction");
+
+  if (sum(slice(series.northLinesAffected, 12, 12)) !== 14)
+    fails.push("7d north lines");
+  if (sum(slice(series.northLinesAffected, 9, 12)) !== 46)
+    fails.push("30d north lines");
+  if (sum(series.northLinesAffected) !== 52) fails.push("90d north lines");
+
+  if (round0(avg(slice(series.promiseKeptNorth, 12, 12))) !== 71)
+    fails.push("7d north kept");
+  if (round0(avg(slice(series.promiseKeptNorth, 9, 12))) !== 77)
+    fails.push("30d north kept");
+  if (round0(avg(series.promiseKeptNorth)) !== 85) fails.push("90d north kept");
+
+  if (round1(avg(slice(series.gurugramHubToSiteDays, 12, 12))) !== 5.0)
+    fails.push("7d hub days");
+  if (round1(avg(slice(series.gurugramHubToSiteDays, 9, 12))) !== 4.3)
+    fails.push("30d hub days");
+  if (round1(avg(series.gurugramHubToSiteDays)) !== 2.8)
+    fails.push("90d hub days");
+
+  if (sum(slice(series.gurugramLines, 12, 12)) !== 11) fails.push("7d g lines");
+  if (sum(slice(series.gurugramLines, 9, 12)) !== 29) fails.push("30d g lines");
+  if (sum(series.gurugramLines) !== 32) fails.push("90d g lines");
+
+  if (round1(avg(slice(series.licenceContacts, 12, 12))) !== 11)
+    fails.push("7d lic avg");
+  if (round1(avg(slice(series.licenceContacts, 9, 12))) !== 8.8)
+    fails.push("30d lic avg");
+  if (round1(avg(series.licenceContacts)) !== 4.9) fails.push("90d lic avg");
+
+  if (series.pipelineRiskOpps[12] !== 8) fails.push("7d pipe now");
+  if (series.pipelineRiskOpps[11] !== 4) fails.push("7d pipe prev");
+  if (
+    sum(slice(series.pipelineRiskOpps, 9, 12)) !== 17 ||
+    sum(slice(series.pipelineRiskOpps, 5, 8)) !== 4
+  )
+    fails.push("30d pipe");
+  if (sum(series.pipelineRiskOpps) !== 24) fails.push("90d pipe now");
+  if (series.prev90.pipelineRiskOpps !== 9) fails.push("90d pipe prev");
+
+  if (series.promiseKeptSEA[12] !== 92 || series.promiseKeptSEA[11] !== 91)
+    fails.push("7d sea");
+  if (
+    round0(avg(slice(series.promiseKeptSEA, 9, 12))) !== 91 ||
+    round0(avg(slice(series.promiseKeptSEA, 5, 8))) !== 88
+  )
+    fails.push("30d sea");
+  if (
+    round0(avg(series.promiseKeptSEA)) !== 88 ||
+    series.prev90.promiseKeptSEA !== 84
+  )
+    fails.push("90d sea");
+
+  if (series.programmingPraise[12] !== 1 || series.programmingPraise[11] !== 2)
+    fails.push("7d praise");
+  if (
+    sum(slice(series.programmingPraise, 9, 12)) !== 6 ||
+    sum(slice(series.programmingPraise, 5, 8)) !== 7
+  )
+    fails.push("30d praise");
+  if (
+    sum(series.programmingPraise) !== 22 ||
+    series.prev90.programmingPraise !== 20
+  )
+    fails.push("90d praise");
+
+  return {
+    name: "period tables (sections 3–4) match series math",
+    ok: fails.length === 0,
+    detail: fails[0],
+  };
 }
 
 export function checkPromiseKpis(): Check {
@@ -394,6 +562,8 @@ export const ALL_CHECKS = [
   checkAnonymiseMap,
   checkAnonymiseLeavesNoIds,
   checkReadStrip,
+  checkSeriesAnchors,
+  checkPeriodOverviewTables,
   checkPromiseKpis,
 ];
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useLabel2, useV2K } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import {
   Activity,
@@ -11,10 +12,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { type ComponentType, useState } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useKgs2Nav } from "../nav";
 
 type RailItem = {
@@ -35,6 +33,9 @@ const RAIL: { key: V2View; label: string; icon: RailItem["icon"] }[] = [
 
 export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
   const { view, go, exit } = useKgs2Nav();
+  const L = useLabel2();
+  const K = useV2K();
+  const brand = L("LiSN · {{region:India & SEA}}");
   const [hover, setHover] = useState(false);
   const w = hover ? 268 : 76;
 
@@ -154,8 +155,8 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
         <button
           type="button"
           onClick={() => go("overview")}
-          title="LiSN · India & SEA"
-          aria-label="LiSN · India & SEA"
+          title={brand}
+          aria-label={brand}
           className="kgs2-focus"
           style={{
             width: 36,
@@ -177,7 +178,7 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
         </button>
       </div>
       <nav
-        aria-label="India & SEA"
+        aria-label={L("{{region:India & SEA}}")}
         style={{ padding: "10px 8px", flex: 1, overflowY: "auto" }}
       >
         {top.map(renderItem)}

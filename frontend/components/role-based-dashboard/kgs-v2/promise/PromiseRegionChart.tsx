@@ -1,8 +1,8 @@
 "use client";
 
+import { useV2K } from "@kgs2/lib/demoState";
 import { useMemo } from "react";
 import {
-  Area,
   CartesianGrid,
   ComposedChart,
   Line,
@@ -12,10 +12,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import type { V2Tokens } from "../shared/themeTokens";
 
 type RegionSeries = {
   regionId: string;
@@ -23,44 +21,74 @@ type RegionSeries = {
   values: number[];
 };
 
-/** North coloured line; other regions as a grey min–max band; 90% target. */
+/** North highlighted; on-target regions stay grey but clearly stepped for visibility. */
+export function regionStroke(
+  K: V2Tokens,
+): Record<string, { color: string; width: number }> {
+  const light = K.mode === "light";
+  return {
+    North: { color: K.orange, width: 2.5 },
+    South: { color: light ? "#6b7280" : "#d1d5db", width: 1.75 },
+    East: { color: "#9ca3af", width: 1.75 },
+    West: { color: light ? "#374151" : "#6b7280", width: 1.75 },
+    SEA: { color: light ? "#b8bfc9" : "#e5e7eb", width: 1.75 },
+  };
+}
+
+export const REGION_ORDER = ["North", "South", "East", "West", "SEA"] as const;
+
+/**
+ * SPEC §5a — five region lines (North highlighted) + 90% target.
+ */
 export function PromiseRegionChart({
   weeks,
   series,
   targetPct,
-  northLabel,
-  height = 220,
-  endLabel = "71%",
+  labelFn,
+  height = 260,
 }: {
   weeks: string[];
   series: RegionSeries[];
   targetPct: number;
-  northLabel: string;
+  labelFn: (s: string) => string;
   height?: number;
-  endLabel?: string;
 }) {
-  const data = useMemo(() => {
-    const north = series.find((s) => s.regionId === "North");
-    const others = series.filter((s) => s.regionId !== "North");
-    return weeks.map((w, i) => {
-      const vals = others.map((s) => s.values[i] ?? 0);
-      const bandMin = vals.length ? Math.min(...vals) : null;
-      const bandMax = vals.length ? Math.max(...vals) : null;
-      return {
-        week: w,
-        north: north?.values[i] ?? null,
-        bandMin,
-        bandMax,
-        bandBase: bandMin,
-        bandSpan: bandMin != null && bandMax != null ? bandMax - bandMin : null,
-      };
-    });
-  }, [weeks, series]);
+  const K = useV2K();
+  const REGION_STROKE = regionStroke(K);
+  const ordered = useMemo(() => {
+    return REGION_ORDER.map((id) =>
+      series.find((s) => s.regionId === id),
+    ).filter((s): s is RegionSeries => Boolean(s));
+  }, [series]);
+
+  const data = useMemo(
+    () =>
+      weeks.map((w, i) => {
+        const row: Record<string, string | number | null> = { week: w };
+        for (const s of ordered) {
+          row[s.regionId] = s.values[i] ?? null;
+        }
+        return row;
+      }),
+    [weeks, ordered],
+  );
+
+  const ys = ordered.flatMap((s) => s.values);
+  const dataMin = ys.length ? Math.min(...ys, targetPct) : 60;
+  const dataMax = ys.length ? Math.max(...ys, targetPct) : 100;
+  const pad = Math.max((dataMax - dataMin) * 0.12, 2);
+  const domainMin = Math.max(0, Math.floor(dataMin - pad));
+  const domainMax = Math.ceil(dataMax + pad);
+
+  const northEnd = ordered.find((s) => s.regionId === "North")?.values;
+  const endLabel = northEnd?.length
+    ? `${northEnd[northEnd.length - 1]}%`
+    : undefined;
 
   return (
     <div
       role="img"
-      aria-label={`${northLabel} promise kept weekly`}
+      aria-label="Promise kept by region weekly"
       style={{ height, position: "relative" }}
     >
       <ResponsiveContainer
@@ -70,13 +98,9 @@ export function PromiseRegionChart({
       >
         <ComposedChart
           data={data}
-          margin={{ top: 12, right: 36, bottom: 4, left: 0 }}
+          margin={{ top: 16, right: 40, bottom: 4, left: 0 }}
         >
-          <CartesianGrid
-            stroke={K.borderLight}
-            strokeDasharray="0"
-            vertical={false}
-          />
+          <CartesianGrid stroke={K.borderLight} vertical={false} />
           <XAxis
             dataKey="week"
             tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
@@ -84,8 +108,7 @@ export function PromiseRegionChart({
             tickLine={false}
           />
           <YAxis
-            domain={[60, 95]}
-            ticks={[60, 70, 80, 90, 95]}
+            domain={[domainMin, domainMax]}
             tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
             axisLine={false}
             tickLine={false}
@@ -93,61 +116,79 @@ export function PromiseRegionChart({
             tickFormatter={(v) => `${v}%`}
           />
           <Tooltip
+            cursor={{ stroke: withAlpha(K.text, 0.35), strokeWidth: 1 }}
             contentStyle={{
               background: K.elevated,
               border: `1px solid ${K.borderLight}`,
               borderRadius: 8,
               fontSize: 12,
+              color: K.text,
+              boxShadow: `0 8px 24px ${K.scrim}`,
             }}
-            labelStyle={{ color: K.text }}
+            labelStyle={{
+              color: K.text,
+              fontWeight: 700,
+              marginBottom: 4,
+            }}
+            itemStyle={{
+              color: K.textSec,
+              paddingTop: 2,
+              paddingBottom: 2,
+            }}
             formatter={(value: number | string, name: string) => {
-              if (name === "bandSpan" || name === "bandBase")
-                return [null, null];
               const n = typeof value === "number" ? value : Number(value);
-              if (Number.isNaN(n)) return [value, name];
-              return [`${n}%`, name === "north" ? northLabel : name];
+              if (Number.isNaN(n)) return [String(value), name];
+              const seriesMeta = ordered.find((s) => s.regionId === name);
+              const label = seriesMeta ? labelFn(seriesMeta.region) : name;
+              const stroke = REGION_STROKE[name]?.color ?? K.text;
+              return [
+                <span key={name} style={{ color: K.text, fontWeight: 600 }}>
+                  {n}%
+                </span>,
+                <span
+                  key={`${name}-l`}
+                  style={{ color: stroke, fontWeight: 600 }}
+                >
+                  {label}
+                </span>,
+              ];
             }}
-          />
-          <Area
-            type="monotone"
-            dataKey="bandBase"
-            stackId="band"
-            stroke="none"
-            fill="transparent"
-            isAnimationActive={false}
-            legendType="none"
-            tooltipType="none"
-          />
-          <Area
-            type="monotone"
-            dataKey="bandSpan"
-            stackId="band"
-            stroke="none"
-            fill={withAlpha(K.slate, 0.35)}
-            isAnimationActive={false}
-            name="Other regions"
           />
           <ReferenceLine
             y={targetPct}
             stroke={K.textMut}
             strokeDasharray="4 4"
             label={{
-              value: `${targetPct}%`,
+              value: `${targetPct}% target`,
               fill: K.textMut,
               fontSize: 11,
               position: "insideTopRight",
             }}
           />
-          <Line
-            type="monotone"
-            dataKey="north"
-            stroke={K.orange}
-            strokeWidth={2.5}
-            dot={{ r: 3, fill: K.orange, strokeWidth: 0 }}
-            activeDot={{ r: 5 }}
-            isAnimationActive={false}
-            name={northLabel}
-          />
+          {ordered.map((s) => {
+            const stroke = REGION_STROKE[s.regionId] ?? {
+              color: K.slate,
+              width: 1.5,
+            };
+            const highlight = s.regionId === "North";
+            return (
+              <Line
+                key={s.regionId}
+                type="monotone"
+                dataKey={s.regionId}
+                stroke={stroke.color}
+                strokeWidth={stroke.width}
+                dot={
+                  highlight
+                    ? { r: 3, fill: stroke.color, strokeWidth: 0 }
+                    : false
+                }
+                activeDot={{ r: highlight ? 5 : 3, fill: stroke.color }}
+                isAnimationActive={false}
+                name={s.regionId}
+              />
+            );
+          })}
         </ComposedChart>
       </ResponsiveContainer>
       {endLabel ? (

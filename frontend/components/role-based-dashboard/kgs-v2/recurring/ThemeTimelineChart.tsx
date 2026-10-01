@@ -1,5 +1,6 @@
 "use client";
 
+import { useV2K } from "@kgs2/lib/demoState";
 import { useMemo } from "react";
 import {
   CartesianGrid,
@@ -11,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type Series = {
   id: string;
@@ -20,8 +21,6 @@ type Series = {
   fixMarkers: number[];
   returnMarkers: number[];
 };
-
-const COLOURS = [K.orange, K.violet400, K.green];
 
 /** Theme timeline: weekly contacts · ◆ fix / ▲ return large + labelled. */
 export function ThemeTimelineChart({
@@ -33,6 +32,8 @@ export function ThemeTimelineChart({
   series: Series[];
   height?: number;
 }) {
+  const K = useV2K();
+  const COLOURS = [K.orange, K.violet400, K.green, K.sky, K.teal];
   const data = useMemo(() => {
     return weeks.map((w, i) => {
       const row: Record<string, string | number | null> = { week: w };
@@ -88,7 +89,10 @@ export function ThemeTimelineChart({
               border: `1px solid ${K.borderLight}`,
               borderRadius: 8,
               fontSize: 12,
+              color: K.text,
             }}
+            labelStyle={{ color: K.text, fontWeight: 700 }}
+            cursor={{ stroke: withAlpha(K.text, 0.35), strokeWidth: 1 }}
           />
           <Legend wrapperStyle={{ fontSize: 11, color: K.textMut }} />
           {series.map((s, si) => {

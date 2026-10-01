@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useV2K } from "@kgs2/lib/demoState";
 import {
   Area,
   AreaChart,
@@ -10,7 +10,6 @@ import {
   YAxis,
 } from "recharts";
 import { useReducedMotion } from "@/components/role-based-dashboard/kgs/shared/motion";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 export type TrendSeries2 = {
   key: string;
@@ -23,8 +22,8 @@ export type TrendSeries2 = {
 export const QUESTION_CHART_H2 = 150;
 
 /**
- * v2 AreaTrend — one series, gradient fill, end value labelled,
- * y-axis fitted to the data (not forced through 0).
+ * v2 AreaTrend — same plot setup as President AreaTrend:
+ * monotone curve, accent gradient, end-dot, footer caption, y from 0.
  */
 export function AreaTrend2({
   id,
@@ -34,6 +33,8 @@ export function AreaTrend2({
   strokeColor,
   footerLabel = "13 wks",
   endSuffix = "",
+  endLabel,
+  showEndLabel = false,
 }: {
   id: string;
   data: Array<Record<string, number | null>>;
@@ -43,9 +44,14 @@ export function AreaTrend2({
   footerLabel?: string;
   /** Appended to the end-value label (e.g. "%"). */
   endSuffix?: string;
+  /** When set, replaces the computed end-value label. */
+  endLabel?: string;
+  /** Overview cards hide this (matches v1). Default false. */
+  showEndLabel?: boolean;
 }) {
+  const K = useV2K();
   const reduced = useReducedMotion();
-  const [data] = useState(() => dataProp);
+  const data = dataProp;
   const primary = series.find((s) => s.area) ??
     series[0] ?? {
       key: "v",
@@ -59,11 +65,7 @@ export function AreaTrend2({
   const ys = data
     .map((d) => d[primary.key])
     .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
-  const minY = ys.length ? Math.min(...ys) : 0;
   const maxY = ys.length ? Math.max(...ys) : 1;
-  const pad = Math.max((maxY - minY) * 0.18, maxY * 0.04, 1);
-  const domainMin = Math.max(0, minY - pad);
-  const domainMax = maxY + pad;
   const endVal = ys.length ? ys[ys.length - 1] : null;
 
   return (
@@ -79,7 +81,7 @@ export function AreaTrend2({
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={data}
-          margin={{ top: 10, right: 28, left: 0, bottom: 4 }}
+          margin={{ top: 10, right: 8, left: 0, bottom: 4 }}
         >
           <defs>
             <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
@@ -88,12 +90,12 @@ export function AreaTrend2({
             </linearGradient>
           </defs>
           <XAxis dataKey="x" hide />
-          <YAxis hide domain={[domainMin, domainMax]} />
+          <YAxis hide domain={[0, maxY * 1.1]} />
           <Tooltip
             cursor={false}
             labelFormatter={() => ""}
             contentStyle={{
-              background: "rgba(10, 14, 22, 0.96)",
+              background: K.elevated,
               border: `1px solid ${K.borderLight}`,
               borderRadius: 8,
               fontSize: 11,
@@ -144,7 +146,7 @@ export function AreaTrend2({
       >
         {footerLabel}
       </span>
-      {endVal != null ? (
+      {showEndLabel && (endLabel != null || endVal != null) ? (
         <span
           style={{
             position: "absolute",
@@ -159,8 +161,11 @@ export function AreaTrend2({
             pointerEvents: "none",
           }}
         >
-          {Number.isInteger(endVal) ? endVal : endVal.toFixed(1)}
-          {endSuffix}
+          {endLabel != null
+            ? endLabel
+            : endVal == null
+              ? ""
+              : `${Number.isInteger(endVal) ? endVal : endVal.toFixed(1)}${endSuffix}`}
         </span>
       ) : null}
     </div>

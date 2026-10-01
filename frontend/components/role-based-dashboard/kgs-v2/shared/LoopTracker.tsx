@@ -1,10 +1,8 @@
 "use client";
 
+import { useV2K } from "@kgs2/lib/demoState";
 import type { LoopStatus } from "@kgs2/types";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 const STEPS: Array<{
   key: LoopStatus["step"];
@@ -25,6 +23,7 @@ export function LoopTracker({
   status: LoopStatus;
   watchingNote?: string;
 }) {
+  const K = useV2K();
   const activeIdx = ORDER.indexOf(status.step);
 
   return (
@@ -80,7 +79,7 @@ export function LoopTracker({
                   ? withAlpha(K.violet400, 0.12)
                   : done
                     ? withAlpha(K.green, 0.08)
-                    : K.surface,
+                    : K.inset,
                 padding: "10px 12px",
               }}
             >

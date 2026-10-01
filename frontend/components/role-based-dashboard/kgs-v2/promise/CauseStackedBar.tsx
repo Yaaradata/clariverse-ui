@@ -1,5 +1,6 @@
 "use client";
 
+import { useV2K } from "@kgs2/lib/demoState";
 import { useMemo } from "react";
 import {
   Bar,
@@ -11,7 +12,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type CauseRow = {
   regionId: string;
@@ -20,6 +21,9 @@ type CauseRow = {
   lastMile: number;
 };
 
+/**
+ * Candidate causes by region — KGS-side stack vs last mile (SPEC §5a).
+ */
 export function CauseStackedBar({
   rows,
   labelFn,
@@ -29,6 +33,7 @@ export function CauseStackedBar({
   labelFn: (s: string) => string;
   height?: number;
 }) {
+  const K = useV2K();
   const data = useMemo(
     () =>
       rows.map((r) => ({
@@ -42,7 +47,14 @@ export function CauseStackedBar({
   );
 
   return (
-    <div role="img" aria-label="Candidate causes by region" style={{ height }}>
+    <div
+      role="img"
+      aria-label="Candidate causes by region"
+      // Grows with the panel so it matches the quotes panel beside it. The inner
+      // absolute box gives the chart a definite height to measure.
+      style={{ flex: 1, minHeight: height, position: "relative" }}
+    >
+      <div style={{ position: "absolute", inset: 0 }}>
       <ResponsiveContainer
         width="100%"
         height="100%"
@@ -68,7 +80,10 @@ export function CauseStackedBar({
               border: `1px solid ${K.borderLight}`,
               borderRadius: 8,
               fontSize: 12,
+              color: K.text,
             }}
+            labelStyle={{ color: K.text, fontWeight: 700 }}
+            cursor={{ fill: withAlpha(K.text, 0.06) }}
           />
           <Legend
             wrapperStyle={{ fontSize: 11, color: K.textMut, paddingTop: 4 }}
@@ -77,28 +92,28 @@ export function CauseStackedBar({
           />
           <Bar
             dataKey="allocation"
-            stackId="a"
+            stackId="kgs"
             fill={K.orange}
-            name="KGS allocation"
+            name="KGS · allocation"
             isAnimationActive={false}
           />
           <Bar
             dataKey="backorder"
-            stackId="a"
-            fill={K.amber}
-            name="Backorder"
+            stackId="kgs"
+            fill={K.amberFill}
+            name="KGS · backorder"
             isAnimationActive={false}
           />
           <Bar
             dataKey="orderChange"
-            stackId="a"
+            stackId="kgs"
             fill={K.violet400}
-            name="Order change"
+            name="KGS · order change"
             isAnimationActive={false}
           />
           <Bar
             dataKey="lastMile"
-            stackId="a"
+            stackId="lm"
             fill={K.slate}
             name="Last mile"
             isAnimationActive={false}
@@ -106,6 +121,7 @@ export function CauseStackedBar({
           />
         </BarChart>
       </ResponsiveContainer>
+      </div>
     </div>
   );
 }

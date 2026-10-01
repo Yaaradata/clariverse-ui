@@ -1,10 +1,10 @@
 "use client";
 
-import { useDemo2 } from "@kgs2/lib/demoState";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { useDemo2, useV2K } from "@kgs2/lib/demoState";
 
 /** Anonymise toggle — default OFF (v2 demoState). */
 export function AnonymiseToggle() {
+  const K = useV2K();
   const { state, toggleAnonymise } = useDemo2();
   const on = state.anonymise;
   return (

@@ -73,7 +73,7 @@
   "severity": {
     "class": "S2",
     "word": "Material impact",
-    "domain": "Supply",
+    "domain": "Promise",
     "type": "slope",
     "typeNote": "slope (4-week decline)",
     "blastRadius": {
@@ -146,7 +146,7 @@
   },
   "routing": {
     "owner": "Operations lead",
-    "cc": ["Regional GM", "Partner manager"]
+    "cc": ["Regional GM", "Partner manager {{region:North}}"]
   },
   "recommendedAction": "Re-prioritise allocation for the 2 inspection-bound projects; send each distributor one confirmed date; open a last-mile review for the {{place:Gurugram hub}}",
   "humanGate": {
@@ -171,14 +171,14 @@
         "title": "Action approved",
         "body": "Approved · audit logged {ts}"
       },
-      "auditEntry": "{ts} · Operations lead approved North promise drafts",
+      "auditEntry": "{ts} · Operations lead approved {{region:North}} promise drafts",
       "investigationId": "PR-01"
     },
     "decisionRequest": {
       "buttonLabel": "Ask for a decision",
       "doneLabel": "Decision requested",
       "chip": "Decision requested",
-      "auditEntry": "{ts} · Regional GM asked Operations lead for a decision on North promises"
+      "auditEntry": "{ts} · Regional GM asked Operations lead for a decision on {{region:North}} promises"
     }
   },
   "loop": {

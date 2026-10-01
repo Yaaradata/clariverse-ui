@@ -1,7 +1,7 @@
 {
   "title": "What do installers experience?",
   "subtitle": "Friction and praise at each commissioning step.",
-  "captureGapNote": "Source: KGS help desk and service calls only · partner first-line support not connected yet · See Partner view",
+  "captureGapNote": "Source: KGS help desk and service calls only. Partner first-line support is not connected, so most installer feedback is not here yet. See Partner view.",
   "steps": [
     {
       "step": "Design & device selection",
@@ -176,7 +176,7 @@
   "signalWall": [
     {
       "id": "IN-01",
-      "title": "Network set-up takes longer",
+      "title": "Network configuration adds set-up time",
       "severity": "S3",
       "level": "alert",
       "type": "slope",
@@ -187,7 +187,7 @@
     },
     {
       "id": "IN-02",
-      "title": "Ease of programming holding",
+      "title": "Praise for ease of programming holding",
       "severity": "improving",
       "level": "improving",
       "type": "improving",
@@ -201,5 +201,116 @@
     "mainSignal": "Network configuration is the step installers most often call slow.",
     "whatChanged": "Mentions rose after the September partner training on the new network module (candidate).",
     "decideFirst": "Share a one-page set-up guide with partners, and send a feedback note to the US product team."
-  }
+  },
+  "timeInstallersMention": {
+    "note": "LiSN pulls stated times from the text; these are not measurements.",
+    "rows": [
+      {
+        "step": "Network configuration",
+        "phrase": "takes about half an hour more to set up the network",
+        "statedExtraTime": "~25 min (median stated)",
+        "mentions": 9,
+        "partners": 5
+      }
+    ]
+  },
+  "praiseWorthUsing": {
+    "owner": "Marketing / partner training",
+    "quotes": [
+      {
+        "quote": "Easiest panel we've programmed this year.",
+        "step": "Panel programming",
+        "via": "{{partner:D-S-02}}",
+        "date": "9 Sep",
+        "note": "installer · synthetic"
+      }
+    ]
+  },
+  "familyRegionHeat": {
+    "title": "Friction by product family × region",
+    "families": [
+      {
+        "id": "A",
+        "label": "{{platform:A}}"
+      },
+      {
+        "id": "B",
+        "label": "{{platform:B}}"
+      },
+      {
+        "id": "C",
+        "label": "{{platform:C}}"
+      },
+      {
+        "id": "D",
+        "label": "{{platform:D}}"
+      }
+    ],
+    "regions": [
+      {
+        "id": "North",
+        "label": "{{region:North}}"
+      },
+      {
+        "id": "South",
+        "label": "{{region:South}}"
+      },
+      {
+        "id": "East",
+        "label": "{{region:East}}"
+      },
+      {
+        "id": "West",
+        "label": "{{region:West}}"
+      },
+      {
+        "id": "SEA",
+        "label": "{{region:SEA}}"
+      }
+    ],
+    "values": [
+      [3, 2, 1, 2, 1],
+      [4, 3, 2, 2, 1],
+      [2, 1, 1, 1, 0],
+      [8, 4, 3, 3, 2]
+    ]
+  },
+  "humanGate": {
+    "title": "Drafts — awaiting Product liaison approval",
+    "chip": "Awaiting Product liaison",
+    "approveLabel": "Approve",
+    "approveEnabledFor": ["Product liaison"],
+    "disabledTooltip": "Approval sits with the Product liaison",
+    "onApprove": {
+      "title": "Approved · drafts ready for Product liaison to hand on · audit logged {ts}",
+      "toast": {
+        "title": "Action approved",
+        "body": "Approved · audit logged {ts}"
+      },
+      "auditEntry": "{ts} · Product liaison approved install drafts"
+    }
+  },
+  "drafts": [
+    {
+      "id": "draft-us-feedback",
+      "title": "Feedback note to the US product team",
+      "status": "Not sent",
+      "awaiting": "Product liaison",
+      "body": "Network configuration adds stated set-up time (~25 min). Please review the partner set-up guide and module UX. Status: Not sent."
+    },
+    {
+      "id": "draft-training-tip",
+      "title": "Partner training tip sheet",
+      "status": "Not sent",
+      "awaiting": "Product liaison",
+      "body": "One-page network set-up tip sheet for partners after the September training. Status: Not sent."
+    },
+    {
+      "id": "draft-praise-marketing",
+      "title": "Praise routed to Marketing",
+      "status": "Not sent",
+      "awaiting": "Product liaison",
+      "body": "Quote for partner training / Marketing: \"Easiest panel we've programmed this year.\" (via {{partner:D-S-02}}, 9 Sep). Status: Not sent."
+    }
+  ]
 }

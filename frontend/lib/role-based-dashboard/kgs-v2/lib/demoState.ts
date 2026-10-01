@@ -13,15 +13,24 @@ import {
   useMemo,
   useReducer,
 } from "react";
+import {
+  tokensFor,
+  type V2Tokens,
+} from "@/components/role-based-dashboard/kgs-v2/shared/themeTokens";
 import anonymise from "../data/anonymise.json";
 import type {
   AnonymiseMap,
+  DateRangeId,
   DemoStateV2,
   LoopStatus,
+  PeriodId,
   Role,
   TokenKind,
+  V2ThemeMode,
   V2View,
 } from "../types";
+import { overviewForPeriod } from "./overviewFromPeriod";
+import { seriesForRange } from "./periodData";
 
 const MAP = anonymise as AnonymiseMap;
 const TOKEN = /\{\{(brand|platform|fw|partner|region|place|term):([^{}]+)\}\}/g;
@@ -71,6 +80,10 @@ type Action =
   | { type: "setRole"; role: Role }
   | { type: "setAnonymise"; on: boolean }
   | { type: "setView"; view: V2View }
+  | { type: "openRecurringTheme"; id: string }
+  | { type: "setPeriod"; period: PeriodId }
+  | { type: "setTheme"; theme: V2ThemeMode }
+  | { type: "toggleTheme" }
   | { type: "approve"; signalId: string; ts: string }
   | { type: "askForDecision"; signalId: string; ts: string }
   | { type: "setLoop"; signalId: string; loop: LoopStatus }
@@ -79,22 +92,41 @@ type Action =
 function initialState(): DemoStateV2 {
   return {
     role: "Regional GM",
+    roleChanged: false,
     anonymise: false,
     approvals: {},
     decisionRequested: {},
     loop: {},
     view: "overview",
+    period: "7d",
+    theme: "dark",
+    recurringThemeId: "rc-01",
   };
 }
 
 function reducer(state: DemoStateV2, action: Action): DemoStateV2 {
   switch (action.type) {
     case "setRole":
-      return { ...state, role: action.role };
+      return {
+        ...state,
+        role: action.role,
+        roleChanged: action.role !== state.role ? true : state.roleChanged,
+      };
     case "setAnonymise":
       return { ...state, anonymise: action.on };
     case "setView":
       return { ...state, view: action.view };
+    case "openRecurringTheme":
+      return { ...state, view: "recurringTheme", recurringThemeId: action.id };
+    case "setPeriod":
+      return { ...state, period: action.period };
+    case "setTheme":
+      return { ...state, theme: action.theme };
+    case "toggleTheme":
+      return {
+        ...state,
+        theme: state.theme === "dark" ? "light" : "dark",
+      };
     case "approve":
       if (state.approvals[action.signalId]) return state;
       return {
@@ -136,12 +168,22 @@ function reducer(state: DemoStateV2, action: Action): DemoStateV2 {
   }
 }
 
+/** View state: period is canonical; dateRange mirrors it for drill pages. */
+export type DemoStateView = DemoStateV2 & { dateRange: PeriodId };
+
 export interface DemoApi2 {
-  state: DemoStateV2;
+  state: DemoStateView;
   setRole: (role: Role) => void;
   setAnonymise: (on: boolean) => void;
   toggleAnonymise: () => void;
   setView: (view: V2View) => void;
+  /** Open the theme deep dive for one recurring theme (rc-01, rc-03, rc-05). */
+  openRecurringTheme: (id: string) => void;
+  setPeriod: (period: PeriodId) => void;
+  /** Alias for setPeriod — drills still call setDateRange. */
+  setDateRange: (dateRange: DateRangeId) => void;
+  setTheme: (theme: V2ThemeMode) => void;
+  toggleTheme: () => void;
   /** Captures IST time once; returns stored ts if already approved. */
   approve: (signalId: string) => string;
   askForDecision: (signalId: string) => string;
@@ -171,6 +213,24 @@ export function DemoProvider({ children }: { children: ReactNode }) {
     (view: V2View) => dispatch({ type: "setView", view }),
     [],
   );
+  const openRecurringTheme = useCallback(
+    (id: string) => dispatch({ type: "openRecurringTheme", id }),
+    [],
+  );
+  const setPeriod = useCallback(
+    (period: PeriodId) => dispatch({ type: "setPeriod", period }),
+    [],
+  );
+  const setDateRange = useCallback(
+    (dateRange: DateRangeId) =>
+      dispatch({ type: "setPeriod", period: dateRange }),
+    [],
+  );
+  const setTheme = useCallback(
+    (theme: V2ThemeMode) => dispatch({ type: "setTheme", theme }),
+    [],
+  );
+  const toggleTheme = useCallback(() => dispatch({ type: "toggleTheme" }), []);
   const approve = useCallback(
     (signalId: string) => {
       const existing = state.approvals[signalId]?.ts;
@@ -204,11 +264,16 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
   const api = useMemo<DemoApi2>(
     () => ({
-      state,
+      state: { ...state, dateRange: state.period },
       setRole,
       setAnonymise,
       toggleAnonymise,
       setView,
+      openRecurringTheme,
+      setPeriod,
+      setDateRange,
+      setTheme,
+      toggleTheme,
       approve,
       askForDecision,
       setLoop,
@@ -221,6 +286,11 @@ export function DemoProvider({ children }: { children: ReactNode }) {
       setAnonymise,
       toggleAnonymise,
       setView,
+      openRecurringTheme,
+      setPeriod,
+      setDateRange,
+      setTheme,
+      toggleTheme,
       approve,
       askForDecision,
       setLoop,
@@ -245,5 +315,33 @@ export function useLabel2(): (str: string) => string {
   return useCallback(
     (str: string) => fmt2(str, state.anonymise),
     [state.anonymise],
+  );
+}
+
+/** Active dark/light surface + accent tokens for kgs-v2 only. */
+export function useV2K(): V2Tokens {
+  const { state } = useDemo2();
+  return useMemo(() => tokensFor(state.theme), [state.theme]);
+}
+
+/** Overview JSON-shaped snapshot for the active period. */
+export function useOverviewData() {
+  const { state } = useDemo2();
+  return useMemo(() => {
+    const data = overviewForPeriod(state.period);
+    return {
+      data,
+      period: state.period,
+      signalsTitle: data.signalsTitle,
+    };
+  }, [state.period]);
+}
+
+/** Remap a weekly numeric series to the active date window (drills). */
+export function usePeriodSeries(values: number[]): number[] {
+  const { state } = useDemo2();
+  return useMemo(
+    () => seriesForRange(values, state.period),
+    [values, state.period],
   );
 }

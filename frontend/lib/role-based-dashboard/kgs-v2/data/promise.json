@@ -298,7 +298,7 @@
   "signalWall": [
     {
       "id": "PR-01",
-      "title": "North promises slipping",
+      "title": "{{region:North}} promises slipping",
       "severity": "S2",
       "level": "critical",
       "hero": true,
@@ -309,7 +309,7 @@
     },
     {
       "id": "PR-02",
-      "title": "Gurugram last-mile delays",
+      "title": "{{place:Gurugram}} last-mile delays",
       "severity": "S3",
       "level": "alert",
       "hero": false,
@@ -320,7 +320,7 @@
     },
     {
       "id": "SEA-IMPROVING",
-      "title": "SEA improving",
+      "title": "{{region:SEA}} improving",
       "severity": "improving",
       "level": "improving",
       "hero": false,

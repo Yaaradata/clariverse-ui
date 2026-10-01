@@ -1,7 +1,6 @@
 "use client";
 
-import theme from "@kgs2/data/theme_rc01.json";
-import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K, withTs } from "@kgs2/lib/demoState";
 import type { LoopStatus } from "@kgs2/types";
 import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -14,23 +13,22 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { DrillHeader2 } from "../shared/DrillHeader2";
 import { LoopTracker } from "../shared/LoopTracker";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
+import { type ThemeDetail, themeDetailFor } from "@kgs2/lib/themeDetail";
 import { useToast2 } from "../shell/Toast";
 
-const SIGNAL_ID = "RC-01";
 const APPROVING_MS = 500;
 
 function Block({ children }: { children: ReactNode }) {
+  const K = useV2K();
   return (
     <div
       style={{
-        background: K.card,
+        background: K.block,
+        border: `1px solid ${K.mode === "light" ? K.border : "transparent"}`,
         borderRadius: K.radius.card,
         padding: 14,
         display: "flex",
@@ -43,23 +41,30 @@ function Block({ children }: { children: ReactNode }) {
   );
 }
 
-const outlineBtn = {
-  display: "inline-flex",
-  alignItems: "center",
-  gap: 6,
-  padding: "8px 12px",
-  borderRadius: K.radius.chip,
-  background: "transparent",
-  border: `1px solid ${K.borderLight}`,
-  color: K.textSec,
-  fontSize: 14,
-  fontWeight: 600,
-  fontFamily: "inherit",
-  cursor: "pointer",
-  whiteSpace: "nowrap" as const,
-};
-
-function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
+function ThemeDecisionPanel({
+  theme,
+  onViewDraft,
+}: {
+  theme: ThemeDetail;
+  onViewDraft: () => void;
+}) {
+  const SIGNAL_ID = theme.signalId;
+  const K = useV2K();
+  const outlineBtn = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "8px 12px",
+    borderRadius: K.radius.chip,
+    background: "transparent",
+    border: `1px solid ${K.borderLight}`,
+    color: K.textSec,
+    fontSize: 14,
+    fontWeight: 600,
+    fontFamily: "inherit",
+    cursor: "pointer",
+    whiteSpace: "nowrap" as const,
+  };
   const L = useLabel2();
   const { state, approve, askForDecision, isApproved, setLoop } = useDemo2();
   const { show } = useToast2();
@@ -80,7 +85,7 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
 
   const banner =
     approved && ts
-      ? `Approved · draft handed to Technical support lead · audit logged ${ts}`
+      ? `Approved · draft handed to ${gate.owner} · audit logged ${ts}`
       : asked
         ? "Decision requested"
         : L(gate.title);
@@ -162,7 +167,7 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
                   step: "watching",
                   nextCheck: theme.loop.nextCheck,
                   approvedAt: stamp,
-                  approvedBy: "Technical support lead",
+                  approvedBy: gate.owner,
                 });
                 setApproving(false);
                 show(
@@ -220,7 +225,7 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
       ) : null}
       {approved && ts ? (
         <div style={{ fontSize: 12, color: K.textMut, fontFamily: K.mono }}>
-          {ts} · Technical support lead approved draft
+          {ts} · {gate.owner} approved draft
         </div>
       ) : null}
     </section>
@@ -231,10 +236,37 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
  * RC-01 theme deep dive (SPEC §6b) — Pass 4 hero layout.
  */
 export function ThemeView() {
+  const { state } = useDemo2();
+  const detail = themeDetailFor(state.recurringThemeId, state.dateRange);
+  if (!detail) return null;
+  return <ThemeDetailView key={detail.id} theme={detail} />;
+}
+
+function ThemeDetailView({ theme }: { theme: ThemeDetail }) {
+  const SIGNAL_ID = theme.signalId;
+  const K = useV2K();
+  const outlineBtn = {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "8px 12px",
+    borderRadius: K.radius.chip,
+    background: "transparent",
+    border: `1px solid ${K.borderLight}`,
+    color: K.textSec,
+    fontSize: 14,
+    fontWeight: 600,
+    fontFamily: "inherit",
+    cursor: "pointer",
+    whiteSpace: "nowrap" as const,
+  };
   const L = useLabel2();
   const { state, isApproved } = useDemo2();
   const [draftOpen, setDraftOpen] = useState(false);
   const draft = theme.drafts[0];
+  const nextCheckLabel = new Date(
+    `${theme.loop.nextCheck}T12:00:00Z`,
+  ).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 
   const loop: LoopStatus = useMemo(() => {
     const stored = state.loop[SIGNAL_ID];
@@ -247,7 +279,7 @@ export function ThemeView() {
       };
     }
     return { step: "open", nextCheck: theme.loop.nextCheck };
-  }, [state.loop, state.approvals, isApproved]);
+  }, [state.loop, state.approvals, isApproved, SIGNAL_ID, theme]);
 
   const chartData = useMemo(
     () =>
@@ -255,7 +287,7 @@ export function ThemeView() {
         week: w,
         value: theme.chart.values[i] ?? null,
       })),
-    [],
+    [theme],
   );
 
   return (
@@ -264,12 +296,11 @@ export function ThemeView() {
         display: "flex",
         flexDirection: "column",
         gap: 14,
-        padding: "16px 24px 24px",
       }}
     >
       <DrillHeader2
         title={theme.title}
-        subtitle="Back a third time · 11 contacts this week vs 2 after the June fix"
+        subtitle={theme.headline}
         parentView="recurring"
         backLabel="Back to Recurring"
       />
@@ -284,7 +315,7 @@ export function ThemeView() {
           padding: "10px 12px",
           borderRadius: K.radius.tile,
           border: `1px solid ${K.borderLight}`,
-          background: K.surface,
+          background: K.inset,
           fontSize: 13,
           color: K.body,
         }}
@@ -293,6 +324,8 @@ export function ThemeView() {
           {theme.severity.class}
         </span>
         <span>{theme.severity.word}</span>
+        <span style={{ color: K.textMut }}>·</span>
+        <span>{theme.severity.typeNote}</span>
         <span style={{ color: K.textMut }}>·</span>
         <span>{theme.severity.blastRadius.headline}</span>
       </div>
@@ -325,11 +358,11 @@ export function ThemeView() {
                 marginBottom: 4,
               }}
             >
-              26-week contacts
+              {theme.chart.weeks.length}-week contacts
             </div>
             <div
               role="img"
-              aria-label="Licence re-activation weekly contacts"
+              aria-label={`${theme.title} weekly contacts`}
               style={{ height: 260 }}
             >
               <ResponsiveContainer
@@ -503,7 +536,7 @@ export function ThemeView() {
 
           <LoopTracker
             status={loop}
-            watchingNote={`next check 5 Oct: ${theme.title}`}
+            watchingNote={`next check ${nextCheckLabel}: ${theme.title}`}
           />
         </div>
 
@@ -516,30 +549,32 @@ export function ThemeView() {
             minWidth: 0,
           }}
         >
-          <Block>
-            <div
-              style={{
-                fontSize: 12,
-                fontWeight: 700,
-                color: K.textMut,
-                letterSpacing: "0.06em",
-                textTransform: "uppercase",
-              }}
-            >
-              Confidence
-            </div>
-            <div style={{ fontSize: 14, fontWeight: 700, color: K.text }}>
-              {theme.confidence.level} {theme.confidence.p} · K{" "}
-              {theme.confidence.known.count} · I{" "}
-              {theme.confidence.inferred.count}
-            </div>
-            <div style={{ fontSize: 12, color: K.body, lineHeight: 1.45 }}>
-              Known: {theme.confidence.known.label}
-            </div>
-            <div style={{ fontSize: 12, color: K.body, lineHeight: 1.45 }}>
-              Inferred: {theme.confidence.inferred.label}
-            </div>
-          </Block>
+          {theme.confidence ? (
+            <Block>
+              <div
+                style={{
+                  fontSize: 12,
+                  fontWeight: 700,
+                  color: K.textMut,
+                  letterSpacing: "0.06em",
+                  textTransform: "uppercase",
+                }}
+              >
+                Confidence
+              </div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: K.text }}>
+                {theme.confidence.level} {theme.confidence.p} · K{" "}
+                {theme.confidence.known.count} · I{" "}
+                {theme.confidence.inferred.count}
+              </div>
+              <div style={{ fontSize: 12, color: K.body, lineHeight: 1.45 }}>
+                Known: {theme.confidence.known.label}
+              </div>
+              <div style={{ fontSize: 12, color: K.body, lineHeight: 1.45 }}>
+                Inferred: {theme.confidence.inferred.label}
+              </div>
+            </Block>
+          ) : null}
 
           <Block>
             <div
@@ -561,7 +596,7 @@ export function ThemeView() {
                     fontSize: 11,
                     padding: "4px 8px",
                     borderRadius: K.radius.pill,
-                    background: K.surface,
+                    background: K.inset,
                     border: `1px solid ${K.borderLight}`,
                     color: K.body,
                   }}
@@ -628,7 +663,10 @@ export function ThemeView() {
             </div>
           </Block>
 
-          <ThemeDecisionPanel onViewDraft={() => setDraftOpen(true)} />
+          <ThemeDecisionPanel
+            theme={theme}
+            onViewDraft={() => setDraftOpen(true)}
+          />
         </div>
       </div>
 
@@ -680,7 +718,7 @@ export function ThemeView() {
               }}
             >
               <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>
-                Draft · licence re-activation
+                Draft · {theme.shortName}
               </h2>
               <span
                 style={{

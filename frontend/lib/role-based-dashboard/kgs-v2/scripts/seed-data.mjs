@@ -580,7 +580,7 @@ const seededThemes = [
         type: "process",
         owner: "Ops",
         before: 8,
-        after: 3,
+        after: 4,
       },
     ],
     lastFixLabel: "3 Jul · process: auto-reply with order-desk link · Ops",
@@ -734,6 +734,28 @@ w("recurring.json", {
       cta: "Open theme →",
     },
   ],
+  // Themes that came back after a fix earlier in the quarter; shown only in the
+  // periods that reach back to their return.
+  backAfterFixEarlier: [
+    {
+      id: "rc-22",
+      title: "Zone map export help, back after fix",
+      fixDate: "2026-08-18",
+      returnDate: "2026-09-05",
+      weeklyDelta: "+2 vs post-fix",
+      cta: "Open theme →",
+      periods: ["30d", "90d"],
+    },
+    {
+      id: "rc-11",
+      title: "Programming tool download link, back after fix",
+      fixDate: "2026-08-02",
+      returnDate: "2026-08-20",
+      weeklyDelta: "+1 vs post-fix",
+      cta: "Open theme →",
+      periods: ["90d"],
+    },
+  ],
   timeline: {
     weeks: weeks13,
     series: [
@@ -756,6 +778,20 @@ w("recurring.json", {
         name: "Device addressing",
         values: [4, 5, 6, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6],
         fixMarkers: [3],
+        returnMarkers: [7],
+      },
+      {
+        id: "rc-22",
+        name: "Zone map export help",
+        values: [1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 3, 0, 0],
+        fixMarkers: [7],
+        returnMarkers: [10],
+      },
+      {
+        id: "rc-11",
+        name: "Programming tool download link",
+        values: [2, 2, 2, 1, 1, 0, 0, 2, 1, 1, 0, 0, 0],
+        fixMarkers: [5],
         returnMarkers: [7],
       },
     ],
@@ -784,6 +820,22 @@ w("recurring.json", {
       service_calls: 12,
       salesforce: 2,
       partner_portal: 1,
+    },
+    {
+      id: "rc-22",
+      help_desk: 7,
+      email: 3,
+      service_calls: 0,
+      salesforce: 0,
+      partner_portal: 0,
+    },
+    {
+      id: "rc-11",
+      help_desk: 8,
+      email: 0,
+      service_calls: 0,
+      salesforce: 0,
+      partner_portal: 4,
     },
   ],
   evidenceSummary: {
@@ -1003,8 +1055,6 @@ w("install.json", {
 w("partner.json", {
   title: "Partner view",
   conceptLabel: "Concept",
-  conceptFooter:
-    "Concept: partner owns its data; KGS sees only what the partner shares. Legal and data-protection terms to be agreed.",
   subtitle:
     "Help partners run their businesses better — loyalty against Competitor A",
   consentBoundary: {

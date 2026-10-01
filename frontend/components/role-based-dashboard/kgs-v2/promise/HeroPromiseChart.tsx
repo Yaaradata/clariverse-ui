@@ -1,5 +1,6 @@
 "use client";
 
+import { useV2K } from "@kgs2/lib/demoState";
 import { useMemo } from "react";
 import {
   CartesianGrid,
@@ -12,10 +13,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type Marker = { weekIndex: number; label: string };
 
@@ -37,6 +35,7 @@ export function HeroPromiseChart({
   markers: Marker[];
   ariaLabel: string;
 }) {
+  const K = useV2K();
   const data = useMemo(
     () =>
       weeks.map((w, i) => ({
@@ -114,6 +113,8 @@ export function HeroPromiseChart({
           {markers.map((m) => {
             const w = weeks[m.weekIndex];
             if (!w) return null;
+            const short =
+              m.label.length > 28 ? `${m.label.slice(0, 26)}…` : m.label;
             return (
               <ReferenceLine
                 key={m.label}
@@ -121,7 +122,7 @@ export function HeroPromiseChart({
                 stroke={withAlpha(K.violet400, 0.7)}
                 strokeWidth={1}
                 label={{
-                  value: m.label,
+                  value: short,
                   fill: K.violet300,
                   fontSize: 10,
                   position: "top",
@@ -167,6 +168,9 @@ export function HeroPromiseChart({
           Baseline {baselineLow}–{baselineHigh}%
         </span>
         <span>— — {targetPct}% target</span>
+        {markers.map((m) => (
+          <span key={m.label}>◆ {m.label}</span>
+        ))}
       </div>
     </div>
   );

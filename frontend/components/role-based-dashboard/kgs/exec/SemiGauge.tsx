@@ -20,12 +20,15 @@ export function SemiGauge({
   pct,
   label,
   color,
+  labelColor,
 }: {
   pct: number;
   label: string;
   /** Optional; ignored on the overview tile (no sub-row). */
   sub?: string;
   color: string;
+  /** Gauge caption colour — defaults to muted grey. */
+  labelColor?: string;
 }) {
   const reduced = useReducedMotion();
   const clamped = Math.max(0, Math.min(100, pct));
@@ -95,7 +98,7 @@ export function SemiGauge({
       <div
         style={{
           fontSize: 11,
-          color: "rgb(185, 185, 186)",
+          color: labelColor ?? "rgb(185, 185, 186)",
           textTransform: "uppercase",
           letterSpacing: 0.4,
           textAlign: "center",
@@ -108,6 +111,7 @@ export function SemiGauge({
           display: "flex",
           alignItems: "flex-start",
           justifyContent: "center",
+          fontWeight: labelColor ? 600 : 400,
         }}
       >
         {label}

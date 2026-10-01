@@ -1,38 +1,35 @@
 "use client";
 
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import { useDemo2, useLabel2, useV2K } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import { ChevronRight, Handshake, RefreshCw, Wrench } from "lucide-react";
 import type { CSSProperties } from "react";
-import { InsightBox } from "@/components/role-based-dashboard/kgs/exec/InsightBox";
 import { SemiGauge } from "@/components/role-based-dashboard/kgs/exec/SemiGauge";
 import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
 import {
   ACCENT,
-  K,
+  K as Accent,
   liftVars,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { AreaTrend2, QUESTION_CHART_H2 } from "../shared/AreaTrend2";
+import { InsightBox2 } from "../shared/InsightBox2";
 
 export type OverviewQuestionCard = {
   id: "promise" | "recurring" | "install";
   title: string;
+  subtitle: string;
   count: number;
-  /** One-line caption under the big number. */
-  caption: string;
+  countLabel: string;
   delta: number;
   deltaLabel: string;
   border: "orange" | "teal" | "sky";
-  gauges: Array<{
-    label: string;
-    value?: number;
-    unit?: string;
-    valueLabel?: string;
-  }>;
+  gauges: Array<{ label: string; pct: number }>;
   miniKpis: Array<{ label: string; value: string }>;
   insight: string;
-  trend13: number[];
+  trend: number[];
+  trendEndLabel: string;
+  chartCaption: string;
 };
 
 const ICONS = {
@@ -47,49 +44,30 @@ const ROUTES: Record<OverviewQuestionCard["id"], V2View> = {
   install: "install",
 };
 
-/** Short ≤2-word gauge labels (R2). */
-const GAUGE_SHORT: Record<OverviewQuestionCard["id"], [string, string]> = {
-  promise: ["Kept on time", "Same-day reply"],
-  recurring: ["Fix on record", "Repeat contacts"],
-  install: ["Friction share", "Partner feedback captured"],
-};
-
-const END_SUFFIX: Record<OverviewQuestionCard["id"], string> = {
-  promise: "%",
-  recurring: "",
-  install: "",
-};
-
 function deltaColor(label: string): string {
   const t = label.trim();
-  if (/^0\b/.test(t)) return K.textMut;
-  if (/^[-−–]/.test(t)) return K.green;
-  if (/^\+/.test(t)) return K.red;
-  return K.textMut;
+  if (/^No change\b/i.test(t) || /^0\b/.test(t)) return Accent.textMut;
+  if (/^[-−–]/.test(t)) return Accent.green;
+  if (/^\+/.test(t)) return Accent.red;
+  return Accent.textMut;
 }
 
-function gaugePct(
-  g: OverviewQuestionCard["gauges"][number],
-  cardId: OverviewQuestionCard["id"],
-  index: number,
-): number {
-  if (typeof g.value === "number") return g.value;
-  if (cardId === "install" && index === 0) return 61;
-  return 0;
-}
-
+/**
+ * Same anatomy as v1 kgs/exec/QuestionCard (President ExecutiveTile).
+ * Left: count + chart · Right: gauges + mini KPIs · Bottom: LiSN insight.
+ */
 export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
   const L = useLabel2();
-  const { setView } = useDemo2();
+  const K = useV2K();
+  const { setView, state } = useDemo2();
   const accent = ACCENT[card.border];
   const Icon = ICONS[card.id];
-  const short = GAUGE_SHORT[card.id];
   const highlighted = card.border === "orange";
   const border = highlighted
     ? `2px solid ${accent}`
     : `1px solid ${withAlpha(accent, 0.25)}`;
-  // AreaTrend expects dataKey "x" (v1 bug was using "w" → empty chart).
-  const trendData = card.trend13.map((v, i) => ({ x: i + 1, v }));
+  const glow = `0 8px 32px ${withAlpha(accent, 0.082)}`;
+  const trendData = card.trend.map((v, i) => ({ x: i + 1, v }));
 
   return (
     <article
@@ -106,7 +84,7 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
           gap: 10,
           height: "100%",
           minWidth: 0,
-          boxShadow: `0 8px 32px ${withAlpha(accent, 0.082)}`,
+          boxShadow: glow,
           ...liftVars(
             highlighted ? accent : withAlpha(accent, 0.6),
             `0 0 0 2px ${accent}, 0 8px 28px ${withAlpha(accent, 0.133)}`,
@@ -160,17 +138,32 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
           >
             <Icon size={18} color={accent} />
           </div>
-          <h3
-            style={{
-              margin: 0,
-              fontSize: 15.5,
-              fontWeight: 700,
-              color: "#ffffff",
-              lineHeight: 1.25,
-            }}
-          >
-            {L(card.title)}
-          </h3>
+          <div style={{ minWidth: 0 }}>
+            <h3
+              style={{
+                margin: 0,
+                fontSize: 15.5,
+                fontWeight: 700,
+                color: K.text,
+                lineHeight: 1.1,
+              }}
+            >
+              {L(card.title)}
+            </h3>
+            <div
+              style={{
+                fontSize: 11,
+                color: withAlpha(K.text, 0.38),
+                marginTop: 2,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                lineHeight: 1.35,
+              }}
+            >
+              {L(card.subtitle)}
+            </div>
+          </div>
         </div>
         <ChevronRight
           size={22}
@@ -201,6 +194,7 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
           }}
         >
           <span
+            title={card.deltaLabel}
             style={{
               position: "absolute",
               top: 0,
@@ -212,16 +206,17 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
               whiteSpace: "nowrap",
               color: deltaColor(card.deltaLabel),
               zIndex: 2,
+              pointerEvents: "auto",
             }}
           >
             {card.deltaLabel}
           </span>
-          <div style={{ marginBottom: 6, paddingRight: 96 }}>
+          <div style={{ marginBottom: 6, paddingRight: 88 }}>
             <div
               style={{
                 fontSize: 34,
                 fontWeight: 800,
-                color: "#ffffff",
+                color: K.text,
                 fontFamily: K.mono,
                 fontVariantNumeric: "tabular-nums",
                 lineHeight: 1,
@@ -230,7 +225,7 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
               <CountUp text={String(card.count)} />
             </div>
             <div style={{ fontSize: 11, color: K.body, marginTop: 4 }}>
-              {L(card.caption)}
+              {L(card.countLabel)}
             </div>
           </div>
           <div
@@ -243,7 +238,8 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
             }}
           >
             <AreaTrend2
-              id={`v2-${card.id}`}
+              key={`${card.id}-${state.period}-${trendData.length}`}
+              id={`v2-${card.id}-${state.period}`}
               data={trendData}
               series={[
                 {
@@ -255,8 +251,8 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
               ]}
               height={QUESTION_CHART_H2}
               strokeColor={accent}
-              footerLabel="13 wks"
-              endSuffix={END_SUFFIX[card.id]}
+              footerLabel={card.chartCaption}
+              showEndLabel={false}
             />
           </div>
         </div>
@@ -278,11 +274,11 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
               alignItems: "start",
             }}
           >
-            {card.gauges.slice(0, 2).map((g, i) => (
+            {card.gauges.slice(0, 2).map((g) => (
               <SemiGauge
-                key={short[i] ?? g.label}
-                pct={gaugePct(g, card.id, i)}
-                label={short[i] ?? L(g.label)}
+                key={g.label}
+                pct={g.pct}
+                label={L(g.label)}
                 color={accent}
               />
             ))}
@@ -335,7 +331,11 @@ export function QuestionCard({ card }: { card: OverviewQuestionCard }) {
         </div>
       </div>
 
-      <InsightBox label="LiSN INSIGHT" text={L(card.insight)} accent={accent} />
+      <InsightBox2
+        label="LiSN INSIGHT"
+        text={L(card.insight)}
+        accent={accent}
+      />
     </article>
   );
 }

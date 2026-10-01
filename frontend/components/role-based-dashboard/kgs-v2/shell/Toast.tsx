@@ -1,5 +1,6 @@
 "use client";
 
+import { useV2K } from "@kgs2/lib/demoState";
 import { X } from "lucide-react";
 import {
   createContext,
@@ -10,10 +11,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  K,
-  withAlpha,
-} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type ToastMsg = { id: number; title: string; body?: string };
 
@@ -28,6 +26,7 @@ export function useToast2() {
 }
 
 export function ToastProvider2({ children }: { children: ReactNode }) {
+  const K = useV2K();
   const [toast, setToast] = useState<ToastMsg | null>(null);
   const show = useCallback((title: string, body?: string) => {
     setToast({ id: Date.now(), title, body });

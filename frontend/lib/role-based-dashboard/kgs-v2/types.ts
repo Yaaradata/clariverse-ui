@@ -147,11 +147,25 @@ export type HumanGate = Omit<
   status: GateStatus;
 };
 
+/** Overview + drill window for Regional GM Asia. */
+export type DateRangeId = "7d" | "30d" | "90d";
+/** Alias — demoState.period */
+export type PeriodId = DateRangeId;
+
+export type V2ThemeMode = "dark" | "light";
+
 export interface DemoStateV2 {
   role: Role;
+  /** True after Viewing as changes; cleared on reset. Drives "Go to my view". */
+  roleChanged: boolean;
   anonymise: boolean;
   approvals: Record<string, { ts: string }>;
   decisionRequested: Record<string, { ts: string }>;
   loop: Record<string, LoopStatus>;
   view: V2View;
+  /** Last 7 / 30 / 90 days filter. Default 7d. */
+  period: PeriodId;
+  theme: V2ThemeMode;
+  /** Which recurring theme the `recurringTheme` view shows. Default rc-01. */
+  recurringThemeId: string;
 }

@@ -1,18 +1,19 @@
 "use client";
 
-import overview from "@kgs2/data/overview.json";
-import { useLabel2 } from "@kgs2/lib/demoState";
+import { useLabel2, useOverviewData, useV2K } from "@kgs2/lib/demoState";
 import { Activity, Sparkles } from "lucide-react";
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { type OverviewQuestionCard, QuestionCard } from "./QuestionCard";
 import { type OverviewSignal, SignalCard } from "./SignalCard";
 
 /**
- * Regional overview — India & Southeast Asia — this week (SPEC §4).
- * All figures from overview.json via useLabel2().
+ * Regional overview — India & Southeast Asia.
+ * C pulse · D questions · E signals. Data follows active period.
  */
 export function OverviewView() {
   const L = useLabel2();
+  const K = useV2K();
+  const { data: overview, signalsTitle } = useOverviewData();
 
   return (
     <div
@@ -20,7 +21,6 @@ export function OverviewView() {
         display: "flex",
         flexDirection: "column",
         gap: 12,
-        padding: "16px 24px 24px",
       }}
     >
       <style>{`
@@ -34,7 +34,9 @@ export function OverviewView() {
           background: K.elevated,
           borderRadius: 10,
           padding: "12px 14px",
-          border: `1px solid ${K.borderLight}`,
+          borderTop: `1px solid ${K.borderLight}`,
+          borderRight: `1px solid ${K.borderLight}`,
+          borderBottom: `1px solid ${K.borderLight}`,
           borderLeft: `3px solid ${K.amber}`,
         }}
       >
@@ -71,7 +73,7 @@ export function OverviewView() {
               key={item.key}
               style={{
                 textAlign: "left",
-                background: "rgba(255,255,255,0.03)",
+                background: withAlpha(K.text, 0.03),
                 border: `1px solid ${K.borderLight}`,
                 borderRadius: 8,
                 padding: "10px 12px",
@@ -124,14 +126,12 @@ export function OverviewView() {
           gap: 12,
         }}
       >
-        {(overview.questionCards as unknown as OverviewQuestionCard[]).map(
-          (c) => (
-            <QuestionCard key={c.id} card={c} />
-          ),
-        )}
+        {(overview.questionCards as OverviewQuestionCard[]).map((c) => (
+          <QuestionCard key={c.id} card={c} />
+        ))}
       </section>
 
-      {/* E. This week's signals */}
+      {/* E. Signals for active period */}
       <section style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
           <h2
@@ -146,7 +146,7 @@ export function OverviewView() {
             }}
           >
             <Activity size={16} color={K.amber2} aria-hidden />
-            This week&apos;s signals
+            {signalsTitle}
           </h2>
         </div>
         <div
@@ -161,30 +161,9 @@ export function OverviewView() {
           }}
         >
           {overview.signals.map((s) => (
-            <SignalCard key={s.id} signal={s as unknown as OverviewSignal} />
+            <SignalCard key={s.id} signal={s as OverviewSignal} />
           ))}
         </div>
-
-        <p
-          style={{
-            margin: 0,
-            fontSize: 12,
-            color: K.textMut,
-            lineHeight: 1.4,
-          }}
-        >
-          {L(overview.sources.line)}
-        </p>
-        <p
-          style={{
-            margin: 0,
-            fontSize: 12,
-            color: K.textMut,
-            lineHeight: 1.4,
-          }}
-        >
-          Loop closure · {L(overview.loopClosureStrip)}
-        </p>
       </section>
     </div>
   );

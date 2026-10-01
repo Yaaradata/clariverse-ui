@@ -36,6 +36,10 @@
     "India & Southeast Asia": {
       "named": "India & Southeast Asia",
       "anon": "Region all"
+    },
+    "India & SEA": {
+      "named": "India & SEA",
+      "anon": "Region all"
     }
   },
   "place": {
