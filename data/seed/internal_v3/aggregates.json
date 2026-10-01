@@ -3939,17 +3939,17 @@
   }
  ],
  "md_mail": {
-  "total": 55,
-  "shown": 33,
+  "total": 339,
+  "shown": 317,
   "rows": [
    {
     "theme": "complaint_handling",
     "label": "Complaints closed without resolution",
     "owner": "cx",
-    "mails": 11,
-    "median_age_days": 24.6,
-    "resolved": 5,
-    "resolved_share": 45.5
+    "mails": 295,
+    "median_age_days": 16.7,
+    "resolved": 217,
+    "resolved_share": 73.6
    },
    {
     "theme": "app_speed_crash",
@@ -4177,19 +4177,19 @@
    },
    {
     "rung": "Grievance",
-    "count": 1199
+    "count": 1461
    },
    {
     "rung": "MD's office",
-    "count": 55
+    "count": 339
    },
    {
     "rung": "IO",
-    "count": 15
+    "count": 285
    },
    {
     "rung": "RBI Ombudsman",
-    "count": 4
+    "count": 53
    }
   ],
   "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",

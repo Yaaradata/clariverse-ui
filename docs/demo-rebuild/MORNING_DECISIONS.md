@@ -465,3 +465,42 @@ relationships 242 of 1,055. "Customers in contact" uses the same cap.
 **High-priority mentions.** The public reply is now spread evenly through time at bank scale (about 62% answered), so
 the rate is steady across periods: 63% full window, 64% for 30 days, 72% for 7 days.
 
+## D31 · Reject rate, Internal Ombudsman, negative share, social inbox and "unhappy with the reply" (1 Oct)
+
+All rates below are ours unless an anchor is named. They live in `scripts/hdfc_v3/complaint_rules.py` and
+`scripts/hdfc_v3/scale_v3.py`; figures are for the full window.
+
+**1. Reject rate and the Internal Ombudsman: one register.**
+- A complaint ends partly or fully rejected with probability 10.5% (12.3% when the contact is negative), 60% of those
+  partly. A reply inside two days is always a resolution, since a rejection has to pass the Internal Ombudsman first.
+  Result: 9.4% of complaints, 10,370, in line with peer bank disclosures (6-10%).
+- Of complaints still open after two days, the same share already carry a decision to reject and are waiting for IO
+  review: 2,454 awaiting; 7,916 reviewed; 10,370 sent in all.
+- The outcome rules are in one module used by both the seed and the register. A contact sits at the ladder's IO rung
+  exactly when it is a complaint with a decision to reject; the old independent IO rung (3,900, our earlier guess) is
+  gone. Reconcile checks the ladder rung, the queue and "awaiting IO review" against the register.
+- The RBI Ombudsman rung now also comes from the register: only a complaint that is at risk can reach it (40% of those
+  unhappy with the reply, 12% of those past day 30 without a reply; more for loans, which are few in the sample). The
+  total is still held at 2,400 (O7/O8), split by the complaint mix so loans lead (31%), then cards (26%).
+
+**2. Negative share.** 12.2% of internal contacts are negative (was 41%, inherited from the sample). Complaints are 85%
+negative; queries and requests about 9%. By product: personal loans 16%, cards 15%, home and auto loans 15%, PayZapp
+and insurance 11%, accounts 9.5%, digital 9%. The product mix of contacts is held at the sample's own mix. The business
+cards and the Cards issue pulse show these shares. The sample pages still count the kept rows, where the share is higher.
+
+**3. Social inbox.** 1% of contacts (24,000), the low end of K4's 1-3%. Chat 13.5% and WhatsApp 7.5% take up the
+difference; calls 56%, email 13%, branch 9% are unchanged. The inbox is still larger than the public mentions collected
+(17,193): it counts every message to the bank's handles, including direct messages, and the public figure is a sample.
+The External channels block carries one (i): "Public figures are the collected sample."
+
+**4. Unhappy with the reply.** Derived from the reply's outcome, not from later contacts: 30% of partly or fully
+rejected complaints come back (40% reopen, the rest contact again on the issue), and 2.2% of resolved ones do. Result:
+2,921. Total at risk (on the brink 2,974 + already eligible 7,124 + unhappy 2,921) is 13,019, against about 2,400
+Ombudsman complaints: 5.4 at risk for each one filed. Brink plus eligible is 51% of pending (19,882) and stays a
+subset of it.
+
+**Walkthrough.** `scripts/hdfc_v3/walkthrough.py` now writes the walkthrough from the Full-window figures on every
+pipeline run, so its numbers cannot go stale.
+
+**Not changed.** The unlinked sample pages keep their own ladder and sample counts.
+
