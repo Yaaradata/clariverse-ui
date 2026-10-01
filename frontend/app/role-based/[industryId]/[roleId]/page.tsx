@@ -77,14 +77,20 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
   const isLegacyHdfcContact =
     industryId === HDFC_BANK_INDUSTRY_ID && roleId === "head_contact";
 
+  // Placeholder Kidde Head of CX → President, Global Commercial Fire
+  const isLegacyKiddeHeadCx =
+    industryId === KIDDE_GLOBAL_INDUSTRY_ID && roleId === "head_cx";
+
   const normalizedRoleId = isLegacyHdfcContact
     ? HDFC_HEAD_OF_CX_ROLE_ID
-    : industryId === "credit_cards" && roleId === "head_cards_v3"
-      ? "head_cards"
-      : industryId === "ecommerce" &&
-          (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
-        ? "head_cx_retail"
-        : roleId;
+    : isLegacyKiddeHeadCx
+      ? KIDDE_GLOBAL_PRESIDENT_ROLE_ID
+      : industryId === "credit_cards" && roleId === "head_cards_v3"
+        ? "head_cards"
+        : industryId === "ecommerce" &&
+            (roleId === "head_cx_retail_v2" || roleId === "head_cx_retail_v3")
+          ? "head_cx_retail"
+          : roleId;
 
   const pulseHref =
     industryId === HDFC_BANK_INDUSTRY_ID ? HDFC_PULSE_ROLE_HREF[roleId] : undefined;
@@ -100,6 +106,12 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
       );
       return;
     }
+    if (isLegacyKiddeHeadCx) {
+      router.replace(
+        `/role-based/${KIDDE_GLOBAL_INDUSTRY_ID}/${KIDDE_GLOBAL_PRESIDENT_ROLE_ID}`,
+      );
+      return;
+    }
     if (industryId === "credit_cards" && roleId === "head_cards_v3") {
       router.replace(`/role-based/credit_cards/head_cards`);
     }
@@ -109,7 +121,7 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
     ) {
       router.replace(`/role-based/ecommerce/head_cx_retail`);
     }
-  }, [industryId, roleId, router, pulseHref]);
+  }, [industryId, roleId, router, pulseHref, isLegacyKiddeHeadCx]);
 
   if (!industryId || !roleId || pulseHref) {
     return (
