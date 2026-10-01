@@ -30,7 +30,7 @@ export const ROLE_LANDING: Record<string, V2View> = {
 };
 
 export const VIEW_TITLE: Record<V2View, string> = {
-  overview: "Asia ex China — this week",
+  overview: "India & Southeast Asia — this week",
   promise: "Are we keeping our promises?",
   promiseHero: "North region: promises slipping",
   recurring: "What keeps coming back?",

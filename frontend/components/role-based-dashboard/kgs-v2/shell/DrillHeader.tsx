@@ -1,5 +1,6 @@
 "use client";
 
+import meta from "@kgs2/data/meta.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
 import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
@@ -9,7 +10,7 @@ export function DrillHeader({ view }: { view: V2View }) {
   const L = useLabel2();
   const { state } = useDemo2();
   const title = VIEW_TITLE[view];
-  const crumb = `Global Commercial Fire · Asia ex China · ${state.role} · ${VIEW_PAGE_LABEL[view]}`;
+  const crumb = `${meta.breadcrumbRoot} · ${state.role} · ${VIEW_PAGE_LABEL[view]}`;
 
   return (
     <header

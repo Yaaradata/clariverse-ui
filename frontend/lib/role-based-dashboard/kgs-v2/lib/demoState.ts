@@ -1,5 +1,5 @@
 /**
- * v2 demo state — Regional GM Asia ex China.
+ * v2 demo state — Regional GM India & Southeast Asia.
  * Own provider; does not touch v1 demoState.
  */
 

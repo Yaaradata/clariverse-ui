@@ -1,8 +1,12 @@
 "use client";
 
+import meta from "@kgs2/data/meta.json";
+import { useDemo2 } from "@kgs2/lib/demoState";
+import type { Role } from "@kgs2/types";
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { ROLE_LANDING } from "../nav";
 import { SyntheticBadge } from "../shared/SyntheticBadge";
 import { AnonymiseToggle } from "./AnonymiseToggle";
 
@@ -16,6 +20,8 @@ export function DemoMenu({
   onReset: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const { state, setRole, setView } = useDemo2();
+  const landing = ROLE_LANDING[state.role] ?? "overview";
 
   useEffect(() => {
     if (!open) return;
@@ -45,7 +51,7 @@ export function DemoMenu({
         left: 88,
         bottom: 56,
         zIndex: 85,
-        width: 260,
+        width: 280,
         background: K.elevated,
         border: `1px solid ${K.borderLight}`,
         borderRadius: K.radius.tile,
@@ -56,6 +62,56 @@ export function DemoMenu({
         gap: 10,
       }}
     >
+      <label
+        htmlFor="kgs2-demo-role"
+        style={{ fontSize: 12, color: K.textMut }}
+      >
+        Viewing as
+      </label>
+      <select
+        id="kgs2-demo-role"
+        className="kgs2-focus"
+        value={state.role}
+        onChange={(e) => setRole(e.target.value as Role)}
+        style={{
+          background: K.surface,
+          color: K.textSec,
+          border: `1px solid ${K.borderLight}`,
+          borderRadius: 8,
+          padding: "6px 8px",
+          fontSize: 13,
+          fontFamily: "inherit",
+        }}
+      >
+        {meta.roles.map((r) => (
+          <option key={r} value={r}>
+            {r}
+          </option>
+        ))}
+      </select>
+      <button
+        type="button"
+        className="kgs2-focus"
+        onClick={() => {
+          setView(landing);
+          onClose();
+        }}
+        style={{
+          background: "none",
+          border: "none",
+          color: K.violet300,
+          fontSize: 12,
+          fontWeight: 600,
+          cursor: "pointer",
+          fontFamily: "inherit",
+          padding: 0,
+          textAlign: "left",
+          textDecoration: "underline",
+        }}
+      >
+        Go to my view
+      </button>
+      <AnonymiseToggle />
       <button
         type="button"
         onClick={onReset}
@@ -78,7 +134,6 @@ export function DemoMenu({
         <RotateCcw size={14} />
         Reset demo
       </button>
-      <AnonymiseToggle />
       <div
         style={{
           fontSize: 11,

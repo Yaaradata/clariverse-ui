@@ -13,7 +13,6 @@ import { PromiseHeroView } from "./promise/PromiseHeroView";
 import { PromiseView } from "./promise/PromiseView";
 import { RecurringView } from "./recurring/RecurringView";
 import { ThemeView } from "./recurring/ThemeView";
-import { ContextBar } from "./shell/ContextBar";
 import { DemoMenu } from "./shell/DemoMenu";
 import { DrillHeader } from "./shell/DrillHeader";
 import { LeftRail } from "./shell/LeftRail";
@@ -24,7 +23,7 @@ export type KgsAsiaRegionalDashboardProps = {
 };
 
 /**
- * LiSN × KGS v2 — Regional GM, Asia ex China.
+ * LiSN × KGS v2 — Regional GM, India & Southeast Asia.
  * Views are held in v2 demoState; no new Next.js pages.
  */
 export function KgsAsiaRegionalDashboard({
@@ -42,7 +41,6 @@ export function KgsAsiaRegionalDashboard({
 function Kgs2DashboardInner({ onExit }: { onExit: () => void }) {
   const { state, setView, reset } = useDemo2();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [region, setRegion] = useState("all");
 
   const go = useCallback((view: V2View) => setView(view), [setView]);
 
@@ -57,7 +55,6 @@ function Kgs2DashboardInner({ onExit }: { onExit: () => void }) {
 
   const onReset = useCallback(() => {
     reset();
-    setRegion("all");
     setMenuOpen(false);
   }, [reset]);
 
@@ -117,7 +114,6 @@ function Kgs2DashboardInner({ onExit }: { onExit: () => void }) {
           }}
         >
           <DrillHeader view={state.view} />
-          <ContextBar region={region} onRegionChange={setRegion} />
           <main style={{ flex: 1, overflow: "auto", paddingBottom: 48 }}>
             {body}
           </main>

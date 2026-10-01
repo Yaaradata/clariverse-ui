@@ -18,7 +18,8 @@ Indexed locally in `.codegraph/`. For callers/callees/symbols:
 - Never edit files in the KB, except to write the build notes (CONTEXT_DIGEST.md, REPO_MAP.md, BUILD_PLAN.md, QA_REPORT.md, DRIVER_NOTES.md) into `LiSN_KGS_Demo_DevBrief_v1/`.
 - Never import from the KB at runtime. Copy the mock data into `lib/role-based-dashboard/kgs/`; the KB folder is reference only.
 
-## KGS v2 build — Regional GM, Asia ex China
+## KGS v2 build — Regional GM, India & Southeast Asia
+- On screen, call the region "India & Southeast Asia" (short: "India & SEA"), never "Asia ex China".
 - Sources: "frontend/Carrier KiddeGlobal/v2/SPEC.md" (source of truth for v2) and "frontend/Carrier KiddeGlobal/v2/CALL_TRANSCRIPT.md" (the reason behind every change). SPEC wins over the v1 brief.
 - v1 (President card) stays untouched. Never edit files in `components/role-based-dashboard/kgs/` or `lib/role-based-dashboard/kgs/`. Import v1 components from there. If a component needs changes, copy it into `kgs-v2/` and change the copy.
 - v2 code: `components/role-based-dashboard/kgs-v2/{shell,overview,promise,recurring,install,partner,shared}/`. Entry component: `kgs-v2/KgsAsiaRegionalDashboard.tsx`.

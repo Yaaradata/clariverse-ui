@@ -154,8 +154,8 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
         <button
           type="button"
           onClick={() => go("overview")}
-          title="LiSN · Asia ex China"
-          aria-label="LiSN · Asia ex China"
+          title="LiSN · India & SEA"
+          aria-label="LiSN · India & SEA"
           className="kgs2-focus"
           style={{
             width: 36,
@@ -177,7 +177,7 @@ export function LeftRail({ onOpenDemoMenu }: { onOpenDemoMenu: () => void }) {
         </button>
       </div>
       <nav
-        aria-label="Asia ex China"
+        aria-label="India & SEA"
         style={{ padding: "10px 8px", flex: 1, overflowY: "auto" }}
       >
         {top.map(renderItem)}

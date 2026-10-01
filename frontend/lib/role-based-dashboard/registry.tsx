@@ -219,7 +219,7 @@ export const INDUSTRIES = [
       },
       {
         id: KIDDE_GLOBAL_REGIONAL_GM_ROLE_ID,
-        name: "Regional GM — Asia ex China",
+        name: "Regional GM — India & Southeast Asia",
         icon: Globe,
         sub: "Delivery promise · what keeps coming back · installer experience · partners",
         defaultLens: "ops",

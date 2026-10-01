@@ -1,5 +1,5 @@
 /**
- * LiSN × KGS v2 — Regional GM, Asia ex China.
+ * LiSN × KGS v2 — Regional GM, India & Southeast Asia.
  * Reuses v1 Severity / Confidence / JoinTag / PnLDestination / EvidenceSnippet /
  * AnonymiseMap shapes. Role and HumanGate are v2-scoped (six regional roles).
  * Everything here is a SYNTHETIC SCENARIO — illustrative only.

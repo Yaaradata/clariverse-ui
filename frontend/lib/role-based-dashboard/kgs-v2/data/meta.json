@@ -1,6 +1,6 @@
 {
-  "title": "Asia ex China — this week",
-  "breadcrumbRoot": "Global Commercial Fire · Asia ex China",
+  "title": "India & Southeast Asia — this week",
+  "breadcrumbRoot": "Global Commercial Fire · India & SEA",
   "badge": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
   "footer": "SYNTHETIC SCENARIO — illustrative data, not KGS data",
   "dataAsOf": {
@@ -13,7 +13,7 @@
     "endDate": "2026-09-25"
   },
   "regions": [
-    { "id": "all", "label": "Asia ex China" },
+    { "id": "all", "label": "India & SEA" },
     { "id": "North", "label": "{{region:North}}" },
     { "id": "South", "label": "{{region:South}}" },
     { "id": "East", "label": "{{region:East}}" },

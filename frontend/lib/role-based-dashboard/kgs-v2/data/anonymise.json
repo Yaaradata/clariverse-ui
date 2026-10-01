@@ -33,7 +33,10 @@
     "East": { "named": "East", "anon": "Region 3" },
     "West": { "named": "West", "anon": "Region 4" },
     "SEA": { "named": "SEA", "anon": "Region 5" },
-    "Asia ex China": { "named": "Asia ex China", "anon": "Region all" }
+    "India & Southeast Asia": {
+      "named": "India & Southeast Asia",
+      "anon": "Region all"
+    }
   },
   "place": {
     "Gurugram": { "named": "Gurugram", "anon": "Hub 1" },
