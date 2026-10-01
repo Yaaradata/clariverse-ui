@@ -5,7 +5,7 @@
  * Customer pulse and the CX pulse. Every figure comes from periods.json for the selected period.
  */
 
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { type PointerEvent, type ReactNode, useState } from "react";
 
@@ -1042,13 +1042,6 @@ export function CustomerPulse({ p }: { p: Period }) {
       >
         <strong style={{ fontSize: 15 }}>Internal channels</strong>
         <ProvenanceTag kind="internal" />
-        <span style={{ fontSize: 12.5, color: C.textMut }}>
-          <span title={p.compare_detail}>Changes: {p.compare}</span>
-          {p.id === "all" ? " (full window: second half vs first half)" : ""}.
-          Colour: red, amber and green only where direction matters (no reply
-          48h+, open, negative share): green better, amber within {TREND_BAND}%,
-          red worse. Volumes stay neutral.
-        </span>
       </div>
       <div
         style={{
@@ -1156,31 +1149,14 @@ function SocialPostRow({ post, rank }: { post: SocialPost; rank: number }) {
   );
 }
 
-/** One external figure, in the same shape as a list card: the figure over its trend, gauges beside it. */
+/** The frame of one external card: a title, then its parts stacked, the last one on the floor of the card. */
 function ExternalCard({
   title,
   tip,
-  big,
-  chip,
-  caption,
-  chart,
   children,
 }: {
   title: string;
   tip?: string;
-  big: string;
-  chip?: ReactNode;
-  caption: string;
-  /** The one chart on the card: the metric that matters, in the rule's colour (or neutral for a volume). */
-  chart: {
-    id: string;
-    values: number[];
-    title: string;
-    points: TrendPoints;
-    color: string;
-    /** Shown over the chart when it is not the card's headline figure. */
-    label?: string;
-  };
   children: ReactNode;
 }) {
   return (
@@ -1192,91 +1168,82 @@ function ExternalCard({
         border: `1px solid ${C.border}`,
         borderRadius: 14,
         padding: "14px 14px 12px",
-        display: "grid",
-        gridRow: "span 2",
-        gridTemplateRows: "subgrid",
-        rowGap: 10,
+        display: "flex",
+        flexDirection: "column",
+        gap: 10,
         minWidth: 0,
       }}
     >
       <strong
-        style={{
-          fontSize: "clamp(13.5px, 1.02vw, 15.5px)",
-          lineHeight: 1.25,
-          alignSelf: "start",
-        }}
+        style={{ fontSize: "clamp(13.5px, 1.02vw, 15.5px)", lineHeight: 1.25 }}
       >
         {title}
       </strong>
       <div
         style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.15fr)",
-          gap: 14,
-          alignItems: "stretch",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          gap: 10,
+          minWidth: 0,
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 4,
-            minWidth: 0,
-          }}
-        >
-          <span
-            style={{
-              display: "flex",
-              alignItems: "baseline",
-              gap: 8,
-              flexWrap: "wrap",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: MONO,
-                fontSize: 30,
-                fontWeight: 750,
-                lineHeight: 1,
-              }}
-            >
-              {big}
-            </span>
-            {chip}
-          </span>
-          <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.35 }}>
-            {caption}
-          </span>
-          {chart.label ? (
-            <span style={{ ...STAT_LABEL, marginTop: 4 }}>{chart.label}</span>
-          ) : null}
-          <div style={{ flex: 1, minHeight: 40, position: "relative" }}>
-            <AreaChart
-              id={chart.id}
-              values={chart.values}
-              color={chart.color}
-              height="100%"
-              title={chart.title}
-              points={chart.points}
-            />
-          </div>
-        </div>
-        {/* Gauges at the top, the footer on the floor of the card, level with the foot of the chart. */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            gap: 8,
-            minWidth: 0,
-          }}
-        >
-          {children}
-        </div>
+        {children}
       </div>
     </div>
   );
 }
+
+/** A card's headline: the big figure, its change beside it, and one line saying what it counts. */
+function Headline({
+  big,
+  chip,
+  caption,
+}: {
+  big: string;
+  chip?: ReactNode;
+  caption?: ReactNode;
+}) {
+  return (
+    <div
+      style={{ display: "flex", flexDirection: "column", gap: 4, minWidth: 0 }}
+    >
+      <span
+        style={{
+          display: "flex",
+          alignItems: "baseline",
+          gap: 8,
+          flexWrap: "wrap",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: MONO,
+            fontSize: 30,
+            fontWeight: 750,
+            lineHeight: 1,
+          }}
+        >
+          {big}
+        </span>
+        {chip}
+      </span>
+      {caption ? (
+        <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.35 }}>
+          {caption}
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+const SPLIT_ROW = {
+  display: "grid",
+  gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.15fr)",
+  gap: 14,
+  alignItems: "start",
+};
 
 /** The line under a card's gauges: a label, a figure and a bar. */
 function CardFoot({
@@ -1346,7 +1313,12 @@ const GAUGE_PAIR = {
 
 function ExternalBlock({ p }: { p: Period }) {
   const [open, setOpen] = useState(false);
+  // The trending list can be narrowed to one day: the high-impact peak.
+  const [day, setDay] = useState<string | null>(null);
   const sp = p.social_pulse;
+  const peak = sp.high_impact_peak;
+  const onDay = day !== null && peak?.date === day ? peak : null;
+  const shown = onDay ? onDay.posts : sp.posts;
   const ext = p.cx_pulse.external;
   const m = p.customer_pulse.mentions;
   const g = sp.good_response;
@@ -1359,7 +1331,6 @@ function ExternalBlock({ p }: { p: Period }) {
   };
   const trend = "over the last periods of the same length";
   const whole = p.id === "all";
-  const negShare = sp.negative_share_series.map((x) => x.pct ?? 0);
   const unanswered = m.unanswered_series.map((x) => x.count);
   return (
     <div
@@ -1391,10 +1362,6 @@ function ExternalBlock({ p }: { p: Period }) {
         >
           <strong style={{ fontSize: 15 }}>External channels</strong>
           <ProvenanceTag kind="public" />
-          <span style={{ fontSize: 13, color: C.textSec }}>
-            What LisN adds beyond your own systems. Counted separately from the
-            internal cards above; for awareness, not a service target.
-          </span>
         </div>
         <div
           style={{
@@ -1402,45 +1369,36 @@ function ExternalBlock({ p }: { p: Period }) {
             gridTemplateColumns:
               "repeat(auto-fit, minmax(min(100%, max(280px, calc((100% - 30px) / 4))), 1fr))",
             gap: 10,
+            alignItems: "stretch",
           }}
         >
-          <ExternalCard
-            title="Total mentions"
-            big={fmt(sp.mentions)}
-            chip={
-              <TrendChip
-                pct={ext.change_pct}
-                label={`${p.compare_detail}, stores and forums`}
-                compact
+          <ExternalCard title="Total mentions">
+            <div style={SPLIT_ROW}>
+              <Headline
+                big={fmt(sp.mentions)}
+                chip={
+                  <TrendChip
+                    pct={ext.change_pct}
+                    label={`${p.compare_detail}, stores and forums`}
+                    compact
+                  />
+                }
+                caption="public posts and reviews"
               />
-            }
-            caption="public posts and reviews"
-            chart={{
-              id: "trend-ext-negative-share",
-              values: negShare,
-              title: `Negative share of mentions, ${trend}`,
-              label: "Negative share · trend",
-              color: trendColor(seriesChange(negShare, whole)),
-              points: {
-                ends: sp.negative_share_series.map((x) => x.end),
-                span: spanOf(p),
-                unit: "% negative",
-              },
-            }}
-          >
-            <div style={GAUGE_PAIR}>
-              <ArcGauge
-                value={ext.positive_share}
-                color={C.green}
-                centre={fmtPct(ext.positive_share)}
-                label="Positive"
-              />
-              <ArcGauge
-                value={ext.negative_share}
-                color={C.red}
-                centre={fmtPct(ext.negative_share)}
-                label="Negative"
-              />
+              <div style={GAUGE_PAIR}>
+                <ArcGauge
+                  value={ext.positive_share}
+                  color={C.green}
+                  centre={fmtPct(ext.positive_share)}
+                  label="Positive"
+                />
+                <ArcGauge
+                  value={ext.negative_share}
+                  color={C.red}
+                  centre={fmtPct(ext.negative_share)}
+                  label="Negative"
+                />
+              </div>
             </div>
             <div
               title={sp.by_source
@@ -1481,69 +1439,105 @@ function ExternalBlock({ p }: { p: Period }) {
             </div>
           </ExternalCard>
 
-          <ExternalCard
-            title="High-impact mentions"
-            tip={sp.rule}
-            big={fmt(sp.high_impact)}
-            caption="posts with reach"
-            chart={{
-              id: "trend-ext-high-impact",
-              values: sp.high_impact_series.map((x) => x.count),
-              title: `High-impact mentions, ${trend}`,
-              color: NEUTRAL,
-              points: {
-                ends: sp.high_impact_series.map((x) => x.end),
-                span: spanOf(p),
-                unit: "high-impact mentions",
-              },
-            }}
-          >
-            <div style={GAUGE_PAIR}>
-              <ArcGauge
-                value={share(sp.high_impact_responded, sp.high_impact)}
-                color={C.green}
-                centre={fmt(sp.high_impact_responded)}
-                label="Responded"
+          <ExternalCard title="High-impact mentions" tip={sp.rule}>
+            <div style={SPLIT_ROW}>
+              <Headline
+                big={fmt(sp.high_impact)}
+                chip={
+                  <TrendChip
+                    pct={sp.high_impact_change_pct}
+                    label={p.compare_detail}
+                    compact
+                  />
+                }
+                caption={
+                  <>
+                    posts with reach;{" "}
+                    <strong style={{ color: C.textSec }}>
+                      {fmt(ext.high_impact.escalation)}
+                    </strong>{" "}
+                    with escalation language
+                  </>
+                }
               />
-              <ArcGauge
-                value={share(ext.high_impact.negative, sp.high_impact)}
-                color={C.red}
-                centre={fmt(ext.high_impact.negative)}
-                label="Negative"
-              />
+              <div style={GAUGE_PAIR}>
+                <ArcGauge
+                  value={share(sp.high_impact_responded, sp.high_impact)}
+                  color={C.green}
+                  centre={fmt(sp.high_impact_responded)}
+                  label="Responded"
+                />
+                <ArcGauge
+                  value={share(ext.high_impact.negative, sp.high_impact)}
+                  color={C.red}
+                  centre={fmt(ext.high_impact.negative)}
+                  label="Negative"
+                />
+              </div>
             </div>
-            <CardFoot
-              label="Escalation language"
-              figure={fmt(ext.high_impact.escalation)}
-              value={share(ext.high_impact.escalation, sp.high_impact)}
-              color={NEUTRAL}
-            />
+            {peak ? (
+              <button
+                type="button"
+                data-testid="peak"
+                onClick={() => {
+                  setDay(peak.date);
+                  setOpen(true);
+                }}
+                title="Open that day's posts"
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 8,
+                  width: "100%",
+                  background: C.cardAlt,
+                  border: `1px solid ${C.borderLight}`,
+                  borderRadius: 8,
+                  padding: "6px 10px",
+                  color: C.text,
+                  fontSize: 13,
+                  cursor: "pointer",
+                  textAlign: "left",
+                }}
+              >
+                <span
+                  style={{ display: "flex", flexDirection: "column", gap: 2 }}
+                >
+                  <span>
+                    <span style={{ color: C.textMut }}>Peak: </span>
+                    <strong>
+                      {fmtDate(peak.date)} · {fmt(peak.count)}{" "}
+                      {peak.count === 1 ? "post" : "posts"}
+                    </strong>
+                  </span>
+                  <span style={{ fontSize: 11.5, color: C.textMut }}>
+                    See that day&apos;s posts
+                  </span>
+                </span>
+                <ChevronRight size={15} color={C.brandInk} />
+              </button>
+            ) : null}
           </ExternalCard>
 
           <ExternalCard
             title="Bank response · informational"
             tip="Response here means acknowledged and routed to an official channel. Shown for information, not as a target."
-            big={sp.response_pct === null ? "—" : `${sp.response_pct}%`}
-            caption={`${fmt(sp.responded)} of ${fmt(sp.mentions)} mentions`}
-            chart={{
-              id: "trend-ext-response",
-              values: sp.response_series.map((x) => x.pct ?? 0),
-              title: `Bank response rate, ${trend}`,
-              color: NEUTRAL,
-              points: {
-                ends: sp.response_series.map((x) => x.end),
-                span: spanOf(p),
-                unit: "%",
-              },
-            }}
           >
+            <Headline
+              big={sp.response_pct === null ? "—" : `${sp.response_pct}%`}
+              chip={
+                <span style={{ fontSize: 12.5, color: C.textSec }}>
+                  {fmt(sp.responded)} of {fmt(sp.mentions)} mentions
+                </span>
+              }
+            />
             <div
               data-testid="response-by-source"
               style={{
+                flex: 1,
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
-                flex: 1,
+                justifyContent: "space-evenly",
                 gap: 4,
               }}
             >
@@ -1553,10 +1547,11 @@ function ExternalBlock({ p }: { p: Period }) {
                   title={`${fmt(x.responded)} of ${fmt(x.mentions)}`}
                   style={{
                     display: "grid",
-                    gridTemplateColumns: "62px minmax(0, 1fr) 34px",
+                    gridTemplateColumns: "66px minmax(0, 1fr) 36px",
                     alignItems: "center",
-                    gap: 6,
+                    gap: 8,
                     fontSize: 12,
+                    lineHeight: "14px",
                     color: C.textSec,
                   }}
                 >
@@ -1594,56 +1589,80 @@ function ExternalBlock({ p }: { p: Period }) {
             </div>
           </ExternalCard>
 
-          <ExternalCard
-            title="High-priority mentions"
-            tip={m.rule}
-            big={fmt(m.total)}
-            caption="listed customers who tagged the bank"
-            chart={{
-              id: "trend-ext-unanswered",
-              values: unanswered,
-              title: `High-priority mentions without a reply, ${trend}`,
-              label: "Unanswered · trend",
-              color: trendColor(seriesChange(unanswered, whole)),
-              points: {
-                ends: m.unanswered_series.map((x) => x.end),
-                span: spanOf(p),
-                unit: "unanswered",
-              },
-            }}
-          >
-            <div style={GAUGE_PAIR}>
-              <ArcGauge
-                value={share(m.responded, m.total)}
-                color={C.green}
-                centre={fmt(m.responded)}
-                label="Responded"
-              />
-              <ArcGauge
-                value={share(m.not_responded, m.total)}
-                color={C.red}
-                centre={fmt(m.not_responded)}
-                label="Unanswered"
-              />
+          <ExternalCard title="High-priority mentions" tip={m.rule}>
+            <div style={{ ...SPLIT_ROW, alignItems: "stretch", flex: 1 }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  minWidth: 0,
+                }}
+              >
+                <Headline
+                  big={fmt(m.total)}
+                  caption="listed customers who tagged the bank"
+                />
+                <span style={{ ...STAT_LABEL, marginTop: 4 }}>
+                  Unanswered · trend
+                </span>
+                <div style={{ flex: 1, minHeight: 28, position: "relative" }}>
+                  <AreaChart
+                    id="trend-ext-unanswered"
+                    values={unanswered}
+                    color={trendColor(seriesChange(unanswered, whole))}
+                    height="100%"
+                    title={`High-priority mentions without a reply, ${trend}`}
+                    points={{
+                      ends: m.unanswered_series.map((x) => x.end),
+                      span: spanOf(p),
+                      unit: "unanswered",
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  minWidth: 0,
+                }}
+              >
+                <div style={GAUGE_PAIR}>
+                  <ArcGauge
+                    value={share(m.responded, m.total)}
+                    color={C.green}
+                    centre={fmt(m.responded)}
+                    label="Responded"
+                  />
+                  <ArcGauge
+                    value={share(m.not_responded, m.total)}
+                    color={C.red}
+                    centre={fmt(m.not_responded)}
+                    label="Unanswered"
+                  />
+                </div>
+                <CardFoot
+                  label="Response rate"
+                  figure={fmtPct(share(m.responded, m.total))}
+                  value={share(m.responded, m.total)}
+                  color={NEUTRAL}
+                />
+              </div>
             </div>
-            <CardFoot
-              label="Response rate"
-              figure={fmtPct(share(m.responded, m.total))}
-              value={share(m.responded, m.total)}
-              color={NEUTRAL}
-            />
           </ExternalCard>
         </div>
 
-        <div style={{ fontSize: 12.5, color: C.textMut }}>
-          Response here means acknowledged and routed to an official channel. It
-          is shown for information, not as a target.
-        </div>
         {/* Detail, not pulse: closed until asked for. */}
         <button
           type="button"
           data-testid="posts-toggle"
-          onClick={() => setOpen(!open)}
+          onClick={() => {
+            setOpen(!open);
+            setDay(null);
+          }}
           aria-expanded={open}
           style={{
             alignSelf: "flex-start",
@@ -1672,19 +1691,53 @@ function ExternalBlock({ p }: { p: Period }) {
             }}
           >
             <div style={{ ...box, flex: "3 1 460px" }}>
-              <strong style={{ fontSize: 14.5 }}>
-                Top {sp.posts.length || ""} trending posts, by engagement
-              </strong>
-              {sp.posts.length ? (
-                sp.posts.map((post, i) => (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 8,
+                  flexWrap: "wrap",
+                }}
+              >
+                <strong data-testid="posts-heading" style={{ fontSize: 14.5 }}>
+                  {onDay
+                    ? `High-impact posts on ${fmtDate(onDay.date)}: ${shown.length} of ${fmt(onDay.count)}, by engagement`
+                    : `Top ${sp.posts.length || ""} trending posts, by engagement`}
+                </strong>
+                {onDay ? (
+                  <button
+                    type="button"
+                    data-testid="clear-day"
+                    onClick={() => setDay(null)}
+                    style={{
+                      background: "transparent",
+                      border: `1px solid ${C.border}`,
+                      color: C.textSec,
+                      borderRadius: 999,
+                      padding: "2px 10px",
+                      fontSize: 12.5,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Show the whole period
+                  </button>
+                ) : null}
+              </div>
+              {shown.length ? (
+                shown.map((post, i) => (
                   <SocialPostRow
-                    key={`${post.platform}-${post.date}-${post.score}`}
+                    key={`${post.platform}-${post.date}-${post.score}-${post.text.slice(0, 12)}`}
                     post={post}
                     rank={i + 1}
                   />
                 ))
               ) : (
-                <MutedNote>No posts with engagement in this period.</MutedNote>
+                <MutedNote>
+                  {onDay
+                    ? "None of that day's posts can be quoted (they name a person or make an allegation)."
+                    : "No posts with engagement in this period."}
+                </MutedNote>
               )}
             </div>
             {g ? (
