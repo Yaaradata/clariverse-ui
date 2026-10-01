@@ -51,6 +51,7 @@ const install = load<{
 }>("install.json");
 
 const partner = load<{
+  subtitle: string;
   kgsView: { partnersConnected: { connected: number; of: number } };
 }>("partner.json");
 
@@ -257,6 +258,15 @@ export function checkBannedStrings(): Check {
   const hits: string[] = [];
   for (const s of strings(all)) {
     for (const b of BANNED) {
+      // SPEC §8 / AGENTS: Honeywell allowed only in Partner view subtitle.
+      if (
+        b.label === "real product/competitor (data)" &&
+        s === partner.subtitle &&
+        /Honeywell/i.test(s) &&
+        !/Edwards|EST4/i.test(s)
+      ) {
+        continue;
+      }
       if (b.re.test(s)) hits.push(`${b.label}: ${s.slice(0, 72)}`);
     }
   }
