@@ -103,6 +103,10 @@ export type SocialPost = {
 /** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
 export type SocialPulse = {
   mentions: number;
+  mentions_series: { end: string; count: number }[];
+  high_impact_series: { end: string; count: number }[];
+  /** Share of mentions with a bank response, per earlier window of the period's length. */
+  response_series: { end: string; pct: number | null }[];
   /** Bank replies by source. Play Store is collected (live); the rest are simulated and marked illustrative. */
   by_source: {
     source: string;
@@ -436,6 +440,7 @@ export type Period = {
       total: number;
       responded: number;
       not_responded: number;
+      series: { end: string; count: number }[];
       by_list: Record<string, { total: number; responded: number }>;
       rule: string;
     };

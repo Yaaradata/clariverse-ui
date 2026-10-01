@@ -244,6 +244,8 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "total": len(ment),
             "responded": responded,
             "not_responded": len(ment) - responded,
+            "series": [{"end": e.isoformat(), "count": sum(1 for r in inter if r["_ch"] == "social" and r["masked_id"] in listed and in_win(r, s, e))}
+                       for s, e in w["series"]],
             "by_list": by_list,
             "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data.",
         },
@@ -425,6 +427,13 @@ def social_pulse(pub, w, W) -> dict:
                 "engagement": engagement_of(g), "reply": redact_reply(g["reply"]["text"]), "in_period": in_period}
     return {
         "mentions": len(rs),
+        # Trend shapes for the cards: the same measure for each earlier window of the period's length.
+        "mentions_series": [{"end": e.isoformat(), "count": sum(1 for r in pub if s <= r["_c"] < e)} for s, e in w["series"]],
+        "high_impact_series": [{"end": e.isoformat(), "count": sum(1 for r in pub if s <= r["_c"] < e and reach(r))} for s, e in w["series"]],
+        "response_series": [
+            {"end": e.isoformat(), "pct": pct(sum(1 for r in xs if responded(r)), len(xs), 0)}
+            for s, e in w["series"] for xs in [[r for r in pub if s <= r["_c"] < e]]
+        ],
         "by_source": by_source,
         "responded": n_resp,
         "response_pct": pct(n_resp, len(rs), 0),

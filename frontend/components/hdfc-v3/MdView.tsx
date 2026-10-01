@@ -7,7 +7,7 @@
  */
 
 import type { Bundle } from "@/lib/hdfc-v3/types";
-import { MorningBrief, ReputationTable } from "./Brief";
+import { MorningBrief } from "./Brief";
 import { OmbudsmanWatch } from "./Ombudsman";
 import { CustomerPulse, CxPulse, usePeriod } from "./Pulse";
 
@@ -19,7 +19,6 @@ export function MdView({ b }: { b: Bundle }) {
       <CxPulse p={p} />
       <OmbudsmanWatch o={p.ombudsman} p={p} scope="bank" />
       <MorningBrief p={p} />
-      <ReputationTable p={p} />
     </div>
   );
 }

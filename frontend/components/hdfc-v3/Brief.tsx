@@ -12,7 +12,7 @@ import Link from "next/link";
 import { fmt, fmtDate, fmtPct } from "@/lib/hdfc-v3/format";
 import type { BriefItem, Business, Period } from "@/lib/hdfc-v3/periods";
 import { SmallRing, TrendChip, titled, withPeriod } from "./Pulse";
-import { C, MONO, MutedNote, Table, Tile, tint } from "./primitives";
+import { C, MONO, Tile, tint } from "./primitives";
 
 const CARDS_VIEW = "/hdfc-pulse/v2/business/cards";
 const BRIEF_ORDER = [
@@ -24,28 +24,16 @@ const BRIEF_ORDER = [
   "insurance",
 ];
 
-/** Every business has a deep-dive page; Cards is built, the others say "coming soon" there. The bank-wide Ombudsman
- * item opens the Ombudsman watch on the same page. */
-function businessHref(id: string, p: Period): string {
-  if (id === "bank") return "#ombudsman-watch";
-  return withPeriod(
-    id === "cards" ? CARDS_VIEW : `/hdfc-pulse/v2/business/${id}`,
-    p,
-  );
-}
-
 /* ---------------------------------------------------------------- morning brief */
 
 function BriefColumn({
   title,
   items,
   color,
-  p,
 }: {
   title: string;
   items: BriefItem[];
   color: string;
-  p: Period;
 }) {
   return (
     <div
@@ -64,7 +52,6 @@ function BriefColumn({
       <strong style={{ fontSize: 15 }}>{title}</strong>
       {items.length ? (
         items.map((it) => {
-          const href = businessHref(it.business, p);
           const head = (
             <>
               <span
@@ -93,25 +80,17 @@ function BriefColumn({
               </span>
             </>
           );
-          const style = {
-            display: "flex",
-            flexDirection: "column" as const,
-            gap: 3,
-            textDecoration: "none",
-            color: "inherit",
-            borderLeft: `2px solid ${tint(color, 0.5)}`,
-            paddingLeft: 10,
-          };
-          return href ? (
-            <Link
+          return (
+            <div
               key={`${it.business}-${it.issue ?? ""}`}
-              href={href}
-              style={style}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+                borderLeft: `2px solid ${tint(color, 0.5)}`,
+                paddingLeft: 10,
+              }}
             >
-              {head}
-            </Link>
-          ) : (
-            <div key={`${it.business}-${it.issue ?? ""}`} style={style}>
               {head}
             </div>
           );
@@ -126,7 +105,6 @@ function BriefColumn({
 }
 
 function BusinessCard({ x, p }: { x: Business; p: Period }) {
-  const href = businessHref(x.id, p);
   const i = x.internal;
   const e = x.external;
   const r = e.responded;
@@ -141,26 +119,28 @@ function BusinessCard({ x, p }: { x: Business; p: Period }) {
         }}
       >
         <strong style={{ fontSize: 16 }}>{x.label}</strong>
-        <Link
-          href={href}
-          data-testid="deep-dive"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 3,
-            background: C.brand,
-            color: "#fff",
-            border: `1px solid ${C.brand}`,
-            borderRadius: 8,
-            padding: "5px 12px",
-            fontSize: 13,
-            fontWeight: 700,
-            textDecoration: "none",
-            whiteSpace: "nowrap",
-          }}
-        >
-          Deep dive <ChevronRight size={14} />
-        </Link>
+        {x.id === "cards" ? (
+          <Link
+            href={withPeriod(CARDS_VIEW, p)}
+            data-testid="deep-dive"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 3,
+              background: C.brand,
+              color: "#fff",
+              border: `1px solid ${C.brand}`,
+              borderRadius: 8,
+              padding: "5px 12px",
+              fontSize: 13,
+              fontWeight: 700,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Deep dive <ChevronRight size={14} />
+          </Link>
+        ) : null}
       </div>
       <div
         style={{
@@ -318,19 +298,16 @@ export function MorningBrief({ p }: { p: Period }) {
           title="What needs you"
           items={p.brief.needs_you}
           color={C.red}
-          p={p}
         />
         <BriefColumn
           title="Signals that are building"
           items={p.brief.building}
           color={C.amber}
-          p={p}
         />
         <BriefColumn
           title="What's improving or stable"
           items={p.brief.improving}
           color={C.green}
-          p={p}
         />
       </div>
       <div
@@ -345,90 +322,6 @@ export function MorningBrief({ p }: { p: Period }) {
           <BusinessCard key={x.id} x={x} p={p} />
         ))}
       </div>
-      <MutedNote>
-        {p.brief.rules} Internal figures are illustrative; public shares are
-        source-weighted; public trends use store reviews and forums only. Quotes
-        are paraphrased and anonymised. Insurance is thin in public voice.
-      </MutedNote>
-    </Tile>
-  );
-}
-
-/* ---------------------------------------------------------------- reputation pulse by product */
-
-export function ReputationTable({ p }: { p: Period }) {
-  return (
-    <Tile
-      id="reputation-pulse"
-      title={titled("Reputation pulse by product", p)}
-      sub="Every product, internal and public. Cards opens its business view."
-      prov={["internal", "public"]}
-    >
-      <Table
-        head={[
-          "Product",
-          "Overall volume",
-          "Negative internal",
-          "Negative public",
-          "Trend",
-          "Open / too long",
-          "Top issue",
-          "Escalation language (public)",
-          "",
-        ]}
-        align={[
-          "left",
-          "right",
-          "right",
-          "right",
-          "left",
-          "right",
-          "left",
-          "right",
-          "right",
-        ]}
-        rows={p.businesses.map((x) => {
-          const href = businessHref(x.id, p);
-          return [
-            href ? (
-              <Link
-                key="l"
-                href={href}
-                style={{ color: C.text, fontWeight: 650 }}
-              >
-                {x.label}
-              </Link>
-            ) : (
-              x.label
-            ),
-            fmt(x.overall_volume),
-            fmt(x.internal.negative),
-            `${fmt(x.external.negative)} (${fmtPct(x.external.negative_share)})`,
-            <span key="t" style={{ display: "flex", gap: 10 }}>
-              <TrendChip pct={x.internal.change_pct} label="internal" />
-              <TrendChip pct={x.external.change_pct} label="public" />
-            </span>,
-            `${fmt(x.internal.open)} / ${x.internal.open_too_long === null ? "—" : fmt(x.internal.open_too_long)}`,
-            x.top_issue?.label ?? "—",
-            fmt(x.external.escalation),
-            href ? (
-              <Link key="go" href={href} aria-label={`Open ${x.label}`}>
-                <ChevronRight size={16} color={C.textMut} />
-              </Link>
-            ) : (
-              ""
-            ),
-          ];
-        })}
-      />
-      <MutedNote>
-        Overall volume: the bank&apos;s own contacts plus public posts and
-        reviews. Negative public share is source-weighted. Trend: {p.compare}.
-        Public trends use store reviews and forums only. Open too long: still
-        open more than 48 hours after the contact came in
-        {p.id === "brief" ? " (can't be measured in a 24-hour window)" : ""}.
-        Wealth, SME and corporate items sit outside the table.
-      </MutedNote>
     </Tile>
   );
 }
