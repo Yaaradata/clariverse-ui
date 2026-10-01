@@ -3,8 +3,8 @@
 /**
  * The Cards business-head view (30 Sep review, changes_30sep.md C). It follows the same period filter as the MD's view
  * (the filter sits in the header). Top to bottom: the issue pulse (internal and external, side by side), the issue
- * categories as an accordion, then at most five panels (30 Sep review round 2, K4): two question cards, where contacts
- * come from, repeat contacts by category, and top complaints and feature requests. The drill-down pages:
+ * categories as an accordion, then three question cards, one per drill-down. Nothing from inside a drill-down is
+ * repeated on this view. The drill-down pages:
  *   1. Are my customers happy?             /business/cards/happy    (was the satisfaction page)
  *   2. What is the market saying about us? /business/cards/market   (was the market page)
  *   3. Are we keeping our timelines?       /business/cards/service  (was the deliverables page, without TAT compliance)
@@ -17,6 +17,7 @@ import {
   ChevronRight,
   Shield,
   Sparkles,
+  Timer,
 } from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
@@ -268,18 +269,6 @@ function IssuePulse({ p }: { p: Period }) {
           </div>
         </div>
       </div>
-      <MutedNote>
-        Internal: emails, calls, chat, WhatsApp, social inbox and branch (IVR
-        bot not counted); open = with the bank; waiting on customer = the bank
-        has sent a resolution or proposed one, so the thread is not counted as
-        open or as not responded to; not responded to in 48h+ = waited more than
-        48 hours for a first reply. External: responded = a bank reply on a Play
-        Store review (the only source with reply data); high impact = a post
-        with reach, almost all on X and Reddit, which carry no reply data, so
-        high impact shows escalation language (RBI or ombudsman, consumer court,
-        legal action, ministers or the grievance cell) instead; shares are
-        source-weighted; trends use store reviews and forums only.
-      </MutedNote>
     </Tile>
   );
 }
@@ -817,8 +806,16 @@ function QuestionCards({ p }: { p: Period }) {
   const riser = mk.rising[0];
   const play = c.stores.find((s) => s.store === "playstore");
   const ios = c.stores.find((s) => s.store === "appstore");
+  // The market card never repeats the quote on the first card.
   const riserQuote =
-    h.saying.find((s) => riser && s.id === riser.id) ?? h.saying[0];
+    h.saying.find((s, i) => i > 0 && riser && s.id === riser.id) ??
+    h.saying[1] ??
+    h.saying[0];
+  const internalRepeat = h.repeat_by_category.reduce(
+    (t, r) => t + r.internal_repeat,
+    0,
+  );
+  const late = c.internal.not_responded_48h;
   const href = (id: DrillDownId) => withPeriod(`${CARDS}/${id}`, p);
   return (
     <div
@@ -826,7 +823,7 @@ function QuestionCards({ p }: { p: Period }) {
       style={{
         display: "grid",
         gridTemplateColumns:
-          "repeat(auto-fit, minmax(min(100%, max(340px, calc((100% - 14px) / 2))), 1fr))",
+          "repeat(auto-fit, minmax(min(100%, max(340px, calc((100% - 28px) / 3))), 1fr))",
         gap: 14,
       }}
     >
@@ -914,6 +911,53 @@ function QuestionCards({ p }: { p: Period }) {
           riserQuote?.summary ?? "No quotable public item in this period."
         }
         prov={["public"]}
+      />
+      <QuestionCard
+        href={href("service")}
+        accent={C.amber}
+        icon={<Timer size={18} />}
+        title="Are we keeping our timelines?"
+        micro="Missed timelines · Status-seeking · Escalation"
+        answer={`${fmt(sv.missed_timelines.total)} public Cards posts describe a missed timeline; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
+        headlineLabel="Missed timelines heard"
+        headline={fmt(sv.missed_timelines.total)}
+        caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} Cards contacts not responded to in 48h+`}.`}
+        gauges={[
+          {
+            label: "Repeat contact",
+            value: pct(internalRepeat, c.internal.volume) ?? 0,
+            sub: "of the bank's Cards contacts",
+            tone: "red",
+          },
+          {
+            label: "Asking status",
+            value: sv.transparency.share ?? 0,
+            sub: "of Cards public posts",
+            tone: "amber",
+          },
+        ]}
+        stats={[
+          {
+            label: "Escalation language",
+            value: `${fmt(sv.public_escalation)} posts`,
+            sub: sv.targets[0]
+              ? `most name ${sv.targets[0].label}`
+              : "public voice",
+            color: C.red,
+          },
+          {
+            label: "TAT-related contacts",
+            value: fmt(sv.tat_related.contacts),
+            sub: `${fmtPct(sv.tat_related.share)} of Cards contacts · ${fmt(sv.tat_related.open)} open`,
+            color: C.amber,
+          },
+        ]}
+        saying={
+          sv.transparency.quote?.summary ??
+          sv.closure.quote?.summary ??
+          "No quotable public item in this period."
+        }
+        prov={["public", "internal"]}
       />
     </div>
   );
@@ -1809,16 +1853,6 @@ export function CardsView({ b }: { b: Bundle }) {
       <SaveList o={p.cards.ombudsman} p={p} />
       <Categories p={p} />
       <QuestionCards p={p} />
-      <div style={{ ...PAIRS, alignItems: "start" }}>
-        <JourneyPanel p={p} />
-        <RepeatPanel p={p} />
-      </div>
-      <StoresPanel p={p} />
-      <MutedNote>
-        The other Cards panels (timelines, the escalation ladder, volume by
-        channel, actions, disputes and closure intent) are one question away:
-        use Ask LisN at the bottom of the screen.
-      </MutedNote>
     </div>
   );
 }
