@@ -434,21 +434,6 @@ function ShellInner({
               approved models.
             </footer>
           </main>
-          {/* The Ask LisN bar's dock: a solid strip at the foot of the content column, so page content fades out
-              above the bar instead of showing behind it. */}
-          <div
-            aria-hidden
-            data-testid="ask-dock"
-            style={{
-              position: "sticky",
-              bottom: 0,
-              height: 92,
-              marginTop: -92,
-              background: `linear-gradient(to top, ${C.bg} 70%, transparent)`,
-              pointerEvents: "none",
-              zIndex: 40,
-            }}
-          />
         </div>
       </div>
       <AskBar ask={ask} periods={periods} open={askOpen} setOpen={setAskOpen} />
