@@ -15,6 +15,7 @@ import {
 import {
   KIDDE_GLOBAL_INDUSTRY_ID,
   KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
+  KIDDE_GLOBAL_REGIONAL_GM_ROLE_ID,
 } from "@/lib/role-based-dashboard/kiddeGlobalIndustry";
 import {
   NEOGROUP_HEAD_CLIENT_EXPERIENCE_ROLE_ID,
@@ -45,6 +46,20 @@ const KgsCommercialFireDashboard = dynamic(
   () =>
     import("@/components/role-based-dashboard/kgs/KgsCommercialFireDashboard").then(
       (m) => m.KgsCommercialFireDashboard
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{ minHeight: "100vh", backgroundColor: "#010101" }} />
+    ),
+  }
+);
+
+/** Client-only KGS v2 — Regional GM Asia ex China. */
+const KgsAsiaRegionalDashboard = dynamic(
+  () =>
+    import("@/components/role-based-dashboard/kgs-v2/KgsAsiaRegionalDashboard").then(
+      (m) => m.KgsAsiaRegionalDashboard
     ),
   {
     ssr: false,
@@ -171,6 +186,13 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
     role.id === KIDDE_GLOBAL_PRESIDENT_ROLE_ID
   ) {
     return <KgsCommercialFireDashboard onExit={onExit} />;
+  }
+
+  if (
+    industry.id === KIDDE_GLOBAL_INDUSTRY_ID &&
+    role.id === KIDDE_GLOBAL_REGIONAL_GM_ROLE_ID
+  ) {
+    return <KgsAsiaRegionalDashboard onExit={onExit} />;
   }
 
   return (
