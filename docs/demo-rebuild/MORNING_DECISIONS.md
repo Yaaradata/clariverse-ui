@@ -341,3 +341,39 @@ Design and definitions: `ombudsman_watch_design.md`. Only the RBI rules listed t
 - **What needs you:** a material Ombudsman risk takes the first slot, and the business items keep the other two. **Material:** any complaint with 3 days or fewer to go, or more already eligible than at the previous period end.
 - **The bank's lists:** Ultra sensitive, RBI & Government and Ultra HNI. The derived "multiple relationships" cohort is not a list the bank keeps, so it isn't counted.
 - **Confirm with the bank:** the Internal Ombudsman timeline, and HDFC's product TATs. Neither is used in any figure.
+
+# 1 Oct: fixes on the Customer pulse
+
+## D27 · High-priority mentions: a realistic response rate
+
+- Before, "responded" on a high-priority mention was the first response on the internal case, which is almost always
+  present, so the card read 142 of 144 (99%) and made the problem look solved.
+- Now a mention carries its own fact in the seed, `mention_replied`: whether the bank replied to the customer's public
+  post. It is set from the record id (sha1, no random stream) at 62%, so a rebuild gives the same figures and no other
+  internal figure moves (open, waiting on customer, no reply in 48h+ and RM alerts are unchanged).
+- Result: full window 100 of 144 (69%); last 30 days 36 of 53 (68%); last 7 days 9 of 13 (69%). Short periods with a
+  handful of mentions can sit outside the band.
+- Reconcile recomputes the count and the replies from the seed for every period, and fails if the full-window rate
+  leaves 55-70%.
+
+## D28 · Colour, charts and labels on the Customer pulse
+
+- **Colour rule.** Red, amber and green only where a direction is good or bad: no reply in 48h+ (including unanswered
+  high-priority mentions), open, and negative share. Green when it fell, red when it rose, amber within 10% or with no
+  earlier period. Volumes (contacts, mentions), the informational response rate and the footers are neutral. The rule
+  is stated once in the section legend.
+- **One chart per card.** Internal list cards: the large volume chart is gone; the one chart is the no-reply-in-48h+
+  trend. External cards: Total mentions shows the negative-share trend (new series, source-weighted); High-impact shows
+  its count (neutral); Bank response shows its rate (neutral); High-priority mentions shows unanswered mentions.
+- **Hover.** Every custom trend chart (the area charts here and the sparkline in the Cards category table) shows the
+  window and the figure with a highlighted dot: on mouse hover, on keyboard focus with the arrow keys, and on touch. The
+  keyboard and touch go through an invisible range input over the chart. The Recharts charts on the older screens
+  already had tooltips.
+- **Comparison label.** One label for every period, "vs previous period". For the full window there is no earlier
+  period of the same length, so the comparison is still second half against first half; the legend says so in
+  brackets for that period only, and the exact comparison is in each figure's tooltip (`compare_detail`).
+- **Ask LisN bar.** Pages have more bottom padding, and the content column has a solid strip behind the bar, so content
+  fades out above the bar instead of showing behind it. At the end of every page the last line sits 62 px above the
+  bar, at 1440 and 390 wide.
+- **Work was done on a branch off main** (`feat/customer-pulse-fixes`), not on main itself.
+
