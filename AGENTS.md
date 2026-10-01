@@ -1,5 +1,40 @@
 # Agent instructions
 
+## QA
+
+- Before any push, run the `eng-qa` skill, then `ui-qa` if any screen changed.
+- Apply `demo-content-rules` to every figure and label on screen.
+- When a reviewer gives feedback, add it as a rule to `docs/FEEDBACK_LOG.md` (see `stakeholder-feedback-log`).
+- If the Claude skills aren't available (for example in Cursor), follow `docs/QA_RULES.md`.
+
+### eng-qa commands for this repo
+
+Run from the repo root, in this order; stop at the first failure. Python 3; on Windows run the `.sh` with Git Bash
+(`"C:\Program Files\Git\bin\bash.exe"` or your Git install), not WSL bash.
+
+| # | Check | Command |
+|---|---|---|
+| 1 | Data pipeline (rebuilds the V2 data, then runs checks 2–4) | `bash scripts/hdfc_pipeline/run_all.sh` |
+| 2 | Reconcile checks | `cd scripts/hdfc_v3 && python check_reconcile_v3.py` |
+| 3 | Internal-names lint / personal-data check | `python scripts/lint_terms.py` · `python scripts/check_pii.py` |
+| 4 | Test fixtures | `python scripts/test_check_pii.py` · `python scripts/test_checks.py` |
+| 5 | Lint and format (Biome) | `cd frontend && npm run lint` |
+| 5 | Typecheck (no npm script) | `cd frontend && npx tsc --noEmit -p .` |
+| 6 | Build | `cd frontend && npm run build` |
+| 7 | Every V2 route ends in 200 | `cd frontend && npx next start -p 3100`, then `node scripts/qa_routes_v2.mjs http://localhost:3100 scripts/routes.json` |
+
+There is no `test` script in `frontend/package.json`; the Python fixtures in step 4 are the tests. `lint_terms.py` and
+`check_pii.py` also scan `frontend/.next`, so run them again after the build. Restart the port-3100 server after every
+rebuild.
+
+ui-qa scripts (need `playwright` plus `@fontsource/outfit` and `@fontsource/jetbrains-mono` installed in a scratch
+folder, with `FONTSOURCE_DIR=<scratch>/node_modules/@fontsource`; the server on port 3100):
+
+- Screens, one per screen: `node scripts/qa_screens_v2.mjs <route> <light|dark> laptop125 qa/screens/<theme>`
+- Gaps and stretched tiles: `cd scripts && node qa_gaps_v2.mjs routes.json 24 ../qa/gaps.json`
+- Overflow and ellipsis, 1536@1.25 and 390: `node scripts/qa_overflow.mjs http://localhost:3100 <route> [...]`
+- Theme and contrast, both themes: `node scripts/qa_theme_v2.mjs scripts/routes.json qa/screens_theme_v2 <shots.json> 1536`
+
 ## CodeGraph
 
 Indexed locally in `.codegraph/`. For callers/callees/symbols:
