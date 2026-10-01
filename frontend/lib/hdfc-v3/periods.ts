@@ -72,7 +72,10 @@ export type PublicFigures = {
 export type PulseList = {
   id: string;
   label: string;
+  /** The list's size at the bank (declared; bank scale). */
   members: number;
+  /** Its customers with a contact in the period. */
+  in_contact: number;
   volume: number;
   prev_volume: number;
   change_pct: number | null;
@@ -485,6 +488,13 @@ export type Period = {
 };
 
 export type PeriodsFile = {
+  /** Internal figures are bank-scale weighted sums of the kept sample rows (scripts/hdfc_v3/scale_v3.py). */
+  scale: {
+    sample_rows: number;
+    sample_customers: number;
+    list_sizes: Record<string, number>;
+    note: string;
+  };
   end: string;
   public_end: string;
   default: PeriodId;

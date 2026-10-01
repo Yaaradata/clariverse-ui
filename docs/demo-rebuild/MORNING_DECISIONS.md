@@ -377,3 +377,57 @@ Design and definitions: `ombudsman_watch_design.md`. Only the RBI rules listed t
   bar, at 1440 and 390 wide.
 - **Work was done on a branch off main** (`feat/customer-pulse-fixes`), not on main itself.
 
+# 1 Oct: internal volumes at bank scale (public_anchors_volumes.md, option 1)
+
+## D29 · Internal volumes at bank scale
+
+**How.** The seed still keeps about 32,000 contact rows and 5,000 customers. Each row now carries a weight `w` (how many
+bank-scale contacts it stands for) and each customer a weight `cw` (how many contacting customers it stands for), set
+in `scripts/hdfc_v3/scale_v3.py`. Every figure on the MD view, the Cards view and the Ombudsman watch is a weighted sum
+of the kept rows for the selected period. Weights are whole numbers, so totals, channels, businesses, categories and
+periods still add up exactly, and reconcile recomputes them from the rows. Nothing is stored at millions of rows.
+
+**Weights.** Fitted by iterative proportional fitting to four margins at once (customer list, channel, complaint by
+product, escalation rung), then rounded up or down by a hash of the row id. Deterministic: no random stream.
+
+**Sample pages.** The older drill-down and customer pages (priority, customer, module, deliverables, satisfaction,
+market, signal, action queue) list the kept rows themselves. Their counts stay sample counts and each page carries a
+"Sample rows" label. The Cards save list says the same. Reconcile checks that those pages count the same rows, by the
+same status, that the bank-scale views weight.
+
+**Assumptions (each to confirm in discovery).** Anchors are in the anchors file; these are ours.
+
+| # | Assumption | Value | Why |
+|---|---|---|---|
+| 1 | Total contacts, full window | 24 lakh | Middle of K3 (16-33 lakh). IVR bot calls sit outside it, as on the views. |
+| 2 | Channel mix | Calls 56%, chat 13%, WhatsApp 7%, email 13%, branch 9%, social inbox 2% | Inside every K4 range. |
+| 3 | Complaint | A contact measured against the 30-day complaint rule, as in the Ombudsman watch register | 1.1 lakh in the window (C5). |
+| 4 | Product mix of complaints | Loans 31% (personal 14, home 11, auto 6), cards 26%, accounts 20%, PayZapp and UPI 11%, digital 6%, insurance 6% | K5's order; loans near O4's 29.25%. |
+| 5 | Ombudsman complaints | 2,400 in the window (185 a week) | Middle of O7/O8. Internal Ombudsman 3,900 and MD's office 7,000 are ours, with no anchor. |
+| 6 | Ultra HNI | 2,00,000 on the list (P1); 22.5% in contact (P2) | Middle of P2. |
+| 7 | Ultra sensitive; RBI & Government | 1,800 and 3,200 on the lists; 40% and 35% in contact | P3 says low thousands; the shares are ours. |
+| 8 | Contacts per contacting customer on a list | 2.5 | Ours. |
+| 9 | Customers with a contact, whole bank | 10.5 lakh | Ours: 24 lakh contacts at about 2.3 each. |
+| 10 | Customers with multiple relationships | 85,900 | See below. |
+
+**"Customers with multiple relationships" was redefined.** It was every listed or HNI customer with two or more
+products, which takes in almost all of the Ultra HNI list and the HNI tier, so it could not sit between the small lists
+and Ultra HNI. It is now the bank's deepest listed relationships: customers on one of the three lists holding four or
+more products. Its size is worked out from its own members (each contacting member stands for 1 / share-in-contact
+customers), which gives 85,900. This changes who is on the list in the sample, so its figures moved on every screen.
+
+**Pending complaints follow C2, not a literal 3-4% of the window.** C6 is pending at year-end over a year's intake
+(16,133 of 4.42 lakh). Against one quarter's intake the same stock is about 15%. Holding pending at 3-4% of the 13-week
+intake would mean about 4,000 pending, a quarter of the published stock. Ours is 21,094 pending (1.31x C2), which is
+4.8% of annualised intake. The validation table carries both rows.
+
+**Weights are level across time.** They do not depend on status or date, so each period is the same slice of a steady
+flow: about 26,000 contacts and 1,200 complaints a day.
+
+**Small-period caveat.** Rows on the small lists carry weights of 2 to 4 and Ultra HNI rows about 160, so a short
+period's list figures move in steps, and a rate over a handful of rows (for example high-priority mentions in 7 days)
+can sit well away from the full-window rate.
+
+**Validation.** `qa/volume_validation.md` is rewritten by `scripts/hdfc_v3/volume_validation.py` on every run: 49 rows,
+each against its anchor. It fails the run if a row is more than 2x off without a stated reason.
+

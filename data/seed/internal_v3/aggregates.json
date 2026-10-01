@@ -994,40 +994,40 @@
   {
    "id": "multi",
    "label": "Customers with multiple relationships",
-   "source": "Listed or HNI customers holding two or more products, from the bank's records",
-   "customers": 763,
-   "interactions": 6884,
-   "customers_with_open_issue": 150,
-   "open": 169,
-   "waiting_on_customer": 87,
-   "open_over_5h": 167,
-   "open_over_24h": 139,
-   "open_too_long": 32,
-   "negative": 2846,
+   "source": "Customers on the bank's lists holding four or more products, from the bank's records",
+   "customers": 99,
+   "interactions": 1035,
+   "customers_with_open_issue": 23,
+   "open": 29,
+   "waiting_on_customer": 9,
+   "open_over_5h": 28,
+   "open_over_24h": 22,
+   "open_too_long": 3,
+   "negative": 410,
    "negative_by_channel": {
-    "inbound_voice": 1050,
-    "outbound_voice": 166,
-    "chat": 585,
-    "email": 401,
-    "social_inbox": 59,
-    "ivr_bot": 217,
-    "branch": 175,
-    "whatsapp": 193
+    "inbound_voice": 152,
+    "outbound_voice": 23,
+    "chat": 74,
+    "email": 63,
+    "social_inbox": 7,
+    "ivr_bot": 34,
+    "branch": 22,
+    "whatsapp": 35
    },
    "products_affected": {
-    "accounts": 78,
-    "insurance": 8,
-    "cards": 48,
-    "payzapp": 12,
-    "personal_loans": 11,
-    "digital": 3,
-    "home_loans": 5,
-    "auto_loans": 4
+    "insurance": 3,
+    "personal_loans": 1,
+    "accounts": 9,
+    "digital": 1,
+    "cards": 9,
+    "payzapp": 3,
+    "home_loans": 2,
+    "auto_loans": 1
    },
-   "rm_should_know": 152,
-   "rm_notified_today": 32,
-   "added_this_week": 15,
-   "added_this_week_by_lisn": 5
+   "rm_should_know": 24,
+   "rm_notified_today": 3,
+   "added_this_week": 7,
+   "added_this_week_by_lisn": 3
   }
  ],
  "high_impact": {
@@ -2840,8 +2840,7 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni",
-    "multi"
+    "uhni"
    ],
    "products": [
     "cards",
@@ -3056,8 +3055,7 @@
    "descriptor": "Private Banking relationship, 4 years, Pune",
    "segment": "Private",
    "cohorts": [
-    "uhni",
-    "multi"
+    "uhni"
    ],
    "products": [
     "cards",
@@ -3189,8 +3187,7 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni",
-    "multi"
+    "uhni"
    ],
    "products": [
     "cards",
@@ -3242,8 +3239,7 @@
    "descriptor": "Imperia relationship, 8 years, Ahmedabad",
    "segment": "Imperia",
    "cohorts": [
-    "hni",
-    "multi"
+    "hni"
    ],
    "products": [
     "cards",
@@ -3353,8 +3349,7 @@
    "descriptor": "Imperia relationship, 3 years, Gurugram",
    "segment": "Imperia",
    "cohorts": [
-    "hni",
-    "multi"
+    "hni"
    ],
    "products": [
     "cards",
@@ -3408,8 +3403,7 @@
    "segment": "Private",
    "cohorts": [
     "priority_a",
-    "uhni",
-    "multi"
+    "uhni"
    ],
    "products": [
     "cards",

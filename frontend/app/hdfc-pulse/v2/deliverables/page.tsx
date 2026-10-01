@@ -11,6 +11,7 @@ export default function DeliverablesPage() {
   return (
     <Shell
       {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
       title="Are we meeting our deliverables?"
       subtitle="Deliverables ledger · By product · Escalation ladder · Transparency gap · Cure watch · Disputes"
       drill

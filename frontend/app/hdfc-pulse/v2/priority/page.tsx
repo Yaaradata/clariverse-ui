@@ -9,6 +9,7 @@ export default function PriorityPage() {
   return (
     <Shell
       {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
       title="Priority relationships"
       subtitle="Cohorts from the bank's own tiers and lists · Open over 5 and 24 hours · RM notified · High-impact complaints"
       drill

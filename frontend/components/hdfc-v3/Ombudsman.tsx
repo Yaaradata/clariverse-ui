@@ -279,7 +279,7 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
     <Tile
       id="save-list"
       title={titled("Save list: call today", p)}
-      sub={`The ${o.save_list.length} Cards complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. LisN recommends; people call.`}
+      sub={`The ${o.save_list.length} Cards complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
       prov="internal"
       tone="red"
     >

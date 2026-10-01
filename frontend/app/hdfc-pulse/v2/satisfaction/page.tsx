@@ -9,6 +9,7 @@ export default function SatisfactionPage() {
   return (
     <Shell
       {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
       title="Are customers satisfied with their journey?"
       subtitle="Trust pillars · Relationship tiers · Journey stages"
       drill

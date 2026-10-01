@@ -12,7 +12,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 
-from common import CARDS_CATEGORIES, CARDS_OTHER, SEED_V3
+from common import CARDS_CATEGORIES, CARDS_OTHER, SEED_V3, inr
 
 D30 = dt.timedelta(days=30)
 D90 = dt.timedelta(days=90)
@@ -133,9 +133,10 @@ COUNT_KEYS = ["brink", "eligible", "unhappy", "awaiting_io", "at_risk", "open"]
 
 
 def counts(pairs) -> dict:
-    out = {k: sum(1 for _, s in pairs if s[k]) for k in COUNT_KEYS}
-    out["buckets"] = {b: sum(1 for _, s in pairs if s["bucket"] == b) for b, *_ in BUCKETS}
-    out["received"] = len(pairs)
+    """Bank-scale counts: each sample complaint stands for c["w"] complaints (scale_v3.py)."""
+    out = {k: sum(c["w"] for c, s in pairs if s[k]) for k in COUNT_KEYS}
+    out["buckets"] = {b: sum(c["w"] for c, s in pairs if s["bucket"] == b) for b, *_ in BUCKETS}
+    out["received"] = sum(c["w"] for c, _ in pairs)
     return out
 
 
@@ -150,7 +151,7 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
     now, prev = snap(cs, T), snap(cs, P)
     cn, cp = counts(now), counts(prev)
     risky = [(c, s) for c, s in now if s["at_risk"]]
-    by_list = {k: sum(1 for c, _ in risky if k in c["lists"]) for k in LIST_LABEL}
+    by_list = {k: sum(c["w"] for c, _ in risky if k in c["lists"]) for k in LIST_LABEL}
     return {
         "provenance": "internal",
         "as_of": T.isoformat(),
@@ -158,8 +159,8 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
         "now": cn,
         "prev": cp,
         "delta": {k: cn[k] - cp[k] for k in COUNT_KEYS},
-        "became_eligible": sum(1 for _, s in now if s["eligible_from"] and start < s["eligible_from"] <= T),
-        "on_lists": {"at_risk": sum(1 for c, _ in risky if c["lists"]), "by_list": by_list,
+        "became_eligible": sum(c["w"] for c, s in now if s["eligible_from"] and start < s["eligible_from"] <= T),
+        "on_lists": {"at_risk": sum(c["w"] for c, _ in risky if c["lists"]), "by_list": by_list,
                      "labels": LIST_LABEL},
         "by_business": [
             {"id": pid, "label": label, **{k: v for k, v in counts([(c, s) for c, s in now if c["product"] == pid]).items()
@@ -190,7 +191,7 @@ def cards_extra(cs: list[dict], w: dict, labels: dict) -> dict:
             "subcategories": [
                 {"id": th, "label": labels.get(th, th),
                  **{x: v for x, v in counts(v).items() if x in ("at_risk", "brink", "eligible", "unhappy", "awaiting_io")}}
-                for th, v in sorted(subs.items(), key=lambda z: -sum(1 for _, s in z[1] if s["at_risk"]))
+                for th, v in sorted(subs.items(), key=lambda z: -sum(c["w"] for c, s in z[1] if s["at_risk"]))
             ],
         })
     ranked = []
@@ -218,7 +219,7 @@ def brief_item(bank: dict) -> dict | None:
         return None
     return {
         "business": "bank", "business_label": "All businesses", "issue": "Ombudsman watch", "kind": "ombudsman",
-        "text": (f"{n03} complaints have 3 days or fewer to the 30-day reply limit; {el} are already eligible to "
+        "text": (f"{inr(n03)} complaints have 3 days or fewer to the 30-day reply limit; {inr(el)} are already eligible to "
                  f"approach the RBI Ombudsman ({'up' if d > 0 else 'down' if d < 0 else 'no change'}"
-                 f"{f' {abs(d)}' if d else ''} on the previous period end)."),
+                 f"{f' {inr(abs(d))}' if d else ''} on the previous period end)."),
     }

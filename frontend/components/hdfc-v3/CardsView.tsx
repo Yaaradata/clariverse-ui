@@ -21,7 +21,13 @@ import {
 import Link from "next/link";
 import { type ReactNode, useState } from "react";
 import type { DrillDownId } from "@/lib/hdfc-v3/drilldowns";
-import { fmt, fmtDate, fmtPct, fmtSigned } from "@/lib/hdfc-v3/format";
+import {
+  fmt,
+  fmtCompact,
+  fmtDate,
+  fmtPct,
+  fmtSigned,
+} from "@/lib/hdfc-v3/format";
 import type {
   Category,
   CategoryFigures,
@@ -99,6 +105,20 @@ function QuoteLine({ q }: { q: Quote | null }) {
 
 /* ---------------------------------------------------------------- C2 issue pulse */
 
+/** A tile figure at bank scale: seven digits step down a size so they stay inside a quarter-width tile. */
+function tileFigure(n: number | null | undefined): ReactNode {
+  return (
+    <span
+      style={{
+        fontSize: (n ?? 0) >= 100000 ? "0.78em" : undefined,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {fmt(n)}
+    </span>
+  );
+}
+
 function IssuePulse({ p }: { p: Period }) {
   const i = p.cards.internal;
   const e = p.cards.external;
@@ -131,7 +151,7 @@ function IssuePulse({ p }: { p: Period }) {
             <Dial
               value={100}
               color={C.violet}
-              centre={fmt(i.volume)}
+              centre={fmtCompact(i.volume)}
               big={fmt(i.volume)}
               label="Volume"
               sub={<TrendChip pct={i.change_pct} label={p.compare} />}
@@ -159,31 +179,31 @@ function IssuePulse({ p }: { p: Period }) {
           <div
             style={{
               ...box,
-              gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
+              gridTemplateColumns: "repeat(auto-fit, minmax(118px, 1fr))",
               padding: "10px 12px",
             }}
           >
             <Kpi
               label="Waiting on customer"
-              value={fmt(i.waiting_on_customer)}
+              value={tileFigure(i.waiting_on_customer)}
               sub="resolution sent; not open"
               tone="cyan"
             />
             <Kpi
               label="Negative"
-              value={fmt(i.negative)}
+              value={tileFigure(i.negative)}
               sub={`${fmtPct(pct(i.negative, i.volume))} of contacts`}
               tone="red"
             />
             <Kpi
               label="Escalated"
-              value={fmt(i.escalations)}
+              value={tileFigure(i.escalations)}
               sub="to a grievance desk or beyond"
               tone="amber"
             />
             <Kpi
               label="TAT-related"
-              value={fmt(p.cards.service_full.tat_related.contacts)}
+              value={tileFigure(p.cards.service_full.tat_related.contacts)}
               sub={`${fmtPct(p.cards.service_full.tat_related.share)} carry a delivery timeline`}
             />
           </div>
@@ -196,7 +216,7 @@ function IssuePulse({ p }: { p: Period }) {
             <Dial
               value={100}
               color={C.cyan}
-              centre={fmt(e.volume)}
+              centre={fmtCompact(e.volume)}
               big={fmt(e.volume)}
               label="Volume"
               sub={<TrendChip pct={e.change_pct} label="stores and forums" />}
@@ -225,7 +245,7 @@ function IssuePulse({ p }: { p: Period }) {
             <Dial
               value={100}
               color={C.amber}
-              centre={fmt(hi.volume)}
+              centre={fmtCompact(hi.volume)}
               big={fmt(hi.volume)}
               label="High impact"
             />
@@ -325,7 +345,7 @@ function FigureCells({ f, span }: { f: CategoryFigures; span: string }) {
 // Category | six internal | five external (the first carries the gap between the groups) | trend
 const GROUP_GAP = 14;
 const GRID =
-  "minmax(190px, 2.2fr) repeat(3, minmax(62px, 0.8fr)) minmax(88px, 1fr) minmax(108px, 1.2fr) minmax(74px, 0.85fr) minmax(76px, 0.95fr) repeat(2, minmax(62px, 0.8fr)) repeat(2, minmax(74px, 0.85fr)) minmax(84px, 1fr)";
+  "minmax(190px, 2.2fr) repeat(3, minmax(78px, 0.9fr)) minmax(88px, 1fr) minmax(108px, 1.2fr) minmax(74px, 0.85fr) minmax(84px, 0.95fr) minmax(104px, 1.1fr) minmax(74px, 0.8fr) repeat(2, minmax(74px, 0.85fr)) minmax(84px, 1fr)";
 
 function CategoryRow({
   c,
@@ -470,7 +490,7 @@ function Categories({ p }: { p: Period }) {
       style={{ minWidth: 0, maxWidth: "100%" }}
     >
       <div style={{ overflowX: "auto", maxWidth: "100%", minWidth: 0 }}>
-        <div style={{ minWidth: 1240 }}>
+        <div style={{ minWidth: 1340 }}>
           <div
             style={{
               display: "grid",

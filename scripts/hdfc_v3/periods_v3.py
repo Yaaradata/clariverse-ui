@@ -51,6 +51,7 @@ from common import (
     SOURCE_DOMINANCE_LIMIT,
     dump,
     load,
+    inr,
 )
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hdfc_pipeline"))
@@ -124,8 +125,31 @@ def load_internal():
         r["_wait"] = ts(r.get("resolution_sent_at"))
         r["_ch"] = CHANNEL_GROUP[r["channel"]]
     customers = {c["masked_id"]: c for c in load(SEED_V3 / "customers.json")}
+    SCALE.update(load(SEED_V3 / "scale.json"))
     notes = load(SEED_V3 / "rm_notifications.json")
     return inter, customers, notes
+
+
+# Bank scale (scale_v3.py): each kept row stands for r["w"] contacts and each customer for c["cw"] contacting customers.
+# Every internal figure below is a weighted sum, so it sits at bank scale and still reconciles exactly.
+SCALE: dict = {}
+
+
+def wn(rs) -> int:
+    """Bank-scale count of internal rows."""
+    return sum(r["w"] for r in rs)
+
+
+def ncust(ids, customers) -> int:
+    """Bank-scale count of customers."""
+    return sum(customers[m]["cw"] for m in ids)
+
+
+def wcounter(rs, key) -> collections.Counter:
+    c = collections.Counter()
+    for r in rs:
+        c[key(r)] += r["w"]
+    return c
 
 
 def open_at(r, t):
@@ -165,28 +189,28 @@ def internal_block(rs, w) -> dict:
     a, b = w["start"], w["end"]
     vol = [r for r in rs if in_win(r, a, b)]
     pa, pb = w["prev"]
-    prev = sum(1 for r in rs if in_win(r, pa, pb))
+    prev = sum(r["w"] for r in rs if in_win(r, pa, pb))
     ta, tb = w["trend_cur"]
-    cur_t = sum(1 for r in rs if in_win(r, ta, tb))
+    cur_t = sum(r["w"] for r in rs if in_win(r, ta, tb))
     measurable = (b - a) > H48  # a 24-hour window cannot hold anything 48 hours old
     # Like for like: the comparison window as it stood at its own end.
     cur_rs = [r for r in rs if in_win(r, ta, tb)]
     prev_rs = [r for r in rs if in_win(r, pa, pb)]
-    open_delta = sum(1 for r in cur_rs if is_open(r, b)) - sum(1 for r in prev_rs if is_open(r, pb))
-    late_delta = sum(1 for r in cur_rs if no_resp_48(r, b)) - sum(1 for r in prev_rs if no_resp_48(r, pb))
+    open_delta = sum(r["w"] for r in cur_rs if is_open(r, b)) - sum(r["w"] for r in prev_rs if is_open(r, pb))
+    late_delta = sum(r["w"] for r in cur_rs if no_resp_48(r, b)) - sum(r["w"] for r in prev_rs if no_resp_48(r, pb))
     return {
-        "volume": len(vol),
+        "volume": wn(vol),
         "prev_volume": prev,
         "change_pct": change(cur_t, prev),
-        "resolved": sum(1 for r in vol if not open_at(r, b)),
-        "open": sum(1 for r in vol if is_open(r, b)),
-        "waiting_on_customer": sum(1 for r in vol if waiting_at(r, b)),
+        "resolved": sum(r["w"] for r in vol if not open_at(r, b)),
+        "open": sum(r["w"] for r in vol if is_open(r, b)),
+        "waiting_on_customer": sum(r["w"] for r in vol if waiting_at(r, b)),
         "open_delta": open_delta,
         "not_responded_delta": late_delta if measurable else None,
-        "open_too_long": sum(1 for r in vol if open_48(r, b)) if measurable else None,
-        "not_responded_48h": sum(1 for r in vol if no_resp_48(r, b)) if measurable else None,
-        "negative": sum(1 for r in vol if r["sentiment"] == "negative"),
-        "escalations": sum(1 for r in vol if r.get("escalation")),
+        "open_too_long": sum(r["w"] for r in vol if open_48(r, b)) if measurable else None,
+        "not_responded_48h": sum(r["w"] for r in vol if no_resp_48(r, b)) if measurable else None,
+        "negative": sum(r["w"] for r in vol if r["sentiment"] == "negative"),
+        "escalations": sum(r["w"] for r in vol if r.get("escalation")),
     }
 
 
@@ -207,7 +231,9 @@ def customer_pulse(inter, customers, notes, w) -> dict:
         lists.append({
             "id": lid,
             "label": LIST_LABEL[lid],
-            "members": len(members),
+            # The list's size at the bank (declared; scale.json), and how many of its customers made a contact.
+            "members": SCALE["list_sizes"][lid],
+            "in_contact": ncust({r["masked_id"] for r in rs if in_win(r, w["start"], w["end"])}, customers),
             "volume": blk["volume"],
             "prev_volume": blk["prev_volume"],
             "change_pct": blk["change_pct"],
@@ -217,14 +243,14 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "open_delta": blk["open_delta"],
             "not_responded_delta": blk["not_responded_delta"],
             "rm": {
-                "alerted": len({n["masked_id"] for n in notes if n["masked_id"] in members and n["notified_today"]}),
-                "of": len({n["masked_id"] for n in notes if n["masked_id"] in members}),
+                "alerted": ncust({x["masked_id"] for x in notes if x["masked_id"] in members and x["notified_today"]}, customers),
+                "of": ncust({x["masked_id"] for x in notes if x["masked_id"] in members}, customers),
             },
             # Trend line: the same measure for each earlier window of the period's length, all as of 29 Sep 08:30.
             "not_responded_series": [
-                {"end": e.isoformat(), "count": sum(1 for r in rs if in_win(r, s, e) and no_resp_48(r))} for s, e in w["series"]
+                {"end": e.isoformat(), "count": sum(r["w"] for r in rs if in_win(r, s, e) and no_resp_48(r))} for s, e in w["series"]
             ],
-            "volume_series": [{"end": e.isoformat(), "count": sum(1 for r in rs if in_win(r, s, e))} for s, e in w["series"]],
+            "volume_series": [{"end": e.isoformat(), "count": sum(r["w"] for r in rs if in_win(r, s, e))} for s, e in w["series"]],
             "by_channel": by_channel(rs, w, ("volume", "open", "waiting_on_customer", "not_responded_48h")),
         })
     # High-priority mentions: posts where a listed customer tagged the bank, linked only through the bank's verified
@@ -233,29 +259,29 @@ def customer_pulse(inter, customers, notes, w) -> dict:
     a, b = w["start"], w["end"]
     ment = [r for r in inter if r["_ch"] == "social" and r["masked_id"] in listed and in_win(r, a, b)]
     replied = lambda r: bool(r.get("mention_replied"))  # noqa: E731  (a public reply on the post, from the seed)
-    responded = sum(1 for r in ment if replied(r))
+    responded = sum(r["w"] for r in ment if replied(r))
     by_list = {}
     for lid in PULSE_LISTS:
         ms = [r for r in ment if lid in customers[r["masked_id"]]["cohorts"]]
-        by_list[lid] = {"total": len(ms), "responded": sum(1 for r in ms if replied(r))}
+        by_list[lid] = {"total": wn(ms), "responded": sum(r["w"] for r in ms if replied(r))}
     all_ment = [r for r in inter if r["_ch"] == "social" and r["masked_id"] in listed]
-    due = {n["masked_id"] for n in notes if any(k in customers[n["masked_id"]]["cohorts"] for k in PULSE_LISTS)}
-    told = {n["masked_id"] for n in notes if n["notified_today"] and n["masked_id"] in due}
+    due = {x["masked_id"] for x in notes if any(k in customers[x["masked_id"]]["cohorts"] for k in PULSE_LISTS)}
+    told = {x["masked_id"] for x in notes if x["notified_today"] and x["masked_id"] in due}
     return {
         "lists": lists,
         "mentions": {
             "provenance": "internal",
-            "total": len(ment),
+            "total": wn(ment),
             "responded": responded,
-            "not_responded": len(ment) - responded,
-            "series": [{"end": e.isoformat(), "count": sum(1 for r in all_ment if in_win(r, s, e))} for s, e in w["series"]],
-            "unanswered_series": [{"end": e.isoformat(), "count": sum(1 for r in all_ment if in_win(r, s, e) and not replied(r))}
+            "not_responded": wn(ment) - responded,
+            "series": [{"end": e.isoformat(), "count": sum(r["w"] for r in all_ment if in_win(r, s, e))} for s, e in w["series"]],
+            "unanswered_series": [{"end": e.isoformat(), "count": sum(r["w"] for r in all_ment if in_win(r, s, e) and not replied(r))}
                                   for s, e in w["series"]],
-            "response_pct": pct(responded, len(ment), 0),
+            "response_pct": pct(responded, wn(ment), 0),
             "by_list": by_list,
             "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data.",
         },
-        "rm": {"alerted": len(told), "of": len(due), "as_of": PERIOD_END},
+        "rm": {"alerted": ncust(told, customers), "of": ncust(due, customers), "as_of": PERIOD_END},
     }
 
 
@@ -506,7 +532,7 @@ def businesses(inter, pub, w, W, labels) -> list[dict]:
         neg_t = collections.Counter(r["themes"][0] for r in prs if r["sentiment"] == "negative")
         top = neg_t.most_common(1)[0] if neg_t else None
         if not top:  # thin public voice: fall back to the internal top issue, and say so
-            it = collections.Counter(r["theme"] for r in irs if in_win(r, a, b) and r["sentiment"] == "negative").most_common(1)
+            it = wcounter([r for r in irs if in_win(r, a, b) and r["sentiment"] == "negative"], lambda r: r["theme"]).most_common(1)
             top_issue = {"id": it[0][0], "label": labels.get(it[0][0], it[0][0]), "count": it[0][1], "source": "internal"} if it else None
         else:
             top_issue = {"id": top[0], "label": labels.get(top[0], top[0]), "count": top[1], "source": "public"}
@@ -539,7 +565,7 @@ def brief(biz: list[dict], pub, w, W, labels, p) -> dict:
         if sev and x["top_issue"]:
             needs.append((sev, {
                 "business": x["id"], "business_label": x["label"], "issue": x["top_issue"]["label"],
-                "text": f"{x['external']['escalation']} posts with escalation language; {backlog} {what}.",
+                "text": f"{inr(x['external']['escalation'])} posts with escalation language; {inr(backlog)} {what}.",
             }))
     needs = [v for _, v in sorted(needs, key=lambda z: -z[0])][:3]
     taken = {(n["business"], n["issue"]) for n in needs}
@@ -665,7 +691,7 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
         return {
             "internal": {k: ib[k] for k in ("volume", "resolved", "open", "waiting_on_customer", "open_too_long", "not_responded_48h", "escalations", "change_pct")},
             "external": {k: pbk[k] for k in ("volume", "positive", "negative", "negative_share", "escalation", "responded", "high_impact", "change_pct")},
-            "trend": [{"end": e.isoformat(), "internal": sum(1 for r in ir if in_win(r, s, e)),
+            "trend": [{"end": e.isoformat(), "internal": sum(r["w"] for r in ir if in_win(r, s, e)),
                        "external": sum(1 for r in prs_all if pk(r) and s <= r["_c"] < e)} for s, e in w["series"]],
         }
 
@@ -716,8 +742,8 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
         pr = [r for r in prs if (cat_of(r["themes"][0])["id"]) == cid]
         friction.append({
             "id": cid, "label": c["label"],
-            "repeat_contact_internal": pct(sum(1 for r in ir if r.get("repeat")), len(ir)),
-            "escalation_internal": sum(1 for r in ir if r.get("escalation")),
+            "repeat_contact_internal": pct(sum(r["w"] for r in ir if r.get("repeat")), wn(ir)),
+            "escalation_internal": sum(r["w"] for r in ir if r.get("escalation")),
             "escalation_external": sum(1 for r in pr if r["escalation_intent"]),
             "negative_share": weighted_share(pr, lambda r: r["sentiment"] == "negative", W) if pr else None,
         })
@@ -732,8 +758,8 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
     journey = []
     for st in JOURNEY_ORDER:
         xs = [r for r in ivol if JOURNEY_STAGE.get(r["theme"], "Everyday use") == st]
-        journey.append({"stage": st, "volume": len(xs), "negative_share": pct(sum(1 for r in xs if r["sentiment"] == "negative"), len(xs)),
-                        "repeat_share": pct(sum(1 for r in xs if r.get("repeat")), len(xs))})
+        journey.append({"stage": st, "volume": wn(xs), "negative_share": pct(sum(r["w"] for r in xs if r["sentiment"] == "negative"), wn(xs)),
+                        "repeat_share": pct(sum(r["w"] for r in xs if r.get("repeat")), wn(xs))})
     # Stores, one at a time: top complaints, feature requests, feedback on existing features.
     stores = []
     for st in ("playstore", "appstore"):
@@ -754,11 +780,11 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
     tiers = []
     for lid in PULSE_LISTS:
         xs = [r for r in ivol if lid in customers[r["masked_id"]]["cohorts"]]
-        tiers.append({"id": lid, "label": LIST_LABEL[lid], "volume": len(xs), "open": sum(1 for r in xs if is_open(r, b)),
-                      "negative": sum(1 for r in xs if r["sentiment"] == "negative")})
+        tiers.append({"id": lid, "label": LIST_LABEL[lid], "volume": wn(xs), "open": sum(r["w"] for r in xs if is_open(r, b)),
+                      "negative": sum(r["w"] for r in xs if r["sentiment"] == "negative")})
     unlisted = [r for r in ivol if not any(k in customers[r["masked_id"]]["cohorts"] for k in PULSE_LISTS)]
-    tiers.append({"id": "none", "label": "Not on a list", "volume": len(unlisted), "open": sum(1 for r in unlisted if is_open(r, b)),
-                  "negative": sum(1 for r in unlisted if r["sentiment"] == "negative")})
+    tiers.append({"id": "none", "label": "Not on a list", "volume": wn(unlisted), "open": sum(r["w"] for r in unlisted if is_open(r, b)),
+                  "negative": sum(r["w"] for r in unlisted if r["sentiment"] == "negative")})
     return {
         "internal": ib, "external": pbk, "categories": cats, "mood": mood, "market": market, "service": service,
         "friction": friction, "pillars": pillars, "journey": journey, "stores": stores, "channels": channels, "tiers": tiers,
@@ -855,18 +881,18 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
         ir = [r for r in ivol if cat_of(r["theme"])["id"] == c["id"]]
         pr = [r for r in prs if cat_of(r["themes"][0])["id"] == c["id"]]
         if ir or pr:
-            repeat_by_cat.append({"id": c["id"], "label": c["label"], "internal_repeat": sum(1 for r in ir if r.get("repeat")),
-                                  "public_repeat": sum(1 for r in pr if r["repeat_contact"]), "contacts": len(ir)})
+            repeat_by_cat.append({"id": c["id"], "label": c["label"], "internal_repeat": sum(r["w"] for r in ir if r.get("repeat")),
+                                  "public_repeat": sum(1 for r in pr if r["repeat_contact"]), "contacts": wn(ir)})
     repeat_by_cat.sort(key=lambda x: -(x["internal_repeat"] + x["public_repeat"]))
     tiers_sent = []
     for lid in PULSE_LISTS + ["none"]:
         xs = [r for r in ivol if (lid == "none" and not any(k in customers[r["masked_id"]]["cohorts"] for k in PULSE_LISTS))
               or (lid != "none" and lid in customers[r["masked_id"]]["cohorts"])]
-        tiers_sent.append({"id": lid, "label": LIST_LABEL.get(lid, "Not on a list"), "volume": len(xs),
-                           "positive": sum(1 for r in xs if r["sentiment"] == "positive"),
-                           "neutral": sum(1 for r in xs if r["sentiment"] == "neutral"),
-                           "negative": sum(1 for r in xs if r["sentiment"] == "negative"),
-                           "open": sum(1 for r in xs if is_open(r, b))})
+        tiers_sent.append({"id": lid, "label": LIST_LABEL.get(lid, "Not on a list"), "volume": wn(xs),
+                           "positive": sum(r["w"] for r in xs if r["sentiment"] == "positive"),
+                           "neutral": sum(r["w"] for r in xs if r["sentiment"] == "neutral"),
+                           "negative": sum(r["w"] for r in xs if r["sentiment"] == "negative"),
+                           "open": sum(r["w"] for r in xs if is_open(r, b))})
     happy = {"by_source": by_source, "weekly_net": weekly_net, "saying": saying, "repeat_by_category": repeat_by_cat, "tiers": tiers_sent}
 
     # --- 2. What is the market saying about us?
@@ -907,16 +933,16 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
     safety = {
         "public": len(fraud_pub), "public_negative": sum(1 for r in fraud_pub if r["sentiment"] == "negative"),
         "public_escalation": sum(1 for r in fraud_pub if r["escalation_intent"]), "high_impact": sum(1 for r in fraud_pub if reach(r)),
-        "internal": len(fraud_int), "internal_open": sum(1 for r in fraud_int if is_open(r, b)),
-        "internal_high_impact": sum(1 for r in fraud_int if r["high_impact"]),
+        "internal": wn(fraud_int), "internal_open": sum(r["w"] for r in fraud_int if is_open(r, b)),
+        "internal_high_impact": sum(r["w"] for r in fraud_int if r["high_impact"]),
         "top": [{"id": k, "label": labels.get(k, k), "count": v} for k, v in collections.Counter(r["themes"][0] for r in fraud_pub).most_common(3)],
     }
     market_full = {"themes": themes_all, "rising": rising, "reach": reach_block, "safety": safety}
 
     # --- 3. Service
-    ladder = [{"rung": "Contacts", "count": len(ivol)}, {"rung": "Repeat", "count": sum(1 for r in ivol if r.get("repeat"))}]
+    ladder = [{"rung": "Contacts", "count": wn(ivol)}, {"rung": "Repeat", "count": sum(r["w"] for r in ivol if r.get("repeat"))}]
     for rid, rl in RUNG_LABEL:
-        ladder.append({"rung": rl, "count": sum(1 for r in ivol if r.get("escalation") and rung[r["escalation"]] >= rung[rid])})
+        ladder.append({"rung": rl, "count": sum(r["w"] for r in ivol if r.get("escalation") and rung[r["escalation"]] >= rung[rid])})
     pub_esc = [r for r in prs if r["escalation_intent"]]
     by_target = collections.Counter(r.get("escalation_target") or "unnamed" for r in pub_esc)
     targets = [{"id": k, "label": TARGET_LABEL.get(k, "Target not named"), "count": v} for k, v in by_target.most_common()]
@@ -926,10 +952,10 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
     status = [r for r in prs if r["status_seeking"]]
     disp = [r for r in ivol if r["deliverable"] == "dispute"]
     funnel = [
-        {"stage": "Disputes raised", "count": len(disp)},
-        {"stage": "First response given", "count": sum(1 for r in disp if r["_resp"] and r["_resp"] <= b)},
-        {"stage": "Closed", "count": sum(1 for r in disp if not open_at(r, b))},
-        {"stage": "Customer credited", "count": sum(1 for r in disp if r.get("credited") and not open_at(r, b))},
+        {"stage": "Disputes raised", "count": wn(disp)},
+        {"stage": "First response given", "count": sum(r["w"] for r in disp if r["_resp"] and r["_resp"] <= b)},
+        {"stage": "Closed", "count": sum(r["w"] for r in disp if not open_at(r, b))},
+        {"stage": "Customer credited", "count": sum(r["w"] for r in disp if r.get("credited") and not open_at(r, b))},
     ]
     missed = collections.Counter(r.get("request_type") or "other" for r in prs if r["promise_break"])
     missed_rows = [{"id": k, "label": REQUEST_LABEL.get(k, k), "count": v} for k, v in missed.most_common()]
@@ -937,7 +963,7 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
     failures = sorted(themes_all, key=lambda t: -t["negative"])[:5]
     service_full = {
         "ladder": ladder, "public_escalation": len(pub_esc), "targets": targets,
-        "closure": {"internal_requests": len(closure_int), "internal_open": sum(1 for r in closure_int if is_open(r, b)),
+        "closure": {"internal_requests": wn(closure_int), "internal_open": sum(r["w"] for r in closure_int if is_open(r, b)),
                     "public_intent": len(closure_pub), "quote": quote_of(closure_pub)},
         "cure": {"count": len(cure), "top": [{"id": k, "label": labels.get(k, k), "count": v} for k, v in collections.Counter(r["themes"][0] for r in cure).most_common(3)],
                  "quote": quote_of(cure)},
@@ -945,7 +971,7 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
                          "quote": quote_of(status)},
         "disputes": funnel,
         "missed_timelines": {"total": sum(missed.values()), "rows": missed_rows},
-        "tat_related": {"contacts": len(tat_int), "share": pct(len(tat_int), len(ivol)), "open": sum(1 for r in tat_int if is_open(r, b))},
+        "tat_related": {"contacts": wn(tat_int), "share": pct(wn(tat_int), wn(ivol)), "open": sum(r["w"] for r in tat_int if is_open(r, b))},
         "failures": [{"id": t["id"], "label": t["label"], "negative": t["negative"], "count": t["count"], "escalation": t["escalation"]} for t in failures],
     }
     return {"happy": happy, "market_full": market_full, "service_full": service_full}
@@ -954,12 +980,12 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
 def md_mail(inter, w, labels) -> dict:
     a, b = w["start"], w["end"]
     rs = [r for r in inter if r.get("escalation") in ("md_office", "io", "rbi_ombudsman") and in_win(r, a, b)]
-    by = collections.Counter(r["theme"] for r in rs).most_common(5)
+    by = wcounter(rs, lambda r: r["theme"]).most_common(5)
     rows = []
     for th, n in by:
         xs = [r for r in rs if r["theme"] == th]
-        rows.append({"theme": th, "label": labels.get(th, th), "mails": n, "resolved": sum(1 for r in xs if not open_at(r, b))})
-    return {"total": len(rs), "rows": rows}
+        rows.append({"theme": th, "label": labels.get(th, th), "mails": n, "resolved": sum(r["w"] for r in xs if not open_at(r, b))})
+    return {"total": wn(rs), "rows": rows}
 
 
 def main():
@@ -971,6 +997,9 @@ def main():
     cards_complaints = [c for c in complaints if c["product"] == "cards"]
     products = [(pid, PRODUCT_LABEL[pid]) for pid in PRODUCT_ORDER]
     out = {"end": PERIOD_END, "public_end": PUBLIC_END.isoformat(), "default": DEFAULT_PERIOD,
+           # Internal figures are bank-scale weighted sums of the kept sample rows (scale_v3.py).
+           "scale": {"sample_rows": SCALE["sample"]["rows"], "sample_customers": SCALE["sample"]["customers"],
+                     "list_sizes": SCALE["list_sizes"], "note": SCALE["note"]},
            "dominance_limit": SOURCE_DOMINANCE_LIMIT, "source_weights": {s: round(v, 4) for s, v in W.items()}, "periods": {}}
     for p in PERIODS:
         w = windows(p)
