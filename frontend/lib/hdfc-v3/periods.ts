@@ -103,6 +103,12 @@ export type SocialPost = {
 /** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
 export type SocialPulse = {
   mentions: number;
+  mentions_series: { end: string; count: number }[];
+  high_impact_series: { end: string; count: number }[];
+  /** Share of mentions with a bank response, per earlier window of the period's length. */
+  response_series: { end: string; pct: number | null }[];
+  /** Source-weighted negative share of mentions, per earlier window of the period's length. */
+  negative_share_series: { end: string; pct: number | null }[];
   /** Bank replies by source. Play Store is collected (live); the rest are simulated and marked illustrative. */
   by_source: {
     source: string;
@@ -116,6 +122,10 @@ export type SocialPulse = {
   response_pct: number | null;
   high_impact: number;
   high_impact_responded: number;
+  /** Against the comparison window; null when there is nothing to compare with. */
+  high_impact_change_pct: number | null;
+  /** The busiest day for high-impact posts in the period, with that day's posts (up to five, by engagement). */
+  high_impact_peak: { date: string; count: number; posts: SocialPost[] } | null;
   high_impact_response_pct: number | null;
   posts: SocialPost[];
   good_response: {
@@ -428,7 +438,10 @@ export type Period = {
   end: string;
   public_start: string;
   public_end: string;
+  /** One label for every period: "vs previous period". */
   compare: string;
+  /** Exactly what is compared, for the tooltip. */
+  compare_detail: string;
   customer_pulse: {
     lists: PulseList[];
     mentions: {
@@ -436,6 +449,9 @@ export type Period = {
       total: number;
       responded: number;
       not_responded: number;
+      series: { end: string; count: number }[];
+      unanswered_series: { end: string; count: number }[];
+      response_pct: number | null;
       by_list: Record<string, { total: number; responded: number }>;
       rule: string;
     };

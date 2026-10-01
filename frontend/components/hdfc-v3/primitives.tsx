@@ -137,6 +137,7 @@ export function ProvenanceTag({
   kind: Prov;
   style?: CSSProperties;
 }) {
+  if (kind === "internal") return null;
   const tone = TONE[PROV_TONE[kind]];
   return (
     <span

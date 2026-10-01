@@ -293,7 +293,18 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
            f"[{pid}] External block: sources sum to the combined response figure")
         ok(sp["high_impact_responded"] <= sp["high_impact"] and all(x["illustrative"] == (x["source"] != "playstore") for x in sp["by_source"]),
            f"[{pid}] External block: every simulated source is marked illustrative")
+        pk = sp["high_impact_peak"]
+        ok((pk is None) == (sp["high_impact"] == 0) and (pk is None or (0 < pk["count"] <= sp["high_impact"] and len(pk["posts"]) <= min(5, pk["count"])
+                                                                and all(x["date"] == pk["date"] for x in pk["posts"]))),
+           f"[{pid}] High-impact peak day: within the period's high-impact posts, and its posts are from that day")
         men = p["customer_pulse"]["mentions"]
+        listed = {m for m, c in customers.items() if any(lst["id"] in c["cohorts"] for lst in p["customer_pulse"]["lists"])}
+        ment = [r for r in rs_all if r["channel"] == "social_inbox" and r["masked_id"] in listed
+                and a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+        ok(men["total"] == len(ment) and men["responded"] == sum(1 for r in ment if r.get("mention_replied")),
+           f"[{pid}] High-priority mentions recomputed from the seed ({len(ment)}, replied {men['responded']})")
+        if pid == "all":
+            ok(55 <= 100 * men["responded"] / max(men["total"], 1) <= 70, "High-priority mentions: full-window response rate within 55-70%")
         ok(men["responded"] + men["not_responded"] == men["total"], f"[{pid}] High-priority mentions: responded + not responded = total")
         ok(len(sp["posts"]) <= 5 and all(x["score"] >= y["score"] for x, y in zip(sp["posts"], sp["posts"][1:])),
            f"[{pid}] Social pulse: at most five posts, ranked by engagement")

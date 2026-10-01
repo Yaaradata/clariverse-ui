@@ -26,9 +26,16 @@ function withoutLinks(raw: Record<string, Evidence & { url?: string }>) {
 }
 
 let cache: Bundle | null = null;
+let stamp = 0;
 
 export function loadBundle(): Bundle {
-  if (cache) return cache;
+  // The period figures are regenerated most often: when that file changes, read everything again, so a running dev
+  // server never serves data older than the files on disk.
+  const changed = fs.statSync(
+    path.join(ROOT, "out", PUBLIC, "periods.json"),
+  ).mtimeMs;
+  if (cache && changed === stamp) return cache;
+  stamp = changed;
   cache = {
     themes: read("out", PUBLIC, "themes.json"),
     signals: read("out", PUBLIC, "signals.json"),

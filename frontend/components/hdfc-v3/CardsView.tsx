@@ -34,6 +34,7 @@ import { OmbudsmanWatch, RiskPill, SaveList } from "./Ombudsman";
 import {
   Dial,
   Sparkline,
+  spanOf,
   TrendChip,
   titled,
   usePeriod,
@@ -269,7 +270,7 @@ function IssuePulse({ p }: { p: Period }) {
 const IN = tint(C.violet, 0.07);
 const EX = tint(C.cyan, 0.07);
 
-function FigureCells({ f }: { f: CategoryFigures }) {
+function FigureCells({ f, span }: { f: CategoryFigures; span: string }) {
   const i = f.internal;
   const e = f.external;
   const cell = (bg: string, marginLeft = 0) => ({
@@ -307,8 +308,14 @@ function FigureCells({ f }: { f: CategoryFigures }) {
       <span style={{ display: "flex", alignItems: "center", marginLeft: 10 }}>
         <Sparkline
           values={f.trend.map((t) => t.internal + t.external)}
-          color={C.violet}
+          color={C.textSec}
           width={70}
+          title="Internal plus public volume, trend"
+          points={{
+            ends: f.trend.map((t) => t.end),
+            span,
+            unit: "contacts and public items",
+          }}
         />
       </span>
     </>
@@ -385,7 +392,7 @@ function CategoryRow({
             <RiskPill r={risk} />
           </span>
         </span>
-        <FigureCells f={c} />
+        <FigureCells f={c} span={spanOf(p)} />
       </button>
       {open
         ? c.subcategories.map((s) => (
@@ -412,7 +419,7 @@ function CategoryRow({
                 {s.label}
                 <RiskPill r={risk?.subcategories.find((x) => x.id === s.id)} />
               </span>
-              <FigureCells f={s} />
+              <FigureCells f={s} span={spanOf(p)} />
             </div>
           ))
         : null}

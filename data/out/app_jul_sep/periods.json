@@ -19,7 +19,8 @@
    "end": "2026-09-29T08:30:00+05:30",
    "public_start": "2026-09-28T08:30:00+05:30",
    "public_end": "2026-09-28T23:59:59+05:30",
-   "compare": "vs the day before",
+   "compare": "vs previous period",
+   "compare_detail": "vs the day before",
    "customer_pulse": {
     "lists": [
      {
@@ -518,12 +519,81 @@
     "mentions": {
      "provenance": "internal",
      "total": 1,
-     "responded": 0,
-     "not_responded": 1,
+     "responded": 1,
+     "not_responded": 0,
+     "series": [
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "count": 2
+      },
+      {
+       "end": "2026-09-23T08:30:00+05:30",
+       "count": 3
+      },
+      {
+       "end": "2026-09-24T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-25T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-26T08:30:00+05:30",
+       "count": 2
+      },
+      {
+       "end": "2026-09-27T08:30:00+05:30",
+       "count": 2
+      },
+      {
+       "end": "2026-09-28T08:30:00+05:30",
+       "count": 3
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 1
+      }
+     ],
+     "unanswered_series": [
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-23T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-24T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-25T08:30:00+05:30",
+       "count": 0
+      },
+      {
+       "end": "2026-09-26T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-27T08:30:00+05:30",
+       "count": 0
+      },
+      {
+       "end": "2026-09-28T08:30:00+05:30",
+       "count": 1
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 0
+      }
+     ],
+     "response_pct": 100.0,
      "by_list": {
       "priority_a": {
        "total": 1,
-       "responded": 0
+       "responded": 1
       },
       "priority_b": {
        "total": 0,
@@ -531,11 +601,11 @@
       },
       "uhni": {
        "total": 1,
-       "responded": 0
+       "responded": 1
       },
       "multi": {
        "total": 1,
-       "responded": 0
+       "responded": 1
       }
      },
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
@@ -548,6 +618,142 @@
    },
    "social_pulse": {
     "mentions": 200,
+    "mentions_series": [
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "count": 138
+     },
+     {
+      "end": "2026-09-23T08:30:00+05:30",
+      "count": 191
+     },
+     {
+      "end": "2026-09-24T08:30:00+05:30",
+      "count": 258
+     },
+     {
+      "end": "2026-09-25T08:30:00+05:30",
+      "count": 417
+     },
+     {
+      "end": "2026-09-26T08:30:00+05:30",
+      "count": 303
+     },
+     {
+      "end": "2026-09-27T08:30:00+05:30",
+      "count": 388
+     },
+     {
+      "end": "2026-09-28T08:30:00+05:30",
+      "count": 299
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 200
+     }
+    ],
+    "high_impact_series": [
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "count": 0
+     },
+     {
+      "end": "2026-09-23T08:30:00+05:30",
+      "count": 1
+     },
+     {
+      "end": "2026-09-24T08:30:00+05:30",
+      "count": 0
+     },
+     {
+      "end": "2026-09-25T08:30:00+05:30",
+      "count": 5
+     },
+     {
+      "end": "2026-09-26T08:30:00+05:30",
+      "count": 4
+     },
+     {
+      "end": "2026-09-27T08:30:00+05:30",
+      "count": 7
+     },
+     {
+      "end": "2026-09-28T08:30:00+05:30",
+      "count": 1
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 1
+     }
+    ],
+    "negative_share_series": [
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "pct": 51.7
+     },
+     {
+      "end": "2026-09-23T08:30:00+05:30",
+      "pct": 50.6
+     },
+     {
+      "end": "2026-09-24T08:30:00+05:30",
+      "pct": 52.5
+     },
+     {
+      "end": "2026-09-25T08:30:00+05:30",
+      "pct": 50.4
+     },
+     {
+      "end": "2026-09-26T08:30:00+05:30",
+      "pct": 45.7
+     },
+     {
+      "end": "2026-09-27T08:30:00+05:30",
+      "pct": 51.7
+     },
+     {
+      "end": "2026-09-28T08:30:00+05:30",
+      "pct": 47.7
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 38.8
+     }
+    ],
+    "response_series": [
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "pct": 74.0
+     },
+     {
+      "end": "2026-09-23T08:30:00+05:30",
+      "pct": 59.0
+     },
+     {
+      "end": "2026-09-24T08:30:00+05:30",
+      "pct": 60.0
+     },
+     {
+      "end": "2026-09-25T08:30:00+05:30",
+      "pct": 64.0
+     },
+     {
+      "end": "2026-09-26T08:30:00+05:30",
+      "pct": 70.0
+     },
+     {
+      "end": "2026-09-27T08:30:00+05:30",
+      "pct": 54.0
+     },
+     {
+      "end": "2026-09-28T08:30:00+05:30",
+      "pct": 38.0
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 26.0
+     }
+    ],
     "by_source": [
      {
       "source": "x",
@@ -570,6 +776,26 @@
     "response_pct": 26.0,
     "high_impact": 1,
     "high_impact_responded": 1,
+    "high_impact_change_pct": 0.0,
+    "high_impact_peak": {
+     "date": "2026-09-28",
+     "count": 1,
+     "posts": [
+      {
+       "text": "Family banked here for decades out of convenience; investing is fast but servicing is poor, with a weak manager and relationship manager pairing at one branch.",
+       "platform": "X",
+       "date": "2026-09-28",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 10,
+        "replies": 2
+       },
+       "score": 12,
+       "responded": true,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 100.0,
     "posts": [
      {
@@ -1426,19 +1652,19 @@
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Product questions and advice-seeking",
-      "text": "28 public items; share of voice up 2033% vs the day before, source-weighted."
+      "text": "28 public items; share of voice up 2033% vs previous period, source-weighted."
      },
      {
       "business": "cards",
       "business_label": "Cards",
       "issue": "Other",
-      "text": "3 public items; share of voice up 1300% vs the day before, source-weighted."
+      "text": "3 public items; share of voice up 1300% vs previous period, source-weighted."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Customer care unreachable or unhelpful",
-      "text": "6 public items; share of voice up 775% vs the day before, source-weighted."
+      "text": "6 public items; share of voice up 775% vs previous period, source-weighted."
      }
     ],
     "improving": [
@@ -1446,22 +1672,22 @@
       "business": "cards",
       "business_label": "Cards",
       "status": "improving",
-      "text": "Negative share down from 80% to 40% vs the day before."
+      "text": "Negative share down from 80% to 40% vs previous period."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "status": "improving",
-      "text": "Negative share down from 57% to 38% vs the day before."
+      "text": "Negative share down from 57% to 38% vs previous period."
      },
      {
       "business": "personal_loans",
       "business_label": "Personal loans",
       "status": "improving",
-      "text": "Negative share down from 70% to 54% vs the day before."
+      "text": "Negative share down from 70% to 54% vs previous period."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the day before (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 3 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 2,
@@ -6682,7 +6908,8 @@
    "end": "2026-09-29T08:30:00+05:30",
    "public_start": "2026-09-22T08:30:00+05:30",
    "public_end": "2026-09-28T23:59:59+05:30",
-   "compare": "vs the previous 7 days",
+   "compare": "vs previous period",
+   "compare_detail": "vs the previous 7 days",
    "customer_pulse": {
     "lists": [
      {
@@ -7181,8 +7408,77 @@
     "mentions": {
      "provenance": "internal",
      "total": 13,
-     "responded": 11,
-     "not_responded": 2,
+     "responded": 9,
+     "not_responded": 4,
+     "series": [
+      {
+       "end": "2026-08-11T08:30:00+05:30",
+       "count": 11
+      },
+      {
+       "end": "2026-08-18T08:30:00+05:30",
+       "count": 5
+      },
+      {
+       "end": "2026-08-25T08:30:00+05:30",
+       "count": 12
+      },
+      {
+       "end": "2026-09-01T08:30:00+05:30",
+       "count": 9
+      },
+      {
+       "end": "2026-09-08T08:30:00+05:30",
+       "count": 11
+      },
+      {
+       "end": "2026-09-15T08:30:00+05:30",
+       "count": 18
+      },
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "count": 7
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 13
+      }
+     ],
+     "unanswered_series": [
+      {
+       "end": "2026-08-11T08:30:00+05:30",
+       "count": 3
+      },
+      {
+       "end": "2026-08-18T08:30:00+05:30",
+       "count": 0
+      },
+      {
+       "end": "2026-08-25T08:30:00+05:30",
+       "count": 2
+      },
+      {
+       "end": "2026-09-01T08:30:00+05:30",
+       "count": 0
+      },
+      {
+       "end": "2026-09-08T08:30:00+05:30",
+       "count": 4
+      },
+      {
+       "end": "2026-09-15T08:30:00+05:30",
+       "count": 5
+      },
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "count": 4
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 4
+      }
+     ],
+     "response_pct": 69.0,
      "by_list": {
       "priority_a": {
        "total": 4,
@@ -7198,7 +7494,7 @@
       },
       "multi": {
        "total": 13,
-       "responded": 11
+       "responded": 9
       }
      },
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
@@ -7211,6 +7507,142 @@
    },
    "social_pulse": {
     "mentions": 2056,
+    "mentions_series": [
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "count": 1884
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "count": 1131
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "count": 1290
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "count": 1147
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "count": 1445
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "count": 1267
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "count": 1263
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 2056
+     }
+    ],
+    "high_impact_series": [
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "count": 33
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "count": 13
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "count": 50
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "count": 22
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "count": 9
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "count": 8
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "count": 14
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 19
+     }
+    ],
+    "negative_share_series": [
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "pct": 47.1
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "pct": 44.1
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "pct": 44.1
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "pct": 50.3
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "pct": 48.4
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "pct": 48.3
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "pct": 46.8
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 49.4
+     }
+    ],
+    "response_series": [
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "pct": 82.0
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "pct": 81.0
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "pct": 75.0
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "pct": 79.0
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "pct": 74.0
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "pct": 70.0
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "pct": 58.0
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 54.0
+     }
+    ],
     "by_source": [
      {
       "source": "playstore",
@@ -7257,6 +7689,77 @@
     "response_pct": 54.0,
     "high_impact": 19,
     "high_impact_responded": 12,
+    "high_impact_change_pct": 35.7,
+    "high_impact_peak": {
+     "date": "2026-09-26",
+     "count": 7,
+     "posts": [
+      {
+       "text": "Customer and shareholder welcomes the bank staying open on Sunday and through the strike days as a good sign.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "positive",
+       "engagement": {
+        "likes": 95,
+        "replies": 42,
+        "reposts": 9
+       },
+       "score": 146,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "A list of harsh adjectives condemning the bank with no specific issue.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Rejects the bank's generic reply asking for details by email and repeats that the system is shameless.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Single-word remark calling something dangerous.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 1
+       },
+       "score": 1,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Hindi reply saying the IPO blocking feature is still disabled.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1
+       },
+       "score": 1,
+       "responded": true,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 63.0,
     "posts": [
      {
@@ -8145,19 +8648,19 @@
       "business": "cards",
       "business_label": "Cards",
       "issue": "Debit card and ATM",
-      "text": "35 public items; share of voice up 400% vs the previous 7 days, source-weighted."
+      "text": "35 public items; share of voice up 400% vs previous period, source-weighted."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Branch service and staff behaviour",
-      "text": "49 public items; share of voice up 200% vs the previous 7 days, source-weighted."
+      "text": "49 public items; share of voice up 200% vs previous period, source-weighted."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Bank charges and hidden fees",
-      "text": "19 public items; share of voice up 200% vs the previous 7 days, source-weighted."
+      "text": "19 public items; share of voice up 200% vs previous period, source-weighted."
      }
     ],
     "improving": [
@@ -8171,16 +8674,16 @@
       "business": "insurance",
       "business_label": "Insurance (bank-sold)",
       "status": "watch",
-      "text": "Negative share down from 100% to 100% vs the previous 7 days; outside the improving and stable bands."
+      "text": "Negative share down from 100% to 100% vs previous period; outside the improving and stable bands."
      },
      {
       "business": "cards",
       "business_label": "Cards",
       "status": "watch",
-      "text": "Negative share up from 66% to 77% vs the previous 7 days; outside the improving and stable bands."
+      "text": "Negative share up from 66% to 77% vs previous period; outside the improving and stable bands."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 7 days (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 8 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 5,
@@ -14571,7 +15074,8 @@
    "end": "2026-09-29T08:30:00+05:30",
    "public_start": "2026-08-30T08:30:00+05:30",
    "public_end": "2026-09-28T23:59:59+05:30",
-   "compare": "vs the previous 30 days",
+   "compare": "vs previous period",
+   "compare_detail": "vs the previous 30 days",
    "customer_pulse": {
     "lists": [
      {
@@ -14910,8 +15414,37 @@
     "mentions": {
      "provenance": "internal",
      "total": 53,
-     "responded": 51,
-     "not_responded": 2,
+     "responded": 36,
+     "not_responded": 17,
+     "series": [
+      {
+       "end": "2026-07-31T08:30:00+05:30",
+       "count": 53
+      },
+      {
+       "end": "2026-08-30T08:30:00+05:30",
+       "count": 38
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 53
+      }
+     ],
+     "unanswered_series": [
+      {
+       "end": "2026-07-31T08:30:00+05:30",
+       "count": 20
+      },
+      {
+       "end": "2026-08-30T08:30:00+05:30",
+       "count": 7
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 17
+      }
+     ],
+     "response_pct": 68.0,
      "by_list": {
       "priority_a": {
        "total": 6,
@@ -14919,7 +15452,7 @@
       },
       "priority_b": {
        "total": 7,
-       "responded": 7
+       "responded": 4
       },
       "uhni": {
        "total": 11,
@@ -14927,7 +15460,7 @@
       },
       "multi": {
        "total": 53,
-       "responded": 51
+       "responded": 36
       }
      },
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
@@ -14940,6 +15473,62 @@
    },
    "social_pulse": {
     "mentions": 6391,
+    "mentions_series": [
+     {
+      "end": "2026-07-31T08:30:00+05:30",
+      "count": 4449
+     },
+     {
+      "end": "2026-08-30T08:30:00+05:30",
+      "count": 6308
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 6391
+     }
+    ],
+    "high_impact_series": [
+     {
+      "end": "2026-07-31T08:30:00+05:30",
+      "count": 89
+     },
+     {
+      "end": "2026-08-30T08:30:00+05:30",
+      "count": 120
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 59
+     }
+    ],
+    "negative_share_series": [
+     {
+      "end": "2026-07-31T08:30:00+05:30",
+      "pct": 41.5
+     },
+     {
+      "end": "2026-08-30T08:30:00+05:30",
+      "pct": 43.1
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 47.4
+     }
+    ],
+    "response_series": [
+     {
+      "end": "2026-07-31T08:30:00+05:30",
+      "pct": 65.0
+     },
+     {
+      "end": "2026-08-30T08:30:00+05:30",
+      "pct": 78.0
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 64.0
+     }
+    ],
     "by_source": [
      {
       "source": "playstore",
@@ -14986,6 +15575,77 @@
     "response_pct": 64.0,
     "high_impact": 59,
     "high_impact_responded": 32,
+    "high_impact_change_pct": -50.8,
+    "high_impact_peak": {
+     "date": "2026-09-26",
+     "count": 7,
+     "posts": [
+      {
+       "text": "Customer and shareholder welcomes the bank staying open on Sunday and through the strike days as a good sign.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "positive",
+       "engagement": {
+        "likes": 95,
+        "replies": 42,
+        "reposts": 9
+       },
+       "score": 146,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "A list of harsh adjectives condemning the bank with no specific issue.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Rejects the bank's generic reply asking for details by email and repeats that the system is shameless.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1,
+        "reposts": 1
+       },
+       "score": 2,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Single-word remark calling something dangerous.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 1
+       },
+       "score": 1,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Hindi reply saying the IPO blocking feature is still disabled.",
+       "platform": "X",
+       "date": "2026-09-26",
+       "sentiment": "negative",
+       "engagement": {
+        "replies": 1
+       },
+       "score": 1,
+       "responded": true,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 54.0,
     "posts": [
      {
@@ -15879,19 +16539,19 @@
       "business": "cards",
       "business_label": "Cards",
       "issue": "Card dispatch and delivery",
-      "text": "31 public items; share of voice up 300% vs the previous 30 days, source-weighted."
+      "text": "31 public items; share of voice up 300% vs previous period, source-weighted."
      },
      {
       "business": "payzapp",
       "business_label": "PayZapp and UPI",
       "issue": "Refunds not credited",
-      "text": "25 public items; share of voice up 200% vs the previous 30 days, source-weighted."
+      "text": "25 public items; share of voice up 200% vs previous period, source-weighted."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Customer care unreachable or unhelpful",
-      "text": "51 public items; share of voice up 200% vs the previous 30 days, source-weighted."
+      "text": "51 public items; share of voice up 200% vs previous period, source-weighted."
      }
     ],
     "improving": [
@@ -15914,7 +16574,7 @@
       "text": "Negative share steady at 80% (78% before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs the previous 30 days (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 20 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 14,
@@ -21200,7 +21860,8 @@
    "end": "2026-09-29T08:30:00+05:30",
    "public_start": "2026-07-01T00:00:00+05:30",
    "public_end": "2026-09-28T23:59:59+05:30",
-   "compare": "second half vs first half of the window",
+   "compare": "vs previous period",
+   "compare_detail": "second half vs first half of the window (no earlier data to compare the full window with)",
    "customer_pulse": {
     "lists": [
      {
@@ -21827,24 +22488,125 @@
     "mentions": {
      "provenance": "internal",
      "total": 144,
-     "responded": 142,
-     "not_responded": 2,
+     "responded": 100,
+     "not_responded": 44,
+     "series": [
+      {
+       "end": "2026-07-14T08:30:00+05:30",
+       "count": 10
+      },
+      {
+       "end": "2026-07-21T08:30:00+05:30",
+       "count": 14
+      },
+      {
+       "end": "2026-07-28T08:30:00+05:30",
+       "count": 9
+      },
+      {
+       "end": "2026-08-04T08:30:00+05:30",
+       "count": 9
+      },
+      {
+       "end": "2026-08-11T08:30:00+05:30",
+       "count": 11
+      },
+      {
+       "end": "2026-08-18T08:30:00+05:30",
+       "count": 5
+      },
+      {
+       "end": "2026-08-25T08:30:00+05:30",
+       "count": 12
+      },
+      {
+       "end": "2026-09-01T08:30:00+05:30",
+       "count": 9
+      },
+      {
+       "end": "2026-09-08T08:30:00+05:30",
+       "count": 11
+      },
+      {
+       "end": "2026-09-15T08:30:00+05:30",
+       "count": 18
+      },
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "count": 7
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 13
+      }
+     ],
+     "unanswered_series": [
+      {
+       "end": "2026-07-14T08:30:00+05:30",
+       "count": 3
+      },
+      {
+       "end": "2026-07-21T08:30:00+05:30",
+       "count": 3
+      },
+      {
+       "end": "2026-07-28T08:30:00+05:30",
+       "count": 5
+      },
+      {
+       "end": "2026-08-04T08:30:00+05:30",
+       "count": 4
+      },
+      {
+       "end": "2026-08-11T08:30:00+05:30",
+       "count": 3
+      },
+      {
+       "end": "2026-08-18T08:30:00+05:30",
+       "count": 0
+      },
+      {
+       "end": "2026-08-25T08:30:00+05:30",
+       "count": 2
+      },
+      {
+       "end": "2026-09-01T08:30:00+05:30",
+       "count": 0
+      },
+      {
+       "end": "2026-09-08T08:30:00+05:30",
+       "count": 4
+      },
+      {
+       "end": "2026-09-15T08:30:00+05:30",
+       "count": 5
+      },
+      {
+       "end": "2026-09-22T08:30:00+05:30",
+       "count": 4
+      },
+      {
+       "end": "2026-09-29T08:30:00+05:30",
+       "count": 4
+      }
+     ],
+     "response_pct": 69.0,
      "by_list": {
       "priority_a": {
        "total": 13,
-       "responded": 11
+       "responded": 7
       },
       "priority_b": {
        "total": 27,
-       "responded": 27
+       "responded": 22
       },
       "uhni": {
        "total": 35,
-       "responded": 33
+       "responded": 20
       },
       "multi": {
        "total": 140,
-       "responded": 138
+       "responded": 98
       }
      },
      "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data."
@@ -21857,6 +22619,206 @@
    },
    "social_pulse": {
     "mentions": 17193,
+    "mentions_series": [
+     {
+      "end": "2026-07-14T08:30:00+05:30",
+      "count": 906
+     },
+     {
+      "end": "2026-07-21T08:30:00+05:30",
+      "count": 731
+     },
+     {
+      "end": "2026-07-28T08:30:00+05:30",
+      "count": 975
+     },
+     {
+      "end": "2026-08-04T08:30:00+05:30",
+      "count": 1851
+     },
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "count": 1884
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "count": 1131
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "count": 1290
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "count": 1147
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "count": 1445
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "count": 1267
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "count": 1263
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 2056
+     }
+    ],
+    "high_impact_series": [
+     {
+      "end": "2026-07-14T08:30:00+05:30",
+      "count": 22
+     },
+     {
+      "end": "2026-07-21T08:30:00+05:30",
+      "count": 15
+     },
+     {
+      "end": "2026-07-28T08:30:00+05:30",
+      "count": 16
+     },
+     {
+      "end": "2026-08-04T08:30:00+05:30",
+      "count": 16
+     },
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "count": 33
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "count": 13
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "count": 50
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "count": 22
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "count": 9
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "count": 8
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "count": 14
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "count": 19
+     }
+    ],
+    "negative_share_series": [
+     {
+      "end": "2026-07-14T08:30:00+05:30",
+      "pct": 44.8
+     },
+     {
+      "end": "2026-07-21T08:30:00+05:30",
+      "pct": 44.2
+     },
+     {
+      "end": "2026-07-28T08:30:00+05:30",
+      "pct": 37.3
+     },
+     {
+      "end": "2026-08-04T08:30:00+05:30",
+      "pct": 35.7
+     },
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "pct": 47.1
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "pct": 44.1
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "pct": 44.1
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "pct": 50.3
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "pct": 48.4
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "pct": 48.3
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "pct": 46.8
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 49.4
+     }
+    ],
+    "response_series": [
+     {
+      "end": "2026-07-14T08:30:00+05:30",
+      "pct": 60.0
+     },
+     {
+      "end": "2026-07-21T08:30:00+05:30",
+      "pct": 64.0
+     },
+     {
+      "end": "2026-07-28T08:30:00+05:30",
+      "pct": 77.0
+     },
+     {
+      "end": "2026-08-04T08:30:00+05:30",
+      "pct": 75.0
+     },
+     {
+      "end": "2026-08-11T08:30:00+05:30",
+      "pct": 82.0
+     },
+     {
+      "end": "2026-08-18T08:30:00+05:30",
+      "pct": 81.0
+     },
+     {
+      "end": "2026-08-25T08:30:00+05:30",
+      "pct": 75.0
+     },
+     {
+      "end": "2026-09-01T08:30:00+05:30",
+      "pct": 79.0
+     },
+     {
+      "end": "2026-09-08T08:30:00+05:30",
+      "pct": 74.0
+     },
+     {
+      "end": "2026-09-15T08:30:00+05:30",
+      "pct": 70.0
+     },
+     {
+      "end": "2026-09-22T08:30:00+05:30",
+      "pct": 58.0
+     },
+     {
+      "end": "2026-09-29T08:30:00+05:30",
+      "pct": 54.0
+     }
+    ],
     "by_source": [
      {
       "source": "playstore",
@@ -21903,6 +22865,82 @@
     "response_pct": 69.0,
     "high_impact": 272,
     "high_impact_responded": 138,
+    "high_impact_change_pct": -11.1,
+    "high_impact_peak": {
+     "date": "2026-08-18",
+     "count": 25,
+     "posts": [
+      {
+       "text": "Suggests paying a slightly rounded-up card amount because excess credit is carried to the next bill, saving hassle.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "neutral",
+       "engagement": {
+        "likes": 1094,
+        "replies": 20,
+        "reposts": 14
+       },
+       "score": 1128,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Cites a regulatory circular saying fractions under half a rupee round down, so the bill was really a whole-rupee sum.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "neutral",
+       "engagement": {
+        "likes": 979,
+        "replies": 20,
+        "reposts": 112
+       },
+       "score": 1111,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Urges another customer to file under the banking ombudsman scheme and show no leniency.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 647,
+        "replies": 5,
+        "reposts": 5
+       },
+       "score": 657,
+       "responded": false,
+       "illustrative": true
+      },
+      {
+       "text": "Calls the bank's service appalling and demands immediate reversal of a late payment fee.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "negative",
+       "engagement": {
+        "likes": 261,
+        "reposts": 6
+       },
+       "score": 267,
+       "responded": true,
+       "illustrative": true
+      },
+      {
+       "text": "Jokes that the bank's shareholder meeting would never entertain a question about a tiny shortfall.",
+       "platform": "X",
+       "date": "2026-08-18",
+       "sentiment": "neutral",
+       "engagement": {
+        "likes": 261,
+        "replies": 3,
+        "reposts": 1
+       },
+       "score": 265,
+       "responded": false,
+       "illustrative": true
+      }
+     ]
+    },
     "high_impact_response_pct": 51.0,
     "posts": [
      {
@@ -22802,19 +23840,19 @@
       "business": "cards",
       "business_label": "Cards",
       "issue": "Card variant migration and forced upgrade",
-      "text": "275 public items; share of voice up 675% second half vs first half of the window, source-weighted."
+      "text": "275 public items; share of voice up 675% vs previous period, source-weighted."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "Product questions and advice-seeking",
-      "text": "133 public items; share of voice up 550% second half vs first half of the window, source-weighted."
+      "text": "133 public items; share of voice up 550% vs previous period, source-weighted."
      },
      {
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "issue": "KYC, re-KYC and profile updates",
-      "text": "46 public items; share of voice up 300% second half vs first half of the window, source-weighted."
+      "text": "46 public items; share of voice up 300% vs previous period, source-weighted."
      }
     ],
     "improving": [
@@ -22822,13 +23860,13 @@
       "business": "accounts",
       "business_label": "Accounts and deposits",
       "status": "improving",
-      "text": "Negative share down from 60% to 50% second half vs first half of the window."
+      "text": "Negative share down from 60% to 50% vs previous period."
      },
      {
       "business": "payzapp",
       "business_label": "PayZapp and UPI",
       "status": "improving",
-      "text": "Negative share down from 53% to 45% second half vs first half of the window."
+      "text": "Negative share down from 53% to 45% vs previous period."
      },
      {
       "business": "cards",
@@ -22837,7 +23875,7 @@
       "text": "Negative share steady at 68% (66% before)."
      }
     ],
-    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more second half vs first half of the window (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
+    "rules": "What needs you: the businesses with the most internal cases open over 48 hours (still open, in the Morning brief) plus public posts with escalation language. Signals that are building: issues whose source-weighted share of public voice rose by 30% or more vs previous period (at least 30 items). Improving or stable: businesses whose negative share fell 15% or more, or held within 10%. Each column shows three: where fewer meet its rule, the next-closest businesses fill it, marked \"watch\". An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply limit, or more complaints are already eligible than at the previous period end."
    },
    "md_mail": {
     "total": 47,

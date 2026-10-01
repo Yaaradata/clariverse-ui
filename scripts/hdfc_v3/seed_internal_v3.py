@@ -332,6 +332,12 @@ def make_interaction(idx, cust, product, theme, created, channel, sender, themes
         if int(hashlib.sha1(rec["id"].encode()).hexdigest(), 16) % 100 < 40:
             rec["resolution_sent_at"] = rec["first_response_at"]
             rec["status"] = "waiting_on_customer"  # not open with the bank, on every screen
+    # High-priority mentions (1 Oct fix 4): whether the bank replied to the customer's public post. Its own fact, apart
+    # from how the case was handled inside the bank, so no other figure moves. Set from the record id (no random
+    # stream), at 62%: listed customers who go public are answered a little under two times in three.
+    rec["mention_replied"] = None
+    if rec["channel"] == "social_inbox":
+        rec["mention_replied"] = int(hashlib.sha1(f"mention:{rec['id']}".encode()).hexdigest(), 16) % 100 < 62
     return rec
 
 

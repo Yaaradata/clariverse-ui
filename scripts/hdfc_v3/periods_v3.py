@@ -93,21 +93,23 @@ def windows(p: dict) -> dict:
     if p["days"]:
         start = END - dt.timedelta(days=p["days"])
         prev = (start - dt.timedelta(days=p["days"]), start)
-        compare = f"vs the previous {p['days']} days" if p["days"] > 1 else "vs the day before"
+        detail = f"vs the previous {p['days']} days" if p["days"] > 1 else "vs the day before"
         n = min(8, int((END - START) / dt.timedelta(days=p["days"])))
         series = [(END - dt.timedelta(days=p["days"] * (k + 1)), END - dt.timedelta(days=p["days"] * k)) for k in range(n)][::-1]
     else:
         start = START
         mid = START + (END - START) / 2
         prev = (START, mid)  # full window: trends compare the second half with the first
-        compare = "second half vs first half of the window"
+        detail = "second half vs first half of the window (no earlier data to compare the full window with)"
         series, w = [], END
         while w - dt.timedelta(days=7) >= START:
             series.append((w - dt.timedelta(days=7), w))
             w -= dt.timedelta(days=7)
         series = series[::-1]
     cur_for_trend = (START + (END - START) / 2, END) if not p["days"] else (start, END)
-    return {"period_id": p["id"], "start": start, "end": END, "prev": prev, "trend_cur": cur_for_trend, "compare": compare, "series": series}
+    return {"period_id": p["id"], "start": start, "end": END, "prev": prev, "trend_cur": cur_for_trend,
+            # One label on screen for every period, matching the period filter; the detail says exactly what is compared.
+            "compare": "vs previous period", "compare_detail": detail, "series": series}
 
 
 # ------------------------------------------------------------------ internal
@@ -230,11 +232,13 @@ def customer_pulse(inter, customers, notes, w) -> dict:
     listed = {m for m, c in customers.items() if any(k in c["cohorts"] for k in PULSE_LISTS)}
     a, b = w["start"], w["end"]
     ment = [r for r in inter if r["_ch"] == "social" and r["masked_id"] in listed and in_win(r, a, b)]
-    responded = sum(1 for r in ment if r["_resp"] and r["_resp"] <= b)
+    replied = lambda r: bool(r.get("mention_replied"))  # noqa: E731  (a public reply on the post, from the seed)
+    responded = sum(1 for r in ment if replied(r))
     by_list = {}
     for lid in PULSE_LISTS:
         ms = [r for r in ment if lid in customers[r["masked_id"]]["cohorts"]]
-        by_list[lid] = {"total": len(ms), "responded": sum(1 for r in ms if r["_resp"] and r["_resp"] <= b)}
+        by_list[lid] = {"total": len(ms), "responded": sum(1 for r in ms if replied(r))}
+    all_ment = [r for r in inter if r["_ch"] == "social" and r["masked_id"] in listed]
     due = {n["masked_id"] for n in notes if any(k in customers[n["masked_id"]]["cohorts"] for k in PULSE_LISTS)}
     told = {n["masked_id"] for n in notes if n["notified_today"] and n["masked_id"] in due}
     return {
@@ -244,6 +248,10 @@ def customer_pulse(inter, customers, notes, w) -> dict:
             "total": len(ment),
             "responded": responded,
             "not_responded": len(ment) - responded,
+            "series": [{"end": e.isoformat(), "count": sum(1 for r in all_ment if in_win(r, s, e))} for s, e in w["series"]],
+            "unanswered_series": [{"end": e.isoformat(), "count": sum(1 for r in all_ment if in_win(r, s, e) and not replied(r))}
+                                  for s, e in w["series"]],
+            "response_pct": pct(responded, len(ment), 0),
             "by_list": by_list,
             "rule": "A post counts only when the bank's own verified handles or contact records link it to a listed customer; LisN never matches people from public data.",
         },
@@ -408,11 +416,22 @@ def social_pulse(pub, w, W) -> dict:
     score = lambda r: sum(engagement_of(r).values())  # noqa: E731
     safe = lambda r: quotable(r) and r["summary"] and not ALLEGATION.search(f"{r['summary']} {r.get('text') or ''}")  # noqa: E731
     top = sorted([r for r in rs if safe(r) and score(r) > 0], key=lambda r: (score(r), r["created_at"]), reverse=True)[:5]
-    posts = [{
+    as_post = lambda r: {  # noqa: E731
         "text": r["summary"], "platform": SOURCE_LABEL[r["source"]], "date": r["created_at"][:10],
         "sentiment": r["sentiment"], "engagement": engagement_of(r), "score": score(r),
         "responded": responded(r), "illustrative": r["source"] != "playstore",
-    } for r in top]
+    }
+    posts = [as_post(r) for r in top]
+    # High impact: the busiest day in the period, the posts of that day, and the change against the comparison window.
+    by_day = collections.Counter(r["created_at"][:10] for r in hi)
+    peak = None
+    if by_day:
+        day, n_day = max(by_day.items(), key=lambda kv: (kv[1], kv[0]))
+        day_posts = sorted([r for r in hi if r["created_at"][:10] == day and safe(r)], key=score, reverse=True)[:5]
+        peak = {"date": day, "count": n_day, "posts": [as_post(r) for r in day_posts]}
+    (ta, tb), (pa, pb) = w["trend_cur"], w["prev"]
+    hi_cur = sum(1 for r in pub if ta <= r["_c"] < tb and reach(r))
+    hi_prev = sum(1 for r in pub if pa <= r["_c"] < pb and reach(r))
     good_pool = lambda xs: [r for r in xs if r["source"] == "playstore" and r.get("reply") and r["sentiment"] == "negative"  # noqa: E731
                             and safe(r) and ROUTED.search(r["reply"]["text"])]
     pool, in_period = good_pool(rs), True
@@ -425,11 +444,24 @@ def social_pulse(pub, w, W) -> dict:
                 "engagement": engagement_of(g), "reply": redact_reply(g["reply"]["text"]), "in_period": in_period}
     return {
         "mentions": len(rs),
+        # Trend shapes for the cards: the same measure for each earlier window of the period's length.
+        "mentions_series": [{"end": e.isoformat(), "count": sum(1 for r in pub if s <= r["_c"] < e)} for s, e in w["series"]],
+        "high_impact_series": [{"end": e.isoformat(), "count": sum(1 for r in pub if s <= r["_c"] < e and reach(r))} for s, e in w["series"]],
+        "negative_share_series": [
+            {"end": e.isoformat(), "pct": weighted_share(xs, lambda r: r["sentiment"] == "negative", W) if xs else None}
+            for s, e in w["series"] for xs in [[r for r in pub if s <= r["_c"] < e]]
+        ],
+        "response_series": [
+            {"end": e.isoformat(), "pct": pct(sum(1 for r in xs if responded(r)), len(xs), 0)}
+            for s, e in w["series"] for xs in [[r for r in pub if s <= r["_c"] < e]]
+        ],
         "by_source": by_source,
         "responded": n_resp,
         "response_pct": pct(n_resp, len(rs), 0),
         "high_impact": len(hi),
         "high_impact_responded": hi_resp,
+        "high_impact_change_pct": change(hi_cur, hi_prev),
+        "high_impact_peak": peak,
         "high_impact_response_pct": pct(hi_resp, len(hi), 0),
         "posts": posts,
         "good_response": good,
@@ -952,6 +984,7 @@ def main():
             "start": w["start"].isoformat(), "end": w["end"].isoformat(),
             "public_start": w["start"].isoformat(), "public_end": min(w["end"], PUBLIC_END).isoformat(),
             "compare": w["compare"],
+            "compare_detail": w["compare_detail"],
             "customer_pulse": customer_pulse(inter, customers, notes, w),
             "social_pulse": social_pulse(pub, w, W),
             "cx_pulse": {

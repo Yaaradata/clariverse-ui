@@ -378,7 +378,7 @@ function ShellInner({
 
           <main
             style={{
-              padding: "18px 20px 110px",
+              padding: "18px 20px 132px",
               maxWidth: 1480,
               width: "100%",
               margin: "0 auto",
