@@ -1,12 +1,15 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import promise from "@kgs2/data/promise.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
-import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
-import { Panel } from "@/components/role-based-dashboard/kgs/drill/Panel";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { Sparkles } from "lucide-react";
+import type { CSSProperties } from "react";
+import { Panel } from "@/components/role-based-dashboard/kgs/drill/Panel";
+import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { CauseStackedBar } from "./CauseStackedBar";
 import { PromiseRegionChart } from "./PromiseRegionChart";
 
@@ -16,10 +19,7 @@ function trendCell(trend: string): string {
   return "— flat";
 }
 
-function formatKpiValue(
-  value: number,
-  unit?: string,
-): string {
+function formatKpiValue(value: number, unit?: string): string {
   if (unit === "%") return `${value}%`;
   if (unit === "days") return `${value}`;
   return value.toLocaleString("en-GB");
@@ -31,7 +31,9 @@ function formatKpiValue(
 export function PromiseView() {
   const L = useLabel2();
   const { state, setView, isApproved } = useDemo2();
-  const north = promise.weeklyByRegion.series.find((s) => s.regionId === "North");
+  const north = promise.weeklyByRegion.series.find(
+    (s) => s.regionId === "North",
+  );
   const northLabel = L(north?.region ?? "{{region:North}}");
 
   const distributors = [...promise.distributors].sort(
@@ -204,8 +206,7 @@ export function PromiseView() {
                     style={{
                       ...td,
                       fontFamily: K.mono,
-                      color:
-                        row.keptVsOriginalPct < 80 ? K.orange : K.text,
+                      color: row.keptVsOriginalPct < 80 ? K.orange : K.text,
                       fontWeight: row.keptVsOriginalPct < 80 ? 700 : 500,
                     }}
                   >
@@ -318,10 +319,7 @@ export function PromiseView() {
         title="Candidate causes by region"
         sub="candidate causes — owner confirms · KGS-side vs last mile"
       >
-        <CauseStackedBar
-          rows={promise.causeSplitByRegion}
-          labelFn={L}
-        />
+        <CauseStackedBar rows={promise.causeSplitByRegion} labelFn={L} />
       </Panel>
 
       {/* 6. Signal Wall */}
@@ -335,24 +333,26 @@ export function PromiseView() {
         >
           {promise.signalWall.map((card) => {
             const approved = card.id === "PR-01" && isApproved("PR-01");
-            const clickable = card.cta != null && card.id === "PR-01";
+            const route =
+              card.id === "PR-01"
+                ? ("promiseHero" as const)
+                : card.id === "PR-02"
+                  ? ("promise" as const)
+                  : null;
+            const clickable = route != null;
             const improving = card.severity === "improving";
             return (
               <button
                 key={card.id}
                 type="button"
                 disabled={!clickable}
-                onClick={() => clickable && setView("promiseHero")}
+                onClick={() => clickable && route && setView(route)}
                 className={clickable ? "kgs2-focus" : undefined}
                 style={{
                   textAlign: "left",
-                  background: card.hero
-                    ? withAlpha(K.orange, 0.08)
-                    : K.surface,
+                  background: card.hero ? withAlpha(K.orange, 0.08) : K.surface,
                   border: `1px solid ${
-                    card.hero
-                      ? withAlpha(K.orange, 0.45)
-                      : K.borderLight
+                    card.hero ? withAlpha(K.orange, 0.45) : K.borderLight
                   }`,
                   borderRadius: 12,
                   padding: "14px 16px",
@@ -398,19 +398,35 @@ export function PromiseView() {
                     {improving ? "Improving" : card.severity}
                   </span>
                 </div>
-                <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}>
+                <div
+                  style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}
+                >
                   {L(card.title)}
                 </div>
                 {approved ? (
-                  <div style={{ fontSize: 12, color: K.green, fontWeight: 600 }}>
+                  <div
+                    style={{ fontSize: 12, color: K.green, fontWeight: 600 }}
+                  >
                     Action approved
                   </div>
                 ) : card.cta ? (
-                  <div style={{ fontSize: 13, color: K.violet300, marginTop: "auto" }}>
+                  <div
+                    style={{
+                      fontSize: 13,
+                      color: K.violet300,
+                      marginTop: "auto",
+                    }}
+                  >
                     {card.cta}
                   </div>
                 ) : (
-                  <div style={{ fontSize: 12, color: K.textMut, marginTop: "auto" }}>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: K.textMut,
+                      marginTop: "auto",
+                    }}
+                  >
                     Holding · no action needed
                   </div>
                 )}
@@ -429,7 +445,9 @@ export function PromiseView() {
           Critical {promise.signalWallFooter.critical} · Needs action{" "}
           {promise.signalWallFooter.needsAction} · Improving{" "}
           {promise.signalWallFooter.improving}
-          {state.role === "Operations lead" ? " · Viewing as Operations lead" : ""}
+          {state.role === "Operations lead"
+            ? " · Viewing as Operations lead"
+            : ""}
         </div>
       </Panel>
 

@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
-import { X } from "lucide-react";
 import signal from "@kgs2/data/signal_pr01.json";
 import { useLabel2 } from "@kgs2/lib/demoState";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { X } from "lucide-react";
+import { useEffect } from "react";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { SyntheticBadge } from "../shared/SyntheticBadge";
 
 const BODIES: Record<string, string> = {
   "draft-partner-update":
@@ -44,9 +48,6 @@ export function PromiseDraftModals({
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Draft preview"
       style={{
         position: "fixed",
         inset: 0,
@@ -57,10 +58,26 @@ export function PromiseDraftModals({
         background: "rgba(0,0,0,0.55)",
         padding: 24,
       }}
-      onClick={onClose}
     >
-      <div
+      <button
+        type="button"
+        aria-label="Close drafts"
+        className="kgs2-focus"
+        onClick={onClose}
         style={{
+          position: "absolute",
+          inset: 0,
+          border: "none",
+          background: "transparent",
+          cursor: "pointer",
+        }}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Draft preview"
+        style={{
+          position: "relative",
           width: "min(640px, 100%)",
           maxHeight: "90vh",
           overflow: "auto",
@@ -69,7 +86,6 @@ export function PromiseDraftModals({
           borderRadius: 14,
           padding: 18,
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         <header
           style={{
@@ -107,7 +123,8 @@ export function PromiseDraftModals({
               </span>
             </div>
             <p style={{ margin: 0, fontSize: 12, color: K.textMut }}>
-              Nothing is sent automatically. Partner manager sends after approval.
+              Nothing is sent automatically. Partner manager sends after
+              approval.
             </p>
           </div>
           <button
@@ -208,6 +225,9 @@ export function PromiseDraftModals({
             {L(BODIES[active.id] ?? active.title)}
           </pre>
         </article>
+        <div style={{ marginTop: 14 }}>
+          <SyntheticBadge compact />
+        </div>
       </div>
     </div>
   );

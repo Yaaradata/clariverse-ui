@@ -1,11 +1,14 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import { Info } from "lucide-react";
 import signal from "@kgs2/data/signal_pr01.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import type { LoopStatus } from "@kgs2/types";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { Info } from "lucide-react";
+import { type ReactNode, useMemo, useState } from "react";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { LoopTracker } from "../shared/LoopTracker";
 import { HeroPromiseChart } from "./HeroPromiseChart";
 import { PromiseDecisionPanel } from "./PromiseDecisionPanel";
@@ -314,7 +317,14 @@ export function PromiseHeroView() {
             >
               Counter-evidence
             </div>
-            <p style={{ margin: 0, fontSize: 14, color: K.body, lineHeight: 1.5 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                color: K.body,
+                lineHeight: 1.5,
+              }}
+            >
               {L(signal.counterEvidence)}
             </p>
           </Block>
@@ -463,7 +473,14 @@ export function PromiseHeroView() {
             >
               Recommended action
             </div>
-            <p style={{ margin: 0, fontSize: 13, color: K.body, lineHeight: 1.5 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                color: K.body,
+                lineHeight: 1.5,
+              }}
+            >
               {L(signal.recommendedAction)}
             </p>
           </Block>

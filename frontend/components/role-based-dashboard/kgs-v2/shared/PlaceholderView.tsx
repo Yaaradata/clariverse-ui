@@ -1,7 +1,7 @@
 "use client";
 
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useLabel2 } from "@kgs2/lib/demoState";
+import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 /** Pass 2 placeholder — SPEC title only; later passes replace the body. */
 export function PlaceholderView({ title }: { title: string }) {

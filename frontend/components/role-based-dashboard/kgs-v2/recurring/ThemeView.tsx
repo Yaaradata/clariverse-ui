@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import theme from "@kgs2/data/theme_rc01.json";
+import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
+import type { LoopStatus } from "@kgs2/types";
+import { type ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import {
   CartesianGrid,
   Line,
@@ -11,11 +14,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import theme from "@kgs2/data/theme_rc01.json";
-import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
-import type { LoopStatus } from "@kgs2/types";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { LoopTracker } from "../shared/LoopTracker";
+import { SyntheticBadge } from "../shared/SyntheticBadge";
 import { useToast2 } from "../shell/Toast";
 
 const SIGNAL_ID = "RC-01";
@@ -105,7 +109,6 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
         Human gate
       </div>
       <div
-        role="status"
         style={{
           padding: "10px 12px",
           borderRadius: 10,
@@ -135,7 +138,11 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
             color: approved ? K.green : K.amber,
           }}
         >
-          {approved ? "Action approved" : asked ? "Decision requested" : gate.chip}
+          {approved
+            ? "Action approved"
+            : asked
+              ? "Decision requested"
+              : gate.chip}
         </span>
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
@@ -349,7 +356,11 @@ export function ThemeView() {
             >
               26-week contacts
             </div>
-            <div role="img" aria-label="RC-01 weekly contacts" style={{ height: 280 }}>
+            <div
+              role="img"
+              aria-label="RC-01 weekly contacts"
+              style={{ height: 280 }}
+            >
               <ResponsiveContainer
                 width="100%"
                 height="100%"
@@ -544,7 +555,8 @@ export function ThemeView() {
             </div>
             <div style={{ fontSize: 14, fontWeight: 700, color: K.text }}>
               {theme.confidence.level} {theme.confidence.p} · K{" "}
-              {theme.confidence.known.count} · I {theme.confidence.inferred.count}
+              {theme.confidence.known.count} · I{" "}
+              {theme.confidence.inferred.count}
             </div>
             <div style={{ fontSize: 12, color: K.body, lineHeight: 1.45 }}>
               Known: {theme.confidence.known.label}
@@ -598,7 +610,9 @@ export function ThemeView() {
             >
               P&L destination
             </div>
-            <div style={{ fontSize: 14, color: K.text }}>{theme.pnl.compact}</div>
+            <div style={{ fontSize: 14, color: K.text }}>
+              {theme.pnl.compact}
+            </div>
           </Block>
 
           <Block>
@@ -613,7 +627,14 @@ export function ThemeView() {
             >
               Draft
             </div>
-            <p style={{ margin: 0, fontSize: 13, color: K.body, lineHeight: 1.5 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 13,
+                color: K.body,
+                lineHeight: 1.5,
+              }}
+            >
               {draft?.title}
             </p>
             <div
@@ -638,9 +659,6 @@ export function ThemeView() {
 
       {draftOpen && draft ? (
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Draft preview"
           style={{
             position: "fixed",
             inset: 0,
@@ -651,17 +669,32 @@ export function ThemeView() {
             background: "rgba(0,0,0,0.55)",
             padding: 24,
           }}
-          onClick={() => setDraftOpen(false)}
         >
-          <div
+          <button
+            type="button"
+            aria-label="Close draft"
+            className="kgs2-focus"
+            onClick={() => setDraftOpen(false)}
             style={{
+              position: "absolute",
+              inset: 0,
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Draft preview"
+            style={{
+              position: "relative",
               width: "min(560px, 100%)",
               background: K.elevated,
               border: `1px solid ${K.borderLight}`,
               borderRadius: 14,
               padding: 18,
             }}
-            onClick={(e) => e.stopPropagation()}
           >
             <div
               style={{
@@ -687,7 +720,14 @@ export function ThemeView() {
                 Not sent
               </span>
             </div>
-            <p style={{ margin: 0, fontSize: 14, color: K.body, lineHeight: 1.55 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                color: K.body,
+                lineHeight: 1.55,
+              }}
+            >
               {draft.title}
             </p>
             <p
@@ -710,6 +750,9 @@ export function ThemeView() {
             >
               Close
             </button>
+            <div style={{ marginTop: 14 }}>
+              <SyntheticBadge compact />
+            </div>
           </div>
         </div>
       ) : null}

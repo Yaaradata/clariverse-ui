@@ -1,10 +1,13 @@
 "use client";
 
-import type { ReactNode } from "react";
 import meta from "@kgs2/data/meta.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import type { Role } from "@kgs2/types";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import type { ReactNode } from "react";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { ROLE_LANDING } from "../nav";
 import { AnonymiseToggle } from "./AnonymiseToggle";
 

@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import signal from "@kgs2/data/signal_pr01.json";
 import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { useEffect, useRef, useState } from "react";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useToast2 } from "../shell/Toast";
 
 const APPROVING_MS = 500;
@@ -54,11 +57,12 @@ export function PromiseDecisionPanel({
     [],
   );
 
-  const banner = approved && ts
-    ? withTs(gate.onApprove.title, ts)
-    : asked
-      ? gate.decisionRequest.chip
-      : L(gate.title);
+  const banner =
+    approved && ts
+      ? withTs(gate.onApprove.title, ts)
+      : asked
+        ? gate.decisionRequest.chip
+        : L(gate.title);
 
   const onApprove = () => {
     if (!canApprove || approved || approving) return;
@@ -98,7 +102,6 @@ export function PromiseDecisionPanel({
         Human gate
       </div>
       <div
-        role="status"
         style={{
           padding: "10px 12px",
           borderRadius: 10,
@@ -147,10 +150,7 @@ export function PromiseDecisionPanel({
             style={{
               ...outlineBtn,
               background: canApprove && !approved ? K.brandTint : "transparent",
-              color:
-                canApprove && !approved
-                  ? K.violet300
-                  : K.textMut,
+              color: canApprove && !approved ? K.violet300 : K.textMut,
               borderColor:
                 canApprove && !approved
                   ? withAlpha(K.violet400, 0.5)

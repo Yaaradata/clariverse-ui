@@ -36,7 +36,9 @@
     { "id": "install", "label": "Install" },
     { "id": "partner", "label": "Partners" }
   ],
-  "weeklyInteractions": [360, 370, 365, 375, 380, 385, 378, 390, 392, 388, 371, 400, 386],
+  "weeklyInteractions": [
+    360, 370, 365, 375, 380, 385, 378, 390, 392, 388, 371, 400, 386
+  ],
   "thisWeekInteractions": 386,
   "totalInteractions13w": 4940,
   "perWorkingDayAbout": 77,

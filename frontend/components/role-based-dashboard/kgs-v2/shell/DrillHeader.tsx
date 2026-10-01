@@ -1,9 +1,9 @@
 "use client";
 
-import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
-import { VIEW_PAGE_LABEL, VIEW_TITLE } from "../nav";
 import type { V2View } from "@kgs2/types";
+import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { VIEW_PAGE_LABEL, VIEW_TITLE } from "../nav";
 
 export function DrillHeader({ view }: { view: V2View }) {
   const L = useLabel2();

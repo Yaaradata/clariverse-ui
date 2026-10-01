@@ -29,10 +29,17 @@
       "border": "orange",
       "gauges": [
         { "label": "Promise kept vs original date", "value": 82, "unit": "%" },
-        { "label": "Delivery complaints answered same day", "value": 64, "unit": "%" }
+        {
+          "label": "Delivery complaints answered same day",
+          "value": 64,
+          "unit": "%"
+        }
       ],
       "miniKpis": [
-        { "label": "Biggest gap", "value": "{{region:North}} · 3 distributors" },
+        {
+          "label": "Biggest gap",
+          "value": "{{region:North}} · 3 distributors"
+        },
         { "label": "Last-mile share of misses", "value": "~24% (candidate)" }
       ],
       "insight": "Most {{region:North}} misses trace to one allocation queue, not supply. Other regions ship the same product family on time.",
@@ -48,7 +55,11 @@
       "border": "teal",
       "gauges": [
         { "label": "Themes with a fix on record", "value": 58, "unit": "%" },
-        { "label": "Repeat contacts", "value": 22, "unit": "% of help-desk volume" }
+        {
+          "label": "Repeat contacts",
+          "value": 22,
+          "unit": "% of help-desk volume"
+        }
       ],
       "miniKpis": [
         { "label": "Top returning theme", "value": "Licence re-activation" },
@@ -67,7 +78,11 @@
       "border": "sky",
       "gauges": [
         { "label": "Friction : praise mentions", "valueLabel": "61 : 39" },
-        { "label": "Feedback captured from partners", "value": 18, "unit": "% (help desk only)" }
+        {
+          "label": "Feedback captured from partners",
+          "value": 18,
+          "unit": "% (help desk only)"
+        }
       ],
       "miniKpis": [
         { "label": "Top friction step", "value": "Network configuration" },
@@ -87,7 +102,12 @@
       "pnlTag": "On-time delivery · partner loyalty",
       "confidence": "M 0.68",
       "hero": true,
-      "channelMix": { "email": 8, "service_calls": 5, "salesforce": 4, "help_desk": 2 },
+      "channelMix": {
+        "email": 8,
+        "service_calls": 5,
+        "salesforce": 4,
+        "help_desk": 2
+      },
       "topIntent": "Delivery date moved after confirmation",
       "timeWindow": "Weeks 36–39",
       "beforeAfter": { "before": "88% kept", "after": "71% kept" },
@@ -105,7 +125,10 @@
       "channelMix": { "email": 4, "service_calls": 3, "help_desk": 2 },
       "topIntent": "Local delivery lag after hub arrival",
       "timeWindow": "Last 3 weeks",
-      "beforeAfter": { "before": "2.1 days last mile", "after": "5.0 days last mile" },
+      "beforeAfter": {
+        "before": "2.1 days last mile",
+        "after": "5.0 days last mile"
+      },
       "recommendation": "Open a last-mile review for the {{place:Gurugram hub}}."
     },
     {
@@ -120,7 +143,10 @@
       "channelMix": { "help_desk": 6, "email": 3, "service_calls": 2 },
       "topIntent": "Licence re-activation after laptop change",
       "timeWindow": "This week · 11 contacts",
-      "beforeAfter": { "before": "2 contacts / week after June fix", "after": "11 contacts this week" },
+      "beforeAfter": {
+        "before": "2 contacts / week after June fix",
+        "after": "11 contacts this week"
+      },
       "recommendation": "Update the knowledge article and confirm the portal change with the US product team."
     },
     {
@@ -135,7 +161,10 @@
       "channelMix": { "help_desk": 9, "email": 2 },
       "topIntent": "Where is my order?",
       "timeWindow": "Last 4 weeks",
-      "beforeAfter": { "before": "auto-reply live (Jul)", "after": "contacts rising again" },
+      "beforeAfter": {
+        "before": "auto-reply live (Jul)",
+        "after": "contacts rising again"
+      },
       "recommendation": "Refresh the auto-reply with a clearer order-desk path."
     },
     {
@@ -150,7 +179,10 @@
       "channelMix": { "service_calls": 5, "help_desk": 3, "email": 1 },
       "topIntent": "Network set-up takes longer",
       "timeWindow": "13 weeks",
-      "beforeAfter": { "before": "occasional mention", "after": "~25 min extra stated" },
+      "beforeAfter": {
+        "before": "occasional mention",
+        "after": "~25 min extra stated"
+      },
       "recommendation": "Share a one-page set-up guide with partners; send a feedback note to the US product team."
     }
   ],
@@ -159,12 +191,24 @@
       { "name": "Order desk email", "owner": "kgs", "connected": true },
       { "name": "Help desk", "owner": "kgs", "connected": true },
       { "name": "Service calls", "owner": "kgs", "connected": true },
-      { "name": "Salesforce cases and notes", "owner": "kgs", "connected": true },
+      {
+        "name": "Salesforce cases and notes",
+        "owner": "kgs",
+        "connected": true
+      },
       { "name": "ERP promise dates", "owner": "kgs", "connected": true }
     ],
     "notConnected": [
-      { "name": "Partner first-line support", "owner": "partner", "connected": false },
-      { "name": "Partner email with builders and sites", "owner": "partner", "connected": false }
+      {
+        "name": "Partner first-line support",
+        "owner": "partner",
+        "connected": false
+      },
+      {
+        "name": "Partner email with builders and sites",
+        "owner": "partner",
+        "connected": false
+      }
     ],
     "footnote": "Richer installer voice sits with partners. See Partner view."
   },
@@ -174,7 +218,10 @@
     "role": "Sales ops",
     "priority": "P1",
     "items": [
-      { "theme": "Deals marked 'commit' with no activity in 21 days", "count": 6 },
+      {
+        "theme": "Deals marked 'commit' with no activity in 21 days",
+        "count": 6
+      },
       { "theme": "Opportunities waiting on a delivery date", "count": 9 },
       { "theme": "Notes mentioning Competitor A", "count": 4 }
     ]

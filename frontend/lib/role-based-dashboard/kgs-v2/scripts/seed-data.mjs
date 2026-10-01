@@ -14,18 +14,114 @@ const west = [90, 91, 90, 92, 91, 90, 91, 92, 91, 90, 91, 92, 91];
 const sea = [86, 87, 88, 87, 88, 89, 88, 89, 90, 90, 91, 91, 92];
 
 const distributors = [
-  { id: "D-N-04", region: "North", ordersDue: 42, kept: 62, slip: 7.2, complaints: 11, cause: "allocation queue N-2" },
-  { id: "D-N-07", region: "North", ordersDue: 38, kept: 66, slip: 6.4, complaints: 9, cause: "allocation queue N-2" },
-  { id: "D-N-11", region: "North", ordersDue: 35, kept: 69, slip: 5.8, complaints: 8, cause: "last-mile {{place:Gurugram hub}}" },
-  { id: "D-N-02", region: "North", ordersDue: 28, kept: 78, slip: 3.1, complaints: 3, cause: "order change" },
-  { id: "D-E-03", region: "East", ordersDue: 31, kept: 84, slip: 2.4, complaints: 2, cause: "backorder" },
-  { id: "D-E-06", region: "East", ordersDue: 27, kept: 86, slip: 2.1, complaints: 2, cause: "allocation" },
-  { id: "D-S-01", region: "South", ordersDue: 44, kept: 90, slip: 1.6, complaints: 1, cause: "on target" },
-  { id: "D-S-05", region: "South", ordersDue: 36, kept: 91, slip: 1.4, complaints: 1, cause: "on target" },
-  { id: "D-S-02", region: "South", ordersDue: 40, kept: 92, slip: 1.2, complaints: 1, cause: "on target" },
-  { id: "D-W-08", region: "West", ordersDue: 33, kept: 91, slip: 1.5, complaints: 1, cause: "on target" },
-  { id: "D-W-09", region: "West", ordersDue: 29, kept: 93, slip: 1.1, complaints: 0, cause: "on target" },
-  { id: "D-SEA-10", region: "SEA", ordersDue: 26, kept: 94, slip: 0.9, complaints: 0, cause: "improving" },
+  {
+    id: "D-N-04",
+    region: "North",
+    ordersDue: 42,
+    kept: 62,
+    slip: 7.2,
+    complaints: 11,
+    cause: "allocation queue N-2",
+  },
+  {
+    id: "D-N-07",
+    region: "North",
+    ordersDue: 38,
+    kept: 66,
+    slip: 6.4,
+    complaints: 9,
+    cause: "allocation queue N-2",
+  },
+  {
+    id: "D-N-11",
+    region: "North",
+    ordersDue: 35,
+    kept: 69,
+    slip: 5.8,
+    complaints: 8,
+    cause: "last-mile {{place:Gurugram hub}}",
+  },
+  {
+    id: "D-N-02",
+    region: "North",
+    ordersDue: 28,
+    kept: 78,
+    slip: 3.1,
+    complaints: 3,
+    cause: "order change",
+  },
+  {
+    id: "D-E-03",
+    region: "East",
+    ordersDue: 31,
+    kept: 84,
+    slip: 2.4,
+    complaints: 2,
+    cause: "backorder",
+  },
+  {
+    id: "D-E-06",
+    region: "East",
+    ordersDue: 27,
+    kept: 86,
+    slip: 2.1,
+    complaints: 2,
+    cause: "allocation",
+  },
+  {
+    id: "D-S-01",
+    region: "South",
+    ordersDue: 44,
+    kept: 90,
+    slip: 1.6,
+    complaints: 1,
+    cause: "on target",
+  },
+  {
+    id: "D-S-05",
+    region: "South",
+    ordersDue: 36,
+    kept: 91,
+    slip: 1.4,
+    complaints: 1,
+    cause: "on target",
+  },
+  {
+    id: "D-S-02",
+    region: "South",
+    ordersDue: 40,
+    kept: 92,
+    slip: 1.2,
+    complaints: 1,
+    cause: "on target",
+  },
+  {
+    id: "D-W-08",
+    region: "West",
+    ordersDue: 33,
+    kept: 91,
+    slip: 1.5,
+    complaints: 1,
+    cause: "on target",
+  },
+  {
+    id: "D-W-09",
+    region: "West",
+    ordersDue: 29,
+    kept: 93,
+    slip: 1.1,
+    complaints: 0,
+    cause: "on target",
+  },
+  {
+    id: "D-SEA-10",
+    region: "SEA",
+    ordersDue: 26,
+    kept: 94,
+    slip: 0.9,
+    complaints: 0,
+    cause: "improving",
+  },
 ].map((d) => ({
   distributor: `{{partner:${d.id}}}`,
   distributorId: d.id,
@@ -43,10 +139,24 @@ w("promise.json", {
   title: "Are we keeping our promises?",
   kpis: [
     { key: "orders_due", label: "Orders due this quarter", value: 1180 },
-    { key: "kept_original", label: "Promise kept vs original date", value: 82, unit: "%" },
-    { key: "kept_revised", label: "Promise kept vs revised date", value: 93, unit: "%" },
+    {
+      key: "kept_original",
+      label: "Promise kept vs original date",
+      value: 82,
+      unit: "%",
+    },
+    {
+      key: "kept_revised",
+      label: "Promise kept vs revised date",
+      value: 93,
+      unit: "%",
+    },
     { key: "avg_slip", label: "Average slip", value: 4.1, unit: "days" },
-    { key: "complaints_week", label: "Delivery complaints this week", value: 38 },
+    {
+      key: "complaints_week",
+      label: "Delivery complaints this week",
+      value: 38,
+    },
   ],
   weeklyByRegion: {
     weeks: weeks13,
@@ -72,27 +182,73 @@ w("promise.json", {
       orderFacts: "original 10 Sep, revised 18 Sep, allocation queue N-2",
     },
     {
-      phrase: "Material reached the hub on time, but local delivery took five days",
+      phrase:
+        "Material reached the hub on time, but local delivery took five days",
       partner: "{{partner:D-N-11}}",
-      orderFacts: "hub arrival on time · last-mile 5 days · {{place:Gurugram hub}}",
+      orderFacts:
+        "hub arrival on time · last-mile 5 days · {{place:Gurugram hub}}",
     },
     {
-      phrase: "Sales and support are giving us different dates. Which one is right?",
+      phrase:
+        "Sales and support are giving us different dates. Which one is right?",
       partner: "{{partner:D-N-04}}",
       orderFacts: "ERP original 20 Sep · help desk quoted 25 Sep",
     },
   ],
   causeSplitByRegion: [
-    { regionId: "North", region: "{{region:North}}", kgs: { allocation: 28, backorder: 0, orderChange: 7 }, lastMile: 11 },
-    { regionId: "South", region: "{{region:South}}", kgs: { allocation: 4, backorder: 2, orderChange: 1 }, lastMile: 3 },
-    { regionId: "East", region: "{{region:East}}", kgs: { allocation: 5, backorder: 3, orderChange: 2 }, lastMile: 2 },
-    { regionId: "West", region: "{{region:West}}", kgs: { allocation: 3, backorder: 1, orderChange: 1 }, lastMile: 2 },
-    { regionId: "SEA", region: "{{region:SEA}}", kgs: { allocation: 2, backorder: 1, orderChange: 0 }, lastMile: 1 },
+    {
+      regionId: "North",
+      region: "{{region:North}}",
+      kgs: { allocation: 28, backorder: 0, orderChange: 7 },
+      lastMile: 11,
+    },
+    {
+      regionId: "South",
+      region: "{{region:South}}",
+      kgs: { allocation: 4, backorder: 2, orderChange: 1 },
+      lastMile: 3,
+    },
+    {
+      regionId: "East",
+      region: "{{region:East}}",
+      kgs: { allocation: 5, backorder: 3, orderChange: 2 },
+      lastMile: 2,
+    },
+    {
+      regionId: "West",
+      region: "{{region:West}}",
+      kgs: { allocation: 3, backorder: 1, orderChange: 1 },
+      lastMile: 2,
+    },
+    {
+      regionId: "SEA",
+      region: "{{region:SEA}}",
+      kgs: { allocation: 2, backorder: 1, orderChange: 0 },
+      lastMile: 1,
+    },
   ],
   signalWall: [
-    { id: "PR-01", title: "North promises slipping", severity: "S2", hero: true, cta: "Open signal →" },
-    { id: "PR-02", title: "Last-mile delays, {{place:Gurugram hub}}", severity: "S3", hero: false, cta: "Open signal →" },
-    { id: "SEA-IMPROVING", title: "SEA improving", severity: "improving", hero: false, cta: null },
+    {
+      id: "PR-01",
+      title: "North promises slipping",
+      severity: "S2",
+      hero: true,
+      cta: "Open signal →",
+    },
+    {
+      id: "PR-02",
+      title: "Last-mile delays, {{place:Gurugram hub}}",
+      severity: "S3",
+      hero: false,
+      cta: "Open signal →",
+    },
+    {
+      id: "SEA-IMPROVING",
+      title: "SEA improving",
+      severity: "improving",
+      hero: false,
+      cta: null,
+    },
   ],
   signalWallFooter: { critical: 0, needsAction: 2, improving: 1 },
   evidenceSummary: {
@@ -103,11 +259,56 @@ w("promise.json", {
 });
 
 const featuredSnippets = [
-  { id: "sn-01", channel: "email", channelLabel: "Email", partnerId: "{{partner:D-N-04}}", localDateLabel: "8 Sep", text: "You confirmed dispatch for Monday. The system now shows the 22nd. Our site handover is on the 25th.", featured: true, featuredOrder: 1 },
-  { id: "sn-02", channel: "call", channelLabel: "Call", partnerId: "{{partner:D-N-07}}", localDateLabel: "11 Sep", text: "Third order this month where the date moved after confirmation.", featured: true, featuredOrder: 2 },
-  { id: "sn-03", channel: "case", channelLabel: "Case note", partnerId: "{{partner:D-N-04}}", localDateLabel: "15 Sep", text: "Builder has escalated. Detectors needed before the fire NOC inspection.", featured: true, featuredOrder: 3 },
-  { id: "sn-04", channel: "email", channelLabel: "Email", partnerId: "{{partner:D-N-11}}", localDateLabel: "17 Sep", text: "Material reached the {{place:Gurugram}} hub on time, but local delivery took five days.", featured: true, featuredOrder: 4 },
-  { id: "sn-05", channel: "case", channelLabel: "Case note", partnerId: "{{partner:D-N-04}}", localDateLabel: "21 Sep", text: "Sales and support are giving us different dates. Which one is right?", featured: true, featuredOrder: 5 },
+  {
+    id: "sn-01",
+    channel: "email",
+    channelLabel: "Email",
+    partnerId: "{{partner:D-N-04}}",
+    localDateLabel: "8 Sep",
+    text: "You confirmed dispatch for Monday. The system now shows the 22nd. Our site handover is on the 25th.",
+    featured: true,
+    featuredOrder: 1,
+  },
+  {
+    id: "sn-02",
+    channel: "call",
+    channelLabel: "Call",
+    partnerId: "{{partner:D-N-07}}",
+    localDateLabel: "11 Sep",
+    text: "Third order this month where the date moved after confirmation.",
+    featured: true,
+    featuredOrder: 2,
+  },
+  {
+    id: "sn-03",
+    channel: "case",
+    channelLabel: "Case note",
+    partnerId: "{{partner:D-N-04}}",
+    localDateLabel: "15 Sep",
+    text: "Builder has escalated. Detectors needed before the fire NOC inspection.",
+    featured: true,
+    featuredOrder: 3,
+  },
+  {
+    id: "sn-04",
+    channel: "email",
+    channelLabel: "Email",
+    partnerId: "{{partner:D-N-11}}",
+    localDateLabel: "17 Sep",
+    text: "Material reached the {{place:Gurugram}} hub on time, but local delivery took five days.",
+    featured: true,
+    featuredOrder: 4,
+  },
+  {
+    id: "sn-05",
+    channel: "case",
+    channelLabel: "Case note",
+    partnerId: "{{partner:D-N-04}}",
+    localDateLabel: "21 Sep",
+    text: "Sales and support are giving us different dates. Which one is right?",
+    featured: true,
+    featuredOrder: 5,
+  },
 ];
 
 const extraTexts = [
@@ -190,10 +391,25 @@ w("signal_pr01.json", {
     chip: "#1 of 5 this week",
     factors: [
       { label: "Severity", value: "S2", weight: 0.3, score: 0.28 },
-      { label: "Drop vs own baseline", value: "88% → 71%", weight: 0.25, score: 0.22 },
+      {
+        label: "Drop vs own baseline",
+        value: "88% → 71%",
+        weight: 0.25,
+        score: 0.22,
+      },
       { label: "Lines affected", value: "46", weight: 0.2, score: 0.18 },
-      { label: "Source independence", value: "0.70", weight: 0.15, score: 0.12 },
-      { label: "Projects at risk", value: "2 fire NOC", weight: 0.1, score: 0.09 },
+      {
+        label: "Source independence",
+        value: "0.70",
+        weight: 0.15,
+        score: 0.12,
+      },
+      {
+        label: "Projects at risk",
+        value: "2 fire NOC",
+        weight: 0.1,
+        score: 0.09,
+      },
     ],
   },
   headline:
@@ -204,7 +420,10 @@ w("signal_pr01.json", {
     baselineBand: { low: 84, high: 91 },
     targetPct: 90,
     markers: [
-      { weekIndex: 8, label: "week 35: allocation queue re-sequenced (candidate)" },
+      {
+        weekIndex: 8,
+        label: "week 35: allocation queue re-sequenced (candidate)",
+      },
       { weekIndex: 12, label: "next monthly ops review 7 Oct" },
     ],
   },
@@ -222,7 +441,10 @@ w("signal_pr01.json", {
   confidence: {
     level: "M",
     p: 0.68,
-    known: { count: 46, label: "46 lines with original and revised dates from ERP" },
+    known: {
+      count: 46,
+      label: "46 lines with original and revised dates from ERP",
+    },
     inferred: { count: 19, label: "cause read from 19 contacts" },
     sourceIndependence: {
       score: 0.7,
@@ -469,7 +691,8 @@ const fillerThemes = fillerNames.map((name, i) => ({
 }));
 
 const themes = [...seededThemes, ...fillerThemes];
-if (themes.length !== 27) throw new Error(`expected 27 themes, got ${themes.length}`);
+if (themes.length !== 27)
+  throw new Error(`expected 27 themes, got ${themes.length}`);
 
 w("recurring.json", {
   title: "What keeps coming back?",

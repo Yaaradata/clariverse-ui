@@ -1,5 +1,15 @@
 "use client";
 
+import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import type { V2View } from "@kgs2/types";
+import { ChevronRight, Handshake, RefreshCw, Wrench } from "lucide-react";
+import type { CSSProperties } from "react";
+import {
+  AreaTrend,
+  QUESTION_CHART_H,
+} from "@/components/role-based-dashboard/kgs/exec/AreaTrend";
+import { InsightBox } from "@/components/role-based-dashboard/kgs/exec/InsightBox";
+import { SemiGauge } from "@/components/role-based-dashboard/kgs/exec/SemiGauge";
 import { CountUp } from "@/components/role-based-dashboard/kgs/shared/CountUp";
 import {
   ACCENT,
@@ -7,16 +17,6 @@ import {
   liftVars,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
-import {
-  AreaTrend,
-  QUESTION_CHART_H,
-} from "@/components/role-based-dashboard/kgs/exec/AreaTrend";
-import { InsightBox } from "@/components/role-based-dashboard/kgs/exec/InsightBox";
-import { SemiGauge } from "@/components/role-based-dashboard/kgs/exec/SemiGauge";
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
-import type { V2View } from "@kgs2/types";
-import { ChevronRight, Handshake, RefreshCw, Wrench } from "lucide-react";
-import type { CSSProperties } from "react";
 
 export type OverviewQuestionCard = {
   id: "promise" | "recurring" | "install";

@@ -1,8 +1,11 @@
 "use client";
 
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 export type OverviewSignal = {
   id: string;
@@ -20,10 +23,7 @@ export type OverviewSignal = {
   recommendation: string;
 };
 
-const SEVERITY_STYLE: Record<
-  string,
-  { color: string; word: string }
-> = {
+const SEVERITY_STYLE: Record<string, { color: string; word: string }> = {
   S2: { color: K.red, word: "S2 · Material" },
   S3: { color: K.amber, word: "S3 · Operational" },
   S4: { color: "#fbbf24", word: "S4 · Watch" },

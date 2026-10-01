@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useMemo, useState, type ReactNode } from "react";
 import meta from "@kgs2/data/meta.json";
 import { DemoProvider, useDemo2 } from "@kgs2/lib/demoState";
 import type { V2View } from "@kgs2/types";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { InstallView } from "./install/InstallView";
-import { Kgs2NavContext, type Kgs2Nav } from "./nav";
+import { type Kgs2Nav, Kgs2NavContext } from "./nav";
 import { OverviewView } from "./overview/OverviewView";
 import { PartnerView } from "./partner/PartnerView";
 import { PromiseHeroView } from "./promise/PromiseHeroView";

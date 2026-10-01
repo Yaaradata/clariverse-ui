@@ -53,21 +53,7 @@
       "W12",
       "W13"
     ],
-    "values": [
-      90,
-      89,
-      88,
-      88,
-      87,
-      88,
-      88,
-      87,
-      86,
-      82,
-      78,
-      74,
-      71
-    ],
+    "values": [90, 89, 88, 88, 87, 88, 88, 87, 86, 82, 78, 74, 71],
     "baselineBand": {
       "low": 84,
       "high": 91
@@ -160,10 +146,7 @@
   },
   "routing": {
     "owner": "Operations lead",
-    "cc": [
-      "Regional GM",
-      "Partner manager"
-    ]
+    "cc": ["Regional GM", "Partner manager"]
   },
   "recommendedAction": "Re-prioritise allocation for the 2 inspection-bound projects; send each distributor one confirmed date; open a last-mile review for the {{place:Gurugram hub}}",
   "humanGate": {
@@ -173,9 +156,7 @@
     "title": "Draft actions — awaiting Operations lead approval",
     "chip": "Awaiting approval",
     "owner": "Operations lead",
-    "approveEnabledFor": [
-      "Operations lead"
-    ],
+    "approveEnabledFor": ["Operations lead"],
     "approveLabel": "Approve",
     "disabledTooltip": "Approval sits with the Operations lead",
     "onApprove": {
@@ -527,9 +508,7 @@
       "originalDate": "2026-09-10",
       "revisedDate": "2026-09-14",
       "slipDays": 4,
-      "contactIds": [
-        "sn-01"
-      ],
+      "contactIds": ["sn-01"],
       "candidateCause": "allocation"
     },
     {
@@ -540,9 +519,7 @@
       "originalDate": "2026-09-11",
       "revisedDate": "2026-09-16",
       "slipDays": 5,
-      "contactIds": [
-        "sn-02"
-      ],
+      "contactIds": ["sn-02"],
       "candidateCause": "allocation"
     },
     {
@@ -553,9 +530,7 @@
       "originalDate": "2026-09-12",
       "revisedDate": "2026-09-18",
       "slipDays": 6,
-      "contactIds": [
-        "sn-03"
-      ],
+      "contactIds": ["sn-03"],
       "candidateCause": "allocation"
     },
     {
@@ -566,9 +541,7 @@
       "originalDate": "2026-09-13",
       "revisedDate": "2026-09-20",
       "slipDays": 7,
-      "contactIds": [
-        "sn-04"
-      ],
+      "contactIds": ["sn-04"],
       "candidateCause": "allocation"
     },
     {
@@ -579,9 +552,7 @@
       "originalDate": "2026-09-14",
       "revisedDate": "2026-09-22",
       "slipDays": 8,
-      "contactIds": [
-        "sn-05"
-      ],
+      "contactIds": ["sn-05"],
       "candidateCause": "allocation"
     },
     {
@@ -592,9 +563,7 @@
       "originalDate": "2026-09-15",
       "revisedDate": "2026-09-19",
       "slipDays": 4,
-      "contactIds": [
-        "sn-06"
-      ],
+      "contactIds": ["sn-06"],
       "candidateCause": "allocation"
     },
     {
@@ -605,9 +574,7 @@
       "originalDate": "2026-09-16",
       "revisedDate": "2026-09-21",
       "slipDays": 5,
-      "contactIds": [
-        "sn-07"
-      ],
+      "contactIds": ["sn-07"],
       "candidateCause": "allocation"
     },
     {
@@ -618,9 +585,7 @@
       "originalDate": "2026-09-17",
       "revisedDate": "2026-09-23",
       "slipDays": 6,
-      "contactIds": [
-        "sn-08"
-      ],
+      "contactIds": ["sn-08"],
       "candidateCause": "allocation"
     },
     {
@@ -631,9 +596,7 @@
       "originalDate": "2026-09-18",
       "revisedDate": "2026-09-25",
       "slipDays": 7,
-      "contactIds": [
-        "sn-09"
-      ],
+      "contactIds": ["sn-09"],
       "candidateCause": "allocation"
     },
     {
@@ -644,9 +607,7 @@
       "originalDate": "2026-09-19",
       "revisedDate": "2026-09-27",
       "slipDays": 8,
-      "contactIds": [
-        "sn-10"
-      ],
+      "contactIds": ["sn-10"],
       "candidateCause": "allocation"
     },
     {
@@ -657,9 +618,7 @@
       "originalDate": "2026-09-20",
       "revisedDate": "2026-09-24",
       "slipDays": 4,
-      "contactIds": [
-        "sn-11"
-      ],
+      "contactIds": ["sn-11"],
       "candidateCause": "allocation"
     },
     {
@@ -670,9 +629,7 @@
       "originalDate": "2026-09-21",
       "revisedDate": "2026-09-26",
       "slipDays": 5,
-      "contactIds": [
-        "sn-12"
-      ],
+      "contactIds": ["sn-12"],
       "candidateCause": "allocation"
     },
     {
@@ -683,9 +640,7 @@
       "originalDate": "2026-09-22",
       "revisedDate": "2026-09-28",
       "slipDays": 6,
-      "contactIds": [
-        "sn-13"
-      ],
+      "contactIds": ["sn-13"],
       "candidateCause": "allocation"
     },
     {
@@ -696,9 +651,7 @@
       "originalDate": "2026-09-23",
       "revisedDate": "2026-09-30",
       "slipDays": 7,
-      "contactIds": [
-        "sn-14"
-      ],
+      "contactIds": ["sn-14"],
       "candidateCause": "allocation"
     },
     {
@@ -709,9 +662,7 @@
       "originalDate": "2026-09-24",
       "revisedDate": "2026-09-30",
       "slipDays": 8,
-      "contactIds": [
-        "sn-15"
-      ],
+      "contactIds": ["sn-15"],
       "candidateCause": "allocation"
     },
     {
@@ -722,9 +673,7 @@
       "originalDate": "2026-09-10",
       "revisedDate": "2026-09-14",
       "slipDays": 4,
-      "contactIds": [
-        "sn-16"
-      ],
+      "contactIds": ["sn-16"],
       "candidateCause": "allocation"
     },
     {
@@ -735,9 +684,7 @@
       "originalDate": "2026-09-11",
       "revisedDate": "2026-09-16",
       "slipDays": 5,
-      "contactIds": [
-        "sn-17"
-      ],
+      "contactIds": ["sn-17"],
       "candidateCause": "allocation"
     },
     {
@@ -748,9 +695,7 @@
       "originalDate": "2026-09-12",
       "revisedDate": "2026-09-18",
       "slipDays": 6,
-      "contactIds": [
-        "sn-18"
-      ],
+      "contactIds": ["sn-18"],
       "candidateCause": "allocation"
     },
     {
@@ -761,9 +706,7 @@
       "originalDate": "2026-09-13",
       "revisedDate": "2026-09-20",
       "slipDays": 7,
-      "contactIds": [
-        "sn-19"
-      ],
+      "contactIds": ["sn-19"],
       "candidateCause": "allocation"
     },
     {
@@ -774,9 +717,7 @@
       "originalDate": "2026-09-14",
       "revisedDate": "2026-09-22",
       "slipDays": 8,
-      "contactIds": [
-        "sn-01"
-      ],
+      "contactIds": ["sn-01"],
       "candidateCause": "allocation"
     },
     {
@@ -787,9 +728,7 @@
       "originalDate": "2026-09-15",
       "revisedDate": "2026-09-19",
       "slipDays": 4,
-      "contactIds": [
-        "sn-02"
-      ],
+      "contactIds": ["sn-02"],
       "candidateCause": "allocation"
     },
     {
@@ -800,9 +739,7 @@
       "originalDate": "2026-09-16",
       "revisedDate": "2026-09-21",
       "slipDays": 5,
-      "contactIds": [
-        "sn-03"
-      ],
+      "contactIds": ["sn-03"],
       "candidateCause": "allocation"
     },
     {
@@ -813,9 +750,7 @@
       "originalDate": "2026-09-17",
       "revisedDate": "2026-09-23",
       "slipDays": 6,
-      "contactIds": [
-        "sn-04"
-      ],
+      "contactIds": ["sn-04"],
       "candidateCause": "allocation"
     },
     {
@@ -826,9 +761,7 @@
       "originalDate": "2026-09-18",
       "revisedDate": "2026-09-25",
       "slipDays": 7,
-      "contactIds": [
-        "sn-05"
-      ],
+      "contactIds": ["sn-05"],
       "candidateCause": "allocation"
     },
     {
@@ -839,9 +772,7 @@
       "originalDate": "2026-09-19",
       "revisedDate": "2026-09-27",
       "slipDays": 8,
-      "contactIds": [
-        "sn-06"
-      ],
+      "contactIds": ["sn-06"],
       "candidateCause": "allocation"
     },
     {
@@ -852,9 +783,7 @@
       "originalDate": "2026-09-20",
       "revisedDate": "2026-09-24",
       "slipDays": 4,
-      "contactIds": [
-        "sn-07"
-      ],
+      "contactIds": ["sn-07"],
       "candidateCause": "allocation"
     },
     {
@@ -865,9 +794,7 @@
       "originalDate": "2026-09-21",
       "revisedDate": "2026-09-26",
       "slipDays": 5,
-      "contactIds": [
-        "sn-08"
-      ],
+      "contactIds": ["sn-08"],
       "candidateCause": "allocation"
     },
     {
@@ -878,9 +805,7 @@
       "originalDate": "2026-09-22",
       "revisedDate": "2026-09-28",
       "slipDays": 6,
-      "contactIds": [
-        "sn-09"
-      ],
+      "contactIds": ["sn-09"],
       "candidateCause": "allocation"
     },
     {
@@ -891,9 +816,7 @@
       "originalDate": "2026-09-23",
       "revisedDate": "2026-09-26",
       "slipDays": 3,
-      "contactIds": [
-        "sn-10"
-      ],
+      "contactIds": ["sn-10"],
       "candidateCause": "order-change"
     },
     {
@@ -904,9 +827,7 @@
       "originalDate": "2026-09-24",
       "revisedDate": "2026-09-28",
       "slipDays": 4,
-      "contactIds": [
-        "sn-11"
-      ],
+      "contactIds": ["sn-11"],
       "candidateCause": "order-change"
     },
     {
@@ -917,9 +838,7 @@
       "originalDate": "2026-09-10",
       "revisedDate": "2026-09-15",
       "slipDays": 5,
-      "contactIds": [
-        "sn-12"
-      ],
+      "contactIds": ["sn-12"],
       "candidateCause": "order-change"
     },
     {
@@ -930,9 +849,7 @@
       "originalDate": "2026-09-11",
       "revisedDate": "2026-09-17",
       "slipDays": 6,
-      "contactIds": [
-        "sn-13"
-      ],
+      "contactIds": ["sn-13"],
       "candidateCause": "order-change"
     },
     {
@@ -943,9 +860,7 @@
       "originalDate": "2026-09-12",
       "revisedDate": "2026-09-15",
       "slipDays": 3,
-      "contactIds": [
-        "sn-14"
-      ],
+      "contactIds": ["sn-14"],
       "candidateCause": "order-change"
     },
     {
@@ -956,9 +871,7 @@
       "originalDate": "2026-09-13",
       "revisedDate": "2026-09-17",
       "slipDays": 4,
-      "contactIds": [
-        "sn-15"
-      ],
+      "contactIds": ["sn-15"],
       "candidateCause": "order-change"
     },
     {
@@ -969,9 +882,7 @@
       "originalDate": "2026-09-14",
       "revisedDate": "2026-09-19",
       "slipDays": 5,
-      "contactIds": [
-        "sn-16"
-      ],
+      "contactIds": ["sn-16"],
       "candidateCause": "order-change"
     },
     {
@@ -982,9 +893,7 @@
       "originalDate": "2026-09-15",
       "revisedDate": "2026-09-22",
       "slipDays": 7,
-      "contactIds": [
-        "sn-17"
-      ],
+      "contactIds": ["sn-17"],
       "candidateCause": "last-mile"
     },
     {
@@ -995,9 +904,7 @@
       "originalDate": "2026-09-16",
       "revisedDate": "2026-09-21",
       "slipDays": 5,
-      "contactIds": [
-        "sn-18"
-      ],
+      "contactIds": ["sn-18"],
       "candidateCause": "last-mile"
     },
     {
@@ -1008,9 +915,7 @@
       "originalDate": "2026-09-17",
       "revisedDate": "2026-09-23",
       "slipDays": 6,
-      "contactIds": [
-        "sn-19"
-      ],
+      "contactIds": ["sn-19"],
       "candidateCause": "last-mile"
     },
     {
@@ -1021,9 +926,7 @@
       "originalDate": "2026-09-18",
       "revisedDate": "2026-09-25",
       "slipDays": 7,
-      "contactIds": [
-        "sn-01"
-      ],
+      "contactIds": ["sn-01"],
       "candidateCause": "last-mile"
     },
     {
@@ -1034,9 +937,7 @@
       "originalDate": "2026-09-19",
       "revisedDate": "2026-09-24",
       "slipDays": 5,
-      "contactIds": [
-        "sn-02"
-      ],
+      "contactIds": ["sn-02"],
       "candidateCause": "last-mile"
     },
     {
@@ -1047,9 +948,7 @@
       "originalDate": "2026-09-20",
       "revisedDate": "2026-09-26",
       "slipDays": 6,
-      "contactIds": [
-        "sn-03"
-      ],
+      "contactIds": ["sn-03"],
       "candidateCause": "last-mile"
     },
     {
@@ -1060,9 +959,7 @@
       "originalDate": "2026-09-21",
       "revisedDate": "2026-09-28",
       "slipDays": 7,
-      "contactIds": [
-        "sn-04"
-      ],
+      "contactIds": ["sn-04"],
       "candidateCause": "last-mile"
     },
     {
@@ -1073,9 +970,7 @@
       "originalDate": "2026-09-22",
       "revisedDate": "2026-09-27",
       "slipDays": 5,
-      "contactIds": [
-        "sn-05"
-      ],
+      "contactIds": ["sn-05"],
       "candidateCause": "last-mile"
     },
     {
@@ -1086,9 +981,7 @@
       "originalDate": "2026-09-23",
       "revisedDate": "2026-09-29",
       "slipDays": 6,
-      "contactIds": [
-        "sn-06"
-      ],
+      "contactIds": ["sn-06"],
       "candidateCause": "last-mile"
     },
     {
@@ -1099,9 +992,7 @@
       "originalDate": "2026-09-24",
       "revisedDate": "2026-09-30",
       "slipDays": 7,
-      "contactIds": [
-        "sn-07"
-      ],
+      "contactIds": ["sn-07"],
       "candidateCause": "last-mile"
     },
     {
@@ -1112,9 +1003,7 @@
       "originalDate": "2026-09-10",
       "revisedDate": "2026-09-15",
       "slipDays": 5,
-      "contactIds": [
-        "sn-08"
-      ],
+      "contactIds": ["sn-08"],
       "candidateCause": "last-mile"
     }
   ],

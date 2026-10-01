@@ -53,13 +53,20 @@ export function ThemeTimelineChart({
   }, [series]);
 
   return (
-    <div role="img" aria-label="Theme timeline weekly contacts" style={{ height: 280 }}>
+    <div
+      role="img"
+      aria-label="Theme timeline weekly contacts"
+      style={{ height: 280 }}
+    >
       <ResponsiveContainer
         width="100%"
         height="100%"
         initialDimension={{ width: 1, height: 1 }}
       >
-        <LineChart data={data} margin={{ top: 16, right: 16, bottom: 4, left: 0 }}>
+        <LineChart
+          data={data}
+          margin={{ top: 16, right: 16, bottom: 4, left: 0 }}
+        >
           <CartesianGrid stroke={K.borderLight} vertical={false} />
           <XAxis
             dataKey="week"

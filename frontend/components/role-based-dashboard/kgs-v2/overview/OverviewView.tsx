@@ -1,14 +1,14 @@
 "use client";
 
-import { Activity, Sparkles } from "lucide-react";
 import overview from "@kgs2/data/overview.json";
 import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { Activity, Sparkles } from "lucide-react";
 import {
-  QuestionCard,
-  type OverviewQuestionCard,
-} from "./QuestionCard";
-import { SignalCard, type OverviewSignal } from "./SignalCard";
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { type OverviewQuestionCard, QuestionCard } from "./QuestionCard";
+import { type OverviewSignal, SignalCard } from "./SignalCard";
 
 /**
  * Regional overview — Asia ex China — this week (SPEC §4).

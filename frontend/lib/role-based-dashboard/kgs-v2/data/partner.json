@@ -4,18 +4,9 @@
   "conceptFooter": "Concept: partner owns its data; KGS sees only what the partner shares. Legal and data-protection terms to be agreed.",
   "subtitle": "Help partners run their businesses better, so they choose KGS over Honeywell or anyone else.",
   "consentBoundary": {
-    "partnerKeeps": [
-      "customer identities",
-      "pricing",
-      "raw messages"
-    ],
-    "crossesToKgs": [
-      "agreed aggregates"
-    ],
-    "flowsBack": [
-      "confirmed dates",
-      "fixes"
-    ]
+    "partnerKeeps": ["customer identities", "pricing", "raw messages"],
+    "crossesToKgs": ["agreed aggregates"],
+    "flowsBack": ["confirmed dates", "fixes"]
   },
   "workspace": {
     "partnerId": "D-N-04",
@@ -76,12 +67,7 @@
       "connected": 4,
       "of": 12
     },
-    "connectedIds": [
-      "D-N-04",
-      "D-S-02",
-      "D-W-08",
-      "D-SEA-10"
-    ],
+    "connectedIds": ["D-N-04", "D-S-02", "D-W-08", "D-SEA-10"],
     "themePartnerGrid": {
       "themes": [
         "Licence re-activation",
@@ -89,38 +75,8 @@
         "Promise slips",
         "Ease of programming"
       ],
-      "partners": [
-        "D-N-04",
-        "D-S-02",
-        "D-W-08",
-        "D-SEA-10"
-      ],
-      "values": [
-        [
-          5,
-          1,
-          0,
-          0
-        ],
-        [
-          3,
-          2,
-          1,
-          1
-        ],
-        [
-          6,
-          0,
-          1,
-          0
-        ],
-        [
-          0,
-          4,
-          2,
-          1
-        ]
-      ]
+      "partners": ["D-N-04", "D-S-02", "D-W-08", "D-SEA-10"],
+      "values": [[5, 1, 0, 0], [3, 2, 1, 1], [6, 0, 1, 0], [0, 4, 2, 1]]
     },
     "promiseByPartner": [
       {

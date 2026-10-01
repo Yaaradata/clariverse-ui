@@ -55,9 +55,10 @@ const partner = load<{
   kgsView: { partnersConnected: { connected: number; of: number } };
 }>("partner.json");
 
-const anonymise = load<
-  Record<string, Record<string, { named: string; anon: string }>>
->("anonymise.json");
+const anonymise =
+  load<Record<string, Record<string, { named: string; anon: string }>>>(
+    "anonymise.json",
+  );
 
 type Check = { name: string; ok: boolean; detail?: string };
 
@@ -91,7 +92,10 @@ const BANNED: { re: RegExp; label: string }[] = [
   { re: /auto-send/i, label: "auto-send" },
   { re: /in 30 minutes/i, label: "in 30 minutes" },
   { re: /\bAmit\b|\bKartik\b|\bKarthik\b/, label: "real person name" },
-  { re: /Honeywell|Edwards|EST4/i, label: "real product/competitor (data)" },
+  {
+    re: /Honeywell|Siemens|Johnson Controls|Notifier|Edwards|EST4/i,
+    label: "real product/competitor (data)",
+  },
 ];
 
 const CURRENCY = /[$£€¥₹]|USD|GBP|INR|EUR|rupees?/i;
@@ -118,7 +122,11 @@ export function checkChannelMix(): Check {
     m.service_calls === 20 &&
     m.salesforce === 15 &&
     m.partner_portal === 5 &&
-    m.email + m.help_desk + m.service_calls + m.salesforce + m.partner_portal ===
+    m.email +
+      m.help_desk +
+      m.service_calls +
+      m.salesforce +
+      m.partner_portal ===
       100;
   return { name: "channel mix 38/22/20/15/5", ok };
 }
@@ -173,7 +181,9 @@ export function checkInstallTotals(): Check {
 
 export function checkOverviewMatchesPages(): Check {
   const promiseCard = overview.questionCards.find((c) => c.id === "promise");
-  const recurringCard = overview.questionCards.find((c) => c.id === "recurring");
+  const recurringCard = overview.questionCards.find(
+    (c) => c.id === "recurring",
+  );
   const installCard = overview.questionCards.find((c) => c.id === "install");
   const signalIds = overview.signals.map((s) => s.id);
   const backAfterFix = recurring.kpis.find((k) => k.key === "back_after_fix");
@@ -310,21 +320,17 @@ export function checkAnonymiseLeavesNoIds(): Check {
       return entry ? entry.anon : key;
     });
 
-  function displayStrings(
-    o: unknown,
-    key = "",
-    out: string[] = [],
-  ): string[] {
+  function displayStrings(o: unknown, key = "", out: string[] = []): string[] {
     if (typeof o === "string") {
       const structural =
         /Id$|Ids$|^id$|connectedIds|distributorId|partnerId|regionId|signalId/i.test(
           key,
         );
-      const looksDisplay =
-        o.includes("{{") || o.includes(" ") || o.length > 12;
+      const looksDisplay = o.includes("{{") || o.includes(" ") || o.length > 12;
       if (!structural && looksDisplay) out.push(o);
     } else if (Array.isArray(o)) {
-      o.forEach((v, i) => displayStrings(v, `${key}[${i}]`, out));
+      for (let i = 0; i < o.length; i++)
+        displayStrings(o[i], `${key}[${i}]`, out);
     } else if (o && typeof o === "object") {
       for (const [k, v] of Object.entries(o)) displayStrings(v, k, out);
     }

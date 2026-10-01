@@ -1,7 +1,10 @@
 "use client";
 
 import type { LoopStatus } from "@kgs2/types";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 const STEPS: Array<{
   key: LoopStatus["step"];
@@ -13,12 +16,7 @@ const STEPS: Array<{
   { key: "closed", label: "Closed" },
 ];
 
-const ORDER: LoopStatus["step"][] = [
-  "open",
-  "approved",
-  "watching",
-  "closed",
-];
+const ORDER: LoopStatus["step"][] = ["open", "approved", "watching", "closed"];
 
 export function LoopTracker({
   status,

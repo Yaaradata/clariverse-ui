@@ -24,10 +24,10 @@ export type {
 
 import type {
   GateStatus,
-  HumanGate as V1HumanGate,
   ISODate,
   JoinTag,
   TokenString,
+  HumanGate as V1HumanGate,
 } from "@kgs/types";
 
 /** Alias used in SPEC ("JoinTags"). */

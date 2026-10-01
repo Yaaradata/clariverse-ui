@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useState, type CSSProperties } from "react";
+import install from "@kgs2/data/install.json";
+import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import { Sparkles } from "lucide-react";
+import { type CSSProperties, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -13,10 +15,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import install from "@kgs2/data/install.json";
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
 import { Panel } from "@/components/role-based-dashboard/kgs/drill/Panel";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { SyntheticBadge } from "../shared/SyntheticBadge";
 
 const FAMILY_LABEL: Record<string, string> = {
   A: "A · detection",
@@ -33,7 +37,7 @@ function heatColour(n: number, max: number): string {
 
 /**
  * Install experience — What do installers experience? (SPEC §7).
- * Framed as experience only — never fault or defect.
+ * Framed as experience only — never as a product fault.
  */
 export function InstallView() {
   const L = useLabel2();
@@ -85,7 +89,6 @@ export function InstallView() {
 
       {/* 1. Capture-gap banner */}
       <aside
-        role="status"
         style={{
           padding: "12px 14px",
           borderRadius: 10,
@@ -349,7 +352,7 @@ export function InstallView() {
                   <td style={td}>{FAMILY_LABEL[fam] ?? fam}</td>
                   {install.heatGrid.values[ri].map((n, ci) => (
                     <td
-                      key={`${fam}-${ci}`}
+                      key={`${fam}-${install.heatGrid.regions[ci]}`}
                       style={{
                         ...td,
                         textAlign: "center",
@@ -384,13 +387,9 @@ export function InstallView() {
               <div
                 key={card.id}
                 style={{
-                  background: improving
-                    ? withAlpha(K.green, 0.08)
-                    : K.surface,
+                  background: improving ? withAlpha(K.green, 0.08) : K.surface,
                   border: `1px solid ${
-                    improving
-                      ? withAlpha(K.green, 0.4)
-                      : K.borderLight
+                    improving ? withAlpha(K.green, 0.4) : K.borderLight
                   }`,
                   borderRadius: 12,
                   padding: "14px 16px",
@@ -435,10 +434,14 @@ export function InstallView() {
                       : `${card.severity} · ${card.type}`}
                   </span>
                 </div>
-                <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}>
+                <div
+                  style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.35 }}
+                >
                   {L(card.title)}
                 </div>
-                <div style={{ fontSize: 12, color: K.textMut, marginTop: "auto" }}>
+                <div
+                  style={{ fontSize: 12, color: K.textMut, marginTop: "auto" }}
+                >
                   Owner: {card.owner}
                 </div>
               </div>
@@ -604,9 +607,6 @@ export function InstallView() {
 
       {openDraft ? (
         <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Draft preview"
           style={{
             position: "fixed",
             inset: 0,
@@ -617,17 +617,32 @@ export function InstallView() {
             background: "rgba(0,0,0,0.55)",
             padding: 24,
           }}
-          onClick={() => setDraftOpen(null)}
         >
-          <div
+          <button
+            type="button"
+            aria-label="Close draft"
+            className="kgs2-focus"
+            onClick={() => setDraftOpen(null)}
             style={{
+              position: "absolute",
+              inset: 0,
+              border: "none",
+              background: "transparent",
+              cursor: "pointer",
+            }}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Draft preview"
+            style={{
+              position: "relative",
               width: "min(520px, 100%)",
               background: K.elevated,
               border: `1px solid ${K.borderLight}`,
               borderRadius: 14,
               padding: 18,
             }}
-            onClick={(e) => e.stopPropagation()}
           >
             <div
               style={{
@@ -653,7 +668,14 @@ export function InstallView() {
                 Not sent
               </span>
             </div>
-            <p style={{ margin: 0, fontSize: 14, color: K.body, lineHeight: 1.55 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                color: K.body,
+                lineHeight: 1.55,
+              }}
+            >
               {openDraft.id === "draft-praise-marketing"
                 ? `Share installer praise with Marketing / partner training: “${L(install.praiseWorthUsing.quotes[0]?.text ?? "")}”`
                 : openDraft.id === "draft-tip-sheet"
@@ -668,6 +690,9 @@ export function InstallView() {
             >
               Close
             </button>
+            <div style={{ marginTop: 14 }}>
+              <SyntheticBadge compact />
+            </div>
           </div>
         </div>
       ) : null}

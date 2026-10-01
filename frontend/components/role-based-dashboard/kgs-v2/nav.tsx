@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext } from "react";
 import type { V2View } from "@kgs2/types";
+import { createContext, useContext } from "react";
 
 export type Kgs2Nav = {
   view: V2View;

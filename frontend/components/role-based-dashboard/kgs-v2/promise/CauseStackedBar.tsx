@@ -72,9 +72,7 @@ export function CauseStackedBar({
               fontSize: 12,
             }}
           />
-          <Legend
-            wrapperStyle={{ fontSize: 11, color: K.textMut }}
-          />
+          <Legend wrapperStyle={{ fontSize: 11, color: K.textMut }} />
           <Bar
             dataKey="allocation"
             stackId="a"

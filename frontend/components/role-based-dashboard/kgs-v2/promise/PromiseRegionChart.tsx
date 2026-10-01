@@ -12,7 +12,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type RegionSeries = {
   regionId: string;
@@ -45,21 +48,31 @@ export function PromiseRegionChart({
         bandMin,
         bandMax,
         bandBase: bandMin,
-        bandSpan:
-          bandMin != null && bandMax != null ? bandMax - bandMin : null,
+        bandSpan: bandMin != null && bandMax != null ? bandMax - bandMin : null,
       };
     });
   }, [weeks, series]);
 
   return (
-    <div role="img" aria-label={`${northLabel} promise kept weekly`} style={{ height: 280 }}>
+    <div
+      role="img"
+      aria-label={`${northLabel} promise kept weekly`}
+      style={{ height: 280 }}
+    >
       <ResponsiveContainer
         width="100%"
         height="100%"
         initialDimension={{ width: 1, height: 1 }}
       >
-        <ComposedChart data={data} margin={{ top: 12, right: 16, bottom: 4, left: 0 }}>
-          <CartesianGrid stroke={K.borderLight} strokeDasharray="0" vertical={false} />
+        <ComposedChart
+          data={data}
+          margin={{ top: 12, right: 16, bottom: 4, left: 0 }}
+        >
+          <CartesianGrid
+            stroke={K.borderLight}
+            strokeDasharray="0"
+            vertical={false}
+          />
           <XAxis
             dataKey="week"
             tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
@@ -84,7 +97,8 @@ export function PromiseRegionChart({
             }}
             labelStyle={{ color: K.text }}
             formatter={(value: number | string, name: string) => {
-              if (name === "bandSpan" || name === "bandBase") return [null, null];
+              if (name === "bandSpan" || name === "bandBase")
+                return [null, null];
               const n = typeof value === "number" ? value : Number(value);
               if (Number.isNaN(n)) return [value, name];
               return [`${n}%`, name === "north" ? northLabel : name];

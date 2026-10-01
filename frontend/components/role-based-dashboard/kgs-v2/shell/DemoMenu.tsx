@@ -3,6 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { SyntheticBadge } from "../shared/SyntheticBadge";
 import { AnonymiseToggle } from "./AnonymiseToggle";
 
 export function DemoMenu({
@@ -84,9 +85,13 @@ export function DemoMenu({
           color: K.textMut,
           borderTop: `1px solid ${K.borderLight}`,
           paddingTop: 8,
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
         }}
       >
         Clears approvals, role and loop states
+        <SyntheticBadge compact />
       </div>
     </div>
   );

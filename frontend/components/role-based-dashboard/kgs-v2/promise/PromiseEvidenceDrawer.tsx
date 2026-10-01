@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useMemo, type CSSProperties } from "react";
-import { X } from "lucide-react";
 import signal from "@kgs2/data/signal_pr01.json";
 import { useDemo2, useLabel2, withTs } from "@kgs2/lib/demoState";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { X } from "lucide-react";
+import { type CSSProperties, useEffect, useMemo } from "react";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
+import { SyntheticBadge } from "../shared/SyntheticBadge";
 
 export type PromiseEvidenceTab =
   | "snippets"
@@ -37,9 +41,7 @@ export function PromiseEvidenceDrawer({
   const snippets = useMemo(() => {
     const featured = signal.snippets
       .filter((s) => s.featured)
-      .sort(
-        (a, b) => (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99),
-      );
+      .sort((a, b) => (a.featuredOrder ?? 99) - (b.featuredOrder ?? 99));
     const rest = signal.snippets.filter((s) => !s.featured);
     return [...featured, ...rest];
   }, []);
@@ -58,9 +60,8 @@ export function PromiseEvidenceDrawer({
       partner,
       lines: v.lines,
       avgSlip:
-        Math.round(
-          (v.slips.reduce((a, b) => a + b, 0) / v.slips.length) * 10,
-        ) / 10,
+        Math.round((v.slips.reduce((a, b) => a + b, 0) / v.slips.length) * 10) /
+        10,
     }));
   }, []);
 
@@ -71,9 +72,6 @@ export function PromiseEvidenceDrawer({
 
   return (
     <div
-      role="dialog"
-      aria-modal="true"
-      aria-label="Evidence drawer"
       style={{
         position: "fixed",
         inset: 0,
@@ -82,10 +80,26 @@ export function PromiseEvidenceDrawer({
         justifyContent: "flex-end",
         background: "rgba(0,0,0,0.45)",
       }}
-      onClick={onClose}
     >
-      <div
+      <button
+        type="button"
+        aria-label="Close evidence"
+        className="kgs2-focus"
+        onClick={onClose}
         style={{
+          position: "absolute",
+          inset: 0,
+          border: "none",
+          background: "transparent",
+          cursor: "pointer",
+        }}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Evidence drawer"
+        style={{
+          position: "relative",
           width: "min(560px, 100%)",
           height: "100%",
           background: K.page,
@@ -94,7 +108,6 @@ export function PromiseEvidenceDrawer({
           flexDirection: "column",
           boxShadow: "-12px 0 40px rgba(0,0,0,0.4)",
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         <header
           style={{
@@ -138,8 +151,7 @@ export function PromiseEvidenceDrawer({
           {signal.evidenceDrawerTabs.map((t) => {
             const id = t.id as PromiseEvidenceTab;
             const on = tab === id;
-            const count =
-              t.count != null ? ` ${t.count}` : "";
+            const count = t.count != null ? ` ${t.count}` : "";
             return (
               <button
                 key={t.id}
@@ -169,7 +181,16 @@ export function PromiseEvidenceDrawer({
 
         <div style={{ flex: 1, overflow: "auto", padding: 16 }}>
           {tab === "snippets" ? (
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
               {snippets.map((s, i) => (
                 <li
                   key={s.id}
@@ -180,9 +201,7 @@ export function PromiseEvidenceDrawer({
                       ? withAlpha(K.violet400, 0.08)
                       : K.surface,
                     border: `1px solid ${
-                      s.featured
-                        ? withAlpha(K.violet400, 0.35)
-                        : K.borderLight
+                      s.featured ? withAlpha(K.violet400, 0.35) : K.borderLight
                     }`,
                   }}
                 >
@@ -217,21 +236,27 @@ export function PromiseEvidenceDrawer({
               >
                 <thead>
                   <tr>
-                    {["Line", "Distributor", "Family", "Original", "Revised", "Slip", "Cause"].map(
-                      (h) => (
-                        <th
-                          key={h}
-                          style={{
-                            textAlign: "left",
-                            padding: "6px 8px",
-                            color: K.textMut,
-                            borderBottom: `1px solid ${K.borderLight}`,
-                          }}
-                        >
-                          {h}
-                        </th>
-                      ),
-                    )}
+                    {[
+                      "Line",
+                      "Distributor",
+                      "Family",
+                      "Original",
+                      "Revised",
+                      "Slip",
+                      "Cause",
+                    ].map((h) => (
+                      <th
+                        key={h}
+                        style={{
+                          textAlign: "left",
+                          padding: "6px 8px",
+                          color: K.textMut,
+                          borderBottom: `1px solid ${K.borderLight}`,
+                        }}
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
@@ -252,7 +277,16 @@ export function PromiseEvidenceDrawer({
           ) : null}
 
           {tab === "distributors" ? (
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 10 }}>
+            <ul
+              style={{
+                listStyle: "none",
+                margin: 0,
+                padding: 0,
+                display: "flex",
+                flexDirection: "column",
+                gap: 10,
+              }}
+            >
               {northDistributors.map((d) => (
                 <li
                   key={d.partner}
@@ -299,7 +333,15 @@ export function PromiseEvidenceDrawer({
               </section>
               <section>
                 <h3 style={h3}>Audit</h3>
-                <ul style={{ margin: 0, paddingLeft: 18, color: K.body, fontSize: 13, lineHeight: 1.6 }}>
+                <ul
+                  style={{
+                    margin: 0,
+                    paddingLeft: 18,
+                    color: K.body,
+                    fontSize: 13,
+                    lineHeight: 1.6,
+                  }}
+                >
                   <li>Seeded investigation PR-01 · status Open</li>
                   {askTs ? (
                     <li>
@@ -317,14 +359,20 @@ export function PromiseEvidenceDrawer({
                       )}
                     </li>
                   ) : (
-                    <li style={{ color: K.textMut }}>
-                      No approval logged yet
-                    </li>
+                    <li style={{ color: K.textMut }}>No approval logged yet</li>
                   )}
                 </ul>
               </section>
             </div>
           ) : null}
+        </div>
+        <div
+          style={{
+            padding: "10px 16px",
+            borderTop: `1px solid ${K.borderLight}`,
+          }}
+        >
+          <SyntheticBadge compact />
         </div>
       </div>
     </div>

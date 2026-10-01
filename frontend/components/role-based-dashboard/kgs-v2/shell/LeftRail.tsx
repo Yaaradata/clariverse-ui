@@ -1,5 +1,6 @@
 "use client";
 
+import type { V2View } from "@kgs2/types";
 import {
   Activity,
   ArrowLeft,
@@ -10,8 +11,10 @@ import {
   Wrench,
 } from "lucide-react";
 import { type ComponentType, useState } from "react";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
-import type { V2View } from "@kgs2/types";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useKgs2Nav } from "../nav";
 
 type RailItem = {

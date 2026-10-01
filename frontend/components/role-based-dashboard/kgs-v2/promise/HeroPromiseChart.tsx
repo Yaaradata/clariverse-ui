@@ -12,7 +12,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type Marker = { weekIndex: number; label: string };
 
@@ -51,7 +54,10 @@ export function HeroPromiseChart({
         height="100%"
         initialDimension={{ width: 1, height: 1 }}
       >
-        <ComposedChart data={data} margin={{ top: 28, right: 20, bottom: 8, left: 0 }}>
+        <ComposedChart
+          data={data}
+          margin={{ top: 28, right: 20, bottom: 8, left: 0 }}
+        >
           <CartesianGrid stroke={K.borderLight} vertical={false} />
           <XAxis
             dataKey="week"

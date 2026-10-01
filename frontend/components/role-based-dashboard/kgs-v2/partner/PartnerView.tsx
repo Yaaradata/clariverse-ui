@@ -1,18 +1,21 @@
 "use client";
 
+import partner from "@kgs2/data/partner.json";
+import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
+import type { V2View } from "@kgs2/types";
+import { Lock } from "lucide-react";
 import {
-  useEffect,
-  useState,
   type CSSProperties,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
+  useEffect,
+  useState,
 } from "react";
-import { Lock } from "lucide-react";
-import partner from "@kgs2/data/partner.json";
-import { useDemo2, useLabel2 } from "@kgs2/lib/demoState";
-import type { V2View } from "@kgs2/types";
-import { K, withAlpha } from "@/components/role-based-dashboard/kgs/shared/tokens";
+import {
+  K,
+  withAlpha,
+} from "@/components/role-based-dashboard/kgs/shared/tokens";
 
 type TabId = "workspace" | "kgs";
 
@@ -301,9 +304,7 @@ function WorkspaceTab({
 }: {
   L: (s: string) => string;
   sharing: typeof partner.workspace.sharing;
-  setSharing: Dispatch<
-    SetStateAction<typeof partner.workspace.sharing>
-  >;
+  setSharing: Dispatch<SetStateAction<typeof partner.workspace.sharing>>;
   onOpenSignal: (id: string) => void;
 }) {
   const ws = partner.workspace;
@@ -480,7 +481,9 @@ function WorkspaceTab({
               }}
             >
               <div>
-                <div style={{ fontWeight: 600, color: K.text }}>{row.label}</div>
+                <div style={{ fontWeight: 600, color: K.text }}>
+                  {row.label}
+                </div>
                 <div
                   style={{
                     fontSize: 11,
@@ -522,8 +525,16 @@ function WorkspaceTab({
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {(
             [
-              { key: "themes" as const, label: "Product and install themes", locked: false },
-              { key: "promise" as const, label: "Promise performance", locked: false },
+              {
+                key: "themes" as const,
+                label: "Product and install themes",
+                locked: false,
+              },
+              {
+                key: "promise" as const,
+                label: "Promise performance",
+                locked: false,
+              },
               {
                 key: "commissioning" as const,
                 label: "Commissioning experience",
@@ -589,13 +600,9 @@ function WorkspaceTab({
                     padding: "4px 10px",
                     borderRadius: K.radius.pill,
                     border: `1px solid ${
-                      on
-                        ? withAlpha(K.green, 0.45)
-                        : K.borderLight
+                      on ? withAlpha(K.green, 0.45) : K.borderLight
                     }`,
-                    background: on
-                      ? withAlpha(K.green, 0.15)
-                      : "transparent",
+                    background: on ? withAlpha(K.green, 0.15) : "transparent",
                     color: on ? K.green : K.textMut,
                     fontSize: 12,
                     fontWeight: 700,
@@ -679,7 +686,7 @@ function KgsSeesTab({
                   <td style={td}>{theme}</td>
                   {grid.values[ri].map((n, ci) => (
                     <td
-                      key={`${theme}-${ci}`}
+                      key={`${theme}-${grid.partners[ci]}`}
                       style={{
                         ...td,
                         textAlign: "center",
@@ -737,7 +744,9 @@ function KgsSeesTab({
                   >
                     {row.keptPct}%
                   </td>
-                  <td style={{ ...td, fontFamily: K.mono }}>{row.complaints}</td>
+                  <td style={{ ...td, fontFamily: K.mono }}>
+                    {row.complaints}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -887,9 +896,7 @@ function KgsSeesTab({
                       opacity: !canMarkReady && !ready ? 0.7 : 1,
                     }}
                   >
-                    {ready
-                      ? "Ready to send — Not sent"
-                      : card.action}
+                    {ready ? "Ready to send — Not sent" : card.action}
                   </button>
                 </div>
               </div>

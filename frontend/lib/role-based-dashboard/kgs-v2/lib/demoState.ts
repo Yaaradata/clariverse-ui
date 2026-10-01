@@ -2,6 +2,8 @@
  * v2 demo state — Regional GM Asia ex China.
  * Own provider; does not touch v1 demoState.
  */
+
+import { withTs } from "@kgs/lib/label";
 import {
   createContext,
   createElement,
@@ -20,11 +22,9 @@ import type {
   TokenKind,
   V2View,
 } from "../types";
-import { withTs } from "@kgs/lib/label";
 
 const MAP = anonymise as AnonymiseMap;
-const TOKEN =
-  /\{\{(brand|platform|fw|partner|region|place|term):([^{}]+)\}\}/g;
+const TOKEN = /\{\{(brand|platform|fw|partner|region|place|term):([^{}]+)\}\}/g;
 const warned = new Set<string>();
 
 /** Live click time in IST — capture once per approval. */
@@ -37,8 +37,7 @@ export function fmtDemoTimeIst(d: Date): string {
     minute: "2-digit",
     hour12: false,
   }).formatToParts(d);
-  const get = (type: string) =>
-    parts.find((p) => p.type === type)?.value ?? "";
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
   const day = get("day");
   const month = get("month");
   const hour = get("hour");
@@ -235,12 +234,16 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
 export function useDemo2(): DemoApi2 {
   const ctx = useContext(DemoContext2);
-  if (!ctx) throw new Error("useDemo2 must be used inside DemoProvider (kgs-v2)");
+  if (!ctx)
+    throw new Error("useDemo2 must be used inside DemoProvider (kgs-v2)");
   return ctx;
 }
 
 /** t(str) resolves {{tokens}} with the current v2 anonymise flag. */
 export function useLabel2(): (str: string) => string {
   const { state } = useDemo2();
-  return useCallback((str: string) => fmt2(str, state.anonymise), [state.anonymise]);
+  return useCallback(
+    (str: string) => fmt2(str, state.anonymise),
+    [state.anonymise],
+  );
 }

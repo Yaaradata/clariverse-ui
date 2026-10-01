@@ -32,31 +32,7 @@
       "W26"
     ],
     "values": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      8,
-      7,
-      6,
-      9,
-      2,
-      2,
-      2,
-      2,
-      2,
-      3,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
+      2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 9, 2, 2, 2, 2, 2, 3, 3, 4, 5, 6, 7, 8, 9,
       11
     ],
     "fixMarkers": [
@@ -159,9 +135,7 @@
     "title": "Draft — awaiting Technical support lead approval",
     "chip": "Awaiting approval",
     "owner": "Technical support lead",
-    "approveEnabledFor": [
-      "Technical support lead"
-    ],
+    "approveEnabledFor": ["Technical support lead"],
     "approveLabel": "Approve",
     "disabledTooltip": "Approval sits with the Technical support lead"
   }
