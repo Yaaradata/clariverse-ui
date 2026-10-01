@@ -68,7 +68,7 @@ function WallCardRow({
 }: {
   card: SignalWall2Card;
   selected: boolean;
-  onOpen: (card: SignalWall2Card, e: ReactMouseEvent<HTMLDivElement>) => void;
+  onOpen: (card: SignalWall2Card, e: ReactMouseEvent<HTMLElement>) => void;
 }) {
   const L = useLabel2();
   const meta = LEVEL[card.level];
@@ -76,16 +76,9 @@ function WallCardRow({
   const color = meta.color;
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
+    <button
+      type="button"
       onClick={(e) => onOpen(card, e)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onOpen(card, e as unknown as ReactMouseEvent<HTMLDivElement>);
-        }
-      }}
       style={{
         position: "relative",
         borderRadius: 12,
@@ -94,6 +87,10 @@ function WallCardRow({
         background: `linear-gradient(135deg, ${color}26 0%, ${color}0d 100%)`,
         border: `1px solid ${color}50`,
         boxShadow: selected ? `0 0 0 1px ${color}80 inset` : "none",
+        width: "100%",
+        textAlign: "left",
+        color: "inherit",
+        fontFamily: "inherit",
       }}
     >
       <div
@@ -204,7 +201,9 @@ function WallCardRow({
             }}
           >
             <TrendingUp size={14} aria-hidden />
-            <span style={{ fontSize: 12, fontWeight: 700 }}>{L(card.trend)}</span>
+            <span style={{ fontSize: 12, fontWeight: 700 }}>
+              {L(card.trend)}
+            </span>
           </div>
         </div>
         <ChevronRight
@@ -214,7 +213,7 @@ function WallCardRow({
           aria-hidden
         />
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -434,7 +433,9 @@ function DetailPanel({
               >
                 {idx + 1}
               </span>
-              <span style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}>
+              <span
+                style={{ fontSize: 11, color: "#d6d9d8", lineHeight: 1.45 }}
+              >
                 {L(a)}
               </span>
             </div>
@@ -492,8 +493,10 @@ function DetailPanel({
             type="button"
             className="kgs2-focus"
             onClick={() => {
+              const view = card.openView;
+              if (!view) return;
               onClose();
-              go(card.openView!);
+              go(view);
             }}
             style={{
               fontSize: 12,
@@ -537,7 +540,10 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
   useEffect(() => {
     if (!selected) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeDetail();
+      if (e.key === "Escape") {
+        setSelectedId(null);
+        setDetailTop(null);
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -545,7 +551,7 @@ export function SignalWall2({ wall }: { wall: SignalWall2Data }) {
 
   const openCard = (
     card: SignalWall2Card,
-    event: ReactMouseEvent<HTMLDivElement>,
+    event: ReactMouseEvent<HTMLElement>,
   ) => {
     const scrollEl = scrollRef.current;
     if (scrollEl) {

@@ -261,7 +261,9 @@ export function FixesDidntHoldPanel({
         minHeight: 0,
       }}
     >
-      <DrHead sub="Returning after a recorded fix">Fixes that didn't hold</DrHead>
+      <DrHead sub="Returning after a recorded fix">
+        Fixes that didn't hold
+      </DrHead>
       <MetricTiles items={kpis} />
       <div
         style={{
@@ -335,9 +337,7 @@ export function FixesDidntHoldPanel({
                 {L(t.name)}
               </span>
               <span style={{ fontSize: 12, color: DR.muted, lineHeight: 1.3 }}>
-                {fix
-                  ? `${fmtDate(fix.date)} · ${fixTypeLabel(fix.type)}`
-                  : "—"}
+                {fix ? `${fmtDate(fix.date)} · ${fixTypeLabel(fix.type)}` : "—"}
               </span>
               <span style={{ fontSize: 13, color: DR.sub }}>
                 <DrMono size={13}>
@@ -672,9 +672,7 @@ export function WhyFixesDontHold({
                   >
                     {L(r.title)}
                   </div>
-                  <div
-                    style={{ marginTop: 6, fontSize: 12, color: DR.muted }}
-                  >
+                  <div style={{ marginTop: 6, fontSize: 12, color: DR.muted }}>
                     Fix {fmtDate(r.fixDate)} · Return {fmtDate(r.returnDate)}
                   </div>
                   <div style={{ marginTop: 4, fontSize: 13, color: DR.sub }}>
@@ -999,7 +997,9 @@ export function ThemeRegisterDrawer({
             alignItems: "center",
           }}
         >
-          <h2 style={{ margin: 0, fontSize: 18, fontWeight: 800, color: K.text }}>
+          <h2
+            style={{ margin: 0, fontSize: 18, fontWeight: 800, color: K.text }}
+          >
             Theme register · {themes.length}
           </h2>
           <button

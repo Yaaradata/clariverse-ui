@@ -220,7 +220,7 @@ function ThemeDecisionPanel({ onViewDraft }: { onViewDraft: () => void }) {
       ) : null}
       {approved && ts ? (
         <div style={{ fontSize: 12, color: K.textMut, fontFamily: K.mono }}>
-          {ts} · Technical support lead approved RC-01 draft
+          {ts} · Technical support lead approved draft
         </div>
       ) : null}
     </section>
@@ -269,7 +269,7 @@ export function ThemeView() {
     >
       <DrillHeader2
         title={theme.title}
-        subtitle={theme.headline}
+        subtitle="Back a third time · 11 contacts this week vs 2 after the June fix"
         parentView="recurring"
         backLabel="Back to Recurring"
       />
@@ -294,11 +294,7 @@ export function ThemeView() {
         </span>
         <span>{theme.severity.word}</span>
         <span style={{ color: K.textMut }}>·</span>
-        <span>{theme.severity.typeNote}</span>
-        <span style={{ color: K.textMut }}>·</span>
         <span>{theme.severity.blastRadius.headline}</span>
-        <span style={{ color: K.textMut }}>·</span>
-        <span>{theme.severity.incident.note}</span>
       </div>
 
       <div
@@ -333,8 +329,8 @@ export function ThemeView() {
             </div>
             <div
               role="img"
-              aria-label="RC-01 weekly contacts"
-              style={{ height: 280 }}
+              aria-label="Licence re-activation weekly contacts"
+              style={{ height: 260 }}
             >
               <ResponsiveContainer
                 width="100%"
@@ -354,6 +350,10 @@ export function ThemeView() {
                     tickLine={false}
                   />
                   <YAxis
+                    domain={[
+                      (min: number) => Math.max(0, Math.floor(min - 1)),
+                      (max: number) => Math.ceil(max + 1),
+                    ]}
                     tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
                     axisLine={false}
                     tickLine={false}
@@ -680,7 +680,7 @@ export function ThemeView() {
               }}
             >
               <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>
-                Draft · RC-01
+                Draft · licence re-activation
               </h2>
               <span
                 style={{

@@ -42,11 +42,7 @@ export function CauseStackedBar({
   );
 
   return (
-    <div
-      role="img"
-      aria-label="Candidate causes by region"
-      style={{ height }}
-    >
+    <div role="img" aria-label="Candidate causes by region" style={{ height }}>
       <ResponsiveContainer
         width="100%"
         height="100%"

@@ -1,7 +1,7 @@
 "use client";
 
-import type { V2View } from "@kgs2/types";
 import { useLabel2 } from "@kgs2/lib/demoState";
+import type { V2View } from "@kgs2/types";
 import { ArrowLeft } from "lucide-react";
 import { K } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { useKgs2Nav } from "../nav";

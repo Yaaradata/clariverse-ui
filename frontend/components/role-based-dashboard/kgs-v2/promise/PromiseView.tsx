@@ -13,9 +13,9 @@ import {
 import { DrillHeader2 } from "../shared/DrillHeader2";
 import { KpiRow2 } from "../shared/KpiRow2";
 import {
+  SignalWall2,
   type SignalWall2Data,
   type WallLevel2,
-  SignalWall2,
 } from "../shared/SignalWall2";
 import { CauseStackedBar } from "./CauseStackedBar";
 import { PromiseRegionChart } from "./PromiseRegionChart";
@@ -40,10 +40,7 @@ function trendGlyph(trend: string): { text: string; color: string } {
   return { text: "—", color: K.textMut };
 }
 
-function wallLevel(card: {
-  level?: string;
-  severity: string;
-}): WallLevel2 {
+function wallLevel(card: { level?: string; severity: string }): WallLevel2 {
   if (
     card.level === "critical" ||
     card.level === "alert" ||
@@ -89,9 +86,7 @@ function buildPromiseWall(): SignalWall2Data {
             : ["Hold · no action needed"],
           timeline: card.trend,
           owner:
-            card.id === "SEA-IMPROVING"
-              ? "Regional GM"
-              : "Operations lead",
+            card.id === "SEA-IMPROVING" ? "Regional GM" : "Operations lead",
           priority: level === "improving" ? "Watching" : "Needs action",
         },
         openView: openFor[card.id],
@@ -231,6 +226,7 @@ export function PromiseView() {
                       {row.keptVsOriginalPct}%
                     </span>
                     <span
+                      title={row.trend}
                       style={{
                         fontSize: 14,
                         fontWeight: 700,
@@ -238,7 +234,6 @@ export function PromiseView() {
                         width: 16,
                         textAlign: "center",
                       }}
-                      aria-label={row.trend}
                     >
                       {t.text}
                     </span>

@@ -366,11 +366,11 @@ function WorkspaceTab({
                   <span
                     style={{
                       fontSize: 11,
-                      fontFamily: K.mono,
+                      fontWeight: 700,
                       color: K.violet300,
                     }}
                   >
-                    {item.linkedSignal} →
+                    Open →
                   </span>
                 ) : null}
               </button>
@@ -467,7 +467,6 @@ function WorkspaceTab({
               </div>
               <div
                 style={{
-                  fontFamily: K.mono,
                   color: K.body,
                   textAlign: "right",
                   fontSize: 12,
@@ -475,10 +474,12 @@ function WorkspaceTab({
               >
                 {"promised" in row && row.promised ? (
                   <>
-                    promised {row.promised}
+                    <span style={{ color: K.textMut }}>Promised </span>
+                    <span style={{ fontFamily: K.mono }}>{row.promised}</span>
                     <br />
                     <span style={{ color: K.orange }}>
-                      current {row.current}
+                      Now{" "}
+                      <span style={{ fontFamily: K.mono }}>{row.current}</span>
                     </span>
                   </>
                 ) : (
@@ -621,10 +622,10 @@ function KgsSeesTab({
           background: withAlpha(K.amber, 0.12),
           color: K.amber,
           border: `1px solid ${withAlpha(K.amber, 0.35)}`,
-          fontFamily: K.mono,
         }}
       >
-        {pc.connected} of {pc.of} partners connected
+        <span style={{ fontFamily: K.mono }}>{pc.connected}</span>
+        <span> of {pc.of} partners connected</span>
       </div>
 
       {/* Heat grid */}

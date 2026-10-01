@@ -90,9 +90,7 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
         borderRadius: 16,
         border: `1px solid ${withAlpha(tone, u.borderA)}`,
         background: withAlpha(tone, u.bgA),
-        boxShadow: u.glow
-          ? `0 10px 24px ${withAlpha(tone, u.glowA)}`
-          : "none",
+        boxShadow: u.glow ? `0 10px 24px ${withAlpha(tone, u.glowA)}` : "none",
         color: K.textSec,
         padding: "14px 14px 16px",
         fontSize: 12,
@@ -124,7 +122,6 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
         </div>
         <span
           title={confTip}
-          aria-label={confTip}
           style={{
             display: "flex",
             alignItems: "center",
@@ -206,8 +203,7 @@ export function SignalCard({ signal }: { signal: OverviewSignal }) {
         }}
       >
         {c.metrics.map((m) => {
-          const deltaColor =
-            m.deltaTone === "opportunity" ? K.green : u.delta;
+          const deltaColor = m.deltaTone === "opportunity" ? K.green : u.delta;
           return (
             <div
               key={m.label}

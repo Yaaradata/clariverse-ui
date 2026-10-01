@@ -130,7 +130,7 @@ export function PromiseHeroView() {
     >
       <DrillHeader2
         title="North region: promises slipping"
-        subtitle={signal.headline}
+        subtitle="Promise kept fell vs its own baseline · 3 distributors · 2 projects at inspection risk"
         parentView="promise"
         backLabel="Back to Promises"
       />
@@ -192,11 +192,7 @@ export function PromiseHeroView() {
         <span style={{ color: K.textMut }}>·</span>
         <span>{signal.severity.domain}</span>
         <span style={{ color: K.textMut }}>·</span>
-        <span>{signal.severity.typeNote}</span>
-        <span style={{ color: K.textMut }}>·</span>
         <span>{signal.severity.blastRadius.headline}</span>
-        <span style={{ color: K.textMut }}>·</span>
-        <span>{signal.severity.incident.note}</span>
       </div>
 
       <div

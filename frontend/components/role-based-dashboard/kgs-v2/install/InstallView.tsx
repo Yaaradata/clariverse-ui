@@ -10,9 +10,9 @@ import {
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
 import { DrillHeader2 } from "../shared/DrillHeader2";
 import {
+  SignalWall2,
   type SignalWall2Data,
   type WallLevel2,
-  SignalWall2,
 } from "../shared/SignalWall2";
 import {
   ByPartnerTable,
@@ -80,10 +80,7 @@ export function InstallView() {
         padding: "16px 24px 24px",
       }}
     >
-      <DrillHeader2
-        title={install.title}
-        subtitle={install.subtitle}
-      />
+      <DrillHeader2 title={install.title} subtitle={install.subtitle} />
 
       <CaptureGapNote text={install.captureGapNote} />
 

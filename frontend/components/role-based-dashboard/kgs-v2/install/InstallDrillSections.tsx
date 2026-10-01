@@ -361,8 +361,7 @@ export function InstallerTopics({ topics }: { topics: InstallTopic[] }) {
       >
         {topics.map((t) => {
           const toneColor = severityColor(t.tone);
-          const growthColor =
-            t.tone === "PRAISE" ? DR.green : DR.orange;
+          const growthColor = t.tone === "PRAISE" ? DR.green : DR.orange;
           return (
             <div
               key={t.topic}

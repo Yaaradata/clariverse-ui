@@ -14,7 +14,7 @@ const BODIES: Record<string, string> = {
   "draft-partner-update":
     "Subject: Confirmed delivery date for your open lines\n\nWe have re-checked allocation for your inspection-bound projects. Confirmed date: [one date per distributor]. This draft is ready for Partner manager to send — not sent.",
   "draft-allocation":
-    "Internal note: Re-prioritise allocation queue N-2 for the 2 fire-NOC projects linked to PR-01. Owner: Operations lead. Status: Not sent.",
+    "Internal note: Re-prioritise allocation queue N-2 for the 2 fire-NOC projects. Owner: Operations lead. Status: Not sent.",
   "draft-carrier":
     "Request: Open a last-mile review for the Gurugram hub carrier (11 lines). Share findings with Partner manager North. Status: Not sent.",
 };
@@ -106,7 +106,7 @@ export function PromiseDraftModals({
               }}
             >
               <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>
-                Drafts · PR-01
+                Drafts · North promises
               </h2>
               <span
                 style={{

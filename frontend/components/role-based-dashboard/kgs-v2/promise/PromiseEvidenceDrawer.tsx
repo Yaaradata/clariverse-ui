@@ -119,7 +119,7 @@ export function PromiseEvidenceDrawer({
           }}
         >
           <h2 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>
-            Evidence · PR-01
+            Evidence · North promises
           </h2>
           <button
             type="button"
@@ -260,9 +260,9 @@ export function PromiseEvidenceDrawer({
                   </tr>
                 </thead>
                 <tbody>
-                  {signal.orderLines.map((ol) => (
+                  {signal.orderLines.map((ol, i) => (
                     <tr key={ol.id}>
-                      <td style={cell}>{ol.id}</td>
+                      <td style={cell}>{i + 1}</td>
                       <td style={cell}>{L(ol.distributor)}</td>
                       <td style={cell}>{ol.family}</td>
                       <td style={cell}>{ol.originalDate}</td>
@@ -342,7 +342,7 @@ export function PromiseEvidenceDrawer({
                     lineHeight: 1.6,
                   }}
                 >
-                  <li>Seeded investigation PR-01 · status Open</li>
+                  <li>Seeded investigation · status Open</li>
                   {askTs ? (
                     <li>
                       {withTs(

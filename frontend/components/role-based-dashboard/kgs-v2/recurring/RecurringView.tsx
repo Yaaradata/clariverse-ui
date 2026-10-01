@@ -14,10 +14,10 @@ import {
   BiggestOpenThemesPanel,
   FixesDidntHoldPanel,
   FixLoopFunnel,
+  type RecurringThemeRow,
   ThemeRegisterDrawer,
   TopRecurringThemes,
   WhyFixesDontHold,
-  type RecurringThemeRow,
 } from "./RecurringDrillSections";
 import { ThemeTimelineChart } from "./ThemeTimelineChart";
 
@@ -36,8 +36,7 @@ export function RecurringView() {
       if (t.status !== "back-after-fix") continue;
       const fix = t.fixes[0];
       const series = recurring.timeline.series.find((s) => s.id === t.id);
-      const now =
-        series?.values[series.values.length - 1] ?? fix?.before ?? 0;
+      const now = series?.values[series.values.length - 1] ?? fix?.before ?? 0;
       const before = fix?.after ?? 0;
       map[t.id] = { before, now };
     }
@@ -114,10 +113,7 @@ export function RecurringView() {
         />
       </div>
 
-      <Panel
-        title="Theme timeline"
-        sub="Top 3 themes · ◆ fix · ▲ return"
-      >
+      <Panel title="Theme timeline" sub="Top 3 themes · ◆ fix · ▲ return">
         <ThemeTimelineChart
           weeks={recurring.timeline.weeks}
           series={recurring.timeline.series}

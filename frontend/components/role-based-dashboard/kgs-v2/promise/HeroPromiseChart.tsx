@@ -47,8 +47,17 @@ export function HeroPromiseChart({
     [weeks, values],
   );
 
+  const ys = values.filter((v) => typeof v === "number" && Number.isFinite(v));
+  const dataMin = ys.length ? Math.min(...ys, baselineLow) : baselineLow;
+  const dataMax = ys.length
+    ? Math.max(...ys, baselineHigh, targetPct)
+    : baselineHigh;
+  const pad = Math.max((dataMax - dataMin) * 0.12, 2);
+  const domainMin = Math.max(0, Math.floor(dataMin - pad));
+  const domainMax = Math.ceil(dataMax + pad);
+
   return (
-    <div role="img" aria-label={ariaLabel} style={{ height: 300 }}>
+    <div role="img" aria-label={ariaLabel} style={{ height: 260 }}>
       <ResponsiveContainer
         width="100%"
         height="100%"
@@ -66,8 +75,7 @@ export function HeroPromiseChart({
             tickLine={false}
           />
           <YAxis
-            domain={[60, 100]}
-            ticks={[60, 70, 80, 90, 100]}
+            domain={[domainMin, domainMax]}
             tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
             axisLine={false}
             tickLine={false}

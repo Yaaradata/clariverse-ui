@@ -171,14 +171,14 @@
         "title": "Action approved",
         "body": "Approved · audit logged {ts}"
       },
-      "auditEntry": "{ts} · Operations lead approved PR-01 drafts",
+      "auditEntry": "{ts} · Operations lead approved North promise drafts",
       "investigationId": "PR-01"
     },
     "decisionRequest": {
       "buttonLabel": "Ask for a decision",
       "doneLabel": "Decision requested",
       "chip": "Decision requested",
-      "auditEntry": "{ts} · Regional GM asked Operations lead for a decision on PR-01"
+      "auditEntry": "{ts} · Regional GM asked Operations lead for a decision on North promises"
     }
   },
   "loop": {

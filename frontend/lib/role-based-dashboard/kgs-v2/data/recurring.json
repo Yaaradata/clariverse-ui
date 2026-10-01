@@ -30,11 +30,7 @@
       "name": "Licence re-activation after a laptop change",
       "firstSeen": "2025-11-12",
       "contacts13w": 64,
-      "channels": [
-        "help desk",
-        "email",
-        "service calls"
-      ],
+      "channels": ["help desk", "email", "service calls"],
       "partners": 7,
       "status": "back-after-fix",
       "fixes": [
@@ -53,10 +49,7 @@
       "name": "Order status asked on the help desk, not the order desk",
       "firstSeen": "2026-01-08",
       "contacts13w": 58,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 9,
       "status": "back-after-fix",
       "fixes": [
@@ -75,10 +68,7 @@
       "name": "Device addressing questions after a panel swap",
       "firstSeen": "2025-12-02",
       "contacts13w": 41,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 5,
       "status": "back-after-fix",
       "fixes": [
@@ -97,10 +87,7 @@
       "name": "Legacy panel upgrade path",
       "firstSeen": "2026-02-14",
       "contacts13w": 37,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 4,
       "status": "no-fix",
       "fixes": [],
@@ -111,10 +98,7 @@
       "name": "Network configuration during commissioning",
       "firstSeen": "2026-03-01",
       "contacts13w": 33,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 6,
       "status": "no-fix",
       "fixes": [],
@@ -125,10 +109,7 @@
       "name": "Programming tool download link",
       "firstSeen": "2026-04-10",
       "contacts13w": 12,
-      "channels": [
-        "help desk",
-        "partner portal"
-      ],
+      "channels": ["help desk", "partner portal"],
       "partners": 3,
       "status": "holding",
       "fixes": [
@@ -147,10 +128,7 @@
       "name": "Panel password reset loop",
       "firstSeen": "2026-01-15",
       "contacts13w": 8,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 2,
       "status": "holding",
       "fixes": [
@@ -169,10 +147,7 @@
       "name": "Spare detector lead time questions",
       "firstSeen": "2026-02-15",
       "contacts13w": 9,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 3,
       "status": "holding",
       "fixes": [
@@ -191,10 +166,7 @@
       "name": "Zone map export help",
       "firstSeen": "2026-03-15",
       "contacts13w": 10,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 4,
       "status": "holding",
       "fixes": [
@@ -213,10 +185,7 @@
       "name": "Battery replacement schedule",
       "firstSeen": "2026-04-15",
       "contacts13w": 11,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 5,
       "status": "no-fix",
       "fixes": [],
@@ -227,10 +196,7 @@
       "name": "Remote dial-in access",
       "firstSeen": "2026-05-15",
       "contacts13w": 12,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 2,
       "status": "no-fix",
       "fixes": [],
@@ -241,10 +207,7 @@
       "name": "False trouble on notification circuit",
       "firstSeen": "2026-06-15",
       "contacts13w": 13,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 3,
       "status": "holding",
       "fixes": [
@@ -263,10 +226,7 @@
       "name": "Label printer pairing",
       "firstSeen": "2026-07-15",
       "contacts13w": 14,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 4,
       "status": "no-fix",
       "fixes": [],
@@ -277,10 +237,7 @@
       "name": "As-built drawing requests",
       "firstSeen": "2026-08-15",
       "contacts13w": 8,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 5,
       "status": "holding",
       "fixes": [
@@ -299,10 +256,7 @@
       "name": "Holiday cover for order desk",
       "firstSeen": "2026-01-15",
       "contacts13w": 9,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 2,
       "status": "holding",
       "fixes": [
@@ -321,10 +275,7 @@
       "name": "Credit note status chase",
       "firstSeen": "2026-02-15",
       "contacts13w": 10,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 3,
       "status": "holding",
       "fixes": [
@@ -343,10 +294,7 @@
       "name": "Return material authorisation timing",
       "firstSeen": "2026-03-15",
       "contacts13w": 11,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 4,
       "status": "holding",
       "fixes": [
@@ -365,10 +313,7 @@
       "name": "Training seat availability",
       "firstSeen": "2026-04-15",
       "contacts13w": 12,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 5,
       "status": "no-fix",
       "fixes": [],
@@ -379,10 +324,7 @@
       "name": "Portal invoice download",
       "firstSeen": "2026-05-15",
       "contacts13w": 13,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 2,
       "status": "no-fix",
       "fixes": [],
@@ -393,10 +335,7 @@
       "name": "Multi-site licence count mismatch",
       "firstSeen": "2026-06-15",
       "contacts13w": 14,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 3,
       "status": "no-fix",
       "fixes": [],
@@ -407,10 +346,7 @@
       "name": "Smoke test checklist clarification",
       "firstSeen": "2026-07-15",
       "contacts13w": 8,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 4,
       "status": "holding",
       "fixes": [
@@ -429,10 +365,7 @@
       "name": "Loop card compatibility question",
       "firstSeen": "2026-08-15",
       "contacts13w": 9,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 5,
       "status": "holding",
       "fixes": [
@@ -451,10 +384,7 @@
       "name": "End-of-life panel path",
       "firstSeen": "2026-01-15",
       "contacts13w": 10,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 2,
       "status": "holding",
       "fixes": [
@@ -473,10 +403,7 @@
       "name": "Commissioning form upload",
       "firstSeen": "2026-02-15",
       "contacts13w": 11,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 3,
       "status": "no-fix",
       "fixes": [],
@@ -487,10 +414,7 @@
       "name": "Partner portal password lockout",
       "firstSeen": "2026-03-15",
       "contacts13w": 12,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 4,
       "status": "no-fix",
       "fixes": [],
@@ -501,10 +425,7 @@
       "name": "Dispatch photo proof missing",
       "firstSeen": "2026-04-15",
       "contacts13w": 13,
-      "channels": [
-        "service calls",
-        "help desk"
-      ],
+      "channels": ["service calls", "help desk"],
       "partners": 5,
       "status": "no-fix",
       "fixes": [],
@@ -515,10 +436,7 @@
       "name": "Weekend escalation path unclear",
       "firstSeen": "2026-05-15",
       "contacts13w": 14,
-      "channels": [
-        "help desk",
-        "email"
-      ],
+      "channels": ["help desk", "email"],
       "partners": 2,
       "status": "holding",
       "fixes": [
@@ -579,77 +497,23 @@
       {
         "id": "rc-01",
         "name": "Licence re-activation",
-        "values": [
-          3,
-          4,
-          8,
-          9,
-          2,
-          2,
-          2,
-          2,
-          3,
-          5,
-          7,
-          9,
-          11
-        ],
-        "fixMarkers": [
-          4
-        ],
-        "returnMarkers": [
-          9
-        ]
+        "values": [3, 4, 8, 9, 2, 2, 2, 2, 3, 5, 7, 9, 11],
+        "fixMarkers": [4],
+        "returnMarkers": [9]
       },
       {
         "id": "rc-03",
         "name": "Order status on help desk",
-        "values": [
-          5,
-          6,
-          7,
-          8,
-          3,
-          3,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9
-        ],
-        "fixMarkers": [
-          4
-        ],
-        "returnMarkers": [
-          8
-        ]
+        "values": [5, 6, 7, 8, 3, 3, 3, 4, 5, 6, 7, 8, 9],
+        "fixMarkers": [4],
+        "returnMarkers": [8]
       },
       {
         "id": "rc-05",
         "name": "Device addressing",
-        "values": [
-          4,
-          5,
-          6,
-          2,
-          2,
-          2,
-          3,
-          3,
-          4,
-          4,
-          5,
-          5,
-          6
-        ],
-        "fixMarkers": [
-          3
-        ],
-        "returnMarkers": [
-          7
-        ]
+        "values": [4, 5, 6, 2, 2, 2, 3, 3, 4, 4, 5, 5, 6],
+        "fixMarkers": [3],
+        "returnMarkers": [7]
       }
     ]
   },

@@ -13,10 +13,7 @@ import {
   liftVars,
   withAlpha,
 } from "@/components/role-based-dashboard/kgs/shared/tokens";
-import {
-  AreaTrend2,
-  QUESTION_CHART_H2,
-} from "../shared/AreaTrend2";
+import { AreaTrend2, QUESTION_CHART_H2 } from "../shared/AreaTrend2";
 
 export type OverviewQuestionCard = {
   id: "promise" | "recurring" | "install";
