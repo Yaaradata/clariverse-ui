@@ -341,3 +341,166 @@ Design and definitions: `ombudsman_watch_design.md`. Only the RBI rules listed t
 - **What needs you:** a material Ombudsman risk takes the first slot, and the business items keep the other two. **Material:** any complaint with 3 days or fewer to go, or more already eligible than at the previous period end.
 - **The bank's lists:** Ultra sensitive, RBI & Government and Ultra HNI. The derived "multiple relationships" cohort is not a list the bank keeps, so it isn't counted.
 - **Confirm with the bank:** the Internal Ombudsman timeline, and HDFC's product TATs. Neither is used in any figure.
+
+# 1 Oct: fixes on the Customer pulse
+
+## D27 · High-priority mentions: a realistic response rate
+
+- Before, "responded" on a high-priority mention was the first response on the internal case, which is almost always
+  present, so the card read 142 of 144 (99%) and made the problem look solved.
+- Now a mention carries its own fact in the seed, `mention_replied`: whether the bank replied to the customer's public
+  post. It is set from the record id (sha1, no random stream) at 62%, so a rebuild gives the same figures and no other
+  internal figure moves (open, waiting on customer, no reply in 48h+ and RM alerts are unchanged).
+- Result: full window 100 of 144 (69%); last 30 days 36 of 53 (68%); last 7 days 9 of 13 (69%). Short periods with a
+  handful of mentions can sit outside the band.
+- Reconcile recomputes the count and the replies from the seed for every period, and fails if the full-window rate
+  leaves 55-70%.
+
+## D28 · Colour, charts and labels on the Customer pulse
+
+- **Colour rule.** Red, amber and green only where a direction is good or bad: no reply in 48h+ (including unanswered
+  high-priority mentions), open, and negative share. Green when it fell, red when it rose, amber within 10% or with no
+  earlier period. Volumes (contacts, mentions), the informational response rate and the footers are neutral. The rule
+  is stated once in the section legend.
+- **One chart per card.** Internal list cards: the large volume chart is gone; the one chart is the no-reply-in-48h+
+  trend. External cards: Total mentions shows the negative-share trend (new series, source-weighted); High-impact shows
+  its count (neutral); Bank response shows its rate (neutral); High-priority mentions shows unanswered mentions.
+- **Hover.** Every custom trend chart (the area charts here and the sparkline in the Cards category table) shows the
+  window and the figure with a highlighted dot: on mouse hover, on keyboard focus with the arrow keys, and on touch. The
+  keyboard and touch go through an invisible range input over the chart. The Recharts charts on the older screens
+  already had tooltips.
+- **Comparison label.** One label for every period, "vs previous period". For the full window there is no earlier
+  period of the same length, so the comparison is still second half against first half; the legend says so in
+  brackets for that period only, and the exact comparison is in each figure's tooltip (`compare_detail`).
+- **Ask LisN bar.** Pages have more bottom padding, and the content column has a solid strip behind the bar, so content
+  fades out above the bar instead of showing behind it. At the end of every page the last line sits 62 px above the
+  bar, at 1440 and 390 wide.
+- **Work was done on a branch off main** (`feat/customer-pulse-fixes`), not on main itself.
+
+# 1 Oct: internal volumes at bank scale (public_anchors_volumes.md, option 1)
+
+## D29 · Internal volumes at bank scale
+
+**How.** The seed still keeps about 32,000 contact rows and 5,000 customers. Each row now carries a weight `w` (how many
+bank-scale contacts it stands for) and each customer a weight `cw` (how many contacting customers it stands for), set
+in `scripts/hdfc_v3/scale_v3.py`. Every figure on the MD view, the Cards view and the Ombudsman watch is a weighted sum
+of the kept rows for the selected period. Weights are whole numbers, so totals, channels, businesses, categories and
+periods still add up exactly, and reconcile recomputes them from the rows. Nothing is stored at millions of rows.
+
+**Weights.** Fitted by iterative proportional fitting to four margins at once (customer list, channel, complaint by
+product, escalation rung), then rounded up or down by a hash of the row id. Deterministic: no random stream.
+
+**Sample pages.** The older drill-down and customer pages (priority, customer, module, deliverables, satisfaction,
+market, signal, action queue) list the kept rows themselves. Their counts stay sample counts and each page carries a
+"Sample rows" label. The Cards save list says the same. Reconcile checks that those pages count the same rows, by the
+same status, that the bank-scale views weight.
+
+**Assumptions (each to confirm in discovery).** Anchors are in the anchors file; these are ours.
+
+| # | Assumption | Value | Why |
+|---|---|---|---|
+| 1 | Total contacts, full window | 24 lakh | Middle of K3 (16-33 lakh). IVR bot calls sit outside it, as on the views. |
+| 2 | Channel mix | Calls 56%, chat 13%, WhatsApp 7%, email 13%, branch 9%, social inbox 2% | Inside every K4 range. |
+| 3 | Complaint | A contact measured against the 30-day complaint rule, as in the Ombudsman watch register | 1.1 lakh in the window (C5). |
+| 4 | Product mix of complaints | Loans 31% (personal 14, home 11, auto 6), cards 26%, accounts 20%, PayZapp and UPI 11%, digital 6%, insurance 6% | K5's order; loans near O4's 29.25%. |
+| 5 | Ombudsman complaints | 2,400 in the window (185 a week) | Middle of O7/O8. Internal Ombudsman 3,900 and MD's office 7,000 are ours, with no anchor. |
+| 6 | Ultra HNI | 2,00,000 on the list (P1); 22.5% in contact (P2) | Middle of P2. |
+| 7 | Ultra sensitive; RBI & Government | 1,800 and 3,200 on the lists; 40% and 35% in contact | P3 says low thousands; the shares are ours. |
+| 8 | Contacts per contacting customer on a list | 2.5 | Ours. |
+| 9 | Customers with a contact, whole bank | 10.5 lakh | Ours: 24 lakh contacts at about 2.3 each. |
+| 10 | Customers with multiple relationships | 85,900 | See below. |
+
+**"Customers with multiple relationships" was redefined.** It was every listed or HNI customer with two or more
+products, which takes in almost all of the Ultra HNI list and the HNI tier, so it could not sit between the small lists
+and Ultra HNI. It is now the bank's deepest listed relationships: customers on one of the three lists holding four or
+more products. Its size is worked out from its own members (each contacting member stands for 1 / share-in-contact
+customers), which gives 85,900. This changes who is on the list in the sample, so its figures moved on every screen.
+
+**Pending complaints follow C2, not a literal 3-4% of the window.** C6 is pending at year-end over a year's intake
+(16,133 of 4.42 lakh). Against one quarter's intake the same stock is about 15%. Holding pending at 3-4% of the 13-week
+intake would mean about 4,000 pending, a quarter of the published stock. Ours is 21,094 pending (1.31x C2), which is
+4.8% of annualised intake. The validation table carries both rows.
+
+**Weights are level across time.** They do not depend on status or date, so each period is the same slice of a steady
+flow: about 26,000 contacts and 1,200 complaints a day.
+
+**Small-period caveat.** Rows on the small lists carry weights of 2 to 4 and Ultra HNI rows about 160, so a short
+period's list figures move in steps, and a rate over a handful of rows (for example high-priority mentions in 7 days)
+can sit well away from the full-window rate.
+
+**Validation.** `qa/volume_validation.md` is rewritten by `scripts/hdfc_v3/volume_validation.py` on every run: 49 rows,
+each against its anchor. It fails the run if a row is more than 2x off without a stated reason.
+
+## D30 · Granularity, the Ombudsman share of pending, and RMs alerted (1 Oct, follow-up to D29)
+
+**What was wrong.** With one weight per kind of row, small figures moved in steps: an Ultra HNI row stood for about 160
+contacts, so "no reply in 48h+" read 3, 3, then 318 across periods, and "RMs alerted" was always a multiple of 16.
+
+**Fix: more kept rows where the figures are small.**
+- The seed now draws listed customers more often for the kept sample (Ultra sensitive 4.2x, RBI & Government 2.6x,
+  Ultra HNI 9x). The sample is still 32,000 rows; the two small lists now hold about as many rows as they have
+  contacts, so their rows carry a weight of about 1, and an Ultra HNI row about 29 instead of 160.
+- Every row starts between 0.6 and 1.4 times the average before the fitting, and every customer between 0.5 and 1.5
+  times its stratum's average, so rows of one kind no longer share one weight.
+- The calibration was re-run: the totals still hit the anchors (24,00,418 contacts, 1,10,192 complaints, the channel
+  and product mixes, 2 lakh Ultra HNI with 22% in contact). `qa/volume_validation.md`: 48 of 49 rows OK.
+- New reconcile check: of the internal figures under 500 on the MD and Cards views, across all four periods, no more
+  than 30% may share a common factor above 5. Today the worst is 21% (divisible by 7), across 191 figures.
+- This redraws the sample, so every internal figure moved a little from D29 (pending 20,254, was 21,094; multiple
+  relationships 85,000, was 85,900).
+
+**Ombudsman watch against pending.** "On the brink" (2,707) and "already eligible" (6,621) are both complaints still
+waiting for a reply, so together (9,328) they are a subset of pending (20,254): 46%. That is plausible for a 30-day
+rule: about a third of pending is past day 30, and an eighth is within 10 days of it. Reconcile now checks the subset
+for the bank and for Cards in every period, and that the bank share stays between 15% and 75%. "Unhappy with the reply"
+is outside pending by definition: those complaints were answered.
+
+**RMs alerted, at bank scale.** Y is the listed customers with an alert due in the selected period: a contact from the
+period still open with the bank that is negative, high impact or more than 5 hours old (the same RM rule as before),
+for customers who have an RM. A sample customer stands for its customer weight, but never for more customers than the
+due contacts it carries, so Y never exceeds the open contacts beside it (reconcile checks this). X is those whose RM has
+been alerted. Full window: Ultra sensitive 7 of 49, RBI & Government 16 of 79, Ultra HNI 381 of 1,880, multiple
+relationships 242 of 1,055. "Customers in contact" uses the same cap.
+
+**High-priority mentions.** The public reply is now spread evenly through time at bank scale (about 62% answered), so
+the rate is steady across periods: 63% full window, 64% for 30 days, 72% for 7 days.
+
+## D31 · Reject rate, Internal Ombudsman, negative share, social inbox and "unhappy with the reply" (1 Oct)
+
+All rates below are ours unless an anchor is named. They live in `scripts/hdfc_v3/complaint_rules.py` and
+`scripts/hdfc_v3/scale_v3.py`; figures are for the full window.
+
+**1. Reject rate and the Internal Ombudsman: one register.**
+- A complaint ends partly or fully rejected with probability 10.5% (12.3% when the contact is negative), 60% of those
+  partly. A reply inside two days is always a resolution, since a rejection has to pass the Internal Ombudsman first.
+  Result: 9.4% of complaints, 10,370, in line with peer bank disclosures (6-10%).
+- Of complaints still open after two days, the same share already carry a decision to reject and are waiting for IO
+  review: 2,454 awaiting; 7,916 reviewed; 10,370 sent in all.
+- The outcome rules are in one module used by both the seed and the register. A contact sits at the ladder's IO rung
+  exactly when it is a complaint with a decision to reject; the old independent IO rung (3,900, our earlier guess) is
+  gone. Reconcile checks the ladder rung, the queue and "awaiting IO review" against the register.
+- The RBI Ombudsman rung now also comes from the register: only a complaint that is at risk can reach it (40% of those
+  unhappy with the reply, 12% of those past day 30 without a reply; more for loans, which are few in the sample). The
+  total is still held at 2,400 (O7/O8), split by the complaint mix so loans lead (31%), then cards (26%).
+
+**2. Negative share.** 12.2% of internal contacts are negative (was 41%, inherited from the sample). Complaints are 85%
+negative; queries and requests about 9%. By product: personal loans 16%, cards 15%, home and auto loans 15%, PayZapp
+and insurance 11%, accounts 9.5%, digital 9%. The product mix of contacts is held at the sample's own mix. The business
+cards and the Cards issue pulse show these shares. The sample pages still count the kept rows, where the share is higher.
+
+**3. Social inbox.** 1% of contacts (24,000), the low end of K4's 1-3%. Chat 13.5% and WhatsApp 7.5% take up the
+difference; calls 56%, email 13%, branch 9% are unchanged. The inbox is still larger than the public mentions collected
+(17,193): it counts every message to the bank's handles, including direct messages, and the public figure is a sample.
+The External channels block carries one (i): "Public figures are the collected sample."
+
+**4. Unhappy with the reply.** Derived from the reply's outcome, not from later contacts: 30% of partly or fully
+rejected complaints come back (40% reopen, the rest contact again on the issue), and 2.2% of resolved ones do. Result:
+2,921. Total at risk (on the brink 2,974 + already eligible 7,124 + unhappy 2,921) is 13,019, against about 2,400
+Ombudsman complaints: 5.4 at risk for each one filed. Brink plus eligible is 51% of pending (19,882) and stays a
+subset of it.
+
+**Walkthrough.** `scripts/hdfc_v3/walkthrough.py` now writes the walkthrough from the Full-window figures on every
+pipeline run, so its numbers cannot go stale.
+
+**Not changed.** The unlinked sample pages keep their own ladder and sample counts.
+

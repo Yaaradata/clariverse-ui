@@ -72,7 +72,10 @@ export type PublicFigures = {
 export type PulseList = {
   id: string;
   label: string;
+  /** The list's size at the bank (declared; bank scale). */
   members: number;
+  /** Its customers with a contact in the period. */
+  in_contact: number;
   volume: number;
   prev_volume: number;
   change_pct: number | null;
@@ -103,6 +106,12 @@ export type SocialPost = {
 /** Social pulse (30 Sep review, K2): public voice only; what LisN adds beyond the bank's own systems. */
 export type SocialPulse = {
   mentions: number;
+  mentions_series: { end: string; count: number }[];
+  high_impact_series: { end: string; count: number }[];
+  /** Share of mentions with a bank response, per earlier window of the period's length. */
+  response_series: { end: string; pct: number | null }[];
+  /** Source-weighted negative share of mentions, per earlier window of the period's length. */
+  negative_share_series: { end: string; pct: number | null }[];
   /** Bank replies by source. Play Store is collected (live); the rest are simulated and marked illustrative. */
   by_source: {
     source: string;
@@ -116,6 +125,10 @@ export type SocialPulse = {
   response_pct: number | null;
   high_impact: number;
   high_impact_responded: number;
+  /** Against the comparison window; null when there is nothing to compare with. */
+  high_impact_change_pct: number | null;
+  /** The busiest day for high-impact posts in the period, with that day's posts (up to five, by engagement). */
+  high_impact_peak: { date: string; count: number; posts: SocialPost[] } | null;
   high_impact_response_pct: number | null;
   posts: SocialPost[];
   good_response: {
@@ -289,7 +302,7 @@ export type OmbudsmanCounts = {
   brink: number;
   /** Past day 30 with no reply, within the 90 days to file. */
   eligible: number;
-  /** Replied, then reopened, contacted again on the issue, or escalation language; within 90 days of the reply. */
+  /** Replied, then reopened or contacted again on the issue; within 90 days of the reply. */
   unhappy: number;
   /** A partly or fully rejecting decision waiting for Internal Ombudsman review. */
   awaiting_io: number;
@@ -303,6 +316,10 @@ export type OmbudsmanSnapshot = OmbudsmanCounts & {
   received: number;
 };
 export type OmbudsmanBlock = {
+  /** Complaints received and still waiting for a reply. On the brink and already eligible are both inside it. */
+  pending: number;
+  /** Internal Ombudsman, from the one complaint register: sent for review, and reviewed. */
+  io: { decided: number; reviewed: number };
   provenance: "internal";
   as_of: string;
   prev_as_of: string;
@@ -428,7 +445,10 @@ export type Period = {
   end: string;
   public_start: string;
   public_end: string;
+  /** One label for every period: "vs previous period". */
   compare: string;
+  /** Exactly what is compared, for the tooltip. */
+  compare_detail: string;
   customer_pulse: {
     lists: PulseList[];
     mentions: {
@@ -436,6 +456,9 @@ export type Period = {
       total: number;
       responded: number;
       not_responded: number;
+      series: { end: string; count: number }[];
+      unanswered_series: { end: string; count: number }[];
+      response_pct: number | null;
       by_list: Record<string, { total: number; responded: number }>;
       rule: string;
     };
@@ -469,6 +492,13 @@ export type Period = {
 };
 
 export type PeriodsFile = {
+  /** Internal figures are bank-scale weighted sums of the kept sample rows (scripts/hdfc_v3/scale_v3.py). */
+  scale: {
+    sample_rows: number;
+    sample_customers: number;
+    list_sizes: Record<string, number>;
+    note: string;
+  };
   end: string;
   public_end: string;
   default: PeriodId;

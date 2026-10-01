@@ -18,6 +18,8 @@ cd ../hdfc_v3
 "$PY" seed_complaints_v3.py
 "$PY" periods_v3.py
 "$PY" check_reconcile_v3.py
+"$PY" volume_validation.py
+"$PY" walkthrough.py
 cd ../..
 "$PY" scripts/lint_terms.py
 "$PY" scripts/check_pii.py

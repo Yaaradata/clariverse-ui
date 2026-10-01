@@ -31,6 +31,7 @@ export default async function SignalPage({
   return (
     <Shell
       {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
       title={title}
       subtitle="Signal detail · What · Is it real · Where · How high · Who and what next · Evidence"
       drill

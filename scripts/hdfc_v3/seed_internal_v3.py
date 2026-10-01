@@ -40,6 +40,8 @@ from common import (
     dump,
     load,
 )
+import complaint_rules
+import scale_v3
 from personas import BUCKETS, ESCALATION_EMAILS, PERSONAS
 
 rng = random.Random(SEED)
@@ -49,6 +51,8 @@ START_DT = dt.datetime(2026, 7, 1, 0, 0, tzinfo=IST)
 N_CUSTOMERS = 5000
 N_INTERACTIONS = 32000
 N_BOT_CALLS = 500
+# How much more often a listed customer is drawn for a kept row than their share of contacts would give.
+LIST_OVERSAMPLE = {"priority_a": 4.2, "priority_b": 2.6, "uhni": 9.0, "other": 1.0}
 
 SEGMENTS = [("Classic", 0.55), ("Preferred", 0.27), ("Imperia", 0.14), ("Private", 0.04)]
 CHANNELS = [
@@ -332,6 +336,12 @@ def make_interaction(idx, cust, product, theme, created, channel, sender, themes
         if int(hashlib.sha1(rec["id"].encode()).hexdigest(), 16) % 100 < 40:
             rec["resolution_sent_at"] = rec["first_response_at"]
             rec["status"] = "waiting_on_customer"  # not open with the bank, on every screen
+    # High-priority mentions (1 Oct fix 4): whether the bank replied to the customer's public post. Its own fact, apart
+    # from how the case was handled inside the bank, so no other figure moves. Set from the record id (no random
+    # stream), at 62%: listed customers who go public are answered a little under two times in three.
+    rec["mention_replied"] = None
+    if rec["channel"] == "social_inbox":
+        rec["mention_replied"] = int(hashlib.sha1(f"mention:{rec['id']}".encode()).hexdigest(), 16) % 100 < 62
     return rec
 
 
@@ -346,6 +356,10 @@ def build_interactions(customers, mix, themes):
             w = 1.4
         if "priority_a" in c["cohorts"] or "priority_b" in c["cohorts"]:
             w *= 1.2
+        # Bank scale (1 Oct, granularity): the kept sample holds more rows for listed customers, so each of their rows
+        # stands for few bank-scale contacts (about 1 on the two small lists) and their small figures vary naturally
+        # instead of moving in steps of one large weight. scale_v3 then fits the weights to the same anchors.
+        w *= LIST_OVERSAMPLE[next((k for k in ("priority_a", "priority_b", "uhni") if k in c["cohorts"]), "other")]
         weights.append(w)
     persona_ids = {p["masked_id"] for p in PERSONAS}
     out = []
@@ -478,7 +492,7 @@ COHORTS = [
     ("priority_b", "RBI & Government", "The bank's own list"),
     ("uhni", "Ultra HNI", "Relationship tier from core banking"),
     ("hni", "HNI", "Relationship tier from core banking"),
-    ("multi", "Customers with multiple relationships", "Listed or HNI customers holding two or more products, from the bank's records"),
+    ("multi", "Customers with multiple relationships", "Customers on the bank's lists holding four or more products, from the bank's records"),
 ]
 LISTED = ("priority_a", "priority_b", "uhni", "hni")
 HI_LABEL = {
@@ -1139,13 +1153,27 @@ def main():
         c["cohort_added_at"] = p.get("cohort_added_at", "2026-04-01T00:00+05:30")
         c["cohort_added_by"] = p.get("cohort_added_by", "bank")
     # Customers with multiple relationships: a bank-supplied list (synthetic), derived from the bank's own records only.
+    # Bank scale (1 Oct): the list is the bank's deepest listed relationships, four or more products, so that it sits
+    # between the two small lists and the Ultra HNI list in size (public_anchors_volumes.md; MORNING_DECISIONS D29).
     for c in customers:
-        if len(c["products"]) >= 2 and any(k in c["cohorts"] for k in LISTED) and "multi" not in c["cohorts"]:
+        deep = len(c["products"]) >= 4 and any(k in c["cohorts"] for k in ("priority_a", "priority_b", "uhni"))
+        if deep and "multi" not in c["cohorts"]:
             c["cohorts"].append("multi")
     inter = build_interactions(customers, mix, themes)
     inter.sort(key=lambda r: r["created_at"])
     written_delays(inter)
     enrich(inter)
+    # Internal Ombudsman (1 Oct): a contact is at the IO rung exactly when it is a complaint the bank decided to partly
+    # or fully reject (complaint_rules.decide), which is what the IO reviews. No other contact sits at that rung, so the
+    # ladder, the IO queue and "awaiting IO review" all come from the one register.
+    for r in inter:
+        d = complaint_rules.decide(r) if complaint_rules.is_complaint(r) else None
+        if d and complaint_rules.filed_with_ombudsman(r, d):
+            r["escalation"] = "rbi_ombudsman"  # only an at-risk complaint reaches the RBI Ombudsman
+        elif d and d["decision_at"] is not None:
+            r["escalation"] = "io"
+        elif r["escalation"] in ("io", "rbi_ombudsman"):
+            r["escalation"] = "md_office"
     link_proxies(customers, inter)
     bot_calls = build_bot_calls(customers)
     agg = aggregates(customers, inter, bot_calls, ESCALATION_EMAILS, themes, products_pub)
@@ -1160,7 +1188,21 @@ def main():
     assert sum(d["total"] for d in agg["deliverables"]) == agg["dials"]["total"]
     agg["qa"]["reconcile_pass"] = True
 
+    # Bank scale: a weight on every kept row and customer (scale_v3.py). The aggregates above stay sample counts: they
+    # feed the drill-down and customer pages, which are labelled "sample rows".
+    scale = scale_v3.apply(customers, inter)
+    # High-priority mentions: the public reply is spread evenly through time at bank scale (about 62% answered), so the
+    # response rate is steady whichever period is chosen, instead of swinging with a few heavy rows.
+    listed_ids = {c["masked_id"] for c in customers if any(k in c["cohorts"] for k in ("priority_a", "priority_b", "uhni", "multi"))}
+    done = total = 0
+    for r in inter:  # in time order
+        if r["channel"] == "social_inbox" and r["masked_id"] in listed_ids:
+            total += r["w"]
+            r["mention_replied"] = done + r["w"] <= 0.62 * total + 0.5 * r["w"]
+            done += r["w"] if r["mention_replied"] else 0
+
     SEED_V3.mkdir(parents=True, exist_ok=True)
+    dump(scale, SEED_V3 / "scale.json")
     dump(customers, SEED_V3 / "customers.json", indent=None)
     with open(SEED_V3 / "interactions.jsonl", "w", encoding="utf-8") as f:
         for r in inter:

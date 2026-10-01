@@ -243,6 +243,13 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     end = dt.datetime.fromisoformat(per["end"])
     h48 = dt.timedelta(hours=48)
     rs_all = [r for r in inter if r["channel"] in CH]  # IVR bot is not counted on these views
+    # Bank scale (scale_v3.py): every internal figure is a weighted sum of the kept sample rows.
+    W = lambda rs: sum(r["w"] for r in rs)  # noqa: E731
+    CW = lambda ids: sum(customers[m]["cw"] for m in ids)  # noqa: E731
+    scale = load(seed_dir / "scale.json")
+    ok(all(isinstance(r.get("w"), int) and r["w"] >= 1 for r in inter) and all(isinstance(c.get("cw"), int) and c["cw"] >= 1 for c in customers.values()),
+       "bank scale: every kept row and customer carries a whole-number weight")
+    notes = {x["masked_id"]: x for x in load(seed_dir / "rm_notifications.json")}
     for pid, p in per["periods"].items():
         a, b = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
         measurable = b - a > h48
@@ -252,7 +259,7 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
             still = [r for r in vol if r["status"] != "closed" or (r["closed_at"] and dt.datetime.fromisoformat(r["closed_at"]) > b)]
             wait = [r for r in still if r.get("resolution_sent_at") and dt.datetime.fromisoformat(r["resolution_sent_at"]) <= b]
             op = [r for r in still if r not in wait]  # waiting on the customer is not open with the bank
-            figs.waiting = len(wait)
+            figs.waiting = W(wait)
             wait_ids = {r["id"] for r in wait}
 
             def waited(r):
@@ -261,7 +268,11 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
                 c = dt.datetime.fromisoformat(r["created_at"])
                 fr = dt.datetime.fromisoformat(r["first_response_at"]) if r["first_response_at"] else None
                 return (fr - c > h48) if fr and fr <= b else (b - c > h48)
-            return len(vol), len(op), (sum(1 for r in vol if waited(r)) if measurable else None)
+            seen = collections.Counter()
+            for r in vol:
+                seen[r["masked_id"]] += r["w"]
+            figs.customers = sum(min(customers[m]["cw"], v) for m, v in seen.items())
+            return W(vol), W(op), (sum(r["w"] for r in vol if waited(r)) if measurable else None)
 
         for lst in p["customer_pulse"]["lists"]:
             members = {m for m, c in customers.items() if lst["id"] in c["cohorts"]}
@@ -270,6 +281,18 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
                f"[{pid}] {lst['label']}: volume, open and 48-hour wait recomputed ({v}, {o}, {n})")
             ok(figs.waiting == lst["waiting_on_customer"], f"[{pid}] {lst['label']}: waiting on customer recomputed ({figs.waiting})")
             ok(0 <= lst["rm"]["alerted"] <= lst["rm"]["of"] <= lst["members"], f"[{pid}] {lst['label']}: RMs alerted within customers due an alert")
+            ok(lst["members"] == scale["list_sizes"][lst["id"]] and figs.customers == lst["in_contact"] <= min(lst["members"], lst["volume"]),
+               f"[{pid}] {lst['label']}: list size from scale.json; customers in contact recomputed ({figs.customers}) and within the list")
+            due = collections.Counter()
+            for r in rs_all:
+                c = dt.datetime.fromisoformat(r["created_at"])
+                if (r["masked_id"] in members and a <= c < b and r["status"] == "open" and customers[r["masked_id"]]["rm_id"]
+                        and (r["sentiment"] == "negative" or r["high_impact"] or b - c > dt.timedelta(hours=5))):
+                    due[r["masked_id"]] += r["w"]
+            each = {m: min(customers[m]["cw"], n) for m, n in due.items()}
+            got = (sum(v for m, v in each.items() if m in notes and notes[m]["notified_today"]), sum(each.values()))
+            ok(got == (lst["rm"]["alerted"], lst["rm"]["of"]), f"[{pid}] {lst['label']}: RMs alerted recomputed {got}")
+            ok(lst["rm"]["of"] <= lst["open"], f"[{pid}] {lst['label']}: customers due an RM alert never exceed the open contacts ({lst['rm']['of']} <= {lst['open']})")
             for k in ("volume", "open", "waiting_on_customer", "not_responded_48h"):
                 chans = [c[k] for c in lst["by_channel"].values()]
                 total = None if any(c is None for c in chans) else sum(chans)
@@ -293,7 +316,18 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
            f"[{pid}] External block: sources sum to the combined response figure")
         ok(sp["high_impact_responded"] <= sp["high_impact"] and all(x["illustrative"] == (x["source"] != "playstore") for x in sp["by_source"]),
            f"[{pid}] External block: every simulated source is marked illustrative")
+        pk = sp["high_impact_peak"]
+        ok((pk is None) == (sp["high_impact"] == 0) and (pk is None or (0 < pk["count"] <= sp["high_impact"] and len(pk["posts"]) <= min(5, pk["count"])
+                                                                and all(x["date"] == pk["date"] for x in pk["posts"]))),
+           f"[{pid}] High-impact peak day: within the period's high-impact posts, and its posts are from that day")
         men = p["customer_pulse"]["mentions"]
+        listed = {m for m, c in customers.items() if any(lst["id"] in c["cohorts"] for lst in p["customer_pulse"]["lists"])}
+        ment = [r for r in rs_all if r["channel"] == "social_inbox" and r["masked_id"] in listed
+                and a <= dt.datetime.fromisoformat(r["created_at"]) < b]
+        ok(men["total"] == W(ment) and men["responded"] == sum(r["w"] for r in ment if r.get("mention_replied")),
+           f"[{pid}] High-priority mentions recomputed from the seed ({W(ment)}, replied {men['responded']})")
+        if pid == "all":
+            ok(55 <= 100 * men["responded"] / max(men["total"], 1) <= 70, "High-priority mentions: full-window response rate within 55-70%")
         ok(men["responded"] + men["not_responded"] == men["total"], f"[{pid}] High-priority mentions: responded + not responded = total")
         ok(len(sp["posts"]) <= 5 and all(x["score"] >= y["score"] for x, y in zip(sp["posts"], sp["posts"][1:])),
            f"[{pid}] Social pulse: at most five posts, ranked by engagement")
@@ -332,16 +366,40 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     # Across views (follow-up 5): the same status on every V2 screen. The older screens' dials count every channel; the
     # 30 Sep views leave the IVR bot out, so compare on the contacts both count.
     allp = per["periods"]["all"]["cx_pulse"]["internal"]
-    ok(allp["open"] == sum(1 for r in rs_all if r["status"] == "open")
-       and allp["waiting_on_customer"] == sum(1 for r in rs_all if r["status"] == "waiting_on_customer"),
-       "across views: full-window open and waiting on customer = the seed status the older screens count")
+    ok(allp["open"] == sum(r["w"] for r in rs_all if r["status"] == "open")
+       and allp["waiting_on_customer"] == sum(r["w"] for r in rs_all if r["status"] == "waiting_on_customer"),
+       "across views: full-window open and waiting on customer = the weighted seed status")
+    # The drill-down and customer pages (aggregates.json) count the kept sample rows themselves, and say "sample rows".
+    # Same rows, same status: their dials equal the unweighted count of the rows the bank-scale views weight.
     agg = load(seed_dir / "aggregates.json") if (seed_dir / "aggregates.json").exists() else None
     if agg:
-        bot = [r for r in inter if r["channel"] not in CH]
-        ok(agg["dials"]["open"] - sum(1 for r in bot if r["status"] == "open") == allp["open"],
-           "across views: exec dial open (less IVR bot) = CX pulse open, full window")
-        ok(agg["dials"]["waiting_on_customer"] - sum(1 for r in bot if r["status"] == "waiting_on_customer") == allp["waiting_on_customer"],
-           "across views: exec dial waiting on customer (less IVR bot) = CX pulse, full window")
+        ok(agg["dials"]["open"] == sum(1 for r in inter if r["status"] == "open")
+           and agg["dials"]["waiting_on_customer"] == sum(1 for r in inter if r["status"] == "waiting_on_customer"),
+           "across views: sample pages count the same rows, by the same status, that the bank-scale views weight")
+    ok(per["scale"]["sample_rows"] == len(inter) and per["scale"]["list_sizes"] == scale["list_sizes"],
+       "bank scale: periods.json names the sample it is weighted from")
+    # Granularity (1 Oct): small figures must not move in steps of one row weight. Of the internal figures under 500
+    # shown on the MD and Cards views, across all four periods, no more than 30% may share a common factor above 5.
+    small = []
+    for pid, p in per["periods"].items():
+        for lst in p["customer_pulse"]["lists"]:
+            small += [lst[k] for k in ("volume", "open", "waiting_on_customer", "not_responded_48h", "in_contact")]
+            small += [lst["rm"]["alerted"], lst["rm"]["of"]]
+            small += [x["count"] for x in lst["not_responded_series"]]
+        men = p["customer_pulse"]["mentions"]
+        small += [men["total"], men["responded"], men["not_responded"]]
+        for blk in (p["ombudsman"], p["cards"]["ombudsman"]):
+            small += [blk["now"][k] for k in ("brink", "eligible", "unhappy", "awaiting_io")] + list(blk["now"]["buckets"].values())
+            small += [blk["delta"][k] for k in ("brink", "eligible", "unhappy", "awaiting_io")] + [blk["became_eligible"]]
+        ci = p["cards"]["internal"]
+        small += [ci[k] for k in ("open", "waiting_on_customer", "open_too_long", "not_responded_48h", "escalations")]
+        for c in p["cards"]["categories"]:
+            small += [c["internal"][k] for k in ("open", "waiting_on_customer", "not_responded_48h", "escalations")]
+    small = [abs(v) for v in small if isinstance(v, int) and 5 < abs(v) < 500]
+    worst = max(((sum(1 for v in small if v % f == 0) / max(len(small), 1), f) for f in range(6, 251)), default=(0, 0))
+    ok(len(small) >= 30 and worst[0] <= 0.30,
+       f"granularity: of {len(small)} small figures (under 500) on the MD and Cards views, at most 30% share a factor above 5 "
+       f"(worst: {100 * worst[0]:.0f}% divisible by {worst[1]})")
     ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
     ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
     ombudsman_checks(seed_dir, per, inter, ok)
@@ -363,9 +421,8 @@ def _omb_state(c, T):
         st = {"open": True, "eligible": d30 <= age < d30 + d90, "brink": left is not None and left <= 10, "unhappy": False,
               "awaiting_io": bool(dec and dec <= T and (io is None or io > T)), "left": left}
     else:
-        after = [x for x in c["contacts"] if reply < dt.datetime.fromisoformat(x["at"]) <= T and (x["same_issue"] or x["escalation"])]
-        re_ = t("reopened_at")
-        unhappy = T < reply + d90 and (bool(after) or bool(re_ and reply < re_ <= T))
+        back = t("unhappy_at")
+        unhappy = bool(back and reply < back <= T and T < reply + d90)
         st = {"open": unhappy, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
@@ -380,6 +437,7 @@ def ombudsman_checks(seed_dir, per, inter, ok):
     src = {r["id"]: r for r in inter if r["deliverable"] == "complaint_resolution" and r["channel"] != "ivr_bot"}
     ok(len(cs) == len(src) and {c["source_id"] for c in cs} == set(src),
        f"Ombudsman: one complaint per formal complaint contact (IVR bot excluded) ({len(cs)} = {len(src)})")
+    ok(all(c.get("w") == src[c["source_id"]]["w"] for c in cs if c["source_id"] in src), "Ombudsman: each complaint carries its contact's bank-scale weight")
     bad = []
     for c in cs:
         r = src.get(c["source_id"])
@@ -395,6 +453,23 @@ def ombudsman_checks(seed_dir, per, inter, ok):
         if c["outcome"] == "resolved" and c["decision_at"]:
             bad.append(c["id"])
     ok(not bad, f"Ombudsman: register matches the contacts and the IO order holds ({bad[:3]})")
+    # Internal Ombudsman: one register. A contact is at the IO rung exactly when it is a complaint with a decision to
+    # reject (the RBI Ombudsman rung sits above it); the reject rate is about 10%, as at peer banks.
+    W = lambda xs: sum(c["w"] for c in xs)  # noqa: E731
+    decided = [c for c in cs if c["decision_at"]]
+    at_io = {r["id"] for r in inter if r.get("escalation") == "io"}
+    want_io = {c["source_id"] for c in decided if src.get(c["source_id"], {}).get("escalation") != "rbi_ombudsman"}
+    ok(at_io == want_io, f"Internal Ombudsman: the ladder's IO rung is exactly the complaints with a decision to reject ({len(at_io)} contacts)")
+    rbi = [c for c in cs if src.get(c["source_id"], {}).get("escalation") == "rbi_ombudsman"]
+    end = dt.datetime.fromisoformat(per["end"])
+    ok(len(rbi) == sum(1 for r in inter if r.get("escalation") == "rbi_ombudsman")
+       and all(c["unhappy_at"] or (not c["final_reply_at"] and end - dt.datetime.fromisoformat(c["received_at"]) > dt.timedelta(days=30)) for c in rbi),
+       f"RBI Ombudsman: every contact at that rung is a complaint that was unhappy with the reply or past day 30 without one ({len(rbi)} in the sample)")
+    ok(0.06 <= W(decided) / max(W(cs), 1) <= 0.12,
+       f"Internal Ombudsman: reject rate {100 * W(decided) / max(W(cs), 1):.1f}% of complaints ({W(decided)} of {W(cs)}), within 6-12%")
+    ok(all(c["outcome"] in ("partly_rejected", "rejected") for c in decided) and not any(c["decision_at"] for c in cs if c["outcome"] == "resolved"),
+       "Internal Ombudsman: only rejected or partly rejected complaints carry a decision")
+    ok(all((c["unhappy_at"] is None) or c["final_reply_at"] for c in cs), "Unhappy with the reply: only replied complaints")
     keys = ("brink", "eligible", "unhappy", "awaiting_io", "at_risk", "open")
     for pid, p in per["periods"].items():
         o = p.get("ombudsman")
@@ -405,13 +480,37 @@ def ombudsman_checks(seed_dir, per, inter, ok):
         for label, blk, scope in (("bank", o, cs), ("Cards", co, [c for c in cs if c["product"] == "cards"])):
             for when, at in (("now", blk["as_of"]), ("prev", blk["prev_as_of"])):
                 T = dt.datetime.fromisoformat(at)
-                sts = [s for c in scope if (s := _omb_state(c, T))]
-                got = {k: sum(1 for s in sts if s[k]) for k in keys}
+                pairs = [(c, s) for c in scope if (s := _omb_state(c, T))]
+                sts = [s for _, s in pairs]
+                got = {k: sum(c["w"] for c, s in pairs if s[k]) for k in keys}
                 ok(all(got[k] == blk[when][k] for k in keys), f"[{pid}] Ombudsman {label} {when} recomputed {got}")
                 ok(all(s["open"] for s in sts if s["at_risk"]) and got["at_risk"] <= got["open"],
                    f"[{pid}] Ombudsman {label} {when}: at risk is a subset of open complaints")
                 ok(all(s["open"] for s in sts if s["awaiting_io"]), f"[{pid}] Ombudsman {label} {when}: awaiting IO review are open")
             ok(sum(blk["now"]["buckets"].values()) == blk["now"]["brink"], f"[{pid}] Ombudsman {label}: countdown buckets = on the brink")
+            T = dt.datetime.fromisoformat(blk["as_of"])
+            pending = sum(c["w"] for c in scope if dt.datetime.fromisoformat(c["received_at"]) <= T
+                          and not (c["final_reply_at"] and dt.datetime.fromisoformat(c["final_reply_at"]) <= T))
+            near = blk["now"]["brink"] + blk["now"]["eligible"]
+            ok(pending == blk["pending"] and near <= pending,
+               f"[{pid}] Ombudsman {label}: on the brink + already eligible ({near}) is within pending complaints ({pending})")
+            io = blk["io"]
+            got_io = (sum(c["w"] for c in scope if c["decision_at"] and dt.datetime.fromisoformat(c["decision_at"]) <= T),
+                      sum(c["w"] for c in scope if c["io_reviewed_at"] and dt.datetime.fromisoformat(c["io_reviewed_at"]) <= T))
+            ok(got_io == (io["decided"], io["reviewed"]) and io["decided"] - io["reviewed"] == blk["now"]["awaiting_io"],
+               f"[{pid}] Internal Ombudsman {label}: sent for review {io['decided']} = reviewed {io['reviewed']} + awaiting {blk['now']['awaiting_io']}")
+            if label == "Cards":
+                rungs = {x["rung"]: x["count"] for x in p["cards"]["service_full"]["ladder"]}
+                a_, b_ = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
+                in_win = [r for r in inter if r["product"] == "cards" and r["channel"] != "ivr_bot"
+                          and a_ <= dt.datetime.fromisoformat(r["created_at"]) < b_]
+                reg = sum(c["w"] for c in scope if a_ <= dt.datetime.fromisoformat(c["received_at"]) < b_ and c["decision_at"])
+                rbi_only = sum(r["w"] for r in in_win if r.get("escalation") == "rbi_ombudsman" and not (
+                    r["id"] in {c["source_id"] for c in scope if c["decision_at"]}))
+                ok(rungs["Internal Ombudsman"] == reg + rbi_only,
+                   f"[{pid}] Internal Ombudsman: the Cards ladder's IO rung ({rungs['Internal Ombudsman']}) = the register's complaints sent for review ({reg}) plus RBI-rung contacts outside it ({rbi_only})")
+            if label == "bank":
+                ok(0.15 <= near / max(pending, 1) <= 0.75, f"[{pid}] Ombudsman: brink + eligible is a plausible share of pending ({100 * near / max(pending, 1):.0f}%)")
             ok(all(blk["delta"][k] == blk["now"][k] - blk["prev"][k] for k in keys), f"[{pid}] Ombudsman {label}: changes = now - previous")
         ok(all(sum(x[k] for x in o["by_business"]) == o["now"][k] for k in keys), f"[{pid}] Ombudsman: businesses sum to the bank total")
         cards_row = next(x for x in o["by_business"] if x["id"] == "cards")

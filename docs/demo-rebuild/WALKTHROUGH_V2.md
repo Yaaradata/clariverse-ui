@@ -1,4 +1,7 @@
-# LisN · HDFC Customer Pulse: walkthrough script (branch feat/review-30sep, after the Karthik review)
+# LisN · HDFC Customer Pulse: walkthrough script (bank-scale numbers)
+
+Written by `scripts/hdfc_v3/walkthrough.py` from the Full-window figures, on every pipeline run. Edit the script, not
+this file.
 
 For an internal walkthrough with a manager. About 12 minutes.
 **Do** = what to click. **Say** = what to say (in your own words).
@@ -6,9 +9,11 @@ For an internal walkthrough with a manager. About 12 minutes.
 Before you start:
 - Open `http://localhost:3000/role-based/hdfc`, click **"MD's office & Head of CX · LisN"**, and full-screen the browser.
 - Pick a theme with the **Light / Dark** button in the header. The choice sticks for the whole demo.
-- In the top-right corner, click **Full window**. The screen opens on Last 7 days; every figure in this script is for **Full window, 1 Jul to 29 Sep 08:30** (public data ends 28 Sep), in the brief of **Tuesday 29 September 2026, 07:45**. Trends in this period compare the second half of the window with the first half.
+- In the top-right corner, click **Full window**. The screen opens on Last 7 days; every figure in this script is for **Full window, 1 Jul to 29 Sep 08:30** (public data ends 28 Sep), in the brief of **Tuesday 29 September 2026, 07:45**. Changes compare the second half of the window with the first half.
 
 The left menu has four screens: **MD's office / Head of CX**, **Cards: business view**, **Action queue: escalation emails** and **My view: pinned answers**. The **Ask LisN** bar sits at the bottom of every screen.
+
+**On the numbers.** Internal figures are at HDFC Bank's scale, calibrated to public anchors (`public_anchors_volumes.md`; checked in `qa/volume_validation.md`). They are still illustrative until discovery, and every internal tile says so.
 
 ---
 
@@ -17,7 +22,7 @@ The left menu has four screens: **MD's office / Head of CX**, **Cards: business 
 **Do:** Land on the MD's office / Head of CX view. Don't scroll yet.
 
 **Say:**
-> "This is the HDFC demo after the two reviews on 30 September. One view for the MD's office and the Head of CX, opening with the pulse. One period filter for everything. A Cards business view. And Ask LisN is now a question bar on every screen, because the product is AI-first: the screens show the few things that matter, and everything else is one question away."
+> "One view for the MD's office and the Head of CX, opening with the pulse. One period filter for everything. A Cards business view. And Ask LisN on every screen: the screens show the few things that matter, and everything else is one question away. The volumes are sized to the bank: about 24.0 lakh contacts and 1.1 lakh complaints a quarter, from HDFC's own published complaint numbers."
 
 ---
 
@@ -35,152 +40,141 @@ The left menu has four screens: **MD's office / Head of CX**, **Cards: business 
 **Do:** Point at the four list cards under **Internal channels**.
 
 **Say:**
-> "The bank's most important customers come first, on the bank's own channels only. Four lists, all the bank's own: Ultra sensitive, RBI & Government, Ultra HNI, and customers with multiple relationships. Each card shows contacts, what is open, and what was not responded to in 48 hours, each compared with the previous period, with a small trend line for the 48-hour figure.
-> Ultra sensitive: 45 customers, 438 contacts, up 14%; 18 open, 3 not responded to in 48 hours. RBI & Government: 1,204 contacts, 40 open. Ultra HNI: 1,551 contacts, 39 open. Multiple relationships: 6,304 contacts, 161 open, down 61."
+> "The bank's most important customers come first, on the bank's own channels only. Four lists, all the bank's own. Each card shows the list's contacts with the change on the previous period, gauges for what is open and what was not replied to in 48 hours, and the trend of that 48-hour figure.
+> Ultra sensitive: 1,800 customers, 2,325 contacts; 48 open, 12 with no reply in 48 hours. RBI & Government: 3,200 customers, 3,592 contacts; 99 open, 20 with no reply in 48 hours. Ultra HNI: 2,00,000 customers, 1,13,290 contacts; 1,875 open, 388 with no reply in 48 hours. Multiple relationships, the listed customers holding four or more products: 85,000 customers, 50,398 contacts; 894 open, 133 with no reply in 48 hours."
 
-**Do:** Point at the line under one card: **RMs alerted** and **Waiting on customer**. Click **By channel**, then close it.
+**Do:** Hover the trend on one card. Point at **RMs alerted**.
 
 **Say:**
-> "Two things on every card. RMs alerted: 3 of 14 for Ultra sensitive, 5 of 33 for RBI & Government, 7 of 36 for Ultra HNI, 32 of 152 for multiple relationships. And waiting on customer: when the bank has sent a resolution, the thread is with the customer, so it is not counted as open or as unanswered. That status is illustrative, like the rest of the internal data."
+> "Hover any trend for the figure behind each week. And RMs alerted: of the listed customers with an alert due, how many RMs have been told. Ultra sensitive 8 of 48. RBI & Government 15 of 81. Ultra HNI 327 of 1,797. Multiple relationships 182 of 894. That gap is the point."
 
 ---
 
 ## 3. Customer pulse: external channels (2 min)
 
-**Do:** Scroll to the tinted **External channels** block below the dashed line.
+**Do:** Scroll to the tinted **External channels** block below the dashed line. Hover the small (i).
 
 **Say:**
-> "Below the line, and never added to the cards above, is what LisN adds beyond the bank's own systems. 17,193 public mentions. 272 are high impact, by the virality rule printed underneath; 138 of those got a response. Overall the bank responded to 69%, which is 11,918 of 17,193. That figure is informational, not a target, and response means acknowledged and routed to an official channel."
+> "Below the line, and never added to the cards above, is public voice: what LisN adds beyond the bank's own systems. These are the posts and reviews we collected, a sample, not a census. 17,193 public mentions, 37% positive and 44% negative. 272 are high impact; 138 of those got a response and 157 are negative."
 
-**Do:** Point at **Response by source**.
-
-**Say:**
-> "By source: Play Store 96%, which is collected data. App Store 37%, X 62%, Reddit 9% and forums 5% are marked Illustrative: the replies on those platforms are simulated at typical care-handle rates until we collect them."
-
-**Do:** Point at **High-priority mentions**, the **Top 5 trending posts** and the **Good response** card.
+**Do:** Click **Peak: 18 Aug · 25 posts** on the High-impact card. Show the list, then click **Show the whole period**.
 
 **Say:**
-> "High-priority mentions are posts where a customer on the bank's lists tagged the bank: 144, of which 142 were responded to and 2 were not. Then the five posts with the most engagement, each marked responded or not responded. And one good response: the customer's review and the bank's reply, acknowledged, given a reference and routed to an official channel. Names and links are removed; there is no link to the original post."
+> "The busiest day for high-impact posts was 18 Aug, with 25. One click opens that day's posts: anonymised, no names, no links."
+
+**Do:** Point at **Bank response** and **High-priority mentions**.
+
+**Say:**
+> "The bank responded to 69% of public mentions. That is informational, not a target. Play Store, 96%, is collected data; App Store 37%, X 62%, Reddit 9% and forums 5% are illustrative until we collect those replies.
+> High-priority mentions are posts where a customer on the bank's lists tagged the bank: 1,010, of which 634 were answered, 63%, and 376 were not. That chart is the unanswered ones, week by week."
 
 ---
 
 ## 4. CX pulse: all customer contact (1.5 min)
 
-**Do:** Point at the **Overall contact volume** bar, then the **Internal channels** dials and channel table.
+**Do:** Point at the **Overall contact volume** line, then the **Internal channels** dials and channel table.
 
 **Say:**
-> "All customer contact in one place: 46,311 since 1 July; 29,118 on the bank's own channels (63%) and 17,193 in public (37%).
-> Inside the bank: 27,792 resolved, 826 open, 500 waiting on the customer, and 637 open too long, meaning with the bank for more than 48 hours. Resolved plus open plus waiting equals the volume, and the channel table adds up to the dials."
+> "All customer contact: 24,01,310 on the bank's own channels since 1 July, and 17,193 collected in public.
+> Inside the bank: 23,22,019 resolved, 47,278 open, 32,013 waiting on the customer, and 30,287 open too long, meaning with the bank for more than 48 hours. 12% of contacts are negative. Calls are the largest channel at 13.4 lakh; then chat 3.2 lakh, email 3.1 lakh, branch 2.2 lakh and WhatsApp 1.8 lakh; the social inbox is 24,046. The channels add up to the dials."
 
 **Do:** Point at **External channels**: Total signals and High-impact signals.
 
 **Say:**
-> "Outside: 6,332 positive against 7,510 negative, source-weighted. 272 posts with reach, 157 of them negative."
+> "Outside: 6,332 positive against 7,510 negative, source-weighted. 272 posts with reach."
 
 ---
 
-## 5. Today's morning brief (1.5 min)
+## 5. Ombudsman watch (1.5 min)
+
+**Do:** Scroll to **Ombudsman watch**. Point at the four dials, then the bars by business.
+
+**Say:**
+> "This is the RBI rule, and only the RBI rule: 30 days to reply to a complaint, and after that the customer can go to the Ombudsman. Of 1,10,209 complaints in the window, 19,882 are still pending a reply.
+> On the brink, 10 days or fewer left: 2,974. Already eligible, past day 30 with no reply: 7,124. Those two together are 51% of what is pending. Unhappy with the reply, so eligible at any point: 2,921. That is 13,019 at risk in all.
+> About 9% of complaints are partly or fully rejected, 10,370 in the window; each goes to the Internal Ombudsman first, and 2,454 are waiting for that review now.
+> By business, Accounts and deposits and Cards carry the most. LisN shows eligibility and risk; it never predicts that a customer will file."
+
+---
+
+## 6. Today's morning brief (1.5 min)
 
 **Do:** Scroll to **Today's morning brief**. Read across the three columns.
 
 **Say:**
 > "The brief, in three columns of three.
-> What needs you: Accounts and deposits, with 222 posts using escalation language and 378 internal cases open over 48 hours. Cards, rewards value, devaluation and caps: 130 posts and 118 cases. Personal loans, recovery and collection conduct: 58 posts and 44 cases.
-> Signals that are building: card variant migration and forced upgrade on Cards, 275 public items; product questions and KYC updates on Accounts.
-> What's improving or stable: Accounts, negative share down from 60% to 50%. PayZapp and UPI, down from 53% to 45%. Cards is steady at 68%."
+> What needs you: the Ombudsman watch leads, with 1,060 complaints at 3 days or fewer and 7,124 already eligible. Then Cards, Rewards value, devaluation and caps: 130 posts with escalation language; 11,024 internal cases open over 48 hours. Then Accounts and deposits: 222 posts with escalation language; 6,989 internal cases open over 48 hours.
+> Signals that are building: Card variant migration and forced upgrade on Cards; then Product questions and advice-seeking and KYC, re-KYC and profile updates.
+> What's improving or stable: Accounts and deposits: Negative share down from 60% to 50% vs previous period. PayZapp and UPI: Negative share down from 53% to 45% vs previous period. Cards: Negative share steady at 68% (66% before)."
 
-**Do:** Point at the **business cards** and the **Deep dive** button on each.
-
-**Say:**
-> "One card per business. Cards: 12,319 contacts, 8,693 internal and 3,626 public; 179 open and 106 waiting on the customer. Accounts and deposits: 10,605. Digital: 9,514. PayZapp and UPI: 7,690. Every card has a Deep dive button. Cards is built; the others say 'Coming soon'."
-
-**Do:** Scroll to **Reputation pulse by product**.
+**Do:** Point at the **business cards** and the **Deep dive** button.
 
 **Say:**
-> "Reputation by product is the public side only, one row per product. The view ends here; there is no separate actions list any more."
+> "One card per business. Cards: 7,67,015 contacts; 15,629 open and 10,623 waiting on the customer; 15% of its internal contacts are negative. Accounts and deposits: 6,50,176. Digital: 3,74,980. PayZapp and UPI: 2,26,157. Cards has a Deep dive; the others say 'Coming soon'."
 
 ---
 
-## 6. Cards: business view (2.5 min)
+## 7. Cards: business view (2 min)
 
-**Do:** Click **Deep dive** on the Cards card. Point at the **"Cards · Business view"** label in the header, then scroll a little to show it stays.
-
-**Say:**
-> "The head of Cards' view. The label stays in the header while you scroll, so you always know where you are."
-
-**Do:** Point at **Issue pulse: Cards**.
+**Do:** Click **Deep dive** on the Cards card. Point at the **"Cards · Business view"** label in the header, then **Issue pulse: Cards**.
 
 **Say:**
-> "Same period, same numbers as the Cards card: 8,693 internal contacts, up 15%; 8,408 resolved, 179 open, 106 waiting on the customer, and 67 not responded to in 48 hours or more. 2,592 negative, 171 escalated, and 4,597, that's 53%, carry a delivery timeline.
-> In public: 3,626 posts and reviews; 259 positive against 1,312 negative; 131 of 133 Play Store reviews got a reply."
+> "The head of Cards' view; the label stays in the header while you scroll. Same period, same numbers as the Cards card: 7,63,389 internal contacts; 7,37,137 resolved, 15,629 open, 10,623 waiting on the customer, 6,223 not responded to in 48 hours. 1,14,626 negative and 13,852 escalated. In public: 3,626 posts and reviews, 259 positive against 1,312 negative."
 
-**Do:** Scroll to **Issues by category**. Point at the two tinted groups, then click **Upgrades, variants and eligibility**.
-
-**Say:**
-> "Issues by category. Internal and external sit side by side, each with its own tint and its own escalations column. Upgrades, variants and eligibility leads: 2,228 contacts, 40 open, 29 waiting on the customer, 23 not responded to in 48 hours, 54 escalated; and 818 public items, 21 with escalation language. Each contact counts once, so the categories add up to the pulse."
-
-**Do:** Scroll through the five panels.
+**Do:** Scroll past the Cards **Ombudsman watch** and **Save list** to **Issues by category**. Click **Upgrades, variants and eligibility**.
 
 **Say:**
-> "Then five panels, no more. Are my customers happy: net sentiment −56, down 5 points between the two halves of the window. What is the market saying: card dispatch and delivery is rising fastest; 69 posts with reach, 46 of them negative. Both open a full drill-down.
-> Where contacts come from, by journey stage: everyday use is the largest, 3,767. Repeat contact by category: upgrades leads with 278 internal repeats. And top complaints and feature requests from the stores: 133 Cards reviews on the Play Store, 24 on the App Store."
+> "The same Ombudsman watch, scoped to Cards: 1,129 on the brink, 1,659 already eligible. And a save list: the ten complaints to call today, each with why and who owns it. Those ten are sample rows; the counts are bank scale.
+> Then issues by category, internal and external side by side. Upgrades, variants and eligibility leads: 2,05,365 contacts, 3,272 open, 2,182 waiting on the customer, 1,978 not responded to in 48 hours, 1,734 escalated; and 818 public items. The categories add up to the pulse."
+
+**Do:** Scroll to the **three question cards**. Click **Are we keeping our timelines?**, then go back.
+
+**Say:**
+> "Three questions, each with its answer on the card and a full page behind it. Are my customers happy: net sentiment -56, down 5 points. What is the market saying: card dispatch and delivery is rising fastest; 69 posts with reach. Are we keeping our timelines: 124 public posts describe a missed timeline, 611 ask where something is, and 4,04,370 contacts, 53%, carry a delivery timeline."
 
 ---
 
-## 7. Ask LisN (2 min)
+## 8. Ask LisN (1.5 min)
 
-**Do:** Click the **Ask LisN about your business** bar at the bottom. Point at the suggested questions and **Recent questions**.
-
-**Say:**
-> "Everything we took off the page is here. Ask LisN suggests about ten questions for the view you are on."
-
-**Do:** Click **Are we keeping our timelines?**
+**Do:** Click the **Ask LisN about your business** bar. Click a suggested question, then **Pin to my view**.
 
 **Say:**
-> "A short answer and a small table, from the same figures as the page: 124 public posts describe a missed timeline, 611 ask where something is, and 4,597 internal contacts carry a delivery timeline. The answers are precomputed from the page's data for the demo, and tagged that way; there is no live model call yet. The link opens the full panel."
+> "Ask LisN suggests about ten questions for the view you are on and answers from the same figures as the page: a short answer and a small table. The answers are precomputed for the demo, and say so."
 
-**Do:** Click **Pin to my view**, then ask **Where are replies late?** and pin that too.
-
-**Do:** Click **How are Home loans customers doing this week?**
+**Do:** On the Cards view, click **How are Home loans customers doing this week?** Then open **My view**.
 
 **Say:**
-> "And this is role-based access. The head of Cards asks about another business and is told: you're not authorised to see this. Answers follow the bank's role-based access."
-
-**Do:** Click **My view** (in the bar, or in the left menu).
-
-**Say:**
-> "Pinned answers become panels on My view: each person composes their own dashboard by asking. For the demo it lasts for the session."
+> "Role-based access: the head of Cards asks about another business and is told they're not authorised. And pinned answers become panels on My view, for the session."
 
 ---
 
-## 8. Action queue (30 sec)
+## 9. Action queue (30 sec)
 
-**Do:** Click **Action queue: escalation emails** in the left menu.
+**Do:** Click **Action queue: escalation emails** in the left menu. Point at the **Sample rows** label.
 
 **Say:**
-> "The 'act' part. Twenty sample escalation emails, each read against its backend status and sorted into buckets: 3 to call today, 4 to escalate, and 5 that can be answered now. A person approves every draft before anything is sent."
+> "The 'act' part: twenty sample escalation emails, sorted into buckets, each with a draft a person approves. This page, like the customer and drill-down pages, shows sample rows, and says so."
 
 ---
 
-## 9. Where the data comes from (1 min)
+## 10. Where the data comes from (1 min)
 
 **Say:**
 > "Every tile says which kind of data it shows.
-> **Public · live** is real: 17,193 posts and reviews about HDFC Bank from the Play Store, App Store, Reddit, X and consumer forums, 1 July to 28 September.
-> **Internal · illustrative** is simulated until discovery: 29,118 contacts from fictional customers with masked ids.
-> Three things are marked **Illustrative** on otherwise live tiles: bank replies outside the Play Store, high-priority mentions, and the waiting-on-customer status.
-> No names, handles or links to original posts appear on screen, and checks run on every build: totals reconcile across screens, and no personal data or internal labels."
+> **Public · live** is real: 17,193 posts and reviews about HDFC Bank that we collected, 1 July to 28 September.
+> **Internal · illustrative** is simulated until discovery, but sized to the bank from public figures: HDFC's own complaint disclosure gives about 1.1 lakh complaints a quarter; we assume 15 to 30 contacts per complaint, which gives 24 lakh; about 12% of contacts are negative; about 10% of complaints are rejected, as at peer banks; the Ultra HNI list is 2 lakh, as Vidya told us. We keep about 32,000 sample rows and weight them; nothing is stored at millions of rows. Every assumption is logged, and a validation table checks each figure against its anchor on every build.
+> No names, handles or links to original posts appear on screen, and totals reconcile across screens and periods."
 
 ---
 
-## 10. Close (30 sec)
+## 11. Close (30 sec)
 
 **Say:**
-> "To sum up: the pulse first, internal and external kept apart; one period filter; a Cards view cut to what is actionable; and Ask LisN for everything else.
+> "To sum up: the pulse first, internal and external kept apart; one period filter; the Ombudsman watch; a Cards view; and Ask LisN for everything else, all at the bank's scale.
 > Decisions for us:
-> 1. Is the Cards layout the template for the other businesses?
-> 2. Are the simulated response rates (X 62%, Reddit 9%, forums 5%) believable enough to show, or do we collect the replies first?
-> 3. Is 'waiting on customer' the right status name, and should it start when a resolution is sent or proposed?
+> 1. Are the scale assumptions right: 24 lakh contacts, the channel mix, 12% negative, the 10% reject rate, the list sizes? HDFC's own RBI-format complaint disclosure should replace our anchor before the Anjani meeting.
+> 2. Are the simulated response rates believable enough to show?
+> 3. Is the Cards layout the template for the other businesses?
 > The branch is pushed; it is not merged."
 
 ---
@@ -189,16 +183,17 @@ The left menu has four screens: **MD's office / Head of CX**, **Cards: business 
 
 | Question | Answer |
 |---|---|
-| Is the inside data real? | No. It's simulated and labelled on every tile. It becomes real in discovery. |
-| Are the response rates real? | Play Store is collected (96%). App Store, X, Reddit and forums are simulated at typical care-handle rates and marked Illustrative. |
-| Is the response rate a target? | No. It is informational: response means acknowledged and routed to an official channel. |
-| What is "waiting on customer"? | The bank has sent a resolution or proposed one. The thread is not counted as open or as not responded to. Illustrative. |
-| Why are internal and external not added up? | They are different things: the bank's own contacts, and public voice. The block is separated so they are never read as one total. |
+| Is the inside data real? | No. It's simulated and labelled on every tile. The scale is taken from public figures; it becomes real in discovery. |
+| Where does 1.1 lakh complaints come from? | HDFC's FY25 disclosure: 4.42 lakh complaints a year, about 1,210 a day, times 13 weeks. |
+| Where does 24 lakh contacts come from? | An assumption: 15 to 30 service contacts per complaint. No Indian bank publishes contact volumes. |
+| Why is pending about 20,000? | It follows the published stock (16,133 pending at year-end), not a share of one quarter's intake. |
+| How many complaints are rejected? | About 9%, in line with peer bank disclosures (6-10%). Every one goes to the Internal Ombudsman before the reply. |
+| How many reach the RBI Ombudsman? | About 2,400 a quarter in the data (our planning range from peer banks). Each of them was first unhappy with the reply or past day 30 without one. |
+| Why is "RMs alerted" smaller than the list? | It counts listed customers with an alert due in the period, never more than the open contacts beside it. |
+| Why is the social inbox bigger than the public count? | The inbox is every message to the bank's handles, including direct messages. The public figure is what we collected: a sample. |
+| What are "Sample rows"? | Drill-down and customer pages list the rows kept for drill-down; their counts are of those rows, not bank totals. |
+| Are the response rates real? | Play Store is collected (96%). App Store, X, Reddit and forums are simulated and marked Illustrative. |
+| What is "waiting on customer"? | The bank has sent a resolution or proposed one. Not counted as open or as not responded to. |
 | Is Ask LisN a live model? | Not in the demo. Suggested questions are answered from the page's own figures and tagged as precomputed. |
-| Why was the Home loans question refused? | To show role-based access: answers follow the role of the person asking. |
-| Does My view persist? | For the session only in the demo. |
-| Where did "Actions to take" go? | Removed from both views after the review. |
-| Why do the numbers change with the period? | Every section is recomputed for the selected period. The Cards card on the MD's view always equals the Cards view. |
-| What are full-window trends compared with? | The second half of the window against the first half. |
-| Why is the 48-hour figure a dash in Morning brief? | The brief covers 24 hours, so nothing in it can be 48 hours old. |
+| What are full-window changes compared with? | The second half of the window against the first half. |
 | Can I click through to the original post? | No, by design. Posts are labelled by platform and date, and names are removed. |
