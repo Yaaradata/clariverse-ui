@@ -123,10 +123,48 @@ def main() -> int:
         v = b["internal"]["volume"]
         add(f"Contacts: {b['label']}", v, f"{IN(v)} ({100 * v / total:.0f}%)", "no anchor; follows the sample's product mix", "none", v, v)
 
+    # ---- negative share (our assumption: 12% overall, 9-16% by product)
+    neg = W([r for r in rs if r["sentiment"] == "negative"])
+    add("Negative share of internal contacts", 100 * neg / total, f"{100 * neg / total:.1f}% ({IN(neg)})", "about 12%", "our assumption (D31)", 12, 12)
+    cneg = W([r for r in cmp if r["sentiment"] == "negative"])
+    add("Negative share of complaints", 100 * cneg / n_cmp, f"{100 * cneg / n_cmp:.0f}%", "mostly negative (85%)", "our assumption (D31)", 85, 85)
+    rest = [r for r in rs if not is_complaint(r)]
+    add("Negative share of queries and requests", 100 * W([r for r in rest if r["sentiment"] == "negative"]) / W(rest),
+        f"{100 * W([r for r in rest if r['sentiment'] == 'negative']) / W(rest):.1f}%", "mostly neutral: under 12%", "our assumption (D31)", 0, 12)
+    for b in full["businesses"]:
+        v = b["internal"]
+        add(f"Negative share: {b['label']}", 100 * v["negative"] / v["volume"], f"{100 * v['negative'] / v['volume']:.1f}%", "9-16% (cards and loans higher)",
+            "our assumption (D31)", 9, 16)
+
+    # ---- reject rate and the Internal Ombudsman (one register)
+    cs = [json.loads(line) for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8")]
+    WC = lambda xs: sum(c["w"] for c in xs)  # noqa: E731
+    decided = WC([c for c in cs if c["decision_at"]])
+    add("Complaints partly or fully rejected (sent to the Internal Ombudsman)", 100 * decided / WC(cs), f"{100 * decided / WC(cs):.1f}% ({IN(decided)})",
+        "6-10% at peer banks", "peer disclosures (D31)", 6, 10)
+    o = full["ombudsman"]
+    add("Awaiting Internal Ombudsman review, of those sent", 100 * o["now"]["awaiting_io"] / max(o["io"]["decided"], 1),
+        f"{100 * o['now']['awaiting_io'] / max(o['io']['decided'], 1):.0f}% ({IN(o['now']['awaiting_io'])} of {IN(o['io']['decided'])})",
+        "no anchor; the queue is part of the one register", "D31", 0, 100)
+
+    # ---- social inbox against the public sample
+    social = sum(ch[k] for k in ("social",))
+    pub = full["social_pulse"]["mentions"]
+    add("Social inbox contacts against public mentions collected", social / pub, f"{social / pub:.1f}x ({IN(social)} vs {IN(pub)})", "no anchor",
+        "K4 / public collection", 0.5, 2,
+        "the inbox counts every message to the bank's care handles, including direct messages; the public figure is a "
+        "collected sample of posts and reviews, not a census")
+
+    # ---- at risk against Ombudsman filings
+    add("Unhappy with the reply", o["now"]["unhappy"], IN(o["now"]["unhappy"]), "3,000-4,000 (30% of rejections, plus a few resolved)", "our assumption (D31)", 3000, 4000)
+    add("At risk of reaching the Ombudsman (brink + eligible + unhappy)", o["now"]["at_risk"], IN(o["now"]["at_risk"]), "12,000-13,000", "our assumption (D31)", 12_000, 13_000)
+
     # ---- Ombudsman (O7, O8)
     omb = W([r for r in rs if r.get("escalation") == "rbi_ombudsman"])
     add("Ombudsman complaints, full window", omb, IN(omb), "1,750-3,000 (7,000-12,000 a year)", "O7 (assumption)", 1750, 3000)
     add("Ombudsman complaints per week", omb / WEEKS, IN(omb / WEEKS), "135-230", "O8 (derived)", 135, 230)
+    add("Complaints at risk per Ombudsman complaint", o["now"]["at_risk"] / max(omb, 1), f"{o['now']['at_risk'] / max(omb, 1):.1f} to 1", "no anchor",
+        "O7 / D31", 2, 10)
     add("Ombudsman complaints per lakh customers, annualised", (omb * 365 / DAYS) / 1200, f"{(omb * 365 / DAYS) / 1200:.1f}",
         "7.7 per lakh accounts, all banks", "O5 (anchor; industry)", 7.7, 7.7)
 
