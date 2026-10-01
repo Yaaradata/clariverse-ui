@@ -32,3 +32,15 @@ Indexed locally in `.codegraph/`. For callers/callees/symbols:
 - Look: match the final v1 look after review: head_cards-style cards, little text per card, plain coloured deltas ("+1 vs last week" as text, no chip boxes), clean area charts (one series, gradient fill, no dashed or white lines), Signal Wall in the head_cards "AI Summary Wall" style with an in-place detail panel, severity as word + colour (S2 red, S3 amber, S4 soft amber, improving green).
 - Human gate: nothing is sent or actioned automatically. Approve works only for the owner role; otherwise `aria-disabled` with a tooltip naming the owner. Approval time = live click time in IST, captured once, shown on banner, toast, audit log and the overview card.
 - Badge on every view, drawer and modal: "SYNTHETIC SCENARIO — illustrative data, not KGS data". Fixed footer.
+
+### v2 design rules (learned from v1 — mandatory)
+- Every drill page starts with BackToOverviewHeader (v1, "← Back to Overview" + H1 question + one-line subtitle). Hero and theme pages use the same header with "← Back to {parent page}".
+- Each drill page copies a v1 drill layout, so the three drills look different:
+  Promise → v1 InstalledBaseView layout. Recurring → v1 SeparationView layout. Install → v1 ChannelView layout.
+- Signal Wall on drill pages = v1 kgs/drill/SignalWall.tsx look (right column, fixed height, scroll, severity-tinted cards with body + metric + trend, click opens the in-place detail panel). Never a row of tiny cards.
+- Exec, not operational: no internal IDs on screen (PR-01, RC-03, IN-01, SIG-…). Show the signal title instead. Distributor IDs read as "Distributor N-04" (anonymise → "Partner P-04"). No monospace for text; mono only for numbers.
+- Tables: max 6 rows visible, then a "Show all N" toggle. No table with 1 row; use a stat tile instead.
+- No Approve / draft / send buttons on overview or drill pages. They live only on the hero (promise) and theme deep dives.
+- Text limits: card title ≤ 2 lines; insight/callout ≤ 2 lines (~25 words); table cell ≤ 1 line; channel lists ≤ 2 items ("+2" for more).
+- Metrics are numbers: "88% → 71%" with a coloured ▲/▼ delta, never "Before/After" text.
+- Charts: one highlighted series, others grey; y-axis fitted to the data (not 0–100 by default); height ≤ 260px on drill pages; no dashed lines except a target line; end value labelled.
