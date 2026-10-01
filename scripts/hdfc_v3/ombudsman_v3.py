@@ -159,6 +159,8 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
         "now": cn,
         "prev": cp,
         "delta": {k: cn[k] - cp[k] for k in COUNT_KEYS},
+        # Pending: received, no final reply yet. "On the brink" and "already eligible" are both pending complaints.
+        "pending": sum(c["w"] for c, s in now if s["open"] and not s["unhappy"]),
         "became_eligible": sum(c["w"] for c, s in now if s["eligible_from"] and start < s["eligible_from"] <= T),
         "on_lists": {"at_risk": sum(c["w"] for c, _ in risky if c["lists"]), "by_list": by_list,
                      "labels": LIST_LABEL},

@@ -87,7 +87,9 @@ def apply(customers: list[dict], inter: list[dict]) -> dict:
                        {**ESCALATION, "none": TOTAL_CONTACTS - sum(ESCALATION.values())}),
     }
     keyed = [([key(r) for r in rows], targets) for key, targets in dims.values()]
-    xs = [TOTAL_CONTACTS / len(rows)] * len(rows)
+    # Start each row between 0.6 and 1.4 times the average (by a hash of its id). The fitting below keeps that spread
+    # inside every cell, so rows of the same kind do not all carry one weight and small figures do not move in steps.
+    xs = [TOTAL_CONTACTS / len(rows) * (0.6 + 0.8 * _frac("spread:" + r["id"])) for r in rows]
     for _ in range(80):  # iterative proportional fitting over the four margins
         for keys, targets in keyed:
             tot = collections.defaultdict(float)
@@ -114,8 +116,16 @@ def apply(customers: list[dict], inter: list[dict]) -> dict:
     cw["uhni"] = (LISTS["uhni"]["size"] * LISTS["uhni"]["in_contact"] - on_small) / max(len(members["uhni"]), 1)
     listed = sum(cw[k] * len(members[k]) for k in PRIMARY)
     cw["other"] = (CONTACTING_CUSTOMERS - listed) / max(len(members["other"]), 1)
+    # Sample customers do not all stand for the same number of customers: each gets between half and one and a half
+    # times its stratum's average (by a hash of its id), rescaled so the stratum still adds up. Customer counts then
+    # vary naturally instead of moving in steps of one weight.
+    for k, cs in members.items():
+        raw = {c["masked_id"]: cw[k] * (0.5 + _frac("spread:" + c["masked_id"])) for c in cs}
+        fix = cw[k] * len(cs) / max(sum(raw.values()), 1e-9)
+        for c in cs:
+            c["cw"] = _whole(raw[c["masked_id"]] * fix, "cw:" + c["masked_id"])
     for c in customers:
-        c["cw"] = _whole(cw[stratum(c)], "cw:" + c["masked_id"])
+        c.setdefault("cw", 1)  # no contact in the sample: stands for no contacting customer beyond itself
 
     # --- list sizes. The three lists are declared. "Multiple relationships" is sized from its own members: each
     # contacting member stands for 1 / (share in contact) customers on the list.

@@ -50,6 +50,8 @@ START_DT = dt.datetime(2026, 7, 1, 0, 0, tzinfo=IST)
 N_CUSTOMERS = 5000
 N_INTERACTIONS = 32000
 N_BOT_CALLS = 500
+# How much more often a listed customer is drawn for a kept row than their share of contacts would give.
+LIST_OVERSAMPLE = {"priority_a": 4.2, "priority_b": 2.6, "uhni": 9.0, "other": 1.0}
 
 SEGMENTS = [("Classic", 0.55), ("Preferred", 0.27), ("Imperia", 0.14), ("Private", 0.04)]
 CHANNELS = [
@@ -353,6 +355,10 @@ def build_interactions(customers, mix, themes):
             w = 1.4
         if "priority_a" in c["cohorts"] or "priority_b" in c["cohorts"]:
             w *= 1.2
+        # Bank scale (1 Oct, granularity): the kept sample holds more rows for listed customers, so each of their rows
+        # stands for few bank-scale contacts (about 1 on the two small lists) and their small figures vary naturally
+        # instead of moving in steps of one large weight. scale_v3 then fits the weights to the same anchors.
+        w *= LIST_OVERSAMPLE[next((k for k in ("priority_a", "priority_b", "uhni") if k in c["cohorts"]), "other")]
         weights.append(w)
     persona_ids = {p["masked_id"] for p in PERSONAS}
     out = []
@@ -1173,6 +1179,15 @@ def main():
     # Bank scale: a weight on every kept row and customer (scale_v3.py). The aggregates above stay sample counts: they
     # feed the drill-down and customer pages, which are labelled "sample rows".
     scale = scale_v3.apply(customers, inter)
+    # High-priority mentions: the public reply is spread evenly through time at bank scale (about 62% answered), so the
+    # response rate is steady whichever period is chosen, instead of swinging with a few heavy rows.
+    listed_ids = {c["masked_id"] for c in customers if any(k in c["cohorts"] for k in ("priority_a", "priority_b", "uhni", "multi"))}
+    done = total = 0
+    for r in inter:  # in time order
+        if r["channel"] == "social_inbox" and r["masked_id"] in listed_ids:
+            total += r["w"]
+            r["mention_replied"] = done + r["w"] <= 0.62 * total + 0.5 * r["w"]
+            done += r["w"] if r["mention_replied"] else 0
 
     SEED_V3.mkdir(parents=True, exist_ok=True)
     dump(scale, SEED_V3 / "scale.json")
