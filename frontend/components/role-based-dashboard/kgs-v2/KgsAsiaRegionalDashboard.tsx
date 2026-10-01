@@ -17,6 +17,7 @@ import { ContextBar } from "./shell/ContextBar";
 import { DemoMenu } from "./shell/DemoMenu";
 import { DrillHeader } from "./shell/DrillHeader";
 import { LeftRail } from "./shell/LeftRail";
+import { ToastProvider2 } from "./shell/Toast";
 
 export type KgsAsiaRegionalDashboardProps = {
   onExit: () => void;
@@ -31,7 +32,9 @@ export function KgsAsiaRegionalDashboard({
 }: KgsAsiaRegionalDashboardProps) {
   return (
     <DemoProvider>
-      <Kgs2DashboardInner onExit={onExit} />
+      <ToastProvider2>
+        <Kgs2DashboardInner onExit={onExit} />
+      </ToastProvider2>
     </DemoProvider>
   );
 }
