@@ -264,7 +264,7 @@ export function OmbudsmanWatch({
             title={
               scope === "bank" ? "At risk, by business" : "At risk, by category"
             }
-            info={`On the brink: no reply yet and 10 days or fewer to the 30-day limit. Already eligible: past day 30 with no reply, within the 90 days to file. Unhappy with the reply: after the reply the customer reopened the complaint, contacted the bank again about the issue, or used escalation language. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
+            info={`On the brink: no reply yet and 10 days or fewer to the 30-day limit. Already eligible: past day 30 with no reply, within the 90 days to file. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
             rows={split}
           />
         </div>
