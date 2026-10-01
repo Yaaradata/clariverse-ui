@@ -40,6 +40,7 @@ from common import (
     dump,
     load,
 )
+import complaint_rules
 import scale_v3
 from personas import BUCKETS, ESCALATION_EMAILS, PERSONAS
 
@@ -1162,6 +1163,17 @@ def main():
     inter.sort(key=lambda r: r["created_at"])
     written_delays(inter)
     enrich(inter)
+    # Internal Ombudsman (1 Oct): a contact is at the IO rung exactly when it is a complaint the bank decided to partly
+    # or fully reject (complaint_rules.decide), which is what the IO reviews. No other contact sits at that rung, so the
+    # ladder, the IO queue and "awaiting IO review" all come from the one register.
+    for r in inter:
+        d = complaint_rules.decide(r) if complaint_rules.is_complaint(r) else None
+        if d and complaint_rules.filed_with_ombudsman(r, d):
+            r["escalation"] = "rbi_ombudsman"  # only an at-risk complaint reaches the RBI Ombudsman
+        elif d and d["decision_at"] is not None:
+            r["escalation"] = "io"
+        elif r["escalation"] in ("io", "rbi_ombudsman"):
+            r["escalation"] = "md_office"
     link_proxies(customers, inter)
     bot_calls = build_bot_calls(customers)
     agg = aggregates(customers, inter, bot_calls, ESCALATION_EMAILS, themes, products_pub)

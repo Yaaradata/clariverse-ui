@@ -38,7 +38,7 @@ def load_complaints() -> list[dict]:
     out = []
     for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8"):
         c = json.loads(line)
-        for k in ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "reopened_at"):
+        for k in ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at"):
             c["_" + k] = ts(c[k])
         for x in c["contacts"]:
             x["_at"] = ts(x["at"])
@@ -70,20 +70,14 @@ def status(c: dict, T: dt.datetime) -> dict | None:
         d, io = c["_decision_at"], c["_io_reviewed_at"]
         st["awaiting_io"] = bool(d and d <= T and (io is None or io > T))
     else:
-        events = []
-        if c["_reopened_at"] and reply < c["_reopened_at"] <= T:
-            events.append((c["_reopened_at"], "reopened"))
-        for x in c["contacts"]:
-            if reply < x["_at"] <= T:
-                if x["same_issue"]:
-                    events.append((x["_at"], "contacted again"))
-                if x["escalation"]:
-                    events.append((x["_at"], "escalation language"))
-        if events and T < reply + D90:
+        # Unhappy with the reply comes from the reply's outcome (complaint_rules): the customer reopened the complaint
+        # or contacted again on the issue, within the 90 days they have to approach the Ombudsman.
+        back = c["_unhappy_at"]
+        if back and reply < back <= T and T < reply + D90:
             st["unhappy"] = True
             st["open"] = True  # contested: open again
-            st["unhappy_how"] = sorted({h for _, h in events})
-            st["eligible_from"] = min(t for t, _ in events)
+            st["unhappy_how"] = [c["unhappy_how"]]
+            st["eligible_from"] = back
         if reply > rec + D30:  # it was eligible on the no-reply route before the late reply
             st["eligible_from"] = min(filter(None, [st["eligible_from"], rec + D30]))
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
@@ -161,6 +155,11 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
         "delta": {k: cn[k] - cp[k] for k in COUNT_KEYS},
         # Pending: received, no final reply yet. "On the brink" and "already eligible" are both pending complaints.
         "pending": sum(c["w"] for c, s in now if s["open"] and not s["unhappy"]),
+        # Internal Ombudsman: every complaint the bank decided to partly or fully reject is reviewed before the reply.
+        "io": {
+            "decided": sum(c["w"] for c, _ in now if c["_decision_at"] and c["_decision_at"] <= T),
+            "reviewed": sum(c["w"] for c, _ in now if c["_io_reviewed_at"] and c["_io_reviewed_at"] <= T),
+        },
         "became_eligible": sum(c["w"] for c, s in now if s["eligible_from"] and start < s["eligible_from"] <= T),
         "on_lists": {"at_risk": sum(c["w"] for c, _ in risky if c["lists"]), "by_list": by_list,
                      "labels": LIST_LABEL},
