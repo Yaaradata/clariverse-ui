@@ -23,9 +23,11 @@ type CauseRow = {
 export function CauseStackedBar({
   rows,
   labelFn,
+  height = 200,
 }: {
   rows: CauseRow[];
   labelFn: (s: string) => string;
+  height?: number;
 }) {
   const data = useMemo(
     () =>
@@ -43,7 +45,7 @@ export function CauseStackedBar({
     <div
       role="img"
       aria-label="Candidate causes by region"
-      style={{ height: 260 }}
+      style={{ height }}
     >
       <ResponsiveContainer
         width="100%"
@@ -72,26 +74,30 @@ export function CauseStackedBar({
               fontSize: 12,
             }}
           />
-          <Legend wrapperStyle={{ fontSize: 11, color: K.textMut }} />
+          <Legend
+            wrapperStyle={{ fontSize: 11, color: K.textMut, paddingTop: 4 }}
+            iconType="square"
+            iconSize={8}
+          />
           <Bar
             dataKey="allocation"
             stackId="a"
             fill={K.orange}
-            name="KGS · allocation"
+            name="KGS allocation"
             isAnimationActive={false}
           />
           <Bar
             dataKey="backorder"
             stackId="a"
             fill={K.amber}
-            name="KGS · backorder"
+            name="Backorder"
             isAnimationActive={false}
           />
           <Bar
             dataKey="orderChange"
             stackId="a"
             fill={K.violet400}
-            name="KGS · order change"
+            name="Order change"
             isAnimationActive={false}
           />
           <Bar

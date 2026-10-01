@@ -29,11 +29,15 @@ export function PromiseRegionChart({
   series,
   targetPct,
   northLabel,
+  height = 220,
+  endLabel = "71%",
 }: {
   weeks: string[];
   series: RegionSeries[];
   targetPct: number;
   northLabel: string;
+  height?: number;
+  endLabel?: string;
 }) {
   const data = useMemo(() => {
     const north = series.find((s) => s.regionId === "North");
@@ -57,7 +61,7 @@ export function PromiseRegionChart({
     <div
       role="img"
       aria-label={`${northLabel} promise kept weekly`}
-      style={{ height: 280 }}
+      style={{ height, position: "relative" }}
     >
       <ResponsiveContainer
         width="100%"
@@ -66,7 +70,7 @@ export function PromiseRegionChart({
       >
         <ComposedChart
           data={data}
-          margin={{ top: 12, right: 16, bottom: 4, left: 0 }}
+          margin={{ top: 12, right: 36, bottom: 4, left: 0 }}
         >
           <CartesianGrid
             stroke={K.borderLight}
@@ -80,8 +84,8 @@ export function PromiseRegionChart({
             tickLine={false}
           />
           <YAxis
-            domain={[60, 100]}
-            ticks={[60, 70, 80, 90, 100]}
+            domain={[60, 95]}
+            ticks={[60, 70, 80, 90, 95]}
             tick={{ fill: K.textMut, fontSize: 11, fontFamily: K.mono }}
             axisLine={false}
             tickLine={false}
@@ -128,7 +132,7 @@ export function PromiseRegionChart({
             stroke={K.textMut}
             strokeDasharray="4 4"
             label={{
-              value: `${targetPct}% target`,
+              value: `${targetPct}%`,
               fill: K.textMut,
               fontSize: 11,
               position: "insideTopRight",
@@ -146,6 +150,23 @@ export function PromiseRegionChart({
           />
         </ComposedChart>
       </ResponsiveContainer>
+      {endLabel ? (
+        <span
+          style={{
+            position: "absolute",
+            right: 4,
+            top: 10,
+            fontSize: 12,
+            fontWeight: 800,
+            fontFamily: K.mono,
+            fontVariantNumeric: "tabular-nums",
+            color: K.orange,
+            pointerEvents: "none",
+          }}
+        >
+          {endLabel}
+        </span>
+      ) : null}
     </div>
   );
 }

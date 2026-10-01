@@ -8,13 +8,13 @@
     },
     {
       "key": "kept_original",
-      "label": "Promise kept vs original date",
+      "label": "Kept vs original",
       "value": 82,
       "unit": "%"
     },
     {
       "key": "kept_revised",
-      "label": "Promise kept vs revised date",
+      "label": "Kept vs revised",
       "value": 93,
       "unit": "%"
     },
@@ -225,22 +225,22 @@
     {
       "phrase": "You confirmed Monday, now it shows the 22nd",
       "partner": "{{partner:D-N-04}}",
-      "orderFacts": "original 15 Sep, revised 22 Sep, allocation queue N-2"
+      "orderFacts": "Promised 15 Sep → now 22 Sep · allocation queue N-2"
     },
     {
       "phrase": "Third order this month where the date moved after confirmation",
       "partner": "{{partner:D-N-07}}",
-      "orderFacts": "original 10 Sep, revised 18 Sep, allocation queue N-2"
+      "orderFacts": "Promised 10 Sep → now 18 Sep · allocation queue N-2"
     },
     {
       "phrase": "Material reached the hub on time, but local delivery took five days",
       "partner": "{{partner:D-N-11}}",
-      "orderFacts": "hub arrival on time · last-mile 5 days · {{place:Gurugram hub}}"
+      "orderFacts": "Hub on time → local delivery 5 days · {{place:Gurugram hub}}"
     },
     {
       "phrase": "Sales and support are giving us different dates. Which one is right?",
       "partner": "{{partner:D-N-04}}",
-      "orderFacts": "ERP original 20 Sep · help desk quoted 25 Sep"
+      "orderFacts": "ERP promised 20 Sep · help desk quoted 25 Sep"
     }
   ],
   "causeSplitByRegion": [
@@ -300,21 +300,33 @@
       "id": "PR-01",
       "title": "North promises slipping",
       "severity": "S2",
+      "level": "critical",
       "hero": true,
+      "body": "Three distributors, 46 order lines, 2 projects facing fire NOC inspection.",
+      "metric": "71% vs own 88%",
+      "trend": "▼ 4 weeks",
       "cta": "Open signal →"
     },
     {
       "id": "PR-02",
-      "title": "Last-mile delays, {{place:Gurugram hub}}",
+      "title": "Gurugram last-mile delays",
       "severity": "S3",
+      "level": "alert",
       "hero": false,
+      "body": "Hub-to-site days stretched after on-time hub arrival.",
+      "metric": "2.1 → 5.0 days",
+      "trend": "▲ 3 weeks",
       "cta": "Open signal →"
     },
     {
       "id": "SEA-IMPROVING",
       "title": "SEA improving",
       "severity": "improving",
+      "level": "improving",
       "hero": false,
+      "body": "Promise kept rising week on week; no action needed.",
+      "metric": "92% kept",
+      "trend": "▲ holding",
       "cta": null
     }
   ],
