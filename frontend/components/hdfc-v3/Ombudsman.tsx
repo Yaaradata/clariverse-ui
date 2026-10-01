@@ -6,13 +6,12 @@
  * periods.json. Eligibility and risk only: LisN flags and recommends, people act, and nothing contacts a customer.
  */
 
-import { Scale } from "lucide-react";
+import { Info, Scale } from "lucide-react";
 import Link from "next/link";
 
 import { fmt, fmtDateTime } from "@/lib/hdfc-v3/format";
 import type {
   CardsOmbudsman,
-  CountdownBucket,
   OmbudsmanBlock,
   OmbudsmanRisk,
   Period,
@@ -23,86 +22,6 @@ import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
 const CARDS_VIEW = "/hdfc-pulse/v2/business/cards";
 
 const pct = (a: number, b: number) => (b ? (100 * a) / b : null);
-
-const BUCKETS: {
-  id: CountdownBucket | "eligible";
-  label: string;
-  color: string;
-}[] = [
-  { id: "8-10", label: "8–10 days left", color: tint(C.amber, 0.45) },
-  { id: "4-7", label: "4–7 days left", color: C.amber },
-  { id: "0-3", label: "0–3 days left", color: tint(C.red, 0.75) },
-  { id: "eligible", label: "Past day 30: eligible", color: C.red },
-];
-
-/** One bar that fills towards day 30: the no-reply complaints, closest to the limit on the right. */
-function Countdown({ o }: { o: OmbudsmanBlock }) {
-  const n = (id: CountdownBucket | "eligible") =>
-    id === "eligible" ? o.now.eligible : o.now.buckets[id];
-  const total = BUCKETS.reduce((s, b) => s + n(b.id), 0);
-  return (
-    <div data-testid="ombudsman-countdown">
-      <div
-        style={{
-          fontSize: 12,
-          color: C.textMut,
-          textTransform: "uppercase",
-          letterSpacing: "0.05em",
-          marginBottom: 6,
-        }}
-      >
-        Countdown to the 30-day reply limit · no reply yet
-      </div>
-      <div
-        style={{
-          display: "flex",
-          height: 14,
-          borderRadius: 999,
-          overflow: "hidden",
-          background: C.inner,
-        }}
-      >
-        {BUCKETS.map((b) =>
-          n(b.id) ? (
-            <div
-              key={b.id}
-              title={`${b.label}: ${n(b.id)}`}
-              style={{
-                width: `${(100 * n(b.id)) / (total || 1)}%`,
-                background: b.color,
-              }}
-            />
-          ) : null,
-        )}
-      </div>
-      <div style={{ ...cols(4, 120, 6), marginTop: 6 }}>
-        {BUCKETS.map((b) => (
-          <div key={b.id} style={{ display: "flex", gap: 6, minWidth: 0 }}>
-            <span
-              aria-hidden
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 3,
-                background: b.color,
-                marginTop: 4,
-                flexShrink: 0,
-              }}
-            />
-            <span
-              style={{ fontSize: 12.5, color: C.textSec, lineHeight: 1.35 }}
-            >
-              <strong style={{ fontFamily: MONO, color: C.text }}>
-                {fmt(n(b.id))}
-              </strong>{" "}
-              {b.label}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /** A small stacked bar: on the brink, eligible (no reply) and unhappy with the reply. */
 function RiskBar({ r, max }: { r: OmbudsmanRisk; max: number }) {
@@ -154,9 +73,11 @@ function RiskLegend() {
 /** Split by business (MD view) or by category (Cards view): where the at-risk complaints come from. */
 function Split({
   title,
+  info,
   rows,
 }: {
   title: string;
+  info: string;
   rows: { id: string; label: string; href?: string; r: OmbudsmanRisk }[];
 }) {
   const max = Math.max(...rows.map((x) => x.r.at_risk), 1);
@@ -174,6 +95,20 @@ function Split({
         }}
       >
         {title}
+        {/* The definitions and RBI rules stay reachable without taking room on the tile. */}
+        <span
+          role="img"
+          aria-label={info}
+          title={info}
+          style={{
+            display: "inline-flex",
+            marginLeft: 6,
+            cursor: "help",
+            verticalAlign: "-2px",
+          }}
+        >
+          <Info size={13} />
+        </span>
       </div>
       <RiskLegend />
       {rows.map((x) => {
@@ -261,7 +196,6 @@ export function OmbudsmanWatch({
           .filter((c) => c.at_risk)
           .sort((a, b) => b.at_risk - a.at_risk)
           .map((c) => ({ id: c.id, label: c.label, r: c }));
-  const lists = Object.entries(o.on_lists.by_list).filter(([, v]) => v);
   return (
     <Tile
       id="ombudsman-watch"
@@ -276,7 +210,7 @@ export function OmbudsmanWatch({
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
         <div
           style={{
-            flex: "5 1 520px",
+            flex: "4 1 380px",
             minWidth: 0,
             background: C.cardAlt,
             border: `1px solid ${C.border}`,
@@ -284,10 +218,17 @@ export function OmbudsmanWatch({
             padding: "12px",
             display: "flex",
             flexDirection: "column",
-            gap: 14,
+            justifyContent: "center",
           }}
         >
-          <div style={{ ...cols(4, 130, 8), alignItems: "start" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: "16px 8px",
+              alignItems: "start",
+            }}
+          >
             <Dial
               value={pct(n.brink, n.open)}
               color={C.amber}
@@ -341,45 +282,10 @@ export function OmbudsmanWatch({
               }
             />
           </div>
-          <Countdown o={o} />
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-              fontSize: 13.5,
-              color: C.textSec,
-              lineHeight: 1.45,
-            }}
-          >
-            <span>
-              <Scale
-                size={14}
-                style={{ display: "inline", verticalAlign: "-2px" }}
-                color={C.red}
-              />{" "}
-              <strong style={{ color: C.text }}>{fmt(n.at_risk)}</strong> of{" "}
-              {fmt(n.open)} open complaints are at risk ·{" "}
-              <strong style={{ color: C.text }}>
-                {fmt(o.became_eligible)}
-              </strong>{" "}
-              became eligible in this period ({p.label.toLowerCase()}).
-            </span>
-            <span>
-              <strong style={{ color: C.text }}>
-                {fmt(o.on_lists.at_risk)}
-              </strong>{" "}
-              at-risk complaints are from customers on the bank&apos;s lists
-              {lists.length
-                ? `: ${lists.map(([k, v]) => `${o.on_lists.labels[k]} ${fmt(v)}`).join(" · ")}`
-                : ""}
-              .
-            </span>
-          </div>
         </div>
         <div
           style={{
-            flex: "4 1 360px",
+            flex: "5 1 420px",
             minWidth: 0,
             display: "flex",
             flexDirection: "column",
@@ -390,30 +296,11 @@ export function OmbudsmanWatch({
             title={
               scope === "bank" ? "At risk, by business" : "At risk, by category"
             }
+            info={`On the brink: no reply yet and 10 days or fewer to the 30-day limit. Already eligible: past day 30 with no reply, within the 90 days to file. Unhappy with the reply: after the reply the customer reopened the complaint, contacted the bank again about the issue, or used escalation language. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
             rows={split}
           />
-          {scope === "bank" ? (
-            <span style={{ fontSize: 12.5, color: C.textMut }}>
-              Cards opens its business view; the other businesses are coming
-              soon.
-            </span>
-          ) : null}
         </div>
       </div>
-      <details style={{ fontSize: 12.5, color: C.textMut, lineHeight: 1.5 }}>
-        <summary style={{ cursor: "pointer", color: C.textSec }}>
-          How it&apos;s counted, and the RBI rules
-        </summary>
-        <p style={{ margin: "6px 0 0" }}>
-          On the brink: no reply yet and 10 days or fewer to the 30-day limit.
-          Already eligible: past day 30 with no reply, within the 90 days to
-          file. Unhappy with the reply: after the reply the customer reopened
-          the complaint, contacted the bank again about the issue with a
-          negative contact, or used escalation language (RBI or Ombudsman named,
-          consumer court, legal notice). At risk counts each complaint once;
-          rings show the share of open complaints. {o.rules}
-        </p>
-      </details>
     </Tile>
   );
 }

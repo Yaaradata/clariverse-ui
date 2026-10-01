@@ -93,20 +93,20 @@
 ## 2. Chosen design
 
 ### MD's office / Head of CX
-An **"Ombudsman watch"** tile, right after the CX pulse, containing:
+An **"Ombudsman watch"** tile, right after the CX pulse, containing only:
 1. Four dials: on the brink (10 days or fewer left), already eligible, unhappy with the reply, awaiting IO review. Each shows the change against the previous period's snapshot.
-2. The countdown bar (concept 1).
-3. A split by business: a small bar for each business. Cards opens the Cards view; the others open their "coming soon" page.
-4. One line for the priority-list overlap (concept 8), and one line for "became eligible in this period" (concept 9).
-5. The rules line: 30 days, RB-IOS 2026, 90-day filing window, award caps, and "IO timeline: confirm with the bank".
-6. **Morning brief:** when the risk is material (any complaint with 3 days or fewer left, or more complaints already eligible than at the previous snapshot), "What needs you" gets a bank-wide Ombudsman item first.
+2. "At risk, by business" on the right: a small bar for each business. Cards opens the Cards view; the others open their "coming soon" page.
+3. The definitions and the RBI rules (30 days, RB-IOS 2026, 90-day filing window, award caps, "IO timeline: confirm with the bank") sit behind an ⓘ next to the table title, not on the tile.
+4. **Morning brief:** when the risk is material (any complaint with 3 days or fewer left, or more complaints already eligible than at the previous snapshot), "What needs you" gets a bank-wide Ombudsman item first.
 
-**Why:** the MD needs the size of the risk, whether it is moving, and where it sits. Dials, one bar and a business split do that in one compact tile. The per-complaint detail belongs to the business head.
+**Why:** the MD needs the size of the risk, whether it is moving, and where it sits. Review (Ranjith, 30 Sep): "just the dials and table on right"; the text below was too much for the MD/CX. So the countdown bar, the at-risk / became-eligible line, the lists line and the rules paragraph were removed from the tile. Their figures stay in `periods.json` and in Ask LisN (the countdown buckets and the lists question).
 
 ### Cards business view
-1. The same tile, scoped to Cards.
+Review (Ranjith, 30 Sep): the business head's view shows only their own business.
+1. The same tile, scoped to Cards: the four dials and "At risk, by category". No bank-wide figure.
 2. An **Ombudsman risk** pill on every category and subcategory in the issues accordion (concept 7).
 3. The **save list**, top 10 (concepts 4 and 5).
+4. Ask LisN answers on this view use Cards figures only.
 
 **Why:** the head of Cards owns the fixes. The accordion shows where risk is coming from, and the save list shows whom to call.
 

@@ -81,7 +81,7 @@ function ioQA(id: string, o: OmbudsmanBlock, scope: string): AskQA {
   return {
     id,
     q: `How many ${scope}complaints are waiting for Internal Ombudsman review?`,
-    answer: `${fmt(o.now.awaiting_io)} complaints the bank has decided to partly or fully reject are waiting for Internal Ombudsman review, so their final reply cannot go out yet (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). A slow review can take them past day 30. ${IO_NOTE}`,
+    answer: `${fmt(o.now.awaiting_io)} ${scope}complaints the bank has decided to partly or fully reject are waiting for Internal Ombudsman review, so their final reply cannot go out yet (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). A slow review can take them past day 30. ${IO_NOTE}`,
   };
 }
 
