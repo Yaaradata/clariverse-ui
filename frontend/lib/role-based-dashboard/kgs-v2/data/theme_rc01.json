@@ -1,0 +1,168 @@
+{
+  "id": "rc-01",
+  "title": "Licence re-activation, back a third time",
+  "headline": "Licence re-activation after a laptop change: back a third time. 11 contacts this week against 2 a week after the June fix.",
+  "chart": {
+    "weeks": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6",
+      "W7",
+      "W8",
+      "W9",
+      "W10",
+      "W11",
+      "W12",
+      "W13",
+      "W14",
+      "W15",
+      "W16",
+      "W17",
+      "W18",
+      "W19",
+      "W20",
+      "W21",
+      "W22",
+      "W23",
+      "W24",
+      "W25",
+      "W26"
+    ],
+    "values": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      8,
+      7,
+      6,
+      9,
+      2,
+      2,
+      2,
+      2,
+      2,
+      3,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      11
+    ],
+    "fixMarkers": [
+      {
+        "weekIndex": 11,
+        "label": "12 Jun knowledge article"
+      },
+      {
+        "weekIndex": 17,
+        "label": "18 Aug portal change"
+      }
+    ],
+    "returnMarkers": [
+      {
+        "weekIndex": 20,
+        "label": "return"
+      }
+    ]
+  },
+  "severity": {
+    "class": "S3",
+    "word": "Operational",
+    "domain": "Quality",
+    "type": "cliff",
+    "typeNote": "cliff",
+    "blastRadius": {
+      "headline": "7 partners · software/licence"
+    },
+    "incident": {
+      "flag": false,
+      "note": "Incident flag Off"
+    },
+    "compact": "S3 · cliff · licence re-activation"
+  },
+  "confidence": {
+    "level": "H",
+    "p": 0.81,
+    "known": {
+      "count": 64,
+      "label": "64 contacts over 13 weeks"
+    },
+    "inferred": {
+      "count": 11,
+      "label": "11 contacts this week linked to portal change"
+    },
+    "short": "H 0.81"
+  },
+  "joinTags": [
+    {
+      "key": "FAMILY",
+      "value": "D software/licence"
+    },
+    {
+      "key": "CHANNELS",
+      "value": "help desk, email, service calls"
+    },
+    {
+      "key": "PARTNERS",
+      "value": "7"
+    }
+  ],
+  "pnl": {
+    "primary": "Cost-to-serve",
+    "secondary": "partner experience",
+    "compact": "Cost-to-serve; partner experience"
+  },
+  "fixHistory": [
+    {
+      "date": "2026-06-12",
+      "what": "Knowledge article published",
+      "by": "Technical support lead",
+      "contactsPerWeekBefore": 9,
+      "contactsPerWeekAfter": 2
+    },
+    {
+      "date": "2026-08-18",
+      "what": "Licence portal change (candidate)",
+      "by": "US product team",
+      "contactsPerWeekBefore": 2,
+      "contactsPerWeekAfter": 5
+    }
+  ],
+  "drafts": [
+    {
+      "id": "draft-kb",
+      "title": "Update the knowledge article + ask the US product team to confirm the portal change",
+      "status": "Not sent",
+      "artefactType": "kb-update",
+      "awaiting": "Technical support lead"
+    }
+  ],
+  "loop": {
+    "step": "open",
+    "nextCheck": "2026-10-05"
+  },
+  "humanGate": {
+    "id": "rc01-gate",
+    "artefactType": "kb-update",
+    "status": "awaiting",
+    "title": "Draft — awaiting Technical support lead approval",
+    "chip": "Awaiting approval",
+    "owner": "Technical support lead",
+    "approveEnabledFor": [
+      "Technical support lead"
+    ],
+    "approveLabel": "Approve",
+    "disabledTooltip": "Approval sits with the Technical support lead"
+  }
+}

@@ -1,0 +1,1141 @@
+{
+  "id": "PR-01",
+  "displayId": "PR-01",
+  "rank": {
+    "chip": "#1 of 5 this week",
+    "factors": [
+      {
+        "label": "Severity",
+        "value": "S2",
+        "weight": 0.3,
+        "score": 0.28
+      },
+      {
+        "label": "Drop vs own baseline",
+        "value": "88% → 71%",
+        "weight": 0.25,
+        "score": 0.22
+      },
+      {
+        "label": "Lines affected",
+        "value": "46",
+        "weight": 0.2,
+        "score": 0.18
+      },
+      {
+        "label": "Source independence",
+        "value": "0.70",
+        "weight": 0.15,
+        "score": 0.12
+      },
+      {
+        "label": "Projects at risk",
+        "value": "2 fire NOC",
+        "weight": 0.1,
+        "score": 0.09
+      }
+    ]
+  },
+  "headline": "{{region:North}}: promise kept fell to 71% against its own 88% over 4 weeks — 3 distributors, 46 order lines, 2 projects facing a fire NOC inspection",
+  "chart": {
+    "weeks": [
+      "W1",
+      "W2",
+      "W3",
+      "W4",
+      "W5",
+      "W6",
+      "W7",
+      "W8",
+      "W9",
+      "W10",
+      "W11",
+      "W12",
+      "W13"
+    ],
+    "values": [
+      90,
+      89,
+      88,
+      88,
+      87,
+      88,
+      88,
+      87,
+      86,
+      82,
+      78,
+      74,
+      71
+    ],
+    "baselineBand": {
+      "low": 84,
+      "high": 91
+    },
+    "targetPct": 90,
+    "markers": [
+      {
+        "weekIndex": 8,
+        "label": "week 35: allocation queue re-sequenced (candidate)"
+      },
+      {
+        "weekIndex": 12,
+        "label": "next monthly ops review 7 Oct"
+      }
+    ]
+  },
+  "severity": {
+    "class": "S2",
+    "word": "Material impact",
+    "domain": "Supply",
+    "type": "slope",
+    "typeNote": "slope (4-week decline)",
+    "blastRadius": {
+      "headline": "3 distributors · 46 lines · 2 projects"
+    },
+    "incident": {
+      "flag": false,
+      "note": "Incident flag Off"
+    },
+    "compact": "S2 · Promise · slope (4-week decline) · 3 distributors · 46 lines · 2 projects · incident flag Off"
+  },
+  "confidence": {
+    "level": "M",
+    "p": 0.68,
+    "known": {
+      "count": 46,
+      "label": "46 lines with original and revised dates from ERP"
+    },
+    "inferred": {
+      "count": 19,
+      "label": "cause read from 19 contacts"
+    },
+    "sourceIndependence": {
+      "score": 0.7,
+      "scoreDisplay": "0.70",
+      "partners": 3,
+      "channels": 4
+    },
+    "short": "M 0.68 · Known: 46 lines · Inferred: 19 contacts · source independence 0.70"
+  },
+  "causeSplit": {
+    "kgsSide": {
+      "total": 35,
+      "allocation": 28,
+      "orderChange": 7
+    },
+    "lastMile": {
+      "total": 11,
+      "note": "{{place:Gurugram hub}} carrier"
+    },
+    "label": "candidate — Operations lead confirms"
+  },
+  "counterEvidence": "{{region:South}} and {{region:West}} receive the same product families on time; the pattern follows the allocation queue, not supply.",
+  "joinTags": [
+    {
+      "key": "REGION",
+      "value": "{{region:North}}"
+    },
+    {
+      "key": "PARTNERS",
+      "value": "{{partner:D-N-04}}, {{partner:D-N-07}}, {{partner:D-N-11}}"
+    },
+    {
+      "key": "FAMILIES",
+      "value": "A (detection), B (panels)"
+    },
+    {
+      "key": "CHANNELS",
+      "value": "email, service calls, Salesforce, help desk"
+    },
+    {
+      "key": "TIME",
+      "value": "weeks 36–39"
+    }
+  ],
+  "pnl": {
+    "primary": "On-time delivery and cash (DSO)",
+    "secondary": "partner loyalty",
+    "compact": "On-time delivery and cash (DSO); secondary: partner loyalty"
+  },
+  "routing": {
+    "owner": "Operations lead",
+    "cc": [
+      "Regional GM",
+      "Partner manager"
+    ]
+  },
+  "recommendedAction": "Re-prioritise allocation for the 2 inspection-bound projects; send each distributor one confirmed date; open a last-mile review for the {{place:Gurugram hub}}",
+  "humanGate": {
+    "id": "pr01-gate",
+    "artefactType": "partner-update",
+    "status": "awaiting",
+    "title": "Draft actions — awaiting Operations lead approval",
+    "chip": "Awaiting approval",
+    "owner": "Operations lead",
+    "approveEnabledFor": [
+      "Operations lead"
+    ],
+    "approveLabel": "Approve",
+    "disabledTooltip": "Approval sits with the Operations lead",
+    "onApprove": {
+      "title": "Approved · partner updates handed to Partner manager to send · audit logged {ts}",
+      "auditLine": "Approved · partner updates handed to Partner manager to send · audit logged {ts}",
+      "openLines": [
+        "Loop: Watching — next check 2 Oct: promise kept {{region:North}}",
+        "Partner manager: drafts ready to send"
+      ],
+      "chip": "Action approved",
+      "toast": {
+        "title": "Action approved",
+        "body": "Approved · audit logged {ts}"
+      },
+      "auditEntry": "{ts} · Operations lead approved PR-01 drafts",
+      "investigationId": "PR-01"
+    },
+    "decisionRequest": {
+      "buttonLabel": "Ask for a decision",
+      "doneLabel": "Decision requested",
+      "chip": "Decision requested",
+      "auditEntry": "{ts} · Regional GM asked Operations lead for a decision on PR-01"
+    }
+  },
+  "loop": {
+    "step": "open",
+    "nextCheck": "2026-10-02"
+  },
+  "evidenceDrawerTabs": [
+    {
+      "id": "snippets",
+      "label": "Snippets",
+      "count": 19
+    },
+    {
+      "id": "order_lines",
+      "label": "Order lines",
+      "count": 46
+    },
+    {
+      "id": "distributors",
+      "label": "Distributors",
+      "count": 3
+    },
+    {
+      "id": "method",
+      "label": "Method & audit",
+      "count": null
+    }
+  ],
+  "snippets": [
+    {
+      "id": "sn-01",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-04}}",
+      "localDateLabel": "8 Sep",
+      "text": "You confirmed dispatch for Monday. The system now shows the 22nd. Our site handover is on the 25th.",
+      "featured": true,
+      "featuredOrder": 1,
+      "signalId": "PR-01",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "timestampUtc": "2026-09-15T10:00:00Z",
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-02",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:D-N-07}}",
+      "localDateLabel": "11 Sep",
+      "text": "Third order this month where the date moved after confirmation.",
+      "featured": true,
+      "featuredOrder": 2,
+      "signalId": "PR-01",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "timestampUtc": "2026-09-15T10:00:00Z",
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-03",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:D-N-04}}",
+      "localDateLabel": "15 Sep",
+      "text": "Builder has escalated. Detectors needed before the fire NOC inspection.",
+      "featured": true,
+      "featuredOrder": 3,
+      "signalId": "PR-01",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "timestampUtc": "2026-09-15T10:00:00Z",
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-04",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-11}}",
+      "localDateLabel": "17 Sep",
+      "text": "Material reached the {{place:Gurugram}} hub on time, but local delivery took five days.",
+      "featured": true,
+      "featuredOrder": 4,
+      "signalId": "PR-01",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "timestampUtc": "2026-09-15T10:00:00Z",
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-05",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:D-N-04}}",
+      "localDateLabel": "21 Sep",
+      "text": "Sales and support are giving us different dates. Which one is right?",
+      "featured": true,
+      "featuredOrder": 5,
+      "signalId": "PR-01",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "timestampUtc": "2026-09-15T10:00:00Z",
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-06",
+      "signalId": "PR-01",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "8 Sep",
+      "timestampUtc": "2026-09-08T09:00:00Z",
+      "text": "Please lock one date for the inspection project.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-07",
+      "signalId": "PR-01",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "9 Sep",
+      "timestampUtc": "2026-09-09T09:00:00Z",
+      "text": "We held the crew for a day waiting on panels.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-08",
+      "signalId": "PR-01",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "10 Sep",
+      "timestampUtc": "2026-09-10T09:00:00Z",
+      "text": "Revised date keeps moving without a note on the order.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-09",
+      "signalId": "PR-01",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "11 Sep",
+      "timestampUtc": "2026-09-11T09:00:00Z",
+      "text": "Can ops confirm allocation for family A this week?",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-10",
+      "signalId": "PR-01",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "12 Sep",
+      "timestampUtc": "2026-09-12T09:00:00Z",
+      "text": "Site access was fine; the delay was after the hub.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-11",
+      "signalId": "PR-01",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "13 Sep",
+      "timestampUtc": "2026-09-13T09:00:00Z",
+      "text": "We still show Monday on our side.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-12",
+      "signalId": "PR-01",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "14 Sep",
+      "timestampUtc": "2026-09-14T09:00:00Z",
+      "text": "Partner asked again for a written confirmation.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-13",
+      "signalId": "PR-01",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "15 Sep",
+      "timestampUtc": "2026-09-15T09:00:00Z",
+      "text": "Two lines on the same PO have different revised dates.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-14",
+      "signalId": "PR-01",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "16 Sep",
+      "timestampUtc": "2026-09-16T09:00:00Z",
+      "text": "Help desk escalated to the order desk twice.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-15",
+      "signalId": "PR-01",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "17 Sep",
+      "timestampUtc": "2026-09-17T09:00:00Z",
+      "text": "Local pickup slipped after hub arrival.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-16",
+      "signalId": "PR-01",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "18 Sep",
+      "timestampUtc": "2026-09-18T09:00:00Z",
+      "text": "Need detectors before the NOC window closes.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-17",
+      "signalId": "PR-01",
+      "channel": "case",
+      "channelLabel": "Case note",
+      "partnerId": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "19 Sep",
+      "timestampUtc": "2026-09-19T09:00:00Z",
+      "text": "Order change was from our side last month; this one is not.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-18",
+      "signalId": "PR-01",
+      "channel": "email",
+      "channelLabel": "Email",
+      "partnerId": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "20 Sep",
+      "timestampUtc": "2026-09-20T09:00:00Z",
+      "text": "{{region:South}} shipments of the same family arrived on time.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    },
+    {
+      "id": "sn-19",
+      "signalId": "PR-01",
+      "channel": "call",
+      "channelLabel": "Call",
+      "partnerId": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "place": "{{place:Gurugram}}",
+      "localDateLabel": "21 Sep",
+      "timestampUtc": "2026-09-21T09:00:00Z",
+      "text": "Please align Salesforce case status with ERP dates.",
+      "featured": false,
+      "firmwareSource": "imputed",
+      "mentionsRollback": false
+    }
+  ],
+  "orderLines": [
+    {
+      "id": "OL-N-001",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-10",
+      "revisedDate": "2026-09-14",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-01"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-002",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-11",
+      "revisedDate": "2026-09-16",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-02"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-003",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-12",
+      "revisedDate": "2026-09-18",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-03"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-004",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-13",
+      "revisedDate": "2026-09-20",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-04"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-005",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-14",
+      "revisedDate": "2026-09-22",
+      "slipDays": 8,
+      "contactIds": [
+        "sn-05"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-006",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-15",
+      "revisedDate": "2026-09-19",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-06"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-007",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-16",
+      "revisedDate": "2026-09-21",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-07"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-008",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-17",
+      "revisedDate": "2026-09-23",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-08"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-009",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-18",
+      "revisedDate": "2026-09-25",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-09"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-010",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-19",
+      "revisedDate": "2026-09-27",
+      "slipDays": 8,
+      "contactIds": [
+        "sn-10"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-011",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-20",
+      "revisedDate": "2026-09-24",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-11"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-012",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-21",
+      "revisedDate": "2026-09-26",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-12"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-013",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-22",
+      "revisedDate": "2026-09-28",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-13"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-014",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-23",
+      "revisedDate": "2026-09-30",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-14"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-015",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-24",
+      "revisedDate": "2026-09-30",
+      "slipDays": 8,
+      "contactIds": [
+        "sn-15"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-016",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-10",
+      "revisedDate": "2026-09-14",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-16"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-017",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-11",
+      "revisedDate": "2026-09-16",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-17"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-018",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-12",
+      "revisedDate": "2026-09-18",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-18"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-019",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-13",
+      "revisedDate": "2026-09-20",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-19"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-020",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-14",
+      "revisedDate": "2026-09-22",
+      "slipDays": 8,
+      "contactIds": [
+        "sn-01"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-021",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-15",
+      "revisedDate": "2026-09-19",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-02"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-022",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-16",
+      "revisedDate": "2026-09-21",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-03"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-023",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-17",
+      "revisedDate": "2026-09-23",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-04"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-024",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-18",
+      "revisedDate": "2026-09-25",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-05"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-025",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-19",
+      "revisedDate": "2026-09-27",
+      "slipDays": 8,
+      "contactIds": [
+        "sn-06"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-026",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-20",
+      "revisedDate": "2026-09-24",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-07"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-027",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-21",
+      "revisedDate": "2026-09-26",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-08"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-028",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-22",
+      "revisedDate": "2026-09-28",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-09"
+      ],
+      "candidateCause": "allocation"
+    },
+    {
+      "id": "OL-N-029",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-23",
+      "revisedDate": "2026-09-26",
+      "slipDays": 3,
+      "contactIds": [
+        "sn-10"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-030",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-24",
+      "revisedDate": "2026-09-28",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-11"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-031",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-10",
+      "revisedDate": "2026-09-15",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-12"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-032",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-11",
+      "revisedDate": "2026-09-17",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-13"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-033",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-12",
+      "revisedDate": "2026-09-15",
+      "slipDays": 3,
+      "contactIds": [
+        "sn-14"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-034",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-13",
+      "revisedDate": "2026-09-17",
+      "slipDays": 4,
+      "contactIds": [
+        "sn-15"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-035",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-14",
+      "revisedDate": "2026-09-19",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-16"
+      ],
+      "candidateCause": "order-change"
+    },
+    {
+      "id": "OL-N-036",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-15",
+      "revisedDate": "2026-09-22",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-17"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-037",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-16",
+      "revisedDate": "2026-09-21",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-18"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-038",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-17",
+      "revisedDate": "2026-09-23",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-19"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-039",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-18",
+      "revisedDate": "2026-09-25",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-01"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-040",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-19",
+      "revisedDate": "2026-09-24",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-02"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-041",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-20",
+      "revisedDate": "2026-09-26",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-03"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-042",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-21",
+      "revisedDate": "2026-09-28",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-04"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-043",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-22",
+      "revisedDate": "2026-09-27",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-05"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-044",
+      "distributor": "{{partner:D-N-07}}",
+      "region": "{{region:North}}",
+      "family": "B",
+      "originalDate": "2026-09-23",
+      "revisedDate": "2026-09-29",
+      "slipDays": 6,
+      "contactIds": [
+        "sn-06"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-045",
+      "distributor": "{{partner:D-N-11}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-24",
+      "revisedDate": "2026-09-30",
+      "slipDays": 7,
+      "contactIds": [
+        "sn-07"
+      ],
+      "candidateCause": "last-mile"
+    },
+    {
+      "id": "OL-N-046",
+      "distributor": "{{partner:D-N-04}}",
+      "region": "{{region:North}}",
+      "family": "A",
+      "originalDate": "2026-09-10",
+      "revisedDate": "2026-09-15",
+      "slipDays": 5,
+      "contactIds": [
+        "sn-08"
+      ],
+      "candidateCause": "last-mile"
+    }
+  ],
+  "drafts": [
+    {
+      "id": "draft-partner-update",
+      "title": "Partner update email with one confirmed date",
+      "status": "Not sent",
+      "artefactType": "partner-update"
+    },
+    {
+      "id": "draft-allocation",
+      "title": "Allocation change note",
+      "status": "Not sent",
+      "artefactType": "allocation-note"
+    },
+    {
+      "id": "draft-carrier",
+      "title": "Last-mile review request",
+      "status": "Not sent",
+      "artefactType": "carrier-review"
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "title": "Partner view",
+  "conceptLabel": "Concept",
+  "conceptFooter": "Concept: partner owns its data; KGS sees only what the partner shares. Legal and data-protection terms to be agreed.",
+  "subtitle": "Help partners run their businesses better — loyalty against Competitor A",
+  "consentBoundary": {
+    "partnerKeeps": [
+      "customer identities",
+      "pricing",
+      "raw messages"
+    ],
+    "crossesToKgs": [
+      "agreed aggregates"
+    ],
+    "flowsBack": [
+      "confirmed dates",
+      "fixes"
+    ]
+  },
+  "workspace": {
+    "partnerId": "D-N-04",
+    "partnerLabel": "{{partner:D-N-04}}",
+    "header": "Partner workspace · powered by LiSN",
+    "cobrandPlaceholder": "KGS co-brand placeholder",
+    "queue": [
+      {
+        "priority": 1,
+        "title": "Site handover on the 25th, detectors not delivered",
+        "linkedSignal": "PR-01"
+      },
+      {
+        "priority": 2,
+        "title": "Programming help, network set-up",
+        "linkedSignal": "IN-01"
+      },
+      {
+        "priority": 3,
+        "title": "Licence re-activation for a laptop change",
+        "linkedSignal": "RC-01"
+      }
+    ],
+    "managerView": {
+      "themesThisWeek": 4,
+      "replyTimeVsTarget": "92% within target",
+      "repeatContacts": 3,
+      "waitingOnKgs": 2
+    },
+    "waitingOnKgs": [
+      {
+        "type": "order",
+        "label": "Open order — detectors",
+        "promised": "2026-09-15",
+        "current": "2026-09-22"
+      },
+      {
+        "type": "return",
+        "label": "Open return — notification device",
+        "status": "awaiting credit note"
+      },
+      {
+        "type": "question",
+        "label": "Open question — network module set-up guide",
+        "status": "with Product liaison"
+      }
+    ],
+    "sharing": {
+      "themes": true,
+      "promise": true,
+      "commissioning": true,
+      "identities": false,
+      "pricing": false
+    }
+  },
+  "kgsView": {
+    "partnersConnected": {
+      "connected": 4,
+      "of": 12
+    },
+    "connectedIds": [
+      "D-N-04",
+      "D-S-02",
+      "D-W-08",
+      "D-SEA-10"
+    ],
+    "themePartnerGrid": {
+      "themes": [
+        "Licence re-activation",
+        "Network configuration",
+        "Promise slips",
+        "Ease of programming"
+      ],
+      "partners": [
+        "D-N-04",
+        "D-S-02",
+        "D-W-08",
+        "D-SEA-10"
+      ],
+      "values": [
+        [
+          5,
+          1,
+          0,
+          0
+        ],
+        [
+          3,
+          2,
+          1,
+          1
+        ],
+        [
+          6,
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          4,
+          2,
+          1
+        ]
+      ]
+    },
+    "promiseByPartner": [
+      {
+        "partner": "{{partner:D-N-04}}",
+        "keptPct": 62,
+        "complaints": 11
+      },
+      {
+        "partner": "{{partner:D-S-02}}",
+        "keptPct": 92,
+        "complaints": 1
+      },
+      {
+        "partner": "{{partner:D-W-08}}",
+        "keptPct": 91,
+        "complaints": 1
+      },
+      {
+        "partner": "{{partner:D-SEA-10}}",
+        "keptPct": 94,
+        "complaints": 0
+      }
+    ],
+    "commissioningFromPartners": {
+      "note": "Fills the capture gap on the Install page",
+      "frictionMentions": 14,
+      "praiseMentions": 9
+    },
+    "healthCards": [
+      {
+        "partner": "{{partner:D-N-04}}",
+        "frictionTrend": "up",
+        "replyTime": "sla watch",
+        "openItems": 3,
+        "action": "Draft update to partner — Not sent"
+      },
+      {
+        "partner": "{{partner:D-S-02}}",
+        "frictionTrend": "flat",
+        "replyTime": "on target",
+        "openItems": 1,
+        "action": "Draft update to partner — Not sent"
+      },
+      {
+        "partner": "{{partner:D-W-08}}",
+        "frictionTrend": "down",
+        "replyTime": "on target",
+        "openItems": 0,
+        "action": "Draft update to partner — Not sent"
+      },
+      {
+        "partner": "{{partner:D-SEA-10}}",
+        "frictionTrend": "down",
+        "replyTime": "on target",
+        "openItems": 0,
+        "action": "Draft update to partner — Not sent"
+      }
+    ]
+  }
+}

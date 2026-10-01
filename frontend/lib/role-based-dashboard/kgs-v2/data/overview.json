@@ -1,0 +1,182 @@
+{
+  "readStrip": "LiSN read 386 partner and installer interactions this week, about 77 a working day, across email, help desk, service calls and Salesforce. 13-week history: 4,940.",
+  "brief": "Delivery promise slipped for three distributors in {{region:North}}; one issue we fixed in June is back; installers report extra set-up time on network configuration.",
+  "pulse": [
+    {
+      "key": "critical",
+      "title": "What's critical",
+      "body": "{{region:North}}: promise kept 71% against its own 88% over 4 weeks. 3 distributors, 46 order lines, 2 projects facing a fire NOC inspection."
+    },
+    {
+      "key": "focus",
+      "title": "Where's your focus",
+      "body": "Licence re-activation after a laptop change is back for the third time since the June fix. 11 contacts this week."
+    },
+    {
+      "key": "stable",
+      "title": "What's stable",
+      "body": "Installers keep praising ease of programming: 22 mentions this quarter, steady. {{region:South}} and {{region:West}} promise kept on target."
+    }
+  ],
+  "questionCards": [
+    {
+      "id": "promise",
+      "title": "Are we keeping our promises?",
+      "count": 2,
+      "countLabel": "2 signals",
+      "delta": 1,
+      "deltaLabel": "+1 vs last week",
+      "border": "orange",
+      "gauges": [
+        { "label": "Promise kept vs original date", "value": 82, "unit": "%" },
+        { "label": "Delivery complaints answered same day", "value": 64, "unit": "%" }
+      ],
+      "miniKpis": [
+        { "label": "Biggest gap", "value": "{{region:North}} · 3 distributors" },
+        { "label": "Last-mile share of misses", "value": "~24% (candidate)" }
+      ],
+      "insight": "Most {{region:North}} misses trace to one allocation queue, not supply. Other regions ship the same product family on time.",
+      "trend13": [88, 87, 86, 85, 84, 84, 83, 83, 82, 81, 80, 79, 82]
+    },
+    {
+      "id": "recurring",
+      "title": "What keeps coming back?",
+      "count": 3,
+      "countLabel": "3 themes back after a fix",
+      "delta": 1,
+      "deltaLabel": "+1 vs last week",
+      "border": "teal",
+      "gauges": [
+        { "label": "Themes with a fix on record", "value": 58, "unit": "%" },
+        { "label": "Repeat contacts", "value": 22, "unit": "% of help-desk volume" }
+      ],
+      "miniKpis": [
+        { "label": "Top returning theme", "value": "Licence re-activation" },
+        { "label": "Days since its last fix", "value": "105" }
+      ],
+      "insight": "Three fixes did not hold. Each is linked to what was done last time.",
+      "trend13": [18, 19, 20, 17, 16, 15, 14, 18, 22, 24, 26, 28, 31]
+    },
+    {
+      "id": "install",
+      "title": "What do installers experience?",
+      "count": 2,
+      "countLabel": "2 signals",
+      "delta": 0,
+      "deltaLabel": "0 vs last week",
+      "border": "sky",
+      "gauges": [
+        { "label": "Friction : praise mentions", "valueLabel": "61 : 39" },
+        { "label": "Feedback captured from partners", "value": 18, "unit": "% (help desk only)" }
+      ],
+      "miniKpis": [
+        { "label": "Top friction step", "value": "Network configuration" },
+        { "label": "Top praise", "value": "Ease of programming" }
+      ],
+      "insight": "Installers describe about 25 extra minutes on network set-up. Most first-line feedback sits with partners and is not connected yet.",
+      "trend13": [4, 5, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 21]
+    }
+  ],
+  "signals": [
+    {
+      "id": "PR-01",
+      "title": "North promises slipping",
+      "severity": "S2",
+      "severityType": "slope",
+      "owner": "Operations lead",
+      "pnlTag": "On-time delivery · partner loyalty",
+      "confidence": "M 0.68",
+      "hero": true,
+      "channelMix": { "email": 8, "service_calls": 5, "salesforce": 4, "help_desk": 2 },
+      "topIntent": "Delivery date moved after confirmation",
+      "timeWindow": "Weeks 36–39",
+      "beforeAfter": { "before": "88% kept", "after": "71% kept" },
+      "recommendation": "Re-prioritise allocation for the 2 inspection-bound projects; send each distributor one confirmed date."
+    },
+    {
+      "id": "PR-02",
+      "title": "Last-mile delays, {{place:Gurugram hub}}",
+      "severity": "S3",
+      "severityType": "slope",
+      "owner": "Operations lead",
+      "pnlTag": "On-time delivery",
+      "confidence": "M 0.55",
+      "hero": false,
+      "channelMix": { "email": 4, "service_calls": 3, "help_desk": 2 },
+      "topIntent": "Local delivery lag after hub arrival",
+      "timeWindow": "Last 3 weeks",
+      "beforeAfter": { "before": "2.1 days last mile", "after": "5.0 days last mile" },
+      "recommendation": "Open a last-mile review for the {{place:Gurugram hub}}."
+    },
+    {
+      "id": "RC-01",
+      "title": "Licence re-activation, back a third time",
+      "severity": "S3",
+      "severityType": "cliff",
+      "owner": "Technical support lead",
+      "pnlTag": "Cost-to-serve",
+      "confidence": "H 0.81",
+      "hero": false,
+      "channelMix": { "help_desk": 6, "email": 3, "service_calls": 2 },
+      "topIntent": "Licence re-activation after laptop change",
+      "timeWindow": "This week · 11 contacts",
+      "beforeAfter": { "before": "2 contacts / week after June fix", "after": "11 contacts this week" },
+      "recommendation": "Update the knowledge article and confirm the portal change with the US product team."
+    },
+    {
+      "id": "RC-03",
+      "title": "Order status asked on the help desk, not the order desk",
+      "severity": "S4",
+      "severityType": "slope",
+      "owner": "Technical support lead",
+      "pnlTag": "Cost-to-serve",
+      "confidence": "M 0.62",
+      "hero": false,
+      "channelMix": { "help_desk": 9, "email": 2 },
+      "topIntent": "Where is my order?",
+      "timeWindow": "Last 4 weeks",
+      "beforeAfter": { "before": "auto-reply live (Jul)", "after": "contacts rising again" },
+      "recommendation": "Refresh the auto-reply with a clearer order-desk path."
+    },
+    {
+      "id": "IN-01",
+      "title": "Network configuration adds set-up time",
+      "severity": "S3",
+      "severityType": "slope",
+      "owner": "Product liaison",
+      "pnlTag": "Partner experience",
+      "confidence": "M 0.58",
+      "hero": false,
+      "channelMix": { "service_calls": 5, "help_desk": 3, "email": 1 },
+      "topIntent": "Network set-up takes longer",
+      "timeWindow": "13 weeks",
+      "beforeAfter": { "before": "occasional mention", "after": "~25 min extra stated" },
+      "recommendation": "Share a one-page set-up guide with partners; send a feedback note to the US product team."
+    }
+  ],
+  "sources": {
+    "connected": [
+      { "name": "Order desk email", "owner": "kgs", "connected": true },
+      { "name": "Help desk", "owner": "kgs", "connected": true },
+      { "name": "Service calls", "owner": "kgs", "connected": true },
+      { "name": "Salesforce cases and notes", "owner": "kgs", "connected": true },
+      { "name": "ERP promise dates", "owner": "kgs", "connected": true }
+    ],
+    "notConnected": [
+      { "name": "Partner first-line support", "owner": "partner", "connected": false },
+      { "name": "Partner email with builders and sites", "owner": "partner", "connected": false }
+    ],
+    "footnote": "Richer installer voice sits with partners. See Partner view."
+  },
+  "loopClosureStrip": "This quarter: 11 issues closed with a confirmed fix · 3 came back after a fix · promise kept (all regions) up 6 points since August, {{region:North}} the exception · same-day replies to partners 52% → 64%.",
+  "pipelineNotes": {
+    "title": "Salesforce pipeline notes",
+    "role": "Sales ops",
+    "priority": "P1",
+    "items": [
+      { "theme": "Deals marked 'commit' with no activity in 21 days", "count": 6 },
+      { "theme": "Opportunities waiting on a delivery date", "count": 9 },
+      { "theme": "Notes mentioning Competitor A", "count": 4 }
+    ]
+  }
+}

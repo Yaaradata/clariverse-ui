@@ -1,0 +1,53 @@
+{
+  "brand": {
+    "KGS": { "named": "KGS", "anon": "OEM" }
+  },
+  "platform": {
+    "A": { "named": "Family A (detection)", "anon": "Product family A" },
+    "B": { "named": "Family B (panels)", "anon": "Product family B" },
+    "C": { "named": "Family C (notification)", "anon": "Product family C" },
+    "D": { "named": "Family D (software/licence)", "anon": "Product family D" }
+  },
+  "fw": {},
+  "partner": {
+    "D-N-04": { "named": "D-N-04", "anon": "Partner P-04" },
+    "D-N-07": { "named": "D-N-07", "anon": "Partner P-07" },
+    "D-N-11": { "named": "D-N-11", "anon": "Partner P-11" },
+    "D-N-02": { "named": "D-N-02", "anon": "Partner P-02" },
+    "D-S-01": { "named": "D-S-01", "anon": "Partner P-01" },
+    "D-S-02": { "named": "D-S-02", "anon": "Partner P-02" },
+    "D-S-05": { "named": "D-S-05", "anon": "Partner P-05" },
+    "D-E-03": { "named": "D-E-03", "anon": "Partner P-03" },
+    "D-E-06": { "named": "D-E-06", "anon": "Partner P-06" },
+    "D-W-08": { "named": "D-W-08", "anon": "Partner P-08" },
+    "D-W-09": { "named": "D-W-09", "anon": "Partner P-09" },
+    "D-SEA-10": { "named": "D-SEA-10", "anon": "Partner P-10" },
+    "SP-01": { "named": "SP-01", "anon": "Partner P-01" },
+    "SP-02": { "named": "SP-02", "anon": "Partner P-02" },
+    "SP-03": { "named": "SP-03", "anon": "Partner P-03" },
+    "SP-04": { "named": "SP-04", "anon": "Partner P-04" }
+  },
+  "region": {
+    "North": { "named": "North", "anon": "Region 1" },
+    "South": { "named": "South", "anon": "Region 2" },
+    "East": { "named": "East", "anon": "Region 3" },
+    "West": { "named": "West", "anon": "Region 4" },
+    "SEA": { "named": "SEA", "anon": "Region 5" },
+    "Asia ex China": { "named": "Asia ex China", "anon": "Region all" }
+  },
+  "place": {
+    "Gurugram": { "named": "Gurugram", "anon": "Hub 1" },
+    "Gurugram hub": { "named": "Gurugram hub", "anon": "Hub 1" },
+    "Delhi": { "named": "Delhi", "anon": "Hub 2" },
+    "Mumbai": { "named": "Mumbai", "anon": "Hub 3" },
+    "Chennai": { "named": "Chennai", "anon": "Hub 4" },
+    "Kolkata": { "named": "Kolkata", "anon": "Hub 5" },
+    "Bengaluru": { "named": "Bengaluru", "anon": "Hub 6" },
+    "Singapore": { "named": "Singapore", "anon": "Hub 7" }
+  },
+  "term": {
+    "promise": { "named": "promise kept", "anon": "promise kept" },
+    "Competitor A": { "named": "Competitor A", "anon": "Competitor A" },
+    "Competitor B": { "named": "Competitor B", "anon": "Competitor B" }
+  }
+}
