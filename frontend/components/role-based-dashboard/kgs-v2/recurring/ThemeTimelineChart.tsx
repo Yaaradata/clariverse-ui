@@ -23,13 +23,15 @@ type Series = {
 
 const COLOURS = [K.orange, K.violet400, K.green];
 
-/** Theme timeline: weekly contacts for top themes with ◆ fix / ▲ return markers. */
+/** Theme timeline: weekly contacts · ◆ fix / ▲ return large + labelled. */
 export function ThemeTimelineChart({
   weeks,
   series,
+  height = 220,
 }: {
   weeks: string[];
   series: Series[];
+  height?: number;
 }) {
   const data = useMemo(() => {
     return weeks.map((w, i) => {
@@ -56,7 +58,7 @@ export function ThemeTimelineChart({
     <div
       role="img"
       aria-label="Theme timeline weekly contacts"
-      style={{ height: 280 }}
+      style={{ height, position: "relative" }}
     >
       <ResponsiveContainer
         width="100%"
@@ -65,7 +67,7 @@ export function ThemeTimelineChart({
       >
         <LineChart
           data={data}
-          margin={{ top: 16, right: 16, bottom: 4, left: 0 }}
+          margin={{ top: 28, right: 16, bottom: 4, left: 0 }}
         >
           <CartesianGrid stroke={K.borderLight} vertical={false} />
           <XAxis
@@ -89,75 +91,106 @@ export function ThemeTimelineChart({
             }}
           />
           <Legend wrapperStyle={{ fontSize: 11, color: K.textMut }} />
-          {series.map((s, si) => (
-            <Line
-              key={s.id}
-              type="monotone"
-              dataKey={s.id}
-              name={s.name}
-              stroke={COLOURS[si % COLOURS.length]}
-              strokeWidth={2}
-              isAnimationActive={false}
-              dot={(props) => {
-                const { cx, cy, index } = props;
-                if (cx == null || cy == null || index == null) return null;
-                const m = markerMap.get(s.id);
-                if (m?.fix.has(index)) {
+          {series.map((s, si) => {
+            const color = COLOURS[si % COLOURS.length];
+            return (
+              <Line
+                key={s.id}
+                type="monotone"
+                dataKey={s.id}
+                name={s.name}
+                stroke={color}
+                strokeWidth={2.5}
+                isAnimationActive={false}
+                dot={(props) => {
+                  const { cx, cy, index } = props;
+                  if (cx == null || cy == null || index == null) {
+                    return <g key={`empty-${s.id}-${index ?? 0}`} />;
+                  }
+                  const m = markerMap.get(s.id);
+                  if (m?.fix.has(index)) {
+                    return (
+                      <g key={`f-${s.id}-${index}`}>
+                        <text
+                          x={cx}
+                          y={cy - 14}
+                          textAnchor="middle"
+                          fill={color}
+                          fontSize={16}
+                          fontWeight={800}
+                        >
+                          ◆
+                        </text>
+                        <text
+                          x={cx}
+                          y={cy - 28}
+                          textAnchor="middle"
+                          fill={color}
+                          fontSize={10}
+                          fontWeight={700}
+                        >
+                          fix
+                        </text>
+                      </g>
+                    );
+                  }
+                  if (m?.ret.has(index)) {
+                    return (
+                      <g key={`r-${s.id}-${index}`}>
+                        <text
+                          x={cx}
+                          y={cy - 14}
+                          textAnchor="middle"
+                          fill={K.orange}
+                          fontSize={16}
+                          fontWeight={800}
+                        >
+                          ▲
+                        </text>
+                        <text
+                          x={cx}
+                          y={cy - 28}
+                          textAnchor="middle"
+                          fill={K.orange}
+                          fontSize={10}
+                          fontWeight={700}
+                        >
+                          return
+                        </text>
+                      </g>
+                    );
+                  }
                   return (
-                    <text
-                      key={`f-${s.id}-${index}`}
-                      x={cx}
-                      y={cy - 10}
-                      textAnchor="middle"
-                      fill={COLOURS[si % COLOURS.length]}
-                      fontSize={12}
-                      fontWeight={700}
-                    >
-                      ◆
-                    </text>
+                    <circle
+                      key={`d-${s.id}-${index}`}
+                      cx={cx}
+                      cy={cy}
+                      r={3}
+                      fill={color}
+                    />
                   );
-                }
-                if (m?.ret.has(index)) {
-                  return (
-                    <text
-                      key={`r-${s.id}-${index}`}
-                      x={cx}
-                      y={cy - 10}
-                      textAnchor="middle"
-                      fill={K.orange}
-                      fontSize={12}
-                      fontWeight={700}
-                    >
-                      ▲
-                    </text>
-                  );
-                }
-                return (
-                  <circle
-                    key={`d-${s.id}-${index}`}
-                    cx={cx}
-                    cy={cy}
-                    r={3}
-                    fill={COLOURS[si % COLOURS.length]}
-                  />
-                );
-              }}
-              activeDot={{ r: 5 }}
-            />
-          ))}
+                }}
+                activeDot={{ r: 5 }}
+              />
+            );
+          })}
         </LineChart>
       </ResponsiveContainer>
       <div
         style={{
           display: "flex",
-          gap: 14,
-          marginTop: 6,
+          gap: 16,
+          marginTop: 4,
           fontSize: 11,
           color: K.textMut,
         }}
       >
-        <span>◆ fix</span>
-        <span>▲ return</span>
+        <span>
+          <span style={{ color: K.orange, fontWeight: 800 }}>◆</span> fix
+        </span>
+        <span>
+          <span style={{ color: K.orange, fontWeight: 800 }}>▲</span> return
+        </span>
       </div>
     </div>
   );
