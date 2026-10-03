@@ -584,3 +584,19 @@ wording.
 - **IV-20 · Home layout.** Improving, peer moves and horizon sit three across; the checked-and-within-range item is one
   thin line under them (a tile of its own was mostly empty). Ombudsman "eligible" is red (the reply rule is already
   breached); the other states amber; volumes neutral.
+- **IV-21 · Weekly complaint register as stock and flow.** The first build measured each week's own intake at that
+  week's end, so "over 30 days" was always 0% and about 82% read as "pending". The register now reads as a bank MIS does:
+  received and closed in the week as indices on the Q1 weekly intake, the pending stock in weeks of intake, the share of
+  pending over 30 days, and rejected, reopened and IO referrals as shares of the week's final replies. It shows the
+  last 13 weeks in every window.
+- **IV-22 · Business filter scope.** On the home page the business filter changes the customer pulse and the Ombudsman
+  watch. The pulse-by-business table, the four cards and the strips stay bank-wide (the table already has a row per
+  business; the selected one is highlighted). Deposits and Cards have their own screens; other businesses show
+  "Module next".
+- **IV-23 · Views.** CEO's office and Head of CX change the home page only (summary vs channel table, gauges, evidence
+  open, owners table). The other screens are the same in both views; screenshots are still taken in both.
+- **IV-24 · Rates side by side.** With the manual read not logged, the peer rates P10–P17 are listed (pending) with one
+  line saying IndusInd's own rate for the same band appears once the read is logged. No comparison is drawn.
+- **IV-25 · Routes and screenshots.** IndusInd routes live in `scripts/routes_indusind.json` (HDFC's `routes.json` is
+  unchanged). Full-page screenshots hide the floating Ask bar (a fixed bar lands mid-page in a full-page capture); a
+  second end-of-page shot per screen shows the bar clear of the footer, and the script asserts it.

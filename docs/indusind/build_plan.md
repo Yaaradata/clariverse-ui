@@ -48,17 +48,17 @@ is filled from IND-B3's tables, the research files or memory.
 |---|---|---|
 | 0 | Inputs unzipped outside the repo; branch; `docs/indusind/` committed | Done |
 | 1 | This plan | Done |
-| 2 | Config, register, sensitivities, owners reference | To do |
-| 3 | L3 seed (`deposits_weekly`, `complaints_weekly`, `contacts_weekly`, `cards_internal`, `actions`) and reconcile | To do |
-| 4 | Lint: all 26 IND-B3 §8 rules, each with a failing fixture | To do |
-| 5 | Page payloads, privacy and payload grep | To do |
-| 6 | S-HOME | To do |
-| 7 | S-DEP | To do |
-| 8 | S-PEER | To do |
-| 9 | S-RISK | To do |
-| 10 | S-CARDS | To do |
-| 11 | S-APPR mock | To do |
-| 12 | Checks, routes, screenshots, `qa/indusind_qa_checklist.md`, `qa/indusind_volume_validation.md` | To do |
+| 2 | Config, register, sensitivities, owners reference | Done (values pending IND-D1) |
+| 3 | L3 seed (`deposits_weekly`, `complaints_weekly`, `contacts_weekly`, `cards_internal`, `actions`) and reconcile | Done |
+| 4 | Lint: all 26 IND-B3 §8 rules, each with a failing fixture | Done |
+| 5 | Page payloads, privacy and payload grep | Done |
+| 6 | S-HOME | Done |
+| 7 | S-DEP | Done |
+| 8 | S-PEER | Done (reduced; captures not loaded) |
+| 9 | S-RISK | Done |
+| 10 | S-CARDS | Done |
+| 11 | S-APPR mock | Done |
+| 12 | Checks, routes, screenshots, `qa/indusind_qa_checklist.md`, `qa/indusind_volume_validation.md` | Done (see checklist; independent review not run) |
 | 13 | Push `feat/indusind-v1` | After the Vercel protection confirmation |
 | — | Stretch: S-VF, S-MICRO, S-APP | Not started (core QA first) |
 
