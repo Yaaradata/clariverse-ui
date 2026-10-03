@@ -106,7 +106,7 @@ export function SensBlock({ s }: { s: Sens }) {
         }}
       >
         <span style={{ color: C.textSec }}>{s.label}</span>
-        <strong style={{ whiteSpace: "nowrap" }}>
+        <strong style={{ textAlign: "right", maxWidth: "55%" }}>
           {s.pending ? <Pending /> : s.display}
         </strong>
       </div>
