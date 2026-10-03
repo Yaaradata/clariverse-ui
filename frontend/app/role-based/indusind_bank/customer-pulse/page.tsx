@@ -22,6 +22,9 @@ export default async function IndusIndHome({
     quarter: home.quarter,
     win: {
       ...w,
+      // The business filter scopes Outside and "What customers are doing" as well as the inside pulse.
+      outside: pulse.outside ?? w.outside,
+      doing: pulse.doing ?? w.doing,
       // CEO's office sees the pulse summary: the channel table is not sent.
       pulse: sel.v === "cx" ? pulse : { ...pulse, channels: [] },
     },

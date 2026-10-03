@@ -34,7 +34,7 @@ import {
   Tile,
   tint,
 } from "./primitives";
-import { SignalCards } from "./SignalCards";
+import { FigRow, SignalCards } from "./SignalCards";
 
 /** What the home page receives: one window, one business, one view. Sliced on the server. */
 export type HomeSlice = {
@@ -158,7 +158,11 @@ function Pulse({
   const i = p.inside;
   const d = s.win.doing;
   const rt = trendPoints(i.trend);
-  const ot = trendPoints(d.outflow_index.trend);
+  const ot = trendPoints(
+    d.kind === "lines"
+      ? { id: "", layer: "L3", unit: "", points: [] }
+      : d.outflow_index.trend,
+  );
   const sub = {
     fontSize: 12.5,
     color: C.textMut,
@@ -275,43 +279,71 @@ function Pulse({
             v={s.win.outside}
             defs={common.defs}
             rating={s.win.outside.rating}
-            trend={s.win.outside.trend}
+            trend={s.win.outside.trend ?? undefined}
             before={s.win.outside.before}
             caption={common.pulse_caption}
           />
         </Tile>
 
-        <Tile
-          title="What customers are doing"
-          sub="Savings, flows, app"
-          layers={["L1", "L3"]}
-        >
-          <div style={cols(2, 120, 8)}>
-            <Kpi
-              label="Savings outflow (index)"
-              f={d.outflow_index}
-              info={common.defs.outflow}
-            />
-            <Kpi
-              label="Savings closures (index)"
-              f={d.closures_index}
-              info={common.defs.closures}
-            />
-          </div>
-          <div style={{ position: "relative", height: 64 }}>
-            <AreaChart
-              id="home-outflow"
-              values={ot.values}
-              color={C.cyan}
-              height="100%"
-              title="Savings outflow, weekly index"
-              points={ot.points}
-            />
-          </div>
-          <div>
-            {d.savings.map((f) => (
+        {d.kind === "lines" ? (
+          <Tile
+            title="What customers are doing"
+            sub={d.sub}
+            layers={Array.from(new Set(d.lines.map((f) => f.layer)))}
+          >
+            {d.lines.map((f) => (
+              <FigRow key={f.id + (f.label ?? "")} f={f} />
+            ))}
+          </Tile>
+        ) : (
+          <Tile
+            title="What customers are doing"
+            sub="Savings, flows, app"
+            layers={["L1", "L3"]}
+          >
+            <div style={cols(2, 120, 8)}>
+              <Kpi
+                label="Savings outflow (index)"
+                f={d.outflow_index}
+                info={common.defs.outflow}
+              />
+              <Kpi
+                label="Savings closures (index)"
+                f={d.closures_index}
+                info={common.defs.closures}
+              />
+            </div>
+            <div style={{ position: "relative", height: 64 }}>
+              <AreaChart
+                id="home-outflow"
+                values={ot.values}
+                color={C.cyan}
+                height="100%"
+                title="Savings outflow, weekly index"
+                points={ot.points}
+              />
+            </div>
+            <div>
+              {d.savings.map((f) => (
+                <div
+                  key={f.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 8,
+                    fontSize: 13,
+                    color: C.textSec,
+                    padding: "2px 0",
+                  }}
+                >
+                  <span>
+                    {f.label}{" "}
+                    <span style={{ color: C.textMut }}>· {f.period}</span>
+                  </span>
+                  <Fig f={f} style={{ fontFamily: MONO, color: C.text }} />
+                </div>
+              ))}
               <div
-                key={f.id}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -322,35 +354,19 @@ function Pulse({
                 }}
               >
                 <span>
-                  {f.label}{" "}
-                  <span style={{ color: C.textMut }}>· {f.period}</span>
+                  {d.app_deposits.label}{" "}
+                  <span style={{ color: C.textMut }}>
+                    · {d.app_deposits.period}
+                  </span>
                 </span>
-                <Fig f={f} style={{ fontFamily: MONO, color: C.text }} />
+                <Fig
+                  f={d.app_deposits}
+                  style={{ fontFamily: MONO, color: C.text }}
+                />
               </div>
-            ))}
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 8,
-                fontSize: 13,
-                color: C.textSec,
-                padding: "2px 0",
-              }}
-            >
-              <span>
-                {d.app_deposits.label}{" "}
-                <span style={{ color: C.textMut }}>
-                  · {d.app_deposits.period}
-                </span>
-              </span>
-              <Fig
-                f={d.app_deposits}
-                style={{ fontFamily: MONO, color: C.text }}
-              />
             </div>
-          </div>
-        </Tile>
+          </Tile>
+        )}
       </div>
 
       {cx ? (

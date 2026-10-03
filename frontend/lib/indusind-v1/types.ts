@@ -226,19 +226,22 @@ export type HomeWindow = {
       contacts: { index: Fig; negative: Fig };
       channels: ChannelRow[];
       ombudsman: OmbudsmanBlock;
+      /** Set for a single business: its own public items (absent under "all"). */
+      outside?: HomeOutside;
+      /** Set for a business that is not savings: its own book lines. */
+      doing?: DoingLines;
     }
   >;
-  outside: VoiceBlock & {
-    rating: Rating | null;
-    trend: Trend & { starts: string | null };
-    before: { from: string; to: string; items: Fig } | null;
-  };
-  doing: {
-    savings: Fig[];
-    outflow_index: Fig & { trend: Trend };
-    closures_index: Fig;
-    app_deposits: Fig;
-  };
+  outside: HomeOutside;
+  doing:
+    | DoingLines
+    | {
+        kind?: undefined;
+        savings: Fig[];
+        outflow_index: Fig & { trend: Trend };
+        closures_index: Fig;
+        app_deposits: Fig;
+      };
   risk_by_business: { id: string; label: string; share: Fig }[];
   rows: BusinessRow[];
   cards: Card[];
@@ -246,6 +249,14 @@ export type HomeWindow = {
   unassigned?: Fig;
   quiet: (Fig & { text: string; passed: boolean }) | null;
 };
+
+export type HomeOutside = VoiceBlock & {
+  rating: Rating | null;
+  trend: (Trend & { starts: string | null }) | null;
+  before: { from: string; to: string; items: Fig } | null;
+};
+
+export type DoingLines = { kind: "lines"; sub: string; lines: Fig[] };
 
 export type Home = {
   quarter: { items: Fig[]; chips: Sens[] };

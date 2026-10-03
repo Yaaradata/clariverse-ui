@@ -135,6 +135,14 @@ def run(p: dict) -> list[str]:
             for b in ("deposits", "vehicle", "micro", "cards", "digital"):
                 ok(rows[b]["inside"][k]["display"] == w["pulse"][b]["inside"][k]["display"],
                    f"reconcile [{wid}]: {b} row {k} differs from the home pulse for {b}")
+        # ---- the business filter scopes Outside: home Outside under Cards = the Cards page's public items
+        ok(w["pulse"]["cards"]["outside"]["items"]["display"] == cards["windows"][wid]["external"]["items"]["display"],
+           f"reconcile [{wid}]: home Outside under Cards differs from the Cards page public items")
+        for b in ("deposits", "vehicle", "micro", "cards", "digital"):
+            ok(w["pulse"][b]["outside"]["items"]["display"] == rows[b]["outside"]["items"]["display"],
+               f"reconcile [{wid}]: home Outside under {b} differs from its business row")
+        ok(w["pulse"]["cards"]["doing"]["lines"][-1]["display"] == cards["windows"][wid]["closure_risk"]["index"]["display"],
+           f"reconcile [{wid}]: Cards closure index on home differs from the Cards page")
         # ---- resolved + open + waiting = received (shares sum to 100)
         for b, blk in w["pulse"].items():
             i = blk["inside"]
@@ -320,6 +328,7 @@ def _set(d, path, value):
 
 
 FIXTURES = [
+    ("home Cards outside out of step", "home Outside under Cards", lambda p: _set(p["home"]["windows"]["w4"]["pulse"]["cards"]["outside"]["items"], ["display"], "64")),
     ("peer card date edited", "trace:", lambda p: _set(p["peers"]["cards"][0], ["display"], "Federal FD card effective 29 Sep 2026: 1-year 6.35%; peak 6.70% (48 months)")),
     ("press date edited", "trace:", lambda p: _set(p["peers"]["press"][-1], ["display"], "1 Jul 2026")),
     ("peer chip edited", "trace:", lambda p: _set(p["home"]["windows"]["week"]["cards"][0]["peer_chip"], ["display"], "IDFC First 50.8% · Yes 33.7% · Federal 32.23% (CASA, Jun 2026)")),

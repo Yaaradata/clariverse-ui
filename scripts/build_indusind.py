@@ -542,6 +542,15 @@ def quiet_item(w: dict) -> dict | None:
             "text": "Complaints received this week: within the range of the previous 12 weeks"} if passed else None
 
 
+# "What customers are doing", by business filter: deposits and all show savings; the rest show their own book lines.
+DOING_LINES = {
+    "cards": ("Card balances", [{"line": ["N18"], "label": "Card balances"}]),
+    "vehicle": ("Disbursements and book", [{"line": ["N22", "D11"], "label": "Disbursements"}, {"line": ["N21"]}]),
+    "micro": ("Micro loans book", [{"line": ["N16"]}]),
+    "digital": ("App use", ["N41", "N42"]),
+}
+
+
 def home() -> dict:
     out = {"quarter": {"items": [l1("N27"), l1("N28"), l1("N29")], "chips": [sens("S01"), sens("S07")]},
            "windows": {}}
@@ -556,6 +565,15 @@ def home() -> dict:
                 "channels": channels_block(ps, w),
                 "ombudsman": {k: v for k, v in ombudsman_block(ps, b, w).items() if not k.startswith("_")},
             }
+            if b != "all":
+                # The business filter scopes Outside too: only that business's public items (Cards = the Cards page).
+                ob = M.voice_block(M.business_items(L2, b, w["id"]), b, w["id"])
+                per[b]["outside"] = {**ob, "rating": M.rating_fig() if b == "digital" else None,
+                                     "trend": M.security_trend(L2) if b == "digital" else None,
+                                     "before": M.before_block(L2, w["id"], b, M.BUSINESS_PRODUCTS[b])}
+            if b in DOING_LINES:
+                # "What customers are doing" for a business that is not savings: its own public book lines.
+                per[b]["doing"] = {"kind": "lines", "sub": DOING_LINES[b][0], "lines": [card_row(x) for x in DOING_LINES[b][1]]}
         rows = []
         for b in CONFIG["businesses"]:
             ps = products_of(b["id"])
@@ -871,6 +889,10 @@ def main():
     h = home()
     pages = {"common": common(), "home": h, "deposits": deposits_page(), "peers": peers_page(), "risk": risk_page(),
              "cards": cards_page(), "approvals": approvals_page(), "ask": ask_bank(h)}
+    # Cards under the home filter shows the Cards page's closure-risk index beside the balances (same figure).
+    for wid, w in h["windows"].items():
+        ci = pages["cards"]["windows"][wid]["closure_risk"]["index"]
+        w["pulse"]["cards"]["doing"]["lines"].append({**ci, "label": "Card accounts at risk of closure (index)"})
     M.write_registry()
     for name, obj in pages.items():
         (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8", newline="\n")
