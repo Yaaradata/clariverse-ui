@@ -173,7 +173,7 @@ function Pulse({
           · {s.businessLabel} · {s.windowLabel}
         </span>
       </h2>
-      <div style={cols(3, 300, 12)}>
+      <div style={{ ...cols(3, 300, 12), alignItems: "start" }}>
         <Tile
           title="Inside the bank"
           sub="Complaints and contacts"
@@ -500,7 +500,7 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
   const q = s.win.quiet;
   return (
     <>
-      <div style={cols(3, 300, 12)}>
+      <div style={{ ...cols(3, 300, 12), alignItems: "start" }}>
         <Tile
           title="Improving"
           sub="Verified items only"

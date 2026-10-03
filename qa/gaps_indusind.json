@@ -1,0 +1,290 @@
+[
+ {
+  "route": "/indusind-v1",
+  "gaps": [
+   {
+    "gap": 46,
+    "h": 291,
+    "cols": 2,
+    "y": 2007,
+    "at": 205,
+    "title": "Conduct rules from pending verification: pending verificatio"
+   },
+   {
+    "gap": 41,
+    "h": 41,
+    "cols": 2,
+    "y": 2477,
+    "at": 0,
+    "title": "IO quarterly complaint-pattern analysis: next quarter-end"
+   },
+   {
+    "gap": 24,
+    "h": 71,
+    "cols": 3,
+    "y": 356,
+    "at": 16,
+    "title": "ESCALATION LANGUAGE"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1?v=cx",
+  "gaps": [
+   {
+    "gap": 46,
+    "h": 286,
+    "cols": 2,
+    "y": 2696,
+    "at": 205,
+    "title": "Conduct rules from pending verification: pending verificatio"
+   },
+   {
+    "gap": 41,
+    "h": 41,
+    "cols": 2,
+    "y": 3160,
+    "at": 0,
+    "title": "IO quarterly complaint-pattern analysis: next quarter-end"
+   },
+   {
+    "gap": 24,
+    "h": 71,
+    "cols": 3,
+    "y": 356,
+    "at": 16,
+    "title": "ESCALATION LANGUAGE"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1?b=cards",
+  "gaps": [
+   {
+    "gap": 46,
+    "h": 291,
+    "cols": 2,
+    "y": 2007,
+    "at": 205,
+    "title": "Conduct rules from pending verification: pending verificatio"
+   },
+   {
+    "gap": 41,
+    "h": 41,
+    "cols": 2,
+    "y": 2477,
+    "at": 0,
+    "title": "IO quarterly complaint-pattern analysis: next quarter-end"
+   },
+   {
+    "gap": 24,
+    "h": 71,
+    "cols": 3,
+    "y": 356,
+    "at": 16,
+    "title": "ESCALATION LANGUAGE"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1?v=cx&b=cards",
+  "gaps": [
+   {
+    "gap": 46,
+    "h": 286,
+    "cols": 2,
+    "y": 2696,
+    "at": 205,
+    "title": "Conduct rules from pending verification: pending verificatio"
+   },
+   {
+    "gap": 41,
+    "h": 41,
+    "cols": 2,
+    "y": 3160,
+    "at": 0,
+    "title": "IO quarterly complaint-pattern analysis: next quarter-end"
+   },
+   {
+    "gap": 24,
+    "h": 71,
+    "cols": 3,
+    "y": 356,
+    "at": 16,
+    "title": "ESCALATION LANGUAGE"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1?w=week",
+  "gaps": [
+   {
+    "gap": 46,
+    "h": 291,
+    "cols": 2,
+    "y": 2026,
+    "at": 205,
+    "title": "Conduct rules from pending verification: pending verificatio"
+   },
+   {
+    "gap": 41,
+    "h": 41,
+    "cols": 2,
+    "y": 2496,
+    "at": 0,
+    "title": "IO quarterly complaint-pattern analysis: next quarter-end"
+   },
+   {
+    "gap": 24,
+    "h": 71,
+    "cols": 3,
+    "y": 356,
+    "at": 16,
+    "title": "ESCALATION LANGUAGE"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1?w=w13",
+  "gaps": [
+   {
+    "gap": 46,
+    "h": 291,
+    "cols": 2,
+    "y": 2084,
+    "at": 205,
+    "title": "Conduct rules from pending verification: pending verificatio"
+   },
+   {
+    "gap": 41,
+    "h": 41,
+    "cols": 2,
+    "y": 2554,
+    "at": 0,
+    "title": "IO quarterly complaint-pattern analysis: next quarter-end"
+   },
+   {
+    "gap": 24,
+    "h": 71,
+    "cols": 3,
+    "y": 356,
+    "at": 16,
+    "title": "ESCALATION LANGUAGE"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1/deposits",
+  "gaps": [
+   {
+    "gap": 45,
+    "h": 366,
+    "cols": 2,
+    "y": 209,
+    "at": 287,
+    "title": "What"
+   },
+   {
+    "gap": 40,
+    "h": 50,
+    "cols": 3,
+    "y": 145,
+    "at": 5,
+    "title": "Savings and flows"
+   },
+   {
+    "gap": 40,
+    "h": 50,
+    "cols": 3,
+    "y": 145,
+    "at": 5,
+    "title": "Cost of deposits"
+   },
+   {
+    "gap": 40,
+    "h": 50,
+    "cols": 3,
+    "y": 145,
+    "at": 5,
+    "title": "Retail franchise"
+   },
+   {
+    "gap": 28,
+    "h": 350,
+    "cols": 2,
+    "y": 1425,
+    "at": 121,
+    "title": "How highi"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1/deposits?w=w13",
+  "gaps": [
+   {
+    "gap": 45,
+    "h": 366,
+    "cols": 2,
+    "y": 209,
+    "at": 287,
+    "title": "What"
+   },
+   {
+    "gap": 40,
+    "h": 50,
+    "cols": 3,
+    "y": 145,
+    "at": 5,
+    "title": "Savings and flows"
+   },
+   {
+    "gap": 40,
+    "h": 50,
+    "cols": 3,
+    "y": 145,
+    "at": 5,
+    "title": "Cost of deposits"
+   },
+   {
+    "gap": 40,
+    "h": 50,
+    "cols": 3,
+    "y": 145,
+    "at": 5,
+    "title": "Retail franchise"
+   },
+   {
+    "gap": 28,
+    "h": 350,
+    "cols": 2,
+    "y": 1425,
+    "at": 121,
+    "title": "How highi"
+   }
+  ]
+ },
+ {
+  "route": "/indusind-v1/peers",
+  "gaps": []
+ },
+ {
+  "route": "/indusind-v1/risk",
+  "gaps": []
+ },
+ {
+  "route": "/indusind-v1/risk?w=week",
+  "gaps": []
+ },
+ {
+  "route": "/indusind-v1/cards",
+  "gaps": []
+ },
+ {
+  "route": "/indusind-v1/cards?w=w13",
+  "gaps": []
+ },
+ {
+  "route": "/indusind-v1/approvals",
+  "gaps": []
+ }
+]
