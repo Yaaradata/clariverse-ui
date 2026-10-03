@@ -19,6 +19,14 @@ const nextConfig = {
       { source: '/hdfc-v3/:path*', destination: '/hdfc-pulse/v2/:path*', permanent: false },
     ];
   },
+  // IndusInd demo: never indexed, on top of Deployment Protection and the page-level robots meta.
+  async headers() {
+    const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }];
+    return [
+      { source: '/indusind-v1', headers: noindex },
+      { source: '/indusind-v1/:path*', headers: noindex },
+    ];
+  },
   experimental: {
     optimizeCss: false,
   },

@@ -561,3 +561,26 @@ wording.
   row = module and = the home pulse for that business, resolved + open + waiting = 100%, Ombudsman at-risk within
   pending, balances bound to the right register entries, the sanity ratios and the payload privacy grep. Each check
   has a fixture that must fail it (`scripts/test_checks.py`). `check_pii.py` now also scans the IndusInd files.
+- **IV-13 · Selection in the URL, sliced on the server.** View, window and business live in `?v=&w=&b=`. Each page
+  reads its own payload on the server and sends the browser one window, one business and one view: CEO's office does
+  not receive the channel table or the owners table it does not render.
+- **IV-14 · Arithmetic in words.** Sensitivity formulas reach the screen as `formula_text`, with each register ID
+  replaced by its label and period. Instructions in sensitivity notes ("Add the derivation to IND-D1 v1.1") moved to
+  `build_note`; the on-screen basis note keeps only the basis.
+- **IV-15 · Biome scope.** `npm run lint` (repo-wide `biome check`) already fails on main with 2,586 errors in files
+  outside this work. The IndusInd gate is `biome check` on `components/`, `app/` and `lib/indusind-v1` plus the shared
+  files changed here; it must be clean. `next.config.mjs` keeps its existing style (two pre-existing warnings).
+- **IV-16 · Rule 18 and CSS.** A layout value in a style prop (`translateX(-50%)`, `calc(100% + 6px)`) is geometry, not
+  a figure. The rule now skips strings whose every word is CSS; fixtures check both that CSS passes and that a figure
+  inside CSS-looking text still fails.
+- **IV-17 · Internal labels in payloads.** Register periods read "date per IND-D1" and reached the screen. They now read
+  "date pending verification". `check_indusind.py` gained an internal-label check (brief, decision, track, screen and
+  register IDs, "V1") over every payload string except id and build-note fields, with a fixture. It also caught the
+  approvals list carrying a raw `{N36}` title template, now built from the card's title parts.
+- **IV-18 · Seed account counts.** Weekly savings opens and closures rounded to zero per cell, so the closures and
+  new-money indices were blank. Counts now use their own account base per cell (100,000 × the cell weight).
+- **IV-19 · Definitions behind the (i).** Definitions carry numbers ("over 30 days", "Q1 weekly average = 100"), so they
+  live in `config/indusind.yaml` (`copy.defs`) and reach the page through `common.json`; no figure is typed in a component.
+- **IV-20 · Home layout.** Improving, peer moves and horizon sit three across; the checked-and-within-range item is one
+  thin line under them (a tile of its own was mostly empty). Ombudsman "eligible" is red (the reply rule is already
+  breached); the other states amber; volumes neutral.

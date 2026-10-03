@@ -1,0 +1,200 @@
+/**
+ * IndusInd · page payload types. The payloads are written by scripts/build_indusind.py (data/out/indusind_v1/); every
+ * figure carries its register, L2 or L3 id and its layer, and nothing is computed in the browser.
+ */
+
+export type Layer = "L1" | "L2" | "L3";
+export type WindowId = "week" | "w4" | "w13";
+export type ViewId = "ceo" | "cx";
+
+/** One figure. L1 values are null while IND-D1 is missing: display is then "pending verification". */
+export type Fig = {
+  id: string;
+  layer: Layer;
+  tag?: string;
+  label?: string;
+  period?: string;
+  basis?: string;
+  note?: string;
+  status?: string;
+  value: number | null;
+  display: string;
+  pending?: boolean;
+  source?: string | null;
+  source_date?: string | null;
+  delta?: number | null;
+  delta_display?: string;
+};
+
+export type NotLoaded = {
+  layer: "L2";
+  tag: string;
+  loaded: false;
+  text: string;
+  what: string;
+};
+
+export type Sens = {
+  id: string;
+  layer: "L1";
+  label: string;
+  derived: true;
+  /** The arithmetic in words (labels and periods, never ids). */
+  formula_text: string;
+  inputs: Fig[];
+  value: number | null;
+  display: string;
+  pending: boolean;
+  basis_note: string;
+  caveat: string;
+};
+
+export type Trend = {
+  id: string;
+  layer: "L3";
+  unit: string;
+  points: { end: string; value: number | null }[];
+};
+
+export type Action = {
+  action_id: string;
+  card_id: string;
+  owner_role: string;
+  scope: string;
+  ask: string;
+  cost_cap_cr: number | null;
+  cost_cap_note: string | null;
+  success_measure: string;
+  review_date: string;
+  status: string;
+  approver_role: string;
+  approved_at: string | null;
+  evidence_version: string;
+};
+
+export type Common = {
+  bank: string;
+  freeze: string;
+  freeze_provisional: boolean;
+  windows: { id: WindowId; label: string }[];
+  default_window: WindowId;
+  views: { id: ViewId; label: string }[];
+  businesses: { id: string; label: string }[];
+  watermark: string;
+  footer: string;
+  pulse_caption: string;
+  pending: string;
+  not_loaded: string;
+  sensitivity_footer: string;
+  /** Definitions shown behind an (i). */
+  defs: Record<string, string>;
+};
+
+export type InsideBlock = Record<
+  | "received_index"
+  | "change"
+  | "resolved"
+  | "open"
+  | "waiting"
+  | "over_30"
+  | "escalated"
+  | "io"
+  | "escalation_language",
+  Fig
+> & { trend: Trend };
+
+export type OmbudsmanBlock = Record<
+  "brink" | "eligible" | "unhappy" | "awaiting_io" | "at_risk",
+  Fig
+>;
+
+export type ChannelRow = {
+  id: string;
+  label: string;
+  share: Fig;
+  resolved: Fig;
+  open: Fig;
+  waiting: Fig;
+  over_30: Fig;
+};
+
+export type TitlePart = { text?: string; fig?: Fig };
+
+export type Card = {
+  id: string;
+  title: string;
+  title_parts: TitlePart[];
+  what: Fig[];
+  peers: Fig[];
+  peers_held: boolean;
+  voice: NotLoaded;
+  inside: { text: string; figures?: Fig[] };
+  sensitivity: Sens[];
+  exposure: string | null;
+  owner: string;
+  with: string;
+  action: Action;
+  module: string | null;
+};
+
+export type BusinessRow = {
+  id: string;
+  label: string;
+  next: boolean;
+  inside: { received_index: Fig; open: Fig; over_30: Fig } | null;
+  outside: NotLoaded;
+  theme: NotLoaded;
+  money: Fig[];
+  module: string | null;
+};
+
+export type HomeWindow = {
+  pulse: Record<
+    string,
+    {
+      inside: InsideBlock;
+      contacts: { index: Fig; negative: Fig };
+      channels: ChannelRow[];
+      ombudsman: OmbudsmanBlock;
+    }
+  >;
+  outside: NotLoaded;
+  doing: {
+    savings: Fig[];
+    outflow_index: Fig & { trend: Trend };
+    closures_index: Fig;
+    app_deposits: Fig;
+  };
+  risk_by_business: { id: string; label: string; share: Fig }[];
+  rows: BusinessRow[];
+  cards: Card[];
+  quiet: (Fig & { text: string; passed: boolean }) | null;
+};
+
+export type Home = {
+  quarter: { items: Fig[]; chips: Sens[] };
+  windows: Record<WindowId, HomeWindow>;
+  improving: Fig[];
+  horizon: { id: string; label: string; date: Fig; countdown: string | null }[];
+  peer_moves: NotLoaded;
+  owners: {
+    card: string;
+    owner: string;
+    action: string;
+    status: string;
+    age_days: number;
+    approver: string;
+  }[];
+};
+
+export type AskBank = {
+  questions: {
+    id: string;
+    q: string;
+    page: string;
+    answer: string;
+    figures: Fig[];
+  }[];
+  fallback: string;
+  fallback_look: string[];
+};

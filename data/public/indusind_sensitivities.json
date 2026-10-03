@@ -11,8 +11,9 @@
    ],
    "value": null,
    "unit": "inr_cr_year",
-   "basis_note": "On the 30 Jun 2026 period-end deposit base. IND-D1 gives the Q1 average-base and excluding-current-accounts notes.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "basis_note": "On the 30 Jun 2026 period-end deposit base.",
+   "caveats": "Not a forecast. Not additive across cards.",
+   "build_note": "IND-D1 gives the Q1 average-base and excluding-current-accounts notes."
   },
   {
    "id": "S02",
@@ -23,7 +24,7 @@
    ],
    "value": null,
    "unit": "inr_cr_year",
-   "basis_note": "Same base as S01.",
+   "basis_note": "On the 30 Jun 2026 period-end deposit base.",
    "caveats": "Not a forecast. Not additive across cards."
   },
   {
@@ -37,8 +38,9 @@
    ],
    "value": null,
    "unit": "inr_cr",
-   "basis_note": "Money moved from CASA to term deposits. Restoring the March CASA ratio with new CASA money instead needs (D06 x N01 - D01) / (1 - D06). Add the derivation to IND-D1 v1.1 before display.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "basis_note": "Money moved from CASA to term deposits, at the June deposit base.",
+   "caveats": "Not a forecast. Not additive across cards.",
+   "build_note": "Restoring the March CASA ratio with new CASA money instead needs (D06 x N01 - D01) / (1 - D06). Add the derivation to IND-D1 v1.1 before display."
   },
   {
    "id": "S04",
@@ -52,8 +54,9 @@
    ],
    "value": null,
    "unit": "inr_cr_year_range",
-   "basis_note": "Low end: the lost CASA was all savings. High end: the lost CASA was in today's CA:SA mix. Q1 average costs applied to 30 Jun balances. Add the derivation to IND-D1 v1.1 before display.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "basis_note": "Low end: the lost CASA was all savings. High end: the lost CASA was in today's current-to-savings mix. Q1 average costs applied to 30 Jun balances.",
+   "caveats": "Not a forecast. Not additive across cards.",
+   "build_note": "Add the derivation to IND-D1 v1.1 before display."
   },
   {
    "id": "S05",

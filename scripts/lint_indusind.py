@@ -175,9 +175,23 @@ def ui_strings(text: str) -> list[str]:
     return [s for s in out if re.search(r"[A-Za-z]{3}|\d", s)]
 
 
+# Words a CSS value in a style prop can carry (functions, units, keywords, and the JS names interpolated into it).
+CSS_WORDS = {"calc", "translate", "translatex", "translatey", "repeat", "minmax", "min", "max", "auto", "fit", "fill",
+             "px", "fr", "em", "rem", "vh", "vw", "deg", "ms", "var", "inset", "x", "y", "n", "gap", "share"}
+
+
+def css_only(s: str) -> bool:
+    """True for a layout value such as 'translateX(-50%)' or 'calc(100% + 6px)': every word is CSS, so a % in it is
+    geometry, not a figure."""
+    t = re.sub(r"\$\{[^{}]*\}", " ", s)
+    words = re.findall(r"[A-Za-z]+", t)
+    return all(w.lower() in CSS_WORDS for w in words) and not re.search(r"₹|crore|lakh|\bbp\b|\bpts\b|\bdays?\b", t)
+
+
 def ui_figures(s: str, where: str) -> list[str]:
-    """Rule 18 for the source: no figure typed into a component (₹, %, crore, lakh, bp, days next to a number)."""
-    if FIGURE.search(s) and not re.fullmatch(r"[\w\s.:%()/-]*\d+(?:px|ms|s|fr|em|rem|vw|vh|deg)\b.*", s):
+    """Rule 18 for the source: no figure typed into a component (₹, %, crore, lakh, bp, days next to a number). CSS
+    layout values are not figures."""
+    if FIGURE.search(s) and not css_only(s) and not re.fullmatch(r"[\w\s.:%()/-]*\d+(?:px|ms|s|fr|em|rem|vw|vh|deg)\b.*", s):
         return [f"IND-R18 {where}: a figure typed into a component: {s[:90]!r}"]
     return []
 

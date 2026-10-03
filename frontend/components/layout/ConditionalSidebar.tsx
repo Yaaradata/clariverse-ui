@@ -24,6 +24,7 @@ export default function ConditionalSidebar({
   const isFlipkartRoute = pathname?.startsWith("/flipkart");
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered");
   const isHdfcRoute = pathname?.startsWith("/hdfc");
+  const isIndusIndRoute = pathname?.startsWith("/indusind-v1");
   const isRootPage = pathname === "/";
   const isRoleBasedRoute =
     pathname === "/role-based" || pathname?.startsWith("/role-based/");
@@ -36,6 +37,7 @@ export default function ConditionalSidebar({
     isFlipkartRoute ||
     isStandardCharteredRoute ||
     isHdfcRoute ||
+    isIndusIndRoute ||
     isRootPage ||
     isRoleBasedRoute ||
     isRoleBasedUnderscoreRoute;

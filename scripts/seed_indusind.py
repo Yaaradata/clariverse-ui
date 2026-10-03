@@ -280,6 +280,7 @@ def deposits(weeks) -> tuple[list[dict], dict]:
         # Neutral: every cell follows the same rhythm and its own noise. No slab, region or branch type is made to lead.
         noise = random.Random(f"{SEED}:{prod}:{ct}:{slab}:{rg}:{bt}")
         level = 1000 * w
+        accounts = 100_000 * w  # an account base per cell, so weekly opens and closures stay whole numbers above zero
         series = []
         for i, end in enumerate(weeks):
             lift = month_end_lift(end)
@@ -287,8 +288,8 @@ def deposits(weeks) -> tuple[list[dict], dict]:
                 "inflow": level * lift * (1 + 0.04 * math.sin(i / 2.2)) * noise.uniform(0.9, 1.1),
                 "outflow": level * (1 + 0.03 * math.cos(i / 2.6)) * noise.uniform(0.9, 1.1) * (1.04 if lift > 1 else 1.0),
                 "premature": level * 0.08 * noise.uniform(0.7, 1.3) if prod == "TD" else 0.0,
-                "new": max(0, int(round(level * 0.012 * lift * noise.uniform(0.8, 1.2)))),
-                "closed": max(0, int(round(level * 0.010 * noise.uniform(0.8, 1.2)))),
+                "new": max(0, int(round(accounts * 0.012 * lift * noise.uniform(0.8, 1.2)))),
+                "closed": max(0, int(round(accounts * 0.010 * noise.uniform(0.8, 1.2)))),
             })
         raw.append(((prod, ct, slab, rg, bt), series))
     rows = []

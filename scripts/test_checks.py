@@ -225,6 +225,11 @@ def indusind_lint_fixtures(fails: list[str]) -> int:
         if not ok:
             fails.append(f"IndusInd lint rule {rule} missed {text!r} ({h})")
     # Clean copy passes every text rule.
+    # CSS layout values in a style prop are geometry, not figures.
+    for css in ("translateX(-50%)", "calc(100% + 6px)", "repeat(auto-fit, minmax(min(100%, 280px), 1fr))"):
+        n += 1
+        if li.ui_figures(css, "fixture.tsx"):
+            fails.append(f"IndusInd lint rule 18 flagged a CSS value {css!r}")
     for text in ("Fraud and impersonation (customers targeted)", "Cost of deposits pending verification",
                  "IDFC First Bank cost of funds", "Designed to run inside the bank, on the bank's approved models"):
         h = li.text_rules(text, "fixture", {"manual_read_logged": False}, li.local_terms())
@@ -237,6 +242,7 @@ def indusind_lint_fixtures(fails: list[str]) -> int:
         (17, li.structure_rules({}, [], [{"week_ending": "2026-07-03", "balance_cr": 1.0}], {})),
         (18, li.structure_rules({"home": {"x": {"display": "12.5%"}}}, [], [], {})),
         (18, li.ui_figures("Savings fell 2.7% in the quarter", "fixture.tsx")),
+        (18, li.ui_figures("calc(100% + 6px) 1 bp = ₹41.5 crore", "fixture.tsx")),
         (19, li.structure_rules({}, [{"id": "S09", "formula": "", "inputs": []}], [], {})),
         (25, li.structure_rules({"home": {"sensitivity": [{"label": "A saving of ₹40 crore"}]}}, [], [], {})),
     ]

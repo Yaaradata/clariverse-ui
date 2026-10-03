@@ -14,6 +14,7 @@ from __future__ import annotations
 import collections
 import datetime as dt
 import json
+import re
 from pathlib import Path
 
 import yaml
@@ -53,11 +54,24 @@ def l1(rid: str) -> dict:
     }
 
 
+def formula_text(formula: str) -> str:
+    """The arithmetic in words: each register or sensitivity ID replaced by its label and period, so no ID reaches the
+    screen. "x" becomes the multiplication sign."""
+    def name(m):
+        i = m.group(0)
+        if i in REG:
+            return f"{REG[i]['label_short']} ({REG[i]['period']})"
+        return SENS[i]["label"] if i in SENS else i
+    return re.sub(r"\b[NDPS]\d{2}\b", name, formula).replace(" x ", " × ")
+
+
 def sens(sid: str) -> dict:
     e = SENS[sid]
     return {
-        "id": sid, "layer": "L1", "tag": "Public · verified (derived)", "label": e["label"], "formula": e["formula"],
-        "inputs": [l1(i) if i in REG else {"id": i, "label": SENS[i]["label"], "display": PENDING, "pending": True} for i in e["inputs"]],
+        "id": sid, "layer": "L1", "tag": "Public · verified (derived)", "label": e["label"], "derived": True,
+        "formula_text": formula_text(e["formula"]),
+        "inputs": [l1(i) if i in REG else {"id": i, "layer": "L1", "label": SENS[i]["label"], "value": SENS[i]["value"], "display": PENDING, "pending": True}
+                   for i in e["inputs"]],
         "value": e["value"], "display": PENDING if e["value"] is None else e["value"], "pending": e["value"] is None,
         "basis_note": e["basis_note"], "caveat": e["caveats"],
     }
@@ -257,9 +271,11 @@ def common() -> dict:
         "views": CONFIG["views"],
         "businesses": [{"id": "all", "label": "All"}] + [{"id": b["id"], "label": b["label"]} for b in CONFIG["businesses"] if b["id"] in CONFIG["business_filter"]],
         "watermark": c["watermark"],
-        "footer": c["footer"].format(public_as_of=PENDING, freeze=ftime(FREEZE)),
+        # IND-D1 carries the disclosure date; until then the clause reads "as of a date pending verification".
+        "footer": c["footer"].format(public_as_of=f"a date {PENDING}", freeze=ftime(FREEZE)),
         "pulse_caption": c["pulse_caption"],
         "pending": PENDING, "not_loaded": NOT_LOADED, "sensitivity_footer": c["sensitivity_footer"],
+        "defs": c["defs"],
     }
 
 
@@ -596,7 +612,9 @@ def cards_page() -> dict:
 
 def approvals_page() -> dict:
     cards = {c["id"]: c for c in CONFIG["cards"]}
-    return {"actions": [{**a, "card_title": cards[a["card_id"]]["title"].split(":")[0] if "{" in cards[a["card_id"]]["title"] else cards[a["card_id"]]["title"],
+    w4 = D.window("w4")
+    # The card's title as parts, so a pending register value renders as a chip and no template reaches the page.
+    return {"actions": [{**a, "card_title_parts": card_payload(cards[a["card_id"]], w4)["title_parts"],
                          "evidence": [l1(r) for r in cards[a["card_id"]]["figures"][:3]]} for a in D.actions],
             "banner": "LisN recommends; people approve. Nothing is sent or executed."}
 

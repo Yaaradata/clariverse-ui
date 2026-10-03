@@ -24,6 +24,8 @@ OUT = ROOT / "data" / "out" / "indusind_v1"
 SEED = ROOT / "data" / "seed" / "indusind_v1"
 REG = {e["id"]: e for e in json.loads((ROOT / "data" / "public" / "indusind_register.json").read_text(encoding="utf-8"))["entries"]}
 PENDING = "pending verification"
+INTERNAL = re.compile(r"\bIND-[A-Z]\d|\bDEC-\d|\bS-(?:HOME|DEP|PEER|RISK|CARDS|APPR|VF|MICRO|APP)\b|\bV1\b|\bT[1-6] |"
+                      r"\b[NDPHS]\d{2}\b|\bCF-\d|\bIV-\d")
 PRIVATE = {
     "url": re.compile(r"https?://|www\.[a-z]"),
     "handle": re.compile(r"(?<![\w.])@[A-Za-z0-9_]{3,}"),
@@ -73,7 +75,7 @@ def run(p: dict) -> list[str]:
             want = PENDING if e["value"] is None else e["display"]
             if "label" in f and "period" in f:
                 ok(f["label"] == e["label_short"] and f["period"] == e["period"], f"register: {path} label or period differs from {f['id']}")
-            if "formula" not in f:
+            if "derived" not in f:
                 ok(f.get("display") == want, f"register: {path} shows {f.get('display')!r}, the register says {want!r} for {f['id']}")
 
     home, cards = p["home"], p["cards"]
@@ -128,6 +130,13 @@ def run(p: dict) -> list[str]:
     ok(0.10 <= neg <= 0.14, f"sanity: negative share of contacts {100 * neg:.1f}%, not about 12%")
     ok(all(r["complaints"] <= r["negative"] <= r["contacts"] for r in contacts), "sanity: complaints exceed negative contacts in a row")
 
+    # ---- no internal labels on screen: brief, decision, track or screen IDs, "V1", register IDs in text
+    skip = (".id", ".build_note", ".about", ".module", ".card_id", ".action_id", ".evidence_version", ".card")
+    for name, obj in p.items():
+        for path, s in strings(obj, name):
+            if not path.endswith(skip) and INTERNAL.search(s):
+                fails.append(f"internal label in {path}: {s[:70]!r}")
+
     # ---- privacy: no URL, handle or personal-data pattern in any page payload
     for name, obj in p.items():
         for path, s in strings(obj, name):
@@ -156,6 +165,7 @@ FIXTURES = [
     ("balance bound to the wrong entry", "not bound to", lambda p: _set(p["deposits"]["balances"]["2026-06-30"]["SA"], ["id"], "N06")),
     ("post URL in a payload", "privacy: url", lambda p: _set(p["cards"], ["voice"], {"text": "see https://x.com/a/status/1"})),
     ("author handle in a payload", "privacy: handle", lambda p: _set(p["cards"], ["voice"], {"text": "posted by @someone_here"})),
+    ("internal label in a payload", "internal label", lambda p: _set(p["home"]["quarter"]["items"][0], ["period"], "date per IND-D1")),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 
