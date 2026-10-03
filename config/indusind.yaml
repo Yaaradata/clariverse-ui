@@ -37,6 +37,15 @@ peers:
     rbl: RBL Bank
     au: AU Small Finance Bank
     bandhan: Bandhan Bank
+  # Short names for peer chips ("IDFC First 50.8% · Yes 32.7% · ...")
+  short:
+    federal: Federal
+    "yes": "Yes"
+    idfc_first: IDFC First
+    kotak: Kotak
+    rbl: RBL
+    au: AU
+    bandhan: Bandhan
 
 # Pulse by business (IND-B4 §2.3). money: register IDs for the money line. module: route, or null ("Module next").
 businesses:
@@ -106,7 +115,12 @@ cards:
     title_bound_to: [N04, D08]
     title_pending: "Savings balances and term deposits, Mar to Jun 2026"
     figures: [N04, D08, D06, D05, D07]
+    rows:
+      - {line: [N04, D08]}
+      - {pair: [D06, D05], label: CASA ratio, period: "Mar → Jun 2026"}
+      - {line: [D07]}
     peers: [P04, P05, P06, P07, P08]
+    peer_chip: {ids: [P04, P06, P08], suffix: "CASA, Jun 2026"}
     sensitivity: [S03, S04]
     owner: Retail liabilities head
     with: CFO and ALCO
@@ -122,7 +136,11 @@ cards:
   - id: B
     title: "Cost of deposits against true peers"
     figures: [N10, N09, N08]
+    rows:
+      - {pair: [N10, N08], label: Cost of deposits, period: "Q1 FY26 → Q1 FY27"}
+      - N09
     peers: [P01, P02, P03]
+    peer_chip: {ids: [P01, P02], suffix: cost of deposits}
     sensitivity: [S01, S02]
     owner: CFO (ALCO)
     with: "Head, Consumer Banking"
@@ -138,6 +156,10 @@ cards:
   - id: C
     title: "Vehicle finance: Q1 disbursements {N22}, {D11_yoy} a year ago. Demand, service or credit?"
     figures: [N22, N24, D11, N23, N21]
+    rows:
+      - {line: [N22, D11], label: Disbursements}
+      - {line: [N21]}
+      - N24
     peers: []
     sensitivity: [S05]
     owner: "Head, Vehicle Finance"

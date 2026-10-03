@@ -301,7 +301,10 @@ def card_payload(card: dict, w: dict) -> dict:
         "title": title.format(**fill),
         # The title as parts, so a pending value renders as a small chip, not as words in the sentence.
         "title_parts": title_parts(title),
-        "what": [l1(r) for r in card["figures"]],
+        # The tile's rows: lines that read as figures, then any figure not already in a row.
+        "what": [card_row(x) for x in card.get("rows", [])]
+                + [l1(r) for r in card["figures"] if r not in {i for x in card.get("rows", []) for i in row_ids(x)}],
+        "peer_chip": peer_chip(card.get("peer_chip")),
         "peers": [l1(r) for r in card["peers"]],
         "peers_held": not card["peers"],
         "peer_held_label": card.get("peer_held_label"),
@@ -428,6 +431,46 @@ def distribution_by_product(w: dict) -> list[dict]:
     return out
 
 
+def money_line(ids: list[str], label: str | None = None) -> dict:
+    """A line that reads as figures, not field names: "Savings ₹87,440 crore · −2.7% QoQ · −4.0% YoY". The name is the
+    first entry's short label up to its first comma; each entry's display is joined with " · "."""
+    pending = any(REG[i]["value"] is None for i in ids)
+    return {**l1(ids[0]), "label": label or REG[ids[0]]["label_short"].split(",")[0], "ids": ids, "view": "line",
+            "display": PENDING if pending else " · ".join(REG[i]["display"].replace(", ", " · ") for i in ids),
+            "pending": pending}
+
+
+def pair_fig(a: str, b: str, label: str, period: str) -> dict:
+    """A from → to pair of two register entries: "CASA ratio 31.2% → 29.4% (Mar → Jun 2026)"."""
+    pending = REG[a]["value"] is None or REG[b]["value"] is None
+    return {**l1(b), "label": label, "period": period, "from_id": a, "view": "pair",
+            "display": PENDING if pending else f"{REG[a]['display']} → {REG[b]['display']}", "pending": pending}
+
+
+def peer_chip(spec: dict | None) -> dict | None:
+    """The peer chip names each bank: "IDFC First 50.8% · Yes 32.7% · Federal 32.23% (CASA, Jun 2026)"."""
+    if not spec:
+        return None
+    ids = spec["ids"]
+    banks = [CONFIG["peers"]["short"][REG[i]["bank"]] for i in ids]
+    pending = any(REG[i]["value"] is None for i in ids)
+    text = " · ".join(f"{b} {REG[i]['display'].split(', ')[0]}" for b, i in zip(banks, ids))
+    return {**l1(ids[0]), "ids": ids, "banks": banks, "suffix": spec["suffix"], "view": "peers", "pending": pending,
+            "display": PENDING if pending else f"{text} ({spec['suffix']})"}
+
+
+def card_row(x) -> dict:
+    if isinstance(x, str):
+        return l1(x)
+    if "pair" in x:
+        return pair_fig(*x["pair"], x["label"], x["period"])
+    return money_line(x["line"], x.get("label"))
+
+
+def row_ids(x) -> list[str]:
+    return [x] if isinstance(x, str) else x.get("pair") or x["line"]
+
+
 def improving_item(x) -> dict:
     """An Improving entry: one register figure, or a from → to pair ("Cost of deposits 6.44% → 5.95% year on year")."""
     if isinstance(x, dict):
@@ -473,7 +516,7 @@ def home() -> dict:
             ob = M.voice_block(M.business_items(L2, b["id"], w["id"]), b["id"], w["id"])
             rows.append({"id": b["id"], "label": b["label"], "next": bool(b.get("next")), "inside": inside,
                          "outside": ob, "theme": ob["theme"],
-                         "money": [l1(r) for r in b["money"]], "module": b["module"]})
+                         "money": [money_line(b["money"])], "module": b["module"]})
         # Public items not tied to one business sit apart (no extra row); rows plus these equal the home total.
         unassigned = M.voice_block(M.business_items(L2, "other", w["id"]), "other", w["id"])["items"]
         sa_out = deposit_flow_index("SA", "outflow", w)
@@ -659,7 +702,7 @@ def risk_page() -> dict:
 
 
 def cards_page() -> dict:
-    out = {"money": l1("N18"), "windows": {}}
+    out = {"money": money_line(["N18"]), "windows": {}}
     # The sub-line claims Cards has the most public voice only if it leads every row of the pulse by business, Digital
     # included (the home table shows Digital's count beside it).
     w13 = {b: len(M.business_items(L2, b, "w13")) for b in ("deposits", "vehicle", "micro", "cards", "personal", "digital")}

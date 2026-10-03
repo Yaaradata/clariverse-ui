@@ -588,7 +588,8 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
                       color: C.textMut,
                     }}
                   >
-                    {h.countdown} from data freeze
+                    {h.countdown}
+                    {/^\d/.test(h.countdown) ? " from data freeze" : ""}
                   </span>
                 ) : null}
               </span>

@@ -82,6 +82,11 @@ def trace_view(f: dict, e: dict) -> str:
         ends = [dt.date(q.year, 3, 31), dt.date(q.year, 6, 30), dt.date(q.year, 9, 30), dt.date(q.year, 12, 31)]
         d = next(x for x in ends if x >= q)
         return f"{d.day} {d:%b} {d.year}"
+    if f["view"] == "line":
+        return " · ".join(REG[i]["display"].replace(", ", " · ") for i in f["ids"])
+    if f["view"] == "peers":
+        text = " · ".join(f"{b} {REG[i]['display'].split(', ')[0]}" for b, i in zip(f["banks"], f["ids"], strict=True))
+        return f"{text} ({f['suffix']})"
     if f["view"] == "pair":
         return f"{REG[f['from_id']]['display']} → {e['display']}"
     return "unknown view"
@@ -167,7 +172,7 @@ def run(p: dict) -> list[str]:
     skip = (".id", ".from_id", ".build_note", ".about", ".module", ".card_id", ".action_id", ".evidence_version", ".card")
     for name, obj in p.items():
         for path, s in strings(obj, name):
-            if not path.endswith(skip) and INTERNAL.search(s):
+            if not path.endswith(skip) and ".ids[" not in path and INTERNAL.search(s):
                 fails.append(f"internal label in {path}: {s[:70]!r}")
 
     # ---- HL-01: no public item id reaches a page (a page renders paraphrases and counts, never item lists)
@@ -306,6 +311,8 @@ def _set(d, path, value):
 
 
 FIXTURES = [
+    ("peer chip edited", "trace:", lambda p: _set(p["home"]["windows"]["week"]["cards"][0]["peer_chip"], ["display"], "IDFC First 50.8% · Yes 33.7% · Federal 32.23% (CASA, Jun 2026)")),
+    ("money line edited", "trace:", lambda p: _set(p["home"]["windows"]["week"]["rows"][0]["money"][0], ["display"], "₹87,440 crore · −2.7% QoQ · −4.1% YoY")),
     ("register display edited", "register:", lambda p: _set(p["home"]["quarter"]["items"][0], ["display"], "0.87%")),
     ("Cards row out of step", "Cards row", lambda p: _set(p["home"]["windows"]["w4"]["rows"][3]["inside"]["open"], ["display"], "99.9%")),
     ("business row out of step", "row open differs from the home pulse", lambda p: _set(p["home"]["windows"]["w13"]["pulse"]["deposits"]["inside"]["open"], ["display"], "1.0%")),

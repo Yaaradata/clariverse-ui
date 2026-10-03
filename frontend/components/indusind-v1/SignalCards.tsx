@@ -77,7 +77,13 @@ export function FigRow({ f, label }: { f: FigT; label?: string }) {
           <span style={{ color: C.textMut }}> · {f.period}</span>
         ) : null}
       </span>
-      <strong style={{ color: C.text, whiteSpace: "nowrap" }}>
+      <strong
+        style={{
+          color: C.text,
+          textAlign: "right",
+          whiteSpace: (f.display ?? "").length > 22 ? "normal" : "nowrap",
+        }}
+      >
         <Fig f={f} />
       </strong>
     </div>
@@ -497,7 +503,13 @@ function CardTile({
       </div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
         <Chip label="Peer">
-          {card.peers_held || !peer ? <Pending /> : <Fig f={peer} />}
+          {card.peer_chip ? (
+            <Fig f={card.peer_chip} />
+          ) : card.peers_held || !peer ? (
+            <Pending />
+          ) : (
+            <Fig f={peer} />
+          )}
         </Chip>
         <Chip label="Voice">{voiceChip(card)}</Chip>
         {card.exposure ? (

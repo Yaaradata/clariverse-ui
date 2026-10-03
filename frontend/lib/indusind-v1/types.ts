@@ -189,6 +189,8 @@ export type Card = {
   what: Fig[];
   peers: Fig[];
   peers_held: boolean;
+  /** The peer chip, each bank named: "Federal 5.21% · Yes 5.4% (cost of deposits)". */
+  peer_chip?: Fig | null;
   /** The peer the brief names when the core peers do not apply (Card C: AU vehicle book). */
   peer_held_label?: string | null;
   voice: CardVoice;
