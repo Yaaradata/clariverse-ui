@@ -351,9 +351,8 @@ export function DepositsView({
 
           <Tile title="Is it real" sub="Against the baseline" layers={["L3"]}>
             <div style={{ fontSize: 14, color: C.textSec, lineHeight: 1.55 }}>
-              Each week is read against its own Q1 weekly average. Month-end and
-              salary weeks run higher on both sides, so one high week is not a
-              trend; a run of weeks above the band is.
+              Each week against its Q1 average; one high month-end week is not a
+              trend.
             </div>
           </Tile>
 

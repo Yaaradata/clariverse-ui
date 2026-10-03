@@ -22,6 +22,7 @@ import json
 import sys
 
 import indusind_l2_common as L
+from pii_names import alleges_against_named_person
 
 OUT = L.ROOT / "data" / "processed" / "indusind_l2"
 GLOSSES = L.ROOT / "scripts" / "indusind_l2_glosses.json"
@@ -44,6 +45,7 @@ def main() -> int:
 
     counts = collections.Counter()
     items, audit = [], []
+    dropped_named = 0
     bad_dates = []
     for r in rows:
         t = L.created(r)
@@ -54,6 +56,9 @@ def main() -> int:
         if r["bucket"] != "core":
             continue
         raw_text = " ".join(x for x in (r.get("title"), r.get("text")) if x)
+        if alleges_against_named_person(raw_text):
+            dropped_named += 1  # HL-02: an allegation against a named person is dropped, not redacted
+            continue
         text = L.redact(raw_text)
         iid = L.item_id(r)
         prod, pmethod = L.product_of(r, text)
@@ -152,6 +157,7 @@ def main() -> int:
         "duplicates": sum(1 for it in items if it["duplicate_of"]),
         "hindi_items": sum(it["language"] != "en" for it in items),
         "hindi_without_gloss": len(missing_gloss),
+        "dropped_named_allegation": dropped_named,
         "earliest": min(it["created_at"] for it in items)[:10],
         "latest": max(it["created_at"] for it in items)[:10],
     }
@@ -162,7 +168,8 @@ def main() -> int:
     print(f"ingest_indusind_l2: {len(rows):,} raw rows -> {len(items):,} core items "
           f"({', '.join(f'{L.SOURCE_LABEL[s]} {n:,}' for s, n in sorted(by_src.items()))}); "
           f"{log['on_topic']:,} on topic; {log['duplicates']} duplicates; {log['hindi_items']} Hindi "
-          f"({len(missing_gloss)} without a gloss); {log['earliest']} to {log['latest']}")
+          f"({len(missing_gloss)} without a gloss); {dropped_named} dropped as allegations against a named person; "
+          f"{log['earliest']} to {log['latest']}")
     if missing_gloss:
         print(f"ingest_indusind_l2: WARN Hindi items without a gloss: {missing_gloss[:5]}")
     return 0

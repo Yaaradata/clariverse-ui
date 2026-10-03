@@ -43,14 +43,20 @@ export function Thin({ text }: { text: string }) {
 
 export function Footnotes({ notes }: { notes: string[] }) {
   if (!notes.length) return null;
+  // Source caveats sit behind an (i): the executive view stays numbers first (HL-22); the notes stay one tap away.
   return (
     <div
       data-testid="l2-footnotes"
-      style={{ display: "flex", flexDirection: "column", gap: 2 }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        fontSize: 12,
+        color: C.textMut,
+      }}
     >
-      {notes.map((n) => (
-        <MutedNote key={n}>* {n}</MutedNote>
-      ))}
+      Source notes ({notes.length})
+      <Info text={notes.map((n) => `* ${n}`).join(" ")} label="source notes" />
     </div>
   );
 }

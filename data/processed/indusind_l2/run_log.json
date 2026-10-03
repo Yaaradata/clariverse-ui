@@ -8,13 +8,14 @@
  },
  "core_items_by_source": {
   "appstore": 281,
-  "consumercomplaints": 3,
-  "play": 5000
+  "consumercomplaints": 2,
+  "play": 4999
  },
- "on_topic": 5278,
+ "on_topic": 5277,
  "duplicates": 3,
  "hindi_items": 29,
  "hindi_without_gloss": 0,
+ "dropped_named_allegation": 2,
  "earliest": "2026-07-01",
  "latest": "2026-09-30"
 }

@@ -111,7 +111,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
 
       <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
         <Tile
-          title="Issue pulse, inside the bank"
+          title="Cards: issue pulse, inside the bank"
           sub="Contacts and complaints"
           layers={["L3"]}
         >
@@ -170,7 +170,11 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
             />
           </div>
         </Tile>
-        <Tile title="Issue pulse, in public" sub="Public voice" layers={["L2"]}>
+        <Tile
+          title="Cards: issue pulse, in public"
+          sub="Public voice"
+          layers={["L2"]}
+        >
           <OutsideMeter
             v={w.external}
             defs={common.defs}
@@ -183,12 +187,12 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
         o={w.ombudsman}
         def={common.defs.ombudsman}
         expanded
-        title="Ombudsman watch, Cards"
+        title="Cards: Ombudsman watch"
       />
 
       <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
         <Tile
-          title="Accounts at risk of closure"
+          title="Cards: accounts at risk of closure"
           sub="Aggregate, by category"
           layers={["L3"]}
           info={common.defs.closure_risk}
@@ -201,7 +205,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
           </div>
         </Tile>
         <Tile
-          title="Public items by category"
+          title="Cards: public items by category"
           sub="What customers say"
           layers={["L2"]}
         >
@@ -241,7 +245,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
       </div>
 
       <Tile
-        title="Issues by category"
+        title="Cards: issues by category"
         sub="Each with an owner role"
         layers={["L3"]}
       >

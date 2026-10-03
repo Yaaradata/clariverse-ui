@@ -245,7 +245,8 @@ def main() -> int:
 
     ind_hits, ind_scanned = lint_indusind.run()
     hits += ind_hits
-    print(f"lint_terms: IndusInd rules checked on {ind_scanned} files")
+    print(f"lint_terms: IndusInd rules checked on {ind_scanned} files and pages, "
+          f"including {lint_indusind.CRAWLED_ROUTES} rendered routes under /role-based/indusind_bank")
     built = scan_build(hits)
     if not built:
         print("lint_terms: NOTE no V2 build in frontend/.next; built pages not checked")

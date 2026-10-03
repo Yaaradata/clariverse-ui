@@ -706,7 +706,7 @@ def main():
              "cards": cards_page(), "approvals": approvals_page(), "ask": ask_bank(h)}
     M.write_registry()
     for name, obj in pages.items():
-        (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+        (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8", newline="\n")
     print("indusind payloads:", {k: (OUT / f"{k}.json").stat().st_size // 1024 for k in pages}, "KB")
 
 

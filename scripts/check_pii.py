@@ -39,6 +39,8 @@ FILES = [
     *sorted((ROOT / "data" / "processed" / "indusind_l2").glob("*.json*")),
     *[f for f in [ROOT / "data" / "processed" / "indusind_l2" / "_audit" / "text.jsonl"] if f.exists()],
     ROOT / "scripts" / "indusind_l2_glosses.json",
+    # Rendered text of every route reachable from /role-based/indusind_bank, when the crawl has run.
+    *[f for f in [ROOT / "qa" / "_crawl" / "pages.json"] if f.exists()],
     ROOT / "scripts" / "indusind_l2_manual.json",
 ]
 PATTERNS = {

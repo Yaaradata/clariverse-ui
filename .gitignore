@@ -12,3 +12,4 @@ node_modules/
 # IndusInd public-voice raw scrape and URL audit: never committed (handles, phone numbers, URLs)
 data/raw/indusind/
 data/processed/indusind_l2/_audit/
+qa/_crawl/

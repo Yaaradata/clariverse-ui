@@ -665,3 +665,31 @@ wording.
 - **IV-42 · Carry-forward file.** `docs/indusind/carry_forward_from_hdfc.md` was not found in the working tree, any
   local or remote branch, or under `D:\office`. The HL rules quoted in the requests (HL-03 and the rules listed in the
   first IndusInd request) are applied; the rest wait for the file.
+- **IV-43 · Carry-forward rules applied (`docs/indusind/carry_forward_from_hdfc.md`).** Rules found already met and how
+  they are checked are listed in `docs/indusind/feedback_log.md`. Gaps closed on this round:
+  - HL-01: a check now fails if any public item id reaches a page payload (with a fixture).
+  - HL-02: public items that allege something against a named person are dropped at ingest, not redacted (2 dropped).
+  - HL-06: the internal-names lint is seeded from the briefs (Owner and Who columns, less any word the config uses),
+    with internal ids (IND-, DEC-, S-, CF-, IV-, HL-, V1, T1–T6); fixtures for both.
+  - HL-09: IndusInd writers write LF; the repo's `.gitattributes` already sets `eol=lf`; scripts run without
+    `PYTHONIOENCODING`.
+  - HL-18: `qa/indusind_anchors.md` (ANCHOR, DERIVED, ASSUMPTION; stock versus flow for N32).
+  - HL-19: negative share of contacts now varies by product inside 9–16% (it was a flat 12%); the social inbox is 1% of
+    contacts (it was 2%) and 1% of complaints (it was 4%); checks with fixtures.
+  - HL-20: a lumpiness check over the small integers shown (fixture).
+  - HL-22: tile subtitles ≤6 words and theme paraphrases ≤12 words are linted (fixtures); source notes now sit behind an
+    (i); the Deposits "Is it real" line is cut to one short sentence.
+  - HL-23: every Cards section title carries "Cards".
+  - HL-28: a lint for "16 Jan 2026" (fixture).
+  - HL-33: screenshots add 1536×730 at 1.25, with local fonts, mouse parked and smooth scroll off
+    (`scripts/qa_screens_indusind.mjs`).
+  Still open: HL-11 (independent review, IND-B4 §10.8) and HL-18 anchors that wait on IND-D1 (N31, N32) or on a source
+  for Ombudsman filings. No HL rule conflicted with an IndusInd brief.
+- **IV-44 · Head of Cards.** The role opened the earlier cards demo (hard-coded figures, not built to IND-B4 §7). It now
+  opens S-CARDS (`/role-based/indusind_bank/customer-pulse/cards`). The earlier demo keeps its route
+  (`/role-based/indusind_bank/head_cards`) but is unlisted on the role page.
+- **IV-45 · Check scope.** lint_terms, check_pii, the rendered-page grep, the watermark check and noindex now cover every
+  route reachable from `/role-based/indusind_bank` (crawled by `scripts/qa_indusind_routes.mjs`: the role page, the
+  customer-pulse screens and every view, window and business link). noindex covers `/role-based/indusind_bank/*`,
+  which includes the unlisted earlier demo; its content is not crawled because nothing on the role page links to it.
+  The IndusInd role page shows the watermark.

@@ -46,7 +46,10 @@ N_WEEKS = 27  # weeks ending on the freeze, back to early April
 # ---------------------------------------------------------------- working scale and rates (IV-06 to IV-10)
 COMPLAINTS_PER_WEEK = 1180  # internal working scale only: counts never reach a screen until N31 sets the scale
 CONTACTS_PER_COMPLAINT = 21  # 15-30x is the planning range used on the HDFC build; counts stay in the seed
-NEGATIVE_SHARE = 0.12  # of contacts
+NEGATIVE_SHARE = 0.12  # of contacts, overall
+# By product, inside the 9-16% band a banker expects (HL-19); weighted by contact volume they come to about 12%.
+NEGATIVE_BY_PRODUCT = {"deposits": 0.11, "vehicle": 0.14, "micro": 0.15, "cards": 0.13, "personal": 0.125, "digital": 0.105,
+                       "home": 0.095, "other": 0.10}
 REJECT_RATE = 0.08  # of replied complaints, partly or fully rejected (peer disclosures 6-10%)
 UNHAPPY = {"resolved": 0.02, "rejected": 0.30}
 GRIEVANCE = 0.085  # escalated to a grievance desk
@@ -69,8 +72,9 @@ GROUNDS = {
     "home": {"loans": 0.74, "para_banking": 0.16, "others": 0.10},
     "other": {"others": 0.6, "pension": 0.2, "account_ops": 0.2},
 }
-CHANNELS = {"branch": 0.24, "contact_centre": 0.37, "email": 0.15, "web": 0.10, "app": 0.10, "social_inbox": 0.04}
-CONTACT_CHANNELS = {"branch": 0.20, "contact_centre": 0.50, "email": 0.10, "web": 0.08, "app": 0.10, "social_inbox": 0.02}
+CHANNELS = {"branch": 0.24, "contact_centre": 0.40, "email": 0.15, "web": 0.10, "app": 0.10, "social_inbox": 0.01}
+# Social inbox about 1% of internal contacts (HL-19: on HDFC the inbox came out 26x the public posts collected).
+CONTACT_CHANNELS = {"branch": 0.20, "contact_centre": 0.51, "email": 0.10, "web": 0.08, "app": 0.10, "social_inbox": 0.01}
 REGIONS = {"N": 0.26, "S": 0.19, "E": 0.14, "W": 0.29, "C": 0.12}
 CUSTOMER_GROUPS = {"retail": 0.71, "senior": 0.12, "nri": 0.07, "small_business": 0.10}  # for the IO pattern analysis
 CARD_CATEGORIES = {
@@ -237,7 +241,7 @@ def contacts_weekly(cs, weeks) -> list[dict]:
             for ch, chs in CONTACT_CHANNELS.items():
                 k = (end.date().isoformat(), p, ch)
                 n = max(int(round(total * ps * chs * rng.uniform(0.9, 1.1))), cmp[k])
-                neg = max(cmp[k], int(round(n * NEGATIVE_SHARE * rng.uniform(0.85, 1.15))))
+                neg = max(cmp[k], int(round(n * NEGATIVE_BY_PRODUCT.get(p, NEGATIVE_SHARE) * rng.uniform(0.85, 1.15))))
                 out.append({"week_ending": end.date().isoformat(), "product": p, "channel": ch, "contacts": n,
                             "negative": neg, "complaints": cmp[k]})
     del by
@@ -357,7 +361,7 @@ def main():
     with open(OUT / "complaints.jsonl", "w", encoding="utf-8", newline="\n") as f:
         for c in cs:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
-    dump = lambda name, obj: (OUT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=None, separators=(",", ":")) + "\n", encoding="utf-8")  # noqa: E731
+    dump = lambda name, obj: (OUT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=None, separators=(",", ":")) + "\n", encoding="utf-8", newline="\n")  # noqa: E731
     dump("complaints_weekly.json", complaints_weekly(cs, weeks))
     dump("contacts_weekly.json", contacts_weekly(cs, weeks))
     dump("cards_internal.json", cards_internal(weeks))
@@ -368,7 +372,7 @@ def main():
     meta = {"seed": SEED, "freeze": CONFIG["data_freeze"], "weeks": [w.date().isoformat() for w in weeks],
             "q1_weeks": [w.date().isoformat() for w in weeks if Q1_START <= w <= Q1_END], "complaints": len(cs),
             "working_scale_note": "Counts here are at an internal working scale. Screens show shares and indices until N31 sets the scale."}
-    (OUT / "meta.json").write_text(json.dumps(meta, indent=1) + "\n", encoding="utf-8")
+    (OUT / "meta.json").write_text(json.dumps(meta, indent=1) + "\n", encoding="utf-8", newline="\n")
     print("indusind seed:", len(cs), "complaints;", len(dep), "deposit rows;", len(weeks), "weeks")
 
 

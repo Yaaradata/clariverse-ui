@@ -41,6 +41,39 @@ def near(text: str, a: str, b: str, n: int, flags=re.I) -> bool:
     return False
 
 
+DOCS = ROOT / "docs" / "indusind"
+OWNER_STOP = {"Claude", "Code", "Fresh", "Dev", "CC", "Track", "Owner", "Who", "Bank", "IndusInd", "Head", "Chief", "Officer"}
+INTERNAL_ID = re.compile(r"\bIND-[A-Z]\d|\bDEC-\d|\bS-(?:HOME|DEP|PEER|RISK|CARDS|APPR|VF|MICRO|APP)\b|\bV[12]\b|"
+                         r"\bCF-\d\d|\bIV-\d\d|\bHL-\d\d|\bT[1-6]\b")
+
+
+def internal_names() -> list[str]:
+    """HL-06: people's names, seeded from the briefs: every capitalised word in an Owner or Who column of a table in
+    docs/indusind/*.md, less role and business words (anything the config also uses). Never whitelisted."""
+    names = set()
+    for f in sorted(DOCS.glob("*.md")) if DOCS.exists() else []:
+        col = None
+        for line in f.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("|"):
+                col = None
+                continue
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if col is None:
+                col = next((i for i, c in enumerate(cells) if c.strip("* ") in ("Owner", "Who")), -1)
+                continue
+            if 0 <= col < len(cells):
+                for w in re.findall(r"\b[A-Z][a-z]{2,}\b", cells[col].replace("*", "")):
+                    if w not in OWNER_STOP:
+                        names.add(w)
+    # Role and business words (Banking, Digital, Compliance) also appear in the config; people's names never do.
+    vocab = set(re.findall(r"[A-Za-z]+", CONFIG.read_text(encoding="utf-8"))) if CONFIG.exists() else set()
+    return sorted(n for n in names if n not in vocab)
+
+
+INTERNAL_NAMES = internal_names()
+CRAWLED_ROUTES = 0  # routes whose rendered text was linted (set by run())
+
+
 def local_terms() -> list[str]:
     out = ["champion", "KNOW"]
     for f in LOCAL_FILES:
@@ -102,7 +135,26 @@ def text_rules(s: str, where: str, flags: dict, local: list[str]) -> list[str]:
         add(24, "product boundary")
     if re.search(r"(?<![A-Za-z])(?:LiSN|Lisn)(?![A-Za-z])", s):
         add(26, "brand spelling")
+    # Carry-forward rules from the HDFC build (docs/indusind/carry_forward_from_hdfc.md).
+    if INTERNAL_ID.search(s) or any(re.search(rf"\b{n}\b", s) for n in INTERNAL_NAMES):
+        h.append(f"IND-HL06 {where}: an internal label or a team member's name: {s[:90]!r}")
+    if "16 Jan 2026" in s:
+        h.append(f"IND-HL28 {where}: the HDFC Internal Ombudsman Directions date (IndusInd uses N37): {s[:90]!r}")
     return h
+
+
+def length_rules(text: str, where: str) -> list[str]:
+    """HL-22: section subtitles at most 6 words (the `sub` of a tile); theme paraphrases at most 12 words."""
+    h = []
+    for m in re.finditer(r'\bsub="([^"]+)"', text):
+        if len(m.group(1).split()) > 6:
+            h.append(f"IND-HL22 {where}: subtitle over 6 words: {m.group(1)!r}")
+    return h
+
+
+def paraphrase_rules(themes: dict, where: str) -> list[str]:
+    return [f"IND-HL22 {where}: paraphrase over 12 words: {t['paraphrase']!r}"
+            for t in themes.values() if len(t["paraphrase"].split()) > 12]
 
 
 def tile_rules(s: str, where: str) -> list[str]:
@@ -211,6 +263,7 @@ def run() -> tuple[list[str], int]:
             continue
         for f in sorted(d.rglob("*.ts*")):
             rel = str(f.relative_to(ROOT))
+            hits += length_rules(f.read_text(encoding="utf-8"), rel)
             for s in ui_strings(f.read_text(encoding="utf-8")):
                 if s.startswith(("@/", "./", "../", "/role-based/indusind_bank", "http")) or re.fullmatch(r"[\w\s./:#?&=,%()-]+", s) and not re.search(r"[A-Za-z]{3,}\s+[A-Za-z]{3,}", s):
                     hits += [x for x in ui_figures(s, rel)]
@@ -228,6 +281,8 @@ def run() -> tuple[list[str], int]:
                 continue  # build notes and file descriptions are for the team, never rendered
             hits += text_rules(s, path, flags, local)
         scanned += 1
+    cfg = yaml.safe_load(CONFIG.read_text(encoding="utf-8")) if CONFIG.exists() else {}
+    hits += paraphrase_rules((cfg.get("l2") or {}).get("themes", {}), "config/indusind.yaml l2.themes")
     sens = json.loads((PUBLIC / "indusind_sensitivities.json").read_text(encoding="utf-8"))["entries"] if (PUBLIC / "indusind_sensitivities.json").exists() else []
     deposits = json.loads((SEED / "deposits_weekly.json").read_text(encoding="utf-8")) if (SEED / "deposits_weekly.json").exists() else []
     hits += structure_rules(load_payloads(), sens, deposits, flags)
@@ -242,6 +297,16 @@ def run() -> tuple[list[str], int]:
                 visible = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>", " ", text) if f.suffix == ".html" else text
                 hits += text_rules(visible, str(f.relative_to(ROOT)), flags, local)
                 scanned += 1
+    # Rendered text of every route reachable from /role-based/indusind_bank (scripts/qa_indusind_routes.mjs).
+    global CRAWLED_ROUTES
+    crawl = ROOT / "qa" / "_crawl" / "pages.json"
+    if crawl.exists():
+        CRAWLED_ROUTES = len(json.loads(crawl.read_text(encoding="utf-8")))
+        for page in json.loads(crawl.read_text(encoding="utf-8")):
+            for line in page["text"].splitlines():
+                if line.strip():
+                    hits += text_rules(line, f"route {page['route']}", flags, local)
+            scanned += 1
     # One hit per rule and place is enough to fail; keep the list readable.
     seen, out = set(), []
     for x in hits:

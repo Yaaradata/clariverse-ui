@@ -24,6 +24,7 @@ OUT = ROOT / "data" / "out" / "indusind_v1"
 SEED = ROOT / "data" / "seed" / "indusind_v1"
 REG = {e["id"]: e for e in json.loads((ROOT / "data" / "public" / "indusind_register.json").read_text(encoding="utf-8"))["entries"]}
 PENDING = "pending verification"
+L2_ITEMS = ROOT / "data" / "processed" / "indusind_l2" / "items.jsonl"
 INTERNAL = re.compile(r"\bIND-[A-Z]\d|\bDEC-\d|\bS-(?:HOME|DEP|PEER|RISK|CARDS|APPR|VF|MICRO|APP)\b|\bV1\b|\bT[1-6] |"
                       r"\b[NDPHS]\d{2}\b|\bCF-\d|\bIV-\d")
 PRIVATE = {
@@ -137,6 +138,36 @@ def run(p: dict) -> list[str]:
             if not path.endswith(skip) and INTERNAL.search(s):
                 fails.append(f"internal label in {path}: {s[:70]!r}")
 
+    # ---- HL-01: no public item id reaches a page (a page renders paraphrases and counts, never item lists)
+    item_ids = {json.loads(line)["id"] for line in open(L2_ITEMS, encoding="utf-8")} if L2_ITEMS.exists() else set()
+    for name, obj in p.items():
+        for path, s in strings(obj, name):
+            if s in item_ids or path.endswith(".evidence") and isinstance(s, str):
+                fails.append(f"HL-01: public item id in {path}")
+
+    # ---- HL-19: negative share of internal contacts 9-16% by product; social inbox about 1% of contacts
+    by = {}
+    inbox = tot_c = 0
+    for r in contacts:
+        b = by.setdefault(r["product"], [0, 0])
+        b[0] += r["negative"]
+        b[1] += r["contacts"]
+        tot_c += r["contacts"]
+        inbox += r["contacts"] if r["channel"] == "social_inbox" else 0
+    for prod, (ng, ct) in by.items():
+        ok(0.09 <= ng / ct <= 0.16, f"sanity: negative share of {prod} contacts {100 * ng / ct:.1f}%, outside 9-16%")
+    ok(0.005 <= inbox / tot_c <= 0.015, f"sanity: social inbox {100 * inbox / tot_c:.1f}% of contacts, not about 1%")
+    shares = [ng / ct for ng, ct in by.values()]
+    ok(max(shares) - min(shares) >= 0.02, "sanity: negative share is the same for every product (a seed artefact)")
+
+    # ---- HL-20: weighted values must not be lumpy (under 30% of small integers shown share a factor above 5)
+    small = [f["value"] for obj in p.values() for _, f in figures(obj)
+             if isinstance(f.get("value"), int) and not isinstance(f.get("value"), bool) and 6 <= f["value"] < 500]
+    if len(small) >= 20:
+        worst = max(range(6, 51), key=lambda k: sum(v % k == 0 for v in small))
+        frac = sum(v % worst == 0 for v in small) / len(small)
+        ok(frac < 0.30, f"lumpy: {100 * frac:.0f}% of the {len(small)} small values shown are multiples of {worst}")
+
     # ---- Cards categories must not all move one way (a seed artefact a banker would spot)
     for wid, w in p["cards"]["windows"].items():
         ch = [c["change"]["value"] for c in w["categories"] if c["change"]["value"]]
@@ -246,6 +277,11 @@ FIXTURES = [
     ("L2 Cards row out of step", "Cards row differs from the Cards screen", lambda p: _set(p["cards"]["windows"]["week"]["external"]["items"], ["value"], 7)),
     ("Cards categories all rising", "categories move the same way", lambda p: [
         _set(c["change"], ["value"], 2.0) for c in p["cards"]["windows"]["w4"]["categories"]]),
+    ("public item id in a payload", "HL-01", lambda p: _set(p["home"]["windows"]["w4"]["outside"]["theme"], ["evidence"],
+        [json.loads(open(L2_ITEMS, encoding="utf-8").readline())["id"]])),
+    ("lumpy values", "lumpy", lambda p: [
+        _set(f, ["value"], 75 * (1 + i % 6)) for i, (_, f) in enumerate(figures(p["cards"]))
+        if isinstance(f.get("value"), int) and not isinstance(f.get("value"), bool) and 6 <= f["value"] < 500]),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 

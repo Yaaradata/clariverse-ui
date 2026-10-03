@@ -225,6 +225,20 @@ def indusind_lint_fixtures(fails: list[str]) -> int:
         if not ok:
             fails.append(f"IndusInd lint rule {rule} missed {text!r} ({h})")
     # Clean copy passes every text rule.
+    # Carry-forward rules: internal labels and team names (HL-06), the HDFC IO Directions date (HL-28), text length (HL-22).
+    extra = [
+        ("HL06", li.text_rules("Built for S-HOME after the DEC-4 call", "fixture", {}, [])),
+        ("HL06", li.text_rules(f"Approved by {li.INTERNAL_NAMES[0] if li.INTERNAL_NAMES else 'Nobody'}", "fixture", {}, [])),
+        ("HL28", li.text_rules("Internal Ombudsman Directions of 16 Jan 2026", "fixture", {}, [])),
+        ("HL22", li.length_rules('<Tile sub="One two three four five six seven" />', "fixture.tsx")),
+        ("HL22", li.paraphrase_rules({"x": {"paraphrase": "one two three four five six seven eight nine ten eleven twelve thirteen"}}, "fixture")),
+    ]
+    for rule, h in extra:
+        ok = any(x.startswith(f"IND-{rule}") for x in h)
+        n += 1
+        print(("PASS " if ok else "FAIL ") + f"IndusInd carry-forward rule {rule} fires")
+        if not ok:
+            fails.append(f"IndusInd carry-forward rule {rule} did not fire")
     # CSS layout values in a style prop are geometry, not figures.
     for css in ("translateX(-50%)", "calc(100% + 6px)", "repeat(auto-fit, minmax(min(100%, 280px), 1fr))"):
         n += 1
