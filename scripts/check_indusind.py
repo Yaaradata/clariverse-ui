@@ -280,7 +280,7 @@ FIXTURES = [
     ("public item id in a payload", "HL-01", lambda p: _set(p["home"]["windows"]["w4"]["outside"]["theme"], ["evidence"],
         [json.loads(open(L2_ITEMS, encoding="utf-8").readline())["id"]])),
     ("lumpy values", "lumpy", lambda p: [
-        _set(f, ["value"], 75 * (1 + i % 6)) for i, (_, f) in enumerate(figures(p["cards"]))
+        _set(f, ["value"], 75 * (1 + i % 6)) for i, (_, f) in enumerate(x for obj in p.values() for x in figures(obj))
         if isinstance(f.get("value"), int) and not isinstance(f.get("value"), bool) and 6 <= f["value"] < 500]),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
