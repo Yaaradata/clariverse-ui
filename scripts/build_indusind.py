@@ -528,9 +528,35 @@ def improving_item(x) -> dict:
     return l1(x)
 
 
+def quiet_public() -> dict | None:
+    """The public check, preferred: this week's Google Play reviews sit within the range of the previous full weeks
+    since Play items start (L2). None if it fails or there are too few weeks."""
+    play = [dt.datetime.fromisoformat(i["created_at"]) for i in L2 if i["source"] == "play"]
+    start = min(play)
+    counts, k = [], 0
+    while True:
+        e = FREEZE - dt.timedelta(days=7 * k)
+        if e - dt.timedelta(days=7) < start:
+            break
+        counts.append(sum(1 for t in play if e - dt.timedelta(days=7) < t <= e))
+        k += 1
+    if len(counts) < 5:
+        return None
+    last, prior = counts[0], counts[1:]
+    if not min(prior) <= last <= max(prior):
+        return None
+    return {"id": "L2:play_weekly:within_range:all:week", "layer": "L2", "tag": "Public · live", "passed": True,
+            "value": last, "display": f"{last:,}",
+            "text": f"Google Play reviews this week: within the range of the previous {len(prior)} weeks"}
+
+
 def quiet_item(w: dict) -> dict | None:
-    """One item, only from a computed check that passed: this week's complaints received sit within the range of the
-    previous 12 weeks (L3). If the check fails, no quiet item is shown."""
+    """One item, only from a computed check that passed. Prefer the public check (Play reviews this week within the
+    range of the previous weeks); else this week's complaints received within the range of the previous 12 weeks (L3).
+    If neither passes, no quiet item is shown."""
+    q = quiet_public()
+    if q:
+        return q
     counts = []
     for wk in D.weeks[-13:]:
         e = dt.datetime.combine(wk, FREEZE.timetz())
@@ -739,11 +765,11 @@ def risk_page() -> dict:
            "penalty_note": "Both RBI penalties cite the Interest Rate on Deposits Directions",
            "card_d": None, "windows": {},
            "checklist": [
-               {"item": "12 months of complaints about insurance or investment sales reviewed", "status": "Not started"},
-               {"item": "App and web journeys with pre-ticked or bundled consent listed", "status": "In progress"},
-               {"item": "Incentive lines tied to third-party products mapped", "status": "Not started"},
-               {"item": "Refund and compensation process for established mis-selling drafted", "status": "Not started"},
-               {"item": "Explicit-consent capture checked on every distribution journey", "status": "In progress"},
+               {"item": "12 months of complaints about insurance or investment sales reviewed", "status": "To confirm with the bank"},
+               {"item": "App and web journeys with pre-ticked or bundled consent listed", "status": "To confirm with the bank"},
+               {"item": "Incentive lines tied to third-party products mapped", "status": "To confirm with the bank"},
+               {"item": "Refund and compensation process for established mis-selling drafted", "status": "To confirm with the bank"},
+               {"item": "Explicit-consent capture checked on every distribution journey", "status": "To confirm with the bank"},
            ],
            }
     for wd in CONFIG["windows"]:

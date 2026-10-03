@@ -637,7 +637,7 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
           <MutedNote>No check passed this window.</MutedNote>
         )}
         <span style={{ marginLeft: "auto" }}>
-          <SourceTag layer="L3" />
+          <SourceTag layer={q?.layer ?? "L3"} />
         </span>
       </div>
     </>

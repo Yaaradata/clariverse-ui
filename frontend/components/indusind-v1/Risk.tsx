@@ -104,8 +104,7 @@ const PATTERN = [
 ] as const;
 
 const STATUS_COLOR: Record<string, string> = {
-  "Not started": C.amber,
-  "In progress": C.cyan,
+  "To confirm with the bank": C.amber,
   Done: C.green,
 };
 

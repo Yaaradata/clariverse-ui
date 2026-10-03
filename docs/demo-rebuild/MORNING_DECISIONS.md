@@ -756,3 +756,25 @@ wording.
 - **IV-53 · Ads.** No ad captures exist and none are invented. The Ads section on Peer and market moves is removed (no
   placeholder), and ad references are dropped from the Deposits "why" note and the home peer-moves tile. Card B carried
   no ad text (its public lines are rate offers only).
+
+## IndusInd V1 · visual review of 3 Oct
+
+- **IV-54 · Closure risk is an index.** "Accounts at risk of closure" is an index (Q1 weekly average = 100), not a count,
+  so no scaling to the card base is needed; it is labelled "(index)" and "Illustrative" wherever shown.
+- **IV-55 · IO pattern analysis date.** The Directions of 14 Jan 2026 (N37) set a quarterly analysis; the due date shown is
+  the next quarter-end after the data freeze (31 Dec 2026), recomputed by the check. Month-only dates (DPDP) count days to
+  the start of the month.
+- **IV-56 · Peer card dates.** P10–P15 are verified pages read 2 Oct 2026. They are shown as card dates, one line per
+  bank, tagged "Public · verified · page read 2 Oct 2026"; never as rate changes and never beside IndusInd rates (manual
+  read not logged). "This week" = within 7 days of the freeze (Federal 29 Sep, RBL page dated 1 Oct); the Deposits "why"
+  uses the 13-week window. Yes (w.e.f. 2 Jun) shows only on the Peers page.
+- **IV-57 · Press list.** Each peer's Q1 FY27 release date is the earliest source date among its verified results figures
+  in the register (Federal 17 Jul, RBL 17 Jul, Yes 18 Jul, IDFC First 25 Jul), plus CRISIL 19 Aug; Ratings and Press merge
+  into one dated tile. Peer rows with nothing verified (AU, Bandhan) are hidden behind "Other peers: pending
+  verification"; Kotak stays as the greyed upper benchmark.
+- **IV-58 · Business filter on home.** Outside = that business's public items (Cards equals the Cards page, checked).
+  "What customers are doing" shows savings only under All and Deposits; Cards shows card balances (N18) and the Cards
+  closure index; Vehicle, Micro and Digital show their own book or app lines.
+- **IV-59 · Quiet item.** The public check (Google Play reviews this week within the range of the previous full weeks
+  since 10 Aug) does not pass: 338 this week against 403–931. The internal check stays, tagged Internal · illustrative.
+- **IV-60 · Readiness checklist.** Every status reads "To confirm with the bank": the bank's progress is not known.
