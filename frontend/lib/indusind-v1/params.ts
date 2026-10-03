@@ -4,7 +4,7 @@ import type { ViewId, WindowId } from "./types";
  * IndusInd · view, window and business live in the URL (?v=&w=&b=), so the server slices each page payload to the one
  * view it renders and the browser never receives the other windows.
  */
-export const BASE = "/indusind-v1";
+export const BASE = "/role-based/indusind_bank/customer-pulse";
 
 const WINDOWS: WindowId[] = ["week", "w4", "w13"];
 const VIEWS: ViewId[] = ["ceo", "cx"];

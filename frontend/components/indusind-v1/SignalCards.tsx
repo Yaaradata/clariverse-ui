@@ -371,7 +371,9 @@ function Drawer({
               {a.approver_role}
             </Chip>
           </div>
-          <OpenLink href="/indusind-v1/approvals">Approvals</OpenLink>
+          <OpenLink href="/role-based/indusind_bank/customer-pulse/approvals">
+            Approvals
+          </OpenLink>
         </Section>
 
         <Section n={8} title="Evidence">

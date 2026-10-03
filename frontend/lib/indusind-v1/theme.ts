@@ -3,7 +3,7 @@
  * variable (`C` in primitives.tsx points at these), so one attribute on <html> switches the whole demo. Light keeps the
  * same five meanings (red, amber, green, cyan, violet) in darker shades that stay readable on white.
  *
- * The variables are scoped to `.lisn-v2`; the layout of /indusind-v1 injects them, so other routes are never affected.
+ * The variables are scoped to `.lisn-v2`; the customer-pulse layout injects them, so other routes are never affected.
  */
 
 export const THEME_KEY = "lisn-v2-theme";

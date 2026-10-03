@@ -1,7 +1,7 @@
 # IndusInd · Customer pulse: build plan
 
 Branch `feat/indusind-v1`, cut from `main` (the latest HDFC build; `release/vidya-demo` does not exist). Routes under
-`/indusind-v1/*`; HDFC routes are not touched. Precedence: IND-B4 on screens, IND-B3 on data, IND-D1 on numbers, IND-B2
+`/role-based/indusind_bank/customer-pulse/*` (first built at `/indusind-v1/*`, which redirects; IV-41); HDFC routes are not touched. Precedence: IND-B4 on screens, IND-B3 on data, IND-D1 on numbers, IND-B2
 on wording. Judgement calls are logged in `docs/demo-rebuild/MORNING_DECISIONS.md` under "IndusInd V1" (IDs IV-xx).
 
 **IND-D1 is missing.** It was not in the zips and is not in the repo. Every register value is therefore `null` and

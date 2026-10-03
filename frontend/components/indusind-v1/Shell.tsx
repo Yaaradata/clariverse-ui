@@ -1,12 +1,22 @@
 "use client";
 
 /**
- * IndusInd · the frame of every screen: title line with the date and the data freeze, the view toggle (CEO's office ·
- * Head of CX), the window selector, the business filter, the nav, the watermark, the footer and Ask LisN. The
- * selection lives in the URL, so the server sends only the slice a page renders.
+ * IndusInd · the frame of every screen, in the role-based layout (/role-based/indusind_bank): the icon rail (back to
+ * roles, one icon per screen), the title bar with the data-freeze pill, the view toggle (CEO's office · Head of CX),
+ * the window selector, the business filter, the watermark, the footer and Ask LisN. The selection lives in the URL,
+ * so the server sends only the slice a page renders.
  */
 
-import { Moon, Sun } from "lucide-react";
+import {
+  Activity,
+  CheckSquare,
+  CreditCard,
+  Landmark,
+  Moon,
+  Scale,
+  Sun,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
 import { type ReactNode, useEffect, useState } from "react";
 
@@ -17,13 +27,16 @@ import { AskBar } from "./AskBar";
 import { C, tint } from "./primitives";
 
 const NAV = [
-  { href: BASE, label: "Customer pulse" },
-  { href: `${BASE}/deposits`, label: "Deposits" },
-  { href: `${BASE}/peers`, label: "Peer and market moves" },
-  { href: `${BASE}/risk`, label: "Conduct and complaints" },
-  { href: `${BASE}/cards`, label: "Cards" },
-  { href: `${BASE}/approvals`, label: "Approvals" },
+  { href: BASE, label: "Customer pulse", icon: Activity },
+  { href: `${BASE}/deposits`, label: "Deposits", icon: Landmark },
+  { href: `${BASE}/peers`, label: "Peer and market moves", icon: Users },
+  { href: `${BASE}/risk`, label: "Conduct and complaints", icon: Scale },
+  { href: `${BASE}/cards`, label: "Cards", icon: CreditCard },
+  { href: `${BASE}/approvals`, label: "Approvals", icon: CheckSquare },
 ];
+
+/** The role picker for the bank, as in every role-based dashboard. */
+const ROLES_HREF = "/role-based/indusind_bank";
 
 function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeName>("dark");
@@ -147,9 +160,11 @@ export function Shell({
   controls?: { view?: boolean; window?: boolean; business?: boolean };
   children: ReactNode;
 }) {
+  const view = common.views.find((x) => x.id === sel.v)?.label ?? "";
+  const screen = NAV.find((n) => n.href === path)?.label ?? "";
   return (
     <div
-      className="lisn-v2"
+      className="lisn-v2 ind-shell"
       style={{
         minHeight: "100vh",
         background: C.bg,
@@ -157,31 +172,47 @@ export function Shell({
         fontFamily: "var(--font), system-ui, sans-serif",
       }}
     >
-      <header
-        style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 40,
-          background: C.header,
-          borderBottom: `1px solid ${C.border}`,
-          backdropFilter: "blur(10px)",
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 1360,
-            margin: "0 auto",
-            padding: "10px 16px 8px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 8,
-          }}
+      {/* The role-based rail: back to roles, one icon per screen, the theme switch and the role's initials. */}
+      <aside className="ind-rail" aria-label="Screens">
+        <Link
+          href={ROLES_HREF}
+          title="Back to roles"
+          aria-label="Back to roles"
+          className="ind-rail-home"
         >
+          Y
+        </Link>
+        <div className="ind-rail-rule" />
+        {NAV.map((n) => {
+          const on = n.href === path;
+          const Icon = n.icon;
+          return (
+            <Link
+              key={n.href}
+              href={hrefWith(n.href, sel, { b: "all" })}
+              title={n.label}
+              aria-label={n.label}
+              aria-current={on ? "page" : undefined}
+              className={on ? "ind-rail-item ind-rail-on" : "ind-rail-item"}
+            >
+              <Icon size={17} />
+            </Link>
+          );
+        })}
+        <div className="ind-rail-fill" />
+        <ThemeToggle />
+        <div className="ind-rail-me" title={view}>
+          {sel.v === "cx" ? "CX" : "CO"}
+        </div>
+      </aside>
+
+      <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
+        <header style={{ padding: "16px 22px 0" }}>
           <div
             style={{
               display: "flex",
+              alignItems: "flex-start",
               justifyContent: "space-between",
-              alignItems: "center",
               gap: 12,
               flexWrap: "wrap",
             }}
@@ -190,102 +221,71 @@ export function Shell({
               <h1
                 style={{
                   margin: 0,
-                  fontSize: 18,
-                  fontWeight: 750,
-                  letterSpacing: "-0.01em",
+                  fontSize: 21,
+                  fontWeight: 900,
+                  letterSpacing: "-0.02em",
                 }}
               >
-                {common.bank} · Customer pulse
+                Customer pulse — {view}
               </h1>
-              <div
-                style={{
-                  fontSize: 12.5,
-                  color: C.textMut,
-                  display: "flex",
-                  gap: 10,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Now />
-                <span data-testid="freeze">
-                  Data freeze {common.freeze}
-                  {common.freeze_provisional ? " (provisional)" : ""}
-                </span>
+              <div style={{ fontSize: 12.5, color: C.textMut, marginTop: 2 }}>
+                {common.bank} · {screen}
               </div>
             </div>
             <div
+              data-testid="freeze"
               style={{
+                fontSize: 11,
+                fontWeight: 700,
+                color: C.textSec,
+                background: C.cardAlt,
+                border: `1px solid ${C.border}`,
+                borderRadius: 999,
+                padding: "5px 11px",
+                whiteSpace: "nowrap",
                 display: "flex",
                 gap: 8,
-                alignItems: "center",
-                flexWrap: "wrap",
               }}
             >
-              {controls.view ? (
-                <Segmented
-                  label="View"
-                  items={common.views.map((x) => ({
-                    href: hrefWith(path, sel, { v: x.id }),
-                    label: x.label,
-                    on: sel.v === x.id,
-                  }))}
-                />
-              ) : null}
-              {controls.window ? (
-                <Segmented
-                  label="Window"
-                  items={common.windows.map((x) => ({
-                    href: hrefWith(path, sel, { w: x.id }),
-                    label: x.label,
-                    on: sel.w === x.id,
-                  }))}
-                />
-              ) : null}
-              <ThemeToggle />
+              <span>
+                Data freeze {common.freeze}
+                {common.freeze_provisional ? " (provisional)" : ""}
+              </span>
+              <span style={{ color: C.textMut, fontWeight: 500 }}>
+                <Now />
+              </span>
             </div>
           </div>
-          <nav
-            aria-label="Screens"
+          <div
             style={{
               display: "flex",
-              gap: 4,
+              gap: 8,
+              alignItems: "center",
               flexWrap: "wrap",
+              marginTop: 12,
             }}
           >
-            {NAV.map((n) => {
-              const on = n.href === path;
-              return (
-                <Link
-                  key={n.href}
-                  href={hrefWith(n.href, sel, { b: "all" })}
-                  aria-current={on ? "page" : undefined}
-                  style={{
-                    fontSize: 13.5,
-                    fontWeight: on ? 700 : 500,
-                    color: on ? C.text : C.textSec,
-                    padding: "5px 10px",
-                    borderRadius: 8,
-                    background: on ? C.cardAlt : "transparent",
-                    border: `1px solid ${on ? C.border : "transparent"}`,
-                    textDecoration: "none",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {n.label}
-                </Link>
-              );
-            })}
-          </nav>
-          {controls.business ? (
-            <div
-              style={{
-                display: "flex",
-                gap: 8,
-                alignItems: "center",
-                flexWrap: "wrap",
-              }}
-            >
-              <span style={{ fontSize: 12, color: C.textMut }}>Business</span>
+            {controls.view ? (
+              <Segmented
+                label="View"
+                items={common.views.map((x) => ({
+                  href: hrefWith(path, sel, { v: x.id }),
+                  label: x.label,
+                  on: sel.v === x.id,
+                }))}
+              />
+            ) : null}
+            {controls.window ? (
+              <Segmented
+                label="Window"
+                items={common.windows.map((x) => ({
+                  href: hrefWith(path, sel, { w: x.id }),
+                  label: x.label,
+                  on: sel.w === x.id,
+                }))}
+              />
+            ) : null}
+            {controls.business ? (
               <Segmented
                 label="Business"
                 items={common.businesses.map((x) => ({
@@ -294,51 +294,53 @@ export function Shell({
                   on: sel.b === x.id,
                 }))}
               />
-            </div>
-          ) : null}
-        </div>
-        <div
-          data-testid="watermark"
-          style={{
-            fontSize: 11.5,
-            color: C.amber,
-            background: tint(C.amber, 0.08),
-            borderTop: `1px solid ${tint(C.amber, 0.25)}`,
-            textAlign: "center",
-            padding: "3px 16px",
-            letterSpacing: "0.02em",
-          }}
-        >
-          {common.watermark}
-        </div>
-      </header>
+            ) : null}
+          </div>
+          <div
+            data-testid="watermark"
+            style={{
+              fontSize: 11.5,
+              color: C.amber,
+              background: tint(C.amber, 0.08),
+              border: `1px solid ${tint(C.amber, 0.25)}`,
+              borderRadius: 8,
+              textAlign: "center",
+              padding: "3px 12px",
+              marginTop: 12,
+              letterSpacing: "0.02em",
+            }}
+          >
+            {common.watermark}
+          </div>
+        </header>
 
-      <main
-        style={{
-          maxWidth: 1360,
-          margin: "0 auto",
-          // The Ask bar floats at the bottom: the page ends well above it, so it never covers content.
-          padding: "16px 16px 120px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 14,
-        }}
-      >
-        {children}
-        <footer
-          data-testid="footer"
+        <main
           style={{
-            borderTop: `1px solid ${C.border}`,
-            paddingTop: 12,
-            marginTop: 6,
-            fontSize: 12.5,
-            color: C.textMut,
-            lineHeight: 1.55,
+            width: "100%",
+            maxWidth: 1400,
+            // The Ask bar floats at the bottom: the page ends well above it, so it never covers content.
+            padding: "14px 22px 120px",
+            display: "flex",
+            flexDirection: "column",
+            gap: 14,
           }}
         >
-          {common.footer}
-        </footer>
-      </main>
+          {children}
+          <footer
+            data-testid="footer"
+            style={{
+              borderTop: `1px solid ${C.border}`,
+              paddingTop: 12,
+              marginTop: 6,
+              fontSize: 12.5,
+              color: C.textMut,
+              lineHeight: 1.55,
+            }}
+          >
+            {common.footer}
+          </footer>
+        </main>
+      </div>
       <AskBar ask={ask} />
     </div>
   );

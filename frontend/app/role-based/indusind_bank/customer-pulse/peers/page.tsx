@@ -1,4 +1,4 @@
-import { type RiskSlice, RiskView } from "@/components/indusind-v1/Risk";
+import { type PeersSlice, PeersView } from "@/components/indusind-v1/Peers";
 import { Shell } from "@/components/indusind-v1/Shell";
 import { loadPage } from "@/lib/indusind-v1/load";
 import { readSel } from "@/lib/indusind-v1/params";
@@ -6,34 +6,24 @@ import type { AskBank, Common } from "@/lib/indusind-v1/types";
 
 export const dynamic = "force-dynamic";
 
-type RiskFile = Omit<RiskSlice, "win" | "windowLabel"> & {
-  windows: Record<string, RiskSlice["win"]>;
-};
-
-/** S-RISK. One window sent to the browser. */
-export default async function IndusIndRisk({
+/** S-PEER. */
+export default async function IndusIndPeers({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const common = loadPage<Common>("common");
   const ask = loadPage<AskBank>("ask");
-  const { windows, ...rest } = loadPage<RiskFile>("risk");
+  const p = loadPage<PeersSlice>("peers");
   const sel = readSel(await searchParams, common.default_window);
-  const r: RiskSlice = {
-    ...rest,
-    win: windows[sel.w],
-    windowLabel: common.windows.find((x) => x.id === sel.w)?.label ?? "",
-  };
   return (
     <Shell
       common={common}
       ask={ask}
       sel={sel}
-      path="/indusind-v1/risk"
-      controls={{ window: true }}
+      path="/role-based/indusind_bank/customer-pulse/peers"
     >
-      <RiskView r={r} common={common} />
+      <PeersView p={p} common={common} />
     </Shell>
   );
 }

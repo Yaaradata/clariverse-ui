@@ -1,8 +1,8 @@
 """IndusInd lint: the 26 rules of IND-B3 §8. Called by scripts/lint_terms.py (and by the fixtures in test_checks.py).
 
-Runs on: the IndusInd UI copy (string literals and JSX text in frontend/{app,components,lib}/indusind-v1), the
+Runs on: the IndusInd UI copy (string literals and JSX text in frontend/{components,lib}/indusind-v1 and frontend/app/role-based/indusind_bank), the
 register files (data/public/), the internal seed (data/seed/indusind_v1/), the page payloads and the Ask LisN answer
-bank (data/out/indusind_v1/) and, when a build exists, the built /indusind-v1 pages. Every hit starts with its rule
+bank (data/out/indusind_v1/) and, when a build exists, the built customer-pulse pages. Every hit starts with its rule
 number ("IND-R07 ...") so a fixture can tell which rule fired. Each rule fails the build.
 """
 
@@ -16,11 +16,11 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 FE = ROOT / "frontend"
-UI_DIRS = [FE / "app" / "indusind-v1", FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1"]
+UI_DIRS = [FE / "app" / "role-based" / "indusind_bank", FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1"]
 PUBLIC = ROOT / "data" / "public"
 SEED = ROOT / "data" / "seed" / "indusind_v1"
 OUT = ROOT / "data" / "out" / "indusind_v1"
-BUILD = FE / ".next" / "server" / "app" / "indusind-v1"
+BUILD = FE / ".next" / "server" / "app" / "role-based" / "indusind_bank"
 CONFIG = ROOT / "config" / "indusind.yaml"
 # Rule 21: discovery names, filled locally and never committed. IND-B3 names the file lint_local_terms.txt; the repo's
 # existing local list is lint_terms_local.txt. Both are read (IndusInd V1, IV-11).
@@ -212,7 +212,7 @@ def run() -> tuple[list[str], int]:
         for f in sorted(d.rglob("*.ts*")):
             rel = str(f.relative_to(ROOT))
             for s in ui_strings(f.read_text(encoding="utf-8")):
-                if s.startswith(("@/", "./", "../", "/indusind-v1", "http")) or re.fullmatch(r"[\w\s./:#?&=,%()-]+", s) and not re.search(r"[A-Za-z]{3,}\s+[A-Za-z]{3,}", s):
+                if s.startswith(("@/", "./", "../", "/role-based/indusind_bank", "http")) or re.fullmatch(r"[\w\s./:#?&=,%()-]+", s) and not re.search(r"[A-Za-z]{3,}\s+[A-Za-z]{3,}", s):
                     hits += [x for x in ui_figures(s, rel)]
                     continue
                 hits += text_rules(s, rel, flags, local)

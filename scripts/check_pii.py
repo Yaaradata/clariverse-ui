@@ -61,10 +61,10 @@ SOURCE_LINK_PATTERNS = {
 }
 FE = ROOT / "frontend"
 LINK_SOURCES = [FE / "components" / "hdfc-v3", FE / "lib" / "hdfc-v3", FE / "app" / "hdfc-pulse" / "v2",
-                FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1", FE / "app" / "indusind-v1"]
+                FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1", FE / "app" / "role-based" / "indusind_bank"]
 # Built V2 pages (HTML and RSC payloads) and the client chunks every page loads. V1 is kept as first shown and is out
 # of scope for this rule.
-LINK_BUILD = [FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2", FE / ".next" / "server" / "app" / "indusind-v1",
+LINK_BUILD = [FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2", FE / ".next" / "server" / "app" / "role-based" / "indusind_bank",
               FE / ".next" / "static" / "chunks"]
 
 

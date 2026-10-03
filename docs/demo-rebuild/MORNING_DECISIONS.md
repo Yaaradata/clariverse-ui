@@ -634,3 +634,34 @@ wording.
   those slots still say "Public data not yet loaded". The pull holds no peer-bank items.
 - **IV-34 · INDIE rating.** The Play run returned dated listing metadata: 4.5 from 8,17,954 ratings, scraped 1 Oct
   2026. Shown once, one store, dated. The App Store run returned no listing metadata.
+- **IV-35 · Peer apps.** IND-B3 wants the core peers' retail apps on Play and the App Store. The pull holds none: every
+  app's developer is IndusInd Bank Ltd. or a group insurer. The ingest now has a `peer` bucket (Federal, Yes, IDFC
+  First retail apps, tagged by bank, deposit topics and peer voice only, never in IndusInd totals) for when they are
+  pulled. Counts: peer 0; IndusInd apps outside the B3 list 892 and group insurers 372, both still excluded.
+- **IV-36 · Sharper themes.** "Cards in the app" and "Deposits in the app" were replaced by concrete sub-themes read from
+  the items: Cards (card missing from the app; card-only sign-up; bill payment) and Deposits (debit card set-up; fixed
+  deposits; frozen accounts; account opening; savings account missing; charges). The largest with 15 non-positive
+  items wins; otherwise "Not enough public items this window". Card missing from the app fits about 28 of its 35
+  items; the debit-card paraphrase was widened after reading (renewal and charges as well as PIN and limits).
+- **IV-37 · 10 Aug cut.** Every public figure for a window reaching back before the first Google Play review counts
+  from 10 Aug; App Store items before that are shown apart ("not added in"). The weekly series starts at a marker.
+  "Responded" is "Play Store · bank replied" with n, Play only. The listing rating is "all-time, as of" its scrape
+  date and sits apart from the window's figures.
+- **IV-38 · Card G trigger.** IND-B4 gives none. Used: in a week, at least 15 security-block reviews, at least 10% of
+  the week's app reviews, and a share on the newest releases at least 5× the previous stable release's. It fired in
+  the four weeks to 28 Aug, 4, 11 and 18 Sep (release 2.5.0) and is not firing in the week to the freeze. Written to
+  `docs/indusind/card_g_candidate.md`; not swapped in (Ranjith's call).
+- **IV-39 · App Store drop.** 210 INDIE reviews in August, 16 in September. Not a slice boundary (both runs agree);
+  Play rose over the same weeks. Read as a collection gap and footnoted wherever App Store items count.
+- **IV-40 · Seed artefacts.** Cards categories each follow a seeded trend (slope signs alternate) and show their change
+  as share points, which removes the month-end swing every category shares; a check fails if more than 80% move one
+  way. Pending IO reviews are now timed like replied ones, so they no longer bunch into the last week; IO referrals run
+  6.3–10.2% of a week's replies, the one 10.2% week being within weekly noise (about 0.8 points on some 1,100
+  replies). Card A shows "Savings balances and term deposits, Mar to Jun 2026" until N04 and D08 are verified.
+- **IV-41 · Role-based home.** The screens moved from `/indusind-v1` to `/role-based/indusind_bank/customer-pulse` and
+  appear as two roles on the Indus Ind Bank page (CEO's office; Head of CX, opening the Head of CX view), beside the
+  existing Head of Cards role. The shell copies the role-based layout (icon rail with "Y" back to roles, title bar,
+  as-of pill). `/indusind-v1/*` redirects; noindex moves with the routes.
+- **IV-42 · Carry-forward file.** `docs/indusind/carry_forward_from_hdfc.md` was not found in the working tree, any
+  local or remote branch, or under `D:\office`. The HL rules quoted in the requests (HL-03 and the rules listed in the
+  first IndusInd request) are applied; the rest wait for the file.

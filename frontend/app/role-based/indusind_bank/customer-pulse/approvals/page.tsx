@@ -20,7 +20,12 @@ export default async function IndusIndApprovals({
   const a = loadPage<{ actions: ApprovalItem[]; banner: string }>("approvals");
   const sel = readSel(await searchParams, common.default_window);
   return (
-    <Shell common={common} ask={ask} sel={sel} path="/indusind-v1/approvals">
+    <Shell
+      common={common}
+      ask={ask}
+      sel={sel}
+      path="/role-based/indusind_bank/customer-pulse/approvals"
+    >
       <ApprovalsView actions={a.actions} banner={a.banner} />
     </Shell>
   );

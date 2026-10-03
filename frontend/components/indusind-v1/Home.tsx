@@ -531,7 +531,13 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
           sub="Rate cards, ads, press"
           layers={["L2"]}
           right={
-            <OpenLink href={hrefWith("/indusind-v1/peers", sel, { b: "all" })}>
+            <OpenLink
+              href={hrefWith(
+                "/role-based/indusind_bank/customer-pulse/peers",
+                sel,
+                { b: "all" },
+              )}
+            >
               Peers
             </OpenLink>
           }
@@ -543,7 +549,13 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
           sub="Dated obligations"
           layers={["L1"]}
           right={
-            <OpenLink href={hrefWith("/indusind-v1/risk", sel, { b: "all" })}>
+            <OpenLink
+              href={hrefWith(
+                "/role-based/indusind_bank/customer-pulse/risk",
+                sel,
+                { b: "all" },
+              )}
+            >
               Calendar
             </OpenLink>
           }

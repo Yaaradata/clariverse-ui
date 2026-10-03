@@ -37,7 +37,7 @@ export default async function IndusIndHome({
       common={common}
       ask={ask}
       sel={sel}
-      path="/indusind-v1"
+      path="/role-based/indusind_bank/customer-pulse"
       controls={{ view: true, window: true, business: true }}
     >
       <HomeView s={slice} sel={sel} common={common} />

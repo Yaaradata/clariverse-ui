@@ -6,6 +6,7 @@ import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
 import { HDFC_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/hdfcBankIndustry";
+import { INDUSIND_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/indusindBankIndustry";
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
 const accent = "#5332FF";
@@ -104,7 +105,9 @@ export default function RoleBasedIndustryRolesPage({ params }: PageProps) {
         {industry.roles.map((role) => {
           const Icon = role.icon;
           const roleHref =
-            HDFC_PULSE_ROLE_HREF[role.id] ?? `/role-based/${industry.id}/${role.id}`;
+            HDFC_PULSE_ROLE_HREF[role.id] ??
+            INDUSIND_PULSE_ROLE_HREF[role.id] ??
+            `/role-based/${industry.id}/${role.id}`;
           const isNetworkHealth = industry.id === "ecommerce" && role.id === "network_health";
           const cardStyle = {
             background: cardBg,

@@ -206,7 +206,9 @@ function ActionBlock({ a }: { a: Action }) {
         <Chip label="Approver" color={C.violet}>
           {a.approver_role}
         </Chip>
-        <OpenLink href="/indusind-v1/approvals">Approvals</OpenLink>
+        <OpenLink href="/role-based/indusind_bank/customer-pulse/approvals">
+          Approvals
+        </OpenLink>
       </div>
       <MutedNote>
         Drafted from the evidence of {fmtStamp(a.evidence_version)} IST. On

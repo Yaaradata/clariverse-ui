@@ -40,10 +40,10 @@ peers:
 
 # Pulse by business (IND-B4 §2.3). money: register IDs for the money line. module: route, or null ("Module next").
 businesses:
-  - {id: deposits, label: Deposits, products: [deposits_savings, fd_rd, nri], money: [N04, D08], module: /indusind-v1/deposits}
+  - {id: deposits, label: Deposits, products: [deposits_savings, fd_rd, nri], money: [N04, D08], module: /role-based/indusind_bank/customer-pulse/deposits}
   - {id: vehicle, label: Vehicle finance, products: [vehicle_loans], money: [N21], module: null}
   - {id: micro, label: Micro loans and rural, products: [micro_loans_rural], money: [N16], module: null}
-  - {id: cards, label: Cards, products: [cards], money: [N18], module: /indusind-v1/cards}
+  - {id: cards, label: Cards, products: [cards], money: [N18], module: /role-based/indusind_bank/customer-pulse/cards}
   - {id: personal, label: Personal loans, products: [personal_loans], money: [N19], module: null}
   - {id: digital, label: Digital, products: [app_digital], money: [N41], module: null}
   - {id: wholesale, label: Wholesale, products: [], money: [N26], module: null, next: true}
@@ -111,7 +111,7 @@ cards:
     owner: Retail liabilities head
     with: CFO and ALCO
     approver: "Head, Consumer Banking"
-    module: /indusind-v1/deposits
+    module: /role-based/indusind_bank/customer-pulse/deposits
     voice_tags: [fee_change, closure_intent, app_failure, rate_offer]
     inside: "Illustrative: where the outflow sits by slab, region and branch type. Your data shows the real split."
     action:
@@ -127,7 +127,7 @@ cards:
     owner: CFO (ALCO)
     with: "Head, Consumer Banking"
     approver: CFO
-    module: /indusind-v1/deposits
+    module: /role-based/indusind_bank/customer-pulse/deposits
     voice_tags: [rate_offer]
     inside: "Illustrative decomposition of the gap: mix, term pricing by bucket, bulk reliance."
     action:
@@ -160,7 +160,7 @@ cards:
     owner: Chief Compliance Officer
     with: "Consumer Banking (distribution); Internal Ombudsman informed"
     approver: Chief Compliance Officer
-    module: /indusind-v1/risk
+    module: /role-based/indusind_bank/customer-pulse/risk
     voice_tags: [mis_selling_allegation, insurance_investment_sales]
     inside: "Complaints in distribution-related grounds, by product; an illustrative readiness checklist."
     action:

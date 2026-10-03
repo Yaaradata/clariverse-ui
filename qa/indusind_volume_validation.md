@@ -17,7 +17,7 @@ Rule: no count shown may imply an annual complaint rate more than 2× off IndusI
 |---|---|
 | Weekly complaint intake | 1,180 a week (about 61,000 a year) |
 | Weeks generated | 27, ending at the data freeze (2 Oct 2026, 18:00 IST, provisional) |
-| Complaints in the seed | 32,843 |
+| Complaints in the seed | 32,952 |
 
 When IND-D1 gives N31: compare 52 × the Q1 weekly intake with N31. Within 0.5× to 2× passes. Outside that range,
 rescale `WEEKLY` in `scripts/seed_indusind.py`, rebuild, and only then allow counts on screen.
@@ -27,9 +27,9 @@ rescale `WEEKLY` in `scripts/seed_indusind.py`, rebuild, and only then allow cou
 | Ratio | Target | Seed |
 |---|---|---|
 | Negative share of internal contacts | about 12% | 12.0% (home, last 4 weeks, all businesses) |
-| Reject rate, of final replies | 6–10% | 8.1% overall; 6.3–9.3% by week (weekly register) |
+| Reject rate, of final replies | 6–10% | 8.1% overall; 6.3–9.3% by week (weekly register); IO referrals 6.3–10.2% of the week's replies |
 | Internal Ombudsman figures | one register | weekly referrals = case-register decisions (check passes) |
-| Ombudsman at-risk | a subset of pending | 39.2% of pending (last 4 weeks); each state ≤ at-risk ≤ the sum of states |
+| Ombudsman at-risk | a subset of pending | 38.6% of pending (last 4 weeks); each state ≤ at-risk ≤ the sum of states |
 | Resolved + open + waiting on customer | = volume | sums to 100% in every window and business (check passes) |
 | Pending stock | plausible | 2.2–2.5 weeks of intake; 10–12% of pending over 30 days |
 | Lumpy weighted values | none | no source weighting in L3; indices move 85–111 week to week |

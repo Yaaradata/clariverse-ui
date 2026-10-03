@@ -247,7 +247,9 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
             <Chip label="Status" color={C.amber}>
               {a.status}
             </Chip>
-            <OpenLink href="/indusind-v1/approvals">Approvals</OpenLink>
+            <OpenLink href="/role-based/indusind_bank/customer-pulse/approvals">
+              Approvals
+            </OpenLink>
           </div>
         </div>
       </Tile>

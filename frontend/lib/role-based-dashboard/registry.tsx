@@ -25,7 +25,11 @@ import {
   HDFC_PULSE_V2_ROLE_ID,
 } from "./hdfcBankIndustry";
 import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
-import { INDUSIND_BANK_INDUSTRY_ID } from "./indusindBankIndustry";
+import {
+  INDUSIND_BANK_INDUSTRY_ID,
+  INDUSIND_CEO_OFFICE_ROLE_ID,
+  INDUSIND_HEAD_CX_ROLE_ID,
+} from "./indusindBankIndustry";
 import {
   KIDDE_GLOBAL_INDUSTRY_ID,
   KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
@@ -481,6 +485,22 @@ export const INDUSTRIES = [
     color: "#9333ea",
     desc: "Retail banking · deposits, loans, cards · branches & contact centres",
     roles: [
+      {
+        id: INDUSIND_CEO_OFFICE_ROLE_ID,
+        name: "CEO's office",
+        icon: Landmark,
+        sub: "Customer pulse · inside the bank and in public · four items that need a decision",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        id: INDUSIND_HEAD_CX_ROLE_ID,
+        name: "Head of CX",
+        icon: Headphones,
+        sub: "Customer pulse by channel · Ombudsman watch · owners and status",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
       {
         id: "head_cards",
         name: "Head of Cards",
