@@ -117,12 +117,12 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
         >
           <div style={cols(3, 120, 8)}>
             <Kpi
-              label="Contacts"
+              label="Contacts (index)"
               f={w.issue.index}
               info={common.defs.contacts}
             />
             <Kpi
-              label="Complaints received"
+              label="Complaints received (index)"
               f={w.complaints.received_index}
               info={common.defs.received}
               sub={<Fig f={w.complaints.change} />}
@@ -193,11 +193,15 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
       <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
         <Tile
           title="Cards: accounts at risk of closure (index)"
-          sub="Aggregate, by category"
+          sub="Illustrative; aggregate, by category"
           layers={["L3"]}
           info={common.defs.closure_risk}
         >
-          <Kpi label="At risk of closure" f={w.closure_risk.index} />
+          <Kpi
+            label="At risk of closure (index)"
+            f={w.closure_risk.index}
+            sub="Q1 weekly avg = 100"
+          />
           <div>
             {w.closure_risk.by_category.map((f) => (
               <ShareBar key={f.id} label={f.label} f={f} max={maxClosure} />

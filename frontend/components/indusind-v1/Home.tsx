@@ -181,7 +181,7 @@ function Pulse({
         >
           <div style={cols(2, 120, 8)}>
             <Kpi
-              label="Complaints received"
+              label="Complaints received (index)"
               f={i.received_index}
               info={common.defs.received}
               sub={<Fig f={i.change} />}
@@ -253,7 +253,7 @@ function Pulse({
             }}
           >
             <span>
-              Contacts{" "}
+              Contacts (index){" "}
               <Fig
                 f={p.contacts.index}
                 style={{ fontFamily: MONO, color: C.text }}
@@ -288,12 +288,12 @@ function Pulse({
         >
           <div style={cols(2, 120, 8)}>
             <Kpi
-              label="Savings outflow"
+              label="Savings outflow (index)"
               f={d.outflow_index}
               info={common.defs.outflow}
             />
             <Kpi
-              label="Savings closures"
+              label="Savings closures (index)"
               f={d.closures_index}
               info={common.defs.closures}
             />
@@ -400,7 +400,7 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
         testid="by-business"
         head={[
           "Business",
-          "Received",
+          "Received (index)",
           "Open",
           "Open too long",
           `Outside, ${s.win.outside.period}`,

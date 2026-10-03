@@ -254,15 +254,9 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
       </Tile>
 
       <Tile
-        title="Complaint register"
-        sub="Disclosed, then weekly internal"
-        layers={["L1", "L3"]}
-        right={
-          <Chip label="Owner" color={C.violet}>
-            Principal Nodal Officer, with the Chief Compliance Officer; IO
-            informed
-          </Chip>
-        }
+        title="Published, FY25"
+        sub="BRSR, the bank's disclosure"
+        layers={["L1"]}
       >
         <div style={cols(2, 300, 12)}>
           {r.register.map((f) => (
@@ -272,8 +266,21 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
         <MutedNote>
           {(r.register[0]?.note ?? "").replace(/^./, (x) => x.toUpperCase())}.
         </MutedNote>
+      </Tile>
+
+      <Tile
+        title="Complaint register, weekly"
+        sub="Inside the bank, illustrative"
+        layers={["L3"]}
+        right={
+          <Chip label="Owner" color={C.violet}>
+            Principal Nodal Officer, with the Chief Compliance Officer; IO
+            informed
+          </Chip>
+        }
+      >
         <Label>
-          Weekly, inside the bank · last 13 weeks
+          Last 13 weeks; received and closed as an index, Q1 weekly avg = 100
           <Info text={common.defs.weekly} />
         </Label>
         <div data-register={r.win.weekly.id} data-layer="L3">
@@ -281,8 +288,8 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
             testid="weekly-register"
             head={[
               "Week to",
-              "Received",
-              "Closed",
+              "Received (index)",
+              "Closed (index)",
               "Pending, weeks",
               "Over 30",
               "Rejected",
