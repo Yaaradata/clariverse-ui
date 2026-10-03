@@ -1,12 +1,12 @@
 [
  {
-  "route": "/indusind-v1",
+  "route": "/role-based/indusind_bank/customer-pulse",
   "gaps": [
    {
     "gap": 46,
     "h": 291,
     "cols": 2,
-    "y": 2007,
+    "y": 2073,
     "at": 205,
     "title": "Conduct rules from pending verification: pending verificatio"
    },
@@ -14,28 +14,52 @@
     "gap": 41,
     "h": 41,
     "cols": 2,
-    "y": 2477,
+    "y": 2543,
     "at": 0,
     "title": "IO quarterly complaint-pattern analysis: next quarter-end"
    },
    {
-    "gap": 24,
-    "h": 71,
+    "gap": 37,
+    "h": 89,
     "cols": 3,
-    "y": 356,
+    "y": 334,
+    "at": 51,
+    "title": "PUBLIC ITEMS"
+   },
+   {
+    "gap": 31,
+    "h": 660,
+    "cols": 3,
+    "y": 267,
+    "at": 548,
+    "title": "Outside"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
     "at": 16,
     "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
+    "at": 16,
+    "title": "PLAY STORE · BANK REPLIED"
    }
   ]
  },
  {
-  "route": "/indusind-v1?v=cx",
+  "route": "/role-based/indusind_bank/customer-pulse?v=cx",
   "gaps": [
    {
     "gap": 46,
     "h": 286,
     "cols": 2,
-    "y": 2696,
+    "y": 2762,
     "at": 205,
     "title": "Conduct rules from pending verification: pending verificatio"
    },
@@ -43,28 +67,52 @@
     "gap": 41,
     "h": 41,
     "cols": 2,
-    "y": 3160,
+    "y": 3226,
     "at": 0,
     "title": "IO quarterly complaint-pattern analysis: next quarter-end"
    },
    {
-    "gap": 24,
-    "h": 71,
+    "gap": 37,
+    "h": 89,
     "cols": 3,
-    "y": 356,
+    "y": 334,
+    "at": 51,
+    "title": "PUBLIC ITEMS"
+   },
+   {
+    "gap": 31,
+    "h": 660,
+    "cols": 3,
+    "y": 267,
+    "at": 548,
+    "title": "Outside"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
     "at": 16,
     "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
+    "at": 16,
+    "title": "PLAY STORE · BANK REPLIED"
    }
   ]
  },
  {
-  "route": "/indusind-v1?b=cards",
+  "route": "/role-based/indusind_bank/customer-pulse?b=cards",
   "gaps": [
    {
     "gap": 46,
     "h": 291,
     "cols": 2,
-    "y": 2007,
+    "y": 2073,
     "at": 205,
     "title": "Conduct rules from pending verification: pending verificatio"
    },
@@ -72,28 +120,52 @@
     "gap": 41,
     "h": 41,
     "cols": 2,
-    "y": 2477,
+    "y": 2543,
     "at": 0,
     "title": "IO quarterly complaint-pattern analysis: next quarter-end"
    },
    {
-    "gap": 24,
-    "h": 71,
+    "gap": 37,
+    "h": 89,
     "cols": 3,
-    "y": 356,
+    "y": 334,
+    "at": 51,
+    "title": "PUBLIC ITEMS"
+   },
+   {
+    "gap": 31,
+    "h": 660,
+    "cols": 3,
+    "y": 267,
+    "at": 548,
+    "title": "Outside"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
     "at": 16,
     "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
+    "at": 16,
+    "title": "PLAY STORE · BANK REPLIED"
    }
   ]
  },
  {
-  "route": "/indusind-v1?v=cx&b=cards",
+  "route": "/role-based/indusind_bank/customer-pulse?v=cx&b=cards",
   "gaps": [
    {
     "gap": 46,
     "h": 286,
     "cols": 2,
-    "y": 2696,
+    "y": 2762,
     "at": 205,
     "title": "Conduct rules from pending verification: pending verificatio"
    },
@@ -101,28 +173,52 @@
     "gap": 41,
     "h": 41,
     "cols": 2,
-    "y": 3160,
+    "y": 3226,
     "at": 0,
     "title": "IO quarterly complaint-pattern analysis: next quarter-end"
    },
    {
-    "gap": 24,
-    "h": 71,
+    "gap": 37,
+    "h": 89,
     "cols": 3,
-    "y": 356,
+    "y": 334,
+    "at": 51,
+    "title": "PUBLIC ITEMS"
+   },
+   {
+    "gap": 31,
+    "h": 660,
+    "cols": 3,
+    "y": 267,
+    "at": 548,
+    "title": "Outside"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
     "at": 16,
     "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
+    "at": 16,
+    "title": "PLAY STORE · BANK REPLIED"
    }
   ]
  },
  {
-  "route": "/indusind-v1?w=week",
+  "route": "/role-based/indusind_bank/customer-pulse?w=week",
   "gaps": [
    {
     "gap": 46,
     "h": 291,
     "cols": 2,
-    "y": 2026,
+    "y": 2073,
     "at": 205,
     "title": "Conduct rules from pending verification: pending verificatio"
    },
@@ -130,28 +226,52 @@
     "gap": 41,
     "h": 41,
     "cols": 2,
-    "y": 2496,
+    "y": 2543,
     "at": 0,
     "title": "IO quarterly complaint-pattern analysis: next quarter-end"
    },
    {
-    "gap": 24,
-    "h": 71,
+    "gap": 37,
+    "h": 89,
     "cols": 3,
-    "y": 356,
+    "y": 334,
+    "at": 51,
+    "title": "PUBLIC ITEMS"
+   },
+   {
+    "gap": 31,
+    "h": 660,
+    "cols": 3,
+    "y": 267,
+    "at": 548,
+    "title": "Outside"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
     "at": 16,
     "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
+    "at": 16,
+    "title": "PLAY STORE · BANK REPLIED"
    }
   ]
  },
  {
-  "route": "/indusind-v1?w=w13",
+  "route": "/role-based/indusind_bank/customer-pulse?w=w13",
   "gaps": [
    {
     "gap": 46,
     "h": 291,
     "cols": 2,
-    "y": 2084,
+    "y": 2123,
     "at": 205,
     "title": "Conduct rules from pending verification: pending verificatio"
    },
@@ -159,28 +279,52 @@
     "gap": 41,
     "h": 41,
     "cols": 2,
-    "y": 2554,
+    "y": 2592,
     "at": 0,
     "title": "IO quarterly complaint-pattern analysis: next quarter-end"
    },
    {
-    "gap": 24,
-    "h": 71,
+    "gap": 37,
+    "h": 89,
     "cols": 3,
-    "y": 356,
+    "y": 334,
+    "at": 51,
+    "title": "PUBLIC ITEMS"
+   },
+   {
+    "gap": 31,
+    "h": 728,
+    "cols": 3,
+    "y": 267,
+    "at": 616,
+    "title": "Outside"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
     "at": 16,
     "title": "ESCALATION LANGUAGE"
+   },
+   {
+    "gap": 24,
+    "h": 89,
+    "cols": 3,
+    "y": 334,
+    "at": 16,
+    "title": "PLAY STORE · BANK REPLIED"
    }
   ]
  },
  {
-  "route": "/indusind-v1/deposits",
+  "route": "/role-based/indusind_bank/customer-pulse/deposits",
   "gaps": [
    {
     "gap": 45,
     "h": 366,
     "cols": 2,
-    "y": 209,
+    "y": 228,
     "at": 287,
     "title": "What"
    },
@@ -188,7 +332,7 @@
     "gap": 40,
     "h": 50,
     "cols": 3,
-    "y": 145,
+    "y": 164,
     "at": 5,
     "title": "Savings and flows"
    },
@@ -196,7 +340,7 @@
     "gap": 40,
     "h": 50,
     "cols": 3,
-    "y": 145,
+    "y": 164,
     "at": 5,
     "title": "Cost of deposits"
    },
@@ -204,7 +348,7 @@
     "gap": 40,
     "h": 50,
     "cols": 3,
-    "y": 145,
+    "y": 164,
     "at": 5,
     "title": "Retail franchise"
    },
@@ -212,20 +356,20 @@
     "gap": 28,
     "h": 350,
     "cols": 2,
-    "y": 1425,
+    "y": 1444,
     "at": 121,
     "title": "How highi"
    }
   ]
  },
  {
-  "route": "/indusind-v1/deposits?w=w13",
+  "route": "/role-based/indusind_bank/customer-pulse/deposits?w=w13",
   "gaps": [
    {
     "gap": 45,
     "h": 366,
     "cols": 2,
-    "y": 209,
+    "y": 228,
     "at": 287,
     "title": "What"
    },
@@ -233,7 +377,7 @@
     "gap": 40,
     "h": 50,
     "cols": 3,
-    "y": 145,
+    "y": 164,
     "at": 5,
     "title": "Savings and flows"
    },
@@ -241,7 +385,7 @@
     "gap": 40,
     "h": 50,
     "cols": 3,
-    "y": 145,
+    "y": 164,
     "at": 5,
     "title": "Cost of deposits"
    },
@@ -249,7 +393,7 @@
     "gap": 40,
     "h": 50,
     "cols": 3,
-    "y": 145,
+    "y": 164,
     "at": 5,
     "title": "Retail franchise"
    },
@@ -257,34 +401,34 @@
     "gap": 28,
     "h": 350,
     "cols": 2,
-    "y": 1425,
+    "y": 1444,
     "at": 121,
     "title": "How highi"
    }
   ]
  },
  {
-  "route": "/indusind-v1/peers",
+  "route": "/role-based/indusind_bank/customer-pulse/peers",
   "gaps": []
  },
  {
-  "route": "/indusind-v1/risk",
+  "route": "/role-based/indusind_bank/customer-pulse/risk",
   "gaps": []
  },
  {
-  "route": "/indusind-v1/risk?w=week",
+  "route": "/role-based/indusind_bank/customer-pulse/risk?w=week",
   "gaps": []
  },
  {
-  "route": "/indusind-v1/cards",
+  "route": "/role-based/indusind_bank/customer-pulse/cards",
   "gaps": []
  },
  {
-  "route": "/indusind-v1/cards?w=w13",
+  "route": "/role-based/indusind_bank/customer-pulse/cards?w=w13",
   "gaps": []
  },
  {
-  "route": "/indusind-v1/approvals",
+  "route": "/role-based/indusind_bank/customer-pulse/approvals",
   "gaps": []
  }
 ]
