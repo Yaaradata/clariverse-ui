@@ -4,9 +4,32 @@
     {
       "name": "frontend",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "frontend", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "frontend",
+        "run",
+        "dev"
+      ],
       "port": 3000,
       "autoPort": true
+    },
+    {
+      "name": "dev3200",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd frontend && npx next dev -p 3200"
+      ],
+      "port": 3200
+    },
+    {
+      "name": "prod3100",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "cd frontend && npx next start -p 3100"
+      ],
+      "port": 3100
     }
   ]
 }
