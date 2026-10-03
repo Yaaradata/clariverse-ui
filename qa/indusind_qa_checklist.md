@@ -55,3 +55,17 @@ fails until it arrives.
 
 Head of Cards opens S-CARDS. The earlier cards demo (`/role-based/indusind_bank/head_cards`) is unlisted, so the crawl does
 not reach it; noindex still covers it.
+
+## Re-judged on IND-D1 figures (3 Oct 2026)
+
+IND-D1 and its v1.1 addendum are in `docs/indusind/`; the register holds 59 verified, 11 derived and 10 held entries.
+
+| # | Item | Result | Evidence |
+|---|---|---|---|
+| 1 | Every on-screen number checked against the register; labels and bases match IND-D1 | **PASS** | `check_indusind.py`: 2,166 bound figures, 0 failures; every L1 display equals its IND-D1 value, computed views (days to go, "4% below a year ago", "6.44% → 5.95%") recomputed from the register, and 1,858 public and internal displays traced to their values; the fill script recomputes D01–D11 and S01–S07 and fails on any difference from the addendum |
+| 3 | Reconciliation: business row = module; Cards row = S-CARDS; L3 totals = register at 31 Mar and 30 Jun | **PASS** | Rows = home pulse per business and Cards row = Cards screen in every window (internal and public), with fixtures; the seed's 31 Mar and 30 Jun balances carry the register's verified values (N03–N06, D03, D04) |
+| 4 | Depth test per home card | **FAIL (one part)** | Rupee line or exposure: A ≈ ₹7,500 crore moved, ≈ ₹170–275 crore a year with its caveats; B ≈ ₹41.5 crore a year per bp; C ≈ ₹100 crore a year per 10 bp; D the exposure statement. True peer: A CASA (IDFC First, Yes, Federal), B cost of deposits (Federal 5.21%, Yes 5.4%; IDFC First cost of funds on its own row); C and D greyed "pending verification" (held peers). Owner and drafted action: all four. **What customers said: no card reaches 15 public items for a claim in the last 4 weeks** (only INDIE app reviews are licensed for screen), so each shows "Not enough public items this window" |
+| 5 | Exactly four tiles; one computed quiet item; Improving strip with verified items only | **PASS** | Four tiles on every home variant; quiet item from a passed check; Improving: cost of deposits 6.44% → 5.95% year on year, retail deposits 49.5%, home loans ₹6,889 crore (+38% YoY), CRISIL outlook Stable from Negative, all verified |
+
+Volume (HL-18): intake 0.8× N31 (pass); the pending stock is 5.5× below N32's FY25 year-end figure, justified in
+`qa/indusind_volume_validation.md` (broadened FY25 classification) and flagged.
