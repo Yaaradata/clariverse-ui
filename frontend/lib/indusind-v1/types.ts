@@ -55,7 +55,8 @@ export type VoiceBlock = {
   items: Fig;
   by_source: (Fig & { share: number })[];
   escalation: Fig;
-  responded: Fig | null;
+  responded: (Fig & { n: number; n_display: string }) | null;
+  clipped_from?: string | null;
   theme: Theme;
   footnotes: string[];
   negative?: Fig;
@@ -219,6 +220,7 @@ export type HomeWindow = {
   outside: VoiceBlock & {
     rating: Rating | null;
     trend: Trend & { starts: string | null };
+    before: { from: string; to: string; items: Fig } | null;
   };
   doing: {
     savings: Fig[];

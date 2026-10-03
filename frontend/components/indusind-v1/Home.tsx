@@ -276,6 +276,7 @@ function Pulse({
             defs={common.defs}
             rating={s.win.outside.rating}
             trend={s.win.outside.trend}
+            before={s.win.outside.before}
             caption={common.pulse_caption}
           />
         </Tile>

@@ -121,8 +121,12 @@ def main() -> int:
     md += ["- **Google Play, INDIE: capped run.** The collector stopped at its 5,000-review cap (newest first), so INDIE Play "
            "covers 10 Aug–30 Sep only. 1 Jul–9 Aug is missing: a mid-window start. Play series are plotted as shares, "
            "and every Play count for a window that starts before 10 Aug is footnoted.",
-           "- **Apple App Store: thin September.** 210 INDIE reviews in August, 16 in September (two collector slices). "
-           "Read as a collection artefact until re-pulled.",
+           "- **Apple App Store: thin September, investigated.** 210 INDIE reviews in August, 16 in September. Not a "
+           "slice boundary: the \"Jul–Aug\" run returned 287 reviews dated up to 26 Sep (one scrape, 1 Oct) and the "
+           "September run returned the same 16, so both runs agree. Reviews taper from about five a day in mid-August to "
+           "one a week by late September, while Google Play rose about a quarter over the same weeks (no store-specific "
+           "outage or release explains a 90% fall on iOS alone). August's peak follows release 2.4.1 (106 reviews). "
+           "Read as a collection gap (the store's public review feed), footnoted on screen, until re-pulled.",
            "- **Sudden jumps.** X: 660 items in the week to 2 Oct and 322 in the week to 24 Jul, against about 100 in a "
            "typical week (event or campaign spikes; pending anyway). App Store: 136 in the week to 7 Aug against 0–35 "
            "in the other weeks (a collector slice boundary).",

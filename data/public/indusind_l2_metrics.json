@@ -2,8 +2,8 @@
  "about": "Every public (L2) figure shown on the IndusInd pages, by id pattern (the window suffix is dropped). Written by scripts/build_indusind.py.",
  "metrics": {
   "L2:LIVE-01:indie_play_rating": {
-   "label": "INDIE on Google Play",
-   "definition": "Listing rating, one store, dated to the scrape"
+   "label": "INDIE listing rating, all-time",
+   "definition": "Google Play listing rating, all-time, one store, dated to the scrape; not a window figure"
   },
   "L2:card_category_items:activation": {
    "label": "Activation",
@@ -117,12 +117,12 @@
    "label": "Public items",
    "definition": "On-topic public items in the window, core sources"
   },
+  "L2:items_before_play:all": {
+   "label": "App Store only, before Google Play starts",
+   "definition": "Public items before the first Google Play review; shown apart, never added to a total"
+  },
   "L2:items_by_source:all:appstore": {
    "label": "Apple App Store",
-   "definition": "Public items from one source"
-  },
-  "L2:items_by_source:all:consumercomplaints": {
-   "label": "consumercomplaints.in",
    "definition": "Public items from one source"
   },
   "L2:items_by_source:all:play": {
@@ -149,24 +149,12 @@
    "label": "Apple App Store",
    "definition": "Public items from one source"
   },
-  "L2:items_by_source:digital:consumercomplaints": {
-   "label": "consumercomplaints.in",
-   "definition": "Public items from one source"
-  },
   "L2:items_by_source:digital:play": {
    "label": "Google Play",
    "definition": "Public items from one source"
   },
-  "L2:items_by_source:other:appstore": {
-   "label": "Apple App Store",
-   "definition": "Public items from one source"
-  },
   "L2:items_by_source:other:play": {
    "label": "Google Play",
-   "definition": "Public items from one source"
-  },
-  "L2:items_by_source:personal:consumercomplaints": {
-   "label": "consumercomplaints.in",
    "definition": "Public items from one source"
   },
   "L2:items_by_source:personal:play": {
@@ -178,19 +166,19 @@
    "definition": "Deposit items that name a peer bank (switching talk)"
   },
   "L2:responded_share:all": {
-   "label": "Responded, Google Play",
+   "label": "Play Store · bank replied",
    "definition": "Share of Google Play reviews with a reply from the bank"
   },
   "L2:responded_share:cards": {
-   "label": "Responded, Google Play",
+   "label": "Play Store · bank replied",
    "definition": "Share of Google Play reviews with a reply from the bank"
   },
   "L2:responded_share:deposits": {
-   "label": "Responded, Google Play",
+   "label": "Play Store · bank replied",
    "definition": "Share of Google Play reviews with a reply from the bank"
   },
   "L2:responded_share:digital": {
-   "label": "Responded, Google Play",
+   "label": "Play Store · bank replied",
    "definition": "Share of Google Play reviews with a reply from the bank"
   },
   "L2:security_block_share_weekly": {
@@ -205,10 +193,6 @@
    "label": "Card missing from the app: items",
    "definition": "On-topic public items in the window carrying this theme"
   },
-  "L2:theme_items:deposits:debit_card": {
-   "label": "Debit card set-up: items",
-   "definition": "On-topic public items in the window carrying this theme"
-  },
   "L2:theme_items:digital:security_block": {
    "label": "App blocked as a security risk: items",
    "definition": "On-topic public items in the window carrying this theme"
@@ -219,10 +203,6 @@
   },
   "L2:theme_share:cards:card_not_visible": {
    "label": "Card missing from the app: share of items",
-   "definition": "Theme items as a share of the scope's public items"
-  },
-  "L2:theme_share:deposits:debit_card": {
-   "label": "Debit card set-up: share of items",
    "definition": "Theme items as a share of the scope's public items"
   },
   "L2:theme_share:digital:security_block": {

@@ -124,12 +124,14 @@ export function OutsideMeter({
   defs,
   rating,
   trend,
+  before,
   caption,
 }: {
   v: VoiceBlock;
   defs: Record<string, string>;
   rating?: Rating | null;
   trend?: Trend & { starts: string | null };
+  before?: { to: string; items: FigT } | null;
   caption?: string;
 }) {
   const max = Math.max(...v.by_source.map((s) => s.share ?? 0), 1);
@@ -146,7 +148,17 @@ export function OutsideMeter({
           f={v.escalation}
           info={defs.escalation_public}
         />
-        <Stat label="Responded" f={v.responded} info={defs.responded} />
+        <Stat
+          label="Play Store · bank replied"
+          f={v.responded}
+          info={defs.responded}
+        >
+          {v.responded ? (
+            <div style={{ fontSize: 12, color: C.textMut }}>
+              n = {v.responded.n_display}
+            </div>
+          ) : null}
+        </Stat>
       </div>
       {v.negative ? <Stat label="Negative share" f={v.negative} /> : null}
       <div>
@@ -165,18 +177,6 @@ export function OutsideMeter({
           />
         ))}
       </div>
-      {rating ? (
-        <div
-          data-register={rating.id}
-          style={{ fontSize: 13, color: C.textSec }}
-        >
-          {rating.label}:{" "}
-          <strong style={{ color: C.text, fontFamily: MONO }}>
-            {rating.display}
-          </strong>{" "}
-          from {rating.ratings_display} ratings · as of {fmtDate(rating.as_of)}
-        </div>
-      ) : null}
       <div>
         <Label>Top theme</Label>
         <div style={{ marginTop: 3 }}>
@@ -199,9 +199,42 @@ export function OutsideMeter({
               points={{ ...t.points, unit: "%" }}
             />
           </div>
+          {trend?.starts ? (
+            <div style={{ fontSize: 11.5, color: C.textMut, marginTop: 2 }}>
+              ▸ Starts {fmtDate(trend.starts)}, the first Google Play review in
+              the pull
+            </div>
+          ) : null}
+        </div>
+      ) : null}
+      {before ? (
+        <div
+          data-register={before.items.id}
+          style={{ fontSize: 12.5, color: C.textMut }}
+        >
+          Before {fmtDate(before.to)}, App Store only: {before.items.display}{" "}
+          items, not added in.
         </div>
       ) : null}
       <Footnotes notes={v.footnotes} />
+      {rating ? (
+        // The listing rating is all-time and dated: it sits apart from the window's figures.
+        <div
+          data-register={rating.id}
+          style={{
+            fontSize: 12.5,
+            color: C.textMut,
+            borderTop: `1px solid ${C.border}`,
+            paddingTop: 8,
+          }}
+        >
+          {rating.label}, as of {fmtDate(rating.as_of)}:{" "}
+          <strong style={{ color: C.text, fontFamily: MONO }}>
+            {rating.display}
+          </strong>{" "}
+          from {rating.ratings_display} ratings (Google Play).
+        </div>
+      ) : null}
       {caption ? <MutedNote>{caption}</MutedNote> : null}
     </div>
   );

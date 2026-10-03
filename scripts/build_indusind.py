@@ -417,7 +417,7 @@ def home() -> dict:
         per_w = {
             "pulse": per,
             "outside": {**M.voice_block(M.in_window(L2, w["id"]), "all", w["id"]), "rating": M.rating_fig(),
-                        "trend": M.security_trend(L2)},
+                        "trend": M.security_trend(L2), "before": M.before_block(L2, w["id"], "all")},
             "doing": {
                 "savings": [l1("N04"), l1("N06"), l1("N07"), l1("D08")],
                 "outflow_index": sa_out,

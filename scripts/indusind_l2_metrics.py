@@ -49,11 +49,15 @@ ALLEGATION_LABEL = {
 REGISTERED: dict[str, dict] = {}
 
 
+ALL: list[dict] = []
+
+
 def load() -> list[dict]:
-    global PLAY_START
+    global PLAY_START, ALL
     items = [json.loads(line) for line in open(PROC / "items.jsonl", encoding="utf-8")]
     items = [i for i in items if i["on_topic"] and not i["duplicate_of"]]
     PLAY_START = min(dt.datetime.fromisoformat(i["created_at"]) for i in items if i["source"] == "play")
+    ALL = items
     return items
 
 
@@ -66,9 +70,28 @@ def window(wid: str) -> tuple[dt.datetime, dt.datetime]:
     return FREEZE - dt.timedelta(days=7 * n), FREEZE
 
 
+def effective_start(wid: str) -> dt.datetime:
+    """A window reaching back before the first Google Play review starts at it instead: no total crosses that date."""
+    a, _ = window(wid)
+    return max(a, PLAY_START) if PLAY_START else a
+
+
+def clipped(wid: str) -> bool:
+    a, _ = window(wid)
+    return bool(PLAY_START and PLAY_START > a)
+
+
 def in_window(items: list[dict], wid: str) -> list[dict]:
-    a, b = window(wid)
-    return [i for i in items if a < dt.datetime.fromisoformat(i["created_at"]) <= b]
+    a, b = effective_start(wid), window(wid)[1]
+    return [i for i in items if a <= dt.datetime.fromisoformat(i["created_at"]) <= b and
+            (clipped(wid) or a < dt.datetime.fromisoformat(i["created_at"]))]
+
+
+def before_play(items: list[dict], wid: str, products: set[str] | None = None) -> list[dict]:
+    """Items in the window but before Google Play starts (App Store and forums only): shown apart, never added in."""
+    a, _ = window(wid)
+    return [i for i in items if a < dt.datetime.fromisoformat(i["created_at"]) < effective_start(wid)
+            and (products is None or i["product"] in products)]
 
 
 def fmt_int(n: int) -> str:
@@ -99,11 +122,20 @@ def thin(what: str) -> dict:
 
 
 def coverage_note(wid: str, sources: set[str]) -> str | None:
-    a, _ = window(wid)
-    if "play" in sources and PLAY_START and PLAY_START > a:
-        return (f"Google Play reviews start {PLAY_START.day} {PLAY_START:%b} (the collector's cap); "
-                "earlier weeks hold App Store items only.")
+    if clipped(wid):
+        return (f"Counted from {PLAY_START.day} {PLAY_START:%b}, when Google Play reviews start (the collector's cap). "
+                "App Store items before that date are shown apart and not added in.")
     return None
+
+
+def appstore_note(items_all: list[dict], xs: list[dict]) -> str | None:
+    """The App Store's September drop, footnoted wherever App Store items count (read as a collection gap)."""
+    if not any(i["source"] == "appstore" for i in xs):
+        return None
+    aug = sum(1 for i in items_all if i["source"] == "appstore" and i["created_at"][:7] == "2026-08")
+    sep = sum(1 for i in items_all if i["source"] == "appstore" and i["created_at"][:7] == "2026-09")
+    return (f"App Store: {sep} INDIE reviews in September against {aug} in August, while Google Play rose; "
+            "read as a collection gap until re-pulled.")
 
 
 def source_note(xs: list[dict]) -> tuple[str | None, list[dict]]:
@@ -147,6 +179,7 @@ def voice_block(xs: list[dict], scope: str, wid: str) -> dict:
     esc = sum("escalation_language" in i["topic_tags"] for i in xs)
     play = [i for i in xs if i["source"] == "play"]
     resp = sum(1 for i in play if i["responded"])
+    a_note = appstore_note(ALL, xs)
     out = {
         "layer": "L2", "tag": TAG, "loaded": True, "thin": n < L2C["min_items"], "text": L2C["not_enough"],
         "items": fig(f"L2:items:{scope}:{wid}", n, fmt_int(n), "Public items", "On-topic public items in the window, core sources"),
@@ -154,11 +187,14 @@ def voice_block(xs: list[dict], scope: str, wid: str) -> dict:
                           "Public items from one source", share=s["share"]) for s in by_src],
         "escalation": fig(f"L2:escalation:{scope}:{wid}", esc, fmt_int(esc), "Escalation language",
                           "Items naming the RBI, the Ombudsman or a court"),
+        # Play only (the only store that returns replies); never blended across stores.
         "responded": (fig(f"L2:responded_share:{scope}:{wid}", pct(resp, len(play)), f"{pct(resp, len(play))}%",
-                          "Responded, Google Play", "Share of Google Play reviews with a reply from the bank")
+                          "Play Store · bank replied", "Share of Google Play reviews with a reply from the bank",
+                          n=len(play), n_display=fmt_int(len(play)))
                       if len(play) >= L2C["min_items"] else None),
         "theme": top_theme(xs, scope, wid),
-        "footnotes": [x for x in (note, coverage_note(wid, {i["source"] for i in xs})) if x],
+        "footnotes": [x for x in (note, coverage_note(wid, {i["source"] for i in xs}), a_note) if x],
+        "clipped_from": PLAY_START.date().isoformat() if clipped(wid) else None,
     }
     if CONFIG["flags"].get("sentiment_check_passed"):
         neg = sum(i["sentiment"] == "negative" for i in xs if "trust_governance" not in i["topic_tags"])
@@ -177,6 +213,8 @@ def security_trend(items: list[dict], wid: str = "w13") -> dict:
         start = end - dt.timedelta(days=7)
         if start < a:
             break
+        if PLAY_START and end - PLAY_START < dt.timedelta(days=3):
+            break  # weeks mostly before the first Play review are not plotted: the series starts at the marker
         xs = [i for i in items if start < dt.datetime.fromisoformat(i["created_at"]) <= end and i["product"] == "app_digital"]
         v = pct(sum(i["theme"] == "security_block" for i in xs), len(xs)) if len(xs) >= L2C["min_items"] else None
         pts.insert(0, {"end": end.date().isoformat(), "value": v})
@@ -191,8 +229,9 @@ def rating_fig() -> dict | None:
     m = listing()
     if not m:
         return None
-    return fig("L2:LIVE-01:indie_play_rating", m["score"], f"{m['score']}", "INDIE on Google Play",
-               "Listing rating, one store, dated to the scrape", store=m["store"], ratings=m["ratings"],
+    return fig("L2:LIVE-01:indie_play_rating", m["score"], f"{m['score']}", "INDIE listing rating, all-time",
+               "Google Play listing rating, all-time, one store, dated to the scrape; not a window figure",
+               store=m["store"], ratings=m["ratings"],
                ratings_display=fmt_int(m["ratings"]), as_of=m["as_of"])
 
 
@@ -243,7 +282,7 @@ def card_voice(card_id: str, tags: list[str], items: list[dict], wid: str) -> di
                                "Deposit items that name a peer bank (switching talk)")
         out["switching_thin"] = len(sw) < L2C["min_items"]
     note, _ = source_note(xs)
-    out["footnotes"] = [x for x in (note, coverage_note(wid, {i["source"] for i in xs})) if x]
+    out["footnotes"] = [x for x in (note, coverage_note(wid, {i["source"] for i in xs}), appstore_note(ALL, xs)) if x]
     return out
 
 
@@ -283,3 +322,14 @@ def cards_external(items: list[dict], wid: str) -> dict:
     praise = [i for i in xs if i["sentiment"] == "positive" and not i["short"]]
     block["praise"] = {"show": len(praise) >= L2C["min_items"], "count": len(praise)}
     return block
+
+
+def before_block(items: list[dict], wid: str, scope: str, products: set[str] | None = None) -> dict | None:
+    """The App Store-only items before Google Play starts, for a window that reaches back past it. Not in any total."""
+    if not clipped(wid):
+        return None
+    xs = before_play(items, wid, products)
+    return {"from": window(wid)[0].date().isoformat(), "to": PLAY_START.date().isoformat(),
+            "items": fig(f"L2:items_before_play:{scope}:{wid}", len(xs), fmt_int(len(xs)),
+                         "App Store only, before Google Play starts",
+                         "Public items before the first Google Play review; shown apart, never added to a total")}

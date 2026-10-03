@@ -207,7 +207,7 @@ copy:
     closure_risk: "Card accounts flagged at risk of closure, as an index: Q1 weekly average = 100. Aggregate only; no customer list."
     l2_items: "Public items in the window: INDIE reviews on Google Play and the App Store, and consumercomplaints.in. X and Reddit wait on a licence decision. Counts, not incidence."
     escalation_public: "Public items naming the RBI, the Ombudsman, a court or cyber crime."
-    responded: "Share of Google Play reviews with a reply from the bank (Play returns the reply). Other sources do not return replies."
+    responded: "Share of the window's Google Play reviews with a reply from the bank (Play returns the reply), with n, the number of Play reviews. Other stores do not return replies, so no figure is blended across stores."
     security_trend: "Weekly share of app items saying the app blocks the phone as unsafe (threat detected, secure operating system, screen reader). Shares, not counts: Play reviews start mid-window."
     weekly: "Received and closed in the week: indices on the Q1 weekly intake (= 100). Pending: complaints with no final reply at the week end, in weeks of Q1 intake. Over 30: share of pending with no final reply after 30 days. Rejected, reopened and to the IO: shares of the week's final replies."
 
