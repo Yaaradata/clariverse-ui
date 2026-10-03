@@ -47,6 +47,7 @@ export type Theme =
     };
 
 export type VoiceBlock = {
+  /** Escalation count below the minimum items shows the thin state. */
   layer: "L2";
   tag: string;
   loaded: true;
@@ -54,7 +55,7 @@ export type VoiceBlock = {
   text: string;
   items: Fig;
   by_source: (Fig & { share: number })[];
-  escalation: Fig;
+  escalation: Fig & { thin?: boolean };
   responded: (Fig & { n: number; n_display: string }) | null;
   clipped_from?: string | null;
   /** The period the public figures cover: the window, or "since 10 Aug" when Play starts inside it. */
@@ -188,6 +189,8 @@ export type Card = {
   what: Fig[];
   peers: Fig[];
   peers_held: boolean;
+  /** The peer the brief names when the core peers do not apply (Card C: AU vehicle book). */
+  peer_held_label?: string | null;
   voice: CardVoice;
   inside: { text: string; figures?: Fig[] };
   sensitivity: Sens[];
@@ -234,6 +237,8 @@ export type HomeWindow = {
   risk_by_business: { id: string; label: string; share: Fig }[];
   rows: BusinessRow[];
   cards: Card[];
+  /** Public items not tied to one business: shown under the table, not as a row. */
+  unassigned?: Fig;
   quiet: (Fig & { text: string; passed: boolean }) | null;
 };
 

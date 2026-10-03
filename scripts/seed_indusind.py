@@ -259,6 +259,13 @@ def card_category_trend(cat: str, i: int, n_weeks: int) -> float:
     return max(0.3, 1 + slope * x + amp * math.sin(i / period + phase))
 
 
+def card_category_profile(cat: str) -> tuple[float, float, float]:
+    """Each category's own open, waiting and negative shares (seeded, neutral: no category is made to lead), so the
+    Cards table tells categories apart (review finding 16). Negative stays inside the 9-16% band (HL-19)."""
+    r = random.Random(f"{SEED}:card-profile:{cat}")
+    return r.uniform(0.04, 0.14), r.uniform(0.02, 0.09), r.uniform(0.09, 0.16)
+
+
 def cards_internal(weeks) -> list[dict]:
     rng = random.Random(f"{SEED}:cards")
     out = []
@@ -267,11 +274,12 @@ def cards_internal(weeks) -> list[dict]:
         for cat, cs in CARD_CATEGORIES.items():
             for ch, chs in CONTACT_CHANNELS.items():
                 n = int(round(total * cs * card_category_trend(cat, i, len(weeks)) * chs * rng.uniform(0.88, 1.12)))
-                opn = int(round(n * rng.uniform(0.05, 0.11)))
-                wait = int(round(n * rng.uniform(0.03, 0.07)))
+                prof = card_category_profile(cat)
+                opn = int(round(n * prof[0] * rng.uniform(0.9, 1.1)))
+                wait = int(round(n * prof[1] * rng.uniform(0.9, 1.1)))
                 out.append({"week_ending": end.date().isoformat(), "category": cat, "channel": ch, "contacts": n,
                             "resolved": n - opn - wait, "open": opn, "waiting_on_customer": wait,
-                            "negative": int(round(n * NEGATIVE_SHARE * rng.uniform(0.8, 1.3))),
+                            "negative": int(round(n * prof[2] * rng.uniform(0.9, 1.1))),
                             "closure_risk": int(round(n * CLOSURE_RISK[cat] * rng.uniform(0.85, 1.15)))})
     return out
 

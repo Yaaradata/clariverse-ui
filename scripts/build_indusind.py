@@ -304,6 +304,7 @@ def card_payload(card: dict, w: dict) -> dict:
         "what": [l1(r) for r in card["figures"]],
         "peers": [l1(r) for r in card["peers"]],
         "peers_held": not card["peers"],
+        "peer_held_label": card.get("peer_held_label"),
         "voice": M.card_voice(card["id"], card["voice_tags"], L2, w["id"]),
         "inside": inside,
         "sensitivity": [sens(s) for s in card["sensitivity"]],
@@ -458,10 +459,8 @@ def home() -> dict:
             rows.append({"id": b["id"], "label": b["label"], "next": bool(b.get("next")), "inside": inside,
                          "outside": ob, "theme": ob["theme"],
                          "money": [l1(r) for r in b["money"]], "module": b["module"]})
-        # Public items not tied to one business, so the home total is the sum of the rows.
-        ob = M.voice_block(M.business_items(L2, "other", w["id"]), "other", w["id"])
-        rows.append({"id": "other", "label": "Not tied to one business", "next": False, "outside_only": True,
-                     "inside": None, "outside": ob, "theme": ob["theme"], "money": [], "module": None})
+        # Public items not tied to one business sit apart (no extra row); rows plus these equal the home total.
+        unassigned = M.voice_block(M.business_items(L2, "other", w["id"]), "other", w["id"])["items"]
         sa_out = deposit_flow_index("SA", "outflow", w)
         per_w = {
             "pulse": per,
@@ -475,6 +474,7 @@ def home() -> dict:
             },
             "risk_by_business": by_business_risk(w),
             "rows": rows,
+            "unassigned": unassigned,
             "cards": [card_payload(c, w) for c in CONFIG["cards"]],
             "quiet": quiet_item(w),
         }
@@ -581,7 +581,11 @@ def register_weekly() -> list[dict]:
         replied = [c for c in D.cs if (t := when(c["final_reply_at"])) and b < t <= e]
         st = [x for x in (SEED.complaint_state(c, e) for c in D.cs if c["_rec"] <= e) if x and x["pending"]]
         back = sum(1 for c in D.cs if (t := when(c["unhappy_at"])) and b < t <= e)
-        to_io = sum(1 for c in D.cs if (t := when(c["decision_at"])) and b < t <= e)
+        # To the IO: every rejection in the week's replies (each was reviewed by the IO first) plus reviews opened in the
+        # week for complaints not yet replied, so referrals never sit below rejections (review finding 13).
+        rej_ids = {c["id"] for c in replied if c["outcome"] == "rejected"}
+        opened = {c["id"] for c in D.cs if (t := when(c["decision_at"])) and b < t <= e and not c["final_reply_at"]}
+        to_io = len(rej_ids | opened)
         rows.append({
             "end": wk.isoformat(),
             "received_index": round(100 * len(received) / q1w),
@@ -604,6 +608,7 @@ def risk_page() -> dict:
                         for h in CONFIG["horizon"]],
            "register": [l1("N31"), l1("N32")],
            "penalties": [l1("N33"), l1("N34")],
+           "penalty_note": "Both RBI penalties cite the Interest Rate on Deposits Directions",
            "card_d": None, "windows": {},
            "checklist": [
                {"item": "12 months of complaints about insurance or investment sales reviewed", "status": "Not started"},
@@ -685,6 +690,8 @@ def cards_page() -> dict:
                              "no earlier period" if ch is None else f"{'+' if ch > 0 else '−' if ch < 0 else ''}{abs(ch):.1f} pts"),
             })
             k = sum(r["closure_risk"] for r in xs)
+            if cid == "closure":
+                continue  # circular: closure requests are the closure risk (review finding 19)
             at_risk.append(l3("cards_internal", "closure_risk_share", cid, W, pct(k, risk_tot), show_pct(pct(k, risk_tot)), label=c["label"]))
         categories.sort(key=lambda r: -(r["share"]["value"] or 0))
         at_risk.sort(key=lambda r: -(r["value"] or 0))

@@ -186,6 +186,10 @@ def main() -> int:
         rid = e["id"]
         e["entity_basis"] = "as_presented"
         # IND-B2 decides what is shown: N15 (DEC-3) and N17 (Rural Banking) are kept in the register, never in copy.
+        if rid == "N36":
+            e["label_on_screen"] = ("Full refund plus compensation where mis-selling is established; compulsory bundling "
+                                    "barred; explicit consent")
+            e["label_short"] = "Conduct rules (Second Amendment) effective"
         if rid in ("N15", "N17"):
             e["not_in_copy"] = True
         if rid in ROWS:

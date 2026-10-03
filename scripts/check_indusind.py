@@ -195,6 +195,15 @@ def run(p: dict) -> list[str]:
         frac = sum(v % worst == 0 for v in small) / len(small)
         ok(frac < 0.30, f"lumpy: {100 * frac:.0f}% of the {len(small)} small values shown are multiples of {worst}")
 
+    # ---- review finding 5: every core peer row carries its register figures (YAML once read "yes" as true)
+    for row in p["peers"]["table"]:
+        if row["tier"] == "Core":
+            ok(bool(row["figures"]), f"peers: core peer {row['bank']} has no register figures")
+
+    # ---- review finding 13: IO referrals never sit below rejections in a week
+    for r in p["risk"]["windows"]["w13"]["weekly"]["rows"]:
+        ok(r["referred_to_io"] >= r["rejected"], f"IO: week to {r['end']} sends {r['referred_to_io']}% to the IO, below {r['rejected']}% rejected")
+
     # ---- Cards categories must not all move one way (a seed artefact a banker would spot)
     for wid, w in p["cards"]["windows"].items():
         ch = [c["change"]["value"] for c in w["categories"] if c["change"]["value"]]
@@ -275,7 +284,7 @@ def run_l2(p: dict) -> list[str]:
             ok(t["unit"] == "%" or dt.date.fromisoformat(t["starts"]) <= a.date(),
                f"L2 series [{wid}]: the trend starts mid-window ({t['starts']}) but is plotted as {t['unit']}, not shares")
         rows = {r["id"]: r for r in w["rows"]}
-        tot = sum(r["outside"]["items"]["value"] for r in w["rows"])
+        tot = sum(r["outside"]["items"]["value"] for r in w["rows"]) + (w.get("unassigned") or {}).get("value", 0)
         ok(tot == w["outside"]["items"]["value"], f"L2 reconcile [{wid}]: rows sum to {tot}, home total is {w['outside']['items']['value']}")
         ok(rows["deposits"]["outside"]["items"]["value"] == p["deposits"]["windows"][wid]["why"]["items"]["value"],
            f"L2 reconcile [{wid}]: Deposits row differs from the Deposits screen")
@@ -326,6 +335,8 @@ FIXTURES = [
         if isinstance(f.get("value"), int) and not isinstance(f.get("value"), bool) and 6 <= f["value"] < 500]),
     ("computed view out of step", "trace:", lambda p: _set(p["home"]["improving"][0], ["display"], "6.40% → 5.95%")),
     ("display not its value", "trace:", lambda p: _set(p["home"]["windows"]["w4"]["outside"]["items"], ["display"], "9,999")),
+    ("core peer row empty", "core peer", lambda p: _set(next(r for r in p["peers"]["table"] if r["tier"] == "Core"), ["figures"], [])),
+    ("IO below rejections", "IO: week", lambda p: _set(p["risk"]["windows"]["w13"]["weekly"]["rows"][0], ["referred_to_io"], 0.1)),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 

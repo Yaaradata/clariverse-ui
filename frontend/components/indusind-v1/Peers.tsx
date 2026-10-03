@@ -47,6 +47,8 @@ export function PeersView({ p, common }: { p: PeersSlice; common: Common }) {
           head={["Bank", "Tier", "Verified figures"]}
           rows={p.table.map((r) => ({
             key: r.bank,
+            // The upper benchmark is greyed: Kotak is a reference, not a core peer (review finding 27).
+            muted: r.tier === "Upper benchmark",
             cells: [
               <strong key="b" style={{ color: C.text }}>
                 {r.bank}

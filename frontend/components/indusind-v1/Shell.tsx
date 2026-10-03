@@ -78,30 +78,6 @@ function ThemeToggle() {
   );
 }
 
-/** Today's date and time, shown once mounted so the server and the browser render the same first frame. */
-function Now() {
-  const [now, setNow] = useState<string>("");
-  useEffect(() => {
-    const f = () =>
-      setNow(
-        new Intl.DateTimeFormat("en-GB", {
-          day: "numeric",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "Asia/Kolkata",
-        })
-          .format(new Date())
-          .replace(",", ""),
-      );
-    f();
-    const t = setInterval(f, 30_000);
-    return () => clearInterval(t);
-  }, []);
-  return <span suppressHydrationWarning>{now ? `${now} IST` : ""}</span>;
-}
-
 function Segmented({
   label,
   items,
@@ -162,6 +138,10 @@ export function Shell({
 }) {
   const view = common.views.find((x) => x.id === sel.v)?.label ?? "";
   const screen = NAV.find((n) => n.href === path)?.label ?? "";
+  // The Cards page is the business head's view, not the CEO's office (review finding 15).
+  const isCards = path === `${BASE}/cards`;
+  const title = isCards ? "Cards — business view" : `Customer pulse — ${view}`;
+  const initials = isCards ? "HC" : sel.v === "cx" ? "CX" : "CO";
   return (
     <div
       className="lisn-v2 ind-shell"
@@ -201,8 +181,8 @@ export function Shell({
         })}
         <div className="ind-rail-fill" />
         <ThemeToggle />
-        <div className="ind-rail-me" title={view}>
-          {sel.v === "cx" ? "CX" : "CO"}
+        <div className="ind-rail-me" title={isCards ? "Head of Cards" : view}>
+          {initials}
         </div>
       </aside>
 
@@ -226,34 +206,40 @@ export function Shell({
                   letterSpacing: "-0.02em",
                 }}
               >
-                Customer pulse — {view}
+                {title}
               </h1>
               <div style={{ fontSize: 12.5, color: C.textMut, marginTop: 2 }}>
                 {common.bank} · {screen}
               </div>
             </div>
             <div
-              data-testid="freeze"
               style={{
-                fontSize: 11,
-                fontWeight: 700,
-                color: C.textSec,
-                background: C.cardAlt,
-                border: `1px solid ${C.border}`,
-                borderRadius: 999,
-                padding: "5px 11px",
-                whiteSpace: "nowrap",
                 display: "flex",
                 gap: 8,
+                alignItems: "center",
+                flexWrap: "wrap",
               }}
             >
-              <span>
-                Data freeze {common.freeze}
-                {common.freeze_provisional ? " (provisional)" : ""}
-              </span>
-              <span style={{ color: C.textMut, fontWeight: 500 }}>
-                <Now />
-              </span>
+              <div
+                data-testid="freeze"
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  color: C.textSec,
+                  background: C.cardAlt,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 999,
+                  padding: "5px 11px",
+                  whiteSpace: "nowrap",
+                  display: "flex",
+                  gap: 8,
+                }}
+              >
+                <span>
+                  Data freeze {common.freeze}
+                  {common.freeze_provisional ? " (provisional)" : ""}
+                </span>
+              </div>
             </div>
           </div>
           <div
@@ -318,8 +304,8 @@ export function Shell({
           style={{
             width: "100%",
             maxWidth: 1400,
-            // The Ask bar floats at the bottom: the page ends well above it, so it never covers content.
-            padding: "14px 22px 120px",
+            // Ask LisN sits in the title bar, so nothing floats over the page.
+            padding: "14px 22px 28px",
             display: "flex",
             flexDirection: "column",
             gap: 14,

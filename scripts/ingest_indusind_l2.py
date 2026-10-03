@@ -80,7 +80,8 @@ def main() -> int:
             "source": r["source"],
             "bank": "indusind",
             "language": lang,
-            "created_at": t.isoformat(),
+            # Day only in the committed store (noon IST), so an item cannot be matched back to its post by the second.
+            "created_at": t.replace(hour=12, minute=0, second=0, microsecond=0).isoformat(),
             "week_end": week_end(t),
             "product": prod,
             "product_method": pmethod,

@@ -192,7 +192,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
 
       <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
         <Tile
-          title="Cards: accounts at risk of closure"
+          title="Cards: accounts at risk of closure (index)"
           sub="Aggregate, by category"
           layers={["L3"]}
           info={common.defs.closure_risk}

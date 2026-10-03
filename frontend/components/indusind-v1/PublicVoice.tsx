@@ -148,15 +148,20 @@ export function OutsideMeter({
       style={{ display: "flex", flexDirection: "column", gap: 10 }}
     >
       <div data-testid="l2-period" style={{ fontSize: 12, color: C.textMut }}>
-        Public items, {v.period}
+        INDIE app reviews (Google Play, App Store), {v.period}
+        {v.footnotes[0] ? (
+          <div style={{ color: C.amber, marginTop: 2 }}>{v.footnotes[0]}</div>
+        ) : null}
       </div>
       <div style={cols(3, 100, 8)}>
         <Stat label="Public items" f={v.items} info={defs.l2_items} />
         <Stat
           label="Escalation language"
-          f={v.escalation}
+          f={v.escalation.thin ? null : v.escalation}
           info={defs.escalation_public}
-        />
+        >
+          {v.escalation.thin ? <Thin text="Fewer than 15 items" /> : null}
+        </Stat>
         <Stat
           label="Play Store · bank replied"
           f={v.responded}
@@ -225,7 +230,7 @@ export function OutsideMeter({
           items, not added in.
         </div>
       ) : null}
-      <Footnotes notes={v.footnotes} />
+      <Footnotes notes={v.footnotes.slice(1)} />
       {rating ? (
         // The listing rating is all-time and dated: it sits apart from the window's figures.
         <div

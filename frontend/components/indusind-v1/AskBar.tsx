@@ -21,11 +21,12 @@ const words = (s: string) =>
     .split(/\s+/)
     .filter((w) => w.length > 3);
 
-/** The question closest to what was typed, if it shares at least one meaningful word. */
+/** The question closest to what was typed, if it shares at least two meaningful words (review finding 11: one shared
+ * word answered an unrelated question); otherwise the fallback. */
 function closest(q: string, qs: Q[]): Q | null {
   const t = new Set(words(q));
   let best: Q | null = null;
-  let score = 0;
+  let score = 1;
   for (const x of qs) {
     const n = words(x.q).filter((w) => t.has(w)).length;
     if (n > score) {
@@ -59,6 +60,10 @@ export function AskBar({ ask }: { ask: AskBank }) {
     setOpen(true);
   };
 
+  useEffect(() => {
+    if (open) input.current?.focus();
+  }, [open]);
+
   const a = shown?.a ?? null;
   const chip = {
     textAlign: "left" as const,
@@ -71,6 +76,32 @@ export function AskBar({ ask }: { ask: AskBank }) {
     cursor: "pointer",
     lineHeight: 1.35,
   };
+
+  // Closed, Ask LisN is a button in the title bar, so it never covers content (review finding 20, HL-26).
+  if (!open)
+    return (
+      <button
+        type="button"
+        data-testid="ask-bar"
+        onClick={() => setOpen(true)}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 6,
+          background: C.card,
+          border: `1.5px solid ${tint(C.brand, 0.55)}`,
+          borderRadius: 999,
+          padding: "5px 12px",
+          color: C.text,
+          fontSize: 12.5,
+          fontWeight: 700,
+          cursor: "pointer",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <Sparkles size={14} color={C.brandInk} /> Ask LisN
+      </button>
+    );
 
   return (
     <>
@@ -93,7 +124,7 @@ export function AskBar({ ask }: { ask: AskBank }) {
         style={{
           position: "fixed",
           left: "50%",
-          bottom: 14,
+          top: 72,
           transform: "translateX(-50%)",
           width: "min(760px, calc(100vw - 32px))",
           zIndex: 50,

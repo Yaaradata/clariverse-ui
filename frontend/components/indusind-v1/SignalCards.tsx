@@ -153,6 +153,7 @@ function Section({
 }
 
 function peerRows(card: Card) {
+  if (card.peer_held_label) return [{ bank: card.peer_held_label, figs: [] }];
   return CORE_PEERS.map((bank) => ({
     bank,
     figs: card.peers.filter((p) => (p.label ?? "").startsWith(bank)),

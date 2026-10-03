@@ -13,3 +13,4 @@ node_modules/
 data/raw/indusind/
 data/processed/indusind_l2/_audit/
 qa/_crawl/
+scripts/lint_local_terms.txt

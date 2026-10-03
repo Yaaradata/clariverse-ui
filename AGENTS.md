@@ -18,7 +18,7 @@ Run from the repo root, in this order; stop at the first failure. Python 3; on W
 | 2 | Reconcile checks | `cd scripts/hdfc_v3 && python check_reconcile_v3.py` |
 | 3 | Internal-names lint / personal-data check | `python scripts/lint_terms.py` · `python scripts/check_pii.py` |
 | 4 | Test fixtures | `python scripts/test_check_pii.py` · `python scripts/test_checks.py` |
-| 5 | Lint and format (Biome) | `cd frontend && npm run lint` |
+| 5 | Lint and format (Biome) | `cd frontend && npm run lint`. The repo-wide baseline already fails on main; for IndusInd the gate is `npx biome check components/indusind-v1 app/role-based/indusind_bank lib/indusind-v1` (must be clean) |
 | 5 | Typecheck (no npm script) | `cd frontend && npx tsc --noEmit -p .` |
 | 6 | Build | `cd frontend && npm run build` |
 | 7 | Every V2 route ends in 200 | `cd frontend && npx next start -p 3100`, then `node scripts/qa_routes_v2.mjs http://localhost:3100 scripts/routes.json` |

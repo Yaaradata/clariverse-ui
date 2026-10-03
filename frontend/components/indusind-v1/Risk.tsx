@@ -51,6 +51,7 @@ export type RiskSlice = {
   }[];
   register: FigT[];
   penalties: FigT[];
+  penalty_note: string;
   checklist: { item: string; status: string }[];
 
   card_d: Card;
@@ -343,6 +344,9 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
           {r.penalties.map((f) => (
             <FigRow key={f.id} f={f} />
           ))}
+          <div style={{ fontSize: 13.5, color: C.text }}>
+            {r.penalty_note} ({r.penalties.map((f) => f.period).join(" and ")}).
+          </div>
           <MutedNote>
             Suggested: one review of deposit-rate controls, owned by the Chief
             Compliance Officer.

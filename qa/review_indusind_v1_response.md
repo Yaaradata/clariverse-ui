@@ -40,3 +40,15 @@ as "IndusInd review fix N".
 | 32 | Phone first screen is all controls | Deferred | Layout polish after the D1 figures land |
 | 33 | Re-identifiable timestamps; salt in the repo | Planned: Fixed | Item 8 |
 | 34 | Volume note says 1,180 a week | Planned: Fixed | Item 9 |
+
+## Round 2 (3 Oct 2026, after IND-D1)
+
+Fixed in "IndusInd review fix 4–9": 5 (Yes Bank `"yes"` quoted, with a check that every core peer has figures), 6
+(Improving pair 6.44% → 5.95%), 7 (Outside named as INDIE app reviews, source share inline), 9 (peer rate rows hidden
+until the manual read), 11 (Ask LisN needs two shared words, else the fallback), 13 (IO referrals cover every rejection,
+with a check), 15 (Cards page titled "Cards — business view"), 16 (distinct category profiles), 17 (Card C inside label),
+18 (closure risk titled as an index), 19 (Closure dropped from that list), 20 (Ask LisN in the title bar), 21 and 22 (one
+15-item threshold for escalation; RBI, Ombudsman or court only), 23 (no extra row; Digital line labelled "Scale"), 26
+(Card C names the AU vehicle book), 27 (Kotak greyed), 28 (penalties line), 30 (short N36 label), 31 (scoped Biome gate in
+AGENTS.md), 33 (day-only timestamps in the committed store; the hash salt stays, since changing it re-keys the glosses), 34
+(volume note). Finding 2 is closed by IND-D1. Still deferred: 8, 10, 24, 25, 32.

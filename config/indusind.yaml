@@ -25,13 +25,13 @@ flags:
   sentiment_checked: false    # 100-item sentiment-accuracy sample reported (IND-B3 §7)
 
 peers:
-  core: [federal, yes, idfc_first]
+  core: [federal, "yes", idfc_first]  # "yes" quoted: YAML 1.1 reads a bare yes as true
   upper_benchmark: [kotak]
   specialist: [rbl, au, bandhan]
   excluded: [HDFC Bank, ICICI, Axis, SBI]
   names:
     federal: Federal Bank
-    yes: Yes Bank
+    "yes": Yes Bank
     idfc_first: IDFC First Bank
     kotak: Kotak Mahindra Bank
     rbl: RBL Bank
@@ -145,7 +145,8 @@ cards:
     approver: "Head, Vehicle Finance"
     module: null
     voice_tags: [service_delay, fee_change, recovery_conduct_allegation]
-    inside: "Illustrative, by region: application-to-disbursement time and dealer drop-offs."
+    inside: "Illustrative, by region: conduct complaints as a share of each region's vehicle-finance complaints."
+    peer_held_label: "AU Small Finance Bank vehicle book"
     action:
       scope: "The two regions where disbursement delay and conduct complaints move together"
       ask: "Review the hand-offs and the conduct-complaint log within 14 days, before any sourcing change"
@@ -163,6 +164,7 @@ cards:
     module: /role-based/indusind_bank/customer-pulse/risk
     voice_tags: [mis_selling_allegation, insurance_investment_sales]
     inside: "Complaints in distribution-related grounds, by product; an illustrative readiness checklist."
+    peer_held_label: "Peer conduct penalties"
     action:
       scope: "60-day readiness check for the CSCB"
       ask: "Cover 12 months of complaints about insurance or investment sales, app and web journeys with pre-ticked or bundled consent, and incentive lines tied to third-party products; an owner for each gap"
@@ -211,7 +213,7 @@ copy:
     pattern: "What the Internal Ombudsman's quarterly complaint-pattern analysis would cover this quarter: shares of the window's complaints."
     closure_risk: "Card accounts flagged at risk of closure, as an index: Q1 weekly average = 100. Aggregate only; no customer list."
     l2_items: "Public items in the window: INDIE reviews on Google Play and the App Store, and consumercomplaints.in. X and Reddit wait on a licence decision. Counts, not incidence."
-    escalation_public: "Public items naming the RBI, the Ombudsman, a court or cyber crime."
+    escalation_public: "Public items naming the RBI, the Ombudsman or a court. Shown as a count only from 15 items."
     responded: "Share of the window's Google Play reviews with a reply from the bank (Play returns the reply), with n, the number of Play reviews. Other stores do not return replies, so no figure is blended across stores."
     security_trend: "Weekly share of app items saying the app blocks the phone as unsafe (threat detected, secure operating system, screen reader). Shares, not counts: Play reviews start mid-window."
     weekly: "Received and closed in the week: indices on the Q1 weekly intake (= 100). Pending: complaints with no final reply at the week end, in weeks of Q1 intake. Over 30: share of pending with no final reply after 30 days. Rejected, reopened and to the IO: shares of the week's final replies."

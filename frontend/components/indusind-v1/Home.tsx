@@ -441,7 +441,7 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
                   style={{ fontFamily: MONO, color: C.text }}
                 />{" "}
                 items
-                {r.outside.escalation.value ? (
+                {r.outside.escalation.value && !r.outside.escalation.thin ? (
                   <>
                     {" · "}
                     <Fig f={r.outside.escalation} /> escalation
@@ -471,6 +471,7 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
             >
               {r.money.map((f) => (
                 <span key={f.id + (f.period ?? "")}>
+                  {r.id === "digital" ? "Scale: " : ""}
                   {f.label} <Fig f={f} />
                 </span>
               ))}
@@ -493,6 +494,11 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
           ],
         }))}
       />
+      {s.win.unassigned?.value ? (
+        <MutedNote>
+          App reviews not tied to one business: <Fig f={s.win.unassigned} />
+        </MutedNote>
+      ) : null}
     </Tile>
   );
 }

@@ -194,7 +194,7 @@ def voice_block(xs: list[dict], scope: str, wid: str) -> dict:
         "by_source": [fig(f"L2:items_by_source:{scope}:{s['source']}:{wid}", s["count"], fmt_int(s["count"]), s["label"],
                           "Public items from one source", share=s["share"]) for s in by_src],
         "escalation": fig(f"L2:escalation:{scope}:{wid}", esc, fmt_int(esc), "Escalation language",
-                          "Items naming the RBI, the Ombudsman or a court"),
+                          "Items naming the RBI, the Ombudsman or a court", thin=esc < L2C["min_items"]),
         # Play only (the only store that returns replies); never blended across stores.
         "responded": (fig(f"L2:responded_share:{scope}:{wid}", pct(resp, len(play)), f"{pct(resp, len(play))}%",
                           "Play Store · bank replied", "Share of Google Play reviews with a reply from the bank",
