@@ -38,3 +38,10 @@ export function fmtDate(iso: string | null | undefined): string {
   const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
   return `${d} ${MONTHS[m - 1]} ${y}`;
 }
+
+/** "2026-10-02 18:00" → "2 Oct 2026, 18:00". */
+export function fmtStamp(stamp: string | null | undefined): string {
+  if (!stamp) return "—";
+  const time = stamp.slice(11, 16);
+  return time ? `${fmtDate(stamp)}, ${time}` : fmtDate(stamp);
+}

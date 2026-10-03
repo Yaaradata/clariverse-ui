@@ -59,7 +59,7 @@ function plainTitle(parts: TitlePart[]) {
   return parts.map((p) => (p.fig ? p.fig.display : p.text)).join("");
 }
 
-function FigRow({ f, label }: { f: FigT; label?: string }) {
+export function FigRow({ f, label }: { f: FigT; label?: string }) {
   return (
     <div
       style={{
@@ -84,7 +84,7 @@ function FigRow({ f, label }: { f: FigT; label?: string }) {
   );
 }
 
-function SensBlock({ s }: { s: Sens }) {
+export function SensBlock({ s }: { s: Sens }) {
   return (
     <div
       data-register={s.id}

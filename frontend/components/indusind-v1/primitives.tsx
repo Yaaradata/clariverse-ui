@@ -168,7 +168,10 @@ export function Fig({
   style?: CSSProperties;
   color?: string;
 }) {
-  const pending = f.pending || (f.layer === "L1" && f.value === null);
+  const pending =
+    f.pending ||
+    (f.layer === "L1" && f.value === null) ||
+    f.display === "pending verification";
   return (
     <span
       data-register={f.id}
