@@ -2,7 +2,7 @@
 
 Runs on: the IndusInd UI copy (string literals and JSX text in frontend/{components,lib}/indusind-v1 and frontend/app/role-based/indusind_bank), the
 register files (data/public/), the internal seed (data/seed/indusind_v1/), the page payloads and the Ask LisN answer
-bank (data/out/indusind_v1/) and, when a build exists, the built customer-pulse pages. Every hit starts with its rule
+bank (data/out/indusind_v1/) and, when a build exists, the built IndusInd pages. Rule IND-DEC7 (DEC-7): no other client's name in any of these. Every hit starts with its rule
 number ("IND-R07 ...") so a fixture can tell which rule fired. Each rule fails the build.
 """
 
@@ -25,6 +25,11 @@ CONFIG = ROOT / "config" / "indusind.yaml"
 # Rule 21: discovery names, filled locally and never committed. IND-B3 names the file lint_local_terms.txt; the repo's
 # existing local list is lint_terms_local.txt. Both are read (IndusInd V1, IV-11).
 LOCAL_FILES = [ROOT / "scripts" / "lint_local_terms.txt", ROOT / "scripts" / "lint_terms_local.txt"]
+
+# DEC-7: other clients' names (scripts/indusind_other_clients.json). None may be reachable from an IndusInd page.
+_OTHER = ROOT / "scripts" / "indusind_other_clients.json"
+OTHER_CLIENTS = json.loads(_OTHER.read_text(encoding="utf-8"))["names"] if _OTHER.exists() else []
+OTHER_RX = re.compile(r"(?<![A-Za-z])(?:" + "|".join(re.escape(n) for n in OTHER_CLIENTS) + r")(?![A-Za-z])") if OTHER_CLIENTS else None
 
 BANKS = r"(?:IndusInd|Federal|Yes|IDFC|Kotak|RBL|AU|Bandhan|HDFC|ICICI|Axis|SBI)"
 MONTH = r"(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*"
@@ -138,6 +143,8 @@ def text_rules(s: str, where: str, flags: dict, local: list[str]) -> list[str]:
     # Carry-forward rules from the HDFC build (docs/indusind/carry_forward_from_hdfc.md).
     if INTERNAL_ID.search(s) or any(re.search(rf"\b{n}\b", s) for n in INTERNAL_NAMES):
         h.append(f"IND-HL06 {where}: an internal label or a team member's name: {s[:90]!r}")
+    if OTHER_RX and OTHER_RX.search(s):
+        h.append(f"IND-DEC7 {where}: another client's name (DEC-7): {s[:90]!r}")
     if "16 Jan 2026" in s:
         h.append(f"IND-HL28 {where}: the HDFC Internal Ombudsman Directions date (IndusInd uses N37): {s[:90]!r}")
     return h

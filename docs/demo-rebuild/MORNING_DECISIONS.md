@@ -711,3 +711,25 @@ wording.
   strings) and follows links as before; its `pages.json` feeds `lint_terms.py` and `check_pii.py`, so lint and PII
   cover the same set. Fixtures in `scripts/test_qa_indusind_routes.mjs` (run by `run_all.sh`), including "an unlinked
   route without a watermark fails".
+- **IV-48 · Register filled from IND-D1.** `scripts/fill_register_indusind.py` copies every value from IND-D1 (2 Oct 2026)
+  and recomputes D01–D11 and S01–S07 from the verified inputs, failing if any differs from the v1.1 addendum. Result: 59
+  verified, 11 derived, 10 held (H01–H10: peer sizes, VF slippage, distribution fees, total assets, IndusInd and IDFC
+  First rate tables, the IRDAI penalty, 30 Sep and 31 Dec balances, the ECL date, peer conduct penalties, AU VF).
+  - **Differences from IND-B3: none.** Every IND-B3 §2 figure already carried IND-D1's verified value (checked by
+    script, 70 rows). IND-D1's corrections were against the research files: ₹31,417 crore is Rural Banking, not
+    microfinance; cost of funds 5.05% (5.68% was the Q1 FY26 cost of savings); Federal cost of deposits 5.21% (not
+    5.25%); RBL CASA 25.2% is an average; credit cards ₹9,418 crore and personal loans ₹9,930 crore; the SFIO letter is
+    dated 23 Dec 2025; DPDP phases are November 2026 and May 2027 (month only); the IO duty is quarterly pattern analysis,
+    not root-cause; peer rate cards moved (Federal card 29 Sep 2026, Federal savings 16 Jul 2026, Yes FD peak 7.25% from
+    2 Jun 2026, Yes savings 7 Apr 2026, RBL 1-year FD 6.90%); the INDIE Play rating is 4.5 from 8.19 lakh reviews.
+  - **entity_basis:** IND-D1 does not say standalone or consolidated, so every entry stays `as_presented`.
+  - **Held:** FY26 complaint counts are not in the register (IND-D1: NOT FOUND); IndusInd and IDFC First rate tables and
+    the IRDAI penalty (UNVERIFIABLE) stay held.
+  - **Precedence (IND-B2 wins on whether a figure is shown):** N15 keeps `display_default: false` (DEC-3) and is not in
+    any payload; no personal names (DEC-9), linted; N17 is in the register only, never in copy; Federal CASA reads "up
+    188 bp YoY" only; Yes savings shows the 2.50% and 3.50% bands only; peer rate rows are not sent until IndusInd's own
+    rates are read (`manual_read_logged`).
+  - **LIVE-01:** "4.5 from 8.19 lakh reviews, India listing, as of 2 Oct 2026" (IND-D1's read), all-time and apart from
+    the window's figures. The bank's 4.6 is never shown as a store rating.
+  - **Computed views:** days to go (from the freeze), Card C's "4% below a year ago" (the March-quarter change stays in
+    the drawer) and the Improving pair "6.44% → 5.95%" are recomputed from the register by `check_indusind.py` (fixture).

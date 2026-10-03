@@ -27,9 +27,8 @@ import {
 import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import {
   INDUSIND_BANK_INDUSTRY_ID,
-  INDUSIND_CEO_OFFICE_ROLE_ID,
-  INDUSIND_HEAD_CARDS_ROLE_ID,
-  INDUSIND_HEAD_CX_ROLE_ID,
+  INDUSIND_BANK_NAME,
+  INDUSIND_ROLE_COPY,
 } from "./indusindBankIndustry";
 import {
   KIDDE_GLOBAL_INDUSTRY_ID,
@@ -481,37 +480,16 @@ export const INDUSTRIES = [
   },
   {
     id: INDUSIND_BANK_INDUSTRY_ID,
-    name: "Indus Ind Bank",
+    name: INDUSIND_BANK_NAME,
     icon: Landmark,
     color: "#9333ea",
     desc: "Retail banking · deposits, loans, cards · branches & contact centres",
     roles: [
+      { ...INDUSIND_ROLE_COPY[0], icon: Landmark, defaultLens: "ops", primaryTile: 0 },
+      { ...INDUSIND_ROLE_COPY[1], icon: Headphones, defaultLens: "ops", primaryTile: 0 },
+      { ...INDUSIND_ROLE_COPY[2], icon: CreditCard, defaultLens: "ops", primaryTile: 0 },
       {
-        id: INDUSIND_CEO_OFFICE_ROLE_ID,
-        name: "CEO's office",
-        icon: Landmark,
-        sub: "Customer pulse · inside the bank and in public · four items that need a decision",
-        defaultLens: "ops",
-        primaryTile: 0,
-      },
-      {
-        id: INDUSIND_HEAD_CX_ROLE_ID,
-        name: "Head of CX",
-        icon: Headphones,
-        sub: "Customer pulse by channel · Ombudsman watch · owners and status",
-        defaultLens: "ops",
-        primaryTile: 0,
-      },
-      {
-        id: INDUSIND_HEAD_CARDS_ROLE_ID,
-        name: "Head of Cards",
-        icon: CreditCard,
-        sub: "Cards business view · issue pulse · Ombudsman watch · closure risk by category",
-        defaultLens: "ops",
-        primaryTile: 0,
-      },
-      {
-        // The earlier cards demo: its route still works, but it is not listed on the role page.
+        // The earlier cards demo: unlisted, and its URL redirects to the Cards business view (next.config.mjs).
         id: "head_cards",
         name: "Head of Cards (earlier demo)",
         icon: CreditCard,

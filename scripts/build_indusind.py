@@ -73,7 +73,7 @@ def sens(sid: str) -> dict:
         "formula_text": formula_text(e["formula"]),
         "inputs": [l1(i) if i in REG else {"id": i, "layer": "L1", "label": SENS[i]["label"], "value": SENS[i]["value"], "display": PENDING, "pending": True}
                    for i in e["inputs"]],
-        "value": e["value"], "display": PENDING if e["value"] is None else e["value"], "pending": e["value"] is None,
+        "value": e["value"], "display": PENDING if e["value"] is None else e["display"], "pending": e["value"] is None,
         "basis_note": e["basis_note"], "caveat": e["caveats"],
     }
 
@@ -286,9 +286,9 @@ def card_payload(card: dict, w: dict) -> dict:
     title = card["title"]
     if any(REG[r]["value"] is None for r in card.get("title_bound_to", [])):
         title = card["title_pending"]
-    days = None
     fill = {rid: l1(rid)["display"] for rid in REG}
-    fill["N36_days"] = PENDING if REG["N36"]["value"] is None else f"{days} days"
+    fill["N36_days"] = days_to_go("N36")
+    fill["D11_yoy"] = yoy_words("D11")
     inside = {"text": card["inside"]}
     if card["id"] == "A":
         inside["figures"] = top_clusters(w)
@@ -314,6 +314,40 @@ def card_payload(card: dict, w: dict) -> dict:
     }
 
 
+def days_to_go(rid: str) -> str:
+    """Days from the data freeze to a dated register entry; "in force" once it has passed."""
+    v = REG[rid]["value"]
+    if v is None:
+        return PENDING
+    d = dt.date.fromisoformat(v)
+    n = (d - FREEZE.date()).days
+    return f"{n} days" if n > 0 else "in force"
+
+
+def yoy_words(rid: str) -> str:
+    """D11's year-on-year change in words for a title ("4% below"); the March-quarter change stays in the drawer."""
+    v = REG[rid]["value"]
+    if v is None:
+        return PENDING
+    return f"{abs(round(v))}% {'below' if v < 0 else 'above'}"
+
+
+def horizon_countdown(rid: str) -> str | None:
+    """Countdown for the horizon: days to a dated rule; the next quarter-end for the IO's quarterly analysis; none for
+    month-only dates (DPDP shows month and year only)."""
+    e = REG[rid]
+    if e["value"] is None:
+        return PENDING
+    if e["unit"] == "month":
+        return None
+    if rid == "N37":
+        q = FREEZE.date()
+        ends = [dt.date(q.year, 3, 31), dt.date(q.year, 6, 30), dt.date(q.year, 9, 30), dt.date(q.year, 12, 31)]
+        nxt = next(x for x in ends if x >= q)
+        return f"{(nxt - q).days} days to quarter-end"
+    return days_to_go(rid)
+
+
 def title_parts(title: str) -> list[dict]:
     import re
     parts, pos = [], 0
@@ -323,7 +357,12 @@ def title_parts(title: str) -> list[dict]:
         rid = m.group(1)
         if rid.endswith("_days"):
             base = rid[: -len("_days")]
-            parts.append({"fig": {"id": base, "layer": "L1", "display": PENDING, "pending": REG[base]["value"] is None, "label": "days to go"}})
+            parts.append({"fig": {"id": base, "layer": "L1", "display": days_to_go(base), "pending": REG[base]["value"] is None,
+                                  "label": "days to go", "value": REG[base]["value"], "view": "days"}})
+        elif rid.endswith("_yoy"):
+            base = rid[: -len("_yoy")]
+            parts.append({"fig": {"id": base, "layer": "L1", "display": yoy_words(base), "pending": REG[base]["value"] is None,
+                                  "label": "change on a year ago", "value": REG[base]["value"], "view": "yoy"}})
         else:
             parts.append({"fig": l1(rid)})
         pos = m.end()
@@ -371,6 +410,16 @@ def distribution_by_product(w: dict) -> list[dict]:
         out.append(l3("complaints_weekly", "distribution_ground_share", b["id"], w["id"], pct(k, len(xs)), show_pct(pct(k, len(xs))),
                       label=f"{b['label']}: share of complaints in distribution grounds"))
     return out
+
+
+def improving_item(x) -> dict:
+    """An Improving entry: one register figure, or a from → to pair ("Cost of deposits 6.44% → 5.95% year on year")."""
+    if isinstance(x, dict):
+        a, b = l1(x["from"]), l1(x["to"])
+        pending = a["pending"] or b["pending"]
+        return {**b, "label": x["label"], "period": x["period"], "from_id": x["from"], "view": "pair",
+                "display": PENDING if pending else f"{a['display']} → {b['display']}", "pending": pending}
+    return l1(x)
 
 
 def quiet_item(w: dict) -> dict | None:
@@ -430,8 +479,8 @@ def home() -> dict:
             "quiet": quiet_item(w),
         }
         out["windows"][wd["id"]] = per_w
-    out["improving"] = [l1(r) for r in CONFIG["improving"][:3]]
-    out["horizon"] = [{"id": h["id"], "label": h["label"], "date": l1(h["id"]), "countdown": PENDING if REG[h["id"]]["value"] is None else None}
+    out["improving"] = [improving_item(x) for x in CONFIG["improving"]]
+    out["horizon"] = [{"id": h["id"], "label": h["label"], "date": l1(h["id"]), "countdown": horizon_countdown(h["id"])}
                       for h in CONFIG["horizon"]]
     out["peer_moves"] = not_loaded("Peer rate-card dates and changes, ad captures, press")
     out["owners"] = [{"card": a["card_id"], "owner": a["owner_role"], "action": a["scope"], "status": a["status"],
@@ -506,12 +555,12 @@ def peers_page() -> dict:
         for b in banks:
             figs = [l1(e["id"]) for e in REG.values() if e.get("bank") == b and e["measure_basis"] != "rate_card" and not e.get("footnote_only")]
             rows.append({"bank": names[b], "tier": tier, "figures": figs, "held": [l1("H01")] if not figs else []})
-    rates = [l1(f"P{i}") for i in range(10, 18)]
+    # Peer rate cards sit beside IndusInd's same band only; until the manual read is logged, no rate row is sent.
+    rates = [l1(f"P{i}") for i in range(10, 16)] if CONFIG["flags"]["manual_read_logged"] else []
     return {
         "table": rows, "footnote": l1("P09"),
         "cards": not_loaded("Card effective dates and changes, read from the rate captures"),
         "rates": {"peers": rates, "indusind": {"loaded": CONFIG["flags"]["manual_read_logged"], "text": "IndusInd's own rate for the same band: shown once the manual read is logged"}},
-        "ads": not_loaded("Ten captured creatives: advertiser, date, product, offer"),
         "press": {"ratings": [l1("N40")], "press": not_loaded("Dated press list")},
     }
 

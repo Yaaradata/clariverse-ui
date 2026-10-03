@@ -1,0 +1,4 @@
+{
+ "about": "DEC-7: other clients' and demos' names that must not be reachable from any IndusInd page (rendered text, page payloads, the JS a page loads, or a link). Read by scripts/lint_indusind.py (rule IND-DEC7) and scripts/qa_indusind_routes.mjs. Never put this list in a page payload.",
+ "names": ["HDFC", "Sterling Bank", "Kidde", "Neogroup", "Openbank", "Nuvama", "Swedbank", "Flipkart", "Standard Chartered", "StanChart"]
+}

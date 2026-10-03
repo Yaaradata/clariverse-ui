@@ -63,6 +63,25 @@ def strings(o, path=""):
         yield path, o
 
 
+FREEZE_DATE = dt.datetime.fromisoformat(
+    json.loads((SEED / "meta.json").read_text(encoding="utf-8"))["freeze"]).date()
+
+
+def trace_view(f: dict, e: dict) -> str:
+    """Recompute a computed view of a register entry: days to go from the freeze, a year-on-year change in words, or a
+    from → to pair."""
+    if e["value"] is None:
+        return PENDING
+    if f["view"] == "days":
+        n = (dt.date.fromisoformat(e["value"]) - FREEZE_DATE).days
+        return f"{n} days" if n > 0 else "in force"
+    if f["view"] == "yoy":
+        return f"{abs(round(e['value']))}% {'below' if e['value'] < 0 else 'above'}"
+    if f["view"] == "pair":
+        return f"{REG[f['from_id']]['display']} → {e['display']}"
+    return "unknown view"
+
+
 def run(p: dict) -> list[str]:
     fails: list[str] = []
     ok = lambda cond, msg: None if cond else fails.append(msg)  # noqa: E731
@@ -74,6 +93,11 @@ def run(p: dict) -> list[str]:
                 continue
             e = REG[f["id"]]
             want = PENDING if e["value"] is None else e["display"]
+            if f.get("view"):
+                # A computed view of a register entry: recompute it from the register (the number trace).
+                ok(f.get("display") == trace_view(f, e), f"trace: {path} shows {f.get('display')!r}, the register recomputes "
+                                                           f"{trace_view(f, e)!r} for {f['id']} ({f['view']})")
+                continue
             if "label" in f and "period" in f:
                 ok(f["label"] == e["label_short"] and f["period"] == e["period"], f"register: {path} label or period differs from {f['id']}")
             if "derived" not in f:
@@ -132,7 +156,7 @@ def run(p: dict) -> list[str]:
     ok(all(r["complaints"] <= r["negative"] <= r["contacts"] for r in contacts), "sanity: complaints exceed negative contacts in a row")
 
     # ---- no internal labels on screen: brief, decision, track or screen IDs, "V1", register IDs in text
-    skip = (".id", ".build_note", ".about", ".module", ".card_id", ".action_id", ".evidence_version", ".card")
+    skip = (".id", ".from_id", ".build_note", ".about", ".module", ".card_id", ".action_id", ".evidence_version", ".card")
     for name, obj in p.items():
         for path, s in strings(obj, name):
             if not path.endswith(skip) and INTERNAL.search(s):
@@ -282,6 +306,7 @@ FIXTURES = [
     ("lumpy values", "lumpy", lambda p: [
         _set(f, ["value"], 75 * (1 + i % 6)) for i, (_, f) in enumerate(x for obj in p.values() for x in figures(obj))
         if isinstance(f.get("value"), int) and not isinstance(f.get("value"), bool) and 6 <= f["value"] < 500]),
+    ("computed view out of step", "trace:", lambda p: _set(p["home"]["improving"][0], ["display"], "6.40% → 5.95%")),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 

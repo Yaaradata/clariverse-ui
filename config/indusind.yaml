@@ -136,7 +136,7 @@ cards:
       cost_cap: null
       success: "Gap reported monthly, each part with an owner"
   - id: C
-    title: "Vehicle finance: Q1 disbursements {N22}; on a year ago {D11}. Demand, service or credit?"
+    title: "Vehicle finance: Q1 disbursements {N22}, {D11_yoy} a year ago. Demand, service or credit?"
     figures: [N22, N24, D11, N23, N21]
     peers: []
     sensitivity: [S05]
@@ -169,7 +169,12 @@ cards:
       cost_cap: null
       success: "Every gap has an owner and a close date before the rules apply"
 
-improving: [N10, N14, N20, N26, N40]
+# IND-B4 §2 order: cost of deposits year on year (N10 → N08), then N14, N20 and N40.
+improving:
+  - {from: N10, to: N08, label: Cost of deposits, period: "Q1 FY26 to Q1 FY27, year on year"}
+  - N14
+  - N20
+  - N40
 
 horizon:
   - {id: N35, label: Governance Amendment Directions in force}
@@ -213,6 +218,8 @@ copy:
 
 # Public voice (L2). Only core-licence items (INDIE on Play and the App Store; consumercomplaints.in) reach a screen.
 l2:
+  # LIVE-01 as IND-D1 read it (2 Oct 2026). The bank's own 4.6 is never shown as a store rating.
+  live01: {store: Google Play, listing: India listing, score: 4.5, reviews: "8.19 lakh", as_of: "2026-10-02"}
   min_items: 15            # fewer items than this for a claim: "Not enough public items this window"
   source_share_flag: 0.6   # one source above this share of a product's items in a window: footnoted
   not_enough: "Not enough public items this window"

@@ -226,13 +226,13 @@ def security_trend(items: list[dict], wid: str = "w13") -> dict:
 
 
 def rating_fig() -> dict | None:
-    m = listing()
+    """LIVE-01, as IND-D1 read it: the India Play listing, dated. The bank's own 4.6 is never shown as a store rating."""
+    m = L2C.get("live01")
     if not m:
         return None
     return fig("L2:LIVE-01:indie_play_rating", m["score"], f"{m['score']}", "INDIE listing rating, all-time",
-               "Google Play listing rating, all-time, one store, dated to the scrape; not a window figure",
-               store=m["store"], ratings=m["ratings"],
-               ratings_display=fmt_int(m["ratings"]), as_of=m["as_of"])
+               "Google Play listing rating, India listing, all-time, one store, dated; not a window figure",
+               store=m["store"], ratings=None, ratings_display=m["reviews"], as_of=m["as_of"], listing=m["listing"])
 
 
 def write_registry() -> None:

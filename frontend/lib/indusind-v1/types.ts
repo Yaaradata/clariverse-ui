@@ -86,7 +86,7 @@ export type CardVoice = {
 
 export type Rating = Fig & {
   store: string;
-  ratings: number;
+  ratings: number | null;
   ratings_display: string;
   as_of: string;
 };

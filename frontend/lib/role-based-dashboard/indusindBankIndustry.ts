@@ -1,4 +1,4 @@
-/** Canonical Indus Ind Bank industry id — isolated from registry.tsx to avoid circular imports. */
+/** Canonical IndusInd Bank industry id — isolated from registry.tsx to avoid circular imports. */
 export const INDUSIND_BANK_INDUSTRY_ID = "indusind_bank" as const;
 
 /** On every IndusInd screen, the role page included (IND-B4 §1). */
@@ -20,3 +20,25 @@ export const INDUSIND_PULSE_ROLE_HREF: Record<string, string> = {
   // The earlier cards demo: its URL opens the Cards business view (next.config.mjs redirects it on the server too).
   head_cards: `${INDUSIND_PULSE_BASE}/cards?r=cards`,
 };
+
+/** The bank's name as it appears on screen (header text only, IND-B4 §1). */
+export const INDUSIND_BANK_NAME = "IndusInd Bank" as const;
+
+/** The listed roles, in order: one source for the registry and the IndusInd role page. */
+export const INDUSIND_ROLE_COPY = [
+  {
+    id: INDUSIND_CEO_OFFICE_ROLE_ID,
+    name: "CEO's office",
+    sub: "Customer pulse · inside the bank and in public · four items that need a decision",
+  },
+  {
+    id: INDUSIND_HEAD_CX_ROLE_ID,
+    name: "Head of CX",
+    sub: "Customer pulse by channel · Ombudsman watch · owners and status",
+  },
+  {
+    id: INDUSIND_HEAD_CARDS_ROLE_ID,
+    name: "Head of Cards",
+    sub: "Cards business view · issue pulse · Ombudsman watch · closure risk by category",
+  },
+] as const;

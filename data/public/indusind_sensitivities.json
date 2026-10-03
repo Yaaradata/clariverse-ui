@@ -9,11 +9,14 @@
    "inputs": [
     "N01"
    ],
-   "value": null,
+   "value": 41.48,
    "unit": "inr_cr_year",
    "basis_note": "On the 30 Jun 2026 period-end deposit base.",
    "caveats": "Not a forecast. Not additive across cards.",
-   "build_note": "IND-D1 gives the Q1 average-base and excluding-current-accounts notes."
+   "build_note": "IND-D1 gives the Q1 average-base and excluding-current-accounts notes.",
+   "display": "≈ ₹41.5 crore a year",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   },
   {
    "id": "S02",
@@ -22,10 +25,13 @@
    "inputs": [
     "N01"
    ],
-   "value": null,
+   "value": 414.8,
    "unit": "inr_cr_year",
    "basis_note": "On the 30 Jun 2026 period-end deposit base.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "caveats": "Not a forecast. Not additive across cards.",
+   "display": "≈ ₹415 crore a year",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   },
   {
    "id": "S03",
@@ -36,11 +42,13 @@
     "D06",
     "D05"
    ],
-   "value": null,
+   "value": 7507,
    "unit": "inr_cr",
-   "basis_note": "Money moved from CASA to term deposits, at the June deposit base.",
+   "basis_note": "Money moved from CASA to term deposits, at the June deposit base. As new CASA money instead, restoring the March CASA ratio needs ≈ ₹10,900 crore. Approximate: Q1 average costs applied to 30 Jun period-end balances.",
    "caveats": "Not a forecast. Not additive across cards.",
-   "build_note": "Restoring the March CASA ratio with new CASA money instead needs (D06 x N01 - D01) / (1 - D06). Add the derivation to IND-D1 v1.1 before display."
+   "display": "≈ ₹7,500 crore",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   },
   {
    "id": "S04",
@@ -52,11 +60,16 @@
     "N11",
     "D10"
    ],
-   "value": null,
+   "value": [
+    173,
+    273
+   ],
    "unit": "inr_cr_year_range",
-   "basis_note": "Low end: the lost CASA was all savings. High end: the lost CASA was in today's current-to-savings mix. Q1 average costs applied to 30 Jun balances.",
+   "basis_note": "Approximate: Q1 average costs applied to 30 Jun period-end balances. Low end: the CASA lost was all savings, at the 4.72% cost of savings. High end: the CASA lost was in today's current-to-savings mix, at the ≈3.4% blended cost. Pre-tax and annualised. Not a statement of what the bank paid.",
    "caveats": "Not a forecast. Not additive across cards.",
-   "build_note": "Add the derivation to IND-D1 v1.1 before display."
+   "display": "≈ ₹170–275 crore a year, pre-tax (approximate)",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   },
   {
    "id": "S05",
@@ -65,10 +78,13 @@
    "inputs": [
     "N21"
    ],
-   "value": null,
+   "value": 99.7,
    "unit": "inr_cr_year",
    "basis_note": "Period-end book.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "caveats": "Not a forecast. Not additive across cards.",
+   "display": "≈ ₹100 crore a year",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   },
   {
    "id": "S06",
@@ -77,10 +93,13 @@
    "inputs": [
     "N16"
    ],
-   "value": null,
+   "value": 16.3,
    "unit": "inr_cr_year",
    "basis_note": "Period-end book.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "caveats": "Not a forecast. Not additive across cards.",
+   "display": "≈ ₹16 crore a year",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   },
   {
    "id": "S07",
@@ -89,10 +108,13 @@
    "inputs": [
     "N25"
    ],
-   "value": null,
+   "value": 32.6,
    "unit": "inr_cr_year",
    "basis_note": "Period-end loans.",
-   "caveats": "Not a forecast. Not additive across cards."
+   "caveats": "Not a forecast. Not additive across cards.",
+   "display": "≈ ₹32.6 crore a year",
+   "status": "derived",
+   "source": "Derived from the bank's reported figures (arithmetic, recomputed 3 Oct 2026)"
   }
  ]
 }

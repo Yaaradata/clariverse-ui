@@ -3,7 +3,7 @@
  "metrics": {
   "L2:LIVE-01:indie_play_rating": {
    "label": "INDIE listing rating, all-time",
-   "definition": "Google Play listing rating, all-time, one store, dated to the scrape; not a window figure"
+   "definition": "Google Play listing rating, India listing, all-time, one store, dated; not a window figure"
   },
   "L2:card_category_items:activation": {
    "label": "Activation",

@@ -146,7 +146,7 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
               <Fig key="d" f={c.date} />,
               <Fig
                 key="c"
-                f={{ ...c.date, display: c.countdown ?? common.pending }}
+                f={{ ...c.date, display: c.countdown ?? "—" }}
               />,
             ],
           }))}

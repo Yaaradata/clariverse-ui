@@ -1,8 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
-import Sidebar from "./Sidebar";
+
+// Loaded only where it is rendered: standalone pages (the role-based demos among them) never fetch the sidebar, its
+// logos or its other demos' names (IndusInd DEC-7).
+const Sidebar = dynamic(() => import("./Sidebar"), { ssr: false });
 
 export default function ConditionalSidebar({
   children,

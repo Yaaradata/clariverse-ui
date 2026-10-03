@@ -230,6 +230,7 @@ def indusind_lint_fixtures(fails: list[str]) -> int:
         ("HL06", li.text_rules("Built for S-HOME after the DEC-4 call", "fixture", {}, [])),
         ("HL06", li.text_rules(f"Approved by {li.INTERNAL_NAMES[0] if li.INTERNAL_NAMES else 'Nobody'}", "fixture", {}, [])),
         ("HL28", li.text_rules("Internal Ombudsman Directions of 16 Jan 2026", "fixture", {}, [])),
+        ("DEC7", li.text_rules("Back to industries: Sterling Bank, Swedbank", "fixture", {}, [])),
         ("HL22", li.length_rules('<Tile sub="One two three four five six seven" />', "fixture.tsx")),
         ("HL22", li.paraphrase_rules({"x": {"paraphrase": "one two three four five six seven eight nine ten eleven twelve thirteen"}}, "fixture")),
     ]

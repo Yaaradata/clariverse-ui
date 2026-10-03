@@ -238,7 +238,7 @@ export function OutsideMeter({
           <strong style={{ color: C.text, fontFamily: MONO }}>
             {rating.display}
           </strong>{" "}
-          from {rating.ratings_display} ratings (Google Play).
+          from {rating.ratings_display} reviews (Google Play, India listing).
         </div>
       ) : null}
       {caption ? <MutedNote>{caption}</MutedNote> : null}
