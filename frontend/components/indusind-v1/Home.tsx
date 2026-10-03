@@ -100,7 +100,7 @@ function QuarterLine({ q, common }: { q: Home["quarter"]; common: Common }) {
   );
 }
 
-function StateBar({ r, o, w }: { r: FigT; o: FigT; w: FigT }) {
+export function StateBar({ r, o, w }: { r: FigT; o: FigT; w: FigT }) {
   const seg = (f: FigT, color: string) => (
     <div style={{ width: `${f.value ?? 0}%`, background: color }} />
   );
