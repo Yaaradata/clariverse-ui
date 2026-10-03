@@ -200,4 +200,4 @@ copy:
     new_money: "New savings accounts, as an index: Q1 weekly average = 100."
     pattern: "What the Internal Ombudsman's quarterly complaint-pattern analysis would cover this quarter: shares of the window's complaints."
     closure_risk: "Card accounts flagged at risk of closure, as an index: Q1 weekly average = 100. Aggregate only; no customer list."
-
+    weekly: "Received and closed in the week: indices on the Q1 weekly intake (= 100). Pending: complaints with no final reply at the week end, in weeks of Q1 intake. Over 30: share of pending with no final reply after 30 days. Rejected, reopened and to the IO: shares of the week's final replies."

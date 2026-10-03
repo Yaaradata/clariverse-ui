@@ -506,7 +506,39 @@ def peers_page() -> dict:
     }
 
 
+def register_weekly() -> list[dict]:
+    """The weekly complaint register, last 13 weeks to the freeze, as stock and flow (the way a bank's MIS reads it).
+    Received and closed in the week: indices on the Q1 weekly intake (= 100). Pending: the stock at the week end, in
+    weeks of Q1 intake. Over 30: share of that stock with no final reply after 30 days. Rejected and reopened: shares of
+    the week's final replies. To the IO: rejections sent for Internal Ombudsman review in the week, as a share of the
+    week's final replies. Counts stay in the seed until N31 sets the scale."""
+    q1w = len([c for c in D.cs if dt.date.fromisoformat(c["received_at"][:10]) <= max(D.q1)]) / len(D.q1)
+    when = lambda x: dt.datetime.fromisoformat(x) if x else None  # noqa: E731
+    rows = []
+    for wk in D.weeks[-13:]:
+        e = dt.datetime.combine(wk, FREEZE.timetz())
+        b = e - dt.timedelta(days=7)
+        received = [c for c in D.cs if b < c["_rec"] <= e]
+        replied = [c for c in D.cs if (t := when(c["final_reply_at"])) and b < t <= e]
+        st = [x for x in (SEED.complaint_state(c, e) for c in D.cs if c["_rec"] <= e) if x and x["pending"]]
+        back = sum(1 for c in D.cs if (t := when(c["unhappy_at"])) and b < t <= e)
+        to_io = sum(1 for c in D.cs if (t := when(c["decision_at"])) and b < t <= e)
+        rows.append({
+            "end": wk.isoformat(),
+            "received_index": round(100 * len(received) / q1w),
+            "closed_index": round(100 * len(replied) / q1w),
+            "pending_weeks": round(len(st) / q1w, 1),
+            "over_30": pct(sum(x["over_30"] for x in st), len(st)),
+            "rejected": pct(sum(c["outcome"] == "rejected" for c in replied), len(replied)),
+            "reopened": pct(back, len(replied)),
+            "referred_to_io": pct(to_io, len(replied)),
+        })
+    return rows
+
+
+
 def risk_page() -> dict:
+    weekly_rows = register_weekly()  # the same 13 weeks in every window
     grounds = {g["id"]: g["label"] for g in CONFIG["complaint_grounds"]}
     groups = {g["id"]: g["label"] for g in CONFIG["customer_groups"]}
     out = {"calendar": [{"id": h["id"], "label": h["label"], "date": l1(h["id"]), "countdown": PENDING if REG[h["id"]]["value"] is None else None}
@@ -526,16 +558,7 @@ def risk_page() -> dict:
         w = D.window(wd["id"])
         cur = [c for c in D.cs if w["start"] < c["_rec"] <= w["end"]]
         n = len(cur)
-        weekly = []
-        for wk in D.weeks[-13:]:
-            e = dt.datetime.combine(wk, FREEZE.timetz())
-            xs = [c for c in D.cs if e - dt.timedelta(days=7) < c["_rec"] <= e]
-            st = [SEED.complaint_state(c, e) for c in xs]
-            k = len(xs)
-            q1w = len([c for c in D.cs if dt.date.fromisoformat(c["received_at"][:10]) <= max(D.q1)]) / len(D.q1)
-            weekly.append({"end": wk.isoformat(), "received_index": round(100 * k / q1w),
-                           **{f: pct(sum(s[g] for s in st), k) for f, g in (("closed", "resolved"), ("pending", "pending"), ("over_30", "over_30"), ("rejected", "rejected"))},
-                           "reopened": pct(sum(s["unhappy"] for s in st), k), "referred_to_io": pct(sum(1 for c in xs if c["decision_at"]), k)})
+        weekly = weekly_rows
 
         def split(key, labels):
             c = collections.Counter(x[key] for x in cur)
