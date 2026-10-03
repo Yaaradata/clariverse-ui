@@ -72,6 +72,7 @@ GROUNDS = {
 CHANNELS = {"branch": 0.24, "contact_centre": 0.37, "email": 0.15, "web": 0.10, "app": 0.10, "social_inbox": 0.04}
 CONTACT_CHANNELS = {"branch": 0.20, "contact_centre": 0.50, "email": 0.10, "web": 0.08, "app": 0.10, "social_inbox": 0.02}
 REGIONS = {"N": 0.26, "S": 0.19, "E": 0.14, "W": 0.29, "C": 0.12}
+CUSTOMER_GROUPS = {"retail": 0.71, "senior": 0.12, "nri": 0.07, "small_business": 0.10}  # for the IO pattern analysis
 CARD_CATEGORIES = {
     "rewards": 0.16, "lounge": 0.06, "fees": 0.12, "limits": 0.08, "disputes": 0.09, "fraud": 0.07, "applications": 0.08,
     "activation": 0.05, "closure": 0.06, "servicing": 0.11, "emi": 0.08, "cobrand": 0.04,
@@ -134,6 +135,7 @@ def complaints(weeks) -> list[dict]:
                 "ground": pick(rng, GROUNDS[product]),
                 "channel": pick(rng, CHANNELS),
                 "region": pick(rng, REGIONS),
+                "customer_group": pick(random.Random(f"{SEED}:group:{n}"), CUSTOMER_GROUPS),
                 "received_at": iso(received),
                 "final_reply_at": iso(reply) if replied else None,
                 "resolution_sent_at": iso(waiting_from) if waiting_from and (not replied or waiting_from < reply) else None,

@@ -65,6 +65,7 @@ sa_slabs:
   - {id: 1to25l, label: "₹1–25 lakh"}
   - {id: 25lto5cr, label: "₹25 lakh–₹5 crore"}
   - {id: gt5cr, label: "Above ₹5 crore"}
+customer_groups: [{id: retail, label: Retail}, {id: senior, label: Senior citizens}, {id: nri, label: NRI}, {id: small_business, label: Small business}]
 customer_types: [{id: resident_retail, label: Resident retail}, {id: nri, label: NRI}, {id: bulk, label: Bulk and institutional}]
 
 # RBI complaint grounds used for the illustrative register (L3). Distribution grounds feed card D.
@@ -130,7 +131,7 @@ cards:
       cost_cap: null
       success: "Gap reported monthly, each part with an owner"
   - id: C
-    title: "Vehicle finance: Q1 disbursements {N22}, {D11} on a year ago. Demand, service or credit?"
+    title: "Vehicle finance: Q1 disbursements {N22}; on a year ago {D11}. Demand, service or credit?"
     figures: [N22, N24, D11, N23, N21]
     peers: []
     sensitivity: [S05]
