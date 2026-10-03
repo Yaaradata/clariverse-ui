@@ -137,12 +137,70 @@ def run(p: dict) -> list[str]:
             if not path.endswith(skip) and INTERNAL.search(s):
                 fails.append(f"internal label in {path}: {s[:70]!r}")
 
+    fails += run_l2(p)
+
     # ---- privacy: no URL, handle or personal-data pattern in any page payload
     for name, obj in p.items():
         for path, s in strings(obj, name):
             for kind, rx in PRIVATE.items():
                 if rx.search(s) and not (kind == "url" and path.endswith(".module")):
                     fails.append(f"privacy: {kind} pattern in {path}: {s[:60]!r}")
+    return fails
+
+
+def blocks(o, path=""):
+    """Every public-voice block (a dict with by_source) in a payload."""
+    if isinstance(o, dict):
+        if "by_source" in o:
+            yield path, o
+        for k, v in o.items():
+            yield from blocks(v, f"{path}.{k}")
+    elif isinstance(o, list):
+        for i, v in enumerate(o):
+            yield from blocks(v, f"{path}[{i}]")
+
+
+def run_l2(p: dict) -> list[str]:
+    """Public voice (L2): source dominance footnoted, mid-window series as shares, one store per rating, counts
+    reconcile (rows = home total, Deposits row = Deposits screen, Cards row = Cards screen), negative share hidden
+    until the sentiment check passes, no claim on fewer than min_items items, every figure registered."""
+    import indusind_l2_metrics as M  # noqa: PLC0415
+
+    fails: list[str] = []
+    ok = lambda cond, msg: None if cond else fails.append(msg)  # noqa: E731
+    lim, flag = M.L2C["min_items"], M.L2C["source_share_flag"]
+    registry = json.loads(M.REGISTRY.read_text(encoding="utf-8"))["metrics"] if M.REGISTRY.exists() else {}
+    for name, obj in p.items():
+        for path, b in blocks(obj, name):
+            top = max((x.get("share") or 0 for x in b["by_source"]), default=0)
+            ok(top <= 100 * flag or any("%" in f and "of these items" in f for f in b.get("footnotes", [])),
+               f"L2 source: {path} has one source at {top}% with no footnote")
+            th = b.get("theme") or {}
+            ok(th.get("thin", True) or (th["count"]["value"] >= lim and b["items"]["value"] >= lim),
+               f"L2 thin: {path} names a top theme on fewer than {lim} items")
+        for path, f in figures(obj, name):
+            if f["layer"] != "L2":
+                continue
+            if "negative_share" in f["id"]:
+                ok(M.CONFIG["flags"].get("sentiment_check_passed") is True,
+                   f"L2 negative: {path} shows a negative share before the sentiment check passed")
+            ok(re.sub(r":(?:week|w4|w13)$", "", f["id"]) in registry or "points" in f,
+               f"L2 registry: {path} id {f['id']} is not in data/public/indusind_l2_metrics.json")
+    stores = {f.get("store") for obj in p.values() for _, f in figures(obj) if f.get("layer") == "L2" and f.get("store")}
+    ok(len(stores) <= 1, f"L2 rating: ratings from more than one store compared ({sorted(stores)})")
+    for wid, w in p["home"]["windows"].items():
+        t = w["outside"].get("trend")
+        if t and t.get("starts"):
+            a, _ = M.window("w13")
+            ok(t["unit"] == "%" or dt.date.fromisoformat(t["starts"]) <= a.date(),
+               f"L2 series [{wid}]: the trend starts mid-window ({t['starts']}) but is plotted as {t['unit']}, not shares")
+        rows = {r["id"]: r for r in w["rows"]}
+        tot = sum(r["outside"]["items"]["value"] for r in w["rows"])
+        ok(tot == w["outside"]["items"]["value"], f"L2 reconcile [{wid}]: rows sum to {tot}, home total is {w['outside']['items']['value']}")
+        ok(rows["deposits"]["outside"]["items"]["value"] == p["deposits"]["windows"][wid]["why"]["items"]["value"],
+           f"L2 reconcile [{wid}]: Deposits row differs from the Deposits screen")
+        ok(rows["cards"]["outside"]["items"]["value"] == p["cards"]["windows"][wid]["external"]["items"]["value"],
+           f"L2 reconcile [{wid}]: Cards row differs from the Cards screen")
     return fails
 
 
@@ -166,6 +224,19 @@ FIXTURES = [
     ("post URL in a payload", "privacy: url", lambda p: _set(p["cards"], ["voice"], {"text": "see https://x.com/a/status/1"})),
     ("author handle in a payload", "privacy: handle", lambda p: _set(p["cards"], ["voice"], {"text": "posted by @someone_here"})),
     ("internal label in a payload", "internal label", lambda p: _set(p["home"]["quarter"]["items"][0], ["period"], "date per IND-D1")),
+    ("L2 source over 60% unflagged", "L2 source", lambda p: _set(p["home"]["windows"]["w4"]["outside"], ["footnotes"], [])),
+    ("L2 theme on thin data", "L2 thin", lambda p: _set(p["home"]["windows"]["week"]["rows"][0]["outside"], ["theme"],
+                                                        {"thin": False, "count": {"value": 3}})),
+    ("L2 negative share shown early", "L2 negative", lambda p: p["home"]["windows"]["w4"]["outside"]["by_source"].append(
+        {"id": "L2:negative_share:all:w4", "layer": "L2", "value": 60.0, "display": "60.0%"})),
+    ("L2 figure not registered", "L2 registry", lambda p: _set(p["home"]["windows"]["w4"]["outside"], ["escalation"],
+                                                             {"id": "L2:made_up:all:w4", "layer": "L2", "value": 1, "display": "1"})),
+    ("L2 two stores in a rating", "L2 rating", lambda p: _set(p["home"]["windows"]["w13"]["outside"], ["rating2"],
+                                                            {"id": "L2:LIVE-02", "layer": "L2", "store": "Apple App Store", "value": 4.1, "display": "4.1"})),
+    ("L2 mid-window series as counts", "L2 series", lambda p: _set(p["home"]["windows"]["w13"]["outside"]["trend"], ["unit"], "items")),
+    ("L2 rows do not sum", "rows sum to", lambda p: _set(p["home"]["windows"]["w4"]["rows"][5]["outside"]["items"], ["value"], 1)),
+    ("L2 Deposits row out of step", "Deposits row differs", lambda p: _set(p["deposits"]["windows"]["w13"]["why"]["items"], ["value"], 7)),
+    ("L2 Cards row out of step", "Cards row differs from the Cards screen", lambda p: _set(p["cards"]["windows"]["week"]["external"]["items"], ["value"], 7)),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 

@@ -19,6 +19,7 @@ from pathlib import Path
 
 import yaml
 
+import indusind_l2_metrics as M
 import seed_indusind as SEED
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -300,7 +301,7 @@ def card_payload(card: dict, w: dict) -> dict:
         "what": [l1(r) for r in card["figures"]],
         "peers": [l1(r) for r in card["peers"]],
         "peers_held": not card["peers"],
-        "voice": not_loaded("Customer and market voice: " + ", ".join(t.replace("_", " ") for t in card["voice_tags"])),
+        "voice": M.card_voice(card["id"], card["voice_tags"], L2, w["id"]),
         "inside": inside,
         "sensitivity": [sens(s) for s in card["sensitivity"]],
         "exposure": card.get("exposure"),
@@ -401,14 +402,19 @@ def home() -> dict:
         for b in CONFIG["businesses"]:
             ps = products_of(b["id"])
             inside = {k: v for k, v in complaint_block(b["id"], ps, w).items() if k in ("received_index", "open", "over_30")} if ps else None
+            ob = M.voice_block(M.business_items(L2, b["id"], w["id"]), b["id"], w["id"])
             rows.append({"id": b["id"], "label": b["label"], "next": bool(b.get("next")), "inside": inside,
-                         "outside": not_loaded("Public items, negative share, escalation language"),
-                         "theme": not_loaded("Top theme, hand-verified"),
+                         "outside": ob, "theme": ob["theme"],
                          "money": [l1(r) for r in b["money"]], "module": b["module"]})
+        # Public items not tied to one business, so the home total is the sum of the rows.
+        ob = M.voice_block(M.business_items(L2, "other", w["id"]), "other", w["id"])
+        rows.append({"id": "other", "label": "Not tied to one business", "next": False, "outside_only": True,
+                     "inside": None, "outside": ob, "theme": ob["theme"], "money": [], "module": None})
         sa_out = deposit_flow_index("SA", "outflow", w)
         per_w = {
             "pulse": per,
-            "outside": not_loaded("Public items by source, share of negative voice, escalation language, responded"),
+            "outside": {**M.voice_block(M.in_window(L2, w["id"]), "all", w["id"]), "rating": M.rating_fig(),
+                        "trend": M.security_trend(L2)},
             "doing": {
                 "savings": [l1("N04"), l1("N06"), l1("N07"), l1("D08")],
                 "outflow_index": sa_out,
@@ -458,7 +464,7 @@ def deposits_page() -> dict:
                                       for k, lab in (("mix", "Mix (CASA, retail share)"), ("term", "Term pricing by bucket"), ("bulk", "Bulk reliance"))],
                     "rate_table": {"loaded": CONFIG["flags"]["manual_read_logged"], "text": "IndusInd rate table: shown once the manual read is logged"}},
            "franchise": [l1("N13"), l1("N14")],
-           "why": not_loaded("Peer card dates and changes, ad captures, deposit-voice themes, switching talk"),
+           "why_captures": not_loaded("Peer card dates and changes, ad captures"),
            "action": next(a for a in D.actions if a["card_id"] == "A"),
            "windows": {}}
     for wd in CONFIG["windows"]:
@@ -483,6 +489,7 @@ def deposits_page() -> dict:
             "top": top_clusters(w),
             "premature": l3("deposits_weekly", "premature_td_withdrawals_index", "TD", w["id"], round(100 * cur / q1p), show_index(round(100 * cur / q1p))),
             "new_money": deposit_count_index("SA", "new_accounts", w),
+            "why": M.card_voice("A", ["fee_change", "closure_intent", "rate_offer", "app_failure"], L2, w["id"]),
         }
     out["slabs"], out["regions"], out["branch_types"] = CONFIG["sa_slabs"], CONFIG["regions"], CONFIG["branch_types"]
     return out
@@ -553,7 +560,7 @@ def risk_page() -> dict:
                {"item": "Refund and compensation process for established mis-selling drafted", "status": "Not started"},
                {"item": "Explicit-consent capture checked on every distribution journey", "status": "In progress"},
            ],
-           "escalation": not_loaded("Items naming the RBI, the Ombudsman or a court, by product")}
+           }
     for wd in CONFIG["windows"]:
         w = D.window(wd["id"])
         cur = [c for c in D.cs if w["start"] < c["_rec"] <= w["end"]]
@@ -572,14 +579,18 @@ def risk_page() -> dict:
                         "group": split("customer_group", groups), "geography": split("region", region_labels)},
             "ombudsman": {k: v for k, v in ombudsman_block(set(SEED.PRODUCTS), "all", w).items() if not k.startswith("_")},
             "distribution": distribution_by_product(w),
+            "public": M.allegations_by_product(L2, w["id"]),
         }
     out["card_d"] = card_payload(next(c for c in CONFIG["cards"] if c["id"] == "D"), D.window(CONFIG["default_window"]))
     return out
 
 
 def cards_page() -> dict:
-    out = {"money": l1("N18"), "voice": not_loaded("Cards voice, timelines heard in public, where customers praise us"),
-           "outside": not_loaded("Public items about Cards, negative share, escalation language"), "windows": {}}
+    out = {"money": l1("N18"), "windows": {}}
+    # The sub-line claims Cards has the most public voice only if it leads every row of the pulse by business, Digital
+    # included (the home table shows Digital's count beside it).
+    w13 = {b: len(M.business_items(L2, b, "w13")) for b in ("deposits", "vehicle", "micro", "cards", "personal", "digital")}
+    out["most_voice"] = max(w13, key=w13.get) == "cards" and w13["cards"] >= CONFIG["l2"]["min_items"]
     cats = {c["id"]: c for c in CONFIG["cards_categories"]}
     for wd in CONFIG["windows"]:
         w = D.window(wd["id"])
@@ -629,6 +640,7 @@ def cards_page() -> dict:
                                          round(100 * (risk_tot / w["n"]) / weekly_avg(D.cards, "closure_risk", D.q1)),
                                          show_index(round(100 * (risk_tot / w["n"]) / weekly_avg(D.cards, "closure_risk", D.q1))), basis="Q1 weekly average = 100"),
                              "by_category": at_risk[:6]},
+            "external": M.cards_external(L2, W),
         }
     return out
 
@@ -667,12 +679,14 @@ def ask_bank(h: dict) -> dict:
 
 
 def main():
-    global D
+    global D, L2
     D = Data()
+    L2 = M.load()
     OUT.mkdir(parents=True, exist_ok=True)
     h = home()
     pages = {"common": common(), "home": h, "deposits": deposits_page(), "peers": peers_page(), "risk": risk_page(),
              "cards": cards_page(), "approvals": approvals_page(), "ask": ask_bank(h)}
+    M.write_registry()
     for name, obj in pages.items():
         (OUT / f"{name}.json").write_text(json.dumps(obj, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     print("indusind payloads:", {k: (OUT / f"{k}.json").stat().st_size // 1024 for k in pages}, "KB")

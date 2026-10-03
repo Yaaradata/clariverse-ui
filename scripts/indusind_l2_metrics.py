@@ -1,0 +1,285 @@
+"""IndusInd public voice (L2) blocks for the page payloads, from data/processed/indusind_l2/ (written by the ingest).
+
+Only core-licence, on-topic, non-duplicate items count. Every figure is {id, layer: "L2", tag, value, display}; every
+id is recorded in data/public/indusind_l2_metrics.json (lint 18). Rules:
+  - a claim needs `min_items` items in the window, else the slot says "Not enough public items this window";
+  - one source above `source_share_flag` of a product's items in a window is footnoted;
+  - a series whose source starts mid-window is plotted as shares, never raw counts;
+  - a rating comparison uses one store only (only the INDIE Play listing rating is shown);
+  - negative share is left out of every payload until config sets `sentiment_check_passed: true`;
+  - trust_governance items count, but never set a top theme, an example or a negative share.
+Used by scripts/build_indusind.py and scripts/check_indusind.py.
+"""
+
+from __future__ import annotations
+
+import collections
+import datetime as dt
+import json
+import re
+from pathlib import Path
+
+import yaml
+
+ROOT = Path(__file__).resolve().parents[1]
+PROC = ROOT / "data" / "processed" / "indusind_l2"
+REGISTRY = ROOT / "data" / "public" / "indusind_l2_metrics.json"
+CONFIG = yaml.safe_load((ROOT / "config" / "indusind.yaml").read_text(encoding="utf-8"))
+L2C = CONFIG["l2"]
+TAG = "Public · live"
+IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
+FREEZE = dt.datetime.fromisoformat(CONFIG["data_freeze"])
+SOURCE_LABEL = {"play": "Google Play", "appstore": "Apple App Store", "consumercomplaints": "consumercomplaints.in"}
+PLAY_START = None  # first INDIE Play item: the collector's cap cut the window (qa/indusind_l2_profile.md)
+
+BUSINESS_PRODUCTS = {
+    "deposits": {"deposits_savings", "fd_rd", "nri"},
+    "vehicle": {"vehicle_loans"},
+    "micro": {"micro_loans_rural"},
+    "cards": {"cards"},
+    "personal": {"personal_loans"},
+    "digital": {"app_digital"},
+    "wholesale": set(),
+    "other": {"home_loans", "other"},
+}
+ALLEGATION_LABEL = {
+    "mis_selling_allegation": "Posts alleging mis-selling or bundling (public, unverified)",
+    "recovery_conduct_allegation": "Posts alleging recovery-agent conduct (public, unverified)",
+}
+REGISTERED: dict[str, dict] = {}
+
+
+def load() -> list[dict]:
+    global PLAY_START
+    items = [json.loads(line) for line in open(PROC / "items.jsonl", encoding="utf-8")]
+    items = [i for i in items if i["on_topic"] and not i["duplicate_of"]]
+    PLAY_START = min(dt.datetime.fromisoformat(i["created_at"]) for i in items if i["source"] == "play")
+    return items
+
+
+def listing() -> dict | None:
+    return json.loads((PROC / "listing.json").read_text(encoding="utf-8")).get("indie_play")
+
+
+def window(wid: str) -> tuple[dt.datetime, dt.datetime]:
+    n = next(w["weeks"] for w in CONFIG["windows"] if w["id"] == wid)
+    return FREEZE - dt.timedelta(days=7 * n), FREEZE
+
+
+def in_window(items: list[dict], wid: str) -> list[dict]:
+    a, b = window(wid)
+    return [i for i in items if a < dt.datetime.fromisoformat(i["created_at"]) <= b]
+
+
+def fmt_int(n: int) -> str:
+    s = str(n)
+    if len(s) <= 3:
+        return s
+    head, tail = s[:-3], s[-3:]
+    parts = []
+    while len(head) > 2:
+        parts.insert(0, head[-2:])
+        head = head[:-2]
+    if head:
+        parts.insert(0, head)
+    return ",".join(parts) + "," + tail
+
+
+def pct(n: int, d: int) -> float | None:
+    return round(100 * n / d, 1) if d else None
+
+
+def fig(fid: str, value, display: str, label: str, definition: str, **extra) -> dict:
+    REGISTERED[re.sub(r":(?:week|w4|w13)$", "", fid)] = {"label": label, "definition": definition}
+    return {"id": fid, "layer": "L2", "tag": TAG, "value": value, "display": display, "label": label, **extra}
+
+
+def thin(what: str) -> dict:
+    return {"layer": "L2", "tag": TAG, "loaded": True, "thin": True, "text": L2C["not_enough"], "what": what}
+
+
+def coverage_note(wid: str, sources: set[str]) -> str | None:
+    a, _ = window(wid)
+    if "play" in sources and PLAY_START and PLAY_START > a:
+        return (f"Google Play reviews start {PLAY_START.day} {PLAY_START:%b} (the collector's cap); "
+                "earlier weeks hold App Store items only.")
+    return None
+
+
+def source_note(xs: list[dict]) -> tuple[str | None, list[dict]]:
+    c = collections.Counter(i["source"] for i in xs)
+    n = len(xs)
+    if not n:
+        return None, []
+    top, k = c.most_common(1)[0]
+    share = k / n
+    note = (f"{round(100 * share)}% of these items are {SOURCE_LABEL[top]} reviews of the INDIE app."
+            if share > L2C["source_share_flag"] else None)
+    return note, [{"source": s, "label": SOURCE_LABEL[s], "count": v, "share": pct(v, n)} for s, v in c.most_common()]
+
+
+def top_theme(xs: list[dict], scope: str, wid: str, evidence: bool = False) -> dict:
+    """The most frequent theme among the scope's non-positive items (trust_governance and very short items out)."""
+    # Themes describe what customers complain about, so praise is left out of the pool (it would sit under a complaint
+    # paraphrase); trust_governance and very short items are out too.
+    pool = [i for i in xs if i["theme"] and "trust_governance" not in i["topic_tags"] and not i["short"]
+            and i["sentiment"] != "positive"]
+    if len(xs) < L2C["min_items"] or not pool:
+        return thin("Top theme")
+    theme, k = collections.Counter(i["theme"] for i in pool).most_common(1)[0]
+    if k < L2C["min_items"]:
+        return thin("Top theme")
+    t = L2C["themes"][theme]
+    return {"layer": "L2", "tag": TAG, "loaded": True, "thin": False, "theme": theme, "label": t["label"],
+            "paraphrase": t["paraphrase"],
+            "count": fig(f"L2:theme_items:{scope}:{theme}:{wid}", k, fmt_int(k), f"{t['label']}: items",
+                         "On-topic public items in the window carrying this theme"),
+            "share": fig(f"L2:theme_share:{scope}:{theme}:{wid}", pct(k, len(xs)), f"{pct(k, len(xs))}%",
+                         f"{t['label']}: share of items", "Theme items as a share of the scope's public items"),
+            # Source items are for the hand check only (qa/indusind_l2_sample_check.md); a page never receives them.
+            **({"evidence": sorted(i["id"] for i in pool if i["theme"] == theme)} if evidence else {})}
+
+
+def voice_block(xs: list[dict], scope: str, wid: str) -> dict:
+    """Public items, by source, escalation language, responded, top theme; negative share only once checked."""
+    n = len(xs)
+    note, by_src = source_note(xs)
+    esc = sum("escalation_language" in i["topic_tags"] for i in xs)
+    play = [i for i in xs if i["source"] == "play"]
+    resp = sum(1 for i in play if i["responded"])
+    out = {
+        "layer": "L2", "tag": TAG, "loaded": True, "thin": n < L2C["min_items"], "text": L2C["not_enough"],
+        "items": fig(f"L2:items:{scope}:{wid}", n, fmt_int(n), "Public items", "On-topic public items in the window, core sources"),
+        "by_source": [fig(f"L2:items_by_source:{scope}:{s['source']}:{wid}", s["count"], fmt_int(s["count"]), s["label"],
+                          "Public items from one source", share=s["share"]) for s in by_src],
+        "escalation": fig(f"L2:escalation:{scope}:{wid}", esc, fmt_int(esc), "Escalation language",
+                          "Items naming the RBI, the Ombudsman or a court"),
+        "responded": (fig(f"L2:responded_share:{scope}:{wid}", pct(resp, len(play)), f"{pct(resp, len(play))}%",
+                          "Responded, Google Play", "Share of Google Play reviews with a reply from the bank")
+                      if len(play) >= L2C["min_items"] else None),
+        "theme": top_theme(xs, scope, wid),
+        "footnotes": [x for x in (note, coverage_note(wid, {i["source"] for i in xs})) if x],
+    }
+    if CONFIG["flags"].get("sentiment_check_passed"):
+        neg = sum(i["sentiment"] == "negative" for i in xs if "trust_governance" not in i["topic_tags"])
+        out["negative"] = fig(f"L2:negative_share:{scope}:{wid}", pct(neg, n), f"{pct(neg, n)}%", "Negative share",
+                              "Share of items with negative sentiment")
+    return out
+
+
+def security_trend(items: list[dict], wid: str = "w13") -> dict:
+    """Weekly share of items flagging the app as unsafe. Shares, not counts: Play starts mid-window."""
+    a, b = window(wid)
+    pts = []
+    k = 0
+    while True:
+        end = b - dt.timedelta(days=7 * k)
+        start = end - dt.timedelta(days=7)
+        if start < a:
+            break
+        xs = [i for i in items if start < dt.datetime.fromisoformat(i["created_at"]) <= end and i["product"] == "app_digital"]
+        v = pct(sum(i["theme"] == "security_block" for i in xs), len(xs)) if len(xs) >= L2C["min_items"] else None
+        pts.insert(0, {"end": end.date().isoformat(), "value": v})
+        k += 1
+    REGISTERED["L2:security_block_share_weekly"] = {"label": "App flagged as unsafe, share of the week's app items",
+                                                    "definition": "Weekly share; weeks under the minimum item count are left blank"}
+    return {"id": "L2:security_block_share_weekly:digital", "layer": "L2", "unit": "%", "points": pts,
+            "starts": PLAY_START.date().isoformat() if PLAY_START else None}
+
+
+def rating_fig() -> dict | None:
+    m = listing()
+    if not m:
+        return None
+    return fig("L2:LIVE-01:indie_play_rating", m["score"], f"{m['score']}", "INDIE on Google Play",
+               "Listing rating, one store, dated to the scrape", store=m["store"], ratings=m["ratings"],
+               ratings_display=fmt_int(m["ratings"]), as_of=m["as_of"])
+
+
+def write_registry() -> None:
+    REGISTRY.write_text(json.dumps({"about": "Every public (L2) figure shown on the IndusInd pages, by id pattern "
+                                    "(the window suffix is dropped). Written by scripts/build_indusind.py.",
+                                    "metrics": dict(sorted(REGISTERED.items()))}, ensure_ascii=False, indent=1) + "\n",
+                        encoding="utf-8", newline="\n")
+
+
+TOPIC_LABEL = {
+    "rate_offer": "Rate offers",
+    "fee_change": "Fees and charges",
+    "closure_intent": "Talk of closing the account",
+    "app_failure": "App failures",
+    "service_delay": "Service delays",
+    "escalation_language": "Escalation language",
+    "insurance_investment_sales": "Insurance or investment sales",
+    "fraud_impersonation": "Fraud and impersonation (customers targeted)",
+    **ALLEGATION_LABEL,
+}
+CARD_SCOPE = {"A": ("deposits", BUSINESS_PRODUCTS["deposits"]), "B": ("all", None),
+              "C": ("vehicle", BUSINESS_PRODUCTS["vehicle"]), "D": ("all", None)}
+
+
+def tag_lines(xs: list[dict], tags: list[str], scope: str, wid: str) -> list[dict]:
+    """One line per topic: its count, or the not-enough state when the claim rests on fewer than min_items items."""
+    out = []
+    for t in tags:
+        k = sum(t in i["topic_tags"] for i in xs)
+        f = fig(f"L2:topic_items:{scope}:{t}:{wid}", k, fmt_int(k), TOPIC_LABEL[t], "On-topic public items with this topic")
+        out.append({"topic": t, "label": TOPIC_LABEL[t], "fig": f, "thin": k < L2C["min_items"]})
+    return out
+
+
+def card_voice(card_id: str, tags: list[str], items: list[dict], wid: str) -> dict:
+    scope, products = CARD_SCOPE[card_id]
+    xs = [i for i in in_window(items, wid) if products is None or i["product"] in products]
+    out = {"layer": "L2", "tag": TAG, "loaded": True, "scope": scope, "text": L2C["not_enough"],
+           "items": fig(f"L2:items:{scope}:{wid}", len(xs), fmt_int(len(xs)), "Public items",
+                        "On-topic public items in the window, core sources"),
+           "lines": tag_lines(xs, tags, f"card{card_id}", wid),
+           "thin": all(line["thin"] for line in tag_lines(xs, tags, f"card{card_id}", wid))}
+    if card_id == "A":
+        out["theme"] = top_theme(xs, "deposits", wid)
+        sw = [i for i in xs if i["peer_mentioned"]]
+        out["switching"] = fig(f"L2:peer_mentioned:deposits:{wid}", len(sw), fmt_int(len(sw)), "Items naming a peer bank",
+                               "Deposit items that name a peer bank (switching talk)")
+        out["switching_thin"] = len(sw) < L2C["min_items"]
+    note, _ = source_note(xs)
+    out["footnotes"] = [x for x in (note, coverage_note(wid, {i["source"] for i in xs})) if x]
+    return out
+
+
+def business_items(items: list[dict], business: str, wid: str) -> list[dict]:
+    ps = BUSINESS_PRODUCTS[business]
+    return [i for i in in_window(items, wid) if i["product"] in ps]
+
+
+def allegations_by_product(items: list[dict], wid: str) -> list[dict]:
+    """Allegation-labelled posts and escalation language, by business. Counts only; thin under min_items."""
+    out = []
+    for b in ("deposits", "vehicle", "micro", "cards", "personal", "digital"):
+        xs = business_items(items, b, wid)
+        row = {"business": b}
+        for t in ("mis_selling_allegation", "recovery_conduct_allegation", "escalation_language"):
+            k = sum(t in i["topic_tags"] for i in xs)
+            row[t] = fig(f"L2:topic_items:{b}:{t}:{wid}", k, fmt_int(k), TOPIC_LABEL[t], "On-topic public items with this topic")
+            row[t]["thin"] = k < L2C["min_items"]
+        out.append(row)
+    return out
+
+
+CARD_CATEGORY_LABEL = {"rewards": "Rewards and redemption", "lounge": "Lounge and benefits", "fees": "Fees and charges",
+                       "limits": "Limits", "disputes": "Disputes and refunds",
+                       "fraud": "Fraud and impersonation (customers targeted)", "applications": "Applications and verification",
+                       "activation": "Activation", "closure": "Closure", "app_servicing": "App and card servicing",
+                       "emi": "EMI and payments", "cobrand": "Co-brand partners"}
+
+
+def cards_external(items: list[dict], wid: str) -> dict:
+    xs = business_items(items, "cards", wid)
+    block = voice_block(xs, "cards", wid)
+    cats = collections.Counter(i["card_category"] for i in xs if i["card_category"])
+    block["categories"] = [fig(f"L2:card_category_items:{c}:{wid}", k, fmt_int(k), CARD_CATEGORY_LABEL[c],
+                               "Public card items in this category", category=c, thin=k < L2C["min_items"])
+                           for c, k in cats.most_common()]
+    praise = [i for i in xs if i["sentiment"] == "positive" and not i["short"]]
+    block["praise"] = {"show": len(praise) >= L2C["min_items"], "count": len(praise)}
+    return block

@@ -1,0 +1,345 @@
+{
+ "about": "Every public (L2) figure shown on the IndusInd pages, by id pattern (the window suffix is dropped). Written by scripts/build_indusind.py.",
+ "metrics": {
+  "L2:LIVE-01:indie_play_rating": {
+   "label": "INDIE on Google Play",
+   "definition": "Listing rating, one store, dated to the scrape"
+  },
+  "L2:card_category_items:activation": {
+   "label": "Activation",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:app_servicing": {
+   "label": "App and card servicing",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:applications": {
+   "label": "Applications and verification",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:closure": {
+   "label": "Closure",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:emi": {
+   "label": "EMI and payments",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:fees": {
+   "label": "Fees and charges",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:fraud": {
+   "label": "Fraud and impersonation (customers targeted)",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:limits": {
+   "label": "Limits",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:lounge": {
+   "label": "Lounge and benefits",
+   "definition": "Public card items in this category"
+  },
+  "L2:card_category_items:rewards": {
+   "label": "Rewards and redemption",
+   "definition": "Public card items in this category"
+  },
+  "L2:escalation:all": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:cards": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:deposits": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:digital": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:micro": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:other": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:personal": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:vehicle": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:escalation:wholesale": {
+   "label": "Escalation language",
+   "definition": "Items naming the RBI, the Ombudsman or a court"
+  },
+  "L2:items:all": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:cards": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:deposits": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:digital": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:micro": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:other": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:personal": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:vehicle": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items:wholesale": {
+   "label": "Public items",
+   "definition": "On-topic public items in the window, core sources"
+  },
+  "L2:items_by_source:all:appstore": {
+   "label": "Apple App Store",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:all:consumercomplaints": {
+   "label": "consumercomplaints.in",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:all:play": {
+   "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:cards:appstore": {
+   "label": "Apple App Store",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:cards:play": {
+   "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:deposits:appstore": {
+   "label": "Apple App Store",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:deposits:play": {
+   "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:digital:appstore": {
+   "label": "Apple App Store",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:digital:consumercomplaints": {
+   "label": "consumercomplaints.in",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:digital:play": {
+   "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:other:appstore": {
+   "label": "Apple App Store",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:other:play": {
+   "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:personal:consumercomplaints": {
+   "label": "consumercomplaints.in",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:personal:play": {
+   "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:peer_mentioned:deposits": {
+   "label": "Items naming a peer bank",
+   "definition": "Deposit items that name a peer bank (switching talk)"
+  },
+  "L2:responded_share:all": {
+   "label": "Responded, Google Play",
+   "definition": "Share of Google Play reviews with a reply from the bank"
+  },
+  "L2:responded_share:cards": {
+   "label": "Responded, Google Play",
+   "definition": "Share of Google Play reviews with a reply from the bank"
+  },
+  "L2:responded_share:deposits": {
+   "label": "Responded, Google Play",
+   "definition": "Share of Google Play reviews with a reply from the bank"
+  },
+  "L2:responded_share:digital": {
+   "label": "Responded, Google Play",
+   "definition": "Share of Google Play reviews with a reply from the bank"
+  },
+  "L2:security_block_share_weekly": {
+   "label": "App flagged as unsafe, share of the week's app items",
+   "definition": "Weekly share; weeks under the minimum item count are left blank"
+  },
+  "L2:theme_items:all:security_block": {
+   "label": "App blocked as a security risk: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_items:cards:card_in_app": {
+   "label": "Cards in the app: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_items:deposits:deposit_app": {
+   "label": "Deposits in the app: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_items:digital:security_block": {
+   "label": "App blocked as a security risk: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_share:all:security_block": {
+   "label": "App blocked as a security risk: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:theme_share:cards:card_in_app": {
+   "label": "Cards in the app: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:theme_share:deposits:deposit_app": {
+   "label": "Deposits in the app: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:theme_share:digital:security_block": {
+   "label": "App blocked as a security risk: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:topic_items:cardA:app_failure": {
+   "label": "App failures",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardA:closure_intent": {
+   "label": "Talk of closing the account",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardA:fee_change": {
+   "label": "Fees and charges",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardA:rate_offer": {
+   "label": "Rate offers",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardB:rate_offer": {
+   "label": "Rate offers",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardC:fee_change": {
+   "label": "Fees and charges",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardC:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardC:service_delay": {
+   "label": "Service delays",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardD:insurance_investment_sales": {
+   "label": "Insurance or investment sales",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cardD:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cards:escalation_language": {
+   "label": "Escalation language",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cards:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:cards:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:deposits:escalation_language": {
+   "label": "Escalation language",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:deposits:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:deposits:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:digital:escalation_language": {
+   "label": "Escalation language",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:digital:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:digital:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:micro:escalation_language": {
+   "label": "Escalation language",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:micro:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:micro:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:personal:escalation_language": {
+   "label": "Escalation language",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:personal:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:personal:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:vehicle:escalation_language": {
+   "label": "Escalation language",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:vehicle:mis_selling_allegation": {
+   "label": "Posts alleging mis-selling or bundling (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  },
+  "L2:topic_items:vehicle:recovery_conduct_allegation": {
+   "label": "Posts alleging recovery-agent conduct (public, unverified)",
+   "definition": "On-topic public items with this topic"
+  }
+ }
+}

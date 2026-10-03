@@ -1,0 +1,607 @@
+{
+ "about": "The 100 items of the hand-check sample (random.Random(20261002).sample over on-topic, non-duplicate items of 15+ characters, drawn before the id encoding changed and kept fixed), with Claude's pre-score of each label. A person confirms or overrides.",
+ "sample": [
+  "hukadra7dtddwbqc",
+  "5rbissl26aace5jp",
+  "gwdyi56rco5dhicv",
+  "ycd6cwguwirecrz6",
+  "qropcitgmf7enlnn",
+  "sbplnfq2kujvtcw6",
+  "6oywgm3ouai4c4xp",
+  "pz7cy5gpxwvgojui",
+  "eppnjyrtbtx3b3xt",
+  "4rrluiepqebsgk6z",
+  "v7gutns7sfkoo3vz",
+  "oe2drm4xupiobq3n",
+  "mkynij46orjtm3s3",
+  "vbwzrdru3jnaics4",
+  "2xpqnm47k6awo2g2",
+  "75jlvmswm2lyvobp",
+  "22yvwjwvjbteucc5",
+  "mbuy7zismy3ubswl",
+  "avkasxo5ym5iprs3",
+  "5uqwshuajrty6kc7",
+  "t3wylq6y4f7cqc5e",
+  "7ixpuu2ax543yzth",
+  "j27e5qsbu7ikbkag",
+  "m4ckl5ad5zogccwp",
+  "q6gob63it4hwu3u7",
+  "w6mnlaojsdpx3iqz",
+  "ec26bjesdtelsfqv",
+  "w22k55a7bhqoj2r5",
+  "3x5f4wothqsolcxp",
+  "fn3llo3336n4rr3g",
+  "a2e6f7v377ydcpqf",
+  "kbwiygt4vqvai2wp",
+  "4epe6pb5fuobihs2",
+  "feml5pknyfitkum7",
+  "f7qevymvoxfgpuga",
+  "pchlyeeoymqhn6oy",
+  "dymn6v3rngbzlfb6",
+  "6imhu6mhzibvs7ne",
+  "cofl2nrnldmjftd6",
+  "g3pvlw3hgoxo5eqx",
+  "3ihuyxgsxkbefw2f",
+  "uddrlmgvzaeiv23d",
+  "s3sucm5ut32vjjl3",
+  "lzwiek66b5zhxhut",
+  "osdvwd2uvg6j3ota",
+  "vj75yayqkdu4vldj",
+  "2bzls3zx54j2r5pp",
+  "k5g4n72yqmq6miad",
+  "vv7hoxoejdqfqgsb",
+  "542adpoka5qybyml",
+  "rnbl4pwsnpzqnbod",
+  "rucukjd3lnvnesc7",
+  "izeq65z6r33qlpns",
+  "rdtacqdey5r3qx2v",
+  "523apf6jm7tvojbh",
+  "jdwysqmaaip4ecfq",
+  "cqzyaea4yzrvgrje",
+  "z3m3kpa3wh7eabgc",
+  "knoqfprcvpr74rhj",
+  "u4j6s2mkqsy62utc",
+  "pugxideky3i3xpyy",
+  "anx3kehmkr7jsm5z",
+  "5cyribyjmnvlkn3l",
+  "ls4xbwu25s6452iy",
+  "g7ob4t6qxi6ogyjx",
+  "65subtt4d6iktyum",
+  "r3azpoghgf3j5b7v",
+  "cfqwnmvqrepjcipg",
+  "psxcf5fb3a57jjjc",
+  "zjerj3l5f55ukszz",
+  "yc5ent7bxtr7hbkc",
+  "jhk5hht7zdrzecpu",
+  "bsa4eai3cp5bvtoq",
+  "kyvtg5gme73svmjq",
+  "mcfnemwwvtia6j2b",
+  "pdls7nixbbujm7ws",
+  "yw67noj7j45c5svw",
+  "4an3y6i7ehyvr4q5",
+  "ngukmj5xlyanoyss",
+  "siy72jpqeh7tlslr",
+  "tzjsprpqha4zhjul",
+  "6zwoiebu7bggadaz",
+  "iw7m5yumlvnrwmzi",
+  "4herm6sjvu3bsz5p",
+  "s2jf5svpbrmuecsk",
+  "u3xu3vp5h5tde42u",
+  "de6zrpmcqtwcq5rn",
+  "ghiyx547x7d76xli",
+  "32ndsvcnhy2lqubo",
+  "dzzhrlclbyum4nt2",
+  "ecibesv6seep4l2r",
+  "gmbkv4oihsstrmmz",
+  "bwxz4zx4phj3v4fx",
+  "6lrmcmpvdjfpca63",
+  "x2zf6gu22jzvcwa6",
+  "7cn3mqzwvahfxbfv",
+  "c75kxcbngurauxmm",
+  "f643sups67xnt23s",
+  "ljyve6rbib4mqjxu",
+  "c3bw6y3zyv6fytjx"
+ ],
+ "prescore": {
+  "hukadra7dtddwbqc": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "5rbissl26aace5jp": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "gwdyi56rco5dhicv": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ycd6cwguwirecrz6": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "qropcitgmf7enlnn": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "sbplnfq2kujvtcw6": {
+   "product": "wrong: account opening, not the app",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "6oywgm3ouai4c4xp": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "pz7cy5gpxwvgojui": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "eppnjyrtbtx3b3xt": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "4rrluiepqebsgk6z": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "v7gutns7sfkoo3vz": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "oe2drm4xupiobq3n": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "mkynij46orjtm3s3": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "vbwzrdru3jnaics4": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "2xpqnm47k6awo2g2": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "75jlvmswm2lyvobp": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "22yvwjwvjbteucc5": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "mbuy7zismy3ubswl": {
+   "product": "ok",
+   "topics": "wrong: misses app_failure (screen-recorder block)",
+   "sentiment": "ok"
+  },
+  "avkasxo5ym5iprs3": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "5uqwshuajrty6kc7": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "t3wylq6y4f7cqc5e": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "7ixpuu2ax543yzth": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "j27e5qsbu7ikbkag": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "m4ckl5ad5zogccwp": {
+   "product": "wrong: a refund, product unclear",
+   "topics": "ok",
+   "sentiment": "wrong: unclear"
+  },
+  "q6gob63it4hwu3u7": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "w6mnlaojsdpx3iqz": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ec26bjesdtelsfqv": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "w22k55a7bhqoj2r5": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "3x5f4wothqsolcxp": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "wrong: rated neutral, text is negative"
+  },
+  "fn3llo3336n4rr3g": {
+   "product": "wrong: a warning not to open an account (deposits)",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "a2e6f7v377ydcpqf": {
+   "product": "wrong: bank service in general",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "kbwiygt4vqvai2wp": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "4epe6pb5fuobihs2": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "feml5pknyfitkum7": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "f7qevymvoxfgpuga": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "pchlyeeoymqhn6oy": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "dymn6v3rngbzlfb6": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "wrong: five stars, text is negative"
+  },
+  "6imhu6mhzibvs7ne": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "cofl2nrnldmjftd6": {
+   "product": "wrong: praise for a branch",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "g3pvlw3hgoxo5eqx": {
+   "product": "wrong: a loan statement, not cards",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "3ihuyxgsxkbefw2f": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "uddrlmgvzaeiv23d": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "s3sucm5ut32vjjl3": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "lzwiek66b5zhxhut": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "osdvwd2uvg6j3ota": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "vj75yayqkdu4vldj": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "2bzls3zx54j2r5pp": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "k5g4n72yqmq6miad": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "vv7hoxoejdqfqgsb": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "542adpoka5qybyml": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "rnbl4pwsnpzqnbod": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "rucukjd3lnvnesc7": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "izeq65z6r33qlpns": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "rdtacqdey5r3qx2v": {
+   "product": "wrong: withdrawals and a branch visit (deposits)",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "523apf6jm7tvojbh": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "jdwysqmaaip4ecfq": {
+   "product": "wrong: a frozen account (deposits)",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "cqzyaea4yzrvgrje": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "z3m3kpa3wh7eabgc": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "knoqfprcvpr74rhj": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "u4j6s2mkqsy62utc": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "pugxideky3i3xpyy": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "anx3kehmkr7jsm5z": {
+   "product": "ok",
+   "topics": "wrong: closure_intent is wrong (uninstalling the app)",
+   "sentiment": "ok"
+  },
+  "5cyribyjmnvlkn3l": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ls4xbwu25s6452iy": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "g7ob4t6qxi6ogyjx": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "65subtt4d6iktyum": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "wrong: rated positive, text is negative"
+  },
+  "r3azpoghgf3j5b7v": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "cfqwnmvqrepjcipg": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "psxcf5fb3a57jjjc": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "zjerj3l5f55ukszz": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "yc5ent7bxtr7hbkc": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "jhk5hht7zdrzecpu": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "bsa4eai3cp5bvtoq": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "kyvtg5gme73svmjq": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "mcfnemwwvtia6j2b": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "pdls7nixbbujm7ws": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "yw67noj7j45c5svw": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "wrong: rated positive, text is negative"
+  },
+  "4an3y6i7ehyvr4q5": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ngukmj5xlyanoyss": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "siy72jpqeh7tlslr": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "tzjsprpqha4zhjul": {
+   "product": "ok",
+   "topics": "wrong: misses app_failure",
+   "sentiment": "ok"
+  },
+  "6zwoiebu7bggadaz": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "iw7m5yumlvnrwmzi": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "4herm6sjvu3bsz5p": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "s2jf5svpbrmuecsk": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "u3xu3vp5h5tde42u": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "de6zrpmcqtwcq5rn": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ghiyx547x7d76xli": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "32ndsvcnhy2lqubo": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "dzzhrlclbyum4nt2": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ecibesv6seep4l2r": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "gmbkv4oihsstrmmz": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "bwxz4zx4phj3v4fx": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "wrong: rated positive, text is negative"
+  },
+  "6lrmcmpvdjfpca63": {
+   "product": "ok",
+   "topics": "wrong: misses app_failure",
+   "sentiment": "ok"
+  },
+  "x2zf6gu22jzvcwa6": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "7cn3mqzwvahfxbfv": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "c75kxcbngurauxmm": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "f643sups67xnt23s": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  },
+  "ljyve6rbib4mqjxu": {
+   "product": "ok",
+   "topics": "wrong: misses app_failure",
+   "sentiment": "ok"
+  },
+  "c3bw6y3zyv6fytjx": {
+   "product": "ok",
+   "topics": "ok",
+   "sentiment": "ok"
+  }
+ }
+}

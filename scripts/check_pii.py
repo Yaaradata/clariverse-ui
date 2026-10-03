@@ -34,6 +34,12 @@ FILES = [
     *sorted((ROOT / "data" / "seed" / "indusind_v1").glob("*.json")),
     ROOT / "data" / "seed" / "indusind_v1" / "complaints.jsonl",
     *sorted((ROOT / "data" / "out" / "indusind_v1").glob("*.json")),
+    # IndusInd public voice: the processed store, the hand-written glosses and overrides, and the gitignored redacted
+    # text (scanned when present, to prove the redaction held).
+    *sorted((ROOT / "data" / "processed" / "indusind_l2").glob("*.json*")),
+    *[f for f in [ROOT / "data" / "processed" / "indusind_l2" / "_audit" / "text.jsonl"] if f.exists()],
+    ROOT / "scripts" / "indusind_l2_glosses.json",
+    ROOT / "scripts" / "indusind_l2_manual.json",
 ]
 PATTERNS = {
     "email": r"[\w.+-]+@[\w-]+\.[\w.-]+",

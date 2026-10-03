@@ -15,6 +15,7 @@ Only `core` items reach a page.
 
 from __future__ import annotations
 
+import base64
 import datetime as dt
 import glob
 import hashlib
@@ -22,6 +23,8 @@ import json
 import os
 import re
 from pathlib import Path
+
+from pii_names import redact_names
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW = Path(os.environ.get("INDUSIND_L2_RAW", ROOT.parent / "indusind_inputs" / "social_raw" / "IndusInd-jul1st26-sept30th26"))
@@ -123,21 +126,27 @@ def redact(text: str | None) -> str:
     t = HANDLE.sub("@[user]", t)
     t = SELF_NAME.sub(lambda m: f"{m.group(1)} [name]", t)
     t = HINDI_SELF.sub("मैं [name] ", t)
+    t = redact_names(t)  # the repo's name detector (scripts/pii_names.py): staff and family named in a review
     return re.sub(r"\s+", " ", t).strip()
+
+
+def _h(key: str) -> str:
+    """A short, stable hash in lower-case base32: no long digit runs, so it never reads as a phone or card number."""
+    return base64.b32encode(hashlib.sha256(key.encode()).digest()).decode().lower()[:16]
 
 
 def hash_handle(r: dict) -> str | None:
     a = r.get("author") or {}
     h = a.get("id") or a.get("username") or a.get("display_name")
-    return hashlib.sha256(f"{SALT}:{r['source']}:{h}".encode()).hexdigest()[:16] if h else None
+    return _h(f"{SALT}:{r['source']}:{h}") if h else None
 
 
 def item_id(r: dict) -> str:
-    return hashlib.sha256(f"{SALT}:{r['source']}:{r.get('native_id') or r.get('id')}".encode()).hexdigest()[:16]
+    return _h(f"{SALT}:{r['source']}:{r.get('native_id') or r.get('id')}")
 
 
 def text_hash(text: str) -> str:
-    return hashlib.sha256(re.sub(r"[^a-z0-9ऀ-ॿ]+", " ", text.lower()).strip().encode()).hexdigest()[:16]
+    return _h(re.sub(r"[^a-z0-9ऀ-ॿ]+", " ", text.lower()).strip())
 
 
 # ---------------------------------------------------------------- tagging (deterministic rules)
@@ -172,7 +181,7 @@ PRODUCT_RULES: list[tuple[str, re.Pattern]] = [
 TOPIC_RULES: dict[str, re.Pattern] = {
     "rate_offer": kw(r"interest rate", r"rate of interest", r"(?:fd|savings?|deposit) rates?", r"higher interest",
                      r"cashback offer", r"special offer", r"ब्याज दर"),
-    "fee_change": kw(r"charges?\b", r"charged", r"\bfees?\b", r"deduct", r"penalt", r"\bgst\b", r"hidden cost", r"शुल्क", r"चार्ज"),
+    "fee_change": kw(r"\bcharges?\b", r"charged", r"\bfees?\b", r"deduct", r"penalt", r"\bgst\b", r"hidden cost", r"शुल्क", r"चार्ज"),
     "insurance_investment_sales": kw(r"insurance", r"\bpolic(?:y|ies)\b", r"mutual fund", r"\bulip\b", r"बीमा"),
     "escalation_language": kw(r"\brbi\b", r"ombudsman", r"consumer (?:court|forum)", r"legal notice", r"\bcourt\b",
                               r"cyber ?crime"),
@@ -190,7 +199,10 @@ TOPIC_RULES: dict[str, re.Pattern] = {
                         r"still (?:not|no)", r"pending", r"for (?:the last |last )?(?:\d+|many|several|few) (?:days|weeks|months)"),
     "app_failure": kw(r"not working", r"doesn'?t work", r"crash", r"\berror", r"unable to (?:log ?in|login|open|access)",
                       r"can'?t (?:log ?in|login|open)", r"otp (?:not|is not)", r"server", r"\bbug", r"stuck", r"\bslow",
-                      r"\bhang", r"failed", r"failure", r"glitch", r"threat detected", r"logs? (?:me )?out", r"नहीं चल"),
+                      r"\bhang", r"failed", r"failure", r"glitch", r"threat (?:is )?detected", r"logs? (?:me )?out", r"नहीं चल",
+                      r"not able to (?:use|log ?in|open|access|login)", r"(?:would|will|does) not (?:log ?in|open|work)",
+                      r"not open", r"closes (?:unexpectedly|automatically|with)", r"can'?t (?:use|access)",
+                      r"unable to (?:use|download)", r"sim binding (?:fail|not|issue)", r"stops at"),
 }
 
 # Allegations need both halves: who (recovery or collection staff) and what (harassment, threats, abuse).
@@ -297,7 +309,9 @@ BUSINESS_OF = {"deposits_savings": "deposits", "fd_rd": "deposits", "nri": "depo
 
 THEMES: dict[str, list[tuple[str, re.Pattern]]] = {
     "digital": [
-        ("security_block", kw(r"threat detected", r"thread detected", r"secure(?:d)? operating system", r"screen reader",
+        ("security_block", kw(r"threat (?:is )?detected", r"thread detected", r"threat found", r"caution", r"malware",
+                              r"secure(?:d)? (?:operating system|os)\b", r"operating (?:system|software) is not secure",
+                              r"another operating system", r"screen reader", r"screen record",
                               r"rooted", r"developer option", r"android 16", r"hyperos")),
         ("login_otp", kw(r"log ?in", r"\botp\b", r"register(?:ing)? (?:my )?(?:mobile|number)", r"\bsim\b", r"device bind",
                          r"verif", r"\bmpin\b", r"\bpin\b", r"logged out", r"log ?out", r"लॉग ?इन", r"ओटी ?पी")),
@@ -310,8 +324,10 @@ THEMES: dict[str, list[tuple[str, re.Pattern]]] = {
         ("card_service", kw(r"customer care", r"call", r"support", r"service")),
     ],
     "deposits": [
-        ("account_opening", kw(r"account open", r"open(?:ing)? (?:an |a |my |the )?(?:new )?account", r"video ?kyc",
-                               r"\bvkyc\b", r"\bkyc\b", r"pre[- ]?deposit", r"10,?000", r"खाते नहीं खुलते")),
+        ("account_opening", kw(r"video ?kyc", r"\bv?kyc\b", r"pre[- ]?deposit", r"10,?000", r"zero balance",
+                               r"(?:unable|not able|can'?t|cannot) (?:to )?open (?:an |a |my |new )?(?:saving |savings )?account",
+                               r"error[^.]{0,30}open(?:ing)? (?:an |my )?account", r"open(?:ing)? (?:an |my )?account[^.]{0,40}(?:error|fail|reject)",
+                               r"account open nahi", r"खाते नहीं खुलते", r"खोल नहीं पा")),
         ("charges", kw(r"charge", r"\bfees?\b", r"minimum balance", r"\bmab\b", r"deduct")),
         ("deposit_app", kw(r"\bapp\b", r"login", r"\botp\b", r"\bfd\b")),
     ],
