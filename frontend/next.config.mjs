@@ -26,8 +26,8 @@ const nextConfig = {
   async headers() {
     const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }];
     return [
-      { source: '/role-based/indusind_bank/customer-pulse', headers: noindex },
-      { source: '/role-based/indusind_bank/customer-pulse/:path*', headers: noindex },
+      { source: '/role-based/indusind_bank', headers: noindex },
+      { source: '/role-based/indusind_bank/:path*', headers: noindex },
     ];
   },
   experimental: {

@@ -28,6 +28,7 @@ import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import {
   INDUSIND_BANK_INDUSTRY_ID,
   INDUSIND_CEO_OFFICE_ROLE_ID,
+  INDUSIND_HEAD_CARDS_ROLE_ID,
   INDUSIND_HEAD_CX_ROLE_ID,
 } from "./indusindBankIndustry";
 import {
@@ -502,12 +503,22 @@ export const INDUSTRIES = [
         primaryTile: 0,
       },
       {
-        id: "head_cards",
+        id: INDUSIND_HEAD_CARDS_ROLE_ID,
         name: "Head of Cards",
+        icon: CreditCard,
+        sub: "Cards business view · issue pulse · Ombudsman watch · closure risk by category",
+        defaultLens: "ops",
+        primaryTile: 0,
+      },
+      {
+        // The earlier cards demo: its route still works, but it is not listed on the role page.
+        id: "head_cards",
+        name: "Head of Cards (earlier demo)",
         icon: CreditCard,
         sub: "Transactions & offers · blockers & problems · 2 drilldowns · AI Analyst",
         defaultLens: "ops",
         primaryTile: 0,
+        unlisted: true,
       },
     ],
   },
