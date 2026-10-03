@@ -1,57 +1,73 @@
-// IndusInd route checks over everything reachable from the role page (/role-based/indusind_bank).
-// Crawls from the role page, following every link that stays under /role-based/indusind_bank (screens, view, window
-// and business variants, role links), and for each route records: status, X-Robots-Tag, watermark, and hits of the
-// rendered-page grep (URLs, handles, emails, phones, PAN, internal labels, HDFC strings, source links). Each page's
-// visible text goes to qa/_crawl/pages.json (gitignored) for the lint and PII scans. Exits 1 on any failure.
+// IndusInd route checks over EVERY route under /role-based/indusind_bank, linked or not (review finding 1, IV-47).
+// Routes come from the route files (scripts/indusind_route_checks.mjs: enumerateRoutes); links found on the pages
+// are followed as well. For each route it records status (after redirects), the final URL, X-Robots-Tag, watermark,
+// footer, the rendered-page grep, other clients' names in the page or the JS it loads (DEC-7), and links that leave
+// the IndusInd pages. Each page's visible text goes to qa/_crawl/pages.json (gitignored) for the lint and PII scans.
+// Exits 1 on any failure.
 // Usage: node scripts/qa_indusind_routes.mjs http://localhost:3100 [outDir]
-// Needs playwright (run from a folder that has it, as the other ui-qa scripts do).
+// Needs playwright: installed here, or PLAYWRIGHT_MODULE=<file URL of playwright/index.mjs in a scratch folder>.
 import fs from "node:fs";
-import { chromium } from "playwright";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const [base = "http://localhost:3100", outDir = "qa/_crawl"] = process.argv.slice(2);
-const ROOT = "/role-based/indusind_bank";
-const MAX = 200;
-const GREP = {
-  url: /https?:\/\/(?!fonts\.googleapis\.com|fonts\.gstatic\.com|www\.w3\.org|localhost)[^\s"'<>\\)]+/g,
-  handle: /(?<![\w.@/])@(?!import|media|keyframes|font-face|supports|user\b)[A-Za-z][A-Za-z0-9_]{2,}/g,
-  email: /[\w.+-]+@[\w-]+\.(?:com|in|org|net)\b/g,
-  phone: /(?<![\w\d])[6-9]\d{9}(?!\d)/g,
-  pan: /\b[A-Z]{5}\d{4}[A-Z]\b/g,
-  internal: /\bIND-[A-Z]\d|\bDEC-\d|\bS-(?:HOME|DEP|PEER|RISK|CARDS|APPR)\b|\bCF-\d\d|\bIV-\d\d|\bHL-\d\d/g,
-  hdfc: /HDFC|Regalia|PayZapp|16 Jan 2026/g,
-  source_link: /play\.google\.com\/store|apps\.apple\.com|(?:x|twitter)\.com\/\w+\/status|reddit\.com\/r\/|consumercomplaints\.in\//g,
-};
+import { checkRoute, enumerateRoutes, ROOT } from "./indusind_route_checks.mjs";
+
+const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? "playwright");
+const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const [base = "http://localhost:3100", outDir = path.join(REPO, "qa/_crawl")] = process.argv.slice(2);
+const read = (p) => fs.readFileSync(path.join(REPO, p), "utf8");
+const common = JSON.parse(read("data/out/indusind_v1/common.json"));
+// Other clients' names (DEC-7). Kept in a scripts file, never in a page payload, so the list itself never ships.
+const otherClients = fs.existsSync(path.join(REPO, "scripts/indusind_other_clients.json"))
+  ? JSON.parse(read("scripts/indusind_other_clients.json")).names
+  : [];
+const seeds = enumerateRoutes({
+  appRoleDir: path.join(REPO, "frontend/app/role-based/indusind_bank"),
+  industryTs: read("frontend/lib/role-based-dashboard/indusindBankIndustry.ts"),
+  registryTsx: read("frontend/lib/role-based-dashboard/registry.tsx"),
+  nextConfig: read("frontend/next.config.mjs"),
+  views: common.views.map((v) => v.id).filter((v) => v !== "ceo"),
+  windows: common.windows.map((w) => w.id),
+  businesses: common.businesses.map((b) => b.id).filter((b) => b !== "all"),
+});
 
 fs.mkdirSync(outDir, { recursive: true });
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1440, height: 900 } });
 const p = await ctx.newPage();
-const seen = new Set([ROOT]);
-const queue = [ROOT];
+const chunkCache = new Map();
+async function chunkText(src) {
+  if (!chunkCache.has(src)) {
+    const r = await ctx.request.get(new URL(src, base).toString());
+    chunkCache.set(src, r.ok() ? await r.text() : "");
+  }
+  return chunkCache.get(src);
+}
+const seen = new Set(seeds);
+const queue = [...seeds];
 const report = [];
 const pages = [];
-while (queue.length && report.length < MAX) {
+while (queue.length && report.length < 400) {
   const route = queue.shift();
   const res = await p.goto(base + route, { waitUntil: "networkidle" });
-  await p.waitForTimeout(300);
-  const finalPath = new URL(p.url()).pathname + new URL(p.url()).search;
+  await p.waitForTimeout(250);
+  const u = new URL(p.url());
+  const final = u.pathname + u.search;
   const html = await p.content();
   const text = await p.evaluate(() => document.body.innerText);
   const robots = (await res.allHeaders())["x-robots-tag"] ?? null;
-  const watermark = await p.evaluate(() => !!document.querySelector('[data-testid="watermark"]'));
-  const hits = {};
-  for (const [k, rx] of Object.entries(GREP)) {
-    const m = [...new Set(html.match(rx) ?? [])];
-    if (m.length) hits[k] = m.slice(0, 5);
-  }
-  report.push({ route, final: finalPath, status: res.status(), robots, watermark, hits });
-  pages.push({ route: finalPath, text });
   const links = await p.evaluate(() => [...document.querySelectorAll("a[href]")].map((a) => a.getAttribute("href")));
+  const scripts = await p.evaluate(() => [...document.querySelectorAll("script[src]")].map((s) => s.getAttribute("src")));
+  const chunks = (await Promise.all(scripts.map(chunkText))).join("\n");
+  const rec = { route, final, status: res.status(), robots, text, html, chunks, links };
+  const problems = checkRoute(rec, { otherClients, links: true, footer: true });
+  report.push({ route, final, status: rec.status, robots, scripts: scripts.length, problems });
+  pages.push({ route: final, text });
   for (const href of links) {
     if (!href) continue;
-    const u = new URL(href, base + finalPath);
-    if (u.origin !== new URL(base).origin || !u.pathname.startsWith(ROOT)) continue;
-    const key = u.pathname + u.search;
+    const l = new URL(href, base + final);
+    if (l.origin !== new URL(base).origin || !l.pathname.startsWith(ROOT)) continue;
+    const key = l.pathname + l.search;
     if (!seen.has(key)) {
       seen.add(key);
       queue.push(key);
@@ -61,23 +77,13 @@ while (queue.length && report.length < MAX) {
 await b.close();
 fs.writeFileSync(`${outDir}/pages.json`, JSON.stringify(pages));
 fs.writeFileSync(`${outDir}/routes.json`, JSON.stringify(report, null, 1));
-let bad = 0;
-for (const r of report) {
-  const problems = [];
-  if (r.status !== 200) problems.push(`status ${r.status}`);
-  if (!r.robots || !/noindex/.test(r.robots)) problems.push("no noindex header");
-  if (!r.watermark) problems.push("no watermark");
-  if (Object.keys(r.hits).length) problems.push(`grep ${JSON.stringify(r.hits)}`);
-  if (problems.length) {
-    bad++;
-    console.log(`FAIL ${r.final}: ${problems.join("; ")}`);
-  }
-}
+const bad = report.filter((r) => r.problems.length);
+for (const r of bad) console.log(`FAIL ${r.route} -> ${r.final}: ${r.problems.join("; ")}`);
 const n = report.length;
+const ok = (f) => report.filter(f).length;
 console.log(
-  `Routes crawled: ${n} (from ${ROOT}). 200: ${report.filter((r) => r.status === 200).length}/${n}; ` +
-    `noindex: ${report.filter((r) => /noindex/.test(r.robots ?? "")).length}/${n}; ` +
-    `watermark: ${report.filter((r) => r.watermark).length}/${n}; ` +
-    `rendered grep clean: ${report.filter((r) => !Object.keys(r.hits).length).length}/${n}`,
+  `Routes checked: ${n} (${seeds.length} enumerated from the route files, ${n - seeds.length} more found by links). ` +
+    `200: ${ok((r) => r.status === 200)}/${n}; noindex: ${ok((r) => /noindex/.test(r.robots ?? ""))}/${n}; ` +
+    `all checks clean: ${n - bad.length}/${n}`,
 );
-process.exit(bad ? 1 : 0);
+process.exit(bad.length ? 1 : 0);

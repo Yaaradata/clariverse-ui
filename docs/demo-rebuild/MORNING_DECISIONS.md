@@ -702,3 +702,12 @@ wording.
   bundle (the earlier demo's ₹9,760 Cr, co-brand partner names and "mis-selling claims"). The component code
   (`CardsPortfolioV2Dashboard`, `IndusIndCardsCustomerPortfolioDrill`) and the registry entry are kept; nothing is
   deleted. Open question for the decision owner: is the earlier demo still needed anywhere else?
+- **IV-47 · Check scope is every route under `/role-based/indusind_bank/` (review finding 1, IV-45 replaced).**
+  `scripts/indusind_route_checks.mjs` enumerates the routes from the route files, linked or not: every `page.tsx` under
+  `app/role-based/indusind_bank/`, every IndusInd role id the shared `[roleId]` route would resolve (constants and
+  registry entries, unlisted ones included), every redirect source under the root in `next.config.mjs`, a probe for
+  the catch-all, and the view, window and business variants. `qa_indusind_routes.mjs` checks each (status after
+  redirects, final URL still under the root, noindex, watermark, footer, rendered grep including the earlier demo's
+  strings) and follows links as before; its `pages.json` feeds `lint_terms.py` and `check_pii.py`, so lint and PII
+  cover the same set. Fixtures in `scripts/test_qa_indusind_routes.mjs` (run by `run_all.sh`), including "an unlinked
+  route without a watermark fails".
