@@ -47,6 +47,13 @@ peers:
     au: AU
     bandhan: Bandhan
 
+# Peer rate cards read 2 Oct 2026 (IND-D1, verified): shown as card dates, not rate changes, and never beside
+# IndusInd's own rates until the manual read is logged. {ID} is the register display, {ID_period} its period.
+card_dates:
+  - {bank: federal, ids: [P10, P11], text: "Federal FD {P10_period}: 1-year {P10}; peak {P11}"}
+  - {bank: "yes", ids: [P12, P13], text: "Yes FD card {P12_period}: 12-month {P12}; peak {P13}"}
+  - {bank: rbl, ids: [P14, P15], text: "RBL rate {P14_period}: 365–500-day FD {P14}; savings {P15}"}
+
 # Pulse by business (IND-B4 §2.3). money: register IDs for the money line. module: route, or null ("Module next").
 businesses:
   - {id: deposits, label: Deposits, products: [deposits_savings, fd_rd, nri], money: [N04, D08], module: /role-based/indusind_bank/customer-pulse/deposits}

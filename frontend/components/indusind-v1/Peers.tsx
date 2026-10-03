@@ -6,26 +6,81 @@
  * and press and ratings. Never a league table of all banks.
  */
 
-import type { Common, Fig as FigT, NotLoaded } from "@/lib/indusind-v1/types";
-import {
-  C,
-  cols,
-  Fig,
-  MutedNote,
-  NotLoadedNote,
-  Pending,
-  Table,
-  Tile,
-} from "./primitives";
-import { FigRow } from "./SignalCards";
+import type { CardDate, Common, Fig as FigT } from "@/lib/indusind-v1/types";
+import { C, cols, Fig, MutedNote, Pending, Table, Tile } from "./primitives";
 
 export type PeersSlice = {
   table: { bank: string; tier: string; figures: FigT[]; held: FigT[] }[];
   footnote: FigT;
-  cards: NotLoaded;
+  pending_note: string | null;
+  cards: CardDate[];
   rates: { peers: FigT[]; indusind: { loaded: boolean; text: string } };
-  press: { ratings: FigT[]; press: NotLoaded };
+  press: FigT[];
 };
+
+/** Peer rate-card dates: one line each, tagged with the page date. Card dates, not rate changes. */
+export function CardDateList({
+  items,
+  empty,
+}: {
+  items: CardDate[];
+  empty?: string;
+}) {
+  if (!items.length)
+    return empty ? (
+      <div style={{ fontSize: 13, color: C.textMut }}>{empty}</div>
+    ) : null;
+  return (
+    <div
+      data-testid="card-dates"
+      style={{ display: "flex", flexDirection: "column", gap: 8 }}
+    >
+      {items.map((f) => (
+        <div
+          key={f.id}
+          data-register={f.id}
+          style={{ fontSize: 13.5, color: C.text, lineHeight: 1.4 }}
+        >
+          {f.display}
+          <div style={{ fontSize: 11.5, color: C.textMut }}>
+            Public · verified · {f.page_date}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/** A dated list: label left, date right. */
+function DatedList({ items }: { items: FigT[] }) {
+  return (
+    <div
+      data-testid="press"
+      style={{ display: "flex", flexDirection: "column", gap: 6 }}
+    >
+      {items.map((f) => (
+        <div
+          key={f.id + (f.label ?? "")}
+          data-register={f.id}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 10,
+            fontSize: 13.5,
+            color: C.textSec,
+            borderBottom: `1px solid ${C.border}`,
+            paddingBottom: 4,
+          }}
+        >
+          <span style={{ minWidth: 0 }}>{f.label}</span>
+          <strong style={{ color: C.text, whiteSpace: "nowrap" }}>
+            <Fig f={f} />
+          </strong>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
@@ -76,26 +131,29 @@ export function PeersView({ p, common }: { p: PeersSlice; common: Common }) {
         />
         <MutedNote>
           {p.footnote.label} · {p.footnote.period}: <Fig f={p.footnote} />.{" "}
-          {p.footnote.note}.
+          {p.footnote.note}.{p.pending_note ? ` ${p.pending_note}.` : ""}
         </MutedNote>
       </Tile>
 
-      <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
+      <div style={cols(2, 380, 12)}>
         <Tile
-          title="Card effective dates and changes"
-          sub="From the rate captures"
-          layers={["L2"]}
+          title="Card effective dates"
+          sub="Dates, not rate changes"
+          layers={["L1"]}
         >
-          <NotLoadedNote n={p.cards} />
+          <CardDateList items={p.cards} />
+        </Tile>
+        <Tile title="Press and ratings" sub="Dated list" layers={["L1"]}>
+          <DatedList items={p.press} />
         </Tile>
       </div>
 
-      <Tile
-        title="Rates side by side"
-        sub="Same band, same date"
-        layers={["L1"]}
-      >
-        {p.rates.peers.length ? (
+      {p.rates.peers.length ? (
+        <Tile
+          title="Rates side by side"
+          sub="Same band, same date"
+          layers={["L1"]}
+        >
           <Table
             testid="rates"
             head={["Rate", "Date", "Peer"]}
@@ -111,22 +169,11 @@ export function PeersView({ p, common }: { p: PeersSlice; common: Common }) {
               ],
             }))}
           />
-        ) : null}
-        <MutedNote>
-          {p.rates.indusind.loaded ? common.pending : p.rates.indusind.text}
-        </MutedNote>
-      </Tile>
-
-      <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
-        <Tile title="Ratings" sub="Dated" layers={["L1"]}>
-          {p.press.ratings.map((f) => (
-            <FigRow key={f.id} f={f} />
-          ))}
+          <MutedNote>
+            {p.rates.indusind.loaded ? common.pending : p.rates.indusind.text}
+          </MutedNote>
         </Tile>
-        <Tile title="Press" sub="Dated list" layers={["L2"]}>
-          <NotLoadedNote n={p.press.press} />
-        </Tile>
-      </div>
+      ) : null}
     </>
   );
 }

@@ -471,6 +471,53 @@ def row_ids(x) -> list[str]:
     return [x] if isinstance(x, str) else x.get("pair") or x["line"]
 
 
+def fill_text(text: str, ids: list[str]) -> str:
+    vals = {}
+    for i in ids:
+        vals[i] = REG[i]["display"]
+        vals[f"{i}_period"] = REG[i]["period"]
+    return text.format(**vals)
+
+
+def card_date_items() -> list[dict]:
+    """Peer rate-card dates (verified, dated pages), newest first. A card date, not a rate change."""
+    out = []
+    for c in CONFIG["card_dates"]:
+        ids = c["ids"]
+        if any(REG[i]["value"] is None for i in ids):
+            continue
+        m = re.search(r"(\d{1,2} \w{3} \d{4})", REG[ids[0]]["period"])
+        when = dt.datetime.strptime(m.group(1), "%d %b %Y").date()
+        read = dt.date.fromisoformat(REG[ids[0]]["source_date"])
+        out.append({**l1(ids[0]), "label": CONFIG["peers"]["names"][c["bank"]], "ids": ids, "template": c["text"],
+                    "view": "text", "display": fill_text(c["text"], ids), "date": when.isoformat(),
+                    "page_date": f"page read {read.day} {read:%b} {read.year}", "kind": "card_effective_date"})
+    return sorted(out, key=lambda x: x["date"], reverse=True)
+
+
+def card_dates_since(days: int) -> list[dict]:
+    start = FREEZE.date() - dt.timedelta(days=days)
+    return [x for x in card_date_items() if start < dt.date.fromisoformat(x["date"]) <= FREEZE.date()]
+
+
+def press_items() -> list[dict]:
+    """The peers' Q1 FY27 results releases, dated from the register's sources, plus the rating action; newest first."""
+    out = []
+    banks = CONFIG["peers"]["core"] + CONFIG["peers"]["specialist"]
+    for b in banks:
+        es = [e for e in REG.values() if e.get("bank") == b and e["measure_basis"] != "rate_card" and e["value"] is not None]
+        if not es:
+            continue
+        e = min(es, key=lambda x: x["source_date"])
+        d = dt.date.fromisoformat(e["source_date"])
+        out.append({**l1(e["id"]), "label": f"{CONFIG['peers']['names'][b]}: Q1 FY27 results released", "view": "srcdate",
+                    "display": f"{d.day} {d:%b} {d.year}", "date": e["source_date"]})
+    n40 = l1("N40")
+    out.append({**n40, "label": f"CRISIL on IndusInd: {n40['display']}", "view": "srcdate", "display": n40["period"],
+                "date": n40["source_date"]})
+    return sorted(out, key=lambda x: x["date"], reverse=True)
+
+
 def improving_item(x) -> dict:
     """An Improving entry: one register figure, or a from → to pair ("Cost of deposits 6.44% → 5.95% year on year")."""
     if isinstance(x, dict):
@@ -540,7 +587,7 @@ def home() -> dict:
     out["improving"] = [improving_item(x) for x in CONFIG["improving"]]
     out["horizon"] = [{"id": h["id"], "label": h["label"], "date": horizon_date(h["id"]), "countdown": horizon_countdown(h["id"])}
                       for h in CONFIG["horizon"]]
-    out["peer_moves"] = not_loaded("Peer rate-card dates and changes, press")
+    out["peer_moves"] = {"items": card_dates_since(7), "empty": "No dated peer card this week"}
     out["owners"] = [{"card": a["card_id"], "owner": a["owner_role"], "action": a["scope"], "status": a["status"],
                       "age_days": (FREEZE.date() - FREEZE.date()).days, "approver": a["approver_role"]} for a in D.actions]
     return out
@@ -574,7 +621,7 @@ def deposits_page() -> dict:
                                       for k, lab in (("mix", "Mix (CASA, retail share)"), ("term", "Term pricing by bucket"), ("bulk", "Bulk reliance"))],
                     "rate_table": {"loaded": CONFIG["flags"]["manual_read_logged"], "text": "IndusInd rate table: shown once the manual read is logged"}},
            "franchise": [l1("N13"), l1("N14")],
-           "why_captures": not_loaded("Peer card dates and changes"),
+           "why_cards": card_dates_since(7 * 13),
            "action": next(a for a in D.actions if a["card_id"] == "A"),
            "windows": {}}
     for wd in CONFIG["windows"]:
@@ -608,18 +655,23 @@ def deposits_page() -> dict:
 def peers_page() -> dict:
     names = CONFIG["peers"]["names"]
     tiers = [("Core", CONFIG["peers"]["core"]), ("Upper benchmark", CONFIG["peers"]["upper_benchmark"]), ("Specialist", CONFIG["peers"]["specialist"])]
-    rows = []
+    rows, pending = [], []
     for tier, banks in tiers:
         for b in banks:
             figs = [l1(e["id"]) for e in REG.values() if e.get("bank") == b and e["measure_basis"] != "rate_card" and not e.get("footnote_only")]
-            rows.append({"bank": names[b], "tier": tier, "figures": figs, "held": [l1("H01")] if not figs else []})
+            # A peer with nothing verified is not a row; one footnote names the rest as pending.
+            if figs or tier == "Upper benchmark":
+                rows.append({"bank": names[b], "tier": tier, "figures": figs, "held": [] if figs else [l1("H01")]})
+            else:
+                pending.append(names[b])
     # Peer rate cards sit beside IndusInd's same band only; until the manual read is logged, no rate row is sent.
     rates = [l1(f"P{i}") for i in range(10, 16)] if CONFIG["flags"]["manual_read_logged"] else []
     return {
         "table": rows, "footnote": l1("P09"),
-        "cards": not_loaded("Card effective dates and changes, read from the rate captures"),
+        "pending_note": "Other peers: pending verification" if pending else None,
+        "cards": card_date_items(),
         "rates": {"peers": rates, "indusind": {"loaded": CONFIG["flags"]["manual_read_logged"], "text": "IndusInd's own rate for the same band: shown once the manual read is logged"}},
-        "press": {"ratings": [l1("N40")], "press": not_loaded("Dated press list")},
+        "press": press_items(),
     }
 
 

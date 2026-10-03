@@ -16,6 +16,7 @@ import type {
 } from "@/lib/indusind-v1/types";
 import { AreaChart, trendPoints } from "./charts";
 import { OmbudsmanWatch } from "./Ombudsman";
+import { CardDateList } from "./Peers";
 import { OutsideMeter, ThemeLine, Thin } from "./PublicVoice";
 import {
   C,
@@ -26,7 +27,6 @@ import {
   Label,
   MONO,
   MutedNote,
-  NotLoadedNote,
   OpenLink,
   Pending,
   SourceTag,
@@ -534,8 +534,8 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
         </Tile>
         <Tile
           title="Peer moves this week"
-          sub="Rate cards, press"
-          layers={["L2"]}
+          sub="Peer rate-card dates"
+          layers={["L1"]}
           right={
             <OpenLink
               href={hrefWith(
@@ -548,7 +548,7 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
             </OpenLink>
           }
         >
-          <NotLoadedNote n={s.peer_moves} />
+          <CardDateList items={s.peer_moves.items} empty={s.peer_moves.empty} />
         </Tile>
         <Tile
           title="Horizon"

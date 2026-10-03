@@ -82,6 +82,15 @@ def trace_view(f: dict, e: dict) -> str:
         ends = [dt.date(q.year, 3, 31), dt.date(q.year, 6, 30), dt.date(q.year, 9, 30), dt.date(q.year, 12, 31)]
         d = next(x for x in ends if x >= q)
         return f"{d.day} {d:%b} {d.year}"
+    if f["view"] == "text":
+        vals = {}
+        for i in f["ids"]:
+            vals[i] = REG[i]["display"]
+            vals[f"{i}_period"] = REG[i]["period"]
+        return f["template"].format(**vals)
+    if f["view"] == "srcdate":
+        d = dt.date.fromisoformat(e["source_date"])
+        return e["period"] if e["measure_basis"] == "date" else f"{d.day} {d:%b} {d.year}"
     if f["view"] == "line":
         return " · ".join(REG[i]["display"].replace(", ", " · ") for i in f["ids"])
     if f["view"] == "peers":
@@ -169,7 +178,7 @@ def run(p: dict) -> list[str]:
     ok(all(r["complaints"] <= r["negative"] <= r["contacts"] for r in contacts), "sanity: complaints exceed negative contacts in a row")
 
     # ---- no internal labels on screen: brief, decision, track or screen IDs, "V1", register IDs in text
-    skip = (".id", ".from_id", ".build_note", ".about", ".module", ".card_id", ".action_id", ".evidence_version", ".card")
+    skip = (".id", ".from_id", ".build_note", ".about", ".module", ".card_id", ".action_id", ".evidence_version", ".card", ".template")
     for name, obj in p.items():
         for path, s in strings(obj, name):
             if not path.endswith(skip) and ".ids[" not in path and INTERNAL.search(s):
@@ -311,6 +320,8 @@ def _set(d, path, value):
 
 
 FIXTURES = [
+    ("peer card date edited", "trace:", lambda p: _set(p["peers"]["cards"][0], ["display"], "Federal FD card effective 29 Sep 2026: 1-year 6.35%; peak 6.70% (48 months)")),
+    ("press date edited", "trace:", lambda p: _set(p["peers"]["press"][-1], ["display"], "1 Jul 2026")),
     ("peer chip edited", "trace:", lambda p: _set(p["home"]["windows"]["week"]["cards"][0]["peer_chip"], ["display"], "IDFC First 50.8% · Yes 33.7% · Federal 32.23% (CASA, Jun 2026)")),
     ("money line edited", "trace:", lambda p: _set(p["home"]["windows"]["week"]["rows"][0]["money"][0], ["display"], "₹87,440 crore · −2.7% QoQ · −4.1% YoY")),
     ("register display edited", "register:", lambda p: _set(p["home"]["quarter"]["items"][0], ["display"], "0.87%")),

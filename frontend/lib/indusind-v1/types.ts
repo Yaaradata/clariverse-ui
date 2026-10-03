@@ -26,6 +26,9 @@ export type Fig = {
   delta_display?: string;
 };
 
+/** A peer rate-card date (verified page), shown as a dated item, never as a rate change. */
+export type CardDate = Fig & { date: string; page_date: string; kind: string };
+
 export type NotLoaded = {
   layer: "L2";
   tag: string;
@@ -249,7 +252,7 @@ export type Home = {
   windows: Record<WindowId, HomeWindow>;
   improving: Fig[];
   horizon: { id: string; label: string; date: Fig; countdown: string | null }[];
-  peer_moves: NotLoaded;
+  peer_moves: { items: CardDate[]; empty: string };
   owners: {
     card: string;
     owner: string;

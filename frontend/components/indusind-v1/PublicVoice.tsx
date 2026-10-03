@@ -256,39 +256,48 @@ export function OutsideMeter({
 
 /** A card's "what customers said": the topic lines (or the thin state per line), the theme, switching talk. */
 export function CardVoiceBlock({ v }: { v: CardVoice }) {
+  // Lines with too few items collapse into one line, so a block never repeats the thin state.
+  const thin = [
+    ...v.lines.filter((l) => l.thin).map((l) => l.label),
+    ...(v.switching && v.switching_thin ? [v.switching.label] : []),
+  ];
   return (
     <div
       data-testid="card-voice"
       style={{ display: "flex", flexDirection: "column", gap: 6 }}
     >
-      {v.theme ? (
+      {v.theme && !v.theme.thin ? (
         <div>
           <ThemeLine t={v.theme} />
         </div>
       ) : null}
-      {v.lines.map((l) => (
-        <div
-          key={l.topic}
-          data-register={l.fig.id}
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 10,
-            fontSize: 13,
-            color: C.textSec,
-          }}
-        >
-          <span style={{ minWidth: 0 }}>{l.label}</span>
-          {l.thin ? (
-            <Thin text={v.text} />
-          ) : (
+      {v.lines
+        .filter((l) => !l.thin)
+        .map((l) => (
+          <div
+            key={l.topic}
+            data-register={l.fig.id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 10,
+              fontSize: 13,
+              color: C.textSec,
+            }}
+          >
+            <span style={{ minWidth: 0 }}>{l.label}</span>
             <strong style={{ color: C.text, fontFamily: MONO }}>
               {l.fig.display}
             </strong>
-          )}
+          </div>
+        ))}
+      {thin.length ? (
+        <div data-thin style={{ fontSize: 12.5, color: C.textMut }}>
+          <span style={{ fontStyle: "italic" }}>{v.text}:</span>{" "}
+          {thin.join(", ")}
         </div>
-      ))}
-      {v.switching ? (
+      ) : null}
+      {v.switching && !v.switching_thin ? (
         <div
           style={{
             display: "flex",
@@ -299,11 +308,7 @@ export function CardVoiceBlock({ v }: { v: CardVoice }) {
           }}
         >
           <span>{v.switching.label}</span>
-          {v.switching_thin ? (
-            <Thin text={v.text} />
-          ) : (
-            <strong style={{ color: C.text }}>{v.switching.display}</strong>
-          )}
+          <strong style={{ color: C.text }}>{v.switching.display}</strong>
         </div>
       ) : null}
       <MutedNote>

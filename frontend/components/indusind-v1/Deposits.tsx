@@ -11,14 +11,15 @@ import { useState } from "react";
 import { fmtDate, fmtStamp } from "@/lib/indusind-v1/format";
 import type {
   Action,
+  CardDate,
   CardVoice,
   Common,
   Fig as FigT,
-  NotLoaded,
   Sens,
   Trend,
 } from "@/lib/indusind-v1/types";
 import { AreaChart, trendPoints } from "./charts";
+import { CardDateList } from "./Peers";
 import { CardVoiceBlock } from "./PublicVoice";
 import {
   C,
@@ -29,7 +30,6 @@ import {
   Label,
   MONO,
   MutedNote,
-  NotLoadedNote,
   OpenLink,
   SourceTag,
   Table,
@@ -53,7 +53,7 @@ export type DepositsSlice = {
     rate_table: { loaded: boolean; text: string };
   };
   franchise: FigT[];
-  why_captures: NotLoaded;
+  why_cards: CardDate[];
   action: Action;
   win: {
     flows: Record<"CA" | "SA" | "TD", { inflow: Flow; outflow: Flow }>;
@@ -382,9 +382,18 @@ export function DepositsView({
           </Tile>
 
           <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
-            <Tile title="Why, from outside" sub="Same weeks" layers={["L2"]}>
+            <Tile
+              title="Why, from outside"
+              sub="Same weeks"
+              layers={["L2", "L1"]}
+            >
               <CardVoiceBlock v={d.win.why} />
-              <NotLoadedNote n={d.why_captures} />
+              {d.why_cards.length ? (
+                <>
+                  <Label>Peer card dates in the same weeks</Label>
+                  <CardDateList items={d.why_cards} />
+                </>
+              ) : null}
             </Tile>
             <Tile
               title="How high"
