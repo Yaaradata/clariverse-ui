@@ -273,7 +273,7 @@ def common() -> dict:
         "businesses": [{"id": "all", "label": "All"}] + [{"id": b["id"], "label": b["label"]} for b in CONFIG["businesses"] if b["id"] in CONFIG["business_filter"]],
         "watermark": c["watermark"],
         # IND-D1 carries the disclosure date; until then the clause reads "as of a date pending verification".
-        "footer": c["footer"].format(public_as_of=f"a date {PENDING}", freeze=ftime(FREEZE)),
+        "footer": c["footer"].format(freeze=ftime(FREEZE)),
         "pulse_caption": c["pulse_caption"],
         "pending": PENDING, "not_loaded": NOT_LOADED, "sensitivity_footer": c["sensitivity_footer"],
         "defs": c["defs"],
@@ -333,19 +333,34 @@ def yoy_words(rid: str) -> str:
     return f"{abs(round(v))}% {'below' if v < 0 else 'above'}"
 
 
+def next_quarter_end() -> dt.date:
+    q = FREEZE.date()
+    ends = [dt.date(q.year, 3, 31), dt.date(q.year, 6, 30), dt.date(q.year, 9, 30), dt.date(q.year, 12, 31)]
+    return next(x for x in ends if x >= q)
+
+
+def horizon_date(rid: str) -> dict:
+    """The date a horizon item is due. The IO's quarterly pattern analysis is due at the next quarter-end; its
+    register entry (N37, the Directions of 14 Jan 2026) is cited in the label, not shown as the due date."""
+    if rid == "N37" and REG[rid]["value"] is not None:
+        d = next_quarter_end()
+        return {**l1(rid), "display": f"{d.day} {d:%b} {d.year}", "value": d.isoformat(), "view": "qend"}
+    return l1(rid)
+
+
 def horizon_countdown(rid: str) -> str | None:
-    """Countdown for the horizon: days to a dated rule; the next quarter-end for the IO's quarterly analysis; none for
-    month-only dates (DPDP shows month and year only)."""
+    """Days to go from the data freeze, for every dated item: to the date; to the next quarter-end for the IO's
+    quarterly analysis; to the start of the month for month-only dates (DPDP shows month and year only)."""
     e = REG[rid]
     if e["value"] is None:
         return PENDING
-    if e["unit"] == "month":
-        return None
+    q = FREEZE.date()
     if rid == "N37":
-        q = FREEZE.date()
-        ends = [dt.date(q.year, 3, 31), dt.date(q.year, 6, 30), dt.date(q.year, 9, 30), dt.date(q.year, 12, 31)]
-        nxt = next(x for x in ends if x >= q)
-        return f"{(nxt - q).days} days to quarter-end"
+        return f"{(next_quarter_end() - q).days} days"
+    if e["unit"] == "month":
+        y, m = (int(x) for x in e["value"].split("-"))
+        n = (dt.date(y, m, 1) - q).days
+        return f"{n} days to the start of the month" if n > 0 else "in force"
     return days_to_go(rid)
 
 
@@ -480,7 +495,7 @@ def home() -> dict:
         }
         out["windows"][wd["id"]] = per_w
     out["improving"] = [improving_item(x) for x in CONFIG["improving"]]
-    out["horizon"] = [{"id": h["id"], "label": h["label"], "date": l1(h["id"]), "countdown": horizon_countdown(h["id"])}
+    out["horizon"] = [{"id": h["id"], "label": h["label"], "date": horizon_date(h["id"]), "countdown": horizon_countdown(h["id"])}
                       for h in CONFIG["horizon"]]
     out["peer_moves"] = not_loaded("Peer rate-card dates and changes, press")
     out["owners"] = [{"card": a["card_id"], "owner": a["owner_role"], "action": a["scope"], "status": a["status"],
@@ -604,7 +619,7 @@ def risk_page() -> dict:
     weekly_rows = register_weekly()  # the same 13 weeks in every window
     grounds = {g["id"]: g["label"] for g in CONFIG["complaint_grounds"]}
     groups = {g["id"]: g["label"] for g in CONFIG["customer_groups"]}
-    out = {"calendar": [{"id": h["id"], "label": h["label"], "date": l1(h["id"]), "countdown": PENDING if REG[h["id"]]["value"] is None else None}
+    out = {"calendar": [{"id": h["id"], "label": h["label"], "date": horizon_date(h["id"]), "countdown": horizon_countdown(h["id"])}
                         for h in CONFIG["horizon"]],
            "register": [l1("N31"), l1("N32")],
            "penalties": [l1("N33"), l1("N34")],

@@ -77,6 +77,11 @@ def trace_view(f: dict, e: dict) -> str:
         return f"{n} days" if n > 0 else "in force"
     if f["view"] == "yoy":
         return f"{abs(round(e['value']))}% {'below' if e['value'] < 0 else 'above'}"
+    if f["view"] == "qend":
+        q = FREEZE_DATE
+        ends = [dt.date(q.year, 3, 31), dt.date(q.year, 6, 30), dt.date(q.year, 9, 30), dt.date(q.year, 12, 31)]
+        d = next(x for x in ends if x >= q)
+        return f"{d.day} {d:%b} {d.year}"
     if f["view"] == "pair":
         return f"{REG[f['from_id']]['display']} → {e['display']}"
     return "unknown view"

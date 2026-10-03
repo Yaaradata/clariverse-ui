@@ -578,7 +578,20 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
               }}
             >
               <span>{h.label}</span>
-              <Fig f={h.date} />
+              <span style={{ textAlign: "right" }}>
+                <Fig f={h.date} />
+                {h.countdown ? (
+                  <span
+                    style={{
+                      display: "block",
+                      fontSize: 11.5,
+                      color: C.textMut,
+                    }}
+                  >
+                    {h.countdown} from data freeze
+                  </span>
+                ) : null}
+              </span>
             </div>
           ))}
         </Tile>

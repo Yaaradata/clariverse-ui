@@ -139,7 +139,7 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
       <Tile title="Calendar" sub="Dated obligations" layers={["L1"]}>
         <Table
           testid="calendar"
-          head={["Obligation", "Date", "Days to go"]}
+          head={["Obligation", "Date", "Days to go (from data freeze)"]}
           align={["left", "left", "left"]}
           rows={r.calendar.map((c) => ({
             key: c.id,
