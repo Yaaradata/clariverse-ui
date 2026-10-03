@@ -34,6 +34,62 @@ export type NotLoaded = {
   what: string;
 };
 
+/** Public voice (L2) from the scrape, core-licence sources only. */
+export type Theme =
+  | { thin: true; text: string; what: string }
+  | {
+      thin: false;
+      theme: string;
+      label: string;
+      paraphrase: string;
+      count: Fig;
+      share: Fig;
+    };
+
+export type VoiceBlock = {
+  layer: "L2";
+  tag: string;
+  loaded: true;
+  thin: boolean;
+  text: string;
+  items: Fig;
+  by_source: (Fig & { share: number })[];
+  escalation: Fig;
+  responded: Fig | null;
+  theme: Theme;
+  footnotes: string[];
+  negative?: Fig;
+};
+
+export type VoiceLine = {
+  topic: string;
+  label: string;
+  fig: Fig;
+  thin: boolean;
+};
+
+export type CardVoice = {
+  layer: "L2";
+  tag: string;
+  loaded: true;
+  scope: string;
+  text: string;
+  items: Fig;
+  lines: VoiceLine[];
+  thin: boolean;
+  theme?: Theme;
+  switching?: Fig;
+  switching_thin?: boolean;
+  footnotes: string[];
+};
+
+export type Rating = Fig & {
+  store: string;
+  ratings: number;
+  ratings_display: string;
+  as_of: string;
+};
+
 export type Sens = {
   id: string;
   layer: "L1";
@@ -86,6 +142,7 @@ export type Common = {
   pending: string;
   not_loaded: string;
   sensitivity_footer: string;
+  l2_not_enough: string;
   /** Definitions shown behind an (i). */
   defs: Record<string, string>;
 };
@@ -127,7 +184,7 @@ export type Card = {
   what: Fig[];
   peers: Fig[];
   peers_held: boolean;
-  voice: NotLoaded;
+  voice: CardVoice;
   inside: { text: string; figures?: Fig[] };
   sensitivity: Sens[];
   exposure: string | null;
@@ -141,9 +198,10 @@ export type BusinessRow = {
   id: string;
   label: string;
   next: boolean;
+  outside_only?: boolean;
   inside: { received_index: Fig; open: Fig; over_30: Fig } | null;
-  outside: NotLoaded;
-  theme: NotLoaded;
+  outside: VoiceBlock;
+  theme: Theme;
   money: Fig[];
   module: string | null;
 };
@@ -158,7 +216,10 @@ export type HomeWindow = {
       ombudsman: OmbudsmanBlock;
     }
   >;
-  outside: NotLoaded;
+  outside: VoiceBlock & {
+    rating: Rating | null;
+    trend: Trend & { starts: string | null };
+  };
   doing: {
     savings: Fig[];
     outflow_index: Fig & { trend: Trend };

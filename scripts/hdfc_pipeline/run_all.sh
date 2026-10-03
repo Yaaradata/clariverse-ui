@@ -21,10 +21,18 @@ cd ../hdfc_v3
 "$PY" volume_validation.py
 "$PY" walkthrough.py
 cd ../..
-# IndusInd (docs/indusind/): internal seed, page payloads, reconcile and privacy checks.
+# IndusInd (docs/indusind/): public voice (L2), internal seed, page payloads, reconcile and privacy checks.
+# The raw public scrape lives outside the repo (handles, phone numbers, URLs). When it is present, profile and ingest
+# it; otherwise the committed, redacted data/processed/indusind_l2/ is used as is.
+if [ -d "${INDUSIND_L2_RAW:-../indusind_inputs/social_raw/IndusInd-jul1st26-sept30th26}" ]; then
+  (cd scripts && "$PY" profile_indusind_l2.py && "$PY" ingest_indusind_l2.py)
+else
+  echo "indusind L2: raw scrape not present; using the committed data/processed/indusind_l2/"
+fi
 "$PY" scripts/seed_indusind.py
 (cd scripts && "$PY" build_indusind.py)
 "$PY" scripts/check_indusind.py
+[ -f data/processed/indusind_l2/_audit/text.jsonl ] && (cd scripts && "$PY" sample_check_indusind_l2.py)
 "$PY" scripts/lint_terms.py
 "$PY" scripts/check_pii.py
 "$PY" scripts/test_check_pii.py

@@ -277,6 +277,7 @@ def common() -> dict:
         "pulse_caption": c["pulse_caption"],
         "pending": PENDING, "not_loaded": NOT_LOADED, "sensitivity_footer": c["sensitivity_footer"],
         "defs": c["defs"],
+        "l2_not_enough": CONFIG["l2"]["not_enough"],
     }
 
 
@@ -654,13 +655,22 @@ def approvals_page() -> dict:
             "banner": "LisN recommends; people approve. Nothing is sent or executed."}
 
 
+def l2_answer(v: dict, lead: str) -> list[dict]:
+    """The top theme of a public-voice block as an answer figure, labelled with its paraphrase; nothing if thin."""
+    t = v.get("theme") or {}
+    if t.get("thin", True):
+        return []
+    return [t["count"] | {"label": f"{lead}: {t['label'].lower()}. {t['paraphrase']}"}]
+
+
 def ask_bank(h: dict) -> dict:
     """Ask LisN, demo mode: answers only from this bank (IND-B4 §9.7). No model-generated numbers."""
     w4 = h["windows"]["w4"]
     qs = [
         {"id": "savings", "q": "Where did savings go this quarter?", "page": "deposits",
-         "answer": "Savings balances at 30 Jun 2026 and the change on March and on a year ago are pending verification. Inside the bank (illustrative), the largest outflow clusters by slab, region and branch type over the last 4 weeks are below.",
-         "figures": w4["cards"][0]["inside"]["figures"] + [w4["doing"]["outflow_index"] | {"label": "Savings outflow index, last 4 weeks (Q1 weekly average = 100)"}]},
+         "answer": "Savings balances at 30 Jun 2026 and the change on March and on a year ago are pending verification. Inside the bank (illustrative), the largest outflow clusters by slab, region and branch type over the last 4 weeks are below, with what deposit holders said in public (INDIE app reviews; public, unverified).",
+         "figures": w4["cards"][0]["inside"]["figures"] + [w4["doing"]["outflow_index"] | {"label": "Savings outflow index, last 4 weeks (Q1 weekly average = 100)"}]
+                    + l2_answer(w4["cards"][0]["voice"], "Deposit holders in public")},
         {"id": "conduct", "q": "Which products carry conduct-rule exposure?", "page": "risk",
          "answer": "The conduct rules' effective date is pending verification. Inside the bank (illustrative), the share of complaints in distribution-related grounds, by product, over the last 4 weeks:",
          "figures": w4["cards"][3]["inside"]["figures"]},
@@ -668,9 +678,11 @@ def ask_bank(h: dict) -> dict:
          "answer": "Disbursements and the book are pending verification. Inside the bank (illustrative), conduct complaints as a share of each region's vehicle-finance complaints, last 4 weeks:",
          "figures": w4["cards"][2]["inside"]["figures"]},
         {"id": "since_monday", "q": "What changed since Monday?", "page": "home",
-         "answer": "Inside the bank (illustrative), this week against the previous one: complaints received and the open share. Public data is not yet loaded, so peer and voice changes are not shown.",
+         "answer": "Inside the bank (illustrative), this week against the previous one: complaints received and the open share. In public, this week's INDIE app reviews and their top theme. Peer rate cards are not yet captured, so peer changes are not shown.",
          "figures": [h["windows"]["week"]["pulse"]["all"]["inside"]["change"] | {"label": "Complaints received, this week"},
-                     h["windows"]["week"]["pulse"]["all"]["inside"]["open"] | {"label": "Open, share of this week's complaints"}]},
+                     h["windows"]["week"]["pulse"]["all"]["inside"]["open"] | {"label": "Open, share of this week's complaints"},
+                     h["windows"]["week"]["outside"]["items"] | {"label": "Public items this week"}]
+                    + l2_answer(h["windows"]["week"]["outside"], "In public this week")},
     ]
     if CONFIG["flags"]["l2_loaded"]:
         qs.insert(1, {"id": "peer_rates", "q": "What changed in peer rate cards this week?", "page": "peers", "answer": "", "figures": []})

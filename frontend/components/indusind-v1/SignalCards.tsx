@@ -20,6 +20,7 @@ import type {
   TitlePart,
   ViewId,
 } from "@/lib/indusind-v1/types";
+import { CardVoiceBlock } from "./PublicVoice";
 import {
   C,
   Chip,
@@ -29,7 +30,6 @@ import {
   LAYER_LABEL,
   Label,
   MutedNote,
-  NotLoadedNote,
   OpenLink,
   Pending,
   SourceTag,
@@ -306,7 +306,7 @@ function Drawer({
         </Section>
 
         <Section n={3} title="What customers and the market said">
-          <NotLoadedNote n={card.voice} />
+          <CardVoiceBlock v={card.voice} />
           <MutedNote>{card.inside.text}</MutedNote>
           {card.inside.figures?.length ? (
             <div>
@@ -428,6 +428,17 @@ function Drawer({
   );
 }
 
+/** The tile's voice chip: the strongest topic line with enough items, else the thin state. */
+function voiceChip(card: Card) {
+  const v = card.voice;
+  if (v.theme && !v.theme.thin)
+    return `${v.theme.label} (${v.theme.count.display})`;
+  const line = v.lines.find((l) => !l.thin);
+  return line
+    ? `${line.label} (${line.fig.display})`
+    : "Not enough public items";
+}
+
 function CardTile({
   card,
   view,
@@ -441,7 +452,7 @@ function CardTile({
   const peer = card.peers[0];
   const sens = card.sensitivity[0];
   const layers = Array.from(new Set(evidence(card).map((f) => f.layer))).concat(
-    card.voice ? ["L2" as const] : [],
+    ["L2" as const],
   );
   return (
     <section
@@ -482,7 +493,7 @@ function CardTile({
         <Chip label="Peer">
           {card.peers_held || !peer ? <Pending /> : <Fig f={peer} />}
         </Chip>
-        <Chip label="Voice">{card.voice.text}</Chip>
+        <Chip label="Voice">{voiceChip(card)}</Chip>
         {card.exposure ? (
           <Chip label="Exposure" color={C.amber}>
             Not quantified

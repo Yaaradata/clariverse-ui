@@ -600,3 +600,37 @@ wording.
 - **IV-25 · Routes and screenshots.** IndusInd routes live in `scripts/routes_indusind.json` (HDFC's `routes.json` is
   unchanged). Full-page screenshots hide the floating Ask bar (a fixed bar lands mid-page in a full-page capture); a
   second end-of-page shot per screen shows the bar clear of the footer, and the script asserts it.
+
+## IndusInd V1 · public voice (L2)
+
+- **IV-26 · Licence buckets.** Core (on screen): INDIE on Google Play and the App Store, consumercomplaints.in. Pending
+  (counted, never shown): X (2,235; an Apify tweet-scraper actor, not a named paid X API tier), Reddit (1,497; Apify
+  archive-scraper actors, not the official API), MouthShut (3; not in the IND-B3 sources table). Out (dropped, never
+  stored): TechnoFino (419), Trustpilot (10). The collection-method line in the request was left blank; the method was
+  read from the scrape's own actor ids.
+- **IV-27 · Apps.** IND-B3 names INDIE only, so INDIE for Business, BHIM IndusPay, IndusDIRECT Corporate, Video Branch
+  and the small bank apps are excluded (892 Play rows). The IndusInd Insurance and INLIC apps belong to group insurance
+  companies, not the bank (372 rows): excluded.
+- **IV-28 · Raw outside the repo; no free text committed.** The scrape stays in `../indusind_inputs/social_raw/`.
+  The committed store (`data/processed/indusind_l2/items.jsonl`) holds labels, hashes and glosses only. Redacted text
+  and post URLs go to the gitignored `_audit/` folder: reviews name staff and family members in ways no pattern
+  fully catches. Redaction still runs before storage (phones, 12–19-digit numbers, emails, PAN, URLs, @handles,
+  self-introduced names and the repo's name detector). Hashes are base32 so they never read as phone numbers.
+- **IV-29 · Tagging.** Deterministic keyword rules (English, Hindi and Hinglish) for product, topic and theme, with the
+  method on every item. A store review with no product word is `app_digital` (it is about the app). Recovery-agent
+  allegations need both a who (recovery or collection staff) and a what (harassment, threats, abuse): "threat
+  detected" is the app's security error. "Scam" as an insult is not customers-targeted fraud. Sentiment on store
+  reviews comes from the star rating. 29 Devanagari items glossed by hand; three are Marathi (language `mr`).
+- **IV-30 · Themes.** Hand-written labels and paraphrases (`config/indusind.yaml`, `l2.themes`) after reading the items.
+  A theme counts only non-positive items (its paraphrase describes a complaint) and needs 15 items. The account-opening
+  rule was narrowed after reading its 15 items (half were "don't open an account here" warnings).
+- **IV-31 · Thresholds and states.** A claim needs 15 items in the window, else "Not enough public items this window".
+  A source above 60% of a scope's items is footnoted with its share (Google Play is 95–100% everywhere). Play reviews
+  start 10 Aug (the collector hit its 5,000 cap), so the weekly series is a share and windows before 10 Aug carry a
+  coverage footnote. Negative share is left out of every payload until a person sets `sentiment_check_passed`.
+- **IV-32 · Cards sub-line.** Cards leads the product businesses on public items but Digital (the app) has far more,
+  and the home table shows both, so the sub-line stays "Business view: Cards".
+- **IV-33 · What stays not loaded.** Peer rate cards, ads and press are captures, not voice; none are in the zip, so
+  those slots still say "Public data not yet loaded". The pull holds no peer-bank items.
+- **IV-34 · INDIE rating.** The Play run returned dated listing metadata: 4.5 from 8,17,954 ratings, scraped 1 Oct
+  2026. Shown once, one store, dated. The App Store run returned no listing metadata.

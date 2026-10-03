@@ -113,7 +113,7 @@ def source_note(xs: list[dict]) -> tuple[str | None, list[dict]]:
         return None, []
     top, k = c.most_common(1)[0]
     share = k / n
-    note = (f"{round(100 * share)}% of these items are {SOURCE_LABEL[top]} reviews of the INDIE app."
+    note = (f"{pct(k, n)}% of these items are {SOURCE_LABEL[top]} reviews of the INDIE app."
             if share > L2C["source_share_flag"] else None)
     return note, [{"source": s, "label": SOURCE_LABEL[s], "count": v, "share": pct(v, n)} for s, v in c.most_common()]
 

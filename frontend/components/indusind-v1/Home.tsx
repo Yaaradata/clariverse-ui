@@ -16,6 +16,7 @@ import type {
 } from "@/lib/indusind-v1/types";
 import { AreaChart, trendPoints } from "./charts";
 import { OmbudsmanWatch } from "./Ombudsman";
+import { OutsideMeter, ThemeLine, Thin } from "./PublicVoice";
 import {
   C,
   cols,
@@ -270,8 +271,13 @@ function Pulse({
         </Tile>
 
         <Tile title="Outside" sub="Public voice" layers={["L2"]}>
-          <NotLoadedNote n={s.win.outside} />
-          <MutedNote>{common.pulse_caption}</MutedNote>
+          <OutsideMeter
+            v={s.win.outside}
+            defs={common.defs}
+            rating={s.win.outside.rating}
+            trend={s.win.outside.trend}
+            caption={common.pulse_caption}
+          />
         </Tile>
 
         <Tile
@@ -427,11 +433,31 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
             r.inside ? <Fig key="i" f={r.inside.received_index} /> : "—",
             r.inside ? <Fig key="o" f={r.inside.open} /> : "—",
             r.inside ? <Fig key="t" f={r.inside.over_30} /> : "—",
-            <span key="out" style={{ color: C.textMut, fontSize: 12.5 }}>
-              {r.outside.text}
-            </span>,
-            <span key="th" style={{ color: C.textMut, fontSize: 12.5 }}>
-              {r.theme.text}
+            !r.outside.thin ? (
+              <span key="out" style={{ fontSize: 12.5 }}>
+                <Fig
+                  f={r.outside.items}
+                  style={{ fontFamily: MONO, color: C.text }}
+                />{" "}
+                items
+                {r.outside.escalation.value ? (
+                  <>
+                    {" · "}
+                    <Fig f={r.outside.escalation} /> escalation
+                  </>
+                ) : null}
+                {r.outside.footnotes.length ? (
+                  <span title={r.outside.footnotes.join(" ")}> *</span>
+                ) : null}
+              </span>
+            ) : (
+              <Thin key="out" text={r.outside.text} />
+            ),
+            <span
+              key="th"
+              title={r.theme.thin ? undefined : r.theme.paraphrase}
+            >
+              <ThemeLine t={r.theme} compact />
             </span>,
             <div
               key="m"
@@ -448,7 +474,9 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
                 </span>
               ))}
             </div>,
-            r.next ? (
+            r.outside_only ? (
+              ""
+            ) : r.next ? (
               <span key="x" style={{ color: C.textMut, fontSize: 12.5 }}>
                 Next
               </span>

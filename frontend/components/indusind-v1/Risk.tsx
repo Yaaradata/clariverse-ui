@@ -12,10 +12,10 @@ import type {
   Card,
   Common,
   Fig as FigT,
-  NotLoaded,
   OmbudsmanBlock,
 } from "@/lib/indusind-v1/types";
 import { OmbudsmanWatch } from "./Ombudsman";
+import { CardVoiceBlock, Thin } from "./PublicVoice";
 import {
   C,
   Chip,
@@ -24,7 +24,6 @@ import {
   Info,
   Label,
   MutedNote,
-  NotLoadedNote,
   OpenLink,
   ShareBar,
   Table,
@@ -53,15 +52,46 @@ export type RiskSlice = {
   register: FigT[];
   penalties: FigT[];
   checklist: { item: string; status: string }[];
-  escalation: NotLoaded;
+
   card_d: Card;
   win: {
     weekly: { id: string; layer: "L3"; rows: WeeklyRow[] };
     pattern: Record<"product" | "category" | "group" | "geography", FigT[]>;
     ombudsman: OmbudsmanBlock;
     distribution: FigT[];
+    public: PublicRow[];
   };
   windowLabel: string;
+};
+
+type PublicRow = {
+  business: string;
+} & Record<
+  | "escalation_language"
+  | "mis_selling_allegation"
+  | "recovery_conduct_allegation",
+  FigT & { thin: boolean }
+>;
+
+const PUBLIC_COLS = [
+  { id: "escalation_language", label: "Escalation language" },
+  {
+    id: "mis_selling_allegation",
+    label: "Posts alleging mis-selling or bundling (public, unverified)",
+  },
+  {
+    id: "recovery_conduct_allegation",
+    label: "Posts alleging recovery-agent conduct (public, unverified)",
+  },
+] as const;
+
+const BUSINESS_LABEL: Record<string, string> = {
+  deposits: "Deposits",
+  vehicle: "Vehicle finance",
+  micro: "Micro loans and rural",
+  cards: "Cards",
+  personal: "Personal loans",
+  digital: "Digital",
 };
 
 const PATTERN = [
@@ -149,7 +179,7 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
               }}
             />
             <Label>Posts alleging mis-selling or bundling</Label>
-            <NotLoadedNote n={d.voice} />
+            <CardVoiceBlock v={d.voice} />
           </div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <Label>
@@ -322,8 +352,49 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
           title="Public escalation language"
           sub="By product"
           layers={["L2"]}
+          info={common.defs.escalation_public}
         >
-          <NotLoadedNote n={r.escalation} />
+          {r.win.public.every((p) => PUBLIC_COLS.every((c) => p[c.id].thin)) ? (
+            <div
+              data-testid="public-by-product"
+              style={{ display: "flex", flexDirection: "column", gap: 6 }}
+            >
+              {PUBLIC_COLS.map((c) => (
+                <div
+                  key={c.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    fontSize: 13,
+                    color: C.textSec,
+                  }}
+                >
+                  <span>{c.label}</span>
+                  <Thin text={common.l2_not_enough} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Table
+              testid="public-by-product"
+              head={["Business", ...PUBLIC_COLS.map((c) => c.label)]}
+              align={["left", "right", "right", "right"]}
+              rows={r.win.public.map((p) => ({
+                key: p.business,
+                cells: [
+                  BUSINESS_LABEL[p.business] ?? p.business,
+                  ...PUBLIC_COLS.map((c) =>
+                    p[c.id].thin ? (
+                      <Thin key={c.id} text={common.l2_not_enough} />
+                    ) : (
+                      <Fig key={c.id} f={p[c.id]} />
+                    ),
+                  ),
+                ],
+              }))}
+            />
+          )}
         </Tile>
       </div>
     </>

@@ -10,13 +10,14 @@
 import type {
   Common,
   Fig as FigT,
-  NotLoaded,
   OmbudsmanBlock,
   Trend,
+  VoiceBlock,
 } from "@/lib/indusind-v1/types";
 import { AreaChart, trendPoints } from "./charts";
 import { StateBar } from "./Home";
 import { OmbudsmanWatch } from "./Ombudsman";
+import { OutsideMeter, Thin } from "./PublicVoice";
 import {
   C,
   cols,
@@ -25,7 +26,6 @@ import {
   Kpi,
   Label,
   MONO,
-  NotLoadedNote,
   ShareBar,
   Table,
   Tile,
@@ -44,8 +44,7 @@ type Category = {
 
 export type CardsSlice = {
   money: FigT;
-  voice: NotLoaded;
-  outside: NotLoaded;
+  most_voice: boolean;
   win: {
     issue: Record<"index" | "resolved" | "open" | "waiting" | "negative", FigT>;
     complaints: Record<
@@ -57,6 +56,10 @@ export type CardsSlice = {
     ombudsman: OmbudsmanBlock;
     categories: Category[];
     closure_risk: { index: FigT; by_category: FigT[] };
+    external: VoiceBlock & {
+      categories: (FigT & { category: string; thin: boolean })[];
+      praise: { show: boolean; count: number };
+    };
   };
   windowLabel: string;
 };
@@ -84,7 +87,10 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
             The same engine, at a business head's altitude.
           </h2>
           <div style={{ fontSize: 13, color: C.textMut }}>
-            Business view: Cards · {c.windowLabel}
+            {c.most_voice
+              ? "Cards: the business with the most public customer voice this quarter"
+              : "Business view: Cards"}{" "}
+            · {c.windowLabel}
           </div>
         </div>
         <div
@@ -165,10 +171,11 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
           </div>
         </Tile>
         <Tile title="Issue pulse, in public" sub="Public voice" layers={["L2"]}>
-          <NotLoadedNote n={c.outside} />
-          <div style={{ fontSize: 12.5, color: C.textMut }}>
-            {common.pulse_caption}
-          </div>
+          <OutsideMeter
+            v={w.external}
+            defs={common.defs}
+            caption={common.pulse_caption}
+          />
         </Tile>
       </div>
 
@@ -194,11 +201,42 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
           </div>
         </Tile>
         <Tile
-          title="Voice and timelines"
+          title="Public items by category"
           sub="What customers say"
           layers={["L2"]}
         >
-          <NotLoadedNote n={c.voice} />
+          {w.external.categories.length ? (
+            <div>
+              {w.external.categories.map((f) => (
+                <div
+                  key={f.id}
+                  data-register={f.id}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 10,
+                    fontSize: 13,
+                    color: C.textSec,
+                    padding: "2px 0",
+                  }}
+                >
+                  <span>{f.label}</span>
+                  {f.thin ? (
+                    <Thin text="Not enough items" />
+                  ) : (
+                    <strong style={{ color: C.text }}>{f.display}</strong>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <Thin text={w.external.text} />
+          )}
+          {w.external.praise.show ? null : (
+            <div style={{ fontSize: 12.5, color: C.textMut }}>
+              Where customers praise us: {w.external.text.toLowerCase()}.
+            </div>
+          )}
         </Tile>
       </div>
 

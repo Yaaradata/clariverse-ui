@@ -11,6 +11,7 @@ import { useState } from "react";
 import { fmtDate, fmtStamp } from "@/lib/indusind-v1/format";
 import type {
   Action,
+  CardVoice,
   Common,
   Fig as FigT,
   NotLoaded,
@@ -18,6 +19,7 @@ import type {
   Trend,
 } from "@/lib/indusind-v1/types";
 import { AreaChart, trendPoints } from "./charts";
+import { CardVoiceBlock } from "./PublicVoice";
 import {
   C,
   Chip,
@@ -51,7 +53,7 @@ export type DepositsSlice = {
     rate_table: { loaded: boolean; text: string };
   };
   franchise: FigT[];
-  why: NotLoaded;
+  why_captures: NotLoaded;
   action: Action;
   win: {
     flows: Record<"CA" | "SA" | "TD", { inflow: Flow; outflow: Flow }>;
@@ -59,6 +61,7 @@ export type DepositsSlice = {
     top: FigT[];
     premature: FigT;
     new_money: FigT;
+    why: CardVoice;
   };
   slabs: Opt[];
   regions: Opt[];
@@ -379,7 +382,8 @@ export function DepositsView({
 
           <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
             <Tile title="Why, from outside" sub="Same weeks" layers={["L2"]}>
-              <NotLoadedNote n={d.why} />
+              <CardVoiceBlock v={d.win.why} />
+              <NotLoadedNote n={d.why_captures} />
             </Tile>
             <Tile
               title="How high"
