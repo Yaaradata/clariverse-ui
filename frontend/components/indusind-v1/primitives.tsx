@@ -345,7 +345,7 @@ export function Tile({
                   gap: 8,
                 }}
               >
-                {title}
+                <span style={{ minWidth: 0 }}>{title}</span>
                 {info ? <Info text={info} /> : null}
               </h2>
             ) : null}
@@ -460,6 +460,7 @@ export function Table({
       }}
     >
       <table
+        className="ind-table"
         style={{ width: "100%", borderCollapse: "collapse", fontSize: 13.5 }}
       >
         <thead>
@@ -496,6 +497,7 @@ export function Table({
             >
               {r.cells.map((c, ci) => (
                 <td
+                  data-label={typeof head[ci] === "string" ? head[ci] : ""}
                   // biome-ignore lint/suspicious/noArrayIndexKey: cells are positional
                   key={ci}
                   style={{

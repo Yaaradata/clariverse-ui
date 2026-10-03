@@ -83,6 +83,7 @@ function Heatmap({ d }: { d: DepositsSlice }) {
     <div style={{ overflowX: "auto" }}>
       <table
         data-testid="heatmap"
+        className="ind-heat"
         style={{
           borderCollapse: "separate",
           borderSpacing: 3,

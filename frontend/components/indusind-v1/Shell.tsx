@@ -249,8 +249,7 @@ export function Shell({
             style={{
               display: "flex",
               gap: 4,
-              overflowX: "auto",
-              scrollbarWidth: "none",
+              flexWrap: "wrap",
             }}
           >
             {NAV.map((n) => {
