@@ -2,25 +2,24 @@
 
 Rule: no count shown may imply an annual complaint rate more than 2× off IndusInd's FY25 disclosure (register N31).
 
-## Status: BLOCKED on IND-D1
+## Status: checked against IND-D1 (N31, N32)
 
-- N31 (complaints received, FY25) and N32 (pending at year-end) are `null` in `data/public/indusind_register.json`.
-  IND-D1 is not in the repo, so the disclosed scale is unknown.
-- The check cannot pass or fail. Instead, **no internal count reaches any screen.** Every internal (L3) figure on the
-  IndusInd routes is a share, an index (Q1 weekly average = 100) or weeks of intake. The seed's absolute counts stay in
-  `data/seed/indusind_v1/` and are never put in a page payload (`scripts/build_indusind.py`).
-- Logged as IV-05 and CF-05 (`docs/demo-rebuild/MORNING_DECISIONS.md`, `docs/indusind/build_plan.md`).
+IND-D1 verified the BRSR FY25 figures: **80,062 complaints received, 15,811 pending at year-end** (FY24: 42,330 and
+2,555). The classification was broadened in FY25, so FY24 and FY25 are not like-for-like and no trend is drawn across
+them. Internal (L3) figures stay shares, indices and weeks of intake on screen; no seed count is shown.
 
-## Seed scale (for when N31 lands)
+| Metric | Our figure | Anchor | Ratio | Verdict |
+|---|---|---|---|---|
+| Complaints received a year | about 63,700 (Q1 weekly intake of about 1,225 × 52) | N31: 80,062 (FY25) | 0.80× | **Pass** (within 2×) |
+| Complaints pending at a period end (stock) | 2.2–2.5 weeks of intake, about 2,700–3,100 complaints | N32: 15,811 at 31 Mar 2025, 10.3 weeks of FY25 intake | 0.18× (5.5× low) | **Justified, flagged** (below) |
+| Same, against FY24 (old classification) | 2.2–2.5 weeks of intake | FY24: 2,555 pending on 42,330 received, 3.1 weeks | 0.7–0.8× | Within 2× |
 
-| Item | Seed value |
-|---|---|
-| Weekly complaint intake | 1,180 a week (about 61,000 a year) |
-| Weeks generated | 27, ending at the data freeze (2 Oct 2026, 18:00 IST, provisional) |
-| Complaints in the seed | 32,952 |
-
-When IND-D1 gives N31: compare 52 × the Q1 weekly intake with N31. Within 0.5× to 2× passes. Outside that range,
-rescale `WEEKLY` in `scripts/seed_indusind.py`, rebuild, and only then allow counts on screen.
+**Why the pending stock is not raised to 10 weeks.** N32 is a single year-end stock under a classification broadened in
+FY25 (IND-D1: "not comparable with FY24"; no category split is given), so it likely holds items the seed's case-level
+complaints do not. Matching it would mean most pending complaints were over 30 days old, which would inflate every
+Ombudsman share (eligible, at risk) on a basis IND-D1 cannot confirm. The seed matches the FY24 ratio (3.1 weeks) and the
+FY25 intake (0.8×). The gap is reported to Usha as a figure that could look wrong to someone who knows the bank's BRSR,
+and the Conduct and complaints screen shows N31 and N32 with the classification footnote beside the weekly register.
 
 ## Banker sanity ratios (from the seed, checked by `scripts/check_indusind.py`)
 
