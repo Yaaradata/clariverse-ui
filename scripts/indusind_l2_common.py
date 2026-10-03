@@ -106,11 +106,14 @@ LONGNUM = re.compile(r"(?<!\d)(?:\d[\s-]?){12,19}(?!\d)")
 EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
 PAN = re.compile(r"\b[A-Z]{5}\d{4}[A-Z]\b")
 URL = re.compile(r"https?://\S+|www\.\S+")
+# A customer naming themself: "my name is A B", "myself A B", "mera naam A", "मैं A B C इस ..." (Hindi self-introduction).
+SELF_NAME = re.compile(r"(?i)(my name is|myself|mera naam(?: hai)?|मेरा नाम)\s+[^\s,.;:!?]+(?:\s+[A-Z][^\s,.;:!?]*)?")
+HINDI_SELF = re.compile(r"मैं\s+((?:[ऀ-ॿ]+\s+){2,3})(?=इस|का|की|ने\b)")
 HANDLE = re.compile(r"(?<![\w.])@[A-Za-z0-9_]{2,}")
 
 
 def redact(text: str | None) -> str:
-    """Redact before anything is stored: mobiles, 12–19-digit numbers, emails, PAN, URLs and @handles."""
+    """Redact before anything is stored: mobiles, 12–19-digit numbers, emails, PAN, URLs, @handles and a customer's own name."""
     t = text or ""
     t = URL.sub("[link]", t)
     t = EMAIL.sub("[email]", t)
@@ -118,6 +121,8 @@ def redact(text: str | None) -> str:
     t = MOBILE.sub("[phone]", t)
     t = PAN.sub("[id]", t)
     t = HANDLE.sub("@[user]", t)
+    t = SELF_NAME.sub(lambda m: f"{m.group(1)} [name]", t)
+    t = HINDI_SELF.sub("मैं [name] ", t)
     return re.sub(r"\s+", " ", t).strip()
 
 
@@ -165,27 +170,32 @@ PRODUCT_RULES: list[tuple[str, re.Pattern]] = [
 ]
 
 TOPIC_RULES: dict[str, re.Pattern] = {
-    "rate_offer": kw(r"interest rate", r"\brates?\b", r"\boffer", r"cashback", r"higher interest", r"ब्याज"),
-    "fee_change": kw(r"charge", r"\bfees?\b", r"deduct", r"penalt", r"\bgst\b", r"hidden cost", r"शुल्क", r"चार्ज"),
+    "rate_offer": kw(r"interest rate", r"rate of interest", r"(?:fd|savings?|deposit) rates?", r"higher interest",
+                     r"cashback offer", r"special offer", r"ब्याज दर"),
+    "fee_change": kw(r"charges?\b", r"charged", r"\bfees?\b", r"deduct", r"penalt", r"\bgst\b", r"hidden cost", r"शुल्क", r"चार्ज"),
     "insurance_investment_sales": kw(r"insurance", r"\bpolic(?:y|ies)\b", r"mutual fund", r"\bulip\b", r"बीमा"),
     "escalation_language": kw(r"\brbi\b", r"ombudsman", r"consumer (?:court|forum)", r"legal notice", r"\bcourt\b",
-                              r"\bcms\.rbi", r"cyber ?crime"),
-    "closure_intent": kw(r"clos(?:e|ing) (?:my|the|this)? ?(?:account|a/c|card)", r"account closure", r"switch(?:ing)? to",
-                         r"moving to (?:another|other)", r"never (?:use|bank)", r"uninstall", r"खाता बंद"),
+                              r"cyber ?crime"),
+    "closure_intent": kw(r"clos(?:e|ing) (?:my|the|this|our)? ?(?:account|a/c|card)", r"account closure",
+                         r"switch(?:ing)? (?:to|my account)", r"moving (?:my account )?to (?:another|other|a different)",
+                         r"खाता बंद"),
     "trust_governance": kw(r"\bsebi\b", r"\bsfio\b", r"derivative", r"accounting (?:lapse|discrepanc)", r"governance",
-                           r"\bceo\b", r"resign", r"share price", r"management"),
-    "recovery_conduct_allegation": kw(r"recovery agent", r"harass", r"threat", r"abusive call", r"abus(?:e|ing) ",
-                                      r"धमकी", r"परेशान"),
+                           r"(?:top|senior) management", r"\bceo\b", r"resign"),
     "mis_selling_allegation": kw(r"mis-?sold", r"mis-?sell", r"forced to (?:buy|take|open)", r"without (?:my )?consent",
-                                 r"bundl", r"added without", r"zabardasti", r"जबरदस्ती"),
-    "fraud_impersonation": kw(r"\bscam", r"fraud call", r"fake (?:call|sms|message|app|link)", r"phishing",
-                              r"impersonat", r"cheat", r"\bfraud", r"धोखा", r"ठगी"),
+                                 r"bundl", r"(?:insurance|policy) (?:was )?added without"),
+    "fraud_impersonation": kw(r"scam (?:call|sms|message|link)", r"scammers?\b", r"got scammed", r"fraud (?:call|sms|message|link)", r"fake (?:call|sms|message|app|link|customer care)",
+                              r"phishing", r"impersonat", r"unauthori[sz]ed (?:transaction|debit|withdrawal)",
+                              r"money (?:was )?(?:stolen|debited without)", r"ठगी"),
     "service_delay": kw(r"not (?:yet )?resolved", r"no (?:response|reply|resolution)", r"waiting", r"\bdelay",
                         r"still (?:not|no)", r"pending", r"for (?:the last |last )?(?:\d+|many|several|few) (?:days|weeks|months)"),
     "app_failure": kw(r"not working", r"doesn'?t work", r"crash", r"\berror", r"unable to (?:log ?in|login|open|access)",
                       r"can'?t (?:log ?in|login|open)", r"otp (?:not|is not)", r"server", r"\bbug", r"stuck", r"\bslow",
-                      r"hang", r"failed", r"failure", r"glitch", r"नहीं चल"),
+                      r"\bhang", r"failed", r"failure", r"glitch", r"threat detected", r"logs? (?:me )?out", r"नहीं चल"),
 }
+
+# Allegations need both halves: who (recovery or collection staff) and what (harassment, threats, abuse).
+RECOVERY_WHO = kw(r"recovery", r"collection (?:agent|team|call)", r"\bagents?\b", r"loan (?:call|agent)", r"वसूली")
+RECOVERY_WHAT = kw(r"harass", r"threaten", r"abus", r"misbehav", r"rude", r"insult", r"धमकी", r"परेशान")
 
 OFF_TOPIC = {
     "jobs": kw(r"\bhiring\b", r"vacanc", r"recruit", r"walk-?in interview", r"job opening", r"\bjobs?\b at"),
@@ -245,7 +255,10 @@ def product_of(r: dict, text: str) -> tuple[str, str]:
 
 
 def topics_of(text: str) -> list[str]:
-    return [t for t, rx in TOPIC_RULES.items() if rx.search(text)]
+    tags = [t for t, rx in TOPIC_RULES.items() if rx.search(text)]
+    if RECOVERY_WHO.search(text) and RECOVERY_WHAT.search(text):
+        tags.append("recovery_conduct_allegation")
+    return tags
 
 
 def off_topic(text: str) -> str | None:
@@ -273,3 +286,40 @@ def card_category(text: str) -> str | None:
 
 def peers_in(text: str) -> list[str]:
     return [p for p, rx in PEERS.items() if rx.search(text)]
+
+
+# ---------------------------------------------------------------- themes (for the top theme per business)
+# Business → ordered (theme, pattern). An item takes the first theme of its business that matches. The on-screen
+# label and paraphrase of each theme live in config/indusind.yaml (l2.themes), written by hand from the items.
+BUSINESS_OF = {"deposits_savings": "deposits", "fd_rd": "deposits", "nri": "deposits", "cards": "cards",
+               "vehicle_loans": "vehicle", "micro_loans_rural": "micro", "personal_loans": "personal",
+               "app_digital": "digital"}
+
+THEMES: dict[str, list[tuple[str, re.Pattern]]] = {
+    "digital": [
+        ("security_block", kw(r"threat detected", r"thread detected", r"secure(?:d)? operating system", r"screen reader",
+                              r"rooted", r"developer option", r"android 16", r"hyperos")),
+        ("login_otp", kw(r"log ?in", r"\botp\b", r"register(?:ing)? (?:my )?(?:mobile|number)", r"\bsim\b", r"device bind",
+                         r"verif", r"\bmpin\b", r"\bpin\b", r"logged out", r"log ?out", r"लॉग ?इन", r"ओटी ?पी")),
+        ("update", kw(r"\bupdate", r"new version", r"old app", r"new app")),
+        ("customer_care", kw(r"customer care", r"call cent", r"no response", r"support")),
+    ],
+    "cards": [
+        ("card_in_app", kw(r"\bapp\b", r"login", r"register", r"activat", r"ऐप")),
+        ("card_bill", kw(r"\bbill\b", r"pay (?:my )?(?:credit )?card", r"card payment", r"\bemi\b", r"\bdue\b")),
+        ("card_service", kw(r"customer care", r"call", r"support", r"service")),
+    ],
+    "deposits": [
+        ("account_opening", kw(r"account open", r"open(?:ing)? (?:an |a |my |the )?(?:new )?account", r"video ?kyc",
+                               r"\bvkyc\b", r"\bkyc\b", r"pre[- ]?deposit", r"10,?000", r"खाते नहीं खुलते")),
+        ("charges", kw(r"charge", r"\bfees?\b", r"minimum balance", r"\bmab\b", r"deduct")),
+        ("deposit_app", kw(r"\bapp\b", r"login", r"\botp\b", r"\bfd\b")),
+    ],
+}
+
+
+def theme_of(product: str, text: str) -> str | None:
+    for theme, rx in THEMES.get(BUSINESS_OF.get(product, ""), []):
+        if rx.search(text):
+            return theme
+    return None

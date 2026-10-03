@@ -1,0 +1,800 @@
+[
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-03",
+  "rows": 12
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-10",
+  "rows": 9
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-17",
+  "rows": 2
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-31",
+  "rows": 29
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-07",
+  "rows": 136
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-14",
+  "rows": 26
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-21",
+  "rows": 34
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-28",
+  "rows": 14
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-09-04",
+  "rows": 14
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-09-11",
+  "rows": 4
+ },
+ {
+  "source": "appstore",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-10-02",
+  "rows": 1
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-03",
+  "rows": 2
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-17",
+  "rows": 2
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-24",
+  "rows": 3
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-31",
+  "rows": 1
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-07",
+  "rows": 1
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-14",
+  "rows": 2
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-21",
+  "rows": 1
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-28",
+  "rows": 2
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-09-11",
+  "rows": 3
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-09-25",
+  "rows": 1
+ },
+ {
+  "source": "appstore",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-10-02",
+  "rows": 1
+ },
+ {
+  "source": "consumercomplaints",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-10",
+  "rows": 1
+ },
+ {
+  "source": "consumercomplaints",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-17",
+  "rows": 1
+ },
+ {
+  "source": "consumercomplaints",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-07-31",
+  "rows": 1
+ },
+ {
+  "source": "mouthshut",
+  "bucket": "pending",
+  "reason": "MouthShut: not in the IND-B3 sources table",
+  "week_end": "2026-08-07",
+  "rows": 1
+ },
+ {
+  "source": "mouthshut",
+  "bucket": "pending",
+  "reason": "MouthShut: not in the IND-B3 sources table",
+  "week_end": "2026-08-28",
+  "rows": 1
+ },
+ {
+  "source": "mouthshut",
+  "bucket": "pending",
+  "reason": "MouthShut: not in the IND-B3 sources table",
+  "week_end": "2026-09-25",
+  "rows": 1
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-14",
+  "rows": 383
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-21",
+  "rows": 510
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-08-28",
+  "rows": 660
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-09-04",
+  "rows": 934
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-09-11",
+  "rows": 878
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-09-18",
+  "rows": 673
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-09-25",
+  "rows": 599
+ },
+ {
+  "source": "play",
+  "bucket": "core",
+  "reason": "",
+  "week_end": "2026-10-02",
+  "rows": 363
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-07-03",
+  "rows": 26
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-07-10",
+  "rows": 69
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-07-17",
+  "rows": 66
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-07-24",
+  "rows": 49
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-07-31",
+  "rows": 67
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-08-07",
+  "rows": 65
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-08-14",
+  "rows": 52
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-08-21",
+  "rows": 59
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-08-28",
+  "rows": 59
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-09-04",
+  "rows": 74
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-09-11",
+  "rows": 110
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-09-18",
+  "rows": 86
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-09-25",
+  "rows": 70
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "bank app outside the IND-B3 list (INDIE only)",
+  "week_end": "2026-10-02",
+  "rows": 40
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-03",
+  "rows": 10
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-10",
+  "rows": 24
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-17",
+  "rows": 34
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-24",
+  "rows": 17
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-07-31",
+  "rows": 27
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-07",
+  "rows": 22
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-14",
+  "rows": 22
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-21",
+  "rows": 33
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-08-28",
+  "rows": 19
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-09-04",
+  "rows": 27
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-09-11",
+  "rows": 31
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-09-18",
+  "rows": 39
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-09-25",
+  "rows": 28
+ },
+ {
+  "source": "play",
+  "bucket": "excluded",
+  "reason": "group-company insurance app, not the bank",
+  "week_end": "2026-10-02",
+  "rows": 20
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-07-03",
+  "rows": 50
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-07-10",
+  "rows": 72
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-07-17",
+  "rows": 75
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-07-24",
+  "rows": 91
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-07-31",
+  "rows": 117
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-08-07",
+  "rows": 112
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-08-14",
+  "rows": 127
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-08-21",
+  "rows": 154
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-08-28",
+  "rows": 141
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-09-04",
+  "rows": 100
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-09-11",
+  "rows": 115
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-09-18",
+  "rows": 124
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-09-25",
+  "rows": 135
+ },
+ {
+  "source": "reddit",
+  "bucket": "pending",
+  "reason": "Reddit: archive scraper actors, not the official API",
+  "week_end": "2026-10-02",
+  "rows": 84
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-07-03",
+  "rows": 18
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-07-10",
+  "rows": 50
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-07-17",
+  "rows": 14
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-07-24",
+  "rows": 18
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-07-31",
+  "rows": 1
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-08-07",
+  "rows": 7
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-08-14",
+  "rows": 35
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-08-21",
+  "rows": 110
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-08-28",
+  "rows": 51
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-09-04",
+  "rows": 19
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-09-11",
+  "rows": 56
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-09-18",
+  "rows": 9
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-09-25",
+  "rows": 20
+ },
+ {
+  "source": "technofino",
+  "bucket": "out",
+  "reason": "TechnoFino: out under IND-B3 (terms)",
+  "week_end": "2026-10-02",
+  "rows": 11
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-07-10",
+  "rows": 1
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-07-24",
+  "rows": 1
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-08-07",
+  "rows": 2
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-08-14",
+  "rows": 1
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-08-28",
+  "rows": 1
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-09-11",
+  "rows": 2
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-09-18",
+  "rows": 1
+ },
+ {
+  "source": "trustpilot",
+  "bucket": "out",
+  "reason": "Trustpilot: out under IND-B3 (terms)",
+  "week_end": "2026-09-25",
+  "rows": 1
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-07-03",
+  "rows": 28
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-07-10",
+  "rows": 175
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-07-17",
+  "rows": 62
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-07-24",
+  "rows": 322
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-07-31",
+  "rows": 107
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-08-07",
+  "rows": 99
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-08-14",
+  "rows": 105
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-08-21",
+  "rows": 89
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-08-28",
+  "rows": 99
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-09-04",
+  "rows": 91
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-09-11",
+  "rows": 118
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-09-18",
+  "rows": 58
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-09-25",
+  "rows": 222
+ },
+ {
+  "source": "x",
+  "bucket": "pending",
+  "reason": "X: scraper actor, not a named paid X API tier",
+  "week_end": "2026-10-02",
+  "rows": 660
+ }
+]

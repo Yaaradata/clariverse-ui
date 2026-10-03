@@ -1,0 +1,20 @@
+{
+ "raw_rows": 10712,
+ "by_bucket": {
+  "core": 5284,
+  "excluded": 1264,
+  "out": 429,
+  "pending": 3735
+ },
+ "core_items_by_source": {
+  "appstore": 281,
+  "consumercomplaints": 3,
+  "play": 5000
+ },
+ "on_topic": 5278,
+ "duplicates": 3,
+ "hindi_items": 29,
+ "hindi_without_gloss": 0,
+ "earliest": "2026-07-01",
+ "latest": "2026-09-30"
+}

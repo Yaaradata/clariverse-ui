@@ -18,6 +18,8 @@ views:
   - {id: cx, label: Head of CX}
 
 flags:
+  # Negative share stays hidden until a person confirms the sentiment sample (qa/indusind_l2_sample_check.md). Never set by a script.
+  sentiment_check_passed: false
   manual_read_logged: false   # IndusInd and IDFC First rate pages read by hand (IND-B3 §4)
   l2_loaded: false            # social pull, rate captures, ads and press (IND-B3 §4, §5, §7)
   sentiment_checked: false    # 100-item sentiment-accuracy sample reported (IND-B3 §7)
@@ -201,3 +203,21 @@ copy:
     pattern: "What the Internal Ombudsman's quarterly complaint-pattern analysis would cover this quarter: shares of the window's complaints."
     closure_risk: "Card accounts flagged at risk of closure, as an index: Q1 weekly average = 100. Aggregate only; no customer list."
     weekly: "Received and closed in the week: indices on the Q1 weekly intake (= 100). Pending: complaints with no final reply at the week end, in weeks of Q1 intake. Over 30: share of pending with no final reply after 30 days. Rejected, reopened and to the IO: shares of the week's final replies."
+
+# Public voice (L2). Only core-licence items (INDIE on Play and the App Store; consumercomplaints.in) reach a screen.
+l2:
+  min_items: 15            # fewer items than this for a claim: "Not enough public items this window"
+  source_share_flag: 0.6   # one source above this share of a product's items in a window: footnoted
+  not_enough: "Not enough public items this window"
+  themes:
+    security_block: {label: "App blocked as a security risk", paraphrase: "After phone updates, the app flags the device unsafe and won't open"}
+    login_otp: {label: "Login and registration", paraphrase: "Login and registration fail at the OTP or mobile-number check"}
+    update: {label: "The latest app update", paraphrase: "Problems began with the latest app update"}
+    customer_care: {label: "Customer care", paraphrase: "Care lines and email do not resolve app problems"}
+    card_in_app: {label: "Cards in the app", paraphrase: "Card holders cannot register, activate or see their card in the app"}
+    card_bill: {label: "Card bill payment", paraphrase: "Card bill payments in the app fail or stall"}
+    card_service: {label: "Card servicing", paraphrase: "Card holders cannot reach customer care"}
+    account_opening: {label: "Account opening", paraphrase: "Online account opening stalls at video KYC or the opening deposit"}
+    charges: {label: "Charges", paraphrase: "Unexpected charges and minimum-balance deductions"}
+    deposit_app: {label: "Deposits in the app", paraphrase: "Savings and deposit holders cannot use the app"}
+
