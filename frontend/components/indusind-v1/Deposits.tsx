@@ -23,7 +23,6 @@ import {
   Chip,
   cols,
   Fig,
-  Info,
   Kpi,
   Label,
   MONO,
