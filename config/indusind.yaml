@@ -221,10 +221,13 @@ l2:
     login_otp: {label: "Login and registration", paraphrase: "Login and registration fail at the OTP or mobile-number check"}
     update: {label: "The latest app update", paraphrase: "Problems began with the latest app update"}
     customer_care: {label: "Customer care", paraphrase: "Care lines and email do not resolve app problems"}
-    card_in_app: {label: "Cards in the app", paraphrase: "Card holders cannot register, activate or see their card in the app"}
-    card_bill: {label: "Card bill payment", paraphrase: "Card bill payments in the app fail or stall"}
-    card_service: {label: "Card servicing", paraphrase: "Card holders cannot reach customer care"}
+    card_not_visible: {label: "Card missing from the app", paraphrase: "Card holders log in but cannot see their card or its details"}
+    card_registration: {label: "Card-only sign-up", paraphrase: "Card-only customers cannot register; the app expects a bank account"}
+    card_bill: {label: "Card bill payment", paraphrase: "Card bill payments fail or stay pending in the app"}
+    debit_card: {label: "Debit card set-up", paraphrase: "Debit card PIN, limits, renewal and charges go unresolved"}
+    fd_service: {label: "Fixed deposits", paraphrase: "Fixed deposits missing, not closable or interest not credited"}
+    account_blocked: {label: "Frozen accounts", paraphrase: "Accounts frozen or made inactive without notice"}
+    savings_not_visible: {label: "Savings account missing", paraphrase: "Existing savings accounts do not show in the app"}
     account_opening: {label: "Account opening", paraphrase: "Online account opening stalls at video KYC or the opening deposit"}
     charges: {label: "Charges", paraphrase: "Unexpected charges and minimum-balance deductions"}
-    deposit_app: {label: "Deposits in the app", paraphrase: "Savings and deposit holders cannot use the app"}
 

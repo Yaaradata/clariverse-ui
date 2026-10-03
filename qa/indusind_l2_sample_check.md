@@ -28,7 +28,7 @@ The file carries labels only, never review text (reviews name staff and family m
 | 11 | `v7gutns7sfkoo3vz` | Google Play | app_digital | — | — | positive | ok | ok | ok | |
 | 12 | `oe2drm4xupiobq3n` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
 | 13 | `mkynij46orjtm3s3` | Google Play | app_digital | app_failure | — | negative | ok | ok | ok | |
-| 14 | `vbwzrdru3jnaics4` | Apple App Store | cards | — | card_in_app | negative | ok | ok | ok | |
+| 14 | `vbwzrdru3jnaics4` | Apple App Store | cards | — | card_not_visible | negative | ok | ok | ok | |
 | 15 | `2xpqnm47k6awo2g2` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
 | 16 | `75jlvmswm2lyvobp` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
 | 17 | `22yvwjwvjbteucc5` | Google Play | app_digital | — | — | positive | ok | ok | ok | |
@@ -46,7 +46,7 @@ The file carries labels only, never review text (reviews name staff and family m
 | 29 | `3x5f4wothqsolcxp` | Google Play | app_digital | app_failure | login_otp | neutral | ok | ok | wrong: rated neutral, text is negative | |
 | 30 | `fn3llo3336n4rr3g` | Google Play | app_digital | — | — | negative | wrong: a warning not to open an account (deposits) | ok | ok | |
 | 31 | `a2e6f7v377ydcpqf` | Google Play | app_digital | — | — | negative | wrong: bank service in general | ok | ok | |
-| 32 | `kbwiygt4vqvai2wp` | Google Play | cards | — | card_bill | negative | ok | ok | ok | |
+| 32 | `kbwiygt4vqvai2wp` | Google Play | cards | — | — | negative | ok | ok | ok | |
 | 33 | `4epe6pb5fuobihs2` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
 | 34 | `feml5pknyfitkum7` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
 | 35 | `f7qevymvoxfgpuga` | Google Play | app_digital | — | update | negative | ok | ok | ok | |
@@ -54,8 +54,8 @@ The file carries labels only, never review text (reviews name staff and family m
 | 37 | `dymn6v3rngbzlfb6` | Google Play | app_digital | app_failure | — | positive | ok | ok | wrong: five stars, text is negative | |
 | 38 | `6imhu6mhzibvs7ne` | Google Play | app_digital | — | security_block | negative | ok | ok | ok | |
 | 39 | `cofl2nrnldmjftd6` | Google Play | app_digital | — | — | positive | wrong: praise for a branch | ok | ok | |
-| 40 | `g3pvlw3hgoxo5eqx` | Google Play | cards | — | card_service | negative | wrong: a loan statement, not cards | ok | ok | |
-| 41 | `3ihuyxgsxkbefw2f` | Google Play | cards | — | card_in_app | negative | ok | ok | ok | |
+| 40 | `g3pvlw3hgoxo5eqx` | Google Play | cards | — | — | negative | wrong: a loan statement, not cards | ok | ok | |
+| 41 | `3ihuyxgsxkbefw2f` | Google Play | cards | — | — | negative | ok | ok | ok | |
 | 42 | `uddrlmgvzaeiv23d` | Google Play | app_digital | — | — | negative | ok | ok | ok | |
 | 43 | `s3sucm5ut32vjjl3` | Google Play | app_digital | — | — | positive | ok | ok | ok | |
 | 44 | `lzwiek66b5zhxhut` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
@@ -76,11 +76,11 @@ The file carries labels only, never review text (reviews name staff and family m
 | 59 | `knoqfprcvpr74rhj` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
 | 60 | `u4j6s2mkqsy62utc` | Apple App Store | app_digital | — | — | negative | ok | ok | ok | |
 | 61 | `pugxideky3i3xpyy` | Google Play | app_digital | — | — | positive | ok | ok | ok | |
-| 62 | `anx3kehmkr7jsm5z` | Google Play | fd_rd | closure_intent, app_failure | deposit_app | negative | ok | wrong: closure_intent is wrong (uninstalling the app) | ok | |
+| 62 | `anx3kehmkr7jsm5z` | Google Play | fd_rd | closure_intent, app_failure | fd_service | negative | ok | wrong: closure_intent is wrong (uninstalling the app) | ok | |
 | 63 | `5cyribyjmnvlkn3l` | Google Play | app_digital | — | — | negative | ok | ok | ok | |
 | 64 | `ls4xbwu25s6452iy` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
 | 65 | `g7ob4t6qxi6ogyjx` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
-| 66 | `65subtt4d6iktyum` | Apple App Store | nri | app_failure | deposit_app | positive | ok | ok | wrong: rated positive, text is negative | |
+| 66 | `65subtt4d6iktyum` | Apple App Store | nri | app_failure | — | positive | ok | ok | wrong: rated positive, text is negative | |
 | 67 | `r3azpoghgf3j5b7v` | Google Play | app_digital | — | security_block | negative | ok | ok | ok | |
 | 68 | `cfqwnmvqrepjcipg` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
 | 69 | `psxcf5fb3a57jjjc` | Google Play | app_digital | — | — | neutral | ok | ok | ok | |
@@ -89,7 +89,7 @@ The file carries labels only, never review text (reviews name staff and family m
 | 72 | `jhk5hht7zdrzecpu` | Google Play | app_digital | app_failure | update | negative | ok | ok | ok | |
 | 73 | `bsa4eai3cp5bvtoq` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
 | 74 | `kyvtg5gme73svmjq` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
-| 75 | `mcfnemwwvtia6j2b` | Google Play | cards | — | card_in_app | negative | ok | ok | ok | |
+| 75 | `mcfnemwwvtia6j2b` | Google Play | cards | — | — | negative | ok | ok | ok | |
 | 76 | `pdls7nixbbujm7ws` | Apple App Store | app_digital | app_failure | — | negative | ok | ok | ok | |
 | 77 | `yw67noj7j45c5svw` | Google Play | app_digital | app_failure | — | positive | ok | ok | wrong: rated positive, text is negative | |
 | 78 | `4an3y6i7ehyvr4q5` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
@@ -97,7 +97,7 @@ The file carries labels only, never review text (reviews name staff and family m
 | 80 | `siy72jpqeh7tlslr` | Google Play | app_digital | — | — | positive | ok | ok | ok | |
 | 81 | `tzjsprpqha4zhjul` | Google Play | app_digital | — | security_block | negative | ok | wrong: misses app_failure | ok | |
 | 82 | `6zwoiebu7bggadaz` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
-| 83 | `iw7m5yumlvnrwmzi` | Apple App Store | deposits_savings | app_failure | deposit_app | negative | ok | ok | ok | |
+| 83 | `iw7m5yumlvnrwmzi` | Apple App Store | deposits_savings | app_failure | debit_card | negative | ok | ok | ok | |
 | 84 | `4herm6sjvu3bsz5p` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
 | 85 | `s2jf5svpbrmuecsk` | Google Play | app_digital | — | customer_care | negative | ok | ok | ok | |
 | 86 | `u3xu3vp5h5tde42u` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
@@ -105,7 +105,7 @@ The file carries labels only, never review text (reviews name staff and family m
 | 88 | `ghiyx547x7d76xli` | Google Play | app_digital | app_failure | login_otp | negative | ok | ok | ok | |
 | 89 | `32ndsvcnhy2lqubo` | Google Play | app_digital | — | — | neutral | ok | ok | ok | |
 | 90 | `dzzhrlclbyum4nt2` | Google Play | app_digital | app_failure | update | negative | ok | ok | ok | |
-| 91 | `ecibesv6seep4l2r` | Google Play | cards | app_failure | card_in_app | negative | ok | ok | ok | |
+| 91 | `ecibesv6seep4l2r` | Google Play | cards | app_failure | card_registration | negative | ok | ok | ok | |
 | 92 | `gmbkv4oihsstrmmz` | Google Play | app_digital | app_failure | security_block | negative | ok | ok | ok | |
 | 93 | `bwxz4zx4phj3v4fx` | Google Play | app_digital | — | — | positive | ok | ok | wrong: rated positive, text is negative | |
 | 94 | `6lrmcmpvdjfpca63` | Google Play | app_digital | — | login_otp | negative | ok | wrong: misses app_failure | ok | |
@@ -131,19 +131,19 @@ Each theme's paraphrase is written by hand (`config/indusind.yaml`, `l2.themes`)
 
 ### Last 4 weeks
 
-- **Deposits:** Deposits in the app: "Savings and deposit holders cannot use the app". 18 of 39 items. Source items (18): `47ddz5pcea4vvxpm`, `5tn25aep33xc7vvg`, `75i2olojltpbzexs`, `anx3kehmkr7jsm5z`, `cuj2hn5pgoxpjpsu`, `ecamdsgh6fk37pdi`, `eqhjwaid6r6hboxy`, `i2x4jy7zhie6fypq`, `ikc75u7jgogrwkk2`, `l5aqlfx4vs2jv4ps`, `lrabf4ti6mnopdcx`, `o555566ecnx5qxgd`, `rbzswdrsfy5zqunr`, `suv7eftlgd6ergjp`, `tr43oh7qxaiezrha`, `tsc4m5bvnorjefou`, `yihvgolewwv4ono7`, `yx77aewz6icftnlx`
+- **Deposits:** 39 items. Not enough public items this window.
 - **Vehicle finance:** 0 items. Not enough public items this window.
 - **Micro loans and rural:** 0 items. Not enough public items this window.
-- **Cards:** Cards in the app: "Card holders cannot register, activate or see their card in the app". 41 of 63 items. Source items (41): `3dstxgjpidtw4yh2`, `3gqcjtcwm26sdlyf`, `3ihuyxgsxkbefw2f`, `4ewptx2tk6vtb65n`, `4mfblruzhpex2wcf`, `5wx5boxjjzk6ebrg`, `7ocdrlpqw3nnoxom`, `apmrstgkvopg2zis`, `ba3xhokwgxz7kfms`, `blcyf7k7t7ixf3ox`, `bvfd3ymh3hvrh6xv`, `cbdb2nmw77vw22jm`, `d5vxjhbbk7daaj6f`, `ecibesv6seep4l2r`, `eyf722whiauazpy3`, `fp7o4y6fvzvnj6ff`, `fvxngnakqvzld3ns`, `g7fnri5rkwhotbig`, `gcvuo632mssni4hy`, `hnxnyagvbpzlrvr7` …
+- **Cards:** 63 items. Not enough public items this window.
 - **Personal loans:** 1 items. Not enough public items this window.
 - **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 339 of 2406 items. Source items (339): `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2urvnsfrhxhi3tdg`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7`, `34lfi75x3f2njq55`, `3a7laai5n42a2nir`, `3acwqcztf575kz7y`, `3azbpj5kwb5zik5b`, `3bca4gbgvwpfd2cc`, `3bwntb5rtuyry3ts` …
 
 ### Last 13 weeks
 
-- **Deposits:** Deposits in the app: "Savings and deposit holders cannot use the app". 41 of 88 items. Source items (41): `2b24ezvwwdb66ww4`, `2yaj4jya2upss5kj`, `47ddz5pcea4vvxpm`, `4clkrcos7mxxk3k6`, `4og7fxe7r5564ahf`, `4ozczbjvkhxrm4us`, `4v7qsrpdi6k7upkq`, `5tn25aep33xc7vvg`, `6yammefwn2hzxqhe`, `75i2olojltpbzexs`, `7un6wh6msnewtpa5`, `anx3kehmkr7jsm5z`, `cc6tabdoinadazbk`, `cuj2hn5pgoxpjpsu`, `ecamdsgh6fk37pdi`, `eqhjwaid6r6hboxy`, `hl7kfpjv7kwwisey`, `hphaeit5ylz3k5cs`, `hrntvdfpoc7b5fgi`, `hrxmufkm2lck72hh` …
+- **Deposits:** Debit card set-up: "Debit card PIN, limits, renewal and charges go unresolved". 16 of 88 items. Source items (16): `4b5gwfelp3szzwre`, `6yammefwn2hzxqhe`, `75i2olojltpbzexs`, `7ez2xqdbnsgfly5j`, `ecamdsgh6fk37pdi`, `g4yvvruw2bavbnfa`, `iw7m5yumlvnrwmzi`, `lavqcczk4gfvleb6`, `lhrss5nawopjpzcu`, `oi6nh6jmk25j5mfv`, `tthomppligviq4bn`, `vml6uzfyvkpcgzya`, `w5igeyef6ruavjmh`, `w5jtspo6u3dtwz2a`, `x6crjhbzmnzvo5u6`, `yx77aewz6icftnlx`
 - **Vehicle finance:** 0 items. Not enough public items this window.
 - **Micro loans and rural:** 0 items. Not enough public items this window.
-- **Cards:** Cards in the app: "Card holders cannot register, activate or see their card in the app". 125 of 174 items. Source items (125): `2cwpmofsjw6inyik`, `2dhgy72tv4pfsnix`, `2p2xwca7wnd5bu7g`, `2wpv33folv2gtjhf`, `2yculjlj5pan7y6b`, `3dstxgjpidtw4yh2`, `3gqcjtcwm26sdlyf`, `3hlopxq4s4du2hze`, `3ihuyxgsxkbefw2f`, `3povzamua22qamod`, `3vtomika5q5jto3t`, `4ewptx2tk6vtb65n`, `4hlw4g5qknvwvwx4`, `4mfblruzhpex2wcf`, `4xuus6zwx3mubyyy`, `536uwzd2djboglhn`, `5ooi4um6adodda6q`, `5wbz3e7wr63ykinu`, `5wx5boxjjzk6ebrg`, `5zlioay4kyaktprl` …
+- **Cards:** Card missing from the app: "Card holders log in but cannot see their card or its details". 35 of 174 items. Source items (35): `2cwpmofsjw6inyik`, `2wpv33folv2gtjhf`, `3povzamua22qamod`, `4ewptx2tk6vtb65n`, `4hlw4g5qknvwvwx4`, `6qcfcoallfmtrsf3`, `a5vnqm6vkk6lx4bd`, `ajmth56abztkijqg`, `an4siifh4dqd5sjj`, `blcyf7k7t7ixf3ox`, `dtq76mxl3afrrzb2`, `ewx5bljqyi24hcpa`, `f37mv4b7qnkqqeha`, `fsbrnz4pxcdepwcf`, `g7fnri5rkwhotbig`, `gwdmuhto2zzldv3z`, `i7tamacu2py3kmt6`, `irelvdk55ke7s5uy`, `ixbmbu2jkmogofqe`, `jiq32atln5yvxqp3` …
 - **Personal loans:** 2 items. Not enough public items this window.
 - **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 632 of 4997 items. Source items (632): `22g3qfbg6vrv7z2p`, `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2ga6pphaqjqiwlgn`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2qd6optdeqaenxg2`, `2rdof7hwrmsw5qou`, `2rnw4d2tysc4i5m4`, `2rx5uc3cq7adppup`, `2urvnsfrhxhi3tdg`, `2vfesuacqwtw7zyq`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2` …
 

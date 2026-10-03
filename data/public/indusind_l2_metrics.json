@@ -201,12 +201,12 @@
    "label": "App blocked as a security risk: items",
    "definition": "On-topic public items in the window carrying this theme"
   },
-  "L2:theme_items:cards:card_in_app": {
-   "label": "Cards in the app: items",
+  "L2:theme_items:cards:card_not_visible": {
+   "label": "Card missing from the app: items",
    "definition": "On-topic public items in the window carrying this theme"
   },
-  "L2:theme_items:deposits:deposit_app": {
-   "label": "Deposits in the app: items",
+  "L2:theme_items:deposits:debit_card": {
+   "label": "Debit card set-up: items",
    "definition": "On-topic public items in the window carrying this theme"
   },
   "L2:theme_items:digital:security_block": {
@@ -217,12 +217,12 @@
    "label": "App blocked as a security risk: share of items",
    "definition": "Theme items as a share of the scope's public items"
   },
-  "L2:theme_share:cards:card_in_app": {
-   "label": "Cards in the app: share of items",
+  "L2:theme_share:cards:card_not_visible": {
+   "label": "Card missing from the app: share of items",
    "definition": "Theme items as a share of the scope's public items"
   },
-  "L2:theme_share:deposits:deposit_app": {
-   "label": "Deposits in the app: share of items",
+  "L2:theme_share:deposits:debit_card": {
+   "label": "Debit card set-up: share of items",
    "definition": "Theme items as a share of the scope's public items"
   },
   "L2:theme_share:digital:security_block": {
