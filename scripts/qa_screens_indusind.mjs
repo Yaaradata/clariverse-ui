@@ -5,11 +5,12 @@
 // Needs playwright and the @fontsource packages (run from a folder that has them, as the other ui-qa scripts do).
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 
 const [base, outDir] = process.argv.slice(2);
 const BASE = "/role-based/indusind_bank/customer-pulse";
-const FONT_CSS = fs.readFileSync(path.join(path.dirname(new URL(import.meta.url).pathname.replace(/^\/([A-Z]:)/, "$1")), "qa_fonts_v2.css"), "utf8");
+const FONT_CSS = fs.readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "qa_fonts_v2.css"), "utf8");
 fs.mkdirSync(outDir, { recursive: true });
 const screens = [["home", ""], ["deposits", "/deposits"], ["peers", "/peers"], ["risk", "/risk"], ["cards", "/cards"], ["approvals", "/approvals"]];
 const jobs = [["role-page", "/role-based/indusind_bank"]];

@@ -38,3 +38,20 @@ fails until it arrives.
   `qa/indusind_l2_sample_check.md`.
 - Google Play is 95–100% of every public count (footnoted) and starts 10 Aug (the collector's cap): windows reaching back further count from 10 Aug, with earlier App Store items shown apart.
 - Card G (app release) candidate: `docs/indusind/card_g_candidate.md`; not swapped in.
+
+## Re-scoped checks (all routes reachable from `/role-based/indusind_bank`)
+
+`scripts/qa_indusind_routes.mjs` crawls from the role page and follows every link under `/role-based/indusind_bank`.
+
+| Check | Routes covered | Result |
+|---|---|---|
+| Status 200 | 67 | 67/67 |
+| noindex (`X-Robots-Tag`) | 67 | 67/67 |
+| Watermark | 67 | 67/67 (the role page included) |
+| Rendered-page grep (URLs, handles, emails, phones, PAN, internal labels, HDFC strings, source links) | 67 | 67/67 clean |
+| lint_terms (26 rules and HL-06, HL-22, HL-28) on the rendered text | 67 | 0 hits |
+| check_pii patterns on the rendered text | 67 | 0 hits |
+| Screenshots | 15 screens × 3 sizes (1440, 390, 1536 at 1.25) | 45, 0 problems |
+
+Head of Cards opens S-CARDS. The earlier cards demo (`/role-based/indusind_bank/head_cards`) is unlisted, so the crawl does
+not reach it; noindex still covers it.

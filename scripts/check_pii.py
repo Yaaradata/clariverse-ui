@@ -39,8 +39,6 @@ FILES = [
     *sorted((ROOT / "data" / "processed" / "indusind_l2").glob("*.json*")),
     *[f for f in [ROOT / "data" / "processed" / "indusind_l2" / "_audit" / "text.jsonl"] if f.exists()],
     ROOT / "scripts" / "indusind_l2_glosses.json",
-    # Rendered text of every route reachable from /role-based/indusind_bank, when the crawl has run.
-    *[f for f in [ROOT / "qa" / "_crawl" / "pages.json"] if f.exists()],
     ROOT / "scripts" / "indusind_l2_manual.json",
 ]
 PATTERNS = {
@@ -146,6 +144,18 @@ def main() -> int:
     built = (FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2").is_dir()
     link_hits = scan_links(LINK_SOURCES + (LINK_BUILD if built else []))
     hits += link_hits
+    # Rendered text of every route reachable from /role-based/indusind_bank (scripts/qa_indusind_routes.mjs): the
+    # personal-data patterns only. UI labels on their own line ("Status", "Approve") are not names, so the name rule
+    # stays on the stored data, where items are sentences.
+    crawl = ROOT / "qa" / "_crawl" / "pages.json"
+    routes = 0
+    if crawl.exists():
+        for page in json.loads(crawl.read_text(encoding="utf-8")):
+            routes += 1
+            for name, pat in PATTERNS.items():
+                for m in re.finditer(pat, page["text"]):
+                    hits.append(f"route {page['route']}: {name}: {m.group(0)}")
+        print(f"check_pii: {routes} rendered routes under /role-based/indusind_bank scanned")
     for h in hits[:50]:
         print(h)
     if not built:

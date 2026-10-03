@@ -113,7 +113,7 @@ export default function RoleBasedIndustryRolesPage({ params }: PageProps) {
           ) : null}
         </div>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 14 }}>
         {industry.roles
           .filter((role) => !("unlisted" in role && role.unlisted))
           .map((role) => {
