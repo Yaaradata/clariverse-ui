@@ -34,7 +34,7 @@ export default function IndusIndLayout({ children }: { children: ReactNode }) {
         .ind-rail-home { width: 36px; height: 36px; border-radius: 11px; background: #241a44; border: 1px solid #8b5cf6;
           display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-weight: 900; font-size: 15px;
           text-decoration: none; }
-        .ind-rail-rule { width: 55%; height: 1px; background: var(--v2-border); }
+        .ind-rail-rule { width: 34px; height: 1px; background: var(--v2-border); }
         .ind-rail-item { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center;
           justify-content: center; color: var(--v2-text-mut); border-left: 3px solid transparent; }
         .ind-rail-item:hover { color: var(--v2-text); background: var(--v2-hover); }
