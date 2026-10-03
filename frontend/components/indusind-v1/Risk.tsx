@@ -144,10 +144,7 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
             cells: [
               c.label,
               <Fig key="d" f={c.date} />,
-              <Fig
-                key="c"
-                f={{ ...c.date, display: c.countdown ?? "—" }}
-              />,
+              <Fig key="c" f={{ ...c.date, display: c.countdown ?? "—" }} />,
             ],
           }))}
         />

@@ -97,21 +97,23 @@ export function PeersView({ p, common }: { p: PeersSlice; common: Common }) {
         sub="Same band, same date"
         layers={["L1"]}
       >
-        <Table
-          testid="rates"
-          head={["Rate", "Date", "Peer"]}
-          align={["left", "left", "right"]}
-          rows={p.rates.peers.map((f) => ({
-            key: f.id,
-            cells: [
-              f.label,
-              <span key="d" style={{ color: C.textMut }}>
-                {f.period}
-              </span>,
-              <Fig key="v" f={f} />,
-            ],
-          }))}
-        />
+        {p.rates.peers.length ? (
+          <Table
+            testid="rates"
+            head={["Rate", "Date", "Peer"]}
+            align={["left", "left", "right"]}
+            rows={p.rates.peers.map((f) => ({
+              key: f.id,
+              cells: [
+                f.label,
+                <span key="d" style={{ color: C.textMut }}>
+                  {f.period}
+                </span>,
+                <Fig key="v" f={f} />,
+              ],
+            }))}
+          />
+        ) : null}
         <MutedNote>
           {p.rates.indusind.loaded ? common.pending : p.rates.indusind.text}
         </MutedNote>

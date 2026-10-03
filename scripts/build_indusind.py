@@ -723,15 +723,15 @@ def ask_bank(h: dict) -> dict:
     w4 = h["windows"]["w4"]
     qs = [
         {"id": "savings", "q": "Where did savings go this quarter?", "page": "deposits",
-         "answer": "Savings balances at 30 Jun 2026 and the change on March and on a year ago are pending verification. Inside the bank (illustrative), the largest outflow clusters by slab, region and branch type over the last 4 weeks are below, with what deposit holders said in public (INDIE app reviews; public, unverified).",
-         "figures": w4["cards"][0]["inside"]["figures"] + [w4["doing"]["outflow_index"] | {"label": "Savings outflow index, last 4 weeks (Q1 weekly average = 100)"}]
+         "answer": "Savings balances at 30 Jun 2026, with the change on March and on a year ago, then, inside the bank (illustrative), the largest outflow clusters by slab, region and branch type over the last 4 weeks, and what deposit holders said in public (INDIE app reviews; public, unverified).",
+         "figures": [l1("N04"), l1("D08")] + w4["cards"][0]["inside"]["figures"] + [w4["doing"]["outflow_index"] | {"label": "Savings outflow index, last 4 weeks (Q1 weekly average = 100)"}]
                     + l2_answer(w4["cards"][0]["voice"], "Deposit holders in public")},
         {"id": "conduct", "q": "Which products carry conduct-rule exposure?", "page": "risk",
-         "answer": "The conduct rules' effective date is pending verification. Inside the bank (illustrative), the share of complaints in distribution-related grounds, by product, over the last 4 weeks:",
-         "figures": w4["cards"][3]["inside"]["figures"]},
+         "answer": "The conduct rules take effect on the date below. Inside the bank (illustrative), the share of complaints in distribution-related grounds, by product, over the last 4 weeks:",
+         "figures": [l1("N36")] + w4["cards"][3]["inside"]["figures"]},
         {"id": "vehicle", "q": "Vehicle finance by region", "page": "home",
-         "answer": "Disbursements and the book are pending verification. Inside the bank (illustrative), conduct complaints as a share of each region's vehicle-finance complaints, last 4 weeks:",
-         "figures": w4["cards"][2]["inside"]["figures"]},
+         "answer": "Q1 disbursements and the book, then, inside the bank (illustrative), conduct complaints as a share of each region's vehicle-finance complaints, last 4 weeks:",
+         "figures": [l1("N22"), l1("D11"), l1("N21")] + w4["cards"][2]["inside"]["figures"]},
         {"id": "since_monday", "q": "What changed since Monday?", "page": "home",
          "answer": "Inside the bank (illustrative), this week against the previous one: complaints received and the open share. In public, this week's INDIE app reviews and their top theme. Peer rate cards are not yet captured, so peer changes are not shown.",
          "figures": [h["windows"]["week"]["pulse"]["all"]["inside"]["change"] | {"label": "Complaints received, this week"},

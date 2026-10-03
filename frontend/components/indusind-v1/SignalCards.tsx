@@ -452,7 +452,10 @@ function CardTile({
 }) {
   const [copied, setCopied] = useState(false);
   const peer = card.peers[0];
-  const sens = card.sensitivity[0];
+  // The rupee chip shows the cost a year (S04 on card A), not the balance moved; else the first sensitivity.
+  const sens =
+    card.sensitivity.find((s) => s.display.includes("a year")) ??
+    card.sensitivity[0];
   const layers = Array.from(new Set(evidence(card).map((f) => f.layer))).concat(
     ["L2" as const],
   );
