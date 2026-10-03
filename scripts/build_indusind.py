@@ -363,7 +363,7 @@ def horizon_countdown(rid: str) -> str | None:
     if e["unit"] == "month":
         y, m = (int(x) for x in e["value"].split("-"))
         n = (dt.date(y, m, 1) - q).days
-        return f"{n} days to the start of the month" if n > 0 else "in force"
+        return f"{n} days (to 1 {dt.date(y, m, 1):%b})" if n > 0 else "in force"
     return days_to_go(rid)
 
 
@@ -525,7 +525,8 @@ def improving_item(x) -> dict:
         pending = a["pending"] or b["pending"]
         return {**b, "label": x["label"], "period": x["period"], "from_id": x["from"], "view": "pair",
                 "display": PENDING if pending else f"{a['display']} → {b['display']}", "pending": pending}
-    return l1(x)
+    # A field-name label ("Home loans, and change on a year ago") reads as figures instead.
+    return money_line([x]) if "," in REG[x]["label_short"] else l1(x)
 
 
 def quiet_public() -> dict | None:
@@ -616,7 +617,7 @@ def home() -> dict:
             "outside": {**M.voice_block(M.in_window(L2, w["id"]), "all", w["id"]), "rating": M.rating_fig(),
                         "trend": M.security_trend(L2), "before": M.before_block(L2, w["id"], "all")},
             "doing": {
-                "savings": [l1("N04"), l1("N06"), l1("N07"), l1("D08")],
+                "savings": [money_line(["N04", "D08"]), l1("N06"), l1("N07")],
                 "outflow_index": sa_out,
                 "closures_index": deposit_count_index("SA", "closures", w),
                 "app_deposits": l1("N42"),
@@ -704,7 +705,7 @@ def peers_page() -> dict:
         for b in banks:
             figs = [l1(e["id"]) for e in REG.values() if e.get("bank") == b and e["measure_basis"] != "rate_card" and not e.get("footnote_only")]
             # A peer with nothing verified is not a row; one footnote names the rest as pending.
-            if figs or tier == "Upper benchmark":
+            if figs:
                 rows.append({"bank": names[b], "tier": tier, "figures": figs, "held": [] if figs else [l1("H01")]})
             else:
                 pending.append(names[b])

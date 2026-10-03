@@ -253,21 +253,6 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
       </Tile>
 
       <Tile
-        title="Published, FY25"
-        sub="BRSR, the bank's disclosure"
-        layers={["L1"]}
-      >
-        <div style={cols(2, 300, 12)}>
-          {r.register.map((f) => (
-            <FigRow key={f.id} f={f} />
-          ))}
-        </div>
-        <MutedNote>
-          {(r.register[0]?.note ?? "").replace(/^./, (x) => x.toUpperCase())}.
-        </MutedNote>
-      </Tile>
-
-      <Tile
         title="Complaint register, weekly"
         sub="Inside the bank, illustrative"
         layers={["L3"]}
@@ -338,74 +323,102 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
         </div>
       </Tile>
 
-      <OmbudsmanWatch
-        o={r.win.ombudsman}
-        def={common.defs.ombudsman}
-        expanded
-        title="Ombudsman exposure"
-      />
-
       <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
-        <Tile title="Penalties" sub="Dated, cited Directions" layers={["L1"]}>
-          {r.penalties.map((f) => (
-            <FigRow key={f.id} f={f} />
-          ))}
-          <div style={{ fontSize: 13.5, color: C.text }}>
-            {r.penalty_note} ({r.penalties.map((f) => f.period).join(" and ")}).
-          </div>
-          <MutedNote>
-            Suggested: one review of deposit-rate controls, owned by the Chief
-            Compliance Officer.
-          </MutedNote>
-        </Tile>
-        <Tile
-          title="Public escalation language"
-          sub={`By product, ${r.win.public_period}`}
-          layers={["L2"]}
-          info={common.defs.escalation_public}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            minWidth: 0,
+          }}
         >
-          {r.win.public.every((p) => PUBLIC_COLS.every((c) => p[c.id].thin)) ? (
-            <div
-              data-testid="public-by-product"
-              style={{ display: "flex", flexDirection: "column", gap: 6 }}
-            >
-              {PUBLIC_COLS.map((c) => (
-                <div
-                  key={c.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 12,
-                    fontSize: 13,
-                    color: C.textSec,
-                  }}
-                >
-                  <span>{c.label}</span>
-                  <Thin text={common.l2_not_enough} />
-                </div>
+          <OmbudsmanWatch
+            o={r.win.ombudsman}
+            def={common.defs.ombudsman}
+            expanded
+            title="Ombudsman exposure"
+          />
+          <Tile
+            title="Published, FY25"
+            sub="BRSR, the bank's disclosure"
+            layers={["L1"]}
+          >
+            <div style={cols(2, 300, 12)}>
+              {r.register.map((f) => (
+                <FigRow key={f.id} f={f} />
               ))}
             </div>
-          ) : (
-            <Table
-              testid="public-by-product"
-              head={["Business", ...PUBLIC_COLS.map((c) => c.label)]}
-              align={["left", "right", "right", "right"]}
-              rows={r.win.public.map((p) => ({
-                key: p.business,
-                cells: [
-                  BUSINESS_LABEL[p.business] ?? p.business,
-                  ...PUBLIC_COLS.map((c) =>
-                    p[c.id].thin ? (
-                      <Thin key={c.id} text={common.l2_not_enough} />
-                    ) : (
-                      <Fig key={c.id} f={p[c.id]} />
+            <MutedNote>
+              {(r.register[0]?.note ?? "").replace(/^./, (x) =>
+                x.toUpperCase(),
+              )}
+              .
+            </MutedNote>
+          </Tile>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            minWidth: 0,
+          }}
+        >
+          <Tile title="Penalties" sub="Dated, cited Directions" layers={["L1"]}>
+            {r.penalties.map((f) => (
+              <FigRow key={f.id} f={f} />
+            ))}
+            <div style={{ fontSize: 13.5, color: C.text }}>
+              {r.penalty_note} ({r.penalties.map((f) => f.period).join(" and ")}
+              ).
+            </div>
+            <MutedNote>
+              Suggested: one review of deposit-rate controls, owned by the Chief
+              Compliance Officer.
+            </MutedNote>
+          </Tile>
+          <Tile
+            title="Public escalation language"
+            sub={`By product, ${r.win.public_period}`}
+            layers={["L2"]}
+            info={common.defs.escalation_public}
+          >
+            {r.win.public.every((p) =>
+              PUBLIC_COLS.every((c) => p[c.id].thin),
+            ) ? (
+              <div
+                data-testid="public-by-product"
+                style={{ display: "flex", flexDirection: "column", gap: 6 }}
+              >
+                <div style={{ fontSize: 12.5, color: C.textMut }}>
+                  <span style={{ fontStyle: "italic" }}>
+                    {common.l2_not_enough}:
+                  </span>{" "}
+                  {PUBLIC_COLS.map((c) => c.label).join(", ")}
+                </div>
+              </div>
+            ) : (
+              <Table
+                testid="public-by-product"
+                head={["Business", ...PUBLIC_COLS.map((c) => c.label)]}
+                align={["left", "right", "right", "right"]}
+                rows={r.win.public.map((p) => ({
+                  key: p.business,
+                  cells: [
+                    BUSINESS_LABEL[p.business] ?? p.business,
+                    ...PUBLIC_COLS.map((c) =>
+                      p[c.id].thin ? (
+                        <Thin key={c.id} text={common.l2_not_enough} />
+                      ) : (
+                        <Fig key={c.id} f={p[c.id]} />
+                      ),
                     ),
-                  ),
-                ],
-              }))}
-            />
-          )}
-        </Tile>
+                  ],
+                }))}
+              />
+            )}
+          </Tile>
+        </div>
       </div>
     </>
   );

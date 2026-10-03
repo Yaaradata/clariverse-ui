@@ -7,6 +7,7 @@
  * sees the pulse by channel, the watch open, the evidence open and the owners table.
  */
 
+import type { ReactNode } from "react";
 import { hrefWith, type Sel } from "@/lib/indusind-v1/params";
 import type {
   Common,
@@ -145,14 +146,26 @@ export function StateBar({ r, o, w }: { r: FigT; o: FigT; w: FigT }) {
   );
 }
 
+const STACK = {
+  display: "flex",
+  flexDirection: "column",
+  gap: 12,
+  minWidth: 0,
+} as const;
+
 function Pulse({
   s,
   common,
   cx,
+  col1,
+  col3,
 }: {
   s: HomeSlice;
   common: Common;
   cx: boolean;
+  /** Stacked under Inside and under "What customers are doing", so the three columns end level. */
+  col1?: ReactNode;
+  col3?: ReactNode;
 }) {
   const p = s.win.pulse;
   const i = p.inside;
@@ -178,101 +191,106 @@ function Pulse({
         </span>
       </h2>
       <div style={{ ...cols(3, 300, 12), alignItems: "start" }}>
-        <Tile
-          title="Inside the bank"
-          sub="Complaints and contacts"
-          layers={["L3"]}
-        >
-          <div style={cols(2, 120, 8)}>
-            <Kpi
-              label="Complaints received (index)"
-              f={i.received_index}
-              info={common.defs.received}
-              sub={<Fig f={i.change} />}
-            />
-            <Kpi
-              label="Open too long"
-              f={i.over_30}
-              info={common.defs.over_30}
-            />
-          </div>
-          <div style={{ position: "relative", height: 64 }}>
-            <AreaChart
-              id="home-received"
-              values={rt.values}
-              color={C.cyan}
-              height="100%"
-              title="Complaints received, weekly index"
-              points={rt.points}
-            />
-          </div>
-          <div>
-            <Label>
-              State at window end
-              <Info text={common.defs.states} />
-            </Label>
-            <div style={{ marginTop: 6 }}>
-              <StateBar r={i.resolved} o={i.open} w={i.waiting} />
-            </div>
-          </div>
-          <div style={{ ...cols(3, 90, 8), fontSize: 12.5, color: C.textSec }}>
-            <div>
-              <div style={sub}>
-                Grievance desk <Info text={common.defs.escalated} />
-              </div>
-              <Fig
-                f={i.escalated}
-                style={{ fontFamily: MONO, color: C.text, fontSize: 15 }}
-              />
-            </div>
-            <div>
-              <div style={sub}>
-                Internal Ombudsman <Info text={common.defs.io} />
-              </div>
-              <Fig
-                f={i.io}
-                style={{ fontFamily: MONO, color: C.text, fontSize: 15 }}
-              />
-            </div>
-            <div>
-              <div style={sub}>
-                Escalation language{" "}
-                <Info text={common.defs.escalation_language} />
-              </div>
-              <Fig
-                f={i.escalation_language}
-                style={{ fontFamily: MONO, color: C.text, fontSize: 15 }}
-              />
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 14,
-              flexWrap: "wrap",
-              fontSize: 12.5,
-              color: C.textSec,
-              borderTop: `1px solid ${C.border}`,
-              paddingTop: 8,
-            }}
+        <div style={STACK}>
+          <Tile
+            title="Inside the bank"
+            sub="Complaints and contacts"
+            layers={["L3"]}
           >
-            <span>
-              Contacts (index){" "}
-              <Fig
-                f={p.contacts.index}
-                style={{ fontFamily: MONO, color: C.text }}
+            <div style={cols(2, 120, 8)}>
+              <Kpi
+                label="Complaints received (index)"
+                f={i.received_index}
+                info={common.defs.received}
+                sub={<Fig f={i.change} />}
               />
-            </span>
-            <span>
-              Negative{" "}
-              <Fig
-                f={p.contacts.negative}
-                style={{ fontFamily: MONO, color: C.text }}
+              <Kpi
+                label="Open too long"
+                f={i.over_30}
+                info={common.defs.over_30}
               />
-            </span>
-            <Info text={common.defs.contacts} />
-          </div>
-        </Tile>
+            </div>
+            <div style={{ position: "relative", height: 64 }}>
+              <AreaChart
+                id="home-received"
+                values={rt.values}
+                color={C.cyan}
+                height="100%"
+                title="Complaints received, weekly index"
+                points={rt.points}
+              />
+            </div>
+            <div>
+              <Label>
+                State at window end
+                <Info text={common.defs.states} />
+              </Label>
+              <div style={{ marginTop: 6 }}>
+                <StateBar r={i.resolved} o={i.open} w={i.waiting} />
+              </div>
+            </div>
+            <div
+              style={{ ...cols(3, 90, 8), fontSize: 12.5, color: C.textSec }}
+            >
+              <div>
+                <div style={sub}>
+                  Grievance desk <Info text={common.defs.escalated} />
+                </div>
+                <Fig
+                  f={i.escalated}
+                  style={{ fontFamily: MONO, color: C.text, fontSize: 15 }}
+                />
+              </div>
+              <div>
+                <div style={sub}>
+                  Internal Ombudsman <Info text={common.defs.io} />
+                </div>
+                <Fig
+                  f={i.io}
+                  style={{ fontFamily: MONO, color: C.text, fontSize: 15 }}
+                />
+              </div>
+              <div>
+                <div style={sub}>
+                  Escalation language{" "}
+                  <Info text={common.defs.escalation_language} />
+                </div>
+                <Fig
+                  f={i.escalation_language}
+                  style={{ fontFamily: MONO, color: C.text, fontSize: 15 }}
+                />
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 14,
+                flexWrap: "wrap",
+                fontSize: 12.5,
+                color: C.textSec,
+                borderTop: `1px solid ${C.border}`,
+                paddingTop: 8,
+              }}
+            >
+              <span>
+                Contacts (index){" "}
+                <Fig
+                  f={p.contacts.index}
+                  style={{ fontFamily: MONO, color: C.text }}
+                />
+              </span>
+              <span>
+                Negative{" "}
+                <Fig
+                  f={p.contacts.negative}
+                  style={{ fontFamily: MONO, color: C.text }}
+                />
+              </span>
+              <Info text={common.defs.contacts} />
+            </div>
+          </Tile>
+          {col1}
+        </div>
 
         <Tile title="Outside" sub="Public voice" layers={["L2"]}>
           <OutsideMeter
@@ -285,48 +303,66 @@ function Pulse({
           />
         </Tile>
 
-        {d.kind === "lines" ? (
-          <Tile
-            title="What customers are doing"
-            sub={d.sub}
-            layers={Array.from(new Set(d.lines.map((f) => f.layer)))}
-          >
-            {d.lines.map((f) => (
-              <FigRow key={f.id + (f.label ?? "")} f={f} />
-            ))}
-          </Tile>
-        ) : (
-          <Tile
-            title="What customers are doing"
-            sub="Savings, flows, app"
-            layers={["L1", "L3"]}
-          >
-            <div style={cols(2, 120, 8)}>
-              <Kpi
-                label="Savings outflow (index)"
-                f={d.outflow_index}
-                info={common.defs.outflow}
-              />
-              <Kpi
-                label="Savings closures (index)"
-                f={d.closures_index}
-                info={common.defs.closures}
-              />
-            </div>
-            <div style={{ position: "relative", height: 64 }}>
-              <AreaChart
-                id="home-outflow"
-                values={ot.values}
-                color={C.cyan}
-                height="100%"
-                title="Savings outflow, weekly index"
-                points={ot.points}
-              />
-            </div>
-            <div>
-              {d.savings.map((f) => (
+        <div style={STACK}>
+          {d.kind === "lines" ? (
+            <Tile
+              title="What customers are doing"
+              sub={d.sub}
+              layers={Array.from(new Set(d.lines.map((f) => f.layer)))}
+            >
+              {d.lines.map((f) => (
+                <FigRow key={f.id + (f.label ?? "")} f={f} />
+              ))}
+            </Tile>
+          ) : (
+            <Tile
+              title="What customers are doing"
+              sub="Savings, flows, app"
+              layers={["L1", "L3"]}
+            >
+              <div style={cols(2, 120, 8)}>
+                <Kpi
+                  label="Savings outflow (index)"
+                  f={d.outflow_index}
+                  info={common.defs.outflow}
+                />
+                <Kpi
+                  label="Savings closures (index)"
+                  f={d.closures_index}
+                  info={common.defs.closures}
+                />
+              </div>
+              <div style={{ position: "relative", height: 64 }}>
+                <AreaChart
+                  id="home-outflow"
+                  values={ot.values}
+                  color={C.cyan}
+                  height="100%"
+                  title="Savings outflow, weekly index"
+                  points={ot.points}
+                />
+              </div>
+              <div>
+                {d.savings.map((f) => (
+                  <div
+                    key={f.id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      gap: 8,
+                      fontSize: 13,
+                      color: C.textSec,
+                      padding: "2px 0",
+                    }}
+                  >
+                    <span>
+                      {f.label}{" "}
+                      <span style={{ color: C.textMut }}>· {f.period}</span>
+                    </span>
+                    <Fig f={f} style={{ fontFamily: MONO, color: C.text }} />
+                  </div>
+                ))}
                 <div
-                  key={f.id}
                   style={{
                     display: "flex",
                     justifyContent: "space-between",
@@ -337,36 +373,21 @@ function Pulse({
                   }}
                 >
                   <span>
-                    {f.label}{" "}
-                    <span style={{ color: C.textMut }}>· {f.period}</span>
+                    {d.app_deposits.label}{" "}
+                    <span style={{ color: C.textMut }}>
+                      · {d.app_deposits.period}
+                    </span>
                   </span>
-                  <Fig f={f} style={{ fontFamily: MONO, color: C.text }} />
+                  <Fig
+                    f={d.app_deposits}
+                    style={{ fontFamily: MONO, color: C.text }}
+                  />
                 </div>
-              ))}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: 8,
-                  fontSize: 13,
-                  color: C.textSec,
-                  padding: "2px 0",
-                }}
-              >
-                <span>
-                  {d.app_deposits.label}{" "}
-                  <span style={{ color: C.textMut }}>
-                    · {d.app_deposits.period}
-                  </span>
-                </span>
-                <Fig
-                  f={d.app_deposits}
-                  style={{ fontFamily: MONO, color: C.text }}
-                />
               </div>
-            </div>
-          </Tile>
-        )}
+            </Tile>
+          )}
+          {col3}
+        </div>
       </div>
 
       {cx ? (
@@ -519,11 +540,34 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
   );
 }
 
+function PeerMoves({ s, sel }: { s: HomeSlice; sel: Sel }) {
+  return (
+    <Tile
+      title="Peer moves this week"
+      sub="Peer rate-card dates"
+      layers={["L1"]}
+      right={
+        <OpenLink
+          href={hrefWith(
+            "/role-based/indusind_bank/customer-pulse/peers",
+            sel,
+            { b: "all" },
+          )}
+        >
+          Peers
+        </OpenLink>
+      }
+    >
+      <CardDateList items={s.peer_moves.items} empty={s.peer_moves.empty} />
+    </Tile>
+  );
+}
+
 function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
   const q = s.win.quiet;
   return (
     <>
-      <div style={{ ...cols(3, 300, 12), alignItems: "start" }}>
+      <div style={cols(2, 300, 12)}>
         <Tile
           title="Improving"
           sub="Verified items only"
@@ -549,26 +593,8 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
           ))}
         </Tile>
         <Tile
-          title="Peer moves this week"
-          sub="Peer rate-card dates"
-          layers={["L1"]}
-          right={
-            <OpenLink
-              href={hrefWith(
-                "/role-based/indusind_bank/customer-pulse/peers",
-                sel,
-                { b: "all" },
-              )}
-            >
-              Peers
-            </OpenLink>
-          }
-        >
-          <CardDateList items={s.peer_moves.items} empty={s.peer_moves.empty} />
-        </Tile>
-        <Tile
           title="Horizon"
-          sub="Dated obligations"
+          sub="Dated obligations; days from data freeze"
           layers={["L1"]}
           right={
             <OpenLink
@@ -597,16 +623,7 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
               <span style={{ textAlign: "right" }}>
                 <Fig f={h.date} />
                 {h.countdown ? (
-                  <span
-                    style={{
-                      display: "block",
-                      fontSize: 11.5,
-                      color: C.textMut,
-                    }}
-                  >
-                    {h.countdown}
-                    {/^\d/.test(h.countdown) ? " from data freeze" : ""}
-                  </span>
+                  <span style={{ color: C.textMut }}> · {h.countdown}</span>
                 ) : null}
               </span>
             </div>
@@ -657,13 +674,20 @@ export function HomeView({
   return (
     <>
       <QuarterLine q={s.quarter} common={common} />
-      <Pulse s={s} common={common} cx={cx} />
-      <OmbudsmanWatch
-        o={s.win.pulse.ombudsman}
-        def={common.defs.ombudsman}
-        expanded={cx}
-        byBusiness={s.win.risk_by_business}
-        byBusinessDef={common.defs.risk_by_business}
+      <Pulse
+        s={s}
+        common={common}
+        cx={cx}
+        col1={
+          <OmbudsmanWatch
+            o={s.win.pulse.ombudsman}
+            def={common.defs.ombudsman}
+            expanded={cx}
+            byBusiness={s.win.risk_by_business}
+            byBusinessDef={common.defs.risk_by_business}
+          />
+        }
+        col3={<PeerMoves s={s} sel={sel} />}
       />
       <ByBusiness s={s} sel={sel} />
       <SignalCards cards={s.win.cards} view={sel.v} common={common} />

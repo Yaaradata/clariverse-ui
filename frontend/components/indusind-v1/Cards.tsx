@@ -110,142 +110,165 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
       </div>
 
       <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
-        <Tile
-          title="Cards: issue pulse, inside the bank"
-          sub="Contacts and complaints"
-          layers={["L3"]}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            minWidth: 0,
+          }}
         >
-          <div style={cols(3, 120, 8)}>
-            <Kpi
-              label="Contacts (index)"
-              f={w.issue.index}
-              info={common.defs.contacts}
-            />
-            <Kpi
-              label="Complaints received (index)"
-              f={w.complaints.received_index}
-              info={common.defs.received}
-              sub={<Fig f={w.complaints.change} />}
-            />
-            <Kpi
-              label="Open too long"
-              f={w.complaints.over_30}
-              info={common.defs.over_30}
-            />
-          </div>
-          <Label>Complaints received, weekly</Label>
-          <div style={{ position: "relative", height: 64 }}>
-            <AreaChart
-              id="cards-received"
-              values={t.values}
-              color={C.cyan}
-              height="100%"
-              title="Cards complaints received, weekly index"
-              points={t.points}
-            />
-          </div>
-          <div>
-            <Label>
-              Contacts, state at window end
-              <Info text={common.defs.states} />
-            </Label>
-            <div style={{ marginTop: 6 }}>
-              <StateBar
-                r={w.issue.resolved}
-                o={w.issue.open}
-                w={w.issue.waiting}
+          <Tile
+            title="Cards: issue pulse, inside the bank"
+            sub="Contacts and complaints"
+            layers={["L3"]}
+          >
+            <div style={cols(3, 120, 8)}>
+              <Kpi
+                label="Contacts (index)"
+                f={w.issue.index}
+                info={common.defs.contacts}
+              />
+              <Kpi
+                label="Complaints received (index)"
+                f={w.complaints.received_index}
+                info={common.defs.received}
+                sub={<Fig f={w.complaints.change} />}
+              />
+              <Kpi
+                label="Open too long"
+                f={w.complaints.over_30}
+                info={common.defs.over_30}
               />
             </div>
-          </div>
-          <div style={{ fontSize: 12.5, color: C.textSec }}>
-            Negative{" "}
-            <Fig
-              f={w.issue.negative}
-              style={{ fontFamily: MONO, color: C.text }}
-            />{" "}
-            · complaints open{" "}
-            <Fig
-              f={w.complaints.open}
-              style={{ fontFamily: MONO, color: C.text }}
-            />
-          </div>
-        </Tile>
-        <Tile
-          title="Cards: issue pulse, in public"
-          sub="Public voice"
-          layers={["L2"]}
-        >
-          <OutsideMeter
-            v={w.external}
-            defs={common.defs}
-            caption={common.pulse_caption}
-          />
-        </Tile>
-      </div>
-
-      <OmbudsmanWatch
-        o={w.ombudsman}
-        def={common.defs.ombudsman}
-        expanded
-        title="Cards: Ombudsman watch"
-      />
-
-      <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
-        <Tile
-          title="Cards: accounts at risk of closure (index)"
-          sub="Illustrative; aggregate, by category"
-          layers={["L3"]}
-          info={common.defs.closure_risk}
-        >
-          <Kpi
-            label="At risk of closure (index)"
-            f={w.closure_risk.index}
-            sub="Q1 weekly avg = 100"
-          />
-          <div>
-            {w.closure_risk.by_category.map((f) => (
-              <ShareBar key={f.id} label={f.label} f={f} max={maxClosure} />
-            ))}
-          </div>
-        </Tile>
-        <Tile
-          title="Cards: public items by category"
-          sub="What customers say"
-          layers={["L2"]}
-        >
-          {w.external.categories.length ? (
+            <Label>Complaints received, weekly</Label>
+            <div style={{ position: "relative", height: 64 }}>
+              <AreaChart
+                id="cards-received"
+                values={t.values}
+                color={C.cyan}
+                height="100%"
+                title="Cards complaints received, weekly index"
+                points={t.points}
+              />
+            </div>
             <div>
-              {w.external.categories.map((f) => (
-                <div
-                  key={f.id}
-                  data-register={f.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: 10,
-                    fontSize: 13,
-                    color: C.textSec,
-                    padding: "2px 0",
-                  }}
-                >
-                  <span>{f.label}</span>
-                  {f.thin ? (
-                    <Thin text="Not enough items" />
-                  ) : (
-                    <strong style={{ color: C.text }}>{f.display}</strong>
-                  )}
-                </div>
+              <Label>
+                Contacts, state at window end
+                <Info text={common.defs.states} />
+              </Label>
+              <div style={{ marginTop: 6 }}>
+                <StateBar
+                  r={w.issue.resolved}
+                  o={w.issue.open}
+                  w={w.issue.waiting}
+                />
+              </div>
+            </div>
+            <div style={{ fontSize: 12.5, color: C.textSec }}>
+              Negative{" "}
+              <Fig
+                f={w.issue.negative}
+                style={{ fontFamily: MONO, color: C.text }}
+              />{" "}
+              · complaints open{" "}
+              <Fig
+                f={w.complaints.open}
+                style={{ fontFamily: MONO, color: C.text }}
+              />
+            </div>
+          </Tile>
+          <Tile
+            title="Cards: accounts at risk of closure (index)"
+            sub="Illustrative; aggregate, by category"
+            layers={["L3"]}
+            info={common.defs.closure_risk}
+          >
+            <Kpi
+              label="At risk of closure (index)"
+              f={w.closure_risk.index}
+              sub="Q1 weekly avg = 100"
+            />
+            <div>
+              {w.closure_risk.by_category.map((f) => (
+                <ShareBar key={f.id} label={f.label} f={f} max={maxClosure} />
               ))}
             </div>
-          ) : (
-            <Thin text={w.external.text} />
-          )}
-          {w.external.praise.show ? null : (
-            <div style={{ fontSize: 12.5, color: C.textMut }}>
-              Where customers praise us: {w.external.text.toLowerCase()}.
-            </div>
-          )}
-        </Tile>
+          </Tile>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 12,
+            minWidth: 0,
+          }}
+        >
+          <Tile
+            title="Cards: issue pulse, in public"
+            sub="Public voice"
+            layers={["L2"]}
+          >
+            <OutsideMeter
+              v={w.external}
+              defs={common.defs}
+              caption={common.pulse_caption}
+            />
+          </Tile>
+          <OmbudsmanWatch
+            o={w.ombudsman}
+            def={common.defs.ombudsman}
+            expanded
+            title="Cards: Ombudsman watch"
+          />
+          <Tile
+            title="Cards: public items by category"
+            sub="What customers say"
+            layers={["L2"]}
+          >
+            {w.external.categories.length ? (
+              <div>
+                {w.external.categories
+                  .filter((f) => !f.thin)
+                  .map((f) => (
+                    <div
+                      key={f.id}
+                      data-register={f.id}
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: 10,
+                        fontSize: 13,
+                        color: C.textSec,
+                        padding: "2px 0",
+                      }}
+                    >
+                      <span>{f.label}</span>
+                      <strong style={{ color: C.text }}>{f.display}</strong>
+                    </div>
+                  ))}
+                {w.external.categories.some((f) => f.thin) ? (
+                  <div style={{ fontSize: 12.5, color: C.textMut }}>
+                    <span style={{ fontStyle: "italic" }}>
+                      Not enough items:
+                    </span>{" "}
+                    {w.external.categories
+                      .filter((f) => f.thin)
+                      .map((f) => f.label)
+                      .join(", ")}
+                  </div>
+                ) : null}
+              </div>
+            ) : (
+              <Thin text={w.external.text} />
+            )}
+            {w.external.praise.show ? null : (
+              <div style={{ fontSize: 12.5, color: C.textMut }}>
+                Where customers praise us: {w.external.text.toLowerCase()}.
+              </div>
+            )}
+          </Tile>
+        </div>
       </div>
 
       <Tile

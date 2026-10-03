@@ -770,8 +770,8 @@ wording.
   uses the 13-week window. Yes (w.e.f. 2 Jun) shows only on the Peers page.
 - **IV-57 · Press list.** Each peer's Q1 FY27 release date is the earliest source date among its verified results figures
   in the register (Federal 17 Jul, RBL 17 Jul, Yes 18 Jul, IDFC First 25 Jul), plus CRISIL 19 Aug; Ratings and Press merge
-  into one dated tile. Peer rows with nothing verified (AU, Bandhan) are hidden behind "Other peers: pending
-  verification"; Kotak stays as the greyed upper benchmark.
+  into one dated tile. Peer rows with nothing verified (AU, Bandhan, and the Kotak benchmark) are hidden behind
+  one footnote, "Other peers: pending verification".
 - **IV-58 · Business filter on home.** Outside = that business's public items (Cards equals the Cards page, checked).
   "What customers are doing" shows savings only under All and Deposits; Cards shows card balances (N18) and the Cards
   closure index; Vehicle, Micro and Digital show their own book or app lines.
