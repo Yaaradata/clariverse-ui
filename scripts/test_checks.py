@@ -185,6 +185,91 @@ LINT_MUST_PASS = [
 ]
 
 
+# ---------------------------------------------------------------- IndusInd (IND-B3 §8): one failing input per rule
+IND_TEXT_FIXTURES = {
+    1: "Micro loans and rural ₹31,417 crore",
+    2: "Peer CASA: HDFC Bank 38%",
+    3: "The closest peer is Federal",
+    4: "₹6,200 crore of deposits",
+    5: "IDFC First 5.96% cost of deposits",
+    6: "RBL CASA 29.21%",
+    7: "CASA ₹1,22,331 crore",
+    8: "IndusInd savings 4.00% on balances below ₹1 lakh",
+    9: "IDFC First FD rate 7.25% for 1 year",
+    10: "Yes Bank savings 7.00%",
+    11: "Federal cost of deposits 5.25%",
+    12: "INDIE rated 4.7 on Play",
+    13: "SFIO filing of 24 Dec",
+    14: "DPDP main obligations from 14 May 2027",
+    15: "The quarterly root-cause analysis",
+    16: "Approved by Bhasin",
+    17: "Savings at the end of Q2 FY27",
+    20: "Earn on your Regalia card",
+    21: "Our champion in the bank",
+    22: "Deposit run-off this week",
+    23: "fraud at IndusInd",
+    24: "LisN replaces your MIS",
+    26: "Built on LiSN",
+}
+
+
+def indusind_lint_fixtures(fails: list[str]) -> int:
+    import lint_indusind as li  # noqa: PLC0415
+
+    n = 0
+    for rule, text in IND_TEXT_FIXTURES.items():
+        h = li.text_rules(text, "fixture", {"manual_read_logged": False}, li.local_terms())
+        ok = any(x.startswith(f"IND-R{rule:02d}") for x in h)
+        n += 1
+        print(("PASS " if ok else "FAIL ") + f"IndusInd lint rule {rule} flags {text!r}")
+        if not ok:
+            fails.append(f"IndusInd lint rule {rule} missed {text!r} ({h})")
+    # Clean copy passes every text rule.
+    for text in ("Fraud and impersonation (customers targeted)", "Cost of deposits pending verification",
+                 "IDFC First Bank cost of funds", "Designed to run inside the bank, on the bank's approved models"):
+        h = li.text_rules(text, "fixture", {"manual_read_logged": False}, li.local_terms())
+        n += 1
+        if h:
+            fails.append(f"IndusInd lint flagged clean copy {text!r}: {h}")
+    # Structural rules: 17 (a balance after 30 Jun), 18 (a figure without an id, in a payload and in a component),
+    # 19 (a sensitivity without inputs), 25 ('saving' in a sensitivity tile).
+    cases = [
+        (17, li.structure_rules({}, [], [{"week_ending": "2026-07-03", "balance_cr": 1.0}], {})),
+        (18, li.structure_rules({"home": {"x": {"display": "12.5%"}}}, [], [], {})),
+        (18, li.ui_figures("Savings fell 2.7% in the quarter", "fixture.tsx")),
+        (19, li.structure_rules({}, [{"id": "S09", "formula": "", "inputs": []}], [], {})),
+        (25, li.structure_rules({"home": {"sensitivity": [{"label": "A saving of ₹40 crore"}]}}, [], [], {})),
+    ]
+    for rule, h in cases:
+        ok = any(x.startswith(f"IND-R{rule:02d}") for x in h)
+        n += 1
+        print(("PASS " if ok else "FAIL ") + f"IndusInd lint rule {rule} (structure) fires")
+        if not ok:
+            fails.append(f"IndusInd lint rule {rule} (structure) did not fire ({h})")
+    return n
+
+
+def indusind_reconcile_fixtures(fails: list[str]) -> int:
+    """Each IndusInd reconcile check gets a tampered copy of the payloads that must fail it."""
+    import check_indusind as ci  # noqa: PLC0415
+
+    payloads = ci.load()
+    base = ci.run(payloads)
+    if base:
+        fails.append(f"IndusInd: untouched payloads must pass, but {len(base)} check(s) failed: {base[:3]}")
+    n = 0
+    for name, expect, tamper in ci.FIXTURES:
+        p = json.loads(json.dumps(payloads))
+        tamper(p)
+        got = ci.run(p)
+        ok = any(expect in g for g in got)
+        n += 1
+        print(("PASS " if ok else "FAIL ") + f"IndusInd fixture '{name}' trips '{expect}'")
+        if not ok:
+            fails.append(f"IndusInd fixture '{name}' did not trip '{expect}' ({got[:3]})")
+    return n
+
+
 def main() -> int:
     fails: list[str] = []
     with tempfile.TemporaryDirectory() as d:
@@ -263,8 +348,11 @@ def main() -> int:
             fails.append("candidate list naming the bank was accepted")
         except SystemExit:
             print("PASS lint refuses a list that names the bank")
+    ind_lint = indusind_lint_fixtures(fails)
+    ind_rec = indusind_reconcile_fixtures(fails)
     for f in fails:
         print("FAIL", f)
+    print(f"test_checks: IndusInd {ind_lint} lint fixtures (26 rules), {ind_rec} reconcile fixtures")
     print(
         f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + len(LINT_MUST_PASS) + 1 + build_checks} "
         f"lint fixtures, {len(fails)} failure(s)"

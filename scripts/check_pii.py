@@ -29,6 +29,11 @@ FILES = [
     *sorted((ROOT / "data" / "out" / "app_jul_sep" / "work" / "llm_batches").glob("batch_*.jsonl")),
     # V1 (first demo) is still served at /hdfc-pulse/v1.
     *sorted((ROOT / "data" / "out" / "app").glob("*.json")),
+    # IndusInd: register files, internal seed and page payloads.
+    *sorted((ROOT / "data" / "public").glob("indusind_*.json")),
+    *sorted((ROOT / "data" / "seed" / "indusind_v1").glob("*.json")),
+    ROOT / "data" / "seed" / "indusind_v1" / "complaints.jsonl",
+    *sorted((ROOT / "data" / "out" / "indusind_v1").glob("*.json")),
 ]
 PATTERNS = {
     "email": r"[\w.+-]+@[\w-]+\.[\w.-]+",
@@ -49,10 +54,12 @@ SOURCE_LINK_PATTERNS = {
     "forum_link": r"technofino\.in|trustpilot\.com|consumercomplaints\.in|mouthshut\.com|complaintsboard\.com",
 }
 FE = ROOT / "frontend"
-LINK_SOURCES = [FE / "components" / "hdfc-v3", FE / "lib" / "hdfc-v3", FE / "app" / "hdfc-pulse" / "v2"]
+LINK_SOURCES = [FE / "components" / "hdfc-v3", FE / "lib" / "hdfc-v3", FE / "app" / "hdfc-pulse" / "v2",
+                FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1", FE / "app" / "indusind-v1"]
 # Built V2 pages (HTML and RSC payloads) and the client chunks every page loads. V1 is kept as first shown and is out
 # of scope for this rule.
-LINK_BUILD = [FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2", FE / ".next" / "static" / "chunks"]
+LINK_BUILD = [FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2", FE / ".next" / "server" / "app" / "indusind-v1",
+              FE / ".next" / "static" / "chunks"]
 
 
 def _files(roots):

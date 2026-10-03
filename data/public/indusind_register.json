@@ -19,7 +19,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N02",
@@ -38,7 +39,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N03",
@@ -57,7 +59,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N04",
@@ -76,7 +79,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N05",
@@ -95,7 +99,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N06",
@@ -114,7 +119,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N07",
@@ -133,7 +139,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D01",
@@ -158,7 +165,8 @@
     "formula": "N03 + N04"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D02",
@@ -183,7 +191,8 @@
     "formula": "N05 + N06"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D03",
@@ -208,7 +217,8 @@
     "formula": "N01 - D01"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D04",
@@ -233,7 +243,8 @@
     "formula": "N02 - D02"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D05",
@@ -259,7 +270,8 @@
    },
    "do_not_pair_with": [],
    "display_default": true,
-   "display_precision": 1
+   "display_precision": 1,
+   "build_note": null
   },
   {
    "id": "D06",
@@ -286,7 +298,8 @@
    "do_not_pair_with": [],
    "display_default": true,
    "display_precision": 1,
-   "note": "Never show the two-decimal value beside a one-decimal label"
+   "note": "Never show the two-decimal value beside a one-decimal label",
+   "build_note": null
   },
   {
    "id": "D07",
@@ -311,7 +324,8 @@
     "formula": "N01 / N02 - 1"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D08",
@@ -337,7 +351,8 @@
     "formula": "N04 / N06 - 1; N04 / N07 - 1"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N08",
@@ -358,7 +373,8 @@
    "do_not_pair_with": [
     "P03"
    ],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N09",
@@ -379,7 +395,8 @@
    "do_not_pair_with": [
     "P03"
    ],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N10",
@@ -400,7 +417,8 @@
    "do_not_pair_with": [
     "P03"
    ],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N11",
@@ -419,7 +437,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N12",
@@ -430,7 +449,7 @@
    "period": "Q1 FY27 (Apr–Jun 2026)",
    "measure_basis": "quarterly_average",
    "entity_basis": "as_presented",
-   "label_on_screen": "Never beside another bank's cost of deposits",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -441,7 +460,8 @@
     "P01",
     "P02"
    ],
-   "display_default": true
+   "display_default": true,
+   "build_note": "Never beside another bank's cost of deposits"
   },
   {
    "id": "D09",
@@ -469,7 +489,8 @@
     "formula": "(N08 x N01 - N11 x N04) / D03; average cost on period-end balances"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D10",
@@ -495,7 +516,8 @@
     "formula": "(N11 x N04) / D01; current accounts at nil cost"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N13",
@@ -514,7 +536,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N14",
@@ -533,7 +556,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N15",
@@ -552,7 +576,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": false
+   "display_default": false,
+   "build_note": null
   },
   {
    "id": "P01",
@@ -575,7 +600,8 @@
     "P03"
    ],
    "display_default": true,
-   "bank": "federal"
+   "bank": "federal",
+   "build_note": null
   },
   {
    "id": "P02",
@@ -598,7 +624,8 @@
     "P03"
    ],
    "display_default": true,
-   "bank": "yes"
+   "bank": "yes",
+   "build_note": null
   },
   {
    "id": "P03",
@@ -624,7 +651,8 @@
     "P02"
    ],
    "display_default": true,
-   "bank": "idfc_first"
+   "bank": "idfc_first",
+   "build_note": null
   },
   {
    "id": "P04",
@@ -644,7 +672,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "idfc_first"
+   "bank": "idfc_first",
+   "build_note": null
   },
   {
    "id": "P05",
@@ -664,7 +693,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "idfc_first"
+   "bank": "idfc_first",
+   "build_note": null
   },
   {
    "id": "P06",
@@ -684,7 +714,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "yes"
+   "bank": "yes",
+   "build_note": null
   },
   {
    "id": "P07",
@@ -704,7 +735,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "yes"
+   "bank": "yes",
+   "build_note": null
   },
   {
    "id": "P08",
@@ -724,7 +756,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "federal"
+   "bank": "federal",
+   "build_note": null
   },
   {
    "id": "P09",
@@ -745,7 +778,8 @@
    "do_not_pair_with": [],
    "display_default": true,
    "bank": "rbl",
-   "footnote_only": true
+   "footnote_only": true,
+   "build_note": null
   },
   {
    "id": "P10",
@@ -756,7 +790,7 @@
    "period": "rate card effective date per IND-D1",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "card date shown",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -765,7 +799,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "federal"
+   "bank": "federal",
+   "build_note": "card date shown"
   },
   {
    "id": "P11",
@@ -776,7 +811,7 @@
    "period": "same rate card",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "card date shown",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -785,7 +820,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "federal"
+   "bank": "federal",
+   "build_note": "card date shown"
   },
   {
    "id": "P12",
@@ -796,7 +832,7 @@
    "period": "rate card effective date per IND-D1",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "card date shown",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -805,7 +841,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "yes"
+   "bank": "yes",
+   "build_note": "card date shown"
   },
   {
    "id": "P13",
@@ -816,7 +853,7 @@
    "period": "same rate card",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "card date shown",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -825,7 +862,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "yes"
+   "bank": "yes",
+   "build_note": "card date shown"
   },
   {
    "id": "P14",
@@ -836,7 +874,7 @@
    "period": "page date per IND-D1",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "card date shown",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -845,7 +883,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "rbl"
+   "bank": "rbl",
+   "build_note": "card date shown"
   },
   {
    "id": "P15",
@@ -856,7 +895,7 @@
    "period": "page date per IND-D1",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "quote only this band",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -865,7 +904,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "rbl"
+   "bank": "rbl",
+   "build_note": "quote only this band"
   },
   {
    "id": "P16",
@@ -876,7 +916,7 @@
    "period": "effective date per IND-D1",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "card date shown",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -885,7 +925,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "federal"
+   "bank": "federal",
+   "build_note": "card date shown"
   },
   {
    "id": "P17",
@@ -896,7 +937,7 @@
    "period": "effective date per IND-D1",
    "measure_basis": "rate_card",
    "entity_basis": "as_presented",
-   "label_on_screen": "re-read on demo day",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -905,7 +946,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": true,
-   "bank": "yes"
+   "bank": "yes",
+   "build_note": "re-read on demo day"
   },
   {
    "id": "N16",
@@ -924,7 +966,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N17",
@@ -935,7 +978,7 @@
    "period": "30 Jun 2026",
    "measure_basis": "period_end",
    "entity_basis": "as_presented",
-   "label_on_screen": "Never \"microfinance\". Not used in copy",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -943,7 +986,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": false
+   "display_default": false,
+   "build_note": "Never \"microfinance\". Not used in copy"
   },
   {
    "id": "N18",
@@ -962,7 +1006,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N19",
@@ -981,7 +1026,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N20",
@@ -1000,7 +1046,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N21",
@@ -1019,7 +1066,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N22",
@@ -1038,7 +1086,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N23",
@@ -1057,7 +1106,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N24",
@@ -1076,7 +1126,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "D11",
@@ -1102,7 +1153,8 @@
     "formula": "N22 / N24 - 1; N22 / N23 - 1"
    },
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N25",
@@ -1121,7 +1173,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N26",
@@ -1140,7 +1193,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N27",
@@ -1159,7 +1213,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N28",
@@ -1178,7 +1233,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N29",
@@ -1197,7 +1253,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N30",
@@ -1208,7 +1265,7 @@
    "period": "Q1 FY27 call",
    "measure_basis": "statement",
    "entity_basis": "as_presented",
-   "label_on_screen": "management, Q1 FY27 call. No bp labels",
+   "label_on_screen": "management, Q1 FY27 call",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -1216,7 +1273,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": "No bp labels"
   },
   {
    "id": "N31",
@@ -1235,7 +1293,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N32",
@@ -1254,7 +1313,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N33",
@@ -1273,7 +1333,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N34",
@@ -1292,7 +1353,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N35",
@@ -1311,7 +1373,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N36",
@@ -1330,7 +1393,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N37",
@@ -1341,7 +1405,7 @@
    "period": "date per IND-D1",
    "measure_basis": "date",
    "entity_basis": "as_presented",
-   "label_on_screen": "Never \"quarterly root-cause\"",
+   "label_on_screen": "",
    "source_title": null,
    "source_url": null,
    "source_date": null,
@@ -1349,7 +1413,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": "Never \"quarterly root-cause\""
   },
   {
    "id": "N38",
@@ -1368,7 +1433,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N39",
@@ -1387,7 +1453,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N40",
@@ -1406,7 +1473,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N41",
@@ -1425,7 +1493,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "N42",
@@ -1444,7 +1513,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H01",
@@ -1463,7 +1533,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H02",
@@ -1482,7 +1553,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H03",
@@ -1501,7 +1573,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H04",
@@ -1520,7 +1593,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H05",
@@ -1539,7 +1613,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H06",
@@ -1558,7 +1633,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H07",
@@ -1577,7 +1653,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H08",
@@ -1596,7 +1673,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H09",
@@ -1615,7 +1693,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   },
   {
    "id": "H10",
@@ -1634,7 +1713,8 @@
    "d1": "missing",
    "derived_from": null,
    "do_not_pair_with": [],
-   "display_default": true
+   "display_default": true,
+   "build_note": null
   }
  ]
 }

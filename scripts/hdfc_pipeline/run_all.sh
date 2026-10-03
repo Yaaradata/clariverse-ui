@@ -21,6 +21,10 @@ cd ../hdfc_v3
 "$PY" volume_validation.py
 "$PY" walkthrough.py
 cd ../..
+# IndusInd (docs/indusind/): internal seed, page payloads, reconcile and privacy checks.
+"$PY" scripts/seed_indusind.py
+(cd scripts && "$PY" build_indusind.py)
+"$PY" scripts/check_indusind.py
 "$PY" scripts/lint_terms.py
 "$PY" scripts/check_pii.py
 "$PY" scripts/test_check_pii.py

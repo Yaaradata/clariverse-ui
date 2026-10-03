@@ -550,3 +550,14 @@ wording.
 - **IV-10 · No causal story.** Deposit flows for every slab, region and branch type share one rhythm (month-end lift,
   a gentle wave) with their own noise; no cell is made to lead. Balances are null: they come only from the register's
   period-end figures (N03-N06, D03-D04), which are pending.
+- **IV-11 · Lint.** The 26 rules of IND-B3 §8 live in `scripts/lint_indusind.py` and run inside `scripts/lint_terms.py`,
+  over the IndusInd UI copy, register, seed, payloads (including the Ask LisN answer bank) and built pages. Rows and
+  columns do not exist in plain text, so "in a peer column", "on an IndusInd row" and "in the home or Micro loans rows"
+  are read as "in the same string" (stricter than the brief). Rule 18 checks that every payload display holding a digit
+  sits in an object with an id, and that no component types a figure. Rule 21 reads both `scripts/lint_local_terms.txt`
+  (IND-B3's name) and the repo's existing `scripts/lint_terms_local.txt`, both untracked. Register build notes (for
+  example 'Never "quarterly root-cause"') are kept in a `build_note` field that is never rendered or linted.
+- **IV-12 · Reconcile and privacy.** `scripts/check_indusind.py` checks every L1 figure against the register, business
+  row = module and = the home pulse for that business, resolved + open + waiting = 100%, Ombudsman at-risk within
+  pending, balances bound to the right register entries, the sanity ratios and the payload privacy grep. Each check
+  has a fixture that must fail it (`scripts/test_checks.py`). `check_pii.py` now also scans the IndusInd files.

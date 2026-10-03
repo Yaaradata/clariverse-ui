@@ -240,6 +240,12 @@ def main() -> int:
                 hits.append(f"{f.relative_to(ROOT)}: internal reference in: {s[:80]}")
     for f in DATA_FILES:
         walk_json(json.loads(f.read_text(encoding="utf-8")), str(f.relative_to(ROOT)), hits)
+    # IndusInd: the 26 rules of IND-B3 §8 (scripts/lint_indusind.py), on its UI, register, seed, payloads and build.
+    import lint_indusind  # noqa: PLC0415
+
+    ind_hits, ind_scanned = lint_indusind.run()
+    hits += ind_hits
+    print(f"lint_terms: IndusInd rules checked on {ind_scanned} files")
     built = scan_build(hits)
     if not built:
         print("lint_terms: NOTE no V2 build in frontend/.next; built pages not checked")
