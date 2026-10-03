@@ -57,6 +57,8 @@ export type VoiceBlock = {
   escalation: Fig;
   responded: (Fig & { n: number; n_display: string }) | null;
   clipped_from?: string | null;
+  /** The period the public figures cover: the window, or "since 10 Aug" when Play starts inside it. */
+  period: string;
   theme: Theme;
   footnotes: string[];
   negative?: Fig;
@@ -75,6 +77,7 @@ export type CardVoice = {
   loaded: true;
   scope: string;
   text: string;
+  period: string;
   items: Fig;
   lines: VoiceLine[];
   thin: boolean;

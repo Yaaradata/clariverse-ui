@@ -403,7 +403,7 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
           "Received",
           "Open",
           "Open too long",
-          "Outside",
+          `Outside, ${s.win.outside.period}`,
           "Top theme",
           "Money line",
           "",
@@ -528,7 +528,7 @@ function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
         </Tile>
         <Tile
           title="Peer moves this week"
-          sub="Rate cards, ads, press"
+          sub="Rate cards, press"
           layers={["L2"]}
           right={
             <OpenLink

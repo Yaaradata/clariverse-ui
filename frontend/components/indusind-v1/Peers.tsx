@@ -2,7 +2,7 @@
 
 /**
  * S-PEER · Peer and market moves (core, reduced): the peer table with tier labels (Kotak only as the upper
- * benchmark), card effective dates from the rate captures, rates side by side (IndusInd's own only once read), ads,
+ * benchmark), card effective dates from the rate captures, rates side by side (IndusInd's own only once read)
  * and press and ratings. Never a league table of all banks.
  */
 
@@ -24,7 +24,6 @@ export type PeersSlice = {
   footnote: FigT;
   cards: NotLoaded;
   rates: { peers: FigT[]; indusind: { loaded: boolean; text: string } };
-  ads: NotLoaded;
   press: { ratings: FigT[]; press: NotLoaded };
 };
 
@@ -38,7 +37,7 @@ export function PeersView({ p, common }: { p: PeersSlice; common: Common }) {
           Peer and market moves
         </h2>
         <div style={{ fontSize: 13, color: C.textMut }}>
-          True peers, rate cards, ads, press
+          True peers, rate cards, press
         </div>
       </div>
 
@@ -86,9 +85,6 @@ export function PeersView({ p, common }: { p: PeersSlice; common: Common }) {
           layers={["L2"]}
         >
           <NotLoadedNote n={p.cards} />
-        </Tile>
-        <Tile title="Ads" sub="Captured creatives" layers={["L2"]}>
-          <NotLoadedNote n={p.ads} />
         </Tile>
       </div>
 

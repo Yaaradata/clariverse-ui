@@ -60,6 +60,7 @@ export type RiskSlice = {
     ombudsman: OmbudsmanBlock;
     distribution: FigT[];
     public: PublicRow[];
+    public_period: string;
   };
   windowLabel: string;
 };
@@ -349,7 +350,7 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
         </Tile>
         <Tile
           title="Public escalation language"
-          sub="By product"
+          sub={`By product, ${r.win.public_period}`}
           layers={["L2"]}
           info={common.defs.escalation_public}
         >

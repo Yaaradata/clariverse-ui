@@ -87,6 +87,14 @@ def in_window(items: list[dict], wid: str) -> list[dict]:
             (clipped(wid) or a < dt.datetime.fromisoformat(i["created_at"]))]
 
 
+def period_label(wid: str) -> str:
+    """The period a public figure covers: the window, or "since 10 Aug" when the window starts before Google Play
+    does (the collector's cap). Never "Last 13 weeks" for data that only spans seven."""
+    if clipped(wid):
+        return f"since {PLAY_START.day} {PLAY_START:%b}"
+    return next(w["label"] for w in CONFIG["windows"] if w["id"] == wid).lower()
+
+
 def before_play(items: list[dict], wid: str, products: set[str] | None = None) -> list[dict]:
     """Items in the window but before Google Play starts (App Store and forums only): shown apart, never added in."""
     a, _ = window(wid)
@@ -195,6 +203,7 @@ def voice_block(xs: list[dict], scope: str, wid: str) -> dict:
         "theme": top_theme(xs, scope, wid),
         "footnotes": [x for x in (note, coverage_note(wid, {i["source"] for i in xs}), a_note) if x],
         "clipped_from": PLAY_START.date().isoformat() if clipped(wid) else None,
+        "period": period_label(wid),
     }
     if CONFIG["flags"].get("sentiment_check_passed"):
         neg = sum(i["sentiment"] == "negative" for i in xs if "trust_governance" not in i["topic_tags"])
@@ -270,7 +279,7 @@ def tag_lines(xs: list[dict], tags: list[str], scope: str, wid: str) -> list[dic
 def card_voice(card_id: str, tags: list[str], items: list[dict], wid: str) -> dict:
     scope, products = CARD_SCOPE[card_id]
     xs = [i for i in in_window(items, wid) if products is None or i["product"] in products]
-    out = {"layer": "L2", "tag": TAG, "loaded": True, "scope": scope, "text": L2C["not_enough"],
+    out = {"layer": "L2", "tag": TAG, "loaded": True, "scope": scope, "text": L2C["not_enough"], "period": period_label(wid),
            "items": fig(f"L2:items:{scope}:{wid}", len(xs), fmt_int(len(xs)), "Public items",
                         "On-topic public items in the window, core sources"),
            "lines": tag_lines(xs, tags, f"card{card_id}", wid),

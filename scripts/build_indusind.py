@@ -482,7 +482,7 @@ def home() -> dict:
     out["improving"] = [improving_item(x) for x in CONFIG["improving"]]
     out["horizon"] = [{"id": h["id"], "label": h["label"], "date": l1(h["id"]), "countdown": horizon_countdown(h["id"])}
                       for h in CONFIG["horizon"]]
-    out["peer_moves"] = not_loaded("Peer rate-card dates and changes, ad captures, press")
+    out["peer_moves"] = not_loaded("Peer rate-card dates and changes, press")
     out["owners"] = [{"card": a["card_id"], "owner": a["owner_role"], "action": a["scope"], "status": a["status"],
                       "age_days": (FREEZE.date() - FREEZE.date()).days, "approver": a["approver_role"]} for a in D.actions]
     return out
@@ -516,7 +516,7 @@ def deposits_page() -> dict:
                                       for k, lab in (("mix", "Mix (CASA, retail share)"), ("term", "Term pricing by bucket"), ("bulk", "Bulk reliance"))],
                     "rate_table": {"loaded": CONFIG["flags"]["manual_read_logged"], "text": "IndusInd rate table: shown once the manual read is logged"}},
            "franchise": [l1("N13"), l1("N14")],
-           "why_captures": not_loaded("Peer card dates and changes, ad captures"),
+           "why_captures": not_loaded("Peer card dates and changes"),
            "action": next(a for a in D.actions if a["card_id"] == "A"),
            "windows": {}}
     for wd in CONFIG["windows"]:
@@ -632,6 +632,7 @@ def risk_page() -> dict:
             "ombudsman": {k: v for k, v in ombudsman_block(set(SEED.PRODUCTS), "all", w).items() if not k.startswith("_")},
             "distribution": distribution_by_product(w),
             "public": M.allegations_by_product(L2, w["id"]),
+            "public_period": M.period_label(w["id"]),
         }
     out["card_d"] = card_payload(next(c for c in CONFIG["cards"] if c["id"] == "D"), D.window(CONFIG["default_window"]))
     return out

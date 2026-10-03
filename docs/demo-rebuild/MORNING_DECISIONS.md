@@ -711,7 +711,7 @@ wording.
   strings) and follows links as before; its `pages.json` feeds `lint_terms.py` and `check_pii.py`, so lint and PII
   cover the same set. Fixtures in `scripts/test_qa_indusind_routes.mjs` (run by `run_all.sh`), including "an unlinked
   route without a watermark fails".
-- **IV-48 · Register filled from IND-D1.** `scripts/fill_register_indusind.py` copies every value from IND-D1 (2 Oct 2026)
+- **IV-50 · Register filled from IND-D1.** `scripts/fill_register_indusind.py` copies every value from IND-D1 (2 Oct 2026)
   and recomputes D01–D11 and S01–S07 from the verified inputs, failing if any differs from the v1.1 addendum. Result: 59
   verified, 11 derived, 10 held (H01–H10: peer sizes, VF slippage, distribution fees, total assets, IndusInd and IDFC
   First rate tables, the IRDAI penalty, 30 Sep and 31 Dec balances, the ECL date, peer conduct penalties, AU VF).
@@ -744,9 +744,15 @@ wording.
   - Lint rule IND-DEC7: no name from `scripts/indusind_other_clients.json` in IndusInd UI copy, payloads, built pages
     or crawled text (with a fixture).
   - The route checks also fail on such a name in the JS a page loads, and on any link that leaves the IndusInd pages.
-- **IV-49 · IND-D1 "Do not show" list against the lint.** Items 1–9, 11–13 and 15 (part) were IND-B3 §8 rules 1, 3–10,
+- **IV-51 · IND-D1 "Do not show" list against the lint.** Items 1–9, 11–13 and 15 (part) were IND-B3 §8 rules 1, 3–10,
   13–16. New rules, each with a failing fixture: DN10 (the IRDAI penalty with a date or grounds), DN14 (4.6 or 4.7 as a
   store rating), DN15 (every person named in IND-D1 §8, DEC-9), DN16 (Federal CASA up QoQ), DN17 (numeric FY27 guidance
   beyond "in line with market" and "exit RoA of 1%"), DN06 (the annual report's 69,204 and 14,904; the register uses BRSR
   N31 and N32). N15 and N17 are marked `not_in_copy`: kept in the register, skipped by the lint there, and linted
   wherever they could appear on a page.
+- **IV-52 · Public period labels.** Public data starts 10 Aug (the Play collector's cap) and is not re-pulled. Every public
+  block now states its period; in the "Last 13 weeks" window that is "since 10 Aug", never "13 weeks". Charts keep the
+  start marker; July is never drawn as zero (the series starts at 10 Aug and the earlier App Store items sit apart).
+- **IV-53 · Ads.** No ad captures exist and none are invented. The Ads section on Peer and market moves is removed (no
+  placeholder), and ad references are dropped from the Deposits "why" note and the home peer-moves tile. Card B carried
+  no ad text (its public lines are rate offers only).

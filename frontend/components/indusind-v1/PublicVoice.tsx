@@ -147,6 +147,9 @@ export function OutsideMeter({
       data-testid="outside-meter"
       style={{ display: "flex", flexDirection: "column", gap: 10 }}
     >
+      <div data-testid="l2-period" style={{ fontSize: 12, color: C.textMut }}>
+        Public items, {v.period}
+      </div>
       <div style={cols(3, 100, 8)}>
         <Stat label="Public items" f={v.items} info={defs.l2_items} />
         <Stat
@@ -299,8 +302,8 @@ export function CardVoiceBlock({ v }: { v: CardVoice }) {
         </div>
       ) : null}
       <MutedNote>
-        Public items in scope: <Fig f={v.items} />. Public, unverified;
-        paraphrased.
+        Public items in scope, {v.period}: <Fig f={v.items} />. Public,
+        unverified; paraphrased.
       </MutedNote>
       <Footnotes notes={v.footnotes} />
     </div>
