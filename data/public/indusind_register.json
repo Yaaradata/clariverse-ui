@@ -577,7 +577,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": false,
-   "build_note": null
+   "build_note": null,
+   "not_in_copy": true
   },
   {
    "id": "P01",
@@ -987,7 +988,8 @@
    "derived_from": null,
    "do_not_pair_with": [],
    "display_default": false,
-   "build_note": "Never \"microfinance\". Not used in copy"
+   "build_note": "Never \"microfinance\". Not used in copy",
+   "not_in_copy": true
   },
   {
    "id": "N18",

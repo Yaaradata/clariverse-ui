@@ -744,3 +744,9 @@ wording.
   - Lint rule IND-DEC7: no name from `scripts/indusind_other_clients.json` in IndusInd UI copy, payloads, built pages
     or crawled text (with a fixture).
   - The route checks also fail on such a name in the JS a page loads, and on any link that leaves the IndusInd pages.
+- **IV-49 · IND-D1 "Do not show" list against the lint.** Items 1–9, 11–13 and 15 (part) were IND-B3 §8 rules 1, 3–10,
+  13–16. New rules, each with a failing fixture: DN10 (the IRDAI penalty with a date or grounds), DN14 (4.6 or 4.7 as a
+  store rating), DN15 (every person named in IND-D1 §8, DEC-9), DN16 (Federal CASA up QoQ), DN17 (numeric FY27 guidance
+  beyond "in line with market" and "exit RoA of 1%"), DN06 (the annual report's 69,204 and 14,904; the register uses BRSR
+  N31 and N32). N15 and N17 are marked `not_in_copy`: kept in the register, skipped by the lint there, and linted
+  wherever they could appear on a page.

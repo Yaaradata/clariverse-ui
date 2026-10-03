@@ -274,7 +274,7 @@ def _set(d, path, value):
 
 
 FIXTURES = [
-    ("register display edited", "register:", lambda p: _set(p["home"]["quarter"]["items"][0], ["display"], "0.78%")),
+    ("register display edited", "register:", lambda p: _set(p["home"]["quarter"]["items"][0], ["display"], "0.87%")),
     ("Cards row out of step", "Cards row", lambda p: _set(p["home"]["windows"]["w4"]["rows"][3]["inside"]["open"], ["display"], "99.9%")),
     ("business row out of step", "row open differs from the home pulse", lambda p: _set(p["home"]["windows"]["w13"]["pulse"]["deposits"]["inside"]["open"], ["display"], "1.0%")),
     ("states do not sum", "resolved + open + waiting", lambda p: _set(p["home"]["windows"]["week"]["pulse"]["all"]["inside"]["waiting"], ["value"], 30.0)),

@@ -185,6 +185,9 @@ def main() -> int:
     for e in reg["entries"]:
         rid = e["id"]
         e["entity_basis"] = "as_presented"
+        # IND-B2 decides what is shown: N15 (DEC-3) and N17 (Rural Banking) are kept in the register, never in copy.
+        if rid in ("N15", "N17"):
+            e["not_in_copy"] = True
         if rid in ROWS:
             val, disp, src, period = ROWS[rid]
             e.update(value=val, display=disp, source_title=src[0], source_url=src[1], source_date=src[2],
