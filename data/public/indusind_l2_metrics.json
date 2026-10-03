@@ -121,6 +121,26 @@
    "label": "App Store only, before Google Play starts",
    "definition": "Public items before the first Google Play review; shown apart, never added to a total"
   },
+  "L2:items_before_play:cards": {
+   "label": "App Store only, before Google Play starts",
+   "definition": "Public items before the first Google Play review; shown apart, never added to a total"
+  },
+  "L2:items_before_play:deposits": {
+   "label": "App Store only, before Google Play starts",
+   "definition": "Public items before the first Google Play review; shown apart, never added to a total"
+  },
+  "L2:items_before_play:digital": {
+   "label": "App Store only, before Google Play starts",
+   "definition": "Public items before the first Google Play review; shown apart, never added to a total"
+  },
+  "L2:items_before_play:micro": {
+   "label": "App Store only, before Google Play starts",
+   "definition": "Public items before the first Google Play review; shown apart, never added to a total"
+  },
+  "L2:items_before_play:vehicle": {
+   "label": "App Store only, before Google Play starts",
+   "definition": "Public items before the first Google Play review; shown apart, never added to a total"
+  },
   "L2:items_by_source:all:appstore": {
    "label": "Apple App Store",
    "definition": "Public items from one source"

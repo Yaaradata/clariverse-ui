@@ -127,16 +127,16 @@ Each theme's paraphrase is written by hand (`config/indusind.yaml`, `l2.themes`)
 - **Micro loans and rural:** 0 items. Not enough public items this window.
 - **Cards:** 11 items. Not enough public items this window.
 - **Personal loans:** 0 items. Not enough public items this window.
-- **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 25 of 336 items. Source items (25): `2xc5jeomipjx4qoh`, `73cuquuypdebjgmt`, `74kjyfbpzyqvxggn`, `76abxi5neiwb6x5n`, `bgwkoabykndifeyi`, `faebkzqfrcumwmbe`, `gduzzjeibg4xpdvn`, `ivqrqnmadhz5wx4k`, `koti5xlsy3w563jh`, `kqvjrf4lmpkjxynh`, `l53jjvevffi4lyg4`, `mlugwkj56cdo5gvm`, `pjhpeeattbpddqn7`, `qb5drcs4myzebspz`, `r3rmkf5pk2y4yp6h`, `t6b3axx6f2fhrkni`, `unrdkhx6jkjls2uo`, `uovc2jgxapmzo2bg`, `vpm5mmj7herwlkhb`, `w23bct3ud25oypy3` …
+- **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 24 of 317 items. Source items (24): `2xc5jeomipjx4qoh`, `73cuquuypdebjgmt`, `74kjyfbpzyqvxggn`, `76abxi5neiwb6x5n`, `bgwkoabykndifeyi`, `faebkzqfrcumwmbe`, `gduzzjeibg4xpdvn`, `ivqrqnmadhz5wx4k`, `koti5xlsy3w563jh`, `kqvjrf4lmpkjxynh`, `l53jjvevffi4lyg4`, `mlugwkj56cdo5gvm`, `pjhpeeattbpddqn7`, `qb5drcs4myzebspz`, `r3rmkf5pk2y4yp6h`, `t6b3axx6f2fhrkni`, `unrdkhx6jkjls2uo`, `uovc2jgxapmzo2bg`, `vpm5mmj7herwlkhb`, `w23bct3ud25oypy3` …
 
 ### Last 4 weeks
 
 - **Deposits:** 39 items. Not enough public items this window.
 - **Vehicle finance:** 0 items. Not enough public items this window.
 - **Micro loans and rural:** 0 items. Not enough public items this window.
-- **Cards:** 63 items. Not enough public items this window.
+- **Cards:** 62 items. Not enough public items this window.
 - **Personal loans:** 1 items. Not enough public items this window.
-- **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 338 of 2405 items. Source items (338): `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2urvnsfrhxhi3tdg`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7`, `34lfi75x3f2njq55`, `3a7laai5n42a2nir`, `3acwqcztf575kz7y`, `3azbpj5kwb5zik5b`, `3bca4gbgvwpfd2cc`, `3bwntb5rtuyry3ts` …
+- **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 329 of 2375 items. Source items (329): `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2urvnsfrhxhi3tdg`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7`, `34lfi75x3f2njq55`, `3a7laai5n42a2nir`, `3acwqcztf575kz7y`, `3azbpj5kwb5zik5b`, `3bca4gbgvwpfd2cc`, `3bwntb5rtuyry3ts` …
 
 ### Last 13 weeks
 
@@ -145,7 +145,7 @@ Each theme's paraphrase is written by hand (`config/indusind.yaml`, `l2.themes`)
 - **Micro loans and rural:** 0 items. Not enough public items this window.
 - **Cards:** Card missing from the app: "Card holders log in but cannot see their card or its details". 32 of 152 items. Source items (32): `2cwpmofsjw6inyik`, `2wpv33folv2gtjhf`, `4ewptx2tk6vtb65n`, `4hlw4g5qknvwvwx4`, `6qcfcoallfmtrsf3`, `a5vnqm6vkk6lx4bd`, `ajmth56abztkijqg`, `an4siifh4dqd5sjj`, `blcyf7k7t7ixf3ox`, `dtq76mxl3afrrzb2`, `ewx5bljqyi24hcpa`, `f37mv4b7qnkqqeha`, `fsbrnz4pxcdepwcf`, `g7fnri5rkwhotbig`, `gwdmuhto2zzldv3z`, `i7tamacu2py3kmt6`, `irelvdk55ke7s5uy`, `ixbmbu2jkmogofqe`, `jiq32atln5yvxqp3`, `kgurk2tnxd3msbsy` …
 - **Personal loans:** 1 items. Not enough public items this window.
-- **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 611 of 4840 items. Source items (611): `22g3qfbg6vrv7z2p`, `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2ga6pphaqjqiwlgn`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2qd6optdeqaenxg2`, `2rdof7hwrmsw5qou`, `2rx5uc3cq7adppup`, `2urvnsfrhxhi3tdg`, `2vfesuacqwtw7zyq`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7` …
+- **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 611 of 4842 items. Source items (611): `22g3qfbg6vrv7z2p`, `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2ga6pphaqjqiwlgn`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2qd6optdeqaenxg2`, `2rdof7hwrmsw5qou`, `2rx5uc3cq7adppup`, `2urvnsfrhxhi3tdg`, `2vfesuacqwtw7zyq`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7` …
 
 ## 3. Not shown
 
