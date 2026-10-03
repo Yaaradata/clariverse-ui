@@ -504,3 +504,28 @@ pipeline run, so its numbers cannot go stale.
 
 **Not changed.** The unlinked sample pages keep their own ladder and sample counts.
 
+
+# IndusInd V1
+
+Judgement calls on the IndusInd build (`feat/indusind-v1`). Briefs: `docs/indusind/` (IND-B2, IND-B3, IND-B4); plan and
+conflicts: `docs/indusind/build_plan.md`. Precedence: IND-B4 on screens, IND-B3 on data, IND-D1 on numbers, IND-B2 on
+wording.
+
+- **IV-01 · Base branch.** `release/vidya-demo` does not exist; `main` holds the latest HDFC build (bank-scale volumes
+  merged). `feat/indusind-v1` is cut from `main`, with the one `chore/qa-setup` commit cherry-picked so the repo's QA
+  commands (`qa_routes_v2.mjs`, `qa_overflow.mjs`, the AGENTS.md QA section) exist on the branch.
+- **IV-02 · IND-D1 missing.** It was not in the zips and is not in the repo. The register keeps every ID, label, period
+  and basis from IND-B3 §2 with the figure stripped; `value` is `null`, `d1` is `"missing"`, and screens show "pending
+  verification". Ten held items from IND-B3 §2 are entries H01–H10 with `status: held`. Nothing is filled from IND-B3's
+  tables, the research or memory. Dates of regulations and penalties are register values too, so they are pending as
+  well; countdowns read "pending verification".
+- **IV-03 · Owners reference.** IND-D1 §8 holds the names; it is absent, so the file lists roles only. Names are never
+  rendered (DEC-9).
+- **IV-04 · Data freeze.** DEC-8 sets no preview date. The freeze is provisionally 2 Oct 2026, 18:00 IST in
+  `config/indusind.yaml` (`data_freeze_provisional: true`), and "This week" is the seven days to it. It is shown on
+  screen as the freeze. Re-set it when Ranjith fixes the preview date.
+- **IV-05 · Complaint counts withheld until N31.** The user rule is that no count may imply an annual complaint rate
+  more than 2x off IndusInd's FY25 disclosure (N31). N31 is pending, so the check cannot run. The seed keeps absolute
+  counts at an internal working scale, but page payloads and screens carry only shares (open, waiting, over 30 days,
+  rejected, referred to the IO, as a share of received) and volumes as an index (Q1 weekly average = 100). When N31
+  lands, the pipeline scales counts to it and the screens show counts.

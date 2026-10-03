@@ -1,0 +1,95 @@
+{
+ "about": "Sensitivities (IND-B3 §2a). Values are computed from register inputs; while the inputs are pending, the value is null.",
+ "footer": "Not a forecast. Not additive across cards.",
+ "entries": [
+  {
+   "id": "S01",
+   "label": "1 bp of cost of deposits, on 30 Jun 2026 deposits",
+   "formula": "N01 x 0.01%",
+   "inputs": [
+    "N01"
+   ],
+   "value": null,
+   "unit": "inr_cr_year",
+   "basis_note": "On the 30 Jun 2026 period-end deposit base. IND-D1 gives the Q1 average-base and excluding-current-accounts notes.",
+   "caveats": "Not a forecast. Not additive across cards."
+  },
+  {
+   "id": "S02",
+   "label": "10 bp of cost of deposits, same base",
+   "formula": "N01 x 0.10%",
+   "inputs": [
+    "N01"
+   ],
+   "value": null,
+   "unit": "inr_cr_year",
+   "basis_note": "Same base as S01.",
+   "caveats": "Not a forecast. Not additive across cards."
+  },
+  {
+   "id": "S03",
+   "label": "Mix shift since March at the June deposit base",
+   "formula": "N01 x (D06 - D05)",
+   "inputs": [
+    "N01",
+    "D06",
+    "D05"
+   ],
+   "value": null,
+   "unit": "inr_cr",
+   "basis_note": "Money moved from CASA to term deposits. Restoring the March CASA ratio with new CASA money instead needs (D06 x N01 - D01) / (1 - D06). Add the derivation to IND-D1 v1.1 before display.",
+   "caveats": "Not a forecast. Not additive across cards."
+  },
+  {
+   "id": "S04",
+   "label": "Annual interest cost of that mix, pre-tax, approximate",
+   "formula": "low: S03 x (D09 - N11); high: S03 x (D09 - D10)",
+   "inputs": [
+    "S03",
+    "D09",
+    "N11",
+    "D10"
+   ],
+   "value": null,
+   "unit": "inr_cr_year_range",
+   "basis_note": "Low end: the lost CASA was all savings. High end: the lost CASA was in today's CA:SA mix. Q1 average costs applied to 30 Jun balances. Add the derivation to IND-D1 v1.1 before display.",
+   "caveats": "Not a forecast. Not additive across cards."
+  },
+  {
+   "id": "S05",
+   "label": "10 bp of credit cost on vehicle finance, on the 30 Jun 2026 book",
+   "formula": "N21 x 0.10%",
+   "inputs": [
+    "N21"
+   ],
+   "value": null,
+   "unit": "inr_cr_year",
+   "basis_note": "Period-end book.",
+   "caveats": "Not a forecast. Not additive across cards."
+  },
+  {
+   "id": "S06",
+   "label": "10 bp of credit cost on micro loans, same date",
+   "formula": "N16 x 0.10%",
+   "inputs": [
+    "N16"
+   ],
+   "value": null,
+   "unit": "inr_cr_year",
+   "basis_note": "Period-end book.",
+   "caveats": "Not a forecast. Not additive across cards."
+  },
+  {
+   "id": "S07",
+   "label": "1 bp of credit cost on total loans, on 30 Jun 2026 loans",
+   "formula": "N25 x 0.01%",
+   "inputs": [
+    "N25"
+   ],
+   "value": null,
+   "unit": "inr_cr_year",
+   "basis_note": "Period-end loans.",
+   "caveats": "Not a forecast. Not additive across cards."
+  }
+ ]
+}

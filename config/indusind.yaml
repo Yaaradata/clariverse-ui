@@ -1,0 +1,181 @@
+# IndusInd · Customer pulse: settings read by scripts/indusind/*.py (IND-B3, IND-B4).
+# The frontend never reads this file: the pipeline writes JSON page payloads from it.
+
+bank: IndusInd Bank
+
+# The data freeze sets "This week". DEC-8: no preview date yet, so this is provisional (MORNING_DECISIONS IV-04).
+data_freeze: "2026-10-02T18:00:00+05:30"
+data_freeze_provisional: true
+
+windows:
+  - {id: week, label: This week, weeks: 1}
+  - {id: w4, label: Last 4 weeks, weeks: 4}
+  - {id: w13, label: Last 13 weeks, weeks: 13}
+default_window: w4
+
+views:
+  - {id: ceo, label: "CEO's office"}
+  - {id: cx, label: Head of CX}
+
+flags:
+  manual_read_logged: false   # IndusInd and IDFC First rate pages read by hand (IND-B3 §4)
+  l2_loaded: false            # social pull, rate captures, ads and press (IND-B3 §4, §5, §7)
+  sentiment_checked: false    # 100-item sentiment-accuracy sample reported (IND-B3 §7)
+
+peers:
+  core: [federal, yes, idfc_first]
+  upper_benchmark: [kotak]
+  specialist: [rbl, au, bandhan]
+  excluded: [HDFC Bank, ICICI, Axis, SBI]
+  names:
+    federal: Federal Bank
+    yes: Yes Bank
+    idfc_first: IDFC First Bank
+    kotak: Kotak Mahindra Bank
+    rbl: RBL Bank
+    au: AU Small Finance Bank
+    bandhan: Bandhan Bank
+
+# Pulse by business (IND-B4 §2.3). money: register IDs for the money line. module: route, or null ("Module next").
+businesses:
+  - {id: deposits, label: Deposits, products: [deposits_savings, fd_rd, nri], money: [N04, D08], module: /indusind-v1/deposits}
+  - {id: vehicle, label: Vehicle finance, products: [vehicle_loans], money: [N21], module: null}
+  - {id: micro, label: Micro loans and rural, products: [micro_loans_rural], money: [N16], module: null}
+  - {id: cards, label: Cards, products: [cards], money: [N18], module: /indusind-v1/cards}
+  - {id: personal, label: Personal loans, products: [personal_loans], money: [N19], module: null}
+  - {id: digital, label: Digital, products: [app_digital], money: [N41], module: null}
+  - {id: wholesale, label: Wholesale, products: [], money: [N26], module: null, next: true}
+
+# Home filter (IND-B4 §2.1)
+business_filter: [all, deposits, vehicle, micro, cards, digital]
+
+# Inside the bank: IndusInd's channels (IND-B4 §2.2)
+channels:
+  - {id: branch, label: Branch}
+  - {id: contact_centre, label: Contact centre}
+  - {id: email, label: Email}
+  - {id: web, label: Web}
+  - {id: app, label: App}
+  - {id: social_inbox, label: Social inbox}
+
+regions: [{id: N, label: North}, {id: S, label: South}, {id: E, label: East}, {id: W, label: West}, {id: C, label: Central}]
+branch_types: [{id: metro, label: Metro}, {id: urban, label: Urban}, {id: semi_urban, label: Semi-urban}, {id: rural, label: Rural}]
+sa_slabs:
+  - {id: lt1l, label: "Below ₹1 lakh"}
+  - {id: 1to25l, label: "₹1–25 lakh"}
+  - {id: 25lto5cr, label: "₹25 lakh–₹5 crore"}
+  - {id: gt5cr, label: "Above ₹5 crore"}
+customer_types: [{id: resident_retail, label: Resident retail}, {id: nri, label: NRI}, {id: bulk, label: Bulk and institutional}]
+
+# RBI complaint grounds used for the illustrative register (L3). Distribution grounds feed card D.
+complaint_grounds:
+  - {id: atm_debit, label: ATM and debit cards}
+  - {id: credit_cards, label: Credit cards}
+  - {id: internet_mobile, label: Internet and mobile banking}
+  - {id: account_ops, label: Account opening and operations}
+  - {id: loans, label: Loans and advances}
+  - {id: levy_charges, label: Levy of charges}
+  - {id: para_banking, label: Para-banking and third-party products, distribution: true}
+  - {id: pension, label: Pension and remittances}
+  - {id: recovery_conduct, label: Recovery agents and conduct}
+  - {id: others, label: Others}
+
+# Cards: business view categories and their owner roles (IND-B4 §7)
+cards_categories:
+  - {id: rewards, label: Rewards and redemption, owner: "Cards · Rewards lead"}
+  - {id: lounge, label: Lounge and benefits, owner: "Cards · Benefits lead"}
+  - {id: fees, label: Fees and charges, owner: "Cards · Pricing lead"}
+  - {id: limits, label: Limits, owner: "Cards · Credit policy lead"}
+  - {id: disputes, label: Disputes and refunds, owner: "Cards · Disputes lead"}
+  - {id: fraud, label: Fraud and impersonation (customers targeted), owner: "Cards · Fraud risk lead"}
+  - {id: applications, label: Applications and verification, owner: "Cards · Acquisition lead"}
+  - {id: activation, label: Activation, owner: "Cards · Onboarding lead"}
+  - {id: closure, label: Closure, owner: "Cards · Retention lead"}
+  - {id: servicing, label: App and card servicing, owner: "Cards · Digital lead"}
+  - {id: emi, label: EMI and payments, owner: "Cards · Payments lead"}
+  - {id: cobrand, label: Co-brand partners, owner: "Cards · Partnerships lead"}
+
+# Needs you this week (IND-B4 §3). Titles use {ID} placeholders filled from the register.
+cards:
+  - id: A
+    title: "Savings balances fell while term deposits carried the growth"
+    figures: [N04, D08, D06, D05, D07]
+    peers: [P04, P05, P06, P07, P08]
+    sensitivity: [S03, S04]
+    owner: Retail liabilities head
+    with: CFO and ALCO
+    approver: "Head, Consumer Banking"
+    module: /indusind-v1/deposits
+    voice_tags: [fee_change, closure_intent, app_failure, rate_offer]
+    inside: "Illustrative: where the outflow sits by slab, region and branch type. Your data shows the real split."
+    action:
+      scope: "Savings outflows over the last 90 days, by slab, region and branch type"
+      ask: "Set them beside peer rate-card changes and switching talk in the same weeks; bring a targeted retention option for the two largest outflow clusters to the next ALCO"
+      cost_cap: "Set at ALCO"
+      success: "Outflow in the two clusters back within its usual weekly range"
+  - id: B
+    title: "Cost of deposits against true peers"
+    figures: [N10, N09, N08]
+    peers: [P01, P02, P03]
+    sensitivity: [S01, S02]
+    owner: CFO (ALCO)
+    with: "Head, Consumer Banking"
+    approver: CFO
+    module: /indusind-v1/deposits
+    voice_tags: [rate_offer]
+    inside: "Illustrative decomposition of the gap: mix, term pricing by bucket, bulk reliance."
+    action:
+      scope: "Monthly decomposition of the gap to Federal and Yes"
+      ask: "Split the gap into mix, term pricing by bucket and bulk reliance; set one quarterly target with an owner for each part"
+      cost_cap: null
+      success: "Gap reported monthly, each part with an owner"
+  - id: C
+    title: "Vehicle finance: Q1 disbursements {N22}, {D11} on a year ago. Demand, service or credit?"
+    figures: [N22, N24, D11, N23, N21]
+    peers: []
+    sensitivity: [S05]
+    owner: "Head, Vehicle Finance"
+    with: CRO
+    approver: "Head, Vehicle Finance"
+    module: null
+    voice_tags: [service_delay, fee_change, recovery_conduct_allegation]
+    inside: "Illustrative, by region: application-to-disbursement time and dealer drop-offs."
+    action:
+      scope: "The two regions where disbursement delay and conduct complaints move together"
+      ask: "Review the hand-offs and the conduct-complaint log within 14 days, before any sourcing change"
+      cost_cap: null
+      success: "Review closed with an owner per finding"
+  - id: D
+    title: "Conduct rules from {N36}: {N36_days}. Which journeys carry the exposure?"
+    figures: [N36]
+    peers: []
+    sensitivity: []
+    exposure: "Supervisory and refund exposure; not quantified from public data."
+    owner: Chief Compliance Officer
+    with: "Consumer Banking (distribution); Internal Ombudsman informed"
+    approver: Chief Compliance Officer
+    module: /indusind-v1/risk
+    voice_tags: [mis_selling_allegation, insurance_investment_sales]
+    inside: "Complaints in distribution-related grounds, by product; an illustrative readiness checklist."
+    action:
+      scope: "60-day readiness check for the CSCB"
+      ask: "Cover 12 months of complaints about insurance or investment sales, app and web journeys with pre-ticked or bundled consent, and incentive lines tied to third-party products; an owner for each gap"
+      cost_cap: null
+      success: "Every gap has an owner and a close date before the rules apply"
+
+improving: [N10, N14, N20, N26, N40]
+
+horizon:
+  - {id: N35, label: Governance Amendment Directions in force}
+  - {id: N38, label: DPDP Consent Manager rules}
+  - {id: N36, label: Conduct rules (Second Amendment) effective}
+  - {id: N37, label: "IO quarterly complaint-pattern analysis: next quarter-end"}
+  - {id: N39, label: DPDP main obligations}
+
+copy:
+  watermark: "Demonstration · public data plus illustrative internal data · not IndusInd Bank MIS"
+  footer: "Every action is a recommendation routed to its owner; LisN does not execute, authorise or decide. Designed to run inside the bank, on the bank's approved models. Public figures from bank and peer disclosures as of {public_as_of}; internal figures illustrative until discovery. Data frozen {freeze}."
+  pulse_caption: "Public voice skews to people who post. Counts, not incidence. Inside figures illustrative until discovery."
+  not_loaded: "Public data not yet loaded"
+  pending: "pending verification"
+  sensitivity_footer: "Not a forecast. Not additive across cards."
