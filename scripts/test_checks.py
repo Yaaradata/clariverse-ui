@@ -227,6 +227,12 @@ def indusind_lint_fixtures(fails: list[str]) -> int:
     # Clean copy passes every text rule.
     # Carry-forward rules: internal labels and team names (HL-06), the HDFC IO Directions date (HL-28), text length (HL-22).
     extra = [
+        ("DN10", li.text_rules("IRDAI penalty of 10 Sep 2026 for grievance redressal", "fixture", {}, [])),
+        ("DN14", li.text_rules("INDIE rated 4.6 on the store", "fixture", {}, [])),
+        ("DN15", li.text_rules("Approved by Rajiv Anand", "fixture", {}, [])),
+        ("DN16", li.text_rules("Federal CASA up 40 bp QoQ", "fixture", {}, [])),
+        ("DN17", li.text_rules("FY27 guidance: NIM of 3.6%", "fixture", {}, [])),
+        ("DN06", li.text_rules("FY25: 69,204 received; 14,904 pending", "fixture", {}, [])),
         ("HL06", li.text_rules("Built for S-HOME after the DEC-4 call", "fixture", {}, [])),
         ("HL06", li.text_rules(f"Approved by {li.INTERNAL_NAMES[0] if li.INTERNAL_NAMES else 'Nobody'}", "fixture", {}, [])),
         ("HL28", li.text_rules("Internal Ombudsman Directions of 16 Jan 2026", "fixture", {}, [])),

@@ -733,3 +733,14 @@ wording.
     the window's figures. The bank's 4.6 is never shown as a store rating.
   - **Computed views:** days to go (from the freeze), Card C's "4% below a year ago" (the March-quarter change stays in
     the drawer) and the Improving pair "6.44% → 5.95%" are recomputed from the register by `check_indusind.py` (fixture).
+- **IV-48 · DEC-7 on IndusInd pages (review findings 3, 4, 29).**
+  - The role page has its own route (`app/role-based/indusind_bank/page.tsx`). It has no "Back to industries" link and
+    does not load the shared registry or the industries list. It carries the watermark and the footer, and every link
+    stays under the IndusInd root.
+  - The root layout's sidebar (with other clients' logos and names) is now loaded only where it is rendered, so
+    IndusInd pages no longer ship it.
+  - The bank's name is "IndusInd Bank" everywhere (`INDUSIND_BANK_NAME`). The role copy has one source,
+    `INDUSIND_ROLE_COPY`, used by the registry and the role page.
+  - Lint rule IND-DEC7: no name from `scripts/indusind_other_clients.json` in IndusInd UI copy, payloads, built pages
+    or crawled text (with a fixture).
+  - The route checks also fail on such a name in the JS a page loads, and on any link that leaves the IndusInd pages.

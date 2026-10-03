@@ -76,6 +76,11 @@ def internal_names() -> list[str]:
 
 
 INTERNAL_NAMES = internal_names()
+# IND-D1 §8 and its "Do not show" item 15: leaders and former holders named in the verification. None may appear on a
+# screen (DEC-9: roles only).
+PEOPLE = re.compile(r"Rajiv Anand|Viral Damania|Saurav Saha|Sunil Kumar Singh|Balaji Narayanamurthy|Ravi Pangal|"
+                    r"Jagdeep Mallareddy|Ganesh Sankaran|Sunit Madan|Niraj Shah|Indrajit Yadav|Sachin Patange|"
+                    r"Vivek Bajpeyi|Kunal Shah|Shiv Kumar|Pankaj Sharma|Bhasin|Ejaz Nazeer")
 CRAWLED_ROUTES = 0  # routes whose rendered text was linted (set by run())
 
 
@@ -140,6 +145,20 @@ def text_rules(s: str, where: str, flags: dict, local: list[str]) -> list[str]:
         add(24, "product boundary")
     if re.search(r"(?<![A-Za-z])(?:LiSN|Lisn)(?![A-Za-z])", s):
         add(26, "brand spelling")
+    # IND-D1 "Do not show" items IND-B3 §8 did not cover (IND-D1 numbering).
+    if near(s, r"IRDAI", rf"\d{{1,2}}\s+{MONTH}|grievance|Corporate Agents|Reg(?:ulation)?\.? ?20|policyholder", 120):
+        h.append(f"IND-DN10 {where}: the IRDAI penalty with a date or grounds: {s[:90]!r}")
+    if near(s, r"(?<![\d.])4\.[67](?![\d%])", r"INDIE|Play|App Store|store rating|stars?\b", 40):
+        h.append(f"IND-DN14 {where}: 4.6 or 4.7 presented as a store rating: {s[:90]!r}")
+    if re.search(PEOPLE, s):
+        h.append(f"IND-DN15 {where}: a named person (IND-D1 §8; DEC-9): {s[:90]!r}")
+    if near(s, r"Federal", r"(?:up|rose|rise|higher|increase)[^.]{0,30}\bQoQ\b|\bQoQ\b[^.]{0,20}(?:up|rise|higher)", 80):
+        h.append(f"IND-DN16 {where}: Federal CASA up QoQ (only the YoY rise is confirmed): {s[:90]!r}")
+    if near(s, r"\bFY27\b", r"guidance|\bNIM\b|credit[- ]cost|deposit growth", 80) and re.search(r"\d+(?:\.\d+)?\s?(?:%|bp)", s) \
+            and not re.search(r"exit (?:FY27 )?RoA|in line with (?:the )?market", s, re.I):
+        h.append(f"IND-DN17 {where}: numeric FY27 guidance beyond the two stated points: {s[:90]!r}")
+    if re.search(r"69,?204|14,?904", s):
+        h.append(f"IND-DN06 {where}: the FY25 annual-report complaint figures (BRSR N31 and N32 are the register's): {s[:90]!r}")
     # Carry-forward rules from the HDFC build (docs/indusind/carry_forward_from_hdfc.md).
     if INTERNAL_ID.search(s) or any(re.search(rf"\b{n}\b", s) for n in INTERNAL_NAMES):
         h.append(f"IND-HL06 {where}: an internal label or a team member's name: {s[:90]!r}")
@@ -282,7 +301,11 @@ def run() -> tuple[list[str], int]:
     files = sorted(PUBLIC.glob("indusind_*.json")) + sorted(SEED.glob("*.json")) + sorted(OUT.glob("*.json"))
     for f in files:
         strings = []
-        walk(json.loads(f.read_text(encoding="utf-8")), str(f.relative_to(ROOT)), strings)
+        doc = json.loads(f.read_text(encoding="utf-8"))
+        if isinstance(doc, dict) and isinstance(doc.get("entries"), list):
+            # Register entries kept for the record but never shown (N15, N17) are not copy; payloads are still linted.
+            doc = {**doc, "entries": [e for e in doc["entries"] if not e.get("not_in_copy")]}
+        walk(doc, str(f.relative_to(ROOT)), strings)
         for path, s in strings:
             if ("owners_reference" in path and ".names" not in path) or path.endswith((".build_note", ".about")):
                 continue  # build notes and file descriptions are for the team, never rendered
