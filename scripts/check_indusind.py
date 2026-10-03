@@ -137,6 +137,13 @@ def run(p: dict) -> list[str]:
             if not path.endswith(skip) and INTERNAL.search(s):
                 fails.append(f"internal label in {path}: {s[:70]!r}")
 
+    # ---- Cards categories must not all move one way (a seed artefact a banker would spot)
+    for wid, w in p["cards"]["windows"].items():
+        ch = [c["change"]["value"] for c in w["categories"] if c["change"]["value"]]
+        up = sum(x > 0 for x in ch)
+        ok(not ch or max(up, len(ch) - up) / len(ch) <= 0.8,
+           f"cards [{wid}]: {max(up, len(ch) - up)} of {len(ch)} categories move the same way (over 80%)")
+
     fails += run_l2(p)
 
     # ---- privacy: no URL, handle or personal-data pattern in any page payload
@@ -237,6 +244,8 @@ FIXTURES = [
     ("L2 rows do not sum", "rows sum to", lambda p: _set(p["home"]["windows"]["w4"]["rows"][5]["outside"]["items"], ["value"], 1)),
     ("L2 Deposits row out of step", "Deposits row differs", lambda p: _set(p["deposits"]["windows"]["w13"]["why"]["items"], ["value"], 7)),
     ("L2 Cards row out of step", "Cards row differs from the Cards screen", lambda p: _set(p["cards"]["windows"]["week"]["external"]["items"], ["value"], 7)),
+    ("Cards categories all rising", "categories move the same way", lambda p: [
+        _set(c["change"], ["value"], 2.0) for c in p["cards"]["windows"]["w4"]["categories"]]),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 

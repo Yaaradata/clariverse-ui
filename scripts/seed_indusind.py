@@ -121,8 +121,11 @@ def complaints(weeks) -> list[dict]:
             if rejected:
                 decision = received + (reply - received) * rng.uniform(0.55, 0.8)
                 io_done = decision + (reply - decision) * rng.uniform(0.5, 0.9)
-            elif not replied and FREEZE - received >= dt.timedelta(days=2) and rng.random() < REJECT_RATE:
-                decision = received + (FREEZE - received) * rng.uniform(0.35, 0.8)  # IO review still pending
+            elif not replied and rng.random() < REJECT_RATE / 0.93:
+                # IO review still pending: the decision falls where it would for a replied case (55-80% of the way to
+                # the reply), so pending reviews do not bunch up in the week before the freeze.
+                t = received + (reply - received) * rng.uniform(0.55, 0.8)
+                decision = t if t <= FREEZE else None
             unhappy_at = None
             if replied and rng.random() < UNHAPPY["rejected" if rejected else "resolved"]:
                 t = reply + dt.timedelta(days=rng.uniform(1, 15))
@@ -241,6 +244,17 @@ def contacts_weekly(cs, weeks) -> list[dict]:
     return out
 
 
+def card_category_trend(cat: str, i: int, n_weeks: int) -> float:
+    """Each category's own deterministic course: a seeded slope (-25% to +25% across the period) and a seeded wave,
+    so categories do not all rise or fall together. Neutral: no category is made to lead."""
+    r = random.Random(f"{SEED}:card-trend:{cat}")
+    # Slope sizes are seeded; signs alternate over the sorted categories, so half rise and half fall over the period.
+    sign = 1 if sorted(CARD_CATEGORIES).index(cat) % 2 == 0 else -1
+    slope, amp, phase, period = sign * r.uniform(0.10, 0.30), r.uniform(0.04, 0.12), r.uniform(0, 6.3), r.uniform(3.0, 7.0)
+    x = i / max(n_weeks - 1, 1) - 0.5
+    return max(0.3, 1 + slope * x + amp * math.sin(i / period + phase))
+
+
 def cards_internal(weeks) -> list[dict]:
     rng = random.Random(f"{SEED}:cards")
     out = []
@@ -248,7 +262,7 @@ def cards_internal(weeks) -> list[dict]:
         total = COMPLAINTS_PER_WEEK * CONTACTS_PER_COMPLAINT * CONTACT_PRODUCTS["cards"] * month_end_lift(end) * (1 + 0.05 * math.cos(i / 3.3))
         for cat, cs in CARD_CATEGORIES.items():
             for ch, chs in CONTACT_CHANNELS.items():
-                n = int(round(total * cs * chs * rng.uniform(0.88, 1.12)))
+                n = int(round(total * cs * card_category_trend(cat, i, len(weeks)) * chs * rng.uniform(0.88, 1.12)))
                 opn = int(round(n * rng.uniform(0.05, 0.11)))
                 wait = int(round(n * rng.uniform(0.03, 0.07)))
                 out.append({"week_ending": end.date().isoformat(), "category": cat, "channel": ch, "contacts": n,

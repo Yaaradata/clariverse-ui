@@ -102,6 +102,9 @@ cards_categories:
 cards:
   - id: A
     title: "Savings balances fell while term deposits carried the growth"
+    # The directional title asserts what N04 and D08 say; until IND-D1 verifies them, the neutral title shows.
+    title_bound_to: [N04, D08]
+    title_pending: "Savings balances and term deposits, Mar to Jun 2026"
     figures: [N04, D08, D06, D05, D07]
     peers: [P04, P05, P06, P07, P08]
     sensitivity: [S03, S04]

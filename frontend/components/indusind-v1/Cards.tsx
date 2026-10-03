@@ -254,7 +254,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
             "Open",
             "Waiting",
             "Negative",
-            "Change",
+            "Share change, pts",
           ]}
           align={["left", "left", "right", "right", "right", "right", "right"]}
           rows={w.categories.map((x) => ({

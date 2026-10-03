@@ -284,6 +284,8 @@ def common() -> dict:
 def card_payload(card: dict, w: dict) -> dict:
     act = next(a for a in D.actions if a["card_id"] == card["id"])
     title = card["title"]
+    if any(REG[r]["value"] is None for r in card.get("title_bound_to", [])):
+        title = card["title_pending"]
     days = None
     fill = {rid: l1(rid)["display"] for rid in REG}
     fill["N36_days"] = PENDING if REG["N36"]["value"] is None else f"{days} days"
@@ -619,14 +621,18 @@ def cards_page() -> dict:
             ps = [r for r in prev if r["category"] == cid]
             n = sum(r["contacts"] for r in xs)
             pn = sum(r["contacts"] for r in ps)
-            ch = round(100 * (n - pn) / pn) if pn else None
+            # Change in the category's share of Cards contacts (pts), not in its raw volume: a month-end or seasonal
+            # swing moves every category alike and would hide which categories are gaining ground.
+            ptot = sum(r["contacts"] for r in prev)
+            ch = round(100 * n / tot - 100 * pn / ptot, 1) if pn and ptot else None
             categories.append({
                 "id": cid, "label": c["label"], "owner": c["owner"],
                 "share": l3("cards_internal", "category_share", cid, W, pct(n, tot), show_pct(pct(n, tot))),
                 "open": l3("cards_internal", "open_share", cid, W, pct(sum(r["open"] for r in xs), n), show_pct(pct(sum(r["open"] for r in xs), n))),
                 "waiting": l3("cards_internal", "waiting_share", cid, W, pct(sum(r["waiting_on_customer"] for r in xs), n), show_pct(pct(sum(r["waiting_on_customer"] for r in xs), n))),
                 "negative": l3("cards_internal", "negative_share", cid, W, pct(sum(r["negative"] for r in xs), n), show_pct(pct(sum(r["negative"] for r in xs), n))),
-                "change": l3("cards_internal", "contacts_change", cid, W, ch, show_change(ch)),
+                "change": l3("cards_internal", "share_change", cid, W, ch,
+                             "no earlier period" if ch is None else f"{'+' if ch > 0 else '−' if ch < 0 else ''}{abs(ch):.1f} pts"),
             })
             k = sum(r["closure_risk"] for r in xs)
             at_risk.append(l3("cards_internal", "closure_risk_share", cid, W, pct(k, risk_tot), show_pct(pct(k, risk_tot)), label=c["label"]))
