@@ -693,3 +693,12 @@ wording.
   customer-pulse screens and every view, window and business link). noindex covers `/role-based/indusind_bank/*`,
   which includes the unlisted earlier demo; its content is not crawled because nothing on the role page links to it.
   The IndusInd role page shows the watermark.
+
+## IndusInd V1 · independent review fixes (`qa/review_indusind_v1_response.md`)
+
+- **IV-46 · Earlier cards demo redirected (review finding 1).** `/role-based/indusind_bank/head_cards` now redirects on
+  the server (`next.config.mjs`) to the Cards business view. So do the three role ids, and any other single segment under
+  the IndusInd role page goes back to the role page. No IndusInd URL renders the shared `[roleId]` page or carries its
+  bundle (the earlier demo's ₹9,760 Cr, co-brand partner names and "mis-selling claims"). The component code
+  (`CardsPortfolioV2Dashboard`, `IndusIndCardsCustomerPortfolioDrill`) and the registry entry are kept; nothing is
+  deleted. Open question for the decision owner: is the earlier demo still needed anywhere else?
