@@ -529,3 +529,24 @@ wording.
   counts at an internal working scale, but page payloads and screens carry only shares (open, waiting, over 30 days,
   rejected, referred to the IO, as a share of received) and volumes as an index (Q1 weekly average = 100). When N31
   lands, the pipeline scales counts to it and the screens show counts.
+- **IV-06 · Seed shape.** `scripts/seed_indusind.py` (path from IND-B3 §6), fixed seed 20261002, 27 weeks ending on
+  the freeze (back to early April, so Q1 gives the index baseline). Complaints are generated case by case with no
+  customer identifier and aggregated to `complaints_weekly`; the Ombudsman watch reads the case rows. Deposits and Cards
+  are aggregate only.
+- **IV-07 · Two datasets added to IND-B3's core four.** `contacts_weekly` (week × product × channel: contacts, negative,
+  complaints) so the negative share of contacts can be shown and checked (about 12%, user rule); complaints are a subset
+  of negative contacts. `complaints_weekly` gains `waiting_on_customer` and `escalated_grievance`, so resolved + open +
+  waiting = received and the pulse can show "escalated to a grievance desk" (IND-B4 §2.2).
+- **IV-08 · Rates (illustrative, ours).** Reject rate 8% of replied complaints (peer disclosures 6-10%); every rejection
+  passes the Internal Ombudsman first, so IO referrals, the IO queue and "awaiting IO review" come from the one case
+  register. Unhappy with the reply: 30% of rejected, 2% of resolved. Reply time lognormal, median 8.5 days. Escalated to
+  a grievance desk 8.5%; escalation language 6%. Contacts per complaint 21 (inside the 15-30x planning range).
+  Complaint mix by product leads with loans and cards. Result at the freeze: reject 8.1%; pending 18% of 13 weeks'
+  intake; on the brink + eligible 18% of pending; negative share of contacts 12.1%.
+- **IV-09 · Ombudsman states.** Pending = no final reply yet, or replied and the customer came back unhappy within 90
+  days. On the brink: no reply, 20-30 days old. Eligible: no reply, more than 30 days old. Every at-risk state is a
+  subset of pending. The 30-day and 90-day timelines are RB-IOS rules that are not register entries: the screens say
+  "RB-IOS timelines: confirm with the bank".
+- **IV-10 · No causal story.** Deposit flows for every slab, region and branch type share one rhythm (month-end lift,
+  a gentle wave) with their own noise; no cell is made to lead. Balances are null: they come only from the register's
+  period-end figures (N03-N06, D03-D04), which are pending.
