@@ -9,8 +9,11 @@ Licence buckets (IND-B3 §7 sources table):
   pending   X (collected with a scraper actor, not a named paid X API tier); Reddit (archive scraper actors, not the
             official API); MouthShut (not in the sources table). Counted, never on screen, until Ranjith decides
   out       TechnoFino, Trustpilot (IND-B3: out, terms)
-  excluded  other apps in the pull: group-company insurance apps (not the bank) and bank apps IND-B3 does not list
-Only `core` items reach a page.
+  peer      the core peers' main retail apps (Federal, Yes, IDFC First), tagged by bank: used only for deposit topics
+            and peer voice, never in IndusInd totals. None is in the Jul–Sep pull (every app's developer is IndusInd
+            Bank Ltd. or a group insurer)
+  excluded  other apps in the pull: group-company insurance apps (not the bank) and IndusInd apps IND-B3 does not list
+Only `core` items reach an IndusInd figure.
 """
 
 from __future__ import annotations
@@ -63,14 +66,18 @@ def load_raw() -> list[dict]:
     for r in _rows(RAW / "playstore" / "records.jsonl"):
         r["source"] = "play"
         app = r["app"]["store_id"]
-        r["bucket"] = "core" if app == INDIE_PLAY else "excluded"
-        r["exclusion"] = None if app == INDIE_PLAY else _app_exclusion(r["app"]["name"])
+        peer = peer_bank(r["app"]["name"])
+        r["bank"] = peer or "indusind"
+        r["bucket"] = "core" if app == INDIE_PLAY else "peer" if peer else "excluded"
+        r["exclusion"] = None if app == INDIE_PLAY else f"peer app ({peer}): deposit topics and peer voice only" if peer else _app_exclusion(r["app"]["name"])
         out.append(r)
     for r in _rows(RAW / "appstore" / "records.jsonl"):
         r["source"] = "appstore"
         app = str(r["app"]["store_id"])
-        r["bucket"] = "core" if app == INDIE_APPSTORE else "excluded"
-        r["exclusion"] = None if app == INDIE_APPSTORE else _app_exclusion(r["app"]["name"])
+        peer = peer_bank(r["app"]["name"])
+        r["bank"] = peer or "indusind"
+        r["bucket"] = "core" if app == INDIE_APPSTORE else "peer" if peer else "excluded"
+        r["exclusion"] = None if app == INDIE_APPSTORE else f"peer app ({peer}): deposit topics and peer voice only" if peer else _app_exclusion(r["app"]["name"])
         out.append(r)
     for r in _rows(RAW / "x" / "indusind_x_2026-07-01_2026-09-30.jsonl"):
         r["source"], r["bucket"], r["exclusion"] = "x", "pending", "X: scraper actor, not a named paid X API tier"
@@ -92,10 +99,22 @@ def load_raw() -> list[dict]:
     return out
 
 
+PEER_APPS = {"federal": re.compile(r"federal bank|fedmobile|fedbook", re.I),
+             "yes": re.compile(r"yes bank|iris by yes|yes mobile", re.I),
+             "idfc_first": re.compile(r"idfc first", re.I)}
+
+
+def peer_bank(app_name: str) -> str | None:
+    for bank, rx in PEER_APPS.items():
+        if rx.search(app_name or ""):
+            return bank
+    return None
+
+
 def _app_exclusion(name: str) -> str:
     if re.search(r"insurance|inlic|nippon", name, re.I):
         return "group-company insurance app, not the bank"
-    return "bank app outside the IND-B3 list (INDIE only)"
+    return "IndusInd app outside the IND-B3 list (INDIE only)"
 
 
 def created(r: dict) -> dt.datetime:

@@ -60,8 +60,11 @@ def main() -> int:
                       min(x["_t"] for x in xs).date(), max(x["_t"] for x in xs).date(),
                       ", ".join(sorted({x.get("actor_id", "") for x in xs}))]
                      for (s, a), xs in sorted(inv.items(), key=lambda kv: (kv[1][0]["bucket"], -len(kv[1])))]))
-    md += ["", "Every row is an IndusInd query; the pull holds **no peer-bank items** (the IND-B3 peer query set was not "
-           "collected), so `bank` is `indusind` throughout and peer voice stays not loaded.", "",
+    md += ["", "**Peer apps:** IND-B3 asks for the core peers' main retail apps on Play and the App Store. The pull has "
+           "none: the developer of every app in it is IndusInd Bank Ltd. (INDIE, INDIE For Business, BHIM IndusPay, "
+           "IndusDIRECT Corporate, Video Branch, Gift City, PayWear, IndusFX Card) or a group insurer (IndusInd General "
+           "Insurance, IndusInd Nippon Life). Peer rows: 0. IndusInd apps outside the B3 list: 892 rows; group "
+           "insurers: 372 rows; both stay excluded. Peer voice stays not loaded until peer apps are pulled.", "",
            "Fields present, per source:", ""]
     for s, fs in sorted(fields.items()):
         md.append(f"- **{L.SOURCE_LABEL[s]}:** {', '.join(sorted(x.replace('.None', '') for x in fs))}")
