@@ -82,6 +82,9 @@ def trace_view(f: dict, e: dict) -> str:
     return "unknown view"
 
 
+TRACED = [0]
+
+
 def run(p: dict) -> list[str]:
     fails: list[str] = []
     ok = lambda cond, msg: None if cond else fails.append(msg)  # noqa: E731
@@ -199,6 +202,21 @@ def run(p: dict) -> list[str]:
         ok(not ch or max(up, len(ch) - up) / len(ch) <= 0.8,
            f"cards [{wid}]: {max(up, len(ch) - up)} of {len(ch)} categories move the same way (over 80%)")
 
+    # ---- number trace for L2 and L3: every display states its own value (L1 is traced against the register above)
+    traced = 0
+    for name, obj in p.items():
+        for path, f in figures(obj, name):
+            if f["layer"] == "L1" or f.get("view") or not isinstance(f.get("value"), (int, float)) or isinstance(f.get("value"), bool):
+                continue
+            m = re.search(r"-?\d[\d,]*(?:\.\d+)?", (f.get("display") or "").replace("−", "-"))
+            if not m:
+                continue
+            shown = float(m.group(0).replace(",", ""))
+            traced += 1
+            ok(abs(shown - f["value"]) <= 0.05 + 0.006 * abs(f["value"]) if "%" in f.get("display", "") else abs(shown - round(f["value"])) <= 0.5,
+               f"trace: {path} shows {f.get('display')!r} for the value {f['value']} ({f['id']})")
+    TRACED[0] = traced
+
     fails += run_l2(p)
 
     # ---- privacy: no URL, handle or personal-data pattern in any page payload
@@ -307,6 +325,7 @@ FIXTURES = [
         _set(f, ["value"], 75 * (1 + i % 6)) for i, (_, f) in enumerate(x for obj in p.values() for x in figures(obj))
         if isinstance(f.get("value"), int) and not isinstance(f.get("value"), bool) and 6 <= f["value"] < 500]),
     ("computed view out of step", "trace:", lambda p: _set(p["home"]["improving"][0], ["display"], "6.40% → 5.95%")),
+    ("display not its value", "trace:", lambda p: _set(p["home"]["windows"]["w4"]["outside"]["items"], ["display"], "9,999")),
     ("phone number in a payload", "privacy: phone", lambda p: _set(p["cards"], ["voice"], {"text": "call 9876543210"})),
 ]
 
@@ -320,6 +339,7 @@ def main() -> int:
     for f in fails:
         print("FAIL", f)
     pending = sum(1 for e in REG.values() if e["value"] is None)
+    print(f"check_indusind: {TRACED[0]} public and internal figures traced to their values;")
     print(f"check_indusind: {n_fig} bound figures across {len(p)} payloads; {pending} of {len(REG)} register values pending IND-D1; "
           f"{len(fails)} failure(s)")
     return 1 if fails else 0
