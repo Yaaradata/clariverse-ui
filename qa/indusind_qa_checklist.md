@@ -69,3 +69,17 @@ IND-D1 and its v1.1 addendum are in `docs/indusind/`; the register holds 59 veri
 
 Volume (HL-18): intake 0.8× N31 (pass); the pending stock is 5.5× below N32's FY25 year-end figure, justified in
 `qa/indusind_volume_validation.md` (broadened FY25 classification) and flagged.
+
+## Visual review of 3 Oct (re-run 5 Oct 2026)
+
+| Item | Result | Evidence |
+|---|---|---|
+| 0. Review-fix round (Yes parsed, IO referrals cover rejections, Cards title, Outside label) | PASS | `check_indusind.py` sanity checks; Peers shows Yes verified |
+| 1. Index labels where shown; Published FY25 block apart; closure risk an index | PASS | "(index)" on home, business table, Cards, Conduct register; IV-54 |
+| 2. IO analysis due 31 Dec 2026; days to go from data freeze; footer; no wall clock | PASS | `qend` view recomputed by the check; IV-55 |
+| 3. Card chips name each bank; CASA 31.2% → 29.4%; money lines as figures | PASS | `line`, `pair`, `peers` views traced, with fixtures |
+| 4. Peer card dates, press list, thin rows collapsed, empty tiles hidden | PASS | `text` and `srcdate` views traced, with fixtures; IV-56, IV-57 |
+| 5. Filter scopes Outside and Doing; Cards Outside = Cards page | PASS | reconcile check plus fixture (62 items, last 4 weeks); IV-58 |
+| 6. "To confirm with the bank"; quiet item | PASS | public Play check fails (338 vs 403–931), internal kept; IV-59, IV-60 |
+| Gaps | PASS | columns stack and stretch; the Head of CX Ombudsman watch runs full width |
+| 7. Checks and screenshots | PASS | pipeline, reconcile, lint/PII, fixtures, Biome, tsc, build, 79/79 IndusInd and 26/26 V2 routes; `qa/screens_indusind_v1/` at 1440, 390 and 1536@1.25 |

@@ -109,11 +109,11 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
         </div>
       </div>
 
-      <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
+      <div style={cols(2, 380, 12)}>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
+            display: "grid",
+            gridTemplateRows: "auto 1fr",
             gap: 12,
             minWidth: 0,
           }}
@@ -198,8 +198,8 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
         </div>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
+            display: "grid",
+            gridTemplateRows: "auto auto 1fr",
             gap: 12,
             minWidth: 0,
           }}

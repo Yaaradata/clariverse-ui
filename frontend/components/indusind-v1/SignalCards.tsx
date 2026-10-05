@@ -443,9 +443,7 @@ function voiceChip(card: Card) {
   if (v.theme && !v.theme.thin)
     return `${v.theme.label} (${v.theme.count.display})`;
   const line = v.lines.find((l) => !l.thin);
-  return line
-    ? `${line.label} (${line.fig.display})`
-    : "Not enough public items";
+  return line ? `${line.label} (${line.fig.display})` : null;
 }
 
 function CardTile({
@@ -458,7 +456,7 @@ function CardTile({
   onOpen: () => void;
 }) {
   const [copied, setCopied] = useState(false);
-  const peer = card.peers[0];
+  const voice = voiceChip(card);
   // The rupee chip shows the cost a year (S04 on card A), not the balance moved; else the first sensitivity.
   const sens =
     card.sensitivity.find((s) => s.display.includes("a year")) ??
@@ -502,30 +500,21 @@ function CardTile({
         ))}
       </div>
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-        <Chip label="Peer">
-          {card.peer_chip ? (
+        {/* A chip shows only when it carries a figure; placeholders ("pending", "not enough items", "not
+            quantified", the approval status) stay in the drawer, not on the tile. */}
+        {card.peer_chip && !card.peer_chip.pending ? (
+          <Chip label="Peer">
             <Fig f={card.peer_chip} />
-          ) : card.peers_held || !peer ? (
-            <Pending />
-          ) : (
-            <Fig f={peer} />
-          )}
-        </Chip>
-        <Chip label="Voice">{voiceChip(card)}</Chip>
-        {card.exposure ? (
-          <Chip label="Exposure" color={C.amber}>
-            Not quantified
           </Chip>
-        ) : sens ? (
+        ) : null}
+        {voice ? <Chip label="Voice">{voice}</Chip> : null}
+        {!card.exposure && sens && !sens.pending ? (
           <Chip label="Rupee line" color={C.amber}>
-            {sens.pending ? <Pending /> : sens.display}
+            {sens.display}
           </Chip>
         ) : null}
         <Chip label="Owner" color={C.violet}>
           {card.owner}
-        </Chip>
-        <Chip label="Status" color={C.amber}>
-          {card.action.status}
         </Chip>
       </div>
       <div

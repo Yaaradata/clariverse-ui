@@ -29,7 +29,10 @@ L2C = CONFIG["l2"]
 TAG = "Public · live"
 IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
 FREEZE = dt.datetime.fromisoformat(CONFIG["data_freeze"])
-SOURCE_LABEL = {"play": "Google Play", "appstore": "Apple App Store", "consumercomplaints": "consumercomplaints.in"}
+SOURCE_LABEL = {"play": "Google Play", "appstore": "Apple App Store", "consumercomplaints": "consumercomplaints.in",
+                "illustrative": "Illustrative (synthetic)"}
+# Illustrative items (scripts/seed_indusind_l2_illustrative.py, IV-64): labelled wherever they count.
+TAG_MIXED = "Public · live + illustrative"
 PLAY_START = None  # first INDIE Play item: the collector's cap cut the window (qa/indusind_l2_profile.md)
 
 BUSINESS_PRODUCTS = {
@@ -57,6 +60,9 @@ def load() -> list[dict]:
     items = [json.loads(line) for line in open(PROC / "items.jsonl", encoding="utf-8")]
     items = [i for i in items if i["on_topic"] and not i["duplicate_of"]]
     PLAY_START = min(dt.datetime.fromisoformat(i["created_at"]) for i in items if i["source"] == "play")
+    ill = PROC.parents[1] / "seed" / "indusind_v1" / "l2_illustrative.jsonl"
+    if L2C.get("illustrative", True) and ill.exists():
+        items += [json.loads(line) for line in open(ill, encoding="utf-8")]
     ALL = items
     return items
 
@@ -88,10 +94,9 @@ def in_window(items: list[dict], wid: str) -> list[dict]:
 
 
 def period_label(wid: str) -> str:
-    """The period a public figure covers: the window, or "since 10 Aug" when the window starts before Google Play
-    does (the collector's cap). Never "Last 13 weeks" for data that only spans seven."""
-    if clipped(wid):
-        return f"since {PLAY_START.day} {PLAY_START:%b}"
+    """The period a public figure covers, named as the window (reviewer, 5 Oct: no start date on screen). Where the
+    window reaches back before Google Play starts, the source note behind (i) says counting starts at the first Play
+    review; totals still never cross that date."""
     return next(w["label"] for w in CONFIG["windows"] if w["id"] == wid).lower()
 
 
@@ -153,9 +158,38 @@ def source_note(xs: list[dict]) -> tuple[str | None, list[dict]]:
         return None, []
     top, k = c.most_common(1)[0]
     share = k / n
-    note = (f"{pct(k, n)}% of these items are {SOURCE_LABEL[top]} reviews of the INDIE app."
-            if share > L2C["source_share_flag"] else None)
+    if top == "illustrative":
+        note = None  # the illustrative note below says it
+    else:
+        note = (f"{pct(k, n)}% of these items are {SOURCE_LABEL[top]} reviews of the INDIE app."
+                if share > L2C["source_share_flag"] else None)
     return note, [{"source": s, "label": SOURCE_LABEL[s], "count": v, "share": pct(v, n)} for s, v in c.most_common()]
+
+
+def ill_note(xs: list[dict]) -> str | None:
+    k = sum(i["source"] == "illustrative" for i in xs)
+    return f"Includes {fmt_int(k)} illustrative items (synthetic, not public reviews)." if k else None
+
+
+def mark(block: dict, xs: list[dict]) -> dict:
+    """A block that counts illustrative items says so: the count, the mixed tag on every figure, the note first."""
+    k = sum(i["source"] == "illustrative" for i in xs)
+    block["illustrative"] = k
+    if not k:
+        return block
+
+    def walk(o):
+        if isinstance(o, dict):
+            if o.get("tag") == TAG:
+                o["tag"] = TAG_MIXED
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(block)
+    block["footnotes"] = [ill_note(xs), *[f for f in block.get("footnotes", []) if f]]
+    return block
 
 
 def top_theme(xs: list[dict], scope: str, wid: str, evidence: bool = False) -> dict:
@@ -209,7 +243,7 @@ def voice_block(xs: list[dict], scope: str, wid: str) -> dict:
         neg = sum(i["sentiment"] == "negative" for i in xs if "trust_governance" not in i["topic_tags"])
         out["negative"] = fig(f"L2:negative_share:{scope}:{wid}", pct(neg, n), f"{pct(neg, n)}%", "Negative share",
                               "Share of items with negative sentiment")
-    return out
+    return mark(out, xs)
 
 
 def security_trend(items: list[dict], wid: str = "w13") -> dict:
@@ -292,7 +326,7 @@ def card_voice(card_id: str, tags: list[str], items: list[dict], wid: str) -> di
         out["switching_thin"] = len(sw) < L2C["min_items"]
     note, _ = source_note(xs)
     out["footnotes"] = [x for x in (note, coverage_note(wid, {i["source"] for i in xs}), appstore_note(ALL, xs)) if x]
-    return out
+    return mark(out, xs)
 
 
 def business_items(items: list[dict], business: str, wid: str) -> list[dict]:
@@ -330,7 +364,7 @@ def cards_external(items: list[dict], wid: str) -> dict:
                            for c, k in cats.most_common()]
     praise = [i for i in xs if i["sentiment"] == "positive" and not i["short"]]
     block["praise"] = {"show": len(praise) >= L2C["min_items"], "count": len(praise)}
-    return block
+    return mark(block, xs)
 
 
 def before_block(items: list[dict], wid: str, scope: str, products: set[str] | None = None) -> dict | None:

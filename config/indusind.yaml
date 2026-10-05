@@ -268,4 +268,12 @@ l2:
     savings_not_visible: {label: "Savings account missing", paraphrase: "Existing savings accounts do not show in the app"}
     account_opening: {label: "Account opening", paraphrase: "Online account opening stalls at video KYC or the opening deposit"}
     charges: {label: "Charges", paraphrase: "Unexpected charges and minimum-balance deductions"}
+    # Illustrative themes (synthetic items only, IV-64): service themes, hand-written
+    vf_emi: {label: "Loan EMI and statements", paraphrase: "EMI dates, bounce charges and loan statements are hard to find in the app"}
+    vf_noc: {label: "Loan closure and NOC", paraphrase: "After the last EMI, the NOC and hypothecation removal take weeks"}
+    vf_disbursal: {label: "Disbursal delay", paraphrase: "Loan disbursal to the dealer takes longer than promised"}
+    ml_repayment: {label: "Repayment not reflected", paraphrase: "Repayments made through the app or an agent do not show on the loan"}
+    ml_app_access: {label: "Loan not in the app", paraphrase: "Loan customers cannot see their loan after logging in"}
+    pl_preapproved: {label: "Pre-approved offer", paraphrase: "The pre-approved loan offer fails at the final step"}
+    pl_foreclosure: {label: "Foreclosure charges", paraphrase: "Foreclosure amount and charges are unclear in the app"}
 

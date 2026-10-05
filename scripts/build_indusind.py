@@ -363,7 +363,7 @@ def horizon_countdown(rid: str) -> str | None:
     if e["unit"] == "month":
         y, m = (int(x) for x in e["value"].split("-"))
         n = (dt.date(y, m, 1) - q).days
-        return f"{n} days (to 1 {dt.date(y, m, 1):%b})" if n > 0 else "in force"
+        return f"{n} days to month start" if n > 0 else "in force"
     return days_to_go(rid)
 
 

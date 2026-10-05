@@ -323,11 +323,11 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
         </div>
       </Tile>
 
-      <div style={{ ...cols(2, 380, 12), alignItems: "start" }}>
+      <div style={cols(2, 380, 12)}>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
+            display: "grid",
+            gridTemplateRows: "auto 1fr",
             gap: 12,
             minWidth: 0,
           }}
@@ -358,8 +358,8 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
         </div>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
+            display: "grid",
+            gridTemplateRows: "auto 1fr",
             gap: 12,
             minWidth: 0,
           }}

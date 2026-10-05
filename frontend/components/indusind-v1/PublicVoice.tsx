@@ -130,7 +130,6 @@ export function OutsideMeter({
   defs,
   rating,
   trend,
-  before,
   caption,
 }: {
   v: VoiceBlock;
@@ -213,21 +212,6 @@ export function OutsideMeter({
               points={{ ...t.points, unit: "%" }}
             />
           </div>
-          {trend?.starts ? (
-            <div style={{ fontSize: 11.5, color: C.textMut, marginTop: 2 }}>
-              ▸ Starts {fmtDate(trend.starts)}, the first Google Play review in
-              the pull
-            </div>
-          ) : null}
-        </div>
-      ) : null}
-      {before ? (
-        <div
-          data-register={before.items.id}
-          style={{ fontSize: 12.5, color: C.textMut }}
-        >
-          Before {fmtDate(before.to)}, App Store only: {before.items.display}{" "}
-          items, not added in.
         </div>
       ) : null}
       <Footnotes notes={v.footnotes.slice(1)} />

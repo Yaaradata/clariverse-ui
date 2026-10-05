@@ -18,7 +18,7 @@ import type {
 import { AreaChart, trendPoints } from "./charts";
 import { OmbudsmanWatch } from "./Ombudsman";
 import { CardDateList } from "./Peers";
-import { OutsideMeter, ThemeLine, Thin } from "./PublicVoice";
+import { OutsideMeter, ThemeLine } from "./PublicVoice";
 import {
   C,
   cols,
@@ -146,12 +146,17 @@ export function StateBar({ r, o, w }: { r: FigT; o: FigT; w: FigT }) {
   );
 }
 
+// A column of tiles: the last tile fills to the row height, so the columns end level whatever the filter shows.
 const STACK = {
-  display: "flex",
-  flexDirection: "column",
+  display: "grid",
+  gridTemplateRows: "auto 1fr",
   gap: 12,
   minWidth: 0,
 } as const;
+
+/** Grid rows for a column of tiles: every tile at its height, the last one filling to the row height. */
+const rows = (extra?: ReactNode[]) =>
+  `${"auto ".repeat(extra?.length ?? 0)}1fr`;
 
 function Pulse({
   s,
@@ -159,13 +164,16 @@ function Pulse({
   cx,
   col1,
   col3,
+  wide,
 }: {
   s: HomeSlice;
   common: Common;
   cx: boolean;
   /** Stacked under Inside and under "What customers are doing", so the three columns end level. */
-  col1?: ReactNode;
-  col3?: ReactNode;
+  col1?: ReactNode[];
+  col3?: ReactNode[];
+  /** Full width under the pulse row (the expanded Ombudsman watch in the Head of CX view). */
+  wide?: ReactNode;
 }) {
   const p = s.win.pulse;
   const i = p.inside;
@@ -190,8 +198,8 @@ function Pulse({
           · {s.businessLabel} · {s.windowLabel}
         </span>
       </h2>
-      <div style={{ ...cols(3, 300, 12), alignItems: "start" }}>
-        <div style={STACK}>
+      <div style={cols(3, 300, 12)}>
+        <div style={{ ...STACK, gridTemplateRows: rows(col1) }}>
           <Tile
             title="Inside the bank"
             sub="Complaints and contacts"
@@ -303,7 +311,12 @@ function Pulse({
           />
         </Tile>
 
-        <div style={STACK}>
+        <div
+          style={{
+            ...STACK,
+            gridTemplateRows: rows(col3),
+          }}
+        >
           {d.kind === "lines" ? (
             <Tile
               title="What customers are doing"
@@ -389,6 +402,7 @@ function Pulse({
           {col3}
         </div>
       </div>
+      {wide}
 
       {cx ? (
         <Tile
@@ -471,7 +485,10 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
             r.inside ? <Fig key="i" f={r.inside.received_index} /> : "—",
             r.inside ? <Fig key="o" f={r.inside.open} /> : "—",
             r.inside ? <Fig key="t" f={r.inside.over_30} /> : "—",
-            !r.outside.thin ? (
+            // The count is always shown (a count, not a claim); escalation and theme need the minimum items.
+            r.next ? (
+              "—"
+            ) : (
               <span key="out" style={{ fontSize: 12.5 }}>
                 <Fig
                   f={r.outside.items}
@@ -488,15 +505,16 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
                   <span title={r.outside.footnotes.join(" ")}> *</span>
                 ) : null}
               </span>
-            ) : (
-              <Thin key="out" text={r.outside.text} />
             ),
-            <span
-              key="th"
-              title={r.theme.thin ? undefined : r.theme.paraphrase}
-            >
-              <ThemeLine t={r.theme} compact />
-            </span>,
+            r.theme.thin ? (
+              <span key="th" style={{ color: C.textMut }}>
+                —
+              </span>
+            ) : (
+              <span key="th" title={r.theme.paraphrase}>
+                <ThemeLine t={r.theme} compact />
+              </span>
+            ),
             <div
               key="m"
               style={{
@@ -531,11 +549,16 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
           ],
         }))}
       />
-      {s.win.unassigned?.value ? (
-        <MutedNote>
-          App reviews not tied to one business: <Fig f={s.win.unassigned} />
-        </MutedNote>
-      ) : null}
+      <MutedNote>
+        Top theme shows once a business has 15 or more public items in the
+        window; "—" below that.
+        {s.win.unassigned?.value ? (
+          <>
+            {" "}
+            App reviews not tied to one business: <Fig f={s.win.unassigned} />.
+          </>
+        ) : null}
+      </MutedNote>
     </Tile>
   );
 }
@@ -563,35 +586,51 @@ function PeerMoves({ s, sel }: { s: HomeSlice; sel: Sel }) {
   );
 }
 
-function Strips({ s, sel }: { s: HomeSlice; sel: Sel }) {
+function Improving({ s }: { s: HomeSlice }) {
+  return (
+    <Tile
+      title="Improving"
+      sub="Verified items only"
+      layers={["L1"]}
+      tone="green"
+    >
+      {s.improving.map((f) => (
+        <div
+          key={f.id}
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: 10,
+            fontSize: 13.5,
+            color: C.textSec,
+          }}
+        >
+          <span>
+            {f.label} <span style={{ color: C.textMut }}>· {f.period}</span>
+          </span>
+          <Fig f={f} style={{ fontFamily: MONO, color: C.green }} />
+        </div>
+      ))}
+    </Tile>
+  );
+}
+
+function Strips({
+  s,
+  sel,
+  tiles,
+}: {
+  s: HomeSlice;
+  sel: Sel;
+  /** Bank-wide tiles not placed in the pulse; they share the row with Horizon. */
+  tiles: ReactNode[];
+}) {
   const q = s.win.quiet;
   return (
     <>
-      <div style={cols(2, 300, 12)}>
-        <Tile
-          title="Improving"
-          sub="Verified items only"
-          layers={["L1"]}
-          tone="green"
-        >
-          {s.improving.map((f) => (
-            <div
-              key={f.id}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 10,
-                fontSize: 13.5,
-                color: C.textSec,
-              }}
-            >
-              <span>
-                {f.label} <span style={{ color: C.textMut }}>· {f.period}</span>
-              </span>
-              <Fig f={f} style={{ fontFamily: MONO, color: C.green }} />
-            </div>
-          ))}
-        </Tile>
+      {tiles.length > 2 ? <div style={cols(3, 300, 12)}>{tiles}</div> : null}
+      <div style={cols(tiles.length > 2 ? 1 : tiles.length + 1, 300, 12)}>
+        {tiles.length > 2 ? null : tiles}
         <Tile
           title="Horizon"
           sub="Dated obligations; days from data freeze"
@@ -671,6 +710,37 @@ export function HomeView({
   common: Common;
 }) {
   const cx = sel.v === "cx";
+  const biz = s.win.doing.kind === "lines";
+  const omb = (
+    <OmbudsmanWatch
+      key="omb"
+      o={s.win.pulse.ombudsman}
+      def={common.defs.ombudsman}
+      expanded={cx}
+      byBusiness={s.win.risk_by_business}
+      byBusinessDef={common.defs.risk_by_business}
+    />
+  );
+  const improving = <Improving key="improving" s={s} />;
+  const peer = <PeerMoves key="peer" s={s} sel={sel} />;
+  // Tile placement, measured so the three pulse columns end near level (IV-62). Head of CX: the expanded Ombudsman
+  // watch runs full width. A single business shrinks "What customers are doing", so the business-scoped Ombudsman
+  // watch sits beside it and the bank-wide Peer moves and Improving stay in the bottom row.
+  // Outside is tall when it carries the weekly chart (All, Digital); short otherwise.
+  const tallOut = !!s.win.outside.trend;
+  const ombTile = cx ? [] : [omb];
+  const place: { col1: ReactNode[]; col3: ReactNode[]; strips: ReactNode[] } =
+    tallOut && !biz
+      ? cx
+        ? { col1: [improving], col3: [peer], strips: [] }
+        : { col1: [omb], col3: [peer], strips: [improving] }
+      : tallOut
+        ? { col1: ombTile, col3: [peer, improving], strips: [] }
+        : biz
+          ? cx
+            ? { col1: [], col3: [peer], strips: [improving] }
+            : { col1: [], col3: [omb], strips: [improving, peer] }
+          : { col1: [], col3: [], strips: [...ombTile, peer, improving] };
   return (
     <>
       <QuarterLine q={s.quarter} common={common} />
@@ -678,20 +748,15 @@ export function HomeView({
         s={s}
         common={common}
         cx={cx}
-        col1={
-          <OmbudsmanWatch
-            o={s.win.pulse.ombudsman}
-            def={common.defs.ombudsman}
-            expanded={cx}
-            byBusiness={s.win.risk_by_business}
-            byBusinessDef={common.defs.risk_by_business}
-          />
-        }
-        col3={<PeerMoves s={s} sel={sel} />}
+        // CEO's office: the compact watch stacks under Inside. Head of CX: the expanded watch (gauges and the
+        // by-business bars) is too tall for a column, so it runs full width under the pulse row.
+        col1={place.col1}
+        wide={cx ? omb : undefined}
+        col3={place.col3}
       />
       <ByBusiness s={s} sel={sel} />
       <SignalCards cards={s.win.cards} view={sel.v} common={common} />
-      <Strips s={s} sel={sel} />
+      <Strips s={s} sel={sel} tiles={place.strips} />
       {cx && s.owners ? (
         <Tile title="Owners and status" sub="Roles, not names" layers={["L3"]}>
           <Table

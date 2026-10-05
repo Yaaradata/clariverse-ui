@@ -778,3 +778,14 @@ wording.
 - **IV-59 · Quiet item.** The public check (Google Play reviews this week within the range of the previous full weeks
   since 10 Aug) does not pass: 338 this week against 403–931. The internal check stays, tagged Internal · illustrative.
 - **IV-60 · Readiness checklist.** Every status reads "To confirm with the bank": the bank's progress is not known.
+- **IV-61 · Tile chips carry figures only (reviewer, 5 Oct).** On the four home cards a chip shows only when it has a
+  value: Peer (named banks), Voice (a line with enough items), Rupee line, Owner. "Pending verification", "Not enough
+  public items", "Exposure: not quantified" and "Status: awaiting approval" leave the tile; they stay in the drawer
+  (peers, voice, exposure, owner and action sections) and on Approvals. This relaxes the IND-B4 depth test's "greyed
+  chip" for a held peer.
+- **IV-63 · No start date on screen (reviewer, 5 Oct).** Public periods read as the window ("last 13 weeks"); the
+  10 Aug start (the Play collector's cap) and the App Store items before it sit only in the source note behind (i).
+  Totals still start at the first Play review. Supersedes the on-screen part of IV-52.
+- **IV-62 · Columns end level.** Pulse columns stack and stretch. The Head of CX Ombudsman watch (gauges and by-business
+  bars) runs full width under the pulse row. Under a business filter, Improving moves into the third column and
+  Horizon runs full width.
