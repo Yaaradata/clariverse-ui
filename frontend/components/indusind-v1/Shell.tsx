@@ -9,6 +9,7 @@
 
 import {
   Activity,
+  ArrowLeft,
   CheckSquare,
   CreditCard,
   Landmark,
@@ -195,6 +196,7 @@ export function Shell({
       ? "The pulse first, then what needs you this week, business by business."
       : null;
   const initials = isCards ? "HC" : sel.v === "cx" ? "CX" : "CO";
+  const [navHover, setNavHover] = useState(false);
   return (
     <div
       className="lisn-v2 ind-shell"
@@ -205,41 +207,151 @@ export function Shell({
         fontFamily: "var(--font), system-ui, sans-serif",
       }}
     >
-      {/* The role-based rail: back to roles, one icon per screen, the theme switch and the role's initials. */}
-      <aside className="ind-rail" aria-label="Screens">
+      {/* The sidebar: 72px of icons that opens to 280px with labels on hover; the active
+          screen carries a brand bar; back to roles at the foot; Ask LisN is the bar at the bottom of the screen. On phones it becomes a strip of icons on top. */}
+      <aside
+        className="ind-rail"
+        aria-label="Screens"
+        onMouseEnter={() => setNavHover(true)}
+        onMouseLeave={() => setNavHover(false)}
+        style={{ width: navHover ? 280 : 72 }}
+      >
         <Link
           href={ROLES_HREF}
           title="Back to roles"
           aria-label="Back to roles"
-          className="ind-rail-home"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "0 6px",
+            justifyContent: navHover ? "flex-start" : "center",
+            textDecoration: "none",
+            color: C.text,
+          }}
         >
-          Y
+          <span className="ind-rail-home">Y</span>
+          {navHover ? (
+            <span style={{ minWidth: 0 }}>
+              <span
+                style={{
+                  display: "block",
+                  fontWeight: 800,
+                  fontSize: 15,
+                  letterSpacing: "0.02em",
+                }}
+              >
+                LisN
+              </span>
+              <span
+                style={{
+                  display: "block",
+                  fontSize: 12,
+                  color: C.textMut,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                Customer Pulse · {common.bank}
+              </span>
+            </span>
+          ) : null}
         </Link>
-        <div className="ind-rail-rule" />
-        {NAV.map((n) => {
-          const on = n.href === path;
-          const Icon = n.icon;
-          return (
-            <Link
-              key={n.href}
-              href={hrefWith(n.href, sel, { b: "all" })}
-              title={n.label}
-              aria-label={n.label}
-              aria-current={on ? "page" : undefined}
-              className={on ? "ind-rail-item ind-rail-on" : "ind-rail-item"}
-            >
-              <Icon size={17} />
-            </Link>
-          );
-        })}
+        <nav
+          aria-label="LisN screens"
+          style={{ display: "flex", flexDirection: "column", gap: 4 }}
+        >
+          {NAV.map((n) => {
+            const on = n.href === path;
+            const Icon = n.icon;
+            return (
+              <Link
+                key={n.href}
+                href={hrefWith(n.href, sel, { b: "all" })}
+                title={n.label}
+                aria-label={n.label}
+                aria-current={on ? "page" : undefined}
+                className="ind-rail-item"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  padding: navHover ? "9px 10px" : "10px 8px",
+                  justifyContent: navHover ? "flex-start" : "center",
+                  borderRadius: 8,
+                  textDecoration: "none",
+                  color: on ? C.text : C.textSec,
+                  background: on ? tint(C.brand, 0.14) : "transparent",
+                  borderLeft: `3px solid ${on ? C.brand : "transparent"}`,
+                  fontSize: 14,
+                  fontWeight: on ? 700 : 500,
+                  lineHeight: 1.3,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <Icon
+                  size={16}
+                  color={on ? C.brandInk : C.textMut}
+                  style={{ flexShrink: 0 }}
+                />
+                {navHover ? <span>{n.label}</span> : null}
+              </Link>
+            );
+          })}
+        </nav>
         <div className="ind-rail-fill" />
-        <div className="ind-rail-me" title={isCards ? "Head of Cards" : view}>
-          {initials}
+        <Link
+          href={ROLES_HREF}
+          data-testid="back-to-roles"
+          title="Back to roles"
+          style={{
+            width: "100%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: navHover ? "flex-start" : "center",
+            gap: 10,
+            background: C.cardAlt,
+            border: `1px solid ${C.borderLight}`,
+            color: C.text,
+            borderRadius: 8,
+            padding: 10,
+            fontSize: 14,
+            textDecoration: "none",
+            whiteSpace: "nowrap",
+            boxSizing: "border-box",
+          }}
+        >
+          <ArrowLeft size={16} color={C.brandInk} />
+          {navHover ? "Back to roles" : null}
+        </Link>
+        <div
+          title={isCards ? "Head of Cards" : view}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            justifyContent: navHover ? "flex-start" : "center",
+          }}
+        >
+          <span className="ind-rail-me">{initials}</span>
+          {navHover ? (
+            <span
+              style={{ fontSize: 13, color: C.textSec, whiteSpace: "nowrap" }}
+            >
+              {isCards ? "Head of Cards" : view}
+            </span>
+          ) : null}
         </div>
       </aside>
 
-      <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
-        {/* Header as on the HDFC pulse: a thin top bar (bank · screen · data freeze, window on the right), then the
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        {/* Header: a thin top bar (bank · screen · data freeze, window on the right), then the
             page title, one line under it, and the view and business choices. */}
         <header>
           <div
@@ -347,8 +459,8 @@ export function Shell({
           style={{
             // Full width, like the header: no strip left empty on wide screens (reviewer, 5 Oct).
             width: "100%",
-            // Ask LisN sits in the title bar, so nothing floats over the page.
-            padding: "14px 22px 28px",
+            // Bottom padding clears the Ask LisN bar at the foot of the screen.
+            padding: "14px 22px 96px",
             display: "flex",
             flexDirection: "column",
             gap: 14,

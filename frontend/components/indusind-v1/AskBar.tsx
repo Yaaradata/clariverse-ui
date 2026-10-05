@@ -47,8 +47,14 @@ export function AskBar({ ask }: { ask: AskBank }) {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false);
     };
+    // The sidebar's Ask LisN button opens the panel.
+    const onOpen = () => setOpen(true);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("ind-ask-open", onOpen);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("ind-ask-open", onOpen);
+    };
   }, []);
 
   const answer = (text: string) => {
@@ -77,31 +83,7 @@ export function AskBar({ ask }: { ask: AskBank }) {
     lineHeight: 1.35,
   };
 
-  // Closed, Ask LisN is a button in the title bar, so it never covers content (review finding 20, HL-26).
-  if (!open)
-    return (
-      <button
-        type="button"
-        data-testid="ask-bar"
-        onClick={() => setOpen(true)}
-        style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 6,
-          background: C.card,
-          border: `1.5px solid ${tint(C.brand, 0.55)}`,
-          borderRadius: 999,
-          padding: "5px 12px",
-          color: C.text,
-          fontSize: 12.5,
-          fontWeight: 700,
-          cursor: "pointer",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <Sparkles size={14} color={C.brandInk} /> Ask LisN
-      </button>
-    );
+  // Always at the foot of the screen; the page keeps bottom padding so the footer clears it (HL-26).
 
   return (
     <>
@@ -124,9 +106,9 @@ export function AskBar({ ask }: { ask: AskBank }) {
         style={{
           position: "fixed",
           left: "50%",
-          top: 72,
+          bottom: 14,
           transform: "translateX(-50%)",
-          width: "min(760px, calc(100vw - 32px))",
+          width: "min(820px, calc(100vw - 28px))",
           zIndex: 50,
           display: "flex",
           flexDirection: "column",
@@ -282,7 +264,7 @@ export function AskBar({ ask }: { ask: AskBank }) {
                 letterSpacing: "0.08em",
               }}
             >
-              Show me
+              Suggested for this view
             </div>
             <div
               style={{
@@ -329,8 +311,8 @@ export function AskBar({ ask }: { ask: AskBank }) {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onFocus={() => setOpen(true)}
-            aria-label="Ask LisN"
-            placeholder="Ask LisN"
+            aria-label="Ask LisN about your business"
+            placeholder="Ask LisN about your business"
             style={{
               flex: 1,
               minWidth: 0,

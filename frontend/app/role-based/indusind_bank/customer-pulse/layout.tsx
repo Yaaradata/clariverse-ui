@@ -27,26 +27,25 @@ export default function IndusIndLayout({ children }: { children: ReactNode }) {
         @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700;800&display=swap');
         :root { --font: 'Outfit', system-ui, sans-serif; --mono: 'JetBrains Mono', monospace; }
         ${THEME_CSS}
-        /* The role-based shell: a 64px icon rail beside the page; on phones the rail becomes a strip on top. */
-        .ind-shell { display: grid; grid-template-columns: 64px minmax(0, 1fr); }
-        .ind-rail { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; align-items: center;
-          gap: 12px; padding: 16px 0; background: var(--v2-card-alt); border-right: 1px solid var(--v2-border); z-index: 40; }
-        .ind-rail-home { width: 36px; height: 36px; border-radius: 11px; background: #241a44; border: 1px solid #8b5cf6;
-          display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-weight: 900; font-size: 15px;
-          text-decoration: none; }
-        .ind-rail-rule { width: 34px; height: 1px; background: var(--v2-border); }
-        .ind-rail-item { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center;
-          justify-content: center; color: var(--v2-text-mut); border-left: 3px solid transparent; }
-        .ind-rail-item:hover { color: var(--v2-text); background: var(--v2-hover); }
-        .ind-rail-on { color: #8b5cf6; background: #221a40; border-left-color: #8b5cf6; }
+        .ind-shell { display: flex; min-height: 100vh; }
+        .ind-rail { position: sticky; top: 0; height: 100vh; flex-shrink: 0; display: flex; flex-direction: column;
+          gap: 14px; padding: 14px 8px; background: var(--v2-surface); border-right: 1px solid var(--v2-border);
+          overflow: hidden; z-index: 20; transition: width 0.2s ease; }
+        .ind-rail-home { width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+          background: #241a44; border: 1px solid #8b5cf6;
+          display: flex; align-items: center; justify-content: center; color: #8b5cf6; font-weight: 900;
+          font-size: 15px; }
+        .ind-rail-item:hover { color: var(--v2-text) !important; background: var(--v2-hover) !important; }
         .ind-rail-fill { flex: 1; }
         .ind-rail-me { width: 32px; height: 32px; border-radius: 9px; background: var(--v2-inner); display: flex;
-          align-items: center; justify-content: center; color: var(--v2-text-mut); font-size: 12px; font-weight: 800; }
+          flex-shrink: 0; align-items: center; justify-content: center; color: var(--v2-text-mut); font-size: 12px;
+          font-weight: 800; }
         @media (max-width: 640px) {
-          .ind-shell { grid-template-columns: minmax(0, 1fr); }
-          .ind-rail { height: auto; flex-direction: row; justify-content: flex-start; padding: 8px 12px; gap: 6px;
-            border-right: none; border-bottom: 1px solid var(--v2-border); overflow-x: auto; }
-          .ind-rail-rule, .ind-rail-fill { display: none; }
+          .ind-shell { flex-direction: column; }
+          .ind-rail { width: auto !important; height: auto; flex-direction: row; align-items: center; padding: 8px 12px;
+            gap: 6px; border-right: none; border-bottom: 1px solid var(--v2-border); overflow-x: auto; position: static; }
+          .ind-rail nav { flex-direction: row !important; }
+          .ind-rail-fill { display: none; }
         }
         /* Phones: a table becomes one block per row, each cell a label and its value, so nothing sits off-screen. */
         @media (max-width: 640px) {

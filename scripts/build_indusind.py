@@ -901,6 +901,15 @@ def ask_bank(h: dict) -> dict:
                      h["windows"]["week"]["pulse"]["all"]["inside"]["open"] | {"label": "Open, share of this week's complaints"},
                      h["windows"]["week"]["outside"]["items"] | {"label": "Public items this week"}]
                     + l2_answer(h["windows"]["week"]["outside"], "In public this week")},
+        # CX questions (reviewer, 5 Oct): both answered from the home pulse figures, last 4 weeks.
+        {"id": "cx_channels", "q": "Which complaint channels have the most open too long?", "page": "home",
+         "answer": "Inside the bank (illustrative), complaints open beyond 30 days as a share of each channel's complaints, last 4 weeks, highest first:",
+         "figures": [c["over_30"] | {"label": f"{c['label']}: open too long"}
+                     for c in sorted(w4["pulse"]["all"]["channels"], key=lambda c: -(c["over_30"]["value"] or 0))]},
+        {"id": "cx_ombudsman", "q": "How many pending complaints could reach the Ombudsman?", "page": "home",
+         "answer": "Inside the bank (illustrative), the share of pending complaints at risk of an Ombudsman referral, last 4 weeks, and how that splits:",
+         "figures": [w4["pulse"]["all"]["ombudsman"][k] | {"label": w4["pulse"]["all"]["ombudsman"][k].get("label", "At risk")}
+                     for k in ("at_risk", "brink", "eligible", "unhappy", "awaiting_io")]},
     ]
     if CONFIG["flags"]["l2_loaded"]:
         qs.insert(1, {"id": "peer_rates", "q": "What changed in peer rate cards this week?", "page": "peers", "answer": "", "figures": []})
