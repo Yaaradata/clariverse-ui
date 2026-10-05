@@ -62,8 +62,10 @@ expect("a post URL fails", checkRoute({ ...good, html: "https://play.google.com/
   .some((p) => p.includes("source_link")));
 expect("an other client's name in the page JS fails (DEC-7)",
   checkRoute({ ...good, chunks: 'alt:"HDFC Logo"' }, opts).some((p) => p.startsWith("other client named")));
-expect("a link to the industries list fails (DEC-7)",
-  checkRoute({ ...good, links: ["/role-based"] }, opts).some((p) => p.startsWith("link leaves")));
+expect("a link to another industry's pages fails (DEC-7)",
+  checkRoute({ ...good, links: ["/role-based/hdfc_bank"] }, opts).some((p) => p.startsWith("link leaves")));
+expect("the role page's back link to the industries list passes (IV-65)",
+  !checkRoute({ ...good, links: ["/role-based"] }, opts).some((p) => p.startsWith("link leaves")));
 
 console.log(`test_qa_indusind_routes: ${failures} failure(s)`);
 process.exit(failures ? 1 : 0);

@@ -797,3 +797,13 @@ wording.
   (never "Public · live"), its first note reads "x% of these items are modelled", its source split shows "Modelled", and
   the banner reads "public and modelled data". Checked (`L2 illustrative`, with a fixture). Supersedes the "no synthetic
   public data" rule for these rows only. Thin lines are left out (no "Not enough public items" sentence on screen).
+- **IV-65 · Modelled note and banner removed (5 Oct).** The "x% of these items are modelled" footnote and the
+  "Demonstration · public and modelled data … not IndusInd Bank MIS" banner are off every screen. Modelled blocks keep
+  the "Public" tag (never "Public · live") and the "Modelled" row in the source split; the footer still reads "internal
+  figures illustrative until discovery". `L2 illustrative` now checks the count and the tag (fixture: tag set back to
+  live); `L2 source` no longer asks for a footnote when the leading source is modelled. The route and screenshot
+  checks no longer look for the banner. Supersedes the note and banner parts of IV-64.
+- **IV-65 · Back to industries (reviewer, 5 Oct).** The IndusInd role page gets "Back to industries" (`/role-based`), at
+  the reviewer's request after being told it reverses part of IV-48: the industries list names other clients (DEC-7).
+  It is the one link allowed out of the IndusInd pages; the route check still fails any other link out (fixture), and
+  other clients' names still must not appear on any IndusInd page.

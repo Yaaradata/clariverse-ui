@@ -115,7 +115,8 @@ export function checkRoute(rec, opts = {}) {
       problems.push(`external link ${href}`);
       continue;
     }
-    if (!p.startsWith(ROOT)) problems.push(`link leaves the IndusInd pages: ${href}`);
+    // The role page's "Back to industries" is the one link allowed out (IV-65); every other link stays under the root.
+    if (!p.startsWith(ROOT) && p !== "/role-based") problems.push(`link leaves the IndusInd pages: ${href}`);
   }
   return problems;
 }

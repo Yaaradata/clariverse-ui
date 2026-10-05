@@ -1,4 +1,4 @@
-import { CreditCard, Headphones, Landmark } from "lucide-react";
+import { ArrowLeft, CreditCard, Headphones, Landmark } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -38,6 +38,24 @@ export default function IndusIndRolePage() {
       <div
         style={{ maxWidth: 1000, margin: "0 auto", padding: "40px 16px 24px" }}
       >
+        {/* Back to the industries list (reviewer, 5 Oct; IV-65): the one link that leaves the IndusInd pages. */}
+        <Link
+          href="/role-based"
+          prefetch={false}
+          data-testid="back-to-industries"
+          style={{
+            color: "#b9b9ba",
+            display: "flex",
+            alignItems: "center",
+            gap: 6,
+            fontSize: 15,
+            marginBottom: 28,
+            textDecoration: "none",
+            width: "fit-content",
+          }}
+        >
+          <ArrowLeft size={16} /> Back to industries
+        </Link>
         <div
           style={{
             display: "flex",
