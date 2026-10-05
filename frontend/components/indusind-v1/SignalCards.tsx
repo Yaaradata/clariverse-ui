@@ -34,6 +34,7 @@ import {
   Pending,
   SourceTag,
   tint,
+  voiceLayers,
 } from "./primitives";
 
 /** The fixed peer column: the three core peers, in this order. */
@@ -213,6 +214,8 @@ function Drawer({
     return () => window.removeEventListener("keydown", k);
   }, [onClose]);
   const a = card.action;
+  const hasPeers = peerRows(card).some((r) => r.figs.length);
+  const off = hasPeers ? 0 : 1;
   return (
     <>
       <button
@@ -288,31 +291,23 @@ function Drawer({
           ))}
         </Section>
 
-        <Section n={2} title="Peer context">
-          {peerRows(card).map((r) => (
-            <div
-              key={r.bank}
-              style={{ display: "flex", flexDirection: "column", gap: 2 }}
-            >
-              {r.figs.length ? (
-                r.figs.map((f) => <FigRow key={f.id} f={f} />)
-              ) : (
-                <FigRow
-                  label={r.bank}
-                  f={{
-                    id: "held",
-                    layer: "L1",
-                    value: null,
-                    display: common.pending,
-                    pending: true,
-                  }}
-                />
-              )}
-            </div>
-          ))}
-        </Section>
+        {/* No verified peer figure (held peers): the section is left out, not shown as pending. */}
+        {hasPeers ? (
+          <Section n={2} title="Peer context">
+            {peerRows(card).map((r) => (
+              <div
+                key={r.bank}
+                style={{ display: "flex", flexDirection: "column", gap: 2 }}
+              >
+                {r.figs.map((f) => (
+                  <FigRow key={f.id} f={f} />
+                ))}
+              </div>
+            ))}
+          </Section>
+        ) : null}
 
-        <Section n={3} title="What customers and the market said">
+        <Section n={3 - off} title="What customers and the market said">
           <CardVoiceBlock v={card.voice} />
           <MutedNote>{card.inside.text}</MutedNote>
           {card.inside.figures?.length ? (
@@ -324,7 +319,7 @@ function Drawer({
           ) : null}
         </Section>
 
-        <Section n={4} title={card.exposure ? "Exposure" : "Rupee line"}>
+        <Section n={4 - off} title={card.exposure ? "Exposure" : "Rupee line"}>
           {card.exposure ? (
             <div style={{ fontSize: 14, color: C.text }}>{card.exposure}</div>
           ) : (
@@ -333,7 +328,7 @@ function Drawer({
           <MutedNote>{common.sensitivity_footer}</MutedNote>
         </Section>
 
-        <Section n={5} title="Owner">
+        <Section n={5 - off} title="Owner">
           <div style={{ fontSize: 14, color: C.text }}>
             {card.owner}
             {card.with ? (
@@ -342,7 +337,7 @@ function Drawer({
           </div>
         </Section>
 
-        <Section n={6} title="Drafted action">
+        <Section n={6 - off} title="Drafted action">
           <dl
             style={{
               margin: 0,
@@ -369,7 +364,7 @@ function Drawer({
           </dl>
         </Section>
 
-        <Section n={7} title="Approval">
+        <Section n={7 - off} title="Approval">
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
             <Chip label="Status" color={C.amber}>
               {a.status}
@@ -383,7 +378,7 @@ function Drawer({
           </OpenLink>
         </Section>
 
-        <Section n={8} title="Evidence">
+        <Section n={8 - off} title="Evidence">
           <details open={view === "cx"}>
             <summary
               style={{ fontSize: 13, color: C.brandInk, cursor: "pointer" }}
@@ -462,7 +457,7 @@ function CardTile({
     card.sensitivity.find((s) => s.display.includes("a year")) ??
     card.sensitivity[0];
   const layers = Array.from(new Set(evidence(card).map((f) => f.layer))).concat(
-    ["L2" as const],
+    voiceLayers(card.voice.illustrative),
   );
   return (
     <section

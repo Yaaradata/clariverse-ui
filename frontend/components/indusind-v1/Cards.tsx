@@ -17,7 +17,7 @@ import type {
 import { AreaChart, trendPoints } from "./charts";
 import { StateBar } from "./Home";
 import { OmbudsmanWatch } from "./Ombudsman";
-import { OutsideMeter, Thin } from "./PublicVoice";
+import { OutsideMeter } from "./PublicVoice";
 import {
   C,
   cols,
@@ -29,6 +29,7 @@ import {
   ShareBar,
   Table,
   Tile,
+  voiceLayers,
 } from "./primitives";
 
 type Category = {
@@ -207,7 +208,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
           <Tile
             title="Cards: issue pulse, in public"
             sub="Public voice"
-            layers={["L2"]}
+            layers={voiceLayers(w.external.illustrative)}
           >
             <OutsideMeter
               v={w.external}
@@ -224,7 +225,7 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
           <Tile
             title="Cards: public items by category"
             sub="What customers say"
-            layers={["L2"]}
+            layers={voiceLayers(w.external.illustrative)}
           >
             {w.external.categories.length ? (
               <div>
@@ -247,20 +248,9 @@ export function CardsView({ c, common }: { c: CardsSlice; common: Common }) {
                       <strong style={{ color: C.text }}>{f.display}</strong>
                     </div>
                   ))}
-                {w.external.categories.some((f) => f.thin) ? (
-                  <div style={{ fontSize: 12.5, color: C.textMut }}>
-                    <span style={{ fontStyle: "italic" }}>
-                      Not enough items:
-                    </span>{" "}
-                    {w.external.categories
-                      .filter((f) => f.thin)
-                      .map((f) => f.label)
-                      .join(", ")}
-                  </div>
-                ) : null}
               </div>
             ) : (
-              <Thin text={w.external.text} />
+              <span style={{ color: C.textMut }}>—</span>
             )}
             {w.external.praise.show ? null : (
               <div style={{ fontSize: 12.5, color: C.textMut }}>

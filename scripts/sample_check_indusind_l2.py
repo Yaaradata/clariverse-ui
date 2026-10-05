@@ -38,6 +38,9 @@ def main() -> int:
         return 0
     s = json.loads(SAMPLE.read_text(encoding="utf-8"))
     items = {json.loads(line)["id"]: json.loads(line) for line in open(M.PROC / "items.jsonl", encoding="utf-8")}
+    ill = M.ROOT / "data" / "seed" / "indusind_v1" / "l2_illustrative.jsonl"
+    if ill.exists():  # illustrative items (IV-64) carry no text; they are listed by id and source only
+        items.update({json.loads(line)["id"]: json.loads(line) for line in open(ill, encoding="utf-8")})
     pre = s["prescore"]
     acc = {k: sum(pre[i][k] == "ok" for i in s["sample"]) for k in ("product", "topics", "sentiment")}
     md = ["# IndusInd · public voice: hand check", "",

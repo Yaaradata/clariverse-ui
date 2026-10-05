@@ -15,7 +15,7 @@ import type {
   OmbudsmanBlock,
 } from "@/lib/indusind-v1/types";
 import { OmbudsmanWatch } from "./Ombudsman";
-import { CardVoiceBlock, Thin } from "./PublicVoice";
+import { CardVoiceBlock } from "./PublicVoice";
 import {
   C,
   Chip,
@@ -76,14 +76,20 @@ type PublicRow = {
 >;
 
 const PUBLIC_COLS = [
-  { id: "escalation_language", label: "Escalation language" },
+  {
+    id: "escalation_language",
+    label: "Escalation language",
+    short: "Escalation",
+  },
   {
     id: "mis_selling_allegation",
     label: "Posts alleging mis-selling or bundling (public, unverified)",
+    short: "Mis-selling posts",
   },
   {
     id: "recovery_conduct_allegation",
     label: "Posts alleging recovery-agent conduct (public, unverified)",
+    short: "Recovery-conduct posts",
   },
 ] as const;
 
@@ -383,40 +389,25 @@ export function RiskView({ r, common }: { r: RiskSlice; common: Common }) {
             layers={["L2"]}
             info={common.defs.escalation_public}
           >
-            {r.win.public.every((p) =>
-              PUBLIC_COLS.every((c) => p[c.id].thin),
-            ) ? (
-              <div
-                data-testid="public-by-product"
-                style={{ display: "flex", flexDirection: "column", gap: 6 }}
-              >
-                <div style={{ fontSize: 12.5, color: C.textMut }}>
-                  <span style={{ fontStyle: "italic" }}>
-                    {common.l2_not_enough}:
-                  </span>{" "}
-                  {PUBLIC_COLS.map((c) => c.label).join(", ")}
-                </div>
-              </div>
-            ) : (
-              <Table
-                testid="public-by-product"
-                head={["Business", ...PUBLIC_COLS.map((c) => c.label)]}
-                align={["left", "right", "right", "right"]}
-                rows={r.win.public.map((p) => ({
-                  key: p.business,
-                  cells: [
-                    BUSINESS_LABEL[p.business] ?? p.business,
-                    ...PUBLIC_COLS.map((c) =>
-                      p[c.id].thin ? (
-                        <Thin key={c.id} text={common.l2_not_enough} />
-                      ) : (
-                        <Fig key={c.id} f={p[c.id]} />
-                      ),
-                    ),
-                  ],
-                }))}
-              />
-            )}
+            <Table
+              testid="public-by-product"
+              // Short headers fit the column; the exact allegation wording sits under the table.
+              head={["Business", ...PUBLIC_COLS.map((c) => c.short)]}
+              align={["left", "right", "right", "right"]}
+              rows={r.win.public.map((p) => ({
+                key: p.business,
+                cells: [
+                  BUSINESS_LABEL[p.business] ?? p.business,
+                  ...PUBLIC_COLS.map((c) => <Fig key={c.id} f={p[c.id]} />),
+                ],
+              }))}
+            />
+            <MutedNote>
+              {PUBLIC_COLS.slice(1)
+                .map((c) => c.label)
+                .join("; ")}
+              .
+            </MutedNote>
           </Tile>
         </div>
       </div>

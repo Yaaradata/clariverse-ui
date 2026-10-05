@@ -34,6 +34,7 @@ import {
   Table,
   Tile,
   tint,
+  voiceLayers,
 } from "./primitives";
 import { FigRow, SignalCards } from "./SignalCards";
 
@@ -300,7 +301,11 @@ function Pulse({
           {col1}
         </div>
 
-        <Tile title="Outside" sub="Public voice" layers={["L2"]}>
+        <Tile
+          title="Outside"
+          sub="Public voice"
+          layers={voiceLayers(s.win.outside.illustrative)}
+        >
           <OutsideMeter
             v={s.win.outside}
             defs={common.defs}
@@ -445,7 +450,13 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
     <Tile
       title="Pulse by business"
       sub="Bank to product"
-      layers={["L1", "L2", "L3"]}
+      layers={[
+        "L1",
+        ...voiceLayers(
+          s.win.rows.reduce((n, r) => n + (r.outside.illustrative ?? 0), 0),
+        ),
+        "L3",
+      ]}
     >
       <Table
         testid="by-business"

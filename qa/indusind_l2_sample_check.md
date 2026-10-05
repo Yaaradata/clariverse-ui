@@ -122,29 +122,29 @@ Each theme's paraphrase is written by hand (`config/indusind.yaml`, `l2.themes`)
 
 ### This week
 
-- **Deposits:** 11 items. Not enough public items this window.
-- **Vehicle finance:** 0 items. Not enough public items this window.
-- **Micro loans and rural:** 0 items. Not enough public items this window.
-- **Cards:** 11 items. Not enough public items this window.
-- **Personal loans:** 0 items. Not enough public items this window.
+- **Deposits:** Fixed deposits: "Fixed deposits missing, not closable or interest not credited". 17 of 44 items. Source items (17): `47ddz5pcea4vvxpm`, `4y7kecj5nm4ss7yg`, `5qtxyjlomc2v34pz`, `6cpradg6n4ymjo7f`, `7fwt5iwcuhldtcsl`, `adh46uxa5dom3ml6`, `agfw2rdfqc3fqta7`, `eejluqfdlc6mdvmk`, `gljani2zovgs45iq`, `hyaijkd2kyaok4nr`, `jvuy35z5hk6xrop4`, `ksjds5cbybhvavlp`, `lknhg5zvgffb4ufu`, `lvleaypcz5aqbbpn`, `oqnf52zofgfbtprw`, `pl4fkuj7xm4xkhgx`, `wxvvpi2bvvjyhijp`
+- **Vehicle finance:** Loan EMI and statements: "EMI dates, bounce charges and statements are hard to find". 18 of 31 items. Source items (18): `22rvnkunmn4pbdnf`, `2rnrgkfeo4immovd`, `4bwacb35ciwilqan`, `62bwpjquthrx6smp`, `7zatamycobb7f4dn`, `ae7cmktaf3hoy3ez`, `dv2irddyro6rtxhj`, `elysth6d7rq4tca7`, `fxxe6fkbzmlxzn36`, `ghnqsavbshnpd3bi`, `lkzik7yfqedaxozn`, `mjnm4vb2qxrack6n`, `nqwtvch3jssumjz6`, `qhinocmry6u5626y`, `rsjdnkqt7oal6i3u`, `sheeylodsalmvipg`, `v7a6efx6yrvf6py5`, `venqocxbg545movy`
+- **Micro loans and rural:** Repayment not reflected: "Repayments made in the app or to an agent do not show". 16 of 26 items. Source items (16): `3lwgxmlx2iedxafi`, `ao7zssfh7azzpjuy`, `bwbeum4utj2iviqx`, `d6ljggg4fri4tlun`, `db4j6wzmcd6n3bza`, `ek4z2wilcydwqku7`, `ekl6w6otna2bg6nc`, `gpxaqirjz2sdjp3c`, `ip5zybugbxy7jaiw`, `o4h4xbwx35z2q2kb`, `qgygyvoip2lcrh7y`, `qj7ra6awus7asuni`, `qxk6aarm7i7nxghj`, `tw3ltc2k7xnvxw4j`, `zhcvxfd7q5yfbx24`, `ztlsdofumvec5or5`
+- **Cards:** Card missing from the app: "Card holders log in but cannot see their card or its details". 17 of 37 items. Source items (17): `5fcfd35ap3m35piz`, `6cdyysvoe3hdkiyl`, `asoaos4sixhu6wuj`, `ehcutnk5o56kzmdq`, `jlyivxntuw5rn5sp`, `ksfmsb5rk2na4clt`, `llqsyxldt5yfbako`, `oyg2c5ym263luv3v`, `pj4xfhzyaug776hl`, `pkrulhzhbrakfg47`, `qdsom73o2tv5zb67`, `qjxbrz4flany24cg`, `r6orpbk6pqt4iikt`, `rd25qeoot34wrra2`, `sh3qtfaizrqzxbfp`, `tujdbuodoyrtspbg`, `waxje7lapgwxxzmu`
+- **Personal loans:** Pre-approved offer: "The pre-approved loan offer fails at the final step". 17 of 29 items. Source items (17): `4wdwajgry476kxzc`, `adhbxpsdlofkkzlm`, `cgbtlt43ofonmban`, `e3ldfrhr35rjkg74`, `ek7lyghgl4mottex`, `fshdzsihmm5rvxar`, `jxxknsrpuwql4gx3`, `lor6htlrxk6e6xeg`, `oh222wuvy4iaix46`, `oqdzik4tt5glb6rx`, `pi7zawl2wqdwgz46`, `q6kyho33bi3jhu3j`, `sctx3tnbwx3fzcq2`, `vmbv4x4koalwgbq2`, `wxxxvfatmpjsy6k7`, `xxcokexehnzmdsp7`, `ys2brzdglw4il4xo`
 - **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 24 of 317 items. Source items (24): `2xc5jeomipjx4qoh`, `73cuquuypdebjgmt`, `74kjyfbpzyqvxggn`, `76abxi5neiwb6x5n`, `bgwkoabykndifeyi`, `faebkzqfrcumwmbe`, `gduzzjeibg4xpdvn`, `ivqrqnmadhz5wx4k`, `koti5xlsy3w563jh`, `kqvjrf4lmpkjxynh`, `l53jjvevffi4lyg4`, `mlugwkj56cdo5gvm`, `pjhpeeattbpddqn7`, `qb5drcs4myzebspz`, `r3rmkf5pk2y4yp6h`, `t6b3axx6f2fhrkni`, `unrdkhx6jkjls2uo`, `uovc2jgxapmzo2bg`, `vpm5mmj7herwlkhb`, `w23bct3ud25oypy3` …
 
 ### Last 4 weeks
 
-- **Deposits:** 39 items. Not enough public items this window.
-- **Vehicle finance:** 0 items. Not enough public items this window.
-- **Micro loans and rural:** 0 items. Not enough public items this window.
-- **Cards:** 62 items. Not enough public items this window.
-- **Personal loans:** 1 items. Not enough public items this window.
+- **Deposits:** Fixed deposits: "Fixed deposits missing, not closable or interest not credited". 71 of 167 items. Source items (71): `3isttcn3b4skgnfh`, `3zgzd7a7zs4zf6re`, `47ddz5pcea4vvxpm`, `4y7kecj5nm4ss7yg`, `4yff3w4a4mqgpucf`, `5qtxyjlomc2v34pz`, `6cpradg6n4ymjo7f`, `6hxoq5zjst3ugpwp`, `72pbraevu74xcziq`, `7fwt5iwcuhldtcsl`, `adh46uxa5dom3ml6`, `agfw2rdfqc3fqta7`, `anx3kehmkr7jsm5z`, `b7t2rmxe3zhkvn2f`, `btkrbxt6tyf2oe5w`, `bwkexdykytjfquzd`, `cmbfeyxkpghfxnpm`, `cs3kolu3nlsyascw`, `cuj2hn5pgoxpjpsu`, `dytifwxzmb73lhe2` …
+- **Vehicle finance:** Loan EMI and statements: "EMI dates, bounce charges and statements are hard to find". 70 of 123 items. Source items (70): `22rvnkunmn4pbdnf`, `2rnrgkfeo4immovd`, `2tbdq3i7lpk7tije`, `3a6juoq6fedfmgat`, `3qc7nuvstokj6qb6`, `4bwacb35ciwilqan`, `4jbugpr3umeqezvy`, `4nskrpuhogvdslc2`, `4ohhs2omtdy2t5to`, `62bwpjquthrx6smp`, `664nf76xiruzp5ue`, `6fcppmdxr5q4itg3`, `7zatamycobb7f4dn`, `ae7cmktaf3hoy3ez`, `azk344bx76j2yjv2`, `cddhxo2d5rtljq5l`, `cikcgsrmob4puwpx`, `cxlb3sbfphcsrnbp`, `dv2irddyro6rtxhj`, `elysth6d7rq4tca7` …
+- **Micro loans and rural:** Repayment not reflected: "Repayments made in the app or to an agent do not show". 68 of 111 items. Source items (68): `2ae5wdc7p6cetxze`, `2mzu7xisik46zopp`, `2nyz4gprdsnqpba4`, `2th4hld6kjxsxh3k`, `3hyj7lvzsrlptd7x`, `3lwgxmlx2iedxafi`, `3pn7peo4ophzmhzp`, `46vptzx2ku6qqkej`, `4mq5vrrjigodpqq3`, `4yyy2ndt737intn7`, `5qxebpl3bje26app`, `6dkmdl3vv4mhq2w7`, `7mux6pfzysrzottw`, `7slyn23de6z4m3kh`, `a67ott6xqgyc6yvl`, `ao7zssfh7azzpjuy`, `apzaw523fwyk2kec`, `bbnbff2axjdmpf2o`, `bl2x2yg2g7zx6p6m`, `bm7tpfcgxpie4ttv` …
+- **Cards:** Card missing from the app: "Card holders log in but cannot see their card or its details". 68 of 154 items. Source items (68): `36demkzqgqvdgchn`, `4ewptx2tk6vtb65n`, `5fcfd35ap3m35piz`, `5riqdja2tbwzaqcv`, `6cdyysvoe3hdkiyl`, `6fjukcyisqxdofk3`, `and4py3tjt6o2p7z`, `asoaos4sixhu6wuj`, `blcyf7k7t7ixf3ox`, `bpxi4halzjaik4bp`, `c3reqetriop76qxe`, `c4pibpniq5k4shho`, `cm5mt3lfaym253uk`, `dtq76mxl3afrrzb2`, `dyjoqfivcdy5zwzs`, `eeweti5s325uuljz`, `ehcutnk5o56kzmdq`, `g72bxhibhwl26u64`, `g7fnri5rkwhotbig`, `ggptxglexn5bbbnq` …
+- **Personal loans:** Pre-approved offer: "The pre-approved loan offer fails at the final step". 70 of 120 items. Source items (70): `3kywh6uucrbg2owq`, `3mepkqnvyn3kfvua`, `3soldgmbtkifbkwc`, `4bvqxnlkpqvxnfks`, `4wdwajgry476kxzc`, `4x2ar63lrlvr3n42`, `6vu4uc4gtdszbeco`, `6zabu57ipczjnf7z`, `7ykdjrhqvsh4ltjp`, `a2etz622yqq24nol`, `a2pfddjgod54jb52`, `adhbxpsdlofkkzlm`, `aol7eslbrlaago3c`, `cawbzfzp4wophzwo`, `ccwyw5sp2u552lzy`, `cgbtlt43ofonmban`, `d5eqyah6nc63k3z6`, `e3ldfrhr35rjkg74`, `e6zwziwzm36ikz3t`, `e7lnhw6umqk2ddkc` …
 - **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 329 of 2375 items. Source items (329): `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2urvnsfrhxhi3tdg`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7`, `34lfi75x3f2njq55`, `3a7laai5n42a2nir`, `3acwqcztf575kz7y`, `3azbpj5kwb5zik5b`, `3bca4gbgvwpfd2cc`, `3bwntb5rtuyry3ts` …
 
 ### Last 13 weeks
 
-- **Deposits:** 77 items. Not enough public items this window.
-- **Vehicle finance:** 0 items. Not enough public items this window.
-- **Micro loans and rural:** 0 items. Not enough public items this window.
-- **Cards:** Card missing from the app: "Card holders log in but cannot see their card or its details". 32 of 152 items. Source items (32): `2cwpmofsjw6inyik`, `2wpv33folv2gtjhf`, `4ewptx2tk6vtb65n`, `4hlw4g5qknvwvwx4`, `6qcfcoallfmtrsf3`, `a5vnqm6vkk6lx4bd`, `ajmth56abztkijqg`, `an4siifh4dqd5sjj`, `blcyf7k7t7ixf3ox`, `dtq76mxl3afrrzb2`, `ewx5bljqyi24hcpa`, `f37mv4b7qnkqqeha`, `fsbrnz4pxcdepwcf`, `g7fnri5rkwhotbig`, `gwdmuhto2zzldv3z`, `i7tamacu2py3kmt6`, `irelvdk55ke7s5uy`, `ixbmbu2jkmogofqe`, `jiq32atln5yvxqp3`, `kgurk2tnxd3msbsy` …
-- **Personal loans:** 1 items. Not enough public items this window.
+- **Deposits:** Fixed deposits: "Fixed deposits missing, not closable or interest not credited". 135 of 322 items. Source items (135): `226jfnuxjm76jtir`, `2earrq2jhbvbplu4`, `2xfxn5536bqjf4mk`, `2yaj4jya2upss5kj`, `3isttcn3b4skgnfh`, `3xqdl52xnct2i7ya`, `3zgzd7a7zs4zf6re`, `47ddz5pcea4vvxpm`, `47ftchczbcxaoknj`, `4ejrzglgxegz2hbr`, `4pved7oqkqv4qwaz`, `4ujea46dqcvcrfgk`, `4y7kecj5nm4ss7yg`, `4yff3w4a4mqgpucf`, `56i7jp4zswg37nu7`, `5bupoekcbbvfolvm`, `5hzilylswcg5ylgq`, `5qtxyjlomc2v34pz`, `5tmpahesxkhszcoy`, `6cpradg6n4ymjo7f` …
+- **Vehicle finance:** Loan EMI and statements: "EMI dates, bounce charges and statements are hard to find". 132 of 229 items. Source items (132): `22rvnkunmn4pbdnf`, `235cgcr2kfyzg5i3`, `24wkzdd4xsgtmab4`, `2ojjnqcdjivd725n`, `2rnrgkfeo4immovd`, `2tbdq3i7lpk7tije`, `2typbg4ntoxx47ah`, `2u2pxv2xhbtft6c3`, `33pyh4rfqrtjkbnc`, `3a6juoq6fedfmgat`, `3flrrvr6xeclhr5h`, `3qc7nuvstokj6qb6`, `4aztu5q7wcjnv5yd`, `4bwacb35ciwilqan`, `4jbugpr3umeqezvy`, `4krtwbm3b2fcaqab`, `4nskrpuhogvdslc2`, `4ohhs2omtdy2t5to`, `5b7l2zxxy63ypyst`, `62bwpjquthrx6smp` …
+- **Micro loans and rural:** Repayment not reflected: "Repayments made in the app or to an agent do not show". 131 of 214 items. Source items (131): `2ae5wdc7p6cetxze`, `2ir7nmxuu6bgmowz`, `2mzu7xisik46zopp`, `2nyz4gprdsnqpba4`, `2th4hld6kjxsxh3k`, `2vluqq7y4b37djub`, `3gimjxduwq7fytys`, `3hyj7lvzsrlptd7x`, `3lwgxmlx2iedxafi`, `3pn7peo4ophzmhzp`, `3uuky3r6mnf73trg`, `46vptzx2ku6qqkej`, `4klwuwsleox4eany`, `4mq5vrrjigodpqq3`, `4ou5ndruiceo5sd6`, `4yyy2ndt737intn7`, `5mdgbhtnpeucvslj`, `5qxebpl3bje26app`, `6dkmdl3vv4mhq2w7`, `7mux6pfzysrzottw` …
+- **Cards:** Card missing from the app: "Card holders log in but cannot see their card or its details". 132 of 316 items. Source items (132): `2cwpmofsjw6inyik`, `2wpv33folv2gtjhf`, `36demkzqgqvdgchn`, `4ewptx2tk6vtb65n`, `4hlw4g5qknvwvwx4`, `4hnqlka334kmobtr`, `5fcfd35ap3m35piz`, `5jkfimmqj4ptkmru`, `5riqdja2tbwzaqcv`, `63qyefhnjaxy4jl2`, `6cdyysvoe3hdkiyl`, `6fjukcyisqxdofk3`, `6qcfcoallfmtrsf3`, `6tsnwyz3ggtct747`, `7mgtz5kggbpqxmmn`, `7uewc5y2hjie2vp5`, `7wi73m7zr24pgf7a`, `a5b4otc5ujzexrtk`, `a5vnqm6vkk6lx4bd`, `ajmth56abztkijqg` …
+- **Personal loans:** Pre-approved offer: "The pre-approved loan offer fails at the final step". 130 of 218 items. Source items (130): `2wgbtzalsf27oake`, `3emgplq6kdoggebo`, `3j6nv3apzohdkjp7`, `3kywh6uucrbg2owq`, `3mepkqnvyn3kfvua`, `3soldgmbtkifbkwc`, `3tw3js2cmcpot5mx`, `3weqr5fyrjllavop`, `3xu6asuhrwvbtxol`, `4bvqxnlkpqvxnfks`, `4wdwajgry476kxzc`, `4x2ar63lrlvr3n42`, `5nuophelhay3e357`, `5z5r4tbgo3tgxtyi`, `5zf6yl3xzknb2znx`, `64gcf5g6ud2v3ain`, `6i445zarslv3zutm`, `6sceupg7y76ucsyi`, `6vu4uc4gtdszbeco`, `6zabu57ipczjnf7z` …
 - **Digital:** App blocked as a security risk: "After phone updates, the app flags the device unsafe and won't open". 611 of 4842 items. Source items (611): `22g3qfbg6vrv7z2p`, `26okqf7cqtvlfjii`, `2ambwxmvmdtynw7n`, `2amrc7jezkvxskbp`, `2ga6pphaqjqiwlgn`, `2i3hfzsnnycluvby`, `2imdqme7e252bqu3`, `2iof7ysexrtptzyk`, `2irk7hm22p2qquap`, `2ju4vudvonzoa4vl`, `2obbjq5gc5l6tisl`, `2qd6optdeqaenxg2`, `2rdof7hwrmsw5qou`, `2rx5uc3cq7adppup`, `2urvnsfrhxhi3tdg`, `2vfesuacqwtw7zyq`, `2whw5xefhyffsoyk`, `2xc5jeomipjx4qoh`, `2xpqnm47k6awo2g2`, `33rj7iz4m52q5zi7` …
 
 ## 3. Not shown
@@ -157,11 +157,11 @@ Each theme's paraphrase is written by hand (`config/indusind.yaml`, `l2.themes`)
 
 | Topic | Items |
 |---|---|
-| app_failure | 1,558 |
-| service_delay | 119 |
-| fee_change | 42 |
-| closure_intent | 27 |
+| app_failure | 1,977 |
+| service_delay | 498 |
+| fee_change | 311 |
+| closure_intent | 67 |
+| rate_offer | 59 |
 | insurance_investment_sales | 12 |
 | escalation_language | 8 |
-| rate_offer | 2 |
 | trust_governance | 1 |

@@ -145,6 +145,10 @@
    "label": "Apple App Store",
    "definition": "Public items from one source"
   },
+  "L2:items_by_source:all:illustrative": {
+   "label": "Modelled",
+   "definition": "Public items from one source"
+  },
   "L2:items_by_source:all:play": {
    "label": "Google Play",
    "definition": "Public items from one source"
@@ -153,12 +157,20 @@
    "label": "Apple App Store",
    "definition": "Public items from one source"
   },
+  "L2:items_by_source:cards:illustrative": {
+   "label": "Modelled",
+   "definition": "Public items from one source"
+  },
   "L2:items_by_source:cards:play": {
    "label": "Google Play",
    "definition": "Public items from one source"
   },
   "L2:items_by_source:deposits:appstore": {
    "label": "Apple App Store",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:deposits:illustrative": {
+   "label": "Modelled",
    "definition": "Public items from one source"
   },
   "L2:items_by_source:deposits:play": {
@@ -173,12 +185,24 @@
    "label": "Google Play",
    "definition": "Public items from one source"
   },
+  "L2:items_by_source:micro:illustrative": {
+   "label": "Modelled",
+   "definition": "Public items from one source"
+  },
   "L2:items_by_source:other:play": {
    "label": "Google Play",
    "definition": "Public items from one source"
   },
+  "L2:items_by_source:personal:illustrative": {
+   "label": "Modelled",
+   "definition": "Public items from one source"
+  },
   "L2:items_by_source:personal:play": {
    "label": "Google Play",
+   "definition": "Public items from one source"
+  },
+  "L2:items_by_source:vehicle:illustrative": {
+   "label": "Modelled",
    "definition": "Public items from one source"
   },
   "L2:peer_mentioned:deposits": {
@@ -213,8 +237,24 @@
    "label": "Card missing from the app: items",
    "definition": "On-topic public items in the window carrying this theme"
   },
+  "L2:theme_items:deposits:fd_service": {
+   "label": "Fixed deposits: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
   "L2:theme_items:digital:security_block": {
    "label": "App blocked as a security risk: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_items:micro:ml_repayment": {
+   "label": "Repayment not reflected: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_items:personal:pl_preapproved": {
+   "label": "Pre-approved offer: items",
+   "definition": "On-topic public items in the window carrying this theme"
+  },
+  "L2:theme_items:vehicle:vf_emi": {
+   "label": "Loan EMI and statements: items",
    "definition": "On-topic public items in the window carrying this theme"
   },
   "L2:theme_share:all:security_block": {
@@ -225,8 +265,24 @@
    "label": "Card missing from the app: share of items",
    "definition": "Theme items as a share of the scope's public items"
   },
+  "L2:theme_share:deposits:fd_service": {
+   "label": "Fixed deposits: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
   "L2:theme_share:digital:security_block": {
    "label": "App blocked as a security risk: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:theme_share:micro:ml_repayment": {
+   "label": "Repayment not reflected: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:theme_share:personal:pl_preapproved": {
+   "label": "Pre-approved offer: share of items",
+   "definition": "Theme items as a share of the scope's public items"
+  },
+  "L2:theme_share:vehicle:vf_emi": {
+   "label": "Loan EMI and statements: share of items",
    "definition": "Theme items as a share of the scope's public items"
   },
   "L2:topic_items:cardA:app_failure": {

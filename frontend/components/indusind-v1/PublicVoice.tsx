@@ -63,7 +63,8 @@ export function Footnotes({ notes }: { notes: string[] }) {
 
 /** The top theme: label in bold, the hand-written paraphrase, and its item count. */
 export function ThemeLine({ t, compact }: { t: Theme; compact?: boolean }) {
-  if (t.thin) return <Thin text={t.text} />;
+  // Below the minimum items no theme is claimed; a dash, never the not-enough sentence (reviewer, 5 Oct).
+  if (t.thin) return <span style={{ color: C.textMut }}>—</span>;
   return (
     <span
       data-register={t.count.id}
@@ -158,9 +159,7 @@ export function OutsideMeter({
           label="Escalation language"
           f={v.escalation.thin ? null : v.escalation}
           info={defs.escalation_public}
-        >
-          {v.escalation.thin ? <Thin text="Fewer than 15 items" /> : null}
-        </Stat>
+        />
         <Stat
           label="Play Store · bank replied"
           f={v.responded}
@@ -240,11 +239,7 @@ export function OutsideMeter({
 
 /** A card's "what customers said": the topic lines (or the thin state per line), the theme, switching talk. */
 export function CardVoiceBlock({ v }: { v: CardVoice }) {
-  // Lines with too few items collapse into one line, so a block never repeats the thin state.
-  const thin = [
-    ...v.lines.filter((l) => l.thin).map((l) => l.label),
-    ...(v.switching && v.switching_thin ? [v.switching.label] : []),
-  ];
+  // Lines below the minimum items are left out: the block never prints the not-enough sentence.
   return (
     <div
       data-testid="card-voice"
@@ -275,12 +270,6 @@ export function CardVoiceBlock({ v }: { v: CardVoice }) {
             </strong>
           </div>
         ))}
-      {thin.length ? (
-        <div data-thin style={{ fontSize: 12.5, color: C.textMut }}>
-          <span style={{ fontStyle: "italic" }}>{v.text}:</span>{" "}
-          {thin.join(", ")}
-        </div>
-      ) : null}
       {v.switching && !v.switching_thin ? (
         <div
           style={{

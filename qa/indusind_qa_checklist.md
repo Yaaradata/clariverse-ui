@@ -83,3 +83,5 @@ Volume (HL-18): intake 0.8× N31 (pass); the pending stock is 5.5× below N32's 
 | 6. "To confirm with the bank"; quiet item | PASS | public Play check fails (338 vs 403–931), internal kept; IV-59, IV-60 |
 | Gaps | PASS | columns stack and stretch; the Head of CX Ombudsman watch runs full width |
 | 7. Checks and screenshots | PASS | pipeline, reconcile, lint/PII, fixtures, Biome, tsc, build, 79/79 IndusInd and 26/26 V2 routes; `qa/screens_indusind_v1/` at 1440, 390 and 1536@1.25 |
+| Modelled public items (IV-64) | PASS | 1,069 items, fixed seed; tagged "Public" (never "Public · live"), note "x% of these items are modelled", banner updated; `L2 illustrative` check plus fixture |
+| No "Not enough public items" / pending / not-quantified text on tiles or drawers | PASS | visible-text scan of home (all windows, CX, filters, every card drawer), Deposits, Cards, Conduct, Peers; only the approval status and the real penalty name "synthetic securitisation" remain |

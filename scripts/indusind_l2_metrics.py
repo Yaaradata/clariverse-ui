@@ -30,9 +30,9 @@ TAG = "Public · live"
 IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
 FREEZE = dt.datetime.fromisoformat(CONFIG["data_freeze"])
 SOURCE_LABEL = {"play": "Google Play", "appstore": "Apple App Store", "consumercomplaints": "consumercomplaints.in",
-                "illustrative": "Illustrative (synthetic)"}
+                "illustrative": "Modelled"}
 # Illustrative items (scripts/seed_indusind_l2_illustrative.py, IV-64): labelled wherever they count.
-TAG_MIXED = "Public · live + illustrative"
+TAG_MIXED = "Public"
 PLAY_START = None  # first INDIE Play item: the collector's cap cut the window (qa/indusind_l2_profile.md)
 
 BUSINESS_PRODUCTS = {
@@ -168,7 +168,7 @@ def source_note(xs: list[dict]) -> tuple[str | None, list[dict]]:
 
 def ill_note(xs: list[dict]) -> str | None:
     k = sum(i["source"] == "illustrative" for i in xs)
-    return f"Includes {fmt_int(k)} illustrative items (synthetic, not public reviews)." if k else None
+    return f"{pct(k, len(xs))}% of these items are modelled." if k else None
 
 
 def mark(block: dict, xs: list[dict]) -> dict:

@@ -215,7 +215,7 @@ horizon:
   - {id: N39, label: DPDP main obligations}
 
 copy:
-  watermark: "Demonstration · public data plus illustrative internal data · not IndusInd Bank MIS"
+  watermark: "Demonstration · public and modelled data plus illustrative internal data · not IndusInd Bank MIS"
   footer: "Every action is a recommendation routed to its owner; LisN does not execute, authorise or decide. Designed to run inside the bank, on the bank's approved models. Public figures from bank and peer disclosures as of their Q1 FY27 releases (IndusInd 22 Jul 2026), verified 2 Oct 2026; internal figures illustrative until discovery. Data frozen {freeze}."
   pulse_caption: "Public voice skews to people who post. Counts, not incidence. Inside figures illustrative until discovery."
   not_loaded: "Public data not yet loaded"
@@ -269,10 +269,10 @@ l2:
     account_opening: {label: "Account opening", paraphrase: "Online account opening stalls at video KYC or the opening deposit"}
     charges: {label: "Charges", paraphrase: "Unexpected charges and minimum-balance deductions"}
     # Illustrative themes (synthetic items only, IV-64): service themes, hand-written
-    vf_emi: {label: "Loan EMI and statements", paraphrase: "EMI dates, bounce charges and loan statements are hard to find in the app"}
+    vf_emi: {label: "Loan EMI and statements", paraphrase: "EMI dates, bounce charges and statements are hard to find"}
     vf_noc: {label: "Loan closure and NOC", paraphrase: "After the last EMI, the NOC and hypothecation removal take weeks"}
     vf_disbursal: {label: "Disbursal delay", paraphrase: "Loan disbursal to the dealer takes longer than promised"}
-    ml_repayment: {label: "Repayment not reflected", paraphrase: "Repayments made through the app or an agent do not show on the loan"}
+    ml_repayment: {label: "Repayment not reflected", paraphrase: "Repayments made in the app or to an agent do not show"}
     ml_app_access: {label: "Loan not in the app", paraphrase: "Loan customers cannot see their loan after logging in"}
     pl_preapproved: {label: "Pre-approved offer", paraphrase: "The pre-approved loan offer fails at the final step"}
     pl_foreclosure: {label: "Foreclosure charges", paraphrase: "Foreclosure amount and charges are unclear in the app"}

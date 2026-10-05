@@ -80,14 +80,19 @@ export function cols(n: number, min: number, gap: number): CSSProperties {
 export const LAYER_LABEL: Record<Layer, string> = {
   L1: "Public · verified",
   L2: "Public · live",
+  L2I: "Public",
   L3: "Internal · illustrative until discovery",
 };
 
 const LAYER_TONE: Record<Layer, Tone> = {
   L1: "cyan",
   L2: "cyan",
+  L2I: "cyan",
   L3: "violet",
 };
+
+/** The tag for a public-voice tile: "Public · live", or "Public" when the block counts modelled items (IV-64). */
+export const voiceLayers = (n?: number): Layer[] => (n ? ["L2I"] : ["L2"]);
 
 /** The source tag every tile carries: one per layer it shows. */
 export function SourceTag({ layer }: { layer: Layer }) {

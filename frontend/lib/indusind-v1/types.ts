@@ -3,7 +3,8 @@
  * figure carries its register, L2 or L3 id and its layer, and nothing is computed in the browser.
  */
 
-export type Layer = "L1" | "L2" | "L3";
+/** L2I: illustrative public items (synthetic), shown beside L2 wherever a block counts them. */
+export type Layer = "L1" | "L2" | "L2I" | "L3";
 export type WindowId = "week" | "w4" | "w13";
 export type ViewId = "ceo" | "cx";
 
@@ -50,6 +51,8 @@ export type Theme =
     };
 
 export type VoiceBlock = {
+  /** Illustrative (synthetic) items counted in this block. */
+  illustrative?: number;
   /** Escalation count below the minimum items shows the thin state. */
   layer: "L2";
   tag: string;
@@ -76,6 +79,7 @@ export type VoiceLine = {
 };
 
 export type CardVoice = {
+  illustrative?: number;
   layer: "L2";
   tag: string;
   loaded: true;

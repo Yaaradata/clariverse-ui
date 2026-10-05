@@ -789,3 +789,11 @@ wording.
 - **IV-62 · Columns end level.** Pulse columns stack and stretch. The Head of CX Ombudsman watch (gauges and by-business
   bars) runs full width under the pulse row. Under a business filter, Improving moves into the third column and
   Horizon runs full width.
+- **IV-64 · Modelled public items (reviewer, 5 Oct).** Rows that read "Not enough public items" are filled with modelled
+  items (`scripts/seed_indusind_l2_illustrative.py`, fixed seed, from 10 Aug like the real items, same schema, no text):
+  Vehicle finance, Micro loans and Personal loans (no real items), and top-ups for Deposits and Cards. Service themes
+  only; no modelled allegation, escalation, mis-selling, recovery-conduct, insurance-sales, trust or peer-naming item,
+  so those stay real-only. Labelling, as agreed with the reviewer: a block that counts modelled items is tagged "Public"
+  (never "Public · live"), its first note reads "x% of these items are modelled", its source split shows "Modelled", and
+  the banner reads "public and modelled data". Checked (`L2 illustrative`, with a fixture). Supersedes the "no synthetic
+  public data" rule for these rows only. Thin lines are left out (no "Not enough public items" sentence on screen).

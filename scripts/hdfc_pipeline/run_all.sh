@@ -30,6 +30,7 @@ else
   echo "indusind L2: raw scrape not present; using the committed data/processed/indusind_l2/"
 fi
 "$PY" scripts/seed_indusind.py
+"$PY" scripts/seed_indusind_l2_illustrative.py
 (cd scripts && "$PY" build_indusind.py)
 "$PY" scripts/check_indusind.py
 [ -f data/processed/indusind_l2/_audit/text.jsonl ] && (cd scripts && "$PY" sample_check_indusind_l2.py)

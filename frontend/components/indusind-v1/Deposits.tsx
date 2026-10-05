@@ -35,6 +35,7 @@ import {
   Table,
   Tile,
   tint,
+  voiceLayers,
 } from "./primitives";
 import { FigRow, SensBlock } from "./SignalCards";
 
@@ -385,7 +386,7 @@ export function DepositsView({
             <Tile
               title="Why, from outside"
               sub="Same weeks"
-              layers={["L2", "L1"]}
+              layers={[...voiceLayers(d.win.why.illustrative), "L1"]}
             >
               <CardVoiceBlock v={d.win.why} />
               {d.why_cards.length ? (
