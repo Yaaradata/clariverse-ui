@@ -29,7 +29,6 @@ import {
   MONO,
   MutedNote,
   OpenLink,
-  Pending,
   SourceTag,
   Table,
   Tile,
@@ -51,57 +50,6 @@ export type HomeSlice = {
   windowLabel: string;
   businessLabel: string;
 };
-
-/** The thin quarter line: three register figures and the two sensitivity chips, each opening its basis. */
-function QuarterLine({ q, common }: { q: Home["quarter"]; common: Common }) {
-  return (
-    <div
-      data-testid="quarter-line"
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "6px 14px",
-        flexWrap: "wrap",
-        fontSize: 13,
-        color: C.textSec,
-        padding: "2px 2px",
-      }}
-    >
-      <strong style={{ color: C.text }}>{q.items[0]?.period}</strong>
-      {q.items.map((f) => (
-        <span
-          key={f.id}
-          style={{ display: "inline-flex", gap: 6, alignItems: "center" }}
-        >
-          {f.label} <Fig f={f} style={{ fontFamily: MONO, color: C.text }} />
-        </span>
-      ))}
-      {q.chips.map((s) => (
-        <span
-          key={s.id}
-          data-register={s.id}
-          style={{
-            display: "inline-flex",
-            gap: 6,
-            alignItems: "center",
-            border: `1px solid ${tint(C.cyan, 0.3)}`,
-            background: tint(C.cyan, 0.06),
-            borderRadius: 999,
-            padding: "1px 4px 1px 10px",
-          }}
-        >
-          {s.label}
-          {s.pending ? <Pending /> : <strong>{s.display}</strong>}
-          <Info
-            label={s.label}
-            text={`${s.formula_text}. ${s.basis_note} ${common.sensitivity_footer}`}
-          />
-        </span>
-      ))}
-      <SourceTag layer="L1" />
-    </div>
-  );
-}
 
 export function StateBar({ r, o, w }: { r: FigT; o: FigT; w: FigT }) {
   const seg = (f: FigT, color: string) => (
@@ -754,7 +702,6 @@ export function HomeView({
           : { col1: [], col3: [], strips: [...ombTile, peer, improving] };
   return (
     <>
-      <QuarterLine q={s.quarter} common={common} />
       <Pulse
         s={s}
         common={common}

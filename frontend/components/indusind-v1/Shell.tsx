@@ -61,19 +61,27 @@ function ThemeToggle() {
         }
         setTheme(next);
       }}
+      data-testid="theme-toggle"
+      title={`Switch to ${next} theme`}
       style={{
-        width: 34,
-        height: 34,
-        borderRadius: 999,
-        border: `1px solid ${C.border}`,
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
         background: C.cardAlt,
-        color: C.textSec,
-        display: "grid",
-        placeItems: "center",
+        border: `1px solid ${C.borderLight}`,
+        color: C.text,
+        borderRadius: 999,
+        padding: "5px 12px",
+        fontSize: 14,
         cursor: "pointer",
       }}
     >
-      {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+      {theme === "dark" ? (
+        <Sun size={14} color={C.amber} aria-hidden="true" />
+      ) : (
+        <Moon size={14} color={C.amber} aria-hidden="true" />
+      )}
+      {theme === "dark" ? "Light" : "Dark"}
     </button>
   );
 }
@@ -81,19 +89,58 @@ function ThemeToggle() {
 function Segmented({
   label,
   items,
+  variant = "pills",
 }: {
   label: string;
   items: { href: string; label: string; on: boolean }[];
+  /** "switch": one joined track with the active item filled (the role switch); "pills": separate pills. */
+  variant?: "pills" | "switch";
 }) {
+  if (variant === "switch")
+    return (
+      <nav
+        aria-label={label}
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          background: C.cardAlt,
+          border: `1px solid ${C.borderLight}`,
+          borderRadius: 10,
+          padding: 3,
+          gap: 2,
+        }}
+      >
+        {items.map((x) => (
+          <Link
+            key={x.href + x.label}
+            href={x.href}
+            scroll={false}
+            aria-current={x.on ? "true" : undefined}
+            style={{
+              padding: "4px 12px",
+              borderRadius: 7,
+              fontSize: 13,
+              fontWeight: x.on ? 700 : 500,
+              color: x.on ? "#fff" : C.textSec,
+              background: x.on ? C.brand : "transparent",
+              boxShadow: x.on ? `0 1px 6px ${tint(C.brand, 0.35)}` : "none",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {x.label}
+          </Link>
+        ))}
+      </nav>
+    );
   return (
     <nav
       aria-label={label}
+      data-testid={label === "Window" ? "period-filter" : undefined}
       style={{
-        display: "inline-flex",
-        background: C.cardAlt,
-        border: `1px solid ${C.border}`,
-        borderRadius: 999,
-        padding: 2,
+        display: "flex",
+        gap: 4,
+        alignItems: "center",
         flexWrap: "wrap",
       }}
     >
@@ -104,12 +151,13 @@ function Segmented({
           scroll={false}
           aria-current={x.on ? "true" : undefined}
           style={{
-            fontSize: 12.5,
-            fontWeight: x.on ? 700 : 500,
-            color: x.on ? C.text : C.textMut,
-            background: x.on ? tint(C.brand, 0.28) : "transparent",
-            borderRadius: 999,
             padding: "4px 11px",
+            borderRadius: 999,
+            fontSize: 13,
+            color: x.on ? C.text : C.textSec,
+            background: x.on ? tint(C.brand, 0.16) : "transparent",
+            border: `1px solid ${x.on ? C.brand : C.border}`,
+            fontWeight: x.on ? 700 : 500,
             textDecoration: "none",
             whiteSpace: "nowrap",
           }}
@@ -140,7 +188,12 @@ export function Shell({
   const screen = NAV.find((n) => n.href === path)?.label ?? "";
   // The Cards page is the business head's view, not the CEO's office (review finding 15).
   const isCards = path === `${BASE}/cards`;
-  const title = isCards ? "Cards — business view" : `Customer pulse — ${view}`;
+  const title = isCards ? "Cards — business view" : view;
+  // One line under the title on the pulse home; the other screens open with their own heading.
+  const subtitle =
+    path === BASE
+      ? "The pulse first, then what needs you this week, business by business."
+      : null;
   const initials = isCards ? "HC" : sel.v === "cx" ? "CX" : "CO";
   return (
     <div
@@ -180,79 +233,47 @@ export function Shell({
           );
         })}
         <div className="ind-rail-fill" />
-        <ThemeToggle />
         <div className="ind-rail-me" title={isCards ? "Head of Cards" : view}>
           {initials}
         </div>
       </aside>
 
       <div style={{ minWidth: 0, display: "flex", flexDirection: "column" }}>
-        <header style={{ padding: "16px 22px 0" }}>
+        {/* Header as on the HDFC pulse: a thin top bar (bank · screen · data freeze, window on the right), then the
+            page title, one line under it, and the view and business choices. */}
+        <header>
           <div
+            className="lisn-header"
             style={{
+              position: "sticky",
+              top: 0,
+              zIndex: 10,
+              background: C.header,
+              backdropFilter: "blur(6px)",
+              borderBottom: `1px solid ${C.border}`,
+              padding: "10px 20px",
               display: "flex",
-              alignItems: "flex-start",
-              justifyContent: "space-between",
-              gap: 12,
+              alignItems: "center",
+              gap: 14,
               flexWrap: "wrap",
             }}
           >
-            <div style={{ minWidth: 0 }}>
-              <h1
-                style={{
-                  margin: 0,
-                  fontSize: 21,
-                  fontWeight: 900,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                {title}
-              </h1>
-              <div style={{ fontSize: 12.5, color: C.textMut, marginTop: 2 }}>
-                {common.bank} · {screen}
-              </div>
-            </div>
             <div
               style={{
-                display: "flex",
-                gap: 8,
-                alignItems: "center",
-                flexWrap: "wrap",
+                fontSize: 14,
+                color: C.textSec,
+                lineHeight: 1.4,
+                flex: "1 1 360px",
+                minWidth: 0,
               }}
             >
-              <div
-                data-testid="freeze"
-                style={{
-                  fontSize: 11,
-                  fontWeight: 700,
-                  color: C.textSec,
-                  background: C.cardAlt,
-                  border: `1px solid ${C.border}`,
-                  borderRadius: 999,
-                  padding: "5px 11px",
-                  whiteSpace: "nowrap",
-                  display: "flex",
-                  gap: 8,
-                }}
-              >
-                <span>
-                  Data freeze {common.freeze}
-                  {common.freeze_provisional ? " (provisional)" : ""}
-                </span>
-              </div>
+              <strong style={{ color: C.text }}>{common.bank}</strong> ·{" "}
+              {screen} ·{" "}
+              <span data-testid="freeze">Data freeze {common.freeze}</span>
             </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 8,
-              alignItems: "center",
-              flexWrap: "wrap",
-              marginTop: 12,
-            }}
-          >
             {controls.view ? (
               <Segmented
+                variant="switch"
                 label="View"
                 items={common.views.map((x) => ({
                   href: hrefWith(path, sel, { v: x.id }),
@@ -271,39 +292,61 @@ export function Shell({
                 }))}
               />
             ) : null}
-            {controls.business ? (
-              <Segmented
-                label="Business"
-                items={common.businesses.map((x) => ({
-                  href: hrefWith(path, sel, { b: x.id }),
-                  label: x.label,
-                  on: sel.b === x.id,
-                }))}
-              />
-            ) : null}
+            <ThemeToggle />
           </div>
           <div
-            data-testid="watermark"
             style={{
-              fontSize: 11.5,
-              color: C.amber,
-              background: tint(C.amber, 0.08),
-              border: `1px solid ${tint(C.amber, 0.25)}`,
-              borderRadius: 8,
-              textAlign: "center",
-              padding: "3px 12px",
-              marginTop: 12,
-              letterSpacing: "0.02em",
+              padding: "18px 22px 0",
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              gap: 12,
+              flexWrap: "wrap",
             }}
           >
-            {common.watermark}
+            <div style={{ minWidth: 0 }}>
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: 26,
+                  fontWeight: 800,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                {title}
+              </h1>
+              {subtitle ? (
+                <div style={{ fontSize: 14, color: C.textSec, marginTop: 4 }}>
+                  {subtitle}
+                </div>
+              ) : null}
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: 8,
+                alignItems: "center",
+                flexWrap: "wrap",
+              }}
+            >
+              {controls.business ? (
+                <Segmented
+                  label="Business"
+                  items={common.businesses.map((x) => ({
+                    href: hrefWith(path, sel, { b: x.id }),
+                    label: x.label,
+                    on: sel.b === x.id,
+                  }))}
+                />
+              ) : null}
+            </div>
           </div>
         </header>
 
         <main
           style={{
+            // Full width, like the header: no strip left empty on wide screens (reviewer, 5 Oct).
             width: "100%",
-            maxWidth: 1400,
             // Ask LisN sits in the title bar, so nothing floats over the page.
             padding: "14px 22px 28px",
             display: "flex",
