@@ -416,18 +416,8 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
           `Outside, ${s.win.outside.period}`,
           "Top theme",
           "Money line",
-          "",
         ]}
-        align={[
-          "left",
-          "right",
-          "right",
-          "right",
-          "left",
-          "left",
-          "left",
-          "left",
-        ]}
+        align={["left", "right", "right", "right", "left", "left", "left"]}
         rows={s.win.rows.map((r) => ({
           key: r.id,
           muted: r.next,
@@ -490,21 +480,6 @@ function ByBusiness({ s, sel }: { s: HomeSlice; sel: Sel }) {
                 </span>
               ))}
             </div>,
-            r.outside_only ? (
-              ""
-            ) : r.next ? (
-              <span key="x" style={{ color: C.textMut, fontSize: 12.5 }}>
-                Next
-              </span>
-            ) : r.module ? (
-              <OpenLink key="x" href={hrefWith(r.module, sel, { b: "all" })}>
-                Open
-              </OpenLink>
-            ) : (
-              <span key="x" style={{ color: C.textMut, fontSize: 12.5 }}>
-                Module next
-              </span>
-            ),
           ],
         }))}
       />

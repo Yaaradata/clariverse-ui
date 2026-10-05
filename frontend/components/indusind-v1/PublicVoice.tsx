@@ -140,7 +140,8 @@ export function OutsideMeter({
   before?: { to: string; items: FigT } | null;
   caption?: string;
 }) {
-  const max = Math.max(...v.by_source.map((s) => s.share ?? 0), 1);
+  const sources = v.by_source.filter((s) => !s.id.includes(":illustrative:"));
+  const max = Math.max(...sources.map((s) => s.share ?? 0), 1);
   const t = trend ? trendPoints(trend) : null;
   return (
     <div
@@ -175,7 +176,7 @@ export function OutsideMeter({
       {v.negative ? <Stat label="Negative share" f={v.negative} /> : null}
       <div>
         <Label>By source</Label>
-        {v.by_source.map((s) => (
+        {sources.map((s) => (
           <ShareBar
             key={s.id}
             label={s.label}
