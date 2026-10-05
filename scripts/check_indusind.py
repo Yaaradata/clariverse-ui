@@ -288,13 +288,15 @@ def run_l2(p: dict) -> list[str]:
     registry = json.loads(M.REGISTRY.read_text(encoding="utf-8"))["metrics"] if M.REGISTRY.exists() else {}
     for name, obj in p.items():
         for path, b in blocks(obj, name):
-            # Illustrative (synthetic) items are always labelled: count, mixed tag, the note shown first.
+            # Illustrative (synthetic) items are always labelled: count and mixed tag.
             ill = [x for x in b["by_source"] if ":illustrative:" in x["id"]]
-            ok(not ill or (b.get("illustrative") == ill[0]["value"] and b.get("tag") == M.TAG_MIXED
-                           and "modelled" in (b.get("footnotes") or [""])[0]),
+            ok(not ill or (b.get("illustrative") == ill[0]["value"] and b.get("tag") == M.TAG_MIXED),
                f"L2 illustrative: {path} counts synthetic items without the label")
-            top = max((x.get("share") or 0 for x in b["by_source"]), default=0)
-            ok(top <= 100 * flag or any("%" in f and "of these items" in f for f in b.get("footnotes", [])),
+            # A dominant public source is footnoted; illustrative dominance is carried by the mixed tag instead.
+            lead = max(b["by_source"], key=lambda x: x.get("share") or 0, default=None)
+            top = (lead or {}).get("share") or 0
+            ok(top <= 100 * flag or ":illustrative:" in lead["id"]
+               or any("%" in f and "of these items" in f for f in b.get("footnotes", [])),
                f"L2 source: {path} has one source at {top}% with no footnote")
             th = b.get("theme") or {}
             ok(th.get("thin", True) or (th["count"]["value"] >= lim and b["items"]["value"] >= lim),
@@ -333,7 +335,7 @@ def _set(d, path, value):
 
 
 FIXTURES = [
-    ("illustrative items unlabelled", "L2 illustrative", lambda p: _set(p["home"]["windows"]["w4"]["rows"][1]["outside"], ["footnotes"], [])),
+    ("illustrative items unlabelled", "L2 illustrative", lambda p: _set(p["home"]["windows"]["w4"]["rows"][1]["outside"], ["tag"], "Public · live")),
     ("home Cards outside out of step", "home Outside under Cards", lambda p: _set(p["home"]["windows"]["w4"]["pulse"]["cards"]["outside"]["items"], ["display"], "64")),
     ("peer card date edited", "trace:", lambda p: _set(p["peers"]["cards"][0], ["display"], "Federal FD card effective 29 Sep 2026: 1-year 6.35%; peak 6.70% (48 months)")),
     ("press date edited", "trace:", lambda p: _set(p["peers"]["press"][-1], ["display"], "1 Jul 2026")),

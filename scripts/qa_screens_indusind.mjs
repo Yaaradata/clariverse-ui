@@ -41,7 +41,6 @@ for (const s of SIZES) {
     await p.waitForTimeout(400);
     const info = await p.evaluate(() => ({
       sw: document.documentElement.scrollWidth,
-      watermark: !!document.querySelector('[data-testid="watermark"]'),
       tiles: document.querySelectorAll('[data-testid="signal-tile"]').length,
     }));
     await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
@@ -63,7 +62,7 @@ for (const s of SIZES) {
 }
 await b.close();
 fs.writeFileSync(`${outDir}/report.json`, JSON.stringify(report, null, 1));
-const bad = report.filter((x) => x.status !== 200 || x.sw > Number(x.size.split("@")[0]) || !x.watermark || x.askBarClear === false || x.errs.length);
-for (const x of bad) console.log(`FAIL ${x.size} ${x.name}: status ${x.status}, scrollWidth ${x.sw}, watermark ${x.watermark}, ask bar clear ${x.askBarClear}, errors ${x.errs.length}`);
+const bad = report.filter((x) => x.status !== 200 || x.sw > Number(x.size.split("@")[0]) || x.askBarClear === false || x.errs.length);
+for (const x of bad) console.log(`FAIL ${x.size} ${x.name}: status ${x.status}, scrollWidth ${x.sw}, ask bar clear ${x.askBarClear}, errors ${x.errs.length}`);
 console.log(`Screenshots: ${report.length} (${jobs.length} screens × ${SIZES.length} sizes); problems: ${bad.length}`);
 process.exit(bad.length ? 1 : 0);

@@ -6,11 +6,7 @@ import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
 import { HDFC_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/hdfcBankIndustry";
-import {
-  INDUSIND_BANK_INDUSTRY_ID,
-  INDUSIND_PULSE_ROLE_HREF,
-  INDUSIND_WATERMARK,
-} from "@/lib/role-based-dashboard/indusindBankIndustry";
+import { INDUSIND_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/indusindBankIndustry";
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
 const accent = "#5332FF";
@@ -103,14 +99,6 @@ export default function RoleBasedIndustryRolesPage({ params }: PageProps) {
         <div>
           <h1 style={{ fontSize: 30, fontWeight: 800, color: text, margin: 0 }}>{industry.name}</h1>
           <p style={{ fontSize: 15, color: textMut, margin: "4px 0 0" }}>Select your role</p>
-          {industry.id === INDUSIND_BANK_INDUSTRY_ID ? (
-            <p
-              data-testid="watermark"
-              style={{ fontSize: 12, color: "#f59e0b", margin: "8px 0 0", letterSpacing: "0.02em" }}
-            >
-              {INDUSIND_WATERMARK}
-            </p>
-          ) : null}
         </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 320px), 1fr))", gap: 14 }}>

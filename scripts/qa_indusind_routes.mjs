@@ -1,6 +1,6 @@
 // IndusInd route checks over EVERY route under /role-based/indusind_bank, linked or not (review finding 1, IV-47).
 // Routes come from the route files (scripts/indusind_route_checks.mjs: enumerateRoutes); links found on the pages
-// are followed as well. For each route it records status (after redirects), the final URL, X-Robots-Tag, watermark,
+// are followed as well. For each route it records status (after redirects), the final URL, X-Robots-Tag,
 // footer, the rendered-page grep, other clients' names in the page or the JS it loads (DEC-7), and links that leave
 // the IndusInd pages. Each page's visible text goes to qa/_crawl/pages.json (gitignored) for the lint and PII scans.
 // Exits 1 on any failure.

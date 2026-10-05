@@ -5,7 +5,7 @@
   "url": "/role-based/indusind_bank",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": null,
   "errs": []
@@ -16,7 +16,7 @@
   "url": "/role-based/indusind_bank/customer-pulse",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -27,7 +27,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -38,7 +38,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/deposits",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -49,7 +49,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/deposits?v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -60,7 +60,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/peers",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -71,7 +71,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/peers?v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -82,7 +82,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/risk",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -93,7 +93,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/risk?v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -104,7 +104,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/cards",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -115,7 +115,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/cards?v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -126,7 +126,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/approvals",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -137,7 +137,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/approvals?v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -148,7 +148,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?b=cards",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -159,7 +159,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?b=cards&v=cx",
   "status": 200,
   "sw": 1440,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -170,7 +170,7 @@
   "url": "/role-based/indusind_bank",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": null,
   "errs": []
@@ -181,7 +181,7 @@
   "url": "/role-based/indusind_bank/customer-pulse",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -192,7 +192,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -203,7 +203,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/deposits",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -214,7 +214,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/deposits?v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -225,7 +225,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/peers",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -236,7 +236,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/peers?v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -247,7 +247,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/risk",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -258,7 +258,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/risk?v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -269,7 +269,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/cards",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -280,7 +280,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/cards?v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -291,7 +291,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/approvals",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -302,7 +302,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/approvals?v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -313,7 +313,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?b=cards",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -324,7 +324,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?b=cards&v=cx",
   "status": 200,
   "sw": 390,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -335,7 +335,7 @@
   "url": "/role-based/indusind_bank",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": null,
   "errs": []
@@ -346,7 +346,7 @@
   "url": "/role-based/indusind_bank/customer-pulse",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -357,7 +357,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -368,7 +368,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/deposits",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -379,7 +379,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/deposits?v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -390,7 +390,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/peers",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -401,7 +401,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/peers?v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -412,7 +412,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/risk",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -423,7 +423,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/risk?v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -434,7 +434,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/cards",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -445,7 +445,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/cards?v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -456,7 +456,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/approvals",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -467,7 +467,7 @@
   "url": "/role-based/indusind_bank/customer-pulse/approvals?v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 0,
   "askBarClear": true,
   "errs": []
@@ -478,7 +478,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?b=cards",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []
@@ -489,7 +489,7 @@
   "url": "/role-based/indusind_bank/customer-pulse?b=cards&v=cx",
   "status": 200,
   "sw": 1536,
-  "watermark": true,
+  "watermark": false,
   "tiles": 4,
   "askBarClear": true,
   "errs": []

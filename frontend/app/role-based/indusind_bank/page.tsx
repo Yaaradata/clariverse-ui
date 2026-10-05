@@ -8,7 +8,6 @@ import {
   INDUSIND_BANK_NAME,
   INDUSIND_PULSE_ROLE_HREF,
   INDUSIND_ROLE_COPY,
-  INDUSIND_WATERMARK,
 } from "@/lib/role-based-dashboard/indusindBankIndustry";
 
 export const dynamic = "force-dynamic";
@@ -85,17 +84,6 @@ export default function IndusIndRolePage() {
             </h1>
             <p style={{ fontSize: 15, color: "#b9b9ba", margin: "4px 0 0" }}>
               Select your role
-            </p>
-            <p
-              data-testid="watermark"
-              style={{
-                fontSize: 12,
-                color: "#f59e0b",
-                margin: "8px 0 0",
-                letterSpacing: "0.02em",
-              }}
-            >
-              {INDUSIND_WATERMARK}
             </p>
           </div>
         </div>

@@ -38,5 +38,5 @@ fi
 "$PY" scripts/check_pii.py
 "$PY" scripts/test_check_pii.py
 "$PY" scripts/test_checks.py
-# IndusInd route-check fixtures (no browser): an unlinked route without a watermark must fail, and so on.
+# IndusInd route-check fixtures (no browser): an unlinked route without a footer must fail, and so on.
 node scripts/test_qa_indusind_routes.mjs

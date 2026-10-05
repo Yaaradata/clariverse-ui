@@ -33,7 +33,6 @@ import {
   OpenLink,
   Pending,
   SourceTag,
-  tint,
   voiceLayers,
 } from "./primitives";
 
@@ -272,17 +271,6 @@ function Drawer({
           >
             <X size={20} />
           </button>
-        </div>
-        <div
-          style={{
-            fontSize: 11.5,
-            color: C.amber,
-            background: tint(C.amber, 0.08),
-            borderRadius: 6,
-            padding: "3px 8px",
-          }}
-        >
-          {common.watermark}
         </div>
 
         <Section n={1} title="What moved">

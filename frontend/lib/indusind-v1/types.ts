@@ -148,7 +148,6 @@ export type Common = {
   default_window: WindowId;
   views: { id: ViewId; label: string }[];
   businesses: { id: string; label: string }[];
-  watermark: string;
   footer: string;
   pulse_caption: string;
   pending: string;

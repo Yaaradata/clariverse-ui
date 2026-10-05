@@ -215,7 +215,6 @@ horizon:
   - {id: N39, label: DPDP main obligations}
 
 copy:
-  watermark: "Demonstration · public and modelled data plus illustrative internal data · not IndusInd Bank MIS"
   footer: "Every action is a recommendation routed to its owner; LisN does not execute, authorise or decide. Designed to run inside the bank, on the bank's approved models. Public figures from bank and peer disclosures as of their Q1 FY27 releases (IndusInd 22 Jul 2026), verified 2 Oct 2026; internal figures illustrative until discovery. Data frozen {freeze}."
   pulse_caption: "Public voice skews to people who post. Counts, not incidence. Inside figures illustrative until discovery."
   not_loaded: "Public data not yet loaded"

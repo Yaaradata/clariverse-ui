@@ -12,7 +12,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 export const ROOT = "/role-based/indusind_bank";
-export const WATERMARK = "not IndusInd Bank MIS";
 export const FOOTER = "LisN does not execute, authorise or decide";
 
 export const GREP = {
@@ -94,7 +93,6 @@ export function checkRoute(rec, opts = {}) {
   if (rec.status !== 200) problems.push(`status ${rec.status}`);
   if (!(rec.final ?? "").startsWith(ROOT)) problems.push(`left the IndusInd pages for ${rec.final}`);
   if (!rec.robots || !/noindex/.test(rec.robots)) problems.push("no noindex header");
-  if (!(rec.text ?? "").includes(WATERMARK)) problems.push("no watermark");
   if (opts.footer && !(rec.text ?? "").includes(FOOTER)) problems.push("no footer");
   const hits = {};
   for (const [k, rx] of Object.entries(GREP)) {

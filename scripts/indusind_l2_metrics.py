@@ -166,13 +166,8 @@ def source_note(xs: list[dict]) -> tuple[str | None, list[dict]]:
     return note, [{"source": s, "label": SOURCE_LABEL[s], "count": v, "share": pct(v, n)} for s, v in c.most_common()]
 
 
-def ill_note(xs: list[dict]) -> str | None:
-    k = sum(i["source"] == "illustrative" for i in xs)
-    return f"{pct(k, len(xs))}% of these items are modelled." if k else None
-
-
 def mark(block: dict, xs: list[dict]) -> dict:
-    """A block that counts illustrative items says so: the count, the mixed tag on every figure, the note first."""
+    """A block that counts illustrative items says so: the count and the mixed tag on every figure."""
     k = sum(i["source"] == "illustrative" for i in xs)
     block["illustrative"] = k
     if not k:
@@ -188,7 +183,7 @@ def mark(block: dict, xs: list[dict]) -> dict:
             for v in o:
                 walk(v)
     walk(block)
-    block["footnotes"] = [ill_note(xs), *[f for f in block.get("footnotes", []) if f]]
+    block["footnotes"] = [f for f in block.get("footnotes", []) if f]
     return block
 
 

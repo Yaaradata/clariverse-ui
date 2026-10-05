@@ -271,7 +271,6 @@ def common() -> dict:
         "windows": [{"id": w["id"], "label": w["label"]} for w in CONFIG["windows"]], "default_window": CONFIG["default_window"],
         "views": CONFIG["views"],
         "businesses": [{"id": "all", "label": "All"}] + [{"id": b["id"], "label": b["label"]} for b in CONFIG["businesses"] if b["id"] in CONFIG["business_filter"]],
-        "watermark": c["watermark"],
         # IND-D1 carries the disclosure date; until then the clause reads "as of a date pending verification".
         "footer": c["footer"].format(freeze=ftime(FREEZE)),
         "pulse_caption": c["pulse_caption"],

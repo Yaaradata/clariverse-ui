@@ -1,10 +1,6 @@
 /** Canonical IndusInd Bank industry id — isolated from registry.tsx to avoid circular imports. */
 export const INDUSIND_BANK_INDUSTRY_ID = "indusind_bank" as const;
 
-/** On every IndusInd screen, the role page included (IND-B4 §1). */
-export const INDUSIND_WATERMARK =
-  "Demonstration · public and modelled data plus illustrative internal data · not IndusInd Bank MIS";
-
 /** LisN Customer pulse roles: each opens the customer-pulse screens in its view (CEO's office or Head of CX). */
 export const INDUSIND_CEO_OFFICE_ROLE_ID = "indusind_ceo_office" as const;
 export const INDUSIND_HEAD_CX_ROLE_ID = "indusind_head_cx" as const;
