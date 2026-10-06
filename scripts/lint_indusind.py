@@ -334,6 +334,9 @@ def run() -> tuple[list[str], int]:
         CRAWLED_ROUTES = len(json.loads(crawl.read_text(encoding="utf-8")))
         for page in json.loads(crawl.read_text(encoding="utf-8")):
             for line in page["text"].splitlines():
+                # The role page's "V1" and "V2" version tags are shown by request (IV-66, IV-68); it is the only place it is allowed.
+                if page["route"].split("?")[0] == "/role-based/indusind_bank":
+                    line = re.sub(r"\bV[12]\b", "", line)
                 if line.strip():
                     hits += text_rules(line, f"route {page['route']}", flags, local)
             scanned += 1

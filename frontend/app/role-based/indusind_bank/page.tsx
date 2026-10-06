@@ -6,7 +6,13 @@ import { loadPage } from "@/lib/indusind-v1/load";
 import type { Common } from "@/lib/indusind-v1/types";
 import {
   INDUSIND_BANK_NAME,
+  INDUSIND_EARLIER_CARDS_COPY,
+  INDUSIND_EARLIER_CARDS_HREF,
   INDUSIND_PULSE_ROLE_HREF,
+  INDUSIND_PULSE_V2_COPY,
+  INDUSIND_PULSE_V2_HREF,
+  INDUSIND_PULSE_V2_VERSION,
+  INDUSIND_PULSE_VERSION,
   INDUSIND_ROLE_COPY,
 } from "@/lib/role-based-dashboard/indusindBankIndustry";
 
@@ -95,12 +101,32 @@ export default function IndusIndRolePage() {
             gap: 14,
           }}
         >
-          {INDUSIND_ROLE_COPY.map((role, i) => {
-            const Icon = ICONS[i] ?? Landmark;
+          {[
+            // The customer-pulse roles carry the V1 tag, pulse V2 (the HDFC pulse V2 clone) the V2 tag; the earlier Head of
+            // Cards demo is listed beside them.
+            ...INDUSIND_ROLE_COPY.map((role, i) => ({
+              ...role,
+              href: INDUSIND_PULSE_ROLE_HREF[role.id],
+              Icon: ICONS[i] ?? Landmark,
+              version: INDUSIND_PULSE_VERSION as string | null,
+            })),
+            {
+              ...INDUSIND_PULSE_V2_COPY,
+              href: INDUSIND_PULSE_V2_HREF,
+              Icon: Landmark,
+              version: INDUSIND_PULSE_V2_VERSION as string | null,
+            },
+            {
+              ...INDUSIND_EARLIER_CARDS_COPY,
+              href: INDUSIND_EARLIER_CARDS_HREF,
+              Icon: CreditCard,
+              version: null,
+            },
+          ].map(({ Icon, ...role }) => {
             return (
               <Link
                 key={role.id}
-                href={INDUSIND_PULSE_ROLE_HREF[role.id]}
+                href={role.href}
                 style={{
                   background: "#1a1a1a",
                   border: "1px solid #2a2a2a",
@@ -129,9 +155,33 @@ export default function IndusIndRolePage() {
                 </div>
                 <div style={{ flex: 1 }}>
                   <div
-                    style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 700,
+                      marginBottom: 4,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                    }}
                   >
                     {role.name}
+                    {role.version ? (
+                      <span
+                        data-testid="version-tag"
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 800,
+                          letterSpacing: "0.04em",
+                          padding: "2px 7px",
+                          borderRadius: 6,
+                          color: accent,
+                          background: `${accent}1f`,
+                          border: `1px solid ${accent}40`,
+                        }}
+                      >
+                        {role.version}
+                      </span>
+                    ) : null}
                   </div>
                   <div
                     style={{ fontSize: 15, color: "#e8e9e9", lineHeight: 1.55 }}

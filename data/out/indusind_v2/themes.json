@@ -1,0 +1,9664 @@
+{
+ "scope": "indusind_bank · on_topic · window",
+ "total_items": 9120,
+ "basis_items": 4123,
+ "weeks": [
+  "2026-06-29",
+  "2026-07-06",
+  "2026-07-13",
+  "2026-07-20",
+  "2026-07-27",
+  "2026-08-03",
+  "2026-08-10",
+  "2026-08-17",
+  "2026-08-24",
+  "2026-08-31",
+  "2026-09-07",
+  "2026-09-14",
+  "2026-09-21"
+ ],
+ "themes": [
+  {
+   "id": "app_praise",
+   "label": "Where customers praise us: quick, easy app journeys",
+   "group": "App and digital",
+   "pillar": "experience",
+   "owner": "digital",
+   "owner_label": "Digital",
+   "business": "retail_banking",
+   "definition": "Positive app reviews: easy, fast, useful, smooth.",
+   "count": 2669,
+   "count_group_companies": 0,
+   "primary_count": 2669,
+   "by_source": {
+    "playstore": 2626,
+    "appstore": 43
+   },
+   "by_business": {
+    "sme_merchant": 359,
+    "corporate": 36,
+    "payments": 49,
+    "retail_banking": 2214,
+    "loans": 1,
+    "cards": 10
+   },
+   "sentiment": {
+    "positive": 2669,
+    "neutral": 0,
+    "negative": 0
+   },
+   "share_negative": 0.0,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 2,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 28,
+     "share": 12.77
+    },
+    {
+     "week": "2026-07-06",
+     "count": 29,
+     "share": 10.85
+    },
+    {
+     "week": "2026-07-13",
+     "count": 33,
+     "share": 10.91
+    },
+    {
+     "week": "2026-07-20",
+     "count": 22,
+     "share": 11.93
+    },
+    {
+     "week": "2026-07-27",
+     "count": 33,
+     "share": 11.65
+    },
+    {
+     "week": "2026-08-03",
+     "count": 42,
+     "share": 11.12
+    },
+    {
+     "week": "2026-08-10",
+     "count": 26,
+     "share": 11.05
+    },
+    {
+     "week": "2026-08-17",
+     "count": 51,
+     "share": 13.91
+    },
+    {
+     "week": "2026-08-24",
+     "count": 26,
+     "share": 11.63
+    },
+    {
+     "week": "2026-08-31",
+     "count": 35,
+     "share": 10.48
+    },
+    {
+     "week": "2026-09-07",
+     "count": 39,
+     "share": 8.42
+    },
+    {
+     "week": "2026-09-14",
+     "count": 44,
+     "share": 10.85
+    },
+    {
+     "week": "2026-09-21",
+     "count": 28,
+     "share": 8.46
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 30
+    },
+    {
+     "week": "2026-07-06",
+     "count": 32
+    },
+    {
+     "week": "2026-07-13",
+     "count": 36
+    },
+    {
+     "week": "2026-07-20",
+     "count": 25
+    },
+    {
+     "week": "2026-07-27",
+     "count": 40
+    },
+    {
+     "week": "2026-08-03",
+     "count": 46
+    },
+    {
+     "week": "2026-08-10",
+     "count": 330
+    },
+    {
+     "week": "2026-08-17",
+     "count": 335
+    },
+    {
+     "week": "2026-08-24",
+     "count": 321
+    },
+    {
+     "week": "2026-08-31",
+     "count": 374
+    },
+    {
+     "week": "2026-09-07",
+     "count": 355
+    },
+    {
+     "week": "2026-09-14",
+     "count": 359
+    },
+    {
+     "week": "2026-09-21",
+     "count": 339
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 209,
+    "second_half": 229,
+    "first_share": 10.76,
+    "second_share": 10.81,
+    "change_pct": 0.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 16.4,
+   "rise_pct": null,
+   "first_seen": "2026-07-01T10:32:07+05:30",
+   "latest": "2026-09-28T23:49:57+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "playstore:0504cfa9-427c-4ff1-be80-c06b1ed92610",
+    "playstore:d9659752-3ee2-4b9f-b0f6-97ab7d5ac8d3",
+    "appstore:14397950507",
+    "appstore:14393428911"
+   ],
+   "last_day_count": 47,
+   "score": 0,
+   "status": "improving",
+   "action": "Monitor"
+  },
+  {
+   "id": "general_dissatisfaction",
+   "label": "General dissatisfaction",
+   "group": "Other",
+   "pillar": "experience",
+   "owner": "cx",
+   "owner_label": "CX",
+   "business": "retail_banking",
+   "definition": "Negative without a specific issue: 'worst bank', 'pathetic service'.",
+   "count": 1299,
+   "count_group_companies": 0,
+   "primary_count": 1299,
+   "by_source": {
+    "playstore": 957,
+    "appstore": 51,
+    "x": 170,
+    "reddit": 85,
+    "forum": 36
+   },
+   "by_business": {
+    "sme_merchant": 149,
+    "retail_banking": 949,
+    "payments": 37,
+    "corporate": 5,
+    "loans": 11,
+    "cards": 148
+   },
+   "sentiment": {
+    "positive": 0,
+    "neutral": 0,
+    "negative": 1299
+   },
+   "share_negative": 100.0,
+   "escalation_count": 27,
+   "share_escalation": 2.1,
+   "repeat_count": 38,
+   "status_seeking_count": 16,
+   "promise_break_count": 44,
+   "closure_intent_count": 3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 24,
+     "share": 12.89
+    },
+    {
+     "week": "2026-07-06",
+     "count": 27,
+     "share": 9.58
+    },
+    {
+     "week": "2026-07-13",
+     "count": 16,
+     "share": 6.87
+    },
+    {
+     "week": "2026-07-20",
+     "count": 54,
+     "share": 18.35
+    },
+    {
+     "week": "2026-07-27",
+     "count": 37,
+     "share": 12.46
+    },
+    {
+     "week": "2026-08-03",
+     "count": 48,
+     "share": 11.99
+    },
+    {
+     "week": "2026-08-10",
+     "count": 27,
+     "share": 10.54
+    },
+    {
+     "week": "2026-08-17",
+     "count": 51,
+     "share": 10.76
+    },
+    {
+     "week": "2026-08-24",
+     "count": 22,
+     "share": 9.61
+    },
+    {
+     "week": "2026-08-31",
+     "count": 34,
+     "share": 12.62
+    },
+    {
+     "week": "2026-09-07",
+     "count": 29,
+     "share": 8.2
+    },
+    {
+     "week": "2026-09-14",
+     "count": 29,
+     "share": 10.41
+    },
+    {
+     "week": "2026-09-21",
+     "count": 65,
+     "share": 10.58
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 24
+    },
+    {
+     "week": "2026-07-06",
+     "count": 33
+    },
+    {
+     "week": "2026-07-13",
+     "count": 20
+    },
+    {
+     "week": "2026-07-20",
+     "count": 56
+    },
+    {
+     "week": "2026-07-27",
+     "count": 41
+    },
+    {
+     "week": "2026-08-03",
+     "count": 51
+    },
+    {
+     "week": "2026-08-10",
+     "count": 107
+    },
+    {
+     "week": "2026-08-17",
+     "count": 127
+    },
+    {
+     "week": "2026-08-24",
+     "count": 163
+    },
+    {
+     "week": "2026-08-31",
+     "count": 206
+    },
+    {
+     "week": "2026-09-07",
+     "count": 170
+    },
+    {
+     "week": "2026-09-14",
+     "count": 134
+    },
+    {
+     "week": "2026-09-21",
+     "count": 126
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 225,
+    "second_half": 270,
+    "first_share": 11.74,
+    "second_share": 12.03,
+    "change_pct": 2.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 38.1,
+   "rise_pct": null,
+   "first_seen": "2026-07-01T13:20:01+05:30",
+   "latest": "2026-09-28T23:57:38+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2082753673437098417",
+    "reddit:1vsltpt",
+    "x:2083486393993478394",
+    "reddit:comment:oz7eicq",
+    "playstore:696a45d5-ee44-468a-94d0-376ab3df24d5"
+   ],
+   "last_day_count": 41,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "app_speed_crash",
+   "label": "App speed, loading and crashes",
+   "group": "App and digital",
+   "pillar": "availability",
+   "owner": "digital",
+   "owner_label": "Digital",
+   "business": "retail_banking",
+   "definition": "App is slow, will not open, freezes, crashes or shows 'something went wrong'.",
+   "count": 1241,
+   "count_group_companies": 0,
+   "primary_count": 749,
+   "by_source": {
+    "playstore": 1104,
+    "appstore": 109,
+    "x": 15,
+    "reddit": 10,
+    "forum": 3
+   },
+   "by_business": {
+    "sme_merchant": 111,
+    "payments": 31,
+    "retail_banking": 1008,
+    "corporate": 1,
+    "cards": 81,
+    "loans": 9
+   },
+   "sentiment": {
+    "positive": 49,
+    "neutral": 54,
+    "negative": 1138
+   },
+   "share_negative": 91.7,
+   "escalation_count": 8,
+   "share_escalation": 0.6,
+   "repeat_count": 113,
+   "status_seeking_count": 20,
+   "promise_break_count": 105,
+   "closure_intent_count": 11,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 6,
+     "share": 2.74
+    },
+    {
+     "week": "2026-07-06",
+     "count": 11,
+     "share": 4.67
+    },
+    {
+     "week": "2026-07-13",
+     "count": 10,
+     "share": 4.17
+    },
+    {
+     "week": "2026-07-20",
+     "count": 4,
+     "share": 1.53
+    },
+    {
+     "week": "2026-07-27",
+     "count": 16,
+     "share": 4.8
+    },
+    {
+     "week": "2026-08-03",
+     "count": 76,
+     "share": 6.55
+    },
+    {
+     "week": "2026-08-10",
+     "count": 14,
+     "share": 4.22
+    },
+    {
+     "week": "2026-08-17",
+     "count": 15,
+     "share": 4.02
+    },
+    {
+     "week": "2026-08-24",
+     "count": 9,
+     "share": 4.53
+    },
+    {
+     "week": "2026-08-31",
+     "count": 15,
+     "share": 5.01
+    },
+    {
+     "week": "2026-09-07",
+     "count": 28,
+     "share": 5.66
+    },
+    {
+     "week": "2026-09-14",
+     "count": 15,
+     "share": 3.52
+    },
+    {
+     "week": "2026-09-21",
+     "count": 23,
+     "share": 6.35
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 7
+    },
+    {
+     "week": "2026-07-06",
+     "count": 12
+    },
+    {
+     "week": "2026-07-13",
+     "count": 13
+    },
+    {
+     "week": "2026-07-20",
+     "count": 5
+    },
+    {
+     "week": "2026-07-27",
+     "count": 20
+    },
+    {
+     "week": "2026-08-03",
+     "count": 77
+    },
+    {
+     "week": "2026-08-10",
+     "count": 74
+    },
+    {
+     "week": "2026-08-17",
+     "count": 113
+    },
+    {
+     "week": "2026-08-24",
+     "count": 173
+    },
+    {
+     "week": "2026-08-31",
+     "count": 260
+    },
+    {
+     "week": "2026-09-07",
+     "count": 216
+    },
+    {
+     "week": "2026-09-14",
+     "count": 146
+    },
+    {
+     "week": "2026-09-21",
+     "count": 117
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 135,
+    "second_half": 110,
+    "first_share": 5.38,
+    "second_share": 5.82,
+    "change_pct": 8.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 19.7,
+   "rise_pct": null,
+   "first_seen": "2026-07-01T22:43:13+05:30",
+   "latest": "2026-09-28T20:31:37+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "playstore:0674bc69-048c-4ca4-b7e2-c1832fff5fdf",
+    "playstore:2ae55a60-3f11-47c9-b8b1-7eb9bed0fb67",
+    "x:2084297274096787506",
+    "x:2084132618308821284",
+    "reddit:1wgrkgu"
+   ],
+   "last_day_count": 8,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "other",
+   "label": "Other",
+   "group": "Other",
+   "pillar": "experience",
+   "owner": "cx",
+   "owner_label": "CX",
+   "business": "retail_banking",
+   "definition": "Anything that fits no theme above.",
+   "count": 1006,
+   "count_group_companies": 0,
+   "primary_count": 1006,
+   "by_source": {
+    "playstore": 130,
+    "appstore": 3,
+    "x": 568,
+    "reddit": 246,
+    "forum": 59
+   },
+   "by_business": {
+    "sme_merchant": 15,
+    "payments": 8,
+    "retail_banking": 694,
+    "cards": 272,
+    "loans": 16,
+    "corporate": 1
+   },
+   "sentiment": {
+    "positive": 112,
+    "neutral": 894,
+    "negative": 0
+   },
+   "share_negative": 0.0,
+   "escalation_count": 41,
+   "share_escalation": 4.1,
+   "repeat_count": 7,
+   "status_seeking_count": 3,
+   "promise_break_count": 14,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 38,
+     "share": 21.91
+    },
+    {
+     "week": "2026-07-06",
+     "count": 65,
+     "share": 22.21
+    },
+    {
+     "week": "2026-07-13",
+     "count": 40,
+     "share": 25.29
+    },
+    {
+     "week": "2026-07-20",
+     "count": 117,
+     "share": 24.76
+    },
+    {
+     "week": "2026-07-27",
+     "count": 54,
+     "share": 27.16
+    },
+    {
+     "week": "2026-08-03",
+     "count": 54,
+     "share": 21.76
+    },
+    {
+     "week": "2026-08-10",
+     "count": 52,
+     "share": 18.87
+    },
+    {
+     "week": "2026-08-17",
+     "count": 80,
+     "share": 19.44
+    },
+    {
+     "week": "2026-08-24",
+     "count": 51,
+     "share": 20.6
+    },
+    {
+     "week": "2026-08-31",
+     "count": 38,
+     "share": 17.11
+    },
+    {
+     "week": "2026-09-07",
+     "count": 67,
+     "share": 25.71
+    },
+    {
+     "week": "2026-09-14",
+     "count": 39,
+     "share": 19.48
+    },
+    {
+     "week": "2026-09-21",
+     "count": 149,
+     "share": 23.46
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 38
+    },
+    {
+     "week": "2026-07-06",
+     "count": 65
+    },
+    {
+     "week": "2026-07-13",
+     "count": 40
+    },
+    {
+     "week": "2026-07-20",
+     "count": 117
+    },
+    {
+     "week": "2026-07-27",
+     "count": 54
+    },
+    {
+     "week": "2026-08-03",
+     "count": 55
+    },
+    {
+     "week": "2026-08-10",
+     "count": 70
+    },
+    {
+     "week": "2026-08-17",
+     "count": 98
+    },
+    {
+     "week": "2026-08-24",
+     "count": 68
+    },
+    {
+     "week": "2026-08-31",
+     "count": 55
+    },
+    {
+     "week": "2026-09-07",
+     "count": 79
+    },
+    {
+     "week": "2026-09-14",
+     "count": 56
+    },
+    {
+     "week": "2026-09-21",
+     "count": 162
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 409,
+    "second_half": 483,
+    "first_share": 23.18,
+    "second_share": 20.38,
+    "change_pct": -12.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 88.7,
+   "rise_pct": -12.1,
+   "first_seen": "2026-07-01T13:36:21+05:30",
+   "latest": "2026-09-28T21:41:04+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2083923600047063324",
+    "x:2072307180938948772",
+    "reddit:comment:pc4jkih",
+    "reddit:comment:pcc4tno",
+    "playstore:282e449a-3f9b-4759-be9d-956e2fe853b5"
+   ],
+   "last_day_count": 49,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "login_mpin",
+   "label": "Login, MPIN and registration",
+   "group": "App and digital",
+   "pillar": "availability",
+   "owner": "digital",
+   "owner_label": "Digital",
+   "business": "retail_banking",
+   "definition": "Cannot log in, register or verify; MPIN, password, OTP or SMS verification, device binding, forced re-registration.",
+   "count": 738,
+   "count_group_companies": 0,
+   "primary_count": 570,
+   "by_source": {
+    "playstore": 591,
+    "appstore": 61,
+    "x": 58,
+    "reddit": 17,
+    "forum": 11
+   },
+   "by_business": {
+    "corporate": 5,
+    "sme_merchant": 27,
+    "payments": 20,
+    "retail_banking": 579,
+    "cards": 95,
+    "loans": 10,
+    "wealth": 2
+   },
+   "sentiment": {
+    "positive": 12,
+    "neutral": 42,
+    "negative": 684
+   },
+   "share_negative": 92.7,
+   "escalation_count": 12,
+   "share_escalation": 1.6,
+   "repeat_count": 94,
+   "status_seeking_count": 15,
+   "promise_break_count": 67,
+   "closure_intent_count": 11,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 7,
+     "share": 2.59
+    },
+    {
+     "week": "2026-07-06",
+     "count": 5,
+     "share": 1.6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 8.05
+    },
+    {
+     "week": "2026-07-20",
+     "count": 9,
+     "share": 2.14
+    },
+    {
+     "week": "2026-07-27",
+     "count": 7,
+     "share": 5.45
+    },
+    {
+     "week": "2026-08-03",
+     "count": 43,
+     "share": 4.28
+    },
+    {
+     "week": "2026-08-10",
+     "count": 17,
+     "share": 5.54
+    },
+    {
+     "week": "2026-08-17",
+     "count": 13,
+     "share": 4.05
+    },
+    {
+     "week": "2026-08-24",
+     "count": 12,
+     "share": 4.81
+    },
+    {
+     "week": "2026-08-31",
+     "count": 14,
+     "share": 5.84
+    },
+    {
+     "week": "2026-09-07",
+     "count": 13,
+     "share": 3.46
+    },
+    {
+     "week": "2026-09-14",
+     "count": 5,
+     "share": 3.23
+    },
+    {
+     "week": "2026-09-21",
+     "count": 17,
+     "share": 2.34
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 8
+    },
+    {
+     "week": "2026-07-06",
+     "count": 5
+    },
+    {
+     "week": "2026-07-13",
+     "count": 4
+    },
+    {
+     "week": "2026-07-20",
+     "count": 10
+    },
+    {
+     "week": "2026-07-27",
+     "count": 9
+    },
+    {
+     "week": "2026-08-03",
+     "count": 44
+    },
+    {
+     "week": "2026-08-10",
+     "count": 71
+    },
+    {
+     "week": "2026-08-17",
+     "count": 89
+    },
+    {
+     "week": "2026-08-24",
+     "count": 105
+    },
+    {
+     "week": "2026-08-31",
+     "count": 145
+    },
+    {
+     "week": "2026-09-07",
+     "count": 104
+    },
+    {
+     "week": "2026-09-14",
+     "count": 75
+    },
+    {
+     "week": "2026-09-21",
+     "count": 54
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 87,
+    "second_half": 88,
+    "first_share": 3.67,
+    "second_share": 4.42,
+    "change_pct": 20.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 23.7,
+   "rise_pct": null,
+   "first_seen": "2026-07-01T18:30:03+05:30",
+   "latest": "2026-09-28T22:39:03+05:30",
+   "rung": "Repeat",
+   "exemplars": [
+    "x:2086789650753196471",
+    "playstore:0674bc69-048c-4ca4-b7e2-c1832fff5fdf",
+    "x:2086788802710999098",
+    "playstore:3ed14b2f-9460-445f-b648-b45534390726",
+    "reddit:1vyyxco"
+   ],
+   "last_day_count": 15,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "device_security_block",
+   "label": "Device security blocks and false alerts",
+   "group": "App and digital",
+   "pillar": "availability",
+   "owner": "digital",
+   "owner_label": "Digital",
+   "business": "retail_banking",
+   "definition": "App refuses to run or disables itself because of device checks: developer options, USB debugging, root, 'security violation', 'device not compatible', risky-app warnings.",
+   "count": 570,
+   "count_group_companies": 0,
+   "primary_count": 570,
+   "by_source": {
+    "playstore": 546,
+    "appstore": 20,
+    "x": 4
+   },
+   "by_business": {
+    "sme_merchant": 2,
+    "payments": 5,
+    "retail_banking": 533,
+    "cards": 25,
+    "loans": 5
+   },
+   "sentiment": {
+    "positive": 11,
+    "neutral": 15,
+    "negative": 544
+   },
+   "share_negative": 95.4,
+   "escalation_count": 2,
+   "share_escalation": 0.4,
+   "repeat_count": 52,
+   "status_seeking_count": 8,
+   "promise_break_count": 32,
+   "closure_intent_count": 10,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.17
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 21,
+     "share": 1.45
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.23
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.2
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 22
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 30
+    },
+    {
+     "week": "2026-08-24",
+     "count": 108
+    },
+    {
+     "week": "2026-08-31",
+     "count": 162
+    },
+    {
+     "week": "2026-09-07",
+     "count": 130
+    },
+    {
+     "week": "2026-09-14",
+     "count": 73
+    },
+    {
+     "week": "2026-09-21",
+     "count": 39
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 23,
+    "second_half": 3,
+    "first_share": 0.8,
+    "second_share": 0.13,
+    "change_pct": -84.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 4.6,
+   "rise_pct": null,
+   "first_seen": "2026-07-15T11:03:01+05:30",
+   "latest": "2026-09-28T14:21:20+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2084132618308821284",
+    "playstore:6596e375-a027-49b7-a30c-c2a938b11ace",
+    "playstore:7083a9c0-6dc8-49ec-a1b9-3f32ce6d1ffa",
+    "appstore:14380497398",
+    "appstore:14379840433"
+   ],
+   "last_day_count": 2,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "card_eligibility_upgrade",
+   "label": "Card eligibility, upgrade and LTF requests",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Eligibility criteria (Pioneer, Legend, Celesta), upgrade paths, lifetime-free requests, pre-approved offers.",
+   "count": 434,
+   "count_group_companies": 0,
+   "primary_count": 360,
+   "by_source": {
+    "playstore": 20,
+    "appstore": 5,
+    "x": 67,
+    "reddit": 271,
+    "forum": 71
+   },
+   "by_business": {
+    "sme_merchant": 3,
+    "payments": 7,
+    "cards": 396,
+    "retail_banking": 19,
+    "loans": 7,
+    "wealth": 2
+   },
+   "sentiment": {
+    "positive": 123,
+    "neutral": 162,
+    "negative": 149
+   },
+   "share_negative": 34.3,
+   "escalation_count": 16,
+   "share_escalation": 3.7,
+   "repeat_count": 6,
+   "status_seeking_count": 23,
+   "promise_break_count": 38,
+   "closure_intent_count": 18,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 18,
+     "share": 9.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 37,
+     "share": 14.08
+    },
+    {
+     "week": "2026-07-13",
+     "count": 17,
+     "share": 8.03
+    },
+    {
+     "week": "2026-07-20",
+     "count": 27,
+     "share": 8.14
+    },
+    {
+     "week": "2026-07-27",
+     "count": 29,
+     "share": 10.02
+    },
+    {
+     "week": "2026-08-03",
+     "count": 29,
+     "share": 14.11
+    },
+    {
+     "week": "2026-08-10",
+     "count": 34,
+     "share": 9.99
+    },
+    {
+     "week": "2026-08-17",
+     "count": 66,
+     "share": 12.58
+    },
+    {
+     "week": "2026-08-24",
+     "count": 41,
+     "share": 12.25
+    },
+    {
+     "week": "2026-08-31",
+     "count": 30,
+     "share": 11.21
+    },
+    {
+     "week": "2026-09-07",
+     "count": 26,
+     "share": 9.64
+    },
+    {
+     "week": "2026-09-14",
+     "count": 29,
+     "share": 9.71
+    },
+    {
+     "week": "2026-09-21",
+     "count": 30,
+     "share": 7.92
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 18
+    },
+    {
+     "week": "2026-07-06",
+     "count": 37
+    },
+    {
+     "week": "2026-07-13",
+     "count": 17
+    },
+    {
+     "week": "2026-07-20",
+     "count": 27
+    },
+    {
+     "week": "2026-07-27",
+     "count": 29
+    },
+    {
+     "week": "2026-08-03",
+     "count": 30
+    },
+    {
+     "week": "2026-08-10",
+     "count": 37
+    },
+    {
+     "week": "2026-08-17",
+     "count": 68
+    },
+    {
+     "week": "2026-08-24",
+     "count": 44
+    },
+    {
+     "week": "2026-08-31",
+     "count": 35
+    },
+    {
+     "week": "2026-09-07",
+     "count": 28
+    },
+    {
+     "week": "2026-09-14",
+     "count": 30
+    },
+    {
+     "week": "2026-09-21",
+     "count": 30
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 178,
+    "second_half": 239,
+    "first_share": 10.0,
+    "second_share": 10.05,
+    "change_pct": 0.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 96.1,
+   "rise_pct": 0.5,
+   "first_seen": "2026-07-01T10:50:48+05:30",
+   "latest": "2026-09-28T13:24:14+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1vozn9e",
+    "reddit:1vhytww",
+    "x:2097253426023575685",
+    "x:2088852679384518820",
+    "playstore:a367f386-5c84-4ada-9358-091dd931bff3"
+   ],
+   "last_day_count": 4,
+   "score": 2.25,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "rewards_value",
+   "label": "Rewards value, devaluation and caps",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Reward-point value, devaluation, Indus Moments redemption, milestone and accelerated-reward changes, spend criteria.",
+   "count": 330,
+   "count_group_companies": 0,
+   "primary_count": 131,
+   "by_source": {
+    "playstore": 2,
+    "appstore": 1,
+    "x": 53,
+    "reddit": 220,
+    "forum": 54
+   },
+   "by_business": {
+    "cards": 312,
+    "wealth": 7,
+    "loans": 9,
+    "sme_merchant": 2
+   },
+   "sentiment": {
+    "positive": 101,
+    "neutral": 136,
+    "negative": 93
+   },
+   "share_negative": 28.2,
+   "escalation_count": 7,
+   "share_escalation": 2.1,
+   "repeat_count": 8,
+   "status_seeking_count": 18,
+   "promise_break_count": 25,
+   "closure_intent_count": 14,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 46,
+     "share": 12.81
+    },
+    {
+     "week": "2026-07-06",
+     "count": 23,
+     "share": 9.16
+    },
+    {
+     "week": "2026-07-13",
+     "count": 20,
+     "share": 7.83
+    },
+    {
+     "week": "2026-07-20",
+     "count": 18,
+     "share": 6.19
+    },
+    {
+     "week": "2026-07-27",
+     "count": 25,
+     "share": 7.34
+    },
+    {
+     "week": "2026-08-03",
+     "count": 16,
+     "share": 5.12
+    },
+    {
+     "week": "2026-08-10",
+     "count": 30,
+     "share": 9.84
+    },
+    {
+     "week": "2026-08-17",
+     "count": 24,
+     "share": 6.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 25,
+     "share": 9.12
+    },
+    {
+     "week": "2026-08-31",
+     "count": 27,
+     "share": 9.21
+    },
+    {
+     "week": "2026-09-07",
+     "count": 18,
+     "share": 6.7
+    },
+    {
+     "week": "2026-09-14",
+     "count": 28,
+     "share": 8.28
+    },
+    {
+     "week": "2026-09-21",
+     "count": 25,
+     "share": 6.62
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 46
+    },
+    {
+     "week": "2026-07-06",
+     "count": 23
+    },
+    {
+     "week": "2026-07-13",
+     "count": 20
+    },
+    {
+     "week": "2026-07-20",
+     "count": 18
+    },
+    {
+     "week": "2026-07-27",
+     "count": 25
+    },
+    {
+     "week": "2026-08-03",
+     "count": 16
+    },
+    {
+     "week": "2026-08-10",
+     "count": 30
+    },
+    {
+     "week": "2026-08-17",
+     "count": 25
+    },
+    {
+     "week": "2026-08-24",
+     "count": 25
+    },
+    {
+     "week": "2026-08-31",
+     "count": 27
+    },
+    {
+     "week": "2026-09-07",
+     "count": 18
+    },
+    {
+     "week": "2026-09-14",
+     "count": 28
+    },
+    {
+     "week": "2026-09-21",
+     "count": 26
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 168,
+    "second_half": 160,
+    "first_share": 10.08,
+    "second_share": 6.95,
+    "change_pct": -31.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 99.4,
+   "rise_pct": -31.1,
+   "first_seen": "2026-07-01T13:29:01+05:30",
+   "latest": "2026-09-28T21:10:23+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:comment:ozpfxuo",
+    "reddit:1vo4xi4",
+    "x:2088516008910975399",
+    "x:2095100349577359773",
+    "playstore:2721e50e-dc29-4a62-9128-f329690c6c8a"
+   ],
+   "last_day_count": 3,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "product_advice",
+   "label": "Product questions and advice-seeking",
+   "group": "Other",
+   "pillar": "experience",
+   "owner": "product",
+   "owner_label": "Product",
+   "business": "retail_banking",
+   "definition": "Neutral questions and comparisons: which card, is this worth it, how to apply.",
+   "count": 269,
+   "count_group_companies": 0,
+   "primary_count": 269,
+   "by_source": {
+    "playstore": 1,
+    "x": 81,
+    "reddit": 143,
+    "forum": 44
+   },
+   "by_business": {
+    "payments": 4,
+    "retail_banking": 138,
+    "cards": 126,
+    "loans": 1
+   },
+   "sentiment": {
+    "positive": 52,
+    "neutral": 217,
+    "negative": 0
+   },
+   "share_negative": 0.0,
+   "escalation_count": 7,
+   "share_escalation": 2.6,
+   "repeat_count": 2,
+   "status_seeking_count": 4,
+   "promise_break_count": 13,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 6,
+     "share": 3.21
+    },
+    {
+     "week": "2026-07-06",
+     "count": 27,
+     "share": 9.31
+    },
+    {
+     "week": "2026-07-13",
+     "count": 8,
+     "share": 4.05
+    },
+    {
+     "week": "2026-07-20",
+     "count": 26,
+     "share": 8.14
+    },
+    {
+     "week": "2026-07-27",
+     "count": 8,
+     "share": 2.27
+    },
+    {
+     "week": "2026-08-03",
+     "count": 19,
+     "share": 6.4
+    },
+    {
+     "week": "2026-08-10",
+     "count": 13,
+     "share": 4.15
+    },
+    {
+     "week": "2026-08-17",
+     "count": 33,
+     "share": 6.12
+    },
+    {
+     "week": "2026-08-24",
+     "count": 19,
+     "share": 6.7
+    },
+    {
+     "week": "2026-08-31",
+     "count": 20,
+     "share": 8.68
+    },
+    {
+     "week": "2026-09-07",
+     "count": 21,
+     "share": 7.53
+    },
+    {
+     "week": "2026-09-14",
+     "count": 19,
+     "share": 7.06
+    },
+    {
+     "week": "2026-09-21",
+     "count": 42,
+     "share": 8.26
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 6
+    },
+    {
+     "week": "2026-07-06",
+     "count": 27
+    },
+    {
+     "week": "2026-07-13",
+     "count": 8
+    },
+    {
+     "week": "2026-07-20",
+     "count": 26
+    },
+    {
+     "week": "2026-07-27",
+     "count": 8
+    },
+    {
+     "week": "2026-08-03",
+     "count": 19
+    },
+    {
+     "week": "2026-08-10",
+     "count": 13
+    },
+    {
+     "week": "2026-08-17",
+     "count": 33
+    },
+    {
+     "week": "2026-08-24",
+     "count": 19
+    },
+    {
+     "week": "2026-08-31",
+     "count": 21
+    },
+    {
+     "week": "2026-09-07",
+     "count": 21
+    },
+    {
+     "week": "2026-09-14",
+     "count": 19
+    },
+    {
+     "week": "2026-09-21",
+     "count": 42
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 106,
+    "second_half": 162,
+    "first_share": 6.09,
+    "second_share": 6.77,
+    "change_pct": 11.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 99.6,
+   "rise_pct": 11.1,
+   "first_seen": "2026-07-01T12:11:30+05:30",
+   "latest": "2026-09-28T22:38:49+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2099470285598822612",
+    "reddit:1vwx80d",
+    "reddit:1vv6aen",
+    "x:2077395879103979590",
+    "forums:technofino_1261907"
+   ],
+   "last_day_count": 7,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "care_unreachable",
+   "label": "Customer care unreachable or unhelpful",
+   "group": "Service",
+   "pillar": "availability",
+   "owner": "cx",
+   "owner_label": "CX",
+   "business": "retail_banking",
+   "definition": "Cannot reach phone banking or chat, long waits, IVR loops, unhelpful chatbot or agents.",
+   "count": 259,
+   "count_group_companies": 0,
+   "primary_count": 103,
+   "by_source": {
+    "playstore": 133,
+    "appstore": 25,
+    "x": 40,
+    "reddit": 44,
+    "forum": 17
+   },
+   "by_business": {
+    "sme_merchant": 13,
+    "payments": 5,
+    "retail_banking": 151,
+    "cards": 85,
+    "loans": 5
+   },
+   "sentiment": {
+    "positive": 19,
+    "neutral": 32,
+    "negative": 208
+   },
+   "share_negative": 80.3,
+   "escalation_count": 12,
+   "share_escalation": 4.6,
+   "repeat_count": 31,
+   "status_seeking_count": 8,
+   "promise_break_count": 46,
+   "closure_intent_count": 3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 6,
+     "share": 3.05
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 3.31
+    },
+    {
+     "week": "2026-07-13",
+     "count": 4,
+     "share": 1.45
+    },
+    {
+     "week": "2026-07-20",
+     "count": 5,
+     "share": 1.46
+    },
+    {
+     "week": "2026-07-27",
+     "count": 8,
+     "share": 2.44
+    },
+    {
+     "week": "2026-08-03",
+     "count": 12,
+     "share": 1.64
+    },
+    {
+     "week": "2026-08-10",
+     "count": 7,
+     "share": 2.25
+    },
+    {
+     "week": "2026-08-17",
+     "count": 19,
+     "share": 4.04
+    },
+    {
+     "week": "2026-08-24",
+     "count": 14,
+     "share": 4.85
+    },
+    {
+     "week": "2026-08-31",
+     "count": 10,
+     "share": 4.81
+    },
+    {
+     "week": "2026-09-07",
+     "count": 8,
+     "share": 2.86
+    },
+    {
+     "week": "2026-09-14",
+     "count": 8,
+     "share": 3.08
+    },
+    {
+     "week": "2026-09-21",
+     "count": 22,
+     "share": 3.9
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 7
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 5
+    },
+    {
+     "week": "2026-07-20",
+     "count": 5
+    },
+    {
+     "week": "2026-07-27",
+     "count": 9
+    },
+    {
+     "week": "2026-08-03",
+     "count": 12
+    },
+    {
+     "week": "2026-08-10",
+     "count": 16
+    },
+    {
+     "week": "2026-08-17",
+     "count": 38
+    },
+    {
+     "week": "2026-08-24",
+     "count": 36
+    },
+    {
+     "week": "2026-08-31",
+     "count": 31
+    },
+    {
+     "week": "2026-09-07",
+     "count": 27
+    },
+    {
+     "week": "2026-09-14",
+     "count": 25
+    },
+    {
+     "week": "2026-09-21",
+     "count": 35
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 46,
+    "second_half": 88,
+    "first_share": 2.18,
+    "second_share": 4.23,
+    "change_pct": 94.2,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 51.7,
+   "rise_pct": 94.2,
+   "first_seen": "2026-07-01T18:25:23+05:30",
+   "latest": "2026-09-28T20:25:10+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2103405304075719052",
+    "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+    "playstore:e3d9034c-850c-481e-a2bb-c7edd5e2558c",
+    "reddit:comment:pbihc24",
+    "reddit:1wo2wkv"
+   ],
+   "last_day_count": 7,
+   "score": 255.2,
+   "status": "needs_you",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "branch_service",
+   "label": "Branch service and staff behaviour",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "retail",
+   "owner_label": "Retail",
+   "business": "retail_banking",
+   "definition": "Branch visits, staff behaviour, rudeness, being sent to the home branch.",
+   "count": 237,
+   "count_group_companies": 0,
+   "primary_count": 118,
+   "by_source": {
+    "playstore": 90,
+    "appstore": 2,
+    "x": 100,
+    "reddit": 26,
+    "forum": 19
+   },
+   "by_business": {
+    "sme_merchant": 23,
+    "corporate": 1,
+    "retail_banking": 143,
+    "cards": 47,
+    "loans": 13,
+    "payments": 2,
+    "wealth": 8
+   },
+   "sentiment": {
+    "positive": 47,
+    "neutral": 46,
+    "negative": 144
+   },
+   "share_negative": 60.8,
+   "escalation_count": 24,
+   "share_escalation": 10.1,
+   "repeat_count": 18,
+   "status_seeking_count": 3,
+   "promise_break_count": 27,
+   "closure_intent_count": 5,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 6,
+     "share": 3.4
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8,
+     "share": 2.55
+    },
+    {
+     "week": "2026-07-13",
+     "count": 8,
+     "share": 4.88
+    },
+    {
+     "week": "2026-07-20",
+     "count": 17,
+     "share": 3.71
+    },
+    {
+     "week": "2026-07-27",
+     "count": 10,
+     "share": 3.43
+    },
+    {
+     "week": "2026-08-03",
+     "count": 10,
+     "share": 4.24
+    },
+    {
+     "week": "2026-08-10",
+     "count": 12,
+     "share": 5.27
+    },
+    {
+     "week": "2026-08-17",
+     "count": 15,
+     "share": 3.95
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6,
+     "share": 1.81
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6,
+     "share": 2.58
+    },
+    {
+     "week": "2026-09-07",
+     "count": 14,
+     "share": 5.41
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7,
+     "share": 4.38
+    },
+    {
+     "week": "2026-09-21",
+     "count": 36,
+     "share": 5.34
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 6
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8
+    },
+    {
+     "week": "2026-07-13",
+     "count": 8
+    },
+    {
+     "week": "2026-07-20",
+     "count": 17
+    },
+    {
+     "week": "2026-07-27",
+     "count": 10
+    },
+    {
+     "week": "2026-08-03",
+     "count": 10
+    },
+    {
+     "week": "2026-08-10",
+     "count": 18
+    },
+    {
+     "week": "2026-08-17",
+     "count": 24
+    },
+    {
+     "week": "2026-08-24",
+     "count": 13
+    },
+    {
+     "week": "2026-08-31",
+     "count": 17
+    },
+    {
+     "week": "2026-09-07",
+     "count": 25
+    },
+    {
+     "week": "2026-09-14",
+     "count": 21
+    },
+    {
+     "week": "2026-09-21",
+     "count": 48
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 68,
+    "second_half": 98,
+    "first_share": 3.82,
+    "second_share": 4.11,
+    "change_pct": 7.7,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 70.0,
+   "rise_pct": 7.7,
+   "first_seen": "2026-07-01T12:05:16+05:30",
+   "latest": "2026-09-28T18:08:45+05:30",
+   "rung": "Repeat",
+   "exemplars": [
+    "x:2086739232891289603",
+    "x:2089078366616051817",
+    "reddit:comment:ozx5a9x",
+    "playstore:0b0fe30b-6846-42ca-b525-c26fef22462f",
+    "playstore:9f8b22e3-d1ae-4fbc-a11c-291f420f64a9"
+   ],
+   "last_day_count": 12,
+   "score": 20.09,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "complaint_handling",
+   "label": "Complaints closed without resolution",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "cx",
+   "owner_label": "CX",
+   "business": "retail_banking",
+   "definition": "Complaints or tickets closed without a fix, generic replies, having to repeat the complaint, DMs with no outcome.",
+   "count": 217,
+   "count_group_companies": 0,
+   "primary_count": 80,
+   "by_source": {
+    "playstore": 80,
+    "appstore": 3,
+    "x": 103,
+    "reddit": 24,
+    "forum": 7
+   },
+   "by_business": {
+    "sme_merchant": 9,
+    "payments": 10,
+    "retail_banking": 146,
+    "cards": 44,
+    "loans": 8
+   },
+   "sentiment": {
+    "positive": 8,
+    "neutral": 48,
+    "negative": 161
+   },
+   "share_negative": 74.2,
+   "escalation_count": 59,
+   "share_escalation": 27.2,
+   "repeat_count": 37,
+   "status_seeking_count": 13,
+   "promise_break_count": 43,
+   "closure_intent_count": 5,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 1.44
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 2.28
+    },
+    {
+     "week": "2026-07-13",
+     "count": 4,
+     "share": 2.2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 8,
+     "share": 2.73
+    },
+    {
+     "week": "2026-07-27",
+     "count": 3,
+     "share": 1.36
+    },
+    {
+     "week": "2026-08-03",
+     "count": 8,
+     "share": 2.81
+    },
+    {
+     "week": "2026-08-10",
+     "count": 11,
+     "share": 4.22
+    },
+    {
+     "week": "2026-08-17",
+     "count": 6,
+     "share": 1.78
+    },
+    {
+     "week": "2026-08-24",
+     "count": 5,
+     "share": 2.05
+    },
+    {
+     "week": "2026-08-31",
+     "count": 9,
+     "share": 4.37
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4,
+     "share": 1.61
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7,
+     "share": 3.74
+    },
+    {
+     "week": "2026-09-21",
+     "count": 46,
+     "share": 5.48
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 3
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 5
+    },
+    {
+     "week": "2026-07-20",
+     "count": 8
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4
+    },
+    {
+     "week": "2026-08-03",
+     "count": 8
+    },
+    {
+     "week": "2026-08-10",
+     "count": 18
+    },
+    {
+     "week": "2026-08-17",
+     "count": 9
+    },
+    {
+     "week": "2026-08-24",
+     "count": 19
+    },
+    {
+     "week": "2026-08-31",
+     "count": 23
+    },
+    {
+     "week": "2026-09-07",
+     "count": 22
+    },
+    {
+     "week": "2026-09-14",
+     "count": 20
+    },
+    {
+     "week": "2026-09-21",
+     "count": 51
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 39,
+    "second_half": 101,
+    "first_share": 2.18,
+    "second_share": 4.33,
+    "change_pct": 98.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 64.5,
+   "rise_pct": 98.5,
+   "first_seen": "2026-07-01T17:54:12+05:30",
+   "latest": "2026-09-28T22:39:03+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2089632955589439641",
+    "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+    "playstore:800c2002-bc11-4ef6-8eed-eac1cc55aaec",
+    "x:2085289802652684604",
+    "reddit:comment:pbihc24"
+   ],
+   "last_day_count": 21,
+   "score": 271.88,
+   "status": "needs_you",
+   "action": "Update and close"
+  },
+  {
+   "id": "reward_redemption",
+   "label": "Reward redemption and vouchers",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Redeeming points, vouchers not available or not received, milestone vouchers pending.",
+   "count": 199,
+   "count_group_companies": 0,
+   "primary_count": 127,
+   "by_source": {
+    "playstore": 3,
+    "appstore": 1,
+    "x": 16,
+    "reddit": 127,
+    "forum": 52
+   },
+   "by_business": {
+    "cards": 198,
+    "payments": 1
+   },
+   "sentiment": {
+    "positive": 62,
+    "neutral": 85,
+    "negative": 52
+   },
+   "share_negative": 26.1,
+   "escalation_count": 4,
+   "share_escalation": 2.0,
+   "repeat_count": 7,
+   "status_seeking_count": 13,
+   "promise_break_count": 19,
+   "closure_intent_count": 9,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 39,
+     "share": 8.96
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8,
+     "share": 3.17
+    },
+    {
+     "week": "2026-07-13",
+     "count": 11,
+     "share": 4.67
+    },
+    {
+     "week": "2026-07-20",
+     "count": 11,
+     "share": 3.84
+    },
+    {
+     "week": "2026-07-27",
+     "count": 8,
+     "share": 2.27
+    },
+    {
+     "week": "2026-08-03",
+     "count": 15,
+     "share": 5.12
+    },
+    {
+     "week": "2026-08-10",
+     "count": 15,
+     "share": 4.7
+    },
+    {
+     "week": "2026-08-17",
+     "count": 16,
+     "share": 3.44
+    },
+    {
+     "week": "2026-08-24",
+     "count": 17,
+     "share": 4.85
+    },
+    {
+     "week": "2026-08-31",
+     "count": 20,
+     "share": 6.58
+    },
+    {
+     "week": "2026-09-07",
+     "count": 12,
+     "share": 4.39
+    },
+    {
+     "week": "2026-09-14",
+     "count": 13,
+     "share": 4.19
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10,
+     "share": 2.76
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 39
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8
+    },
+    {
+     "week": "2026-07-13",
+     "count": 11
+    },
+    {
+     "week": "2026-07-20",
+     "count": 11
+    },
+    {
+     "week": "2026-07-27",
+     "count": 8
+    },
+    {
+     "week": "2026-08-03",
+     "count": 15
+    },
+    {
+     "week": "2026-08-10",
+     "count": 15
+    },
+    {
+     "week": "2026-08-17",
+     "count": 16
+    },
+    {
+     "week": "2026-08-24",
+     "count": 17
+    },
+    {
+     "week": "2026-08-31",
+     "count": 21
+    },
+    {
+     "week": "2026-09-07",
+     "count": 13
+    },
+    {
+     "week": "2026-09-14",
+     "count": 13
+    },
+    {
+     "week": "2026-09-21",
+     "count": 11
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 99,
+    "second_half": 97,
+    "first_share": 6.25,
+    "second_share": 4.22,
+    "change_pct": -32.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 98.5,
+   "rise_pct": -32.5,
+   "first_seen": "2026-07-02T05:30:00+05:30",
+   "latest": "2026-09-28T10:40:12+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "reddit:1vozn9e",
+    "x:2088516008910975399",
+    "x:2097286038909780039",
+    "reddit:1w8ngl3",
+    "playstore:2721e50e-dc29-4a62-9128-f329690c6c8a"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "new_app_release",
+   "label": "New app and update experience",
+   "group": "App and digital",
+   "pillar": "availability",
+   "owner": "digital",
+   "owner_label": "Digital",
+   "business": "retail_banking",
+   "definition": "Reactions to the INDIE app or a recent update: migration, old app better, features lost after update.",
+   "count": 194,
+   "count_group_companies": 0,
+   "primary_count": 143,
+   "by_source": {
+    "playstore": 164,
+    "appstore": 23,
+    "x": 3,
+    "reddit": 3,
+    "forum": 1
+   },
+   "by_business": {
+    "corporate": 2,
+    "payments": 2,
+    "sme_merchant": 11,
+    "retail_banking": 158,
+    "cards": 18,
+    "loans": 3
+   },
+   "sentiment": {
+    "positive": 8,
+    "neutral": 5,
+    "negative": 181
+   },
+   "share_negative": 93.3,
+   "escalation_count": 1,
+   "share_escalation": 0.5,
+   "repeat_count": 20,
+   "status_seeking_count": 7,
+   "promise_break_count": 15,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 4,
+     "share": 1.21
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.39
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 19,
+     "share": 1.71
+    },
+    {
+     "week": "2026-08-10",
+     "count": 4,
+     "share": 1.1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3,
+     "share": 0.83
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 3,
+     "share": 1.02
+    },
+    {
+     "week": "2026-09-07",
+     "count": 6,
+     "share": 1.34
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 3,
+     "share": 0.5
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 4
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 19
+    },
+    {
+     "week": "2026-08-10",
+     "count": 11
+    },
+    {
+     "week": "2026-08-17",
+     "count": 20
+    },
+    {
+     "week": "2026-08-24",
+     "count": 23
+    },
+    {
+     "week": "2026-08-31",
+     "count": 60
+    },
+    {
+     "week": "2026-09-07",
+     "count": 32
+    },
+    {
+     "week": "2026-09-14",
+     "count": 15
+    },
+    {
+     "week": "2026-09-21",
+     "count": 8
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 27,
+    "second_half": 16,
+    "first_share": 0.97,
+    "second_share": 0.79,
+    "change_pct": -17.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 22.2,
+   "rise_pct": null,
+   "first_seen": "2026-07-02T18:06:08+05:30",
+   "latest": "2026-09-26T10:49:32+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "playstore:e3d9034c-850c-481e-a2bb-c7edd5e2558c",
+    "playstore:a373eac4-c159-4fd7-9066-a28de86bd2ef",
+    "x:2084580484814901655",
+    "x:2103716075712151938",
+    "reddit:1w7zr0i"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "closure_requests",
+   "label": "Account and card closure requests",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "retail_banking",
+   "definition": "Difficulty closing a card, account or loan; closure pending; charges after closure.",
+   "count": 166,
+   "count_group_companies": 0,
+   "primary_count": 84,
+   "by_source": {
+    "playstore": 50,
+    "appstore": 1,
+    "x": 30,
+    "reddit": 69,
+    "forum": 16
+   },
+   "by_business": {
+    "sme_merchant": 6,
+    "retail_banking": 55,
+    "cards": 87,
+    "loans": 17,
+    "wealth": 1
+   },
+   "sentiment": {
+    "positive": 15,
+    "neutral": 46,
+    "negative": 105
+   },
+   "share_negative": 63.3,
+   "escalation_count": 12,
+   "share_escalation": 7.2,
+   "repeat_count": 6,
+   "status_seeking_count": 4,
+   "promise_break_count": 22,
+   "closure_intent_count": 61,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 2,
+     "share": 1.12
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 2.3
+    },
+    {
+     "week": "2026-07-13",
+     "count": 5,
+     "share": 1.88
+    },
+    {
+     "week": "2026-07-20",
+     "count": 14,
+     "share": 4.75
+    },
+    {
+     "week": "2026-07-27",
+     "count": 6,
+     "share": 1.7
+    },
+    {
+     "week": "2026-08-03",
+     "count": 3,
+     "share": 0.96
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9,
+     "share": 3.27
+    },
+    {
+     "week": "2026-08-17",
+     "count": 19,
+     "share": 4.24
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6,
+     "share": 2.34
+    },
+    {
+     "week": "2026-08-31",
+     "count": 8,
+     "share": 2.65
+    },
+    {
+     "week": "2026-09-07",
+     "count": 17,
+     "share": 6.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 5,
+     "share": 2.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 15,
+     "share": 2.17
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 4
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 5
+    },
+    {
+     "week": "2026-07-20",
+     "count": 14
+    },
+    {
+     "week": "2026-07-27",
+     "count": 6
+    },
+    {
+     "week": "2026-08-03",
+     "count": 3
+    },
+    {
+     "week": "2026-08-10",
+     "count": 14
+    },
+    {
+     "week": "2026-08-17",
+     "count": 19
+    },
+    {
+     "week": "2026-08-24",
+     "count": 14
+    },
+    {
+     "week": "2026-08-31",
+     "count": 23
+    },
+    {
+     "week": "2026-09-07",
+     "count": 22
+    },
+    {
+     "week": "2026-09-14",
+     "count": 10
+    },
+    {
+     "week": "2026-09-21",
+     "count": 20
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 40,
+    "second_half": 80,
+    "first_share": 2.23,
+    "second_share": 3.43,
+    "change_pct": 53.7,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 72.3,
+   "rise_pct": 53.7,
+   "first_seen": "2026-07-02T21:09:35+05:30",
+   "latest": "2026-09-28T22:39:03+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2075119427155288278",
+    "reddit:1vucpdm",
+    "reddit:1vo4whw",
+    "x:2100087001039196258",
+    "playstore:5f8b771b-befb-48bd-a1bc-18330b01eb6e"
+   ],
+   "last_day_count": 6,
+   "score": 95.56,
+   "status": "this_week",
+   "action": "Set a new date"
+  },
+  {
+   "id": "card_application",
+   "label": "Card application, rejection and verification",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Applications rejected, stuck in verification, video KYC, document checks.",
+   "count": 133,
+   "count_group_companies": 0,
+   "primary_count": 64,
+   "by_source": {
+    "playstore": 10,
+    "appstore": 2,
+    "x": 23,
+    "reddit": 95,
+    "forum": 3
+   },
+   "by_business": {
+    "cards": 125,
+    "retail_banking": 5,
+    "payments": 3
+   },
+   "sentiment": {
+    "positive": 11,
+    "neutral": 17,
+    "negative": 105
+   },
+   "share_negative": 78.9,
+   "escalation_count": 12,
+   "share_escalation": 9.0,
+   "repeat_count": 3,
+   "status_seeking_count": 14,
+   "promise_break_count": 16,
+   "closure_intent_count": 4,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 15,
+     "share": 7.36
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 2.6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 7,
+     "share": 2.74
+    },
+    {
+     "week": "2026-07-20",
+     "count": 7,
+     "share": 2.18
+    },
+    {
+     "week": "2026-07-27",
+     "count": 18,
+     "share": 9.85
+    },
+    {
+     "week": "2026-08-03",
+     "count": 5,
+     "share": 1.49
+    },
+    {
+     "week": "2026-08-10",
+     "count": 6,
+     "share": 1.8
+    },
+    {
+     "week": "2026-08-17",
+     "count": 16,
+     "share": 3.71
+    },
+    {
+     "week": "2026-08-24",
+     "count": 11,
+     "share": 4.29
+    },
+    {
+     "week": "2026-08-31",
+     "count": 8,
+     "share": 2.43
+    },
+    {
+     "week": "2026-09-07",
+     "count": 7,
+     "share": 2.5
+    },
+    {
+     "week": "2026-09-14",
+     "count": 5,
+     "share": 1.36
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10,
+     "share": 1.88
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 15
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 7
+    },
+    {
+     "week": "2026-07-20",
+     "count": 7
+    },
+    {
+     "week": "2026-07-27",
+     "count": 18
+    },
+    {
+     "week": "2026-08-03",
+     "count": 5
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8
+    },
+    {
+     "week": "2026-08-17",
+     "count": 17
+    },
+    {
+     "week": "2026-08-24",
+     "count": 13
+    },
+    {
+     "week": "2026-08-31",
+     "count": 10
+    },
+    {
+     "week": "2026-09-07",
+     "count": 8
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 11
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 61,
+    "second_half": 62,
+    "first_share": 3.33,
+    "second_share": 2.69,
+    "change_pct": -19.2,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 92.5,
+   "rise_pct": -19.2,
+   "first_seen": "2026-07-01T13:29:01+05:30",
+   "latest": "2026-09-28T18:09:20+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1vhytww",
+    "playstore:2ae55a60-3f11-47c9-b8b1-7eb9bed0fb67",
+    "reddit:1v40nfp",
+    "x:2102714594271834146",
+    "x:2097952209162162620"
+   ],
+   "last_day_count": 2,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "market_news",
+   "label": "Share price, results and corporate news",
+   "group": "Other",
+   "pillar": "experience",
+   "owner": "cx",
+   "owner_label": "CX",
+   "business": "corporate",
+   "definition": "Stock-market, results and leadership news; not customer experience.",
+   "count": 127,
+   "count_group_companies": 0,
+   "primary_count": 82,
+   "by_source": {
+    "playstore": 3,
+    "x": 121,
+    "reddit": 2,
+    "forum": 1
+   },
+   "by_business": {
+    "retail_banking": 17,
+    "cards": 24,
+    "corporate": 63,
+    "payments": 5,
+    "loans": 11,
+    "sme_merchant": 1,
+    "wealth": 6
+   },
+   "sentiment": {
+    "positive": 20,
+    "neutral": 71,
+    "negative": 36
+   },
+   "share_negative": 28.3,
+   "escalation_count": 1,
+   "share_escalation": 0.8,
+   "repeat_count": 0,
+   "status_seeking_count": 1,
+   "promise_break_count": 1,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 6,
+     "share": 3.86
+    },
+    {
+     "week": "2026-07-06",
+     "count": 10,
+     "share": 3.33
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 1.7
+    },
+    {
+     "week": "2026-07-20",
+     "count": 33,
+     "share": 5.6
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4,
+     "share": 1.91
+    },
+    {
+     "week": "2026-08-03",
+     "count": 12,
+     "share": 5.58
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9,
+     "share": 3.77
+    },
+    {
+     "week": "2026-08-17",
+     "count": 7,
+     "share": 3.48
+    },
+    {
+     "week": "2026-08-24",
+     "count": 7,
+     "share": 3.58
+    },
+    {
+     "week": "2026-08-31",
+     "count": 4,
+     "share": 2.23
+    },
+    {
+     "week": "2026-09-07",
+     "count": 6,
+     "share": 2.53
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 1.82
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10,
+     "share": 1.52
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 6
+    },
+    {
+     "week": "2026-07-06",
+     "count": 10
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 33
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4
+    },
+    {
+     "week": "2026-08-03",
+     "count": 12
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9
+    },
+    {
+     "week": "2026-08-17",
+     "count": 7
+    },
+    {
+     "week": "2026-08-24",
+     "count": 7
+    },
+    {
+     "week": "2026-08-31",
+     "count": 4
+    },
+    {
+     "week": "2026-09-07",
+     "count": 6
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2
+    },
+    {
+     "week": "2026-09-21",
+     "count": 11
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 74,
+    "second_half": 50,
+    "first_share": 4.22,
+    "second_share": 2.1,
+    "change_pct": -50.2,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 97.6,
+   "rise_pct": -50.2,
+   "first_seen": "2026-07-01T06:58:54+05:30",
+   "latest": "2026-09-28T18:48:26+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2079887198862926072",
+    "x:2100060284991770895",
+    "playstore:82374e6a-f758-4312-a817-d6bbccd58b25",
+    "playstore:230875ad-b067-41b9-948b-9dd4dc4a282b",
+    "reddit:comment:p2920h9"
+   ],
+   "last_day_count": 14,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "card_fees_charges",
+   "label": "Card fees and charges",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Annual and renewal fees, late fees, finance charges, no-cost EMI charges on cards.",
+   "count": 117,
+   "count_group_companies": 0,
+   "primary_count": 31,
+   "by_source": {
+    "playstore": 6,
+    "appstore": 1,
+    "x": 11,
+    "reddit": 89,
+    "forum": 10
+   },
+   "by_business": {
+    "cards": 114,
+    "loans": 2,
+    "payments": 1
+   },
+   "sentiment": {
+    "positive": 45,
+    "neutral": 33,
+    "negative": 39
+   },
+   "share_negative": 33.3,
+   "escalation_count": 4,
+   "share_escalation": 3.4,
+   "repeat_count": 2,
+   "status_seeking_count": 7,
+   "promise_break_count": 13,
+   "closure_intent_count": 5,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 4,
+     "share": 1.92
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8,
+     "share": 3.4
+    },
+    {
+     "week": "2026-07-13",
+     "count": 4,
+     "share": 1.57
+    },
+    {
+     "week": "2026-07-20",
+     "count": 5,
+     "share": 1.84
+    },
+    {
+     "week": "2026-07-27",
+     "count": 12,
+     "share": 3.4
+    },
+    {
+     "week": "2026-08-03",
+     "count": 9,
+     "share": 5.64
+    },
+    {
+     "week": "2026-08-10",
+     "count": 13,
+     "share": 3.87
+    },
+    {
+     "week": "2026-08-17",
+     "count": 16,
+     "share": 2.87
+    },
+    {
+     "week": "2026-08-24",
+     "count": 10,
+     "share": 3.28
+    },
+    {
+     "week": "2026-08-31",
+     "count": 9,
+     "share": 2.99
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4,
+     "share": 1.39
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6,
+     "share": 1.64
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10,
+     "share": 2.1
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 4
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8
+    },
+    {
+     "week": "2026-07-13",
+     "count": 4
+    },
+    {
+     "week": "2026-07-20",
+     "count": 5
+    },
+    {
+     "week": "2026-07-27",
+     "count": 12
+    },
+    {
+     "week": "2026-08-03",
+     "count": 9
+    },
+    {
+     "week": "2026-08-10",
+     "count": 13
+    },
+    {
+     "week": "2026-08-17",
+     "count": 16
+    },
+    {
+     "week": "2026-08-24",
+     "count": 12
+    },
+    {
+     "week": "2026-08-31",
+     "count": 12
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 54,
+    "second_half": 57,
+    "first_share": 3.0,
+    "second_share": 2.44,
+    "change_pct": -18.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 94.9,
+   "rise_pct": -18.6,
+   "first_seen": "2026-07-01T16:15:13+05:30",
+   "latest": "2026-09-28T12:59:04+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "reddit:1vozn9e",
+    "reddit:1vo4whw",
+    "playstore:5d1f9fd7-4045-4994-b341-a61a1f6640e4",
+    "x:2103864214808900019",
+    "x:2103531943384260822"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "atm_debit_card",
+   "label": "Debit card and ATM",
+   "group": "Service",
+   "pillar": "availability",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "retail_banking",
+   "definition": "Debit card issues, ATM limits and failures, debit card variants.",
+   "count": 114,
+   "count_group_companies": 0,
+   "primary_count": 50,
+   "by_source": {
+    "playstore": 21,
+    "appstore": 7,
+    "x": 21,
+    "reddit": 52,
+    "forum": 13
+   },
+   "by_business": {
+    "sme_merchant": 5,
+    "cards": 94,
+    "retail_banking": 14,
+    "loans": 1
+   },
+   "sentiment": {
+    "positive": 30,
+    "neutral": 32,
+    "negative": 52
+   },
+   "share_negative": 45.6,
+   "escalation_count": 5,
+   "share_escalation": 4.4,
+   "repeat_count": 0,
+   "status_seeking_count": 4,
+   "promise_break_count": 4,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 15,
+     "share": 6.04
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 2.51
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 0.78
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.38
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5,
+     "share": 1.33
+    },
+    {
+     "week": "2026-08-03",
+     "count": 6,
+     "share": 1.42
+    },
+    {
+     "week": "2026-08-10",
+     "count": 12,
+     "share": 4.27
+    },
+    {
+     "week": "2026-08-17",
+     "count": 12,
+     "share": 3.14
+    },
+    {
+     "week": "2026-08-24",
+     "count": 5,
+     "share": 2.31
+    },
+    {
+     "week": "2026-08-31",
+     "count": 8,
+     "share": 2.55
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5,
+     "share": 1.89
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7,
+     "share": 3.45
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10,
+     "share": 8.38
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 15
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5
+    },
+    {
+     "week": "2026-08-03",
+     "count": 6
+    },
+    {
+     "week": "2026-08-10",
+     "count": 14
+    },
+    {
+     "week": "2026-08-17",
+     "count": 14
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6
+    },
+    {
+     "week": "2026-08-31",
+     "count": 13
+    },
+    {
+     "week": "2026-09-07",
+     "count": 7
+    },
+    {
+     "week": "2026-09-14",
+     "count": 11
+    },
+    {
+     "week": "2026-09-21",
+     "count": 10
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 46,
+    "second_half": 52,
+    "first_share": 2.55,
+    "second_share": 2.32,
+    "change_pct": -8.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 86.0,
+   "rise_pct": -8.9,
+   "first_seen": "2026-07-01T14:52:31+05:30",
+   "latest": "2026-09-28T21:28:59+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2097253426023575685",
+    "x:2102987449840566345",
+    "reddit:1ukgrvg",
+    "reddit:1vo4vgq",
+    "playstore:a7dba4b0-1a83-46ca-b10f-b34e44dea8d2"
+   ],
+   "last_day_count": 4,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "statements_documents",
+   "label": "Statements, certificates and documents",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "retail_banking",
+   "definition": "Statements, interest certificates, NOC or NDC, physical copies.",
+   "count": 108,
+   "count_group_companies": 0,
+   "primary_count": 45,
+   "by_source": {
+    "playstore": 47,
+    "appstore": 7,
+    "x": 19,
+    "reddit": 32,
+    "forum": 3
+   },
+   "by_business": {
+    "corporate": 1,
+    "sme_merchant": 9,
+    "cards": 43,
+    "retail_banking": 44,
+    "loans": 10,
+    "payments": 1
+   },
+   "sentiment": {
+    "positive": 12,
+    "neutral": 17,
+    "negative": 79
+   },
+   "share_negative": 73.1,
+   "escalation_count": 7,
+   "share_escalation": 6.5,
+   "repeat_count": 7,
+   "status_seeking_count": 4,
+   "promise_break_count": 8,
+   "closure_intent_count": 3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 0.83
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.81
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 1.02
+    },
+    {
+     "week": "2026-07-20",
+     "count": 9,
+     "share": 2.55
+    },
+    {
+     "week": "2026-07-27",
+     "count": 7,
+     "share": 1.98
+    },
+    {
+     "week": "2026-08-03",
+     "count": 4,
+     "share": 0.74
+    },
+    {
+     "week": "2026-08-10",
+     "count": 5,
+     "share": 1.38
+    },
+    {
+     "week": "2026-08-17",
+     "count": 8,
+     "share": 2.08
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 1.2
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.59
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5,
+     "share": 1.88
+    },
+    {
+     "week": "2026-09-14",
+     "count": 9,
+     "share": 3.57
+    },
+    {
+     "week": "2026-09-21",
+     "count": 9,
+     "share": 1.78
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 3
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 9
+    },
+    {
+     "week": "2026-07-27",
+     "count": 7
+    },
+    {
+     "week": "2026-08-03",
+     "count": 4
+    },
+    {
+     "week": "2026-08-10",
+     "count": 7
+    },
+    {
+     "week": "2026-08-17",
+     "count": 8
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6
+    },
+    {
+     "week": "2026-08-31",
+     "count": 9
+    },
+    {
+     "week": "2026-09-07",
+     "count": 14
+    },
+    {
+     "week": "2026-09-14",
+     "count": 19
+    },
+    {
+     "week": "2026-09-21",
+     "count": 15
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 31,
+    "second_half": 39,
+    "first_share": 1.62,
+    "second_share": 1.8,
+    "change_pct": 11.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 64.8,
+   "rise_pct": 11.1,
+   "first_seen": "2026-07-01T15:08:29+05:30",
+   "latest": "2026-09-28T15:37:37+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1vo4xi4",
+    "x:2075119427155288278",
+    "reddit:1w0dq9z",
+    "playstore:9993b012-fd87-4a3a-8d2e-d3f4b181af1f",
+    "x:2103780780317290559"
+   ],
+   "last_day_count": 3,
+   "score": 12.77,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "investments_wealth",
+   "label": "Investments and mutual funds",
+   "group": "Wealth",
+   "pillar": "experience",
+   "owner": "product",
+   "owner_label": "Product",
+   "business": "wealth",
+   "definition": "Mutual funds, SIPs and portfolio tracking.",
+   "count": 103,
+   "count_group_companies": 0,
+   "primary_count": 65,
+   "by_source": {
+    "playstore": 1,
+    "x": 62,
+    "reddit": 38,
+    "forum": 2
+   },
+   "by_business": {
+    "retail_banking": 1,
+    "loans": 10,
+    "wealth": 71,
+    "cards": 20,
+    "payments": 1
+   },
+   "sentiment": {
+    "positive": 25,
+    "neutral": 38,
+    "negative": 40
+   },
+   "share_negative": 38.8,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 0,
+   "status_seeking_count": 3,
+   "promise_break_count": 3,
+   "closure_intent_count": 3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 5,
+     "share": 3.22
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8,
+     "share": 3.36
+    },
+    {
+     "week": "2026-07-13",
+     "count": 8,
+     "share": 6.33
+    },
+    {
+     "week": "2026-07-20",
+     "count": 10,
+     "share": 2.68
+    },
+    {
+     "week": "2026-07-27",
+     "count": 6,
+     "share": 1.96
+    },
+    {
+     "week": "2026-08-03",
+     "count": 3,
+     "share": 1.28
+    },
+    {
+     "week": "2026-08-10",
+     "count": 12,
+     "share": 4.18
+    },
+    {
+     "week": "2026-08-17",
+     "count": 10,
+     "share": 3.56
+    },
+    {
+     "week": "2026-08-24",
+     "count": 8,
+     "share": 3.76
+    },
+    {
+     "week": "2026-08-31",
+     "count": 7,
+     "share": 3.39
+    },
+    {
+     "week": "2026-09-07",
+     "count": 11,
+     "share": 4.49
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7,
+     "share": 4.46
+    },
+    {
+     "week": "2026-09-21",
+     "count": 6,
+     "share": 1.48
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 5
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8
+    },
+    {
+     "week": "2026-07-13",
+     "count": 8
+    },
+    {
+     "week": "2026-07-20",
+     "count": 10
+    },
+    {
+     "week": "2026-07-27",
+     "count": 6
+    },
+    {
+     "week": "2026-08-03",
+     "count": 3
+    },
+    {
+     "week": "2026-08-10",
+     "count": 12
+    },
+    {
+     "week": "2026-08-17",
+     "count": 10
+    },
+    {
+     "week": "2026-08-24",
+     "count": 8
+    },
+    {
+     "week": "2026-08-31",
+     "count": 8
+    },
+    {
+     "week": "2026-09-07",
+     "count": 11
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7
+    },
+    {
+     "week": "2026-09-21",
+     "count": 6
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 45,
+    "second_half": 57,
+    "first_share": 2.52,
+    "second_share": 2.43,
+    "change_pct": -3.7,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 99.0,
+   "rise_pct": -3.7,
+   "first_seen": "2026-07-01T21:23:22+05:30",
+   "latest": "2026-09-28T21:10:23+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2097997612557254952",
+    "x:2098000760831353127",
+    "reddit:comment:ozmyc17",
+    "reddit:1v4idqf",
+    "playstore:7b593914-ef36-4f5c-99af-82a1e4c0e20e"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "offers_deals",
+   "label": "Card offers and deals",
+   "group": "Other",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Merchant deals and discounts that mention IndusInd cards (mostly promotional).",
+   "count": 67,
+   "count_group_companies": 0,
+   "primary_count": 22,
+   "by_source": {
+    "x": 25,
+    "reddit": 38,
+    "forum": 4
+   },
+   "by_business": {
+    "cards": 63,
+    "loans": 1,
+    "retail_banking": 2,
+    "sme_merchant": 1
+   },
+   "sentiment": {
+    "positive": 17,
+    "neutral": 39,
+    "negative": 11
+   },
+   "share_negative": 16.4,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 1,
+   "status_seeking_count": 0,
+   "promise_break_count": 2,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 1.18
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8,
+     "share": 3.17
+    },
+    {
+     "week": "2026-07-13",
+     "count": 6,
+     "share": 3.44
+    },
+    {
+     "week": "2026-07-20",
+     "count": 7,
+     "share": 1.38
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.57
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1,
+     "share": 0.32
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9,
+     "share": 3.21
+    },
+    {
+     "week": "2026-08-17",
+     "count": 12,
+     "share": 3.42
+    },
+    {
+     "week": "2026-08-24",
+     "count": 8,
+     "share": 3.43
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.86
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6,
+     "share": 2.27
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.2
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 3
+    },
+    {
+     "week": "2026-07-06",
+     "count": 8
+    },
+    {
+     "week": "2026-07-13",
+     "count": 6
+    },
+    {
+     "week": "2026-07-20",
+     "count": 7
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9
+    },
+    {
+     "week": "2026-08-17",
+     "count": 12
+    },
+    {
+     "week": "2026-08-24",
+     "count": 8
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 34,
+    "second_half": 33,
+    "first_share": 1.97,
+    "second_share": 1.43,
+    "change_pct": -27.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 100.0,
+   "rise_pct": -27.3,
+   "first_seen": "2026-07-01T17:17:37+05:30",
+   "latest": "2026-09-28T10:40:12+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:comment:ox40pu9",
+    "x:2080735558385709138",
+    "reddit:comment:p3noy5t",
+    "x:2089180750424031513",
+    "forums:technofino_1242200"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "recovery_conduct",
+   "label": "Recovery and collection conduct",
+   "group": "Loans",
+   "pillar": "security",
+   "owner": "compliance",
+   "owner_label": "Compliance",
+   "business": "loans",
+   "definition": "Recovery agents, collection calls, harassment, legal notices on dues.",
+   "count": 67,
+   "count_group_companies": 0,
+   "primary_count": 51,
+   "by_source": {
+    "playstore": 12,
+    "x": 44,
+    "reddit": 7,
+    "forum": 4
+   },
+   "by_business": {
+    "sme_merchant": 2,
+    "retail_banking": 13,
+    "cards": 17,
+    "loans": 33,
+    "payments": 2
+   },
+   "sentiment": {
+    "positive": 2,
+    "neutral": 4,
+    "negative": 61
+   },
+   "share_negative": 91.0,
+   "escalation_count": 31,
+   "share_escalation": 46.3,
+   "repeat_count": 7,
+   "status_seeking_count": 1,
+   "promise_break_count": 6,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.64
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3,
+     "share": 1.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.57
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2,
+     "share": 0.54
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.91
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2,
+     "share": 0.84
+    },
+    {
+     "week": "2026-08-17",
+     "count": 9,
+     "share": 3.63
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 1.53
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6,
+     "share": 3.09
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4,
+     "share": 1.69
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 0.55
+    },
+    {
+     "week": "2026-09-21",
+     "count": 14,
+     "share": 1.41
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2
+    },
+    {
+     "week": "2026-07-27",
+     "count": 3
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 4
+    },
+    {
+     "week": "2026-08-17",
+     "count": 9
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 10
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3
+    },
+    {
+     "week": "2026-09-21",
+     "count": 18
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 11,
+    "second_half": 42,
+    "first_share": 0.64,
+    "second_share": 1.78,
+    "change_pct": 177.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 79.1,
+   "rise_pct": 177.1,
+   "first_seen": "2026-07-05T11:14:04+05:30",
+   "latest": "2026-09-28T17:35:47+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2074741781523202305",
+    "x:2090740713432715694",
+    "reddit:comment:paqtrrx",
+    "reddit:1vvu96n",
+    "playstore:8f6c4755-7783-4255-8a64-14dc799d5d5c"
+   ],
+   "last_day_count": 5,
+   "score": 173.6,
+   "status": "this_week",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "account_opening",
+   "label": "Account opening and product conversion",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "retail",
+   "owner_label": "Retail",
+   "business": "retail_banking",
+   "definition": "Opening savings or current accounts, pending opening, account variant conversion, minimum balance programmes.",
+   "count": 64,
+   "count_group_companies": 0,
+   "primary_count": 31,
+   "by_source": {
+    "playstore": 33,
+    "appstore": 3,
+    "x": 10,
+    "reddit": 17,
+    "forum": 1
+   },
+   "by_business": {
+    "corporate": 1,
+    "sme_merchant": 6,
+    "retail_banking": 33,
+    "cards": 19,
+    "loans": 2,
+    "wealth": 3
+   },
+   "sentiment": {
+    "positive": 15,
+    "neutral": 5,
+    "negative": 44
+   },
+   "share_negative": 68.8,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 7,
+   "status_seeking_count": 2,
+   "promise_break_count": 5,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.54
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 1.59
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.37
+    },
+    {
+     "week": "2026-07-27",
+     "count": 7,
+     "share": 1.9
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1,
+     "share": 0.05
+    },
+    {
+     "week": "2026-08-10",
+     "count": 6,
+     "share": 2.1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3,
+     "share": 0.89
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.27
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7,
+     "share": 0.92
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 7
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 10
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6
+    },
+    {
+     "week": "2026-09-07",
+     "count": 9
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 12
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 19,
+    "second_half": 16,
+    "first_share": 0.98,
+    "second_share": 0.69,
+    "change_pct": -29.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 54.7,
+   "rise_pct": -29.9,
+   "first_seen": "2026-07-06T23:41:27+05:30",
+   "latest": "2026-09-28T21:23:11+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1vo4xi4",
+    "playstore:3ed14b2f-9460-445f-b648-b45534390726",
+    "x:2103460695274836047",
+    "x:2074392214156009849",
+    "playstore:d78069a0-bd54-49f9-bb35-a2df350423ba"
+   ],
+   "last_day_count": 4,
+   "score": 0,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "kyc_updates",
+   "label": "KYC, re-KYC and profile updates",
+   "group": "Service",
+   "pillar": "data_intimacy",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "retail_banking",
+   "definition": "KYC and re-KYC, mobile number or address updates, nominee, PAN or Aadhaar linking.",
+   "count": 57,
+   "count_group_companies": 0,
+   "primary_count": 22,
+   "by_source": {
+    "playstore": 15,
+    "appstore": 1,
+    "x": 10,
+    "reddit": 23,
+    "forum": 8
+   },
+   "by_business": {
+    "payments": 1,
+    "retail_banking": 22,
+    "sme_merchant": 1,
+    "cards": 33
+   },
+   "sentiment": {
+    "positive": 7,
+    "neutral": 17,
+    "negative": 33
+   },
+   "share_negative": 57.9,
+   "escalation_count": 5,
+   "share_escalation": 8.8,
+   "repeat_count": 3,
+   "status_seeking_count": 3,
+   "promise_break_count": 7,
+   "closure_intent_count": 2,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 6,
+     "share": 2.88
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1,
+     "share": 0.47
+    },
+    {
+     "week": "2026-07-13",
+     "count": 7,
+     "share": 3.92
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3,
+     "share": 0.71
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1,
+     "share": 0.28
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 5,
+     "share": 2.04
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 2,
+     "share": 0.86
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.56
+    },
+    {
+     "week": "2026-09-07",
+     "count": 8,
+     "share": 2.95
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3,
+     "share": 0.78
+    },
+    {
+     "week": "2026-09-21",
+     "count": 6,
+     "share": 1.48
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 6
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1
+    },
+    {
+     "week": "2026-07-13",
+     "count": 7
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 4
+    },
+    {
+     "week": "2026-09-07",
+     "count": 12
+    },
+    {
+     "week": "2026-09-14",
+     "count": 5
+    },
+    {
+     "week": "2026-09-21",
+     "count": 6
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 18,
+    "second_half": 25,
+    "first_share": 1.07,
+    "second_share": 1.11,
+    "change_pct": 4.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 75.4,
+   "rise_pct": 4.1,
+   "first_seen": "2026-07-01T14:05:05+05:30",
+   "latest": "2026-09-26T10:55:12+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "reddit:1v40nfp",
+    "reddit:1wgedoj",
+    "x:2088852679384518820",
+    "x:2080117675469279591",
+    "playstore:77967697-2757-4236-b0ae-f3f5cb8aadaa"
+   ],
+   "last_day_count": 0,
+   "score": 2.54,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "upi_failures",
+   "label": "UPI payments failing or pending",
+   "group": "Payments",
+   "pillar": "availability",
+   "owner": "payments",
+   "owner_label": "Payments",
+   "business": "payments",
+   "definition": "UPI payments failing, pending, declined or blocked; UPI PIN; UPI limits.",
+   "count": 55,
+   "count_group_companies": 0,
+   "primary_count": 48,
+   "by_source": {
+    "playstore": 4,
+    "x": 16,
+    "reddit": 34,
+    "forum": 1
+   },
+   "by_business": {
+    "payments": 12,
+    "cards": 43
+   },
+   "sentiment": {
+    "positive": 18,
+    "neutral": 17,
+    "negative": 20
+   },
+   "share_negative": 36.4,
+   "escalation_count": 3,
+   "share_escalation": 5.5,
+   "repeat_count": 3,
+   "status_seeking_count": 3,
+   "promise_break_count": 5,
+   "closure_intent_count": 4,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 1.18
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.94
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 0.78
+    },
+    {
+     "week": "2026-07-20",
+     "count": 4,
+     "share": 1.47
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.82
+    },
+    {
+     "week": "2026-08-03",
+     "count": 5,
+     "share": 1.92
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8,
+     "share": 2.37
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4,
+     "share": 1.42
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 1.37
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.56
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5,
+     "share": 1.88
+    },
+    {
+     "week": "2026-09-14",
+     "count": 4,
+     "share": 1.09
+    },
+    {
+     "week": "2026-09-21",
+     "count": 6,
+     "share": 1.26
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 3
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 4
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 5
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 6
+    },
+    {
+     "week": "2026-09-14",
+     "count": 4
+    },
+    {
+     "week": "2026-09-21",
+     "count": 6
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 21,
+    "second_half": 30,
+    "first_share": 1.17,
+    "second_share": 1.29,
+    "change_pct": 10.8,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 92.7,
+   "rise_pct": 10.8,
+   "first_seen": "2026-07-03T09:34:29+05:30",
+   "latest": "2026-09-28T11:11:25+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2083029053267919066",
+    "x:2098403160096375146",
+    "reddit:comment:p3tggod",
+    "playstore:c77886f6-d980-495c-80ee-8474d41521a1",
+    "playstore:4b283be7-3b6d-46c9-9a02-d929428b6138"
+   ],
+   "last_day_count": 2,
+   "score": 6.27,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "merchant_pos",
+   "label": "Merchant QR, POS and sound box",
+   "group": "Payments",
+   "pillar": "availability",
+   "owner": "payments",
+   "owner_label": "Payments",
+   "business": "sme_merchant",
+   "definition": "Merchant apps and devices: QR, POS machine, sound box, settlements (INDIE for Business).",
+   "count": 53,
+   "count_group_companies": 0,
+   "primary_count": 23,
+   "by_source": {
+    "playstore": 3,
+    "appstore": 1,
+    "x": 24,
+    "reddit": 23,
+    "forum": 2
+   },
+   "by_business": {
+    "sme_merchant": 12,
+    "cards": 27,
+    "wealth": 2,
+    "loans": 3,
+    "payments": 9
+   },
+   "sentiment": {
+    "positive": 13,
+    "neutral": 15,
+    "negative": 25
+   },
+   "share_negative": 47.2,
+   "escalation_count": 2,
+   "share_escalation": 3.8,
+   "repeat_count": 1,
+   "status_seeking_count": 4,
+   "promise_break_count": 5,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3,
+     "share": 1.14
+    },
+    {
+     "week": "2026-07-13",
+     "count": 7,
+     "share": 3.38
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.82
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1,
+     "share": 1.6
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9,
+     "share": 3.1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 5,
+     "share": 1.7
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4,
+     "share": 1.88
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6,
+     "share": 1.94
+    },
+    {
+     "week": "2026-09-07",
+     "count": 2,
+     "share": 0.84
+    },
+    {
+     "week": "2026-09-14",
+     "count": 4,
+     "share": 3.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7,
+     "share": 1.14
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3
+    },
+    {
+     "week": "2026-07-13",
+     "count": 7
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 9
+    },
+    {
+     "week": "2026-08-17",
+     "count": 5
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4
+    },
+    {
+     "week": "2026-08-31",
+     "count": 7
+    },
+    {
+     "week": "2026-09-07",
+     "count": 2
+    },
+    {
+     "week": "2026-09-14",
+     "count": 4
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 18,
+    "second_half": 34,
+    "first_share": 1.04,
+    "second_share": 1.52,
+    "change_pct": 46.4,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 98.1,
+   "rise_pct": 46.4,
+   "first_seen": "2026-07-06T08:15:18+05:30",
+   "latest": "2026-09-28T12:21:39+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2102987449840566345",
+    "x:2087882350348927328",
+    "reddit:comment:p0w70ei",
+    "reddit:comment:p7lq3cg",
+    "playstore:deddf869-ce15-49d6-9541-b73ac7bf73a7"
+   ],
+   "last_day_count": 2,
+   "score": 25.53,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "netbanking",
+   "label": "Net banking",
+   "group": "App and digital",
+   "pillar": "availability",
+   "owner": "digital",
+   "owner_label": "Digital",
+   "business": "retail_banking",
+   "definition": "Net banking access, errors and downtime.",
+   "count": 52,
+   "count_group_companies": 0,
+   "primary_count": 26,
+   "by_source": {
+    "playstore": 23,
+    "appstore": 6,
+    "x": 15,
+    "reddit": 5,
+    "forum": 3
+   },
+   "by_business": {
+    "sme_merchant": 12,
+    "retail_banking": 24,
+    "cards": 13,
+    "payments": 2,
+    "loans": 1
+   },
+   "sentiment": {
+    "positive": 4,
+    "neutral": 5,
+    "negative": 43
+   },
+   "share_negative": 82.7,
+   "escalation_count": 8,
+   "share_escalation": 15.4,
+   "repeat_count": 1,
+   "status_seeking_count": 2,
+   "promise_break_count": 8,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 1.26
+    },
+    {
+     "week": "2026-07-06",
+     "count": 5,
+     "share": 1.62
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 1.09
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4,
+     "share": 1.65
+    },
+    {
+     "week": "2026-08-03",
+     "count": 4,
+     "share": 1.33
+    },
+    {
+     "week": "2026-08-10",
+     "count": 7,
+     "share": 2.68
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4,
+     "share": 1.14
+    },
+    {
+     "week": "2026-08-24",
+     "count": 2,
+     "share": 1.05
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4,
+     "share": 0.95
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 1.48
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1,
+     "share": 0.1
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 3
+    },
+    {
+     "week": "2026-07-06",
+     "count": 5
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4
+    },
+    {
+     "week": "2026-08-03",
+     "count": 4
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8
+    },
+    {
+     "week": "2026-08-17",
+     "count": 6
+    },
+    {
+     "week": "2026-08-24",
+     "count": 5
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 25,
+    "second_half": 14,
+    "first_share": 1.34,
+    "second_share": 0.71,
+    "change_pct": -47.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 75.0,
+   "rise_pct": -47.1,
+   "first_seen": "2026-07-03T12:27:36+05:30",
+   "latest": "2026-09-25T18:23:40+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2086739232891289603",
+    "x:2086789650753196471",
+    "playstore:86c01539-ac2b-4dd0-91e4-f92f741fd8ec",
+    "playstore:c374eb9e-7308-45a8-b86a-a3bc1bbc36e3",
+    "appstore:14415297533"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Monitor"
+  },
+  {
+   "id": "deposits_rates",
+   "label": "Deposits and interest rates",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "retail",
+   "owner_label": "Retail",
+   "business": "retail_banking",
+   "definition": "Fixed deposits, interest rates, sweep-in.",
+   "count": 51,
+   "count_group_companies": 0,
+   "primary_count": 30,
+   "by_source": {
+    "playstore": 11,
+    "appstore": 4,
+    "x": 22,
+    "reddit": 14
+   },
+   "by_business": {
+    "retail_banking": 31,
+    "sme_merchant": 1,
+    "cards": 18,
+    "loans": 1
+   },
+   "sentiment": {
+    "positive": 13,
+    "neutral": 10,
+    "negative": 28
+   },
+   "share_negative": 54.9,
+   "escalation_count": 6,
+   "share_escalation": 11.8,
+   "repeat_count": 1,
+   "status_seeking_count": 1,
+   "promise_break_count": 1,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 2,
+     "share": 0.96
+    },
+    {
+     "week": "2026-07-06",
+     "count": 12,
+     "share": 4.28
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 3,
+     "share": 0.77
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1,
+     "share": 0.05
+    },
+    {
+     "week": "2026-08-10",
+     "count": 3,
+     "share": 0.97
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.21
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1,
+     "share": 0.51
+    },
+    {
+     "week": "2026-08-31",
+     "count": 4,
+     "share": 1.34
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3,
+     "share": 1.42
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7,
+     "share": 1.14
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 2
+    },
+    {
+     "week": "2026-07-06",
+     "count": 12
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 3
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 4
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 5
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7
+    },
+    {
+     "week": "2026-09-21",
+     "count": 8
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 21,
+    "second_half": 20,
+    "first_share": 1.1,
+    "second_share": 0.92,
+    "change_pct": -16.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 80.4,
+   "rise_pct": -16.9,
+   "first_seen": "2026-07-03T06:38:45+05:30",
+   "latest": "2026-09-28T19:27:51+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1w336h2",
+    "reddit:1w334o0",
+    "x:2103848759071526968",
+    "x:2100490743941050635",
+    "playstore:b3dd085c-3d14-4447-aff8-c5bd16c60063"
+   ],
+   "last_day_count": 3,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "account_freeze",
+   "label": "Account debit freezes and blocks",
+   "group": "Service",
+   "pillar": "availability",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "retail_banking",
+   "definition": "Accounts frozen or debit-blocked (KYC, undelivered letters, law-enforcement holds, suspicious activity), liens and holds.",
+   "count": 47,
+   "count_group_companies": 0,
+   "primary_count": 19,
+   "by_source": {
+    "playstore": 20,
+    "appstore": 1,
+    "x": 20,
+    "reddit": 5,
+    "forum": 1
+   },
+   "by_business": {
+    "sme_merchant": 6,
+    "retail_banking": 29,
+    "cards": 11,
+    "payments": 1
+   },
+   "sentiment": {
+    "positive": 1,
+    "neutral": 5,
+    "negative": 41
+   },
+   "share_negative": 87.2,
+   "escalation_count": 9,
+   "share_escalation": 19.1,
+   "repeat_count": 5,
+   "status_seeking_count": 3,
+   "promise_break_count": 8,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.64
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1,
+     "share": 0.31
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 1.24
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3,
+     "share": 0.92
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 3,
+     "share": 1.26
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3,
+     "share": 1.23
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 0.95
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.84
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 5,
+     "share": 2.6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7,
+     "share": 0.9
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 6
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4
+    },
+    {
+     "week": "2026-08-31",
+     "count": 7
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 9
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 9,
+    "second_half": 24,
+    "first_share": 0.51,
+    "second_share": 1.07,
+    "change_pct": 111.4,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 70.2,
+   "rise_pct": 111.4,
+   "first_seen": "2026-07-05T22:31:04+05:30",
+   "latest": "2026-09-28T13:20:03+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2100464526890262741",
+    "x:2100087001039196258",
+    "reddit:1wgrkgu",
+    "playstore:774a0572-ec2a-486c-a51e-86c68e2a2dec",
+    "playstore:89536257-075b-4e94-a49b-2c9dca0474be"
+   ],
+   "last_day_count": 3,
+   "score": 62.36,
+   "status": "this_week",
+   "action": "Set a new date"
+  },
+  {
+   "id": "loan_servicing",
+   "label": "EMI and loan account servicing",
+   "group": "Loans",
+   "pillar": "experience",
+   "owner": "loans",
+   "owner_label": "Loans",
+   "business": "loans",
+   "definition": "EMI schedule, EMI debit issues, loan details missing in app, interest-rate resets, part-payments.",
+   "count": 46,
+   "count_group_companies": 0,
+   "primary_count": 25,
+   "by_source": {
+    "playstore": 11,
+    "appstore": 3,
+    "x": 10,
+    "reddit": 20,
+    "forum": 2
+   },
+   "by_business": {
+    "sme_merchant": 1,
+    "loans": 23,
+    "cards": 22
+   },
+   "sentiment": {
+    "positive": 5,
+    "neutral": 15,
+    "negative": 26
+   },
+   "share_negative": 56.5,
+   "escalation_count": 2,
+   "share_escalation": 4.3,
+   "repeat_count": 1,
+   "status_seeking_count": 1,
+   "promise_break_count": 4,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 1.36
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.57
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.57
+    },
+    {
+     "week": "2026-08-03",
+     "count": 6,
+     "share": 3.28
+    },
+    {
+     "week": "2026-08-10",
+     "count": 3,
+     "share": 0.83
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2,
+     "share": 0.45
+    },
+    {
+     "week": "2026-08-24",
+     "count": 2,
+     "share": 0.69
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.73
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4,
+     "share": 1.46
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 1.18
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7,
+     "share": 0.7
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 3
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 6
+    },
+    {
+     "week": "2026-08-10",
+     "count": 5
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 7
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3
+    },
+    {
+     "week": "2026-09-21",
+     "count": 7
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 12,
+    "second_half": 24,
+    "first_share": 0.67,
+    "second_share": 1.15,
+    "change_pct": 71.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 78.3,
+   "rise_pct": 71.9,
+   "first_seen": "2026-07-01T16:15:13+05:30",
+   "latest": "2026-09-28T10:40:12+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2100911737902133644",
+    "reddit:1vpu9k7",
+    "x:2104063335142764662",
+    "playstore:1eecb218-06b0-4a3d-b853-327e7e059fd3",
+    "playstore:39ba9b0b-6a8b-40bb-a623-d954b7c69b30"
+   ],
+   "last_day_count": 2,
+   "score": 34.5,
+   "status": "this_week",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "card_limit",
+   "label": "Credit limit",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Credit limit too low, limit enhancement, limit cut.",
+   "count": 44,
+   "count_group_companies": 0,
+   "primary_count": 18,
+   "by_source": {
+    "playstore": 4,
+    "x": 8,
+    "reddit": 25,
+    "forum": 7
+   },
+   "by_business": {
+    "retail_banking": 3,
+    "cards": 39,
+    "loans": 2
+   },
+   "sentiment": {
+    "positive": 19,
+    "neutral": 12,
+    "negative": 13
+   },
+   "share_negative": 29.5,
+   "escalation_count": 1,
+   "share_escalation": 2.3,
+   "repeat_count": 0,
+   "status_seeking_count": 3,
+   "promise_break_count": 3,
+   "closure_intent_count": 4,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.94
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 1.63
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.37
+    },
+    {
+     "week": "2026-07-27",
+     "count": 6,
+     "share": 5.93
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2,
+     "share": 0.64
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 12,
+     "share": 2.3
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6,
+     "share": 1.9
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4,
+     "share": 1.54
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.64
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 6
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 12
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 7
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 3
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 14,
+    "second_half": 26,
+    "first_share": 0.79,
+    "second_share": 1.08,
+    "change_pct": 37.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 90.9,
+   "rise_pct": 37.6,
+   "first_seen": "2026-07-09T18:08:15+05:30",
+   "latest": "2026-09-28T10:50:08+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1vqobff",
+    "reddit:1vqobya",
+    "playstore:d9b8e8bc-b531-444a-99d6-761cde7c2c62",
+    "forums:technofino_1251771",
+    "forums:technofino_1246650"
+   ],
+   "last_day_count": 1,
+   "score": 16.92,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "fees_charges_bank",
+   "label": "Bank charges and hidden fees",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "retail",
+   "owner_label": "Retail",
+   "business": "retail_banking",
+   "definition": "Account charges, penalties, deductions without intimation, minimum balance penalties.",
+   "count": 36,
+   "count_group_companies": 0,
+   "primary_count": 18,
+   "by_source": {
+    "playstore": 6,
+    "x": 10,
+    "reddit": 12,
+    "forum": 8
+   },
+   "by_business": {
+    "retail_banking": 14,
+    "cards": 20,
+    "loans": 1,
+    "payments": 1
+   },
+   "sentiment": {
+    "positive": 6,
+    "neutral": 12,
+    "negative": 18
+   },
+   "share_negative": 50.0,
+   "escalation_count": 1,
+   "share_escalation": 2.8,
+   "repeat_count": 2,
+   "status_seeking_count": 7,
+   "promise_break_count": 2,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 7,
+     "share": 3.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3,
+     "share": 1.42
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.39
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.17
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1,
+     "share": 0.28
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1,
+     "share": 0.48
+    },
+    {
+     "week": "2026-08-10",
+     "count": 3,
+     "share": 1.12
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.5
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 1.37
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.86
+    },
+    {
+     "week": "2026-09-07",
+     "count": 6,
+     "share": 2.21
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.57
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 7
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 4
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4
+    },
+    {
+     "week": "2026-08-31",
+     "count": 3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 7
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 16,
+    "second_half": 14,
+    "first_share": 0.92,
+    "second_share": 0.56,
+    "change_pct": -39.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 83.3,
+   "rise_pct": -39.6,
+   "first_seen": "2026-07-01T14:56:09+05:30",
+   "latest": "2026-09-28T13:38:29+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "reddit:1ukgrvg",
+    "playstore:7083a9c0-6dc8-49ec-a1b9-3f32ce6d1ffa",
+    "x:2084949159858385077",
+    "reddit:1ukgso7",
+    "playstore:2e57cb72-30c9-4b03-a21f-dc7c53beff54"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "fraud_scam",
+   "label": "Fraud and scam calls",
+   "group": "Security",
+   "pillar": "security",
+   "owner": "fraud_cyber",
+   "owner_label": "Fraud and Cyber",
+   "business": "retail_banking",
+   "definition": "Scam calls and messages, impersonation, frauds reported by customers.",
+   "count": 34,
+   "count_group_companies": 0,
+   "primary_count": 21,
+   "by_source": {
+    "playstore": 2,
+    "x": 26,
+    "reddit": 4,
+    "forum": 2
+   },
+   "by_business": {
+    "retail_banking": 24,
+    "sme_merchant": 2,
+    "loans": 1,
+    "cards": 7
+   },
+   "sentiment": {
+    "positive": 0,
+    "neutral": 5,
+    "negative": 29
+   },
+   "share_negative": 85.3,
+   "escalation_count": 13,
+   "share_escalation": 38.2,
+   "repeat_count": 5,
+   "status_seeking_count": 1,
+   "promise_break_count": 2,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.64
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 1.7
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2,
+     "share": 0.73
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1,
+     "share": 0.54
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4,
+     "share": 1.71
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.84
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3,
+     "share": 2.73
+    },
+    {
+     "week": "2026-09-21",
+     "count": 11,
+     "share": 1.11
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3
+    },
+    {
+     "week": "2026-09-21",
+     "count": 13
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 25,
+    "first_share": 0.34,
+    "second_share": 1.06,
+    "change_pct": 213.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 91.2,
+   "rise_pct": 213.9,
+   "first_seen": "2026-07-03T08:52:46+05:30",
+   "latest": "2026-09-28T14:30:40+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2100652864955928581",
+    "x:2089413428813443215",
+    "reddit:comment:pcitsoo",
+    "playstore:d18aa853-3ab5-4b0b-a6d8-a128cf2fbd5b",
+    "reddit:comment:oznwnr0"
+   ],
+   "last_day_count": 3,
+   "score": 100.51,
+   "status": "this_week",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "rm_service",
+   "label": "Relationship manager service",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "rm",
+   "owner_label": "RM",
+   "business": "retail_banking",
+   "definition": "RM unreachable, RM changes, RM advice and conduct.",
+   "count": 31,
+   "count_group_companies": 0,
+   "primary_count": 16,
+   "by_source": {
+    "playstore": 14,
+    "x": 9,
+    "reddit": 7,
+    "forum": 1
+   },
+   "by_business": {
+    "sme_merchant": 5,
+    "payments": 1,
+    "retail_banking": 14,
+    "cards": 8,
+    "loans": 3
+   },
+   "sentiment": {
+    "positive": 9,
+    "neutral": 6,
+    "negative": 16
+   },
+   "share_negative": 51.6,
+   "escalation_count": 3,
+   "share_escalation": 9.7,
+   "repeat_count": 2,
+   "status_seeking_count": 1,
+   "promise_break_count": 5,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 1.55
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2,
+     "share": 0.34
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1,
+     "share": 0.4
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4,
+     "share": 0.78
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1,
+     "share": 0.51
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3,
+     "share": 0.97
+    },
+    {
+     "week": "2026-09-14",
+     "count": 4,
+     "share": 1.73
+    },
+    {
+     "week": "2026-09-21",
+     "count": 3,
+     "share": 0.52
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 4
+    },
+    {
+     "week": "2026-09-14",
+     "count": 4
+    },
+    {
+     "week": "2026-09-21",
+     "count": 4
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 16,
+    "first_share": 0.34,
+    "second_share": 0.68,
+    "change_pct": 99.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 71.0,
+   "rise_pct": 99.5,
+   "first_seen": "2026-07-14T11:56:45+05:30",
+   "latest": "2026-09-28T16:23:49+05:30",
+   "rung": "Grievance",
+   "exemplars": [
+    "x:2100464526890262741",
+    "x:2076916288447041674",
+    "playstore:60fd10fb-9628-4770-a490-fde01ce995ba",
+    "playstore:dd89cc41-2253-4989-ba34-2e59ca21c4ba",
+    "reddit:1wbh1g9"
+   ],
+   "last_day_count": 2,
+   "score": 33.84,
+   "status": "this_week",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "nri_forex",
+   "label": "NRI and forex services",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "retail",
+   "owner_label": "Retail",
+   "business": "retail_banking",
+   "definition": "NRI accounts, remittances, forex cards.",
+   "count": 30,
+   "count_group_companies": 0,
+   "primary_count": 14,
+   "by_source": {
+    "playstore": 4,
+    "appstore": 5,
+    "x": 10,
+    "reddit": 11
+   },
+   "by_business": {
+    "retail_banking": 16,
+    "sme_merchant": 1,
+    "wealth": 2,
+    "cards": 11
+   },
+   "sentiment": {
+    "positive": 7,
+    "neutral": 10,
+    "negative": 13
+   },
+   "share_negative": 43.3,
+   "escalation_count": 1,
+   "share_escalation": 3.3,
+   "repeat_count": 1,
+   "status_seeking_count": 4,
+   "promise_break_count": 2,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3,
+     "share": 1.14
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.85
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3,
+     "share": 0.71
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5,
+     "share": 1.51
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2,
+     "share": 0.1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2,
+     "share": 0.55
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2,
+     "share": 0.71
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-09-14",
+     "count": 5,
+     "share": 1.96
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.2
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 6
+    },
+    {
+     "week": "2026-09-21",
+     "count": 3
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 15,
+    "second_half": 12,
+    "first_share": 0.74,
+    "second_share": 0.58,
+    "change_pct": -22.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 90.0,
+   "rise_pct": -22.0,
+   "first_seen": "2026-07-09T01:56:52+05:30",
+   "latest": "2026-09-26T18:49:22+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:comment:p02dxfd",
+    "playstore:69c92c96-d407-4bc4-b8fe-6433b93f1944",
+    "playstore:aa9443dd-df2c-44ea-ad46-44768f9ff07c",
+    "appstore:14381490643",
+    "appstore:14367556520"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "unauthorised_txn",
+   "label": "Unauthorised transactions",
+   "group": "Security",
+   "pillar": "security",
+   "owner": "fraud_cyber",
+   "owner_label": "Fraud and Cyber",
+   "business": "cards",
+   "definition": "Transactions the customer did not make, card misuse, money stolen from account.",
+   "count": 28,
+   "count_group_companies": 0,
+   "primary_count": 7,
+   "by_source": {
+    "playstore": 15,
+    "appstore": 2,
+    "x": 6,
+    "reddit": 4,
+    "forum": 1
+   },
+   "by_business": {
+    "retail_banking": 21,
+    "cards": 7
+   },
+   "sentiment": {
+    "positive": 1,
+    "neutral": 1,
+    "negative": 26
+   },
+   "share_negative": 92.9,
+   "escalation_count": 2,
+   "share_escalation": 7.1,
+   "repeat_count": 3,
+   "status_seeking_count": 1,
+   "promise_break_count": 3,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.57
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2,
+     "share": 0.1
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.5
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 1.82
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.42
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2
+    },
+    {
+     "week": "2026-09-21",
+     "count": 3
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 5,
+    "second_half": 7,
+    "first_share": 0.23,
+    "second_share": 0.3,
+    "change_pct": 30.4,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 42.9,
+   "rise_pct": null,
+   "first_seen": "2026-07-28T09:28:18+05:30",
+   "latest": "2026-09-27T17:36:34+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2086739232891289603",
+    "x:2100464526890262741",
+    "playstore:acade7eb-2f25-471a-8c31-d24b76d64e45",
+    "reddit:comment:p075z43",
+    "playstore:9784833d-51bb-4419-9120-732e00d56e55"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "card_variant_migration",
+   "label": "Card variant migration and forced upgrade",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "cards",
+   "owner_label": "Cards",
+   "business": "cards",
+   "definition": "Card variants phased out or converted (EazyDiner, Avios, Jio-bp and other co-brand changes); forced upgrade or downgrade.",
+   "count": 23,
+   "count_group_companies": 0,
+   "primary_count": 16,
+   "by_source": {
+    "playstore": 4,
+    "appstore": 1,
+    "x": 4,
+    "reddit": 9,
+    "forum": 5
+   },
+   "by_business": {
+    "retail_banking": 1,
+    "cards": 22
+   },
+   "sentiment": {
+    "positive": 2,
+    "neutral": 5,
+    "negative": 16
+   },
+   "share_negative": 69.6,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 1,
+   "status_seeking_count": 0,
+   "promise_break_count": 5,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.57
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.57
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.57
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.28
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4,
+     "share": 0.88
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 0.52
+    },
+    {
+     "week": "2026-08-31",
+     "count": 3,
+     "share": 1.16
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.27
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.2
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 4
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 4
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 13,
+    "first_share": 0.37,
+    "second_share": 0.6,
+    "change_pct": 62.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 82.6,
+   "rise_pct": 62.6,
+   "first_seen": "2026-07-08T22:22:34+05:30",
+   "latest": "2026-09-27T09:49:25+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2095100349577359773",
+    "reddit:1vo4vgq",
+    "x:2104063335142764662",
+    "reddit:1w77k4f",
+    "playstore:664de881-8861-4aa9-adf9-8255dc211612"
+   ],
+   "last_day_count": 0,
+   "score": 14.4,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "mis_selling",
+   "label": "Mis-selling and bundled products",
+   "group": "Security",
+   "pillar": "data_intimacy",
+   "owner": "compliance",
+   "owner_label": "Compliance",
+   "business": "retail_banking",
+   "definition": "Insurance or investments pushed with loans or accounts, misleading claims, ULIPs.",
+   "count": 23,
+   "count_group_companies": 0,
+   "primary_count": 18,
+   "by_source": {
+    "playstore": 1,
+    "x": 17,
+    "reddit": 4,
+    "forum": 1
+   },
+   "by_business": {
+    "cards": 8,
+    "loans": 3,
+    "retail_banking": 12
+   },
+   "sentiment": {
+    "positive": 3,
+    "neutral": 6,
+    "negative": 14
+   },
+   "share_negative": 60.9,
+   "escalation_count": 10,
+   "share_escalation": 43.5,
+   "repeat_count": 1,
+   "status_seeking_count": 2,
+   "promise_break_count": 0,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1,
+     "share": 0.33
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.17
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5,
+     "share": 2.7
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.21
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6,
+     "share": 2.23
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 1.11
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.91
+    },
+    {
+     "week": "2026-09-21",
+     "count": 4,
+     "share": 0.4
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1
+    },
+    {
+     "week": "2026-09-21",
+     "count": 4
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 8,
+    "second_half": 14,
+    "first_share": 0.46,
+    "second_share": 0.59,
+    "change_pct": 29.3,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 95.7,
+   "rise_pct": 29.3,
+   "first_seen": "2026-07-11T15:06:29+05:30",
+   "latest": "2026-09-24T12:07:23+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2075876875881320830",
+    "x:2095524521948381621",
+    "playstore:39ba9b0b-6a8b-40bb-a623-d954b7c69b30",
+    "reddit:comment:p47okmh",
+    "forums:technofino_1254103"
+   ],
+   "last_day_count": 0,
+   "score": 9.67,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "credit_report",
+   "label": "CIBIL and credit-report correction",
+   "group": "Security",
+   "pillar": "data_intimacy",
+   "owner": "compliance",
+   "owner_label": "Compliance",
+   "business": "retail_banking",
+   "definition": "Wrong entries on credit reports, CIBIL score impact, correction delays.",
+   "count": 21,
+   "count_group_companies": 0,
+   "primary_count": 17,
+   "by_source": {
+    "playstore": 2,
+    "x": 3,
+    "reddit": 16
+   },
+   "by_business": {
+    "loans": 4,
+    "cards": 15,
+    "retail_banking": 2
+   },
+   "sentiment": {
+    "positive": 2,
+    "neutral": 3,
+    "negative": 16
+   },
+   "share_negative": 76.2,
+   "escalation_count": 5,
+   "share_escalation": 23.8,
+   "repeat_count": 1,
+   "status_seeking_count": 1,
+   "promise_break_count": 4,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2,
+     "share": 0.78
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.17
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4,
+     "share": 1.13
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.28
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2,
+     "share": 0.43
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3,
+     "share": 1.2
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.56
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3,
+     "share": 1.04
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 0.55
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3
+    },
+    {
+     "week": "2026-08-24",
+     "count": 3
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 8,
+    "second_half": 11,
+    "first_share": 0.44,
+    "second_share": 0.48,
+    "change_pct": 9.8,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 90.5,
+   "rise_pct": 9.8,
+   "first_seen": "2026-07-13T21:24:33+05:30",
+   "latest": "2026-09-22T17:40:03+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "reddit:1wfbuz1",
+    "reddit:1uvfhzw",
+    "x:2080124313236312514",
+    "playstore:26aa26f3-a093-49e6-9054-305a0f22d58e",
+    "playstore:9c8dd102-b104-4100-b114-a170b43bb527"
+   ],
+   "last_day_count": 0,
+   "score": 2.55,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "loan_processing",
+   "label": "Loan processing and disbursal",
+   "group": "Loans",
+   "pillar": "experience",
+   "owner": "loans",
+   "owner_label": "Loans",
+   "business": "loans",
+   "definition": "Loan applications, sanction, disbursal delays, valuation and verification, documentation.",
+   "count": 18,
+   "count_group_companies": 0,
+   "primary_count": 11,
+   "by_source": {
+    "playstore": 1,
+    "appstore": 1,
+    "x": 13,
+    "reddit": 3
+   },
+   "by_business": {
+    "sme_merchant": 1,
+    "loans": 16,
+    "cards": 1
+   },
+   "sentiment": {
+    "positive": 3,
+    "neutral": 7,
+    "negative": 8
+   },
+   "share_negative": 44.4,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 1,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.64
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 2.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 4,
+     "share": 0.68
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4,
+     "share": 1.05
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.29
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 4
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 16,
+    "second_half": 2,
+    "first_share": 0.88,
+    "second_share": 0.08,
+    "change_pct": -90.4,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 100.0,
+   "rise_pct": -90.4,
+   "first_seen": "2026-07-03T22:24:25+05:30",
+   "latest": "2026-09-28T15:00:27+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "appstore:14361883380",
+    "x:2073949876334010718",
+    "reddit:1vcvn7x",
+    "reddit:1vcv7u0",
+    "x:2073952232425541939"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Monitor"
+  },
+  {
+   "id": "unsolicited_calls",
+   "label": "Unsolicited sales calls and use of data",
+   "group": "Security",
+   "pillar": "data_intimacy",
+   "owner": "compliance",
+   "owner_label": "Compliance",
+   "business": "retail_banking",
+   "definition": "Repeated sales calls, spam, 'where did you get my number', marketing without consent.",
+   "count": 15,
+   "count_group_companies": 0,
+   "primary_count": 11,
+   "by_source": {
+    "x": 9,
+    "reddit": 6
+   },
+   "by_business": {
+    "retail_banking": 7,
+    "loans": 1,
+    "cards": 7
+   },
+   "sentiment": {
+    "positive": 2,
+    "neutral": 6,
+    "negative": 7
+   },
+   "share_negative": 46.7,
+   "escalation_count": 1,
+   "share_escalation": 6.7,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 0,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.64
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1,
+     "share": 0.33
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 2.54
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2,
+     "share": 0.54
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.57
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 1.18
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1,
+     "share": 0.32
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 9,
+    "second_half": 6,
+    "first_share": 0.51,
+    "second_share": 0.26,
+    "change_pct": -48.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 100.0,
+   "rise_pct": -48.9,
+   "first_seen": "2026-07-05T13:50:45+05:30",
+   "latest": "2026-09-28T14:05:52+05:30",
+   "rung": "Public",
+   "exemplars": [
+    "x:2075876875881320830",
+    "reddit:1v8m1aq",
+    "x:2076916288447041674",
+    "reddit:comment:p075z43"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "card_dispatch",
+   "label": "Card dispatch and delivery",
+   "group": "Cards",
+   "pillar": "experience",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "cards",
+   "definition": "Card or welcome kit not delivered, courier issues, activation after delivery.",
+   "count": 15,
+   "count_group_companies": 0,
+   "primary_count": 6,
+   "by_source": {
+    "x": 3,
+    "reddit": 9,
+    "forum": 3
+   },
+   "by_business": {
+    "cards": 14,
+    "sme_merchant": 1
+   },
+   "sentiment": {
+    "positive": 3,
+    "neutral": 4,
+    "negative": 8
+   },
+   "share_negative": 53.3,
+   "escalation_count": 2,
+   "share_escalation": 13.3,
+   "repeat_count": 0,
+   "status_seeking_count": 2,
+   "promise_break_count": 5,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1,
+     "share": 0.24
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1,
+     "share": 0.28
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2,
+     "share": 0.95
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3,
+     "share": 0.79
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3,
+     "share": 1.04
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 0.55
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 1
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 3,
+    "second_half": 12,
+    "first_share": 0.2,
+    "second_share": 0.51,
+    "change_pct": 151.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 100.0,
+   "rise_pct": null,
+   "first_seen": "2026-07-06T05:30:00+05:30",
+   "latest": "2026-09-28T18:08:45+05:30",
+   "rung": "Repeat",
+   "exemplars": [
+    "reddit:1wdd4rl",
+    "x:2089249077418704946",
+    "forums:technofino_1251813",
+    "reddit:1wg198g",
+    "forums:technofino_1249497"
+   ],
+   "last_day_count": 1,
+   "score": 0,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "failed_txn_reversal",
+   "label": "Failed transaction reversal",
+   "group": "Payments",
+   "pillar": "experience",
+   "owner": "payments",
+   "owner_label": "Payments",
+   "business": "payments",
+   "definition": "Money debited but not received or not reversed; ATM cash not dispensed; failed transaction refund.",
+   "count": 14,
+   "count_group_companies": 0,
+   "primary_count": 13,
+   "by_source": {
+    "playstore": 1,
+    "x": 9,
+    "reddit": 4
+   },
+   "by_business": {
+    "retail_banking": 1,
+    "loans": 1,
+    "payments": 3,
+    "cards": 9
+   },
+   "sentiment": {
+    "positive": 1,
+    "neutral": 4,
+    "negative": 9
+   },
+   "share_negative": 64.3,
+   "escalation_count": 4,
+   "share_escalation": 28.6,
+   "repeat_count": 0,
+   "status_seeking_count": 1,
+   "promise_break_count": 4,
+   "closure_intent_count": 2,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 2,
+     "share": 1.29
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.81
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.39
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.28
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.5
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.3
+    },
+    {
+     "week": "2026-09-07",
+     "count": 2,
+     "share": 0.84
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 3,
+     "share": 0.3
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 2
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 2
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 4
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 5,
+    "second_half": 8,
+    "first_share": 0.28,
+    "second_share": 0.34,
+    "change_pct": 21.8,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 92.9,
+   "rise_pct": 21.8,
+   "first_seen": "2026-07-01T21:23:22+05:30",
+   "latest": "2026-09-26T20:02:56+05:30",
+   "rung": "Public",
+   "exemplars": [
+    "x:2102987449840566345",
+    "x:2103035389569319170",
+    "reddit:comment:owab6fz",
+    "playstore:9353053e-4d40-4b92-bffd-a1f47dda1b35",
+    "reddit:1voshqy"
+   ],
+   "last_day_count": 0,
+   "score": 3.92,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "loan_closure_documents",
+   "label": "Loan closure, foreclosure and documents",
+   "group": "Loans",
+   "pillar": "experience",
+   "owner": "loans",
+   "owner_label": "Loans",
+   "business": "loans",
+   "definition": "Foreclosure, final settlement, NOC, release of original property documents.",
+   "count": 13,
+   "count_group_companies": 0,
+   "primary_count": 4,
+   "by_source": {
+    "playstore": 3,
+    "x": 6,
+    "reddit": 3,
+    "forum": 1
+   },
+   "by_business": {
+    "loans": 11,
+    "cards": 2
+   },
+   "sentiment": {
+    "positive": 0,
+    "neutral": 2,
+    "negative": 11
+   },
+   "share_negative": 84.6,
+   "escalation_count": 4,
+   "share_escalation": 30.8,
+   "repeat_count": 0,
+   "status_seeking_count": 1,
+   "promise_break_count": 3,
+   "closure_intent_count": 1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.67
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.82
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2,
+     "share": 0.7
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1,
+     "share": 0.51
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1,
+     "share": 0.1
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 2
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 3,
+    "first_share": 0.34,
+    "second_share": 0.13,
+    "change_pct": -62.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 69.2,
+   "rise_pct": null,
+   "first_seen": "2026-07-05T05:30:00+05:30",
+   "latest": "2026-09-25T11:29:19+05:30",
+   "rung": "Repeat",
+   "exemplars": [
+    "x:2075119427155288278",
+    "reddit:1vnc7vu",
+    "x:2086699439788613694",
+    "playstore:d46cdf8c-bfb2-4fcd-9e24-ffc17a668985",
+    "playstore:fe643c28-97d8-4edc-917e-81b5b651af7c"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Notify proactively"
+  },
+  {
+   "id": "dispute_chargeback",
+   "label": "Disputes and chargebacks",
+   "group": "Service",
+   "pillar": "experience",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "cards",
+   "definition": "Disputed transactions, chargebacks, dispute outcomes and delays.",
+   "count": 11,
+   "count_group_companies": 0,
+   "primary_count": 8,
+   "by_source": {
+    "x": 2,
+    "reddit": 9
+   },
+   "by_business": {
+    "payments": 2,
+    "cards": 9
+   },
+   "sentiment": {
+    "positive": 2,
+    "neutral": 2,
+    "negative": 7
+   },
+   "share_negative": 63.6,
+   "escalation_count": 2,
+   "share_escalation": 18.2,
+   "repeat_count": 1,
+   "status_seeking_count": 3,
+   "promise_break_count": 1,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.48
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.94
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 3,
+     "share": 0.98
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3,
+     "share": 0.64
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.91
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 3
+    },
+    {
+     "week": "2026-08-17",
+     "count": 3
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 1
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 5,
+    "second_half": 6,
+    "first_share": 0.27,
+    "second_share": 0.26,
+    "change_pct": -4.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "trend_within_window",
+   "basis_share": 100.0,
+   "rise_pct": -4.1,
+   "first_seen": "2026-07-04T15:06:09+05:30",
+   "latest": "2026-09-18T07:28:27+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2088656178452795767",
+    "reddit:comment:p4ths95",
+    "reddit:1vnc7vu",
+    "x:2100766368715112883"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Set a new date"
+  },
+  {
+   "id": "phishing",
+   "label": "Phishing messages and fake links",
+   "group": "Security",
+   "pillar": "security",
+   "owner": "fraud_cyber",
+   "owner_label": "Fraud and Cyber",
+   "business": "retail_banking",
+   "definition": "Phishing SMS, fake links, fake apps, APK files.",
+   "count": 10,
+   "count_group_companies": 0,
+   "primary_count": 2,
+   "by_source": {
+    "playstore": 5,
+    "x": 4,
+    "reddit": 1
+   },
+   "by_business": {
+    "retail_banking": 6,
+    "sme_merchant": 1,
+    "loans": 1,
+    "cards": 2
+   },
+   "sentiment": {
+    "positive": 2,
+    "neutral": 2,
+    "negative": 6
+   },
+   "share_negative": 60.0,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 1,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1,
+     "share": 0.37
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1,
+     "share": 0.54
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.5
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.56
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1,
+     "share": 0.1
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 1
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 2
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 2,
+    "second_half": 3,
+    "first_share": 0.11,
+    "second_share": 0.13,
+    "change_pct": 13.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 50.0,
+   "rise_pct": null,
+   "first_seen": "2026-07-25T16:59:03+05:30",
+   "latest": "2026-09-23T17:33:41+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "playstore:237de3c7-7124-4816-ae59-f4a0038d64b7",
+    "playstore:48a17360-1286-4698-b313-3196eb32b0fa",
+    "reddit:comment:oznwnr0",
+    "playstore:4e8ffaec-35f5-46dc-8062-e5c51c412fc8",
+    "playstore:172d4136-0767-4cf5-9649-1ee9bfb141e2"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "service_praise",
+   "label": "Praise for service",
+   "group": "Other",
+   "pillar": "experience",
+   "owner": "cx",
+   "owner_label": "CX",
+   "business": "retail_banking",
+   "definition": "Customers praising staff, RMs, resolution or the bank overall.",
+   "count": 4,
+   "count_group_companies": 0,
+   "primary_count": 4,
+   "by_source": {
+    "x": 4
+   },
+   "by_business": {
+    "retail_banking": 3,
+    "cards": 1
+   },
+   "sentiment": {
+    "positive": 4,
+    "neutral": 0,
+    "negative": 0
+   },
+   "share_negative": 0.0,
+   "escalation_count": 0,
+   "share_escalation": 0.0,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 0,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2,
+     "share": 0.34
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1,
+     "share": 0.54
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1,
+     "share": 0.51
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 1
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 3,
+    "second_half": 1,
+    "first_share": 0.17,
+    "second_share": 0.04,
+    "change_pct": -75.4,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 100.0,
+   "rise_pct": null,
+   "first_seen": "2026-07-22T22:46:55+05:30",
+   "latest": "2026-08-25T16:58:12+05:30",
+   "rung": "Voice",
+   "exemplars": [
+    "x:2079979012621996399",
+    "x:2092212445104484603",
+    "x:2081755175371542878",
+    "x:2080909865967587420"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "improving",
+   "action": "Monitor"
+  },
+  {
+   "id": "refund_delay",
+   "label": "Refunds not credited",
+   "group": "Payments",
+   "pillar": "experience",
+   "owner": "operations",
+   "owner_label": "Operations",
+   "business": "payments",
+   "definition": "Merchant or excess-payment refunds not credited in time.",
+   "count": 4,
+   "count_group_companies": 0,
+   "primary_count": 4,
+   "by_source": {
+    "playstore": 1,
+    "x": 1,
+    "reddit": 1,
+    "forum": 1
+   },
+   "by_business": {
+    "payments": 3,
+    "cards": 1
+   },
+   "sentiment": {
+    "positive": 0,
+    "neutral": 0,
+    "negative": 4
+   },
+   "share_negative": 100.0,
+   "escalation_count": 1,
+   "share_escalation": 25.0,
+   "repeat_count": 0,
+   "status_seeking_count": 1,
+   "promise_break_count": 2,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 1,
+     "share": 0.48
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1,
+     "share": 0.1
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 1
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 1
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 1
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 1,
+    "second_half": 1,
+    "first_share": 0.05,
+    "second_share": 0.04,
+    "change_pct": -22.2,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 50.0,
+   "rise_pct": null,
+   "first_seen": "2026-07-03T11:50:12+05:30",
+   "latest": "2026-09-24T12:52:41+05:30",
+   "rung": "RBI Ombudsman",
+   "exemplars": [
+    "x:2103022294046216578",
+    "playstore:2ed8c178-1a47-4478-9cd0-685a57954270",
+    "reddit:comment:ov9p3jp"
+   ],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Notify proactively"
+  },
+  {
+   "id": "trading_securities",
+   "label": "Trading and IPO (group company)",
+   "group": "Group",
+   "pillar": "availability",
+   "owner": "product",
+   "owner_label": "Product",
+   "business": "group_company",
+   "definition": "Trading app, orders, IPO, brokerage (group company).",
+   "count": 0,
+   "count_group_companies": 7,
+   "primary_count": 0,
+   "by_source": {},
+   "by_business": {},
+   "sentiment": {
+    "positive": 0,
+    "neutral": 0,
+    "negative": 0
+   },
+   "share_negative": null,
+   "escalation_count": 0,
+   "share_escalation": null,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 0,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 0,
+   "rise_pct": null,
+   "first_seen": null,
+   "latest": null,
+   "rung": "Voice",
+   "exemplars": [],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  },
+  {
+   "id": "insurance_group",
+   "label": "Insurance policies and claims (IndusInd Nippon Life, IndusInd General)",
+   "group": "Group",
+   "pillar": "experience",
+   "owner": "product",
+   "owner_label": "Product",
+   "business": "group_company",
+   "definition": "Policy servicing, claims, premiums, surrender (group companies).",
+   "count": 0,
+   "count_group_companies": 364,
+   "primary_count": 0,
+   "by_source": {},
+   "by_business": {},
+   "sentiment": {
+    "positive": 0,
+    "neutral": 0,
+    "negative": 0
+   },
+   "share_negative": null,
+   "escalation_count": 0,
+   "share_escalation": null,
+   "repeat_count": 0,
+   "status_seeking_count": 0,
+   "promise_break_count": 0,
+   "closure_intent_count": 0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0,
+     "share": 0.0
+    }
+   ],
+   "weekly_all": [
+    {
+     "week": "2026-06-29",
+     "count": 0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 0
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 0
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 0
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 0
+    },
+    {
+     "week": "2026-09-07",
+     "count": 0
+    },
+    {
+     "week": "2026-09-14",
+     "count": 0
+    },
+    {
+     "week": "2026-09-21",
+     "count": 0
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "vs_baseline": null,
+   "trend_mode": "insufficient",
+   "basis_share": 0,
+   "rise_pct": null,
+   "first_seen": null,
+   "latest": null,
+   "rung": "Voice",
+   "exemplars": [],
+   "last_day_count": 0,
+   "score": 0,
+   "status": "watching",
+   "action": "Route with evidence"
+  }
+ ],
+ "pillars": [
+  {
+   "id": "availability",
+   "label": "Availability",
+   "count": 2301,
+   "sentiment": {
+    "positive": 112,
+    "neutral": 167,
+    "negative": 2022
+   },
+   "net_sentiment": -45.7,
+   "net_first_half": -46.0,
+   "net_second_half": -45.5,
+   "net_change_pts": 0.5,
+   "top_themes": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 749
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 570
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 570
+    }
+   ]
+  },
+  {
+   "id": "experience",
+   "label": "Experience",
+   "count": 6670,
+   "sentiment": {
+    "positive": 3153,
+    "neutral": 1662,
+    "negative": 1855
+   },
+   "net_sentiment": -1.8,
+   "net_first_half": 0.8,
+   "net_second_half": -2.8,
+   "net_change_pts": -3.6,
+   "top_themes": [
+    {
+     "id": "app_praise",
+     "label": "Where customers praise us: quick, easy app journeys",
+     "count": 2669
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 1299
+    },
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 1006
+    }
+   ]
+  },
+  {
+   "id": "data_intimacy",
+   "label": "Data intimacy",
+   "count": 68,
+   "sentiment": {
+    "positive": 10,
+    "neutral": 22,
+    "negative": 36
+   },
+   "net_sentiment": -37.2,
+   "net_first_half": -42.9,
+   "net_second_half": -27.8,
+   "net_change_pts": 15.1,
+   "top_themes": [
+    {
+     "id": "kyc_updates",
+     "label": "KYC, re-KYC and profile updates",
+     "count": 22
+    },
+    {
+     "id": "mis_selling",
+     "label": "Mis-selling and bundled products",
+     "count": 18
+    },
+    {
+     "id": "credit_report",
+     "label": "CIBIL and credit-report correction",
+     "count": 17
+    }
+   ]
+  },
+  {
+   "id": "security",
+   "label": "Security",
+   "count": 81,
+   "sentiment": {
+    "positive": 3,
+    "neutral": 10,
+    "negative": 68
+   },
+   "net_sentiment": -81.7,
+   "net_first_half": -66.7,
+   "net_second_half": -81.5,
+   "net_change_pts": -14.8,
+   "top_themes": [
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 51
+    },
+    {
+     "id": "fraud_scam",
+     "label": "Fraud and scam calls",
+     "count": 21
+    },
+    {
+     "id": "unauthorised_txn",
+     "label": "Unauthorised transactions",
+     "count": 7
+    }
+   ]
+  }
+ ]
+}

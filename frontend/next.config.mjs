@@ -21,13 +21,13 @@ const nextConfig = {
       { source: '/indusind-v1', destination: '/role-based/indusind_bank/customer-pulse', permanent: false },
       { source: '/indusind-v1/:path*', destination: '/role-based/indusind_bank/customer-pulse/:path*', permanent: false },
       // IndusInd roles redirect on the server, so no IndusInd URL serves the shared role page and its other demos.
-      // The earlier cards demo (head_cards) is kept in the code but its URL opens the Cards business view.
-      { source: '/role-based/indusind_bank/head_cards', destination: '/role-based/indusind_bank/customer-pulse/cards?r=cards', permanent: false },
+      // The earlier Head of Cards demo (head_cards) is listed again and served as it was (not redirected).
       { source: '/role-based/indusind_bank/indusind_head_cards', destination: '/role-based/indusind_bank/customer-pulse/cards?r=cards', permanent: false },
       { source: '/role-based/indusind_bank/indusind_ceo_office', destination: '/role-based/indusind_bank/customer-pulse', permanent: false },
+      { source: '/role-based/indusind_bank/indusind_mds_office_v2', destination: '/role-based/indusind_bank/pulse-v2/mds-office', permanent: false },
       { source: '/role-based/indusind_bank/indusind_head_cx', destination: '/role-based/indusind_bank/customer-pulse?v=cx', permanent: false },
-      // Any other single segment under the IndusInd role page goes back to it.
-      { source: '/role-based/indusind_bank/:slug((?!customer-pulse)[^/]+)', destination: '/role-based/indusind_bank', permanent: false },
+      // Any other single segment under the IndusInd role page goes back to it (the earlier cards demo and pulse V2 excepted).
+      { source: '/role-based/indusind_bank/:slug((?!customer-pulse|pulse-v2|head_cards$)[^/]+)', destination: '/role-based/indusind_bank', permanent: false },
     ];
   },
   // IndusInd demo: never indexed, on top of Deployment Protection and the page-level robots meta.

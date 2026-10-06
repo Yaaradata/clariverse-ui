@@ -1,0 +1,293 @@
+{
+ "generated_by": "scripts/indusind_v2/aggregate.py",
+ "as_of": "2026-09-28",
+ "brief_date": "2026-09-29",
+ "brief_label": "Tuesday 29 September 2026",
+ "brief_time": "07:45",
+ "window": {
+  "start": "2026-07-01",
+  "end": "2026-09-28"
+ },
+ "provenance": {
+  "public": "Public · live",
+  "internal": "Internal · illustrative until discovery",
+  "joined": "Joined · needs bank systems"
+ },
+ "scope_note": "Bank-wide figures: IndusInd Bank only, on-topic items in the window. IndusInd Nippon Life, IndusInd General Insurance and other group companies are kept in the data and excluded from bank-wide figures.",
+ "records": {
+  "total": 10712,
+  "by_source": {
+   "playstore": 6245,
+   "appstore": 300,
+   "x": 2235,
+   "reddit": 1497,
+   "forum:consumercomplaints": 3,
+   "forum:mouthshut": 3,
+   "forum:technofino": 419,
+   "forum:trustpilot": 10
+  },
+  "window": 10229,
+  "bank_on_topic_window": 9120,
+  "group_on_topic_window": 371,
+  "classified_by": {
+   "rules": 10712
+  }
+ },
+ "bank_by_source": {
+  "playstore": 5734,
+  "appstore": 281,
+  "x": 1538,
+  "reddit": 1227,
+  "forum": 340
+ },
+ "streams": [
+  {
+   "stream": "appstore:INDIE app",
+   "records": 281,
+   "earliest": "2026-07-01",
+   "latest": "2026-09-26",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:IndusInd Insurance",
+   "records": 18,
+   "earliest": "2026-07-01",
+   "latest": "2026-09-27",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "appstore:IndusInd Nippon Life",
+   "records": 1,
+   "earliest": "2026-07-24",
+   "latest": "2026-07-24",
+   "window_first": "2026-07-24",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:consumercomplaints",
+   "records": 3,
+   "earliest": "2026-07-04",
+   "latest": "2026-07-30",
+   "window_first": "2026-07-04",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:mouthshut",
+   "records": 2,
+   "earliest": "2026-08-25",
+   "latest": "2026-09-22",
+   "window_first": "2026-08-25",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:technofino",
+   "records": 341,
+   "earliest": "2026-07-02",
+   "latest": "2026-09-30",
+   "window_first": "2026-07-02",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "forum:trustpilot",
+   "records": 5,
+   "earliest": "2026-07-05",
+   "latest": "2026-09-22",
+   "window_first": "2026-07-05",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:BHIM IndusPay",
+   "records": 114,
+   "earliest": "2026-07-04",
+   "latest": "2026-09-29",
+   "window_first": "2026-07-04",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:INDIE app",
+   "records": 5000,
+   "earliest": "2026-08-10",
+   "latest": "2026-09-30",
+   "window_first": "2026-08-10",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:INDIE for Business",
+   "records": 707,
+   "earliest": "2026-07-01",
+   "latest": "2026-09-30",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:Indus PayWear",
+   "records": 1,
+   "earliest": "2026-08-19",
+   "latest": "2026-08-19",
+   "window_first": "2026-08-19",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:IndusDIRECT Corporate",
+   "records": 51,
+   "earliest": "2026-07-02",
+   "latest": "2026-09-25",
+   "window_first": "2026-07-02",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:IndusFX Card",
+   "records": 1,
+   "earliest": "2026-09-20",
+   "latest": "2026-09-20",
+   "window_first": "2026-09-20",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:IndusInd GIFT City",
+   "records": 3,
+   "earliest": "2026-07-09",
+   "latest": "2026-09-14",
+   "window_first": "2026-07-09",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:IndusInd Insurance",
+   "records": 338,
+   "earliest": "2026-07-01",
+   "latest": "2026-09-30",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:IndusInd Nippon Life",
+   "records": 15,
+   "earliest": "2026-07-02",
+   "latest": "2026-09-28",
+   "window_first": "2026-07-02",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "playstore:Video Branch",
+   "records": 15,
+   "earliest": "2026-07-06",
+   "latest": "2026-09-30",
+   "window_first": "2026-07-06",
+   "full_window": false,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "reddit",
+   "records": 1248,
+   "earliest": "2026-07-01",
+   "latest": "2026-10-01",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  },
+  {
+   "stream": "x",
+   "records": 1789,
+   "earliest": "2026-07-01",
+   "latest": "2026-10-01",
+   "window_first": "2026-07-01",
+   "full_window": true,
+   "partial_reason": null,
+   "mode": "trend_within_window",
+   "baseline_items": 0,
+   "baseline_weeks": 0.0
+  }
+ ],
+ "trend_basis_streams": [
+  "appstore:INDIE app",
+  "appstore:IndusInd Insurance",
+  "forum:technofino",
+  "playstore:INDIE for Business",
+  "playstore:IndusDIRECT Corporate",
+  "playstore:IndusInd Insurance",
+  "playstore:IndusInd Nippon Life",
+  "reddit",
+  "x"
+ ],
+ "baseline_streams": [],
+ "coverage_notes": [
+  "Coverage differs by source: forums, X, Reddit and the App Store cover 1 July to 28 September 2026. Trends and mood are source-weighted; they compare the two halves of the window (no earlier baseline).",
+  "Play Store INDIE reviews start on 10 August (the export holds the latest 5,000): counted in totals, left out of trends.",
+  "X and Reddit are filtered to posts that mention IndusInd Bank or its products; bank and brand handles are excluded.",
+  "Bank replies are visible on Play Store reviews only.",
+  "No competitor data delivered: the competitor strip is hidden."
+ ],
+ "icici_available": false
+}

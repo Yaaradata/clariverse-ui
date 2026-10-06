@@ -14,3 +14,5 @@ data/raw/indusind/
 data/processed/indusind_l2/_audit/
 qa/_crawl/
 scripts/lint_local_terms.txt
+# IndusInd pulse V2 working files: every normalised and classified public post (redacted text). Never committed.
+data/out/indusind_v2/work/

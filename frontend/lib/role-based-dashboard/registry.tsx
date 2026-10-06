@@ -28,6 +28,8 @@ import { HDFC_HEAD_OF_CX_ROLE_ID } from "./hdfcHeadOfCxScreen";
 import {
   INDUSIND_BANK_INDUSTRY_ID,
   INDUSIND_BANK_NAME,
+  INDUSIND_EARLIER_CARDS_COPY,
+  INDUSIND_PULSE_V2_COPY,
   INDUSIND_ROLE_COPY,
 } from "./indusindBankIndustry";
 import {
@@ -488,15 +490,14 @@ export const INDUSTRIES = [
       { ...INDUSIND_ROLE_COPY[0], icon: Landmark, defaultLens: "ops", primaryTile: 0 },
       { ...INDUSIND_ROLE_COPY[1], icon: Headphones, defaultLens: "ops", primaryTile: 0 },
       { ...INDUSIND_ROLE_COPY[2], icon: CreditCard, defaultLens: "ops", primaryTile: 0 },
+      // Pulse V2: the clone of the HDFC pulse V2 screens (next.config.mjs redirects the role id to it).
+      { ...INDUSIND_PULSE_V2_COPY, icon: Landmark, defaultLens: "ops", primaryTile: 0 },
       {
-        // The earlier cards demo: unlisted, and its URL redirects to the Cards business view (next.config.mjs).
-        id: "head_cards",
-        name: "Head of Cards (earlier demo)",
+        // The earlier Head of Cards demo, listed again beside the V1 customer-pulse roles.
+        ...INDUSIND_EARLIER_CARDS_COPY,
         icon: CreditCard,
-        sub: "Transactions & offers · blockers & problems · 2 drilldowns · AI Analyst",
         defaultLens: "ops",
         primaryTile: 0,
-        unlisted: true,
       },
     ],
   },

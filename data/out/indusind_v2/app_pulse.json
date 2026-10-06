@@ -1,0 +1,1776 @@
+{
+ "apps": [
+  {
+   "app": "BHIM IndusPay",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "payments",
+   "streams": [
+    {
+     "stream": "playstore:BHIM IndusPay",
+     "records": 114,
+     "earliest": "2026-07-04",
+     "latest": "2026-09-29",
+     "window_first": "2026-07-04",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 112
+   },
+   "by_store": {
+    "playstore": {
+     "n": 112,
+     "ratings": {
+      "1": 65,
+      "2": 1,
+      "3": 3,
+      "4": 6,
+      "5": 37
+     },
+     "avg_rating": 2.54,
+     "share_positive": 38.4,
+     "share_negative": 58.9
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 16,
+     "exemplars": [
+      "playstore:96f3f6d4-af5a-4935-bc65-bc8e5d8c8672",
+      "playstore:c5484dc7-1a8d-4244-846b-5b3a367bec7d"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 12,
+     "exemplars": [
+      "playstore:25c51c35-a721-49e7-a25d-522a8a0d345a",
+      "playstore:e07ce470-515c-4c4c-bf29-4b82a7273ff5"
+     ]
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 2,
+     "exemplars": [
+      "playstore:e460409c-0b2c-4ee7-ad51-18b24b9230d7",
+      "playstore:bfd99525-1efa-44ad-817a-82da6a536b77"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 1,
+     "exemplars": [
+      "playstore:3443eba2-7e32-4832-a670-b98785979a1a"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 1,
+     "exemplars": [
+      "playstore:ad85f700-9da2-4c66-bdb8-1a5dc4802956"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "3.3.49",
+      "n": 39,
+      "ratings": {
+       "1": 28,
+       "2": 0,
+       "3": 2,
+       "4": 1,
+       "5": 8
+      },
+      "avg_rating": 2.0,
+      "share_positive": 23.1,
+      "share_negative": 71.8
+     },
+     {
+      "version": "3.3.48",
+      "n": 34,
+      "ratings": {
+       "1": 17,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 16
+      },
+      "avg_rating": 2.91,
+      "share_positive": 47.1,
+      "share_negative": 52.9
+     },
+     {
+      "version": "3.3.47",
+      "n": 35,
+      "ratings": {
+       "1": 18,
+       "2": 0,
+       "3": 0,
+       "4": 4,
+       "5": 13
+      },
+      "avg_rating": 2.83,
+      "share_positive": 48.6,
+      "share_negative": 51.4
+     }
+    ]
+   },
+   "praise_exemplars": [
+    "playstore:63c14bf9-8d34-4ba6-b23e-3cec5594d9f3",
+    "playstore:acb66f2b-247a-4fd1-a3eb-d5030fb65901"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 16,
+     "owner": "digital",
+     "first_seen_version": "3.3.47",
+     "latest_version_seen": "3.3.49",
+     "example_ids": [
+      "playstore:96f3f6d4-af5a-4935-bc65-bc8e5d8c8672",
+      "playstore:c5484dc7-1a8d-4244-846b-5b3a367bec7d"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 12,
+     "owner": "digital",
+     "first_seen_version": "3.3.47",
+     "latest_version_seen": "3.3.49",
+     "example_ids": [
+      "playstore:25c51c35-a721-49e7-a25d-522a8a0d345a",
+      "playstore:e07ce470-515c-4c4c-bf29-4b82a7273ff5"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Complaints closed without resolution",
+     "theme": "complaint_handling",
+     "count": 2,
+     "owner": "cx",
+     "first_seen_version": "3.3.48",
+     "latest_version_seen": "3.3.49",
+     "example_ids": [
+      "playstore:e460409c-0b2c-4ee7-ad51-18b24b9230d7",
+      "playstore:bfd99525-1efa-44ad-817a-82da6a536b77"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "3.3.47",
+     "latest_version_seen": "3.3.47",
+     "example_ids": [
+      "playstore:3443eba2-7e32-4832-a670-b98785979a1a"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 1,
+     "owner": "cx",
+     "first_seen_version": "3.3.47",
+     "latest_version_seen": "3.3.47",
+     "example_ids": [
+      "playstore:ad85f700-9da2-4c66-bdb8-1a5dc4802956"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Device security blocks and false alerts",
+     "theme": "device_security_block",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "3.3.46",
+     "latest_version_seen": "3.3.46",
+     "example_ids": [
+      "playstore:204dac54-3fea-494f-8ce0-f4b7bee5d045"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Card eligibility, upgrade and LTF requests",
+     "theme": "card_eligibility_upgrade",
+     "count": 1,
+     "owner": "cards",
+     "first_seen_version": "3.3.46",
+     "latest_version_seen": "3.3.46",
+     "example_ids": [
+      "playstore:da98c3fd-a4a5-4b16-90e1-c1b02742f77e"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Refunds not credited",
+     "theme": "refund_delay",
+     "count": 1,
+     "owner": "operations",
+     "first_seen_version": "3.3.49",
+     "latest_version_seen": "3.3.49",
+     "example_ids": [
+      "playstore:2ed8c178-1a47-4478-9cd0-685a57954270"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "INDIE app",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "retail_banking",
+   "streams": [
+    {
+     "stream": "appstore:INDIE app",
+     "records": 281,
+     "earliest": "2026-07-01",
+     "latest": "2026-09-26",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:INDIE app",
+     "records": 5000,
+     "earliest": "2026-08-10",
+     "latest": "2026-09-30",
+     "window_first": "2026-08-10",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 5137
+   },
+   "by_store": {
+    "playstore": {
+     "n": 4856,
+     "ratings": {
+      "1": 2259,
+      "2": 152,
+      "3": 176,
+      "4": 242,
+      "5": 2027
+     },
+     "avg_rating": 2.92,
+     "share_positive": 46.7,
+     "share_negative": 49.6
+    },
+    "appstore": {
+     "n": 281,
+     "ratings": {
+      "1": 193,
+      "2": 17,
+      "3": 11,
+      "4": 6,
+      "5": 54
+     },
+     "avg_rating": 1.97,
+     "share_positive": 21.4,
+     "share_negative": 74.7
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 215,
+    "second_half": 66,
+    "first_share": 20.19,
+    "second_share": 20.19,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 551,
+     "exemplars": [
+      "playstore:2ae55a60-3f11-47c9-b8b1-7eb9bed0fb67",
+      "playstore:a8076576-cd24-4c17-bc87-9fe1522c0f13",
+      "appstore:14379854421"
+     ]
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 538,
+     "exemplars": [
+      "playstore:6596e375-a027-49b7-a30c-c2a938b11ace",
+      "playstore:7083a9c0-6dc8-49ec-a1b9-3f32ce6d1ffa",
+      "appstore:14380497398"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 434,
+     "exemplars": [
+      "playstore:0674bc69-048c-4ca4-b7e2-c1832fff5fdf",
+      "playstore:800c2002-bc11-4ef6-8eed-eac1cc55aaec",
+      "appstore:14379913297"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 112,
+     "exemplars": [
+      "playstore:e3d9034c-850c-481e-a2bb-c7edd5e2558c",
+      "playstore:a373eac4-c159-4fd7-9066-a28de86bd2ef",
+      "appstore:14498930786"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 44,
+     "exemplars": [
+      "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+      "playstore:98b5ed1a-6516-4b59-9bd4-e6d9b30b71e0",
+      "appstore:14442288401"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "2.6.0",
+      "n": 815,
+      "ratings": {
+       "1": 482,
+       "2": 25,
+       "3": 16,
+       "4": 29,
+       "5": 263
+      },
+      "avg_rating": 2.47,
+      "share_positive": 35.8,
+      "share_negative": 62.2
+     },
+     {
+      "version": "2.5.0",
+      "n": 2570,
+      "ratings": {
+       "1": 1313,
+       "2": 85,
+       "3": 92,
+       "4": 109,
+       "5": 971
+      },
+      "avg_rating": 2.74,
+      "share_positive": 42.0,
+      "share_negative": 54.4
+     },
+     {
+      "version": "2.3.1",
+      "n": 1334,
+      "ratings": {
+       "1": 358,
+       "2": 37,
+       "3": 63,
+       "4": 101,
+       "5": 775
+      },
+      "avg_rating": 3.67,
+      "share_positive": 65.7,
+      "share_negative": 29.6
+     },
+     {
+      "version": "2.0.9",
+      "n": 38,
+      "ratings": {
+       "1": 31,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 7
+      },
+      "avg_rating": 1.74,
+      "share_positive": 18.4,
+      "share_negative": 81.6
+     },
+     {
+      "version": "2.0.4",
+      "n": 24,
+      "ratings": {
+       "1": 16,
+       "2": 2,
+       "3": 2,
+       "4": 2,
+       "5": 2
+      },
+      "avg_rating": 1.83,
+      "share_positive": 16.7,
+      "share_negative": 75.0
+     },
+     {
+      "version": "2.0.3",
+      "n": 10,
+      "ratings": {
+       "1": 7,
+       "2": 2,
+       "3": 0,
+       "4": 0,
+       "5": 1
+      },
+      "avg_rating": 1.6,
+      "share_positive": 10.0,
+      "share_negative": 90.0
+     },
+     {
+      "version": "2.0.2",
+      "n": 11,
+      "ratings": {
+       "1": 11,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 0
+      },
+      "avg_rating": 1.0,
+      "share_positive": 0.0,
+      "share_negative": 100.0
+     }
+    ],
+    "appstore": [
+     {
+      "version": "2.5.0",
+      "n": 46,
+      "ratings": {
+       "1": 31,
+       "2": 3,
+       "3": 1,
+       "4": 1,
+       "5": 10
+      },
+      "avg_rating": 2.04,
+      "share_positive": 23.9,
+      "share_negative": 73.9
+     },
+     {
+      "version": "2.4.1",
+      "n": 106,
+      "ratings": {
+       "1": 74,
+       "2": 3,
+       "3": 5,
+       "4": 2,
+       "5": 22
+      },
+      "avg_rating": 2.01,
+      "share_positive": 22.6,
+      "share_negative": 72.6
+     },
+     {
+      "version": "2.3.1",
+      "n": 105,
+      "ratings": {
+       "1": 78,
+       "2": 6,
+       "3": 4,
+       "4": 3,
+       "5": 14
+      },
+      "avg_rating": 1.75,
+      "share_positive": 16.2,
+      "share_negative": 80.0
+     },
+     {
+      "version": "2.3.0",
+      "n": 10,
+      "ratings": {
+       "1": 6,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 3
+      },
+      "avg_rating": 2.3,
+      "share_positive": 30.0,
+      "share_negative": 70.0
+     },
+     {
+      "version": "2.1.0",
+      "n": 13,
+      "ratings": {
+       "1": 4,
+       "2": 4,
+       "3": 1,
+       "4": 0,
+       "5": 4
+      },
+      "avg_rating": 2.69,
+      "share_positive": 30.8,
+      "share_negative": 61.5
+     }
+    ]
+   },
+   "praise_exemplars": [
+    "playstore:14f2046c-5cca-493a-8c7c-eb31182a443a",
+    "playstore:3b0fcaba-4272-4867-a716-23f56da7a07a",
+    "appstore:14594329303"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 551,
+     "owner": "digital",
+     "first_seen_version": "1.1.26",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:2ae55a60-3f11-47c9-b8b1-7eb9bed0fb67",
+      "playstore:a8076576-cd24-4c17-bc87-9fe1522c0f13",
+      "appstore:14379854421"
+     ],
+     "feature_asks": [
+      "the untrusted screen reader detected on",
+      "the untrusted screen reader",
+      "on line banking in indusind",
+      "the error or update"
+     ]
+    },
+    {
+     "issue": "Device security blocks and false alerts",
+     "theme": "device_security_block",
+     "count": 538,
+     "owner": "digital",
+     "first_seen_version": "1.1.66",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:6596e375-a027-49b7-a30c-c2a938b11ace",
+      "playstore:7083a9c0-6dc8-49ec-a1b9-3f32ce6d1ffa",
+      "appstore:14380497398"
+     ],
+     "feature_asks": [
+      "the untrusted screen reader detected on",
+      "the untrusted screen reader",
+      "untrusted screen reader",
+      "a solution"
+     ]
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 434,
+     "owner": "digital",
+     "first_seen_version": "1.1.46",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:0674bc69-048c-4ca4-b7e2-c1832fff5fdf",
+      "playstore:800c2002-bc11-4ef6-8eed-eac1cc55aaec",
+      "appstore:14379913297"
+     ],
+     "feature_asks": [
+      "the untrusted screen reader detected on",
+      "the untrusted screen reader",
+      "a solution",
+      "the untrusted screen recorder"
+     ]
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 112,
+     "owner": "digital",
+     "first_seen_version": "1.1.72",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:e3d9034c-850c-481e-a2bb-c7edd5e2558c",
+      "playstore:a373eac4-c159-4fd7-9066-a28de86bd2ef",
+      "appstore:14498930786"
+     ],
+     "feature_asks": [
+      "the untrusted screen reader detected on",
+      "the untrusted screen reader in your",
+      "this feature or provide a proper",
+      "a solution at the earliest as"
+     ]
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 44,
+     "owner": "cx",
+     "first_seen_version": "2.0.9",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+      "playstore:98b5ed1a-6516-4b59-9bd4-e6d9b30b71e0",
+      "appstore:14442288401"
+     ],
+     "feature_asks": [
+      "this feature for better convenience",
+      "this feature or provide a proper"
+     ]
+    },
+    {
+     "issue": "Account and card closure requests",
+     "theme": "closure_requests",
+     "count": 18,
+     "owner": "operations",
+     "first_seen_version": "2.0.4",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:bc5b736c-264c-4674-8ab8-77deafdc4851",
+      "playstore:d46cdf8c-bfb2-4fcd-9e24-ffc17a668985"
+     ],
+     "feature_asks": [
+      "the untrusted screen reader from ur",
+      "the untrusted screen reader deducted you",
+      "the untrusted screen reader detected on"
+     ]
+    },
+    {
+     "issue": "Statements, certificates and documents",
+     "theme": "statements_documents",
+     "count": 15,
+     "owner": "operations",
+     "first_seen_version": "1.1.64",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:adff5d74-9385-4a1a-9131-c25a2d07568b",
+      "playstore:e280936b-4ef6-44e8-b5bc-983316b5f402",
+      "appstore:14434081370"
+     ],
+     "feature_asks": [
+      "untrusted screen reader"
+     ]
+    },
+    {
+     "issue": "Branch service and staff behaviour",
+     "theme": "branch_service",
+     "count": 12,
+     "owner": "retail",
+     "first_seen_version": "2.3.1",
+     "latest_version_seen": "2.6.0",
+     "example_ids": [
+      "playstore:2ac1d25f-ed9d-4ac0-861b-8aa1feb8f393",
+      "playstore:27980ab0-f851-4114-b889-55e9ceb0b698",
+      "appstore:14436961756"
+     ],
+     "feature_asks": [
+      "this feature for better convenience"
+     ]
+    }
+   ]
+  },
+  {
+   "app": "INDIE for Business",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "sme_merchant",
+   "streams": [
+    {
+     "stream": "playstore:INDIE for Business",
+     "records": 707,
+     "earliest": "2026-07-01",
+     "latest": "2026-09-30",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 696
+   },
+   "by_store": {
+    "playstore": {
+     "n": 696,
+     "ratings": {
+      "1": 283,
+      "2": 21,
+      "3": 23,
+      "4": 43,
+      "5": 326
+     },
+     "avg_rating": 3.16,
+     "share_positive": 53.0,
+     "share_negative": 43.7
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 298,
+    "second_half": 398,
+    "first_share": 50.0,
+    "second_share": 50.0,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 81,
+     "exemplars": [
+      "playstore:0447ded1-2c9b-4dd0-81bd-107f325c91f1",
+      "playstore:fe104ca6-896f-4be8-9467-36ceae1d5803"
+     ]
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 21,
+     "exemplars": [
+      "playstore:3ed14b2f-9460-445f-b648-b45534390726",
+      "playstore:a7dba4b0-1a83-46ca-b10f-b34e44dea8d2"
+     ]
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 12,
+     "exemplars": [
+      "playstore:9f8b22e3-d1ae-4fbc-a11c-291f420f64a9",
+      "playstore:baf3f7ec-7c80-4384-9c36-f193568af4e1"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 11,
+     "exemplars": [
+      "playstore:5f04b9f3-a39c-4c59-b4cb-7cda58e45221",
+      "playstore:4a0e5759-8dec-4783-a064-8b9b00a08c5a"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 6,
+     "exemplars": [
+      "playstore:54d9cec0-1ac3-4f73-bba3-6c5ff6b17a27",
+      "playstore:b6d14f41-e535-4dd1-b6d5-5b04334a2f1c",
+      "playstore:6857b05a-8619-4b1f-acd6-b9870136425c"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "1.1.9",
+      "n": 62,
+      "ratings": {
+       "1": 41,
+       "2": 3,
+       "3": 3,
+       "4": 0,
+       "5": 15
+      },
+      "avg_rating": 2.11,
+      "share_positive": 24.2,
+      "share_negative": 71.0
+     },
+     {
+      "version": "1.1.8",
+      "n": 225,
+      "ratings": {
+       "1": 101,
+       "2": 7,
+       "3": 7,
+       "4": 11,
+       "5": 99
+      },
+      "avg_rating": 3.0,
+      "share_positive": 48.9,
+      "share_negative": 48.0
+     },
+     {
+      "version": "1.1.7",
+      "n": 144,
+      "ratings": {
+       "1": 38,
+       "2": 3,
+       "3": 6,
+       "4": 13,
+       "5": 84
+      },
+      "avg_rating": 3.71,
+      "share_positive": 67.4,
+      "share_negative": 28.5
+     },
+     {
+      "version": "1.1.6",
+      "n": 253,
+      "ratings": {
+       "1": 100,
+       "2": 8,
+       "3": 6,
+       "4": 19,
+       "5": 120
+      },
+      "avg_rating": 3.2,
+      "share_positive": 54.9,
+      "share_negative": 42.7
+     },
+     {
+      "version": "1.1.5",
+      "n": 10,
+      "ratings": {
+       "1": 2,
+       "2": 0,
+       "3": 0,
+       "4": 0,
+       "5": 8
+      },
+      "avg_rating": 4.2,
+      "share_positive": 80.0,
+      "share_negative": 20.0
+     }
+    ]
+   },
+   "praise_exemplars": [
+    "playstore:83cd5cef-c068-4828-a7af-0b62f5fe9727",
+    "playstore:0504cfa9-427c-4ff1-be80-c06b1ed92610"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 81,
+     "owner": "digital",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.9",
+     "example_ids": [
+      "playstore:0447ded1-2c9b-4dd0-81bd-107f325c91f1",
+      "playstore:fe104ca6-896f-4be8-9467-36ceae1d5803"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 21,
+     "owner": "digital",
+     "first_seen_version": "1.1.5",
+     "latest_version_seen": "1.1.9",
+     "example_ids": [
+      "playstore:3ed14b2f-9460-445f-b648-b45534390726",
+      "playstore:a7dba4b0-1a83-46ca-b10f-b34e44dea8d2"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Branch service and staff behaviour",
+     "theme": "branch_service",
+     "count": 12,
+     "owner": "retail",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.9",
+     "example_ids": [
+      "playstore:9f8b22e3-d1ae-4fbc-a11c-291f420f64a9",
+      "playstore:baf3f7ec-7c80-4384-9c36-f193568af4e1"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 11,
+     "owner": "digital",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.8",
+     "example_ids": [
+      "playstore:5f04b9f3-a39c-4c59-b4cb-7cda58e45221",
+      "playstore:4a0e5759-8dec-4783-a064-8b9b00a08c5a"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 6,
+     "owner": "cx",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.9",
+     "example_ids": [
+      "playstore:54d9cec0-1ac3-4f73-bba3-6c5ff6b17a27",
+      "playstore:b6d14f41-e535-4dd1-b6d5-5b04334a2f1c",
+      "playstore:6857b05a-8619-4b1f-acd6-b9870136425c"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Net banking",
+     "theme": "netbanking",
+     "count": 5,
+     "owner": "digital",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.8",
+     "example_ids": [
+      "playstore:279cc58d-ad2f-4810-8d6d-d7705fcc150f",
+      "playstore:fc663638-3be3-4a6d-ab67-a1948a4c9c82",
+      "playstore:3c680c68-3c8e-45db-baa7-c1185e32aadd"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Statements, certificates and documents",
+     "theme": "statements_documents",
+     "count": 4,
+     "owner": "operations",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.8",
+     "example_ids": [
+      "playstore:a198b0d0-5115-407b-b602-ae0c000d67af",
+      "playstore:26926db8-7564-494f-a858-7719c02292a8",
+      "playstore:d861f01e-3de7-4573-b7e4-6fcc1e7a7891"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Card eligibility, upgrade and LTF requests",
+     "theme": "card_eligibility_upgrade",
+     "count": 3,
+     "owner": "cards",
+     "first_seen_version": "1.1.6",
+     "latest_version_seen": "1.1.9",
+     "example_ids": [
+      "playstore:a953d099-9b16-4293-8083-51c760aa2cf3",
+      "playstore:1f9c3358-3ddc-4134-be8e-cd60a2393a12",
+      "playstore:e014ef7e-4fcd-4be4-9c04-6b1aad2539ee"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "Indus PayWear",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "payments",
+   "streams": [
+    {
+     "stream": "playstore:Indus PayWear",
+     "records": 1,
+     "earliest": "2026-08-19",
+     "latest": "2026-08-19",
+     "window_first": "2026-08-19",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 1
+   },
+   "by_store": {
+    "playstore": {
+     "n": 1,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1,
+     "exemplars": [
+      "playstore:e8ec55e4-b9ff-4d95-9b70-df71b9211ed4"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": []
+   },
+   "praise_exemplars": [],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "3.6.8",
+     "latest_version_seen": "3.6.8",
+     "example_ids": [
+      "playstore:e8ec55e4-b9ff-4d95-9b70-df71b9211ed4"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "IndusDIRECT Corporate",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "corporate",
+   "streams": [
+    {
+     "stream": "playstore:IndusDIRECT Corporate",
+     "records": 51,
+     "earliest": "2026-07-02",
+     "latest": "2026-09-25",
+     "window_first": "2026-07-02",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 51
+   },
+   "by_store": {
+    "playstore": {
+     "n": 51,
+     "ratings": {
+      "1": 9,
+      "2": 3,
+      "3": 1,
+      "4": 2,
+      "5": 36
+     },
+     "avg_rating": 4.04,
+     "share_positive": 74.5,
+     "share_negative": 23.5
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 31,
+    "second_half": 20,
+    "first_share": 3.66,
+    "second_share": 3.66,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 3,
+     "exemplars": [
+      "playstore:6dba8baa-4644-4d00-8f86-28752c9315df",
+      "playstore:7d30810a-14ef-4c2d-bc22-5aa6a44008cc",
+      "playstore:ecaebbf5-656c-40fb-a958-3cb4809749fa"
+     ]
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 2,
+     "exemplars": [
+      "playstore:706ade63-9b4b-4395-af7d-3c49c6ee746e",
+      "playstore:d69d02d1-56b4-457e-b5a8-48cb653fe9bf"
+     ]
+    },
+    {
+     "id": "branch_service",
+     "label": "Branch service and staff behaviour",
+     "count": 1,
+     "exemplars": [
+      "playstore:5eb4ae7c-ff7a-4bb7-b0a7-7a3ab9c2029b"
+     ]
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1,
+     "exemplars": [
+      "playstore:02ea179f-c9e2-402a-a6de-085399047a42"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "1.0.3",
+      "n": 32,
+      "ratings": {
+       "1": 7,
+       "2": 2,
+       "3": 1,
+       "4": 1,
+       "5": 21
+      },
+      "avg_rating": 3.84,
+      "share_positive": 68.8,
+      "share_negative": 28.1
+     },
+     {
+      "version": "1.0.2",
+      "n": 19,
+      "ratings": {
+       "1": 2,
+       "2": 1,
+       "3": 0,
+       "4": 1,
+       "5": 15
+      },
+      "avg_rating": 4.37,
+      "share_positive": 84.2,
+      "share_negative": 15.8
+     }
+    ]
+   },
+   "praise_exemplars": [
+    "playstore:913a9373-b32f-4d6a-8dba-52ca53b20b74",
+    "playstore:9402c796-0cc4-4641-b29e-0171652216ad",
+    "playstore:802f5173-ff13-4a32-a0e6-c6a5b9397cbb"
+   ],
+   "fix_list": [
+    {
+     "issue": "Login, MPIN and registration",
+     "theme": "login_mpin",
+     "count": 3,
+     "owner": "digital",
+     "first_seen_version": "1.0.3",
+     "latest_version_seen": "1.0.3",
+     "example_ids": [
+      "playstore:6dba8baa-4644-4d00-8f86-28752c9315df",
+      "playstore:7d30810a-14ef-4c2d-bc22-5aa6a44008cc",
+      "playstore:ecaebbf5-656c-40fb-a958-3cb4809749fa"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "New app and update experience",
+     "theme": "new_app_release",
+     "count": 2,
+     "owner": "digital",
+     "first_seen_version": "1.0.2",
+     "latest_version_seen": "1.0.3",
+     "example_ids": [
+      "playstore:706ade63-9b4b-4395-af7d-3c49c6ee746e",
+      "playstore:d69d02d1-56b4-457e-b5a8-48cb653fe9bf"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Branch service and staff behaviour",
+     "theme": "branch_service",
+     "count": 1,
+     "owner": "retail",
+     "first_seen_version": "1.0.3",
+     "latest_version_seen": "1.0.3",
+     "example_ids": [
+      "playstore:5eb4ae7c-ff7a-4bb7-b0a7-7a3ab9c2029b"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "1.0.3",
+     "latest_version_seen": "1.0.3",
+     "example_ids": [
+      "playstore:02ea179f-c9e2-402a-a6de-085399047a42"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "IndusFX Card",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "payments",
+   "streams": [
+    {
+     "stream": "playstore:IndusFX Card",
+     "records": 1,
+     "earliest": "2026-09-20",
+     "latest": "2026-09-20",
+     "window_first": "2026-09-20",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 1
+   },
+   "by_store": {
+    "playstore": {
+     "n": 1,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": []
+   },
+   "praise_exemplars": [],
+   "fix_list": []
+  },
+  {
+   "app": "IndusInd GIFT City",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "retail_banking",
+   "streams": [
+    {
+     "stream": "playstore:IndusInd GIFT City",
+     "records": 3,
+     "earliest": "2026-07-09",
+     "latest": "2026-09-14",
+     "window_first": "2026-07-09",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 3
+   },
+   "by_store": {
+    "playstore": {
+     "n": 3,
+     "ratings": {
+      "1": 3,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 1,
+     "exemplars": [
+      "playstore:ab92fd39-4886-4d91-b519-1ddadf9c6ac7"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": []
+   },
+   "praise_exemplars": [],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 1,
+     "owner": "digital",
+     "first_seen_version": "1.0.9",
+     "latest_version_seen": "1.0.9",
+     "example_ids": [
+      "playstore:ab92fd39-4886-4d91-b519-1ddadf9c6ac7"
+     ],
+     "feature_asks": []
+    }
+   ]
+  },
+  {
+   "app": "IndusInd Insurance",
+   "entity": "indusind_general",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:IndusInd Insurance",
+     "records": 18,
+     "earliest": "2026-07-01",
+     "latest": "2026-09-27",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:IndusInd Insurance",
+     "records": 338,
+     "earliest": "2026-07-01",
+     "latest": "2026-09-30",
+     "window_first": "2026-07-01",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 349
+   },
+   "by_store": {
+    "playstore": {
+     "n": 331,
+     "ratings": {
+      "1": 198,
+      "2": 10,
+      "3": 7,
+      "4": 19,
+      "5": 97
+     },
+     "avg_rating": 2.42,
+     "share_positive": 35.0,
+     "share_negative": 62.8
+    },
+    "appstore": {
+     "n": 18,
+     "ratings": {
+      "1": 12,
+      "2": 0,
+      "3": 0,
+      "4": 1,
+      "5": 5
+     },
+     "avg_rating": 2.28,
+     "share_positive": 33.3,
+     "share_negative": 66.7
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 161,
+    "second_half": 188,
+    "first_share": 25.07,
+    "second_share": 25.07,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "1.1.99",
+      "n": 94,
+      "ratings": {
+       "1": 65,
+       "2": 2,
+       "3": 1,
+       "4": 4,
+       "5": 22
+      },
+      "avg_rating": 2.11,
+      "share_positive": 27.7,
+      "share_negative": 71.3
+     },
+     {
+      "version": "1.1.98",
+      "n": 21,
+      "ratings": {
+       "1": 14,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 6
+      },
+      "avg_rating": 2.19,
+      "share_positive": 28.6,
+      "share_negative": 71.4
+     },
+     {
+      "version": "1.1.97",
+      "n": 20,
+      "ratings": {
+       "1": 11,
+       "2": 0,
+       "3": 2,
+       "4": 1,
+       "5": 6
+      },
+      "avg_rating": 2.55,
+      "share_positive": 35.0,
+      "share_negative": 55.0
+     },
+     {
+      "version": "1.1.96",
+      "n": 43,
+      "ratings": {
+       "1": 18,
+       "2": 1,
+       "3": 1,
+       "4": 3,
+       "5": 20
+      },
+      "avg_rating": 3.14,
+      "share_positive": 53.5,
+      "share_negative": 44.2
+     },
+     {
+      "version": "1.1.95",
+      "n": 118,
+      "ratings": {
+       "1": 64,
+       "2": 5,
+       "3": 3,
+       "4": 11,
+       "5": 35
+      },
+      "avg_rating": 2.56,
+      "share_positive": 39.0,
+      "share_negative": 58.5
+     },
+     {
+      "version": "1.1.93",
+      "n": 32,
+      "ratings": {
+       "1": 23,
+       "2": 1,
+       "3": 0,
+       "4": 0,
+       "5": 8
+      },
+      "avg_rating": 2.03,
+      "share_positive": 25.0,
+      "share_negative": 75.0
+     }
+    ],
+    "appstore": []
+   },
+   "praise_exemplars": [
+    "playstore:5652b53e-6367-45da-b5fc-ed752ce05d68",
+    "playstore:994d727c-66ca-4f65-bfe3-51171c598ad4",
+    "appstore:14473505365"
+   ],
+   "fix_list": []
+  },
+  {
+   "app": "IndusInd Nippon Life",
+   "entity": "indusind_life",
+   "group_company": true,
+   "business": "group_company",
+   "streams": [
+    {
+     "stream": "appstore:IndusInd Nippon Life",
+     "records": 1,
+     "earliest": "2026-07-24",
+     "latest": "2026-07-24",
+     "window_first": "2026-07-24",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    },
+    {
+     "stream": "playstore:IndusInd Nippon Life",
+     "records": 15,
+     "earliest": "2026-07-02",
+     "latest": "2026-09-28",
+     "window_first": "2026-07-02",
+     "full_window": true,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 16
+   },
+   "by_store": {
+    "playstore": {
+     "n": 15,
+     "ratings": {
+      "1": 5,
+      "2": 1,
+      "3": 2,
+      "4": 3,
+      "5": 4
+     },
+     "avg_rating": 3.0,
+     "share_positive": 46.7,
+     "share_negative": 40.0
+    },
+    "appstore": {
+     "n": 1,
+     "ratings": {
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0
+     },
+     "avg_rating": 1.0,
+     "share_positive": 0.0,
+     "share_negative": 100.0
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 6,
+    "second_half": 9,
+    "first_share": 1.08,
+    "second_share": 1.08,
+    "change_pct": 0.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [],
+   "versions_by_store": {
+    "playstore": [
+     {
+      "version": "1.2.6",
+      "n": 12,
+      "ratings": {
+       "1": 3,
+       "2": 1,
+       "3": 2,
+       "4": 2,
+       "5": 4
+      },
+      "avg_rating": 3.25,
+      "share_positive": 50.0,
+      "share_negative": 33.3
+     }
+    ],
+    "appstore": []
+   },
+   "praise_exemplars": [],
+   "fix_list": []
+  },
+  {
+   "app": "Video Branch",
+   "entity": "indusind_bank",
+   "group_company": false,
+   "business": "retail_banking",
+   "streams": [
+    {
+     "stream": "playstore:Video Branch",
+     "records": 15,
+     "earliest": "2026-07-06",
+     "latest": "2026-09-30",
+     "window_first": "2026-07-06",
+     "full_window": false,
+     "partial_reason": null,
+     "mode": "trend_within_window",
+     "baseline_items": 0,
+     "baseline_weeks": 0.0
+    }
+   ],
+   "mode": "trend_within_window",
+   "window": {
+    "n": 14
+   },
+   "by_store": {
+    "playstore": {
+     "n": 14,
+     "ratings": {
+      "1": 13,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1
+     },
+     "avg_rating": 1.29,
+     "share_positive": 7.1,
+     "share_negative": 92.9
+    }
+   },
+   "baseline": null,
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 0,
+    "second_half": 0,
+    "first_share": 0.0,
+    "second_share": 0.0,
+    "change_pct": null,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_issues": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 2,
+     "exemplars": [
+      "playstore:70eda960-f454-4a2b-9cc1-83c082645c90",
+      "playstore:4e525327-bf3d-482c-b86e-85e8c3773fe6"
+     ]
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 1,
+     "exemplars": [
+      "playstore:e8fac5b6-d959-41c0-9d2d-c2c94a0f2297"
+     ]
+    },
+    {
+     "id": "account_opening",
+     "label": "Account opening and product conversion",
+     "count": 1,
+     "exemplars": [
+      "playstore:fe6646bc-4232-49cf-ae4a-a0f03cebefe7"
+     ]
+    }
+   ],
+   "versions_by_store": {
+    "playstore": []
+   },
+   "praise_exemplars": [
+    "playstore:fa0e02d8-936b-4a2c-8b59-229951a76b15"
+   ],
+   "fix_list": [
+    {
+     "issue": "App speed, loading and crashes",
+     "theme": "app_speed_crash",
+     "count": 2,
+     "owner": "digital",
+     "first_seen_version": "5.2",
+     "latest_version_seen": "5.3",
+     "example_ids": [
+      "playstore:70eda960-f454-4a2b-9cc1-83c082645c90",
+      "playstore:4e525327-bf3d-482c-b86e-85e8c3773fe6"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Customer care unreachable or unhelpful",
+     "theme": "care_unreachable",
+     "count": 1,
+     "owner": "cx",
+     "first_seen_version": "5.3",
+     "latest_version_seen": "5.3",
+     "example_ids": [
+      "playstore:e8fac5b6-d959-41c0-9d2d-c2c94a0f2297"
+     ],
+     "feature_asks": []
+    },
+    {
+     "issue": "Account opening and product conversion",
+     "theme": "account_opening",
+     "count": 1,
+     "owner": "retail",
+     "first_seen_version": "5.3",
+     "latest_version_seen": "5.3",
+     "example_ids": [
+      "playstore:fe6646bc-4232-49cf-ae4a-a0f03cebefe7"
+     ],
+     "feature_asks": []
+    }
+   ]
+  }
+ ],
+ "note": "Ratings are counted in the window (1 July – 28 September). No baseline: the exports hold no history before July."
+}

@@ -1,0 +1,1245 @@
+{
+ "scope": "indusind_bank · on_topic · window",
+ "total_items": 9120,
+ "flags": {
+  "escalation_intent": {
+   "count": 233,
+   "share": 2.6,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 4,
+     "share": 2.25
+    },
+    {
+     "week": "2026-07-06",
+     "count": 16,
+     "share": 5.89
+    },
+    {
+     "week": "2026-07-13",
+     "count": 5,
+     "share": 2.77
+    },
+    {
+     "week": "2026-07-20",
+     "count": 9,
+     "share": 3.09
+    },
+    {
+     "week": "2026-07-27",
+     "count": 11,
+     "share": 5.43
+    },
+    {
+     "week": "2026-08-03",
+     "count": 7,
+     "share": 2.6
+    },
+    {
+     "week": "2026-08-10",
+     "count": 21,
+     "share": 8.66
+    },
+    {
+     "week": "2026-08-17",
+     "count": 22,
+     "share": 8.25
+    },
+    {
+     "week": "2026-08-24",
+     "count": 10,
+     "share": 4.62
+    },
+    {
+     "week": "2026-08-31",
+     "count": 8,
+     "share": 4.2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 5,
+     "share": 2.03
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7,
+     "share": 2.55
+    },
+    {
+     "week": "2026-09-21",
+     "count": 65,
+     "share": 7.19
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 72,
+    "second_half": 147,
+    "first_share": 4.1,
+    "second_share": 6.23,
+    "change_pct": 52.1,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "other",
+     "label": "Other",
+     "count": 41
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 27
+    },
+    {
+     "id": "complaint_handling",
+     "label": "Complaints closed without resolution",
+     "count": 25
+    },
+    {
+     "id": "recovery_conduct",
+     "label": "Recovery and collection conduct",
+     "count": 24
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 11
+    }
+   ],
+   "exemplars": [
+    "x:2086739232891289603",
+    "x:2086789650753196471",
+    "reddit:1ukk6yj",
+    "reddit:comment:p50wmls"
+   ]
+  },
+  "promise_break": {
+   "count": 378,
+   "share": 4.1,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 8,
+     "share": 3.66
+    },
+    {
+     "week": "2026-07-06",
+     "count": 10,
+     "share": 3.18
+    },
+    {
+     "week": "2026-07-13",
+     "count": 6,
+     "share": 2.45
+    },
+    {
+     "week": "2026-07-20",
+     "count": 9,
+     "share": 2.93
+    },
+    {
+     "week": "2026-07-27",
+     "count": 14,
+     "share": 4.23
+    },
+    {
+     "week": "2026-08-03",
+     "count": 20,
+     "share": 6.12
+    },
+    {
+     "week": "2026-08-10",
+     "count": 14,
+     "share": 4.61
+    },
+    {
+     "week": "2026-08-17",
+     "count": 23,
+     "share": 7.2
+    },
+    {
+     "week": "2026-08-24",
+     "count": 18,
+     "share": 6.37
+    },
+    {
+     "week": "2026-08-31",
+     "count": 10,
+     "share": 4.44
+    },
+    {
+     "week": "2026-09-07",
+     "count": 21,
+     "share": 6.61
+    },
+    {
+     "week": "2026-09-14",
+     "count": 10,
+     "share": 3.33
+    },
+    {
+     "week": "2026-09-21",
+     "count": 38,
+     "share": 5.54
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 79,
+    "second_half": 142,
+    "first_share": 4.21,
+    "second_share": 6.17,
+    "change_pct": 46.6,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 65
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 54
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 44
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 32
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 26
+    }
+   ],
+   "exemplars": [
+    "x:2075119427155288278",
+    "reddit:1wfbuz1",
+    "reddit:1wegaee",
+    "x:2103405304075719052"
+   ]
+  },
+  "status_seeking": {
+   "count": 129,
+   "share": 1.4,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 4,
+     "share": 1.82
+    },
+    {
+     "week": "2026-07-06",
+     "count": 2,
+     "share": 0.47
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.39
+    },
+    {
+     "week": "2026-07-20",
+     "count": 6,
+     "share": 1.81
+    },
+    {
+     "week": "2026-07-27",
+     "count": 5,
+     "share": 1.59
+    },
+    {
+     "week": "2026-08-03",
+     "count": 9,
+     "share": 3.08
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8,
+     "share": 2.63
+    },
+    {
+     "week": "2026-08-17",
+     "count": 6,
+     "share": 2.42
+    },
+    {
+     "week": "2026-08-24",
+     "count": 6,
+     "share": 2.24
+    },
+    {
+     "week": "2026-08-31",
+     "count": 8,
+     "share": 3.2
+    },
+    {
+     "week": "2026-09-07",
+     "count": 11,
+     "share": 3.94
+    },
+    {
+     "week": "2026-09-14",
+     "count": 2,
+     "share": 0.55
+    },
+    {
+     "week": "2026-09-21",
+     "count": 20,
+     "share": 3.53
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 33,
+    "second_half": 64,
+    "first_share": 1.79,
+    "second_share": 2.77,
+    "change_pct": 54.8,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 17
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 16
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 12
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 10
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 8
+    }
+   ],
+   "exemplars": [
+    "x:2103405304075719052",
+    "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+    "x:2087882350348927328",
+    "playstore:3d2347de-f4a9-4e43-a686-97d0383f399b"
+   ]
+  },
+  "cure_watch": {
+   "count": 108,
+   "share": 1.2,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 5,
+     "share": 2.62
+    },
+    {
+     "week": "2026-07-06",
+     "count": 6,
+     "share": 2.18
+    },
+    {
+     "week": "2026-07-13",
+     "count": 4,
+     "share": 2.2
+    },
+    {
+     "week": "2026-07-20",
+     "count": 6,
+     "share": 1.22
+    },
+    {
+     "week": "2026-07-27",
+     "count": 4,
+     "share": 1.31
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2,
+     "share": 0.37
+    },
+    {
+     "week": "2026-08-10",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-17",
+     "count": 6,
+     "share": 1.35
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4,
+     "share": 1.71
+    },
+    {
+     "week": "2026-08-31",
+     "count": 2,
+     "share": 0.61
+    },
+    {
+     "week": "2026-09-07",
+     "count": 3,
+     "share": 1.26
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3,
+     "share": 0.78
+    },
+    {
+     "week": "2026-09-21",
+     "count": 16,
+     "share": 1.81
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 27,
+    "second_half": 35,
+    "first_share": 1.48,
+    "second_share": 1.5,
+    "change_pct": 0.8,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 29
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 14
+    },
+    {
+     "id": "care_unreachable",
+     "label": "Customer care unreachable or unhelpful",
+     "count": 7
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 5
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 4
+    }
+   ],
+   "exemplars": [
+    "reddit:1vsltpt",
+    "x:2102987449840566345",
+    "reddit:1v8m1aq",
+    "playstore:494178be-f692-40ac-ab2a-d0b756b997e8"
+   ]
+  },
+  "closure_intent": {
+   "count": 94,
+   "share": 1.0,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 2,
+     "share": 0.96
+    },
+    {
+     "week": "2026-07-06",
+     "count": 3,
+     "share": 1.02
+    },
+    {
+     "week": "2026-07-13",
+     "count": 3,
+     "share": 1.09
+    },
+    {
+     "week": "2026-07-20",
+     "count": 3,
+     "share": 0.71
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2,
+     "share": 0.64
+    },
+    {
+     "week": "2026-08-10",
+     "count": 7,
+     "share": 2.6
+    },
+    {
+     "week": "2026-08-17",
+     "count": 9,
+     "share": 1.8
+    },
+    {
+     "week": "2026-08-24",
+     "count": 5,
+     "share": 2.11
+    },
+    {
+     "week": "2026-08-31",
+     "count": 6,
+     "share": 1.77
+    },
+    {
+     "week": "2026-09-07",
+     "count": 7,
+     "share": 2.45
+    },
+    {
+     "week": "2026-09-14",
+     "count": 3,
+     "share": 1.46
+    },
+    {
+     "week": "2026-09-21",
+     "count": 12,
+     "share": 2.52
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 17,
+    "second_half": 45,
+    "first_share": 0.96,
+    "second_share": 2.01,
+    "change_pct": 109.9,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "closure_requests",
+     "label": "Account and card closure requests",
+     "count": 29
+    },
+    {
+     "id": "card_eligibility_upgrade",
+     "label": "Card eligibility, upgrade and LTF requests",
+     "count": 14
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 10
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 9
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 5
+    }
+   ],
+   "exemplars": [
+    "reddit:1vo4whw",
+    "reddit:1v4idqf",
+    "playstore:5f8b771b-befb-48bd-a1bc-18330b01eb6e",
+    "x:2090356430889226552"
+   ]
+  },
+  "repeat_contact": {
+   "count": 297,
+   "share": 3.3,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 3,
+     "share": 1.25
+    },
+    {
+     "week": "2026-07-06",
+     "count": 4,
+     "share": 1.23
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.85
+    },
+    {
+     "week": "2026-07-20",
+     "count": 2,
+     "share": 0.54
+    },
+    {
+     "week": "2026-07-27",
+     "count": 2,
+     "share": 0.74
+    },
+    {
+     "week": "2026-08-03",
+     "count": 15,
+     "share": 2.4
+    },
+    {
+     "week": "2026-08-10",
+     "count": 8,
+     "share": 2.99
+    },
+    {
+     "week": "2026-08-17",
+     "count": 7,
+     "share": 2.37
+    },
+    {
+     "week": "2026-08-24",
+     "count": 4,
+     "share": 0.87
+    },
+    {
+     "week": "2026-08-31",
+     "count": 7,
+     "share": 2.58
+    },
+    {
+     "week": "2026-09-07",
+     "count": 9,
+     "share": 2.15
+    },
+    {
+     "week": "2026-09-14",
+     "count": 7,
+     "share": 3.4
+    },
+    {
+     "week": "2026-09-21",
+     "count": 23,
+     "share": 3.54
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 34,
+    "second_half": 67,
+    "first_share": 1.57,
+    "second_share": 2.94,
+    "change_pct": 87.0,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 68
+    },
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 52
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 49
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 38
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 18
+    }
+   ],
+   "exemplars": [
+    "x:2089632955589439641",
+    "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+    "playstore:3ed14b2f-9460-445f-b648-b45534390726",
+    "x:2086865830848114855"
+   ]
+  },
+  "feature_request": {
+   "count": 69,
+   "share": 0.8,
+   "weekly": [
+    {
+     "week": "2026-06-29",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-06",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-13",
+     "count": 1,
+     "share": 0.35
+    },
+    {
+     "week": "2026-07-20",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-07-27",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-03",
+     "count": 2,
+     "share": 0.45
+    },
+    {
+     "week": "2026-08-10",
+     "count": 1,
+     "share": 0.42
+    },
+    {
+     "week": "2026-08-17",
+     "count": 1,
+     "share": 0.24
+    },
+    {
+     "week": "2026-08-24",
+     "count": 0,
+     "share": 0.0
+    },
+    {
+     "week": "2026-08-31",
+     "count": 1,
+     "share": 0.43
+    },
+    {
+     "week": "2026-09-07",
+     "count": 2,
+     "share": 0.69
+    },
+    {
+     "week": "2026-09-14",
+     "count": 1,
+     "share": 0.27
+    },
+    {
+     "week": "2026-09-21",
+     "count": 2,
+     "share": 0.2
+    }
+   ],
+   "trend": {
+    "mode": "trend_within_window",
+    "method": "source_weighted",
+    "first_half": 3,
+    "second_half": 8,
+    "first_share": 0.14,
+    "second_share": 0.46,
+    "change_pct": 220.5,
+    "first_half_dates": "2026-07-01 to 2026-08-14",
+    "second_half_dates": "2026-08-15 to 2026-09-28"
+   },
+   "top_themes": [
+    {
+     "id": "device_security_block",
+     "label": "Device security blocks and false alerts",
+     "count": 51
+    },
+    {
+     "id": "general_dissatisfaction",
+     "label": "General dissatisfaction",
+     "count": 5
+    },
+    {
+     "id": "app_speed_crash",
+     "label": "App speed, loading and crashes",
+     "count": 2
+    },
+    {
+     "id": "login_mpin",
+     "label": "Login, MPIN and registration",
+     "count": 2
+    },
+    {
+     "id": "new_app_release",
+     "label": "New app and update experience",
+     "count": 2
+    }
+   ],
+   "exemplars": [
+    "reddit:1wfwza1",
+    "playstore:398bdd55-4f34-43d9-98ff-9cdff1422c4f",
+    "x:2088656178452795767",
+    "playstore:d594edaf-1455-47c2-a345-f155375e9253"
+   ]
+  },
+  "switching": {
+   "count": 7,
+   "to_other_bank": 7,
+   "from_other_bank": 0,
+   "note": "Posts naming a move between IndusInd Bank and another bank. Counted as mentions, never as confirmed moves."
+  }
+ },
+ "promise_by_request_type": [
+  {
+   "request_type": "other",
+   "count": 274,
+   "status_seeking": 49,
+   "repeat_share": 10.6,
+   "median_days_elapsed": 15,
+   "owner": "cx",
+   "top_theme": "app_speed_crash",
+   "exemplars": [
+    "x:2103405304075719052",
+    "x:2090281686223474784",
+    "playstore:a367f386-5c84-4ada-9358-091dd931bff3"
+   ]
+  },
+  {
+   "request_type": "closure",
+   "count": 43,
+   "status_seeking": 5,
+   "repeat_share": 4.7,
+   "median_days_elapsed": 28,
+   "owner": "cards",
+   "top_theme": "closure_requests",
+   "exemplars": [
+    "x:2075119427155288278",
+    "playstore:5f8b771b-befb-48bd-a1bc-18330b01eb6e",
+    "reddit:1w0dq9z"
+   ]
+  },
+  {
+   "request_type": "card_delivery",
+   "count": 19,
+   "status_seeking": 4,
+   "repeat_share": 10.5,
+   "median_days_elapsed": 7,
+   "owner": "operations",
+   "top_theme": "card_eligibility_upgrade",
+   "exemplars": [
+    "reddit:1wegaee",
+    "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+    "reddit:1ws81z5"
+   ]
+  },
+  {
+   "request_type": "kyc",
+   "count": 16,
+   "status_seeking": 2,
+   "repeat_share": 25.0,
+   "median_days_elapsed": 20,
+   "owner": "operations",
+   "top_theme": "login_mpin",
+   "exemplars": [
+    "playstore:c2a0efde-12fb-4138-81be-623b97cb666e",
+    "reddit:1wgrkgu",
+    "playstore:3d2347de-f4a9-4e43-a686-97d0383f399b"
+   ]
+  },
+  {
+   "request_type": "credit_report",
+   "count": 13,
+   "status_seeking": 2,
+   "repeat_share": 7.7,
+   "median_days_elapsed": 105,
+   "owner": "compliance",
+   "top_theme": "credit_report",
+   "exemplars": [
+    "reddit:1wfbuz1",
+    "reddit:comment:p11a0pa",
+    "x:2085700446904353004"
+   ]
+  },
+  {
+   "request_type": "refund",
+   "count": 7,
+   "status_seeking": 2,
+   "repeat_share": 14.3,
+   "median_days_elapsed": 7,
+   "owner": "operations",
+   "top_theme": "refund_delay",
+   "exemplars": [
+    "x:2104459668211016040",
+    "playstore:2ed8c178-1a47-4478-9cd0-685a57954270",
+    "reddit:1w1dqid"
+   ]
+  },
+  {
+   "request_type": "reversal",
+   "count": 4,
+   "status_seeking": 0,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 38,
+   "owner": "payments",
+   "top_theme": "failed_txn_reversal",
+   "exemplars": [
+    "x:2103035389569319170",
+    "reddit:comment:ovh8izt",
+    "playstore:9353053e-4d40-4b92-bffd-a1f47dda1b35"
+   ]
+  },
+  {
+   "request_type": "loan_disbursal",
+   "count": 1,
+   "status_seeking": 0,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 6,
+   "owner": "loans",
+   "top_theme": "login_mpin",
+   "exemplars": []
+  },
+  {
+   "request_type": "dispute",
+   "count": 1,
+   "status_seeking": 0,
+   "repeat_share": 0.0,
+   "median_days_elapsed": 150,
+   "owner": "operations",
+   "top_theme": "login_mpin",
+   "exemplars": [
+    "x:2100766368715112883"
+   ]
+  }
+ ],
+ "transparency_gap": {
+  "count": 129,
+  "share": 1.4,
+  "by_request_type": [
+   {
+    "request_type": "other",
+    "count": 114
+   },
+   {
+    "request_type": "closure",
+    "count": 5
+   },
+   {
+    "request_type": "card_delivery",
+    "count": 4
+   },
+   {
+    "request_type": "kyc",
+    "count": 2
+   },
+   {
+    "request_type": "credit_report",
+    "count": 2
+   },
+   {
+    "request_type": "refund",
+    "count": 2
+   }
+  ],
+  "exemplars": [
+   "x:2103405304075719052",
+   "playstore:687cd655-ec63-4834-ab25-5e778977e0f1",
+   "x:2087882350348927328"
+  ]
+ },
+ "escalation_by_target": [
+  {
+   "target": "rbi",
+   "rung": "RBI Ombudsman",
+   "count": 154
+  },
+  {
+   "target": "rbi_ombudsman",
+   "rung": "RBI Ombudsman",
+   "count": 50
+  },
+  {
+   "target": "grievance",
+   "rung": "Grievance",
+   "count": 25
+  },
+  {
+   "target": "consumer_court",
+   "rung": "RBI Ombudsman",
+   "count": 3
+  },
+  {
+   "target": "ministers",
+   "rung": "Public",
+   "count": 1
+  }
+ ],
+ "ladder_public": {
+  "voice_negative": 3981,
+  "repeat": 297,
+  "escalation_language": 233,
+  "public_posts_with_escalation": 224,
+  "rbi_or_ombudsman_mentions": 204,
+  "climb_themes": [
+   {
+    "id": "complaint_handling",
+    "label": "Complaints closed without resolution",
+    "count": 25
+   },
+   {
+    "id": "recovery_conduct",
+    "label": "Recovery and collection conduct",
+    "count": 24
+   },
+   {
+    "id": "login_mpin",
+    "label": "Login, MPIN and registration",
+    "count": 11
+   },
+   {
+    "id": "fraud_scam",
+    "label": "Fraud and scam calls",
+    "count": 10
+   },
+   {
+    "id": "branch_service",
+    "label": "Branch service and staff behaviour",
+    "count": 10
+   },
+   {
+    "id": "closure_requests",
+    "label": "Account and card closure requests",
+    "count": 8
+   }
+  ]
+ },
+ "voices_with_reach": [
+  {
+   "id": "x:2100652864955928581",
+   "who": "X account, about 6.3 million followers",
+   "reach": 6263835,
+   "theme": "fraud_scam",
+   "theme_label": "Fraud and scam calls",
+   "owner": "fraud_cyber",
+   "escalation": false,
+   "created_at": "2026-09-17T23:57:25+05:30"
+  },
+  {
+   "id": "x:2079887198862926072",
+   "who": "X account, about 1.5 million followers",
+   "reach": 1518750,
+   "theme": "market_news",
+   "theme_label": "Share price, results and corporate news",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-07-22T16:42:05+05:30"
+  },
+  {
+   "id": "x:2080113141690892349",
+   "who": "X account, about 1.4 million followers",
+   "reach": 1427073,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-07-23T07:39:54+05:30"
+  },
+  {
+   "id": "x:2079888421284090347",
+   "who": "X account, about 1.1 million followers",
+   "reach": 1144307,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-07-22T16:46:56+05:30"
+  },
+  {
+   "id": "x:2091816304567345201",
+   "who": "X account, about 918k followers",
+   "reach": 917886,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-24T14:44:05+05:30"
+  },
+  {
+   "id": "x:2085253167042945517",
+   "who": "X account, about 671k followers",
+   "reach": 671193,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-06T12:04:31+05:30"
+  },
+  {
+   "id": "x:2086644354186461463",
+   "who": "X account, about 392k followers",
+   "reach": 392331,
+   "theme": "general_dissatisfaction",
+   "theme_label": "General dissatisfaction",
+   "owner": "cx",
+   "escalation": false,
+   "created_at": "2026-08-10T08:12:36+05:30"
+  },
+  {
+   "id": "x:2097952209162162620",
+   "who": "X account, about 294k followers",
+   "reach": 293637,
+   "theme": "card_application",
+   "theme_label": "Card application, rejection and verification",
+   "owner": "cards",
+   "escalation": false,
+   "created_at": "2026-09-10T13:05:59+05:30"
+  }
+ ],
+ "closure_intent": {
+  "count": 94,
+  "drivers": [
+   {
+    "id": "closure_requests",
+    "label": "Account and card closure requests",
+    "count": 29
+   },
+   {
+    "id": "card_eligibility_upgrade",
+    "label": "Card eligibility, upgrade and LTF requests",
+    "count": 14
+   },
+   {
+    "id": "device_security_block",
+    "label": "Device security blocks and false alerts",
+    "count": 10
+   },
+   {
+    "id": "login_mpin",
+    "label": "Login, MPIN and registration",
+    "count": 9
+   },
+   {
+    "id": "app_speed_crash",
+    "label": "App speed, loading and crashes",
+    "count": 5
+   }
+  ],
+  "exemplars": [
+   "reddit:1vo4whw",
+   "reddit:1v4idqf",
+   "playstore:5f8b771b-befb-48bd-a1bc-18330b01eb6e",
+   "x:2090356430889226552"
+  ]
+ },
+ "cure_watch": {
+  "count": 108,
+  "by_theme": [
+   {
+    "id": "login_mpin",
+    "label": "Login, MPIN and registration",
+    "count": 29
+   },
+   {
+    "id": "general_dissatisfaction",
+    "label": "General dissatisfaction",
+    "count": 14
+   },
+   {
+    "id": "care_unreachable",
+    "label": "Customer care unreachable or unhelpful",
+    "count": 7
+   },
+   {
+    "id": "app_speed_crash",
+    "label": "App speed, loading and crashes",
+    "count": 5
+   },
+   {
+    "id": "new_app_release",
+    "label": "New app and update experience",
+    "count": 4
+   }
+  ],
+  "exemplars": [
+   "reddit:1vsltpt",
+   "x:2102987449840566345",
+   "reddit:1v8m1aq",
+   "playstore:494178be-f692-40ac-ab2a-d0b756b997e8"
+  ]
+ },
+ "by_business": [
+  {
+   "business": "retail_banking",
+   "count": 6105,
+   "repeat": 216,
+   "escalation": 146,
+   "negative": 2735
+  },
+  {
+   "business": "cards",
+   "count": 1771,
+   "repeat": 49,
+   "escalation": 56,
+   "negative": 679
+  },
+  {
+   "business": "sme_merchant",
+   "count": 716,
+   "repeat": 21,
+   "escalation": 3,
+   "negative": 316
+  },
+  {
+   "business": "payments",
+   "count": 181,
+   "repeat": 6,
+   "escalation": 1,
+   "negative": 100
+  },
+  {
+   "business": "loans",
+   "count": 161,
+   "repeat": 4,
+   "escalation": 26,
+   "negative": 95
+  },
+  {
+   "business": "corporate",
+   "count": 114,
+   "repeat": 1,
+   "escalation": 1,
+   "negative": 26
+  },
+  {
+   "business": "wealth",
+   "count": 72,
+   "repeat": 0,
+   "escalation": 0,
+   "negative": 30
+  }
+ ]
+}

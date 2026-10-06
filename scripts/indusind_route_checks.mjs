@@ -88,7 +88,15 @@ export function enumerateRoutes({ appRoleDir, industryTs, registryTsx, nextConfi
  * page loads). opts.otherClients: names of other clients that must not be reachable (DEC-7); opts.links: every link
  * must stay under the IndusInd root; opts.footer: require the footer. Returns a list of problems; empty means the route passes.
  */
+/**
+ * Routes kept by request outside the customer-pulse rules: the earlier Head of Cards demo (head_cards). It is the
+ * shared role page with its own figures, no IndusInd footer and the shared bundle, so the demo checks do not apply.
+ */
+export const EXEMPT = [`${ROOT}/head_cards`];
+export const isExempt = (p) => EXEMPT.some((e) => (p ?? "").split("?")[0] === e);
+
 export function checkRoute(rec, opts = {}) {
+  if (isExempt(rec.final)) return [];
   const problems = [];
   if (rec.status !== 200) problems.push(`status ${rec.status}`);
   if (!(rec.final ?? "").startsWith(ROOT)) problems.push(`left the IndusInd pages for ${rec.final}`);

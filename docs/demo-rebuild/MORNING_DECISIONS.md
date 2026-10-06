@@ -807,3 +807,45 @@ wording.
   the reviewer's request after being told it reverses part of IV-48: the industries list names other clients (DEC-7).
   It is the one link allowed out of the IndusInd pages; the route check still fails any other link out (fixture), and
   other clients' names still must not appear on any IndusInd page.
+- **IV-66 · Earlier Head of Cards demo restored; customer-pulse roles tagged V1 (user request, 6 Oct).** The IndusInd
+  role page lists the three customer-pulse roles (CEO's office, Head of CX, Head of Cards) with a "V1" tag, and the
+  earlier Head of Cards demo (`/role-based/indusind_bank/head_cards`, `CardsPortfolioV2Dashboard`) as a fourth role
+  with its original description. Its server redirect (IV-46) is removed and the catch-all redirect skips it. The route
+  checks exempt that one route (`EXEMPT` in `scripts/indusind_route_checks.mjs`, with fixtures): it is the earlier demo
+  as it was, with its own figures, no IndusInd footer or watermark, and the shared role-page bundle. Review finding 1
+  is therefore reopened by decision: that demo's figures (₹9,760 Cr receivables against the disclosed ₹9,418 crore
+  cards book) and its co-brand names show again. The "V1" tag on screen overrides HL-06 for the role page, by request.
+- **IV-67 · HDFC pulse V2 cloned into IndusInd (user request, 6 Oct).** `/hdfc-pulse/v2/*` is copied, unchanged in
+  behaviour, to `/role-based/indusind_bank/pulse-v2/*` (entry: `pulse-v2/mds-office`).
+  - Code: `components/indusind-v2`, `lib/indusind-v2`, `app/role-based/indusind_bank/pulse-v2`. Imports and in-app
+    links point to the clone; the HDFC files are untouched.
+  - Data: its own copies in `data/out/indusind_v2/` and `data/seed/indusind_v2/aggregates.json`, so it can be rebound
+    without touching HDFC.
+  - The tab title says IndusInd Bank and the pages are noindex. The catch-all redirect skips `pulse-v2`.
+  - On screen it is still HDFC content (header "HDFC Bank", HDFC data). The IndusInd lint (R02, DEC-7) and the route
+    checks fail on it until the data and copy are replaced.
+- **IV-68 · Pulse V2 on the IndusInd role page (user request, 6 Oct).** The role page lists "MD's office / Head of CX"
+  with a "V2" tag, opening `/role-based/indusind_bank/pulse-v2/mds-office` (IV-67). The role id
+  `indusind_mds_office_v2` is in the registry and redirects there (`next.config.mjs`). The lint allows "V1" and "V2"
+  on the role page only.
+- **IV-69 · Pulse V2 rebound to IndusInd data (user request, 6 Oct).** The cloned screens keep the HDFC V2 layout;
+  every figure, theme, quote, brief item and the Cards deep dive now come from IndusInd data, built by
+  `scripts/indusind_v2/run_all.sh` (copies of the HDFC V2 pipelines; the HDFC scripts are untouched).
+  - Public: the IndusInd raw pull outside the repo: Play Store, App Store, X, Reddit and forums. All sources are used,
+    by request; the X and Reddit licence question stays open. Rules classification; no modelled public items.
+  - Internal: synthetic, sized to the register's FY25 complaints (N31 80,062: about 20,000 in 13 weeks, 21 contacts
+    each). Products as IndusInd's: vehicle finance leads loans; PayZapp becomes "UPI and BHIM IndusPay" (id `upi`).
+    Segments are Classic, Exclusive, Pioneer and Pioneer Private; the cohort list is "Pioneer (Ultra HNI)" (60,000,
+    our assumption). Fixed seed 20261004. Reconcile: 0 failures. Volume validation
+    (`qa/indusind_v2_volume_validation.md`): 0 to fix, 2 justified (pending against N32).
+  - Timeline kept from the HDFC V2: window 1 Jul–28 Sep, morning brief Tuesday 29 Sep 07:45.
+  - Quality rules added for IndusInd:
+    - "Threat detected" is the INDIE security block, not recovery conduct.
+    - Market and news chatter is not customer voice.
+    - Catch-all themes never lead a brief item.
+    - A rise needs at least three earlier items.
+    - Profane posts are never quoted.
+    - Other banks' names in quotes become "[another bank]".
+    - No links in quotes.
+  - Privacy: no post URLs in the payload; the working folder with every redacted post
+    (`data/out/indusind_v2/work/`) is gitignored.

@@ -67,5 +67,9 @@ expect("a link to another industry's pages fails (DEC-7)",
 expect("the role page's back link to the industries list passes (IV-65)",
   !checkRoute({ ...good, links: ["/role-based"] }, opts).some((p) => p.startsWith("link leaves")));
 
+expect("the earlier Head of Cards demo is exempt (kept by request)",
+  checkRoute({ ...good, route: `${ROOT}/head_cards`, final: `${ROOT}/head_cards`, text: "Receivables ₹9,760 Cr" }, opts).length === 0);
+expect("only that route is exempt", checkRoute({ ...good, final: `${ROOT}/head_cards_x`, text: "x" }, opts).length > 0);
+
 console.log(`test_qa_indusind_routes: ${failures} failure(s)`);
 process.exit(failures ? 1 : 0);

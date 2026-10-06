@@ -10,7 +10,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { checkRoute, enumerateRoutes, ROOT } from "./indusind_route_checks.mjs";
+import { checkRoute, enumerateRoutes, isExempt, ROOT } from "./indusind_route_checks.mjs";
 
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? "playwright");
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -62,6 +62,8 @@ while (queue.length && report.length < 400) {
   const rec = { route, final, status: res.status(), robots, text, html, chunks, links };
   const problems = checkRoute(rec, { otherClients, links: true, footer: true });
   report.push({ route, final, status: rec.status, robots, scripts: scripts.length, problems });
+  // The earlier Head of Cards demo is kept by request: recorded, not linted, and its links are not followed.
+  if (isExempt(final)) continue;
   pages.push({ route: final, text });
   for (const href of links) {
     if (!href) continue;
