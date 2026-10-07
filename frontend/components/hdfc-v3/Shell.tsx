@@ -380,11 +380,19 @@ function ShellInner({
             </div>
             {periods ? <HeaderPeriodFilter file={periods} /> : null}
             <ThemeToggle />
+            <div style={{ flexBasis: "100%" }}>
+              <AskBar
+                ask={ask}
+                periods={periods}
+                open={askOpen}
+                setOpen={setAskOpen}
+              />
+            </div>
           </header>
 
           <main
             style={{
-              padding: "18px 20px 132px",
+              padding: "18px 20px 28px",
               maxWidth: 1480,
               width: "100%",
               margin: "0 auto",
@@ -461,7 +469,6 @@ function ShellInner({
           </main>
         </div>
       </div>
-      <AskBar ask={ask} periods={periods} open={askOpen} setOpen={setAskOpen} />
       <style>{`
         .lisn-sidebar { display: flex; }
         @media (max-width: 720px) {

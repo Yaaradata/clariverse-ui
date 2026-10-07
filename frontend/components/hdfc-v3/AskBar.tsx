@@ -11,6 +11,7 @@ import { Lock, Pin, Send, Sparkles, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import {
   type AskQA,
@@ -232,40 +233,111 @@ export function AskBar({
 
   return (
     <>
-      {open ? (
-        <button
-          type="button"
-          aria-label="Close Ask LisN"
-          onClick={() => setOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 48,
-            background: "rgba(0,0,0,0.28)",
-            border: "none",
-          }}
-        />
-      ) : null}
+      {open && typeof document !== "undefined"
+        ? createPortal(
+            <button
+              type="button"
+              aria-label="Close Ask LisN"
+              onClick={() => setOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 9, // under the sticky header (z 10), so the bar and its panel stay above it
+                background: "rgba(0,0,0,0.28)",
+                border: "none",
+              }}
+            />,
+            document.body,
+          )
+        : null}
       <div
         data-testid="ask-bar"
         style={{
-          position: "fixed",
-          left: "50%",
-          bottom: 14,
-          transform: "translateX(-50%)",
-          width: "min(820px, calc(100vw - 28px))",
+          // In the sticky header, under the title line (Karthik, 7 Oct): always visible while scrolling.
+          position: "relative",
+          width: "100%",
+          maxWidth: 900,
+          margin: "0 auto",
           zIndex: 50,
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
         }}
       >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            answer(q);
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            background: "#ffffff",
+            border: `1.5px solid ${C.brand}`,
+            borderRadius: 999,
+            padding: "5px 5px 5px 14px",
+            boxShadow: `0 4px 18px ${tint(C.brand, 0.25)}`,
+          }}
+        >
+          <Sparkles size={18} color="#6d28d9" style={{ flexShrink: 0 }} />
+          <input
+            ref={input}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            onFocus={() => setOpen(true)}
+            aria-label="Ask LisN about your business"
+            placeholder="Ask LisN about your business"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              color: "#111827",
+              fontSize: 15,
+              padding: "4px 0",
+            }}
+          />
+          {pathname !== MY_VIEW && session.pinned.length ? (
+            <Link
+              href={MY_VIEW}
+              style={{
+                fontSize: 12.5,
+                color: C.brandInk,
+                whiteSpace: "nowrap",
+                textDecoration: "none",
+              }}
+            >
+              My view ({session.pinned.length})
+            </Link>
+          ) : null}
+          <button
+            type="submit"
+            aria-label="Ask"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 999,
+              border: "none",
+              background: C.brand,
+              color: "#fff",
+              display: "grid",
+              placeItems: "center",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            <Send size={17} />
+          </button>
+        </form>
         {open ? (
           <div
             role="dialog"
             aria-label="Ask LisN"
             data-testid="ask-panel"
             style={{
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              left: 0,
+              right: 0,
               background: C.card,
               border: `1px solid ${tint(C.brand, 0.4)}`,
               borderRadius: 16,
@@ -447,74 +519,6 @@ export function AskBar({
             )}
           </div>
         ) : null}
-
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            answer(q);
-          }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            background: C.card,
-            border: `1.5px solid ${tint(C.brand, 0.55)}`,
-            borderRadius: 999,
-            padding: "8px 8px 8px 16px",
-            boxShadow: `0 10px 34px ${tint(C.brand, 0.28)}`,
-          }}
-        >
-          <Sparkles size={20} color={C.brandInk} style={{ flexShrink: 0 }} />
-          <input
-            ref={input}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            onFocus={() => setOpen(true)}
-            aria-label="Ask LisN about your business"
-            placeholder="Ask LisN about your business"
-            style={{
-              flex: 1,
-              minWidth: 0,
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: C.text,
-              fontSize: 15.5,
-              padding: "6px 0",
-            }}
-          />
-          {pathname !== MY_VIEW && session.pinned.length ? (
-            <Link
-              href={MY_VIEW}
-              style={{
-                fontSize: 12.5,
-                color: C.brandInk,
-                whiteSpace: "nowrap",
-                textDecoration: "none",
-              }}
-            >
-              My view ({session.pinned.length})
-            </Link>
-          ) : null}
-          <button
-            type="submit"
-            aria-label="Ask"
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 999,
-              border: "none",
-              background: C.brand,
-              color: "#fff",
-              display: "grid",
-              placeItems: "center",
-              cursor: "pointer",
-              flexShrink: 0,
-            }}
-          >
-            <Send size={17} />
-          </button>
-        </form>
       </div>
     </>
   );
