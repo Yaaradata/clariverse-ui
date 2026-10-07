@@ -17,3 +17,6 @@ Every reviewer comment becomes one testable rule here, so feedback is never give
 | FB-007 | 2026-09-28 | Ranjith (Manager) | Long batches run in sub-batches of ~100, flushed to disk or DB after each; long and short tasks in separate threads | Code review against `eng-qa` §1 | Active |
 | FB-008 | 2026-09-30 | Ranjith (Manager) | MD and Head of CX views: dials plus one table only; definitions behind ⓘ | Density check in `ui-qa` §3 | Active |
 | FB-009 | 2026-09-30 | Ranjith (Manager) | Business-head views show their own business only, never bank-wide figures | Density check in `ui-qa` §3 | Active |
+| FB-010 | 2026-10-07 | Karthik (Reviewer) | Ask LisN prominent: pinned at the top of every screen, white input | Visual check, 1440 and 390 | Active |
+| FB-011 | 2026-10-07 | Karthik (Reviewer) | One provenance tag per block; never the same tag beside a title and again below it | Visual check, every screen | Active |
+| FB-012 | 2026-10-07 | Karthik (Reviewer) | Too much text and data overall. Future iteration: show one panel at a time and hide the rest (progressive disclosure). Not before the demo. | Design review after the demo | Parked |
