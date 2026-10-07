@@ -1051,7 +1051,8 @@ export function CustomerPulse({ p }: { p: Period }) {
       id="customer-pulse"
       title={titled("Customer pulse", p)}
       sub="Listed customers on the bank's own channels, then public voice. The two are never added together."
-      prov={["internal", "public"]}
+      // "Public · live" sits beside External channels; the footer does not repeat it (Karthik, 7 Oct).
+      prov={["internal"]}
       tone="violet"
     >
       <div
@@ -1947,7 +1948,8 @@ export function CxPulse({ p }: { p: Period }) {
       id="cx-pulse"
       title={titled("CX pulse", p)}
       sub="All customer contact: the bank's own channels and public voice."
-      prov={["internal", "public"]}
+      // "Public · live" sits beside External channels; the footer does not repeat it (Karthik, 7 Oct).
+      prov={["internal"]}
       tone="cyan"
     >
       <div data-testid="overall-volume">
