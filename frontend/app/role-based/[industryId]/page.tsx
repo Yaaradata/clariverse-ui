@@ -5,7 +5,7 @@ import { use } from "react";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
-import { HDFC_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/hdfcBankIndustry";
+import { HDFC_PULSE_ROLE_HREF, HDFC_PULSE_VERSIONS } from "@/lib/role-based-dashboard/hdfcBankIndustry";
 import { INDUSIND_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/indusindBankIndustry";
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
 
@@ -148,6 +148,66 @@ export default function RoleBasedIndustryRolesPage({ params }: PageProps) {
               <ChevronRight size={18} color={textMut} />
             </>
           );
+
+          const versions = HDFC_PULSE_VERSIONS[role.id];
+          if (versions) {
+            const tabBase = {
+              fontSize: 11,
+              fontWeight: 800,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase" as const,
+              padding: "4px 10px",
+              borderRadius: 6,
+              textDecoration: "none",
+              lineHeight: 1,
+            };
+            return (
+              <div
+                key={role.id}
+                style={{
+                  background: cardBg,
+                  border: `1px solid ${border}`,
+                  borderRadius: 14,
+                  padding: "14px 14px 16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 10,
+                }}
+              >
+                <Link href={versions[0].href} style={{ ...cardStyle, padding: "6px 8px", border: "none", background: "transparent" }}>
+                  {cardBody}
+                </Link>
+                <div
+                  data-testid="lisn-versions"
+                  aria-label="LisN version"
+                  style={{
+                    display: "flex",
+                    gap: 2,
+                    alignSelf: "flex-end",
+                    background: isDarkMode ? "#010101" : "#F5F5F5",
+                    border: `1px solid ${border}`,
+                    borderRadius: 8,
+                    padding: 3,
+                  }}
+                >
+                  {versions.map((v, i) => (
+                    <Link
+                      key={v.href}
+                      href={v.href}
+                      title={v.title}
+                      style={{
+                        ...tabBase,
+                        background: i === 0 ? accent : "transparent",
+                        color: i === 0 ? "#ffffff" : textMut,
+                      }}
+                    >
+                      {v.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          }
 
           if (isNetworkHealth) {
             const tabBase = {
