@@ -1,3 +1,4 @@
+import type { V4File, V4Period } from "./v4";
 /**
  * Period figures (30 Sep review, docs/demo-rebuild/changes_30sep.md): everything the MD's office / Head of CX view and
  * the Cards business-head view show, per period, as written by scripts/hdfc_v3/periods_v3.py from dated records.
@@ -438,6 +439,8 @@ export type CardsPeriod = {
 };
 
 export type Period = {
+  /** B11 additions (scripts/hdfc_v3/v4_blocks.py). */
+  v4: V4Period;
   id: PeriodId;
   label: string;
   short: boolean;
@@ -492,6 +495,8 @@ export type Period = {
 };
 
 export type PeriodsFile = {
+  /** B11: limits, owner roles and the scripted Ask lists. */
+  v4: V4File;
   /** Internal figures are bank-scale weighted sums of the kept sample rows (scripts/hdfc_v3/scale_v3.py). */
   scale: {
     sample_rows: number;

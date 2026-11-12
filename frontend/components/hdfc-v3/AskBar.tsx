@@ -20,6 +20,7 @@ import {
   mdQuestions,
 } from "@/lib/hdfc-v3/askAnswers";
 import { addRecent, pin, useAskSession } from "@/lib/hdfc-v3/askSession";
+import { fmt } from "@/lib/hdfc-v3/format";
 import {
   PERIOD_IDS,
   type PeriodId,
@@ -28,6 +29,7 @@ import {
 import type { AskFile } from "@/lib/hdfc-v3/types";
 import { matchPrompt } from "./AskLisN";
 import { C, MONO, tint } from "./primitives";
+import { ActionList } from "./V4";
 
 const MY_VIEW = "/hdfc-pulse/v2/my-view";
 
@@ -72,6 +74,19 @@ export function AnswerBody({ a }: { a: AskQA }) {
         ) : null}
         <span>{a.answer}</span>
       </div>
+      {a.actions?.length ? (
+        <ActionList
+          name={`${a.id}.csv`}
+          max={8}
+          head={["Item", "Issue", "Why"]}
+          rows={a.actions.map((x) => ({
+            id: x.id,
+            overdue: true,
+            cells: [x.id, x.theme, x.why],
+            csv: [x.id, x.theme, x.why],
+          }))}
+        />
+      ) : null}
       {a.table?.rows.length ? (
         <div style={{ overflowX: "auto" }}>
           <table
@@ -165,9 +180,21 @@ export function AskBar({
         ? "MD's office / Head of CX"
         : "Full window";
 
+  // B11 item 8: three scripted queries, each answered with an assignable list (fixed windows from the data end).
+  const scripted: AskQA[] = useMemo(
+    () =>
+      Object.entries(periods?.v4?.queries ?? {}).map(([id, x]) => ({
+        id: `v4-${id}`,
+        q: x.q,
+        answer: `${fmt(x.count)} found. The first ${x.list.length} are listed; assign each one and track it to Closed.`,
+        actions: x.list,
+      })),
+    [periods],
+  );
   const suggestions: AskQA[] = useMemo(() => {
-    if (period && scope === "cards") return cardsQuestions(period);
-    if (period && scope === "md") return mdQuestions(period);
+    if (period && scope === "cards")
+      return [...scripted, ...cardsQuestions(period)];
+    if (period && scope === "md") return [...scripted, ...mdQuestions(period)];
     // Pages without period figures: the questions precomputed for the full window.
     return ask.prompts.slice(0, 10).map((x) => ({
       id: x.id,
@@ -175,7 +202,7 @@ export function AskBar({
       answer: x.answer,
       link: x.links[0],
     }));
-  }, [period, scope, ask]);
+  }, [period, scope, ask, scripted]);
 
   useEffect(() => {
     if (open) input.current?.focus();

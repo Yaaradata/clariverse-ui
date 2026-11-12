@@ -101,7 +101,11 @@ function slicePeriods(b: Bundle, s: Slice): PeriodsFile {
   for (const id of Object.keys(file.periods) as PeriodId[]) {
     const p = file.periods[id];
     if (s.view === "exec") {
-      periods[id] = { ...p, cards: {} as Period["cards"] };
+      periods[id] = {
+        ...p,
+        cards: {} as Period["cards"],
+        v4: { bank: p.v4.bank },
+      };
     } else if (s.view === "business") {
       periods[id] = {
         id: p.id,
@@ -113,6 +117,7 @@ function slicePeriods(b: Bundle, s: Slice): PeriodsFile {
         public_end: p.public_end,
         compare: p.compare,
         cards: p.cards,
+        v4: p.v4,
       } as Period;
     }
   }

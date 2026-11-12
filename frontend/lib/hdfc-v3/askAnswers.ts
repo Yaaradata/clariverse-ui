@@ -20,6 +20,8 @@ export type AskQA = {
   link?: { label: string; href: string };
   /** Refused under role-based access. */
   denied?: boolean;
+  /** B11 item 8: a scripted query returns a list; each item can be assigned and tracked. */
+  actions?: { id: string; theme: string; why: string }[];
 };
 
 export type AskScope = "md" | "cards";

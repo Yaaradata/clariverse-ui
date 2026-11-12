@@ -67,6 +67,16 @@ import {
   tint,
   WeeklyBars,
 } from "./primitives";
+import {
+  InteractionHierarchy,
+  OpenTooLongTile,
+  Phase2Note,
+  PrioritySlice,
+  SocialOversight,
+  setOwnerRoles,
+  TodaysToClose,
+  TopComplaints,
+} from "./V4";
 
 const pct = (a: number | null | undefined, b: number) =>
   a === null || a === undefined || !b ? null : (100 * a) / b;
@@ -120,7 +130,8 @@ function tileFigure(n: number | null | undefined): ReactNode {
   );
 }
 
-function IssuePulse({ p }: { p: Period }) {
+/** The earlier Cards dials; kept for the service-delivery head (B11 item 7), replaced by the hierarchy on the business view. */
+export function IssuePulse({ p }: { p: Period }) {
   const i = p.cards.internal;
   const e = p.cards.external;
   const hi = e.high_impact;
@@ -1846,13 +1857,51 @@ export function Service({ p }: { p: Period }) {
 
 export function CardsView({ b }: { b: Bundle }) {
   const p = usePeriod(b.periods);
+  const v = p.v4.cards;
+  setOwnerRoles(b.periods.v4?.owner_roles);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      {/* B11: the priority slice leads; the hierarchy replaces the earlier dials (kept on the service-delivery view). */}
+      {v ? (
+        <>
+          <PrioritySlice blocks={v.priority_slice} business="Cards" />
+          <InteractionHierarchy
+            h={v.hierarchy}
+            scope="Cards"
+            title={titled("Cards interactions", p)}
+          />
+          <OpenTooLongTile
+            o={v.open_too_long}
+            title={titled("Open too long: Cards", p)}
+          />
+          <TodaysToClose rows={v.to_close} />
+        </>
+      ) : (
+        <IssuePulse p={p} />
+      )}
+      <OmbudsmanWatch o={p.cards.ombudsman} p={p} scope="cards" />
+      <SaveList o={p.cards.ombudsman} p={p} />
+      {v ? <TopComplaints rows={v.top_complaints} /> : null}
+      {v ? <SocialOversight s={v.social} scope="Cards" /> : null}
+      <Categories p={p} />
+      <QuestionCards p={p} />
+      <Phase2Note />
+    </div>
+  );
+}
+
+/** Service-delivery head (B11 item 7): the detailed views: issue dials, issues by category and channel, repeat contacts. */
+export function ServiceDeliveryView({ b }: { b: Bundle }) {
+  const p = usePeriod(b.periods);
+  setOwnerRoles(b.periods.v4?.owner_roles);
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <IssuePulse p={p} />
-      <OmbudsmanWatch o={p.cards.ombudsman} p={p} scope="cards" />
-      <SaveList o={p.cards.ombudsman} p={p} />
       <Categories p={p} />
-      <QuestionCards p={p} />
+      <RepeatPanel p={p} />
+      <JourneyPanel p={p} />
+      {p.v4.cards ? <TopComplaints rows={p.v4.cards.top_complaints} /> : null}
+      <Phase2Note />
     </div>
   );
 }
