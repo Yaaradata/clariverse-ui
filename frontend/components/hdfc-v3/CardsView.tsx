@@ -552,20 +552,6 @@ function Categories({ p }: { p: Period }) {
           ))}
         </div>
       </div>
-      <MutedNote>
-        Each contact and each public item counts once, under its main theme, so
-        the categories add up to the issue pulse: resolved + open + waiting on
-        customer = volume. Waiting on customer: the bank has sent a resolution
-        or proposed one; not counted as open or as not responded to. Not
-        responded to in 48h+: waited more than 48 hours for a first reply.
-        Escalations: internal contacts escalated to a grievance desk or beyond;
-        external posts with escalation language. Trend: internal plus public
-        volume over the last {p.cards.categories[0]?.trend.length ?? 0} periods
-        of the same length. TAT-related: the category carries a delivery
-        timeline; compliance is not shown here. Owners are roles in the cards
-        team. The at-risk pill counts complaints on the Ombudsman watch
-        (internal, illustrative).
-      </MutedNote>
     </Tile>
   );
 }
@@ -1869,7 +1855,6 @@ export function CardsView({ b }: { b: Bundle }) {
           <PrioritySlice blocks={v.priority_slice} business="Cards" />
           <InteractionHierarchy
             h={v.hierarchy}
-            scope="Cards"
             title={titled("Cards interactions", p)}
           />
           <OpenTooLongTile

@@ -134,37 +134,11 @@ export const DEFS = {
     "Responded: the bank's handle or the store developer replied. Play Store replies are collected; on other sources replies are simulated.",
 };
 
-export function HowToRead({ scope }: { scope: string }) {
-  return (
-    <div
-      data-testid="how-to-read"
-      style={{
-        ...box,
-        background: tint(C.violet, 0.06),
-        border: `1px solid ${tint(C.violet, 0.3)}`,
-        fontSize: 13.5,
-        color: C.textSec,
-        lineHeight: 1.5,
-      }}
-    >
-      <strong style={{ color: C.text }}>How to read this.</strong> Read left to
-      right. Every {scope} interaction is either inside the bank or public.
-      Inside the bank splits into complaints, queries and requests, each then
-      resolved, open or waiting on the customer; open too long is part of open.
-      Public splits into positive, neutral and negative, each responded to or
-      not. Every percentage names what it is a share of. Hover ⓘ for a
-      definition.
-    </div>
-  );
-}
-
 export function InteractionHierarchy({
   h,
-  scope,
   title,
 }: {
   h: Hierarchy;
-  scope: string;
   title: ReactNode;
 }) {
   const i = h.inside;
@@ -182,7 +156,6 @@ export function InteractionHierarchy({
       prov={["internal", "public"]}
       tone="violet"
     >
-      <HowToRead scope={scope} />
       <div
         style={{
           display: "grid",
