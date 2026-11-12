@@ -10,7 +10,7 @@ import type { Bundle } from "@/lib/hdfc-v3/types";
 import { MorningBrief } from "./Brief";
 import { OmbudsmanWatch } from "./Ombudsman";
 import { CustomerPulse, CxPulse, usePeriod } from "./Pulse";
-import { OpenTooLongTile, setOwnerRoles } from "./V4";
+import { OpenTooLongTile, ServiceMetrics, setOwnerRoles } from "./V4";
 
 export function MdView({ b }: { b: Bundle }) {
   const p = usePeriod(b.periods);
@@ -26,6 +26,12 @@ export function MdView({ b }: { b: Bundle }) {
         businesses={p.v4.bank.open_too_long.by_business}
       />
       <OmbudsmanWatch o={p.ombudsman} p={p} scope="bank" />
+      {/* P1: the service-metrics teaser, bank and each business. */}
+      <ServiceMetrics
+        s={p.v4.bank.service}
+        scope="the bank"
+        businesses={p.v4.bank.open_too_long.by_business}
+      />
       <MorningBrief p={p} />
     </div>
   );

@@ -295,6 +295,22 @@ def top_complaints(cs, labels, w) -> list[dict]:
     return rows[:15]
 
 
+# ------------------------------------------------------------------ P1 · service metrics (teaser)
+
+def service_metrics(vol, open_at, b) -> dict:
+    """SDR, FTR and FTNR from the interactions, as illustrative definitions (confirmed in discovery):
+      SDR   same-day resolution: of the period's interactions, closed on the calendar day they came in
+      FTR   first-time resolution: of the resolved, closed with no repeat contact on the issue
+      FTNR  first-time not resolved: of the resolved, needed a further contact first (FTR + FTNR = resolved)"""
+    res = [r for r in vol if not open_at(r, b)]
+    sdr = sum(r["w"] for r in res if r["_closed"] and r["_closed"].date() == r["_c"].date())
+    ftnr = sum(r["w"] for r in res if r["repeat"])
+    n, nres = sum(r["w"] for r in vol), sum(r["w"] for r in res)
+    return {"volume": n, "resolved": nres, "sdr": sdr, "sdr_pct": pct(sdr, n), "ftr": nres - ftnr,
+            "ftr_pct": pct(nres - ftnr, nres), "ftnr": ftnr, "ftnr_pct": pct(ftnr, nres),
+            "tag": "Illustrative: definitions confirmed in discovery"}
+
+
 # ------------------------------------------------------------------ 8 · scripted Ask lists (fixed windows)
 
 def query_lists(inter, cards_complaints, pub, customers, is_open, responded, public_end, labels) -> dict:

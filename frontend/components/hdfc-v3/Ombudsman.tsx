@@ -16,6 +16,7 @@ import type {
 } from "@/lib/hdfc-v3/periods";
 import { Delta, Dial, titled } from "./Pulse";
 import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
+import { ExportButton } from "./V4";
 
 const pct = (a: number, b: number) => (b ? (100 * a) / b : null);
 
@@ -269,7 +270,85 @@ export function OmbudsmanWatch({
           />
         </div>
       </div>
+      <OmbudsmanTable rows={split} scope={scope} />
     </Tile>
+  );
+}
+
+/** P1: the Ombudsman watch per business (or per Cards category) as a table, with a CSV export. */
+function OmbudsmanTable({
+  rows,
+  scope,
+}: {
+  rows: { id: string; label: string; r: OmbudsmanRisk }[];
+  scope: "bank" | "cards";
+}) {
+  const head = [
+    scope === "bank" ? "Business" : "Category",
+    "On the brink",
+    "Already eligible",
+    "Unhappy with the reply",
+    "Awaiting IO review",
+    "At risk",
+  ];
+  const keys = [
+    "brink",
+    "eligible",
+    "unhappy",
+    "awaiting_io",
+    "at_risk",
+  ] as const;
+  const cell = { padding: "6px 8px", textAlign: "right" as const };
+  return (
+    <details data-testid="ombudsman-table">
+      <summary style={{ cursor: "pointer", fontSize: 13.5, color: C.brandInk }}>
+        Per {scope === "bank" ? "business" : "category"}: the full table
+      </summary>
+      <div style={{ overflowX: "auto", marginTop: 8 }}>
+        <table
+          style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}
+        >
+          <thead>
+            <tr style={{ color: C.textMut, fontSize: 12 }}>
+              {head.map((h, i) => (
+                <th
+                  key={h}
+                  style={{ ...cell, textAlign: i ? "right" : "left" }}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((x) => (
+              <tr key={x.id} style={{ borderTop: `1px solid ${C.border}` }}>
+                <td style={{ ...cell, textAlign: "left" }}>{x.label}</td>
+                {keys.map((k) => (
+                  <td
+                    key={k}
+                    style={{
+                      ...cell,
+                      fontFamily: MONO,
+                      color: k === "at_risk" ? C.red : C.text,
+                    }}
+                  >
+                    {fmt(x.r[k])}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div style={{ marginTop: 8 }}>
+        <ExportButton
+          name={`ombudsman-watch-${scope === "bank" ? "by-business" : "cards-by-category"}.csv`}
+          head={head}
+          rows={rows.map((x) => [x.label, ...keys.map((k) => String(x.r[k]))])}
+        />
+      </div>
+    </details>
   );
 }
 

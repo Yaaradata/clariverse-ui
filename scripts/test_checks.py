@@ -141,6 +141,9 @@ FIXTURES = [
     ("V4 type split off", "V4 hierarchy [30d cards]: types sum",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["v4"]["cards"]["hierarchy"]["inside"]["kinds"]["query"].update(
          open=d["periods"]["30d"]["v4"]["cards"]["hierarchy"]["inside"]["kinds"]["query"]["open"] + 1))),
+    ("V4 FTR off", "V4 service metrics [30d bank]",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["v4"]["bank"]["service"].update(
+         ftr=d["periods"]["30d"]["v4"]["bank"]["service"]["ftr"] + 1))),
     ("V4 open too long off", "V4 open too long [7d]",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["v4"]["cards"]["open_too_long"].update(
          count=d["periods"]["7d"]["v4"]["cards"]["open_too_long"]["count"] + 1))),

@@ -118,6 +118,19 @@ export type TopComplaint = {
     ombudsman: string;
   }[];
 };
+/** P1 teaser: SDR, FTR and FTNR (scripts/hdfc_v3/v4_blocks.py service_metrics). Illustrative definitions. */
+export type Service = {
+  volume: number;
+  resolved: number;
+  sdr: number;
+  sdr_pct: number | null;
+  ftr: number;
+  ftr_pct: number | null;
+  ftnr: number;
+  ftnr_pct: number | null;
+  tag: string;
+};
+
 export type V4Period = {
   cards?: {
     hierarchy: Hierarchy;
@@ -126,6 +139,7 @@ export type V4Period = {
     to_close: CloseRow[];
     social: Social;
     top_complaints: TopComplaint[];
+    service: Service;
   };
   bank: {
     hierarchy: Hierarchy;
@@ -137,9 +151,11 @@ export type V4Period = {
         open: number;
         share_of_open: number | null;
         list: OtlRow[];
+        service: Service;
       }[];
     };
     social: Social;
+    service: Service;
   };
 };
 export type QueryList = {
@@ -253,4 +269,90 @@ export function downloadCsv(name: string, head: string[], rows: string[][]) {
   a.download = name;
   a.click();
   URL.revokeObjectURL(url);
+}
+
+/* ---------------------------------------------------------------- team roles (P1: hierarchy upload) */
+
+const ROLES_KEY = "lisn-v4-team-roles";
+const ROLES_EVENT = "lisn-v4-team-roles";
+export type TeamRole = { role: string; team: string; reports_to: string };
+
+/** A cell that looks like a person (an email, a phone number) is refused: Assign uses roles, never names. */
+const PERSONAL = /@|\d{6,}|\+\d/;
+
+/** Parse a team-roles CSV: a header row with a "role" column, optional "team" and "reports_to". */
+export function parseTeamCsv(text: string): {
+  roles: TeamRole[];
+  refused: number;
+  error?: string;
+} {
+  const lines = text
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (!lines.length)
+    return { roles: [], refused: 0, error: "The file is empty." };
+  const split = (l: string) =>
+    l.split(",").map((c) => c.trim().replace(/^"|"$/g, ""));
+  const head = split(lines[0]).map((h) => h.toLowerCase());
+  const ri = head.indexOf("role");
+  if (ri < 0)
+    return {
+      roles: [],
+      refused: 0,
+      error: 'The first row needs a "role" column.',
+    };
+  const ti = head.indexOf("team");
+  const pi = head.indexOf("reports_to");
+  let refused = 0;
+  const seen = new Set<string>();
+  const roles: TeamRole[] = [];
+  for (const l of lines.slice(1)) {
+    const c = split(l);
+    const role = c[ri] ?? "";
+    if (!role) continue;
+    if (c.some((x) => PERSONAL.test(x))) {
+      refused++;
+      continue;
+    }
+    if (seen.has(role)) continue;
+    seen.add(role);
+    roles.push({
+      role,
+      team: ti >= 0 ? (c[ti] ?? "") : "",
+      reports_to: pi >= 0 ? (c[pi] ?? "") : "",
+    });
+  }
+  return { roles, refused };
+}
+
+export function useTeamRoles(defaults: string[]) {
+  const [loaded, setLoaded] = useState<TeamRole[] | null>(null);
+  useEffect(() => {
+    const sync = () => {
+      try {
+        const v = localStorage.getItem(ROLES_KEY);
+        setLoaded(v ? JSON.parse(v) : null);
+      } catch {
+        setLoaded(null);
+      }
+    };
+    sync();
+    window.addEventListener(ROLES_EVENT, sync);
+    return () => window.removeEventListener(ROLES_EVENT, sync);
+  }, []);
+  const save = (roles: TeamRole[] | null) => {
+    try {
+      if (roles) localStorage.setItem(ROLES_KEY, JSON.stringify(roles));
+      else localStorage.removeItem(ROLES_KEY);
+    } catch {
+      // private mode
+    }
+    window.dispatchEvent(new Event(ROLES_EVENT));
+  };
+  return {
+    roles: loaded?.length ? loaded.map((r) => r.role) : defaults,
+    loaded,
+    save,
+  };
 }

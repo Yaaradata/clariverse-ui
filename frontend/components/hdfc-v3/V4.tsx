@@ -20,11 +20,14 @@ import {
   downloadCsv,
   type Hierarchy,
   type OpenTooLong,
+  parseTeamCsv,
+  type Service,
   type SliceBlock,
   type Social,
   STATUSES,
   type TopComplaint,
   useActions,
+  useTeamRoles,
 } from "@/lib/hdfc-v3/v4";
 import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
 
@@ -379,6 +382,7 @@ export function InteractionHierarchy({
 
 function ActionControls({ id, overdue }: { id: string; overdue?: boolean }) {
   const a = useActions();
+  const team = useTeamRoles(OWNERS);
   const s = a.get(id);
   const [mail, setMail] = useState(false);
   const late = overdue && s.status !== "Closed";
@@ -408,7 +412,7 @@ function ActionControls({ id, overdue }: { id: string; overdue?: boolean }) {
         style={sel}
       >
         <option value="">Assign…</option>
-        {OWNERS.map((o) => (
+        {team.roles.map((o) => (
           <option key={o} value={o}>
             {o}
           </option>
@@ -1243,5 +1247,235 @@ export function Phase2Note() {
       status trail work inside LisN only; nothing is sent. Phase 2: status
       writes back to CRM and social tools.
     </MutedNote>
+  );
+}
+
+/* ---------------------------------------------------------------- P1 · service metrics teaser */
+
+export function ServiceMetrics({
+  s,
+  scope,
+  businesses,
+}: {
+  s: Service;
+  scope: string;
+  businesses?: { id: string; label: string; service: Service }[];
+}) {
+  const cell = { padding: "6px 8px", textAlign: "right" as const };
+  return (
+    <Tile
+      id="service-metrics"
+      title={`Service metrics: ${scope}`}
+      sub="Same-day resolution, first-time resolution and first-time not resolved, computed from the interactions. A teaser: the definitions are confirmed in discovery."
+      prov="internal"
+      tone="cyan"
+    >
+      <span
+        style={{
+          alignSelf: "flex-start",
+          fontSize: 12,
+          color: C.amber,
+          border: `1px solid ${tint(C.amber, 0.4)}`,
+          borderRadius: 999,
+          padding: "2px 10px",
+        }}
+      >
+        {s.tag}
+      </span>
+      <div style={cols(3, 180, 10)}>
+        <div style={box}>
+          <Fig
+            label="SDR · same-day resolution"
+            value={s.sdr}
+            of={`${fmtPct(s.sdr_pct)} of ${fmt(s.volume)} interactions`}
+            tone={C.green}
+            def="Same-day resolution: of the period's interactions, those closed on the calendar day they came in."
+          />
+        </div>
+        <div style={box}>
+          <Fig
+            label="FTR · first-time resolution"
+            value={s.ftr}
+            of={`${fmtPct(s.ftr_pct)} of ${fmt(s.resolved)} resolved`}
+            tone={C.green}
+            def="First-time resolution: of the resolved, those closed with no repeat contact on the issue."
+          />
+        </div>
+        <div style={box}>
+          <Fig
+            label="FTNR · first-time not resolved"
+            value={s.ftnr}
+            of={`${fmtPct(s.ftnr_pct)} of ${fmt(s.resolved)} resolved`}
+            tone={C.amber}
+            def="First-time not resolved: of the resolved, those that needed a further contact first. FTR + FTNR = resolved."
+          />
+        </div>
+      </div>
+      {businesses?.length ? (
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}
+          >
+            <thead>
+              <tr style={{ color: C.textMut, fontSize: 12 }}>
+                <th style={{ ...cell, textAlign: "left" }}>Business</th>
+                <th style={cell}>SDR</th>
+                <th style={cell}>FTR</th>
+                <th style={cell}>FTNR</th>
+              </tr>
+            </thead>
+            <tbody>
+              {businesses.map((b) => (
+                <tr
+                  key={b.id}
+                  data-testid="service-business"
+                  style={{ borderTop: `1px solid ${C.border}` }}
+                >
+                  <td style={{ ...cell, textAlign: "left" }}>{b.label}</td>
+                  <td style={{ ...cell, fontFamily: MONO }}>
+                    {fmtPct(b.service.sdr_pct)}
+                  </td>
+                  <td style={{ ...cell, fontFamily: MONO }}>
+                    {fmtPct(b.service.ftr_pct)}
+                  </td>
+                  <td style={{ ...cell, fontFamily: MONO }}>
+                    {fmtPct(b.service.ftnr_pct)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+    </Tile>
+  );
+}
+
+/* ---------------------------------------------------------------- P1 · team roles upload */
+
+const SAMPLE_ROWS = [
+  ["Escalations lead", "Cards service", "Service-delivery head"],
+  ["Upgrades lead", "Cards product", "Head of Cards"],
+  ["Premium cards lead", "Cards premium", "Head of Cards"],
+  ["Service-delivery head", "Cards service", "Head of CX"],
+  ["Social care lead", "CX social", "Head of CX"],
+];
+
+/** Load a team structure (a CSV of roles) that Assign then offers. Roles only: emails and phone numbers are refused. */
+export function TeamRolesUpload() {
+  const team = useTeamRoles(OWNERS);
+  const [msg, setMsg] = useState<string | null>(null);
+  const rows =
+    team.loaded ??
+    team.roles.map((r) => ({ role: r, team: "", reports_to: "" }));
+  return (
+    <Tile
+      id="team-roles"
+      title="Team structure"
+      sub="Load your team's roles from a CSV; Assign then offers them. This shows how a team structure would be loaded."
+      prov="internal"
+      tone="violet"
+    >
+      <div
+        style={{
+          display: "flex",
+          gap: 10,
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
+        <label style={{ ...btn(true), cursor: "pointer" }}>
+          Load team roles (CSV)
+          <input
+            type="file"
+            accept=".csv,text/csv"
+            data-testid="team-roles-input"
+            style={{ display: "none" }}
+            onChange={async (e) => {
+              const f = e.target.files?.[0];
+              if (!f) return;
+              const r = parseTeamCsv(await f.text());
+              if (r.error) {
+                setMsg(r.error);
+              } else {
+                team.save(r.roles);
+                setMsg(
+                  `${r.roles.length} roles loaded${r.refused ? `; ${r.refused} rows refused (they looked like a person: an email or a phone number)` : ""}.`,
+                );
+              }
+              e.target.value = "";
+            }}
+          />
+        </label>
+        <button
+          type="button"
+          onClick={() =>
+            downloadCsv(
+              "team-roles-sample.csv",
+              ["role", "team", "reports_to"],
+              SAMPLE_ROWS,
+            )
+          }
+          style={btn(false)}
+        >
+          <Download size={13} /> Sample CSV
+        </button>
+        {team.loaded ? (
+          <button
+            type="button"
+            onClick={() => {
+              team.save(null);
+              setMsg("Back to the default roles.");
+            }}
+            style={btn(false)}
+          >
+            Use default roles
+          </button>
+        ) : null}
+      </div>
+      {msg ? (
+        <div
+          data-testid="team-roles-msg"
+          style={{ fontSize: 13, color: C.textSec }}
+        >
+          {msg}
+        </div>
+      ) : null}
+      <div style={{ overflowX: "auto" }}>
+        <table
+          style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}
+        >
+          <thead>
+            <tr style={{ color: C.textMut, fontSize: 12, textAlign: "left" }}>
+              <th style={{ padding: "6px 8px" }}>Role</th>
+              <th style={{ padding: "6px 8px" }}>Team</th>
+              <th style={{ padding: "6px 8px" }}>Reports to</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr
+                key={r.role}
+                data-testid="team-role"
+                style={{ borderTop: `1px solid ${C.border}` }}
+              >
+                <td style={{ padding: "6px 8px" }}>{r.role}</td>
+                <td style={{ padding: "6px 8px", color: C.textSec }}>
+                  {r.team || "—"}
+                </td>
+                <td style={{ padding: "6px 8px", color: C.textSec }}>
+                  {r.reports_to || "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <MutedNote>
+        {team.loaded ? "Loaded in this browser. " : "Default roles shown. "}
+        Roles only: a row with an email or a phone number is refused. Phase 2:
+        the hierarchy comes from the bank&apos;s HR or CRM system.
+      </MutedNote>
+    </Tile>
   );
 }

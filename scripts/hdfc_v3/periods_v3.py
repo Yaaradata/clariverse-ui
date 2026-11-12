@@ -1029,7 +1029,8 @@ def v4_period(inter, customers, pub, cards_complaints, w, labels) -> dict:
         if xs:
             o = v4.open_too_long(xs, customers, is_open, labels)
             biz_otl.append({"id": pid, "label": PRODUCT_LABEL[pid], **{k: o[k] for k in ("count", "open", "share_of_open")},
-                            "list": o["list"][:15]})
+                            "list": o["list"][:15],
+                            "service": v4.service_metrics(xs, open_at, b)})
     return {
         "cards": {
             "hierarchy": v4.hierarchy(cvol, cprs, customers, b, is_open, open_at, waiting_at, responded),
@@ -1038,11 +1039,13 @@ def v4_period(inter, customers, pub, cards_complaints, w, labels) -> dict:
             "to_close": v4.to_close(cvol, customers, is_open, labels),
             "social": v4.social(cprs, responded, pend, labels),
             "top_complaints": v4.top_complaints(cards_complaints, labels, w),
+            "service": v4.service_metrics(cvol, open_at, b),
         },
         "bank": {
             "hierarchy": v4.hierarchy(vol, bprs, customers, b, is_open, open_at, waiting_at, responded),
             "open_too_long": {**v4.open_too_long(vol, customers, is_open, labels), "by_business": biz_otl},
             "social": v4.social(bprs, responded, pend, labels),
+            "service": v4.service_metrics(vol, open_at, b),
         },
     }
 

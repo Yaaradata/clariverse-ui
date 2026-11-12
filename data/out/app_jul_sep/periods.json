@@ -7353,7 +7353,18 @@
         }
        ]
       }
-     ]
+     ],
+     "service": {
+      "volume": 8002,
+      "resolved": 2049,
+      "sdr": 1316,
+      "sdr_pct": 16.4,
+      "ftr": 1861,
+      "ftr_pct": 90.8,
+      "ftnr": 188,
+      "ftnr_pct": 9.2,
+      "tag": "Illustrative: definitions confirmed in discovery"
+     }
     },
     "bank": {
      "hierarchy": {
@@ -7621,7 +7632,18 @@
           "over_by": "5 h",
           "limit": "Ultra-sensitive: 5 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 8002,
+         "resolved": 2049,
+         "sdr": 1316,
+         "sdr_pct": 16.4,
+         "ftr": 1861,
+         "ftr_pct": 90.8,
+         "ftnr": 188,
+         "ftnr_pct": 9.2,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "payzapp",
@@ -7629,7 +7651,18 @@
         "count": 0,
         "open": 641,
         "share_of_open": 0.0,
-        "list": []
+        "list": [],
+        "service": {
+         "volume": 1894,
+         "resolved": 1136,
+         "sdr": 524,
+         "sdr_pct": 27.7,
+         "ftr": 727,
+         "ftr_pct": 64.0,
+         "ftnr": 409,
+         "ftnr_pct": 36.0,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "accounts",
@@ -7658,7 +7691,18 @@
           "over_by": "14 h",
           "limit": "Ultra-sensitive: 5 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 9227,
+         "resolved": 2642,
+         "sdr": 959,
+         "sdr_pct": 10.4,
+         "ftr": 2522,
+         "ftr_pct": 95.5,
+         "ftnr": 120,
+         "ftnr_pct": 4.5,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "personal_loans",
@@ -7677,7 +7721,18 @@
           "over_by": "16 h",
           "limit": "Ultra-sensitive: 5 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 1855,
+         "resolved": 477,
+         "sdr": 469,
+         "sdr_pct": 25.3,
+         "ftr": 477,
+         "ftr_pct": 100.0,
+         "ftnr": 0,
+         "ftnr_pct": 0.0,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "home_loans",
@@ -7685,7 +7740,18 @@
         "count": 0,
         "open": 480,
         "share_of_open": 0.0,
-        "list": []
+        "list": [],
+        "service": {
+         "volume": 884,
+         "resolved": 98,
+         "sdr": 82,
+         "sdr_pct": 9.3,
+         "ftr": 98,
+         "ftr_pct": 100.0,
+         "ftnr": 0,
+         "ftnr_pct": 0.0,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "auto_loans",
@@ -7693,7 +7759,18 @@
         "count": 0,
         "open": 311,
         "share_of_open": 0.0,
-        "list": []
+        "list": [],
+        "service": {
+         "volume": 1530,
+         "resolved": 428,
+         "sdr": 408,
+         "sdr_pct": 26.7,
+         "ftr": 384,
+         "ftr_pct": 89.7,
+         "ftnr": 44,
+         "ftnr_pct": 10.3,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "insurance",
@@ -7701,7 +7778,18 @@
         "count": 0,
         "open": 6,
         "share_of_open": 0.0,
-        "list": []
+        "list": [],
+        "service": {
+         "volume": 396,
+         "resolved": 245,
+         "sdr": 4,
+         "sdr_pct": 1.0,
+         "ftr": 245,
+         "ftr_pct": 100.0,
+         "ftnr": 0,
+         "ftnr_pct": 0.0,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "digital",
@@ -7709,7 +7797,18 @@
         "count": 0,
         "open": 1261,
         "share_of_open": 0.0,
-        "list": []
+        "list": [],
+        "service": {
+         "volume": 5013,
+         "resolved": 2762,
+         "sdr": 1890,
+         "sdr_pct": 37.7,
+         "ftr": 2232,
+         "ftr_pct": 80.8,
+         "ftnr": 530,
+         "ftnr_pct": 19.2,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        }
       ]
      },
@@ -7763,6 +7862,17 @@
        }
       ],
       "note": "Responded: the bank's handle or the store developer replied. Play Store replies are collected; on other sources replies are simulated (D24). The bank's agency report is monthly; this is daily."
+     },
+     "service": {
+      "volume": 28801,
+      "resolved": 9837,
+      "sdr": 5652,
+      "sdr_pct": 19.6,
+      "ftr": 8546,
+      "ftr_pct": 86.9,
+      "ftnr": 1291,
+      "ftnr_pct": 13.1,
+      "tag": "Illustrative: definitions confirmed in discovery"
      }
     }
    }
@@ -17209,7 +17319,18 @@
         }
        ]
       }
-     ]
+     ],
+     "service": {
+      "volume": 57986,
+      "resolved": 43158,
+      "sdr": 9940,
+      "sdr_pct": 17.1,
+      "ftr": 37391,
+      "ftr_pct": 86.6,
+      "ftnr": 5767,
+      "ftnr_pct": 13.4,
+      "tag": "Illustrative: definitions confirmed in discovery"
+     }
     },
     "bank": {
      "hierarchy": {
@@ -17857,7 +17978,18 @@
           "over_by": "3 days",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 57986,
+         "resolved": 43158,
+         "sdr": 9940,
+         "sdr_pct": 17.1,
+         "ftr": 37391,
+         "ftr_pct": 86.6,
+         "ftnr": 5767,
+         "ftnr_pct": 13.4,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "payzapp",
@@ -17926,7 +18058,18 @@
           "over_by": "13 h",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 19626,
+         "resolved": 16875,
+         "sdr": 4176,
+         "sdr_pct": 21.3,
+         "ftr": 13925,
+         "ftr_pct": 82.5,
+         "ftnr": 2950,
+         "ftnr_pct": 17.5,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "accounts",
@@ -18085,7 +18228,18 @@
           "over_by": "45 h",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 50163,
+         "resolved": 37518,
+         "sdr": 10042,
+         "sdr_pct": 20.0,
+         "ftr": 34429,
+         "ftr_pct": 91.8,
+         "ftnr": 3089,
+         "ftnr_pct": 8.2,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "personal_loans",
@@ -18144,7 +18298,18 @@
           "over_by": "4 h",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 13660,
+         "resolved": 9503,
+         "sdr": 3730,
+         "sdr_pct": 27.3,
+         "ftr": 8991,
+         "ftr_pct": 94.6,
+         "ftnr": 512,
+         "ftnr_pct": 5.4,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "home_loans",
@@ -18193,7 +18358,18 @@
           "over_by": "34 h",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 6555,
+         "resolved": 5335,
+         "sdr": 1670,
+         "sdr_pct": 25.5,
+         "ftr": 4075,
+         "ftr_pct": 76.4,
+         "ftnr": 1260,
+         "ftnr_pct": 23.6,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "auto_loans",
@@ -18222,7 +18398,18 @@
           "over_by": "3 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 6934,
+         "resolved": 4476,
+         "sdr": 1692,
+         "sdr_pct": 24.4,
+         "ftr": 3577,
+         "ftr_pct": 79.9,
+         "ftnr": 899,
+         "ftnr_pct": 20.1,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "insurance",
@@ -18251,7 +18438,18 @@
           "over_by": "3 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 6108,
+         "resolved": 4922,
+         "sdr": 1205,
+         "sdr_pct": 19.7,
+         "ftr": 4817,
+         "ftr_pct": 97.9,
+         "ftnr": 105,
+         "ftnr_pct": 2.1,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "digital",
@@ -18300,7 +18498,18 @@
           "over_by": "2 days",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 33522,
+         "resolved": 29977,
+         "sdr": 10080,
+         "sdr_pct": 30.1,
+         "ftr": 24760,
+         "ftr_pct": 82.6,
+         "ftnr": 5217,
+         "ftnr_pct": 17.4,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        }
       ]
      },
@@ -18665,6 +18874,17 @@
        }
       ],
       "note": "Responded: the bank's handle or the store developer replied. Play Store replies are collected; on other sources replies are simulated (D24). The bank's agency report is monthly; this is daily."
+     },
+     "service": {
+      "volume": 194554,
+      "resolved": 151764,
+      "sdr": 42535,
+      "sdr_pct": 21.9,
+      "ftr": 131965,
+      "ftr_pct": 87.0,
+      "ftnr": 19799,
+      "ftnr_pct": 13.0,
+      "tag": "Illustrative: definitions confirmed in discovery"
      }
     }
    }
@@ -27222,7 +27442,18 @@
         }
        ]
       }
-     ]
+     ],
+     "service": {
+      "volume": 265972,
+      "resolved": 243745,
+      "sdr": 45886,
+      "sdr_pct": 17.3,
+      "ftr": 217127,
+      "ftr_pct": 89.1,
+      "ftnr": 26618,
+      "ftnr_pct": 10.9,
+      "tag": "Illustrative: definitions confirmed in discovery"
+     }
     },
     "bank": {
      "hierarchy": {
@@ -27870,7 +28101,18 @@
           "over_by": "7 days",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 265972,
+         "resolved": 243745,
+         "sdr": 45886,
+         "sdr_pct": 17.3,
+         "ftr": 217127,
+         "ftr_pct": 89.1,
+         "ftnr": 26618,
+         "ftnr_pct": 10.9,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "payzapp",
@@ -27999,7 +28241,18 @@
           "over_by": "13 h",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 81329,
+         "resolved": 76317,
+         "sdr": 21379,
+         "sdr_pct": 26.3,
+         "ftr": 61255,
+         "ftr_pct": 80.3,
+         "ftnr": 15062,
+         "ftnr_pct": 19.7,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "accounts",
@@ -28158,7 +28411,18 @@
           "over_by": "12 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 225782,
+         "resolved": 208518,
+         "sdr": 48302,
+         "sdr_pct": 21.4,
+         "ftr": 192078,
+         "ftr_pct": 92.1,
+         "ftnr": 16440,
+         "ftnr_pct": 7.9,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "personal_loans",
@@ -28267,7 +28531,18 @@
           "over_by": "4 h",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 51716,
+         "resolved": 45535,
+         "sdr": 12603,
+         "sdr_pct": 24.4,
+         "ftr": 40602,
+         "ftr_pct": 89.2,
+         "ftnr": 4933,
+         "ftnr_pct": 10.8,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "home_loans",
@@ -28326,7 +28601,18 @@
           "over_by": "34 h",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 36721,
+         "resolved": 32186,
+         "sdr": 8656,
+         "sdr_pct": 23.6,
+         "ftr": 27499,
+         "ftr_pct": 85.4,
+         "ftnr": 4687,
+         "ftnr_pct": 14.6,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "auto_loans",
@@ -28375,7 +28661,18 @@
           "over_by": "3 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 24386,
+         "resolved": 21176,
+         "sdr": 4900,
+         "sdr_pct": 20.1,
+         "ftr": 19028,
+         "ftr_pct": 89.9,
+         "ftnr": 2148,
+         "ftnr_pct": 10.1,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "insurance",
@@ -28434,7 +28731,18 @@
           "over_by": "3 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 21876,
+         "resolved": 19729,
+         "sdr": 5620,
+         "sdr_pct": 25.7,
+         "ftr": 18492,
+         "ftr_pct": 93.7,
+         "ftnr": 1237,
+         "ftnr_pct": 6.3,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "digital",
@@ -28523,7 +28831,18 @@
           "over_by": "2 days",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 136138,
+         "resolved": 131386,
+         "sdr": 46382,
+         "sdr_pct": 34.1,
+         "ftr": 110994,
+         "ftr_pct": 84.5,
+         "ftnr": 20392,
+         "ftnr_pct": 15.5,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        }
       ]
      },
@@ -29003,6 +29322,17 @@
        }
       ],
       "note": "Responded: the bank's handle or the store developer replied. Play Store replies are collected; on other sources replies are simulated (D24). The bank's agency report is monthly; this is daily."
+     },
+     "service": {
+      "volume": 843920,
+      "resolved": 778592,
+      "sdr": 193728,
+      "sdr_pct": 23.0,
+      "ftr": 687075,
+      "ftr_pct": 88.2,
+      "ftnr": 91517,
+      "ftnr_pct": 11.8,
+      "tag": "Illustrative: definitions confirmed in discovery"
      }
     }
    }
@@ -40783,7 +41113,18 @@
         }
        ]
       }
-     ]
+     ],
+     "service": {
+      "volume": 763389,
+      "resolved": 737137,
+      "sdr": 134509,
+      "sdr_pct": 17.6,
+      "ftr": 675502,
+      "ftr_pct": 91.6,
+      "ftnr": 61635,
+      "ftnr_pct": 8.4,
+      "tag": "Illustrative: definitions confirmed in discovery"
+     }
     },
     "bank": {
      "hierarchy": {
@@ -41431,7 +41772,18 @@
           "over_by": "27 days",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 763389,
+         "resolved": 737137,
+         "sdr": 134509,
+         "sdr_pct": 17.6,
+         "ftr": 675502,
+         "ftr_pct": 91.6,
+         "ftnr": 61635,
+         "ftnr_pct": 8.4,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "payzapp",
@@ -41590,7 +41942,18 @@
           "over_by": "4 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 220978,
+         "resolved": 214578,
+         "sdr": 62821,
+         "sdr_pct": 28.4,
+         "ftr": 179963,
+         "ftr_pct": 83.9,
+         "ftnr": 34615,
+         "ftnr_pct": 16.1,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "accounts",
@@ -41749,7 +42112,18 @@
           "over_by": "45 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 648541,
+         "resolved": 628999,
+         "sdr": 147204,
+         "sdr_pct": 22.7,
+         "ftr": 588268,
+         "ftr_pct": 93.5,
+         "ftnr": 40731,
+         "ftnr_pct": 6.5,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "personal_loans",
@@ -41908,7 +42282,18 @@
           "over_by": "12 days",
           "limit": "RBI timeline"
          }
-        ]
+        ],
+        "service": {
+         "volume": 153630,
+         "resolved": 145068,
+         "sdr": 36145,
+         "sdr_pct": 23.5,
+         "ftr": 129636,
+         "ftr_pct": 89.4,
+         "ftnr": 15432,
+         "ftnr_pct": 10.6,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "home_loans",
@@ -41987,7 +42372,18 @@
           "over_by": "34 h",
           "limit": "Default: 48 hours (bank TAT to confirm in discovery)"
          }
-        ]
+        ],
+        "service": {
+         "volume": 117664,
+         "resolved": 112425,
+         "sdr": 25392,
+         "sdr_pct": 21.6,
+         "ftr": 99421,
+         "ftr_pct": 88.4,
+         "ftnr": 13004,
+         "ftnr_pct": 11.6,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "auto_loans",
@@ -42076,7 +42472,18 @@
           "over_by": "3 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 67218,
+         "resolved": 63034,
+         "sdr": 12519,
+         "sdr_pct": 18.6,
+         "ftr": 55530,
+         "ftr_pct": 88.1,
+         "ftnr": 7504,
+         "ftnr_pct": 11.9,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "insurance",
@@ -42235,7 +42642,18 @@
           "over_by": "3 days",
           "limit": "Ultra-HNI: 24 hours"
          }
-        ]
+        ],
+        "service": {
+         "volume": 60061,
+         "resolved": 56516,
+         "sdr": 15603,
+         "sdr_pct": 26.0,
+         "ftr": 51801,
+         "ftr_pct": 91.7,
+         "ftnr": 4715,
+         "ftnr_pct": 8.3,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        },
        {
         "id": "digital",
@@ -42344,7 +42762,18 @@
           "over_by": "23 h",
           "limit": "RBI timeline"
          }
-        ]
+        ],
+        "service": {
+         "volume": 369829,
+         "resolved": 364262,
+         "sdr": 127079,
+         "sdr_pct": 34.4,
+         "ftr": 314504,
+         "ftr_pct": 86.3,
+         "ftnr": 49758,
+         "ftnr_pct": 13.7,
+         "tag": "Illustrative: definitions confirmed in discovery"
+        }
        }
       ]
      },
@@ -43124,6 +43553,17 @@
        }
       ],
       "note": "Responded: the bank's handle or the store developer replied. Play Store replies are collected; on other sources replies are simulated (D24). The bank's agency report is monthly; this is daily."
+     },
+     "service": {
+      "volume": 2401310,
+      "resolved": 2322019,
+      "sdr": 561272,
+      "sdr_pct": 23.4,
+      "ftr": 2094625,
+      "ftr_pct": 90.2,
+      "ftnr": 227394,
+      "ftnr_pct": 9.8,
+      "tag": "Illustrative: definitions confirmed in discovery"
      }
     }
    }

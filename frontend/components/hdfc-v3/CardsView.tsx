@@ -72,8 +72,10 @@ import {
   OpenTooLongTile,
   Phase2Note,
   PrioritySlice,
+  ServiceMetrics,
   SocialOversight,
   setOwnerRoles,
+  TeamRolesUpload,
   TodaysToClose,
   TopComplaints,
 } from "./V4";
@@ -1883,6 +1885,7 @@ export function CardsView({ b }: { b: Bundle }) {
       <SaveList o={p.cards.ombudsman} p={p} />
       {v ? <TopComplaints rows={v.top_complaints} /> : null}
       {v ? <SocialOversight s={v.social} scope="Cards" /> : null}
+      {v ? <ServiceMetrics s={v.service} scope="Cards" /> : null}
       <Categories p={p} />
       <QuestionCards p={p} />
       <Phase2Note />
@@ -1901,6 +1904,11 @@ export function ServiceDeliveryView({ b }: { b: Bundle }) {
       <RepeatPanel p={p} />
       <JourneyPanel p={p} />
       {p.v4.cards ? <TopComplaints rows={p.v4.cards.top_complaints} /> : null}
+      {p.v4.cards ? (
+        <ServiceMetrics s={p.v4.cards.service} scope="Cards" />
+      ) : null}
+      {/* P1: load the team's roles; Assign offers them everywhere. */}
+      <TeamRolesUpload />
       <Phase2Note />
     </div>
   );

@@ -876,3 +876,16 @@ wording.
   opens over the page instead of pushing it (the screen jump on hover). Fonts are bundled at build time for offline use.
 - **Provenance:** the "Internal · illustrative until discovery" tag, hidden since 1 Oct, is shown again (B11 item 10);
   tiles whose block heads carry the tags do not repeat them in the footer (FB-011).
+
+## D33 · HDFC demo V4, P1 items (B11)
+
+- **Service metrics teaser** (MD view for the bank and each business; Cards and service-delivery views): SDR = of the
+  period's interactions, closed on the calendar day they came in; FTR = of the resolved, closed with no repeat contact;
+  FTNR = of the resolved, those that needed a further contact first (FTR + FTNR = resolved). Built on the seed's
+  `repeat` flag; tagged "Illustrative: definitions confirmed in discovery". Reconciled with the hierarchy (check plus
+  fixture).
+- **Team structure upload** (service-delivery view): a CSV with a `role` column (optional `team`, `reports_to`); Assign
+  then offers those roles everywhere. Kept in the browser. A row with an email or a phone number is refused; a bare
+  person's name cannot be detected and is left to the uploader (the screen says roles only).
+- **Ombudsman watch per business**: the existing bank tile gains the full per-business table and a CSV export; the
+  Cards tile the same per category. Same figures as the tile, so it reconciles by construction.

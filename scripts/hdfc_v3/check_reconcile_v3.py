@@ -423,6 +423,11 @@ def v4_checks(per, ok):
             ok(sum(s["volume"] for s in pu["sentiments"].values()) == pu["volume"]
                and all(s["responded"] + s["not_responded"] == s["volume"] for s in pu["sentiments"].values()),
                f"V4 hierarchy [{pid} {scope}]: sentiments sum to public; responded + not responded = each")
+        for scope in ("cards", "bank"):
+            sv, hi = v[scope]["service"], v[scope]["hierarchy"]["inside"]
+            ok(sv["volume"] == hi["volume"] and sv["resolved"] == hi["resolved"] and sv["ftr"] + sv["ftnr"] == sv["resolved"]
+               and sv["sdr"] <= sv["resolved"],
+               f"V4 service metrics [{pid} {scope}]: volume and resolved = hierarchy; FTR + FTNR = resolved; SDR within resolved")
         c = v["cards"]
         ok(c["open_too_long"]["count"] == c["hierarchy"]["inside"]["open_too_long"]
            and c["open_too_long"]["open"] == c["hierarchy"]["inside"]["open"] == p["cards"]["internal"]["open"]
