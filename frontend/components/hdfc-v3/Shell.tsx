@@ -3,13 +3,16 @@
 import {
   Activity,
   ArrowLeft,
+  BookOpen,
   CreditCard,
   Headphones,
   Inbox,
   LayoutDashboard,
   MessageSquareText,
   Moon,
+  Presentation,
   Sun,
+  Wrench,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -78,6 +81,16 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
       href: "/hdfc-pulse/v2/my-view",
       label: "My view: pinned answers",
       icon: LayoutDashboard,
+    },
+    {
+      href: "/hdfc-pulse/v2/service-delivery",
+      label: "Service delivery: detail",
+      icon: Wrench,
+    },
+    {
+      href: "/hdfc-pulse/v2/glossary",
+      label: "Glossary",
+      icon: BookOpen,
     },
   ];
   return (
@@ -202,6 +215,116 @@ function BackButton({ from }: { from: View }) {
   );
 }
 
+/** B11 item 7: views by login. Each role opens its own view; the senior views keep the summary, detail one click away. */
+const ROLES = [
+  { href: "/hdfc-pulse/v2/mds-office", label: "MD's office" },
+  { href: "/hdfc-pulse/v2/head-cx", label: "Head of CX" },
+  { href: "/hdfc-pulse/v2/business/cards", label: "Business head (Cards)" },
+  { href: "/hdfc-pulse/v2/service-delivery", label: "Service-delivery head" },
+];
+
+function RoleSwitch() {
+  const pathname = usePathname() ?? "";
+  const sp = useSearchParams();
+  const period = sp?.get("period");
+  return (
+    <nav
+      aria-label="Role"
+      data-testid="role-switch"
+      style={{
+        display: "inline-flex",
+        background: C.cardAlt,
+        border: `1px solid ${C.borderLight}`,
+        borderRadius: 10,
+        padding: 3,
+        gap: 2,
+        flexWrap: "wrap",
+      }}
+    >
+      {ROLES.map((r) => {
+        const on = pathname === r.href;
+        return (
+          <Link
+            key={r.href}
+            href={period ? `${r.href}?period=${period}` : r.href}
+            scroll={false}
+            aria-current={on ? "page" : undefined}
+            style={{
+              padding: "4px 10px",
+              borderRadius: 7,
+              fontSize: 13,
+              fontWeight: on ? 700 : 500,
+              color: on ? "#fff" : C.textSec,
+              background: on ? C.brand : "transparent",
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {r.label}
+          </Link>
+        );
+      })}
+    </nav>
+  );
+}
+
+const PRESENTER_KEY = "lisn-presenter";
+
+/** B11 item 9: presenter mode. A fixed data snapshot (the build's data, never refreshed) with motion switched off. */
+function PresenterToggle() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    let v = false;
+    try {
+      v =
+        localStorage.getItem(PRESENTER_KEY) === "on" ||
+        new URLSearchParams(window.location.search).get("presenter") === "1";
+    } catch {
+      // private mode
+    }
+    setOn(v);
+    document.documentElement.setAttribute("data-presenter", v ? "on" : "off");
+  }, []);
+  const flip = () => {
+    const v = !on;
+    setOn(v);
+    document.documentElement.setAttribute("data-presenter", v ? "on" : "off");
+    try {
+      localStorage.setItem(PRESENTER_KEY, v ? "on" : "off");
+    } catch {
+      // private mode
+    }
+  };
+  return (
+    <button
+      type="button"
+      data-testid="presenter-toggle"
+      aria-pressed={on}
+      onClick={flip}
+      title={
+        on
+          ? "Presenter mode on: fixed snapshot, no motion. Click to switch off."
+          : "Presenter mode: fixed snapshot, no motion, for screen-share."
+      }
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        background: on ? tint(C.brand, 0.16) : C.cardAlt,
+        border: `1px solid ${on ? C.brand : C.borderLight}`,
+        color: C.text,
+        borderRadius: 999,
+        padding: "5px 12px",
+        fontSize: 14,
+        cursor: "pointer",
+      }}
+    >
+      <Presentation size={14} />
+      {on ? "Presenting · snapshot" : "Presenter"}
+    </button>
+  );
+}
+
 function ShellInner({
   meta,
   ask,
@@ -232,92 +355,98 @@ function ShellInner({
         className="lisn-layout"
         style={{ display: "flex", minHeight: "100vh" }}
       >
-        <aside
-          className="lisn-sidebar"
-          onMouseEnter={() => setNavHover(true)}
-          onMouseLeave={() => setNavHover(false)}
-          style={{
-            width: navHover ? 280 : 72,
-            transition: "width 0.2s ease",
-            flexShrink: 0,
-            borderRight: `1px solid ${C.border}`,
-            background: C.surface,
-            padding: "14px 8px",
-            position: "sticky",
-            top: 0,
-            height: "100vh",
-            overflow: "hidden",
-            flexDirection: "column",
-            gap: 14,
-            zIndex: 20,
-          }}
+        {/* B11 item 9: the sidebar opens over the page instead of pushing it, so nothing jumps on a screen-share. */}
+        <div
+          className="lisn-sidebar-slot"
+          style={{ width: 72, flexShrink: 0, zIndex: 20 }}
         >
-          <div
+          <aside
+            className="lisn-sidebar"
+            onMouseEnter={() => setNavHover(true)}
+            onMouseLeave={() => setNavHover(false)}
             style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "0 6px",
-              justifyContent: navHover ? "flex-start" : "center",
+              width: navHover ? 280 : 72,
+              transition: "width 0.2s ease",
+              flexShrink: 0,
+              borderRight: `1px solid ${C.border}`,
+              background: C.surface,
+              padding: "14px 8px",
+              position: "sticky",
+              top: 0,
+              height: "100vh",
+              overflow: "hidden",
+              flexDirection: "column",
+              gap: 14,
+              zIndex: 20,
             }}
           >
             <div
               style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                background: C.brandSoft,
-                border: `1px solid ${tint(C.brand, 0.33)}`,
-                display: "grid",
-                placeItems: "center",
-                flexShrink: 0,
-              }}
-            >
-              <Headphones size={17} color={C.brandInk} />
-            </div>
-            {navHover ? (
-              <div>
-                <div
-                  style={{
-                    fontWeight: 800,
-                    fontSize: 15,
-                    letterSpacing: "0.02em",
-                  }}
-                >
-                  LisN
-                </div>
-                <div style={{ fontSize: 12, color: C.textMut }}>
-                  Customer Pulse · HDFC Bank
-                </div>
-              </div>
-            ) : null}
-          </div>
-          <Nav view={current} collapsed={!navHover} />
-          <div style={{ marginTop: "auto" }}>
-            <button
-              type="button"
-              onClick={() => setAskOpen(true)}
-              title="Ask LisN"
-              style={{
-                width: "100%",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: navHover ? "flex-start" : "center",
                 gap: 10,
-                background: C.cardAlt,
-                border: `1px solid ${C.borderLight}`,
-                color: C.text,
-                borderRadius: 8,
-                padding: "10px",
-                cursor: "pointer",
-                fontSize: 14,
+                padding: "0 6px",
+                justifyContent: navHover ? "flex-start" : "center",
               }}
             >
-              <MessageSquareText size={16} color={C.brandInk} />
-              {navHover ? "Ask LisN" : null}
-            </button>
-          </div>
-        </aside>
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 10,
+                  background: C.brandSoft,
+                  border: `1px solid ${tint(C.brand, 0.33)}`,
+                  display: "grid",
+                  placeItems: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <Headphones size={17} color={C.brandInk} />
+              </div>
+              {navHover ? (
+                <div>
+                  <div
+                    style={{
+                      fontWeight: 800,
+                      fontSize: 15,
+                      letterSpacing: "0.02em",
+                    }}
+                  >
+                    LisN
+                  </div>
+                  <div style={{ fontSize: 12, color: C.textMut }}>
+                    Customer Pulse · HDFC Bank
+                  </div>
+                </div>
+              ) : null}
+            </div>
+            <Nav view={current} collapsed={!navHover} />
+            <div style={{ marginTop: "auto" }}>
+              <button
+                type="button"
+                onClick={() => setAskOpen(true)}
+                title="Ask LisN"
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: navHover ? "flex-start" : "center",
+                  gap: 10,
+                  background: C.cardAlt,
+                  border: `1px solid ${C.borderLight}`,
+                  color: C.text,
+                  borderRadius: 8,
+                  padding: "10px",
+                  cursor: "pointer",
+                  fontSize: 14,
+                }}
+              >
+                <MessageSquareText size={16} color={C.brandInk} />
+                {navHover ? "Ask LisN" : null}
+              </button>
+            </div>
+          </aside>
+        </div>
 
         <div
           style={{
@@ -378,7 +507,9 @@ function ShellInner({
               <strong style={{ color: C.text }}>HDFC Bank</strong> · Customer
               Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
+            <RoleSwitch />
             {periods ? <HeaderPeriodFilter file={periods} /> : null}
+            <PresenterToggle />
             <ThemeToggle />
             <div style={{ flexBasis: "100%" }}>
               <AskBar
@@ -472,8 +603,12 @@ function ShellInner({
       <style>{`
         .lisn-sidebar { display: flex; }
         @media (max-width: 720px) {
-          .lisn-sidebar { display: none; }
+          .lisn-sidebar, .lisn-sidebar-slot { display: none !important; }
         }
+        /* Presenter mode (B11 item 9): no motion, no smooth scroll, no scroll anchoring. */
+        html[data-presenter="on"] *, html[data-presenter="on"] *::before, html[data-presenter="on"] *::after {
+          transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+        html[data-presenter="on"] { overflow-anchor: none; }
       `}</style>
     </div>
   );

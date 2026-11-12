@@ -10,7 +10,7 @@ export default function HeadCxPage() {
   return (
     <Shell
       {...shellProps(b)}
-      title="MD's office / Head of CX"
+      title="Head of CX"
       subtitle="The pulse first, then today's morning brief, business by business."
       view="mds-office"
       periods={sliceBundle(b, { view: "exec" }).periods}

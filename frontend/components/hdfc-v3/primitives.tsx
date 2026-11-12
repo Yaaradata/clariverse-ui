@@ -137,7 +137,7 @@ export function ProvenanceTag({
   kind: Prov;
   style?: CSSProperties;
 }) {
-  if (kind === "internal") return null;
+  // B11 item 10: the simulated-data tag stays on screen (it had been hidden on 1 Oct).
   const tone = TONE[PROV_TONE[kind]];
   return (
     <span
@@ -377,6 +377,7 @@ export function Tile({
   style,
   accent,
   tone,
+  inlineTags,
 }: {
   title?: ReactNode;
   sub?: ReactNode;
@@ -387,6 +388,8 @@ export function Tile({
   style?: CSSProperties;
   accent?: boolean;
   tone?: Tone;
+  /** The block heads inside the tile carry the tags; the footer does not repeat them (one tag per block). */
+  inlineTags?: boolean;
 }) {
   const provs = Array.isArray(prov) ? prov : [prov];
   const color = TONE[tone ?? (accent ? "violet" : PROV_TONE[provs[0]])];
@@ -476,13 +479,15 @@ export function Tile({
       >
         {children}
       </div>
-      <footer
-        style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 2 }}
-      >
-        {provs.map((p) => (
-          <ProvenanceTag key={p} kind={p} />
-        ))}
-      </footer>
+      {inlineTags ? null : (
+        <footer
+          style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 2 }}
+        >
+          {provs.map((p) => (
+            <ProvenanceTag key={p} kind={p} />
+          ))}
+        </footer>
+      )}
     </section>
   );
 }
