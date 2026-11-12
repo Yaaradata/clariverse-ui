@@ -403,6 +403,38 @@ def periods_checks(seed_dir, out_dir, inter, customers, ok):
     ordered = [per["periods"][k]["cx_pulse"]["internal"]["volume"] for k in ("brief", "7d", "30d", "all")]
     ok(ordered == sorted(ordered), f"periods nest: Morning brief <= 7 days <= 30 days <= full window {ordered}")
     ombudsman_checks(seed_dir, per, inter, ok)
+    v4_checks(per, ok)
+
+
+def v4_checks(per, ok):
+    """B11 additions: the hierarchy reconciles with the MD, Head of CX and Cards figures; each level sums to the one
+    above; open too long sits inside open; the scripted Ask lists exist."""
+    for pid, p in per["periods"].items():
+        v = p["v4"]
+        for scope, h, ivol, pvol in (("cards", v["cards"]["hierarchy"], p["cards"]["internal"]["volume"], p["cards"]["external"]["volume"]),
+                                     ("bank", v["bank"]["hierarchy"], p["cx_pulse"]["internal"]["volume"], p["cx_pulse"]["external"]["volume"])):
+            i, pu = h["inside"], h["public"]
+            ok(i["volume"] == ivol and pu["volume"] == pvol and h["total"] == ivol + pvol,
+               f"V4 hierarchy [{pid} {scope}]: inside and public equal the view's internal and public volumes")
+            ok(sum(k["volume"] for k in i["kinds"].values()) == i["volume"]
+               and all(k["resolved"] + k["open"] + k["waiting_on_customer"] == k["volume"] and k["open_too_long"] <= k["open"]
+                       for k in i["kinds"].values()),
+               f"V4 hierarchy [{pid} {scope}]: types sum to inside; resolved + open + waiting = received; too long within open")
+            ok(sum(s["volume"] for s in pu["sentiments"].values()) == pu["volume"]
+               and all(s["responded"] + s["not_responded"] == s["volume"] for s in pu["sentiments"].values()),
+               f"V4 hierarchy [{pid} {scope}]: sentiments sum to public; responded + not responded = each")
+        c = v["cards"]
+        ok(c["open_too_long"]["count"] == c["hierarchy"]["inside"]["open_too_long"]
+           and c["open_too_long"]["open"] == c["hierarchy"]["inside"]["open"] == p["cards"]["internal"]["open"]
+           and sum(x["count"] for x in c["open_too_long"]["by_limit"]) == c["open_too_long"]["count"],
+           f"V4 open too long [{pid}]: dial = hierarchy = Cards open; limits sum to the dial")
+        ok(v["bank"]["open_too_long"]["count"] >= sum(b["count"] for b in v["bank"]["open_too_long"]["by_business"])
+           and next(b["count"] for b in v["bank"]["open_too_long"]["by_business"] if b["id"] == "cards") == c["open_too_long"]["count"],
+           f"V4 open too long [{pid}]: Cards on the bank view = Cards view; businesses within the bank")
+        ok(all(b["open_too_long"] <= b["open"] <= b["volume"] for b in c["priority_slice"]) and len(c["to_close"]) <= 15
+           and len(c["top_complaints"]) <= 15, f"V4 slice and lists [{pid}]: too long <= open <= volume; at most 15 rows")
+    ok(len(per.get("v4", {}).get("queries", {})) == 3 and all(q["list"] for q in per["v4"]["queries"].values()),
+       "V4 Ask: the three scripted queries each return a list")
 
 
 # ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md)

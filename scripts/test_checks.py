@@ -134,6 +134,16 @@ FIXTURES = [
          volume=d["periods"]["30d"]["cards"]["categories"][0]["subcategories"][0]["internal"]["volume"] + 1))),
     ("brief item without a business", "every brief item names a business",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["brief"]["needs_you"].append({"business": "wealth", "business_label": "Wealth", "text": "x"}))),
+    # B11 (V4)
+    ("V4 hierarchy off the Cards total", "V4 hierarchy [7d cards]: inside and public equal",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["v4"]["cards"]["hierarchy"]["inside"].update(
+         volume=d["periods"]["7d"]["v4"]["cards"]["hierarchy"]["inside"]["volume"] + 1))),
+    ("V4 type split off", "V4 hierarchy [30d cards]: types sum",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["30d"]["v4"]["cards"]["hierarchy"]["inside"]["kinds"]["query"].update(
+         open=d["periods"]["30d"]["v4"]["cards"]["hierarchy"]["inside"]["kinds"]["query"]["open"] + 1))),
+    ("V4 open too long off", "V4 open too long [7d]",
+     lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["v4"]["cards"]["open_too_long"].update(
+         count=d["periods"]["7d"]["v4"]["cards"]["open_too_long"]["count"] + 1))),
     # Ombudsman watch (ombudsman_watch_design.md)
     ("ombudsman dial", "Ombudsman bank now recomputed",
      lambda s, o: _rw_json(o / "periods.json", lambda d: d["periods"]["7d"]["ombudsman"]["now"].update(

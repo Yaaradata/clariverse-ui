@@ -849,3 +849,30 @@ wording.
     - No links in quotes.
   - Privacy: no post URLs in the payload; the working folder with every redacted post
     (`data/out/indusind_v2/work/`) is gitignored.
+
+## D32 · HDFC demo V4 (B11, Vidya's 13 Oct review)
+
+- **Bank words.** Internal interactions are typed from their deliverable: complaint (complaint resolution, dispute,
+  failed or unauthorised reversal, refund), query (query response), request (everything else). Waiting on customer is
+  shown beside resolved and open so the three sum to received; open too long sits inside open.
+- **Open too long limits (no D-11).** 5 hours for Ultra-sensitive customers and 24 hours for Ultra-HNI (the spec's
+  "priority customers 5 h / 24 h", mapped this way and to confirm), then the published RBI timeline where the item has
+  one, else 48 hours ("bank TAT to confirm in discovery"). Limits live in `v4_blocks.LIMITS`; D-11 TATs drop in there.
+  The earlier 48-hour "open too long" figure stays where it already was; the new dial says its rule behind ⓘ.
+- **Public counts, not weighted shares,** in the hierarchy (275 of 668 negative), so each figure has a denominator.
+  The source-weighted shares stay on the views that already showed them.
+- **Responded** follows D24: Play Store replies are collected; replies on other sources are simulated and said so.
+  Response time uses Play Store replies only (the one source with reply times).
+- **High-impact complaints** are complaints carrying regulator or legal language, a third contact or public reach; a
+  property of the complaint, never of the person. Negative mentions for a slice are social-inbox contacts with negative
+  sentiment (linked by the bank's own records; LisN never matches people from public data).
+- **Lists** are sample rows with synthetic case references (CASE-…, POST-…); no customer id or text reaches a page.
+  Top-complaint evidence is case timelines only.
+- **Action layer** is phase 1: assign (roles only), notify (in-app notice and an email preview; nothing sent), CSV
+  export and the status trail, kept in the browser. Phase 2 (CRM and social write-back) is noted on screen.
+- **Cards view:** the priority slice leads; the hierarchy replaces the earlier dials, which move to the new
+  service-delivery view (nothing removed). The MD view gains the bank and per-business open-too-long tile.
+- **Presenter mode** switches off motion and scroll anchoring; the data is the build's fixed snapshot. The sidebar now
+  opens over the page instead of pushing it (the screen jump on hover). Fonts are bundled at build time for offline use.
+- **Provenance:** the "Internal · illustrative until discovery" tag, hidden since 1 Oct, is shown again (B11 item 10);
+  tiles whose block heads carry the tags do not repeat them in the footer (FB-011).

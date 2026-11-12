@@ -20,3 +20,5 @@ Every reviewer comment becomes one testable rule here, so feedback is never give
 | FB-010 | 2026-10-07 | Karthik (Reviewer) | Ask LisN prominent: pinned at the top of every screen, white input | Visual check, 1440 and 390 | Active |
 | FB-011 | 2026-10-07 | Karthik (Reviewer) | One provenance tag per block; never the same tag beside a title and again below it | Visual check, every screen | Active |
 | FB-012 | 2026-10-07 | Karthik (Reviewer) | Too much text and data overall. Future iteration: show one panel at a time and hide the rest (progressive disclosure). Not before the demo. | Design review after the demo | Parked |
+| FB-013 | 2026-10-13 | Vidya (Reviewer) | Every dial explainable in one sentence: one hierarchy, a denominator on every derived figure, bank words, ⓘ on each | `V4 hierarchy` reconcile checks; visual check | Active |
+| FB-014 | 2026-10-13 | Vidya (Reviewer) | Every red item can be assigned and tracked to Closed in under three clicks | Action-flow check (assign, close, reload) | Active |
