@@ -60,6 +60,7 @@ from pii_names import ALLEGATION  # noqa: E402  (nor, as an anecdote, one that m
 from public_v3 import PRODUCTS as PUB_PRODUCTS  # noqa: E402
 from public_v3 import product_of  # noqa: E402
 import ombudsman_v3 as omb  # noqa: E402  (Ombudsman watch: snapshots of the complaint register)
+import v4_blocks as v4  # noqa: E402  (B11: V4 additions, from the same records)
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
@@ -1012,6 +1013,40 @@ def md_mail(inter, w, labels) -> dict:
     return {"total": wn(rs), "rows": rows}
 
 
+def v4_period(inter, customers, pub, cards_complaints, w, labels) -> dict:
+    """B11 additions for one period (v4_blocks.py): Cards first, then open too long for the bank and each business."""
+    a, b = w["start"], w["end"]
+    vol = [r for r in inter if in_win(r, a, b)]
+    cvol = [r for r in vol if r["product"] == "cards"]
+    pend = min(b, PUBLIC_END)
+    cprs = [r for r in pub if r["_product"] == "cards" and a <= r["_c"] < b]
+    bprs = [r for r in pub if a <= r["_c"] < b]
+    for r in cprs + bprs:
+        r["_reach"] = reach(r)
+    biz_otl = []
+    for pid in PRODUCT_ORDER:
+        xs = [r for r in vol if r["product"] == pid]
+        if xs:
+            o = v4.open_too_long(xs, customers, is_open, labels)
+            biz_otl.append({"id": pid, "label": PRODUCT_LABEL[pid], **{k: o[k] for k in ("count", "open", "share_of_open")},
+                            "list": o["list"][:15]})
+    return {
+        "cards": {
+            "hierarchy": v4.hierarchy(cvol, cprs, customers, b, is_open, open_at, waiting_at, responded),
+            "open_too_long": v4.open_too_long(cvol, customers, is_open, labels),
+            "priority_slice": v4.priority_slice(cvol, customers, is_open),
+            "to_close": v4.to_close(cvol, customers, is_open, labels),
+            "social": v4.social(cprs, responded, pend, labels),
+            "top_complaints": v4.top_complaints(cards_complaints, labels, w),
+        },
+        "bank": {
+            "hierarchy": v4.hierarchy(vol, bprs, customers, b, is_open, open_at, waiting_at, responded),
+            "open_too_long": {**v4.open_too_long(vol, customers, is_open, labels), "by_business": biz_otl},
+            "social": v4.social(bprs, responded, pend, labels),
+        },
+    }
+
+
 def main():
     inter, customers, notes = load_internal()
     pub = load_public()
@@ -1057,6 +1092,7 @@ def main():
         # category and the save list. A material risk leads the brief's "What needs you" (at most three items).
         cp["cards"]["ombudsman"] = {**omb.block(cards_complaints, w, [("cards", PRODUCT_LABEL["cards"])]),
                                     **omb.cards_extra(complaints, w, labels)}
+        cp["v4"] = v4_period(inter, customers, pub, cards_complaints, w, labels)
         item = omb.brief_item(cp["ombudsman"])
         if item:
             cp["brief"]["needs_you"] = [item, *cp["brief"]["needs_you"]][:3]
@@ -1066,6 +1102,10 @@ def main():
         print(p["id"], "internal", internal["volume"], "external", external["volume"], "lists",
               [(x["id"], x["volume"], x["open"], x["not_responded_48h"]) for x in cp["customer_pulse"]["lists"]],
               "mix", external["source_mix"])
+    out["v4"] = {
+        "limits": v4.LIMITS, "limit_labels": v4.LIMIT_LABEL, "owner_roles": v4.OWNER_ROLES,
+        "queries": v4.query_lists(inter, cards_complaints, pub, customers, is_open, responded, PUBLIC_END, labels),
+    }
     dump(out, OUT_APP / "periods.json")
 
 
