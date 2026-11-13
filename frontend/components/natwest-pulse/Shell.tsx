@@ -35,7 +35,7 @@ export type ShellProps = {
   drill?: boolean;
   /** When set, the period filter sits in the header, top right. */
   periods?: PeriodsFile;
-  /** Where the user is, kept on screen in the sticky header while scrolling (e.g. "Cards · Business view"). */
+  /** Where the user is, kept on screen in the sticky header while scrolling (e.g. "Credit cards · Product view"). */
   context?: string;
   /**
    * Drill-down and customer pages show the kept sample rows themselves, not bank-scale totals: they say so with a
@@ -60,18 +60,18 @@ function Nav({ view, collapsed }: { view: View; collapsed: boolean }) {
   const items = [
     {
       href: "/natwest-pulse/v1/mds-office",
-      label: "MD's office / Head of CX",
+      label: "Head of Customer Experience",
       icon: Activity,
       exec: true,
     },
     {
       href: "/natwest-pulse/v1/business/cards",
-      label: "Cards: business view",
+      label: "Credit cards: product view",
       icon: CreditCard,
     },
     {
       href: withFrom("/natwest-pulse/v1/action-queue", view),
-      label: "Action queue: escalation emails",
+      label: "Action queue: complaint escalations",
       icon: Inbox,
     },
     {
@@ -442,7 +442,7 @@ function ShellInner({
                 {sampleRows ? (
                   <span
                     data-testid="sample-rows"
-                    title="This page lists the rows kept for drill-down. Its counts are of those rows, not bank-scale totals; the MD and Cards views show the bank-scale figures."
+                    title="This page lists the rows kept for drill-down. Its counts are of those rows, not bank-scale totals; the Head of Customer Experience and credit card views show the bank-scale figures."
                     style={{
                       display: "inline-block",
                       marginTop: 6,

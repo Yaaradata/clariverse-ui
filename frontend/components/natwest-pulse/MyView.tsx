@@ -26,7 +26,7 @@ export function MyView() {
           href="/natwest-pulse/v1/mds-office"
           style={{ color: C.brandInk, fontSize: 14 }}
         >
-          Open the MD&apos;s office / Head of CX view
+          Open the Head of Customer Experience view
         </Link>
       </Tile>
     );

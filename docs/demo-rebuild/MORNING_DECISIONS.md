@@ -964,3 +964,27 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
 - **NW-D29 · Signal pages for every theme.** oct13 links theme items to `signal/<theme>`, and builds those pages only for
   themes with public items, so with no public data every such link 404'd. The signal route now builds a page for every
   taxonomy theme; one with no public items shows its name and "Public data not yet loaded" (same page frame).
+
+### Pass 2: NatWest fit review (13 Nov)
+
+- **NW-D30 · Frame and global copy (Pass 2 §1).** Both landing pages are titled "Head of Customer Experience" with
+  "The pulse first, then today's morning brief, product by product."; rail "Credit cards: business view" reads
+  "Credit cards: product view"; "Action queue: complaint escalations"; footer time in GMT. "Business" becomes
+  "product" in on-screen copy only; the `business/` route and ids stay.
+- **NW-D31 · Cohorts (Pass 2 §2).** Financially vulnerable 2.6 million (13% of 20m, ASSUMPTION); Recent complainants
+  43,000 kept; "Premier and Private" is "Premier", 1.1 million (Coutts sits outside retail, so no "Private" tier);
+  "Multi-product customers"; subtitle "Customers on the bank's own channels, then public voice."
+- **NW-D32 · Channels (Pass 2 §3).** "App chat" is "Secure message"; rows Calls · Cora · Secure message · Email ·
+  Social · Branch; open too long reads "over 48 hours (bank SLA, illustrative)".
+- **NW-D33 · Six products (Pass 2 §4–5).** Overdrafts and Cora are no longer product rows. Overdraft and app themes sit
+  under Current accounts and app; the Cora theme rides on every product's mix (the product the query was about).
+  Order everywhere: Current accounts and app · Payments and fraud · Credit cards · Savings · Mortgages · Personal
+  loans. Cora keeps its module (`module/cora_digital`). Supersedes the "eight rows" part of NW-D21. "Bank-wide" reads
+  "Group retail". Bare "Cards" as a product name reads "Credit cards".
+- **NW-D34 · Financial Ombudsman watch (Pass 2 §4).** Referral rate set to about 4.5% of complaints (2,201 of 49,247;
+  research pack figure in the brief: 5,935 FOS cases on about 130k complaints in 9 months). CONFLICT, not resolved:
+  the brief also caps tile 4 (referred) at tile 2 (past 8 weeks, 433). A 4.5% rate gives about 2,200, five times the
+  cap, because most referrals come from customers unhappy with a final response, not from the past-deadline route.
+  The rate is kept; the cap is raised with Ranjith.
+- **NW-D35 · Sizing (Pass 2 §14, applied here because the cohort sizes need it).** Retail customers 19 million;
+  contacts in the window 8.5 million; Cora share 30% (unchanged); complaints 49,200 (unchanged).

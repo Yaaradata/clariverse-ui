@@ -523,9 +523,9 @@ export function CardsModule({ b }: { b: Bundle }) {
 
         <Section n={6} title="Owner and action">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Owner: <strong>Cards</strong>. Set a new date on variant migration
-            and upgrade requests; notify customers proactively before a variant
-            change; hold closure to the 7-working-day rule.
+            Owner: <strong>Credit cards</strong>. Set a new date on variant
+            migration and upgrade requests; notify customers proactively before
+            a variant change; hold closure to the 7-working-day rule.
           </div>
         </Section>
 

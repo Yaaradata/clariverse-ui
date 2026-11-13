@@ -70,7 +70,7 @@ CHANNELS = [
 CHANNEL_LABEL = {
     "inbound_voice": "Inbound calls",
     "outbound_voice": "Outbound calls",
-    "chat": "App chat",
+    "chat": "Secure message",
     "email": "Email",
     "social_inbox": "Social inbox",
     "ivr_bot": "Phone menu",
@@ -89,23 +89,19 @@ CHANNEL_W = {
 }
 # Internal volume mix by product. Assumption until discovery (docs/natwest/public_anchors.md).
 PRODUCT_W = {
-    "current_accounts": 0.28,
-    "cards": 0.18,
-    "digital": 0.14,
-    "payments_fraud": 0.14,
-    "mortgages": 0.10,
-    "savings": 0.06,
+    "current_accounts": 0.40,
+    "cards": 0.20,
+    "payments_fraud": 0.16,
+    "mortgages": 0.11,
+    "savings": 0.07,
     "personal_loans": 0.06,
-    "overdrafts": 0.04,
 }
 HOLD_P = {
     "cards": 0.45,
     "current_accounts": 0.97,
-    "digital": 0.85,
     "payments_fraud": 0.9,
     "personal_loans": 0.1,
     "mortgages": 0.2,
-    "overdrafts": 0.25,
     "savings": 0.5,
 }
 # Hand-set theme mixes, every product: the NatWest public pull is not loaded (NW-D04), so no product's mix can follow
@@ -113,22 +109,21 @@ HOLD_P = {
 HAND_MIX = {
     "cards": {"card_fees_charges": 18, "dispute_chargeback": 16, "card_application": 10, "card_limit": 10,
               "unauthorised_txn": 10, "rewards_value": 8, "card_dispatch": 8, "complaint_handling": 8,
-              "reward_redemption": 6, "closure_requests": 6},
+              "reward_redemption": 6, "closure_requests": 6, "cora_unresolved": 5},
     "payments_fraud": {"upi_failures": 22, "account_freeze": 16, "failed_txn_reversal": 14, "app_reimbursement": 14,
-                       "fraud_scam": 12, "unauthorised_txn": 8, "complaint_handling": 8, "phishing": 6},
-    "current_accounts": {"fees_charges_bank": 16, "kyc_updates": 12, "care_unreachable": 12, "account_opening": 10,
-                         "complaint_handling": 10, "branch_service": 8, "statements_documents": 8, "branch_closure": 6,
-                         "closure_requests": 6, "consumer_duty_value": 6, "atm_debit_card": 6},
+                       "fraud_scam": 12, "unauthorised_txn": 8, "complaint_handling": 8, "phishing": 6, "cora_unresolved": 6},
+    # Current accounts and app: overdraft and app themes folded in (NW-D33); Cora themes ride on every product.
+    "current_accounts": {"fees_charges_bank": 14, "kyc_updates": 8, "care_unreachable": 8, "account_opening": 6,
+                         "complaint_handling": 7, "branch_service": 5, "statements_documents": 5, "branch_closure": 4,
+                         "closure_requests": 4, "consumer_duty_value": 6, "atm_debit_card": 4, "recovery_conduct": 3,
+                         "login_mpin": 8, "app_speed_crash": 6, "app_usability": 4, "online_banking": 4,
+                         "new_app_release": 3, "device_security_block": 3, "cora_unresolved": 6},
     "personal_loans": {"loan_processing": 26, "loan_servicing": 24, "recovery_conduct": 12, "credit_report": 10,
-                       "loan_closure_documents": 10, "complaint_handling": 10, "mis_selling": 8},
+                       "loan_closure_documents": 10, "complaint_handling": 10, "mis_selling": 8, "cora_unresolved": 4},
     "mortgages": {"mortgage_rate_switch": 28, "loan_processing": 18, "loan_servicing": 18, "loan_closure_documents": 10,
-                  "complaint_handling": 10, "recovery_conduct": 8, "care_unreachable": 8},
-    "overdrafts": {"fees_charges_bank": 30, "consumer_duty_value": 18, "recovery_conduct": 14, "complaint_handling": 14,
-                   "loan_servicing": 12, "care_unreachable": 12},
+                  "complaint_handling": 10, "recovery_conduct": 8, "care_unreachable": 8, "cora_unresolved": 4},
     "savings": {"deposits_rates": 34, "statements_documents": 12, "closure_requests": 12, "kyc_updates": 12,
-                "consumer_duty_value": 10, "complaint_handling": 10, "care_unreachable": 10},
-    "digital": {"login_mpin": 24, "cora_unresolved": 20, "app_speed_crash": 18, "app_usability": 10,
-                "online_banking": 10, "new_app_release": 10, "device_security_block": 8},
+                "consumer_duty_value": 10, "complaint_handling": 10, "care_unreachable": 10, "cora_unresolved": 5},
 }
 
 
@@ -224,7 +219,7 @@ def build_customers():
             }
         )
     # NatWest lists (brief Step 3.4): priority_a = financially vulnerable (the bank's vulnerability flag), priority_b =
-    # recent complainants (90 days). Both are drawn from every tier, not only Premier and Private.
+    # recent complainants (90 days). Both are drawn from every tier, not only Premier.
     pool = list(customers)
     rng.shuffle(pool)
     for c in pool[:500]:
@@ -416,8 +411,6 @@ def build_interactions(customers, mix, themes):
         pw = {p: PRODUCT_W[p] / HOLD_P[p] for p in cust["products"]}
         product = pick(pw)
         channel = pick(CHANNEL_W)
-        if product == "digital" and channel == "branch":
-            channel = "chat"
         slots.append((cust, product, sample_created(), channel))
     by_product = collections.defaultdict(list)
     for sl in slots:
@@ -513,9 +506,9 @@ def deliverable_stats(rows):
 COHORTS = [
     ("priority_a", "Financially vulnerable (Consumer Duty)", "Vulnerability flag in the bank's records"),
     ("priority_b", "Recent complainants (90 days)", "The bank's complaints register, last 90 days"),
-    ("uhni", "Premier and Private", "Relationship tier from core banking"),
+    ("uhni", "Premier", "Premier relationship, from core banking"),
     ("hni", "Premier", "Relationship tier from core banking"),
-    ("multi", "Multi-product households", "Customers holding four or more products, from the bank's records"),
+    ("multi", "Multi-product customers", "Customers holding four or more products, from the bank's records"),
 ]
 LISTED = ("priority_a", "priority_b", "uhni", "hni")
 HI_LABEL = {
@@ -782,7 +775,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
         "rm": {
             "should_know": len(notified["should"]),
             "notified_today": len(notified["today"] & notified["should"]),
-            "rule": "An owner alert is due when a customer on a priority list or in the Premier or Private tier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call.",
+            "rule": "An owner alert is due when a customer on a priority list or in Premier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call.",
         },
         "triage": triage,
         "emails": emails,
@@ -833,12 +826,11 @@ def persona_trail(p, rs, theme_label):
 
 
 OWNER_LABEL_TEAM = {
-    "cards": "Cards",
+    "cards": "Credit cards",
     "payments": "Payments",
     "retail": "Retail",
     "loans": "Loans",
     "product": "Insurance",
-    "digital": "Digital",
 }
 
 

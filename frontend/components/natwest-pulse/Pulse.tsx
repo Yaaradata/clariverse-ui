@@ -427,9 +427,11 @@ export function Dial({
   );
 }
 
+// One row of n dials on desktop; wraps to fewer columns when a column would be narrower than 104px, so seven-digit
+// figures never run into each other on a phone (NatWest layout QA, 13 Nov).
 const DIALS = (n: number) => ({
   display: "grid",
-  gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))`,
+  gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(104px, calc((100% - ${(n - 1) * 8}px) / ${n}))), 1fr))`,
   gap: 8,
 });
 
@@ -1050,7 +1052,7 @@ export function CustomerPulse({ p }: { p: Period }) {
     <Tile
       id="customer-pulse"
       title={titled("Customer pulse", p)}
-      sub="Listed customers on the bank's own channels, then public voice. The two are never added together."
+      sub="Customers on the bank's own channels, then public voice."
       // "Public · live" sits beside External channels; the footer does not repeat it (Karthik, 7 Oct).
       prov={["internal"]}
       tone="violet"
@@ -2112,7 +2114,9 @@ export function CxPulse({ p }: { p: Period }) {
               color={C.red}
               big={na ? "—" : fmt(i.open_too_long)}
               label="Open too long"
-              sub={na ? "needs 48 hours" : "over 48 hours"}
+              sub={
+                na ? "needs 48 hours" : "over 48 hours (bank SLA, illustrative)"
+              }
             />
           </div>
         </div>

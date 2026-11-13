@@ -13,7 +13,7 @@ export const dynamicParams = false;
 
 const MODULES = {
   cards: {
-    title: "Cards",
+    title: "Credit cards",
     subtitle:
       "What · Is it real · Issue list · Where · How high · Owner and action · Evidence",
   },

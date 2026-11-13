@@ -55,7 +55,7 @@ THEMES = [
     {
         "id": "card_eligibility_upgrade",
         "label": "Credit card eligibility and upgrades",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -67,7 +67,7 @@ THEMES = [
     {
         "id": "card_variant_migration",
         "label": "Card product changes and forced switches",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -103,7 +103,7 @@ THEMES = [
     {
         "id": "rewards_value",
         "label": "Rewards value and caps",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -127,7 +127,7 @@ THEMES = [
     {
         "id": "card_application",
         "label": "Card applications and identity checks",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -187,7 +187,7 @@ THEMES = [
     {
         "id": "card_fees_charges",
         "label": "Card interest and charges",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -199,7 +199,7 @@ THEMES = [
     {
         "id": "reward_redemption",
         "label": "Reward redemption",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -235,7 +235,7 @@ THEMES = [
     {
         "id": "card_limit",
         "label": "Credit limit",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "cards",
         "owner_label": "Credit cards product owner",
@@ -439,7 +439,7 @@ THEMES = [
     {
         "id": "card_dispatch",
         "label": "Card dispatch and delivery",
-        "group": "Cards",
+        "group": "Credit cards",
         "pillar": "experience",
         "owner": "operations",
         "owner_label": "Operations",

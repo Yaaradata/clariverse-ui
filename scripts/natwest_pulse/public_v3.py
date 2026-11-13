@@ -50,14 +50,12 @@ def product_of(r) -> str | None:
     if b == "loans":
         if r.get("app_name") == "Home Loans" or HOME.search(text):
             return "mortgages"
-        if AUTO.search(text):
-            return "overdrafts"
         return "personal_loans"
     if b == "retail_banking":
         if r["themes"][0] in ("mis_selling", "insurance_group") or (INSURANCE.search(text) and r["themes"][0] in ("mis_selling", "fees_charges_bank", "other", "general_dissatisfaction", "complaint_handling")):
             return "savings"
         if r["themes"][0] in DIGITAL_GROUP or r.get("app_name") in ("NatWest app", "Royal Bank of Scotland app", "Ulster Bank app"):
-            return "digital"
+            return "current_accounts"
         return "current_accounts"
     return None
 

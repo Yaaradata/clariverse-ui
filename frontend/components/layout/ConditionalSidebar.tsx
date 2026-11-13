@@ -28,6 +28,8 @@ export default function ConditionalSidebar({
   const isFlipkartRoute = pathname?.startsWith("/flipkart");
   const isStandardCharteredRoute = pathname?.startsWith("/standard-chartered");
   const isHdfcRoute = pathname?.startsWith("/hdfc");
+  // NatWest Group pulse (docs/natwest): a full-width demo with its own rail, like /hdfc-pulse.
+  const isNatWestRoute = pathname?.startsWith("/natwest-pulse");
   const isRootPage = pathname === "/";
   const isRoleBasedRoute =
     pathname === "/role-based" || pathname?.startsWith("/role-based/");
@@ -40,6 +42,7 @@ export default function ConditionalSidebar({
     isFlipkartRoute ||
     isStandardCharteredRoute ||
     isHdfcRoute ||
+    isNatWestRoute ||
     isRootPage ||
     isRoleBasedRoute ||
     isRoleBasedUnderscoreRoute;

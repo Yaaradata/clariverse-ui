@@ -71,8 +71,8 @@ TREND_SOURCES = {"playstore", "appstore", "trustpilot", "forum"}  # continuous c
 LIST_LABEL = {  # NatWest cohorts (brief Step 5.2); the ids are the oct13 list ids
     "priority_a": "Financially vulnerable (Consumer Duty)",
     "priority_b": "Recent complainants (90 days)",
-    "uhni": "Premier and Private",
-    "multi": "Multi-product households",
+    "uhni": "Premier",
+    "multi": "Multi-product customers",
 }
 PRODUCT_ORDER = [p["id"] for p in PUB_PRODUCTS]
 

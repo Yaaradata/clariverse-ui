@@ -61,7 +61,7 @@ const SOURCE_LABEL: Record<string, string> = {
 };
 const BUSINESS_LABEL: Record<string, string> = {
   retail_banking: "Retail banking",
-  cards: "Cards",
+  cards: "Credit cards",
   loans: "Loans",
   payments: "Payments",
   wealth: "Wealth",
@@ -176,7 +176,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Interactions and sentiment by relationship tier"
-        sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Jul to this morning`}
+        sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Aug to this morning`}
         prov="internal"
         id="tiers"
       >
@@ -272,7 +272,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       </Tile>
 
       <Tile
-        title="Strain and friction by business"
+        title="Strain and friction by product"
         sub="Repeat contact and escalation language in public voice"
         prov="public"
         id="strain"
@@ -392,9 +392,16 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           </div>
           <BaselineCaption>
             Trend within window: second half (
-            {halfLabel(b.themes.themes[0]?.trend.second_half_dates ?? "2026-09-22 to 2026-11-11")}) vs first
-            half ({halfLabel(b.themes.themes[0]?.trend.first_half_dates ?? "2026-08-01 to 2026-09-21")}), as a
-            share of posts.
+            {halfLabel(
+              b.themes.themes[0]?.trend.second_half_dates ??
+                "2026-09-22 to 2026-11-11",
+            )}
+            ) vs first half (
+            {halfLabel(
+              b.themes.themes[0]?.trend.first_half_dates ??
+                "2026-08-01 to 2026-09-21",
+            )}
+            ), as a share of posts.
           </BaselineCaption>
         </div>
       </Tile>
@@ -556,8 +563,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
         </Tile>
 
         <Tile
-          title="Repeat contact by theme and business"
-          sub="Public items where customers say they have raised it before, by business. Tap a bar to open the theme."
+          title="Repeat contact by theme and product"
+          sub="Public items where customers say they have raised it before, by product. Tap a bar to open the theme."
           prov="public"
           id="repeat"
         >

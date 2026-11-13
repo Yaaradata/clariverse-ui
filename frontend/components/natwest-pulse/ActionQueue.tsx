@@ -162,7 +162,7 @@ export function ActionQueue({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="internal" accent tone="red">
         <AnswerLine sub="Each email is read against its backend status and the deliverable clock, then sorted into one of six buckets. LisN recommends; people send. It never executes.">
-          {fmt(t.total)} escalation emails in the L2 queue (received{" "}
+          {fmt(t.total)} escalation emails in the second-line queue (received{" "}
           {receivedRange(emails)}):{" "}
           {t.buckets
             .filter((x) => x.id === "call_today" || x.id === "escalate")

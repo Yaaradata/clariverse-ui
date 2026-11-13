@@ -16,39 +16,39 @@ import collections
 import hashlib
 
 # ---------------------------------------------------------------- targets (full window)
-TOTAL_CONTACTS = 9_000_000  # ASSUMPTION: 20m customers x 1.6 contacts a year x 103/365 (docs/natwest/public_anchors.md)
+TOTAL_CONTACTS = 8_500_000  # ASSUMPTION (Pass 2 section 14): 19m retail customers, about 8.5m contacts in the window
 CHANNEL_MIX = {  # ASSUMPTION, on the views' channel groups ("whatsapp" carries Cora, "chat" carries app chat)
     "calls": 0.44, "whatsapp": 0.30, "chat": 0.09, "emails": 0.06, "branch": 0.10, "social": 0.01,
 }
 COMPLAINTS = 49_200  # DERIVED: 86,498 complaints in H1 2026 (181 days) x 103 days of the window
 COMPLAINT_MIX = {  # ASSUMPTION until the research pack gives the return's per-product shape
-    "current_accounts": 0.30, "payments_fraud": 0.20, "cards": 0.17, "mortgages": 0.10, "savings": 0.07,
-    "personal_loans": 0.06, "overdrafts": 0.05, "digital": 0.05,
+    "current_accounts": 0.40, "payments_fraud": 0.20, "cards": 0.17, "mortgages": 0.10, "savings": 0.07,
+    "personal_loans": 0.06,
 }
 # Share of each product's contacts that is negative: about 12% overall (HL-19), ASSUMPTION.
 # Complaints are mostly negative; queries and requests mostly are not.
 NEGATIVE_SHARE = {
-    "cards": 0.15, "personal_loans": 0.16, "mortgages": 0.15, "overdrafts": 0.15,
-    "payments_fraud": 0.11, "savings": 0.11, "current_accounts": 0.095, "digital": 0.09,
+    "cards": 0.15, "personal_loans": 0.16, "mortgages": 0.15,
+    "payments_fraud": 0.11, "savings": 0.11, "current_accounts": 0.10,
 }
 NEGATIVE_OF_COMPLAINTS = 0.85
 # Product mix of all contacts: the sample's own mix, held fixed so the negative share can be set product by product.
 PRODUCT_MIX = {
-    "current_accounts": 0.28, "cards": 0.18, "digital": 0.14, "payments_fraud": 0.14,
-    "mortgages": 0.10, "savings": 0.06, "personal_loans": 0.06, "overdrafts": 0.04,
+    "current_accounts": 0.40, "cards": 0.20, "payments_fraud": 0.16,
+    "mortgages": 0.11, "savings": 0.07, "personal_loans": 0.06,
 }
-# Referrals to the Financial Ombudsman Service and escalations to the Head of CX in the window. ASSUMPTION: about 5%
-# of complaints referred; no anchor until the research pack.
-ESCALATION = {"rbi_ombudsman": 2_500, "md_office": 3_000}
+# Referrals to the Financial Ombudsman Service and escalations to the Head of CX in the window. ASSUMPTION: about 4.5% (Pass 2 section 4:
+# 5,935 FOS cases on about 130k complaints in 9 months, research pack figure as given in the Pass 2 brief).
+ESCALATION = {"rbi_ombudsman": 2_200, "md_office": 3_000}
 # NatWest lists (ids kept): priority_a financially vulnerable, priority_b recent complainants (90 days), uhni Premier
 # and Private. Sizes: priority_b DERIVED from the H1 return (about 43,000 complaints a quarter); the others ASSUMPTION.
 LISTS = {
-    "priority_a": {"size": 1_200_000, "in_contact": 0.30},
+    "priority_a": {"size": 2_600_000, "in_contact": 0.30},
     "priority_b": {"size": 43_000, "in_contact": 0.60},
-    "uhni": {"size": 800_000, "in_contact": 0.25},
+    "uhni": {"size": 1_100_000, "in_contact": 0.25},
 }
 CONTACTS_PER_CONTACTING = 2.5
-CONTACTING_CUSTOMERS = 3_600_000  # ASSUMPTION: 9m contacts at 2.5 each
+CONTACTING_CUSTOMERS = 3_400_000  # ASSUMPTION: 8.5m contacts at 2.5 each
 PRIMARY = ("priority_a", "priority_b", "uhni")  # a customer on several lists is weighted by the first of these
 
 CHANNEL_GROUP = {"email": "emails", "inbound_voice": "calls", "outbound_voice": "calls", "chat": "chat",

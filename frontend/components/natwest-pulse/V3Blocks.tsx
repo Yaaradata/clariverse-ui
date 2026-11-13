@@ -468,7 +468,7 @@ export function CohortStrip({
               <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.45 }}>
                 {fmt(c.customers_with_open_issue)} customers with an open issue
                 · {fmt(neg)} negative contacts in the bank&apos;s channels since
-                1 Jul.{" "}
+                1 Aug.{" "}
                 <span style={{ color: C.red, fontWeight: 600 }}>
                   Owner told today: {fmt(c.rm_notified_today)} of{" "}
                   {fmt(c.rm_should_know)}

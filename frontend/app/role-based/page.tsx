@@ -68,7 +68,8 @@ export default function RoleBasedIndexPage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: `repeat(${Math.min(INDUSTRY_CARDS.length, 4)}, 1fr)`,
+          // At most four columns (desktop unchanged); wraps to two on a phone instead of scrolling sideways.
+          gridTemplateColumns: `repeat(auto-fit, minmax(min(100%, max(150px, calc((100% - ${(Math.min(INDUSTRY_CARDS.length, 4) - 1) * 20}px) / ${Math.min(INDUSTRY_CARDS.length, 4)}))), 1fr))`,
           gap: 20,
           maxWidth: 1100,
           margin: "0 auto",

@@ -11,7 +11,7 @@ export default function ActionQueuePage() {
       {...shellProps(b)}
       sampleRows={b.periods.scale.sample_rows}
       title="Action queue: escalation email triage"
-      subtitle="20 synthetic L2 escalation emails · Six buckets · Draft replies for a person to approve"
+      subtitle="20 synthetic second-line escalation emails · Six buckets · Draft replies for a person to approve"
       drill
     >
       <ActionQueue b={sliceBundle(b, { view: "action-queue" })} />

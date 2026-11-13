@@ -168,7 +168,9 @@ export function OmbudsmanWatch({
     <Tile
       id="ombudsman-watch"
       title={titled(
-        scope === "bank" ? "Ombudsman watch" : "Ombudsman watch: Cards",
+        scope === "bank"
+          ? "Financial Ombudsman watch"
+          : "Financial Ombudsman watch: Credit cards",
         p,
       )}
       sub={`Complaints eligible to go to the Financial Ombudsman Service, or close to it. As of ${fmtDateTime(o.as_of)}; changes ${since}.`}
@@ -262,7 +264,7 @@ export function OmbudsmanWatch({
         >
           <Split
             title={
-              scope === "bank" ? "At risk, by business" : "At risk, by category"
+              scope === "bank" ? "At risk, by product" : "At risk, by category"
             }
             info={`Within 8 weeks, 10 days or fewer left: no final response yet and 10 days or fewer to the deadline (8 weeks; 15 business days for payment services). Past 8 weeks: no final response by the deadline. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
             rows={split}
@@ -279,7 +281,7 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
     <Tile
       id="save-list"
       title={titled("Save list: call today", p)}
-      sub={`The ${o.save_list.length} Cards complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
+      sub={`The ${o.save_list.length} credit card complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
       prov="internal"
       tone="red"
     >

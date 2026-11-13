@@ -46,12 +46,11 @@ const OWNER: Record<string, string> = {
   query_response: "cx",
 };
 const SHORT: Record<string, string> = {
-  cards: "Cards",
+  cards: "Credit cards",
   payments_fraud: "Payments",
   current_accounts: "Accounts",
   personal_loans: "Loans",
   mortgages: "Mortgages",
-  overdrafts: "Overdrafts",
   savings: "Savings",
   digital: "Cora",
 };

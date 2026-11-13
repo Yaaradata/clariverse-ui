@@ -18,16 +18,15 @@ WINDOW = ("2026-08-01", "2026-11-11")
 
 # Rows of the "pulse by product" table (B7 §1 E1.6). Group-company apps stay excluded.
 PRODUCTS = [
-    {"id": "cards", "label": "Credit cards", "owner": "cards", "module": "cards"},
-    {"id": "payments_fraud", "label": "Payments and fraud", "owner": "payments", "module": None},
     {"id": "current_accounts", "label": "Current accounts and app", "owner": "retail", "module": None},
-    {"id": "personal_loans", "label": "Personal loans", "owner": "loans", "module": None},
-    {"id": "mortgages", "label": "Mortgages", "owner": "loans", "module": None},
-    {"id": "overdrafts", "label": "Overdrafts", "owner": "retail", "module": None},
+    {"id": "payments_fraud", "label": "Payments and fraud", "owner": "payments", "module": None},
+    {"id": "cards", "label": "Credit cards", "owner": "cards", "module": "cards"},
     {"id": "savings", "label": "Savings", "owner": "product", "module": None},
-    # Cora and the digital assistant: a module (module/cora_digital) and a CX-pulse channel, never a business card.
-    {"id": "digital", "label": "Cora and digital assistant", "owner": "digital", "module": "cora_digital"},
+    {"id": "mortgages", "label": "Mortgages", "owner": "loans", "module": None},
+    {"id": "personal_loans", "label": "Personal loans", "owner": "loans", "module": None},
 ]
+# Six products only (NW-D33). Overdraft themes sit under Current accounts and app; Cora themes sit under the product
+# the query was about. Cora keeps its module (module/cora_digital), built from the Cora themes, never a product card.
 PRODUCT_IDS = [p["id"] for p in PRODUCTS]
 PRODUCT_LABEL = {p["id"]: p["label"] for p in PRODUCTS}
 
@@ -168,9 +167,9 @@ THEME_REQUEST_TYPE = {
 # owner" in another. acknowledged_at None = routed, not yet acknowledged.
 ROUTING = [
     {"theme": "complaint_handling", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "23:45"},
-    {"theme": "card_application", "owner": "cards", "system": "Cards service queue", "acknowledged_at": "22:10"},
+    {"theme": "card_application", "owner": "cards", "system": "Credit cards service queue", "acknowledged_at": "22:10"},
     {"theme": "refund_delay", "owner": "operations", "system": "Operations work queue", "acknowledged_at": "06:55"},
-    {"theme": "card_variant_migration", "owner": "cards", "system": "Cards service queue", "acknowledged_at": "22:10"},
+    {"theme": "card_variant_migration", "owner": "cards", "system": "Credit cards service queue", "acknowledged_at": "22:10"},
     {"theme": "care_unreachable", "owner": "cx", "system": "CRM case queue", "acknowledged_at": "06:55"},
     {"theme": "failed_txn_reversal", "owner": "payments", "system": "Payments work queue", "acknowledged_at": None},
 ]
@@ -226,13 +225,13 @@ CHANNEL_GROUP = {
     "social_inbox": "social",
     "branch": "branch",
 }
-# NatWest rows (brief Step 5.4): Calls · Cora · App chat · Email · Social · Branch. The ids stay the oct13 ids (the
+# NatWest rows (brief Step 5.4): Calls · Cora · Secure message · Email · Social · Branch. The ids stay the oct13 ids (the
 # screens key on them): "whatsapp" carries Cora, the digital assistant; "chat" carries in-app chat with an agent.
 CHANNEL_GROUP_ORDER = ["calls", "whatsapp", "chat", "emails", "social", "branch"]
 CHANNEL_GROUP_LABEL = {
     "emails": "Email",
     "calls": "Calls",
-    "chat": "App chat",
+    "chat": "Secure message",
     "whatsapp": "Cora",
     "social": "Social",
     "branch": "Branch",
@@ -240,7 +239,7 @@ CHANNEL_GROUP_LABEL = {
 PULSE_LISTS = ["priority_a", "priority_b", "uhni", "multi"]
 
 # Businesses on the morning brief cards (3 + 3). Insurance is thin in public voice; auto loans thinner still.
-BRIEF_BUSINESSES = ["cards", "payments_fraud", "current_accounts", "personal_loans", "mortgages", "savings"]
+BRIEF_BUSINESSES = ["current_accounts", "payments_fraud", "cards", "savings", "mortgages", "personal_loans"]
 
 # Cards issue categories (C3): each public item and interaction counts once, under its primary theme's category;
 # the themes are the subcategories. Owners are roles in the cards team, never names. "tat" marks categories that

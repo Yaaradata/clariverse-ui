@@ -98,7 +98,7 @@ function ombudsmanMd(p: Period): AskQA[] {
     ),
     {
       id: "md-ombudsman-business",
-      q: "Which business has the most Ombudsman risk?",
+      q: "Which product has the most Ombudsman risk?",
       answer: `${biz[0].label}: ${fmt(biz[0].at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints (${fmt(biz[0].brink)} on the brink, ${fmt(biz[0].eligible)} eligible with no reply, ${fmt(biz[0].unhappy)} unhappy with the reply).`,
       table: {
         head: [
@@ -117,7 +117,7 @@ function ombudsmanMd(p: Period): AskQA[] {
         ]),
       },
       link: {
-        label: "Open the Cards business view",
+        label: "Open the Credit cards product view",
         href: withPeriod(CARDS, p),
       },
     },
@@ -145,16 +145,16 @@ function ombudsmanCards(p: Period): AskQA[] {
   return [
     brinkQA(
       "cards-ombudsman",
-      "How many Cards complaints are close to the Ombudsman?",
+      "How many credit card complaints are close to the Ombudsman?",
       o,
-      "Cards",
+      "Credit cards",
     ),
     {
       id: "cards-ombudsman-save",
-      q: "Which Cards complaints should we call today?",
+      q: "Which credit card complaints should we call today?",
       answer: o.save_list[0]
         ? `${o.save_list.length} complaints, highest risk first. The first: ${o.save_list[0].id}, ${o.save_list[0].issue} (${o.save_list[0].state === "eligible" ? "eligible" : `${o.save_list[0].days_left} days left`}). ${o.save_list[0].reason} Owner: ${o.save_list[0].owner}.`
-        : "No Cards complaint is at risk.",
+        : "No credit card complaint is at risk.",
       table: {
         head: ["Complaint", "Status", "Owner"],
         rows: o.save_list.map((r) => [
@@ -166,10 +166,10 @@ function ombudsmanCards(p: Period): AskQA[] {
     },
     {
       id: "cards-ombudsman-categories",
-      q: "Which Cards categories feed Ombudsman risk?",
+      q: "Which credit card categories feed Ombudsman risk?",
       answer: cats[0]
-        ? `${cats[0].label} has the most: ${fmt(cats[0].at_risk)} of ${fmt(o.now.at_risk)} at-risk Cards complaints.`
-        : "No Cards category has an at-risk complaint.",
+        ? `${cats[0].label} has the most: ${fmt(cats[0].at_risk)} of ${fmt(o.now.at_risk)} at-risk credit card complaints.`
+        : "No credit card category has an at-risk complaint.",
       table: {
         head: [
           "Category",
@@ -216,7 +216,7 @@ function mdBase(p: Period): AskQA[] {
   return [
     {
       id: "md-needs",
-      q: "Which business needs my attention first?",
+      q: "Which product needs my attention first?",
       answer: first
         ? `${first.business_label}${first.issue ? `: ${first.issue}` : ""}. ${first.text}`
         : "Nothing meets the rule in this period.",
@@ -280,7 +280,7 @@ function mdBase(p: Period): AskQA[] {
     },
     {
       id: "md-backlog",
-      q: "Which business has the largest backlog?",
+      q: "Which product has the largest backlog?",
       answer: `${byOpen[0].label}: ${fmt(byOpen[0].internal.open)} open with the bank${byOpen[0].internal.open_too_long === null ? "" : `, ${fmt(byOpen[0].internal.open_too_long)} of them for more than 48 hours`}.`,
       table: {
         head: ["Business", "Open", "Waiting on customer", "Open too long"],
@@ -294,7 +294,7 @@ function mdBase(p: Period): AskQA[] {
     },
     {
       id: "md-negative",
-      q: "Which business has the most negative public voice?",
+      q: "Which product has the most negative public voice?",
       answer: byNeg[0]
         ? `${byNeg[0].label}: ${fmtPct(byNeg[0].external.negative_share)} of its public voice is negative, source-weighted (${fmt(byNeg[0].external.volume)} items).`
         : "Too few public items in this period to compare.",
@@ -386,7 +386,7 @@ function cardsBase(p: Period): AskQA[] {
   return [
     {
       id: "cards-top",
-      q: "What are the top issues in Cards?",
+      q: "What are the top issues in credit cards?",
       answer: `${c.categories[0].label} leads: ${fmt(c.categories[0].internal.volume)} internal contacts and ${fmt(c.categories[0].external.volume)} public items.`,
       table: {
         head: ["Category", "Internal", "Open", "Public", "Negative public"],
@@ -407,7 +407,7 @@ function cardsBase(p: Period): AskQA[] {
       answer:
         c.internal.not_responded_48h === null
           ? "A reply can only be 48 hours late in a period longer than 48 hours; pick 7 days or more."
-          : `${fmt(c.internal.not_responded_48h)} Cards contacts waited more than 48 hours for a first reply. ${late[0].label} has the most (${dash(late[0].internal.not_responded_48h)}). Threads waiting on the customer are not counted.`,
+          : `${fmt(c.internal.not_responded_48h)} credit card contacts waited more than 48 hours for a first reply. ${late[0].label} has the most (${dash(late[0].internal.not_responded_48h)}). Threads waiting on the customer are not counted.`,
       table: {
         head: [
           "Category",
@@ -428,7 +428,7 @@ function cardsBase(p: Period): AskQA[] {
     {
       id: "cards-timelines",
       q: "Are we keeping our timelines?",
-      answer: `${fmt(sv.missed_timelines.total)} public Cards posts describe a missed timeline, ${fmt(sv.transparency.count)} ask where something is, and ${fmt(sv.tat_related.contacts)} internal contacts (${fmtPct(sv.tat_related.share)}) carry a delivery timeline. Heard in public; not a compliance figure.`,
+      answer: `${fmt(sv.missed_timelines.total)} public credit card posts describe a missed timeline, ${fmt(sv.transparency.count)} ask where something is, and ${fmt(sv.tat_related.contacts)} internal contacts (${fmtPct(sv.tat_related.share)}) carry a delivery timeline. Heard in public; not a compliance figure.`,
       table: {
         head: ["Request type", "Posts"],
         rows: sv.missed_timelines.rows.map((r) => [r.label, fmt(r.count)]),
@@ -440,7 +440,7 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-escalate",
-      q: "Where do Cards contacts escalate?",
+      q: "Where do credit card contacts escalate?",
       answer: `${fmt(c.internal.escalations)} internal contacts reached a grievance desk or beyond; ${fmt(sv.public_escalation)} public posts use escalation language${sv.targets[0] ? `, most naming ${sv.targets[0].label}` : ""}.`,
       table: {
         head: ["Rung (internal)", "Contacts"],
@@ -453,8 +453,8 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-channels",
-      q: "Which channels do Cards customers use?",
-      answer: `The bank's own Cards contacts by channel, ${fmt(c.internal.volume)} in all; and ${fmt(c.external.volume)} public items (${Object.entries(
+      q: "Which channels do credit card customers use?",
+      answer: `The bank's own credit card contacts by channel, ${fmt(c.internal.volume)} in all; and ${fmt(c.external.volume)} public items (${Object.entries(
         c.channels.external,
       )
         .map(([k, v]) => `${k} ${fmt(v)}`)
@@ -463,10 +463,10 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-rising",
-      q: "Which Cards themes are rising in public?",
+      q: "Which credit card themes are rising in public?",
       answer: mk.rising[0]
         ? `${mk.rising[0].label}: share of voice ${fmtSigned(mk.rising[0].share_change_pct)} ${p.compare} (${fmt(mk.rising[0].count)} items).`
-        : "No Cards theme is rising in this period.",
+        : "No credit card theme is rising in this period.",
       table: {
         head: ["Theme", "Items", "Share of voice"],
         rows: mk.rising.map((t) => [
@@ -504,7 +504,7 @@ function cardsBase(p: Period): AskQA[] {
     },
     {
       id: "cards-other-business",
-      q: "How are Home loans customers doing this week?",
+      q: "How are Mortgages customers doing this week?",
       answer:
         "You're not authorised to see this. Answers follow your bank's role-based access.",
       denied: true,

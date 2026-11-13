@@ -16,12 +16,12 @@ import { C, MONO, Tile, tint } from "./primitives";
 
 const CARDS_VIEW = "/natwest-pulse/v1/business/cards";
 const BRIEF_ORDER = [
-  "cards",
-  "payments_fraud",
   "current_accounts",
-  "personal_loans",
-  "mortgages",
+  "payments_fraud",
+  "cards",
   "savings",
+  "mortgages",
+  "personal_loans",
 ];
 
 /* ---------------------------------------------------------------- morning brief */
@@ -281,7 +281,7 @@ export function MorningBrief({ p }: { p: Period }) {
     <Tile
       id="morning-brief"
       title={titled("Today's morning brief", p)}
-      sub="Bank-wide, built from the six businesses below. Each item names its business."
+      sub="Group retail, built from the six products below. Each item names its product."
       prov={["internal", "public"]}
       tone="violet"
     >

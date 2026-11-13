@@ -4,10 +4,10 @@
  "note": "Each public item is tagged to one product from its business and theme. Loans are split into home, auto and personal by app and keyword. Row totals count each item once; issue lists count theme tags (an item can carry up to three). Wealth, SME and merchant, and corporate items are outside the product table.",
  "rows": [
   {
-   "id": "cards",
-   "label": "Credit cards",
-   "owner": "cards",
-   "module": "cards",
+   "id": "current_accounts",
+   "label": "Current accounts and app",
+   "owner": "retail",
+   "module": null,
    "count": 0,
    "negative": 0,
    "escalation": 0,
@@ -50,10 +50,10 @@
    "replies": null
   },
   {
-   "id": "current_accounts",
-   "label": "Current accounts and app",
-   "owner": "retail",
-   "module": null,
+   "id": "cards",
+   "label": "Credit cards",
+   "owner": "cards",
+   "module": "cards",
    "count": 0,
    "negative": 0,
    "escalation": 0,
@@ -73,9 +73,9 @@
    "replies": null
   },
   {
-   "id": "personal_loans",
-   "label": "Personal loans",
-   "owner": "loans",
+   "id": "savings",
+   "label": "Savings",
+   "owner": "product",
    "module": null,
    "count": 0,
    "negative": 0,
@@ -119,56 +119,10 @@
    "replies": null
   },
   {
-   "id": "overdrafts",
-   "label": "Overdrafts",
-   "owner": "retail",
+   "id": "personal_loans",
+   "label": "Personal loans",
+   "owner": "loans",
    "module": null,
-   "count": 0,
-   "negative": 0,
-   "escalation": 0,
-   "repeat": 0,
-   "promise_break_mentions": 0,
-   "share_negative": null,
-   "trend_change_pct": null,
-   "trend_basis": {
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null
-   },
-   "top_issue": null,
-   "issues": [],
-   "by_source": {},
-   "replies": null
-  },
-  {
-   "id": "savings",
-   "label": "Savings",
-   "owner": "product",
-   "module": null,
-   "count": 0,
-   "negative": 0,
-   "escalation": 0,
-   "repeat": 0,
-   "promise_break_mentions": 0,
-   "share_negative": null,
-   "trend_change_pct": null,
-   "trend_basis": {
-    "first_half": 0,
-    "second_half": 0,
-    "first_share": null,
-    "second_share": null
-   },
-   "top_issue": null,
-   "issues": [],
-   "by_source": {},
-   "replies": null
-  },
-  {
-   "id": "digital",
-   "label": "Cora and digital assistant",
-   "owner": "digital",
-   "module": "cora_digital",
    "count": 0,
    "negative": 0,
    "escalation": 0,
@@ -194,13 +148,11 @@
  "reconciles": true,
  "trend_rule": "Source-weighted share of trend-basis items, second half (22 Sep–11 Nov) vs first half (1 Aug–21 Sep): each source's share counts in proportion to its share of the window. Reddit (collector changed 1 Sep) and the partial-window store exports are left out. Shown only when both halves have at least 15 items.",
  "labels": {
-  "cards": "Credit cards",
-  "payments_fraud": "Payments and fraud",
   "current_accounts": "Current accounts and app",
-  "personal_loans": "Personal loans",
-  "mortgages": "Mortgages",
-  "overdrafts": "Overdrafts",
+  "payments_fraud": "Payments and fraud",
+  "cards": "Credit cards",
   "savings": "Savings",
-  "digital": "Cora and digital assistant"
+  "mortgages": "Mortgages",
+  "personal_loans": "Personal loans"
  }
 }

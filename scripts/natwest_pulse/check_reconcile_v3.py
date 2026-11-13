@@ -24,7 +24,7 @@ PERSON_FLAG_KEYS = {"high_impact", "sensitive", "sensitivity", "vip", "official"
 # Theme-mix rule (B7 §2): internal share within ±20% (relative) of the target share, for themes with ≥ 5% target share.
 # Targets are the public mix per product, except where public voice is too thin and the generator uses a disclosed
 # substitute (auto loans: the combined loans mix; insurance: a hand-set mix). Those are reported, not hidden.
-THIN_PUBLIC = {"overdrafts", "savings"}
+THIN_PUBLIC = {"savings"}
 # One store per comparison (B7 §4.1, follow-up fix 2): a store rating or share may only sit inside a per-store scope.
 RATING_KEYS = {"avg_rating", "ratings", "share_positive", "new_app_avg", "old_app_avg", "new_app_share_positive", "old_app_share_positive"}
 STORE_SCOPES = {"by_store", "versions_by_store"}
@@ -51,10 +51,6 @@ def _theme_targets(products: dict) -> tuple[dict, dict]:
 
     public = {r["id"]: {i["id"]: i["count"] for i in r["issues"]} for r in products["rows"]}
     target = dict(public)
-    loans = collections.Counter()
-    for lp in ("personal_loans", "mortgages", "overdrafts"):
-        loans.update(public.get(lp, {}))
-    target["overdrafts"] = dict(loans)
     target.update(HAND_MIX)
     return public, target
 

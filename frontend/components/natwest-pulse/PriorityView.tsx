@@ -34,7 +34,7 @@ import { hoursLabel } from "./V3Blocks";
 const COHORT_LABEL: Record<string, string> = {
   priority_a: "Financially vulnerable",
   priority_b: "Recent complainants",
-  uhni: "Premier and Private",
+  uhni: "Premier",
   hni: "Premier",
 };
 const PRODUCT_LABEL: Record<string, string> = {
@@ -43,7 +43,6 @@ const PRODUCT_LABEL: Record<string, string> = {
   current_accounts: "Current accounts and app",
   personal_loans: "Personal loans",
   mortgages: "Mortgages",
-  overdrafts: "Overdrafts",
   savings: "Savings",
   digital: "Cora and digital assistant",
 };
@@ -185,7 +184,7 @@ export function PriorityView({ b }: { b: Bundle }) {
               (illustrative; a resolution was sent, so not counted as open)
             </div>
             <Table
-              head={["Negative contacts by channel, since 1 Jul", ""]}
+              head={["Negative contacts by channel, since 1 Aug", ""]}
               align={["left", "right"]}
               rows={CHANNEL_ORDER.filter((ch) => c.negative_by_channel[ch]).map(
                 (ch) => [labels[ch] ?? ch, fmt(c.negative_by_channel[ch])],

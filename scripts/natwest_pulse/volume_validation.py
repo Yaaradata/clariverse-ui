@@ -91,13 +91,13 @@ def main() -> int:
     add("Complaints closed within 3 days", 100 * WC(fast) / max(WC(cs), 1), f"{100 * WC(fast) / max(WC(cs), 1):.0f}%", "48%",
         "ANCHOR (H1 2026 return)", 48, 48, "the sample's resolution-time model is the oct13 one; tune once the per-product return lands")
     # ---- contacts: assumptions (docs/natwest/public_anchors.md)
-    add("Total contacts, full window", total, IN(total), "about 9,000,000", "ASSUMPTION (20m customers x 1.6 a year)", 9_000_000, 9_000_000)
+    add("Total contacts, full window", total, IN(total), "about 8,500,000", "ASSUMPTION (19m retail customers, Pass 2)", 8_500_000, 8_500_000)
     add("Contacts per complaint", total / n_cmp, f"{total / n_cmp:.0f}x", "no anchor", "DERIVED", total / n_cmp, total / n_cmp)
     neg = W([r for r in rs if r["sentiment"] == "negative"])
     add("Negative share of internal contacts", 100 * neg / total, f"{100 * neg / total:.1f}%", "about 12%", "HL-19", 12, 12)
     cneg = W([r for r in cmp if r["sentiment"] == "negative"])
     add("Negative share of complaints", 100 * cneg / n_cmp, f"{100 * cneg / n_cmp:.0f}%", "mostly negative (85%)", "HL-19", 85, 85)
-    for g, label in (("calls", "Calls"), ("whatsapp", "Cora"), ("chat", "App chat"), ("emails", "Email"), ("branch", "Branch"), ("social", "Social")):
+    for g, label in (("calls", "Calls"), ("whatsapp", "Cora"), ("chat", "Secure message"), ("emails", "Email"), ("branch", "Branch"), ("social", "Social")):
         n = W([r for r in rs if CHANNEL_GROUP[r["channel"]] == g])
         add(f"Channel share: {label}", 100 * n / total, f"{100 * n / total:.1f}% ({IN(n)})", "assumption", "ASSUMPTION", 100 * n / total, 100 * n / total)
     # ---- Ombudsman

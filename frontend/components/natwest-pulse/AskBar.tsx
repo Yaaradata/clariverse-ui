@@ -160,9 +160,9 @@ export function AskBar({
       : null;
   const viewLabel =
     scope === "cards"
-      ? "Cards business view"
+      ? "Credit cards product view"
       : scope === "md"
-        ? "MD's office / Head of CX"
+        ? "Head of Customer Experience"
         : "Full window";
 
   const suggestions: AskQA[] = useMemo(() => {
@@ -283,8 +283,8 @@ export function AskBar({
             value={q}
             onChange={(e) => setQ(e.target.value)}
             onFocus={() => setOpen(true)}
-            aria-label="Ask LisN about your business"
-            placeholder="Ask LisN about your business"
+            aria-label="Ask LisN about your product"
+            placeholder="Ask LisN about your product"
             style={{
               flex: 1,
               minWidth: 0,

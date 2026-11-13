@@ -60,7 +60,12 @@ const REQUEST_DELIVERABLE: Record<string, string> = {
   credit_report: "credit_report",
   kyc: "service_request",
 };
-const SERVICE_GROUPS = new Set(["Service", "Payments", "Loans", "Cards"]);
+const SERVICE_GROUPS = new Set([
+  "Service",
+  "Payments",
+  "Loans",
+  "Credit cards",
+]);
 
 export function ServicePromiseView({ b }: { b: Bundle }) {
   const from: View = useFrom();

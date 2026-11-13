@@ -98,11 +98,11 @@ def filed_with_ombudsman(r: dict, d: dict) -> bool:
 
 
 def referred_at(r: dict, d: dict):
-    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION: 45% of those
+    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION (Pass 2 section 4, about 4.5% of complaints): 40% of those
     unhappy with the final response, 20% of those past the deadline with no final response; referral 3-30 days later."""
     h = int(hashlib.sha1(f"fos:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
     lag = dt.timedelta(days=3 + 27 * (int(hashlib.sha1(f"lag:{r['id']}".encode()).hexdigest(), 16) % 1000 / 1000))
-    if d["unhappy_at"] and h < 0.45:
+    if d["unhappy_at"] and h < 0.40:
         t = d["unhappy_at"] + lag
     elif d["reply"] is None and h < 0.20:
         t = deadline(ts(r["created_at"]), r["product"]) + lag

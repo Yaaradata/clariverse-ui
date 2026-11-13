@@ -138,8 +138,8 @@ function IssuePulse({ p }: { p: Period }) {
   return (
     <Tile
       id="issue-pulse"
-      title={titled("Issue pulse: Cards", p)}
-      sub="The bank's own Cards contacts and public voice about Cards, side by side. The same figures as the Cards card on the MD's view."
+      title={titled("Issue pulse: Credit cards", p)}
+      sub="The bank's own credit card contacts and public voice about credit cards, side by side. The same figures as the credit card card on the MD's view."
       prov={["internal", "public"]}
       tone="violet"
     >
@@ -833,21 +833,21 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Activity size={18} />}
         title="Are my customers happy?"
         micro="Sentiment · Trust pillars · Top pain"
-        answer={`Net sentiment of Cards public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`}
+        answer={`Net sentiment of credit card public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`}
         headlineLabel="Net sentiment"
         headline={fmtSigned(m.net, "", 0)}
-        caption={`${fmt(m.items)} public items about Cards in the period. Positive share minus negative share, each source weighted by its share of the window.`}
+        caption={`${fmt(m.items)} public items about credit cards in the period. Positive share minus negative share, each source weighted by its share of the window.`}
         gauges={[
           {
             label: "Positive share",
             value: c.external.positive_share ?? 0,
-            sub: "of Cards public voice",
+            sub: "of credit card public voice",
             tone: "green",
           },
           {
             label: "Resolved",
             value: pct(c.internal.resolved, c.internal.volume) ?? 0,
-            sub: "of the bank's Cards contacts",
+            sub: "of the bank's credit card contacts",
             tone: "green",
           },
         ]}
@@ -875,10 +875,10 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Shield size={18} />}
         title="What is the market saying about us?"
         micro="Themes · Rising · App pulse"
-        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No Cards theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
+        answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No credit card theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
         headlineLabel="Public posts and reviews"
         headline={fmt(c.external.volume)}
-        caption={`About Cards, in the period: X, Reddit, forums, Google Play, App Store. ${fmt(c.external.escalation)} use escalation language.`}
+        caption={`About credit cards, in the period: X, Reddit, forums, Google Play, App Store. ${fmt(c.external.escalation)} use escalation language.`}
         gauges={[
           {
             label: "Google Play",
@@ -918,7 +918,7 @@ function QuestionCards({ p }: { p: Period }) {
         icon={<Timer size={18} />}
         title="Are we keeping our timelines?"
         micro="Missed timelines · Status-seeking · Escalation"
-        answer={`${fmt(sv.missed_timelines.total)} public Cards posts describe a missed timeline; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
+        answer={`${fmt(sv.missed_timelines.total)} public credit card posts describe a missed timeline; ${fmt(sv.transparency.count)} ask where something is; ${fmt(sv.public_escalation)} use escalation language.`}
         headlineLabel="Missed timelines heard"
         headline={fmt(sv.missed_timelines.total)}
         caption={`Public posts in the period, by request type on the drill-down. Inside the bank: ${late === null ? "the 48-hour figure needs 48 hours" : `${fmt(late)} Cards contacts not responded to in 48h+`}.`}
@@ -926,13 +926,13 @@ function QuestionCards({ p }: { p: Period }) {
           {
             label: "Repeat contact",
             value: pct(internalRepeat, c.internal.volume) ?? 0,
-            sub: "of the bank's Cards contacts",
+            sub: "of the bank's credit card contacts",
             tone: "red",
           },
           {
             label: "Asking status",
             value: sv.transparency.share ?? 0,
-            sub: "of Cards public posts",
+            sub: "of credit card public posts",
             tone: "amber",
           },
         ]}
@@ -948,7 +948,7 @@ function QuestionCards({ p }: { p: Period }) {
           {
             label: "timeline-related contacts",
             value: fmt(sv.tat_related.contacts),
-            sub: `${fmtPct(sv.tat_related.share)} of Cards contacts · ${fmt(sv.tat_related.open)} open`,
+            sub: `${fmtPct(sv.tat_related.share)} of credit card contacts · ${fmt(sv.tat_related.open)} open`,
             color: C.amber,
           },
         ]}
@@ -975,7 +975,7 @@ export function JourneyPanel({ p }: { p: Period }) {
     <Tile
       id="happy-journey"
       title={titled("Where contacts come from", p)}
-      sub="The bank's own Cards contacts by journey stage."
+      sub="The bank's own credit card contacts by journey stage."
       prov="internal"
     >
       <Table
@@ -1037,7 +1037,7 @@ export function StoresPanel({ p }: { p: Period }) {
     <Tile
       id="market-stores"
       title={titled("Top complaints and feature requests", p)}
-      sub="Cards reviews, one store at a time: top complaints, feature requests and the existing features customers praise."
+      sub="Credit card reviews, one store at a time: top complaints, feature requests and the existing features customers praise."
       prov="public"
     >
       <div style={SPLIT}>
@@ -1122,7 +1122,7 @@ export function Happy({ p }: { p: Period }) {
         <Tile
           id="happy-tiers"
           title={titled("Contacts by customer list", p)}
-          sub="The bank's own Cards contacts by the Customer pulse lists, with their sentiment."
+          sub="The bank's own credit card contacts by the Customer pulse lists, with their sentiment."
           prov="internal"
         >
           <Table
@@ -1162,7 +1162,7 @@ export function Happy({ p }: { p: Period }) {
           <Kpi
             label="Net sentiment"
             value={fmtSigned(m.net, "", 0)}
-            sub={`${fmt(m.items)} public items about Cards`}
+            sub={`${fmt(m.items)} public items about credit cards`}
             tone={(m.net ?? 0) < 0 ? "red" : "green"}
           />
           <Kpi
@@ -1226,7 +1226,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-trend"
         title={titled("Sentiment trend", p)}
-        sub={`Net sentiment of Cards public voice per ${p.id === "all" ? "week" : "period of the same length"}, source-weighted. Dashed line: the average of the points shown.`}
+        sub={`Net sentiment of credit card public voice per ${p.id === "all" ? "week" : "period of the same length"}, source-weighted. Dashed line: the average of the points shown.`}
         prov="public"
       >
         <div style={SPLIT}>
@@ -1258,7 +1258,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-saying"
         title={titled("What customers are saying", p)}
-        sub="One anonymised quote for each of the largest negative Cards themes. Names are replaced by roles; quotes that make an allegation are not shown."
+        sub="One anonymised quote for each of the largest negative credit card themes. Names are replaced by roles; quotes that make an allegation are not shown."
         prov="public"
       >
         <div
@@ -1315,7 +1315,7 @@ export function Happy({ p }: { p: Period }) {
       <Tile
         id="happy-pillars"
         title={titled("Themes by trust pillar", p)}
-        sub="Public voice about Cards by trust pillar: items, net sentiment and the top themes in each."
+        sub="Public voice about credit cards by trust pillar: items, net sentiment and the top themes in each."
         prov="public"
       >
         <Table
@@ -1344,7 +1344,7 @@ export function Market({ p }: { p: Period }) {
     <>
       <Tile
         id="market-themes"
-        title={titled("All Cards themes in public voice", p)}
+        title={titled("All credit card themes in public voice", p)}
         sub="Each item once, under its main theme. Share of voice is source-weighted; its change is against the comparison window."
         prov="public"
       >
@@ -1378,8 +1378,8 @@ export function Market({ p }: { p: Period }) {
 
       <Tile
         id="market-topsix"
-        title={titled("Top six Cards themes: share of voice", p)}
-        sub={`Each theme's source-weighted share of Cards public voice, per ${p.id === "all" ? "week" : "period of the same length"}.`}
+        title={titled("Top six credit card themes: share of voice", p)}
+        sub={`Each theme's source-weighted share of credit card public voice, per ${p.id === "all" ? "week" : "period of the same length"}.`}
         prov="public"
       >
         <div
@@ -1433,7 +1433,7 @@ export function Market({ p }: { p: Period }) {
         <Tile
           id="market-rising"
           title={titled("Rising themes", p)}
-          sub={`Cards themes whose share of voice grew the most, ${p.compare}.`}
+          sub={`Credit card themes whose share of voice grew the most, ${p.compare}.`}
           prov="public"
         >
           {mk.rising.length ? (
@@ -1465,7 +1465,7 @@ export function Market({ p }: { p: Period }) {
         <Tile
           id="market-safety"
           title={titled("Safety and reputation watch", p)}
-          sub="Fraud, phishing, security blocks and collection conduct, on Cards."
+          sub="Fraud, phishing, security blocks and collection conduct, on credit cards."
           prov={["internal", "public"]}
           tone="red"
         >
@@ -1510,7 +1510,7 @@ export function Market({ p }: { p: Period }) {
       <Tile
         id="market-reach"
         title={titled("Voices with reach", p)}
-        sub="Cards posts with reach: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Anonymised: no accounts are shown."
+        sub="Credit card posts with reach: an X account with 10,000+ followers, or 50+ likes or 20+ reposts; a Reddit post with 50+ upvotes; a store review 20+ people found helpful. Anonymised: no accounts are shown."
         prov="public"
       >
         <div
@@ -1580,8 +1580,8 @@ export function Service({ p }: { p: Period }) {
     <>
       <Tile
         id="service-handling"
-        title={titled("How Cards contacts were handled", p)}
-        sub="The bank's own Cards contacts in the period."
+        title={titled("How credit card contacts were handled", p)}
+        sub="The bank's own credit card contacts in the period."
         prov="internal"
       >
         <div
@@ -1630,7 +1630,7 @@ export function Service({ p }: { p: Period }) {
       <Tile
         id="service-ladder"
         title={titled("Escalation ladder", p)}
-        sub="Hear it on the first rung. Left: the bank's own Cards contacts, and how far they climbed. Right: public Cards posts with escalation language, by who they name."
+        sub="Hear it on the first rung. Left: the bank's own credit card contacts, and how far they climbed. Right: public credit card posts with escalation language, by who they name."
         prov={["internal", "public"]}
         tone="red"
       >
@@ -1747,7 +1747,7 @@ export function Service({ p }: { p: Period }) {
             <Kpi
               label="Public posts"
               value={fmt(sv.transparency.count)}
-              sub={`${fmtPct(sv.transparency.share)} of Cards posts, source-weighted`}
+              sub={`${fmtPct(sv.transparency.share)} of credit card posts, source-weighted`}
               tone="amber"
             />
             <div style={{ fontSize: 13.5, color: C.textSec }}>
@@ -1781,7 +1781,7 @@ export function Service({ p }: { p: Period }) {
         <Tile
           id="service-failures"
           title={titled("Top service failures", p)}
-          sub="Cards themes with the most negative public items."
+          sub="Credit card themes with the most negative public items."
           prov="public"
           tone="red"
         >
@@ -1804,7 +1804,7 @@ export function Service({ p }: { p: Period }) {
       <Tile
         id="service-timelines"
         title={titled("Timelines customers say were missed", p)}
-        sub="Public Cards posts describing a missed timeline, by the request it concerned. Heard in public; not a compliance figure."
+        sub="Public credit card posts describing a missed timeline, by the request it concerned. Heard in public; not a compliance figure."
         prov="public"
       >
         <div style={SPLIT}>
@@ -1871,7 +1871,7 @@ export function CardsDrillDown({ b, id }: { b: Bundle; id: DrillDownId }) {
 /** Every other product: its business view is not built yet (30 Sep review scope: Cards only). */
 export function ComingSoon({ label }: { label: string }) {
   return (
-    <Tile title={`${label}: business view`} prov="internal">
+    <Tile title={`${label}: product view`} prov="internal">
       <MutedNote>
         Coming soon. The Cards business view is the first; the others follow the
         same layout once it is agreed.

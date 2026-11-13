@@ -43,7 +43,7 @@ const PILLAR: Record<string, string> = {
 };
 const BUSINESS: Record<string, string> = {
   retail_banking: "Retail banking",
-  cards: "Cards",
+  cards: "Credit cards",
   loans: "Loans",
   payments: "Payments",
   wealth: "Wealth",

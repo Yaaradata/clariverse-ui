@@ -11,8 +11,7 @@
   "products": [
    "cards",
    "current_accounts",
-   "mortgages",
-   "digital"
+   "mortgages"
   ],
   "rm_id": "RELM-017",
   "proxy_contacts": 1,
@@ -98,8 +97,7 @@
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "digital"
+   "current_accounts"
   ],
   "rm_id": "RELM-042",
   "proxy_contacts": 1,
@@ -142,8 +140,7 @@
   "products": [
    "cards",
    "current_accounts",
-   "payments_fraud",
-   "digital"
+   "payments_fraud"
   ],
   "rm_id": "RELM-066",
   "proxy_contacts": 0,
@@ -186,8 +183,7 @@
    "cards",
    "current_accounts",
    "mortgages",
-   "savings",
-   "digital"
+   "savings"
   ],
   "rm_id": "RELM-008",
   "proxy_contacts": 1,
@@ -216,8 +212,7 @@
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "digital"
+   "current_accounts"
   ],
   "rm_id": "RELM-091",
   "proxy_contacts": 0,
@@ -226,7 +221,7 @@
    {
     "at": "2026-11-11T22:48+00:00",
     "channel": "chat",
-    "product": "digital",
+    "product": "current_accounts",
     "theme": "device_security_block",
     "summary": "App blocked on a new phone with a security alert; cannot approve a large transfer.",
     "sentiment": "negative",
@@ -246,9 +241,7 @@
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "overdrafts",
-   "digital"
+   "current_accounts"
   ],
   "rm_id": "RELM-073",
   "proxy_contacts": 0,
@@ -267,7 +260,7 @@
    {
     "at": "2026-11-11T09:40+00:00",
     "channel": "branch",
-    "product": "overdrafts",
+    "product": "current_accounts",
     "theme": "loan_servicing",
     "summary": "Visited the branch about the car finance repayment date; mentioned the open card dispute.",
     "sentiment": "neutral",
@@ -288,8 +281,7 @@
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "digital"
+   "current_accounts"
   ],
   "rm_id": "RELM-025",
   "proxy_contacts": 1,
@@ -319,8 +311,7 @@
   "products": [
    "cards",
    "current_accounts",
-   "personal_loans",
-   "digital"
+   "personal_loans"
   ],
   "rm_id": "RELM-054",
   "proxy_contacts": 0,
@@ -350,8 +341,7 @@
   "products": [
    "cards",
    "current_accounts",
-   "savings",
-   "digital"
+   "savings"
   ],
   "rm_id": "RELM-017",
   "proxy_contacts": 1,
@@ -384,8 +374,7 @@
   "products": [
    "cards",
    "current_accounts",
-   "payments_fraud",
-   "digital"
+   "payments_fraud"
   ],
   "rm_id": "RELM-101",
   "proxy_contacts": 0,
@@ -415,8 +404,7 @@
   ],
   "products": [
    "cards",
-   "current_accounts",
-   "digital"
+   "current_accounts"
   ],
   "rm_id": "RELM-033",
   "proxy_contacts": 1,
@@ -446,8 +434,7 @@
   "products": [
    "cards",
    "current_accounts",
-   "mortgages",
-   "digital"
+   "mortgages"
   ],
   "rm_id": "RELM-060",
   "proxy_contacts": 0,

@@ -18,7 +18,7 @@ from complaint_rules import deadline
 D6M = dt.timedelta(days=183)  # 6 months from the final response (or the deadline) to refer (register REG-FOS-6M)
 DAY = dt.timedelta(days=1)
 BUCKETS = [("8-10", 8, 10), ("4-7", 4, 7), ("0-3", 0, 3)]  # days left before the final-response deadline
-LIST_LABEL = {"priority_a": "Financially vulnerable (Consumer Duty)", "priority_b": "Recent complainants (90 days)", "uhni": "Premier and Private"}
+LIST_LABEL = {"priority_a": "Financially vulnerable (Consumer Duty)", "priority_b": "Recent complainants (90 days)", "uhni": "Premier"}
 IO_OWNER = "Final-response team"
 RULES = (
     "Financial Ombudsman Service rules only (register REG-DISP-8W, REG-PSD-15, REG-FOS-6M). The bank has 8 weeks to "
@@ -221,7 +221,7 @@ def brief_item(bank: dict) -> dict | None:
     if not (n03 or d > 0):
         return None
     return {
-        "business": "bank", "business_label": "All businesses", "issue": "Ombudsman watch", "kind": "ombudsman",
+        "business": "bank", "business_label": "All products", "issue": "Financial Ombudsman watch", "kind": "ombudsman",
         "text": (f"{inr(n03)} complaints have 3 days or fewer to the final-response deadline; {inr(el)} are past it and "
                  f"may go to the Financial Ombudsman Service ({'up' if d > 0 else 'down' if d < 0 else 'no change'}"
                  f"{f' {inr(abs(d))}' if d else ''} on the previous period end)."),

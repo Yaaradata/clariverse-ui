@@ -509,7 +509,7 @@ export type PeriodsFile = {
   periods: Record<PeriodId, Period>;
 };
 
-/** NatWest rows (brief Step 5.4): Calls · Cora · App chat · Email · Social · Branch; oct13 ids ("whatsapp" = Cora). */
+/** NatWest rows (brief Step 5.4): Calls · Cora · Secure message · Email · Social · Branch; oct13 ids ("whatsapp" = Cora). */
 export const CHANNEL_ORDER = [
   "calls",
   "whatsapp",
@@ -521,7 +521,7 @@ export const CHANNEL_ORDER = [
 export const CHANNEL_LABEL: Record<string, string> = {
   emails: "Email",
   calls: "Calls",
-  chat: "App chat",
+  chat: "Secure message",
   whatsapp: "Cora",
   social: "Social",
   branch: "Branch",

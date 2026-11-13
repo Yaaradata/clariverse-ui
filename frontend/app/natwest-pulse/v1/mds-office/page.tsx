@@ -10,8 +10,8 @@ export default function MdsOfficePage() {
   return (
     <Shell
       {...shellProps(b)}
-      title="MD's office / Head of CX"
-      subtitle="The pulse first, then today's morning brief, business by business."
+      title="Head of Customer Experience"
+      subtitle="The pulse first, then today's morning brief, product by product."
       view="mds-office"
       periods={sliceBundle(b, { view: "exec" }).periods}
     >

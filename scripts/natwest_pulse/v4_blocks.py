@@ -36,9 +36,9 @@ LIMITS = {
 }
 LIMIT_LABEL = {
     "priority_a": "Financially vulnerable: 5 hours",
-    "uhni": "Premier and Private: 24 hours",
+    "uhni": "Premier: 24 hours",
     "fca": "Published UK timeline (FCA or PSR)",
-    "default": "Default: 48 hours (bank timeline to confirm in discovery)",
+    "default": "Default: over 48 hours (bank SLA, illustrative)",
 }
 
 # Bank words (B11 item 1): every interaction is a complaint, a query or a request.
@@ -56,7 +56,7 @@ KINDS = [("complaint", "Complaints"), ("query", "Queries"), ("request", "Request
 OWNER_ROLES = ["Product owner", "Complaints lead", "Final-response team", "Fraud operations", "Branch region lead",
                "Social care lead", "Service-delivery head"]
 
-CHANNEL_LABEL = {"emails": "Email", "calls": "Calls", "chat": "App chat", "whatsapp": "Cora", "social": "Social inbox",
+CHANNEL_LABEL = {"emails": "Email", "calls": "Calls", "chat": "Secure message", "whatsapp": "Cora", "social": "Social inbox",
                  "branch": "Branch"}
 SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
 
@@ -177,7 +177,7 @@ def open_too_long(vol, customers, is_open, labels) -> dict:
 def priority_slice(vol, customers, is_open) -> list[dict]:
     blocks = [
         ("ultra_sensitive", "Financially vulnerable", lambda r: "priority_a" in customers.get(r["masked_id"], {}).get("cohorts", [])),
-        ("uhni", "Premier and Private", lambda r: "uhni" in customers.get(r["masked_id"], {}).get("cohorts", [])),
+        ("uhni", "Premier", lambda r: "uhni" in customers.get(r["masked_id"], {}).get("cohorts", [])),
         # A property of the complaint (regulator or legal language, a third contact, public reach), never of the person.
         ("high_impact", "High-impact complaints", lambda r: bool(r["high_impact"])),
     ]

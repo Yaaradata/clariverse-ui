@@ -30,7 +30,7 @@ export default async function CardsDrillDownPage({
       title={`Cards: ${d.title}`}
       subtitle={d.sub}
       periods={sliced.periods}
-      context="Cards · Business view"
+      context="Credit cards · Product view"
       drill
     >
       <CardsDrillDown b={sliced} id={section as DrillDownId} />

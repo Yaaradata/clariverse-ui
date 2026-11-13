@@ -5,7 +5,7 @@
   "customers": 5000
  },
  "targets": {
-  "total_contacts": 9000000,
+  "total_contacts": 8500000,
   "channel_mix": {
    "calls": 0.44,
    "whatsapp": 0.3,
@@ -16,43 +16,37 @@
   },
   "complaints": 49200,
   "product_mix": {
-   "current_accounts": 0.28,
-   "cards": 0.18,
-   "digital": 0.14,
-   "payments_fraud": 0.14,
-   "mortgages": 0.1,
-   "savings": 0.06,
-   "personal_loans": 0.06,
-   "overdrafts": 0.04
+   "current_accounts": 0.4,
+   "cards": 0.2,
+   "payments_fraud": 0.16,
+   "mortgages": 0.11,
+   "savings": 0.07,
+   "personal_loans": 0.06
   },
   "negative_share": {
    "cards": 0.15,
    "personal_loans": 0.16,
    "mortgages": 0.15,
-   "overdrafts": 0.15,
    "payments_fraud": 0.11,
    "savings": 0.11,
-   "current_accounts": 0.095,
-   "digital": 0.09
+   "current_accounts": 0.1
   },
   "negative_of_complaints": 0.85,
   "complaint_mix": {
-   "current_accounts": 0.3,
+   "current_accounts": 0.4,
    "payments_fraud": 0.2,
    "cards": 0.17,
    "mortgages": 0.1,
    "savings": 0.07,
-   "personal_loans": 0.06,
-   "overdrafts": 0.05,
-   "digital": 0.05
+   "personal_loans": 0.06
   },
   "escalation": {
-   "rbi_ombudsman": 2500,
+   "rbi_ombudsman": 2200,
    "md_office": 3000
   },
   "lists": {
    "priority_a": {
-    "size": 1200000,
+    "size": 2600000,
     "in_contact": 0.3
    },
    "priority_b": {
@@ -60,17 +54,17 @@
     "in_contact": 0.6
    },
    "uhni": {
-    "size": 800000,
+    "size": 1100000,
     "in_contact": 0.25
    }
   },
   "contacts_per_contacting_customer": 2.5,
-  "contacting_customers": 3600000
+  "contacting_customers": 3400000
  },
  "list_sizes": {
-  "priority_a": 1200000,
+  "priority_a": 2600000,
   "priority_b": 43000,
-  "uhni": 800000,
-  "multi": 1442600
+  "uhni": 1100000,
+  "multi": 1317500
  }
 }

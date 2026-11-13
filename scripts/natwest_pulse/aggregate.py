@@ -55,7 +55,7 @@ def place_label(r) -> str:
 
 
 OWNER_LABEL = {
-    "cx": "CX", "digital": "Digital", "cards": "Cards", "retail": "Retail", "loans": "Loans", "payments": "Payments",
+    "cx": "CX", "digital": "Digital", "cards": "Credit cards", "retail": "Retail", "loans": "Loans", "payments": "Payments",
     "compliance": "Compliance", "fraud_cyber": "Fraud operations", "operations": "Operations", "rm": "Relationship managers (Premier)", "product": "Product",
 }
 RUNG_OF_TARGET = {

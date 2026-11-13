@@ -502,9 +502,16 @@ export function MarketView({ b }: { b: Bundle }) {
           ))}
           <BaselineCaption>
             Trend within window: share of posts,{" "}
-            {halfLabel(b.themes.themes[0]?.trend.second_half_dates ?? "2026-09-22 to 2026-11-11")} vs{" "}
-            {halfLabel(b.themes.themes[0]?.trend.first_half_dates ?? "2026-08-01 to 2026-09-21")}. Seasonal
-            check: in discovery, using your history.
+            {halfLabel(
+              b.themes.themes[0]?.trend.second_half_dates ??
+                "2026-09-22 to 2026-11-11",
+            )}{" "}
+            vs{" "}
+            {halfLabel(
+              b.themes.themes[0]?.trend.first_half_dates ??
+                "2026-08-01 to 2026-09-21",
+            )}
+            . Seasonal check: in discovery, using your history.
           </BaselineCaption>
         </Tile>
 
