@@ -487,7 +487,7 @@ function cardsBase(p: Period): AskQA[] {
       table: {
         head: ["Measure", "Count"],
         rows: [
-          ["Public posts with closure intent", fmt(sv.closure.public_intent)],
+          ["Public posts with switching intent", fmt(sv.closure.public_intent)],
           ["Closure requests to the bank", fmt(sv.closure.internal_requests)],
           ["Closure requests still open", fmt(sv.closure.internal_open)],
         ],

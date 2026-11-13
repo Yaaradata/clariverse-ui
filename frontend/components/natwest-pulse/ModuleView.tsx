@@ -240,8 +240,8 @@ export function DigitalModule({ b }: { b: Bundle }) {
 
         <Section n={4} title="Where">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Pillar: Availability · Product: Cora and digital assistant ·
-            Sources: {rp.coverage.join("; ")}.
+            Consumer Duty outcome: Products and services · Module: Cora and
+            digital assistant · Sources: {rp.coverage.join("; ")}.
           </div>
         </Section>
 

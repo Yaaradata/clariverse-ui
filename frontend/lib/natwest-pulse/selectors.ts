@@ -204,7 +204,7 @@ export function improvingItems(b: Bundle): SignalItem[] {
       status: "improving",
       count: pz.window.n,
       why: `Positive reviews rose from ${Math.round(pz.halves.first.share_positive ?? 0)}% to ${Math.round(pz.halves.second.share_positive ?? 0)}% between the two halves of the window (${fmt(pz.halves.first.n)} and ${fmt(pz.halves.second.n)} reviews, App Store only).`,
-      pillar: "experience",
+      pillar: "support",
       href: "/natwest-pulse/v1/business/payzapp",
     });
   }
@@ -249,7 +249,7 @@ export function priorityAction(b: Bundle): SignalItem | null {
     status: "needs_you",
     count: over24,
     why: `${fmt(over24)} issues for customers on the bank's priority lists have been open more than 24 hours${a ? ` (${fmt(a.open_over_24h)} on list A)` : ""}; Owners have been told about ${fmt(told)} of the ${fmt(due)} customers with an alert due.`,
-    pillar: "experience",
+    pillar: "support",
     href: "/natwest-pulse/v1/priority",
   };
 }

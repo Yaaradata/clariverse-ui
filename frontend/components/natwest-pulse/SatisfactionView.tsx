@@ -141,7 +141,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov={["public", "internal"]}>
-        <AnswerLine sub="Trust pillars from public voice (live); relationship tiers and journey stages are illustrative until discovery.">
+        <AnswerLine sub="Consumer Duty outcomes from public voice (live); account tiers and journey stages are illustrative until discovery.">
           {satisfactionAnswer(b)}
         </AnswerLine>
       </Tile>
@@ -175,7 +175,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       </Tile>
 
       <Tile
-        title="Interactions and sentiment by relationship tier"
+        title="Interactions and sentiment by account tier"
         sub={`${fmt(internal.interactions_total)} interactions across all channels in the demo sample, 1 Aug to this morning`}
         prov="internal"
         id="tiers"
@@ -211,8 +211,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          Tier names to be verified with the bank. Figures are illustrative, not
-          NatWest Group figures.
+          Account tiers as named on the bank's website; Premier rows together.
+          Figures are illustrative, not NatWest Group figures.
         </MutedNote>
       </Tile>
 
@@ -279,7 +279,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       >
         <Table
           head={[
-            "Business",
+            "Product",
             "Items",
             "Repeat contact",
             "Escalation language",
@@ -301,8 +301,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
       </Tile>
 
       <Tile
-        title="Top themes by trust pillar"
-        sub="Tap a pillar to filter. Counts are public items that carry the theme."
+        title="Top themes by Consumer Duty outcome"
+        sub="Tap an outcome to filter. Counts are public items that carry the theme."
         prov="public"
         id="pillars"
       >
@@ -310,7 +310,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               {[
-                { id: null, label: "All pillars" },
+                { id: null, label: "All outcomes" },
                 ...pillars.map((p) => ({ id: p.id, label: p.label })),
               ].map((p) => (
                 <button
@@ -462,14 +462,14 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
         <Tile
           title="Retention watchlist"
-          sub="Closure intent in high-value tiers, routed to the owner"
+          sub="Switching intent in high-value tiers, routed to the owner"
           prov={["internal", "public"]}
           id="retention"
         >
           <Table
             head={[
               "Tier",
-              "Customers with closure intent",
+              "Customers with switching intent",
               "Top driver",
               "Owner",
               "Action",
@@ -479,14 +479,15 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               r.tier,
               fmt(r.customers_with_closure_intent),
               r.top_driver,
-              "Owner",
+              "Premier banking managers",
               r.action,
             ])}
           />
           <div style={{ fontSize: 13.5, color: C.textSec }}>
             In public voice,{" "}
             <strong>{fmt(b.signals.closure_intent.count)}</strong> posts say the
-            customer will close or has closed an account or card. For example:
+            customer will switch, close or has closed an account or card. For
+            example:
           </div>
           {closureEx.map((e) => (
             <Link
@@ -522,7 +523,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               "Interactions",
               "Negative share",
               "Repeat contact",
-              "Closure intent",
+              "Switching intent",
             ]}
             align={["left", "right", "right", "right", "right"]}
             rows={[

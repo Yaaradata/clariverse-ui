@@ -54,7 +54,7 @@ N_BOT_CALLS = 500
 # How much more often a listed customer is drawn for a kept row than their share of contacts would give.
 LIST_OVERSAMPLE = {"priority_a": 4.2, "priority_b": 2.6, "uhni": 9.0, "other": 1.0}
 
-SEGMENTS = [("Standard", 0.55), ("Packaged", 0.27), ("Premier", 0.14), ("Private", 0.04)]
+SEGMENTS = [("Select", 0.55), ("Reward", 0.27), ("Premier Select", 0.10), ("Premier Reward", 0.08)]
 CHANNELS = [
     "inbound_voice",
     "outbound_voice",
@@ -202,9 +202,9 @@ def build_customers():
         if "current_accounts" not in held:
             held.append("current_accounts")
         cohorts = []
-        if seg == "Private":
+        if seg == "Premier Reward":
             cohorts.append("uhni" if rng.random() < 0.75 else "hni")
-        elif seg == "Premier" and rng.random() < 0.85:
+        elif seg == "Premier Select" and rng.random() < 0.85:
             cohorts.append("hni")
         customers.append(
             {
@@ -212,7 +212,7 @@ def build_customers():
                 "segment": seg,
                 "cohorts": cohorts,
                 "products": sorted(held, key=PRODUCT_IDS.index),
-                "rm_id": rng.choice(rm_pool) if seg in ("Premier", "Private") else None,
+                "rm_id": rng.choice(rm_pool) if seg.startswith("Premier") else None,
                 "proxy_contacts": 0,
                 "cohort_added_at": None,
                 "cohort_added_by": None,
@@ -892,7 +892,7 @@ DISPUTE_DRIVERS = [
     ("Manual re-work after reopen", 0.16),
     ("Customer not updated", 0.12),
 ]
-SEGMENT_LABEL = {"Private": "Private", "Premier": "Premier", "Packaged": "Packaged", "Standard": "Standard"}
+SEGMENT_LABEL = {"Select": "Select", "Reward": "Reward", "Premier Select": "Premier Select", "Premier Reward": "Premier Reward"}
 AGE_BANDS = [(30, "Up to 30 days"), (45, "31–45 days"), (60, "46–60 days"), (90, "61–90 days"), (10**6, "Over 90 days")]
 
 
@@ -1027,7 +1027,7 @@ def screen_blocks(customers, inter, themes):
 
     # Satisfaction: tiers, journey stages, retention watchlist.
     tiers = []
-    for sg in ("Private", "Premier", "Packaged", "Standard"):
+    for sg in ("Select", "Reward", "Premier Select", "Premier Reward"):
         rs = [r for r in inter if seg[r["masked_id"]] == sg]
         c = collections.Counter(r["sentiment"] for r in rs)
         n = len(rs)
@@ -1042,7 +1042,7 @@ def screen_blocks(customers, inter, themes):
             "customers_affected": len({r["masked_id"] for r in rs if r["sentiment"] == "negative"}),
         })
     closure_reqs = [r for r in inter if r["theme"] == "closure_requests"]
-    # Closure intent by stage: the stage of the customer's last negative contact before the closure request.
+    # Switching intent by stage: the stage of the customer's last negative contact before the closure request.
     history: dict[str, list] = collections.defaultdict(list)
     for r in inter:
         history[r["masked_id"]].append(r)
@@ -1051,12 +1051,12 @@ def screen_blocks(customers, inter, themes):
         before = [
             r for r in history[c["masked_id"]]
             if r["created_at"] < c["created_at"] and r["sentiment"] == "negative"
-            and JOURNEY_STAGE.get(r["theme"], "Everyday use") != "Close"
+            and JOURNEY_STAGE.get(r["theme"], "Everyday banking") != "Switch or close"
         ]
-        closure_stage[JOURNEY_STAGE.get(before[-1]["theme"], "Everyday use") if before else "Close"] += 1
+        closure_stage[JOURNEY_STAGE.get(before[-1]["theme"], "Everyday banking") if before else "Switch or close"] += 1
     stages = []
     for st in JOURNEY_ORDER:
-        rs = [r for r in inter if JOURNEY_STAGE.get(r["theme"], "Everyday use") == st]
+        rs = [r for r in inter if JOURNEY_STAGE.get(r["theme"], "Everyday banking") == st]
         n = len(rs)
         stages.append({
             "stage": st,
@@ -1066,7 +1066,7 @@ def screen_blocks(customers, inter, themes):
             "closure_intent": closure_stage[st],
         })
     watch = []
-    for sg in ("Private", "Premier", "Packaged"):
+    for sg in ("Reward", "Premier Select", "Premier Reward"):
         ids = {r["masked_id"] for r in closure_reqs if seg[r["masked_id"]] == sg}
         drivers = collections.Counter(
             r["theme"] for r in neg if r["masked_id"] in ids and r["theme"] != "closure_requests"
@@ -1085,7 +1085,7 @@ def screen_blocks(customers, inter, themes):
         "journey_stages": {
             "total": sum(x["interactions"] for x in stages),
             "rows": stages,
-            "rule": "Closure intent: closure requests, placed at the stage of the customer's last negative contact before the request.",
+            "rule": "Switching intent: closure requests, placed at the stage of the customer's last negative contact before the request.",
         },
         "retention_watchlist": {"total": sum(x["customers_with_closure_intent"] for x in watch), "rows": watch},
     }

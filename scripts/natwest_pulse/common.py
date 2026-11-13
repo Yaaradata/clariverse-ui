@@ -40,7 +40,7 @@ OWNER_LABEL = {
     "compliance": "Compliance",
     "fraud_cyber": "Fraud operations",
     "operations": "Operations",
-    "rm": "Relationship managers (Premier)",
+    "rm": "Premier banking managers",
     "product": "Savings product owner",
 }
 
@@ -129,7 +129,7 @@ THEME_DELIVERABLE = {
     "loan_processing": "loan_disbursal",
 }
 
-# Customer journey stage of each theme (satisfaction page, "Where in the journey"). Themes not listed are "Everyday use".
+# Customer journey stage of each theme (satisfaction page, "Where in the journey"). Themes not listed are "Everyday banking".
 JOURNEY_STAGE = {
     **dict.fromkeys(["account_opening", "card_application", "kyc_updates", "loan_processing"], "Open"),
     **dict.fromkeys(["card_dispatch", "login_mpin", "device_security_block"], "Activate"),
@@ -146,9 +146,9 @@ JOURNEY_STAGE = {
          "app_reimbursement"],
         "Disputes and fraud",
     ),
-    **dict.fromkeys(["closure_requests", "loan_closure_documents"], "Close"),
+    **dict.fromkeys(["closure_requests", "loan_closure_documents"], "Switch or close"),
 }
-JOURNEY_ORDER = ["Open", "Activate", "Everyday use", "Service requests", "Disputes and fraud", "Close"]
+JOURNEY_ORDER = ["Open", "Activate", "Everyday banking", "Service requests", "Disputes and fraud", "Switch or close"]
 
 # Request types used by the public "missed timeline" signal, so the internal ageing joins the public rows.
 THEME_REQUEST_TYPE = {

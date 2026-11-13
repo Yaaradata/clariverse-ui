@@ -21,7 +21,7 @@ import method as M
 from classify import OWNER_BY_RT
 from method import stream_of
 from normalise import OUT, WORK
-from taxonomy import THEMES
+from taxonomy import OUTCOMES, THEMES
 
 T = {t["id"]: t for t in THEMES}
 W_START, W_END = "2026-08-01", "2026-11-11"
@@ -291,7 +291,7 @@ def main():
     theme_rows.sort(key=lambda t: -t["count"])
 
     pillars = []
-    for pid, plabel in (("availability", "Availability"), ("experience", "Experience"), ("data_intimacy", "Data intimacy"), ("security", "Security")):
+    for pid, plabel in OUTCOMES:
         rs = [r for r in bank if T[r["themes"][0]]["pillar"] == pid]
         sc = sent_counts(rs)
 
@@ -559,7 +559,7 @@ def main():
     release = None if bank_app is None else {
         "id": "release-pulse",
         "label": "Release pulse: the fix list customers have written",
-        "app": "NatWest app", "owner": "digital", "owner_label": "Digital", "pillar": "availability", "rung": "Voice",
+        "app": "NatWest app", "owner": "digital", "owner_label": "Digital", "pillar": "products_services", "rung": "Voice",
         "action": "Route with evidence", "status": "needs_you",
         "count": len(app_neg), "n_reviews": len(app_rs),
         "ranks_top": len(app_neg) >= largest_other,

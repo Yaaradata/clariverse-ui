@@ -22,8 +22,8 @@
  "themes": [],
  "pillars": [
   {
-   "id": "availability",
-   "label": "Availability",
+   "id": "products_services",
+   "label": "Products and services",
    "count": 0,
    "sentiment": {
     "positive": 0,
@@ -37,8 +37,8 @@
    "top_themes": []
   },
   {
-   "id": "experience",
-   "label": "Experience",
+   "id": "price_value",
+   "label": "Price and value",
    "count": 0,
    "sentiment": {
     "positive": 0,
@@ -52,8 +52,8 @@
    "top_themes": []
   },
   {
-   "id": "data_intimacy",
-   "label": "Data intimacy",
+   "id": "understanding",
+   "label": "Consumer understanding",
    "count": 0,
    "sentiment": {
     "positive": 0,
@@ -67,8 +67,8 @@
    "top_themes": []
   },
   {
-   "id": "security",
-   "label": "Security",
+   "id": "support",
+   "label": "Consumer support",
    "count": 0,
    "sentiment": {
     "positive": 0,

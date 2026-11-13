@@ -689,3 +689,24 @@ THEMES = [
         "owner_label": "Compliance"
     }
 ]
+
+# Consumer Duty outcomes (Pass 2 section 6), in place of the oct13 trust pillars. The "pillar" field keeps its name.
+OUTCOMES = [
+    ("products_services", "Products and services"),
+    ("price_value", "Price and value"),
+    ("understanding", "Consumer understanding"),
+    ("support", "Consumer support"),
+]
+_OUTCOME_OF = {
+    **dict.fromkeys(["card_fees_charges", "fees_charges_bank", "rewards_value", "reward_redemption", "offers_deals",
+                     "deposits_rates", "consumer_duty_value", "mortgage_rate_switch"], "price_value"),
+    **dict.fromkeys(["product_advice", "statements_documents", "unsolicited_calls", "mis_selling",
+                     "card_variant_migration", "market_news"], "understanding"),
+    **dict.fromkeys(["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "online_banking",
+                     "card_application", "card_eligibility_upgrade", "card_limit", "loan_processing", "account_opening",
+                     "upi_failures", "merchant_pos", "atm_debit_card", "investments_wealth", "insurance_group",
+                     "trading_securities", "nri_forex", "app_praise", "card_dispatch", "branch_closure"],
+                    "products_services"),
+}
+for _t in THEMES:
+    _t["pillar"] = _OUTCOME_OF.get(_t["id"], "support")

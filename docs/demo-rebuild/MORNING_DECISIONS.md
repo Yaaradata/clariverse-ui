@@ -988,3 +988,16 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
   The rate is kept; the cap is raised with Ranjith.
 - **NW-D35 · Sizing (Pass 2 §14, applied here because the cohort sizes need it).** Retail customers 19 million;
   contacts in the window 8.5 million; Cora share 30% (unchanged); complaints 49,200 (unchanged).
+- **NW-D36 · Account tiers (Pass 2 §6).** Tiers read Select · Reward · Premier Select · Premier Reward, Premier rows
+  together (sample weights 55 / 27 / 10 / 8%, ASSUMPTION). The retention watchlist covers Reward and both Premier tiers;
+  owner "Premier banking managers" (owner key `rm`).
+- **NW-D37 · Consumer Duty outcomes (Pass 2 §6).** The four oct13 trust pillars are replaced by the four Consumer Duty
+  outcomes: Products and services · Price and value · Consumer understanding · Consumer support. Each theme is mapped
+  to one outcome in `taxonomy.py` (default Consumer support); the `pillar` field name stays.
+- **NW-D38 · Switching intent and journey stages (Pass 2 §6).** "Closure intent" reads "Switching intent" on screen
+  (keys stay `closure_intent`); stages Open · Activate · Everyday banking · Service requests · Disputes and fraud ·
+  Switch or close.
+- **NW-D39 · Market service lines (Pass 2 §7).** The promise list is NatWest's: Cora is available 24/7 · Report fraud in
+  the app in minutes · Switch to us in 7 days · Same-day Faster Payments · Mortgage decision in principle online, each
+  read against its themes; owners are the theme's product owners. Peers and brand gap stay as an accepted gap (to raise
+  with Ranjith).

@@ -2,8 +2,8 @@
  {
   "masked_id": "XXXX4821",
   "persona": "Persona 1",
-  "descriptor": "Private Banking relationship, 14 years, London",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 14 years, London",
+  "segment": "Premier Reward",
   "cohorts": [
    "priority_a",
    "uhni"
@@ -89,8 +89,8 @@
  {
   "masked_id": "XXXX2317",
   "persona": "Persona 2",
-  "descriptor": "Private Banking relationship, 9 years, Manchester",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 9 years, Manchester",
+  "segment": "Premier Reward",
   "cohorts": [
    "priority_a",
    "uhni"
@@ -132,7 +132,7 @@
   "masked_id": "XXXX3390",
   "persona": "Persona 3",
   "descriptor": "Premier relationship, 6 years, Edinburgh",
-  "segment": "Premier",
+  "segment": "Premier Select",
   "cohorts": [
    "priority_b",
    "hni"
@@ -173,8 +173,8 @@
  {
   "masked_id": "XXXX1576",
   "persona": "Persona 4",
-  "descriptor": "Private Banking relationship, 21 years, Glasgow",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 21 years, Glasgow",
+  "segment": "Premier Reward",
   "cohorts": [
    "priority_a",
    "uhni"
@@ -205,8 +205,8 @@
  {
   "masked_id": "XXXX5203",
   "persona": "Persona 5",
-  "descriptor": "Private Banking relationship, 4 years, Bristol",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 4 years, Bristol",
+  "segment": "Premier Reward",
   "cohorts": [
    "uhni"
   ],
@@ -234,7 +234,7 @@
   "masked_id": "XXXX2688",
   "persona": "Persona 6",
   "descriptor": "Premier relationship, 11 years, Belfast",
-  "segment": "Premier",
+  "segment": "Premier Select",
   "cohorts": [
    "priority_b",
    "hni"
@@ -273,8 +273,8 @@
  {
   "masked_id": "XXXX4077",
   "persona": "Persona 7",
-  "descriptor": "Private Banking relationship, 17 years, Leeds",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 17 years, Leeds",
+  "segment": "Premier Reward",
   "cohorts": [
    "priority_a",
    "uhni"
@@ -304,7 +304,7 @@
   "masked_id": "XXXX1942",
   "persona": "Persona 8",
   "descriptor": "Premier relationship, 8 years, Birmingham",
-  "segment": "Premier",
+  "segment": "Premier Select",
   "cohorts": [
    "hni"
   ],
@@ -332,8 +332,8 @@
  {
   "masked_id": "XXXX3815",
   "persona": "Persona 9",
-  "descriptor": "Private Banking relationship, 12 years, London",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 12 years, London",
+  "segment": "Premier Reward",
   "cohorts": [
    "priority_b",
    "uhni"
@@ -367,7 +367,7 @@
   "masked_id": "XXXX2950",
   "persona": "Persona 10",
   "descriptor": "Premier relationship, 3 years, Cardiff",
-  "segment": "Premier",
+  "segment": "Premier Select",
   "cohorts": [
    "hni"
   ],
@@ -396,8 +396,8 @@
  {
   "masked_id": "XXXX5566",
   "persona": "Persona 11",
-  "descriptor": "Private Banking relationship, 19 years, Aberdeen",
-  "segment": "Private",
+  "descriptor": "Premier relationship, 19 years, Aberdeen",
+  "segment": "Premier Reward",
   "cohorts": [
    "priority_a",
    "uhni"
@@ -426,7 +426,7 @@
   "masked_id": "XXXX1318",
   "persona": "Persona 12",
   "descriptor": "Premier relationship, 7 years, Brighton",
-  "segment": "Premier",
+  "segment": "Premier Select",
   "cohorts": [
    "priority_b",
    "hni"

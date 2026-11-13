@@ -832,7 +832,7 @@ function QuestionCards({ p }: { p: Period }) {
         accent={C.violet}
         icon={<Activity size={18} />}
         title="Are my customers happy?"
-        micro="Sentiment · Trust pillars · Top pain"
+        micro="Sentiment · Consumer Duty outcomes · Top pain"
         answer={`Net sentiment of credit card public voice is ${fmtSigned(m.net, "", 0)} (${fmtSigned(change, " pts", 0)} ${p.compare}), source-weighted. ${topPain ? `${topPain.label} draws the most negative posts.` : ""}`}
         headlineLabel="Net sentiment"
         headline={fmtSigned(m.net, "", 0)}
@@ -859,7 +859,7 @@ function QuestionCards({ p }: { p: Period }) {
             color: C.red,
           },
           {
-            label: "Closure intent",
+            label: "Switching intent",
             value: `${fmt(sv.closure.public_intent)} posts`,
             sub: "customers saying they will close or leave",
           },
@@ -1314,12 +1314,12 @@ export function Happy({ p }: { p: Period }) {
 
       <Tile
         id="happy-pillars"
-        title={titled("Themes by trust pillar", p)}
-        sub="Public voice about credit cards by trust pillar: items, net sentiment and the top themes in each."
+        title={titled("Themes by Consumer Duty outcome", p)}
+        sub="Public voice about credit cards by Consumer Duty outcome: items, net sentiment and the top themes in each."
         prov="public"
       >
         <Table
-          head={["Pillar", "Items", "Net sentiment", "Top themes"]}
+          head={["Outcome", "Items", "Net sentiment", "Top themes"]}
           align={["left", "right", "right", "left"]}
           rows={p.cards.pillars.map((x) => [
             x.label,
@@ -1691,7 +1691,7 @@ export function Service({ p }: { p: Period }) {
       >
         <Tile
           id="service-closure"
-          title={titled("Closure intent", p)}
+          title={titled("Switching intent", p)}
           sub="Customers saying they will close or leave."
           prov={["internal", "public"]}
           tone="red"

@@ -36,10 +36,10 @@ import {
 } from "./primitives";
 
 const PILLAR: Record<string, string> = {
-  availability: "Availability",
-  experience: "Experience",
-  data_intimacy: "Data intimacy",
-  security: "Security",
+  products_services: "Products and services",
+  price_value: "Price and value",
+  understanding: "Consumer understanding",
+  support: "Consumer support",
 };
 const BUSINESS: Record<string, string> = {
   retail_banking: "Retail banking",
@@ -273,7 +273,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         <Section n={3} title="Where">
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             <span style={{ fontSize: 14 }}>
-              Pillar: {PILLAR[t.pillar] ?? t.pillar}
+              Consumer Duty outcome: {PILLAR[t.pillar] ?? t.pillar}
             </span>
             <span style={{ fontSize: 14, color: C.textMut }}>·</span>
             <span style={{ fontSize: 14 }}>

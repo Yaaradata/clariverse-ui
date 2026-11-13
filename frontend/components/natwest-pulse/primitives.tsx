@@ -283,7 +283,7 @@ export const OWNER_LABEL: Record<string, string> = {
   fraud_cyber: "Fraud and Cyber",
   compliance: "Compliance",
   operations: "Operations",
-  rm: "Owner",
+  rm: "Premier banking managers",
   product: "Product",
   policy_credit: "Policy and Credit",
 };

@@ -342,7 +342,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <div style={PAIRS}>
         <Tile
           id="closure"
-          title="Closure intent"
+          title="Switching intent"
           sub="Customers saying they will close, or have closed, a card or account"
           prov={["public", "internal"]}
           tone="red"
@@ -355,7 +355,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             }}
           >
             <Kpi
-              label="Closure intent (public)"
+              label="Switching intent (public)"
               value={fmt(sig.closure_intent.count)}
               sub="posts and reviews"
               tone="red"

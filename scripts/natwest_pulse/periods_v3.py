@@ -61,6 +61,7 @@ from public_v3 import PRODUCTS as PUB_PRODUCTS  # noqa: E402
 from public_v3 import product_of  # noqa: E402
 import ombudsman_v3 as omb  # noqa: E402  (Ombudsman watch: snapshots of the complaint register)
 import v4_blocks as v4  # noqa: E402  (B11: V4 additions, from the same records)
+from taxonomy import OUTCOMES  # noqa: E402  (Consumer Duty outcomes, Pass 2)
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
@@ -767,9 +768,9 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
             "escalation_external": sum(1 for r in pr if r["escalation_intent"]),
             "negative_share": weighted_share(pr, lambda r: r["sentiment"] == "negative", W) if pr else None,
         })
-    # Themes by trust pillar (public).
+    # Themes by Consumer Duty outcome (public).
     pillars = []
-    for pid_, plabel in (("availability", "Availability"), ("experience", "Experience"), ("data_intimacy", "Data intimacy"), ("security", "Security")):
+    for pid_, plabel in OUTCOMES:
         xs = [r for r in prs if r.get("pillar") == pid_]
         tops = collections.Counter(r["themes"][0] for r in xs).most_common(3)
         pillars.append({"id": pid_, "label": plabel, "count": len(xs), "net": round(net(xs), 1) if xs else None,
@@ -777,7 +778,7 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
     # Where contacts come from: journey stage (internal).
     journey = []
     for st in JOURNEY_ORDER:
-        xs = [r for r in ivol if JOURNEY_STAGE.get(r["theme"], "Everyday use") == st]
+        xs = [r for r in ivol if JOURNEY_STAGE.get(r["theme"], "Everyday banking") == st]
         journey.append({"stage": st, "volume": wn(xs), "negative_share": pct(sum(r["w"] for r in xs if r["sentiment"] == "negative"), wn(xs)),
                         "repeat_share": pct(sum(r["w"] for r in xs if r.get("repeat")), wn(xs))})
     # Stores, one at a time: top complaints, feature requests, feedback on existing features.

@@ -38,65 +38,44 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-/** NatWest's stated promises, framed on the four trust pillars the bank uses publicly (availability, experience, data intimacy, security). */
+/** NatWest service lines (Pass 2 section 7), each on its Consumer Duty outcome; owners are the product owners. */
 const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
   {
-    promise: "Available when customers need it, around the clock",
-    pillar: "availability",
+    promise: "Cora is available 24/7",
+    pillar: "support",
     themes: [
+      "cora_unresolved",
+      "care_unreachable",
       "app_speed_crash",
       "login_mpin",
-      "care_unreachable",
       "online_banking",
-      "upi_failures",
+    ],
+  },
+  {
+    promise: "Report fraud in the app in minutes",
+    pillar: "support",
+    themes: [
+      "fraud_scam",
+      "unauthorised_txn",
+      "phishing",
+      "app_reimbursement",
       "account_freeze",
     ],
   },
   {
-    promise: "Effortless, one-click digital journeys",
-    pillar: "experience",
-    themes: [
-      "app_usability",
-      "new_app_release",
-      "device_security_block",
-      "card_application",
-    ],
+    promise: "Switch to us in 7 days",
+    pillar: "products_services",
+    themes: ["account_opening", "closure_requests", "kyc_updates"],
   },
   {
-    promise: "Transparent: customers can see where their request is",
-    pillar: "experience",
-    themes: [
-      "complaint_handling",
-      "refund_delay",
-      "failed_txn_reversal",
-      "card_dispatch",
-      "dispute_chargeback",
-    ],
+    promise: "Same-day Faster Payments",
+    pillar: "products_services",
+    themes: ["upi_failures", "failed_txn_reversal", "refund_delay"],
   },
   {
-    promise: "A bank that knows me: relevant offers, with consent",
-    pillar: "data_intimacy",
-    themes: [
-      "unsolicited_calls",
-      "mis_selling",
-      "kyc_updates",
-      "credit_report",
-    ],
-  },
-  {
-    promise: "Rewarding to hold: cards and benefits that keep their value",
-    pillar: "experience",
-    themes: [
-      "rewards_value",
-      "card_variant_migration",
-      "reward_redemption",
-      "card_fees_charges",
-    ],
-  },
-  {
-    promise: "Safe: security that protects without getting in the way",
-    pillar: "security",
-    themes: ["fraud_scam", "unauthorised_txn", "phishing", "recovery_conduct"],
+    promise: "Mortgage decision in principle online",
+    pillar: "products_services",
+    themes: ["loan_processing", "mortgage_rate_switch", "loan_servicing"],
   },
 ];
 const EXCLUDE = new Set([
@@ -442,8 +421,8 @@ export function MarketView({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          These paraphrase the bank&apos;s public trust pillars: availability,
-          experience, data intimacy and security.
+          NatWest service lines, each read against the public voice on its
+          themes. Owners are the product owners.
         </MutedNote>
       </Tile>
 
