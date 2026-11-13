@@ -905,3 +905,17 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
 - **NW-D07 · Removed screens** (cards drill, customer trail, pinned view) keep their folders and redirect home.
 - **NW-D08 · Shared HDFC data.** oct13 reads `data/out/app_jul_sep` and `data/seed/internal_v3`; copied, not moved.
 - **NW-D09 · Starling** appears only in the register's peer list (upper benchmark); banned elsewhere.
+- **NW-D10 · Internal layer rebuilt, screens re-bound.** The oct13 pipeline is built on HDFC's priority lists, RM alerts,
+  card categories and public-post themes; none has NatWest data. `scripts/natwest_pulse/seed_natwest.py` writes the
+  NatWest blocks (segments, channels, Cora leakage, Ombudsman states, Consumer Duty outcomes, brands, agents, ledger,
+  brief) for every window × brand into `data/out/natwest_pulse/natwest.json`. Each copied component keeps its role and
+  primitives and is re-bound to these blocks. `load.ts` changed only in its two data-folder names.
+- **NW-D11 · Upheld vs HL-19.** HL-19 expects 6–10% rejected; the brief's anchor is about 55% upheld. Brief wins.
+- **NW-D12 · Unused copied modules removed** from `scripts/natwest_pulse/` (HDFC seed, personas, classifier, periods,
+  walkthrough, batch tools) with the copied Indian seed files. Kept: normalise (UK sources, brand field), taxonomy (UK
+  themes), method (source weighting, for when the pull lands), seed_natwest, build_public, reconcile, volume validation.
+  An L2 aggregation step is still to build once the pull lands (build_public.py says so).
+- **NW-D13 · Windows.** This week 6–12 Nov; Last 4 weeks 16 Oct–12 Nov; Last 13 weeks 14 Aug–12 Nov. Deltas only for the
+  first two (the 13 weeks before 14 Aug fall outside the 1 Aug window).
+- **NW-D14 · Ombudsman states** are a stock as at the freeze; at-risk = awaiting a final response with 7 days or fewer
+  left (3 business days for payment services).

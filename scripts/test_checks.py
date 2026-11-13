@@ -446,10 +446,19 @@ def main() -> int:
     ind_lint = indusind_lint_fixtures(fails)
     ind_rec = indusind_reconcile_fixtures(fails)
     nw_lint = natwest_lint_fixtures(fails)
+    # NatWest reconcile fixtures (scripts/natwest_pulse/check_reconcile_v3.py), loaded by path: the HDFC module of the
+    # same name is already imported above.
+    import importlib.util  # noqa: PLC0415
+
+    spec = importlib.util.spec_from_file_location("nw_reconcile", ROOT / "scripts" / "natwest_pulse" / "check_reconcile_v3.py")
+    nw_rec_mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(nw_rec_mod)
+    nw_rec, nw_bad = nw_rec_mod.fixtures()
+    fails += nw_bad
     for f in fails:
         print("FAIL", f)
     print(f"test_checks: IndusInd {ind_lint} lint fixtures (26 rules), {ind_rec} reconcile fixtures")
-    print(f"test_checks: NatWest {nw_lint} lint fixtures")
+    print(f"test_checks: NatWest {nw_lint} lint fixtures, {nw_rec} reconcile fixtures")
     print(
         f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + len(LINT_MUST_PASS) + 1 + build_checks} "
         f"lint fixtures, {len(fails)} failure(s)"

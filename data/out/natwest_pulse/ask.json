@@ -1,216 +1,2481 @@
 {
- "prompts": [
-  {
-   "id": "md_desk",
-   "prompt": "What would reach the MD's desk this week if we did nothing?",
-   "keywords": [
-    "md",
-    "desk",
-    "nothing",
-    "reach",
-    "escalate",
-    "managing",
-    "director",
-    "mds"
-   ],
-   "answer": "Complaints closed without resolution: 633 public items, 190 with escalation language. Owner: CX.\nThe HDFC Bank app (all versions): 2,126 negative reviews in the window. Owner: Digital.\nThemes rising fastest:\n• Card fees and charges: 378 items, up 137% in the second half of the window vs the first; 30 name a regulator, court or ombudsman. Owner: Cards.\n• KYC, re-KYC and profile updates: 151 items, up 69% in the second half of the window vs the first; 7 name a regulator, court or ombudsman. Owner: Operations.",
-   "evidence": [
-    "x:2072884095181582607",
-    "reddit:comment:owas2mf",
-    "x:2089738829033046492",
-    "x:2085194811565596800"
-   ],
-   "links": [
-    {
-     "label": "Open the release pulse",
-     "href": "/hdfc-pulse/v2/signal/release-pulse"
+ "about": "Ask LisN answer bank: five questions per window and brand, generated from natwest.json. No model calls.",
+ "fallback": "I'd need your data for that. Here is what I'd look at: the cross-channel pulse, Cora leakage and the Ombudsman watch.",
+ "slices": {
+  "week|all": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the this week, 582,057 calls, 492,450 Cora conversations, 170,524 branch contacts and 3,483 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "582,057",
+       "15.5%",
+       "18.3%",
+       "65.2%"
+      ],
+      [
+       "Cora",
+       "492,450",
+       "11.3%",
+       "17.3%",
+       "43.0%"
+      ],
+      [
+       "Complaints",
+       "3,483",
+       "100.0%",
+       "12.0%",
+       "48.4%"
+      ],
+      [
+       "Branch",
+       "170,524",
+       "15.6%",
+       "18.2%",
+       "72.3%"
+      ]
+     ]
     },
-    {
-     "label": "Open the deliverables view",
-     "href": "/hdfc-pulse/v2/deliverables"
-    }
-   ]
-  },
-  {
-   "id": "io",
-   "prompt": "Which complaints are most likely to go to the Internal Ombudsman?",
-   "keywords": [
-    "internal",
-    "ombudsman",
-    "io",
-    "complaints",
-    "likely",
-    "climb",
-    "rbi",
-    "escalation"
-   ],
-   "answer": "Climb risk is highest where customers already use escalation language and repeat themselves:\n• Fraud and scam calls: 44.1% of 127 items carry escalation language; 33 say they have raised it before.\n• Unauthorised transactions: 33.3% of 45 items carry escalation language; 5 say they have raised it before.\n• Complaints closed without resolution: 30.0% of 633 items carry escalation language; 190 say they have raised it before.",
-   "evidence": [
-    "x:2074391302129782827",
-    "x:2082485955957866512",
-    "x:2072884095181582607"
-   ],
-   "links": [
-    {
-     "label": "See the escalation ladder",
-     "href": "/hdfc-pulse/v2/deliverables#ladder"
-    }
-   ]
-  },
-  {
-   "id": "seasonal",
-   "prompt": "Is the card fees and charges spike seasonal or new?",
-   "keywords": [
-    "seasonal",
-    "spike",
-    "new",
-    "trend",
-    "baseline",
-    "card",
-    "fees",
-    "and"
-   ],
-   "answer": "Card fees and charges: 378 items in the window, up 137% in the second half of the window vs the first. First heard in this window on 2026-07-01. The exports hold no history before July, so LisN shows the trend within the window and makes no baseline claim. Seasonal check: in discovery, using your history.",
-   "evidence": [
-    "x:2089738829033046492",
-    "x:2089760657738711093",
-    "reddit:1uz1ove"
-   ],
-   "links": [
-    {
-     "label": "Open Card fees and charges",
-     "href": "/hdfc-pulse/v2/signal/card_fees_charges"
-    }
-   ]
-  },
-  {
-   "id": "tat",
-   "prompt": "Where did we miss a TAT this week?",
-   "keywords": [
-    "tat",
-    "promise",
-    "break",
-    "yesterday",
-    "broke",
-    "turnaround",
-    "timeline",
-    "delay",
-    "week"
-   ],
-   "answer": "564 public items in the window describe a missed timeline. Most frequent: other requests (404), KYC and profile updates (35), refunds (31), card delivery (24). Stated TATs are checked against the bank's own commitments in discovery.",
-   "evidence": [
-    "reddit:1ve6mba",
-    "x:2085194811565596800",
-    "x:2101280013282906404"
-   ],
-   "links": [
-    {
-     "label": "Open the deliverables ledger",
-     "href": "/hdfc-pulse/v2/deliverables#ledger"
-    }
-   ]
-  },
-  {
-   "id": "cure",
-   "prompt": "Where did a proactive cure not land?",
-   "keywords": [
-    "cure",
-    "proactive",
-    "land",
-    "declined",
-    "failed",
-    "decline",
-    "blocked"
-   ],
-   "answer": "230 items follow a decline, failed payment or block that a proactive message, auto-reversal or unblock could have handled, and the customer still had to chase it. Leading areas: Login, MPIN and registration (48), Account debit freezes and blocks (37), General dissatisfaction (25).",
-   "evidence": [
-    "x:2092894433369055716",
-    "x:2084938740020228231",
-    "reddit:1wafopr"
-   ],
-   "links": [
-    {
-     "label": "See cure watch",
-     "href": "/hdfc-pulse/v2/deliverables#cure"
-    }
-   ]
-  },
-  {
-   "id": "product",
-   "prompt": "What should Product hear this week?",
-   "keywords": [
-    "product",
-    "hear",
-    "week",
-    "digital",
-    "feature",
-    "app",
-    "should"
-   ],
-   "answer": "Product and Digital should hear:\n• App speed, loading and crashes: 2,020 items\n• Login, MPIN and registration: 876 items\n• New app and update experience: 318 items\n• Investments, mutual funds and SmartWealth: 18 items\nTop feature asks from app reviews: the compulsory swipe option, choose sim while setting up upi, old version new version is useless, the option to view.",
-   "evidence": [
-    "x:2076346280796901876",
-    "x:2076346280796901876",
-    "playstore:com.hdfcbank.payzapp:7ca48c6e-5788-402f-a602-bf66d7a27a6d"
-   ],
-   "links": [
-    {
-     "label": "Who should hear what",
-     "href": "/hdfc-pulse/v2/head-cx#routing"
-    }
-   ]
-  },
-  {
-   "id": "release",
-   "prompt": "What are customers saying about the latest app release?",
-   "keywords": [
-    "app",
-    "release",
-    "latest",
-    "version",
-    "update",
-    "new",
-    "mobile",
-    "banking"
-   ],
-   "answer": "Release pulse for the HDFC Bank app, one store at a time: on the Play Store 55.6% of 5,000 window reviews are positive (4–5★); on the App Store 45.8% of 325. The fix list customers have written:\n• App speed, loading and crashes: 716 negative reviews\n• Login, MPIN and registration: 301 negative reviews\n• New app and update experience: 179 negative reviews\n• Customer care unreachable or unhelpful: 19 negative reviews",
-   "evidence": [
-    "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
-    "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda",
-    "appstore:6504402552:14596659417"
-   ],
-   "links": [
-    {
-     "label": "Open the app module",
-     "href": "/hdfc-pulse/v2/module/digital"
-    }
-   ]
-  },
-  {
-   "id": "replies",
-   "prompt": "Are we answering customers in public?",
-   "keywords": [
-    "reply",
-    "replies",
-    "respond",
-    "responded",
-    "answer",
-    "public",
-    "review",
-    "store"
-   ],
-   "answer": "On the Play Store the bank replied to 96.4% of 10,617 reviews in the window, with a median reply time of 10 minutes. But 87.6% of replies to negative reviews only redirect the customer to email, phone or chat rather than answering. 377 reviews still have no reply after 48 hours. X and App Store replies are not in this data.",
-   "evidence": [
-    "playstore:com.hdfcbank.android.now:0d1b523b-1886-46b0-9782-d1c4d9f3da1e",
-    "playstore:com.hdfcbank.android.now:ed3cb110-0cf3-4661-a845-f2c41e0d2eda"
-   ],
-   "links": [
-    {
-     "label": "See the numbers",
-     "href": "/hdfc-pulse/v2/mds-office#dials"
-    }
-   ]
-  }
- ],
- "fallback": "That needs your internal data. It's part of discovery."
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=week&b=all"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.5% of journeys Cora marked resolved came back within 7 days (46,934 calls, 1,211 complaints). Largest: App login and biometrics, 22.7%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "42,853",
+       "9,729",
+       "22.7%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "16,858",
+       "5,714",
+       "33.9%"
+      ],
+      [
+       "Mortgage rate switch",
+       "12,047",
+       "4,069",
+       "33.8%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "42,920",
+       "3,486",
+       "8.1%"
+      ],
+      [
+       "Card disputes and refunds",
+       "11,836",
+       "2,788",
+       "23.6%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=week&b=all"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 5,957 complaints await a final response, 162 of them within a week of the time limit; 188 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "5,769"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "83,525"
+      ],
+      [
+       "Eligible to refer",
+       "188"
+      ],
+      [
+       "Referred",
+       "5,874"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=week&b=all"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.8%); Financially vulnerable customers raise 14.3 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.0%",
+       "748"
+      ],
+      [
+       "Price and value",
+       "14.3%",
+       "404"
+      ],
+      [
+       "Consumer understanding",
+       "7.6%",
+       "395"
+      ],
+      [
+       "Consumer support",
+       "16.8%",
+       "1,936"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=week&b=all"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "Royal Bank of Scotland has the most complaints per 100,000 customers (18.2). Royal Bank of Scotland app 66% vs 48% overall (CMA, August 2026).",
+    "table": {
+     "head": [
+      "Brand",
+      "Complaints per 100k",
+      "Upheld",
+      "Cora leakage"
+     ],
+     "rows": [
+      [
+       "NatWest",
+       "17.4",
+       "54.3%",
+       "18.5%"
+      ],
+      [
+       "Royal Bank of Scotland",
+       "18.2",
+       "52.6%",
+       "18.5%"
+      ],
+      [
+       "Ulster Bank",
+       "15.9",
+       "53.7%",
+       "18.6%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=week"
+    },
+    "bound": [
+     "L3:brand.brands",
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "week|natwest": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the this week, 449,712 calls, 379,403 Cora conversations, 131,978 branch contacts and 2,690 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "449,712",
+       "15.5%",
+       "18.4%",
+       "65.2%"
+      ],
+      [
+       "Cora",
+       "379,403",
+       "11.2%",
+       "17.3%",
+       "43.0%"
+      ],
+      [
+       "Complaints",
+       "2,690",
+       "100.0%",
+       "12.2%",
+       "48.3%"
+      ],
+      [
+       "Branch",
+       "131,978",
+       "15.5%",
+       "18.3%",
+       "72.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=week&b=natwest"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.5% of journeys Cora marked resolved came back within 7 days (36,127 calls, 887 complaints). Largest: App login and biometrics, 22.9%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "31,454",
+       "7,209",
+       "22.9%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "12,976",
+       "4,441",
+       "34.2%"
+      ],
+      [
+       "Mortgage rate switch",
+       "9,405",
+       "3,176",
+       "33.8%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "33,195",
+       "2,711",
+       "8.2%"
+      ],
+      [
+       "Card disputes and refunds",
+       "9,256",
+       "2,207",
+       "23.8%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=week&b=natwest"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 4,587 complaints await a final response, 120 of them within a week of the time limit; 140 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "4,447"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "64,162"
+      ],
+      [
+       "Eligible to refer",
+       "140"
+      ],
+      [
+       "Referred",
+       "4,533"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=week&b=natwest"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.7%); Financially vulnerable customers raise 14.3 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "10.9%",
+       "583"
+      ],
+      [
+       "Price and value",
+       "14.3%",
+       "314"
+      ],
+      [
+       "Consumer understanding",
+       "7.6%",
+       "304"
+      ],
+      [
+       "Consumer support",
+       "16.7%",
+       "1,489"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=week&b=natwest"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=week"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "week|rbs": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the this week, 100,641 calls, 86,256 Cora conversations, 29,265 branch contacts and 618 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "100,641",
+       "15.7%",
+       "18.3%",
+       "65.1%"
+      ],
+      [
+       "Cora",
+       "86,256",
+       "11.7%",
+       "17.2%",
+       "43.5%"
+      ],
+      [
+       "Complaints",
+       "618",
+       "100.0%",
+       "11.3%",
+       "48.7%"
+      ],
+      [
+       "Branch",
+       "29,265",
+       "15.8%",
+       "18.1%",
+       "72.0%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=week&b=rbs"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.5% of journeys Cora marked resolved came back within 7 days (8,281 calls, 230 complaints). Largest: App login and biometrics, 22.1%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "9,158",
+       "2,024",
+       "22.1%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "2,952",
+       "951",
+       "32.2%"
+      ],
+      [
+       "Mortgage rate switch",
+       "2,023",
+       "678",
+       "33.5%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "7,399",
+       "591",
+       "8.0%"
+      ],
+      [
+       "App outages and errors",
+       "2,035",
+       "440",
+       "21.6%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=week&b=rbs"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 1,058 complaints await a final response, 30 of them within a week of the time limit; 37 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "1,021"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "15,014"
+      ],
+      [
+       "Eligible to refer",
+       "37"
+      ],
+      [
+       "Referred",
+       "1,056"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=week&b=rbs"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (17.0%); Financially vulnerable customers raise 16.2 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.3%",
+       "115"
+      ],
+      [
+       "Price and value",
+       "14.3%",
+       "76"
+      ],
+      [
+       "Consumer understanding",
+       "7.7%",
+       "62"
+      ],
+      [
+       "Consumer support",
+       "17.0%",
+       "365"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=week&b=rbs"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=week"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "week|ulster": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the this week, 31,704 calls, 26,791 Cora conversations, 9,281 branch contacts and 175 complaints. Repeat within 7 days is highest on branch. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "31,704",
+       "15.6%",
+       "18.1%",
+       "65.1%"
+      ],
+      [
+       "Cora",
+       "26,791",
+       "11.4%",
+       "17.2%",
+       "42.7%"
+      ],
+      [
+       "Complaints",
+       "175",
+       "100.0%",
+       "12.0%",
+       "49.7%"
+      ],
+      [
+       "Branch",
+       "9,281",
+       "15.7%",
+       "18.4%",
+       "71.7%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=week&b=ulster"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.6% of journeys Cora marked resolved came back within 7 days (2,526 calls, 94 complaints). Largest: App login and biometrics, 22.1%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "2,241",
+       "496",
+       "22.1%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "930",
+       "322",
+       "34.6%"
+      ],
+      [
+       "Mortgage rate switch",
+       "619",
+       "215",
+       "34.7%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "2,326",
+       "184",
+       "7.9%"
+      ],
+      [
+       "App outages and errors",
+       "648",
+       "158",
+       "24.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=week&b=ulster"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 312 complaints await a final response, 12 of them within a week of the time limit; 11 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "301"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "4,349"
+      ],
+      [
+       "Eligible to refer",
+       "11"
+      ],
+      [
+       "Referred",
+       "285"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=week&b=ulster"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (17.0%); Multi-product customers raise 12.5 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.1%",
+       "50"
+      ],
+      [
+       "Price and value",
+       "14.7%",
+       "14"
+      ],
+      [
+       "Consumer understanding",
+       "7.1%",
+       "29"
+      ],
+      [
+       "Consumer support",
+       "17.0%",
+       "82"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=week&b=ulster"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=week"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w4|all": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 4 weeks, 2,297,039 calls, 1,950,425 Cora conversations, 676,256 branch contacts and 13,835 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "2,297,039",
+       "15.6%",
+       "18.4%",
+       "65.1%"
+      ],
+      [
+       "Cora",
+       "1,950,425",
+       "11.4%",
+       "17.3%",
+       "43.1%"
+      ],
+      [
+       "Complaints",
+       "13,835",
+       "100.0%",
+       "12.2%",
+       "47.8%"
+      ],
+      [
+       "Branch",
+       "676,256",
+       "15.6%",
+       "18.2%",
+       "72.3%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w4&b=all"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.1% of journeys Cora marked resolved came back within 7 days (181,243 calls, 4,587 complaints). Largest: App login and biometrics, 20.3%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "155,192",
+       "31,517",
+       "20.3%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "78,089",
+       "25,097",
+       "32.1%"
+      ],
+      [
+       "Mortgage rate switch",
+       "44,545",
+       "14,920",
+       "33.5%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "170,059",
+       "14,119",
+       "8.3%"
+      ],
+      [
+       "Card disputes and refunds",
+       "47,942",
+       "11,183",
+       "23.3%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w4&b=all"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 5,957 complaints await a final response, 162 of them within a week of the time limit; 188 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "5,769"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "83,525"
+      ],
+      [
+       "Eligible to refer",
+       "188"
+      ],
+      [
+       "Referred",
+       "5,874"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w4&b=all"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.5%); Financially vulnerable customers raise 56.1 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.9%",
+       "3,166"
+      ],
+      [
+       "Price and value",
+       "14.5%",
+       "1,670"
+      ],
+      [
+       "Consumer understanding",
+       "7.7%",
+       "1,510"
+      ],
+      [
+       "Consumer support",
+       "16.5%",
+       "7,489"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w4&b=all"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "Royal Bank of Scotland has the most complaints per 100,000 customers (74.0). Royal Bank of Scotland app 66% vs 48% overall (CMA, August 2026).",
+    "table": {
+     "head": [
+      "Brand",
+      "Complaints per 100k",
+      "Upheld",
+      "Cora leakage"
+     ],
+     "rows": [
+      [
+       "NatWest",
+       "68.3",
+       "55.1%",
+       "18.1%"
+      ],
+      [
+       "Royal Bank of Scotland",
+       "74.0",
+       "54.9%",
+       "18.2%"
+      ],
+      [
+       "Ulster Bank",
+       "66.4",
+       "52.9%",
+       "18.1%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w4"
+    },
+    "bound": [
+     "L3:brand.brands",
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w4|natwest": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 4 weeks, 1,776,946 calls, 1,507,007 Cora conversations, 523,529 branch contacts and 10,590 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "1,776,946",
+       "15.6%",
+       "18.4%",
+       "65.2%"
+      ],
+      [
+       "Cora",
+       "1,507,007",
+       "11.4%",
+       "17.3%",
+       "43.1%"
+      ],
+      [
+       "Complaints",
+       "10,590",
+       "100.0%",
+       "12.3%",
+       "47.6%"
+      ],
+      [
+       "Branch",
+       "523,529",
+       "15.6%",
+       "18.2%",
+       "72.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w4&b=natwest"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.1% of journeys Cora marked resolved came back within 7 days (139,786 calls, 3,506 complaints). Largest: App login and biometrics, 20.3%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "116,361",
+       "23,588",
+       "20.3%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "60,418",
+       "19,442",
+       "32.2%"
+      ],
+      [
+       "Mortgage rate switch",
+       "34,721",
+       "11,672",
+       "33.6%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "131,851",
+       "10,957",
+       "8.3%"
+      ],
+      [
+       "Card disputes and refunds",
+       "37,411",
+       "8,768",
+       "23.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w4&b=natwest"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 4,587 complaints await a final response, 120 of them within a week of the time limit; 140 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "4,447"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "64,162"
+      ],
+      [
+       "Eligible to refer",
+       "140"
+      ],
+      [
+       "Referred",
+       "4,533"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w4&b=natwest"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.5%); Financially vulnerable customers raise 54.8 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.9%",
+       "2,439"
+      ],
+      [
+       "Price and value",
+       "14.5%",
+       "1,281"
+      ],
+      [
+       "Consumer understanding",
+       "7.7%",
+       "1,164"
+      ],
+      [
+       "Consumer support",
+       "16.5%",
+       "5,706"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w4&b=natwest"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w4"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w4|rbs": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 4 weeks, 394,515 calls, 336,729 Cora conversations, 115,452 branch contacts and 2,515 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "394,515",
+       "15.6%",
+       "18.3%",
+       "65.0%"
+      ],
+      [
+       "Cora",
+       "336,729",
+       "11.6%",
+       "17.3%",
+       "43.3%"
+      ],
+      [
+       "Complaints",
+       "2,515",
+       "100.0%",
+       "12.1%",
+       "48.6%"
+      ],
+      [
+       "Branch",
+       "115,452",
+       "15.7%",
+       "18.1%",
+       "72.3%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w4&b=rbs"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.2% of journeys Cora marked resolved came back within 7 days (31,593 calls, 818 complaints). Largest: App login and biometrics, 20.4%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "30,420",
+       "6,220",
+       "20.4%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "13,277",
+       "4,232",
+       "31.9%"
+      ],
+      [
+       "Mortgage rate switch",
+       "7,440",
+       "2,477",
+       "33.3%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "28,988",
+       "2,413",
+       "8.3%"
+      ],
+      [
+       "Card disputes and refunds",
+       "7,934",
+       "1,821",
+       "23.0%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w4&b=rbs"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 1,058 complaints await a final response, 30 of them within a week of the time limit; 37 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "1,021"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "15,014"
+      ],
+      [
+       "Eligible to refer",
+       "37"
+      ],
+      [
+       "Referred",
+       "1,056"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w4&b=rbs"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.6%); Financially vulnerable customers raise 65.9 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.9%",
+       "538"
+      ],
+      [
+       "Price and value",
+       "14.5%",
+       "323"
+      ],
+      [
+       "Consumer understanding",
+       "7.7%",
+       "254"
+      ],
+      [
+       "Consumer support",
+       "16.6%",
+       "1,400"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w4&b=rbs"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w4"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w4|ulster": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 4 weeks, 125,578 calls, 106,689 Cora conversations, 37,275 branch contacts and 730 complaints. Repeat within 7 days is highest on branch. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "125,578",
+       "15.7%",
+       "18.3%",
+       "65.2%"
+      ],
+      [
+       "Cora",
+       "106,689",
+       "11.6%",
+       "17.3%",
+       "43.0%"
+      ],
+      [
+       "Complaints",
+       "730",
+       "100.0%",
+       "11.6%",
+       "48.4%"
+      ],
+      [
+       "Branch",
+       "37,275",
+       "15.1%",
+       "18.4%",
+       "72.0%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w4&b=ulster"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "18.1% of journeys Cora marked resolved came back within 7 days (9,864 calls, 263 complaints). Largest: App login and biometrics, 20.3%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "8,411",
+       "1,709",
+       "20.3%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "4,394",
+       "1,423",
+       "32.4%"
+      ],
+      [
+       "Mortgage rate switch",
+       "2,384",
+       "771",
+       "32.3%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "9,220",
+       "749",
+       "8.1%"
+      ],
+      [
+       "Card disputes and refunds",
+       "2,597",
+       "594",
+       "22.9%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w4&b=ulster"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 312 complaints await a final response, 12 of them within a week of the time limit; 11 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "301"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "4,349"
+      ],
+      [
+       "Eligible to refer",
+       "11"
+      ],
+      [
+       "Referred",
+       "285"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w4&b=ulster"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.6%); Financially vulnerable customers raise 43.6 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "12.0%",
+       "189"
+      ],
+      [
+       "Price and value",
+       "14.7%",
+       "66"
+      ],
+      [
+       "Consumer understanding",
+       "7.5%",
+       "92"
+      ],
+      [
+       "Consumer support",
+       "16.6%",
+       "383"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w4&b=ulster"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w4"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w13|all": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 13 weeks, 7,184,511 calls, 6,127,955 Cora conversations, 2,086,477 branch contacts and 43,724 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "7,184,511",
+       "15.2%",
+       "18.3%",
+       "65.2%"
+      ],
+      [
+       "Cora",
+       "6,127,955",
+       "11.1%",
+       "17.3%",
+       "43.9%"
+      ],
+      [
+       "Complaints",
+       "43,724",
+       "100.0%",
+       "12.6%",
+       "47.4%"
+      ],
+      [
+       "Branch",
+       "2,086,477",
+       "14.9%",
+       "18.1%",
+       "72.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w13&b=all"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "17.0% of journeys Cora marked resolved came back within 7 days (538,098 calls, 14,231 complaints). Largest: App login and biometrics, 18.5%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "468,088",
+       "86,669",
+       "18.5%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "228,410",
+       "62,776",
+       "27.5%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "553,770",
+       "46,091",
+       "8.3%"
+      ],
+      [
+       "Card disputes and refunds",
+       "157,098",
+       "36,517",
+       "23.2%"
+      ],
+      [
+       "Mortgage rate switch",
+       "122,674",
+       "35,941",
+       "29.3%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w13&b=all"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 5,957 complaints await a final response, 162 of them within a week of the time limit; 188 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "5,769"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "83,525"
+      ],
+      [
+       "Eligible to refer",
+       "188"
+      ],
+      [
+       "Referred",
+       "5,874"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w13&b=all"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.1%); Financially vulnerable customers raise 173.9 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.3%",
+       "9,873"
+      ],
+      [
+       "Price and value",
+       "14.6%",
+       "5,484"
+      ],
+      [
+       "Consumer understanding",
+       "7.6%",
+       "4,964"
+      ],
+      [
+       "Consumer support",
+       "16.1%",
+       "23,403"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w13&b=all"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "Royal Bank of Scotland has the most complaints per 100,000 customers (230.0). Royal Bank of Scotland app 66% vs 48% overall (CMA, August 2026).",
+    "table": {
+     "head": [
+      "Brand",
+      "Complaints per 100k",
+      "Upheld",
+      "Cora leakage"
+     ],
+     "rows": [
+      [
+       "NatWest",
+       "216.9",
+       "55.1%",
+       "17.0%"
+      ],
+      [
+       "Royal Bank of Scotland",
+       "230.0",
+       "55.1%",
+       "17.0%"
+      ],
+      [
+       "Ulster Bank",
+       "207.4",
+       "54.9%",
+       "17.1%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w13"
+    },
+    "bound": [
+     "L3:brand.brands",
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w13|natwest": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 13 weeks, 5,565,849 calls, 4,744,591 Cora conversations, 1,616,842 branch contacts and 33,623 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "5,565,849",
+       "15.2%",
+       "18.3%",
+       "65.2%"
+      ],
+      [
+       "Cora",
+       "4,744,591",
+       "11.0%",
+       "17.3%",
+       "43.9%"
+      ],
+      [
+       "Complaints",
+       "33,623",
+       "100.0%",
+       "12.8%",
+       "47.2%"
+      ],
+      [
+       "Branch",
+       "1,616,842",
+       "14.9%",
+       "18.1%",
+       "72.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w13&b=natwest"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "17.0% of journeys Cora marked resolved came back within 7 days (416,479 calls, 10,860 complaints). Largest: App login and biometrics, 18.5%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "359,246",
+       "66,410",
+       "18.5%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "176,716",
+       "48,595",
+       "27.5%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "429,762",
+       "35,738",
+       "8.3%"
+      ],
+      [
+       "Card disputes and refunds",
+       "122,074",
+       "28,340",
+       "23.2%"
+      ],
+      [
+       "Mortgage rate switch",
+       "95,624",
+       "28,043",
+       "29.3%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w13&b=natwest"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 4,587 complaints await a final response, 120 of them within a week of the time limit; 140 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "4,447"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "64,162"
+      ],
+      [
+       "Eligible to refer",
+       "140"
+      ],
+      [
+       "Referred",
+       "4,533"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w13&b=natwest"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.1%); Financially vulnerable customers raise 172.1 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.3%",
+       "7,627"
+      ],
+      [
+       "Price and value",
+       "14.6%",
+       "4,234"
+      ],
+      [
+       "Consumer understanding",
+       "7.6%",
+       "3,829"
+      ],
+      [
+       "Consumer support",
+       "16.1%",
+       "17,933"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w13&b=natwest"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w13"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w13|rbs": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 13 weeks, 1,223,771 calls, 1,047,593 Cora conversations, 354,966 branch contacts and 7,820 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "1,223,771",
+       "15.2%",
+       "18.3%",
+       "65.1%"
+      ],
+      [
+       "Cora",
+       "1,047,593",
+       "11.1%",
+       "17.3%",
+       "43.9%"
+      ],
+      [
+       "Complaints",
+       "7,820",
+       "100.0%",
+       "11.8%",
+       "48.0%"
+      ],
+      [
+       "Branch",
+       "354,966",
+       "15.0%",
+       "18.1%",
+       "72.4%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w13&b=rbs"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "17.0% of journeys Cora marked resolved came back within 7 days (92,046 calls, 2,536 complaints). Largest: App login and biometrics, 18.5%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "83,257",
+       "15,426",
+       "18.5%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "38,953",
+       "10,719",
+       "27.5%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "93,694",
+       "7,861",
+       "8.4%"
+      ],
+      [
+       "Card disputes and refunds",
+       "26,430",
+       "6,177",
+       "23.4%"
+      ],
+      [
+       "Mortgage rate switch",
+       "20,473",
+       "5,987",
+       "29.2%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w13&b=rbs"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 1,058 complaints await a final response, 30 of them within a week of the time limit; 37 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "1,021"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "15,014"
+      ],
+      [
+       "Eligible to refer",
+       "37"
+      ],
+      [
+       "Referred",
+       "1,056"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w13&b=rbs"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.2%); Financially vulnerable customers raise 187.9 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.3%",
+       "1,713"
+      ],
+      [
+       "Price and value",
+       "14.6%",
+       "992"
+      ],
+      [
+       "Consumer understanding",
+       "7.7%",
+       "867"
+      ],
+      [
+       "Consumer support",
+       "16.2%",
+       "4,248"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w13&b=rbs"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w13"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ],
+  "w13|ulster": [
+   {
+    "id": "cross_channel",
+    "q": "Where is the customer experience leaking across channels?",
+    "answer": "In the last 13 weeks, 394,891 calls, 335,771 Cora conversations, 114,669 branch contacts and 2,281 complaints. Repeat within 7 days is highest on calls. Public data not yet loaded.",
+    "table": {
+     "head": [
+      "Channel",
+      "Volume",
+      "Negative",
+      "Repeat 7d",
+      "Resolved first time"
+     ],
+     "rows": [
+      [
+       "Calls",
+       "394,891",
+       "15.3%",
+       "18.3%",
+       "65.1%"
+      ],
+      [
+       "Cora",
+       "335,771",
+       "11.1%",
+       "17.3%",
+       "43.8%"
+      ],
+      [
+       "Complaints",
+       "2,281",
+       "100.0%",
+       "12.3%",
+       "47.5%"
+      ],
+      [
+       "Branch",
+       "114,669",
+       "14.8%",
+       "18.2%",
+       "72.3%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the cross-channel pulse",
+     "href": "/natwest-pulse/v1/satisfaction?w=w13&b=ulster"
+    },
+    "bound": [
+     "L3:channel.rows",
+     "L2:sources"
+    ]
+   },
+   {
+    "id": "cora_leakage",
+    "q": "Which Cora journeys come back as a call or complaint?",
+    "answer": "17.1% of journeys Cora marked resolved came back within 7 days (29,573 calls, 835 complaints). Largest: App login and biometrics, 18.9%.",
+    "table": {
+     "head": [
+      "Journey",
+      "Resolved by Cora",
+      "Back in 7 days",
+      "Leakage"
+     ],
+     "rows": [
+      [
+       "App login and biometrics",
+       "25,585",
+       "4,833",
+       "18.9%"
+      ],
+      [
+       "Faster Payments or Open Banking failure",
+       "12,741",
+       "3,462",
+       "27.2%"
+      ],
+      [
+       "Card frozen, lost or replaced",
+       "30,314",
+       "2,492",
+       "8.2%"
+      ],
+      [
+       "Card disputes and refunds",
+       "8,594",
+       "2,000",
+       "23.3%"
+      ],
+      [
+       "Mortgage rate switch",
+       "6,577",
+       "1,911",
+       "29.1%"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Cora leakage",
+     "href": "/natwest-pulse/v1/module/cora_digital?w=w13&b=ulster"
+    },
+    "bound": [
+     "L3:cora.journeys"
+    ]
+   },
+   {
+    "id": "fos_risk",
+    "q": "How many complaints could reach the Financial Ombudsman Service?",
+    "answer": "As at 12 Nov 2026, 23:59 GMT: 312 complaints await a final response, 12 of them within a week of the time limit; 11 are past it and eligible to refer. Eligibility and risk only; LisN does not predict who will refer.",
+    "table": {
+     "head": [
+      "State",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Within 8 weeks",
+       "301"
+      ],
+      [
+       "Final response issued, 6-month clock running",
+       "4,349"
+      ],
+      [
+       "Eligible to refer",
+       "11"
+      ],
+      [
+       "Referred",
+       "285"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open the Ombudsman watch",
+     "href": "/natwest-pulse/v1/service-promise?w=w13&b=ulster"
+    },
+    "bound": [
+     "L3:fos.states",
+     "REG-DISP-8W",
+     "REG-PSD-15",
+     "REG-FOS-6M"
+    ]
+   },
+   {
+    "id": "consumer_duty",
+    "q": "What is the Consumer Duty evidence by segment?",
+    "answer": "Consumer support has the highest negative share (16.1%); Financially vulnerable customers raise 156.4 complaints per 100,000 on it.",
+    "table": {
+     "head": [
+      "Outcome",
+      "Negative",
+      "Complaints"
+     ],
+     "rows": [
+      [
+       "Products and services",
+       "11.4%",
+       "533"
+      ],
+      [
+       "Price and value",
+       "14.7%",
+       "258"
+      ],
+      [
+       "Consumer understanding",
+       "7.6%",
+       "268"
+      ],
+      [
+       "Consumer support",
+       "16.1%",
+       "1,222"
+      ]
+     ]
+    },
+    "link": {
+     "label": "Open Consumer Duty outcomes",
+     "href": "/natwest-pulse/v1/priority?w=w13&b=ulster"
+    },
+    "bound": [
+     "L3:duty",
+     "REG-CD-OUTCOMES"
+    ]
+   },
+   {
+    "id": "brand_gap",
+    "q": "Where is the gap between our brands?",
+    "answer": "The brand lens compares all three brands; switch the brand filter to All brands.",
+    "link": {
+     "label": "Open the brand lens",
+     "href": "/natwest-pulse/v1/market?w=w13"
+    },
+    "bound": [
+     "REG-CMA-RBS-APP"
+    ]
+   }
+  ]
+ }
 }

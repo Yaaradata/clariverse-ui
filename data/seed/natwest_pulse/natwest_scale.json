@@ -1,0 +1,59 @@
+{
+ "seed": 20261112,
+ "anchors": {
+  "h1_complaints": 86498,
+  "per_1000_accounts": 2.74,
+  "upheld": 0.55,
+  "closed_3d": 0.48
+ },
+ "derived": {
+  "weekly_complaints": 3345.2,
+  "accounts": 31568613
+ },
+ "assumptions": {
+  "customers": 20000000,
+  "contacts_per_customer_year": {
+   "calls": 1.4,
+   "cora": 1.2,
+   "branch": 0.4
+  },
+  "brand_share": {
+   "natwest": 0.775,
+   "rbs": 0.17,
+   "ulster": 0.055
+  },
+  "segment_share": {
+   "everyday": 0.5,
+   "mortgage": 0.16,
+   "multi": 0.24,
+   "vulnerable": 0.1
+  },
+  "product_complaint_shape": {
+   "current_accounts": 0.34,
+   "payments_fraud": 0.22,
+   "cards": 0.17,
+   "mortgages": 0.1,
+   "loans": 0.08,
+   "savings": 0.07,
+   "cora_digital": 0.02
+  },
+  "app_claims_week": 700,
+  "fraud_alerts_week": 41000,
+  "ai_letter_share": 0.38
+ },
+ "ours": {
+  "complaints_per_half_year": 86438,
+  "per_1000_accounts_half_year": 2.74,
+  "upheld": 0.55,
+  "closed_3d": 0.476,
+  "contacts_week": 1245031,
+  "negative_share": 0.134,
+  "complaint_records": 122906
+ },
+ "events": [
+  "Faster Payments incident 23-25 Oct (contacts x3.2; Cora leakage x1.35 after)",
+  "Mortgage rate switch contacts rising from 28 Sep (fixed rates ending)",
+  "App login contacts up from 30 Oct after an app update (Royal Bank of Scotland x1.55)",
+  "Cora unresolved rising from 12 Oct; branch closure contacts x1.6 from 1 Oct"
+ ]
+}

@@ -1,0 +1,149 @@
+{
+ "about": "NatWest register (L1). Rules and public figures only; see scripts/natwest_pulse/build_public.py.",
+ "entries": [
+  {
+   "id": "REG-DISP-8W",
+   "label": "Final response within 8 weeks",
+   "value": "8 weeks",
+   "basis": "FCA complaint-handling rules (DISP): final response, or a holding reply, within 8 weeks of receipt",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-PSD-15",
+   "label": "Payment-services final response",
+   "value": "15 business days (35 in exceptional cases)",
+   "basis": "FCA DISP for payment-services complaints",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-FOS-6M",
+   "label": "Time to refer after a final response",
+   "value": "6 months",
+   "basis": "Customer may refer to the Financial Ombudsman Service within 6 months of the final response",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-PSR-APP",
+   "label": "Push payment scam reimbursement",
+   "value": "5 business days",
+   "basis": "PSR reimbursement requirement for authorised push payment scams",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-CD-OUTCOMES",
+   "label": "Consumer Duty outcomes",
+   "value": "Products and services · price and value · consumer understanding · consumer support",
+   "basis": "FCA Consumer Duty: the four outcomes",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-H1-COMPLAINTS",
+   "label": "Complaints, H1 2026",
+   "value": "86,498",
+   "basis": "NatWest Group complaints return, H1 2026",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-H1-PER1000",
+   "label": "Complaints per 1,000 accounts, H1 2026",
+   "value": "2.74",
+   "basis": "NatWest Group complaints return, H1 2026",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-H1-UPHELD",
+   "label": "Complaints upheld, H1 2026",
+   "value": "About 55%",
+   "basis": "NatWest Group complaints return, H1 2026",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-H1-3D",
+   "label": "Complaints closed within 3 days, H1 2026",
+   "value": "48%",
+   "basis": "NatWest Group complaints return, H1 2026",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-CMA-RBS-APP",
+   "label": "Royal Bank of Scotland: app vs overall service",
+   "value": "66% vs 48%",
+   "basis": "CMA service quality survey, August 2026 (measure definition pending research pack)",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  }
+ ],
+ "peers": [
+  {
+   "id": "lloyds",
+   "label": "Lloyds",
+   "benchmark": false,
+   "figures": null,
+   "status": "Pending research pack (CMA August 2026 survey, FCA H1 2026 returns)"
+  },
+  {
+   "id": "barclays",
+   "label": "Barclays",
+   "benchmark": false,
+   "figures": null,
+   "status": "Pending research pack (CMA August 2026 survey, FCA H1 2026 returns)"
+  },
+  {
+   "id": "hsbc_uk",
+   "label": "HSBC UK",
+   "benchmark": false,
+   "figures": null,
+   "status": "Pending research pack (CMA August 2026 survey, FCA H1 2026 returns)"
+  },
+  {
+   "id": "santander_uk",
+   "label": "Santander UK",
+   "benchmark": false,
+   "figures": null,
+   "status": "Pending research pack (CMA August 2026 survey, FCA H1 2026 returns)"
+  },
+  {
+   "id": "monzo",
+   "label": "Monzo",
+   "benchmark": true,
+   "figures": null,
+   "status": "Pending research pack (CMA August 2026 survey, FCA H1 2026 returns)"
+  },
+  {
+   "id": "starling",
+   "label": "Starling",
+   "benchmark": true,
+   "figures": null,
+   "status": "Pending research pack (CMA August 2026 survey, FCA H1 2026 returns)"
+  }
+ ]
+}

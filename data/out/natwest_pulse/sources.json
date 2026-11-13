@@ -1,0 +1,48 @@
+{
+ "provenance": "public",
+ "raw_dir": "data/raw/natwest",
+ "sources": [
+  {
+   "id": "appstore",
+   "label": "App Store (United Kingdom)",
+   "loaded": false,
+   "files": 0,
+   "items": 0
+  },
+  {
+   "id": "playstore",
+   "label": "Google Play",
+   "loaded": false,
+   "files": 0,
+   "items": 0
+  },
+  {
+   "id": "x",
+   "label": "X",
+   "loaded": false,
+   "files": 0,
+   "items": 0
+  },
+  {
+   "id": "reddit",
+   "label": "Reddit",
+   "loaded": false,
+   "files": 0,
+   "items": 0
+  },
+  {
+   "id": "trustpilot",
+   "label": "Trustpilot",
+   "loaded": false,
+   "files": 0,
+   "items": 0
+  },
+  {
+   "id": "mse",
+   "label": "MoneySavingExpert forum",
+   "loaded": false,
+   "files": 0,
+   "items": 0
+  }
+ ]
+}
