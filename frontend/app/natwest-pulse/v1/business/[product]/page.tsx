@@ -1,16 +1,11 @@
 import { notFound } from "next/navigation";
 
-import { ProductView } from "@/components/natwest-pulse/Brief";
+import { CardsView, ComingSoon } from "@/components/natwest-pulse/CardsView";
 import { Shell } from "@/components/natwest-pulse/Shell";
-import {
-  askFor,
-  frame,
-  nwDoc,
-  nwSlice,
-  type SearchParams,
-  selection,
-} from "@/lib/natwest-pulse/natwest";
+import { loadBundle } from "@/lib/natwest-pulse/load";
 import { PRODUCT_ORDER } from "@/lib/natwest-pulse/products";
+import { shellProps } from "@/lib/natwest-pulse/shellProps";
+import { sliceBundle } from "@/lib/natwest-pulse/slice";
 
 export const dynamicParams = false;
 
@@ -18,29 +13,30 @@ export function generateStaticParams() {
   return PRODUCT_ORDER.map((product) => ({ product }));
 }
 
-/** One product's own slice (HL-23), opened from the morning brief. */
 export default async function BusinessPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ product: string }>;
-  searchParams: SearchParams;
 }) {
   const { product } = await params;
-  const { w, b } = await selection(searchParams);
-  const p = nwSlice(w, b).products[product];
-  if (!p || !nwDoc().products.some((x) => x.id === product)) notFound();
-  const f = frame(w, b);
+  const b = loadBundle();
+  const row = b.products.rows.find((r) => r.id === product);
+  if (!row) notFound();
+  const cards = product === "cards";
+  const sliced = sliceBundle(b, { view: "business" });
   return (
     <Shell
-      frame={f}
-      ask={askFor(w, b)}
-      screen="home"
-      drill
-      title={p.label}
-      subtitle="Product view"
+      {...shellProps(b)}
+      periods={cards ? sliced.periods : undefined}
+      context={cards ? "Cards · Business view" : undefined}
+      title={`${row.label}: business view`}
+      subtitle={
+        cards
+          ? "For the head of Cards: the issue pulse, issues by category and what customers say, for the selected period."
+          : "Coming soon."
+      }
     >
-      <ProductView p={p} windowLabel={f.window.label} showDelta={w !== "w13"} />
+      {cards ? <CardsView b={sliced} /> : <ComingSoon label={row.label} />}
     </Shell>
   );
 }

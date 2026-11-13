@@ -925,3 +925,11 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
   each); `/role-based/natwest_bank` gets the same noindex header. No version tag on the card (HL-06).
 - **NW-D16 · Server components.** Three re-bound screens called client helpers from the server (500s); `vsPrev` moved
   to `lib/natwest-pulse/nw.ts` and the Ombudsman tint inlined.
+- **NW-D17 · Change of direction (Usha, 13 Nov).** The eight re-bound "gap" screens (1e45611) are withdrawn: the
+  NatWest screens are the `oct13` layout exactly, relabelled, on the Yaaralabs dark theme. Components, lib, routes,
+  pipeline and data are reset to the Step 2 `oct13` copy; NatWest content comes through the `oct13` data shape. The
+  NatWest industry card on `/role-based` (NW-D15) stays. NW-D10, D13, D14 and D16 (built for the gap screens) are void.
+- **NW-D18 · Teal reverted.** "No brand purple" means NatWest's colour; the Yaaralabs accent #bc6cd3 stays.
+- **NW-D19 · Period toggle.** Step 3.6 asks for This week · Last 4 weeks · Last 13 weeks; Step 5.1 and the layout rule
+  keep the `oct13` toggle (Morning brief · Last 7 days · Last 30 days · Full window). The layout rule wins; every
+  period is anchored to the freeze and the full window starts 1 Aug.

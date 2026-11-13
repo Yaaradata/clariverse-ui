@@ -1,37 +1,20 @@
-import { AgentOutcomes } from "@/components/natwest-pulse/ActionQueue";
-import { DeliverablesLedger } from "@/components/natwest-pulse/DeliverablesLedger";
+import { ActionQueue } from "@/components/natwest-pulse/ActionQueue";
 import { Shell } from "@/components/natwest-pulse/Shell";
-import { SCREEN_COPY } from "@/lib/natwest-pulse/copy";
-import {
-  askFor,
-  frame,
-  nwSlice,
-  registerEntries,
-  type SearchParams,
-  selection,
-} from "@/lib/natwest-pulse/natwest";
+import { loadBundle } from "@/lib/natwest-pulse/load";
+import { shellProps } from "@/lib/natwest-pulse/shellProps";
+import { sliceBundle } from "@/lib/natwest-pulse/slice";
 
-/** S-AGENTS AI-agent outcomes, with the timelines ledger. */
-export default async function AgentsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
-  const { w, b } = await selection(searchParams);
-  const s = nwSlice(w, b);
+export default function ActionQueuePage() {
+  const b = loadBundle();
   return (
     <Shell
-      frame={frame(w, b)}
-      ask={askFor(w, b)}
-      screen="agents"
-      title={SCREEN_COPY.agents.title}
-      subtitle={SCREEN_COPY.agents.subtitle}
+      {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
+      title="Action queue: escalation email triage"
+      subtitle="20 synthetic L2 escalation emails · Six buckets · Draft replies for a person to approve"
+      drill
     >
-      <AgentOutcomes agents={s.agents} />
-      <DeliverablesLedger
-        rows={s.ledger}
-        register={registerEntries(s.ledger.map((r) => r.register))}
-      />
+      <ActionQueue b={sliceBundle(b, { view: "action-queue" })} />
     </Shell>
   );
 }

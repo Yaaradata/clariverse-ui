@@ -1,45 +1,42 @@
 import { notFound } from "next/navigation";
+
 import { Shell } from "@/components/natwest-pulse/Shell";
 import { SignalDetail } from "@/components/natwest-pulse/SignalDetail";
-import { SCREEN_COPY } from "@/lib/natwest-pulse/copy";
-import {
-  askFor,
-  frame,
-  nwDoc,
-  nwSlice,
-  type SearchParams,
-  selection,
-} from "@/lib/natwest-pulse/natwest";
+import { loadBundle } from "@/lib/natwest-pulse/load";
+import { shellProps } from "@/lib/natwest-pulse/shellProps";
+import { sliceBundle } from "@/lib/natwest-pulse/slice";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return nwDoc().journeys.map((j) => ({ id: j.id }));
+  const b = loadBundle();
+  const ids = b.themes.themes.map((t) => ({ id: t.id }));
+  if (b.briefing.release_pulse) ids.push({ id: "release-pulse" });
+  return ids;
 }
 
-/** One Cora journey (the drill behind S-CORA). */
 export default async function SignalPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: SearchParams;
 }) {
   const { id } = await params;
-  const { w, b } = await selection(searchParams);
-  const j = nwSlice(w, b).journeys[id];
-  if (!j) notFound();
-  const product = nwDoc().products.find((p) => p.id === j.product);
+  const b = loadBundle();
+  const theme = b.themes.themes.find((t) => t.id === id);
+  if (!theme && !(id === "release-pulse" && b.briefing.release_pulse))
+    notFound();
+  const title = theme
+    ? theme.label
+    : "Release pulse: the fix list customers have written";
   return (
     <Shell
-      frame={frame(w, b)}
-      ask={askFor(w, b)}
-      screen="cora"
+      {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
+      title={title}
+      subtitle="Signal detail · What · Is it real · Where · How high · Who and what next · Evidence"
       drill
-      title={j.label}
-      subtitle={SCREEN_COPY.cora.title}
     >
-      <SignalDetail j={j} productLabel={product?.label ?? ""} />
+      <SignalDetail b={sliceBundle(b, { view: "signal", id })} id={id} />
     </Shell>
   );
 }

@@ -1,38 +1,20 @@
-import { DutyView } from "@/components/natwest-pulse/PriorityView";
+import { PriorityView } from "@/components/natwest-pulse/PriorityView";
 import { Shell } from "@/components/natwest-pulse/Shell";
-import { SCREEN_COPY } from "@/lib/natwest-pulse/copy";
-import {
-  askFor,
-  frame,
-  nwDoc,
-  nwSlice,
-  registerEntries,
-  type SearchParams,
-  selection,
-} from "@/lib/natwest-pulse/natwest";
+import { loadBundle } from "@/lib/natwest-pulse/load";
+import { shellProps } from "@/lib/natwest-pulse/shellProps";
+import { sliceBundle } from "@/lib/natwest-pulse/slice";
 
-/** S-DUTY Consumer Duty outcomes. */
-export default async function DutyPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
-  const { w, b } = await selection(searchParams);
-  const duty = nwSlice(w, b).duty;
-  const ids = [...new Set(duty.flatMap((o) => o.evidence))];
+export default function PriorityPage() {
+  const b = loadBundle();
   return (
     <Shell
-      frame={frame(w, b)}
-      ask={askFor(w, b)}
-      screen="duty"
-      title={SCREEN_COPY.duty.title}
-      subtitle={SCREEN_COPY.duty.subtitle}
+      {...shellProps(b)}
+      sampleRows={b.periods.scale.sample_rows}
+      title="Priority relationships"
+      subtitle="Cohorts from the bank's own tiers and lists · Open over 5 and 24 hours · RM notified · High-impact complaints"
+      drill
     >
-      <DutyView
-        duty={duty}
-        evidence={registerEntries(ids)}
-        segments={nwDoc().segments}
-      />
+      <PriorityView b={sliceBundle(b, { view: "priority" })} />
     </Shell>
   );
 }

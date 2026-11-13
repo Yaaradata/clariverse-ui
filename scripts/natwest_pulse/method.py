@@ -1,10 +1,11 @@
-"""Source-stratified method for trends, weekly series and mood (IndusInd pulse V2; the HDFC V2 method, re-read for the
-IndusInd pull).
+"""Source-stratified method for trends, weekly series and mood (review step 5, B7 §1 method fixes, §4.4).
 
-Collection, not customers, moves raw counts:
-  - The Play Store INDIE export holds the latest 5,000 reviews, so it starts on 10 August; it does not cover the window
-    and is not trend basis (counted in totals, left out of trends).
-  - Reddit came from two archive collectors over the whole window; it is one stream.
+Collection, not customers, moved the old figures:
+  - Reddit changed collector on 1 Sep (a new actor run, about four times the comments per post). It is split into two
+    streams at that date; neither covers the whole window, so neither is trend basis (the same start-marker rule as the
+    Play Store HDFC Bank app export that starts on 25 July).
+  - X was collected in weekly capped runs; the 20–27 Sep run hit its 1,000-item cap and has no items on 20–22 Sep, so X
+    is 43% of the last seven days against about 15% of the window.
 So every trend, weekly series and mood figure is source-weighted: a share (or net sentiment) is computed inside each
 stream, then streams are combined with fixed weights equal to their share of trend-basis items over the whole window.
 A burst or a gap in one source changes that source's own share, not its weight.
@@ -17,10 +18,15 @@ import datetime as dt
 
 W_START, W_END = "2026-07-01", "2026-09-28"
 H1_END = "2026-08-14"
+CAPPED_X_RUN = "WhOLVGQsnVo9H7jHb"
+REDDIT_SWITCH = "2026-09-01"
 
 
 # Streams whose collection does not span the window by design, whatever their first and last dates say.
-PARTIAL_BY_DESIGN: dict[str, str] = {}
+PARTIAL_BY_DESIGN = {
+    "reddit:jul_aug_collector": "Reddit collector replaced on 1 Sep (a few late items trickle in)",
+    "reddit:sep_collector": "Reddit's new collector starts on 1 Sep",
+}
 
 
 def stream_of(r) -> str:
@@ -28,6 +34,9 @@ def stream_of(r) -> str:
         return f"{r['source']}:{r['app_name']}"
     if r["source"] == "forum":
         return f"forum:{r['subreddit']}"
+    if r["source"] == "reddit":
+        # The September collector is a different instrument; its items never share a series with the earlier ones.
+        return "reddit:sep_collector" if r.get("collector") else "reddit:jul_aug_collector"
     return r["source"]
 
 

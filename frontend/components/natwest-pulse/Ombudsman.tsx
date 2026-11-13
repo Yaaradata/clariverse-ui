@@ -1,257 +1,398 @@
+"use client";
+
 /**
- * NatWest Group · S-FOS Ombudsman watch (re-bound from the Ombudsman watch): Financial Ombudsman Service states as at
- * the freeze, by theme, product and brand. Eligibility and risk, never prediction (HL-27). Every rule line comes from a
- * register entry. At-risk is a subset of complaints awaiting a final response.
+ * Ombudsman watch (docs/demo-rebuild/ombudsman_watch_design.md). Internal · illustrative. A snapshot of the complaint
+ * register as of the end of the selected period, compared with the end of the previous period; every figure comes from
+ * periods.json. Eligibility and risk only: LisN flags and recommends, people act, and nothing contacts a customer.
  */
 
-import { DEFINITIONS } from "@/lib/natwest-pulse/copy";
-import {
-  type FosBlock,
-  type FosRow,
-  fmtN,
-  fmtP,
-  type RegisterEntry,
-} from "@/lib/natwest-pulse/nw";
-import { C, Kpi, MONO, PAIRS, Table, Tile } from "./primitives";
+import { Info, Scale } from "lucide-react";
+import { fmt, fmtDateTime } from "@/lib/natwest-pulse/format";
+import type {
+  CardsOmbudsman,
+  OmbudsmanBlock,
+  OmbudsmanRisk,
+  Period,
+} from "@/lib/natwest-pulse/periods";
+import { Delta, Dial, titled } from "./Pulse";
+import { C, cols, MONO, MutedNote, Tile, tint } from "./primitives";
 
-const ROWS = 6;
+const pct = (a: number, b: number) => (b ? (100 * a) / b : null);
 
-/** A register entry as one line, its basis and source status behind an (i). */
-export function RegisterLine({ e }: { e: RegisterEntry }) {
-  const note = `${e.basis}. ${e.status}.`;
+/** A small stacked bar: on the brink, eligible (no reply) and unhappy with the reply. */
+function RiskBar({ r, max }: { r: OmbudsmanRisk; max: number }) {
+  const w = (n: number) => `${(100 * n) / (max || 1)}%`;
   return (
     <div
-      data-testid="register-line"
-      data-register={e.id}
       style={{
         display: "flex",
-        gap: 8,
-        alignItems: "baseline",
-        flexWrap: "wrap",
-        fontSize: 13.5,
-        color: C.textSec,
+        height: 8,
+        borderRadius: 999,
+        overflow: "hidden",
+        background: C.inner,
       }}
     >
-      <span style={{ color: C.text, fontWeight: 650 }}>{e.label}:</span>
-      <span style={{ fontFamily: MONO }}>{e.value}</span>
-      <span
-        title={note}
-        role="img"
-        aria-label={note}
-        style={{
-          fontSize: 11.5,
-          color: C.textMut,
-          border: `1px solid ${C.borderLight}`,
-          borderRadius: 999,
-          padding: "0 6px",
-          cursor: "help",
-        }}
-      >
-        i
-      </span>
+      <div style={{ width: w(r.brink), background: C.amber }} />
+      <div style={{ width: w(r.eligible), background: C.red }} />
+      <div style={{ width: w(r.unhappy), background: C.violet }} />
     </div>
   );
 }
 
-function StateTable({ rows, label }: { rows: FosRow[]; label: string }) {
-  const shown = rows.filter((r) => r.total > 0);
-  const body = (rs: FosRow[]) =>
-    rs.map((r) => [
-      <span key="l" style={{ color: C.text }}>
-        {r.label}
-      </span>,
-      <span key="w" style={{ fontFamily: MONO }}>
-        {fmtN(r.within)}
-      </span>,
+function RiskLegend() {
+  const dot = (color: string, label: string) => (
+    <span style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
       <span
-        key="a"
-        style={{ fontFamily: MONO, color: r.at_risk ? C.amber : C.textSec }}
-      >
-        {fmtN(r.at_risk)}
-      </span>,
-      <span
-        key="e"
-        style={{ fontFamily: MONO, color: r.eligible ? C.red : C.textSec }}
-      >
-        {fmtN(r.eligible)}
-      </span>,
-      <span key="c" style={{ fontFamily: MONO }}>
-        {fmtN(r.clock_running)}
-      </span>,
-      <span key="r" style={{ fontFamily: MONO }}>
-        {fmtN(r.referred)}
-      </span>,
-    ]);
-  const head = [
-    label,
-    "Within time",
-    "At risk",
-    "Eligible to refer",
-    "Clock running",
-    "Referred",
-  ];
-  const align: ("left" | "right")[] = [
-    "left",
-    "right",
-    "right",
-    "right",
-    "right",
-    "right",
-  ];
+        aria-hidden
+        style={{ width: 9, height: 9, borderRadius: 3, background: color }}
+      />
+      {label}
+    </span>
+  );
   return (
-    <>
-      <Table head={head} align={align} rows={body(shown.slice(0, ROWS))} />
-      {shown.length > ROWS ? (
-        <details>
-          <summary
-            style={{ cursor: "pointer", fontSize: 13.5, color: C.brandInk }}
+    <div
+      style={{
+        display: "flex",
+        gap: 12,
+        flexWrap: "wrap",
+        fontSize: 12,
+        color: C.textMut,
+      }}
+    >
+      {dot(C.amber, "On the brink")}
+      {dot(C.red, "Eligible, no reply")}
+      {dot(C.violet, "Unhappy with the reply")}
+    </div>
+  );
+}
+
+/** Split by business (MD view) or by category (Cards view): where the at-risk complaints come from. */
+function Split({
+  title,
+  info,
+  rows,
+}: {
+  title: string;
+  info: string;
+  rows: { id: string; label: string; r: OmbudsmanRisk }[];
+}) {
+  const max = Math.max(...rows.map((x) => x.r.at_risk), 1);
+  return (
+    <div
+      data-testid="ombudsman-split"
+      style={{ display: "flex", flexDirection: "column", gap: 8, minWidth: 0 }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          color: C.textMut,
+          textTransform: "uppercase",
+          letterSpacing: "0.05em",
+        }}
+      >
+        {title}
+        {/* The definitions and RBI rules stay reachable without taking room on the tile. */}
+        <span
+          role="img"
+          aria-label={info}
+          title={info}
+          style={{
+            display: "inline-flex",
+            marginLeft: 6,
+            cursor: "help",
+            verticalAlign: "-2px",
+          }}
+        >
+          <Info size={13} />
+        </span>
+      </div>
+      <RiskLegend />
+      {rows.map((x) => (
+        <div
+          key={x.id}
+          style={{
+            display: "grid",
+            gridTemplateColumns: "minmax(0, 1.3fr) minmax(0, 1fr) 42px",
+            gap: 10,
+            alignItems: "center",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 13.5,
+              color: C.textSec,
+              minWidth: 0,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
           >
-            Show all {shown.length}
-          </summary>
-          <div style={{ marginTop: 8 }}>
-            <Table head={head} align={align} rows={body(shown.slice(ROWS))} />
-          </div>
-        </details>
-      ) : null}
-    </>
+            {x.label}
+          </span>
+          <RiskBar r={x.r} max={max} />
+          <span
+            style={{
+              fontFamily: MONO,
+              fontSize: 13.5,
+              fontWeight: 700,
+              textAlign: "right",
+            }}
+          >
+            {fmt(x.r.at_risk)}
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
 
 export function OmbudsmanWatch({
-  fos,
-  rules,
-  windowLabel,
+  o,
+  p,
+  scope,
 }: {
-  fos: FosBlock;
-  rules: RegisterEntry[];
-  windowLabel: string;
+  o: OmbudsmanBlock | CardsOmbudsman;
+  p: Period;
+  scope: "bank" | "cards";
 }) {
-  const eligible = fos.states.find((s) => s.id === "eligible")?.count ?? 0;
-  const grid = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 200px), 1fr))",
-    gap: 10,
-  } as const;
+  const n = o.now;
+  const since = `since ${fmtDateTime(o.prev_as_of)}`;
+  const split =
+    scope === "bank"
+      ? o.by_business.map((x) => ({ id: x.id, label: x.label, r: x }))
+      : [...(o as CardsOmbudsman).categories]
+          .filter((c) => c.at_risk)
+          .sort((a, b) => b.at_risk - a.at_risk)
+          .map((c) => ({ id: c.id, label: c.label, r: c }));
   return (
-    <>
-      <Tile
-        title="Where complaints stand"
-        sub={`As at ${fos.as_at}`}
-        prov="internal"
-        tone={eligible > 0 ? "red" : undefined}
-        accent
+    <Tile
+      id="ombudsman-watch"
+      title={titled(
+        scope === "bank" ? "Ombudsman watch" : "Ombudsman watch: Cards",
+        p,
+      )}
+      sub={`Complaints eligible to approach the RBI Ombudsman, or close to it. As of ${fmtDateTime(o.as_of)}; changes ${since}.`}
+      prov="internal"
+      tone="red"
+    >
+      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <div
+          style={{
+            flex: "4 1 380px",
+            minWidth: 0,
+            background: C.cardAlt,
+            border: `1px solid ${C.border}`,
+            borderRadius: 12,
+            padding: "12px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: "16px 8px",
+              alignItems: "start",
+            }}
+          >
+            <Dial
+              value={pct(n.brink, n.open)}
+              color={C.amber}
+              big={fmt(n.brink)}
+              label="On the brink"
+              sub={
+                <>
+                  10 days or fewer left
+                  <br />
+                  <Delta n={o.delta.brink} label={since} goodDown />
+                </>
+              }
+            />
+            <Dial
+              value={pct(n.eligible, n.open)}
+              color={C.red}
+              big={fmt(n.eligible)}
+              label="Already eligible"
+              sub={
+                <>
+                  past day 30, no reply
+                  <br />
+                  <Delta n={o.delta.eligible} label={since} goodDown />
+                </>
+              }
+            />
+            <Dial
+              value={pct(n.unhappy, n.open)}
+              color={C.violet}
+              big={fmt(n.unhappy)}
+              label="Unhappy with the reply"
+              sub={
+                <>
+                  eligible at any point
+                  <br />
+                  <Delta n={o.delta.unhappy} label={since} goodDown />
+                </>
+              }
+            />
+            <Dial
+              value={pct(n.awaiting_io, n.open)}
+              color={C.cyan}
+              big={fmt(n.awaiting_io)}
+              label="Awaiting IO review"
+              sub={
+                <>
+                  rejection held for review
+                  <br />
+                  <Delta n={o.delta.awaiting_io} label={since} goodDown />
+                </>
+              }
+            />
+          </div>
+        </div>
+        <div
+          style={{
+            flex: "5 1 420px",
+            minWidth: 0,
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
+          }}
+        >
+          <Split
+            title={
+              scope === "bank" ? "At risk, by business" : "At risk, by category"
+            }
+            info={`On the brink: no reply yet and 10 days or fewer to the 30-day limit. Already eligible: past day 30 with no reply, within the 90 days to file. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
+            rows={split}
+          />
+        </div>
+      </div>
+    </Tile>
+  );
+}
+
+/** Cards: the ten at-risk complaints to call today, highest risk first. */
+export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
+  return (
+    <Tile
+      id="save-list"
+      title={titled("Save list: call today", p)}
+      sub={`The ${o.save_list.length} Cards complaints most at risk as of ${fmtDateTime(o.as_of)}, each with why and who owns it. Sample rows: these are from the rows kept for drill-down, and the counts above are bank scale. LisN recommends; people call.`}
+      prov="internal"
+      tone="red"
+    >
+      {/* Cards, not a table: each complaint's reason stays readable on a phone. */}
+      <ol
+        style={{
+          ...cols(2, 420, 10),
+          listStyle: "none",
+          margin: 0,
+          padding: 0,
+        }}
       >
-        <div data-testid="fos-states" style={grid}>
-          {fos.states.map((s) => {
-            const breach = s.id === "eligible" && s.count > 0;
-            return (
+        {o.save_list.map((r, i) => {
+          const color = r.state === "eligible" ? C.red : C.amber;
+          return (
+            <li
+              key={r.id}
+              data-testid="save-row"
+              style={{
+                background: C.cardAlt,
+                border: `1px solid ${C.border}`,
+                borderLeft: `3px solid ${color}`,
+                borderRadius: 10,
+                padding: "10px 12px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 5,
+                minWidth: 0,
+              }}
+            >
               <div
-                key={s.id}
                 style={{
-                  background: breach
-                    ? `color-mix(in srgb, ${C.red} 6%, transparent)`
-                    : C.cardAlt,
-                  border: `1px solid ${breach ? `color-mix(in srgb, ${C.red} 35%, transparent)` : C.border}`,
-                  borderRadius: 10,
-                  padding: "10px 12px",
-                  minWidth: 0,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  alignItems: "baseline",
                 }}
               >
-                <div style={{ fontSize: 12.5, color: C.textMut }}>
-                  {s.label}
-                </div>
-                <div
-                  style={{
-                    fontFamily: MONO,
-                    fontSize: 24,
-                    fontWeight: 800,
-                    color: breach ? C.red : C.text,
-                  }}
-                >
-                  {fmtN(s.count)}
-                </div>
-                <div style={{ fontSize: 12.5, color: C.textSec }}>{s.sub}</div>
+                <span style={{ fontFamily: MONO, fontSize: 13 }}>
+                  {i + 1}. {r.id}{" "}
+                  <span style={{ color: C.textMut }}>· {r.customer}</span>
+                </span>
+                <strong style={{ color, whiteSpace: "nowrap", fontSize: 13.5 }}>
+                  {r.state === "eligible"
+                    ? "Eligible"
+                    : `${r.days_left} day${r.days_left === 1 ? "" : "s"} left`}
+                </strong>
               </div>
-            );
-          })}
-        </div>
-        <div style={grid}>
-          <Kpi
-            label="Awaiting final response"
-            value={fmtN(fos.pending)}
-            sub="Within time plus eligible"
-          />
-          <Kpi
-            label="At risk"
-            value={fmtN(fos.at_risk)}
-            sub="Subset of awaiting; 7 days or fewer"
-            tone={fos.at_risk ? "amber" : undefined}
-          />
-          <Kpi
-            label="Payment services awaiting"
-            value={fmtN(fos.psd_pending)}
-            sub="15 business days rule"
-          />
-        </div>
-        <div style={{ fontSize: 12.5, color: C.textMut, lineHeight: 1.5 }}>
-          Eligibility and risk only; LisN does not predict who will refer. At
-          risk: {DEFINITIONS.at_risk}
-        </div>
-      </Tile>
-      <div style={PAIRS}>
-        <Tile title="The rules applied" sub="From the register" prov="public">
-          {rules.map((e) => (
-            <RegisterLine key={e.id} e={e} />
-          ))}
-          <div style={{ fontSize: 12.5, color: C.textMut }}>
-            Source citations pending the research pack.
-          </div>
-        </Tile>
-        <Tile
-          title={`Flows, ${windowLabel.toLowerCase()}`}
-          sub="Received, answered, referred"
-          prov="internal"
-        >
-          <div style={grid}>
-            <Kpi
-              label="Received"
-              value={fmtN(fos.flows.received)}
-              sub="Complaints"
-            />
-            <Kpi
-              label="Final responses"
-              value={fmtN(fos.flows.final_responses)}
-              sub={`${fmtP(fos.flows.on_time_pct)} within the limit`}
-            />
-            <Kpi
-              label="Referred"
-              value={fmtN(fos.flows.referred)}
-              sub="To the Ombudsman Service"
-            />
-          </div>
-        </Tile>
-      </div>
-      <Tile
-        title="By theme"
-        sub="Ordered by eligible and at risk"
-        prov="internal"
-      >
-        <StateTable rows={fos.by_theme} label="Theme" />
-      </Tile>
-      <div style={PAIRS}>
-        <Tile title="By product" sub="Same states, by product" prov="internal">
-          <StateTable rows={fos.by_product} label="Product" />
-        </Tile>
-        <Tile title="By brand" sub="Same states, by brand" prov="internal">
-          {fos.by_brand.length > 1 ? (
-            <StateTable rows={fos.by_brand} label="Brand" />
-          ) : (
-            <div style={{ fontSize: 14, color: C.textSec }}>
-              One brand selected. Choose All brands to compare.
-            </div>
-          )}
-        </Tile>
-      </div>
-    </>
+              <div style={{ fontSize: 14, fontWeight: 650 }}>
+                {r.category}
+                <span style={{ fontWeight: 400, color: C.textMut }}>
+                  {" "}
+                  · {r.issue}
+                </span>
+              </div>
+              <div style={{ fontSize: 13, color: C.textSec, lineHeight: 1.45 }}>
+                {r.reason}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexWrap: "wrap",
+                  fontSize: 12.5,
+                  color: C.textMut,
+                }}
+              >
+                <span>
+                  Owner: <strong style={{ color: C.text }}>{r.owner}</strong>
+                </span>
+                {r.lists.length ? <span>· {r.lists.join(", ")}</span> : null}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <MutedNote>
+        Ordered by a points score from signals LisN already holds: days to the
+        limit or eligibility, an unhappy reply, repeat contacts, channels used,
+        escalation language, the bank&apos;s lists and a public post that
+        reached the social inbox. The score orders the list; it is not a
+        probability. Owners are roles. IO timeline: confirm with the bank.
+      </MutedNote>
+    </Tile>
+  );
+}
+
+/** A pill for the issues accordion: at-risk complaints in the category or subcategory. */
+export function RiskPill({ r }: { r?: OmbudsmanRisk }) {
+  if (!r || !r.at_risk) return null;
+  const hot = r.eligible + r.unhappy > 0;
+  const color = hot ? C.red : C.amber;
+  return (
+    <span
+      data-testid="ombudsman-pill"
+      title={`Ombudsman risk: ${r.at_risk} at risk (${r.brink} on the brink, ${r.eligible} eligible with no reply, ${r.unhappy} unhappy with the reply)`}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 4,
+        fontSize: 11.5,
+        fontWeight: 700,
+        color,
+        background: tint(color, 0.1),
+        border: `1px solid ${tint(color, 0.35)}`,
+        borderRadius: 999,
+        padding: "1px 7px",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <Scale size={11} style={{ flexShrink: 0 }} />
+      {r.at_risk} at risk
+    </span>
   );
 }

@@ -1,37 +1,181 @@
 "use client";
 
 /**
- * Ask LisN, the bar at the foot of every screen (re-bound from oct13). Five suggested questions for the selected
- * window and brand; a typed question goes to the closest one, otherwise the fallback. Answers come from the answer
- * bank only. No model call. The page keeps bottom padding so the bar never covers content (HL-26).
+ * Ask LisN, AI-first (30 Sep review, K5): a pinned question bar on every screen. On focus it offers about ten
+ * questions for the current view and the recent ones. A suggested question is answered from the page's own period
+ * figures (lib/hdfc-v3/askAnswers.ts): a short answer and a small table, tagged as precomputed. No live model call.
+ * An answer can be pinned to "My view" for the session.
  */
 
-import { Send, Sparkles, X } from "lucide-react";
+import { Lock, Pin, Send, Sparkles, X } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
-import type { AskQA } from "@/lib/natwest-pulse/nw";
-import { AnswerBody, closest } from "./AskLisN";
-import { C, tint } from "./primitives";
+import {
+  type AskQA,
+  type AskScope,
+  cardsQuestions,
+  mdQuestions,
+} from "@/lib/natwest-pulse/askAnswers";
+import { addRecent, pin, useAskSession } from "@/lib/natwest-pulse/askSession";
+import {
+  PERIOD_IDS,
+  type PeriodId,
+  type PeriodsFile,
+} from "@/lib/natwest-pulse/periods";
+import type { AskFile } from "@/lib/natwest-pulse/types";
+import { matchPrompt } from "./AskLisN";
+import { C, MONO, tint } from "./primitives";
+
+const MY_VIEW = "/natwest-pulse/v1/my-view";
+
+const words = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, " ")
+    .split(/\s+/)
+    .filter((w) => w.length > 3);
+
+/** The suggested question closest to what was typed, if any shares two or more words with it. */
+function closest(q: string, qs: AskQA[]): AskQA | null {
+  const t = new Set(words(q));
+  let best: AskQA | null = null;
+  let score = 1;
+  for (const x of qs) {
+    const n = words(x.q).filter((w) => t.has(w)).length;
+    if (n > score) {
+      score = n;
+      best = x;
+    }
+  }
+  return best;
+}
+
+export function AnswerBody({ a }: { a: AskQA }) {
+  return (
+    <>
+      <div
+        style={{
+          fontSize: 14.5,
+          lineHeight: 1.55,
+          color: a.denied ? C.amber : C.text,
+          display: "flex",
+          gap: 8,
+          alignItems: "flex-start",
+          whiteSpace: "pre-line",
+        }}
+      >
+        {a.denied ? (
+          <Lock size={16} style={{ flexShrink: 0, marginTop: 3 }} />
+        ) : null}
+        <span>{a.answer}</span>
+      </div>
+      {a.table?.rows.length ? (
+        <div style={{ overflowX: "auto" }}>
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: 13,
+            }}
+          >
+            <thead>
+              <tr>
+                {a.table.head.map((h, i) => (
+                  <th
+                    key={h}
+                    style={{
+                      textAlign: i ? "right" : "left",
+                      color: C.textMut,
+                      fontWeight: 700,
+                      fontSize: 12,
+                      padding: "4px 8px",
+                      borderBottom: `1px solid ${C.border}`,
+                    }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {a.table.rows.map((r) => (
+                <tr key={r.join("|")}>
+                  {r.map((cell, i) => (
+                    <td
+                      key={`${a.table?.head[i]}`}
+                      style={{
+                        textAlign: i ? "right" : "left",
+                        fontFamily:
+                          i && /^[\d−+—]/.test(cell) ? MONO : undefined,
+                        padding: "5px 8px",
+                        borderBottom: `1px solid ${C.border}`,
+                        color: C.textSec,
+                        verticalAlign: "top",
+                      }}
+                    >
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+    </>
+  );
+}
 
 export function AskBar({
-  qa,
-  fallback,
-  context,
+  ask,
+  periods,
   open,
   setOpen,
 }: {
-  qa: AskQA[];
-  fallback: string;
-  context: string;
+  ask: AskFile;
+  periods?: PeriodsFile;
   open: boolean;
   setOpen: (v: boolean) => void;
 }) {
+  const sp = useSearchParams();
+  const pathname = usePathname() ?? "";
+  const session = useAskSession();
   const input = useRef<HTMLInputElement>(null);
   const [q, setQ] = useState("");
   const [shown, setShown] = useState<{ q: string; a: AskQA | null } | null>(
     null,
   );
+
+  const pid = sp?.get("period") as PeriodId | null;
+  const period = periods
+    ? periods.periods[pid && PERIOD_IDS.includes(pid) ? pid : periods.default]
+    : null;
+  const scope: AskScope | null = period?.cards?.internal
+    ? "cards"
+    : period?.customer_pulse
+      ? "md"
+      : null;
+  const viewLabel =
+    scope === "cards"
+      ? "Cards business view"
+      : scope === "md"
+        ? "MD's office / Head of CX"
+        : "Full window";
+
+  const suggestions: AskQA[] = useMemo(() => {
+    if (period && scope === "cards") return cardsQuestions(period);
+    if (period && scope === "md") return mdQuestions(period);
+    // Pages without period figures: the questions precomputed for the full window.
+    return ask.prompts.slice(0, 10).map((x) => ({
+      id: x.id,
+      q: x.prompt,
+      answer: x.answer,
+      link: x.links[0],
+    }));
+  }, [period, scope, ask]);
 
   useEffect(() => {
     if (open) input.current?.focus();
@@ -47,13 +191,27 @@ export function AskBar({
   const answer = (text: string) => {
     const t = text.trim();
     if (!t) return;
-    const a = qa.find((x) => x.q === t) ?? closest(t, qa);
+    let a: AskQA | null =
+      suggestions.find((x) => x.q === t) ?? closest(t, suggestions);
+    if (!a) {
+      const old = matchPrompt(t, ask.prompts);
+      if (old)
+        a = {
+          id: old.id,
+          q: old.prompt,
+          answer: old.answer,
+          link: old.links[0],
+        };
+    }
     setShown({ q: t, a });
+    addRecent(a?.q ?? t);
     setQ("");
     setOpen(true);
   };
 
   const a = shown?.a ?? null;
+  const pinnedKey = a ? `${a.id}:${period?.label ?? viewLabel}` : "";
+  const isPinned = session.pinned.some((x) => x.key === pinnedKey);
   const chip = {
     textAlign: "left" as const,
     background: C.cardAlt,
@@ -65,43 +223,121 @@ export function AskBar({
     cursor: "pointer",
     lineHeight: 1.35,
   };
+  const label = {
+    fontSize: 11.5,
+    fontWeight: 800,
+    color: C.textMut,
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.08em",
+  };
 
   return (
     <>
-      {open ? (
-        <button
-          type="button"
-          aria-label="Close Ask LisN"
-          onClick={() => setOpen(false)}
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 48,
-            background: "rgba(0,0,0,0.28)",
-            border: "none",
-          }}
-        />
-      ) : null}
+      {open && typeof document !== "undefined"
+        ? createPortal(
+            <button
+              type="button"
+              aria-label="Close Ask LisN"
+              onClick={() => setOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 9, // under the sticky header (z 10), so the bar and its panel stay above it
+                background: "rgba(0,0,0,0.28)",
+                border: "none",
+              }}
+            />,
+            document.body,
+          )
+        : null}
       <div
         data-testid="ask-bar"
         style={{
-          position: "fixed",
-          left: "50%",
-          bottom: 14,
-          transform: "translateX(-50%)",
-          width: "min(820px, calc(100vw - 28px))",
+          // In the sticky header, under the title line (Karthik, 7 Oct): always visible while scrolling.
+          position: "relative",
+          width: "100%",
+          maxWidth: 900,
+          margin: "0 auto",
           zIndex: 50,
-          display: "flex",
-          flexDirection: "column",
-          gap: 8,
         }}
       >
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            answer(q);
+          }}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            background: "#ffffff",
+            border: `1.5px solid ${C.brand}`,
+            borderRadius: 999,
+            padding: "5px 5px 5px 14px",
+            boxShadow: `0 4px 18px ${tint(C.brand, 0.25)}`,
+          }}
+        >
+          <Sparkles size={18} color="#6d28d9" style={{ flexShrink: 0 }} />
+          <input
+            ref={input}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            onFocus={() => setOpen(true)}
+            aria-label="Ask LisN about your business"
+            placeholder="Ask LisN about your business"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              background: "transparent",
+              border: "none",
+              outline: "none",
+              color: "#111827",
+              fontSize: 15,
+              padding: "4px 0",
+            }}
+          />
+          {pathname !== MY_VIEW && session.pinned.length ? (
+            <Link
+              href={MY_VIEW}
+              style={{
+                fontSize: 12.5,
+                color: C.brandInk,
+                whiteSpace: "nowrap",
+                textDecoration: "none",
+              }}
+            >
+              My view ({session.pinned.length})
+            </Link>
+          ) : null}
+          <button
+            type="submit"
+            aria-label="Ask"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: 999,
+              border: "none",
+              background: C.brand,
+              color: "#fff",
+              display: "grid",
+              placeItems: "center",
+              cursor: "pointer",
+              flexShrink: 0,
+            }}
+          >
+            <Send size={17} />
+          </button>
+        </form>
         {open ? (
           <div
             role="dialog"
             aria-label="Ask LisN"
             data-testid="ask-panel"
             style={{
+              position: "absolute",
+              top: "calc(100% + 8px)",
+              left: 0,
+              right: 0,
               background: C.card,
               border: `1px solid ${tint(C.brand, 0.4)}`,
               borderRadius: 16,
@@ -134,7 +370,8 @@ export function AskBar({
                 <span
                   style={{ fontWeight: 400, color: C.textMut, fontSize: 13 }}
                 >
-                  · {context}
+                  · {viewLabel}
+                  {period ? ` · ${period.label}` : ""}
                 </span>
               </strong>
               <button
@@ -152,12 +389,13 @@ export function AskBar({
                 <X size={18} />
               </button>
             </div>
+
             {shown ? (
               <div
                 data-testid="ask-answer"
                 style={{
                   background: C.cardAlt,
-                  border: `1px solid ${C.border}`,
+                  border: `1px solid ${a?.denied ? tint(C.amber, 0.5) : C.border}`,
                   borderRadius: 12,
                   padding: "12px 14px",
                   display: "flex",
@@ -175,7 +413,7 @@ export function AskBar({
                   <AnswerBody a={a} />
                 ) : (
                   <span style={{ fontSize: 14, color: C.textSec }}>
-                    {fallback}
+                    {ask.fallback}
                   </span>
                 )}
                 <div
@@ -188,6 +426,37 @@ export function AskBar({
                     color: C.textMut,
                   }}
                 >
+                  {a && !a.denied ? (
+                    <button
+                      type="button"
+                      data-testid="pin-answer"
+                      disabled={isPinned}
+                      onClick={() =>
+                        pin(a, period?.label ?? viewLabel, viewLabel)
+                      }
+                      style={{
+                        display: "inline-flex",
+                        gap: 5,
+                        alignItems: "center",
+                        background: isPinned ? "transparent" : C.brand,
+                        color: isPinned ? C.textSec : "#fff",
+                        border: `1px solid ${isPinned ? C.border : C.brand}`,
+                        borderRadius: 8,
+                        padding: "4px 10px",
+                        fontSize: 12.5,
+                        fontWeight: 700,
+                        cursor: isPinned ? "default" : "pointer",
+                      }}
+                    >
+                      <Pin size={13} />{" "}
+                      {isPinned ? "Pinned to my view" : "Pin to my view"}
+                    </button>
+                  ) : null}
+                  {isPinned ? (
+                    <Link href={MY_VIEW} style={{ color: C.brandInk }}>
+                      Open My view
+                    </Link>
+                  ) : null}
                   {a?.link ? (
                     <Link
                       href={a.link.href}
@@ -197,93 +466,59 @@ export function AskBar({
                       {a.link.label}
                     </Link>
                   ) : null}
-                  <span>
-                    Precomputed from this view&apos;s figures; no model call.
-                  </span>
+                  {a?.denied ? null : (
+                    <span>
+                      Precomputed from this view&apos;s data
+                      {period ? ` for ${period.label.toLowerCase()}` : ""}; no
+                      live model call.
+                    </span>
+                  )}
                 </div>
               </div>
             ) : null}
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-              <span
-                style={{
-                  fontSize: 11.5,
-                  fontWeight: 800,
-                  color: C.textMut,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.08em",
-                }}
-              >
-                Suggested
-              </span>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
-                {qa.map((x) => (
+
+            <div style={label}>Suggested for this view</div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns:
+                  "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
+                gap: 6,
+              }}
+            >
+              {suggestions.map((x) => (
+                <button
+                  key={x.id}
+                  type="button"
+                  data-testid="ask-suggestion"
+                  onClick={() => answer(x.q)}
+                  style={chip}
+                >
+                  {x.q}
+                </button>
+              ))}
+            </div>
+            <div style={label}>Recent questions</div>
+            {session.recent.length ? (
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                {session.recent.map((r) => (
                   <button
-                    key={x.id}
+                    key={r}
                     type="button"
-                    data-testid="ask-suggestion"
-                    onClick={() => answer(x.q)}
-                    style={chip}
+                    onClick={() => answer(r)}
+                    style={{ ...chip, fontSize: 13, padding: "5px 10px" }}
                   >
-                    {x.q}
+                    {r}
                   </button>
                 ))}
               </div>
-            </div>
+            ) : (
+              <span style={{ fontSize: 13, color: C.textMut }}>
+                None yet in this session.
+              </span>
+            )}
           </div>
         ) : null}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            answer(q);
-          }}
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            background: C.card,
-            border: `1px solid ${tint(C.brand, 0.45)}`,
-            borderRadius: 999,
-            padding: "6px 6px 6px 14px",
-            boxShadow: `0 10px 30px ${tint(C.brand, 0.18)}`,
-          }}
-        >
-          <Sparkles size={16} color={C.brandInk} style={{ flexShrink: 0 }} />
-          <input
-            ref={input}
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            onFocus={() => setOpen(true)}
-            placeholder="Ask LisN about this view"
-            aria-label="Ask LisN"
-            style={{
-              flex: 1,
-              minWidth: 0,
-              background: "transparent",
-              border: "none",
-              outline: "none",
-              color: C.text,
-              fontSize: 14.5,
-            }}
-          />
-          <button
-            type="submit"
-            aria-label="Ask"
-            style={{
-              display: "grid",
-              placeItems: "center",
-              width: 34,
-              height: 34,
-              borderRadius: 999,
-              background: C.brand,
-              border: "none",
-              color: "#fff",
-              cursor: "pointer",
-              flexShrink: 0,
-            }}
-          >
-            <Send size={15} />
-          </button>
-        </form>
       </div>
     </>
   );
