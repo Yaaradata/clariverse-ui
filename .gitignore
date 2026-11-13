@@ -16,3 +16,6 @@ qa/_crawl/
 scripts/lint_local_terms.txt
 # IndusInd pulse V2 working files: every normalised and classified public post (redacted text). Never committed.
 data/out/indusind_v2/work/
+# NatWest pulse working files and raw public pull: never committed (handles, URLs).
+data/out/natwest_pulse/work/
+data/raw/natwest/
