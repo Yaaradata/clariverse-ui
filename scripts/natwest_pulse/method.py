@@ -16,10 +16,10 @@ from __future__ import annotations
 import collections
 import datetime as dt
 
-W_START, W_END = "2026-07-01", "2026-09-28"
-H1_END = "2026-08-14"
+W_START, W_END = "2026-08-01", "2026-11-11"
+H1_END = "2026-09-21"
 CAPPED_X_RUN = "WhOLVGQsnVo9H7jHb"
-REDDIT_SWITCH = "2026-09-01"
+REDDIT_SWITCH = "2026-10-15"
 
 
 # Streams whose collection does not span the window by design, whatever their first and last dates say.
@@ -103,7 +103,7 @@ def halves(rows, basis_rows, w, min_per_half: int = 0) -> dict:
         "second_share": round(sh2, 2) if sh2 is not None else None,
         "change_pct": change,
         "first_half_dates": f"{W_START} to {H1_END}",
-        "second_half_dates": f"2026-08-15 to {W_END}",
+        "second_half_dates": f"2026-09-22 to {W_END}",
     }
 
 
@@ -176,13 +176,15 @@ def mood(basis_rows, w) -> dict:
         v = strat_net(rs, w)
         weekly.append({"week": wk, "n": len(rs), "net": round(v, 1) if v is not None else None,
                        "net_unweighted": round(_net(rs), 1) if rs else None})
+    r1 = lambda x: round(x, 1) if x is not None else None  # noqa: E731  (no public data yet: every figure is None)
+    d1 = lambda a, b: round(a - b, 1) if a is not None and b is not None else None  # noqa: E731
     return {
         "method": "source_weighted",
         "weekly": weekly,
-        "value": round(value, 1),
-        "window_average": round(avg, 1),
-        "delta_pts": round(value - avg, 1),
-        "unweighted": {"value": round(raw_value, 1), "window_average": round(raw_avg, 1), "delta_pts": round(raw_value - raw_avg, 1)},
+        "value": r1(value),
+        "window_average": r1(avg),
+        "delta_pts": d1(value, avg),
+        "unweighted": {"value": r1(raw_value), "window_average": r1(raw_avg), "delta_pts": d1(raw_value, raw_avg)},
         "by_source": by_source,
         "n_items": len(basis_rows),
         "daily": daily,

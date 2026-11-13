@@ -1,5 +1,5 @@
 {
- "about": "NatWest register (L1). Rules and public figures only; see scripts/natwest_pulse/build_public.py.",
+ "about": "NatWest register (L1). Rules and public figures only; read by scripts/natwest_pulse/ask.py and the screens.",
  "entries": [
   {
    "id": "REG-DISP-8W",
@@ -96,6 +96,16 @@
    "label": "Royal Bank of Scotland: app vs overall service",
    "value": "66% vs 48%",
    "basis": "CMA service quality survey, August 2026 (measure definition pending research pack)",
+   "source_title": null,
+   "url": null,
+   "date": null,
+   "status": "Quoted in brief; source pending research pack"
+  },
+  {
+   "id": "REG-FPS-SAMEDAY",
+   "label": "Faster Payments",
+   "value": "Same day",
+   "basis": "Faster Payments settle the same day; a failed payment is returned the same day",
    "source_title": null,
    "url": null,
    "date": null,

@@ -45,16 +45,16 @@ import scale_v3
 from personas import BUCKETS, ESCALATION_EMAILS, PERSONAS
 
 rng = random.Random(SEED)
-IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
+IST = dt.timezone(dt.timedelta(0))
 NOW_DT = dt.datetime.fromisoformat(NOW)
-START_DT = dt.datetime(2026, 7, 1, 0, 0, tzinfo=IST)
+START_DT = dt.datetime(2026, 8, 1, 0, 0, tzinfo=IST)
 N_CUSTOMERS = 5000
 N_INTERACTIONS = 32000
 N_BOT_CALLS = 500
 # How much more often a listed customer is drawn for a kept row than their share of contacts would give.
 LIST_OVERSAMPLE = {"priority_a": 4.2, "priority_b": 2.6, "uhni": 9.0, "other": 1.0}
 
-SEGMENTS = [("Classic", 0.55), ("Preferred", 0.27), ("Imperia", 0.14), ("Private", 0.04)]
+SEGMENTS = [("Standard", 0.55), ("Packaged", 0.27), ("Premier", 0.14), ("Private", 0.04)]
 CHANNELS = [
     "inbound_voice",
     "outbound_voice",
@@ -65,57 +65,70 @@ CHANNELS = [
     "branch",
     "whatsapp",
 ]
+# The oct13 channel ids are kept (the screens key on them): "whatsapp" carries Cora, the digital assistant, and
+# "chat" carries in-app chat with an agent (brief Step 5.4).
 CHANNEL_LABEL = {
     "inbound_voice": "Inbound calls",
     "outbound_voice": "Outbound calls",
-    "chat": "Chat",
+    "chat": "App chat",
     "email": "Email",
     "social_inbox": "Social inbox",
-    "ivr_bot": "IVR bot",
+    "ivr_bot": "Phone menu",
     "branch": "Branch",
-    "whatsapp": "WhatsApp",
+    "whatsapp": "Cora",
 }
 CHANNEL_W = {
-    "inbound_voice": 0.36,
-    "outbound_voice": 0.06,
-    "chat": 0.19,
-    "email": 0.14,
+    "inbound_voice": 0.34,
+    "outbound_voice": 0.05,
+    "chat": 0.12,
+    "email": 0.08,
     "social_inbox": 0.02,
-    "ivr_bot": 0.09,
+    "ivr_bot": 0.07,
     "branch": 0.08,
-    "whatsapp": 0.06,
+    "whatsapp": 0.24,
 }
-# Internal volume mix by product (public voice over-represents the app; internal contact is card- and account-heavy).
+# Internal volume mix by product. Assumption until discovery (docs/natwest/public_anchors.md).
 PRODUCT_W = {
-    "cards": 0.31,
-    "accounts": 0.24,
-    "digital": 0.13,
-    "payzapp": 0.09,
-    "personal_loans": 0.09,
-    "home_loans": 0.07,
-    "auto_loans": 0.04,
-    "insurance": 0.03,
+    "current_accounts": 0.28,
+    "cards": 0.18,
+    "digital": 0.14,
+    "payments_fraud": 0.14,
+    "mortgages": 0.10,
+    "savings": 0.06,
+    "personal_loans": 0.06,
+    "overdrafts": 0.04,
 }
 HOLD_P = {
-    "cards": 0.7,
-    "accounts": 0.97,
+    "cards": 0.45,
+    "current_accounts": 0.97,
     "digital": 0.85,
-    "payzapp": 0.35,
-    "personal_loans": 0.12,
-    "home_loans": 0.09,
-    "auto_loans": 0.07,
-    "insurance": 0.16,
+    "payments_fraud": 0.9,
+    "personal_loans": 0.1,
+    "mortgages": 0.2,
+    "overdrafts": 0.25,
+    "savings": 0.5,
 }
-# Hand-set mixes where public voice is too thin to follow (logged in the QA block).
+# Hand-set theme mixes, every product: the NatWest public pull is not loaded (NW-D04), so no product's mix can follow
+# public voice. Logged in the QA block as the disclosed substitute. Assumption until discovery.
 HAND_MIX = {
-    "insurance": {
-        "mis_selling": 30,
-        "fees_charges_bank": 22,
-        "complaint_handling": 18,
-        "care_unreachable": 12,
-        "statements_documents": 10,
-        "closure_requests": 8,
-    },
+    "cards": {"card_fees_charges": 18, "dispute_chargeback": 16, "card_application": 10, "card_limit": 10,
+              "unauthorised_txn": 10, "rewards_value": 8, "card_dispatch": 8, "complaint_handling": 8,
+              "reward_redemption": 6, "closure_requests": 6},
+    "payments_fraud": {"upi_failures": 22, "account_freeze": 16, "failed_txn_reversal": 14, "app_reimbursement": 14,
+                       "fraud_scam": 12, "unauthorised_txn": 8, "complaint_handling": 8, "phishing": 6},
+    "current_accounts": {"fees_charges_bank": 16, "kyc_updates": 12, "care_unreachable": 12, "account_opening": 10,
+                         "complaint_handling": 10, "branch_service": 8, "statements_documents": 8, "branch_closure": 6,
+                         "closure_requests": 6, "consumer_duty_value": 6, "atm_debit_card": 6},
+    "personal_loans": {"loan_processing": 26, "loan_servicing": 24, "recovery_conduct": 12, "credit_report": 10,
+                       "loan_closure_documents": 10, "complaint_handling": 10, "mis_selling": 8},
+    "mortgages": {"mortgage_rate_switch": 28, "loan_processing": 18, "loan_servicing": 18, "loan_closure_documents": 10,
+                  "complaint_handling": 10, "recovery_conduct": 8, "care_unreachable": 8},
+    "overdrafts": {"fees_charges_bank": 30, "consumer_duty_value": 18, "recovery_conduct": 14, "complaint_handling": 14,
+                   "loan_servicing": 12, "care_unreachable": 12},
+    "savings": {"deposits_rates": 34, "statements_documents": 12, "closure_requests": 12, "kyc_updates": 12,
+                "consumer_duty_value": 10, "complaint_handling": 10, "care_unreachable": 10},
+    "digital": {"login_mpin": 24, "cora_unresolved": 20, "app_speed_crash": 18, "app_usability": 10,
+                "online_banking": 10, "new_app_release": 10, "device_security_block": 8},
 }
 
 
@@ -139,7 +152,7 @@ def add_working_days(d: dt.datetime, days: int) -> dt.datetime:
     left = days
     while left > 0:
         out += dt.timedelta(days=1)
-        if out.weekday() != 6:  # Sundays skipped
+        if out.weekday() < 5:  # weekends skipped (UK business days)
             left -= 1
     return out
 
@@ -165,17 +178,21 @@ def masked(n: int) -> str:
 # ------------------------------------------------------------------ public mix
 
 def public_mix():
+    """Theme mix per product. With the public pull loaded, each product would follow its public issues; until then
+    every product uses HAND_MIX. Theme labels come from the taxonomy, so every theme the seed uses has a label."""
+    from taxonomy import THEMES
+
     products = load(OUT_APP / "products.json")
-    themes = {t["id"]: t for t in load(OUT_APP / "themes.json")["themes"]}
+    themes = {t["id"]: t for t in THEMES}
+    for t in load(OUT_APP / "themes.json")["themes"]:
+        themes[t["id"]] = t
     mix: dict[str, dict[str, int]] = {}
     for r in products["rows"]:
-        mix[r["id"]] = {i["id"]: i["count"] for i in r["issues"]}
-    # Auto loans: too few public items; use the combined loans mix.
-    loans = collections.Counter()
-    for lp in ("personal_loans", "home_loans", "auto_loans"):
-        loans.update(mix[lp])
-    mix["auto_loans"] = dict(loans)
-    mix.update(HAND_MIX)
+        issues = {i["id"]: i["count"] for i in r["issues"]}
+        if sum(issues.values()) >= 50:
+            mix[r["id"]] = issues
+    for k, v in HAND_MIX.items():
+        mix.setdefault(k, v)
     return mix, themes, products
 
 
@@ -183,16 +200,16 @@ def public_mix():
 
 def build_customers():
     customers = []
-    rm_pool = [f"RM-{i:03d}" for i in range(1, 121)]
+    rm_pool = [f"RELM-{i:03d}" for i in range(1, 121)]
     for i in range(N_CUSTOMERS):
         seg = pick(dict(SEGMENTS))
         held = [p for p in PRODUCT_IDS if rng.random() < HOLD_P[p]]
-        if "accounts" not in held:
-            held.append("accounts")
+        if "current_accounts" not in held:
+            held.append("current_accounts")
         cohorts = []
         if seg == "Private":
             cohorts.append("uhni" if rng.random() < 0.75 else "hni")
-        elif seg == "Imperia" and rng.random() < 0.85:
+        elif seg == "Premier" and rng.random() < 0.85:
             cohorts.append("hni")
         customers.append(
             {
@@ -200,20 +217,19 @@ def build_customers():
                 "segment": seg,
                 "cohorts": cohorts,
                 "products": sorted(held, key=PRODUCT_IDS.index),
-                "rm_id": rng.choice(rm_pool) if seg in ("Imperia", "Private") else None,
+                "rm_id": rng.choice(rm_pool) if seg in ("Premier", "Private") else None,
                 "proxy_contacts": 0,
                 "cohort_added_at": None,
                 "cohort_added_by": None,
             }
         )
-    # The bank's own priority lists (neutral labels until the bank's term is confirmed). Drawn mostly from UHNI.
-    uhni = [c for c in customers if "uhni" in c["cohorts"]]
-    hni = [c for c in customers if "hni" in c["cohorts"]]
-    rng.shuffle(uhni)
-    rng.shuffle(hni)
-    for c in uhni[:34] + hni[:6]:
+    # NatWest lists (brief Step 3.4): priority_a = financially vulnerable (the bank's vulnerability flag), priority_b =
+    # recent complainants (90 days). Both are drawn from every tier, not only Premier and Private.
+    pool = list(customers)
+    rng.shuffle(pool)
+    for c in pool[:40]:
         c["cohorts"].insert(0, "priority_a")
-    for c in uhni[34:74] + hni[6:86]:
+    for c in pool[40:160]:
         c["cohorts"].insert(0, "priority_b")
     for c in customers:
         if "uhni" in c["cohorts"]:
@@ -224,10 +240,10 @@ def build_customers():
             # Most were on the list before the window; a few added this week, by the bank or on a LisN suggestion.
             r = rng.random()
             if r < 0.05:
-                c["cohort_added_at"] = iso(dt.datetime(2026, 9, 23, 11, tzinfo=IST) + dt.timedelta(hours=rng.randint(0, 130)))
+                c["cohort_added_at"] = iso(dt.datetime(2026, 11, 6, 11, tzinfo=IST) + dt.timedelta(hours=rng.randint(0, 130)))
                 c["cohort_added_by"] = "lisn_suggested_bank_confirmed" if rng.random() < 0.4 else "bank"
             else:
-                c["cohort_added_at"] = "2026-04-01T00:00+05:30"
+                c["cohort_added_at"] = "2026-04-01T00:00+00:00"
                 c["cohort_added_by"] = "bank"
     return customers
 
@@ -250,6 +266,12 @@ def sample_created() -> dt.datetime:
 
 def resolution_hours(deliv: str, theme: str, cohort: bool, channel: str) -> float:
     d = DELIVERABLES[deliv]
+    if deliv == "complaint_resolution":
+        # NatWest (H1 2026 anchor): 48% closed within 3 days. Half are summary resolutions within 3 days; the rest
+        # follow the 8-week rule with a median of about 2.5 weeks and a thin tail past it.
+        if rng.random() < 0.50:
+            return rng.uniform(2, 70)
+        return 56 * 24 * math.exp(math.log(0.30) + 0.75 * rng.gauss(0, 1))
     tat_h = d["tat_days"] * 24 * (1.15 if not d.get("calendar") and deliv not in ("query_response", "failed_reversal") else 1)
     median = 0.5
     sigma = 0.85
@@ -487,17 +509,18 @@ def deliverable_stats(rows):
 
 # Names as set in the 30 Sep review (changes_30sep.md; overrides B7 §E2's neutral labels). Membership always comes from
 # the bank's own lists and tiers (synthetic here), never from public data.
+# NatWest cohorts (brief Step 3.4), one for one onto the oct13 lists; the ids stay (the screens key on them).
 COHORTS = [
-    ("priority_a", "Ultra sensitive", "The bank's own list"),
-    ("priority_b", "RBI & Government", "The bank's own list"),
-    ("uhni", "Ultra HNI", "Relationship tier from core banking"),
-    ("hni", "HNI", "Relationship tier from core banking"),
-    ("multi", "Customers with multiple relationships", "Customers on the bank's lists holding four or more products, from the bank's records"),
+    ("priority_a", "Financially vulnerable (Consumer Duty)", "Vulnerability flag in the bank's records"),
+    ("priority_b", "Recent complainants (90 days)", "The bank's complaints register, last 90 days"),
+    ("uhni", "Premier and Private", "Relationship tier from core banking"),
+    ("hni", "Premier", "Relationship tier from core banking"),
+    ("multi", "Multi-product households", "Customers holding four or more products, from the bank's records"),
 ]
 LISTED = ("priority_a", "priority_b", "uhni", "hni")
 HI_LABEL = {
     "regulator_named": "Regulator or ombudsman named",
-    "legal_language": "Legal or consumer-court language",
+    "legal_language": "Legal language or a solicitor named",
     "public_reach": "Public post with reach",
     "official_domain": "Sent from an official or regulator domain",
     "third_contact": "Third contact on the same issue",
@@ -523,9 +546,9 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
             d = dt.date.fromisoformat(r["created_at"][:10])
             weeks[(d - dt.timedelta(days=d.weekday())).isoformat()] += 1
         # Full weeks only (Mon 6 Jul to Sun 27 Sep): partial first and last weeks would read as false dips.
-        wk = sorted((w, v) for w, v in weeks.items() if "2026-07-06" <= w <= "2026-09-21")
-        prev3 = sum(v for w, v in wk if "2026-08-17" <= w <= "2026-08-31")
-        last3 = sum(v for w, v in wk if "2026-09-07" <= w <= "2026-09-21")
+        wk = sorted((w, v) for w, v in weeks.items() if "2026-08-03" <= w <= "2026-11-02")
+        prev3 = sum(v for w, v in wk if "2026-09-28" <= w <= "2026-10-12")
+        last3 = sum(v for w, v in wk if "2026-10-19" <= w <= "2026-11-02")
         tcount = collections.Counter(r["theme"] for r in neg)
         product_rows.append(
             {
@@ -578,11 +601,11 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
                 "products_affected": dict(collections.Counter(r["product"] for r in open_rows)),
                 "rm_should_know": len(rm_should),
                 "rm_notified_today": len(rm_did),
-                "added_this_week": sum(1 for m in members if m["cohort_added_at"] and m["cohort_added_at"] >= "2026-09-23"),
+                "added_this_week": sum(1 for m in members if m["cohort_added_at"] and m["cohort_added_at"] >= "2026-11-06"),
                 "added_this_week_by_lisn": sum(
                     1
                     for m in members
-                    if m["cohort_added_at"] and m["cohort_added_at"] >= "2026-09-23" and m["cohort_added_by"] == "lisn_suggested_bank_confirmed"
+                    if m["cohort_added_at"] and m["cohort_added_at"] >= "2026-11-06" and m["cohort_added_by"] == "lisn_suggested_bank_confirmed"
                 ),
             }
         )
@@ -739,12 +762,12 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
         "provenance": "internal",
         "label": "Internal · illustrative until discovery",
         "note": (
-            f"Synthetic sample generated by scripts/hdfc_v3/seed_internal_v3.py (seed {SEED}): {len(customers):,} fictional "
-            f"customers and {len(inter):,} interactions over 13 weeks. Priority cohorts are over-sampled for the demo. These are "
-            "not HDFC Bank figures."
+            f"Synthetic sample generated by scripts/natwest_pulse/seed_internal_v3.py (seed {SEED}): {len(customers):,} "
+            f"fictional customers and {len(inter):,} interactions, 1 August to 12 November. Priority cohorts are over-sampled "
+            "for the demo. These are not NatWest Group figures."
         ),
         "now": NOW,
-        "window": {"start": "2026-07-01", "end": "2026-09-29"},
+        "window": {"start": "2026-08-01", "end": "2026-11-12"},
         "sample": {"customers": len(customers), "interactions": len(inter), "bot_calls": len(bot_calls)},
         "dials": overall,
         "products": product_rows,
@@ -759,7 +782,7 @@ def aggregates(customers, inter, bot_calls, emails, themes, products_pub):
         "rm": {
             "should_know": len(notified["should"]),
             "notified_today": len(notified["today"] & notified["should"]),
-            "rule": "An RM alert is due when a customer on a priority list or in the ultra-HNI or HNI tier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call.",
+            "rule": "An owner alert is due when a customer on a priority list or in the Premier or Private tier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call.",
         },
         "triage": triage,
         "emails": emails,
@@ -787,7 +810,7 @@ def persona_trail(p, rs, theme_label):
             "flag_follows": step.get("flag_follows", False),
         }
         if step.get("event"):
-            out.append({**base, "event": True, "id": None, "channel": "system", "channel_label": "Card system", "sender": None, "sentiment": None, "status": None, "high_impact": []})
+            out.append({**base, "event": True, "id": None, "channel": "system", "channel_label": "Bank system", "sender": None, "sentiment": None, "status": None, "high_impact": []})
             continue
         out.append(
             {
@@ -861,7 +884,7 @@ def qa(inter, mix, products_pub):
     return {
         "theme_mix": report,
         "theme_mix_pass": all(r["within_20pct"] for r in report),
-        "hand_set_mix": list(HAND_MIX) + ["auto_loans (combined loans mix)"],
+        "hand_set_mix": list(HAND_MIX),
     }
 
 
@@ -877,7 +900,7 @@ DISPUTE_DRIVERS = [
     ("Manual re-work after reopen", 0.16),
     ("Customer not updated", 0.12),
 ]
-SEGMENT_LABEL = {"Private": "Private Banking", "Imperia": "Imperia", "Preferred": "Preferred", "Classic": "Classic"}
+SEGMENT_LABEL = {"Private": "Private", "Premier": "Premier", "Packaged": "Packaged", "Standard": "Standard"}
 AGE_BANDS = [(30, "Up to 30 days"), (45, "31–45 days"), (60, "46–60 days"), (90, "61–90 days"), (10**6, "Over 90 days")]
 
 
@@ -1012,7 +1035,7 @@ def screen_blocks(customers, inter, themes):
 
     # Satisfaction: tiers, journey stages, retention watchlist.
     tiers = []
-    for sg in ("Private", "Imperia", "Preferred", "Classic"):
+    for sg in ("Private", "Premier", "Packaged", "Standard"):
         rs = [r for r in inter if seg[r["masked_id"]] == sg]
         c = collections.Counter(r["sentiment"] for r in rs)
         n = len(rs)
@@ -1051,7 +1074,7 @@ def screen_blocks(customers, inter, themes):
             "closure_intent": closure_stage[st],
         })
     watch = []
-    for sg in ("Private", "Imperia", "Preferred"):
+    for sg in ("Private", "Premier", "Packaged"):
         ids = {r["masked_id"] for r in closure_reqs if seg[r["masked_id"]] == sg}
         drivers = collections.Counter(
             r["theme"] for r in neg if r["masked_id"] in ids and r["theme"] != "closure_requests"
@@ -1094,7 +1117,7 @@ def screen_blocks(customers, inter, themes):
         {"rung": "Voice", "count": len(inter)},
         {"rung": "Repeat", "count": sum(1 for r in inter if r["repeat"])},
     ]
-    for rung_id, rung in (("grievance", "Grievance"), ("md_office", "MD's office"), ("io", "IO"), ("rbi_ombudsman", "RBI Ombudsman")):
+    for rung_id, rung in (("grievance", "Complaint"), ("md_office", "Head of CX"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")):
         ladder.append({"rung": rung, "count": sum(1 for r in inter if reached(r, rung_id))})
     closed_closure = [r for r in closure_reqs if r["status"] == "closed"]
     saved = sum(1 for r in closure_reqs if r["retained"])
@@ -1121,7 +1144,7 @@ def screen_blocks(customers, inter, themes):
             {"stage": "First response given", "count": sum(1 for r in disputes if r["first_response_at"])},
             {"stage": "Closed", "count": sum(1 for r in disputes if r["status"] == "closed")},
             {"stage": "Customer credited", "count": sum(1 for r in disputes if r["credited"])},
-            {"stage": "Credited within TAT", "count": sum(1 for r in disputes if r["credited"] and not r["breached"])},
+            {"stage": "Credited within the timeline", "count": sum(1 for r in disputes if r["credited"] and not r["breached"])},
         ],
     }
     return {
@@ -1150,7 +1173,7 @@ def main():
         c["products"] = list(p["products"])
         c["rm_id"] = p["rm_id"]
         c["proxy_contacts"] = p.get("proxy_contacts", 0)
-        c["cohort_added_at"] = p.get("cohort_added_at", "2026-04-01T00:00+05:30")
+        c["cohort_added_at"] = p.get("cohort_added_at", "2026-04-01T00:00+00:00")
         c["cohort_added_by"] = p.get("cohort_added_by", "bank")
     # Customers with multiple relationships: a bank-supplied list (synthetic), derived from the bank's own records only.
     # Bank scale (1 Oct): the list is the bank's deepest listed relationships, four or more products, so that it sits
@@ -1169,7 +1192,7 @@ def main():
     for r in inter:
         d = complaint_rules.decide(r) if complaint_rules.is_complaint(r) else None
         if d and complaint_rules.filed_with_ombudsman(r, d):
-            r["escalation"] = "rbi_ombudsman"  # only an at-risk complaint reaches the RBI Ombudsman
+            r["escalation"] = "rbi_ombudsman"  # only an at-risk complaint reaches the Financial Ombudsman Service
         elif d and d["decision_at"] is not None:
             r["escalation"] = "io"
         elif r["escalation"] in ("io", "rbi_ombudsman"):

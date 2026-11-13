@@ -5,7 +5,7 @@ Reads data/out/app_jul_sep/work/classified.jsonl (from scripts/hdfc_pipeline/) a
   data/out/app_jul_sep/store_series.json  per-app, per-store weekly share negative and version ratings (one store at a time)
 
 Product tagging, per item (bank entity, on-topic, in the window):
-  cards business → Cards · payments → PayZapp and UPI · loans → Home, Auto and two-wheeler, or Personal loans (by app,
+  cards business → Cards · payments → PayZapp and Faster Payments · loans → Home, Auto and two-wheeler, or Personal loans (by app,
   then keyword; personal by default) · retail banking → Insurance if the item is about a bank-sold policy, Digital if its
   primary theme is an app or NetBanking theme, otherwise Accounts and deposits · wealth, SME and merchant, corporate →
   outside the table (listed separately).
@@ -20,16 +20,16 @@ import re
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hdfc_pipeline"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import PRODUCT_LABEL, PRODUCTS, dump  # noqa: E402
 import aggregate as A  # noqa: E402  (reply statistics, one definition)
 import method as M  # noqa: E402  (scripts/hdfc_pipeline/method.py: source-weighted trends)
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "data" / "out" / "app_jul_sep"
-W_START, W_END, H1_END = "2026-07-01", "2026-09-28", "2026-08-14"
+OUT = ROOT / "data" / "out" / "natwest_pulse"
+W_START, W_END, H1_END = "2026-08-01", "2026-11-11", "2026-09-21"
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction"}
-DIGITAL_GROUP = {"app_speed_crash", "app_usability", "login_mpin", "device_security_block", "new_app_release", "netbanking", "app_praise"}
+DIGITAL_GROUP = {"app_speed_crash", "app_usability", "login_mpin", "device_security_block", "new_app_release", "online_banking", "app_praise"}
 HOME = re.compile(r"home ?loan|housing loan|mortgage|property", re.I)
 AUTO = re.compile(r"car loan|auto loan|two[- ]wheeler|bike loan|vehicle loan", re.I)
 INSURANCE = re.compile(r"insurance|policy|premium|ulip|term plan", re.I)
@@ -37,7 +37,7 @@ INSURANCE = re.compile(r"insurance|policy|premium|ulip|term plan", re.I)
 
 def load():
     rows = [json.loads(line) for line in open(OUT / "work" / "classified.jsonl", encoding="utf-8")]
-    return [r for r in rows if W_START <= r["created_at"][:10] <= W_END and r["relevant"] == "on_topic" and r["entity"] == "hdfc_bank"]
+    return [r for r in rows if W_START <= r["created_at"][:10] <= W_END and r["relevant"] == "on_topic" and r["entity"] == "natwest_group"]
 
 
 def product_of(r) -> str | None:
@@ -46,19 +46,19 @@ def product_of(r) -> str | None:
     if b == "cards":
         return "cards"
     if b == "payments":
-        return "payzapp"
+        return "payments_fraud"
     if b == "loans":
         if r.get("app_name") == "Home Loans" or HOME.search(text):
-            return "home_loans"
+            return "mortgages"
         if AUTO.search(text):
-            return "auto_loans"
+            return "overdrafts"
         return "personal_loans"
     if b == "retail_banking":
         if r["themes"][0] in ("mis_selling", "insurance_group") or (INSURANCE.search(text) and r["themes"][0] in ("mis_selling", "fees_charges_bank", "other", "general_dissatisfaction", "complaint_handling")):
-            return "insurance"
-        if r["themes"][0] in DIGITAL_GROUP or r.get("app_name") == "HDFC Bank app":
+            return "savings"
+        if r["themes"][0] in DIGITAL_GROUP or r.get("app_name") in ("NatWest app", "Royal Bank of Scotland app", "Ulster Bank app"):
             return "digital"
-        return "accounts"
+        return "current_accounts"
     return None
 
 
@@ -114,7 +114,7 @@ def build_products(rows, basis) -> dict:
     total_rows = sum(r["count"] for r in out)
     return {
         "provenance": "public",
-        "scope": "hdfc_bank · on_topic · window",
+        "scope": "natwest_group · on_topic · window",
         "note": (
             "Each public item is tagged to one product from its business and theme. Loans are split into home, auto "
             "and personal by app and keyword. Row totals count each item once; issue lists count theme tags (an item "
@@ -126,9 +126,9 @@ def build_products(rows, basis) -> dict:
         "total_items": meta["records"]["bank_on_topic_window"],
         "reconciles": total_rows + sum(excluded.values()) == meta["records"]["bank_on_topic_window"],
         "trend_rule": (
-            "Source-weighted share of trend-basis items, second half (15 Aug–28 Sep) vs first half (1 Jul–14 Aug): each "
+            "Source-weighted share of trend-basis items, second half (22 Sep–11 Nov) vs first half (1 Aug–21 Sep): each "
             "source's share counts in proportion to its share of the window. Reddit (collector changed 1 Sep) and the "
-            "Play Store HDFC Bank app export (from 25 Jul) are left out. Shown only when both halves have at least 15 items."
+            "partial-window store exports are left out. Shown only when both halves have at least 15 items."
         ),
         "labels": PRODUCT_LABEL,
     }
@@ -156,9 +156,9 @@ def vkey(v: str):
 def build_store_series() -> dict:
     allrows = [json.loads(line) for line in open(OUT / "work" / "classified.jsonl", encoding="utf-8")]
     apps = []
-    for app in ("HDFC Bank app", "PayZapp"):
+    for app in ("NatWest app", "Royal Bank of Scotland app", "Ulster Bank app"):
         entry = {"app": app, "stores": []}
-        for store, label in (("appstore", "App Store"), ("playstore", "Play Store")):
+        for store, label in (("appstore", "App Store"), ("playstore", "Google Play")):
             rs = [r for r in allrows if r["source"] == store and r["app_name"] == app]
             if not rs:
                 continue
@@ -182,9 +182,9 @@ def build_store_series() -> dict:
                     "records": len(rs),
                     "export_start": start,
                     "export_end": max(r["created_at"][:10] for r in rs),
-                    "starts_mid_window": start > "2026-07-03",
+                    "starts_mid_window": start > "2026-08-03",
                     "window": summarise(win),
-                    "halves": {"first": summarise(first), "second": summarise(second), "comparable": start <= "2026-07-03" and len(first) >= 15 and len(second) >= 15},
+                    "halves": {"first": summarise(first), "second": summarise(second), "comparable": start <= "2026-08-03" and len(first) >= 15 and len(second) >= 15},
                     "weekly": [{"week": w, **summarise(v)} for w, v in sorted(weeks.items())],
                     "versions": sorted([{"version": v, **summarise(x)} for v, x in versions.items() if len(x) >= 10], key=lambda v: vkey(v["version"]), reverse=True),
                     "by_major": {k: summarise(v) for k, v in sorted(major.items(), key=lambda kv: -int(kv[0]) if kv[0].isdigit() else 0) if len(v) >= 10},

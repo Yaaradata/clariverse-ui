@@ -13,20 +13,18 @@ import datetime as dt
 import json
 
 from common import CARDS_CATEGORIES, CARDS_OTHER, SEED_V3, inr
+from complaint_rules import deadline
 
-D30 = dt.timedelta(days=30)
-D90 = dt.timedelta(days=90)
+D6M = dt.timedelta(days=183)  # 6 months from the final response (or the deadline) to refer (register REG-FOS-6M)
 DAY = dt.timedelta(days=1)
-BUCKETS = [("8-10", 8, 10), ("4-7", 4, 7), ("0-3", 0, 3)]  # days left before day 30, furthest first
-LIST_LABEL = {"priority_a": "Ultra sensitive", "priority_b": "RBI & Government", "uhni": "Ultra HNI"}
-IO_OWNER = "Internal Ombudsman office"
+BUCKETS = [("8-10", 8, 10), ("4-7", 4, 7), ("0-3", 0, 3)]  # days left before the final-response deadline
+LIST_LABEL = {"priority_a": "Financially vulnerable (Consumer Duty)", "priority_b": "Recent complainants (90 days)", "uhni": "Premier and Private"}
+IO_OWNER = "Final-response team"
 RULES = (
-    "RBI rules only. The bank has 30 days to reply to a complaint. The customer is eligible to approach the RBI "
-    "Ombudsman when there is no reply within 30 days, or at any point when unhappy with the reply, and then has 90 days "
-    "to file (Reserve Bank – Integrated Ombudsman Scheme 2026, from 1 July 2026). The Ombudsman can award up to ₹30 "
-    "lakh for financial loss plus up to ₹3 lakh for harassment and time lost, per complaint. A complaint the bank partly "
-    "or fully rejects is reviewed by its Internal Ombudsman before the final reply; IO timeline: confirm with the bank. "
-    "Eligibility and risk only: LisN never predicts that a customer will file."
+    "Financial Ombudsman Service rules only (register REG-DISP-8W, REG-PSD-15, REG-FOS-6M). The bank has 8 weeks to "
+    "send a final response; 15 business days for payment-services complaints. The customer may refer the complaint to "
+    "the Financial Ombudsman Service when there is no final response by then, or when unhappy with the final response, "
+    "within 6 months of it. Eligibility and risk only: LisN never predicts that a customer will refer."
 )
 
 
@@ -38,7 +36,7 @@ def load_complaints() -> list[dict]:
     out = []
     for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8"):
         c = json.loads(line)
-        for k in ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at"):
+        for k in ("received_at", "final_reply_at", "decision_at", "io_reviewed_at", "unhappy_at", "referred_at"):
             c["_" + k] = ts(c[k])
         for x in c["contacts"]:
             x["_at"] = ts(x["at"])
@@ -55,31 +53,35 @@ def status(c: dict, T: dt.datetime) -> dict | None:
     replied = reply is not None and reply <= T
     st = {"brink": False, "bucket": None, "days_left": None, "eligible": False, "unhappy": False,
           "unhappy_how": [], "awaiting_io": False, "open": False, "eligible_from": None}
+    due = deadline(rec, c["product"])
     if not replied:
         st["open"] = True
-        elapsed = T - rec
-        if elapsed >= D30:
-            st["eligible"] = elapsed < D30 + D90  # the 90 days to file run from day 30
-            st["eligible_from"] = rec + D30
+        if T >= due:
+            st["eligible"] = True  # past the deadline with no final response: may refer
+            st["eligible_from"] = due
         else:
-            left = int((rec + D30 - T) / DAY)
+            left = int((due - T) / DAY)
             st["days_left"] = left
             if left <= 10:
                 st["brink"] = True
                 st["bucket"] = next(b for b, lo, hi in BUCKETS if lo <= left <= hi)
-        d, io = c["_decision_at"], c["_io_reviewed_at"]
-        st["awaiting_io"] = bool(d and d <= T and (io is None or io > T))
+
     else:
         # Unhappy with the reply comes from the reply's outcome (complaint_rules): the customer reopened the complaint
         # or contacted again on the issue, within the 90 days they have to approach the Ombudsman.
         back = c["_unhappy_at"]
-        if back and reply < back <= T and T < reply + D90:
+        if back and reply < back <= T and T < reply + D6M:
             st["unhappy"] = True
             st["open"] = True  # contested: open again
             st["unhappy_how"] = [c["unhappy_how"]]
             st["eligible_from"] = back
-        if reply > rec + D30:  # it was eligible on the no-reply route before the late reply
-            st["eligible_from"] = min(filter(None, [st["eligible_from"], rec + D30]))
+        if reply > due:  # it was eligible on the no-response route before the late final response
+            st["eligible_from"] = min(filter(None, [st["eligible_from"], due]))
+    # Referred to the Financial Ombudsman Service (the oct13 "awaiting IO review" tile, relabelled): out of the
+    # at-risk states, counted on its own.
+    ref = c.get("_referred_at")
+    if ref and ref <= T:
+        st.update(awaiting_io=True, brink=False, bucket=None, eligible=False, unhappy=False, open=not replied)
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
 
@@ -91,14 +93,14 @@ def score(c: dict, st: dict, T: dt.datetime) -> tuple[int, list[str]]:
     if st["eligible"]:
         days = int((T - c["_received_at"]) / DAY)
         pts += 40
-        why.append(f"no reply for {days} days: eligible")
+        why.append(f"no final response for {days} days: may refer")
     elif st["brink"]:
         pts += {"0-3": 50, "4-7": 35, "8-10": 20}[st["bucket"]]
         dl = st["days_left"]
-        why.append(f"no reply, {dl} day{'' if dl == 1 else 's'} to day 30")
+        why.append(f"no final response, {dl} day{'' if dl == 1 else 's'} to the deadline")
     if st["unhappy"]:
         pts += 35
-        why.append("unhappy with the reply (" + ", ".join(st["unhappy_how"]) + ")")
+        why.append("unhappy with the final response (" + ", ".join(st["unhappy_how"]) + ")")
     seen = [x for x in c["contacts"] if x["_at"] <= T]
     repeats = sum(1 for x in seen if x["same_issue"])
     if repeats:
@@ -114,12 +116,12 @@ def score(c: dict, st: dict, T: dt.datetime) -> tuple[int, list[str]]:
             why.append("escalation language")
     if c["lists"]:
         pts += 10
-        why.append("on the bank's list")
+        why.append("on a priority list")
     if "social_inbox" in channels:
         pts += 10
         why.append("public post via the social inbox")
     if st["awaiting_io"]:
-        why.append("awaiting IO review")
+        why.append("referred to the Ombudsman")
     return pts, why
 
 
@@ -155,7 +157,7 @@ def block(cs: list[dict], w: dict, products: list[tuple[str, str]]) -> dict:
         "delta": {k: cn[k] - cp[k] for k in COUNT_KEYS},
         # Pending: received, no final reply yet. "On the brink" and "already eligible" are both pending complaints.
         "pending": sum(c["w"] for c, s in now if s["open"] and not s["unhappy"]),
-        # Internal Ombudsman: every complaint the bank decided to partly or fully reject is reviewed before the reply.
+        # Final responses not upholding the complaint (the oct13 "io" block, kept for its fields).
         "io": {
             "decided": sum(c["w"] for c, _ in now if c["_decision_at"] and c["_decision_at"] <= T),
             "reviewed": sum(c["w"] for c, _ in now if c["_io_reviewed_at"] and c["_io_reviewed_at"] <= T),
@@ -220,7 +222,7 @@ def brief_item(bank: dict) -> dict | None:
         return None
     return {
         "business": "bank", "business_label": "All businesses", "issue": "Ombudsman watch", "kind": "ombudsman",
-        "text": (f"{inr(n03)} complaints have 3 days or fewer to the 30-day reply limit; {inr(el)} are already eligible to "
-                 f"approach the RBI Ombudsman ({'up' if d > 0 else 'down' if d < 0 else 'no change'}"
+        "text": (f"{inr(n03)} complaints have 3 days or fewer to the final-response deadline; {inr(el)} are past it and "
+                 f"may go to the Financial Ombudsman Service ({'up' if d > 0 else 'down' if d < 0 else 'no change'}"
                  f"{f' {inr(abs(d))}' if d else ''} on the previous period end)."),
     }

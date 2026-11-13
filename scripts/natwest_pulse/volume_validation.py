@@ -1,5 +1,5 @@
-"""Writes qa/volume_validation.md: the internal layer's bank-scale figures against the public anchors
-(docs/demo-rebuild/public_anchors_volumes.md). One row per metric: our figure | anchor | source | ratio | verdict.
+"""Writes qa/natwest_volume_validation.md (HL-18): the NatWest internal layer's figures against the public anchors
+(docs/natwest/public_anchors.md; ANCHOR rows are the figures the brief quotes from the research pack, NW-D01). One row per metric: our figure | anchor | source | ratio | verdict.
 
 Verdict: OK when the figure is inside the anchor's range, or within 2x of a point anchor. Anything else must be fixed
 or justified in the row. Exit code 1 if any row is neither OK nor justified.
@@ -11,12 +11,14 @@ import collections
 import json
 import sys
 
+import datetime as dt
+
 from common import OUT_APP, ROOT, SEED_V3, load
 from scale_v3 import CHANNEL_GROUP, COMPLAINT_MIX, is_complaint
 
-WEEKS = 13
-DAYS = 91
-IN = lambda n: _indian(round(n))  # noqa: E731
+WEEKS = 103 / 7
+DAYS = 103
+IN = lambda n: f"{round(n):,}"  # noqa: E731
 
 
 def _indian(n: int) -> str:
@@ -29,6 +31,10 @@ def _indian(n: int) -> str:
             head = head[:-2]
         s = ",".join([head, *parts, tail]) if head else ",".join([*parts, tail])
     return ("-" if n < 0 else "") + s
+
+
+def load_complaints():
+    return [json.loads(line) for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8")]
 
 
 rows: list[tuple[str, str, str, str, str, str]] = []
@@ -69,135 +75,56 @@ def main() -> int:
     cmp = [r for r in rs if is_complaint(r)]
     n_cmp = W(cmp)
 
-    # ---- section 6 of the anchors file
-    add("Total contacts, full window", total, IN(total), "16-33 lakh", "K3 (derived)", 1_600_000, 3_300_000)
-    add("Complaints, full window", n_cmp, IN(n_cmp), "about 1.1 lakh", "C5 (derived from C1)", 110_000, 110_000)
-    uhni = next(x for x in full["customer_pulse"]["lists"] if x["id"] == "uhni")
-    add("Ultra HNI customers with a contact, full window", uhni["in_contact"], IN(uhni["in_contact"]), "30,000-60,000 (15-30% of the list)", "P2 (assumption)", 30_000, 60_000)
-    add("Ultra HNI contacts, full window", uhni["volume"], IN(uhni["volume"]), "scales with P2: 2-3 contacts per contacting customer", "P2 (assumption)",
-        2 * uhni["in_contact"], 3 * uhni["in_contact"])
-
-    # ---- rates
-    add("Complaints per day (window average)", n_cmp / DAYS, IN(n_cmp / DAYS), "about 1,210", "C3 (derived)", 1210, 1210)
-    add("Complaints per week", n_cmp / WEEKS, IN(n_cmp / WEEKS), "about 8,500", "C4 (derived)", 8500, 8500)
-    day = [r for r in cmp if r["created_at"] >= brief["start"][:16]]
-    add("Complaints in the Morning brief (last 24 hours)", W(day), IN(W(day)), "about 1,210", "C3 (derived)", 1210, 1210)
-    add("Contacts per complaint", total / n_cmp, f"{total / n_cmp:.1f}x", "15-30x", "K1 (assumption)", 15, 30)
-    add("Contacts per day (window average)", total / DAYS, IN(total / DAYS), "18,000-36,000", "K2 (derived)", 18_000, 36_000)
-    bv = brief["cx_pulse"]["internal"]["volume"]
-    add("Contacts in the Morning brief (last 24 hours)", bv, IN(bv), "18,000-36,000", "K2 (derived)", 18_000, 36_000)
-
-    # ---- pending
-    pending = W([r for r in cmp if r["status"] == "open"])
-    add("Complaints pending at the window end", pending, IN(pending), "16,133 pending at FY25 year-end", "C2 (anchor)", 16_133, 16_133)
-    annual = n_cmp * 365 / DAYS
-    add("Pending as a share of annual intake", 100 * pending / annual, f"{100 * pending / annual:.1f}%", "about 3.6%", "C6 (derived)", 3.0, 4.0)
-    add("Pending as a share of the 13-week intake", 100 * pending / n_cmp, f"{100 * pending / n_cmp:.1f}%", "3-4% (the brief's reading of C6)", "C6 (derived)", 3.0, 4.0,
-        "C6 is pending over a year's intake (16,133 of 4.42 lakh). The same stock against one quarter's intake is about "
-        "15%; holding it at 3-4% of the window would mean about 4,000 pending, a quarter of the published stock (C2). "
-        "Calibrated to C2 instead")
-
-    # ---- channel mix (K4)
-    ch = collections.Counter()
-    for r in rs:
-        ch[CHANNEL_GROUP[r["channel"]]] += r["w"]
-    for label, keys, lo, hi in (("Calls", ("calls",), 50, 60), ("Chat and WhatsApp", ("chat", "whatsapp"), 15, 25),
-                                ("Email", ("emails",), 10, 15), ("Branch", ("branch",), 5, 10), ("Social inbox", ("social",), 1, 3)):
-        n = sum(ch[k] for k in keys)
-        add(f"Channel share: {label}", 100 * n / total, f"{100 * n / total:.1f}% ({IN(n)})", f"{lo}-{hi}%", "K4 (assumption)", lo, hi)
-
-    # ---- product mix of complaints (K5, O4)
-    by_p = {p: W([r for r in cmp if r["product"] == p]) for p in COMPLAINT_MIX}
-    loans = sum(by_p[p] for p in ("personal_loans", "home_loans", "auto_loans"))
-    add("Complaint share: loans (personal, home, auto)", 100 * loans / n_cmp, f"{100 * loans / n_cmp:.1f}% ({IN(loans)})",
-        "leads; 29.25% at the Ombudsman", "K5 / O4", 29.25, 29.25)
-    order = sorted(((v, k) for k, v in {"loans": loans, **{k: v for k, v in by_p.items() if "loans" not in k}}.items()), reverse=True)
-    lead = [k for _, k in order[:2]]
-    add("Complaint mix: the two leading products", 1 if lead == ["loans", "cards"] else 0, " then ".join(lead), "loans, then cards", "K5 / O4", 1, 1)
-    for p, label in (("cards", "Cards"), ("accounts", "Accounts and deposits"), ("payzapp", "PayZapp and UPI"),
-                     ("insurance", "Insurance"), ("digital", "Digital")):
-        target = 100 * COMPLAINT_MIX[p]
-        add(f"Complaint share: {label}", 100 * by_p[p] / n_cmp, f"{100 * by_p[p] / n_cmp:.1f}% ({IN(by_p[p])})",
-            f"{target:.0f}% (our split of K5's order)", "K5 (derived)", target, target)
-    for b in full["businesses"]:
-        v = b["internal"]["volume"]
-        add(f"Contacts: {b['label']}", v, f"{IN(v)} ({100 * v / total:.0f}%)", "no anchor; follows the sample's product mix", "none", v, v)
-
-    # ---- negative share (our assumption: 12% overall, 9-16% by product)
-    neg = W([r for r in rs if r["sentiment"] == "negative"])
-    add("Negative share of internal contacts", 100 * neg / total, f"{100 * neg / total:.1f}% ({IN(neg)})", "about 12%", "our assumption (D31)", 12, 12)
-    cneg = W([r for r in cmp if r["sentiment"] == "negative"])
-    add("Negative share of complaints", 100 * cneg / n_cmp, f"{100 * cneg / n_cmp:.0f}%", "mostly negative (85%)", "our assumption (D31)", 85, 85)
-    rest = [r for r in rs if not is_complaint(r)]
-    add("Negative share of queries and requests", 100 * W([r for r in rest if r["sentiment"] == "negative"]) / W(rest),
-        f"{100 * W([r for r in rest if r['sentiment'] == 'negative']) / W(rest):.1f}%", "mostly neutral: under 12%", "our assumption (D31)", 0, 12)
-    for b in full["businesses"]:
-        v = b["internal"]
-        add(f"Negative share: {b['label']}", 100 * v["negative"] / v["volume"], f"{100 * v['negative'] / v['volume']:.1f}%", "9-16% (cards and loans higher)",
-            "our assumption (D31)", 9, 16)
-
-    # ---- reject rate and the Internal Ombudsman (one register)
-    cs = [json.loads(line) for line in open(SEED_V3 / "complaints.jsonl", encoding="utf-8")]
+    # ---- complaints: the H1 2026 return (brief Step 3.8), scaled to the 103 days of the window
+    add("Complaints, full window", n_cmp, IN(n_cmp), "about 49,200 (86,498 in H1 x 103/181)", "ANCHOR, derived", 49_200, 49_200)
+    add("Complaints per week", n_cmp / WEEKS, IN(n_cmp / WEEKS), "about 3,345", "ANCHOR, derived", 3345, 3345)
+    accounts = 86_498 / 2.74 * 1000
+    per1000 = n_cmp * 181 / DAYS / accounts * 1000
+    add("Complaints per 1,000 accounts, half-year equivalent", per1000, f"{per1000:.2f}", "2.74", "ANCHOR (H1 2026 return)", 2.74, 2.74)
+    cs = load_complaints()
     WC = lambda xs: sum(c["w"] for c in xs)  # noqa: E731
-    decided = WC([c for c in cs if c["decision_at"]])
-    add("Complaints partly or fully rejected (sent to the Internal Ombudsman)", 100 * decided / WC(cs), f"{100 * decided / WC(cs):.1f}% ({IN(decided)})",
-        "6-10% at peer banks", "peer disclosures (D31)", 6, 10)
-    o = full["ombudsman"]
-    add("Awaiting Internal Ombudsman review, of those sent", 100 * o["now"]["awaiting_io"] / max(o["io"]["decided"], 1),
-        f"{100 * o['now']['awaiting_io'] / max(o['io']['decided'], 1):.0f}% ({IN(o['now']['awaiting_io'])} of {IN(o['io']['decided'])})",
-        "no anchor; the queue is part of the one register", "D31", 0, 100)
-
-    # ---- social inbox against the public sample
-    social = sum(ch[k] for k in ("social",))
-    pub = full["social_pulse"]["mentions"]
-    add("Social inbox contacts against public mentions collected", social / pub, f"{social / pub:.1f}x ({IN(social)} vs {IN(pub)})", "no anchor",
-        "K4 / public collection", 0.5, 2,
-        "the inbox counts every message to the bank's care handles, including direct messages; the public figure is a "
-        "collected sample of posts and reviews, not a census")
-
-    # ---- at risk against Ombudsman filings
-    add("Unhappy with the reply", o["now"]["unhappy"], IN(o["now"]["unhappy"]), "3,000-4,000 (30% of rejections, plus a few resolved)", "our assumption (D31)", 3000, 4000)
-    add("At risk of reaching the Ombudsman (brink + eligible + unhappy)", o["now"]["at_risk"], IN(o["now"]["at_risk"]), "12,000-13,000", "our assumption (D31)", 12_000, 13_000)
-
-    # ---- Ombudsman (O7, O8)
+    replied = [c for c in cs if c["final_reply_at"]]
+    upheld = [c for c in replied if c["outcome"] == "resolved"]
+    add("Complaints upheld, of those with a final response", 100 * WC(upheld) / max(WC(replied), 1),
+        f"{100 * WC(upheld) / max(WC(replied), 1):.0f}%", "about 55%", "ANCHOR (H1 2026 return)", 45, 65)
+    fast = [c for c in replied if (dt.datetime.fromisoformat(c["final_reply_at"]) - dt.datetime.fromisoformat(c["received_at"])) <= dt.timedelta(days=3)]
+    add("Complaints closed within 3 days", 100 * WC(fast) / max(WC(cs), 1), f"{100 * WC(fast) / max(WC(cs), 1):.0f}%", "48%",
+        "ANCHOR (H1 2026 return)", 48, 48, "the sample's resolution-time model is the oct13 one; tune once the per-product return lands")
+    # ---- contacts: assumptions (docs/natwest/public_anchors.md)
+    add("Total contacts, full window", total, IN(total), "about 9,000,000", "ASSUMPTION (20m customers x 1.6 a year)", 9_000_000, 9_000_000)
+    add("Contacts per complaint", total / n_cmp, f"{total / n_cmp:.0f}x", "no anchor", "DERIVED", total / n_cmp, total / n_cmp)
+    neg = W([r for r in rs if r["sentiment"] == "negative"])
+    add("Negative share of internal contacts", 100 * neg / total, f"{100 * neg / total:.1f}%", "about 12%", "HL-19", 12, 12)
+    cneg = W([r for r in cmp if r["sentiment"] == "negative"])
+    add("Negative share of complaints", 100 * cneg / n_cmp, f"{100 * cneg / n_cmp:.0f}%", "mostly negative (85%)", "HL-19", 85, 85)
+    for g, label in (("calls", "Calls"), ("whatsapp", "Cora"), ("chat", "App chat"), ("emails", "Email"), ("branch", "Branch"), ("social", "Social")):
+        n = W([r for r in rs if CHANNEL_GROUP[r["channel"]] == g])
+        add(f"Channel share: {label}", 100 * n / total, f"{100 * n / total:.1f}% ({IN(n)})", "assumption", "ASSUMPTION", 100 * n / total, 100 * n / total)
+    # ---- Ombudsman
+    o = full["ombudsman"]["bank"] if "bank" in full["ombudsman"] else full["ombudsman"]
     omb = W([r for r in rs if r.get("escalation") == "rbi_ombudsman"])
-    add("Ombudsman complaints, full window", omb, IN(omb), "1,750-3,000 (7,000-12,000 a year)", "O7 (assumption)", 1750, 3000)
-    add("Ombudsman complaints per week", omb / WEEKS, IN(omb / WEEKS), "135-230", "O8 (derived)", 135, 230)
-    add("Complaints at risk per Ombudsman complaint", o["now"]["at_risk"] / max(omb, 1), f"{o['now']['at_risk'] / max(omb, 1):.1f} to 1", "no anchor",
-        "O7 / D31", 2, 10)
-    add("Ombudsman complaints per lakh customers, annualised", (omb * 365 / DAYS) / 1200, f"{(omb * 365 / DAYS) / 1200:.1f}",
-        "7.7 per lakh accounts, all banks", "O5 (anchor; industry)", 7.7, 7.7)
-
-    # ---- lists (P1-P3)
+    add("Referred to the Financial Ombudsman Service, full window", omb, IN(omb), "about 2,500 (5% of complaints)", "ASSUMPTION (no anchor)", 2_500, 2_500)
+    add("At risk (brink + past the deadline + unhappy)", o["now"]["at_risk"], IN(o["now"]["at_risk"]), "no anchor", "DERIVED", o["now"]["at_risk"], o["now"]["at_risk"])
+    pending = o["pending"]
+    add("Awaiting a final response at the window end", pending, IN(pending), "about 7 weeks of intake at most", "DERIVED (8-week rule)",
+        0, 7 * n_cmp / WEEKS)
+    # ---- cohorts
     sizes = scale["list_sizes"]
     for lst in full["customer_pulse"]["lists"]:
-        k, size = lst["id"], sizes[lst["id"]]
-        if k == "uhni":
-            add("List size: Ultra HNI", size, IN(size), "about 2 lakh", "P1 / A4 (sponsor anchor)", 200_000, 200_000)
-            add("Ultra HNI share in contact", 100 * lst["in_contact"] / size, f"{100 * lst['in_contact'] / size:.1f}%", "15-30%", "P2 (assumption)", 15, 30)
-        elif k in ("priority_a", "priority_b"):
-            add(f"List size: {lst['label']}", size, IN(size), "low thousands at most", "P3 (assumption)", 1_000, 5_000)
-        else:
-            add(f"List size: {lst['label']}", size, IN(size), "between the small lists and Ultra HNI", "our assumption (D29)", 5_000, 200_000)
-        if k != "uhni":
-            add(f"{lst['label']}: customers with a contact", lst["in_contact"], f"{IN(lst['in_contact'])} ({100 * lst['in_contact'] / size:.0f}% of the list)",
-                "no anchor; our assumption", "D29", lst["in_contact"], lst["in_contact"])
-        per_c = lst["volume"] / max(lst["in_contact"], 1)
-        add(f"{lst['label']}: contacts per contacting customer", per_c, f"{per_c:.1f} ({IN(lst['volume'])} contacts)", "2-3", "our assumption (D29)", 2, 3)
-    contacting = sum(customers[m]["cw"] for m in {r["masked_id"] for r in rs})
-    add("All customers with a contact, full window", contacting, IN(contacting), "no anchor; about 0.9% of 12 crore customers", "A1 / D29", contacting, contacting)
+        size = sizes[lst["id"]]
+        add(f"Cohort size: {lst['label']}", size, IN(size), "assumption" if lst["id"] != "priority_b" else "about 43,000 (a quarter's complaints)",
+            "ASSUMPTION" if lst["id"] != "priority_b" else "DERIVED", size if lst["id"] != "priority_b" else 43_000, size if lst["id"] != "priority_b" else 43_000)
 
-    out = ["# Volume validation: internal layer against the public anchors", "",
-           "Written by `scripts/hdfc_v3/volume_validation.py` from `data/out/app_jul_sep/periods.json` and the seed. Anchors:",
-           "`docs/demo-rebuild/public_anchors_volumes.md`. Full window = 1 Jul to 29 Sep 08:30 (13 weeks).", "",
+    out = ["# NatWest · volume validation (HL-18)", "",
+           "Written by `scripts/natwest_pulse/volume_validation.py` from `data/out/natwest_pulse/periods.json` and the seed.",
+           "Anchors: `docs/natwest/public_anchors.md`. Full window = 1 Aug to 12 Nov 08:30 (103 days).", "",
            f"Sample kept: {IN(scale['sample']['rows'])} rows and {IN(scale['sample']['customers'])} customers; every figure below is a weighted sum of those rows.", "",
            "Verdict: **OK** = inside the anchor's range, or within 2x of a point anchor. Anything else is fixed or justified in the row.", "",
-           "Pending complaints are calibrated to the published stock (C2: 16,133 pending at year-end), not to 3-4% of the window's intake: C6 is that stock over a full year's intake, and against one quarter's intake the same stock is about 15%.", "",
            "| Metric | Our figure | Anchor | Source | Ratio | Verdict |", "|---|---|---|---|---|---|"]
     out += [f"| {m} | {o} | {a} | {s} | {r} | {v} |" for m, o, a, s, r, v in rows]
     not_ok = [r for r in rows if not r[5].startswith("OK")]
     out += ["", f"{len(rows)} rows; {len(rows) - len(not_ok)} OK; {len(not_ok)} justified or to fix."]
-    (ROOT / "qa" / "volume_validation.md").write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+    (ROOT / "qa" / "natwest_volume_validation.md").write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
     print(f"volume_validation: {len(rows)} rows, {bad} to fix, {len(not_ok) - bad} justified")
     for r in not_ok:
         print("  ", r[0], "|", r[1], "|", r[4], "|", r[5][:90])

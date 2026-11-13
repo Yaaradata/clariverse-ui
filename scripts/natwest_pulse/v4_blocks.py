@@ -32,13 +32,13 @@ H = dt.timedelta(hours=1)
 LIMITS = {
     "default_hours": 48,
     "priority": {"priority_a": 5, "uhni": 24},
-    "regulatory_source": "rbi",
+    "regulatory_source": "fca",
 }
 LIMIT_LABEL = {
-    "priority_a": "Ultra-sensitive: 5 hours",
-    "uhni": "Ultra-HNI: 24 hours",
-    "rbi": "RBI timeline",
-    "default": "Default: 48 hours (bank TAT to confirm in discovery)",
+    "priority_a": "Financially vulnerable: 5 hours",
+    "uhni": "Premier and Private: 24 hours",
+    "fca": "Published UK timeline (FCA or PSR)",
+    "default": "Default: 48 hours (bank timeline to confirm in discovery)",
 }
 
 # Bank words (B11 item 1): every interaction is a complaint, a query or a request.
@@ -53,12 +53,12 @@ KIND_OF = {
 KINDS = [("complaint", "Complaints"), ("query", "Queries"), ("request", "Requests")]
 
 # Assignable owners (B11 item 4): roles, never names.
-OWNER_ROLES = ["Escalations lead", "Upgrades lead", "Premium cards lead", "Service-delivery head", "Cards · CX lead",
-               "Social care lead", "Internal Ombudsman office"]
+OWNER_ROLES = ["Product owner", "Complaints lead", "Final-response team", "Fraud operations", "Branch region lead",
+               "Social care lead", "Service-delivery head"]
 
-CHANNEL_LABEL = {"emails": "Email", "calls": "Calls", "chat": "Chat", "whatsapp": "WhatsApp", "social": "Social inbox",
+CHANNEL_LABEL = {"emails": "Email", "calls": "Calls", "chat": "App chat", "whatsapp": "Cora", "social": "Social inbox",
                  "branch": "Branch"}
-SOURCE_LABEL = {"playstore": "Play Store", "appstore": "App Store", "x": "X", "reddit": "Reddit", "forum": "Forums"}
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
 
 
 def kind(r) -> str:
@@ -76,8 +76,8 @@ def limit_of(r, customers) -> tuple[dt.timedelta, str]:
         if lid in coh:
             return hours * H, lid
     d = DELIVERABLES.get(r["deliverable"])
-    if d and d["source"] == LIMITS["regulatory_source"] and r.get("deliverable_due"):
-        return dt.datetime.fromisoformat(r["deliverable_due"]) - r["_c"], "rbi"
+    if d and d["source"] in ("fca", "psr") and r.get("deliverable_due"):
+        return dt.datetime.fromisoformat(r["deliverable_due"]) - r["_c"], "fca"
     return LIMITS["default_hours"] * H, "default"
 
 
@@ -139,7 +139,7 @@ def hierarchy(vol, prs, customers, b, is_open, open_at, waiting_at, responded) -
         "public": {"volume": p_tot, "sentiments": public,
                    "responded": sum(x["responded"] for x in public.values()),
                    "not_responded": sum(x["not_responded"] for x in public.values()),
-                   "responded_live_only": "Play Store replies are collected; replies on other sources are simulated (D24)."},
+                   "responded_live_only": "Replies are counted only where the source carries them; none are simulated."},
     }
 
 
@@ -168,7 +168,7 @@ def open_too_long(vol, customers, is_open, labels) -> dict:
     for r in late:
         by_basis[limit_of(r, customers)[1]] += r["w"]
     return {"count": sum(r["w"] for r in late), "open": open_w, "share_of_open": pct(sum(r["w"] for r in late), open_w),
-            "by_limit": [{"id": k, "label": LIMIT_LABEL[k], "count": by_basis[k]} for k in ("priority_a", "uhni", "rbi", "default")],
+            "by_limit": [{"id": k, "label": LIMIT_LABEL[k], "count": by_basis[k]} for k in ("priority_a", "uhni", "fca", "default")],
             "list": otl_rows(vol, customers, is_open, labels)}
 
 
@@ -176,8 +176,8 @@ def open_too_long(vol, customers, is_open, labels) -> dict:
 
 def priority_slice(vol, customers, is_open) -> list[dict]:
     blocks = [
-        ("ultra_sensitive", "Ultra-sensitive", lambda r: "priority_a" in customers.get(r["masked_id"], {}).get("cohorts", [])),
-        ("uhni", "Ultra-HNI", lambda r: "uhni" in customers.get(r["masked_id"], {}).get("cohorts", [])),
+        ("ultra_sensitive", "Financially vulnerable", lambda r: "priority_a" in customers.get(r["masked_id"], {}).get("cohorts", [])),
+        ("uhni", "Premier and Private", lambda r: "uhni" in customers.get(r["masked_id"], {}).get("cohorts", [])),
         # A property of the complaint (regulator or legal language, a third contact, public reach), never of the person.
         ("high_impact", "High-impact complaints", lambda r: bool(r["high_impact"])),
     ]
@@ -251,15 +251,15 @@ def social(prs, responded, public_end, labels, days=None) -> dict:
                     x["responded"] += 1
     return {
         "matrix": mat,
-        "response_time": {"basis": "Play Store replies (live)", "n": len(hrs), "buckets": dist,
+        "response_time": {"basis": "Store replies (live)", "n": len(hrs), "buckets": dist,
                           "median_hours": round(sorted(hrs)[len(hrs) // 2], 1) if hrs else None},
         "unanswered_negatives": {"count": len(late), "list": [
             {"id": post_ref(r), "source": SOURCE_LABEL.get(r["source"], r["source"]),
              "theme": labels.get(r["themes"][0], r["themes"][0]) if r.get("themes") else "—",
              "age": age_label(public_end - r["_c"]), "reach": bool(r.get("_reach"))} for r in late[:40]]},
         "daily": [{"date": d.isoformat(), **v} for d, v in daily.items()],
-        "note": "Responded: the bank's handle or the store developer replied. Play Store replies are collected; on other "
-                "sources replies are simulated (D24). The bank's agency report is monthly; this is daily.",
+        "note": "Responded: the bank's handle or the store developer replied, where the source carries replies. "
+                "Public data not yet loaded until the pull lands.",
     }
 
 

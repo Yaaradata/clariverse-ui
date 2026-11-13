@@ -54,7 +54,7 @@ from common import (
     inr,
 )
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "hdfc_pipeline"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from aggregate import quotable  # noqa: E402  (a quote naming a person is never used)
 from pii_names import ALLEGATION  # noqa: E402  (nor, as an anecdote, one that makes an allegation)
 from public_v3 import PRODUCTS as PUB_PRODUCTS  # noqa: E402
@@ -65,14 +65,14 @@ import v4_blocks as v4  # noqa: E402  (B11: V4 additions, from the same records)
 END = dt.datetime.fromisoformat(PERIOD_END)
 START = dt.datetime.fromisoformat(DATA_START)
 H48 = dt.timedelta(hours=48)
-PUBLIC_END = dt.datetime(2026, 9, 28, 23, 59, 59, tzinfo=END.tzinfo)
-SOURCE_LABEL = {"playstore": "Play Store", "appstore": "App Store", "x": "X", "reddit": "Reddit", "forum": "Forums"}
-TREND_SOURCES = {"playstore", "appstore", "forum"}  # continuous collection across any two windows
-LIST_LABEL = {
-    "priority_a": "Ultra sensitive",
-    "priority_b": "RBI & Government",
-    "uhni": "Ultra HNI",
-    "multi": "Customers with multiple relationships",
+PUBLIC_END = dt.datetime(2026, 11, 11, 23, 59, 59, tzinfo=END.tzinfo)
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
+TREND_SOURCES = {"playstore", "appstore", "trustpilot", "forum"}  # continuous collection across any two windows
+LIST_LABEL = {  # NatWest cohorts (brief Step 5.2); the ids are the oct13 list ids
+    "priority_a": "Financially vulnerable (Consumer Duty)",
+    "priority_b": "Recent complainants (90 days)",
+    "uhni": "Premier and Private",
+    "multi": "Multi-product households",
 }
 PRODUCT_ORDER = [p["id"] for p in PUB_PRODUCTS]
 
@@ -316,7 +316,7 @@ def load_public():
     rows = [json.loads(line) for line in open(OUT_APP / "work" / "classified.jsonl", encoding="utf-8")]
     out = []
     for r in rows:
-        if r["relevant"] != "on_topic" or r["entity"] != "hdfc_bank":
+        if r["relevant"] != "on_topic" or r["entity"] != "natwest_group":
             continue
         c = ts(r["created_at"])
         if not (START <= c <= PUBLIC_END):
@@ -359,29 +359,20 @@ def weighted_share(rs, pred, W, min_items: int = 3):
     return round(100 * num / den, 1)
 
 
-# Bank replies on public posts. Play Store replies are collected (live). For the other sources the collection holds no
-# replies, so a reply is simulated per post from its id (fixed, no random stream), at rates typical of an Indian bank's
-# care handle: most active on X, present on the App Store, rare on Reddit and consumer forums. Negative posts are
-# answered more often than the rest. Illustrative, and tagged so on screen. (MORNING_DECISIONS.md D24.)
-SYNTHETIC_RESPONSE = {"x": (0.68, 0.40), "appstore": (0.45, 0.30), "reddit": (0.14, 0.06), "forum": (0.08, 0.03)}
-
-
+# Bank replies on public posts (NatWest, HL-15): a reply counts only where the source itself carries it (store and
+# Trustpilot reply fields). Nothing is simulated: the oct13 simulated replies (an HDFC exception) are not carried over.
 def responded(r) -> bool:
-    if r["source"] == "playstore":
-        return bool(r.get("reply"))
-    neg, other = SYNTHETIC_RESPONSE[r["source"]]
-    h = int(hashlib.sha1(f"reply:{r['id']}".encode()).hexdigest(), 16) % 10000
-    return h < 10000 * (neg if r["sentiment"] == "negative" else other)
+    return bool(r.get("reply"))
 
 
 def response_by_source(rs) -> list[dict]:
     out = []
-    for src in ("playstore", "appstore", "x", "reddit", "forum"):
+    for src in ("appstore", "playstore", "x", "reddit", "trustpilot", "forum"):
         xs = [r for r in rs if r["source"] == src]
         if xs:
             n = sum(1 for r in xs if responded(r))
             out.append({"source": src, "label": SOURCE_LABEL[src], "mentions": len(xs), "responded": n,
-                        "pct": pct(n, len(xs), 0), "illustrative": src != "playstore"})
+                        "pct": pct(n, len(xs), 0), "illustrative": False})
     return out
 
 
@@ -405,7 +396,7 @@ def public_block(rs_all, w, W, keep=lambda r: True) -> dict:
     rs = [r for r in rs_all if keep(r) and a <= r["_c"] < b]
     pa, pb = w["prev"]
     ta, tb = w["trend_cur"]
-    basis = lambda r: r["source"] in TREND_SOURCES and not (w["prev"][0] == START and r.get("app_name") == "HDFC Bank app" and r["source"] == "playstore")  # noqa: E731
+    basis = lambda r: r["source"] in TREND_SOURCES and not (w["prev"][0] == START and r.get("app_name") == "NatWest app" and r["source"] == "playstore")  # noqa: E731
     cur_t = sum(1 for r in rs_all if keep(r) and basis(r) and ta <= r["_c"] < tb)
     prev_t = sum(1 for r in rs_all if keep(r) and basis(r) and pa <= r["_c"] < pb)
     hi = [r for r in rs if reach(r)]
@@ -449,7 +440,7 @@ def redact_reply(text: str) -> str:
     """The bank's reply with the customer's name and any link taken out."""
     t = " ".join(text.split())
     t = re.sub(r"^(Hi|Hello|Dear)\s+[^,]{1,40},", "Hi [customer],", t)
-    t = re.sub(r"https?://\S+", "[official help centre link]", t)
+    t = re.sub(r"https?://\S+", "[official help page link]", t)
     t = t.replace("!", ".")  # screen copy carries no exclamation marks (lint_terms), quoted or not
     return t[:420]
 
@@ -820,25 +811,25 @@ def cards_view(inter, customers, pub, w, W, labels) -> dict:
 # ------------------------------------------------------------------ Cards drill-downs (30 Sep review, changes_30sep.md C4)
 # The three MD drill-downs (satisfaction, market, service), rebuilt for Cards only and for the selected period.
 TARGET_LABEL = {
-    "rbi": "RBI (named or tagged)",
-    "rbi_ombudsman": "RBI Ombudsman",
-    "consumer_court": "Consumer court or helpline",
+    "rbi": "Regulator named or tagged (FCA)",
+    "rbi_ombudsman": "Financial Ombudsman Service",
+    "consumer_court": "Small claims court or consumer body",
     "legal": "Legal action",
-    "ministers": "Ministers tagged",
-    "grievance": "Grievance or nodal officer",
+    "ministers": "MP tagged",
+    "grievance": "Complaints team",
 }
 REQUEST_LABEL = {
     "card_delivery": "Card delivery",
     "refund": "Merchant refund",
-    "reversal": "Failed-transaction reversal",
+    "reversal": "Failed payment return",
     "dispute": "Dispute or chargeback",
     "closure": "Card closure",
-    "loan_disbursal": "Loan disbursal",
-    "credit_report": "Credit report correction",
-    "kyc": "KYC and profile updates",
+    "loan_disbursal": "Loan payout",
+    "credit_report": "Credit file correction",
+    "kyc": "Identity checks and profile updates",
     "other": "Other request",
 }
-RUNG_LABEL = [("grievance", "Grievance"), ("md_office", "MD's office"), ("io", "Internal Ombudsman"), ("rbi_ombudsman", "RBI Ombudsman")]
+RUNG_LABEL = [("grievance", "Complaint"), ("md_office", "Head of CX"), ("io", "Final response"), ("rbi_ombudsman", "Financial Ombudsman Service")]
 
 
 def quote_of(rs):
@@ -876,7 +867,7 @@ def cards_drilldowns(inter, customers, pub, w, W, labels, ivol, prs, prs_all, ir
 
     # --- 1. Are my customers happy?
     by_source = []
-    for src in ("playstore", "appstore", "x", "reddit", "forum"):
+    for src in ("appstore", "playstore", "x", "reddit", "trustpilot", "forum"):
         xs = [r for r in prs if r["source"] == src]
         if not xs:
             continue
@@ -1100,7 +1091,7 @@ def main():
         if item:
             cp["brief"]["needs_you"] = [item, *cp["brief"]["needs_you"]][:3]
         cp["brief"]["rules"] += (
-            " An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the 30-day reply "
+            " An Ombudsman watch item leads What needs you when any complaint has 3 days or fewer to the final-response deadline "
             "limit, or more complaints are already eligible than at the previous period end.")
         print(p["id"], "internal", internal["volume"], "external", external["volume"], "lists",
               [(x["id"], x["volume"], x["open"], x["not_responded_48h"]) for x in cp["customer_pulse"]["lists"]],

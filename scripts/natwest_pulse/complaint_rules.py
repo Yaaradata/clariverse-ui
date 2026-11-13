@@ -1,4 +1,8 @@
-"""How a formal complaint turns out (Internal · illustrative). One place, used by the seed (to mark which contacts went to
+"""How a formal complaint turns out (Internal · illustrative). NatWest: the final response rule (8 weeks; 15 business days
+for payment services) and referral to the Financial Ombudsman Service (docs/natwest/brief.md Step 3.9). The ids below
+(io_reviewed_at, "rbi_ombudsman") are the oct13 field names, kept so the screens read them unchanged.
+
+Copied from the oct13 pipeline: One place, used by the seed (to mark which contacts went to
 the Internal Ombudsman) and by the complaint register (seed_complaints_v3.py), so every IO figure comes from one source:
 the escalation ladder's IO rung, the IO queue and "awaiting IO review" cannot disagree.
 
@@ -25,10 +29,10 @@ import random
 from common import PERIOD_END, SEED
 
 END = dt.datetime.fromisoformat(PERIOD_END)
-REJECT = {"base": 0.105, "negative": 0.123}  # share of replied complaints partly or fully rejected, before the two-day rule
+REJECT = {"base": 0.80, "negative": 0.86}  # NatWest: about 55% upheld overall (H1 2026 anchor); summary resolutions are upheld  # share of replied complaints partly or fully rejected, before the two-day rule
 PARTLY_OF_REJECTED = 0.6
-OPEN_DECIDED = {"base": 0.105, "negative": 0.123}
-UNHAPPY = {"resolved": 0.022, "partly_rejected": 0.30, "rejected": 0.30}
+OPEN_DECIDED = {"base": 0.30, "negative": 0.34}
+UNHAPPY = {"resolved": 0.02, "partly_rejected": 0.12, "rejected": 0.14}
 REOPEN_OF_UNHAPPY = 0.4  # the rest contact the bank again on the same issue
 
 
@@ -74,15 +78,34 @@ def decide(r: dict) -> dict:
     return out
 
 
+def deadline(received: dt.datetime, product: str) -> dt.datetime:
+    """Final response due: 8 weeks; 15 business days for payment-services complaints (register REG-DISP-8W,
+    REG-PSD-15). The 35-business-day exception is not modelled."""
+    if product == "payments_fraud":
+        d, n = received, 0
+        while n < 15:
+            d += dt.timedelta(days=1)
+            if d.weekday() < 5:
+                n += 1
+        return d
+    return received + dt.timedelta(days=56)
+
+
 def filed_with_ombudsman(r: dict, d: dict) -> bool:
-    """Whether this complaint went on to the RBI Ombudsman. Only complaints that are at risk can: the customer came
-    back unhappy with the reply, or had no reply for more than 30 days."""
-    h = int(hashlib.sha1(f"rbi:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
-    # Loan complaints are few in the kept sample but lead at the Ombudsman (O4), so more of the at-risk ones are kept
-    # at this rung; scale_v3 then sets each product's share of the total.
-    loans = r["product"].endswith("_loans")
-    if d["unhappy_at"]:
-        return h < (0.8 if loans else 0.4)
-    if d["reply"] is None and END - ts(r["created_at"]) > dt.timedelta(days=30):
-        return h < (0.5 if loans else 0.12)
-    return False
+    """Whether this complaint was referred to the Financial Ombudsman Service. Only complaints at risk can be: the
+    customer came back unhappy with the final response, or had none by the deadline."""
+    return referred_at(r, d) is not None
+
+
+def referred_at(r: dict, d: dict):
+    """When the customer referred the complaint to the Financial Ombudsman Service, or None. ASSUMPTION: 45% of those
+    unhappy with the final response, 20% of those past the deadline with no final response; referral 3-30 days later."""
+    h = int(hashlib.sha1(f"fos:{r['id']}".encode()).hexdigest(), 16) % 10_000 / 10_000
+    lag = dt.timedelta(days=3 + 27 * (int(hashlib.sha1(f"lag:{r['id']}".encode()).hexdigest(), 16) % 1000 / 1000))
+    if d["unhappy_at"] and h < 0.45:
+        t = d["unhappy_at"] + lag
+    elif d["reply"] is None and h < 0.20:
+        t = deadline(ts(r["created_at"]), r["product"]) + lag
+    else:
+        return None
+    return t if t <= END else None

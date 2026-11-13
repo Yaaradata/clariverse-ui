@@ -24,26 +24,25 @@ from normalise import OUT, WORK
 from taxonomy import THEMES
 
 T = {t["id"]: t for t in THEMES}
-W_START, W_END = "2026-07-01", "2026-09-28"
-H1_END = "2026-08-14"
-AS_OF = "2026-09-28"
-BRIEF = {"date": "2026-09-29", "label": "Tuesday 29 September 2026", "time": "07:45"}
-SINCE_830 = "2026-09-28T08:30:00+05:30"
-IST = dt.timezone(dt.timedelta(hours=5, minutes=30))
+W_START, W_END = "2026-08-01", "2026-11-11"
+H1_END = "2026-09-21"
+AS_OF = "2026-11-11"
+BRIEF = {"date": "2026-11-12", "label": "Thursday 12 November 2026", "time": "07:45"}
+SINCE_830 = "2026-11-11T08:30:00+00:00"
+IST = dt.timezone(dt.timedelta(0))
 NON_ISSUE = {"app_praise", "service_praise", "product_advice", "offers_deals", "market_news", "other", "general_dissatisfaction", "trading_securities", "insurance_group"}
-SOURCE_LABEL = {"playstore": "Play Store", "appstore": "App Store", "x": "X", "reddit": "Reddit", "forum": "Forums"}
+SOURCE_LABEL = {"appstore": "App Store", "playstore": "Google Play", "x": "X", "reddit": "Reddit", "trustpilot": "Trustpilot", "forum": "Forums (MoneySavingExpert)"}
 # Plain place labels for evidence. Screens never link to the original post (the URL stays in evidence.json, server-side,
 # for audit only), so each quote says where it came from in words.
-FORUM_NAME = {
-    "technofino": "TechnoFino", "trustpilot": "Trustpilot", "consumercomplaints": "Consumer Complaints",
-    "mouthshut": "MouthShut", "complaintsboard": "ComplaintsBoard",
-}
+FORUM_NAME = {"mse": "MoneySavingExpert"}
 
 
 def place_label(r) -> str:
     src = r["source"]
     if src == "playstore":
-        return "Play Store review"
+        return "Google Play review"
+    if src == "trustpilot":
+        return "Trustpilot review"
     if src == "appstore":
         return "App Store review"
     if src == "x":
@@ -57,10 +56,11 @@ def place_label(r) -> str:
 
 OWNER_LABEL = {
     "cx": "CX", "digital": "Digital", "cards": "Cards", "retail": "Retail", "loans": "Loans", "payments": "Payments",
-    "compliance": "Compliance", "fraud_cyber": "Fraud and Cyber", "operations": "Operations", "rm": "RM", "product": "Product",
+    "compliance": "Compliance", "fraud_cyber": "Fraud operations", "operations": "Operations", "rm": "Relationship managers (Premier)", "product": "Product",
 }
 RUNG_OF_TARGET = {
-    "rbi": "RBI Ombudsman", "rbi_ombudsman": "RBI Ombudsman", "consumer_court": "RBI Ombudsman", "legal": "RBI Ombudsman",
+    "rbi": "Financial Ombudsman Service", "rbi_ombudsman": "Financial Ombudsman Service",
+    "consumer_court": "Financial Ombudsman Service", "legal": "Financial Ombudsman Service",
     "ministers": "Public", "grievance": "Grievance", "repeat": "Repeat",
 }
 REDIRECT_RE = re.compile(
@@ -106,7 +106,7 @@ def streams_info(rows):
                 "earliest": earliest,
                 "latest": latest,
                 "window_first": min(win) if win else None,
-                "full_window": earliest <= "2026-07-03" and latest >= "2026-09-24" and s not in M.PARTIAL_BY_DESIGN,
+                "full_window": earliest <= "2026-08-03" and latest >= "2026-11-07" and s not in M.PARTIAL_BY_DESIGN,
                 "partial_reason": M.PARTIAL_BY_DESIGN.get(s),
                 "mode": "trend_within_window",
                 "baseline_items": 0,
@@ -132,7 +132,7 @@ def sent_counts(rows):
     return {"positive": c.get("positive", 0), "neutral": c.get("neutral", 0), "negative": c.get("negative", 0)}
 
 
-REPLY_NOW = dt.datetime(2026, 9, 28, 23, 59, tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)))
+REPLY_NOW = dt.datetime(2026, 11, 11, 23, 59, tzinfo=dt.timezone(dt.timedelta(0)))
 
 
 def resp_stats(rs, now=REPLY_NOW):
@@ -211,8 +211,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     win = [r for r in rows if in_window(r)]
     on = [r for r in win if r["relevant"] == "on_topic"]
-    bank = [r for r in on if r["entity"] == "hdfc_bank"]
-    group = [r for r in on if r["entity"] != "hdfc_bank"]
+    bank = [r for r in on if r["entity"] == "natwest_group"]
+    group = [r for r in on if r["entity"] != "natwest_group"]
     sinfo = streams_info([r for r in rows if r["relevant"] == "on_topic"])
     basis = {s["stream"] for s in sinfo if s["full_window"]}
     basis_bank = [r for r in bank if stream_of(r) in basis]
@@ -224,7 +224,7 @@ def main():
     for r in bank:
         for t in r["themes"]:
             by_theme[t].append(r)
-    last_day = max(r["created_at"][:10] for r in bank)
+    last_day = max((r["created_at"][:10] for r in bank), default=W_END)
     theme_rows = []
     for t in THEMES:
         rs = by_theme.get(t["id"], [])
@@ -315,7 +315,7 @@ def main():
             }
         )
     themes_file = {
-        "scope": "hdfc_bank · on_topic · window",
+        "scope": "natwest_group · on_topic · window",
         "total_items": len(bank),
         "basis_items": len(basis_bank),
         "weeks": WEEKS,
@@ -345,7 +345,7 @@ def main():
         "count": len(sw),
         "to_other_bank": sum(1 for r in sw if r["switching"]["direction"] == "to"),
         "from_other_bank": sum(1 for r in sw if r["switching"]["direction"] == "from"),
-        "note": "Posts naming a move between HDFC Bank and another bank. Counted as mentions, never as confirmed moves.",
+        "note": "Posts naming a move between NatWest Group and another bank. Counted as mentions, never as confirmed moves.",
     }
     pb = [r for r in bank if r["promise_break"]]
     pb_rows = []
@@ -387,7 +387,7 @@ def main():
     cl_ex, cw_ex = pick_exemplars(cl, 4), pick_exemplars(cw, 4)
     evidence_ids.update(cl_ex + cw_ex)
     signals = {
-        "scope": "hdfc_bank · on_topic · window",
+        "scope": "natwest_group · on_topic · window",
         "total_items": len(bank),
         "flags": flags,
         "promise_by_request_type": pb_rows,
@@ -489,7 +489,7 @@ def main():
             {
                 "app": app,
                 "entity": entity,
-                "group_company": entity != "hdfc_bank",
+                "group_company": entity != "natwest_group",
                 "business": rs[0]["business_hint"],
                 "streams": app_streams,
                 "mode": "trend_within_window",
@@ -522,8 +522,8 @@ def main():
     # ------------------------------------------------------------ mood
     mood = {
         "definition": (
-            "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public HDFC "
-            "Bank voice, compared with the window average (1 July to 28 September 2026). Source-weighted: each source's "
+            "Mood index: net sentiment, (positive − negative) ÷ on-topic items × 100, over the last 7 days of public NatWest "
+            "Group voice, compared with the window average (1 July to 28 September 2026). Source-weighted: each source's "
             "net sentiment counts in proportion to its share of the whole window, so a burst or a gap in one source's "
             "collection cannot move it. Range −100 to +100."
         ),
@@ -532,9 +532,9 @@ def main():
     }
 
     # ------------------------------------------------------------ release pulse (HDFC Bank app)
-    app_rs = [r for r in reviews if r["app_name"] == "HDFC Bank app"]
+    app_rs = [r for r in reviews if r["app_name"] == "NatWest app"]
     app_neg = [r for r in app_rs if r["rating"] <= 2]
-    bank_app = next(a for a in apps if a["app"] == "HDFC Bank app")
+    bank_app = next((a for a in apps if a["app"] == "NatWest app"), None)
     new_v = [r for r in app_rs if (r["app_version"] or "").startswith("11")]
 
     def release_store(st):
@@ -555,10 +555,11 @@ def main():
     largest_other = max((t["count"] for t in theme_rows if t["id"] not in NON_ISSUE), default=0)
     rp_ex = pick_exemplars(app_neg, 5)
     evidence_ids.update(rp_ex)
-    release = {
+    # No release pulse without a United Kingdom store series to support it (brief Step 5, removed list).
+    release = None if bank_app is None else {
         "id": "release-pulse",
         "label": "Release pulse: the fix list customers have written",
-        "app": "HDFC Bank app", "owner": "digital", "owner_label": "Digital", "pillar": "availability", "rung": "Voice",
+        "app": "NatWest app", "owner": "digital", "owner_label": "Digital", "pillar": "availability", "rung": "Voice",
         "action": "Route with evidence", "status": "needs_you",
         "count": len(app_neg), "n_reviews": len(app_rs),
         "ranks_top": len(app_neg) >= largest_other,
@@ -573,8 +574,8 @@ def main():
         "exemplars": rp_ex,
         "praise_exemplars": bank_app["praise_exemplars"],
         "daily_negative": [{"date": d, "count": c} for d, c in sorted(collections.Counter(r["created_at"][:10] for r in app_neg).items())],
-        "coverage": [f"{s['stream'].split(':')[0].replace('playstore', 'Play Store').replace('appstore', 'App Store')} {s['earliest']} to {s['latest']}" for s in bank_app["streams"]],
-        "trend_label": "trend within window (Play Store export starts 25 July)",
+        "coverage": [f"{s['stream'].split(':')[0].replace('playstore', 'Google Play').replace('appstore', 'App Store')} {s['earliest']} to {s['latest']}" for s in bank_app["streams"]],
+        "trend_label": "trend within window",
     }
 
     # ------------------------------------------------------------ briefing
@@ -596,7 +597,7 @@ def main():
             )
     needs = [t["id"] for t in theme_rows if t["status"] == "needs_you"]
     briefing = {
-        "needs_you": (["release-pulse"] if release["ranks_top"] else []) + needs,
+        "needs_you": (["release-pulse"] if release and release["ranks_top"] else []) + needs,
         "this_week": [t["id"] for t in sorted(theme_rows, key=lambda t: -t["score"]) if t["status"] == "this_week"],
         "improving": [t["id"] for t in theme_rows if t["status"] == "improving"],
         "since_830": since_830,
@@ -609,8 +610,8 @@ def main():
     }
 
     # ------------------------------------------------------------ responses (Play Store replies)
-    now = dt.datetime(2026, 9, 28, 23, 59, tzinfo=IST)
-    ps = [r for r in reviews if r["source"] == "playstore" and r["entity"] == "hdfc_bank"]
+    now = dt.datetime(2026, 11, 11, 23, 59, tzinfo=IST)
+    ps = [r for r in reviews if r["source"] == "playstore" and r["entity"] == "natwest_group"]
 
     by_app = {}
     for app in sorted({r["app_name"] for r in ps}):
@@ -618,9 +619,9 @@ def main():
     neg_ps = [r for r in ps if r["rating"] <= 2]
     responses = {
         "provenance": "public",
-        "definition": "A Play Store review is responded when the bank has posted a reply on it; open too long when there is still no reply 48 hours after it was posted. A redirect-only reply sends the customer elsewhere (email, call, DM, branch) rather than answering.",
+        "definition": "A store review is responded when the bank has posted a reply on it; open too long when there is still no reply 48 hours after it was posted. A redirect-only reply sends the customer elsewhere (email, call, DM, branch) rather than answering.",
         "replies_available": True,
-        "scope_note": "Bank replies are visible on Play Store reviews only. App Store exports carry no reply field; bank-authored X posts were not collected.",
+        "scope_note": "Bank replies are counted where the source carries them. App Store exports carry no reply field; bank-authored X posts were not collected.",
         "reviews_in_scope": len(ps),
         "all": resp_stats(ps),
         "negative": resp_stats(neg_ps),
@@ -632,14 +633,18 @@ def main():
 
     # ------------------------------------------------------------ meta
     meta = {
-        "generated_by": "scripts/hdfc_pipeline/aggregate.py",
+        "generated_by": "scripts/natwest_pulse/aggregate.py",
         "as_of": AS_OF,
         "brief_date": BRIEF["date"],
         "brief_label": BRIEF["label"],
         "brief_time": BRIEF["time"],
         "window": {"start": W_START, "end": W_END},
         "provenance": {"public": "Public · live", "internal": "Internal · illustrative until discovery", "joined": "Joined · needs bank systems"},
-        "scope_note": "Bank-wide figures: HDFC Bank only, on-topic items in the window. HDFC Life, HDFC Securities and other group companies are kept in the data and excluded from bank-wide figures.",
+        "scope_note": "Retail figures: NatWest, Royal Bank of Scotland and Ulster Bank, on-topic items in the window. Coutts, Mettle and other group companies are kept in the data and excluded from retail figures.",
+        "data_freeze": "2026-11-12T07:45:00+00:00",
+        "freeze_label": "Thursday 12 November 2026, 07:45 GMT",
+        "sources": json.loads((OUT / "sources.json").read_text(encoding="utf-8"))["sources"],
+        "public_loaded": len(bank) > 0,
         "records": {
             "total": len(rows),
             "by_source": dict(collections.Counter(r["source"] if r["source"] != "forum" else f"forum:{r['subreddit']}" for r in rows)),
@@ -653,13 +658,9 @@ def main():
         "trend_basis_streams": sorted(basis),
         "baseline_streams": [],
         "coverage_notes": [
-            "Coverage differs by source: forums, X and most store exports cover 1 July to 28 September 2026; Reddit changed collector on 1 September and X's last weekly run was capped (no items on 20–22 September). Trends and mood are source-weighted and leave Reddit out; they compare the two halves of the window (no earlier baseline).",
-            "Play Store HDFC Bank app reviews start on 25 July (the export holds the latest 5,000): counted in totals, left out of trends.",
-            "X and Reddit are filtered to posts that mention HDFC Bank or its products; bank and brand handles are excluded.",
-            "Bank replies are visible on Play Store reviews only.",
-            "No competitor data delivered: the competitor strip is hidden.",
-        ],
-        "icici_available": False,
+            f"{x['label']}: not loaded" for x in json.loads((OUT / "sources.json").read_text(encoding="utf-8"))["sources"] if not x["loaded"]
+        ] or ["Trends and mood are source-weighted; one store per rating comparison."],
+        "icici_available": False,  # oct13 field name, kept; no competitor data
     }
 
     # ------------------------------------------------------------ evidence
@@ -690,7 +691,8 @@ def main():
     print("needs_you", briefing["needs_you"], "this_week", briefing["this_week"])
     print("mood", mood["value"], mood["window_average"], mood["delta_pts"])
     print("responses", json.dumps(responses["all"]), json.dumps(responses["negative"]))
-    print("release", release["count"], release["n_reviews"], release["ranks_top"], release["by_store"]["playstore"]["new_app_avg"], release["by_store"]["playstore"]["old_app_avg"])
+    if release:
+        print("release", release["count"], release["n_reviews"], release["ranks_top"], release["by_store"]["playstore"]["new_app_avg"], release["by_store"]["playstore"]["old_app_avg"])
 
 
 if __name__ == "__main__":

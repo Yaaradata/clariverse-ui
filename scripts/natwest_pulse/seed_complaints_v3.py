@@ -30,14 +30,15 @@ import datetime as dt
 import json
 import random
 
+import complaint_rules
 from common import PERIOD_END, SEED, SEED_V3, load
 from complaint_rules import decide
 
 END = dt.datetime.fromisoformat(PERIOD_END)
 LISTS = ("priority_a", "priority_b", "uhni")  # the bank's own lists (the derived "multi" cohort is not a list)
 # Escalation language on a contact: an RBI or Ombudsman named, or legal / consumer-court language.
-ESC_IMPACT = {"regulator_named": "RBI or Ombudsman named", "legal_language": "Consumer court or legal notice"}
-ESC_RUNG = {"rbi_ombudsman": "RBI or Ombudsman named", "io": "RBI or Ombudsman named"}
+ESC_IMPACT = {"regulator_named": "Regulator or Ombudsman named", "legal_language": "Legal language or a solicitor named"}
+ESC_RUNG = {"rbi_ombudsman": "Regulator or Ombudsman named", "io": "Regulator or Ombudsman named"}
 
 
 def ts(s):
@@ -114,6 +115,7 @@ def main():
             "outcome": outcome,
             "decision_at": iso(decision),
             "io_reviewed_at": iso(io_done),
+            "referred_at": iso(complaint_rules.referred_at(r, d)),
             # Unhappy with the reply: the customer reopened the complaint or contacted the bank again on the issue.
             "unhappy_at": iso(unhappy_at),
             "unhappy_how": unhappy_how,

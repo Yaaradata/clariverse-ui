@@ -933,3 +933,25 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
 - **NW-D19 · Period toggle.** Step 3.6 asks for This week · Last 4 weeks · Last 13 weeks; Step 5.1 and the layout rule
   keep the `oct13` toggle (Morning brief · Last 7 days · Last 30 days · Full window). The layout rule wins; every
   period is anchored to the freeze and the full window starts 1 Aug.
+- **NW-D20 · Theme hex values.** The brief names the Yaaralabs theme as #1c1c1c / #2a2a2a / #bc6cd3 / #dcfc84, but the
+  `oct13` screens use their own palette (background #0d0d0d, accent #5332FF; light theme as copied). The layout rule
+  says "same as `oct13`, nothing restyled", so the copied `oct13` theme is kept exactly. Confirm with Usha which is meant.
+- **NW-D21 · Ids kept, labels swapped.** Product ids renamed only where the URL would show an Indian or wrong name
+  (payzapp→payments_fraud, accounts→current_accounts, home_loans→mortgages, insurance→savings, auto_loans→overdrafts);
+  cards, personal_loans and digital keep their ids (shared with owner keys); the digital module is cora_digital. List
+  ids (priority_a, priority_b, uhni, multi), channel ids (whatsapp carries Cora, chat carries app chat) and period ids
+  are the oct13 ids. Eight product rows as in oct13: the brief's six cards, Overdrafts (the oct13 eighth row,
+  relabelled) and Cora (module and channel, never a card).
+- **NW-D22 · Dates.** Synthetic dates shifted 44 days (brief morning 12 Nov 07:45 GMT, public end 11 Nov); window
+  starts 1 Aug; times in GMT; business days skip weekends.
+- **NW-D23 · Hand-set theme mix.** With no public pull, every product's internal theme mix is hand-set (disclosed in the
+  seed's QA block, as oct13 did for its thin products).
+- **NW-D24 · No simulated public replies.** oct13 simulated bank replies on X, App Store, Reddit and forums (an HDFC
+  exception, D24). Not carried over (HL-15): a reply counts only where the source carries it.
+- **NW-D25 · Ombudsman tiles.** Brink = within 10 days of the final-response deadline (8 weeks; 15 business days for
+  payment services); eligible = past it with no final response; unhappy = within 6 months of the final response;
+  referred = referred to the Financial Ombudsman Service (the oct13 "awaiting IO review" tile, same field). Reconcile and
+  its independent recomputation re-based on these rules; the "not upheld" band is 35-55% (anchor about 55% upheld).
+- **NW-D26 · Fixtures.** The HDFC reconcile fixtures run on the NatWest data with the NatWest checker (42 trip; 4 need
+  public data and are skipped until it lands). The brief's "brand rows sum to group" applies to the public layer, which
+  is empty; the brand field is written by normalise.py and the check is still to add when the pull lands.

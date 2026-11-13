@@ -24,7 +24,7 @@ PERSON_FLAG_KEYS = {"high_impact", "sensitive", "sensitivity", "vip", "official"
 # Theme-mix rule (B7 §2): internal share within ±20% (relative) of the target share, for themes with ≥ 5% target share.
 # Targets are the public mix per product, except where public voice is too thin and the generator uses a disclosed
 # substitute (auto loans: the combined loans mix; insurance: a hand-set mix). Those are reported, not hidden.
-THIN_PUBLIC = {"auto_loans", "insurance"}
+THIN_PUBLIC = {"overdrafts", "savings"}
 # One store per comparison (B7 §4.1, follow-up fix 2): a store rating or share may only sit inside a per-store scope.
 RATING_KEYS = {"avg_rating", "ratings", "share_positive", "new_app_avg", "old_app_avg", "new_app_share_positive", "old_app_share_positive"}
 STORE_SCOPES = {"by_store", "versions_by_store"}
@@ -52,9 +52,9 @@ def _theme_targets(products: dict) -> tuple[dict, dict]:
     public = {r["id"]: {i["id"]: i["count"] for i in r["issues"]} for r in products["rows"]}
     target = dict(public)
     loans = collections.Counter()
-    for lp in ("personal_loans", "home_loans", "auto_loans"):
+    for lp in ("personal_loans", "mortgages", "overdrafts"):
         loans.update(public.get(lp, {}))
-    target["auto_loans"] = dict(loans)
+    target["overdrafts"] = dict(loans)
     target.update(HAND_MIX)
     return public, target
 
@@ -187,7 +187,7 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     at_least = lambda r, x: bool(r["escalation"]) and rung[r["escalation"]] >= rung[x]  # noqa: E731
     ladder = {x["rung"]: x["count"] for x in agg["deliverables_detail"]["ladder"]}
     md = agg["md_mail"]
-    ok(md["total"] == sum(1 for r in inter if at_least(r, "md_office")) == ladder["MD's office"],
+    ok(md["total"] == sum(1 for r in inter if at_least(r, "md_office")) == ladder["Head of CX"],
        f"MD-marked mail = records at the MD's office rung = ladder rung ({md['total']})")
     ok(sum(r["mails"] for r in md["rows"]) == md["shown"] <= md["total"], "MD mail rows sum to the shown count")
     ok(ladder["Voice"] == len(inter) and ladder["Repeat"] == sum(1 for r in inter if r["repeat"]), "ladder Voice and Repeat recomputed")
@@ -204,7 +204,7 @@ def run(seed_dir: Path = SEED_V3, out_dir: Path = OUT_APP, quiet: bool = False) 
     bad_tat = [
         d["id"]
         for d in agg["deliverables"]
-        if d["source"] not in ("rbi", "bank_confirmed") and d["tat_label"] != BANK_TAT_LABEL
+        if d["source"] not in ("fca", "psr", "bank_confirmed") and d["tat_label"] != BANK_TAT_LABEL
         or d["source"] == "bank_confirmed" and (not d.get("source_note") or d["tat_label"] == BANK_TAT_LABEL)
     ]
     ok(not bad_tat, f"bank TATs: unconfirmed read '{BANK_TAT_LABEL}'; confirmed cite a source ({bad_tat[:3]})")
@@ -438,29 +438,40 @@ def v4_checks(per, ok):
            f"V4 open too long [{pid}]: Cards on the bank view = Cards view; businesses within the bank")
         ok(all(b["open_too_long"] <= b["open"] <= b["volume"] for b in c["priority_slice"]) and len(c["to_close"]) <= 15
            and len(c["top_complaints"]) <= 15, f"V4 slice and lists [{pid}]: too long <= open <= volume; at most 15 rows")
-    ok(len(per.get("v4", {}).get("queries", {})) == 3 and all(q["list"] for q in per["v4"]["queries"].values()),
-       "V4 Ask: the three scripted queries each return a list")
+    # NatWest: the public query may be empty only while no public data is loaded (its count is then 0 too).
+    ok(len(per.get("v4", {}).get("queries", {})) == 3
+       and all(q["list"] or (k == "unanswered_negatives_48h" and q["count"] == 0) for k, q in per["v4"]["queries"].items()),
+       "V4 Ask: the three scripted queries each return a list (the public one empty only with no public data)")
 
 
 # ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md)
 # Recomputed here from the complaint register with its own code (not ombudsman_v3), so the two must agree.
 
 def _omb_state(c, T):
-    t = lambda k: dt.datetime.fromisoformat(c[k]) if c[k] else None  # noqa: E731
+    """Independent recomputation of the Financial Ombudsman Service states (8 weeks; 15 business days for payment
+    services; 6 months after the final response; referred = out of the at-risk states)."""
+    t = lambda k: dt.datetime.fromisoformat(c[k]) if c.get(k) else None  # noqa: E731
     rec, reply = t("received_at"), t("final_reply_at")
     if rec > T:
         return None
-    d30, d90 = dt.timedelta(days=30), dt.timedelta(days=90)
+    if c["product"] == "payments_fraud":
+        due, n = rec, 0
+        while n < 15:
+            due += dt.timedelta(days=1)
+            n += due.weekday() < 5
+    else:
+        due = rec + dt.timedelta(days=56)
     if reply is None or reply > T:
-        age = T - rec
-        left = None if age >= d30 else int((rec + d30 - T) / dt.timedelta(days=1))
-        dec, io = t("decision_at"), t("io_reviewed_at")
-        st = {"open": True, "eligible": d30 <= age < d30 + d90, "brink": left is not None and left <= 10, "unhappy": False,
-              "awaiting_io": bool(dec and dec <= T and (io is None or io > T)), "left": left}
+        left = None if T >= due else int((due - T) / dt.timedelta(days=1))
+        st = {"open": True, "eligible": T >= due, "brink": left is not None and left <= 10, "unhappy": False,
+              "awaiting_io": False, "left": left}
     else:
         back = t("unhappy_at")
-        unhappy = bool(back and reply < back <= T and T < reply + d90)
+        unhappy = bool(back and reply < back <= T and T < reply + dt.timedelta(days=183))
         st = {"open": unhappy, "eligible": False, "brink": False, "unhappy": unhappy, "awaiting_io": False, "left": None}
+    ref = t("referred_at")
+    if ref and ref <= T:
+        st.update(awaiting_io=True, brink=False, eligible=False, unhappy=False, left=None, open=reply is None or reply > T)
     st["at_risk"] = st["brink"] or st["eligible"] or st["unhappy"]
     return st
 
@@ -500,10 +511,11 @@ def ombudsman_checks(seed_dir, per, inter, ok):
     rbi = [c for c in cs if src.get(c["source_id"], {}).get("escalation") == "rbi_ombudsman"]
     end = dt.datetime.fromisoformat(per["end"])
     ok(len(rbi) == sum(1 for r in inter if r.get("escalation") == "rbi_ombudsman")
-       and all(c["unhappy_at"] or (not c["final_reply_at"] and end - dt.datetime.fromisoformat(c["received_at"]) > dt.timedelta(days=30)) for c in rbi),
-       f"RBI Ombudsman: every contact at that rung is a complaint that was unhappy with the reply or past day 30 without one ({len(rbi)} in the sample)")
-    ok(0.06 <= W(decided) / max(W(cs), 1) <= 0.12,
-       f"Internal Ombudsman: reject rate {100 * W(decided) / max(W(cs), 1):.1f}% of complaints ({W(decided)} of {W(cs)}), within 6-12%")
+       and all(c.get("referred_at") for c in rbi),
+       f"Financial Ombudsman Service: every contact at that rung is a complaint the customer referred ({len(rbi)} in the sample)")
+    # NatWest anchor (brief Step 3.8): about 55% upheld, so about 45% not upheld; a 35-55% band.
+    ok(0.35 <= W(decided) / max(W(cs), 1) <= 0.55,
+       f"Final response: not upheld {100 * W(decided) / max(W(cs), 1):.1f}% of complaints ({W(decided)} of {W(cs)}), within 35-55%")
     ok(all(c["outcome"] in ("partly_rejected", "rejected") for c in decided) and not any(c["decision_at"] for c in cs if c["outcome"] == "resolved"),
        "Internal Ombudsman: only rejected or partly rejected complaints carry a decision")
     ok(all((c["unhappy_at"] is None) or c["final_reply_at"] for c in cs), "Unhappy with the reply: only replied complaints")
@@ -523,7 +535,7 @@ def ombudsman_checks(seed_dir, per, inter, ok):
                 ok(all(got[k] == blk[when][k] for k in keys), f"[{pid}] Ombudsman {label} {when} recomputed {got}")
                 ok(all(s["open"] for s in sts if s["at_risk"]) and got["at_risk"] <= got["open"],
                    f"[{pid}] Ombudsman {label} {when}: at risk is a subset of open complaints")
-                ok(all(s["open"] for s in sts if s["awaiting_io"]), f"[{pid}] Ombudsman {label} {when}: awaiting IO review are open")
+                ok(not any(s["at_risk"] for s in sts if s["awaiting_io"]), f"[{pid}] Ombudsman {label} {when}: referred complaints are never counted at risk")
             ok(sum(blk["now"]["buckets"].values()) == blk["now"]["brink"], f"[{pid}] Ombudsman {label}: countdown buckets = on the brink")
             T = dt.datetime.fromisoformat(blk["as_of"])
             pending = sum(c["w"] for c in scope if dt.datetime.fromisoformat(c["received_at"]) <= T
@@ -534,8 +546,10 @@ def ombudsman_checks(seed_dir, per, inter, ok):
             io = blk["io"]
             got_io = (sum(c["w"] for c in scope if c["decision_at"] and dt.datetime.fromisoformat(c["decision_at"]) <= T),
                       sum(c["w"] for c in scope if c["io_reviewed_at"] and dt.datetime.fromisoformat(c["io_reviewed_at"]) <= T))
-            ok(got_io == (io["decided"], io["reviewed"]) and io["decided"] - io["reviewed"] == blk["now"]["awaiting_io"],
-               f"[{pid}] Internal Ombudsman {label}: sent for review {io['decided']} = reviewed {io['reviewed']} + awaiting {blk['now']['awaiting_io']}")
+            referred = sum(c["w"] for c in scope if c.get("referred_at") and dt.datetime.fromisoformat(c["referred_at"]) <= T
+                           and dt.datetime.fromisoformat(c["received_at"]) <= T)
+            ok(got_io == (io["decided"], io["reviewed"]) and referred == blk["now"]["awaiting_io"],
+               f"[{pid}] Ombudsman {label}: referred to the Financial Ombudsman Service {blk['now']['awaiting_io']} = the register's referrals {referred}")
             if label == "Cards":
                 rungs = {x["rung"]: x["count"] for x in p["cards"]["service_full"]["ladder"]}
                 a_, b_ = dt.datetime.fromisoformat(p["start"]), dt.datetime.fromisoformat(p["end"])
@@ -544,10 +558,11 @@ def ombudsman_checks(seed_dir, per, inter, ok):
                 reg = sum(c["w"] for c in scope if a_ <= dt.datetime.fromisoformat(c["received_at"]) < b_ and c["decision_at"])
                 rbi_only = sum(r["w"] for r in in_win if r.get("escalation") == "rbi_ombudsman" and not (
                     r["id"] in {c["source_id"] for c in scope if c["decision_at"]}))
-                ok(rungs["Internal Ombudsman"] == reg + rbi_only,
-                   f"[{pid}] Internal Ombudsman: the Cards ladder's IO rung ({rungs['Internal Ombudsman']}) = the register's complaints sent for review ({reg}) plus RBI-rung contacts outside it ({rbi_only})")
+                ok(rungs["Final response"] == reg + rbi_only,
+                   f"[{pid}] Internal Ombudsman: the Cards ladder's IO rung ({rungs['Final response']}) = the register's complaints sent for review ({reg}) plus RBI-rung contacts outside it ({rbi_only})")
             if label == "bank":
-                ok(0.15 <= near / max(pending, 1) <= 0.75, f"[{pid}] Ombudsman: brink + eligible is a plausible share of pending ({100 * near / max(pending, 1):.0f}%)")
+                # 8-week limit (NatWest): the last 10 days are a smaller slice of pending than under a 30-day rule.
+                ok(0.05 <= near / max(pending, 1) <= 0.75, f"[{pid}] Ombudsman: brink + eligible is a plausible share of pending ({100 * near / max(pending, 1):.0f}%)")
             ok(all(blk["delta"][k] == blk["now"][k] - blk["prev"][k] for k in keys), f"[{pid}] Ombudsman {label}: changes = now - previous")
         ok(all(sum(x[k] for x in o["by_business"]) == o["now"][k] for k in keys), f"[{pid}] Ombudsman: businesses sum to the bank total")
         cards_row = next(x for x in o["by_business"] if x["id"] == "cards")

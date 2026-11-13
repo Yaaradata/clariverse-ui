@@ -7,41 +7,42 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA = ROOT / "data"
-RAW = DATA / "raw" / "hdfc"
-OUT_APP = DATA / "out" / "app_jul_sep"
-SEED_V3 = DATA / "seed" / "internal_v3"
+RAW = DATA / "raw" / "natwest"
+OUT_APP = DATA / "out" / "natwest_pulse"
+SEED_V3 = DATA / "seed" / "natwest_pulse"
 
 SEED = 20260928
 # The brief is written for the 29 September morning review: every age is measured from this moment.
-NOW = "2026-09-29T07:45:00+05:30"
-WINDOW = ("2026-07-01", "2026-09-28")
+NOW = "2026-11-12T07:45:00+00:00"
+WINDOW = ("2026-08-01", "2026-11-11")
 
 # Rows of the "pulse by product" table (B7 §1 E1.6). Group-company apps stay excluded.
 PRODUCTS = [
-    {"id": "cards", "label": "Cards", "owner": "cards", "module": "cards"},
-    {"id": "payzapp", "label": "PayZapp and UPI", "owner": "payments", "module": None},
-    {"id": "accounts", "label": "Accounts and deposits", "owner": "retail", "module": None},
+    {"id": "cards", "label": "Credit cards", "owner": "cards", "module": "cards"},
+    {"id": "payments_fraud", "label": "Payments and fraud", "owner": "payments", "module": None},
+    {"id": "current_accounts", "label": "Current accounts and app", "owner": "retail", "module": None},
     {"id": "personal_loans", "label": "Personal loans", "owner": "loans", "module": None},
-    {"id": "home_loans", "label": "Home loans", "owner": "loans", "module": None},
-    {"id": "auto_loans", "label": "Auto and two-wheeler loans", "owner": "loans", "module": None},
-    {"id": "insurance", "label": "Insurance (bank-sold)", "owner": "product", "module": None},
-    {"id": "digital", "label": "Digital (app and NetBanking)", "owner": "digital", "module": "digital"},
+    {"id": "mortgages", "label": "Mortgages", "owner": "loans", "module": None},
+    {"id": "overdrafts", "label": "Overdrafts", "owner": "retail", "module": None},
+    {"id": "savings", "label": "Savings", "owner": "product", "module": None},
+    # Cora and the digital assistant: a module (module/cora_digital) and a CX-pulse channel, never a business card.
+    {"id": "digital", "label": "Cora and digital assistant", "owner": "digital", "module": "cora_digital"},
 ]
 PRODUCT_IDS = [p["id"] for p in PRODUCTS]
 PRODUCT_LABEL = {p["id"]: p["label"] for p in PRODUCTS}
 
 OWNER_LABEL = {
-    "cx": "CX",
-    "digital": "Digital",
-    "cards": "Cards",
-    "retail": "Retail",
-    "loans": "Loans",
-    "payments": "Payments",
+    "cx": "Complaints lead",
+    "digital": "Digital and Cora",
+    "cards": "Credit cards product owner",
+    "retail": "Current accounts product owner",
+    "loans": "Lending product owner",
+    "payments": "Payments operations",
     "compliance": "Compliance",
-    "fraud_cyber": "Fraud and Cyber",
+    "fraud_cyber": "Fraud operations",
     "operations": "Operations",
-    "rm": "Relationship managers",
-    "product": "Product",
+    "rm": "Relationship managers (Premier)",
+    "product": "Savings product owner",
 }
 
 # Deliverables (B7 D1). TATs marked "rbi" are published RBI timelines. "bank_confirmed" rows carry a TAT the bank has
@@ -49,109 +50,59 @@ OWNER_LABEL = {
 # are unconfirmed and read BANK_TAT_LABEL; their `tat_days` is a parameter of the illustrative sample generator only and
 # never reaches a screen (follow-up fix 3). Days are working days (Sundays skipped) unless `calendar` is set.
 # D-11 (the TAT reference B7 inherits) is not in the repo (qa/tat_check.md), so no bank row is confirmed yet.
-BANK_TAT_LABEL = "Bank TAT: confirm in discovery"
+BANK_TAT_LABEL = "Bank timeline: confirm with the bank"
+# United Kingdom timelines (brief Step 5.12). "fca" and "psr" rows are published rules from the register
+# (data/public/natwest_register.json); "bank" rows are unconfirmed and read BANK_TAT_LABEL; their tat_days drive the
+# illustrative generator only. Days are business days (weekends skipped) unless `calendar` is set.
 DELIVERABLES = {
     "failed_reversal": {
-        "label": "Failed transaction reversal",
+        "label": "Failed payment returned",
         "tat_days": 1,
-        "tat_label": "T+1 (UPI, card-to-card); T+5 (ATM)",
-        "source": "rbi",
-        "source_note": "RBI, harmonised TAT for failed transactions (20 Sep 2019)",
-        "compensation": "₹100 per day of delay",
+        "tat_label": "Same day (Faster Payments)",
+        "source": "fca",
+        "source_note": "Faster Payments same-day (register REG-FPS-SAMEDAY)",
+        "compensation": "—",
     },
-    "card_closure": {
-        "label": "Credit card closure",
-        "tat_days": 7,
-        "tat_label": "7 working days",
-        "source": "rbi",
-        "source_note": "RBI Master Direction on credit and debit cards (2022)",
-        "compensation": "₹500 per day of delay",
-    },
+    "card_closure": {"label": "Credit card closure", "tat_days": 7, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
     "unauthorised_reversal": {
-        "label": "Unauthorised transaction: shadow credit",
-        "tat_days": 10,
-        "tat_label": "10 working days",
-        "source": "rbi",
-        "source_note": "RBI, limiting customer liability in unauthorised electronic transactions (2017)",
-        "compensation": "Full shadow credit within the TAT",
+        "label": "Unauthorised transaction refund", "tat_days": 2, "tat_label": BANK_TAT_LABEL, "source": "bank",
+        "compensation": "—",
     },
-    "credit_report": {
-        "label": "Credit information correction",
-        "tat_days": 30,
-        "calendar": True,
-        "tat_label": "30 calendar days (21 bank + 9 bureau)",
-        "source": "rbi",
-        "source_note": "RBI, compensation for delayed credit-information correction (2023)",
-        "compensation": "₹100 per day of delay",
-    },
+    "credit_report": {"label": "Credit file correction", "tat_days": 20, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
     "loan_documents": {
-        "label": "Property documents after loan closure",
-        "tat_days": 30,
-        "calendar": True,
-        "tat_label": "30 calendar days",
-        "source": "rbi",
-        "source_note": "RBI, release of property documents on repayment (2023)",
-        "compensation": "₹5,000 per day of delay",
+        "label": "Title deeds after mortgage redemption", "tat_days": 20, "tat_label": BANK_TAT_LABEL, "source": "bank",
+        "compensation": "—",
     },
     "complaint_resolution": {
-        "label": "Complaint resolution before ombudsman eligibility",
-        "tat_days": 30,
+        "label": "Final response to a complaint",
+        "tat_days": 56,
         "calendar": True,
-        "tat_label": "30 calendar days",
-        "source": "rbi",
-        "source_note": "RBI Integrated Ombudsman Scheme (2021)",
-        "compensation": "Customer may escalate to the RBI Ombudsman",
+        "tat_label": "8 weeks (FCA DISP)",
+        "source": "fca",
+        "source_note": "FCA DISP final response within 8 weeks (register REG-DISP-8W)",
+        "compensation": "Customer may refer to the Financial Ombudsman Service",
     },
-    "card_dispatch": {
-        "label": "Card dispatch and delivery",
-        "tat_days": 7,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
-    },
-    "dispute": {
-        "label": "Card dispute and chargeback",
-        "tat_days": 30,
-        "calendar": True,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
-    },
-    "refund": {
-        "label": "Merchant refund credited",
-        "tat_days": 7,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
-    },
-    "service_request": {
-        "label": "Service request (KYC, account changes, card requests)",
-        "tat_days": 3,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
-    },
-    "account_unfreeze": {
-        "label": "Debit freeze review",
-        "tat_days": 3,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
-    },
-    "loan_disbursal": {
-        "label": "Loan sanction and disbursal",
+    "app_reimbursement": {
+        "label": "Push payment scam reimbursement",
         "tat_days": 5,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
+        "tat_label": "5 business days (PSR)",
+        "source": "psr",
+        "source_note": "PSR reimbursement for authorised push payment scams (register REG-PSR-APP)",
+        "compensation": "Reimbursement under the PSR rules",
     },
-    "query_response": {
-        "label": "First response to a query or complaint",
-        "tat_days": 1,
-        "tat_label": BANK_TAT_LABEL,
-        "source": "bank",
-        "compensation": "—",
+    "card_dispatch": {"label": "Card dispatch and delivery", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
+    "dispute": {
+        "label": "Card dispute and chargeback", "tat_days": 30, "calendar": True, "tat_label": BANK_TAT_LABEL,
+        "source": "bank", "compensation": "—",
     },
+    "refund": {"label": "Merchant refund credited", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
+    "service_request": {
+        "label": "Service request (identity checks, account changes, card requests)", "tat_days": 3,
+        "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—",
+    },
+    "account_unfreeze": {"label": "Account freeze review", "tat_days": 3, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
+    "loan_disbursal": {"label": "Loan decision and payout", "tat_days": 5, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
+    "query_response": {"label": "First response to a query or complaint", "tat_days": 1, "tat_label": BANK_TAT_LABEL, "source": "bank", "compensation": "—"},
 }
 
 # Public theme → deliverable it is measured against. Themes not listed use query_response.
@@ -165,6 +116,7 @@ THEME_DELIVERABLE = {
     "complaint_handling": "complaint_resolution",
     "card_dispatch": "card_dispatch",
     "dispute_chargeback": "dispute",
+    "app_reimbursement": "app_reimbursement",
     "refund_delay": "refund",
     "kyc_updates": "service_request",
     "card_variant_migration": "service_request",
@@ -191,7 +143,8 @@ JOURNEY_STAGE = {
         "Service requests",
     ),
     **dict.fromkeys(
-        ["dispute_chargeback", "failed_txn_reversal", "refund_delay", "unauthorised_txn", "fraud_scam", "phishing"],
+        ["dispute_chargeback", "failed_txn_reversal", "refund_delay", "unauthorised_txn", "fraud_scam", "phishing",
+         "app_reimbursement"],
         "Disputes and fraud",
     ),
     **dict.fromkeys(["closure_requests", "loan_closure_documents"], "Close"),
@@ -250,8 +203,8 @@ def dump(obj, path: Path, indent: int | None = 1):
 # ------------------------------------------------------------------ periods (30 Sep review, changes_30sep.md A1)
 # Every period ends at the last moment in the data (29 Sep 08:30), never at the real clock. The morning brief is
 # yesterday 08:30 to today 08:30 in data time.
-PERIOD_END = "2026-09-29T08:30:00+05:30"
-DATA_START = "2026-07-01T00:00:00+05:30"
+PERIOD_END = "2026-11-12T08:30:00+00:00"
+DATA_START = "2026-08-01T00:00:00+00:00"
 PERIODS = [
     {"id": "brief", "label": "Morning brief", "days": 1, "short": True},
     {"id": "7d", "label": "Last 7 days", "days": 7, "short": True},
@@ -273,55 +226,50 @@ CHANNEL_GROUP = {
     "social_inbox": "social",
     "branch": "branch",
 }
-CHANNEL_GROUP_ORDER = ["emails", "calls", "chat", "whatsapp", "social", "branch"]
+# NatWest rows (brief Step 5.4): Calls · Cora · App chat · Email · Social · Branch. The ids stay the oct13 ids (the
+# screens key on them): "whatsapp" carries Cora, the digital assistant; "chat" carries in-app chat with an agent.
+CHANNEL_GROUP_ORDER = ["calls", "whatsapp", "chat", "emails", "social", "branch"]
 CHANNEL_GROUP_LABEL = {
-    "emails": "Emails",
+    "emails": "Email",
     "calls": "Calls",
-    "chat": "Chat",
-    "whatsapp": "WhatsApp",
+    "chat": "App chat",
+    "whatsapp": "Cora",
     "social": "Social",
     "branch": "Branch",
 }
 PULSE_LISTS = ["priority_a", "priority_b", "uhni", "multi"]
 
 # Businesses on the morning brief cards (3 + 3). Insurance is thin in public voice; auto loans thinner still.
-BRIEF_BUSINESSES = ["cards", "payzapp", "accounts", "personal_loans", "home_loans", "insurance"]
+BRIEF_BUSINESSES = ["cards", "payments_fraud", "current_accounts", "personal_loans", "mortgages", "savings"]
 
 # Cards issue categories (C3): each public item and interaction counts once, under its primary theme's category;
 # the themes are the subcategories. Owners are roles in the cards team, never names. "tat" marks categories that
 # carry a deliverable (the old Deliverables breakdown), shown without TAT compliance.
 CARDS_CATEGORIES = [
-    {"id": "rewards", "label": "Rewards and redemption", "owner": "Cards · Rewards lead", "tat": False,
+    {"id": "rewards", "label": "Rewards and redemption", "owner": "Credit cards · Rewards lead", "tat": False,
      "themes": ["rewards_value", "reward_redemption", "offers_deals"]},
-    {"id": "upgrades", "label": "Upgrades, variants and eligibility", "owner": "Cards · Product lead", "tat": True,
+    {"id": "upgrades", "label": "Upgrades, variants and eligibility", "owner": "Credit cards · Product lead", "tat": True,
      "themes": ["card_variant_migration", "card_eligibility_upgrade"]},
-    {"id": "applications", "label": "Applications and verification", "owner": "Cards · Acquisition lead", "tat": True,
+    {"id": "applications", "label": "Applications and verification", "owner": "Credit cards · Acquisition lead", "tat": True,
      "themes": ["card_application", "kyc_updates"]},
-    {"id": "fees", "label": "Fees and charges", "owner": "Cards · Pricing lead", "tat": False,
+    {"id": "fees", "label": "Fees and charges", "owner": "Credit cards · Pricing lead", "tat": False,
      "themes": ["card_fees_charges", "fees_charges_bank"]},
-    {"id": "limits", "label": "Limits", "owner": "Cards · Credit policy lead", "tat": True, "themes": ["card_limit"]},
-    {"id": "disputes", "label": "Disputes, refunds and reversals", "owner": "Cards · Disputes lead", "tat": True,
+    {"id": "limits", "label": "Limits", "owner": "Credit cards · Credit policy lead", "tat": True, "themes": ["card_limit"]},
+    {"id": "disputes", "label": "Disputes, refunds and reversals", "owner": "Credit cards · Disputes lead", "tat": True,
      "themes": ["dispute_chargeback", "refund_delay", "failed_txn_reversal", "unauthorised_txn", "merchant_pos"]},
-    {"id": "delivery", "label": "Card delivery", "owner": "Cards · Fulfilment lead", "tat": True, "themes": ["card_dispatch"]},
-    {"id": "closure", "label": "Closure", "owner": "Cards · Retention lead", "tat": True, "themes": ["closure_requests"]},
-    {"id": "service", "label": "Service and complaint handling", "owner": "Cards · Service lead", "tat": True,
+    {"id": "delivery", "label": "Card delivery", "owner": "Credit cards · Fulfilment lead", "tat": True, "themes": ["card_dispatch"]},
+    {"id": "closure", "label": "Closure", "owner": "Credit cards · Retention lead", "tat": True, "themes": ["closure_requests"]},
+    {"id": "service", "label": "Service and complaint handling", "owner": "Credit cards · Service lead", "tat": True,
      "themes": ["complaint_handling", "care_unreachable", "branch_service", "rm_service", "unsolicited_calls"]},
-    {"id": "fraud", "label": "Fraud and security", "owner": "Cards · Fraud lead", "tat": False,
+    {"id": "fraud", "label": "Fraud and security", "owner": "Credit cards · Fraud lead", "tat": False,
      "themes": ["fraud_scam", "phishing", "device_security_block", "recovery_conduct"]},
-    {"id": "digital", "label": "App and online card servicing", "owner": "Cards · Digital lead", "tat": False,
-     "themes": ["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "netbanking", "statements_documents"]},
+    {"id": "digital", "label": "App and online card servicing", "owner": "Credit cards · Digital lead", "tat": False,
+     "themes": ["app_speed_crash", "app_usability", "login_mpin", "new_app_release", "online_banking", "statements_documents"]},
 ]
-CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Cards · CX lead", "tat": False, "themes": []}
+CARDS_OTHER = {"id": "other", "label": "Other", "owner": "Credit cards · CX lead", "tat": False, "themes": []}
 
 
 def inr(n: int) -> str:
-    """A count with Indian digit grouping (1,10,047), for sentences written by the pipeline."""
-    s = str(abs(int(n)))
-    if len(s) > 3:
-        head, tail = s[:-3], s[-3:]
-        parts = []
-        while len(head) > 2:
-            parts.insert(0, head[-2:])
-            head = head[:-2]
-        s = ",".join([p for p in [head, *parts, tail] if p])
-    return ("-" if n < 0 else "") + s
+    """A count with United Kingdom digit grouping (110,047), for sentences written by the pipeline. The name is kept
+    from the copied pipeline so every caller still works."""
+    return f"{int(n):,}"

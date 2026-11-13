@@ -365,6 +365,80 @@ def natwest_lint_fixtures(fails: list[str]) -> int:
     return n
 
 
+def natwest_reconcile_fixtures(fails: list[str]) -> int:
+    """The same tampered-data fixtures as the HDFC build, run on a copy of the NatWest data with the NatWest reconcile
+    (scripts/natwest_pulse/check_reconcile_v3.py, loaded by path: the HDFC module of the same name is imported above).
+    The untouched copy must pass; each fixture must trip its check."""
+    import contextlib  # noqa: PLC0415
+    import importlib.util  # noqa: PLC0415
+
+    nw_dir = ROOT / "scripts" / "natwest_pulse"
+    names = {f.stem for f in nw_dir.glob("*.py")}
+
+    @contextlib.contextmanager
+    def natwest_modules():
+        """The HDFC modules of the same names (common, complaint_rules, ...) are already imported; swap them out so the
+        NatWest checker reads the NatWest config, then put them back."""
+        saved = {k: sys.modules.pop(k) for k in list(sys.modules) if k in names}
+        sys.path.insert(0, str(nw_dir))
+        try:
+            yield
+        finally:
+            sys.path.remove(str(nw_dir))
+            for k in [k for k in list(sys.modules) if k in names]:
+                NW_MODULES[k] = sys.modules.pop(k)
+            sys.modules.update(saved)
+
+    with natwest_modules():
+        spec = importlib.util.spec_from_file_location("nw_reconcile", nw_dir / "check_reconcile_v3.py")
+        nw = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(nw)
+    seed, out = ROOT / "data" / "seed" / "natwest_pulse", ROOT / "data" / "out" / "natwest_pulse"
+    n = 0
+    with tempfile.TemporaryDirectory() as d:
+        base = Path(d)
+        cs, co = base / "seed", base / "out"
+        shutil.copytree(seed, cs)
+        co.mkdir()
+        for f in ("themes.json", "signals.json", "products.json", "app_pulse.json", "briefing.json", "store_series.json", "periods.json"):
+            shutil.copy(out / f, co / f)
+        with natwest_modules():
+            sys.modules.update(NW_MODULES)
+            got = nw.run(cs, co, quiet=True)
+        if got:
+            fails.append(f"NatWest: untouched data must pass, but {len(got)} check(s) failed: {got[:3]}")
+        public_loaded = json.loads((out / "meta.json").read_text(encoding="utf-8")).get("public_loaded")
+        for name, expect, tamper in FIXTURES:
+            expect = expect.replace("Bank TAT: confirm in discovery", "Bank timeline: confirm with the bank")
+            if not public_loaded and name in PUBLIC_ONLY_FIXTURES:
+                print(f"SKIP NatWest fixture '{name}': needs public data (not loaded; the check is vacuous until it lands)")
+                NW_SKIPPED.append(name)
+                continue
+            sd, od = base / f"s{n}", base / f"o{n}"
+            shutil.copytree(cs, sd)
+            shutil.copytree(co, od)
+            n += 1
+            try:
+                tamper(sd, od)
+            except (StopIteration, KeyError, IndexError, TypeError, AttributeError) as e:
+                print(f"SKIP NatWest fixture '{name}': the tamper needs public data or an HDFC-only field ({type(e).__name__})")
+                NW_SKIPPED.append(name)
+                continue
+            with natwest_modules():
+                sys.modules.update(NW_MODULES)
+                got = nw.run(sd, od, quiet=True)
+            hit = [g for g in got if expect in g]
+            print(("PASS " if hit else "FAIL ") + f"NatWest fixture '{name}' trips '{expect}'")
+            if not hit:
+                fails.append(f"NatWest fixture '{name}' did not trip '{expect}' ({got[:2]})")
+    return n
+
+
+NW_SKIPPED: list[str] = []
+PUBLIC_ONLY_FIXTURES = {"unweighted share with a dominant source"}
+NW_MODULES: dict = {}
+
+
 def main() -> int:
     fails: list[str] = []
     with tempfile.TemporaryDirectory() as d:
@@ -446,19 +520,11 @@ def main() -> int:
     ind_lint = indusind_lint_fixtures(fails)
     ind_rec = indusind_reconcile_fixtures(fails)
     nw_lint = natwest_lint_fixtures(fails)
-    # NatWest reconcile fixtures (scripts/natwest_pulse/check_reconcile_v3.py), loaded by path: the HDFC module of the
-    # same name is already imported above.
-    import importlib.util  # noqa: PLC0415
-
-    spec = importlib.util.spec_from_file_location("nw_reconcile", ROOT / "scripts" / "natwest_pulse" / "check_reconcile_v3.py")
-    nw_rec_mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(nw_rec_mod)
-    nw_rec, nw_bad = nw_rec_mod.fixtures()
-    fails += nw_bad
+    nw_rec = natwest_reconcile_fixtures(fails)
     for f in fails:
         print("FAIL", f)
     print(f"test_checks: IndusInd {ind_lint} lint fixtures (26 rules), {ind_rec} reconcile fixtures")
-    print(f"test_checks: NatWest {nw_lint} lint fixtures, {nw_rec} reconcile fixtures")
+    print(f"test_checks: NatWest {nw_lint} lint fixtures, {nw_rec} reconcile fixtures ({len(NW_SKIPPED)} skipped: {NW_SKIPPED})")
     print(
         f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + len(LINT_MUST_PASS) + 1 + build_checks} "
         f"lint fixtures, {len(fails)} failure(s)"

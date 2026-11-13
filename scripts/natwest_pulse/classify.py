@@ -32,7 +32,7 @@ THEME_RULES: list[tuple[str, re.Pattern]] = [
     ("new_app_release", rx(r"new (app|version|update|ui|interface)", r"(after|since|with) (the )?(latest |recent |new )?update", r"old app (was|is) (better|good)", r"previous (version|app)", r"bring back (the )?old", r"integrated keyboard", r"custom keyboard", r"forced (to )?(update|migrate)", r"purana app", r"naya app")),
     ("login_mpin", rx(r"\blog ?in\b", r"\blogin\b", r"\bmpin\b", r"\bm-pin\b", r"password", r"\botp\b", r"registration", r"register", r"device binding", r"sim binding", r"verify (my )?(mobile|number)", r"sms verification", r"customer id", r"re-?register")),
     ("app_speed_crash", rx(r"\bslow\b", r"not (opening|loading|working|responding)", r"(doesn'?t|does not|won'?t|will not) (open|load|work)", r"\bcrash", r"\bhang", r"freez", r"something went wrong", r"technical (error|issue|glitch)", r"server (error|down|issue)", r"\blag", r"keeps? loading", r"stuck on", r"\bdown\b.*(app|server|site)", r"(app|server|site).*\bdown\b", r"bahut slow", r"khul(ta)? nahi", r"chal(ta)? nahi", r"timeout", r"time ?out", r"error")),
-    ("netbanking", rx(r"net ?banking", r"netbanking", r"internet banking")),
+    ("online_banking", rx(r"net ?banking", r"online_banking", r"internet banking")),
     ("upi_failures", rx(r"\bupi\b.*(fail|pending|declin|not work|block|limit|error|stuck|deducted)", r"(fail|pending|declin|error|stuck).*\bupi\b", r"upi pin", r"upi lite", r"rupay.*upi", r"upi transaction")),
     ("failed_txn_reversal", rx(r"(debited|deducted|cut|kat gay[ae])\b.*(not|nahi|never).*(receiv|credit|revers|refund|return|mila|aaya)", r"not (been )?reversed", r"reversal", r"(atm|cash).*(not dispensed|didn'?t dispense|not received|nahi nikla)", r"money (got )?stuck", r"failed transaction", r"transaction failed.*(amount|money|debited)", r"paisa (kat|nahi aaya|wapas)")),
     ("refund_delay", rx(r"refund.{0,40}(not|yet|still|pending|delay|waiting|nahi|missing|never|since|months|weeks)", r"(not|yet|still|pending|waiting|never|nahi|no).{0,30}refund", r"money back.{0,30}(not|yet|still|pending)", r"paisa wapas nahi")),
@@ -75,7 +75,7 @@ THEME_RULES: list[tuple[str, re.Pattern]] = [
 ]
 
 GROUP_THEME_RULES = [
-    ("insurance_group", rx(r"policy", r"premium", r"claim", r"insurance", r"surrender", r"hdfc life", r"ergo")),
+    ("insurance_group", rx(r"policy", r"premium", r"claim", r"savings", r"surrender", r"hdfc life", r"ergo")),
     ("trading_securities", rx(r"trad(e|ing)", r"order", r"ipo", r"brokerage", r"demat", r"f&o", r"option", r"investright", r"hdfc sky")),
 ]
 
@@ -131,7 +131,7 @@ SWITCH_FROM = re.compile(rf"(from|left|leaving)\s+({BANKS})\s+(to\s+)?hdfc", re.
 
 BUSINESS_RULES = [
     ("cards", rx(r"credit card", r"\bcard\b", r"infinia", r"regalia", r"millennia", r"\bdcb\b", r"diners", r"tata neu", r"swiggy", r"pixel", r"smart ?buy", r"reward", r"\bcc\b", r"annual fee", r"lounge")),
-    ("payments", rx(r"\bupi\b", r"payzapp", r"payment (failed|gateway)", r"\bneft\b", r"\bimps\b", r"\brtgs\b", r"bill pay", r"fastag")),
+    ("payments", rx(r"\bupi\b", r"payments_fraud", r"payment (failed|gateway)", r"\bneft\b", r"\bimps\b", r"\brtgs\b", r"bill pay", r"fastag")),
     ("loans", rx(r"\bloan", r"\bemi\b", r"mortgage", r"disburs", r"foreclos")),
     ("wealth", rx(r"mutual fund", r"\bsip\b", r"demat", r"smartwealth", r"portfolio")),
     ("sme_merchant", rx(r"merchant", r"current account", r"\bpos\b", r"sound ?box", r"smarthub", r"business account")),
@@ -192,7 +192,7 @@ def classify(rec: dict) -> dict:
             themes = ["app_praise"]  # "fast and easy login" is praise, not a login problem
     # Business
     business = rec.get("business_hint")
-    if rec["entity"] != "hdfc_bank":
+    if rec["entity"] != "natwest_group":
         business = "group_company"
     elif business in (None, "retail_banking") or rec["source"] not in ("playstore", "appstore"):
         found = None
@@ -307,14 +307,14 @@ def apply_llm(rec: dict, lab: dict) -> dict:
         entity = "other_group"
         themes = [t for t in themes if t in ("insurance_group", "trading_securities")] or ["insurance_group"]
     elif lab.get("entity") == "bank":
-        entity = "hdfc_bank"
+        entity = "natwest_group"
         themes = [t for t in themes if t not in ("insurance_group", "trading_securities")]
     if not themes:
         themes = ["other"]
     sent = lab.get("sentiment") if lab.get("sentiment") in ("positive", "neutral", "negative") else rec["sentiment"]
     low = f"{rec.get('title') or ''} {rec.get('text') or ''}".lower()
-    business = "group_company" if entity != "hdfc_bank" else next((b for b, r in BUSINESS_RULES if r.search(low)), T[themes[0]]["business"])
-    if business == "group_company" and entity == "hdfc_bank":
+    business = "group_company" if entity != "natwest_group" else next((b for b, r in BUSINESS_RULES if r.search(low)), T[themes[0]]["business"])
+    if business == "group_company" and entity == "natwest_group":
         business = "retail_banking"
     tgt = lab.get("esc_target") if lab.get("esc_target") in VALID_TGT else None
     esc = bool(lab.get("esc")) and sent != "positive"
@@ -355,7 +355,7 @@ def main():
     with open(WORK / "classified.jsonl", "w", encoding="utf-8") as f:
         for r in out:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
-    on = [r for r in out if r["relevant"] == "on_topic" and r["entity"] == "hdfc_bank"]
+    on = [r for r in out if r["relevant"] == "on_topic" and r["entity"] == "natwest_group"]
     c = Counter(t for r in on for t in r["themes"][:1])
     print("bank on-topic", len(on), Counter(r["classified_by"] for r in out))
     for k, v in c.most_common(60):
