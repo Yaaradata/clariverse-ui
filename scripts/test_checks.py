@@ -310,6 +310,61 @@ def indusind_reconcile_fixtures(fails: list[str]) -> int:
     return n
 
 
+def natwest_lint_fixtures(fails: list[str]) -> int:
+    """NatWest lint (brief Step 1.4): every India swap-table term, internal labels, names and other demo banks must
+    fire on seeded copy; clean UK copy must pass; the register peer list may name Starling (NW-D10)."""
+    import lint_natwest as ln  # noqa: PLC0415
+
+    seeded = {
+        "RBI": "Escalate to the RBI", "Banking Ombudsman": "Refer to the Banking Ombudsman",
+        "Internal Ombudsman": "Internal Ombudsman review due", "IO": "IO review pending", "RB-IOS": "RB-IOS timeline",
+        "CEPD": "CEPD circular applies", "NPCI": "NPCI dispute raised", "UPI": "UPI failures up",
+        "IMPS": "IMPS transfer stuck", "NEFT": "NEFT credit late", "RTGS": "RTGS cut-off missed",
+        "PayZapp": "PayZapp login fails", "INDIE": "INDIE app crash", "net banking": "net banking down",
+        "Play Store leads": "Play Store leads the ratings", "₹": "Fees of ₹500", "crore": "Exposure of 40 crore",
+        "lakh": "Two lakh complaints", "TAT": "TAT breached", "KYC": "KYC video stuck", "PAN": "PAN mismatch",
+        "Aadhaar": "Aadhaar link failed", "EMI": "EMI bounced", "Cards Business Head": "Cards Business Head to act",
+        "RM": "RM did not call", "RBI & Government": "RBI & Government segment", "India": "Across India",
+    }
+    n = 0
+    for term, text in seeded.items():
+        h = ln.text_rules(text, "fixture")
+        ok = any(x.startswith("NW-INDIA") and f"'{term}'" in x for x in h)
+        n += 1
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint flags India term {term!r}")
+        if not ok:
+            fails.append(f"NatWest lint missed India term {term!r} in {text!r} ({h})")
+    for rule, text in [
+        ("NW-HL06", "V2 · pulse"), ("NW-HL06", "Decided in NW-D04"), ("NW-HL06", "Per HL-15"),
+        ("NW-HL06", "Built for S-CORA"), ("NW-HL06", "Done in Step 3.9"),
+        ("NW-NAME", "Approved by Ranjith"), ("NW-NAME", "Ask Usha"),
+        ("NW-BANK", "Same as HDFC"), ("NW-BANK", "IndusInd view"), ("NW-BANK", "Sterling Bank peers"),
+        ("NW-BANK", "Starling demo"), ("NW-BANK", "Openbank card"),
+    ]:
+        h = ln.text_rules(text, "fixture")
+        ok = any(x.startswith(rule) for x in h)
+        n += 1
+        print(("PASS " if ok else "FAIL ") + f"NatWest lint {rule} flags {text!r}")
+        if not ok:
+            fails.append(f"NatWest lint {rule} missed {text!r} ({h})")
+    for text in ("Financial Ombudsman Service referrals", "Final response within 8 weeks", "Faster Payments failures",
+                 "Royal Bank of Scotland app", "Consumer Duty: price and value", "£4.2 million"):
+        h = ln.text_rules(text, "fixture")
+        n += 1
+        if h:
+            fails.append(f"NatWest lint flagged clean copy {text!r}: {h}")
+    h = ln.text_rules("Monzo · Starling (upper benchmark)", "register.peers", allow_peer_names=True)
+    n += 1
+    if h:
+        fails.append(f"NatWest lint flagged the register peer list: {h}")
+    # Code is not copy: an import path or identifier holding a banned word does not fire; JSX text does.
+    h = ln._ui_hits('import { x } from "@/lib/natwest-pulse/load";\nconst a = indiaTerms;\n<p>Ask the RBI</p>', "f.tsx")
+    n += 1
+    if not any(x.startswith("NW-INDIA") for x in h) or len(h) != 1:
+        fails.append(f"NatWest UI scan: expected one hit (JSX text), got {h}")
+    return n
+
+
 def main() -> int:
     fails: list[str] = []
     with tempfile.TemporaryDirectory() as d:
@@ -390,9 +445,11 @@ def main() -> int:
             print("PASS lint refuses a list that names the bank")
     ind_lint = indusind_lint_fixtures(fails)
     ind_rec = indusind_reconcile_fixtures(fails)
+    nw_lint = natwest_lint_fixtures(fails)
     for f in fails:
         print("FAIL", f)
     print(f"test_checks: IndusInd {ind_lint} lint fixtures (26 rules), {ind_rec} reconcile fixtures")
+    print(f"test_checks: NatWest {nw_lint} lint fixtures")
     print(
         f"test_checks: {len(FIXTURES)} reconcile fixtures, {len(LINT_MUST_FLAG) + len(LINT_MUST_PASS) + 1 + build_checks} "
         f"lint fixtures, {len(fails)} failure(s)"

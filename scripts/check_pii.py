@@ -41,6 +41,15 @@ FILES = [
     ROOT / "scripts" / "indusind_l2_glosses.json",
     ROOT / "scripts" / "indusind_l2_manual.json",
 ]
+# NatWest (docs/natwest/brief.md Step 1.5): register, synthetic seed and page payloads. The UK patterns below run on
+# these files only (an 8-digit run or a dd-dd-dd group means something else in the Indian data).
+NATWEST_FILES = [
+    *sorted((ROOT / "data" / "public").glob("natwest_*.json")),
+    *sorted((ROOT / "data" / "seed" / "natwest_pulse").glob("*.json")),
+    *sorted((ROOT / "data" / "seed" / "natwest_pulse").glob("*.jsonl")),
+    *sorted((ROOT / "data" / "out" / "natwest_pulse").glob("*.json")),
+]
+FILES += NATWEST_FILES
 PATTERNS = {
     "email": r"[\w.+-]+@[\w-]+\.[\w.-]+",
     "phone": r"(?<!\d)(?:\+91[\s-]?)?[6-9]\d{9}(?!\d)",
@@ -49,6 +58,18 @@ PATTERNS = {
     "pan": r"\b[A-Z]{5}\d{4}[A-Z]\b",
     "aadhaar": r"(?<!\d)\d{4}\s\d{4}\s\d{4}(?!\d)",
 }
+UK_PATTERNS = {
+    "uk_mobile": r"(?<![\d+])(?:\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}(?!\d)",
+    "uk_phone_intl": r"\+44[\s\d()-]{9,14}\d",
+    "sort_code": r"(?<![\d-])\d{2}-\d{2}-\d{2}(?![\d-])",
+    "account_number_8": r"(?<![\d.,£-])\d{8}(?![\d.,%])",
+    "card_number": r"(?<!\d)\d{4}(?:[ -]\d{4}){2,3}(?:[ -]?\d{1,3})?(?!\d)|(?<![\d.])\d{12,19}(?![\d.])",
+    "ni_number": r"\b[A-CEGHJ-PR-TW-Z][A-CEGHJ-NPR-TW-Z]\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]\b",
+}
+# Hashed author handles: a key that names an author or handle, or a hex digest standing in for one.
+HANDLE_KEYS = {"author", "author_hash", "author_id", "handle", "user", "username", "user_id", "screen_name"}
+HASH_RX = re.compile(r"\b[0-9a-f]{16,64}\b")
+
 # Record ids and source links identify public posts; they are not personal data.
 ID_RE = re.compile(r'"(?:appstore|playstore|x|reddit|technofino|trustpilot|mouthshut|consumercomplaints|complaintsboard)[:_][^"]*"')
 URL_RE = re.compile(r"https?://[^\s\"]+")
@@ -58,13 +79,16 @@ SOURCE_LINK_PATTERNS = {
     "x_status_link": r"(?:x|twitter)\.com/(?:i|[A-Za-z0-9_]+)/status",
     "reddit_thread_link": r"reddit\.com/r/[^/\s\"']+/comments",
     "forum_link": r"technofino\.in|trustpilot\.com|consumercomplaints\.in|mouthshut\.com|complaintsboard\.com",
+    "uk_forum_link": r"trustpilot\.com/reviews?|moneysavingexpert\.com/(?:forum|discussion)|forums\.moneysavingexpert\.com",
 }
 FE = ROOT / "frontend"
 LINK_SOURCES = [FE / "components" / "hdfc-v3", FE / "lib" / "hdfc-v3", FE / "app" / "hdfc-pulse" / "v2",
-                FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1", FE / "app" / "role-based" / "indusind_bank"]
+                FE / "components" / "indusind-v1", FE / "lib" / "indusind-v1", FE / "app" / "role-based" / "indusind_bank",
+                FE / "components" / "natwest-pulse", FE / "lib" / "natwest-pulse", FE / "app" / "natwest-pulse"]
 # Built V2 pages (HTML and RSC payloads) and the client chunks every page loads. V1 is kept as first shown and is out
 # of scope for this rule.
 LINK_BUILD = [FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2", FE / ".next" / "server" / "app" / "role-based" / "indusind_bank",
+              FE / ".next" / "server" / "app" / "natwest-pulse",
               FE / ".next" / "static" / "chunks"]
 
 
@@ -137,11 +161,57 @@ def scan(paths) -> list[str]:
     return hits
 
 
+def _handles(obj, path="") -> list[str]:
+    out = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if k in HANDLE_KEYS and v not in (None, "", [], {}):
+                out.append(f"{path}.{k}")
+            out += _handles(v, f"{path}.{k}")
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            out += _handles(v, f"{path}[{i}]")
+    return out
+
+
+def scan_uk(paths) -> list[str]:
+    """UK personal data (mobile and +44 numbers, sort codes, 8-digit accounts, card numbers, NI numbers) and author
+    handles, hashed or not. Record ids, URLs and ISO dates are stripped first."""
+    hits = []
+    for f in paths:
+        f = Path(f)
+        rel = f.relative_to(ROOT) if f.is_relative_to(ROOT) else f
+        raw = f.read_text(encoding="utf-8")
+        text = URL_RE.sub("", ID_RE.sub('""', raw))
+        text = re.sub(r"\d{4}-\d{2}-\d{2}(?:T[\d:.]+(?:[+-]\d{2}:\d{2}|Z)?)?", "", text)
+        for name, p in UK_PATTERNS.items():
+            for m in re.finditer(p, text):
+                hits.append(f"{rel}: {name}: {m.group(0)}")
+        docs = []
+        lines = raw.splitlines() if f.suffix == ".jsonl" else [raw]
+        for line in lines:
+            try:
+                docs.append(json.loads(line))
+            except json.JSONDecodeError:
+                pass
+        for d in docs:
+            for k in _handles(d):
+                hits.append(f"{rel}: author_handle_field: {k}")
+            for s in _strings(d):
+                for m in HASH_RX.finditer(s):
+                    if re.search(r"[a-f]", m.group(0)) and re.search(r"\d", m.group(0)):
+                        hits.append(f"{rel}: hashed_handle: {m.group(0)}")
+    return hits
+
+
 def main() -> int:
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
     hits = scan(FILES)
     built = (FE / ".next" / "server" / "app" / "hdfc-pulse" / "v2").is_dir()
+    uk_hits = scan_uk(NATWEST_FILES)
+    hits += uk_hits
+    print(f"check_pii: NatWest UK rules on {len(NATWEST_FILES)} files: {len(uk_hits)} hit(s)")
     link_hits = scan_links(LINK_SOURCES + (LINK_BUILD if built else []))
     hits += link_hits
     # Rendered text of every route reachable from /role-based/indusind_bank (scripts/qa_indusind_routes.mjs): the

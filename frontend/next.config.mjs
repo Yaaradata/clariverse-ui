@@ -30,12 +30,15 @@ const nextConfig = {
       { source: '/role-based/indusind_bank/:slug((?!customer-pulse|pulse-v2|head_cards$)[^/]+)', destination: '/role-based/indusind_bank', permanent: false },
     ];
   },
-  // IndusInd demo: never indexed, on top of Deployment Protection and the page-level robots meta.
+  // IndusInd and NatWest demos: never indexed, on top of Deployment Protection and the page-level robots meta.
   async headers() {
     const noindex = [{ key: 'X-Robots-Tag', value: 'noindex, nofollow, noarchive' }];
     return [
       { source: '/role-based/indusind_bank', headers: noindex },
       { source: '/role-based/indusind_bank/:path*', headers: noindex },
+      // NatWest Group demo (docs/natwest/brief.md Step 1.1): same protection.
+      { source: '/natwest-pulse', headers: noindex },
+      { source: '/natwest-pulse/:path*', headers: noindex },
     ];
   },
   experimental: {

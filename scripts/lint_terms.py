@@ -247,6 +247,13 @@ def main() -> int:
     hits += ind_hits
     print(f"lint_terms: IndusInd rules checked on {ind_scanned} files and pages, "
           f"including {lint_indusind.CRAWLED_ROUTES} rendered routes under /role-based/indusind_bank")
+    # NatWest (docs/natwest/brief.md Step 1.4): India terms, internal labels, names, other demo banks.
+    import lint_natwest  # noqa: PLC0415
+
+    nw_hits, nw_scanned = lint_natwest.run()
+    hits += nw_hits
+    print(f"lint_terms: NatWest rules checked on {nw_scanned} files and pages, "
+          f"including {lint_natwest.CRAWLED_ROUTES} rendered routes under /natwest-pulse")
     built = scan_build(hits)
     if not built:
         print("lint_terms: NOTE no V2 build in frontend/.next; built pages not checked")

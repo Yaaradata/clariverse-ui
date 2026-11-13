@@ -1,0 +1,189 @@
+"""NatWest lint (docs/natwest/brief.md Step 1.4). Called by scripts/lint_terms.py and by the fixtures in test_checks.py.
+
+Runs on the NatWest UI copy (string literals and JSX text in frontend/{components,lib}/natwest-pulse and
+frontend/app/natwest-pulse), the register (data/public/natwest_*.json), the synthetic seed aggregates and the
+page payloads including the Ask LisN answer bank (data/out/natwest_pulse/), and, when a build exists, the built NatWest
+pages. Every hit starts with its rule id so a fixture can tell which rule fired:
+
+- NW-INDIA  an India register term from the swap table (RBI, Internal Ombudsman, UPI, ₹, crore, TAT, ...).
+- NW-HL06   an internal label on screen: version tags, decision, carry-forward, step and screen ids.
+- NW-NAME   a person's name (our team, the bank's people named in the docs).
+- NW-BANK   another demo bank's name (HDFC, IndusInd, Sterling, Starling, Openbank).
+
+Customer quotes (evidence text) are exempt: they are the customer's words. The register's peer list may name Starling
+as an upper benchmark (NW-D10); that list, and the brand-lens route that renders it, are the only exemptions.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+FE = ROOT / "frontend"
+UI_DIRS = [FE / "app" / "natwest-pulse", FE / "components" / "natwest-pulse", FE / "lib" / "natwest-pulse"]
+PUBLIC = ROOT / "data" / "public"
+SEED = ROOT / "data" / "seed" / "natwest_pulse"
+OUT = ROOT / "data" / "out" / "natwest_pulse"
+BUILD = FE / ".next" / "server" / "app" / "natwest-pulse"
+
+# The swap table (brief Step 4). Each entry: (label, regex). Whole words; "Ombudsman" alone is allowed (the Financial
+# Ombudsman Service), only the Indian schemes are banned.
+INDIA_TERMS: list[tuple[str, str]] = [
+    ("RBI", r"\bRBI\b"),
+    ("Banking Ombudsman", r"\bBanking Ombudsman\b"),
+    ("Internal Ombudsman", r"\bInternal Ombudsman\b"),
+    ("IO", r"\bIO\b"),
+    ("RB-IOS", r"\bRB-IOS\b"),
+    ("CEPD", r"\bCEPD\b"),
+    ("NPCI", r"\bNPCI\b"),
+    ("UPI", r"\bUPI\b"),
+    ("IMPS", r"\bIMPS\b"),
+    ("NEFT", r"\bNEFT\b"),
+    ("RTGS", r"\bRTGS\b"),
+    ("PayZapp", r"\bPayZapp\b"),
+    ("INDIE", r"\bINDIE\b"),
+    ("net banking", r"\b[Nn]et ?[Bb]anking\b"),
+    ("Play Store leads", r"\bPlay Store leads?\b"),
+    ("₹", r"₹"),
+    ("crore", r"\bcrores?\b"),
+    ("lakh", r"\blakhs?\b"),
+    ("TAT", r"\bTATs?\b"),
+    ("KYC", r"\bKYC\b"),
+    ("PAN", r"\bPAN\b"),
+    ("Aadhaar", r"\bAadhaar\b"),
+    ("EMI", r"\bEMIs?\b"),
+    ("Cards Business Head", r"\bCards Business Head\b"),
+    ("RM", r"\bRMs?\b"),
+    ("RBI & Government", r"RBI\s*&\s*Government"),
+    ("India", r"\bIndia(?:n)?\b"),
+]
+INDIA_RX = [(t, re.compile(p)) for t, p in INDIA_TERMS]
+
+# HL-06: internal labels. Version tags, our decision and rule ids, brief steps and screen ids.
+INTERNAL_ID = re.compile(
+    r"\bV[1-4]\b|\bNW-D\d*|\bHL-\d*|\bIND-[A-Z]\d|\bDEC-\d|\bIV-\d\d|\bFB-\d\d\d|\bD\d\d\b|\bB1[01]\b|"
+    r"\bS-(?:HOME|CHANNEL|CORA|FOS|DUTY|BRAND|AGENTS)\b|\bStep [0-5](?:\.\d+)?\b|\bMORNING_DECISIONS\b"
+)
+# People's names: our team and anyone the internal docs name. Never whitelisted.
+PEOPLE = ["Vidya", "Ranjith", "Soumya", "Somya", "Anjani", "Pradeep", "Kartik", "Usha", "Kannan"]
+PEOPLE_RX = re.compile(r"(?<![A-Za-z])(?:" + "|".join(PEOPLE) + r")(?![A-Za-z])")
+# Other demo banks (brief Step 1.4).
+OTHER_BANKS = ["HDFC", "IndusInd", "Sterling", "Starling", "Openbank"]
+BANK_RX = re.compile(r"(?<![A-Za-z])(?:" + "|".join(OTHER_BANKS) + r")(?![A-Za-z])", re.I)
+
+# Customer voice is the customer's words; search keywords are never shown; build notes are for the team.
+SKIP_KEYS = {"redacted_text", "summary_raw", "text", "keywords", "build_note", "about", "url"}
+# NW-D10: the register's peer list (key `peers`) may name the upper benchmarks. Nothing else may.
+PEER_KEY = "peers"
+
+
+def text_rules(s: str, where: str, allow_peer_names: bool = False) -> list[str]:
+    hits = []
+    for t, rx in INDIA_RX:
+        if rx.search(s):
+            hits.append(f"NW-INDIA {where}: India term '{t}' in: {s[:90]}")
+    m = INTERNAL_ID.search(s)
+    if m:
+        hits.append(f"NW-HL06 {where}: internal label '{m.group(0)}' in: {s[:90]}")
+    m = PEOPLE_RX.search(s)
+    if m:
+        hits.append(f"NW-NAME {where}: person's name '{m.group(0)}' in: {s[:90]}")
+    m = BANK_RX.search(s)
+    if m and not (allow_peer_names and m.group(0).lower() == "starling"):
+        hits.append(f"NW-BANK {where}: other demo bank '{m.group(0)}' in: {s[:90]}")
+    return hits
+
+
+STRING = re.compile(r'"((?:[^"\\\n]|\\.)*)"|`((?:[^`\\]|\\.)*)`|\'((?:[^\'\\\n]|\\.)*)\'')
+JSX_TEXT = re.compile(r">\s*([^<>{}\n;=()][^<>{}=;]*?)\s*<")
+# Code, not copy: identifiers, import paths, hrefs, CSS.
+IDENTIFIER = re.compile(r"\b\w+_\w+\b|\b[a-z]+[A-Z]\w*\b|\b[A-Z][a-z]+[A-Z]\w*\b|(?<![\w ])/[\w/\[\]-]+|@/[\w/.-]+")
+
+
+def ui_strings(text: str):
+    text = re.sub(r"/\*[\s\S]*?\*/", "", text)
+    text = re.sub(r"(?m)^\s*//.*$", "", text)
+    text = re.sub(r"(?m)\s//\s.*$", "", text)
+    for m in STRING.finditer(text):
+        s = next((g for g in m.groups() if g is not None), "")
+        if s and re.search(r"[A-Za-z]{2}", s):
+            yield s
+    for m in JSX_TEXT.finditer(text):
+        s = m.group(1)
+        if s and re.search(r"[A-Za-z]{2}", s):
+            yield s
+
+
+def _ui_hits(text: str, rel: str) -> list[str]:
+    hits = []
+    for s in ui_strings(text):
+        if s.startswith(("@/", "./", "../", "/", "http", "node:")):
+            continue
+        s = re.sub(r"\$\{[^}]*\}", "", s)
+        hits += text_rules(IDENTIFIER.sub("", s), rel)
+    return hits
+
+
+def walk(o, path: str, out: list[tuple[str, str, bool]], peer: bool = False):
+    if isinstance(o, dict):
+        for k, v in o.items():
+            if k in SKIP_KEYS:
+                continue
+            walk(v, f"{path}.{k}", out, peer or k == PEER_KEY)
+    elif isinstance(o, list):
+        for i, v in enumerate(o):
+            walk(v, f"{path}[{i}]", out, peer)
+    elif isinstance(o, str) and re.search(r"[A-Za-z]{2}", o) and not o.startswith(("http", "/")):
+        out.append((path, o, peer))
+
+
+def data_files() -> list[Path]:
+    files = sorted(PUBLIC.glob("natwest_*.json"))
+    files += [SEED / "aggregates.json"] if (SEED / "aggregates.json").exists() else []
+    # evidence.json holds customer quotes and the audit-only URLs; its copy keys are walked like any payload.
+    files += sorted(OUT.glob("*.json")) if OUT.exists() else []
+    return files
+
+
+CRAWLED_ROUTES = 0
+
+
+def run() -> tuple[list[str], int]:
+    hits: list[str] = []
+    scanned = 0
+    for d in UI_DIRS:
+        if not d.exists():
+            continue
+        for f in sorted(d.rglob("*.ts*")):
+            hits += _ui_hits(f.read_text(encoding="utf-8"), str(f.relative_to(ROOT)))
+            scanned += 1
+    for f in data_files():
+        strings: list[tuple[str, str, bool]] = []
+        walk(json.loads(f.read_text(encoding="utf-8")), str(f.relative_to(ROOT)), strings)
+        for path, s, peer in strings:
+            hits += text_rules(IDENTIFIER.sub("", s), path, allow_peer_names=peer)
+        scanned += 1
+    if BUILD.exists():
+        for f in sorted(BUILD.rglob("*.html")):
+            text = f.read_text(encoding="utf-8", errors="replace")
+            visible = re.sub(r"<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>", " ", text)
+            hits += text_rules(visible, str(f.relative_to(ROOT)))
+            scanned += 1
+    global CRAWLED_ROUTES
+    crawl = ROOT / "qa" / "_crawl" / "natwest_pages.json"
+    if crawl.exists():
+        pages = json.loads(crawl.read_text(encoding="utf-8"))
+        CRAWLED_ROUTES = len(pages)
+        for page in pages:
+            for line in page["text"].splitlines():
+                if line.strip():
+                    hits += text_rules(line, f"route {page['route']}", allow_peer_names=page["route"].split("?")[0].endswith("/market"))
+            scanned += 1
+    seen, out = set(), []
+    for x in hits:
+        if x[:140] not in seen:
+            seen.add(x[:140])
+            out.append(x)
+    return out, scanned
