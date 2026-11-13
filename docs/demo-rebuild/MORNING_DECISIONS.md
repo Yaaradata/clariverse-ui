@@ -961,3 +961,6 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
 - **NW-D28 · External blocks with no public data.** When no source is loaded (periods.json `public_loaded: false`), the
   two external blocks show "Public data not yet loaded" in place of zeros (HL-15); the block, its title and its Public ·
   live tag stay where oct13 has them. Signal pages exist only for public themes, so there are none until the pull lands.
+- **NW-D29 · Signal pages for every theme.** oct13 links theme items to `signal/<theme>`, and builds those pages only for
+  themes with public items, so with no public data every such link 404'd. The signal route now builds a page for every
+  taxonomy theme; one with no public items shows its name and "Public data not yet loaded" (same page frame).

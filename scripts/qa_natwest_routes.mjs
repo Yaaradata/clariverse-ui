@@ -23,7 +23,13 @@ const pages = [];
 const fails = [];
 while (queue.length && pages.length < 300) {
   const route = queue.shift();
-  const res = await p.goto(base + route, { waitUntil: "networkidle" });
+  let res;
+  try {
+    res = await p.goto(base + route, { waitUntil: "networkidle", timeout: 30000 });
+  } catch (e) {
+    fails.push(`${route}: did not load (${e.name})`);
+    continue;
+  }
   const u = new URL(p.url());
   const final = u.pathname + u.search;
   const text = await p.evaluate(() => document.body.innerText);

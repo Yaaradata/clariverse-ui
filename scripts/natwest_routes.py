@@ -15,6 +15,7 @@ def main() -> None:
     out = ROOT / "data" / "out" / "natwest_pulse"
     products = [r["id"] for r in json.loads((out / "products.json").read_text(encoding="utf-8"))["rows"]]
     themes = [t["id"] for t in json.loads((out / "themes.json").read_text(encoding="utf-8"))["themes"]]
+    themes += [t for t in json.loads((out / "meta.json").read_text(encoding="utf-8")).get("theme_labels", {}) if t not in themes]
     personas = json.loads((ROOT / "data" / "seed" / "natwest_pulse" / "aggregates.json").read_text(encoding="utf-8"))["personas"]
     routes = ["/natwest-pulse", P, f"{P}/mds-office", f"{P}/head-cx", f"{P}/satisfaction", f"{P}/market", f"{P}/priority",
               f"{P}/action-queue", f"{P}/deliverables", f"{P}/service-promise", f"{P}/my-view",

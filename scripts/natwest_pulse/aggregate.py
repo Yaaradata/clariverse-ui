@@ -645,6 +645,8 @@ def main():
         "freeze_label": "Thursday 12 November 2026, 07:45 GMT",
         "sources": json.loads((OUT / "sources.json").read_text(encoding="utf-8"))["sources"],
         "public_loaded": len(bank) > 0,
+        # Theme names for the signal pages while no public theme exists yet (NW-D29).
+        "theme_labels": {t["id"]: t["label"] for t in THEMES},
         "records": {
             "total": len(rows),
             "by_source": dict(collections.Counter(r["source"] if r["source"] != "forum" else f"forum:{r['subreddit']}" for r in rows)),

@@ -392,8 +392,8 @@ export function SatisfactionView({ b }: { b: Bundle }) {
           </div>
           <BaselineCaption>
             Trend within window: second half (
-            {halfLabel(b.themes.themes[0].trend.second_half_dates)}) vs first
-            half ({halfLabel(b.themes.themes[0].trend.first_half_dates)}), as a
+            {halfLabel(b.themes.themes[0]?.trend.second_half_dates ?? "2026-09-22 to 2026-11-11")}) vs first
+            half ({halfLabel(b.themes.themes[0]?.trend.first_half_dates ?? "2026-08-01 to 2026-09-21")}), as a
             share of posts.
           </BaselineCaption>
         </div>
