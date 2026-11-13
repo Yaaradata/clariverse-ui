@@ -870,7 +870,7 @@ const STAT_LABEL = {
 
 /**
  * One customer list. Volume is a figure with its change (neutral: volume is not good or bad). The one chart is the
- * trend that matters, no reply in 48h+, coloured by the rule. Gauges for open and no reply; RMs alerted underneath.
+ * trend that matters, no reply in 48h+, coloured by the rule. Gauges for open and no reply; Owners alerted underneath.
  */
 function ListCard({ l, p }: { l: PulseList; p: Period }) {
   const late = l.not_responded_48h;
@@ -1015,7 +1015,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
           </div>
           <div
             data-testid="rm-line"
-            title="RMs alerted this morning, of the customers on this list due an alert"
+            title="Owners alerted this morning, of the customers on this list due an alert"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -1026,7 +1026,7 @@ function ListCard({ l, p }: { l: PulseList; p: Period }) {
               paddingTop: 8,
             }}
           >
-            <span style={STAT_LABEL}>RMs alerted</span>
+            <span style={STAT_LABEL}>Owners alerted</span>
             <strong
               style={{
                 fontFamily: MONO,
@@ -1334,6 +1334,27 @@ const GAUGE_PAIR = {
   gap: 6,
 };
 
+/** NatWest (HL-15): while no public source is loaded, an external block says so instead of showing zeros. */
+export function PublicNotLoaded() {
+  return (
+    <div
+      data-testid="public-not-loaded"
+      style={{
+        border: `1px dashed ${tint(C.cyan, 0.45)}`,
+        borderRadius: 12,
+        padding: "12px 14px",
+        fontSize: 14,
+        color: C.textSec,
+        lineHeight: 1.5,
+      }}
+    >
+      Public data not yet loaded. Sources: App Store · Google Play · X · Reddit
+      · Trustpilot · Forums (MoneySavingExpert). No posts, counts, ratings or
+      reply rates are shown until the pull lands.
+    </div>
+  );
+}
+
 function ExternalBlock({ p }: { p: Period }) {
   const [open, setOpen] = useState(false);
   // The trending list can be narrowed to one day: the high-impact peak.
@@ -1354,6 +1375,32 @@ function ExternalBlock({ p }: { p: Period }) {
   };
   const trend = "over the last periods of the same length";
   const whole = p.id === "all";
+  if (p.public_loaded === false) {
+    return (
+      <div
+        data-testid="external-block"
+        style={{
+          marginTop: 6,
+          borderTop: `2px dashed ${tint(C.cyan, 0.6)}`,
+          paddingTop: 14,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            alignItems: "center",
+            flexWrap: "wrap",
+            marginBottom: 10,
+          }}
+        >
+          <strong style={{ fontSize: 15 }}>External channels</strong>
+          <ProvenanceTag kind="public" />
+        </div>
+        <PublicNotLoaded />
+      </div>
+    );
+  }
   const unanswered = m.unanswered_series.map((x) => x.count);
   return (
     <div
@@ -1633,7 +1680,7 @@ function ExternalBlock({ p }: { p: Period }) {
               >
                 <Headline
                   big={fmt(m.total)}
-                  caption="listed customers who tagged the bank"
+                  caption="customers who tagged the bank"
                 />
                 <span style={{ ...STAT_LABEL, marginTop: 4 }}>
                   Unanswered · trend
@@ -2112,8 +2159,14 @@ export function CxPulse({ p }: { p: Period }) {
           gap: 12,
         }}
       >
-        <ExternalSet title="Total signals" f={e} />
-        <ExternalSet title="High-impact signals" f={e.high_impact} hi />
+        {p.public_loaded === false ? (
+          <PublicNotLoaded />
+        ) : (
+          <>
+            <ExternalSet title="Total signals" f={e} />
+            <ExternalSet title="High-impact signals" f={e.high_impact} hi />
+          </>
+        )}
       </div>
     </Tile>
   );

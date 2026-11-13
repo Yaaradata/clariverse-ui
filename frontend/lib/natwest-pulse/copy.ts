@@ -75,7 +75,7 @@ export function marketAnswer(b: Bundle): string {
   const praise = b.themes.themes.find((t) => t.id === "app_praise");
   return `Across ${fmt(b.themes.total_items)} public posts and reviews since ${fmtDate(b.meta.window.start)}, ${top?.label.toLowerCase()} leads; ${riser?.label.toLowerCase()} is rising fastest; ${
     praise
-      ? "quick, easy app journeys are where HDFC is praised most"
+      ? "quick, easy app journeys are where NatWest is praised most"
       : "praise is thin"
   }.`;
 }
@@ -93,7 +93,7 @@ export function promiseAnswer(b: Bundle): string {
     closure: "closure",
     loan_disbursal: "loan disbursal",
     credit_report: "credit-report correction",
-    kyc: "KYC and profile updates",
+    kyc: "Identity checks and profile updates",
   };
   const share = b.signals.transparency_gap.share ?? 0;
   return `${pb.length} request types missed their timeline in public voice this window; ${RT[top?.request_type] ?? "service requests"} drives the most; ${share.toFixed(

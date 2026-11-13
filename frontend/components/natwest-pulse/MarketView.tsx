@@ -11,7 +11,11 @@ import {
   halfLabel,
   rangeLong,
 } from "@/lib/natwest-pulse/format";
-import { signalHref, themeMap, trendWords } from "@/lib/natwest-pulse/selectors";
+import {
+  signalHref,
+  themeMap,
+  trendWords,
+} from "@/lib/natwest-pulse/selectors";
 import type { AppPulse, Bundle, Theme, View } from "@/lib/natwest-pulse/types";
 import {
   AnswerLine,
@@ -34,7 +38,7 @@ import {
 } from "./primitives";
 import { useFrom } from "./Shell";
 
-/** HDFC's stated promises, framed on the four trust pillars the bank uses publicly (availability, experience, data intimacy, security). */
+/** NatWest's stated promises, framed on the four trust pillars the bank uses publicly (availability, experience, data intimacy, security). */
 const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
   {
     promise: "Available when customers need it, around the clock",
@@ -43,7 +47,7 @@ const PROMISES: { promise: string; pillar: string; themes: string[] }[] = [
       "app_speed_crash",
       "login_mpin",
       "care_unreachable",
-      "netbanking",
+      "online_banking",
       "upi_failures",
       "account_freeze",
     ],
@@ -126,13 +130,13 @@ const ratingColor = (r: number) =>
 
 // Version ratings are shown one store at a time, never pooled (follow-up fix 2).
 const STORES = [
-  ["playstore", "Play Store"],
+  ["playstore", "Google Play"],
   ["appstore", "App Store"],
 ] as const;
 
 function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
-  // Play Store where the app has it, so the cards compare apps within one store (review finding #13).
-  const store = a.by_store?.playstore ? "Play Store" : "App Store";
+  // Google Play where the app has it, so the cards compare apps within one store (review finding #13).
+  const store = a.by_store?.playstore ? "Google Play" : "App Store";
   const w = a.by_store?.playstore ?? a.by_store?.appstore ?? null;
   if (!w) return null;
   const maxR = Math.max(...Object.values(w.ratings), 1);
@@ -231,7 +235,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
         </div>
       </div>
       <BaselineCaption>
-        {`Trend within window (${a.streams.map((s) => `${s.stream.split(":")[0] === "playstore" ? "Play Store" : "App Store"} from ${fmtDate(s.window_first ?? s.earliest)}`).join("; ")}). No baseline claim.`}
+        {`Trend within window (${a.streams.map((s) => `${s.stream.split(":")[0] === "playstore" ? "Google Play" : "App Store"} from ${fmtDate(s.window_first ?? s.earliest)}`).join("; ")}). No baseline claim.`}
       </BaselineCaption>
       <div>
         <div
@@ -281,7 +285,7 @@ function AppCard({ a, from, b }: { a: AppPulse; from: View; b: Bundle }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {a.fix_list.slice(0, 5).map((f) => {
               const e = b.evidence[f.example_ids[0]];
-              const href = `${signalHref(a.app === "HDFC Bank app" ? "release-pulse" : f.theme, from)}${e ? `#ev-${encodeURIComponent(e.id)}` : ""}`;
+              const href = `${signalHref(a.app === "NatWest app" ? "release-pulse" : f.theme, from)}${e ? `#ev-${encodeURIComponent(e.id)}` : ""}`;
               return (
                 <Link
                   key={f.theme}
@@ -394,7 +398,7 @@ export function MarketView({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="public">
         <AnswerLine
-          sub={`Public voice only: X, Reddit, consumer forums, Play Store and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. HDFC Bank only; group companies shown separately.`}
+          sub={`Public voice only: X, Reddit, consumer forums, Google Play and App Store, ${rangeLong(b.meta.window.start, b.meta.window.end)}. NatWest Group only; group companies shown separately.`}
         >
           {marketAnswer(b)}
         </AnswerLine>
@@ -403,7 +407,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="promise-gap"
         title="What we say vs what customers hear"
-        sub="What HDFC Bank says in public, against where customers say it falls short. Ordered by negative items."
+        sub="What NatWest Group says in public, against where customers say it falls short. Ordered by negative items."
         prov="public"
       >
         <Table
@@ -549,7 +553,7 @@ export function MarketView({ b }: { b: Bundle }) {
       <Tile
         id="app-pulse"
         title="App pulse"
-        sub="Per app, one store at a time (Play Store where the app has it): rating distribution, share positive, top issues and, for the HDFC Bank app and PayZapp, the fix list customers have written."
+        sub="Per app, one store at a time (App Store first, then Google Play): rating distribution, share positive, top issues and, for the NatWest app, the fix list customers have written."
         prov="public"
         right={
           <label
@@ -625,7 +629,7 @@ export function MarketView({ b }: { b: Bundle }) {
         <Tile
           id="themes"
           title="All themes this window"
-          sub={`Every theme heard, HDFC Bank only. ${fmt(b.themes.total_items)} items; an item can carry up to three themes.`}
+          sub={`Every theme heard, NatWest Group only. ${fmt(b.themes.total_items)} items; an item can carry up to three themes.`}
           prov="public"
         >
           <div style={{ maxHeight: 640, overflowY: "auto", paddingRight: 6 }}>

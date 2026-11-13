@@ -33,7 +33,7 @@ while (queue.length && pages.length < 300) {
   if (res.status() !== 200) problems.push(`status ${res.status()}`);
   if (!robots.includes("noindex")) problems.push("no X-Robots-Tag noindex");
   if (!text.includes(WATERMARK)) problems.push("no watermark");
-  if (!/Data frozen \d{1,2} \w{3} 2026/.test(text)) problems.push("no freeze date in the footer");
+  if (!/Data frozen [^.]*\d{1,2} \w+ 2026/.test(text)) problems.push("no freeze date in the footer");
   const other = text.match(OTHER);
   if (other) problems.push(`other demo bank on screen: ${other[0]}`);
   for (const href of links) {

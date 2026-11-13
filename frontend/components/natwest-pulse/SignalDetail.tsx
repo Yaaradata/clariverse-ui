@@ -55,7 +55,7 @@ const SOURCE: Record<string, string> = {
   x: "X",
   reddit: "Reddit",
   forum: "Forums",
-  playstore: "Play Store",
+  playstore: "Google Play",
   appstore: "App Store",
 };
 
@@ -208,7 +208,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         </div>
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Customers talk about {t.label.toLowerCase()}: {fmt(t.count)} HDFC
+            Customers talk about {t.label.toLowerCase()}: {fmt(t.count)} NatWest
             Bank items in the window, {fmtPct(t.share_negative)} negative.
             {t.count_group_companies
               ? ` A further ${fmt(t.count_group_companies)} items concern group companies and are kept separate.`
@@ -301,7 +301,7 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
             Highest rung heard: <strong>{t.rung}</strong>.{" "}
             {fmt(t.escalation_count)} items ({fmtPct(t.share_escalation)})
-            mention the RBI, the ombudsman, a court or a complaint number;{" "}
+            mention the FCA, the ombudsman, a court or a complaint number;{" "}
             {fmt(t.repeat_count)} say they have raised it before.
           </div>
         </Section>
@@ -327,8 +327,8 @@ function ThemeSignal({ b, t }: { b: Bundle; t: Theme }) {
         </Section>
         <Section n={7} title="Provenance">
           <MutedNote>
-            Public voice from X, Reddit, consumer forums, Play Store and App
-            Store, {rangeLong(b.meta.window.start, b.meta.window.end)}, HDFC
+            Public voice from X, Reddit, consumer forums, Google Play and App
+            Store, {rangeLong(b.meta.window.start, b.meta.window.end)}, NatWest
             Bank only. Classified by LisN; counts reproduce from the classified
             data.
           </MutedNote>

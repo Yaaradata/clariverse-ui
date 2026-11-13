@@ -17,3 +17,4 @@ export PYTHONIOENCODING=utf-8
 "$PY" ask.py
 "$PY" check_reconcile_v3.py
 "$PY" volume_validation.py
+"$PY" ../natwest_routes.py

@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 
-import { CardsModule, DigitalModule } from "@/components/natwest-pulse/ModuleView";
+import {
+  CardsModule,
+  DigitalModule,
+} from "@/components/natwest-pulse/ModuleView";
 import { Shell } from "@/components/natwest-pulse/Shell";
 import { loadBundle } from "@/lib/natwest-pulse/load";
 import { shellProps } from "@/lib/natwest-pulse/shellProps";
@@ -14,8 +17,9 @@ const MODULES = {
     subtitle:
       "What · Is it real · Issue list · Where · How high · Owner and action · Evidence",
   },
-  digital: {
-    title: "Digital: HDFC Bank app",
+  // Cora and the digital assistant (brief Step 5.11): the oct13 digital module, relabelled.
+  cora_digital: {
+    title: "Cora and digital assistant",
     subtitle:
       "What · Is it real · Fix list · Where · How high · Owner and action · Evidence",
   },

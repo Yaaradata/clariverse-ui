@@ -59,9 +59,9 @@ function RiskLegend() {
         color: C.textMut,
       }}
     >
-      {dot(C.amber, "On the brink")}
-      {dot(C.red, "Eligible, no reply")}
-      {dot(C.violet, "Unhappy with the reply")}
+      {dot(C.amber, "Within 8 weeks, 10 days or fewer left")}
+      {dot(C.red, "Past 8 weeks, no final response")}
+      {dot(C.violet, "Unhappy with the final response")}
     </div>
   );
 }
@@ -91,7 +91,7 @@ function Split({
         }}
       >
         {title}
-        {/* The definitions and RBI rules stay reachable without taking room on the tile. */}
+        {/* The definitions and FCA rules stay reachable without taking room on the tile. */}
         <span
           role="img"
           aria-label={info}
@@ -171,7 +171,7 @@ export function OmbudsmanWatch({
         scope === "bank" ? "Ombudsman watch" : "Ombudsman watch: Cards",
         p,
       )}
-      sub={`Complaints eligible to approach the RBI Ombudsman, or close to it. As of ${fmtDateTime(o.as_of)}; changes ${since}.`}
+      sub={`Complaints eligible to go to the Financial Ombudsman Service, or close to it. As of ${fmtDateTime(o.as_of)}; changes ${since}.`}
       prov="internal"
       tone="red"
     >
@@ -201,7 +201,7 @@ export function OmbudsmanWatch({
               value={pct(n.brink, n.open)}
               color={C.amber}
               big={fmt(n.brink)}
-              label="On the brink"
+              label="Within 8 weeks, 10 days or fewer left"
               sub={
                 <>
                   10 days or fewer left
@@ -214,10 +214,10 @@ export function OmbudsmanWatch({
               value={pct(n.eligible, n.open)}
               color={C.red}
               big={fmt(n.eligible)}
-              label="Already eligible"
+              label="Past 8 weeks, no final response"
               sub={
                 <>
-                  past day 30, no reply
+                  past 8 weeks, no final response
                   <br />
                   <Delta n={o.delta.eligible} label={since} goodDown />
                 </>
@@ -227,10 +227,10 @@ export function OmbudsmanWatch({
               value={pct(n.unhappy, n.open)}
               color={C.violet}
               big={fmt(n.unhappy)}
-              label="Unhappy with the reply"
+              label="Unhappy with the final response"
               sub={
                 <>
-                  eligible at any point
+                  within 6 months of it
                   <br />
                   <Delta n={o.delta.unhappy} label={since} goodDown />
                 </>
@@ -240,10 +240,10 @@ export function OmbudsmanWatch({
               value={pct(n.awaiting_io, n.open)}
               color={C.cyan}
               big={fmt(n.awaiting_io)}
-              label="Awaiting IO review"
+              label="Referred to the Ombudsman"
               sub={
                 <>
-                  rejection held for review
+                  with the Financial Ombudsman Service
                   <br />
                   <Delta n={o.delta.awaiting_io} label={since} goodDown />
                 </>
@@ -264,7 +264,7 @@ export function OmbudsmanWatch({
             title={
               scope === "bank" ? "At risk, by business" : "At risk, by category"
             }
-            info={`On the brink: no reply yet and 10 days or fewer to the 30-day limit. Already eligible: past day 30 with no reply, within the 90 days to file. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
+            info={`Within 8 weeks, 10 days or fewer left: no final response yet and 10 days or fewer to the deadline (8 weeks; 15 business days for payment services). Past 8 weeks: no final response by the deadline. Unhappy with the reply: after the reply the customer reopened the complaint or contacted the bank again about the issue. At risk counts each complaint once; rings show the share of open complaints. ${o.rules}`}
             rows={split}
           />
         </div>
@@ -362,7 +362,8 @@ export function SaveList({ o, p }: { o: CardsOmbudsman; p: Period }) {
         limit or eligibility, an unhappy reply, repeat contacts, channels used,
         escalation language, the bank&apos;s lists and a public post that
         reached the social inbox. The score orders the list; it is not a
-        probability. Owners are roles. IO timeline: confirm with the bank.
+        probability. Owners are roles. Final response: 8 weeks (FCA DISP); 15
+        business days for payment services.
       </MutedNote>
     </Tile>
   );

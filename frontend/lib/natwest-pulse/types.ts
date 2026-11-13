@@ -405,12 +405,12 @@ export type Bundle = {
 
 export type ProductId =
   | "cards"
-  | "payzapp"
-  | "accounts"
+  | "payments_fraud"
+  | "current_accounts"
   | "personal_loans"
-  | "home_loans"
-  | "auto_loans"
-  | "insurance"
+  | "mortgages"
+  | "overdrafts"
+  | "savings"
   | "digital";
 
 export type PublicProductRow = {
@@ -426,7 +426,7 @@ export type PublicProductRow = {
   share_negative: number | null;
   trend_change_pct: number | null;
   top_issue: { id: string; label: string; negative: number } | null;
-  /** Bank replies on this product's Play Store reviews; null when it has none. */
+  /** Bank replies on this product's Google Play reviews; null when it has none. */
   replies: ReplyStats | null;
   issues: {
     id: string;
@@ -594,7 +594,7 @@ export type Persona = {
   products: ProductId[];
   rm_id: string | null;
   proxy_contacts: number;
-  /** An RM alert is due under the RM rule (same set as rm_notifications.json). */
+  /** An Owner alert is due under the owner rule (same set as rm_notifications.json). */
   rm_alert_due: boolean;
   rm_notified: boolean;
   story?: boolean;

@@ -7,7 +7,7 @@
  * repeated on this view. The drill-down pages:
  *   1. Are my customers happy?             /business/cards/happy    (was the satisfaction page)
  *   2. What is the market saying about us? /business/cards/market   (was the market page)
- *   3. Are we keeping our timelines?       /business/cards/service  (was the deliverables page, without TAT compliance)
+ *   3. Are we keeping our timelines?       /business/cards/service  (was the deliverables page, without timeline compliance)
  * No deliverables ledger, no retention watch. Every figure comes from periods.json for the selected period.
  */
 
@@ -203,7 +203,7 @@ function IssuePulse({ p }: { p: Period }) {
               tone="amber"
             />
             <Kpi
-              label="TAT-related"
+              label="timeline-related"
               value={tileFigure(p.cards.service_full.tat_related.contacts)}
               sub={`${fmtPct(p.cards.service_full.tat_related.share)} carry a delivery timeline`}
             />
@@ -397,7 +397,7 @@ function CategoryRow({
             }}
           >
             {c.owner}
-            {c.tat_related ? " · TAT-related" : ""}
+            {c.tat_related ? " · timeline-related" : ""}
             <RiskPill r={risk} />
           </span>
         </span>
@@ -548,7 +548,7 @@ function Categories({ p }: { p: Period }) {
         Escalations: internal contacts escalated to a grievance desk or beyond;
         external posts with escalation language. Trend: internal plus public
         volume over the last {p.cards.categories[0]?.trend.length ?? 0} periods
-        of the same length. TAT-related: the category carries a delivery
+        of the same length. timeline-related: the category carries a delivery
         timeline; compliance is not shown here. Owners are roles in the cards
         team. The at-risk pill counts complaints on the Ombudsman watch
         (internal, illustrative).
@@ -878,10 +878,10 @@ function QuestionCards({ p }: { p: Period }) {
         answer={`${riser ? `${riser.label} is rising fastest (share of voice ${fmtSigned(riser.share_change_pct)} ${p.compare}).` : "No Cards theme is rising by the 30% rule in this period."} ${mk.reach.volume ? `${fmt(mk.reach.volume)} posts with reach.` : "No posts with reach."}`}
         headlineLabel="Public posts and reviews"
         headline={fmt(c.external.volume)}
-        caption={`About Cards, in the period: X, Reddit, forums, Play Store, App Store. ${fmt(c.external.escalation)} use escalation language.`}
+        caption={`About Cards, in the period: X, Reddit, forums, Google Play, App Store. ${fmt(c.external.escalation)} use escalation language.`}
         gauges={[
           {
-            label: "Play Store",
+            label: "Google Play",
             value: play?.share_positive ?? 0,
             sub: `4–5★ share · ${fmt(play?.reviews)} reviews`,
             tone: "amber",
@@ -946,7 +946,7 @@ function QuestionCards({ p }: { p: Period }) {
             color: C.red,
           },
           {
-            label: "TAT-related contacts",
+            label: "timeline-related contacts",
             value: fmt(sv.tat_related.contacts),
             sub: `${fmtPct(sv.tat_related.share)} of Cards contacts · ${fmt(sv.tat_related.open)} open`,
             color: C.amber,
@@ -1549,7 +1549,7 @@ export function Market({ p }: { p: Period }) {
                 ? `${fmt(r.responded.responded)} of ${fmt(r.responded.reviews)}`
                 : "—"
             }
-            sub="Play Store reviews only"
+            sub="Google Play reviews only"
           />
           <Kpi
             label="Top themes"
@@ -1610,10 +1610,10 @@ export function Service({ p }: { p: Period }) {
                 ? "—"
                 : `${sr.median_first_response_hours_written} h`
             }
-            sub="median, email / WhatsApp / social"
+            sub="median, email / Cora / social"
           />
           <Kpi
-            label="TAT-related contacts"
+            label="timeline-related contacts"
             value={fmt(sv.tat_related.contacts)}
             sub={`${fmtPct(sv.tat_related.share)} of contacts · ${fmt(sv.tat_related.open)} open`}
             tone="amber"

@@ -17,11 +17,11 @@ import { C, MONO, Tile, tint } from "./primitives";
 const CARDS_VIEW = "/natwest-pulse/v1/business/cards";
 const BRIEF_ORDER = [
   "cards",
-  "payzapp",
-  "accounts",
+  "payments_fraud",
+  "current_accounts",
   "personal_loans",
-  "home_loans",
-  "insurance",
+  "mortgages",
+  "savings",
 ];
 
 /* ---------------------------------------------------------------- morning brief */

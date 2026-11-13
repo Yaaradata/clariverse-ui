@@ -115,12 +115,12 @@ export function signalFromRelease(rp: ReleasePulse): SignalItem {
   };
 }
 
-/** Version 11 against earlier versions, within the Play Store only (one store per comparison, follow-up fix 2). */
+/** Version 11 against earlier versions, within the Google Play only (one store per comparison, follow-up fix 2). */
 export function releaseWhy(rp: ReleasePulse): string {
   const p = rp.by_store.playstore;
   if (!p)
     return `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release.`;
-  return `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release, across both stores. On the Play Store, ${Math.round(p.new_app_share_positive ?? 0)}% of its ${fmt(p.new_app_n)} reviews are positive, against ${Math.round(p.old_app_share_positive ?? 0)}% of ${fmt(p.old_app_n)} on earlier versions.`;
+  return `${fmt(rp.new_app_negative)} negative reviews of version 11, the new release, across both stores. On the Google Play, ${Math.round(p.new_app_share_positive ?? 0)}% of its ${fmt(p.new_app_n)} reviews are positive, against ${Math.round(p.old_app_share_positive ?? 0)}% of ${fmt(p.old_app_n)} on earlier versions.`;
 }
 
 export function needsYou(b: Bundle): SignalItem[] {
@@ -163,7 +163,7 @@ export function thisWeekItems(b: Bundle): SignalItem[] {
 
 /**
  * Improving (B7 §4.3): only real improvements, each with at least 15 items in both halves of the window. Themes whose
- * share of voice fell, then PayZapp on the App Store when its positive share rose, then where customers praise us.
+ * share of voice fell, then the Royal Bank of Scotland app on the App Store when its positive share rose, then where customers praise us.
  */
 export function improvingItems(b: Bundle): SignalItem[] {
   const out: SignalItem[] = [];
@@ -186,7 +186,7 @@ export function improvingItems(b: Bundle): SignalItem[] {
     out.push(s);
   }
   const pz = b.storeSeries.apps
-    .find((a) => a.app === "PayZapp")
+    .find((a) => a.app === "Royal Bank of Scotland app")
     ?.stores.find((s) => s.store === "appstore");
   if (
     pz?.halves.comparable &&
@@ -194,8 +194,8 @@ export function improvingItems(b: Bundle): SignalItem[] {
       (pz.halves.first.share_positive ?? 0)
   ) {
     out.push({
-      id: "payzapp-appstore",
-      label: "PayZapp reviews on the App Store",
+      id: "rbs-app-appstore",
+      label: "Royal Bank of Scotland app reviews on the App Store",
       group: "Payments",
       owner: "payments",
       ownerLabel: "Payments",
@@ -227,7 +227,7 @@ export function praiseItem(b: Bundle): SignalItem | null {
 /** Actions to take: needs you first, then routed and this week. MD's office view weights reputation and regulatory rungs. */
 /**
  * The priority-relationships action (review finding #10): issues open over 24 hours for customers on the bank's own
- * lists, and how many RM alerts that are due have been sent. Internal, illustrative.
+ * lists, and how many Owner alerts that are due have been sent. Internal, illustrative.
  */
 export function priorityAction(b: Bundle): SignalItem | null {
   const lists = b.v3.cohorts.filter(
@@ -243,12 +243,12 @@ export function priorityAction(b: Bundle): SignalItem | null {
     label: "Priority relationships: issues open over 24 hours",
     group: "Priority relationships",
     owner: "rm",
-    ownerLabel: "RM",
+    ownerLabel: "Owner",
     rung: "Voice",
-    action: "Alert the RM",
+    action: "Alert the owner",
     status: "needs_you",
     count: over24,
-    why: `${fmt(over24)} issues for customers on the bank's priority lists have been open more than 24 hours${a ? ` (${fmt(a.open_over_24h)} on list A)` : ""}; RMs have been told about ${fmt(told)} of the ${fmt(due)} customers with an alert due.`,
+    why: `${fmt(over24)} issues for customers on the bank's priority lists have been open more than 24 hours${a ? ` (${fmt(a.open_over_24h)} on list A)` : ""}; Owners have been told about ${fmt(told)} of the ${fmt(due)} customers with an alert due.`,
     pillar: "experience",
     href: "/natwest-pulse/v1/priority",
   };

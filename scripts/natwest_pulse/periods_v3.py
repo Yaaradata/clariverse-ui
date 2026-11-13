@@ -532,7 +532,11 @@ def anecdote(rs, theme):
 
 
 def theme_labels():
-    return {t["id"]: t["label"] for t in load(OUT_APP / "themes.json")["themes"]}
+    from taxonomy import THEMES
+
+    out = {t["id"]: t["label"] for t in THEMES}
+    out.update({t["id"]: t["label"] for t in load(OUT_APP / "themes.json")["themes"]})
+    return out
 
 
 # ------------------------------------------------------------------ businesses, brief
@@ -1065,6 +1069,9 @@ def main():
             "id": p["id"], "label": p["label"], "short": p["short"],
             "start": w["start"].isoformat(), "end": w["end"].isoformat(),
             "public_start": w["start"].isoformat(), "public_end": min(w["end"], PUBLIC_END).isoformat(),
+            # NatWest (HL-15): false while data/raw/natwest/ holds nothing; the external blocks then read "Public data
+            # not yet loaded" instead of zeros.
+            "public_loaded": bool(pub),
             "compare": w["compare"],
             "compare_detail": w["compare_detail"],
             "customer_pulse": customer_pulse(inter, customers, notes, w),

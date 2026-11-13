@@ -56,7 +56,7 @@ const SOURCE_LABEL: Record<string, string> = {
   x: "X",
   reddit: "Reddit",
   forum: "Forums",
-  playstore: "Play Store",
+  playstore: "Google Play",
   appstore: "App Store",
 };
 const BUSINESS_LABEL: Record<string, string> = {
@@ -89,7 +89,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
     .filter((w) => w.net !== null)
     .map((w) => ({ week: fmtDate(w.week), net: Math.round(w.net ?? 0) }));
   const SOURCE_NAME: Record<string, string> = {
-    playstore: "Play Store",
+    playstore: "Google Play",
     appstore: "App Store",
     x: "X",
     forum: "Forums",
@@ -148,7 +148,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
       <Tile
         title="Public items this window, by source"
-        sub={`HDFC Bank, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
+        sub={`NatWest Group, on-topic, ${rangeLabel(b.meta.window.start, b.meta.window.end)}`}
         prov="public"
         id="sources"
       >
@@ -212,13 +212,13 @@ export function SatisfactionView({ b }: { b: Bundle }) {
         />
         <MutedNote>
           Tier names to be verified with the bank. Figures are illustrative, not
-          HDFC Bank figures.
+          NatWest Group figures.
         </MutedNote>
       </Tile>
 
       <Tile
         title="Sentiment trend (conversation-inferred)"
-        sub="Weekly net sentiment of public HDFC Bank voice, full-window sources, source-weighted"
+        sub="Weekly net sentiment of public NatWest Group voice, full-window sources, source-weighted"
         prov="public"
         id="trend"
       >
@@ -455,7 +455,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
 
         <Tile
           title="Retention watchlist"
-          sub="Closure intent in high-value tiers, routed to the RM"
+          sub="Closure intent in high-value tiers, routed to the owner"
           prov={["internal", "public"]}
           id="retention"
         >
@@ -472,7 +472,7 @@ export function SatisfactionView({ b }: { b: Bundle }) {
               r.tier,
               fmt(r.customers_with_closure_intent),
               r.top_driver,
-              "RM",
+              "Owner",
               r.action,
             ])}
           />

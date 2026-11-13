@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false, nocache: true },
 };
 
-export default function NatWestPulseLayout({ children }: { children: ReactNode }) {
+export default function NatWestPulseLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   return <RoleBasedChrome>{children}</RoleBasedChrome>;
 }

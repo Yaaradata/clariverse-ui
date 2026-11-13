@@ -32,20 +32,20 @@ import { useFrom } from "./Shell";
 import { hoursLabel } from "./V3Blocks";
 
 const COHORT_LABEL: Record<string, string> = {
-  priority_a: "Priority list A",
-  priority_b: "Priority list B",
-  uhni: "Ultra-HNI",
-  hni: "HNI",
+  priority_a: "Financially vulnerable",
+  priority_b: "Recent complainants",
+  uhni: "Premier and Private",
+  hni: "Premier",
 };
 const PRODUCT_LABEL: Record<string, string> = {
-  cards: "Cards",
-  payzapp: "PayZapp and UPI",
-  accounts: "Accounts and deposits",
+  cards: "Credit cards",
+  payments_fraud: "Payments and fraud",
+  current_accounts: "Current accounts and app",
   personal_loans: "Personal loans",
-  home_loans: "Home loans",
-  auto_loans: "Auto and two-wheeler loans",
-  insurance: "Insurance",
-  digital: "Digital",
+  mortgages: "Mortgages",
+  overdrafts: "Overdrafts",
+  savings: "Savings",
+  digital: "Cora and digital assistant",
 };
 const CHANNEL_ORDER = [
   "email",
@@ -87,7 +87,7 @@ function CohortChips({ cohorts }: { cohorts: string[] }) {
 
 /* ================================================================= E2 */
 
-/** RM status from the RM rule: no alert due, alert sent, or alert due but not sent. */
+/** Owner status from the owner rule: no alert due, alert sent, or alert due but not sent. */
 function rmStatus(p: { rm_alert_due: boolean; rm_notified: boolean }): string {
   if (!p.rm_alert_due) return "no alert due";
   return p.rm_notified ? "notified" : "not notified";
@@ -126,8 +126,8 @@ export function PriorityView({ b }: { b: Bundle }) {
         >
           {fmt(openCustomers)} customers on the bank&apos;s priority lists have
           an issue open this morning; {fmt(over24)} issues on list A have been
-          open for more than 24 hours. RMs have been told about {fmt(rmDid)} of
-          the {fmt(rmShould)} customers with an RM alert due.
+          open for more than 24 hours. Owners have been told about {fmt(rmDid)}{" "}
+          of the {fmt(rmShould)} customers with an Owner alert due.
         </AnswerLine>
       </Tile>
 
@@ -199,11 +199,11 @@ export function PriorityView({ b }: { b: Bundle }) {
                 .join(" · ") || "none"}
             </div>
             <div style={{ fontSize: 13.5, color: C.textSec }}>
-              RM notified:{" "}
+              Owner notified:{" "}
               <strong style={{ color: C.red }}>
                 {fmt(c.rm_notified_today)} of {fmt(c.rm_should_know)}
               </strong>{" "}
-              customers who should have an RM alert today.
+              customers who should have an Owner alert today.
             </div>
             <div style={{ fontSize: 13, color: C.textMut }}>
               {c.id.startsWith("priority") ? (
@@ -236,7 +236,7 @@ export function PriorityView({ b }: { b: Bundle }) {
             "Latest signal",
             "Oldest open",
             "Owner",
-            "RM",
+            "Owner",
             "",
           ]}
           align={[
@@ -654,11 +654,11 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
                 , {teams.size} {teams.size === 1 ? "team" : "teams"}, no one saw
                 the pattern
                 {p.rm_alert_due && !p.rm_notified
-                  ? "; the RM was not told."
+                  ? "; the owner was not told."
                   : "."}{" "}
                 <strong style={{ color: C.green }}>With LisN:</strong> flagged
-                at touchpoint {flagged}, the RM alerted, and every later contact
-                opens with the history.
+                at touchpoint {flagged}, the owner alerted, and every later
+                contact opens with the history.
               </>
             ) : (
               <>
@@ -706,7 +706,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
           <Field label="Products">
             {p.products.map((x) => PRODUCT_LABEL[x] ?? x).join(", ")}
           </Field>
-          <Field label="RM">
+          <Field label="Owner">
             <span style={{ fontFamily: MONO }}>{p.rm_id}</span> ·{" "}
             <span style={{ color: rmColor(p) }}>{rmStatus(p)}</span>
           </Field>
@@ -776,7 +776,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
         >
           <ActionBox
             icon={<BellRing size={16} />}
-            title="Alert the RM"
+            title="Alert the owner"
             body={`CRM task for ${p.rm_id}: ${openSteps.length} open ${openSteps.length === 1 ? "item" : "items"} across ${[...new Set(openSteps.map((s) => s.team))].join(" and ") || "no team"}. Call the customer today with the full history.`}
             owner="rm"
           />
@@ -786,7 +786,7 @@ export function CustomerTrail({ b, id }: { b: Bundle; id: string }) {
             body={
               onList
                 ? "Working priority target (to confirm with the bank): call back within 5 hours of the first unresolved contact; close within 24 hours or tell the customer why not."
-                : "Call back within the bank TAT for this request; confirm the outcome in writing."
+                : "Call back within the bank timeline for this request; confirm the outcome in writing."
             }
             owner={callbackOwner}
           />

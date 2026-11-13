@@ -375,8 +375,8 @@ function ShellInner({
                   {context}
                 </strong>
               ) : null}
-              <strong style={{ color: C.text }}>NatWest Group</strong> · Customer
-              Pulse · {meta.brief_label}, {meta.brief_time}
+              <strong style={{ color: C.text }}>NatWest Group</strong> ·
+              Customer Pulse · {meta.brief_label}, {meta.brief_time}
             </div>
             {periods ? <HeaderPeriodFilter file={periods} /> : null}
             <ThemeToggle />
@@ -454,7 +454,7 @@ function ShellInner({
                       padding: "1px 10px",
                     }}
                   >
-                    Sample rows · {sampleRows.toLocaleString("en-IN")} kept for
+                    Sample rows · {sampleRows.toLocaleString("en-GB")} kept for
                     drill-down
                   </span>
                 ) : null}
@@ -483,7 +483,10 @@ function ShellInner({
               authorise or decide. Public figures from NatWest Group and
               regulator disclosures as dated in the research pack; internal
               figures illustrative until discovery. Data frozen{" "}
-              <span data-testid="freeze">{meta.brief_label}</span>.
+              <span data-testid="freeze">
+                {meta.brief_label}, {meta.brief_time}
+              </span>
+              .
             </footer>
           </main>
         </div>

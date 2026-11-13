@@ -955,3 +955,9 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
 - **NW-D26 · Fixtures.** The HDFC reconcile fixtures run on the NatWest data with the NatWest checker (42 trip; 4 need
   public data and are skipped until it lands). The brief's "brand rows sum to group" applies to the public layer, which
   is empty; the brand field is written by normalise.py and the check is still to add when the pull lands.
+- **NW-D27 · No brand filter on screen.** The brief asks for a brand filter as a first-class dimension, but the oct13
+  layout has none and the layout rule bars adding sections. Brand is written on every public record (normalise.py); the
+  market view names the three brands. A filter control is a layout change for Usha to approve.
+- **NW-D28 · External blocks with no public data.** When no source is loaded (periods.json `public_loaded: false`), the
+  two external blocks show "Public data not yet loaded" in place of zeros (HL-15); the block, its title and its Public ·
+  live tag stay where oct13 has them. Signal pages exist only for public themes, so there are none until the pull lands.

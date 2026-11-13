@@ -11,7 +11,7 @@ export default function PriorityPage() {
       {...shellProps(b)}
       sampleRows={b.periods.scale.sample_rows}
       title="Priority relationships"
-      subtitle="Cohorts from the bank's own tiers and lists · Open over 5 and 24 hours · RM notified · High-impact complaints"
+      subtitle="Cohorts from the bank's own tiers and lists · Open over 5 and 24 hours · Owner notified · High-impact complaints"
       drill
     >
       <PriorityView b={sliceBundle(b, { view: "priority" })} />

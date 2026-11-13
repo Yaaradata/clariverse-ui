@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import { fmtDate } from "@/lib/natwest-pulse/format";
-import type { AskEntry, AskFile, Evidence, View } from "@/lib/natwest-pulse/types";
+import type {
+  AskEntry,
+  AskFile,
+  Evidence,
+  View,
+} from "@/lib/natwest-pulse/types";
 import { C, ProvenanceTag, tint } from "./primitives";
 
 type Ev = Pick<Evidence, "id" | "summary" | "place" | "created_at" | "themes">;

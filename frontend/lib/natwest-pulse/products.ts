@@ -3,19 +3,19 @@ import type { ProductId } from "./types";
 
 export const PRODUCT_ORDER: ProductId[] = [
   "cards",
-  "payzapp",
-  "accounts",
+  "payments_fraud",
+  "current_accounts",
   "personal_loans",
-  "home_loans",
-  "auto_loans",
-  "insurance",
+  "mortgages",
+  "overdrafts",
+  "savings",
   "digital",
 ];
 
 /** Products with a full module (M1–M3); the rest open the business view. */
 export const MODULES: Partial<Record<ProductId, string>> = {
   cards: "cards",
-  digital: "digital",
+  digital: "cora_digital",
 };
 
 /**
@@ -25,27 +25,32 @@ export const MODULES: Partial<Record<ProductId, string>> = {
  */
 const ALL_PRODUCTS: ProductId[] = [
   "cards",
-  "payzapp",
-  "accounts",
+  "payments_fraud",
+  "current_accounts",
   "personal_loans",
-  "home_loans",
-  "auto_loans",
-  "insurance",
+  "mortgages",
+  "overdrafts",
+  "savings",
   "digital",
 ];
-const LOANS: ProductId[] = ["personal_loans", "home_loans", "auto_loans"];
+const LOANS: ProductId[] = ["personal_loans", "mortgages", "overdrafts"];
 export const DELIVERABLE_REMIT: Record<string, ProductId[]> = {
-  failed_reversal: ["cards", "payzapp", "accounts", "digital"],
+  failed_reversal: ["cards", "payments_fraud", "current_accounts", "digital"],
   card_closure: ["cards"],
-  unauthorised_reversal: ["cards", "payzapp", "accounts", "digital"],
+  unauthorised_reversal: [
+    "cards",
+    "payments_fraud",
+    "current_accounts",
+    "digital",
+  ],
   credit_report: ["cards", ...LOANS],
   loan_documents: LOANS,
   complaint_resolution: ALL_PRODUCTS,
   card_dispatch: ["cards"],
-  dispute: ["cards", "payzapp"],
-  refund: ["cards", "payzapp", "digital"],
+  dispute: ["cards", "payments_fraud"],
+  refund: ["cards", "payments_fraud", "digital"],
   service_request: ALL_PRODUCTS,
-  account_unfreeze: ["accounts", "payzapp", "digital"],
+  account_unfreeze: ["current_accounts", "payments_fraud", "digital"],
   loan_disbursal: LOANS,
   query_response: ALL_PRODUCTS,
 };

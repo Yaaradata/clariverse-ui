@@ -1,18 +1,17 @@
-/** Number and label formatting for the LisN HDFC demo. Indian digit grouping, rupees in lakh and crore. */
+/** Number and label formatting for the NatWest Group pulse: United Kingdom digit grouping, pounds. */
 
-const IN = new Intl.NumberFormat("en-IN");
+const IN = new Intl.NumberFormat("en-GB");
 
 export function fmt(n: number | null | undefined): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—";
   return IN.format(Math.round(n));
 }
 
-/** A count short enough for a ring's centre: 24.0L, 1.2 Cr, 48K; exact below ten thousand. */
+/** A count short enough for a ring's centre: 1.2m, 628K, 48K; exact below ten thousand. */
 export function fmtCompact(n: number | null | undefined): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—";
   const a = Math.abs(n);
-  if (a >= 1e7) return `${(n / 1e7).toFixed(1)} Cr`;
-  if (a >= 1e5) return `${(n / 1e5).toFixed(1)}L`;
+  if (a >= 1e6) return `${(n / 1e6).toFixed(1)}m`;
   if (a >= 1e4) return `${Math.round(n / 1e3)}K`;
   return fmt(n);
 }
@@ -38,11 +37,10 @@ export function fmtSigned(
   return `${s}${Math.abs(n).toFixed(digits)}${unit}`;
 }
 
-/** ₹ in lakh or crore, e.g. 2,50,00,000 → ₹2.5 crore. */
+/** Pounds, in millions from £1m: £2.5 million; below that, £12,500. */
 export function fmtRupees(n: number): string {
-  if (n >= 1e7) return `₹${(n / 1e7).toFixed(n % 1e7 === 0 ? 0 : 1)} crore`;
-  if (n >= 1e5) return `₹${(n / 1e5).toFixed(n % 1e5 === 0 ? 0 : 1)} lakh`;
-  return `₹${IN.format(n)}`;
+  if (n >= 1e6) return `£${(n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1)} million`;
+  return `£${IN.format(n)}`;
 }
 
 const MONTHS = [

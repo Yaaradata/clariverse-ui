@@ -84,7 +84,7 @@ export type PulseList = {
   not_responded_48h: number | null;
   open_delta: number;
   not_responded_delta: number | null;
-  /** RMs alerted this morning, of the list's customers due an alert. */
+  /** Owners alerted this morning, of the list's customers due an alert. */
   rm: { alerted: number; of: number };
   not_responded_series: { end: string; count: number }[];
   volume_series: { end: string; count: number }[];
@@ -99,7 +99,7 @@ export type SocialPost = {
   engagement: Record<string, number>;
   score: number;
   responded: boolean;
-  /** True when the reply is simulated (every source but the Play Store). */
+  /** True when the reply is simulated (every source but the Google Play). */
   illustrative: boolean;
 };
 
@@ -112,7 +112,7 @@ export type SocialPulse = {
   response_series: { end: string; pct: number | null }[];
   /** Source-weighted negative share of mentions, per earlier window of the period's length. */
   negative_share_series: { end: string; pct: number | null }[];
-  /** Bank replies by source. Play Store is collected (live); the rest are simulated and marked illustrative. */
+  /** Bank replies by source. Google Play is collected (live); the rest are simulated and marked illustrative. */
   by_source: {
     source: string;
     label: string;
@@ -298,13 +298,13 @@ export type CardsService = {
 /* ---------------------------------------------------------------- Ombudsman watch (ombudsman_watch_design.md) */
 
 export type OmbudsmanCounts = {
-  /** No reply yet, 10 days or fewer to the 30-day reply limit. */
+  /** No reply yet, 10 days or fewer to the final-response deadline. */
   brink: number;
-  /** Past day 30 with no reply, within the 90 days to file. */
+  /** Past the final-response deadline with no final response. */
   eligible: number;
   /** Replied, then reopened or contacted again on the issue; within 90 days of the reply. */
   unhappy: number;
-  /** A partly or fully rejecting decision waiting for Internal Ombudsman review. */
+  /** A partly or fully rejecting decision referred to the Financial Ombudsman Service. */
   awaiting_io: number;
   /** On the brink, eligible or unhappy, each complaint once. A subset of open complaints. */
   at_risk: number;
@@ -318,7 +318,7 @@ export type OmbudsmanSnapshot = OmbudsmanCounts & {
 export type OmbudsmanBlock = {
   /** Complaints received and still waiting for a reply. On the brink and already eligible are both inside it. */
   pending: number;
-  /** Internal Ombudsman, from the one complaint register: sent for review, and reviewed. */
+  /** Final responses not upholding the complaint, from the one register. */
   io: { decided: number; reviewed: number };
   provenance: "internal";
   as_of: string;
@@ -444,6 +444,8 @@ export type Period = {
   start: string;
   end: string;
   public_start: string;
+  /** NatWest: false while no public source is loaded (the external blocks say so). */
+  public_loaded?: boolean;
   public_end: string;
   /** One label for every period: "vs previous period". */
   compare: string;
@@ -507,19 +509,20 @@ export type PeriodsFile = {
   periods: Record<PeriodId, Period>;
 };
 
+/** NatWest rows (brief Step 5.4): Calls · Cora · App chat · Email · Social · Branch; oct13 ids ("whatsapp" = Cora). */
 export const CHANNEL_ORDER = [
-  "emails",
   "calls",
-  "chat",
   "whatsapp",
+  "chat",
+  "emails",
   "social",
   "branch",
 ] as const;
 export const CHANNEL_LABEL: Record<string, string> = {
-  emails: "Emails",
+  emails: "Email",
   calls: "Calls",
-  chat: "Chat",
-  whatsapp: "WhatsApp",
+  chat: "App chat",
+  whatsapp: "Cora",
   social: "Social",
   branch: "Branch",
 };

@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * D1 · Deliverables ledger (B7 §1): each deliverable with its TAT, compensation, met, outside, open too long, public
- * posts describing a delay, owner and action. A TAT is an RBI published timeline, a bank-confirmed SLA (both with their
- * source under the TAT), or, while unconfirmed, "Bank TAT: confirm in discovery". A second table splits "met" by product.
+ * D1 · Deliverables ledger (B7 §1): each deliverable with its timeline, compensation, met, outside, open too long, public
+ * posts describing a delay, owner and action. A timeline is an FCA published timeline, a bank-confirmed SLA (both with their
+ * source under the timeline), or, while unconfirmed, "Bank timeline: confirm in discovery". A second table splits "met" by product.
  */
 
 import { fmt, fmtPct } from "@/lib/natwest-pulse/format";
@@ -47,13 +47,13 @@ const OWNER: Record<string, string> = {
 };
 const SHORT: Record<string, string> = {
   cards: "Cards",
-  payzapp: "PayZapp",
-  accounts: "Accounts",
-  personal_loans: "PL",
-  home_loans: "HL",
-  auto_loans: "Auto",
-  insurance: "Ins.",
-  digital: "Digital",
+  payments_fraud: "Payments",
+  current_accounts: "Accounts",
+  personal_loans: "Loans",
+  mortgages: "Mortgages",
+  overdrafts: "Overdrafts",
+  savings: "Savings",
+  digital: "Cora",
 };
 
 /** The recommended action for a ledger row, from its own figures (review finding #40). */
@@ -112,11 +112,11 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
     <>
       <Tile prov={["internal", "public"]} accent tone="violet">
         <AnswerLine
-          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. TATs marked RBI are published timelines; the rest are the bank's own SLAs, shown once the bank confirms them.`}
+          sub={`Weakest: ${worst?.label.toLowerCase()} at ${fmtPct(worst?.met_pct)} met. timelines marked FCA are published timelines; the rest are the bank's own SLAs, shown once the bank confirms them.`}
         >
           {fmtPct((100 * met) / measured)} of deliverables met across{" "}
           {rows.length} deliverable types; {fmt(otl)} items are open past their
-          TAT this morning.
+          timeline this morning.
         </AnswerLine>
       </Tile>
       <Tile
@@ -129,7 +129,7 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
         <Table
           head={[
             "Deliverable",
-            "TAT",
+            "timeline",
             "Compensation",
             "Met",
             "Outside",
@@ -178,19 +178,20 @@ export function DeliverablesLedger({ b }: { b: Bundle }) {
           ])}
         />
         <MutedNote>
-          RBI rows use published RBI timelines. Where RBI sets none, the TAT is
-          the bank&apos;s confirmed SLA, with its source document under the TAT.
-          Any row still reading &ldquo;Bank TAT: confirm in discovery&rdquo; is
-          unconfirmed; on those rows, met, outside and open too long come from
-          the illustrative sample, measured against a placeholder that is not a
-          bank figure. Met = closed within the TAT (for the first-response row:
-          answered within it). Outside = settled late, or open and already past
-          the TAT. Working days skip Sundays; bank holidays are not modelled
-          yet. Public posts describing a delay are matched to a deliverable by
-          request type; &ldquo;—&rdquo; where public voice has no matching type.
-          Action: set a new date when a quarter or more of the open items are
-          past the TAT; route with evidence when under 80% is met; update and
-          close when a few items are past the TAT; otherwise monitor.
+          FCA rows use published FCA timelines. Where FCA sets none, the
+          timeline is the bank&apos;s confirmed SLA, with its source document
+          under the timeline. Any row still reading &ldquo;Bank timeline:
+          confirm in discovery&rdquo; is unconfirmed; on those rows, met,
+          outside and open too long come from the illustrative sample, measured
+          against a placeholder that is not a bank figure. Met = closed within
+          the timeline (for the first-response row: answered within it). Outside
+          = settled late, or open and already past the timeline. Working days
+          skip Sundays; bank holidays are not modelled yet. Public posts
+          describing a delay are matched to a deliverable by request type;
+          &ldquo;—&rdquo; where public voice has no matching type. Action: set a
+          new date when a quarter or more of the open items are past the
+          timeline; route with evidence when under 80% is met; update and close
+          when a few items are past the timeline; otherwise monitor.
         </MutedNote>
       </Tile>
       <Tile

@@ -227,9 +227,9 @@ def build_customers():
     # recent complainants (90 days). Both are drawn from every tier, not only Premier and Private.
     pool = list(customers)
     rng.shuffle(pool)
-    for c in pool[:40]:
+    for c in pool[:500]:
         c["cohorts"].insert(0, "priority_a")
-    for c in pool[40:160]:
+    for c in pool[500:620]:
         c["cohorts"].insert(0, "priority_b")
     for c in customers:
         if "uhni" in c["cohorts"]:

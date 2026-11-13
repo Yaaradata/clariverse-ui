@@ -35,7 +35,7 @@ export const REQUEST_LABEL: Record<string, string> = {
   closure: "Card, account and loan closure",
   loan_disbursal: "Loan processing and disbursal",
   credit_report: "Credit-information correction",
-  kyc: "KYC and profile updates",
+  kyc: "Identity checks and profile updates",
   other: "Other service requests",
 };
 const ACTION_FOR: Record<string, string> = {
@@ -49,7 +49,7 @@ const ACTION_FOR: Record<string, string> = {
   kyc: "Update and close",
   other: "Route with evidence",
 };
-/** Public request type → the internal deliverable whose TAT applies (same TATs as the ledger). */
+/** Public request type → the internal deliverable whose timeline applies (same timelines as the ledger). */
 const REQUEST_DELIVERABLE: Record<string, string> = {
   card_delivery: "card_dispatch",
   refund: "refund",
@@ -141,7 +141,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
               tone="red"
             />
             <Kpi
-              label="Beyond TAT (internal)"
+              label="Beyond timeline (internal)"
               value={fmt(it.ageing.reduce((s, r) => s + r.beyond_tat, 0))}
               sub="open past the deliverable · illustrative"
               tone="violet"
@@ -151,11 +151,11 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <Table
               head={[
                 "Request type",
-                "TAT",
+                "timeline",
                 "Breaches heard",
                 "Asking status",
                 "Repeat",
-                "Open · beyond TAT",
+                "Open · beyond timeline",
                 "Owner",
                 "Action",
               ]}
@@ -202,11 +202,11 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             />
           </div>
           <MutedNote>
-            TATs as in the deliverables ledger above: RBI where published;
-            otherwise the bank&apos;s own TAT, not shown until it is confirmed
-            in discovery. Breaches, status-seeking and repeat are public voice;
-            open cases and beyond-TAT are illustrative, from the same demo
-            sample as the ledger.
+            timelines as in the deliverables ledger above: FCA where published;
+            otherwise the bank&apos;s own timeline, not shown until it is
+            confirmed in discovery. Breaches, status-seeking and repeat are
+            public voice; open cases and beyond-timeline are illustrative, from
+            the same demo sample as the ledger.
           </MutedNote>
         </Tile>
       </div>
@@ -214,7 +214,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
       <Tile
         id="ladder"
         title="Escalation ladder"
-        sub={`Hear it on the first rung. Voice → Repeat → Grievance → MD's office → IO → RBI Ombudsman → Public. ${it.ladder_rule}`}
+        sub={`Hear it on the first rung. Voice → Repeat → Complaint → Head of CX → Final response → Financial Ombudsman Service → Public. ${it.ladder_rule}`}
         prov={["public", "internal"]}
         tone="red"
       >
@@ -278,15 +278,15 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
                   e.target
                     ? ((
                         {
-                          rbi: "RBI (named or tagged)",
-                          rbi_ombudsman: "RBI Ombudsman",
+                          rbi: "Regulator named or tagged (FCA)",
+                          rbi_ombudsman: "Financial Ombudsman Service",
                           grievance: "Grievance or nodal officer",
                           legal: "Legal action",
                           consumer_court: "Consumer court or helpline",
                           ministers: "Ministers tagged",
                           repeat: "Complaint number or third time",
                           md_office: "MD or CEO",
-                          internal_ombudsman: "Internal Ombudsman",
+                          internal_ombudsman: "Final response",
                         } as Record<string, string>
                       )[e.target] ?? e.target)
                     : "Target not named",
@@ -491,7 +491,7 @@ export function ServicePromiseView({ b }: { b: Bundle }) {
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
               <ActionChip action="Notify proactively" />
               <span style={{ fontSize: 12.5, color: C.textMut }}>
-                Push stage updates in app, WhatsApp and SMS.
+                Push stage updates in app, Cora and SMS.
               </span>
             </div>
           </div>

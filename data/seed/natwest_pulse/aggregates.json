@@ -14,781 +14,781 @@
  },
  "dials": {
   "total": 32000,
-  "closed": 31095,
-  "waiting_on_customer": 335,
-  "closed_or_responded": 31966,
-  "open": 570,
-  "open_too_long": 56,
+  "closed": 31126,
+  "waiting_on_customer": 340,
+  "closed_or_responded": 31974,
+  "open": 534,
+  "open_too_long": 41,
   "closed_or_responded_pct": 99.9,
-  "open_pct": 1.8,
-  "open_too_long_pct_of_open": 9.8
+  "open_pct": 1.7,
+  "open_too_long_pct_of_open": 7.7
  },
  "products": [
   {
    "id": "cards",
    "label": "Credit cards",
-   "total": 5077,
-   "closed": 4811,
-   "waiting_on_customer": 98,
-   "closed_or_responded": 5071,
-   "open": 168,
-   "open_too_long": 23,
+   "total": 4848,
+   "closed": 4595,
+   "waiting_on_customer": 94,
+   "closed_or_responded": 4844,
+   "open": 159,
+   "open_too_long": 14,
    "closed_or_responded_pct": 99.9,
    "open_pct": 3.3,
-   "open_too_long_pct_of_open": 13.7,
-   "negative": 1640,
-   "high_impact": 25,
+   "open_too_long_pct_of_open": 8.8,
+   "negative": 1533,
+   "high_impact": 19,
    "deliverables": {
-    "measured": 4854,
-    "met": 4396,
-    "outside": 458,
-    "met_pct": 90.6,
+    "measured": 4626,
+    "met": 4242,
+    "outside": 384,
+    "met_pct": 91.7,
     "open_within": 145
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 98
+     "count": 102
     },
     {
      "week": "2026-08-10",
-     "count": 100
-    },
-    {
-     "week": "2026-08-17",
-     "count": 96
-    },
-    {
-     "week": "2026-08-24",
-     "count": 116
-    },
-    {
-     "week": "2026-08-31",
      "count": 103
     },
     {
-     "week": "2026-09-07",
-     "count": 116
+     "week": "2026-08-17",
+     "count": 101
     },
     {
-     "week": "2026-09-14",
-     "count": 108
-    },
-    {
-     "week": "2026-09-21",
-     "count": 108
-    },
-    {
-     "week": "2026-09-28",
-     "count": 110
-    },
-    {
-     "week": "2026-10-05",
-     "count": 113
-    },
-    {
-     "week": "2026-10-12",
-     "count": 122
-    },
-    {
-     "week": "2026-10-19",
-     "count": 120
-    },
-    {
-     "week": "2026-10-26",
+     "week": "2026-08-24",
      "count": 104
     },
     {
+     "week": "2026-08-31",
+     "count": 97
+    },
+    {
+     "week": "2026-09-07",
+     "count": 101
+    },
+    {
+     "week": "2026-09-14",
+     "count": 115
+    },
+    {
+     "week": "2026-09-21",
+     "count": 113
+    },
+    {
+     "week": "2026-09-28",
+     "count": 98
+    },
+    {
+     "week": "2026-10-05",
+     "count": 90
+    },
+    {
+     "week": "2026-10-12",
+     "count": 123
+    },
+    {
+     "week": "2026-10-19",
+     "count": 107
+    },
+    {
+     "week": "2026-10-26",
+     "count": 95
+    },
+    {
      "week": "2026-11-02",
-     "count": 145
+     "count": 106
     }
    ],
-   "negative_change_pct": 7.0,
+   "negative_change_pct": -1.0,
    "top_issue": {
     "id": "card_fees_charges",
     "label": "Card interest and charges",
-    "negative": 292
+    "negative": 271
    },
    "by_channel": {
-    "inbound_voice": 1706,
-    "email": 427,
-    "whatsapp": 1251,
-    "chat": 578,
-    "ivr_bot": 361,
-    "branch": 381,
-    "social_inbox": 108,
-    "outbound_voice": 265
+    "outbound_voice": 240,
+    "inbound_voice": 1631,
+    "branch": 390,
+    "whatsapp": 1179,
+    "email": 407,
+    "ivr_bot": 315,
+    "chat": 580,
+    "social_inbox": 106
    }
   },
   {
    "id": "payments_fraud",
    "label": "Payments and fraud",
-   "total": 4834,
-   "closed": 4716,
-   "waiting_on_customer": 46,
-   "closed_or_responded": 4830,
-   "open": 72,
-   "open_too_long": 11,
-   "closed_or_responded_pct": 99.9,
-   "open_pct": 1.5,
-   "open_too_long_pct_of_open": 15.3,
-   "negative": 1497,
-   "high_impact": 14,
+   "total": 4988,
+   "closed": 4884,
+   "waiting_on_customer": 40,
+   "closed_or_responded": 4986,
+   "open": 64,
+   "open_too_long": 10,
+   "closed_or_responded_pct": 100.0,
+   "open_pct": 1.3,
+   "open_too_long_pct_of_open": 15.6,
+   "negative": 1580,
+   "high_impact": 18,
    "deliverables": {
-    "measured": 4740,
-    "met": 4143,
-    "outside": 597,
-    "met_pct": 87.4,
-    "open_within": 61
+    "measured": 4905,
+    "met": 4326,
+    "outside": 579,
+    "met_pct": 88.2,
+    "open_within": 54
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 89
+     "count": 86
     },
     {
      "week": "2026-08-10",
-     "count": 79
+     "count": 108
     },
     {
      "week": "2026-08-17",
-     "count": 99
+     "count": 94
     },
     {
      "week": "2026-08-24",
-     "count": 107
+     "count": 111
     },
     {
      "week": "2026-08-31",
-     "count": 100
-    },
-    {
-     "week": "2026-09-07",
-     "count": 106
-    },
-    {
-     "week": "2026-09-14",
-     "count": 98
-    },
-    {
-     "week": "2026-09-21",
-     "count": 102
-    },
-    {
-     "week": "2026-09-28",
      "count": 114
     },
     {
+     "week": "2026-09-07",
+     "count": 90
+    },
+    {
+     "week": "2026-09-14",
+     "count": 108
+    },
+    {
+     "week": "2026-09-21",
+     "count": 131
+    },
+    {
+     "week": "2026-09-28",
+     "count": 120
+    },
+    {
      "week": "2026-10-05",
-     "count": 102
+     "count": 117
     },
     {
      "week": "2026-10-12",
-     "count": 98
+     "count": 113
     },
     {
      "week": "2026-10-19",
-     "count": 107
+     "count": 94
     },
     {
      "week": "2026-10-26",
-     "count": 107
+     "count": 124
     },
     {
      "week": "2026-11-02",
-     "count": 115
+     "count": 98
     }
    ],
-   "negative_change_pct": 4.8,
+   "negative_change_pct": -9.7,
    "top_issue": {
     "id": "upi_failures",
     "label": "Faster Payments or Open Banking failure",
-    "negative": 326
+    "negative": 382
    },
    "by_channel": {
-    "email": 411,
-    "whatsapp": 1151,
-    "inbound_voice": 1601,
-    "ivr_bot": 361,
-    "chat": 604,
-    "branch": 367,
-    "outbound_voice": 235,
+    "inbound_voice": 1695,
+    "branch": 402,
+    "whatsapp": 1194,
+    "email": 356,
+    "ivr_bot": 368,
+    "chat": 632,
+    "outbound_voice": 237,
     "social_inbox": 104
    }
   },
   {
    "id": "current_accounts",
    "label": "Current accounts and app",
-   "total": 10408,
-   "closed": 10140,
-   "waiting_on_customer": 99,
-   "closed_or_responded": 10397,
-   "open": 169,
-   "open_too_long": 16,
+   "total": 10594,
+   "closed": 10328,
+   "waiting_on_customer": 105,
+   "closed_or_responded": 10583,
+   "open": 161,
+   "open_too_long": 9,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 1.6,
-   "open_too_long_pct_of_open": 9.5,
-   "negative": 3175,
-   "high_impact": 37,
+   "open_pct": 1.5,
+   "open_too_long_pct_of_open": 5.6,
+   "negative": 3301,
+   "high_impact": 39,
    "deliverables": {
-    "measured": 10200,
-    "met": 9677,
-    "outside": 523,
-    "met_pct": 94.9,
-    "open_within": 153
+    "measured": 10370,
+    "met": 9876,
+    "outside": 494,
+    "met_pct": 95.2,
+    "open_within": 152
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 200
+     "count": 194
     },
     {
      "week": "2026-08-10",
-     "count": 201
+     "count": 204
     },
     {
      "week": "2026-08-17",
-     "count": 160
-    },
-    {
-     "week": "2026-08-24",
-     "count": 209
-    },
-    {
-     "week": "2026-08-31",
-     "count": 212
-    },
-    {
-     "week": "2026-09-07",
-     "count": 219
-    },
-    {
-     "week": "2026-09-14",
-     "count": 228
-    },
-    {
-     "week": "2026-09-21",
-     "count": 236
-    },
-    {
-     "week": "2026-09-28",
-     "count": 219
-    },
-    {
-     "week": "2026-10-05",
-     "count": 222
-    },
-    {
-     "week": "2026-10-12",
-     "count": 218
-    },
-    {
-     "week": "2026-10-19",
      "count": 230
     },
     {
+     "week": "2026-08-24",
+     "count": 239
+    },
+    {
+     "week": "2026-08-31",
+     "count": 226
+    },
+    {
+     "week": "2026-09-07",
+     "count": 223
+    },
+    {
+     "week": "2026-09-14",
+     "count": 218
+    },
+    {
+     "week": "2026-09-21",
+     "count": 242
+    },
+    {
+     "week": "2026-09-28",
+     "count": 229
+    },
+    {
+     "week": "2026-10-05",
+     "count": 230
+    },
+    {
+     "week": "2026-10-12",
+     "count": 236
+    },
+    {
+     "week": "2026-10-19",
+     "count": 231
+    },
+    {
      "week": "2026-10-26",
-     "count": 209
+     "count": 226
     },
     {
      "week": "2026-11-02",
-     "count": 239
+     "count": 232
     }
    ],
-   "negative_change_pct": 2.9,
+   "negative_change_pct": -0.9,
    "top_issue": {
     "id": "fees_charges_bank",
     "label": "Account charges and fees",
-    "negative": 518
+    "negative": 530
    },
    "by_channel": {
-    "email": 872,
-    "whatsapp": 2481,
-    "inbound_voice": 3506,
-    "chat": 1261,
-    "ivr_bot": 726,
-    "branch": 828,
-    "outbound_voice": 534,
-    "social_inbox": 200
+    "branch": 841,
+    "whatsapp": 2587,
+    "chat": 1193,
+    "inbound_voice": 3630,
+    "email": 818,
+    "social_inbox": 219,
+    "ivr_bot": 755,
+    "outbound_voice": 551
    }
   },
   {
    "id": "personal_loans",
    "label": "Personal loans",
-   "total": 1265,
-   "closed": 1201,
-   "waiting_on_customer": 26,
-   "closed_or_responded": 1263,
-   "open": 38,
-   "open_too_long": 2,
+   "total": 1247,
+   "closed": 1181,
+   "waiting_on_customer": 24,
+   "closed_or_responded": 1244,
+   "open": 42,
+   "open_too_long": 4,
    "closed_or_responded_pct": 99.8,
-   "open_pct": 3.0,
-   "open_too_long_pct_of_open": 5.3,
-   "negative": 376,
-   "high_impact": 5,
+   "open_pct": 3.4,
+   "open_too_long_pct_of_open": 9.5,
+   "negative": 375,
+   "high_impact": 6,
    "deliverables": {
-    "measured": 1213,
-    "met": 1139,
-    "outside": 74,
-    "met_pct": 93.9,
-    "open_within": 36
+    "measured": 1189,
+    "met": 1132,
+    "outside": 57,
+    "met_pct": 95.2,
+    "open_within": 38
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 19
+     "count": 21
     },
     {
      "week": "2026-08-10",
-     "count": 17
+     "count": 28
     },
     {
      "week": "2026-08-17",
-     "count": 25
+     "count": 16
     },
     {
      "week": "2026-08-24",
-     "count": 23
+     "count": 22
     },
     {
      "week": "2026-08-31",
-     "count": 29
-    },
-    {
-     "week": "2026-09-07",
-     "count": 28
-    },
-    {
-     "week": "2026-09-14",
      "count": 23
     },
     {
+     "week": "2026-09-07",
+     "count": 22
+    },
+    {
+     "week": "2026-09-14",
+     "count": 27
+    },
+    {
      "week": "2026-09-21",
-     "count": 38
+     "count": 28
     },
     {
      "week": "2026-09-28",
-     "count": 30
+     "count": 21
     },
     {
      "week": "2026-10-05",
-     "count": 25
+     "count": 27
     },
     {
      "week": "2026-10-12",
-     "count": 19
+     "count": 29
     },
     {
      "week": "2026-10-19",
-     "count": 28
+     "count": 33
     },
     {
      "week": "2026-10-26",
-     "count": 28
+     "count": 23
     },
     {
      "week": "2026-11-02",
-     "count": 31
+     "count": 33
     }
    ],
-   "negative_change_pct": 17.6,
+   "negative_change_pct": 15.6,
    "top_issue": {
     "id": "loan_processing",
     "label": "Loan and mortgage applications",
-    "negative": 111
+    "negative": 90
    },
    "by_channel": {
-    "inbound_voice": 450,
-    "whatsapp": 276,
-    "chat": 169,
-    "branch": 98,
-    "outbound_voice": 56,
-    "email": 101,
-    "social_inbox": 30,
-    "ivr_bot": 85
+    "ivr_bot": 95,
+    "chat": 157,
+    "whatsapp": 314,
+    "outbound_voice": 55,
+    "branch": 91,
+    "inbound_voice": 401,
+    "email": 113,
+    "social_inbox": 21
    }
   },
   {
    "id": "mortgages",
    "label": "Mortgages",
-   "total": 2235,
-   "closed": 2155,
-   "waiting_on_customer": 29,
-   "closed_or_responded": 2232,
-   "open": 51,
-   "open_too_long": 3,
+   "total": 2313,
+   "closed": 2230,
+   "waiting_on_customer": 38,
+   "closed_or_responded": 2310,
+   "open": 45,
+   "open_too_long": 1,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 2.3,
-   "open_too_long_pct_of_open": 5.9,
-   "negative": 688,
-   "high_impact": 11,
+   "open_pct": 1.9,
+   "open_too_long_pct_of_open": 2.2,
+   "negative": 731,
+   "high_impact": 7,
    "deliverables": {
-    "measured": 2166,
-    "met": 2099,
-    "outside": 67,
+    "measured": 2242,
+    "met": 2172,
+    "outside": 70,
     "met_pct": 96.9,
-    "open_within": 48
+    "open_within": 44
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 28
+     "count": 34
     },
     {
      "week": "2026-08-10",
-     "count": 36
+     "count": 52
     },
     {
      "week": "2026-08-17",
-     "count": 51
-    },
-    {
-     "week": "2026-08-24",
-     "count": 50
-    },
-    {
-     "week": "2026-08-31",
-     "count": 50
-    },
-    {
-     "week": "2026-09-07",
-     "count": 55
-    },
-    {
-     "week": "2026-09-14",
-     "count": 50
-    },
-    {
-     "week": "2026-09-21",
-     "count": 45
-    },
-    {
-     "week": "2026-09-28",
-     "count": 42
-    },
-    {
-     "week": "2026-10-05",
      "count": 57
     },
     {
-     "week": "2026-10-12",
-     "count": 48
+     "week": "2026-08-24",
+     "count": 55
     },
     {
-     "week": "2026-10-19",
+     "week": "2026-08-31",
+     "count": 53
+    },
+    {
+     "week": "2026-09-07",
+     "count": 42
+    },
+    {
+     "week": "2026-09-14",
+     "count": 49
+    },
+    {
+     "week": "2026-09-21",
+     "count": 65
+    },
+    {
+     "week": "2026-09-28",
+     "count": 45
+    },
+    {
+     "week": "2026-10-05",
      "count": 44
     },
     {
+     "week": "2026-10-12",
+     "count": 54
+    },
+    {
+     "week": "2026-10-19",
+     "count": 51
+    },
+    {
      "week": "2026-10-26",
-     "count": 56
+     "count": 46
     },
     {
      "week": "2026-11-02",
-     "count": 42
+     "count": 48
     }
    ],
-   "negative_change_pct": -3.4,
+   "negative_change_pct": 1.4,
    "top_issue": {
     "id": "mortgage_rate_switch",
     "label": "Mortgage rate switch",
-    "negative": 199
+    "negative": 189
    },
    "by_channel": {
-    "inbound_voice": 811,
-    "social_inbox": 55,
-    "email": 169,
-    "outbound_voice": 121,
-    "whatsapp": 534,
-    "ivr_bot": 145,
-    "branch": 171,
-    "chat": 229
+    "social_inbox": 59,
+    "outbound_voice": 123,
+    "whatsapp": 577,
+    "inbound_voice": 772,
+    "chat": 249,
+    "ivr_bot": 172,
+    "email": 186,
+    "branch": 175
    }
   },
   {
    "id": "overdrafts",
    "label": "Overdrafts",
-   "total": 1209,
-   "closed": 1183,
-   "waiting_on_customer": 9,
-   "closed_or_responded": 1209,
-   "open": 17,
-   "open_too_long": 1,
+   "total": 1194,
+   "closed": 1166,
+   "waiting_on_customer": 16,
+   "closed_or_responded": 1194,
+   "open": 12,
+   "open_too_long": 0,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 1.4,
-   "open_too_long_pct_of_open": 5.9,
-   "negative": 394,
-   "high_impact": 6,
+   "open_pct": 1.0,
+   "open_too_long_pct_of_open": 0.0,
+   "negative": 377,
+   "high_impact": 2,
    "deliverables": {
-    "measured": 1191,
-    "met": 1175,
-    "outside": 16,
-    "met_pct": 98.7,
-    "open_within": 16
+    "measured": 1170,
+    "met": 1164,
+    "outside": 6,
+    "met_pct": 99.5,
+    "open_within": 12
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 22
+     "count": 20
     },
     {
      "week": "2026-08-10",
-     "count": 22
+     "count": 27
     },
     {
      "week": "2026-08-17",
-     "count": 28
+     "count": 23
     },
     {
      "week": "2026-08-24",
-     "count": 27
+     "count": 28
     },
     {
      "week": "2026-08-31",
-     "count": 29
+     "count": 25
     },
     {
      "week": "2026-09-07",
-     "count": 15
+     "count": 23
     },
     {
      "week": "2026-09-14",
-     "count": 26
+     "count": 24
     },
     {
      "week": "2026-09-21",
-     "count": 34
+     "count": 28
     },
     {
      "week": "2026-09-28",
-     "count": 28
+     "count": 31
     },
     {
      "week": "2026-10-05",
-     "count": 28
+     "count": 26
     },
     {
      "week": "2026-10-12",
-     "count": 16
+     "count": 34
     },
     {
      "week": "2026-10-19",
-     "count": 27
+     "count": 31
     },
     {
      "week": "2026-10-26",
-     "count": 41
+     "count": 28
     },
     {
      "week": "2026-11-02",
-     "count": 34
+     "count": 15
     }
    ],
-   "negative_change_pct": 41.7,
+   "negative_change_pct": -18.7,
    "top_issue": {
     "id": "fees_charges_bank",
     "label": "Account charges and fees",
     "negative": 121
    },
    "by_channel": {
-    "inbound_voice": 395,
-    "branch": 107,
-    "chat": 156,
-    "whatsapp": 280,
-    "outbound_voice": 45,
-    "social_inbox": 24,
-    "email": 101,
-    "ivr_bot": 101
+    "whatsapp": 267,
+    "inbound_voice": 440,
+    "outbound_voice": 58,
+    "branch": 83,
+    "chat": 147,
+    "ivr_bot": 80,
+    "email": 97,
+    "social_inbox": 22
    }
   },
   {
    "id": "savings",
    "label": "Savings",
-   "total": 2033,
-   "closed": 1981,
-   "waiting_on_customer": 16,
-   "closed_or_responded": 2028,
-   "open": 36,
-   "open_too_long": 0,
-   "closed_or_responded_pct": 99.8,
+   "total": 1973,
+   "closed": 1923,
+   "waiting_on_customer": 15,
+   "closed_or_responded": 1973,
+   "open": 35,
+   "open_too_long": 3,
+   "closed_or_responded_pct": 100.0,
    "open_pct": 1.8,
-   "open_too_long_pct_of_open": 0.0,
-   "negative": 655,
-   "high_impact": 12,
+   "open_too_long_pct_of_open": 8.6,
+   "negative": 607,
+   "high_impact": 6,
    "deliverables": {
-    "measured": 1986,
-    "met": 1897,
-    "outside": 89,
-    "met_pct": 95.5,
-    "open_within": 36
+    "measured": 1934,
+    "met": 1831,
+    "outside": 103,
+    "met_pct": 94.7,
+    "open_within": 32
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 45
+     "count": 40
     },
     {
      "week": "2026-08-10",
-     "count": 41
+     "count": 23
     },
     {
      "week": "2026-08-17",
-     "count": 37
+     "count": 40
     },
     {
      "week": "2026-08-24",
-     "count": 52
+     "count": 39
     },
     {
      "week": "2026-08-31",
-     "count": 40
+     "count": 41
     },
     {
      "week": "2026-09-07",
-     "count": 45
+     "count": 38
     },
     {
      "week": "2026-09-14",
-     "count": 36
+     "count": 39
     },
     {
      "week": "2026-09-21",
-     "count": 46
+     "count": 45
     },
     {
      "week": "2026-09-28",
-     "count": 47
+     "count": 45
     },
     {
      "week": "2026-10-05",
-     "count": 40
+     "count": 37
     },
     {
      "week": "2026-10-12",
-     "count": 47
+     "count": 37
     },
     {
      "week": "2026-10-19",
-     "count": 55
+     "count": 51
     },
     {
      "week": "2026-10-26",
-     "count": 48
+     "count": 47
     },
     {
      "week": "2026-11-02",
-     "count": 46
+     "count": 55
     }
    ],
-   "negative_change_pct": 11.2,
+   "negative_change_pct": 28.6,
    "top_issue": {
     "id": "deposits_rates",
     "label": "Savings rates and bonus terms",
-    "negative": 218
+    "negative": 202
    },
    "by_channel": {
-    "inbound_voice": 696,
-    "branch": 161,
-    "whatsapp": 500,
-    "chat": 239,
-    "outbound_voice": 102,
-    "email": 156,
-    "ivr_bot": 142,
-    "social_inbox": 37
+    "chat": 226,
+    "social_inbox": 40,
+    "ivr_bot": 133,
+    "branch": 153,
+    "whatsapp": 462,
+    "email": 154,
+    "inbound_voice": 709,
+    "outbound_voice": 96
    }
   },
   {
    "id": "digital",
    "label": "Cora and digital assistant",
-   "total": 4939,
-   "closed": 4908,
-   "waiting_on_customer": 12,
-   "closed_or_responded": 4936,
-   "open": 19,
+   "total": 4843,
+   "closed": 4819,
+   "waiting_on_customer": 8,
+   "closed_or_responded": 4840,
+   "open": 16,
    "open_too_long": 0,
    "closed_or_responded_pct": 99.9,
-   "open_pct": 0.4,
+   "open_pct": 0.3,
    "open_too_long_pct_of_open": 0.0,
-   "negative": 1532,
-   "high_impact": 18,
+   "negative": 1479,
+   "high_impact": 22,
    "deliverables": {
-    "measured": 4936,
-    "met": 4862,
-    "outside": 74,
-    "met_pct": 98.5,
-    "open_within": 19
+    "measured": 4840,
+    "met": 4802,
+    "outside": 38,
+    "met_pct": 99.2,
+    "open_within": 16
    },
    "negative_weekly": [
     {
      "week": "2026-08-03",
-     "count": 73
+     "count": 103
     },
     {
      "week": "2026-08-10",
-     "count": 92
-    },
-    {
-     "week": "2026-08-17",
-     "count": 90
-    },
-    {
-     "week": "2026-08-24",
      "count": 94
     },
     {
-     "week": "2026-08-31",
-     "count": 96
-    },
-    {
-     "week": "2026-09-07",
-     "count": 104
-    },
-    {
-     "week": "2026-09-14",
-     "count": 106
-    },
-    {
-     "week": "2026-09-21",
-     "count": 122
-    },
-    {
-     "week": "2026-09-28",
+     "week": "2026-08-17",
      "count": 113
     },
     {
-     "week": "2026-10-05",
+     "week": "2026-08-24",
+     "count": 92
+    },
+    {
+     "week": "2026-08-31",
+     "count": 116
+    },
+    {
+     "week": "2026-09-07",
+     "count": 91
+    },
+    {
+     "week": "2026-09-14",
+     "count": 91
+    },
+    {
+     "week": "2026-09-21",
+     "count": 92
+    },
+    {
+     "week": "2026-09-28",
      "count": 114
     },
     {
+     "week": "2026-10-05",
+     "count": 89
+    },
+    {
      "week": "2026-10-12",
-     "count": 119
+     "count": 112
     },
     {
      "week": "2026-10-19",
-     "count": 98
+     "count": 91
     },
     {
      "week": "2026-10-26",
-     "count": 129
+     "count": 105
     },
     {
      "week": "2026-11-02",
-     "count": 105
+     "count": 112
     }
    ],
-   "negative_change_pct": -4.0,
+   "negative_change_pct": -2.2,
    "top_issue": {
     "id": "login_mpin",
     "label": "App login and biometrics",
-    "negative": 375
+    "negative": 363
    },
    "by_channel": {
-    "inbound_voice": 1656,
-    "chat": 1051,
-    "whatsapp": 1183,
-    "social_inbox": 96,
-    "ivr_bot": 347,
-    "email": 366,
-    "outbound_voice": 240
+    "whatsapp": 1097,
+    "ivr_bot": 363,
+    "inbound_voice": 1724,
+    "email": 357,
+    "chat": 1003,
+    "social_inbox": 80,
+    "outbound_voice": 219
    }
   }
  ],
@@ -796,114 +796,114 @@
   {
    "channel": "inbound_voice",
    "label": "Inbound calls",
-   "total": 10821,
-   "closed": 10516,
-   "waiting_on_customer": 123,
-   "closed_or_responded": 10821,
-   "open": 182,
-   "open_too_long": 14,
+   "total": 11002,
+   "closed": 10696,
+   "waiting_on_customer": 108,
+   "closed_or_responded": 11002,
+   "open": 198,
+   "open_too_long": 19,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 1.7,
-   "open_too_long_pct_of_open": 7.7,
-   "negative": 3316
+   "open_pct": 1.8,
+   "open_too_long_pct_of_open": 9.6,
+   "negative": 3420
   },
   {
    "channel": "outbound_voice",
    "label": "Outbound calls",
-   "total": 1598,
-   "closed": 1549,
-   "waiting_on_customer": 18,
-   "closed_or_responded": 1598,
-   "open": 31,
-   "open_too_long": 4,
+   "total": 1579,
+   "closed": 1535,
+   "waiting_on_customer": 22,
+   "closed_or_responded": 1579,
+   "open": 22,
+   "open_too_long": 1,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 1.9,
-   "open_too_long_pct_of_open": 12.9,
-   "negative": 533
+   "open_pct": 1.4,
+   "open_too_long_pct_of_open": 4.5,
+   "negative": 480
   },
   {
    "channel": "chat",
    "label": "App chat",
-   "total": 4287,
-   "closed": 4190,
+   "total": 4187,
+   "closed": 4091,
    "waiting_on_customer": 38,
-   "closed_or_responded": 4287,
-   "open": 59,
-   "open_too_long": 6,
+   "closed_or_responded": 4187,
+   "open": 58,
+   "open_too_long": 3,
    "closed_or_responded_pct": 100.0,
    "open_pct": 1.4,
-   "open_too_long_pct_of_open": 10.2,
-   "negative": 1357
+   "open_too_long_pct_of_open": 5.2,
+   "negative": 1324
   },
   {
    "channel": "email",
    "label": "Email",
-   "total": 2603,
-   "closed": 2520,
-   "waiting_on_customer": 25,
-   "closed_or_responded": 2597,
-   "open": 58,
-   "open_too_long": 7,
-   "closed_or_responded_pct": 99.8,
-   "open_pct": 2.2,
-   "open_too_long_pct_of_open": 12.1,
-   "negative": 810
+   "total": 2488,
+   "closed": 2404,
+   "waiting_on_customer": 31,
+   "closed_or_responded": 2479,
+   "open": 53,
+   "open_too_long": 2,
+   "closed_or_responded_pct": 99.6,
+   "open_pct": 2.1,
+   "open_too_long_pct_of_open": 3.8,
+   "negative": 828
   },
   {
    "channel": "social_inbox",
    "label": "Social inbox",
-   "total": 654,
-   "closed": 630,
-   "waiting_on_customer": 7,
-   "closed_or_responded": 650,
-   "open": 17,
-   "open_too_long": 2,
-   "closed_or_responded_pct": 99.4,
-   "open_pct": 2.6,
-   "open_too_long_pct_of_open": 11.8,
-   "negative": 215
+   "total": 651,
+   "closed": 631,
+   "waiting_on_customer": 9,
+   "closed_or_responded": 649,
+   "open": 11,
+   "open_too_long": 3,
+   "closed_or_responded_pct": 99.7,
+   "open_pct": 1.7,
+   "open_too_long_pct_of_open": 27.3,
+   "negative": 204
   },
   {
    "channel": "ivr_bot",
    "label": "Phone menu",
-   "total": 2268,
-   "closed": 2214,
-   "waiting_on_customer": 21,
-   "closed_or_responded": 2268,
-   "open": 33,
+   "total": 2281,
+   "closed": 2227,
+   "waiting_on_customer": 23,
+   "closed_or_responded": 2281,
+   "open": 31,
    "open_too_long": 2,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 1.5,
-   "open_too_long_pct_of_open": 6.1,
-   "negative": 690
+   "open_pct": 1.4,
+   "open_too_long_pct_of_open": 6.5,
+   "negative": 675
   },
   {
    "channel": "branch",
    "label": "Branch",
-   "total": 2113,
-   "closed": 2041,
-   "waiting_on_customer": 29,
-   "closed_or_responded": 2113,
-   "open": 43,
-   "open_too_long": 7,
+   "total": 2135,
+   "closed": 2064,
+   "waiting_on_customer": 30,
+   "closed_or_responded": 2135,
+   "open": 41,
+   "open_too_long": 3,
    "closed_or_responded_pct": 100.0,
-   "open_pct": 2.0,
-   "open_too_long_pct_of_open": 16.3,
-   "negative": 656
+   "open_pct": 1.9,
+   "open_too_long_pct_of_open": 7.3,
+   "negative": 645
   },
   {
    "channel": "whatsapp",
    "label": "Cora",
-   "total": 7656,
-   "closed": 7435,
-   "waiting_on_customer": 74,
-   "closed_or_responded": 7632,
-   "open": 147,
-   "open_too_long": 14,
-   "closed_or_responded_pct": 99.7,
-   "open_pct": 1.9,
-   "open_too_long_pct_of_open": 9.5,
-   "negative": 2380
+   "total": 7677,
+   "closed": 7478,
+   "waiting_on_customer": 79,
+   "closed_or_responded": 7662,
+   "open": 120,
+   "open_too_long": 8,
+   "closed_or_responded_pct": 99.8,
+   "open_pct": 1.6,
+   "open_too_long_pct_of_open": 6.7,
+   "negative": 2407
   }
  ],
  "cohorts": [
@@ -911,112 +911,110 @@
    "id": "priority_a",
    "label": "Financially vulnerable (Consumer Duty)",
    "source": "Vulnerability flag in the bank's records",
-   "customers": 45,
-   "interactions": 864,
-   "customers_with_open_issue": 17,
-   "open": 24,
-   "waiting_on_customer": 5,
-   "open_over_5h": 24,
-   "open_over_24h": 16,
-   "open_too_long": 3,
-   "negative": 293,
+   "customers": 505,
+   "interactions": 8964,
+   "customers_with_open_issue": 120,
+   "open": 140,
+   "waiting_on_customer": 93,
+   "open_over_5h": 135,
+   "open_over_24h": 100,
+   "open_too_long": 10,
+   "negative": 2789,
    "negative_by_channel": {
-    "inbound_voice": 93,
-    "outbound_voice": 18,
-    "chat": 50,
-    "email": 22,
-    "social_inbox": 8,
-    "ivr_bot": 24,
-    "branch": 21,
-    "whatsapp": 57
+    "inbound_voice": 966,
+    "outbound_voice": 130,
+    "chat": 371,
+    "email": 226,
+    "social_inbox": 47,
+    "ivr_bot": 186,
+    "branch": 195,
+    "whatsapp": 668
    },
    "products_affected": {
-    "cards": 13,
-    "savings": 2,
-    "current_accounts": 4,
-    "mortgages": 1,
-    "personal_loans": 1,
-    "payments_fraud": 1,
-    "digital": 2
+    "current_accounts": 42,
+    "payments_fraud": 20,
+    "mortgages": 16,
+    "personal_loans": 7,
+    "cards": 40,
+    "overdrafts": 4,
+    "savings": 8,
+    "digital": 3
    },
-   "rm_should_know": 6,
-   "rm_notified_today": 2,
-   "added_this_week": 2,
-   "added_this_week_by_lisn": 1
+   "rm_should_know": 27,
+   "rm_notified_today": 8,
+   "added_this_week": 30,
+   "added_this_week_by_lisn": 13
   },
   {
    "id": "priority_b",
    "label": "Recent complainants (90 days)",
    "source": "The bank's complaints register, last 90 days",
-   "customers": 124,
-   "interactions": 1731,
-   "customers_with_open_issue": 31,
-   "open": 36,
-   "waiting_on_customer": 22,
-   "open_over_5h": 35,
-   "open_over_24h": 25,
-   "open_too_long": 6,
-   "negative": 537,
+   "customers": 123,
+   "interactions": 1423,
+   "customers_with_open_issue": 23,
+   "open": 25,
+   "waiting_on_customer": 13,
+   "open_over_5h": 25,
+   "open_over_24h": 22,
+   "open_too_long": 2,
+   "negative": 462,
    "negative_by_channel": {
-    "inbound_voice": 197,
-    "outbound_voice": 28,
-    "chat": 63,
-    "email": 40,
-    "social_inbox": 7,
-    "ivr_bot": 32,
-    "branch": 37,
-    "whatsapp": 133
+    "inbound_voice": 159,
+    "outbound_voice": 18,
+    "chat": 59,
+    "email": 31,
+    "social_inbox": 12,
+    "ivr_bot": 40,
+    "branch": 31,
+    "whatsapp": 112
    },
    "products_affected": {
-    "cards": 12,
-    "current_accounts": 10,
-    "overdrafts": 1,
-    "savings": 2,
+    "savings": 4,
+    "current_accounts": 5,
     "personal_loans": 3,
-    "payments_fraud": 4,
-    "mortgages": 2,
-    "digital": 2
+    "cards": 9,
+    "payments_fraud": 4
    },
    "rm_should_know": 12,
-   "rm_notified_today": 1,
-   "added_this_week": 11,
-   "added_this_week_by_lisn": 6
+   "rm_notified_today": 4,
+   "added_this_week": 4,
+   "added_this_week_by_lisn": 1
   },
   {
    "id": "uhni",
    "label": "Premier and Private",
    "source": "Relationship tier from core banking",
    "customers": 151,
-   "interactions": 9484,
-   "customers_with_open_issue": 92,
-   "open": 160,
-   "waiting_on_customer": 66,
-   "open_over_5h": 157,
-   "open_over_24h": 122,
-   "open_too_long": 9,
-   "negative": 2958,
+   "interactions": 7329,
+   "customers_with_open_issue": 85,
+   "open": 127,
+   "waiting_on_customer": 64,
+   "open_over_5h": 122,
+   "open_over_24h": 90,
+   "open_too_long": 5,
+   "negative": 2336,
    "negative_by_channel": {
-    "inbound_voice": 973,
-    "outbound_voice": 159,
-    "chat": 418,
-    "email": 243,
-    "social_inbox": 63,
-    "ivr_bot": 199,
-    "branch": 197,
-    "whatsapp": 706
+    "inbound_voice": 772,
+    "outbound_voice": 110,
+    "chat": 325,
+    "email": 199,
+    "social_inbox": 55,
+    "ivr_bot": 158,
+    "branch": 167,
+    "whatsapp": 550
    },
    "products_affected": {
-    "current_accounts": 49,
-    "overdrafts": 6,
-    "payments_fraud": 21,
-    "cards": 46,
-    "personal_loans": 10,
-    "savings": 12,
-    "mortgages": 13,
-    "digital": 3
+    "cards": 37,
+    "payments_fraud": 14,
+    "current_accounts": 37,
+    "overdrafts": 2,
+    "personal_loans": 7,
+    "mortgages": 12,
+    "savings": 11,
+    "digital": 7
    },
-   "rm_should_know": 92,
-   "rm_notified_today": 24,
+   "rm_should_know": 84,
+   "rm_notified_today": 14,
    "added_this_week": 0,
    "added_this_week_by_lisn": 0
   },
@@ -1025,98 +1023,98 @@
    "label": "Premier",
    "source": "Relationship tier from core banking",
    "customers": 640,
-   "interactions": 3975,
-   "customers_with_open_issue": 64,
-   "open": 67,
-   "waiting_on_customer": 54,
-   "open_over_5h": 66,
-   "open_over_24h": 50,
-   "open_too_long": 9,
-   "negative": 1264,
+   "interactions": 4325,
+   "customers_with_open_issue": 63,
+   "open": 66,
+   "waiting_on_customer": 44,
+   "open_over_5h": 65,
+   "open_over_24h": 46,
+   "open_too_long": 7,
+   "negative": 1346,
    "negative_by_channel": {
-    "inbound_voice": 434,
-    "outbound_voice": 66,
-    "chat": 170,
-    "email": 104,
-    "social_inbox": 16,
-    "ivr_bot": 93,
-    "branch": 94,
-    "whatsapp": 287
+    "inbound_voice": 476,
+    "outbound_voice": 61,
+    "chat": 173,
+    "email": 113,
+    "social_inbox": 22,
+    "ivr_bot": 81,
+    "branch": 78,
+    "whatsapp": 342
    },
    "products_affected": {
-    "cards": 15,
-    "personal_loans": 6,
-    "current_accounts": 21,
-    "savings": 7,
-    "mortgages": 6,
-    "payments_fraud": 9,
-    "digital": 2,
-    "overdrafts": 1
+    "mortgages": 3,
+    "current_accounts": 18,
+    "cards": 24,
+    "overdrafts": 2,
+    "payments_fraud": 8,
+    "personal_loans": 8,
+    "savings": 2,
+    "digital": 1
    },
-   "rm_should_know": 64,
-   "rm_notified_today": 9,
-   "added_this_week": 2,
-   "added_this_week_by_lisn": 2
+   "rm_should_know": 62,
+   "rm_notified_today": 16,
+   "added_this_week": 8,
+   "added_this_week_by_lisn": 5
   },
   {
    "id": "multi",
    "label": "Multi-product households",
    "source": "Customers holding four or more products, from the bank's records",
-   "customers": 221,
-   "interactions": 8607,
-   "customers_with_open_issue": 101,
-   "open": 163,
-   "waiting_on_customer": 73,
-   "open_over_5h": 160,
-   "open_over_24h": 125,
-   "open_too_long": 13,
-   "negative": 2700,
+   "customers": 555,
+   "interactions": 12697,
+   "customers_with_open_issue": 168,
+   "open": 216,
+   "waiting_on_customer": 126,
+   "open_over_5h": 208,
+   "open_over_24h": 162,
+   "open_too_long": 12,
+   "negative": 3968,
    "negative_by_channel": {
-    "inbound_voice": 880,
-    "outbound_voice": 144,
-    "chat": 359,
-    "email": 222,
-    "social_inbox": 59,
-    "ivr_bot": 196,
-    "branch": 187,
-    "whatsapp": 653
+    "inbound_voice": 1369,
+    "outbound_voice": 182,
+    "chat": 526,
+    "email": 323,
+    "social_inbox": 78,
+    "ivr_bot": 279,
+    "branch": 278,
+    "whatsapp": 933
    },
    "products_affected": {
-    "cards": 60,
-    "current_accounts": 34,
-    "overdrafts": 7,
-    "payments_fraud": 19,
-    "personal_loans": 14,
-    "savings": 11,
-    "mortgages": 15,
-    "digital": 3
+    "current_accounts": 44,
+    "cards": 76,
+    "payments_fraud": 28,
+    "savings": 19,
+    "overdrafts": 5,
+    "mortgages": 24,
+    "personal_loans": 15,
+    "digital": 5
    },
-   "rm_should_know": 78,
-   "rm_notified_today": 17,
-   "added_this_week": 11,
-   "added_this_week_by_lisn": 6
+   "rm_should_know": 94,
+   "rm_notified_today": 18,
+   "added_this_week": 27,
+   "added_this_week_by_lisn": 13
   }
  ],
  "high_impact": {
-  "total": 128,
-  "open": 7,
-  "waiting_on_customer": 0,
+  "total": 119,
+  "open": 3,
+  "waiting_on_customer": 3,
   "open_too_long": 0,
   "reasons": [
    {
     "id": "third_contact",
     "label": "Third contact on the same issue",
-    "count": 81
+    "count": 73
    },
    {
     "id": "public_reach",
     "label": "Public post with reach",
-    "count": 43
+    "count": 38
    },
    {
     "id": "official_domain",
     "label": "Sent from an official or regulator domain",
-    "count": 2
+    "count": 6
    },
    {
     "id": "legal_language",
@@ -1130,43 +1128,43 @@
    }
   ],
   "by_product": {
-   "cards": 25,
-   "overdrafts": 6,
-   "personal_loans": 5,
-   "current_accounts": 37,
-   "mortgages": 11,
-   "payments_fraud": 14,
-   "digital": 18,
-   "savings": 12
+   "current_accounts": 39,
+   "payments_fraud": 18,
+   "cards": 19,
+   "digital": 22,
+   "savings": 6,
+   "mortgages": 7,
+   "overdrafts": 2,
+   "personal_loans": 6
   }
  },
  "customer_memory": {
-  "customers_with_signals": 4926,
-  "multi_product": 4258,
-  "negative_in_two_or_more_products": 1717,
-  "with_open_issue": 259,
-  "with_open_too_long": 25,
-  "priority_among_them": 576,
+  "customers_with_signals": 4863,
+  "multi_product": 3976,
+  "negative_in_two_or_more_products": 1645,
+  "with_open_issue": 285,
+  "with_open_too_long": 26,
+  "priority_among_them": 865,
   "pairs": [
    {
     "pair": "Payments and fraud + Current accounts and app",
-    "customers": 391
+    "customers": 434
    },
    {
     "pair": "Credit cards + Current accounts and app",
-    "customers": 242
-   },
-   {
-    "pair": "Current accounts and app + Cora and digital assistant",
-    "customers": 184
+    "customers": 218
    },
    {
     "pair": "Credit cards + Payments and fraud",
-    "customers": 166
+    "customers": 201
+   },
+   {
+    "pair": "Current accounts and app + Cora and digital assistant",
+    "customers": 155
    },
    {
     "pair": "Current accounts and app + Savings",
-    "customers": 93
+    "customers": 81
    }
   ]
  },
@@ -1178,13 +1176,13 @@
    "source": "fca",
    "source_note": "Faster Payments same-day (register REG-FPS-SAMEDAY)",
    "compensation": "—",
-   "total": 1741,
-   "measured": 1729,
-   "met": 1464,
-   "outside": 265,
-   "met_pct": 84.7,
-   "open_within": 6,
-   "open_too_long": 2,
+   "total": 1796,
+   "measured": 1789,
+   "met": 1534,
+   "outside": 255,
+   "met_pct": 85.7,
+   "open_within": 7,
+   "open_too_long": 1,
    "themes": [
     "failed_txn_reversal",
     "upi_failures"
@@ -1193,13 +1191,13 @@
     {
      "product": "payments_fraud",
      "label": "Payments and fraud",
-     "total": 1741,
-     "measured": 1729,
-     "met": 1464,
-     "outside": 265,
-     "met_pct": 84.7,
-     "open_within": 6,
-     "open_too_long": 2
+     "total": 1796,
+     "measured": 1789,
+     "met": 1534,
+     "outside": 255,
+     "met_pct": 85.7,
+     "open_within": 7,
+     "open_too_long": 1
     }
    ]
   },
@@ -1210,13 +1208,13 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 1173,
-   "measured": 1124,
-   "met": 1011,
-   "outside": 113,
-   "met_pct": 89.9,
-   "open_within": 30,
-   "open_too_long": 4,
+   "total": 1163,
+   "measured": 1118,
+   "met": 1014,
+   "outside": 104,
+   "met_pct": 90.7,
+   "open_within": 26,
+   "open_too_long": 5,
    "themes": [
     "closure_requests"
    ],
@@ -1224,35 +1222,35 @@
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 305,
-     "measured": 294,
-     "met": 266,
-     "outside": 28,
-     "met_pct": 90.5,
-     "open_within": 5,
+     "total": 291,
+     "measured": 281,
+     "met": 261,
+     "outside": 20,
+     "met_pct": 92.9,
+     "open_within": 7,
      "open_too_long": 1
     },
     {
      "product": "current_accounts",
      "label": "Current accounts and app",
-     "total": 624,
-     "measured": 597,
-     "met": 533,
-     "outside": 64,
-     "met_pct": 89.3,
-     "open_within": 18,
+     "total": 635,
+     "measured": 608,
+     "met": 550,
+     "outside": 58,
+     "met_pct": 90.5,
+     "open_within": 15,
      "open_too_long": 3
     },
     {
      "product": "savings",
      "label": "Savings",
-     "total": 244,
-     "measured": 233,
-     "met": 212,
-     "outside": 21,
-     "met_pct": 91.0,
-     "open_within": 7,
-     "open_too_long": 0
+     "total": 237,
+     "measured": 229,
+     "met": 203,
+     "outside": 26,
+     "met_pct": 88.6,
+     "open_within": 4,
+     "open_too_long": 1
     }
    ]
   },
@@ -1263,12 +1261,12 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 895,
-   "measured": 888,
+   "total": 884,
+   "measured": 874,
    "met": 761,
-   "outside": 127,
-   "met_pct": 85.7,
-   "open_within": 5,
+   "outside": 113,
+   "met_pct": 87.1,
+   "open_within": 7,
    "open_too_long": 1,
    "themes": [
     "unauthorised_txn"
@@ -1277,24 +1275,24 @@
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 508,
-     "measured": 503,
-     "met": 432,
-     "outside": 71,
-     "met_pct": 85.9,
-     "open_within": 3,
-     "open_too_long": 0
+     "total": 485,
+     "measured": 480,
+     "met": 427,
+     "outside": 53,
+     "met_pct": 89.0,
+     "open_within": 5,
+     "open_too_long": 1
     },
     {
      "product": "payments_fraud",
      "label": "Payments and fraud",
-     "total": 387,
-     "measured": 385,
-     "met": 329,
-     "outside": 56,
-     "met_pct": 85.5,
+     "total": 399,
+     "measured": 394,
+     "met": 334,
+     "outside": 60,
+     "met_pct": 84.8,
      "open_within": 2,
-     "open_too_long": 1
+     "open_too_long": 0
     }
    ]
   },
@@ -1305,12 +1303,12 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 127,
-   "measured": 112,
-   "met": 97,
-   "outside": 15,
-   "met_pct": 86.6,
-   "open_within": 7,
+   "total": 125,
+   "measured": 104,
+   "met": 95,
+   "outside": 9,
+   "met_pct": 91.3,
+   "open_within": 13,
    "open_too_long": 1,
    "themes": [
     "credit_report"
@@ -1319,12 +1317,12 @@
     {
      "product": "personal_loans",
      "label": "Personal loans",
-     "total": 127,
-     "measured": 112,
-     "met": 97,
-     "outside": 15,
-     "met_pct": 86.6,
-     "open_within": 7,
+     "total": 125,
+     "measured": 104,
+     "met": 95,
+     "outside": 9,
+     "met_pct": 91.3,
+     "open_within": 13,
      "open_too_long": 1
     }
    ]
@@ -1336,12 +1334,12 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 350,
-   "measured": 306,
-   "met": 279,
-   "outside": 27,
-   "met_pct": 91.2,
-   "open_within": 27,
+   "total": 357,
+   "measured": 316,
+   "met": 295,
+   "outside": 21,
+   "met_pct": 93.4,
+   "open_within": 23,
    "open_too_long": 2,
    "themes": [
     "loan_closure_documents"
@@ -1350,24 +1348,24 @@
     {
      "product": "personal_loans",
      "label": "Personal loans",
-     "total": 126,
-     "measured": 111,
-     "met": 100,
-     "outside": 11,
-     "met_pct": 90.1,
+     "total": 125,
+     "measured": 110,
+     "met": 104,
+     "outside": 6,
+     "met_pct": 94.5,
      "open_within": 11,
-     "open_too_long": 0
+     "open_too_long": 2
     },
     {
      "product": "mortgages",
      "label": "Mortgages",
-     "total": 224,
-     "measured": 195,
-     "met": 179,
-     "outside": 16,
-     "met_pct": 91.8,
-     "open_within": 16,
-     "open_too_long": 2
+     "total": 232,
+     "measured": 206,
+     "met": 191,
+     "outside": 15,
+     "met_pct": 92.7,
+     "open_within": 12,
+     "open_too_long": 0
     }
    ]
   },
@@ -1378,13 +1376,13 @@
    "source": "fca",
    "source_note": "FCA DISP final response within 8 weeks (register REG-DISP-8W)",
    "compensation": "Customer may refer to the Financial Ombudsman Service",
-   "total": 2556,
-   "measured": 2263,
-   "met": 2230,
-   "outside": 33,
-   "met_pct": 98.5,
-   "open_within": 182,
-   "open_too_long": 8,
+   "total": 2567,
+   "measured": 2264,
+   "met": 2233,
+   "outside": 31,
+   "met_pct": 98.6,
+   "open_within": 191,
+   "open_too_long": 6,
    "themes": [
     "complaint_handling"
    ],
@@ -1392,78 +1390,78 @@
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 406,
-     "measured": 361,
-     "met": 353,
-     "outside": 8,
-     "met_pct": 97.8,
-     "open_within": 27,
-     "open_too_long": 2
+     "total": 388,
+     "measured": 339,
+     "met": 334,
+     "outside": 5,
+     "met_pct": 98.5,
+     "open_within": 34,
+     "open_too_long": 1
     },
     {
      "product": "payments_fraud",
      "label": "Payments and fraud",
-     "total": 387,
-     "measured": 346,
-     "met": 340,
-     "outside": 6,
-     "met_pct": 98.3,
-     "open_within": 26,
+     "total": 399,
+     "measured": 360,
+     "met": 351,
+     "outside": 9,
+     "met_pct": 97.5,
+     "open_within": 22,
      "open_too_long": 2
     },
     {
      "product": "current_accounts",
      "label": "Current accounts and app",
-     "total": 1042,
-     "measured": 916,
-     "met": 904,
+     "total": 1061,
+     "measured": 929,
+     "met": 917,
      "outside": 12,
      "met_pct": 98.7,
-     "open_within": 73,
-     "open_too_long": 3
+     "open_within": 87,
+     "open_too_long": 2
     },
     {
      "product": "personal_loans",
      "label": "Personal loans",
-     "total": 126,
-     "measured": 115,
-     "met": 114,
-     "outside": 1,
-     "met_pct": 99.1,
-     "open_within": 7,
+     "total": 124,
+     "measured": 116,
+     "met": 116,
+     "outside": 0,
+     "met_pct": 100.0,
+     "open_within": 5,
      "open_too_long": 0
     },
     {
      "product": "mortgages",
      "label": "Mortgages",
-     "total": 223,
-     "measured": 197,
-     "met": 194,
-     "outside": 3,
-     "met_pct": 98.5,
-     "open_within": 17,
-     "open_too_long": 0
+     "total": 231,
+     "measured": 202,
+     "met": 200,
+     "outside": 2,
+     "met_pct": 99.0,
+     "open_within": 15,
+     "open_too_long": 1
     },
     {
      "product": "overdrafts",
      "label": "Overdrafts",
-     "total": 169,
-     "measured": 151,
-     "met": 148,
-     "outside": 3,
-     "met_pct": 98.0,
+     "total": 167,
+     "measured": 143,
+     "met": 141,
+     "outside": 2,
+     "met_pct": 98.6,
      "open_within": 12,
-     "open_too_long": 1
+     "open_too_long": 0
     },
     {
      "product": "savings",
      "label": "Savings",
-     "total": 203,
-     "measured": 177,
-     "met": 177,
-     "outside": 0,
-     "met_pct": 100.0,
-     "open_within": 20,
+     "total": 197,
+     "measured": 175,
+     "met": 174,
+     "outside": 1,
+     "met_pct": 99.4,
+     "open_within": 16,
      "open_too_long": 0
     }
    ]
@@ -1475,13 +1473,13 @@
    "source": "psr",
    "source_note": "PSR reimbursement for authorised push payment scams (register REG-PSR-APP)",
    "compensation": "Reimbursement under the PSR rules",
-   "total": 676,
-   "measured": 655,
-   "met": 575,
-   "outside": 80,
-   "met_pct": 87.8,
-   "open_within": 15,
-   "open_too_long": 0,
+   "total": 698,
+   "measured": 681,
+   "met": 616,
+   "outside": 65,
+   "met_pct": 90.5,
+   "open_within": 10,
+   "open_too_long": 3,
    "themes": [
     "app_reimbursement"
    ],
@@ -1489,13 +1487,13 @@
     {
      "product": "payments_fraud",
      "label": "Payments and fraud",
-     "total": 676,
-     "measured": 655,
-     "met": 575,
-     "outside": 80,
-     "met_pct": 87.8,
-     "open_within": 15,
-     "open_too_long": 0
+     "total": 698,
+     "measured": 681,
+     "met": 616,
+     "outside": 65,
+     "met_pct": 90.5,
+     "open_within": 10,
+     "open_too_long": 3
     }
    ]
   },
@@ -1506,13 +1504,13 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 405,
-   "measured": 383,
+   "total": 387,
+   "measured": 377,
    "met": 295,
-   "outside": 88,
-   "met_pct": 77.0,
-   "open_within": 12,
-   "open_too_long": 5,
+   "outside": 82,
+   "met_pct": 78.2,
+   "open_within": 7,
+   "open_too_long": 3,
    "themes": [
     "card_dispatch"
    ],
@@ -1520,13 +1518,13 @@
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 405,
-     "measured": 383,
+     "total": 387,
+     "measured": 377,
      "met": 295,
-     "outside": 88,
-     "met_pct": 77.0,
-     "open_within": 12,
-     "open_too_long": 5
+     "outside": 82,
+     "met_pct": 78.2,
+     "open_within": 7,
+     "open_too_long": 3
     }
    ]
   },
@@ -1537,13 +1535,13 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 812,
-   "measured": 704,
-   "met": 618,
-   "outside": 86,
-   "met_pct": 87.8,
-   "open_within": 72,
-   "open_too_long": 13,
+   "total": 775,
+   "measured": 653,
+   "met": 584,
+   "outside": 69,
+   "met_pct": 89.4,
+   "open_within": 75,
+   "open_too_long": 5,
    "themes": [
     "dispute_chargeback"
    ],
@@ -1551,13 +1549,13 @@
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 812,
-     "measured": 704,
-     "met": 618,
-     "outside": 86,
-     "met_pct": 87.8,
-     "open_within": 72,
-     "open_too_long": 13
+     "total": 775,
+     "measured": 653,
+     "met": 584,
+     "outside": 69,
+     "met_pct": 89.4,
+     "open_within": 75,
+     "open_too_long": 5
     }
    ]
   },
@@ -1568,13 +1566,13 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 4933,
-   "measured": 4840,
-   "met": 4228,
-   "outside": 612,
-   "met_pct": 87.4,
-   "open_within": 66,
-   "open_too_long": 11,
+   "total": 4915,
+   "measured": 4818,
+   "met": 4240,
+   "outside": 578,
+   "met_pct": 88.0,
+   "open_within": 53,
+   "open_too_long": 9,
    "themes": [
     "kyc_updates",
     "card_variant_migration",
@@ -1589,35 +1587,35 @@
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 1322,
-     "measured": 1291,
-     "met": 1123,
-     "outside": 168,
-     "met_pct": 87.0,
-     "open_within": 20,
-     "open_too_long": 2
+     "total": 1263,
+     "measured": 1237,
+     "met": 1089,
+     "outside": 148,
+     "met_pct": 88.0,
+     "open_within": 14,
+     "open_too_long": 3
     },
     {
      "product": "current_accounts",
      "label": "Current accounts and app",
-     "total": 3123,
-     "measured": 3070,
-     "met": 2682,
-     "outside": 388,
-     "met_pct": 87.4,
-     "open_within": 40,
-     "open_too_long": 9
+     "total": 3178,
+     "measured": 3116,
+     "met": 2752,
+     "outside": 364,
+     "met_pct": 88.3,
+     "open_within": 31,
+     "open_too_long": 4
     },
     {
      "product": "savings",
      "label": "Savings",
-     "total": 488,
-     "measured": 479,
-     "met": 423,
-     "outside": 56,
-     "met_pct": 88.3,
-     "open_within": 6,
-     "open_too_long": 0
+     "total": 474,
+     "measured": 465,
+     "met": 399,
+     "outside": 66,
+     "met_pct": 85.8,
+     "open_within": 8,
+     "open_too_long": 2
     }
    ]
   },
@@ -1628,13 +1626,13 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 773,
-   "measured": 756,
-   "met": 573,
+   "total": 798,
+   "measured": 783,
+   "met": 600,
    "outside": 183,
-   "met_pct": 75.8,
-   "open_within": 7,
-   "open_too_long": 6,
+   "met_pct": 76.6,
+   "open_within": 10,
+   "open_too_long": 4,
    "themes": [
     "account_freeze"
    ],
@@ -1642,13 +1640,13 @@
     {
      "product": "payments_fraud",
      "label": "Payments and fraud",
-     "total": 773,
-     "measured": 756,
-     "met": 573,
+     "total": 798,
+     "measured": 783,
+     "met": 600,
      "outside": 183,
-     "met_pct": 75.8,
-     "open_within": 7,
-     "open_too_long": 6
+     "met_pct": 76.6,
+     "open_within": 10,
+     "open_too_long": 4
     }
    ]
   },
@@ -1659,13 +1657,13 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 731,
-   "measured": 709,
-   "met": 630,
-   "outside": 79,
-   "met_pct": 88.9,
-   "open_within": 15,
-   "open_too_long": 2,
+   "total": 740,
+   "measured": 714,
+   "met": 640,
+   "outside": 74,
+   "met_pct": 89.6,
+   "open_within": 17,
+   "open_too_long": 1,
    "themes": [
     "loan_processing"
    ],
@@ -1673,24 +1671,24 @@
     {
      "product": "personal_loans",
      "label": "Personal loans",
-     "total": 329,
-     "measured": 319,
-     "met": 279,
-     "outside": 40,
-     "met_pct": 87.5,
-     "open_within": 6,
+     "total": 324,
+     "measured": 311,
+     "met": 274,
+     "outside": 37,
+     "met_pct": 88.1,
+     "open_within": 7,
      "open_too_long": 1
     },
     {
      "product": "mortgages",
      "label": "Mortgages",
-     "total": 402,
-     "measured": 390,
-     "met": 351,
-     "outside": 39,
-     "met_pct": 90.0,
-     "open_within": 9,
-     "open_too_long": 1
+     "total": 416,
+     "measured": 403,
+     "met": 366,
+     "outside": 37,
+     "met_pct": 90.8,
+     "open_within": 10,
+     "open_too_long": 0
     }
    ]
   },
@@ -1701,101 +1699,101 @@
    "source": "bank",
    "source_note": null,
    "compensation": "—",
-   "total": 16828,
-   "measured": 16817,
-   "met": 16627,
-   "outside": 190,
-   "met_pct": 98.9,
-   "open_within": 70,
-   "open_too_long": 1,
+   "total": 16795,
+   "measured": 16785,
+   "met": 16638,
+   "outside": 147,
+   "met_pct": 99.1,
+   "open_within": 54,
+   "open_too_long": 0,
    "themes": [],
    "products": [
     {
      "product": "cards",
      "label": "Credit cards",
-     "total": 1319,
-     "measured": 1318,
-     "met": 1309,
-     "outside": 9,
-     "met_pct": 99.3,
-     "open_within": 6,
+     "total": 1259,
+     "measured": 1259,
+     "met": 1252,
+     "outside": 7,
+     "met_pct": 99.4,
+     "open_within": 3,
      "open_too_long": 0
     },
     {
      "product": "payments_fraud",
      "label": "Payments and fraud",
-     "total": 870,
-     "measured": 869,
-     "met": 862,
+     "total": 898,
+     "measured": 898,
+     "met": 891,
      "outside": 7,
      "met_pct": 99.2,
-     "open_within": 5,
+     "open_within": 3,
      "open_too_long": 0
     },
     {
      "product": "current_accounts",
      "label": "Current accounts and app",
-     "total": 5619,
-     "measured": 5617,
-     "met": 5558,
-     "outside": 59,
-     "met_pct": 98.9,
-     "open_within": 22,
-     "open_too_long": 1
+     "total": 5720,
+     "measured": 5717,
+     "met": 5657,
+     "outside": 60,
+     "met_pct": 99.0,
+     "open_within": 19,
+     "open_too_long": 0
     },
     {
      "product": "personal_loans",
      "label": "Personal loans",
-     "total": 557,
-     "measured": 556,
-     "met": 549,
-     "outside": 7,
-     "met_pct": 98.7,
-     "open_within": 5,
+     "total": 549,
+     "measured": 548,
+     "met": 543,
+     "outside": 5,
+     "met_pct": 99.1,
+     "open_within": 2,
      "open_too_long": 0
     },
     {
      "product": "mortgages",
      "label": "Mortgages",
-     "total": 1386,
-     "measured": 1384,
-     "met": 1375,
-     "outside": 9,
-     "met_pct": 99.3,
-     "open_within": 6,
+     "total": 1434,
+     "measured": 1431,
+     "met": 1415,
+     "outside": 16,
+     "met_pct": 98.9,
+     "open_within": 7,
      "open_too_long": 0
     },
     {
      "product": "overdrafts",
      "label": "Overdrafts",
-     "total": 1040,
-     "measured": 1040,
-     "met": 1027,
-     "outside": 13,
-     "met_pct": 98.8,
-     "open_within": 4,
+     "total": 1027,
+     "measured": 1027,
+     "met": 1023,
+     "outside": 4,
+     "met_pct": 99.6,
+     "open_within": 0,
      "open_too_long": 0
     },
     {
      "product": "savings",
      "label": "Savings",
-     "total": 1098,
-     "measured": 1097,
-     "met": 1085,
-     "outside": 12,
-     "met_pct": 98.9,
-     "open_within": 3,
+     "total": 1065,
+     "measured": 1065,
+     "met": 1055,
+     "outside": 10,
+     "met_pct": 99.1,
+     "open_within": 4,
      "open_too_long": 0
     },
     {
      "product": "digital",
      "label": "Cora and digital assistant",
-     "total": 4939,
-     "measured": 4936,
-     "met": 4862,
-     "outside": 74,
-     "met_pct": 98.5,
-     "open_within": 19,
+     "total": 4843,
+     "measured": 4840,
+     "met": 4802,
+     "outside": 38,
+     "met_pct": 99.2,
+     "open_within": 16,
      "open_too_long": 0
     }
    ]
@@ -1805,9 +1803,81 @@
   {
    "theme": "card_fees_charges",
    "label": "Card interest and charges",
-   "interactions": 912,
-   "negative": 292,
+   "interactions": 871,
+   "negative": 271,
+   "open": 3,
+   "open_too_long": 0,
+   "deliverable": "query_response",
+   "deliv_met_pct": 99.4,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "dispute_chargeback",
+   "label": "Disputes and chargebacks",
+   "interactions": 775,
+   "negative": 233,
+   "open": 80,
+   "open_too_long": 5,
+   "deliverable": "dispute",
+   "deliv_met_pct": 89.4,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "card_limit",
+   "label": "Credit limit",
+   "interactions": 487,
+   "negative": 156,
+   "open": 9,
+   "open_too_long": 2,
+   "deliverable": "service_request",
+   "deliv_met_pct": 87.2,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "unauthorised_txn",
+   "label": "Unauthorised transactions",
+   "interactions": 485,
+   "negative": 138,
+   "open": 6,
+   "open_too_long": 1,
+   "deliverable": "unauthorised_reversal",
+   "deliv_met_pct": 89.0,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "card_application",
+   "label": "Card applications and identity checks",
+   "interactions": 484,
+   "negative": 150,
    "open": 4,
+   "open_too_long": 0,
+   "deliverable": "service_request",
+   "deliv_met_pct": 88.3,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "complaint_handling",
+   "label": "Complaints closed without resolution",
+   "interactions": 388,
+   "negative": 139,
+   "open": 35,
+   "open_too_long": 1,
+   "deliverable": "complaint_resolution",
+   "deliv_met_pct": 98.5,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "rewards_value",
+   "label": "Rewards value and caps",
+   "interactions": 388,
+   "negative": 117,
+   "open": 0,
    "open_too_long": 0,
    "deliverable": "query_response",
    "deliv_met_pct": 99.5,
@@ -1815,110 +1885,38 @@
    "public_negative": 0
   },
   {
-   "theme": "dispute_chargeback",
-   "label": "Disputes and chargebacks",
-   "interactions": 812,
-   "negative": 270,
-   "open": 85,
-   "open_too_long": 13,
-   "deliverable": "dispute",
-   "deliv_met_pct": 87.8,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "card_limit",
-   "label": "Credit limit",
-   "interactions": 510,
-   "negative": 169,
-   "open": 13,
-   "open_too_long": 1,
-   "deliverable": "service_request",
-   "deliv_met_pct": 87.9,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "unauthorised_txn",
-   "label": "Unauthorised transactions",
-   "interactions": 508,
-   "negative": 181,
-   "open": 3,
-   "open_too_long": 0,
-   "deliverable": "unauthorised_reversal",
-   "deliv_met_pct": 85.9,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "card_application",
-   "label": "Card applications and identity checks",
-   "interactions": 507,
-   "negative": 159,
-   "open": 4,
-   "open_too_long": 0,
-   "deliverable": "service_request",
-   "deliv_met_pct": 86.8,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "rewards_value",
-   "label": "Rewards value and caps",
-   "interactions": 407,
-   "negative": 119,
-   "open": 2,
-   "open_too_long": 0,
-   "deliverable": "query_response",
-   "deliv_met_pct": 99.0,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "complaint_handling",
-   "label": "Complaints closed without resolution",
-   "interactions": 406,
-   "negative": 133,
-   "open": 29,
-   "open_too_long": 2,
-   "deliverable": "complaint_resolution",
-   "deliv_met_pct": 97.8,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
    "theme": "card_dispatch",
    "label": "Card dispatch and delivery",
-   "interactions": 405,
-   "negative": 139,
-   "open": 17,
-   "open_too_long": 5,
+   "interactions": 387,
+   "negative": 131,
+   "open": 10,
+   "open_too_long": 3,
    "deliverable": "card_dispatch",
-   "deliv_met_pct": 77.0,
-   "public_mentions": 0,
-   "public_negative": 0
-  },
-  {
-   "theme": "closure_requests",
-   "label": "Account and card closure",
-   "interactions": 305,
-   "negative": 86,
-   "open": 6,
-   "open_too_long": 1,
-   "deliverable": "card_closure",
-   "deliv_met_pct": 90.5,
+   "deliv_met_pct": 78.2,
    "public_mentions": 0,
    "public_negative": 0
   },
   {
    "theme": "reward_redemption",
    "label": "Reward redemption",
-   "interactions": 304,
-   "negative": 91,
-   "open": 4,
+   "interactions": 291,
+   "negative": 101,
+   "open": 3,
    "open_too_long": 1,
    "deliverable": "service_request",
-   "deliv_met_pct": 85.9,
+   "deliv_met_pct": 89.1,
+   "public_mentions": 0,
+   "public_negative": 0
+  },
+  {
+   "theme": "closure_requests",
+   "label": "Account and card closure",
+   "interactions": 291,
+   "negative": 96,
+   "open": 8,
+   "open_too_long": 1,
+   "deliverable": "card_closure",
+   "deliv_met_pct": 92.9,
    "public_mentions": 0,
    "public_negative": 0
   },
@@ -2787,17 +2785,17 @@
   "resolved": 289,
   "unresolved": 211,
   "follow_up_after_unresolved": 157,
-  "priority_unresolved": 8,
+  "priority_unresolved": 40,
   "by_reason": [
    {
     "reason": "Insufficient funds or limit",
-    "calls": 155,
-    "resolved": 110
+    "calls": 156,
+    "resolved": 111
    },
    {
     "reason": "International usage switched off",
-    "calls": 96,
-    "resolved": 47
+    "calls": 95,
+    "resolved": 46
    },
    {
     "reason": "Suspected fraud hold",
@@ -2822,8 +2820,8 @@
   ]
  },
  "rm": {
-  "should_know": 156,
-  "notified_today": 33,
+  "should_know": 151,
+  "notified_today": 31,
   "rule": "An owner alert is due when a customer on a priority list or in the Premier or Private tier has a negative signal, a high-impact complaint, an issue open over 5 hours, or an unresolved bot call."
  },
  "triage": {
@@ -3246,42 +3244,33 @@
   }
  ],
  "md_mail": {
-  "total": 1140,
-  "shown": 1128,
+  "total": 1104,
+  "shown": 1091,
   "rows": [
    {
     "theme": "complaint_handling",
     "label": "Complaints closed without resolution",
     "owner": "cx",
-    "mails": 1119,
-    "median_age_days": 10.9,
-    "resolved": 1064,
-    "resolved_share": 95.1
+    "mails": 1083,
+    "median_age_days": 9.9,
+    "resolved": 1034,
+    "resolved_share": 95.5
    },
    {
-    "theme": "unauthorised_txn",
-    "label": "Unauthorised transactions",
-    "owner": "fraud_cyber",
+    "theme": "failed_txn_reversal",
+    "label": "Failed payment returns",
+    "owner": "payments",
     "mails": 3,
-    "median_age_days": 0.8,
+    "median_age_days": 1.2,
     "resolved": 3,
     "resolved_share": 100.0
    },
    {
-    "theme": "account_freeze",
-    "label": "Fraud block or account freeze",
-    "owner": "operations",
+    "theme": "fees_charges_bank",
+    "label": "Account charges and fees",
+    "owner": "retail",
     "mails": 2,
-    "median_age_days": 10.6,
-    "resolved": 2,
-    "resolved_share": 100.0
-   },
-   {
-    "theme": "card_application",
-    "label": "Card applications and identity checks",
-    "owner": "cards",
-    "mails": 2,
-    "median_age_days": 5.8,
+    "median_age_days": 0.8,
     "resolved": 2,
     "resolved_share": 100.0
    },
@@ -3290,8 +3279,17 @@
     "label": "Loan and mortgage applications",
     "owner": "loans",
     "mails": 2,
-    "median_age_days": 2.0,
+    "median_age_days": 0.9,
     "resolved": 2,
+    "resolved_share": 100.0
+   },
+   {
+    "theme": "account_opening",
+    "label": "Account opening and switching",
+    "owner": "retail",
+    "mails": 1,
+    "median_age_days": 2.4,
+    "resolved": 1,
     "resolved_share": 100.0
    }
   ],
@@ -3302,43 +3300,43 @@
   "tiers": [
    {
     "tier": "Private",
-    "interactions": 9754,
-    "positive": 1164,
-    "neutral": 5558,
-    "negative": 3032,
-    "share_positive": 11.9,
-    "share_negative": 31.1,
-    "customers_affected": 190
+    "interactions": 7552,
+    "positive": 914,
+    "neutral": 4240,
+    "negative": 2398,
+    "share_positive": 12.1,
+    "share_negative": 31.8,
+    "customers_affected": 182
    },
    {
     "tier": "Premier",
-    "interactions": 4184,
-    "positive": 557,
-    "neutral": 2275,
-    "negative": 1352,
-    "share_positive": 13.3,
-    "share_negative": 32.3,
-    "customers_affected": 593
+    "interactions": 4659,
+    "positive": 579,
+    "neutral": 2610,
+    "negative": 1470,
+    "share_positive": 12.4,
+    "share_negative": 31.6,
+    "customers_affected": 549
    },
    {
     "tier": "Packaged",
-    "interactions": 5932,
-    "positive": 727,
-    "neutral": 3299,
-    "negative": 1906,
-    "share_positive": 12.3,
-    "share_negative": 32.1,
-    "customers_affected": 989
+    "interactions": 6611,
+    "positive": 818,
+    "neutral": 3765,
+    "negative": 2028,
+    "share_positive": 12.4,
+    "share_negative": 30.7,
+    "customers_affected": 925
    },
    {
     "tier": "Standard",
-    "interactions": 12130,
-    "positive": 1518,
-    "neutral": 6945,
-    "negative": 3667,
-    "share_positive": 12.5,
-    "share_negative": 30.2,
-    "customers_affected": 1946
+    "interactions": 13178,
+    "positive": 1577,
+    "neutral": 7514,
+    "negative": 4087,
+    "share_positive": 12.0,
+    "share_negative": 31.0,
+    "customers_affected": 1878
    }
   ],
   "journey_stages": {
@@ -3346,70 +3344,70 @@
    "rows": [
     {
      "stage": "Open",
-     "interactions": 3773,
-     "negative_share": 31.0,
-     "repeat_contact_share": 20.2,
-     "closure_intent": 99
+     "interactions": 3792,
+     "negative_share": 31.6,
+     "repeat_contact_share": 19.9,
+     "closure_intent": 82
     },
     {
      "stage": "Activate",
-     "interactions": 1986,
-     "negative_share": 31.6,
-     "repeat_contact_share": 17.4,
-     "closure_intent": 65
+     "interactions": 1937,
+     "negative_share": 31.1,
+     "repeat_contact_share": 13.0,
+     "closure_intent": 38
     },
     {
      "stage": "Everyday use",
-     "interactions": 12192,
-     "negative_share": 31.3,
-     "repeat_contact_share": 18.3,
-     "closure_intent": 290
+     "interactions": 12117,
+     "negative_share": 30.7,
+     "repeat_contact_share": 16.9,
+     "closure_intent": 304
     },
     {
      "stage": "Service requests",
-     "interactions": 8595,
-     "negative_share": 30.4,
-     "repeat_contact_share": 22.2,
-     "closure_intent": 185
+     "interactions": 8680,
+     "negative_share": 31.9,
+     "repeat_contact_share": 19.8,
+     "closure_intent": 205
     },
     {
      "stage": "Disputes and fraud",
-     "interactions": 3931,
-     "negative_share": 32.2,
-     "repeat_contact_share": 15.0,
+     "interactions": 3954,
+     "negative_share": 30.3,
+     "repeat_contact_share": 13.8,
      "closure_intent": 91
     },
     {
      "stage": "Close",
-     "interactions": 1523,
-     "negative_share": 30.6,
-     "repeat_contact_share": 18.3,
+     "interactions": 1520,
+     "negative_share": 32.5,
+     "repeat_contact_share": 15.1,
      "closure_intent": 443
     }
    ],
    "rule": "Closure intent: closure requests, placed at the stage of the customer's last negative contact before the request."
   },
   "retention_watchlist": {
-   "total": 454,
+   "total": 485,
    "rows": [
     {
      "tier": "Private",
-     "customers_with_closure_intent": 136,
+     "customers_with_closure_intent": 123,
      "top_driver": "Complaints closed without resolution",
      "owner": "rm",
      "action": "Route with evidence"
     },
     {
      "tier": "Premier",
-     "customers_with_closure_intent": 143,
+     "customers_with_closure_intent": 149,
      "top_driver": "Complaints closed without resolution",
      "owner": "rm",
      "action": "Route with evidence"
     },
     {
      "tier": "Packaged",
-     "customers_with_closure_intent": 175,
-     "top_driver": "Account charges and fees",
+     "customers_with_closure_intent": 213,
+     "top_driver": "Complaints closed without resolution",
      "owner": "rm",
      "action": "Route with evidence"
     }
@@ -3420,51 +3418,51 @@
   "ageing": [
    {
     "request_type": "other",
-    "open_cases": 367,
-    "beyond_tat": 23,
-    "beyond_tat_share": 6.3
+    "open_cases": 345,
+    "beyond_tat": 20,
+    "beyond_tat_share": 5.8
    },
    {
     "request_type": "dispute",
-    "open_cases": 85,
-    "beyond_tat": 13,
-    "beyond_tat_share": 15.3
+    "open_cases": 80,
+    "beyond_tat": 5,
+    "beyond_tat_share": 6.2
    },
    {
     "request_type": "closure",
-    "open_cases": 34,
-    "beyond_tat": 4,
-    "beyond_tat_share": 11.8
+    "open_cases": 31,
+    "beyond_tat": 5,
+    "beyond_tat_share": 16.1
    },
    {
     "request_type": "kyc",
-    "open_cases": 28,
-    "beyond_tat": 5,
-    "beyond_tat_share": 17.9
-   },
-   {
-    "request_type": "card_delivery",
-    "open_cases": 17,
-    "beyond_tat": 5,
-    "beyond_tat_share": 29.4
+    "open_cases": 20,
+    "beyond_tat": 4,
+    "beyond_tat_share": 20.0
    },
    {
     "request_type": "loan_disbursal",
-    "open_cases": 17,
-    "beyond_tat": 2,
-    "beyond_tat_share": 11.8
+    "open_cases": 18,
+    "beyond_tat": 1,
+    "beyond_tat_share": 5.6
    },
    {
     "request_type": "reversal",
-    "open_cases": 14,
-    "beyond_tat": 3,
-    "beyond_tat_share": 21.4
+    "open_cases": 16,
+    "beyond_tat": 2,
+    "beyond_tat_share": 12.5
    },
    {
     "request_type": "credit_report",
-    "open_cases": 8,
+    "open_cases": 14,
     "beyond_tat": 1,
-    "beyond_tat_share": 12.5
+    "beyond_tat_share": 7.1
+   },
+   {
+    "request_type": "card_delivery",
+    "open_cases": 10,
+    "beyond_tat": 3,
+    "beyond_tat_share": 30.0
    }
   ],
   "ladder": [
@@ -3474,95 +3472,91 @@
    },
    {
     "rung": "Repeat",
-    "count": 6116
+    "count": 5553
    },
    {
     "rung": "Complaint",
-    "count": 1856
+    "count": 1743
    },
    {
     "rung": "Head of CX",
-    "count": 1140
+    "count": 1104
    },
    {
     "rung": "Final response",
-    "count": 1117
+    "count": 1082
    },
    {
     "rung": "Financial Ombudsman Service",
-    "count": 48
+    "count": 52
    }
   ],
   "ladder_rule": "Each rung counts every contact that reached at least that rung. Repeat: the same customer on the same theme within 30 days.",
   "closure": {
-   "closure_requests": 1173,
-   "closed": 1117,
-   "saved": 311,
-   "save_rate": 27.8
+   "closure_requests": 1163,
+   "closed": 1109,
+   "saved": 300,
+   "save_rate": 27.1
   },
   "disputes": {
-   "raised": 812,
-   "beyond_sla_total": 86,
+   "raised": 775,
+   "beyond_sla_total": 69,
    "drivers": [
     {
      "driver": "Merchant response pending",
-     "cases": 33
+     "cases": 25
     },
     {
      "driver": "Chargeback evidence incomplete",
-     "cases": 18
+     "cases": 14
     },
     {
      "driver": "Network timeline",
-     "cases": 8
+     "cases": 12
     },
     {
      "driver": "Manual re-work after reopen",
-     "cases": 18
+     "cases": 11
     },
     {
      "driver": "Customer not updated",
-     "cases": 9
+     "cases": 7
     }
    ],
    "aged_cases": [
     {
      "band": "31–45 days",
-     "cases": 59
+     "cases": 41
     },
     {
      "band": "46–60 days",
-     "cases": 16
+     "cases": 19
     },
     {
      "band": "61–90 days",
-     "cases": 10
-    },
-    {
-     "band": "Over 90 days",
-     "cases": 1
+     "cases": 9
     }
    ],
    "funnel": [
     {
      "stage": "Disputes raised",
-     "count": 812
+     "count": 775
     },
     {
      "stage": "First response given",
-     "count": 810
+     "count": 775
     },
     {
      "stage": "Closed",
-     "count": 681
+     "count": 642
     },
     {
      "stage": "Customer credited",
-     "count": 392
+     "count": 372
     },
     {
      "stage": "Credited within the timeline",
-     "count": 356
+     "count": 339
     }
    ]
   }

@@ -172,7 +172,7 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
     : undefined;
   const r = b.responses;
   if (!inside) return null;
-  // Replies are visible on Play Store reviews only: bank-wide, or on the Play Store reviews tagged to the product.
+  // Replies are visible on Google Play reviews only: bank-wide, or on the Google Play reviews tagged to the product.
   const rs = product ? (pub?.replies ?? undefined) : r.all;
   const rn = product ? undefined : r.negative;
   const outsideTotal = pub ? pub.count : b.themes.total_items;
@@ -208,7 +208,7 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
           color={C.violet}
           label="Total signals"
           big={fmt(inside.total)}
-          sub="calls, chats, emails, WhatsApp, branch, bot, social inbox"
+          sub="calls, chats, emails, Cora, branch, bot, social inbox"
         />
         <Ring
           value={inside.closed_or_responded_pct}
@@ -263,14 +263,14 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
               color={C.green}
               label="Responded"
               big={fmt(rs.responded)}
-              sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Play Store reviews · median reply ${replyTime(rs.median_reply_minutes)}`}
+              sub={`${fmtPct(rs.responded_pct)} of ${fmt(rs.reviews)} Google Play reviews · median reply ${replyTime(rs.median_reply_minutes)}`}
             />
             <Ring
               value={rs.open_pct}
               color={C.amber}
               label="Open"
               big={fmt(rs.open)}
-              sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} Play Store reviews · no bank reply yet`}
+              sub={`${fmtPct(rs.open_pct, 1)} of ${fmt(rs.reviews)} Google Play reviews · no bank reply yet`}
             />
             <Ring
               value={rs.open_too_long_pct_of_reviews}
@@ -290,9 +290,9 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
               lineHeight: 1.5,
             }}
           >
-            No Play Store reviews are tagged to this product, so no bank replies
-            are visible for it: its public voice is on X, Reddit and forums,
-            where bank replies were not collected.
+            No Google Play reviews are tagged to this product, so no bank
+            replies are visible for it: its public voice is on X, Reddit and
+            forums, where bank replies were not collected.
           </div>
         )}
       </div>
@@ -331,7 +331,7 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
             `${fmt(inside.open_too_long)} (${fmtPct(inside.open_too_long_pct_of_open)} of open)`,
           ],
           [
-            rs ? "Outside (Play Store replies)" : "Outside (public)",
+            rs ? "Outside (Google Play replies)" : "Outside (public)",
             rs ? fmt(rs.reviews) : fmt(outsideTotal),
             rs ? `${fmt(rs.responded)} (${fmtPct(rs.responded_pct)})` : "—",
             rs ? `${fmt(rs.open)} (${fmtPct(rs.open_pct)})` : "—",
@@ -343,8 +343,8 @@ export function DialsRow({ b, product }: { b: Bundle; product?: ProductId }) {
       />
       <MutedNote>
         {r.definition} {r.scope_note} Open too long inside the bank means open
-        past the deliverable (RBI TAT where published, otherwise the bank TAT to
-        confirm in discovery).
+        past the deliverable (UK timeline where published, otherwise the bank
+        timeline to confirm in discovery).
       </MutedNote>
     </Tile>
   );
@@ -369,7 +369,7 @@ export function CohortStrip({
       sub={
         product
           ? `Open issues for priority customers in ${b.products.rows.find((p) => p.id === product)?.label}, and across all their products. Cohorts come from the bank's own tiers and lists.`
-          : "Customers on the bank's own priority lists and relationship tiers. Issues open over 5 hours and over 24 hours, and whether the RM knows."
+          : "Customers on the bank's own priority lists and relationship tiers. Issues open over 5 hours and over 24 hours, and whether the owner knows."
       }
       prov="internal"
       tone="red"
@@ -470,7 +470,7 @@ export function CohortStrip({
                 · {fmt(neg)} negative contacts in the bank&apos;s channels since
                 1 Jul.{" "}
                 <span style={{ color: C.red, fontWeight: 600 }}>
-                  RM told today: {fmt(c.rm_notified_today)} of{" "}
+                  Owner told today: {fmt(c.rm_notified_today)} of{" "}
                   {fmt(c.rm_should_know)}
                 </span>
               </div>
@@ -647,8 +647,8 @@ export function ProductPulseTable({ b, from }: { b: Bundle; from: View }) {
         wealth, SME and corporate items sit outside the table). Loans are split
         by the loan apps and by keyword, so the split is approximate.{" "}
         {b.products.trend_rule} Deliverables are measured on closed items and on
-        open items already past their TAT ({ledger.length} deliverable types).
-        Group-company apps are excluded.
+        open items already past their timeline ({ledger.length} deliverable
+        types). Group-company apps are excluded.
       </MutedNote>
     </Tile>
   );
@@ -792,7 +792,7 @@ export function CustomerMemory({ b, from }: { b: Bundle; from: View }) {
                 3.6e6,
             )}
             {story.rm_alert_due && !story.rm_notified
-              ? ". No one saw the pattern; the RM was not told."
+              ? ". No one saw the pattern; the owner was not told."
               : ". No one saw the pattern."}
           </span>
           <ChevronRight size={16} color={C.textDim} style={{ flexShrink: 0 }} />

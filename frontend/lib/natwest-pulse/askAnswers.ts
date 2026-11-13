@@ -33,7 +33,8 @@ const withPeriod = (href: string, p: Period) => `${href}?period=${p.id}`;
 
 const signed = (n: number) =>
   n > 0 ? `up ${fmt(n)}` : n < 0 ? `down ${fmt(-n)}` : "no change";
-const IO_NOTE = "IO timeline: confirm with the bank.";
+const IO_NOTE =
+  "Final response: 8 weeks (FCA DISP); 15 business days for payment services.";
 
 function brinkQA(
   id: string,
@@ -45,7 +46,7 @@ function brinkQA(
   return {
     id,
     q,
-    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have no reply and 10 days or fewer to the 30-day limit (${fmt(n.buckets["0-3"])} with 3 days or fewer). ${fmt(n.eligible)} are already eligible to approach the RBI Ombudsman with no reply, and ${fmt(n.unhappy)} more because the customer is unhappy with the reply. That is ${fmt(n.at_risk)} at risk of ${fmt(n.open)} open complaints, ${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}. Eligibility only; LisN does not predict who will file.`,
+    answer: `As of ${fmtDateTime(o.as_of)}, ${fmt(n.brink)} ${scope} complaints have no reply and 10 days or fewer to the final-response deadline (${fmt(n.buckets["0-3"])} with 3 days or fewer). ${fmt(n.eligible)} are already eligible to approach the Financial Ombudsman Service with no reply, and ${fmt(n.unhappy)} more because the customer is unhappy with the reply. That is ${fmt(n.at_risk)} at risk of ${fmt(n.open)} open complaints, ${signed(o.delta.at_risk)} since ${fmtDateTime(o.prev_as_of)}. Eligibility only; LisN does not predict who will file.`,
     table: {
       head: ["Measure", "Now", "Change"],
       rows: [
@@ -53,12 +54,12 @@ function brinkQA(
         ["4–7 days left", fmt(n.buckets["4-7"]), "—"],
         ["8–10 days left", fmt(n.buckets["8-10"]), "—"],
         [
-          "On the brink (10 days or fewer)",
+          "Within 8 weeks, 10 days or fewer left",
           fmt(n.brink),
           signed(o.delta.brink),
         ],
         [
-          "Eligible: past day 30, no reply",
+          "Eligible: past 8 weeks, no final response",
           fmt(n.eligible),
           signed(o.delta.eligible),
         ],
@@ -68,7 +69,7 @@ function brinkQA(
           signed(o.delta.unhappy),
         ],
         [
-          "Awaiting Internal Ombudsman review",
+          "Referred to the Ombudsman",
           fmt(n.awaiting_io),
           signed(o.delta.awaiting_io),
         ],
@@ -80,8 +81,8 @@ function brinkQA(
 function ioQA(id: string, o: OmbudsmanBlock, scope: string): AskQA {
   return {
     id,
-    q: `How many ${scope}complaints are waiting for Internal Ombudsman review?`,
-    answer: `${fmt(o.now.awaiting_io)} ${scope}complaints the bank has decided to partly or fully reject are waiting for Internal Ombudsman review, so their final reply cannot go out yet (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). A slow review can take them past day 30. ${IO_NOTE}`,
+    q: `How many ${scope}complaints are referred to the Financial Ombudsman Service?`,
+    answer: `${fmt(o.now.awaiting_io)} ${scope}complaints have been referred to the Financial Ombudsman Service (${signed(o.delta.awaiting_io)} since ${fmtDateTime(o.prev_as_of)}). ${IO_NOTE}`,
   };
 }
 
@@ -103,8 +104,8 @@ function ombudsmanMd(p: Period): AskQA[] {
         head: [
           "Business",
           "At risk",
-          "On the brink",
-          "Eligible, no reply",
+          "Within 8 weeks, 10 days or fewer left",
+          "Past 8 weeks, no final response",
           "Unhappy with reply",
         ],
         rows: biz.map((x) => [
@@ -123,7 +124,7 @@ function ombudsmanMd(p: Period): AskQA[] {
     {
       id: "md-ombudsman-lists",
       q: "Are customers on our lists at risk of going to the Ombudsman?",
-      answer: `${fmt(o.on_lists.at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints come from customers on the bank's lists. The RM should hear first.`,
+      answer: `${fmt(o.on_lists.at_risk)} of the ${fmt(o.now.at_risk)} at-risk complaints come from customers on the bank's lists. The Owner should hear first.`,
       table: {
         head: ["List", "At-risk complaints"],
         rows: Object.entries(o.on_lists.by_list).map(([k, v]) => [
@@ -173,8 +174,8 @@ function ombudsmanCards(p: Period): AskQA[] {
         head: [
           "Category",
           "At risk",
-          "On the brink",
-          "Eligible, no reply",
+          "Within 8 weeks, 10 days or fewer left",
+          "Past 8 weeks, no final response",
           "Unhappy with reply",
         ],
         rows: cats.map((c) => [
@@ -231,7 +232,7 @@ function mdBase(p: Period): AskQA[] {
     {
       id: "md-lists",
       q: "How are our most sensitive customers being served?",
-      answer: `Across the four lists, on the bank's own channels: ${cp.lists.map((l) => `${l.label} ${fmt(l.open)} open`).join("; ")}. RMs alerted for ${fmt(cp.rm.alerted)} of ${fmt(cp.rm.of)} customers due an alert.`,
+      answer: `Across the four lists, on the bank's own channels: ${cp.lists.map((l) => `${l.label} ${fmt(l.open)} open`).join("; ")}. Owners alerted for ${fmt(cp.rm.alerted)} of ${fmt(cp.rm.of)} customers due an alert.`,
       table: {
         head: [
           "List",
@@ -239,7 +240,7 @@ function mdBase(p: Period): AskQA[] {
           "Open",
           "Waiting on customer",
           "No reply 48 h",
-          "RMs alerted",
+          "Owners alerted",
         ],
         rows: cp.lists.map((l) => [
           l.label,
@@ -351,7 +352,7 @@ function mdBase(p: Period): AskQA[] {
     {
       id: "md-response",
       q: "Did the bank respond to public posts?",
-      answer: `The bank responded to ${fmt(sp.responded)} of ${fmt(sp.mentions)} public mentions (${sp.response_pct ?? "—"}%), and to ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact)} high-impact ones. Response means acknowledged and routed to an official channel. Informational, not a target. Play Store replies are collected; the other sources are illustrative.`,
+      answer: `The bank responded to ${fmt(sp.responded)} of ${fmt(sp.mentions)} public mentions (${sp.response_pct ?? "—"}%), and to ${fmt(sp.high_impact_responded)} of ${fmt(sp.high_impact)} high-impact ones. Response means acknowledged and routed to an official channel. Informational, not a target. Google Play replies are collected; the other sources are illustrative.`,
       table: {
         head: ["Source", "Mentions", "Responded", "Response"],
         rows: sp.by_source.map((x) => [

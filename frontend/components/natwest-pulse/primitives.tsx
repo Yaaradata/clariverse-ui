@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * LisN · HDFC demo — global components (B4 §2), built once and used on every /natwest-pulse/v1 screen.
+ * LisN · NatWest Group demo — global components (B4 §2), built once and used on every /natwest-pulse/v1 screen.
  * Visual language follows the Cards Portfolio v2 dashboard (dark canvas, inline styles, Outfit / JetBrains Mono)
  * Five colours, one meaning each, on every screen:
  *   red    critical / negative        amber  needs attention / rising
@@ -262,9 +262,10 @@ const RUNG_COLOR: Record<string, string> = {
   Voice: C.cyan,
   Repeat: C.amber,
   Grievance: C.amber,
-  "MD's office": C.amber,
-  IO: C.amber,
-  "RBI Ombudsman": C.red,
+  Complaint: C.amber,
+  "Head of CX": C.amber,
+  "Final response": C.amber,
+  "Financial Ombudsman Service": C.red,
   Public: C.red,
 };
 
@@ -282,7 +283,7 @@ export const OWNER_LABEL: Record<string, string> = {
   fraud_cyber: "Fraud and Cyber",
   compliance: "Compliance",
   operations: "Operations",
-  rm: "RM",
+  rm: "Owner",
   product: "Product",
   policy_credit: "Policy and Credit",
 };
@@ -299,7 +300,7 @@ export function RungChip({ rung }: { rung: string }) {
       label="Rung"
       value={rung}
       color={rungColor(rung)}
-      title="Voice · Repeat · Grievance · MD's office · IO · RBI Ombudsman · Public"
+      title="Voice · Repeat · Complaint · Head of CX · Final response · Financial Ombudsman Service · Public"
     />
   );
 }

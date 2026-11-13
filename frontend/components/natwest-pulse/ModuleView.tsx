@@ -160,7 +160,7 @@ const GRID2 = {
 export function DigitalModule({ b }: { b: Bundle }) {
   const from = useFrom();
   const rp = releasePulse(b);
-  const app = b.storeSeries.apps.find((a) => a.app === "HDFC Bank app");
+  const app = b.storeSeries.apps.find((a) => a.app === "NatWest app");
   const play = app?.stores.find((s) => s.store === "playstore");
   const ios = app?.stores.find((s) => s.store === "appstore");
   const pub = b.products.rows.find((r) => r.id === "digital");
@@ -179,7 +179,7 @@ export function DigitalModule({ b }: { b: Bundle }) {
     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
       <Tile prov="public" accent tone="red">
         <AnswerLine
-          sub={`Compared within each store only. Play Store: v11 averages ${p11?.avg_rating?.toFixed(1)}★ over ${fmt(p11?.n)} reviews against ${p9?.avg_rating?.toFixed(1)}★ for v9 (${fmt(p9?.n)}). App Store: v11 averages ${i11?.avg_rating?.toFixed(1)}★ (${fmt(i11?.n)}) against ${i10?.avg_rating?.toFixed(1)}★ for v10 (${fmt(i10?.n)}).`}
+          sub={`Compared within each store only. Google Play: v11 averages ${p11?.avg_rating?.toFixed(1)}★ over ${fmt(p11?.n)} reviews against ${p9?.avg_rating?.toFixed(1)}★ for v9 (${fmt(p9?.n)}). App Store: v11 averages ${i11?.avg_rating?.toFixed(1)}★ (${fmt(i11?.n)}) against ${i10?.avg_rating?.toFixed(1)}★ for v10 (${fmt(i10?.n)}).`}
         >
           {RELEASE_LABEL}: {fmt(rp.new_app_negative)} negative reviews of
           version 11, the new release ({fmt(rp.count)} across all versions), led
@@ -195,7 +195,7 @@ export function DigitalModule({ b }: { b: Bundle }) {
 
         <Section n={1} title="What">
           <div style={{ fontSize: 15, color: C.textSec, lineHeight: 1.5 }}>
-            Store reviews of the new HDFC Bank app (versions 11.x), read as a
+            Store reviews of the new NatWest app (versions 11.x), read as a
             release pulse: the specific, fixable issues customers name, with the
             praise alongside. {fmt(pub.count)} public items sit in the Digital
             row of the product table; {fmt(pub.negative)} are negative.
@@ -209,7 +209,7 @@ export function DigitalModule({ b }: { b: Bundle }) {
           </div>
           <BaselineCaption>
             {b.storeSeries.rule} Weeks with fewer than 5 reviews are not
-            plotted. The Play Store export starts on{" "}
+            plotted. The Google Play export starts on{" "}
             {fmtDate(play.export_start)}, so its series starts there: there is
             no spike, only a start date.
           </BaselineCaption>
@@ -240,7 +240,7 @@ export function DigitalModule({ b }: { b: Bundle }) {
 
         <Section n={4} title="Where">
           <div style={{ fontSize: 15, color: C.textSec }}>
-            Pillar: Availability · Product: Digital (app and NetBanking) ·
+            Pillar: Availability · Product: Cora and digital assistant ·
             Sources: {rp.coverage.join("; ")}.
           </div>
         </Section>
@@ -318,7 +318,7 @@ const CARD_ISSUES: { label: string; themes: string[]; note?: string }[] = [
   {
     label: "Closure",
     themes: ["closure_requests"],
-    note: "7 working days (RBI); ₹500 per day of delay",
+    note: "Bank timeline: confirm with the bank",
   },
 ];
 
@@ -461,7 +461,7 @@ export function CardsModule({ b }: { b: Bundle }) {
               "Inside: interactions",
               "Open / open too long",
               "Deliverable met",
-              "TAT",
+              "timeline",
             ]}
             align={[
               "left",
