@@ -1,18 +1,6 @@
-import { MyView } from "@/components/natwest-pulse/MyView";
-import { Shell } from "@/components/natwest-pulse/Shell";
-import { loadBundle } from "@/lib/natwest-pulse/load";
-import { shellProps } from "@/lib/natwest-pulse/shellProps";
+import { redirect } from "next/navigation";
 
-/** My view (30 Sep review, K5): the Ask LisN answers pinned in this session. */
+/** Pinned answers are not part of the NatWest build; the route goes back to the customer pulse. */
 export default function MyViewPage() {
-  const b = loadBundle();
-  return (
-    <Shell
-      {...shellProps(b)}
-      title="My view"
-      subtitle="The Ask LisN answers you pinned, as panels. This session only."
-    >
-      <MyView />
-    </Shell>
-  );
+  redirect("/natwest-pulse/v1/mds-office");
 }

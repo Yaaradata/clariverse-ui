@@ -5,6 +5,7 @@ import { use } from "react";
 import { ArrowLeft, ChevronRight } from "lucide-react";
 
 import { useRoleBasedUi } from "@/components/role-based-dashboard/RoleBasedChrome";
+import { NATWEST_ROLE_HREF } from "@/lib/role-based-dashboard/natwestBankIndustry";
 import { HDFC_PULSE_ROLE_HREF, HDFC_PULSE_VERSIONS } from "@/lib/role-based-dashboard/hdfcBankIndustry";
 import { INDUSIND_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/indusindBankIndustry";
 import { getIndustryById, roleDisplayName } from "@/lib/role-based-dashboard/registry";
@@ -109,6 +110,7 @@ export default function RoleBasedIndustryRolesPage({ params }: PageProps) {
           const roleHref =
             HDFC_PULSE_ROLE_HREF[role.id] ??
             INDUSIND_PULSE_ROLE_HREF[role.id] ??
+            NATWEST_ROLE_HREF[role.id] ??
             `/role-based/${industry.id}/${role.id}`;
           const isNetworkHealth = industry.id === "ecommerce" && role.id === "network_health";
           const cardStyle = {

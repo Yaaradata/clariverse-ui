@@ -6,6 +6,7 @@ import { use, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { SWEDBANK_DASHBOARD_THEME } from "@/lib/role-based-dashboard/swedbank-compliance-theme";
+import { NATWEST_BANK_INDUSTRY_ID, NATWEST_ROLE_HREF } from "@/lib/role-based-dashboard/natwestBankIndustry";
 import { HDFC_PULSE_ROLE_HREF } from "@/lib/role-based-dashboard/hdfcBankIndustry";
 import {
   INDUSIND_BANK_INDUSTRY_ID,
@@ -116,7 +117,9 @@ export default function RoleBasedRoleDashboardPage({ params }: PageProps) {
       ? HDFC_PULSE_ROLE_HREF[roleId]
       : industryId === INDUSIND_BANK_INDUSTRY_ID
         ? INDUSIND_PULSE_ROLE_HREF[roleId]
-        : undefined;
+        : industryId === NATWEST_BANK_INDUSTRY_ID
+          ? NATWEST_ROLE_HREF[roleId]
+          : undefined;
 
   useEffect(() => {
     if (pulseHref) {

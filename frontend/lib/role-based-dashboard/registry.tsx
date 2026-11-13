@@ -33,6 +33,11 @@ import {
   INDUSIND_ROLE_COPY,
 } from "./indusindBankIndustry";
 import {
+  NATWEST_BANK_INDUSTRY_ID,
+  NATWEST_BANK_NAME,
+  NATWEST_ROLE_COPY,
+} from "./natwestBankIndustry";
+import {
   KIDDE_GLOBAL_INDUSTRY_ID,
   KIDDE_GLOBAL_PRESIDENT_ROLE_ID,
   KIDDE_GLOBAL_REGIONAL_GM_ROLE_ID,
@@ -502,6 +507,15 @@ export const INDUSTRIES = [
         primaryTile: 0,
       },
     ],
+  },
+  {
+    // NatWest Group (docs/natwest): one role, opening /natwest-pulse/v1 (natwestBankIndustry.ts).
+    id: NATWEST_BANK_INDUSTRY_ID,
+    name: NATWEST_BANK_NAME,
+    icon: Landmark,
+    color: "#0f766e",
+    desc: "United Kingdom retail bank · NatWest, Royal Bank of Scotland, Ulster Bank",
+    roles: [{ ...NATWEST_ROLE_COPY[0], icon: Headphones, defaultLens: "ops", primaryTile: 0 }],
   },
 ];
 

@@ -1,6 +1,6 @@
-/** Number and label formatting for the LisN HDFC demo. Indian digit grouping, rupees in lakh and crore. */
+/** Number and label formatting for the NatWest Group pulse: United Kingdom digit grouping. */
 
-const IN = new Intl.NumberFormat("en-IN");
+const IN = new Intl.NumberFormat("en-GB");
 
 export function fmt(n: number | null | undefined): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—";
@@ -36,13 +36,6 @@ export function fmtSigned(
   if (n === null || n === undefined || Number.isNaN(n)) return "—";
   const s = n > 0 ? "+" : n < 0 ? "−" : "";
   return `${s}${Math.abs(n).toFixed(digits)}${unit}`;
-}
-
-/** ₹ in lakh or crore, e.g. 2,50,00,000 → ₹2.5 crore. */
-export function fmtRupees(n: number): string {
-  if (n >= 1e7) return `₹${(n / 1e7).toFixed(n % 1e7 === 0 ? 0 : 1)} crore`;
-  if (n >= 1e5) return `₹${(n / 1e5).toFixed(n % 1e5 === 0 ? 0 : 1)} lakh`;
-  return `₹${IN.format(n)}`;
 }
 
 const MONTHS = [

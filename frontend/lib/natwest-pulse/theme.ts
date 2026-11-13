@@ -27,9 +27,10 @@ const DARK: Record<string, string> = {
   red: "#ef4444",
   amber: "#f59e0b",
   cyan: "#38bdf8",
-  violet: "#8b5cf6",
-  brand: "#5332FF",
-  "brand-ink": "#b7a6ff",
+  // No purple on the NatWest screens: slate for the internal tag, teal accent.
+  violet: "#94a3b8",
+  brand: "#0f9488",
+  "brand-ink": "#5eead4",
   neutral: "#4b5563",
   header: "rgba(11,11,12,0.94)",
   tooltip: "rgba(12,12,14,0.96)",
@@ -37,9 +38,9 @@ const DARK: Record<string, string> = {
   "series-1": "#7dd3fc",
   "series-2": "#38bdf8",
   "series-3": "#0284c7",
-  "series-4": "#c4b5fd",
-  "series-5": "#8b5cf6",
-  "series-6": "#6d28d9",
+  "series-4": "#5eead4",
+  "series-5": "#14b8a6",
+  "series-6": "#0f766e",
 };
 
 const LIGHT: Record<string, string> = {
@@ -60,9 +61,9 @@ const LIGHT: Record<string, string> = {
   red: "#dc2626",
   amber: "#b45309",
   cyan: "#0369a1",
-  violet: "#6d28d9",
-  brand: "#4f2ee8",
-  "brand-ink": "#4f2ee8",
+  violet: "#475569",
+  brand: "#0f766e",
+  "brand-ink": "#0f766e",
   neutral: "#9ca3af",
   header: "rgba(255,255,255,0.94)",
   tooltip: "rgba(255,255,255,0.98)",
@@ -71,9 +72,9 @@ const LIGHT: Record<string, string> = {
   "series-1": "#0284c7",
   "series-2": "#0369a1",
   "series-3": "#0c4a6e",
-  "series-4": "#8b5cf6",
-  "series-5": "#6d28d9",
-  "series-6": "#4c1d95",
+  "series-4": "#0f766e",
+  "series-5": "#115e59",
+  "series-6": "#134e4a",
 };
 
 const block = (vars: Record<string, string>) =>

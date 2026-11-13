@@ -39,6 +39,8 @@ const nextConfig = {
       // NatWest Group demo (docs/natwest/brief.md Step 1.1): same protection.
       { source: '/natwest-pulse', headers: noindex },
       { source: '/natwest-pulse/:path*', headers: noindex },
+      { source: '/role-based/natwest_bank', headers: noindex },
+      { source: '/role-based/natwest_bank/:path*', headers: noindex },
     ];
   },
   experimental: {

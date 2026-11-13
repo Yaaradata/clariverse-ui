@@ -1,289 +1,71 @@
 "use client";
 
 /**
- * The second scroll of the MD's office / Head of CX view (30 Sep review, changes_30sep.md B): today's morning brief,
- * built from the business cards beneath it, the reputation pulse by product, MD-marked mail and the actions.
- * Everything follows the period filter except the actions, which are labelled with their own period.
+ * NatWest Group · morning brief by product (re-bound from the oct13 brief) and the product view behind each card.
+ * Every line is generated from the figures by the pipeline (HL-29). "Copy to pack" copies the card as plain text.
  */
 
-import { ChevronRight } from "lucide-react";
+import { Check, ClipboardCopy } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
-import { fmt, fmtDate, fmtPct } from "@/lib/natwest-pulse/format";
-import type { BriefItem, Business, Period } from "@/lib/natwest-pulse/periods";
-import { SmallRing, TrendChip, titled, withPeriod } from "./Pulse";
-import { C, MONO, Tile, tint } from "./primitives";
+import { OUTCOME_LABEL } from "@/lib/natwest-pulse/copy";
+import {
+  type BriefItem,
+  fmtN,
+  fmtP,
+  type ProductBlock,
+} from "@/lib/natwest-pulse/nw";
+import { Delta, vsPrev } from "./Pulse";
+import { C, Kpi, MONO, Table, Tile, tint } from "./primitives";
 
-const CARDS_VIEW = "/natwest-pulse/v1/business/cards";
-const BRIEF_ORDER = [
-  "cards",
-  "payzapp",
-  "accounts",
-  "personal_loans",
-  "home_loans",
-  "insurance",
-];
-
-/* ---------------------------------------------------------------- morning brief */
-
-function BriefColumn({
-  title,
-  items,
-  color,
-}: {
-  title: string;
-  items: BriefItem[];
-  color: string;
-}) {
+function CopyToPack({ text }: { text: string }) {
+  const [done, setDone] = useState(false);
   return (
-    <div
+    <button
+      type="button"
+      data-testid="copy-to-pack"
+      onClick={() => {
+        navigator.clipboard?.writeText(text).catch(() => undefined);
+        setDone(true);
+        setTimeout(() => setDone(false), 1800);
+      }}
       style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 5,
+        fontSize: 12.5,
+        color: C.textSec,
         background: C.cardAlt,
         border: `1px solid ${C.border}`,
-        borderTop: `3px solid ${color}`,
-        borderRadius: 12,
-        padding: "12px 14px",
-        display: "flex",
-        flexDirection: "column",
-        gap: 10,
-        minWidth: 0,
+        borderRadius: 8,
+        padding: "3px 9px",
+        cursor: "pointer",
       }}
     >
-      <strong style={{ fontSize: 15 }}>{title}</strong>
-      {items.length ? (
-        items.map((it) => {
-          const head = (
-            <>
-              <span
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color,
-                }}
-              >
-                {it.business_label}
-                {it.status ? ` · ${it.status}` : ""}
-              </span>
-              {it.issue ? (
-                <span
-                  style={{ fontSize: 14.5, fontWeight: 650, color: C.text }}
-                >
-                  {it.issue}
-                </span>
-              ) : null}
-              <span
-                style={{ fontSize: 13.5, color: C.textSec, lineHeight: 1.45 }}
-              >
-                {it.text}
-              </span>
-            </>
-          );
-          return (
-            <div
-              key={`${it.business}-${it.issue ?? ""}`}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 3,
-                borderLeft: `2px solid ${tint(color, 0.5)}`,
-                paddingLeft: 10,
-              }}
-            >
-              {head}
-            </div>
-          );
-        })
-      ) : (
-        <span style={{ fontSize: 13.5, color: C.textMut }}>
-          Nothing met the rule in this period.
-        </span>
-      )}
-    </div>
+      {done ? <Check size={13} /> : <ClipboardCopy size={13} />}
+      {done ? "Copied" : "Copy to pack"}
+    </button>
   );
 }
 
-function BusinessCard({ x, p }: { x: Business; p: Period }) {
-  const i = x.internal;
-  const e = x.external;
-  const r = e.responded;
-  const body = (
-    <>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "baseline",
-          gap: 8,
-        }}
-      >
-        <strong style={{ fontSize: 16 }}>{x.label}</strong>
-        {x.id === "cards" ? (
-          <Link
-            href={withPeriod(CARDS_VIEW, p)}
-            data-testid="deep-dive"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 3,
-              background: C.brand,
-              color: "#fff",
-              border: `1px solid ${C.brand}`,
-              borderRadius: 8,
-              padding: "5px 12px",
-              fontSize: 13,
-              fontWeight: 700,
-              textDecoration: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Deep dive <ChevronRight size={14} />
-          </Link>
-        ) : null}
-      </div>
-      <div
-        style={{
-          display: "flex",
-          gap: 14,
-          alignItems: "center",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <SmallRing value={e.negative_share} color={C.red} size={58} />
-          <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.3 }}>
-            negative
-            <br />
-            public
-          </span>
-        </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <SmallRing
-            value={i.volume ? (100 * i.open) / i.volume : null}
-            color={C.amber}
-            size={58}
-          />
-          <span style={{ fontSize: 12, color: C.textMut, lineHeight: 1.3 }}>
-            open
-            <br />
-            internal
-          </span>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <span style={{ fontFamily: MONO, fontSize: 22, fontWeight: 750 }}>
-            {fmt(x.overall_volume)}
-          </span>
-          <span style={{ fontSize: 12, color: C.textMut }}>
-            contacts: {fmt(i.volume)} internal · {fmt(e.volume)} public
-          </span>
-        </div>
-      </div>
-      <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-        <TrendChip pct={i.change_pct} label="internal" />
-        <TrendChip pct={e.change_pct} label="public" />
-      </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 6,
-          fontSize: 13,
-          color: C.textSec,
-        }}
-      >
-        <span>
-          Open / waiting:{" "}
-          <strong style={{ color: C.text }}>
-            {fmt(i.open)} / {fmt(i.waiting_on_customer)}
-          </strong>
-        </span>
-        <span>
-          Responded:{" "}
-          <strong style={{ color: C.text }}>
-            {r.reviews ? `${fmt(r.responded)} of ${fmt(r.reviews)}` : "—"}
-          </strong>
-        </span>
-        <span>
-          Negative public:{" "}
-          <strong style={{ color: C.text }}>{fmtPct(e.negative_share)}</strong>
-        </span>
-        <span>
-          Negative internal:{" "}
-          <strong style={{ color: C.text }}>
-            {fmtPct(i.volume ? (100 * i.negative) / i.volume : null)}
-          </strong>
-        </span>
-      </div>
-      <div style={{ fontSize: 13.5 }}>
-        <span style={{ color: C.textMut }}>Top issue: </span>
-        <strong>{x.top_issue?.label ?? "—"}</strong>
-        {x.top_issue?.source === "internal" ? (
-          <span style={{ color: C.textMut }}>
-            {" "}
-            (internal; thin public voice)
-          </span>
-        ) : null}
-      </div>
-      <div
-        style={{
-          fontSize: 13,
-          color: x.anecdote ? C.textSec : C.textMut,
-          borderLeft: `2px solid ${C.border}`,
-          paddingLeft: 8,
-          lineHeight: 1.45,
-          alignSelf: "end",
-          display: "-webkit-box",
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: "vertical",
-          overflow: "hidden",
-        }}
-      >
-        {x.anecdote ? (
-          <>
-            &ldquo;{x.anecdote.summary}&rdquo;
-            <span style={{ color: C.textMut }}>
-              {" "}
-              · {x.anecdote.source_label}, {fmtDate(x.anecdote.date)}
-            </span>
-          </>
-        ) : (
-          "No quotable public post in this period."
-        )}
-      </div>
-    </>
-  );
-  const style = {
-    background: C.cardAlt,
-    border: `1px solid ${x.id === "cards" ? tint(C.brand, 0.35) : C.border}`,
-    borderRadius: 12,
-    padding: "12px 14px",
-    // Rule B: six sections, one per subgrid row, so cards in a row line up section by section.
-    display: "grid",
-    gridRow: "span 6",
-    gridTemplateRows: "subgrid",
-    rowGap: 10,
-    minWidth: 0,
-    textDecoration: "none",
-    color: "inherit",
-  };
-  return (
-    <div data-testid="business-card" style={style}>
-      {body}
-    </div>
-  );
-}
-
-export function MorningBrief({ p }: { p: Period }) {
-  const by = Object.fromEntries(p.businesses.map((x) => [x.id, x]));
-  const cards = BRIEF_ORDER.map((id) => by[id]).filter(Boolean);
+export function MorningBrief({
+  items,
+  hrefFor,
+  windowLabel,
+  showDelta,
+}: {
+  items: BriefItem[];
+  hrefFor: Record<string, string>;
+  windowLabel: string;
+  showDelta: boolean;
+}) {
   return (
     <Tile
-      id="morning-brief"
-      title={titled("Today's morning brief", p)}
-      sub="Bank-wide, built from the six businesses below. Each item names its business."
-      prov={["internal", "public"]}
-      tone="violet"
+      title="Morning brief by product"
+      sub="One line per product"
+      prov="internal"
+      id="brief"
     >
       <div
         style={{
@@ -291,37 +73,206 @@ export function MorningBrief({ p }: { p: Period }) {
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
           gap: 10,
-          alignItems: "start",
         }}
       >
-        <BriefColumn
-          title="What needs you"
-          items={p.brief.needs_you}
-          color={C.red}
-        />
-        <BriefColumn
-          title="Signals that are building"
-          items={p.brief.building}
-          color={C.amber}
-        />
-        <BriefColumn
-          title="What's improving or stable"
-          items={p.brief.improving}
-          color={C.green}
-        />
+        {items.map((it) => {
+          const pack = `${it.label}: ${it.headline}. ${fmtN(it.complaints)} complaints, ${fmtP(it.negative_pct)} of contacts negative (${windowLabel}). Owner: ${it.owner}. ${it.action}. Consumer Duty: ${OUTCOME_LABEL[it.outcome]}. Internal, illustrative until discovery.`;
+          return (
+            <div
+              key={it.id}
+              data-testid="brief-card"
+              style={{
+                background: C.cardAlt,
+                border: `1px solid ${C.border}`,
+                borderRadius: 12,
+                padding: "12px 14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
+                minWidth: 0,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: 8,
+                  alignItems: "baseline",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Link
+                  href={hrefFor[it.id]}
+                  style={{
+                    fontWeight: 700,
+                    color: C.text,
+                    textDecoration: "none",
+                  }}
+                >
+                  {it.label}
+                </Link>
+                <span
+                  style={{ fontFamily: MONO, fontSize: 13, color: C.textSec }}
+                >
+                  {fmtN(it.complaints)} complaints{" "}
+                  {showDelta ? (
+                    <Delta
+                      value={it.complaints_change_pct}
+                      kind="pct"
+                      worseWhen="neutral"
+                    />
+                  ) : null}
+                </span>
+              </div>
+              <div style={{ fontSize: 14, color: C.textSec }}>
+                {it.headline}
+              </div>
+              <div style={{ fontSize: 13, color: C.textMut }}>
+                {it.owner} · {it.action}
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 8,
+                  flexWrap: "wrap",
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: 12,
+                    color: C.textSec,
+                    border: `1px solid ${tint(C.cyan, 0.35)}`,
+                    borderRadius: 999,
+                    padding: "1px 8px",
+                  }}
+                >
+                  {OUTCOME_LABEL[it.outcome]}
+                </span>
+                <CopyToPack text={pack} />
+              </div>
+            </div>
+          );
+        })}
       </div>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns:
-            "repeat(auto-fit, minmax(min(100%, max(360px, calc((100% - 20px) / 3))), 1fr))",
-          gap: 10,
-        }}
-      >
-        {cards.map((x) => (
-          <BusinessCard key={x.id} x={x} p={p} />
-        ))}
-      </div>
+      {showDelta ? (
+        <div style={{ fontSize: 12.5, color: C.textMut }}>
+          Changes {vsPrev(windowLabel)}.
+        </div>
+      ) : null}
     </Tile>
+  );
+}
+
+/** The product view (business route): the product's own slice only (HL-23). */
+export function ProductView({
+  p,
+  windowLabel,
+  showDelta,
+}: {
+  p: ProductBlock;
+  windowLabel: string;
+  showDelta: boolean;
+}) {
+  const vs = vsPrev(windowLabel);
+  return (
+    <>
+      <Tile title={`${p.label}: pulse`} sub={p.owner} prov="internal">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(min(100%, 170px), 1fr))",
+            gap: 10,
+          }}
+        >
+          <Kpi
+            label="Contacts"
+            value={fmtN(p.contacts)}
+            sub="Calls, Cora and branch"
+          />
+          <Kpi
+            label="Negative share"
+            value={fmtP(p.negative_pct)}
+            sub={
+              showDelta ? (
+                <span>
+                  <Delta value={p.negative_delta} kind="pts" /> {vs}
+                </span>
+              ) : (
+                "Of contacts"
+              )
+            }
+          />
+          <Kpi
+            label="Complaints"
+            value={fmtN(p.complaints)}
+            sub={
+              showDelta ? (
+                <span>
+                  <Delta
+                    value={p.complaints_change_pct}
+                    kind="pct"
+                    worseWhen="neutral"
+                  />{" "}
+                  {vs}
+                </span>
+              ) : (
+                "In the window"
+              )
+            }
+          />
+          <Kpi label="Upheld" value={fmtP(p.upheld_pct)} sub="Of complaints" />
+          <Kpi
+            label="Closed within 3 days"
+            value={fmtP(p.closed_3d_pct)}
+            sub="Of complaints"
+          />
+        </div>
+      </Tile>
+      <Tile
+        title={`${p.label}: themes`}
+        sub="Ordered by complaints"
+        prov="internal"
+      >
+        <Table
+          head={[
+            "Theme",
+            "Contacts",
+            "Negative",
+            "Complaints",
+            showDelta ? "Change" : "Outcome",
+            "Owner",
+          ]}
+          align={["left", "right", "right", "right", "right", "left"]}
+          rows={p.themes.map((t) => [
+            <strong key="l" style={{ color: C.text }}>
+              {t.label}
+            </strong>,
+            <span key="c" style={{ fontFamily: MONO }}>
+              {fmtN(t.contacts)}
+            </span>,
+            <span key="n" style={{ fontFamily: MONO }}>
+              {fmtP(t.negative_pct)}
+            </span>,
+            <span key="k" style={{ fontFamily: MONO }}>
+              {fmtN(t.complaints)}
+            </span>,
+            showDelta ? (
+              <Delta
+                key="d"
+                value={t.complaints_change_pct}
+                kind="pct"
+                worseWhen="neutral"
+              />
+            ) : (
+              <span key="o">{OUTCOME_LABEL[t.outcome]}</span>
+            ),
+            <span key="w">{t.owner}</span>,
+          ])}
+        />
+      </Tile>
+    </>
   );
 }

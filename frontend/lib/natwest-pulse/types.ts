@@ -1,4 +1,5 @@
-import type { PeriodsFile } from "./periods";
+/** The copied period file is not read by the NatWest screens (their windows live in natwest.json). */
+type PeriodsFile = Record<string, unknown>;
 
 /** Shapes of data/out/app/*.json and data/seed/*.json (produced by scripts/aggregate.py, insights.py, seed_internal.py). */
 

@@ -919,3 +919,9 @@ Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md
   first two (the 13 weeks before 14 Aug fall outside the 1 Aug window).
 - **NW-D14 · Ombudsman states** are a stock as at the freeze; at-risk = awaiting a final response with 7 days or fewer
   left (3 business days for payment services).
+- **NW-D15 · Industry card added on request.** The brief kept `natwest_bank` off `/role-based` unless Usha asked; Usha
+  asked on 13 Nov. Industry `natwest_bank` ("NatWest Group") with one role, Head of Customer Experience, opening
+  `/natwest-pulse/v1/mds-office`. Wired like HDFC and IndusInd (href lookup in the two shared role pages, two lines
+  each); `/role-based/natwest_bank` gets the same noindex header. No version tag on the card (HL-06).
+- **NW-D16 · Server components.** Three re-bound screens called client helpers from the server (500s); `vsPrev` moved
+  to `lib/natwest-pulse/nw.ts` and the Ombudsman tint inlined.

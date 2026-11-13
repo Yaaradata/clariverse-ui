@@ -137,7 +137,6 @@ export function ProvenanceTag({
   kind: Prov;
   style?: CSSProperties;
 }) {
-  if (kind === "internal") return null;
   const tone = TONE[PROV_TONE[kind]];
   return (
     <span
@@ -263,8 +262,8 @@ const RUNG_COLOR: Record<string, string> = {
   Repeat: C.amber,
   Grievance: C.amber,
   "MD's office": C.amber,
-  IO: C.amber,
-  "RBI Ombudsman": C.red,
+  "Final response": C.amber,
+  "Financial Ombudsman Service": C.red,
   Public: C.red,
 };
 
@@ -282,7 +281,7 @@ export const OWNER_LABEL: Record<string, string> = {
   fraud_cyber: "Fraud and Cyber",
   compliance: "Compliance",
   operations: "Operations",
-  rm: "RM",
+  rm: "Relationship manager (Premier)",
   product: "Product",
   policy_credit: "Policy and Credit",
 };
@@ -299,7 +298,7 @@ export function RungChip({ rung }: { rung: string }) {
       label="Rung"
       value={rung}
       color={rungColor(rung)}
-      title="Voice · Repeat · Grievance · MD's office · IO · RBI Ombudsman · Public"
+      title="Voice · Repeat · Grievance · Head of CX · Final response · Financial Ombudsman Service · Public"
     />
   );
 }

@@ -1,25 +1,35 @@
 import { DeliverablesLedger } from "@/components/natwest-pulse/DeliverablesLedger";
-import { ServicePromiseView } from "@/components/natwest-pulse/ServicePromiseView";
 import { Shell } from "@/components/natwest-pulse/Shell";
-import { loadBundle } from "@/lib/natwest-pulse/load";
-import { shellProps } from "@/lib/natwest-pulse/shellProps";
-import { sliceBundle } from "@/lib/natwest-pulse/slice";
+import { SCREEN_COPY } from "@/lib/natwest-pulse/copy";
+import {
+  askFor,
+  frame,
+  nwSlice,
+  registerEntries,
+  type SearchParams,
+  selection,
+} from "@/lib/natwest-pulse/natwest";
 
-export default function DeliverablesPage() {
-  const b = loadBundle();
-  const sliced = sliceBundle(b, { view: "deliverables" });
+/** The timelines ledger on its own (also on the AI-agent outcomes screen). */
+export default async function LedgerPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  const { w, b } = await selection(searchParams);
+  const rows = nwSlice(w, b).ledger;
   return (
     <Shell
-      {...shellProps(b)}
-      sampleRows={b.periods.scale.sample_rows}
-      title="Are we meeting our deliverables?"
-      subtitle="Deliverables ledger · By product · Escalation ladder · Transparency gap · Cure watch · Disputes"
-      drill
+      frame={frame(w, b)}
+      ask={askFor(w, b)}
+      screen="agents"
+      title={SCREEN_COPY.ledger.title}
+      subtitle={SCREEN_COPY.ledger.subtitle}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        <DeliverablesLedger b={sliced} />
-        <ServicePromiseView b={sliced} />
-      </div>
+      <DeliverablesLedger
+        rows={rows}
+        register={registerEntries(rows.map((r) => r.register))}
+      />
     </Shell>
   );
 }
