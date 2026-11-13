@@ -889,3 +889,19 @@ wording.
   person's name cannot be detected and is left to the uploader (the screen says roles only).
 - **Ombudsman watch per business**: the existing bank tile gains the full per-business table and a CSV export; the
   Cards tile the same per category. Same figures as the tile, so it reconciles by construction.
+
+# NatWest Pulse v1
+
+Brief `docs/natwest/brief.md`; plan and resume point `docs/natwest/build_plan.md`. Work on `main`.
+
+- **NW-D01 · Research pack missing.** Register values null / "pending verification", except the five figures the brief
+  quotes, each with basis "quoted in brief; source pending research pack".
+- **NW-D02 · Not pushed.** Protection beyond noindex is only the Vercel setting; commits stay on local main until
+  Deployment Protection is confirmed ON.
+- **NW-D03 · "v1" in the URL only.** HL-06 bans version labels on screen; the route name follows the brief.
+- **NW-D04 · Public layer empty.** No `data/raw/natwest/`; tiles read "Public data not yet loaded" (HL-15).
+- **NW-D05 · Freeze.** 12 Nov 2026 23:59 GMT; window 1 Aug to the freeze.
+- **NW-D06 · Deliverables ledger kept** for S-AGENTS (brief over carry-forward §G).
+- **NW-D07 · Removed screens** (cards drill, customer trail, pinned view) keep their folders and redirect home.
+- **NW-D08 · Shared HDFC data.** oct13 reads `data/out/app_jul_sep` and `data/seed/internal_v3`; copied, not moved.
+- **NW-D09 · Starling** appears only in the register's peer list (upper benchmark); banned elsewhere.

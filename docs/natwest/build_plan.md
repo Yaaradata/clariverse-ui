@@ -1,0 +1,100 @@
+# NatWest Group · Customer Pulse v1 (`natwest-pulse`): build plan
+
+Work on `main` (pulled 13 Nov 2026 at `d3664f9`; up to date). Brief: `docs/natwest/brief.md`. Judgement calls:
+`docs/demo-rebuild/MORNING_DECISIONS.md` → "NatWest Pulse v1" (NW-Dxx). This file is the resume point.
+
+## Blocked on people
+
+1. **Confirm Vercel Deployment Protection is ON before the first push to main** (Ranjith / Usha). The IndusInd routes
+   are protected in the app only by noindex (page meta + `X-Robots-Tag`); access protection is the Vercel setting.
+   Every step is committed on local `main` and **nothing is pushed** until this is confirmed (Step 1.1, HL-05). NW-D02.
+2. **Research pack missing** (Usha): `docs/natwest/research_pack.md` was not supplied. Register values other than the
+   five the brief quotes (86,498 complaints; 2.74 per 1,000 accounts; about 55% upheld; 48% closed within 3 days;
+   RBS app 66% vs overall 48%) render "pending verification"; no source titles or URLs. NW-D01.
+3. **NatWest public pull missing** (Usha): `data/raw/natwest/` does not exist. App Store, Google Play, X, Reddit,
+   Trustpilot and MoneySavingExpert: all not loaded. Public tiles read "Public data not yet loaded". NW-D04.
+4. **Peer figures** (Lloyds, Barclays, HSBC UK, Santander UK; Monzo, Starling greyed): names only until the pack. NW-D09.
+5. **Data freeze**: 12 Nov 2026 23:59 GMT for the illustrative layer; confirm. NW-D05.
+
+## What oct13 is (recorded before copying)
+
+- Routes, `app/hdfc-pulse/oct13/`: `layout.tsx`, `page.tsx` (redirects to `mds-office`), `action-queue`,
+  `business/[product]`, `business/cards/[section]`, `customer/[id]`, `deliverables`, `head-cx`, `market`, `mds-office`,
+  `module/[id]`, `my-view`, `priority`, `satisfaction`, `service-promise` (redirects to `deliverables`), `signal/[id]`.
+- Components: `components/hdfc-oct13/` (19 files). Lib: `lib/hdfc-oct13/` (13 files).
+- Loader `lib/hdfc-oct13/load.ts`: `PUBLIC = "app_jul_sep"` (data/out) and `read("seed", "internal_v3", ...)`.
+- Pipeline: `scripts/hdfc_pipeline/` (normalise, classify, aggregate, ask, …) and `scripts/hdfc_v3/` (seed, periods,
+  Ombudsman, reconcile, volume validation).
+- `app/hdfc-pulse/page.tsx` is a version index (redirect), so `app/natwest-pulse/page.tsx` redirects to `v1` only.
+
+Target: `app/natwest-pulse/v1/` with the same folders; `components/natwest-pulse/`, `lib/natwest-pulse/`,
+`scripts/natwest_pulse/`, `data/out/natwest_pulse/`, `data/seed/natwest_pulse/`.
+
+## Component map (`components/hdfc-oct13/` → `components/natwest-pulse/`)
+
+| Component | NatWest screen | What changes | Removed |
+|---|---|---|---|
+| Shell | all | "NatWest Group" header text, watermark, freeze footer, window (This week · Last 4 weeks · Last 13 weeks) and brand filter; neutral teal accent | HDFC nav items for removed screens |
+| primitives | all | Three provenance tags shown, internal included | purple tones |
+| MdView, Pulse | S-HOME | Group pulse, segment pulse, public tile beside (never summed), Cora and Ombudsman summaries | priority lists, RM alerts |
+| SatisfactionView, V3Blocks | S-CHANNEL | Calls · Cora · complaints · branch · public voice, one metric set | — |
+| ModuleView, SignalDetail | S-CORA | Module `cora_digital`; journey drill | Cards and app modules, release pulse |
+| Ombudsman | S-FOS | FOS states by theme, product, brand; register-bound rules | Internal Ombudsman ladder, save list |
+| PriorityView | S-DUTY | Four outcomes by segment; evidence = register ids | priority relationships, "RBI & Government" |
+| MarketView | S-BRAND | Three brands; peers; RBS app finding | Play Store-led ratings |
+| ActionQueue, DeliverablesLedger | S-AGENTS | Fraud Triage Agent, AI complaint letters; UK timelines | MD-marked mail, email triage, RBI TAT rows |
+| Brief, AskBar, AskLisN | Brief, Ask | Morning brief by product, Copy to pack; five NatWest questions | pins |
+| CardsView, ServicePromiseView, MyView | — | — | removed screens; routes kept, redirect home |
+
+## Register swap table (grep hits: `components/hdfc-oct13` · `lib/hdfc-oct13`)
+
+| India term | hits | UK replacement |
+|---|---|---|
+| RBI / Banking Ombudsman / Ombudsman | 14 · 1 / 0 · 0 / 13 · 14 | Financial Ombudsman Service |
+| Internal Ombudsman, IO | 1 · 5, 5 · 1 | Final response (8-week rule) |
+| TAT | 28 · 1 | FCA DISP timeline; PSR 5-business-day APP reimbursement |
+| CEPD, NPCI | 0 · 0 | FCA (Consumer Duty, DISP), PSR |
+| ₹, crore, lakh | 0 · 4, 0 · 3, 0 · 3 | £, million |
+| UPI | 1 · 0 | Faster Payments, Open Banking |
+| PayZapp, INDIE | 3 · 3, 0 · 0 | NatWest app, Royal Bank of Scotland app, online banking |
+| Play Store | 20 · 6 | App Store leads (UK iOS share); both stores, never combined |
+| KYC | 1 · 1 | Identity check, onboarding |
+| EMI | 0 · 0 | Repayment, instalment |
+| RM | 15 · 5 | Product owner, relationship manager (Premier) |
+| "RBI & Government" | — | Removed |
+
+## Data inventory
+
+| Item | Status |
+|---|---|
+| Public pull (all six sources) | Missing |
+| Research pack (register, anchors, peers) | Missing; five figures quoted in the brief |
+| Seed (L3) | To build, fixed seed |
+| Register | To build: `data/public/natwest_register.json` |
+| Peers | Names only |
+
+## Steps
+
+| # | Step | Status | Commit |
+|---|---|---|---|
+| 0 | Brief, this plan | Built | (this commit) |
+| 1 | Safety rails | Planned | |
+| 2 | Route tree copy, 200 on HDFC data | Planned | |
+| 3 | Data folder and pipeline | Planned | |
+| 4 | Register and copy swap | Planned | |
+| 5.1–5.8 | Screens | Planned | |
+| F | Checks, screenshots, checklist | Planned | |
+| P | Push to main | Blocked (Deployment Protection) | |
+
+## Conflicts
+
+| ID | Conflict | Resolution |
+|---|---|---|
+| NW-D01 | Research pack absent; only allowed source | Five brief-quoted figures only, labelled; the rest pending |
+| NW-D02 | "Push after each commit" vs "do not push until protection confirmed" | Commit on local main; no push until confirmed |
+| NW-D03 | Brief bans "V1" on screen; route is `/natwest-pulse/v1` | URL only; no version text on screen |
+| NW-D04 | Copied HDFC data holds Indian public posts; HL-15 | Public layer empty until the pull lands |
+| NW-D06 | Carry-forward §G drops the deliverables ledger; brief re-binds it | Brief wins |
+| NW-D07 | One-for-one routes vs removed screens | Folders kept; removed screens redirect to the pulse home |
+| NW-D08 | oct13 reads the shared HDFC folders (`app_jul_sep`, `internal_v3`) | Both copied into `natwest_pulse`; HDFC folders untouched |
+| NW-D09 | Lint bans "Starling"; peers grey Monzo and Starling | Peer names only in the register's peer list; lint exempts that list |
