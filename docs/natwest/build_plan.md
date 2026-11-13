@@ -1,6 +1,6 @@
 # NatWest Group · Customer Pulse v1 (`natwest-pulse`): build plan
 
-Work on `main` (pulled 13 Nov 2026 at `d3664f9`; up to date). Brief: `docs/natwest/brief.md`. Judgement calls:
+Work on `main` (pulled 13 Nov 2026 at `d3664f9`; up to date). Layout: the `oct13` screens exactly, relabelled (NW-D17). Brief: `docs/natwest/brief.md`. Judgement calls:
 `docs/demo-rebuild/MORNING_DECISIONS.md` → "NatWest Pulse v1" (NW-Dxx). This file is the resume point.
 
 ## Blocked on people
@@ -77,14 +77,17 @@ Target: `app/natwest-pulse/v1/` with the same folders; `components/natwest-pulse
 
 | # | Step | Status | Commit |
 |---|---|---|---|
-| 0 | Brief, this plan | Built | (this commit) |
-| 1 | Safety rails | Planned | |
-| 2 | Route tree copy, 200 on HDFC data | Planned | |
-| 3 | Data folder and pipeline | Planned | |
-| 4 | Register and copy swap | Planned | |
-| 5.1–5.8 | Screens | Planned | |
-| F | Checks, screenshots, checklist | Planned | |
-| P | Push to main | Blocked (Deployment Protection) | |
+| 0 | Brief, this plan | Built | 21bee9c |
+| 1 | Safety rails (noindex, lint scope, UK PII, fixtures) | Built | 6da6073 |
+| 2 | Route tree copied from `oct13`, 200 on copied data | Built | 88022ef |
+| — | Gap screens withdrawn; back to the `oct13` layout (NW-D17) | Built | ea6bad5 |
+| 3 | `oct13` pipeline re-parameterised for NatWest | Built | 6f27cc3 |
+| 4–5 | Copy and register swap; `oct13` sections relabelled | Built | 1756eed |
+| — | Signal pages for every theme; empty-public fixes | Built | 9349ad3 |
+| F | Checks, screenshots, checklist (`qa/natwest_qa_checklist.md`) | Built | (this commit) |
+| P | Push to main | Blocked (Deployment Protection not confirmed) | |
+| — | Brand filter on screen | Not built (layout rule, NW-D27) | |
+| — | Public layer (L2) | Blocked (`data/raw/natwest/` empty) | |
 
 ## Conflicts
 

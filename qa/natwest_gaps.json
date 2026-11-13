@@ -1,0 +1,1894 @@
+[
+ {
+  "route": "/natwest-pulse",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 88,
+    "h": 358,
+    "cols": 2,
+    "y": 1356,
+    "at": 270,
+    "title": "AT RISK, BY BUSINESS"
+   },
+   {
+    "gap": 51,
+    "h": 3079,
+    "cols": 2,
+    "y": 24,
+    "at": 2962,
+    "title": "Customer pulse"
+   },
+   {
+    "gap": 40,
+    "h": 260,
+    "cols": 2,
+    "y": 887,
+    "at": 208,
+    "title": "676K"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "6,678"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "468"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "4,814"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "8,989"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Credit cards"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Current accounts and app"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Mortgages"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Savings"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 88,
+    "h": 358,
+    "cols": 2,
+    "y": 1356,
+    "at": 270,
+    "title": "AT RISK, BY BUSINESS"
+   },
+   {
+    "gap": 51,
+    "h": 3079,
+    "cols": 2,
+    "y": 24,
+    "at": 2962,
+    "title": "Customer pulse"
+   },
+   {
+    "gap": 40,
+    "h": 260,
+    "cols": 2,
+    "y": 887,
+    "at": 208,
+    "title": "676K"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "6,678"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "468"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "4,814"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "8,989"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Credit cards"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Current accounts and app"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Mortgages"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Savings"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/mds-office",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 88,
+    "h": 358,
+    "cols": 2,
+    "y": 1356,
+    "at": 270,
+    "title": "AT RISK, BY BUSINESS"
+   },
+   {
+    "gap": 51,
+    "h": 3079,
+    "cols": 2,
+    "y": 24,
+    "at": 2962,
+    "title": "Customer pulse"
+   },
+   {
+    "gap": 40,
+    "h": 260,
+    "cols": 2,
+    "y": 887,
+    "at": 208,
+    "title": "676K"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "6,678"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "468"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "4,814"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "8,989"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Credit cards"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Current accounts and app"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Mortgages"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Savings"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/head-cx",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 88,
+    "h": 358,
+    "cols": 2,
+    "y": 1356,
+    "at": 270,
+    "title": "AT RISK, BY BUSINESS"
+   },
+   {
+    "gap": 51,
+    "h": 3079,
+    "cols": 2,
+    "y": 24,
+    "at": 2962,
+    "title": "Customer pulse"
+   },
+   {
+    "gap": 40,
+    "h": 260,
+    "cols": 2,
+    "y": 887,
+    "at": 208,
+    "title": "676K"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "6,678"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "468"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "4,814"
+   },
+   {
+    "gap": 38,
+    "h": 149,
+    "cols": 2,
+    "y": 407,
+    "at": 73,
+    "title": "8,989"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Credit cards"
+   },
+   {
+    "gap": 32,
+    "h": 367,
+    "cols": 3,
+    "y": 2197,
+    "at": 303,
+    "title": "Current accounts and app"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Mortgages"
+   },
+   {
+    "gap": 32,
+    "h": 359,
+    "cols": 3,
+    "y": 2573,
+    "at": 296,
+    "title": "Savings"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/satisfaction",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 313,
+    "h": 516,
+    "cols": 2,
+    "y": 2348,
+    "at": 164,
+    "title": "Repeat contact by theme and business"
+   },
+   {
+    "gap": 51,
+    "h": 2957,
+    "cols": 2,
+    "y": 24,
+    "at": 2840,
+    "title": "Public items this window, by source"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/market",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 51,
+    "h": 1775,
+    "cols": 2,
+    "y": 24,
+    "at": 1658,
+    "title": "What we say vs what customers hear"
+   },
+   {
+    "gap": 46,
+    "h": 146,
+    "cols": 2,
+    "y": 1234,
+    "at": 62,
+    "title": "All themes this window"
+   },
+   {
+    "gap": 26,
+    "h": 146,
+    "cols": 2,
+    "y": 1234,
+    "at": 81,
+    "title": "Safety and reputation watch"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/priority",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 74,
+    "h": 440,
+    "cols": 2,
+    "y": 3511,
+    "at": 162,
+    "title": "How a customer gets on a list"
+   },
+   {
+    "gap": 51,
+    "h": 4045,
+    "cols": 2,
+    "y": 24,
+    "at": 3928,
+    "title": "Financially vulnerable (Consumer Duty)"
+   },
+   {
+    "gap": 33,
+    "h": 870,
+    "cols": 4,
+    "y": 441,
+    "at": 246,
+    "title": "Financially vulnerable (Consumer Duty)"
+   },
+   {
+    "gap": 33,
+    "h": 807,
+    "cols": 4,
+    "y": 441,
+    "at": 224,
+    "title": "Recent complainants (90 days)"
+   },
+   {
+    "gap": 33,
+    "h": 848,
+    "cols": 4,
+    "y": 441,
+    "at": 224,
+    "title": "Premier and Private"
+   },
+   {
+    "gap": 33,
+    "h": 848,
+    "cols": 4,
+    "y": 441,
+    "at": 224,
+    "title": "Premier"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/action-queue",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 51,
+    "h": 3101,
+    "cols": 2,
+    "y": 24,
+    "at": 2984,
+    "title": "Buckets"
+   },
+   {
+    "gap": 37,
+    "h": 134,
+    "cols": 6,
+    "y": 492,
+    "at": 87,
+    "title": "Bucket 1"
+   },
+   {
+    "gap": 37,
+    "h": 134,
+    "cols": 6,
+    "y": 492,
+    "at": 87,
+    "title": "Bucket 4"
+   },
+   {
+    "gap": 37,
+    "h": 134,
+    "cols": 6,
+    "y": 492,
+    "at": 87,
+    "title": "Bucket 5"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/deliverables",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 51,
+    "h": 5076,
+    "cols": 2,
+    "y": 24,
+    "at": 4959,
+    "title": "Deliverables ledger"
+   },
+   {
+    "gap": 24,
+    "h": 258,
+    "cols": 2,
+    "y": 3330,
+    "at": 195,
+    "title": "Cure watch"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/service-promise",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 51,
+    "h": 5076,
+    "cols": 2,
+    "y": 24,
+    "at": 4959,
+    "title": "Deliverables ledger"
+   },
+   {
+    "gap": 24,
+    "h": 258,
+    "cols": 2,
+    "y": 3330,
+    "at": 195,
+    "title": "Cure watch"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/my-view",
+  "gaps": [
+   {
+    "gap": 458,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 220,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Nothing pinned yet"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/module/cards",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 72,
+    "h": 72,
+    "cols": 2,
+    "y": 1908,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 51,
+    "h": 2326,
+    "cols": 2,
+    "y": 24,
+    "at": 2209,
+    "title": "The numbers first"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/module/cora_digital",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 363,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 367,
+    "title": "NatWest Group · Customer Pulse · Thursday 12 November 2026, "
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/cards",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 144,
+    "h": 358,
+    "cols": 2,
+    "y": 845,
+    "at": 214,
+    "title": "AT RISK, BY CATEGORY"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "31,882"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "14,166"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "10,439"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "7,277"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "18"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "137"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "13,393"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "9,873"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "2,878"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "642"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 109,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "15,423"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "10,035"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "2,584"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "2,804"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "309"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "6,402"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "3,689"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "1,612"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "1,101"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 87,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "870"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "176"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "589"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "105"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "330"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "26"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "26"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 82,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "22,488"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "21,111"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "1,308"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "69"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "198"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "21,182"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "18,557"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "934"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "1,691"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "103"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 69,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "11,467"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "6,929"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "4,094"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "444"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "0 / 0"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "—"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 60,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 10,
+    "title": "0"
+   },
+   {
+    "gap": 59,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 39,
+    "title": "Disputes, refunds and reversals"
+   },
+   {
+    "gap": 59,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 39,
+    "title": "Applications and verification"
+   },
+   {
+    "gap": 59,
+    "h": 511,
+    "cols": 3,
+    "y": 3343,
+    "at": 247,
+    "title": "What is the market saying about us?"
+   },
+   {
+    "gap": 51,
+    "h": 3948,
+    "cols": 2,
+    "y": 24,
+    "at": 3831,
+    "title": "Issue pulse: Cards"
+   },
+   {
+    "gap": 51,
+    "h": 129,
+    "cols": 13,
+    "y": 2246,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 51,
+    "h": 129,
+    "cols": 13,
+    "y": 2664,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 48,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 28,
+    "title": "Limits"
+   },
+   {
+    "gap": 48,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 28,
+    "title": "Card delivery"
+   },
+   {
+    "gap": 41,
+    "h": 107,
+    "cols": 13,
+    "y": 2556,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 41,
+    "h": 107,
+    "cols": 13,
+    "y": 2874,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 41,
+    "h": 511,
+    "cols": 3,
+    "y": 3343,
+    "at": 265,
+    "title": "Are we keeping our timelines?"
+   },
+   {
+    "gap": 38,
+    "h": 102,
+    "cols": 13,
+    "y": 2982,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 38,
+    "h": 102,
+    "cols": 13,
+    "y": 3085,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 32,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 32,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 0,
+    "title": ""
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Category · owner"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Volume"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Resolved"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Open"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Waiting on customer"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Not responded to in 48h+"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Escalations"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Volume"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "+ / −"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Responded"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "High impact"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Escalations"
+   },
+   {
+    "gap": 31,
+    "h": 45,
+    "cols": 13,
+    "y": 2200,
+    "at": 6,
+    "title": "Trend"
+   },
+   {
+    "gap": 30,
+    "h": 89,
+    "cols": 13,
+    "y": 2376,
+    "at": 28,
+    "title": "Fees and charges"
+   },
+   {
+    "gap": 30,
+    "h": 89,
+    "cols": 13,
+    "y": 2466,
+    "at": 28,
+    "title": "Rewards and redemption"
+   },
+   {
+    "gap": 27,
+    "h": 80,
+    "cols": 13,
+    "y": 2794,
+    "at": 0,
+    "title": ""
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/payments_fraud",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Payments and fraud: business view"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/current_accounts",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Current accounts and app: business view"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/personal_loans",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Personal loans: business view"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/mortgages",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Mortgages: business view"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/overdrafts",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Overdrafts: business view"
+   }
+  ]
+ },
+ {
+  "route": "/natwest-pulse/v1/business/savings",
+  "gaps": [
+   {
+    "gap": 468,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 210,
+    "title": ""
+   },
+   {
+    "gap": 280,
+    "h": 730,
+    "cols": 2,
+    "y": 24,
+    "at": 450,
+    "title": "Savings: business view"
+   }
+  ]
+ }
+]
